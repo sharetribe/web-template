@@ -121,14 +121,12 @@ export { default as BookingBreakdown } from './BookingBreakdown/BookingBreakdown
 export { default as BookingDateRangeFilter } from './BookingDateRangeFilter/BookingDateRangeFilter';
 export { default as BookingTimeInfo } from './BookingTimeInfo/BookingTimeInfo';
 export { default as BookingPanel } from './BookingPanel/BookingPanel';
-export { default as Discussion } from './Discussion/Discussion';
 export { default as FilterPlain } from './FilterPlain/FilterPlain';
 export { default as FilterPopup } from './FilterPopup/FilterPopup';
 export { default as KeywordFilter } from './KeywordFilter/KeywordFilter';
 export { default as ListingCard } from './ListingCard/ListingCard';
 export { default as ManageListingCard } from './ManageListingCard/ManageListingCard';
 export { default as Map } from './Map/Map';
-export { default as OrderDiscussionPanel } from './OrderDiscussionPanel/OrderDiscussionPanel';
 export { default as Page } from './Page/Page';
 export { default as PriceFilter } from './PriceFilter/PriceFilter';
 export { default as Reviews } from './Reviews/Reviews';
