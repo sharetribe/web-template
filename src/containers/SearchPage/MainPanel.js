@@ -3,7 +3,7 @@ import { array, bool, func, number, object, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
 import config from '../../config';
-import routeConfiguration from '../../routeConfiguration';
+import routeConfiguration from '../../routing/routeConfiguration';
 import { FormattedMessage } from '../../util/reactIntl';
 import { createResourceLocatorString } from '../../util/routes';
 import { isAnyFilterActive } from '../../util/search';

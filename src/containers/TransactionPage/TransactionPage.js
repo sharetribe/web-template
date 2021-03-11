@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
-import routeConfiguration from '../../routeConfiguration';
+import routeConfiguration from '../../routing/routeConfiguration';
 import { propTypes } from '../../util/types';
 import { ensureListing, ensureTransaction } from '../../util/data';
 import { dateFromAPIToLocalNoon } from '../../util/dates';

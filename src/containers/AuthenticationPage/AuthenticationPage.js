@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 import classNames from 'classnames';
 import { isEmpty } from 'lodash';
 
-import routeConfiguration from '../../routeConfiguration';
+import routeConfiguration from '../../routing/routeConfiguration';
 import { pathByRouteName } from '../../util/routes';
 import { apiBaseUrl } from '../../util/api';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';

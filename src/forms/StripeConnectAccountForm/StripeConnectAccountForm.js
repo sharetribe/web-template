@@ -6,7 +6,7 @@ import { Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 import config from '../../config';
-import routeConfiguration from '../../routeConfiguration';
+import routeConfiguration from '../../routing/routeConfiguration';
 import { createResourceLocatorString } from '../../util/routes';
 import { isStripeError } from '../../util/errors';
 import * as validators from '../../util/validators';

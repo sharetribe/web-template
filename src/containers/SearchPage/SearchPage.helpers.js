@@ -3,7 +3,7 @@ import config from '../../config';
 import { createResourceLocatorString } from '../../util/routes';
 import { parseSelectFilterOptions } from '../../util/search';
 import { createSlug } from '../../util/urlHelpers';
-import routeConfiguration from '../../routeConfiguration';
+import routeConfiguration from '../../routing/routeConfiguration';
 
 const flatten = (acc, val) => acc.concat(val);
 

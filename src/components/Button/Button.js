@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bool, node, string } from 'prop-types';
 import classNames from 'classnames';
-import routeConfiguration from '../../routeConfiguration';
+import routeConfiguration from '../../routing/routeConfiguration';
 import { findRouteByRouteName } from '../../util/routes';
 import { IconSpinner, IconCheckmark } from '../../components';
 
