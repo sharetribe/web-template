@@ -2,8 +2,9 @@ import has from 'lodash/has';
 import trimEnd from 'lodash/trimEnd';
 import Decimal from 'decimal.js';
 import { types as sdkTypes } from './sdkLoader';
-import { subUnitDivisors } from '../config/currency-config';
+import config from '../config';
 
+const { subUnitDivisors } = config;
 const { Money } = sdkTypes;
 
 // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER
