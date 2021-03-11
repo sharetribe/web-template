@@ -14,7 +14,7 @@ import mapValues from 'lodash/mapValues';
 import moment from 'moment';
 import { IntlProvider } from './util/reactIntl';
 import configureStore from './store';
-import routeConfiguration from './routeConfiguration';
+import routeConfiguration from './routing/routeConfiguration';
 import Routes from './routing/Routes';
 import config from './config';
 

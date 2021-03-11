@@ -10,7 +10,7 @@ import { locationChanged } from '../ducks/Routing.duck';
 import { propTypes } from '../util/types';
 import * as log from '../util/log';
 import { canonicalRoutePath } from '../util/routes';
-import routeConfiguration from '../routeConfiguration';
+import routeConfiguration from '../routing/routeConfiguration';
 
 const canShowComponent = props => {
   const { isAuthenticated, route } = props;
