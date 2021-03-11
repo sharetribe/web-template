@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { NotFoundPage } from '../containers';
 import { NamedRedirect } from '../components';
-import LoadableComponentErrorBoundary from './LoadableComponentErrorBoundary';
+import LoadableComponentErrorBoundary from './LoadableComponentErrorBoundary/LoadableComponentErrorBoundary';
 import { locationChanged } from '../ducks/Routing.duck';
 import { propTypes } from '../util/types';
 import * as log from '../util/log';
