@@ -37,12 +37,7 @@ possible for Topbar to take current filters into account.
 ## MainPanel
 
 MainPanel has two functions: showing searchResults and showing filters. Filters are primarily added,
-removed, reordered and configured through _marketplace-custom-config.js_
-
-```shell
-└── src
-    └── marketplace-custom-config.js
-```
+removed, reordered and configured through _marketplace-custom-config.js_.
 
 There you can set some filters to be primary filters. They are shown always on top of SearchResults
 as dropdown-selections on Desktop layout. We recommend that only 1 - 3 primary filters are passed in

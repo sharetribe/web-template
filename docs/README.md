@@ -23,48 +23,6 @@ Marketplace features included in Saunatime:
 - **User profiles** provide detailed information about a given user.
 - **Extended data:** The listing and user data models are modified using extended data.
 
-## Directory structure
-
-After cloning the repo, your project should look like this:
-
-```
-├── ext/
-│   └── default-mail-templates/
-├── package.json
-├── docs/
-├── public/
-│   ├── static/
-│   ├── 500.html
-│   ├── index.html
-│   └── robots.txt
-├── server/
-│   ├── csp.js
-│   ├── index.js
-│   ├── sitemap.js
-│   └   ...
-└── src/
-    ├── analytics/
-    ├── assets/
-    ├── components/
-    ├── containers/
-    ├── ducks/
-    ├── forms/
-    ├── translations/
-    ├── util/
-    ├── Routes.js
-    ├── app.js
-    ├── config.js
-    ├── examples.js
-    ├── index.js
-    ├── marketplace-custom-config.js
-    ├── marketplace.css
-    ├── marketplaceFonts.css
-    ├── marketplaceIndex.css
-    ├── reducers.js
-    ├── routeConfiguration.js
-    └── store.js
-```
-
 ### public/index.html
 
 This is the page template. It includes fonts, Stripe SDK, Mapbox API (and Google Maps JavaScript
