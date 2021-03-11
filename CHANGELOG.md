@@ -15,6 +15,9 @@ way to update this template, but currently, we follow a pattern:
 ## Upcoming version 2020-XX-XX
 
 - [remove] OrderDetailsPanel and Discussion components were not used.
+- [change] Configuration files are moved to a separate `src/config` directory. The main config file
+  is still imported with the same path as there is the index file in the directory.
+  [#2](https://github.com/sharetribe/ftw-product/pull/2)
 
 ## [v8.1.0] 2021-03-11
 
