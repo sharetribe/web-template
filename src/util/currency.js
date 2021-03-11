@@ -2,7 +2,7 @@ import has from 'lodash/has';
 import trimEnd from 'lodash/trimEnd';
 import Decimal from 'decimal.js';
 import { types as sdkTypes } from './sdkLoader';
-import { subUnitDivisors } from '../currency-config';
+import { subUnitDivisors } from '../config/currency-config';
 
 const { Money } = sdkTypes;
 

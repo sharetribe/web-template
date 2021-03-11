@@ -1,4 +1,4 @@
-import { types as sdkTypes } from './util/sdkLoader';
+import { types as sdkTypes } from '../util/sdkLoader';
 
 const { LatLng, LatLngBounds } = sdkTypes;
 
