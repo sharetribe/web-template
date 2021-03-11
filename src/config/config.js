@@ -1,7 +1,7 @@
 import * as custom from './marketplace-custom-config.js';
 import defaultLocationSearches from './default-location-searches';
 import { defaultMCC, stripePublishableKey, stripeCountryDetails } from './stripe-config';
-import { currencyConfiguration } from './currency-config';
+import { subUnitDivisors, currencyConfiguration } from './currency-config';
 
 const env = process.env.REACT_APP_ENV;
 const dev = process.env.REACT_APP_ENV === 'development';
@@ -206,6 +206,7 @@ const config = {
   sortSearchByDistance,
   currency,
   currencyConfig,
+  subUnitDivisors,
   listingMinimumPriceSubUnits,
   stripe: {
     defaultMCC: defaultMCC,
