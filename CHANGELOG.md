@@ -18,6 +18,8 @@ way to update this template, but currently, we follow a pattern:
 - [change] Configuration files are moved to a separate `src/config` directory. The main config file
   is still imported with the same path as there is the index file in the directory.
   [#2](https://github.com/sharetribe/ftw-product/pull/2)
+- [change] Routing configuration and components are moved to a separate `src/routing` directory.
+  [#4](https://github.com/sharetribe/ftw-product/pull/4)
 
 ## [v8.1.0] 2021-03-11
 
