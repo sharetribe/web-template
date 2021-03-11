@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [remove] OrderDetailsPanel and Discussion components were not used.
+
 ## [v8.1.0] 2021-03-11
 
 - [change] Specify required Node.js versions in package.json and update the node version used in
