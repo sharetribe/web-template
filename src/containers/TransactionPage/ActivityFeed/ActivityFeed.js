@@ -1,11 +1,11 @@
 import React from 'react';
 import { string, arrayOf, bool, func, number } from 'prop-types';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import dropWhile from 'lodash/dropWhile';
 import classNames from 'classnames';
-import { Avatar, InlineTextButton, ReviewRating, UserDisplayName } from '../../components';
-import { formatDate } from '../../util/dates';
-import { ensureTransaction, ensureUser, ensureListing } from '../../util/data';
+
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { formatDate } from '../../../util/dates';
+import { ensureTransaction, ensureUser, ensureListing } from '../../../util/data';
 import {
   TRANSITION_ACCEPT,
   TRANSITION_CANCEL,
@@ -27,9 +27,11 @@ import {
   txRoleIsCustomer,
   getUserTxRole,
   isRelevantPastTransition,
-} from '../../util/transaction';
-import { propTypes } from '../../util/types';
-import * as log from '../../util/log';
+} from '../../../util/transaction';
+import { propTypes } from '../../../util/types';
+import * as log from '../../../util/log';
+
+import { Avatar, InlineTextButton, ReviewRating, UserDisplayName } from '../../../components';
 
 import css from './ActivityFeed.module.css';
 

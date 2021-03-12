@@ -23,6 +23,9 @@ way to update this template, but currently, we follow a pattern:
 - [change] Forms that are used only in the AuthenticationPage (ConfirmSignupForm, LoginForm,
   SignupForm) are moved under the AuthenticationPage.
   [#5](https://github.com/sharetribe/ftw-product/pull/5)
+- [change] Components and forms that are used only in the TransactionPage (ActivityFeed,
+  ReviewModal, ReviewForm, TransactionPanel, SendMessageForm) are moved under the TransactionPage.
+  [#6](https://github.com/sharetribe/ftw-product/pull/6)
 
 ## [v8.1.0] 2021-03-11
 

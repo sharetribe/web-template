@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { array, arrayOf, bool, func, number, string } from 'prop-types';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import classNames from 'classnames';
+
+import config from '../../../config';
 import {
   TRANSITION_REQUEST_PAYMENT_AFTER_ENQUIRY,
   txIsAccepted,
@@ -12,25 +13,21 @@ import {
   txIsPaymentPending,
   txIsRequested,
   txHasBeenDelivered,
-} from '../../util/transaction';
-import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes } from '../../util/types';
+} from '../../../util/transaction';
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes } from '../../../util/types';
 import {
   ensureListing,
   ensureTransaction,
   ensureUser,
   userDisplayNameAsString,
-} from '../../util/data';
-import { isMobileSafari } from '../../util/userAgent';
-import { formatMoney } from '../../util/currency';
-import {
-  AvatarLarge,
-  BookingPanel,
-  NamedLink,
-  ReviewModal,
-  UserDisplayName,
-} from '../../components';
-import { SendMessageForm } from '../../forms';
-import config from '../../config';
+} from '../../../util/data';
+import { isMobileSafari } from '../../../util/userAgent';
+import { formatMoney } from '../../../util/currency';
+import { AvatarLarge, BookingPanel, NamedLink, UserDisplayName } from '../../../components';
+
+import ReviewModal from '../ReviewModal/ReviewModal';
+import SendMessageForm from '../SendMessageForm/SendMessageForm';
 
 // These are internal components that make this file more readable.
 import AddressLinkMaybe from './AddressLinkMaybe';
