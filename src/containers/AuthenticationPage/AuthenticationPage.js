@@ -7,17 +7,23 @@ import Cookies from 'js-cookie';
 import classNames from 'classnames';
 import { isEmpty } from 'lodash';
 
+import config from '../../config';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { pathByRouteName } from '../../util/routes';
 import { apiBaseUrl } from '../../util/api';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import config from '../../config';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
 import {
   isSignupEmailTakenError,
   isTooManyEmailVerificationRequestsError,
 } from '../../util/errors';
+
+import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/Auth.duck';
+import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { sendVerificationEmail } from '../../ducks/user.duck';
+import { manageDisableScrolling } from '../../ducks/UI.duck';
+
 import {
   Page,
   NamedLink,
@@ -35,11 +41,7 @@ import {
   Modal,
   TermsOfService,
 } from '../../components';
-import { TopbarContainer } from '../../containers';
-import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/Auth.duck';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
-import { sendVerificationEmail } from '../../ducks/user.duck';
-import { manageDisableScrolling } from '../../ducks/UI.duck';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import ConfirmSignupForm from './ConfirmSignupForm/ConfirmSignupForm';
 import LoginForm from './LoginForm/LoginForm';

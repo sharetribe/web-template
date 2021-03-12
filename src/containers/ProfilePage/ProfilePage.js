@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
+
+import config from '../../config';
+import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { REVIEW_TYPE_OF_PROVIDER, REVIEW_TYPE_OF_CUSTOMER, propTypes } from '../../util/types';
 import { ensureCurrentUser, ensureUser } from '../../util/data';
 import { withViewport } from '../../util/contextHelpers';
@@ -23,8 +25,8 @@ import {
   Reviews,
   ButtonTabNavHorizontal,
 } from '../../components';
-import { TopbarContainer, NotFoundPage } from '../../containers';
-import config from '../../config';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import css from './ProfilePage.module.css';
 

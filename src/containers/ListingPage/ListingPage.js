@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { array, arrayOf, bool, func, shape, string, oneOf } from 'prop-types';
-import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+
 import config from '../../config';
 import routeConfiguration from '../../routing/routeConfiguration';
+import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { findOptionsForSelectFilter } from '../../util/search';
 import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes } from '../../util/types';
 import { types as sdkTypes } from '../../util/sdkLoader';
@@ -28,6 +29,7 @@ import { richText } from '../../util/richText';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck';
 import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
+
 import {
   Page,
   NamedLink,
@@ -39,7 +41,8 @@ import {
   Footer,
   BookingPanel,
 } from '../../components';
-import { TopbarContainer, NotFoundPage } from '../../containers';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import { sendEnquiry, fetchTransactionLineItems, setInitialValues } from './ListingPage.duck';
 import SectionImages from './SectionImages';

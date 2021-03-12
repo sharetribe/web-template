@@ -4,6 +4,8 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import classNames from 'classnames';
+
+import config from '../../config';
 import {
   txIsAccepted,
   txIsCanceled,
@@ -35,8 +37,9 @@ import {
   IconSpinner,
   UserDisplayName,
 } from '../../components';
-import { TopbarContainer, NotFoundPage } from '../../containers';
-import config from '../../config';
+
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import css from './InboxPage.module.css';
 

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { parse } from '../../util/urlHelpers';
@@ -19,7 +20,7 @@ import {
   Footer,
 } from '../../components';
 import { PasswordResetForm } from '../../forms';
-import { TopbarContainer } from '../../containers';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import { resetPassword } from './PasswordResetPage.duck';
 import css from './PasswordResetPage.module.css';

@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+
+import config from '../../config';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
-import { TopbarContainer } from '../../containers';
 import {
   Page,
   LayoutSideNavigation,
@@ -15,7 +16,7 @@ import {
   Footer,
   TermsOfService,
 } from '../../components';
-import config from '../../config';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import css from './TermsOfServicePage.module.css';
 

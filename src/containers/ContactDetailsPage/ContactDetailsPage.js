@@ -2,10 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
 import { sendVerificationEmail } from '../../ducks/user.duck';
+import { isScrollingDisabled } from '../../ducks/UI.duck';
+
+import { ContactDetailsForm } from '../../forms';
 import {
   LayoutSideNavigation,
   LayoutWrapperMain,
@@ -16,10 +20,8 @@ import {
   Page,
   UserNav,
 } from '../../components';
-import { ContactDetailsForm } from '../../forms';
-import { TopbarContainer } from '../../containers';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
-import { isScrollingDisabled } from '../../ducks/UI.duck';
 import {
   saveContactDetails,
   saveContactDetailsClear,
