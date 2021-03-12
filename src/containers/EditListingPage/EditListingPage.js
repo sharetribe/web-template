@@ -2,8 +2,10 @@ import React from 'react';
 import { bool, func, object, shape, string, oneOf } from 'prop-types';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
-import { intlShape, injectIntl } from '../../util/reactIntl';
 import { connect } from 'react-redux';
+
+// Import configs and util modules
+import { intlShape, injectIntl } from '../../util/reactIntl';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
@@ -22,9 +24,11 @@ import {
   getStripeConnectAccountLink,
 } from '../../ducks/stripeConnectAccount.duck';
 
-import { EditListingWizard, NamedRedirect, Page } from '../../components';
+// Import shared components
+import { NamedRedirect, Page } from '../../components';
 import { TopbarContainer } from '../../containers';
 
+// Import modules from this directory
 import {
   requestFetchBookings,
   requestFetchAvailabilityExceptions,
@@ -39,7 +43,7 @@ import {
   clearUpdatedTab,
   savePayoutDetails,
 } from './EditListingPage.duck';
-
+import EditListingWizard from './EditListingWizard/EditListingWizard';
 import css from './EditListingPage.module.css';
 
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = 'success';
