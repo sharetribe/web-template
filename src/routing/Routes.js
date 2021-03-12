@@ -3,14 +3,14 @@ import { arrayOf, bool, object, func, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from 'react-router-dom';
-import { NotFoundPage } from '../containers';
-import { NamedRedirect } from '../components';
-import LoadableComponentErrorBoundary from './LoadableComponentErrorBoundary/LoadableComponentErrorBoundary';
-import { locationChanged } from '../ducks/Routing.duck';
 import { propTypes } from '../util/types';
 import * as log from '../util/log';
 import { canonicalRoutePath } from '../util/routes';
 import routeConfiguration from '../routing/routeConfiguration';
+import { NamedRedirect } from '../components';
+import { NotFoundPage } from '../containers';
+import { locationChanged } from '../ducks/Routing.duck';
+import LoadableComponentErrorBoundary from './LoadableComponentErrorBoundary/LoadableComponentErrorBoundary';
 
 const canShowComponent = props => {
   const { isAuthenticated, route } = props;
