@@ -3,12 +3,17 @@ import { bool, func, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import { Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
-import { FormattedMessage } from '../../util/reactIntl';
-import { findOptionsForSelectFilter } from '../../util/search';
-import { propTypes } from '../../util/types';
-import config from '../../config';
-import { Button, FieldCheckboxGroup, Form } from '../../components';
 
+// Import configs and util modules
+import config from '../../../../config';
+import { FormattedMessage } from '../../../../util/reactIntl';
+import { findOptionsForSelectFilter } from '../../../../util/search';
+import { propTypes } from '../../../../util/types';
+
+// Import shared components
+import { Button, FieldCheckboxGroup, Form } from '../../../../components';
+
+// Import modules from this directory
 import css from './EditListingFeaturesForm.module.css';
 
 const EditListingFeaturesFormComponent = props => (

@@ -45,5 +45,5 @@ export const Amenities = {
     ready: false,
     filterConfig,
   },
-  group: 'forms',
+  group: 'EditListingPage',
 };
