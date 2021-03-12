@@ -84,12 +84,12 @@ import * as EditListingPricingForm from './forms/EditListingPricingForm/EditList
 import * as EmailVerificationForm from './forms/EmailVerificationForm/EmailVerificationForm.example';
 import * as EnquiryForm from './forms/EnquiryForm/EnquiryForm.example';
 import * as FilterForm from './forms/FilterForm/FilterForm.example';
-import * as LoginForm from './forms/LoginForm/LoginForm.example';
+import * as LoginForm from './containers/AuthenticationPage/LoginForm/LoginForm.example';
 import * as PasswordRecoveryForm from './forms/PasswordRecoveryForm/PasswordRecoveryForm.example';
 import * as PasswordResetForm from './forms/PasswordResetForm/PasswordResetForm.example';
 import * as ReviewForm from './forms/ReviewForm/ReviewForm.example';
 import * as SendMessageForm from './forms/SendMessageForm/SendMessageForm.example';
-import * as SignupForm from './forms/SignupForm/SignupForm.example';
+import * as SignupForm from './containers/AuthenticationPage/SignupForm/SignupForm.example';
 import * as StripePaymentForm from './forms/StripePaymentForm/StripePaymentForm.example';
 
 // containers

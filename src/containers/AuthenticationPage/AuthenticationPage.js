@@ -35,7 +35,9 @@ import {
   Modal,
   TermsOfService,
 } from '../../components';
-import { ConfirmSignupForm, LoginForm, SignupForm } from '../../forms';
+import ConfirmSignupForm from './ConfirmSignupForm/ConfirmSignupForm';
+import LoginForm from './LoginForm/LoginForm';
+import SignupForm from './SignupForm/SignupForm';
 import { TopbarContainer } from '../../containers';
 import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/Auth.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
