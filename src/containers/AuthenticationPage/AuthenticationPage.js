@@ -35,14 +35,15 @@ import {
   Modal,
   TermsOfService,
 } from '../../components';
-import ConfirmSignupForm from './ConfirmSignupForm/ConfirmSignupForm';
-import LoginForm from './LoginForm/LoginForm';
-import SignupForm from './SignupForm/SignupForm';
 import { TopbarContainer } from '../../containers';
 import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/Auth.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 import { sendVerificationEmail } from '../../ducks/user.duck';
 import { manageDisableScrolling } from '../../ducks/UI.duck';
+
+import ConfirmSignupForm from './ConfirmSignupForm/ConfirmSignupForm';
+import LoginForm from './LoginForm/LoginForm';
+import SignupForm from './SignupForm/SignupForm';
 
 import css from './AuthenticationPage.module.css';
 import { FacebookLogo, GoogleLogo } from './socialLoginLogos';
