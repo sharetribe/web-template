@@ -13,5 +13,5 @@ export const Empty = {
     disabled: false,
     ready: false,
   },
-  group: 'forms',
+  group: 'EditListingPage',
 };

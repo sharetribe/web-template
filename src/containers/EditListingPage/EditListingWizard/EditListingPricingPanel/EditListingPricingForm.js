@@ -2,14 +2,20 @@ import React from 'react';
 import { bool, func, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
-import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import config from '../../config';
-import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes } from '../../util/types';
-import * as validators from '../../util/validators';
-import { formatMoney } from '../../util/currency';
-import { types as sdkTypes } from '../../util/sdkLoader';
-import { Button, Form, FieldCurrencyInput } from '../../components';
+
+// Import configs and util modules
+import config from '../../../../config';
+import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
+import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes } from '../../../../util/types';
+import * as validators from '../../../../util/validators';
+import { formatMoney } from '../../../../util/currency';
+import { types as sdkTypes } from '../../../../util/sdkLoader';
+
+// Import shared components
+import { Button, Form, FieldCurrencyInput } from '../../../../components';
+
+// Import modules from this directory
 import css from './EditListingPricingForm.module.css';
 
 const { Money } = sdkTypes;
