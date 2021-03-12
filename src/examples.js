@@ -73,13 +73,6 @@ import * as UserDisplayName from './components/UserDisplayName/UserDisplayName.e
 
 // forms
 import * as BookingDatesForm from './forms/BookingDatesForm/BookingDatesForm.example';
-import * as EditListingAvailabilityForm from './forms/EditListingAvailabilityForm/EditListingAvailabilityForm.example';
-import * as EditListingDescriptionForm from './forms/EditListingDescriptionForm/EditListingDescriptionForm.example';
-import * as EditListingFeaturesForm from './forms/EditListingFeaturesForm/EditListingFeaturesForm.example';
-import * as EditListingLocationForm from './forms/EditListingLocationForm/EditListingLocationForm.example';
-import * as EditListingPhotosForm from './forms/EditListingPhotosForm/EditListingPhotosForm.example';
-import * as EditListingPoliciesForm from './forms/EditListingPoliciesForm/EditListingPoliciesForm.example';
-import * as EditListingPricingForm from './forms/EditListingPricingForm/EditListingPricingForm.example';
 import * as EmailVerificationForm from './forms/EmailVerificationForm/EmailVerificationForm.example';
 import * as EnquiryForm from './forms/EnquiryForm/EnquiryForm.example';
 import * as FilterForm from './forms/FilterForm/FilterForm.example';
@@ -90,6 +83,13 @@ import * as StripePaymentForm from './forms/StripePaymentForm/StripePaymentForm.
 // components under containers
 import * as SignupForm from './containers/AuthenticationPage/SignupForm/SignupForm.example';
 import * as LoginForm from './containers/AuthenticationPage/LoginForm/LoginForm.example';
+import * as EditListingAvailabilityForm from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/EditListingAvailabilityForm.example';
+import * as EditListingDescriptionForm from './containers/EditListingPage/EditListingWizard/EditListingDescriptionPanel/EditListingDescriptionForm.example';
+import * as EditListingFeaturesForm from './containers/EditListingPage/EditListingWizard/EditListingFeaturesPanel/EditListingFeaturesForm.example';
+import * as EditListingLocationForm from './containers/EditListingPage/EditListingWizard/EditListingLocationPanel/EditListingLocationForm.example';
+import * as EditListingPhotosForm from './containers/EditListingPage/EditListingWizard/EditListingPhotosPanel/EditListingPhotosForm.example';
+import * as EditListingPoliciesForm from './containers/EditListingPage/EditListingWizard/EditListingPoliciesPanel/EditListingPoliciesForm.example';
+import * as EditListingPricingForm from './containers/EditListingPage/EditListingWizard/EditListingPricingPanel/EditListingPricingForm.example';
 import * as ReviewForm from './containers/TransactionPage/ReviewForm/ReviewForm.example';
 import * as SendMessageForm from './containers/TransactionPage/SendMessageForm/SendMessageForm.example';
 import * as ActivityFeed from './containers/TransactionPage/ActivityFeed/ActivityFeed.example.js';
