@@ -3,12 +3,14 @@ import { bool, func, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
-import { verify } from '../../ducks/EmailVerification.duck';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
 import { parse } from '../../util/urlHelpers';
 import { ensureCurrentUser } from '../../util/data';
+import { verify } from '../../ducks/EmailVerification.duck';
+import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { EmailVerificationForm } from '../../forms';
 import {
   Page,
   LayoutSingleColumn,
@@ -18,8 +20,7 @@ import {
   Footer,
   NamedRedirect,
 } from '../../components';
-import { EmailVerificationForm } from '../../forms';
-import { TopbarContainer } from '../../containers';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import css from './EmailVerificationPage.module.css';
 

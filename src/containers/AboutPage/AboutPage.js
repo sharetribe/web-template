@@ -1,7 +1,7 @@
 import React from 'react';
+
 import config from '../../config';
 import { twitterPageURL } from '../../util/urlHelpers';
-import { StaticPage, TopbarContainer } from '../../containers';
 import {
   LayoutSingleColumn,
   LayoutWrapperTopbar,
@@ -10,6 +10,8 @@ import {
   Footer,
   ExternalLink,
 } from '../../components';
+import StaticPage from '../../containers/StaticPage/StaticPage';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import css from './AboutPage.module.css';
 import image from './about-us-1056.jpg';

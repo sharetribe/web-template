@@ -14,20 +14,22 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] The `containers/index.js` file is now removed and the components imported directly to
+  improve code splitting. [#8](https://github.com/sharetribe/ftw-product/pull/8)
 - [change] Move EditListingWizard et al. under EditListingPage
   [#7](https://github.com/sharetribe/ftw-product/pull/7)
-- [remove] OrderDetailsPanel and Discussion components were not used.
-- [change] Configuration files are moved to a separate `src/config` directory. The main config file
-  is still imported with the same path as there is the index file in the directory.
-  [#2](https://github.com/sharetribe/ftw-product/pull/2)
-- [change] Routing configuration and components are moved to a separate `src/routing` directory.
-  [#4](https://github.com/sharetribe/ftw-product/pull/4)
-- [change] Forms that are used only in the AuthenticationPage (ConfirmSignupForm, LoginForm,
-  SignupForm) are moved under the AuthenticationPage.
-  [#5](https://github.com/sharetribe/ftw-product/pull/5)
 - [change] Components and forms that are used only in the TransactionPage (ActivityFeed,
   ReviewModal, ReviewForm, TransactionPanel, SendMessageForm) are moved under the TransactionPage.
   [#6](https://github.com/sharetribe/ftw-product/pull/6)
+- [change] Forms that are used only in the AuthenticationPage (ConfirmSignupForm, LoginForm,
+  SignupForm) are moved under the AuthenticationPage.
+  [#5](https://github.com/sharetribe/ftw-product/pull/5)
+- [change] Routing configuration and components are moved to a separate `src/routing` directory.
+  [#4](https://github.com/sharetribe/ftw-product/pull/4)
+- [change] Configuration files are moved to a separate `src/config` directory. The main config file
+  is still imported with the same path as there is the index file in the directory.
+  [#2](https://github.com/sharetribe/ftw-product/pull/2)
+- [remove] OrderDetailsPanel and Discussion components were not used.
 
 ## [v8.1.0] 2021-03-11
 
