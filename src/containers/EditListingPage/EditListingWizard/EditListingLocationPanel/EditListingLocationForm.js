@@ -2,16 +2,26 @@ import React from 'react';
 import { bool, func, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
-import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { propTypes } from '../../util/types';
+
+// Import configs and util modules
+import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
+import { propTypes } from '../../../../util/types';
 import {
   autocompleteSearchRequired,
   autocompletePlaceSelected,
   composeValidators,
-} from '../../util/validators';
-import { Form, LocationAutocompleteInputField, Button, FieldTextInput } from '../../components';
+} from '../../../../util/validators';
 
+// Import shared components
+import {
+  Form,
+  LocationAutocompleteInputField,
+  Button,
+  FieldTextInput,
+} from '../../../../components';
+
+// Import modules from this directory
 import css from './EditListingLocationForm.module.css';
 
 const identity = v => v;
