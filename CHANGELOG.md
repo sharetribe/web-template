@@ -28,6 +28,8 @@ way to update this template, but currently, we follow a pattern:
 - [change] Components and forms that are used only in the TransactionPage (ActivityFeed,
   ReviewModal, ReviewForm, TransactionPanel, SendMessageForm) are moved under the TransactionPage.
   [#6](https://github.com/sharetribe/ftw-product/pull/6)
+- [change] The `containers/index.js` file is now removed and the components imported directly to
+  improve code splitting. [#8](https://github.com/sharetribe/ftw-product/pull/8)
 
 ## [v8.1.0] 2021-03-11
 
