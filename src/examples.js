@@ -87,16 +87,16 @@ import * as PasswordRecoveryForm from './forms/PasswordRecoveryForm/PasswordReco
 import * as PasswordResetForm from './forms/PasswordResetForm/PasswordResetForm.example';
 import * as StripePaymentForm from './forms/StripePaymentForm/StripePaymentForm.example';
 
-// containers
-import * as Colors from './containers/StyleguidePage/Colors.example';
-import * as Typography from './containers/StyleguidePage/Typography.example';
-
 // components under containers
 import * as SignupForm from './containers/AuthenticationPage/SignupForm/SignupForm.example';
 import * as LoginForm from './containers/AuthenticationPage/LoginForm/LoginForm.example';
 import * as ReviewForm from './containers/TransactionPage/ReviewForm/ReviewForm.example';
 import * as SendMessageForm from './containers/TransactionPage/SendMessageForm/SendMessageForm.example';
 import * as ActivityFeed from './containers/TransactionPage/ActivityFeed/ActivityFeed.example.js';
+
+// containers
+import * as Colors from './containers/StyleguidePage/Colors.example';
+import * as Typography from './containers/StyleguidePage/Typography.example';
 
 export {
   ActivityFeed,
