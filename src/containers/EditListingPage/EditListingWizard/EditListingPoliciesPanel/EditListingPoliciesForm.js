@@ -2,11 +2,16 @@ import React from 'react';
 import { bool, func, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
-import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { propTypes } from '../../util/types';
-import { Form, Button, FieldTextInput } from '../../components';
 
+// Import configs and util modules
+import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
+import { propTypes } from '../../../../util/types';
+
+// Import shared components
+import { Form, Button, FieldTextInput } from '../../../../components';
+
+// Import modules from this directory
 import css from './EditListingPoliciesForm.module.css';
 
 export const EditListingPoliciesFormComponent = props => (
