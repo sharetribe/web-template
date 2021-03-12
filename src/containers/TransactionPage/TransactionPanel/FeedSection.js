@@ -1,7 +1,9 @@
 import React from 'react';
-import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { ActivityFeed } from '../../components';
+
+import { FormattedMessage } from '../../../util/reactIntl';
+
+import ActivityFeed from '../ActivityFeed/ActivityFeed';
 
 import css from './TransactionPanel.module.css';
 
