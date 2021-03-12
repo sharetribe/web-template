@@ -2,14 +2,19 @@ import React, { Component } from 'react';
 import { array, bool, func, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm, Field } from 'react-final-form';
-import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
-import { propTypes } from '../../util/types';
-import { nonEmptyArray, composeValidators } from '../../util/validators';
-import { isUploadImageOverLimitError } from '../../util/errors';
-import { AddImages, Button, Form, ValidationError } from '../../components';
 
+// Import configs and util modules
+import { FormattedMessage, intlShape, injectIntl } from '../../../../util/reactIntl';
+import { propTypes } from '../../../../util/types';
+import { nonEmptyArray, composeValidators } from '../../../../util/validators';
+import { isUploadImageOverLimitError } from '../../../../util/errors';
+
+// Import shared components
+import { AddImages, Button, Form, ValidationError } from '../../../../components';
+
+// Import modules from this directory
 import css from './EditListingPhotosForm.module.css';
 
 const ACCEPT_IMAGES = 'image/*';

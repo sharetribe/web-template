@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import { array, bool, func, object, string } from 'prop-types';
-import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { LISTING_STATE_DRAFT } from '../../util/types';
-import { EditListingPhotosForm } from '../../forms';
-import { ensureOwnListing } from '../../util/data';
-import { ListingLink } from '../../components';
 
+// Import configs and util modules
+import { FormattedMessage } from '../../../../util/reactIntl';
+import { LISTING_STATE_DRAFT } from '../../../../util/types';
+import { ensureOwnListing } from '../../../../util/data';
+
+// Import shared components
+import { ListingLink } from '../../../../components';
+
+// Import modules from this directory
+import EditListingPhotosForm from './EditListingPhotosForm';
 import css from './EditListingPhotosPanel.module.css';
 
 class EditListingPhotosPanel extends Component {

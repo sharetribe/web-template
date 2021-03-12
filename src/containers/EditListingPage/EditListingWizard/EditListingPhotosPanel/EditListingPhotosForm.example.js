@@ -24,5 +24,5 @@ export const Empty = {
       console.log('remove image:', imageId);
     },
   },
-  group: 'forms',
+  group: 'EditListingPage',
 };
