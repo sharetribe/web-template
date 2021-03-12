@@ -1,5 +1,4 @@
 // components
-import * as ActivityFeed from './containers/TransactionPage/ActivityFeed/ActivityFeed.example.js';
 import * as AddImages from './components/AddImages/AddImages.example';
 import * as Avatar from './components/Avatar/Avatar.example';
 import * as BookingBreakdown from './components/BookingBreakdown/BookingBreakdown.example';
@@ -84,17 +83,20 @@ import * as EditListingPricingForm from './forms/EditListingPricingForm/EditList
 import * as EmailVerificationForm from './forms/EmailVerificationForm/EmailVerificationForm.example';
 import * as EnquiryForm from './forms/EnquiryForm/EnquiryForm.example';
 import * as FilterForm from './forms/FilterForm/FilterForm.example';
-import * as LoginForm from './containers/AuthenticationPage/LoginForm/LoginForm.example';
 import * as PasswordRecoveryForm from './forms/PasswordRecoveryForm/PasswordRecoveryForm.example';
 import * as PasswordResetForm from './forms/PasswordResetForm/PasswordResetForm.example';
-import * as ReviewForm from './containers/TransactionPage/ReviewForm/ReviewForm.example';
-import * as SendMessageForm from './containers/TransactionPage/SendMessageForm/SendMessageForm.example';
-import * as SignupForm from './containers/AuthenticationPage/SignupForm/SignupForm.example';
 import * as StripePaymentForm from './forms/StripePaymentForm/StripePaymentForm.example';
 
 // containers
 import * as Colors from './containers/StyleguidePage/Colors.example';
 import * as Typography from './containers/StyleguidePage/Typography.example';
+
+// components under containers
+import * as SignupForm from './containers/AuthenticationPage/SignupForm/SignupForm.example';
+import * as LoginForm from './containers/AuthenticationPage/LoginForm/LoginForm.example';
+import * as ReviewForm from './containers/TransactionPage/ReviewForm/ReviewForm.example';
+import * as SendMessageForm from './containers/TransactionPage/SendMessageForm/SendMessageForm.example';
+import * as ActivityFeed from './containers/TransactionPage/ActivityFeed/ActivityFeed.example.js';
 
 export {
   ActivityFeed,
