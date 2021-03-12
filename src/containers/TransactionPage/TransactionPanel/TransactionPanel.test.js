@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { types as sdkTypes } from '../../util/sdkLoader';
+
+import { types as sdkTypes } from '../../../util/sdkLoader';
 import {
   createTxTransition,
   createTransaction,
@@ -9,9 +10,9 @@ import {
   createUser,
   createCurrentUser,
   createMessage,
-} from '../../util/test-data';
-import { renderShallow } from '../../util/test-helpers';
-import { fakeIntl } from '../../util/test-data';
+} from '../../../util/test-data';
+import { renderShallow } from '../../../util/test-helpers';
+import { fakeIntl } from '../../../util/test-data';
 import {
   TRANSITION_ACCEPT,
   TRANSITION_CANCELED,
@@ -21,7 +22,8 @@ import {
   TRANSITION_EXPIRE,
   TRANSITION_REQUEST_PAYMENT,
   TRANSITION_CONFIRM_PAYMENT,
-} from '../../util/transaction';
+} from '../../../util/transaction';
+
 import BreakdownMaybe from './BreakdownMaybe';
 import { TransactionPanelComponent } from './TransactionPanel';
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import { ExternalLink } from '../../components';
+
+import { ExternalLink } from '../../../components';
 
 import css from './TransactionPanel.module.css';
 

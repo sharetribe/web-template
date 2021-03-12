@@ -1,7 +1,9 @@
 import React from 'react';
-import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { PrimaryButton, SecondaryButton } from '../../components';
+
+import { FormattedMessage } from '../../../util/reactIntl';
+
+import { PrimaryButton, SecondaryButton } from '../../../components';
 
 import css from './TransactionPanel.module.css';
 

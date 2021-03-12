@@ -114,7 +114,6 @@ export { default as UserNav } from './UserNav/UserNav';
 // These components include other components //
 ///////////////////////////////////////////////
 
-export { default as ActivityFeed } from './ActivityFeed/ActivityFeed';
 export { default as AddImages } from './AddImages/AddImages';
 export { default as Avatar, AvatarMedium, AvatarLarge } from './Avatar/Avatar';
 export { default as BookingBreakdown } from './BookingBreakdown/BookingBreakdown';
@@ -152,7 +151,6 @@ export { default as UserCard } from './UserCard/UserCard';
 
 export { default as LayoutWrapperAccountSettingsSideNav } from './LayoutWrapperAccountSettingsSideNav/LayoutWrapperAccountSettingsSideNav';
 export { default as ModalMissingInformation } from './ModalMissingInformation/ModalMissingInformation';
-export { default as ReviewModal } from './ReviewModal/ReviewModal';
 export { default as PrivacyPolicy } from './PrivacyPolicy/PrivacyPolicy';
 export { default as TermsOfService } from './TermsOfService/TermsOfService';
 export { default as EditListingAvailabilityPanel } from './EditListingAvailabilityPanel/EditListingAvailabilityPanel';
@@ -171,4 +169,3 @@ export { default as SectionThumbnailLinks } from './SectionThumbnailLinks/Sectio
 export { default as Topbar } from './Topbar/Topbar';
 export { default as TopbarDesktop } from './TopbarDesktop/TopbarDesktop';
 export { default as TopbarMobileMenu } from './TopbarMobileMenu/TopbarMobileMenu';
-export { default as TransactionPanel } from './TransactionPanel/TransactionPanel';

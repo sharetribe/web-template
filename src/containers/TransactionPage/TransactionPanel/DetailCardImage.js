@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import { AvatarMedium, ResponsiveImage } from '../../components';
+
+import { AvatarMedium, ResponsiveImage } from '../../../components';
 
 import css from './TransactionPanel.module.css';
 
