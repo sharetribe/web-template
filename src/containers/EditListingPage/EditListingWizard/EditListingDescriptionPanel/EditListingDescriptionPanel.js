@@ -1,14 +1,19 @@
 import React from 'react';
 import { bool, func, object, string } from 'prop-types';
 import classNames from 'classnames';
-import { FormattedMessage } from '../../util/reactIntl';
-import { ensureOwnListing } from '../../util/data';
-import { findOptionsForSelectFilter } from '../../util/search';
-import { LISTING_STATE_DRAFT } from '../../util/types';
-import { ListingLink } from '../../components';
-import { EditListingDescriptionForm } from '../../forms';
-import config from '../../config';
 
+// Import configs and util modules
+import config from '../../../../config';
+import { FormattedMessage } from '../../../../util/reactIntl';
+import { ensureOwnListing } from '../../../../util/data';
+import { findOptionsForSelectFilter } from '../../../../util/search';
+import { LISTING_STATE_DRAFT } from '../../../../util/types';
+
+// Import shared components
+import { ListingLink } from '../../../../components';
+
+// Import modules from this directory
+import EditListingDescriptionForm from './EditListingDescriptionForm';
 import css from './EditListingDescriptionPanel.module.css';
 
 const EditListingDescriptionPanel = props => {

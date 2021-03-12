@@ -1,7 +1,9 @@
 import React from 'react';
-import { required } from '../../util/validators';
-import { FieldSelect } from '../../components';
-
+// Import configs and util modules
+import { required } from '../../../../util/validators';
+// Import shared components
+import { FieldSelect } from '../../../../components';
+// Import modules from this directory
 import css from './EditListingDescriptionForm.module.css';
 
 const CustomCategorySelectFieldMaybe = props => {
