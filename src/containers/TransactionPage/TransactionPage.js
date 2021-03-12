@@ -7,12 +7,12 @@ import classNames from 'classnames';
 
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
-import routeConfiguration from '../../routing/routeConfiguration';
 import { propTypes } from '../../util/types';
 import { ensureListing, ensureTransaction } from '../../util/data';
 import { dateFromAPIToLocalNoon } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import { txIsPaymentPending } from '../../util/transaction';
+import routeConfiguration from '../../routing/routeConfiguration';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/UI.duck';
@@ -27,7 +27,7 @@ import {
   LayoutWrapperFooter,
   Footer,
 } from '../../components';
-import { TopbarContainer } from '../../containers';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import TransactionPanel from './TransactionPanel/TransactionPanel';
 

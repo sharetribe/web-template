@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
+
 import {
   ManageListingCard,
   Page,
@@ -16,7 +18,7 @@ import {
   LayoutWrapperFooter,
   Footer,
 } from '../../components';
-import { TopbarContainer } from '../../containers';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import { closeListing, openListing, getOwnListingsById } from './ManageListingsPage.duck';
 import css from './ManageListingsPage.module.css';

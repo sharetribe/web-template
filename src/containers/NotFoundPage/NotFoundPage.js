@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+
 import routeConfiguration from '../../routing/routeConfiguration';
+import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { createResourceLocatorString } from '../../util/routes';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
+
+import { LocationSearchForm } from '../../forms';
 import {
   Page,
   LayoutSingleColumn,
@@ -15,8 +18,7 @@ import {
   LayoutWrapperFooter,
   Footer,
 } from '../../components';
-import { LocationSearchForm } from '../../forms';
-import { TopbarContainer } from '../../containers';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import css from './NotFoundPage.module.css';
 

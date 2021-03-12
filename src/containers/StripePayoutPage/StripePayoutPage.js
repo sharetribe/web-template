@@ -2,8 +2,9 @@ import React from 'react';
 import { bool, func, oneOf, shape } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import routeConfiguration from '../../routing/routeConfiguration';
+
 import config from '../../config';
+import routeConfiguration from '../../routing/routeConfiguration';
 import { createResourceLocatorString } from '../../util/routes';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { ensureCurrentUser } from '../../util/data';
@@ -13,6 +14,8 @@ import {
   stripeAccountClearError,
   getStripeConnectAccountLink,
 } from '../../ducks/stripeConnectAccount.duck';
+
+import { StripeConnectAccountForm } from '../../forms';
 import {
   NamedRedirect,
   LayoutSideNavigation,
@@ -25,8 +28,8 @@ import {
   StripeConnectAccountStatusBox,
   UserNav,
 } from '../../components';
-import { StripeConnectAccountForm } from '../../forms';
-import { TopbarContainer } from '..';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+
 import { savePayoutDetails } from './StripePayoutPage.duck';
 
 import css from './StripePayoutPage.module.css';
