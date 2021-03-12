@@ -1,7 +1,7 @@
 // NOTE: renderdeep doesn't work due to map integration
 import React from 'react';
-import { renderShallow } from '../../util/test-helpers';
-import { fakeIntl } from '../../util/test-data';
+import { renderShallow } from '../../../../util/test-helpers';
+import { fakeIntl } from '../../../../util/test-data';
 import { EditListingLocationFormComponent } from './EditListingLocationForm';
 
 const noop = () => null;

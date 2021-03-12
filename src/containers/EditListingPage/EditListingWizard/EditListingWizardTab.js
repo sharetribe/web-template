@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { intlShape } from '../../util/reactIntl';
-import routeConfiguration from '../../routing/routeConfiguration';
+import { intlShape } from '../../../util/reactIntl';
+import routeConfiguration from '../../../routing/routeConfiguration';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_NEW,
   LISTING_PAGE_PARAM_TYPES,
-} from '../../util/urlHelpers';
-import { ensureListing } from '../../util/data';
-import { createResourceLocatorString } from '../../util/routes';
+} from '../../../util/urlHelpers';
+import { ensureListing } from '../../../util/data';
+import { createResourceLocatorString } from '../../../util/routes';
 import {
   EditListingAvailabilityPanel,
   EditListingDescriptionPanel,
@@ -17,7 +17,7 @@ import {
   EditListingPhotosPanel,
   EditListingPoliciesPanel,
   EditListingPricingPanel,
-} from '../../components';
+} from '../../../components';
 
 import css from './EditListingWizard.module.css';
 
