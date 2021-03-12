@@ -1,6 +1,6 @@
 import React from 'react';
 import { func, node, string } from 'prop-types';
-import routeConfiguration from '../../routeConfiguration';
+import routeConfiguration from '../../routing/routeConfiguration';
 import { findRouteByRouteName } from '../../util/routes';
 
 const Form = props => {
