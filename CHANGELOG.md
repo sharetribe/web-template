@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Move EditListingWizard et al. under EditListingPage
+  [#7](https://github.com/sharetribe/ftw-product/pull/7)
 - [remove] OrderDetailsPanel and Discussion components were not used.
 - [change] Configuration files are moved to a separate `src/config` directory. The main config file
   is still imported with the same path as there is the index file in the directory.
