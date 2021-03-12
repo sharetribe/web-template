@@ -1,23 +1,27 @@
 import React, { Component, useEffect } from 'react';
 import { array, bool, func, number, object, oneOf, shape, string } from 'prop-types';
 import { compose } from 'redux';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import classNames from 'classnames';
-import config from '../../config';
-import routeConfiguration from '../../routing/routeConfiguration';
-import { createResourceLocatorString } from '../../util/routes';
-import { withViewport } from '../../util/contextHelpers';
-import { propTypes } from '../../util/types';
+
+// Import configs and util modules
+import config from '../../../config';
+import routeConfiguration from '../../../routing/routeConfiguration';
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { createResourceLocatorString } from '../../../util/routes';
+import { withViewport } from '../../../util/contextHelpers';
+import { propTypes } from '../../../util/types';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_NEW,
   LISTING_PAGE_PARAM_TYPES,
-} from '../../util/urlHelpers';
-import { ensureCurrentUser, ensureListing } from '../../util/data';
+} from '../../../util/urlHelpers';
+import { ensureCurrentUser, ensureListing } from '../../../util/data';
 
-import { Modal, NamedRedirect, Tabs, StripeConnectAccountStatusBox } from '../../components';
-import { StripeConnectAccountForm } from '../../forms';
+// Import shared components
+import { Modal, NamedRedirect, Tabs, StripeConnectAccountStatusBox } from '../../../components';
+import { StripeConnectAccountForm } from '../../../forms';
 
+// Import modules from this directory
 import EditListingWizardTab, {
   AVAILABILITY,
   DESCRIPTION,
