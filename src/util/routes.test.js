@@ -1,4 +1,4 @@
-import routeConfiguration from '../routeConfiguration';
+import routeConfiguration from '../routing/routeConfiguration';
 import { createResourceLocatorString, findRouteByRouteName, canonicalRoutePath } from './routes';
 
 describe('util/routes.js', () => {

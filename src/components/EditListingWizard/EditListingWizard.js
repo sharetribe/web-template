@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import classNames from 'classnames';
 import config from '../../config';
-import routeConfiguration from '../../routeConfiguration';
+import routeConfiguration from '../../routing/routeConfiguration';
 import { createResourceLocatorString } from '../../util/routes';
 import { withViewport } from '../../util/contextHelpers';
 import { propTypes } from '../../util/types';

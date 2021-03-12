@@ -3,7 +3,7 @@ import { bool, object, shape } from 'prop-types';
 import { compose } from 'redux';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import config from '../../config';
-import routeConfiguration from '../../routeConfiguration';
+import routeConfiguration from '../../routing/routeConfiguration';
 import { propTypes } from '../../util/types';
 import { createResourceLocatorString } from '../../util/routes';
 

@@ -8,7 +8,7 @@ import debounce from 'lodash/debounce';
 import unionWith from 'lodash/unionWith';
 import classNames from 'classnames';
 import config from '../../config';
-import routeConfiguration from '../../routeConfiguration';
+import routeConfiguration from '../../routing/routeConfiguration';
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
 import { parse, stringify } from '../../util/urlHelpers';
 import { propTypes } from '../../util/types';

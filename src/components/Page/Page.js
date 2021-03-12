@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { withRouter } from 'react-router-dom';
 import { injectIntl, intlShape } from '../../util/reactIntl';
 import classNames from 'classnames';
-import routeConfiguration from '../../routeConfiguration';
+import routeConfiguration from '../../routing/routeConfiguration';
 import config from '../../config';
 import { metaTagProps } from '../../util/seo';
 import { canonicalRoutePath } from '../../util/routes';

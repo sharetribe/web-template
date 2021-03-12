@@ -21,7 +21,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import classNames from 'classnames';
-import routeConfiguration from '../../routeConfiguration';
+import routeConfiguration from '../../routing/routeConfiguration';
 import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
 
 export const NamedLinkComponent = props => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
 import { pathByRouteName } from '../../util/routes';
-import routeConfiguration from '../../routeConfiguration';
+import routeConfiguration from '../../routing/routeConfiguration';
 import {
   LayoutSingleColumn,
   LayoutWrapperTopbar,

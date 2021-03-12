@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
-import routeConfiguration from '../../routeConfiguration';
+import routeConfiguration from '../../routing/routeConfiguration';
 import {
   LINE_ITEM_NIGHT,
   LINE_ITEM_DAY,

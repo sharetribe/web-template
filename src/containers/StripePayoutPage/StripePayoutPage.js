@@ -2,7 +2,7 @@ import React from 'react';
 import { bool, func, oneOf, shape } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import routeConfiguration from '../../routeConfiguration';
+import routeConfiguration from '../../routing/routeConfiguration';
 import config from '../../config';
 import { createResourceLocatorString } from '../../util/routes';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
