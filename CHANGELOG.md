@@ -20,6 +20,9 @@ way to update this template, but currently, we follow a pattern:
   [#2](https://github.com/sharetribe/ftw-product/pull/2)
 - [change] Routing configuration and components are moved to a separate `src/routing` directory.
   [#4](https://github.com/sharetribe/ftw-product/pull/4)
+- [change] Forms that are used only in the AuthenticationPage (ConfirmSignupForm, LoginForm,
+  SignupForm) are moved under the AuthenticationPage.
+  [#5](https://github.com/sharetribe/ftw-product/pull/5)
 
 ## [v8.1.0] 2021-03-11
 
