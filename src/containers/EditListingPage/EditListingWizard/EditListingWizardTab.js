@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
+// Import configs and util modules
 import { intlShape } from '../../../util/reactIntl';
 import routeConfiguration from '../../../routing/routeConfiguration';
 import {
@@ -9,15 +11,15 @@ import {
 } from '../../../util/urlHelpers';
 import { ensureListing } from '../../../util/data';
 import { createResourceLocatorString } from '../../../util/routes';
-import {
-  EditListingAvailabilityPanel,
-  EditListingDescriptionPanel,
-  EditListingFeaturesPanel,
-  EditListingLocationPanel,
-  EditListingPhotosPanel,
-  EditListingPoliciesPanel,
-  EditListingPricingPanel,
-} from '../../../components';
+
+// Import modules from this directory
+import EditListingAvailabilityPanel from './EditListingAvailabilityPanel/EditListingAvailabilityPanel';
+import EditListingDescriptionPanel from './EditListingDescriptionPanel/EditListingDescriptionPanel';
+import EditListingFeaturesPanel from './EditListingFeaturesPanel/EditListingFeaturesPanel';
+import EditListingLocationPanel from './EditListingLocationPanel/EditListingLocationPanel';
+import EditListingPhotosPanel from './EditListingPhotosPanel/EditListingPhotosPanel';
+import EditListingPoliciesPanel from './EditListingPoliciesPanel/EditListingPoliciesPanel';
+import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
 
 import css from './EditListingWizard.module.css';
 
