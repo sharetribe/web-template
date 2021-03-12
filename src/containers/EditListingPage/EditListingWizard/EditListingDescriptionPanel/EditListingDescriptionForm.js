@@ -2,13 +2,16 @@ import React from 'react';
 import { arrayOf, bool, func, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
-import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { propTypes } from '../../util/types';
-import { maxLength, required, composeValidators } from '../../util/validators';
-import { Form, Button, FieldTextInput } from '../../components';
-import CustomCategorySelectFieldMaybe from './CustomCategorySelectFieldMaybe';
 
+// Import configs and util modules
+import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
+import { propTypes } from '../../../../util/types';
+import { maxLength, required, composeValidators } from '../../../../util/validators';
+// Import shared components
+import { Form, Button, FieldTextInput } from '../../../../components';
+// Import modules from this directory
+import CustomCategorySelectFieldMaybe from './CustomCategorySelectFieldMaybe';
 import css from './EditListingDescriptionForm.module.css';
 
 const TITLE_MAX_LENGTH = 60;

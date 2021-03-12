@@ -1,6 +1,6 @@
 import React from 'react';
-import { renderDeep } from '../../util/test-helpers';
-import { fakeIntl } from '../../util/test-data';
+import { renderDeep } from '../../../../util/test-helpers';
+import { fakeIntl } from '../../../../util/test-data';
 import EditListingDescriptionForm from './EditListingDescriptionForm';
 
 const noop = () => null;
