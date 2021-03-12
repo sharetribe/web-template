@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
+
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
 import routeConfiguration from '../../routing/routeConfiguration';
@@ -12,12 +13,13 @@ import { ensureListing, ensureTransaction } from '../../util/data';
 import { dateFromAPIToLocalNoon } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import { txIsPaymentPending } from '../../util/transaction';
+
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/UI.duck';
 import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
+
 import {
   NamedRedirect,
-  TransactionPanel,
   Page,
   LayoutSingleColumn,
   LayoutWrapperTopbar,
@@ -26,6 +28,8 @@ import {
   Footer,
 } from '../../components';
 import { TopbarContainer } from '../../containers';
+
+import TransactionPanel from './TransactionPanel/TransactionPanel';
 
 import {
   acceptSale,

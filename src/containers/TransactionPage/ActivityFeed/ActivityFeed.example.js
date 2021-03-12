@@ -7,7 +7,7 @@ import {
   createListing,
   createTxTransition,
   createReview,
-} from '../../util/test-data';
+} from '../../../util/test-data';
 import {
   TRANSITION_ACCEPT,
   TRANSITION_COMPLETE,
@@ -21,7 +21,7 @@ import {
   TRANSITION_REVIEW_2_BY_PROVIDER,
   TX_TRANSITION_ACTOR_CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER,
-} from '../../util/transaction';
+} from '../../../util/transaction';
 import ActivityFeed from './ActivityFeed';
 
 const noop = () => null;
