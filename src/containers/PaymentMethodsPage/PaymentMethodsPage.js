@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { bool, func, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { ensureCurrentUser, ensureStripeCustomer, ensurePaymentMethodCard } from '../../util/data';
 import { propTypes } from '../../util/types';
 import { savePaymentMethod, deletePaymentMethod } from '../../ducks/paymentMethods.duck';
 import { handleCardSetup } from '../../ducks/stripe.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck';
+
+import { PaymentMethodsForm } from '../../forms';
 import {
   SavedCardDetails,
   LayoutSideNavigation,
@@ -19,8 +22,8 @@ import {
   Page,
   UserNav,
 } from '../../components';
-import { TopbarContainer } from '../../containers';
-import { PaymentMethodsForm } from '../../forms';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+
 import { createStripeSetupIntent, stripeCustomer } from './PaymentMethodsPage.duck.js';
 
 import css from './PaymentMethodsPage.module.css';

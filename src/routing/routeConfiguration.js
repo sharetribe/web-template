@@ -1,7 +1,8 @@
 import React from 'react';
 import loadable from '@loadable/component';
+
 import getPageDataLoadingAPI from '../containers/pageDataLoadingAPI';
-import { NotFoundPage } from '../containers';
+import NotFoundPage from '../containers/NotFoundPage/NotFoundPage';
 
 // routeConfiguration needs to initialize containers first
 // Otherwise, components will import form container eventually and

@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
 import { array, bool, func, oneOf, object, shape, string } from 'prop-types';
-import { injectIntl, intlShape } from '../../util/reactIntl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import unionWith from 'lodash/unionWith';
 import classNames from 'classnames';
+
 import config from '../../config';
+import { injectIntl, intlShape } from '../../util/reactIntl';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
 import { parse, stringify } from '../../util/urlHelpers';
 import { propTypes } from '../../util/types';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck';
+
 import { SearchMap, ModalInMobile, Page } from '../../components';
-import { TopbarContainer } from '../../containers';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import { searchMapListings, setActiveListing } from './SearchPage.duck';
 import {

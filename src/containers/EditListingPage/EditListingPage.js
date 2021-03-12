@@ -26,7 +26,7 @@ import {
 
 // Import shared components
 import { NamedRedirect, Page } from '../../components';
-import { TopbarContainer } from '../../containers';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 // Import modules from this directory
 import {
