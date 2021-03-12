@@ -6,19 +6,24 @@ import {
   isInclusivelyBeforeDay,
   isInclusivelyAfterDay,
 } from 'react-dates';
-import { FormattedMessage } from '../../util/reactIntl';
 import memoize from 'lodash/memoize';
 import classNames from 'classnames';
 import moment from 'moment';
+
+// Import configs and util modules
+import { FormattedMessage } from '../../../../util/reactIntl';
 import {
   ensureBooking,
   ensureAvailabilityException,
   ensureDayAvailabilityPlan,
-} from '../../util/data';
-import { DAYS_OF_WEEK, propTypes } from '../../util/types';
-import { monthIdString, monthIdStringInUTC } from '../../util/dates';
-import { IconArrowHead, IconSpinner } from '../../components';
+} from '../../../../util/data';
+import { DAYS_OF_WEEK, propTypes } from '../../../../util/types';
+import { monthIdString, monthIdStringInUTC } from '../../../../util/dates';
 
+// Import shared components
+import { IconArrowHead, IconSpinner } from '../../../../components';
+
+// Import modules from this directory
 import css from './ManageAvailabilityCalendar.module.css';
 
 // Constants

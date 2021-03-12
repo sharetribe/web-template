@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import { bool, func, object, string } from 'prop-types';
 import { compose } from 'redux';
-import { Form as FinalForm } from 'react-final-form';
-import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { propTypes } from '../../util/types';
-import { Form, Button } from '../../components';
+import { Form as FinalForm } from 'react-final-form';
 
+// Import configs and util modules
+import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
+import { propTypes } from '../../../../util/types';
+
+// Import shared components
+import { Form, Button } from '../../../../components';
+
+// Import modules from this directory
 import ManageAvailabilityCalendar from './ManageAvailabilityCalendar';
 import css from './EditListingAvailabilityForm.module.css';
 
