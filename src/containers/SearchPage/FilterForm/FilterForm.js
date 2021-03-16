@@ -3,9 +3,11 @@ import { bool, func, node, object } from 'prop-types';
 import classNames from 'classnames';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
-import { injectIntl, intlShape } from '../../util/reactIntl';
 
-import { Form } from '../../components';
+import { injectIntl, intlShape } from '../../../util/reactIntl';
+
+import { Form } from '../../../components';
+
 import css from './FilterForm.module.css';
 
 const FilterFormComponent = props => {
