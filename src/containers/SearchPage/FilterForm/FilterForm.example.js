@@ -1,6 +1,6 @@
 import React from 'react';
+import { FieldTextInput } from '../../../components';
 import FilterForm from './FilterForm';
-import { FieldTextInput } from '../../components';
 
 const field = formId => (
   <FieldTextInput

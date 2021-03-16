@@ -71,7 +71,6 @@ import * as UserDisplayName from './components/UserDisplayName/UserDisplayName.e
 import * as BookingDatesForm from './forms/BookingDatesForm/BookingDatesForm.example';
 import * as EmailVerificationForm from './forms/EmailVerificationForm/EmailVerificationForm.example';
 import * as EnquiryForm from './forms/EnquiryForm/EnquiryForm.example';
-import * as FilterForm from './forms/FilterForm/FilterForm.example';
 import * as PasswordRecoveryForm from './forms/PasswordRecoveryForm/PasswordRecoveryForm.example';
 import * as PasswordResetForm from './forms/PasswordResetForm/PasswordResetForm.example';
 import * as StripePaymentForm from './forms/StripePaymentForm/StripePaymentForm.example';
@@ -93,6 +92,7 @@ import * as SelectMultipleFilter from './containers/SearchPage/SelectMultipleFil
 import * as BookingDateRangeFilter from './containers/SearchPage/BookingDateRangeFilter/BookingDateRangeFilter.example';
 import * as KeywordFilter from './containers/SearchPage/KeywordFilter/KeywordFilter.example';
 import * as PriceFilter from './containers/SearchPage/PriceFilter/PriceFilter.example';
+import * as FilterForm from './containers/SearchPage/FilterForm/FilterForm.example';
 
 // containers
 import * as Colors from './containers/StyleguidePage/Colors.example';
