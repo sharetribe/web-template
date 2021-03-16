@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { arrayOf, bool, func, string } from 'prop-types';
 import { compose } from 'redux';
-import { injectIntl, intlShape } from '../../util/reactIntl';
 import classNames from 'classnames';
-import config from '../../config';
-import { propTypes } from '../../util/types';
-import { formatMoney } from '../../util/currency';
-import { ensureListing } from '../../util/data';
-import { ResponsiveImage } from '../../components';
+
+import config from '../../../config';
+import { injectIntl, intlShape } from '../../../util/reactIntl';
+import { propTypes } from '../../../util/types';
+import { formatMoney } from '../../../util/currency';
+import { ensureListing } from '../../../util/data';
+
+import { ResponsiveImage } from '../../../components';
 
 import css from './SearchMapInfoCard.module.css';
 
