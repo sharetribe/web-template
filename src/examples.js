@@ -3,7 +3,6 @@ import * as AddImages from './components/AddImages/AddImages.example';
 import * as Avatar from './components/Avatar/Avatar.example';
 import * as BookingBreakdown from './components/BookingBreakdown/BookingBreakdown.example';
 import * as BookingPanel from './components/BookingPanel/BookingPanel.example';
-import * as BookingDateRangeFilter from './components/BookingDateRangeFilter/BookingDateRangeFilter.example';
 import * as BookingTimeInfo from './components/BookingTimeInfo/BookingTimeInfo.example';
 import * as Button from './components/Button/Button.example';
 import * as ExpandingTextarea from './components/ExpandingTextarea/ExpandingTextarea.example';
@@ -93,6 +92,7 @@ import * as ReviewForm from './containers/TransactionPage/ReviewForm/ReviewForm.
 import * as SendMessageForm from './containers/TransactionPage/SendMessageForm/SendMessageForm.example';
 import * as ActivityFeed from './containers/TransactionPage/ActivityFeed/ActivityFeed.example.js';
 import * as SelectMultipleFilter from './containers/SearchPage/SelectMultipleFilter/SelectMultipleFilter.example';
+import * as BookingDateRangeFilter from './containers/SearchPage/BookingDateRangeFilter/BookingDateRangeFilter.example';
 
 // containers
 import * as Colors from './containers/StyleguidePage/Colors.example';

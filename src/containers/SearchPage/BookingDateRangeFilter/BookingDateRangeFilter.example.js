@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { stringify, parse } from '../../util/urlHelpers';
-import { parseDateFromISO8601, stringifyDateToISO8601 } from '../../util/dates';
+import { stringify, parse } from '../../../util/urlHelpers';
+import { parseDateFromISO8601, stringifyDateToISO8601 } from '../../../util/dates';
 import BookingDateRangeFilter from './BookingDateRangeFilter';
 
 const URL_PARAM = 'dates';

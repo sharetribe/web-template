@@ -1,6 +1,7 @@
 import React from 'react';
-import { BookingDateRangeFilter, PriceFilter, KeywordFilter } from '../../components';
+import { PriceFilter, KeywordFilter } from '../../components';
 
+import BookingDateRangeFilter from './BookingDateRangeFilter/BookingDateRangeFilter';
 import SelectSingleFilter from './SelectSingleFilter/SelectSingleFilter';
 import SelectMultipleFilter from './SelectMultipleFilter/SelectMultipleFilter';
 
