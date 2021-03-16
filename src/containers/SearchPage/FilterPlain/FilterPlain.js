@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { bool, func, node, object, string } from 'prop-types';
 import classNames from 'classnames';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 
-import FilterForm from '../../containers/SearchPage/FilterForm/FilterForm';
+import FilterForm from '../FilterForm/FilterForm';
 
 import css from './FilterPlain.module.css';
 

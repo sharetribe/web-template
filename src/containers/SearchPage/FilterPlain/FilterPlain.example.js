@@ -1,5 +1,5 @@
 import React from 'react';
-import { FieldTextInput } from '../../components';
+import { FieldTextInput } from '../../../components';
 import FilterPlain from './FilterPlain';
 
 const id = 'FilterPlainExample';
