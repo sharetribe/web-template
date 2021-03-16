@@ -133,7 +133,6 @@ export { default as SavedCardDetails } from './SavedCardDetails/SavedCardDetails
 export { default as SearchFiltersMobile } from './SearchFiltersMobile/SearchFiltersMobile';
 export { default as SearchFiltersPrimary } from './SearchFiltersPrimary/SearchFiltersPrimary';
 export { default as SearchFiltersSecondary } from './SearchFiltersSecondary/SearchFiltersSecondary';
-export { default as SearchMapPriceLabel } from './SearchMapPriceLabel/SearchMapPriceLabel';
 export { default as SearchResultsPanel } from './SearchResultsPanel/SearchResultsPanel';
 export { default as SelectMultipleFilter } from './SelectMultipleFilter/SelectMultipleFilter';
 export { default as SelectSingleFilter } from './SelectSingleFilter/SelectSingleFilter';
