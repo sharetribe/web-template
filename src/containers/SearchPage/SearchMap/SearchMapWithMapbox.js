@@ -11,9 +11,10 @@ import { propTypes } from '../../../util/types';
 import { ensureListing } from '../../../util/data';
 import { sdkBoundsToFixedCoordinates, hasSameSDKBounds } from '../../../util/maps';
 
-import { SearchMapInfoCard, SearchMapPriceLabel, SearchMapGroupLabel } from '../../../components';
+import { SearchMapInfoCard, SearchMapPriceLabel } from '../../../components';
 
-import { groupedByCoordinates, reducedToArray } from './SearchMap.helpers.js';
+import SearchMapGroupLabel from '../SearchMapGroupLabel/SearchMapGroupLabel';
+import { groupedByCoordinates, reducedToArray } from './SearchMap.helpers';
 import css from './SearchMapWithMapbox.module.css';
 
 export const LABEL_HANDLE = 'SearchMapLabel';
