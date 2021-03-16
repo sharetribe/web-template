@@ -10,12 +10,9 @@ import { createResourceLocatorString } from '../../util/routes';
 import { isAnyFilterActive } from '../../util/search';
 import { propTypes } from '../../util/types';
 
-import {
-  SearchFiltersMobile,
-  SearchFiltersPrimary,
-  SearchFiltersSecondary,
-} from '../../components';
+import { SearchFiltersPrimary, SearchFiltersSecondary } from '../../components';
 
+import SearchFiltersMobile from './SearchFiltersMobile/SearchFiltersMobile';
 import SortBy from './SortBy/SortBy';
 import SearchResultsPanel from './SearchResultsPanel/SearchResultsPanel';
 import FilterComponent from './FilterComponent';

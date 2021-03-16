@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { bool, func, object, node, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { withRouter } from 'react-router-dom';
 
-import routeConfiguration from '../../routing/routeConfiguration';
-import { createResourceLocatorString } from '../../util/routes';
-import { ModalInMobile, Button } from '../../components';
+import routeConfiguration from '../../../routing/routeConfiguration';
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { createResourceLocatorString } from '../../../util/routes';
+
+import { ModalInMobile, Button } from '../../../components';
+
 import css from './SearchFiltersMobile.module.css';
 
 class SearchFiltersMobileComponent extends Component {
