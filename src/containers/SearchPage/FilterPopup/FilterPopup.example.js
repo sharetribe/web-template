@@ -1,5 +1,5 @@
 import React from 'react';
-import { FieldTextInput } from '../../components';
+import { FieldTextInput } from '../../../components';
 import FilterPopup from './FilterPopup';
 
 const id = 'FilterPopupExample';
