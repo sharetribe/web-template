@@ -2,20 +2,22 @@ import React, { Component } from 'react';
 import { array, bool, func, number, object, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
+
 import config from '../../config';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { FormattedMessage } from '../../util/reactIntl';
 import { createResourceLocatorString } from '../../util/routes';
 import { isAnyFilterActive } from '../../util/search';
 import { propTypes } from '../../util/types';
+
 import {
-  SearchResultsPanel,
   SearchFiltersMobile,
   SearchFiltersPrimary,
   SearchFiltersSecondary,
   SortBy,
 } from '../../components';
 
+import SearchResultsPanel from './SearchResultsPanel/SearchResultsPanel';
 import FilterComponent from './FilterComponent';
 import { validFilterParams } from './SearchPage.helpers';
 
