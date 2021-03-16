@@ -14,9 +14,9 @@ import {
   SearchFiltersMobile,
   SearchFiltersPrimary,
   SearchFiltersSecondary,
-  SortBy,
 } from '../../components';
 
+import SortBy from './SortBy/SortBy';
 import SearchResultsPanel from './SearchResultsPanel/SearchResultsPanel';
 import FilterComponent from './FilterComponent';
 import { validFilterParams } from './SearchPage.helpers';
