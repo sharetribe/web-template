@@ -1,10 +1,10 @@
 import React from 'react';
 import { PriceFilter } from '../../components';
 
-import KeywordFilter from './KeywordFilter/KeywordFilter';
-import BookingDateRangeFilter from './BookingDateRangeFilter/BookingDateRangeFilter';
 import SelectSingleFilter from './SelectSingleFilter/SelectSingleFilter';
 import SelectMultipleFilter from './SelectMultipleFilter/SelectMultipleFilter';
+import BookingDateRangeFilter from './BookingDateRangeFilter/BookingDateRangeFilter';
+import KeywordFilter from './KeywordFilter/KeywordFilter';
 
 /**
  * FilterComponent is used to map configured filter types
