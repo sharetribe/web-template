@@ -4,7 +4,9 @@ import { arrayOf, bool, func, node, number, object, string } from 'prop-types';
 import { injectIntl, intlShape } from '../../../util/reactIntl';
 import { parseDateFromISO8601, stringifyDateToISO8601 } from '../../../util/dates';
 
-import { FieldDateRangeController, FilterPopup, FilterPlain } from '../../../components';
+import { FieldDateRangeController, FilterPopup } from '../../../components';
+
+import FilterPlain from '../FilterPlain/FilterPlain';
 
 import css from './BookingDateRangeFilter.module.css';
 

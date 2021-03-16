@@ -5,7 +5,9 @@ import debounce from 'lodash/debounce';
 
 import { injectIntl, intlShape } from '../../../util/reactIntl';
 
-import { FilterPopup, FilterPlain, FieldTextInput } from '../../../components';
+import { FilterPopup, FieldTextInput } from '../../../components';
+
+import FilterPlain from '../FilterPlain/FilterPlain';
 
 import css from './KeywordFilter.module.css';
 
