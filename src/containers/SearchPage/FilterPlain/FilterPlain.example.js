@@ -21,5 +21,5 @@ export const FilterPlainExample = {
     label: 'Example label',
     children: field,
   },
-  group: 'misc',
+  group: 'SearchPage',
 };

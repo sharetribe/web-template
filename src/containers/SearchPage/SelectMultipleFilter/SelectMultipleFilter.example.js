@@ -72,7 +72,7 @@ const AmenitiesFilterPopup = withRouter(props => {
 export const AmenitiesFilterPopupExample = {
   component: AmenitiesFilterPopup,
   props: {},
-  group: 'filters',
+  group: 'SearchPage',
 };
 
 const AmenitiesFilterPlain = withRouter(props => {
@@ -102,5 +102,5 @@ const AmenitiesFilterPlain = withRouter(props => {
 export const AmenitiesFilterPlainExample = {
   component: AmenitiesFilterPlain,
   props: {},
-  group: 'filters',
+  group: 'SearchPage',
 };

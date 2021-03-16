@@ -55,7 +55,7 @@ export const BookingDateRangeFilterPopup = {
     // initialValues: handled inside wrapper
     // onSubmit: handled inside wrapper
   },
-  group: 'misc',
+  group: 'SearchPage',
 };
 
 export const BookingDateRangeFilterPlain = {
@@ -69,5 +69,5 @@ export const BookingDateRangeFilterPlain = {
     // initialValues: handled inside wrapper
     // onSubmit: handled inside wrapper
   },
-  group: 'misc',
+  group: 'SearchPage',
 };
