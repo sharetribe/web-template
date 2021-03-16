@@ -12,9 +12,10 @@ import { ensureListing } from '../../../util/data';
 import { sdkBoundsToFixedCoordinates, hasSameSDKBounds } from '../../../util/maps';
 import { getOffsetOverride, getLayoutStyles } from '../../../util/googleMaps';
 
-import { SearchMapInfoCard, SearchMapPriceLabel, SearchMapGroupLabel } from '../../../components';
+import { SearchMapInfoCard, SearchMapPriceLabel } from '../../../components';
 
-import { groupedByCoordinates, reducedToArray } from './SearchMap.helpers.js';
+import SearchMapGroupLabel from '../SearchMapGroupLabel/SearchMapGroupLabel';
+import { groupedByCoordinates, reducedToArray } from './SearchMap.helpers';
 import css from './SearchMapWithGoogleMaps.module.css';
 
 export const LABEL_HANDLE = 'SearchMapLabel';
