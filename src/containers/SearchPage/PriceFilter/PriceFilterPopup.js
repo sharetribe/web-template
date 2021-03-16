@@ -7,7 +7,7 @@ import { injectIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { formatCurrencyMajorUnit } from '../../../util/currency';
 
-import { PriceFilterForm } from '../../../forms';
+import PriceFilterForm from '../PriceFilterForm/PriceFilterForm';
 
 import css from './PriceFilterPopup.module.css';
 
