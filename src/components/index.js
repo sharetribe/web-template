@@ -130,7 +130,6 @@ export { default as Page } from './Page/Page';
 export { default as PriceFilter } from './PriceFilter/PriceFilter';
 export { default as Reviews } from './Reviews/Reviews';
 export { default as SavedCardDetails } from './SavedCardDetails/SavedCardDetails';
-export { default as SearchFiltersSecondary } from './SearchFiltersSecondary/SearchFiltersSecondary';
 export { default as StripeConnectAccountStatusBox } from './StripeConnectAccountStatusBox/StripeConnectAccountStatusBox';
 export { default as StripePaymentAddress } from './StripePaymentAddress/StripePaymentAddress';
 export { default as UserCard } from './UserCard/UserCard';
