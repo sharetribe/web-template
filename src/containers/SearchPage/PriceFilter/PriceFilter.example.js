@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { stringify, parse } from '../../util/urlHelpers';
+
+import { stringify, parse } from '../../../util/urlHelpers';
 
 import PriceFilter from './PriceFilter';
 

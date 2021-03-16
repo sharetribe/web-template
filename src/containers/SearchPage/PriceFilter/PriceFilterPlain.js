@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { arrayOf, func, node, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { propTypes } from '../../util/types';
-import { formatCurrencyMajorUnit } from '../../util/currency';
-import config from '../../config';
 
-import { PriceFilterForm } from '../../forms';
+import config from '../../../config';
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { propTypes } from '../../../util/types';
+import { formatCurrencyMajorUnit } from '../../../util/currency';
+
+import { PriceFilterForm } from '../../../forms';
 
 import css from './PriceFilterPlain.module.css';
 

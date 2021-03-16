@@ -53,7 +53,6 @@ import * as ModalInMobile from './components/ModalInMobile/ModalInMobile.example
 import * as NamedLink from './components/NamedLink/NamedLink.example';
 import * as OutsideClickHandler from './components/OutsideClickHandler/OutsideClickHandler.example';
 import * as PaginationLinks from './components/PaginationLinks/PaginationLinks.example';
-import * as PriceFilter from './components/PriceFilter/PriceFilter.example';
 import * as PropertyGroup from './components/PropertyGroup/PropertyGroup.example';
 import * as RangeSlider from './components/RangeSlider/RangeSlider.example';
 import * as ResponsiveImage from './components/ResponsiveImage/ResponsiveImage.example';
@@ -89,10 +88,11 @@ import * as EditListingPoliciesForm from './containers/EditListingPage/EditListi
 import * as EditListingPricingForm from './containers/EditListingPage/EditListingWizard/EditListingPricingPanel/EditListingPricingForm.example';
 import * as ReviewForm from './containers/TransactionPage/ReviewForm/ReviewForm.example';
 import * as SendMessageForm from './containers/TransactionPage/SendMessageForm/SendMessageForm.example';
-import * as ActivityFeed from './containers/TransactionPage/ActivityFeed/ActivityFeed.example.js';
+import * as ActivityFeed from './containers/TransactionPage/ActivityFeed/ActivityFeed.example';
 import * as SelectMultipleFilter from './containers/SearchPage/SelectMultipleFilter/SelectMultipleFilter.example';
 import * as BookingDateRangeFilter from './containers/SearchPage/BookingDateRangeFilter/BookingDateRangeFilter.example';
 import * as KeywordFilter from './containers/SearchPage/KeywordFilter/KeywordFilter.example';
+import * as PriceFilter from './containers/SearchPage/PriceFilter/PriceFilter.example';
 
 // containers
 import * as Colors from './containers/StyleguidePage/Colors.example';
