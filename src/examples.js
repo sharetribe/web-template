@@ -20,7 +20,6 @@ import * as FieldRangeSlider from './components/FieldRangeSlider/FieldRangeSlide
 import * as FieldReviewRating from './components/FieldReviewRating/FieldReviewRating.example';
 import * as FieldSelect from './components/FieldSelect/FieldSelect.example';
 import * as FieldTextInput from './components/FieldTextInput/FieldTextInput.example';
-import * as FilterPopup from './components/FilterPopup/FilterPopup.example';
 import * as Footer from './components/Footer/Footer.example';
 import * as IconAdd from './components/IconAdd/IconAdd.example';
 import * as IconBannedUser from './components/IconBannedUser/IconBannedUser.example';
@@ -93,6 +92,7 @@ import * as KeywordFilter from './containers/SearchPage/KeywordFilter/KeywordFil
 import * as PriceFilter from './containers/SearchPage/PriceFilter/PriceFilter.example';
 import * as FilterForm from './containers/SearchPage/FilterForm/FilterForm.example';
 import * as FilterPlain from './containers/SearchPage/FilterPlain/FilterPlain.example';
+import * as FilterPopup from './containers/SearchPage/FilterPopup/FilterPopup.example';
 
 // containers
 import * as Colors from './containers/StyleguidePage/Colors.example';

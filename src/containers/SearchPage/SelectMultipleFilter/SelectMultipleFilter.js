@@ -5,9 +5,10 @@ import classNames from 'classnames';
 import { injectIntl, intlShape } from '../../../util/reactIntl';
 import { parseSelectFilterOptions } from '../../../util/search';
 
-import { FilterPopup, FieldCheckbox } from '../../../components';
+import { FieldCheckbox } from '../../../components';
 
 import FilterPlain from '../FilterPlain/FilterPlain';
+import FilterPopup from '../FilterPopup/FilterPopup';
 
 import css from './SelectMultipleFilter.module.css';
 
