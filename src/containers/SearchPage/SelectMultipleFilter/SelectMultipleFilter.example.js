@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
+import { stringify, parse } from '../../../util/urlHelpers';
 import SelectMultipleFilter from './SelectMultipleFilter';
-import { stringify, parse } from '../../util/urlHelpers';
 
 const URL_PARAM = 'pub_amenities';
 

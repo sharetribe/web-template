@@ -4,8 +4,9 @@ import {
   PriceFilter,
   KeywordFilter,
   SelectSingleFilter,
-  SelectMultipleFilter,
 } from '../../components';
+
+import SelectMultipleFilter from './SelectMultipleFilter/SelectMultipleFilter';
 
 /**
  * FilterComponent is used to map configured filter types
