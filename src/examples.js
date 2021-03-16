@@ -43,7 +43,6 @@ import * as IconSocialMediaTwitter from './components/IconSocialMediaTwitter/Ico
 import * as IconSpinner from './components/IconSpinner/IconSpinner.example';
 import * as IconSuccess from './components/IconSuccess/IconSuccess.example';
 import * as ImageCarousel from './components/ImageCarousel/ImageCarousel.example';
-import * as KeywordFilter from './components/KeywordFilter/KeywordFilter.example';
 import * as ListingCard from './components/ListingCard/ListingCard.example';
 import * as LocationAutocompleteInput from './components/LocationAutocompleteInput/LocationAutocompleteInput.example';
 import * as ManageListingCard from './components/ManageListingCard/ManageListingCard.example';
@@ -93,6 +92,7 @@ import * as SendMessageForm from './containers/TransactionPage/SendMessageForm/S
 import * as ActivityFeed from './containers/TransactionPage/ActivityFeed/ActivityFeed.example.js';
 import * as SelectMultipleFilter from './containers/SearchPage/SelectMultipleFilter/SelectMultipleFilter.example';
 import * as BookingDateRangeFilter from './containers/SearchPage/BookingDateRangeFilter/BookingDateRangeFilter.example';
+import * as KeywordFilter from './containers/SearchPage/KeywordFilter/KeywordFilter.example';
 
 // containers
 import * as Colors from './containers/StyleguidePage/Colors.example';
