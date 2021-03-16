@@ -1,8 +1,8 @@
 import React from 'react';
 import { string, bool } from 'prop-types';
-import { intlShape, injectIntl } from '../../util/reactIntl';
 
-import config from '../../config';
+import config from '../../../config';
+import { intlShape, injectIntl } from '../../../util/reactIntl';
 
 import SortByPlain from './SortByPlain';
 import SortByPopup from './SortByPopup';
