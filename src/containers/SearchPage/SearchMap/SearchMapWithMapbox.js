@@ -11,8 +11,7 @@ import { propTypes } from '../../../util/types';
 import { ensureListing } from '../../../util/data';
 import { sdkBoundsToFixedCoordinates, hasSameSDKBounds } from '../../../util/maps';
 
-import { SearchMapPriceLabel } from '../../../components';
-
+import SearchMapPriceLabel from '../SearchMapPriceLabel/SearchMapPriceLabel';
 import SearchMapInfoCard from '../SearchMapInfoCard/SearchMapInfoCard';
 import SearchMapGroupLabel from '../SearchMapGroupLabel/SearchMapGroupLabel';
 import { groupedByCoordinates, reducedToArray } from './SearchMap.helpers';

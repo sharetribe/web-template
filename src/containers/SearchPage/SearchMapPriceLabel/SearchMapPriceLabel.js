@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { propTypes } from '../../util/types';
-import { formatMoney } from '../../util/currency';
-import { ensureListing } from '../../util/data';
-import config from '../../config';
+
+import config from '../../../config';
+import { injectIntl, intlShape } from '../../../util/reactIntl';
+import { propTypes } from '../../../util/types';
+import { formatMoney } from '../../../util/currency';
+import { ensureListing } from '../../../util/data';
 
 import css from './SearchMapPriceLabel.module.css';
 
