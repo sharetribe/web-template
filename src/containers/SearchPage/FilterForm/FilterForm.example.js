@@ -31,7 +31,7 @@ export const FilterFormExample = {
     label: 'Example label',
     children: field('FilterFormExample'),
   },
-  group: 'forms',
+  group: 'SearchPage',
 };
 
 export const FilterFormExampleLiveEdit = {
@@ -47,5 +47,5 @@ export const FilterFormExampleLiveEdit = {
     label: 'Example label',
     children: field('FilterFormExampleLiveEdit'),
   },
-  group: 'forms',
+  group: 'SearchPage',
 };

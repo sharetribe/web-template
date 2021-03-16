@@ -46,7 +46,7 @@ export const PriceFilterPopup = {
     // initialValues: handled inside wrapper
     // onSubmit: handled inside wrapper
   },
-  group: 'filters',
+  group: 'SearchPage',
 };
 
 export const PriceFilterPlain = {
@@ -63,5 +63,5 @@ export const PriceFilterPlain = {
     // initialValues: handled inside wrapper
     // onSubmit: handled inside wrapper
   },
-  group: 'filters',
+  group: 'SearchPage',
 };
