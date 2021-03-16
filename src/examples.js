@@ -63,7 +63,6 @@ import * as ReviewRating from './components/ReviewRating/ReviewRating.example';
 import * as Reviews from './components/Reviews/Reviews.example';
 import * as SavedCardDetails from './components/SavedCardDetails/SavedCardDetails.example';
 import * as SectionThumbnailLinks from './components/SectionThumbnailLinks/SectionThumbnailLinks.example';
-import * as SelectMultipleFilter from './components/SelectMultipleFilter/SelectMultipleFilter.example';
 import * as StripeBankAccountTokenInputField from './components/StripeBankAccountTokenInputField/StripeBankAccountTokenInputField.example';
 import * as TabNav from './components/TabNav/TabNav.example';
 import * as TabNavHorizontal from './components/TabNavHorizontal/TabNavHorizontal.example';
@@ -93,6 +92,7 @@ import * as EditListingPricingForm from './containers/EditListingPage/EditListin
 import * as ReviewForm from './containers/TransactionPage/ReviewForm/ReviewForm.example';
 import * as SendMessageForm from './containers/TransactionPage/SendMessageForm/SendMessageForm.example';
 import * as ActivityFeed from './containers/TransactionPage/ActivityFeed/ActivityFeed.example.js';
+import * as SelectMultipleFilter from './containers/SearchPage/SelectMultipleFilter/SelectMultipleFilter.example';
 
 // containers
 import * as Colors from './containers/StyleguidePage/Colors.example';
