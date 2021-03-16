@@ -1,7 +1,8 @@
 import React from 'react';
 import { bool, func, node, number, string } from 'prop-types';
-import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
+
+import { FormattedMessage } from '../../../util/reactIntl';
 
 import css from './SearchFiltersPrimary.module.css';
 
