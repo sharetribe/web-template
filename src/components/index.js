@@ -125,7 +125,6 @@ export { default as ListingCard } from './ListingCard/ListingCard';
 export { default as ManageListingCard } from './ManageListingCard/ManageListingCard';
 export { default as Map } from './Map/Map';
 export { default as Page } from './Page/Page';
-export { default as PriceFilter } from './PriceFilter/PriceFilter';
 export { default as Reviews } from './Reviews/Reviews';
 export { default as SavedCardDetails } from './SavedCardDetails/SavedCardDetails';
 export { default as StripeConnectAccountStatusBox } from './StripeConnectAccountStatusBox/StripeConnectAccountStatusBox';
