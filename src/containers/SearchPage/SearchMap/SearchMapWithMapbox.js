@@ -4,12 +4,14 @@ import { arrayOf, func, node, number, shape, string } from 'prop-types';
 import differenceBy from 'lodash/differenceBy';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
-import { types as sdkTypes } from '../../util/sdkLoader';
-import { parse } from '../../util/urlHelpers';
-import { propTypes } from '../../util/types';
-import { ensureListing } from '../../util/data';
-import { sdkBoundsToFixedCoordinates, hasSameSDKBounds } from '../../util/maps';
-import { SearchMapInfoCard, SearchMapPriceLabel, SearchMapGroupLabel } from '../../components';
+
+import { types as sdkTypes } from '../../../util/sdkLoader';
+import { parse } from '../../../util/urlHelpers';
+import { propTypes } from '../../../util/types';
+import { ensureListing } from '../../../util/data';
+import { sdkBoundsToFixedCoordinates, hasSameSDKBounds } from '../../../util/maps';
+
+import { SearchMapInfoCard, SearchMapPriceLabel, SearchMapGroupLabel } from '../../../components';
 
 import { groupedByCoordinates, reducedToArray } from './SearchMap.helpers.js';
 import css from './SearchMapWithMapbox.module.css';

@@ -16,8 +16,10 @@ import { propTypes } from '../../util/types';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck';
 
-import { SearchMap, ModalInMobile, Page } from '../../components';
+import { ModalInMobile, Page } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+
+import SearchMap from './SearchMap/SearchMap';
 
 import { searchMapListings, setActiveListing } from './SearchPage.duck';
 import {

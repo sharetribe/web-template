@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { arrayOf, func, number, string, shape, object } from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
-import routeConfiguration from '../../routing/routeConfiguration';
-import { createResourceLocatorString } from '../../util/routes';
-import { createSlug } from '../../util/urlHelpers';
-import { propTypes } from '../../util/types';
-import { obfuscatedCoordinates } from '../../util/maps';
-import config from '../../config';
+
+import config from '../../../config';
+import routeConfiguration from '../../../routing/routeConfiguration';
+import { createResourceLocatorString } from '../../../util/routes';
+import { createSlug } from '../../../util/urlHelpers';
+import { propTypes } from '../../../util/types';
+import { obfuscatedCoordinates } from '../../../util/maps';
 
 import { hasParentWithClassName } from './SearchMap.helpers.js';
 import SearchMapWithMapbox, {

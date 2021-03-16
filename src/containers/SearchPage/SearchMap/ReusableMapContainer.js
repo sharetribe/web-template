@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { node, string, object } from 'prop-types';
-import { IntlProvider } from '../../util/reactIntl';
-import config from '../../config';
+
+import config from '../../../config';
+import { IntlProvider } from '../../../util/reactIntl';
 
 import css from './SearchMap.module.css';
 
