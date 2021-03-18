@@ -10,13 +10,13 @@ import { createResourceLocatorString } from '../../util/routes';
 import { isAnyFilterActive } from '../../util/search';
 import { propTypes } from '../../util/types';
 
+import { validFilterParams } from './SearchPage.helpers';
 import SearchFiltersSecondary from './SearchFiltersSecondary/SearchFiltersSecondary';
 import SearchFiltersPrimary from './SearchFiltersPrimary/SearchFiltersPrimary';
 import SearchFiltersMobile from './SearchFiltersMobile/SearchFiltersMobile';
 import SortBy from './SortBy/SortBy';
 import SearchResultsPanel from './SearchResultsPanel/SearchResultsPanel';
 import FilterComponent from './FilterComponent';
-import { validFilterParams } from './SearchPage.helpers';
 
 import css from './SearchPage.module.css';
 
