@@ -9,7 +9,6 @@ import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { createResourceLocatorString } from '../../util/routes';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 
-import { LocationSearchForm } from '../../forms';
 import {
   Page,
   LayoutSingleColumn,
@@ -19,6 +18,8 @@ import {
   Footer,
 } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+
+import LocationSearchForm from './LocationSearchForm/LocationSearchForm';
 
 import css from './NotFoundPage.module.css';
 
