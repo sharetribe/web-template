@@ -1,9 +1,23 @@
+/**
+ * Note: the order of the imports to these Styleguide examples is
+ * significant. We should import indepenedent simple components first,
+ * and more complex components later. The order of imports should also
+ * match the import order elsewhere to avoid conflicts in module
+ * bundling.
+ *
+ * This order mitigates problems that might arise when trying to import components
+ * that have circular dependencies to other components.
+ * Note: import-order also affects to the generated CSS bundle file.
+ *
+ * Read more:
+ * https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de
+ */
+
 // components
 import * as AddImages from './components/AddImages/AddImages.example';
 import * as Avatar from './components/Avatar/Avatar.example';
 import * as BookingBreakdown from './components/BookingBreakdown/BookingBreakdown.example';
 import * as BookingPanel from './components/BookingPanel/BookingPanel.example';
-import * as BookingDateRangeFilter from './components/BookingDateRangeFilter/BookingDateRangeFilter.example';
 import * as BookingTimeInfo from './components/BookingTimeInfo/BookingTimeInfo.example';
 import * as Button from './components/Button/Button.example';
 import * as ExpandingTextarea from './components/ExpandingTextarea/ExpandingTextarea.example';
@@ -21,8 +35,6 @@ import * as FieldRangeSlider from './components/FieldRangeSlider/FieldRangeSlide
 import * as FieldReviewRating from './components/FieldReviewRating/FieldReviewRating.example';
 import * as FieldSelect from './components/FieldSelect/FieldSelect.example';
 import * as FieldTextInput from './components/FieldTextInput/FieldTextInput.example';
-import * as FilterPlain from './components/FilterPlain/FilterPlain.example';
-import * as FilterPopup from './components/FilterPopup/FilterPopup.example';
 import * as Footer from './components/Footer/Footer.example';
 import * as IconAdd from './components/IconAdd/IconAdd.example';
 import * as IconBannedUser from './components/IconBannedUser/IconBannedUser.example';
@@ -44,7 +56,6 @@ import * as IconSocialMediaTwitter from './components/IconSocialMediaTwitter/Ico
 import * as IconSpinner from './components/IconSpinner/IconSpinner.example';
 import * as IconSuccess from './components/IconSuccess/IconSuccess.example';
 import * as ImageCarousel from './components/ImageCarousel/ImageCarousel.example';
-import * as KeywordFilter from './components/KeywordFilter/KeywordFilter.example';
 import * as ListingCard from './components/ListingCard/ListingCard.example';
 import * as LocationAutocompleteInput from './components/LocationAutocompleteInput/LocationAutocompleteInput.example';
 import * as ManageListingCard from './components/ManageListingCard/ManageListingCard.example';
@@ -55,7 +66,6 @@ import * as ModalInMobile from './components/ModalInMobile/ModalInMobile.example
 import * as NamedLink from './components/NamedLink/NamedLink.example';
 import * as OutsideClickHandler from './components/OutsideClickHandler/OutsideClickHandler.example';
 import * as PaginationLinks from './components/PaginationLinks/PaginationLinks.example';
-import * as PriceFilter from './components/PriceFilter/PriceFilter.example';
 import * as PropertyGroup from './components/PropertyGroup/PropertyGroup.example';
 import * as RangeSlider from './components/RangeSlider/RangeSlider.example';
 import * as ResponsiveImage from './components/ResponsiveImage/ResponsiveImage.example';
@@ -63,7 +73,6 @@ import * as ReviewRating from './components/ReviewRating/ReviewRating.example';
 import * as Reviews from './components/Reviews/Reviews.example';
 import * as SavedCardDetails from './components/SavedCardDetails/SavedCardDetails.example';
 import * as SectionThumbnailLinks from './components/SectionThumbnailLinks/SectionThumbnailLinks.example';
-import * as SelectMultipleFilter from './components/SelectMultipleFilter/SelectMultipleFilter.example';
 import * as StripeBankAccountTokenInputField from './components/StripeBankAccountTokenInputField/StripeBankAccountTokenInputField.example';
 import * as TabNav from './components/TabNav/TabNav.example';
 import * as TabNavHorizontal from './components/TabNavHorizontal/TabNavHorizontal.example';
@@ -75,7 +84,6 @@ import * as UserDisplayName from './components/UserDisplayName/UserDisplayName.e
 import * as BookingDatesForm from './forms/BookingDatesForm/BookingDatesForm.example';
 import * as EmailVerificationForm from './forms/EmailVerificationForm/EmailVerificationForm.example';
 import * as EnquiryForm from './forms/EnquiryForm/EnquiryForm.example';
-import * as FilterForm from './forms/FilterForm/FilterForm.example';
 import * as PasswordRecoveryForm from './forms/PasswordRecoveryForm/PasswordRecoveryForm.example';
 import * as PasswordResetForm from './forms/PasswordResetForm/PasswordResetForm.example';
 import * as StripePaymentForm from './forms/StripePaymentForm/StripePaymentForm.example';
@@ -92,7 +100,14 @@ import * as EditListingPoliciesForm from './containers/EditListingPage/EditListi
 import * as EditListingPricingForm from './containers/EditListingPage/EditListingWizard/EditListingPricingPanel/EditListingPricingForm.example';
 import * as ReviewForm from './containers/TransactionPage/ReviewForm/ReviewForm.example';
 import * as SendMessageForm from './containers/TransactionPage/SendMessageForm/SendMessageForm.example';
-import * as ActivityFeed from './containers/TransactionPage/ActivityFeed/ActivityFeed.example.js';
+import * as ActivityFeed from './containers/TransactionPage/ActivityFeed/ActivityFeed.example';
+import * as SelectMultipleFilter from './containers/SearchPage/SelectMultipleFilter/SelectMultipleFilter.example';
+import * as BookingDateRangeFilter from './containers/SearchPage/BookingDateRangeFilter/BookingDateRangeFilter.example';
+import * as KeywordFilter from './containers/SearchPage/KeywordFilter/KeywordFilter.example';
+import * as PriceFilter from './containers/SearchPage/PriceFilter/PriceFilter.example';
+import * as FilterForm from './containers/SearchPage/FilterForm/FilterForm.example';
+import * as FilterPlain from './containers/SearchPage/FilterPlain/FilterPlain.example';
+import * as FilterPopup from './containers/SearchPage/FilterPopup/FilterPopup.example';
 
 // containers
 import * as Colors from './containers/StyleguidePage/Colors.example';
