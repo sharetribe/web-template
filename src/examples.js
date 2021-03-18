@@ -1,3 +1,18 @@
+/**
+ * Note: the order of the imports to these Styleguide examples is
+ * significant. We should import indepenedent simple components first,
+ * and more complex components later. The order of imports should also
+ * match the import order elsewhere to avoid conflicts in module
+ * bundling.
+ *
+ * This order mitigates problems that might arise when trying to import components
+ * that have circular dependencies to other components.
+ * Note: import-order also affects to the generated CSS bundle file.
+ *
+ * Read more:
+ * https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de
+ */
+
 // components
 import * as AddImages from './components/AddImages/AddImages.example';
 import * as Avatar from './components/Avatar/Avatar.example';
