@@ -10,7 +10,6 @@ import { savePaymentMethod, deletePaymentMethod } from '../../ducks/paymentMetho
 import { handleCardSetup } from '../../ducks/stripe.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck';
 
-import { PaymentMethodsForm } from '../../forms';
 import {
   SavedCardDetails,
   LayoutSideNavigation,
@@ -23,6 +22,8 @@ import {
   UserNav,
 } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+
+import PaymentMethodsForm from './PaymentMethodsForm/PaymentMethodsForm';
 
 import { createStripeSetupIntent, stripeCustomer } from './PaymentMethodsPage.duck.js';
 
