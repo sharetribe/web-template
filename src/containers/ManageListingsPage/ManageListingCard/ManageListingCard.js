@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
-import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
-import routeConfiguration from '../../routing/routeConfiguration';
+
+import config from '../../../config';
+import routeConfiguration from '../../../routing/routeConfiguration';
+import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
 import {
   LINE_ITEM_NIGHT,
   LINE_ITEM_DAY,
@@ -12,18 +14,18 @@ import {
   LISTING_STATE_CLOSED,
   LISTING_STATE_DRAFT,
   propTypes,
-} from '../../util/types';
-import { formatMoney } from '../../util/currency';
-import { ensureOwnListing } from '../../util/data';
+} from '../../../util/types';
+import { formatMoney } from '../../../util/currency';
+import { ensureOwnListing } from '../../../util/data';
 import {
   LISTING_PAGE_PENDING_APPROVAL_VARIANT,
   LISTING_PAGE_DRAFT_VARIANT,
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_EDIT,
   createSlug,
-} from '../../util/urlHelpers';
-import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
-import config from '../../config';
+} from '../../../util/urlHelpers';
+import { createResourceLocatorString, findRouteByRouteName } from '../../../util/routes';
+
 import {
   InlineTextButton,
   Menu,
@@ -33,7 +35,7 @@ import {
   NamedLink,
   IconSpinner,
   ResponsiveImage,
-} from '../../components';
+} from '../../../components';
 
 import MenuIcon from './MenuIcon';
 import Overlay from './Overlay';

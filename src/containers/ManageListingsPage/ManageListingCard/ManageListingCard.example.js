@@ -1,12 +1,14 @@
 /* eslint-disable no-console */
 import React from 'react';
-import ManageListingCard from './ManageListingCard';
+
 import {
   LISTING_STATE_CLOSED,
   LISTING_STATE_PENDING_APPROVAL,
   LISTING_STATE_DRAFT,
-} from '../../util/types';
-import { createOwnListing, fakeIntl } from '../../util/test-data';
+} from '../../../util/types';
+import { createOwnListing, fakeIntl } from '../../../util/test-data';
+
+import ManageListingCard from './ManageListingCard';
 
 const noop = () => null;
 
@@ -29,6 +31,7 @@ export const Published = {
     onToggleMenu: noop,
     history: { push: noop },
   },
+  group: 'ManageListingsPage',
 };
 
 export const Closed = {
@@ -46,6 +49,7 @@ export const Closed = {
     onToggleMenu: noop,
     history: { push: noop },
   },
+  group: 'ManageListingsPage',
 };
 
 export const PendingApproval = {
@@ -63,6 +67,7 @@ export const PendingApproval = {
     onToggleMenu: noop,
     history: { push: noop },
   },
+  group: 'ManageListingsPage',
 };
 
 export const Draft = {
@@ -80,4 +85,5 @@ export const Draft = {
     onToggleMenu: noop,
     history: { push: noop },
   },
+  group: 'ManageListingsPage',
 };
