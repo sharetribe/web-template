@@ -8,6 +8,7 @@ import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { parse } from '../../util/urlHelpers';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
+
 import {
   Page,
   NamedLink,
@@ -19,8 +20,9 @@ import {
   LayoutWrapperFooter,
   Footer,
 } from '../../components';
-import { PasswordResetForm } from '../../forms';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+
+import PasswordResetForm from './PasswordResetForm/PasswordResetForm';
 
 import { resetPassword } from './PasswordResetPage.duck';
 import css from './PasswordResetPage.module.css';
