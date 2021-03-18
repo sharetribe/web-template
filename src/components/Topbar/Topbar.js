@@ -18,13 +18,13 @@ import {
   Modal,
   ModalMissingInformation,
   NamedLink,
-  TopbarDesktop,
 } from '../../components';
 import { TopbarSearchForm } from '../../forms';
 
 import MenuIcon from './MenuIcon';
 import SearchIcon from './SearchIcon';
 import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
+import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
 
 import css from './Topbar.module.css';
 
