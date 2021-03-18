@@ -7,7 +7,6 @@ import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 
-import { PasswordChangeForm } from '../../forms';
 import {
   LayoutSideNavigation,
   LayoutWrapperMain,
@@ -19,6 +18,8 @@ import {
   UserNav,
 } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+
+import PasswordChangeForm from './PasswordChangeForm/PasswordChangeForm';
 
 import { changePassword, changePasswordClear, resetPassword } from './PasswordChangePage.duck';
 import css from './PasswordChangePage.module.css';
