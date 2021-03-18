@@ -16,7 +16,7 @@ import {
   NamedLink,
 } from '../../../components';
 
-import { TopbarSearchForm } from '../../../forms';
+import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
 
 import css from './TopbarDesktop.module.css';
 

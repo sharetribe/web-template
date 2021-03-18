@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Form as FinalForm, Field } from 'react-final-form';
 import classNames from 'classnames';
-import { intlShape, injectIntl } from '../../util/reactIntl';
-import { Form, LocationAutocompleteInput } from '../../components';
+
+import { intlShape, injectIntl } from '../../../util/reactIntl';
+
+import { Form, LocationAutocompleteInput } from '../../../components';
 
 import css from './TopbarSearchForm.module.css';
 
