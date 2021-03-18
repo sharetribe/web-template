@@ -1,12 +1,13 @@
 import React from 'react';
 import { string, bool } from 'prop-types';
 import { compose } from 'redux';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
-import { Form, PrimaryButton, FieldTextInput, IconEnquiry } from '../../components';
-import * as validators from '../../util/validators';
-import { propTypes } from '../../util/types';
+
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import * as validators from '../../../util/validators';
+import { propTypes } from '../../../util/types';
+import { Form, PrimaryButton, FieldTextInput, IconEnquiry } from '../../../components';
 
 import css from './EnquiryForm.module.css';
 
