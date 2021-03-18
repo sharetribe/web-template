@@ -1,16 +1,17 @@
 import React from 'react';
 import { bool } from 'prop-types';
 import { compose } from 'redux';
-import { FormattedMessage, injectIntl } from '../../util/reactIntl';
 import { Form as FinalForm, Field } from 'react-final-form';
+
+import { FormattedMessage, injectIntl } from '../../../util/reactIntl';
+import { propTypes } from '../../../util/types';
 import {
   Form,
   NamedLink,
   IconEmailAttention,
   IconEmailSuccess,
   PrimaryButton,
-} from '../../components';
-import { propTypes } from '../../util/types';
+} from '../../../components';
 
 import css from './EmailVerificationForm.module.css';
 
