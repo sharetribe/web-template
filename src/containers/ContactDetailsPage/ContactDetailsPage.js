@@ -9,7 +9,6 @@ import { ensureCurrentUser } from '../../util/data';
 import { sendVerificationEmail } from '../../ducks/user.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 
-import { ContactDetailsForm } from '../../forms';
 import {
   LayoutSideNavigation,
   LayoutWrapperMain,
@@ -21,6 +20,8 @@ import {
   UserNav,
 } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+
+import ContactDetailsForm from './ContactDetailsForm/ContactDetailsForm';
 
 import {
   saveContactDetails,
