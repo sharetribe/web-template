@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { Form as FinalForm } from 'react-final-form';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
-import { propTypes } from '../../util/types';
-import * as validators from '../../util/validators';
-import { ensureCurrentUser } from '../../util/data';
-import { isChangePasswordWrongPassword } from '../../util/errors';
-import { Form, PrimaryButton, FieldTextInput } from '../../components';
+
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { propTypes } from '../../../util/types';
+import * as validators from '../../../util/validators';
+import { ensureCurrentUser } from '../../../util/data';
+import { isChangePasswordWrongPassword } from '../../../util/errors';
+
+import { Form, PrimaryButton, FieldTextInput } from '../../../components';
 
 import css from './PasswordChangeForm.module.css';
 
