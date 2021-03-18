@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Components and forms that are used only in the SearchPage are nested under the page
+  directory. [#9](https://github.com/sharetribe/ftw-product/pull/9)
 - [change] The `containers/index.js` file is now removed and the components imported directly to
   improve code splitting. [#8](https://github.com/sharetribe/ftw-product/pull/8)
 - [change] Move EditListingWizard et al. under EditListingPage

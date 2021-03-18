@@ -3,9 +3,8 @@
 > **Note:** _category_ and _amenities_ filters are not actually filtering anything by default. They
 > are tied to [extended data](https://www.sharetribe.com/docs/references/extended-data/), which is
 > likely to be customized in every marketplace. You can add public data to listing entity in your
-> client app, but to make it work as a search filter, we need to manually add
-> [a schema](https://www.sharetribe.com/docs/references/extended-data/#data-schema) for it - so that
-> search engine understands what is the nature of a given data key.
+> client app, but to make it work as a search filter, see this article:
+> https://www.sharetribe.com/docs/flex-cli/manage-search-schemas-with-flex-cli/
 
 ## Structure
 
