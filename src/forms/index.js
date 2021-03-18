@@ -1,5 +1,4 @@
 export { default as BookingDatesForm } from './BookingDatesForm/BookingDatesForm';
-export { default as LocationSearchForm } from './LocationSearchForm/LocationSearchForm';
 export { default as PasswordChangeForm } from './PasswordChangeForm/PasswordChangeForm';
 export { default as PasswordRecoveryForm } from './PasswordRecoveryForm/PasswordRecoveryForm';
 export { default as PasswordResetForm } from './PasswordResetForm/PasswordResetForm';
