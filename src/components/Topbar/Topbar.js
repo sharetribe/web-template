@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
+
 import config from '../../config';
 import routeConfiguration from '../../routing/routeConfiguration';
+import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { withViewport } from '../../util/contextHelpers';
 import { parse, stringify } from '../../util/urlHelpers';
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
@@ -18,12 +19,13 @@ import {
   ModalMissingInformation,
   NamedLink,
   TopbarDesktop,
-  TopbarMobileMenu,
 } from '../../components';
 import { TopbarSearchForm } from '../../forms';
 
 import MenuIcon from './MenuIcon';
 import SearchIcon from './SearchIcon';
+import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
+
 import css from './Topbar.module.css';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
