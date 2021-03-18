@@ -143,4 +143,3 @@ export { default as SectionLocations } from './SectionLocations/SectionLocations
 export { default as SectionThumbnailLinks } from './SectionThumbnailLinks/SectionThumbnailLinks';
 export { default as Topbar } from './Topbar/Topbar';
 export { default as TopbarDesktop } from './TopbarDesktop/TopbarDesktop';
-export { default as TopbarMobileMenu } from './TopbarMobileMenu/TopbarMobileMenu';
