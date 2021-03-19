@@ -1,15 +1,24 @@
 import React, { Component } from 'react';
 import { bool, string } from 'prop-types';
 import { compose } from 'redux';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { Field, Form as FinalForm } from 'react-final-form';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
-import { ensureCurrentUser } from '../../util/data';
-import { propTypes } from '../../util/types';
-import * as validators from '../../util/validators';
-import { isUploadImageOverLimitError } from '../../util/errors';
-import { Form, Avatar, Button, ImageFromFile, IconSpinner, FieldTextInput } from '../../components';
+
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { ensureCurrentUser } from '../../../util/data';
+import { propTypes } from '../../../util/types';
+import * as validators from '../../../util/validators';
+import { isUploadImageOverLimitError } from '../../../util/errors';
+
+import {
+  Form,
+  Avatar,
+  Button,
+  ImageFromFile,
+  IconSpinner,
+  FieldTextInput,
+} from '../../../components';
 
 import css from './ProfileSettingsForm.module.css';
 
