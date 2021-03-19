@@ -1,6 +1,6 @@
 import React from 'react';
-import { fakeIntl } from '../../util/test-data';
-import { renderDeep } from '../../util/test-helpers';
+import { fakeIntl } from '../../../util/test-data';
+import { renderDeep } from '../../../util/test-helpers';
 import TopbarDesktop from './TopbarDesktop';
 
 const noop = () => null;
