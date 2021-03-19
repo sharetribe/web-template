@@ -35,7 +35,7 @@ export const Empty = {
     onShowOlderMessages: noop,
     fetchMessagesInProgress: false,
   },
-  group: 'messages',
+  group: 'TransactionPage',
 };
 
 export const WithoutCurrentUser = {
@@ -50,7 +50,7 @@ export const WithoutCurrentUser = {
     onShowOlderMessages: noop,
     fetchMessagesInProgress: false,
   },
-  group: 'messages',
+  group: 'TransactionPage',
 };
 
 export const WithCurrentUser = {
@@ -69,7 +69,7 @@ export const WithCurrentUser = {
     onShowOlderMessages: noop,
     fetchMessagesInProgress: false,
   },
-  group: 'messages',
+  group: 'TransactionPage',
 };
 
 export const WithTransitions = {
@@ -111,7 +111,7 @@ export const WithTransitions = {
     onShowOlderMessages: noop,
     fetchMessagesInProgress: false,
   },
-  group: 'messages',
+  group: 'TransitionPage',
 };
 
 export const WithMessagesTransitionsAndReviews = {
@@ -200,7 +200,7 @@ export const WithMessagesTransitionsAndReviews = {
     onShowOlderMessages: noop,
     fetchMessagesInProgress: false,
   },
-  group: 'messages',
+  group: 'TransactionPage',
 };
 
 export const WithAReviewFromBothUsers = {
@@ -243,7 +243,7 @@ export const WithAReviewFromBothUsers = {
     onShowOlderMessages: noop,
     fetchMessagesInProgress: false,
   },
-  group: 'messages',
+  group: 'TransactionPage',
 };
 
 class PagedFeed extends Component {
@@ -330,5 +330,5 @@ class PagedFeed extends Component {
 export const WithMessagePaging = {
   component: PagedFeed,
   props: {},
-  group: 'messages',
+  group: 'TransactionPage',
 };
