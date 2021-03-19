@@ -5,11 +5,14 @@
  */
 import React, { Component } from 'react';
 import { func, object, string } from 'prop-types';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
-import config from '../../config';
-import { Form, PrimaryButton, FieldTextInput, StripePaymentAddress } from '../../components';
+
+import config from '../../../config';
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+
+import { Form, PrimaryButton, FieldTextInput, StripePaymentAddress } from '../../../components';
+
 import css from './PaymentMethodsForm.module.css';
 
 /**

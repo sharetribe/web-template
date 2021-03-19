@@ -7,7 +7,6 @@ import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { isPasswordRecoveryEmailNotFoundError } from '../../util/errors';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
-import { PasswordRecoveryForm } from '../../forms';
 
 import {
   Page,
@@ -20,6 +19,8 @@ import {
   Footer,
 } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+
+import PasswordRecoveryForm from './PasswordRecoveryForm/PasswordRecoveryForm';
 
 import {
   recoverPassword,

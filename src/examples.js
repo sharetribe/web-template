@@ -82,10 +82,6 @@ import * as UserDisplayName from './components/UserDisplayName/UserDisplayName.e
 
 // forms
 import * as BookingDatesForm from './forms/BookingDatesForm/BookingDatesForm.example';
-import * as EmailVerificationForm from './forms/EmailVerificationForm/EmailVerificationForm.example';
-import * as EnquiryForm from './forms/EnquiryForm/EnquiryForm.example';
-import * as PasswordRecoveryForm from './forms/PasswordRecoveryForm/PasswordRecoveryForm.example';
-import * as PasswordResetForm from './forms/PasswordResetForm/PasswordResetForm.example';
 import * as StripePaymentForm from './forms/StripePaymentForm/StripePaymentForm.example';
 
 // components under containers
@@ -108,6 +104,10 @@ import * as PriceFilter from './containers/SearchPage/PriceFilter/PriceFilter.ex
 import * as FilterForm from './containers/SearchPage/FilterForm/FilterForm.example';
 import * as FilterPlain from './containers/SearchPage/FilterPlain/FilterPlain.example';
 import * as FilterPopup from './containers/SearchPage/FilterPopup/FilterPopup.example';
+import * as EmailVerificationForm from './containers/EmailVerificationPage/EmailVerificationForm/EmailVerificationForm.example';
+import * as EnquiryForm from './containers/ListingPage/EnquiryForm/EnquiryForm.example';
+import * as PasswordRecoveryForm from './containers/PasswordRecoveryPage/PasswordRecoveryForm/PasswordRecoveryForm.example';
+import * as PasswordResetForm from './containers/PasswordResetPage/PasswordResetForm/PasswordResetForm.example';
 
 // containers
 import * as Colors from './containers/StyleguidePage/Colors.example';

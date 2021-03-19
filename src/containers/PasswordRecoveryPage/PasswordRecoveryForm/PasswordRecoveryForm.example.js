@@ -9,5 +9,5 @@ export const Empty = {
       console.log('submit forgotten password email:', values);
     },
   },
-  group: 'forms',
+  group: 'PasswordRecoveryPage',
 };

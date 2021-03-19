@@ -10,7 +10,6 @@ import { parse } from '../../util/urlHelpers';
 import { ensureCurrentUser } from '../../util/data';
 import { verify } from '../../ducks/EmailVerification.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
-import { EmailVerificationForm } from '../../forms';
 import {
   Page,
   LayoutSingleColumn,
@@ -21,6 +20,8 @@ import {
   NamedRedirect,
 } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+
+import EmailVerificationForm from './EmailVerificationForm/EmailVerificationForm';
 
 import css from './EmailVerificationPage.module.css';
 

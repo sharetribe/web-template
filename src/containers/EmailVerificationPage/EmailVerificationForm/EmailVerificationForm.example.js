@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { createCurrentUser } from '../../util/test-data';
+import { createCurrentUser } from '../../../util/test-data';
 import EmailVerificationForm from './EmailVerificationForm';
 
 const notVerifiedUser = createCurrentUser('not-verified');
@@ -13,7 +13,7 @@ export const NotVerified = {
       console.log('submit values:', values);
     },
   },
-  group: 'forms',
+  group: 'EmailVerificationPage',
 };
 
 export const Verified = {
@@ -24,5 +24,5 @@ export const Verified = {
       console.log('submit values:', values);
     },
   },
-  group: 'forms',
+  group: 'EmailVerificationPage',
 };
