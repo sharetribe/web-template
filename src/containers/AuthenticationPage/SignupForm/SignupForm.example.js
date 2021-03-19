@@ -12,5 +12,5 @@ export const Empty = {
       console.log('open terms of service');
     },
   },
-  group: 'forms',
+  group: 'AuthenticationPage',
 };

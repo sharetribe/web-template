@@ -62,5 +62,5 @@ export const Empty = {
       ],
     },
   },
-  group: 'forms',
+  group: 'EditListingPage',
 };
