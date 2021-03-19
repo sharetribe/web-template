@@ -58,7 +58,6 @@ import * as IconSuccess from './components/IconSuccess/IconSuccess.example';
 import * as ImageCarousel from './components/ImageCarousel/ImageCarousel.example';
 import * as ListingCard from './components/ListingCard/ListingCard.example';
 import * as LocationAutocompleteInput from './components/LocationAutocompleteInput/LocationAutocompleteInput.example';
-import * as ManageListingCard from './components/ManageListingCard/ManageListingCard.example';
 import * as Map from './components/Map/Map.example';
 import * as Menu from './components/Menu/Menu.example';
 import * as Modal from './components/Modal/Modal.example';
@@ -108,6 +107,7 @@ import * as EmailVerificationForm from './containers/EmailVerificationPage/Email
 import * as EnquiryForm from './containers/ListingPage/EnquiryForm/EnquiryForm.example';
 import * as PasswordRecoveryForm from './containers/PasswordRecoveryPage/PasswordRecoveryForm/PasswordRecoveryForm.example';
 import * as PasswordResetForm from './containers/PasswordResetPage/PasswordResetForm/PasswordResetForm.example';
+import * as ManageListingCard from './containers/ManageListingsPage/ManageListingCard/ManageListingCard.example';
 
 // containers
 import * as Colors from './containers/StyleguidePage/Colors.example';

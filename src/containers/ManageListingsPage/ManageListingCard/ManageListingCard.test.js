@@ -1,6 +1,6 @@
 import React from 'react';
-import { renderShallow } from '../../util/test-helpers';
-import { createOwnListing, fakeIntl } from '../../util/test-data';
+import { renderShallow } from '../../../util/test-helpers';
+import { createOwnListing, fakeIntl } from '../../../util/test-data';
 import { ManageListingCardComponent } from './ManageListingCard';
 
 const noop = () => null;

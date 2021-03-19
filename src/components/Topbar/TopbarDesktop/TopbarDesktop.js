@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { ACCOUNT_SETTINGS_PAGES } from '../../routing/routeConfiguration';
-import { propTypes } from '../../util/types';
+
+import { FormattedMessage, intlShape } from '../../../util/reactIntl';
+import { ACCOUNT_SETTINGS_PAGES } from '../../../routing/routeConfiguration';
+import { propTypes } from '../../../util/types';
 import {
   Avatar,
   InlineTextButton,
@@ -13,8 +14,9 @@ import {
   MenuContent,
   MenuItem,
   NamedLink,
-} from '../../components';
-import { TopbarSearchForm } from '../../forms';
+} from '../../../components';
+
+import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
 
 import css from './TopbarDesktop.module.css';
 
