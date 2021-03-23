@@ -16,7 +16,6 @@ exports[`EditListingPricingForm matches snapshot 1`] = `
       EditListingPricingForm.pricePerNight
     </label>
     <input
-      autoFocus={true}
       className="input"
       id="price"
       onBlur={[Function]}

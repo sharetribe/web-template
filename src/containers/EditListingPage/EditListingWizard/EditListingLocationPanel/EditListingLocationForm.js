@@ -31,6 +31,7 @@ export const EditListingLocationFormComponent = props => (
     {...props}
     render={formRenderProps => {
       const {
+        autoFocus,
         className,
         disabled,
         ready,
@@ -96,7 +97,7 @@ export const EditListingLocationFormComponent = props => (
             iconClassName={css.locationAutocompleteInputIcon}
             predictionsClassName={css.predictionsRoot}
             validClassName={css.validLocation}
-            autoFocus
+            autoFocus={autoFocus}
             name="location"
             label={titleRequiredMessage}
             placeholder={addressPlaceholderMessage}
