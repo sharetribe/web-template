@@ -28,13 +28,18 @@
 import React from 'react';
 import moment from 'moment';
 import Decimal from 'decimal.js';
-import { types as sdkTypes } from '../../util/sdkLoader';
-import { dateFromLocalToAPI } from '../../util/dates';
-import { TRANSITION_REQUEST_PAYMENT, TX_TRANSITION_ACTOR_CUSTOMER } from '../../util/transaction';
-import { DATE_TYPE_DATE } from '../../util/types';
-import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../util/currency';
-import config from '../../config';
-import { BookingBreakdown } from '../../components';
+
+import config from '../../../config';
+import { types as sdkTypes } from '../../../util/sdkLoader';
+import { dateFromLocalToAPI } from '../../../util/dates';
+import {
+  TRANSITION_REQUEST_PAYMENT,
+  TX_TRANSITION_ACTOR_CUSTOMER,
+} from '../../../util/transaction';
+import { DATE_TYPE_DATE } from '../../../util/types';
+import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../../util/currency';
+
+import { BookingBreakdown } from '../../../components';
 
 import css from './BookingDatesForm.module.css';
 
