@@ -18,7 +18,7 @@ export const Empty = {
       console.log('blur on message form');
     },
   },
-  group: 'forms',
+  group: 'TransactionPage',
 };
 
 export const InProgress = {
@@ -31,7 +31,7 @@ export const InProgress = {
       console.log('submit values:', values);
     },
   },
-  group: 'forms',
+  group: 'TransactionPage',
 };
 
 export const Error = {
@@ -44,5 +44,5 @@ export const Error = {
       console.log('submit values:', values);
     },
   },
-  group: 'forms',
+  group: 'TransactionPage',
 };
