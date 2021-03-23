@@ -27,7 +27,7 @@ const CURRENCY = config.currency;
 const exampleBooking = attributes => {
   return {
     id: new UUID('example-booking'),
-    type: 'booking',
+    type: 'payment',
     attributes,
   };
 };
@@ -86,6 +86,7 @@ export const Checkout = {
       end: new Date(Date.UTC(2017, 3, 16)),
     }),
   },
+  group: 'payment',
 };
 
 export const CustomerOrder = {
@@ -113,6 +114,7 @@ export const CustomerOrder = {
       end: new Date(Date.UTC(2017, 3, 16)),
     }),
   },
+  group: 'payment',
 };
 
 export const ProviderSale = {
@@ -147,6 +149,7 @@ export const ProviderSale = {
       end: new Date(Date.UTC(2017, 3, 16)),
     }),
   },
+  group: 'payment',
 };
 
 export const ProviderSaleZeroCommission = {
@@ -181,6 +184,7 @@ export const ProviderSaleZeroCommission = {
       end: new Date(Date.UTC(2017, 3, 16)),
     }),
   },
+  group: 'payment',
 };
 
 export const ProviderSaleSingleNight = {
@@ -215,6 +219,7 @@ export const ProviderSaleSingleNight = {
       end: new Date(Date.UTC(2017, 3, 15)),
     }),
   },
+  group: 'payment',
 };
 
 export const ProviderSalePreauthorized = {
@@ -250,6 +255,7 @@ export const ProviderSalePreauthorized = {
       end: new Date(Date.UTC(2017, 3, 15)),
     }),
   },
+  group: 'payment',
 };
 
 export const ProviderSaleAccepted = {
@@ -285,6 +291,7 @@ export const ProviderSaleAccepted = {
       end: new Date(Date.UTC(2017, 3, 15)),
     }),
   },
+  group: 'payment',
 };
 
 export const ProviderSaleDeclined = {
@@ -320,6 +327,7 @@ export const ProviderSaleDeclined = {
       end: new Date(Date.UTC(2017, 3, 15)),
     }),
   },
+  group: 'payment',
 };
 
 export const ProviderSaleAutoDeclined = {
@@ -355,6 +363,7 @@ export const ProviderSaleAutoDeclined = {
       end: new Date(Date.UTC(2017, 3, 15)),
     }),
   },
+  group: 'payment',
 };
 
 export const ProviderSaleDelivered = {
@@ -390,6 +399,7 @@ export const ProviderSaleDelivered = {
       end: new Date(Date.UTC(2017, 3, 15)),
     }),
   },
+  group: 'payment',
 };
 
 export const ProviderSaleCanceled = {
@@ -442,6 +452,7 @@ export const ProviderSaleCanceled = {
       end: new Date(Date.UTC(2017, 3, 15)),
     }),
   },
+  group: 'payment',
 };
 
 export const SingleDay = {
@@ -469,6 +480,7 @@ export const SingleDay = {
       end: new Date(Date.UTC(2017, 3, 15)),
     }),
   },
+  group: 'payment',
 };
 
 export const MultipleDays = {
@@ -496,6 +508,7 @@ export const MultipleDays = {
       end: new Date(Date.UTC(2017, 3, 16)),
     }),
   },
+  group: 'payment',
 };
 
 export const UnitsType = {
@@ -523,6 +536,7 @@ export const UnitsType = {
       end: new Date(Date.UTC(2017, 3, 18)),
     }),
   },
+  group: 'payment',
 };
 
 export const CustomPricing = {
@@ -574,6 +588,7 @@ export const CustomPricing = {
       end: new Date(Date.UTC(2017, 3, 16)),
     }),
   },
+  group: 'payment',
 };
 
 export const CustomPricingWithRefund = {
@@ -657,4 +672,5 @@ export const CustomPricingWithRefund = {
       end: new Date(Date.UTC(2017, 3, 16)),
     }),
   },
+  group: 'payment',
 };
