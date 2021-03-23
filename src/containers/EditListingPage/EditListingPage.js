@@ -20,7 +20,6 @@ import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck';
 import {
   stripeAccountClearError,
-  createStripeAccount,
   getStripeConnectAccountLink,
 } from '../../ducks/stripeConnectAccount.duck';
 
@@ -77,8 +76,8 @@ export const EditListingPageComponent = props => {
     onImageUpload,
     onRemoveListingImage,
     onManageDisableScrolling,
-    onPayoutDetailsFormSubmit,
-    onPayoutDetailsFormChange,
+    onPayoutDetailsSubmit,
+    onPayoutDetailsChange,
     onGetStripeConnectAccountLink,
     onUpdateImageOrder,
     onChange,
@@ -201,8 +200,8 @@ export const EditListingPageComponent = props => {
           onUpdateListing={onUpdateListing}
           onCreateListingDraft={onCreateListingDraft}
           onPublishListingDraft={onPublishListingDraft}
-          onPayoutDetailsFormChange={onPayoutDetailsFormChange}
-          onPayoutDetailsSubmit={onPayoutDetailsFormSubmit}
+          onPayoutDetailsChange={onPayoutDetailsChange}
+          onPayoutDetailsSubmit={onPayoutDetailsSubmit}
           onGetStripeConnectAccountLink={onGetStripeConnectAccountLink}
           getAccountLinkInProgress={getAccountLinkInProgress}
           onImageUpload={onImageUpload}
@@ -270,8 +269,8 @@ EditListingPageComponent.propTypes = {
   onPublishListingDraft: func.isRequired,
   onImageUpload: func.isRequired,
   onManageDisableScrolling: func.isRequired,
-  onPayoutDetailsFormChange: func.isRequired,
-  onPayoutDetailsFormSubmit: func.isRequired,
+  onPayoutDetailsChange: func.isRequired,
+  onPayoutDetailsSubmit: func.isRequired,
   onUpdateImageOrder: func.isRequired,
   onRemoveListingImage: func.isRequired,
   onUpdateListing: func.isRequired,
@@ -346,9 +345,8 @@ const mapDispatchToProps = dispatch => ({
   onImageUpload: data => dispatch(requestImageUpload(data)),
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
-  onPayoutDetailsFormChange: () => dispatch(stripeAccountClearError()),
-  onPayoutDetailsSubmit: values => dispatch(createStripeAccount(values)),
-  onPayoutDetailsFormSubmit: (values, isUpdateCall) =>
+  onPayoutDetailsChange: () => dispatch(stripeAccountClearError()),
+  onPayoutDetailsSubmit: (values, isUpdateCall) =>
     dispatch(savePayoutDetails(values, isUpdateCall)),
   onGetStripeConnectAccountLink: params => dispatch(getStripeConnectAccountLink(params)),
   onUpdateImageOrder: imageOrder => dispatch(updateImageOrder(imageOrder)),
