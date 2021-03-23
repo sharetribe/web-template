@@ -51,6 +51,7 @@ export const Image2X = {
     },
     variants: ['crop', 'crop2x'],
   },
+  group: 'images',
 };
 
 /* Image with aspect ratio wrapper */
@@ -80,6 +81,7 @@ export const Image2XAspect = {
     },
     variants: ['crop', 'crop2x'],
   },
+  group: 'images',
 };
 
 /* Image with aspect ratio wrapper and wrong aspect */
@@ -109,6 +111,7 @@ export const Image2XWrongAspect = {
     },
     variants: ['crop', 'crop2x'],
   },
+  group: 'images',
 };
 
 export const Image2XWrongAspectNoWrapper = {
@@ -137,6 +140,7 @@ export const Image2XWrongAspectNoWrapper = {
     },
     variants: ['crop', 'crop2x'],
   },
+  group: 'images',
 };
 
 /* No image without aspect ratio wrapper */
@@ -147,6 +151,7 @@ export const ImageEmpty = {
     image: null,
     variants: ['crop', 'crop2x'],
   },
+  group: 'images',
 };
 
 /* No image with aspect ratio wrapper */
@@ -157,6 +162,7 @@ export const ImageEmptyWithAspect = {
     image: null,
     variants: ['crop', 'crop2x'],
   },
+  group: 'images',
 };
 
 /* Image without aspect ratio wrapper usign sizes */
@@ -195,4 +201,5 @@ export const ImageWithSizes = {
     variants: ['crop', 'crop2x'],
     sizes: '(max-width: 600px) 200px, 400px',
   },
+  group: 'images',
 };
