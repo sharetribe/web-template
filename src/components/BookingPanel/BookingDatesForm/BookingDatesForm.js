@@ -4,14 +4,15 @@ import { compose } from 'redux';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import classNames from 'classnames';
 import moment from 'moment';
-import config from '../../config';
-import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
-import { required, bookingDatesRequired, composeValidators } from '../../util/validators';
-import { START_DATE, END_DATE } from '../../util/dates';
-import { propTypes } from '../../util/types';
-import { Form, IconSpinner, PrimaryButton, FieldDateRangeInput } from '../../components';
-import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
 
+import config from '../../../config';
+import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
+import { required, bookingDatesRequired, composeValidators } from '../../../util/validators';
+import { START_DATE, END_DATE } from '../../../util/dates';
+import { propTypes } from '../../../util/types';
+import { Form, IconSpinner, PrimaryButton, FieldDateRangeInput } from '../../../components';
+
+import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
 import css from './BookingDatesForm.module.css';
 
 const identity = v => v;

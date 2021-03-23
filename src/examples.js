@@ -17,6 +17,7 @@
 import * as AddImages from './components/AddImages/AddImages.example';
 import * as Avatar from './components/Avatar/Avatar.example';
 import * as BookingBreakdown from './components/BookingBreakdown/BookingBreakdown.example';
+import * as BookingDatesForm from './components/BookingPanel/BookingDatesForm/BookingDatesForm.example';
 import * as BookingPanel from './components/BookingPanel/BookingPanel.example';
 import * as BookingTimeInfo from './components/BookingTimeInfo/BookingTimeInfo.example';
 import * as Button from './components/Button/Button.example';
@@ -80,7 +81,6 @@ import * as UserCard from './components/UserCard/UserCard.example';
 import * as UserDisplayName from './components/UserDisplayName/UserDisplayName.example';
 
 // forms
-import * as BookingDatesForm from './forms/BookingDatesForm/BookingDatesForm.example';
 import * as StripePaymentForm from './forms/StripePaymentForm/StripePaymentForm.example';
 
 // components under containers

@@ -1,17 +1,19 @@
 import React from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
-import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
 import { arrayOf, array, bool, func, node, oneOfType, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
+
+import config from '../../config';
+import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
 import { propTypes, LISTING_STATE_CLOSED, LINE_ITEM_NIGHT, LINE_ITEM_DAY } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
-import config from '../../config';
-import { ModalInMobile, Button } from '../../components';
-import { BookingDatesForm } from '../../forms';
 
+import { ModalInMobile, Button } from '../../components';
+
+import BookingDatesForm from './BookingDatesForm/BookingDatesForm';
 import css from './BookingPanel.module.css';
 
 // This defines when ModalInMobile shows content as Modal
