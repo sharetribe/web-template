@@ -21,5 +21,5 @@ export const FilterPopupExample = {
     label: 'Example label',
     children: field,
   },
-  group: 'SearchPage',
+  group: 'page:SearchPage',
 };

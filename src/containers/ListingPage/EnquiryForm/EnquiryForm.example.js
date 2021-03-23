@@ -10,5 +10,5 @@ export const Empty = {
       console.log('submit with values:', values);
     },
   },
-  group: 'ListingPage',
+  group: 'page:ListingPage',
 };

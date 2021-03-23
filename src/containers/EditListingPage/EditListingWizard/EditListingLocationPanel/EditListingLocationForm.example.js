@@ -13,5 +13,5 @@ export const Empty = {
     disabled: false,
     ready: false,
   },
-  group: 'EditListingPage',
+  group: 'page:EditListingPage',
 };
