@@ -17,6 +17,7 @@ export const Default = {
     fetchLineItemsInProgress: false,
     onFetchTransactionLineItems: () => null,
   },
+  group: 'payment',
 };
 
 export const WithClosedListing = {
@@ -32,4 +33,5 @@ export const WithClosedListing = {
     fetchLineItemsInProgress: false,
     onFetchTransactionLineItems: () => null,
   },
+  group: 'payment',
 };

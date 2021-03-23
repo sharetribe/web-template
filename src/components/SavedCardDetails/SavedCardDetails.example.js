@@ -20,7 +20,7 @@ export const SavedCardDetailsExample = {
       last4Digits: '3220',
     },
   },
-  group: 'payment methods',
+  group: 'payment',
 };
 
 export const SavedCardDetailsNoDelete = {
@@ -35,7 +35,7 @@ export const SavedCardDetailsNoDelete = {
     },
     onDeleteCard: null,
   },
-  group: 'payment methods',
+  group: 'payment',
 };
 
 export const SavedCardDetailsExpired = {
@@ -49,5 +49,5 @@ export const SavedCardDetailsExpired = {
       last4Digits: '3220',
     },
   },
-  group: 'payment methods',
+  group: 'payment',
 };
