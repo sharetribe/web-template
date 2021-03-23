@@ -69,5 +69,5 @@ export const FieldRangeSliderForm = {
       console.log('submit values:', values);
     },
   },
-  group: 'custom inputs',
+  group: 'inputs',
 };

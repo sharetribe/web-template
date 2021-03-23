@@ -5,7 +5,7 @@ const loremIpsum =
 
 export const Empty = {
   component: ExpandingTextarea,
-  group: 'custom inputs',
+  group: 'inputs',
 };
 
 export const WithInitialText = {
@@ -13,5 +13,5 @@ export const WithInitialText = {
   props: {
     defaultValue: loremIpsum,
   },
-  group: 'custom inputs',
+  group: 'inputs',
 };
