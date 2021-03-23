@@ -134,11 +134,15 @@ class BirthdayInputComponent extends Component {
       return typeof n === 'number' ? n : '';
     };
 
-    const datePlaceholder = intl.formatMessage({ id: 'PayoutDetailsForm.birthdayDatePlaceholder' });
-    const monthPlaceholder = intl.formatMessage({
-      id: 'PayoutDetailsForm.birthdayMonthPlaceholder',
+    const datePlaceholder = intl.formatMessage({
+      id: 'FieldBirthdayInput.birthdayDatePlaceholder',
     });
-    const yearPlaceholder = intl.formatMessage({ id: 'PayoutDetailsForm.birthdayYearPlaceholder' });
+    const monthPlaceholder = intl.formatMessage({
+      id: 'FieldBirthdayInput.birthdayMonthPlaceholder',
+    });
+    const yearPlaceholder = intl.formatMessage({
+      id: 'FieldBirthdayInput.birthdayYearPlaceholder',
+    });
 
     return (
       <div className={css.inputRoot}>
