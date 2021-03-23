@@ -11,5 +11,5 @@ export const Empty = {
     reviewSent: false,
     sendReviewInProgress: false,
   },
-  group: 'forms',
+  group: 'TransactionPage',
 };
