@@ -31,7 +31,7 @@ export const Published = {
     onToggleMenu: noop,
     history: { push: noop },
   },
-  group: 'ManageListingsPage',
+  group: 'page:ManageListingsPage',
 };
 
 export const Closed = {
@@ -49,7 +49,7 @@ export const Closed = {
     onToggleMenu: noop,
     history: { push: noop },
   },
-  group: 'ManageListingsPage',
+  group: 'page:ManageListingsPage',
 };
 
 export const PendingApproval = {
@@ -67,7 +67,7 @@ export const PendingApproval = {
     onToggleMenu: noop,
     history: { push: noop },
   },
-  group: 'ManageListingsPage',
+  group: 'page:ManageListingsPage',
 };
 
 export const Draft = {
@@ -85,5 +85,5 @@ export const Draft = {
     onToggleMenu: noop,
     history: { push: noop },
   },
-  group: 'ManageListingsPage',
+  group: 'page:ManageListingsPage',
 };

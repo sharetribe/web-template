@@ -9,5 +9,5 @@ export const Empty = {
       console.log('submit with values:', values);
     },
   },
-  group: 'PasswordResetPage',
+  group: 'page:PasswordResetPage',
 };
