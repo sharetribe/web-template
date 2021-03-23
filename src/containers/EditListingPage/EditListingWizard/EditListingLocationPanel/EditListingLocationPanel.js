@@ -109,6 +109,7 @@ class EditListingLocationPanel extends Component {
           updated={panelUpdated}
           updateInProgress={updateInProgress}
           fetchErrors={errors}
+          autoFocus
         />
       </div>
     );

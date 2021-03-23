@@ -16,7 +16,6 @@ exports[`EditListingDescriptionForm matches snapshot 1`] = `
       EditListingDescriptionForm.title
     </label>
     <input
-      autoFocus={true}
       className="input"
       id="title"
       maxLength={60}
