@@ -15,7 +15,6 @@ import {
   getStripeConnectAccountLink,
 } from '../../ducks/stripeConnectAccount.duck';
 
-import { StripeConnectAccountForm } from '../../forms';
 import {
   NamedRedirect,
   LayoutSideNavigation,
@@ -26,6 +25,7 @@ import {
   Footer,
   Page,
   StripeConnectAccountStatusBox,
+  StripeConnectAccountForm,
   UserNav,
 } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';

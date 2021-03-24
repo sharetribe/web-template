@@ -18,8 +18,13 @@ import {
 import { ensureCurrentUser, ensureListing } from '../../../util/data';
 
 // Import shared components
-import { Modal, NamedRedirect, Tabs, StripeConnectAccountStatusBox } from '../../../components';
-import { StripeConnectAccountForm } from '../../../forms';
+import {
+  Modal,
+  NamedRedirect,
+  Tabs,
+  StripeConnectAccountStatusBox,
+  StripeConnectAccountForm,
+} from '../../../components';
 
 // Import modules from this directory
 import EditListingWizardTab, {
