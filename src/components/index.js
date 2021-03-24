@@ -128,6 +128,9 @@ export { default as StripeConnectAccountStatusBox } from './StripeConnectAccount
 export { default as StripePaymentAddress } from './StripePaymentAddress/StripePaymentAddress';
 export { default as UserCard } from './UserCard/UserCard';
 
+// Forms
+export { default as StripeConnectAccountForm } from './StripeConnectAccountForm/StripeConnectAccountForm';
+
 //////////////////////////////////////////////
 // Page sections and modal content wrappers //
 //////////////////////////////////////////////
