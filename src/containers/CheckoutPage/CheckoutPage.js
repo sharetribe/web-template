@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import { bool, func, instanceOf, object, oneOfType, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
+
+// Import configs and util modules
 import config from '../../config';
+import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
 import { propTypes, LINE_ITEM_NIGHT, LINE_ITEM_DAY, DATE_TYPE_DATE } from '../../util/types';
@@ -31,6 +33,13 @@ import {
 } from '../../util/errors';
 import { formatMoney } from '../../util/currency';
 import { TRANSITION_ENQUIRE, txIsPaymentPending, txIsPaymentExpired } from '../../util/transaction';
+
+// Import global thunk functions
+import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { confirmCardPayment, retrievePaymentIntent } from '../../ducks/stripe.duck';
+import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
+
+// Import shared components
 import {
   AvatarMedium,
   BookingBreakdown,
@@ -40,11 +49,8 @@ import {
   Page,
   ResponsiveImage,
 } from '../../components';
-import { StripePaymentForm } from '../../forms';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
-import { confirmCardPayment, retrievePaymentIntent } from '../../ducks/stripe.duck';
-import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
 
+// Import modules from this directory
 import {
   initiateOrder,
   setInitialValues,
@@ -53,6 +59,7 @@ import {
   confirmPayment,
   sendMessage,
 } from './CheckoutPage.duck';
+import StripePaymentForm from './StripePaymentForm/StripePaymentForm';
 import { storeData, storedData, clearData } from './CheckoutPageSessionHelpers';
 import css from './CheckoutPage.module.css';
 

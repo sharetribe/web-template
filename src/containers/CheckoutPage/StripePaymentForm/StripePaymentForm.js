@@ -7,10 +7,11 @@ import React, { Component } from 'react';
 import { bool, func, object, string } from 'prop-types';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
-import config from '../../config';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { propTypes } from '../../util/types';
-import { ensurePaymentMethodCard } from '../../util/data';
+
+import config from '../../../config';
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { propTypes } from '../../../util/types';
+import { ensurePaymentMethodCard } from '../../../util/data';
 
 import {
   Form,
@@ -20,7 +21,8 @@ import {
   IconSpinner,
   SavedCardDetails,
   StripePaymentAddress,
-} from '../../components';
+} from '../../../components';
+
 import css from './StripePaymentForm.module.css';
 
 /**
