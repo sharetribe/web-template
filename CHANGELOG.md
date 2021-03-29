@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Move BookingDatesForm under BookingPanel
+  [#15](https://github.com/sharetribe/ftw-product/pull/15)
 - [change] Regroup examples in styleguide using prefixes
   [#14](https://github.com/sharetribe/ftw-product/pull/14)
 - [change] Group page specific Styleguide examples by page name
