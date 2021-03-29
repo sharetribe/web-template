@@ -23,11 +23,10 @@ tab.
 The tab defines which panel to render for a given tab. It also defines how to route to the next
 panel in order.
 
-### PayoutDetailsForm
+### PayoutDetails
 
 The wizard prompts the user to connect their payout details before allowing creating a listing. This
-is only done if the user has not connected the Stripe account. Usually this means when creating
-their first listing.
+is only done if the user has not connected the Stripe account.
 
 ### Panels
 
