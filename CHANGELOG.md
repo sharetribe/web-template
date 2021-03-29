@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Regroup examples in styleguide using prefixes
+  [#14](https://github.com/sharetribe/ftw-product/pull/14)
 - [change] Group page specific Styleguide examples by page name
   [#13](https://github.com/sharetribe/ftw-product/pull/13)
 - [change] Move more components under other components and pages
