@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
-import { types as sdkTypes } from '../../util/sdkLoader';
-import { LINE_ITEM_NIGHT } from '../../util/types';
+import { types as sdkTypes } from '../../../util/sdkLoader';
+import { LINE_ITEM_NIGHT } from '../../../util/types';
+
 import BookingDatesForm from './BookingDatesForm';
 
 const { Money } = sdkTypes;

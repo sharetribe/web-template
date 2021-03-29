@@ -1,12 +1,15 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import Decimal from 'decimal.js';
-import { types as sdkTypes } from '../../util/sdkLoader';
-import { renderShallow, renderDeep } from '../../util/test-helpers';
-import { fakeIntl } from '../../util/test-data';
-import { LINE_ITEM_NIGHT } from '../../util/types';
-import { dateFromAPIToLocalNoon } from '../../util/dates';
-import { BookingBreakdown } from '../../components';
+
+import { types as sdkTypes } from '../../../util/sdkLoader';
+import { renderShallow, renderDeep } from '../../../util/test-helpers';
+import { fakeIntl } from '../../../util/test-data';
+import { LINE_ITEM_NIGHT } from '../../../util/types';
+import { dateFromAPIToLocalNoon } from '../../../util/dates';
+
+import { BookingBreakdown } from '../../../components';
+
 import { BookingDatesFormComponent } from './BookingDatesForm';
 import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
 
