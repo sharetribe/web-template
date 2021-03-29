@@ -89,8 +89,8 @@ export const StripePayoutPageComponent = props => {
     fetchStripeAccountError,
     stripeAccountFetched,
     stripeAccount,
-    onPayoutDetailsFormChange,
-    onPayoutDetailsFormSubmit,
+    onPayoutDetailsChange,
+    onPayoutDetailsSubmit,
     onGetStripeConnectAccountLink,
     payoutDetailsSaveInProgress,
     payoutDetailsSaved,
@@ -182,8 +182,8 @@ export const StripePayoutPageComponent = props => {
                 }
                 stripeAccountLinkError={getAccountLinkError}
                 stripeAccountFetched={stripeAccountFetched}
-                onChange={onPayoutDetailsFormChange}
-                onSubmit={onPayoutDetailsFormSubmit}
+                onChange={onPayoutDetailsChange}
+                onSubmit={onPayoutDetailsSubmit}
                 onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink}
                 stripeConnected={stripeConnected}
               >
@@ -242,8 +242,8 @@ StripePayoutPageComponent.propTypes = {
   stripeAccountFetched: bool.isRequired,
   payoutDetailsSaved: bool.isRequired,
 
-  onPayoutDetailsFormChange: func.isRequired,
-  onPayoutDetailsFormSubmit: func.isRequired,
+  onPayoutDetailsChange: func.isRequired,
+  onPayoutDetailsSubmit: func.isRequired,
   onGetStripeConnectAccountLink: func.isRequired,
   params: shape({
     returnURLType: oneOf(STRIPE_ONBOARDING_RETURN_URL_TYPES),
@@ -281,8 +281,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  onPayoutDetailsFormChange: () => dispatch(stripeAccountClearError()),
-  onPayoutDetailsFormSubmit: (values, isUpdateCall) =>
+  onPayoutDetailsChange: () => dispatch(stripeAccountClearError()),
+  onPayoutDetailsSubmit: (values, isUpdateCall) =>
     dispatch(savePayoutDetails(values, isUpdateCall)),
   onGetStripeConnectAccountLink: params => dispatch(getStripeConnectAccountLink(params)),
 });

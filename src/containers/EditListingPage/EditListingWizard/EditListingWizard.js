@@ -201,7 +201,6 @@ class EditListingWizard extends Component {
     this.handleCreateFlowTabScrolling = this.handleCreateFlowTabScrolling.bind(this);
     this.handlePublishListing = this.handlePublishListing.bind(this);
     this.handlePayoutModalClose = this.handlePayoutModalClose.bind(this);
-    this.handlePayoutSubmit = this.handlePayoutSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -243,17 +242,6 @@ class EditListingWizard extends Component {
     this.setState({ showPayoutDetails: false });
   }
 
-  handlePayoutSubmit(values) {
-    this.props
-      .onPayoutDetailsSubmit(values)
-      .then(response => {
-        this.props.onManageDisableScrolling('EditListingWizard.payoutModal', false);
-      })
-      .catch(() => {
-        // do nothing
-      });
-  }
-
   render() {
     const {
       id,
@@ -268,7 +256,7 @@ class EditListingWizard extends Component {
       payoutDetailsSaveInProgress,
       payoutDetailsSaved,
       onManageDisableScrolling,
-      onPayoutDetailsFormChange,
+      onPayoutDetailsChange,
       onGetStripeConnectAccountLink,
       getAccountLinkInProgress,
       createStripeAccountError,
@@ -437,7 +425,7 @@ class EditListingWizard extends Component {
                   stripeAccountError={stripeAccountError}
                   stripeAccountFetched={stripeAccountFetched}
                   stripeAccountLinkError={stripeAccountLinkError}
-                  onChange={onPayoutDetailsFormChange}
+                  onChange={onPayoutDetailsChange}
                   onSubmit={rest.onPayoutDetailsSubmit}
                   onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink}
                   stripeConnected={stripeConnected}
@@ -528,7 +516,8 @@ EditListingWizard.propTypes = {
   getAccountLinkInProgress: bool.isRequired,
   payoutDetailsSaveInProgress: bool.isRequired,
   payoutDetailsSaved: bool.isRequired,
-  onPayoutDetailsFormChange: func.isRequired,
+  onPayoutDetailsChange: func.isRequired,
+  onPayoutDetailsSubmit: func.isRequired,
   onGetStripeConnectAccountLink: func.isRequired,
   onManageDisableScrolling: func.isRequired,
 
