@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { bool, func, object, shape, string } from 'prop-types';
 import { compose } from 'redux';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
+
 import config from '../../config';
+import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { createResourceLocatorString } from '../../util/routes';
 import { isStripeError } from '../../util/errors';
 import * as validators from '../../util/validators';
 import { propTypes } from '../../util/types';
+
 import {
   Button,
   ExternalLink,

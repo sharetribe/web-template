@@ -80,12 +80,10 @@ import * as Tabs from './components/Tabs/Tabs.example';
 import * as UserCard from './components/UserCard/UserCard.example';
 import * as UserDisplayName from './components/UserDisplayName/UserDisplayName.example';
 
-// forms
-import * as StripePaymentForm from './forms/StripePaymentForm/StripePaymentForm.example';
-
 // components under containers
 import * as SignupForm from './containers/AuthenticationPage/SignupForm/SignupForm.example';
 import * as LoginForm from './containers/AuthenticationPage/LoginForm/LoginForm.example';
+import * as StripePaymentForm from './containers/CheckoutPage/StripePaymentForm/StripePaymentForm.example';
 import * as EditListingAvailabilityForm from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/EditListingAvailabilityForm.example';
 import * as EditListingDescriptionForm from './containers/EditListingPage/EditListingWizard/EditListingDescriptionPanel/EditListingDescriptionForm.example';
 import * as EditListingFeaturesForm from './containers/EditListingPage/EditListingWizard/EditListingFeaturesPanel/EditListingFeaturesForm.example';

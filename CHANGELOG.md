@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Move stripe related forms and forms directory
+  [#17](https://github.com/sharetribe/ftw-product/pull/17)
 - [change] Remove PayoutDetailsForm and rename some functions
   [#16](https://github.com/sharetribe/ftw-product/pull/16)
 - [change] Move BookingDatesForm under BookingPanel
@@ -44,6 +46,7 @@ way to update this template, but currently, we follow a pattern:
   is still imported with the same path as there is the index file in the directory.
   [#2](https://github.com/sharetribe/ftw-product/pull/2)
 - [remove] OrderDetailsPanel and Discussion components were not used.
+  [#1](https://github.com/sharetribe/ftw-product/pull/1)
 
 ## [v8.1.0] 2021-03-11
 
