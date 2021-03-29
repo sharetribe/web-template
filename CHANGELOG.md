@@ -14,6 +14,12 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Group page specific Styleguide examples by page name
+  [#13](https://github.com/sharetribe/ftw-product/pull/13)
+- [change] Move more components under other components and pages
+  [#12](https://github.com/sharetribe/ftw-product/pull/12)
+- [change] Move forms under the page directory they are used in
+  [#11](https://github.com/sharetribe/ftw-product/pull/11)
 - [change] Components and forms that are used only in the SearchPage are nested under the page
   directory. [#9](https://github.com/sharetribe/ftw-product/pull/9)
 - [change] The `containers/index.js` file is now removed and the components imported directly to
