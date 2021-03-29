@@ -9,5 +9,5 @@ export const Empty = {
       console.log('log in with form values:', values);
     },
   },
-  group: 'AuthenticationPage',
+  group: 'page:AuthenticationPage',
 };

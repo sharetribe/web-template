@@ -42,7 +42,7 @@ export const EmptyWithEnUSD = {
     currencyConfig: currencyConfigUSD,
     locale: 'en',
   },
-  group: 'custom inputs',
+  group: 'inputs',
 };
 
 export const defaultValueWithEnUSD = {
@@ -52,7 +52,7 @@ export const defaultValueWithEnUSD = {
     locale: 'en',
     defaultValue: 9999.99,
   },
-  group: 'custom inputs',
+  group: 'inputs',
 };
 
 export const EmptyWithFiEUR = {
@@ -61,7 +61,7 @@ export const EmptyWithFiEUR = {
     currencyConfig: currencyConfigEUR,
     locale: 'fi',
   },
-  group: 'custom inputs',
+  group: 'inputs',
 };
 
 export const defaultValueWithFiEUR = {
@@ -71,7 +71,7 @@ export const defaultValueWithFiEUR = {
     locale: 'fi',
     defaultValue: 9999.99,
   },
-  group: 'custom inputs',
+  group: 'inputs',
 };
 
 const FormComponent = props => (
@@ -116,5 +116,5 @@ export const FieldInForm = {
       return false;
     },
   },
-  group: 'custom inputs',
+  group: 'inputs',
 };

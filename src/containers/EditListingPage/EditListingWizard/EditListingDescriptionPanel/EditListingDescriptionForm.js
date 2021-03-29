@@ -21,6 +21,7 @@ const EditListingDescriptionFormComponent = props => (
     {...props}
     render={formRenderProps => {
       const {
+        autoFocus,
         categories,
         className,
         disabled,
@@ -99,7 +100,7 @@ const EditListingDescriptionFormComponent = props => (
             placeholder={titlePlaceholderMessage}
             maxLength={TITLE_MAX_LENGTH}
             validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
-            autoFocus
+            autoFocus={autoFocus}
           />
 
           <FieldTextInput

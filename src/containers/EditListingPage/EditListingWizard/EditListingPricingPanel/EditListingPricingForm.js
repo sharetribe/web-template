@@ -25,6 +25,7 @@ export const EditListingPricingFormComponent = props => (
     {...props}
     render={formRenderProps => {
       const {
+        autoFocus,
         className,
         disabled,
         ready,
@@ -99,7 +100,7 @@ export const EditListingPricingFormComponent = props => (
             id="price"
             name="price"
             className={css.priceInput}
-            autoFocus
+            autoFocus={autoFocus}
             label={pricePerUnitMessage}
             placeholder={pricePlaceholderMessage}
             currencyConfig={config.currencyConfig}

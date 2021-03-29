@@ -38,7 +38,7 @@ const KeywordFilterPopup = withRouter(props => {
 export const KeywordFilterPopupExample = {
   component: KeywordFilterPopup,
   props: {},
-  group: 'SearchPage',
+  group: 'page:SearchPage',
 };
 
 const KeywordFilterPlain = withRouter(props => {
@@ -67,5 +67,5 @@ const KeywordFilterPlain = withRouter(props => {
 export const KeywordFilterPlainExample = {
   component: KeywordFilterPlain,
   props: {},
-  group: 'SearchPage',
+  group: 'page:SearchPage',
 };

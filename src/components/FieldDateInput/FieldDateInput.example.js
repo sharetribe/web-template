@@ -81,7 +81,7 @@ export const Empty = {
       console.log('Submitting a form with values:', values);
     },
   },
-  group: 'custom inputs',
+  group: 'inputs',
 };
 
 export const WithAvailableTimeSlots = {
@@ -109,5 +109,5 @@ export const WithAvailableTimeSlots = {
       console.log('Submitting a form with values:', values);
     },
   },
-  group: 'custom inputs',
+  group: 'inputs',
 };

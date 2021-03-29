@@ -28,7 +28,7 @@ export const RangeSliderOneHandle = {
     step: 5,
     handles: [500],
   },
-  group: 'custom inputs',
+  group: 'inputs',
 };
 
 export const RangeSliderTwoHandles = {
@@ -39,7 +39,7 @@ export const RangeSliderTwoHandles = {
     step: 5,
     handles: [333, 666],
   },
-  group: 'custom inputs',
+  group: 'inputs',
 };
 
 export const RangeSliderThreeHandles = {
@@ -50,5 +50,5 @@ export const RangeSliderThreeHandles = {
     step: 5,
     handles: [150, 490, 850],
   },
-  group: 'custom inputs',
+  group: 'inputs',
 };
