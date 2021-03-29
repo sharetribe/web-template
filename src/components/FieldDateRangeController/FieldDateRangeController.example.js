@@ -36,5 +36,5 @@ export const DateRangeControllerExample = {
     },
     onSubmit: () => null,
   },
-  group: 'custom inputs',
+  group: 'inputs',
 };

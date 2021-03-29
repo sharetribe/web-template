@@ -50,7 +50,7 @@ export const Empty = {
       console.log('BirthdayInput.Form submitted values:', values);
     },
   },
-  group: 'custom inputs',
+  group: 'inputs',
 };
 
 export const WithInitialValue = {
@@ -67,5 +67,5 @@ export const WithInitialValue = {
       console.log('BirthdayInput.Form submitted values:', values);
     },
   },
-  group: 'custom inputs',
+  group: 'inputs',
 };

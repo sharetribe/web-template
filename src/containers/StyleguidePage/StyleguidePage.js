@@ -8,6 +8,7 @@ import css from './StyleguidePage.module.css';
 
 const ALL = '*';
 const DEFAULT_GROUP = 'misc';
+const PREFIX_SEPARATOR = ':';
 
 const Example = props => {
   const {
@@ -91,13 +92,17 @@ Example.propTypes = {
 // Renders the list of component example groups as clickable filters
 const Nav = props => {
   const { groups, selectedGroup } = props;
-  const toGroupLink = group => {
+  const toGroupLink = (group, linkableContent) => {
     const linkProps = {
       name: group === ALL ? 'Styleguide' : 'StyleguideGroup',
       params: group === ALL ? null : { group },
     };
 
-    const linkContent = group === ALL ? 'all components' : group;
+    const linkContent = linkableContent
+      ? linkableContent
+      : group === ALL
+      ? 'all components'
+      : group;
     const isSelected = selectedGroup && group === selectedGroup;
     const groupLink = classNames(css.link, { [css.selectedGroup]: isSelected });
     return (
@@ -110,20 +115,42 @@ const Nav = props => {
   };
 
   const filteredGroups = groups.filter(g => g !== ALL && g !== DEFAULT_GROUP);
-  const basicStylings = ['typography', 'colors'];
-  const basicStylingGroups = filteredGroups.filter(g => basicStylings.includes(g)).map(toGroupLink);
-  const componentGroups = filteredGroups.filter(g => !basicStylings.includes(g)).map(toGroupLink);
+  // Get prefixGroups => { elements: [], page: [], unprefixed: [] }
+  const prefixGroups = filteredGroups.reduce((acc, g) => {
+    const prefixIndex = g.indexOf(PREFIX_SEPARATOR);
+    const prefix = prefixIndex > 0 ? g.slice(0, prefixIndex) : null;
+
+    if (prefix) {
+      const prevGroupsWithPrefix = acc && acc[prefix] ? acc[prefix] : [];
+      return { ...acc, [prefix]: [...prevGroupsWithPrefix, g] };
+    }
+    const prevUnprefixedGroups = acc && acc.unprefixed ? acc.unprefixed : [];
+    return { ...acc, unprefixed: [...prevUnprefixedGroups, g] };
+  }, {});
+
+  const getGroupLinks = (prefixGroups, prefix) =>
+    prefix && prefixGroups[prefix]
+      ? prefixGroups[prefix].map(g => toGroupLink(g, g.slice(prefix.length + 1)))
+      : !prefix
+      ? prefixGroups.unprefixed.map(g => toGroupLink(g))
+      : [];
+
+  const designElementGroups = getGroupLinks(prefixGroups, 'elements');
+  const pageSubComponentGroups = getGroupLinks(prefixGroups, 'page');
+  const sharedComponentGroups = getGroupLinks(prefixGroups);
 
   return (
     <nav className={css.withMargin}>
       <ul>{toGroupLink(ALL)}</ul>
-      <h5>Basic styling</h5>
-      <ul className={css.groups}>{basicStylingGroups}</ul>
-      <h5>Component categories</h5>
+      <h5>Design elements</h5>
+      <ul className={css.groups}>{designElementGroups}</ul>
+      <h5>Shared components</h5>
       <ul className={css.groups}>
-        {componentGroups}
+        {sharedComponentGroups}
         {toGroupLink(DEFAULT_GROUP)}
       </ul>
+      <h5>Page-related components</h5>
+      <ul className={css.groups}>{pageSubComponentGroups}</ul>
     </nav>
   );
 };
@@ -220,6 +247,9 @@ const StyleguidePage = props => {
       </p>
     );
 
+  const prefixIndex = selectedGroup ? selectedGroup.indexOf(PREFIX_SEPARATOR) : -1;
+  const selectedGroupWithoutPrefix =
+    prefixIndex > 0 ? selectedGroup.slice(prefixIndex + 1).trim() : selectedGroup;
   return (
     <section className={css.root}>
       <div className={css.navBar}>
@@ -232,7 +262,11 @@ const StyleguidePage = props => {
         <Nav groups={groups} selectedGroup={selectedGroup} />
       </div>
       <div className={css.main}>
-        <h2>Component examples:</h2>
+        <h2>
+          {selectedGroupWithoutPrefix
+            ? `Selected category: ${selectedGroupWithoutPrefix}`
+            : `Component`}
+        </h2>
         {html}
       </div>
     </section>

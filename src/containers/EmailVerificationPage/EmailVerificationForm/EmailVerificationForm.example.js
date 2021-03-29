@@ -13,7 +13,7 @@ export const NotVerified = {
       console.log('submit values:', values);
     },
   },
-  group: 'EmailVerificationPage',
+  group: 'page:EmailVerificationPage',
 };
 
 export const Verified = {
@@ -24,5 +24,5 @@ export const Verified = {
       console.log('submit values:', values);
     },
   },
-  group: 'EmailVerificationPage',
+  group: 'page:EmailVerificationPage',
 };
