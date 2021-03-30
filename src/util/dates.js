@@ -26,6 +26,10 @@ export const isDate = d =>
  */
 export const isSameDate = (a, b) => a && isDate(a) && b && isDate(b) && a.getTime() === b.getTime();
 
+////////////////////////////////////////////////////////////////////
+// Manipulate time: time-of-day between different time zones etc. //
+////////////////////////////////////////////////////////////////////
+
 /**
  * Convert date given by API to something meaningful noon on browser's timezone
  * So, what happens is that date given by client
@@ -76,6 +80,10 @@ export const dateFromLocalToAPI = date => {
 
   return momentInLocalTimezone.toDate();
 };
+
+///////////////
+// Durations //
+///////////////
 
 /**
  * Calculate the number of nights between the given dates
@@ -131,26 +139,9 @@ export const minutesBetween = (startDate, endDate) => {
   return minutes;
 };
 
-/**
- * Format the given date to month id/string
- *
- * @param {Date} date to be formatted
- *
- * @returns {String} formatted month string
- */
-export const monthIdString = date => moment(date).format('YYYY-MM');
-
-/**
- * Format the given date to UTC month id/string
- *
- * @param {Date} date to be formatted
- *
- * @returns {String} formatted month string
- */
-export const monthIdStringInUTC = date =>
-  moment(date)
-    .utc()
-    .format('YYYY-MM');
+////////////////////////////
+// Parsing and formatting //
+////////////////////////////
 
 /**
  * Format the given date
@@ -222,7 +213,6 @@ export const parseDateFromISO8601 = dateString => {
  *
  * @returns {String} string in 'YYYY-MM-DD'format
  */
-
 export const stringifyDateToISO8601 = date => {
   return moment(date).format('YYYY-MM-DD');
 };
@@ -235,10 +225,62 @@ export const stringifyDateToISO8601 = date => {
  *
  * @returns {String} string in '0000-00-00T00:00:00.000Z' format
  */
-
 export const formatDateStringToUTC = dateString => {
   return moment.utc(dateString).toDate();
 };
+
+/**
+ * Formats date to into multiple different ways:
+ * - date "Mar 24"
+ * - time "8:07 PM"
+ * - dateAndTime: "Mar 24, 8:07 PM"
+ *
+ * @param {Object} intl Intl object from react-intl
+ * @param {Date} date to be formatted
+ *
+ * @returns {Object} "{ date, time, dateAndTime }"
+ */
+export const formatDateToText = (intl, date) => {
+  return {
+    date: intl.formatDate(date, {
+      month: 'short',
+      day: 'numeric',
+    }),
+    time: intl.formatDate(date, {
+      hour: 'numeric',
+      minute: 'numeric',
+    }),
+    dateAndTime: intl.formatTime(date, {
+      month: 'short',
+      day: 'numeric',
+    }),
+  };
+};
+
+//////////
+// Misc //
+//////////
+
+/**
+ * Format the given date to month id/string
+ *
+ * @param {Date} date to be formatted
+ *
+ * @returns {String} formatted month string
+ */
+export const monthIdString = date => moment(date).format('YYYY-MM');
+
+/**
+ * Format the given date to UTC month id/string
+ *
+ * @param {Date} date to be formatted
+ *
+ * @returns {String} formatted month string
+ */
+export const monthIdStringInUTC = date =>
+  moment(date)
+    .utc()
+    .format('YYYY-MM');
 
 /**
  * Formats string ('YYYY-MM-DD') to UTC format ('0000-00-00T00:00:00.000Z') and adds one day.
@@ -256,21 +298,4 @@ export const getExclusiveEndDate = dateString => {
     .add(1, 'days')
     .startOf('day')
     .toDate();
-};
-
-export const formatDateToText = (intl, date) => {
-  return {
-    date: intl.formatDate(date, {
-      month: 'short',
-      day: 'numeric',
-    }),
-    time: intl.formatDate(date, {
-      hour: 'numeric',
-      minute: 'numeric',
-    }),
-    dateAndTime: intl.formatTime(date, {
-      month: 'short',
-      day: 'numeric',
-    }),
-  };
 };
