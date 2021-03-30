@@ -1,9 +1,13 @@
 import React from 'react';
-import moment from 'moment';
 import { bool } from 'prop-types';
 import classNames from 'classnames';
 import { txIsEnquired } from '../../util/transaction';
-import { dateFromAPIToLocalNoon, daysBetween, formatDateToText } from '../../util/dates';
+import {
+  dateFromAPIToLocalNoon,
+  daysBetween,
+  formatDateToText,
+  subtractTime,
+} from '../../util/dates';
 import { injectIntl, intlShape } from '../../util/reactIntl';
 import {
   LINE_ITEM_DAY,
@@ -30,12 +34,7 @@ const bookingData = (unitType, tx, isOrder, intl) => {
   const isSingleDay = !isNightly && daysBetween(startDate, endDateRaw) <= 1;
   const bookingStart = formatDateToText(intl, startDate);
   // Shift the exclusive API end date with daily bookings
-  const endDate =
-    isDaily || isUnits
-      ? moment(endDateRaw)
-          .subtract(1, 'days')
-          .toDate()
-      : endDateRaw;
+  const endDate = isDaily || isUnits ? subtractTime(endDateRaw, 1, 'days') : endDateRaw;
   const bookingEnd = formatDateToText(intl, endDate);
   return { bookingStart, bookingEnd, isSingleDay };
 };
