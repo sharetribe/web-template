@@ -81,6 +81,25 @@ export const dateFromLocalToAPI = date => {
   return momentInLocalTimezone.toDate();
 };
 
+/**
+ * Subtract time-units from the date
+ *
+ * @param {Date} date date to be manipulated
+ * @param {int} offset offset of time-units (e.g. "3" days)
+ * @param {String} unit time-unit (e.g. "days")
+ * @param {String} timeZone time zone name
+ *
+ * @returns {Date} date with given offset subtracted
+ */
+export const subtractTime = (date, offset, unit, timeZone) => {
+  const m = timeZone
+    ? moment(date)
+        .clone()
+        .tz(timeZone)
+    : moment(date).clone();
+  return m.subtract(offset, unit).toDate();
+};
+
 ///////////////
 // Durations //
 ///////////////

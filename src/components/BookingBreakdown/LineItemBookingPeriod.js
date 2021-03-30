@@ -1,8 +1,7 @@
 import React from 'react';
 import { FormattedMessage, FormattedDate } from '../../util/reactIntl';
-import moment from 'moment';
 import { LINE_ITEM_NIGHT, DATE_TYPE_DATE, propTypes } from '../../util/types';
-import { dateFromAPIToLocalNoon } from '../../util/dates';
+import { dateFromAPIToLocalNoon, subtractTime } from '../../util/dates';
 
 import css from './BookingBreakdown.module.css';
 
@@ -68,7 +67,7 @@ const LineItemBookingPeriod = props => {
   const localEndDateRaw = dateFromAPIToLocalNoon(displayEnd || end);
 
   const isNightly = unitType === LINE_ITEM_NIGHT;
-  const endDay = isNightly ? localEndDateRaw : moment(localEndDateRaw).subtract(1, 'days');
+  const endDay = isNightly ? localEndDateRaw : subtractTime(localEndDateRaw, 1, 'days');
 
   return (
     <>
