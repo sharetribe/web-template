@@ -1,6 +1,6 @@
-import moment from 'moment';
-import { types as sdkTypes } from './sdkLoader';
 import toPairs from 'lodash/toPairs';
+import { types as sdkTypes } from './sdkLoader';
+import { diffInTime } from './dates';
 
 const { LatLng, Money } = sdkTypes;
 
@@ -127,9 +127,9 @@ export const ageAtLeast = (message, minYears) => value => {
 
   // day, month, and year needs to be numbers
   if (dayNum !== null && monthNum !== null && yearNum !== null) {
-    const now = moment();
+    const now = new Date();
     const age = new Date(yearNum, monthNum - 1, dayNum);
-    const ageInYears = now.diff(moment(age), 'years', true);
+    const ageInYears = diffInTime(now, age, 'years', true);
 
     return age && age instanceof Date && ageInYears >= minYears ? VALID : message;
   }
