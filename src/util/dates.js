@@ -82,6 +82,44 @@ export const dateFromLocalToAPI = date => {
 };
 
 /**
+ * Get start of time unit (e.g. start of day)
+ *
+ * @param {Date} date date instance to be converted
+ * @param {String} unit time-unit (e.g. "day")
+ * @param {String} timeZone time zone id
+ *
+ * @returns {Date} date object converted to the start of given unit
+ */
+export const getStartOf = (date, unit, timeZone) => {
+  const m = timeZone
+    ? moment(date)
+        .clone()
+        .tz(timeZone)
+    : moment(date).clone();
+
+  return m.startOf(unit).toDate();
+};
+
+/**
+ * Adds time-units to the date
+ *
+ * @param {Date} date date to be manipulated
+ * @param {int} offset offset of time-units (e.g. "3" days)
+ * @param {String} unit time-unit (e.g. "days")
+ * @param {String} timeZone time zone name
+ *
+ * @returns {Date} date with given offset added
+ */
+export const addTime = (date, offset, unit, timeZone) => {
+  const m = timeZone
+    ? moment(date)
+        .clone()
+        .tz(timeZone)
+    : moment(date).clone();
+  return m.add(offset, unit).toDate();
+};
+
+/**
  * Subtract time-units from the date
  *
  * @param {Date} date date to be manipulated
