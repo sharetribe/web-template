@@ -26,6 +26,18 @@ export const isDate = d =>
  */
 export const isSameDate = (a, b) => a && isDate(a) && b && isDate(b) && a.getTime() === b.getTime();
 
+/**
+ * Compare is dateA is after dateB
+ *
+ * @param {Date} dateA date instance
+ * @param {Date} dateB date instance
+ *
+ * @returns {Date} true if dateA is after dateB
+ */
+export const isAfterDate = (dateA, dateB) => {
+  return moment(storedAt).isAfter(moment(dateB));
+};
+
 ////////////////////////////////////////////////////////////////////
 // Manipulate time: time-of-day between different time zones etc. //
 ////////////////////////////////////////////////////////////////////
