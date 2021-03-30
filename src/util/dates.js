@@ -208,6 +208,18 @@ export const minutesBetween = (startDate, endDate) => {
   return minutes;
 };
 
+/**
+ * Calculate the difference between the given dates
+ *
+ * @param {Date} startDate start of the time period
+ * @param {Date} endDate end of the time period.
+ *
+ * @returns {Number} time difference between the given Date objects using given unit
+ */
+export const diffInTime = (startDate, endDate, unit, useFloat = false) => {
+  return startDate.diff(endDate, unit, useFloat);
+};
+
 ////////////////////////////
 // Parsing and formatting //
 ////////////////////////////
