@@ -1,7 +1,8 @@
 import pick from 'lodash/pick';
-import moment from 'moment';
+
 import config from '../../config';
 import { types as sdkTypes } from '../../util/sdkLoader';
+import { getStartOf, addTime } from '../../util/dates';
 import { storableError } from '../../util/errors';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { transactionLineItems } from '../../util/api';
@@ -233,15 +234,9 @@ export const fetchTimeSlots = listingId => (dispatch, getState, sdk) => {
   const bookingRange = config.dayCountAvailableForBooking - 1;
   const timeSlotsRange = Math.min(bookingRange, maxTimeSlots);
 
-  const start = moment
-    .utc()
-    .startOf('day')
-    .toDate();
-  const end = moment()
-    .utc()
-    .startOf('day')
-    .add(timeSlotsRange, 'days')
-    .toDate();
+  const now = new Date();
+  const start = getStartOf(now, 'day', 'Etc/UTC');
+  const end = addTime(start, timeSlotsRange, 'days', 'Etc/UTC');
   const params = { listingId, start, end };
 
   return dispatch(timeSlotsRequest(params))
@@ -253,9 +248,7 @@ export const fetchTimeSlots = listingId => (dispatch, getState, sdk) => {
         const secondParams = {
           listingId,
           start: end,
-          end: moment(end)
-            .add(secondRange, 'days')
-            .toDate(),
+          end: addTime(end, secondRange, 'days', 'Etc/UTC'),
         };
 
         return dispatch(timeSlotsRequest(secondParams)).then(secondBatch => {
