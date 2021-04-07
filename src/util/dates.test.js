@@ -8,6 +8,7 @@ import {
   formatDateIntoPartials,
   parseDateFromISO8601,
   stringifyDateToISO8601,
+  monthIdString,
 } from './dates';
 
 describe('date utils', () => {
@@ -178,6 +179,28 @@ describe('date utils', () => {
       const date = new Date(Date.UTC(2020, 3, 7));
       // UTC 2020-04-07 00:00 is previous day in New York
       expect(stringifyDateToISO8601(date, 'America/New_York')).toEqual('2020-04-06');
+    });
+  });
+
+  describe('monthIdString()', () => {
+    it('should return string in YYYY-MM format without timeZone param', () => {
+      const date = new Date(2018, 10, 23);
+      expect(monthIdString(date)).toContain('2018-11');
+    });
+
+    it('should return string in YYYY-MM format with timeZone param', () => {
+      const date = new Date(2018, 10, 23);
+      expect(monthIdString(date, 'Etc/UTC')).toEqual('2018-11');
+    });
+
+    it('should return string in YYYY-MM format with Etc/UTC tz to equal moment(date).utc().format("YYYY-MM")', () => {
+      const date = new Date(2018, 10, 23);
+      const pad = num => {
+        return num >= 0 && num < 10 ? `0${num}` : `${num}`;
+      };
+      expect(monthIdString(date, 'Etc/UTC')).toEqual(
+        `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}`
+      );
     });
   });
 });

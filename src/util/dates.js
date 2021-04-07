@@ -403,25 +403,20 @@ export const stringifyDateToISO8601 = (date, timeZone = null) => {
 //////////
 
 /**
- * Format the given date to month id/string
+ * Format the given date to month id/string: 'YYYY-MM'.
  *
  * @param {Date} date to be formatted
+ * @param {String} [timeZone] time zone name (optional parameter).
  *
  * @returns {String} formatted month string
  */
-export const monthIdString = date => moment(date).format('YYYY-MM');
-
-/**
- * Format the given date to UTC month id/string
- *
- * @param {Date} date to be formatted
- *
- * @returns {String} formatted month string
- */
-export const monthIdStringInUTC = date =>
-  moment(date)
-    .utc()
-    .format('YYYY-MM');
+export const monthIdString = (date, timeZone = null) => {
+  return timeZone
+    ? moment(date)
+        .tz(timeZone)
+        .format('YYYY-MM')
+    : moment(date).format('YYYY-MM');
+};
 
 /**
  * Formats string ('YYYY-MM-DD') to UTC format ('0000-00-00T00:00:00.000Z') and adds one day.
