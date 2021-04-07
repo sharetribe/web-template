@@ -90,7 +90,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         <p
           className="messageDate"
         >
-          2017-11-09, 08:12
+          2017-11-09
         </p>
       </div>
     </div>
@@ -117,7 +117,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
       <p
         className="ownMessageDate"
       >
-        2017-11-09, 08:12
+        2017-11-09
       </p>
     </div>
   </li>
