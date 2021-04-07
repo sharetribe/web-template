@@ -419,18 +419,18 @@ export const monthIdString = (date, timeZone = null) => {
 };
 
 /**
- * Formats string ('YYYY-MM-DD') to UTC format ('0000-00-00T00:00:00.000Z') and adds one day.
+ * Formats string ('YYYY-MM-DD') in given time zone to format ('0000-00-00T00:00:00.000Z') and adds one day.
  * This is used as end date of the search query.
  * One day must be added because end of the availability is exclusive in API.
  *
  * @param {String} string in 'YYYY-MM-DD'format
+ * @param {String} timeZone time zone name.
  *
  * @returns {String} string in '0000-00-00T00:00:00.000Z' format
  */
-
-export const getExclusiveEndDate = dateString => {
+export const getExclusiveEndDate = (dateString, timeZone) => {
   return moment
-    .utc(dateString)
+    .tz(dateString, timeZone)
     .add(1, 'days')
     .startOf('day')
     .toDate();
