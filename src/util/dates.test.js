@@ -142,6 +142,18 @@ describe('date utils', () => {
       const date = new Date(2018, 10, 23);
       expect(parseDateFromISO8601(dateString)).toEqual(date);
     });
+
+    it('should read ISO 8601 date as date in Etc/UTC and return date and time in UTC formatted ISO 8601', () => {
+      expect(parseDateFromISO8601('2020-04-07', 'Etc/UTC').toISOString()).toEqual(
+        '2020-04-07T00:00:00.000Z'
+      );
+    });
+
+    it('should read ISO 8601 date as date in Europe/Helsinki and return date and time in UTC formetted ISO 8601', () => {
+      expect(parseDateFromISO8601('2020-02-07', 'Europe/Helsinki').toISOString()).toEqual(
+        '2020-02-06T22:00:00.000Z'
+      );
+    });
   });
 
   describe('stringifyDateToISO8601()', () => {

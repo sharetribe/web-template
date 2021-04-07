@@ -359,15 +359,25 @@ export const formatDateIntoPartials = (date, intl, opts = {}) => {
 };
 
 /**
- * Converts string given in ISO8601 format to date object.
- * This is used e.g. when when dates are parsed form urlParams
+ * Parses given date string in ISO8601 format('YYYY-MM-DD') to date in
+ * the given time zone.
  *
- * @param {String} dateString in 'YYYY-MM-DD'format
+ * This is used in search when filtering by time-based availability.
  *
- * @returns {Date} parsed date object
+ * Example:
+ * ('2020-04-15', 'Etc/UTC') => new Date('2020-04-15T00:00:00.000Z')
+ * ('2020-04-15', 'Europe/Helsinki') => new Date('2020-04-14T21:00:00.000Z')
+ *
+ * @param {String} dateString in 'YYYY-MM-DD' format
+ * @param {String} [timeZone] time zone id, see:
+ *   https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+ *
+ * @returns {Date} date
  */
-export const parseDateFromISO8601 = dateString => {
-  return moment(dateString, 'YYYY-MM-DD').toDate();
+export const parseDateFromISO8601 = (dateString, timeZone = null) => {
+  return timeZone
+    ? moment.tz(dateString, timeZone).toDate()
+    : moment(dateString, 'YYYY-MM-DD').toDate();
 };
 
 /**
@@ -380,18 +390,6 @@ export const parseDateFromISO8601 = dateString => {
  */
 export const stringifyDateToISO8601 = date => {
   return moment(date).format('YYYY-MM-DD');
-};
-
-/**
- * Formats string ('YYYY-MM-DD') to UTC format ('0000-00-00T00:00:00.000Z').
- * This is used in search query.
- *
- * @param {String} string in 'YYYY-MM-DD'format
- *
- * @returns {String} string in '0000-00-00T00:00:00.000Z' format
- */
-export const formatDateStringToUTC = dateString => {
-  return moment.utc(dateString).toDate();
 };
 
 //////////
