@@ -5,6 +5,7 @@ import {
   daysBetween,
   minutesBetween,
   formatDateWithProximity,
+  formatDateIntoPartials,
   parseDateFromISO8601,
   stringifyDateToISO8601,
 } from './dates';
@@ -124,6 +125,14 @@ describe('date utils', () => {
       );
     });
   });
+
+  describe('formatDateIntoPartials()', () => {
+    it('formats a date into its partials', () => {
+      const d = new Date(Date.UTC(2017, 10, 23, 13, 51));
+      const partials = formatDateIntoPartials(d, intl, { timeZone: 'Etc/UTC' });
+      expect(partials.time).toEqual('1:51 PM');
+      expect(partials.date).toEqual('Nov 23');
+      expect(partials.dateAndTime).toEqual('Nov 23, 1:51 PM');
     });
   });
 

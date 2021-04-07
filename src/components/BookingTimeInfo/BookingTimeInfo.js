@@ -5,7 +5,7 @@ import { txIsEnquired } from '../../util/transaction';
 import {
   timeOfDayFromTimeZoneToLocal,
   daysBetween,
-  formatDateToText,
+  formatDateIntoPartials,
   subtractTime,
 } from '../../util/dates';
 import { injectIntl, intlShape } from '../../util/reactIntl';
@@ -33,10 +33,10 @@ const bookingData = (unitType, tx, isOrder, intl) => {
   const isNightly = unitType === LINE_ITEM_NIGHT;
   const isUnits = unitType === LINE_ITEM_UNITS;
   const isSingleDay = !isNightly && daysBetween(startDate, endDateRaw) <= 1;
-  const bookingStart = formatDateToText(intl, startDate);
+  const bookingStart = formatDateIntoPartials(startDate, intl);
   // Shift the exclusive API end date with daily bookings
   const endDate = isDaily || isUnits ? subtractTime(endDateRaw, 1, 'days') : endDateRaw;
-  const bookingEnd = formatDateToText(intl, endDate);
+  const bookingEnd = formatDateIntoPartials(endDate, intl);
   return { bookingStart, bookingEnd, isSingleDay };
 };
 

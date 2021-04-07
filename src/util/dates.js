@@ -309,6 +309,56 @@ export const formatDateWithProximity = (date, intl, todayString, opts = {}) => {
 };
 
 /**
+ * Formats date to into multiple different ways:
+ * - date "Mar 24"
+ * - time "8:07 PM"
+ * - dateAndTime: "Mar 24, 8:07 PM"
+ *
+ * If date is on different year, it will show it.
+ *
+ * @param {Date} date to be formatted
+ * @param {Object} intl Intl object from react-intl
+ * @param {Object} [opts] options. Can be used to pass in timeZone. It should represent IANA time zone key.
+ *
+ * @returns {Object} "{ date, time, dateAndTime }"
+ */
+export const formatDateIntoPartials = (date, intl, opts = {}) => {
+  // If timeZone parameter is set, use it as formatting option
+  const { timeZone } = opts;
+  const timeZoneMaybe = getTimeZoneMaybe(timeZone);
+
+  // By default we can use moment() directly but in tests we need to use a specific dates.
+  // Tests inject now() function to intl wich returns predefined date
+  const now = intl.now ? moment(intl.now()) : moment();
+
+  // isSame: if the two moments have different time zones, the time zone of the first moment will be used for the comparison.
+  const localizedNow = timeZoneMaybe.timeZone ? now.tz(timeZone) : now;
+  const yearMaybe = localizedNow.isSame(date, 'year') ? {} : { year: 'numeric' };
+
+  return {
+    date: intl.formatDate(date, {
+      month: 'short',
+      day: 'numeric',
+      ...yearMaybe,
+      ...timeZoneMaybe,
+    }),
+    time: intl.formatDate(date, {
+      hour: 'numeric',
+      minute: 'numeric',
+      ...timeZoneMaybe,
+    }),
+    dateAndTime: intl.formatDate(date, {
+      ...yearMaybe,
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      ...timeZoneMaybe,
+    }),
+  };
+};
+
+/**
  * Converts string given in ISO8601 format to date object.
  * This is used e.g. when when dates are parsed form urlParams
  *
@@ -342,34 +392,6 @@ export const stringifyDateToISO8601 = date => {
  */
 export const formatDateStringToUTC = dateString => {
   return moment.utc(dateString).toDate();
-};
-
-/**
- * Formats date to into multiple different ways:
- * - date "Mar 24"
- * - time "8:07 PM"
- * - dateAndTime: "Mar 24, 8:07 PM"
- *
- * @param {Object} intl Intl object from react-intl
- * @param {Date} date to be formatted
- *
- * @returns {Object} "{ date, time, dateAndTime }"
- */
-export const formatDateToText = (intl, date) => {
-  return {
-    date: intl.formatDate(date, {
-      month: 'short',
-      day: 'numeric',
-    }),
-    time: intl.formatDate(date, {
-      hour: 'numeric',
-      minute: 'numeric',
-    }),
-    dateAndTime: intl.formatTime(date, {
-      month: 'short',
-      day: 'numeric',
-    }),
-  };
 };
 
 //////////
