@@ -385,11 +385,17 @@ export const parseDateFromISO8601 = (dateString, timeZone = null) => {
  * This string is used e.g. in urlParam.
  *
  * @param {Date} date
+ * @param {String} [timeZone] time zone id, see:
+ *   https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
  *
- * @returns {String} string in 'YYYY-MM-DD'format
+ * @returns {String} string in 'YYYY-MM-DD' format
  */
-export const stringifyDateToISO8601 = date => {
-  return moment(date).format('YYYY-MM-DD');
+export const stringifyDateToISO8601 = (date, timeZone = null) => {
+  return timeZone
+    ? moment(date)
+        .tz(timeZone)
+        .format('YYYY-MM-DD')
+    : moment(date).format('YYYY-MM-DD');
 };
 
 //////////

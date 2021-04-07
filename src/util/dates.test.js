@@ -161,5 +161,23 @@ describe('date utils', () => {
       const date = new Date(2018, 10, 23);
       expect(stringifyDateToISO8601(date)).toEqual('2018-11-23');
     });
+
+    it('should read given date in Etc/UTC and return ISO 8601 date string', () => {
+      expect(stringifyDateToISO8601(new Date('2020-04-07T00:00:00.000Z'), 'Etc/UTC')).toEqual(
+        '2020-04-07'
+      );
+    });
+
+    it('should read given date in Europe/Helsinki and return ISO 8601 date string', () => {
+      expect(
+        stringifyDateToISO8601(new Date('2020-02-06T22:00:00.000Z'), 'Europe/Helsinki')
+      ).toEqual('2020-02-07');
+    });
+
+    it('should read given date in America/New_York and return ISO 8601 date string', () => {
+      const date = new Date(Date.UTC(2020, 3, 7));
+      // UTC 2020-04-07 00:00 is previous day in New York
+      expect(stringifyDateToISO8601(date, 'America/New_York')).toEqual('2020-04-06');
+    });
   });
 });
