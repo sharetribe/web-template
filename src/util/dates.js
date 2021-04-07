@@ -7,6 +7,39 @@ export const START_DATE = 'startDate';
 export const END_DATE = 'endDate';
 
 /**
+ * Check if the browser's DateTimeFormat API supports time zones.
+ *
+ * @returns {Boolean} true if the browser returns current time zone.
+ */
+export const isTimeZoneSupported = () => {
+  if (!Intl || typeof Intl === 'undefined' || typeof Intl.DateTimeFormat === 'undefined') {
+    return false;
+  }
+
+  const dtf = new Intl.DateTimeFormat();
+  if (typeof dtf === 'undefined' || typeof dtf.resolvedOptions === 'undefined') {
+    return false;
+  }
+  return !!dtf.resolvedOptions().timeZone;
+};
+
+/**
+ * Check if the given time zone key is valid.
+ *
+ * @param {String} name of the time zone in IANA format
+ *
+ * @returns {Boolean} true if the browser recognizes the key.
+ */
+export const isValidTimeZone = timeZone => {
+  try {
+    new Intl.DateTimeFormat('en-US', { timeZone }).format();
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+/**
  * Check that the given parameter is a Date object.
  *
  * @param {Date} object that should be a Date.
@@ -186,54 +219,93 @@ export const diffInTime = (startDate, endDate, unit, useFloat = false) => {
 // Parsing and formatting //
 ////////////////////////////
 
+const getTimeZoneMaybe = timeZone => {
+  if (timeZone) {
+    if (!isTimeZoneSupported()) {
+      throw new Error(`Your browser doesn't support time zones.`);
+    }
+
+    if (!isValidTimeZone(timeZone)) {
+      throw new Error(`Given time zone key (${timeZone}) is not valid.`);
+    }
+    return { timeZone };
+  }
+  return {};
+};
+
 /**
- * Format the given date
+ * Format the given date. Printed string depends on how close the date is the current day.
+ * E.g. "Today, 9:10 PM", "Sun 6:02 PM", "Jul 20, 6:02 PM", "Jul 20 2020, 6:02 PM"
  *
+ * @param {Date} date Date to be formatted
  * @param {Object} intl Intl object from react-intl
  * @param {String} todayString translation for the current day
- * @param {Date} d Date to be formatted
+ * @param {Object} [opts] options. Can be used to pass in timeZone. It should represent IANA time zone key.
  *
  * @returns {String} formatted date
  */
-export const formatDate = (intl, todayString, d) => {
-  const paramsValid = intl && d instanceof Date && typeof todayString === 'string';
+export const formatDateWithProximity = (date, intl, todayString, opts = {}) => {
+  const paramsValid = intl && date instanceof Date && typeof todayString === 'string';
   if (!paramsValid) {
-    throw new Error(`Invalid params for formatDate: (${intl}, ${todayString}, ${d})`);
+    throw new Error(`Invalid params for formatDate: (${date}, ${intl}, ${todayString})`);
   }
+
+  // If timeZone parameter is set, use it as formatting option
+  const { timeZone } = opts;
+  const timeZoneMaybe = getTimeZoneMaybe(timeZone);
 
   // By default we can use moment() directly but in tests we need to use a specific dates.
-  // fakeIntl used in tests contains now() function wich returns predefined date
+  // Tests inject now() function to intl wich returns predefined date
   const now = intl.now ? moment(intl.now()) : moment();
-  const formattedTime = intl.formatTime(d);
-  let formattedDate;
 
-  if (now.isSame(d, 'day')) {
-    // e.g. "Today, 9:10pm"
-    formattedDate = todayString;
-  } else if (now.isSame(d, 'week')) {
-    // e.g. "Wed, 8:00pm"
-    formattedDate = intl.formatDate(d, {
-      weekday: 'short',
+  // isSame: if the two moments have different time zones, the time zone of the first moment will be used for the comparison.
+  const localizedNow = timeZoneMaybe.timeZone ? now.tz(timeZone) : now;
+
+  if (localizedNow.isSame(date, 'day')) {
+    // e.g. "Today, 9:10 PM"
+    const formattedTime = intl.formatDate(date, {
+      hour: 'numeric',
+      minute: 'numeric',
+      ...timeZoneMaybe,
     });
-  } else if (now.isSame(d, 'year')) {
-    // e.g. "Aug 22, 7:40pm"
-    formattedDate = intl.formatDate(d, {
+    return `${todayString}, ${formattedTime}`;
+  } else if (localizedNow.isSame(date, 'week')) {
+    // e.g.
+    // en-US: "Sun 6:02 PM"
+    // en-GB: "Sun 18:02"
+    // fr-FR: "dim. 18:02"
+    return intl.formatDate(date, {
+      weekday: 'short',
+      hour: 'numeric',
+      minute: 'numeric',
+      ...timeZoneMaybe,
+    });
+  } else if (localizedNow.isSame(date, 'year')) {
+    // e.g.
+    // en-US: "Jul 20, 6:02 PM"
+    // en-GB: "20 Jul, 18:02"
+    // fr-FR: "20 juil., 18:02"
+    return intl.formatDate(date, {
       month: 'short',
       day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      ...timeZoneMaybe,
     });
   } else {
-    // e.g. "Jul 17 2016, 6:02pm"
-    const date = intl.formatDate(d, {
+    // e.g.
+    // en-US: "Jul 20, 2020, 6:02 PM"
+    // en-GB: "20 Jul 2020, 18:02"
+    // fr-FR: "20 juil. 2020, 18:02"
+    return intl.formatDate(date, {
+      year: 'numeric',
       month: 'short',
       day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      ...timeZoneMaybe,
     });
-    const year = intl.formatDate(d, {
-      year: 'numeric',
-    });
-    formattedDate = `${date} ${year}`;
   }
-
-  return `${formattedDate}, ${formattedTime}`;
 };
 
 /**

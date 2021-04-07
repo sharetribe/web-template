@@ -1,11 +1,10 @@
-import { fakeIntl } from './test-data';
 import { createIntl, createIntlCache } from './reactIntl';
 import {
   isDate,
   isSameDate,
   daysBetween,
   minutesBetween,
-  formatDate,
+  formatDateWithProximity,
   parseDateFromISO8601,
   stringifyDateToISO8601,
 } from './dates';
@@ -93,19 +92,38 @@ describe('date utils', () => {
     });
   });
 
-  describe('formatDate()', () => {
-    /*
-      NOTE: These are not really testing the formatting properly since
-      the fakeIntl object has to be used in the tests.
-     */
-
+  describe('formatDateWithProximity()', () => {
     it('formats a date today', () => {
       const d = new Date(Date.UTC(2017, 10, 23, 13, 51));
-      expect(formatDate(fakeIntl, 'Today', d)).toEqual('Today, 13:51');
+      expect(formatDateWithProximity(d, intl, 'Today', { timeZone: 'Etc/UTC' })).toEqual(
+        'Today, 1:51 PM'
+      );
     });
-    it('formats a date', () => {
+    it('formats a date on same week', () => {
       const d = new Date(Date.UTC(2017, 10, 22, 13, 51));
-      expect(formatDate(fakeIntl, 'Today', d)).toEqual('2017-11-22, 13:51');
+      expect(formatDateWithProximity(d, intl, 'Today', { timeZone: 'Etc/UTC' })).toEqual(
+        'Wed 1:51 PM'
+      );
+    });
+    it('formats a date on same year', () => {
+      const d = new Date(Date.UTC(2017, 10, 2, 13, 51));
+      expect(formatDateWithProximity(d, intl, 'Today', { timeZone: 'Etc/UTC' })).toEqual(
+        'Nov 2, 1:51 PM'
+      );
+    });
+    it('formats a date on different year', () => {
+      const d = new Date(Date.UTC(2020, 10, 2, 13, 51));
+      expect(formatDateWithProximity(d, intl, 'Today', { timeZone: 'Etc/UTC' })).toEqual(
+        'Nov 2, 2020, 1:51 PM'
+      );
+    });
+    it('formats 2017-11-23 00:00 UTC as "Wed 7:00 PM" in New York tz. (I.e. not as "Today, 12:00 AM")', () => {
+      const d = new Date(Date.UTC(2017, 10, 23, 0, 0));
+      expect(formatDateWithProximity(d, intl, 'Today', { timeZone: 'America/New_York' })).toEqual(
+        'Wed 7:00 PM'
+      );
+    });
+  });
     });
   });
 
