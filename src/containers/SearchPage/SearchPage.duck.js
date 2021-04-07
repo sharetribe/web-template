@@ -4,7 +4,7 @@ import config from '../../config';
 import { storableError } from '../../util/errors';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { convertUnitToSubUnit, unitDivisor } from '../../util/currency';
-import { formatDateStringToUTC, getExclusiveEndDate } from '../../util/dates';
+import { parseDateFromISO8601, getExclusiveEndDate } from '../../util/dates';
 import { isOriginInUse } from '../../util/search';
 import { parse } from '../../util/urlHelpers';
 
@@ -150,8 +150,8 @@ export const searchListings = searchParams => (dispatch, getState, sdk) => {
 
     return hasValues
       ? {
-          start: formatDateStringToUTC(startDate),
-          end: formatDateStringToUTC(endDate),
+          start: parseDateFromISO8601(startDate, 'Etc/UTC'),
+          end: parseDateFromISO8601(endDate, 'Etc/UTC'),
           // Availability can be full or partial. Default value is full.
           availability: 'full',
         }
