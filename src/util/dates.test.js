@@ -4,6 +4,7 @@ import {
   isSameDate,
   daysBetween,
   minutesBetween,
+  diffInTime,
   formatDateWithProximity,
   formatDateIntoPartials,
   parseDateFromISO8601,
@@ -91,6 +92,14 @@ describe('date utils', () => {
       const start = new Date(2017, 0, 1, 10, 35, 0);
       const end = new Date(2017, 0, 1, 10, 55, 0);
       expect(minutesBetween(start, end)).toEqual(20);
+    });
+  });
+
+  describe('diffInTime()', () => {
+    it('should calculate 18 years between 2000-01-01 and 2018-01-01', () => {
+      const birth = new Date(Date.UTC(2000, 0, 1));
+      const now = new Date(Date.UTC(2018, 0, 1));
+      expect(diffInTime(now, birth, 'years', true)).toEqual(18);
     });
   });
 
