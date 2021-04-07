@@ -208,11 +208,13 @@ export const minutesBetween = (startDate, endDate) => {
  *
  * @param {Date} startDate start of the time period
  * @param {Date} endDate end of the time period.
+ * @param {String} unit time unit. E.g. 'years'.
+ * @param {String} useFloat Should return floating point numbers?
  *
  * @returns {Number} time difference between the given Date objects using given unit
  */
 export const diffInTime = (startDate, endDate, unit, useFloat = false) => {
-  return startDate.diff(endDate, unit, useFloat);
+  return moment(startDate).diff(endDate, unit, useFloat);
 };
 
 ////////////////////////////
