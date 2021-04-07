@@ -1,4 +1,5 @@
 import { fakeIntl } from './test-data';
+import { createIntl, createIntlCache } from './reactIntl';
 import {
   isDate,
   isSameDate,
@@ -10,6 +11,18 @@ import {
 } from './dates';
 
 describe('date utils', () => {
+  const cache = createIntlCache();
+  const intl = createIntl(
+    {
+      locale: 'en-US',
+      messages: {},
+    },
+    cache
+  );
+  // Tests inject now() function to intl wich returns predefined date
+  // Note: fakeIntl uses this same moment
+  intl.now = () => Date.UTC(2017, 10, 23, 12, 59);
+
   describe('isDate()', () => {
     it('should return false if parameters is string', () => {
       expect(isDate('Monday')).toBeFalsy();
