@@ -146,7 +146,11 @@ export const searchListings = searchParams => (dispatch, getState, sdk) => {
     const startDate = hasValues ? values[0] : null;
     const isNightlyBooking = config.bookingUnitType === 'line-item/night';
     const endDate =
-      hasValues && isNightlyBooking ? values[1] : hasValues ? getExclusiveEndDate(values[1]) : null;
+      hasValues && isNightlyBooking
+        ? values[1]
+        : hasValues
+        ? getExclusiveEndDate(values[1], 'Etc/UTC')
+        : null;
 
     return hasValues
       ? {
