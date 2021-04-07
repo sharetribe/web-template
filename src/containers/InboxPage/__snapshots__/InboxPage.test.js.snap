@@ -458,12 +458,12 @@ exports[`InboxPage matches snapshot 2`] = `
           <span
             className="dateSection"
           >
-            Feb 15 -
+            Feb 15, 2017 -
           </span>
           <span
             className="dateSection"
           >
-            Feb 16
+            Feb 16, 2017
           </span>
         </div>
       </div>
@@ -478,7 +478,7 @@ exports[`InboxPage matches snapshot 2`] = `
       </div>
       <div
         className="lastTransitionedAt lastTransitionedAtEmphasized"
-        title="2017-01-15 00:00"
+        title="2017-01-15"
       >
         2017-01-15
       </div>
@@ -949,12 +949,12 @@ exports[`InboxPage matches snapshot 4`] = `
           <span
             className="dateSection"
           >
-            Feb 15 -
+            Feb 15, 2017 -
           </span>
           <span
             className="dateSection"
           >
-            Feb 16
+            Feb 16, 2017
           </span>
         </div>
       </div>
@@ -969,7 +969,7 @@ exports[`InboxPage matches snapshot 4`] = `
       </div>
       <div
         className="lastTransitionedAt lastTransitionedAtEmphasized"
-        title="2017-01-15 00:00"
+        title="2017-01-15"
       >
         2017-01-15
       </div>
