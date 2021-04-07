@@ -1,7 +1,7 @@
 import Decimal from 'decimal.js';
 import moment from 'moment';
 import { types as sdkTypes } from './sdkLoader';
-import { nightsBetween } from '../util/dates';
+import { daysBetween } from '../util/dates';
 import {
   TRANSITION_ACCEPT,
   TRANSITION_CONFIRM_PAYMENT,
@@ -179,7 +179,7 @@ export const createTransaction = options => {
       }),
     ],
   } = options;
-  const nightCount = booking ? nightsBetween(booking.attributes.start, booking.attributes.end) : 1;
+  const dayCount = booking ? daysBetween(booking.attributes.start, booking.attributes.end) : 1;
   return {
     id: new UUID(id),
     type: 'transaction',
@@ -191,10 +191,10 @@ export const createTransaction = options => {
       payoutTotal: new Money(total.amount - commission.amount, total.currency),
       lineItems: [
         {
-          code: 'line-item/night',
+          code: 'line-item/day',
           includeFor: ['customer', 'provider'],
-          quantity: new Decimal(nightCount),
-          unitPrice: new Money(total.amount / nightCount, total.currency),
+          quantity: new Decimal(dayCount),
+          unitPrice: new Money(total.amount / dayCount, total.currency),
           lineTotal: total,
           reversal: false,
         },
