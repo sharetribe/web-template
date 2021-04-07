@@ -17,7 +17,7 @@ import classNames from 'classnames';
 import moment from 'moment';
 import config from '../../config';
 import { propTypes, TIME_SLOT_DAY } from '../../util/types';
-import { dateFromAPIToLocalNoon } from '../../util/dates';
+import { timeOfDayFromTimeZoneToLocal } from '../../util/dates';
 import { ensureTimeSlot } from '../../util/data';
 
 import NextMonthIcon from './NextMonthIcon';
@@ -110,7 +110,10 @@ const timeSlotEqualsDay = (timeSlot, day) => {
   // Time slots describe available dates by providing a start and
   // an end date which is the following day. In the single date picker
   // the start date is used to represent available dates.
-  const localStartDate = dateFromAPIToLocalNoon(timeSlot.attributes.start);
+
+  // In day-based booking process, timeSlots come in server's time zone.
+  const apiTimeZone = 'Etc/UTC';
+  const localStartDate = timeOfDayFromTimeZoneToLocal(timeSlot.attributes.start, apiTimeZone);
 
   const isDay = ensureTimeSlot(timeSlot).attributes.type === TIME_SLOT_DAY;
   return isDay && isSameDay(day, moment(localStartDate));

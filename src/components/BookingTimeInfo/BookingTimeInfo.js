@@ -3,7 +3,7 @@ import { bool } from 'prop-types';
 import classNames from 'classnames';
 import { txIsEnquired } from '../../util/transaction';
 import {
-  dateFromAPIToLocalNoon,
+  timeOfDayFromTimeZoneToLocal,
   daysBetween,
   formatDateToText,
   subtractTime,
@@ -26,8 +26,9 @@ const bookingData = (unitType, tx, isOrder, intl) => {
   // where there are preparation time needed between bookings.
   // Read more: https://www.sharetribe.com/api-reference/marketplace.html#bookings
   const { start, end, displayStart, displayEnd } = tx.booking.attributes;
-  const startDate = dateFromAPIToLocalNoon(displayStart || start);
-  const endDateRaw = dateFromAPIToLocalNoon(displayEnd || end);
+  const apiTimeZone = 'Etc/UTC';
+  const startDate = timeOfDayFromTimeZoneToLocal(displayStart || start, apiTimeZone);
+  const endDateRaw = timeOfDayFromTimeZoneToLocal(displayEnd || end, apiTimeZone);
   const isDaily = unitType === LINE_ITEM_DAY;
   const isNightly = unitType === LINE_ITEM_NIGHT;
   const isUnits = unitType === LINE_ITEM_UNITS;
