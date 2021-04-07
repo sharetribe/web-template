@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage, FormattedDate } from '../../util/reactIntl';
 import { LINE_ITEM_NIGHT, DATE_TYPE_DATE, propTypes } from '../../util/types';
-import { dateFromAPIToLocalNoon, subtractTime } from '../../util/dates';
+import { timeOfDayFromTimeZoneToLocal, subtractTime } from '../../util/dates';
 
 import css from './BookingBreakdown.module.css';
 
@@ -63,8 +63,9 @@ const LineItemBookingPeriod = props => {
   // where there are preparation time needed between bookings.
   // Read more: https://www.sharetribe.com/api-reference/marketplace.html#bookings
   const { start, end, displayStart, displayEnd } = booking.attributes;
-  const localStartDate = dateFromAPIToLocalNoon(displayStart || start);
-  const localEndDateRaw = dateFromAPIToLocalNoon(displayEnd || end);
+  const apiTimeZone = 'Etc/UTC';
+  const localStartDate = timeOfDayFromTimeZoneToLocal(displayStart || start, apiTimeZone);
+  const localEndDateRaw = timeOfDayFromTimeZoneToLocal(displayEnd || end, apiTimeZone);
 
   const isNightly = unitType === LINE_ITEM_NIGHT;
   const endDay = isNightly ? localEndDateRaw : subtractTime(localEndDateRaw, 1, 'days');
