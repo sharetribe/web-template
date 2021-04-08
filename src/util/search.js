@@ -41,3 +41,14 @@ export const findOptionsForSelectFilter = (filterId, filters) => {
   const filter = filters.find(f => f.id === filterId);
   return filter && filter.config && filter.config.options ? filter.config.options : [];
 };
+
+/**
+ * Check if the main search type is 'keywords'
+ */
+export const isMainSearchTypeKeywords = config => config.mainSearchType === 'keywords';
+
+/**
+ * Check if the origin parameter is currently active.
+ */
+export const isOriginInUse = config =>
+  config.mainSearchType === 'location' && config.sortSearchByDistance;
