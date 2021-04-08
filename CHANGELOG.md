@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Make Topbar search configurable and use keyword-search there
+  [#20](https://github.com/sharetribe/ftw-product/pull/20)
 - [change] Move stripe related forms and forms directory
   [#17](https://github.com/sharetribe/ftw-product/pull/17)
 - [change] Remove PayoutDetailsForm and rename some functions

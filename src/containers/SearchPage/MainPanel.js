@@ -6,6 +6,7 @@ import omit from 'lodash/omit';
 import config from '../../config';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { FormattedMessage } from '../../util/reactIntl';
+import { isMainSearchTypeKeywords } from '../../util/search';
 import { createResourceLocatorString } from '../../util/routes';
 import { isAnyFilterActive } from '../../util/search';
 import { propTypes } from '../../util/types';
@@ -169,8 +170,11 @@ class MainPanel extends Component {
       sortConfig,
     } = this.props;
 
-    const primaryFilters = filterConfig.filter(f => f.group === 'primary');
-    const secondaryFilters = filterConfig.filter(f => f.group !== 'primary');
+    const availableFilters = isMainSearchTypeKeywords(config)
+      ? filterConfig.filter(f => f.type !== 'KeywordFilter')
+      : filterConfig;
+    const primaryFilters = availableFilters.filter(f => f.group === 'primary');
+    const secondaryFilters = availableFilters.filter(f => f.group !== 'primary');
     const hasSecondaryFilters = !!(secondaryFilters && secondaryFilters.length > 0);
 
     // Selected aka active filters
@@ -268,7 +272,7 @@ class MainPanel extends Component {
           resetAll={this.resetAll}
           selectedFiltersCount={selectedFiltersCount}
         >
-          {filterConfig.map(config => {
+          {availableFilters.map(config => {
             return (
               <FilterComponent
                 key={`SearchFiltersMobile.${config.id}`}

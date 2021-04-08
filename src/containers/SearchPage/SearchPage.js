@@ -11,6 +11,7 @@ import config from '../../config';
 import { injectIntl, intlShape } from '../../util/reactIntl';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
+import { isOriginInUse } from '../../util/search';
 import { parse, stringify } from '../../util/urlHelpers';
 import { propTypes } from '../../util/types';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
@@ -77,7 +78,7 @@ export class SearchPageComponent extends Component {
       });
 
       //const viewportMapCenter = SearchMap.getMapCenter(map);
-      const originMaybe = config.sortSearchByDistance ? { origin: viewportCenter } : {};
+      const originMaybe = isOriginInUse(config) ? { origin: viewportCenter } : {};
 
       const searchParams = {
         address,

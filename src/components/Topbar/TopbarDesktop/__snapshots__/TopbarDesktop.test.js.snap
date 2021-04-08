@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TopbarDesktop data matches snapshot 1`] = `
+exports[`TopbarDesktop data with keywords search matches snapshot 1`] = `
 <nav
   className="root"
 >
@@ -16,7 +16,236 @@ exports[`TopbarDesktop data matches snapshot 1`] = `
     <img
       alt="TopbarDesktop.logo"
       className="logo"
-      src="saunatime-logo.png"
+      src="sneakertime-logo.png"
+    />
+  </a>
+  <form
+    action="/"
+    className="searchLink"
+    method="post"
+    onMouseOver={[Function]}
+    onSubmit={[Function]}
+    onTouchStart={[Function]}
+  >
+    <div
+      className="keywordSearchWrapper topbarSearchWithLeftPadding"
+    >
+      <button
+        className="searchSubmit"
+      >
+        <div
+          className="desktopIcon"
+        >
+          <svg
+            className="iconSvg"
+            height="22"
+            viewBox="0 0 21 22"
+            width="21"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g
+              className="iconSvgGroup"
+              fill="none"
+              fillRule="evenodd"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              transform="matrix(-1 0 0 1 20 1)"
+            >
+              <path
+                d="M13 14l5.241 5.241"
+              />
+              <circle
+                cx="7.5"
+                cy="7.5"
+                r="7.5"
+              />
+            </g>
+          </svg>
+        </div>
+      </button>
+      <input
+        autoComplete="off"
+        className="desktopInput"
+        id="keyword-search"
+        name="keywords"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder="TopbarSearchForm.placeholder"
+        type="text"
+        value=""
+      />
+    </div>
+  </form>
+  <a
+    className="createListingLink"
+    href="/l/new"
+    onClick={[Function]}
+    onMouseOver={[Function]}
+    onTouchStart={[Function]}
+    style={Object {}}
+    title={null}
+  >
+    <span
+      className="createListing"
+    >
+      <span>
+        TopbarDesktop.createListing
+      </span>
+    </span>
+  </a>
+  <a
+    className="inboxLink"
+    href="/inbox/sales"
+    onClick={[Function]}
+    onMouseOver={[Function]}
+    onTouchStart={[Function]}
+    style={Object {}}
+    title={null}
+  >
+    <span
+      className="inbox"
+    >
+      <span>
+        TopbarDesktop.inbox
+      </span>
+    </span>
+  </a>
+  <div
+    className="root"
+    onBlur={[Function]}
+    onKeyDown={[Function]}
+    tabIndex={0}
+  >
+    <button
+      className="root profileMenuLabel"
+      onBlur={[Function]}
+      onClick={[Function]}
+    >
+      <div
+        className="root avatar"
+        title=""
+      >
+        <span
+          className="initials"
+        />
+      </div>
+    </button>
+    <div
+      className="root profileMenuContent isClosed"
+      style={
+        Object {
+          "left": "-10000px",
+        }
+      }
+    >
+      <ul
+        className="content"
+      >
+        <li
+          className="root"
+          role="menuitem"
+        >
+          <a
+            className="yourListingsLink"
+            href="/listings"
+            onClick={[Function]}
+            onMouseOver={[Function]}
+            onTouchStart={[Function]}
+            style={Object {}}
+            title={null}
+          >
+            <span
+              className="menuItemBorder"
+            />
+            <span>
+              TopbarDesktop.yourListingsLink
+            </span>
+          </a>
+        </li>
+        <li
+          className="root"
+          role="menuitem"
+        >
+          <a
+            className="profileSettingsLink"
+            href="/profile-settings"
+            onClick={[Function]}
+            onMouseOver={[Function]}
+            onTouchStart={[Function]}
+            style={Object {}}
+            title={null}
+          >
+            <span
+              className="menuItemBorder"
+            />
+            <span>
+              TopbarDesktop.profileSettingsLink
+            </span>
+          </a>
+        </li>
+        <li
+          className="root"
+          role="menuitem"
+        >
+          <a
+            className="yourListingsLink"
+            href="/account"
+            onClick={[Function]}
+            onMouseOver={[Function]}
+            onTouchStart={[Function]}
+            style={Object {}}
+            title={null}
+          >
+            <span
+              className="menuItemBorder"
+            />
+            <span>
+              TopbarDesktop.accountSettingsLink
+            </span>
+          </a>
+        </li>
+        <li
+          className="root"
+          role="menuitem"
+        >
+          <button
+            className="logoutButton inlineTextButton"
+            disabled={false}
+            onClick={[Function]}
+          >
+            <span
+              className="menuItemBorder"
+            />
+            <span>
+              TopbarDesktop.logout
+            </span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+`;
+
+exports[`TopbarDesktop data with location search matches snapshot 1`] = `
+<nav
+  className="root"
+>
+  <a
+    className="logoLink NamedLink_active"
+    href="/"
+    onClick={[Function]}
+    onMouseOver={[Function]}
+    onTouchStart={[Function]}
+    style={Object {}}
+    title={null}
+  >
+    <img
+      alt="TopbarDesktop.logo"
+      className="logo"
+      src="sneakertime-logo.png"
     />
   </a>
   <form
