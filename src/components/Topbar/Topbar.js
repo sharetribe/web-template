@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import config from '../../config';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
-import { isMainSearchTypeKeywords } from '../../util/search';
+import { isMainSearchTypeKeywords, isOriginInUse } from '../../util/search';
 import { withViewport } from '../../util/contextHelpers';
 import { parse, stringify } from '../../util/urlHelpers';
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
@@ -109,7 +109,7 @@ class TopbarComponent extends Component {
       // topbar search defaults to 'location' search
       const { search, selectedPlace } = values?.location;
       const { origin, bounds } = selectedPlace;
-      const originMaybe = config.sortSearchByDistance ? { origin } : {};
+      const originMaybe = isOriginInUse(config) ? { origin } : {};
 
       return {
         ...originMaybe,
@@ -194,7 +194,9 @@ class TopbarComponent extends Component {
       }
 
       // Only render current search if full place object is available in the URL params
-      const locationFieldsPresent = config.sortSearchByDistance ? address && origin && bounds : address && bounds;
+      const locationFieldsPresent = isOriginInUse(config)
+        ? address && origin && bounds
+        : address && bounds;
       return {
         location: locationFieldsPresent
           ? {

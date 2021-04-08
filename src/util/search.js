@@ -46,3 +46,9 @@ export const findOptionsForSelectFilter = (filterId, filters) => {
  * Check if the main search type is 'keywords'
  */
 export const isMainSearchTypeKeywords = config => config.mainSearchType === 'keywords';
+
+/**
+ * Check if the origin parameter is currently active.
+ */
+export const isOriginInUse = config =>
+  config.mainSearchType === 'location' && config.sortSearchByDistance;
