@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { any, bool, func, object, number, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { FormattedMessage, intlShape } from '../../../util/reactIntl';
@@ -23,6 +23,7 @@ import css from './TopbarDesktop.module.css';
 const TopbarDesktop = props => {
   const {
     className,
+    appConfig,
     currentUser,
     currentPage,
     rootClassName,
@@ -51,6 +52,7 @@ const TopbarDesktop = props => {
       desktopInputRoot={css.topbarSearchWithLeftPadding}
       onSubmit={onSearchSubmit}
       initialValues={initialSearchFormValues}
+      appConfig={appConfig}
     />
   );
 
@@ -157,8 +159,6 @@ const TopbarDesktop = props => {
   );
 };
 
-const { bool, func, object, number, string } = PropTypes;
-
 TopbarDesktop.defaultProps = {
   rootClassName: null,
   className: null,
@@ -166,6 +166,7 @@ TopbarDesktop.defaultProps = {
   currentPage: null,
   notificationCount: 0,
   initialSearchFormValues: {},
+  appConfig: null,
 };
 
 TopbarDesktop.propTypes = {
@@ -180,6 +181,7 @@ TopbarDesktop.propTypes = {
   onSearchSubmit: func.isRequired,
   initialSearchFormValues: object,
   intl: intlShape.isRequired,
+  appConfig: object,
 };
 
 export default TopbarDesktop;

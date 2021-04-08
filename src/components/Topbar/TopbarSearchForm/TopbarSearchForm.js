@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { bool, func, object, string } from 'prop-types';
 import { Form as FinalForm, Field } from 'react-final-form';
 import classNames from 'classnames';
 
@@ -98,28 +98,31 @@ class TopbarSearchFormComponent extends Component {
   }
 
   onChange(location) {
-    if (!isMainSearchTypeKeywords(config) && location.selectedPlace) {
+    const { appConfig, onSubmit } = this.props;
+    if (!isMainSearchTypeKeywords(appConfig) && location.selectedPlace) {
       // Note that we use `onSubmit` instead of the conventional
       // `handleSubmit` prop for submitting. We want to autosubmit
       // when a place is selected, and don't require any extra
       // validations for the form.
-      this.props.onSubmit({ location });
+      onSubmit({ location });
       // blur search input to hide software keyboard
       this.searchInput?.blur();
     }
   }
 
   onSubmit(values) {
-    if (isMainSearchTypeKeywords(config)) {
-      this.props.onSubmit({ keywords: values.keywords });
+    const { appConfig, onSubmit } = this.props;
+    if (isMainSearchTypeKeywords(appConfig)) {
+      onSubmit({ keywords: values.keywords });
       // blur search input to hide software keyboard
       this.searchInput?.blur();
     }
   }
 
   render() {
-    const { onSubmit, ...restOfProps } = this.props;
-    const submit = isMainSearchTypeKeywords(config) ? this.onSubmit : onSubmit;
+    const { onSubmit, appConfig, ...restOfProps } = this.props;
+    const isKeywordsSearch = isMainSearchTypeKeywords(appConfig);
+    const submit = isKeywordsSearch ? this.onSubmit : onSubmit;
     return (
       <FinalForm
         {...restOfProps}
@@ -135,7 +138,6 @@ class TopbarSearchFormComponent extends Component {
           } = formRenderProps;
           const classes = classNames(rootClassName, className);
           const desktopInputRootClass = desktopInputRoot || css.desktopInputRoot;
-          const isKeywordsSearch = isMainSearchTypeKeywords(config);
 
           // Location search: allow form submit only when the place has changed
           const preventFormSubmit = e => e.preventDefault();
@@ -173,13 +175,12 @@ class TopbarSearchFormComponent extends Component {
   }
 }
 
-const { func, string, bool } = PropTypes;
-
 TopbarSearchFormComponent.defaultProps = {
   rootClassName: null,
   className: null,
   desktopInputRoot: null,
   isMobile: false,
+  appConfig: config,
 };
 
 TopbarSearchFormComponent.propTypes = {
@@ -188,6 +189,7 @@ TopbarSearchFormComponent.propTypes = {
   desktopInputRoot: string,
   onSubmit: func.isRequired,
   isMobile: bool,
+  appConfig: object,
 
   // from injectIntl
   intl: intlShape.isRequired,
