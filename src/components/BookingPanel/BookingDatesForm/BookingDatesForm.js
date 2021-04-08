@@ -3,12 +3,11 @@ import { string, bool, arrayOf, array, func } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import classNames from 'classnames';
-import moment from 'moment';
 
 import config from '../../../config';
 import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
 import { required, bookingDatesRequired, composeValidators } from '../../../util/validators';
-import { START_DATE, END_DATE } from '../../../util/dates';
+import { START_DATE, END_DATE, getStartOf, addTime } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { Form, IconSpinner, PrimaryButton, FieldDateRangeInput } from '../../../components';
 
@@ -178,12 +177,9 @@ export class BookingDatesFormComponent extends Component {
             day: 'numeric',
           };
 
-          const now = moment();
-          const today = now.startOf('day').toDate();
-          const tomorrow = now
-            .startOf('day')
-            .add(1, 'days')
-            .toDate();
+          const now = new Date();
+          const today = getStartOf(now);
+          const tomorrow = addTime(today, 1, 'days');
           const startDatePlaceholderText =
             startDatePlaceholder || intl.formatDate(today, dateFormatOptions);
           const endDatePlaceholderText =
