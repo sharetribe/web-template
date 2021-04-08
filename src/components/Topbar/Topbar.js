@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import config from '../../config';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
+import { isMainSearchTypeKeywords } from '../../util/search';
 import { withViewport } from '../../util/contextHelpers';
 import { parse, stringify } from '../../util/urlHelpers';
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
@@ -99,15 +100,26 @@ class TopbarComponent extends Component {
 
   handleSubmit(values) {
     const { currentSearchParams } = this.props;
-    const { search, selectedPlace } = values.location;
     const { history } = this.props;
-    const { origin, bounds } = selectedPlace;
-    const originMaybe = config.sortSearchByDistance ? { origin } : {};
+
+    const topbarSearchParams = () => {
+      if (isMainSearchTypeKeywords(config)) {
+        return { keywords: values?.keywords };
+      }
+      // topbar search defaults to 'location' search
+      const { search, selectedPlace } = values?.location;
+      const { origin, bounds } = selectedPlace;
+      const originMaybe = config.sortSearchByDistance ? { origin } : {};
+
+      return {
+        ...originMaybe,
+        address: search,
+        bounds,
+      };
+    };
     const searchParams = {
       ...currentSearchParams,
-      ...originMaybe,
-      address: search,
-      bounds,
+      ...topbarSearchParams(),
     };
     history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, searchParams));
   }
@@ -154,7 +166,7 @@ class TopbarComponent extends Component {
       showGenericError,
     } = this.props;
 
-    const { mobilemenu, mobilesearch, address, origin, bounds } = parse(location.search, {
+    const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
       latlng: ['origin'],
       latlngBounds: ['bounds'],
     });
@@ -176,18 +188,23 @@ class TopbarComponent extends Component {
       />
     );
 
-    // Only render current search if full place object is available in the URL params
-    const locationFieldsPresent = config.sortSearchByDistance
-      ? address && origin && bounds
-      : address && bounds;
-    const initialSearchFormValues = {
-      location: locationFieldsPresent
-        ? {
-            search: address,
-            selectedPlace: { address, origin, bounds },
-          }
-        : null,
+    const topbarSearcInitialValues = () => {
+      if (isMainSearchTypeKeywords(config)) {
+        return { keywords };
+      }
+
+      // Only render current search if full place object is available in the URL params
+      const locationFieldsPresent = config.sortSearchByDistance ? address && origin && bounds : address && bounds;
+      return {
+        location: locationFieldsPresent
+          ? {
+              search: address,
+              selectedPlace: { address, origin, bounds },
+            }
+          : null,
+      };
     };
+    const initialSearchFormValues = topbarSearcInitialValues();
 
     const classes = classNames(rootClassName || css.root, className);
 
