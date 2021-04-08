@@ -36,6 +36,7 @@
     "lodash": "^4.17.19",
     "mapbox-gl-multitouch": "^1.0.3",
     "moment": "^2.22.2",
+    "moment-timezone": "^0.5.33",
     "object.entries": "^1.1.2",
     "object.values": "^1.1.1",
     "passport": "^0.4.1",
@@ -122,11 +123,9 @@
       "last 1 safari version"
     ]
   },
-
-   "engines": {
+  "engines": {
     "node": "^12.19.0 || >= 14.15.0"
   },
-
   "prettier": {
     "singleQuote": true,
     "trailingComma": "es5",

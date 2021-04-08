@@ -26,12 +26,11 @@
  * are forced to estimate the information here.
  */
 import React from 'react';
-import moment from 'moment';
 import Decimal from 'decimal.js';
 
 import config from '../../../config';
 import { types as sdkTypes } from '../../../util/sdkLoader';
-import { dateFromLocalToAPI } from '../../../util/dates';
+import { dateFromLocalToAPI, getStartOf } from '../../../util/dates';
 import {
   TRANSITION_REQUEST_PAYMENT,
   TX_TRANSITION_ACTOR_CUSTOMER,
@@ -84,16 +83,8 @@ const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => 
   // The result is: local timestamp.subtract(12h).add(timezoneoffset) (in eg. -23 h)
 
   // local noon -> startOf('day') => 00:00 local => remove timezoneoffset => 00:00 API (UTC)
-  const serverDayStart = dateFromLocalToAPI(
-    moment(bookingStart)
-      .startOf('day')
-      .toDate()
-  );
-  const serverDayEnd = dateFromLocalToAPI(
-    moment(bookingEnd)
-      .startOf('day')
-      .toDate()
-  );
+  const serverDayStart = dateFromLocalToAPI(getStartOf(bookingStart, 'day'));
+  const serverDayEnd = dateFromLocalToAPI(getStartOf(bookingEnd, 'day'));
 
   return {
     id: new UUID('estimated-transaction'),

@@ -4,9 +4,10 @@
  * This data is saved to Session Store which only exists while the browsing session exists -
  * e.g. tab is open. (Session Store is not related to session cookies.)
  */
-import moment from 'moment';
 import reduce from 'lodash/reduce';
 import Decimal from 'decimal.js';
+
+import { isAfterDate, subtractTime } from '../../util/dates';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { TRANSITIONS } from '../../util/transaction';
 
@@ -111,7 +112,7 @@ export const storedData = storageKey => {
 
     // If sessionStore contains freshly saved data (max 1 day old), use it
     const isFreshlySaved = storedAt
-      ? moment(storedAt).isAfter(moment().subtract(1, 'days'))
+      ? isAfterDate(storedAt, subtractTime(new Date(), 1, 'days'))
       : false;
 
     // resolve transaction as valid if it is missing

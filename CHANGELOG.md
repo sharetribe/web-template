@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [add] Add moment-timezone library on dates.js. Reorder & group util/dates functions. Remove
+  unnecessary spread of moment library imports.
+  [#18](https://github.com/sharetribe/ftw-product/pull/18)
 - [change] Make Topbar search configurable and use keyword-search there
   [#20](https://github.com/sharetribe/ftw-product/pull/20)
 - [change] Move stripe related forms and forms directory
