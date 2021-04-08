@@ -1,10 +1,12 @@
 import unionWith from 'lodash/unionWith';
+
+import config from '../../config';
 import { storableError } from '../../util/errors';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { convertUnitToSubUnit, unitDivisor } from '../../util/currency';
 import { formatDateStringToUTC, getExclusiveEndDate } from '../../util/dates';
+import { isOriginInUse } from '../../util/search';
 import { parse } from '../../util/urlHelpers';
-import config from '../../config';
 
 // Pagination page size might need to be dynamic on responsive page layouts
 // Current design has max 3 columns 12 is divisible by 2 and 3
@@ -213,7 +215,7 @@ export const loadData = (params, search) => {
     latlngBounds: ['bounds'],
   });
   const { page = 1, address, origin, ...rest } = queryParams;
-  const originMaybe = config.sortSearchByDistance && origin ? { origin } : {};
+  const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
   return searchListings({
     ...rest,
     ...originMaybe,

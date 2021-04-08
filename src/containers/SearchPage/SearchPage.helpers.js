@@ -1,7 +1,7 @@
 import intersection from 'lodash/intersection';
 import config from '../../config';
 import { createResourceLocatorString } from '../../util/routes';
-import { parseSelectFilterOptions } from '../../util/search';
+import { parseSelectFilterOptions, isOriginInUse } from '../../util/search';
 import { createSlug } from '../../util/urlHelpers';
 import routeConfiguration from '../../routing/routeConfiguration';
 
@@ -105,7 +105,7 @@ export const validURLParamsForExtendedData = (params, filters) => {
 export const pickSearchParamsOnly = (params, filters, sortConfig) => {
   const { address, origin, bounds, ...rest } = params || {};
   const boundsMaybe = bounds ? { bounds } : {};
-  const originMaybe = config.sortSearchByDistance && origin ? { origin } : {};
+  const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
   const filterParams = validFilterParams(rest, filters);
   const sort = rest[sortConfig.queryParamName];
   const sortMaybe = sort ? { sort } : {};
