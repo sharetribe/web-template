@@ -26,7 +26,8 @@ export const isTimeZoneSupported = () => {
 /**
  * Check if the given time zone key is valid.
  *
- * @param {String} name of the time zone in IANA format
+ * @param {String} timeZone time zone id, see:
+ *   https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
  *
  * @returns {Boolean} true if the browser recognizes the key.
  */
