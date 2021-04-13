@@ -167,7 +167,12 @@ export const subtractTime = (date, offset, unit, timeZone) => {
 ///////////////
 
 /**
- * Calculate the number of days between the given dates
+ * Calculate the number of days between the given dates.
+ * This uses moment#diff and, therefore, it just checks,
+ * if there are 1000x60x60x24 milliseconds between date objects.
+ *
+ * Note: This should not be used for checking if the local date has
+ *       changed between "2021-04-07 23:00" and "2021-04-08 05:00".
  *
  * @param {Date} startDate start of the time period
  * @param {Date} endDate end of the time period. NOTE: with daily
