@@ -9,7 +9,7 @@ import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
 import { propTypes } from '../../util/types';
 import { ensureListing, ensureTransaction } from '../../util/data';
-import { dateFromAPIToLocalNoon } from '../../util/dates';
+import { timeOfDayFromTimeZoneToLocal } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import { txIsPaymentPending } from '../../util/transaction';
 import routeConfiguration from '../../routing/routeConfiguration';
@@ -120,6 +120,7 @@ export const TransactionPageComponent = props => {
   ) {
     const currentBooking = ensureListing(currentTransaction.booking);
 
+    const apiTimeZone = 'Etc/UTC';
     const initialValues = {
       listing: currentListing,
       // Transaction with payment pending should be passed to CheckoutPage
@@ -129,8 +130,9 @@ export const TransactionPageComponent = props => {
       // (E.g. quantity is used when booking is created.)
       bookingData: {},
       bookingDates: {
-        bookingStart: dateFromAPIToLocalNoon(currentBooking.attributes.start),
-        bookingEnd: dateFromAPIToLocalNoon(currentBooking.attributes.end),
+        // In day-based booking process, booking start and end come in server's time zone.
+        bookingStart: timeOfDayFromTimeZoneToLocal(currentBooking.attributes.start, apiTimeZone),
+        bookingEnd: timeOfDayFromTimeZoneToLocal(currentBooking.attributes.end, apiTimeZone),
       },
     };
 

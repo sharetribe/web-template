@@ -139,7 +139,7 @@ exports[`TransactionPanel - Order accepted matches snapshot 1`] = `
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -289,7 +289,7 @@ exports[`TransactionPanel - Order accepted matches snapshot 1`] = `
               "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
               "lineItems": Array [
                 Object {
-                  "code": "line-item/night",
+                  "code": "line-item/day",
                   "includeFor": Array [
                     "customer",
                     "provider",
@@ -582,7 +582,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -913,7 +913,7 @@ exports[`TransactionPanel - Order autodeclined matches snapshot 1`] = `
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -1063,7 +1063,7 @@ exports[`TransactionPanel - Order autodeclined matches snapshot 1`] = `
               "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
               "lineItems": Array [
                 Object {
-                  "code": "line-item/night",
+                  "code": "line-item/day",
                   "includeFor": Array [
                     "customer",
                     "provider",
@@ -1355,7 +1355,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -1687,7 +1687,7 @@ exports[`TransactionPanel - Order canceled matches snapshot 1`] = `
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -1837,7 +1837,7 @@ exports[`TransactionPanel - Order canceled matches snapshot 1`] = `
               "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
               "lineItems": Array [
                 Object {
-                  "code": "line-item/night",
+                  "code": "line-item/day",
                   "includeFor": Array [
                     "customer",
                     "provider",
@@ -2130,7 +2130,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -2461,7 +2461,7 @@ exports[`TransactionPanel - Order declined matches snapshot 1`] = `
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -2611,7 +2611,7 @@ exports[`TransactionPanel - Order declined matches snapshot 1`] = `
               "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
               "lineItems": Array [
                 Object {
-                  "code": "line-item/night",
+                  "code": "line-item/day",
                   "includeFor": Array [
                     "customer",
                     "provider",
@@ -2903,7 +2903,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -3235,7 +3235,7 @@ exports[`TransactionPanel - Order delivered matches snapshot 1`] = `
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -3390,7 +3390,7 @@ exports[`TransactionPanel - Order delivered matches snapshot 1`] = `
               "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
               "lineItems": Array [
                 Object {
-                  "code": "line-item/night",
+                  "code": "line-item/day",
                   "includeFor": Array [
                     "customer",
                     "provider",
@@ -3688,7 +3688,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -4024,7 +4024,7 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -4174,7 +4174,7 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
               "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
               "lineItems": Array [
                 Object {
-                  "code": "line-item/night",
+                  "code": "line-item/day",
                   "includeFor": Array [
                     "customer",
                     "provider",
@@ -4465,7 +4465,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -4796,7 +4796,7 @@ exports[`TransactionPanel - Order preauthorized matches snapshot 1`] = `
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -4946,7 +4946,7 @@ exports[`TransactionPanel - Order preauthorized matches snapshot 1`] = `
               "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
               "lineItems": Array [
                 Object {
-                  "code": "line-item/night",
+                  "code": "line-item/day",
                   "includeFor": Array [
                     "customer",
                     "provider",
@@ -5238,7 +5238,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -5570,7 +5570,7 @@ exports[`TransactionPanel - Sale accepted matches snapshot 1`] = `
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -5720,7 +5720,7 @@ exports[`TransactionPanel - Sale accepted matches snapshot 1`] = `
               "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
               "lineItems": Array [
                 Object {
-                  "code": "line-item/night",
+                  "code": "line-item/day",
                   "includeFor": Array [
                     "customer",
                     "provider",
@@ -6013,7 +6013,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -6344,7 +6344,7 @@ exports[`TransactionPanel - Sale autodeclined matches snapshot 1`] = `
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -6494,7 +6494,7 @@ exports[`TransactionPanel - Sale autodeclined matches snapshot 1`] = `
               "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
               "lineItems": Array [
                 Object {
-                  "code": "line-item/night",
+                  "code": "line-item/day",
                   "includeFor": Array [
                     "customer",
                     "provider",
@@ -6786,7 +6786,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -7118,7 +7118,7 @@ exports[`TransactionPanel - Sale canceled matches snapshot 1`] = `
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -7268,7 +7268,7 @@ exports[`TransactionPanel - Sale canceled matches snapshot 1`] = `
               "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
               "lineItems": Array [
                 Object {
-                  "code": "line-item/night",
+                  "code": "line-item/day",
                   "includeFor": Array [
                     "customer",
                     "provider",
@@ -7561,7 +7561,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -7892,7 +7892,7 @@ exports[`TransactionPanel - Sale declined matches snapshot 1`] = `
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -8042,7 +8042,7 @@ exports[`TransactionPanel - Sale declined matches snapshot 1`] = `
               "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
               "lineItems": Array [
                 Object {
-                  "code": "line-item/night",
+                  "code": "line-item/day",
                   "includeFor": Array [
                     "customer",
                     "provider",
@@ -8334,7 +8334,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -8666,7 +8666,7 @@ exports[`TransactionPanel - Sale delivered matches snapshot 1`] = `
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -8816,7 +8816,7 @@ exports[`TransactionPanel - Sale delivered matches snapshot 1`] = `
               "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
               "lineItems": Array [
                 Object {
-                  "code": "line-item/night",
+                  "code": "line-item/day",
                   "includeFor": Array [
                     "customer",
                     "provider",
@@ -9109,7 +9109,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -9440,7 +9440,7 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -9590,7 +9590,7 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
               "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
               "lineItems": Array [
                 Object {
-                  "code": "line-item/night",
+                  "code": "line-item/day",
                   "includeFor": Array [
                     "customer",
                     "provider",
@@ -9881,7 +9881,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -10212,7 +10212,7 @@ exports[`TransactionPanel - Sale preauthorized matches snapshot 1`] = `
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",
@@ -10362,7 +10362,7 @@ exports[`TransactionPanel - Sale preauthorized matches snapshot 1`] = `
               "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
               "lineItems": Array [
                 Object {
-                  "code": "line-item/night",
+                  "code": "line-item/day",
                   "includeFor": Array [
                     "customer",
                     "provider",
@@ -10654,7 +10654,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
-                    "code": "line-item/night",
+                    "code": "line-item/day",
                     "includeFor": Array [
                       "customer",
                       "provider",

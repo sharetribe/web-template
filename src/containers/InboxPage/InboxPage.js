@@ -18,6 +18,7 @@ import {
 } from '../../util/transaction';
 import { propTypes, DATE_TYPE_DATE } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
+import { formatDateIntoPartials } from '../../util/dates';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 import {
@@ -42,16 +43,6 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import css from './InboxPage.module.css';
-
-const formatDate = (intl, date) => {
-  return {
-    short: intl.formatDate(date, {
-      month: 'short',
-      day: 'numeric',
-    }),
-    long: `${intl.formatDate(date)} ${intl.formatTime(date)}`,
-  };
-};
 
 // Translated name of the state of the given transaction
 export const txState = (intl, tx, type) => {
@@ -206,7 +197,7 @@ export const InboxItem = props => {
 
   const isSaleNotification = !isOrder && txIsRequested(tx);
   const rowNotificationDot = isSaleNotification ? <div className={css.notificationDot} /> : null;
-  const lastTransitionedAt = formatDate(intl, tx.attributes.lastTransitionedAt);
+  const lastTransitionedAt = formatDateIntoPartials(tx.attributes.lastTransitionedAt, intl);
 
   const linkClasses = classNames(css.itemLink, {
     [css.bannedUserLink]: isOtherUserBanned,
@@ -241,9 +232,9 @@ export const InboxItem = props => {
           </div>
           <div
             className={classNames(css.lastTransitionedAt, stateData.lastTransitionedAtClassName)}
-            title={lastTransitionedAt.long}
+            title={lastTransitionedAt.dateAndTime}
           >
-            {lastTransitionedAt.short}
+            {lastTransitionedAt.date}
           </div>
         </div>
       </NamedLink>

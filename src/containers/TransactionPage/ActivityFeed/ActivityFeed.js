@@ -4,7 +4,7 @@ import dropWhile from 'lodash/dropWhile';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
-import { formatDate } from '../../../util/dates';
+import { formatDateWithProximity } from '../../../util/dates';
 import { ensureTransaction, ensureUser, ensureListing } from '../../../util/data';
 import {
   TRANSITION_ACCEPT,
@@ -44,7 +44,7 @@ const Message = props => {
       <div>
         <p className={css.messageContent}>{message.attributes.content}</p>
         <p className={css.messageDate}>
-          {formatDate(intl, todayString, message.attributes.createdAt)}
+          {formatDateWithProximity(message.attributes.createdAt, intl, todayString)}
         </p>
       </div>
     </div>
@@ -65,7 +65,7 @@ const OwnMessage = props => {
         <p className={css.ownMessageContent}>{message.attributes.content}</p>
       </div>
       <p className={css.ownMessageDate}>
-        {formatDate(intl, todayString, message.attributes.createdAt)}
+        {formatDateWithProximity(message.attributes.createdAt, intl, todayString)}
       </p>
     </div>
   );
@@ -276,7 +276,9 @@ const Transition = props => {
       </div>
       <div>
         <p className={css.transitionContent}>{transitionMessage}</p>
-        <p className={css.transitionDate}>{formatDate(intl, todayString, transition.createdAt)}</p>
+        <p className={css.transitionDate}>
+          {formatDateWithProximity(transition.createdAt, intl, todayString)}
+        </p>
         {reviewComponent}
       </div>
     </div>

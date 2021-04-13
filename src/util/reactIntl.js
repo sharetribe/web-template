@@ -4,6 +4,8 @@ import {
   FormattedMessage,
   FormattedDate,
   FormattedHTMLMessage,
+  createIntl,
+  createIntlCache,
   injectIntl,
 } from 'react-intl/dist/react-intl';
 // Note: we import React Intl directly from dist directory, because
@@ -25,6 +27,8 @@ export {
   FormattedMessage,
   FormattedDate,
   FormattedHTMLMessage,
+  createIntl,
+  createIntlCache,
   injectIntl,
   intlShape,
 };
