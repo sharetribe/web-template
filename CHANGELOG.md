@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Update functions in util/dates.js
+  [#19](https://github.com/sharetribe/ftw-product/pull/19)
 - [add] Add moment-timezone library on dates.js. Reorder & group util/dates functions. Remove
   unnecessary spread of moment library imports.
   [#18](https://github.com/sharetribe/ftw-product/pull/18)

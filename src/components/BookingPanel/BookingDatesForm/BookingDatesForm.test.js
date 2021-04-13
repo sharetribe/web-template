@@ -6,7 +6,7 @@ import { types as sdkTypes } from '../../../util/sdkLoader';
 import { renderShallow, renderDeep } from '../../../util/test-helpers';
 import { fakeIntl } from '../../../util/test-data';
 import { LINE_ITEM_NIGHT } from '../../../util/types';
-import { dateFromAPIToLocalNoon } from '../../../util/dates';
+import { timeOfDayFromTimeZoneToLocal } from '../../../util/dates';
 
 import { BookingBreakdown } from '../../../components';
 
@@ -70,8 +70,8 @@ describe('EstimatedBreakdownMaybe', () => {
   });
   it('renders breakdown with correct transaction data', () => {
     const unitPrice = new Money(1099, 'USD');
-    const startDate = new Date(2017, 3, 14, 12, 0, 0);
-    const endDate = new Date(2017, 3, 16, 12, 0, 0);
+    const startDate = new Date(2017, 3, 14, 0, 0, 0);
+    const endDate = new Date(2017, 3, 16, 0, 0, 0);
     const data = {
       unitType: LINE_ITEM_NIGHT,
       unitPrice,
@@ -86,10 +86,14 @@ describe('EstimatedBreakdownMaybe', () => {
     expect(userRole).toEqual('customer');
     expect(unitType).toEqual(LINE_ITEM_NIGHT);
 
+    // Local time-of-day (startDate) is converted to server's time-of-day (booking.attributes.start)
+    // and it's then verified that it's actually UTC time.
     expect(booking.attributes.start).toEqual(new Date(Date.UTC(2017, 3, 14)));
     expect(booking.attributes.end).toEqual(new Date(Date.UTC(2017, 3, 16)));
-    expect(dateFromAPIToLocalNoon(booking.attributes.start)).toEqual(startDate);
-    expect(dateFromAPIToLocalNoon(booking.attributes.end)).toEqual(endDate);
+
+    // Server's time-of-day for day-based booking times matches the original local time-of-day
+    expect(timeOfDayFromTimeZoneToLocal(booking.attributes.start, 'Etc/UTC')).toEqual(startDate);
+    expect(timeOfDayFromTimeZoneToLocal(booking.attributes.end, 'Etc/UTC')).toEqual(endDate);
 
     expect(transaction.attributes.payinTotal).toEqual(new Money(2198, 'USD'));
     expect(transaction.attributes.payoutTotal).toEqual(new Money(2198, 'USD'));

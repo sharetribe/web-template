@@ -25,7 +25,7 @@ exports[`BookingBreakdown customer transaction data matches snapshot 1`] = `
             className="dayInfo"
           >
             <span>
-              Sat 12:00 PM
+              Sat 12:00 AM
             </span>
           </div>
           <div
@@ -50,7 +50,7 @@ exports[`BookingBreakdown customer transaction data matches snapshot 1`] = `
             className="dayInfo"
           >
             <span>
-              Sat 12:00 PM
+              Sat 12:00 AM
             </span>
           </div>
           <div
@@ -132,7 +132,7 @@ exports[`BookingBreakdown pretransaction data matches snapshot 1`] = `
             className="dayInfo"
           >
             <span>
-              Sat 12:00 PM
+              Sat 12:00 AM
             </span>
           </div>
           <div
@@ -157,7 +157,7 @@ exports[`BookingBreakdown pretransaction data matches snapshot 1`] = `
             className="dayInfo"
           >
             <span>
-              Sat 12:00 PM
+              Sat 12:00 AM
             </span>
           </div>
           <div
@@ -239,7 +239,7 @@ exports[`BookingBreakdown provider canceled transaction data matches snapshot 1`
             className="dayInfo"
           >
             <span>
-              Sat 12:00 PM
+              Sat 12:00 AM
             </span>
           </div>
           <div
@@ -264,7 +264,7 @@ exports[`BookingBreakdown provider canceled transaction data matches snapshot 1`
             className="dayInfo"
           >
             <span>
-              Sat 12:00 PM
+              Sat 12:00 AM
             </span>
           </div>
           <div
@@ -422,7 +422,7 @@ exports[`BookingBreakdown provider transaction data matches snapshot 1`] = `
             className="dayInfo"
           >
             <span>
-              Sat 12:00 PM
+              Sat 12:00 AM
             </span>
           </div>
           <div
@@ -447,7 +447,7 @@ exports[`BookingBreakdown provider transaction data matches snapshot 1`] = `
             className="dayInfo"
           >
             <span>
-              Sat 12:00 PM
+              Sat 12:00 AM
             </span>
           </div>
           <div

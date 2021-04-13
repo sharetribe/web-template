@@ -7,6 +7,40 @@ export const START_DATE = 'startDate';
 export const END_DATE = 'endDate';
 
 /**
+ * Check if the browser's DateTimeFormat API supports time zones.
+ *
+ * @returns {Boolean} true if the browser returns current time zone.
+ */
+export const isTimeZoneSupported = () => {
+  if (!Intl || typeof Intl === 'undefined' || typeof Intl.DateTimeFormat === 'undefined') {
+    return false;
+  }
+
+  const dtf = new Intl.DateTimeFormat();
+  if (typeof dtf === 'undefined' || typeof dtf.resolvedOptions === 'undefined') {
+    return false;
+  }
+  return !!dtf.resolvedOptions().timeZone;
+};
+
+/**
+ * Check if the given time zone key is valid.
+ *
+ * @param {String} timeZone time zone id, see:
+ *   https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+ *
+ * @returns {Boolean} true if the browser recognizes the key.
+ */
+export const isValidTimeZone = timeZone => {
+  try {
+    new Intl.DateTimeFormat('en-US', { timeZone }).format();
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+/**
  * Check that the given parameter is a Date object.
  *
  * @param {Date} object that should be a Date.
@@ -43,54 +77,33 @@ export const isAfterDate = (dateA, dateB) => {
 ////////////////////////////////////////////////////////////////////
 
 /**
- * Convert date given by API to something meaningful noon on browser's timezone
- * So, what happens is that date given by client
- * ("Fri Mar 30 2018 12:00:00 GMT-1100 (SST)" aka "Fri Mar 30 2018 23:00:00 GMT+0000 (UTC)")
- * will be read as UTC time. Then API normalizes night/day bookings to
- * start from 00:00 UTC (i.e. discards hours from UTC day).
- * So Api gives 00:00 UTC which (in our example) would be locally
- * "Thu Mar 29 2018 13:00:00 GMT-1100 (SST)".
+ * Returns a new date, which indicates the same time of day in a given time zone
+ * as given date is in local time zone
  *
- * The resulting timestamp from API is:
- * localTimestamp.subtract(12h).add(timezoneoffset) (in eg. -23 h)
+ * @param {Date} date
+ * @param {String} timeZone
  *
- * So, this function adds those removed hours back.
- *
- * @param {Date} date is a local date object
- *
- * @returns {Date} date (given by API as UTC 00:00) converted back to local noon.
+ * @returns {Date} date in given time zone
  */
-export const dateFromAPIToLocalNoon = date => {
-  const timezoneDiffInMinutes = moment(date).utcOffset();
-  // Example timezone SST:
-  // We get a Fri 00:00 UTC aka "Thu Mar 29 2018 13:00:00 GMT-1100 (SST)"
-  // We need to subtract timezone difference (-11h), effectively adding 11h - to get to correct date
-  const momentInLocalTimezone = moment(date).subtract(timezoneDiffInMinutes, 'minutes');
-  // To be on the safe zone with leap seconds and stuff when using day / night picker
-  // we'll add 12 h to get to the noon of day in local timezone.
-  return momentInLocalTimezone.add(12, 'hours').toDate();
+export const timeOfDayFromLocalToTimeZone = (date, timeZone) => {
+  return moment.tz(moment(date).format('YYYY-MM-DD HH:mm:ss'), timeZone).toDate();
 };
 
 /**
- * Convert local date for API.
- * Date given by browser
- * ("Fri Mar 30 2018 12:00:00 GMT-1100 (SST)" aka "Fri Mar 30 2018 23:00:00 GMT+0000 (UTC)")
- * must be modified so that API will get correct moment also in UTC.
- * We achieve this by adding timezone offset to local date / timestamp.
+ * Returns a new date, which indicates the same time of day in a local time zone
+ * as given date is in specified time zone
  *
- * The resulting timestamp for the API is:
- * localTimestamp.add(timezoneoffset)
- * In eg. Fri Mar 30 2018 23:00:00 GMT-1100 (SST) aka "Fri Mar 30 2018 12:00:00 GMT+0000 (UTC)"
+ * @param {Date} date
+ * @param {String} timeZone
  *
- * @param {Date} date is a local date object
- *
- * @returns {Date} date (given by API as UTC 00:00) converted back to local noon.
+ * @returns {Date} date in given time zone
  */
-export const dateFromLocalToAPI = date => {
-  const timezoneDiffInMinutes = moment(date).utcOffset();
-  const momentInLocalTimezone = moment(date).add(timezoneDiffInMinutes, 'minutes');
-
-  return momentInLocalTimezone.toDate();
+export const timeOfDayFromTimeZoneToLocal = (date, timeZone) => {
+  return moment(
+    moment(date)
+      .tz(timeZone)
+      .format('YYYY-MM-DD HH:mm:ss')
+  ).toDate();
 };
 
 /**
@@ -155,24 +168,12 @@ export const subtractTime = (date, offset, unit, timeZone) => {
 ///////////////
 
 /**
- * Calculate the number of nights between the given dates
+ * Calculate the number of days between the given dates.
+ * This uses moment#diff and, therefore, it just checks,
+ * if there are 1000x60x60x24 milliseconds between date objects.
  *
- * @param {Date} startDate start of the time period
- * @param {Date} endDate end of the time period
- *
- * @throws Will throw if the end date is before the start date
- * @returns {Number} number of nights between the given dates
- */
-export const nightsBetween = (startDate, endDate) => {
-  const nights = moment(endDate).diff(startDate, 'days');
-  if (nights < 0) {
-    throw new Error('End date cannot be before start date');
-  }
-  return nights;
-};
-
-/**
- * Calculate the number of days between the given dates
+ * Note: This should not be used for checking if the local date has
+ *       changed between "2021-04-07 23:00" and "2021-04-08 05:00".
  *
  * @param {Date} startDate start of the time period
  * @param {Date} endDate end of the time period. NOTE: with daily
@@ -213,101 +214,106 @@ export const minutesBetween = (startDate, endDate) => {
  *
  * @param {Date} startDate start of the time period
  * @param {Date} endDate end of the time period.
+ * @param {String} unit time unit. E.g. 'years'.
+ * @param {String} useFloat Should return floating point numbers?
  *
  * @returns {Number} time difference between the given Date objects using given unit
  */
 export const diffInTime = (startDate, endDate, unit, useFloat = false) => {
-  return startDate.diff(endDate, unit, useFloat);
+  return moment(startDate).diff(endDate, unit, useFloat);
 };
 
 ////////////////////////////
 // Parsing and formatting //
 ////////////////////////////
 
+const getTimeZoneMaybe = timeZone => {
+  if (timeZone) {
+    if (!isTimeZoneSupported()) {
+      throw new Error(`Your browser doesn't support time zones.`);
+    }
+
+    if (!isValidTimeZone(timeZone)) {
+      throw new Error(`Given time zone key (${timeZone}) is not valid.`);
+    }
+    return { timeZone };
+  }
+  return {};
+};
+
 /**
- * Format the given date
+ * Format the given date. Printed string depends on how close the date is the current day.
+ * E.g. "Today, 9:10 PM", "Sun 6:02 PM", "Jul 20, 6:02 PM", "Jul 20 2020, 6:02 PM"
  *
+ * @param {Date} date Date to be formatted
  * @param {Object} intl Intl object from react-intl
  * @param {String} todayString translation for the current day
- * @param {Date} d Date to be formatted
+ * @param {Object} [opts] options. Can be used to pass in timeZone. It should represent IANA time zone key.
  *
  * @returns {String} formatted date
  */
-export const formatDate = (intl, todayString, d) => {
-  const paramsValid = intl && d instanceof Date && typeof todayString === 'string';
+export const formatDateWithProximity = (date, intl, todayString, opts = {}) => {
+  const paramsValid = intl && date instanceof Date && typeof todayString === 'string';
   if (!paramsValid) {
-    throw new Error(`Invalid params for formatDate: (${intl}, ${todayString}, ${d})`);
+    throw new Error(`Invalid params for formatDate: (${date}, ${intl}, ${todayString})`);
   }
+
+  // If timeZone parameter is set, use it as formatting option
+  const { timeZone } = opts;
+  const timeZoneMaybe = getTimeZoneMaybe(timeZone);
 
   // By default we can use moment() directly but in tests we need to use a specific dates.
-  // fakeIntl used in tests contains now() function wich returns predefined date
+  // Tests inject now() function to intl wich returns predefined date
   const now = intl.now ? moment(intl.now()) : moment();
-  const formattedTime = intl.formatTime(d);
-  let formattedDate;
 
-  if (now.isSame(d, 'day')) {
-    // e.g. "Today, 9:10pm"
-    formattedDate = todayString;
-  } else if (now.isSame(d, 'week')) {
-    // e.g. "Wed, 8:00pm"
-    formattedDate = intl.formatDate(d, {
-      weekday: 'short',
+  // isSame: if the two moments have different time zones, the time zone of the first moment will be used for the comparison.
+  const localizedNow = timeZoneMaybe.timeZone ? now.tz(timeZone) : now;
+
+  if (localizedNow.isSame(date, 'day')) {
+    // e.g. "Today, 9:10 PM"
+    const formattedTime = intl.formatDate(date, {
+      hour: 'numeric',
+      minute: 'numeric',
+      ...timeZoneMaybe,
     });
-  } else if (now.isSame(d, 'year')) {
-    // e.g. "Aug 22, 7:40pm"
-    formattedDate = intl.formatDate(d, {
+    return `${todayString}, ${formattedTime}`;
+  } else if (localizedNow.isSame(date, 'week')) {
+    // e.g.
+    // en-US: "Sun 6:02 PM"
+    // en-GB: "Sun 18:02"
+    // fr-FR: "dim. 18:02"
+    return intl.formatDate(date, {
+      weekday: 'short',
+      hour: 'numeric',
+      minute: 'numeric',
+      ...timeZoneMaybe,
+    });
+  } else if (localizedNow.isSame(date, 'year')) {
+    // e.g.
+    // en-US: "Jul 20, 6:02 PM"
+    // en-GB: "20 Jul, 18:02"
+    // fr-FR: "20 juil., 18:02"
+    return intl.formatDate(date, {
       month: 'short',
       day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      ...timeZoneMaybe,
     });
   } else {
-    // e.g. "Jul 17 2016, 6:02pm"
-    const date = intl.formatDate(d, {
+    // e.g.
+    // en-US: "Jul 20, 2020, 6:02 PM"
+    // en-GB: "20 Jul 2020, 18:02"
+    // fr-FR: "20 juil. 2020, 18:02"
+    return intl.formatDate(date, {
+      year: 'numeric',
       month: 'short',
       day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      ...timeZoneMaybe,
     });
-    const year = intl.formatDate(d, {
-      year: 'numeric',
-    });
-    formattedDate = `${date} ${year}`;
   }
-
-  return `${formattedDate}, ${formattedTime}`;
-};
-
-/**
- * Converts string given in ISO8601 format to date object.
- * This is used e.g. when when dates are parsed form urlParams
- *
- * @param {String} dateString in 'YYYY-MM-DD'format
- *
- * @returns {Date} parsed date object
- */
-export const parseDateFromISO8601 = dateString => {
-  return moment(dateString, 'YYYY-MM-DD').toDate();
-};
-
-/**
- * Converts date to string ISO8601 format ('YYYY-MM-DD').
- * This string is used e.g. in urlParam.
- *
- * @param {Date} date
- *
- * @returns {String} string in 'YYYY-MM-DD'format
- */
-export const stringifyDateToISO8601 = date => {
-  return moment(date).format('YYYY-MM-DD');
-};
-
-/**
- * Formats string ('YYYY-MM-DD') to UTC format ('0000-00-00T00:00:00.000Z').
- * This is used in search query.
- *
- * @param {String} string in 'YYYY-MM-DD'format
- *
- * @returns {String} string in '0000-00-00T00:00:00.000Z' format
- */
-export const formatDateStringToUTC = dateString => {
-  return moment.utc(dateString).toDate();
 };
 
 /**
@@ -316,26 +322,88 @@ export const formatDateStringToUTC = dateString => {
  * - time "8:07 PM"
  * - dateAndTime: "Mar 24, 8:07 PM"
  *
- * @param {Object} intl Intl object from react-intl
+ * If date is on different year, it will show it.
+ *
  * @param {Date} date to be formatted
+ * @param {Object} intl Intl object from react-intl
+ * @param {Object} [opts] options. Can be used to pass in timeZone. It should represent IANA time zone key.
  *
  * @returns {Object} "{ date, time, dateAndTime }"
  */
-export const formatDateToText = (intl, date) => {
+export const formatDateIntoPartials = (date, intl, opts = {}) => {
+  // If timeZone parameter is set, use it as formatting option
+  const { timeZone } = opts;
+  const timeZoneMaybe = getTimeZoneMaybe(timeZone);
+
+  // By default we can use moment() directly but in tests we need to use a specific dates.
+  // Tests inject now() function to intl wich returns predefined date
+  const now = intl.now ? moment(intl.now()) : moment();
+
+  // isSame: if the two moments have different time zones, the time zone of the first moment will be used for the comparison.
+  const localizedNow = timeZoneMaybe.timeZone ? now.tz(timeZone) : now;
+  const yearMaybe = localizedNow.isSame(date, 'year') ? {} : { year: 'numeric' };
+
   return {
     date: intl.formatDate(date, {
       month: 'short',
       day: 'numeric',
+      ...yearMaybe,
+      ...timeZoneMaybe,
     }),
     time: intl.formatDate(date, {
       hour: 'numeric',
       minute: 'numeric',
+      ...timeZoneMaybe,
     }),
-    dateAndTime: intl.formatTime(date, {
+    dateAndTime: intl.formatDate(date, {
+      ...yearMaybe,
       month: 'short',
       day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      ...timeZoneMaybe,
     }),
   };
+};
+
+/**
+ * Parses given date string in ISO8601 format('YYYY-MM-DD') to date in
+ * the given time zone.
+ *
+ * This is used in search when filtering by time-based availability.
+ *
+ * Example:
+ * ('2020-04-15', 'Etc/UTC') => new Date('2020-04-15T00:00:00.000Z')
+ * ('2020-04-15', 'Europe/Helsinki') => new Date('2020-04-14T21:00:00.000Z')
+ *
+ * @param {String} dateString in 'YYYY-MM-DD' format
+ * @param {String} [timeZone] time zone id, see:
+ *   https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+ *
+ * @returns {Date} date
+ */
+export const parseDateFromISO8601 = (dateString, timeZone = null) => {
+  return timeZone
+    ? moment.tz(dateString, timeZone).toDate()
+    : moment(dateString, 'YYYY-MM-DD').toDate();
+};
+
+/**
+ * Converts date to string ISO8601 format ('YYYY-MM-DD').
+ * This string is used e.g. in urlParam.
+ *
+ * @param {Date} date
+ * @param {String} [timeZone] time zone id, see:
+ *   https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+ *
+ * @returns {String} string in 'YYYY-MM-DD' format
+ */
+export const stringifyDateToISO8601 = (date, timeZone = null) => {
+  return timeZone
+    ? moment(date)
+        .tz(timeZone)
+        .format('YYYY-MM-DD')
+    : moment(date).format('YYYY-MM-DD');
 };
 
 //////////
@@ -343,39 +411,34 @@ export const formatDateToText = (intl, date) => {
 //////////
 
 /**
- * Format the given date to month id/string
+ * Format the given date to month id/string: 'YYYY-MM'.
  *
  * @param {Date} date to be formatted
+ * @param {String} [timeZone] time zone name (optional parameter).
  *
  * @returns {String} formatted month string
  */
-export const monthIdString = date => moment(date).format('YYYY-MM');
+export const monthIdString = (date, timeZone = null) => {
+  return timeZone
+    ? moment(date)
+        .tz(timeZone)
+        .format('YYYY-MM')
+    : moment(date).format('YYYY-MM');
+};
 
 /**
- * Format the given date to UTC month id/string
- *
- * @param {Date} date to be formatted
- *
- * @returns {String} formatted month string
- */
-export const monthIdStringInUTC = date =>
-  moment(date)
-    .utc()
-    .format('YYYY-MM');
-
-/**
- * Formats string ('YYYY-MM-DD') to UTC format ('0000-00-00T00:00:00.000Z') and adds one day.
+ * Formats string ('YYYY-MM-DD') in given time zone to format ('0000-00-00T00:00:00.000Z') and adds one day.
  * This is used as end date of the search query.
  * One day must be added because end of the availability is exclusive in API.
  *
  * @param {String} string in 'YYYY-MM-DD'format
+ * @param {String} timeZone time zone name.
  *
  * @returns {String} string in '0000-00-00T00:00:00.000Z' format
  */
-
-export const getExclusiveEndDate = dateString => {
+export const getExclusiveEndDate = (dateString, timeZone) => {
   return moment
-    .utc(dateString)
+    .tz(dateString, timeZone)
     .add(1, 'days')
     .startOf('day')
     .toDate();

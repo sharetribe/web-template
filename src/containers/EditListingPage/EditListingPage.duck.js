@@ -1,7 +1,7 @@
 import omit from 'lodash/omit';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { denormalisedResponseEntities, ensureAvailabilityException } from '../../util/data';
-import { isSameDate, monthIdStringInUTC } from '../../util/dates';
+import { isSameDate, monthIdString } from '../../util/dates';
 import { storableError } from '../../util/errors';
 import * as log from '../../util/log';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -19,7 +19,7 @@ const removeException = (exception, calendar) => {
   const availabilityException = ensureAvailabilityException(exception.availabilityException);
   const { start, end } = availabilityException.attributes;
   // When using time-based process, you might want to deal with local dates using monthIdString
-  const monthId = monthIdStringInUTC(start);
+  const monthId = monthIdString(start, 'Etc/UTC');
   const monthData = calendar[monthId] || { exceptions: [] };
 
   const exceptions = monthData.exceptions.filter(e => {
@@ -40,7 +40,7 @@ const removeException = (exception, calendar) => {
 const addException = (exception, calendar) => {
   const { start } = ensureAvailabilityException(exception.availabilityException).attributes;
   // When using time-based process, you might want to deal with local dates using monthIdString
-  const monthId = monthIdStringInUTC(start);
+  const monthId = monthIdString(start, 'Etc/UTC');
 
   // TODO: API doesn't support "availability_exceptions/update" yet
   // So, when user wants to create an exception we need to ensure
@@ -59,7 +59,7 @@ const updateException = (exception, calendar) => {
   const newAvailabilityException = ensureAvailabilityException(exception.availabilityException);
   const { start, end } = newAvailabilityException.attributes;
   // When using time-based process, you might want to deal with local dates using monthIdString
-  const monthId = monthIdStringInUTC(start);
+  const monthId = monthIdString(start, 'Etc/UTC');
   const monthData = calendar[monthId] || { exceptions: [] };
 
   const exceptions = monthData.exceptions.map(e => {
@@ -552,7 +552,7 @@ export function requestImageUpload(actionPayload) {
 export const requestFetchBookings = fetchParams => (dispatch, getState, sdk) => {
   const { listingId, start, end, state } = fetchParams;
   // When using time-based process, you might want to deal with local dates using monthIdString
-  const monthId = monthIdStringInUTC(start);
+  const monthId = monthIdString(start, 'Etc/UTC');
 
   dispatch(fetchBookingsRequest({ ...fetchParams, monthId }));
 
@@ -570,7 +570,7 @@ export const requestFetchBookings = fetchParams => (dispatch, getState, sdk) => 
 export const requestFetchAvailabilityExceptions = fetchParams => (dispatch, getState, sdk) => {
   const { listingId, start, end } = fetchParams;
   // When using time-based process, you might want to deal with local dates using monthIdString
-  const monthId = monthIdStringInUTC(start);
+  const monthId = monthIdString(start, 'Etc/UTC');
 
   dispatch(fetchAvailabilityExceptionsRequest({ ...fetchParams, monthId }));
 

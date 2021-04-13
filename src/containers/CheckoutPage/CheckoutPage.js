@@ -20,7 +20,7 @@ import {
   ensureStripeCustomer,
   ensurePaymentMethodCard,
 } from '../../util/data';
-import { dateFromLocalToAPI, minutesBetween } from '../../util/dates';
+import { timeOfDayFromLocalToTimeZone, minutesBetween } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import {
   isTransactionInitiateAmountTooLowError,
@@ -191,10 +191,10 @@ export class CheckoutPageComponent extends Component {
       const transactionId = tx ? tx.id : null;
       const { bookingStart, bookingEnd } = pageData.bookingDates;
 
-      // Convert picked date to date that will be converted on the API as
-      // a noon of correct year-month-date combo in UTC
-      const bookingStartForAPI = dateFromLocalToAPI(bookingStart);
-      const bookingEndForAPI = dateFromLocalToAPI(bookingEnd);
+      // Convert the picked date to moment that will represent the same time of day in UTC time zone.
+      const apiTimeZone = 'Etc/UTC';
+      const bookingStartForAPI = timeOfDayFromLocalToTimeZone(bookingStart, apiTimeZone);
+      const bookingEndForAPI = timeOfDayFromLocalToTimeZone(bookingEnd, apiTimeZone);
 
       // Fetch speculated transaction for showing price in booking breakdown
       // NOTE: if unit type is line-item/units, quantity needs to be added.

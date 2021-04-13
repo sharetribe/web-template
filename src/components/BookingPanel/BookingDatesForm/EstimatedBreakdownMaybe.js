@@ -30,7 +30,7 @@ import Decimal from 'decimal.js';
 
 import config from '../../../config';
 import { types as sdkTypes } from '../../../util/sdkLoader';
-import { dateFromLocalToAPI, getStartOf } from '../../../util/dates';
+import { timeOfDayFromLocalToTimeZone, getStartOf } from '../../../util/dates';
 import {
   TRANSITION_REQUEST_PAYMENT,
   TX_TRANSITION_ACTOR_CUSTOMER,
@@ -78,13 +78,13 @@ const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => 
   const payinTotal = estimatedTotalPrice(customerLineItems);
   const payoutTotal = estimatedTotalPrice(providerLineItems);
 
-  // bookingStart: "Fri Mar 30 2018 12:00:00 GMT-1100 (SST)" aka "Fri Mar 30 2018 23:00:00 GMT+0000 (UTC)"
-  // Server normalizes night/day bookings to start from 00:00 UTC aka "Thu Mar 29 2018 13:00:00 GMT-1100 (SST)"
-  // The result is: local timestamp.subtract(12h).add(timezoneoffset) (in eg. -23 h)
-
-  // local noon -> startOf('day') => 00:00 local => remove timezoneoffset => 00:00 API (UTC)
-  const serverDayStart = dateFromLocalToAPI(getStartOf(bookingStart, 'day'));
-  const serverDayEnd = dateFromLocalToAPI(getStartOf(bookingEnd, 'day'));
+  // Server normalizes night/day bookings to start from 00:00 UTC. In this case, it would remove 23 hours.
+  // We convert local (start of day) to the same time-of-day in UTC time zone to prevent untracked conversions.
+  // local noon -> startOf('day') => 00:00 local
+  // => convert to the same time of day to server's tz aka remove timezoneoffset => 00:00 API (UTC)
+  const apiTimeZone = 'Etc/UTC';
+  const serverDayStart = timeOfDayFromLocalToTimeZone(getStartOf(bookingStart, 'day'), apiTimeZone);
+  const serverDayEnd = timeOfDayFromLocalToTimeZone(getStartOf(bookingEnd, 'day'), apiTimeZone);
 
   return {
     id: new UUID('estimated-transaction'),
