@@ -126,7 +126,7 @@ export const getMapCenter = map => mapboxLngLatToSDKLatLng(map.getCenter());
  * Check if map library is loaded
  */
 export const isMapsLibLoaded = () =>
-  typeof window !== 'undefined' && window.mapboxgl && window.mapboxgl.accessToken;
+  typeof window !== 'undefined' && window.mapboxgl && window.mapboxgl;
 
 /**
  * Return price labels grouped by listing locations.
