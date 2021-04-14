@@ -1,18 +1,26 @@
 import React, { Component } from 'react';
 import { any, arrayOf, bool, func, number, shape, string, oneOfType, object } from 'prop-types';
-import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
 import debounce from 'lodash/debounce';
-import { IconSpinner } from '../../components';
-import { propTypes } from '../../util/types';
+
 import config from '../../config';
+import { FormattedMessage } from '../../util/reactIntl';
+import { propTypes } from '../../util/types';
+
+import { IconSpinner } from '../../components';
 
 import IconHourGlass from './IconHourGlass';
 import IconCurrentLocation from './IconCurrentLocation';
-import Geocoder, { GeocoderAttribution, CURRENT_LOCATION_ID } from './GeocoderMapbox';
-// import Geocoder, { GeocoderAttribution, CURRENT_LOCATION_ID } from './GeocoderGoogleMaps';
+import * as geocoderMapbox from './GeocoderMapbox';
+import * as geocoderGoogleMaps from './GeocoderGoogleMaps';
 
 import css from './LocationAutocompleteInput.module.css';
+
+const isGoogleMapsInUse = config.maps.mapProvider === 'GOOGLE_MAPS';
+const geocoderVariant = isGoogleMapsInUse ? geocoderGoogleMaps : geocoderMapbox;
+const Geocoder = geocoderVariant.default;
+const GeocoderAttribution = geocoderVariant.GeocoderAttribution;
+const CURRENT_LOCATION_ID = geocoderVariant.CURRENT_LOCATION_ID;
 
 // A list of default predictions that can be shown when the user
 // focuses on the autocomplete input without typing a search. This can
