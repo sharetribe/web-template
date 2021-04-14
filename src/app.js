@@ -13,6 +13,7 @@ import difference from 'lodash/difference';
 import mapValues from 'lodash/mapValues';
 import moment from 'moment';
 import { IntlProvider } from './util/reactIntl';
+import { IncludeMapLibraryScripts } from './util/includeScripts';
 import configureStore from './store';
 import routeConfiguration from './routing/routeConfiguration';
 import Routes from './routing/Routes';
@@ -89,6 +90,7 @@ export const ClientApp = props => {
     <IntlProvider locale={config.locale} messages={localeMessages} textComponent="span">
       <Provider store={store}>
         <HelmetProvider>
+          <IncludeMapLibraryScripts />
           <BrowserRouter>
             <Routes routes={routeConfiguration()} />
           </BrowserRouter>
@@ -110,6 +112,7 @@ export const ServerApp = props => {
     <IntlProvider locale={config.locale} messages={localeMessages} textComponent="span">
       <Provider store={store}>
         <HelmetProvider context={helmetContext}>
+          <IncludeMapLibraryScripts />
           <StaticRouter location={url} context={context}>
             <Routes routes={routeConfiguration()} />
           </StaticRouter>
