@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import { func, object, shape, string } from 'prop-types';
 import { Field } from 'react-final-form';
+import loadable from '@loadable/component';
 import { ValidationError } from '../../components';
-import LocationAutocompleteInputImpl from './LocationAutocompleteInputImpl.js';
+
+// LocationAutocompleteInputImpl is a big component that includes code for both Mapbox and Google Maps
+// It is loaded dynamically - i.e. it is splitted to its own code chunk.
+const LocationAutocompleteInputImpl = loadable(() =>
+  import(/* webpackChunkName: "LocationAutocompleteInputImpl" */ './LocationAutocompleteInputImpl')
+);
 
 class LocationAutocompleteInputComponent extends Component {
   render() {
