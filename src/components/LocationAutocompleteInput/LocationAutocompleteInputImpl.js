@@ -106,7 +106,14 @@ const LocationPredictionsList = props => {
     );
   };
 
-  const classes = classNames(rootClassName || css.predictionsRoot, className);
+  const predictionRootMapProviderClass = isGoogleMapsInUse
+    ? css.predictionsRootGoogle
+    : css.predictionsRootMapbox;
+  const classes = classNames(
+    rootClassName || css.predictionsRoot,
+    predictionRootMapProviderClass,
+    className
+  );
 
   return (
     <div className={classes}>

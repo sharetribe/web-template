@@ -58,7 +58,6 @@ size and position, etc.
 .predictionsRoot {
   position: absolute;
   width: 100%;
-  padding-bottom: var(--locationAutocompleteBottomPadding);
   top: var(--LocationAutocompleteInput_inputHeight);
   left: 0;
   background-color: var(--marketplaceColor);
@@ -66,6 +65,16 @@ size and position, etc.
   border-bottom-right-radius: var(--borderRadius);
   box-shadow: var(--boxShadowPopup);
   z-index: calc(var(--zIndexPopup) + 1);
+}
+
+.predictionsRootGoogle {
+  /* Google Maps needs 72px bottom padding to accommodate logo, Mapbox doesn't have one */
+  padding-bottom: 72px;
+}
+
+.predictionsRootMapbox {
+  /* Google Maps needs 72px bottom padding to accommodate logo, Mapbox doesn't have one */
+  padding-bottom: 8px;
 }
 
 /*
