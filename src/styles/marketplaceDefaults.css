@@ -114,11 +114,6 @@
   --modalPadding: 24px 24px 48px 24px;
   --modalPaddingMedium: 55px 60px 55px 60px;
 
-  /* ================ LocationAutocompleteInput bottom attribution padding ================ */
-
-  --LocationAutocompleteInput_inputHeight: 50px;
-  --LocationAutocompleteInput_sidePaddingDesktop: 36px;
-
   /* ================ Filters ================ */
   --marketplaceButtonSmallDesktopPadding: 9px 16px 9px 16px;
 
