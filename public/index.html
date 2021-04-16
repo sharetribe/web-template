@@ -76,6 +76,7 @@
         }
       })(document);
     </script>
+    <!--!script-->
 
     <link rel="stylesheet" href="%PUBLIC_URL%/static/reactDates.css" />
   </head>
@@ -138,22 +139,6 @@
     </script>
 
     <!--
-      NOTE: remember to update mapbox-sdk.min.js to a new version regularly.
-      mapbox-sdk.min.js is included from static folder for CSP purposes.
-      We didn't bundle it to the main app since it would unnecessarily slow down initial rendering.
-    -->
-    <script src="%PUBLIC_URL%/static/scripts/mapbox/mapbox-sdk.min.js"></script>
-    <link href="https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css" rel="stylesheet" />
-    <script src="https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js"></script>
-    <script>
-      window.mapboxgl.accessToken = '%REACT_APP_MAPBOX_ACCESS_TOKEN%';
-    </script>
-    <!--
-      If Google Maps is used instead of Mapbox, you need to include Google's script instead:
-      <script src="https://maps.googleapis.com/maps/api/js?key=%REACT_APP_GOOGLE_MAPS_API_KEY%&libraries=places"></script>
-    -->
-
-    <!--
          Stripe script should be on every page, not just the pages that
          use the API:
 
@@ -161,7 +146,6 @@
        -->
     <script src="https://js.stripe.com/v3/"></script>
     <!--!preloadedStateScript-->
-    <!--!script-->
 
     <!--!ssrScripts-->
 

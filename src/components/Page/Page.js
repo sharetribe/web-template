@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet-async';
 import { withRouter } from 'react-router-dom';
-import { injectIntl, intlShape } from '../../util/reactIntl';
 import classNames from 'classnames';
-import routeConfiguration from '../../routing/routeConfiguration';
+
 import config from '../../config';
+import routeConfiguration from '../../routing/routeConfiguration';
+import { injectIntl, intlShape } from '../../util/reactIntl';
 import { metaTagProps } from '../../util/seo';
 import { canonicalRoutePath } from '../../util/routes';
+
 import { CookieConsent } from '../../components';
 
 import facebookImage from '../../assets/saunatimeFacebook-1200x630.jpg';
