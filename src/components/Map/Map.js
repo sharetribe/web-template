@@ -3,10 +3,17 @@ import { bool, number, object, string } from 'prop-types';
 import classNames from 'classnames';
 import { propTypes } from '../../util/types';
 import config from '../../config';
-import { StaticMap, DynamicMap, isMapsLibLoaded } from './MapboxMap';
-// import { StaticMap, DynamicMap, isMapsLibLoaded } from './GoogleMap';
+import * as mapboxMap from './MapboxMap';
+import * as googleMapsMap from './GoogleMap';
 
 import css from './Map.module.css';
+
+const isGoogleMapsInUse = config.maps.mapProvider === 'GOOGLE_MAPS';
+const StaticMap = isGoogleMapsInUse ? googleMapsMap.StaticMap : mapboxMap.StaticMap;
+const DynamicMap = isGoogleMapsInUse ? googleMapsMap.DynamicMap : mapboxMap.DynamicMap;
+const isMapsLibLoaded = isGoogleMapsInUse
+  ? googleMapsMap.isMapsLibLoaded
+  : mapboxMap.isMapsLibLoaded;
 
 export class Map extends Component {
   render() {

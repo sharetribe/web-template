@@ -1,3 +1,4 @@
+@import '../../styles/customMediaQueries.css';
 @import '../../styles/propertySets.css';
 
 .root {
@@ -33,7 +34,7 @@
 
 .input {
   flex-grow: 1;
-  height: var(--LocationAutocompleteInput_inputHeight);
+  height: 50px;
   padding-left: 10px;
   margin: 0;
   line-height: unset;
@@ -58,14 +59,23 @@ size and position, etc.
 .predictionsRoot {
   position: absolute;
   width: 100%;
-  padding-bottom: var(--locationAutocompleteBottomPadding);
-  top: var(--LocationAutocompleteInput_inputHeight);
+  top: 50px;
   left: 0;
   background-color: var(--marketplaceColor);
   border-bottom-left-radius: var(--borderRadius);
   border-bottom-right-radius: var(--borderRadius);
   box-shadow: var(--boxShadowPopup);
   z-index: calc(var(--zIndexPopup) + 1);
+}
+
+.predictionsRootGoogle {
+  /* Google Maps needs 72px bottom padding to accommodate logo, Mapbox doesn't have one */
+  padding-bottom: 72px;
+}
+
+.predictionsRootMapbox {
+  /* Google Maps needs 72px bottom padding to accommodate logo, Mapbox doesn't have one */
+  padding-bottom: 8px;
 }
 
 /*
@@ -83,7 +93,7 @@ bottom of the container.
   background-position: center;
 
   @media (--viewportMedium) {
-    background-position: center left var(--LocationAutocompleteInput_sidePaddingDesktop);
+    background-position: center left 36px;
   }
 }
 
@@ -105,7 +115,7 @@ bottom of the container.
 
     @media (--viewportMedium) {
       color: var(--matterColorLightTransparent);
-      padding: 10px var(--LocationAutocompleteInput_sidePaddingDesktop);
+      padding: 10px 36px;
       margin: 0;
     }
 

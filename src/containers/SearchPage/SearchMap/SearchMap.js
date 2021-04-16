@@ -11,18 +11,22 @@ import { propTypes } from '../../../util/types';
 import { obfuscatedCoordinates } from '../../../util/maps';
 
 import { hasParentWithClassName } from './SearchMap.helpers.js';
-import SearchMapWithMapbox, {
-  LABEL_HANDLE,
-  INFO_CARD_HANDLE,
-  getMapBounds,
-  getMapCenter,
-  fitMapToBounds,
-  isMapsLibLoaded,
-} from './SearchMapWithMapbox';
+import * as searchMapMapbox from './SearchMapWithMapbox';
+import * as searchMapGoogleMaps from './SearchMapWithGoogleMaps';
 import ReusableMapContainer from './ReusableMapContainer';
 import css from './SearchMap.module.css';
 
 const REUSABLE_MAP_HIDDEN_HANDLE = 'reusableMapHidden';
+
+const isGoogleMapsInUse = config.maps.mapProvider === 'GOOGLE_MAPS';
+const searchMapVariant = isGoogleMapsInUse ? searchMapGoogleMaps : searchMapMapbox;
+const LABEL_HANDLE = searchMapVariant.LABEL_HANDLE;
+const INFO_CARD_HANDLE = searchMapVariant.INFO_CARD_HANDLE;
+const fitMapToBounds = searchMapVariant.fitMapToBounds;
+const SearchMapVariantComponent = searchMapVariant.default;
+const isMapsLibLoaded = searchMapVariant.isMapsLibLoaded;
+const getMapBounds = searchMapVariant.getMapBounds;
+const getMapCenter = searchMapVariant.getMapCenter;
 
 const withCoordinatesObfuscated = listings => {
   return listings.map(listing => {
@@ -144,29 +148,6 @@ export class SearchMapComponent extends Component {
       this.setState({ mapReattachmentCount: window.mapReattachmentCount });
     };
 
-    // When changing from default map provider to Google Maps, you should use the following
-    // component instead of SearchMapWithMapbox:
-    //
-    // <SearchMapWithGoogleMaps
-    //   id={id}
-    //   className={classes}
-    //   bounds={bounds}
-    //   center={center}
-    //   location={location}
-    //   infoCardOpen={infoCardOpen}
-    //   listings={listings}
-    //   activeListingId={activeListingId}
-    //   mapComponentRefreshToken={this.state.mapReattachmentCount}
-    //   createURLToListing={this.createURLToListing}
-    //   onClick={this.onMapClicked}
-    //   onListingClicked={this.onListingClicked}
-    //   onListingInfoCardClicked={this.onListingInfoCardClicked}
-    //   onMapLoad={this.onMapLoadHandler}
-    //   onMapMoveEnd={onMapMoveEnd}
-    //   reusableMapHiddenHandle={REUSABLE_MAP_HIDDEN_HANDLE}
-    //   zoom={zoom}
-    // />
-
     return isMapsLibLoaded() ? (
       <ReusableMapContainer
         className={reusableContainerClassName}
@@ -174,7 +155,7 @@ export class SearchMapComponent extends Component {
         onReattach={forceUpdateHandler}
         messages={messages}
       >
-        <SearchMapWithMapbox
+        <SearchMapVariantComponent
           id={id}
           className={classes}
           bounds={bounds}
