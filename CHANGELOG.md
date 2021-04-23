@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [remove] Articles in docs directory was just pointing Flex Docs.
+  [#21](https://github.com/sharetribe/ftw-product/pull/21)
 - [change] Update functions in util/dates.js
   [#19](https://github.com/sharetribe/ftw-product/pull/19)
 - [add] Add moment-timezone library on dates.js. Reorder & group util/dates functions. Remove
