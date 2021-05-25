@@ -14,7 +14,7 @@ import { findOptionsForSelectFilter } from '../../../../util/search';
 // Import shared components
 import { Form, Button, FieldTextInput } from '../../../../components';
 // Import modules from this directory
-import CustomCategorySelectFieldMaybe from './CustomCategorySelectFieldMaybe';
+import CustomFieldEnum from './CustomFieldEnum';
 import css from './EditListingDetailsForm.module.css';
 
 const TITLE_MAX_LENGTH = 60;
@@ -118,12 +118,7 @@ const EditListingDetailsFormComponent = props => (
             validate={composeValidators(required(descriptionRequiredMessage))}
           />
 
-          <CustomCategorySelectFieldMaybe
-            id="category"
-            name="category"
-            categories={categories}
-            intl={intl}
-          />
+          <CustomFieldEnum id="category" name="category" categories={categories} intl={intl} />
 
           <Button
             className={css.submitButton}
