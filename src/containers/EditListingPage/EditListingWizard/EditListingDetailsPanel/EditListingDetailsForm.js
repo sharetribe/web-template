@@ -89,7 +89,21 @@ const EditListingDetailsFormComponent = props => (
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
 
-      const categories = findOptionsForSelectFilter('category', filterConfig);
+      const categoryConfig = findConfigForSelectFilter('category', filterConfig);
+      const categorySchemaType = categoryConfig.schemaType;
+      const categories = categoryConfig.options ? categoryConfig.options : [];
+      const categoryLabel = intl.formatMessage({
+        id: 'EditListingDetailsForm.categoryLabel',
+      });
+      const categoryPlaceholder = intl.formatMessage({
+        id: 'EditListingDetailsForm.categoryPlaceholder',
+      });
+
+      const categoryRequired = required(
+        intl.formatMessage({
+          id: 'EditListingDetailsForm.categoryRequired',
+        })
+      );
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
@@ -107,7 +121,6 @@ const EditListingDetailsFormComponent = props => (
             validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
             autoFocus={autoFocus}
           />
-
           <FieldTextInput
             id="description"
             name="description"
@@ -117,9 +130,15 @@ const EditListingDetailsFormComponent = props => (
             placeholder={descriptionPlaceholderMessage}
             validate={composeValidators(required(descriptionRequiredMessage))}
           />
-
-          <CustomFieldEnum id="category" name="category" categories={categories} intl={intl} />
-
+          <CustomFieldEnum
+            id="category"
+            name="category"
+            options={categories}
+            label={categoryLabel}
+            placeholder={categoryPlaceholder}
+            validate={categoryRequired}
+            schemaType={categorySchemaType}
+          />
           <Button
             className={css.submitButton}
             type="submit"
