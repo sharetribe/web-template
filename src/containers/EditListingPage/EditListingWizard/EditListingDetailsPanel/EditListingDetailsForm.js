@@ -5,9 +5,12 @@ import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 // Import configs and util modules
+import config from '../../../../config';
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import { maxLength, required, composeValidators } from '../../../../util/validators';
+import { findOptionsForSelectFilter } from '../../../../util/search';
+
 // Import shared components
 import { Form, Button, FieldTextInput } from '../../../../components';
 // Import modules from this directory
@@ -22,7 +25,6 @@ const EditListingDetailsFormComponent = props => (
     render={formRenderProps => {
       const {
         autoFocus,
-        categories,
         className,
         disabled,
         ready,
@@ -34,6 +36,7 @@ const EditListingDetailsFormComponent = props => (
         updated,
         updateInProgress,
         fetchErrors,
+        filterConfig,
       } = formRenderProps;
 
       const titleMessage = intl.formatMessage({ id: 'EditListingDetailsForm.title' });
@@ -86,6 +89,8 @@ const EditListingDetailsFormComponent = props => (
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
 
+      const categories = findOptionsForSelectFilter('category', filterConfig);
+
       return (
         <Form className={classes} onSubmit={handleSubmit}>
           {errorMessageCreateListingDraft}
@@ -135,7 +140,11 @@ const EditListingDetailsFormComponent = props => (
   />
 );
 
-EditListingDetailsFormComponent.defaultProps = { className: null, fetchErrors: null };
+EditListingDetailsFormComponent.defaultProps = {
+  className: null,
+  fetchErrors: null,
+  filterConfig: config.custom.filters,
+};
 
 EditListingDetailsFormComponent.propTypes = {
   className: string,
@@ -151,12 +160,7 @@ EditListingDetailsFormComponent.propTypes = {
     showListingsError: propTypes.error,
     updateListingError: propTypes.error,
   }),
-  categories: arrayOf(
-    shape({
-      key: string.isRequired,
-      label: string.isRequired,
-    })
-  ),
+  filterConfig: propTypes.filterConfig,
 };
 
 export default compose(injectIntl)(EditListingDetailsFormComponent);
