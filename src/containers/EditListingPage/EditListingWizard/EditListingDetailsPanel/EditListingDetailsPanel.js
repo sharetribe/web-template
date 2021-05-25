@@ -3,10 +3,8 @@ import { bool, func, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 // Import configs and util modules
-import config from '../../../../config';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { ensureOwnListing } from '../../../../util/data';
-import { findOptionsForSelectFilter } from '../../../../util/search';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
 
 // Import shared components
@@ -45,7 +43,6 @@ const EditListingDetailsPanel = props => {
     <FormattedMessage id="EditListingDetailsPanel.createListingTitle" />
   );
 
-  const categoryOptions = findOptionsForSelectFilter('category', config.custom.filters);
   return (
     <div className={classes}>
       <h1 className={css.title}>{panelTitle}</h1>
@@ -69,7 +66,6 @@ const EditListingDetailsPanel = props => {
         updated={panelUpdated}
         updateInProgress={updateInProgress}
         fetchErrors={errors}
-        categories={categoryOptions}
         autoFocus
       />
     </div>
