@@ -12,11 +12,11 @@ import { maxLength, required, composeValidators } from '../../../../util/validat
 import { Form, Button, FieldTextInput } from '../../../../components';
 // Import modules from this directory
 import CustomCategorySelectFieldMaybe from './CustomCategorySelectFieldMaybe';
-import css from './EditListingDescriptionForm.module.css';
+import css from './EditListingDetailsForm.module.css';
 
 const TITLE_MAX_LENGTH = 60;
 
-const EditListingDescriptionFormComponent = props => (
+const EditListingDetailsFormComponent = props => (
   <FinalForm
     {...props}
     render={formRenderProps => {
@@ -36,48 +36,48 @@ const EditListingDescriptionFormComponent = props => (
         fetchErrors,
       } = formRenderProps;
 
-      const titleMessage = intl.formatMessage({ id: 'EditListingDescriptionForm.title' });
+      const titleMessage = intl.formatMessage({ id: 'EditListingDetailsForm.title' });
       const titlePlaceholderMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.titlePlaceholder',
+        id: 'EditListingDetailsForm.titlePlaceholder',
       });
       const titleRequiredMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.titleRequired',
+        id: 'EditListingDetailsForm.titleRequired',
       });
       const maxLengthMessage = intl.formatMessage(
-        { id: 'EditListingDescriptionForm.maxLength' },
+        { id: 'EditListingDetailsForm.maxLength' },
         {
           maxLength: TITLE_MAX_LENGTH,
         }
       );
 
       const descriptionMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.description',
+        id: 'EditListingDetailsForm.description',
       });
       const descriptionPlaceholderMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.descriptionPlaceholder',
+        id: 'EditListingDetailsForm.descriptionPlaceholder',
       });
       const maxLength60Message = maxLength(maxLengthMessage, TITLE_MAX_LENGTH);
       const descriptionRequiredMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.descriptionRequired',
+        id: 'EditListingDetailsForm.descriptionRequired',
       });
 
       const { updateListingError, createListingDraftError, showListingsError } = fetchErrors || {};
       const errorMessageUpdateListing = updateListingError ? (
         <p className={css.error}>
-          <FormattedMessage id="EditListingDescriptionForm.updateFailed" />
+          <FormattedMessage id="EditListingDetailsForm.updateFailed" />
         </p>
       ) : null;
 
       // This error happens only on first tab (of EditListingWizard)
       const errorMessageCreateListingDraft = createListingDraftError ? (
         <p className={css.error}>
-          <FormattedMessage id="EditListingDescriptionForm.createListingDraftError" />
+          <FormattedMessage id="EditListingDetailsForm.createListingDraftError" />
         </p>
       ) : null;
 
       const errorMessageShowListing = showListingsError ? (
         <p className={css.error}>
-          <FormattedMessage id="EditListingDescriptionForm.showListingFailed" />
+          <FormattedMessage id="EditListingDetailsForm.showListingFailed" />
         </p>
       ) : null;
 
@@ -135,9 +135,9 @@ const EditListingDescriptionFormComponent = props => (
   />
 );
 
-EditListingDescriptionFormComponent.defaultProps = { className: null, fetchErrors: null };
+EditListingDetailsFormComponent.defaultProps = { className: null, fetchErrors: null };
 
-EditListingDescriptionFormComponent.propTypes = {
+EditListingDetailsFormComponent.propTypes = {
   className: string,
   intl: intlShape.isRequired,
   onSubmit: func.isRequired,
@@ -159,4 +159,4 @@ EditListingDescriptionFormComponent.propTypes = {
   ),
 };
 
-export default compose(injectIntl)(EditListingDescriptionFormComponent);
+export default compose(injectIntl)(EditListingDetailsFormComponent);

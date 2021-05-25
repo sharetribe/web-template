@@ -13,10 +13,10 @@ import { LISTING_STATE_DRAFT } from '../../../../util/types';
 import { ListingLink } from '../../../../components';
 
 // Import modules from this directory
-import EditListingDescriptionForm from './EditListingDescriptionForm';
-import css from './EditListingDescriptionPanel.module.css';
+import EditListingDetailsForm from './EditListingDetailsForm';
+import css from './EditListingDetailsPanel.module.css';
 
-const EditListingDescriptionPanel = props => {
+const EditListingDetailsPanel = props => {
   const {
     className,
     rootClassName,
@@ -38,18 +38,18 @@ const EditListingDescriptionPanel = props => {
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
   const panelTitle = isPublished ? (
     <FormattedMessage
-      id="EditListingDescriptionPanel.title"
+      id="EditListingDetailsPanel.title"
       values={{ listingTitle: <ListingLink listing={listing} /> }}
     />
   ) : (
-    <FormattedMessage id="EditListingDescriptionPanel.createListingTitle" />
+    <FormattedMessage id="EditListingDetailsPanel.createListingTitle" />
   );
 
   const categoryOptions = findOptionsForSelectFilter('category', config.custom.filters);
   return (
     <div className={classes}>
       <h1 className={css.title}>{panelTitle}</h1>
-      <EditListingDescriptionForm
+      <EditListingDetailsForm
         className={css.form}
         initialValues={{ title, description, category: publicData.category }}
         saveActionMsg={submitButtonText}
@@ -76,14 +76,14 @@ const EditListingDescriptionPanel = props => {
   );
 };
 
-EditListingDescriptionPanel.defaultProps = {
+EditListingDetailsPanel.defaultProps = {
   className: null,
   rootClassName: null,
   errors: null,
   listing: null,
 };
 
-EditListingDescriptionPanel.propTypes = {
+EditListingDetailsPanel.propTypes = {
   className: string,
   rootClassName: string,
 
@@ -100,4 +100,4 @@ EditListingDescriptionPanel.propTypes = {
   errors: object.isRequired,
 };
 
-export default EditListingDescriptionPanel;
+export default EditListingDetailsPanel;

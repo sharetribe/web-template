@@ -1,14 +1,14 @@
 import React from 'react';
 import { renderDeep } from '../../../../util/test-helpers';
 import { fakeIntl } from '../../../../util/test-data';
-import EditListingDescriptionForm from './EditListingDescriptionForm';
+import EditListingDetailsForm from './EditListingDetailsForm';
 
 const noop = () => null;
 
-describe('EditListingDescriptionForm', () => {
+describe('EditListingDetailsForm', () => {
   it('matches snapshot', () => {
     const tree = renderDeep(
-      <EditListingDescriptionForm
+      <EditListingDetailsForm
         intl={fakeIntl}
         dispatch={noop}
         onSubmit={v => v}
