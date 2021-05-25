@@ -4,19 +4,19 @@ import { required } from '../../../../util/validators';
 // Import shared components
 import { FieldSelect } from '../../../../components';
 // Import modules from this directory
-import css from './EditListingDescriptionForm.module.css';
+import css from './EditListingDetailsForm.module.css';
 
 const CustomCategorySelectFieldMaybe = props => {
   const { name, id, categories, intl } = props;
   const categoryLabel = intl.formatMessage({
-    id: 'EditListingDescriptionForm.categoryLabel',
+    id: 'EditListingDetailsForm.categoryLabel',
   });
   const categoryPlaceholder = intl.formatMessage({
-    id: 'EditListingDescriptionForm.categoryPlaceholder',
+    id: 'EditListingDetailsForm.categoryPlaceholder',
   });
   const categoryRequired = required(
     intl.formatMessage({
-      id: 'EditListingDescriptionForm.categoryRequired',
+      id: 'EditListingDetailsForm.categoryRequired',
     })
   );
   return categories ? (

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`EditListingDescriptionForm matches snapshot 1`] = `
+exports[`EditListingDetailsForm matches snapshot 1`] = `
 <form
   action="/"
   className="root"
@@ -13,7 +13,7 @@ exports[`EditListingDescriptionForm matches snapshot 1`] = `
     <label
       htmlFor="title"
     >
-      EditListingDescriptionForm.title
+      EditListingDetailsForm.title
     </label>
     <input
       className="input"
@@ -23,7 +23,7 @@ exports[`EditListingDescriptionForm matches snapshot 1`] = `
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
-      placeholder="EditListingDescriptionForm.titlePlaceholder"
+      placeholder="EditListingDetailsForm.titlePlaceholder"
       type="text"
       value=""
     />
@@ -34,7 +34,7 @@ exports[`EditListingDescriptionForm matches snapshot 1`] = `
     <label
       htmlFor="description"
     >
-      EditListingDescriptionForm.description
+      EditListingDetailsForm.description
     </label>
     <textarea
       className="input textarea"
@@ -44,7 +44,7 @@ exports[`EditListingDescriptionForm matches snapshot 1`] = `
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
-      placeholder="EditListingDescriptionForm.descriptionPlaceholder"
+      placeholder="EditListingDetailsForm.descriptionPlaceholder"
       rows={1}
       value=""
     />
@@ -55,7 +55,7 @@ exports[`EditListingDescriptionForm matches snapshot 1`] = `
     <label
       htmlFor="category"
     >
-      EditListingDescriptionForm.categoryLabel
+      EditListingDetailsForm.categoryLabel
     </label>
     <select
       className="select"
@@ -70,7 +70,7 @@ exports[`EditListingDescriptionForm matches snapshot 1`] = `
         disabled={true}
         value=""
       >
-        EditListingDescriptionForm.categoryPlaceholder
+        EditListingDetailsForm.categoryPlaceholder
       </option>
       <option
         key="cat1"
