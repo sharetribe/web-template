@@ -11,16 +11,11 @@ const SearchFiltersPrimaryComponent = props => {
     rootClassName,
     className,
     children,
-    sortByComponent,
-    listingsAreLoaded,
-    resultsCount,
-    searchInProgress,
     isSecondaryFiltersOpen,
     toggleSecondaryFiltersOpen,
     selectedSecondaryFiltersCount,
   } = props;
 
-  const hasNoResult = listingsAreLoaded && resultsCount === 0;
   const classes = classNames(rootClassName || css.root, className);
 
   const toggleSecondaryFiltersOpenButtonClasses =
@@ -43,36 +38,10 @@ const SearchFiltersPrimaryComponent = props => {
 
   return (
     <div className={classes}>
-      <div className={css.searchOptions}>
-        {listingsAreLoaded ? (
-          <div className={css.searchResultSummary}>
-            <span className={css.resultsFound}>
-              <FormattedMessage
-                id="SearchFiltersPrimary.foundResults"
-                values={{ count: resultsCount }}
-              />
-            </span>
-          </div>
-        ) : null}
-        {sortByComponent}
-      </div>
-
       <div className={css.filters}>
         {children}
         {toggleSecondaryFiltersOpenButton}
       </div>
-
-      {hasNoResult ? (
-        <div className={css.noSearchResults}>
-          <FormattedMessage id="SearchFiltersPrimary.noResults" />
-        </div>
-      ) : null}
-
-      {searchInProgress ? (
-        <div className={css.loadingResults}>
-          <FormattedMessage id="SearchFiltersPrimary.loadingResults" />
-        </div>
-      ) : null}
     </div>
   );
 };
@@ -80,24 +49,17 @@ const SearchFiltersPrimaryComponent = props => {
 SearchFiltersPrimaryComponent.defaultProps = {
   rootClassName: null,
   className: null,
-  resultsCount: null,
-  searchInProgress: false,
   isSecondaryFiltersOpen: false,
   toggleSecondaryFiltersOpen: null,
   selectedSecondaryFiltersCount: 0,
-  sortByComponent: null,
 };
 
 SearchFiltersPrimaryComponent.propTypes = {
   rootClassName: string,
   className: string,
-  listingsAreLoaded: bool.isRequired,
-  resultsCount: number,
-  searchInProgress: bool,
   isSecondaryFiltersOpen: bool,
   toggleSecondaryFiltersOpen: func,
   selectedSecondaryFiltersCount: number,
-  sortByComponent: node,
 };
 
 const SearchFiltersPrimary = SearchFiltersPrimaryComponent;
