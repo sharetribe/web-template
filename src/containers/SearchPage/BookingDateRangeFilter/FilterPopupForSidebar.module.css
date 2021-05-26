@@ -1,0 +1,99 @@
+@import '../../../styles/propertySets.css';
+
+.root {
+  position: relative;
+  display: block;
+  width: 100%;
+
+  @media (--viewportMedium) {
+    padding-top: 16px;
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+}
+
+.filterHeader {
+  line-height: 24px;
+}
+.labelWrapper {
+  display: inline-block;
+  max-width: calc(100% - 16px);
+}
+
+.label,
+.labelSelected {
+  @apply --marketplaceSmallFontStyles;
+  font-weight: var(--fontWeightBold);
+
+  /* Baseline adjustment for label text */
+  margin-top: 0;
+  margin-bottom: 12px;
+  padding: 4px 0 2px 0;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-bottom: 8px;
+  }
+}
+
+.label {
+  color: var(--matterColor);
+}
+
+.labelSelected {
+  color: var(--marketplaceColor);
+  white-space: nowrap;
+}
+
+.labelButton {
+  /* Override button styles */
+  width: 100%;
+  outline: none;
+  text-align: left;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.labelButtonContent {
+  display: inline-block;
+  width: 100%;
+}
+
+.openSign {
+  float: right;
+}
+
+.popup {
+  /* By default hide the content */
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+
+  /* Position */
+  position: absolute;
+  z-index: var(--zIndexPopup);
+
+  /* Layout */
+  min-width: 300px;
+  margin-top: 7px;
+  background-color: var(--matterColorLight);
+
+  /* Borders */
+  border-top: 1px solid var(--matterColorNegative);
+  box-shadow: var(--boxShadowPopup);
+  border-radius: 4px;
+  transition: var(--transitionStyleButton);
+}
+
+.popupSize {
+  padding: 15px 30px 17px 30px;
+}
+
+.isOpen {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
