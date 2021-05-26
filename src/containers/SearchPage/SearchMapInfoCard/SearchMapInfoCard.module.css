@@ -36,7 +36,7 @@
   position: relative;
 
   width: 250px;
-  min-height: 207px;
+  min-height: 120px;
 
   /* Font */
   @apply --marketplaceH5FontStyles;
@@ -62,16 +62,7 @@
   font-weight: var(--fontWeightSemiBold);
 }
 
-.threeToTwoWrapper {
-  /* Layout */
-  display: block;
-  width: 100%;
-  position: relative;
-}
-
-/* Firefox doesn't support image aspect ratio inside flexbox */
-.aspectWrapper {
-  padding-bottom: 66.6667%; /* 3:2 Aspect Ratio */
+.aspectratioWrapper {
   background: var(--matterColorNegative); /* Loading BG color */
 }
 
