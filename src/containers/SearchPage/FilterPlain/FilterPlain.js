@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 
+import IconPlus from '../IconPlus/IconPlus';
 import FilterForm from '../FilterForm/FilterForm';
 
 import css from './FilterPlain.module.css';
@@ -44,6 +45,8 @@ class FilterPlainComponent extends Component {
       plainClassName,
       id,
       label,
+      labelSelection,
+      labelSelectionSeparator,
       isSelected,
       children,
       initialValues,
@@ -52,16 +55,24 @@ class FilterPlainComponent extends Component {
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
 
-    const labelClass = isSelected ? css.filterLabelSelected : css.filterLabel;
-
     return (
       <div className={classes}>
-        <div className={labelClass}>
-          <button type="button" className={css.labelButton} onClick={this.toggleIsOpen}>
-            <span className={labelClass}>{label}</span>
-          </button>
-          <button type="button" className={css.clearButton} onClick={this.handleClear}>
-            <FormattedMessage id={'FilterPlain.clear'} />
+        <div className={css.filterHeader}>
+          <button className={css.labelButton} onClick={this.toggleIsOpen}>
+            <span className={css.labelButtonContent}>
+              <span className={css.labelWrapper}>
+                <span className={css.label}>
+                  {label}
+                  {labelSelection && labelSelectionSeparator ? labelSelectionSeparator : null}
+                  {labelSelection ? (
+                    <span className={css.labelSelected}>{labelSelection}</span>
+                  ) : null}
+                </span>
+              </span>
+              <span className={css.openSign}>
+                <IconPlus isOpen={this.state.isOpen} isSelected={isSelected} />
+              </span>
+            </span>
           </button>
         </div>
         <div
@@ -81,6 +92,9 @@ class FilterPlainComponent extends Component {
           >
             {children}
           </FilterForm>
+          <button className={css.clearButton} onClick={this.handleClear}>
+            <FormattedMessage id={'FilterPlain.clear'} />
+          </button>
         </div>
       </div>
     );
@@ -93,6 +107,8 @@ FilterPlainComponent.defaultProps = {
   plainClassName: null,
   initialValues: null,
   keepDirtyOnReinitialize: false,
+  labelSelection: null,
+  labelSelectionSeparator: null,
 };
 
 FilterPlainComponent.propTypes = {
@@ -102,6 +118,8 @@ FilterPlainComponent.propTypes = {
   id: string.isRequired,
   onSubmit: func.isRequired,
   label: node.isRequired,
+  labelSelection: node,
+  labelSelectionSeparator: node,
   isSelected: bool.isRequired,
   children: node.isRequired,
   initialValues: object,
