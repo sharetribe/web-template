@@ -355,7 +355,7 @@
   "LayoutWrapperAccountSettingsSideNav.paymentMethodsTabTitle": "Moyens de paiement",
   "LimitedAccessBanner.message": "Votre connexion en tant que {firstName} {lastName} est active. Certaines actions sont restreintes.",
   "LimitedAccessBanner.logout": "Se déconnecter",
-  "ListingCard.hostedBy": "Proposé par {authorName}.",
+  "ListingCard.author": "Proposé par {authorName}.",
   "ListingCard.perDay": "par jour",
   "ListingCard.perNight": "par nuit",
   "ListingCard.perUnit": "par unité",

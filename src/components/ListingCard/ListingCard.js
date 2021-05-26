@@ -9,7 +9,7 @@ import { ensureListing, ensureUser } from '../../util/data';
 import { richText } from '../../util/richText';
 import { createSlug } from '../../util/urlHelpers';
 import config from '../../config';
-import { NamedLink, ResponsiveImage } from '../../components';
+import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '../../components';
 
 import css from './ListingCard.module.css';
 
@@ -53,8 +53,12 @@ export const ListingCardComponent = props => {
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
 
-  const { formattedPrice, priceTitle } = priceData(price, intl);
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+  const variants = firstImage
+    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.indexOf(variantPrefix) >= 0)
+    : [];
 
+  const { formattedPrice, priceTitle } = priceData(price, intl);
   const unitType = config.bookingUnitType;
   const isNightly = unitType === LINE_ITEM_NIGHT;
   const isDaily = unitType === LINE_ITEM_DAY;
@@ -65,23 +69,29 @@ export const ListingCardComponent = props => {
     ? 'ListingCard.perDay'
     : 'ListingCard.perUnit';
 
+  const setActivePropsMaybe = setActiveListing
+    ? {
+        onMouseEnter: () => setActiveListing(currentListing.id),
+        onMouseLeave: () => setActiveListing(null),
+      }
+    : null;
+
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
-      <div
-        className={css.threeToTwoWrapper}
-        onMouseEnter={() => setActiveListing(currentListing.id)}
-        onMouseLeave={() => setActiveListing(null)}
+      <AspectRatioWrapper
+        className={css.aspectRatioWrapper}
+        width={aspectWidth}
+        height={aspectHeight}
+        {...setActivePropsMaybe}
       >
-        <div className={css.aspectWrapper}>
-          <LazyImage
-            rootClassName={css.rootForImage}
-            alt={title}
-            image={firstImage}
-            variants={['landscape-crop', 'landscape-crop2x']}
-            sizes={renderSizes}
-          />
-        </div>
-      </div>
+        <LazyImage
+          rootClassName={css.rootForImage}
+          alt={title}
+          image={firstImage}
+          variants={variants}
+          sizes={renderSizes}
+        />
+      </AspectRatioWrapper>
       <div className={css.info}>
         <div className={css.price}>
           <div className={css.priceValue} title={priceTitle}>
@@ -101,7 +111,7 @@ export const ListingCardComponent = props => {
             })}
           </div>
           <div className={css.authorInfo}>
-            <FormattedMessage id="ListingCard.hostedBy" values={{ authorName }} />
+            <FormattedMessage id="ListingCard.author" values={{ authorName }} />
           </div>
         </div>
       </div>
@@ -113,7 +123,7 @@ ListingCardComponent.defaultProps = {
   className: null,
   rootClassName: null,
   renderSizes: null,
-  setActiveListing: () => null,
+  setActiveListing: null,
 };
 
 ListingCardComponent.propTypes = {

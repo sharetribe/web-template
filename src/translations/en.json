@@ -361,7 +361,7 @@
   "LayoutWrapperAccountSettingsSideNav.paymentMethodsTabTitle": "Payment methods",
   "LimitedAccessBanner.message": "Your are logged in as {firstName} {lastName}. You have limited rights for actions.",
   "LimitedAccessBanner.logout": "Log out",
-  "ListingCard.hostedBy": "Hosted by {authorName}.",
+  "ListingCard.author": "Sold by {authorName}.",
   "ListingCard.perDay": "per day",
   "ListingCard.perNight": "per night",
   "ListingCard.perUnit": "per unit",
