@@ -23,6 +23,10 @@ const i18n = {
 // This can be either 'keywords' or 'location'.
 const mainSearchType = 'keywords';
 
+// There are 2 SearchPage variants that can be used:
+// 'map' & 'list'
+const searchPageVariant = 'list';
+
 // Should search results be ordered by distance to origin.
 // NOTE 1: This doesn't affect if the main search type is 'keywords'
 // NOTE 2: If this is set to true add parameter 'origin' to every location in default-location-searches.js
@@ -216,6 +220,7 @@ const config = {
     transitVerbose: sdkTransitVerbose,
   },
   mainSearchType,
+  searchPageVariant,
   sortSearchByDistance,
   currency,
   currencyConfig,
