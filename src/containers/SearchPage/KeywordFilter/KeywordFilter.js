@@ -92,12 +92,8 @@ class KeywordFilter extends Component {
         )
       : label;
 
-    const labelForPlain = hasInitialValues
-      ? intl.formatMessage(
-          { id: 'KeywordFilterPlainForm.labelSelected' },
-          { labelText: initialValues[urlParam] }
-        )
-      : label;
+    const labelClass = hasInitialValues ? css.labelPlainSelected : css.labelPlain;
+    const labelForPlain = <span className={labelClass}>{label}</span>;
 
     const filterText = intl.formatMessage({ id: 'KeywordFilter.filterText' });
 
@@ -188,11 +184,11 @@ class KeywordFilter extends Component {
         {...rest}
       >
         <fieldset className={css.fieldPlain}>
-          <label>{filterText}</label>
+          <label className={css.fieldPlainLabel}>{filterText}</label>
           <FieldTextInput
             name={name}
             id={`${id}-input`}
-            isUncontrolled
+            className={css.fieldPlainInput}
             inputRef={this.mobileInputRef}
             type="text"
             placeholder={placeholder}
