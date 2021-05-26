@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import debounce from 'lodash/debounce';
+import omit from 'lodash/omit';
 import classNames from 'classnames';
 
 import config from '../../config';
-import { injectIntl, intlShape } from '../../util/reactIntl';
+import { injectIntl, intlShape, FormattedMessage } from '../../util/reactIntl';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
 import { isAnyFilterActive, isMainSearchTypeKeywords, isOriginInUse } from '../../util/search';
@@ -41,8 +42,6 @@ const SEARCH_WITH_MAP_DEBOUNCE = 300; // Little bit of debounce before search is
 // SortBy component has its content in dropdown-popup.
 // With this offset we move the dropdown a few pixels on desktop layout.
 const FILTER_DROPDOWN_OFFSET = -14;
-
-const isMapVariant = config.searchPageVariant === 'map';
 
 const validUrlQueryParamsFromProps = props => {
   const { location, filterConfig } = props;
@@ -243,6 +242,16 @@ export class SearchPageComponent extends Component {
     history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, queryParams));
   }
 
+  // Reset all filter query parameters
+  handleResetAll(e) {
+    this.resetAll(e);
+
+    // blur event target if event is passed
+    if (e && e.currentTarget) {
+      e.currentTarget.blur();
+    }
+  }
+
   render() {
     const {
       intl,
@@ -276,13 +285,17 @@ export class SearchPageComponent extends Component {
 
     const validQueryParams = validURLParamsForExtendedData(searchInURL, filterConfig);
 
-    const availableFilters = isMainSearchTypeKeywords(config)
+    const isKeywordSearch = isMainSearchTypeKeywords(config);
+    const availableFilters = isKeywordSearch
       ? filterConfig.filter(f => f.type !== 'KeywordFilter')
       : filterConfig;
 
     // Selected aka active filters
     const selectedFilters = validFilterParams(validQueryParams, filterConfig);
-    const selectedFiltersCount = Object.keys(selectedFilters).length;
+    const keysOfSelectedFilters = Object.keys(selectedFilters);
+    const selectedFiltersCountForMobile = isKeywordSearch
+      ? keysOfSelectedFilters.filter(f => f !== 'keywords').length
+      : keysOfSelectedFilters.length;
 
     const hasPaginationInfo = !!pagination && pagination.totalItems != null;
     const totalItems = searchParamsAreInSync && hasPaginationInfo ? pagination.totalItems : 0;
@@ -348,11 +361,6 @@ export class SearchPageComponent extends Component {
           <aside className={css.layoutWrapperFilterColumn}>
             <div className={css.filterColumnContent}>
               {availableFilters.map(config => {
-                const mode = config =>
-                  config.id === 'dates'
-                    ? { liveEdit: false, showAsPopup: true }
-                    : { liveEdit: true, showAsPopup: false };
-
                 return (
                   <FilterComponent
                     key={`SearchFiltersMobile.${config.id}`}
@@ -364,10 +372,13 @@ export class SearchPageComponent extends Component {
                     getHandleChangedValueFn={this.getHandleChangedValueFn}
                     liveEdit
                     showAsPopup={false}
-                    {...mode(config)}
+                    isDesktop
                   />
                 );
               })}
+              <button className={css.resetAllButton} onClick={e => this.handleResetAll(e)}>
+                <FormattedMessage id={'SearchFiltersMobile.resetAll'} />
+              </button>
             </div>
           </aside>
 
@@ -387,7 +398,8 @@ export class SearchPageComponent extends Component {
                 onOpenModal={this.onOpenMobileModal}
                 onCloseModal={this.onCloseMobileModal}
                 resetAll={this.resetAll}
-                selectedFiltersCount={selectedFiltersCount}
+                selectedFiltersCount={selectedFiltersCountForMobile}
+                isMapVariant={false}
               >
                 {availableFilters.map(config => {
                   return (
