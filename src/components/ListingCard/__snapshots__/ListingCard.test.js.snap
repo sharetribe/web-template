@@ -68,7 +68,7 @@ exports[`ListingCard matches snapshot 1`] = `
         className="authorInfo"
       >
         <FormattedMessage
-          id="ListingCard.hostedBy"
+          id="ListingCard.author"
           values={
             Object {
               "authorName": "user1 display name",

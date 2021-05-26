@@ -318,7 +318,7 @@
   "LayoutWrapperAccountSettingsSideNav.passwordTabTitle": "Passwort",
   "LayoutWrapperAccountSettingsSideNav.paymentsTabTitle": "Zahlungseinstellungen",
   "LayoutWrapperAccountSettingsSideNav.paymentMethodsTabTitle": "Zahlungseinstellungen",
-  "ListingCard.hostedBy": "Gehostet von {authorName}.",
+  "ListingCard.author": "Gehostet von {authorName}.",
   "ListingCard.perDay": "pro Tag",
   "ListingCard.perNight": "pro Nacht",
   "ListingCard.perUnit": "pro Einheit",

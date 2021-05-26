@@ -355,7 +355,7 @@
   "LayoutWrapperAccountSettingsSideNav.paymentMethodsTabTitle": "Formas de pago",
   "LimitedAccessBanner.message": "Estás conectado como {firstName} {lastName}. Tienes derechos limitados a algunas acciones.",
   "LimitedAccessBanner.logout": "Cerrar sesión",
-  "ListingCard.hostedBy": "Publicado por {authorName}.",
+  "ListingCard.author": "Publicado por {authorName}.",
   "ListingCard.perDay": "por día",
   "ListingCard.perNight": "por noche",
   "ListingCard.perUnit": "por unidad",
