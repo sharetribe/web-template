@@ -5,49 +5,87 @@
   padding-top: 24px;
   padding-bottom: 17px;
   border-bottom: 1px solid var(--matterColorNegative);
+
+  @media (--viewportMedium) {
+    padding-top: 16px;
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
 }
 
-.filterLabel,
-.filterLabelSelected {
-  @apply --marketplaceH3FontStyles;
+.filterHeader {
+  line-height: 24px;
+}
+
+.labelWrapper {
+  display: inline-block;
+  max-width: calc(100% - 16px);
+}
+
+.label,
+.labelSelected {
+  @apply --marketplaceSmallFontStyles;
+  font-weight: var(--fontWeightBold);
 
   /* Baseline adjustment for label text */
   margin-top: 0;
   margin-bottom: 12px;
   padding: 4px 0 2px 0;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-bottom: 8px;
+  }
 }
 
-.filterLabel {
-  color: var(--matterColorDark);
+.label {
+  color: var(--matterColor);
 }
 
-.filterLabelSelected {
+.labelSelected {
   color: var(--marketplaceColor);
+  white-space: nowrap;
 }
 
 .labelButton {
   /* Override button styles */
   outline: none;
+  line-height: 24px;
   text-align: left;
   border: none;
   padding: 0;
   cursor: pointer;
+  width: 100%;
+}
+
+.labelButtonContent {
+  display: inline-block;
+  width: 100%;
+
+  &:hover {
+    color: var(--marketplaceColor);
+
+    & * {
+      color: var(--marketplaceColor);
+      stroke: var(--marketplaceColor);
+    }
+  }
+}
+
+.openSign {
+  float: right;
 }
 
 .formWrapper {
-  padding-left: 20px;
+  padding-left: 12px;
 }
 
 .clearButton {
   @apply --marketplaceH5FontStyles;
+  margin: 0;
+  display: block;
   font-weight: var(--fontWeightMedium);
   color: var(--matterColorAnti);
-
-  /* Layout */
-  display: inline;
-  float: right;
-  margin-top: 6px;
-  padding: 0;
 
   /* Override button styles */
   outline: none;
@@ -57,5 +95,10 @@
   &:focus,
   &:hover {
     color: var(--matterColor);
+  }
+
+  @media (--viewportMedium) {
+    margin: 0;
+    padding: 4px 0 4px 0;
   }
 }

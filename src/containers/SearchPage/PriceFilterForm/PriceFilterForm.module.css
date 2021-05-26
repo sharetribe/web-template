@@ -39,6 +39,11 @@
 
 .plain {
   width: 100%;
+
+  @media (--viewportMedium) {
+    padding-top: 8px;
+    padding-bottom: 16px;
+  }
 }
 
 .isOpen {
@@ -116,6 +121,10 @@
   @media (--viewportMedium) {
     padding: 1px 0 4px 0;
   }
+}
+
+.priceInSidebar {
+  width: 72px;
 }
 
 .priceSeparator {

@@ -533,7 +533,7 @@
   "PaymentMethodsPage.title": "Payment methods",
   "PriceFilter.clear": "Clear",
   "PriceFilter.label": "Price",
-  "PriceFilter.labelSelectedPlain": "Price: {minPrice} - {maxPrice}",
+  "PriceFilter.labelSelectedPlain": "{minPrice} - {maxPrice}",
   "PriceFilter.labelSelectedButton": "{minPrice} - {maxPrice}",
   "PriceFilterForm.cancel": "Cancel",
   "PriceFilterForm.clear": "Clear",
