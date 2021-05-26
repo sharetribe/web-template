@@ -1,11 +1,11 @@
 import React from 'react';
 import { renderShallow } from '../../util/test-helpers';
 import { fakeIntl } from '../../util/test-data';
-import { SearchPageComponent } from './SearchPage';
+import { SearchPageComponent } from './SearchPageWithList';
 
 const noop = () => null;
 
-describe('SearchPageComponent', () => {
+describe('SearchPageWithList', () => {
   it('matches snapshot', () => {
     const props = {
       location: { search: '' },
