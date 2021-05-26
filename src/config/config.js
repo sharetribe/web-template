@@ -55,6 +55,10 @@ const bookingProcessAlias = 'flex-product-default-process/release-1';
 //         depending on the value chosen.
 const bookingUnitType = 'line-item/night';
 
+// This flag defines if unit type translation is used:
+// e.g. "100 € per night" vs "100 €"
+const showUnitTypeTranslations = false;
+
 // Should the application fetch available time slots (currently defined as
 // start and end dates) to be shown on listing page.
 const enableAvailability = process.env.REACT_APP_AVAILABILITY_ENABLED === 'true';
@@ -211,6 +215,7 @@ const config = {
   locale,
   bookingProcessAlias,
   bookingUnitType,
+  showUnitTypeTranslations,
   enableAvailability,
   dayCountAvailableForBooking,
   i18n,
