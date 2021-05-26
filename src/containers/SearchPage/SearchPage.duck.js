@@ -2,11 +2,12 @@ import unionWith from 'lodash/unionWith';
 
 import config from '../../config';
 import { storableError } from '../../util/errors';
-import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { convertUnitToSubUnit, unitDivisor } from '../../util/currency';
 import { parseDateFromISO8601, getExclusiveEndDate } from '../../util/dates';
+import { util as sdkUtil } from '../../util/sdkLoader';
 import { isOriginInUse } from '../../util/search';
 import { parse } from '../../util/urlHelpers';
+import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
 // Pagination page size might need to be dynamic on responsive page layouts
 // Current design has max 3 columns 12 is divisible by 2 and 3
@@ -220,6 +221,20 @@ export const loadData = (params, search) => {
   });
   const { page = 1, address, origin, ...rest } = queryParams;
   const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
+
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+
+  const createImageVariant = (name, width) => {
+    const aspectRatio = aspectHeight / aspectWidth;
+    return {
+      [`imageVariant.${name}`]: sdkUtil.objectQueryString({
+        w: width,
+        h: aspectRatio * width,
+        fit: 'crop',
+      }),
+    };
+  };
+
   return searchListings({
     ...rest,
     ...originMaybe,
@@ -228,7 +243,9 @@ export const loadData = (params, search) => {
     include: ['author', 'images'],
     'fields.listing': ['title', 'geolocation', 'price'],
     'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
-    'fields.image': ['variants.landscape-crop', 'variants.landscape-crop2x'],
+    'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
+    ...createImageVariant(`${variantPrefix}`, 400),
+    ...createImageVariant(`${variantPrefix}-2x`, 800),
     'limit.images': 1,
   });
 };
