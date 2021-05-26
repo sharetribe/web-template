@@ -38,9 +38,9 @@ const getQueryParamName = queryParamNames => {
 };
 
 // Format URI component's query param: { pub_key: 'has_all:a,b,c' }
-const format = (selectedOptions, queryParamName, searchMode) => {
+const format = (selectedOptions, queryParamName, schemaType, searchMode) => {
   const hasOptionsSelected = selectedOptions && selectedOptions.length > 0;
-  const mode = searchMode ? `${searchMode}:` : '';
+  const mode = schemaType === 'multi-enum' && searchMode ? `${searchMode}:` : '';
   const value = hasOptionsSelected ? `${mode}${selectedOptions.join(',')}` : null;
   return { [queryParamName]: value };
 };
@@ -90,6 +90,7 @@ class SelectMultipleFilter extends Component {
       contentPlacementOffset,
       onSubmit,
       queryParamNames,
+      schemaType,
       searchMode,
       intl,
       showAsPopup,
@@ -112,12 +113,12 @@ class SelectMultipleFilter extends Component {
         )
       : label;
 
-    const labelForPlain = hasInitialValues
+    const labelSelectionForPlain = hasInitialValues
       ? intl.formatMessage(
           { id: 'SelectMultipleFilterPlainForm.labelSelected' },
-          { labelText: label, count: selectedOptions.length }
+          { count: selectedOptions.length }
         )
-      : label;
+      : '';
 
     const contentStyle = this.positionStyleForContent();
 
@@ -127,7 +128,7 @@ class SelectMultipleFilter extends Component {
 
     const handleSubmit = values => {
       const usedValue = values ? values[name] : values;
-      onSubmit(format(usedValue, queryParamName, searchMode));
+      onSubmit(format(usedValue, queryParamName, schemaType, searchMode));
     };
 
     return showAsPopup ? (
@@ -157,7 +158,8 @@ class SelectMultipleFilter extends Component {
       <FilterPlain
         className={className}
         rootClassName={rootClassName}
-        label={labelForPlain}
+        label={label}
+        labelSelection={labelSelectionForPlain}
         isSelected={hasInitialValues}
         id={`${id}.plain`}
         liveEdit

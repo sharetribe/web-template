@@ -635,7 +635,7 @@
   "SectionLocations.listingsInLocation": "Saunas in {location}",
   "SectionLocations.title": "Explore exotic locations in Finland",
   "SelectMultipleFilter.labelSelected": "{labelText} • {count}",
-  "SelectMultipleFilterPlainForm.labelSelected": "{labelText} • {count}",
+  "SelectMultipleFilterPlainForm.labelSelected": "• {count}",
   "SelectSingleFilter.popupClear": "Clear",
   "SelectSingleFilter.plainClear": "Clear",
   "SendMessageForm.sendFailed": "Failed to send. Please try again.",
