@@ -8,10 +8,10 @@ import unionWith from 'lodash/unionWith';
 import classNames from 'classnames';
 
 import config from '../../config';
-import { injectIntl, intlShape } from '../../util/reactIntl';
+import { injectIntl, intlShape, FormattedMessage } from '../../util/reactIntl';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
-import { isOriginInUse } from '../../util/search';
+import { isAnyFilterActive, isMainSearchTypeKeywords, isOriginInUse } from '../../util/search';
 import { parse, stringify } from '../../util/urlHelpers';
 import { propTypes } from '../../util/types';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
@@ -20,8 +20,6 @@ import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck
 import { ModalInMobile, Page } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
-import SearchMap from './SearchMap/SearchMap';
-
 import { searchMapListings, setActiveListing } from './SearchPage.duck';
 import {
   pickSearchParamsOnly,
@@ -29,11 +27,50 @@ import {
   validFilterParams,
   createSearchResultSchema,
 } from './SearchPage.helpers';
-import MainPanel from './MainPanel';
+
+import FilterComponent from './FilterComponent';
+import SearchMap from './SearchMap/SearchMap';
+import MainPanelHeader from './MainPanelHeader/MainPanelHeader';
+import SearchFiltersSecondary from './SearchFiltersSecondary/SearchFiltersSecondary';
+import SearchFiltersPrimary from './SearchFiltersPrimary/SearchFiltersPrimary';
+import SearchFiltersMobile from './SearchFiltersMobile/SearchFiltersMobile';
+import SortBy from './SortBy/SortBy';
+import SearchResultsPanel from './SearchResultsPanel/SearchResultsPanel';
+
 import css from './SearchPage.module.css';
 
 const MODAL_BREAKPOINT = 768; // Search is in modal on mobile layout
 const SEARCH_WITH_MAP_DEBOUNCE = 300; // Little bit of debounce before search is initiated.
+
+// Primary filters have their content in dropdown-popup.
+// With this offset we move the dropdown to the left a few pixels on desktop layout.
+const FILTER_DROPDOWN_OFFSET = -14;
+
+const validUrlQueryParamsFromProps = props => {
+  const { location, filterConfig } = props;
+  // eslint-disable-next-line no-unused-vars
+  const { mapSearch, page, ...searchInURL } = parse(location.search, {
+    latlng: ['origin'],
+    latlngBounds: ['bounds'],
+  });
+  // urlQueryParams doesn't contain page specific url params
+  // like mapSearch, page or origin (origin depends on config.sortSearchByDistance)
+  return validURLParamsForExtendedData(searchInURL, filterConfig);
+};
+
+const cleanSearchFromConflictingParams = (searchParams, sortConfig, filterConfig) => {
+  // Single out filters that should disable SortBy when an active
+  // keyword search sorts the listings according to relevance.
+  // In those cases, sort parameter should be removed.
+  const sortingFiltersActive = isAnyFilterActive(
+    sortConfig.conflictingFilters,
+    searchParams,
+    filterConfig
+  );
+  return sortingFiltersActive
+    ? { ...searchParams, [sortConfig.queryParamName]: null }
+    : searchParams;
+};
 
 export class SearchPageComponent extends Component {
   constructor(props) {
@@ -42,6 +79,7 @@ export class SearchPageComponent extends Component {
     this.state = {
       isSearchMapOpenOnMobile: props.tab === 'map',
       isMobileModalOpen: false,
+      currentQueryParams: validUrlQueryParamsFromProps(props),
     };
 
     this.searchMapListingsInProgress = false;
@@ -49,6 +87,16 @@ export class SearchPageComponent extends Component {
     this.onMapMoveEnd = debounce(this.onMapMoveEnd.bind(this), SEARCH_WITH_MAP_DEBOUNCE);
     this.onOpenMobileModal = this.onOpenMobileModal.bind(this);
     this.onCloseMobileModal = this.onCloseMobileModal.bind(this);
+
+    // Filter functions
+    this.applyFilters = this.applyFilters.bind(this);
+    this.cancelFilters = this.cancelFilters.bind(this);
+    this.resetAll = this.resetAll.bind(this);
+    this.initialValues = this.initialValues.bind(this);
+    this.getHandleChangedValueFn = this.getHandleChangedValueFn.bind(this);
+
+    // SortBy
+    this.handleSortBy = this.handleSortBy.bind(this);
   }
 
   // Callback to determine if new search is needed
@@ -104,13 +152,105 @@ export class SearchPageComponent extends Component {
     this.setState({ isMobileModalOpen: false });
   }
 
+  // Apply the filters by redirecting to SearchPage with new filters.
+  applyFilters() {
+    const { history, sortConfig, filterConfig } = this.props;
+    const urlQueryParams = validUrlQueryParamsFromProps(this.props);
+    const searchParams = { ...urlQueryParams, ...this.state.currentQueryParams };
+    const search = cleanSearchFromConflictingParams(searchParams, sortConfig, filterConfig);
+
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, search));
+  }
+
+  // Close the filters by clicking cancel, revert to the initial params
+  cancelFilters() {
+    this.setState({ currentQueryParams: {} });
+  }
+
+  // Reset all filter query parameters
+  resetAll(e) {
+    const { history, filterConfig } = this.props;
+    const urlQueryParams = validUrlQueryParamsFromProps(this.props);
+    const filterQueryParamNames = filterConfig.map(f => f.queryParamNames);
+
+    // Reset state
+    this.setState({ currentQueryParams: {} });
+
+    // Reset routing params
+    const queryParams = omit(urlQueryParams, filterQueryParamNames);
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, queryParams));
+  }
+
+  initialValues(queryParamNames) {
+    const urlQueryParams = validUrlQueryParamsFromProps(this.props);
+
+    // Query parameters that are in state (user might have not yet clicked "Apply")
+    const currentQueryParams = this.state.currentQueryParams;
+
+    // Get initial value for a given parameter from state if its there.
+    const getInitialValue = paramName => {
+      const currentQueryParam = currentQueryParams[paramName];
+      const hasQueryParamInState = typeof currentQueryParam !== 'undefined';
+      return hasQueryParamInState ? currentQueryParam : urlQueryParams[paramName];
+    };
+
+    // Return all the initial values related to given queryParamNames
+    // InitialValues for "amenities" filter could be
+    // { amenities: "has_any:towel,jacuzzi" }
+    const isArray = Array.isArray(queryParamNames);
+    return isArray
+      ? queryParamNames.reduce((acc, paramName) => {
+          return { ...acc, [paramName]: getInitialValue(paramName) };
+        }, {})
+      : {};
+  }
+
+  getHandleChangedValueFn(useHistoryPush) {
+    const { history, sortConfig, filterConfig } = this.props;
+    const urlQueryParams = validUrlQueryParamsFromProps(this.props);
+
+    return updatedURLParams => {
+      const updater = prevState => {
+        const { address, bounds } = urlQueryParams;
+        const mergedQueryParams = { ...urlQueryParams, ...prevState.currentQueryParams };
+
+        // Address and bounds are handled outside of MainPanel.
+        // I.e. TopbarSearchForm && search by moving the map.
+        // We should always trust urlQueryParams with those.
+        return {
+          currentQueryParams: { ...mergedQueryParams, ...updatedURLParams, address, bounds },
+        };
+      };
+
+      const callback = () => {
+        if (useHistoryPush) {
+          const searchParams = this.state.currentQueryParams;
+          const search = cleanSearchFromConflictingParams(searchParams, sortConfig, filterConfig);
+          history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, search));
+        }
+      };
+
+      this.setState(updater, callback);
+    };
+  }
+
+  handleSortBy(urlParam, values) {
+    const { history } = this.props;
+    const urlQueryParams = validUrlQueryParamsFromProps(this.props);
+
+    const queryParams = values
+      ? { ...urlQueryParams, [urlParam]: values }
+      : omit(urlQueryParams, urlParam);
+
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, queryParams));
+  }
+
   render() {
     const {
       intl,
       listings,
       filterConfig,
       sortConfig,
-      history,
       location,
       mapListings,
       onManageDisableScrolling,
@@ -146,6 +286,71 @@ export class SearchPageComponent extends Component {
     const shouldShowSearchMap =
       !isMobileLayout || (isMobileLayout && this.state.isSearchMapOpenOnMobile);
 
+    const isKeywordSearch = isMainSearchTypeKeywords(config);
+    const availableFilters = isKeywordSearch
+      ? filterConfig.filter(f => f.type !== 'KeywordFilter')
+      : filterConfig;
+
+    const primaryFilters = availableFilters.filter(f => f.group === 'primary');
+    const secondaryFilters = availableFilters.filter(f => f.group !== 'primary');
+    const hasSecondaryFilters = !!(secondaryFilters && secondaryFilters.length > 0);
+
+    // Selected aka active filters
+    const selectedFilters = validFilterParams(validQueryParams, filterConfig);
+    const keysOfSelectedFilters = Object.keys(selectedFilters);
+    const selectedFiltersCountForMobile = isKeywordSearch
+      ? keysOfSelectedFilters.filter(f => f !== 'keywords').length
+      : keysOfSelectedFilters.length;
+
+    // Selected aka active secondary filters
+    const selectedSecondaryFilters = hasSecondaryFilters
+      ? validFilterParams(validQueryParams, secondaryFilters)
+      : {};
+    const selectedSecondaryFiltersCount = Object.keys(selectedSecondaryFilters).length;
+
+    const isSecondaryFiltersOpen = !!hasSecondaryFilters && this.state.isSecondaryFiltersOpen;
+    const propsForSecondaryFiltersToggle = hasSecondaryFilters
+      ? {
+          isSecondaryFiltersOpen: this.state.isSecondaryFiltersOpen,
+          toggleSecondaryFiltersOpen: isOpen => {
+            this.setState({ isSecondaryFiltersOpen: isOpen });
+          },
+          selectedSecondaryFiltersCount,
+        }
+      : {};
+
+    const hasPaginationInfo = !!pagination && pagination.totalItems != null;
+    const totalItems = searchParamsAreInSync && hasPaginationInfo ? pagination.totalItems : 0;
+    const listingsAreLoaded = !searchInProgress && searchParamsAreInSync && hasPaginationInfo;
+
+    const sortBy = mode => {
+      const conflictingFilterActive = isAnyFilterActive(
+        sortConfig.conflictingFilters,
+        validQueryParams,
+        filterConfig
+      );
+
+      const mobileClassesMaybe =
+        mode === 'mobile'
+          ? {
+              rootClassName: css.sortBy,
+              menuLabelRootClassName: css.sortByMenuLabel,
+            }
+          : { className: css.sortByDesktop };
+      return sortConfig.active ? (
+        <SortBy
+          {...mobileClassesMaybe}
+          sort={validQueryParams[sortConfig.queryParamName]}
+          isConflictingFilterActive={!!conflictingFilterActive}
+          hasConflictingFilters={!!(sortConfig.conflictingFilters?.length > 0)}
+          selectedFilters={selectedFilters}
+          onSelect={this.handleSortBy}
+          showAsPopup
+          contentPlacementOffset={FILTER_DROPDOWN_OFFSET}
+        />
+      ) : null;
+    };
+
     const onMapIconClick = () => {
       this.useLocationSearchBounds = true;
       this.setState({ isSearchMapOpenOnMobile: true });
@@ -175,22 +380,111 @@ export class SearchPageComponent extends Component {
           currentSearchParams={urlQueryParams}
         />
         <div className={css.container}>
-          <MainPanel
-            urlQueryParams={validQueryParams}
-            listings={listings}
-            searchInProgress={searchInProgress}
-            searchListingsError={searchListingsError}
-            searchParamsAreInSync={searchParamsAreInSync}
-            onActivateListing={onActivateListing}
-            onManageDisableScrolling={onManageDisableScrolling}
-            onOpenModal={this.onOpenMobileModal}
-            onCloseModal={this.onCloseMobileModal}
-            onMapIconClick={onMapIconClick}
-            pagination={pagination}
-            searchParamsForPagination={parse(location.search)}
-            showAsModalMaxWidth={MODAL_BREAKPOINT}
-            history={history}
-          />
+          <div className={css.searchResultContainer}>
+            <SearchFiltersMobile
+              className={css.searchFiltersMobile}
+              urlQueryParams={validQueryParams}
+              sortByComponent={sortBy('mobile')}
+              listingsAreLoaded={listingsAreLoaded}
+              resultsCount={totalItems}
+              searchInProgress={searchInProgress}
+              searchListingsError={searchListingsError}
+              showAsModalMaxWidth={MODAL_BREAKPOINT}
+              onMapIconClick={onMapIconClick}
+              onManageDisableScrolling={onManageDisableScrolling}
+              onOpenModal={this.onOpenMobileModal}
+              onCloseModal={this.onCloseMobileModal}
+              resetAll={this.resetAll}
+              selectedFiltersCount={selectedFiltersCount}
+              isMapVariant
+            >
+              {availableFilters.map(config => {
+                return (
+                  <FilterComponent
+                    key={`SearchFiltersMobile.${config.id}`}
+                    idPrefix="SearchFiltersMobile"
+                    filterConfig={config}
+                    urlQueryParams={validQueryParams}
+                    initialValues={this.initialValues}
+                    getHandleChangedValueFn={this.getHandleChangedValueFn}
+                    liveEdit
+                    showAsPopup={false}
+                  />
+                );
+              })}
+            </SearchFiltersMobile>
+            <MainPanelHeader
+              className={css.mainPanelMapVariant}
+              sortByComponent={sortBy('desktop')}
+              listingsAreLoaded={listingsAreLoaded}
+              resultsCount={totalItems}
+              searchInProgress={searchInProgress}
+              searchListingsError={searchListingsError}
+            >
+              <SearchFiltersPrimary {...propsForSecondaryFiltersToggle}>
+                {primaryFilters.map(config => {
+                  return (
+                    <FilterComponent
+                      key={`SearchFiltersPrimary.${config.id}`}
+                      idPrefix="SearchFiltersPrimary"
+                      filterConfig={config}
+                      urlQueryParams={validQueryParams}
+                      initialValues={this.initialValues}
+                      getHandleChangedValueFn={this.getHandleChangedValueFn}
+                      showAsPopup
+                      contentPlacementOffset={FILTER_DROPDOWN_OFFSET}
+                    />
+                  );
+                })}
+              </SearchFiltersPrimary>
+            </MainPanelHeader>
+            {isSecondaryFiltersOpen ? (
+              <div className={classNames(css.searchFiltersPanel)}>
+                <SearchFiltersSecondary
+                  urlQueryParams={validQueryParams}
+                  listingsAreLoaded={listingsAreLoaded}
+                  applyFilters={this.applyFilters}
+                  cancelFilters={this.cancelFilters}
+                  resetAll={this.resetAll}
+                  onClosePanel={() => this.setState({ isSecondaryFiltersOpen: false })}
+                >
+                  {secondaryFilters.map(config => {
+                    return (
+                      <FilterComponent
+                        key={`SearchFiltersSecondary.${config.id}`}
+                        idPrefix="SearchFiltersSecondary"
+                        filterConfig={config}
+                        urlQueryParams={validQueryParams}
+                        initialValues={this.initialValues}
+                        getHandleChangedValueFn={this.getHandleChangedValueFn}
+                        showAsPopup={false}
+                      />
+                    );
+                  })}
+                </SearchFiltersSecondary>
+              </div>
+            ) : (
+              <div
+                className={classNames(css.listingsForMapVariant, {
+                  [css.newSearchInProgress]: !listingsAreLoaded,
+                })}
+              >
+                {searchListingsError ? (
+                  <h2 className={css.error}>
+                    <FormattedMessage id="SearchPage.searchError" />
+                  </h2>
+                ) : null}
+                <SearchResultsPanel
+                  className={css.searchListingsPanel}
+                  listings={listings}
+                  pagination={listingsAreLoaded ? pagination : null}
+                  search={parse(location.search)}
+                  setActiveListing={onActivateListing}
+                  isMapVariant
+                />
+              </div>
+            )}
+          </div>
           <ModalInMobile
             className={css.mapPanel}
             id="SearchPage.map"
