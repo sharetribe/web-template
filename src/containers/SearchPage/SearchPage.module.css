@@ -30,7 +30,6 @@
   }
 }
 
-
 /* Container for side and content */
 .layoutWrapperContainer {
   composes: container;
@@ -73,24 +72,58 @@
   }
 
   @media (min-width: 1440px) {
-    padding: 40px 0 0 calc((100% - 1368px) / 2);
+    padding: 40px 0 0 calc((100vw - 1368px) / 2);
   }
   @media (--viewportXLarge) {
-    padding: 40px 0 0 calc((100% - 1800px) / 2);
+    padding: 40px 0 0 calc((100vw - 1800px) / 2);
   }
 }
 
 .filterColumnContent {
   width: 210px;
-  padding: 0 24px 0 0;
+  padding: 8px 24px 0 0;
+
+  @media (--viewportMedium) {
+    padding: 8px 24px 24px 0;
+  }
 
   @media (--viewportLarge) {
     width: 240px;
-    padding: 0 60px 0 0;
+    padding: 8px 36px 24px 0;
+  }
+
+  @media (min-width: 1440px) {
+    padding: 8px 60px 24px 0;
   }
 }
 .filter:first-child {
   padding-top: 0;
+}
+
+.resetAllButton {
+  @apply --marketplaceH5FontStyles;
+  font-weight: var(--fontWeightMedium);
+  color: var(--matterColorAnti);
+
+  /* Layout */
+  display: inline;
+  margin: 17px 0 0 0;
+  padding: 0;
+
+  /* Override button styles */
+  outline: none;
+  text-align: left;
+  border: none;
+
+  &:focus,
+  &:hover {
+    color: var(--matterColor);
+  }
+
+  @media (--viewportMedium) {
+    margin: 24px 0 0 0;
+    padding: 3px 0 5px 0;
+  }
 }
 
 .layoutWrapperMain {
@@ -121,10 +154,10 @@
   }
 
   @media (min-width: 1440px) {
-    padding: 40px calc((100% - 1368px) / 2) 0 59px;
+    padding: 40px calc((100vw - 1368px) / 2) 0 59px;
   }
   @media (--viewportXLarge) {
-    padding: 40px calc((100% - 1800px) / 2) 0 59px;
+    padding: 40px calc((100vw - 1800px) / 2) 0 59px;
   }
 }
 
@@ -181,7 +214,7 @@
 }
 
 .searchFiltersMobile {
-  padding: 16px 24px;
+  padding: 16px 0;
 
   @media (--viewportMedium) {
     display: none;
