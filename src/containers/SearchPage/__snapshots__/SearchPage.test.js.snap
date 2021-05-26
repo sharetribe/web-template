@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SearchPageComponent matches snapshot 1`] = `
+exports[`SearchPageWithList matches snapshot 1`] = `
 <Page
   description="SearchPage.schemaDescription"
   schema={
@@ -23,285 +23,594 @@ exports[`SearchPageComponent matches snapshot 1`] = `
     currentSearchParams={Object {}}
   />
   <div
-    className="container"
+    className="layoutWrapperContainer"
   >
-    <MainPanel
-      className={null}
-      filterConfig={
-        Array [
-          Object {
-            "config": Object {},
-            "group": "primary",
-            "id": "dates",
-            "label": "Dates",
-            "queryParamNames": Array [
-              "dates",
-            ],
-            "type": "BookingDateRangeFilter",
-          },
-          Object {
-            "config": Object {
-              "max": 1000,
-              "min": 0,
-              "step": 5,
-            },
-            "group": "primary",
-            "id": "price",
-            "label": "Price",
-            "queryParamNames": Array [
-              "price",
-            ],
-            "type": "PriceFilter",
-          },
-          Object {
-            "config": Object {},
-            "group": "primary",
-            "id": "keyword",
-            "label": "Keyword",
-            "queryParamNames": Array [
-              "keywords",
-            ],
-            "type": "KeywordFilter",
-          },
-          Object {
-            "config": Object {
-              "options": Array [
-                Object {
-                  "key": "men",
-                  "label": "Men",
-                },
-                Object {
-                  "key": "women",
-                  "label": "Women",
-                },
-                Object {
-                  "key": "kids",
-                  "label": "Kids",
-                },
-              ],
-              "schemaType": "enum",
-            },
-            "group": "secondary",
-            "id": "category",
-            "label": "Category",
-            "queryParamNames": Array [
-              "pub_category",
-            ],
-            "type": "SelectSingleFilter",
-          },
-          Object {
-            "config": Object {
-              "options": Array [
-                Object {
-                  "key": "4",
-                  "label": "4",
-                },
-                Object {
-                  "key": "5",
-                  "label": "5",
-                },
-                Object {
-                  "key": "6",
-                  "label": "6",
-                },
-                Object {
-                  "key": "7",
-                  "label": "7",
-                },
-                Object {
-                  "key": "8",
-                  "label": "8",
-                },
-                Object {
-                  "key": "9",
-                  "label": "9",
-                },
-                Object {
-                  "key": "10",
-                  "label": "10",
-                },
-                Object {
-                  "key": "11",
-                  "label": "11",
-                },
-                Object {
-                  "key": "12",
-                  "label": "12",
-                },
-              ],
-              "schemaType": "enum",
-              "searchMode": "has_any",
-            },
-            "group": "secondary",
-            "id": "size",
-            "label": "Size (US)",
-            "queryParamNames": Array [
-              "pub_size",
-            ],
-            "type": "SelectMultipleFilter",
-          },
-          Object {
-            "config": Object {
-              "options": Array [
-                Object {
-                  "key": "brand1",
-                  "label": "brand1",
-                },
-                Object {
-                  "key": "brand2",
-                  "label": "brand2",
-                },
-                Object {
-                  "key": "brand3",
-                  "label": "brand3",
-                },
-              ],
-              "schemaType": "enum",
-              "searchMode": "has_any",
-            },
-            "group": "secondary",
-            "id": "brand",
-            "label": "Brand",
-            "queryParamNames": Array [
-              "pub_brand",
-            ],
-            "type": "SelectMultipleFilter",
-          },
-          Object {
-            "config": Object {
-              "options": Array [
-                Object {
-                  "key": "towels",
-                  "label": "Towels",
-                },
-                Object {
-                  "key": "bathroom",
-                  "label": "Bathroom",
-                },
-                Object {
-                  "key": "swimming_pool",
-                  "label": "Swimming pool",
-                },
-                Object {
-                  "key": "own_drinks",
-                  "label": "Own drinks allowed",
-                },
-                Object {
-                  "key": "jacuzzi",
-                  "label": "Jacuzzi",
-                },
-                Object {
-                  "key": "audiovisual_entertainment",
-                  "label": "Audiovisual entertainment",
-                },
-                Object {
-                  "key": "barbeque",
-                  "label": "Barbeque",
-                },
-                Object {
-                  "key": "own_food_allowed",
-                  "label": "Own food allowed",
-                },
-              ],
-              "searchMode": "has_all",
-            },
-            "group": "secondary",
-            "id": "amenities",
-            "label": "Amenities",
-            "queryParamNames": Array [
-              "pub_amenities",
-            ],
-            "type": "SelectMultipleFilter",
-          },
-        ]
-      }
-      history={
-        Object {
-          "push": [Function],
-        }
-      }
-      listings={Array []}
-      onActivateListing={[Function]}
-      onCloseModal={[Function]}
-      onManageDisableScrolling={[Function]}
-      onMapIconClick={[Function]}
-      onOpenModal={[Function]}
-      pagination={
-        Object {
-          "page": 1,
-          "perPage": 12,
-          "totalItems": 22,
-          "totalPages": 2,
-        }
-      }
-      resultsCount={0}
-      rootClassName={null}
-      searchInProgress={false}
-      searchListingsError={null}
-      searchParamsAreInSync={true}
-      searchParamsForPagination={Object {}}
-      showAsModalMaxWidth={768}
-      sortConfig={
-        Object {
-          "active": true,
-          "conflictingFilters": Array [
-            "keyword",
-          ],
-          "options": Array [
-            Object {
-              "key": "createdAt",
-              "label": "Newest",
-            },
-            Object {
-              "key": "-createdAt",
-              "label": "Oldest",
-            },
-            Object {
-              "key": "-price",
-              "label": "Lowest price",
-            },
-            Object {
-              "key": "price",
-              "label": "Highest price",
-            },
-            Object {
-              "key": "relevance",
-              "label": "Relevance",
-              "longLabel": "Relevance (Keyword search)",
-            },
-          ],
-          "queryParamName": "sort",
-          "relevanceKey": "relevance",
-        }
-      }
-      urlQueryParams={Object {}}
-    />
-    <withViewport(ModalInMobileComponent)
-      className="mapPanel"
-      id="SearchPage.map"
-      isModalOpenOnMobile={false}
-      onClose={[Function]}
-      onManageDisableScrolling={[Function]}
-      showAsModalMaxWidth={768}
+    <aside
+      className="layoutWrapperFilterColumn"
     >
       <div
-        className="mapWrapper"
+        className="filterColumnContent"
       >
-        <withRouter(SearchMapComponent)
-          activeListingId={null}
-          isSearchMapOpenOnMobile={false}
-          listings={Array []}
-          location={
+        <FilterComponent
+          className="filter"
+          filterConfig={
             Object {
-              "search": "",
+              "config": Object {
+                "options": Array [
+                  Object {
+                    "key": "men",
+                    "label": "Men",
+                  },
+                  Object {
+                    "key": "women",
+                    "label": "Women",
+                  },
+                  Object {
+                    "key": "kids",
+                    "label": "Kids",
+                  },
+                ],
+                "schemaType": "enum",
+              },
+              "group": "primary",
+              "id": "category",
+              "label": "Category",
+              "queryParamNames": Array [
+                "pub_category",
+              ],
+              "type": "SelectSingleFilter",
             }
           }
-          onCloseAsModal={[Function]}
-          onMapMoveEnd={[Function]}
-          reusableContainerClassName="map"
+          getHandleChangedValueFn={[Function]}
+          idPrefix="SearchFiltersMobile"
+          initialValues={[Function]}
+          isDesktop={true}
+          key="SearchFiltersMobile.category"
+          liveEdit={true}
+          showAsPopup={false}
+          urlQueryParams={Object {}}
         />
+        <FilterComponent
+          className="filter"
+          filterConfig={
+            Object {
+              "config": Object {
+                "options": Array [
+                  Object {
+                    "key": "4",
+                    "label": "4",
+                  },
+                  Object {
+                    "key": "5",
+                    "label": "5",
+                  },
+                  Object {
+                    "key": "6",
+                    "label": "6",
+                  },
+                  Object {
+                    "key": "7",
+                    "label": "7",
+                  },
+                  Object {
+                    "key": "8",
+                    "label": "8",
+                  },
+                  Object {
+                    "key": "9",
+                    "label": "9",
+                  },
+                  Object {
+                    "key": "10",
+                    "label": "10",
+                  },
+                  Object {
+                    "key": "11",
+                    "label": "11",
+                  },
+                  Object {
+                    "key": "12",
+                    "label": "12",
+                  },
+                ],
+                "schemaType": "enum",
+                "searchMode": "has_any",
+              },
+              "group": "primary",
+              "id": "size",
+              "label": "Size (US)",
+              "queryParamNames": Array [
+                "pub_size",
+              ],
+              "type": "SelectMultipleFilter",
+            }
+          }
+          getHandleChangedValueFn={[Function]}
+          idPrefix="SearchFiltersMobile"
+          initialValues={[Function]}
+          isDesktop={true}
+          key="SearchFiltersMobile.size"
+          liveEdit={true}
+          showAsPopup={false}
+          urlQueryParams={Object {}}
+        />
+        <FilterComponent
+          className="filter"
+          filterConfig={
+            Object {
+              "config": Object {
+                "options": Array [
+                  Object {
+                    "key": "brand1",
+                    "label": "brand1",
+                  },
+                  Object {
+                    "key": "brand2",
+                    "label": "brand2",
+                  },
+                  Object {
+                    "key": "brand3",
+                    "label": "brand3",
+                  },
+                ],
+                "schemaType": "enum",
+                "searchMode": "has_any",
+              },
+              "group": "primary",
+              "id": "brand",
+              "label": "Brand",
+              "queryParamNames": Array [
+                "pub_brand",
+              ],
+              "type": "SelectMultipleFilter",
+            }
+          }
+          getHandleChangedValueFn={[Function]}
+          idPrefix="SearchFiltersMobile"
+          initialValues={[Function]}
+          isDesktop={true}
+          key="SearchFiltersMobile.brand"
+          liveEdit={true}
+          showAsPopup={false}
+          urlQueryParams={Object {}}
+        />
+        <FilterComponent
+          className="filter"
+          filterConfig={
+            Object {
+              "config": Object {
+                "max": 1000,
+                "min": 0,
+                "step": 5,
+              },
+              "group": "primary",
+              "id": "price",
+              "label": "Price",
+              "queryParamNames": Array [
+                "price",
+              ],
+              "type": "PriceFilter",
+            }
+          }
+          getHandleChangedValueFn={[Function]}
+          idPrefix="SearchFiltersMobile"
+          initialValues={[Function]}
+          isDesktop={true}
+          key="SearchFiltersMobile.price"
+          liveEdit={true}
+          showAsPopup={false}
+          urlQueryParams={Object {}}
+        />
+        <FilterComponent
+          className="filter"
+          filterConfig={
+            Object {
+              "config": Object {},
+              "group": "primary",
+              "id": "dates",
+              "label": "Dates",
+              "queryParamNames": Array [
+                "dates",
+              ],
+              "type": "BookingDateRangeFilter",
+            }
+          }
+          getHandleChangedValueFn={[Function]}
+          idPrefix="SearchFiltersMobile"
+          initialValues={[Function]}
+          isDesktop={true}
+          key="SearchFiltersMobile.dates"
+          liveEdit={true}
+          showAsPopup={false}
+          urlQueryParams={Object {}}
+        />
+        <FilterComponent
+          className="filter"
+          filterConfig={
+            Object {
+              "config": Object {
+                "options": Array [
+                  Object {
+                    "key": "towels",
+                    "label": "Towels",
+                  },
+                  Object {
+                    "key": "bathroom",
+                    "label": "Bathroom",
+                  },
+                  Object {
+                    "key": "swimming_pool",
+                    "label": "Swimming pool",
+                  },
+                  Object {
+                    "key": "own_drinks",
+                    "label": "Own drinks allowed",
+                  },
+                  Object {
+                    "key": "jacuzzi",
+                    "label": "Jacuzzi",
+                  },
+                  Object {
+                    "key": "audiovisual_entertainment",
+                    "label": "Audiovisual entertainment",
+                  },
+                  Object {
+                    "key": "barbeque",
+                    "label": "Barbeque",
+                  },
+                  Object {
+                    "key": "own_food_allowed",
+                    "label": "Own food allowed",
+                  },
+                ],
+                "searchMode": "has_all",
+              },
+              "group": "secondary",
+              "id": "amenities",
+              "label": "Amenities",
+              "queryParamNames": Array [
+                "pub_amenities",
+              ],
+              "type": "SelectMultipleFilter",
+            }
+          }
+          getHandleChangedValueFn={[Function]}
+          idPrefix="SearchFiltersMobile"
+          initialValues={[Function]}
+          isDesktop={true}
+          key="SearchFiltersMobile.amenities"
+          liveEdit={true}
+          showAsPopup={false}
+          urlQueryParams={Object {}}
+        />
+        <button
+          className="resetAllButton"
+          onClick={[Function]}
+        >
+          <FormattedMessage
+            id="SearchFiltersMobile.resetAll"
+            values={Object {}}
+          />
+        </button>
       </div>
-    </withViewport(ModalInMobileComponent)>
+    </aside>
+    <div
+      className="layoutWrapperMain"
+      role="main"
+    >
+      <div
+        className="searchResultContainer"
+      >
+        <injectIntl(withRouter(SearchFiltersMobileComponent))
+          className="searchFiltersMobile"
+          isMapVariant={false}
+          listingsAreLoaded={true}
+          onCloseModal={[Function]}
+          onManageDisableScrolling={[Function]}
+          onMapIconClick={[Function]}
+          onOpenModal={[Function]}
+          resetAll={[Function]}
+          resultsCount={22}
+          searchInProgress={false}
+          searchListingsError={null}
+          selectedFiltersCount={0}
+          showAsModalMaxWidth={768}
+          sortByComponent={
+            <injectIntl(SortBy)
+              contentPlacementOffset={-14}
+              hasConflictingFilters={false}
+              isConflictingFilterActive={false}
+              menuLabelRootClassName="sortByMenuLabel"
+              onSelect={[Function]}
+              rootClassName="sortBy"
+              selectedFilters={Object {}}
+              showAsPopup={true}
+            />
+          }
+          urlQueryParams={Object {}}
+        >
+          <FilterComponent
+            filterConfig={
+              Object {
+                "config": Object {
+                  "options": Array [
+                    Object {
+                      "key": "men",
+                      "label": "Men",
+                    },
+                    Object {
+                      "key": "women",
+                      "label": "Women",
+                    },
+                    Object {
+                      "key": "kids",
+                      "label": "Kids",
+                    },
+                  ],
+                  "schemaType": "enum",
+                },
+                "group": "primary",
+                "id": "category",
+                "label": "Category",
+                "queryParamNames": Array [
+                  "pub_category",
+                ],
+                "type": "SelectSingleFilter",
+              }
+            }
+            getHandleChangedValueFn={[Function]}
+            idPrefix="SearchFiltersMobile"
+            initialValues={[Function]}
+            key="SearchFiltersMobile.category"
+            liveEdit={true}
+            showAsPopup={false}
+            urlQueryParams={Object {}}
+          />
+          <FilterComponent
+            filterConfig={
+              Object {
+                "config": Object {
+                  "options": Array [
+                    Object {
+                      "key": "4",
+                      "label": "4",
+                    },
+                    Object {
+                      "key": "5",
+                      "label": "5",
+                    },
+                    Object {
+                      "key": "6",
+                      "label": "6",
+                    },
+                    Object {
+                      "key": "7",
+                      "label": "7",
+                    },
+                    Object {
+                      "key": "8",
+                      "label": "8",
+                    },
+                    Object {
+                      "key": "9",
+                      "label": "9",
+                    },
+                    Object {
+                      "key": "10",
+                      "label": "10",
+                    },
+                    Object {
+                      "key": "11",
+                      "label": "11",
+                    },
+                    Object {
+                      "key": "12",
+                      "label": "12",
+                    },
+                  ],
+                  "schemaType": "enum",
+                  "searchMode": "has_any",
+                },
+                "group": "primary",
+                "id": "size",
+                "label": "Size (US)",
+                "queryParamNames": Array [
+                  "pub_size",
+                ],
+                "type": "SelectMultipleFilter",
+              }
+            }
+            getHandleChangedValueFn={[Function]}
+            idPrefix="SearchFiltersMobile"
+            initialValues={[Function]}
+            key="SearchFiltersMobile.size"
+            liveEdit={true}
+            showAsPopup={false}
+            urlQueryParams={Object {}}
+          />
+          <FilterComponent
+            filterConfig={
+              Object {
+                "config": Object {
+                  "options": Array [
+                    Object {
+                      "key": "brand1",
+                      "label": "brand1",
+                    },
+                    Object {
+                      "key": "brand2",
+                      "label": "brand2",
+                    },
+                    Object {
+                      "key": "brand3",
+                      "label": "brand3",
+                    },
+                  ],
+                  "schemaType": "enum",
+                  "searchMode": "has_any",
+                },
+                "group": "primary",
+                "id": "brand",
+                "label": "Brand",
+                "queryParamNames": Array [
+                  "pub_brand",
+                ],
+                "type": "SelectMultipleFilter",
+              }
+            }
+            getHandleChangedValueFn={[Function]}
+            idPrefix="SearchFiltersMobile"
+            initialValues={[Function]}
+            key="SearchFiltersMobile.brand"
+            liveEdit={true}
+            showAsPopup={false}
+            urlQueryParams={Object {}}
+          />
+          <FilterComponent
+            filterConfig={
+              Object {
+                "config": Object {
+                  "max": 1000,
+                  "min": 0,
+                  "step": 5,
+                },
+                "group": "primary",
+                "id": "price",
+                "label": "Price",
+                "queryParamNames": Array [
+                  "price",
+                ],
+                "type": "PriceFilter",
+              }
+            }
+            getHandleChangedValueFn={[Function]}
+            idPrefix="SearchFiltersMobile"
+            initialValues={[Function]}
+            key="SearchFiltersMobile.price"
+            liveEdit={true}
+            showAsPopup={false}
+            urlQueryParams={Object {}}
+          />
+          <FilterComponent
+            filterConfig={
+              Object {
+                "config": Object {},
+                "group": "primary",
+                "id": "dates",
+                "label": "Dates",
+                "queryParamNames": Array [
+                  "dates",
+                ],
+                "type": "BookingDateRangeFilter",
+              }
+            }
+            getHandleChangedValueFn={[Function]}
+            idPrefix="SearchFiltersMobile"
+            initialValues={[Function]}
+            key="SearchFiltersMobile.dates"
+            liveEdit={true}
+            showAsPopup={false}
+            urlQueryParams={Object {}}
+          />
+          <FilterComponent
+            filterConfig={
+              Object {
+                "config": Object {
+                  "options": Array [
+                    Object {
+                      "key": "towels",
+                      "label": "Towels",
+                    },
+                    Object {
+                      "key": "bathroom",
+                      "label": "Bathroom",
+                    },
+                    Object {
+                      "key": "swimming_pool",
+                      "label": "Swimming pool",
+                    },
+                    Object {
+                      "key": "own_drinks",
+                      "label": "Own drinks allowed",
+                    },
+                    Object {
+                      "key": "jacuzzi",
+                      "label": "Jacuzzi",
+                    },
+                    Object {
+                      "key": "audiovisual_entertainment",
+                      "label": "Audiovisual entertainment",
+                    },
+                    Object {
+                      "key": "barbeque",
+                      "label": "Barbeque",
+                    },
+                    Object {
+                      "key": "own_food_allowed",
+                      "label": "Own food allowed",
+                    },
+                  ],
+                  "searchMode": "has_all",
+                },
+                "group": "secondary",
+                "id": "amenities",
+                "label": "Amenities",
+                "queryParamNames": Array [
+                  "pub_amenities",
+                ],
+                "type": "SelectMultipleFilter",
+              }
+            }
+            getHandleChangedValueFn={[Function]}
+            idPrefix="SearchFiltersMobile"
+            initialValues={[Function]}
+            key="SearchFiltersMobile.amenities"
+            liveEdit={true}
+            showAsPopup={false}
+            urlQueryParams={Object {}}
+          />
+        </injectIntl(withRouter(SearchFiltersMobileComponent))>
+        <MainPanelHeader
+          className="mainPanel"
+          listingsAreLoaded={true}
+          resultsCount={22}
+          rootClassName={null}
+          searchInProgress={false}
+          searchListingsError={null}
+          sortByComponent={
+            <injectIntl(SortBy)
+              className="sortByDesktop"
+              contentPlacementOffset={-14}
+              hasConflictingFilters={false}
+              isConflictingFilterActive={false}
+              onSelect={[Function]}
+              selectedFilters={Object {}}
+              showAsPopup={true}
+            />
+          }
+        />
+        <div
+          className="listings"
+        >
+          <SearchResultsPanel
+            className="searchListingsPanel"
+            isMapVariant={false}
+            listings={Array []}
+            pagination={
+              Object {
+                "page": 1,
+                "perPage": 12,
+                "totalItems": 22,
+                "totalPages": 2,
+              }
+            }
+            rootClassName={null}
+            search={Object {}}
+          />
+        </div>
+      </div>
+    </div>
   </div>
+  <injectIntl(Footer) />
 </Page>
 `;
