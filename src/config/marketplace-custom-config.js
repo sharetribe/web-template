@@ -35,55 +35,13 @@
 
 export const filters = [
   {
-    id: 'dates',
-    label: 'Dates',
-    type: 'BookingDateRangeFilter',
-    group: 'primary',
-    // Note: BookingDateRangeFilter is fixed filter,
-    // you can't change "queryParamNames: ['dates'],"
-    queryParamNames: ['dates'],
-    config: {},
-  },
-  {
-    id: 'price',
-    label: 'Price',
-    type: 'PriceFilter',
-    group: 'primary',
-    // Note: PriceFilter is fixed filter,
-    // you can't change "queryParamNames: ['price'],"
-    queryParamNames: ['price'],
-    // Price filter configuration
-    // Note: unlike most prices this is not handled in subunits
-    config: {
-      min: 0,
-      max: 1000,
-      step: 5,
-    },
-  },
-  {
-    id: 'keyword',
-    label: 'Keyword',
-    type: 'KeywordFilter',
-    group: 'primary',
-    // Note: KeywordFilter is fixed filter,
-    // you can't change "queryParamNames: ['keywords'],"
-    queryParamNames: ['keywords'],
-    // NOTE: If you are ordering search results by distance
-    // the keyword search can't be used at the same time.
-    // You can turn on/off ordering by distance from config.js file.
-    config: {},
-  },
-  {
     id: 'category',
     label: 'Category',
     type: 'SelectSingleFilter',
-    group: 'secondary',
+    group: 'primary',
     queryParamNames: ['pub_category'],
     config: {
-      // Schema type options: 'enum', 'multi-enum'
-      // Both types can work so that user selects multiple values when filtering search results.
-      // With "enum" the functionality will be OR-semantics (Nike OR Adidas OR Salomon)
-      // With "multi-enum" it's possible to use both AND and OR semantics with searchMode config.
+      // Schema type is enum for SelectSingleFilter
       schemaType: 'enum',
 
       // "key" is the option you see in Flex Console.
@@ -101,7 +59,7 @@ export const filters = [
     id: 'size',
     label: 'Size (US)',
     type: 'SelectMultipleFilter',
-    group: 'secondary',
+    group: 'primary',
     queryParamNames: ['pub_size'],
     config: {
       // Schema type options: 'enum', 'multi-enum'
@@ -111,6 +69,7 @@ export const filters = [
       schemaType: 'enum',
 
       // Optional modes: 'has_all', 'has_any'
+      // Note: this is relevant only for schema type 'multi-enum'
       // https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
       searchMode: 'has_any',
 
@@ -135,7 +94,7 @@ export const filters = [
     id: 'brand',
     label: 'Brand',
     type: 'SelectMultipleFilter',
-    group: 'secondary',
+    group: 'primary',
     queryParamNames: ['pub_brand'],
     config: {
       // Schema type options: 'enum', 'multi-enum'
@@ -145,6 +104,7 @@ export const filters = [
       schemaType: 'enum',
 
       // Optional modes: 'has_all', 'has_any'
+      // Note: this is relevant only for schema type 'multi-enum'
       // https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
       searchMode: 'has_any',
 
@@ -158,6 +118,45 @@ export const filters = [
         { key: 'brand3', label: 'brand3' },
       ],
     },
+  },
+  {
+    id: 'price',
+    label: 'Price',
+    type: 'PriceFilter',
+    group: 'primary',
+    // Note: PriceFilter is fixed filter,
+    // you can't change "queryParamNames: ['price'],"
+    queryParamNames: ['price'],
+    // Price filter configuration
+    // Note: unlike most prices this is not handled in subunits
+    config: {
+      min: 0,
+      max: 1000,
+      step: 5,
+    },
+  },
+  {
+    id: 'dates',
+    label: 'Dates',
+    type: 'BookingDateRangeFilter',
+    group: 'primary',
+    // Note: BookingDateRangeFilter is fixed filter,
+    // you can't change "queryParamNames: ['dates'],"
+    queryParamNames: ['dates'],
+    config: {},
+  },
+  {
+    id: 'keyword',
+    label: 'Keyword',
+    type: 'KeywordFilter',
+    group: 'primary',
+    // Note: KeywordFilter is fixed filter,
+    // you can't change "queryParamNames: ['keywords'],"
+    queryParamNames: ['keywords'],
+    // NOTE: If you are ordering search results by distance
+    // the keyword search can't be used at the same time.
+    // You can turn on/off ordering by distance from config.js file.
+    config: {},
   },
   {
     id: 'amenities',
