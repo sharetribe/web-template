@@ -96,6 +96,15 @@ const sentryDsn = process.env.REACT_APP_SENTRY_DSN;
 // If webapp is using SSL (i.e. it's behind 'https' protocol)
 const usingSSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';
 
+// Listing and especially listing card related configurations
+const listing = {
+  // These aspectWidth and aspectHeight values are used to calculate aspect ratio.
+  aspectWidth: 400,
+  aspectHeight: 400,
+  // Listings have custom image variants, which are named here.
+  variantPrefix: 'listing-card',
+};
+
 // Address information is used in SEO schema for Organization (http://schema.org/PostalAddress)
 const addressCountry = 'FI';
 const addressRegion = 'Helsinki';
@@ -250,6 +259,7 @@ const config = {
   facebookAppId,
   sentryDsn,
   usingSSL,
+  listing,
   maps,
   custom,
 };
