@@ -307,6 +307,8 @@ export class SearchPageComponent extends Component {
           {...mobileClassesMaybe}
           sort={validQueryParams[sortConfig.queryParamName]}
           isConflictingFilterActive={!!conflictingFilterActive}
+          hasConflictingFilters={!!(sortConfig.conflictingFilters?.length > 0)}
+          selectedFilters={selectedFilters}
           onSelect={this.handleSortBy}
           showAsPopup
           contentPlacementOffset={FILTER_DROPDOWN_OFFSET}

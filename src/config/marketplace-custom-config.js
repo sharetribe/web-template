@@ -223,9 +223,14 @@ export const sortConfig = {
   // Internal key for the relevance option, see notes below.
   relevanceKey: 'relevance',
 
-  // Keyword filter is sorting the results already by relevance.
-  // If keyword filter is active, we need to disable sorting.
-  conflictingFilters: ['keyword'],
+  // Relevance key is used with keywords filter.
+  // Keywords filter also sorts results according to relevance.
+  relevanceFilter: 'keywords',
+
+  // Keyword filter is sorting the results by relevance.
+  // If keyword filter is active, one might want to disable other sorting options
+  // by adding 'keyword' to this list.
+  conflictingFilters: [],
 
   options: [
     { key: 'createdAt', label: 'Newest' },

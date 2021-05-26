@@ -163,14 +163,16 @@ export const searchListings = searchParams => (dispatch, getState, sdk) => {
       : {};
   };
 
-  const { perPage, price, dates, ...rest } = searchParams;
+  const { perPage, price, dates, sort, ...rest } = searchParams;
   const priceMaybe = priceSearchParams(price);
   const datesMaybe = datesSearchParams(dates);
+  const sortMaybe = sort === config.custom.sortConfig.relevanceKey ? {} : { sort };
 
   const params = {
     ...rest,
     ...priceMaybe,
     ...datesMaybe,
+    ...sortMaybe,
     per_page: perPage,
   };
 
