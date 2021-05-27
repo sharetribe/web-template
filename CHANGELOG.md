@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Rename EditListingDescriptionPanel to EditListingDetailsPanel and add more generic
+  CustomFieldEnum for showing enum fields like category, size and brand.
+  [#27](https://github.com/sharetribe/ftw-product/pull/27)
 - [remove] Articles in docs directory was just pointing Flex Docs.
   [#21](https://github.com/sharetribe/ftw-product/pull/21)
 - [change] Update functions in util/dates.js
