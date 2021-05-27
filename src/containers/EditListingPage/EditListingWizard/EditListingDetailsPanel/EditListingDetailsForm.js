@@ -14,7 +14,7 @@ import { findConfigForSelectFilter } from '../../../../util/search';
 // Import shared components
 import { Form, Button, FieldTextInput } from '../../../../components';
 // Import modules from this directory
-import CustomFieldEnum from './CustomFieldEnum';
+import CustomFieldEnum from '../CustomFieldEnum';
 import css from './EditListingDetailsForm.module.css';
 
 const TITLE_MAX_LENGTH = 60;

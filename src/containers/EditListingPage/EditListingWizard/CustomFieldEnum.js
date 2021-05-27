@@ -1,8 +1,8 @@
 import React from 'react';
 // Import shared components
-import { FieldSelect } from '../../../../components';
+import { FieldSelect } from '../../../components';
 // Import modules from this directory
-import css from './EditListingDetailsForm.module.css';
+import css from './EditListingWizard.module.css';
 
 const CustomFieldEnum = props => {
   const { name, id, options, label, placeholder, validate, schemaType } = props;
