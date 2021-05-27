@@ -5,24 +5,26 @@ import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 // Import configs and util modules
+import config from '../../../../config';
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import { maxLength, required, composeValidators } from '../../../../util/validators';
+import { findConfigForSelectFilter } from '../../../../util/search';
+
 // Import shared components
 import { Form, Button, FieldTextInput } from '../../../../components';
 // Import modules from this directory
-import CustomCategorySelectFieldMaybe from './CustomCategorySelectFieldMaybe';
-import css from './EditListingDescriptionForm.module.css';
+import CustomFieldEnum from '../CustomFieldEnum';
+import css from './EditListingDetailsForm.module.css';
 
 const TITLE_MAX_LENGTH = 60;
 
-const EditListingDescriptionFormComponent = props => (
+const EditListingDetailsFormComponent = props => (
   <FinalForm
     {...props}
     render={formRenderProps => {
       const {
         autoFocus,
-        categories,
         className,
         disabled,
         ready,
@@ -34,50 +36,51 @@ const EditListingDescriptionFormComponent = props => (
         updated,
         updateInProgress,
         fetchErrors,
+        filterConfig,
       } = formRenderProps;
 
-      const titleMessage = intl.formatMessage({ id: 'EditListingDescriptionForm.title' });
+      const titleMessage = intl.formatMessage({ id: 'EditListingDetailsForm.title' });
       const titlePlaceholderMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.titlePlaceholder',
+        id: 'EditListingDetailsForm.titlePlaceholder',
       });
       const titleRequiredMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.titleRequired',
+        id: 'EditListingDetailsForm.titleRequired',
       });
       const maxLengthMessage = intl.formatMessage(
-        { id: 'EditListingDescriptionForm.maxLength' },
+        { id: 'EditListingDetailsForm.maxLength' },
         {
           maxLength: TITLE_MAX_LENGTH,
         }
       );
 
       const descriptionMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.description',
+        id: 'EditListingDetailsForm.description',
       });
       const descriptionPlaceholderMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.descriptionPlaceholder',
+        id: 'EditListingDetailsForm.descriptionPlaceholder',
       });
       const maxLength60Message = maxLength(maxLengthMessage, TITLE_MAX_LENGTH);
       const descriptionRequiredMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.descriptionRequired',
+        id: 'EditListingDetailsForm.descriptionRequired',
       });
 
       const { updateListingError, createListingDraftError, showListingsError } = fetchErrors || {};
       const errorMessageUpdateListing = updateListingError ? (
         <p className={css.error}>
-          <FormattedMessage id="EditListingDescriptionForm.updateFailed" />
+          <FormattedMessage id="EditListingDetailsForm.updateFailed" />
         </p>
       ) : null;
 
       // This error happens only on first tab (of EditListingWizard)
       const errorMessageCreateListingDraft = createListingDraftError ? (
         <p className={css.error}>
-          <FormattedMessage id="EditListingDescriptionForm.createListingDraftError" />
+          <FormattedMessage id="EditListingDetailsForm.createListingDraftError" />
         </p>
       ) : null;
 
       const errorMessageShowListing = showListingsError ? (
         <p className={css.error}>
-          <FormattedMessage id="EditListingDescriptionForm.showListingFailed" />
+          <FormattedMessage id="EditListingDetailsForm.showListingFailed" />
         </p>
       ) : null;
 
@@ -85,6 +88,54 @@ const EditListingDescriptionFormComponent = props => (
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
+
+      const categoryConfig = findConfigForSelectFilter('category', filterConfig);
+      const categorySchemaType = categoryConfig.schemaType;
+      const categories = categoryConfig.options ? categoryConfig.options : [];
+      const categoryLabel = intl.formatMessage({
+        id: 'EditListingDetailsForm.categoryLabel',
+      });
+      const categoryPlaceholder = intl.formatMessage({
+        id: 'EditListingDetailsForm.categoryPlaceholder',
+      });
+
+      const categoryRequired = required(
+        intl.formatMessage({
+          id: 'EditListingDetailsForm.categoryRequired',
+        })
+      );
+
+      const sizeConfig = findConfigForSelectFilter('size', filterConfig);
+      const sizeSchemaType = sizeConfig ? sizeConfig.schemaType : null;
+      const sizes = sizeConfig && sizeConfig.options ? sizeConfig.options : [];
+      const sizeLabel = intl.formatMessage({
+        id: 'EditListingDetailsForm.sizeLabel',
+      });
+      const sizePlaceholder = intl.formatMessage({
+        id: 'EditListingDetailsForm.sizePlaceholder',
+      });
+
+      const sizeRequired = required(
+        intl.formatMessage({
+          id: 'EditListingDetailsForm.sizeRequired',
+        })
+      );
+
+      const brandConfig = findConfigForSelectFilter('brand', filterConfig);
+      const brandSchemaType = brandConfig ? brandConfig.schemaType : null;
+      const brands = brandConfig && brandConfig.options ? brandConfig.options : [];
+      const brandLabel = intl.formatMessage({
+        id: 'EditListingDetailsForm.brandLabel',
+      });
+      const brandPlaceholder = intl.formatMessage({
+        id: 'EditListingDetailsForm.brandPlaceholder',
+      });
+
+      const brandRequired = required(
+        intl.formatMessage({
+          id: 'EditListingDetailsForm.brandRequired',
+        })
+      );
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
@@ -102,7 +153,6 @@ const EditListingDescriptionFormComponent = props => (
             validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
             autoFocus={autoFocus}
           />
-
           <FieldTextInput
             id="description"
             name="description"
@@ -112,12 +162,34 @@ const EditListingDescriptionFormComponent = props => (
             placeholder={descriptionPlaceholderMessage}
             validate={composeValidators(required(descriptionRequiredMessage))}
           />
-
-          <CustomCategorySelectFieldMaybe
+          <CustomFieldEnum
             id="category"
             name="category"
-            categories={categories}
-            intl={intl}
+            options={categories}
+            label={categoryLabel}
+            placeholder={categoryPlaceholder}
+            validate={categoryRequired}
+            schemaType={categorySchemaType}
+          />
+
+          <CustomFieldEnum
+            id="size"
+            name="size"
+            options={sizes}
+            label={sizeLabel}
+            placeholder={sizePlaceholder}
+            validate={sizeRequired}
+            schemaType={sizeSchemaType}
+          />
+
+          <CustomFieldEnum
+            id="brand"
+            name="brand"
+            options={brands}
+            label={brandLabel}
+            placeholder={brandPlaceholder}
+            validate={brandRequired}
+            schemaType={brandSchemaType}
           />
 
           <Button
@@ -135,9 +207,13 @@ const EditListingDescriptionFormComponent = props => (
   />
 );
 
-EditListingDescriptionFormComponent.defaultProps = { className: null, fetchErrors: null };
+EditListingDetailsFormComponent.defaultProps = {
+  className: null,
+  fetchErrors: null,
+  filterConfig: config.custom.filters,
+};
 
-EditListingDescriptionFormComponent.propTypes = {
+EditListingDetailsFormComponent.propTypes = {
   className: string,
   intl: intlShape.isRequired,
   onSubmit: func.isRequired,
@@ -151,12 +227,7 @@ EditListingDescriptionFormComponent.propTypes = {
     showListingsError: propTypes.error,
     updateListingError: propTypes.error,
   }),
-  categories: arrayOf(
-    shape({
-      key: string.isRequired,
-      label: string.isRequired,
-    })
-  ),
+  filterConfig: propTypes.filterConfig,
 };
 
-export default compose(injectIntl)(EditListingDescriptionFormComponent);
+export default compose(injectIntl)(EditListingDetailsFormComponent);

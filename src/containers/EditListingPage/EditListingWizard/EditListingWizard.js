@@ -29,7 +29,7 @@ import {
 // Import modules from this directory
 import EditListingWizardTab, {
   AVAILABILITY,
-  DESCRIPTION,
+  DETAILS,
   FEATURES,
   POLICY,
   LOCATION,
@@ -45,15 +45,7 @@ const availabilityMaybe = config.enableAvailability ? [AVAILABILITY] : [];
 // Note 1: You need to change save button translations for new listing flow
 // Note 2: Ensure that draft listing is created after the first panel
 // and listing publishing happens after last panel.
-export const TABS = [
-  DESCRIPTION,
-  FEATURES,
-  POLICY,
-  LOCATION,
-  PRICING,
-  ...availabilityMaybe,
-  PHOTOS,
-];
+export const TABS = [DETAILS, FEATURES, POLICY, LOCATION, PRICING, ...availabilityMaybe, PHOTOS];
 
 // Tabs are horizontal in small screens
 const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
@@ -63,8 +55,8 @@ const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
 
 const tabLabel = (intl, tab) => {
   let key = null;
-  if (tab === DESCRIPTION) {
-    key = 'EditListingWizard.tabLabelDescription';
+  if (tab === DETAILS) {
+    key = 'EditListingWizard.tabLabelDetails';
   } else if (tab === FEATURES) {
     key = 'EditListingWizard.tabLabelFeatures';
   } else if (tab === POLICY) {
@@ -102,8 +94,8 @@ const tabCompleted = (tab, listing) => {
   const images = listing.images;
 
   switch (tab) {
-    case DESCRIPTION:
-      return !!(description && title);
+    case DETAILS:
+      return !!(description && title && publicData.size && publicData.brand);
     case FEATURES:
       return !!(publicData && publicData.amenities);
     case POLICY:

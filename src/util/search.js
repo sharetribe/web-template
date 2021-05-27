@@ -43,6 +43,14 @@ export const findOptionsForSelectFilter = (filterId, filters) => {
 };
 
 /**
+ * Return filter config
+ */
+export const findConfigForSelectFilter = (filterId, filters) => {
+  const filter = filters.find(f => f.id === filterId);
+  return filter && filter.config ? filter.config : null;
+};
+
+/**
  * Check if the main search type is 'keywords'
  */
 export const isMainSearchTypeKeywords = config => config.mainSearchType === 'keywords';

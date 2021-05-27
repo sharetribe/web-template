@@ -116,3 +116,11 @@
 .modalMessage {
   @apply --marketplaceModalParagraphStyles;
 }
+
+.detailsSelect {
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 32px;
+  }
+}
