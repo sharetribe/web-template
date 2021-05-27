@@ -67,22 +67,19 @@ exports[`SearchPageComponent matches snapshot 1`] = `
             "config": Object {
               "options": Array [
                 Object {
-                  "key": "smoke",
-                  "label": "Smoke",
+                  "key": "men",
+                  "label": "Men",
                 },
                 Object {
-                  "key": "electric",
-                  "label": "Electric",
+                  "key": "women",
+                  "label": "Women",
                 },
                 Object {
-                  "key": "wood",
-                  "label": "Wood",
-                },
-                Object {
-                  "key": "other",
-                  "label": "Other",
+                  "key": "kids",
+                  "label": "Kids",
                 },
               ],
+              "schemaType": "enum",
             },
             "group": "secondary",
             "id": "category",
@@ -91,6 +88,84 @@ exports[`SearchPageComponent matches snapshot 1`] = `
               "pub_category",
             ],
             "type": "SelectSingleFilter",
+          },
+          Object {
+            "config": Object {
+              "options": Array [
+                Object {
+                  "key": "4",
+                  "label": "4",
+                },
+                Object {
+                  "key": "5",
+                  "label": "5",
+                },
+                Object {
+                  "key": "6",
+                  "label": "6",
+                },
+                Object {
+                  "key": "7",
+                  "label": "7",
+                },
+                Object {
+                  "key": "8",
+                  "label": "8",
+                },
+                Object {
+                  "key": "9",
+                  "label": "9",
+                },
+                Object {
+                  "key": "10",
+                  "label": "10",
+                },
+                Object {
+                  "key": "11",
+                  "label": "11",
+                },
+                Object {
+                  "key": "12",
+                  "label": "12",
+                },
+              ],
+              "schemaType": "enum",
+              "searchMode": "has_any",
+            },
+            "group": "secondary",
+            "id": "size",
+            "label": "Size (US)",
+            "queryParamNames": Array [
+              "pub_size",
+            ],
+            "type": "SelectMultipleFilter",
+          },
+          Object {
+            "config": Object {
+              "options": Array [
+                Object {
+                  "key": "brand1",
+                  "label": "brand1",
+                },
+                Object {
+                  "key": "brand2",
+                  "label": "brand2",
+                },
+                Object {
+                  "key": "brand3",
+                  "label": "brand3",
+                },
+              ],
+              "schemaType": "enum",
+              "searchMode": "has_any",
+            },
+            "group": "secondary",
+            "id": "brand",
+            "label": "Brand",
+            "queryParamNames": Array [
+              "pub_brand",
+            ],
+            "type": "SelectMultipleFilter",
           },
           Object {
             "config": Object {
