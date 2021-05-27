@@ -55,10 +55,6 @@ const bookingProcessAlias = 'flex-product-default-process/release-1';
 //         depending on the value chosen.
 const bookingUnitType = 'line-item/night';
 
-// This flag defines if unit type translation is used:
-// e.g. "100 € per night" vs "100 €"
-const showUnitTypeTranslations = false;
-
 // Should the application fetch available time slots (currently defined as
 // start and end dates) to be shown on listing page.
 const enableAvailability = process.env.REACT_APP_AVAILABILITY_ENABLED === 'true';
@@ -98,6 +94,10 @@ const usingSSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';
 
 // Listing and especially listing card related configurations
 const listing = {
+  // This flag defines if unit type translation is used:
+  // e.g. "100 € per night" vs "100 €"
+  showUnitTypeTranslations: false,
+
   // These aspectWidth and aspectHeight values are used to calculate aspect ratio.
   aspectWidth: 400,
   aspectHeight: 400,
@@ -224,7 +224,6 @@ const config = {
   locale,
   bookingProcessAlias,
   bookingUnitType,
-  showUnitTypeTranslations,
   enableAvailability,
   dayCountAvailableForBooking,
   i18n,
