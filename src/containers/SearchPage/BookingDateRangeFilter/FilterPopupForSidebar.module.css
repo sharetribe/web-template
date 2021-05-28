@@ -2,9 +2,8 @@
 
 .root {
   position: relative;
-  padding-top: 24px;
-  padding-bottom: 17px;
-  border-bottom: 1px solid var(--matterColorNegative);
+  display: block;
+  width: 100%;
 
   @media (--viewportMedium) {
     padding-top: 16px;
@@ -16,7 +15,6 @@
 .filterHeader {
   line-height: 24px;
 }
-
 .labelWrapper {
   display: inline-block;
   max-width: calc(100% - 16px);
@@ -49,56 +47,53 @@
 
 .labelButton {
   /* Override button styles */
+  width: 100%;
   outline: none;
-  line-height: 24px;
   text-align: left;
   border: none;
   padding: 0;
   cursor: pointer;
-  width: 100%;
 }
 
 .labelButtonContent {
   display: inline-block;
   width: 100%;
-
-  &:hover {
-    color: var(--marketplaceColor);
-
-    & * {
-      color: var(--marketplaceColor);
-      stroke: var(--marketplaceColor);
-    }
-  }
 }
 
 .openSign {
   float: right;
 }
 
-.formWrapper {
-  padding-left: 12px;
+.popup {
+  /* By default hide the content */
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+
+  /* Position */
+  position: absolute;
+  z-index: var(--zIndexPopup);
+
+  /* Layout */
+  min-width: 300px;
+  margin-top: 7px;
+  background-color: var(--matterColorLight);
+
+  /* Borders */
+  border-top: 1px solid var(--matterColorNegative);
+  box-shadow: var(--boxShadowPopup);
+  border-radius: 4px;
+  transition: var(--transitionStyleButton);
 }
 
-.clearButton {
-  @apply --marketplaceH5FontStyles;
-  margin: 0;
+.popupSize {
+  padding: 15px 30px 17px 30px;
+}
+
+.isOpen {
   display: block;
-  font-weight: var(--fontWeightMedium);
-  color: var(--matterColorAnti);
-
-  /* Override button styles */
-  outline: none;
-  text-align: left;
-  border: none;
-
-  &:focus,
-  &:hover {
-    color: var(--matterColor);
-  }
-
-  @media (--viewportMedium) {
-    margin: 0;
-    padding: 4px 0 4px 0;
-  }
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
 }

@@ -7,6 +7,7 @@ import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl
 import { propTypes } from '../../../util/types';
 import { formatCurrencyMajorUnit } from '../../../util/currency';
 
+import IconPlus from '../IconPlus/IconPlus';
 import PriceFilterForm from '../PriceFilterForm/PriceFilterForm';
 
 import css from './PriceFilterPlain.module.css';
@@ -87,8 +88,7 @@ class PriceFilterPlainComponent extends Component {
     const hasValue = value => value != null;
     const hasInitialValues = initialValues && hasValue(minPrice) && hasValue(maxPrice);
 
-    const labelClass = hasInitialValues ? css.filterLabelSelected : css.filterLabel;
-    const labelText = hasInitialValues
+    const labelSelection = hasInitialValues
       ? intl.formatMessage(
           { id: 'PriceFilter.labelSelectedPlain' },
           {
@@ -96,18 +96,27 @@ class PriceFilterPlainComponent extends Component {
             maxPrice: formatCurrencyMajorUnit(intl, currencyConfig.currency, maxPrice),
           }
         )
-      : label
-      ? label
-      : intl.formatMessage({ id: 'PriceFilter.label' });
-
+      : null;
     return (
       <div className={classes}>
-        <div className={labelClass}>
+        <div className={css.filterHeader}>
           <button type="button" className={css.labelButton} onClick={this.toggleIsOpen}>
-            <span className={labelClass}>{labelText}</span>
-          </button>
-          <button type="button" className={css.clearButton} onClick={this.handleClear}>
-            <FormattedMessage id={'PriceFilter.clear'} />
+            <span className={css.labelButtonContent}>
+              <span className={css.labelWrapper}>
+                <span className={css.label}>
+                  {label}
+                  {labelSelection ? (
+                    <>
+                      <span>{': '}</span>
+                      <span className={css.labelSelected}>{labelSelection}</span>
+                    </>
+                  ) : null}
+                </span>
+              </span>
+              <span className={css.openSign}>
+                <IconPlus isOpen={this.state.isOpen} isSelected={hasInitialValues} />
+              </span>
+            </span>
           </button>
         </div>
         <div className={css.formWrapper}>
@@ -124,7 +133,13 @@ class PriceFilterPlainComponent extends Component {
             step={step}
             liveEdit
             isOpen={this.state.isOpen}
-          />
+            isInSideBar
+            style={{ minWidth: '160px' }}
+          >
+            <button className={css.clearButton} onClick={this.handleClear}>
+              <FormattedMessage id={'PriceFilter.clear'} />
+            </button>
+          </PriceFilterForm>
         </div>
       </div>
     );

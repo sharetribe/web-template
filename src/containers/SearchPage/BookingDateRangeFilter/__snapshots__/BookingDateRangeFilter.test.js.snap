@@ -11,7 +11,8 @@ exports[`BookingDateRangeFilter matches plain snapshot 1`] = `
     }
   }
   isSelected={false}
-  label="BookingDateRangeFilter.labelPlain"
+  labelSelection={null}
+  labelSelectionSeparator=":"
   liveEdit={true}
   onSubmit={[Function]}
   rootClassName={null}

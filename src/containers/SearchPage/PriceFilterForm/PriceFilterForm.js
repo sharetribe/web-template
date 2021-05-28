@@ -86,6 +86,7 @@ const PriceFilterFormComponent = props => {
           onClear,
           onCancel,
           isOpen,
+          isInSideBar,
           contentRef,
           style,
           intl,
@@ -93,6 +94,7 @@ const PriceFilterFormComponent = props => {
           min,
           max,
           step,
+          children,
         } = formRenderProps;
         const { minPrice: minPriceRaw, maxPrice: maxPriceRaw } = values;
         const minPrice = typeof minPriceRaw !== 'string' ? minPriceRaw : min;
@@ -124,12 +126,14 @@ const PriceFilterFormComponent = props => {
             style={{ minWidth: '300px', ...style }}
           >
             <div className={css.contentWrapper}>
-              <span className={css.label}>
-                <FormattedMessage id="PriceFilterForm.label" />
-              </span>
+              {showAsPopup ? (
+                <span className={css.label}>
+                  <FormattedMessage id="PriceFilterForm.label" />
+                </span>
+              ) : null}
               <div className={css.inputsWrapper}>
                 <Field
-                  className={css.minPrice}
+                  className={classNames(css.minPrice, { [css.priceInSidebar]: isInSideBar })}
                   id={`${id}.minPrice`}
                   name="minPrice"
                   component="input"
@@ -142,7 +146,7 @@ const PriceFilterFormComponent = props => {
                 />
                 <span className={css.priceSeparator}>-</span>
                 <Field
-                  className={css.maxPrice}
+                  className={classNames(css.maxPrice, { [css.priceInSidebar]: isInSideBar })}
                   id={`${id}.maxPrice`}
                   name="maxPrice"
                   component="input"
@@ -184,6 +188,7 @@ const PriceFilterFormComponent = props => {
                 </button>
               </div>
             )}
+            {children}
           </Form>
         );
       }}

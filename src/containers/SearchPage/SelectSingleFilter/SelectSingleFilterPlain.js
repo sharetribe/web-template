@@ -4,6 +4,8 @@ import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
 
+import IconPlus from '../IconPlus/IconPlus';
+
 import css from './SelectSingleFilterPlain.module.css';
 
 const getQueryParamName = queryParamNames => {
@@ -42,19 +44,18 @@ class SelectSingleFilterPlain extends Component {
       queryParamNames,
       initialValues,
       twoColumns,
-      useBullets,
+      useBorder,
+      useHighlight,
     } = this.props;
 
     const queryParamName = getQueryParamName(queryParamNames);
     const initialValue =
       initialValues && initialValues[queryParamName] ? initialValues[queryParamName] : null;
-    const labelClass = initialValue ? css.filterLabelSelected : css.filterLabel;
+    const labelClass = initialValue ? css.labelSelected : css.label;
 
-    const hasBullets = useBullets || twoColumns;
     const optionsContainerClass = classNames({
       [css.optionsContainerOpen]: this.state.isOpen,
       [css.optionsContainerClosed]: !this.state.isOpen,
-      [css.hasBullets]: hasBullets,
       [css.twoColumns]: twoColumns,
     });
 
@@ -62,40 +63,44 @@ class SelectSingleFilterPlain extends Component {
 
     return (
       <div className={classes}>
-        <div className={labelClass}>
+        <div className={css.filterHeader}>
           <button className={css.labelButton} onClick={this.toggleIsOpen}>
-            <span className={labelClass}>{label}</span>
-          </button>
-          <button className={css.clearButton} onClick={e => this.selectOption(null, e)}>
-            <FormattedMessage id={'SelectSingleFilter.plainClear'} />
+            <span className={css.labelButtonContent}>
+              <span className={labelClass}>{label}</span>
+              <span className={css.openSign}>
+                <IconPlus isOpen={this.state.isOpen} isSelected={!!initialValue} />
+              </span>
+            </span>
           </button>
         </div>
         <div className={optionsContainerClass}>
           {options.map(option => {
             // check if this option is selected
             const selected = initialValue === option.key;
-            const optionClass = hasBullets && selected ? css.optionSelected : css.option;
+            const optionClass = classNames(css.option, {
+              [css.optionHighlight]: selected && useHighlight,
+            });
             // menu item selected bullet or border class
-            const optionBorderClass = hasBullets
+            const optionBorderClass = useBorder
               ? classNames({
-                  [css.optionBulletSelected]: selected,
-                  [css.optionBullet]: !selected,
-                })
-              : classNames({
                   [css.optionBorderSelected]: selected,
                   [css.optionBorder]: !selected,
-                });
+                })
+              : null;
             return (
               <button
                 key={option.key}
                 className={optionClass}
                 onClick={() => this.selectOption(option.key)}
               >
-                <span className={optionBorderClass} />
+                {useBorder ? <span className={optionBorderClass} /> : null}
                 {option.label}
               </button>
             );
           })}
+          <button className={css.clearButton} onClick={e => this.selectOption(null, e)}>
+            <FormattedMessage id={'SelectSingleFilter.plainClear'} />
+          </button>
         </div>
       </div>
     );
@@ -107,7 +112,8 @@ SelectSingleFilterPlain.defaultProps = {
   className: null,
   initialValues: null,
   twoColumns: false,
-  useBullets: false,
+  useHighlight: true,
+  useBorder: false,
 };
 
 SelectSingleFilterPlain.propTypes = {
@@ -125,7 +131,8 @@ SelectSingleFilterPlain.propTypes = {
   ).isRequired,
   initialValues: object,
   twoColumns: bool,
-  useBullets: bool,
+  useHighlight: bool,
+  useBorder: bool,
 };
 
 export default SelectSingleFilterPlain;
