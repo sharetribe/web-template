@@ -23,6 +23,10 @@ const i18n = {
 // This can be either 'keywords' or 'location'.
 const mainSearchType = 'keywords';
 
+// There are 2 SearchPage variants that can be used:
+// 'map' & 'list'
+const searchPageVariant = 'list';
+
 // Should search results be ordered by distance to origin.
 // NOTE 1: This doesn't affect if the main search type is 'keywords'
 // NOTE 2: If this is set to true add parameter 'origin' to every location in default-location-searches.js
@@ -88,6 +92,19 @@ const sentryDsn = process.env.REACT_APP_SENTRY_DSN;
 // If webapp is using SSL (i.e. it's behind 'https' protocol)
 const usingSSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';
 
+// Listing and especially listing card related configurations
+const listing = {
+  // This flag defines if unit type translation is used:
+  // e.g. "100 € per night" vs "100 €"
+  showUnitTypeTranslations: false,
+
+  // These aspectWidth and aspectHeight values are used to calculate aspect ratio.
+  aspectWidth: 400,
+  aspectHeight: 400,
+  // Listings have custom image variants, which are named here.
+  variantPrefix: 'listing-card',
+};
+
 // Address information is used in SEO schema for Organization (http://schema.org/PostalAddress)
 const addressCountry = 'FI';
 const addressRegion = 'Helsinki';
@@ -104,7 +121,7 @@ const siteTitle = 'Saunatime';
 const siteTwitterHandle = '@sharetribe';
 
 // Instagram page is used in SEO schema (http://schema.org/Organization)
-const siteInstagramPage = null;
+const siteInstagramPage = 'https://www.instagram.com/sharetribe/';
 
 // Facebook page is used in SEO schema (http://schema.org/Organization)
 const siteFacebookPage = 'https://www.facebook.com/Sharetribe/';
@@ -216,6 +233,7 @@ const config = {
     transitVerbose: sdkTransitVerbose,
   },
   mainSearchType,
+  searchPageVariant,
   sortSearchByDistance,
   currency,
   currencyConfig,
@@ -240,6 +258,7 @@ const config = {
   facebookAppId,
   sentryDsn,
   usingSSL,
+  listing,
   maps,
   custom,
 };

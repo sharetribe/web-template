@@ -11,47 +11,37 @@
   }
 }
 
-.threeToTwoWrapper {
-  /* Layout */
-  display: block;
-  width: 100%;
-  position: relative;
+.aspectRatioWrapper {
   transition: var(--transitionStyleButton);
+  background: var(--matterColorNegative); /* Loading BG color */
+  border-radius: 4px;
 
-  &:hover {
-    transform: scale(1.02);
-    box-shadow: var(--boxShadowListingCard);
+  @media (--viewportMedium) {
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: var(--boxShadowListingCard);
+    }
   }
 }
 
-/* Firefox doesn't support image aspect ratio inside flexbox */
-.aspectWrapper {
-  padding-bottom: 66.6667%; /* 3:2 Aspect Ratio */
-  background: var(--matterColorNegative); /* Loading BG color */
-}
-
 .rootForImage {
-  /* Layout - image will take space defined by aspect ratio wrapper */
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  border: solid 1px var(--matterColorNegative);
+  border-radius: 4px;
   width: 100%;
-  border-radius: var(--borderRadius);
+  height: 100%;
 }
 
 .info {
   /* Layout */
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   padding: 16px 0 2px 0;
 }
 
 .price {
   /* Layout */
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: flex-start;
   flex-shrink: 0;
   margin-right: 18px;
@@ -75,6 +65,9 @@
   /* Font */
   @apply --marketplaceTinyFontStyles;
   color: var(--matterColor);
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
 
   /* Remove default margins from font */
   margin-top: 0;

@@ -11,28 +11,20 @@ exports[`ListingCard matches snapshot 1`] = `
     }
   }
 >
-  <div
-    className="threeToTwoWrapper"
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
+  <AspectRatioWrapper
+    className="aspectRatioWrapper"
+    height={400}
+    rootClassName={null}
+    width={400}
   >
-    <div
-      className="aspectWrapper"
-    >
-      <lazyLoadWithDimensions(ListingImage)
-        alt="listing1 title"
-        image={null}
-        rootClassName="rootForImage"
-        sizes={null}
-        variants={
-          Array [
-            "landscape-crop",
-            "landscape-crop2x",
-          ]
-        }
-      />
-    </div>
-  </div>
+    <lazyLoadWithDimensions(ListingImage)
+      alt="listing1 title"
+      image={null}
+      rootClassName="rootForImage"
+      sizes={null}
+      variants={Array []}
+    />
+  </AspectRatioWrapper>
   <div
     className="info"
   >
@@ -44,14 +36,6 @@ exports[`ListingCard matches snapshot 1`] = `
         title={55}
       >
         55
-      </div>
-      <div
-        className="perUnit"
-      >
-        <FormattedMessage
-          id="ListingCard.perNight"
-          values={Object {}}
-        />
       </div>
     </div>
     <div
@@ -68,7 +52,7 @@ exports[`ListingCard matches snapshot 1`] = `
         className="authorInfo"
       >
         <FormattedMessage
-          id="ListingCard.hostedBy"
+          id="ListingCard.author"
           values={
             Object {
               "authorName": "user1 display name",

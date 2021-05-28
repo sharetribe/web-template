@@ -14,6 +14,16 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [add] SearchPage is splitted to 2 variants SearchPageWithMap and SearchPageWithList.
+
+  - MainPanel (subcomponent of search page) is removed.
+  - There's a new component, AspectRatioWrapper, and configuration that can be used to fetch custom
+    listing image variants.
+  - API supports nowadays additional sorting on top of keyword filtered listings. SortBy is
+    configured work with this setup.
+
+  [#23](https://github.com/sharetribe/ftw-product/pull/23)
+
 - [change] Rename EditListingDescriptionPanel to EditListingDetailsPanel and add more generic
   CustomFieldEnum for showing enum fields like category, size and brand.
   [#27](https://github.com/sharetribe/ftw-product/pull/27)

@@ -5,12 +5,16 @@
 
 .icon {
   position: relative;
-  bottom: 1px;
-  margin-right: 5px;
+  margin-left: 12px;
+  transition: all 0.2s ease-out;
 
   @media (--viewportMedium) {
-    bottom: 2px;
+    margin-left: 36px;
   }
+}
+
+.iconArrowAnimation {
+  transform: rotate(-180deg);
 }
 
 .menuLabel {

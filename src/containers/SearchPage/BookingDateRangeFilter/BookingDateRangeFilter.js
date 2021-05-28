@@ -9,6 +9,7 @@ import { FieldDateRangeController } from '../../../components';
 import FilterPlain from '../FilterPlain/FilterPlain';
 import FilterPopup from '../FilterPopup/FilterPopup';
 
+import FilterPopupForSidebar from './FilterPopupForSidebar';
 import css from './BookingDateRangeFilter.module.css';
 
 const getDatesQueryParamName = queryParamNames => {
@@ -40,8 +41,16 @@ export class BookingDateRangeFilterComponent extends Component {
   constructor(props) {
     super(props);
 
+    this.state = { isOpen: true };
+
     this.popupControllerRef = null;
     this.plainControllerRef = null;
+
+    this.toggleIsOpen = this.toggleIsOpen.bind(this);
+  }
+
+  toggleIsOpen() {
+    this.setState(prevState => ({ isOpen: !prevState.isOpen }));
   }
 
   render() {
@@ -49,6 +58,7 @@ export class BookingDateRangeFilterComponent extends Component {
       className,
       rootClassName,
       showAsPopup,
+      isDesktop,
       initialValues,
       id,
       contentPlacementOffset,
@@ -99,6 +109,15 @@ export class BookingDateRangeFilterComponent extends Component {
       ? label
       : intl.formatMessage({ id: 'BookingDateRangeFilter.labelPopup' });
 
+    const labelSelection = isSelected
+      ? intl.formatMessage(
+          { id: 'BookingDateRangeFilter.labelSelectedPopup' },
+          {
+            dates: `${formattedStartDate} - ${formattedEndDate}`,
+          }
+        )
+      : null;
+
     const handleSubmit = values => {
       onSubmit(formatValue(values, datesQueryParamName));
     };
@@ -141,11 +160,37 @@ export class BookingDateRangeFilterComponent extends Component {
           }}
         />
       </FilterPopup>
+    ) : isDesktop ? (
+      <FilterPopupForSidebar
+        className={className}
+        rootClassName={rootClassName}
+        popupClassName={css.popupSize}
+        label={label}
+        labelSelection={labelSelection}
+        isSelected={isSelected}
+        id={`${id}.popup`}
+        showAsPopup
+        contentPlacementOffset={contentPlacementOffset}
+        onSubmit={handleSubmit}
+        {...onClearPopupMaybe}
+        {...onCancelPopupMaybe}
+        initialValues={initialDates}
+        {...rest}
+      >
+        <FieldDateRangeController
+          name="dates"
+          controllerRef={node => {
+            this.popupControllerRef = node;
+          }}
+        />
+      </FilterPopupForSidebar>
     ) : (
       <FilterPlain
         className={className}
         rootClassName={rootClassName}
-        label={labelForPlain}
+        label={label}
+        labelSelection={labelSelection}
+        labelSelectionSeparator=":"
         isSelected={isSelected}
         id={`${id}.plain`}
         liveEdit

@@ -75,6 +75,7 @@ class SearchFiltersMobileComponent extends Component {
       onManageDisableScrolling,
       selectedFiltersCount,
       intl,
+      isMapVariant,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
@@ -110,9 +111,11 @@ class SearchFiltersMobileComponent extends Component {
             />
           </Button>
           {sortByComponent}
-          <div className={css.mapIcon} onClick={onMapIconClick}>
-            <FormattedMessage id="SearchFiltersMobile.openMapView" className={css.mapIconText} />
-          </div>
+          {isMapVariant ? (
+            <div className={css.mapIcon} onClick={onMapIconClick}>
+              <FormattedMessage id="SearchFiltersMobile.openMapView" className={css.mapIconText} />
+            </div>
+          ) : null}
         </div>
         <ModalInMobile
           id="SearchFiltersMobile.filters"
@@ -151,6 +154,7 @@ SearchFiltersMobileComponent.defaultProps = {
   resultsCount: null,
   searchInProgress: false,
   selectedFiltersCount: 0,
+  isMapVariant: true,
 };
 
 SearchFiltersMobileComponent.propTypes = {
@@ -168,6 +172,7 @@ SearchFiltersMobileComponent.propTypes = {
   onCloseModal: func.isRequired,
   resetAll: func.isRequired,
   selectedFiltersCount: number,
+  isMapVariant: bool,
 
   // from injectIntl
   intl: intlShape.isRequired,

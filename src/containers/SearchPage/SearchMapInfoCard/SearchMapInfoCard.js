@@ -9,7 +9,7 @@ import { propTypes } from '../../../util/types';
 import { formatMoney } from '../../../util/currency';
 import { ensureListing } from '../../../util/data';
 
-import { ResponsiveImage } from '../../../components';
+import { AspectRatioWrapper, ResponsiveImage } from '../../../components';
 
 import css from './SearchMapInfoCard.module.css';
 
@@ -21,6 +21,11 @@ const ListingCard = props => {
   const formattedPrice =
     price && price.currency === config.currency ? formatMoney(intl, price) : price.currency;
   const firstImage = listing.images && listing.images.length > 0 ? listing.images[0] : null;
+
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+  const variants = firstImage
+    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.indexOf(variantPrefix) >= 0)
+    : [];
 
   // listing card anchor needs sometimes inherited border radius.
   const classes = classNames(
@@ -46,18 +51,20 @@ const ListingCard = props => {
           [css.borderRadiusInheritBottom]: !isInCarousel,
         })}
       >
-        <div className={classNames(css.threeToTwoWrapper, css.borderRadiusInheritTop)}>
-          <div className={classNames(css.aspectWrapper, css.borderRadiusInheritTop)}>
-            <ResponsiveImage
-              rootClassName={classNames(css.rootForImage, css.borderRadiusInheritTop)}
-              alt={title}
-              noImageMessage={intl.formatMessage({ id: 'SearchMapInfoCard.noImage' })}
-              image={firstImage}
-              variants={['landscape-crop', 'landscape-crop2x']}
-              sizes="250px"
-            />
-          </div>
-        </div>
+        <AspectRatioWrapper
+          className={css.aspectRatioWrapper}
+          width={aspectWidth}
+          height={aspectHeight}
+        >
+          <ResponsiveImage
+            rootClassName={classNames(css.rootForImage, css.borderRadiusInheritTop)}
+            alt={title}
+            noImageMessage={intl.formatMessage({ id: 'SearchMapInfoCard.noImage' })}
+            image={firstImage}
+            variants={variants}
+            sizes="250px"
+          />
+        </AspectRatioWrapper>
         <div className={classNames(css.info, { [css.borderRadiusInheritBottom]: !isInCarousel })}>
           <div className={css.price}>{formattedPrice}</div>
           <div className={css.name}>{title}</div>

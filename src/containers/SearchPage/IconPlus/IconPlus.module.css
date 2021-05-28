@@ -1,0 +1,20 @@
+.root {
+  display: inline-block;
+  position: relative;
+  width: 11px;
+  stroke: var(--matterColor);
+}
+
+.horizontalLine {
+}
+
+.verticalLine {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(-270deg);
+  transition: transform 200ms ease-in-out;
+}
+
+.lineVerticalOpen {
+  transform: rotate(0deg);
+}

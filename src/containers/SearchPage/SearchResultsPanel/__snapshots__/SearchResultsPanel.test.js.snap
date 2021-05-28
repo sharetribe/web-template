@@ -5,7 +5,7 @@ exports[`SearchResultsPanel matches snapshot 1`] = `
   className="root"
 >
   <div
-    className="listingCards"
+    className="listingCardsMapVariant"
   />
 </div>
 `;
