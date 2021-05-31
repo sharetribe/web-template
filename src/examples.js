@@ -56,7 +56,6 @@ import * as IconSocialMediaInstagram from './components/IconSocialMediaInstagram
 import * as IconSocialMediaTwitter from './components/IconSocialMediaTwitter/IconSocialMediaTwitter.example';
 import * as IconSpinner from './components/IconSpinner/IconSpinner.example';
 import * as IconSuccess from './components/IconSuccess/IconSuccess.example';
-import * as ImageCarousel from './components/ImageCarousel/ImageCarousel.example';
 import * as ListingCard from './components/ListingCard/ListingCard.example';
 import * as LocationAutocompleteInput from './components/LocationAutocompleteInput/LocationAutocompleteInput.example';
 import * as Map from './components/Map/Map.example';
@@ -103,6 +102,7 @@ import * as FilterPlain from './containers/SearchPage/FilterPlain/FilterPlain.ex
 import * as FilterPopup from './containers/SearchPage/FilterPopup/FilterPopup.example';
 import * as EmailVerificationForm from './containers/EmailVerificationPage/EmailVerificationForm/EmailVerificationForm.example';
 import * as EnquiryForm from './containers/ListingPage/EnquiryForm/EnquiryForm.example';
+import * as ImageCarousel from './containers/ListingPage/ImageCarousel/ImageCarousel.example';
 import * as PasswordRecoveryForm from './containers/PasswordRecoveryPage/PasswordRecoveryForm/PasswordRecoveryForm.example';
 import * as PasswordResetForm from './containers/PasswordResetPage/PasswordResetForm/PasswordResetForm.example';
 import * as ManageListingCard from './containers/ManageListingsPage/ManageListingCard/ManageListingCard.example';
