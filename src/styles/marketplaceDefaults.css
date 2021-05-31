@@ -152,6 +152,9 @@
   /* ================ ProfileSettingsForm ================ */
   --ProfileSettingsForm_avatarSize: 96px;
   --ProfileSettingsForm_avatarSizeDesktop: 240px;
+
+  /* ================ ListingImageGallery ================ */
+  --ListingImageGallery_height: 500px;
 }
 
 /* ================ Global element styles ================ */
