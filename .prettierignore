@@ -3,6 +3,7 @@ coverage/
 node_modules/
 public/
 src/components/index.js
+src/components/ListingImageGallery/image-gallery.css
 src/containers/index.js
 src/examples.js
 src/forms/index.js
