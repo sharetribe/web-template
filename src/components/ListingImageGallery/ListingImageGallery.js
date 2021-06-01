@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactImageGallery from 'react-image-gallery';
 
-import 'react-image-gallery/styles/css/image-gallery.css';
-
 import { propTypes } from '../../util/types';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { Button, IconClose, ResponsiveImage } from '../../components';
+
+// Copied directly from
+// `node_modules/react-image-gallery/styles/css/image-gallery.css`. The
+// copied file is left unedited, and all the overrides are defined in
+// the component CSS file below.
+import './image-gallery.css';
 
 import css from './ListingImageGallery.module.css';
 
