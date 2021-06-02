@@ -160,7 +160,7 @@ export const EditListingDeliveryFormComponent = props => (
                     )
                   : () => {}
               }
-              showErrorMessage={pickupEnabled}
+              hideErrorMessage={!pickupEnabled}
               // Whatever parameters are being used to calculate
               // the validation function need to be combined in such
               // a way that, when they change, this key prop
@@ -206,7 +206,7 @@ export const EditListingDeliveryFormComponent = props => (
                     )
                   : () => {}
               }
-              showErrorMessage={shippingEnabled}
+              hideErrorMessage={!shippingEnabled}
               // Whatever parameters are being used to calculate
               // the validation function need to be combined in such
               // a way that, when they change, this key prop
@@ -232,7 +232,7 @@ export const EditListingDeliveryFormComponent = props => (
                     )
                   : null
               }
-              showErrorMessage={shippingEnabled}
+              hideErrorMessage={!shippingEnabled}
               // Whatever parameters are being used to calculate
               // the validation function need to be combined in such
               // a way that, when they change, this key prop

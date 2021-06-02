@@ -23,6 +23,7 @@ class FieldTextInputComponent extends Component {
       onUnmount,
       isUncontrolled,
       inputRef,
+      hideErrorMessage,
       ...rest
     } = this.props;
     /* eslint-enable no-unused-vars */
@@ -84,7 +85,7 @@ class FieldTextInputComponent extends Component {
       <div className={classes}>
         {label ? <label htmlFor={id}>{label}</label> : null}
         {isTextarea ? <ExpandingTextarea {...inputProps} /> : <input {...inputProps} />}
-        <ValidationError fieldMeta={fieldMeta} />
+        {hideErrorMessage ? null : <ValidationError fieldMeta={fieldMeta} />}
       </div>
     );
   }
