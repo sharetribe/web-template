@@ -2,10 +2,7 @@ import React from 'react';
 import { types as sdkTypes } from '../../../util/sdkLoader';
 import ListingImageGallery from './ListingImageGallery';
 
-import exampleImageData from './example-image-data.json';
-
-const { reviver, UUID } = sdkTypes;
-const exampleImages = JSON.parse(JSON.stringify(exampleImageData), reviver);
+const { UUID } = sdkTypes;
 
 const squareSmall = 'square-small';
 
@@ -69,32 +66,63 @@ const imageLandscape = {
   },
 };
 
+const repeat = (x, n) => {
+  return Array.from(new Array(n)).map(() => x);
+};
+
+const Gallery = props => {
+  const styles = {
+    width: '100%',
+    maxWidth: 600,
+  };
+  return (
+    <div style={styles}>
+      <ListingImageGallery {...props} />
+    </div>
+  );
+};
+
 export const NoImages = {
-  component: ListingImageGallery,
+  component: Gallery,
   props: { images: [] },
   group: 'images',
 };
 
 export const SingleImage = {
-  component: ListingImageGallery,
+  component: Gallery,
   props: { images: [imageSquare] },
   group: 'images',
 };
 
-export const MultipleImages = {
-  component: ListingImageGallery,
-  props: { images: [imageLandscape, imagePortrait, imageSquare] },
+export const VariousImages = {
+  component: Gallery,
+  props: {
+    images: [
+      imageLandscape,
+      imagePortrait,
+      imageSquare,
+      imageLandscape,
+      imagePortrait,
+      imageSquare,
+    ],
+  },
   group: 'images',
 };
 
-export const ListingImages = {
-  component: ListingImageGallery,
-  props: { images: exampleImages },
+export const SquareImages = {
+  component: Gallery,
+  props: { images: repeat(imageSquare, 20) },
   group: 'images',
 };
 
-export const ListingImagesSquareThumbnails = {
-  component: ListingImageGallery,
-  props: { images: exampleImages, thumbnailVariants: ['square-small', 'square-small2x'] },
+export const PortraitImages = {
+  component: Gallery,
+  props: { images: repeat(imagePortrait, 20) },
+  group: 'images',
+};
+
+export const LandscapeImages = {
+  component: Gallery,
+  props: { images: repeat(imageLandscape, 20) },
   group: 'images',
 };
