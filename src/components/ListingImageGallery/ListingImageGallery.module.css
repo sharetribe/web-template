@@ -8,6 +8,7 @@
 :global(.image-gallery-thumbnails) {
   text-align: left !important;
   padding-top: 24px;
+  padding-bottom: 0;
 }
 :global(.image-gallery-thumbnail) {
   width: auto;
@@ -35,6 +36,7 @@
 
 .noImage {
   height: var(--ListingImageGallery_height);
+  border: 1px solid var(--matterColorNegative);
   border-radius: 4px;
 }
 
@@ -48,8 +50,10 @@
 }
 
 .thumb {
-  max-width: 92px;
-  max-height: 92px;
+  /* With the active thumbnail border (default 4px), make the result
+   height a multiple of the baseline. */
+  max-width: 88px;
+  max-height: 88px;
   border-radius: 4px;
 }
 
