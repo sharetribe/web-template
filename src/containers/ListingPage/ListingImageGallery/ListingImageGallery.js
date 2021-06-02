@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import ReactImageGallery from 'react-image-gallery';
 
 import { propTypes } from '../../../util/types';
@@ -20,7 +21,7 @@ const IMAGE_GALLERY_OPTIONS = {
 };
 
 const ListingImageGallery = props => {
-  const { intl, images, imageVariants, thumbnailVariants } = props;
+  const { intl, rootClassName, className, images, imageVariants } = props;
   const items = images.map((img, i) => {
     return {
       // We will only use the image resource, but react-image-gallery
@@ -57,7 +58,7 @@ const ListingImageGallery = props => {
           rootClassName={css.thumb}
           image={item.image}
           alt={item.thumbAlt}
-          variants={thumbnailVariants}
+          variants={imageVariants}
         />
       </div>
     );
@@ -96,11 +97,15 @@ const ListingImageGallery = props => {
   };
 
   if (items.length === 0) {
+    const classes = classNames(rootClassName || css.noImage, className);
     return <ResponsiveImage className={css.noImage} image={null} variants={[]} alt="" />;
   }
 
+  const classes = classNames(rootClassName || css.root, className);
+
   return (
     <ReactImageGallery
+      additionalClass={classes}
       items={items}
       renderItem={renderItem}
       renderThumbInner={renderThumbInner}
@@ -116,8 +121,6 @@ const ListingImageGallery = props => {
 ListingImageGallery.defaultProps = {
   rootClassName: null,
   className: null,
-  imageVariants: ['scaled-small', 'scaled-medium', 'scaled-large', 'scaled-xlarge'],
-  thumbnailVariants: ['scaled-small', 'scaled-medium'],
 };
 
 const { string, arrayOf } = PropTypes;
@@ -126,8 +129,7 @@ ListingImageGallery.propTypes = {
   rootClassName: string,
   className: string,
   images: arrayOf(propTypes.image).isRequired,
-  imageVariants: arrayOf(string),
-  thumbnailVariants: arrayOf(string),
+  imageVariants: arrayOf(string).isRequired,
 
   // from injectIntl
   intl: intlShape.isRequired,
