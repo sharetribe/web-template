@@ -167,7 +167,7 @@ export const EditListingDeliveryFormComponent = props => (
               // changes, thus reregistering this field (and its
               // validation function) with Final Form.
               // See example: https://codesandbox.io/s/changing-field-level-validators-zc8ei
-              key={pickupEnabled ? 'locationValidation' : 'noLocaitonValidation'}
+              key={pickupEnabled ? 'locationValidation' : 'noLocationValidation'}
             />
 
             <FieldTextInput
