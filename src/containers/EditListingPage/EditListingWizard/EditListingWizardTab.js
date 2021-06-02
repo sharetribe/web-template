@@ -14,19 +14,19 @@ import { createResourceLocatorString } from '../../../util/routes';
 
 // Import modules from this directory
 import EditListingDetailsPanel from './EditListingDetailsPanel/EditListingDetailsPanel';
-import EditListingLocationPanel from './EditListingLocationPanel/EditListingLocationPanel';
+import EditListingDeliveryPanel from './EditListingDeliveryPanel/EditListingDeliveryPanel';
 import EditListingPhotosPanel from './EditListingPhotosPanel/EditListingPhotosPanel';
 import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
 
 import css from './EditListingWizard.module.css';
 
 export const DETAILS = 'details';
-export const LOCATION = 'location';
+export const DELIVERY = 'delivery';
 export const PRICING = 'pricing';
 export const PHOTOS = 'photos';
 
 // EditListingWizardTab component supports these tabs
-export const SUPPORTED_TABS = [DETAILS, LOCATION, PRICING, PHOTOS];
+export const SUPPORTED_TABS = [DETAILS, DELIVERY, PRICING, PHOTOS];
 
 const pathParamsToNextTab = (params, tab, marketplaceTabs) => {
   const nextTabIndex = marketplaceTabs.findIndex(s => s === tab) + 1;
@@ -159,13 +159,13 @@ const EditListingWizardTab = props => {
         />
       );
     }
-    case LOCATION: {
+    case DELIVERY: {
       const submitButtonTranslationKey = isNewListingFlow
         ? 'EditListingWizard.saveNewLocation'
         : 'EditListingWizard.saveEditLocation';
       return (
-        <EditListingLocationPanel
-          {...panelProps(LOCATION)}
+        <EditListingDeliveryPanel
+          {...panelProps(DELIVERY)}
           submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
           onSubmit={values => {
             onCompleteEditListingWizardTab(tab, values);
