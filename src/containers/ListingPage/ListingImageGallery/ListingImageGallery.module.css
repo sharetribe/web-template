@@ -1,4 +1,4 @@
-@import '../../styles/propertySets.css';
+@import '../../../styles/propertySets.css';
 
 :global(.image-gallery-thumbnails-container) {
   overflow: auto;

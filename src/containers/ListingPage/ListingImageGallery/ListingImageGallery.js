@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactImageGallery from 'react-image-gallery';
 
-import { propTypes } from '../../util/types';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { Button, IconClose, ResponsiveImage } from '../../components';
+import { propTypes } from '../../../util/types';
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { Button, IconClose, ResponsiveImage } from '../../../components';
 
 // Copied directly from
 // `node_modules/react-image-gallery/styles/css/image-gallery.css`. The

@@ -3,8 +3,8 @@ coverage/
 node_modules/
 public/
 src/components/index.js
-src/components/ListingImageGallery/image-gallery.css
 src/containers/index.js
+src/containers/ListingPage/ListingImageGallery/image-gallery.css
 src/examples.js
 src/forms/index.js
 src/routing/routeConfiguration.js
