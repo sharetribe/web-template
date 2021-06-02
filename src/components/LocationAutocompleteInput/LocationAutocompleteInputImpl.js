@@ -469,6 +469,7 @@ class LocationAutocompleteInputImpl extends Component {
       input,
       meta,
       inputRef,
+      disabled,
     } = this.props;
     const { name, onFocus } = input;
     const { search } = currentValue(this.props);
@@ -509,7 +510,7 @@ class LocationAutocompleteInputImpl extends Component {
           placeholder={placeholder}
           name={name}
           value={search}
-          disabled={this.state.fetchingPlaceDetails}
+          disabled={disabled || this.state.fetchingPlaceDetails}
           onFocus={handleOnFocus}
           onBlur={this.handleOnBlur}
           onChange={this.onChange}
