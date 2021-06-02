@@ -1,6 +1,9 @@
 import React from 'react';
+
 import { FormattedMessage } from '../../util/reactIntl';
-import { ResponsiveImage, Modal, ImageCarousel } from '../../components';
+import { ResponsiveImage, Modal } from '../../components';
+
+import ImageCarousel from './ImageCarousel/ImageCarousel';
 import ActionBarMaybe from './ActionBarMaybe';
 
 import css from './ListingPage.module.css';

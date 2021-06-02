@@ -1,5 +1,5 @@
 import React from 'react';
-import { types as sdkTypes } from '../../util/sdkLoader';
+import { types as sdkTypes } from '../../../util/sdkLoader';
 import ImageCarousel from './ImageCarousel';
 
 const { UUID } = sdkTypes;
