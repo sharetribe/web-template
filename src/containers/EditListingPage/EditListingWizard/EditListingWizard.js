@@ -27,23 +27,14 @@ import {
 } from '../../../components';
 
 // Import modules from this directory
-import EditListingWizardTab, {
-  AVAILABILITY,
-  DETAILS,
-  LOCATION,
-  PRICING,
-  PHOTOS,
-} from './EditListingWizardTab';
+import EditListingWizardTab, { DETAILS, LOCATION, PRICING, PHOTOS } from './EditListingWizardTab';
 import css from './EditListingWizard.module.css';
-
-// Show availability calendar only if environment variable availabilityEnabled is true
-const availabilityMaybe = config.enableAvailability ? [AVAILABILITY] : [];
 
 // You can reorder these panels.
 // Note 1: You need to change save button translations for new listing flow
 // Note 2: Ensure that draft listing is created after the first panel
 // and listing publishing happens after last panel.
-export const TABS = [DETAILS, LOCATION, PRICING, ...availabilityMaybe, PHOTOS];
+export const TABS = [DETAILS, LOCATION, PRICING, PHOTOS];
 
 // Tabs are horizontal in small screens
 const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
@@ -59,8 +50,6 @@ const tabLabel = (intl, tab) => {
     key = 'EditListingWizard.tabLabelLocation';
   } else if (tab === PRICING) {
     key = 'EditListingWizard.tabLabelPricing';
-  } else if (tab === AVAILABILITY) {
-    key = 'EditListingWizard.tabLabelAvailability';
   } else if (tab === PHOTOS) {
     key = 'EditListingWizard.tabLabelPhotos';
   }
@@ -94,8 +83,6 @@ const tabCompleted = (tab, listing) => {
       return !!(geolocation && publicData && publicData.location && publicData.location.address);
     case PRICING:
       return !!price;
-    case AVAILABILITY:
-      return !!availabilityPlan;
     case PHOTOS:
       return images && images.length > 0;
     default:
