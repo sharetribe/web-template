@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Remove EditListingFeaturesPanel, EditListingPoliciesPanel and
+  EditListingAvailabilityPanel from EditListingWizard because they are not used in FTW-product
+  template. [#30](https://github.com/sharetribe/ftw-product/pull/30)
 - [add] SearchPage is splitted to 2 variants SearchPageWithMap and SearchPageWithList.
 
   - MainPanel (subcomponent of search page) is removed.
