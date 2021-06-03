@@ -17,20 +17,18 @@ import EditListingAvailabilityPanel from './EditListingAvailabilityPanel/EditLis
 import EditListingDetailsPanel from './EditListingDetailsPanel/EditListingDetailsPanel';
 import EditListingLocationPanel from './EditListingLocationPanel/EditListingLocationPanel';
 import EditListingPhotosPanel from './EditListingPhotosPanel/EditListingPhotosPanel';
-import EditListingPoliciesPanel from './EditListingPoliciesPanel/EditListingPoliciesPanel';
 import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
 
 import css from './EditListingWizard.module.css';
 
 export const AVAILABILITY = 'availability';
 export const DETAILS = 'details';
-export const POLICY = 'policy';
 export const LOCATION = 'location';
 export const PRICING = 'pricing';
 export const PHOTOS = 'photos';
 
 // EditListingWizardTab component supports these tabs
-export const SUPPORTED_TABS = [DETAILS, POLICY, LOCATION, PRICING, AVAILABILITY, PHOTOS];
+export const SUPPORTED_TABS = [DETAILS, LOCATION, PRICING, AVAILABILITY, PHOTOS];
 
 const pathParamsToNextTab = (params, tab, marketplaceTabs) => {
   const nextTabIndex = marketplaceTabs.findIndex(s => s === tab) + 1;
@@ -156,20 +154,6 @@ const EditListingWizardTab = props => {
       return (
         <EditListingDetailsPanel
           {...panelProps(DETAILS)}
-          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
-          onSubmit={values => {
-            onCompleteEditListingWizardTab(tab, values);
-          }}
-        />
-      );
-    }
-    case POLICY: {
-      const submitButtonTranslationKey = isNewListingFlow
-        ? 'EditListingWizard.saveNewPolicies'
-        : 'EditListingWizard.saveEditPolicies';
-      return (
-        <EditListingPoliciesPanel
-          {...panelProps(POLICY)}
           submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
           onSubmit={values => {
             onCompleteEditListingWizardTab(tab, values);
