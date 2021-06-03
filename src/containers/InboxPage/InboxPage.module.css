@@ -337,12 +337,11 @@
 }
 
 .stateNoActionNeeded {
-  color: var(--matterColorAnti);
+  color: var(--matterColor);
 }
 
-.stateSucces {
-  font-weight: var(--fontWeightSemiBold);
-  color: var(--successColor);
+.stateConcluded {
+  color: var(--matterColorAnti);
 }
 
 .nameEmphasized {
