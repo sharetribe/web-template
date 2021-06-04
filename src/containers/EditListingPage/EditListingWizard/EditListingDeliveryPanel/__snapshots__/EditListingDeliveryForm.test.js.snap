@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EditListingDeliveryForm matches snapshot 1`] = `
+<ReactFinalForm
+  disabled={false}
+  dispatch={[Function]}
+  fetchErrors={null}
+  intl={
+    Object {
+      "formatDate": [Function],
+      "formatHTMLMessage": [Function],
+      "formatMessage": [Function],
+      "formatNumber": [Function],
+      "formatPlural": [Function],
+      "formatRelativeTime": [Function],
+      "formatTime": [Function],
+      "now": [Function],
+    }
+  }
+  onSubmit={[Function]}
+  ready={false}
+  render={[Function]}
+  saveActionMsg="Save location"
+  selectedPlace={null}
+  updateInProgress={false}
+  updated={false}
+/>
+`;

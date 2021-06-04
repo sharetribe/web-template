@@ -85,6 +85,7 @@ import * as LoginForm from './containers/AuthenticationPage/LoginForm/LoginForm.
 import * as StripePaymentForm from './containers/CheckoutPage/StripePaymentForm/StripePaymentForm.example';
 import * as EditListingAvailabilityForm from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/EditListingAvailabilityForm.example';
 import * as EditListingDetailsForm from './containers/EditListingPage/EditListingWizard/EditListingDetailsPanel/EditListingDetailsForm.example';
+import * as EditListingDeliveryForm from './containers/EditListingPage/EditListingWizard/EditListingDeliveryPanel/EditListingDeliveryForm.example';
 import * as EditListingFeaturesForm from './containers/EditListingPage/EditListingWizard/EditListingFeaturesPanel/EditListingFeaturesForm.example';
 import * as EditListingLocationForm from './containers/EditListingPage/EditListingWizard/EditListingLocationPanel/EditListingLocationForm.example';
 import * as EditListingPhotosForm from './containers/EditListingPage/EditListingWizard/EditListingPhotosPanel/EditListingPhotosForm.example';
@@ -125,6 +126,7 @@ export {
   Colors,
   EditListingAvailabilityForm,
   EditListingDetailsForm,
+  EditListingDeliveryForm,
   EditListingFeaturesForm,
   EditListingLocationForm,
   EditListingPhotosForm,

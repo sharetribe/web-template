@@ -14,6 +14,7 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [add] Add EditListingDeliveryPanel. [#29](https://github.com/sharetribe/ftw-product/pull/29)
 - [change] Remove EditListingFeaturesPanel, EditListingPoliciesPanel and
   EditListingAvailabilityPanel from EditListingWizard because they are not used in FTW-product
   template. [#30](https://github.com/sharetribe/ftw-product/pull/30)
