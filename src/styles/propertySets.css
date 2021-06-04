@@ -523,6 +523,11 @@
       outline: none;
     }
 
+    &:disabled {
+      color: var(--matterColorAnti);
+      border-bottom-color: var(--matterColorAnti);
+    }
+
     @media (--viewportMedium) {
       padding: 4px 0 2px 0;
     }
