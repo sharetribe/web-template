@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { array, arrayOf, bool, func, number, string } from 'prop-types';
+import { array, arrayOf, bool, func, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 import config from '../../../config';
@@ -35,7 +35,7 @@ import BreakdownMaybe from './BreakdownMaybe';
 import DetailCardHeadingsMaybe from './DetailCardHeadingsMaybe';
 import DetailCardImage from './DetailCardImage';
 import FeedSection from './FeedSection';
-import SaleActionButtonsMaybe from './SaleActionButtonsMaybe';
+import ActionButtonsMaybe from './ActionButtonsMaybe';
 import PanelHeading, {
   HEADING_ENQUIRED,
   HEADING_PAYMENT_PENDING,
@@ -178,12 +178,8 @@ export class TransactionPanelComponent extends Component {
       onShowMoreMessages,
       transactionRole,
       intl,
-      onAcceptSale,
-      onDeclineSale,
-      acceptInProgress,
-      declineInProgress,
-      acceptSaleError,
-      declineSaleError,
+      markReceivedFromPurchaseProps,
+      markDeliveredProps,
       onSubmitBookingRequest,
       timeSlots,
       fetchTimeSlotsError,
@@ -302,15 +298,11 @@ export class TransactionPanelComponent extends Component {
     const firstImage =
       currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
 
-    const saleButtons = (
-      <SaleActionButtonsMaybe
-        showButtons={stateData.showSaleButtons}
-        acceptInProgress={acceptInProgress}
-        declineInProgress={declineInProgress}
-        acceptSaleError={acceptSaleError}
-        declineSaleError={declineSaleError}
-        onAcceptSale={() => onAcceptSale(currentTransaction.id)}
-        onDeclineSale={() => onDeclineSale(currentTransaction.id)}
+    const actionButtons = (
+      <ActionButtonsMaybe
+        showButtons={stateData.showActionButtons}
+        primaryButtonProps={stateData?.primaryButtonProps}
+        secondaryButtonProps={stateData?.secondaryButtonProps}
       />
     );
 
@@ -409,8 +401,8 @@ export class TransactionPanelComponent extends Component {
               <div className={css.sendingMessageNotAllowed}>{sendingMessageNotAllowed}</div>
             )}
 
-            {stateData.showSaleButtons ? (
-              <div className={css.mobileActionButtons}>{saleButtons}</div>
+            {stateData.showActionButtons ? (
+              <div className={css.mobileActionButtons}>{actionButtons}</div>
             ) : null}
           </div>
 
@@ -457,8 +449,8 @@ export class TransactionPanelComponent extends Component {
                 transactionRole={transactionRole}
               />
 
-              {stateData.showSaleButtons ? (
-                <div className={css.desktopActionButtons}>{saleButtons}</div>
+              {stateData.showActionButtons ? (
+                <div className={css.desktopActionButtons}>{actionButtons}</div>
               ) : null}
             </div>
           </div>
@@ -483,8 +475,6 @@ TransactionPanelComponent.defaultProps = {
   rootClassName: null,
   className: null,
   currentUser: null,
-  acceptSaleError: null,
-  declineSaleError: null,
   fetchMessagesError: null,
   initialMessageFailed: false,
   savePaymentMethodFailed: false,
@@ -496,6 +486,14 @@ TransactionPanelComponent.defaultProps = {
   lineItems: null,
   fetchLineItemsError: null,
 };
+
+const actionButtonShape = shape({
+  inProgress: bool.isRequired,
+  error: propTypes.error,
+  onTransition: func.isRequired,
+  buttonText: string.isRequired,
+  errorText: string.isRequired,
+});
 
 TransactionPanelComponent.propTypes = {
   rootClassName: string,
@@ -523,13 +521,9 @@ TransactionPanelComponent.propTypes = {
   fetchTimeSlotsError: propTypes.error,
   nextTransitions: array,
 
-  // Sale related props
-  onAcceptSale: func.isRequired,
-  onDeclineSale: func.isRequired,
-  acceptInProgress: bool.isRequired,
-  declineInProgress: bool.isRequired,
-  acceptSaleError: propTypes.error,
-  declineSaleError: propTypes.error,
+  // Tx process transition related props
+  markReceivedFromPurchaseProps: actionButtonShape.isRequired,
+  markDeliveredProps: actionButtonShape.isRequired,
 
   // line items
   onFetchTransactionLineItems: func.isRequired,
