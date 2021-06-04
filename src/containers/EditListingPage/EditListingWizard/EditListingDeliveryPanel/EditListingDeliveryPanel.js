@@ -32,9 +32,8 @@ class EditListingDeliveryPanel extends Component {
 
     // Only render current search if full place object is available in the URL params
     // TODO bounds are missing - those need to be queried directly from Google Places
-    const locationFieldsPresent =
-      publicData && publicData.location && publicData.location.address && geolocation;
-    const location = publicData && publicData.location ? publicData.location : {};
+    const locationFieldsPresent = publicData?.location?.address && geolocation;
+    const location = publicData?.location ? publicData.location : {};
     const { address, building } = location;
     const { shippingEnabled, pickupEnabled } = publicData;
     const { shippingOneItem, shippingAdditionalItems } = privateData;

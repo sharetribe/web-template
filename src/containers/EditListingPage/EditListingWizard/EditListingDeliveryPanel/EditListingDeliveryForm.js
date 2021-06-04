@@ -49,9 +49,8 @@ export const EditListingDeliveryFormComponent = props => (
         values,
       } = formRenderProps;
 
-      const shippingEnabled = values.deliveryOptions && values.deliveryOptions.includes('shipping');
-
-      const pickupEnabled = values.deliveryOptions && values.deliveryOptions.includes('pickup');
+      const shippingEnabled = values.deliveryOptions?.includes('shipping');
+      const pickupEnabled = values.deliveryOptions?.includes('pickup');
 
       const titleRequiredMessage = intl.formatMessage({ id: 'EditListingDeliveryForm.address' });
       const addressPlaceholderMessage = intl.formatMessage({
