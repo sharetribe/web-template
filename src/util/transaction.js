@@ -29,19 +29,36 @@ export const TRANSITION_CONFIRM_PAYMENT = 'transition/confirm-payment';
 // the transaction will expire automatically.
 export const TRANSITION_EXPIRE_PAYMENT = 'transition/expire-payment';
 
-// When the provider accepts or declines a transaction from the
-// SalePage, it is transitioned with the accept or decline transition.
-export const TRANSITION_ACCEPT = 'transition/accept';
-export const TRANSITION_DECLINE = 'transition/decline';
+// Provider can mark the product shipped/delivered
+export const TRANSITION_MARK_DELIVERED = 'transition/mark-delivered';
 
-// The backend automatically expire the transaction.
-export const TRANSITION_EXPIRE = 'transition/expire';
+// Customer can mark the product received (e.g. picked up from provider)
+export const TRANSITION_MARK_RECEIVED_FROM_PURCHASED = 'transition/mark-received-from-purchased';
 
-// Admin can also cancel the transition.
-export const TRANSITION_CANCEL = 'transition/cancel';
+// Automatic cancellation happens if none marks the delivery happened
+export const TRANSITION_CANCEL_SYSTEM = 'transition/cancel-system';
 
-// The backend will mark the transaction completed.
-export const TRANSITION_COMPLETE = 'transition/complete';
+// Operator can cancel the purchase before product has been marked as delivered / received
+export const TRANSITION_CANCEL_OPERATOR = 'transition/cancel-operator';
+
+// If provider has marked the product delivered (e.g. shipped),
+// customer can then mark the product received
+export const TRANSITION_MARK_RECEIVED = 'transition/mark-received';
+
+// If customer doesn't mark the product received manually, it can happen automatically
+export const TRANSITION_AUTO_COMPLETE = 'transition/auto-complete';
+
+// When provider has marked the product delivered, customer can dispute the transaction
+export const TRANSITION_DISPUTE = 'transition/dispute';
+
+// If nothing is done to disputed transaction it ends up to Canceled state
+export const TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED = 'transition/cancel-system-from-disputed';
+
+// Operator can cancel disputed transaction manually
+export const TRANSITION_CANCEL_FROM_DISPUTED = 'transition/cancel-from-disputed';
+
+// Operator can mark the disputed transaction as received
+export const TRANSITION_MARK_RECEIVED_FROM_DISPUTED = 'transition/mark-received-from-disputed';
 
 // Reviews are given through transaction transitions. Review 1 can be
 // by provider or customer, and review 2 will be the other party of
@@ -86,11 +103,11 @@ const STATE_INITIAL = 'initial';
 const STATE_ENQUIRY = 'enquiry';
 const STATE_PENDING_PAYMENT = 'pending-payment';
 const STATE_PAYMENT_EXPIRED = 'payment-expired';
-const STATE_PREAUTHORIZED = 'preauthorized';
-const STATE_DECLINED = 'declined';
-const STATE_ACCEPTED = 'accepted';
-const STATE_CANCELED = 'canceled';
+const STATE_PURCHASED = 'purchased';
 const STATE_DELIVERED = 'delivered';
+const STATE_RECEIVED = 'received';
+const STATE_DISPUTED = 'disputed';
+const STATE_CANCELED = 'canceled';
 const STATE_REVIEWED = 'reviewed';
 const STATE_REVIEWED_BY_CUSTOMER = 'reviewed-by-customer';
 const STATE_REVIEWED_BY_PROVIDER = 'reviewed-by-provider';
@@ -108,7 +125,7 @@ const stateDescription = {
   // id is defined only to support Xstate format.
   // However if you have multiple transaction processes defined,
   // it is best to keep them in sync with transaction process aliases.
-  id: 'flex-default-process/release-1',
+  id: 'flex-product-default-process/release-1',
 
   // This 'initial' state is a starting point for new transaction
   initial: STATE_INITIAL,
@@ -130,29 +147,39 @@ const stateDescription = {
     [STATE_PENDING_PAYMENT]: {
       on: {
         [TRANSITION_EXPIRE_PAYMENT]: STATE_PAYMENT_EXPIRED,
-        [TRANSITION_CONFIRM_PAYMENT]: STATE_PREAUTHORIZED,
+        [TRANSITION_CONFIRM_PAYMENT]: STATE_PURCHASED,
       },
     },
 
     [STATE_PAYMENT_EXPIRED]: {},
-    [STATE_PREAUTHORIZED]: {
+    [STATE_PURCHASED]: {
       on: {
-        [TRANSITION_DECLINE]: STATE_DECLINED,
-        [TRANSITION_EXPIRE]: STATE_DECLINED,
-        [TRANSITION_ACCEPT]: STATE_ACCEPTED,
-      },
-    },
-
-    [STATE_DECLINED]: {},
-    [STATE_ACCEPTED]: {
-      on: {
-        [TRANSITION_CANCEL]: STATE_CANCELED,
-        [TRANSITION_COMPLETE]: STATE_DELIVERED,
+        [TRANSITION_MARK_DELIVERED]: STATE_DELIVERED,
+        [TRANSITION_MARK_RECEIVED_FROM_PURCHASED]: STATE_RECEIVED,
+        [TRANSITION_CANCEL_SYSTEM]: STATE_CANCELED,
+        [TRANSITION_CANCEL_OPERATOR]: STATE_CANCELED,
       },
     },
 
     [STATE_CANCELED]: {},
+
     [STATE_DELIVERED]: {
+      on: {
+        [TRANSITION_MARK_RECEIVED]: STATE_RECEIVED,
+        [TRANSITION_AUTO_COMPLETE]: STATE_RECEIVED,
+        [TRANSITION_DISPUTE]: STATE_DISPUTED,
+      },
+    },
+
+    [STATE_DISPUTED]: {
+      on: {
+        [TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED]: STATE_CANCELED,
+        [TRANSITION_CANCEL_FROM_DISPUTED]: STATE_CANCELED,
+        [TRANSITION_MARK_RECEIVED_FROM_DISPUTED]: STATE_RECEIVED,
+      },
+    },
+
+    [STATE_RECEIVED]: {
       on: {
         [TRANSITION_EXPIRE_REVIEW_PERIOD]: STATE_REVIEWED,
         [TRANSITION_REVIEW_1_BY_CUSTOMER]: STATE_REVIEWED_BY_CUSTOMER,
@@ -209,9 +236,10 @@ const getTransitionsToStateFn = stateDesc => state =>
 // Get all the transitions that lead to specified state.
 const getTransitionsToState = getTransitionsToStateFn(stateDescription);
 
+// TODO needed for NOTIFICATION BADGE!
 // This is needed to fetch transactions that need response from provider.
 // I.e. transactions which provider needs to accept or decline
-export const transitionsToRequested = getTransitionsToState(STATE_PREAUTHORIZED);
+export const transitionsToRequested = []; //getTransitionsToState(STATE_PREAUTHORIZED);
 
 /**
  * Helper functions to figure out if transaction is in a specific state.
@@ -229,22 +257,26 @@ export const txIsPaymentPending = tx =>
 export const txIsPaymentExpired = tx =>
   getTransitionsToState(STATE_PAYMENT_EXPIRED).includes(txLastTransition(tx));
 
-// Note: state name used in Marketplace API docs (and here) is actually preauthorized
-// However, word "requested" is used in many places so that we decided to keep it.
-export const txIsRequested = tx =>
-  getTransitionsToState(STATE_PREAUTHORIZED).includes(txLastTransition(tx));
-
-export const txIsAccepted = tx =>
-  getTransitionsToState(STATE_ACCEPTED).includes(txLastTransition(tx));
-
-export const txIsDeclined = tx =>
-  getTransitionsToState(STATE_DECLINED).includes(txLastTransition(tx));
+export const txIsPurchased = tx =>
+  getTransitionsToState(STATE_PURCHASED).includes(txLastTransition(tx));
 
 export const txIsCanceled = tx =>
   getTransitionsToState(STATE_CANCELED).includes(txLastTransition(tx));
 
 export const txIsDelivered = tx =>
   getTransitionsToState(STATE_DELIVERED).includes(txLastTransition(tx));
+
+export const txIsDisputed = tx =>
+  getTransitionsToState(STATE_DISPUTED).includes(txLastTransition(tx));
+
+export const txIsReceived = tx =>
+  getTransitionsToState(STATE_RECEIVED).includes(txLastTransition(tx));
+
+export const txIsReviewedByCustomer = tx =>
+  getTransitionsToState(STATE_REVIEWED_BY_CUSTOMER).includes(txLastTransition(tx));
+
+export const txIsReviewedByProvider = tx =>
+  getTransitionsToState(STATE_REVIEWED_BY_PROVIDER).includes(txLastTransition(tx));
 
 const firstReviewTransitions = [
   ...getTransitionsToState(STATE_REVIEWED_BY_CUSTOMER),
@@ -272,8 +304,8 @@ const hasPassedTransition = (transitionName, tx) =>
 const hasPassedStateFn = state => tx =>
   getTransitionsToState(state).filter(t => hasPassedTransition(t, tx)).length > 0;
 
-export const txHasBeenAccepted = hasPassedStateFn(STATE_ACCEPTED);
-export const txHasBeenDelivered = hasPassedStateFn(STATE_DELIVERED);
+// Helper function to check if the transaction has passed a certain state
+export const txHasBeenReceived = hasPassedStateFn(STATE_RECEIVED);
 
 /**
  * Other transaction related utility functions
@@ -298,12 +330,17 @@ export const getReview2Transition = isCustomer =>
 // The first transition and most of the expiration transitions made by system are not relevant
 export const isRelevantPastTransition = transition => {
   return [
-    TRANSITION_ACCEPT,
-    TRANSITION_CANCEL,
-    TRANSITION_COMPLETE,
     TRANSITION_CONFIRM_PAYMENT,
-    TRANSITION_DECLINE,
-    TRANSITION_EXPIRE,
+    TRANSITION_CANCEL_SYSTEM,
+    TRANSITION_CANCEL_OPERATOR,
+    TRANSITION_MARK_RECEIVED_FROM_PURCHASED,
+    TRANSITION_MARK_DELIVERED,
+    TRANSITION_DISPUTE,
+    TRANSITION_MARK_RECEIVED,
+    TRANSITION_AUTO_COMPLETE,
+    TRANSITION_MARK_RECEIVED_FROM_DISPUTED,
+    TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED,
+    TRANSITION_CANCEL_FROM_DISPUTED,
     TRANSITION_REVIEW_1_BY_CUSTOMER,
     TRANSITION_REVIEW_1_BY_PROVIDER,
     TRANSITION_REVIEW_2_BY_CUSTOMER,
