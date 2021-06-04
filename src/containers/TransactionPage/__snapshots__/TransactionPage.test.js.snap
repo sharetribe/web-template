@@ -23,8 +23,6 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
         className="root"
       >
         <injectIntl(TransactionPanelComponent)
-          acceptInProgress={false}
-          acceptSaleError={null}
           className="tabContent tabContentVisible"
           currentUser={
             Object {
@@ -47,8 +45,6 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
               "type": "currentUser",
             }
           }
-          declineInProgress={false}
-          declineSaleError={null}
           fetchLineItemsError={null}
           fetchLineItemsInProgress={false}
           fetchMessagesError={null}
@@ -56,10 +52,26 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
           fetchTimeSlotsError={null}
           initialMessageFailed={false}
           lineItems={null}
+          markDeliveredProps={
+            Object {
+              "buttonText": "TransactionPage.markDelivered.actionButton",
+              "error": undefined,
+              "errorText": "TransactionPage.markDelivered.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
+          markReceivedFromPurchaseProps={
+            Object {
+              "buttonText": "TransactionPage.markReceivedFromPurchase.actionButton",
+              "error": null,
+              "errorText": "TransactionPage.markReceivedFromPurchase.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
           messages={Array []}
           oldestMessagePageFetched={0}
-          onAcceptSale={[Function]}
-          onDeclineSale={[Function]}
           onFetchTransactionLineItems={[Function]}
           onSendMessage={[Function]}
           onShowMoreMessages={[Function]}
@@ -87,11 +99,11 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
                       "amount": 1000,
                       "currency": "USD",
                     },
-                    "quantity": "3",
+                    "quantity": "1",
                     "reversal": false,
                     "unitPrice": Money {
                       "_sdkType": "Money",
-                      "amount": 333.3333333333333,
+                      "amount": 1000,
                       "currency": "USD",
                     },
                   },
@@ -134,26 +146,9 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
                     "createdAt": 2017-05-01T00:00:01.000Z,
                     "transition": "transition/confirm-payment",
                   },
-                  Object {
-                    "by": "provider",
-                    "createdAt": 2017-06-01T00:00:00.000Z,
-                    "transition": "transition/accept",
-                  },
                 ],
               },
-              "booking": Object {
-                "attributes": Object {
-                  "displayEnd": 2017-06-13T00:00:00.000Z,
-                  "displayStart": 2017-06-10T00:00:00.000Z,
-                  "end": 2017-06-13T00:00:00.000Z,
-                  "start": 2017-06-10T00:00:00.000Z,
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "booking1",
-                },
-                "type": "booking",
-              },
+              "booking": null,
               "customer": Object {
                 "attributes": Object {
                   "banned": false,
@@ -253,8 +248,6 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
         className="root"
       >
         <injectIntl(TransactionPanelComponent)
-          acceptInProgress={false}
-          acceptSaleError={null}
           className="tabContent tabContentVisible"
           currentUser={
             Object {
@@ -277,18 +270,32 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
               "type": "currentUser",
             }
           }
-          declineInProgress={false}
-          declineSaleError={null}
           fetchLineItemsError={null}
           fetchLineItemsInProgress={false}
           fetchMessagesError={null}
           fetchTimeSlotsError={null}
           initialMessageFailed={false}
           lineItems={null}
+          markDeliveredProps={
+            Object {
+              "buttonText": "TransactionPage.markDelivered.actionButton",
+              "error": undefined,
+              "errorText": "TransactionPage.markDelivered.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
+          markReceivedFromPurchaseProps={
+            Object {
+              "buttonText": "TransactionPage.markReceivedFromPurchase.actionButton",
+              "error": null,
+              "errorText": "TransactionPage.markReceivedFromPurchase.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
           messages={Array []}
           oldestMessagePageFetched={0}
-          onAcceptSale={[Function]}
-          onDeclineSale={[Function]}
           onFetchTransactionLineItems={[Function]}
           onSendMessage={[Function]}
           onShowMoreMessages={[Function]}
@@ -316,11 +323,11 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
                       "amount": 1000,
                       "currency": "USD",
                     },
-                    "quantity": "3",
+                    "quantity": "1",
                     "reversal": false,
                     "unitPrice": Money {
                       "_sdkType": "Money",
-                      "amount": 333.3333333333333,
+                      "amount": 1000,
                       "currency": "USD",
                     },
                   },
@@ -363,26 +370,9 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
                     "createdAt": 2017-05-01T00:00:01.000Z,
                     "transition": "transition/confirm-payment",
                   },
-                  Object {
-                    "by": "provider",
-                    "createdAt": 2017-06-01T00:00:00.000Z,
-                    "transition": "transition/accept",
-                  },
                 ],
               },
-              "booking": Object {
-                "attributes": Object {
-                  "displayEnd": 2017-06-13T00:00:00.000Z,
-                  "displayStart": 2017-06-10T00:00:00.000Z,
-                  "end": 2017-06-13T00:00:00.000Z,
-                  "start": 2017-06-10T00:00:00.000Z,
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "booking1",
-                },
-                "type": "booking",
-              },
+              "booking": null,
               "customer": Object {
                 "attributes": Object {
                   "banned": false,
