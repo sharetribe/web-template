@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { bool, func, shape, string } from 'prop-types';
 import { compose } from 'redux';
-import { Form as FinalForm, FormSpy } from 'react-final-form';
+import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 // Import configs and util modules
@@ -49,12 +49,9 @@ export const EditListingDeliveryFormComponent = props => (
         values,
       } = formRenderProps;
 
-      const [shippingEnabled, setShippingEnabled] = useState(
-        values.deliveryOptions && values.deliveryOptions.includes('shipping')
-      );
-      const [pickupEnabled, setPickupEnabled] = useState(
-        values.deliveryOptions && values.deliveryOptions.includes('pickup')
-      );
+      const shippingEnabled = values.deliveryOptions && values.deliveryOptions.includes('shipping');
+
+      const pickupEnabled = values.deliveryOptions && values.deliveryOptions.includes('pickup');
 
       const titleRequiredMessage = intl.formatMessage({ id: 'EditListingDeliveryForm.address' });
       const addressPlaceholderMessage = intl.formatMessage({
@@ -98,16 +95,6 @@ export const EditListingDeliveryFormComponent = props => (
       const submitDisabled =
         invalid || disabled || submitInProgress || (!shippingEnabled && !pickupEnabled);
 
-      const onChange = formState => {
-        const { values, errors } = formState;
-        const shippingSelected =
-          values.deliveryOptions && values.deliveryOptions.includes('shipping');
-        const pickupSelected = values.deliveryOptions && values.deliveryOptions.includes('pickup');
-
-        setShippingEnabled(shippingSelected);
-        setPickupEnabled(pickupSelected);
-      };
-
       const shippingLabel = intl.formatMessage({ id: 'EditListingDeliveryForm.shippingLabel' });
 
       const pickupLabel = intl.formatMessage({ id: 'EditListingDeliveryForm.pickupLabel' });
@@ -127,7 +114,6 @@ export const EditListingDeliveryFormComponent = props => (
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
-          <FormSpy onChange={onChange} subscription={{ values: true, errors: true }} />
           <FieldCheckbox
             id="pickup"
             className={css.deliveryCheckbox}
