@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  createBooking,
   createCurrentUser,
   createListing,
   createTransaction,
@@ -21,12 +20,6 @@ describe('TransactionPage - Sale', () => {
     const transaction = createTransaction({
       id: txId,
       lastTransition: TRANSITION_CONFIRM_PAYMENT,
-      booking: createBooking('booking1', {
-        start,
-        end,
-        displayStart: start,
-        displayEnd: end,
-      }),
       listing: createListing('listing1'),
       customer: createUser('customer1'),
       provider: createUser('provider1'),
@@ -37,10 +30,10 @@ describe('TransactionPage - Sale', () => {
       transactionRole: 'provider',
 
       currentUser: createCurrentUser('provider1'),
-      acceptInProgress: false,
-      declineInProgress: false,
-      onAcceptSale: noop,
-      onDeclineSale: noop,
+      markReceivedFromPurchaseInProgress: false,
+      onMarkReceivedFromPurchase: noop,
+      markDeliveredInProgress: false,
+      onMarkDelivered: noop,
       scrollingDisabled: false,
       callSetInitialValues: noop,
       transaction,
@@ -81,12 +74,6 @@ describe('TransactionPage - Order', () => {
     const transaction = createTransaction({
       id: txId,
       lastTransition: TRANSITION_CONFIRM_PAYMENT,
-      booking: createBooking('booking1', {
-        start,
-        end,
-        displayStart: start,
-        displayEnd: end,
-      }),
       listing: createListing('listing1'),
       customer: createUser('customer1'),
       provider: createUser('provider1'),
@@ -114,10 +101,10 @@ describe('TransactionPage - Order', () => {
       fetchLineItemsInProgress: false,
       intl: fakeIntl,
 
-      acceptInProgress: false,
-      declineInProgress: false,
-      onAcceptSale: noop,
-      onDeclineSale: noop,
+      markReceivedFromPurchaseInProgress: false,
+      onMarkReceivedFromPurchase: noop,
+      markDeliveredInProgress: false,
+      onMarkDelivered: noop,
 
       location: {
         pathname: `/order/${txId}/details`,
