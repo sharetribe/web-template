@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { array, arrayOf, bool, func, number, oneOf, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -32,8 +32,8 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import TransactionPanel from './TransactionPanel/TransactionPanel';
 
 import {
-  acceptSale,
-  declineSale,
+  markReceivedFromPurchase,
+  markDelivered,
   sendMessage,
   sendReview,
   fetchMoreMessages,
@@ -70,12 +70,12 @@ export const TransactionPageComponent = props => {
     sendReviewInProgress,
     transaction,
     transactionRole,
-    acceptInProgress,
-    acceptSaleError,
-    declineInProgress,
-    declineSaleError,
-    onAcceptSale,
-    onDeclineSale,
+    markReceivedFromPurchaseInProgress,
+    markReceivedFromPurchaseError,
+    onMarkReceivedFromPurchase,
+    markDeliveredInProgress,
+    markDeliveredError,
+    onMarkDelivered,
     timeSlots,
     fetchTimeSlotsError,
     processTransitions,
@@ -242,12 +242,24 @@ export const TransactionPageComponent = props => {
       onSendMessage={onSendMessage}
       onSendReview={onSendReview}
       transactionRole={transactionRole}
-      onAcceptSale={onAcceptSale}
-      onDeclineSale={onDeclineSale}
-      acceptInProgress={acceptInProgress}
-      declineInProgress={declineInProgress}
-      acceptSaleError={acceptSaleError}
-      declineSaleError={declineSaleError}
+      markReceivedFromPurchaseProps={{
+        inProgress: markReceivedFromPurchaseInProgress,
+        error: markReceivedFromPurchaseError,
+        onTransition: () => onMarkReceivedFromPurchase(currentTransaction.id),
+        buttonText: intl.formatMessage({
+          id: 'TransactionPage.markReceivedFromPurchase.actionButton',
+        }),
+        errorText: intl.formatMessage({
+          id: 'TransactionPage.markReceivedFromPurchase.actionError',
+        }),
+      }}
+      markDeliveredProps={{
+        inProgress: markDeliveredInProgress,
+        error: markDeliveredError,
+        onTransition: () => onMarkDelivered(currentTransaction.id),
+        buttonText: intl.formatMessage({ id: 'TransactionPage.markDelivered.actionButton' }),
+        errorText: intl.formatMessage({ id: 'TransactionPage.markDelivered.actionError' }),
+      }}
       nextTransitions={processTransitions}
       onSubmitBookingRequest={handleSubmitBookingRequest}
       timeSlots={timeSlots}
@@ -284,8 +296,7 @@ export const TransactionPageComponent = props => {
 TransactionPageComponent.defaultProps = {
   currentUser: null,
   fetchTransactionError: null,
-  acceptSaleError: null,
-  declineSaleError: null,
+  markReceivedFromPurchaseError: null,
   transaction: null,
   fetchMessagesError: null,
   initialMessageFailedToTransaction: null,
@@ -297,19 +308,17 @@ TransactionPageComponent.defaultProps = {
   fetchLineItemsError: null,
 };
 
-const { bool, func, oneOf, shape, string, array, arrayOf, number } = PropTypes;
-
 TransactionPageComponent.propTypes = {
   params: shape({ id: string }).isRequired,
   transactionRole: oneOf([PROVIDER, CUSTOMER]).isRequired,
   currentUser: propTypes.currentUser,
   fetchTransactionError: propTypes.error,
-  acceptSaleError: propTypes.error,
-  declineSaleError: propTypes.error,
-  acceptInProgress: bool.isRequired,
-  declineInProgress: bool.isRequired,
-  onAcceptSale: func.isRequired,
-  onDeclineSale: func.isRequired,
+  markReceivedFromPurchaseInProgress: bool.isRequired,
+  markReceivedFromPurchaseError: propTypes.error,
+  onMarkReceivedFromPurchase: func.isRequired,
+  markDeliveredInProgress: bool.isRequired,
+  markDeliveredError: propTypes.error,
+  onMarkDelivered: func.isRequired,
   scrollingDisabled: bool.isRequired,
   transaction: propTypes.transaction,
   fetchMessagesError: propTypes.error,
@@ -348,10 +357,10 @@ TransactionPageComponent.propTypes = {
 const mapStateToProps = state => {
   const {
     fetchTransactionError,
-    acceptSaleError,
-    declineSaleError,
-    acceptInProgress,
-    declineInProgress,
+    markReceivedFromPurchaseInProgress,
+    markReceivedFromPurchaseError,
+    markDeliveredInProgress,
+    markDeliveredError,
     transactionRef,
     fetchMessagesInProgress,
     fetchMessagesError,
@@ -379,10 +388,10 @@ const mapStateToProps = state => {
   return {
     currentUser,
     fetchTransactionError,
-    acceptSaleError,
-    declineSaleError,
-    acceptInProgress,
-    declineInProgress,
+    markReceivedFromPurchaseInProgress,
+    markReceivedFromPurchaseError,
+    markDeliveredInProgress,
+    markDeliveredError,
     scrollingDisabled: isScrollingDisabled(state),
     transaction,
     fetchMessagesInProgress,
@@ -407,8 +416,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAcceptSale: transactionId => dispatch(acceptSale(transactionId)),
-    onDeclineSale: transactionId => dispatch(declineSale(transactionId)),
+    onMarkReceivedFromPurchase: transactionId => dispatch(markReceivedFromPurchase(transactionId)),
+    onMarkDelivered: transactionId => dispatch(markDelivered(transactionId)),
     onShowMoreMessages: txId => dispatch(fetchMoreMessages(txId)),
     onSendMessage: (txId, message) => dispatch(sendMessage(txId, message)),
     onManageDisableScrolling: (componentId, disableScrolling) =>
