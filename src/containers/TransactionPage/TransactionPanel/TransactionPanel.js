@@ -5,14 +5,15 @@ import classNames from 'classnames';
 import config from '../../../config';
 import {
   TRANSITION_REQUEST_PAYMENT_AFTER_ENQUIRY,
-  txIsAccepted,
+  txHasBeenReceived,
   txIsCanceled,
-  txIsDeclined,
+  txIsDelivered,
+  txIsDisputed,
   txIsEnquired,
   txIsPaymentExpired,
   txIsPaymentPending,
-  txIsRequested,
-  txHasBeenDelivered,
+  txIsPurchased,
+  txIsReceived,
 } from '../../../util/transaction';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes } from '../../../util/types';
@@ -40,11 +41,11 @@ import PanelHeading, {
   HEADING_ENQUIRED,
   HEADING_PAYMENT_PENDING,
   HEADING_PAYMENT_EXPIRED,
-  HEADING_REQUESTED,
-  HEADING_ACCEPTED,
-  HEADING_DECLINED,
   HEADING_CANCELED,
+  HEADING_PURCHASED,
   HEADING_DELIVERED,
+  HEADING_DISPUTED,
+  HEADING_RECEIVED,
 } from './PanelHeading';
 
 import css from './TransactionPanel.module.css';
@@ -229,33 +230,37 @@ export class TransactionPanelComponent extends Component {
           headingState: HEADING_PAYMENT_EXPIRED,
           showDetailCardHeadings: isCustomer,
         };
-      } else if (txIsRequested(tx)) {
+      } else if (txIsPurchased(tx)) {
         return {
-          headingState: HEADING_REQUESTED,
+          headingState: HEADING_PURCHASED,
           showDetailCardHeadings: isCustomer,
-          showSaleButtons: isProvider && !isCustomerBanned,
-        };
-      } else if (txIsAccepted(tx)) {
-        return {
-          headingState: HEADING_ACCEPTED,
-          showDetailCardHeadings: isCustomer,
-          showAddress: isCustomer,
-        };
-      } else if (txIsDeclined(tx)) {
-        return {
-          headingState: HEADING_DECLINED,
-          showDetailCardHeadings: isCustomer,
+          showActionButtons: true,
+          primaryButtonProps: isCustomer ? markReceivedFromPurchaseProps : markDeliveredProps,
         };
       } else if (txIsCanceled(tx)) {
         return {
           headingState: HEADING_CANCELED,
           showDetailCardHeadings: isCustomer,
         };
-      } else if (txHasBeenDelivered(tx)) {
+      } else if (txIsDelivered(tx)) {
+        // const primaryButtonPropsMaybe = isCustomer ? { primaryButtonProps: markReceived } : {};
+        // const secondaryButtonPropsMaybe = isCustomer ? { secondaryButtonProps: dispute } : {};
         return {
           headingState: HEADING_DELIVERED,
           showDetailCardHeadings: isCustomer,
-          showAddress: isCustomer,
+          // showActionButtons: isCustomer,
+          // ...primaryButtonPropsMaybe,
+          // ...secondaryButtonPropsMaybe,
+        };
+      } else if (txIsDisputed(tx)) {
+        return {
+          headingState: HEADING_DISPUTED,
+          showDetailCardHeadings: isCustomer,
+        };
+      } else if (txIsReceived(tx)) {
+        return {
+          headingState: HEADING_RECEIVED,
+          showDetailCardHeadings: isCustomer,
         };
       } else {
         return { headingState: 'unknown' };
