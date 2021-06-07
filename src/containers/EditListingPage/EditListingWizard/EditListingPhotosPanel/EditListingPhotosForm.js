@@ -6,13 +6,20 @@ import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 
 // Import configs and util modules
+import config from '../../../../config';
 import { FormattedMessage, intlShape, injectIntl } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import { nonEmptyArray, composeValidators } from '../../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../../util/errors';
 
 // Import shared components
-import { AddImages, Button, Form, ValidationError } from '../../../../components';
+import {
+  AddImages,
+  Button,
+  Form,
+  ValidationError,
+  AspectRatioWrapper,
+} from '../../../../components';
 
 // Import modules from this directory
 import css from './EditListingPhotosForm.module.css';
@@ -132,6 +139,8 @@ export class EditListingPhotosFormComponent extends Component {
 
           const classes = classNames(css.root, className);
 
+          const { aspectWidth = 1, aspectHeight = 1 } = config.listing;
+
           return (
             <Form
               className={classes}
@@ -175,14 +184,14 @@ export class EditListingPhotosFormComponent extends Component {
                     const inputProps = { accept, id: name, name, onChange, type };
                     return (
                       <div className={css.addImageWrapper}>
-                        <div className={css.aspectRatioWrapper}>
+                        <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
                           {fieldDisabled ? null : (
                             <input {...inputProps} className={css.addImageInput} />
                           )}
                           <label htmlFor={name} className={css.addImage}>
                             {label}
                           </label>
-                        </div>
+                        </AspectRatioWrapper>
                       </div>
                     );
                   }}
