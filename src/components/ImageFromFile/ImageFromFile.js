@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { Promised } from '../../components';
+
+import config from '../../config';
+import { AspectRatioWrapper, Promised } from '../../components';
 
 import css from './ImageFromFile.module.css';
 
@@ -32,7 +34,8 @@ class ImageFromFile extends Component {
   render() {
     const { className, rootClassName, aspectRatioClassName, file, id, children } = this.props;
     const classes = classNames(rootClassName || css.root, className);
-    const aspectRatioClasses = aspectRatioClassName || css.aspectWrapper;
+    const { aspectWidth = 1, aspectHeight = 1 } = config.listing;
+
     return (
       <Promised
         key={id}
@@ -41,9 +44,9 @@ class ImageFromFile extends Component {
           return (
             <div className={classes}>
               <div className={css.threeToTwoWrapper}>
-                <div className={aspectRatioClasses}>
+                <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
                   <img src={dataURL} alt={file.name} className={css.rootForImage} />
-                </div>
+                </AspectRatioWrapper>
               </div>
               {children}
             </div>

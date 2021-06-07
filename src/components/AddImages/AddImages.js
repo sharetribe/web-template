@@ -10,7 +10,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { ImageFromFile, ResponsiveImage, IconSpinner } from '../../components';
+import config from '../../config';
+import { AspectRatioWrapper, ImageFromFile, ResponsiveImage, IconSpinner } from '../../components';
 
 import css from './AddImages.module.css';
 import RemoveImageButton from './RemoveImageButton';
@@ -21,6 +22,8 @@ const ThumbnailWrapper = props => {
     e.stopPropagation();
     onRemoveImage(image.id);
   };
+
+  const { aspectWidth = 1, aspectHeight = 1 } = config.listing;
 
   if (image.file) {
     // Add remove button only when the image has been uploaded and can be removed
@@ -49,14 +52,14 @@ const ThumbnailWrapper = props => {
     return (
       <div className={classes}>
         <div className={css.threeToTwoWrapper}>
-          <div className={css.aspectWrapper}>
+          <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
             <ResponsiveImage
               rootClassName={css.rootForImage}
               image={image}
               alt={savedImageAltText}
               variants={['landscape-crop', 'landscape-crop2x']}
             />
-          </div>
+          </AspectRatioWrapper>
           <RemoveImageButton onClick={handleRemoveClick} />
         </div>
       </div>
