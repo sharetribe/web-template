@@ -48,11 +48,6 @@
   }
 }
 
-/* Firefox doesn't support image aspect ratio inside flexbox */
-.aspectRatioWrapper {
-  padding-bottom: calc(100% * (2 / 3));
-}
-
 .addImage {
   /* Layout */
   /* Maintain aspect ratio */
