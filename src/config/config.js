@@ -27,6 +27,9 @@ const mainSearchType = 'keywords';
 // 'map' & 'list'
 const searchPageVariant = 'list';
 
+// ListingPage has 2 variants: 'booking' & 'product'
+const listingPageVariant = 'product';
+
 // Should search results be ordered by distance to origin.
 // NOTE 1: This doesn't affect if the main search type is 'keywords'
 // NOTE 2: If this is set to true add parameter 'origin' to every location in default-location-searches.js
@@ -234,6 +237,7 @@ const config = {
   },
   mainSearchType,
   searchPageVariant,
+  listingPageVariant,
   sortSearchByDistance,
   currency,
   currencyConfig,
