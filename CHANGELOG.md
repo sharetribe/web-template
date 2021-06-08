@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [fix] Fix padding problem in EditListingWizard by handling the paddings in one place.
+  [#34](https://github.com/sharetribe/ftw-product/pull/34)
 - [change] Use AspectRatoWrapper on EditListingPhotosPanel.
   [#33](https://github.com/sharetribe/ftw-product/pull/33)
 - [add] Add EditListingDeliveryPanel. [#29](https://github.com/sharetribe/ftw-product/pull/29)
