@@ -1,16 +1,15 @@
 # Sharetribe Flex Template for Web
 
-[![CircleCI](https://circleci.com/gh/sharetribe/ftw-daily.svg?style=svg)](https://circleci.com/gh/sharetribe/ftw-daily)
+[![CircleCI](https://circleci.com/gh/sharetribe/ftw-product.svg?style=svg)](https://circleci.com/gh/sharetribe/ftw-product)
 
 This is a template web application for a Sharetribe Flex marketplace ready to be extended and
 customized. It is based on an application bootstrapped with
 [create-react-app](https://github.com/facebookincubator/create-react-app) with some additions,
 namely server side rendering and a custom CSS setup.
 
-> Note: We also have [FTW-hourly](https://github.com/sharetribe/ftw-hourly) for time-based
-> processes. If you are taking time-based booking process into use, you should consider using it
-> instead. You can read more from the related
-> [Flex Docs article](https://www.sharetribe.com/docs/background/time-based-template)
+> Note: We also have [FTW-daily](https://github.com/sharetribe/ftw-daily) for day-based
+> processes and [FTW-hourly](https://github.com/sharetribe/ftw-hourly) for time-based
+> processes. You can learn more on [Flex Docs](https://www.sharetribe.com/docs/ftw-introduction/how-to-customize-ftw/#choose-a-template)
 
 ## Quick start
 
@@ -18,8 +17,8 @@ If you just want to get the app running quickly to test it out, first install
 [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/), and follow along:
 
 ```sh
-git clone git@github.com:sharetribe/ftw-daily.git      # clone this repository
-cd ftw-daily/                                          # change to the cloned directory
+git clone git@github.com:sharetribe/ftw-product.git      # clone this repository
+cd ftw-product/                                          # change to the cloned directory
 yarn install                                                   # install dependencies
 yarn run config                                                # add the mandatory env vars to your local config
 yarn run dev                                                   # start the dev server, this will open a browser in localhost:3000
