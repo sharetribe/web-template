@@ -7,13 +7,13 @@ import classNames from 'classnames';
 // Import configs and util modules
 import config from '../../../../config';
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
-import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes } from '../../../../util/types';
+import { propTypes } from '../../../../util/types';
 import * as validators from '../../../../util/validators';
 import { formatMoney } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 
 // Import shared components
-import { Button, Form, FieldCurrencyInput } from '../../../../components';
+import { Button, Form, FieldCurrencyInput, FieldTextInput } from '../../../../components';
 
 // Import modules from this directory
 import css from './EditListingPricingForm.module.css';
@@ -39,18 +39,8 @@ export const EditListingPricingFormComponent = props => (
         fetchErrors,
       } = formRenderProps;
 
-      const unitType = config.bookingUnitType;
-      const isNightly = unitType === LINE_ITEM_NIGHT;
-      const isDaily = unitType === LINE_ITEM_DAY;
-
-      const translationKey = isNightly
-        ? 'EditListingPricingForm.pricePerNight'
-        : isDaily
-        ? 'EditListingPricingForm.pricePerDay'
-        : 'EditListingPricingForm.pricePerUnit';
-
       const pricePerUnitMessage = intl.formatMessage({
-        id: translationKey,
+        id: 'EditListingPricingForm.pricePerProduct',
       });
 
       const pricePlaceholderMessage = intl.formatMessage({
@@ -78,6 +68,10 @@ export const EditListingPricingFormComponent = props => (
         ? validators.composeValidators(priceRequired, minPriceRequired)
         : priceRequired;
 
+      const stockMessage = intl.formatMessage({
+        id: 'EditListingPricingForm.stockLabel',
+      });
+
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
@@ -99,12 +93,21 @@ export const EditListingPricingFormComponent = props => (
           <FieldCurrencyInput
             id="price"
             name="price"
-            className={css.priceInput}
+            className={css.input}
             autoFocus={autoFocus}
             label={pricePerUnitMessage}
             placeholder={pricePlaceholderMessage}
             currencyConfig={config.currencyConfig}
             validate={priceValidators}
+          />
+
+          <FieldTextInput
+            className={css.input}
+            id="stock"
+            name="stock"
+            label={stockMessage}
+            type="number"
+            min={0}
           />
 
           <Button
