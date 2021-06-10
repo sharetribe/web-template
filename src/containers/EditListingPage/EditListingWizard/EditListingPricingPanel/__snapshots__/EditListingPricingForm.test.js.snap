@@ -8,12 +8,12 @@ exports[`EditListingPricingForm matches snapshot 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="priceInput"
+    className="input"
   >
     <label
       htmlFor="price"
     >
-      EditListingPricingForm.pricePerNight
+      EditListingPricingForm.pricePerProduct
     </label>
     <input
       className="input"
@@ -23,6 +23,26 @@ exports[`EditListingPricingForm matches snapshot 1`] = `
       onFocus={[Function]}
       placeholder="EditListingPricingForm.priceInputPlaceholder"
       type="text"
+      value=""
+    />
+  </div>
+  <div
+    className="root input"
+  >
+    <label
+      htmlFor="stock"
+    >
+      EditListingPricingForm.stockLabel
+    </label>
+    <input
+      className="input inputSuccess"
+      id="stock"
+      min={0}
+      name="stock"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      type="number"
       value=""
     />
   </div>
