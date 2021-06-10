@@ -44,7 +44,11 @@
 
   @media (--viewportLarge) {
     margin: 80px auto 0 auto;
-    max-width: 62.5vw;
+    max-width: 1128px;
+  }
+
+  @media (--viewportXLarge) {
+    max-width: 1056px;
   }
 }
 
