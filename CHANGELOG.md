@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Add UI for adjusting stock to pricing panel in EditListingWizard. This doesn't store any
+  data related to stock yet! [#39](https://github.com/sharetribe/ftw-product/pull/39)
 - [fix] Fix padding problem in EditListingWizard by handling the paddings in one place.
   [#34](https://github.com/sharetribe/ftw-product/pull/34)
 - [change] Use AspectRatoWrapper on EditListingPhotosPanel.
