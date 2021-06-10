@@ -27,6 +27,7 @@ import {
 import { createResourceLocatorString, findRouteByRouteName } from '../../../util/routes';
 
 import {
+  AspectRatioWrapper,
   InlineTextButton,
   Menu,
   MenuLabel,
@@ -176,6 +177,13 @@ export const ManageListingCardComponent = props => {
     ? 'ManageListingCard.perDay'
     : 'ManageListingCard.perUnit';
 
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+  const variants = firstImage
+    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.indexOf(variantPrefix) >= 0)
+    : [];
+
+  console.log('variants', variants, currentListing.images);
+
   return (
     <div className={classes}>
       <div
@@ -195,15 +203,15 @@ export const ManageListingCardComponent = props => {
         onMouseOver={onOverListingLink}
         onTouchStart={onOverListingLink}
       >
-        <div className={css.aspectWrapper}>
+        <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
           <ResponsiveImage
             rootClassName={css.rootForImage}
             alt={title}
             image={firstImage}
-            variants={['landscape-crop', 'landscape-crop2x']}
+            variants={variants}
             sizes={renderSizes}
           />
-        </div>
+        </AspectRatioWrapper>
         <div className={classNames(css.menuOverlayWrapper, { [css.menuOverlayOpen]: isMenuOpen })}>
           <div className={classNames(css.menuOverlay)} />
           <div className={css.menuOverlayContent}>
