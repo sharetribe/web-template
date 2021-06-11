@@ -118,7 +118,7 @@ const Footer = props => {
                     }}
                     className={css.link}
                   >
-                    <FormattedMessage id="Footer.searchBrand1" />
+                    <FormattedMessage id="Footer.link1" />
                   </NamedLink>
                 </li>
                 <li className={css.listItem}>
@@ -129,7 +129,7 @@ const Footer = props => {
                     }}
                     className={css.link}
                   >
-                    <FormattedMessage id="Footer.searchBrand2" />
+                    <FormattedMessage id="Footer.link2" />
                   </NamedLink>
                 </li>
                 <li className={css.listItem}>
@@ -140,7 +140,7 @@ const Footer = props => {
                     }}
                     className={css.link}
                   >
-                    <FormattedMessage id="Footer.searchBrand3" />
+                    <FormattedMessage id="Footer.link3" />
                   </NamedLink>
                 </li>
                 <li className={css.listItem}>
@@ -151,7 +151,7 @@ const Footer = props => {
                     }}
                     className={css.link}
                   >
-                    <FormattedMessage id="Footer.searchBrand4" />
+                    <FormattedMessage id="Footer.link4" />
                   </NamedLink>
                 </li>
                 <li className={css.listItem}>
@@ -162,7 +162,7 @@ const Footer = props => {
                     }}
                     className={css.link}
                   >
-                    <FormattedMessage id="Footer.searchBrand5" />
+                    <FormattedMessage id="Footer.link5" />
                   </NamedLink>
                 </li>
               </ul>
@@ -177,7 +177,7 @@ const Footer = props => {
                     }}
                     className={css.link}
                   >
-                    <FormattedMessage id="Footer.searchBrand6" />
+                    <FormattedMessage id="Footer.link6" />
                   </NamedLink>
                 </li>
                 <li className={css.listItem}>
@@ -188,7 +188,7 @@ const Footer = props => {
                     }}
                     className={css.link}
                   >
-                    <FormattedMessage id="Footer.searchBrand7" />
+                    <FormattedMessage id="Footer.link7" />
                   </NamedLink>
                 </li>
                 <li className={css.listItem}>
@@ -199,7 +199,7 @@ const Footer = props => {
                     }}
                     className={css.link}
                   >
-                    <FormattedMessage id="Footer.searchBrand8" />
+                    <FormattedMessage id="Footer.link8" />
                   </NamedLink>
                 </li>
                 <li className={css.listItem}>
@@ -210,7 +210,7 @@ const Footer = props => {
                     }}
                     className={css.link}
                   >
-                    <FormattedMessage id="Footer.searchBrand9" />
+                    <FormattedMessage id="Footer.link9" />
                   </NamedLink>
                 </li>
                 <li className={css.listItem}>
@@ -221,7 +221,7 @@ const Footer = props => {
                     }}
                     className={css.link}
                   >
-                    <FormattedMessage id="Footer.searchBrand10" />
+                    <FormattedMessage id="Footer.link10" />
                   </NamedLink>
                 </li>
               </ul>
