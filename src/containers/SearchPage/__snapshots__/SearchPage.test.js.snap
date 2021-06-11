@@ -141,16 +141,44 @@ exports[`SearchPageWithList matches snapshot 1`] = `
               "config": Object {
                 "options": Array [
                   Object {
-                    "key": "brand1",
-                    "label": "brand1",
+                    "key": "adidas",
+                    "label": "Adidas",
                   },
                   Object {
-                    "key": "brand2",
-                    "label": "brand2",
+                    "key": "air_jordan",
+                    "label": "Air Jordan",
                   },
                   Object {
-                    "key": "brand3",
-                    "label": "brand3",
+                    "key": "converse",
+                    "label": "Converse",
+                  },
+                  Object {
+                    "key": "new_balance",
+                    "label": "New Balance",
+                  },
+                  Object {
+                    "key": "nike",
+                    "label": "Nike",
+                  },
+                  Object {
+                    "key": "puma",
+                    "label": "Puma",
+                  },
+                  Object {
+                    "key": "ultraboost",
+                    "label": "Ultraboost",
+                  },
+                  Object {
+                    "key": "vans",
+                    "label": "Vans",
+                  },
+                  Object {
+                    "key": "yeezy",
+                    "label": "Yeezy",
+                  },
+                  Object {
+                    "key": "other",
+                    "label": "Other",
                   },
                 ],
                 "schemaType": "enum",
@@ -434,16 +462,44 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                 "config": Object {
                   "options": Array [
                     Object {
-                      "key": "brand1",
-                      "label": "brand1",
+                      "key": "adidas",
+                      "label": "Adidas",
                     },
                     Object {
-                      "key": "brand2",
-                      "label": "brand2",
+                      "key": "air_jordan",
+                      "label": "Air Jordan",
                     },
                     Object {
-                      "key": "brand3",
-                      "label": "brand3",
+                      "key": "converse",
+                      "label": "Converse",
+                    },
+                    Object {
+                      "key": "new_balance",
+                      "label": "New Balance",
+                    },
+                    Object {
+                      "key": "nike",
+                      "label": "Nike",
+                    },
+                    Object {
+                      "key": "puma",
+                      "label": "Puma",
+                    },
+                    Object {
+                      "key": "ultraboost",
+                      "label": "Ultraboost",
+                    },
+                    Object {
+                      "key": "vans",
+                      "label": "Vans",
+                    },
+                    Object {
+                      "key": "yeezy",
+                      "label": "Yeezy",
+                    },
+                    Object {
+                      "key": "other",
+                      "label": "Other",
                     },
                   ],
                   "schemaType": "enum",
