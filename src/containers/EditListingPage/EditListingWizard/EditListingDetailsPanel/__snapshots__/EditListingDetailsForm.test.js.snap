@@ -195,22 +195,64 @@ exports[`EditListingDetailsForm matches snapshot 1`] = `
         EditListingDetailsForm.brandPlaceholder
       </option>
       <option
-        key="brand1"
-        value="brand1"
+        key="adidas"
+        value="adidas"
       >
-        brand1
+        Adidas
       </option>
       <option
-        key="brand2"
-        value="brand2"
+        key="air_jordan"
+        value="air_jordan"
       >
-        brand2
+        Air Jordan
       </option>
       <option
-        key="brand3"
-        value="brand3"
+        key="converse"
+        value="converse"
       >
-        brand3
+        Converse
+      </option>
+      <option
+        key="new_balance"
+        value="new_balance"
+      >
+        New Balance
+      </option>
+      <option
+        key="nike"
+        value="nike"
+      >
+        Nike
+      </option>
+      <option
+        key="puma"
+        value="puma"
+      >
+        Puma
+      </option>
+      <option
+        key="ultraboost"
+        value="ultraboost"
+      >
+        Ultraboost
+      </option>
+      <option
+        key="vans"
+        value="vans"
+      >
+        Vans
+      </option>
+      <option
+        key="yeezy"
+        value="yeezy"
+      >
+        Yeezy
+      </option>
+      <option
+        key="other"
+        value="other"
+      >
+        Other
       </option>
     </select>
   </div>

@@ -113,9 +113,16 @@ export const filters = [
       // Note: label is not added through the translation files
       // to make filter customizations a bit easier.
       options: [
-        { key: 'brand1', label: 'brand1' },
-        { key: 'brand2', label: 'brand2' },
-        { key: 'brand3', label: 'brand3' },
+        { key: 'adidas', label: 'Adidas' },
+        { key: 'air_jordan', label: 'Air Jordan' },
+        { key: 'converse', label: 'Converse' },
+        { key: 'new_balance', label: 'New Balance' },
+        { key: 'nike', label: 'Nike' },
+        { key: 'puma', label: 'Puma' },
+        { key: 'ultraboost', label: 'Ultraboost' },
+        { key: 'vans', label: 'Vans' },
+        { key: 'yeezy', label: 'Yeezy' },
+        { key: 'other', label: 'Other' },
       ],
     },
   },
