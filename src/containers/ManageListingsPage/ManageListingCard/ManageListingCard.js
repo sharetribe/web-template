@@ -136,6 +136,16 @@ export const ManageListingCardComponent = props => {
   const isPendingApproval = state === LISTING_STATE_PENDING_APPROVAL;
   const isClosed = state === LISTING_STATE_CLOSED;
   const isDraft = state === LISTING_STATE_DRAFT;
+
+  // TODO:
+  // When stock features are available make sure this works
+  // or if some other kind of check is needed.
+  // We don't want to show out of stock overlay if the listing is not
+  // public.
+  const currentStock = currentListing.attributes.currentStock;
+  const isOutOfStock = currentStock === 0;
+  const showOutOfStockOverlay = isOutOfStock && !isPendingApproval && !isClosed && !isDraft;
+
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
 
@@ -181,8 +191,6 @@ export const ManageListingCardComponent = props => {
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.indexOf(variantPrefix) >= 0)
     : [];
-
-  console.log('variants', variants, currentListing.images);
 
   return (
     <div className={classes}>
@@ -305,6 +313,45 @@ export const ManageListingCardComponent = props => {
               { listingTitle: title }
             )}
           />
+        ) : null}
+        {showOutOfStockOverlay ? (
+          <Overlay
+            message={intl.formatMessage(
+              { id: 'ManageListingCard.outOfStockOverlayText' },
+              { listingTitle: title }
+            )}
+          >
+            <NamedLink
+              className={css.finishListingDraftLink}
+              name="EditListingPage"
+              params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_EDIT, tab: 'pricing' }}
+            >
+              <FormattedMessage id="ManageListingCard.setStock" />
+            </NamedLink>
+
+            <div className={css.closeListingTextLink}>
+              {intl.formatMessage(
+                { id: 'ManageListingCard.closeListingTextOr' },
+                {
+                  closeListingLink: (
+                    <InlineTextButton
+                      className={css.closeListingText}
+                      disabled={!!actionsInProgressListingId}
+                      onClick={event => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        if (!actionsInProgressListingId) {
+                          onCloseListing(currentListing.id);
+                        }
+                      }}
+                    >
+                      <FormattedMessage id="ManageListingCard.closeListingText" />
+                    </InlineTextButton>
+                  ),
+                }
+              )}
+            </div>
+          </Overlay>
         ) : null}
         {thisListingInProgress ? (
           <Overlay>
