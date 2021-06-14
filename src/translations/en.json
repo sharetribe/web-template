@@ -449,6 +449,7 @@
   "ManageListingCard.editListing": "Edit listing",
   "ManageListingCard.finishListingDraft": "Finish listing",
   "ManageListingCard.manageAvailability": "Manage availability",
+  "ManageListingCard.manageStock": "Manage stock ({currentStock})",
   "ManageListingCard.openListing": "Open listing",
   "ManageListingCard.outOfStockOverlayText": "{listingTitle} is out of stock and can't be purchased.",
   "ManageListingCard.pendingApproval": "{listingTitle} is pending admin approval and can't be booked.",

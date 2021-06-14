@@ -281,10 +281,6 @@
   }
 }
 
-.titlePending {
-  color: var(--attentionColor);
-}
-
 .titleDraft {
   margin-right: 8px;
 }
@@ -362,7 +358,7 @@
 }
 
 .manageLink {
-  text-decoration: none;
+  text-decoration: underline;
   color: var(--matterColor);
   white-space: pre;
 
