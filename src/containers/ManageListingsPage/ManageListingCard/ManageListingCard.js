@@ -399,7 +399,7 @@ export const ManageListingCardComponent = props => {
           <NamedLink
             className={css.manageLink}
             name="EditListingPage"
-            params={{ id, slug, type: editListingLinkType, tab: 'description' }}
+            params={{ id, slug, type: editListingLinkType, tab: 'details' }}
           >
             <FormattedMessage id="ManageListingCard.editListing" />
           </NamedLink>
@@ -411,9 +411,11 @@ export const ManageListingCardComponent = props => {
               <NamedLink
                 className={css.manageLink}
                 name="EditListingPage"
-                params={{ id, slug, type: editListingLinkType, tab: 'availability' }}
+                params={{ id, slug, type: editListingLinkType, tab: 'pricing' }}
               >
-                <FormattedMessage id="ManageListingCard.manageAvailability" />
+                {isDraft || isPendingApproval
+                  ? intl.formatMessage({ id: 'ManageListingCard.setStock' })
+                  : intl.formatMessage({ id: 'ManageListingCard.manageStock' }, { currentStock })}
               </NamedLink>
             </React.Fragment>
           ) : null}

@@ -161,7 +161,7 @@ exports[`ManageListingCard matches snapshot 1`] = `
           Object {
             "id": "listing1",
             "slug": "listing1-title",
-            "tab": "description",
+            "tab": "details",
             "type": "edit",
           }
         }
@@ -183,15 +183,12 @@ exports[`ManageListingCard matches snapshot 1`] = `
           Object {
             "id": "listing1",
             "slug": "listing1-title",
-            "tab": "availability",
+            "tab": "pricing",
             "type": "edit",
           }
         }
       >
-        <FormattedMessage
-          id="ManageListingCard.manageAvailability"
-          values={Object {}}
-        />
+        ManageListingCard.manageStock
       </NamedLink>
     </div>
   </div>
