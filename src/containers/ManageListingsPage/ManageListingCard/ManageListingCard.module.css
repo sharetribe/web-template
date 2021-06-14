@@ -375,3 +375,7 @@
 .manageLinksSeparator {
   margin: 0 3px 0 3px;
 }
+
+.closeListingText {
+  @apply --marketplaceH5FontStyles;
+}
