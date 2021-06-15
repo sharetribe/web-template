@@ -44,7 +44,11 @@
 
   @media (--viewportLarge) {
     margin: 80px auto 0 auto;
-    max-width: 62.5vw;
+    max-width: 1128px;
+  }
+
+  @media (--viewportXLarge) {
+    max-width: 1056px;
   }
 }
 
@@ -61,58 +65,30 @@
 }
 
 .listingCards {
-  padding: 0 24px 96px 24px;
+  padding: 0 24px;
+
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 24px;
+  width: 100%;
+
+  @media (min-width: 550px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
   @media (--viewportMedium) {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   @media (--viewportLarge) {
-    padding: 0 36px 36px 36px;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 36px;
   }
 }
 
 .listingCard {
   margin-bottom: 36px;
-  flex-basis: 100%;
-
-  @media (--viewportMedium) {
-    /**
-     * resultPanel: 62.5vw from 1024px = 640px
-     * panelPaddings: - 2*36px = 72px
-     *
-     * columnCount: 2
-     * gutterWidthBetweenColumns: 24px
-     *
-     * (resultPanel - (panelPaddings + gutterWidthBetweenColumns)) / columnCount = listingCardWidth
-     * ergo => listingCardWidth: 272px
-     *
-     * flex-basis: calc((100%/columnCount) - (guttersBetweenColumns / columnCount))
-     */
-    flex-basis: calc(50% - 12px);
-    margin-right: 24px;
-  }
-
-  @media (--viewportXLarge) {
-    /**
-     * resultPanelWidthRatio = 0.625 aka 62.5%
-     *
-     * resultPanel: 62.5vw from 1920px = 1200px
-     * panelPaddings: - 2*36px = 72px
-     *
-     * columnCount: 3
-     * guttersBetweenColumns: 2*24px = 48px
-     *
-     * (resultPanel - (panelPaddings + guttersBetweenColumns)) / columnCount = listingCardWidth
-     * ergo => listingCardWidth: 360px
-     *
-     * flex-basis: calc((100%/columnCount) - (guttersBetweenColumns / columnCount))
-     */
-    flex-basis: calc(33.33% - 16px);
-    margin-right: 24px;
-  }
+  width: 100%;
 }
 
 /**

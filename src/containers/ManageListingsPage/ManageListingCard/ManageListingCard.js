@@ -27,6 +27,7 @@ import {
 import { createResourceLocatorString, findRouteByRouteName } from '../../../util/routes';
 
 import {
+  AspectRatioWrapper,
   InlineTextButton,
   Menu,
   MenuLabel,
@@ -135,6 +136,16 @@ export const ManageListingCardComponent = props => {
   const isPendingApproval = state === LISTING_STATE_PENDING_APPROVAL;
   const isClosed = state === LISTING_STATE_CLOSED;
   const isDraft = state === LISTING_STATE_DRAFT;
+
+  // TODO:
+  // When stock features are available make sure this works
+  // or if some other kind of check is needed.
+  // We don't want to show out of stock overlay if the listing is not
+  // public.
+  const currentStock = currentListing.attributes.currentStock;
+  const isOutOfStock = currentStock === 0;
+  const showOutOfStockOverlay = isOutOfStock && !isPendingApproval && !isClosed && !isDraft;
+
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
 
@@ -176,6 +187,11 @@ export const ManageListingCardComponent = props => {
     ? 'ManageListingCard.perDay'
     : 'ManageListingCard.perUnit';
 
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+  const variants = firstImage
+    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
+    : [];
+
   return (
     <div className={classes}>
       <div
@@ -195,15 +211,15 @@ export const ManageListingCardComponent = props => {
         onMouseOver={onOverListingLink}
         onTouchStart={onOverListingLink}
       >
-        <div className={css.aspectWrapper}>
+        <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
           <ResponsiveImage
             rootClassName={css.rootForImage}
             alt={title}
             image={firstImage}
-            variants={['landscape-crop', 'landscape-crop2x']}
+            variants={variants}
             sizes={renderSizes}
           />
-        </div>
+        </AspectRatioWrapper>
         <div className={classNames(css.menuOverlayWrapper, { [css.menuOverlayOpen]: isMenuOpen })}>
           <div className={classNames(css.menuOverlay)} />
           <div className={css.menuOverlayContent}>
@@ -298,6 +314,44 @@ export const ManageListingCardComponent = props => {
             )}
           />
         ) : null}
+        {showOutOfStockOverlay ? (
+          <Overlay
+            message={intl.formatMessage(
+              { id: 'ManageListingCard.outOfStockOverlayText' },
+              { listingTitle: title }
+            )}
+          >
+            <NamedLink
+              className={css.finishListingDraftLink}
+              name="EditListingPage"
+              params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_EDIT, tab: 'pricing' }}
+            >
+              <FormattedMessage id="ManageListingCard.setStock" />
+            </NamedLink>
+
+            <div className={css.closeListingTextLink}>
+              {intl.formatMessage(
+                { id: 'ManageListingCard.closeListingTextOr' },
+                {
+                  closeListingLink: (
+                    <InlineTextButton
+                      key="closeListingLink"
+                      className={css.closeListingText}
+                      disabled={!!actionsInProgressListingId}
+                      onClick={() => {
+                        if (!actionsInProgressListingId) {
+                          onCloseListing(currentListing.id);
+                        }
+                      }}
+                    >
+                      <FormattedMessage id="ManageListingCard.closeListingText" />
+                    </InlineTextButton>
+                  ),
+                }
+              )}
+            </div>
+          </Overlay>
+        ) : null}
         {thisListingInProgress ? (
           <Overlay>
             <IconSpinner />
@@ -344,7 +398,7 @@ export const ManageListingCardComponent = props => {
           <NamedLink
             className={css.manageLink}
             name="EditListingPage"
-            params={{ id, slug, type: editListingLinkType, tab: 'description' }}
+            params={{ id, slug, type: editListingLinkType, tab: 'details' }}
           >
             <FormattedMessage id="ManageListingCard.editListing" />
           </NamedLink>
@@ -356,9 +410,11 @@ export const ManageListingCardComponent = props => {
               <NamedLink
                 className={css.manageLink}
                 name="EditListingPage"
-                params={{ id, slug, type: editListingLinkType, tab: 'availability' }}
+                params={{ id, slug, type: editListingLinkType, tab: 'pricing' }}
               >
-                <FormattedMessage id="ManageListingCard.manageAvailability" />
+                {isDraft || isPendingApproval
+                  ? intl.formatMessage({ id: 'ManageListingCard.setStock' })
+                  : intl.formatMessage({ id: 'ManageListingCard.manageStock' }, { currentStock })}
               </NamedLink>
             </React.Fragment>
           ) : null}
