@@ -14,11 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Changes to ManageListingsPage: use AspectRatioWrapper on ManageListingCard,small layout
+  changes and a new overlay for out of stock items.
+  [#46](https://github.com/sharetribe/ftw-product/pull/46)
 - [change] Add UI for adjusting stock to pricing panel in EditListingWizard. This doesn't store any
   data related to stock yet! [#39](https://github.com/sharetribe/ftw-product/pull/39)
 - [fix] Fix padding problem in EditListingWizard by handling the paddings in one place.
   [#34](https://github.com/sharetribe/ftw-product/pull/34)
-- [change] Use AspectRatoWrapper on EditListingPhotosPanel.
+- [change] Use AspectRatioWrapper on EditListingPhotosPanel.
   [#33](https://github.com/sharetribe/ftw-product/pull/33)
 - [add] Add EditListingDeliveryPanel. [#29](https://github.com/sharetribe/ftw-product/pull/29)
 - [change] Remove EditListingFeaturesPanel, EditListingPoliciesPanel and
