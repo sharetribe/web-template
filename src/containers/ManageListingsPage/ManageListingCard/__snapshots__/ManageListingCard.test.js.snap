@@ -11,8 +11,11 @@ exports[`ManageListingCard matches snapshot 1`] = `
     onTouchStart={[Function]}
     tabIndex={0}
   >
-    <div
-      className="aspectWrapper"
+    <AspectRatioWrapper
+      className={null}
+      height={400}
+      rootClassName={null}
+      width={400}
     >
       <ResponsiveImage
         alt="listing1 title"
@@ -21,14 +24,9 @@ exports[`ManageListingCard matches snapshot 1`] = `
         noImageMessage={null}
         rootClassName="rootForImage"
         sizes={null}
-        variants={
-          Array [
-            "landscape-crop",
-            "landscape-crop2x",
-          ]
-        }
+        variants={Array []}
       />
-    </div>
+    </AspectRatioWrapper>
     <div
       className="menuOverlayWrapper"
     >
@@ -163,7 +161,7 @@ exports[`ManageListingCard matches snapshot 1`] = `
           Object {
             "id": "listing1",
             "slug": "listing1-title",
-            "tab": "description",
+            "tab": "details",
             "type": "edit",
           }
         }
@@ -185,15 +183,12 @@ exports[`ManageListingCard matches snapshot 1`] = `
           Object {
             "id": "listing1",
             "slug": "listing1-title",
-            "tab": "availability",
+            "tab": "pricing",
             "type": "edit",
           }
         }
       >
-        <FormattedMessage
-          id="ManageListingCard.manageAvailability"
-          values={Object {}}
-        />
+        ManageListingCard.manageStock
       </NamedLink>
     </div>
   </div>
