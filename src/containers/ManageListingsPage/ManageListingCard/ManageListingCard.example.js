@@ -87,3 +87,19 @@ export const Draft = {
   },
   group: 'page:ManageListingsPage',
 };
+
+export const OutOfStock = {
+  component: ManageListingCardWrapper,
+  props: {
+    hasClosingError: false,
+    hasOpeningError: false,
+    intl: fakeIntl,
+    listing: createOwnListing('listing-out-of-stock', { currentStock: 0 }),
+    isMenuOpen: false,
+    onCloseListing: noop,
+    onOpenListing: noop,
+    onToggleMenu: noop,
+    history: { push: noop },
+  },
+  group: 'page:ManageListingsPage',
+};
