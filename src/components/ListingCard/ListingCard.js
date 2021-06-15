@@ -55,7 +55,7 @@ export const ListingCardComponent = props => {
 
   const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
   const variants = firstImage
-    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.indexOf(variantPrefix) >= 0)
+    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
 
   const { formattedPrice, priceTitle } = priceData(price, intl);
