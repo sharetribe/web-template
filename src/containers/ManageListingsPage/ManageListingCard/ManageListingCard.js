@@ -335,11 +335,10 @@ export const ManageListingCardComponent = props => {
                 {
                   closeListingLink: (
                     <InlineTextButton
+                      key="closeListingLink"
                       className={css.closeListingText}
                       disabled={!!actionsInProgressListingId}
-                      onClick={event => {
-                        event.preventDefault();
-                        event.stopPropagation();
+                      onClick={() => {
                         if (!actionsInProgressListingId) {
                           onCloseListing(currentListing.id);
                         }
