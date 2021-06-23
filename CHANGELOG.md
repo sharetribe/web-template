@@ -45,6 +45,8 @@ way to update this template, but currently, we follow a pattern:
   [#34](https://github.com/sharetribe/ftw-product/pull/34)
 - [change] Use AspectRatioWrapper on EditListingPhotosPanel.
   [#33](https://github.com/sharetribe/ftw-product/pull/33)
+- [add] ListingPage is split into 2 variants: ListingPageBooking and ListingPageProduct.
+  [#32](https://github.com/sharetribe/ftw-product/pull/32)
 - [add] Add EditListingDeliveryPanel. [#29](https://github.com/sharetribe/ftw-product/pull/29)
 - [change] Remove EditListingFeaturesPanel, EditListingPoliciesPanel and
   EditListingAvailabilityPanel from EditListingWizard because they are not used in FTW-product
