@@ -585,3 +585,60 @@
   word-break: break-word;
   hyphens: auto;
 }
+
+.productContentWrapper {
+  @media (--viewportLarge) {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.productMainContent {
+  @media (--viewportMedium) {
+    max-width: 1056px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  @media (--viewportLarge) {
+    max-width: 1128px;
+    padding: 0 36px;
+    margin: 0 0 117px 0;
+  }
+}
+
+.productGallery {
+  margin: 24px 24px 0 24px;
+
+  @media (--viewportMedium) {
+    margin: 24px 0;
+  }
+}
+
+.productMobileHeading {
+  @media (--viewportLarge) {
+    display: none;
+  }
+}
+
+.productDesktopHeading {
+  display: none;
+  @media (--viewportLarge) {
+    display: block;
+  }
+}
+
+.productSideContent {
+}
+
+.productBookingPanel {
+  @media (--viewportLarge) {
+    display: block;
+    margin-top: 24px;
+
+    /* The calendar needs 312px */
+    flex-basis: 312px;
+    flex-shrink: 0;
+  }
+}
