@@ -246,7 +246,6 @@ const Transition = props => {
     listingTitle,
     ownRole,
     otherUsersName,
-    intl,
     onOpenReviewModal
   );
   const currentTransition = transition.transition;
