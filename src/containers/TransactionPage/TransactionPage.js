@@ -32,7 +32,9 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import TransactionPanel from './TransactionPanel/TransactionPanel';
 
 import {
-  markReceivedFromPurchase,
+  dispute,
+  markReceived,
+  markReceivedFromPurchased,
   markDelivered,
   sendMessage,
   sendReview,
@@ -70,9 +72,16 @@ export const TransactionPageComponent = props => {
     sendReviewInProgress,
     transaction,
     transactionRole,
-    markReceivedFromPurchaseInProgress,
-    markReceivedFromPurchaseError,
-    onMarkReceivedFromPurchase,
+
+    disputeInProgress,
+    disputeError,
+    onDispute,
+    markReceivedInProgress,
+    markReceivedError,
+    onMarkReceived,
+    markReceivedFromPurchasedInProgress,
+    markReceivedFromPurchasedError,
+    onMarkReceivedFromPurchased,
     markDeliveredInProgress,
     markDeliveredError,
     onMarkDelivered,
@@ -242,15 +251,26 @@ export const TransactionPageComponent = props => {
       onSendMessage={onSendMessage}
       onSendReview={onSendReview}
       transactionRole={transactionRole}
-      markReceivedFromPurchaseProps={{
-        inProgress: markReceivedFromPurchaseInProgress,
-        error: markReceivedFromPurchaseError,
-        onTransition: () => onMarkReceivedFromPurchase(currentTransaction.id),
+      markReceivedProps={{
+        inProgress: markReceivedInProgress,
+        error: markReceivedError,
+        onTransition: () => onMarkReceived(currentTransaction.id),
         buttonText: intl.formatMessage({
-          id: 'TransactionPage.markReceivedFromPurchase.actionButton',
+          id: 'TransactionPage.markReceived.actionButton',
         }),
         errorText: intl.formatMessage({
-          id: 'TransactionPage.markReceivedFromPurchase.actionError',
+          id: 'TransactionPage.markReceived.actionError',
+        }),
+      }}
+      markReceivedFromPurchasedProps={{
+        inProgress: markReceivedFromPurchasedInProgress,
+        error: markReceivedFromPurchasedError,
+        onTransition: () => onMarkReceivedFromPurchased(currentTransaction.id),
+        buttonText: intl.formatMessage({
+          id: 'TransactionPage.markReceivedFromPurchased.actionButton',
+        }),
+        errorText: intl.formatMessage({
+          id: 'TransactionPage.markReceivedFromPurchased.actionError',
         }),
       }}
       markDeliveredProps={{
@@ -259,6 +279,20 @@ export const TransactionPageComponent = props => {
         onTransition: () => onMarkDelivered(currentTransaction.id),
         buttonText: intl.formatMessage({ id: 'TransactionPage.markDelivered.actionButton' }),
         errorText: intl.formatMessage({ id: 'TransactionPage.markDelivered.actionError' }),
+      }}
+      disputeProps={{
+        inProgress: disputeInProgress,
+        error: disputeError,
+        onTransition: () => onDispute(currentTransaction.id),
+        buttonText: intl.formatMessage({ id: 'TransactionPage.dispute.actionButton' }),
+        errorText: intl.formatMessage({ id: 'TransactionPage.dispute.actionError' }),
+      }}
+      leaveReviewProps={{
+        inProgress: sendReviewInProgress,
+        error: sendReviewError,
+        onTransition: onOpenReviewModal,
+        buttonText: intl.formatMessage({ id: 'TransactionPage.leaveReview.actionButton' }),
+        errorText: intl.formatMessage({ id: 'TransactionPage.leaveReview.actionError' }),
       }}
       nextTransitions={processTransitions}
       onSubmitBookingRequest={handleSubmitBookingRequest}
@@ -296,7 +330,10 @@ export const TransactionPageComponent = props => {
 TransactionPageComponent.defaultProps = {
   currentUser: null,
   fetchTransactionError: null,
-  markReceivedFromPurchaseError: null,
+  disputeError: null,
+  markDeliveredError: null,
+  markReceivedError: null,
+  markReceivedFromPurchasedError: null,
   transaction: null,
   fetchMessagesError: null,
   initialMessageFailedToTransaction: null,
@@ -313,12 +350,18 @@ TransactionPageComponent.propTypes = {
   transactionRole: oneOf([PROVIDER, CUSTOMER]).isRequired,
   currentUser: propTypes.currentUser,
   fetchTransactionError: propTypes.error,
-  markReceivedFromPurchaseInProgress: bool.isRequired,
-  markReceivedFromPurchaseError: propTypes.error,
-  onMarkReceivedFromPurchase: func.isRequired,
+  markReceivedInProgress: bool.isRequired,
+  markReceivedError: propTypes.error,
+  onMarkReceived: func.isRequired,
+  markReceivedFromPurchasedInProgress: bool.isRequired,
+  markReceivedFromPurchasedError: propTypes.error,
+  onMarkReceivedFromPurchased: func.isRequired,
   markDeliveredInProgress: bool.isRequired,
   markDeliveredError: propTypes.error,
   onMarkDelivered: func.isRequired,
+  disputeInProgress: bool.isRequired,
+  disputeError: propTypes.error,
+  onDispute: func.isRequired,
   scrollingDisabled: bool.isRequired,
   transaction: propTypes.transaction,
   fetchMessagesError: propTypes.error,
@@ -357,8 +400,12 @@ TransactionPageComponent.propTypes = {
 const mapStateToProps = state => {
   const {
     fetchTransactionError,
-    markReceivedFromPurchaseInProgress,
-    markReceivedFromPurchaseError,
+    disputeInProgress,
+    disputeError,
+    markReceivedInProgress,
+    markReceivedError,
+    markReceivedFromPurchasedInProgress,
+    markReceivedFromPurchasedError,
     markDeliveredInProgress,
     markDeliveredError,
     transactionRef,
@@ -388,8 +435,12 @@ const mapStateToProps = state => {
   return {
     currentUser,
     fetchTransactionError,
-    markReceivedFromPurchaseInProgress,
-    markReceivedFromPurchaseError,
+    disputeInProgress,
+    disputeError,
+    markReceivedInProgress,
+    markReceivedError,
+    markReceivedFromPurchasedInProgress,
+    markReceivedFromPurchasedError,
     markDeliveredInProgress,
     markDeliveredError,
     scrollingDisabled: isScrollingDisabled(state),
@@ -416,7 +467,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onMarkReceivedFromPurchase: transactionId => dispatch(markReceivedFromPurchase(transactionId)),
+    onDispute: transactionId => dispatch(dispute(transactionId)),
+    onMarkReceived: transactionId => dispatch(markReceived(transactionId)),
+    onMarkReceivedFromPurchased: transactionId =>
+      dispatch(markReceivedFromPurchased(transactionId)),
     onMarkDelivered: transactionId => dispatch(markDelivered(transactionId)),
     onShowMoreMessages: txId => dispatch(fetchMoreMessages(txId)),
     onSendMessage: (txId, message) => dispatch(sendMessage(txId, message)),
