@@ -14,6 +14,7 @@ import {
   txIsPaymentPending,
   txIsPurchased,
   txIsReceived,
+  txIsInFirstReviewBy,
 } from '../../../util/transaction';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes } from '../../../util/types';
@@ -179,8 +180,11 @@ export class TransactionPanelComponent extends Component {
       onShowMoreMessages,
       transactionRole,
       intl,
-      markReceivedFromPurchaseProps,
+      markReceivedProps,
+      markReceivedFromPurchasedProps,
       markDeliveredProps,
+      disputeProps,
+      leaveReviewProps,
       onSubmitBookingRequest,
       timeSlots,
       fetchTimeSlotsError,
@@ -235,7 +239,7 @@ export class TransactionPanelComponent extends Component {
           headingState: HEADING_PURCHASED,
           showDetailCardHeadings: isCustomer,
           showActionButtons: true,
-          primaryButtonProps: isCustomer ? markReceivedFromPurchaseProps : markDeliveredProps,
+          primaryButtonProps: isCustomer ? markReceivedFromPurchasedProps : markDeliveredProps,
         };
       } else if (txIsCanceled(tx)) {
         return {
@@ -243,24 +247,26 @@ export class TransactionPanelComponent extends Component {
           showDetailCardHeadings: isCustomer,
         };
       } else if (txIsDelivered(tx)) {
-        // const primaryButtonPropsMaybe = isCustomer ? { primaryButtonProps: markReceived } : {};
-        // const secondaryButtonPropsMaybe = isCustomer ? { secondaryButtonProps: dispute } : {};
+        const primaryButtonPropsMaybe = isCustomer ? { primaryButtonProps: markReceivedProps } : {};
+        const secondaryButtonPropsMaybe = isCustomer ? { secondaryButtonProps: disputeProps } : {};
         return {
           headingState: HEADING_DELIVERED,
           showDetailCardHeadings: isCustomer,
-          // showActionButtons: isCustomer,
-          // ...primaryButtonPropsMaybe,
-          // ...secondaryButtonPropsMaybe,
+          showActionButtons: isCustomer,
+          ...primaryButtonPropsMaybe,
+          ...secondaryButtonPropsMaybe,
         };
       } else if (txIsDisputed(tx)) {
         return {
           headingState: HEADING_DISPUTED,
           showDetailCardHeadings: isCustomer,
         };
-      } else if (txIsReceived(tx)) {
+      } else if (txIsReceived(tx) || txIsInFirstReviewBy(tx, !isCustomer)) {
         return {
           headingState: HEADING_RECEIVED,
           showDetailCardHeadings: isCustomer,
+          showActionButtons: true,
+          primaryButtonProps: leaveReviewProps,
         };
       } else {
         return { headingState: 'unknown' };
@@ -527,8 +533,11 @@ TransactionPanelComponent.propTypes = {
   nextTransitions: array,
 
   // Tx process transition related props
-  markReceivedFromPurchaseProps: actionButtonShape.isRequired,
+  markReceivedProps: actionButtonShape.isRequired,
+  markReceivedFromPurchasedProps: actionButtonShape.isRequired,
   markDeliveredProps: actionButtonShape.isRequired,
+  disputeProps: actionButtonShape.isRequired,
+  leaveReviewProps: actionButtonShape.isRequired,
 
   // line items
   onFetchTransactionLineItems: func.isRequired,
