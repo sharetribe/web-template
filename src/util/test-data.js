@@ -3,11 +3,9 @@ import moment from 'moment';
 import { types as sdkTypes } from './sdkLoader';
 import { daysBetween } from '../util/dates';
 import {
-  TRANSITION_ACCEPT,
   TRANSITION_CONFIRM_PAYMENT,
   TRANSITION_REQUEST_PAYMENT,
   TX_TRANSITION_ACTOR_CUSTOMER,
-  TX_TRANSITION_ACTOR_PROVIDER,
 } from '../util/transaction';
 import { LISTING_STATE_PUBLISHED, TIME_SLOT_DAY } from '../util/types';
 
@@ -152,7 +150,7 @@ export const createTxTransition = options => {
 export const createTransaction = options => {
   const {
     id,
-    lastTransition = TRANSITION_ACCEPT,
+    lastTransition = TRANSITION_CONFIRM_PAYMENT,
     total = new Money(1000, 'USD'),
     commission = new Money(100, 'USD'),
     booking = null,
@@ -171,11 +169,6 @@ export const createTransaction = options => {
         createdAt: new Date(Date.UTC(2017, 4, 1, 0, 0, 1)),
         by: TX_TRANSITION_ACTOR_CUSTOMER,
         transition: TRANSITION_CONFIRM_PAYMENT,
-      }),
-      createTxTransition({
-        createdAt: new Date(Date.UTC(2017, 5, 1)),
-        by: TX_TRANSITION_ACTOR_PROVIDER,
-        transition: TRANSITION_ACCEPT,
       }),
     ],
   } = options;

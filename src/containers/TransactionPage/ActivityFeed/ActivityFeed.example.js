@@ -9,12 +9,12 @@ import {
   createReview,
 } from '../../../util/test-data';
 import {
-  TRANSITION_ACCEPT,
-  TRANSITION_COMPLETE,
-  TRANSITION_DECLINE,
-  TRANSITION_EXPIRE_REVIEW_PERIOD,
-  TRANSITION_REQUEST_PAYMENT,
   TRANSITION_CONFIRM_PAYMENT,
+  TRANSITION_EXPIRE_REVIEW_PERIOD,
+  TRANSITION_MARK_DELIVERED,
+  TRANSITION_MARK_RECEIVED,
+  TRANSITION_MARK_RECEIVED_FROM_PURCHASED,
+  TRANSITION_REQUEST_PAYMENT,
   TRANSITION_REVIEW_1_BY_CUSTOMER,
   TRANSITION_REVIEW_1_BY_PROVIDER,
   TRANSITION_REVIEW_2_BY_CUSTOMER,
@@ -80,6 +80,7 @@ export const WithTransitions = {
       customer: createUser('user1'),
       provider: createUser('user2'),
       listing: createListing('Listing'),
+      lastTransition: TRANSITION_EXPIRE_REVIEW_PERIOD,
       transitions: [
         // this should not be visible in the feed
         createTxTransition({
@@ -94,8 +95,8 @@ export const WithTransitions = {
         }),
         createTxTransition({
           createdAt: new Date(Date.UTC(2017, 10, 9, 8, 12)),
-          by: TX_TRANSITION_ACTOR_PROVIDER,
-          transition: TRANSITION_ACCEPT,
+          by: TX_TRANSITION_ACTOR_CUSTOMER,
+          transition: TRANSITION_MARK_RECEIVED_FROM_PURCHASED,
         }),
         // this should not be visible in the feed
         createTxTransition({
@@ -137,17 +138,12 @@ export const WithMessagesTransitionsAndReviews = {
         createTxTransition({
           createdAt: new Date(Date.UTC(2017, 10, 9, 8, 12)),
           by: TX_TRANSITION_ACTOR_PROVIDER,
-          transition: TRANSITION_ACCEPT,
+          transition: TRANSITION_MARK_DELIVERED,
         }),
         createTxTransition({
           createdAt: new Date(Date.UTC(2017, 10, 9, 10, 33)),
           by: TX_TRANSITION_ACTOR_PROVIDER,
-          transition: TRANSITION_DECLINE,
-        }),
-        createTxTransition({
-          createdAt: new Date(Date.UTC(2017, 10, 9, 10, 34)),
-          by: TX_TRANSITION_ACTOR_PROVIDER,
-          transition: TRANSITION_COMPLETE,
+          transition: TRANSITION_MARK_RECEIVED,
         }),
         createTxTransition({
           createdAt: new Date(Date.UTC(2017, 10, 9, 11, 34)),
@@ -279,7 +275,7 @@ class PagedFeed extends Component {
     const trans3 = createTxTransition({
       createdAt: dates[2],
       by: TX_TRANSITION_ACTOR_PROVIDER,
-      transition: TRANSITION_ACCEPT,
+      transition: TRANSITION_MARK_DELIVERED,
     });
 
     // Last transition timestamp is interleaved between the last two
@@ -287,7 +283,7 @@ class PagedFeed extends Component {
     const trans4 = createTxTransition({
       createdAt: dates[5],
       by: TX_TRANSITION_ACTOR_CUSTOMER,
-      transition: TRANSITION_COMPLETE,
+      transition: TRANSITION_MARK_RECEIVED,
     });
 
     // First message timestamp is interleaved between the first two
@@ -300,7 +296,7 @@ class PagedFeed extends Component {
 
     const transaction = createTransaction({
       id: 'tx1',
-      lastTransition: TRANSITION_COMPLETE,
+      lastTransition: TRANSITION_MARK_RECEIVED,
       lastTransitionedAt: dates[5],
       transitions: [trans1, trans2, trans3, trans4],
       listing: createListing('listing'),

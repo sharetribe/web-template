@@ -7,26 +7,31 @@ import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl
 import { formatDateWithProximity } from '../../../util/dates';
 import { ensureTransaction, ensureUser, ensureListing } from '../../../util/data';
 import {
-  TRANSITION_ACCEPT,
-  TRANSITION_CANCEL,
-  TRANSITION_COMPLETE,
-  TRANSITION_DECLINE,
-  TRANSITION_EXPIRE,
   TRANSITION_CONFIRM_PAYMENT,
+  TRANSITION_CANCEL_SYSTEM,
+  TRANSITION_CANCEL_OPERATOR,
+  TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED,
+  TRANSITION_CANCEL_FROM_DISPUTED,
+  TRANSITION_MARK_RECEIVED_FROM_PURCHASED,
+  TRANSITION_MARK_RECEIVED,
+  TRANSITION_AUTO_COMPLETE,
+  TRANSITION_MARK_RECEIVED_FROM_DISPUTED,
+  TRANSITION_MARK_DELIVERED,
+  TRANSITION_DISPUTE,
   TRANSITION_REVIEW_1_BY_CUSTOMER,
   TRANSITION_REVIEW_1_BY_PROVIDER,
   TRANSITION_REVIEW_2_BY_CUSTOMER,
   TRANSITION_REVIEW_2_BY_PROVIDER,
-  transitionIsReviewed,
-  txIsDelivered,
-  txIsInFirstReviewBy,
-  txIsReviewed,
+  getUserTxRole,
   isCustomerReview,
   isProviderReview,
-  txRoleIsProvider,
-  txRoleIsCustomer,
-  getUserTxRole,
   isRelevantPastTransition,
+  transitionIsReviewed,
+  txIsInFirstReviewBy,
+  txIsReceived,
+  txIsReviewed,
+  txRoleIsCustomer,
+  txRoleIsProvider,
 } from '../../../util/transaction';
 import { propTypes } from '../../../util/types';
 import * as log from '../../../util/log';
@@ -110,7 +115,6 @@ const resolveTransitionMessage = (
   listingTitle,
   ownRole,
   otherUsersName,
-  intl,
   onOpenReviewModal
 ) => {
   const isOwnTransition = transition.by === ownRole;
@@ -120,36 +124,25 @@ const resolveTransitionMessage = (
   switch (currentTransition) {
     case TRANSITION_CONFIRM_PAYMENT:
       return isOwnTransition ? (
-        <FormattedMessage id="ActivityFeed.ownTransitionRequest" values={{ listingTitle }} />
+        <FormattedMessage id="ActivityFeed.ownTransitionPurchased" values={{ listingTitle }} />
       ) : (
         <FormattedMessage
-          id="ActivityFeed.transitionRequest"
+          id="ActivityFeed.transitionPurchased"
           values={{ displayName, listingTitle }}
         />
       );
-    case TRANSITION_ACCEPT:
-      return isOwnTransition ? (
-        <FormattedMessage id="ActivityFeed.ownTransitionAccept" />
-      ) : (
-        <FormattedMessage id="ActivityFeed.transitionAccept" values={{ displayName }} />
-      );
-    case TRANSITION_DECLINE:
-      return isOwnTransition ? (
-        <FormattedMessage id="ActivityFeed.ownTransitionDecline" />
-      ) : (
-        <FormattedMessage id="ActivityFeed.transitionDecline" values={{ displayName }} />
-      );
-    case TRANSITION_EXPIRE:
-      return txRoleIsProvider(ownRole) ? (
-        <FormattedMessage id="ActivityFeed.ownTransitionExpire" />
-      ) : (
-        <FormattedMessage id="ActivityFeed.transitionExpire" values={{ displayName }} />
-      );
-    case TRANSITION_CANCEL:
+    case TRANSITION_CANCEL_SYSTEM:
+    case TRANSITION_CANCEL_OPERATOR:
+    case TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED:
+    case TRANSITION_CANCEL_FROM_DISPUTED:
       return <FormattedMessage id="ActivityFeed.transitionCancel" />;
-    case TRANSITION_COMPLETE:
-      // Show the leave a review link if the state is delivered and if the current user is the first to leave a review
-      const reviewPeriodJustStarted = txIsDelivered(transaction);
+    case TRANSITION_MARK_RECEIVED_FROM_PURCHASED:
+    case TRANSITION_MARK_RECEIVED:
+    case TRANSITION_AUTO_COMPLETE:
+    case TRANSITION_MARK_RECEIVED_FROM_DISPUTED:
+      // Show the leave a review link if the state is delivered and
+      // if the current user is the first to leave a review
+      const reviewPeriodJustStarted = txIsReceived(transaction);
 
       const reviewAsFirstLink = reviewPeriodJustStarted ? (
         <InlineTextButton onClick={onOpenReviewModal}>
@@ -157,13 +150,25 @@ const resolveTransitionMessage = (
         </InlineTextButton>
       ) : null;
 
-      return (
+      return reviewAsFirstLink || <FormattedMessage id="ActivityFeed.transitionMarkReceived" />;
+    case TRANSITION_MARK_DELIVERED:
+      return isOwnTransition ? (
+        <FormattedMessage id="ActivityFeed.ownTransitionDelivered" values={{ listingTitle }} />
+      ) : (
         <FormattedMessage
-          id="ActivityFeed.transitionComplete"
-          values={{ reviewLink: reviewAsFirstLink }}
+          id="ActivityFeed.transitionDelivered"
+          values={{ displayName, listingTitle }}
         />
       );
-
+    case TRANSITION_DISPUTE:
+      return isOwnTransition ? (
+        <FormattedMessage id="ActivityFeed.ownTransitionDisputed" values={{ listingTitle }} />
+      ) : (
+        <FormattedMessage
+          id="ActivityFeed.transitionDisputed"
+          values={{ displayName, listingTitle }}
+        />
+      );
     case TRANSITION_REVIEW_1_BY_PROVIDER:
     case TRANSITION_REVIEW_1_BY_CUSTOMER:
       if (isOwnTransition) {
@@ -241,7 +246,6 @@ const Transition = props => {
     listingTitle,
     ownRole,
     otherUsersName,
-    intl,
     onOpenReviewModal
   );
   const currentTransition = transition.transition;

@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
-import { array, arrayOf, bool, func, number, string } from 'prop-types';
+import { array, arrayOf, bool, func, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 import config from '../../../config';
 import {
   TRANSITION_REQUEST_PAYMENT_AFTER_ENQUIRY,
-  txIsAccepted,
+  txHasBeenReceived,
   txIsCanceled,
-  txIsDeclined,
+  txIsDelivered,
+  txIsDisputed,
   txIsEnquired,
   txIsPaymentExpired,
   txIsPaymentPending,
-  txIsRequested,
-  txHasBeenDelivered,
+  txIsPurchased,
+  txIsReceived,
+  txIsInFirstReviewBy,
 } from '../../../util/transaction';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes } from '../../../util/types';
@@ -26,7 +28,6 @@ import { isMobileSafari } from '../../../util/userAgent';
 import { formatMoney } from '../../../util/currency';
 import { AvatarLarge, BookingPanel, NamedLink, UserDisplayName } from '../../../components';
 
-import ReviewModal from '../ReviewModal/ReviewModal';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
 
 // These are internal components that make this file more readable.
@@ -35,16 +36,16 @@ import BreakdownMaybe from './BreakdownMaybe';
 import DetailCardHeadingsMaybe from './DetailCardHeadingsMaybe';
 import DetailCardImage from './DetailCardImage';
 import FeedSection from './FeedSection';
-import SaleActionButtonsMaybe from './SaleActionButtonsMaybe';
+import ActionButtonsMaybe from './ActionButtonsMaybe';
 import PanelHeading, {
   HEADING_ENQUIRED,
   HEADING_PAYMENT_PENDING,
   HEADING_PAYMENT_EXPIRED,
-  HEADING_REQUESTED,
-  HEADING_ACCEPTED,
-  HEADING_DECLINED,
   HEADING_CANCELED,
+  HEADING_PURCHASED,
   HEADING_DELIVERED,
+  HEADING_DISPUTED,
+  HEADING_RECEIVED,
 } from './PanelHeading';
 
 import css from './TransactionPanel.module.css';
@@ -82,14 +83,10 @@ export class TransactionPanelComponent extends Component {
     super(props);
     this.state = {
       sendMessageFormFocused: false,
-      isReviewModalOpen: false,
-      reviewSubmitted: false,
     };
     this.isMobSaf = false;
     this.sendMessageFormName = 'TransactionPanel.SendMessageForm';
 
-    this.onOpenReviewModal = this.onOpenReviewModal.bind(this);
-    this.onSubmitReview = this.onSubmitReview.bind(this);
     this.onSendMessageFormFocus = this.onSendMessageFormFocus.bind(this);
     this.onSendMessageFormBlur = this.onSendMessageFormBlur.bind(this);
     this.onMessageSubmit = this.onMessageSubmit.bind(this);
@@ -98,22 +95,6 @@ export class TransactionPanelComponent extends Component {
 
   componentDidMount() {
     this.isMobSaf = isMobileSafari();
-  }
-
-  onOpenReviewModal() {
-    this.setState({ isReviewModalOpen: true });
-  }
-
-  onSubmitReview(values) {
-    const { onSendReview, transaction, transactionRole } = this.props;
-    const currentTransaction = ensureTransaction(transaction);
-    const { reviewRating, reviewContent } = values;
-    const rating = Number.parseInt(reviewRating, 10);
-    onSendReview(transactionRole, currentTransaction, rating, reviewContent)
-      .then(r => this.setState({ isReviewModalOpen: false, reviewSubmitted: true }))
-      .catch(e => {
-        // Do nothing.
-      });
   }
 
   onSendMessageFormFocus() {
@@ -172,18 +153,16 @@ export class TransactionPanelComponent extends Component {
       fetchMessagesError,
       sendMessageInProgress,
       sendMessageError,
-      sendReviewInProgress,
-      sendReviewError,
       onManageDisableScrolling,
+      onOpenReviewModal,
       onShowMoreMessages,
       transactionRole,
       intl,
-      onAcceptSale,
-      onDeclineSale,
-      acceptInProgress,
-      declineInProgress,
-      acceptSaleError,
-      declineSaleError,
+      markReceivedProps,
+      markReceivedFromPurchasedProps,
+      markDeliveredProps,
+      disputeProps,
+      leaveReviewProps,
       onSubmitBookingRequest,
       timeSlots,
       fetchTimeSlotsError,
@@ -233,33 +212,39 @@ export class TransactionPanelComponent extends Component {
           headingState: HEADING_PAYMENT_EXPIRED,
           showDetailCardHeadings: isCustomer,
         };
-      } else if (txIsRequested(tx)) {
+      } else if (txIsPurchased(tx)) {
         return {
-          headingState: HEADING_REQUESTED,
+          headingState: HEADING_PURCHASED,
           showDetailCardHeadings: isCustomer,
-          showSaleButtons: isProvider && !isCustomerBanned,
-        };
-      } else if (txIsAccepted(tx)) {
-        return {
-          headingState: HEADING_ACCEPTED,
-          showDetailCardHeadings: isCustomer,
-          showAddress: isCustomer,
-        };
-      } else if (txIsDeclined(tx)) {
-        return {
-          headingState: HEADING_DECLINED,
-          showDetailCardHeadings: isCustomer,
+          showActionButtons: true,
+          primaryButtonProps: isCustomer ? markReceivedFromPurchasedProps : markDeliveredProps,
         };
       } else if (txIsCanceled(tx)) {
         return {
           headingState: HEADING_CANCELED,
           showDetailCardHeadings: isCustomer,
         };
-      } else if (txHasBeenDelivered(tx)) {
+      } else if (txIsDelivered(tx)) {
+        const primaryButtonPropsMaybe = isCustomer ? { primaryButtonProps: markReceivedProps } : {};
+        const secondaryButtonPropsMaybe = isCustomer ? { secondaryButtonProps: disputeProps } : {};
         return {
           headingState: HEADING_DELIVERED,
           showDetailCardHeadings: isCustomer,
-          showAddress: isCustomer,
+          showActionButtons: isCustomer,
+          ...primaryButtonPropsMaybe,
+          ...secondaryButtonPropsMaybe,
+        };
+      } else if (txIsDisputed(tx)) {
+        return {
+          headingState: HEADING_DISPUTED,
+          showDetailCardHeadings: isCustomer,
+        };
+      } else if (txIsReceived(tx) || txIsInFirstReviewBy(tx, !isCustomer)) {
+        return {
+          headingState: HEADING_RECEIVED,
+          showDetailCardHeadings: isCustomer,
+          showActionButtons: true,
+          primaryButtonProps: leaveReviewProps,
         };
       } else {
         return { headingState: 'unknown' };
@@ -271,12 +256,12 @@ export class TransactionPanelComponent extends Component {
       id: 'TransactionPanel.deletedListingTitle',
     });
 
-    const {
-      authorDisplayName,
-      customerDisplayName,
-      otherUserDisplayName,
-      otherUserDisplayNameString,
-    } = displayNames(currentUser, currentProvider, currentCustomer, intl);
+    const { authorDisplayName, customerDisplayName, otherUserDisplayNameString } = displayNames(
+      currentUser,
+      currentProvider,
+      currentCustomer,
+      intl
+    );
 
     const { publicData, geolocation } = currentListing.attributes;
     const location = publicData && publicData.location ? publicData.location : {};
@@ -302,15 +287,11 @@ export class TransactionPanelComponent extends Component {
     const firstImage =
       currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
 
-    const saleButtons = (
-      <SaleActionButtonsMaybe
-        showButtons={stateData.showSaleButtons}
-        acceptInProgress={acceptInProgress}
-        declineInProgress={declineInProgress}
-        acceptSaleError={acceptSaleError}
-        declineSaleError={declineSaleError}
-        onAcceptSale={() => onAcceptSale(currentTransaction.id)}
-        onDeclineSale={() => onDeclineSale(currentTransaction.id)}
+    const actionButtons = (
+      <ActionButtonsMaybe
+        showButtons={stateData.showActionButtons}
+        primaryButtonProps={stateData?.primaryButtonProps}
+        secondaryButtonProps={stateData?.secondaryButtonProps}
       />
     );
 
@@ -390,7 +371,7 @@ export class TransactionPanelComponent extends Component {
               initialMessageFailed={initialMessageFailed}
               messages={messages}
               oldestMessagePageFetched={oldestMessagePageFetched}
-              onOpenReviewModal={this.onOpenReviewModal}
+              onOpenReviewModal={onOpenReviewModal}
               onShowMoreMessages={() => onShowMoreMessages(currentTransaction.id)}
               totalMessagePages={totalMessagePages}
             />
@@ -409,8 +390,8 @@ export class TransactionPanelComponent extends Component {
               <div className={css.sendingMessageNotAllowed}>{sendingMessageNotAllowed}</div>
             )}
 
-            {stateData.showSaleButtons ? (
-              <div className={css.mobileActionButtons}>{saleButtons}</div>
+            {stateData.showActionButtons ? (
+              <div className={css.mobileActionButtons}>{actionButtons}</div>
             ) : null}
           </div>
 
@@ -457,23 +438,12 @@ export class TransactionPanelComponent extends Component {
                 transactionRole={transactionRole}
               />
 
-              {stateData.showSaleButtons ? (
-                <div className={css.desktopActionButtons}>{saleButtons}</div>
+              {stateData.showActionButtons ? (
+                <div className={css.desktopActionButtons}>{actionButtons}</div>
               ) : null}
             </div>
           </div>
         </div>
-        <ReviewModal
-          id="ReviewOrderModal"
-          isOpen={this.state.isReviewModalOpen}
-          onCloseModal={() => this.setState({ isReviewModalOpen: false })}
-          onManageDisableScrolling={onManageDisableScrolling}
-          onSubmitReview={this.onSubmitReview}
-          revieweeName={otherUserDisplayName}
-          reviewSent={this.state.reviewSubmitted}
-          sendReviewInProgress={sendReviewInProgress}
-          sendReviewError={sendReviewError}
-        />
       </div>
     );
   }
@@ -483,8 +453,6 @@ TransactionPanelComponent.defaultProps = {
   rootClassName: null,
   className: null,
   currentUser: null,
-  acceptSaleError: null,
-  declineSaleError: null,
   fetchMessagesError: null,
   initialMessageFailed: false,
   savePaymentMethodFailed: false,
@@ -496,6 +464,14 @@ TransactionPanelComponent.defaultProps = {
   lineItems: null,
   fetchLineItemsError: null,
 };
+
+const actionButtonShape = shape({
+  inProgress: bool.isRequired,
+  error: propTypes.error,
+  onTransition: func.isRequired,
+  buttonText: string.isRequired,
+  errorText: string.isRequired,
+});
 
 TransactionPanelComponent.propTypes = {
   rootClassName: string,
@@ -512,24 +488,21 @@ TransactionPanelComponent.propTypes = {
   fetchMessagesError: propTypes.error,
   sendMessageInProgress: bool.isRequired,
   sendMessageError: propTypes.error,
-  sendReviewInProgress: bool.isRequired,
-  sendReviewError: propTypes.error,
   onManageDisableScrolling: func.isRequired,
+  onOpenReviewModal: func.isRequired,
   onShowMoreMessages: func.isRequired,
   onSendMessage: func.isRequired,
-  onSendReview: func.isRequired,
   onSubmitBookingRequest: func.isRequired,
   timeSlots: arrayOf(propTypes.timeSlot),
   fetchTimeSlotsError: propTypes.error,
   nextTransitions: array,
 
-  // Sale related props
-  onAcceptSale: func.isRequired,
-  onDeclineSale: func.isRequired,
-  acceptInProgress: bool.isRequired,
-  declineInProgress: bool.isRequired,
-  acceptSaleError: propTypes.error,
-  declineSaleError: propTypes.error,
+  // Tx process transition related props
+  markReceivedProps: actionButtonShape.isRequired,
+  markReceivedFromPurchasedProps: actionButtonShape.isRequired,
+  markDeliveredProps: actionButtonShape.isRequired,
+  disputeProps: actionButtonShape.isRequired,
+  leaveReviewProps: actionButtonShape.isRequired,
 
   // line items
   onFetchTransactionLineItems: func.isRequired,

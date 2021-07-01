@@ -2,19 +2,22 @@ import React from 'react';
 import { arrayOf, bool, number, oneOf, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import classNames from 'classnames';
 
 import config from '../../config';
+import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import {
-  txIsAccepted,
   txIsCanceled,
-  txIsDeclined,
   txIsEnquired,
-  txIsRequested,
-  txHasBeenDelivered,
+  txIsPurchased,
+  txIsDelivered,
+  txIsDisputed,
   txIsPaymentExpired,
   txIsPaymentPending,
+  txIsReceived,
+  txIsReviewedByCustomer,
+  txIsReviewedByProvider,
+  txIsReviewed,
 } from '../../util/transaction';
 import { propTypes, DATE_TYPE_DATE } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
@@ -23,7 +26,6 @@ import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 import {
   Avatar,
-  BookingTimeInfo,
   NamedLink,
   NotificationBadge,
   Page,
@@ -58,28 +60,6 @@ export const txState = (intl, tx, type) => {
         id: 'InboxPage.stateEnquiry',
       }),
     };
-  } else if (txIsRequested(tx)) {
-    const requested = isOrder
-      ? {
-          nameClassName: css.nameNotEmphasized,
-          bookingClassName: css.bookingNoActionNeeded,
-          lastTransitionedAtClassName: css.lastTransitionedAtEmphasized,
-          stateClassName: css.stateActionNeeded,
-          state: intl.formatMessage({
-            id: 'InboxPage.stateRequested',
-          }),
-        }
-      : {
-          nameClassName: css.nameEmphasized,
-          bookingClassName: css.bookingActionNeeded,
-          lastTransitionedAtClassName: css.lastTransitionedAtEmphasized,
-          stateClassName: css.stateActionNeeded,
-          state: intl.formatMessage({
-            id: 'InboxPage.statePending',
-          }),
-        };
-
-    return requested;
   } else if (txIsPaymentPending(tx)) {
     return {
       nameClassName: isOrder ? css.nameNotEmphasized : css.nameEmphasized,
@@ -97,27 +77,7 @@ export const txState = (intl, tx, type) => {
       lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: css.stateNoActionNeeded,
       state: intl.formatMessage({
-        id: 'InboxPage.stateExpired',
-      }),
-    };
-  } else if (txIsDeclined(tx)) {
-    return {
-      nameClassName: css.nameNotEmphasized,
-      bookingClassName: css.bookingNoActionNeeded,
-      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
-      stateClassName: css.stateNoActionNeeded,
-      state: intl.formatMessage({
-        id: 'InboxPage.stateDeclined',
-      }),
-    };
-  } else if (txIsAccepted(tx)) {
-    return {
-      nameClassName: css.nameNotEmphasized,
-      bookingClassName: css.bookingNoActionNeeded,
-      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
-      stateClassName: css.stateSucces,
-      state: intl.formatMessage({
-        id: 'InboxPage.stateAccepted',
+        id: 'InboxPage.statePaymentExpired',
       }),
     };
   } else if (txIsCanceled(tx)) {
@@ -125,65 +85,93 @@ export const txState = (intl, tx, type) => {
       nameClassName: css.nameNotEmphasized,
       bookingClassName: css.bookingNoActionNeeded,
       lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
-      stateClassName: css.stateNoActionNeeded,
+      stateClassName: css.stateConcluded,
       state: intl.formatMessage({
         id: 'InboxPage.stateCanceled',
       }),
     };
-  } else if (txHasBeenDelivered(tx)) {
+  } else if (txIsPurchased(tx)) {
     return {
       nameClassName: css.nameNotEmphasized,
       bookingClassName: css.bookingNoActionNeeded,
       lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
-      stateClassName: css.stateNoActionNeeded,
+      stateClassName: isOrder ? css.stateNoActionNeeded : css.stateActionNeeded,
       state: intl.formatMessage({
-        id: 'InboxPage.stateDelivered',
+        id: 'InboxPage.statePurchased',
+      }),
+    };
+  } else if (txIsDelivered(tx)) {
+    return isOrder
+      ? {
+          nameClassName: css.nameNotEmphasized,
+          bookingClassName: css.bookingNoActionNeeded,
+          lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
+          stateClassName: css.stateActionNeeded,
+          state: intl.formatMessage({ id: 'InboxPage.stateDeliveredCustomer' }),
+        }
+      : {
+          nameClassName: css.nameNotEmphasized,
+          bookingClassName: css.bookingNoActionNeeded,
+          lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
+          stateClassName: css.stateNoActionNeeded,
+          state: intl.formatMessage({ id: 'InboxPage.stateDeliveredProvider' }),
+        };
+  } else if (txIsDisputed(tx)) {
+    return {
+      nameClassName: css.nameNotEmphasized,
+      bookingClassName: css.bookingNoActionNeeded,
+      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
+      stateClassName: css.stateActionNeeded,
+      state: intl.formatMessage({
+        id: 'InboxPage.stateDisputed',
+      }),
+    };
+  } else if (txIsReceived(tx)) {
+    return {
+      nameClassName: css.nameNotEmphasized,
+      bookingClassName: css.bookingNoActionNeeded,
+      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
+      stateClassName: css.stateActionNeeded,
+      state: intl.formatMessage({
+        id: 'InboxPage.stateReceived',
+      }),
+    };
+  } else if (txIsReviewedByCustomer(tx)) {
+    const translationKey = isOrder ? 'InboxPage.stateReviewGiven' : 'InboxPage.stateReviewNeeded';
+    return {
+      nameClassName: css.nameNotEmphasized,
+      bookingClassName: css.bookingNoActionNeeded,
+      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
+      stateClassName: isOrder ? css.stateNoActionNeeded : css.stateActionNeeded,
+      state: intl.formatMessage({
+        id: translationKey,
+      }),
+    };
+  } else if (txIsReviewedByProvider(tx)) {
+    const translationKey = isOrder ? 'InboxPage.stateReviewNeeded' : 'InboxPage.stateReviewGiven';
+    return {
+      nameClassName: css.nameNotEmphasized,
+      bookingClassName: css.bookingNoActionNeeded,
+      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
+      stateClassName: isOrder ? css.stateActionNeeded : css.stateNoActionNeeded,
+      state: intl.formatMessage({
+        id: translationKey,
+      }),
+    };
+  } else if (txIsReviewed(tx)) {
+    return {
+      nameClassName: css.nameNotEmphasized,
+      bookingClassName: css.bookingNoActionNeeded,
+      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
+      stateClassName: css.stateConcluded,
+      state: intl.formatMessage({
+        id: 'InboxPage.stateReviewed',
       }),
     };
   } else {
     console.warn('This transition is unknown:', tx.attributes.lastTransition);
     return null;
   }
-};
-
-// Functional component as internal helper to print BookingTimeInfo if that is needed
-const BookingInfoMaybe = props => {
-  const { bookingClassName, isOrder, intl, tx, unitType } = props;
-  const isEnquiry = txIsEnquired(tx);
-
-  if (isEnquiry) {
-    return null;
-  }
-
-  // If you want to show the booking price after the booking time on InboxPage you can
-  // add the price after the BookingTimeInfo component. You can get the price by uncommenting
-  // sthe following lines:
-
-  // const bookingPrice = isOrder ? tx.attributes.payinTotal : tx.attributes.payoutTotal;
-  // const price = bookingPrice ? formatMoney(intl, bookingPrice) : null;
-
-  // Remember to also add formatMoney function from 'util/currency.js' and add this after BookingTimeInfo:
-  // <div className={css.itemPrice}>{price}</div>
-
-  return (
-    <div className={classNames(css.bookingInfoWrapper, bookingClassName)}>
-      <BookingTimeInfo
-        bookingClassName={bookingClassName}
-        isOrder={isOrder}
-        intl={intl}
-        tx={tx}
-        unitType={unitType}
-        dateType={DATE_TYPE_DATE}
-      />
-    </div>
-  );
-};
-
-BookingInfoMaybe.propTypes = {
-  intl: intlShape.isRequired,
-  isOrder: bool.isRequired,
-  tx: propTypes.transaction.isRequired,
-  unitType: propTypes.bookingUnitType.isRequired,
 };
 
 export const InboxItem = props => {
@@ -195,7 +183,7 @@ export const InboxItem = props => {
   const otherUserDisplayName = <UserDisplayName user={otherUser} intl={intl} />;
   const isOtherUserBanned = otherUser.attributes.banned;
 
-  const isSaleNotification = !isOrder && txIsRequested(tx);
+  const isSaleNotification = !isOrder && txIsPurchased(tx);
   const rowNotificationDot = isSaleNotification ? <div className={css.notificationDot} /> : null;
   const lastTransitionedAt = formatDateIntoPartials(tx.attributes.lastTransitionedAt, intl);
 
@@ -218,13 +206,6 @@ export const InboxItem = props => {
           <div className={classNames(css.itemUsername, stateData.nameClassName)}>
             {otherUserDisplayName}
           </div>
-          <BookingInfoMaybe
-            bookingClassName={stateData.bookingClassName}
-            intl={intl}
-            isOrder={isOrder}
-            tx={tx}
-            unitType={unitType}
-          />
         </div>
         <div className={css.itemState}>
           <div className={classNames(css.stateName, stateData.stateClassName)}>

@@ -31,32 +31,6 @@ exports[`ActivityFeed matches snapshot 1`] = `
     </div>
   </li>
   <li
-    className="transitionItem"
-    key="transition/accept"
-  >
-    <div
-      className="transition"
-    >
-      <div
-        className="bullet"
-      >
-        <p
-          className="transitionContent"
-        >
-          •
-        </p>
-      </div>
-      <div>
-        <p
-          className="transitionContent"
-        />
-        <p
-          className="transitionDate"
-        />
-      </div>
-    </div>
-  </li>
-  <li
     className="messageItem"
     id="msg-msg1"
     key="msg1"

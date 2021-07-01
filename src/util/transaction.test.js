@@ -1,56 +1,56 @@
 import { createUser, createTransaction, createListing, createTxTransition } from './test-data';
 
 import {
+  TRANSITION_CONFIRM_PAYMENT,
+  TRANSITION_EXPIRE_REVIEW_PERIOD,
+  TRANSITION_MARK_DELIVERED,
+  TRANSITION_MARK_RECEIVED,
   TX_TRANSITION_ACTOR_CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER,
   TX_TRANSITION_ACTOR_SYSTEM,
-  TRANSITION_REQUEST,
-  TRANSITION_ACCEPT,
-  TRANSITION_COMPLETE,
-  TRANSITION_EXPIRE_REVIEW_PERIOD,
-  txIsAccepted,
+  txHasBeenReceived,
+  txIsPurchased,
   txIsReviewed,
-  txHasBeenAccepted,
-  txHasBeenDelivered,
 } from './transaction';
 
-const transitionRequest = createTxTransition({
+// transitions
+const transitionConfirmPayment = createTxTransition({
   createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
   by: TX_TRANSITION_ACTOR_CUSTOMER,
-  transition: TRANSITION_REQUEST,
+  transition: TRANSITION_CONFIRM_PAYMENT,
 });
-
-const transitionAccept = createTxTransition({
-  createdAt: new Date(Date.UTC(2017, 10, 9, 8, 12)),
+const transitionMarkDelivered = createTxTransition({
+  createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
   by: TX_TRANSITION_ACTOR_PROVIDER,
-  transition: TRANSITION_ACCEPT,
+  transition: TRANSITION_MARK_DELIVERED,
+});
+const transitionMarkReceived = createTxTransition({
+  createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
+  by: TX_TRANSITION_ACTOR_CUSTOMER,
+  transition: TRANSITION_MARK_RECEIVED,
 });
 
-const transitionDelivered = createTxTransition({
-  createdAt: new Date(Date.UTC(2017, 10, 16, 8, 12)),
-  by: TX_TRANSITION_ACTOR_SYSTEM,
-  transition: TRANSITION_COMPLETE,
-});
 const transitionReviewed = createTxTransition({
   createdAt: new Date(Date.UTC(2017, 10, 16, 8, 12)),
   by: TX_TRANSITION_ACTOR_SYSTEM,
   transition: TRANSITION_EXPIRE_REVIEW_PERIOD,
 });
 
-const txRequested = createTransaction({
-  lastTransition: TRANSITION_REQUEST,
+// transactions
+const txPurchased = createTransaction({
+  lastTransition: TRANSITION_CONFIRM_PAYMENT,
   customer: createUser('user1'),
   provider: createUser('user2'),
   listing: createListing('Listing'),
-  transitions: [transitionRequest],
+  transitions: [transitionConfirmPayment],
 });
 
-const txAccepted = createTransaction({
-  lastTransition: TRANSITION_ACCEPT,
+const txReceived = createTransaction({
+  lastTransition: TRANSITION_MARK_RECEIVED,
   customer: createUser('user1'),
   provider: createUser('user2'),
   listing: createListing('Listing'),
-  transitions: [transitionRequest, transitionAccept],
+  transitions: [transitionConfirmPayment, transitionMarkDelivered, transitionMarkReceived],
 });
 
 const txReviewed = createTransaction({
@@ -58,7 +58,12 @@ const txReviewed = createTransaction({
   customer: createUser('user1'),
   provider: createUser('user2'),
   listing: createListing('Listing'),
-  transitions: [transitionRequest, transitionAccept, transitionDelivered, transitionReviewed],
+  transitions: [
+    transitionConfirmPayment,
+    transitionMarkDelivered,
+    transitionMarkReceived,
+    transitionReviewed,
+  ],
 });
 
 describe('transaction utils', () => {
@@ -66,31 +71,20 @@ describe('transaction utils', () => {
     it(`txIsReviewed(txReviewed) succeeds with last transaction: ${TRANSITION_EXPIRE_REVIEW_PERIOD}`, () => {
       expect(txIsReviewed(txReviewed)).toEqual(true);
     });
-    it(`txIsAccepted(txReviewed) fails with last transaction: ${TRANSITION_EXPIRE_REVIEW_PERIOD}`, () => {
-      expect(txIsAccepted(txReviewed)).toEqual(false);
+    it(`txIsPurchased(txReviewed) fails with last transaction: ${TRANSITION_EXPIRE_REVIEW_PERIOD}`, () => {
+      expect(txIsPurchased(txReviewed)).toEqual(false);
     });
   });
 
   describe('tx has passed a state X', () => {
-    it('txHasBeenAccepted(txRequested) fails', () => {
-      expect(txHasBeenAccepted(txRequested)).toEqual(false);
+    it('txHasBeenReceived(txPurchased) fails', () => {
+      expect(txHasBeenReceived(txPurchased)).toEqual(false);
     });
-    it('txHasBeenDelivered(txRequest) fails', () => {
-      expect(txHasBeenDelivered(txRequested)).toEqual(false);
+    it('txHasBeenReceived(txReceived) succeeds', () => {
+      expect(txHasBeenReceived(txReceived)).toEqual(true);
     });
-
-    it('txHasBeenAccepted(txAccepted) succeeds', () => {
-      expect(txHasBeenAccepted(txAccepted)).toEqual(true);
-    });
-    it('txHasBeenDelivered(txAccepted) fails', () => {
-      expect(txHasBeenDelivered(txAccepted)).toEqual(false);
-    });
-
-    it('txHasBeenAccepted(txReviewed) succeeds', () => {
-      expect(txHasBeenAccepted(txReviewed)).toEqual(true);
-    });
-    it('txHasBeenDelivered(txReviewed) succeeds', () => {
-      expect(txHasBeenDelivered(txReviewed)).toEqual(true);
+    it('txHasBeenReceived(txReviewed) succeeds', () => {
+      expect(txHasBeenReceived(txReviewed)).toEqual(true);
     });
   });
 });
