@@ -45,27 +45,54 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
               "type": "currentUser",
             }
           }
+          disputeProps={
+            Object {
+              "buttonText": "TransactionPage.dispute.actionButton",
+              "error": null,
+              "errorText": "TransactionPage.dispute.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
           fetchLineItemsError={null}
           fetchLineItemsInProgress={false}
           fetchMessagesError={null}
           fetchMessagesInProgress={false}
           fetchTimeSlotsError={null}
           initialMessageFailed={false}
+          leaveReviewProps={
+            Object {
+              "buttonText": "TransactionPage.leaveReview.actionButton",
+              "error": undefined,
+              "errorText": "TransactionPage.leaveReview.actionError",
+              "inProgress": undefined,
+              "onTransition": [Function],
+            }
+          }
           lineItems={null}
           markDeliveredProps={
             Object {
               "buttonText": "TransactionPage.markDelivered.actionButton",
-              "error": undefined,
+              "error": null,
               "errorText": "TransactionPage.markDelivered.actionError",
               "inProgress": false,
               "onTransition": [Function],
             }
           }
-          markReceivedFromPurchaseProps={
+          markReceivedFromPurchasedProps={
             Object {
-              "buttonText": "TransactionPage.markReceivedFromPurchase.actionButton",
+              "buttonText": "TransactionPage.markReceivedFromPurchased.actionButton",
               "error": null,
-              "errorText": "TransactionPage.markReceivedFromPurchase.actionError",
+              "errorText": "TransactionPage.markReceivedFromPurchased.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
+          markReceivedProps={
+            Object {
+              "buttonText": "TransactionPage.markReceived.actionButton",
+              "error": null,
+              "errorText": "TransactionPage.markReceived.actionError",
               "inProgress": false,
               "onTransition": [Function],
             }
@@ -73,6 +100,7 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
           messages={Array []}
           oldestMessagePageFetched={0}
           onFetchTransactionLineItems={[Function]}
+          onOpenReviewModal={[Function]}
           onSendMessage={[Function]}
           onShowMoreMessages={[Function]}
           onSubmitBookingRequest={[Function]}
@@ -214,6 +242,50 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
           transactionRole="customer"
         />
       </div>
+      <injectIntl(ReviewModal)
+        id="ReviewOrderModal"
+        isOpen={false}
+        onCloseModal={[Function]}
+        onSubmitReview={[Function]}
+        reviewSent={false}
+        revieweeName={
+          <UserDisplayName
+            bannedUserDisplayName={null}
+            className={null}
+            deletedUserDisplayName={null}
+            intl={
+              Object {
+                "formatDate": [Function],
+                "formatHTMLMessage": [Function],
+                "formatMessage": [Function],
+                "formatNumber": [Function],
+                "formatPlural": [Function],
+                "formatRelativeTime": [Function],
+                "formatTime": [Function],
+                "now": [Function],
+              }
+            }
+            rootClassName={null}
+            user={
+              Object {
+                "attributes": Object {
+                  "banned": false,
+                  "deleted": false,
+                  "profile": Object {
+                    "abbreviatedName": "TT",
+                    "displayName": "provider1 display name",
+                  },
+                },
+                "id": UUID {
+                  "_sdkType": "UUID",
+                  "uuid": "provider1",
+                },
+                "type": "user",
+              }
+            }
+          />
+        }
+      />
     </LayoutWrapperMain>
     <LayoutWrapperFooter
       className="footer"
@@ -270,26 +342,53 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
               "type": "currentUser",
             }
           }
+          disputeProps={
+            Object {
+              "buttonText": "TransactionPage.dispute.actionButton",
+              "error": null,
+              "errorText": "TransactionPage.dispute.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
           fetchLineItemsError={null}
           fetchLineItemsInProgress={false}
           fetchMessagesError={null}
           fetchTimeSlotsError={null}
           initialMessageFailed={false}
+          leaveReviewProps={
+            Object {
+              "buttonText": "TransactionPage.leaveReview.actionButton",
+              "error": undefined,
+              "errorText": "TransactionPage.leaveReview.actionError",
+              "inProgress": undefined,
+              "onTransition": [Function],
+            }
+          }
           lineItems={null}
           markDeliveredProps={
             Object {
               "buttonText": "TransactionPage.markDelivered.actionButton",
-              "error": undefined,
+              "error": null,
               "errorText": "TransactionPage.markDelivered.actionError",
               "inProgress": false,
               "onTransition": [Function],
             }
           }
-          markReceivedFromPurchaseProps={
+          markReceivedFromPurchasedProps={
             Object {
-              "buttonText": "TransactionPage.markReceivedFromPurchase.actionButton",
+              "buttonText": "TransactionPage.markReceivedFromPurchased.actionButton",
               "error": null,
-              "errorText": "TransactionPage.markReceivedFromPurchase.actionError",
+              "errorText": "TransactionPage.markReceivedFromPurchased.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
+          markReceivedProps={
+            Object {
+              "buttonText": "TransactionPage.markReceived.actionButton",
+              "error": null,
+              "errorText": "TransactionPage.markReceived.actionError",
               "inProgress": false,
               "onTransition": [Function],
             }
@@ -297,6 +396,7 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
           messages={Array []}
           oldestMessagePageFetched={0}
           onFetchTransactionLineItems={[Function]}
+          onOpenReviewModal={[Function]}
           onSendMessage={[Function]}
           onShowMoreMessages={[Function]}
           onSubmitBookingRequest={[Function]}
@@ -438,6 +538,50 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
           transactionRole="provider"
         />
       </div>
+      <injectIntl(ReviewModal)
+        id="ReviewOrderModal"
+        isOpen={false}
+        onCloseModal={[Function]}
+        onSubmitReview={[Function]}
+        reviewSent={false}
+        revieweeName={
+          <UserDisplayName
+            bannedUserDisplayName={null}
+            className={null}
+            deletedUserDisplayName={null}
+            intl={
+              Object {
+                "formatDate": [Function],
+                "formatHTMLMessage": [Function],
+                "formatMessage": [Function],
+                "formatNumber": [Function],
+                "formatPlural": [Function],
+                "formatRelativeTime": [Function],
+                "formatTime": [Function],
+                "now": [Function],
+              }
+            }
+            rootClassName={null}
+            user={
+              Object {
+                "attributes": Object {
+                  "banned": false,
+                  "deleted": false,
+                  "profile": Object {
+                    "abbreviatedName": "TT",
+                    "displayName": "customer1 display name",
+                  },
+                },
+                "id": UUID {
+                  "_sdkType": "UUID",
+                  "uuid": "customer1",
+                },
+                "type": "user",
+              }
+            }
+          />
+        }
+      />
     </LayoutWrapperMain>
     <LayoutWrapperFooter
       className="footer"

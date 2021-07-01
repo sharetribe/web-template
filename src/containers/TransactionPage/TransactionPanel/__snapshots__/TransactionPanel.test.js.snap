@@ -708,53 +708,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
       </div>
     </div>
   </div>
-  <injectIntl(ReviewModal)
-    id="ReviewOrderModal"
-    isOpen={false}
-    onCloseModal={[Function]}
-    onManageDisableScrolling={[Function]}
-    onSubmitReview={[Function]}
-    reviewSent={false}
-    revieweeName={
-      <UserDisplayName
-        bannedUserDisplayName={null}
-        className={null}
-        deletedUserDisplayName={null}
-        intl={
-          Object {
-            "formatDate": [Function],
-            "formatHTMLMessage": [Function],
-            "formatMessage": [Function],
-            "formatNumber": [Function],
-            "formatPlural": [Function],
-            "formatRelativeTime": [Function],
-            "formatTime": [Function],
-            "now": [Function],
-          }
-        }
-        rootClassName={null}
-        user={
-          Object {
-            "attributes": Object {
-              "banned": false,
-              "deleted": false,
-              "profile": Object {
-                "abbreviatedName": "TT",
-                "displayName": "provider display name",
-              },
-            },
-            "id": UUID {
-              "_sdkType": "UUID",
-              "uuid": "provider",
-            },
-            "type": "user",
-          }
-        }
-      />
-    }
-    sendReviewError={null}
-    sendReviewInProgress={false}
-  />
 </div>
 `;
 
@@ -1481,53 +1434,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
       </div>
     </div>
   </div>
-  <injectIntl(ReviewModal)
-    id="ReviewOrderModal"
-    isOpen={false}
-    onCloseModal={[Function]}
-    onManageDisableScrolling={[Function]}
-    onSubmitReview={[Function]}
-    reviewSent={false}
-    revieweeName={
-      <UserDisplayName
-        bannedUserDisplayName={null}
-        className={null}
-        deletedUserDisplayName={null}
-        intl={
-          Object {
-            "formatDate": [Function],
-            "formatHTMLMessage": [Function],
-            "formatMessage": [Function],
-            "formatNumber": [Function],
-            "formatPlural": [Function],
-            "formatRelativeTime": [Function],
-            "formatTime": [Function],
-            "now": [Function],
-          }
-        }
-        rootClassName={null}
-        user={
-          Object {
-            "attributes": Object {
-              "banned": false,
-              "deleted": false,
-              "profile": Object {
-                "abbreviatedName": "TT",
-                "displayName": "provider display name",
-              },
-            },
-            "id": UUID {
-              "_sdkType": "UUID",
-              "uuid": "provider",
-            },
-            "type": "user",
-          }
-        }
-      />
-    }
-    sendReviewError={null}
-    sendReviewInProgress={false}
-  />
 </div>
 `;
 
@@ -2238,53 +2144,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
       </div>
     </div>
   </div>
-  <injectIntl(ReviewModal)
-    id="ReviewOrderModal"
-    isOpen={false}
-    onCloseModal={[Function]}
-    onManageDisableScrolling={[Function]}
-    onSubmitReview={[Function]}
-    reviewSent={false}
-    revieweeName={
-      <UserDisplayName
-        bannedUserDisplayName={null}
-        className={null}
-        deletedUserDisplayName={null}
-        intl={
-          Object {
-            "formatDate": [Function],
-            "formatHTMLMessage": [Function],
-            "formatMessage": [Function],
-            "formatNumber": [Function],
-            "formatPlural": [Function],
-            "formatRelativeTime": [Function],
-            "formatTime": [Function],
-            "now": [Function],
-          }
-        }
-        rootClassName={null}
-        user={
-          Object {
-            "attributes": Object {
-              "banned": false,
-              "deleted": false,
-              "profile": Object {
-                "abbreviatedName": "TT",
-                "displayName": "provider display name",
-              },
-            },
-            "id": UUID {
-              "_sdkType": "UUID",
-              "uuid": "provider",
-            },
-            "type": "user",
-          }
-        }
-      />
-    }
-    sendReviewError={null}
-    sendReviewInProgress={false}
-  />
 </div>
 `;
 
@@ -3028,53 +2887,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
       </div>
     </div>
   </div>
-  <injectIntl(ReviewModal)
-    id="ReviewOrderModal"
-    isOpen={false}
-    onCloseModal={[Function]}
-    onManageDisableScrolling={[Function]}
-    onSubmitReview={[Function]}
-    reviewSent={false}
-    revieweeName={
-      <UserDisplayName
-        bannedUserDisplayName={null}
-        className={null}
-        deletedUserDisplayName={null}
-        intl={
-          Object {
-            "formatDate": [Function],
-            "formatHTMLMessage": [Function],
-            "formatMessage": [Function],
-            "formatNumber": [Function],
-            "formatPlural": [Function],
-            "formatRelativeTime": [Function],
-            "formatTime": [Function],
-            "now": [Function],
-          }
-        }
-        rootClassName={null}
-        user={
-          Object {
-            "attributes": Object {
-              "banned": false,
-              "deleted": false,
-              "profile": Object {
-                "abbreviatedName": "TT",
-                "displayName": "provider display name",
-              },
-            },
-            "id": UUID {
-              "_sdkType": "UUID",
-              "uuid": "provider",
-            },
-            "type": "user",
-          }
-        }
-      />
-    }
-    sendReviewError={null}
-    sendReviewInProgress={false}
-  />
 </div>
 `;
 
@@ -3615,6 +3427,22 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         rootClassName="sendMessageForm"
         sendMessageError={null}
       />
+      <div
+        className="mobileActionButtons"
+      >
+        <ActionButtonsMaybe
+          primaryButtonProps={
+            Object {
+              "buttonText": "leave review",
+              "error": null,
+              "errorText": "leave review failed",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
+          showButtons={true}
+        />
+      </div>
     </div>
     <div
       className="asideDesktop"
@@ -3813,56 +3641,25 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             }
           }
         />
+        <div
+          className="desktopActionButtons"
+        >
+          <ActionButtonsMaybe
+            primaryButtonProps={
+              Object {
+                "buttonText": "leave review",
+                "error": null,
+                "errorText": "leave review failed",
+                "inProgress": false,
+                "onTransition": [Function],
+              }
+            }
+            showButtons={true}
+          />
+        </div>
       </div>
     </div>
   </div>
-  <injectIntl(ReviewModal)
-    id="ReviewOrderModal"
-    isOpen={false}
-    onCloseModal={[Function]}
-    onManageDisableScrolling={[Function]}
-    onSubmitReview={[Function]}
-    reviewSent={false}
-    revieweeName={
-      <UserDisplayName
-        bannedUserDisplayName={null}
-        className={null}
-        deletedUserDisplayName={null}
-        intl={
-          Object {
-            "formatDate": [Function],
-            "formatHTMLMessage": [Function],
-            "formatMessage": [Function],
-            "formatNumber": [Function],
-            "formatPlural": [Function],
-            "formatRelativeTime": [Function],
-            "formatTime": [Function],
-            "now": [Function],
-          }
-        }
-        rootClassName={null}
-        user={
-          Object {
-            "attributes": Object {
-              "banned": false,
-              "deleted": false,
-              "profile": Object {
-                "abbreviatedName": "TT",
-                "displayName": "provider display name",
-              },
-            },
-            "id": UUID {
-              "_sdkType": "UUID",
-              "uuid": "provider",
-            },
-            "type": "user",
-          }
-        }
-      />
-    }
-    sendReviewError={null}
-    sendReviewInProgress={false}
-  />
 </div>
 `;
 
@@ -4538,53 +4335,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
       </div>
     </div>
   </div>
-  <injectIntl(ReviewModal)
-    id="ReviewOrderModal"
-    isOpen={false}
-    onCloseModal={[Function]}
-    onManageDisableScrolling={[Function]}
-    onSubmitReview={[Function]}
-    reviewSent={false}
-    revieweeName={
-      <UserDisplayName
-        bannedUserDisplayName={null}
-        className={null}
-        deletedUserDisplayName={null}
-        intl={
-          Object {
-            "formatDate": [Function],
-            "formatHTMLMessage": [Function],
-            "formatMessage": [Function],
-            "formatNumber": [Function],
-            "formatPlural": [Function],
-            "formatRelativeTime": [Function],
-            "formatTime": [Function],
-            "now": [Function],
-          }
-        }
-        rootClassName={null}
-        user={
-          Object {
-            "attributes": Object {
-              "banned": false,
-              "deleted": false,
-              "profile": Object {
-                "abbreviatedName": "TT",
-                "displayName": "customer display name",
-              },
-            },
-            "id": UUID {
-              "_sdkType": "UUID",
-              "uuid": "customer",
-            },
-            "type": "user",
-          }
-        }
-      />
-    }
-    sendReviewError={null}
-    sendReviewInProgress={false}
-  />
 </div>
 `;
 
@@ -5275,53 +5025,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
       </div>
     </div>
   </div>
-  <injectIntl(ReviewModal)
-    id="ReviewOrderModal"
-    isOpen={false}
-    onCloseModal={[Function]}
-    onManageDisableScrolling={[Function]}
-    onSubmitReview={[Function]}
-    reviewSent={false}
-    revieweeName={
-      <UserDisplayName
-        bannedUserDisplayName={null}
-        className={null}
-        deletedUserDisplayName={null}
-        intl={
-          Object {
-            "formatDate": [Function],
-            "formatHTMLMessage": [Function],
-            "formatMessage": [Function],
-            "formatNumber": [Function],
-            "formatPlural": [Function],
-            "formatRelativeTime": [Function],
-            "formatTime": [Function],
-            "now": [Function],
-          }
-        }
-        rootClassName={null}
-        user={
-          Object {
-            "attributes": Object {
-              "banned": false,
-              "deleted": false,
-              "profile": Object {
-                "abbreviatedName": "TT",
-                "displayName": "customer display name",
-              },
-            },
-            "id": UUID {
-              "_sdkType": "UUID",
-              "uuid": "customer",
-            },
-            "type": "user",
-          }
-        }
-      />
-    }
-    sendReviewError={null}
-    sendReviewInProgress={false}
-  />
 </div>
 `;
 
@@ -5996,53 +5699,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
       </div>
     </div>
   </div>
-  <injectIntl(ReviewModal)
-    id="ReviewOrderModal"
-    isOpen={false}
-    onCloseModal={[Function]}
-    onManageDisableScrolling={[Function]}
-    onSubmitReview={[Function]}
-    reviewSent={false}
-    revieweeName={
-      <UserDisplayName
-        bannedUserDisplayName={null}
-        className={null}
-        deletedUserDisplayName={null}
-        intl={
-          Object {
-            "formatDate": [Function],
-            "formatHTMLMessage": [Function],
-            "formatMessage": [Function],
-            "formatNumber": [Function],
-            "formatPlural": [Function],
-            "formatRelativeTime": [Function],
-            "formatTime": [Function],
-            "now": [Function],
-          }
-        }
-        rootClassName={null}
-        user={
-          Object {
-            "attributes": Object {
-              "banned": false,
-              "deleted": false,
-              "profile": Object {
-                "abbreviatedName": "TT",
-                "displayName": "customer display name",
-              },
-            },
-            "id": UUID {
-              "_sdkType": "UUID",
-              "uuid": "customer",
-            },
-            "type": "user",
-          }
-        }
-      />
-    }
-    sendReviewError={null}
-    sendReviewInProgress={false}
-  />
 </div>
 `;
 
@@ -6750,53 +6406,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
       </div>
     </div>
   </div>
-  <injectIntl(ReviewModal)
-    id="ReviewOrderModal"
-    isOpen={false}
-    onCloseModal={[Function]}
-    onManageDisableScrolling={[Function]}
-    onSubmitReview={[Function]}
-    reviewSent={false}
-    revieweeName={
-      <UserDisplayName
-        bannedUserDisplayName={null}
-        className={null}
-        deletedUserDisplayName={null}
-        intl={
-          Object {
-            "formatDate": [Function],
-            "formatHTMLMessage": [Function],
-            "formatMessage": [Function],
-            "formatNumber": [Function],
-            "formatPlural": [Function],
-            "formatRelativeTime": [Function],
-            "formatTime": [Function],
-            "now": [Function],
-          }
-        }
-        rootClassName={null}
-        user={
-          Object {
-            "attributes": Object {
-              "banned": false,
-              "deleted": false,
-              "profile": Object {
-                "abbreviatedName": "TT",
-                "displayName": "customer display name",
-              },
-            },
-            "id": UUID {
-              "_sdkType": "UUID",
-              "uuid": "customer",
-            },
-            "type": "user",
-          }
-        }
-      />
-    }
-    sendReviewError={null}
-    sendReviewInProgress={false}
-  />
 </div>
 `;
 
@@ -7313,6 +6922,22 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         rootClassName="sendMessageForm"
         sendMessageError={null}
       />
+      <div
+        className="mobileActionButtons"
+      >
+        <ActionButtonsMaybe
+          primaryButtonProps={
+            Object {
+              "buttonText": "leave review",
+              "error": null,
+              "errorText": "leave review failed",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
+          showButtons={true}
+        />
+      </div>
     </div>
     <div
       className="asideDesktop"
@@ -7499,55 +7124,24 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             }
           }
         />
+        <div
+          className="desktopActionButtons"
+        >
+          <ActionButtonsMaybe
+            primaryButtonProps={
+              Object {
+                "buttonText": "leave review",
+                "error": null,
+                "errorText": "leave review failed",
+                "inProgress": false,
+                "onTransition": [Function],
+              }
+            }
+            showButtons={true}
+          />
+        </div>
       </div>
     </div>
   </div>
-  <injectIntl(ReviewModal)
-    id="ReviewOrderModal"
-    isOpen={false}
-    onCloseModal={[Function]}
-    onManageDisableScrolling={[Function]}
-    onSubmitReview={[Function]}
-    reviewSent={false}
-    revieweeName={
-      <UserDisplayName
-        bannedUserDisplayName={null}
-        className={null}
-        deletedUserDisplayName={null}
-        intl={
-          Object {
-            "formatDate": [Function],
-            "formatHTMLMessage": [Function],
-            "formatMessage": [Function],
-            "formatNumber": [Function],
-            "formatPlural": [Function],
-            "formatRelativeTime": [Function],
-            "formatTime": [Function],
-            "now": [Function],
-          }
-        }
-        rootClassName={null}
-        user={
-          Object {
-            "attributes": Object {
-              "banned": false,
-              "deleted": false,
-              "profile": Object {
-                "abbreviatedName": "TT",
-                "displayName": "customer display name",
-              },
-            },
-            "id": UUID {
-              "_sdkType": "UUID",
-              "uuid": "customer",
-            },
-            "type": "user",
-          }
-        }
-      />
-    }
-    sendReviewError={null}
-    sendReviewInProgress={false}
-  />
 </div>
 `;

@@ -114,7 +114,7 @@ describe('TransactionPanel - Sale', () => {
   });
 
   const panelBaseProps = {
-    markReceivedFromPurchaseProps: {
+    markReceivedFromPurchasedProps: {
       inProgress: false,
       error: null,
       onTransition: noop,
@@ -127,6 +127,27 @@ describe('TransactionPanel - Sale', () => {
       onTransition: noop,
       buttonText: 'mark delivered',
       errorText: 'mark delivered failed',
+    },
+    markReceivedProps: {
+      inProgress: false,
+      error: null,
+      onTransition: noop,
+      buttonText: 'mark received',
+      errorText: 'mark received failed',
+    },
+    disputeProps: {
+      inProgress: false,
+      error: null,
+      onTransition: noop,
+      buttonText: 'dispute',
+      errorText: 'dispute failed',
+    },
+    leaveReviewProps: {
+      inProgress: false,
+      error: null,
+      onTransition: noop,
+      buttonText: 'leave review',
+      errorText: 'leave review failed',
     },
     currentUser: createCurrentUser(providerId),
     totalMessages: 2,
@@ -313,7 +334,7 @@ describe('TransactionPanel - Order', () => {
   });
 
   const panelBaseProps = {
-    markReceivedFromPurchaseProps: {
+    markReceivedFromPurchasedProps: {
       inProgress: false,
       error: null,
       onTransition: noop,
@@ -326,6 +347,27 @@ describe('TransactionPanel - Order', () => {
       onTransition: noop,
       buttonText: 'mark delivered',
       errorText: 'mark delivered failed',
+    },
+    markReceivedProps: {
+      inProgress: false,
+      error: null,
+      onTransition: noop,
+      buttonText: 'mark received',
+      errorText: 'mark received failed',
+    },
+    disputeProps: {
+      inProgress: false,
+      error: null,
+      onTransition: noop,
+      buttonText: 'dispute',
+      errorText: 'dispute failed',
+    },
+    leaveReviewProps: {
+      inProgress: false,
+      error: null,
+      onTransition: noop,
+      buttonText: 'leave review',
+      errorText: 'leave review failed',
     },
     intl: fakeIntl,
     currentUser: createCurrentUser(customerId),
