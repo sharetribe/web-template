@@ -9,13 +9,32 @@ import css from './TransactionPanel.module.css';
 const ActionButtonsMaybe = props => {
   const { className, rootClassName, showButtons, primaryButtonProps, secondaryButtonProps } = props;
 
-  const buttonsDisabled = primaryButtonProps.inProgress || secondaryButtonProps?.inProgress;
+  const buttonsDisabled = primaryButtonProps?.inProgress || secondaryButtonProps?.inProgress;
 
-  const primaryErrorMessage = primaryButtonProps.error ? (
-    <p className={css.actionError}>{primaryButtonProps.errorText}</p>
+  const primaryButton = primaryButtonProps ? (
+    <PrimaryButton
+      inProgress={primaryButtonProps.inProgress}
+      disabled={buttonsDisabled}
+      onClick={primaryButtonProps.onTransition}
+    >
+      {primaryButtonProps.buttonText}
+    </PrimaryButton>
   ) : null;
-  const secondaryErrorMessage = secondaryButtonProps ? (
-    <p className={css.actionError}>{secondaryButtonProps.errorText}</p>
+  const primaryErrorMessage = primaryButtonProps?.error ? (
+    <p className={css.actionError}>{primaryButtonProps?.errorText}</p>
+  ) : null;
+
+  const secondaryButton = secondaryButtonProps ? (
+    <SecondaryButton
+      inProgress={secondaryButtonProps?.inProgress}
+      disabled={buttonsDisabled}
+      onClick={secondaryButtonProps.onTransition}
+    >
+      {secondaryButtonProps.buttonText}
+    </SecondaryButton>
+  ) : null;
+  const secondaryErrorMessage = secondaryButtonProps?.error ? (
+    <p className={css.actionError}>{secondaryButtonProps?.errorText}</p>
   ) : null;
 
   const classes = classNames(rootClassName || css.actionButtons, className);
@@ -27,20 +46,8 @@ const ActionButtonsMaybe = props => {
         {secondaryErrorMessage}
       </div>
       <div className={css.actionButtonWrapper}>
-        <SecondaryButton
-          inProgress={declineInProgress}
-          disabled={buttonsDisabled}
-          onClick={onDeclineSale}
-        >
-          {secondaryButtonProps.buttonText}
-        </SecondaryButton>
-        <PrimaryButton
-          inProgress={primaryButtonProps.inProgress}
-          disabled={buttonsDisabled}
-          onClick={primaryButtonProps.onTransition}
-        >
-          {primaryButtonProps.buttonText}
-        </PrimaryButton>
+        {secondaryButton}
+        {primaryButton}
       </div>
     </div>
   ) : null;
