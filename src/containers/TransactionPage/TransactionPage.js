@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { array, arrayOf, bool, func, number, oneOf, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -26,9 +26,11 @@ import {
   LayoutWrapperMain,
   LayoutWrapperFooter,
   Footer,
+  UserDisplayName,
 } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
+import ReviewModal from './ReviewModal/ReviewModal';
 import TransactionPanel from './TransactionPanel/TransactionPanel';
 
 import {
@@ -48,6 +50,10 @@ const CUSTOMER = 'customer';
 
 // TransactionPage handles data loading for Sale and Order views to transaction pages in Inbox.
 export const TransactionPageComponent = props => {
+  const [state, setState] = useState({
+    isReviewModalOpen: false,
+    reviewSubmitted: false,
+  });
   const {
     currentUser,
     initialMessageFailedToTransaction,
@@ -72,7 +78,6 @@ export const TransactionPageComponent = props => {
     sendReviewInProgress,
     transaction,
     transactionRole,
-
     disputeInProgress,
     disputeError,
     onDispute,
@@ -167,6 +172,23 @@ export const TransactionPageComponent = props => {
     redirectToCheckoutPageWithInitialValues(initialValues, currentListing);
   };
 
+  // Open review modal
+  // This is called from ActivityFeed and from action buttons
+  const onOpenReviewModal = () => {
+    setState({ isReviewModalOpen: true });
+  };
+
+  // Submit review and close the review modal
+  const onSubmitReview = values => {
+    const { reviewRating, reviewContent } = values;
+    const rating = Number.parseInt(reviewRating, 10);
+    onSendReview(transactionRole, currentTransaction, rating, reviewContent)
+      .then(r => setState({ isReviewModalOpen: false, reviewSubmitted: true }))
+      .catch(e => {
+        // Do nothing.
+      });
+  };
+
   const deletedListingTitle = intl.formatMessage({
     id: 'TransactionPage.deletedListing',
   });
@@ -228,6 +250,12 @@ export const TransactionPageComponent = props => {
     initialMessageFailedToTransaction.uuid === currentTransaction.id.uuid
   );
 
+  const otherUserDisplayName = isOwnOrder ? (
+    <UserDisplayName user={currentTransaction.provider} intl={intl} />
+  ) : (
+    <UserDisplayName user={currentTransaction.customer} intl={intl} />
+  );
+
   // TransactionPanel is presentational component
   // that currently handles showing everything inside layout's main view area.
   const panel = isDataAvailable ? (
@@ -244,12 +272,10 @@ export const TransactionPageComponent = props => {
       fetchMessagesError={fetchMessagesError}
       sendMessageInProgress={sendMessageInProgress}
       sendMessageError={sendMessageError}
-      sendReviewInProgress={sendReviewInProgress}
-      sendReviewError={sendReviewError}
       onManageDisableScrolling={onManageDisableScrolling}
       onShowMoreMessages={onShowMoreMessages}
       onSendMessage={onSendMessage}
-      onSendReview={onSendReview}
+      onOpenReviewModal={onOpenReviewModal}
       transactionRole={transactionRole}
       markReceivedProps={{
         inProgress: markReceivedInProgress,
@@ -318,6 +344,17 @@ export const TransactionPageComponent = props => {
         </LayoutWrapperTopbar>
         <LayoutWrapperMain>
           <div className={css.root}>{panel}</div>
+          <ReviewModal
+            id="ReviewOrderModal"
+            isOpen={state.isReviewModalOpen}
+            onCloseModal={() => setState({ isReviewModalOpen: false })}
+            onManageDisableScrolling={onManageDisableScrolling}
+            onSubmitReview={onSubmitReview}
+            revieweeName={otherUserDisplayName}
+            reviewSent={state.reviewSubmitted}
+            sendReviewInProgress={sendReviewInProgress}
+            sendReviewError={sendReviewError}
+          />
         </LayoutWrapperMain>
         <LayoutWrapperFooter className={css.footer}>
           <Footer />

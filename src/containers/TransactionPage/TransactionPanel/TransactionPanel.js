@@ -28,7 +28,6 @@ import { isMobileSafari } from '../../../util/userAgent';
 import { formatMoney } from '../../../util/currency';
 import { AvatarLarge, BookingPanel, NamedLink, UserDisplayName } from '../../../components';
 
-import ReviewModal from '../ReviewModal/ReviewModal';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
 
 // These are internal components that make this file more readable.
@@ -84,14 +83,10 @@ export class TransactionPanelComponent extends Component {
     super(props);
     this.state = {
       sendMessageFormFocused: false,
-      isReviewModalOpen: false,
-      reviewSubmitted: false,
     };
     this.isMobSaf = false;
     this.sendMessageFormName = 'TransactionPanel.SendMessageForm';
 
-    this.onOpenReviewModal = this.onOpenReviewModal.bind(this);
-    this.onSubmitReview = this.onSubmitReview.bind(this);
     this.onSendMessageFormFocus = this.onSendMessageFormFocus.bind(this);
     this.onSendMessageFormBlur = this.onSendMessageFormBlur.bind(this);
     this.onMessageSubmit = this.onMessageSubmit.bind(this);
@@ -100,22 +95,6 @@ export class TransactionPanelComponent extends Component {
 
   componentDidMount() {
     this.isMobSaf = isMobileSafari();
-  }
-
-  onOpenReviewModal() {
-    this.setState({ isReviewModalOpen: true });
-  }
-
-  onSubmitReview(values) {
-    const { onSendReview, transaction, transactionRole } = this.props;
-    const currentTransaction = ensureTransaction(transaction);
-    const { reviewRating, reviewContent } = values;
-    const rating = Number.parseInt(reviewRating, 10);
-    onSendReview(transactionRole, currentTransaction, rating, reviewContent)
-      .then(r => this.setState({ isReviewModalOpen: false, reviewSubmitted: true }))
-      .catch(e => {
-        // Do nothing.
-      });
   }
 
   onSendMessageFormFocus() {
@@ -174,9 +153,8 @@ export class TransactionPanelComponent extends Component {
       fetchMessagesError,
       sendMessageInProgress,
       sendMessageError,
-      sendReviewInProgress,
-      sendReviewError,
       onManageDisableScrolling,
+      onOpenReviewModal,
       onShowMoreMessages,
       transactionRole,
       intl,
@@ -278,12 +256,12 @@ export class TransactionPanelComponent extends Component {
       id: 'TransactionPanel.deletedListingTitle',
     });
 
-    const {
-      authorDisplayName,
-      customerDisplayName,
-      otherUserDisplayName,
-      otherUserDisplayNameString,
-    } = displayNames(currentUser, currentProvider, currentCustomer, intl);
+    const { authorDisplayName, customerDisplayName, otherUserDisplayNameString } = displayNames(
+      currentUser,
+      currentProvider,
+      currentCustomer,
+      intl
+    );
 
     const { publicData, geolocation } = currentListing.attributes;
     const location = publicData && publicData.location ? publicData.location : {};
@@ -393,7 +371,7 @@ export class TransactionPanelComponent extends Component {
               initialMessageFailed={initialMessageFailed}
               messages={messages}
               oldestMessagePageFetched={oldestMessagePageFetched}
-              onOpenReviewModal={this.onOpenReviewModal}
+              onOpenReviewModal={onOpenReviewModal}
               onShowMoreMessages={() => onShowMoreMessages(currentTransaction.id)}
               totalMessagePages={totalMessagePages}
             />
@@ -466,17 +444,6 @@ export class TransactionPanelComponent extends Component {
             </div>
           </div>
         </div>
-        <ReviewModal
-          id="ReviewOrderModal"
-          isOpen={this.state.isReviewModalOpen}
-          onCloseModal={() => this.setState({ isReviewModalOpen: false })}
-          onManageDisableScrolling={onManageDisableScrolling}
-          onSubmitReview={this.onSubmitReview}
-          revieweeName={otherUserDisplayName}
-          reviewSent={this.state.reviewSubmitted}
-          sendReviewInProgress={sendReviewInProgress}
-          sendReviewError={sendReviewError}
-        />
       </div>
     );
   }
@@ -521,12 +488,10 @@ TransactionPanelComponent.propTypes = {
   fetchMessagesError: propTypes.error,
   sendMessageInProgress: bool.isRequired,
   sendMessageError: propTypes.error,
-  sendReviewInProgress: bool.isRequired,
-  sendReviewError: propTypes.error,
   onManageDisableScrolling: func.isRequired,
+  onOpenReviewModal: func.isRequired,
   onShowMoreMessages: func.isRequired,
   onSendMessage: func.isRequired,
-  onSendReview: func.isRequired,
   onSubmitBookingRequest: func.isRequired,
   timeSlots: arrayOf(propTypes.timeSlot),
   fetchTimeSlotsError: propTypes.error,
