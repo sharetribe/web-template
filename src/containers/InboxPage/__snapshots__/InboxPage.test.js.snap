@@ -102,10 +102,10 @@ exports[`InboxPage matches snapshot 1`] = `
             stateData={
               Object {
                 "bookingClassName": "bookingNoActionNeeded",
-                "lastTransitionedAtClassName": "lastTransitionedAtEmphasized",
+                "lastTransitionedAtClassName": "lastTransitionedAtNotEmphasized",
                 "nameClassName": "nameNotEmphasized",
-                "state": "InboxPage.stateRequested",
-                "stateClassName": "stateActionNeeded",
+                "state": "InboxPage.statePurchased",
+                "stateClassName": "stateNoActionNeeded",
               }
             }
             tx={
@@ -172,11 +172,6 @@ exports[`InboxPage matches snapshot 1`] = `
                       "by": "customer",
                       "createdAt": 2017-05-01T00:00:01.000Z,
                       "transition": "transition/confirm-payment",
-                    },
-                    Object {
-                      "by": "provider",
-                      "createdAt": 2017-06-01T00:00:00.000Z,
-                      "transition": "transition/accept",
                     },
                   ],
                 },
@@ -256,10 +251,10 @@ exports[`InboxPage matches snapshot 1`] = `
             stateData={
               Object {
                 "bookingClassName": "bookingNoActionNeeded",
-                "lastTransitionedAtClassName": "lastTransitionedAtEmphasized",
+                "lastTransitionedAtClassName": "lastTransitionedAtNotEmphasized",
                 "nameClassName": "nameNotEmphasized",
-                "state": "InboxPage.stateRequested",
-                "stateClassName": "stateActionNeeded",
+                "state": "InboxPage.statePurchased",
+                "stateClassName": "stateNoActionNeeded",
               }
             }
             tx={
@@ -326,11 +321,6 @@ exports[`InboxPage matches snapshot 1`] = `
                       "by": "customer",
                       "createdAt": 2017-05-01T00:00:01.000Z,
                       "transition": "transition/confirm-payment",
-                    },
-                    Object {
-                      "by": "provider",
-                      "createdAt": 2017-06-01T00:00:00.000Z,
-                      "transition": "transition/accept",
                     },
                   ],
                 },
@@ -449,35 +439,17 @@ exports[`InboxPage matches snapshot 2`] = `
           provider-user-id display name
         </span>
       </div>
-      <div
-        className="bookingInfoWrapper bookingNoActionNeeded"
-      >
-        <div
-          className="bookingInfo bookingNoActionNeeded"
-        >
-          <span
-            className="dateSection"
-          >
-            Feb 15, 2017 -
-          </span>
-          <span
-            className="dateSection"
-          >
-            Feb 16, 2017
-          </span>
-        </div>
-      </div>
     </div>
     <div
       className="itemState"
     >
       <div
-        className="stateName stateActionNeeded"
+        className="stateName stateNoActionNeeded"
       >
-        InboxPage.stateRequested
+        InboxPage.statePurchased
       </div>
       <div
-        className="lastTransitionedAt lastTransitionedAtEmphasized"
+        className="lastTransitionedAt lastTransitionedAtNotEmphasized"
         title="2017-01-15"
       >
         2017-01-15
@@ -588,10 +560,10 @@ exports[`InboxPage matches snapshot 3`] = `
             }
             stateData={
               Object {
-                "bookingClassName": "bookingActionNeeded",
-                "lastTransitionedAtClassName": "lastTransitionedAtEmphasized",
-                "nameClassName": "nameEmphasized",
-                "state": "InboxPage.statePending",
+                "bookingClassName": "bookingNoActionNeeded",
+                "lastTransitionedAtClassName": "lastTransitionedAtNotEmphasized",
+                "nameClassName": "nameNotEmphasized",
+                "state": "InboxPage.statePurchased",
                 "stateClassName": "stateActionNeeded",
               }
             }
@@ -659,11 +631,6 @@ exports[`InboxPage matches snapshot 3`] = `
                       "by": "customer",
                       "createdAt": 2017-05-01T00:00:01.000Z,
                       "transition": "transition/confirm-payment",
-                    },
-                    Object {
-                      "by": "provider",
-                      "createdAt": 2017-06-01T00:00:00.000Z,
-                      "transition": "transition/accept",
                     },
                   ],
                 },
@@ -742,10 +709,10 @@ exports[`InboxPage matches snapshot 3`] = `
             }
             stateData={
               Object {
-                "bookingClassName": "bookingActionNeeded",
-                "lastTransitionedAtClassName": "lastTransitionedAtEmphasized",
-                "nameClassName": "nameEmphasized",
-                "state": "InboxPage.statePending",
+                "bookingClassName": "bookingNoActionNeeded",
+                "lastTransitionedAtClassName": "lastTransitionedAtNotEmphasized",
+                "nameClassName": "nameNotEmphasized",
+                "state": "InboxPage.statePurchased",
                 "stateClassName": "stateActionNeeded",
               }
             }
@@ -813,11 +780,6 @@ exports[`InboxPage matches snapshot 3`] = `
                       "by": "customer",
                       "createdAt": 2017-05-01T00:00:01.000Z,
                       "transition": "transition/confirm-payment",
-                    },
-                    Object {
-                      "by": "provider",
-                      "createdAt": 2017-06-01T00:00:00.000Z,
-                      "transition": "transition/accept",
                     },
                   ],
                 },
@@ -932,31 +894,13 @@ exports[`InboxPage matches snapshot 4`] = `
       className="itemInfo"
     >
       <div
-        className="itemUsername nameEmphasized"
+        className="itemUsername nameNotEmphasized"
       >
         <span
           className=""
         >
           customer-user-id display name
         </span>
-      </div>
-      <div
-        className="bookingInfoWrapper bookingActionNeeded"
-      >
-        <div
-          className="bookingInfo bookingActionNeeded"
-        >
-          <span
-            className="dateSection"
-          >
-            Feb 15, 2017 -
-          </span>
-          <span
-            className="dateSection"
-          >
-            Feb 16, 2017
-          </span>
-        </div>
       </div>
     </div>
     <div
@@ -965,10 +909,10 @@ exports[`InboxPage matches snapshot 4`] = `
       <div
         className="stateName stateActionNeeded"
       >
-        InboxPage.statePending
+        InboxPage.statePurchased
       </div>
       <div
-        className="lastTransitionedAt lastTransitionedAtEmphasized"
+        className="lastTransitionedAt lastTransitionedAtNotEmphasized"
         title="2017-01-15"
       >
         2017-01-15

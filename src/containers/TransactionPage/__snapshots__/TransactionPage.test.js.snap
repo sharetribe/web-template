@@ -23,8 +23,6 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
         className="root"
       >
         <injectIntl(TransactionPanelComponent)
-          acceptInProgress={false}
-          acceptSaleError={null}
           className="tabContent tabContentVisible"
           currentUser={
             Object {
@@ -47,20 +45,62 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
               "type": "currentUser",
             }
           }
-          declineInProgress={false}
-          declineSaleError={null}
+          disputeProps={
+            Object {
+              "buttonText": "TransactionPage.dispute.actionButton",
+              "error": null,
+              "errorText": "TransactionPage.dispute.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
           fetchLineItemsError={null}
           fetchLineItemsInProgress={false}
           fetchMessagesError={null}
           fetchMessagesInProgress={false}
           fetchTimeSlotsError={null}
           initialMessageFailed={false}
+          leaveReviewProps={
+            Object {
+              "buttonText": "TransactionPage.leaveReview.actionButton",
+              "error": undefined,
+              "errorText": "TransactionPage.leaveReview.actionError",
+              "inProgress": undefined,
+              "onTransition": [Function],
+            }
+          }
           lineItems={null}
+          markDeliveredProps={
+            Object {
+              "buttonText": "TransactionPage.markDelivered.actionButton",
+              "error": null,
+              "errorText": "TransactionPage.markDelivered.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
+          markReceivedFromPurchasedProps={
+            Object {
+              "buttonText": "TransactionPage.markReceivedFromPurchased.actionButton",
+              "error": null,
+              "errorText": "TransactionPage.markReceivedFromPurchased.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
+          markReceivedProps={
+            Object {
+              "buttonText": "TransactionPage.markReceived.actionButton",
+              "error": null,
+              "errorText": "TransactionPage.markReceived.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
           messages={Array []}
           oldestMessagePageFetched={0}
-          onAcceptSale={[Function]}
-          onDeclineSale={[Function]}
           onFetchTransactionLineItems={[Function]}
+          onOpenReviewModal={[Function]}
           onSendMessage={[Function]}
           onShowMoreMessages={[Function]}
           onSubmitBookingRequest={[Function]}
@@ -87,11 +127,11 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
                       "amount": 1000,
                       "currency": "USD",
                     },
-                    "quantity": "3",
+                    "quantity": "1",
                     "reversal": false,
                     "unitPrice": Money {
                       "_sdkType": "Money",
-                      "amount": 333.3333333333333,
+                      "amount": 1000,
                       "currency": "USD",
                     },
                   },
@@ -134,26 +174,9 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
                     "createdAt": 2017-05-01T00:00:01.000Z,
                     "transition": "transition/confirm-payment",
                   },
-                  Object {
-                    "by": "provider",
-                    "createdAt": 2017-06-01T00:00:00.000Z,
-                    "transition": "transition/accept",
-                  },
                 ],
               },
-              "booking": Object {
-                "attributes": Object {
-                  "displayEnd": 2017-06-13T00:00:00.000Z,
-                  "displayStart": 2017-06-10T00:00:00.000Z,
-                  "end": 2017-06-13T00:00:00.000Z,
-                  "start": 2017-06-10T00:00:00.000Z,
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "booking1",
-                },
-                "type": "booking",
-              },
+              "booking": null,
               "customer": Object {
                 "attributes": Object {
                   "banned": false,
@@ -219,6 +242,50 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
           transactionRole="customer"
         />
       </div>
+      <injectIntl(ReviewModal)
+        id="ReviewOrderModal"
+        isOpen={false}
+        onCloseModal={[Function]}
+        onSubmitReview={[Function]}
+        reviewSent={false}
+        revieweeName={
+          <UserDisplayName
+            bannedUserDisplayName={null}
+            className={null}
+            deletedUserDisplayName={null}
+            intl={
+              Object {
+                "formatDate": [Function],
+                "formatHTMLMessage": [Function],
+                "formatMessage": [Function],
+                "formatNumber": [Function],
+                "formatPlural": [Function],
+                "formatRelativeTime": [Function],
+                "formatTime": [Function],
+                "now": [Function],
+              }
+            }
+            rootClassName={null}
+            user={
+              Object {
+                "attributes": Object {
+                  "banned": false,
+                  "deleted": false,
+                  "profile": Object {
+                    "abbreviatedName": "TT",
+                    "displayName": "provider1 display name",
+                  },
+                },
+                "id": UUID {
+                  "_sdkType": "UUID",
+                  "uuid": "provider1",
+                },
+                "type": "user",
+              }
+            }
+          />
+        }
+      />
     </LayoutWrapperMain>
     <LayoutWrapperFooter
       className="footer"
@@ -253,8 +320,6 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
         className="root"
       >
         <injectIntl(TransactionPanelComponent)
-          acceptInProgress={false}
-          acceptSaleError={null}
           className="tabContent tabContentVisible"
           currentUser={
             Object {
@@ -277,19 +342,61 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
               "type": "currentUser",
             }
           }
-          declineInProgress={false}
-          declineSaleError={null}
+          disputeProps={
+            Object {
+              "buttonText": "TransactionPage.dispute.actionButton",
+              "error": null,
+              "errorText": "TransactionPage.dispute.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
           fetchLineItemsError={null}
           fetchLineItemsInProgress={false}
           fetchMessagesError={null}
           fetchTimeSlotsError={null}
           initialMessageFailed={false}
+          leaveReviewProps={
+            Object {
+              "buttonText": "TransactionPage.leaveReview.actionButton",
+              "error": undefined,
+              "errorText": "TransactionPage.leaveReview.actionError",
+              "inProgress": undefined,
+              "onTransition": [Function],
+            }
+          }
           lineItems={null}
+          markDeliveredProps={
+            Object {
+              "buttonText": "TransactionPage.markDelivered.actionButton",
+              "error": null,
+              "errorText": "TransactionPage.markDelivered.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
+          markReceivedFromPurchasedProps={
+            Object {
+              "buttonText": "TransactionPage.markReceivedFromPurchased.actionButton",
+              "error": null,
+              "errorText": "TransactionPage.markReceivedFromPurchased.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
+          markReceivedProps={
+            Object {
+              "buttonText": "TransactionPage.markReceived.actionButton",
+              "error": null,
+              "errorText": "TransactionPage.markReceived.actionError",
+              "inProgress": false,
+              "onTransition": [Function],
+            }
+          }
           messages={Array []}
           oldestMessagePageFetched={0}
-          onAcceptSale={[Function]}
-          onDeclineSale={[Function]}
           onFetchTransactionLineItems={[Function]}
+          onOpenReviewModal={[Function]}
           onSendMessage={[Function]}
           onShowMoreMessages={[Function]}
           onSubmitBookingRequest={[Function]}
@@ -316,11 +423,11 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
                       "amount": 1000,
                       "currency": "USD",
                     },
-                    "quantity": "3",
+                    "quantity": "1",
                     "reversal": false,
                     "unitPrice": Money {
                       "_sdkType": "Money",
-                      "amount": 333.3333333333333,
+                      "amount": 1000,
                       "currency": "USD",
                     },
                   },
@@ -363,26 +470,9 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
                     "createdAt": 2017-05-01T00:00:01.000Z,
                     "transition": "transition/confirm-payment",
                   },
-                  Object {
-                    "by": "provider",
-                    "createdAt": 2017-06-01T00:00:00.000Z,
-                    "transition": "transition/accept",
-                  },
                 ],
               },
-              "booking": Object {
-                "attributes": Object {
-                  "displayEnd": 2017-06-13T00:00:00.000Z,
-                  "displayStart": 2017-06-10T00:00:00.000Z,
-                  "end": 2017-06-13T00:00:00.000Z,
-                  "start": 2017-06-10T00:00:00.000Z,
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "booking1",
-                },
-                "type": "booking",
-              },
+              "booking": null,
               "customer": Object {
                 "attributes": Object {
                   "banned": false,
@@ -448,6 +538,50 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
           transactionRole="provider"
         />
       </div>
+      <injectIntl(ReviewModal)
+        id="ReviewOrderModal"
+        isOpen={false}
+        onCloseModal={[Function]}
+        onSubmitReview={[Function]}
+        reviewSent={false}
+        revieweeName={
+          <UserDisplayName
+            bannedUserDisplayName={null}
+            className={null}
+            deletedUserDisplayName={null}
+            intl={
+              Object {
+                "formatDate": [Function],
+                "formatHTMLMessage": [Function],
+                "formatMessage": [Function],
+                "formatNumber": [Function],
+                "formatPlural": [Function],
+                "formatRelativeTime": [Function],
+                "formatTime": [Function],
+                "now": [Function],
+              }
+            }
+            rootClassName={null}
+            user={
+              Object {
+                "attributes": Object {
+                  "banned": false,
+                  "deleted": false,
+                  "profile": Object {
+                    "abbreviatedName": "TT",
+                    "displayName": "customer1 display name",
+                  },
+                },
+                "id": UUID {
+                  "_sdkType": "UUID",
+                  "uuid": "customer1",
+                },
+                "type": "user",
+              }
+            }
+          />
+        }
+      />
     </LayoutWrapperMain>
     <LayoutWrapperFooter
       className="footer"

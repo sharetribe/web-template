@@ -11,8 +11,10 @@ import {
   getReview1Transition,
   getReview2Transition,
   txIsInFirstReviewBy,
-  TRANSITION_ACCEPT,
-  TRANSITION_DECLINE,
+  TRANSITION_DISPUTE,
+  TRANSITION_MARK_RECEIVED,
+  TRANSITION_MARK_RECEIVED_FROM_PURCHASED,
+  TRANSITION_MARK_DELIVERED,
 } from '../../util/transaction';
 import { transactionLineItems } from '../../util/api';
 import * as log from '../../util/log';
@@ -41,13 +43,24 @@ export const FETCH_TRANSITIONS_REQUEST = 'app/TransactionPage/FETCH_TRANSITIONS_
 export const FETCH_TRANSITIONS_SUCCESS = 'app/TransactionPage/FETCH_TRANSITIONS_SUCCESS';
 export const FETCH_TRANSITIONS_ERROR = 'app/TransactionPage/FETCH_TRANSITIONS_ERROR';
 
-export const ACCEPT_SALE_REQUEST = 'app/TransactionPage/ACCEPT_SALE_REQUEST';
-export const ACCEPT_SALE_SUCCESS = 'app/TransactionPage/ACCEPT_SALE_SUCCESS';
-export const ACCEPT_SALE_ERROR = 'app/TransactionPage/ACCEPT_SALE_ERROR';
+export const MARK_RECEIVED_FROM_PURCHASED_REQUEST =
+  'app/TransactionPage/MARK_RECEIVED_FROM_PURCHASED_REQUEST';
+export const MARK_RECEIVED_FROM_PURCHASED_SUCCESS =
+  'app/TransactionPage/MARK_RECEIVED_FROM_PURCHASED_SUCCESS';
+export const MARK_RECEIVED_FROM_PURCHASED_ERROR =
+  'app/TransactionPage/MARK_RECEIVED_FROM_PURCHASED_ERROR';
 
-export const DECLINE_SALE_REQUEST = 'app/TransactionPage/DECLINE_SALE_REQUEST';
-export const DECLINE_SALE_SUCCESS = 'app/TransactionPage/DECLINE_SALE_SUCCESS';
-export const DECLINE_SALE_ERROR = 'app/TransactionPage/DECLINE_SALE_ERROR';
+export const MARK_DELIVERED_REQUEST = 'app/TransactionPage/MARK_DELIVERED_REQUEST';
+export const MARK_DELIVERED_SUCCESS = 'app/TransactionPage/MARK_DELIVERED_SUCCESS';
+export const MARK_DELIVERED_ERROR = 'app/TransactionPage/MARK_DELIVERED_ERROR';
+
+export const MARK_RECEIVED_REQUEST = 'app/TransactionPage/MARK_RECEIVED_REQUEST';
+export const MARK_RECEIVED_SUCCESS = 'app/TransactionPage/MARK_RECEIVED_SUCCESS';
+export const MARK_RECEIVED_ERROR = 'app/TransactionPage/MARK_RECEIVED_ERROR';
+
+export const DISPUTE_REQUEST = 'app/TransactionPage/DISPUTE_REQUEST';
+export const DISPUTE_SUCCESS = 'app/TransactionPage/DISPUTE_SUCCESS';
+export const DISPUTE_ERROR = 'app/TransactionPage/DISPUTE_ERROR';
 
 export const FETCH_MESSAGES_REQUEST = 'app/TransactionPage/FETCH_MESSAGES_REQUEST';
 export const FETCH_MESSAGES_SUCCESS = 'app/TransactionPage/FETCH_MESSAGES_SUCCESS';
@@ -75,10 +88,14 @@ const initialState = {
   fetchTransactionInProgress: false,
   fetchTransactionError: null,
   transactionRef: null,
-  acceptInProgress: false,
-  acceptSaleError: null,
-  declineInProgress: false,
-  declineSaleError: null,
+  markReceivedInProgress: false,
+  markReceivedError: null,
+  markReceivedFromPurchasedInProgress: false,
+  markReceivedFromPurchasedError: null,
+  markDeliveredInProgress: false,
+  markDeliveredError: null,
+  disputeInProgress: false,
+  disputeError: null,
   fetchMessagesInProgress: false,
   fetchMessagesError: null,
   totalMessages: 0,
@@ -134,19 +151,49 @@ export default function checkoutPageReducer(state = initialState, action = {}) {
       console.error(payload); // eslint-disable-line
       return { ...state, fetchTransitionsInProgress: false, fetchTransitionsError: payload };
 
-    case ACCEPT_SALE_REQUEST:
-      return { ...state, acceptInProgress: true, acceptSaleError: null, declineSaleError: null };
-    case ACCEPT_SALE_SUCCESS:
-      return { ...state, acceptInProgress: false };
-    case ACCEPT_SALE_ERROR:
-      return { ...state, acceptInProgress: false, acceptSaleError: payload };
+    case MARK_RECEIVED_FROM_PURCHASED_REQUEST:
+      return {
+        ...state,
+        markReceivedFromPurchasedInProgress: true,
+        markReceivedFromPurchasedError: null,
+      };
+    case MARK_RECEIVED_FROM_PURCHASED_SUCCESS:
+      return { ...state, markReceivedFromPurchasedInProgress: false };
+    case MARK_RECEIVED_FROM_PURCHASED_ERROR:
+      return {
+        ...state,
+        markReceivedFromPurchasedInProgress: false,
+        markReceivedFromPurchasedError: payload,
+      };
 
-    case DECLINE_SALE_REQUEST:
-      return { ...state, declineInProgress: true, declineSaleError: null, acceptSaleError: null };
-    case DECLINE_SALE_SUCCESS:
-      return { ...state, declineInProgress: false };
-    case DECLINE_SALE_ERROR:
-      return { ...state, declineInProgress: false, declineSaleError: payload };
+    case MARK_DELIVERED_REQUEST:
+      return { ...state, markDeliveredInProgress: true, markDeliveredError: null };
+    case MARK_DELIVERED_SUCCESS:
+      return { ...state, markDeliveredInProgress: false };
+    case MARK_DELIVERED_ERROR:
+      return { ...state, markDeliveredInProgress: false, markDeliveredError: payload };
+
+    case MARK_RECEIVED_REQUEST:
+      return {
+        ...state,
+        markReceivedInProgress: true,
+        markReceivedError: null,
+      };
+    case MARK_RECEIVED_SUCCESS:
+      return { ...state, markReceivedInProgress: false };
+    case MARK_RECEIVED_ERROR:
+      return {
+        ...state,
+        markReceivedInProgress: false,
+        markReceivedError: payload,
+      };
+
+    case DISPUTE_REQUEST:
+      return { ...state, disputeInProgress: true, disputeError: null };
+    case DISPUTE_SUCCESS:
+      return { ...state, disputeInProgress: false };
+    case DISPUTE_ERROR:
+      return { ...state, disputeInProgress: false, disputeError: payload };
 
     case FETCH_MESSAGES_REQUEST:
       return { ...state, fetchMessagesInProgress: true, fetchMessagesError: null };
@@ -207,8 +254,9 @@ export default function checkoutPageReducer(state = initialState, action = {}) {
 
 // ================ Selectors ================ //
 
-export const acceptOrDeclineInProgress = state => {
-  return state.TransactionPage.acceptInProgress || state.TransactionPage.declineInProgress;
+export const transitionInProgress = state => {
+  const pageState = state.TransactionPage;
+  return pageState.markReceivedFromPurchasedInProgress || pageState.markDeliveredInProgress;
 };
 
 // ================ Action creators ================ //
@@ -231,13 +279,25 @@ const fetchTransitionsSuccess = response => ({
 });
 const fetchTransitionsError = e => ({ type: FETCH_TRANSITIONS_ERROR, error: true, payload: e });
 
-const acceptSaleRequest = () => ({ type: ACCEPT_SALE_REQUEST });
-const acceptSaleSuccess = () => ({ type: ACCEPT_SALE_SUCCESS });
-const acceptSaleError = e => ({ type: ACCEPT_SALE_ERROR, error: true, payload: e });
+const markReceivedFromPurchasedRequest = () => ({ type: MARK_RECEIVED_FROM_PURCHASED_REQUEST });
+const markReceivedFromPurchasedSuccess = () => ({ type: MARK_RECEIVED_FROM_PURCHASED_SUCCESS });
+const markReceivedFromPurchasedError = e => ({
+  type: MARK_RECEIVED_FROM_PURCHASED_ERROR,
+  error: true,
+  payload: e,
+});
 
-const declineSaleRequest = () => ({ type: DECLINE_SALE_REQUEST });
-const declineSaleSuccess = () => ({ type: DECLINE_SALE_SUCCESS });
-const declineSaleError = e => ({ type: DECLINE_SALE_ERROR, error: true, payload: e });
+const markDeliveredRequest = () => ({ type: MARK_DELIVERED_REQUEST });
+const markDeliveredSuccess = () => ({ type: MARK_DELIVERED_SUCCESS });
+const markDeliveredError = e => ({ type: MARK_DELIVERED_ERROR, error: true, payload: e });
+
+const markReceivedRequest = () => ({ type: MARK_RECEIVED_REQUEST });
+const markReceivedSuccess = () => ({ type: MARK_RECEIVED_SUCCESS });
+const markReceivedError = e => ({ type: MARK_RECEIVED_ERROR, error: true, payload: e });
+
+const disputeRequest = () => ({ type: DISPUTE_REQUEST });
+const disputeSuccess = () => ({ type: DISPUTE_SUCCESS });
+const disputeError = e => ({ type: DISPUTE_ERROR, error: true, payload: e });
 
 const fetchMessagesRequest = () => ({ type: FETCH_MESSAGES_REQUEST });
 const fetchMessagesSuccess = (messages, pagination) => ({
@@ -349,49 +409,100 @@ export const fetchTransaction = (id, txRole) => (dispatch, getState, sdk) => {
     });
 };
 
-export const acceptSale = id => (dispatch, getState, sdk) => {
-  if (acceptOrDeclineInProgress(getState())) {
-    return Promise.reject(new Error('Accept or decline already in progress'));
+export const markReceivedFromPurchased = id => (dispatch, getState, sdk) => {
+  if (transitionInProgress(getState())) {
+    return Promise.reject(new Error('Transition already in progress'));
   }
-  dispatch(acceptSaleRequest());
+  dispatch(markReceivedFromPurchasedRequest());
 
   return sdk.transactions
-    .transition({ id, transition: TRANSITION_ACCEPT, params: {} }, { expand: true })
+    .transition(
+      { id, transition: TRANSITION_MARK_RECEIVED_FROM_PURCHASED, params: {} },
+      { expand: true }
+    )
     .then(response => {
       dispatch(addMarketplaceEntities(response));
-      dispatch(acceptSaleSuccess());
+      dispatch(markReceivedFromPurchasedSuccess());
       dispatch(fetchCurrentUserNotifications());
       return response;
     })
     .catch(e => {
-      dispatch(acceptSaleError(storableError(e)));
-      log.error(e, 'accept-sale-failed', {
+      dispatch(markReceivedFromPurchasedError(storableError(e)));
+      log.error(e, 'mark-received-from-purchase-failed', {
         txId: id,
-        transition: TRANSITION_ACCEPT,
+        transition: TRANSITION_MARK_RECEIVED_FROM_PURCHASED,
       });
       throw e;
     });
 };
 
-export const declineSale = id => (dispatch, getState, sdk) => {
-  if (acceptOrDeclineInProgress(getState())) {
-    return Promise.reject(new Error('Accept or decline already in progress'));
+export const markDelivered = id => (dispatch, getState, sdk) => {
+  if (transitionInProgress(getState())) {
+    return Promise.reject(new Error('Transition already in progress'));
   }
-  dispatch(declineSaleRequest());
+  dispatch(markDeliveredRequest());
 
   return sdk.transactions
-    .transition({ id, transition: TRANSITION_DECLINE, params: {} }, { expand: true })
+    .transition({ id, transition: TRANSITION_MARK_DELIVERED, params: {} }, { expand: true })
     .then(response => {
       dispatch(addMarketplaceEntities(response));
-      dispatch(declineSaleSuccess());
+      dispatch(markDeliveredSuccess());
       dispatch(fetchCurrentUserNotifications());
       return response;
     })
     .catch(e => {
-      dispatch(declineSaleError(storableError(e)));
-      log.error(e, 'reject-sale-failed', {
+      dispatch(markDeliveredError(storableError(e)));
+      log.error(e, 'mark-delivered-failed', {
         txId: id,
-        transition: TRANSITION_DECLINE,
+        transition: TRANSITION_MARK_DELIVERED,
+      });
+      throw e;
+    });
+};
+
+export const markReceived = id => (dispatch, getState, sdk) => {
+  if (transitionInProgress(getState())) {
+    return Promise.reject(new Error('Transition already in progress'));
+  }
+  dispatch(markReceivedRequest());
+
+  return sdk.transactions
+    .transition({ id, transition: TRANSITION_MARK_RECEIVED, params: {} }, { expand: true })
+    .then(response => {
+      dispatch(addMarketplaceEntities(response));
+      dispatch(markReceivedSuccess());
+      dispatch(fetchCurrentUserNotifications());
+      return response;
+    })
+    .catch(e => {
+      dispatch(markReceivedError(storableError(e)));
+      log.error(e, 'mark-received-failed', {
+        txId: id,
+        transition: TRANSITION_MARK_RECEIVED,
+      });
+      throw e;
+    });
+};
+
+export const dispute = id => (dispatch, getState, sdk) => {
+  if (transitionInProgress(getState())) {
+    return Promise.reject(new Error('Transition already in progress'));
+  }
+  dispatch(disputeRequest());
+
+  return sdk.transactions
+    .transition({ id, transition: TRANSITION_DISPUTE, params: {} }, { expand: true })
+    .then(response => {
+      dispatch(addMarketplaceEntities(response));
+      dispatch(disputeSuccess());
+      dispatch(fetchCurrentUserNotifications());
+      return response;
+    })
+    .catch(e => {
+      dispatch(disputeError(storableError(e)));
+      log.error(e, 'dispute-failed', {
+        txId: id,
+        transition: TRANSITION_DISPUTE,
       });
       throw e;
     });

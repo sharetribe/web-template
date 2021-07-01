@@ -108,6 +108,7 @@ import * as ListingImageGallery from './containers/ListingPage/ListingImageGalle
 import * as PasswordRecoveryForm from './containers/PasswordRecoveryPage/PasswordRecoveryForm/PasswordRecoveryForm.example';
 import * as PasswordResetForm from './containers/PasswordResetPage/PasswordResetForm/PasswordResetForm.example';
 import * as ManageListingCard from './containers/ManageListingsPage/ManageListingCard/ManageListingCard.example';
+import * as InboxPage from './containers/InboxPage/InboxPage.example';
 
 // containers
 import * as Colors from './containers/StyleguidePage/Colors.example';
@@ -172,6 +173,7 @@ export {
   IconSocialMediaTwitter,
   IconSpinner,
   IconSuccess,
+  InboxPage,
   ImageCarousel,
   KeywordFilter,
   ListingCard,
