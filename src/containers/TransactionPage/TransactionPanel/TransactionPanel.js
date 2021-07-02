@@ -246,6 +246,11 @@ export class TransactionPanelComponent extends Component {
           showActionButtons: true,
           primaryButtonProps: leaveReviewProps,
         };
+      } else if (txHasBeenReceived(tx)) {
+        return {
+          headingState: HEADING_RECEIVED,
+          showDetailCardHeadings: isCustomer,
+        };
       } else {
         return { headingState: 'unknown' };
       }
