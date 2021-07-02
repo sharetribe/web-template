@@ -14,9 +14,15 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [fix] Add missing heading for reviewed transaction on TransactionPage.
+  [#48](https://github.com/sharetribe/ftw-product/pull/48)
+- [change] Transaction process has changed. This adds changes to util/transaction.js
+  [#31](https://github.com/sharetribe/ftw-product/pull/31)
 - [change] Changes to ManageListingsPage: use AspectRatioWrapper on ManageListingCard,small layout
   changes and a new overlay for out of stock items.
   [#46](https://github.com/sharetribe/ftw-product/pull/46)
+- [change] Footer translation keys updated. [#47](https://github.com/sharetribe/ftw-product/pull/47)
+- [change] Footer updated. [#45](https://github.com/sharetribe/ftw-product/pull/45)
 - [change] Add UI for adjusting stock to pricing panel in EditListingWizard. This doesn't store any
   data related to stock yet! [#39](https://github.com/sharetribe/ftw-product/pull/39)
 - [fix] Fix padding problem in EditListingWizard by handling the paddings in one place.
