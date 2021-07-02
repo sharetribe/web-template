@@ -69,7 +69,7 @@ export const isSameDate = (a, b) => a && isDate(a) && b && isDate(b) && a.getTim
  * @returns {Date} true if dateA is after dateB
  */
 export const isAfterDate = (dateA, dateB) => {
-  return moment(storedAt).isAfter(moment(dateB));
+  return moment(dateA).isAfter(moment(dateB));
 };
 
 ////////////////////////////////////////////////////////////////////
