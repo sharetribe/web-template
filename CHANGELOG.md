@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [fix] util/dates.js: Fix earlier copy-paste error.
+  [#49](https://github.com/sharetribe/ftw-product/pull/49)
 - [fix] Add missing heading for reviewed transaction on TransactionPage.
   [#48](https://github.com/sharetribe/ftw-product/pull/48)
 - [change] Transaction process has changed. This adds changes to util/transaction.js
