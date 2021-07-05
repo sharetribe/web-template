@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { string, func, arrayOf, shape, number } from 'prop-types';
+import { arrayOf, func, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { Menu, MenuContent, MenuItem, MenuLabel } from '../../../components';
@@ -76,9 +76,6 @@ class SortByPopup extends Component {
           <SortByIcon className={iconArrowClassName} />
         </MenuLabel>
         <MenuContent className={css.menuContent}>
-          <MenuItem key="sort-by">
-            <h4 className={css.menuHeading}>{label}</h4>
-          </MenuItem>
           {options.map(option => {
             // check if this option is selected
             const selected = initialValue === option.key;
