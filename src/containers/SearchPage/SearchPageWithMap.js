@@ -395,7 +395,7 @@ export class SearchPageComponent extends Component {
               onOpenModal={this.onOpenMobileModal}
               onCloseModal={this.onCloseMobileModal}
               resetAll={this.resetAll}
-              selectedFiltersCount={selectedFiltersCount}
+              selectedFiltersCount={selectedFiltersCountForMobile}
               isMapVariant
             >
               {availableFilters.map(config => {
