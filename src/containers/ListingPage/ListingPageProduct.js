@@ -104,14 +104,21 @@ export class ListingPageComponent extends Component {
     const listingId = new UUID(params.id);
     const listing = getListing(listingId);
 
-    const { bookingDates, ...bookingData } = values;
+    const { bookingDates, ...otherOrderData } = values;
+    const bookingDatesMaybe = bookingDates
+      ? {
+          bookingDates: {
+            bookingStart: bookingDates.startDate,
+            bookingEnd: bookingDates.endDate,
+          },
+        }
+      : {};
 
     const initialValues = {
       listing,
-      bookingData,
-      bookingDates: {
-        bookingStart: bookingDates.startDate,
-        bookingEnd: bookingDates.endDate,
+      orderData: {
+        ...bookingDatesMaybe,
+        ...otherOrderData,
       },
       confirmPaymentError: null,
     };
@@ -119,7 +126,7 @@ export class ListingPageComponent extends Component {
     const saveToSessionStorage = !this.props.currentUser;
 
     const routes = routeConfiguration();
-    // Customize checkout page state with current listing and selected bookingDates
+    // Customize checkout page state with current listing and selected orderData
     const { setInitialValues } = findRouteByRouteName('CheckoutPage', routes);
 
     callSetInitialValues(setInitialValues, initialValues, saveToSessionStorage);
@@ -601,8 +608,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
   callSetInitialValues: (setInitialValues, values, saveToSessionStorage) =>
     dispatch(setInitialValues(values, saveToSessionStorage)),
-  onFetchTransactionLineItems: (bookingData, listingId, isOwnListing) =>
-    dispatch(fetchTransactionLineItems(bookingData, listingId, isOwnListing)),
+  onFetchTransactionLineItems: (orderData, listingId, isOwnListing) =>
+    dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)),
   onSendEnquiry: (listingId, message) => dispatch(sendEnquiry(listingId, message)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
 });

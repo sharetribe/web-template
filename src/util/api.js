@@ -82,7 +82,7 @@ export const transactionLineItems = body => {
 // Initiate a privileged transaction.
 //
 // With privileged transitions, the transactions need to be created
-// from the backend. This endpoint enables sending the booking data to
+// from the backend. This endpoint enables sending the order data to
 // the local backend, and passing that to the Marketplace API.
 //
 // See `server/api/initiate-privileged.js` to see what data should be
