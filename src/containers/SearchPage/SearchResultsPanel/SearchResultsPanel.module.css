@@ -21,7 +21,7 @@
 }
 
 .listingCards {
-  padding: 0 0 96px 0;
+  padding: 0 0 72px 0;
 
   display: grid;
   grid-template-columns: repeat(1, 1fr);
@@ -33,6 +33,7 @@
   }
 
   @media (--viewportMedium) {
+    padding: 0 0 96px 0;
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -56,5 +57,5 @@
 .pagination {
   /* margin-top: auto; pushes pagination to the end of the page. */
   margin-top: auto;
-  background-color: var(--matterColorLight);
+  background-color: transparent;
 }
