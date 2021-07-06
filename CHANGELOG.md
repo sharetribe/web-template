@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [fix] ManageListingPage: review changes
+  [#51](https://github.com/sharetribe/ftw-product/pull/51)
 - [fix] SearchPage: review changes
   [#50](https://github.com/sharetribe/ftw-product/pull/50)
 - [fix] util/dates.js: Fix earlier copy-paste error.
