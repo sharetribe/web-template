@@ -86,7 +86,8 @@
 
 .title {
   /* Font */
-  @apply --marketplaceH3FontStyles;
+  @apply --marketplaceDefaultFontStyles;
+  line-height: 24px;
   color: var(--matterColor);
 
   /* Remove default margins from font */
@@ -103,6 +104,9 @@
   /* Font */
   @apply --marketplaceTinyFontStyles;
   color: var(--matterColor);
+
+  padding-top: 4px;
+  padding-bottom: 4px;
 
   /* Remove default margins from font */
   margin-top: 0;
