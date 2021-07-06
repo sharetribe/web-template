@@ -117,14 +117,6 @@ exports[`ManageListingCard matches snapshot 1`] = `
       >
         55
       </div>
-      <div
-        className="perUnit"
-      >
-        <FormattedMessage
-          id="ManageListingCard.perNight"
-          values={Object {}}
-        />
-      </div>
     </div>
     <div
       className="mainInfo"

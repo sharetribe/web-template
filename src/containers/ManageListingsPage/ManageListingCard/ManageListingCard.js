@@ -368,9 +368,11 @@ export const ManageListingCardComponent = props => {
               <div className={css.priceValue} title={priceTitle}>
                 {formattedPrice}
               </div>
-              <div className={css.perUnit}>
-                <FormattedMessage id={unitTranslationKey} />
-              </div>
+              {config.listing.showUnitTypeTranslations ? (
+                <div className={css.perUnit}>
+                  <FormattedMessage id={unitTranslationKey} />
+                </div>
+              ) : null}
             </React.Fragment>
           ) : (
             <div className={css.noPrice}>

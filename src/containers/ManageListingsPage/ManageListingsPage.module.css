@@ -1,4 +1,5 @@
 @import '../../styles/customMediaQueries.css';
+@import '../../styles/propertySets.css';
 
 .root {
 }
@@ -43,7 +44,7 @@
   }
 
   @media (--viewportLarge) {
-    margin: 80px auto 0 auto;
+    margin: 72px auto 0 auto;
     max-width: 1128px;
   }
 
@@ -53,14 +54,15 @@
 }
 
 .title {
+  @apply --marketplaceH2FontStyles;
   margin: 0 24px 24px 24px;
 
   @media (--viewportMedium) {
-    margin: 0 24px 48px 24px;
+    margin: 0 24px 32px 24px;
   }
 
   @media (--viewportLarge) {
-    margin: 0 36px 48px 36px;
+    margin: 0 36px 32px 36px;
   }
 }
 
