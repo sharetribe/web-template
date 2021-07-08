@@ -4,7 +4,7 @@ import config from '../../config';
 import { storableError } from '../../util/errors';
 import { convertUnitToSubUnit, unitDivisor } from '../../util/currency';
 import { parseDateFromISO8601, getExclusiveEndDate } from '../../util/dates';
-import { util as sdkUtil } from '../../util/sdkLoader';
+import { createImageVariantConfig } from '../../util/sdkLoader';
 import { isOriginInUse } from '../../util/search';
 import { parse } from '../../util/urlHelpers';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -225,17 +225,7 @@ export const loadData = (params, search) => {
   const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
 
   const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
-
-  const createImageVariant = (name, width) => {
-    const aspectRatio = aspectHeight / aspectWidth;
-    return {
-      [`imageVariant.${name}`]: sdkUtil.objectQueryString({
-        w: width,
-        h: aspectRatio * width,
-        fit: 'crop',
-      }),
-    };
-  };
+  const aspectRatio = aspectHeight / aspectWidth;
 
   return searchListings({
     ...rest,
@@ -246,8 +236,8 @@ export const loadData = (params, search) => {
     'fields.listing': ['title', 'geolocation', 'price'],
     'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
     'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
-    ...createImageVariant(`${variantPrefix}`, 400),
-    ...createImageVariant(`${variantPrefix}-2x`, 800),
+    ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+    ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
     'limit.images': 1,
   });
 };
