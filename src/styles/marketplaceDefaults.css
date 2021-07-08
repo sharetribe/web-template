@@ -237,8 +237,8 @@ label {
     font-weight: var(--fontWeightSemiBold);
     margin-top: 0;
     margin-bottom: 0;
-    padding-top: 6px;
-    padding-bottom: 2px;
+    padding-top: 3px;
+    padding-bottom: 5px;
   }
 }
 
@@ -266,7 +266,11 @@ textarea {
   }
 
   @media (--viewportMedium) {
-    padding: 4px 0 10px 0;
+    padding: 6px 0 8px 0;
+
+    &::placeholder {
+      padding: 0 0 0 0;
+    }
   }
 }
 
