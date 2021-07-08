@@ -4,7 +4,7 @@
  * It's also handled separately in handleSubmit function.
  */
 import React, { Component } from 'react';
-import { bool, func, object, string } from 'prop-types';
+import { bool, func, object, shape, string } from 'prop-types';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
@@ -22,6 +22,8 @@ import {
   SavedCardDetails,
   StripePaymentAddress,
 } from '../../../components';
+
+import ShippingDetails from '../ShippingDetails/ShippingDetails';
 
 import css from './StripePaymentForm.module.css';
 
@@ -255,6 +257,9 @@ class StripePaymentForm extends Component {
       this.card = null;
     }
     this.setState({ paymentMethod: changedTo });
+    if (changedTo === 'defaultCard' && this.finalFormAPI) {
+      this.finalFormAPI.change('sameAddressCheckbox', undefined);
+    }
   }
 
   handleStripeElementRef(el) {
@@ -330,6 +335,9 @@ class StripePaymentForm extends Component {
       form,
       hasHandledCardPayment,
       defaultPaymentMethod,
+      pickupLocation,
+      askShippingDetails,
+      values,
     } = formRenderProps;
 
     this.finalFormAPI = form;
@@ -382,6 +390,23 @@ class StripePaymentForm extends Component {
       { messageOptionalText: messageOptionalText }
     );
 
+    const pickupDetails = pickupLocation?.building
+      ? `${pickupLocation.building}, ${pickupLocation.address}`
+      : pickupLocation?.address
+      ? pickupLocation.address
+      : intl.formatMessage({ id: 'StripePaymentForm.pickupLocationUnknown' });
+
+    const shippingOrPickupDetails = askShippingDetails ? (
+      <ShippingDetails intl={intl} form={form} />
+    ) : (
+      <div className={css.pickupWrapper}>
+        <h3 className={css.pickupHeading}>
+          <FormattedMessage id="StripePaymentForm.pickupDetailsTitle" />
+        </h3>
+        <p className={css.pickupDetails}>{pickupDetails}</p>
+      </div>
+    );
+
     // Asking billing address is recommended in PaymentIntent flow.
     // In CheckoutPage, we send name and email as billing details, but address only if it exists.
     const billingAddress = (
@@ -397,8 +422,20 @@ class StripePaymentForm extends Component {
     const showOnetimePaymentFields = ['onetimeCardPayment', 'replaceCard'].includes(
       selectedPaymentMethod
     );
+    const handleSameAddressCheckbox = event => {
+      const checked = event.target.checked;
+      form.change('name', checked ? values.recipientName : '');
+      form.change('addressLine1', checked ? values.recipientAddressLine1 : '');
+      form.change('addressLine2', checked ? values.recipientAddressLine2 : '');
+      form.change('postal', checked ? values.recipientPostal : '');
+      form.change('city', checked ? values.recipientCity : '');
+      form.change('state', checked ? values.recipientState : '');
+      form.change('country', checked ? values.recipientCountry : '');
+    };
+
     return hasStripeKey ? (
       <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
+        {shippingOrPickupDetails}
         {billingDetailsNeeded && !loadingData ? (
           <React.Fragment>
             {showPaymentMethodSelector ? (
@@ -434,6 +471,21 @@ class StripePaymentForm extends Component {
                 <h3 className={css.billingHeading}>
                   <FormattedMessage id="StripePaymentForm.billingDetails" />
                 </h3>
+
+                {askShippingDetails ? (
+                  <FieldCheckbox
+                    className={css.sameAddressCheckbox}
+                    textClassName={css.sameAddressLabel}
+                    id="sameAddressCheckbox"
+                    name="sameAddressCheckbox"
+                    label={intl.formatMessage({
+                      id: 'StripePaymentForm.sameBillingAndShippingAddress',
+                    })}
+                    value="sameAddress"
+                    useSuccessColor
+                    onChange={handleSameAddressCheckbox}
+                  />
+                ) : null}
 
                 <FieldTextInput
                   className={css.field}
@@ -517,6 +569,8 @@ StripePaymentForm.defaultProps = {
   initiateOrderError: null,
   confirmCardPaymentError: null,
   confirmPaymentError: null,
+  askShippingDetails: false,
+  pickupLocation: null,
 };
 
 StripePaymentForm.propTypes = {
@@ -535,6 +589,11 @@ StripePaymentForm.propTypes = {
   showInitialMessageInput: bool,
   hasHandledCardPayment: bool,
   defaultPaymentMethod: propTypes.defaultPaymentMethod,
+  askShippingDetails: bool,
+  pickupLocation: shape({
+    address: string.isRequired,
+    building: string,
+  }),
 };
 
 export default injectIntl(StripePaymentForm);
