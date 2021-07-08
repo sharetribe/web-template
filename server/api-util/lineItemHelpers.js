@@ -11,6 +11,44 @@ const LINE_ITEM_DAY = 'line-item/day';
 /** Helper functions for constructing line items*/
 
 /**
+ * Calculates shipping fee based on saved public data fields and quantity.
+ * The total will be `shippingPriceInSubunitsOneItem + (shippingPriceInSubunitsAdditionalItems * (quantity - 1))`.
+ * E.g. 4 items ordered with shipping fees €10 for first item and €5 for additional items:
+ * €10 + (3 * €5) => €25
+ *
+ * @param {Money} shippingPriceInSubunitsOneItem
+ * @param {Money} shippingPriceInSubunitsAdditionalItems
+ * @param {string} currency code
+ * @param {int} quantity
+ *
+ * @returns {Money} lineTotal
+ */
+exports.calculateShippingFee = (
+  shippingPriceInSubunitsOneItem,
+  shippingPriceInSubunitsAdditionalItems,
+  currency,
+  quantity
+) => {
+  if (shippingPriceInSubunitsOneItem && currency && quantity === 1) {
+    return new Money(shippingPriceInSubunitsOneItem, currency);
+  } else if (
+    shippingPriceInSubunitsOneItem &&
+    shippingPriceInSubunitsAdditionalItems &&
+    currency &&
+    quantity > 1
+  ) {
+    const oneItemFee = getAmountAsDecimalJS(new Money(shippingPriceInSubunitsOneItem, currency));
+    const additionalItemsFee = getAmountAsDecimalJS(
+      new Money(shippingPriceInSubunitsAdditionalItems, currency)
+    );
+    const additionalItemsTotal = additionalItemsFee.times(quantity - 1);
+    const numericShippingFee = convertDecimalJSToNumber(oneItemFee.plus(additionalItemsTotal));
+    return new Money(numericShippingFee, currency);
+  }
+  return null;
+};
+
+/**
  * Calculates lineTotal for lineItem based on quantity.
  * The total will be `unitPrice * quantity`.
  *

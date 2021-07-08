@@ -1,4 +1,8 @@
-const { calculateQuantityFromDates, calculateTotalFromLineItems } = require('./lineItemHelpers');
+const {
+  calculateQuantityFromDates,
+  calculateTotalFromLineItems,
+  calculateShippingFee,
+} = require('./lineItemHelpers');
 const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
 
@@ -29,6 +33,13 @@ const PROVIDER_COMMISSION_PERCENTAGE = -10;
  */
 exports.transactionLineItems = (listing, orderData) => {
   const unitPrice = listing.attributes.price;
+  const publicData = listing.attributes.publicData;
+  const shippingPriceInSubunitsOneItem = publicData && publicData.shippingPriceInSubunitsOneItem;
+  const shippingPriceInSubunitsAdditionalItems =
+    publicData && publicData.shippingPriceInSubunitsAdditionalItems;
+  const currency = unitPrice.currency;
+  const hasShippingFee =
+    orderData && orderData.deliveryMethod && orderData.deliveryMethod === 'shipping';
   const hasQuantity = orderData && orderData.quantity;
   const { startDate, endDate } = orderData && orderData.bookinDates ? orderData.bookinDates : {};
   const hasBookingDates = startDate && endDate;
@@ -55,14 +66,33 @@ exports.transactionLineItems = (listing, orderData) => {
     includeFor: ['customer', 'provider'],
   };
 
+  const shippingFee = hasShippingFee
+    ? calculateShippingFee(
+        shippingPriceInSubunitsOneItem,
+        shippingPriceInSubunitsAdditionalItems,
+        currency,
+        orderQuantity
+      )
+    : null;
+  const shippingFeeLineItem = shippingFee
+    ? [
+        {
+          code: 'line-item/shipping-fee',
+          unitPrice: shippingFee,
+          quantity: 1,
+          includeFor: ['customer', 'provider'],
+        },
+      ]
+    : [];
+
   const providerCommission = {
     code: 'line-item/provider-commission',
-    unitPrice: calculateTotalFromLineItems([order]),
+    unitPrice: calculateTotalFromLineItems([order, ...shippingFeeLineItem]),
     percentage: PROVIDER_COMMISSION_PERCENTAGE,
     includeFor: ['provider'],
   };
 
-  const lineItems = [order, providerCommission];
+  const lineItems = [order, ...shippingFeeLineItem, providerCommission];
 
   return lineItems;
 };
