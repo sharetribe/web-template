@@ -5,6 +5,7 @@ import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 // Import configs and util modules
+import config from '../../../../config';
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import {
@@ -19,6 +20,7 @@ import {
   Form,
   LocationAutocompleteInputField,
   Button,
+  FieldCurrencyInput,
   FieldTextInput,
   FieldCheckbox,
 } from '../../../../components';
@@ -95,15 +97,7 @@ export const EditListingDeliveryFormComponent = props => (
         invalid || disabled || submitInProgress || (!shippingEnabled && !pickupEnabled);
 
       const shippingLabel = intl.formatMessage({ id: 'EditListingDeliveryForm.shippingLabel' });
-
       const pickupLabel = intl.formatMessage({ id: 'EditListingDeliveryForm.pickupLabel' });
-
-      const shippingOneItemLabel = intl.formatMessage({
-        id: 'EditListingDeliveryForm.shippingOneItemLabel',
-      });
-      const shippingAdditionalItemsLabel = intl.formatMessage({
-        id: 'EditListingDeliveryForm.shippingAdditionalItemsLabel',
-      });
 
       const pickupClasses = classNames(css.deliveryOption, !pickupEnabled ? css.disabled : null);
       const shippingClasses = classNames(
@@ -125,7 +119,7 @@ export const EditListingDeliveryFormComponent = props => (
             {errorMessageShowListing}
             <LocationAutocompleteInputField
               disabled={!pickupEnabled}
-              className={css.locationAddress}
+              className={css.input}
               inputClassName={css.locationAutocompleteInput}
               iconClassName={css.locationAutocompleteInputIcon}
               predictionsClassName={css.predictionsRoot}
@@ -156,7 +150,7 @@ export const EditListingDeliveryFormComponent = props => (
             />
 
             <FieldTextInput
-              className={css.building}
+              className={css.input}
               type="text"
               name="building"
               id="building"
@@ -174,13 +168,17 @@ export const EditListingDeliveryFormComponent = props => (
           />
 
           <div className={shippingClasses}>
-            <FieldTextInput
-              className={css.building}
-              type="text"
-              name="shippingOneItem"
-              id="shippingOneItem"
-              label={shippingOneItemLabel}
-              placeholder={buildingPlaceholderMessage}
+            <FieldCurrencyInput
+              id="shippingPriceInSubunitsOneItem"
+              name="shippingPriceInSubunitsOneItem"
+              className={css.input}
+              label={intl.formatMessage({
+                id: 'EditListingDeliveryForm.shippingOneItemLabel',
+              })}
+              placeholder={intl.formatMessage({
+                id: 'EditListingDeliveryForm.shippingOneItemPlaceholder',
+              })}
+              currencyConfig={config.currencyConfig}
               disabled={!shippingEnabled}
               validate={
                 shippingEnabled
@@ -189,7 +187,7 @@ export const EditListingDeliveryFormComponent = props => (
                         id: 'EditListingDeliveryForm.shippingOneItemRequired',
                       })
                     )
-                  : () => {}
+                  : null
               }
               hideErrorMessage={!shippingEnabled}
               // Whatever parameters are being used to calculate
@@ -200,13 +198,18 @@ export const EditListingDeliveryFormComponent = props => (
               // See example: https://codesandbox.io/s/changing-field-level-validators-zc8ei
               key={shippingEnabled ? 'oneItemValidation' : 'noOneItemValidation'}
             />
-            <FieldTextInput
-              className={css.building}
-              type="text"
-              name="shippingAdditionalItems"
-              id="shippingAdditionalItems"
-              label={shippingAdditionalItemsLabel}
-              placeholder={buildingPlaceholderMessage}
+
+            <FieldCurrencyInput
+              id="shippingPriceInSubunitsAdditionalItems"
+              name="shippingPriceInSubunitsAdditionalItems"
+              className={css.input}
+              label={intl.formatMessage({
+                id: 'EditListingDeliveryForm.shippingAdditionalItemsLabel',
+              })}
+              placeholder={intl.formatMessage({
+                id: 'EditListingDeliveryForm.shippingAdditionalItemsPlaceholder',
+              })}
+              currencyConfig={config.currencyConfig}
               disabled={!shippingEnabled}
               validate={
                 shippingEnabled
