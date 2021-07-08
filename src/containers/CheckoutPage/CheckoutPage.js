@@ -42,6 +42,7 @@ import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
 // Import shared components
 import {
   AvatarMedium,
+  AspectRatioWrapper,
   BookingBreakdown,
   Logo,
   NamedLink,
@@ -624,6 +625,11 @@ export class CheckoutPageComponent extends Component {
     const firstImage =
       currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
 
+    const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+    const variants = firstImage
+      ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
+      : [];
+
     const listingLink = (
       <NamedLink
         name="ListingPage"
@@ -759,14 +765,18 @@ export class CheckoutPageComponent extends Component {
       <Page {...pageProps}>
         {topbar}
         <div className={css.contentContainer}>
-          <div className={css.aspectWrapper}>
+          <AspectRatioWrapper
+            width={aspectWidth}
+            height={aspectHeight}
+            className={css.aspectWrapper}
+          >
             <ResponsiveImage
               rootClassName={css.rootForImage}
               alt={listingTitle}
               image={firstImage}
-              variants={['landscape-crop', 'landscape-crop2x']}
+              variants={variants}
             />
-          </div>
+          </AspectRatioWrapper>
           <div className={classNames(css.avatarWrapper, css.avatarMobile)}>
             <AvatarMedium user={currentAuthor} disableProfileLink />
           </div>
@@ -832,14 +842,18 @@ export class CheckoutPageComponent extends Component {
           </div>
 
           <div className={css.detailsContainerDesktop}>
-            <div className={css.detailsAspectWrapper}>
+            <AspectRatioWrapper
+              width={aspectWidth}
+              height={aspectHeight}
+              className={css.detailsAspectWrapper}
+            >
               <ResponsiveImage
                 rootClassName={css.rootForImage}
                 alt={listingTitle}
                 image={firstImage}
-                variants={['landscape-crop', 'landscape-crop2x']}
+                variants={variants}
               />
-            </div>
+            </AspectRatioWrapper>
             <div className={css.avatarWrapper}>
               <AvatarMedium user={currentAuthor} disableProfileLink />
             </div>
