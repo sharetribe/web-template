@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 // Import configs and util modules
+import config from '../../../../config';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
 import { ensureOwnListing } from '../../../../util/data';
+import { types as sdkTypes } from '../../../../util/sdkLoader';
 
 // Import shared components
 import { ListingLink } from '../../../../components';
@@ -13,6 +15,8 @@ import { ListingLink } from '../../../../components';
 // Import modules from this directory
 import EditListingDeliveryForm from './EditListingDeliveryForm';
 import css from './EditListingDeliveryPanel.module.css';
+
+const { Money } = sdkTypes;
 
 class EditListingDeliveryPanel extends Component {
   constructor(props) {
@@ -28,15 +32,19 @@ class EditListingDeliveryPanel extends Component {
   getInitialValues() {
     const { listing } = this.props;
     const currentListing = ensureOwnListing(listing);
-    const { geolocation, publicData, privateData } = currentListing.attributes;
+    const { geolocation, publicData, price } = currentListing.attributes;
 
     // Only render current search if full place object is available in the URL params
     // TODO bounds are missing - those need to be queried directly from Google Places
     const locationFieldsPresent = publicData?.location?.address && geolocation;
     const location = publicData?.location ? publicData.location : {};
     const { address, building } = location;
-    const { shippingEnabled, pickupEnabled } = publicData;
-    const { shippingOneItem, shippingAdditionalItems } = privateData;
+    const {
+      shippingEnabled,
+      pickupEnabled,
+      shippingPriceInSubunitsOneItem,
+      shippingPriceInSubunitsAdditionalItems,
+    } = publicData;
     const deliveryOptions = [];
 
     if (shippingEnabled) {
@@ -46,6 +54,13 @@ class EditListingDeliveryPanel extends Component {
       deliveryOptions.push('pickup');
     }
 
+    const currency = price?.currency || config.currency;
+    const shippingOneItemAsMoney = shippingPriceInSubunitsOneItem
+      ? new Money(shippingPriceInSubunitsOneItem, currency)
+      : null;
+    const shippingAdditionalItemsAsMoney = shippingPriceInSubunitsAdditionalItems
+      ? new Money(shippingPriceInSubunitsAdditionalItems, currency)
+      : null;
     return {
       building,
       location: locationFieldsPresent
@@ -55,8 +70,8 @@ class EditListingDeliveryPanel extends Component {
           }
         : { search: undefined, selectedPlace: undefined },
       deliveryOptions,
-      shippingOneItem,
-      shippingAdditionalItems,
+      shippingPriceInSubunitsOneItem: shippingOneItemAsMoney,
+      shippingPriceInSubunitsAdditionalItems: shippingAdditionalItemsAsMoney,
     };
   }
 
@@ -99,8 +114,8 @@ class EditListingDeliveryPanel extends Component {
             const {
               building = '',
               location,
-              shippingOneItem,
-              shippingAdditionalItems,
+              shippingPriceInSubunitsOneItem,
+              shippingPriceInSubunitsAdditionalItems,
               deliveryOptions,
             } = values;
 
@@ -121,18 +136,19 @@ class EditListingDeliveryPanel extends Component {
                 location: { address, building },
                 shippingEnabled,
                 pickupEnabled,
-              },
-              privateData: {
-                shippingOneItem,
-                shippingAdditionalItems,
+                // Note: we only save the "amount" because currency should not differ from listing's price.
+                // Money is always dealt in subunits (e.g. cents) to avoid float calculations.
+                shippingPriceInSubunitsOneItem: shippingPriceInSubunitsOneItem.amount,
+                shippingPriceInSubunitsAdditionalItems:
+                  shippingPriceInSubunitsAdditionalItems.amount,
               },
             };
             this.setState({
               initialValues: {
                 building,
                 location: { search: address, selectedPlace: { address, origin } },
-                shippingOneItem,
-                shippingAdditionalItems,
+                shippingPriceInSubunitsOneItem,
+                shippingPriceInSubunitsAdditionalItems,
                 deliveryOptions,
               },
             });
