@@ -133,20 +133,29 @@ export const TransactionPageComponent = props => {
     currentTransaction.attributes.lineItems
   ) {
     const currentBooking = ensureListing(currentTransaction.booking);
+    const bookingDatesMaybe = currentBooking.id
+      ? {
+          bookingDates: {
+            // In day-based booking process, booking start and end come in server's time zone.
+            bookingStart: timeOfDayFromTimeZoneToLocal(
+              currentBooking.attributes.start,
+              apiTimeZone
+            ),
+            bookingEnd: timeOfDayFromTimeZoneToLocal(currentBooking.attributes.end, apiTimeZone),
+          },
+        }
+      : {};
 
     const apiTimeZone = 'Etc/UTC';
     const initialValues = {
       listing: currentListing,
       // Transaction with payment pending should be passed to CheckoutPage
       transaction: currentTransaction,
-      // Original bookingData content is not available,
+      // Original orderData content is not available,
       // but it is already used since booking is created.
       // (E.g. quantity is used when booking is created.)
-      bookingData: {},
-      bookingDates: {
-        // In day-based booking process, booking start and end come in server's time zone.
-        bookingStart: timeOfDayFromTimeZoneToLocal(currentBooking.attributes.start, apiTimeZone),
-        bookingEnd: timeOfDayFromTimeZoneToLocal(currentBooking.attributes.end, apiTimeZone),
+      orderData: {
+        ...bookingDatesMaybe,
       },
     };
 
@@ -155,16 +164,23 @@ export const TransactionPageComponent = props => {
 
   // Customer can create a booking, if the tx is in "enquiry" state.
   const handleSubmitBookingRequest = values => {
-    const { bookingDates, ...bookingData } = values;
+    const { bookingDates, ...otherOrderData } = values;
+    const bookingDatesMaybe = bookingDates
+      ? {
+          bookingDates: {
+            bookingStart: bookingDates.startDate,
+            bookingEnd: bookingDates.endDate,
+          },
+        }
+      : {};
 
     const initialValues = {
       listing: currentListing,
       // enquired transaction should be passed to CheckoutPage
       transaction: currentTransaction,
-      bookingData,
-      bookingDates: {
-        bookingStart: bookingDates.startDate,
-        bookingEnd: bookingDates.endDate,
+      orderData: {
+        ...bookingDatesMaybe,
+        ...otherOrderData,
       },
       confirmPaymentError: null,
     };
@@ -517,8 +533,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(sendReview(role, tx, reviewRating, reviewContent)),
     callSetInitialValues: (setInitialValues, values) => dispatch(setInitialValues(values)),
     onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
-    onFetchTransactionLineItems: (bookingData, listingId, isOwnListing) =>
-      dispatch(fetchTransactionLineItems(bookingData, listingId, isOwnListing)),
+    onFetchTransactionLineItems: (orderData, listingId, isOwnListing) =>
+      dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)),
   };
 };
 
