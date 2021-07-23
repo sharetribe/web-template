@@ -3,7 +3,7 @@ import { FormattedMessage, FormattedDate } from '../../util/reactIntl';
 import { LINE_ITEM_NIGHT, DATE_TYPE_DATE, propTypes } from '../../util/types';
 import { timeOfDayFromTimeZoneToLocal, subtractTime } from '../../util/dates';
 
-import css from './BookingBreakdown.module.css';
+import css from './OrderBreakdown.module.css';
 
 const BookingPeriod = props => {
   const { startDate, endDate, dateType } = props;
@@ -29,7 +29,7 @@ const BookingPeriod = props => {
       <div className={css.bookingPeriod}>
         <div className={css.bookingPeriodSection}>
           <div className={css.dayLabel}>
-            <FormattedMessage id="BookingBreakdown.bookingStart" />
+            <FormattedMessage id="OrderBreakdown.bookingStart" />
           </div>
           <div className={css.dayInfo}>
             <FormattedDate value={startDate} {...timeFormatOptions} />
@@ -41,7 +41,7 @@ const BookingPeriod = props => {
 
         <div className={css.bookingPeriodSectionRigth}>
           <div className={css.dayLabel}>
-            <FormattedMessage id="BookingBreakdown.bookingEnd" />
+            <FormattedMessage id="OrderBreakdown.bookingEnd" />
           </div>
           <div className={css.dayInfo}>
             <FormattedDate value={endDate} {...timeFormatOptions} />

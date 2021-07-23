@@ -5,22 +5,22 @@ import { formatMoney } from '../../util/currency';
 import { txIsCanceled, txIsReceived } from '../../util/transaction';
 import { propTypes } from '../../util/types';
 
-import css from './BookingBreakdown.module.css';
+import css from './OrderBreakdown.module.css';
 
 const LineItemUnitPrice = props => {
   const { transaction, isProvider, intl } = props;
 
-  let providerTotalMessageId = 'BookingBreakdown.providerTotalDefault';
+  let providerTotalMessageId = 'OrderBreakdown.providerTotalDefault';
   if (txIsReceived(transaction)) {
-    providerTotalMessageId = 'BookingBreakdown.providerTotalReceived';
+    providerTotalMessageId = 'OrderBreakdown.providerTotalReceived';
   } else if (txIsCanceled(transaction)) {
-    providerTotalMessageId = 'BookingBreakdown.providerTotalCanceled';
+    providerTotalMessageId = 'OrderBreakdown.providerTotalCanceled';
   }
 
   const totalLabel = isProvider ? (
     <FormattedMessage id={providerTotalMessageId} />
   ) : (
-    <FormattedMessage id="BookingBreakdown.total" />
+    <FormattedMessage id="OrderBreakdown.total" />
   );
 
   const totalPrice = isProvider

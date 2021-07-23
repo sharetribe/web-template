@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
 import { LINE_ITEM_UNITS, propTypes } from '../../util/types';
 
-import css from './BookingBreakdown.module.css';
+import css from './OrderBreakdown.module.css';
 
 const LineItemUnitsMaybe = props => {
   const { transaction, unitType } = props;
@@ -24,10 +24,10 @@ const LineItemUnitsMaybe = props => {
   return (
     <div className={css.lineItem}>
       <span className={css.itemLabel}>
-        <FormattedMessage id="BookingBreakdown.quantityUnit" />
+        <FormattedMessage id="OrderBreakdown.quantityUnit" />
       </span>
       <span className={css.itemValue}>
-        <FormattedMessage id="BookingBreakdown.quantity" values={{ quantity }} />
+        <FormattedMessage id="OrderBreakdown.quantity" values={{ quantity }} />
       </span>
     </div>
   );

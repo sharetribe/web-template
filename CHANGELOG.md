@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Rename BookingBreakdown as OrderBreakdown.
+  [#54](https://github.com/sharetribe/ftw-product/pull/54)
 - [change] CheckoutPage: add shipping details to form, change bookindData to orderData, and add
   other UI changes. [#52](https://github.com/sharetribe/ftw-product/pull/52)
 - [fix] ManageListingPage: review changes [#51](https://github.com/sharetribe/ftw-product/pull/51)

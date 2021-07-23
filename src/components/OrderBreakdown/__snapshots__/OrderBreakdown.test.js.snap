@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`BookingBreakdown customer transaction data matches snapshot 1`] = `
+exports[`OrderBreakdown customer transaction data matches snapshot 1`] = `
 <div
   className="root"
 >
@@ -18,7 +18,7 @@ exports[`BookingBreakdown customer transaction data matches snapshot 1`] = `
             className="dayLabel"
           >
             <span>
-              BookingBreakdown.bookingStart
+              OrderBreakdown.bookingStart
             </span>
           </div>
           <div
@@ -43,7 +43,7 @@ exports[`BookingBreakdown customer transaction data matches snapshot 1`] = `
             className="dayLabel"
           >
             <span>
-              BookingBreakdown.bookingEnd
+              OrderBreakdown.bookingEnd
             </span>
           </div>
           <div
@@ -74,7 +74,7 @@ exports[`BookingBreakdown customer transaction data matches snapshot 1`] = `
       className="itemLabel"
     >
       <span>
-        BookingBreakdown.baseUnitNight
+        OrderBreakdown.baseUnitNight
       </span>
     </span>
     <span
@@ -94,7 +94,7 @@ exports[`BookingBreakdown customer transaction data matches snapshot 1`] = `
         className="totalLabel"
       >
         <span>
-          BookingBreakdown.total
+          OrderBreakdown.total
         </span>
       </div>
       <div
@@ -107,7 +107,7 @@ exports[`BookingBreakdown customer transaction data matches snapshot 1`] = `
 </div>
 `;
 
-exports[`BookingBreakdown pretransaction data matches snapshot 1`] = `
+exports[`OrderBreakdown pretransaction data matches snapshot 1`] = `
 <div
   className="root"
 >
@@ -125,7 +125,7 @@ exports[`BookingBreakdown pretransaction data matches snapshot 1`] = `
             className="dayLabel"
           >
             <span>
-              BookingBreakdown.bookingStart
+              OrderBreakdown.bookingStart
             </span>
           </div>
           <div
@@ -150,7 +150,7 @@ exports[`BookingBreakdown pretransaction data matches snapshot 1`] = `
             className="dayLabel"
           >
             <span>
-              BookingBreakdown.bookingEnd
+              OrderBreakdown.bookingEnd
             </span>
           </div>
           <div
@@ -181,7 +181,7 @@ exports[`BookingBreakdown pretransaction data matches snapshot 1`] = `
       className="itemLabel"
     >
       <span>
-        BookingBreakdown.baseUnitNight
+        OrderBreakdown.baseUnitNight
       </span>
     </span>
     <span
@@ -201,7 +201,7 @@ exports[`BookingBreakdown pretransaction data matches snapshot 1`] = `
         className="totalLabel"
       >
         <span>
-          BookingBreakdown.total
+          OrderBreakdown.total
         </span>
       </div>
       <div
@@ -214,7 +214,7 @@ exports[`BookingBreakdown pretransaction data matches snapshot 1`] = `
 </div>
 `;
 
-exports[`BookingBreakdown provider transaction data matches snapshot 1`] = `
+exports[`OrderBreakdown provider transaction data matches snapshot 1`] = `
 <div
   className="root"
 >
@@ -232,7 +232,7 @@ exports[`BookingBreakdown provider transaction data matches snapshot 1`] = `
             className="dayLabel"
           >
             <span>
-              BookingBreakdown.bookingStart
+              OrderBreakdown.bookingStart
             </span>
           </div>
           <div
@@ -257,7 +257,7 @@ exports[`BookingBreakdown provider transaction data matches snapshot 1`] = `
             className="dayLabel"
           >
             <span>
-              BookingBreakdown.bookingEnd
+              OrderBreakdown.bookingEnd
             </span>
           </div>
           <div
@@ -288,7 +288,7 @@ exports[`BookingBreakdown provider transaction data matches snapshot 1`] = `
       className="itemLabel"
     >
       <span>
-        BookingBreakdown.baseUnitNight
+        OrderBreakdown.baseUnitNight
       </span>
     </span>
     <span
@@ -308,7 +308,7 @@ exports[`BookingBreakdown provider transaction data matches snapshot 1`] = `
         className="itemLabel"
       >
         <span>
-          BookingBreakdown.subTotal
+          OrderBreakdown.subTotal
         </span>
       </span>
       <span
@@ -325,7 +325,7 @@ exports[`BookingBreakdown provider transaction data matches snapshot 1`] = `
       className="itemLabel"
     >
       <span>
-        BookingBreakdown.commission
+        OrderBreakdown.commission
       </span>
     </span>
     <span
@@ -345,7 +345,7 @@ exports[`BookingBreakdown provider transaction data matches snapshot 1`] = `
         className="totalLabel"
       >
         <span>
-          BookingBreakdown.providerTotalDefault
+          OrderBreakdown.providerTotalDefault
         </span>
       </div>
       <div
@@ -359,7 +359,7 @@ exports[`BookingBreakdown provider transaction data matches snapshot 1`] = `
     className="feeInfo"
   >
     <span>
-      BookingBreakdown.commissionFeeNote
+      OrderBreakdown.commissionFeeNote
     </span>
   </span>
 </div>
