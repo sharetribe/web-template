@@ -356,6 +356,10 @@ class StripePaymentForm extends Component {
       [css.cardError]: hasCardError,
     });
 
+    // Note: totalPrice might not be available initially
+    // when speculateTransaction call is in progress.
+    const totalPriceMaybe = totalPrice || '';
+
     // TODO: confirmCardPayment can create all kinds of errors.
     // Currently, we provide translation support for one:
     // https://stripe.com/docs/error-codes
@@ -539,11 +543,14 @@ class StripePaymentForm extends Component {
             disabled={submitDisabled}
           >
             {billingDetailsNeeded ? (
-              <FormattedMessage id="StripePaymentForm.submitPaymentInfo" values={{ totalPrice }} />
+              <FormattedMessage
+                id="StripePaymentForm.submitPaymentInfo"
+                values={{ totalPrice: totalPriceMaybe }}
+              />
             ) : (
               <FormattedMessage
                 id="StripePaymentForm.submitConfirmPaymentInfo"
-                values={{ totalPrice }}
+                values={{ totalPrice: totalPriceMaybe }}
               />
             )}
           </PrimaryButton>
@@ -575,6 +582,7 @@ StripePaymentForm.defaultProps = {
   confirmPaymentError: null,
   askShippingDetails: false,
   pickupLocation: null,
+  totalPrice: null,
 };
 
 StripePaymentForm.propTypes = {
@@ -598,7 +606,7 @@ StripePaymentForm.propTypes = {
     address: string.isRequired,
     building: string,
   }),
-  totalPrice: string.isRequired,
+  totalPrice: string,
 };
 
 export default injectIntl(StripePaymentForm);
