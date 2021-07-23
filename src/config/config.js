@@ -44,7 +44,7 @@ const sortSearchByDistance = false;
 //
 // In a way, 'processAlias' defines which transaction process (or processes)
 // this particular web application is able to handle.
-const bookingProcessAlias = 'flex-product-default-process/release-1';
+const transactionProcessAlias = 'flex-product-default-process/release-1';
 
 // The transaction line item code for the main unit type for listings.
 //
@@ -225,7 +225,7 @@ const config = {
   env,
   dev,
   locale,
-  bookingProcessAlias,
+  transactionProcessAlias,
   lineItemUnitType,
   enableAvailability,
   dayCountAvailableForBooking,
