@@ -587,19 +587,20 @@ export class CheckoutPageComponent extends Component {
       return <NamedRedirect name="ListingPage" params={params} />;
     }
 
-    // Show breakdown only when speculated transaction and booking are loaded
-    // (i.e. have an id)
+    // Show breakdown only when (speculated?) transaction is loaded
+    // (i.e. have an id and lineItems)
     const tx = existingTransaction.booking ? existingTransaction : speculatedTransaction;
-    const txBooking = ensureBooking(tx.booking);
+    const txBookingMaybe = tx.booking?.id
+      ? { booking: ensureBooking(tx.booking), dateType: DATE_TYPE_DATE }
+      : {};
     const breakdown =
-      tx.id && txBooking.id ? (
+      tx.id && tx.attributes.lineItems?.length > 0 ? (
         <BookingBreakdown
-          className={css.bookingBreakdown}
+          className={css.orderBreakdown}
           userRole="customer"
           unitType={config.bookingUnitType}
           transaction={tx}
-          booking={txBooking}
-          dateType={DATE_TYPE_DATE}
+          {...txBookingMaybe}
         />
       ) : null;
 
@@ -862,6 +863,9 @@ export class CheckoutPageComponent extends Component {
               <p className={css.detailsSubtitle}>{detailsSubTitle}</p>
             </div>
             {speculateTransactionErrorMessage}
+            <h2 className={css.orderBreakdownTitle}>
+              <FormattedMessage id="CheckoutPage.orderBreakdown" />
+            </h2>
             {breakdown}
           </div>
         </div>
