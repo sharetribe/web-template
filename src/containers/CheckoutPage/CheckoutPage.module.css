@@ -91,7 +91,6 @@
 
 .aspectWrapper {
   position: relative;
-  padding-bottom: 66.6667%; /* 3:2 Aspect Ratio */
   background-color: var(--matterColorNegative); /* Loading BG color */
 
   @media (--viewportLarge) {
@@ -147,7 +146,7 @@
 
   @media (--viewportLarge) {
     margin-top: 0px;
-    margin-bottom: 54px;
+    margin-bottom: 48px;
     padding: 0;
   }
 }
@@ -164,7 +163,7 @@
 
   @media (--viewportMedium) {
     margin-top: 0;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
   }
 }
 
@@ -224,7 +223,7 @@
   }
 
   @media (--viewportLarge) {
-    margin-top: 4px;
+    margin-top: 0;
     padding: 0;
   }
 }
@@ -280,7 +279,6 @@
 
 .detailsAspectWrapper {
   position: relative;
-  padding-bottom: 66.6667%; /* 3:2 Aspect Ratio */
   background-color: var(--matterColorNegative); /* Loading BG color */
 }
 
