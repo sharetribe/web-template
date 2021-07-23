@@ -190,8 +190,8 @@
   }
 }
 
-/* Container for booking details in mobile layout */
-.bookingDetailsMobile {
+/* Container for order details in mobile layout */
+.orderDetailsMobile {
   margin-top: 47px;
 
   @media (--viewportMedium) {
@@ -468,12 +468,12 @@
   }
 }
 
-/* BookingPanel subcompnent */
-.bookingPanel {
+/* OrderPanel subcompnent */
+.orderPanel {
   margin: 16px 48px 48px 48px;
 }
 
-.bookingTitle {
+.orderTitle {
   /* Font */
   color: var(--matterColor);
 

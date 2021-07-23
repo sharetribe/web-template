@@ -1,11 +1,11 @@
 import React from 'react';
 import { createListing } from '../../util/test-data';
 import { LISTING_STATE_CLOSED } from '../../util/types';
-import BookingPanel from './BookingPanel';
-import css from './BookingPanelExample.module.css';
+import OrderPanel from './OrderPanel';
+import css from './OrderPanelExample.module.css';
 
 export const Default = {
-  component: BookingPanel,
+  component: OrderPanel,
   props: {
     className: css.example,
     listing: createListing('listing_1'),
@@ -21,7 +21,7 @@ export const Default = {
 };
 
 export const WithClosedListing = {
-  component: BookingPanel,
+  component: OrderPanel,
   props: {
     className: css.example,
     listing: createListing('listing_1', { state: LISTING_STATE_CLOSED }),

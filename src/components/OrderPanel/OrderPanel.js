@@ -11,10 +11,10 @@ import { propTypes, LISTING_STATE_CLOSED, LINE_ITEM_NIGHT, LINE_ITEM_DAY } from 
 import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
 
-import { ModalInMobile, Button } from '../../components';
+import { ModalInMobile, Button } from '..';
 
 import BookingDatesForm from './BookingDatesForm/BookingDatesForm';
-import css from './BookingPanel.module.css';
+import css from './OrderPanel.module.css';
 
 // This defines when ModalInMobile shows content as Modal
 const MODAL_BREAKPOINT = 1023;
@@ -49,7 +49,7 @@ const closeBookModal = (history, location) => {
   history.push(`${pathname}${searchString}`, state);
 };
 
-const BookingPanel = props => {
+const OrderPanel = props => {
   const {
     rootClassName,
     className,
@@ -84,17 +84,17 @@ const BookingPanel = props => {
   const subTitleText = !!subTitle
     ? subTitle
     : showClosedListingHelpText
-    ? intl.formatMessage({ id: 'BookingPanel.subTitleClosedListing' })
+    ? intl.formatMessage({ id: 'OrderPanel.subTitleClosedListing' })
     : null;
 
   const isNightly = unitType === LINE_ITEM_NIGHT;
   const isDaily = unitType === LINE_ITEM_DAY;
 
   const unitTranslationKey = isNightly
-    ? 'BookingPanel.perNight'
+    ? 'OrderPanel.perNight'
     : isDaily
-    ? 'BookingPanel.perDay'
-    : 'BookingPanel.perUnit';
+    ? 'OrderPanel.perDay'
+    : 'OrderPanel.perUnit';
 
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.bookingTitle);
@@ -112,7 +112,7 @@ const BookingPanel = props => {
         <div className={css.modalHeading}>
           <h1 className={css.title}>{title}</h1>
           <div className={css.author}>
-            <FormattedMessage id="BookingPanel.hostedBy" values={{ name: authorDisplayName }} />
+            <FormattedMessage id="OrderPanel.hostedBy" values={{ name: authorDisplayName }} />
           </div>
         </div>
 
@@ -123,7 +123,7 @@ const BookingPanel = props => {
         {showBookingDatesForm ? (
           <BookingDatesForm
             className={css.bookingForm}
-            formId="BookingPanel"
+            formId="OrderPanel"
             submitButtonWrapperClassName={css.bookingDatesSubmitButtonWrapper}
             unitType={unitType}
             onSubmit={onSubmit}
@@ -154,11 +154,11 @@ const BookingPanel = props => {
             rootClassName={css.bookButton}
             onClick={() => openBookModal(isOwnListing, isClosed, history, location)}
           >
-            <FormattedMessage id="BookingPanel.ctaButtonMessage" />
+            <FormattedMessage id="OrderPanel.ctaButtonMessage" />
           </Button>
         ) : isClosed ? (
           <div className={css.closedListingButton}>
-            <FormattedMessage id="BookingPanel.closedListingButtonText" />
+            <FormattedMessage id="OrderPanel.closedListingButtonText" />
           </div>
         ) : null}
       </div>
@@ -166,7 +166,7 @@ const BookingPanel = props => {
   );
 };
 
-BookingPanel.defaultProps = {
+OrderPanel.defaultProps = {
   rootClassName: null,
   className: null,
   titleClassName: null,
@@ -179,7 +179,7 @@ BookingPanel.defaultProps = {
   fetchLineItemsError: null,
 };
 
-BookingPanel.propTypes = {
+OrderPanel.propTypes = {
   rootClassName: string,
   className: string,
   titleClassName: string,
@@ -213,4 +213,4 @@ BookingPanel.propTypes = {
 export default compose(
   withRouter,
   injectIntl
-)(BookingPanel);
+)(OrderPanel);

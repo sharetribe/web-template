@@ -16,8 +16,6 @@
 // components
 import * as AddImages from './components/AddImages/AddImages.example';
 import * as Avatar from './components/Avatar/Avatar.example';
-import * as BookingDatesForm from './components/BookingPanel/BookingDatesForm/BookingDatesForm.example';
-import * as BookingPanel from './components/BookingPanel/BookingPanel.example';
 import * as BookingTimeInfo from './components/BookingTimeInfo/BookingTimeInfo.example';
 import * as Button from './components/Button/Button.example';
 import * as ExpandingTextarea from './components/ExpandingTextarea/ExpandingTextarea.example';
@@ -63,6 +61,8 @@ import * as Modal from './components/Modal/Modal.example';
 import * as ModalInMobile from './components/ModalInMobile/ModalInMobile.example';
 import * as NamedLink from './components/NamedLink/NamedLink.example';
 import * as OrderBreakdown from './components/OrderBreakdown/OrderBreakdown.example';
+import * as BookingDatesForm from './components/OrderPanel/BookingDatesForm/BookingDatesForm.example';
+import * as OrderPanel from './components/OrderPanel/OrderPanel.example';
 import * as OutsideClickHandler from './components/OutsideClickHandler/OutsideClickHandler.example';
 import * as PaginationLinks from './components/PaginationLinks/PaginationLinks.example';
 import * as PropertyGroup from './components/PropertyGroup/PropertyGroup.example';
@@ -118,11 +118,9 @@ export {
   ActivityFeed,
   AddImages,
   Avatar,
-  OrderBreakdown,
   BookingDateRangeFilter,
   BookingDatesForm,
   BookingTimeInfo,
-  BookingPanel,
   Button,
   Colors,
   EditListingAvailabilityForm,
@@ -186,6 +184,8 @@ export {
   Modal,
   ModalInMobile,
   NamedLink,
+  OrderBreakdown,
+  OrderPanel,
   OutsideClickHandler,
   PaginationLinks,
   PasswordRecoveryForm,
