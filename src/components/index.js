@@ -118,7 +118,7 @@ export { default as AddImages } from './AddImages/AddImages';
 export { default as Avatar, AvatarMedium, AvatarLarge } from './Avatar/Avatar';
 export { default as BookingTimeInfo } from './BookingTimeInfo/BookingTimeInfo';
 export { default as OrderBreakdown } from './OrderBreakdown/OrderBreakdown';
-export { default as BookingPanel } from './BookingPanel/BookingPanel';
+export { default as OrderPanel } from './OrderPanel/OrderPanel';
 export { default as ListingCard } from './ListingCard/ListingCard';
 export { default as Map } from './Map/Map';
 export { default as Page } from './Page/Page';

@@ -282,9 +282,9 @@ exports[`ListingPage matches snapshot 1`] = `
               title="listing1 title"
             />
           </div>
-          <withRouter(injectIntl(BookingPanel))
+          <withRouter(injectIntl(OrderPanel))
             authorDisplayName="user-1 display name"
-            className="bookingPanel"
+            className="orderPanel"
             fetchLineItemsError={null}
             fetchLineItemsInProgress={false}
             fetchTimeSlotsError={null}

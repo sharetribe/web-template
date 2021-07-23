@@ -167,7 +167,7 @@ describe('TransactionPanel - Sale', () => {
     onSendMessage: noop,
     onSendReview: noop,
     onResetForm: noop,
-    onSubmitBookingRequest: noop,
+    onSubmitOrderRequest: noop,
     onFetchTransactionLineItems: noop,
     fetchLineItemsInProgress: false,
     intl: fakeIntl,
@@ -388,7 +388,7 @@ describe('TransactionPanel - Order', () => {
     onSendMessage: noop,
     onSendReview: noop,
     onResetForm: noop,
-    onSubmitBookingRequest: noop,
+    onSubmitOrderRequest: noop,
     onFetchTransactionLineItems: noop,
     fetchLineItemsInProgress: false,
   };

@@ -39,7 +39,7 @@ import {
   LayoutWrapperMain,
   LayoutWrapperFooter,
   Footer,
-  BookingPanel,
+  OrderPanel,
 } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
@@ -342,7 +342,7 @@ export class ListingPageComponent extends Component {
 
     const { formattedPrice, priceTitle } = priceData(price, intl);
 
-    const handleBookingSubmit = values => {
+    const handleOrderSubmit = values => {
       const isCurrentlyClosed = currentListing.attributes.state === LISTING_STATE_CLOSED;
       if (isOwnListing || isCurrentlyClosed) {
         window.scrollTo(0, 0);
@@ -467,12 +467,12 @@ export class ListingPageComponent extends Component {
                     onManageDisableScrolling={onManageDisableScrolling}
                   />
                 </div>
-                <BookingPanel
-                  className={css.bookingPanel}
+                <OrderPanel
+                  className={css.orderPanel}
                   listing={currentListing}
                   isOwnListing={isOwnListing}
                   unitType={unitType}
-                  onSubmit={handleBookingSubmit}
+                  onSubmit={handleOrderSubmit}
                   title={bookingTitle}
                   subTitle={bookingSubTitle}
                   authorDisplayName={authorDisplayName}

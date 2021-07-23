@@ -26,7 +26,7 @@ import {
 } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
 import { formatMoney } from '../../../util/currency';
-import { AvatarLarge, BookingPanel, NamedLink, UserDisplayName } from '../../../components';
+import { AvatarLarge, OrderPanel, NamedLink, UserDisplayName } from '../../../components';
 
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
 
@@ -163,7 +163,7 @@ export class TransactionPanelComponent extends Component {
       markDeliveredProps,
       disputeProps,
       leaveReviewProps,
-      onSubmitBookingRequest,
+      onSubmitOrderRequest,
       timeSlots,
       fetchTimeSlotsError,
       nextTransitions,
@@ -200,7 +200,7 @@ export class TransactionPanelComponent extends Component {
           transitions.length > 0 && transitions.includes(TRANSITION_REQUEST_PAYMENT_AFTER_ENQUIRY);
         return {
           headingState: HEADING_ENQUIRED,
-          showBookingPanel: isCustomer && !isProviderBanned && hasCorrectNextTransition,
+          showOrderPanel: isCustomer && !isProviderBanned && hasCorrectNextTransition,
         };
       } else if (txIsPaymentPending(tx)) {
         return {
@@ -349,7 +349,7 @@ export class TransactionPanelComponent extends Component {
               listingDeleted={listingDeleted}
             />
 
-            <div className={css.bookingDetailsMobile}>
+            <div className={css.orderDetailsMobile}>
               <AddressLinkMaybe
                 rootClassName={css.addressMobile}
                 location={location}
@@ -418,16 +418,16 @@ export class TransactionPanelComponent extends Component {
                 geolocation={geolocation}
                 showAddress={stateData.showAddress}
               />
-              {stateData.showBookingPanel ? (
-                <BookingPanel
-                  className={css.bookingPanel}
-                  titleClassName={css.bookingTitle}
+              {stateData.showOrderPanel ? (
+                <OrderPanel
+                  className={css.orderPanel}
+                  titleClassName={css.orderTitle}
                   isOwnListing={false}
                   listing={currentListing}
                   title={listingTitle}
                   subTitle={bookingSubTitle}
                   authorDisplayName={authorDisplayName}
-                  onSubmit={onSubmitBookingRequest}
+                  onSubmit={onSubmitOrderRequest}
                   onManageDisableScrolling={onManageDisableScrolling}
                   timeSlots={timeSlots}
                   fetchTimeSlotsError={fetchTimeSlotsError}
@@ -497,7 +497,7 @@ TransactionPanelComponent.propTypes = {
   onOpenReviewModal: func.isRequired,
   onShowMoreMessages: func.isRequired,
   onSendMessage: func.isRequired,
-  onSubmitBookingRequest: func.isRequired,
+  onSubmitOrderRequest: func.isRequired,
   timeSlots: arrayOf(propTypes.timeSlot),
   fetchTimeSlotsError: propTypes.error,
   nextTransitions: array,
