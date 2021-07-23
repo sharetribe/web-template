@@ -208,7 +208,7 @@
   margin: 1px 0 0 0;
 
   /**
-   * Aside is visible on mobile layout too, since it includes BookingPanel component.
+   * Aside is visible on mobile layout too, since it includes OrderPanel component.
    * It might get rendered as a Modal in mobile layout.
    */
 
