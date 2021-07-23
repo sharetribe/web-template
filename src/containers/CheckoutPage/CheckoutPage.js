@@ -101,6 +101,11 @@ const checkIsPaymentExpired = existingTransaction => {
     : false;
 };
 
+const getFormattedTotalPrice = (transaction, intl) => {
+  const totalPrice = transaction.attributes.payinTotal;
+  return formatMoney(intl, totalPrice);
+};
+
 export class CheckoutPageComponent extends Component {
   constructor(props) {
     super(props);
@@ -829,6 +834,7 @@ export class CheckoutPageComponent extends Component {
                   }
                   paymentIntent={paymentIntent}
                   onStripeInitialized={this.onStripeInitialized}
+                  totalPrice={getFormattedTotalPrice(tx, intl)}
                 />
               ) : null}
               {isPaymentExpired ? (

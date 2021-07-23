@@ -337,6 +337,7 @@ class StripePaymentForm extends Component {
       defaultPaymentMethod,
       pickupLocation,
       askShippingDetails,
+      totalPrice,
       values,
     } = formRenderProps;
 
@@ -538,9 +539,12 @@ class StripePaymentForm extends Component {
             disabled={submitDisabled}
           >
             {billingDetailsNeeded ? (
-              <FormattedMessage id="StripePaymentForm.submitPaymentInfo" />
+              <FormattedMessage id="StripePaymentForm.submitPaymentInfo" values={{ totalPrice }} />
             ) : (
-              <FormattedMessage id="StripePaymentForm.submitConfirmPaymentInfo" />
+              <FormattedMessage
+                id="StripePaymentForm.submitConfirmPaymentInfo"
+                values={{ totalPrice }}
+              />
             )}
           </PrimaryButton>
         </div>
@@ -594,6 +598,7 @@ StripePaymentForm.propTypes = {
     address: string.isRequired,
     building: string,
   }),
+  totalPrice: string.isRequired,
 };
 
 export default injectIntl(StripePaymentForm);
