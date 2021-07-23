@@ -48,7 +48,7 @@ import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
 import {
   AvatarMedium,
   AspectRatioWrapper,
-  BookingBreakdown,
+  OrderBreakdown,
   Logo,
   NamedLink,
   NamedRedirect,
@@ -638,7 +638,7 @@ export class CheckoutPageComponent extends Component {
       : {};
     const breakdown =
       tx.id && tx.attributes.lineItems?.length > 0 ? (
-        <BookingBreakdown
+        <OrderBreakdown
           className={css.orderBreakdown}
           userRole="customer"
           unitType={config.bookingUnitType}

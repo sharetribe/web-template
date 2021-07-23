@@ -5,7 +5,7 @@ import { formatMoney } from '../../util/currency';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { LINE_ITEM_PROVIDER_COMMISSION, propTypes } from '../../util/types';
 
-import css from './BookingBreakdown.module.css';
+import css from './OrderBreakdown.module.css';
 
 const { Money } = sdkTypes;
 
@@ -27,7 +27,7 @@ const LineItemProviderCommissionMaybe = props => {
 
   // Flex Template for Web is using the default transaction process (https://www.sharetribe.com/docs/background/transaction-process/#sharetribe-flex-default-transaction-process)
   // which containt provider commissions so by default the providerCommissionLineItem should exist.
-  // If you are not using provider commisison you might want to remove this whole component from BookingBreakdown.js file.
+  // If you are not using provider commisison you might want to remove this whole component from OrderBreakdown.js file.
   if (isProvider && providerCommissionLineItem) {
     if (!isValidCommission(providerCommissionLineItem)) {
       // eslint-disable-next-line no-console
@@ -41,7 +41,7 @@ const LineItemProviderCommissionMaybe = props => {
     commissionItem = (
       <div className={css.lineItem}>
         <span className={css.itemLabel}>
-          <FormattedMessage id="BookingBreakdown.commission" />
+          <FormattedMessage id="OrderBreakdown.commission" />
         </span>
         <span className={css.itemValue}>{formattedCommission}</span>
       </div>

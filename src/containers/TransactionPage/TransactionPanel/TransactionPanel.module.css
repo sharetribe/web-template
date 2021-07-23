@@ -279,7 +279,7 @@
   /* default "root" class for breakdown container */
 }
 
-.bookingBreakdownTitle {
+.orderBreakdownTitle {
   /* Font */
   color: var(--matterColorAnti);
 

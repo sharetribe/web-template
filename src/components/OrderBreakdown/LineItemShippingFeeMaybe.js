@@ -3,7 +3,7 @@ import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
 import { LINE_ITEM_SHIPPING_FEE, propTypes } from '../../util/types';
 
-import css from './BookingBreakdown.module.css';
+import css from './OrderBreakdown.module.css';
 
 const LineItemShippingFeeMaybe = props => {
   const { transaction, intl } = props;
@@ -15,7 +15,7 @@ const LineItemShippingFeeMaybe = props => {
   return shippingFeeLineItem ? (
     <div className={css.lineItem}>
       <span className={css.itemLabel}>
-        <FormattedMessage id="BookingBreakdown.shippingFee" />
+        <FormattedMessage id="OrderBreakdown.shippingFee" />
       </span>
       <span className={css.itemValue}>{formatMoney(intl, shippingFeeLineItem.lineTotal)}</span>
     </div>

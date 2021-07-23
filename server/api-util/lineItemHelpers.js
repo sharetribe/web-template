@@ -228,7 +228,7 @@ exports.constructValidLineItems = lineItems => {
     }
 
     // lineItems are expected to be in similar format as when they are returned from API
-    // so that we can use them in e.g. BookingBreakdown component.
+    // so that we can use them in e.g. OrderBreakdown component.
     // This means we need to convert quantity to Decimal and add attributes lineTotal and reversal to lineItems
     const lineTotal = this.calculateLineTotal(lineItem);
     return {

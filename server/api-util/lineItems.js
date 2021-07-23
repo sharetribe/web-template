@@ -58,7 +58,7 @@ exports.transactionLineItems = (listing, orderData) => {
    * Pre-definded commission components expects line item code to be one of the following:
    * 'line-item/provider-commission', 'line-item/customer-commission'
    *
-   * By default BookingBreakdown prints line items inside LineItemUnknownItemsMaybe if the lineItem code is not recognized. */
+   * By default OrderBreakdown prints line items inside LineItemUnknownItemsMaybe if the lineItem code is not recognized. */
 
   const order = {
     code: lineItemUnitType,
