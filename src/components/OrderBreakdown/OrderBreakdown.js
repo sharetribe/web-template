@@ -154,7 +154,7 @@ OrderBreakdownComponent.propTypes = {
   className: string,
 
   userRole: oneOf(['customer', 'provider']).isRequired,
-  unitType: propTypes.bookingUnitType.isRequired,
+  unitType: propTypes.lineItemUnitType.isRequired,
   transaction: propTypes.transaction.isRequired,
   booking: propTypes.booking,
   dateType: propTypes.dateType,

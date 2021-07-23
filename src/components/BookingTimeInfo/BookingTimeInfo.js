@@ -88,7 +88,7 @@ BookingTimeInfoComponent.defaultProps = { dateType: null };
 BookingTimeInfoComponent.propTypes = {
   intl: intlShape.isRequired,
   tx: propTypes.transaction.isRequired,
-  unitType: propTypes.bookingUnitType.isRequired,
+  unitType: propTypes.lineItemUnitType.isRequired,
   dateType: propTypes.dateType,
 };
 

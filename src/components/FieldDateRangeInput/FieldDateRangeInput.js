@@ -169,7 +169,7 @@ FieldDateRangeInputComponent.defaultProps = {
 FieldDateRangeInputComponent.propTypes = {
   className: string,
   rootClassName: string,
-  unitType: propTypes.bookingUnitType.isRequired,
+  unitType: propTypes.lineItemUnitType.isRequired,
   useMobileMargins: bool,
   endDateId: string,
   endDateLabel: string,

@@ -9,7 +9,7 @@ import { ensureTransaction } from './data';
  * so we need to understand what those strings mean.
  */
 
-// When a customer makes a booking to a listing, a transaction is
+// When a customer makes an order for a listing, a transaction is
 // created with the initial request-payment transition.
 // At this transition a PaymentIntent is created by Marketplace API.
 // After this transition, the actual payment must be made on client-side directly to Stripe.
