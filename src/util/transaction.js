@@ -305,6 +305,7 @@ const hasPassedStateFn = state => tx =>
   getTransitionsToState(state).filter(t => hasPassedTransition(t, tx)).length > 0;
 
 // Helper function to check if the transaction has passed a certain state
+export const txHasPassedPaymentPending = hasPassedStateFn(STATE_PENDING_PAYMENT);
 export const txHasBeenReceived = hasPassedStateFn(STATE_RECEIVED);
 
 /**

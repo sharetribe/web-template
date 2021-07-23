@@ -10,10 +10,7 @@ describe('CheckoutPage', () => {
   it('matches snapshot', () => {
     const listing = createListing('listing1', {}, { author: createUser('author') });
     const props = {
-      bookingDates: {
-        bookingStart: new Date(Date.UTC(2017, 3, 14)),
-        bookingEnd: new Date(Date.UTC(2017, 3, 16)),
-      },
+      orderData: { quantity: 3, deliveryMethod: 'shipping' },
       dispatch: noop,
       history: { push: noop, action: 'PUSH' },
       intl: fakeIntl,
@@ -47,24 +44,20 @@ describe('CheckoutPage', () => {
           author: createUser('author1'),
         }
       );
-      const bookingDates = {
-        bookingStart: new Date(Date.UTC(2017, 3, 14)),
-        bookingEnd: new Date(Date.UTC(2017, 3, 16)),
-      };
+      const orderData = { quantity: 3, deliveryMethod: 'shipping' };
       const expectedAction = {
         type: SET_INITIAL_VALUES,
-        payload: { listing, bookingDates },
+        payload: { listing, orderData },
       };
 
-      expect(setInitialValues({ listing, bookingDates })).toEqual(expectedAction);
+      expect(setInitialValues({ listing, orderData })).toEqual(expectedAction);
     });
 
     describe('Reducer', () => {
       const initialValues = {
         initiateOrderError: null,
         listing: null,
-        bookingData: null,
-        bookingDates: null,
+        orderData: null,
         stripeCustomerFetched: false,
         speculateTransactionError: null,
         speculateTransactionInProgress: false,
@@ -85,11 +78,8 @@ describe('CheckoutPage', () => {
             author: createUser('author1'),
           }
         );
-        const bookingDates = {
-          bookingStart: new Date(Date.UTC(2017, 3, 14)),
-          bookingEnd: new Date(Date.UTC(2017, 3, 16)),
-        };
-        const payload = { listing, bookingDates };
+        const orderData = { quantity: 3, deliveryMethod: 'shipping' };
+        const payload = { listing, orderData };
         const expected = { ...initialValues, ...payload };
         expect(checkoutPageReducer({}, { type: SET_INITIAL_VALUES, payload })).toEqual(expected);
       });

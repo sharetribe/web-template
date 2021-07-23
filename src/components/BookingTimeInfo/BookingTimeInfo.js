@@ -20,7 +20,7 @@ import {
 
 import css from './BookingTimeInfo.module.css';
 
-const bookingData = (unitType, tx, isOrder, intl) => {
+const orderData = (unitType, tx, intl) => {
   // Attributes: displayStart and displayEnd can be used to differentiate shown time range
   // from actual start and end times used for availability reservation. It can help in situations
   // where there are preparation time needed between bookings.
@@ -41,14 +41,14 @@ const bookingData = (unitType, tx, isOrder, intl) => {
 };
 
 const BookingTimeInfoComponent = props => {
-  const { bookingClassName, isOrder, intl, tx, unitType, dateType } = props;
+  const { bookingClassName, intl, tx, unitType, dateType } = props;
   const isEnquiry = txIsEnquired(tx);
 
   if (isEnquiry) {
     return null;
   }
 
-  const bookingTimes = bookingData(unitType, tx, isOrder, intl);
+  const bookingTimes = orderData(unitType, tx, intl);
 
   const { bookingStart, bookingEnd, isSingleDay } = bookingTimes;
 
@@ -87,7 +87,6 @@ BookingTimeInfoComponent.defaultProps = { dateType: null };
 
 BookingTimeInfoComponent.propTypes = {
   intl: intlShape.isRequired,
-  isOrder: bool.isRequired,
   tx: propTypes.transaction.isRequired,
   unitType: propTypes.bookingUnitType.isRequired,
   dateType: propTypes.dateType,

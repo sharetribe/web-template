@@ -62,12 +62,11 @@ export const isValidTransaction = transaction => {
   return validateProperties(transaction, props);
 };
 
-// Stores given bookingDates and listing to sessionStorage
-export const storeData = (bookingData, bookingDates, listing, transaction, storageKey) => {
-  if (window && window.sessionStorage && listing && bookingDates && bookingData) {
+// Stores given bookinData, listing and transaction to sessionStorage
+export const storeData = (orderData, listing, transaction, storageKey) => {
+  if (window && window.sessionStorage && listing && orderData) {
     const data = {
-      bookingData,
-      bookingDates,
+      orderData,
       listing,
       transaction,
       storedAt: new Date(),
@@ -106,9 +105,15 @@ export const storedData = storageKey => {
       return sdkTypes.reviver(k, v);
     };
 
-    const { bookingData, bookingDates, listing, transaction, storedAt } = checkoutPageData
+    // Note: orderData may contain bookingDates if booking process is used.
+    const { orderData, listing, transaction, storedAt } = checkoutPageData
       ? JSON.parse(checkoutPageData, reviver)
       : {};
+
+    const bookingDates = orderData?.bookingDates;
+    const isPotentiallyIncludedBookingDatesValid = bookingDates
+      ? isValidBookingDates(bookingDates)
+      : true;
 
     // If sessionStore contains freshly saved data (max 1 day old), use it
     const isFreshlySaved = storedAt
@@ -120,12 +125,12 @@ export const storedData = storageKey => {
 
     const isStoredDataValid =
       isFreshlySaved &&
-      isValidBookingDates(bookingDates) &&
+      isPotentiallyIncludedBookingDatesValid &&
       isValidListing(listing) &&
       isTransactionValid;
 
     if (isStoredDataValid) {
-      return { bookingData, bookingDates, listing, transaction };
+      return { orderData, listing, transaction };
     }
   }
   return {};

@@ -1,7 +1,7 @@
 import pick from 'lodash/pick';
 
 import config from '../../config';
-import { types as sdkTypes } from '../../util/sdkLoader';
+import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { getStartOf, addTime } from '../../util/dates';
 import { storableError } from '../../util/errors';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -158,6 +158,9 @@ export const sendEnquiryError = e => ({ type: SEND_ENQUIRY_ERROR, error: true, p
 // ================ Thunks ================ //
 
 export const showListing = (listingId, isOwn = false) => (dispatch, getState, sdk) => {
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+  const aspectRatio = aspectHeight / aspectWidth;
+
   dispatch(showListingRequest(listingId));
   dispatch(fetchCurrentUser());
   const params = {
@@ -169,6 +172,9 @@ export const showListing = (listingId, isOwn = false) => (dispatch, getState, sd
       'variants.landscape-crop2x',
       'variants.landscape-crop4x',
       'variants.landscape-crop6x',
+
+      `variants.${variantPrefix}`,
+      `variants.${variantPrefix}-2x`,
 
       // Social media
       'variants.facebook',
@@ -184,6 +190,8 @@ export const showListing = (listingId, isOwn = false) => (dispatch, getState, sd
       'variants.square-small',
       'variants.square-small2x',
     ],
+    ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+    ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
   };
 
   const show = isOwn ? sdk.ownListings.show(params) : sdk.listings.show(params);
@@ -289,9 +297,9 @@ export const sendEnquiry = (listingId, message) => (dispatch, getState, sdk) => 
     });
 };
 
-export const fetchTransactionLineItems = ({ bookingData, listingId, isOwnListing }) => dispatch => {
+export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }) => dispatch => {
   dispatch(fetchLineItemsRequest());
-  transactionLineItems({ bookingData, listingId, isOwnListing })
+  transactionLineItems({ orderData, listingId, isOwnListing })
     .then(response => {
       const lineItems = response.data;
       dispatch(fetchLineItemsSuccess(lineItems));
@@ -300,7 +308,7 @@ export const fetchTransactionLineItems = ({ bookingData, listingId, isOwnListing
       dispatch(fetchLineItemsError(storableError(e)));
       log.error(e, 'fetching-line-items-failed', {
         listingId: listingId.uuid,
-        bookingData: bookingData,
+        orderData,
       });
     });
 };

@@ -80,8 +80,7 @@
   border-bottom-color: var(--successColor);
 }
 
-.locationAddress,
-.building {
+.input {
   flex-shrink: 0;
   margin-bottom: 24px;
 
