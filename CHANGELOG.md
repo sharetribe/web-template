@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Rename bookingUnitType as lineItemUnitType.
+  [#56](https://github.com/sharetribe/ftw-product/pull/56)
 - [change] Rename BookingPanel as OrderPanel.
   [#55](https://github.com/sharetribe/ftw-product/pull/55)
 - [change] Rename BookingBreakdown as OrderBreakdown.
