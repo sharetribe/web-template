@@ -163,7 +163,7 @@ export const TransactionPageComponent = props => {
   }
 
   // Customer can create a booking, if the tx is in "enquiry" state.
-  const handleSubmitBookingRequest = values => {
+  const handleSubmitOrderRequest = values => {
     const { bookingDates, ...otherOrderData } = values;
     const bookingDatesMaybe = bookingDates
       ? {
@@ -337,7 +337,7 @@ export const TransactionPageComponent = props => {
         errorText: intl.formatMessage({ id: 'TransactionPage.leaveReview.actionError' }),
       }}
       nextTransitions={processTransitions}
-      onSubmitBookingRequest={handleSubmitBookingRequest}
+      onSubmitOrderRequest={handleSubmitOrderRequest}
       timeSlots={timeSlots}
       fetchTimeSlotsError={fetchTimeSlotsError}
       onFetchTransactionLineItems={onFetchTransactionLineItems}
