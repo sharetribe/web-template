@@ -14,10 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
-- [fix] ManageListingPage: review changes
-  [#51](https://github.com/sharetribe/ftw-product/pull/51)
-- [fix] SearchPage: review changes
-  [#50](https://github.com/sharetribe/ftw-product/pull/50)
+- [change] CheckoutPage: add shipping details to form, change bookindData to orderData, and add
+  other UI changes. [#52](https://github.com/sharetribe/ftw-product/pull/52)
+- [fix] ManageListingPage: review changes [#51](https://github.com/sharetribe/ftw-product/pull/51)
+- [fix] SearchPage: review changes [#50](https://github.com/sharetribe/ftw-product/pull/50)
 - [fix] util/dates.js: Fix earlier copy-paste error.
   [#49](https://github.com/sharetribe/ftw-product/pull/49)
 - [fix] Add missing heading for reviewed transaction on TransactionPage.
