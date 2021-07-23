@@ -32,7 +32,12 @@ import {
   transactionInitiateOrderStripeErrors,
 } from '../../util/errors';
 import { formatMoney } from '../../util/currency';
-import { TRANSITION_ENQUIRE, txIsPaymentPending, txIsPaymentExpired } from '../../util/transaction';
+import {
+  TRANSITION_ENQUIRE,
+  txIsPaymentPending,
+  txIsPaymentExpired,
+  txHasPassedPaymentPending,
+} from '../../util/transaction';
 
 // Import global thunk functions
 import { isScrollingDisabled } from '../../ducks/UI.duck';
@@ -106,6 +111,19 @@ const getFormattedTotalPrice = (transaction, intl) => {
   return formatMoney(intl, totalPrice);
 };
 
+// Convert the picked date to moment that will represent the same time of day in UTC time zone.
+const bookingDatesMaybe = bookingDates => {
+  const apiTimeZone = 'Etc/UTC';
+  return bookingDates
+    ? {
+        bookingDates: {
+          bookingStart: timeOfDayFromLocalToTimeZone(bookingDates.bookingStart, apiTimeZone),
+          bookingEnd: timeOfDayFromLocalToTimeZone(bookingDates.bookingEnd, apiTimeZone),
+        },
+      }
+    : {};
+};
+
 export class CheckoutPageComponent extends Component {
   constructor(props) {
     super(props);
@@ -147,8 +165,7 @@ export class CheckoutPageComponent extends Component {
    */
   loadInitialData() {
     const {
-      bookingData,
-      bookingDates,
+      orderData,
       listing,
       transaction,
       fetchSpeculatedTransaction,
@@ -167,49 +184,41 @@ export class CheckoutPageComponent extends Component {
     // Action is 'REPLACE' when user has directed through login/signup process
     const hasNavigatedThroughLink = history.action === 'PUSH' || history.action === 'REPLACE';
 
-    const hasDataInProps = !!(bookingData && bookingDates && listing) && hasNavigatedThroughLink;
+    const hasDataInProps = !!(orderData && listing && hasNavigatedThroughLink);
     if (hasDataInProps) {
       // Store data only if data is passed through props and user has navigated through a link.
-      storeData(bookingData, bookingDates, listing, transaction, STORAGE_KEY);
+      storeData(orderData, listing, transaction, STORAGE_KEY);
     }
 
     // NOTE: stored data can be empty if user has already successfully completed transaction.
-    const pageData = hasDataInProps
-      ? { bookingData, bookingDates, listing, transaction }
-      : storedData(STORAGE_KEY);
+    const pageData = hasDataInProps ? { orderData, listing, transaction } : storedData(STORAGE_KEY);
 
-    // Check if a booking is already created according to stored data.
     const tx = pageData ? pageData.transaction : null;
-    const isBookingCreated = tx && tx.booking && tx.booking.id;
 
+    // If transaction has passed payment-pending state, speculated tx is not needed.
     const shouldFetchSpeculatedTransaction =
       pageData &&
       pageData.listing &&
       pageData.listing.id &&
-      pageData.bookingData &&
-      pageData.bookingDates &&
-      pageData.bookingDates.bookingStart &&
-      pageData.bookingDates.bookingEnd &&
-      !isBookingCreated;
+      pageData.orderData &&
+      !txHasPassedPaymentPending(tx);
 
     if (shouldFetchSpeculatedTransaction) {
       const listingId = pageData.listing.id;
       const transactionId = tx ? tx.id : null;
-      const { bookingStart, bookingEnd } = pageData.bookingDates;
 
-      // Convert the picked date to moment that will represent the same time of day in UTC time zone.
-      const apiTimeZone = 'Etc/UTC';
-      const bookingStartForAPI = timeOfDayFromLocalToTimeZone(bookingStart, apiTimeZone);
-      const bookingEndForAPI = timeOfDayFromLocalToTimeZone(bookingEnd, apiTimeZone);
-
-      // Fetch speculated transaction for showing price in booking breakdown
+      // Fetch speculated transaction for showing price in order breakdown
       // NOTE: if unit type is line-item/units, quantity needs to be added.
-      // The way to pass it to checkout page is through pageData.bookingData
+      // The way to pass it to checkout page is through pageData.orderData
+      const quantity = pageData.orderData?.quantity;
+      const quantityMaybe = quantity ? { quantity } : {};
+      const deliveryMethod = pageData.orderData?.deliveryMethod;
       fetchSpeculatedTransaction(
         {
           listingId,
-          bookingStart: bookingStartForAPI,
-          bookingEnd: bookingEndForAPI,
+          deliveryMethod,
+          ...quantityMaybe,
+          ...bookingDatesMaybe(pageData.orderData.bookingDates),
         },
         transactionId
       );
@@ -274,8 +283,8 @@ export class CheckoutPageComponent extends Component {
       const order = ensureTransaction(fnParams);
       if (order.id) {
         // Store order.
-        const { bookingData, bookingDates, listing } = pageData;
-        storeData(bookingData, bookingDates, listing, order, STORAGE_KEY);
+        const { orderData, listing } = pageData;
+        storeData(orderData, listing, order, STORAGE_KEY);
         this.setState({ pageData: { ...pageData, transaction: order } });
       }
 
@@ -375,9 +384,18 @@ export class CheckoutPageComponent extends Component {
 
     // Create order aka transaction
     // NOTE: if unit type is line-item/units, quantity needs to be added.
-    // The way to pass it to checkout page is through pageData.bookingData
+    // The way to pass it to checkout page is through pageData.orderData
     const tx = speculatedTransaction ? speculatedTransaction : storedTx;
 
+    const deliveryMethod = pageData.orderData?.deliveryMethod;
+    const quantity = pageData.orderData?.quantity;
+    const quantityMaybe = quantity ? { quantity } : {};
+    const protectedDataMaybe =
+      deliveryMethod && shippingDetails
+        ? { protectedData: { deliveryMethod, shippingDetails } }
+        : deliveryMethod
+        ? { protectedData: { deliveryMethod } }
+        : {};
     // Note: optionalPaymentParams contains Stripe paymentMethod,
     // but that can also be passed on Step 2
     // stripe.confirmCardPayment(stripe, { payment_method: stripePaymentMethodId })
@@ -390,8 +408,10 @@ export class CheckoutPageComponent extends Component {
 
     const orderParams = {
       listingId: pageData.listing.id,
-      bookingStart: tx.booking.attributes.start,
-      bookingEnd: tx.booking.attributes.end,
+      deliveryMethod,
+      ...quantityMaybe,
+      ...bookingDatesMaybe(pageData.orderData.bookingDates),
+      ...protectedDataMaybe,
       ...optionalPaymentParams,
     };
 
@@ -481,14 +501,12 @@ export class CheckoutPageComponent extends Component {
     const { paymentIntent, onRetrievePaymentIntent } = this.props;
     const tx = this.state.pageData ? this.state.pageData.transaction : null;
 
-    // We need to get up to date PI, if booking is created but payment is not expired.
+    // We need to get up to date PI, if payment is pending but it's not expired.
     const shouldFetchPaymentIntent =
       this.stripe &&
       !paymentIntent &&
       tx &&
       tx.id &&
-      tx.booking &&
-      tx.booking.id &&
       txIsPaymentPending(tx) &&
       !checkIsPaymentExpired(tx);
 
@@ -532,7 +550,7 @@ export class CheckoutPageComponent extends Component {
 
     const isLoading = !this.state.dataLoaded || speculateTransactionInProgress;
 
-    const { listing, bookingDates, transaction } = this.state.pageData;
+    const { listing, transaction, orderData } = this.state.pageData;
     const existingTransaction = ensureTransaction(transaction);
     const speculatedTransaction = ensureTransaction(speculatedTransactionMaybe, {}, null);
     const currentListing = ensureListing(listing);
@@ -570,13 +588,7 @@ export class CheckoutPageComponent extends Component {
       currentAuthor.id &&
       currentAuthor.id.uuid === currentUser.id.uuid;
 
-    const hasListingAndAuthor = !!(currentListing.id && currentAuthor.id);
-    const hasBookingDates = !!(
-      bookingDates &&
-      bookingDates.bookingStart &&
-      bookingDates.bookingEnd
-    );
-    const hasRequiredData = hasListingAndAuthor && hasBookingDates;
+    const hasRequiredData = !!(currentListing.id && currentAuthor.id);
     const canShowPage = hasRequiredData && !isOwnListing;
     const shouldRedirect = !isLoading && !canShowPage;
 
@@ -586,7 +598,6 @@ export class CheckoutPageComponent extends Component {
       // eslint-disable-next-line no-console
       console.error('Missing or invalid data for checkout, redirecting back to listing page.', {
         transaction: speculatedTransaction,
-        bookingDates,
         listing,
       });
       return <NamedRedirect name="ListingPage" params={params} />;
@@ -647,9 +658,6 @@ export class CheckoutPageComponent extends Component {
 
     const isAmountTooLowError = isTransactionInitiateAmountTooLowError(initiateOrderError);
     const isChargeDisabledError = isTransactionChargeDisabledError(initiateOrderError);
-    const isBookingTimeNotAvailableError = isTransactionInitiateBookingTimeNotAvailableError(
-      initiateOrderError
-    );
     const stripeErrors = transactionInitiateOrderStripeErrors(initiateOrderError);
 
     let initiateOrderErrorMessage = null;
@@ -667,7 +675,8 @@ export class CheckoutPageComponent extends Component {
           <FormattedMessage id="CheckoutPage.initiateOrderAmountTooLow" />
         </p>
       );
-    } else if (isBookingTimeNotAvailableError) {
+    } else if (isTransactionInitiateBookingTimeNotAvailableError(initiateOrderError)) {
+      // If bookings are used, there could be error related to those
       initiateOrderErrorMessage = (
         <p className={css.orderError}>
           <FormattedMessage id="CheckoutPage.bookingTimeNotAvailableMessage" />
@@ -884,8 +893,7 @@ CheckoutPageComponent.defaultProps = {
   initiateOrderError: null,
   confirmPaymentError: null,
   listing: null,
-  bookingData: {},
-  bookingDates: null,
+  orderData: {},
   speculateTransactionError: null,
   speculatedTransaction: null,
   transaction: null,
@@ -896,11 +904,7 @@ CheckoutPageComponent.defaultProps = {
 CheckoutPageComponent.propTypes = {
   scrollingDisabled: bool.isRequired,
   listing: propTypes.listing,
-  bookingData: object,
-  bookingDates: shape({
-    bookingStart: instanceOf(Date).isRequired,
-    bookingEnd: instanceOf(Date).isRequired,
-  }),
+  orderData: object,
   fetchStripeCustomer: func.isRequired,
   stripeCustomerFetched: bool.isRequired,
   fetchSpeculatedTransaction: func.isRequired,
@@ -940,8 +944,7 @@ CheckoutPageComponent.propTypes = {
 const mapStateToProps = state => {
   const {
     listing,
-    bookingData,
-    bookingDates,
+    orderData,
     stripeCustomerFetched,
     speculateTransactionInProgress,
     speculateTransactionError,
@@ -956,8 +959,7 @@ const mapStateToProps = state => {
     scrollingDisabled: isScrollingDisabled(state),
     currentUser,
     stripeCustomerFetched,
-    bookingData,
-    bookingDates,
+    orderData,
     speculateTransactionInProgress,
     speculateTransactionError,
     speculatedTransaction,
@@ -996,8 +998,8 @@ const CheckoutPage = compose(
 
 CheckoutPage.setInitialValues = (initialValues, saveToSessionStorage = false) => {
   if (saveToSessionStorage) {
-    const { listing, bookingData, bookingDates } = initialValues;
-    storeData(bookingData, bookingDates, listing, null, STORAGE_KEY);
+    const { listing, orderData } = initialValues;
+    storeData(orderData, listing, null, STORAGE_KEY);
   }
 
   return setInitialValues(initialValues);

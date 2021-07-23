@@ -51,7 +51,7 @@ export class BookingDatesFormComponent extends Component {
   // When the values of the form are updated we need to fetch
   // lineItems from FTW backend for the EstimatedTransactionMaybe
   // In case you add more fields to the form, make sure you add
-  // the values here to the bookingData object.
+  // the values here to the orderData object.
   handleOnChange(formValues) {
     const { startDate, endDate } =
       formValues.values && formValues.values.bookingDates ? formValues.values.bookingDates : {};
@@ -60,7 +60,7 @@ export class BookingDatesFormComponent extends Component {
 
     if (startDate && endDate && !this.props.fetchLineItemsInProgress) {
       this.props.onFetchTransactionLineItems({
-        bookingData: { startDate, endDate },
+        orderData: { bookingDates: { startDate, endDate } },
         listingId,
         isOwnListing,
       });
@@ -140,7 +140,7 @@ export class BookingDatesFormComponent extends Component {
           // so we need to pass only booking data that is needed otherwise
           // If you have added new fields to the form that will affect to pricing,
           // you need to add the values to handleOnChange function
-          const bookingData =
+          const orderData =
             startDate && endDate
               ? {
                   unitType,
@@ -150,14 +150,14 @@ export class BookingDatesFormComponent extends Component {
               : null;
 
           const showEstimatedBreakdown =
-            bookingData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
+            orderData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
 
           const bookingInfoMaybe = showEstimatedBreakdown ? (
             <div className={css.priceBreakdownContainer}>
               <h3 className={css.priceBreakdownTitle}>
                 <FormattedMessage id="BookingDatesForm.priceBreakdownTitle" />
               </h3>
-              <EstimatedBreakdownMaybe bookingData={bookingData} lineItems={lineItems} />
+              <EstimatedBreakdownMaybe orderData={orderData} lineItems={lineItems} />
             </div>
           ) : null;
 

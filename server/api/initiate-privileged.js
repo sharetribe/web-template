@@ -13,7 +13,7 @@ module.exports = (req, res) => {
     .show({ id: listingId })
     .then(listingResponse => {
       const listing = listingResponse.data.data;
-      lineItems = transactionLineItems(listing, orderData);
+      lineItems = transactionLineItems(listing, { ...orderData, ...bodyParams.params });
 
       return getTrustedSdk(req);
     })
