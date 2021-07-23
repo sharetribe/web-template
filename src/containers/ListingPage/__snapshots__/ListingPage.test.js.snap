@@ -284,7 +284,7 @@ exports[`ListingPage matches snapshot 1`] = `
           </div>
           <withRouter(injectIntl(OrderPanel))
             authorDisplayName="user-1 display name"
-            className="OrderPanel"
+            className="orderPanel"
             fetchLineItemsError={null}
             fetchLineItemsInProgress={false}
             fetchTimeSlotsError={null}
