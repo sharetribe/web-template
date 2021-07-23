@@ -14,4 +14,16 @@ if (isServer()) {
 
 const { createInstance, types, transit, util } = exportSdk;
 
-export { createInstance, types, transit, util };
+// create image variant from variant name, desired width and aspectRatio
+const createImageVariantConfig = (name, width, aspectRatio) => {
+  //const aspectRatio = aspectHeight / aspectWidth;
+  return {
+    [`imageVariant.${name}`]: util.objectQueryString({
+      w: width,
+      h: aspectRatio * width,
+      fit: 'crop',
+    }),
+  };
+};
+
+export { createInstance, types, transit, util, createImageVariantConfig };

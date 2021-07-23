@@ -27,8 +27,11 @@ exports[`CheckoutPage matches snapshot 1`] = `
   <div
     className="contentContainer"
   >
-    <div
+    <AspectRatioWrapper
       className="aspectWrapper"
+      height={400}
+      rootClassName={null}
+      width={400}
     >
       <ResponsiveImage
         alt="listing1 title"
@@ -36,14 +39,9 @@ exports[`CheckoutPage matches snapshot 1`] = `
         image={null}
         noImageMessage={null}
         rootClassName="rootForImage"
-        variants={
-          Array [
-            "landscape-crop",
-            "landscape-crop2x",
-          ]
-        }
+        variants={Array []}
       />
-    </div>
+    </AspectRatioWrapper>
     <div
       className="avatarWrapper avatarMobile"
     >
@@ -83,7 +81,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
           className="author"
         >
           <FormattedMessage
-            id="CheckoutPage.hostedBy"
+            id="CheckoutPage.providerInfo"
             values={
               Object {
                 "name": "author display name",
@@ -99,6 +97,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
         className="paymentContainer"
       >
         <injectIntl(StripePaymentForm)
+          askShippingDetails={true}
           authorDisplayName="author display name"
           className="paymentForm"
           confirmPaymentError={null}
@@ -109,6 +108,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
           initialValues={
             Object {
               "name": "currentUser first name currentUser last name",
+              "recipientName": "currentUser first name currentUser last name",
             }
           }
           initiateOrderError={null}
@@ -118,14 +118,18 @@ exports[`CheckoutPage matches snapshot 1`] = `
           paymentInfo="CheckoutPage.paymentInfo"
           paymentIntent={null}
           showInitialMessageInput={true}
+          totalPrice={null}
         />
       </section>
     </div>
     <div
       className="detailsContainerDesktop"
     >
-      <div
+      <AspectRatioWrapper
         className="detailsAspectWrapper"
+        height={400}
+        rootClassName={null}
+        width={400}
       >
         <ResponsiveImage
           alt="listing1 title"
@@ -133,14 +137,9 @@ exports[`CheckoutPage matches snapshot 1`] = `
           image={null}
           noImageMessage={null}
           rootClassName="rootForImage"
-          variants={
-            Array [
-              "landscape-crop",
-              "landscape-crop2x",
-            ]
-          }
+          variants={Array []}
         />
-      </div>
+      </AspectRatioWrapper>
       <div
         className="avatarWrapper"
       >
@@ -179,6 +178,14 @@ exports[`CheckoutPage matches snapshot 1`] = `
           55 CheckoutPage.perNight
         </p>
       </div>
+      <h2
+        className="orderBreakdownTitle"
+      >
+        <FormattedMessage
+          id="CheckoutPage.orderBreakdown"
+          values={Object {}}
+        />
+      </h2>
     </div>
   </div>
 </Page>

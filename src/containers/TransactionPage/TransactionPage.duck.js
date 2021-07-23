@@ -730,9 +730,9 @@ export const fetchNextTransitions = id => (dispatch, getState, sdk) => {
     });
 };
 
-export const fetchTransactionLineItems = ({ bookingData, listingId, isOwnListing }) => dispatch => {
+export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }) => dispatch => {
   dispatch(fetchLineItemsRequest());
-  transactionLineItems({ bookingData, listingId, isOwnListing })
+  transactionLineItems({ orderData, listingId, isOwnListing })
     .then(response => {
       const lineItems = response.data;
       dispatch(fetchLineItemsSuccess(lineItems));
@@ -741,7 +741,7 @@ export const fetchTransactionLineItems = ({ bookingData, listingId, isOwnListing
       dispatch(fetchLineItemsError(storableError(e)));
       log.error(e, 'fetching-line-items-failed', {
         listingId: listingId.uuid,
-        bookingData: bookingData,
+        orderData,
       });
     });
 };

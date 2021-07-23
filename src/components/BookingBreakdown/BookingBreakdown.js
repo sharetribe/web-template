@@ -14,8 +14,9 @@ import {
 
 import LineItemBookingPeriod from './LineItemBookingPeriod';
 import LineItemBasePriceMaybe from './LineItemBasePriceMaybe';
-import LineItemUnitsMaybe from './LineItemUnitsMaybe';
 import LineItemSubTotalMaybe from './LineItemSubTotalMaybe';
+import LineItemShippingFeeMaybe from './LineItemShippingFeeMaybe';
+import LineItemShippingFeeRefundMaybe from './LineItemShippingFeeRefundMaybe';
 import LineItemCustomerCommissionMaybe from './LineItemCustomerCommissionMaybe';
 import LineItemCustomerCommissionRefundMaybe from './LineItemCustomerCommissionRefundMaybe';
 import LineItemProviderCommissionMaybe from './LineItemProviderCommissionMaybe';
@@ -56,7 +57,12 @@ export const BookingBreakdownComponent = props => {
    * determines if the date and time or only the date is shown
    *
    * LineItemUnitsMaybe: if he unitType is line-item/unit print the name and
-   * quantity of the unit
+   * quantity of the unit (Not used with FTW-product).
+   *
+   * LineItemShippingFeeMaybe: prints the shipping fee (combining additional fee of
+   * additional items into it).
+   *
+   * LineItemShippingFeeRefundMaybe: prints the amount of refunded shipping fee
    *
    * LineItemBasePriceMaybe: prints the base price calculation for the listing, e.g.
    * "$150.00 * 2 nights $300"
@@ -89,9 +95,10 @@ export const BookingBreakdownComponent = props => {
   return (
     <div className={classes}>
       <LineItemBookingPeriod booking={booking} unitType={unitType} dateType={dateType} />
-      <LineItemUnitsMaybe transaction={transaction} unitType={unitType} />
 
       <LineItemBasePriceMaybe transaction={transaction} unitType={unitType} intl={intl} />
+      <LineItemShippingFeeMaybe transaction={transaction} intl={intl} />
+      <LineItemShippingFeeRefundMaybe transaction={transaction} intl={intl} />
       <LineItemUnknownItemsMaybe transaction={transaction} isProvider={isProvider} intl={intl} />
 
       <LineItemSubTotalMaybe
@@ -135,7 +142,12 @@ export const BookingBreakdownComponent = props => {
   );
 };
 
-BookingBreakdownComponent.defaultProps = { rootClassName: null, className: null, dateType: null };
+BookingBreakdownComponent.defaultProps = {
+  rootClassName: null,
+  className: null,
+  booking: null,
+  dateType: null,
+};
 
 BookingBreakdownComponent.propTypes = {
   rootClassName: string,
@@ -144,7 +156,7 @@ BookingBreakdownComponent.propTypes = {
   userRole: oneOf(['customer', 'provider']).isRequired,
   unitType: propTypes.bookingUnitType.isRequired,
   transaction: propTypes.transaction.isRequired,
-  booking: propTypes.booking.isRequired,
+  booking: propTypes.booking,
   dateType: propTypes.dateType,
 
   // from injectIntl

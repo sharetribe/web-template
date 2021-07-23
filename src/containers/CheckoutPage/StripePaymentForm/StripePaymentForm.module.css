@@ -5,6 +5,35 @@
   flex-direction: column;
 }
 
+.pickupWrapper {
+  margin-bottom: 40px;
+}
+
+.pickupHeading {
+  margin: 0 0 12px 0;
+  color: var(--matterColorAnti);
+
+  padding-top: 4px;
+  padding-bottom: 2px;
+
+  @media (--viewportMedium) {
+    margin: 0 0 8px 0;
+    padding-top: 5px;
+    padding-bottom: 3px;
+  }
+}
+
+.pickupDetails {
+  @apply --marketplaceSmallFontStyles;
+  margin-top: 0;
+  margin-bottom: 0;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
 .card {
   @apply --marketplaceInputStyles;
 
@@ -50,8 +79,8 @@
 
   @media (--viewportMedium) {
     margin: 0 0 16px 0;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 5px;
+    padding-bottom: 3px;
   }
 }
 
@@ -114,9 +143,14 @@
 
   @media (--viewportMedium) {
     margin: 0 0 24px 0;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 6px;
+    padding-bottom: 2px;
   }
+}
+
+.sameAddressCheckbox {
+  display: block;
+  margin: 24px 0;
 }
 
 .paymentLabel {
@@ -137,8 +171,8 @@
 
   @media (--viewportMedium) {
     margin: 24px 0 24px 0;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 5px;
+    padding-bottom: 3px;
   }
 }
 
@@ -174,9 +208,9 @@
   margin: 28px 0 0 0;
 
   @media (--viewportLarge) {
-    /* TODO this is ugly overwrite to fix unconsistent font styles */
     font-size: 14px;
-    padding: 0;
+    padding: 2px 0 6px 0;
+    margin: 24px 0 0 0;
   }
 }
 
@@ -187,7 +221,7 @@
     margin-top: 26px;
   }
   @media (--viewportLarge) {
-    margin-top: 17px;
+    margin-top: 16px;
   }
 }
 
