@@ -314,10 +314,10 @@
     margin-bottom: 0;
   }
 }
-
-.bookingBreakdownTitle {
+.orderBreakdownTitle {
   /* Font */
-  color: var(--matterColorAnti);
+  @apply --marketplaceH3FontStyles;
+  color: var(--matterColor);
 
   /* Layout spacing */
   margin: 5px 24px 25px 24px;
@@ -327,7 +327,7 @@
   }
 }
 
-.bookingBreakdown {
+.orderBreakdown {
   @media (--viewportLarge) {
     margin: 0 48px;
   }
