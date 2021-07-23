@@ -224,7 +224,7 @@ export const InboxItem = props => {
 };
 
 InboxItem.propTypes = {
-  unitType: propTypes.bookingUnitType.isRequired,
+  unitType: propTypes.lineItemUnitType.isRequired,
   type: oneOf(['order', 'sale']).isRequired,
   tx: propTypes.transaction.isRequired,
   intl: intlShape.isRequired,
@@ -370,7 +370,7 @@ export const InboxPageComponent = props => {
 };
 
 InboxPageComponent.defaultProps = {
-  unitType: config.bookingUnitType,
+  unitType: config.lineItemUnitType,
   currentUser: null,
   currentUserHasOrders: null,
   fetchOrdersOrSalesError: null,
@@ -384,7 +384,7 @@ InboxPageComponent.propTypes = {
     tab: string.isRequired,
   }).isRequired,
 
-  unitType: propTypes.bookingUnitType,
+  unitType: propTypes.lineItemUnitType,
   currentUser: propTypes.currentUser,
   fetchInProgress: bool.isRequired,
   fetchOrdersOrSalesError: propTypes.error,

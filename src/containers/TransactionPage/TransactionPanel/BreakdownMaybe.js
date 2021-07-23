@@ -25,7 +25,7 @@ const BreakdownMaybe = props => {
       <OrderBreakdown
         className={breakdownClasses}
         userRole={transactionRole}
-        unitType={config.bookingUnitType}
+        unitType={config.lineItemUnitType}
         transaction={transaction}
         {...txBookingMaybe}
       />

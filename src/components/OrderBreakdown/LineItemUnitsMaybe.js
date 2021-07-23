@@ -35,7 +35,7 @@ const LineItemUnitsMaybe = props => {
 
 LineItemUnitsMaybe.propTypes = {
   transaction: propTypes.transaction.isRequired,
-  unitType: propTypes.bookingUnitType.isRequired,
+  unitType: propTypes.lineItemUnitType.isRequired,
 };
 
 export default LineItemUnitsMaybe;

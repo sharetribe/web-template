@@ -38,7 +38,7 @@ const LineItemBasePriceMaybe = props => {
 
 LineItemBasePriceMaybe.propTypes = {
   transaction: propTypes.transaction.isRequired,
-  unitType: propTypes.bookingUnitType.isRequired,
+  unitType: propTypes.lineItemUnitType.isRequired,
   intl: intlShape.isRequired,
 };
 
