@@ -244,6 +244,7 @@ export class CheckoutPageComponent extends Component {
       paymentIntent,
       selectedPaymentMethod,
       saveAfterOnetimePayment,
+      shippingDetails,
     } = handlePaymentParams;
     const storedTx = ensureTransaction(pageData.transaction);
 
@@ -268,7 +269,7 @@ export class CheckoutPageComponent extends Component {
 
     // Step 1: initiate order by requesting payment from Marketplace API
     const fnRequestPayment = fnParams => {
-      // fnParams should be { listingId, bookingStart, bookingEnd }
+      // fnParams should be { listingId, deliveryMethod, quantity?, bookingDates?, paymentMethod?/setupPaymentMethodForSaving? }
       const hasPaymentIntents =
         storedTx.attributes.protectedData && storedTx.attributes.protectedData.stripePaymentIntents;
 
@@ -435,6 +436,14 @@ export class CheckoutPageComponent extends Component {
       state,
       country,
       saveAfterOnetimePayment,
+      recipientName,
+      recipientPhoneNumber,
+      recipientAddressLine1,
+      recipientAddressLine2,
+      recipientPostal,
+      recipientCity,
+      recipientState,
+      recipientCountry,
     } = formValues;
 
     // Billing address is recommended.
@@ -460,6 +469,23 @@ export class CheckoutPageComponent extends Component {
       ...addressMaybe,
     };
 
+    const shippingDetailsMaybe =
+      recipientName && recipientAddressLine1 && recipientPostal
+        ? {
+            shippingDetails: {
+              name: recipientName,
+              phoneNumber: recipientPhoneNumber,
+              address: {
+                city: recipientCity,
+                country: recipientCountry,
+                line1: recipientAddressLine1,
+                line2: recipientAddressLine2,
+                postalCode: recipientPostal,
+                state: recipientState,
+              },
+            },
+          }
+        : {};
     const requestPaymentParams = {
       pageData: this.state.pageData,
       speculatedTransaction,
@@ -470,6 +496,7 @@ export class CheckoutPageComponent extends Component {
       paymentIntent,
       selectedPaymentMethod: paymentMethod,
       saveAfterOnetimePayment: !!saveAfterOnetimePayment,
+      ...shippingDetailsMaybe,
     };
 
     this.handlePaymentIntent(requestPaymentParams)
@@ -774,7 +801,7 @@ export class CheckoutPageComponent extends Component {
     // If your marketplace works mostly in one country you can use initial values to select country automatically
     // e.g. {country: 'FI'}
 
-    const initalValuesForStripePayment = { name: userName };
+    const initalValuesForStripePayment = { name: userName, recipientName: userName };
 
     return (
       <Page {...pageProps}>
@@ -843,6 +870,8 @@ export class CheckoutPageComponent extends Component {
                   }
                   paymentIntent={paymentIntent}
                   onStripeInitialized={this.onStripeInitialized}
+                  askShippingDetails={orderData?.deliveryMethod === 'shipping'}
+                  pickupLocation={currentListing?.attributes?.publicData?.location}
                   totalPrice={getFormattedTotalPrice(tx, intl)}
                 />
               ) : null}
