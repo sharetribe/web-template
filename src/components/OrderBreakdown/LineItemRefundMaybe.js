@@ -10,7 +10,7 @@ import {
   LINE_ITEM_PROVIDER_COMMISSION,
 } from '../../util/types';
 
-import css from './BookingBreakdown.module.css';
+import css from './OrderBreakdown.module.css';
 
 const { Money } = sdkTypes;
 
@@ -55,7 +55,7 @@ const LineItemRefundMaybe = props => {
   return formattedRefund ? (
     <div className={css.lineItem}>
       <span className={css.itemLabel}>
-        <FormattedMessage id="BookingBreakdown.refund" />
+        <FormattedMessage id="OrderBreakdown.refund" />
       </span>
       <span className={css.itemValue}>{formattedRefund}</span>
     </div>

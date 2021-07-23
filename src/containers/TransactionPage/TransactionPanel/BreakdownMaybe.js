@@ -4,11 +4,11 @@ import classNames from 'classnames';
 import config from '../../../config';
 import { DATE_TYPE_DATE } from '../../../util/types';
 
-import { BookingBreakdown } from '../../../components';
+import { OrderBreakdown } from '../../../components';
 
 import css from './TransactionPanel.module.css';
 
-// Functional component as a helper to build BookingBreakdown
+// Functional component as a helper to build OrderBreakdown
 const BreakdownMaybe = props => {
   const { className, rootClassName, breakdownClassName, transaction, transactionRole } = props;
   const loaded = transaction?.id && transaction.attributes.lineItems?.length > 0;
@@ -22,7 +22,7 @@ const BreakdownMaybe = props => {
 
   return loaded ? (
     <div className={classes}>
-      <BookingBreakdown
+      <OrderBreakdown
         className={breakdownClasses}
         userRole={transactionRole}
         unitType={config.bookingUnitType}

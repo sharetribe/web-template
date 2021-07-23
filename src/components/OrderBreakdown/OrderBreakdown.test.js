@@ -9,7 +9,7 @@ import {
   DATE_TYPE_DATE,
 } from '../../util/transaction';
 import { LINE_ITEM_NIGHT } from '../../util/types';
-import { BookingBreakdownComponent } from './BookingBreakdown';
+import { OrderBreakdownComponent } from './OrderBreakdown';
 
 const { UUID, Money } = sdkTypes;
 
@@ -36,10 +36,10 @@ const exampleTransaction = params => {
   };
 };
 
-describe('BookingBreakdown', () => {
+describe('OrderBreakdown', () => {
   it('pretransaction data matches snapshot', () => {
     const tree = renderDeep(
-      <BookingBreakdownComponent
+      <OrderBreakdownComponent
         userRole="customer"
         unitType={LINE_ITEM_NIGHT}
         dateType={DATE_TYPE_DATE}
@@ -69,7 +69,7 @@ describe('BookingBreakdown', () => {
 
   it('customer transaction data matches snapshot', () => {
     const tree = renderDeep(
-      <BookingBreakdownComponent
+      <OrderBreakdownComponent
         userRole="customer"
         unitType={LINE_ITEM_NIGHT}
         dateType={DATE_TYPE_DATE}
@@ -99,7 +99,7 @@ describe('BookingBreakdown', () => {
 
   it('provider transaction data matches snapshot', () => {
     const tree = renderDeep(
-      <BookingBreakdownComponent
+      <OrderBreakdownComponent
         userRole="provider"
         unitType={LINE_ITEM_NIGHT}
         dateType={DATE_TYPE_DATE}

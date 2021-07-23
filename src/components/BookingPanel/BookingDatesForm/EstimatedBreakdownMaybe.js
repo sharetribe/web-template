@@ -2,7 +2,7 @@
  * Booking breakdown estimation
  *
  * Transactions have payment information that can be shown with the
- * BookingBreakdown component. However, when selecting booking
+ * OrderBreakdown component. However, when selecting booking
  * details, there is no transaction object present and we have to
  * estimate the breakdown of the transaction without data from the
  * API.
@@ -38,7 +38,7 @@ import {
 import { DATE_TYPE_DATE } from '../../../util/types';
 import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../../util/currency';
 
-import { BookingBreakdown } from '../../../components';
+import { OrderBreakdown } from '../../../components';
 
 import css from './BookingDatesForm.module.css';
 
@@ -129,7 +129,7 @@ const EstimatedBreakdownMaybe = props => {
       : null;
 
   return tx ? (
-    <BookingBreakdown
+    <OrderBreakdown
       className={css.receipt}
       userRole={userRole}
       unitType={unitType}

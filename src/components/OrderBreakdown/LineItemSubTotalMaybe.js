@@ -11,7 +11,7 @@ import {
   LINE_ITEM_PROVIDER_COMMISSION,
 } from '../../util/types';
 
-import css from './BookingBreakdown.module.css';
+import css from './OrderBreakdown.module.css';
 
 const { Money } = sdkTypes;
 
@@ -86,7 +86,7 @@ const LineItemSubTotalMaybe = props => {
       <hr className={css.totalDivider} />
       <div className={css.subTotalLineItem}>
         <span className={css.itemLabel}>
-          <FormattedMessage id="BookingBreakdown.subTotal" />
+          <FormattedMessage id="OrderBreakdown.subTotal" />
         </span>
         <span className={css.itemValue}>{formattedSubTotal}</span>
       </div>
