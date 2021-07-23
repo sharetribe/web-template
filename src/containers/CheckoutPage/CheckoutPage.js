@@ -872,7 +872,7 @@ export class CheckoutPageComponent extends Component {
                   onStripeInitialized={this.onStripeInitialized}
                   askShippingDetails={orderData?.deliveryMethod === 'shipping'}
                   pickupLocation={currentListing?.attributes?.publicData?.location}
-                  totalPrice={getFormattedTotalPrice(tx, intl)}
+                  totalPrice={tx.id ? getFormattedTotalPrice(tx, intl) : null}
                 />
               ) : null}
               {isPaymentExpired ? (
