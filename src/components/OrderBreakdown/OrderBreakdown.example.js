@@ -13,7 +13,7 @@ import {
   DATE_TYPE_DATETIME,
 } from '../../util/types';
 import config from '../../config';
-import BookingBreakdown from './BookingBreakdown';
+import OrderBreakdown from './OrderBreakdown';
 
 const { UUID, Money } = sdkTypes;
 
@@ -57,7 +57,7 @@ const exampleTransaction = params => {
 };
 
 export const Checkout = {
-  component: BookingBreakdown,
+  component: OrderBreakdown,
   props: {
     userRole: 'customer',
     unitType: LINE_ITEM_NIGHT,
@@ -85,7 +85,7 @@ export const Checkout = {
 };
 
 export const CustomerOrder = {
-  component: BookingBreakdown,
+  component: OrderBreakdown,
   props: {
     userRole: 'customer',
     unitType: LINE_ITEM_NIGHT,
@@ -113,7 +113,7 @@ export const CustomerOrder = {
 };
 
 export const ProviderSale = {
-  component: BookingBreakdown,
+  component: OrderBreakdown,
   props: {
     userRole: 'provider',
     unitType: LINE_ITEM_NIGHT,
@@ -148,7 +148,7 @@ export const ProviderSale = {
 };
 
 export const ProviderSaleZeroCommission = {
-  component: BookingBreakdown,
+  component: OrderBreakdown,
   props: {
     userRole: 'provider',
     unitType: LINE_ITEM_NIGHT,
@@ -183,7 +183,7 @@ export const ProviderSaleZeroCommission = {
 };
 
 export const ProviderSaleSingleNight = {
-  component: BookingBreakdown,
+  component: OrderBreakdown,
   props: {
     userRole: 'provider',
     unitType: LINE_ITEM_NIGHT,
@@ -218,7 +218,7 @@ export const ProviderSaleSingleNight = {
 };
 
 export const ProviderSalePreauthorized = {
-  component: BookingBreakdown,
+  component: OrderBreakdown,
   props: {
     userRole: 'provider',
     unitType: LINE_ITEM_NIGHT,
@@ -254,7 +254,7 @@ export const ProviderSalePreauthorized = {
 };
 
 export const SingleDay = {
-  component: BookingBreakdown,
+  component: OrderBreakdown,
   props: {
     userRole: 'customer',
     unitType: LINE_ITEM_DAY,
@@ -282,7 +282,7 @@ export const SingleDay = {
 };
 
 export const MultipleDays = {
-  component: BookingBreakdown,
+  component: OrderBreakdown,
   props: {
     userRole: 'customer',
     unitType: LINE_ITEM_DAY,
@@ -310,7 +310,7 @@ export const MultipleDays = {
 };
 
 export const UnitsType = {
-  component: BookingBreakdown,
+  component: OrderBreakdown,
   props: {
     userRole: 'customer',
     unitType: LINE_ITEM_UNITS,
@@ -338,7 +338,7 @@ export const UnitsType = {
 };
 
 export const CustomPricing = {
-  component: BookingBreakdown,
+  component: OrderBreakdown,
   props: {
     userRole: 'customer',
     unitType: LINE_ITEM_NIGHT,
@@ -390,7 +390,7 @@ export const CustomPricing = {
 };
 
 export const CustomPricingWithRefund = {
-  component: BookingBreakdown,
+  component: OrderBreakdown,
   props: {
     userRole: 'customer',
     unitType: LINE_ITEM_NIGHT,

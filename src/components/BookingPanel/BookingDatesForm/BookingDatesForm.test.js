@@ -8,7 +8,7 @@ import { fakeIntl } from '../../../util/test-data';
 import { LINE_ITEM_NIGHT } from '../../../util/types';
 import { timeOfDayFromTimeZoneToLocal } from '../../../util/dates';
 
-import { BookingBreakdown } from '../../../components';
+import { OrderBreakdown } from '../../../components';
 
 import { BookingDatesFormComponent } from './BookingDatesForm';
 import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
@@ -80,7 +80,7 @@ describe('EstimatedBreakdownMaybe', () => {
     };
 
     const tree = shallow(<EstimatedBreakdownMaybe orderData={data} lineItems={lineItems} />);
-    const breakdown = tree.find(BookingBreakdown);
+    const breakdown = tree.find(OrderBreakdown);
     const { userRole, unitType, transaction, booking } = breakdown.props();
 
     expect(userRole).toEqual('customer');

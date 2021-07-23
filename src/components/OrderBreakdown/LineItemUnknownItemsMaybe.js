@@ -7,7 +7,7 @@
  *
  * If you require another kind of presentation for your line items, add them to
  * the `LINE_ITEMS` array in util/types.js and create a specific line item
- * component for them that can be used in the `BookingBreakdown` component.
+ * component for them that can be used in the `OrderBreakdown` component.
  */
 import React from 'react';
 import { intlShape } from '../../util/reactIntl';
@@ -15,7 +15,7 @@ import { formatMoney } from '../../util/currency';
 import { humanizeLineItemCode } from '../../util/data';
 import { LINE_ITEMS, propTypes } from '../../util/types';
 
-import css from './BookingBreakdown.module.css';
+import css from './OrderBreakdown.module.css';
 
 const LineItemUnknownItemsMaybe = props => {
   const { transaction, isProvider, intl } = props;

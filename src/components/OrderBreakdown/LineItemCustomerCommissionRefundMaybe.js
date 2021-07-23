@@ -3,7 +3,7 @@ import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
 import { propTypes, LINE_ITEM_CUSTOMER_COMMISSION } from '../../util/types';
 
-import css from './BookingBreakdown.module.css';
+import css from './OrderBreakdown.module.css';
 
 const LineItemCustomerCommissionRefundMaybe = props => {
   const { transaction, isCustomer, intl } = props;
@@ -15,7 +15,7 @@ const LineItemCustomerCommissionRefundMaybe = props => {
   return isCustomer && refund ? (
     <div className={css.lineItem}>
       <span className={css.itemLabel}>
-        <FormattedMessage id="BookingBreakdown.refundCustomerFee" />
+        <FormattedMessage id="OrderBreakdown.refundCustomerFee" />
       </span>
       <span className={css.itemValue}>{formatMoney(intl, refund.lineTotal)}</span>
     </div>

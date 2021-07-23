@@ -25,9 +25,9 @@ import LineItemRefundMaybe from './LineItemRefundMaybe';
 import LineItemTotalPrice from './LineItemTotalPrice';
 import LineItemUnknownItemsMaybe from './LineItemUnknownItemsMaybe';
 
-import css from './BookingBreakdown.module.css';
+import css from './OrderBreakdown.module.css';
 
-export const BookingBreakdownComponent = props => {
+export const OrderBreakdownComponent = props => {
   const {
     rootClassName,
     className,
@@ -51,7 +51,7 @@ export const BookingBreakdownComponent = props => {
   const classes = classNames(rootClassName || css.root, className);
 
   /**
-   * BookingBreakdown contains different line items:
+   * OrderBreakdown contains different line items:
    *
    * LineItemBookingPeriod: prints booking start and booking end types. Prop dateType
    * determines if the date and time or only the date is shown
@@ -68,7 +68,7 @@ export const BookingBreakdownComponent = props => {
    * "$150.00 * 2 nights $300"
    *
    * LineItemUnitPriceMaybe: prints just the unit price, e.g. "Price per night $32.00".
-   * This line item is not used by default in the BookingBreakdown.
+   * This line item is not used by default in the OrderBreakdown.
    *
    * LineItemUnknownItemsMaybe: prints the line items that are unknown. In ideal case there
    * should not be unknown line items. If you are using custom pricing, you should create
@@ -135,21 +135,21 @@ export const BookingBreakdownComponent = props => {
 
       {hasCommissionLineItem ? (
         <span className={css.feeInfo}>
-          <FormattedMessage id="BookingBreakdown.commissionFeeNote" />
+          <FormattedMessage id="OrderBreakdown.commissionFeeNote" />
         </span>
       ) : null}
     </div>
   );
 };
 
-BookingBreakdownComponent.defaultProps = {
+OrderBreakdownComponent.defaultProps = {
   rootClassName: null,
   className: null,
   booking: null,
   dateType: null,
 };
 
-BookingBreakdownComponent.propTypes = {
+OrderBreakdownComponent.propTypes = {
   rootClassName: string,
   className: string,
 
@@ -163,8 +163,8 @@ BookingBreakdownComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-const BookingBreakdown = injectIntl(BookingBreakdownComponent);
+const OrderBreakdown = injectIntl(OrderBreakdownComponent);
 
-BookingBreakdown.displayName = 'BookingBreakdown';
+OrderBreakdown.displayName = 'OrderBreakdown';
 
-export default BookingBreakdown;
+export default OrderBreakdown;
