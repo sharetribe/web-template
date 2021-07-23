@@ -7,9 +7,10 @@ customized. It is based on an application bootstrapped with
 [create-react-app](https://github.com/facebookincubator/create-react-app) with some additions,
 namely server side rendering and a custom CSS setup.
 
-> Note: We also have [FTW-daily](https://github.com/sharetribe/ftw-daily) for day-based
-> processes and [FTW-hourly](https://github.com/sharetribe/ftw-hourly) for time-based
-> processes. You can learn more on [Flex Docs](https://www.sharetribe.com/docs/ftw-introduction/how-to-customize-ftw/#choose-a-template)
+> Note: We also have [FTW-daily](https://github.com/sharetribe/ftw-daily) for day-based processes
+> and [FTW-hourly](https://github.com/sharetribe/ftw-hourly) for time-based processes. You can learn
+> more on
+> [Flex Docs](https://www.sharetribe.com/docs/ftw-introduction/how-to-customize-ftw/#choose-a-template)
 
 ## Quick start
 
