@@ -232,7 +232,7 @@
   }
 }
 
-.bookingPanel {
+.orderPanel {
   @media (--viewportLarge) {
     display: block;
     margin-top: 79px;
