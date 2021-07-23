@@ -46,17 +46,17 @@ const sortSearchByDistance = false;
 // this particular web application is able to handle.
 const bookingProcessAlias = 'flex-product-default-process/release-1';
 
-// The transaction line item code for the main unit type in bookings.
+// The transaction line item code for the main unit type for listings.
 //
 // Possible values: ['line-item/night', 'line-item/day', 'line-item/units';]
 //
-// Note 1: This 'bookingUnitType' variable affects only web app.
+// Note 1: This 'lineItemUnitType' variable affects only web app.
 //         If you are using privileged transitions (which is used by the default process),
 //         you also need to configure unit type in API server: server/api-util/lineItems.js
 //
 // Note 2: Translations will use different translation keys for night, day or unit
 //         depending on the value chosen.
-const bookingUnitType = 'line-item/night';
+const lineItemUnitType = 'line-item/night';
 
 // Should the application fetch available time slots (currently defined as
 // start and end dates) to be shown on listing page.
@@ -226,7 +226,7 @@ const config = {
   dev,
   locale,
   bookingProcessAlias,
-  bookingUnitType,
+  lineItemUnitType,
   enableAvailability,
   dayCountAvailableForBooking,
   i18n,

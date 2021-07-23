@@ -297,7 +297,7 @@ DateRangeInputComponent.propTypes = {
   className: string,
   startDateId: string,
   endDateId: string,
-  unitType: propTypes.bookingUnitType.isRequired,
+  unitType: propTypes.lineItemUnitType.isRequired,
   focusedInput: oneOf([START_DATE, END_DATE]),
   initialDates: instanceOf(Date),
   intl: intlShape.isRequired,

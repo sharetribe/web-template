@@ -497,7 +497,7 @@ export class ListingPageComponent extends Component {
 }
 
 ListingPageComponent.defaultProps = {
-  unitType: config.bookingUnitType,
+  unitType: config.lineItemUnitType,
   currentUser: null,
   enquiryModalOpenForListingId: null,
   showListingError: null,
@@ -520,7 +520,7 @@ ListingPageComponent.propTypes = {
     search: string,
   }).isRequired,
 
-  unitType: propTypes.bookingUnitType,
+  unitType: propTypes.lineItemUnitType,
   // from injectIntl
   intl: intlShape.isRequired,
 

@@ -59,7 +59,7 @@ export const ListingCardComponent = props => {
     : [];
 
   const { formattedPrice, priceTitle } = priceData(price, intl);
-  const unitType = config.bookingUnitType;
+  const unitType = config.lineItemUnitType;
   const isNightly = unitType === LINE_ITEM_NIGHT;
   const isDaily = unitType === LINE_ITEM_DAY;
 

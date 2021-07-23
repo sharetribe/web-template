@@ -343,7 +343,7 @@ export const LINE_ITEMS = [
   LINE_ITEM_SHIPPING_FEE,
 ];
 
-propTypes.bookingUnitType = oneOf([LINE_ITEM_NIGHT, LINE_ITEM_DAY, LINE_ITEM_UNITS]);
+propTypes.lineItemUnitType = oneOf([LINE_ITEM_NIGHT, LINE_ITEM_DAY, LINE_ITEM_UNITS]);
 
 const requiredLineItemPropType = (props, propName, componentName) => {
   const prop = props[propName];
