@@ -263,7 +263,7 @@ BookingDatesFormComponent.propTypes = {
   className: string,
   submitButtonWrapperClassName: string,
 
-  unitType: propTypes.bookingUnitType.isRequired,
+  unitType: propTypes.lineItemUnitType.isRequired,
   price: propTypes.money,
   isOwnListing: bool,
   timeSlots: arrayOf(propTypes.timeSlot),

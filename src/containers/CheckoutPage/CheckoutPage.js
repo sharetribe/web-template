@@ -641,7 +641,7 @@ export class CheckoutPageComponent extends Component {
         <OrderBreakdown
           className={css.orderBreakdown}
           userRole="customer"
-          unitType={config.bookingUnitType}
+          unitType={config.lineItemUnitType}
           transaction={tx}
           {...txBookingMaybe}
         />
@@ -769,7 +769,7 @@ export class CheckoutPageComponent extends Component {
       );
     }
 
-    const unitType = config.bookingUnitType;
+    const unitType = config.lineItemUnitType;
     const isNightly = unitType === LINE_ITEM_NIGHT;
     const isDaily = unitType === LINE_ITEM_DAY;
 
