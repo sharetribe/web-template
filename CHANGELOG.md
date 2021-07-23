@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [fix] Add uncommitted change to TransactionPage: onSubmitOrderRequest 
+  [#58](https://github.com/sharetribe/ftw-product/pull/58)
 - [change] Rename bookingProcessAlias as transactionProcessAlias.
   [#57](https://github.com/sharetribe/ftw-product/pull/57)
 - [change] Rename bookingUnitType as lineItemUnitType.
