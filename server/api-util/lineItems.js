@@ -41,11 +41,12 @@ exports.transactionLineItems = (listing, orderData) => {
   const hasShippingFee =
     orderData && orderData.deliveryMethod && orderData.deliveryMethod === 'shipping';
   const hasQuantity = orderData && orderData.quantity;
-  const { startDate, endDate } = orderData && orderData.bookinDates ? orderData.bookinDates : {};
-  const hasBookingDates = startDate && endDate;
+  const { startDate, endDate } = orderData && orderData.bookingDates ? orderData.bookingDates : {};
+  const shouldCalculateQuantityFromDates =
+    startDate && endDate && lineItemUnitType !== 'line-item/units';
   const orderQuantity = hasQuantity
     ? orderData.quantity
-    : hasBookingDates
+    : shouldCalculateQuantityFromDates
     ? calculateQuantityFromDates(startDate, endDate, lineItemUnitType)
     : 1;
 

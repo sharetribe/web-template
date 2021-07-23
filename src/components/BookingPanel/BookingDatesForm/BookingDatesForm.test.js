@@ -55,7 +55,7 @@ describe('EstimatedBreakdownMaybe', () => {
       unitPrice: new Money(1234, 'USD'),
     };
     expect(
-      renderDeep(<EstimatedBreakdownMaybe bookingData={data} lineItems={lineItems} />)
+      renderDeep(<EstimatedBreakdownMaybe orderData={data} lineItems={lineItems} />)
     ).toBeFalsy();
   });
   it('renders nothing if missing end date', () => {
@@ -65,7 +65,7 @@ describe('EstimatedBreakdownMaybe', () => {
       startDate: new Date(),
     };
     expect(
-      renderDeep(<EstimatedBreakdownMaybe bookingData={data} lineItems={lineItems} />)
+      renderDeep(<EstimatedBreakdownMaybe orderData={data} lineItems={lineItems} />)
     ).toBeFalsy();
   });
   it('renders breakdown with correct transaction data', () => {
@@ -79,7 +79,7 @@ describe('EstimatedBreakdownMaybe', () => {
       endDate,
     };
 
-    const tree = shallow(<EstimatedBreakdownMaybe bookingData={data} lineItems={lineItems} />);
+    const tree = shallow(<EstimatedBreakdownMaybe orderData={data} lineItems={lineItems} />);
     const breakdown = tree.find(BookingBreakdown);
     const { userRole, unitType, transaction, booking } = breakdown.props();
 
