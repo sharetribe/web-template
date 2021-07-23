@@ -194,7 +194,7 @@ export const initiateOrder = (orderParams, transactionId) => (dispatch, getState
         params: transitionParams,
       }
     : {
-        processAlias: config.bookingProcessAlias,
+        processAlias: config.transactionProcessAlias,
         transition,
         params: transitionParams,
       };
@@ -344,7 +344,7 @@ export const speculateTransaction = (orderParams, transactionId) => (dispatch, g
         params: transitionParams,
       }
     : {
-        processAlias: config.bookingProcessAlias,
+        processAlias: config.transactionProcessAlias,
         transition,
         params: transitionParams,
       };

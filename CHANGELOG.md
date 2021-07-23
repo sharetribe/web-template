@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Rename bookingProcessAlias as transactionProcessAlias.
+  [#57](https://github.com/sharetribe/ftw-product/pull/57)
 - [change] Rename bookingUnitType as lineItemUnitType.
   [#56](https://github.com/sharetribe/ftw-product/pull/56)
 - [change] Rename BookingPanel as OrderPanel.
