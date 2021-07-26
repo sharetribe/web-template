@@ -8,7 +8,7 @@ import {
   TX_TRANSITION_ACTOR_CUSTOMER,
   DATE_TYPE_DATE,
 } from '../../util/transaction';
-import { LINE_ITEM_NIGHT } from '../../util/types';
+import { LINE_ITEM_NIGHT, LINE_ITEM_UNITS } from '../../util/types';
 import { OrderBreakdownComponent } from './OrderBreakdown';
 
 const { UUID, Money } = sdkTypes;
@@ -37,29 +37,32 @@ const exampleTransaction = params => {
 };
 
 describe('OrderBreakdown', () => {
-  it('pretransaction data matches snapshot', () => {
+  it('data for product marketplace matches snapshot', () => {
     const tree = renderDeep(
       <OrderBreakdownComponent
         userRole="customer"
-        unitType={LINE_ITEM_NIGHT}
-        dateType={DATE_TYPE_DATE}
+        unitType={LINE_ITEM_UNITS}
         transaction={exampleTransaction({
-          payinTotal: new Money(2000, 'USD'),
-          payoutTotal: new Money(2000, 'USD'),
+          payinTotal: new Money(3000, 'USD'),
+          payoutTotal: new Money(3000, 'USD'),
           lineItems: [
             {
-              code: 'line-item/night',
+              code: 'line-item/units',
               includeFor: ['customer', 'provider'],
               quantity: new Decimal(2),
               lineTotal: new Money(2000, 'USD'),
               unitPrice: new Money(1000, 'USD'),
               reversal: false,
             },
+            {
+              code: 'line-item/shipping-fee',
+              includeFor: ['customer', 'provider'],
+              quantity: new Decimal(1),
+              unitPrice: new Money(1000, 'USD'),
+              lineTotal: new Money(1000, 'USD'),
+              reversal: false,
+            },
           ],
-        })}
-        booking={createBooking('example-booking', {
-          start: new Date(Date.UTC(2017, 3, 14)),
-          end: new Date(Date.UTC(2017, 3, 16)),
         })}
         intl={fakeIntl}
       />
