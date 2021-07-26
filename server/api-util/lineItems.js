@@ -32,22 +32,28 @@ const PROVIDER_COMMISSION_PERCENTAGE = -10;
  * @returns {Array} lineItems
  */
 exports.transactionLineItems = (listing, orderData) => {
-  const unitPrice = listing.attributes.price;
   const publicData = listing.attributes.publicData;
+  const unitPrice = listing.attributes.price;
+  const currency = unitPrice.currency;
+
+  // Check delivery method and shipping prices
+  const deliveryMethod = orderData && orderData.deliveryMethod;
+  const isShipping = deliveryMethod === 'shipping';
+  const isPickup = deliveryMethod === 'pickup';
   const shippingPriceInSubunitsOneItem = publicData && publicData.shippingPriceInSubunitsOneItem;
   const shippingPriceInSubunitsAdditionalItems =
     publicData && publicData.shippingPriceInSubunitsAdditionalItems;
-  const currency = unitPrice.currency;
-  const hasShippingFee =
-    orderData && orderData.deliveryMethod && orderData.deliveryMethod === 'shipping';
+
+  // Quantity
+  // Note: by default, we assume that this is a single item order (quantity = 1)
   const hasQuantity = orderData && orderData.quantity;
-  const { startDate, endDate } = orderData && orderData.bookingDates ? orderData.bookingDates : {};
+  const { bookingStart, bookingEnd } = orderData || {};
   const shouldCalculateQuantityFromDates =
-    startDate && endDate && lineItemUnitType !== 'line-item/units';
+    bookingStart && bookingEnd && ['line-item/day', 'line-item/night'].includes(lineItemUnitType);
   const orderQuantity = hasQuantity
     ? orderData.quantity
     : shouldCalculateQuantityFromDates
-    ? calculateQuantityFromDates(startDate, endDate, lineItemUnitType)
+    ? calculateQuantityFromDates(bookingStart, bookingEnd, lineItemUnitType)
     : 1;
 
   /**
@@ -67,7 +73,8 @@ exports.transactionLineItems = (listing, orderData) => {
     includeFor: ['customer', 'provider'],
   };
 
-  const shippingFee = hasShippingFee
+  // Calculate shipping fee if applicable
+  const shippingFee = isShipping
     ? calculateShippingFee(
         shippingPriceInSubunitsOneItem,
         shippingPriceInSubunitsAdditionalItems,
@@ -75,7 +82,10 @@ exports.transactionLineItems = (listing, orderData) => {
         orderQuantity
       )
     : null;
-  const shippingFeeLineItem = shippingFee
+
+  // Add line-item for given delivery method.
+  // Note: by default, pickup considered as free.
+  const deliveryLineItem = !!shippingFee
     ? [
         {
           code: 'line-item/shipping-fee',
@@ -84,16 +94,25 @@ exports.transactionLineItems = (listing, orderData) => {
           includeFor: ['customer', 'provider'],
         },
       ]
+    : isPickup
+    ? [
+        {
+          code: 'line-item/pickup-fee',
+          unitPrice: new Money(0, currency),
+          quantity: 1,
+          includeFor: ['customer', 'provider'],
+        },
+      ]
     : [];
 
   const providerCommission = {
     code: 'line-item/provider-commission',
-    unitPrice: calculateTotalFromLineItems([order, ...shippingFeeLineItem]),
+    unitPrice: calculateTotalFromLineItems([order, ...deliveryLineItem]),
     percentage: PROVIDER_COMMISSION_PERCENTAGE,
     includeFor: ['provider'],
   };
 
-  const lineItems = [order, ...shippingFeeLineItem, providerCommission];
+  const lineItems = [order, ...deliveryLineItem, providerCommission];
 
   return lineItems;
 };
