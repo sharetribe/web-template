@@ -473,6 +473,7 @@
   "OrderBreakdown.commissionFeeNote": "* The fee helps us run the platform and provide the best possible service to you!",
   "OrderBreakdown.dayCount": "{count, number} {count, plural, one {day} other {days}}",
   "OrderBreakdown.nightCount": "{count, number} {count, plural, one {night} other {nights}}",
+  "OrderBreakdown.pickupFee": "Pickup",
   "OrderBreakdown.pricePerDay": "Price per day",
   "OrderBreakdown.pricePerNight": "Price per night",
   "OrderBreakdown.pricePerQuantity": "Price per item",
