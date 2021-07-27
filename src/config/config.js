@@ -56,7 +56,7 @@ const transactionProcessAlias = 'flex-product-default-process/release-1';
 //
 // Note 2: Translations will use different translation keys for night, day or unit
 //         depending on the value chosen.
-const lineItemUnitType = 'line-item/night';
+const lineItemUnitType = 'line-item/units';
 
 // Should the application fetch available time slots (currently defined as
 // start and end dates) to be shown on listing page.

@@ -107,73 +107,10 @@ exports[`OrderBreakdown customer transaction data matches snapshot 1`] = `
 </div>
 `;
 
-exports[`OrderBreakdown pretransaction data matches snapshot 1`] = `
+exports[`OrderBreakdown data for product marketplace matches snapshot 1`] = `
 <div
   className="root"
 >
-  Array [
-    <div
-      className="lineItem"
-    >
-      <div
-        className="bookingPeriod"
-      >
-        <div
-          className="bookingPeriodSection"
-        >
-          <div
-            className="dayLabel"
-          >
-            <span>
-              OrderBreakdown.bookingStart
-            </span>
-          </div>
-          <div
-            className="dayInfo"
-          >
-            <span>
-              Sat 12:00 AM
-            </span>
-          </div>
-          <div
-            className="itemLabel"
-          >
-            <span>
-              Jun 10
-            </span>
-          </div>
-        </div>
-        <div
-          className="bookingPeriodSectionRigth"
-        >
-          <div
-            className="dayLabel"
-          >
-            <span>
-              OrderBreakdown.bookingEnd
-            </span>
-          </div>
-          <div
-            className="dayInfo"
-          >
-            <span>
-              Sat 12:00 AM
-            </span>
-          </div>
-          <div
-            className="itemLabel"
-          >
-            <span>
-              Jun 10
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>,
-    <hr
-      className="totalDivider"
-    />,
-  ]
   <div
     className="lineItem"
   >
@@ -181,13 +118,29 @@ exports[`OrderBreakdown pretransaction data matches snapshot 1`] = `
       className="itemLabel"
     >
       <span>
-        OrderBreakdown.baseUnitNight
+        OrderBreakdown.baseUnitQuantity
       </span>
     </span>
     <span
       className="itemValue"
     >
       20
+    </span>
+  </div>
+  <div
+    className="lineItem"
+  >
+    <span
+      className="itemLabel"
+    >
+      <span>
+        OrderBreakdown.shippingFee
+      </span>
+    </span>
+    <span
+      className="itemValue"
+    >
+      10
     </span>
   </div>
   Array [
@@ -207,7 +160,7 @@ exports[`OrderBreakdown pretransaction data matches snapshot 1`] = `
       <div
         className="totalPrice"
       >
-        20
+        30
       </div>
     </div>,
   ]
