@@ -18,7 +18,7 @@ import {
   TRANSITION_REQUEST_PAYMENT,
   TRANSITION_CONFIRM_PAYMENT,
   TRANSITION_MARK_DELIVERED,
-  TRANSITION_CANCEL_OPERATOR,
+  TRANSITION_CANCEL,
   TRANSITION_MARK_RECEIVED,
 } from '../../../util/transaction';
 
@@ -81,7 +81,7 @@ describe('TransactionPanel - Sale', () => {
 
   const txCanceled = createTransaction({
     id: 'sale-canceled',
-    lastTransition: TRANSITION_CANCEL_OPERATOR,
+    lastTransition: TRANSITION_CANCEL,
     ...baseTxAttrs,
   });
 
@@ -301,7 +301,7 @@ describe('TransactionPanel - Order', () => {
 
   const txCanceled = createTransaction({
     id: 'order-canceled',
-    lastTransition: TRANSITION_CANCEL_OPERATOR,
+    lastTransition: TRANSITION_CANCEL,
     ...baseTxAttrs,
   });
 

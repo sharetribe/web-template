@@ -134,7 +134,7 @@ exports[`TransactionPanel - Order canceled matches snapshot 1`] = `
             Object {
               "attributes": Object {
                 "createdAt": 2017-05-01T00:00:00.000Z,
-                "lastTransition": "transition/cancel-operator",
+                "lastTransition": "transition/cancel",
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
@@ -279,7 +279,7 @@ exports[`TransactionPanel - Order canceled matches snapshot 1`] = `
           Object {
             "attributes": Object {
               "createdAt": 2017-05-01T00:00:00.000Z,
-              "lastTransition": "transition/cancel-operator",
+              "lastTransition": "transition/cancel",
               "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
               "lineItems": Array [
                 Object {
@@ -566,7 +566,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             Object {
               "attributes": Object {
                 "createdAt": 2017-05-01T00:00:00.000Z,
-                "lastTransition": "transition/cancel-operator",
+                "lastTransition": "transition/cancel",
                 "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
@@ -3797,7 +3797,7 @@ exports[`TransactionPanel - Sale canceled matches snapshot 1`] = `
             Object {
               "attributes": Object {
                 "createdAt": 2017-05-01T00:00:00.000Z,
-                "lastTransition": "transition/cancel-operator",
+                "lastTransition": "transition/cancel",
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {
@@ -3930,7 +3930,7 @@ exports[`TransactionPanel - Sale canceled matches snapshot 1`] = `
           Object {
             "attributes": Object {
               "createdAt": 2017-05-01T00:00:00.000Z,
-              "lastTransition": "transition/cancel-operator",
+              "lastTransition": "transition/cancel",
               "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
               "lineItems": Array [
                 Object {
@@ -4205,7 +4205,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             Object {
               "attributes": Object {
                 "createdAt": 2017-05-01T00:00:00.000Z,
-                "lastTransition": "transition/cancel-operator",
+                "lastTransition": "transition/cancel",
                 "lastTransitionedAt": 2017-06-10T00:00:00.000Z,
                 "lineItems": Array [
                   Object {

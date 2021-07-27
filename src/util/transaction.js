@@ -39,7 +39,7 @@ export const TRANSITION_MARK_RECEIVED_FROM_PURCHASED = 'transition/mark-received
 export const TRANSITION_CANCEL_SYSTEM = 'transition/cancel-system';
 
 // Operator can cancel the purchase before product has been marked as delivered / received
-export const TRANSITION_CANCEL_OPERATOR = 'transition/cancel-operator';
+export const TRANSITION_CANCEL = 'transition/cancel';
 
 // If provider has marked the product delivered (e.g. shipped),
 // customer can then mark the product received
@@ -157,7 +157,7 @@ const stateDescription = {
         [TRANSITION_MARK_DELIVERED]: STATE_DELIVERED,
         [TRANSITION_MARK_RECEIVED_FROM_PURCHASED]: STATE_RECEIVED,
         [TRANSITION_CANCEL_SYSTEM]: STATE_CANCELED,
-        [TRANSITION_CANCEL_OPERATOR]: STATE_CANCELED,
+        [TRANSITION_CANCEL]: STATE_CANCELED,
       },
     },
 
@@ -332,7 +332,7 @@ export const isRelevantPastTransition = transition => {
   return [
     TRANSITION_CONFIRM_PAYMENT,
     TRANSITION_CANCEL_SYSTEM,
-    TRANSITION_CANCEL_OPERATOR,
+    TRANSITION_CANCEL,
     TRANSITION_MARK_RECEIVED_FROM_PURCHASED,
     TRANSITION_MARK_DELIVERED,
     TRANSITION_DISPUTE,
