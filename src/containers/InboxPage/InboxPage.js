@@ -15,6 +15,7 @@ import {
   txIsPaymentExpired,
   txIsPaymentPending,
   txIsReceived,
+  txIsCompleted,
   txIsReviewedByCustomer,
   txIsReviewedByProvider,
   txIsReviewed,
@@ -118,7 +119,7 @@ export const txState = (intl, tx, type) => {
         id: 'InboxPage.stateDisputed',
       }),
     };
-  } else if (txIsReceived(tx)) {
+  } else if (txIsReceived(tx) || txIsCompleted(tx)) {
     return {
       bookingClassName: css.bookingNoActionNeeded,
       lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,

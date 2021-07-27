@@ -28,7 +28,7 @@ import {
   isRelevantPastTransition,
   transitionIsReviewed,
   txIsInFirstReviewBy,
-  txIsReceived,
+  txIsCompleted,
   txIsReviewed,
   txRoleIsCustomer,
   txRoleIsProvider,
@@ -140,9 +140,9 @@ const resolveTransitionMessage = (
     case TRANSITION_MARK_RECEIVED:
     case TRANSITION_AUTO_MARK_RECEIVED:
     case TRANSITION_MARK_RECEIVED_FROM_DISPUTED:
-      // Show the leave a review link if the state is delivered and
+      // Show the leave a review link if the state is completed and
       // if the current user is the first to leave a review
-      const reviewPeriodJustStarted = txIsReceived(transaction);
+      const reviewPeriodJustStarted = txIsCompleted(transaction);
 
       const reviewAsFirstLink = reviewPeriodJustStarted ? (
         <InlineTextButton onClick={onOpenReviewModal}>

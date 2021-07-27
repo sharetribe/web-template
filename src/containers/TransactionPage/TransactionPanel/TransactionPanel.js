@@ -14,6 +14,7 @@ import {
   txIsPaymentPending,
   txIsPurchased,
   txIsReceived,
+  txIsCompleted,
   txIsInFirstReviewBy,
 } from '../../../util/transaction';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
@@ -239,7 +240,7 @@ export class TransactionPanelComponent extends Component {
           headingState: HEADING_DISPUTED,
           showDetailCardHeadings: isCustomer,
         };
-      } else if (txIsReceived(tx) || txIsInFirstReviewBy(tx, !isCustomer)) {
+      } else if (txIsReceived(tx) || txIsCompleted(tx) || txIsInFirstReviewBy(tx, !isCustomer)) {
         return {
           headingState: HEADING_RECEIVED,
           showDetailCardHeadings: isCustomer,

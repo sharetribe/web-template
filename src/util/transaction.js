@@ -60,6 +60,10 @@ export const TRANSITION_CANCEL_FROM_DISPUTED = 'transition/cancel-from-disputed'
 // Operator can mark the disputed transaction as received
 export const TRANSITION_MARK_RECEIVED_FROM_DISPUTED = 'transition/mark-received-from-disputed';
 
+// System moves transaction automatically from received state to complete state
+// This makes it possible to to add notifications to that single transition.
+export const TRANSITION_AUTO_COMPLETE = 'transition/auto-complete';
+
 // Reviews are given through transaction transitions. Review 1 can be
 // by provider or customer, and review 2 will be the other party of
 // the transaction.
@@ -108,6 +112,7 @@ const STATE_DELIVERED = 'delivered';
 const STATE_RECEIVED = 'received';
 const STATE_DISPUTED = 'disputed';
 const STATE_CANCELED = 'canceled';
+const STATE_COMPLETED = 'completed';
 const STATE_REVIEWED = 'reviewed';
 const STATE_REVIEWED_BY_CUSTOMER = 'reviewed-by-customer';
 const STATE_REVIEWED_BY_PROVIDER = 'reviewed-by-provider';
@@ -180,6 +185,12 @@ const stateDescription = {
     },
 
     [STATE_RECEIVED]: {
+      on: {
+        [TRANSITION_AUTO_COMPLETE]: STATE_COMPLETED,
+      },
+    },
+
+    [STATE_COMPLETED]: {
       on: {
         [TRANSITION_EXPIRE_REVIEW_PERIOD]: STATE_REVIEWED,
         [TRANSITION_REVIEW_1_BY_CUSTOMER]: STATE_REVIEWED_BY_CUSTOMER,
@@ -270,6 +281,9 @@ export const txIsDisputed = tx =>
 
 export const txIsReceived = tx =>
   getTransitionsToState(STATE_RECEIVED).includes(txLastTransition(tx));
+
+export const txIsCompleted = tx =>
+  getTransitionsToState(STATE_COMPLETED).includes(txLastTransition(tx));
 
 export const txIsReviewedByCustomer = tx =>
   getTransitionsToState(STATE_REVIEWED_BY_CUSTOMER).includes(txLastTransition(tx));
