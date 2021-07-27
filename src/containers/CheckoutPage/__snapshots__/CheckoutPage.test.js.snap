@@ -175,7 +175,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
         <p
           className="detailsSubtitle"
         >
-          55 CheckoutPage.perNight
+          55 CheckoutPage.perUnit
         </p>
       </div>
       <h2

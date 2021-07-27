@@ -83,10 +83,10 @@ const LineItemBookingPeriod = props => {
     </>
   );
 };
-LineItemBookingPeriod.defaultProps = { dateType: null };
+LineItemBookingPeriod.defaultProps = { booking: null, dateType: null };
 
 LineItemBookingPeriod.propTypes = {
-  booking: propTypes.booking.isRequired,
+  booking: propTypes.booking,
   dateType: propTypes.dateType,
 };
 

@@ -56,7 +56,131 @@ const exampleTransaction = params => {
   };
 };
 
-export const Checkout = {
+export const ProductCheckout = {
+  component: OrderBreakdown,
+  props: {
+    userRole: 'customer',
+    unitType: LINE_ITEM_UNITS,
+    transaction: exampleTransaction({
+      payinTotal: new Money(10000, CURRENCY),
+      payoutTotal: new Money(10000, CURRENCY),
+      lineItems: [
+        {
+          code: 'line-item/units',
+          includeFor: ['customer', 'provider'],
+          quantity: new Decimal(2),
+          unitPrice: new Money(4500, CURRENCY),
+          lineTotal: new Money(9000, CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/shipping-fee',
+          includeFor: ['customer', 'provider'],
+          quantity: new Decimal(1),
+          unitPrice: new Money(1000, CURRENCY),
+          lineTotal: new Money(1000, CURRENCY),
+          reversal: false,
+        },
+      ],
+    }),
+  },
+  group: 'payment',
+};
+
+export const ProductRefundShipping = {
+  component: OrderBreakdown,
+  props: {
+    userRole: 'customer',
+    unitType: LINE_ITEM_UNITS,
+    transaction: exampleTransaction({
+      payinTotal: new Money(0, CURRENCY),
+      payoutTotal: new Money(0, CURRENCY),
+      lineItems: [
+        {
+          code: 'line-item/units',
+          includeFor: ['customer', 'provider'],
+          quantity: new Decimal(2),
+          unitPrice: new Money(4500, CURRENCY),
+          lineTotal: new Money(9000, CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/units',
+          includeFor: ['customer', 'provider'],
+          quantity: new Decimal(-2),
+          unitPrice: new Money(4500, CURRENCY),
+          lineTotal: new Money(-9000, CURRENCY),
+          reversal: true,
+        },
+        {
+          code: 'line-item/shipping-fee',
+          includeFor: ['customer', 'provider'],
+          quantity: new Decimal(1),
+          unitPrice: new Money(1000, CURRENCY),
+          lineTotal: new Money(1000, CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/shipping-fee',
+          includeFor: ['customer', 'provider'],
+          quantity: new Decimal(-1),
+          unitPrice: new Money(1000, CURRENCY),
+          lineTotal: new Money(-1000, CURRENCY),
+          reversal: true,
+        },
+      ],
+    }),
+  },
+  group: 'payment',
+};
+export const ProductRefundPickup = {
+  component: OrderBreakdown,
+  props: {
+    userRole: 'customer',
+    unitType: LINE_ITEM_UNITS,
+    transaction: exampleTransaction({
+      payinTotal: new Money(0, CURRENCY),
+      payoutTotal: new Money(0, CURRENCY),
+      lineItems: [
+        {
+          code: 'line-item/units',
+          includeFor: ['customer', 'provider'],
+          quantity: new Decimal(2),
+          unitPrice: new Money(4500, CURRENCY),
+          lineTotal: new Money(9000, CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/units',
+          includeFor: ['customer', 'provider'],
+          quantity: new Decimal(-2),
+          unitPrice: new Money(4500, CURRENCY),
+          lineTotal: new Money(-9000, CURRENCY),
+          reversal: true,
+        },
+        {
+          code: 'line-item/pickup-fee',
+          includeFor: ['customer', 'provider'],
+          quantity: new Decimal(1),
+          unitPrice: new Money(0, CURRENCY),
+          lineTotal: new Money(0, CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/pickup-fee',
+          includeFor: ['customer', 'provider'],
+          quantity: new Decimal(-1),
+          unitPrice: new Money(0, CURRENCY),
+          lineTotal: new Money(-0, CURRENCY),
+          reversal: true,
+        },
+      ],
+    }),
+  },
+  group: 'payment',
+};
+
+export const BookingCheckout = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
@@ -84,7 +208,7 @@ export const Checkout = {
   group: 'payment',
 };
 
-export const CustomerOrder = {
+export const BookingCustomerOrder = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
@@ -112,7 +236,7 @@ export const CustomerOrder = {
   group: 'payment',
 };
 
-export const ProviderSale = {
+export const BookingProviderSale = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
@@ -147,7 +271,7 @@ export const ProviderSale = {
   group: 'payment',
 };
 
-export const ProviderSaleZeroCommission = {
+export const BookingProviderSaleZeroCommission = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
@@ -182,7 +306,7 @@ export const ProviderSaleZeroCommission = {
   group: 'payment',
 };
 
-export const ProviderSaleSingleNight = {
+export const BookingProviderSaleSingleNight = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
@@ -217,7 +341,7 @@ export const ProviderSaleSingleNight = {
   group: 'payment',
 };
 
-export const ProviderSalePreauthorized = {
+export const BookingProviderSalePreauthorized = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
@@ -253,7 +377,7 @@ export const ProviderSalePreauthorized = {
   group: 'payment',
 };
 
-export const SingleDay = {
+export const BookingSingleDay = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
@@ -281,7 +405,7 @@ export const SingleDay = {
   group: 'payment',
 };
 
-export const MultipleDays = {
+export const BookingMultipleDays = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
@@ -309,7 +433,7 @@ export const MultipleDays = {
   group: 'payment',
 };
 
-export const UnitsType = {
+export const BookingWithUnitsType = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
@@ -337,7 +461,7 @@ export const UnitsType = {
   group: 'payment',
 };
 
-export const CustomPricing = {
+export const BookingCustomPricing = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
@@ -389,7 +513,7 @@ export const CustomPricing = {
   group: 'payment',
 };
 
-export const CustomPricingWithRefund = {
+export const BookingCustomPricingWithRefund = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
