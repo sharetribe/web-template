@@ -3,7 +3,7 @@ import pickBy from 'lodash/pickBy';
 import isEmpty from 'lodash/isEmpty';
 
 import config from '../../config';
-import { types as sdkTypes } from '../../util/sdkLoader';
+import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { getStartOf, addTime } from '../../util/dates';
 import { isTransactionsTransitionInvalidTransition, storableError } from '../../util/errors';
 import {
@@ -30,6 +30,7 @@ const { UUID } = sdkTypes;
 
 const MESSAGES_PAGE_SIZE = 100;
 const CUSTOMER = 'customer';
+const REVIEW_TX_INCLUDES = ['reviews', 'reviews.author', 'reviews.subject'];
 
 // ================ Action types ================ //
 
@@ -338,6 +339,25 @@ export const fetchLineItemsError = error => ({
 
 // ================ Thunks ================ //
 
+// Helper to fetch correct image variants for different thunk calls
+const getImageVariants = () => {
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+  const aspectRatio = aspectHeight / aspectWidth;
+  return {
+    'fields.image': [
+      // Profile images
+      'variants.square-small',
+      'variants.square-small2x',
+
+      // Listing images:
+      `variants.${variantPrefix}`,
+      `variants.${variantPrefix}-2x`,
+    ],
+    ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+    ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+  };
+};
+
 const listingRelationship = txResponse => {
   return txResponse.data.data.relationships.listing.data;
 };
@@ -361,7 +381,7 @@ export const fetchTransaction = (id, txRole) => (dispatch, getState, sdk) => {
           'reviews.author',
           'reviews.subject',
         ],
-        ...IMAGE_VARIANTS,
+        ...getImageVariants(),
       },
       { expand: true }
     )
@@ -391,7 +411,7 @@ export const fetchTransaction = (id, txRole) => (dispatch, getState, sdk) => {
         return sdk.listings.show({
           id: listingId,
           include: ['author', 'author.profileImage', 'images'],
-          ...IMAGE_VARIANTS,
+          ...getImageVariants(),
         });
       } else {
         return response;
@@ -516,7 +536,7 @@ const fetchMessages = (txId, page) => (dispatch, getState, sdk) => {
     .query({
       transaction_id: txId,
       include: ['sender', 'sender.profileImage'],
-      ...IMAGE_VARIANTS,
+      ...getImageVariants(),
       ...paging,
     })
     .then(response => {
@@ -587,19 +607,6 @@ export const sendMessage = (txId, message) => (dispatch, getState, sdk) => {
     });
 };
 
-const REVIEW_TX_INCLUDES = ['reviews', 'reviews.author', 'reviews.subject'];
-const IMAGE_VARIANTS = {
-  'fields.image': [
-    // Profile images
-    'variants.square-small',
-    'variants.square-small2x',
-
-    // Listing images:
-    'variants.landscape-crop',
-    'variants.landscape-crop2x',
-  ],
-};
-
 // If other party has already sent a review, we need to make transition to
 // TRANSITION_REVIEW_2_BY_<CUSTOMER/PROVIDER>
 const sendReviewAsSecond = (id, params, role, dispatch, sdk) => {
@@ -608,7 +615,7 @@ const sendReviewAsSecond = (id, params, role, dispatch, sdk) => {
   const include = REVIEW_TX_INCLUDES;
 
   return sdk.transactions
-    .transition({ id, transition, params }, { expand: true, include, ...IMAGE_VARIANTS })
+    .transition({ id, transition, params }, { expand: true, include, ...getImageVariants() })
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       dispatch(sendReviewSuccess());
@@ -633,7 +640,7 @@ const sendReviewAsFirst = (id, params, role, dispatch, sdk) => {
   const include = REVIEW_TX_INCLUDES;
 
   return sdk.transactions
-    .transition({ id, transition, params }, { expand: true, include, ...IMAGE_VARIANTS })
+    .transition({ id, transition, params }, { expand: true, include, ...getImageVariants() })
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       dispatch(sendReviewSuccess());
