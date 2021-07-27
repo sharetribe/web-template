@@ -52,18 +52,11 @@
   display: none;
   width: 100%;
   position: relative;
+  background-color: var(--matterColorNegative); /* Loading BG color */
 
   @media (--viewportLarge) {
     display: block;
-    max-height: 268px;
-    overflow-y: hidden;
   }
-}
-
-/* Firefox doesn't support image aspect ratio inside flexbox */
-.aspectWrapper {
-  padding-bottom: 66.6667%; /* 3:2 Aspect Ratio */
-  background-color: var(--matterColorNegative); /* Loading BG color */
 }
 
 .rootForImage {
@@ -104,6 +97,7 @@
 /* Passed-in props for DetailCardImage subcomponent */
 .imageWrapperMobile {
   position: relative;
+  background-color: var(--matterColorNegative); /* Loading BG color */
 
   @media (--viewportLarge) {
     display: none;
