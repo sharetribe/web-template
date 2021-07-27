@@ -103,7 +103,6 @@ exports[`InboxPage matches snapshot 1`] = `
               Object {
                 "bookingClassName": "bookingNoActionNeeded",
                 "lastTransitionedAtClassName": "lastTransitionedAtNotEmphasized",
-                "nameClassName": "nameNotEmphasized",
                 "state": "InboxPage.statePurchased",
                 "stateClassName": "stateNoActionNeeded",
               }
@@ -252,7 +251,6 @@ exports[`InboxPage matches snapshot 1`] = `
               Object {
                 "bookingClassName": "bookingNoActionNeeded",
                 "lastTransitionedAtClassName": "lastTransitionedAtNotEmphasized",
-                "nameClassName": "nameNotEmphasized",
                 "state": "InboxPage.statePurchased",
                 "stateClassName": "stateNoActionNeeded",
               }
@@ -431,12 +429,21 @@ exports[`InboxPage matches snapshot 2`] = `
       className="itemInfo"
     >
       <div
-        className="itemUsername nameNotEmphasized"
+        className="itemUsername"
       >
         <span
           className=""
         >
           provider-user-id display name
+        </span>
+      </div>
+      <div
+        className="itemOrderInfo"
+      >
+        <span />
+        <br />
+        <span>
+          InboxPage.quantity
         </span>
       </div>
     </div>
@@ -562,7 +569,6 @@ exports[`InboxPage matches snapshot 3`] = `
               Object {
                 "bookingClassName": "bookingNoActionNeeded",
                 "lastTransitionedAtClassName": "lastTransitionedAtNotEmphasized",
-                "nameClassName": "nameNotEmphasized",
                 "state": "InboxPage.statePurchased",
                 "stateClassName": "stateActionNeeded",
               }
@@ -711,7 +717,6 @@ exports[`InboxPage matches snapshot 3`] = `
               Object {
                 "bookingClassName": "bookingNoActionNeeded",
                 "lastTransitionedAtClassName": "lastTransitionedAtNotEmphasized",
-                "nameClassName": "nameNotEmphasized",
                 "state": "InboxPage.statePurchased",
                 "stateClassName": "stateActionNeeded",
               }
@@ -894,12 +899,21 @@ exports[`InboxPage matches snapshot 4`] = `
       className="itemInfo"
     >
       <div
-        className="itemUsername nameNotEmphasized"
+        className="itemUsername"
       >
         <span
           className=""
         >
           customer-user-id display name
+        </span>
+      </div>
+      <div
+        className="itemOrderInfo"
+      >
+        <span />
+        <br />
+        <span>
+          InboxPage.quantity
         </span>
       </div>
     </div>
