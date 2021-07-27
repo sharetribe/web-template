@@ -236,10 +236,9 @@ const getTransitionsToStateFn = stateDesc => state =>
 // Get all the transitions that lead to specified state.
 const getTransitionsToState = getTransitionsToStateFn(stateDescription);
 
-// TODO needed for NOTIFICATION BADGE!
 // This is needed to fetch transactions that need response from provider.
 // I.e. transactions which provider needs to accept or decline
-export const transitionsToRequested = []; //getTransitionsToState(STATE_PREAUTHORIZED);
+export const transitionsToRequested = getTransitionsToState(STATE_PURCHASED);
 
 /**
  * Helper functions to figure out if transaction is in a specific state.
