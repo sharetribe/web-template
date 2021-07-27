@@ -1,0 +1,21 @@
+
+<html>
+  <body>
+    {{#with transaction}}
+    <h1>Your order for {{listing.title}} was marked as completed</h1>
+
+    {{#eq "shipping" protected-data.deliveryMethod}}
+    <p>Your order for {{listing.title}} was marked as shipped two weeks ago, but was not marked as received. According to our policy, all orders are marked as received two weeks after they have been marked as sent.</p>
+    {{else}}
+    <p>Your order for {{listing.title}} was marked as delivered two weeks ago, but was not marked as received. According to our policy, all orders are marked as received two weeks after they have been marked as sent.</p>
+    {{/eq}}
+
+    <p>If you did not receive your order, please contact the marketplace admin.</p>
+
+    {{/with}}
+
+    <hr />
+
+    <p>You have received this email notification because you are a member of {{marketplace.name}}. If you no longer wish to receive these emails, please contact {{marketplace.name}} team.</p>
+  </body>
+</html>
