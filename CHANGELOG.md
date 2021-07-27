@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [fix] TransactionPage: use custom image variant for listing.
+  [#62](https://github.com/sharetribe/ftw-product/pull/62)
 - [fix] Add 'line-item/pickup-fee' and update OrderBreakdown component
   [#59](https://github.com/sharetribe/ftw-product/pull/59)
 - [fix] Add uncommitted change to TransactionPage: onSubmitOrderRequest
