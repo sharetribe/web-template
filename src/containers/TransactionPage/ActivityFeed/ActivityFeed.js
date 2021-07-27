@@ -8,7 +8,7 @@ import { formatDateWithProximity } from '../../../util/dates';
 import { ensureTransaction, ensureUser, ensureListing } from '../../../util/data';
 import {
   TRANSITION_CONFIRM_PAYMENT,
-  TRANSITION_CANCEL_SYSTEM,
+  TRANSITION_AUTO_CANCEL,
   TRANSITION_CANCEL,
   TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED,
   TRANSITION_CANCEL_FROM_DISPUTED,
@@ -131,7 +131,7 @@ const resolveTransitionMessage = (
           values={{ displayName, listingTitle }}
         />
       );
-    case TRANSITION_CANCEL_SYSTEM:
+    case TRANSITION_AUTO_CANCEL:
     case TRANSITION_CANCEL:
     case TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED:
     case TRANSITION_CANCEL_FROM_DISPUTED:
