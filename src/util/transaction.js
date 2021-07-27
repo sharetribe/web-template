@@ -52,7 +52,7 @@ export const TRANSITION_AUTO_COMPLETE = 'transition/auto-complete';
 export const TRANSITION_DISPUTE = 'transition/dispute';
 
 // If nothing is done to disputed transaction it ends up to Canceled state
-export const TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED = 'transition/cancel-system-from-disputed';
+export const TRANSITION_AUTO_CANCEL_FROM_DISPUTED = 'transition/auto-cancel-from-disputed';
 
 // Operator can cancel disputed transaction manually
 export const TRANSITION_CANCEL_FROM_DISPUTED = 'transition/cancel-from-disputed';
@@ -173,7 +173,7 @@ const stateDescription = {
 
     [STATE_DISPUTED]: {
       on: {
-        [TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED]: STATE_CANCELED,
+        [TRANSITION_AUTO_CANCEL_FROM_DISPUTED]: STATE_CANCELED,
         [TRANSITION_CANCEL_FROM_DISPUTED]: STATE_CANCELED,
         [TRANSITION_MARK_RECEIVED_FROM_DISPUTED]: STATE_RECEIVED,
       },
@@ -339,7 +339,7 @@ export const isRelevantPastTransition = transition => {
     TRANSITION_MARK_RECEIVED,
     TRANSITION_AUTO_COMPLETE,
     TRANSITION_MARK_RECEIVED_FROM_DISPUTED,
-    TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED,
+    TRANSITION_AUTO_CANCEL_FROM_DISPUTED,
     TRANSITION_CANCEL_FROM_DISPUTED,
     TRANSITION_REVIEW_1_BY_CUSTOMER,
     TRANSITION_REVIEW_1_BY_PROVIDER,
