@@ -52,7 +52,6 @@ export const txState = (intl, tx, type) => {
 
   if (txIsEnquired(tx)) {
     return {
-      nameClassName: isOrder ? css.nameNotEmphasized : css.nameEmphasized,
       bookingClassName: css.bookingActionNeeded,
       lastTransitionedAtClassName: css.lastTransitionedAtEmphasized,
       stateClassName: css.stateActionNeeded,
@@ -62,7 +61,6 @@ export const txState = (intl, tx, type) => {
     };
   } else if (txIsPaymentPending(tx)) {
     return {
-      nameClassName: isOrder ? css.nameNotEmphasized : css.nameEmphasized,
       bookingClassName: css.bookingNoActionNeeded,
       lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: isOrder ? css.stateActionNeeded : css.stateNoActionNeeded,
@@ -72,7 +70,6 @@ export const txState = (intl, tx, type) => {
     };
   } else if (txIsPaymentExpired(tx)) {
     return {
-      nameClassName: css.nameNotEmphasized,
       bookingClassName: css.bookingNoActionNeeded,
       lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: css.stateNoActionNeeded,
@@ -82,7 +79,6 @@ export const txState = (intl, tx, type) => {
     };
   } else if (txIsCanceled(tx)) {
     return {
-      nameClassName: css.nameNotEmphasized,
       bookingClassName: css.bookingNoActionNeeded,
       lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: css.stateConcluded,
@@ -92,7 +88,6 @@ export const txState = (intl, tx, type) => {
     };
   } else if (txIsPurchased(tx)) {
     return {
-      nameClassName: css.nameNotEmphasized,
       bookingClassName: css.bookingNoActionNeeded,
       lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: isOrder ? css.stateNoActionNeeded : css.stateActionNeeded,
@@ -103,14 +98,12 @@ export const txState = (intl, tx, type) => {
   } else if (txIsDelivered(tx)) {
     return isOrder
       ? {
-          nameClassName: css.nameNotEmphasized,
           bookingClassName: css.bookingNoActionNeeded,
           lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
           stateClassName: css.stateActionNeeded,
           state: intl.formatMessage({ id: 'InboxPage.stateDeliveredCustomer' }),
         }
       : {
-          nameClassName: css.nameNotEmphasized,
           bookingClassName: css.bookingNoActionNeeded,
           lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
           stateClassName: css.stateNoActionNeeded,
@@ -118,7 +111,6 @@ export const txState = (intl, tx, type) => {
         };
   } else if (txIsDisputed(tx)) {
     return {
-      nameClassName: css.nameNotEmphasized,
       bookingClassName: css.bookingNoActionNeeded,
       lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: css.stateActionNeeded,
@@ -128,7 +120,6 @@ export const txState = (intl, tx, type) => {
     };
   } else if (txIsReceived(tx)) {
     return {
-      nameClassName: css.nameNotEmphasized,
       bookingClassName: css.bookingNoActionNeeded,
       lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: css.stateActionNeeded,
@@ -139,7 +130,6 @@ export const txState = (intl, tx, type) => {
   } else if (txIsReviewedByCustomer(tx)) {
     const translationKey = isOrder ? 'InboxPage.stateReviewGiven' : 'InboxPage.stateReviewNeeded';
     return {
-      nameClassName: css.nameNotEmphasized,
       bookingClassName: css.bookingNoActionNeeded,
       lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: isOrder ? css.stateNoActionNeeded : css.stateActionNeeded,
@@ -150,7 +140,6 @@ export const txState = (intl, tx, type) => {
   } else if (txIsReviewedByProvider(tx)) {
     const translationKey = isOrder ? 'InboxPage.stateReviewNeeded' : 'InboxPage.stateReviewGiven';
     return {
-      nameClassName: css.nameNotEmphasized,
       bookingClassName: css.bookingNoActionNeeded,
       lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: isOrder ? css.stateActionNeeded : css.stateNoActionNeeded,
@@ -160,7 +149,6 @@ export const txState = (intl, tx, type) => {
     };
   } else if (txIsReviewed(tx)) {
     return {
-      nameClassName: css.nameNotEmphasized,
       bookingClassName: css.bookingNoActionNeeded,
       lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: css.stateConcluded,
@@ -176,8 +164,13 @@ export const txState = (intl, tx, type) => {
 
 export const InboxItem = props => {
   const { unitType, type, tx, intl, stateData } = props;
-  const { customer, provider } = tx;
+  const { customer, provider, listing } = tx;
   const isOrder = type === 'order';
+
+  const unitPurchase = tx.attributes?.lineItems?.find(
+    item => item.code === unitType && !item.reversal
+  );
+  const quantity = unitPurchase ? unitPurchase.quantity.toString() : null;
 
   const otherUser = isOrder ? provider : customer;
   const otherUserDisplayName = <UserDisplayName user={otherUser} intl={intl} />;
@@ -203,8 +196,11 @@ export const InboxItem = props => {
       >
         <div className={css.rowNotificationDot}>{rowNotificationDot}</div>
         <div className={css.itemInfo}>
-          <div className={classNames(css.itemUsername, stateData.nameClassName)}>
-            {otherUserDisplayName}
+          <div className={css.itemUsername}>{otherUserDisplayName}</div>
+          <div className={css.itemOrderInfo}>
+            <span>{listing?.attributes?.title}</span>
+            <br />
+            <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
           </div>
         </div>
         <div className={css.itemState}>
