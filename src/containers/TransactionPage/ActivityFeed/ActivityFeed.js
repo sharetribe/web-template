@@ -9,7 +9,7 @@ import { ensureTransaction, ensureUser, ensureListing } from '../../../util/data
 import {
   TRANSITION_CONFIRM_PAYMENT,
   TRANSITION_CANCEL_SYSTEM,
-  TRANSITION_CANCEL_OPERATOR,
+  TRANSITION_CANCEL,
   TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED,
   TRANSITION_CANCEL_FROM_DISPUTED,
   TRANSITION_MARK_RECEIVED_FROM_PURCHASED,
@@ -132,7 +132,7 @@ const resolveTransitionMessage = (
         />
       );
     case TRANSITION_CANCEL_SYSTEM:
-    case TRANSITION_CANCEL_OPERATOR:
+    case TRANSITION_CANCEL:
     case TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED:
     case TRANSITION_CANCEL_FROM_DISPUTED:
       return <FormattedMessage id="ActivityFeed.transitionCancel" />;
