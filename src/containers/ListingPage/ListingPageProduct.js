@@ -454,25 +454,23 @@ export class ListingPageComponent extends Component {
                   onManageDisableScrolling={onManageDisableScrolling}
                 />
               </div>
-              <div>
-                <OrderPanel
-                  className={css.orderPanel}
-                  listing={currentListing}
-                  isOwnListing={isOwnListing}
-                  unitType={unitType}
-                  onSubmit={handleOrderSubmit}
-                  title={bookingTitle}
-                  subTitle={bookingSubTitle}
-                  authorDisplayName={authorDisplayName}
-                  onManageDisableScrolling={onManageDisableScrolling}
-                  timeSlots={timeSlots}
-                  fetchTimeSlotsError={fetchTimeSlotsError}
-                  onFetchTransactionLineItems={onFetchTransactionLineItems}
-                  lineItems={lineItems}
-                  fetchLineItemsInProgress={fetchLineItemsInProgress}
-                  fetchLineItemsError={fetchLineItemsError}
-                />
-              </div>
+              <OrderPanel
+                className={css.productOrderPanel}
+                listing={currentListing}
+                isOwnListing={isOwnListing}
+                unitType={unitType}
+                onSubmit={handleOrderSubmit}
+                title={bookingTitle}
+                subTitle={bookingSubTitle}
+                authorDisplayName={authorDisplayName}
+                onManageDisableScrolling={onManageDisableScrolling}
+                timeSlots={timeSlots}
+                fetchTimeSlotsError={fetchTimeSlotsError}
+                onFetchTransactionLineItems={onFetchTransactionLineItems}
+                lineItems={lineItems}
+                fetchLineItemsInProgress={fetchLineItemsInProgress}
+                fetchLineItemsError={fetchLineItemsError}
+              />
             </div>
           </LayoutWrapperMain>
           <LayoutWrapperFooter>
