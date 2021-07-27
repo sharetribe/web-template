@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [fix] InboxPage: update inbox-items and provider notifications (red dots)
+  [#63](https://github.com/sharetribe/ftw-product/pull/63)
 - [fix] CheckoutPage: move error message generation to a dedicated function.
   [#61](https://github.com/sharetribe/ftw-product/pull/61)
 - [fix] TransactionPage: use custom image variant for listing.
