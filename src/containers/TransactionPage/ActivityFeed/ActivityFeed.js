@@ -14,7 +14,7 @@ import {
   TRANSITION_CANCEL_FROM_DISPUTED,
   TRANSITION_MARK_RECEIVED_FROM_PURCHASED,
   TRANSITION_MARK_RECEIVED,
-  TRANSITION_AUTO_COMPLETE,
+  TRANSITION_AUTO_MARK_RECEIVED,
   TRANSITION_MARK_RECEIVED_FROM_DISPUTED,
   TRANSITION_MARK_DELIVERED,
   TRANSITION_DISPUTE,
@@ -138,7 +138,7 @@ const resolveTransitionMessage = (
       return <FormattedMessage id="ActivityFeed.transitionCancel" />;
     case TRANSITION_MARK_RECEIVED_FROM_PURCHASED:
     case TRANSITION_MARK_RECEIVED:
-    case TRANSITION_AUTO_COMPLETE:
+    case TRANSITION_AUTO_MARK_RECEIVED:
     case TRANSITION_MARK_RECEIVED_FROM_DISPUTED:
       // Show the leave a review link if the state is delivered and
       // if the current user is the first to leave a review

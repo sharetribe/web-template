@@ -46,7 +46,7 @@ export const TRANSITION_CANCEL = 'transition/cancel';
 export const TRANSITION_MARK_RECEIVED = 'transition/mark-received';
 
 // If customer doesn't mark the product received manually, it can happen automatically
-export const TRANSITION_AUTO_COMPLETE = 'transition/auto-complete';
+export const TRANSITION_AUTO_MARK_RECEIVED = 'transition/auto-mark-received';
 
 // When provider has marked the product delivered, customer can dispute the transaction
 export const TRANSITION_DISPUTE = 'transition/dispute';
@@ -166,7 +166,7 @@ const stateDescription = {
     [STATE_DELIVERED]: {
       on: {
         [TRANSITION_MARK_RECEIVED]: STATE_RECEIVED,
-        [TRANSITION_AUTO_COMPLETE]: STATE_RECEIVED,
+        [TRANSITION_AUTO_MARK_RECEIVED]: STATE_RECEIVED,
         [TRANSITION_DISPUTE]: STATE_DISPUTED,
       },
     },
@@ -337,7 +337,7 @@ export const isRelevantPastTransition = transition => {
     TRANSITION_MARK_DELIVERED,
     TRANSITION_DISPUTE,
     TRANSITION_MARK_RECEIVED,
-    TRANSITION_AUTO_COMPLETE,
+    TRANSITION_AUTO_MARK_RECEIVED,
     TRANSITION_MARK_RECEIVED_FROM_DISPUTED,
     TRANSITION_AUTO_CANCEL_FROM_DISPUTED,
     TRANSITION_CANCEL_FROM_DISPUTED,
