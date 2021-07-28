@@ -45,7 +45,6 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import { sendEnquiry, fetchTransactionLineItems, setInitialValues } from './ListingPage.duck';
-import SectionImages from './SectionImages';
 import SectionAvatar from './SectionAvatar';
 import SectionHeading from './SectionHeading';
 import SectionDescriptionMaybe from './SectionDescriptionMaybe';
@@ -54,6 +53,8 @@ import SectionReviews from './SectionReviews';
 import SectionHostMaybe from './SectionHostMaybe';
 import SectionRulesMaybe from './SectionRulesMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
+import SectionGallery from './SectionGallery';
+
 import css from './ListingPage.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
@@ -416,25 +417,10 @@ export class ListingPageComponent extends Component {
         <LayoutSingleColumn className={css.pageRoot}>
           <LayoutWrapperTopbar>{topbar}</LayoutWrapperTopbar>
           <LayoutWrapperMain>
-            <div>
-              <SectionImages
-                title={title}
-                listing={currentListing}
-                isOwnListing={isOwnListing}
-                editParams={{
-                  id: listingId.uuid,
-                  slug: listingSlug,
-                  type: listingType,
-                  tab: listingTab,
-                }}
-                imageCarouselOpen={this.state.imageCarouselOpen}
-                onImageCarouselClose={() => this.setState({ imageCarouselOpen: false })}
-                handleViewPhotosClick={handleViewPhotosClick}
-                onManageDisableScrolling={onManageDisableScrolling}
-              />
-              <div className={css.contentContainer}>
-                <SectionAvatar user={currentAuthor} params={params} />
-                <div className={css.mainContent}>
+            <div className={css.productContentWrapper}>
+              <div className={css.productMainContent}>
+                <SectionGallery listing={currentListing} />
+                <div className={css.productMobileHeading}>
                   <SectionHeading
                     priceTitle={priceTitle}
                     formattedPrice={formattedPrice}
@@ -444,47 +430,47 @@ export class ListingPageComponent extends Component {
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
                   />
-                  <SectionDescriptionMaybe description={description} />
-                  <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
-                  <SectionRulesMaybe publicData={publicData} />
-                  <SectionMapMaybe
-                    geolocation={geolocation}
-                    publicData={publicData}
-                    listingId={currentListing.id}
-                  />
-                  <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
-                  <SectionHostMaybe
-                    title={title}
-                    listing={currentListing}
-                    authorDisplayName={authorDisplayName}
-                    onContactUser={this.onContactUser}
-                    isEnquiryModalOpen={isAuthenticated && this.state.enquiryModalOpen}
-                    onCloseEnquiryModal={() => this.setState({ enquiryModalOpen: false })}
-                    sendEnquiryError={sendEnquiryError}
-                    sendEnquiryInProgress={sendEnquiryInProgress}
-                    onSubmitEnquiry={this.onSubmitEnquiry}
-                    currentUser={currentUser}
-                    onManageDisableScrolling={onManageDisableScrolling}
-                  />
                 </div>
-                <OrderPanel
-                  className={css.orderPanel}
+                <SectionDescriptionMaybe description={description} />
+                <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
+                <SectionRulesMaybe publicData={publicData} />
+                <SectionMapMaybe
+                  geolocation={geolocation}
+                  publicData={publicData}
+                  listingId={currentListing.id}
+                />
+                <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
+                <SectionHostMaybe
+                  title={title}
                   listing={currentListing}
-                  isOwnListing={isOwnListing}
-                  unitType={unitType}
-                  onSubmit={handleOrderSubmit}
-                  title={bookingTitle}
-                  subTitle={bookingSubTitle}
                   authorDisplayName={authorDisplayName}
+                  onContactUser={this.onContactUser}
+                  isEnquiryModalOpen={isAuthenticated && this.state.enquiryModalOpen}
+                  onCloseEnquiryModal={() => this.setState({ enquiryModalOpen: false })}
+                  sendEnquiryError={sendEnquiryError}
+                  sendEnquiryInProgress={sendEnquiryInProgress}
+                  onSubmitEnquiry={this.onSubmitEnquiry}
+                  currentUser={currentUser}
                   onManageDisableScrolling={onManageDisableScrolling}
-                  timeSlots={timeSlots}
-                  fetchTimeSlotsError={fetchTimeSlotsError}
-                  onFetchTransactionLineItems={onFetchTransactionLineItems}
-                  lineItems={lineItems}
-                  fetchLineItemsInProgress={fetchLineItemsInProgress}
-                  fetchLineItemsError={fetchLineItemsError}
                 />
               </div>
+              <OrderPanel
+                className={css.productOrderPanel}
+                listing={currentListing}
+                isOwnListing={isOwnListing}
+                unitType={unitType}
+                onSubmit={handleOrderSubmit}
+                title={bookingTitle}
+                subTitle={bookingSubTitle}
+                authorDisplayName={authorDisplayName}
+                onManageDisableScrolling={onManageDisableScrolling}
+                timeSlots={timeSlots}
+                fetchTimeSlotsError={fetchTimeSlotsError}
+                onFetchTransactionLineItems={onFetchTransactionLineItems}
+                lineItems={lineItems}
+                fetchLineItemsInProgress={fetchLineItemsInProgress}
+                fetchLineItemsError={fetchLineItemsError}
+              />
             </div>
           </LayoutWrapperMain>
           <LayoutWrapperFooter>
