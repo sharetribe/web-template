@@ -21,7 +21,8 @@ const IMAGE_GALLERY_OPTIONS = {
 };
 
 const ListingImageGallery = props => {
-  const { intl, rootClassName, className, images, imageVariants } = props;
+  const { intl, rootClassName, className, images, imageVariants, thumbnailVariants } = props;
+  const thumbVariants = thumbnailVariants || imageVariants;
   const items = images.map((img, i) => {
     return {
       // We will only use the image resource, but react-image-gallery
@@ -58,7 +59,7 @@ const ListingImageGallery = props => {
           rootClassName={css.thumb}
           image={item.image}
           alt={item.thumbAlt}
-          variants={imageVariants}
+          variants={thumbVariants}
         />
       </div>
     );
@@ -121,6 +122,7 @@ const ListingImageGallery = props => {
 ListingImageGallery.defaultProps = {
   rootClassName: null,
   className: null,
+  thumbnailVariants: null,
 };
 
 const { string, arrayOf } = PropTypes;
@@ -130,6 +132,7 @@ ListingImageGallery.propTypes = {
   className: string,
   images: arrayOf(propTypes.image).isRequired,
   imageVariants: arrayOf(string).isRequired,
+  thumbnailVariants: arrayOf(string),
 
   // from injectIntl
   intl: intlShape.isRequired,
