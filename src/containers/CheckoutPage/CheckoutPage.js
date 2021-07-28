@@ -124,6 +124,82 @@ const bookingDatesMaybe = bookingDates => {
     : {};
 };
 
+// Collect error message checks to a single function.
+const getErrorMessages = (listingNotFound, initiateOrderError, speculateTransactionError) => {
+  let listingNotFoundErrorMessage = null;
+  let initiateOrderErrorMessage = null;
+  let speculateErrorMessage = null;
+
+  const isAmountTooLowError = isTransactionInitiateAmountTooLowError(initiateOrderError);
+  const isChargeDisabledError = isTransactionChargeDisabledError(initiateOrderError);
+  const stripeErrors = transactionInitiateOrderStripeErrors(initiateOrderError);
+
+  // We want to show one error at a time for the real transition
+  if (listingNotFound) {
+    listingNotFoundErrorMessage = <FormattedMessage id="CheckoutPage.listingNotFoundError" />;
+  } else if (isAmountTooLowError) {
+    initiateOrderErrorMessage = <FormattedMessage id="CheckoutPage.initiateOrderAmountTooLow" />;
+  } else if (isTransactionInitiateBookingTimeNotAvailableError(initiateOrderError)) {
+    // If bookings are used, there could be error related to those
+    initiateOrderErrorMessage = (
+      <FormattedMessage id="CheckoutPage.bookingTimeNotAvailableMessage" />
+    );
+  } else if (isChargeDisabledError) {
+    initiateOrderErrorMessage = <FormattedMessage id="CheckoutPage.chargeDisabledMessage" />;
+  } else if (stripeErrors && stripeErrors.length > 0) {
+    // NOTE: Error messages from Stripes are not part of translations.
+    // By default they are in English.
+    const stripeErrorsAsString = stripeErrors.join(', ');
+    initiateOrderErrorMessage = (
+      <FormattedMessage
+        id="CheckoutPage.initiateOrderStripeError"
+        values={{ stripeErrors: stripeErrorsAsString }}
+      />
+    );
+  } else if (initiateOrderError) {
+    // Generic initiate order error
+    initiateOrderErrorMessage = (
+      <FormattedMessage id="CheckoutPage.initiateOrderError" values={{ listingLink }} />
+    );
+  }
+
+  // We want to show one error at a time for speculateTransition
+  if (isTransactionInitiateMissingStripeAccountError(speculateTransactionError)) {
+    speculateErrorMessage = (
+      <FormattedMessage id="CheckoutPage.providerStripeAccountMissingError" />
+    );
+  } else if (isTransactionInitiateBookingTimeNotAvailableError(speculateTransactionError)) {
+    speculateErrorMessage = <FormattedMessage id="CheckoutPage.bookingTimeNotAvailableMessage" />;
+  } else if (isTransactionZeroPaymentError(speculateTransactionError)) {
+    speculateErrorMessage = <FormattedMessage id="CheckoutPage.initiateOrderAmountTooLow" />;
+  } else if (speculateTransactionError) {
+    speculateErrorMessage = <FormattedMessage id="CheckoutPage.speculateFailedMessage" />;
+  }
+
+  // Add paragraph-container for the error message, if it exists
+  const listingNotFoundErrorMessageParagraph = listingNotFoundErrorMessage ? (
+    <p className={css.notFoundError}>{listingNotFoundErrorMessage}</p>
+  ) : null;
+  const initiateOrderErrorMessageParagraph = initiateOrderErrorMessage ? (
+    <p className={css.orderError}>{initiateOrderErrorMessage}</p>
+  ) : null;
+  const speculateErrorMessageParagraph = speculateErrorMessage ? (
+    <p className={css.orderError}>{speculateErrorMessage}</p>
+  ) : null;
+  const speculateTransactionErrorMessageParagraph = speculateTransactionError ? (
+    <p className={css.speculateError}>
+      <FormattedMessage id="CheckoutPage.speculateTransactionError" />
+    </p>
+  ) : null;
+
+  return {
+    listingNotFoundErrorMessage: listingNotFoundErrorMessageParagraph,
+    initiateOrderErrorMessage: initiateOrderErrorMessageParagraph,
+    speculateErrorMessage: speculateErrorMessageParagraph,
+    speculateTransactionErrorMessage: speculateTransactionErrorMessageParagraph,
+  };
+};
+
 export class CheckoutPageComponent extends Component {
   constructor(props) {
     super(props);
@@ -575,6 +651,13 @@ export class CheckoutPageComponent extends Component {
       isTransactionInitiateListingNotFoundError(speculateTransactionError) ||
       isTransactionInitiateListingNotFoundError(initiateOrderError);
 
+    const {
+      listingNotFoundErrorMessage,
+      initiateOrderErrorMessage,
+      speculateErrorMessage,
+      speculateTransactionErrorMessage,
+    } = getErrorMessages(listingNotFound, initiateOrderError, speculateTransactionError);
+
     const isLoading = !this.state.dataLoaded || speculateTransactionInProgress;
 
     const { listing, transaction, orderData } = this.state.pageData;
@@ -682,92 +765,6 @@ export class CheckoutPageComponent extends Component {
         <FormattedMessage id="CheckoutPage.errorlistingLinkText" />
       </NamedLink>
     );
-
-    const isAmountTooLowError = isTransactionInitiateAmountTooLowError(initiateOrderError);
-    const isChargeDisabledError = isTransactionChargeDisabledError(initiateOrderError);
-    const stripeErrors = transactionInitiateOrderStripeErrors(initiateOrderError);
-
-    let initiateOrderErrorMessage = null;
-    let listingNotFoundErrorMessage = null;
-
-    if (listingNotFound) {
-      listingNotFoundErrorMessage = (
-        <p className={css.notFoundError}>
-          <FormattedMessage id="CheckoutPage.listingNotFoundError" />
-        </p>
-      );
-    } else if (isAmountTooLowError) {
-      initiateOrderErrorMessage = (
-        <p className={css.orderError}>
-          <FormattedMessage id="CheckoutPage.initiateOrderAmountTooLow" />
-        </p>
-      );
-    } else if (isTransactionInitiateBookingTimeNotAvailableError(initiateOrderError)) {
-      // If bookings are used, there could be error related to those
-      initiateOrderErrorMessage = (
-        <p className={css.orderError}>
-          <FormattedMessage id="CheckoutPage.bookingTimeNotAvailableMessage" />
-        </p>
-      );
-    } else if (isChargeDisabledError) {
-      initiateOrderErrorMessage = (
-        <p className={css.orderError}>
-          <FormattedMessage id="CheckoutPage.chargeDisabledMessage" />
-        </p>
-      );
-    } else if (stripeErrors && stripeErrors.length > 0) {
-      // NOTE: Error messages from Stripes are not part of translations.
-      // By default they are in English.
-      const stripeErrorsAsString = stripeErrors.join(', ');
-      initiateOrderErrorMessage = (
-        <p className={css.orderError}>
-          <FormattedMessage
-            id="CheckoutPage.initiateOrderStripeError"
-            values={{ stripeErrors: stripeErrorsAsString }}
-          />
-        </p>
-      );
-    } else if (initiateOrderError) {
-      // Generic initiate order error
-      initiateOrderErrorMessage = (
-        <p className={css.orderError}>
-          <FormattedMessage id="CheckoutPage.initiateOrderError" values={{ listingLink }} />
-        </p>
-      );
-    }
-
-    const speculateTransactionErrorMessage = speculateTransactionError ? (
-      <p className={css.speculateError}>
-        <FormattedMessage id="CheckoutPage.speculateTransactionError" />
-      </p>
-    ) : null;
-    let speculateErrorMessage = null;
-
-    if (isTransactionInitiateMissingStripeAccountError(speculateTransactionError)) {
-      speculateErrorMessage = (
-        <p className={css.orderError}>
-          <FormattedMessage id="CheckoutPage.providerStripeAccountMissingError" />
-        </p>
-      );
-    } else if (isTransactionInitiateBookingTimeNotAvailableError(speculateTransactionError)) {
-      speculateErrorMessage = (
-        <p className={css.orderError}>
-          <FormattedMessage id="CheckoutPage.bookingTimeNotAvailableMessage" />
-        </p>
-      );
-    } else if (isTransactionZeroPaymentError(speculateTransactionError)) {
-      speculateErrorMessage = (
-        <p className={css.orderError}>
-          <FormattedMessage id="CheckoutPage.initiateOrderAmountTooLow" />
-        </p>
-      );
-    } else if (speculateTransactionError) {
-      speculateErrorMessage = (
-        <p className={css.orderError}>
-          <FormattedMessage id="CheckoutPage.speculateFailedMessage" />
-        </p>
-      );
-    }
 
     const unitType = config.lineItemUnitType;
     const isNightly = unitType === LINE_ITEM_NIGHT;
