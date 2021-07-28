@@ -8,12 +8,14 @@ const SectionGallery = props => {
   const { listing } = props;
   const images = listing.images;
   const { variantPrefix } = config.listing;
-  const variants = [variantPrefix, `${variantPrefix}-2x`, `${variantPrefix}-4x`];
+  const imageVariants = ['scaled-small', 'scaled-medium', 'scaled-large', 'scaled-xlarge'];
+  const thumbnailVariants = [variantPrefix, `${variantPrefix}-2x`, `${variantPrefix}-4x`];
   return (
     <ListingImageGallery
       rootClassName={css.productGallery}
       images={images}
-      imageVariants={variants}
+      imageVariants={imageVariants}
+      thumbnailVariants={thumbnailVariants}
     />
   );
 };

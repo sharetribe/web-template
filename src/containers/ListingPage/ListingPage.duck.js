@@ -167,12 +167,16 @@ export const showListing = (listingId, isOwn = false) => (dispatch, getState, sd
     id: listingId,
     include: ['author', 'author.profileImage', 'images'],
     'fields.image': [
+      // Scaled variants for large images
+      'variants.scaled-small',
+      'variants.scaled-medium',
+      'variants.scaled-large',
+      'variants.scaled-xlarge',
+
+      // Cropped variants for listing thumbnail images
       `variants.${variantPrefix}`,
       `variants.${variantPrefix}-2x`,
       `variants.${variantPrefix}-4x`,
-
-      `variants.${variantPrefix}`,
-      `variants.${variantPrefix}-2x`,
 
       // Social media
       'variants.facebook',
