@@ -1,7 +1,7 @@
 import pick from 'lodash/pick';
 
 import config from '../../config';
-import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
+import { types as sdkTypes, util as sdkUtil, createImageVariantConfig } from '../../util/sdkLoader';
 import { getStartOf, addTime } from '../../util/dates';
 import { storableError } from '../../util/errors';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -167,24 +167,20 @@ export const showListing = (listingId, isOwn = false) => (dispatch, getState, sd
     id: listingId,
     include: ['author', 'author.profileImage', 'images'],
     'fields.image': [
-      // Listing page
-      'variants.landscape-crop',
-      'variants.landscape-crop2x',
-      'variants.landscape-crop4x',
-      'variants.landscape-crop6x',
-
-      `variants.${variantPrefix}`,
-      `variants.${variantPrefix}-2x`,
-
-      // Social media
-      'variants.facebook',
-      'variants.twitter',
-
-      // Image carousel
+      // Scaled variants for large images
       'variants.scaled-small',
       'variants.scaled-medium',
       'variants.scaled-large',
       'variants.scaled-xlarge',
+
+      // Cropped variants for listing thumbnail images
+      `variants.${variantPrefix}`,
+      `variants.${variantPrefix}-2x`,
+      `variants.${variantPrefix}-4x`,
+
+      // Social media
+      'variants.facebook',
+      'variants.twitter',
 
       // Avatars
       'variants.square-small',
@@ -192,6 +188,7 @@ export const showListing = (listingId, isOwn = false) => (dispatch, getState, sd
     ],
     ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
     ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+    ...createImageVariantConfig(`${variantPrefix}-4x`, 1600, aspectRatio),
   };
 
   const show = isOwn ? sdk.ownListings.show(params) : sdk.listings.show(params);

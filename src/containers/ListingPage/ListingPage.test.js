@@ -121,35 +121,12 @@ describe('ListingPage', () => {
         expect(data).toEqual(response);
         expect(show.mock.calls).toEqual([
           [
-            {
+            expect.objectContaining({
               id,
               'imageVariant.listing-card': 'w:400;h:400;fit:crop',
               'imageVariant.listing-card-2x': 'w:800;h:800;fit:crop',
               include: ['author', 'author.profileImage', 'images'],
-              'fields.image': [
-                // Listing page
-                'variants.landscape-crop',
-                'variants.landscape-crop2x',
-                'variants.landscape-crop4x',
-                'variants.landscape-crop6x',
-                'variants.listing-card',
-                'variants.listing-card-2x',
-
-                // Social media
-                'variants.facebook',
-                'variants.twitter',
-
-                // Image carousel
-                'variants.scaled-small',
-                'variants.scaled-medium',
-                'variants.scaled-large',
-                'variants.scaled-xlarge',
-
-                // Avatars
-                'variants.square-small',
-                'variants.square-small2x',
-              ],
-            },
+            }),
           ],
         ]);
         expect(dispatch.mock.calls).toEqual([
@@ -172,35 +149,12 @@ describe('ListingPage', () => {
       return showListing(id)(dispatch, null, sdk).then(data => {
         expect(show.mock.calls).toEqual([
           [
-            {
+            expect.objectContaining({
               id,
               'imageVariant.listing-card': 'w:400;h:400;fit:crop',
               'imageVariant.listing-card-2x': 'w:800;h:800;fit:crop',
               include: ['author', 'author.profileImage', 'images'],
-              'fields.image': [
-                // Listing page
-                'variants.landscape-crop',
-                'variants.landscape-crop2x',
-                'variants.landscape-crop4x',
-                'variants.landscape-crop6x',
-                'variants.listing-card',
-                'variants.listing-card-2x',
-
-                // Social media
-                'variants.facebook',
-                'variants.twitter',
-
-                // Image carousel
-                'variants.scaled-small',
-                'variants.scaled-medium',
-                'variants.scaled-large',
-                'variants.scaled-xlarge',
-
-                // Avatars
-                'variants.square-small',
-                'variants.square-small2x',
-              ],
-            },
+            }),
           ],
         ]);
         expect(dispatch.mock.calls).toEqual([
