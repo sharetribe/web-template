@@ -44,14 +44,19 @@ exports.transactionLineItems = (listing, orderData) => {
   const shippingPriceInSubunitsAdditionalItems =
     publicData && publicData.shippingPriceInSubunitsAdditionalItems;
 
-  // Quantity
-  // Note: by default, we assume that this is a single item order (quantity = 1)
+  // stockReservationQuantity is used with stock management
+  const hasStockReservationQuantity = orderData && orderData.stockReservationQuantity;
+  // quantity is used with bookings (time-based process: e.g. units: hours, quantity: 5)
   const hasQuantity = orderData && orderData.quantity;
+  // bookingStart & bookingend are used with day-based bookings (how many days / nights)
   const { bookingStart, bookingEnd } = orderData || {};
   const shouldCalculateQuantityFromDates =
     bookingStart && bookingEnd && ['line-item/day', 'line-item/night'].includes(lineItemUnitType);
-  const orderQuantity = hasQuantity
-    ? orderData.quantity
+  // Quantity for line-items
+  const orderQuantity = hasStockReservationQuantity
+    ? orderData.stockReservationQuantity
+    : hasQuantity
+    ? order.quantity
     : shouldCalculateQuantityFromDates
     ? calculateQuantityFromDates(bookingStart, bookingEnd, lineItemUnitType)
     : 1;

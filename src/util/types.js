@@ -444,6 +444,8 @@ export const ERROR_CODE_TRANSACTION_ALREADY_REVIEWED_BY_PROVIDER =
   'transaction-already-reviewed-by-provider';
 export const ERROR_CODE_TRANSACTION_BOOKING_TIME_NOT_AVAILABLE =
   'transaction-booking-time-not-available';
+export const ERROR_CODE_TRANSACTION_LISTING_INSUFFICIENT_STOCK =
+  'transaction-listing-insufficient-stock';
 export const ERROR_CODE_PAYMENT_FAILED = 'transaction-payment-failed';
 export const ERROR_CODE_CHARGE_ZERO_PAYIN = 'transaction-charge-zero-payin';
 export const ERROR_CODE_CHARGE_ZERO_PAYOUT = 'transaction-charge-zero-payout';

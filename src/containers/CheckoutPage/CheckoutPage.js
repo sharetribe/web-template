@@ -27,6 +27,7 @@ import {
   isTransactionInitiateListingNotFoundError,
   isTransactionInitiateMissingStripeAccountError,
   isTransactionInitiateBookingTimeNotAvailableError,
+  isTransactionInitiateListingInsufficientStockError,
   isTransactionChargeDisabledError,
   isTransactionZeroPaymentError,
   transactionInitiateOrderStripeErrors,
@@ -144,6 +145,9 @@ const getErrorMessages = (listingNotFound, initiateOrderError, speculateTransact
     initiateOrderErrorMessage = (
       <FormattedMessage id="CheckoutPage.bookingTimeNotAvailableMessage" />
     );
+  } else if (isTransactionInitiateListingInsufficientStockError(initiateOrderError)) {
+    // If stock management is used, there could be error related to that
+    initiateOrderErrorMessage = <FormattedMessage id="CheckoutPage.notEnoughStockMessage" />;
   } else if (isChargeDisabledError) {
     initiateOrderErrorMessage = <FormattedMessage id="CheckoutPage.chargeDisabledMessage" />;
   } else if (stripeErrors && stripeErrors.length > 0) {
@@ -170,6 +174,8 @@ const getErrorMessages = (listingNotFound, initiateOrderError, speculateTransact
     );
   } else if (isTransactionInitiateBookingTimeNotAvailableError(speculateTransactionError)) {
     speculateErrorMessage = <FormattedMessage id="CheckoutPage.bookingTimeNotAvailableMessage" />;
+  } else if (isTransactionInitiateListingInsufficientStockError(speculateTransactionError)) {
+    speculateErrorMessage = <FormattedMessage id="CheckoutPage.notEnoughStockMessage" />;
   } else if (isTransactionZeroPaymentError(speculateTransactionError)) {
     speculateErrorMessage = <FormattedMessage id="CheckoutPage.initiateOrderAmountTooLow" />;
   } else if (speculateTransactionError) {

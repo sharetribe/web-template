@@ -172,7 +172,7 @@ export const initiateOrder = (orderParams, transactionId) => (dispatch, getState
   const isPrivilegedTransition = isPrivileged(transition);
 
   const { deliveryMethod, quantity, bookingDates, ...otherOrderParams } = orderParams;
-  const quantityMaybe = quantity ? { quantity } : {};
+  const quantityMaybe = quantity ? { stockReservationQuantity: quantity } : {};
   const bookingParamsMaybe = bookingDates || {};
 
   // Parameters only for client app's server
@@ -321,7 +321,7 @@ export const speculateTransaction = (orderParams, transactionId) => (dispatch, g
   const isPrivilegedTransition = isPrivileged(transition);
 
   const { deliveryMethod, quantity, bookingDates, ...otherOrderParams } = orderParams;
-  const quantityMaybe = quantity ? { quantity } : {};
+  const quantityMaybe = quantity ? { stockReservationQuantity: quantity } : {};
   const bookingParamsMaybe = bookingDates || {};
 
   // Parameters only for client app's server
