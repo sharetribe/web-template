@@ -22,6 +22,7 @@ import {
   ERROR_CODE_UPLOAD_OVER_LIMIT,
   ERROR_CODE_MISSING_STRIPE_ACCOUNT,
   ERROR_CODE_TRANSACTION_BOOKING_TIME_NOT_AVAILABLE,
+  ERROR_CODE_TRANSACTION_LISTING_INSUFFICIENT_STOCK,
 } from './types';
 
 const errorAPIErrors = error => {
@@ -103,6 +104,13 @@ export const isTransactionInitiateMissingStripeAccountError = error =>
  */
 export const isTransactionInitiateBookingTimeNotAvailableError = error =>
   hasErrorWithCode(error, ERROR_CODE_TRANSACTION_BOOKING_TIME_NOT_AVAILABLE);
+
+/**
+ * Check if the given API error (from `sdk.transaction.initiate()` or
+ * `sdk.transaction.initiateSpeculative()`) is due to insufficient stock.
+ */
+export const isTransactionInitiateListingInsufficientStockError = error =>
+  hasErrorWithCode(error, ERROR_CODE_TRANSACTION_LISTING_INSUFFICIENT_STOCK);
 
 /**
  * Check if the given API error (from `sdk.transaction.initiate()` or
