@@ -245,6 +245,14 @@ export const isStripeError = error => {
   });
 };
 
+/**
+ * Check if the given transition error is
+ * due to no quantity information in the transition params.
+ */
+export const isTransitionQuantityInfoMissingError = error =>
+  error?.status === 400 &&
+  error?.statusText.startsWith('Error: transition should contain quantity information');
+
 export const storableError = err => {
   const error = err || {};
   const { name, message, status, statusText } = error;

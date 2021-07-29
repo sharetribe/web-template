@@ -30,6 +30,7 @@ import {
   isTransactionInitiateListingInsufficientStockError,
   isTransactionChargeDisabledError,
   isTransactionZeroPaymentError,
+  isTransitionQuantityInfoMissingError,
   transactionInitiateOrderStripeErrors,
 } from '../../util/errors';
 import { formatMoney } from '../../util/currency';
@@ -145,6 +146,10 @@ const getErrorMessages = (listingNotFound, initiateOrderError, speculateTransact
     initiateOrderErrorMessage = (
       <FormattedMessage id="CheckoutPage.bookingTimeNotAvailableMessage" />
     );
+  } else if (isTransitionQuantityInfoMissingError(initiateOrderError)) {
+    initiateOrderErrorMessage = (
+      <FormattedMessage id="CheckoutPage.correctQuantityInformationMissing" />
+    );
   } else if (isTransactionInitiateListingInsufficientStockError(initiateOrderError)) {
     // If stock management is used, there could be error related to that
     initiateOrderErrorMessage = <FormattedMessage id="CheckoutPage.notEnoughStockMessage" />;
@@ -178,6 +183,10 @@ const getErrorMessages = (listingNotFound, initiateOrderError, speculateTransact
     speculateErrorMessage = <FormattedMessage id="CheckoutPage.notEnoughStockMessage" />;
   } else if (isTransactionZeroPaymentError(speculateTransactionError)) {
     speculateErrorMessage = <FormattedMessage id="CheckoutPage.initiateOrderAmountTooLow" />;
+  } else if (isTransitionQuantityInfoMissingError(speculateTransactionError)) {
+    speculateErrorMessage = (
+      <FormattedMessage id="CheckoutPage.correctQuantityInformationMissing" />
+    );
   } else if (speculateTransactionError) {
     speculateErrorMessage = <FormattedMessage id="CheckoutPage.speculateFailedMessage" />;
   }
