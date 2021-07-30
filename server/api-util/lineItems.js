@@ -54,7 +54,9 @@ exports.transactionLineItems = (listing, orderData) => {
     bookingStart && bookingEnd && ['line-item/day', 'line-item/night'].includes(lineItemUnitType);
 
   // Throw error if there is no quantity information given
-  if (!hasStockReservationQuantity && !hasQuantity && !shouldCalculateQuantityFromDates) {
+  const hasQuantityInformation =
+    hasStockReservationQuantity || hasQuantity || shouldCalculateQuantityFromDates;
+  if (!hasQuantityInformation) {
     const message = `Error: transition should contain quantity information: 
       stockReservationQuantity, quantity, or bookingStart & bookingEnd (if "line-item/day" or "line-item/night" is used)`;
     const error = new Error(message);
@@ -63,6 +65,7 @@ exports.transactionLineItems = (listing, orderData) => {
     error.data = {};
     throw error;
   }
+
   // Quantity for line-items
   const orderQuantity = hasStockReservationQuantity
     ? orderData.stockReservationQuantity
