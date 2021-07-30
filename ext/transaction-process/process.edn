@@ -248,11 +248,11 @@
    :to :actor.role/provider,
    :template :order-disputed}
   {:name :notification/order-received-from-disputed-customer,
-   :on :transition/mark-received-from-distputed,
+   :on :transition/mark-received-from-disputed,
    :to :actor.role/customer,
    :template :order-received-from-disputed-customer}
   {:name :notification/order-received-from-disputed-provider,
-   :on :transition/mark-received-from-distputed,
+   :on :transition/mark-received-from-disputed,
    :to :actor.role/provider,
    :template :order-received-from-disputed-provider}
   {:name :notification/canceled-from-disputed-customer,
