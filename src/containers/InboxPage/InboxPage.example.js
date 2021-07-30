@@ -6,7 +6,7 @@ import {
   TRANSITION_ENQUIRE,
   TRANSITION_REQUEST_PAYMENT,
   TRANSITION_CONFIRM_PAYMENT,
-  TRANSITION_CANCEL_OPERATOR,
+  TRANSITION_CANCEL,
   TRANSITION_MARK_DELIVERED,
   TRANSITION_MARK_RECEIVED,
   TRANSITION_DISPUTE,
@@ -89,7 +89,7 @@ export const Canceled_Order = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'order',
-    tx: tx(TRANSITION_CANCEL_OPERATOR),
+    tx: tx(TRANSITION_CANCEL),
   },
   group: 'page:InboxPage',
 };
@@ -183,7 +183,7 @@ export const Canceled_Sale = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'sale',
-    tx: tx(TRANSITION_CANCEL_OPERATOR),
+    tx: tx(TRANSITION_CANCEL),
   },
   group: 'page:InboxPage',
 };

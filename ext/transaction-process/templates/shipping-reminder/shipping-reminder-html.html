@@ -1,0 +1,24 @@
+
+<html>
+  <body>
+    {{#with transaction}}
+    {{#eq "shipping" protected-data.deliveryMethod}}
+    <h1>Remember to ship {{listing.title}}!</h1>
+
+    <p>You received an order for {{listing.title}} from {{customer.display-name}} three days ago. Please remember to ship the item and mark it shipped on the order details page.</p>
+
+    <p>If the order is not marked as shipped within two weeks, the order will expire automatically.</p>
+    {{else}}
+    <h1>Remember to arrange pickup for {{listing.title}}!</h1>
+
+    <p>You received an order for {{listing.title}} from {{customer.display-name}} three days ago. Please remember to arrange pickup for the item and mark it delivered on the order details page.</p>
+
+    <p>If the order is not marked as delivered within two weeks, the order will expire automatically.</p>
+    {{/eq}}
+    {{/with}}
+
+    <hr />
+
+    <p>You have received this email notification because you are a member of {{marketplace.name}}. If you no longer wish to receive these emails, please contact {{marketplace.name}} team.</p>
+  </body>
+</html>
