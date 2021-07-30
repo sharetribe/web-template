@@ -6,83 +6,132 @@
    :to :state/enquiry}
   {:name :transition/request-payment,
    :actor :actor.role/customer,
+   :privileged? true,
    :actions
-   [{:name :action/create-pending-booking}
+   [{:name :action/update-protected-data}
+    {:name :action/create-pending-stock-reservation}
     {:name :action/privileged-set-line-items}
     {:name :action/stripe-create-payment-intent}],
-   :to :state/pending-payment,
-   :privileged? true}
+   :to :state/pending-payment}
   {:name :transition/request-payment-after-enquiry,
    :actor :actor.role/customer,
+   :privileged? true,
    :actions
-   [{:name :action/create-pending-booking}
+   [{:name :action/update-protected-data}
+    {:name :action/create-pending-stock-reservation}
     {:name :action/privileged-set-line-items}
     {:name :action/stripe-create-payment-intent}],
    :from :state/enquiry,
-   :to :state/pending-payment,
-   :privileged? true}
+   :to :state/pending-payment}
+  {:name :transition/confirm-payment,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/accept-stock-reservation}
+    {:name :action/stripe-confirm-payment-intent}
+    {:name :action/stripe-capture-payment-intent}],
+   :from :state/pending-payment,
+   :to :state/purchased}
   {:name :transition/expire-payment,
    :at
    {:fn/plus
     [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
      {:fn/period ["PT15M"]}]},
    :actions
-   [{:name :action/decline-booking}
-    {:name :action/calculate-full-refund}
-    {:name :action/stripe-refund-payment}],
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/decline-stock-reservation}],
    :from :state/pending-payment,
    :to :state/payment-expired}
-  {:name :transition/confirm-payment,
+  {:name :transition/mark-received-from-purchased,
    :actor :actor.role/customer,
-   :actions [{:name :action/stripe-confirm-payment-intent}],
-   :from :state/pending-payment,
-   :to :state/preauthorized}
-  {:name :transition/accept,
-   :actor :actor.role/provider,
-   :actions
-   [{:name :action/accept-booking}
-    {:name :action/stripe-capture-payment-intent}],
-   :from :state/preauthorized,
-   :to :state/accepted}
-  {:name :transition/decline,
-   :actor :actor.role/provider,
-   :actions
-   [{:name :action/decline-booking}
-    {:name :action/calculate-full-refund}
-    {:name :action/stripe-refund-payment}],
-   :from :state/preauthorized,
-   :to :state/declined}
-  {:name :transition/expire,
-   :at
-   {:fn/min
-    [{:fn/plus
-      [{:fn/timepoint [:time/first-entered-state :state/preauthorized]}
-       {:fn/period ["P6D"]}]}
-     {:fn/plus
-      [{:fn/timepoint [:time/booking-end]} {:fn/period ["P1D"]}]}]},
-   :actions
-   [{:name :action/decline-booking}
-    {:name :action/calculate-full-refund}
-    {:name :action/stripe-refund-payment}],
-   :from :state/preauthorized,
-   :to :state/declined}
-  {:name :transition/complete,
-   :at {:fn/timepoint [:time/booking-end]},
    :actions [{:name :action/stripe-create-payout}],
-   :from :state/accepted,
+   :from :state/purchased,
+   :to :state/received}
+  {:name :transition/mark-delivered,
+   :actor :actor.role/provider,
+   :actions [],
+   :from :state/purchased,
    :to :state/delivered}
+  {:name :transition/mark-received,
+   :actor :actor.role/customer,
+   :actions [{:name :action/stripe-create-payout}],
+   :from :state/delivered,
+   :to :state/received}
+  {:name :transition/auto-mark-received,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/delivered]}
+     {:fn/period ["P14D"]}]},
+   :actions [{:name :action/stripe-create-payout}],
+   :from :state/delivered,
+   :to :state/received}
+  {:name :transition/dispute,
+   :actor :actor.role/customer,
+   :actions [{:name :action/update-protected-data}],
+   :from :state/delivered,
+   :to :state/disputed}
+  {:name :transition/mark-received-from-disputed,
+   :actor :actor.role/operator,
+   :actions [{:name :action/stripe-create-payout}],
+   :from :state/disputed,
+   :to :state/received}
   {:name :transition/cancel,
    :actor :actor.role/operator,
    :actions
-   [{:name :action/cancel-booking}
-    {:name :action/calculate-full-refund}
-    {:name :action/stripe-refund-payment}],
-   :from :state/accepted,
-   :to :state/cancelled}
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/cancel-stock-reservation}],
+   :from :state/purchased,
+   :to :state/canceled}
+  {:name :transition/auto-cancel,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/purchased]}
+     {:fn/period ["P14D"]}]},
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/cancel-stock-reservation}],
+   :from :state/purchased,
+   :to :state/canceled}
+  {:name :transition/cancel-from-disputed,
+   :actor :actor.role/operator,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/cancel-stock-reservation}],
+   :from :state/disputed,
+   :to :state/canceled}
+  {:name :transition/auto-cancel-from-disputed,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/disputed]}
+     {:fn/period ["P60D"]}]},
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/cancel-stock-reservation}],
+   :from :state/disputed,
+   :to :state/canceled}
+  {:name :transition/auto-complete,
+   :at {:fn/timepoint [:time/first-entered-state :state/received]},
+   :actions [],
+   :from :state/received,
+   :to :state/completed}
   {:name :transition/review-1-by-provider,
    :actor :actor.role/provider,
    :actions [{:name :action/post-review-by-provider}],
-   :from :state/delivered,
+   :from :state/completed,
    :to :state/reviewed-by-provider}
   {:name :transition/review-2-by-provider,
    :actor :actor.role/provider,
@@ -94,7 +143,7 @@
   {:name :transition/review-1-by-customer,
    :actor :actor.role/customer,
    :actions [{:name :action/post-review-by-customer}],
-   :from :state/delivered,
+   :from :state/completed,
    :to :state/reviewed-by-customer}
   {:name :transition/review-2-by-customer,
    :actor :actor.role/customer,
@@ -106,53 +155,130 @@
   {:name :transition/expire-review-period,
    :at
    {:fn/plus
-    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P7D"]}]},
+    [{:fn/timepoint [:time/first-entered-state :state/received]}
+     {:fn/period ["P7D"]}]},
    :actions [],
-   :from :state/delivered,
+   :from :state/completed,
    :to :state/reviewed}
   {:name :transition/expire-provider-review-period,
    :at
    {:fn/plus
-    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P7D"]}]},
+    [{:fn/timepoint [:time/first-entered-state :state/received]}
+     {:fn/period ["P7D"]}]},
    :actions [{:name :action/publish-reviews}],
    :from :state/reviewed-by-customer,
    :to :state/reviewed}
   {:name :transition/expire-customer-review-period,
    :at
    {:fn/plus
-    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P7D"]}]},
+    [{:fn/timepoint [:time/first-entered-state :state/received]}
+     {:fn/period ["P7D"]}]},
    :actions [{:name :action/publish-reviews}],
    :from :state/reviewed-by-provider,
    :to :state/reviewed}],
  :notifications
- [{:name :notification/new-booking-request,
+ [{:name :notification/order-receipt,
+   :on :transition/confirm-payment,
+   ;; This notification is delayed to give the customer a chance to verify their
+   ;; email address, in case they are a new customer.
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/purchased]}
+     {:fn/period ["PT15M"]}]},
+   :to :actor.role/customer,
+   :template :order-receipt}
+  {:name :notification/new-order,
    :on :transition/confirm-payment,
    :to :actor.role/provider,
-   :template :new-booking-request}
-  {:name :notification/booking-request-accepted,
-   :on :transition/accept,
-   :to :actor.role/customer,
-   :template :booking-request-accepted}
-  {:name :notification/booking-request-declined,
-   :on :transition/decline,
-   :to :actor.role/customer,
-   :template :booking-request-declined}
-  {:name :notification/booking-request-auto-declined,
-   :on :transition/expire,
-   :to :actor.role/customer,
-   :template :booking-request-auto-declined}
-  {:name :notification/money-paid,
-   :on :transition/complete,
+   :template :new-order}
+  {:name :notification/shipping-reminder,
+   :on :transition/confirm-payment,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/purchased]}
+     {:fn/period ["P3D"]}]},
    :to :actor.role/provider,
-   :template :money-paid}
+   :template :shipping-reminder}
+  {:name :notification/order-marked-as-delivered,
+   :on :transition/mark-delivered,
+   :to :actor.role/customer,
+   :template :order-marked-as-delivered}
+  {:name :notification/mark-order-received-reminder,
+   :on :transition/mark-delivered,
+   :at
+   {:fn/plus
+    [{:fn/timepoint [:time/first-entered-state :state/delivered]}
+     {:fn/period ["P12D"]}]},
+   :to :actor.role/customer,
+   :template :mark-order-received-reminder}
+  {:name :notification/order-marked-as-received-from-purchased,
+   :on :transition/mark-received-from-purchased,
+   :to :actor.role/provider,
+   :template :order-marked-as-received}
+  {:name :notification/order-marked-as-received,
+   :on :transition/mark-received,
+   :to :actor.role/provider,
+   :template :order-marked-as-received}
+  {:name :notification/shipping-time-expired,
+   :on :transition/auto-cancel,
+   :to :actor.role/customer,
+   :template :shipping-time-expired-customer}
+  {:name :notification/order-shipping-time-expired,
+   :on :transition/auto-cancel,
+   :to :actor.role/provider,
+   :template :shipping-time-expired-provider}
+  {:name :notification/purchase-canceled,
+   :on :transition/cancel,
+   :to :actor.role/customer,
+   :template :purchase-canceled}
+  {:name :notification/order-canceled,
+   :on :transition/cancel,
+   :to :actor.role/provider,
+   :template :order-canceled}
+  {:name :notification/order-auto-marked-as-received-customer,
+   :on :transition/auto-mark-received,
+   :to :actor.role/customer,
+   :template :order-auto-marked-as-received-customer}
+  {:name :notification/order-auto-marked-as-received-provider,
+   :on :transition/auto-mark-received,
+   :to :actor.role/provider,
+   :template :order-auto-marked-as-received-provider}
+  {:name :notification/order-disputed,
+   :on :transition/dispute,
+   :to :actor.role/provider,
+   :template :order-disputed}
+  {:name :notification/order-received-from-disputed-customer,
+   :on :transition/mark-received-from-disputed,
+   :to :actor.role/customer,
+   :template :order-received-from-disputed-customer}
+  {:name :notification/order-received-from-disputed-provider,
+   :on :transition/mark-received-from-disputed,
+   :to :actor.role/provider,
+   :template :order-received-from-disputed-provider}
+  {:name :notification/canceled-from-disputed-customer,
+   :on :transition/cancel-from-disputed,
+   :to :actor.role/customer,
+   :template :order-canceled-from-disputed-customer}
+  {:name :notification/canceled-from-disputed-provider,
+   :on :transition/cancel-from-disputed,
+   :to :actor.role/customer,
+   :template :order-canceled-from-disputed-provider}
+  {:name :notification/auto-canceled-from-disputed-customer,
+   :on :transition/auto-cancel-from-disputed,
+   :to :actor.role/customer,
+   :template :order-auto-canceled-from-disputed-customer}
+  {:name :notification/auto-canceled-from-disputed-provider,
+   :on :transition/auto-cancel-from-disputed,
+   :to :actor.role/provider,
+   :template :order-auto-canceled-from-disputed-provider}
   {:name :notification/review-period-start-provider,
-   :on :transition/complete,
+   :on :transition/auto-complete,
    :to :actor.role/provider,
-   :template :review-by-provider-wanted}
+   :template :order-review-by-provider-wanted}
   {:name :notification/review-period-start-customer,
-   :on :transition/complete,
+   :on :transition/auto-complete,
    :to :actor.role/customer,
-   :template :review-by-customer-wanted}
+   :template :order-review-by-customer-wanted}
   {:name :notification/review-by-provider-first,
    :on :transition/review-1-by-provider,
    :to :actor.role/customer,

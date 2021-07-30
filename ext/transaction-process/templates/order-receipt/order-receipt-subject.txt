@@ -1,0 +1,1 @@
+Your receipt for {{transaction.listing.title}}

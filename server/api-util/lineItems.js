@@ -44,14 +44,35 @@ exports.transactionLineItems = (listing, orderData) => {
   const shippingPriceInSubunitsAdditionalItems =
     publicData && publicData.shippingPriceInSubunitsAdditionalItems;
 
-  // Quantity
-  // Note: by default, we assume that this is a single item order (quantity = 1)
+  // stockReservationQuantity is used with stock management
+  const hasStockReservationQuantity = orderData && orderData.stockReservationQuantity;
+  // quantity is used with bookings (time-based process: e.g. units: hours, quantity: 5)
   const hasQuantity = orderData && orderData.quantity;
+  // bookingStart & bookingend are used with day-based bookings (how many days / nights)
   const { bookingStart, bookingEnd } = orderData || {};
   const shouldCalculateQuantityFromDates =
     bookingStart && bookingEnd && ['line-item/day', 'line-item/night'].includes(lineItemUnitType);
-  const orderQuantity = hasQuantity
-    ? orderData.quantity
+
+  // Throw error if there is no quantity information given
+  const hasQuantityInformation =
+    hasStockReservationQuantity || hasQuantity || shouldCalculateQuantityFromDates;
+  if (!hasQuantityInformation) {
+    const message = `Error: transition should contain quantity information: 
+      stockReservationQuantity, quantity, or bookingStart & bookingEnd (if "line-item/day" or "line-item/night" is used)`;
+    const error = new Error(message);
+    error.status = 400;
+    error.statusText = message;
+    error.data = {};
+    throw error;
+  }
+
+  // Quantity for line-items
+  // Note: this uses ternary as conditional chain
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator#conditional_chains
+  const orderQuantity = hasStockReservationQuantity
+    ? orderData.stockReservationQuantity
+    : hasQuantity
+    ? order.quantity
     : shouldCalculateQuantityFromDates
     ? calculateQuantityFromDates(bookingStart, bookingEnd, lineItemUnitType)
     : 1;

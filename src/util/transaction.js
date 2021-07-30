@@ -36,29 +36,33 @@ export const TRANSITION_MARK_DELIVERED = 'transition/mark-delivered';
 export const TRANSITION_MARK_RECEIVED_FROM_PURCHASED = 'transition/mark-received-from-purchased';
 
 // Automatic cancellation happens if none marks the delivery happened
-export const TRANSITION_CANCEL_SYSTEM = 'transition/cancel-system';
+export const TRANSITION_AUTO_CANCEL = 'transition/auto-cancel';
 
 // Operator can cancel the purchase before product has been marked as delivered / received
-export const TRANSITION_CANCEL_OPERATOR = 'transition/cancel-operator';
+export const TRANSITION_CANCEL = 'transition/cancel';
 
 // If provider has marked the product delivered (e.g. shipped),
 // customer can then mark the product received
 export const TRANSITION_MARK_RECEIVED = 'transition/mark-received';
 
 // If customer doesn't mark the product received manually, it can happen automatically
-export const TRANSITION_AUTO_COMPLETE = 'transition/auto-complete';
+export const TRANSITION_AUTO_MARK_RECEIVED = 'transition/auto-mark-received';
 
 // When provider has marked the product delivered, customer can dispute the transaction
 export const TRANSITION_DISPUTE = 'transition/dispute';
 
 // If nothing is done to disputed transaction it ends up to Canceled state
-export const TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED = 'transition/cancel-system-from-disputed';
+export const TRANSITION_AUTO_CANCEL_FROM_DISPUTED = 'transition/auto-cancel-from-disputed';
 
 // Operator can cancel disputed transaction manually
 export const TRANSITION_CANCEL_FROM_DISPUTED = 'transition/cancel-from-disputed';
 
 // Operator can mark the disputed transaction as received
 export const TRANSITION_MARK_RECEIVED_FROM_DISPUTED = 'transition/mark-received-from-disputed';
+
+// System moves transaction automatically from received state to complete state
+// This makes it possible to to add notifications to that single transition.
+export const TRANSITION_AUTO_COMPLETE = 'transition/auto-complete';
 
 // Reviews are given through transaction transitions. Review 1 can be
 // by provider or customer, and review 2 will be the other party of
@@ -108,6 +112,7 @@ const STATE_DELIVERED = 'delivered';
 const STATE_RECEIVED = 'received';
 const STATE_DISPUTED = 'disputed';
 const STATE_CANCELED = 'canceled';
+const STATE_COMPLETED = 'completed';
 const STATE_REVIEWED = 'reviewed';
 const STATE_REVIEWED_BY_CUSTOMER = 'reviewed-by-customer';
 const STATE_REVIEWED_BY_PROVIDER = 'reviewed-by-provider';
@@ -156,8 +161,8 @@ const stateDescription = {
       on: {
         [TRANSITION_MARK_DELIVERED]: STATE_DELIVERED,
         [TRANSITION_MARK_RECEIVED_FROM_PURCHASED]: STATE_RECEIVED,
-        [TRANSITION_CANCEL_SYSTEM]: STATE_CANCELED,
-        [TRANSITION_CANCEL_OPERATOR]: STATE_CANCELED,
+        [TRANSITION_AUTO_CANCEL]: STATE_CANCELED,
+        [TRANSITION_CANCEL]: STATE_CANCELED,
       },
     },
 
@@ -166,20 +171,26 @@ const stateDescription = {
     [STATE_DELIVERED]: {
       on: {
         [TRANSITION_MARK_RECEIVED]: STATE_RECEIVED,
-        [TRANSITION_AUTO_COMPLETE]: STATE_RECEIVED,
+        [TRANSITION_AUTO_MARK_RECEIVED]: STATE_RECEIVED,
         [TRANSITION_DISPUTE]: STATE_DISPUTED,
       },
     },
 
     [STATE_DISPUTED]: {
       on: {
-        [TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED]: STATE_CANCELED,
+        [TRANSITION_AUTO_CANCEL_FROM_DISPUTED]: STATE_CANCELED,
         [TRANSITION_CANCEL_FROM_DISPUTED]: STATE_CANCELED,
         [TRANSITION_MARK_RECEIVED_FROM_DISPUTED]: STATE_RECEIVED,
       },
     },
 
     [STATE_RECEIVED]: {
+      on: {
+        [TRANSITION_AUTO_COMPLETE]: STATE_COMPLETED,
+      },
+    },
+
+    [STATE_COMPLETED]: {
       on: {
         [TRANSITION_EXPIRE_REVIEW_PERIOD]: STATE_REVIEWED,
         [TRANSITION_REVIEW_1_BY_CUSTOMER]: STATE_REVIEWED_BY_CUSTOMER,
@@ -271,6 +282,9 @@ export const txIsDisputed = tx =>
 export const txIsReceived = tx =>
   getTransitionsToState(STATE_RECEIVED).includes(txLastTransition(tx));
 
+export const txIsCompleted = tx =>
+  getTransitionsToState(STATE_COMPLETED).includes(txLastTransition(tx));
+
 export const txIsReviewedByCustomer = tx =>
   getTransitionsToState(STATE_REVIEWED_BY_CUSTOMER).includes(txLastTransition(tx));
 
@@ -331,15 +345,15 @@ export const getReview2Transition = isCustomer =>
 export const isRelevantPastTransition = transition => {
   return [
     TRANSITION_CONFIRM_PAYMENT,
-    TRANSITION_CANCEL_SYSTEM,
-    TRANSITION_CANCEL_OPERATOR,
+    TRANSITION_AUTO_CANCEL,
+    TRANSITION_CANCEL,
     TRANSITION_MARK_RECEIVED_FROM_PURCHASED,
     TRANSITION_MARK_DELIVERED,
     TRANSITION_DISPUTE,
     TRANSITION_MARK_RECEIVED,
-    TRANSITION_AUTO_COMPLETE,
+    TRANSITION_AUTO_MARK_RECEIVED,
     TRANSITION_MARK_RECEIVED_FROM_DISPUTED,
-    TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED,
+    TRANSITION_AUTO_CANCEL_FROM_DISPUTED,
     TRANSITION_CANCEL_FROM_DISPUTED,
     TRANSITION_REVIEW_1_BY_CUSTOMER,
     TRANSITION_REVIEW_1_BY_PROVIDER,

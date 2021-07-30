@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [fix] Update transaction process and handle stockReservationQuantity transition parameter.
+  [#60](https://github.com/sharetribe/ftw-product/pull/60)
 - [fix] InboxPage: update inbox-items and provider notifications (red dots)
   [#63](https://github.com/sharetribe/ftw-product/pull/63)
 - [fix] CheckoutPage: move error message generation to a dedicated function.

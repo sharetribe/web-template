@@ -2,7 +2,7 @@ import React from 'react';
 import { bool } from 'prop-types';
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
-import { txIsCanceled, txIsReceived } from '../../util/transaction';
+import { txIsCanceled, txIsReceived, txIsCompleted } from '../../util/transaction';
 import { propTypes } from '../../util/types';
 
 import css from './OrderBreakdown.module.css';
@@ -11,7 +11,7 @@ const LineItemUnitPrice = props => {
   const { transaction, isProvider, intl } = props;
 
   let providerTotalMessageId = 'OrderBreakdown.providerTotalDefault';
-  if (txIsReceived(transaction)) {
+  if (txIsReceived(transaction) || txIsCompleted(transaction)) {
     providerTotalMessageId = 'OrderBreakdown.providerTotalReceived';
   } else if (txIsCanceled(transaction)) {
     providerTotalMessageId = 'OrderBreakdown.providerTotalCanceled';

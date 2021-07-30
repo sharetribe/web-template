@@ -8,13 +8,13 @@ import { formatDateWithProximity } from '../../../util/dates';
 import { ensureTransaction, ensureUser, ensureListing } from '../../../util/data';
 import {
   TRANSITION_CONFIRM_PAYMENT,
-  TRANSITION_CANCEL_SYSTEM,
-  TRANSITION_CANCEL_OPERATOR,
-  TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED,
+  TRANSITION_AUTO_CANCEL,
+  TRANSITION_CANCEL,
+  TRANSITION_AUTO_CANCEL_FROM_DISPUTED,
   TRANSITION_CANCEL_FROM_DISPUTED,
   TRANSITION_MARK_RECEIVED_FROM_PURCHASED,
   TRANSITION_MARK_RECEIVED,
-  TRANSITION_AUTO_COMPLETE,
+  TRANSITION_AUTO_MARK_RECEIVED,
   TRANSITION_MARK_RECEIVED_FROM_DISPUTED,
   TRANSITION_MARK_DELIVERED,
   TRANSITION_DISPUTE,
@@ -28,7 +28,7 @@ import {
   isRelevantPastTransition,
   transitionIsReviewed,
   txIsInFirstReviewBy,
-  txIsReceived,
+  txIsCompleted,
   txIsReviewed,
   txRoleIsCustomer,
   txRoleIsProvider,
@@ -131,18 +131,18 @@ const resolveTransitionMessage = (
           values={{ displayName, listingTitle }}
         />
       );
-    case TRANSITION_CANCEL_SYSTEM:
-    case TRANSITION_CANCEL_OPERATOR:
-    case TRANSITION_CANCEL_SYSTEM_FROM_DISPUTED:
+    case TRANSITION_AUTO_CANCEL:
+    case TRANSITION_CANCEL:
+    case TRANSITION_AUTO_CANCEL_FROM_DISPUTED:
     case TRANSITION_CANCEL_FROM_DISPUTED:
       return <FormattedMessage id="ActivityFeed.transitionCancel" />;
     case TRANSITION_MARK_RECEIVED_FROM_PURCHASED:
     case TRANSITION_MARK_RECEIVED:
-    case TRANSITION_AUTO_COMPLETE:
+    case TRANSITION_AUTO_MARK_RECEIVED:
     case TRANSITION_MARK_RECEIVED_FROM_DISPUTED:
-      // Show the leave a review link if the state is delivered and
+      // Show the leave a review link if the state is completed and
       // if the current user is the first to leave a review
-      const reviewPeriodJustStarted = txIsReceived(transaction);
+      const reviewPeriodJustStarted = txIsCompleted(transaction);
 
       const reviewAsFirstLink = reviewPeriodJustStarted ? (
         <InlineTextButton onClick={onOpenReviewModal}>

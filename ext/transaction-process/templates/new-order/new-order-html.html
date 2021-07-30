@@ -1,0 +1,83 @@
+
+{{~#*inline "format-money"~}}
+{{money-amount money}} {{money.currency}}
+{{~/inline~}}
+
+<html>
+  <body>
+    {{#with transaction}}
+    <h1>New order for {{listing.title}}</h1>
+
+    <p>Good news! {{customer.display-name}} has bought {{listing.title}}. Here's the breakdown of the order.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align: left;">Payment</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#each tx-line-items}}
+        {{#contains include-for "provider"}}
+          {{#eq "line-item/units" code}}
+            <tr>
+              <td>Unit price</td>
+              <td style="text-align: right; padding-left: 20px">{{> format-money money=unit-price}}</td>
+            </tr>
+            <tr>
+              <td>Quantity</td>
+              <td style="text-align: right; padding-left: 20px">&times; {{number quantity}}</td>
+            </tr>
+            <tr>
+              <th style="text-align: left;">Subtotal</th>
+              <th style="text-align: right; padding-left: 20px">{{> format-money money=line-total}}</th>
+            </tr>
+          {{/eq}}
+
+          {{#eq "line-item/shipping-fee" code}}
+            <tr>
+              <td>Shipping</td>
+              <td style="text-align: right; padding-left: 20px">{{> format-money money=unit-price}}</td>
+            </tr>
+          {{/eq}}
+
+          {{#eq "line-item/pickup-fee" code}}
+            <tr>
+              <td>Pickup</td>
+              <td style="text-align: right; padding-left: 20px">{{> format-money money=unit-price}}</td>
+            </tr>
+          {{/eq}}
+
+          {{#eq "line-item/provider-commission" code}}
+            <tr>
+              <td>{{marketplace.name}} fee</td>
+              <td style="text-align: right; padding-left: 20px;">{{> format-money money=line-total}}</td>
+            </tr>
+          {{/eq}}
+        {{/contains}}
+      {{/each}}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th style="text-align: left;">You earn</th>
+          <th style="text-align: left; padding-left: 20px;">{{> format-money money=payout-total}}</th>
+        </tr>
+      </tfoot>
+    </table>
+
+    {{#eq "shipping" protected-data.deliveryMethod}}
+    <p>Please get the order ready for shipping and remember to mark the item as shipped on the order details page.</p>
+
+    <p>If the order is not marked as shipped within two weeks, the order will expire automatically.</p>
+    {{else}}
+    <p>Please get the order ready for pickup and remember to mark the item as delivered on the order details page.</p>
+
+    <p>If the order is not marked as delivered within two weeks, the order will expire automatically.</p>
+    {{/eq}}
+    {{/with}}
+
+    <hr />
+
+    <p>You have received this email notification because you are a member of {{marketplace.name}}. If you no longer wish to receive these emails, please contact {{marketplace.name}} team.</p>
+  </body>
+</html>
