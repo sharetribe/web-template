@@ -72,7 +72,7 @@
    :actions [{:name :action/update-protected-data}],
    :from :state/delivered,
    :to :state/disputed}
-  {:name :transition/mark-received-from-distputed,
+  {:name :transition/mark-received-from-disputed,
    :actor :actor.role/operator,
    :actions [{:name :action/stripe-create-payout}],
    :from :state/disputed,
