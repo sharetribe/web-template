@@ -67,6 +67,8 @@ exports.transactionLineItems = (listing, orderData) => {
   }
 
   // Quantity for line-items
+  // Note: this uses ternary as conditional chain
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator#conditional_chains
   const orderQuantity = hasStockReservationQuantity
     ? orderData.stockReservationQuantity
     : hasQuantity
