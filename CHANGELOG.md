@@ -14,15 +14,17 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
-- [fix] Update transaction process and handle stockReservationQuantity transition parameter.
+- [fix] server/api-util/lineItems.js: 'orderData' instead of 'order'.
+  [#65](https://github.com/sharetribe/ftw-product/pull/65)
+- [change] Update transaction process and handle stockReservationQuantity transition parameter.
   [#60](https://github.com/sharetribe/ftw-product/pull/60)
-- [fix] InboxPage: update inbox-items and provider notifications (red dots)
+- [change] InboxPage: update inbox-items and provider notifications (red dots)
   [#63](https://github.com/sharetribe/ftw-product/pull/63)
-- [fix] CheckoutPage: move error message generation to a dedicated function.
+- [change] CheckoutPage: move error message generation to a dedicated function.
   [#61](https://github.com/sharetribe/ftw-product/pull/61)
-- [fix] TransactionPage: use custom image variant for listing.
+- [add] TransactionPage: use custom image variant for listing.
   [#62](https://github.com/sharetribe/ftw-product/pull/62)
-- [fix] Add 'line-item/pickup-fee' and update OrderBreakdown component
+- [add] Add 'line-item/pickup-fee' and update OrderBreakdown component
   [#59](https://github.com/sharetribe/ftw-product/pull/59)
 - [fix] Add uncommitted change to TransactionPage: onSubmitOrderRequest
   [#58](https://github.com/sharetribe/ftw-product/pull/58)
