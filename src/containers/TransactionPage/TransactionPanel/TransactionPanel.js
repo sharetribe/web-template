@@ -36,6 +36,7 @@ import AddressLinkMaybe from './AddressLinkMaybe';
 import BreakdownMaybe from './BreakdownMaybe';
 import DetailCardHeadingsMaybe from './DetailCardHeadingsMaybe';
 import DetailCardImage from './DetailCardImage';
+import DeliveryInfoMaybe from './DeliveryInfoMaybe';
 import FeedSection from './FeedSection';
 import ActionButtonsMaybe from './ActionButtonsMaybe';
 import PanelHeading, {
@@ -368,6 +369,7 @@ export class TransactionPanelComponent extends Component {
                 />
               </p>
             ) : null}
+            <DeliveryInfoMaybe transaction={currentTransaction} listing={currentListing} />
             <FeedSection
               rootClassName={css.feedContainer}
               currentTransaction={currentTransaction}
