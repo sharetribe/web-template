@@ -72,7 +72,7 @@ exports.transactionLineItems = (listing, orderData) => {
   const orderQuantity = hasStockReservationQuantity
     ? orderData.stockReservationQuantity
     : hasQuantity
-    ? order.quantity
+    ? orderData.quantity
     : shouldCalculateQuantityFromDates
     ? calculateQuantityFromDates(bookingStart, bookingEnd, lineItemUnitType)
     : 1;
