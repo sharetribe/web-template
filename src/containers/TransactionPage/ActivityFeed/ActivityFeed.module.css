@@ -1,8 +1,6 @@
 @import '../../../styles/propertySets.css';
 
 .root {
-  margin: 0;
-
   /* Clearfix */
   @apply --clearfix;
 }
@@ -62,7 +60,7 @@
   box-shadow: var(--boxShadow);
 
   @media (--viewportMedium) {
-    padding: 8.5px 14px 8.5px 14px;
+    padding: 8px 14px 8px 14px;
     margin: 0;
   }
 }
@@ -85,12 +83,16 @@
   color: var(--matterColorAnti);
 
   @media (--viewportMedium) {
-    margin: 6px 0 0 0;
+    margin: 0 0 0 0;
   }
 }
 
 .ownMessageDate {
   text-align: right;
+
+  @media (--viewportMedium) {
+    margin: 8px 0 0 0;
+  }
 }
 
 .transitionItem {
@@ -129,7 +131,7 @@
   margin: 7px 0 0 0;
 
   @media (--viewportMedium) {
-    margin: -1px 0 1px 0;
+    margin: 0;
   }
 }
 
