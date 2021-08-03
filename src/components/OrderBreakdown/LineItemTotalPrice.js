@@ -7,7 +7,7 @@ import { propTypes } from '../../util/types';
 
 import css from './OrderBreakdown.module.css';
 
-const LineItemUnitPrice = props => {
+const LineItemTotalPrice = props => {
   const { transaction, isProvider, intl } = props;
 
   let providerTotalMessageId = 'OrderBreakdown.providerTotalDefault';
@@ -39,10 +39,10 @@ const LineItemUnitPrice = props => {
   );
 };
 
-LineItemUnitPrice.propTypes = {
+LineItemTotalPrice.propTypes = {
   transaction: propTypes.transaction.isRequired,
   isProvider: bool.isRequired,
   intl: intlShape.isRequired,
 };
 
-export default LineItemUnitPrice;
+export default LineItemTotalPrice;
