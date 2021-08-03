@@ -18,12 +18,10 @@ import { LINE_ITEMS, propTypes } from '../../util/types';
 import css from './OrderBreakdown.module.css';
 
 const LineItemUnknownItemsMaybe = props => {
-  const { transaction, isProvider, intl } = props;
+  const { lineItems, isProvider, intl } = props;
 
   // resolve unknown non-reversal line items
-  const allItems = transaction.attributes.lineItems.filter(
-    item => LINE_ITEMS.indexOf(item.code) === -1 && !item.reversal
-  );
+  const allItems = lineItems.filter(item => LINE_ITEMS.indexOf(item.code) === -1 && !item.reversal);
 
   const items = isProvider
     ? allItems.filter(item => item.includeFor.includes('provider'))
@@ -52,7 +50,7 @@ const LineItemUnknownItemsMaybe = props => {
 };
 
 LineItemUnknownItemsMaybe.propTypes = {
-  transaction: propTypes.transaction.isRequired,
+  lineItems: propTypes.lineItems.isRequired,
   intl: intlShape.isRequired,
 };
 

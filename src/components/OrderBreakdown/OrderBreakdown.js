@@ -41,8 +41,9 @@ export const OrderBreakdownComponent = props => {
 
   const isCustomer = userRole === 'customer';
   const isProvider = userRole === 'provider';
+  const lineItems = transaction.attributes.lineItems;
 
-  const hasCommissionLineItem = transaction.attributes.lineItems.find(item => {
+  const hasCommissionLineItem = lineItems.find(item => {
     const hasCustomerCommission = isCustomer && item.code === LINE_ITEM_CUSTOMER_COMMISSION;
     const hasProviderCommission = isProvider && item.code === LINE_ITEM_PROVIDER_COMMISSION;
     return (hasCustomerCommission || hasProviderCommission) && !item.reversal;
@@ -96,37 +97,29 @@ export const OrderBreakdownComponent = props => {
     <div className={classes}>
       <LineItemBookingPeriod booking={booking} unitType={unitType} dateType={dateType} />
 
-      <LineItemBasePriceMaybe transaction={transaction} unitType={unitType} intl={intl} />
-      <LineItemShippingFeeMaybe transaction={transaction} intl={intl} />
-      <LineItemPickupFeeMaybe transaction={transaction} intl={intl} />
-      <LineItemUnknownItemsMaybe transaction={transaction} isProvider={isProvider} intl={intl} />
+      <LineItemBasePriceMaybe lineItems={lineItems} unitType={unitType} intl={intl} />
+      <LineItemShippingFeeMaybe lineItems={lineItems} intl={intl} />
+      <LineItemPickupFeeMaybe lineItems={lineItems} intl={intl} />
+      <LineItemUnknownItemsMaybe lineItems={lineItems} isProvider={isProvider} intl={intl} />
 
       <LineItemSubTotalMaybe
-        transaction={transaction}
+        lineItems={lineItems}
         unitType={unitType}
         userRole={userRole}
         intl={intl}
       />
-      <LineItemRefundMaybe transaction={transaction} intl={intl} />
+      <LineItemRefundMaybe lineItems={lineItems} intl={intl} />
 
-      <LineItemCustomerCommissionMaybe
-        transaction={transaction}
-        isCustomer={isCustomer}
-        intl={intl}
-      />
+      <LineItemCustomerCommissionMaybe lineItems={lineItems} isCustomer={isCustomer} intl={intl} />
       <LineItemCustomerCommissionRefundMaybe
-        transaction={transaction}
+        lineItems={lineItems}
         isCustomer={isCustomer}
         intl={intl}
       />
 
-      <LineItemProviderCommissionMaybe
-        transaction={transaction}
-        isProvider={isProvider}
-        intl={intl}
-      />
+      <LineItemProviderCommissionMaybe lineItems={lineItems} isProvider={isProvider} intl={intl} />
       <LineItemProviderCommissionRefundMaybe
-        transaction={transaction}
+        lineItems={lineItems}
         isProvider={isProvider}
         intl={intl}
       />
