@@ -39,43 +39,36 @@ const isCommission = lineItem => {
 /**
  * Returns non-commission, non-reversal line items
  */
-const nonCommissionNonReversalLineItems = transaction => {
-  return transaction.attributes.lineItems.filter(item => !isCommission(item) && !item.reversal);
+const nonCommissionNonReversalLineItems = lineItems => {
+  return lineItems.filter(item => !isCommission(item) && !item.reversal);
 };
 
 /**
- * Checks if a transaction has a commission line-item for
- * a given user role.
+ * Check if there is a commission line-item for the given user role.
  */
-const txHasCommission = (transaction, userRole) => {
+const hasCommission = (lineItems, userRole) => {
   let commissionLineItem = null;
 
   if (userRole === 'customer') {
-    commissionLineItem = transaction.attributes.lineItems.find(
-      item => item.code === LINE_ITEM_CUSTOMER_COMMISSION
-    );
+    commissionLineItem = lineItems.find(item => item.code === LINE_ITEM_CUSTOMER_COMMISSION);
   } else if (userRole === 'provider') {
-    commissionLineItem = transaction.attributes.lineItems.find(
-      item => item.code === LINE_ITEM_PROVIDER_COMMISSION
-    );
+    commissionLineItem = lineItems.find(item => item.code === LINE_ITEM_PROVIDER_COMMISSION);
   }
   return !!commissionLineItem;
 };
 
 const LineItemSubTotalMaybe = props => {
-  const { transaction, unitType, userRole, intl } = props;
+  const { lineItems, unitType, userRole, intl } = props;
 
-  const refund = transaction.attributes.lineItems.find(
-    item => item.code === unitType && item.reversal
-  );
+  const refund = lineItems.find(item => item.code === unitType && item.reversal);
 
   // Show unit purchase line total (unit price * quantity) as a subtotal.
   // PLEASE NOTE that this assumes that the transaction doesn't have other
   // line item types than the defined unit type (e.g. week, month, year).
-  const showSubTotal = txHasCommission(transaction, userRole) || refund;
+  const showSubTotal = hasCommission(lineItems, userRole) || refund;
 
   // all non-reversal, non-commission line items
-  const subTotalLineItems = nonCommissionNonReversalLineItems(transaction);
+  const subTotalLineItems = nonCommissionNonReversalLineItems(lineItems);
   // line totals of those line items combined
   const subTotal = lineItemsTotal(subTotalLineItems);
 
@@ -95,7 +88,7 @@ const LineItemSubTotalMaybe = props => {
 };
 
 LineItemSubTotalMaybe.propTypes = {
-  transaction: propTypes.transaction.isRequired,
+  lineItems: propTypes.lineItems.isRequired,
   userRole: string.isRequired,
   intl: intlShape.isRequired,
 };
