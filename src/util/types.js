@@ -358,6 +358,17 @@ const requiredLineItemPropType = (props, propName, componentName) => {
   }
 };
 
+propTypes.lineItems = arrayOf(
+  shape({
+    code: requiredLineItemPropType,
+    includeFor: arrayOf(oneOf(['customer', 'provider'])).isRequired,
+    quantity: instanceOf(Decimal),
+    unitPrice: propTypes.money.isRequired,
+    lineTotal: propTypes.money.isRequired,
+    reversal: bool.isRequired,
+  })
+);
+
 // Denormalised transaction object
 propTypes.transaction = shape({
   id: propTypes.uuid.isRequired,
@@ -372,16 +383,7 @@ propTypes.transaction = shape({
     payinTotal: propTypes.money,
     payoutTotal: propTypes.money,
 
-    lineItems: arrayOf(
-      shape({
-        code: requiredLineItemPropType,
-        includeFor: arrayOf(oneOf(['customer', 'provider'])).isRequired,
-        quantity: instanceOf(Decimal),
-        unitPrice: propTypes.money.isRequired,
-        lineTotal: propTypes.money.isRequired,
-        reversal: bool.isRequired,
-      })
-    ),
+    lineItems: propTypes.lineItems,
     transitions: arrayOf(propTypes.transition).isRequired,
   }),
   booking: propTypes.booking,
