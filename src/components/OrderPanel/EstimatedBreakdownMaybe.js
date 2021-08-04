@@ -37,8 +37,7 @@ import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../u
 
 import { OrderBreakdown } from '../../components';
 
-// TODO: move classes to OrderPanel CSS file
-import css from './BookingDatesForm/BookingDatesForm.module.css';
+import css from './OrderPanel.module.css';
 
 const { Money, UUID } = sdkTypes;
 
