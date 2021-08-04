@@ -9,10 +9,40 @@ import EstimatedCustomerBreakdownMaybe from './EstimatedCustomerBreakdownMaybe';
 const { Money } = sdkTypes;
 const CURRENCY = config.currency;
 
-export const Empty = {
+export const EmptyWithoutDatesOrLineItems = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
     unitType: LINE_ITEM_DAY,
+  },
+  group: 'payment',
+};
+
+export const EmptyWithoutDates = {
+  component: EstimatedCustomerBreakdownMaybe,
+  props: {
+    unitType: LINE_ITEM_DAY,
+    lineItems: [
+      {
+        code: 'line-item/day',
+        includeFor: ['customer', 'provider'],
+        quantity: new Decimal(1),
+        unitPrice: new Money(4500, CURRENCY),
+        lineTotal: new Money(4500, CURRENCY),
+        reversal: false,
+      },
+    ],
+  },
+  group: 'payment',
+};
+
+export const EmptyWithoutLineItems = {
+  component: EstimatedCustomerBreakdownMaybe,
+  props: {
+    unitType: LINE_ITEM_DAY,
+    breakdownData: {
+      startDate: new Date(Date.UTC(2017, 3, 14)),
+      endDate: new Date(Date.UTC(2017, 3, 15)),
+    },
   },
   group: 'payment',
 };
