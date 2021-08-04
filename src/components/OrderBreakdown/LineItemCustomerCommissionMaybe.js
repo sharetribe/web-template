@@ -20,9 +20,9 @@ const isValidCommission = commissionLineItem => {
 };
 
 const LineItemCustomerCommissionMaybe = props => {
-  const { transaction, isCustomer, intl } = props;
+  const { lineItems, isCustomer, intl } = props;
 
-  const customerCommissionLineItem = transaction.attributes.lineItems.find(
+  const customerCommissionLineItem = lineItems.find(
     item => item.code === LINE_ITEM_CUSTOMER_COMMISSION && !item.reversal
   );
 
@@ -53,7 +53,7 @@ const LineItemCustomerCommissionMaybe = props => {
 };
 
 LineItemCustomerCommissionMaybe.propTypes = {
-  transaction: propTypes.transaction.isRequired,
+  lineItems: propTypes.lineItems.isRequired,
   isCustomer: bool.isRequired,
   intl: intlShape.isRequired,
 };
