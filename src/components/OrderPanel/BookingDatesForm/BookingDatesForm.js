@@ -140,24 +140,27 @@ export class BookingDatesFormComponent extends Component {
           // so we need to pass only booking data that is needed otherwise
           // If you have added new fields to the form that will affect to pricing,
           // you need to add the values to handleOnChange function
-          const orderData =
+          const breakdownData =
             startDate && endDate
               ? {
-                  unitType,
                   startDate,
                   endDate,
                 }
               : null;
 
           const showEstimatedBreakdown =
-            orderData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
+            breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
 
           const bookingInfoMaybe = showEstimatedBreakdown ? (
             <div className={css.priceBreakdownContainer}>
               <h3 className={css.priceBreakdownTitle}>
                 <FormattedMessage id="BookingDatesForm.priceBreakdownTitle" />
               </h3>
-              <EstimatedBreakdownMaybe orderData={orderData} lineItems={lineItems} />
+              <EstimatedBreakdownMaybe
+                unitType={unitType}
+                breakdownData={breakdownData}
+                lineItems={lineItems}
+              />
             </div>
           ) : null;
 
