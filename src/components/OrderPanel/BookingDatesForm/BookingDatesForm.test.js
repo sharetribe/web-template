@@ -50,13 +50,13 @@ describe('BookingDatesForm', () => {
 
 describe('EstimatedCustomerBreakdownMaybe', () => {
   it('renders breakdown with correct transaction data', () => {
-    const bookingStart = new Date(2017, 3, 14, 0, 0, 0);
-    const bookingEnd = new Date(2017, 3, 16, 0, 0, 0);
+    const startDate = new Date(2017, 3, 14, 0, 0, 0);
+    const endDate = new Date(2017, 3, 16, 0, 0, 0);
     const props = {
       unitType: LINE_ITEM_NIGHT,
       breakdownData: {
-        bookingStart,
-        bookingEnd,
+        startDate,
+        endDate,
       },
       lineItems,
     };
@@ -74,8 +74,8 @@ describe('EstimatedCustomerBreakdownMaybe', () => {
     expect(booking.attributes.end).toEqual(new Date(Date.UTC(2017, 3, 16)));
 
     // Server's time-of-day for day-based booking times matches the original local time-of-day
-    expect(timeOfDayFromTimeZoneToLocal(booking.attributes.start, 'Etc/UTC')).toEqual(bookingStart);
-    expect(timeOfDayFromTimeZoneToLocal(booking.attributes.end, 'Etc/UTC')).toEqual(bookingEnd);
+    expect(timeOfDayFromTimeZoneToLocal(booking.attributes.start, 'Etc/UTC')).toEqual(startDate);
+    expect(timeOfDayFromTimeZoneToLocal(booking.attributes.end, 'Etc/UTC')).toEqual(endDate);
 
     expect(transaction.attributes.payinTotal).toEqual(new Money(2198, 'USD'));
     expect(transaction.attributes.payoutTotal).toEqual(new Money(2198, 'USD'));

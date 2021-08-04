@@ -32,7 +32,7 @@ import config from '../../config';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { timeOfDayFromLocalToTimeZone, getStartOf } from '../../util/dates';
 import { TRANSITION_REQUEST_PAYMENT, TX_TRANSITION_ACTOR_CUSTOMER } from '../../util/transaction';
-import { DATE_TYPE_DATE } from '../../util/types';
+import { DATE_TYPE_DATE, LINE_ITEM_DAY, LINE_ITEM_NIGHT } from '../../util/types';
 import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../util/currency';
 
 import { OrderBreakdown } from '../../components';
@@ -83,8 +83,7 @@ const estimatedBooking = (bookingStart, bookingEnd) => {
 //
 // We need to use FTW backend to calculate the correct line items through thransactionLineItems
 // endpoint so that they can be passed to this estimated transaction.
-const estimatedCustomerTransaction = (breakdownData, lineItems) => {
-  const { bookingStart, bookingEnd } = breakdownData;
+const estimatedCustomerTransaction = (lineItems, bookingStart, bookingEnd) => {
   const now = new Date();
   const customerLineItems = lineItems.filter(item => item.includeFor.includes('customer'));
   const providerLineItems = lineItems.filter(item => item.includeFor.includes('provider'));
@@ -117,9 +116,16 @@ const estimatedCustomerTransaction = (breakdownData, lineItems) => {
 };
 
 const EstimatedCustomerBreakdownMaybe = props => {
-  const { unitType, breakdownData = {}, lineItems = [] } = props;
-  console.log('estimated breakdown with:', unitType, breakdownData, lineItems);
-  const tx = estimatedCustomerTransaction(breakdownData, lineItems);
+  const { unitType, breakdownData = {}, lineItems } = props;
+  const { startDate, endDate } = breakdownData;
+
+  const shouldHaveBooking = unitType === LINE_ITEM_DAY || unitType === LINE_ITEM_NIGHT;
+  const hasLineItems = lineItems && lineItems.length > 0;
+  const hasRequiredBookingData = !shouldHaveBooking || (startDate && endDate);
+  const tx =
+    hasLineItems && hasRequiredBookingData
+      ? estimatedCustomerTransaction(lineItems, startDate, endDate)
+      : null;
 
   return tx ? (
     <OrderBreakdown
