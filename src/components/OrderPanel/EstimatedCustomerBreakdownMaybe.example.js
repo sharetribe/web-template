@@ -113,7 +113,7 @@ export const BookingUnits = {
   group: 'payment',
 };
 
-export const NoBookingWithShipping = {
+export const OrderProductWithShipping = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
     unitType: LINE_ITEM_UNITS,
