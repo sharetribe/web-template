@@ -36,7 +36,7 @@ const FeedSection = props => {
 
   return showFeed ? (
     <div className={classes}>
-      <h3 className={css.feedHeading}>
+      <h3 className={css.sectionHeading}>
         <FormattedMessage id="TransactionPanel.activityHeading" />
       </h3>
       {initialMessageFailed ? (
@@ -49,16 +49,18 @@ const FeedSection = props => {
           <FormattedMessage id="TransactionPanel.messageLoadingFailed" />
         </p>
       ) : null}
-      <ActivityFeed
-        className={css.feed}
-        messages={messages}
-        transaction={currentTransaction}
-        currentUser={currentUser}
-        hasOlderMessages={hasOlderMessages && !fetchMessagesInProgress}
-        onOpenReviewModal={onOpenReviewModal}
-        onShowOlderMessages={onShowMoreMessages}
-        fetchMessagesInProgress={fetchMessagesInProgress}
-      />
+      <div className={css.feedContent}>
+        <ActivityFeed
+          className={css.feed}
+          messages={messages}
+          transaction={currentTransaction}
+          currentUser={currentUser}
+          hasOlderMessages={hasOlderMessages && !fetchMessagesInProgress}
+          onOpenReviewModal={onOpenReviewModal}
+          onShowOlderMessages={onShowMoreMessages}
+          fetchMessagesInProgress={fetchMessagesInProgress}
+        />
+      </div>
     </div>
   ) : null;
 };
