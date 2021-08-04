@@ -19,7 +19,7 @@ import * as Avatar from './components/Avatar/Avatar.example';
 import * as BookingTimeInfo from './components/BookingTimeInfo/BookingTimeInfo.example';
 import * as Button from './components/Button/Button.example';
 import * as ExpandingTextarea from './components/ExpandingTextarea/ExpandingTextarea.example';
-import * as EstimatedBreakdownMaybe from './components/OrderPanel/EstimatedBreakdownMaybe.example';
+import * as EstimatedCustomerBreakdownMaybe from './components/OrderPanel/EstimatedCustomerBreakdownMaybe.example';
 import * as FieldBirthdayInput from './components/FieldBirthdayInput/FieldBirthdayInput.example';
 import * as FieldBoolean from './components/FieldBoolean/FieldBoolean.example';
 import * as FieldCheckbox from './components/FieldCheckbox/FieldCheckbox.example';
@@ -134,7 +134,7 @@ export {
   EditListingPricingForm,
   EmailVerificationForm,
   EnquiryForm,
-  EstimatedBreakdownMaybe,
+  EstimatedCustomerBreakdownMaybe,
   ExpandingTextarea,
   FieldBirthdayInput,
   FieldBoolean,
