@@ -36,11 +36,6 @@
   }
 }
 
-.receipt {
-  flex-shrink: 0;
-  margin: 0 0 24px 0;
-}
-
 .error {
   color: var(--failColor);
   margin: 0 24px;

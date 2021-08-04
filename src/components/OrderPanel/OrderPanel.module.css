@@ -202,3 +202,8 @@
   padding: 15px 24px 15px 24px;
   text-align: center;
 }
+
+.receipt {
+  flex-shrink: 0;
+  margin: 0 0 24px 0;
+}
