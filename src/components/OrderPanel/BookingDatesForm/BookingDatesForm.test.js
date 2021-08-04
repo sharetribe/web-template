@@ -11,7 +11,7 @@ import { timeOfDayFromTimeZoneToLocal } from '../../../util/dates';
 import { OrderBreakdown } from '../../../components';
 
 import { BookingDatesFormComponent } from './BookingDatesForm';
-import EstimatedBreakdownMaybe from '../EstimatedBreakdownMaybe';
+import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
 const { Money } = sdkTypes;
 
@@ -20,7 +20,7 @@ const lineItems = [
   {
     code: 'line-item/night',
     unitPrice: new Money(1099, 'USD'),
-    units: new Decimal(2),
+    quantity: new Decimal(2),
     includeFor: ['customer', 'provider'],
     lineTotal: new Money(2198, 'USD'),
     reversal: false,
@@ -48,38 +48,20 @@ describe('BookingDatesForm', () => {
   });
 });
 
-describe('EstimatedBreakdownMaybe', () => {
-  it('renders nothing if missing start and end date', () => {
-    const data = {
-      unitType: LINE_ITEM_NIGHT,
-      unitPrice: new Money(1234, 'USD'),
-    };
-    expect(
-      renderDeep(<EstimatedBreakdownMaybe orderData={data} lineItems={lineItems} />)
-    ).toBeFalsy();
-  });
-  it('renders nothing if missing end date', () => {
-    const data = {
-      unitType: LINE_ITEM_NIGHT,
-      unitPrice: new Money(1234, 'USD'),
-      startDate: new Date(),
-    };
-    expect(
-      renderDeep(<EstimatedBreakdownMaybe orderData={data} lineItems={lineItems} />)
-    ).toBeFalsy();
-  });
+describe('EstimatedCustomerBreakdownMaybe', () => {
   it('renders breakdown with correct transaction data', () => {
-    const unitPrice = new Money(1099, 'USD');
-    const startDate = new Date(2017, 3, 14, 0, 0, 0);
-    const endDate = new Date(2017, 3, 16, 0, 0, 0);
-    const data = {
+    const bookingStart = new Date(2017, 3, 14, 0, 0, 0);
+    const bookingEnd = new Date(2017, 3, 16, 0, 0, 0);
+    const props = {
       unitType: LINE_ITEM_NIGHT,
-      unitPrice,
-      startDate,
-      endDate,
+      breakdownData: {
+        bookingStart,
+        bookingEnd,
+      },
+      lineItems,
     };
 
-    const tree = shallow(<EstimatedBreakdownMaybe orderData={data} lineItems={lineItems} />);
+    const tree = shallow(<EstimatedCustomerBreakdownMaybe {...props} />);
     const breakdown = tree.find(OrderBreakdown);
     const { userRole, unitType, transaction, booking } = breakdown.props();
 
@@ -92,16 +74,16 @@ describe('EstimatedBreakdownMaybe', () => {
     expect(booking.attributes.end).toEqual(new Date(Date.UTC(2017, 3, 16)));
 
     // Server's time-of-day for day-based booking times matches the original local time-of-day
-    expect(timeOfDayFromTimeZoneToLocal(booking.attributes.start, 'Etc/UTC')).toEqual(startDate);
-    expect(timeOfDayFromTimeZoneToLocal(booking.attributes.end, 'Etc/UTC')).toEqual(endDate);
+    expect(timeOfDayFromTimeZoneToLocal(booking.attributes.start, 'Etc/UTC')).toEqual(bookingStart);
+    expect(timeOfDayFromTimeZoneToLocal(booking.attributes.end, 'Etc/UTC')).toEqual(bookingEnd);
 
     expect(transaction.attributes.payinTotal).toEqual(new Money(2198, 'USD'));
     expect(transaction.attributes.payoutTotal).toEqual(new Money(2198, 'USD'));
     expect(transaction.attributes.lineItems).toEqual([
       {
         code: 'line-item/night',
-        unitPrice,
-        units: new Decimal(2),
+        unitPrice: new Money(1099, 'USD'),
+        quantity: new Decimal(2),
         includeFor: ['customer', 'provider'],
         lineTotal: new Money(2198, 'USD'),
         reversal: false,
