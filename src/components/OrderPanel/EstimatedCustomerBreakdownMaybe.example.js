@@ -4,13 +4,13 @@ import config from '../../config';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, LINE_ITEM_UNITS } from '../../util/types';
 
-import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
+import EstimatedCustomerBreakdownMaybe from './EstimatedCustomerBreakdownMaybe';
 
 const { Money } = sdkTypes;
 const CURRENCY = config.currency;
 
 export const Empty = {
-  component: EstimatedBreakdownMaybe,
+  component: EstimatedCustomerBreakdownMaybe,
   props: {
     unitType: LINE_ITEM_DAY,
   },
@@ -18,7 +18,7 @@ export const Empty = {
 };
 
 export const BookingSingleDay = {
-  component: EstimatedBreakdownMaybe,
+  component: EstimatedCustomerBreakdownMaybe,
   props: {
     unitType: LINE_ITEM_DAY,
     breakdownData: {
@@ -40,7 +40,7 @@ export const BookingSingleDay = {
 };
 
 export const BookingMultipleNights = {
-  component: EstimatedBreakdownMaybe,
+  component: EstimatedCustomerBreakdownMaybe,
   props: {
     unitType: LINE_ITEM_NIGHT,
     breakdownData: {
@@ -62,7 +62,7 @@ export const BookingMultipleNights = {
 };
 
 export const BookingUnits = {
-  component: EstimatedBreakdownMaybe,
+  component: EstimatedCustomerBreakdownMaybe,
   props: {
     unitType: LINE_ITEM_UNITS,
     breakdownData: {
@@ -84,7 +84,7 @@ export const BookingUnits = {
 };
 
 export const NoBookingWithShipping = {
-  component: EstimatedBreakdownMaybe,
+  component: EstimatedCustomerBreakdownMaybe,
   props: {
     unitType: LINE_ITEM_UNITS,
     breakdownData: {},
@@ -111,7 +111,7 @@ export const NoBookingWithShipping = {
 };
 
 export const NoBookingWithPickup = {
-  component: EstimatedBreakdownMaybe,
+  component: EstimatedCustomerBreakdownMaybe,
   props: {
     unitType: LINE_ITEM_UNITS,
     breakdownData: {},

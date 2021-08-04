@@ -11,7 +11,7 @@ import { START_DATE, END_DATE, getStartOf, addTime } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { Form, IconSpinner, PrimaryButton, FieldDateRangeInput } from '../../../components';
 
-import EstimatedBreakdownMaybe from '../EstimatedBreakdownMaybe';
+import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 import css from './BookingDatesForm.module.css';
 
 const identity = v => v;
@@ -156,7 +156,7 @@ export class BookingDatesFormComponent extends Component {
               <h3 className={css.priceBreakdownTitle}>
                 <FormattedMessage id="BookingDatesForm.priceBreakdownTitle" />
               </h3>
-              <EstimatedBreakdownMaybe
+              <EstimatedCustomerBreakdownMaybe
                 unitType={unitType}
                 breakdownData={breakdownData}
                 lineItems={lineItems}
