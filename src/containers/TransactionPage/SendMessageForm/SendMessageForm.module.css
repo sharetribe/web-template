@@ -16,25 +16,21 @@
 .textarea {
   @apply --marketplaceH4FontStyles;
   border-bottom-width: 0;
-
-  /* Avoid text going behind the submit button */
-  padding: 22px 52px 25px 0;
-
   margin: 0;
-
-  /* We need to remove horizontal paddings,
-   since textarea uses content-box (autosize library fix). */
-  width: calc(100% - 52px);
-
+  padding: 2px 0 8px 0;
   border-bottom-width: 2px;
   border-bottom-color: var(--attentionColor);
   background-color: transparent;
+
+  &::placeholder {
+    padding: 0 0 0 0;
+  }
 
   @media (--viewportMedium) {
     margin: 0;
   }
   @media (--viewportLarge) {
-    padding: 0 0 5px 0;
+    padding: 0 0 6px 0;
     margin: 0;
     width: 100%;
   }

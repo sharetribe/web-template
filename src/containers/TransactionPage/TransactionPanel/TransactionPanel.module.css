@@ -137,18 +137,17 @@
 
 /* PanelHeadings subcomponent */
 .headingOrder {
-  margin: 29px 24px 0 24px;
+  margin: 30px 24px 0 24px;
 
   @media (--viewportMedium) {
     max-width: 80%;
     margin: 24px 24px 0 24px;
-    padding: 1px 0 7px 0;
+    padding: 2px 0 6px 0;
   }
 
   @media (--viewportLarge) {
     max-width: 100%;
     margin: 152px 0 0 0;
-    padding: 0;
   }
 }
 
@@ -186,11 +185,11 @@
 
 /* Container for order details in mobile layout */
 .orderDetailsMobile {
-  margin-top: 47px;
+  margin-top: 48px;
 
   @media (--viewportMedium) {
     margin-top: 40px;
-    padding: 4px 0 0px 0;
+    padding: 4px 0 4px 0;
   }
   @media (--viewportLarge) {
     display: none;
@@ -268,6 +267,16 @@
   margin: 0 24px 24px 24px;
 }
 
+.pickupAddress {
+  @apply --marketplaceH5FontStyles;
+  margin: 0;
+  display: inline-block;
+
+  @media (--viewportMedium) {
+    padding: 3px 0 5px 0;
+  }
+}
+
 /* BreakdownMaybe subcomponent */
 .breakdownMaybe {
   /* default "root" class for breakdown container */
@@ -288,9 +297,11 @@
 
 .breakdown {
   margin: 14px 24px 0 24px;
+  padding: 1px 0 5px 0;
 
   @media (--viewportMedium) {
-    margin: 18px 24px 0 24px;
+    margin: 16px 24px 0 24px;
+    padding: 3px 0 5px 0;
   }
   @media (--viewportLarge) {
     margin: 24px 48px 47px 48px;
@@ -306,18 +317,42 @@
   }
 }
 
-/* FeedSection subcomponent */
-.feedHeading {
-  color: var(--matterColorAnti);
+.sectionHeading {
+  color: var(--matterColor);
   margin: 0;
 
   @media (--viewportMedium) {
     margin: 0;
   }
 }
+.shippingInfoContent {
+  padding: 0px 0 0px 13px;
+  margin-top: 12px;
 
-.feed {
-  margin-top: 20px;
+  @media (--viewportMedium) {
+    padding: 4px 0 4px 13px;
+    margin-top: 8px;
+  }
+}
+
+.pickupInfoContent {
+  @apply --marketplaceSmallFontStyles;
+  padding: 5px 0 1px 0;
+  margin-top: 6px;
+
+  @media (--viewportMedium) {
+    padding: 1px 0 7px 0;
+    margin-top: 8px;
+  }
+}
+
+.feedContent {
+  padding: 0;
+  margin-top: 12px;
+
+  @media (--viewportMedium) {
+    margin-top: 8px;
+  }
 }
 
 .messageError {
@@ -334,14 +369,15 @@
 }
 
 /* Passed-in props for FeedSection subcomponent */
+.deliveryInfoContainer,
 .feedContainer {
-  margin: 46px 24px 0 24px;
+  margin: 42px 24px 0 24px;
 
   @media (--viewportMedium) {
     margin: 40px 24px 0 24px;
   }
   @media (--viewportLarge) {
-    margin: 43px 0 0 0;
+    margin: 40px 0 0 0;
   }
 }
 
@@ -355,7 +391,7 @@
     border-top: 0;
   }
   @media (--viewportLarge) {
-    margin: 47px 0 0 0;
+    margin: 48px 0 0 0;
   }
 }
 
