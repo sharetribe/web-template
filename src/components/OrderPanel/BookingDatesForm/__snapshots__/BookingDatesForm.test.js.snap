@@ -33,13 +33,13 @@ exports[`BookingDatesForm matches snapshot without selected dates 1`] = `
           "amount": 2198,
           "currency": "USD",
         },
+        "quantity": "2",
         "reversal": false,
         "unitPrice": Money {
           "_sdkType": "Money",
           "amount": 1099,
           "currency": "USD",
         },
-        "units": "2",
       },
     ]
   }

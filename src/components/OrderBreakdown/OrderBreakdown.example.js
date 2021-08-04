@@ -22,7 +22,7 @@ const CURRENCY = config.currency;
 const exampleBooking = attributes => {
   return {
     id: new UUID('example-booking'),
-    type: 'payment',
+    type: 'booking',
     attributes,
   };
 };

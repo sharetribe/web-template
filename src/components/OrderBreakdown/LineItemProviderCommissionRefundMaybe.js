@@ -6,9 +6,9 @@ import { propTypes, LINE_ITEM_PROVIDER_COMMISSION } from '../../util/types';
 import css from './OrderBreakdown.module.css';
 
 const LineItemProviderCommissionRefundMaybe = props => {
-  const { transaction, isProvider, intl } = props;
+  const { lineItems, isProvider, intl } = props;
 
-  const refund = transaction.attributes.lineItems.find(
+  const refund = lineItems.find(
     item => item.code === LINE_ITEM_PROVIDER_COMMISSION && item.reversal
   );
 
@@ -23,7 +23,7 @@ const LineItemProviderCommissionRefundMaybe = props => {
 };
 
 LineItemProviderCommissionRefundMaybe.propTypes = {
-  transaction: propTypes.transaction.isRequired,
+  lineItems: propTypes.lineItems.isRequired,
   intl: intlShape.isRequired,
 };
 

@@ -38,15 +38,15 @@ const isCommission = lineItem => {
 /**
  * Returns non-commission, reversal line items
  */
-const nonCommissionReversalLineItems = transaction => {
-  return transaction.attributes.lineItems.filter(item => !isCommission(item) && item.reversal);
+const nonCommissionReversalLineItems = lineItems => {
+  return lineItems.filter(item => !isCommission(item) && item.reversal);
 };
 
 const LineItemRefundMaybe = props => {
-  const { transaction, intl } = props;
+  const { lineItems, intl } = props;
 
   // all non-commission, reversal line items
-  const refundLineItems = nonCommissionReversalLineItems(transaction);
+  const refundLineItems = nonCommissionReversalLineItems(lineItems);
 
   const refund = lineItemsTotal(refundLineItems);
 
@@ -63,7 +63,7 @@ const LineItemRefundMaybe = props => {
 };
 
 LineItemRefundMaybe.propTypes = {
-  transaction: propTypes.transaction.isRequired,
+  lineItems: propTypes.lineItems.isRequired,
   intl: intlShape.isRequired,
 };
 
