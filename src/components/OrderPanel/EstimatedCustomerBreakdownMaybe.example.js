@@ -140,7 +140,7 @@ export const OrderProductWithShipping = {
   group: 'payment',
 };
 
-export const NoBookingWithPickup = {
+export const OrderProductWithPickup = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
     unitType: LINE_ITEM_UNITS,
