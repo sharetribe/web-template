@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [add] TransactionPanel: show shipping and pickup addresses.
+  [#66](https://github.com/sharetribe/ftw-product/pull/66)
+- [change] Update OrderBreakdown line-items and move breakdown estimation to OrderPanel.
+  [#67](https://github.com/sharetribe/ftw-product/pull/67)
 - [fix] server/api-util/lineItems.js: 'orderData' instead of 'order'.
   [#65](https://github.com/sharetribe/ftw-product/pull/65)
 - [change] Update transaction process and handle stockReservationQuantity transition parameter.
