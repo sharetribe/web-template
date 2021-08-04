@@ -28,19 +28,17 @@
 import React from 'react';
 import Decimal from 'decimal.js';
 
-import config from '../../../config';
-import { types as sdkTypes } from '../../../util/sdkLoader';
-import { timeOfDayFromLocalToTimeZone, getStartOf } from '../../../util/dates';
-import {
-  TRANSITION_REQUEST_PAYMENT,
-  TX_TRANSITION_ACTOR_CUSTOMER,
-} from '../../../util/transaction';
-import { DATE_TYPE_DATE } from '../../../util/types';
-import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../../util/currency';
+import config from '../../config';
+import { types as sdkTypes } from '../../util/sdkLoader';
+import { timeOfDayFromLocalToTimeZone, getStartOf } from '../../util/dates';
+import { TRANSITION_REQUEST_PAYMENT, TX_TRANSITION_ACTOR_CUSTOMER } from '../../util/transaction';
+import { DATE_TYPE_DATE } from '../../util/types';
+import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../util/currency';
 
-import { OrderBreakdown } from '../../../components';
+import { OrderBreakdown } from '../../components';
 
-import css from './BookingDatesForm.module.css';
+// TODO: move classes to OrderPanel CSS file
+import css from './BookingDatesForm/BookingDatesForm.module.css';
 
 const { Money, UUID } = sdkTypes;
 

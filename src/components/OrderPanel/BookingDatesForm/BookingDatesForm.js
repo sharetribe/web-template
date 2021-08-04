@@ -11,7 +11,7 @@ import { START_DATE, END_DATE, getStartOf, addTime } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { Form, IconSpinner, PrimaryButton, FieldDateRangeInput } from '../../../components';
 
-import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
+import EstimatedBreakdownMaybe from '../EstimatedBreakdownMaybe';
 import css from './BookingDatesForm.module.css';
 
 const identity = v => v;

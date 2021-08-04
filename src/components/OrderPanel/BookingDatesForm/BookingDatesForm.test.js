@@ -11,7 +11,7 @@ import { timeOfDayFromTimeZoneToLocal } from '../../../util/dates';
 import { OrderBreakdown } from '../../../components';
 
 import { BookingDatesFormComponent } from './BookingDatesForm';
-import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
+import EstimatedBreakdownMaybe from '../EstimatedBreakdownMaybe';
 
 const { Money } = sdkTypes;
 
