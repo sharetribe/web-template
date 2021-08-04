@@ -49,6 +49,27 @@ describe('BookingDatesForm', () => {
 });
 
 describe('EstimatedCustomerBreakdownMaybe', () => {
+  it('renders nothing if nightly is missing start and end date', () => {
+    expect(
+      renderDeep(
+        <EstimatedCustomerBreakdownMaybe unitType={LINE_ITEM_NIGHT} lineItems={lineItems} />
+      )
+    ).toBeFalsy();
+  });
+  it('renders nothing if nightly is missing end date', () => {
+    const data = {
+      startDate: new Date(),
+    };
+    expect(
+      renderDeep(
+        <EstimatedCustomerBreakdownMaybe
+          unitType={LINE_ITEM_NIGHT}
+          breakdownData={data}
+          lineItems={lineItems}
+        />
+      )
+    ).toBeFalsy();
+  });
   it('renders breakdown with correct transaction data', () => {
     const startDate = new Date(2017, 3, 14, 0, 0, 0);
     const endDate = new Date(2017, 3, 16, 0, 0, 0);
