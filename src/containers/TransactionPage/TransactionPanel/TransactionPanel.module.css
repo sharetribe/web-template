@@ -219,15 +219,20 @@
   }
 }
 
-.detailCard {
+.stickySection {
   @media (--viewportLarge) {
     position: sticky;
     top: -200px; /* This is a hack to showcase how the component would look when the image isn't sticky */
     width: 409px;
+    z-index: 1;
+  }
+}
+
+.detailCard {
+  @media (--viewportLarge) {
     background-color: var(--matterColorLight);
     border: 1px solid var(--matterColorNegative);
     border-radius: 2px;
-    z-index: 1;
   }
 }
 
