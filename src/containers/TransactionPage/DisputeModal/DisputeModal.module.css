@@ -1,0 +1,79 @@
+@import '../../../styles/propertySets.css';
+
+.root {
+  @apply --marketplaceModalBaseStyles;
+  padding-top: 70px;
+
+  @media (--viewportMedium) {
+    flex-basis: 567px;
+    min-height: 687px;
+  }
+}
+
+.modalContent {
+  flex-grow: 1;
+}
+
+/* Icon of the modal */
+.modalIcon {
+  @apply --marketplaceModalIconStyles;
+}
+
+/* Title of the modal */
+.modalTitle {
+  @apply --marketplaceModalTitleStyles;
+}
+
+/* Paragraph for the Modal */
+.modalMessage {
+  @apply --marketplaceModalParagraphStyles;
+}
+
+.formRoot {
+  display: flex;
+  flex-direction: column;
+
+  /* Layout: size and positioning */
+  width: 100%;
+  height: auto;
+  margin-top: 24px;
+}
+
+.errorPlaceholder {
+  color: var(--failColor);
+
+  @media (--viewportMedium) {
+    margin: 0;
+    width: 100%;
+    min-height: 32px;
+  }
+}
+
+.disputeMessage {
+  flex-shrink: 0;
+  margin-top: 24px;
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    margin-top: 30px;
+  }
+}
+
+.submitButton {
+  margin-top: auto;
+  margin-bottom: 96px;
+  flex-shrink: 0;
+  background-color: var(--marketplaceColor);
+
+  &:hover,
+  &:focus {
+    background-color: var(--marketplaceColorDark);
+  }
+
+  @media (--viewportMedium) {
+    display: inline-block;
+    width: 100%;
+    margin-top: 36px;
+    margin-bottom: 0;
+  }
+}
