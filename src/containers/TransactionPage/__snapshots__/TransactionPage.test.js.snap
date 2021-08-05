@@ -45,15 +45,6 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
               "type": "currentUser",
             }
           }
-          disputeProps={
-            Object {
-              "buttonText": "TransactionPage.dispute.actionButton",
-              "error": null,
-              "errorText": "TransactionPage.dispute.actionError",
-              "inProgress": false,
-              "onTransition": [Function],
-            }
-          }
           fetchLineItemsError={null}
           fetchLineItemsInProgress={false}
           fetchMessagesError={null}
@@ -100,6 +91,7 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
           messages={Array []}
           oldestMessagePageFetched={0}
           onFetchTransactionLineItems={[Function]}
+          onOpenDisputeModal={[Function]}
           onOpenReviewModal={[Function]}
           onSendMessage={[Function]}
           onShowMoreMessages={[Function]}
@@ -286,6 +278,15 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
           />
         }
       />
+      <injectIntl(DisputeModal)
+        disputeError={null}
+        disputeInProgress={false}
+        disputeSubmitted={false}
+        id="DisputeOrderModal"
+        isOpen={false}
+        onCloseModal={[Function]}
+        onDisputeOrder={[Function]}
+      />
     </LayoutWrapperMain>
     <LayoutWrapperFooter
       className="footer"
@@ -342,15 +343,6 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
               "type": "currentUser",
             }
           }
-          disputeProps={
-            Object {
-              "buttonText": "TransactionPage.dispute.actionButton",
-              "error": null,
-              "errorText": "TransactionPage.dispute.actionError",
-              "inProgress": false,
-              "onTransition": [Function],
-            }
-          }
           fetchLineItemsError={null}
           fetchLineItemsInProgress={false}
           fetchMessagesError={null}
@@ -396,6 +388,7 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
           messages={Array []}
           oldestMessagePageFetched={0}
           onFetchTransactionLineItems={[Function]}
+          onOpenDisputeModal={[Function]}
           onOpenReviewModal={[Function]}
           onSendMessage={[Function]}
           onShowMoreMessages={[Function]}
@@ -581,6 +574,15 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
             }
           />
         }
+      />
+      <injectIntl(DisputeModal)
+        disputeError={null}
+        disputeInProgress={false}
+        disputeSubmitted={false}
+        id="DisputeOrderModal"
+        isOpen={false}
+        onCloseModal={[Function]}
+        onDisputeOrder={[Function]}
       />
     </LayoutWrapperMain>
     <LayoutWrapperFooter
