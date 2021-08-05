@@ -30,6 +30,7 @@ import {
 } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
+import DisputeModal from './DisputeModal/DisputeModal';
 import ReviewModal from './ReviewModal/ReviewModal';
 import TransactionPanel from './TransactionPanel/TransactionPanel';
 
@@ -51,6 +52,8 @@ const CUSTOMER = 'customer';
 // TransactionPage handles data loading for Sale and Order views to transaction pages in Inbox.
 export const TransactionPageComponent = props => {
   const [state, setState] = useState({
+    isDisputeModalOpen: false,
+    disputeSubmitted: false,
     isReviewModalOpen: false,
     reviewSubmitted: false,
   });
@@ -191,7 +194,7 @@ export const TransactionPageComponent = props => {
   // Open review modal
   // This is called from ActivityFeed and from action buttons
   const onOpenReviewModal = () => {
-    setState({ isReviewModalOpen: true });
+    setState(prevState => ({ ...prevState, isReviewModalOpen: true }));
   };
 
   // Submit review and close the review modal
@@ -199,7 +202,25 @@ export const TransactionPageComponent = props => {
     const { reviewRating, reviewContent } = values;
     const rating = Number.parseInt(reviewRating, 10);
     onSendReview(transactionRole, currentTransaction, rating, reviewContent)
-      .then(r => setState({ isReviewModalOpen: false, reviewSubmitted: true }))
+      .then(r =>
+        setState(prevState => ({ ...prevState, isReviewModalOpen: false, reviewSubmitted: true }))
+      )
+      .catch(e => {
+        // Do nothing.
+      });
+  };
+
+  // Open dispute modal
+  const onOpenDisputeModal = () => {
+    setState(prevState => ({ ...prevState, isDisputeModalOpen: true }));
+  };
+  // Submit dispute and close the review modal
+  const onDisputeOrder = values => {
+    const { disputeReason } = values;
+    onDispute(currentTransaction.id, disputeReason)
+      .then(r => {
+        return setState(prevState => ({ ...prevState, disputeSubmitted: true }));
+      })
       .catch(e => {
         // Do nothing.
       });
@@ -322,13 +343,6 @@ export const TransactionPageComponent = props => {
         buttonText: intl.formatMessage({ id: 'TransactionPage.markDelivered.actionButton' }),
         errorText: intl.formatMessage({ id: 'TransactionPage.markDelivered.actionError' }),
       }}
-      disputeProps={{
-        inProgress: disputeInProgress,
-        error: disputeError,
-        onTransition: () => onDispute(currentTransaction.id),
-        buttonText: intl.formatMessage({ id: 'TransactionPage.dispute.actionButton' }),
-        errorText: intl.formatMessage({ id: 'TransactionPage.dispute.actionError' }),
-      }}
       leaveReviewProps={{
         inProgress: sendReviewInProgress,
         error: sendReviewError,
@@ -363,13 +377,25 @@ export const TransactionPageComponent = props => {
           <ReviewModal
             id="ReviewOrderModal"
             isOpen={state.isReviewModalOpen}
-            onCloseModal={() => setState({ isReviewModalOpen: false })}
+            onCloseModal={() => setState(prevState => ({ ...prevState, isReviewModalOpen: false }))}
             onManageDisableScrolling={onManageDisableScrolling}
             onSubmitReview={onSubmitReview}
             revieweeName={otherUserDisplayName}
             reviewSent={state.reviewSubmitted}
             sendReviewInProgress={sendReviewInProgress}
             sendReviewError={sendReviewError}
+          />
+          <DisputeModal
+            id="DisputeOrderModal"
+            isOpen={state.isDisputeModalOpen}
+            onCloseModal={() =>
+              setState(prevState => ({ ...prevState, isDisputeModalOpen: false }))
+            }
+            onManageDisableScrolling={onManageDisableScrolling}
+            onDisputeOrder={onDisputeOrder}
+            disputeSubmitted={state.disputeSubmitted}
+            disputeInProgress={disputeInProgress}
+            disputeError={disputeError}
           />
         </LayoutWrapperMain>
         <LayoutWrapperFooter className={css.footer}>
@@ -520,7 +546,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onDispute: transactionId => dispatch(dispute(transactionId)),
+    onDispute: (transactionId, disputeReason) => dispatch(dispute(transactionId, disputeReason)),
     onMarkReceived: transactionId => dispatch(markReceived(transactionId)),
     onMarkReceivedFromPurchased: transactionId =>
       dispatch(markReceivedFromPurchased(transactionId)),
