@@ -418,51 +418,53 @@ export class TransactionPanelComponent extends Component {
           </div>
 
           <div className={css.asideDesktop}>
-            <div className={css.detailCard}>
-              <DetailCardImage
-                avatarWrapperClassName={css.avatarWrapperDesktop}
-                listingTitle={listingTitle}
-                image={firstImage}
-                provider={currentProvider}
-                isCustomer={isCustomer}
-              />
-
-              <DetailCardHeadingsMaybe
-                showDetailCardHeadings={stateData.showDetailCardHeadings}
-                listingTitle={listingTitle}
-                subTitle={bookingSubTitle}
-                location={location}
-                geolocation={geolocation}
-                showAddress={stateData.showAddress}
-              />
-              {stateData.showOrderPanel ? (
-                <OrderPanel
-                  className={css.orderPanel}
-                  titleClassName={css.orderTitle}
-                  isOwnListing={false}
-                  listing={currentListing}
-                  title={listingTitle}
-                  subTitle={bookingSubTitle}
-                  authorDisplayName={authorDisplayName}
-                  onSubmit={onSubmitOrderRequest}
-                  onManageDisableScrolling={onManageDisableScrolling}
-                  timeSlots={timeSlots}
-                  fetchTimeSlotsError={fetchTimeSlotsError}
-                  onFetchTransactionLineItems={onFetchTransactionLineItems}
-                  lineItems={lineItems}
-                  fetchLineItemsInProgress={fetchLineItemsInProgress}
-                  fetchLineItemsError={fetchLineItemsError}
+            <div className={css.stickySection}>
+              <div className={css.detailCard}>
+                <DetailCardImage
+                  avatarWrapperClassName={css.avatarWrapperDesktop}
+                  listingTitle={listingTitle}
+                  image={firstImage}
+                  provider={currentProvider}
+                  isCustomer={isCustomer}
                 />
-              ) : null}
-              <BreakdownMaybe
-                className={css.breakdownContainer}
-                transaction={currentTransaction}
-                transactionRole={transactionRole}
-              />
 
-              {stateData.showActionButtons ? (
-                <div className={css.desktopActionButtons}>{actionButtons}</div>
-              ) : null}
+                <DetailCardHeadingsMaybe
+                  showDetailCardHeadings={stateData.showDetailCardHeadings}
+                  listingTitle={listingTitle}
+                  subTitle={bookingSubTitle}
+                  location={location}
+                  geolocation={geolocation}
+                  showAddress={stateData.showAddress}
+                />
+                {stateData.showOrderPanel ? (
+                  <OrderPanel
+                    className={css.orderPanel}
+                    titleClassName={css.orderTitle}
+                    isOwnListing={false}
+                    listing={currentListing}
+                    title={listingTitle}
+                    subTitle={bookingSubTitle}
+                    authorDisplayName={authorDisplayName}
+                    onSubmit={onSubmitOrderRequest}
+                    onManageDisableScrolling={onManageDisableScrolling}
+                    timeSlots={timeSlots}
+                    fetchTimeSlotsError={fetchTimeSlotsError}
+                    onFetchTransactionLineItems={onFetchTransactionLineItems}
+                    lineItems={lineItems}
+                    fetchLineItemsInProgress={fetchLineItemsInProgress}
+                    fetchLineItemsError={fetchLineItemsError}
+                  />
+                ) : null}
+                <BreakdownMaybe
+                  className={css.breakdownContainer}
+                  transaction={currentTransaction}
+                  transactionRole={transactionRole}
+                />
+
+                {stateData.showActionButtons ? (
+                  <div className={css.desktopActionButtons}>{actionButtons}</div>
+                ) : null}
+              </div>
               <DiminishedActionButtonMaybe
                 showDispute={stateData.showDispute}
                 onOpenDisputeModal={onOpenDisputeModal}
