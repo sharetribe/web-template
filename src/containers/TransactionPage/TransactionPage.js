@@ -313,6 +313,7 @@ export const TransactionPageComponent = props => {
       onShowMoreMessages={onShowMoreMessages}
       onSendMessage={onSendMessage}
       onOpenReviewModal={onOpenReviewModal}
+      onOpenDisputeModal={onOpenDisputeModal}
       transactionRole={transactionRole}
       markReceivedProps={{
         inProgress: markReceivedInProgress,

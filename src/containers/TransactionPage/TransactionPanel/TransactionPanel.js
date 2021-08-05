@@ -39,6 +39,7 @@ import DetailCardImage from './DetailCardImage';
 import DeliveryInfoMaybe from './DeliveryInfoMaybe';
 import FeedSection from './FeedSection';
 import ActionButtonsMaybe from './ActionButtonsMaybe';
+import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading, {
   HEADING_ENQUIRED,
   HEADING_PAYMENT_PENDING,
@@ -156,6 +157,7 @@ export class TransactionPanelComponent extends Component {
       sendMessageInProgress,
       sendMessageError,
       onManageDisableScrolling,
+      onOpenDisputeModal,
       onOpenReviewModal,
       onShowMoreMessages,
       transactionRole,
@@ -163,7 +165,6 @@ export class TransactionPanelComponent extends Component {
       markReceivedProps,
       markReceivedFromPurchasedProps,
       markDeliveredProps,
-      disputeProps,
       leaveReviewProps,
       onSubmitOrderRequest,
       timeSlots,
@@ -228,13 +229,12 @@ export class TransactionPanelComponent extends Component {
         };
       } else if (txIsDelivered(tx)) {
         const primaryButtonPropsMaybe = isCustomer ? { primaryButtonProps: markReceivedProps } : {};
-        const secondaryButtonPropsMaybe = isCustomer ? { secondaryButtonProps: disputeProps } : {};
         return {
           headingState: HEADING_DELIVERED,
           showDetailCardHeadings: isCustomer,
           showActionButtons: isCustomer,
           ...primaryButtonPropsMaybe,
-          ...secondaryButtonPropsMaybe,
+          showDispute: isCustomer,
         };
       } else if (txIsDisputed(tx)) {
         return {
@@ -351,25 +351,39 @@ export class TransactionPanelComponent extends Component {
               listingDeleted={listingDeleted}
             />
 
-            <div className={css.orderDetailsMobile}>
-              <AddressLinkMaybe
-                rootClassName={css.addressMobile}
-                location={location}
-                geolocation={geolocation}
-                showAddress={stateData.showAddress}
+            <div className={css.orderDetails}>
+              <div className={css.orderDetailsMobileSection}>
+                <AddressLinkMaybe
+                  rootClassName={css.addressMobile}
+                  location={location}
+                  geolocation={geolocation}
+                  showAddress={stateData.showAddress}
+                />
+                <BreakdownMaybe
+                  transaction={currentTransaction}
+                  transactionRole={transactionRole}
+                />
+                <DiminishedActionButtonMaybe
+                  showDispute={stateData.showDispute}
+                  onOpenDisputeModal={onOpenDisputeModal}
+                />
+              </div>
+
+              {savePaymentMethodFailed ? (
+                <p className={css.genericError}>
+                  <FormattedMessage
+                    id="TransactionPanel.savePaymentMethodFailed"
+                    values={{ paymentMethodsPageLink }}
+                  />
+                </p>
+              ) : null}
+              <DeliveryInfoMaybe
+                className={css.deliveryInfoSection}
+                transaction={currentTransaction}
+                listing={currentListing}
               />
-              <BreakdownMaybe transaction={currentTransaction} transactionRole={transactionRole} />
             </div>
 
-            {savePaymentMethodFailed ? (
-              <p className={css.genericError}>
-                <FormattedMessage
-                  id="TransactionPanel.savePaymentMethodFailed"
-                  values={{ paymentMethodsPageLink }}
-                />
-              </p>
-            ) : null}
-            <DeliveryInfoMaybe transaction={currentTransaction} listing={currentListing} />
             <FeedSection
               rootClassName={css.feedContainer}
               currentTransaction={currentTransaction}
@@ -449,6 +463,10 @@ export class TransactionPanelComponent extends Component {
               {stateData.showActionButtons ? (
                 <div className={css.desktopActionButtons}>{actionButtons}</div>
               ) : null}
+              <DiminishedActionButtonMaybe
+                showDispute={stateData.showDispute}
+                onOpenDisputeModal={onOpenDisputeModal}
+              />
             </div>
           </div>
         </div>
@@ -497,6 +515,7 @@ TransactionPanelComponent.propTypes = {
   sendMessageInProgress: bool.isRequired,
   sendMessageError: propTypes.error,
   onManageDisableScrolling: func.isRequired,
+  onOpenDisputeModal: func.isRequired,
   onOpenReviewModal: func.isRequired,
   onShowMoreMessages: func.isRequired,
   onSendMessage: func.isRequired,
@@ -509,7 +528,6 @@ TransactionPanelComponent.propTypes = {
   markReceivedProps: actionButtonShape.isRequired,
   markReceivedFromPurchasedProps: actionButtonShape.isRequired,
   markDeliveredProps: actionButtonShape.isRequired,
-  disputeProps: actionButtonShape.isRequired,
   leaveReviewProps: actionButtonShape.isRequired,
 
   // line items
