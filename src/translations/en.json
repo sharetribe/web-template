@@ -957,6 +957,7 @@
   "TransactionPanel.declineSaleFailed": "Oops, declining failed. Please try again.",
   "TransactionPanel.deletedListingOrderTitle": "a listing",
   "TransactionPanel.deletedListingTitle": "Deleted listing",
+  "TransactionPanel.disputeOrder": "Dispute order",
   "TransactionPanel.initialMessageFailed": "Whoops, failed to send message from checkout.",
   "TransactionPanel.messageDeletedListing": "However, the listing is deleted and cannot be viewed anymore.",
   "TransactionPanel.messageLoadingFailed": "Something went wrong when loading messages. Please refresh the page and try again.",
