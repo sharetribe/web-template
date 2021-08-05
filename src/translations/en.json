@@ -473,7 +473,7 @@
   "ModalMissingInformation.resendFailed": "Resending verification email failed. Please try again.",
   "ModalMissingInformation.resendFailedTooManyRequests": "Resending verification email failed. You already have too many verification emails sent.",
   "ModalMissingInformation.sendingEmail": "Sending verification email…",
-  "ModalMissingInformation.verifyEmailText": "We are currently unable to send you email notifications if other Saunatime users contact you because you haven't verified your email address.",
+  "ModalMissingInformation.verifyEmailText": "Please verify your email address so we can send you your receipt and details about the status of your order via email. We are unable to send you email before your email has been verified.",
   "ModalMissingInformation.verifyEmailTitle": "Please verify your email address",
   "NotFoundPage.description": "We can't find the page or sauna you're looking for. Make sure you've typed in the URL correctly or try searching Saunatime.",
   "NotFoundPage.heading": "Sorry, we couldn't find that page.",
