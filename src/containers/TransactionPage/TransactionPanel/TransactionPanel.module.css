@@ -183,9 +183,15 @@
   }
 }
 
+.orderDetails {
+  display: flex;
+  flex-direction: column;
+}
+
 /* Container for order details in mobile layout */
-.orderDetailsMobile {
+.orderDetailsMobileSection {
   margin-top: 48px;
+  order: 2;
 
   @media (--viewportMedium) {
     margin-top: 40px;
@@ -194,6 +200,9 @@
   @media (--viewportLarge) {
     display: none;
   }
+}
+.deliveryInfoSection {
+  order: 1;
 }
 
 /* "aside" section in desktop layout */
@@ -210,15 +219,20 @@
   }
 }
 
-.detailCard {
+.stickySection {
   @media (--viewportLarge) {
     position: sticky;
     top: -200px; /* This is a hack to showcase how the component would look when the image isn't sticky */
     width: 409px;
+    z-index: 1;
+  }
+}
+
+.detailCard {
+  @media (--viewportLarge) {
     background-color: var(--matterColorLight);
     border: 1px solid var(--matterColorNegative);
     border-radius: 2px;
-    z-index: 1;
   }
 }
 
@@ -284,7 +298,7 @@
 
 .orderBreakdownTitle {
   /* Font */
-  color: var(--matterColorAnti);
+  color: var(--matterColor);
 
   margin: 0 24px 0 24px;
 
@@ -464,6 +478,7 @@
 
   @media (--viewportMedium) {
     margin: 0 0 10px 0;
+    padding: 1px 0 7px 0;
   }
   @media (--viewportLarge) {
     margin: 0;
@@ -473,11 +488,6 @@
 .actionErrors {
   width: 100%;
   text-align: center;
-
-  @media (--viewportLarge) {
-    position: absolute;
-    top: 151px;
-  }
 }
 
 /* Container for SaleActionButtonsMaybe subcomponent */
@@ -509,4 +519,33 @@
 
   margin-top: 0;
   margin-bottom: 1px;
+}
+
+.diminishedActionButtonRoot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 18px 24px 0 24px;
+
+  @media (--viewportLarge) {
+    align-items: center;
+    padding: 0;
+  }
+}
+
+/* e.g. dispute "link" */
+.diminishedActionButton {
+  @apply --marketplaceTinyFontStyles;
+  width: max-content;
+  color: #808080;
+  padding: 1px 0 5px 0;
+  margin: 0;
+
+  @media (--viewportMedium) {
+    margin: 0;
+  }
+  @media (--viewportLarge) {
+    padding: 0px 75px;
+    margin-top: 16px;
+  }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 import config from '../../../config';
+import { FormattedMessage } from '../../../util/reactIntl';
 import { DATE_TYPE_DATE } from '../../../util/types';
 
 import { OrderBreakdown } from '../../../components';
@@ -22,6 +23,9 @@ const BreakdownMaybe = props => {
 
   return loaded ? (
     <div className={classes}>
+      <h3 className={css.orderBreakdownTitle}>
+        <FormattedMessage id="TransactionPanel.orderBreakdownTitle" />
+      </h3>
       <OrderBreakdown
         className={breakdownClasses}
         userRole={transactionRole}
