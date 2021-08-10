@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [add] TransactionPage: add DisputeModal component.
+  [#68](https://github.com/sharetribe/ftw-product/pull/68)
 - [add] TransactionPanel: show shipping and pickup addresses.
   [#66](https://github.com/sharetribe/ftw-product/pull/66)
 - [change] Update OrderBreakdown line-items and move breakdown estimation to OrderPanel.
