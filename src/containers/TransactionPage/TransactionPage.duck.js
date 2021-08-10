@@ -504,14 +504,15 @@ export const markReceived = id => (dispatch, getState, sdk) => {
     });
 };
 
-export const dispute = id => (dispatch, getState, sdk) => {
+export const dispute = (id, disputeReason) => (dispatch, getState, sdk) => {
   if (transitionInProgress(getState())) {
     return Promise.reject(new Error('Transition already in progress'));
   }
-  dispatch(disputeRequest());
 
+  const params = disputeReason ? { protectedData: { disputeReason } } : {};
+  dispatch(disputeRequest());
   return sdk.transactions
-    .transition({ id, transition: TRANSITION_DISPUTE, params: {} }, { expand: true })
+    .transition({ id, transition: TRANSITION_DISPUTE, params }, { expand: true })
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       dispatch(disputeSuccess());

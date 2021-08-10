@@ -39,6 +39,7 @@ import DetailCardImage from './DetailCardImage';
 import DeliveryInfoMaybe from './DeliveryInfoMaybe';
 import FeedSection from './FeedSection';
 import ActionButtonsMaybe from './ActionButtonsMaybe';
+import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
 import PanelHeading, {
   HEADING_ENQUIRED,
   HEADING_PAYMENT_PENDING,
@@ -156,6 +157,7 @@ export class TransactionPanelComponent extends Component {
       sendMessageInProgress,
       sendMessageError,
       onManageDisableScrolling,
+      onOpenDisputeModal,
       onOpenReviewModal,
       onShowMoreMessages,
       transactionRole,
@@ -163,7 +165,6 @@ export class TransactionPanelComponent extends Component {
       markReceivedProps,
       markReceivedFromPurchasedProps,
       markDeliveredProps,
-      disputeProps,
       leaveReviewProps,
       onSubmitOrderRequest,
       timeSlots,
@@ -228,13 +229,12 @@ export class TransactionPanelComponent extends Component {
         };
       } else if (txIsDelivered(tx)) {
         const primaryButtonPropsMaybe = isCustomer ? { primaryButtonProps: markReceivedProps } : {};
-        const secondaryButtonPropsMaybe = isCustomer ? { secondaryButtonProps: disputeProps } : {};
         return {
           headingState: HEADING_DELIVERED,
           showDetailCardHeadings: isCustomer,
           showActionButtons: isCustomer,
           ...primaryButtonPropsMaybe,
-          ...secondaryButtonPropsMaybe,
+          showDispute: isCustomer,
         };
       } else if (txIsDisputed(tx)) {
         return {
@@ -351,25 +351,39 @@ export class TransactionPanelComponent extends Component {
               listingDeleted={listingDeleted}
             />
 
-            <div className={css.orderDetailsMobile}>
-              <AddressLinkMaybe
-                rootClassName={css.addressMobile}
-                location={location}
-                geolocation={geolocation}
-                showAddress={stateData.showAddress}
+            <div className={css.orderDetails}>
+              <div className={css.orderDetailsMobileSection}>
+                <AddressLinkMaybe
+                  rootClassName={css.addressMobile}
+                  location={location}
+                  geolocation={geolocation}
+                  showAddress={stateData.showAddress}
+                />
+                <BreakdownMaybe
+                  transaction={currentTransaction}
+                  transactionRole={transactionRole}
+                />
+                <DiminishedActionButtonMaybe
+                  showDispute={stateData.showDispute}
+                  onOpenDisputeModal={onOpenDisputeModal}
+                />
+              </div>
+
+              {savePaymentMethodFailed ? (
+                <p className={css.genericError}>
+                  <FormattedMessage
+                    id="TransactionPanel.savePaymentMethodFailed"
+                    values={{ paymentMethodsPageLink }}
+                  />
+                </p>
+              ) : null}
+              <DeliveryInfoMaybe
+                className={css.deliveryInfoSection}
+                transaction={currentTransaction}
+                listing={currentListing}
               />
-              <BreakdownMaybe transaction={currentTransaction} transactionRole={transactionRole} />
             </div>
 
-            {savePaymentMethodFailed ? (
-              <p className={css.genericError}>
-                <FormattedMessage
-                  id="TransactionPanel.savePaymentMethodFailed"
-                  values={{ paymentMethodsPageLink }}
-                />
-              </p>
-            ) : null}
-            <DeliveryInfoMaybe transaction={currentTransaction} listing={currentListing} />
             <FeedSection
               rootClassName={css.feedContainer}
               currentTransaction={currentTransaction}
@@ -404,51 +418,57 @@ export class TransactionPanelComponent extends Component {
           </div>
 
           <div className={css.asideDesktop}>
-            <div className={css.detailCard}>
-              <DetailCardImage
-                avatarWrapperClassName={css.avatarWrapperDesktop}
-                listingTitle={listingTitle}
-                image={firstImage}
-                provider={currentProvider}
-                isCustomer={isCustomer}
-              />
-
-              <DetailCardHeadingsMaybe
-                showDetailCardHeadings={stateData.showDetailCardHeadings}
-                listingTitle={listingTitle}
-                subTitle={bookingSubTitle}
-                location={location}
-                geolocation={geolocation}
-                showAddress={stateData.showAddress}
-              />
-              {stateData.showOrderPanel ? (
-                <OrderPanel
-                  className={css.orderPanel}
-                  titleClassName={css.orderTitle}
-                  isOwnListing={false}
-                  listing={currentListing}
-                  title={listingTitle}
-                  subTitle={bookingSubTitle}
-                  authorDisplayName={authorDisplayName}
-                  onSubmit={onSubmitOrderRequest}
-                  onManageDisableScrolling={onManageDisableScrolling}
-                  timeSlots={timeSlots}
-                  fetchTimeSlotsError={fetchTimeSlotsError}
-                  onFetchTransactionLineItems={onFetchTransactionLineItems}
-                  lineItems={lineItems}
-                  fetchLineItemsInProgress={fetchLineItemsInProgress}
-                  fetchLineItemsError={fetchLineItemsError}
+            <div className={css.stickySection}>
+              <div className={css.detailCard}>
+                <DetailCardImage
+                  avatarWrapperClassName={css.avatarWrapperDesktop}
+                  listingTitle={listingTitle}
+                  image={firstImage}
+                  provider={currentProvider}
+                  isCustomer={isCustomer}
                 />
-              ) : null}
-              <BreakdownMaybe
-                className={css.breakdownContainer}
-                transaction={currentTransaction}
-                transactionRole={transactionRole}
-              />
 
-              {stateData.showActionButtons ? (
-                <div className={css.desktopActionButtons}>{actionButtons}</div>
-              ) : null}
+                <DetailCardHeadingsMaybe
+                  showDetailCardHeadings={stateData.showDetailCardHeadings}
+                  listingTitle={listingTitle}
+                  subTitle={bookingSubTitle}
+                  location={location}
+                  geolocation={geolocation}
+                  showAddress={stateData.showAddress}
+                />
+                {stateData.showOrderPanel ? (
+                  <OrderPanel
+                    className={css.orderPanel}
+                    titleClassName={css.orderTitle}
+                    isOwnListing={false}
+                    listing={currentListing}
+                    title={listingTitle}
+                    subTitle={bookingSubTitle}
+                    authorDisplayName={authorDisplayName}
+                    onSubmit={onSubmitOrderRequest}
+                    onManageDisableScrolling={onManageDisableScrolling}
+                    timeSlots={timeSlots}
+                    fetchTimeSlotsError={fetchTimeSlotsError}
+                    onFetchTransactionLineItems={onFetchTransactionLineItems}
+                    lineItems={lineItems}
+                    fetchLineItemsInProgress={fetchLineItemsInProgress}
+                    fetchLineItemsError={fetchLineItemsError}
+                  />
+                ) : null}
+                <BreakdownMaybe
+                  className={css.breakdownContainer}
+                  transaction={currentTransaction}
+                  transactionRole={transactionRole}
+                />
+
+                {stateData.showActionButtons ? (
+                  <div className={css.desktopActionButtons}>{actionButtons}</div>
+                ) : null}
+              </div>
+              <DiminishedActionButtonMaybe
+                showDispute={stateData.showDispute}
+                onOpenDisputeModal={onOpenDisputeModal}
+              />
             </div>
           </div>
         </div>
@@ -497,6 +517,7 @@ TransactionPanelComponent.propTypes = {
   sendMessageInProgress: bool.isRequired,
   sendMessageError: propTypes.error,
   onManageDisableScrolling: func.isRequired,
+  onOpenDisputeModal: func.isRequired,
   onOpenReviewModal: func.isRequired,
   onShowMoreMessages: func.isRequired,
   onSendMessage: func.isRequired,
@@ -509,7 +530,6 @@ TransactionPanelComponent.propTypes = {
   markReceivedProps: actionButtonShape.isRequired,
   markReceivedFromPurchasedProps: actionButtonShape.isRequired,
   markDeliveredProps: actionButtonShape.isRequired,
-  disputeProps: actionButtonShape.isRequired,
   leaveReviewProps: actionButtonShape.isRequired,
 
   // line items
