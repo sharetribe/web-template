@@ -39,10 +39,11 @@ const pathParamsToNextTab = (params, tab, marketplaceTabs) => {
 
 // When user has update draft listing, he should be redirected to next EditListingWizardTab
 const redirectAfterDraftUpdate = (listingId, params, tab, marketplaceTabs, history) => {
+  const listingUUID = listingId.uuid;
   const currentPathParams = {
     ...params,
     type: LISTING_PAGE_PARAM_TYPE_DRAFT,
-    id: listingId,
+    id: listingUUID,
   };
   const routes = routeConfiguration();
 
@@ -94,6 +95,20 @@ const EditListingWizardTab = props => {
     return images ? images.map(img => img.imageId || img.id) : null;
   };
 
+  // New listing flow has automatic redirects to new tab on the wizard
+  // and the last panel calls publishListing API endpoint.
+  const automaticRedirectsForNewListingFlow = (tab, listingId) => {
+    if (tab !== marketplaceTabs[marketplaceTabs.length - 1]) {
+      // Create listing flow: smooth scrolling polyfill to scroll to correct tab
+      handleCreateFlowTabScrolling(false);
+
+      // After successful saving of draft data, user should be redirected to next tab
+      redirectAfterDraftUpdate(listingId, params, tab, marketplaceTabs, history);
+    } else {
+      handlePublishListing(listingId);
+    }
+  };
+
   const onCompleteEditListingWizardTab = (tab, updateValues) => {
     // Normalize images for API call
     const { images: updatedImages, ...otherValues } = updateValues;
@@ -101,33 +116,24 @@ const EditListingWizardTab = props => {
       typeof updatedImages !== 'undefined' ? { images: imageIds(updatedImages) } : {};
     const updateValuesWithImages = { ...otherValues, ...imageProperty };
 
-    if (isNewListingFlow) {
-      const onUpsertListingDraft = isNewURI
-        ? (tab, updateValues) => onCreateListingDraft(updateValues)
-        : onUpdateListing;
+    const onUpdateListingOrCreateListingDraft = isNewURI
+      ? (tab, values) => onCreateListingDraft(values)
+      : onUpdateListing;
 
-      const upsertValues = isNewURI
-        ? updateValuesWithImages
-        : { ...updateValuesWithImages, id: currentListing.id };
+    const updateListingValues = isNewURI
+      ? updateValuesWithImages
+      : { ...updateValuesWithImages, id: currentListing.id };
 
-      onUpsertListingDraft(tab, upsertValues)
-        .then(r => {
-          if (tab !== marketplaceTabs[marketplaceTabs.length - 1]) {
-            // Create listing flow: smooth scrolling polyfill to scroll to correct tab
-            handleCreateFlowTabScrolling(false);
-
-            // After successful saving of draft data, user should be redirected to next tab
-            redirectAfterDraftUpdate(r.data.data.id.uuid, params, tab, marketplaceTabs, history);
-          } else {
-            handlePublishListing(currentListing.id);
-          }
-        })
-        .catch(e => {
-          // No need for extra actions
-        });
-    } else {
-      onUpdateListing(tab, { ...updateValuesWithImages, id: currentListing.id });
-    }
+    onUpdateListingOrCreateListingDraft(tab, updateListingValues)
+      .then(r => {
+        if (isNewListingFlow) {
+          const listingId = r.data.data.id;
+          automaticRedirectsForNewListingFlow(tab, listingId);
+        }
+      })
+      .catch(e => {
+        // No need for extra actions
+      });
   };
 
   const panelProps = tab => {
