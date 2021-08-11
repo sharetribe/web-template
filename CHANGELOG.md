@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [fix] EditListingPage: use correct image aspect ratio for listing images
+  [#69](https://github.com/sharetribe/ftw-product/pull/69)
 - [add] TransactionPage: add DisputeModal component.
   [#68](https://github.com/sharetribe/ftw-product/pull/68)
 - [add] TransactionPanel: show shipping and pickup addresses.
