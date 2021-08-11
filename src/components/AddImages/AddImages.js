@@ -23,7 +23,7 @@ const ThumbnailWrapper = props => {
     onRemoveImage(image.id);
   };
 
-  const { aspectWidth = 1, aspectHeight = 1 } = config.listing;
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
 
   if (image.file) {
     // Add remove button only when the image has been uploaded and can be removed
@@ -49,6 +49,11 @@ const ThumbnailWrapper = props => {
     );
   } else {
     const classes = classNames(css.thumbnail, className);
+
+    const variants = image
+      ? Object.keys(image?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
+      : [];
+
     return (
       <div className={classes}>
         <div className={css.threeToTwoWrapper}>
@@ -57,7 +62,7 @@ const ThumbnailWrapper = props => {
               rootClassName={css.rootForImage}
               image={image}
               alt={savedImageAltText}
-              variants={['landscape-crop', 'landscape-crop2x']}
+              variants={variants}
             />
           </AspectRatioWrapper>
           <RemoveImageButton onClick={handleRemoveClick} />
