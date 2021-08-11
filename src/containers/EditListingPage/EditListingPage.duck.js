@@ -1,9 +1,12 @@
 import omit from 'lodash/omit';
-import { types as sdkTypes } from '../../util/sdkLoader';
+
+import config from '../../config';
+import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { denormalisedResponseEntities, ensureAvailabilityException } from '../../util/data';
 import { isSameDate, monthIdString } from '../../util/dates';
 import { storableError } from '../../util/errors';
 import * as log from '../../util/log';
+
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import {
   createStripeAccount,
@@ -13,6 +16,20 @@ import {
 import { fetchCurrentUser } from '../../ducks/user.duck';
 
 const { UUID } = sdkTypes;
+
+const getImageVariantInfo = () => {
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+  const aspectRatio = aspectHeight / aspectWidth;
+  const fieldsImage = [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`];
+
+  return {
+    fieldsImage,
+    imageVariants: {
+      ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+      ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+    },
+  };
+};
 
 // A helper function to filter away exception that matches start and end timestamps
 const removeException = (exception, calendar) => {
@@ -496,10 +513,12 @@ export function requestCreateListingDraft(data) {
   return (dispatch, getState, sdk) => {
     dispatch(createListingDraft(data));
 
+    const imageVariantInfo = getImageVariantInfo();
     const queryParams = {
       expand: true,
       include: ['author', 'images'],
-      'fields.image': ['variants.landscape-crop', 'variants.landscape-crop2x'],
+      'fields.image': imageVariantInfo.fieldsImage,
+      ...imageVariantInfo.imageVariants,
     };
 
     return sdk.ownListings
@@ -657,10 +676,12 @@ export function requestUpdateListing(tab, data) {
       .update(data)
       .then(response => {
         updateResponse = response;
+        const imageVariantInfo = getImageVariantInfo();
         const payload = {
           id,
           include: ['author', 'images'],
-          'fields.image': ['variants.landscape-crop', 'variants.landscape-crop2x'],
+          'fields.image': imageVariantInfo.fieldsImage,
+          ...imageVariantInfo.imageVariants,
         };
         return dispatch(requestShowListing(payload));
       })
@@ -709,10 +730,12 @@ export const loadData = params => (dispatch, getState, sdk) => {
       });
   }
 
+  const imageVariantInfo = getImageVariantInfo();
   const payload = {
     id: new UUID(id),
     include: ['author', 'images'],
-    'fields.image': ['variants.landscape-crop', 'variants.landscape-crop2x'],
+    'fields.image': imageVariantInfo.fieldsImage,
+    ...imageVariantInfo.imageVariants,
   };
 
   return Promise.all([dispatch(requestShowListing(payload)), dispatch(fetchCurrentUser())])
