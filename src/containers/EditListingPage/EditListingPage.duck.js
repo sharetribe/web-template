@@ -516,7 +516,7 @@ export function requestCreateListingDraft(data) {
     const imageVariantInfo = getImageVariantInfo();
     const queryParams = {
       expand: true,
-      include: ['author', 'images'],
+      include: ['author', 'images', 'currentStock'],
       'fields.image': imageVariantInfo.fieldsImage,
       ...imageVariantInfo.imageVariants,
     };
@@ -679,7 +679,7 @@ export function requestUpdateListing(tab, data) {
         const imageVariantInfo = getImageVariantInfo();
         const payload = {
           id,
-          include: ['author', 'images'],
+          include: ['author', 'images', 'currentStock'],
           'fields.image': imageVariantInfo.fieldsImage,
           ...imageVariantInfo.imageVariants,
         };
@@ -733,7 +733,7 @@ export const loadData = params => (dispatch, getState, sdk) => {
   const imageVariantInfo = getImageVariantInfo();
   const payload = {
     id: new UUID(id),
-    include: ['author', 'images'],
+    include: ['author', 'images', 'currentStock'],
     'fields.image': imageVariantInfo.fieldsImage,
     ...imageVariantInfo.imageVariants,
   };
