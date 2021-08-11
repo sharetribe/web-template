@@ -263,7 +263,7 @@ export default function reducer(state = initialState, action = {}) {
     case UPDATE_LISTING_REQUEST:
       return { ...state, updateInProgress: true, updateListingError: null };
     case UPDATE_LISTING_SUCCESS:
-      return { ...state, updateInProgress: false };
+      return { ...state, updateInProgress: false, availabilityCalendar: { ...state.availabilityCalendar }};
     case UPDATE_LISTING_ERROR:
       return { ...state, updateInProgress: false, updateListingError: payload };
 
@@ -671,24 +671,22 @@ export function requestUpdateListing(tab, data) {
   return (dispatch, getState, sdk) => {
     dispatch(updateListing(data));
     const { id } = data;
-    let updateResponse;
+
+    const imageVariantInfo = getImageVariantInfo();
+    const queryParams = {
+      expand: true,
+      include: ['author', 'images', 'currentStock'],
+      'fields.image': imageVariantInfo.fieldsImage,
+      ...imageVariantInfo.imageVariants,
+    };
+
     return sdk.ownListings
-      .update(data)
+      .update(data, queryParams)
       .then(response => {
-        updateResponse = response;
-        const imageVariantInfo = getImageVariantInfo();
-        const payload = {
-          id,
-          include: ['author', 'images', 'currentStock'],
-          'fields.image': imageVariantInfo.fieldsImage,
-          ...imageVariantInfo.imageVariants,
-        };
-        return dispatch(requestShowListing(payload));
-      })
-      .then(() => {
+        dispatch(addMarketplaceEntities(response));
         dispatch(markTabUpdated(tab));
-        dispatch(updateListingSuccess(updateResponse));
-        return updateResponse;
+        dispatch(updateListingSuccess(response));
+        return response;
       })
       .catch(e => {
         log.error(e, 'update-listing-failed', { listingData: data });
