@@ -36,10 +36,10 @@ const EditListingPricingPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
 
-  // TODO
-  // The listing resource should have a new attribute `currentStock`
-  // when the stock features are available but it still should be tested
-  const { price, currentStock = 1 } = currentListing.attributes;
+  // The listing resource has a relationship: `currentStock`,
+  // which you should include when making API calls.
+  const currentStock = currentListing.currentStock?.attributes?.quantity || 0;
+  const { price } = currentListing.attributes;
 
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
   const panelTitle = isPublished ? (
