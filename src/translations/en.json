@@ -169,7 +169,7 @@
   "EditListingDeliveryForm.showListingFailed": "Fetching listing data failed",
   "EditListingDeliveryForm.updateFailed": "Failed to update listing. Please try again.",
   "EditListingDeliveryPanel.createListingTitle": "Delivery options",
-  "EditListingDeliveryPanel.title": "Edit the delivery options",
+  "EditListingDeliveryPanel.title": "Edit the delivery options of {listingTitle}",
   "EditListingDetailsForm.brandLabel": "Brand",
   "EditListingDetailsForm.brandPlaceholder": "Choose…",
   "EditListingDetailsForm.brandRequired": "You need to select a brand.",
