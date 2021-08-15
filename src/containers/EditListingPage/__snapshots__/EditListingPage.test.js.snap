@@ -28,6 +28,7 @@ exports[`EditListingPageComponent matches snapshot 1`] = `
         "createListingDraftError": null,
         "createStripeAccountError": null,
         "publishListingError": null,
+        "setStockError": null,
         "showListingsError": null,
         "updateListingError": null,
         "uploadImageError": null,
