@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { bool, func, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
@@ -50,6 +50,20 @@ export const EditListingDeliveryFormComponent = props => (
         fetchErrors,
         values,
       } = formRenderProps;
+
+      // This is a bug fix for Final Form.
+      // Without this, React will return a warning:
+      //   "Cannot update a component (`ForwardRef(Field)`)
+      //   while rendering a different component (`ForwardRef(Field)`)"
+      // This seems to happen because validation calls listeneres and
+      // that causes state to change inside final-form.
+      // https://github.com/final-form/react-final-form/issues/751
+      //
+      // TODO: it might not be worth the trouble to show these fields as disabled,
+      // if this fix causes trouble in future dependency updates.
+      const { pauseValidation, resumeValidation } = form;
+      pauseValidation(false);
+      useEffect(() => resumeValidation(), [values]);
 
       const shippingEnabled = values.deliveryOptions?.includes('shipping');
       const pickupEnabled = values.deliveryOptions?.includes('pickup');
