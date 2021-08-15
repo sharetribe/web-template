@@ -460,27 +460,27 @@ export const removeListingImage = imageId => ({
 // expects.
 
 // SDK method: ownListings.create
-export const createListingDraft = requestAction(CREATE_LISTING_DRAFT_REQUEST);
+export const createListingDraftRequest = requestAction(CREATE_LISTING_DRAFT_REQUEST);
 export const createListingDraftSuccess = successAction(CREATE_LISTING_DRAFT_SUCCESS);
 export const createListingDraftError = errorAction(CREATE_LISTING_DRAFT_ERROR);
 
 // SDK method: ownListings.publish
-export const publishListing = requestAction(PUBLISH_LISTING_REQUEST);
+export const publishListingRequest = requestAction(PUBLISH_LISTING_REQUEST);
 export const publishListingSuccess = successAction(PUBLISH_LISTING_SUCCESS);
 export const publishListingError = errorAction(PUBLISH_LISTING_ERROR);
 
 // SDK method: ownListings.update
-export const updateListing = requestAction(UPDATE_LISTING_REQUEST);
+export const updateListingRequest = requestAction(UPDATE_LISTING_REQUEST);
 export const updateListingSuccess = successAction(UPDATE_LISTING_SUCCESS);
 export const updateListingError = errorAction(UPDATE_LISTING_ERROR);
 
 // SDK method: ownListings.show
-export const showListings = requestAction(SHOW_LISTINGS_REQUEST);
+export const showListingsRequest = requestAction(SHOW_LISTINGS_REQUEST);
 export const showListingsSuccess = successAction(SHOW_LISTINGS_SUCCESS);
 export const showListingsError = errorAction(SHOW_LISTINGS_ERROR);
 
 // SDK method: images.upload
-export const uploadImage = requestAction(UPLOAD_IMAGE_REQUEST);
+export const uploadImageRequest = requestAction(UPLOAD_IMAGE_REQUEST);
 export const uploadImageSuccess = successAction(UPLOAD_IMAGE_SUCCESS);
 export const uploadImageError = errorAction(UPLOAD_IMAGE_ERROR);
 
@@ -524,7 +524,7 @@ export function requestShowListing(actionPayload) {
       ...imageVariantInfo.imageVariants,
     };
 
-    dispatch(showListings(actionPayload));
+    dispatch(showListingsRequest(actionPayload));
     return sdk.ownListings
       .show({ ...actionPayload, ...queryParams })
       .then(response => {
@@ -576,7 +576,7 @@ const updateStockOfListingMaybe = (listingId, stockTotals, dispatch) => {
 // create, set stock, show listing (to get updated currentStock entity)
 export function requestCreateListingDraft(data) {
   return (dispatch, getState, sdk) => {
-    dispatch(createListingDraft(data));
+    dispatch(createListingDraftRequest(data));
     const { stockUpdate, ...ownListingValues } = data;
 
     const imageVariantInfo = getImageVariantInfo();
@@ -621,7 +621,7 @@ export function requestCreateListingDraft(data) {
 // NOTE: what comes to stock management, this follows the same pattern used in create listing call
 export function requestUpdateListing(tab, data) {
   return (dispatch, getState, sdk) => {
-    dispatch(updateListing(data));
+    dispatch(updateListingRequest(data));
     const { id, stockUpdate, ...rest } = data;
 
     const ownListingUpdateValues = { id, ...rest };
@@ -651,7 +651,7 @@ export function requestUpdateListing(tab, data) {
 }
 
 export const requestPublishListingDraft = listingId => (dispatch, getState, sdk) => {
-  dispatch(publishListing(listingId));
+  dispatch(publishListingRequest(listingId));
 
   return sdk.ownListings
     .publishDraft({ id: listingId }, { expand: true })
@@ -670,7 +670,7 @@ export const requestPublishListingDraft = listingId => (dispatch, getState, sdk)
 export function requestImageUpload(actionPayload) {
   return (dispatch, getState, sdk) => {
     const id = actionPayload.id;
-    dispatch(uploadImage(actionPayload));
+    dispatch(uploadImageRequest(actionPayload));
     return sdk.images
       .upload({ image: actionPayload.file })
       .then(resp => dispatch(uploadImageSuccess({ data: { id, imageId: resp.data.data.id } })))
