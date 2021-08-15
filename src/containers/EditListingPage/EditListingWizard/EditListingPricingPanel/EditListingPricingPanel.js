@@ -38,7 +38,8 @@ const EditListingPricingPanel = props => {
 
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
-  const currentStock = currentListing.currentStock?.attributes?.quantity || 0;
+  const currentStockRaw = currentListing.currentStock?.attributes?.quantity;
+  const currentStock = currentStockRaw || 0;
   const { price } = currentListing.attributes;
 
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
@@ -58,18 +59,24 @@ const EditListingPricingPanel = props => {
       initialValues={{ price, stock: currentStock }}
       onSubmit={values => {
         const { price, stock } = values;
+
+        // Update stock only if the value has changed.
+        // NOTE: this is going to be used on a separate call to API
+        // in EditListingPage.duck.js: sdk.stockAdjustments.compareAndSet();
+        const hasStockQuantityChanged = stock && currentStockRaw !== stock;
+        const stockUpdateMaybe = hasStockQuantityChanged
+          ? {
+              stockUpdate: {
+                oldTotal: currentStockRaw || null,
+                newTotal: stock,
+              },
+            }
+          : {};
+
         const updateValues = {
           price,
+          ...stockUpdateMaybe,
         };
-        /**
-         * TODO use stock value to create stock adjustment
-         * When using the /stock_adjustments/compare_and_set endpoint
-         * it might look something like this:
-         *
-         * handleStockAdjustment(listing.id, currentStock, stock)
-         */
-
-        console.log('TODO: update stock to ', stock);
         onSubmit(updateValues);
       }}
       onChange={onChange}
