@@ -153,6 +153,10 @@ export const DELETE_EXCEPTION_REQUEST = 'app/EditListingPage/DELETE_AVAILABILITY
 export const DELETE_EXCEPTION_SUCCESS = 'app/EditListingPage/DELETE_AVAILABILITY_EXCEPTION_SUCCESS';
 export const DELETE_EXCEPTION_ERROR = 'app/EditListingPage/DELETE_AVAILABILITY_EXCEPTION_ERROR';
 
+export const SET_STOCK_REQUEST = 'app/EditListingPage/SET_STOCK_REQUEST';
+export const SET_STOCK_SUCCESS = 'app/EditListingPage/SET_STOCK_SUCCESS';
+export const SET_STOCK_ERROR = 'app/EditListingPage/SET_STOCK_ERROR';
+
 export const UPLOAD_IMAGE_REQUEST = 'app/EditListingPage/UPLOAD_IMAGE_REQUEST';
 export const UPLOAD_IMAGE_SUCCESS = 'app/EditListingPage/UPLOAD_IMAGE_SUCCESS';
 export const UPLOAD_IMAGE_ERROR = 'app/EditListingPage/UPLOAD_IMAGE_ERROR';
@@ -175,6 +179,8 @@ const initialState = {
   updateListingError: null,
   showListingsError: null,
   uploadImageError: null,
+  setStockError: null,
+  setStockInProgress: false,
   createListingDraftInProgress: false,
   submittedListingId: null,
   redirectToListing: false,
@@ -263,7 +269,11 @@ export default function reducer(state = initialState, action = {}) {
     case UPDATE_LISTING_REQUEST:
       return { ...state, updateInProgress: true, updateListingError: null };
     case UPDATE_LISTING_SUCCESS:
-      return { ...state, updateInProgress: false, availabilityCalendar: { ...state.availabilityCalendar }};
+      return {
+        ...state,
+        updateInProgress: false,
+        availabilityCalendar: { ...state.availabilityCalendar },
+      };
     case UPDATE_LISTING_ERROR:
       return { ...state, updateInProgress: false, updateListingError: payload };
 
@@ -403,6 +413,13 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, images, imageOrder, removedImageIds };
     }
 
+    case SET_STOCK_REQUEST:
+      return { ...state, setStockInProgress: true, setStockError: null };
+    case SET_STOCK_SUCCESS:
+      return { ...state, setStockInProgress: false };
+    case SET_STOCK_ERROR:
+      return { ...state, setStockInProgress: false, setStockError: payload };
+
     case SAVE_PAYOUT_DETAILS_REQUEST:
       return { ...state, payoutDetailsSaveInProgress: true };
     case SAVE_PAYOUT_DETAILS_ERROR:
@@ -467,6 +484,11 @@ export const uploadImage = requestAction(UPLOAD_IMAGE_REQUEST);
 export const uploadImageSuccess = successAction(UPLOAD_IMAGE_SUCCESS);
 export const uploadImageError = errorAction(UPLOAD_IMAGE_ERROR);
 
+// SDK method: stockAdjustments.compareAndSet
+export const setStockRequest = requestAction(SET_STOCK_REQUEST);
+export const setStockSuccess = successAction(SET_STOCK_SUCCESS);
+export const setStockError = errorAction(SET_STOCK_ERROR);
+
 // SDK method: bookings.query
 export const fetchBookingsRequest = requestAction(FETCH_BOOKINGS_REQUEST);
 export const fetchBookingsSuccess = successAction(FETCH_BOOKINGS_SUCCESS);
@@ -495,9 +517,16 @@ export const savePayoutDetailsError = errorAction(SAVE_PAYOUT_DETAILS_ERROR);
 
 export function requestShowListing(actionPayload) {
   return (dispatch, getState, sdk) => {
+    const imageVariantInfo = getImageVariantInfo();
+    const queryParams = {
+      include: ['author', 'images', 'currentStock'],
+      'fields.image': imageVariantInfo.fieldsImage,
+      ...imageVariantInfo.imageVariants,
+    };
+
     dispatch(showListings(actionPayload));
     return sdk.ownListings
-      .show(actionPayload)
+      .show({ ...actionPayload, ...queryParams })
       .then(response => {
         // EditListingPage fetches new listing data, which also needs to be added to global data
         dispatch(addMarketplaceEntities(response));
@@ -509,9 +538,46 @@ export function requestShowListing(actionPayload) {
   };
 }
 
+// Set stock if requested among listing update info
+export function compareAndSetStock(listingId, oldTotal, newTotal) {
+  return (dispatch, getState, sdk) => {
+    dispatch(setStockRequest());
+
+    return sdk.stockAdjustments
+      .compareAndSet({ listingId, oldTotal, newTotal })
+      .then(response => {
+        // NOTE: currently compareAndSet doesn't return currentStock as a relationship.
+        // Therefore, there's no need to save anything to marketplace entities (atm.)
+        // dispatch(addMarketplaceEntities(response));
+        dispatch(setStockSuccess(response));
+      })
+      .catch(e => {
+        log.error(e, 'update-stock-failed', { listingId, oldTotal, newTotal });
+        return dispatch(setStockError(storableError(e)));
+      });
+  };
+}
+
+// Helper function to make compareAndSetStock call if stock update is needed.
+const updateStockOfListingMaybe = (listingId, stockTotals, dispatch) => {
+  const { oldTotal, newTotal } = stockTotals || {};
+  // Note: newTotal and oldTotal must be given, but oldTotal can be null
+  const hasStockTotals = newTotal >= 0 && typeof oldTotal !== 'undefined';
+
+  if (listingId && hasStockTotals) {
+    return dispatch(compareAndSetStock(listingId, oldTotal, newTotal));
+  }
+  return Promise.resolve();
+};
+
+// Create listing in draft state
+// NOTE: we want to keep it possible to include stock management field to the first wizard form.
+// this means that there needs to be a sequence of calls:
+// create, set stock, show listing (to get updated currentStock entity)
 export function requestCreateListingDraft(data) {
   return (dispatch, getState, sdk) => {
     dispatch(createListingDraft(data));
+    const { stockUpdate, ...ownListingValues } = data;
 
     const imageVariantInfo = getImageVariantInfo();
     const queryParams = {
@@ -521,13 +587,22 @@ export function requestCreateListingDraft(data) {
       ...imageVariantInfo.imageVariants,
     };
 
+    let listingId = null;
     return sdk.ownListings
-      .createDraft(data, queryParams)
+      .createDraft(ownListingValues, queryParams)
       .then(response => {
-        //const id = response.data.data.id.uuid;
-
-        // Add the created listing to the marketplace data
-        dispatch(addMarketplaceEntities(response));
+        listingId = response.data.data.id;
+        return updateStockOfListingMaybe(listingId, stockUpdate, dispatch);
+      })
+      .then(() => {
+        // TODO: currently, API doesn't return currentStock
+        // with stockAdjustments.compareAndSet() call.
+        // We need to update currentStock entity with a separate call.
+        return dispatch(requestShowListing({ id: listingId }));
+      })
+      .then(response => {
+        // Note: requestShowListing call has updated marketplace entitites
+        // dispatch(addMarketplaceEntities(response));
 
         // Modify store to understand that we have created listing and can redirect away
         dispatch(createListingDraftSuccess(response));
@@ -536,6 +611,41 @@ export function requestCreateListingDraft(data) {
       .catch(e => {
         log.error(e, 'create-listing-draft-failed', { listingData: data });
         return dispatch(createListingDraftError(storableError(e)));
+      });
+  };
+}
+
+// Update the given tab of the wizard with the given data. This saves
+// the data to the listing, and marks the tab updated so the UI can
+// display the state.
+// NOTE: what comes to stock management, this follows the same pattern used in create listing call
+export function requestUpdateListing(tab, data) {
+  return (dispatch, getState, sdk) => {
+    dispatch(updateListing(data));
+    const { id, stockUpdate, ...rest } = data;
+
+    const ownListingUpdateValues = { id, ...rest };
+    const imageVariantInfo = getImageVariantInfo();
+    const queryParams = {
+      expand: true,
+      include: ['author', 'images', 'currentStock'],
+      'fields.image': imageVariantInfo.fieldsImage,
+      ...imageVariantInfo.imageVariants,
+    };
+
+    // Note: if update values include stockUpdate, we'll do that first
+    // That way we get updated currentStock info among ownListings.update
+    return updateStockOfListingMaybe(id, stockUpdate, dispatch)
+      .then(() => sdk.ownListings.update(ownListingUpdateValues, queryParams))
+      .then(response => {
+        dispatch(addMarketplaceEntities(response));
+        dispatch(markTabUpdated(tab));
+        dispatch(updateListingSuccess(response));
+        return response;
+      })
+      .catch(e => {
+        log.error(e, 'update-listing-failed', { listingData: data });
+        return dispatch(updateListingError(storableError(e)));
       });
   };
 }
@@ -664,37 +774,6 @@ export const requestDeleteAvailabilityException = params => (dispatch, getState,
     });
 };
 
-// Update the given tab of the wizard with the given data. This saves
-// the data to the listing, and marks the tab updated so the UI can
-// display the state.
-export function requestUpdateListing(tab, data) {
-  return (dispatch, getState, sdk) => {
-    dispatch(updateListing(data));
-    const { id } = data;
-
-    const imageVariantInfo = getImageVariantInfo();
-    const queryParams = {
-      expand: true,
-      include: ['author', 'images', 'currentStock'],
-      'fields.image': imageVariantInfo.fieldsImage,
-      ...imageVariantInfo.imageVariants,
-    };
-
-    return sdk.ownListings
-      .update(data, queryParams)
-      .then(response => {
-        dispatch(addMarketplaceEntities(response));
-        dispatch(markTabUpdated(tab));
-        dispatch(updateListingSuccess(response));
-        return response;
-      })
-      .catch(e => {
-        log.error(e, 'update-listing-failed', { listingData: data });
-        return dispatch(updateListingError(storableError(e)));
-      });
-  };
-}
-
 export const savePayoutDetails = (values, isUpdateCall) => (dispatch, getState, sdk) => {
   const upsertThunk = isUpdateCall ? updateStripeAccount : createStripeAccount;
   dispatch(savePayoutDetailsRequest());
@@ -728,14 +807,7 @@ export const loadData = params => (dispatch, getState, sdk) => {
       });
   }
 
-  const imageVariantInfo = getImageVariantInfo();
-  const payload = {
-    id: new UUID(id),
-    include: ['author', 'images', 'currentStock'],
-    'fields.image': imageVariantInfo.fieldsImage,
-    ...imageVariantInfo.imageVariants,
-  };
-
+  const payload = { id: new UUID(id) };
   return Promise.all([dispatch(requestShowListing(payload)), dispatch(fetchCurrentUser())])
     .then(response => {
       const currentUser = getState().user.currentUser;
