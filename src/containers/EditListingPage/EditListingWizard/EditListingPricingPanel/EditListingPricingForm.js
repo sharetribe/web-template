@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import config from '../../../../config';
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
+import { isOldTotalMismatchStockError } from '../../../../util/errors';
 import * as validators from '../../../../util/validators';
 import { formatMoney } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
@@ -76,7 +77,11 @@ export const EditListingPricingFormComponent = props => (
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
-      const { updateListingError, showListingsError } = fetchErrors || {};
+      const { updateListingError, showListingsError, setStockError } = fetchErrors || {};
+
+      const stockErrorMessage = isOldTotalMismatchStockError(setStockError)
+        ? intl.formatMessage({ id: 'EditListingPricingForm.oldStockTotalWasOutOfSync' })
+        : intl.formatMessage({ id: 'EditListingPricingForm.stockUpdateFailed' });
 
       return (
         <Form onSubmit={handleSubmit} className={classes}>
@@ -109,6 +114,7 @@ export const EditListingPricingFormComponent = props => (
             type="number"
             min={0}
           />
+          {setStockError ? <p className={css.error}>{stockErrorMessage}</p> : null}
 
           <Button
             className={css.submitButton}

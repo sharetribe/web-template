@@ -23,6 +23,7 @@ import {
   ERROR_CODE_MISSING_STRIPE_ACCOUNT,
   ERROR_CODE_TRANSACTION_BOOKING_TIME_NOT_AVAILABLE,
   ERROR_CODE_TRANSACTION_LISTING_INSUFFICIENT_STOCK,
+  ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH,
 } from './types';
 
 const errorAPIErrors = error => {
@@ -73,6 +74,13 @@ export const isTooManyEmailVerificationRequestsError = error =>
  */
 export const isUploadImageOverLimitError = error =>
   hasErrorWithCode(error, ERROR_CODE_UPLOAD_OVER_LIMIT);
+
+/**
+ * Check if the given API error (from
+ * `sdk.stockAdjustments.compareAndSet()`) is due to the oldTotal being wrong.
+ */
+export const isOldTotalMismatchStockError = error =>
+  hasErrorWithCode(error, ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH);
 
 /**
  * Check if the given API error (from `sdk.passwordReset.request()`)
