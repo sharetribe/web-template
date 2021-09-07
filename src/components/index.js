@@ -141,5 +141,4 @@ export { default as ModalMissingInformation } from './ModalMissingInformation/Mo
 export { default as PrivacyPolicy } from './PrivacyPolicy/PrivacyPolicy';
 export { default as TermsOfService } from './TermsOfService/TermsOfService';
 export { default as Footer } from './Footer/Footer';
-export { default as SectionThumbnailLinks } from './SectionThumbnailLinks/SectionThumbnailLinks';
 export { default as Topbar } from './Topbar/Topbar';
