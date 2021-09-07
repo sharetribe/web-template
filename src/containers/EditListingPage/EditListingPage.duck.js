@@ -544,11 +544,14 @@ export function compareAndSetStock(listingId, oldTotal, newTotal) {
     dispatch(setStockRequest());
 
     return sdk.stockAdjustments
-      .compareAndSet({ listingId, oldTotal, newTotal })
+      .compareAndSet(
+        { listingId, oldTotal, newTotal },
+        { expand: true, include: ['ownListing.currentStock'] }
+      )
       .then(response => {
-        // NOTE: currently compareAndSet doesn't return currentStock as a relationship.
-        // Therefore, there's no need to save anything to marketplace entities (atm.)
-        // dispatch(addMarketplaceEntities(response));
+        // NOTE: compareAndSet returns currentStock as a relationship: 'ownListing.currentStock'.
+        // We update client app's internal state with these updated API entities.
+        dispatch(addMarketplaceEntities(response));
         dispatch(setStockSuccess(response));
       })
       .catch(e => {
@@ -594,16 +597,7 @@ export function requestCreateListingDraft(data) {
         listingId = response.data.data.id;
         return updateStockOfListingMaybe(listingId, stockUpdate, dispatch);
       })
-      .then(() => {
-        // TODO: currently, API doesn't return currentStock
-        // with stockAdjustments.compareAndSet() call.
-        // We need to update currentStock entity with a separate call.
-        return dispatch(requestShowListing({ id: listingId }));
-      })
       .then(response => {
-        // Note: requestShowListing call has updated marketplace entitites
-        // dispatch(addMarketplaceEntities(response));
-
         // Modify store to understand that we have created listing and can redirect away
         dispatch(createListingDraftSuccess(response));
         return response;
