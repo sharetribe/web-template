@@ -137,6 +137,7 @@ export const EditListingPageComponent = props => {
       updateListingError = null,
       showListingsError = null,
       uploadImageError = null,
+      setStockError = null,
     } = page;
     const errors = {
       createListingDraftError,
@@ -145,6 +146,7 @@ export const EditListingPageComponent = props => {
       showListingsError,
       uploadImageError,
       createStripeAccountError,
+      setStockError,
     };
     // TODO: is this dead code? (shouldRedirect is checked before)
     const newListingPublished =
