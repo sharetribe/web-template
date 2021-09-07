@@ -14,9 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
-- [update] Social media images updated. [#72](https://github.com/sharetribe/ftw-product/pull/72)
-- [update] Marketplace colors updated. [#71](https://github.com/sharetribe/ftw-product/pull/71)
-- [change] Landing page Hero and How it works sections updated. [#70](https://github.com/sharetribe/ftw-product/pull/70)
+- [add] Stock info and link to correct tab included to ManageListingCard.
+  [#74](https://github.com/sharetribe/ftw-product/pull/74)
+- [change] Social media images updated for Sneakertime.
+  [#72](https://github.com/sharetribe/ftw-product/pull/72)
+- [change] Marketplace colors updated for Sneakertime.
+  [#71](https://github.com/sharetribe/ftw-product/pull/71)
+- [change] Landing page Hero and How it works sections updated.
+  [#70](https://github.com/sharetribe/ftw-product/pull/70)
 - [fix] EditListingPage: use correct image aspect ratio for listing images
   [#69](https://github.com/sharetribe/ftw-product/pull/69)
 - [add] TransactionPage: add DisputeModal component.
@@ -64,11 +69,14 @@ way to update this template, but currently, we follow a pattern:
 - [change] Footer updated. [#45](https://github.com/sharetribe/ftw-product/pull/45)
 - [add] Add category values. [#44](https://github.com/sharetribe/ftw-product/pull/44)
 - [change] Favicon updated. [#43](https://github.com/sharetribe/ftw-product/pull/43)
-- [change] siteTitle and PostalAddress updated. [#42](https://github.com/sharetribe/ftw-product/pull/42)
-- [change] Top bar translation keys updated. [#40](https://github.com/sharetribe/ftw-product/pull/40)
+- [change] siteTitle and PostalAddress updated.
+  [#42](https://github.com/sharetribe/ftw-product/pull/42)
+- [change] Top bar translation keys updated.
+  [#40](https://github.com/sharetribe/ftw-product/pull/40)
 - [change] Add UI for adjusting stock to pricing panel in EditListingWizard. This doesn't store any
   data related to stock yet! [#39](https://github.com/sharetribe/ftw-product/pull/39)
-- [change] Privacy Policy and Terms translation keys updated. [#37](https://github.com/sharetribe/ftw-product/pull/37)
+- [change] Privacy Policy and Terms translation keys updated.
+  [#37](https://github.com/sharetribe/ftw-product/pull/37)
 - [fix] Fix padding problem in EditListingWizard by handling the paddings in one place.
   [#34](https://github.com/sharetribe/ftw-product/pull/34)
 - [change] Use AspectRatioWrapper on EditListingPhotosPanel.
