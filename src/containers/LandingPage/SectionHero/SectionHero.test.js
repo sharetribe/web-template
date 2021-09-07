@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderDeep } from '../../util/test-helpers';
+import { renderDeep } from '../../../util/test-helpers';
 import SectionHero from './SectionHero';
 
 const noop = () => null;
