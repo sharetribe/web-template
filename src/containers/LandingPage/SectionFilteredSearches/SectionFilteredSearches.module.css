@@ -1,4 +1,4 @@
-@import '../../styles/propertySets.css';
+@import '../../../styles/propertySets.css';
 
 .title {
   @apply --marketplaceH1FontStyles;
@@ -7,7 +7,7 @@
   margin-bottom: 0;
 }
 
-.locations {
+.filteredSearches {
   display: flex;
   flex-direction: column;
   margin-top: 0px;
@@ -18,7 +18,7 @@
   }
 }
 
-.location {
+.searchLink {
   width: 100%;
   margin-top: 25px;
 
@@ -26,22 +26,17 @@
   &:hover {
     text-decoration: none;
   }
-
-  @media (--viewportMedium) {
-    margin-top: 0;
-  }
 }
 
-.location {
-  @media (--viewportMedium) {
+@media (--viewportMedium) {
+  .searchLink {
+    margin-top: 0;
     margin-right: 40px;
     margin-bottom: 0;
-  }
-}
 
-.location:last-of-type {
-  @media (--viewportMedium) {
-    margin-right: 0;
+    &:last-of-type {
+      margin-right: 0;
+    }
   }
 }
 
@@ -67,7 +62,7 @@
   }
 }
 
-.locationImage {
+.searchImage {
   /* Layout - image will take space defined by aspect ratio wrapper */
   position: absolute;
   top: 0;
@@ -91,6 +86,6 @@
   }
 }
 
-.locationName {
+.searchName {
   color: var(--marketplaceColor);
 }

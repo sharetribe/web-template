@@ -1,82 +1,95 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { FormattedMessage } from '../../util/reactIntl';
+import { string } from 'prop-types';
 import classNames from 'classnames';
-import { lazyLoadWithDimensions } from '../../util/contextHelpers';
 
-import { NamedLink } from '../../components';
+import { FormattedMessage } from '../../../util/reactIntl';
+import { lazyLoadWithDimensions } from '../../../util/contextHelpers';
 
-import css from './SectionLocations.module.css';
+import { NamedLink } from '../../../components';
 
-import helsinkiImage from './images/location_helsinki.jpg';
-import rovaniemiImage from './images/location_rovaniemi.jpg';
-import rukaImage from './images/location_ruka.jpg';
+import css from './SectionFilteredSearches.module.css';
 
-class LocationImage extends Component {
+// Update images by saving images to src/LandingPage/SeactionFilteredSearches/images directory.
+// If those images have been saved with the same name, no need to make changes to these imports.
+import imageForFilter1 from './images/imageForFilter1_648x448.jpg';
+import imageForFilter2 from './images/imageForFilter2_648x448.jpg';
+import imageForFilter3 from './images/imageForFilter3_648x448.jpg';
+
+// Thumbnail image for the search "card"
+class ThumbnailImage extends Component {
   render() {
     const { alt, ...rest } = this.props;
     return <img alt={alt} {...rest} />;
   }
 }
-const LazyImage = lazyLoadWithDimensions(LocationImage);
+// Load the image only if it's close to viewport (user has scrolled the page enough).
+const LazyImage = lazyLoadWithDimensions(ThumbnailImage);
 
-const locationLink = (name, image, searchQuery) => {
-  const nameText = <span className={css.locationName}>{name}</span>;
+// Create a "card" that contains a link to filtered search on SearchPage.
+const FilterLink = props => {
+  const { name, image, link } = props;
+  const url = typeof window !== 'undefined' ? new window.URL(link) : new global.URL(link);
+  const searchQuery = url.search;
+  const nameText = <span className={css.searchName}>{name}</span>;
   return (
-    <NamedLink name="SearchPage" to={{ search: searchQuery }} className={css.location}>
+    <NamedLink name="SearchPage" to={{ search: searchQuery }} className={css.searchLink}>
       <div className={css.imageWrapper}>
         <div className={css.aspectWrapper}>
-          <LazyImage src={image} alt={name} className={css.locationImage} />
+          <LazyImage src={image} alt={name} className={css.searchImage} />
         </div>
       </div>
       <div className={css.linkText}>
         <FormattedMessage
-          id="SectionLocations.listingsInLocation"
-          values={{ location: nameText }}
+          id="SectionFilteredSearches.filteredSearch"
+          values={{ filter: nameText }}
         />
       </div>
     </NamedLink>
   );
 };
 
-const SectionLocations = props => {
+// Component that shows full-width section on LandingPage.
+// Inside it shows 3 "cards" that link to SearchPage with specific filters applied.
+const SectionFilteredSearches = props => {
   const { rootClassName, className } = props;
-
   const classes = classNames(rootClassName || css.root, className);
 
+  // FilterLink props:
+  // - "name" is a string that defines what kind of search the link is going to make
+  // - "image" is imported from images directory and you can update it by changing the file
+  // - "link" should be copy-pasted URL from search page.
+  //    The domain doesn't matter, but search query does. (I.e. "?pub_brand=nike")
   return (
     <div className={classes}>
       <div className={css.title}>
-        <FormattedMessage id="SectionLocations.title" />
+        <FormattedMessage id="SectionFilteredSearches.title" />
       </div>
-      <div className={css.locations}>
-        {locationLink(
-          'Helsinki',
-          helsinkiImage,
-          '?address=Helsinki%2C%20Finland&bounds=60.2978389%2C25.254484899999966%2C59.9224887%2C24.782875800000056&origin=60.16985569999999%2C24.93837910000002'
-        )}
-        {locationLink(
-          'Rovaniemi',
-          rovaniemiImage,
-          '?address=Rovaniemi%2C%20Finland&bounds=67.18452510000002%2C27.32667850000007%2C66.1553745%2C24.736871199999996&origin=66.50394779999999%2C25.729390599999988'
-        )}
-        {locationLink(
-          'Ruka',
-          rukaImage,
-          '?address=Ruka%2C%20Finland&bounds=66.1704578%2C29.14246849999995%2C66.1614402%2C29.110453699999994&origin=66.16594940000002%2C29.12646110000003'
-        )}
+      <div className={css.filteredSearches}>
+        <FilterLink
+          name="Nikes"
+          image={imageForFilter1}
+          link="http://localhost:3000/s?pub_brand=nike"
+        />
+        <FilterLink
+          name="Yeezys"
+          image={imageForFilter2}
+          link="http://localhost:3000/s?pub_brand=yeezy"
+        />
+        <FilterLink
+          name="Converses"
+          image={imageForFilter3}
+          link="http://localhost:3000/s?pub_brand=converse"
+        />
       </div>
     </div>
   );
 };
 
-SectionLocations.defaultProps = { rootClassName: null, className: null };
+SectionFilteredSearches.defaultProps = { rootClassName: null, className: null };
 
-const { string } = PropTypes;
-
-SectionLocations.propTypes = {
+SectionFilteredSearches.propTypes = {
   rootClassName: string,
   className: string,
 };
 
-export default SectionLocations;
+export default SectionFilteredSearches;
