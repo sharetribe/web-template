@@ -126,7 +126,6 @@ export const ManageListingCardComponent = props => {
     onOpenListing,
     onToggleMenu,
     renderSizes,
-    availabilityEnabled,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
@@ -137,12 +136,7 @@ export const ManageListingCardComponent = props => {
   const isClosed = state === LISTING_STATE_CLOSED;
   const isDraft = state === LISTING_STATE_DRAFT;
 
-  // TODO:
-  // When stock features are available make sure this works
-  // or if some other kind of check is needed.
-  // We don't want to show out of stock overlay if the listing is not
-  // public.
-  const currentStock = currentListing.attributes.currentStock;
+  const currentStock = currentListing.currentStock?.attributes?.quantity;
   const isOutOfStock = currentStock === 0;
   const showOutOfStockOverlay = isOutOfStock && !isPendingApproval && !isClosed && !isDraft;
 
@@ -405,21 +399,17 @@ export const ManageListingCardComponent = props => {
             <FormattedMessage id="ManageListingCard.editListing" />
           </NamedLink>
 
-          {availabilityEnabled ? (
-            <React.Fragment>
-              <span className={css.manageLinksSeparator}>{' • '}</span>
+          <span className={css.manageLinksSeparator}>{' • '}</span>
 
-              <NamedLink
-                className={css.manageLink}
-                name="EditListingPage"
-                params={{ id, slug, type: editListingLinkType, tab: 'pricing' }}
-              >
-                {isDraft || isPendingApproval
-                  ? intl.formatMessage({ id: 'ManageListingCard.setStock' })
-                  : intl.formatMessage({ id: 'ManageListingCard.manageStock' }, { currentStock })}
-              </NamedLink>
-            </React.Fragment>
-          ) : null}
+          <NamedLink
+            className={css.manageLink}
+            name="EditListingPage"
+            params={{ id, slug, type: editListingLinkType, tab: 'pricing' }}
+          >
+            {isDraft || isPendingApproval
+              ? intl.formatMessage({ id: 'ManageListingCard.setStock' })
+              : intl.formatMessage({ id: 'ManageListingCard.manageStock' }, { currentStock })}
+          </NamedLink>
         </div>
       </div>
     </div>
@@ -431,7 +421,6 @@ ManageListingCardComponent.defaultProps = {
   rootClassName: null,
   actionsInProgressListingId: null,
   renderSizes: null,
-  availabilityEnabled: config.enableAvailability,
 };
 
 const { bool, func, shape, string } = PropTypes;
@@ -448,7 +437,6 @@ ManageListingCardComponent.propTypes = {
   onCloseListing: func.isRequired,
   onOpenListing: func.isRequired,
   onToggleMenu: func.isRequired,
-  availabilityEnabled: bool,
 
   // Responsive image sizes hint
   renderSizes: string,
