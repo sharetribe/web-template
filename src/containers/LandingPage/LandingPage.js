@@ -10,7 +10,6 @@ import { isScrollingDisabled } from '../../ducks/UI.duck';
 
 import {
   Page,
-  SectionHowItWorks,
   SectionLocations,
   LayoutSingleColumn,
   LayoutWrapperTopbar,
@@ -24,6 +23,7 @@ import facebookImage from '../../assets/sneakertimeFacebook-1200x630.jpg';
 import twitterImage from '../../assets/sneakertimeTwitter-600x314.jpg';
 
 import SectionHero from './SectionHero/SectionHero';
+import SectionHowItWorks from './SectionHowItWorks/SectionHowItWorks';
 import css from './LandingPage.module.css';
 
 export const LandingPageComponent = props => {

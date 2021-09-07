@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
 
-import { NamedLink } from '../../components';
+import { FormattedMessage } from '../../../util/reactIntl';
+
+import { NamedLink } from '../../../components';
 
 import css from './SectionHowItWorks.module.css';
 
