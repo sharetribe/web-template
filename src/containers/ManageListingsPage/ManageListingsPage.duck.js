@@ -279,7 +279,7 @@ export const loadData = (params, search) => {
     ...queryParams,
     page,
     perPage: RESULT_PAGE_SIZE,
-    include: ['images'],
+    include: ['images', 'currentStock'],
     'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
     ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
     ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
