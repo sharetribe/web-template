@@ -10,7 +10,6 @@ import { isScrollingDisabled } from '../../ducks/UI.duck';
 
 import {
   Page,
-  SectionLocations,
   LayoutSingleColumn,
   LayoutWrapperTopbar,
   LayoutWrapperMain,
@@ -24,6 +23,7 @@ import twitterImage from '../../assets/sneakertimeTwitter-600x314.jpg';
 
 import SectionHero from './SectionHero/SectionHero';
 import SectionHowItWorks from './SectionHowItWorks/SectionHowItWorks';
+import SectionFilteredSearches from './SectionFilteredSearches/SectionFilteredSearches';
 import css from './LandingPage.module.css';
 
 export const LandingPageComponent = props => {
@@ -72,7 +72,7 @@ export const LandingPageComponent = props => {
           <ul className={css.sections}>
             <li className={css.section}>
               <div className={css.sectionContentFirstChild}>
-                <SectionLocations />
+                <SectionFilteredSearches />
               </div>
             </li>
             <li className={css.section}>
