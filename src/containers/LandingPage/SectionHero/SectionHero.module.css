@@ -1,4 +1,4 @@
-@import '../../styles/propertySets.css';
+@import '../../../styles/propertySets.css';
 
 /* Animation for the hero elements */
 
@@ -28,13 +28,22 @@
 }
 
 .root {
-  @apply --backgroundImage;
+  /* Gradient direction and overlaying the black color on top of the image for better readability */
+  background: linear-gradient(-45deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)),
+    url('../../../assets/background-1440.jpg');
+  background-color: var(--matterColor);
+  background-size: cover;
+  background-position: center center;
+
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
 
-  /* Text positioning is done with paddings */
+  @media (--viewportLarge) {
+    border-radius: 40px;
+    border: solid 36px var(--matterColorBright);
+  }
 }
 
 .heroContent {

@@ -10,9 +10,6 @@ import { isScrollingDisabled } from '../../ducks/UI.duck';
 
 import {
   Page,
-  SectionHero,
-  SectionHowItWorks,
-  SectionLocations,
   LayoutSingleColumn,
   LayoutWrapperTopbar,
   LayoutWrapperMain,
@@ -23,6 +20,10 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import facebookImage from '../../assets/sneakertimeFacebook-1200x630.jpg';
 import twitterImage from '../../assets/sneakertimeTwitter-600x314.jpg';
+
+import SectionHero from './SectionHero/SectionHero';
+import SectionHowItWorks from './SectionHowItWorks/SectionHowItWorks';
+import SectionFilteredSearches from './SectionFilteredSearches/SectionFilteredSearches';
 import css from './LandingPage.module.css';
 
 export const LandingPageComponent = props => {
@@ -61,12 +62,17 @@ export const LandingPageComponent = props => {
         </LayoutWrapperTopbar>
         <LayoutWrapperMain>
           <div className={css.heroContainer}>
-            <SectionHero className={css.hero} history={history} location={location} />
+            <SectionHero
+              rootClassName={css.heroRoot}
+              className={css.hero}
+              history={history}
+              location={location}
+            />
           </div>
           <ul className={css.sections}>
             <li className={css.section}>
               <div className={css.sectionContentFirstChild}>
-                <SectionLocations />
+                <SectionFilteredSearches />
               </div>
             </li>
             <li className={css.section}>
