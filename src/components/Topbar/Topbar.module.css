@@ -32,6 +32,8 @@
 
 .home {
   display: flex;
+  height: var(--topbarHeight);
+  /* Calculate vertical padding. Something like: (60px - 25px)/2 */
   padding: calc((var(--topbarHeight) - var(--Topbar_logoHeight)) / 2) 24px;
 }
 
