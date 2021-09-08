@@ -672,7 +672,7 @@
   "SearchPage.searchError": "Search failed. Please try again.",
   "SearchResultsPanel.nextPage": "Next page",
   "SearchResultsPanel.previousPage": "Previous page",
-  "SectionFilteredSearches.filteredSearch": "Listings for {filter}",
+  "SectionFilteredSearches.filteredSearch": "{filter}",
   "SectionFilteredSearches.title": "Discover unique sneakers",
   "SectionHero.browseButton": "Browse sneakers",
   "SectionHero.subTitle": "The largest online community for sneakerheads in Finland.",
