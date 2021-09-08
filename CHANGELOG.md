@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Moved LandingPage-related sections under its directory, added SectionFilteredSearches
+  component and removed unused SectionThumbnailLinks component.
+  [#75](https://github.com/sharetribe/ftw-product/pull/75)
 - [add] Stock info and link to correct tab included to ManageListingCard.
   [#74](https://github.com/sharetribe/ftw-product/pull/74)
 - [change] Social media images updated for Sneakertime.
