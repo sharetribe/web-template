@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [add] Add app icons and fix height of mobile logo
+  [#78](https://github.com/sharetribe/ftw-product/pull/78)
 - [change] Update translation for SectionFilteredSearches.filteredSearch
   [#77](https://github.com/sharetribe/ftw-product/pull/77)
 - [add] Update billing details from shipping address by default when changing payment method to
