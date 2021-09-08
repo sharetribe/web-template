@@ -191,6 +191,9 @@ class StripePaymentForm extends Component {
   constructor(props) {
     super(props);
     this.state = initialState;
+    this.updateBillingDetailsToMatchShippingAddress = this.updateBillingDetailsToMatchShippingAddress.bind(
+      this
+    );
     this.handleCardValueChange = this.handleCardValueChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.paymentForm = this.paymentForm.bind(this);
@@ -250,6 +253,20 @@ class StripePaymentForm extends Component {
     }
   }
 
+  updateBillingDetailsToMatchShippingAddress(shouldFill) {
+    const formApi = this.finalFormAPI;
+    const values = formApi.getState()?.values || {};
+    formApi.batch(() => {
+      formApi.change('name', shouldFill ? values.recipientName : '');
+      formApi.change('addressLine1', shouldFill ? values.recipientAddressLine1 : '');
+      formApi.change('addressLine2', shouldFill ? values.recipientAddressLine2 : '');
+      formApi.change('postal', shouldFill ? values.recipientPostal : '');
+      formApi.change('city', shouldFill ? values.recipientCity : '');
+      formApi.change('state', shouldFill ? values.recipientState : '');
+      formApi.change('country', shouldFill ? values.recipientCountry : '');
+    });
+  }
+
   changePaymentMethod(changedTo) {
     if (this.card && changedTo === 'defaultCard') {
       this.card.removeEventListener('change', this.handleCardValueChange);
@@ -259,6 +276,9 @@ class StripePaymentForm extends Component {
     this.setState({ paymentMethod: changedTo });
     if (changedTo === 'defaultCard' && this.finalFormAPI) {
       this.finalFormAPI.change('sameAddressCheckbox', undefined);
+    } else if (changedTo === 'replaceCard' && this.finalFormAPI) {
+      this.finalFormAPI.change('sameAddressCheckbox', ['sameAddress']);
+      this.updateBillingDetailsToMatchShippingAddress(true);
     }
   }
 
@@ -427,15 +447,10 @@ class StripePaymentForm extends Component {
     const showOnetimePaymentFields = ['onetimeCardPayment', 'replaceCard'].includes(
       selectedPaymentMethod
     );
+
     const handleSameAddressCheckbox = event => {
       const checked = event.target.checked;
-      form.change('name', checked ? values.recipientName : '');
-      form.change('addressLine1', checked ? values.recipientAddressLine1 : '');
-      form.change('addressLine2', checked ? values.recipientAddressLine2 : '');
-      form.change('postal', checked ? values.recipientPostal : '');
-      form.change('city', checked ? values.recipientCity : '');
-      form.change('state', checked ? values.recipientState : '');
-      form.change('country', checked ? values.recipientCountry : '');
+      this.updateBillingDetailsToMatchShippingAddress(checked);
     };
 
     return hasStripeKey ? (

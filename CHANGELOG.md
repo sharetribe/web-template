@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [add] Update billing details from shipping address by default when changing payment method to
+  one-time payment. [#76](https://github.com/sharetribe/ftw-product/pull/76)
 - [change] Moved LandingPage-related sections under its directory, added SectionFilteredSearches
   component and removed unused SectionThumbnailLinks component.
   [#75](https://github.com/sharetribe/ftw-product/pull/75)
