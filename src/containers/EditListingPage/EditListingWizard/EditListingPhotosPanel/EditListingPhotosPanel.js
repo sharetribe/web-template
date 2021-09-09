@@ -25,7 +25,6 @@ class EditListingPhotosPanel extends Component {
       images,
       listing,
       onImageUpload,
-      onUpdateImageOrder,
       submitButtonText,
       panelUpdated,
       updateInProgress,
@@ -65,7 +64,6 @@ class EditListingPhotosPanel extends Component {
             onSubmit(updateValues);
           }}
           onChange={onChange}
-          onUpdateImageOrder={onUpdateImageOrder}
           onRemoveImage={onRemoveImage}
           saveActionMsg={submitButtonText}
           updated={panelUpdated}
@@ -96,7 +94,6 @@ EditListingPhotosPanel.propTypes = {
   listing: object,
 
   onImageUpload: func.isRequired,
-  onUpdateImageOrder: func.isRequired,
   onSubmit: func.isRequired,
   onChange: func.isRequired,
   submitButtonText: string.isRequired,

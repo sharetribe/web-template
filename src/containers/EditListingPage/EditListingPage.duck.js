@@ -161,8 +161,6 @@ export const UPLOAD_IMAGE_REQUEST = 'app/EditListingPage/UPLOAD_IMAGE_REQUEST';
 export const UPLOAD_IMAGE_SUCCESS = 'app/EditListingPage/UPLOAD_IMAGE_SUCCESS';
 export const UPLOAD_IMAGE_ERROR = 'app/EditListingPage/UPLOAD_IMAGE_ERROR';
 
-export const UPDATE_IMAGE_ORDER = 'app/EditListingPage/UPDATE_IMAGE_ORDER';
-
 export const REMOVE_LISTING_IMAGE = 'app/EditListingPage/REMOVE_LISTING_IMAGE';
 
 export const SAVE_PAYOUT_DETAILS_REQUEST = 'app/EditListingPage/SAVE_PAYOUT_DETAILS_REQUEST';
@@ -393,8 +391,6 @@ export default function reducer(state = initialState, action = {}) {
       const images = omit(state.images, id);
       return { ...state, imageOrder, images, uploadImageError: error };
     }
-    case UPDATE_IMAGE_ORDER:
-      return { ...state, imageOrder: payload.imageOrder };
 
     case REMOVE_LISTING_IMAGE: {
       const id = payload.imageId;
@@ -443,11 +439,6 @@ export const markTabUpdated = tab => ({
 
 export const clearUpdatedTab = () => ({
   type: CLEAR_UPDATED_TAB,
-});
-
-export const updateImageOrder = imageOrder => ({
-  type: UPDATE_IMAGE_ORDER,
-  payload: { imageOrder },
 });
 
 export const removeListingImage = imageId => ({

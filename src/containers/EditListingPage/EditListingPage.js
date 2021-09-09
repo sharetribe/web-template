@@ -37,7 +37,6 @@ import {
   requestPublishListingDraft,
   requestUpdateListing,
   requestImageUpload,
-  updateImageOrder,
   removeListingImage,
   clearUpdatedTab,
   savePayoutDetails,
@@ -79,7 +78,6 @@ export const EditListingPageComponent = props => {
     onPayoutDetailsSubmit,
     onPayoutDetailsChange,
     onGetStripeConnectAccountLink,
-    onUpdateImageOrder,
     onChange,
     page,
     params,
@@ -207,7 +205,6 @@ export const EditListingPageComponent = props => {
           onGetStripeConnectAccountLink={onGetStripeConnectAccountLink}
           getAccountLinkInProgress={getAccountLinkInProgress}
           onImageUpload={onImageUpload}
-          onUpdateImageOrder={onUpdateImageOrder}
           onRemoveImage={onRemoveListingImage}
           onChange={onChange}
           currentUser={currentUser}
@@ -273,7 +270,6 @@ EditListingPageComponent.propTypes = {
   onManageDisableScrolling: func.isRequired,
   onPayoutDetailsChange: func.isRequired,
   onPayoutDetailsSubmit: func.isRequired,
-  onUpdateImageOrder: func.isRequired,
   onRemoveListingImage: func.isRequired,
   onUpdateListing: func.isRequired,
   onChange: func.isRequired,
@@ -351,7 +347,6 @@ const mapDispatchToProps = dispatch => ({
   onPayoutDetailsSubmit: (values, isUpdateCall) =>
     dispatch(savePayoutDetails(values, isUpdateCall)),
   onGetStripeConnectAccountLink: params => dispatch(getStripeConnectAccountLink(params)),
-  onUpdateImageOrder: imageOrder => dispatch(updateImageOrder(imageOrder)),
   onRemoveListingImage: imageId => dispatch(removeListingImage(imageId)),
   onChange: () => dispatch(clearUpdatedTab()),
 });

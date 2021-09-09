@@ -249,7 +249,6 @@ EditListingPhotosFormComponent.propTypes = {
   images: array,
   intl: intlShape.isRequired,
   onImageUpload: func.isRequired,
-  onUpdateImageOrder: func.isRequired,
   onSubmit: func.isRequired,
   saveActionMsg: string.isRequired,
   disabled: bool.isRequired,
