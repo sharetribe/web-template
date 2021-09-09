@@ -90,9 +90,6 @@ const EditListingWizardTab = props => {
   const isNewListingFlow = isNewURI || isDraftURI;
 
   const currentListing = ensureListing(listing);
-  const imageIds = images => {
-    return images ? images.map(img => img.imageId || img.id) : null;
-  };
 
   // New listing flow has automatic redirects to new tab on the wizard
   // and the last panel calls publishListing API endpoint.
@@ -109,19 +106,13 @@ const EditListingWizardTab = props => {
   };
 
   const onCompleteEditListingWizardTab = (tab, updateValues) => {
-    // Normalize images for API call
-    const { images: updatedImages, ...otherValues } = updateValues;
-    const imageProperty =
-      typeof updatedImages !== 'undefined' ? { images: imageIds(updatedImages) } : {};
-    const updateValuesWithImages = { ...otherValues, ...imageProperty };
-
     const onUpdateListingOrCreateListingDraft = isNewURI
       ? (tab, values) => onCreateListingDraft(values)
       : onUpdateListing;
 
     const updateListingValues = isNewURI
-      ? updateValuesWithImages
-      : { ...updateValuesWithImages, id: currentListing.id };
+      ? updateValues
+      : { ...updateValues, id: currentListing.id };
 
     onUpdateListingOrCreateListingDraft(tab, updateListingValues)
       .then(r => {
