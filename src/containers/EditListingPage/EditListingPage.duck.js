@@ -17,6 +17,13 @@ import { fetchCurrentUser } from '../../ducks/user.duck';
 
 const { UUID } = sdkTypes;
 
+// Return an array of image ids
+const imageIds = images => {
+  // For newly uploaded image the UUID can be found from "img.imageId"
+  // and for existing listing images the id is "img.id"
+  return images ? images.map(img => img.imageId || img.id) : null;
+};
+
 const getImageVariantInfo = () => {
   const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
   const aspectRatio = aspectHeight / aspectWidth;
@@ -571,7 +578,12 @@ const updateStockOfListingMaybe = (listingId, stockTotals, dispatch) => {
 export function requestCreateListingDraft(data) {
   return (dispatch, getState, sdk) => {
     dispatch(createListingDraftRequest(data));
-    const { stockUpdate, ...ownListingValues } = data;
+    const { stockUpdate, images, ...rest } = data;
+
+    // If images should be saved, create array out of the image UUIDs for the API call
+    // Note: in FTW, image upload is not happening at the same time as listing creation.
+    const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
+    const ownListingValues = { ...imageProperty, ...rest };
 
     const imageVariantInfo = getImageVariantInfo();
     const queryParams = {
@@ -609,9 +621,11 @@ export function requestCreateListingDraft(data) {
 export function requestUpdateListing(tab, data) {
   return (dispatch, getState, sdk) => {
     dispatch(updateListingRequest(data));
-    const { id, stockUpdate, ...rest } = data;
+    const { id, stockUpdate, images, ...rest } = data;
 
-    const ownListingUpdateValues = { id, ...rest };
+    // If images should be saved, create array out of the image UUIDs for the API call
+    const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
+    const ownListingUpdateValues = { id, ...imageProperty, ...rest };
     const imageVariantInfo = getImageVariantInfo();
     const queryParams = {
       expand: true,
