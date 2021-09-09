@@ -36,7 +36,6 @@ describe('EditListingPageComponent', () => {
         onRemoveListingImage={noop}
         onPayoutDetailsChange={noop}
         onPayoutDetailsSubmit={noop}
-        onUpdateImageOrder={noop}
         onChange={noop}
         page={{ imageOrder: [], images: {} }}
         scrollingDisabled={false}
