@@ -24,6 +24,30 @@ const imageIds = images => {
   return images ? images.map(img => img.imageId || img.id) : null;
 };
 
+// After listing creation & update, we want to make sure that uploadedImages state is cleaned
+const updateUloadedImagesState = (state, payload) => {
+  const { uploadedImages, uploadedImagesOrder } = state;
+
+  // Images attached to listing entity
+  const attachedImages = payload?.data?.relationships?.images?.data || [];
+  const attachedImageUUIDStrings = attachedImages.map(img => img.id.uuid);
+
+  // Uploaded images (which are propably not yet attached to listing)
+  const unattachedImages = Object.values(state.uploadedImages);
+  const duplicateImageEntities = unattachedImages.filter(unattachedImg =>
+    attachedImageUUIDStrings.includes(unattachedImg.imageId?.uuid)
+  );
+  return duplicateImageEntities.length > 0
+    ? {
+        uploadedImages: {},
+        uploadedImagesOrder: [],
+      }
+    : {
+        uploadedImages,
+        uploadedImagesOrder,
+      };
+};
+
 const getImageVariantInfo = () => {
   const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
   const aspectRatio = aspectHeight / aspectWidth;
@@ -229,6 +253,7 @@ export default function reducer(state = initialState, action = {}) {
     case CREATE_LISTING_DRAFT_SUCCESS:
       return {
         ...state,
+        ...updateUloadedImagesState(state, payload),
         createListingDraftInProgress: false,
         submittedListingId: payload.data.id,
         listingDraft: payload.data,
@@ -276,6 +301,7 @@ export default function reducer(state = initialState, action = {}) {
     case UPDATE_LISTING_SUCCESS:
       return {
         ...state,
+        ...updateUloadedImagesState(state, payload),
         updateInProgress: false,
         availabilityCalendar: { ...state.availabilityCalendar },
       };
