@@ -57,15 +57,19 @@ export class ManageListingsPageComponent extends Component {
     const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
 
     const loadingResults = (
-      <h2>
-        <FormattedMessage id="ManageListingsPage.loadingOwnListings" />
-      </h2>
+      <div className={css.messagePanel}>
+        <h2 className={css.loadingData}>
+          <FormattedMessage id="ManageListingsPage.loadingOwnListings" />
+        </h2>
+      </div>
     );
 
     const queryError = (
-      <h2 className={css.error}>
-        <FormattedMessage id="ManageListingsPage.queryError" />
-      </h2>
+      <div className={css.messagePanel}>
+        <h2 className={css.error}>
+          <FormattedMessage id="ManageListingsPage.queryError" />
+        </h2>
+      </div>
     );
 
     const noResults =
