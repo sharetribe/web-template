@@ -385,10 +385,9 @@ export default function reducer(state = initialState, action = {}) {
       };
     }
     case UPLOAD_IMAGE_SUCCESS: {
-      // payload.params: { id: 'tempId', imageId: 'some-real-id'}
-      const { id, imageId } = payload;
-      const file = state.uploadedImages[id].file;
-      const uploadedImages = { ...state.uploadedImages, [id]: { id, imageId, file } };
+      // payload.params: { id: 'tempId', imageId: 'some-real-id', attributes, type }
+      const { id, ...rest } = payload;
+      const uploadedImages = { ...state.uploadedImages, [id]: { id, ...rest } };
       return { ...state, uploadedImages };
     }
     case UPLOAD_IMAGE_ERROR: {
@@ -671,10 +670,22 @@ export const requestPublishListingDraft = listingId => (dispatch, getState, sdk)
 export function requestImageUpload(actionPayload) {
   return (dispatch, getState, sdk) => {
     const id = actionPayload.id;
+    const imageVariantInfo = getImageVariantInfo();
+    const queryParams = {
+      expand: true,
+      'fields.image': imageVariantInfo.fieldsImage,
+      ...imageVariantInfo.imageVariants,
+    };
+
     dispatch(uploadImageRequest(actionPayload));
     return sdk.images
-      .upload({ image: actionPayload.file })
-      .then(resp => dispatch(uploadImageSuccess({ data: { id, imageId: resp.data.data.id } })))
+      .upload({ image: actionPayload.file }, queryParams)
+      .then(resp => {
+        const img = resp.data.data;
+        // Uploaded image has an existing id that refers to file
+        // The UUID was created as a consequence of this upload call - it's saved to imageId property
+        return dispatch(uploadImageSuccess({ data: { ...img, id, imageId: img.id } }));
+      })
       .catch(e => dispatch(uploadImageError({ id, error: storableError(e) })));
   };
 }
