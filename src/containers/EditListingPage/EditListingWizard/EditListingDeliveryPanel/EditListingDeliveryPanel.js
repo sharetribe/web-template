@@ -121,26 +121,30 @@ class EditListingDeliveryPanel extends Component {
 
             const shippingEnabled = deliveryOptions.includes('shipping');
             const pickupEnabled = deliveryOptions.includes('pickup');
+            const address = location?.selectedPlace?.address || null;
+            const origin = location?.selectedPlace?.origin || null;
 
-            let address = null;
-            let origin = null;
+            const pickupDataMaybe =
+              pickupEnabled && address ? { location: { address, building } } : {};
 
-            if (location && location.selectedPlace) {
-              address = location.selectedPlace.address;
-              origin = location.selectedPlace.origin;
-            }
+            const shippingDataMaybe =
+              shippingEnabled && shippingPriceInSubunitsOneItem
+                ? {
+                    // Note: we only save the "amount" because currency should not differ from listing's price.
+                    // Money is always dealt in subunits (e.g. cents) to avoid float calculations.
+                    shippingPriceInSubunitsOneItem: shippingPriceInSubunitsOneItem.amount,
+                    shippingPriceInSubunitsAdditionalItems:
+                      shippingPriceInSubunitsAdditionalItems?.amount,
+                  }
+                : {};
 
             const updateValues = {
               geolocation: origin,
               publicData: {
-                location: { address, building },
-                shippingEnabled,
                 pickupEnabled,
-                // Note: we only save the "amount" because currency should not differ from listing's price.
-                // Money is always dealt in subunits (e.g. cents) to avoid float calculations.
-                shippingPriceInSubunitsOneItem: shippingPriceInSubunitsOneItem.amount,
-                shippingPriceInSubunitsAdditionalItems:
-                  shippingPriceInSubunitsAdditionalItems.amount,
+                ...pickupDataMaybe,
+                shippingEnabled,
+                ...shippingDataMaybe,
               },
             };
             this.setState({
