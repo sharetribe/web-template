@@ -14,7 +14,6 @@
  */
 
 // components
-import * as AddImages from './components/AddImages/AddImages.example';
 import * as Avatar from './components/Avatar/Avatar.example';
 import * as BookingTimeInfo from './components/BookingTimeInfo/BookingTimeInfo.example';
 import * as Button from './components/Button/Button.example';
@@ -117,7 +116,6 @@ import * as Typography from './containers/StyleguidePage/Typography.example';
 
 export {
   ActivityFeed,
-  AddImages,
   Avatar,
   BookingDateRangeFilter,
   BookingDatesForm,
