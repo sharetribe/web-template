@@ -590,17 +590,19 @@ export function requestCreateListingDraft(data) {
       ...imageVariantInfo.imageVariants,
     };
 
-    let listingId = null;
+    let createDraftResponse = null;
     return sdk.ownListings
       .createDraft(ownListingValues, queryParams)
       .then(response => {
-        listingId = response.data.data.id;
+        createDraftResponse = response;
+        const listingId = response.data.data.id;
+        // If stockUpdate info is passed through, update stock
         return updateStockOfListingMaybe(listingId, stockUpdate, dispatch);
       })
-      .then(response => {
+      .then(() => {
         // Modify store to understand that we have created listing and can redirect away
-        dispatch(createListingDraftSuccess(response));
-        return response;
+        dispatch(createListingDraftSuccess(createDraftResponse));
+        return createDraftResponse;
       })
       .catch(e => {
         log.error(e, 'create-listing-draft-failed', { listingData: data });
@@ -632,9 +634,9 @@ export function requestUpdateListing(tab, data) {
     return updateStockOfListingMaybe(id, stockUpdate, dispatch)
       .then(() => sdk.ownListings.update(ownListingUpdateValues, queryParams))
       .then(response => {
+        dispatch(updateListingSuccess(response));
         dispatch(addMarketplaceEntities(response));
         dispatch(markTabUpdated(tab));
-        dispatch(updateListingSuccess(response));
         return response;
       })
       .catch(e => {
