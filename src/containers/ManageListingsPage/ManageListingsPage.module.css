@@ -35,6 +35,7 @@
   }
 }
 
+.messagePanel,
 .listingPanel {
   width: 100%;
   margin: 24px auto 0 auto;
@@ -53,6 +54,8 @@
   }
 }
 
+.loadingData,
+.error,
 .title {
   @apply --marketplaceH2FontStyles;
   margin: 0 24px 24px 24px;
