@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [fix] EditListingPage.duck.js: updating stock should not affect listing creation call.
+  [#81](https://github.com/sharetribe/ftw-product/pull/81)
 - [fix] ManageListingPage: fix the position of loading text
   [#80](https://github.com/sharetribe/ftw-product/pull/80)
 - [add] Add app icons and fix height of mobile logo
