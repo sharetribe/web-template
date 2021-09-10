@@ -199,8 +199,8 @@ const initialState = {
     //   fetchBookingsInProgress: false,
     // },
   },
-  images: {},
-  imageOrder: [],
+  uploadedImages: {},
+  uploadedImagesOrder: [],
   removedImageIds: [],
   listingDraft: null,
   updatedTab: null,
@@ -373,30 +373,30 @@ export default function reducer(state = initialState, action = {}) {
 
     case UPLOAD_IMAGE_REQUEST: {
       // payload.params: { id: 'tempId', file }
-      const images = {
-        ...state.images,
+      const uploadedImages = {
+        ...state.uploadedImages,
         [payload.params.id]: { ...payload.params },
       };
       return {
         ...state,
-        images,
-        imageOrder: state.imageOrder.concat([payload.params.id]),
+        uploadedImages,
+        uploadedImagesOrder: state.uploadedImagesOrder.concat([payload.params.id]),
         uploadImageError: null,
       };
     }
     case UPLOAD_IMAGE_SUCCESS: {
       // payload.params: { id: 'tempId', imageId: 'some-real-id'}
       const { id, imageId } = payload;
-      const file = state.images[id].file;
-      const images = { ...state.images, [id]: { id, imageId, file } };
-      return { ...state, images };
+      const file = state.uploadedImages[id].file;
+      const uploadedImages = { ...state.uploadedImages, [id]: { id, imageId, file } };
+      return { ...state, uploadedImages };
     }
     case UPLOAD_IMAGE_ERROR: {
       // eslint-disable-next-line no-console
       const { id, error } = payload;
-      const imageOrder = state.imageOrder.filter(i => i !== id);
-      const images = omit(state.images, id);
-      return { ...state, imageOrder, images, uploadImageError: error };
+      const uploadedImagesOrder = state.uploadedImagesOrder.filter(i => i !== id);
+      const uploadedImages = omit(state.uploadedImages, id);
+      return { ...state, uploadedImagesOrder, uploadedImages, uploadImageError: error };
     }
 
     case REMOVE_LISTING_IMAGE: {
@@ -404,16 +404,16 @@ export default function reducer(state = initialState, action = {}) {
 
       // Only mark the image removed if it hasn't been added to the
       // listing already
-      const removedImageIds = state.images[id]
+      const removedImageIds = state.uploadedImages[id]
         ? state.removedImageIds
         : state.removedImageIds.concat(id);
 
       // Always remove from the draft since it might be a new image to
       // an existing listing.
-      const images = omit(state.images, id);
-      const imageOrder = state.imageOrder.filter(i => i !== id);
+      const uploadedImages = omit(state.uploadedImages, id);
+      const uploadedImagesOrder = state.uploadedImagesOrder.filter(i => i !== id);
 
-      return { ...state, images, imageOrder, removedImageIds };
+      return { ...state, uploadedImages, uploadedImagesOrder, removedImageIds };
     }
 
     case SET_STOCK_REQUEST:
