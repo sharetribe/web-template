@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [fix] EditListingPhotosPanel: refactor and fix photos panel (uploading showed images twice).
+  [#79](https://github.com/sharetribe/ftw-product/pull/79)
 - [fix] EditListingPage.duck.js: updating stock should not affect listing creation call.
   [#81](https://github.com/sharetribe/ftw-product/pull/81)
 - [fix] ManageListingPage: fix the position of loading text

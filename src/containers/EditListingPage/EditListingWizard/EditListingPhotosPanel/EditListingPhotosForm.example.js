@@ -17,9 +17,6 @@ export const Empty = {
     ready: false,
     updateInProgress: false,
     disabled: false,
-    onUpdateImageOrder: imageOrder => {
-      console.log('onUpdateImageOrder with new imageOrder:', imageOrder);
-    },
     onRemoveImage: imageId => {
       console.log('remove image:', imageId);
     },

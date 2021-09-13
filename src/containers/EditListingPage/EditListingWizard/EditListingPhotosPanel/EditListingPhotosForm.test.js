@@ -15,7 +15,6 @@ describe('EditListingPhotosForm', () => {
         onImageUpload={v => v}
         onSubmit={v => v}
         saveActionMsg="Save photos"
-        onUpdateImageOrder={v => v}
         stripeConnected={false}
         updated={false}
         ready={false}

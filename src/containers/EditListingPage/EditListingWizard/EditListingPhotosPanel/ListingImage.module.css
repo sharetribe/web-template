@@ -1,18 +1,4 @@
 .root {
-  width: 100%;
-  min-height: 120px;
-  padding-left: 0;
-
-  &::after {
-    content: '.';
-    visibility: hidden;
-    display: block;
-    height: 0;
-    clear: both;
-  }
-}
-
-.thumbnail {
   display: block;
   float: left;
   position: relative;
@@ -22,7 +8,7 @@
   background-color: var(--matterColorNegative); /* Loading BG color */
 }
 
-.threeToTwoWrapper {
+.wrapper {
   position: relative;
 }
 
@@ -53,10 +39,6 @@
     fill: var(--matterColorLight);
     stroke: var(--matterColorLight);
   }
-}
-
-.aspectWrapper {
-  padding-bottom: calc(100% * (2 / 3));
 }
 
 .rootForImage {

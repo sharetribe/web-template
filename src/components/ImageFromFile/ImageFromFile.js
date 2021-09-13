@@ -43,11 +43,9 @@ class ImageFromFile extends Component {
         renderFulfilled={dataURL => {
           return (
             <div className={classes}>
-              <div className={css.threeToTwoWrapper}>
-                <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
-                  <img src={dataURL} alt={file.name} className={css.rootForImage} />
-                </AspectRatioWrapper>
-              </div>
+              <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
+                <img src={dataURL} alt={file.name} className={css.rootForImage} />
+              </AspectRatioWrapper>
               {children}
             </div>
           );
