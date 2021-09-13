@@ -189,7 +189,7 @@ export const ManageListingCardComponent = props => {
   return (
     <div className={classes}>
       <div
-        className={css.threeToTwoWrapper}
+        className={css.clickWrapper}
         tabIndex={0}
         onClick={event => {
           event.preventDefault();
