@@ -5,7 +5,7 @@ exports[`ManageListingCard matches snapshot 1`] = `
   className="root"
 >
   <div
-    className="threeToTwoWrapper"
+    className="clickWrapper"
     onClick={[Function]}
     onMouseOver={[Function]}
     onTouchStart={[Function]}

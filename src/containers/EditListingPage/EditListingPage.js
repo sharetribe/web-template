@@ -37,7 +37,6 @@ import {
   requestPublishListingDraft,
   requestUpdateListing,
   requestImageUpload,
-  updateImageOrder,
   removeListingImage,
   clearUpdatedTab,
   savePayoutDetails,
@@ -53,6 +52,35 @@ const STRIPE_ONBOARDING_RETURN_URL_TYPES = [
 ];
 
 const { UUID } = sdkTypes;
+
+// Pick images that are currently attached to listing entity and images that are going to be attached.
+// Avoid duplicates and images that should be removed.
+const pickRenderableImages = (
+  currentListing,
+  uploadedImages,
+  uploadedImageIdsInOrder = [],
+  removedImageIds = []
+) => {
+  // Images are passed to EditListingForm so that it can generate thumbnails out of them
+  const currentListingImages = currentListing && currentListing.images ? currentListing.images : [];
+  // Images not yet connected to the listing
+  const unattachedImages = uploadedImageIdsInOrder.map(i => uploadedImages[i]);
+  const allImages = currentListingImages.concat(unattachedImages);
+
+  const pickImagesAndIds = (imgs, img) => {
+    const imgId = img.imageId || img.id;
+    // Pick only unique images that are not marked to be removed
+    const shouldInclude = !imgs.imageIds.includes(imgId) && !removedImageIds.includes(imgId);
+    if (shouldInclude) {
+      imgs.imageEntities.push(img);
+      imgs.imageIds.push(imgId);
+    }
+    return imgs;
+  };
+
+  // Return array of image entities. Something like: [{ id, imageId, type, attributes }, ...]
+  return allImages.reduce(pickImagesAndIds, { imageEntities: [], imageIds: [] }).imageEntities;
+};
 
 // N.B. All the presentational content needs to be extracted to their own components
 export const EditListingPageComponent = props => {
@@ -79,7 +107,6 @@ export const EditListingPageComponent = props => {
     onPayoutDetailsSubmit,
     onPayoutDetailsChange,
     onGetStripeConnectAccountLink,
-    onUpdateImageOrder,
     onChange,
     page,
     params,
@@ -138,6 +165,9 @@ export const EditListingPageComponent = props => {
       showListingsError = null,
       uploadImageError = null,
       setStockError = null,
+      uploadedImages,
+      uploadedImagesOrder,
+      removedImageIds,
     } = page;
     const errors = {
       createListingDraftError,
@@ -154,20 +184,12 @@ export const EditListingPageComponent = props => {
 
     // Show form if user is posting a new listing or editing existing one
     const disableForm = page.redirectToListing && !showListingsError;
-
-    // Images are passed to EditListingForm so that it can generate thumbnails out of them
-    const currentListingImages =
-      currentListing && currentListing.images ? currentListing.images : [];
-
-    // Images not yet connected to the listing
-    const imageOrder = page.imageOrder || [];
-    const unattachedImages = imageOrder.map(i => page.images[i]);
-
-    const allImages = currentListingImages.concat(unattachedImages);
-    const removedImageIds = page.removedImageIds || [];
-    const images = allImages.filter(img => {
-      return !removedImageIds.includes(img.id);
-    });
+    const images = pickRenderableImages(
+      currentListing,
+      uploadedImages,
+      uploadedImagesOrder,
+      removedImageIds
+    );
 
     const title = isNewListingFlow
       ? intl.formatMessage({ id: 'EditListingPage.titleCreateListing' })
@@ -207,7 +229,6 @@ export const EditListingPageComponent = props => {
           onGetStripeConnectAccountLink={onGetStripeConnectAccountLink}
           getAccountLinkInProgress={getAccountLinkInProgress}
           onImageUpload={onImageUpload}
-          onUpdateImageOrder={onUpdateImageOrder}
           onRemoveImage={onRemoveListingImage}
           onChange={onChange}
           currentUser={currentUser}
@@ -273,7 +294,6 @@ EditListingPageComponent.propTypes = {
   onManageDisableScrolling: func.isRequired,
   onPayoutDetailsChange: func.isRequired,
   onPayoutDetailsSubmit: func.isRequired,
-  onUpdateImageOrder: func.isRequired,
   onRemoveListingImage: func.isRequired,
   onUpdateListing: func.isRequired,
   onChange: func.isRequired,
@@ -351,7 +371,6 @@ const mapDispatchToProps = dispatch => ({
   onPayoutDetailsSubmit: (values, isUpdateCall) =>
     dispatch(savePayoutDetails(values, isUpdateCall)),
   onGetStripeConnectAccountLink: params => dispatch(getStripeConnectAccountLink(params)),
-  onUpdateImageOrder: imageOrder => dispatch(updateImageOrder(imageOrder)),
   onRemoveListingImage: imageId => dispatch(removeListingImage(imageId)),
   onChange: () => dispatch(clearUpdatedTab()),
 });

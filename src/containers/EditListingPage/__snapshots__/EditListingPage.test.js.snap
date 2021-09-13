@@ -63,7 +63,6 @@ exports[`EditListingPageComponent matches snapshot 1`] = `
     onPayoutDetailsSubmit={[Function]}
     onPublishListingDraft={[Function]}
     onRemoveImage={[Function]}
-    onUpdateImageOrder={[Function]}
     onUpdateListing={[Function]}
     params={
       Object {

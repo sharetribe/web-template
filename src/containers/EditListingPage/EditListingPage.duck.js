@@ -17,6 +17,37 @@ import { fetchCurrentUser } from '../../ducks/user.duck';
 
 const { UUID } = sdkTypes;
 
+// Return an array of image ids
+const imageIds = images => {
+  // For newly uploaded image the UUID can be found from "img.imageId"
+  // and for existing listing images the id is "img.id"
+  return images ? images.map(img => img.imageId || img.id) : null;
+};
+
+// After listing creation & update, we want to make sure that uploadedImages state is cleaned
+const updateUloadedImagesState = (state, payload) => {
+  const { uploadedImages, uploadedImagesOrder } = state;
+
+  // Images attached to listing entity
+  const attachedImages = payload?.data?.relationships?.images?.data || [];
+  const attachedImageUUIDStrings = attachedImages.map(img => img.id.uuid);
+
+  // Uploaded images (which are propably not yet attached to listing)
+  const unattachedImages = Object.values(state.uploadedImages);
+  const duplicateImageEntities = unattachedImages.filter(unattachedImg =>
+    attachedImageUUIDStrings.includes(unattachedImg.imageId?.uuid)
+  );
+  return duplicateImageEntities.length > 0
+    ? {
+        uploadedImages: {},
+        uploadedImagesOrder: [],
+      }
+    : {
+        uploadedImages,
+        uploadedImagesOrder,
+      };
+};
+
 const getImageVariantInfo = () => {
   const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
   const aspectRatio = aspectHeight / aspectWidth;
@@ -161,8 +192,6 @@ export const UPLOAD_IMAGE_REQUEST = 'app/EditListingPage/UPLOAD_IMAGE_REQUEST';
 export const UPLOAD_IMAGE_SUCCESS = 'app/EditListingPage/UPLOAD_IMAGE_SUCCESS';
 export const UPLOAD_IMAGE_ERROR = 'app/EditListingPage/UPLOAD_IMAGE_ERROR';
 
-export const UPDATE_IMAGE_ORDER = 'app/EditListingPage/UPDATE_IMAGE_ORDER';
-
 export const REMOVE_LISTING_IMAGE = 'app/EditListingPage/REMOVE_LISTING_IMAGE';
 
 export const SAVE_PAYOUT_DETAILS_REQUEST = 'app/EditListingPage/SAVE_PAYOUT_DETAILS_REQUEST';
@@ -194,8 +223,8 @@ const initialState = {
     //   fetchBookingsInProgress: false,
     // },
   },
-  images: {},
-  imageOrder: [],
+  uploadedImages: {},
+  uploadedImagesOrder: [],
   removedImageIds: [],
   listingDraft: null,
   updatedTab: null,
@@ -224,6 +253,7 @@ export default function reducer(state = initialState, action = {}) {
     case CREATE_LISTING_DRAFT_SUCCESS:
       return {
         ...state,
+        ...updateUloadedImagesState(state, payload),
         createListingDraftInProgress: false,
         submittedListingId: payload.data.id,
         listingDraft: payload.data,
@@ -271,6 +301,7 @@ export default function reducer(state = initialState, action = {}) {
     case UPDATE_LISTING_SUCCESS:
       return {
         ...state,
+        ...updateUloadedImagesState(state, payload),
         updateInProgress: false,
         availabilityCalendar: { ...state.availabilityCalendar },
       };
@@ -368,49 +399,46 @@ export default function reducer(state = initialState, action = {}) {
 
     case UPLOAD_IMAGE_REQUEST: {
       // payload.params: { id: 'tempId', file }
-      const images = {
-        ...state.images,
+      const uploadedImages = {
+        ...state.uploadedImages,
         [payload.params.id]: { ...payload.params },
       };
       return {
         ...state,
-        images,
-        imageOrder: state.imageOrder.concat([payload.params.id]),
+        uploadedImages,
+        uploadedImagesOrder: state.uploadedImagesOrder.concat([payload.params.id]),
         uploadImageError: null,
       };
     }
     case UPLOAD_IMAGE_SUCCESS: {
-      // payload.params: { id: 'tempId', imageId: 'some-real-id'}
-      const { id, imageId } = payload;
-      const file = state.images[id].file;
-      const images = { ...state.images, [id]: { id, imageId, file } };
-      return { ...state, images };
+      // payload.params: { id: 'tempId', imageId: 'some-real-id', attributes, type }
+      const { id, ...rest } = payload;
+      const uploadedImages = { ...state.uploadedImages, [id]: { id, ...rest } };
+      return { ...state, uploadedImages };
     }
     case UPLOAD_IMAGE_ERROR: {
       // eslint-disable-next-line no-console
       const { id, error } = payload;
-      const imageOrder = state.imageOrder.filter(i => i !== id);
-      const images = omit(state.images, id);
-      return { ...state, imageOrder, images, uploadImageError: error };
+      const uploadedImagesOrder = state.uploadedImagesOrder.filter(i => i !== id);
+      const uploadedImages = omit(state.uploadedImages, id);
+      return { ...state, uploadedImagesOrder, uploadedImages, uploadImageError: error };
     }
-    case UPDATE_IMAGE_ORDER:
-      return { ...state, imageOrder: payload.imageOrder };
 
     case REMOVE_LISTING_IMAGE: {
       const id = payload.imageId;
 
       // Only mark the image removed if it hasn't been added to the
       // listing already
-      const removedImageIds = state.images[id]
+      const removedImageIds = state.uploadedImages[id]
         ? state.removedImageIds
         : state.removedImageIds.concat(id);
 
       // Always remove from the draft since it might be a new image to
       // an existing listing.
-      const images = omit(state.images, id);
-      const imageOrder = state.imageOrder.filter(i => i !== id);
+      const uploadedImages = omit(state.uploadedImages, id);
+      const uploadedImagesOrder = state.uploadedImagesOrder.filter(i => i !== id);
 
-      return { ...state, images, imageOrder, removedImageIds };
+      return { ...state, uploadedImages, uploadedImagesOrder, removedImageIds };
     }
 
     case SET_STOCK_REQUEST:
@@ -443,11 +471,6 @@ export const markTabUpdated = tab => ({
 
 export const clearUpdatedTab = () => ({
   type: CLEAR_UPDATED_TAB,
-});
-
-export const updateImageOrder = imageOrder => ({
-  type: UPDATE_IMAGE_ORDER,
-  payload: { imageOrder },
 });
 
 export const removeListingImage = imageId => ({
@@ -580,7 +603,12 @@ const updateStockOfListingMaybe = (listingId, stockTotals, dispatch) => {
 export function requestCreateListingDraft(data) {
   return (dispatch, getState, sdk) => {
     dispatch(createListingDraftRequest(data));
-    const { stockUpdate, ...ownListingValues } = data;
+    const { stockUpdate, images, ...rest } = data;
+
+    // If images should be saved, create array out of the image UUIDs for the API call
+    // Note: in FTW, image upload is not happening at the same time as listing creation.
+    const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
+    const ownListingValues = { ...imageProperty, ...rest };
 
     const imageVariantInfo = getImageVariantInfo();
     const queryParams = {
@@ -618,9 +646,11 @@ export function requestCreateListingDraft(data) {
 export function requestUpdateListing(tab, data) {
   return (dispatch, getState, sdk) => {
     dispatch(updateListingRequest(data));
-    const { id, stockUpdate, ...rest } = data;
+    const { id, stockUpdate, images, ...rest } = data;
 
-    const ownListingUpdateValues = { id, ...rest };
+    // If images should be saved, create array out of the image UUIDs for the API call
+    const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
+    const ownListingUpdateValues = { id, ...imageProperty, ...rest };
     const imageVariantInfo = getImageVariantInfo();
     const queryParams = {
       expand: true,
@@ -666,10 +696,22 @@ export const requestPublishListingDraft = listingId => (dispatch, getState, sdk)
 export function requestImageUpload(actionPayload) {
   return (dispatch, getState, sdk) => {
     const id = actionPayload.id;
+    const imageVariantInfo = getImageVariantInfo();
+    const queryParams = {
+      expand: true,
+      'fields.image': imageVariantInfo.fieldsImage,
+      ...imageVariantInfo.imageVariants,
+    };
+
     dispatch(uploadImageRequest(actionPayload));
     return sdk.images
-      .upload({ image: actionPayload.file })
-      .then(resp => dispatch(uploadImageSuccess({ data: { id, imageId: resp.data.data.id } })))
+      .upload({ image: actionPayload.file }, queryParams)
+      .then(resp => {
+        const img = resp.data.data;
+        // Uploaded image has an existing id that refers to file
+        // The UUID was created as a consequence of this upload call - it's saved to imageId property
+        return dispatch(uploadImageSuccess({ data: { ...img, id, imageId: img.id } }));
+      })
       .catch(e => dispatch(uploadImageError({ id, error: storableError(e) })));
   };
 }

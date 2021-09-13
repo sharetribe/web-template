@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import { array, bool, func, shape, string } from 'prop-types';
+import { array, bool, func, object, shape, string } from 'prop-types';
 import { compose } from 'redux';
+import { ARRAY_ERROR } from 'final-form';
 import { Form as FinalForm, Field } from 'react-final-form';
+import arrayMutators from 'final-form-arrays';
+import { FieldArray } from 'react-final-form-arrays';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 
@@ -13,18 +16,68 @@ import { nonEmptyArray, composeValidators } from '../../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../../util/errors';
 
 // Import shared components
-import {
-  AddImages,
-  Button,
-  Form,
-  ValidationError,
-  AspectRatioWrapper,
-} from '../../../../components';
+import { Button, Form, AspectRatioWrapper } from '../../../../components';
 
 // Import modules from this directory
+import ListingImage from './ListingImage';
 import css from './EditListingPhotosForm.module.css';
 
 const ACCEPT_IMAGES = 'image/*';
+
+// Field component that uses file-input to allow user to select images.
+const FieldAddImage = props => {
+  const { formApi, onImageUploadHandler, ...rest } = props;
+  const { aspectWidth = 1, aspectHeight = 1 } = config.listing;
+  return (
+    <Field form={null} {...rest}>
+      {fieldprops => {
+        const { accept, input, label, disabled: fieldDisabled } = fieldprops;
+        const { name, type } = input;
+        const onChange = e => {
+          const file = e.target.files[0];
+          formApi.change(`addImage`, file);
+          formApi.blur(`addImage`);
+          onImageUploadHandler(file);
+        };
+        const inputProps = { accept, id: name, name, onChange, type };
+        return (
+          <div className={css.addImageWrapper}>
+            <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
+              {fieldDisabled ? null : <input {...inputProps} className={css.addImageInput} />}
+              <label htmlFor={name} className={css.addImage}>
+                {label}
+              </label>
+            </AspectRatioWrapper>
+          </div>
+        );
+      }}
+    </Field>
+  );
+};
+
+// Component that shows listing images from "images" field array
+const FieldListingImage = props => {
+  const { name, intl, onRemoveImage } = props;
+  return (
+    <Field name={name}>
+      {fieldProps => {
+        const { input } = fieldProps;
+        const image = input.value;
+        return image ? (
+          <ListingImage
+            image={image}
+            key={image?.id?.uuid || image?.id}
+            className={css.thumbnail}
+            savedImageAltText={intl.formatMessage({
+              id: 'EditListingPhotosForm.savedImageAltText',
+            })}
+            onRemoveImage={() => onRemoveImage(image?.id)}
+          />
+        ) : null;
+      }}
+    </Field>
+  );
+};
 
 export class EditListingPhotosFormComponent extends Component {
   constructor(props) {
@@ -52,6 +105,7 @@ export class EditListingPhotosFormComponent extends Component {
     return (
       <FinalForm
         {...this.props}
+        mutators={{ ...arrayMutators }}
         onImageUploadHandler={this.onImageUploadHandler}
         imageUploadRequested={this.state.imageUploadRequested}
         initialValues={{ images: this.props.images }}
@@ -72,6 +126,8 @@ export class EditListingPhotosFormComponent extends Component {
             saveActionMsg,
             updated,
             updateInProgress,
+            touched,
+            errors,
           } = formRenderProps;
 
           const chooseImageText = (
@@ -136,10 +192,9 @@ export class EditListingPhotosFormComponent extends Component {
           const submitInProgress = updateInProgress;
           const submitDisabled =
             invalid || disabled || submitInProgress || imageUploadRequested || ready;
+          const imagesError = touched.images && errors?.images && errors.images[ARRAY_ERROR];
 
           const classes = classNames(css.root, className);
-
-          const { aspectWidth = 1, aspectHeight = 1 } = config.listing;
 
           return (
             <Form
@@ -154,64 +209,39 @@ export class EditListingPhotosFormComponent extends Component {
                   <FormattedMessage id="EditListingPhotosForm.updateFailed" />
                 </p>
               ) : null}
-              <AddImages
-                className={css.imagesField}
-                images={images}
-                thumbnailClassName={css.thumbnail}
-                savedImageAltText={intl.formatMessage({
-                  id: 'EditListingPhotosForm.savedImageAltText',
-                })}
-                onRemoveImage={onRemoveImage}
-              >
-                <Field
+
+              <div className={css.imagesField}>
+                <FieldArray
+                  name="images"
+                  validate={composeValidators(nonEmptyArray(imageRequiredMessage))}
+                >
+                  {({ fields }) =>
+                    fields.map((name, index) => (
+                      <FieldListingImage
+                        key={name}
+                        name={name}
+                        onRemoveImage={imageId => {
+                          fields.remove(index);
+                          onRemoveImage(imageId);
+                        }}
+                        intl={intl}
+                      />
+                    ))
+                  }
+                </FieldArray>
+
+                <FieldAddImage
                   id="addImage"
                   name="addImage"
                   accept={ACCEPT_IMAGES}
-                  form={null}
                   label={chooseImageText}
                   type="file"
                   disabled={imageUploadRequested}
-                >
-                  {fieldprops => {
-                    const { accept, input, label, disabled: fieldDisabled } = fieldprops;
-                    const { name, type } = input;
-                    const onChange = e => {
-                      const file = e.target.files[0];
-                      form.change(`addImage`, file);
-                      form.blur(`addImage`);
-                      onImageUploadHandler(file);
-                    };
-                    const inputProps = { accept, id: name, name, onChange, type };
-                    return (
-                      <div className={css.addImageWrapper}>
-                        <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
-                          {fieldDisabled ? null : (
-                            <input {...inputProps} className={css.addImageInput} />
-                          )}
-                          <label htmlFor={name} className={css.addImage}>
-                            {label}
-                          </label>
-                        </AspectRatioWrapper>
-                      </div>
-                    );
-                  }}
-                </Field>
-
-                <Field
-                  component={props => {
-                    const { input, meta } = props;
-                    return (
-                      <div className={css.imageRequiredWrapper}>
-                        <input {...input} />
-                        <ValidationError fieldMeta={meta} />
-                      </div>
-                    );
-                  }}
-                  name="images"
-                  type="hidden"
-                  validate={composeValidators(nonEmptyArray(imageRequiredMessage))}
+                  formApi={form}
+                  onImageUploadHandler={onImageUploadHandler}
                 />
-              </AddImages>
+              </div>
+              {imagesError ? <div className={css.arrayError}>{imagesError}</div> : null}
               {uploadImageFailed}
 
               <p className={css.tip}>
@@ -249,7 +279,6 @@ EditListingPhotosFormComponent.propTypes = {
   images: array,
   intl: intlShape.isRequired,
   onImageUpload: func.isRequired,
-  onUpdateImageOrder: func.isRequired,
   onSubmit: func.isRequired,
   saveActionMsg: string.isRequired,
   disabled: bool.isRequired,

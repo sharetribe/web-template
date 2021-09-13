@@ -122,11 +122,6 @@
   display: none;
 }
 
-.imageRequiredWrapper {
-  width: 100%;
-  clear: both;
-}
-
 .tip {
   @apply --marketplaceH5FontStyles;
   flex-shrink: 0;
@@ -142,6 +137,25 @@
 
 .error {
   color: var(--failColor);
+}
+
+.arrayError {
+  font-weight: var(--fontWeightMedium);
+  font-size: 15px;
+  line-height: 24px;
+  letter-spacing: 0;
+  color: var(--failColor);
+  width: 100%;
+  clear: both;
+
+  margin-top: 6px;
+  margin-bottom: 12px;
+
+  @media (--viewportMedium) {
+    font-weight: var(--fontWeightMedium);
+    margin-top: 6px;
+    margin-bottom: 10px;
+  }
 }
 
 .submitButton {
