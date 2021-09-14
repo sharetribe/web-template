@@ -7,13 +7,20 @@ import omit from 'lodash/omit';
 
 import config from '../../config';
 import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
-import { propTypes, LISTING_STATE_CLOSED, LINE_ITEM_NIGHT, LINE_ITEM_DAY } from '../../util/types';
+import {
+  propTypes,
+  LISTING_STATE_CLOSED,
+  LINE_ITEM_NIGHT,
+  LINE_ITEM_DAY,
+  LINE_ITEM_UNITS,
+} from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
 
 import { ModalInMobile, Button } from '..';
 
 import BookingDatesForm from './BookingDatesForm/BookingDatesForm';
+import ProductOrderForm from './ProductOrderForm/ProductOrderForm';
 import css from './OrderPanel.module.css';
 
 // This defines when ModalInMobile shows content as Modal
@@ -73,22 +80,28 @@ const OrderPanel = props => {
     fetchLineItemsError,
   } = props;
 
+  const isNightly = unitType === LINE_ITEM_NIGHT;
+  const isDaily = unitType === LINE_ITEM_DAY;
+  const isUnits = unitType === LINE_ITEM_UNITS;
+  const shouldHaveBooking = isNightly || isDaily;
+
   const price = listing.attributes.price;
   const hasListingState = !!listing.attributes.state;
   const isClosed = hasListingState && listing.attributes.state === LISTING_STATE_CLOSED;
-  const showBookingDatesForm = false; // hasListingState && !isClosed;
+  const showBookingDatesForm = shouldHaveBooking && hasListingState && !isClosed;
   const showClosedListingHelpText = listing.id && isClosed;
   const { formattedPrice, priceTitle } = priceData(price, intl);
   const isBook = !!parse(location.search).book;
+
+  // The listing resource has a relationship: `currentStock`,
+  // which you should include when making API calls.
+  const currentStock = listing.currentStock?.attributes?.quantity || 0;
 
   const subTitleText = !!subTitle
     ? subTitle
     : showClosedListingHelpText
     ? intl.formatMessage({ id: 'OrderPanel.subTitleClosedListing' })
     : null;
-
-  const isNightly = unitType === LINE_ITEM_NIGHT;
-  const isDaily = unitType === LINE_ITEM_DAY;
 
   const unitTranslationKey = isNightly
     ? 'OrderPanel.perNight'
@@ -123,7 +136,7 @@ const OrderPanel = props => {
         {showBookingDatesForm ? (
           <BookingDatesForm
             className={css.bookingForm}
-            formId="OrderPanel"
+            formId="OrderPanelBookingDatesForm"
             submitButtonWrapperClassName={css.bookingDatesSubmitButtonWrapper}
             unitType={unitType}
             onSubmit={onSubmit}
@@ -137,7 +150,20 @@ const OrderPanel = props => {
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
           />
-        ) : null}
+        ) : (
+          <ProductOrderForm
+            formId="OrderPanelProductOrderForm"
+            onSubmit={onSubmit}
+            price={price}
+            currentStock={currentStock}
+            listingId={listing.id}
+            isOwnListing={isOwnListing}
+            onFetchTransactionLineItems={onFetchTransactionLineItems}
+            lineItems={lineItems}
+            fetchLineItemsInProgress={fetchLineItemsInProgress}
+            fetchLineItemsError={fetchLineItemsError}
+          />
+        )}
       </ModalInMobile>
       <div className={css.openBookingForm}>
         <div className={css.priceContainer}>
@@ -160,7 +186,9 @@ const OrderPanel = props => {
           <div className={css.closedListingButton}>
             <FormattedMessage id="OrderPanel.closedListingButtonText" />
           </div>
-        ) : null}
+        ) : (
+          <p>product button</p>
+        )}
       </div>
     </div>
   );
