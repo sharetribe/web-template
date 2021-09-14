@@ -105,7 +105,7 @@ export class ListingPageComponent extends Component {
     const listingId = new UUID(params.id);
     const listing = getListing(listingId);
 
-    const { bookingDates, ...otherOrderData } = values;
+    const { bookingDates, quantity: quantityRaw, deliveryMethod, ...otherOrderData } = values;
     const bookingDatesMaybe = bookingDates
       ? {
           bookingDates: {
@@ -119,6 +119,8 @@ export class ListingPageComponent extends Component {
       listing,
       orderData: {
         ...bookingDatesMaybe,
+        quantity: Number.parseInt(quantityRaw, 10),
+        deliveryMethod,
         ...otherOrderData,
       },
       confirmPaymentError: null,
