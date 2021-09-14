@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [add] ProfilePage: add showAuthoInfo flag for listing cards.
+  [#84](https://github.com/sharetribe/ftw-product/pull/84)
 - [add] ProfilePage: fetch correct image aspect ratios for listing cards.
   [#83](https://github.com/sharetribe/ftw-product/pull/83)
 - [fix] EditListingPhotosPanel: refactor and fix photos panel (uploading showed images twice).
