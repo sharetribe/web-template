@@ -51,7 +51,7 @@ const renderForm = formRenderProps => {
   const showBreakdown =
     breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
   const breakdown = showBreakdown ? (
-    <div>
+    <div className={css.breakdownWrapper}>
       <h3>
         <FormattedMessage id="ProductOrderForm.breakdownTitle" />
       </h3>
@@ -76,6 +76,7 @@ const renderForm = formRenderProps => {
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
       <FieldSelect
         id={`${formId}.quantity`}
+        className={css.quantityField}
         name="quantity"
         label={intl.formatMessage({ id: 'ProductOrderForm.quantityLabel' })}
       >

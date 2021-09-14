@@ -187,7 +187,12 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.closedListingButtonText" />
           </div>
         ) : (
-          <p>product button</p>
+          <Button
+            rootClassName={css.bookButton}
+            onClick={() => openBookModal(isOwnListing, isClosed, history, location)}
+          >
+            <FormattedMessage id="OrderPanel.ctaButtonProductMessage" />
+          </Button>
         )}
       </div>
     </div>
