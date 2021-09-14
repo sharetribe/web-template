@@ -63,13 +63,7 @@ const renderForm = formRenderProps => {
     </div>
   ) : null;
 
-  const quantityOptions = [...Array(currentStock).keys()].map(i => {
-    const quantity = i + 1;
-    return {
-      value: quantity,
-      label: quantity,
-    };
-  });
+  const quantities = [...Array(currentStock).keys()].map(i => i + 1);
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -83,9 +77,9 @@ const renderForm = formRenderProps => {
         <option disabled value="">
           {intl.formatMessage({ id: 'ProductOrderForm.selectQuantityOption' })}
         </option>
-        {quantityOptions.map(option => (
-          <option key={option.value} value={option.value}>
-            {option.label}
+        {quantities.map(quantity => (
+          <option key={quantity} value={quantity}>
+            {intl.formatMessage({ id: 'ProductOrderForm.quantityOption' }, { quantity })}
           </option>
         ))}
       </FieldSelect>

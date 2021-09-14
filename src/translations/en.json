@@ -602,6 +602,7 @@
   "ProductOrderForm.deliveryMethodLabel": "Delivery method",
   "ProductOrderForm.pickupOption": "Pickup",
   "ProductOrderForm.quantityLabel": "Quantity",
+  "ProductOrderForm.quantityOption": "{quantity, number} {quantity, plural, one {pair} other {pairs}}",
   "ProductOrderForm.selectDeliveryMethodOption": "Select delivery method",
   "ProductOrderForm.selectQuantityOption": "Select quantity",
   "ProductOrderForm.shippingOption": "Shipping",
