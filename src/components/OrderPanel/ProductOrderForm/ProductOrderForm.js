@@ -1,11 +1,15 @@
 import React from 'react';
+import { bool, func, number, string } from 'prop-types';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 
 import config from '../../../config';
 import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
+import { propTypes } from '../../../util/types';
 import { Form, FieldSelect, PrimaryButton } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
+
+import css from './ProductOrderForm.module.css';
 
 const renderForm = formRenderProps => {
   const {
@@ -47,8 +51,10 @@ const renderForm = formRenderProps => {
   const showBreakdown =
     breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
   const breakdown = showBreakdown ? (
-    <div>
-      <h3>Order breakdown</h3>
+    <div className={css.breakdownWrapper}>
+      <h3>
+        <FormattedMessage id="ProductOrderForm.breakdownTitle" />
+      </h3>
       <EstimatedCustomerBreakdownMaybe
         unitType={config.lineItemUnitType}
         breakdownData={breakdownData}
@@ -57,39 +63,51 @@ const renderForm = formRenderProps => {
     </div>
   ) : null;
 
-  const quantityOptions = [...Array(currentStock).keys()].map(i => {
-    const quantity = i + 1;
-    return {
-      value: quantity,
-      label: quantity,
-    };
-  });
+  const quantities = [...Array(currentStock).keys()].map(i => i + 1);
 
   return (
     <Form onSubmit={handleSubmit}>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
-      <FieldSelect id={`${formId}.quantity`} name="quantity" label={'Quantity'}>
+      <FieldSelect
+        id={`${formId}.quantity`}
+        className={css.quantityField}
+        name="quantity"
+        label={intl.formatMessage({ id: 'ProductOrderForm.quantityLabel' })}
+      >
         <option disabled value="">
-          Select quantity
+          {intl.formatMessage({ id: 'ProductOrderForm.selectQuantityOption' })}
         </option>
-        {quantityOptions.map(option => (
-          <option key={option.value} value={option.value}>
-            {option.label}
+        {quantities.map(quantity => (
+          <option key={quantity} value={quantity}>
+            {intl.formatMessage({ id: 'ProductOrderForm.quantityOption' }, { quantity })}
           </option>
         ))}
       </FieldSelect>
-      <FieldSelect id={`${formId}.deliveryMethod`} name="deliveryMethod" label={'Delivery method'}>
+      <FieldSelect
+        id={`${formId}.deliveryMethod`}
+        className={css.deliveryField}
+        name="deliveryMethod"
+        label={intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
+      >
         <option disabled value="">
-          Select delivery method
+          {intl.formatMessage({ id: 'ProductOrderForm.selectDeliveryMethodOption' })}
         </option>
-        <option value={'pickup'}>Pickup</option>
-        <option value={'shipping'}>Shipping</option>
+        <option value={'pickup'}>
+          {intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
+        </option>
+        <option value={'shipping'}>
+          {intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })}
+        </option>
       </FieldSelect>
       {breakdown}
-      <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
-        Buy now
-      </PrimaryButton>
-      <p>You won't be charged yet.</p>
+      <div className={css.submitButton}>
+        <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+          <FormattedMessage id="ProductOrderForm.ctaButton" />
+        </PrimaryButton>
+      </div>
+      <p className={css.chargeInfo}>
+        <FormattedMessage id="ProductOrderForm.chargeInfo" />
+      </p>
     </Form>
   );
 };
@@ -99,8 +117,36 @@ const ProductOrderForm = props => {
   return <FinalForm {...props} intl={intl} render={renderForm} />;
 };
 
-ProductOrderForm.defaultProps = {};
+ProductOrderForm.defaultProps = {
+  rootClassName: null,
+  className: null,
+  price: null,
+  currentStock: null,
+  listingId: null,
+  isOwnListing: false,
+  lineItems: null,
+  fetchLineItemsError: null,
+};
 
-ProductOrderForm.propTypes = {};
+ProductOrderForm.propTypes = {
+  rootClassName: string,
+  className: string,
+
+  // form
+  formId: string.isRequired,
+  onSubmit: func.isRequired,
+
+  // listing
+  listingId: propTypes.uuid,
+  price: propTypes.money,
+  currentStock: number,
+  isOwnListing: bool,
+
+  // line items
+  lineItems: propTypes.lineItems,
+  onFetchTransactionLineItems: func.isRequired,
+  fetchLineItemsInProgress: bool.isRequired,
+  fetchLineItemsError: propTypes.error,
+};
 
 export default ProductOrderForm;
