@@ -15,7 +15,7 @@ export const Default = {
     authorDisplayName: 'Author Name',
     onManageDisableScrolling: () => null,
     fetchLineItemsInProgress: false,
-    onFetchTransactionLineItems: () => null,
+    onFetchTransactionLineItems: () => console.log('onFetchTransactionLineItems'),
   },
   group: 'payment',
 };
@@ -31,7 +31,7 @@ export const WithClosedListing = {
     authorDisplayName: 'Author Name',
     onManageDisableScrolling: () => null,
     fetchLineItemsInProgress: false,
-    onFetchTransactionLineItems: () => null,
+    onFetchTransactionLineItems: () => console.log('onFetchTransactionLineItems'),
   },
   group: 'payment',
 };
