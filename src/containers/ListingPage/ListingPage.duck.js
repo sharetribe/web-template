@@ -165,7 +165,7 @@ export const showListing = (listingId, isOwn = false) => (dispatch, getState, sd
   dispatch(fetchCurrentUser());
   const params = {
     id: listingId,
-    include: ['author', 'author.profileImage', 'images'],
+    include: ['author', 'author.profileImage', 'images', 'currentStock'],
     'fields.image': [
       // Scaled variants for large images
       'variants.scaled-small',
