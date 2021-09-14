@@ -9,6 +9,8 @@ import { Form, FieldSelect, PrimaryButton } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
+import css from './ProductOrderForm.module.css';
+
 const renderForm = formRenderProps => {
   const {
     // FormRenderProps from final-form
@@ -50,7 +52,9 @@ const renderForm = formRenderProps => {
     breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
   const breakdown = showBreakdown ? (
     <div>
-      <h3>Order breakdown</h3>
+      <h3>
+        <FormattedMessage id="ProductOrderForm.breakdownTitle" />
+      </h3>
       <EstimatedCustomerBreakdownMaybe
         unitType={config.lineItemUnitType}
         breakdownData={breakdownData}
@@ -70,9 +74,13 @@ const renderForm = formRenderProps => {
   return (
     <Form onSubmit={handleSubmit}>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
-      <FieldSelect id={`${formId}.quantity`} name="quantity" label={'Quantity'}>
+      <FieldSelect
+        id={`${formId}.quantity`}
+        name="quantity"
+        label={intl.formatMessage({ id: 'ProductOrderForm.quantityLabel' })}
+      >
         <option disabled value="">
-          Select quantity
+          {intl.formatMessage({ id: 'ProductOrderForm.selectQuantityOption' })}
         </option>
         {quantityOptions.map(option => (
           <option key={option.value} value={option.value}>
@@ -80,18 +88,31 @@ const renderForm = formRenderProps => {
           </option>
         ))}
       </FieldSelect>
-      <FieldSelect id={`${formId}.deliveryMethod`} name="deliveryMethod" label={'Delivery method'}>
+      <FieldSelect
+        id={`${formId}.deliveryMethod`}
+        className={css.deliveryField}
+        name="deliveryMethod"
+        label={intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
+      >
         <option disabled value="">
-          Select delivery method
+          {intl.formatMessage({ id: 'ProductOrderForm.selectDeliveryMethodOption' })}
         </option>
-        <option value={'pickup'}>Pickup</option>
-        <option value={'shipping'}>Shipping</option>
+        <option value={'pickup'}>
+          {intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
+        </option>
+        <option value={'shipping'}>
+          {intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })}
+        </option>
       </FieldSelect>
       {breakdown}
-      <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
-        Buy now
-      </PrimaryButton>
-      <p>You won't be charged yet.</p>
+      <div className={css.submitButton}>
+        <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+          <FormattedMessage id="ProductOrderForm.ctaButton" />
+        </PrimaryButton>
+      </div>
+      <p className={css.chargeInfo}>
+        <FormattedMessage id="ProductOrderForm.chargeInfo" />
+      </p>
     </Form>
   );
 };

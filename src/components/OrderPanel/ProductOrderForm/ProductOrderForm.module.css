@@ -1,0 +1,14 @@
+@import '../../../styles/propertySets.css';
+
+.deliveryField {
+  margin-top: 24px;
+}
+
+.submitButton {
+  margin-top: 24px;
+}
+
+.chargeInfo {
+  @apply --marketplaceTinyFontStyles;
+  text-align: center;
+}
