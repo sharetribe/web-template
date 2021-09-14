@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { string, func } from 'prop-types';
+import { string, func, bool } from 'prop-types';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import classNames from 'classnames';
 import { lazyLoadWithDimensions } from '../../util/contextHelpers';
@@ -42,7 +42,15 @@ class ListingImage extends Component {
 const LazyImage = lazyLoadWithDimensions(ListingImage, { loadAfterInitialRendering: 3000 });
 
 export const ListingCardComponent = props => {
-  const { className, rootClassName, intl, listing, renderSizes, setActiveListing } = props;
+  const {
+    className,
+    rootClassName,
+    intl,
+    listing,
+    renderSizes,
+    setActiveListing,
+    showAuthorInfo,
+  } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
   const id = currentListing.id.uuid;
@@ -110,9 +118,11 @@ export const ListingCardComponent = props => {
               longWordClass: css.longWord,
             })}
           </div>
-          <div className={css.authorInfo}>
-            <FormattedMessage id="ListingCard.author" values={{ authorName }} />
-          </div>
+          {showAuthorInfo ? (
+            <div className={css.authorInfo}>
+              <FormattedMessage id="ListingCard.author" values={{ authorName }} />
+            </div>
+          ) : null}
         </div>
       </div>
     </NamedLink>
@@ -124,6 +134,7 @@ ListingCardComponent.defaultProps = {
   rootClassName: null,
   renderSizes: null,
   setActiveListing: null,
+  showAuthorInfo: true,
 };
 
 ListingCardComponent.propTypes = {
@@ -131,6 +142,7 @@ ListingCardComponent.propTypes = {
   rootClassName: string,
   intl: intlShape.isRequired,
   listing: propTypes.listing.isRequired,
+  showAuthorInfo: bool,
 
   // Responsive image sizes hint
   renderSizes: string,
