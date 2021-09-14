@@ -175,14 +175,7 @@ const OrderPanel = props => {
           </div>
         </div>
 
-        {showBookingDatesForm ? (
-          <Button
-            rootClassName={css.bookButton}
-            onClick={() => openBookModal(isOwnListing, isClosed, history, location)}
-          >
-            <FormattedMessage id="OrderPanel.ctaButtonMessage" />
-          </Button>
-        ) : isClosed ? (
+        {isClosed ? (
           <div className={css.closedListingButton}>
             <FormattedMessage id="OrderPanel.closedListingButtonText" />
           </div>
@@ -191,7 +184,7 @@ const OrderPanel = props => {
             rootClassName={css.bookButton}
             onClick={() => openBookModal(isOwnListing, isClosed, history, location)}
           >
-            <FormattedMessage id="OrderPanel.ctaButtonProductMessage" />
+            <FormattedMessage id="OrderPanel.ctaButtonMessage" />
           </Button>
         )}
       </div>
