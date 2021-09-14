@@ -1,8 +1,10 @@
 import React from 'react';
+import { bool, func, number, string } from 'prop-types';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 
 import config from '../../../config';
 import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
+import { propTypes } from '../../../util/types';
 import { Form, FieldSelect, PrimaryButton } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
@@ -99,8 +101,36 @@ const ProductOrderForm = props => {
   return <FinalForm {...props} intl={intl} render={renderForm} />;
 };
 
-ProductOrderForm.defaultProps = {};
+ProductOrderForm.defaultProps = {
+  rootClassName: null,
+  className: null,
+  price: null,
+  currentStock: null,
+  listingId: null,
+  isOwnListing: false,
+  lineItems: null,
+  fetchLineItemsError: null,
+};
 
-ProductOrderForm.propTypes = {};
+ProductOrderForm.propTypes = {
+  rootClassName: string,
+  className: string,
+
+  // form
+  formId: string.isRequired,
+  onSubmit: func.isRequired,
+
+  // listing
+  listingId: propTypes.uuid,
+  price: propTypes.money,
+  currentStock: number,
+  isOwnListing: bool,
+
+  // line items
+  lineItems: propTypes.lineItems,
+  onFetchTransactionLineItems: func.isRequired,
+  fetchLineItemsInProgress: bool.isRequired,
+  fetchLineItemsError: propTypes.error,
+};
 
 export default ProductOrderForm;
