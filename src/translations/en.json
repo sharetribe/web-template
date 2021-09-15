@@ -384,7 +384,7 @@
   "ListingImageGallery.imageThumbnailAltText": "Listing image thumbnail {index}/{count}",
   "ListingImageGallery.viewImagesButton": "View photos ({count})",
   "ListingPage.bookingSubTitle": "Start by choosing your dates.",
-  "ListingPage.bookingTitle": "Book {title}",
+  "ListingPage.bookingTitle": "{title}",
   "ListingPage.closedListing": "This listing has been closed and can't be booked.",
   "ListingPage.contactUser": "Contact",
   "ListingPage.descriptionTitle": "About this sauna",
