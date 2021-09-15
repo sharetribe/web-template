@@ -603,6 +603,7 @@
   "ProductOrderForm.finePrintNoStock": "Unfortunately this listing is out of stock right now but you can {contactSellerLink}.",
   "ProductOrderForm.finePrintNoStockLinkText": "contact seller",
   "ProductOrderForm.listingCurrencyInvalid": "Oops, the currency of the listing doesn't match the currency of the marketplace.",
+  "ProductOrderForm.listingPriceMissing": "Oops, this listing has no price!",
   "ProductOrderForm.pickupOption": "Pickup",
   "ProductOrderForm.quantityLabel": "Quantity",
   "ProductOrderForm.quantityOption": "{quantity, number} {quantity, plural, one {pair} other {pairs}}",
