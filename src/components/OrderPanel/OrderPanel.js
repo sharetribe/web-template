@@ -75,6 +75,7 @@ const OrderPanel = props => {
     location,
     intl,
     onFetchTransactionLineItems,
+    onContactUser,
     lineItems,
     fetchLineItemsInProgress,
     fetchLineItemsError,
@@ -159,6 +160,7 @@ const OrderPanel = props => {
             listingId={listing.id}
             isOwnListing={isOwnListing}
             onFetchTransactionLineItems={onFetchTransactionLineItems}
+            onContactUser={onContactUser}
             lineItems={lineItems}
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
@@ -220,6 +222,7 @@ OrderPanel.propTypes = {
   timeSlots: arrayOf(propTypes.timeSlot),
   fetchTimeSlotsError: propTypes.error,
   onFetchTransactionLineItems: func.isRequired,
+  onContactUser: func,
   lineItems: array,
   fetchLineItemsInProgress: bool.isRequired,
   fetchLineItemsError: propTypes.error,

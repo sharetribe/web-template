@@ -332,6 +332,7 @@ exports[`ListingPage matches snapshot 1`] = `
                 "type": "listing",
               }
             }
+            onContactUser={[Function]}
             onFetchTransactionLineItems={[Function]}
             onManageDisableScrolling={[Function]}
             onSubmit={[Function]}
