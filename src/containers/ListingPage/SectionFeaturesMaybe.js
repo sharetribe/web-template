@@ -5,12 +5,13 @@ import { PropertyGroup } from '../../components';
 import css from './ListingPage.module.css';
 
 const SectionFeaturesMaybe = props => {
-  const { options, publicData } = props;
-  if (!publicData) {
+  const { options, publicData, extendedDataKey } = props;
+  if (!publicData || !extendedDataKey || !publicData[extendedDataKey]) {
     return null;
   }
 
-  const selectedOptions = publicData && publicData.amenities ? publicData.amenities : [];
+  const selectedOptions =
+    publicData && publicData[extendedDataKey] ? publicData[extendedDataKey] : [];
   return (
     <div className={css.sectionFeatures}>
       <h2 className={css.featuresTitle}>
