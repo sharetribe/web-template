@@ -5,7 +5,7 @@ import { Form as FinalForm, FormSpy } from 'react-final-form';
 import config from '../../../config';
 import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
-import { Form, FieldSelect, PrimaryButton } from '../../../components';
+import { Form, FieldSelect, PrimaryButton, InlineTextButton } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
@@ -26,12 +26,11 @@ const renderForm = formRenderProps => {
     listingId,
     isOwnListing,
     onFetchTransactionLineItems,
+    onContactUser,
     lineItems,
     fetchLineItemsInProgress,
     fetchLineItemsError,
   } = formRenderProps;
-  const submitInProgress = fetchLineItemsInProgress;
-  const submitDisabled = invalid;
 
   const handleOnChange = formValues => {
     const { quantity: quantityRaw, deliveryMethod } = formValues.values;
@@ -63,7 +62,17 @@ const renderForm = formRenderProps => {
     </div>
   ) : null;
 
-  const quantities = [...Array(currentStock).keys()].map(i => i + 1);
+  const contactSellerLink = (
+    <InlineTextButton onClick={onContactUser}>
+      <FormattedMessage id="ProductOrderForm.finePrintNoStockLinkText" />
+    </InlineTextButton>
+  );
+
+  const hasStock = currentStock && currentStock > 0;
+  const quantities = hasStock ? [...Array(currentStock).keys()].map(i => i + 1) : [];
+
+  const submitInProgress = fetchLineItemsInProgress;
+  const submitDisabled = invalid || !hasStock;
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -72,6 +81,7 @@ const renderForm = formRenderProps => {
         id={`${formId}.quantity`}
         className={css.quantityField}
         name="quantity"
+        disabled={!hasStock}
         label={intl.formatMessage({ id: 'ProductOrderForm.quantityLabel' })}
       >
         <option disabled value="">
@@ -87,6 +97,7 @@ const renderForm = formRenderProps => {
         id={`${formId}.deliveryMethod`}
         className={css.deliveryField}
         name="deliveryMethod"
+        disabled={!hasStock}
         label={intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
       >
         <option disabled value="">
@@ -102,11 +113,19 @@ const renderForm = formRenderProps => {
       {breakdown}
       <div className={css.submitButton}>
         <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
-          <FormattedMessage id="ProductOrderForm.ctaButton" />
+          {hasStock ? (
+            <FormattedMessage id="ProductOrderForm.ctaButton" />
+          ) : (
+            <FormattedMessage id="ProductOrderForm.ctaButtonNoStock" />
+          )}
         </PrimaryButton>
       </div>
-      <p className={css.chargeInfo}>
-        <FormattedMessage id="ProductOrderForm.chargeInfo" />
+      <p className={css.finePrint}>
+        {hasStock ? (
+          <FormattedMessage id="ProductOrderForm.finePrint" />
+        ) : (
+          <FormattedMessage id="ProductOrderForm.finePrintNoStock" values={{ contactSellerLink }} />
+        )}
       </p>
     </Form>
   );
@@ -147,6 +166,9 @@ ProductOrderForm.propTypes = {
   onFetchTransactionLineItems: func.isRequired,
   fetchLineItemsInProgress: bool.isRequired,
   fetchLineItemsError: propTypes.error,
+
+  // other
+  onContactUser: func,
 };
 
 export default ProductOrderForm;

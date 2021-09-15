@@ -34,7 +34,7 @@
   }
 }
 
-.chargeInfo {
+.finePrint {
   @apply --marketplaceTinyFontStyles;
   text-align: center;
 }
