@@ -444,8 +444,12 @@ export class ListingPageComponent extends Component {
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
                   />
-                  <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
                   <SectionDescriptionMaybe description={description} listingTitle={richTitle} />
+                  <SectionFeaturesMaybe
+                    extendedDataKey="amenities"
+                    options={amenityOptions}
+                    publicData={publicData}
+                  />
                   <SectionRulesMaybe publicData={publicData} />
                   <SectionMapMaybe
                     geolocation={geolocation}
