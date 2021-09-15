@@ -38,3 +38,14 @@
   @apply --marketplaceTinyFontStyles;
   text-align: center;
 }
+
+.error {
+  @apply --marketplaceH4FontStyles;
+  color: var(--failColor);
+
+  padding: 0 24px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+  }
+}
