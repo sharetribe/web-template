@@ -189,3 +189,9 @@ export const sortConfig = {
     { key: 'relevance', label: 'Relevance', longLabel: 'Relevance (Keyword search)' },
   ],
 };
+
+export const listing = {
+  // These should be listing details from public data with schema type: enum
+  // SectionDetailsMaybe component shows these on listing page.
+  enumFieldDetails: ['size', 'brand', 'category'],
+};
