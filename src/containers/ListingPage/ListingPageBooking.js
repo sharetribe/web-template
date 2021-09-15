@@ -480,6 +480,7 @@ export class ListingPageComponent extends Component {
                   timeSlots={timeSlots}
                   fetchTimeSlotsError={fetchTimeSlotsError}
                   onFetchTransactionLineItems={onFetchTransactionLineItems}
+                  onContactUser={this.onContactUser}
                   lineItems={lineItems}
                   fetchLineItemsInProgress={fetchLineItemsInProgress}
                   fetchLineItemsError={fetchLineItemsError}
