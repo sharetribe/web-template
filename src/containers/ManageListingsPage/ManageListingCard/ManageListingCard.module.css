@@ -73,13 +73,6 @@
   }
 }
 
-/* Firefox doesn't support image aspect ratio inside flexbox */
-.aspectWrapper {
-  padding-bottom: 66.6667%; /* 3:2 Aspect Ratio */
-  background: var(--matterColorNegative); /* Loading BG color */
-  margin-bottom: 1px; /* Fix 1px bug */
-}
-
 .rootForImage {
   /* Layout - image will take space defined by aspect ratio wrapper */
   composes: coverEverything;
