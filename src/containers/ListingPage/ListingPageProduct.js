@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { array, arrayOf, bool, func, shape, string, oneOf } from 'prop-types';
+import { array, arrayOf, bool, func, shape, string, oneOf, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -48,6 +48,7 @@ import { sendEnquiry, fetchTransactionLineItems, setInitialValues } from './List
 import SectionAvatar from './SectionAvatar';
 import SectionHeading from './SectionHeading';
 import SectionDescriptionMaybe from './SectionDescriptionMaybe';
+import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionFeaturesMaybe from './SectionFeaturesMaybe';
 import SectionReviews from './SectionReviews';
 import SectionHostMaybe from './SectionHostMaybe';
@@ -204,7 +205,7 @@ export class ListingPageComponent extends Component {
       sendEnquiryError,
       timeSlots,
       fetchTimeSlotsError,
-      filterConfig,
+      customConfig,
       onFetchTransactionLineItems,
       lineItems,
       fetchLineItemsInProgress,
@@ -389,8 +390,8 @@ export class ListingPageComponent extends Component {
       </NamedLink>
     );
 
-    const amenityOptions = findOptionsForSelectFilter('amenities', filterConfig);
-    const categoryOptions = findOptionsForSelectFilter('category', filterConfig);
+    const amenityOptions = findOptionsForSelectFilter('amenities', customConfig.filters);
+    const categoryOptions = findOptionsForSelectFilter('category', customConfig.filters);
     const category =
       publicData && publicData.category ? (
         <span>
@@ -434,6 +435,7 @@ export class ListingPageComponent extends Component {
                   />
                 </div>
                 <SectionDescriptionMaybe description={description} listingTitle={richTitle} />
+                <SectionDetailsMaybe publicData={publicData} customConfig={customConfig} />
                 <SectionFeaturesMaybe
                   extendedDataKey="amenities"
                   options={amenityOptions}
@@ -500,7 +502,7 @@ ListingPageComponent.defaultProps = {
   timeSlots: null,
   fetchTimeSlotsError: null,
   sendEnquiryError: null,
-  filterConfig: config.custom.filters,
+  customConfig: config.custom,
   lineItems: null,
   fetchLineItemsError: null,
 };
@@ -541,7 +543,7 @@ ListingPageComponent.propTypes = {
   sendEnquiryError: propTypes.error,
   onSendEnquiry: func.isRequired,
   onInitializeCardPaymentData: func.isRequired,
-  filterConfig: array,
+  customConfig: object,
   onFetchTransactionLineItems: func.isRequired,
   lineItems: array,
   fetchLineItemsInProgress: bool.isRequired,
