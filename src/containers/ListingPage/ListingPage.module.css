@@ -261,10 +261,19 @@
   }
 }
 
+.orderPanel {
+  @media (--viewportLarge) {
+    position: sticky;
+    top: 108px;
+  }
+}
+
 .productOrderPanel {
   @media (--viewportLarge) {
     display: block;
     margin-top: 24px;
+    position: sticky;
+    top: 108px;
   }
 }
 
