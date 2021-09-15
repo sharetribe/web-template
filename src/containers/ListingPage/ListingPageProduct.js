@@ -419,8 +419,8 @@ export class ListingPageComponent extends Component {
         <LayoutSingleColumn className={css.pageRoot}>
           <LayoutWrapperTopbar>{topbar}</LayoutWrapperTopbar>
           <LayoutWrapperMain>
-            <div className={css.productContentWrapper}>
-              <div className={css.productMainContent}>
+            <div className={css.contentWrapperForProductLayout}>
+              <div className={css.mainColumnForProductLayout}>
                 <SectionGallery listing={currentListing} />
                 <div className={css.productMobileHeading}>
                   <SectionHeading
@@ -456,23 +456,25 @@ export class ListingPageComponent extends Component {
                   onManageDisableScrolling={onManageDisableScrolling}
                 />
               </div>
-              <OrderPanel
-                className={css.productOrderPanel}
-                listing={currentListing}
-                isOwnListing={isOwnListing}
-                unitType={unitType}
-                onSubmit={handleOrderSubmit}
-                title={bookingTitle}
-                subTitle={bookingSubTitle}
-                authorDisplayName={authorDisplayName}
-                onManageDisableScrolling={onManageDisableScrolling}
-                timeSlots={timeSlots}
-                fetchTimeSlotsError={fetchTimeSlotsError}
-                onFetchTransactionLineItems={onFetchTransactionLineItems}
-                lineItems={lineItems}
-                fetchLineItemsInProgress={fetchLineItemsInProgress}
-                fetchLineItemsError={fetchLineItemsError}
-              />
+              <div className={css.orderColumnForProductLayout}>
+                <OrderPanel
+                  className={css.productOrderPanel}
+                  listing={currentListing}
+                  isOwnListing={isOwnListing}
+                  unitType={unitType}
+                  onSubmit={handleOrderSubmit}
+                  title={bookingTitle}
+                  subTitle={bookingSubTitle}
+                  authorDisplayName={authorDisplayName}
+                  onManageDisableScrolling={onManageDisableScrolling}
+                  timeSlots={timeSlots}
+                  fetchTimeSlotsError={fetchTimeSlotsError}
+                  onFetchTransactionLineItems={onFetchTransactionLineItems}
+                  lineItems={lineItems}
+                  fetchLineItemsInProgress={fetchLineItemsInProgress}
+                  fetchLineItemsError={fetchLineItemsError}
+                />
+              </div>
             </div>
           </LayoutWrapperMain>
           <LayoutWrapperFooter>

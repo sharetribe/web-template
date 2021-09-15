@@ -432,9 +432,9 @@ export class ListingPageComponent extends Component {
                 handleViewPhotosClick={handleViewPhotosClick}
                 onManageDisableScrolling={onManageDisableScrolling}
               />
-              <div className={css.contentContainer}>
+              <div className={css.contentWrapperForHeroLayout}>
                 <SectionAvatar user={currentAuthor} params={params} />
-                <div className={css.mainContent}>
+                <div className={css.mainColumnForHeroLayout}>
                   <SectionHeading
                     priceTitle={priceTitle}
                     formattedPrice={formattedPrice}
@@ -467,24 +467,26 @@ export class ListingPageComponent extends Component {
                     onManageDisableScrolling={onManageDisableScrolling}
                   />
                 </div>
-                <OrderPanel
-                  className={css.orderPanel}
-                  listing={currentListing}
-                  isOwnListing={isOwnListing}
-                  unitType={unitType}
-                  onSubmit={handleOrderSubmit}
-                  title={bookingTitle}
-                  subTitle={bookingSubTitle}
-                  authorDisplayName={authorDisplayName}
-                  onManageDisableScrolling={onManageDisableScrolling}
-                  timeSlots={timeSlots}
-                  fetchTimeSlotsError={fetchTimeSlotsError}
-                  onFetchTransactionLineItems={onFetchTransactionLineItems}
-                  onContactUser={this.onContactUser}
-                  lineItems={lineItems}
-                  fetchLineItemsInProgress={fetchLineItemsInProgress}
-                  fetchLineItemsError={fetchLineItemsError}
-                />
+                <div className={css.orderColumnForHeroLayout}>
+                  <OrderPanel
+                    className={css.orderPanel}
+                    listing={currentListing}
+                    isOwnListing={isOwnListing}
+                    unitType={unitType}
+                    onSubmit={handleOrderSubmit}
+                    title={bookingTitle}
+                    subTitle={bookingSubTitle}
+                    authorDisplayName={authorDisplayName}
+                    onManageDisableScrolling={onManageDisableScrolling}
+                    timeSlots={timeSlots}
+                    fetchTimeSlotsError={fetchTimeSlotsError}
+                    onFetchTransactionLineItems={onFetchTransactionLineItems}
+                    onContactUser={this.onContactUser}
+                    lineItems={lineItems}
+                    fetchLineItemsInProgress={fetchLineItemsInProgress}
+                    fetchLineItemsError={fetchLineItemsError}
+                  />
+                </div>
               </div>
             </div>
           </LayoutWrapperMain>
