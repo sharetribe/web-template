@@ -433,8 +433,8 @@ export class ListingPageComponent extends Component {
                     onContactUser={this.onContactUser}
                   />
                 </div>
-                <SectionDescriptionMaybe description={description} />
                 <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
+                <SectionDescriptionMaybe description={description} listingTitle={richTitle} />
                 <SectionRulesMaybe publicData={publicData} />
                 <SectionMapMaybe
                   geolocation={geolocation}
