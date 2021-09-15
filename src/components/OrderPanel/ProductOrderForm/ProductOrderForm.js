@@ -134,6 +134,13 @@ const renderForm = formRenderProps => {
 const ProductOrderForm = props => {
   const intl = useIntl();
 
+  if (!props.price) {
+    return (
+      <p className={css.error}>
+        <FormattedMessage id="ProductOrderForm.listingPriceMissing" />
+      </p>
+    );
+  }
   if (props.price.currency !== config.currency) {
     return (
       <p className={css.error}>
