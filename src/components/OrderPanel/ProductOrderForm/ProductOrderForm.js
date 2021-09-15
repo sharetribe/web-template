@@ -133,6 +133,15 @@ const renderForm = formRenderProps => {
 
 const ProductOrderForm = props => {
   const intl = useIntl();
+
+  if (props.price.currency !== config.currency) {
+    return (
+      <p className={css.error}>
+        <FormattedMessage id="ProductOrderForm.listingCurrencyInvalid" />
+      </p>
+    );
+  }
+
   return <FinalForm {...props} intl={intl} render={renderForm} />;
 };
 
