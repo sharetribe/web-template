@@ -39,7 +39,7 @@ exports[`ListingPage matches snapshot 1`] = `
             Object {
               "id": "listing1",
               "slug": "listing1-title",
-              "tab": "description",
+              "tab": "details",
               "type": "edit",
             }
           }

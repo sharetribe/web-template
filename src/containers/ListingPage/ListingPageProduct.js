@@ -46,6 +46,7 @@ import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import { sendEnquiry, fetchTransactionLineItems, setInitialValues } from './ListingPage.duck';
 import SectionAvatar from './SectionAvatar';
+import ActionBarMaybe from './ActionBarMaybe';
 import SectionHeading from './SectionHeading';
 import SectionDescriptionMaybe from './SectionDescriptionMaybe';
 import SectionDetailsMaybe from './SectionDetailsMaybe';
@@ -226,7 +227,7 @@ export class ListingPageComponent extends Component {
     const listingType = isDraftVariant
       ? LISTING_PAGE_PARAM_TYPE_DRAFT
       : LISTING_PAGE_PARAM_TYPE_EDIT;
-    const listingTab = isDraftVariant ? 'photos' : 'description';
+    const listingTab = isDraftVariant ? 'photos' : 'details';
 
     const isApproved =
       currentListing.id && currentListing.attributes.state !== LISTING_STATE_PENDING_APPROVAL;
@@ -422,6 +423,19 @@ export class ListingPageComponent extends Component {
           <LayoutWrapperMain>
             <div className={css.contentWrapperForProductLayout}>
               <div className={css.mainColumnForProductLayout}>
+                {currentListing.id ? (
+                  <ActionBarMaybe
+                    className={css.actionBarForProductLayout}
+                    isOwnListing={isOwnListing}
+                    listing={currentListing}
+                    editParams={{
+                      id: listingId.uuid,
+                      slug: listingSlug,
+                      type: listingType,
+                      tab: listingTab,
+                    }}
+                  />
+                ) : null}
                 <SectionGallery listing={currentListing} />
                 <div className={css.productMobileHeading}>
                   <SectionHeading

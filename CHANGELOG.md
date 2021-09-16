@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [add] Add ActionBar component to ListingPageProduct.
+  [#87](https://github.com/sharetribe/ftw-product/pull/87)
 - [add] ListingPage: add column containers and other layout tuning.
   [#86](https://github.com/sharetribe/ftw-product/pull/86)
 - [add] ProfilePage: add showAuthoInfo flag for listing cards.
