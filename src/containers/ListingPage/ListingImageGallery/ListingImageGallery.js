@@ -5,7 +5,7 @@ import ReactImageGallery from 'react-image-gallery';
 
 import { propTypes } from '../../../util/types';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
-import { Button, IconClose, ResponsiveImage } from '../../../components';
+import { AspectRatioWrapper, Button, IconClose, ResponsiveImage } from '../../../components';
 
 // Copied directly from
 // `node_modules/react-image-gallery/styles/css/image-gallery.css`. The
@@ -42,14 +42,20 @@ const ListingImageGallery = props => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const renderItem = item => {
     return (
-      <div className={isFullscreen ? css.itemWrapperFullscreen : css.itemWrapper}>
-        <ResponsiveImage
-          rootClassName={css.item}
-          image={item.image}
-          alt={item.alt}
-          variants={imageVariants}
-        />
-      </div>
+      <AspectRatioWrapper
+        width={1}
+        height={1}
+        className={isFullscreen ? css.itemWrapperFullscreen : css.itemWrapper}
+      >
+        <div className={css.itemCentering}>
+          <ResponsiveImage
+            rootClassName={css.item}
+            image={item.image}
+            alt={item.alt}
+            variants={imageVariants}
+          />
+        </div>
+      </AspectRatioWrapper>
     );
   };
   const renderThumbInner = item => {
