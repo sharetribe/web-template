@@ -40,12 +40,9 @@
 }
 
 .actionBar {
-  position: absolute;
   display: flex;
   justify-content: space-between;
-  top: 13px;
-  left: 13px;
-  width: calc(100% - 26px);
+  width: 100%;
   color: var(--matterColorNegative);
   background-color: var(--matterColor);
   z-index: 1; /* bring on top of mobile image */
@@ -55,6 +52,31 @@
   cursor: initial;
 
   border-radius: var(--borderRadius);
+}
+
+.actionBarForProductLayout {
+  margin: 24px;
+  width: calc(100% - 48px);
+
+  @media (--viewportMedium) {
+    margin: 24px 0 24px 0;
+    width: 100%;
+  }
+
+  @media (--viewportLarge) {
+    margin: 0 0 24px 0;
+  }
+}
+
+.actionBarForHeroLayout {
+  position: absolute;
+  top: 13px;
+  left: 13px;
+  width: calc(100% - 26px);
+
+  /* Action bar prevents the image click events going to the parent and
+   should not show a pointer */
+  cursor: initial;
 }
 
 .ownListingText {
