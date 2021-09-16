@@ -58,9 +58,11 @@ const transactionProcessAlias = 'flex-product-default-process/release-1';
 //         depending on the value chosen.
 const lineItemUnitType = 'line-item/units';
 
+// Bookable listings with availability management.
 // Should the application fetch available time slots (currently defined as
 // start and end dates) to be shown on listing page.
-const enableAvailability = process.env.REACT_APP_AVAILABILITY_ENABLED === 'true';
+// Note: By default, FTW-product doesn't use bookings but stock. Therefore availability is turned off.
+const enableAvailability = false;
 
 // A maximum number of days forwards during which a booking can be made.
 // This is limited due to Stripe holding funds up to 90 days from the
@@ -155,16 +157,16 @@ const maps = {
     // When enabled, the first suggestion is "Current location" that
     // uses the browser Geolocation API to query the user's current
     // location.
-    suggestCurrentLocation: process.env.REACT_APP_DEFAULT_SEARCHES_ENABLED === 'true',
+    suggestCurrentLocation: true,
 
     // Distance in meters for calculating the bounding box around the
     // current location.
     currentLocationBoundsDistance: 1000,
 
+    // This affects location search.
     // Example location can be edited in the
     // `default-location-searches.js` file.
-    defaults:
-      process.env.REACT_APP_DEFAULT_SEARCHES_ENABLED === 'true' ? defaultLocationSearches : [],
+    defaults: defaultLocationSearches || [],
 
     // Limit location autocomplete to a one or more countries
     // using ISO 3166 alpha 2 country codes separated by commas.
