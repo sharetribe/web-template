@@ -209,12 +209,7 @@ ${chalk.dim(
 
 const advancedSettings = settings => {
   const rootUrlDefault = settings ? settings.REACT_APP_CANONICAL_ROOT_URL : null;
-  const availabilityDefault = settings
-    ? settings.REACT_APP_AVAILABILITY_ENABLED.toLowerCase() === 'true'
-    : true;
-  const searchesDefault = settings
-    ? settings.REACT_APP_DEFAULT_SEARCHES_ENABLED.toLowerCase() === 'true'
-    : true;
+  const cspDefault = settings ? settings.REACT_APP_CSP : null;
 
   return [
     {
@@ -239,27 +234,16 @@ ${chalk.dim(
       },
     },
     {
-      type: 'confirm',
-      name: 'REACT_APP_AVAILABILITY_ENABLED',
-      message: `Do you want to enable availability calendar?
+      type: 'input',
+      name: 'REACT_APP_CSP',
+      message: `Should Content Security Policy (CSP) be on block mode?
 ${chalk.dim(
-  'This setting enables the Availability Calendar for listings. The default value for this setting is true.'
+  'Content Security Policy should be on "block" mode, when the app is live. However, for development purposes "report" mode might make sense. The default value for this settings is true.'
 )}
 `,
-      default: availabilityDefault,
-      when: function(answers) {
-        return answers.showAdvancedSettings;
+      default: function() {
+        return cspDefault ? cspDefault : 'report';
       },
-    },
-    {
-      type: 'confirm',
-      name: 'REACT_APP_DEFAULT_SEARCHES_ENABLED',
-      message: `Do you want to enable default search suggestions?
-${chalk.dim(
-  'This setting enables the Default Search Suggestions in location autocomplete search input. The default value for this setting is true.'
-)}
-`,
-      default: searchesDefault,
       when: function(answers) {
         return answers.showAdvancedSettings;
       },
