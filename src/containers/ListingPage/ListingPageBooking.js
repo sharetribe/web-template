@@ -17,7 +17,7 @@ import {
   LISTING_PAGE_PARAM_TYPE_EDIT,
   createSlug,
 } from '../../util/urlHelpers';
-import { formatMoney } from '../../util/currency';
+import { formatMoney, convertMoneyToNumber } from '../../util/currency';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
 import {
   ensureListing,
@@ -369,12 +369,27 @@ export class ListingPageComponent extends Component {
 
     const facebookImages = listingImages(currentListing, 'facebook');
     const twitterImages = listingImages(currentListing, 'twitter');
-    const schemaImages = JSON.stringify(facebookImages.map(img => img.url));
+    const schemaImages = listingImages(currentListing, `${config.listing.variantPrefix}-2x`).map(
+      img => img.url
+    );
     const siteTitle = config.siteTitle;
     const schemaTitle = intl.formatMessage(
       { id: 'ListingPage.schemaTitle' },
       { title, price: formattedPrice, siteTitle }
     );
+    // You could add reviews, sku, etc. into page schema
+    // Read more about product schema
+    // https://developers.google.com/search/docs/advanced/structured-data/product
+    const productURL = `${config.canonicalRootURL}${location.pathname}${location.search}${location.hash}`;
+    const brand = currentListing?.attributes?.publicData?.brand;
+    const brandMaybe = brand ? { brand: { '@type': 'Brand', name: brand } } : {};
+    const schemaPriceNumber = intl.formatNumber(convertMoneyToNumber(price), {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    const currentStock = currentListing.currentStock?.attributes?.quantity || 0;
+    const schemaAvailability =
+      currentStock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
 
     const hostLink = (
       <NamedLink
@@ -408,10 +423,18 @@ export class ListingPageComponent extends Component {
         twitterImages={twitterImages}
         schema={{
           '@context': 'http://schema.org',
-          '@type': 'ItemPage',
+          '@type': 'Product',
           description: description,
           name: schemaTitle,
           image: schemaImages,
+          ...brandMaybe,
+          offers: {
+            '@type': 'Offer',
+            url: productURL,
+            priceCurrency: price.currency,
+            price: schemaPriceNumber,
+            availability: schemaAvailability,
+          },
         }}
       >
         <LayoutSingleColumn className={css.pageRoot}>
