@@ -32,7 +32,12 @@ const SectionImages = props => {
   // to the parent that would otherwise open the image carousel
   const actionBar = listing.id ? (
     <div onClick={e => e.stopPropagation()}>
-      <ActionBarMaybe isOwnListing={isOwnListing} listing={listing} editParams={editParams} />
+      <ActionBarMaybe
+        className={css.actionBarForHeroLayout}
+        isOwnListing={isOwnListing}
+        listing={listing}
+        editParams={editParams}
+      />
     </div>
   ) : null;
 

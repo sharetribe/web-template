@@ -1,5 +1,5 @@
 import React from 'react';
-import { bool, oneOfType, object } from 'prop-types';
+import { bool, oneOfType, object, string } from 'prop-types';
 import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
 import {
@@ -14,7 +14,9 @@ import EditIcon from './EditIcon';
 import css from './ListingPage.module.css';
 
 export const ActionBarMaybe = props => {
-  const { isOwnListing, listing, editParams } = props;
+  const { rootClassName, className, isOwnListing, listing, editParams } = props;
+  const classes = classNames(rootClassName || css.actionBar, className);
+
   const state = listing.attributes.state;
   const isPendingApproval = state === LISTING_STATE_PENDING_APPROVAL;
   const isClosed = state === LISTING_STATE_CLOSED;
@@ -38,7 +40,7 @@ export const ActionBarMaybe = props => {
     });
 
     return (
-      <div className={css.actionBar}>
+      <div className={classes}>
         <p className={ownListingTextClasses}>
           <FormattedMessage id={ownListingTextTranslationId} />
         </p>
@@ -50,7 +52,7 @@ export const ActionBarMaybe = props => {
     );
   } else if (isClosed) {
     return (
-      <div className={css.actionBar}>
+      <div className={classes}>
         <p className={css.closedListingText}>
           <FormattedMessage id="ListingPage.closedListing" />
         </p>
@@ -59,8 +61,14 @@ export const ActionBarMaybe = props => {
   }
   return null;
 };
+ActionBarMaybe.defaultProps = {
+  rootClassName: null,
+  className: null,
+};
 
 ActionBarMaybe.propTypes = {
+  rootClassName: string,
+  className: string,
   isOwnListing: bool.isRequired,
   listing: oneOfType([propTypes.listing, propTypes.ownListing]).isRequired,
   editParams: object.isRequired,
