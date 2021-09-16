@@ -177,6 +177,7 @@ export const showListing = (listingId, isOwn = false) => (dispatch, getState, sd
       `variants.${variantPrefix}`,
       `variants.${variantPrefix}-2x`,
       `variants.${variantPrefix}-4x`,
+      `variants.${variantPrefix}-6x`,
 
       // Social media
       'variants.facebook',
@@ -189,6 +190,7 @@ export const showListing = (listingId, isOwn = false) => (dispatch, getState, sd
     ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
     ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
     ...createImageVariantConfig(`${variantPrefix}-4x`, 1600, aspectRatio),
+    ...createImageVariantConfig(`${variantPrefix}-6x`, 2400, aspectRatio),
   };
 
   const show = isOwn ? sdk.ownListings.show(params) : sdk.listings.show(params);

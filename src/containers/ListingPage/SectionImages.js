@@ -1,7 +1,8 @@
 import React from 'react';
 
+import config from '../../config';
 import { FormattedMessage } from '../../util/reactIntl';
-import { ResponsiveImage, Modal } from '../../components';
+import { AspectRatioWrapper, ResponsiveImage, Modal } from '../../components';
 
 import ImageCarousel from './ImageCarousel/ImageCarousel';
 import ActionBarMaybe from './ActionBarMaybe';
@@ -22,6 +23,10 @@ const SectionImages = props => {
 
   const hasImages = listing.images && listing.images.length > 0;
   const firstImage = hasImages ? listing.images[0] : null;
+  const { aspectWidth, aspectHeight, variantPrefix = 'listing-card' } = config.listing;
+  const variants = firstImage
+    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
+    : [];
 
   // Action bar is wrapped with a div that prevents the click events
   // to the parent that would otherwise open the image carousel
@@ -42,23 +47,21 @@ const SectionImages = props => {
 
   return (
     <div className={css.sectionImages}>
-      <div className={css.threeToTwoWrapper}>
-        <div className={css.aspectWrapper} onClick={handleViewPhotosClick}>
-          {actionBar}
-          <ResponsiveImage
-            rootClassName={css.rootForImage}
-            alt={title}
-            image={firstImage}
-            variants={[
-              'landscape-crop',
-              'landscape-crop2x',
-              'landscape-crop4x',
-              'landscape-crop6x',
-            ]}
-          />
-          {viewPhotosButton}
-        </div>
-      </div>
+      <AspectRatioWrapper
+        className={css.imageWrapperForSectionImage}
+        width={aspectWidth}
+        height={aspectHeight}
+        onClick={handleViewPhotosClick}
+      >
+        {actionBar}
+        <ResponsiveImage
+          rootClassName={css.rootForImage}
+          alt={title}
+          image={firstImage}
+          variants={variants}
+        />
+        {viewPhotosButton}
+      </AspectRatioWrapper>
       <Modal
         id="ListingPage.imageCarousel"
         scrollLayerClassName={css.carouselModalScrollLayer}

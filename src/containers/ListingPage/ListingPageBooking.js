@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { array, arrayOf, bool, func, shape, string, oneOf } from 'prop-types';
+import { array, arrayOf, bool, func, shape, string, oneOf, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -49,6 +49,7 @@ import SectionImages from './SectionImages';
 import SectionAvatar from './SectionAvatar';
 import SectionHeading from './SectionHeading';
 import SectionDescriptionMaybe from './SectionDescriptionMaybe';
+import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionFeaturesMaybe from './SectionFeaturesMaybe';
 import SectionReviews from './SectionReviews';
 import SectionHostMaybe from './SectionHostMaybe';
@@ -201,7 +202,7 @@ export class ListingPageComponent extends Component {
       sendEnquiryError,
       timeSlots,
       fetchTimeSlotsError,
-      filterConfig,
+      customConfig,
       onFetchTransactionLineItems,
       lineItems,
       fetchLineItemsInProgress,
@@ -386,8 +387,8 @@ export class ListingPageComponent extends Component {
       </NamedLink>
     );
 
-    const amenityOptions = findOptionsForSelectFilter('amenities', filterConfig);
-    const categoryOptions = findOptionsForSelectFilter('category', filterConfig);
+    const amenityOptions = findOptionsForSelectFilter('amenities', customConfig.filters);
+    const categoryOptions = findOptionsForSelectFilter('category', customConfig.filters);
     const category =
       publicData && publicData.category ? (
         <span>
@@ -432,9 +433,9 @@ export class ListingPageComponent extends Component {
                 handleViewPhotosClick={handleViewPhotosClick}
                 onManageDisableScrolling={onManageDisableScrolling}
               />
-              <div className={css.contentContainer}>
+              <div className={css.contentWrapperForHeroLayout}>
                 <SectionAvatar user={currentAuthor} params={params} />
-                <div className={css.mainContent}>
+                <div className={css.mainColumnForHeroLayout}>
                   <SectionHeading
                     priceTitle={priceTitle}
                     formattedPrice={formattedPrice}
@@ -444,8 +445,13 @@ export class ListingPageComponent extends Component {
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
                   />
-                  <SectionDescriptionMaybe description={description} />
-                  <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
+                  <SectionDescriptionMaybe description={description} listingTitle={richTitle} />
+                  <SectionDetailsMaybe publicData={publicData} customConfig={customConfig} />
+                  <SectionFeaturesMaybe
+                    extendedDataKey="amenities"
+                    options={amenityOptions}
+                    publicData={publicData}
+                  />
                   <SectionRulesMaybe publicData={publicData} />
                   <SectionMapMaybe
                     geolocation={geolocation}
@@ -467,24 +473,26 @@ export class ListingPageComponent extends Component {
                     onManageDisableScrolling={onManageDisableScrolling}
                   />
                 </div>
-                <OrderPanel
-                  className={css.orderPanel}
-                  listing={currentListing}
-                  isOwnListing={isOwnListing}
-                  unitType={unitType}
-                  onSubmit={handleOrderSubmit}
-                  title={bookingTitle}
-                  subTitle={bookingSubTitle}
-                  authorDisplayName={authorDisplayName}
-                  onManageDisableScrolling={onManageDisableScrolling}
-                  timeSlots={timeSlots}
-                  fetchTimeSlotsError={fetchTimeSlotsError}
-                  onFetchTransactionLineItems={onFetchTransactionLineItems}
-                  onContactUser={this.onContactUser}
-                  lineItems={lineItems}
-                  fetchLineItemsInProgress={fetchLineItemsInProgress}
-                  fetchLineItemsError={fetchLineItemsError}
-                />
+                <div className={css.orderColumnForHeroLayout}>
+                  <OrderPanel
+                    className={css.orderPanel}
+                    listing={currentListing}
+                    isOwnListing={isOwnListing}
+                    unitType={unitType}
+                    onSubmit={handleOrderSubmit}
+                    title={bookingTitle}
+                    subTitle={bookingSubTitle}
+                    authorDisplayName={authorDisplayName}
+                    onManageDisableScrolling={onManageDisableScrolling}
+                    timeSlots={timeSlots}
+                    fetchTimeSlotsError={fetchTimeSlotsError}
+                    onFetchTransactionLineItems={onFetchTransactionLineItems}
+                    onContactUser={this.onContactUser}
+                    lineItems={lineItems}
+                    fetchLineItemsInProgress={fetchLineItemsInProgress}
+                    fetchLineItemsError={fetchLineItemsError}
+                  />
+                </div>
               </div>
             </div>
           </LayoutWrapperMain>
@@ -507,7 +515,7 @@ ListingPageComponent.defaultProps = {
   timeSlots: null,
   fetchTimeSlotsError: null,
   sendEnquiryError: null,
-  filterConfig: config.custom.filters,
+  customConfig: config.custom,
   lineItems: null,
   fetchLineItemsError: null,
 };
@@ -548,7 +556,7 @@ ListingPageComponent.propTypes = {
   sendEnquiryError: propTypes.error,
   onSendEnquiry: func.isRequired,
   onInitializeCardPaymentData: func.isRequired,
-  filterConfig: array,
+  customConfig: object,
   onFetchTransactionLineItems: func.isRequired,
   lineItems: array,
   fetchLineItemsInProgress: bool.isRequired,

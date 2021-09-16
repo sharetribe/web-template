@@ -93,7 +93,7 @@ exports[`ListingPage matches snapshot 1`] = `
           title="listing1 title"
         />
         <div
-          className="contentContainer"
+          className="contentWrapperForHeroLayout"
         >
           <SectionAvatar
             params={
@@ -121,7 +121,7 @@ exports[`ListingPage matches snapshot 1`] = `
             }
           />
           <div
-            className="mainContent"
+            className="mainColumnForHeroLayout"
           >
             <SectionHeading
               category={null}
@@ -160,8 +160,70 @@ exports[`ListingPage matches snapshot 1`] = `
             />
             <SectionDescriptionMaybe
               description="listing1 description"
+              listingTitle={
+                <span>
+                  
+                  listing1
+                   
+                  title
+                  
+                </span>
+              }
+            />
+            <SectionDetailsMaybe
+              customConfig={
+                Object {
+                  "filters": Array [
+                    Object {
+                      "config": Object {
+                        "options": Array [
+                          Object {
+                            "key": "cat1",
+                            "label": "Cat 1",
+                          },
+                          Object {
+                            "key": "cat2",
+                            "label": "Cat 2",
+                          },
+                        ],
+                      },
+                      "group": "secondary",
+                      "id": "category",
+                      "label": "Category",
+                      "queryParamName": "pub_category",
+                      "type": "SelectSingleFilter",
+                    },
+                    Object {
+                      "config": Object {
+                        "mode": "has_all",
+                        "options": Array [
+                          Object {
+                            "key": "feat1",
+                            "label": "Feat 1",
+                          },
+                          Object {
+                            "key": "feat2",
+                            "label": "Feat 2",
+                          },
+                          Object {
+                            "key": "feat3",
+                            "label": "Feat 3",
+                          },
+                        ],
+                      },
+                      "group": "secondary",
+                      "id": "amenities",
+                      "label": "Amenities",
+                      "queryParamName": "pub_amenities",
+                      "type": "SelectMultipleFilter",
+                    },
+                  ],
+                }
+              }
+              publicData={Object {}}
             />
             <SectionFeaturesMaybe
+              extendedDataKey="amenities"
               options={
                 Array [
                   Object {
@@ -282,80 +344,84 @@ exports[`ListingPage matches snapshot 1`] = `
               title="listing1 title"
             />
           </div>
-          <withRouter(injectIntl(OrderPanel))
-            authorDisplayName="user-1 display name"
-            className="orderPanel"
-            fetchLineItemsError={null}
-            fetchLineItemsInProgress={false}
-            fetchTimeSlotsError={null}
-            isOwnListing={false}
-            lineItems={null}
-            listing={
-              Object {
-                "attributes": Object {
-                  "deleted": false,
-                  "description": "listing1 description",
-                  "geolocation": LatLng {
-                    "_sdkType": "LatLng",
-                    "lat": 40,
-                    "lng": 60,
-                  },
-                  "price": Money {
-                    "_sdkType": "Money",
-                    "amount": 5500,
-                    "currency": "USD",
-                  },
-                  "publicData": Object {},
-                  "state": "published",
-                  "title": "listing1 title",
-                },
-                "author": Object {
+          <div
+            className="orderColumnForHeroLayout"
+          >
+            <withRouter(injectIntl(OrderPanel))
+              authorDisplayName="user-1 display name"
+              className="orderPanel"
+              fetchLineItemsError={null}
+              fetchLineItemsInProgress={false}
+              fetchTimeSlotsError={null}
+              isOwnListing={false}
+              lineItems={null}
+              listing={
+                Object {
                   "attributes": Object {
-                    "banned": false,
                     "deleted": false,
-                    "profile": Object {
-                      "abbreviatedName": "TT",
-                      "displayName": "user-1 display name",
+                    "description": "listing1 description",
+                    "geolocation": LatLng {
+                      "_sdkType": "LatLng",
+                      "lat": 40,
+                      "lng": 60,
                     },
+                    "price": Money {
+                      "_sdkType": "Money",
+                      "amount": 5500,
+                      "currency": "USD",
+                    },
+                    "publicData": Object {},
+                    "state": "published",
+                    "title": "listing1 title",
+                  },
+                  "author": Object {
+                    "attributes": Object {
+                      "banned": false,
+                      "deleted": false,
+                      "profile": Object {
+                        "abbreviatedName": "TT",
+                        "displayName": "user-1 display name",
+                      },
+                    },
+                    "id": UUID {
+                      "_sdkType": "UUID",
+                      "uuid": "user-1",
+                    },
+                    "type": "user",
                   },
                   "id": UUID {
                     "_sdkType": "UUID",
-                    "uuid": "user-1",
+                    "uuid": "listing1",
                   },
-                  "type": "user",
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "listing1",
-                },
-                "images": Array [],
-                "type": "listing",
-              }
-            }
-            onContactUser={[Function]}
-            onFetchTransactionLineItems={[Function]}
-            onManageDisableScrolling={[Function]}
-            onSubmit={[Function]}
-            subTitle="ListingPage.bookingSubTitle"
-            timeSlots={null}
-            title={
-              <FormattedMessage
-                id="ListingPage.bookingTitle"
-                values={
-                  Object {
-                    "title": <span>
-                      
-                      listing1
-                       
-                      title
-                      
-                    </span>,
-                  }
+                  "images": Array [],
+                  "type": "listing",
                 }
-              />
-            }
-            unitType="line-item/night"
-          />
+              }
+              onContactUser={[Function]}
+              onFetchTransactionLineItems={[Function]}
+              onManageDisableScrolling={[Function]}
+              onSubmit={[Function]}
+              subTitle="ListingPage.bookingSubTitle"
+              timeSlots={null}
+              title={
+                <FormattedMessage
+                  id="ListingPage.bookingTitle"
+                  values={
+                    Object {
+                      "title": <span>
+                        
+                        listing1
+                         
+                        title
+                        
+                      </span>,
+                    }
+                  }
+                />
+              }
+              unitType="line-item/night"
+            />
+          </div>
         </div>
       </div>
     </LayoutWrapperMain>
