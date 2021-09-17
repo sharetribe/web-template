@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [fix] Fix iphone layout for TopbarMobileMenu with spacer div.
+  [#91](https://github.com/sharetribe/ftw-product/pull/91)
 - [fix] Fix stretched mobile logo on iOS/Safari
   [#90](https://github.com/sharetribe/ftw-product/pull/90)
 - [add] Add ActionBar component to ListingPageProduct.

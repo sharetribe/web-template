@@ -112,6 +112,7 @@ const TopbarMobileMenu = props => {
         >
           <FormattedMessage id="TopbarMobileMenu.accountSettingsLink" />
         </NamedLink>
+        <div className={css.spacer} />
       </div>
       <div className={css.footer}>
         <NamedLink className={css.createNewListingLink} name="NewListingPage">
