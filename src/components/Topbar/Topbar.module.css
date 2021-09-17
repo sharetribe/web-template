@@ -37,6 +37,10 @@
   padding: calc((var(--topbarHeight) - var(--Topbar_logoHeight)) / 2) 24px;
 }
 
+.logo {
+  object-fit: contain;
+}
+
 .logoutButton {
   margin: 0;
 }
