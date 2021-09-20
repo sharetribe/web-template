@@ -126,7 +126,7 @@
 
   @media (--viewportLarge) {
     display: block;
-    margin-top: 119px;
+    margin-top: 120px;
   }
 }
 .avatarDesktop {
@@ -147,7 +147,7 @@
 
   @media (--viewportLarge) {
     max-width: 100%;
-    margin: 152px 0 0 0;
+    margin: 112px 0 0 0;
   }
 }
 
@@ -163,8 +163,8 @@
 
   @media (--viewportLarge) {
     max-width: 100%;
-    margin: 42px 0 0 0;
-    padding: 0;
+    margin: 40px 0 0 0;
+    padding: 2px 0 6px 0;
   }
 }
 
@@ -215,7 +215,8 @@
    */
 
   @media (--viewportLarge) {
-    margin: 123px 0 0 0;
+    margin: 120px 0 0 0;
+    padding-top: 3px;
   }
 }
 
@@ -336,6 +337,7 @@
   margin: 0;
 
   @media (--viewportMedium) {
+    padding: 7px 0 1px 0;
     margin: 0;
   }
 }
@@ -388,6 +390,7 @@
   margin: 42px 24px 0 24px;
 
   @media (--viewportMedium) {
+    padding: 7px 0 1px 0;
     margin: 40px 24px 0 24px;
   }
   @media (--viewportLarge) {
