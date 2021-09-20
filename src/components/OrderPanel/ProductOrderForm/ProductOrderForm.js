@@ -62,8 +62,13 @@ const renderForm = formRenderProps => {
     </div>
   ) : null;
 
+  const onClickContactUser = e => {
+    e.preventDefault();
+    onContactUser();
+  };
+
   const contactSellerLink = (
-    <InlineTextButton onClick={onContactUser}>
+    <InlineTextButton onClick={onClickContactUser}>
       <FormattedMessage id="ProductOrderForm.finePrintNoStockLinkText" />
     </InlineTextButton>
   );

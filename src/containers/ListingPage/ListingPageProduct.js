@@ -269,7 +269,6 @@ export class ListingPageComponent extends Component {
     const bookingTitle = (
       <FormattedMessage id="ListingPage.bookingTitle" values={{ title: richTitle }} />
     );
-    const bookingSubTitle = intl.formatMessage({ id: 'ListingPage.bookingSubTitle' });
 
     const topbar = <TopbarContainer />;
 
@@ -484,9 +483,9 @@ export class ListingPageComponent extends Component {
                   unitType={unitType}
                   onSubmit={handleOrderSubmit}
                   title={bookingTitle}
-                  subTitle={bookingSubTitle}
-                  authorDisplayName={authorDisplayName}
+                  author={ensuredAuthor}
                   onManageDisableScrolling={onManageDisableScrolling}
+                  onContactUser={this.onContactUser}
                   timeSlots={timeSlots}
                   fetchTimeSlotsError={fetchTimeSlotsError}
                   onFetchTransactionLineItems={onFetchTransactionLineItems}

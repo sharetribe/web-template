@@ -16,8 +16,8 @@ import {
 } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
-
-import { ModalInMobile, Button } from '..';
+import { userDisplayNameAsString } from '../../util/data';
+import { ModalInMobile, Button, AvatarSmall } from '../../components';
 
 import BookingDatesForm from './BookingDatesForm/BookingDatesForm';
 import ProductOrderForm from './ProductOrderForm/ProductOrderForm';
@@ -66,8 +66,7 @@ const OrderPanel = props => {
     unitType,
     onSubmit,
     title,
-    subTitle,
-    authorDisplayName,
+    author,
     onManageDisableScrolling,
     timeSlots,
     fetchTimeSlotsError,
@@ -98,9 +97,7 @@ const OrderPanel = props => {
   // which you should include when making API calls.
   const currentStock = listing.currentStock?.attributes?.quantity || 0;
 
-  const subTitleText = !!subTitle
-    ? subTitle
-    : showClosedListingHelpText
+  const subTitleText = showClosedListingHelpText
     ? intl.formatMessage({ id: 'OrderPanel.subTitleClosedListing' })
     : null;
 
@@ -109,6 +106,8 @@ const OrderPanel = props => {
     : isDaily
     ? 'OrderPanel.perDay'
     : 'OrderPanel.perUnit';
+
+  const authorDisplayName = userDisplayNameAsString(author, '');
 
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.bookingTitle);
@@ -125,15 +124,18 @@ const OrderPanel = props => {
       >
         <div className={css.modalHeading}>
           <h1 className={css.title}>{title}</h1>
-          <div className={css.author}>
-            <FormattedMessage id="OrderPanel.hostedBy" values={{ name: authorDisplayName }} />
-          </div>
         </div>
 
         <div className={css.bookingHeading}>
           <h2 className={titleClasses}>{title}</h2>
           {subTitleText ? <div className={css.bookingHelp}>{subTitleText}</div> : null}
         </div>
+        <p className={css.price}>{formatMoney(intl, price)}</p>
+        <div className={css.author}>
+          <AvatarSmall user={author} className={css.providerAvatar} />
+          <FormattedMessage id="OrderPanel.hostedBy" values={{ name: authorDisplayName }} />
+        </div>
+
         {showBookingDatesForm ? (
           <BookingDatesForm
             className={css.bookingForm}
@@ -217,7 +219,6 @@ OrderPanel.propTypes = {
   onSubmit: func.isRequired,
   title: oneOfType([node, string]).isRequired,
   subTitle: oneOfType([node, string]),
-  authorDisplayName: oneOfType([node, string]).isRequired,
   onManageDisableScrolling: func.isRequired,
   timeSlots: arrayOf(propTypes.timeSlot),
   fetchTimeSlotsError: propTypes.error,
