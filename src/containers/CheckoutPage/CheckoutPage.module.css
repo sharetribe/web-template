@@ -27,15 +27,18 @@
 
 .home {
   display: flex;
+  height: var(--topbarHeight);
   padding: calc((var(--topbarHeight) - var(--CheckoutPage_logoHeight)) / 2) 24px;
 
   @media (--viewportLarge) {
+    height: var(--topbarHeightDesktop);
     padding: calc((var(--topbarHeightDesktop) - var(--CheckoutPage_logoHeightDesktop)) / 2) 36px;
   }
 }
 
 .logoMobile {
   display: block;
+  object-fit: contain;
 
   & path {
     fill: var(--marketplaceColor);
@@ -220,6 +223,7 @@
 
   @media (--viewportMedium) {
     margin-top: 2px;
+    margin-bottom: 120px;
   }
 
   @media (--viewportLarge) {
@@ -295,8 +299,9 @@
   margin-bottom: 10px;
 
   @media (--viewportLarge) {
-    margin-top: 17px;
-    margin-bottom: 9px;
+    margin-top: 19px;
+    margin-bottom: 0px;
+    padding: 1px 0 7px 0;
   }
 }
 
@@ -308,6 +313,7 @@
   margin-bottom: 0;
 
   @media (--viewportLarge) {
+    padding: 3px 0 5px 0;
     margin-top: 0;
     margin-bottom: 0;
   }
@@ -321,7 +327,8 @@
   margin: 5px 24px 25px 24px;
 
   @media (--viewportLarge) {
-    margin: 37px 48px 26px 48px;
+    padding: 6px 0 2px 0;
+    margin: 16px 48px 8px 48px;
   }
 }
 
