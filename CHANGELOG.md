@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Add listingManagementType config that replaces the more specific enableAvailability
+  config [#93](https://github.com/sharetribe/ftw-product/pull/93)
 - [add] Update schema for ListingPage component
   [#88](https://github.com/sharetribe/ftw-product/pull/88)
 - [fix] Fix iphone layout for TopbarMobileMenu with spacer div.
