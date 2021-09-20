@@ -96,6 +96,7 @@ const OrderPanel = props => {
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
   const currentStock = listing.currentStock?.attributes?.quantity || 0;
+  const isOutOfStock = config.listingManagementType === 'stock' && currentStock === 0;
 
   const subTitleText = showClosedListingHelpText
     ? intl.formatMessage({ id: 'OrderPanel.subTitleClosedListing' })
@@ -187,8 +188,13 @@ const OrderPanel = props => {
           <Button
             rootClassName={css.bookButton}
             onClick={() => openBookModal(isOwnListing, isClosed, history, location)}
+            disabled={isOutOfStock}
           >
-            <FormattedMessage id="OrderPanel.ctaButtonMessage" />
+            {isOutOfStock ? (
+              <FormattedMessage id="OrderPanel.ctaButtonMessageNoStock" />
+            ) : (
+              <FormattedMessage id="OrderPanel.ctaButtonMessage" />
+            )}
           </Button>
         )}
       </div>
