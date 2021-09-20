@@ -72,7 +72,7 @@
 
 .paymentHeading {
   margin: 0 0 12px 0;
-  color: var(--matterColorAnti);
+  color: var(--matterColor);
 
   padding-top: 4px;
   padding-bottom: 2px;
@@ -136,7 +136,7 @@
 
 .billingHeading {
   margin: 0 0 12px 0;
-  color: var(--matterColorAnti);
+  color: var(--matterColor);
 
   padding-top: 4px;
   padding-bottom: 2px;
@@ -163,7 +163,7 @@
 }
 
 .messageHeading {
-  color: var(--matterColorAnti);
+  color: var(--matterColor);
   margin: 36px 0 12px 0;
 
   padding-top: 4px;
