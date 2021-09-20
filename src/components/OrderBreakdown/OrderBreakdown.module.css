@@ -14,8 +14,8 @@
   margin: 0;
 
   @media (--viewportMedium) {
-    padding-top: 6px;
-    padding-bottom: 2px;
+    padding-top: 7px;
+    padding-bottom: 1px;
   }
 
   display: flex;
@@ -64,7 +64,7 @@
   padding: 5px 0 1px 0;
 
   @media (--viewportMedium) {
-    padding: 6px 0 2px 0;
+    padding: 7px 0 1px 0;
   }
 
   display: flex;
@@ -84,7 +84,8 @@
   justify-content: space-between;
 
   @media (--viewportMedium) {
-    padding-bottom: 2px;
+    padding-top: 7px;
+    padding-bottom: 1px;
   }
 }
 .itemLabel {

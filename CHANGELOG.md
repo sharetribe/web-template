@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Review changes to some of the pages.
+  [#96](https://github.com/sharetribe/ftw-product/pull/96)
 - [change] Rename listing page variant config and file names
   [#95](https://github.com/sharetribe/ftw-product/pull/95)
 - [change] Add listingManagementType config that replaces the more specific enableAvailability
