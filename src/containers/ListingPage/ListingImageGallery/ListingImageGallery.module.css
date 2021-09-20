@@ -130,9 +130,6 @@
     color: var(--matterColorLight);
   }
 
-  @media (--viewportMedium) {
-    margin: 0;
-  }
   @media (--viewportLarge) {
     display: block;
   }
