@@ -220,6 +220,7 @@
 
   @media (--viewportMedium) {
     margin-top: 2px;
+    margin-bottom: 120px;
   }
 
   @media (--viewportLarge) {

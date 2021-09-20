@@ -204,7 +204,6 @@
   @apply --marketplaceH5FontStyles;
   color: var(--matterColorAnti);
   text-align: center;
-  padding: 0 42px;
   margin: 28px 0 0 0;
 
   @media (--viewportLarge) {
