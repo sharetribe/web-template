@@ -101,7 +101,6 @@
 .listingsContainer {
   @apply --clearfix;
   border-top: 1px solid var(--matterColorNegative);
-  border-bottom: 1px solid var(--matterColorNegative);
   padding-bottom: 23px;
 
   @media (--viewportMedium) {
@@ -111,7 +110,7 @@
 
 .listingsTitle {
   @apply --marketplaceH3FontStyles;
-  color: var(--matterColorAnti);
+  color: var(--matterColor);
   margin-bottom: 0;
 
   @media (--viewportMedium) {
@@ -177,20 +176,25 @@
 }
 
 .mobileReviews {
+  border-top: 1px solid var(--matterColorNegative);
   margin-bottom: 36px;
 }
 
 .desktopReviews {
-  margin-top: 28px;
+  border-top: 1px solid var(--matterColorNegative);
 
   @media (--viewportMedium) {
     margin-bottom: 48px;
   }
 
   @media (--viewportLarge) {
-    max-width: 600px;
     margin-bottom: 0;
   }
+}
+
+.desktopReviewsWrapper {
+  max-width: 600px;
+  margin-top: 28px;
 }
 
 .desktopReviewsTitle {

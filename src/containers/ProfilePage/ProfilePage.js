@@ -168,15 +168,17 @@ export class ProfilePageComponent extends Component {
 
     const desktopReviews = (
       <div className={css.desktopReviews}>
-        <ButtonTabNavHorizontal className={css.desktopReviewsTabNav} tabs={desktopReviewTabs} />
+        <div className={css.desktopReviewsWrapper}>
+          <ButtonTabNavHorizontal className={css.desktopReviewsTabNav} tabs={desktopReviewTabs} />
 
-        {queryReviewsError ? reviewsError : null}
+          {queryReviewsError ? reviewsError : null}
 
-        {this.state.showReviewsType === REVIEW_TYPE_OF_PROVIDER ? (
-          <Reviews reviews={reviewsOfProvider} />
-        ) : (
-          <Reviews reviews={reviewsOfCustomer} />
-        )}
+          {this.state.showReviewsType === REVIEW_TYPE_OF_PROVIDER ? (
+            <Reviews reviews={reviewsOfProvider} />
+          ) : (
+            <Reviews reviews={reviewsOfCustomer} />
+          )}
+        </div>
       </div>
     );
 
