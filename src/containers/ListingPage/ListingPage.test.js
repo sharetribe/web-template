@@ -20,7 +20,7 @@ import {
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { showListingRequest, showListingError, showListing } from './ListingPage.duck';
 
-import { ListingPageComponent } from './ListingPageBooking';
+import { ListingPageComponent } from './ListingPageHeroImage';
 import ActionBarMaybe from './ActionBarMaybe';
 
 const { UUID } = sdkTypes;

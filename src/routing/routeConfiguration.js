@@ -21,8 +21,8 @@ const EditListingPage = loadable(() => import(/* webpackChunkName: "EditListingP
 const EmailVerificationPage = loadable(() => import(/* webpackChunkName: "EmailVerificationPage" */ '../containers/EmailVerificationPage/EmailVerificationPage'));
 const InboxPage = loadable(() => import(/* webpackChunkName: "InboxPage" */ '../containers/InboxPage/InboxPage'));
 const LandingPage = loadable(() => import(/* webpackChunkName: "LandingPage" */ '../containers/LandingPage/LandingPage'));
-const ListingPageBooking = loadable(() => import(/* webpackChunkName: "ListingPageBooking" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageBooking'));
-const ListingPageProduct = loadable(() => import(/* webpackChunkName: "ListingPageProduct" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageProduct'));
+const ListingPageHeroImage = loadable(() => import(/* webpackChunkName: "ListingPageHeroImage" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageHeroImage'));
+const ListingPageFullImage = loadable(() => import(/* webpackChunkName: "ListingPageFullImage" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageFullImage'));
 const ManageListingsPage = loadable(() => import(/* webpackChunkName: "ManageListingsPage" */ '../containers/ManageListingsPage/ManageListingsPage'));
 const PasswordChangePage = loadable(() => import(/* webpackChunkName: "PasswordChangePage" */ '../containers/PasswordChangePage/PasswordChangePage'));
 const PasswordRecoveryPage = loadable(() => import(/* webpackChunkName: "PasswordRecoveryPage" */ '../containers/PasswordRecoveryPage/PasswordRecoveryPage'));
@@ -42,7 +42,7 @@ const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePag
 
 
 const SearchPage = config.searchPageVariant === 'map' ? SearchPageWithMap : SearchPageWithList;
-const ListingPage = config.listingPageLayout === 'full-image' ? ListingPageProduct : ListingPageBooking;
+const ListingPage = config.listingPageLayout === 'full-image' ? ListingPageFullImage : ListingPageHeroImage;
 
 export const ACCOUNT_SETTINGS_PAGES = [
   'ContactDetailsPage',
