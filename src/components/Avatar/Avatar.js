@@ -138,6 +138,11 @@ const Avatar = injectIntl(AvatarComponent);
 
 export default Avatar;
 
+export const AvatarSmall = props => (
+  <Avatar rootClassName={css.smallAvatar} renderSizes={AVATAR_SIZES_MEDIUM} {...props} />
+);
+AvatarSmall.displayName = 'AvatarSmall';
+
 export const AvatarMedium = props => (
   <Avatar rootClassName={css.mediumAvatar} renderSizes={AVATAR_SIZES_MEDIUM} {...props} />
 );

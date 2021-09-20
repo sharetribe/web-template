@@ -43,6 +43,14 @@
 
 /* Medium Avatar */
 
+.smallAvatar {
+  composes: avatarBase;
+
+  /* Fixed dimensions */
+  width: 24px;
+  height: 24px;
+}
+
 .mediumAvatar {
   composes: avatarBase;
 
