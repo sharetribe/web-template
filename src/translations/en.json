@@ -506,6 +506,7 @@
   "OrderBreakdown.total": "Total price",
   "OrderPanel.closedListingButtonText": "Sorry, this listing has been closed.",
   "OrderPanel.ctaButtonMessage": "Buy now",
+  "OrderPanel.ctaButtonMessageNoStock": "Out of stock",
   "OrderPanel.hostedBy": "Sold by {name}",
   "OrderPanel.perDay": "per day",
   "OrderPanel.perNight": "per night",

@@ -58,11 +58,15 @@ const transactionProcessAlias = 'flex-product-default-process/release-1';
 //         depending on the value chosen.
 const lineItemUnitType = 'line-item/units';
 
-// Bookable listings with availability management.
-// Should the application fetch available time slots (currently defined as
-// start and end dates) to be shown on listing page.
-// Note: By default, FTW-product doesn't use bookings but stock. Therefore availability is turned off.
-const enableAvailability = false;
+// Listing management types: 'availability', 'stock', or null.
+//
+// With the default 'stock', availability and bookings are not used, and
+// listings have a specific numeric stock.
+//
+// With 'availability', availability management is in use. Then listing will use
+// bookings, and time slots (currently defined as start and end dates) are shown
+// on listing page.
+const listingManagementType = 'stock';
 
 // A maximum number of days forwards during which a booking can be made.
 // This is limited due to Stripe holding funds up to 90 days from the
@@ -229,7 +233,7 @@ const config = {
   locale,
   transactionProcessAlias,
   lineItemUnitType,
-  enableAvailability,
+  listingManagementType,
   dayCountAvailableForBooking,
   i18n,
   sdk: {
