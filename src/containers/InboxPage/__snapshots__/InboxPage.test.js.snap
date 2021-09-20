@@ -101,8 +101,6 @@ exports[`InboxPage matches snapshot 1`] = `
             }
             stateData={
               Object {
-                "bookingClassName": "bookingNoActionNeeded",
-                "lastTransitionedAtClassName": "lastTransitionedAtNotEmphasized",
                 "state": "InboxPage.statePurchased",
                 "stateClassName": "stateNoActionNeeded",
               }
@@ -249,8 +247,6 @@ exports[`InboxPage matches snapshot 1`] = `
             }
             stateData={
               Object {
-                "bookingClassName": "bookingNoActionNeeded",
-                "lastTransitionedAtClassName": "lastTransitionedAtNotEmphasized",
                 "state": "InboxPage.statePurchased",
                 "stateClassName": "stateNoActionNeeded",
               }
@@ -456,7 +452,7 @@ exports[`InboxPage matches snapshot 2`] = `
         InboxPage.statePurchased
       </div>
       <div
-        className="lastTransitionedAt lastTransitionedAtNotEmphasized"
+        className="lastTransitionedAt"
         title="2017-01-15"
       >
         2017-01-15
@@ -567,8 +563,6 @@ exports[`InboxPage matches snapshot 3`] = `
             }
             stateData={
               Object {
-                "bookingClassName": "bookingNoActionNeeded",
-                "lastTransitionedAtClassName": "lastTransitionedAtNotEmphasized",
                 "state": "InboxPage.statePurchased",
                 "stateClassName": "stateActionNeeded",
               }
@@ -715,8 +709,6 @@ exports[`InboxPage matches snapshot 3`] = `
             }
             stateData={
               Object {
-                "bookingClassName": "bookingNoActionNeeded",
-                "lastTransitionedAtClassName": "lastTransitionedAtNotEmphasized",
                 "state": "InboxPage.statePurchased",
                 "stateClassName": "stateActionNeeded",
               }
@@ -926,7 +918,7 @@ exports[`InboxPage matches snapshot 4`] = `
         InboxPage.statePurchased
       </div>
       <div
-        className="lastTransitionedAt lastTransitionedAtNotEmphasized"
+        className="lastTransitionedAt"
         title="2017-01-15"
       >
         2017-01-15
