@@ -100,6 +100,10 @@
 }
 
 .openFullscreen {
+  /* Hide on mobile. Currently react-image-gallery fullscreen mode is broken on
+     mobile, and mobile doesn't really benefit from fullscreen anyways. */
+  display: none;
+
   @apply --marketplaceTinyFontStyles;
   font-weight: var(--fontWeightMedium);
 
@@ -128,6 +132,9 @@
 
   @media (--viewportMedium) {
     margin: 0;
+  }
+  @media (--viewportLarge) {
+    display: block;
   }
 }
 
