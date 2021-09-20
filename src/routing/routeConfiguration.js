@@ -42,7 +42,7 @@ const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePag
 
 
 const SearchPage = config.searchPageVariant === 'map' ? SearchPageWithMap : SearchPageWithList;
-const ListingPage = config.listingPageVariant === 'product' ? ListingPageProduct : ListingPageBooking;
+const ListingPage = config.listingPageLayout === 'full-image' ? ListingPageProduct : ListingPageBooking;
 
 export const ACCOUNT_SETTINGS_PAGES = [
   'ContactDetailsPage',
