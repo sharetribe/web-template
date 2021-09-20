@@ -9,10 +9,17 @@ exports[`ListingPage matches snapshot 1`] = `
   schema={
     Object {
       "@context": "http://schema.org",
-      "@type": "ItemPage",
+      "@type": "Product",
       "description": "listing1 description",
-      "image": "[]",
+      "image": Array [],
       "name": "ListingPage.schemaTitle",
+      "offers": Object {
+        "@type": "Offer",
+        "availability": "https://schema.org/OutOfStock",
+        "price": 55,
+        "priceCurrency": "USD",
+        "url": "http://localhost:3000/l/listing1-title/listing1",
+      },
     }
   }
   scrollingDisabled={false}
