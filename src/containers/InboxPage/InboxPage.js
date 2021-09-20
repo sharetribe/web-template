@@ -53,7 +53,6 @@ export const txState = (intl, tx, type) => {
 
   if (txIsEnquired(tx)) {
     return {
-      bookingClassName: css.bookingActionNeeded,
       lastTransitionedAtClassName: css.lastTransitionedAtEmphasized,
       stateClassName: css.stateActionNeeded,
       state: intl.formatMessage({
@@ -62,8 +61,6 @@ export const txState = (intl, tx, type) => {
     };
   } else if (txIsPaymentPending(tx)) {
     return {
-      bookingClassName: css.bookingNoActionNeeded,
-      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: isOrder ? css.stateActionNeeded : css.stateNoActionNeeded,
       state: intl.formatMessage({
         id: 'InboxPage.statePendingPayment',
@@ -71,8 +68,6 @@ export const txState = (intl, tx, type) => {
     };
   } else if (txIsPaymentExpired(tx)) {
     return {
-      bookingClassName: css.bookingNoActionNeeded,
-      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: css.stateNoActionNeeded,
       state: intl.formatMessage({
         id: 'InboxPage.statePaymentExpired',
@@ -80,8 +75,6 @@ export const txState = (intl, tx, type) => {
     };
   } else if (txIsCanceled(tx)) {
     return {
-      bookingClassName: css.bookingNoActionNeeded,
-      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: css.stateConcluded,
       state: intl.formatMessage({
         id: 'InboxPage.stateCanceled',
@@ -89,8 +82,6 @@ export const txState = (intl, tx, type) => {
     };
   } else if (txIsPurchased(tx)) {
     return {
-      bookingClassName: css.bookingNoActionNeeded,
-      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: isOrder ? css.stateNoActionNeeded : css.stateActionNeeded,
       state: intl.formatMessage({
         id: 'InboxPage.statePurchased',
@@ -99,21 +90,15 @@ export const txState = (intl, tx, type) => {
   } else if (txIsDelivered(tx)) {
     return isOrder
       ? {
-          bookingClassName: css.bookingNoActionNeeded,
-          lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
           stateClassName: css.stateActionNeeded,
           state: intl.formatMessage({ id: 'InboxPage.stateDeliveredCustomer' }),
         }
       : {
-          bookingClassName: css.bookingNoActionNeeded,
-          lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
           stateClassName: css.stateNoActionNeeded,
           state: intl.formatMessage({ id: 'InboxPage.stateDeliveredProvider' }),
         };
   } else if (txIsDisputed(tx)) {
     return {
-      bookingClassName: css.bookingNoActionNeeded,
-      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: css.stateActionNeeded,
       state: intl.formatMessage({
         id: 'InboxPage.stateDisputed',
@@ -121,8 +106,6 @@ export const txState = (intl, tx, type) => {
     };
   } else if (txIsReceived(tx) || txIsCompleted(tx)) {
     return {
-      bookingClassName: css.bookingNoActionNeeded,
-      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: css.stateActionNeeded,
       state: intl.formatMessage({
         id: 'InboxPage.stateReceived',
@@ -131,8 +114,6 @@ export const txState = (intl, tx, type) => {
   } else if (txIsReviewedByCustomer(tx)) {
     const translationKey = isOrder ? 'InboxPage.stateReviewGiven' : 'InboxPage.stateReviewNeeded';
     return {
-      bookingClassName: css.bookingNoActionNeeded,
-      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: isOrder ? css.stateNoActionNeeded : css.stateActionNeeded,
       state: intl.formatMessage({
         id: translationKey,
@@ -141,8 +122,6 @@ export const txState = (intl, tx, type) => {
   } else if (txIsReviewedByProvider(tx)) {
     const translationKey = isOrder ? 'InboxPage.stateReviewNeeded' : 'InboxPage.stateReviewGiven';
     return {
-      bookingClassName: css.bookingNoActionNeeded,
-      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: isOrder ? css.stateActionNeeded : css.stateNoActionNeeded,
       state: intl.formatMessage({
         id: translationKey,
@@ -150,8 +129,6 @@ export const txState = (intl, tx, type) => {
     };
   } else if (txIsReviewed(tx)) {
     return {
-      bookingClassName: css.bookingNoActionNeeded,
-      lastTransitionedAtClassName: css.lastTransitionedAtNotEmphasized,
       stateClassName: css.stateConcluded,
       state: intl.formatMessage({
         id: 'InboxPage.stateReviewed',

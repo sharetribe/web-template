@@ -321,9 +321,11 @@
 
 .itemState {
   /* Font */
-  @apply --marketplaceH5FontStyles;
-
+  @apply --marketplaceTinyFontStyles;
+  line-height: 18px;
   font-weight: var(--fontWeightMedium);
+  letter-spacing: normal;
+
   margin-top: 6px;
   margin-bottom: 0px;
 
@@ -336,7 +338,7 @@
 .lastTransitionedAt {
   @apply --marketplaceTinyFontStyles;
 
-  margin-top: 4px;
+  margin: 0;
   text-align: right;
   color: var(--matterColor);
 }
@@ -352,7 +354,7 @@
 }
 
 .stateActionNeeded {
-  font-weight: var(--fontWeightSemiBold);
+  font-weight: var(--fontWeightMedium);
   color: var(--attentionColor);
 }
 
