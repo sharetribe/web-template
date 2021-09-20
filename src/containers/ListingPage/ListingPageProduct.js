@@ -485,6 +485,7 @@ export class ListingPageComponent extends Component {
                   title={bookingTitle}
                   author={ensuredAuthor}
                   onManageDisableScrolling={onManageDisableScrolling}
+                  onContactUser={this.onContactUser}
                   timeSlots={timeSlots}
                   fetchTimeSlotsError={fetchTimeSlotsError}
                   onFetchTransactionLineItems={onFetchTransactionLineItems}
