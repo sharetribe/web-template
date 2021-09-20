@@ -30,8 +30,7 @@
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 24px;
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding: 6px 0 2px 0;
   }
 }
 
@@ -56,8 +55,8 @@
   margin-bottom: 18px;
 
   @media (--viewportMedium) {
-    margin-top: 44px;
-    margin-bottom: 20px;
+    margin-top: 24px;
+    margin-bottom: 16px;
   }
 }
 
@@ -249,7 +248,7 @@
 
   @media (--viewportMedium) {
     margin-top: 0;
-    margin-bottom: 8px;
+    margin-bottom: 0;
     padding-top: 4px;
     padding-bottom: 4px;
   }
@@ -266,8 +265,7 @@
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 0;
-    padding-top: 6px;
-    padding-bottom: 2px;
+    padding: 4px 0 4px 0;
   }
 }
 
@@ -300,4 +298,5 @@
 
 .submitButton {
   margin-top: 24px;
+  margin-bottom: 56px;
 }
