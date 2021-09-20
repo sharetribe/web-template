@@ -88,52 +88,56 @@ exports[`ProfilePage matches snapshot 1`] = `
         <div
           className="desktopReviews"
         >
-          <ButtonTabNavHorizontal
-            className="desktopReviewsTabNav"
-            rootClassName={null}
-            skin="light"
-            tabClassName={null}
-            tabRootClassName={null}
-            tabs={
-              Array [
-                Object {
-                  "onClick": [Function],
-                  "selected": true,
-                  "text": <h3
-                    className="desktopReviewsTitle"
-                  >
-                    <FormattedMessage
-                      id="ProfilePage.reviewsOfProviderTitle"
-                      values={
-                        Object {
-                          "count": 0,
+          <div
+            className="desktopReviewsWrapper"
+          >
+            <ButtonTabNavHorizontal
+              className="desktopReviewsTabNav"
+              rootClassName={null}
+              skin="light"
+              tabClassName={null}
+              tabRootClassName={null}
+              tabs={
+                Array [
+                  Object {
+                    "onClick": [Function],
+                    "selected": true,
+                    "text": <h3
+                      className="desktopReviewsTitle"
+                    >
+                      <FormattedMessage
+                        id="ProfilePage.reviewsOfProviderTitle"
+                        values={
+                          Object {
+                            "count": 0,
+                          }
                         }
-                      }
-                    />
-                  </h3>,
-                },
-                Object {
-                  "onClick": [Function],
-                  "selected": false,
-                  "text": <h3
-                    className="desktopReviewsTitle"
-                  >
-                    <FormattedMessage
-                      id="ProfilePage.reviewsOfCustomerTitle"
-                      values={
-                        Object {
-                          "count": 0,
+                      />
+                    </h3>,
+                  },
+                  Object {
+                    "onClick": [Function],
+                    "selected": false,
+                    "text": <h3
+                      className="desktopReviewsTitle"
+                    >
+                      <FormattedMessage
+                        id="ProfilePage.reviewsOfCustomerTitle"
+                        values={
+                          Object {
+                            "count": 0,
+                          }
                         }
-                      }
-                    />
-                  </h3>,
-                },
-              ]
-            }
-          />
-          <injectIntl(ReviewsComponent)
-            reviews={Array []}
-          />
+                      />
+                    </h3>,
+                  },
+                ]
+              }
+            />
+            <injectIntl(ReviewsComponent)
+              reviews={Array []}
+            />
+          </div>
         </div>
       </div>
     </LayoutWrapperMain>
