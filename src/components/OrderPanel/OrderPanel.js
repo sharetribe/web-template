@@ -98,6 +98,8 @@ const OrderPanel = props => {
   const currentStock = listing.currentStock?.attributes?.quantity || 0;
   const isOutOfStock = config.listingManagementType === 'stock' && currentStock === 0;
 
+  const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
+
   const subTitleText = showClosedListingHelpText
     ? intl.formatMessage({ id: 'OrderPanel.subTitleClosedListing' })
     : null;
@@ -160,6 +162,8 @@ const OrderPanel = props => {
             onSubmit={onSubmit}
             price={price}
             currentStock={currentStock}
+            pickupEnabled={pickupEnabled}
+            shippingEnabled={shippingEnabled}
             listingId={listing.id}
             isOwnListing={isOwnListing}
             onFetchTransactionLineItems={onFetchTransactionLineItems}
