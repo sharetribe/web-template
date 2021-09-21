@@ -39,19 +39,19 @@ const priceData = (price, intl) => {
   return {};
 };
 
-const openBookModal = (isOwnListing, isClosed, history, location) => {
+const openOrderModal = (isOwnListing, isClosed, history, location) => {
   if (isOwnListing || isClosed) {
     window.scrollTo(0, 0);
   } else {
     const { pathname, search, state } = location;
-    const searchString = `?${stringify({ ...parse(search), book: true })}`;
+    const searchString = `?${stringify({ ...parse(search), orderOpen: true })}`;
     history.push(`${pathname}${searchString}`, state);
   }
 };
 
-const closeBookModal = (history, location) => {
+const closeOrderModal = (history, location) => {
   const { pathname, search, state } = location;
-  const searchParams = omit(parse(search), 'book');
+  const searchParams = omit(parse(search), 'orderOpen');
   const searchString = `?${stringify(searchParams)}`;
   history.push(`${pathname}${searchString}`, state);
 };
@@ -91,7 +91,7 @@ const OrderPanel = props => {
   const showBookingDatesForm = shouldHaveBooking && hasListingState && !isClosed;
   const showClosedListingHelpText = listing.id && isClosed;
   const { formattedPrice, priceTitle } = priceData(price, intl);
-  const isBook = !!parse(location.search).book;
+  const isOrderOpen = !!parse(location.search).orderOpen;
 
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
@@ -113,15 +113,15 @@ const OrderPanel = props => {
   const authorDisplayName = userDisplayNameAsString(author, '');
 
   const classes = classNames(rootClassName || css.root, className);
-  const titleClasses = classNames(titleClassName || css.bookingTitle);
+  const titleClasses = classNames(titleClassName || css.orderTitle);
 
   return (
     <div className={classes}>
       <ModalInMobile
         containerClassName={css.modalContainer}
         id="BookingDatesFormInModal"
-        isModalOpenOnMobile={isBook}
-        onClose={() => closeBookModal(history, location)}
+        isModalOpenOnMobile={isOrderOpen}
+        onClose={() => closeOrderModal(history, location)}
         showAsModalMaxWidth={MODAL_BREAKPOINT}
         onManageDisableScrolling={onManageDisableScrolling}
       >
@@ -129,9 +129,9 @@ const OrderPanel = props => {
           <h1 className={css.title}>{title}</h1>
         </div>
 
-        <div className={css.bookingHeading}>
+        <div className={css.orderHeading}>
           <h2 className={titleClasses}>{title}</h2>
-          {subTitleText ? <div className={css.bookingHelp}>{subTitleText}</div> : null}
+          {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
         </div>
         <p className={css.price}>{formatMoney(intl, price)}</p>
         <div className={css.author}>
@@ -174,7 +174,7 @@ const OrderPanel = props => {
           />
         )}
       </ModalInMobile>
-      <div className={css.openBookingForm}>
+      <div className={css.openOrderForm}>
         <div className={css.priceContainer}>
           <div className={css.priceValue} title={priceTitle}>
             {formattedPrice}
@@ -190,8 +190,8 @@ const OrderPanel = props => {
           </div>
         ) : (
           <Button
-            rootClassName={css.bookButton}
-            onClick={() => openBookModal(isOwnListing, isClosed, history, location)}
+            rootClassName={css.orderButton}
+            onClick={() => openOrderModal(isOwnListing, isClosed, history, location)}
             disabled={isOutOfStock}
           >
             {isOutOfStock ? (
