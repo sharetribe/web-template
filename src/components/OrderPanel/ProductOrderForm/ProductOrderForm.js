@@ -27,6 +27,7 @@ const renderForm = formRenderProps => {
     intl,
     formId,
     currentStock,
+    hasMultipleDeliveryMethods,
     listingId,
     isOwnListing,
     onFetchTransactionLineItems,
@@ -34,6 +35,7 @@ const renderForm = formRenderProps => {
     lineItems,
     fetchLineItemsInProgress,
     fetchLineItemsError,
+    values,
   } = formRenderProps;
 
   const handleOnChange = formValues => {
@@ -112,26 +114,40 @@ const renderForm = formRenderProps => {
         </FieldSelect>
       )}
 
+      {hasMultipleDeliveryMethods ? (
+        <FieldSelect
+          id={`${formId}.deliveryMethod`}
+          className={css.deliveryField}
+          name="deliveryMethod"
+          disabled={!hasStock}
+          label={intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
+        >
+          <option disabled value="">
+            {intl.formatMessage({ id: 'ProductOrderForm.selectDeliveryMethodOption' })}
           </option>
-        ))}
-      </FieldSelect>
-      <FieldSelect
-        id={`${formId}.deliveryMethod`}
-        className={css.deliveryField}
-        name="deliveryMethod"
-        disabled={!hasStock}
-        label={intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
-      >
-        <option disabled value="">
-          {intl.formatMessage({ id: 'ProductOrderForm.selectDeliveryMethodOption' })}
-        </option>
-        <option value={'pickup'}>
-          {intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
-        </option>
-        <option value={'shipping'}>
-          {intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })}
-        </option>
-      </FieldSelect>
+          <option value={'pickup'}>
+            {intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
+          </option>
+          <option value={'shipping'}>
+            {intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })}
+          </option>
+        </FieldSelect>
+      ) : (
+        <div className={css.deliveryField}>
+          <label>{intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}</label>
+          <p className={css.singleDeliveryMethodSelected}>
+            {values.deliveryMethod === 'shipping'
+              ? intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })
+              : intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
+          </p>
+          <FieldTextInput
+            id={`${formId}.deliveryMethod`}
+            className={css.deliveryField}
+            name="deliveryMethod"
+            type="hidden"
+          />
+        </div>
+      )}
       {breakdown}
       <div className={css.submitButton}>
         <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
@@ -155,7 +171,15 @@ const renderForm = formRenderProps => {
 
 const ProductOrderForm = props => {
   const intl = useIntl();
-  const { price, currentStock } = props;
+  const { price, currentStock, pickupEnabled, shippingEnabled } = props;
+
+  // Should not happen for listings that go through EditListingWizard.
+  // However, this might happen for imported listings.
+  if (!pickupEnabled && !shippingEnabled) {
+    <p className={css.error}>
+      <FormattedMessage id="ProductOrderForm.noDeliveryMethodSet" />
+    </p>;
+  }
 
   if (!price) {
     return (
@@ -172,9 +196,25 @@ const ProductOrderForm = props => {
     );
   }
   const hasOneListingLeft = currentStock && currentStock === 1;
-  const initialValues = hasOneListingLeft ? { quantity: '1' } : {};
+  const quantityMaybe = hasOneListingLeft ? { quantity: '1' } : {};
+  const singleDeliveryMethodAvailableMaybe =
+    shippingEnabled && !pickupEnabled
+      ? { deliveryMethod: 'shipping' }
+      : !shippingEnabled && pickupEnabled
+      ? { deliveryMethod: 'pickup' }
+      : {};
+  const hasMultipleDeliveryMethods = pickupEnabled && shippingEnabled;
+  const initialValues = { ...quantityMaybe, ...singleDeliveryMethodAvailableMaybe };
 
-  return <FinalForm initialValues={initialValues} {...props} intl={intl} render={renderForm} />;
+  return (
+    <FinalForm
+      initialValues={initialValues}
+      hasMultipleDeliveryMethods={hasMultipleDeliveryMethods}
+      {...props}
+      intl={intl}
+      render={renderForm}
+    />
+  );
 };
 
 ProductOrderForm.defaultProps = {

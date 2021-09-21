@@ -17,6 +17,14 @@
   }
 }
 
+.singleDeliveryMethodSelected {
+  margin: 0;
+
+  @media (--viewportMedium) {
+    margin: 0;
+  }
+}
+
 .breakdownWrapper {
   padding: 0 24px;
 
