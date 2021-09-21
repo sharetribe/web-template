@@ -3,7 +3,7 @@ import { bool, func, number, string } from 'prop-types';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 
 import config from '../../../config';
-import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { Form, FieldSelect, PrimaryButton, InlineTextButton } from '../../../components';
 
@@ -16,12 +16,10 @@ const renderForm = formRenderProps => {
     // FormRenderProps from final-form
     handleSubmit,
     invalid,
-    values,
 
     // Custom props passed to the form component
     intl,
     formId,
-    price,
     currentStock,
     listingId,
     isOwnListing,
@@ -44,8 +42,6 @@ const renderForm = formRenderProps => {
     }
   };
 
-  const stockReservationQuantity = values?.stockReservationQuantity;
-  const deliveryMethod = values?.deliveryMethod;
   const breakdownData = {};
   const showBreakdown =
     breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
