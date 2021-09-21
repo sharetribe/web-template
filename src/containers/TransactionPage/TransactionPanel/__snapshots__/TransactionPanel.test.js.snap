@@ -121,17 +121,6 @@ exports[`TransactionPanel - Order canceled matches snapshot 1`] = `
         <div
           className="orderDetailsMobileSection"
         >
-          <AddressLinkMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
-            location={Object {}}
-            rootClassName="addressMobile"
-          />
           <BreakdownMaybe
             transaction={
               Object {
@@ -730,15 +719,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             }
           />
           <DetailCardHeadingsMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
             listingTitle="listing1 title"
-            location={Object {}}
             showDetailCardHeadings={false}
             subTitle="55 TransactionPanel.perUnit"
           />
@@ -1018,17 +999,6 @@ exports[`TransactionPanel - Order delivered matches snapshot 1`] = `
         <div
           className="orderDetailsMobileSection"
         >
-          <AddressLinkMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
-            location={Object {}}
-            rootClassName="addressMobile"
-          />
           <BreakdownMaybe
             transaction={
               Object {
@@ -1643,15 +1613,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             }
           />
           <DetailCardHeadingsMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
             listingTitle="listing1 title"
-            location={Object {}}
             showDetailCardHeadings={false}
             subTitle="55 TransactionPanel.perUnit"
           />
@@ -1937,17 +1899,6 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
         <div
           className="orderDetailsMobileSection"
         >
-          <AddressLinkMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
-            location={Object {}}
-            rootClassName="addressMobile"
-          />
           <BreakdownMaybe
             transaction={
               Object {
@@ -2546,15 +2497,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             }
           />
           <DetailCardHeadingsMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
             listingTitle="listing1 title"
-            location={Object {}}
             subTitle="55 TransactionPanel.perUnit"
           />
           <BreakdownMaybe
@@ -2833,17 +2776,6 @@ exports[`TransactionPanel - Order purchased matches snapshot 1`] = `
         <div
           className="orderDetailsMobileSection"
         >
-          <AddressLinkMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
-            location={Object {}}
-            rootClassName="addressMobile"
-          />
           <BreakdownMaybe
             transaction={
               Object {
@@ -3458,15 +3390,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             }
           />
           <DetailCardHeadingsMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
             listingTitle="listing1 title"
-            location={Object {}}
             showDetailCardHeadings={false}
             subTitle="55 TransactionPanel.perUnit"
           />
@@ -3762,17 +3686,6 @@ exports[`TransactionPanel - Order received matches snapshot 1`] = `
         <div
           className="orderDetailsMobileSection"
         >
-          <AddressLinkMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
-            location={Object {}}
-            rootClassName="addressMobile"
-          />
           <BreakdownMaybe
             transaction={
               Object {
@@ -4417,15 +4330,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             }
           />
           <DetailCardHeadingsMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
             listingTitle="listing1 title"
-            location={Object {}}
             showDetailCardHeadings={false}
             subTitle="55 TransactionPanel.perUnit"
           />
@@ -4731,17 +4636,6 @@ exports[`TransactionPanel - Sale canceled matches snapshot 1`] = `
         <div
           className="orderDetailsMobileSection"
         >
-          <AddressLinkMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
-            location={Object {}}
-            rootClassName="addressMobile"
-          />
           <BreakdownMaybe
             transaction={
               Object {
@@ -5304,15 +5198,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             }
           />
           <DetailCardHeadingsMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
             listingTitle="listing1 title"
-            location={Object {}}
             showDetailCardHeadings={false}
             subTitle="55 TransactionPanel.perUnit"
           />
@@ -5580,17 +5466,6 @@ exports[`TransactionPanel - Sale delivered matches snapshot 1`] = `
         <div
           className="orderDetailsMobileSection"
         >
-          <AddressLinkMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
-            location={Object {}}
-            rootClassName="addressMobile"
-          />
           <BreakdownMaybe
             transaction={
               Object {
@@ -6169,15 +6044,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             }
           />
           <DetailCardHeadingsMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
             listingTitle="listing1 title"
-            location={Object {}}
             showDetailCardHeadings={false}
             subTitle="55 TransactionPanel.perUnit"
           />
@@ -6451,17 +6318,6 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
         <div
           className="orderDetailsMobileSection"
         >
-          <AddressLinkMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
-            location={Object {}}
-            rootClassName="addressMobile"
-          />
           <BreakdownMaybe
             transaction={
               Object {
@@ -7024,15 +6880,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             }
           />
           <DetailCardHeadingsMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
             listingTitle="listing1 title"
-            location={Object {}}
             subTitle="55 TransactionPanel.perUnit"
           />
           <BreakdownMaybe
@@ -7299,17 +7147,6 @@ exports[`TransactionPanel - Sale purchased matches snapshot 1`] = `
         <div
           className="orderDetailsMobileSection"
         >
-          <AddressLinkMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
-            location={Object {}}
-            rootClassName="addressMobile"
-          />
           <BreakdownMaybe
             transaction={
               Object {
@@ -7888,15 +7725,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             }
           />
           <DetailCardHeadingsMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
             listingTitle="listing1 title"
-            location={Object {}}
             showDetailCardHeadings={false}
             subTitle="55 TransactionPanel.perUnit"
           />
@@ -8180,17 +8009,6 @@ exports[`TransactionPanel - Sale received matches snapshot 1`] = `
         <div
           className="orderDetailsMobileSection"
         >
-          <AddressLinkMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
-            location={Object {}}
-            rootClassName="addressMobile"
-          />
           <BreakdownMaybe
             transaction={
               Object {
@@ -8799,15 +8617,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             }
           />
           <DetailCardHeadingsMaybe
-            geolocation={
-              LatLng {
-                "_sdkType": "LatLng",
-                "lat": 40,
-                "lng": 60,
-              }
-            }
             listingTitle="listing1 title"
-            location={Object {}}
             showDetailCardHeadings={false}
             subTitle="55 TransactionPanel.perUnit"
           />
