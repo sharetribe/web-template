@@ -487,7 +487,7 @@ class StripePaymentForm extends Component {
             )}
 
             {showOnetimePaymentFields ? (
-              <div className={css.paymentAddressField}>
+              <div className={css.billingDetails}>
                 <h3 className={css.billingHeading}>
                   <FormattedMessage id="StripePaymentForm.billingDetails" />
                 </h3>
