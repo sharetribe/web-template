@@ -566,13 +566,10 @@ export function compareAndSetStock(listingId, oldTotal, newTotal) {
   return (dispatch, getState, sdk) => {
     dispatch(setStockRequest());
 
-    return sdk.stockAdjustments
-      .compareAndSet(
-        { listingId, oldTotal, newTotal },
-        { expand: true, include: ['ownListing.currentStock'] }
-      )
+    return sdk.stock
+      .compareAndSet({ listingId, oldTotal, newTotal }, { expand: true })
       .then(response => {
-        // NOTE: compareAndSet returns currentStock as a relationship: 'ownListing.currentStock'.
+        // NOTE: compareAndSet returns the stock resource of the listing.
         // We update client app's internal state with these updated API entities.
         dispatch(addMarketplaceEntities(response));
         dispatch(setStockSuccess(response));
