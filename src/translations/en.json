@@ -15,6 +15,7 @@
   "ActivityFeed.transitionMarkReceived": "The order was marked as received",
   "ActivityFeed.transitionPurchased": "The order was placed",
   "ActivityFeed.transitionReview": "{ displayName } left a review for you. { reviewLink }",
+  "AddressLinkMaybe.viewOnGoogleMaps": "View on Google Maps",
   "AuthenticationPage.confirmSignupInfoText": "Please check that your information is correct.",
   "AuthenticationPage.confirmSignupWithIdpTitle": "Sign up with {idp}",
   "AuthenticationPage.emailAlreadyInUse": "An account with this email address already exists. Try logging in instead.",
