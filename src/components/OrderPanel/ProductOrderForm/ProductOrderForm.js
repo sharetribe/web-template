@@ -5,7 +5,13 @@ import { Form as FinalForm, FormSpy } from 'react-final-form';
 import config from '../../../config';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
-import { Form, FieldSelect, PrimaryButton, InlineTextButton } from '../../../components';
+import {
+  Form,
+  FieldSelect,
+  FieldTextInput,
+  InlineTextButton,
+  PrimaryButton,
+} from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
@@ -71,6 +77,7 @@ const renderForm = formRenderProps => {
 
   const hasStock = currentStock && currentStock > 0;
   const quantities = hasStock ? [...Array(currentStock).keys()].map(i => i + 1) : [];
+  const hasOneListingLeft = currentStock && currentStock === 1;
 
   const submitInProgress = fetchLineItemsInProgress;
   const submitDisabled = invalid || !hasStock;
@@ -78,19 +85,33 @@ const renderForm = formRenderProps => {
   return (
     <Form onSubmit={handleSubmit}>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
-      <FieldSelect
-        id={`${formId}.quantity`}
-        className={css.quantityField}
-        name="quantity"
-        disabled={!hasStock}
-        label={intl.formatMessage({ id: 'ProductOrderForm.quantityLabel' })}
-      >
-        <option disabled value="">
-          {intl.formatMessage({ id: 'ProductOrderForm.selectQuantityOption' })}
-        </option>
-        {quantities.map(quantity => (
-          <option key={quantity} value={quantity}>
-            {intl.formatMessage({ id: 'ProductOrderForm.quantityOption' }, { quantity })}
+      {hasOneListingLeft ? (
+        <FieldTextInput
+          id={`${formId}.quantity`}
+          className={css.quantityField}
+          name="quantity"
+          type="hidden"
+          value="1"
+        />
+      ) : (
+        <FieldSelect
+          id={`${formId}.quantity`}
+          className={css.quantityField}
+          name="quantity"
+          disabled={!hasStock}
+          label={intl.formatMessage({ id: 'ProductOrderForm.quantityLabel' })}
+        >
+          <option disabled value="">
+            {intl.formatMessage({ id: 'ProductOrderForm.selectQuantityOption' })}
+          </option>
+          {quantities.map(quantity => (
+            <option key={quantity} value={quantity}>
+              {intl.formatMessage({ id: 'ProductOrderForm.quantityOption' }, { quantity })}
+            </option>
+          ))}
+        </FieldSelect>
+      )}
+
           </option>
         ))}
       </FieldSelect>
@@ -134,23 +155,26 @@ const renderForm = formRenderProps => {
 
 const ProductOrderForm = props => {
   const intl = useIntl();
+  const { price, currentStock } = props;
 
-  if (!props.price) {
+  if (!price) {
     return (
       <p className={css.error}>
         <FormattedMessage id="ProductOrderForm.listingPriceMissing" />
       </p>
     );
   }
-  if (props.price.currency !== config.currency) {
+  if (price.currency !== config.currency) {
     return (
       <p className={css.error}>
         <FormattedMessage id="ProductOrderForm.listingCurrencyInvalid" />
       </p>
     );
   }
+  const hasOneListingLeft = currentStock && currentStock === 1;
+  const initialValues = hasOneListingLeft ? { quantity: '1' } : {};
 
-  return <FinalForm {...props} intl={intl} render={renderForm} />;
+  return <FinalForm initialValues={initialValues} {...props} intl={intl} render={renderForm} />;
 };
 
 ProductOrderForm.defaultProps = {
