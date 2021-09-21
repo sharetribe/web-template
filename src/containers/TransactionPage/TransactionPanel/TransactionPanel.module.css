@@ -271,15 +271,12 @@
 /* AddressLinkMaybe subcomponent */
 .address {
   @apply --marketplaceH5FontStyles;
-  color: var(--matterColorAnti);
+  color: var(--matterColor);
   margin: 0;
 }
 
-/* Passed-in props for AddressLinkMaybe subcomponent */
-.addressMobile {
-  @apply --marketplaceH5FontStyles;
-  color: var(--matterColorAnti);
-  margin: 0 24px 24px 24px;
+.viewOnGoogleMapsWrapper {
+  white-space: nowrap;
 }
 
 .pickupAddress {
