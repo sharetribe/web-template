@@ -1,6 +1,6 @@
 @import '../../styles/propertySets.css';
 
-/* Booking form inside modalContainer needs special handling */
+/* Order form inside modalContainer needs special handling */
 /* since "inMobile" breakpoint is actually --viewportLarge */
 .modalContainer {
   @apply --marketplaceModalInMobileBaseStyles;
@@ -80,7 +80,7 @@
   margin-right: 10px;
 }
 
-.bookingHeading {
+.orderHeading {
   display: none;
 
   @media (--viewportLarge) {
@@ -89,7 +89,7 @@
   }
 }
 
-.bookingTitle {
+.orderTitle {
   /* Font */
   color: var(--matterColor);
 
@@ -101,7 +101,7 @@
   }
 }
 
-.bookingHelp {
+.orderHelp {
   display: none;
   @apply --marketplaceH5FontStyles;
 
@@ -146,7 +146,7 @@
   }
 }
 
-.openBookingForm {
+.openOrderForm {
   /* Ensure that mobile button is over Footer too */
   z-index: 9;
   position: fixed;
@@ -207,7 +207,7 @@
   }
 }
 
-.bookButton {
+.orderButton {
   @apply --marketplaceButtonStylesPrimary;
 
   /* Clear padding that is set for link elements looking like buttons */
