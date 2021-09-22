@@ -243,6 +243,9 @@ export const TransactionPageComponent = props => {
     currentTransaction.provider &&
     !fetchTransactionError;
 
+  const isShippable =
+    isDataAvailable && currentTransaction.attributes?.protectedData?.deliveryMethod === 'shipping';
+
   const isOwnSale =
     isDataAvailable &&
     isProviderRole &&
@@ -341,7 +344,11 @@ export const TransactionPageComponent = props => {
         inProgress: markDeliveredInProgress,
         error: markDeliveredError,
         onTransition: () => onMarkDelivered(currentTransaction.id),
-        buttonText: intl.formatMessage({ id: 'TransactionPage.markDelivered.actionButton' }),
+        buttonText: intl.formatMessage({
+          id: isShippable
+            ? 'TransactionPage.markShipped.actionButton'
+            : 'TransactionPage.markDelivered.actionButton',
+        }),
         errorText: intl.formatMessage({ id: 'TransactionPage.markDelivered.actionError' }),
       }}
       leaveReviewProps={{

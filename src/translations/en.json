@@ -978,6 +978,7 @@
   "TransactionPage.markReceived.actionError": "Oops, failed to mark the order as received. Please refresh the page and try again.",
   "TransactionPage.markReceivedFromPurchased.actionButton": "Mark received",
   "TransactionPage.markReceivedFromPurchased.actionError": "Oops, failed to mark the order as received. Please refresh the page and try again.",
+  "TransactionPage.markShipped.actionButton": "Mark shipped",
   "TransactionPage.title": "Sale details: {title}",
   "TransactionPanel.acceptButton": "Accept",
   "TransactionPanel.acceptSaleFailed": "Oops, accepting failed. Please try again.",
