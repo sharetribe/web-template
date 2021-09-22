@@ -17,11 +17,20 @@
   }
 }
 
+.singleDeliveryMethodSelected {
+  margin: 0;
+
+  @media (--viewportMedium) {
+    margin: 0;
+  }
+}
+
 .breakdownWrapper {
   padding: 0 24px;
 
   @media (--viewportMedium) {
     padding: 0;
+    margin-top: 40px;
   }
 }
 
@@ -31,6 +40,7 @@
 
   @media (--viewportMedium) {
     padding: 0;
+    margin-top: 72px;
   }
 }
 

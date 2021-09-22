@@ -32,7 +32,6 @@ import { AvatarLarge, OrderPanel, NamedLink, UserDisplayName } from '../../../co
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
 
 // These are internal components that make this file more readable.
-import AddressLinkMaybe from './AddressLinkMaybe';
 import BreakdownMaybe from './BreakdownMaybe';
 import DetailCardHeadingsMaybe from './DetailCardHeadingsMaybe';
 import DetailCardImage from './DetailCardImage';
@@ -353,12 +352,6 @@ export class TransactionPanelComponent extends Component {
 
             <div className={css.orderDetails}>
               <div className={css.orderDetailsMobileSection}>
-                <AddressLinkMaybe
-                  rootClassName={css.addressMobile}
-                  location={location}
-                  geolocation={geolocation}
-                  showAddress={stateData.showAddress}
-                />
                 <BreakdownMaybe
                   transaction={currentTransaction}
                   transactionRole={transactionRole}
@@ -432,9 +425,6 @@ export class TransactionPanelComponent extends Component {
                   showDetailCardHeadings={stateData.showDetailCardHeadings}
                   listingTitle={listingTitle}
                   subTitle={bookingSubTitle}
-                  location={location}
-                  geolocation={geolocation}
-                  showAddress={stateData.showAddress}
                 />
                 {stateData.showOrderPanel ? (
                   <OrderPanel

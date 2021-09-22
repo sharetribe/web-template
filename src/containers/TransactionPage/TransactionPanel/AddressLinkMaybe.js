@@ -1,6 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 
+import { FormattedMessage } from '../../../util/reactIntl';
+
 import { ExternalLink } from '../../../components';
 
 import css from './TransactionPanel.module.css';
@@ -22,9 +24,12 @@ const AddressLinkMaybe = props => {
   const classes = classNames(rootClassName || css.address, className);
   return showAddress && hrefToGoogleMaps ? (
     <p className={classes}>
-      <ExternalLink className={linkRootClassName} href={hrefToGoogleMaps}>
-        {fullAddress}
-      </ExternalLink>
+      {fullAddress} <br />
+      <span className={css.viewOnGoogleMapsWrapper}>
+        <ExternalLink className={linkRootClassName} href={hrefToGoogleMaps}>
+          <FormattedMessage id="AddressLinkMaybe.viewOnGoogleMaps" />
+        </ExternalLink>
+      </span>
     </p>
   ) : null;
 };
