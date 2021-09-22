@@ -209,7 +209,14 @@
 }
 
 .itemAvatar {
+  display: flex;
+  align-items: center;
   margin-right: 8px;
+
+  @media (--viewportMedium) {
+    display: block;
+    align-items: unset;
+  }
 
   @media (--viewportLarge) {
     margin-right: 15px;
@@ -219,9 +226,12 @@
 .rowNotificationDot {
   width: 6px;
   height: 6px;
-  margin-top: 8px;
+  margin-top: 11px;
   margin-right: 8px;
 
+  @media (--viewportMedium) {
+    margin-top: 8px;
+  }
   @media (--viewportLarge) {
     margin-top: 5px;
     margin-right: 13px;
