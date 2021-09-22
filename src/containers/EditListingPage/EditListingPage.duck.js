@@ -507,7 +507,7 @@ export const uploadImageRequest = requestAction(UPLOAD_IMAGE_REQUEST);
 export const uploadImageSuccess = successAction(UPLOAD_IMAGE_SUCCESS);
 export const uploadImageError = errorAction(UPLOAD_IMAGE_ERROR);
 
-// SDK method: stockAdjustments.compareAndSet
+// SDK method: stock.compareAndSet
 export const setStockRequest = requestAction(SET_STOCK_REQUEST);
 export const setStockSuccess = successAction(SET_STOCK_SUCCESS);
 export const setStockError = errorAction(SET_STOCK_ERROR);

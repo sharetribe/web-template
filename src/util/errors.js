@@ -77,7 +77,7 @@ export const isUploadImageOverLimitError = error =>
 
 /**
  * Check if the given API error (from
- * `sdk.stockAdjustments.compareAndSet()`) is due to the oldTotal being wrong.
+ * `sdk.stock.compareAndSet()`) is due to the oldTotal being wrong.
  */
 export const isOldTotalMismatchStockError = error =>
   hasErrorWithCode(error, ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH);

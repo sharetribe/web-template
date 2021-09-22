@@ -62,7 +62,7 @@ const EditListingPricingPanel = props => {
 
         // Update stock only if the value has changed.
         // NOTE: this is going to be used on a separate call to API
-        // in EditListingPage.duck.js: sdk.stockAdjustments.compareAndSet();
+        // in EditListingPage.duck.js: sdk.stock.compareAndSet();
         const hasStockQuantityChanged = stock && currentStockRaw !== stock;
         // currentStockRaw is null or undefined, return null - otherwise use the value
         const oldTotal = currentStockRaw != null ? currentStockRaw : null;
