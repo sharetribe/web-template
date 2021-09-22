@@ -8,7 +8,6 @@ import { AvatarMedium, AspectRatioWrapper, ResponsiveImage } from '../../../comp
 
 import css from './TransactionPanel.module.css';
 
-// Functional component as a helper to build AddressLinkMaybe
 const DetailCardImage = props => {
   const {
     className,

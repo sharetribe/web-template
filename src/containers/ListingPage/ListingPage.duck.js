@@ -315,6 +315,9 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
 export const loadData = (params, search) => dispatch => {
   const listingId = new UUID(params.id);
 
+  // Clear old line-items
+  dispatch(setInitialValues({ lineItems: null }));
+
   const ownListingVariants = [LISTING_PAGE_DRAFT_VARIANT, LISTING_PAGE_PENDING_APPROVAL_VARIANT];
   if (ownListingVariants.includes(params.variant)) {
     return dispatch(showListing(listingId, true));
