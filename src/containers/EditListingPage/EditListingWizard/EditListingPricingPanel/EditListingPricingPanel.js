@@ -64,10 +64,12 @@ const EditListingPricingPanel = props => {
         // NOTE: this is going to be used on a separate call to API
         // in EditListingPage.duck.js: sdk.stockAdjustments.compareAndSet();
         const hasStockQuantityChanged = stock && currentStockRaw !== stock;
+        // currentStockRaw is null or undefined, return null - otherwise use the value
+        const oldTotal = currentStockRaw != null ? currentStockRaw : null;
         const stockUpdateMaybe = hasStockQuantityChanged
           ? {
               stockUpdate: {
-                oldTotal: currentStockRaw || null,
+                oldTotal,
                 newTotal: stock,
               },
             }
