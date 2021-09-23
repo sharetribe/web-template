@@ -23,16 +23,18 @@ const MainPanelHeader = props => {
   return (
     <div className={classes}>
       <div className={css.searchOptions}>
-        {listingsAreLoaded ? (
-          <div className={css.searchResultSummary}>
-            <span className={css.resultsFound}>
+        <div className={css.searchResultSummary}>
+          <span className={css.resultsFound}>
+            {searchInProgress ? (
+              <FormattedMessage id="MainPanelHeader.loadingResults" />
+            ) : (
               <FormattedMessage
                 id="MainPanelHeader.foundResults"
                 values={{ count: resultsCount }}
               />
-            </span>
-          </div>
-        ) : null}
+            )}
+          </span>
+        </div>
         <div className={css.sortyByWrapper}>
           <span className={css.sortyBy}>
             <FormattedMessage id="MainPanelHeader.sortBy" />
@@ -46,12 +48,6 @@ const MainPanelHeader = props => {
       {hasNoResult ? (
         <div className={css.noSearchResults}>
           <FormattedMessage id="MainPanelHeader.noResults" />
-        </div>
-      ) : null}
-
-      {searchInProgress ? (
-        <div className={css.loadingResults}>
-          <FormattedMessage id="MainPanelHeader.loadingResults" />
         </div>
       ) : null}
     </div>
