@@ -66,6 +66,8 @@ const renderForm = formRenderProps => {
     </div>
   ) : null;
 
+  const showContactUser = typeof onContactUser === 'function';
+
   const onClickContactUser = e => {
     e.preventDefault();
     onContactUser();
@@ -161,9 +163,9 @@ const renderForm = formRenderProps => {
       <p className={css.finePrint}>
         {hasStock ? (
           <FormattedMessage id="ProductOrderForm.finePrint" />
-        ) : (
+        ) : showContactUser ? (
           <FormattedMessage id="ProductOrderForm.finePrintNoStock" values={{ contactSellerLink }} />
-        )}
+        ) : null}
       </p>
     </Form>
   );
