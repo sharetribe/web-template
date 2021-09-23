@@ -22,11 +22,11 @@ const SortBy = props => {
   const { relevanceKey, relevanceFilter, queryParamName } = config.custom.sortConfig;
 
   // Ensure that keywords is included to activeFilter list when needed
-  const activefilters = isMainSearchTypeKeywords(config)
+  const activeOptions = isMainSearchTypeKeywords(config)
     ? Object.keys({ keywords: '', ...selectedFilters })
     : Object.keys(selectedFilters);
 
-  const isRelevanceFilterActive = activefilters.includes(relevanceFilter);
+  const isRelevanceOptionActive = activeOptions.includes(relevanceFilter);
 
   const options = config.custom.sortConfig.options.map(option => {
     const isRelevance = option.key === relevanceKey;
@@ -34,13 +34,14 @@ const SortBy = props => {
     return {
       ...option,
       disabled:
-        (isRelevance && (!isRelevanceFilterActive || isConflictingFilterSetAndActive)) ||
+        (isRelevance && (!isRelevanceOptionActive || isConflictingFilterSetAndActive)) ||
         (!isRelevance && isConflictingFilterActive),
     };
   });
   const defaultValue = 'createdAt';
-  const isRelevanceSortActive = isRelevanceFilterActive && !sort;
-  const relevanceValue = isRelevanceSortActive ? relevanceKey : null;
+  const isRelevanceSortActive = isRelevanceOptionActive && !sort;
+  const relevanceValue =
+    isRelevanceSortActive && selectedFilters[relevanceFilter]?.length > 0 ? relevanceKey : null;
   const initialValue =
     hasConflictingFilters && !isConflictingFilterActive
       ? relevanceKey
