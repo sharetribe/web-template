@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [fix] TransactionPanel: smaller gap between OrderBreakdown and title.
+  [#107](https://github.com/sharetribe/ftw-product/pull/107)
 - [fix] EditListingPricingPanel: default stock value is 1.
   [#105](https://github.com/sharetribe/ftw-product/pull/105)
 - [fix] SearchPage: fix bugs and review issues
