@@ -181,7 +181,7 @@ export class SearchPageComponent extends Component {
     history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, queryParams));
   }
 
-  initialValues(queryParamNames) {
+  initialValues(queryParamNames, isLiveEdit) {
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
     // Query parameters that are in state (user might have not yet clicked "Apply")
@@ -191,7 +191,7 @@ export class SearchPageComponent extends Component {
     const getInitialValue = paramName => {
       const currentQueryParam = currentQueryParams[paramName];
       const hasQueryParamInState = typeof currentQueryParam !== 'undefined';
-      return hasQueryParamInState ? currentQueryParam : urlQueryParams[paramName];
+      return hasQueryParamInState && !isLiveEdit ? currentQueryParam : urlQueryParams[paramName];
     };
 
     // Return all the initial values related to given queryParamNames
