@@ -301,8 +301,7 @@
   margin: 0 24px 0 24px;
 
   @media (--viewportLarge) {
-    margin: 37px 48px 26px 48px;
-    margin: 32px 48px 24px 48px;
+    margin: 32px 48px 0px 48px;
     padding: 4px 0 4px 0;
   }
 }
@@ -316,7 +315,7 @@
     padding: 3px 0 5px 0;
   }
   @media (--viewportLarge) {
-    margin: 24px 48px 47px 48px;
+    margin: 0px 48px 47px 48px;
     padding: 6px 0 2px 0;
   }
 }
