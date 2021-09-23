@@ -431,10 +431,10 @@ export class TransactionPanelComponent extends Component {
                     className={css.orderPanel}
                     titleClassName={css.orderTitle}
                     isOwnListing={false}
+                    unitType={unitType}
                     listing={currentListing}
                     title={listingTitle}
-                    subTitle={bookingSubTitle}
-                    authorDisplayName={authorDisplayName}
+                    author={currentProvider}
                     onSubmit={onSubmitOrderRequest}
                     onManageDisableScrolling={onManageDisableScrolling}
                     timeSlots={timeSlots}

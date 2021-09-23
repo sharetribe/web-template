@@ -376,6 +376,7 @@ export const fetchTransaction = (id, txRole) => (dispatch, getState, sdk) => {
           'provider',
           'provider.profileImage',
           'listing',
+          'listing.currentStock',
           'booking',
           'reviews',
           'reviews.author',
