@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [fix] EditListingPricingPanel: default stock value is 1.
+  [#105](https://github.com/sharetribe/ftw-product/pull/105)
 - [fix] SearchPage: fix bugs and review issues
   [#102](https://github.com/sharetribe/ftw-product/pull/102)
 - [fix] Fix order after enquiry [#101](https://github.com/sharetribe/ftw-product/pull/101)
