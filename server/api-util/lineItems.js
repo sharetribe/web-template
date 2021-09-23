@@ -128,7 +128,7 @@ exports.transactionLineItems = (listing, orderData) => {
 
   const providerCommission = {
     code: 'line-item/provider-commission',
-    unitPrice: calculateTotalFromLineItems([order, ...deliveryLineItem]),
+    unitPrice: calculateTotalFromLineItems([order]),
     percentage: PROVIDER_COMMISSION_PERCENTAGE,
     includeFor: ['provider'],
   };
