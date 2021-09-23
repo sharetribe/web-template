@@ -155,7 +155,7 @@
 
   &:focus,
   &:hover {
-    color: var(--marketplaceColorDark);
+    color: var(--marketplaceColorLight);
   }
 }
 

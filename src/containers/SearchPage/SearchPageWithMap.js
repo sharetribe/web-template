@@ -80,6 +80,7 @@ export class SearchPageComponent extends Component {
       isSearchMapOpenOnMobile: props.tab === 'map',
       isMobileModalOpen: false,
       currentQueryParams: validUrlQueryParamsFromProps(props),
+      isSecondaryFiltersOpen: false,
     };
 
     this.searchMapListingsInProgress = false;
@@ -181,7 +182,7 @@ export class SearchPageComponent extends Component {
     history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, queryParams));
   }
 
-  initialValues(queryParamNames) {
+  initialValues(queryParamNames, isLiveEdit) {
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
     // Query parameters that are in state (user might have not yet clicked "Apply")
@@ -191,7 +192,7 @@ export class SearchPageComponent extends Component {
     const getInitialValue = paramName => {
       const currentQueryParam = currentQueryParams[paramName];
       const hasQueryParamInState = typeof currentQueryParam !== 'undefined';
-      return hasQueryParamInState ? currentQueryParam : urlQueryParams[paramName];
+      return hasQueryParamInState && !isLiveEdit ? currentQueryParam : urlQueryParams[paramName];
     };
 
     // Return all the initial values related to given queryParamNames
@@ -313,7 +314,7 @@ export class SearchPageComponent extends Component {
       ? {
           isSecondaryFiltersOpen: this.state.isSecondaryFiltersOpen,
           toggleSecondaryFiltersOpen: isOpen => {
-            this.setState({ isSecondaryFiltersOpen: isOpen });
+            this.setState({ isSecondaryFiltersOpen: isOpen, currentQueryParams: {} });
           },
           selectedSecondaryFiltersCount,
         }
@@ -382,7 +383,7 @@ export class SearchPageComponent extends Component {
         <div className={css.container}>
           <div className={css.searchResultContainer}>
             <SearchFiltersMobile
-              className={css.searchFiltersMobile}
+              className={css.searchFiltersMobileMap}
               urlQueryParams={validQueryParams}
               sortByComponent={sortBy('mobile')}
               listingsAreLoaded={listingsAreLoaded}
