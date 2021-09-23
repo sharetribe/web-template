@@ -95,8 +95,13 @@ const OrderPanel = props => {
 
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
-  const currentStock = listing.currentStock?.attributes?.quantity || 0;
+  const currentStock = listing.currentStock?.attributes?.quantity;
   const isOutOfStock = config.listingManagementType === 'stock' && currentStock === 0;
+
+  // Show form only when stock is fully loaded. This avoids "Out of stock" UI by
+  // default before all data has been downloaded.
+  const showProductOrderForm =
+    config.listingManagementType === 'stock' && typeof currentStock === 'number';
 
   const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
 
@@ -156,7 +161,7 @@ const OrderPanel = props => {
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
           />
-        ) : (
+        ) : showProductOrderForm ? (
           <ProductOrderForm
             formId="OrderPanelProductOrderForm"
             onSubmit={onSubmit}
@@ -172,7 +177,7 @@ const OrderPanel = props => {
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
           />
-        )}
+        ) : null}
       </ModalInMobile>
       <div className={css.openOrderForm}>
         <div className={css.priceContainer}>
