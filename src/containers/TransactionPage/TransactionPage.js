@@ -167,7 +167,7 @@ export const TransactionPageComponent = props => {
 
   // Customer can create a booking, if the tx is in "enquiry" state.
   const handleSubmitOrderRequest = values => {
-    const { bookingDates, ...otherOrderData } = values;
+    const { bookingDates, quantity: quantityRaw, ...otherOrderData } = values;
     const bookingDatesMaybe = bookingDates
       ? {
           bookingDates: {
@@ -183,6 +183,7 @@ export const TransactionPageComponent = props => {
       transaction: currentTransaction,
       orderData: {
         ...bookingDatesMaybe,
+        quantity: Number.parseInt(quantityRaw, 10),
         ...otherOrderData,
       },
       confirmPaymentError: null,
