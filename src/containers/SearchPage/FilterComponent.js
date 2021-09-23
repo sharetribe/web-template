@@ -34,7 +34,7 @@ const FilterComponent = props => {
           id={componentId}
           label={label}
           queryParamNames={queryParamNames}
-          initialValues={initialValues(queryParamNames)}
+          initialValues={initialValues(queryParamNames, liveEdit)}
           onSelect={getHandleChangedValueFn(useHistoryPush)}
           {...config}
           {...rest}
@@ -48,7 +48,7 @@ const FilterComponent = props => {
           label={label}
           name={name}
           queryParamNames={queryParamNames}
-          initialValues={initialValues(queryParamNames)}
+          initialValues={initialValues(queryParamNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
           {...config}
           {...rest}
@@ -61,7 +61,7 @@ const FilterComponent = props => {
           id={componentId}
           label={label}
           queryParamNames={queryParamNames}
-          initialValues={initialValues(queryParamNames)}
+          initialValues={initialValues(queryParamNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
           {...config}
           {...rest}
@@ -74,7 +74,7 @@ const FilterComponent = props => {
           id={componentId}
           label={label}
           queryParamNames={queryParamNames}
-          initialValues={initialValues(queryParamNames)}
+          initialValues={initialValues(queryParamNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
           {...config}
           {...rest}
@@ -88,7 +88,7 @@ const FilterComponent = props => {
           label={label}
           name={name}
           queryParamNames={queryParamNames}
-          initialValues={initialValues(queryParamNames)}
+          initialValues={initialValues(queryParamNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
           {...config}
           {...rest}

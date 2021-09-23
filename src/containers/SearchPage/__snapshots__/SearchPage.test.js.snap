@@ -248,7 +248,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
         className="searchResultContainer"
       >
         <injectIntl(withRouter(SearchFiltersMobileComponent))
-          className="searchFiltersMobile"
+          className="searchFiltersMobileList"
           isMapVariant={false}
           listingsAreLoaded={true}
           onCloseModal={[Function]}
