@@ -14,6 +14,7 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [fix] Fix order after enquiry [#101](https://github.com/sharetribe/ftw-product/pull/101)
 - [fix] Fix missing author and stock info in OrderPanel on the TransactionPage
   [#100](https://github.com/sharetribe/ftw-product/pull/100)
 - [fix] Update stock from 0 (the value was considered false).
