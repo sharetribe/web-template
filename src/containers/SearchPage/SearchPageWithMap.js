@@ -80,6 +80,7 @@ export class SearchPageComponent extends Component {
       isSearchMapOpenOnMobile: props.tab === 'map',
       isMobileModalOpen: false,
       currentQueryParams: validUrlQueryParamsFromProps(props),
+      isSecondaryFiltersOpen: false,
     };
 
     this.searchMapListingsInProgress = false;
@@ -313,7 +314,7 @@ export class SearchPageComponent extends Component {
       ? {
           isSecondaryFiltersOpen: this.state.isSecondaryFiltersOpen,
           toggleSecondaryFiltersOpen: isOpen => {
-            this.setState({ isSecondaryFiltersOpen: isOpen });
+            this.setState({ isSecondaryFiltersOpen: isOpen, currentQueryParams: {} });
           },
           selectedSecondaryFiltersCount,
         }
