@@ -383,7 +383,7 @@ export class SearchPageComponent extends Component {
         <div className={css.container}>
           <div className={css.searchResultContainer}>
             <SearchFiltersMobile
-              className={css.searchFiltersMobile}
+              className={css.searchFiltersMobileMap}
               urlQueryParams={validQueryParams}
               sortByComponent={sortBy('mobile')}
               listingsAreLoaded={listingsAreLoaded}

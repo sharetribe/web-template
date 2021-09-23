@@ -214,7 +214,15 @@
   }
 }
 
-.searchFiltersMobile {
+.searchFiltersMobileMap {
+  padding: 16px 24px;
+
+  @media (--viewportMedium) {
+    display: none;
+  }
+}
+
+.searchFiltersMobileList {
   padding: 16px 0;
 
   @media (--viewportMedium) {
