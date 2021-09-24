@@ -9,7 +9,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
       "@type": "SearchResultsPage",
       "description": "SearchPage.schemaDescription",
       "mainEntity": Array [
-        "{\\"@type\\":\\"ItemList\\",\\"name\\":\\"SearchPage.schemaMapSearch\\",\\"itemListOrder\\":\\"http://schema.org/ItemListOrderAscending\\",\\"itemListElement\\":[]}",
+        "{\\"@type\\":\\"ItemList\\",\\"name\\":\\"SearchPage.schemaForSearch\\",\\"itemListOrder\\":\\"http://schema.org/ItemListOrderAscending\\",\\"itemListElement\\":[]}",
       ],
       "name": "SearchPage.schemaTitle",
     }
