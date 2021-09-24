@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] SearchPage: update schema title to include keywords.
+  [#108](https://github.com/sharetribe/ftw-product/pull/108)
 - [change] Line-items: calculate commission from base price.
   [#106](https://github.com/sharetribe/ftw-product/pull/106)
 - [change] Update translations (en.json) to match Sneakertime concept.
