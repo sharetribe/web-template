@@ -334,8 +334,11 @@ export class SearchPageComponent extends Component {
       this.setState({ isSearchMapOpenOnMobile: true });
     };
 
-    const { address } = searchInURL || {};
-    const { title, description, schema } = createSearchResultSchema(listings, address, intl); // TODO
+    const { title, description, schema } = createSearchResultSchema(
+      listings,
+      searchInURL || {},
+      intl
+    );
 
     // Set topbar class based on if a modal is open in
     // a child component
