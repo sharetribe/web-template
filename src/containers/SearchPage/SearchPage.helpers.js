@@ -118,16 +118,19 @@ export const pickSearchParamsOnly = (params, filters, sortConfig) => {
   };
 };
 
-export const createSearchResultSchema = (listings, address, intl) => {
+export const createSearchResultSchema = (listings, mainSearchData, intl) => {
   // Schema for search engines (helps them to understand what this page is about)
   // http://schema.org
   // We are using JSON-LD format
   const siteTitle = config.siteTitle;
-  const searchAddress = address || intl.formatMessage({ id: 'SearchPage.schemaMapSearch' });
+  const { address, keywords } = mainSearchData;
+  const keywordsMaybe = keywords ? `"${keywords}"` : null;
+  const searchTitle =
+    address || keywordsMaybe || intl.formatMessage({ id: 'SearchPage.schemaForSearch' });
   const schemaDescription = intl.formatMessage({ id: 'SearchPage.schemaDescription' });
   const schemaTitle = intl.formatMessage(
     { id: 'SearchPage.schemaTitle' },
-    { searchAddress, siteTitle }
+    { searchTitle, siteTitle }
   );
 
   const schemaListings = listings.map((l, i) => {
@@ -146,7 +149,7 @@ export const createSearchResultSchema = (listings, address, intl) => {
 
   const schemaMainEntity = JSON.stringify({
     '@type': 'ItemList',
-    name: searchAddress,
+    name: searchTitle,
     itemListOrder: 'http://schema.org/ItemListOrderAscending',
     itemListElement: schemaListings,
   });
