@@ -56,29 +56,48 @@ const exampleTransaction = params => {
   };
 };
 
-export const ProductCheckout = {
+const unitPrice = new Decimal(4500);
+const quantity = new Decimal(2);
+const basePrice = unitPrice.times(quantity);
+const fee = basePrice.dividedBy(10).times(-1);
+const shipping = new Decimal(1000);
+
+export const ProductShippingCustomer = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
     unitType: LINE_ITEM_UNITS,
     transaction: exampleTransaction({
-      payinTotal: new Money(10000, CURRENCY),
-      payoutTotal: new Money(10000, CURRENCY),
+      payinTotal: new Money(basePrice.plus(shipping), CURRENCY),
+      payoutTotal: new Money(
+        basePrice
+          .plus(shipping)
+          .plus(fee)
+          .toNumber(),
+        CURRENCY
+      ),
       lineItems: [
         {
           code: 'line-item/units',
           includeFor: ['customer', 'provider'],
-          quantity: new Decimal(2),
-          unitPrice: new Money(4500, CURRENCY),
-          lineTotal: new Money(9000, CURRENCY),
+          quantity,
+          unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
+          lineTotal: new Money(basePrice.toNumber(), CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/provider-commission',
+          includeFor: ['provider'],
+          unitPrice: new Money(fee.toNumber(), CURRENCY),
+          lineTotal: new Money(fee.toNumber(), CURRENCY),
           reversal: false,
         },
         {
           code: 'line-item/shipping-fee',
           includeFor: ['customer', 'provider'],
           quantity: new Decimal(1),
-          unitPrice: new Money(1000, CURRENCY),
-          lineTotal: new Money(1000, CURRENCY),
+          unitPrice: new Money(shipping, CURRENCY),
+          lineTotal: new Money(shipping, CURRENCY),
           reversal: false,
         },
       ],
@@ -87,7 +106,51 @@ export const ProductCheckout = {
   group: 'payment',
 };
 
-export const ProductRefundShipping = {
+export const ProductShippingProvider = {
+  component: OrderBreakdown,
+  props: {
+    userRole: 'provider',
+    unitType: LINE_ITEM_UNITS,
+    transaction: exampleTransaction({
+      payinTotal: new Money(basePrice.plus(shipping), CURRENCY),
+      payoutTotal: new Money(
+        basePrice
+          .plus(shipping)
+          .plus(fee)
+          .toNumber(),
+        CURRENCY
+      ),
+      lineItems: [
+        {
+          code: 'line-item/units',
+          includeFor: ['customer', 'provider'],
+          quantity,
+          unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
+          lineTotal: new Money(basePrice.toNumber(), CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/provider-commission',
+          includeFor: ['provider'],
+          unitPrice: new Money(fee.toNumber(), CURRENCY),
+          lineTotal: new Money(fee.toNumber(), CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/shipping-fee',
+          includeFor: ['customer', 'provider'],
+          quantity: new Decimal(1),
+          unitPrice: new Money(shipping, CURRENCY),
+          lineTotal: new Money(shipping, CURRENCY),
+          reversal: false,
+        },
+      ],
+    }),
+  },
+  group: 'payment',
+};
+
+export const ProductRefundShippingCustomer = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
@@ -99,33 +162,47 @@ export const ProductRefundShipping = {
         {
           code: 'line-item/units',
           includeFor: ['customer', 'provider'],
-          quantity: new Decimal(2),
-          unitPrice: new Money(4500, CURRENCY),
-          lineTotal: new Money(9000, CURRENCY),
+          quantity,
+          unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
+          lineTotal: new Money(basePrice.toNumber(), CURRENCY),
           reversal: false,
         },
         {
           code: 'line-item/units',
           includeFor: ['customer', 'provider'],
-          quantity: new Decimal(-2),
-          unitPrice: new Money(4500, CURRENCY),
-          lineTotal: new Money(-9000, CURRENCY),
+          quantity,
+          unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
+          lineTotal: new Money(basePrice.times(-1).toNumber(), CURRENCY),
+          reversal: true,
+        },
+        {
+          code: 'line-item/provider-commission',
+          includeFor: ['provider'],
+          unitPrice: new Money(fee.toNumber(), CURRENCY),
+          lineTotal: new Money(fee.toNumber(), CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/provider-commission',
+          includeFor: ['provider'],
+          unitPrice: new Money(fee.toNumber(), CURRENCY),
+          lineTotal: new Money(fee.times(-1).toNumber(), CURRENCY),
           reversal: true,
         },
         {
           code: 'line-item/shipping-fee',
           includeFor: ['customer', 'provider'],
           quantity: new Decimal(1),
-          unitPrice: new Money(1000, CURRENCY),
-          lineTotal: new Money(1000, CURRENCY),
+          unitPrice: new Money(shipping, CURRENCY),
+          lineTotal: new Money(shipping, CURRENCY),
           reversal: false,
         },
         {
           code: 'line-item/shipping-fee',
           includeFor: ['customer', 'provider'],
-          quantity: new Decimal(-1),
-          unitPrice: new Money(1000, CURRENCY),
-          lineTotal: new Money(-1000, CURRENCY),
+          quantity: new Decimal(1),
+          unitPrice: new Money(shipping, CURRENCY),
+          lineTotal: new Money(shipping.times(-1), CURRENCY),
           reversal: true,
         },
       ],
@@ -133,7 +210,69 @@ export const ProductRefundShipping = {
   },
   group: 'payment',
 };
-export const ProductRefundPickup = {
+
+export const ProductRefundShippingProvider = {
+  component: OrderBreakdown,
+  props: {
+    userRole: 'provider',
+    unitType: LINE_ITEM_UNITS,
+    transaction: exampleTransaction({
+      payinTotal: new Money(0, CURRENCY),
+      payoutTotal: new Money(0, CURRENCY),
+      lineItems: [
+        {
+          code: 'line-item/units',
+          includeFor: ['customer', 'provider'],
+          quantity,
+          unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
+          lineTotal: new Money(basePrice.toNumber(), CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/units',
+          includeFor: ['customer', 'provider'],
+          quantity,
+          unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
+          lineTotal: new Money(basePrice.times(-1).toNumber(), CURRENCY),
+          reversal: true,
+        },
+        {
+          code: 'line-item/provider-commission',
+          includeFor: ['provider'],
+          unitPrice: new Money(fee.toNumber(), CURRENCY),
+          lineTotal: new Money(fee.toNumber(), CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/provider-commission',
+          includeFor: ['provider'],
+          unitPrice: new Money(fee.toNumber(), CURRENCY),
+          lineTotal: new Money(fee.times(-1).toNumber(), CURRENCY),
+          reversal: true,
+        },
+        {
+          code: 'line-item/shipping-fee',
+          includeFor: ['customer', 'provider'],
+          quantity: new Decimal(1),
+          unitPrice: new Money(shipping, CURRENCY),
+          lineTotal: new Money(shipping, CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/shipping-fee',
+          includeFor: ['customer', 'provider'],
+          quantity: new Decimal(1),
+          unitPrice: new Money(shipping, CURRENCY),
+          lineTotal: new Money(shipping.times(-1), CURRENCY),
+          reversal: true,
+        },
+      ],
+    }),
+  },
+  group: 'payment',
+};
+
+export const ProductRefundPickupCustomer = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
@@ -145,17 +284,92 @@ export const ProductRefundPickup = {
         {
           code: 'line-item/units',
           includeFor: ['customer', 'provider'],
-          quantity: new Decimal(2),
-          unitPrice: new Money(4500, CURRENCY),
-          lineTotal: new Money(9000, CURRENCY),
+          quantity,
+          unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
+          lineTotal: new Money(basePrice.toNumber(), CURRENCY),
           reversal: false,
         },
         {
           code: 'line-item/units',
           includeFor: ['customer', 'provider'],
-          quantity: new Decimal(-2),
-          unitPrice: new Money(4500, CURRENCY),
-          lineTotal: new Money(-9000, CURRENCY),
+          quantity,
+          unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
+          lineTotal: new Money(basePrice.times(-1).toNumber(), CURRENCY),
+          reversal: true,
+        },
+        {
+          code: 'line-item/provider-commission',
+          includeFor: ['provider'],
+          unitPrice: new Money(fee.toNumber(), CURRENCY),
+          lineTotal: new Money(fee.toNumber(), CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/provider-commission',
+          includeFor: ['provider'],
+          unitPrice: new Money(fee.toNumber(), CURRENCY),
+          lineTotal: new Money(fee.times(-1).toNumber(), CURRENCY),
+          reversal: true,
+        },
+        {
+          code: 'line-item/pickup-fee',
+          includeFor: ['customer', 'provider'],
+          quantity: new Decimal(1),
+          unitPrice: new Money(0, CURRENCY),
+          lineTotal: new Money(0, CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/pickup-fee',
+          includeFor: ['customer', 'provider'],
+          quantity: new Decimal(-1),
+          unitPrice: new Money(0, CURRENCY),
+          lineTotal: new Money(-0, CURRENCY),
+          reversal: true,
+        },
+      ],
+    }),
+  },
+  group: 'payment',
+};
+
+export const ProductRefundPickupProvider = {
+  component: OrderBreakdown,
+  props: {
+    userRole: 'provider',
+    unitType: LINE_ITEM_UNITS,
+    transaction: exampleTransaction({
+      payinTotal: new Money(0, CURRENCY),
+      payoutTotal: new Money(0, CURRENCY),
+      lineItems: [
+        {
+          code: 'line-item/units',
+          includeFor: ['customer', 'provider'],
+          quantity,
+          unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
+          lineTotal: new Money(basePrice.toNumber(), CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/units',
+          includeFor: ['customer', 'provider'],
+          quantity,
+          unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
+          lineTotal: new Money(basePrice.times(-1).toNumber(), CURRENCY),
+          reversal: true,
+        },
+        {
+          code: 'line-item/provider-commission',
+          includeFor: ['provider'],
+          unitPrice: new Money(fee.toNumber(), CURRENCY),
+          lineTotal: new Money(fee.toNumber(), CURRENCY),
+          reversal: false,
+        },
+        {
+          code: 'line-item/provider-commission',
+          includeFor: ['provider'],
+          unitPrice: new Money(fee.toNumber(), CURRENCY),
+          lineTotal: new Money(fee.times(-1).toNumber(), CURRENCY),
           reversal: true,
         },
         {
