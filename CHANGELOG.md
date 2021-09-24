@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2020-XX-XX
 
+- [change] Line-items: calculate commission from base price.
+  [#106](https://github.com/sharetribe/ftw-product/pull/106)
+- [change] Update translations (en.json) to match Sneakertime concept.
+  [#104](https://github.com/sharetribe/ftw-product/pull/104)
 - [fix] TransactionPanel: smaller gap between OrderBreakdown and title.
   [#107](https://github.com/sharetribe/ftw-product/pull/107)
 - [fix] EditListingPricingPanel: default stock value is 1.
