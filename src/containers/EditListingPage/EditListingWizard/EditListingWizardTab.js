@@ -157,8 +157,8 @@ const EditListingWizardTab = props => {
     }
     case DELIVERY: {
       const submitButtonTranslationKey = isNewListingFlow
-        ? 'EditListingWizard.saveNewLocation'
-        : 'EditListingWizard.saveEditLocation';
+        ? 'EditListingWizard.saveNewDelivery'
+        : 'EditListingWizard.saveEditDelivery';
       return (
         <EditListingDeliveryPanel
           {...panelProps(DELIVERY)}

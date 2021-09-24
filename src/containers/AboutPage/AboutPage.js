@@ -66,7 +66,7 @@ const AboutPage = () => {
               </h3>
               <p>
                 Sneakertime is brought to you by the good folks at{' '}
-                <ExternalLink href="http://www.sharetribe.com">Sharetribe</ExternalLink>. Would you like
+                <ExternalLink href="https://www.sharetribe.com">Sharetribe</ExternalLink>. Would you like
                 to create your own marketplace platform a bit like Sneakertime? Or perhaps a mobile
                 app? With Sharetribe it's really easy. If you have a marketplace idea in mind, do
                 get in touch!
