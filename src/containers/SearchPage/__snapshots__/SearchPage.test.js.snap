@@ -233,9 +233,8 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           className="resetAllButton"
           onClick={[Function]}
         >
-          <FormattedMessage
+          <MemoizedFormattedMessage
             id="SearchFiltersMobile.resetAll"
-            values={Object {}}
           />
         </button>
       </div>

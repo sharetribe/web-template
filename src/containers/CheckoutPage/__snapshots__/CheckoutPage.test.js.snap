@@ -80,7 +80,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
         <div
           className="author"
         >
-          <FormattedMessage
+          <MemoizedFormattedMessage
             id="CheckoutPage.providerInfo"
             values={
               Object {
@@ -181,9 +181,8 @@ exports[`CheckoutPage matches snapshot 1`] = `
       <h2
         className="orderBreakdownTitle"
       >
-        <FormattedMessage
+        <MemoizedFormattedMessage
           id="CheckoutPage.orderBreakdown"
-          values={Object {}}
         />
       </h2>
     </div>
