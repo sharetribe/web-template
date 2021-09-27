@@ -5,7 +5,7 @@ import { storableError } from '../../util/errors';
 import { convertUnitToSubUnit, unitDivisor } from '../../util/currency';
 import { parseDateFromISO8601, getExclusiveEndDate } from '../../util/dates';
 import { createImageVariantConfig } from '../../util/sdkLoader';
-import { isOriginInUse } from '../../util/search';
+import { isOriginInUse, isStockInUse } from '../../util/search';
 import { parse } from '../../util/urlHelpers';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
@@ -221,6 +221,10 @@ export const loadData = (params, search) => {
     latlng: ['origin'],
     latlngBounds: ['bounds'],
   });
+
+  // Add minStock filter with default value (1), if stock management is in use.
+  // This can be overwriten with passed-in query parameters.
+  const minStockMaybe = isStockInUse(config) ? { minStock: 1 } : {};
   const { page = 1, address, origin, ...rest } = queryParams;
   const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
 
@@ -228,6 +232,7 @@ export const loadData = (params, search) => {
   const aspectRatio = aspectHeight / aspectWidth;
 
   return searchListings({
+    ...minStockMaybe,
     ...rest,
     ...originMaybe,
     page,
