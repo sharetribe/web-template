@@ -464,7 +464,7 @@
     }
     &:disabled {
       background-color: var(--matterColorNegative);
-      color: var(--matterColorLight);
+      color: var(--matterColor);
     }
   }
   --marketplaceButtonStylesSecondary {
