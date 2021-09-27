@@ -14,6 +14,18 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [change] review bugs and change requests.
+
+  - SearchPage: if stock is used, add minStock filter
+  - CheckoutPage: remove payment info about provider acceptance needed.
+  - ProductOrderForm: hide quantity and deliveryMethod fields if stock = 0
+  - ProductOrderForm: add validators and focus+show error msg, if submitting too early.
+  - PrimaryButton: change text color for disabled mode
+  - EditListingPricingPanel: if stock is 0, use that (boolean bug)
+  - ActivityFeed: 2 translations for deliveries (shipped vs picked up)
+
+  [#110](https://github.com/sharetribe/ftw-product/pull/110)
+
 - [change] SearchPage: update schema title to include keywords.
   [#108](https://github.com/sharetribe/ftw-product/pull/108)
 - [change] Line-items: calculate commission from base price.
