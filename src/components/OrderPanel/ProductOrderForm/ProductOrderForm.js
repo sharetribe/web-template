@@ -81,7 +81,8 @@ const renderForm = formRenderProps => {
 
   const hasStock = currentStock && currentStock > 0;
   const quantities = hasStock ? [...Array(currentStock).keys()].map(i => i + 1) : [];
-  const hasOneItemLeft = currentStock && currentStock === 1;
+  const hasNoStockLeft = typeof currentStock != null && currentStock === 0;
+  const hasOneItemLeft = typeof currentStock != null && currentStock === 1;
 
   const submitInProgress = fetchLineItemsInProgress;
   const submitDisabled = invalid || !hasStock;
@@ -89,7 +90,7 @@ const renderForm = formRenderProps => {
   return (
     <Form onSubmit={handleSubmit}>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
-      {hasOneItemLeft ? (
+      {hasNoStockLeft ? null : hasOneItemLeft ? (
         <FieldTextInput
           id={`${formId}.quantity`}
           className={css.quantityField}
@@ -116,7 +117,7 @@ const renderForm = formRenderProps => {
         </FieldSelect>
       )}
 
-      {hasMultipleDeliveryMethods ? (
+      {hasNoStockLeft ? null : hasMultipleDeliveryMethods ? (
         <FieldSelect
           id={`${formId}.deliveryMethod`}
           className={css.deliveryField}
