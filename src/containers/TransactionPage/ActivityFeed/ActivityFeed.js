@@ -151,15 +151,24 @@ const resolveTransitionMessage = (
       ) : null;
 
       return reviewAsFirstLink || <FormattedMessage id="ActivityFeed.transitionMarkReceived" />;
-    case TRANSITION_MARK_DELIVERED:
-      return isOwnTransition ? (
+    case TRANSITION_MARK_DELIVERED: {
+      const isShipped = transaction.attributes?.protectedData?.deliveryMethod === 'shipping';
+      return isOwnTransition && isShipped ? (
+        <FormattedMessage id="ActivityFeed.ownTransitionShipped" values={{ listingTitle }} />
+      ) : isOwnTransition && !isShipped ? (
         <FormattedMessage id="ActivityFeed.ownTransitionDelivered" values={{ listingTitle }} />
+      ) : !isOwnTransition && isShipped ? (
+        <FormattedMessage
+          id="ActivityFeed.transitionShipped"
+          values={{ displayName, listingTitle }}
+        />
       ) : (
         <FormattedMessage
           id="ActivityFeed.transitionDelivered"
           values={{ displayName, listingTitle }}
         />
       );
+    }
     case TRANSITION_DISPUTE:
       return isOwnTransition ? (
         <FormattedMessage id="ActivityFeed.ownTransitionDisputed" values={{ listingTitle }} />
