@@ -554,7 +554,7 @@ class StripePaymentForm extends Component {
           {hasPaymentErrors ? (
             <span className={css.errorMessage}>{paymentErrorMessage}</span>
           ) : null}
-          <p className={css.paymentInfo}>{paymentInfo}</p>
+          {paymentInfo ? <p className={css.paymentInfo}>{paymentInfo}</p> : null}
           <PrimaryButton
             className={css.submitButton}
             type="submit"
@@ -599,6 +599,7 @@ StripePaymentForm.defaultProps = {
   initiateOrderError: null,
   confirmCardPaymentError: null,
   confirmPaymentError: null,
+  paymentInfo: null,
   askShippingDetails: false,
   pickupLocation: null,
   totalPrice: null,
@@ -615,7 +616,7 @@ StripePaymentForm.propTypes = {
   formId: string.isRequired,
   intl: intlShape.isRequired,
   onSubmit: func.isRequired,
-  paymentInfo: string.isRequired,
+  paymentInfo: string,
   authorDisplayName: string.isRequired,
   showInitialMessageInput: bool,
   hasHandledCardPayment: bool,
