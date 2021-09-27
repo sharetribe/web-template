@@ -37,7 +37,7 @@ const listingPageLayout = 'full-image';
 // NOTE 2: If this is set to true add parameter 'origin' to every location in default-location-searches.js
 //         Without the 'origin' parameter, search will not work correctly
 // NOTE 3: Keyword search and ordering search results by distance can't be used at the same time. You can turn keyword
-//         search off by changing the keywordFilterConfig parameter active to false in marketplace-custom-config.js
+//         search off by removing keyword filter config from filters array in marketplace-custom-config.js
 const sortSearchByDistance = false;
 
 // API supports custom processes to be used in booking process.

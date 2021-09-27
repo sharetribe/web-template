@@ -3,12 +3,11 @@ import {
   IntlProvider,
   FormattedMessage,
   FormattedDate,
-  FormattedHTMLMessage,
   createIntl,
   createIntlCache,
   injectIntl,
   useIntl,
-} from 'react-intl/dist/react-intl';
+} from 'react-intl';
 // Note: we import React Intl directly from dist directory, because
 // by default the library assumes the usage of ES modules
 // and that don't work with server-side rendering.
@@ -16,7 +15,6 @@ import {
 
 const intlShape = shape({
   formatDate: func.isRequired,
-  formatHTMLMessage: func.isRequired,
   formatMessage: func.isRequired,
   formatNumber: func.isRequired,
   formatPlural: func.isRequired,
@@ -27,7 +25,6 @@ export {
   IntlProvider,
   FormattedMessage,
   FormattedDate,
-  FormattedHTMLMessage,
   createIntl,
   createIntlCache,
   injectIntl,
