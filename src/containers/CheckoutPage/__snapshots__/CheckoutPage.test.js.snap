@@ -115,7 +115,6 @@ exports[`CheckoutPage matches snapshot 1`] = `
           loadingData={true}
           onStripeInitialized={[Function]}
           onSubmit={[Function]}
-          paymentInfo="CheckoutPage.paymentInfo"
           paymentIntent={null}
           showInitialMessageInput={true}
           totalPrice={null}
