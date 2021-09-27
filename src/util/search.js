@@ -60,3 +60,8 @@ export const isMainSearchTypeKeywords = config => config.mainSearchType === 'key
  */
 export const isOriginInUse = config =>
   config.mainSearchType === 'location' && config.sortSearchByDistance;
+
+/**
+ * Check if the stock management is currently active.
+ */
+export const isStockInUse = config => config.listingManagementType === 'stock';

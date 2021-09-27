@@ -868,7 +868,6 @@ export class CheckoutPageComponent extends Component {
                   onSubmit={this.handleSubmit}
                   inProgress={this.state.submitting}
                   formId="CheckoutPagePaymentForm"
-                  paymentInfo={intl.formatMessage({ id: 'CheckoutPage.paymentInfo' })}
                   authorDisplayName={currentAuthor.attributes.profile.displayName}
                   showInitialMessageInput={showInitialMessageInput}
                   initialValues={initalValuesForStripePayment}
