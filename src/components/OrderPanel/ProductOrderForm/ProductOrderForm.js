@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { bool, func, number, string } from 'prop-types';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 
 import config from '../../../config';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
+import { numberAtLeast, required } from '../../../util/validators';
+
 import {
   Form,
   FieldSelect,
@@ -21,7 +23,7 @@ const renderForm = formRenderProps => {
   const {
     // FormRenderProps from final-form
     handleSubmit,
-    invalid,
+    form: formApi,
 
     // Custom props passed to the form component
     intl,
@@ -47,6 +49,25 @@ const renderForm = formRenderProps => {
         listingId,
         isOwnListing,
       });
+    }
+  };
+
+  // In case quantity and deliveryMethod are missing focus on that select-input.
+  // Otherwise continue with the default handleSubmit function.
+  const handleFormSubmit = e => {
+    const { quantity, deliveryMethod } = values || {};
+    if (!quantity || quantity < 1) {
+      e.preventDefault();
+      // Blur event will show validator message
+      formApi.blur('quantity');
+      formApi.focus('quantity');
+    } else if (!deliveryMethod) {
+      e.preventDefault();
+      // Blur event will show validator message
+      formApi.blur('deliveryMethod');
+      formApi.focus('deliveryMethod');
+    } else {
+      handleSubmit(e);
     }
   };
 
@@ -85,10 +106,10 @@ const renderForm = formRenderProps => {
   const hasOneItemLeft = typeof currentStock != null && currentStock === 1;
 
   const submitInProgress = fetchLineItemsInProgress;
-  const submitDisabled = invalid || !hasStock;
+  const submitDisabled = !hasStock;
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleFormSubmit}>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
       {hasNoStockLeft ? null : hasOneItemLeft ? (
         <FieldTextInput
@@ -96,7 +117,7 @@ const renderForm = formRenderProps => {
           className={css.quantityField}
           name="quantity"
           type="hidden"
-          value="1"
+          validate={numberAtLeast('Quantity should be more than 0', 1)}
         />
       ) : (
         <FieldSelect
@@ -105,6 +126,7 @@ const renderForm = formRenderProps => {
           name="quantity"
           disabled={!hasStock}
           label={intl.formatMessage({ id: 'ProductOrderForm.quantityLabel' })}
+          validate={numberAtLeast('Quantity should be more than 0', 1)}
         >
           <option disabled value="">
             {intl.formatMessage({ id: 'ProductOrderForm.selectQuantityOption' })}
@@ -124,6 +146,7 @@ const renderForm = formRenderProps => {
           name="deliveryMethod"
           disabled={!hasStock}
           label={intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
+          validate={required('Delivery method is required')}
         >
           <option disabled value="">
             {intl.formatMessage({ id: 'ProductOrderForm.selectDeliveryMethodOption' })}
