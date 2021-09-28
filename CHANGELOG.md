@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [fix] CheckoutPage: don't enable submit button when selecting onetime payment. In addition, pass
+  payment method id to stripe when re-trying with saved payment method after onetime payment.
+  [#111](https://github.com/sharetribe/ftw-product/pull/111)
 - [fix] searchMode is only relevant for multi-enum schema.
   [112](https://github.com/sharetribe/ftw-product/pull/112)
 - [fix] Fix "Out of Stock" UI flash before current stock is loaded
