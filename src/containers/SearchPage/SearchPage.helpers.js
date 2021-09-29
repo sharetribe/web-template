@@ -34,11 +34,15 @@ export const validURLParamForExtendedData = (queryParamName, paramValueRaw, filt
       // Pick valid select options only
       const allowedValues = filterConfig.config.options.map(o => o.key);
       const searchMode = filterConfig.config.searchMode;
+      const isSchemaTypeMultiEnum = filterConfig.config.schemaType === 'multi-enum';
       const valueArray = parseSelectFilterOptions(paramValue);
       const validValues = intersection(valueArray, allowedValues).join(',');
 
       return validValues.length > 0
-        ? { [queryParamName]: searchMode ? `${searchMode}:${validValues}` : validValues }
+        ? {
+            [queryParamName]:
+              isSchemaTypeMultiEnum && searchMode ? `${searchMode}:${validValues}` : validValues,
+          }
         : {};
     } else if (filterConfig.type === 'PriceFilter') {
       // Restrict price range to correct min & max
