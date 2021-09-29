@@ -248,6 +248,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           className="searchFiltersMobileList"
           isMapVariant={false}
           listingsAreLoaded={true}
+          noResultsInfo={null}
           onCloseModal={[Function]}
           onManageDisableScrolling={[Function]}
           onMapIconClick={[Function]}
@@ -464,6 +465,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
         <MainPanelHeader
           className="mainPanel"
           listingsAreLoaded={true}
+          noResultsInfo={null}
           resultsCount={22}
           rootClassName={null}
           searchInProgress={false}
