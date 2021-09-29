@@ -394,12 +394,12 @@ export class ListingPageComponent extends Component {
     const schemaAvailability =
       currentStock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
 
-    const hostLink = (
+    const authorLink = (
       <NamedLink
         className={css.authorNameLink}
         name="ListingPage"
         params={params}
-        to={{ hash: '#host' }}
+        to={{ hash: '#author' }}
       >
         {authorDisplayName}
       </NamedLink>
@@ -465,7 +465,7 @@ export class ListingPageComponent extends Component {
                     formattedPrice={formattedPrice}
                     richTitle={richTitle}
                     category={category}
-                    hostLink={hostLink}
+                    authorLink={authorLink}
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
                   />

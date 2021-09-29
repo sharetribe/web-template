@@ -25,7 +25,7 @@ const SectionAuthorMaybe = props => {
   }
 
   return (
-    <div id="host" className={css.sectionAuthor}>
+    <div id="author" className={css.sectionAuthor}>
       <h2 className={css.aboutProviderTitle}>
         <FormattedMessage id="ListingPage.aboutProviderTitle" />
       </h2>
