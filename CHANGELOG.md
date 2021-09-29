@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [fix] Fix "Out of Stock" UI flash before current stock is loaded
+  [103](https://github.com/sharetribe/ftw-product/pull/103)
 - [change] review bugs and change requests.
 
   - SearchPage: if stock is used, add minStock filter
