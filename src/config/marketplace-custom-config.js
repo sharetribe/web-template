@@ -68,11 +68,6 @@ export const filters = [
       // With "multi-enum" it's possible to use both AND and OR semantics with searchMode config.
       schemaType: 'enum',
 
-      // Optional modes: 'has_all', 'has_any'
-      // Note: this is relevant only for schema type 'multi-enum'
-      // https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
-      searchMode: 'has_any',
-
       // "key" is the option you see in Flex Console.
       // "label" is set here for the UI only.
       // Note: label is not added through the translation files
@@ -102,11 +97,6 @@ export const filters = [
       // With "enum" the functionality will be OR-semantics (Nike OR Adidas OR Salomon)
       // With "multi-enum" it's possible to use both AND and OR semantics with searchMode config.
       schemaType: 'enum',
-
-      // Optional modes: 'has_all', 'has_any'
-      // Note: this is relevant only for schema type 'multi-enum'
-      // https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
-      searchMode: 'has_any',
 
       // "key" is the option you see in Flex Console.
       // "label" is set here for the UI only.
@@ -155,6 +145,39 @@ export const filters = [
     // You can turn on/off ordering by distance from config.js file.
     config: {},
   },
+
+  // Here is an example of multi-enum search filter.
+  //
+  // {
+  //   id: 'amenities',
+  //   label: 'Amenities',
+  //   type: 'SelectMultipleFilter',
+  //   group: 'secondary',
+  //   queryParamNames: ['pub_amenities'],
+  //   config: {
+  //     // Schema type options: 'enum', 'multi-enum'
+  //     // Both types can work so that user selects multiple values when filtering search results.
+  //     // With "enum" the functionality will be OR-semantics (Nike OR Adidas OR Salomon)
+  //     // With "multi-enum" it's possible to use both AND and OR semantics with searchMode config.
+  //     schemaType: 'multi-enum',
+
+  //     // Optional modes: 'has_all', 'has_any'
+  //     // Note: this is relevant only for schema type 'multi-enum'
+  //     // https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
+  //     searchMode: 'has_all',
+
+  //     // "key" is the option you see in Flex Console.
+  //     // "label" is set here for this web app's UI only.
+  //     // Note: label is not added through the translation files
+  //     // to make filter customizations a bit easier.
+  //     options: [
+  //       { key: 'towels', label: 'Towels' },
+  //       { key: 'bathroom', label: 'Bathroom' },
+  //       { key: 'swimming_pool', label: 'Swimming pool' },
+  //       { key: 'barbeque', label: 'Barbeque' },
+  //     ],
+  //   },
+  // },
 ];
 
 export const sortConfig = {
