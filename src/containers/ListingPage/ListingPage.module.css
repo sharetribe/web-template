@@ -605,7 +605,7 @@
   }
 }
 
-.yourHostTitle {
+.aboutProviderTitle {
   composes: sectionTitle;
 
   margin: 54px 0 23px 0;

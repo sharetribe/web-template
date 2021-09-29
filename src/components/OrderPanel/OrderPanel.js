@@ -141,7 +141,7 @@ const OrderPanel = props => {
         <p className={css.price}>{formatMoney(intl, price)}</p>
         <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
-          <FormattedMessage id="OrderPanel.hostedBy" values={{ name: authorDisplayName }} />
+          <FormattedMessage id="OrderPanel.soldBy" values={{ name: authorDisplayName }} />
         </div>
 
         {showBookingDatesForm ? (
