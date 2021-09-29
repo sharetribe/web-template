@@ -15,9 +15,9 @@ const MainPanelHeader = props => {
     listingsAreLoaded,
     resultsCount,
     searchInProgress,
+    noResultsInfo,
   } = props;
 
-  const hasNoResult = listingsAreLoaded && resultsCount === 0;
   const classes = classNames(rootClassName || css.root, className);
 
   return (
@@ -45,11 +45,7 @@ const MainPanelHeader = props => {
 
       {children}
 
-      {hasNoResult ? (
-        <div className={css.noSearchResults}>
-          <FormattedMessage id="MainPanelHeader.noResults" />
-        </div>
-      ) : null}
+      {noResultsInfo ? noResultsInfo : null}
     </div>
   );
 };
