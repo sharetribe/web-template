@@ -52,7 +52,7 @@ import SectionDescriptionMaybe from './SectionDescriptionMaybe';
 import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionFeaturesMaybe from './SectionFeaturesMaybe';
 import SectionReviews from './SectionReviews';
-import SectionHostMaybe from './SectionHostMaybe';
+import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionRulesMaybe from './SectionRulesMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
@@ -484,7 +484,7 @@ export class ListingPageComponent extends Component {
                   listingId={currentListing.id}
                 />
                 <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
-                <SectionHostMaybe
+                <SectionAuthorMaybe
                   title={title}
                   listing={currentListing}
                   authorDisplayName={authorDisplayName}

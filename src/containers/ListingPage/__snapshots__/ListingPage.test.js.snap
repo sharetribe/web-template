@@ -276,7 +276,7 @@ exports[`ListingPage matches snapshot 1`] = `
               fetchReviewsError={null}
               reviews={Array []}
             />
-            <SectionHostMaybe
+            <SectionAuthorMaybe
               authorDisplayName="user-1 display name"
               currentUser={
                 Object {
