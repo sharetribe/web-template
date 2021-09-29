@@ -40,14 +40,6 @@ export const EditListingPricingFormComponent = props => (
         fetchErrors,
       } = formRenderProps;
 
-      const pricePerUnitMessage = intl.formatMessage({
-        id: 'EditListingPricingForm.pricePerProduct',
-      });
-
-      const pricePlaceholderMessage = intl.formatMessage({
-        id: 'EditListingPricingForm.priceInputPlaceholder',
-      });
-
       const priceRequired = validators.required(
         intl.formatMessage({
           id: 'EditListingPricingForm.priceRequired',
@@ -69,9 +61,10 @@ export const EditListingPricingFormComponent = props => (
         ? validators.composeValidators(priceRequired, minPriceRequired)
         : priceRequired;
 
-      const stockMessage = intl.formatMessage({
-        id: 'EditListingPricingForm.stockLabel',
-      });
+      const stockValidator = validators.numberAtLeast(
+        intl.formatMessage({ id: 'EditListingPricingForm.stockIsRequired' }),
+        0
+      );
 
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
@@ -100,8 +93,8 @@ export const EditListingPricingFormComponent = props => (
             name="price"
             className={css.input}
             autoFocus={autoFocus}
-            label={pricePerUnitMessage}
-            placeholder={pricePlaceholderMessage}
+            label={intl.formatMessage({ id: 'EditListingPricingForm.pricePerProduct' })}
+            placeholder={intl.formatMessage({ id: 'EditListingPricingForm.priceInputPlaceholder' })}
             currencyConfig={config.currencyConfig}
             validate={priceValidators}
           />
@@ -110,9 +103,11 @@ export const EditListingPricingFormComponent = props => (
             className={css.input}
             id="stock"
             name="stock"
-            label={stockMessage}
+            label={intl.formatMessage({ id: 'EditListingPricingForm.stockLabel' })}
+            placeholder={intl.formatMessage({ id: 'EditListingPricingForm.stockPlaceholder' })}
             type="number"
             min={0}
+            validate={stockValidator}
           />
           {setStockError ? <p className={css.error}>{stockErrorMessage}</p> : null}
 
