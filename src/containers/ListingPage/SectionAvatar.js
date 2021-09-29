@@ -7,10 +7,10 @@ const SectionAvatar = props => {
   const { user, params } = props;
   return (
     <div className={css.sectionAvatar}>
-      <NamedLink name="ListingPage" params={params} to={{ hash: '#host' }}>
+      <NamedLink name="ListingPage" params={params} to={{ hash: '#author' }}>
         <AvatarLarge user={user} className={css.avatarDesktop} disableProfileLink />
       </NamedLink>
-      <NamedLink name="ListingPage" params={params} to={{ hash: '#host' }}>
+      <NamedLink name="ListingPage" params={params} to={{ hash: '#author' }}>
         <AvatarMedium user={user} className={css.avatarMobile} disableProfileLink />
       </NamedLink>
     </div>
