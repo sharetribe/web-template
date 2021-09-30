@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [change] ListingPage: improve image gallery styles
+  [#115](https://github.com/sharetribe/ftw-product/pull/115)
 - [add] Add message about no results with current query and reset filters button.
   [114](https://github.com/sharetribe/ftw-product/pull/114)
 - [fix] Small bug fixes and naming changes.
