@@ -24,6 +24,13 @@
   border-radius: 4px;
   border: 1px solid var(--matterColorNegative);
 }
+:global(.image-gallery-content.fullscreen) {
+  background-color: var(--matterColorLight);
+}
+:global(.fullscreen .image-gallery-slide-wrapper) {
+  background-color: transparent;
+  border: none;
+}
 
 .root {
 }
