@@ -5,7 +5,13 @@ import ReactImageGallery from 'react-image-gallery';
 
 import { propTypes } from '../../../util/types';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
-import { AspectRatioWrapper, Button, IconClose, ResponsiveImage } from '../../../components';
+import {
+  AspectRatioWrapper,
+  Button,
+  IconClose,
+  IconArrowHead,
+  ResponsiveImage,
+} from '../../../components';
 
 // Copied directly from
 // `node_modules/react-image-gallery/styles/css/image-gallery.css`. The
@@ -76,10 +82,22 @@ const ListingImageGallery = props => {
   };
 
   const renderLeftNav = (onClick, disabled) => {
-    return <button className={css.navLeft} disabled={disabled} onClick={onClick} />;
+    return (
+      <button className={css.navLeft} disabled={disabled} onClick={onClick}>
+        <div className={css.navArrowWrapper}>
+          <IconArrowHead direction="left" size="big" />
+        </div>
+      </button>
+    );
   };
   const renderRightNav = (onClick, disabled) => {
-    return <button className={css.navRight} disabled={disabled} onClick={onClick} />;
+    return (
+      <button className={css.navRight} disabled={disabled} onClick={onClick}>
+        <div className={css.navArrowWrapper}>
+          <IconArrowHead direction="right" size="big" />
+        </div>
+      </button>
+    );
   };
   const renderFullscreenButton = (onClick, isFullscreen) => {
     return isFullscreen ? (
