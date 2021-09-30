@@ -18,11 +18,11 @@ If you just want to get the app running quickly to test it out, first install
 [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/), and follow along:
 
 ```sh
-git clone git@github.com:sharetribe/ftw-product.git      # clone this repository
-cd ftw-product/                                          # change to the cloned directory
-yarn install                                                   # install dependencies
-yarn run config                                                # add the mandatory env vars to your local config
-yarn run dev                                                   # start the dev server, this will open a browser in localhost:3000
+git clone git@github.com:sharetribe/ftw-product.git  # clone this repository
+cd ftw-product/                                      # change to the cloned directory
+yarn install                                         # install dependencies
+yarn run config                                      # add the mandatory env vars to your local config
+yarn run dev                                         # start the dev server, this will open a browser in localhost:3000
 ```
 
 You can also follow along the
@@ -72,8 +72,6 @@ guide in Flex Docs for more information.
 ## Documentation
 
 See the Flex Docs site: https://www.sharetribe.com/docs/
-
-See also the [docs/](docs/) directory for some additional internal documentation.
 
 ## Get help – join Sharetribe Flex Developer Slack channel
 
