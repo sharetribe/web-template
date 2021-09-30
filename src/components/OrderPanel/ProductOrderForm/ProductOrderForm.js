@@ -99,6 +99,7 @@ const renderForm = formRenderProps => {
       <FormattedMessage id="ProductOrderForm.finePrintNoStockLinkText" />
     </InlineTextButton>
   );
+  const quantityRequiredMsg = intl.formatMessage({ id: 'ProductOrderForm.quantityRequired' });
 
   const hasStock = currentStock && currentStock > 0;
   const quantities = hasStock ? [...Array(currentStock).keys()].map(i => i + 1) : [];
@@ -117,7 +118,7 @@ const renderForm = formRenderProps => {
           className={css.quantityField}
           name="quantity"
           type="hidden"
-          validate={numberAtLeast('Quantity should be more than 0', 1)}
+          validate={numberAtLeast(quantityRequiredMsg, 1)}
         />
       ) : (
         <FieldSelect
@@ -126,7 +127,7 @@ const renderForm = formRenderProps => {
           name="quantity"
           disabled={!hasStock}
           label={intl.formatMessage({ id: 'ProductOrderForm.quantityLabel' })}
-          validate={numberAtLeast('Quantity should be more than 0', 1)}
+          validate={numberAtLeast(quantityRequiredMsg, 1)}
         >
           <option disabled value="">
             {intl.formatMessage({ id: 'ProductOrderForm.selectQuantityOption' })}
@@ -146,7 +147,7 @@ const renderForm = formRenderProps => {
           name="deliveryMethod"
           disabled={!hasStock}
           label={intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
-          validate={required('Delivery method is required')}
+          validate={required(intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodRequired' }))}
         >
           <option disabled value="">
             {intl.formatMessage({ id: 'ProductOrderForm.selectDeliveryMethodOption' })}

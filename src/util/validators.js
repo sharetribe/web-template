@@ -121,7 +121,7 @@ const parseNum = str => {
 
 export const numberAtLeast = (message, minNumber) => value => {
   const valueNum = parseNum(value);
-  return value && valueNum && valueNum >= minNumber ? VALID : message;
+  return typeof valueNum === 'number' && valueNum >= minNumber ? VALID : message;
 };
 
 export const ageAtLeast = (message, minYears) => value => {

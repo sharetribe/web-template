@@ -35,13 +35,14 @@ exports[`EditListingPricingForm matches snapshot 1`] = `
       EditListingPricingForm.stockLabel
     </label>
     <input
-      className="input inputSuccess"
+      className="input"
       id="stock"
       min={0}
       name="stock"
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
+      placeholder="EditListingPricingForm.stockPlaceholder"
       type="number"
       value=""
     />

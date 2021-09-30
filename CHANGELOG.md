@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [fix] Small bug fixes and naming changes.
+  [113](https://github.com/sharetribe/ftw-product/pull/113)
 - [fix] CheckoutPage: don't enable submit button when selecting onetime payment. In addition, pass
   payment method id to stripe when re-trying with saved payment method after onetime payment.
   [#111](https://github.com/sharetribe/ftw-product/pull/111)

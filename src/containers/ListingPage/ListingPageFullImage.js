@@ -52,7 +52,7 @@ import SectionDescriptionMaybe from './SectionDescriptionMaybe';
 import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionFeaturesMaybe from './SectionFeaturesMaybe';
 import SectionReviews from './SectionReviews';
-import SectionHostMaybe from './SectionHostMaybe';
+import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionRulesMaybe from './SectionRulesMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
@@ -394,12 +394,12 @@ export class ListingPageComponent extends Component {
     const schemaAvailability =
       currentStock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
 
-    const hostLink = (
+    const authorLink = (
       <NamedLink
         className={css.authorNameLink}
         name="ListingPage"
         params={params}
-        to={{ hash: '#host' }}
+        to={{ hash: '#author' }}
       >
         {authorDisplayName}
       </NamedLink>
@@ -465,7 +465,7 @@ export class ListingPageComponent extends Component {
                     formattedPrice={formattedPrice}
                     richTitle={richTitle}
                     category={category}
-                    hostLink={hostLink}
+                    authorLink={authorLink}
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
                   />
@@ -484,7 +484,7 @@ export class ListingPageComponent extends Component {
                   listingId={currentListing.id}
                 />
                 <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
-                <SectionHostMaybe
+                <SectionAuthorMaybe
                   title={title}
                   listing={currentListing}
                   authorDisplayName={authorDisplayName}
