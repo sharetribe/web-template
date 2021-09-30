@@ -682,7 +682,7 @@
 }
 
 .productGallery {
-  margin: 24px 24px 0 24px;
+  margin: 0;
 
   @media (--viewportMedium) {
     margin: 24px 0 48px 0;

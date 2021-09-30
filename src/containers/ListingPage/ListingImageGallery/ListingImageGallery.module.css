@@ -8,6 +8,7 @@
    `disableThumbnailScroll` option in the component JS.
    */
   overflow: auto;
+  text-align: left !important;
 }
 :global(.image-gallery-thumbnails) {
   padding-top: 24px;
@@ -17,6 +18,23 @@
   width: auto;
   border-radius: 8px;
 
+  text-align: left !important;
+
+  &:first-child {
+    margin-left: 24px;
+
+    @media (--viewportMedium) {
+      margin-left: 0;
+    }
+  }
+  &:last-child {
+    margin-right: 24px;
+
+    @media (--viewportMedium) {
+      margin-right: 0;
+    }
+  }
+
   &:hover,
   &:global(.active) {
     border-color: var(--marketplaceColor);
@@ -25,15 +43,26 @@
 
 :global(.image-gallery-slide-wrapper) {
   background-color: var(--matterColorLight);
-  border-radius: 4px;
-  border: 1px solid var(--matterColorNegative);
+  border-bottom: 1px solid var(--matterColorNegative);
+
+  @media (--viewportMedium) {
+    border-radius: 4px;
+    border: 1px solid var(--matterColorNegative);
+  }
 }
-:global(.image-gallery-content.fullscreen) {
+
+:global(.fullscreen) {
   background-color: var(--matterColorLight);
-}
-:global(.fullscreen .image-gallery-slide-wrapper) {
-  background-color: transparent;
-  border: none;
+
+  & :global(.image-gallery-slide-wrapper) {
+    background-color: transparent;
+    border: none;
+  }
+
+  & :global(.image-gallery-thumbnails-container),
+  & :global(.image-gallery-thumbnail) {
+    text-align: center !important;
+  }
 }
 
 .root {
