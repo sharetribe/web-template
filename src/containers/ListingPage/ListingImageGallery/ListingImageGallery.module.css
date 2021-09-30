@@ -185,6 +185,9 @@
   cursor: pointer;
   transition: var(--transitionStyleButton);
 
+  /* Ensure the button is on top of the navRight area */
+  z-index: 1;
+
   &:hover {
     background-color: var(--marketplaceColor);
     border-color: var(--marketplaceColor);
