@@ -21,19 +21,6 @@
   margin-right: 8px;
 }
 
-.noSearchResults {
-  @apply --marketplaceH4FontStyles;
-
-  /* Reserves 48px of vertical space */
-  line-height: 20px;
-  margin-top: 16px;
-  margin-bottom: 12px;
-
-  /* parent uses flexbox: this defines minimum width for translated text "noResults" */
-  flex-basis: 100%;
-  flex-shrink: 0;
-}
-
 .loadingResults {
   @apply --marketplaceH4FontStyles;
   line-height: 20px;
