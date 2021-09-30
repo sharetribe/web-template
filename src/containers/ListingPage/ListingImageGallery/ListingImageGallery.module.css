@@ -1,11 +1,15 @@
 @import '../../../styles/propertySets.css';
 
 :global(.image-gallery-thumbnails-container) {
+  /*
+   By default, the gallery controls the scroll position of the thumbnails when
+   browsing the images. We change this logic to a freely scrollable container
+   that the user controls. This overflow works together with the
+   `disableThumbnailScroll` option in the component JS.
+   */
   overflow: auto;
-  text-align: left !important;
 }
 :global(.image-gallery-thumbnails) {
-  text-align: left !important;
   padding-top: 24px;
   padding-bottom: 0;
 }
