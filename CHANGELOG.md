@@ -14,6 +14,22 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+## [v9.0.0] 2021-09-30
+
+  This is the first release of FTW-product. However, it is build on top of FTW-daily (v8.0.0) - so, we start versioning from v9.0.0.
+
+  - We have done pretty big changes to directory structure:
+    - Configuration files are moved under src/config/
+    - Route configuration is moved under src/src/routing/
+    - Page-specific UI components are moved under page-directory (incl. forms)
+
+  - SearchPage and ListingPage have 2 layout variants that can be taken into use.
+  - Transaction process has been changed
+  - Listing's use stock management
+
+  Read more from https://sharetribe.com/docs/ftw-introduction/ftw-product/
+
+
 - [change] ListingPage: improve image gallery styles
   [#115](https://github.com/sharetribe/ftw-product/pull/115)
 - [add] Add message about no results with current query and reset filters button.
@@ -221,6 +237,8 @@ way to update this template, but currently, we follow a pattern:
   [#2](https://github.com/sharetribe/ftw-product/pull/2)
 - [remove] OrderDetailsPanel and Discussion components were not used.
   [#1](https://github.com/sharetribe/ftw-product/pull/1)
+
+  [v9.0.0]: https://github.com/sharetribe/ftw-product/compare/03b27abe9aa022b0997ed98b72285391940cbfa6...v9.0.0
 
 ## [v8.3.0] 2021-09-22
 
