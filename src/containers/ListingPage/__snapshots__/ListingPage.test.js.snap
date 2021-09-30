@@ -131,9 +131,7 @@ exports[`ListingPage matches snapshot 1`] = `
             className="mainColumnForHeroLayout"
           >
             <SectionHeading
-              category={null}
-              formattedPrice={55}
-              hostLink={
+              authorLink={
                 <NamedLink
                   className="authorNameLink"
                   name="ListingPage"
@@ -145,13 +143,15 @@ exports[`ListingPage matches snapshot 1`] = `
                   }
                   to={
                     Object {
-                      "hash": "#host",
+                      "hash": "#author",
                     }
                   }
                 >
                   user-1 display name
                 </NamedLink>
               }
+              category={null}
+              formattedPrice={55}
               onContactUser={[Function]}
               priceTitle={55}
               richTitle={
@@ -276,7 +276,7 @@ exports[`ListingPage matches snapshot 1`] = `
               fetchReviewsError={null}
               reviews={Array []}
             />
-            <SectionHostMaybe
+            <SectionAuthorMaybe
               authorDisplayName="user-1 display name"
               currentUser={
                 Object {
