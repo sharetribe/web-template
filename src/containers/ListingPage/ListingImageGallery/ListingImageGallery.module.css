@@ -148,16 +148,20 @@
 }
 
 .navArrowWrapper {
+  display: none;
+
   width: 40px;
   height: 40px;
   border-radius: 50%;
 
-  /* center content */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
   background-color: rgba(255, 255, 255, 0.5);
+
+  @media (--viewportLarge) {
+    /* center content */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .openFullscreen {
