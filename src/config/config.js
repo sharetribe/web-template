@@ -60,14 +60,15 @@ const transactionProcessAlias = 'flex-product-default-process/release-1';
 //         depending on the value chosen.
 const lineItemUnitType = 'line-item/units';
 
-// Listing management types: 'availability', 'stock', or null.
+// Listing management type. Currently only 'stock' is supported.
 //
 // With the default 'stock', availability and bookings are not used, and
 // listings have a specific numeric stock.
 //
-// With 'availability', availability management is in use. Then listing will use
-// bookings, and time slots (currently defined as start and end dates) are shown
-// on listing page.
+// NOTE: We plan to extend this config to also work for other management types
+// like availability management. But for now, if the stock management doesn't
+// work for you, you should have a look at the other ftw-daily and ftw-hourly
+// templates.
 const listingManagementType = 'stock';
 
 // A maximum number of days forwards during which a booking can be made.
