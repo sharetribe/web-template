@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import unionWith from 'lodash/unionWith';
+import omit from 'lodash/omit';
 import classNames from 'classnames';
 
 import config from '../../config';
@@ -372,6 +373,20 @@ export class SearchPageComponent extends Component {
       intl
     );
 
+    const hasNoResult = listingsAreLoaded && totalItems === 0;
+    const hasSearchParams = location.search?.length > 0;
+    const noResultsInfo = hasNoResult ? (
+      <div className={css.noSearchResults}>
+        <FormattedMessage id="SearchPage.noResults" />
+        <br />
+        {hasSearchParams ? (
+          <button className={css.resetAllFiltersButton} onClick={e => this.resetAll(e)}>
+            <FormattedMessage id={'SearchPage.resetAllFilters'} />
+          </button>
+        ) : null}
+      </div>
+    ) : null;
+
     // Set topbar class based on if a modal is open in
     // a child component
     const topbarClasses = this.state.isMobileModalOpen
@@ -409,6 +424,7 @@ export class SearchPageComponent extends Component {
               onCloseModal={this.onCloseMobileModal}
               resetAll={this.resetAll}
               selectedFiltersCount={selectedFiltersCountForMobile}
+              noResultsInfo={noResultsInfo}
               isMapVariant
             >
               {availableFilters.map(config => {
@@ -433,6 +449,7 @@ export class SearchPageComponent extends Component {
               resultsCount={totalItems}
               searchInProgress={searchInProgress}
               searchListingsError={searchListingsError}
+              noResultsInfo={noResultsInfo}
             >
               <SearchFiltersPrimary {...propsForSecondaryFiltersToggle}>
                 {primaryFilters.map(config => {
