@@ -344,7 +344,7 @@ class StripePaymentForm extends Component {
     } = this.props;
     const { initialMessage } = values;
     const { cardValueValid, paymentMethod } = this.state;
-    const hasDefaultPaymentMethod = defaultPaymentMethod.id;
+    const hasDefaultPaymentMethod = defaultPaymentMethod?.id;
     const selectedPaymentMethod = getPaymentMethod(paymentMethod, hasDefaultPaymentMethod);
     const { onetimePaymentNeedsAttention } = checkOnetimePaymentFields(
       cardValueValid,
