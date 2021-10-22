@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [fix] Temporarily disallow Node v17, since it causes issues with dependencies.
+  [#119](https://github.com/sharetribe/ftw-product/pull/119)
+
 ## [v9.0.0] 2021-09-30
 
   This is the first release of FTW-product. However, it is build on top of FTW-daily (v8.0.0) - so, we start versioning from v9.0.0.
