@@ -137,6 +137,9 @@ class FieldDateRangeInputComponent extends Component {
       <div className={classes}>
         {label}
         <DateRangeInput {...inputProps} />
+
+        {/* Janne: Vesa, I think this block can be removed with the variables above since we don't have the animated line anymore?
+        
         <div
           className={classNames(css.inputBorders, {
             [css.mobileMargins]: useMobileMargins && !this.state.focusedInput,
@@ -144,7 +147,9 @@ class FieldDateRangeInputComponent extends Component {
         >
           <div className={startDateBorderClasses} />
           <div className={endDateBorderClasses} />
-        </div>
+        </div> */}
+
+        
         <ValidationError className={errorClasses} fieldMeta={meta} />
       </div>
     );

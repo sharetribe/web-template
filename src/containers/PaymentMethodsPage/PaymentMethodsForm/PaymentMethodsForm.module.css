@@ -9,28 +9,15 @@
 .card {
   @apply --marketplaceInputStyles;
 
-  /* Layout */
-  padding: 8px 0 6px 0;
-  height: 36px;
-
-  /* Border */
-  border-bottom-color: var(--attentionColor);
-
   @media (--viewportMedium) {
-    height: 35px;
-  }
-  @media (--viewportLarge) {
-    height: 38px;
-    padding: 6px 0 14px 0;
+    padding: 11px 0 11px 16px;
   }
 }
 
 .cardSuccess {
-  border-bottom-color: var(--successColor);
 }
 
 .cardError {
-  border-bottom-color: var(--failColor);
 }
 
 .error {

@@ -237,8 +237,7 @@ ul {
   padding: 0;
 }
 
-legend,
-label {
+legend {
   @apply --marketplaceH5FontStyles;
   font-weight: var(--fontWeightSemiBold);
   display: block;
@@ -251,6 +250,22 @@ label {
     margin-bottom: 0;
     padding-top: 3px;
     padding-bottom: 5px;
+  }
+}
+
+label {
+  @apply --marketplaceH5FontStyles;
+  font-weight: var(--fontWeightSemiBold);
+  display: block;
+  margin-top: 0;
+  margin-bottom: 0;
+
+  @media (--viewportMedium) {
+    font-weight: var(--fontWeightSemiBold);
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 3px;
+    padding-bottom: 13px;
   }
 }
 
@@ -268,21 +283,11 @@ input {
 
 textarea {
   @apply --marketplaceInputStyles;
-
-  /* Todo: All textareas are using auto-sizing extension which currently calculates required space incorrectly when box-sixing is "border-box" */
-  box-sizing: content-box;
-  padding: 2px 0 8px 0;
-
-  &::placeholder {
-    padding: 0 0 0 0;
-  }
+  min-height: 80px; /* 3 rows * 40px */
 
   @media (--viewportMedium) {
-    padding: 6px 0 8px 0;
-
-    &::placeholder {
-      padding: 0 0 0 0;
-    }
+    padding: 7px 0 7px 16px;
+    min-height: 112px; /* 3 rows fully visible */
   }
 }
 
