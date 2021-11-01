@@ -11,65 +11,24 @@
 
 .startDateLabel,
 .endDateLabel {
-  flex-basis: 50%;
-  @apply --marketplaceH4FontStyles;
-  font-weight: 600;
-  color: var(--matterColor);
-  margin-top: 0;
-  margin-bottom: 0;
-
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-    font-weight: 600;
-  }
-
-  @media (--viewportMedium) {
-    padding-bottom: 1px;
-  }
 }
 
 .labelSuccess {
-  color: var(--successColor);
 }
 
 .inputBorders {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  transition: all 0.15s ease-out;
 }
 
 .input {
-  flex-basis: 50%;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: var(--attentionColor);
-
-  transition: border-bottom-color var(--transitionStyle);
-  transition: all 0.15s ease-out;
-
-  &:hover,
-  &:focus {
-    border-bottom-color: var(--matterColor);
-    outline: none;
-  }
-
-  @media (--viewportMedium) {
-    border-bottom-width: 3px;
-  }
 }
 
 .inputSuccess {
-  border-bottom-color: var(--successColor);
 }
 
 .inputError {
-  border-bottom-color: var(--failColor);
 }
 
 .hover {
-  border-bottom-color: var(--matterColorDark);
 }
 
 /**
@@ -101,11 +60,11 @@
     /* Gutter between inputs (when calendar is not visible) */
     & .startDateLabel,
     & .endDateLabel {
-      flex-basis: calc(50% - 12px);
+      flex-basis: calc(50% - 6px);
     }
 
     & .input {
-      flex-basis: calc(50% - 12px);
+      flex-basis: calc(50% - 6px);
       transition: all 0.15s ease-out;
     }
   }

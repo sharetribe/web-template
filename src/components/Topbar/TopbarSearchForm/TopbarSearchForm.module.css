@@ -22,8 +22,6 @@
 }
 
 .mobileInput {
-  flex-grow: 1;
-
   /* Font */
   @apply --marketplaceH1FontStyles;
 
@@ -31,10 +29,13 @@
   margin: 0 24px 0 0;
   padding: 4px 13px 10px 13px;
   height: var(--TopbarSearchForm_inputHeight);
-  line-height: unset;
 
   /* Borders */
   border-bottom-width: var(--borderRadiusMobileSearch);
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-radius: 0;
 
   /* Safari bugfix: without this Safari will print placeholder to a wrong place */
   &::-webkit-input-placeholder {
@@ -44,7 +45,13 @@
   &:hover,
   &:focus {
     border-bottom-color: var(--marketplaceColor);
+    border-bottom-width: 3px;
+    border-radius: 0;
+    border-top: none;
+    border-right: none;
+    border-left: none;
     outline: none;
+    box-shadow: none;
   }
 }
 
@@ -78,6 +85,8 @@
   &:focus {
     border-bottom-color: var(--marketplaceColor);
     outline: none;
+    border: 0;
+    box-shadow: none;
   }
 
   &:hover::placeholder,
