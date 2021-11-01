@@ -2,15 +2,9 @@
 }
 
 .pickerSuccess {
-  & :global(.DateInput_input) {
-    border-bottom-color: var(--successColor);
-  }
 }
 
 .pickerError {
-  & :global(.DateInput_input) {
-    border-bottom-color: var(--failColor);
-  }
 }
 
 /**

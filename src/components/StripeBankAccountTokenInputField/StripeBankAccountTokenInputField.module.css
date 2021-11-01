@@ -15,7 +15,6 @@
 .input {
   /* Parent component should not shrink this field */
   flex-shrink: 0;
-  border-bottom-color: var(--attentionColor);
   margin-bottom: 24px;
   width: 100%;
   &:last-of-type {
@@ -32,16 +31,4 @@
   .longForm {
     width: calc(50% - 9px);
   }
-}
-
-.inputSuccess {
-  border-bottom-color: var(--successColor);
-}
-
-.inputError {
-  border-bottom-color: var(--failColor);
-}
-
-.error {
-  color: var(--failColor);
 }
