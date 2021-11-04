@@ -95,6 +95,7 @@ const PanelHeading = props => {
     className,
     rootClassName,
     panelHeadingState,
+    transactionRole,
     customerName,
     listingId,
     listingTitle,
@@ -102,7 +103,7 @@ const PanelHeading = props => {
     isCustomerBanned,
   } = props;
 
-  const isCustomer = props.transactionRole === 'customer';
+  const isCustomer = transactionRole === 'customer';
 
   const defaultRootClassName = isCustomer ? css.headingOrder : css.headingSale;
   const titleClasses = classNames(rootClassName || defaultRootClassName, className);
