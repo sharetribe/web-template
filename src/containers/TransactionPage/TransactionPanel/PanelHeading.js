@@ -40,16 +40,13 @@ const ListingDeletedInfoMaybe = props => {
 };
 
 const HeadingCustomer = props => {
-  const { className, id, values, listingDeleted } = props;
+  const { className, id, values } = props;
   return (
-    <React.Fragment>
-      <h1 className={className}>
-        <span className={css.mainTitle}>
-          <FormattedMessage id={id} values={values} />
-        </span>
-      </h1>
-      <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
-    </React.Fragment>
+    <h1 className={className}>
+      <span className={css.mainTitle}>
+        <FormattedMessage id={id} values={values} />
+      </span>
+    </h1>
   );
 };
 
@@ -99,12 +96,14 @@ const PanelHeading = props => {
   switch (panelHeadingState) {
     case HEADING_ENQUIRED:
       return isCustomer ? (
-        <HeadingCustomer
-          className={titleClasses}
-          id="TransactionPanel.orderEnquiredTitle"
-          values={{ customerName, listingLink }}
-          listingDeleted={listingDeleted}
-        />
+        <>
+          <HeadingCustomer
+            className={titleClasses}
+            id="TransactionPanel.orderEnquiredTitle"
+            values={{ customerName, listingLink }}
+          />
+          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
+        </>
       ) : (
         <HeadingProvider
           className={titleClasses}
@@ -115,12 +114,14 @@ const PanelHeading = props => {
       );
     case HEADING_PAYMENT_PENDING:
       return isCustomer ? (
-        <HeadingCustomer
-          className={titleClasses}
-          id="TransactionPanel.orderPaymentPendingTitle"
-          values={{ customerName, listingLink }}
-          listingDeleted={listingDeleted}
-        />
+        <>
+          <HeadingCustomer
+            className={titleClasses}
+            id="TransactionPanel.orderPaymentPendingTitle"
+            values={{ customerName, listingLink }}
+          />
+          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
+        </>
       ) : (
         <HeadingProvider
           className={titleClasses}
@@ -138,12 +139,14 @@ const PanelHeading = props => {
       );
     case HEADING_PAYMENT_EXPIRED:
       return isCustomer ? (
-        <HeadingCustomer
-          className={titleClasses}
-          id="TransactionPanel.orderPaymentExpiredTitle"
-          values={{ customerName, listingLink }}
-          listingDeleted={listingDeleted}
-        />
+        <>
+          <HeadingCustomer
+            className={titleClasses}
+            id="TransactionPanel.orderPaymentExpiredTitle"
+            values={{ customerName, listingLink }}
+          />
+          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
+        </>
       ) : (
         <HeadingProvider
           className={titleClasses}
@@ -154,12 +157,14 @@ const PanelHeading = props => {
       );
     case HEADING_PURCHASED:
       return isCustomer ? (
-        <HeadingCustomer
-          className={titleClasses}
-          id="TransactionPanel.orderPurchasedTitle"
-          values={{ customerName, listingLink }}
-          isCustomerBanned={isCustomerBanned}
-        />
+        <>
+          <HeadingCustomer
+            className={titleClasses}
+            id="TransactionPanel.orderPurchasedTitle"
+            values={{ customerName, listingLink }}
+          />
+          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
+        </>
       ) : (
         <HeadingProvider
           className={titleClasses}
@@ -170,11 +175,14 @@ const PanelHeading = props => {
       );
     case HEADING_CANCELED:
       return isCustomer ? (
-        <HeadingCustomer
-          className={titleClasses}
-          id="TransactionPanel.orderCanceledTitle"
-          values={{ customerName, listingLink }}
-        />
+        <>
+          <HeadingCustomer
+            className={titleClasses}
+            id="TransactionPanel.orderCanceledTitle"
+            values={{ customerName, listingLink }}
+          />
+          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
+        </>
       ) : (
         <HeadingProvider
           className={titleClasses}
@@ -184,12 +192,14 @@ const PanelHeading = props => {
       );
     case HEADING_DELIVERED:
       return isCustomer ? (
-        <HeadingCustomer
-          className={titleClasses}
-          id="TransactionPanel.orderDeliveredTitle"
-          values={{ customerName, listingLink }}
-          isCustomerBanned={isCustomerBanned}
-        />
+        <>
+          <HeadingCustomer
+            className={titleClasses}
+            id="TransactionPanel.orderDeliveredTitle"
+            values={{ customerName, listingLink }}
+          />
+          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
+        </>
       ) : (
         <HeadingProvider
           className={titleClasses}
@@ -200,12 +210,14 @@ const PanelHeading = props => {
       );
     case HEADING_RECEIVED:
       return isCustomer ? (
-        <HeadingCustomer
-          className={titleClasses}
-          id="TransactionPanel.orderReceivedTitle"
-          values={{ customerName, listingLink }}
-          isCustomerBanned={isCustomerBanned}
-        />
+        <>
+          <HeadingCustomer
+            className={titleClasses}
+            id="TransactionPanel.orderReceivedTitle"
+            values={{ customerName, listingLink }}
+          />
+          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
+        </>
       ) : (
         <HeadingProvider
           className={titleClasses}
@@ -216,12 +228,14 @@ const PanelHeading = props => {
       );
     case HEADING_DISPUTED:
       return isCustomer ? (
-        <HeadingCustomer
-          className={titleClasses}
-          id="TransactionPanel.orderDisputedTitle"
-          values={{ customerName, listingLink }}
-          isCustomerBanned={isCustomerBanned}
-        />
+        <>
+          <HeadingCustomer
+            className={titleClasses}
+            id="TransactionPanel.orderDisputedTitle"
+            values={{ customerName, listingLink }}
+          />
+          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
+        </>
       ) : (
         <HeadingProvider
           className={titleClasses}
