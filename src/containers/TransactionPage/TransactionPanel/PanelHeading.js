@@ -39,17 +39,6 @@ const ListingDeletedInfoMaybe = props => {
   ) : null;
 };
 
-const Heading = props => {
-  const { className, id, values } = props;
-  return (
-    <h1 className={className}>
-      <span className={css.mainTitle}>
-        <FormattedMessage id={id} values={values} />
-      </span>
-    </h1>
-  );
-};
-
 const CustomerBannedInfoMaybe = props => {
   return props.isCustomerBanned ? (
     <p className={css.transactionInfoMessage}>
@@ -121,11 +110,14 @@ const PanelHeading = props => {
 
   return (
     <>
-      <Heading
-        className={titleClasses}
-        id={headingTranslationId(panelHeadingState, isCustomer)}
-        values={{ customerName, listingLink }}
-      />
+      <h1 className={titleClasses}>
+        <span className={css.mainTitle}>
+          <FormattedMessage
+            id={headingTranslationId(panelHeadingState, isCustomer)}
+            values={{ customerName, listingLink }}
+          />
+        </span>
+      </h1>
       {isCustomer ? <ListingDeletedInfoMaybe listingDeleted={listingDeleted} /> : null}
       {panelHeadingState === HEADING_PAYMENT_PENDING && !isCustomer ? (
         <p className={css.transactionInfoMessage}>
