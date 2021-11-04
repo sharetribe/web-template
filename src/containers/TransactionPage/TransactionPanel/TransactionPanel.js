@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import config from '../../../config';
 import { getProcess } from '../../../util/transaction';
+import { states as productProcessStates } from '../../../util/transactionProcessProduct';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes } from '../../../util/types';
 import {
@@ -38,6 +39,22 @@ import PanelHeading, {
 } from './PanelHeading';
 
 import css from './TransactionPanel.module.css';
+
+const productHeadingStates = {
+  // [productProcessStates.INITIAL]: HEADING_ENQUIRED,
+  [productProcessStates.ENQUIRY]: HEADING_ENQUIRED,
+  [productProcessStates.PENDING_PAYMENT]: HEADING_PAYMENT_PENDING,
+  [productProcessStates.PAYMENT_EXPIRED]: HEADING_PAYMENT_EXPIRED,
+  [productProcessStates.PURCHASED]: HEADING_PURCHASED,
+  [productProcessStates.DELIVERED]: HEADING_DELIVERED,
+  [productProcessStates.RECEIVED]: HEADING_RECEIVED,
+  [productProcessStates.DISPUTED]: HEADING_DISPUTED,
+  [productProcessStates.CANCELED]: HEADING_CANCELED,
+  [productProcessStates.COMPLETED]: HEADING_RECEIVED,
+  [productProcessStates.REVIEWED]: HEADING_RECEIVED,
+  [productProcessStates.REVIEWED_BY_CUSTOMER]: HEADING_RECEIVED,
+  [productProcessStates.REVIEWED_BY_PROVIDER]: HEADING_RECEIVED,
+};
 
 // Helper function to get display names for different roles
 const displayNames = (currentUser, currentProvider, currentCustomer, intl) => {
@@ -185,6 +202,9 @@ export class TransactionPanelComponent extends Component {
       const txHasBeenReceived = tx =>
         process ? process.hasPassedState(process.states.RECEIVED, tx) : false;
 
+      const productHeadingState = productHeadingStates[state];
+      const headingState = productHeadingState || 'unknown';
+
       if (state === process.states.ENQUIRY) {
         const transitions = Array.isArray(nextTransitions)
           ? nextTransitions.map(transition => {
@@ -194,35 +214,35 @@ export class TransactionPanelComponent extends Component {
         const hasCorrectNextTransition =
           transitions.length > 0 && transitions.includes(REQUEST_PAYMENT_AFTER_ENQUIRY);
         return {
-          headingState: HEADING_ENQUIRED,
+          headingState,
           showOrderPanel: isCustomer && !isProviderBanned && hasCorrectNextTransition,
         };
       } else if (state === process.states.PAYMENT_PENDING) {
         return {
-          headingState: HEADING_PAYMENT_PENDING,
+          headingState,
           showDetailCardHeadings: isCustomer,
         };
       } else if (state === process.states.PAYMENT_EXPIRED) {
         return {
-          headingState: HEADING_PAYMENT_EXPIRED,
+          headingState,
           showDetailCardHeadings: isCustomer,
         };
       } else if (state === process.states.PURCHASED) {
         return {
-          headingState: HEADING_PURCHASED,
+          headingState,
           showDetailCardHeadings: isCustomer,
           showActionButtons: true,
           primaryButtonProps: isCustomer ? markReceivedFromPurchasedProps : markDeliveredProps,
         };
       } else if (state === process.states.CANCELED) {
         return {
-          headingState: HEADING_CANCELED,
+          headingState,
           showDetailCardHeadings: isCustomer,
         };
       } else if (state === process.states.DELIVERED) {
         const primaryButtonPropsMaybe = isCustomer ? { primaryButtonProps: markReceivedProps } : {};
         return {
-          headingState: HEADING_DELIVERED,
+          headingState,
           showDetailCardHeadings: isCustomer,
           showActionButtons: isCustomer,
           ...primaryButtonPropsMaybe,
@@ -230,7 +250,7 @@ export class TransactionPanelComponent extends Component {
         };
       } else if (state === process.states.DISPUTED) {
         return {
-          headingState: HEADING_DISPUTED,
+          headingState,
           showDetailCardHeadings: isCustomer,
         };
       } else if (
@@ -240,18 +260,18 @@ export class TransactionPanelComponent extends Component {
         (isProvider && state === process.states.REVIEWED_BY_CUSTOMER)
       ) {
         return {
-          headingState: HEADING_RECEIVED,
+          headingState,
           showDetailCardHeadings: isCustomer,
           showActionButtons: true,
           primaryButtonProps: leaveReviewProps,
         };
       } else if (txHasBeenReceived(tx)) {
         return {
-          headingState: HEADING_RECEIVED,
+          headingState,
           showDetailCardHeadings: isCustomer,
         };
       } else {
-        return { headingState: 'unknown' };
+        return { headingState };
       }
     };
     const stateData = stateDataFn(currentTransaction);
