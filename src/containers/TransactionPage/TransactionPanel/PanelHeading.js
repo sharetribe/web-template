@@ -39,7 +39,7 @@ const ListingDeletedInfoMaybe = props => {
   ) : null;
 };
 
-const HeadingCustomer = props => {
+const Heading = props => {
   const { className, id, values } = props;
   return (
     <h1 className={className}>
@@ -56,17 +56,6 @@ const CustomerBannedInfoMaybe = props => {
       <FormattedMessage id="TransactionPanel.customerBannedStatus" />
     </p>
   ) : null;
-};
-
-const HeadingProvider = props => {
-  const { className, id, values } = props;
-  return (
-    <h1 className={className}>
-      <span className={css.mainTitle}>
-        <FormattedMessage id={id} values={values} />
-      </span>
-    </h1>
-  );
 };
 
 // Functional component as a helper to choose and show Order or Sale heading info:
@@ -93,7 +82,7 @@ const PanelHeading = props => {
     case HEADING_ENQUIRED:
       return isCustomer ? (
         <>
-          <HeadingCustomer
+          <Heading
             className={titleClasses}
             id="TransactionPanel.orderEnquiredTitle"
             values={{ customerName, listingLink }}
@@ -102,7 +91,7 @@ const PanelHeading = props => {
         </>
       ) : (
         <>
-          <HeadingProvider
+          <Heading
             className={titleClasses}
             id="TransactionPanel.saleEnquiredTitle"
             values={{ customerName, listingLink }}
@@ -113,7 +102,7 @@ const PanelHeading = props => {
     case HEADING_PAYMENT_PENDING:
       return isCustomer ? (
         <>
-          <HeadingCustomer
+          <Heading
             className={titleClasses}
             id="TransactionPanel.orderPaymentPendingTitle"
             values={{ customerName, listingLink }}
@@ -122,7 +111,7 @@ const PanelHeading = props => {
         </>
       ) : (
         <>
-          <HeadingProvider
+          <Heading
             className={titleClasses}
             id="TransactionPanel.salePaymentPendingTitle"
             values={{ customerName, listingLink }}
@@ -139,7 +128,7 @@ const PanelHeading = props => {
     case HEADING_PAYMENT_EXPIRED:
       return isCustomer ? (
         <>
-          <HeadingCustomer
+          <Heading
             className={titleClasses}
             id="TransactionPanel.orderPaymentExpiredTitle"
             values={{ customerName, listingLink }}
@@ -148,7 +137,7 @@ const PanelHeading = props => {
         </>
       ) : (
         <>
-          <HeadingProvider
+          <Heading
             className={titleClasses}
             id="TransactionPanel.salePaymentExpiredTitle"
             values={{ customerName, listingLink }}
@@ -159,7 +148,7 @@ const PanelHeading = props => {
     case HEADING_PURCHASED:
       return isCustomer ? (
         <>
-          <HeadingCustomer
+          <Heading
             className={titleClasses}
             id="TransactionPanel.orderPurchasedTitle"
             values={{ customerName, listingLink }}
@@ -168,7 +157,7 @@ const PanelHeading = props => {
         </>
       ) : (
         <>
-          <HeadingProvider
+          <Heading
             className={titleClasses}
             id="TransactionPanel.salePurchasedTitle"
             values={{ customerName, listingLink }}
@@ -179,7 +168,7 @@ const PanelHeading = props => {
     case HEADING_CANCELED:
       return isCustomer ? (
         <>
-          <HeadingCustomer
+          <Heading
             className={titleClasses}
             id="TransactionPanel.orderCanceledTitle"
             values={{ customerName, listingLink }}
@@ -188,7 +177,7 @@ const PanelHeading = props => {
         </>
       ) : (
         <>
-          <HeadingProvider
+          <Heading
             className={titleClasses}
             id="TransactionPanel.saleCanceledTitle"
             values={{ customerName, listingLink }}
@@ -199,7 +188,7 @@ const PanelHeading = props => {
     case HEADING_DELIVERED:
       return isCustomer ? (
         <>
-          <HeadingCustomer
+          <Heading
             className={titleClasses}
             id="TransactionPanel.orderDeliveredTitle"
             values={{ customerName, listingLink }}
@@ -208,7 +197,7 @@ const PanelHeading = props => {
         </>
       ) : (
         <>
-          <HeadingProvider
+          <Heading
             className={titleClasses}
             id="TransactionPanel.saleDeliveredTitle"
             values={{ customerName, listingLink }}
@@ -219,7 +208,7 @@ const PanelHeading = props => {
     case HEADING_RECEIVED:
       return isCustomer ? (
         <>
-          <HeadingCustomer
+          <Heading
             className={titleClasses}
             id="TransactionPanel.orderReceivedTitle"
             values={{ customerName, listingLink }}
@@ -228,7 +217,7 @@ const PanelHeading = props => {
         </>
       ) : (
         <>
-          <HeadingProvider
+          <Heading
             className={titleClasses}
             id="TransactionPanel.saleReceivedTitle"
             values={{ customerName, listingLink }}
@@ -239,7 +228,7 @@ const PanelHeading = props => {
     case HEADING_DISPUTED:
       return isCustomer ? (
         <>
-          <HeadingCustomer
+          <Heading
             className={titleClasses}
             id="TransactionPanel.orderDisputedTitle"
             values={{ customerName, listingLink }}
@@ -248,7 +237,7 @@ const PanelHeading = props => {
         </>
       ) : (
         <>
-          <HeadingProvider
+          <Heading
             className={titleClasses}
             id="TransactionPanel.saleDisputedTitle"
             values={{ customerName, listingLink }}
