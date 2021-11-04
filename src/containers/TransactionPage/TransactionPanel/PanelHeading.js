@@ -58,6 +58,47 @@ const CustomerBannedInfoMaybe = props => {
   ) : null;
 };
 
+const headingTranslationId = (panelHeadingState, isCustomer) => {
+  // TODO: make the translation key dynamic
+  switch (panelHeadingState) {
+    case HEADING_ENQUIRED:
+      return isCustomer
+        ? 'TransactionPanel.orderEnquiredTitle'
+        : 'TransactionPanel.saleEnquiredTitle';
+    case HEADING_PAYMENT_PENDING:
+      return isCustomer
+        ? 'TransactionPanel.orderPaymentPendingTitle'
+        : 'TransactionPanel.salePaymentPendingTitle';
+    case HEADING_PAYMENT_EXPIRED:
+      return isCustomer
+        ? 'TransactionPanel.orderPaymentExpiredTitle'
+        : 'TransactionPanel.salePaymentExpiredTitle';
+    case HEADING_PURCHASED:
+      return isCustomer
+        ? 'TransactionPanel.orderPurchasedTitle'
+        : 'TransactionPanel.salePurchasedTitle';
+    case HEADING_CANCELED:
+      return isCustomer
+        ? 'TransactionPanel.orderCanceledTitle'
+        : 'TransactionPanel.saleCanceledTitle';
+    case HEADING_DELIVERED:
+      return isCustomer
+        ? 'TransactionPanel.orderDeliveredTitle'
+        : 'TransactionPanel.saleDeliveredTitle';
+    case HEADING_RECEIVED:
+      return isCustomer
+        ? 'TransactionPanel.orderReceivedTitle'
+        : 'TransactionPanel.saleReceivedTitle';
+    case HEADING_DISPUTED:
+      return isCustomer
+        ? 'TransactionPanel.orderDisputedTitle'
+        : 'TransactionPanel.saleDisputedTitle';
+    default:
+      console.warn('Unknown state given to panel heading.');
+      return null;
+  }
+};
+
 // Functional component as a helper to choose and show Order or Sale heading info:
 // title, subtitle, and message
 const PanelHeading = props => {
@@ -78,177 +119,25 @@ const PanelHeading = props => {
   const titleClasses = classNames(rootClassName || defaultRootClassName, className);
   const listingLink = createListingLink(listingId, listingTitle, listingDeleted);
 
-  switch (panelHeadingState) {
-    case HEADING_ENQUIRED:
-      return isCustomer ? (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.orderEnquiredTitle"
-            values={{ customerName, listingLink }}
+  return (
+    <>
+      <Heading
+        className={titleClasses}
+        id={headingTranslationId(panelHeadingState, isCustomer)}
+        values={{ customerName, listingLink }}
+      />
+      {isCustomer ? <ListingDeletedInfoMaybe listingDeleted={listingDeleted} /> : null}
+      {panelHeadingState === HEADING_PAYMENT_PENDING && !isCustomer ? (
+        <p className={css.transactionInfoMessage}>
+          <FormattedMessage
+            id="TransactionPanel.salePaymentPendingInfo"
+            values={{ customerName }}
           />
-          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
-        </>
-      ) : (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.saleEnquiredTitle"
-            values={{ customerName, listingLink }}
-          />
-          <CustomerBannedInfoMaybe isCustomerBanned={isCustomerBanned} />
-        </>
-      );
-    case HEADING_PAYMENT_PENDING:
-      return isCustomer ? (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.orderPaymentPendingTitle"
-            values={{ customerName, listingLink }}
-          />
-          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
-        </>
-      ) : (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.salePaymentPendingTitle"
-            values={{ customerName, listingLink }}
-          />
-          <p className={css.transactionInfoMessage}>
-            <FormattedMessage
-              id="TransactionPanel.salePaymentPendingInfo"
-              values={{ customerName }}
-            />
-          </p>
-          <CustomerBannedInfoMaybe isCustomerBanned={isCustomerBanned} />
-        </>
-      );
-    case HEADING_PAYMENT_EXPIRED:
-      return isCustomer ? (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.orderPaymentExpiredTitle"
-            values={{ customerName, listingLink }}
-          />
-          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
-        </>
-      ) : (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.salePaymentExpiredTitle"
-            values={{ customerName, listingLink }}
-          />
-          <CustomerBannedInfoMaybe isCustomerBanned={isCustomerBanned} />
-        </>
-      );
-    case HEADING_PURCHASED:
-      return isCustomer ? (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.orderPurchasedTitle"
-            values={{ customerName, listingLink }}
-          />
-          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
-        </>
-      ) : (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.salePurchasedTitle"
-            values={{ customerName, listingLink }}
-          />
-          <CustomerBannedInfoMaybe isCustomerBanned={isCustomerBanned} />
-        </>
-      );
-    case HEADING_CANCELED:
-      return isCustomer ? (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.orderCanceledTitle"
-            values={{ customerName, listingLink }}
-          />
-          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
-        </>
-      ) : (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.saleCanceledTitle"
-            values={{ customerName, listingLink }}
-          />
-          <CustomerBannedInfoMaybe isCustomerBanned={isCustomerBanned} />
-        </>
-      );
-    case HEADING_DELIVERED:
-      return isCustomer ? (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.orderDeliveredTitle"
-            values={{ customerName, listingLink }}
-          />
-          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
-        </>
-      ) : (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.saleDeliveredTitle"
-            values={{ customerName, listingLink }}
-          />
-          <CustomerBannedInfoMaybe isCustomerBanned={isCustomerBanned} />
-        </>
-      );
-    case HEADING_RECEIVED:
-      return isCustomer ? (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.orderReceivedTitle"
-            values={{ customerName, listingLink }}
-          />
-          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
-        </>
-      ) : (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.saleReceivedTitle"
-            values={{ customerName, listingLink }}
-          />
-          <CustomerBannedInfoMaybe isCustomerBanned={isCustomerBanned} />
-        </>
-      );
-    case HEADING_DISPUTED:
-      return isCustomer ? (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.orderDisputedTitle"
-            values={{ customerName, listingLink }}
-          />
-          <ListingDeletedInfoMaybe listingDeleted={listingDeleted} />
-        </>
-      ) : (
-        <>
-          <Heading
-            className={titleClasses}
-            id="TransactionPanel.saleDisputedTitle"
-            values={{ customerName, listingLink }}
-          />
-          <CustomerBannedInfoMaybe isCustomerBanned={isCustomerBanned} />
-        </>
-      );
-    default:
-      console.warn('Unknown state given to panel heading.');
-      return null;
-  }
+        </p>
+      ) : null}
+      {!isCustomer ? <CustomerBannedInfoMaybe isCustomerBanned={isCustomerBanned} /> : null}
+    </>
+  );
 };
 
 export default PanelHeading;
