@@ -277,10 +277,3 @@ export const storableError = err => {
     apiErrors,
   };
 };
-
-export const responseApiErrorInfo = err =>
-  responseAPIErrors(err).map(e => ({
-    status: e.status,
-    code: e.code,
-    meta: e.meta,
-  }));
