@@ -33,8 +33,9 @@ import {
 } from 'prop-types';
 import Decimal from 'decimal.js';
 import { types as sdkTypes } from './sdkLoader';
-import { TRANSITIONS, TX_TRANSITION_ACTORS } from './transaction';
+import { getAllTransitionsForEveryProcess, TX_TRANSITION_ACTORS } from './transaction';
 
+const TRANSITIONS = getAllTransitionsForEveryProcess();
 const { UUID, LatLng, LatLngBounds, Money } = sdkTypes;
 
 const propTypes = {};
@@ -375,6 +376,7 @@ propTypes.transaction = shape({
   type: propTypes.value('transaction').isRequired,
   attributes: shape({
     createdAt: instanceOf(Date),
+    processName: string.isRequired,
     lastTransitionedAt: instanceOf(Date).isRequired,
     lastTransition: oneOf(TRANSITIONS).isRequired,
 
