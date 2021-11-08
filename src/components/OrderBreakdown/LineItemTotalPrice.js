@@ -2,18 +2,27 @@ import React from 'react';
 import { bool } from 'prop-types';
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
-import { txIsCanceled, txIsReceived, txIsCompleted } from '../../util/transaction';
+import { getProcess } from '../../util/transaction';
 import { propTypes } from '../../util/types';
 
 import css from './OrderBreakdown.module.css';
 
 const LineItemTotalPrice = props => {
   const { transaction, isProvider, intl } = props;
+  const processName = transaction?.attributes?.processName;
+  if (!processName) {
+    return null;
+  }
+  const process = getProcess(processName);
+  const state = process.getState(transaction);
+  const isReceived = state === process.states.ENQUIRY;
+  const isCompleted = state === process.states.COMPLETED;
+  const isCanceled = state === process.states.CANCELED;
 
   let providerTotalMessageId = 'OrderBreakdown.providerTotalDefault';
-  if (txIsReceived(transaction) || txIsCompleted(transaction)) {
+  if (isReceived || isCompleted) {
     providerTotalMessageId = 'OrderBreakdown.providerTotalReceived';
-  } else if (txIsCanceled(transaction)) {
+  } else if (isCanceled) {
     providerTotalMessageId = 'OrderBreakdown.providerTotalCanceled';
   }
 

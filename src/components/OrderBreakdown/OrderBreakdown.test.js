@@ -3,30 +3,29 @@ import Decimal from 'decimal.js';
 import { fakeIntl, createBooking } from '../../util/test-data';
 import { renderDeep } from '../../util/test-helpers';
 import { types as sdkTypes } from '../../util/sdkLoader';
-import {
-  TRANSITION_REQUEST_PAYMENT,
-  TX_TRANSITION_ACTOR_CUSTOMER,
-  DATE_TYPE_DATE,
-} from '../../util/transaction';
+import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../util/transaction';
 import { LINE_ITEM_NIGHT, LINE_ITEM_UNITS } from '../../util/types';
 import { OrderBreakdownComponent } from './OrderBreakdown';
 
 const { UUID, Money } = sdkTypes;
 
 const exampleTransaction = params => {
+  const transitions = getProcess('flex-product-default-process')?.transitions;
   const created = new Date(Date.UTC(2017, 1, 1));
   return {
     id: new UUID('example-transaction'),
     type: 'transaction',
     attributes: {
+      processName: 'flex-product-default-process',
+      processVersion: 1,
       createdAt: created,
       lastTransitionedAt: created,
-      lastTransition: TRANSITION_REQUEST_PAYMENT,
+      lastTransition: transitions.REQUEST_PAYMENT,
       transitions: [
         {
           createdAt: created,
           by: TX_TRANSITION_ACTOR_CUSTOMER,
-          transition: TRANSITION_REQUEST_PAYMENT,
+          transition: transitions.REQUEST_PAYMENT,
         },
       ],
 
@@ -75,7 +74,6 @@ describe('OrderBreakdown', () => {
       <OrderBreakdownComponent
         userRole="customer"
         unitType={LINE_ITEM_NIGHT}
-        dateType={DATE_TYPE_DATE}
         transaction={exampleTransaction({
           payinTotal: new Money(2000, 'USD'),
           payoutTotal: new Money(2000, 'USD'),
@@ -105,7 +103,6 @@ describe('OrderBreakdown', () => {
       <OrderBreakdownComponent
         userRole="provider"
         unitType={LINE_ITEM_NIGHT}
-        dateType={DATE_TYPE_DATE}
         transaction={exampleTransaction({
           payinTotal: new Money(2000, 'USD'),
           payoutTotal: new Money(1800, 'USD'),
