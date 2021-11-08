@@ -514,6 +514,7 @@
   "OrderPanel.perUnit": "per unit",
   "OrderPanel.soldBy": "Sold by {name}",
   "OrderPanel.subTitleClosedListing": "Sorry, this listing has been closed.",
+  "OrderPanel.unknownTransactionProcess": "Oops, it looks like marketplace processes are not up to date. Please, contact the marketplace operator.",
   "Page.schemaDescription": "The largest online community for sneakerheads in Finland.",
   "Page.schemaTitle": "Sell and buy unique sneakers | {siteTitle}",
   "PaginationLinks.next": "Next page",

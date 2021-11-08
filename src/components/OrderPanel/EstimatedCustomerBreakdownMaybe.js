@@ -30,8 +30,9 @@ import Decimal from 'decimal.js';
 
 import config from '../../config';
 import { types as sdkTypes } from '../../util/sdkLoader';
+import { FormattedMessage } from '../../util/reactIntl';
 import { timeOfDayFromLocalToTimeZone, getStartOf } from '../../util/dates';
-import { TRANSITION_REQUEST_PAYMENT, TX_TRANSITION_ACTOR_CUSTOMER } from '../../util/transaction';
+import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../util/transaction';
 import { DATE_TYPE_DATE, LINE_ITEM_DAY, LINE_ITEM_NIGHT } from '../../util/types';
 import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../util/currency';
 
@@ -83,7 +84,14 @@ const estimatedBooking = (bookingStart, bookingEnd) => {
 //
 // We need to use FTW backend to calculate the correct line items through thransactionLineItems
 // endpoint so that they can be passed to this estimated transaction.
-const estimatedCustomerTransaction = (lineItems, bookingStart, bookingEnd) => {
+const estimatedCustomerTransaction = (
+  lineItems,
+  bookingStart,
+  bookingEnd,
+  process,
+  processName
+) => {
+  const transitions = process?.transitions;
   const now = new Date();
   const customerLineItems = lineItems.filter(item => item.includeFor.includes('customer'));
   const providerLineItems = lineItems.filter(item => item.includeFor.includes('provider'));
@@ -98,8 +106,9 @@ const estimatedCustomerTransaction = (lineItems, bookingStart, bookingEnd) => {
     type: 'transaction',
     attributes: {
       createdAt: now,
+      processName,
       lastTransitionedAt: now,
-      lastTransition: TRANSITION_REQUEST_PAYMENT,
+      lastTransition: transitions.REQUEST_PAYMENT,
       payinTotal,
       payoutTotal,
       lineItems: customerLineItems,
@@ -107,7 +116,7 @@ const estimatedCustomerTransaction = (lineItems, bookingStart, bookingEnd) => {
         {
           createdAt: now,
           by: TX_TRANSITION_ACTOR_CUSTOMER,
-          transition: TRANSITION_REQUEST_PAYMENT,
+          transition: transitions.REQUEST_PAYMENT,
         },
       ],
     },
@@ -118,13 +127,25 @@ const estimatedCustomerTransaction = (lineItems, bookingStart, bookingEnd) => {
 const EstimatedCustomerBreakdownMaybe = props => {
   const { unitType, breakdownData = {}, lineItems } = props;
   const { startDate, endDate } = breakdownData;
+  const processName = 'flex-product-default-process';
+  let process = null;
+
+  try {
+    process = getProcess(processName);
+  } catch (e) {
+    return (
+      <div className={css.error}>
+        <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
+      </div>
+    );
+  }
 
   const shouldHaveBooking = unitType === LINE_ITEM_DAY || unitType === LINE_ITEM_NIGHT;
   const hasLineItems = lineItems && lineItems.length > 0;
   const hasRequiredBookingData = !shouldHaveBooking || (startDate && endDate);
   const tx =
     hasLineItems && hasRequiredBookingData
-      ? estimatedCustomerTransaction(lineItems, startDate, endDate)
+      ? estimatedCustomerTransaction(lineItems, startDate, endDate, process, processName)
       : null;
 
   return tx ? (
