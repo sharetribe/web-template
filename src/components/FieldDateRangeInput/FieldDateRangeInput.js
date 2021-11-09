@@ -149,7 +149,6 @@ class FieldDateRangeInputComponent extends Component {
           <div className={endDateBorderClasses} />
         </div> */}
 
-        
         <ValidationError className={errorClasses} fieldMeta={meta} />
       </div>
     );

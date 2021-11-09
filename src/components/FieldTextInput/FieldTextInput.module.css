@@ -1,17 +1,6 @@
 .root {
 }
 
-.input {
-}
-
-.textarea {
-}
-
-/* Global styling for states */
-
-.inputSuccess {
-}
-
 .inputError {
   border: 1px solid var(--failColor);
 }
