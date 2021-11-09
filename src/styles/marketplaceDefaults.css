@@ -279,7 +279,7 @@ textarea {
 
 .inputError,
 .selectError {
-  @apply --errorMessageStyling;
+  border: var(--errorMessageStyling);
 }
 
 .fontsLoaded {
