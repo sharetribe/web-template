@@ -15,14 +15,17 @@
     /* Similar problem as in issue: https://github.com/airbnb/react-dates/issues/947 */
     box-shadow: var(--boxShadowButton);
     top: 36px !important;
-    width: 100%;
-    min-height: calc(100vh - 252px);
+    left: unset !important;
+    width: calc(100% - 48px);
     background-color: var(--marketplaceColor);
 
     @media (--viewportMedium) {
       /* !important is added to top because react-dates uses inline style for height */
       /* Similar problem as in issue: https://github.com/airbnb/react-dates/issues/947 */
       top: 48px !important;
+      left: 0px !important;
+      width: 100%;
+      min-height: calc(100vh - 252px);
       min-height: auto;
       border-radius: 0 0 6px 6px;
     }
