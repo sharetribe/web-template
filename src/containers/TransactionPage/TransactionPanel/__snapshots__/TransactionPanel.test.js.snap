@@ -174,6 +174,8 @@ exports[`TransactionPanel - Order canceled matches snapshot 1`] = `
                     "amount": 16400,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -350,6 +352,8 @@ exports[`TransactionPanel - Order canceled matches snapshot 1`] = `
                   "amount": 16400,
                   "currency": "USD",
                 },
+                "processName": "flex-product-default-process",
+                "processVersion": 1,
                 "transitions": Array [
                   Object {
                     "by": "customer",
@@ -495,6 +499,8 @@ exports[`TransactionPanel - Order canceled matches snapshot 1`] = `
                 "amount": 16400,
                 "currency": "USD",
               },
+              "processName": "flex-product-default-process",
+              "processVersion": 1,
               "transitions": Array [
                 Object {
                   "by": "customer",
@@ -777,6 +783,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                     "amount": 16400,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -1050,6 +1058,8 @@ exports[`TransactionPanel - Order delivered matches snapshot 1`] = `
                     "amount": 16400,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -1232,6 +1242,8 @@ exports[`TransactionPanel - Order delivered matches snapshot 1`] = `
                   "amount": 16400,
                   "currency": "USD",
                 },
+                "processName": "flex-product-default-process",
+                "processVersion": 1,
                 "transitions": Array [
                   Object {
                     "by": "customer",
@@ -1382,6 +1394,8 @@ exports[`TransactionPanel - Order delivered matches snapshot 1`] = `
                 "amount": 16400,
                 "currency": "USD",
               },
+              "processName": "flex-product-default-process",
+              "processVersion": 1,
               "transitions": Array [
                 Object {
                   "by": "customer",
@@ -1669,6 +1683,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                     "amount": 16400,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -1948,6 +1964,8 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
                     "amount": 16400,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -2124,6 +2142,8 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
                   "amount": 16400,
                   "currency": "USD",
                 },
+                "processName": "flex-product-default-process",
+                "processVersion": 1,
                 "transitions": Array [
                   Object {
                     "by": "customer",
@@ -2269,6 +2289,8 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
                 "amount": 16400,
                 "currency": "USD",
               },
+              "processName": "flex-product-default-process",
+              "processVersion": 1,
               "transitions": Array [
                 Object {
                   "by": "customer",
@@ -2550,6 +2572,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                     "amount": 16400,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -2823,6 +2847,8 @@ exports[`TransactionPanel - Order purchased matches snapshot 1`] = `
                     "amount": 16400,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -2999,6 +3025,8 @@ exports[`TransactionPanel - Order purchased matches snapshot 1`] = `
                   "amount": 16400,
                   "currency": "USD",
                 },
+                "processName": "flex-product-default-process",
+                "processVersion": 1,
                 "transitions": Array [
                   Object {
                     "by": "customer",
@@ -3144,6 +3172,8 @@ exports[`TransactionPanel - Order purchased matches snapshot 1`] = `
                 "amount": 16400,
                 "currency": "USD",
               },
+              "processName": "flex-product-default-process",
+              "processVersion": 1,
               "transitions": Array [
                 Object {
                   "by": "customer",
@@ -3442,6 +3472,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                     "amount": 16400,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -3731,6 +3763,8 @@ exports[`TransactionPanel - Order received matches snapshot 1`] = `
                     "amount": 16400,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -3917,6 +3951,8 @@ exports[`TransactionPanel - Order received matches snapshot 1`] = `
                   "amount": 16400,
                   "currency": "USD",
                 },
+                "processName": "flex-product-default-process",
+                "processVersion": 1,
                 "transitions": Array [
                   Object {
                     "by": "customer",
@@ -4072,6 +4108,8 @@ exports[`TransactionPanel - Order received matches snapshot 1`] = `
                 "amount": 16400,
                 "currency": "USD",
               },
+              "processName": "flex-product-default-process",
+              "processVersion": 1,
               "transitions": Array [
                 Object {
                   "by": "customer",
@@ -4380,6 +4418,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                     "amount": 16400,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -4679,6 +4719,8 @@ exports[`TransactionPanel - Sale canceled matches snapshot 1`] = `
                     "amount": 15500,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -4843,6 +4885,8 @@ exports[`TransactionPanel - Sale canceled matches snapshot 1`] = `
                   "amount": 15500,
                   "currency": "USD",
                 },
+                "processName": "flex-product-default-process",
+                "processVersion": 1,
                 "transitions": Array [
                   Object {
                     "by": "customer",
@@ -4976,6 +5020,8 @@ exports[`TransactionPanel - Sale canceled matches snapshot 1`] = `
                 "amount": 15500,
                 "currency": "USD",
               },
+              "processName": "flex-product-default-process",
+              "processVersion": 1,
               "transitions": Array [
                 Object {
                   "by": "customer",
@@ -5246,6 +5292,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                     "amount": 15500,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -5507,6 +5555,8 @@ exports[`TransactionPanel - Sale delivered matches snapshot 1`] = `
                     "amount": 15500,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -5677,6 +5727,8 @@ exports[`TransactionPanel - Sale delivered matches snapshot 1`] = `
                   "amount": 15500,
                   "currency": "USD",
                 },
+                "processName": "flex-product-default-process",
+                "processVersion": 1,
                 "transitions": Array [
                   Object {
                     "by": "customer",
@@ -5815,6 +5867,8 @@ exports[`TransactionPanel - Sale delivered matches snapshot 1`] = `
                 "amount": 15500,
                 "currency": "USD",
               },
+              "processName": "flex-product-default-process",
+              "processVersion": 1,
               "transitions": Array [
                 Object {
                   "by": "customer",
@@ -6090,6 +6144,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                     "amount": 15500,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -6357,6 +6413,8 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
                     "amount": 15500,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -6521,6 +6579,8 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
                   "amount": 15500,
                   "currency": "USD",
                 },
+                "processName": "flex-product-default-process",
+                "processVersion": 1,
                 "transitions": Array [
                   Object {
                     "by": "customer",
@@ -6654,6 +6714,8 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
                 "amount": 15500,
                 "currency": "USD",
               },
+              "processName": "flex-product-default-process",
+              "processVersion": 1,
               "transitions": Array [
                 Object {
                   "by": "customer",
@@ -6923,6 +6985,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                     "amount": 15500,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -7184,6 +7248,8 @@ exports[`TransactionPanel - Sale purchased matches snapshot 1`] = `
                     "amount": 15500,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -7348,6 +7414,8 @@ exports[`TransactionPanel - Sale purchased matches snapshot 1`] = `
                   "amount": 15500,
                   "currency": "USD",
                 },
+                "processName": "flex-product-default-process",
+                "processVersion": 1,
                 "transitions": Array [
                   Object {
                     "by": "customer",
@@ -7481,6 +7549,8 @@ exports[`TransactionPanel - Sale purchased matches snapshot 1`] = `
                 "amount": 15500,
                 "currency": "USD",
               },
+              "processName": "flex-product-default-process",
+              "processVersion": 1,
               "transitions": Array [
                 Object {
                   "by": "customer",
@@ -7767,6 +7837,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                     "amount": 15500,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -8044,6 +8116,8 @@ exports[`TransactionPanel - Sale received matches snapshot 1`] = `
                     "amount": 15500,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
@@ -8218,6 +8292,8 @@ exports[`TransactionPanel - Sale received matches snapshot 1`] = `
                   "amount": 15500,
                   "currency": "USD",
                 },
+                "processName": "flex-product-default-process",
+                "processVersion": 1,
                 "transitions": Array [
                   Object {
                     "by": "customer",
@@ -8361,6 +8437,8 @@ exports[`TransactionPanel - Sale received matches snapshot 1`] = `
                 "amount": 15500,
                 "currency": "USD",
               },
+              "processName": "flex-product-default-process",
+              "processVersion": 1,
               "transitions": Array [
                 Object {
                   "by": "customer",
@@ -8657,6 +8735,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                     "amount": 15500,
                     "currency": "USD",
                   },
+                  "processName": "flex-product-default-process",
+                  "processVersion": 1,
                   "transitions": Array [
                     Object {
                       "by": "customer",
