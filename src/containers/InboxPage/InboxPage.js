@@ -6,20 +6,7 @@ import classNames from 'classnames';
 
 import config from '../../config';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import {
-  txIsCanceled,
-  txIsEnquired,
-  txIsPurchased,
-  txIsDelivered,
-  txIsDisputed,
-  txIsPaymentExpired,
-  txIsPaymentPending,
-  txIsReceived,
-  txIsCompleted,
-  txIsReviewedByCustomer,
-  txIsReviewedByProvider,
-  txIsReviewed,
-} from '../../util/transaction';
+import { getProcess } from '../../util/transaction';
 import { propTypes, DATE_TYPE_DATE } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
 import { formatDateIntoPartials } from '../../util/dates';
@@ -50,8 +37,10 @@ import css from './InboxPage.module.css';
 // Translated name of the state of the given transaction
 export const txState = (intl, tx, type) => {
   const isOrder = type === 'order';
+  const process = getProcess(tx.attributes.processName);
+  const state = process.getState(tx);
 
-  if (txIsEnquired(tx)) {
+  if (state === process.states.ENQUIRY) {
     return {
       lastTransitionedAtClassName: css.lastTransitionedAtEmphasized,
       stateClassName: css.stateActionNeeded,
@@ -59,35 +48,35 @@ export const txState = (intl, tx, type) => {
         id: 'InboxPage.stateEnquiry',
       }),
     };
-  } else if (txIsPaymentPending(tx)) {
+  } else if (state === process.states.PENDING_PAYMENT) {
     return {
       stateClassName: isOrder ? css.stateActionNeeded : css.stateNoActionNeeded,
       state: intl.formatMessage({
         id: 'InboxPage.statePendingPayment',
       }),
     };
-  } else if (txIsPaymentExpired(tx)) {
+  } else if (state === process.states.PAYMENT_EXPIRED) {
     return {
       stateClassName: css.stateNoActionNeeded,
       state: intl.formatMessage({
         id: 'InboxPage.statePaymentExpired',
       }),
     };
-  } else if (txIsCanceled(tx)) {
+  } else if (state === process.states.CANCELED) {
     return {
       stateClassName: css.stateConcluded,
       state: intl.formatMessage({
         id: 'InboxPage.stateCanceled',
       }),
     };
-  } else if (txIsPurchased(tx)) {
+  } else if (state === process.states.PURCHASED) {
     return {
       stateClassName: isOrder ? css.stateNoActionNeeded : css.stateActionNeeded,
       state: intl.formatMessage({
         id: 'InboxPage.statePurchased',
       }),
     };
-  } else if (txIsDelivered(tx)) {
+  } else if (state === process.states.DELIVERED) {
     return isOrder
       ? {
           stateClassName: css.stateActionNeeded,
@@ -97,21 +86,21 @@ export const txState = (intl, tx, type) => {
           stateClassName: css.stateNoActionNeeded,
           state: intl.formatMessage({ id: 'InboxPage.stateDeliveredProvider' }),
         };
-  } else if (txIsDisputed(tx)) {
+  } else if (state === process.states.DISPUTED) {
     return {
       stateClassName: css.stateActionNeeded,
       state: intl.formatMessage({
         id: 'InboxPage.stateDisputed',
       }),
     };
-  } else if (txIsReceived(tx) || txIsCompleted(tx)) {
+  } else if (state === process.states.RECEIVED || state === process.states.COMPLETED) {
     return {
       stateClassName: css.stateActionNeeded,
       state: intl.formatMessage({
         id: 'InboxPage.stateReceived',
       }),
     };
-  } else if (txIsReviewedByCustomer(tx)) {
+  } else if (state === process.states.REVIEWED_BY_CUSTOMER) {
     const translationKey = isOrder ? 'InboxPage.stateReviewGiven' : 'InboxPage.stateReviewNeeded';
     return {
       stateClassName: isOrder ? css.stateNoActionNeeded : css.stateActionNeeded,
@@ -119,7 +108,7 @@ export const txState = (intl, tx, type) => {
         id: translationKey,
       }),
     };
-  } else if (txIsReviewedByProvider(tx)) {
+  } else if (state === process.states.REVIEWED_BY_PROVIDER) {
     const translationKey = isOrder ? 'InboxPage.stateReviewNeeded' : 'InboxPage.stateReviewGiven';
     return {
       stateClassName: isOrder ? css.stateActionNeeded : css.stateNoActionNeeded,
@@ -127,7 +116,7 @@ export const txState = (intl, tx, type) => {
         id: translationKey,
       }),
     };
-  } else if (txIsReviewed(tx)) {
+  } else if (state === process.states.REVIEWED) {
     return {
       stateClassName: css.stateConcluded,
       state: intl.formatMessage({
@@ -144,6 +133,8 @@ export const InboxItem = props => {
   const { unitType, type, tx, intl, stateData } = props;
   const { customer, provider, listing } = tx;
   const isOrder = type === 'order';
+  const process = getProcess(tx.attributes.processName);
+  const state = process.getState(tx);
 
   const unitPurchase = tx.attributes?.lineItems?.find(
     item => item.code === unitType && !item.reversal
@@ -154,7 +145,7 @@ export const InboxItem = props => {
   const otherUserDisplayName = <UserDisplayName user={otherUser} intl={intl} />;
   const isOtherUserBanned = otherUser.attributes.banned;
 
-  const isSaleNotification = !isOrder && txIsPurchased(tx);
+  const isSaleNotification = !isOrder && state === process.states.PURCHASED;
   const rowNotificationDot = isSaleNotification ? <div className={css.notificationDot} /> : null;
   const lastTransitionedAt = formatDateIntoPartials(tx.attributes.lastTransitionedAt, intl);
 
