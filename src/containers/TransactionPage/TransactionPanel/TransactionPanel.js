@@ -3,20 +3,7 @@ import { array, arrayOf, bool, func, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 import config from '../../../config';
-import {
-  TRANSITION_REQUEST_PAYMENT_AFTER_ENQUIRY,
-  txHasBeenReceived,
-  txIsCanceled,
-  txIsDelivered,
-  txIsDisputed,
-  txIsEnquired,
-  txIsPaymentExpired,
-  txIsPaymentPending,
-  txIsPurchased,
-  txIsReceived,
-  txIsCompleted,
-  txIsInFirstReviewBy,
-} from '../../../util/transaction';
+import { getProcess } from '../../../util/transaction';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes } from '../../../util/types';
 import {
@@ -192,41 +179,47 @@ export class TransactionPanelComponent extends Component {
     const isProviderDeleted = isProviderLoaded && currentProvider.attributes.deleted;
 
     const stateDataFn = tx => {
-      if (txIsEnquired(tx)) {
+      const process = getProcess(tx?.attributes?.processName);
+      const REQUEST_PAYMENT_AFTER_ENQUIRY = process.transitions.REQUEST_PAYMENT_AFTER_ENQUIRY;
+      const state = process.getState(tx);
+      const txHasBeenReceived = tx =>
+        process ? process.hasPassedState(process.states.RECEIVED, tx) : false;
+
+      if (state === process.states.ENQUIRY) {
         const transitions = Array.isArray(nextTransitions)
           ? nextTransitions.map(transition => {
               return transition.attributes.name;
             })
           : [];
         const hasCorrectNextTransition =
-          transitions.length > 0 && transitions.includes(TRANSITION_REQUEST_PAYMENT_AFTER_ENQUIRY);
+          transitions.length > 0 && transitions.includes(REQUEST_PAYMENT_AFTER_ENQUIRY);
         return {
           headingState: HEADING_ENQUIRED,
           showOrderPanel: isCustomer && !isProviderBanned && hasCorrectNextTransition,
         };
-      } else if (txIsPaymentPending(tx)) {
+      } else if (state === process.states.PAYMENT_PENDING) {
         return {
           headingState: HEADING_PAYMENT_PENDING,
           showDetailCardHeadings: isCustomer,
         };
-      } else if (txIsPaymentExpired(tx)) {
+      } else if (state === process.states.PAYMENT_EXPIRED) {
         return {
           headingState: HEADING_PAYMENT_EXPIRED,
           showDetailCardHeadings: isCustomer,
         };
-      } else if (txIsPurchased(tx)) {
+      } else if (state === process.states.PURCHASED) {
         return {
           headingState: HEADING_PURCHASED,
           showDetailCardHeadings: isCustomer,
           showActionButtons: true,
           primaryButtonProps: isCustomer ? markReceivedFromPurchasedProps : markDeliveredProps,
         };
-      } else if (txIsCanceled(tx)) {
+      } else if (state === process.states.CANCELED) {
         return {
           headingState: HEADING_CANCELED,
           showDetailCardHeadings: isCustomer,
         };
-      } else if (txIsDelivered(tx)) {
+      } else if (state === process.states.DELIVERED) {
         const primaryButtonPropsMaybe = isCustomer ? { primaryButtonProps: markReceivedProps } : {};
         return {
           headingState: HEADING_DELIVERED,
@@ -235,12 +228,17 @@ export class TransactionPanelComponent extends Component {
           ...primaryButtonPropsMaybe,
           showDispute: isCustomer,
         };
-      } else if (txIsDisputed(tx)) {
+      } else if (state === process.states.DISPUTED) {
         return {
           headingState: HEADING_DISPUTED,
           showDetailCardHeadings: isCustomer,
         };
-      } else if (txIsReceived(tx) || txIsCompleted(tx) || txIsInFirstReviewBy(tx, !isCustomer)) {
+      } else if (
+        state === process.states.RECEIVED ||
+        state === process.states.COMPLETED ||
+        (isCustomer && state === process.states.REVIEWED_BY_PROVIDER) ||
+        (isProvider && state === process.states.REVIEWED_BY_CUSTOMER)
+      ) {
         return {
           headingState: HEADING_RECEIVED,
           showDetailCardHeadings: isCustomer,
