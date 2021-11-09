@@ -7,31 +7,10 @@ import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl
 import { formatDateWithProximity } from '../../../util/dates';
 import { ensureTransaction, ensureUser, ensureListing } from '../../../util/data';
 import {
-  TRANSITION_CONFIRM_PAYMENT,
-  TRANSITION_AUTO_CANCEL,
-  TRANSITION_CANCEL,
-  TRANSITION_AUTO_CANCEL_FROM_DISPUTED,
-  TRANSITION_CANCEL_FROM_DISPUTED,
-  TRANSITION_MARK_RECEIVED_FROM_PURCHASED,
-  TRANSITION_MARK_RECEIVED,
-  TRANSITION_AUTO_MARK_RECEIVED,
-  TRANSITION_MARK_RECEIVED_FROM_DISPUTED,
-  TRANSITION_MARK_DELIVERED,
-  TRANSITION_DISPUTE,
-  TRANSITION_REVIEW_1_BY_CUSTOMER,
-  TRANSITION_REVIEW_1_BY_PROVIDER,
-  TRANSITION_REVIEW_2_BY_CUSTOMER,
-  TRANSITION_REVIEW_2_BY_PROVIDER,
+  getProcess,
   getUserTxRole,
-  isCustomerReview,
-  isProviderReview,
-  isRelevantPastTransition,
-  transitionIsReviewed,
-  txIsInFirstReviewBy,
-  txIsCompleted,
-  txIsReviewed,
-  txRoleIsCustomer,
-  txRoleIsProvider,
+  TX_TRANSITION_ACTOR_CUSTOMER,
+  TX_TRANSITION_ACTOR_PROVIDER,
 } from '../../../util/transaction';
 import { propTypes } from '../../../util/types';
 import * as log from '../../../util/log';
@@ -103,10 +82,13 @@ Review.propTypes = {
 };
 
 const hasUserLeftAReviewFirst = (userRole, transaction) => {
-  // Because function txIsInFirstReviewBy uses isCustomer to check in which state the reviews are
-  // we should also use isCustomer insted of isProvider
-  const isCustomer = txRoleIsCustomer(userRole);
-  return txIsInFirstReviewBy(transaction, isCustomer);
+  const isCustomer = userRole === TX_TRANSITION_ACTOR_CUSTOMER;
+  const process = getProcess(transaction.attributes.processName);
+  const userReviewState = isCustomer
+    ? process.states.REVIEWED_BY_CUSTOMER
+    : process.states.REVIEWED_BY_PROVIDER;
+
+  return process.getTransitionsToStates(userReviewState).includes(tx.attributes.lastTransition);
 };
 
 const resolveTransitionMessage = (
@@ -120,9 +102,12 @@ const resolveTransitionMessage = (
   const isOwnTransition = transition.by === ownRole;
   const currentTransition = transition.transition;
   const displayName = otherUsersName;
+  const process = getProcess(transaction.attributes.processName);
+  const transitions = process.transitions;
+  const state = process.getState(transaction);
 
   switch (currentTransition) {
-    case TRANSITION_CONFIRM_PAYMENT:
+    case transitions.CONFIRM_PAYMENT:
       return isOwnTransition ? (
         <FormattedMessage id="ActivityFeed.ownTransitionPurchased" values={{ listingTitle }} />
       ) : (
@@ -131,18 +116,18 @@ const resolveTransitionMessage = (
           values={{ displayName, listingTitle }}
         />
       );
-    case TRANSITION_AUTO_CANCEL:
-    case TRANSITION_CANCEL:
-    case TRANSITION_AUTO_CANCEL_FROM_DISPUTED:
-    case TRANSITION_CANCEL_FROM_DISPUTED:
+    case transitions.AUTO_CANCEL:
+    case transitions.CANCEL:
+    case transitions.AUTO_CANCEL_FROM_DISPUTED:
+    case transitions.CANCEL_FROM_DISPUTED:
       return <FormattedMessage id="ActivityFeed.transitionCancel" />;
-    case TRANSITION_MARK_RECEIVED_FROM_PURCHASED:
-    case TRANSITION_MARK_RECEIVED:
-    case TRANSITION_AUTO_MARK_RECEIVED:
-    case TRANSITION_MARK_RECEIVED_FROM_DISPUTED:
+    case transitions.MARK_RECEIVED_FROM_PURCHASED:
+    case transitions.MARK_RECEIVED:
+    case transitions.AUTO_MARK_RECEIVED:
+    case transitions.MARK_RECEIVED_FROM_DISPUTED:
       // Show the leave a review link if the state is completed and
       // if the current user is the first to leave a review
-      const reviewPeriodJustStarted = txIsCompleted(transaction);
+      const reviewPeriodJustStarted = state === process.states.COMPLETED;
 
       const reviewAsFirstLink = reviewPeriodJustStarted ? (
         <InlineTextButton onClick={onOpenReviewModal}>
@@ -151,7 +136,7 @@ const resolveTransitionMessage = (
       ) : null;
 
       return reviewAsFirstLink || <FormattedMessage id="ActivityFeed.transitionMarkReceived" />;
-    case TRANSITION_MARK_DELIVERED: {
+    case transitions.MARK_DELIVERED: {
       const isShipped = transaction.attributes?.protectedData?.deliveryMethod === 'shipping';
       return isOwnTransition && isShipped ? (
         <FormattedMessage id="ActivityFeed.ownTransitionShipped" values={{ listingTitle }} />
@@ -169,7 +154,7 @@ const resolveTransitionMessage = (
         />
       );
     }
-    case TRANSITION_DISPUTE:
+    case transitions.DISPUTE:
       return isOwnTransition ? (
         <FormattedMessage id="ActivityFeed.ownTransitionDisputed" values={{ listingTitle }} />
       ) : (
@@ -178,14 +163,14 @@ const resolveTransitionMessage = (
           values={{ displayName, listingTitle }}
         />
       );
-    case TRANSITION_REVIEW_1_BY_PROVIDER:
-    case TRANSITION_REVIEW_1_BY_CUSTOMER:
+    case transitions.REVIEW_1_BY_PROVIDER:
+    case transitions.REVIEW_1_BY_CUSTOMER:
       if (isOwnTransition) {
         return <FormattedMessage id="ActivityFeed.ownTransitionReview" values={{ displayName }} />;
       } else {
         // show the leave a review link if current user is not the first
         // one to leave a review
-        const reviewPeriodIsOver = txIsReviewed(transaction);
+        const reviewPeriodIsOver = state === process.states.REVIEWED;
         const userHasLeftAReview = hasUserLeftAReviewFirst(ownRole, transaction);
         const reviewAsSecondLink = !(reviewPeriodIsOver || userHasLeftAReview) ? (
           <InlineTextButton onClick={onOpenReviewModal}>
@@ -199,8 +184,8 @@ const resolveTransitionMessage = (
           />
         );
       }
-    case TRANSITION_REVIEW_2_BY_PROVIDER:
-    case TRANSITION_REVIEW_2_BY_CUSTOMER:
+    case transitions.REVIEW_2_BY_PROVIDER:
+    case transitions.REVIEW_2_BY_CUSTOMER:
       if (isOwnTransition) {
         return <FormattedMessage id="ActivityFeed.ownTransitionReview" values={{ displayName }} />;
       } else {
@@ -243,11 +228,12 @@ const Transition = props => {
 
   const ownRole = getUserTxRole(currentUser.id, currentTransaction);
 
-  const otherUsersName = txRoleIsProvider(ownRole) ? (
-    <UserDisplayName user={customer} intl={intl} />
-  ) : (
-    <UserDisplayName user={provider} intl={intl} />
-  );
+  const otherUsersName =
+    ownRole === TX_TRANSITION_ACTOR_PROVIDER ? (
+      <UserDisplayName user={customer} intl={intl} />
+    ) : (
+      <UserDisplayName user={provider} intl={intl} />
+    );
 
   const transitionMessage = resolveTransitionMessage(
     transaction,
@@ -262,15 +248,19 @@ const Transition = props => {
   const deletedReviewContent = intl.formatMessage({ id: 'ActivityFeed.deletedReviewContent' });
   let reviewComponent = null;
 
+  const process = getProcess(transaction.attributes.processName);
+  const transitionIsReviewed = transition =>
+    process.getTransitionsToStates([process.states.REVIEWED]).includes(transition);
+
   if (transitionIsReviewed(lastTransition)) {
-    if (isCustomerReview(currentTransition)) {
+    if (process.isCustomerReview(currentTransition)) {
       const review = reviewByAuthorId(currentTransaction, customer.id);
       reviewComponent = review ? (
         <Review content={review.attributes.content} rating={review.attributes.rating} />
       ) : (
         <Review content={deletedReviewContent} />
       );
-    } else if (isProviderReview(currentTransition)) {
+    } else if (process.isProviderReview(currentTransition)) {
       const review = reviewByAuthorId(currentTransaction, provider.id);
       reviewComponent = review ? (
         <Review content={review.attributes.content} rating={review.attributes.rating} />
@@ -356,6 +346,13 @@ export const ActivityFeedComponent = props => {
   const classes = classNames(rootClassName || css.root, className);
 
   const currentTransaction = ensureTransaction(transaction);
+  const processName = currentTransaction.attributes.processName;
+
+  // If currentTransaction doesn't have processName, full tx data has not been fetched.
+  if (!processName) {
+    return null;
+  }
+
   const transitions = currentTransaction.attributes.transitions
     ? currentTransaction.attributes.transitions
     : [];
@@ -412,7 +409,7 @@ export const ActivityFeedComponent = props => {
   };
 
   const transitionListItem = transition => {
-    if (isRelevantPastTransition(transition.transition)) {
+    if (getProcess(processName).isRelevantPastTransition(transition.transition)) {
       return (
         <li key={transition.transition} className={css.transitionItem}>
           {transitionComponent(transition)}
