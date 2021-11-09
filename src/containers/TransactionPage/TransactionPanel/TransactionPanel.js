@@ -196,7 +196,8 @@ export class TransactionPanelComponent extends Component {
     const isProviderDeleted = isProviderLoaded && currentProvider.attributes.deleted;
 
     const stateDataFn = tx => {
-      const process = getProcess(tx?.attributes?.processName);
+      const processName = tx?.attributes?.processName;
+      const process = getProcess(processName);
       const REQUEST_PAYMENT_AFTER_ENQUIRY = process.transitions.REQUEST_PAYMENT_AFTER_ENQUIRY;
       const state = process.getState(tx);
       const txHasBeenReceived = tx =>
@@ -215,21 +216,29 @@ export class TransactionPanelComponent extends Component {
           transitions.length > 0 && transitions.includes(REQUEST_PAYMENT_AFTER_ENQUIRY);
         return {
           headingState,
+          processName,
+          processState: state,
           showOrderPanel: isCustomer && !isProviderBanned && hasCorrectNextTransition,
         };
       } else if (state === process.states.PAYMENT_PENDING) {
         return {
           headingState,
+          processName,
+          processState: state,
           showDetailCardHeadings: isCustomer,
         };
       } else if (state === process.states.PAYMENT_EXPIRED) {
         return {
           headingState,
+          processName,
+          processState: state,
           showDetailCardHeadings: isCustomer,
         };
       } else if (state === process.states.PURCHASED) {
         return {
           headingState,
+          processName,
+          processState: state,
           showDetailCardHeadings: isCustomer,
           showActionButtons: true,
           primaryButtonProps: isCustomer ? markReceivedFromPurchasedProps : markDeliveredProps,
@@ -237,12 +246,16 @@ export class TransactionPanelComponent extends Component {
       } else if (state === process.states.CANCELED) {
         return {
           headingState,
+          processName,
+          processState: state,
           showDetailCardHeadings: isCustomer,
         };
       } else if (state === process.states.DELIVERED) {
         const primaryButtonPropsMaybe = isCustomer ? { primaryButtonProps: markReceivedProps } : {};
         return {
           headingState,
+          processName,
+          processState: state,
           showDetailCardHeadings: isCustomer,
           showActionButtons: isCustomer,
           ...primaryButtonPropsMaybe,
@@ -251,6 +264,8 @@ export class TransactionPanelComponent extends Component {
       } else if (state === process.states.DISPUTED) {
         return {
           headingState,
+          processName,
+          processState: state,
           showDetailCardHeadings: isCustomer,
         };
       } else if (
@@ -261,6 +276,8 @@ export class TransactionPanelComponent extends Component {
       ) {
         return {
           headingState,
+          processName,
+          processState: state,
           showDetailCardHeadings: isCustomer,
           showActionButtons: true,
           primaryButtonProps: leaveReviewProps,
@@ -268,10 +285,16 @@ export class TransactionPanelComponent extends Component {
       } else if (txHasBeenReceived(tx)) {
         return {
           headingState,
+          processName,
+          processState: state,
           showDetailCardHeadings: isCustomer,
         };
       } else {
-        return { headingState };
+        return {
+          headingState,
+          processName,
+          processState: state,
+        };
       }
     };
     const stateData = stateDataFn(currentTransaction);
@@ -359,6 +382,8 @@ export class TransactionPanelComponent extends Component {
 
             <PanelHeading
               panelHeadingState={stateData.headingState}
+              processName={stateData.processName}
+              processState={stateData.processState}
               transactionRole={transactionRole}
               providerName={authorDisplayName}
               customerName={customerDisplayName}

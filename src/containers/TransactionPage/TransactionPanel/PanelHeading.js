@@ -95,6 +95,8 @@ const PanelHeading = props => {
     className,
     rootClassName,
     panelHeadingState,
+    processName,
+    processState,
     transactionRole,
     customerName,
     listingId,
