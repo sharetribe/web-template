@@ -34,12 +34,7 @@ import {
   transactionInitiateOrderStripeErrors,
 } from '../../util/errors';
 import { formatMoney } from '../../util/currency';
-import {
-  TRANSITION_ENQUIRE,
-  txIsPaymentPending,
-  txIsPaymentExpired,
-  txHasPassedPaymentPending,
-} from '../../util/transaction';
+import { getProcess } from '../../util/transaction';
 
 // Import global thunk functions
 import { isScrollingDisabled } from '../../ducks/UI.duck';
@@ -101,9 +96,13 @@ const initializeOrderPage = (initialValues, routes, dispatch) => {
 };
 
 const checkIsPaymentExpired = existingTransaction => {
-  return txIsPaymentExpired(existingTransaction)
+  const processName =
+    existingTransaction.attributes.processName || config.transactionProcessAlias.split('/')[0];
+  const process = getProcess(processName);
+  const state = process.getState(existingTransaction);
+  return state === process.states.PAYMENT_EXPIRED
     ? true
-    : txIsPaymentPending(existingTransaction)
+    : state === process.states.PAYMENT_PENDING
     ? minutesBetween(existingTransaction.attributes.lastTransitionedAt, new Date()) >= 15
     : false;
 };
@@ -285,6 +284,11 @@ export class CheckoutPageComponent extends Component {
     const pageData = hasDataInProps ? { orderData, listing, transaction } : storedData(STORAGE_KEY);
 
     const tx = pageData ? pageData.transaction : null;
+
+    const txHasPassedPaymentPending = tx => {
+      const process = tx?.id ? getProcess(tx?.attributes?.processName) : null;
+      return process ? process.hasPassedState(process.states.PAYMENT_PENDING, tx) : false;
+    };
 
     // If transaction has passed payment-pending state, speculated tx is not needed.
     const shouldFetchSpeculatedTransaction =
@@ -617,6 +621,7 @@ export class CheckoutPageComponent extends Component {
 
     const { paymentIntent, onRetrievePaymentIntent } = this.props;
     const tx = this.state.pageData ? this.state.pageData.transaction : null;
+    const process = tx?.attributes?.processName ? getProcess(tx.attributes.processName) : null;
 
     // We need to get up to date PI, if payment is pending but it's not expired.
     const shouldFetchPaymentIntent =
@@ -624,7 +629,7 @@ export class CheckoutPageComponent extends Component {
       !paymentIntent &&
       tx &&
       tx.id &&
-      txIsPaymentPending(tx) &&
+      process?.getState(tx) === process?.states.PAYMENT_PENDING &&
       !checkIsPaymentExpired(tx);
 
     if (shouldFetchPaymentIntent) {
@@ -672,8 +677,6 @@ export class CheckoutPageComponent extends Component {
       speculateTransactionErrorMessage,
     } = getErrorMessages(listingNotFound, initiateOrderError, speculateTransactionError);
 
-    const isLoading = !this.state.dataLoaded || speculateTransactionInProgress;
-
     const { listing, transaction, orderData } = this.state.pageData;
     const existingTransaction = ensureTransaction(transaction);
     const speculatedTransaction = ensureTransaction(speculatedTransactionMaybe, {}, null);
@@ -700,6 +703,14 @@ export class CheckoutPageComponent extends Component {
         </NamedLink>
       </div>
     );
+
+    // TODO get transactionProcessAlias from listing's publicData (not from config)
+    const processName =
+      existingTransaction?.attributes?.processName || config.transactionProcessAlias.split('/')[0];
+    const process = getProcess(processName);
+    const transitions = process.transitions;
+
+    const isLoading = !this.state.dataLoaded || speculateTransactionInProgress || !processName;
 
     if (isLoading) {
       return <Page {...pageProps}>{topbar}</Page>;
@@ -795,7 +806,7 @@ export class CheckoutPageComponent extends Component {
     const detailsSubTitle = `${formattedPrice} ${intl.formatMessage({ id: unitTranslationKey })}`;
 
     const showInitialMessageInput = !(
-      existingTransaction && existingTransaction.attributes.lastTransition === TRANSITION_ENQUIRE
+      existingTransaction && existingTransaction.attributes.lastTransition === transitions.ENQUIRE
     );
 
     // Get first and last name of the current user and use it in the StripePaymentForm to autofill the name field
