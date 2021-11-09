@@ -114,7 +114,7 @@
 }
 
 .menuLabelWrapperExpired {
-  border: 1px solid var(--failColor);
+  @apply --errorMessageStyling;
 }
 
 .menuContent {

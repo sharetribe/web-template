@@ -1,6 +1,2 @@
 .root {
 }
-
-.selectError {
-  border: 1px solid var(--failColor);
-}

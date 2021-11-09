@@ -70,8 +70,8 @@
 
 /* Verification error box */
 .verficiationErrorBox {
+  @apply --errorMessageStyling;
   background: var(--failColorLight);
-  border: 1px solid var(--failColor);
 }
 
 /* Verification success box */
