@@ -1,10 +1,6 @@
 import Decimal from 'decimal.js';
 import { types as sdkTypes } from '../../util/sdkLoader';
-import {
-  TRANSITION_REQUEST_PAYMENT,
-  TRANSITION_CONFIRM_PAYMENT,
-  TX_TRANSITION_ACTOR_CUSTOMER,
-} from '../../util/transaction';
+import { TX_TRANSITION_ACTOR_CUSTOMER, getProcess } from '../../util/transaction';
 import {
   LINE_ITEM_DAY,
   LINE_ITEM_NIGHT,
@@ -27,6 +23,9 @@ const exampleBooking = attributes => {
   };
 };
 
+const processName = 'flex-product-default-process';
+const transitions = getProcess(processName)?.transitions;
+
 const exampleTransaction = params => {
   const created = new Date(Date.UTC(2017, 1, 1));
   const confirmed = new Date(Date.UTC(2017, 1, 1, 0, 1));
@@ -35,18 +34,19 @@ const exampleTransaction = params => {
     type: 'transaction',
     attributes: {
       createdAt: created,
+      processName,
       lastTransitionedAt: created,
-      lastTransition: TRANSITION_CONFIRM_PAYMENT,
+      lastTransition: transitions.CONFIRM_PAYMENT,
       transitions: [
         {
           createdAt: created,
           by: TX_TRANSITION_ACTOR_CUSTOMER,
-          transition: TRANSITION_REQUEST_PAYMENT,
+          transition: transitions.REQUEST_PAYMENT,
         },
         {
           createdAt: confirmed,
           by: TX_TRANSITION_ACTOR_CUSTOMER,
-          transition: TRANSITION_CONFIRM_PAYMENT,
+          transition: transitions.CONFIRM_PAYMENT,
         },
       ],
 
@@ -562,7 +562,7 @@ export const BookingProviderSalePreauthorized = {
     unitType: LINE_ITEM_NIGHT,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
-      lastTransition: TRANSITION_CONFIRM_PAYMENT,
+      lastTransition: transitions.CONFIRM_PAYMENT,
       payinTotal: new Money(4500, CURRENCY),
       payoutTotal: new Money(2500, CURRENCY),
       lineItems: [

@@ -2,23 +2,13 @@ import React from 'react';
 
 import { injectIntl } from '../../util/reactIntl';
 import { createUser, createTransaction } from '../../util/test-data';
-import {
-  TRANSITION_ENQUIRE,
-  TRANSITION_REQUEST_PAYMENT,
-  TRANSITION_CONFIRM_PAYMENT,
-  TRANSITION_CANCEL,
-  TRANSITION_MARK_DELIVERED,
-  TRANSITION_MARK_RECEIVED,
-  TRANSITION_DISPUTE,
-  TRANSITION_REVIEW_1_BY_CUSTOMER,
-  TRANSITION_REVIEW_1_BY_PROVIDER,
-  TRANSITION_EXPIRE_REVIEW_PERIOD,
-} from '../../util/transaction';
+import { getProcess } from '../../util/transaction';
 import { LINE_ITEM_UNITS } from '../../util/types';
 
 import { InboxItem, txState } from './InboxPage';
 
 const noop = () => null;
+const transitions = getProcess('flex-product-default-process')?.transitions;
 
 const tx = lastTransition =>
   createTransaction({
@@ -55,7 +45,7 @@ export const EnquiryPayment = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'order',
-    tx: tx(TRANSITION_ENQUIRE),
+    tx: tx(transitions.ENQUIRE),
   },
   group: 'page:InboxPage',
 };
@@ -69,7 +59,7 @@ export const PendingPayment_Order = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'order',
-    tx: tx(TRANSITION_REQUEST_PAYMENT),
+    tx: tx(transitions.REQUEST_PAYMENT),
   },
   group: 'page:InboxPage',
 };
@@ -79,7 +69,7 @@ export const Purchased_Order = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'order',
-    tx: tx(TRANSITION_CONFIRM_PAYMENT),
+    tx: tx(transitions.CONFIRM_PAYMENT),
   },
   group: 'page:InboxPage',
 };
@@ -89,7 +79,7 @@ export const Canceled_Order = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'order',
-    tx: tx(TRANSITION_CANCEL),
+    tx: tx(transitions.CANCEL),
   },
   group: 'page:InboxPage',
 };
@@ -99,7 +89,7 @@ export const Delivered_Order = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'order',
-    tx: tx(TRANSITION_MARK_DELIVERED),
+    tx: tx(transitions.MARK_DELIVERED),
   },
   group: 'page:InboxPage',
 };
@@ -109,7 +99,7 @@ export const Disputed_Order = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'order',
-    tx: tx(TRANSITION_DISPUTE),
+    tx: tx(transitions.DISPUTE),
   },
   group: 'page:InboxPage',
 };
@@ -119,7 +109,7 @@ export const Received_Order = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'order',
-    tx: tx(TRANSITION_MARK_RECEIVED),
+    tx: tx(transitions.MARK_RECEIVED),
   },
   group: 'page:InboxPage',
 };
@@ -129,7 +119,7 @@ export const ReviewedByCustomer_Order = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'order',
-    tx: tx(TRANSITION_REVIEW_1_BY_CUSTOMER),
+    tx: tx(transitions.REVIEW_1_BY_CUSTOMER),
   },
   group: 'page:InboxPage',
 };
@@ -139,7 +129,7 @@ export const ReviewedByProvider_Order = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'order',
-    tx: tx(TRANSITION_REVIEW_1_BY_PROVIDER),
+    tx: tx(transitions.REVIEW_1_BY_PROVIDER),
   },
   group: 'page:InboxPage',
 };
@@ -149,7 +139,7 @@ export const Reviewed_Order = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'order',
-    tx: tx(TRANSITION_EXPIRE_REVIEW_PERIOD),
+    tx: tx(transitions.EXPIRE_REVIEW_PERIOD),
   },
   group: 'page:InboxPage',
 };
@@ -163,7 +153,7 @@ export const PendingPayment_Sale = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'sale',
-    tx: tx(TRANSITION_REQUEST_PAYMENT),
+    tx: tx(transitions.REQUEST_PAYMENT),
   },
   group: 'page:InboxPage',
 };
@@ -173,7 +163,7 @@ export const Purchased_Sale = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'sale',
-    tx: tx(TRANSITION_CONFIRM_PAYMENT),
+    tx: tx(transitions.CONFIRM_PAYMENT),
   },
   group: 'page:InboxPage',
 };
@@ -183,7 +173,7 @@ export const Canceled_Sale = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'sale',
-    tx: tx(TRANSITION_CANCEL),
+    tx: tx(transitions.CANCEL),
   },
   group: 'page:InboxPage',
 };
@@ -193,7 +183,7 @@ export const Delivered_Sale = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'sale',
-    tx: tx(TRANSITION_MARK_DELIVERED),
+    tx: tx(transitions.MARK_DELIVERED),
   },
   group: 'page:InboxPage',
 };
@@ -203,7 +193,7 @@ export const Disputed_Sale = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'sale',
-    tx: tx(TRANSITION_DISPUTE),
+    tx: tx(transitions.DISPUTE),
   },
   group: 'page:InboxPage',
 };
@@ -213,7 +203,7 @@ export const Received_Sale = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'sale',
-    tx: tx(TRANSITION_MARK_RECEIVED),
+    tx: tx(transitions.MARK_RECEIVED),
   },
   group: 'page:InboxPage',
 };
@@ -223,7 +213,7 @@ export const ReviewedByCustomer_Sale = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'sale',
-    tx: tx(TRANSITION_REVIEW_1_BY_CUSTOMER),
+    tx: tx(transitions.REVIEW_1_BY_CUSTOMER),
   },
   group: 'page:InboxPage',
 };
@@ -233,7 +223,7 @@ export const ReviewedByProvider_Sale = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'sale',
-    tx: tx(TRANSITION_REVIEW_1_BY_PROVIDER),
+    tx: tx(transitions.REVIEW_1_BY_PROVIDER),
   },
   group: 'page:InboxPage',
 };
@@ -243,7 +233,7 @@ export const Reviewed_Sale = {
   props: {
     unitType: LINE_ITEM_UNITS,
     type: 'sale',
-    tx: tx(TRANSITION_EXPIRE_REVIEW_PERIOD),
+    tx: tx(transitions.EXPIRE_REVIEW_PERIOD),
   },
   group: 'page:InboxPage',
 };

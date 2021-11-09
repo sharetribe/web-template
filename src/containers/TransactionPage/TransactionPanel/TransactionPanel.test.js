@@ -13,19 +13,13 @@ import {
 } from '../../../util/test-data';
 import { renderShallow } from '../../../util/test-helpers';
 import { fakeIntl } from '../../../util/test-data';
-import {
-  TRANSITION_ENQUIRE,
-  TRANSITION_REQUEST_PAYMENT,
-  TRANSITION_CONFIRM_PAYMENT,
-  TRANSITION_MARK_DELIVERED,
-  TRANSITION_CANCEL,
-  TRANSITION_MARK_RECEIVED,
-} from '../../../util/transaction';
+import { getProcess } from '../../../util/transaction';
 
 import BreakdownMaybe from './BreakdownMaybe';
 import { TransactionPanelComponent } from './TransactionPanel';
 
 const noop = () => null;
+const transitions = getProcess('flex-product-default-process')?.transitions;
 
 const { Money } = sdkTypes;
 
@@ -46,34 +40,34 @@ describe('TransactionPanel - Sale', () => {
 
   const txEnquired = createTransaction({
     id: 'sale-enquired',
-    lastTransition: TRANSITION_ENQUIRE,
+    lastTransition: transitions.ENQUIRE,
     ...baseTxAttrs,
   });
 
   const txPurchased = createTransaction({
     id: 'sale-purchased',
-    lastTransition: TRANSITION_CONFIRM_PAYMENT,
+    lastTransition: transitions.CONFIRM_PAYMENT,
     ...baseTxAttrs,
   });
 
   const txDelivered = createTransaction({
     id: 'sale-delivered',
-    lastTransition: TRANSITION_MARK_DELIVERED,
+    lastTransition: transitions.MARK_DELIVERED,
     transitions: [
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 4, 1)),
         by: 'customer',
-        transition: TRANSITION_REQUEST_PAYMENT,
+        transition: transitions.REQUEST_PAYMENT,
       }),
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 4, 1)),
         by: 'customer',
-        transition: TRANSITION_CONFIRM_PAYMENT,
+        transition: transitions.CONFIRM_PAYMENT,
       }),
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 5, 1)),
         by: 'provider',
-        transition: TRANSITION_MARK_DELIVERED,
+        transition: transitions.MARK_DELIVERED,
       }),
     ],
     ...baseTxAttrs,
@@ -81,33 +75,33 @@ describe('TransactionPanel - Sale', () => {
 
   const txCanceled = createTransaction({
     id: 'sale-canceled',
-    lastTransition: TRANSITION_CANCEL,
+    lastTransition: transitions.CANCEL,
     ...baseTxAttrs,
   });
 
   const txReceived = createTransaction({
     id: 'sale-received',
-    lastTransition: TRANSITION_MARK_RECEIVED,
+    lastTransition: transitions.MARK_RECEIVED,
     transitions: [
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 4, 1)),
         by: 'customer',
-        transition: TRANSITION_REQUEST_PAYMENT,
+        transition: transitions.REQUEST_PAYMENT,
       }),
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 4, 1)),
         by: 'customer',
-        transition: TRANSITION_CONFIRM_PAYMENT,
+        transition: transitions.CONFIRM_PAYMENT,
       }),
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 5, 1)),
         by: 'provider',
-        transition: TRANSITION_MARK_DELIVERED,
+        transition: transitions.MARK_DELIVERED,
       }),
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 5, 1)),
         by: 'provider',
-        transition: TRANSITION_MARK_RECEIVED,
+        transition: transitions.MARK_RECEIVED,
       }),
     ],
     ...baseTxAttrs,
@@ -224,7 +218,7 @@ describe('TransactionPanel - Sale', () => {
 
     const transaction = createTransaction({
       id: 'sale-tx',
-      lastTransition: TRANSITION_REQUEST_PAYMENT,
+      lastTransition: transitions.REQUEST_PAYMENT,
       total: new Money(16500, 'USD'),
       commission: new Money(1000, 'USD'),
       listing: createListing('listing1'),
@@ -267,34 +261,34 @@ describe('TransactionPanel - Order', () => {
 
   const txEnquired = createTransaction({
     id: 'order-enquired',
-    lastTransition: TRANSITION_ENQUIRE,
+    lastTransition: transitions.ENQUIRE,
     ...baseTxAttrs,
   });
 
   const txPurchased = createTransaction({
     id: 'order-purchased',
-    lastTransition: TRANSITION_CONFIRM_PAYMENT,
+    lastTransition: transitions.CONFIRM_PAYMENT,
     ...baseTxAttrs,
   });
 
   const txDelivered = createTransaction({
     id: 'order-delivered',
-    lastTransition: TRANSITION_MARK_DELIVERED,
+    lastTransition: transitions.MARK_DELIVERED,
     transitions: [
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 4, 1)),
         by: 'customer',
-        transition: TRANSITION_REQUEST_PAYMENT,
+        transition: transitions.REQUEST_PAYMENT,
       }),
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 4, 1)),
         by: 'customer',
-        transition: TRANSITION_CONFIRM_PAYMENT,
+        transition: transitions.CONFIRM_PAYMENT,
       }),
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 5, 1)),
         by: 'provider',
-        transition: TRANSITION_MARK_DELIVERED,
+        transition: transitions.MARK_DELIVERED,
       }),
     ],
     ...baseTxAttrs,
@@ -302,33 +296,33 @@ describe('TransactionPanel - Order', () => {
 
   const txCanceled = createTransaction({
     id: 'order-canceled',
-    lastTransition: TRANSITION_CANCEL,
+    lastTransition: transitions.CANCEL,
     ...baseTxAttrs,
   });
 
   const txReceived = createTransaction({
     id: 'order-received',
-    lastTransition: TRANSITION_MARK_RECEIVED,
+    lastTransition: transitions.MARK_RECEIVED,
     transitions: [
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 4, 1)),
         by: 'customer',
-        transition: TRANSITION_REQUEST_PAYMENT,
+        transition: transitions.REQUEST_PAYMENT,
       }),
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 4, 1)),
         by: 'customer',
-        transition: TRANSITION_CONFIRM_PAYMENT,
+        transition: transitions.CONFIRM_PAYMENT,
       }),
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 5, 1)),
         by: 'provider',
-        transition: TRANSITION_MARK_DELIVERED,
+        transition: transitions.MARK_DELIVERED,
       }),
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 5, 1)),
         by: 'provider',
-        transition: TRANSITION_MARK_RECEIVED,
+        transition: transitions.MARK_RECEIVED,
       }),
     ],
     ...baseTxAttrs,
@@ -446,7 +440,7 @@ describe('TransactionPanel - Order', () => {
     const end = new Date(Date.UTC(2017, 5, 13));
     const tx = createTransaction({
       id: 'order-tx',
-      lastTransition: TRANSITION_REQUEST_PAYMENT,
+      lastTransition: transitions.REQUEST_PAYMENT,
       total: new Money(16500, 'USD'),
       booking: createBooking('booking1', {
         start,
