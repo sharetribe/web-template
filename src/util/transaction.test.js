@@ -1,44 +1,42 @@
 import { createUser, createTransaction, createListing, createTxTransition } from './test-data';
 
 import {
-  TRANSITION_CONFIRM_PAYMENT,
-  TRANSITION_EXPIRE_REVIEW_PERIOD,
-  TRANSITION_MARK_DELIVERED,
-  TRANSITION_MARK_RECEIVED,
   TX_TRANSITION_ACTOR_CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER,
   TX_TRANSITION_ACTOR_SYSTEM,
-  txHasBeenReceived,
-  txIsPurchased,
-  txIsReviewed,
+  getProcess,
 } from './transaction';
+
+const process = getProcess('flex-product-default-process');
+const transitions = process?.transitions;
+const txHasBeenReceived = tx => process.hasPassedState(process.states.RECEIVED, tx);
 
 // transitions
 const transitionConfirmPayment = createTxTransition({
   createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
   by: TX_TRANSITION_ACTOR_CUSTOMER,
-  transition: TRANSITION_CONFIRM_PAYMENT,
+  transition: transitions.CONFIRM_PAYMENT,
 });
 const transitionMarkDelivered = createTxTransition({
   createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
   by: TX_TRANSITION_ACTOR_PROVIDER,
-  transition: TRANSITION_MARK_DELIVERED,
+  transition: transitions.MARK_DELIVERED,
 });
 const transitionMarkReceived = createTxTransition({
   createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
   by: TX_TRANSITION_ACTOR_CUSTOMER,
-  transition: TRANSITION_MARK_RECEIVED,
+  transition: transitions.MARK_RECEIVED,
 });
 
 const transitionReviewed = createTxTransition({
   createdAt: new Date(Date.UTC(2017, 10, 16, 8, 12)),
   by: TX_TRANSITION_ACTOR_SYSTEM,
-  transition: TRANSITION_EXPIRE_REVIEW_PERIOD,
+  transition: transitions.EXPIRE_REVIEW_PERIOD,
 });
 
 // transactions
 const txPurchased = createTransaction({
-  lastTransition: TRANSITION_CONFIRM_PAYMENT,
+  lastTransition: transitions.CONFIRM_PAYMENT,
   customer: createUser('user1'),
   provider: createUser('user2'),
   listing: createListing('Listing'),
@@ -46,7 +44,7 @@ const txPurchased = createTransaction({
 });
 
 const txReceived = createTransaction({
-  lastTransition: TRANSITION_MARK_RECEIVED,
+  lastTransition: transitions.MARK_RECEIVED,
   customer: createUser('user1'),
   provider: createUser('user2'),
   listing: createListing('Listing'),
@@ -54,7 +52,7 @@ const txReceived = createTransaction({
 });
 
 const txReviewed = createTransaction({
-  lastTransition: TRANSITION_EXPIRE_REVIEW_PERIOD,
+  lastTransition: transitions.EXPIRE_REVIEW_PERIOD,
   customer: createUser('user1'),
   provider: createUser('user2'),
   listing: createListing('Listing'),
@@ -68,11 +66,12 @@ const txReviewed = createTransaction({
 
 describe('transaction utils', () => {
   describe('tx is in correct state', () => {
-    it(`txIsReviewed(txReviewed) succeeds with last transaction: ${TRANSITION_EXPIRE_REVIEW_PERIOD}`, () => {
-      expect(txIsReviewed(txReviewed)).toEqual(true);
+    const state = process.getState(txReviewed);
+    it(`State is REVIEWED when lastTransition is ${transitions.EXPIRE_REVIEW_PERIOD}`, () => {
+      expect(state === process.states.REVIEWED).toEqual(true);
     });
-    it(`txIsPurchased(txReviewed) fails with last transaction: ${TRANSITION_EXPIRE_REVIEW_PERIOD}`, () => {
-      expect(txIsPurchased(txReviewed)).toEqual(false);
+    it(`State is REVIEWED when lastTransition is  ${transitions.PURCHASED}`, () => {
+      expect(state === process.states.PURCHASED).toEqual(false);
     });
   });
 

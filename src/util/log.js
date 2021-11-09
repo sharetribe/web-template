@@ -8,7 +8,6 @@
 
 import * as Sentry from '@sentry/browser';
 import config from '../config';
-import { responseApiErrorInfo } from './errors';
 
 /**
  * Set up error handling. If a Sentry DSN is
@@ -53,6 +52,17 @@ const printAPIErrorsAsConsoleTable = apiErrors => {
     console.table(apiErrors.map(err => ({ status: err.status, code: err.code, ...err.meta })));
   }
 };
+
+const responseAPIErrors = error => {
+  return error && error.data && error.data.errors ? error.data.errors : [];
+};
+
+const responseApiErrorInfo = err =>
+  responseAPIErrors(err).map(e => ({
+    status: e.status,
+    code: e.code,
+    meta: e.meta,
+  }));
 
 /**
  * Logs an execption. If Sentry is configured

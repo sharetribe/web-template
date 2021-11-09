@@ -9,7 +9,7 @@ import Decimal from 'decimal.js';
 
 import { isAfterDate, subtractTime } from '../../util/dates';
 import { types as sdkTypes } from '../../util/sdkLoader';
-import { TRANSITIONS } from '../../util/transaction';
+import { getProcess } from '../../util/transaction';
 
 const { UUID, Money } = sdkTypes;
 
@@ -52,11 +52,22 @@ export const isValidListing = listing => {
 // Validate content of an transaction received from SessionStore.
 // An id is required and the last transition needs to be one of the known transitions
 export const isValidTransaction = transaction => {
+  let process = null;
+  try {
+    const processName = transaction?.attributes?.processName;
+    process = getProcess(processName);
+  } catch (e) {
+    console.error(
+      'Transaction, found from sessionStorage, was following unsupported transaction process.'
+    );
+    return false;
+  }
+
   const props = {
     id: id => id instanceof UUID,
     type: type => type === 'transaction',
     attributes: v => {
-      return typeof v === 'object' && TRANSITIONS.includes(v.lastTransition);
+      return typeof v === 'object' && process.transitions.includes(v.lastTransition);
     },
   };
   return validateProperties(transaction, props);

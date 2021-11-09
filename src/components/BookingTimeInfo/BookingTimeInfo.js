@@ -1,7 +1,7 @@
 import React from 'react';
 import { bool } from 'prop-types';
 import classNames from 'classnames';
-import { txIsEnquired } from '../../util/transaction';
+import { getProcess } from '../../util/transaction';
 import {
   timeOfDayFromTimeZoneToLocal,
   daysBetween,
@@ -42,7 +42,13 @@ const orderData = (unitType, tx, intl) => {
 
 const BookingTimeInfoComponent = props => {
   const { bookingClassName, intl, tx, unitType, dateType } = props;
-  const isEnquiry = txIsEnquired(tx);
+  const processName = tx?.attributes?.processName;
+  if (!processName) {
+    return null;
+  }
+
+  const process = getProcess(processName);
+  const isEnquiry = process.getState(tx) === process.states.ENQUIRY;
 
   if (isEnquiry) {
     return null;

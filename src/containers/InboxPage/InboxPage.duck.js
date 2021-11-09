@@ -2,7 +2,7 @@ import reverse from 'lodash/reverse';
 import sortBy from 'lodash/sortBy';
 import { storableError } from '../../util/errors';
 import { parse } from '../../util/urlHelpers';
-import { TRANSITIONS } from '../../util/transaction';
+import { getAllTransitionsForEveryProcess } from '../../util/transaction';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
 const sortedTransactions = txs =>
@@ -92,7 +92,7 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
 
   const apiQueryParams = {
     only: onlyFilter,
-    lastTransitions: TRANSITIONS,
+    lastTransitions: getAllTransitionsForEveryProcess(),
     include: [
       'listing',
       'provider',
@@ -102,6 +102,7 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
       'booking',
     ],
     'fields.transaction': [
+      'processName',
       'lastTransition',
       'lastTransitionedAt',
       'transitions',
