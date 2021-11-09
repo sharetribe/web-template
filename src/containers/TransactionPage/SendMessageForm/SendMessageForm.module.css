@@ -13,9 +13,6 @@
   }
 }
 
-.textarea {
-}
-
 .spinner {
   stroke: var(--matterColorLight);
   width: 18px;

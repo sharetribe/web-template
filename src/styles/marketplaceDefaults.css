@@ -128,11 +128,13 @@
   --DateRangeController_selectionHeight: var(--ReactDates_selectionHeight);
 
   /* ================ SectionHero ================ */
-
   --SectionHero_desktopTitleMaxWidth: 625px;
 
   /* ================ TabNav ================ */
   --TabNav_linkWidth: 240px;
+
+  /* ================ Inputs, textareas and selects ================ */
+  --errorMessageStyling: 1px solid var(--failColor);
 
   /* ================ LandingPage ================ */
   --LandingPage_sectionMarginTop: 40px;
@@ -198,22 +200,6 @@ h6 {
   @apply --marketplaceH6FontStyles;
 }
 
-input {
-  font-family: var(--fontFamily);
-  font-weight: var(--fontWeightMedium);
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: -0.1px;
-  /* No margins for default font */
-
-  @media (--viewportMedium) {
-    font-size: 16px;
-    line-height: 32px;
-  }
-}
-
-textarea,
-select,
 li {
   @apply --marketplaceDefaultFontStyles;
 }
@@ -287,16 +273,20 @@ textarea {
   min-height: 80px; /* 3 rows * 40px */
 
   @media (--viewportMedium) {
-    padding: 7px 0 7px 16px;
     min-height: 112px; /* 3 rows fully visible */
   }
 }
 
+.inputError,
+.selectError {
+  @apply --errorMessageStyling;
+}
+
 .fontsLoaded {
   & body {
-    font-family: 'poppins', Helvetica, Arial, sans-serif;
+    font-family: var(--fontFamily);
   }
   & button {
-    font-family: 'poppins', Helvetica, Arial, sans-serif;
+    font-family: var(--fontFamily);
   }
 }
