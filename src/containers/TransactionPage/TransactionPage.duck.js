@@ -6,16 +6,7 @@ import config from '../../config';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { getStartOf, addTime } from '../../util/dates';
 import { isTransactionsTransitionInvalidTransition, storableError } from '../../util/errors';
-import {
-  txIsEnquired,
-  getReview1Transition,
-  getReview2Transition,
-  txIsInFirstReviewBy,
-  TRANSITION_DISPUTE,
-  TRANSITION_MARK_RECEIVED,
-  TRANSITION_MARK_RECEIVED_FROM_PURCHASED,
-  TRANSITION_MARK_DELIVERED,
-} from '../../util/transaction';
+import { getProcess } from '../../util/transaction';
 import { transactionLineItems } from '../../util/api';
 import * as log from '../../util/log';
 import {
@@ -395,13 +386,12 @@ export const fetchTransaction = (id, txRole) => (dispatch, getState, sdk) => {
       const denormalised = denormalisedEntities(entities, [listingRef, transactionRef]);
       const listing = denormalised[0];
       const transaction = denormalised[1];
+      const process = getProcess(transaction.attributes.processName);
+      const isEnquiry = process.getState(transaction) === process.states.ENQUIRY;
 
       // Fetch time slots for transactions that are in enquired state
       const canFetchTimeslots =
-        txRole === 'customer' &&
-        config.listingManagementType === 'availability' &&
-        transaction &&
-        txIsEnquired(transaction);
+        txRole === 'customer' && config.listingManagementType === 'availability' && isEnquiry;
 
       if (canFetchTimeslots) {
         dispatch(fetchTimeSlots(listingId));
@@ -435,10 +425,13 @@ export const markReceivedFromPurchased = id => (dispatch, getState, sdk) => {
     return Promise.reject(new Error('Transition already in progress'));
   }
   dispatch(markReceivedFromPurchasedRequest());
+  // TODO not from config
+  const processName = config.transactionProcessAlias.split('/')[0];
+  const transitions = getProcess(processName)?.transitions;
 
   return sdk.transactions
     .transition(
-      { id, transition: TRANSITION_MARK_RECEIVED_FROM_PURCHASED, params: {} },
+      { id, transition: transitions.MARK_RECEIVED_FROM_PURCHASED, params: {} },
       { expand: true }
     )
     .then(response => {
@@ -451,7 +444,7 @@ export const markReceivedFromPurchased = id => (dispatch, getState, sdk) => {
       dispatch(markReceivedFromPurchasedError(storableError(e)));
       log.error(e, 'mark-received-from-purchase-failed', {
         txId: id,
-        transition: TRANSITION_MARK_RECEIVED_FROM_PURCHASED,
+        transition: transitions.MARK_RECEIVED_FROM_PURCHASED,
       });
       throw e;
     });
@@ -462,9 +455,12 @@ export const markDelivered = id => (dispatch, getState, sdk) => {
     return Promise.reject(new Error('Transition already in progress'));
   }
   dispatch(markDeliveredRequest());
+  // TODO not from config
+  const processName = config.transactionProcessAlias.split('/')[0];
+  const transitions = getProcess(processName)?.transitions;
 
   return sdk.transactions
-    .transition({ id, transition: TRANSITION_MARK_DELIVERED, params: {} }, { expand: true })
+    .transition({ id, transition: transitions.MARK_DELIVERED, params: {} }, { expand: true })
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       dispatch(markDeliveredSuccess());
@@ -475,7 +471,7 @@ export const markDelivered = id => (dispatch, getState, sdk) => {
       dispatch(markDeliveredError(storableError(e)));
       log.error(e, 'mark-delivered-failed', {
         txId: id,
-        transition: TRANSITION_MARK_DELIVERED,
+        transition: transitions.MARK_DELIVERED,
       });
       throw e;
     });
@@ -486,9 +482,12 @@ export const markReceived = id => (dispatch, getState, sdk) => {
     return Promise.reject(new Error('Transition already in progress'));
   }
   dispatch(markReceivedRequest());
+  // TODO not from config
+  const processName = config.transactionProcessAlias.split('/')[0];
+  const transitions = getProcess(processName)?.transitions;
 
   return sdk.transactions
-    .transition({ id, transition: TRANSITION_MARK_RECEIVED, params: {} }, { expand: true })
+    .transition({ id, transition: transitions.MARK_RECEIVED, params: {} }, { expand: true })
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       dispatch(markReceivedSuccess());
@@ -499,7 +498,7 @@ export const markReceived = id => (dispatch, getState, sdk) => {
       dispatch(markReceivedError(storableError(e)));
       log.error(e, 'mark-received-failed', {
         txId: id,
-        transition: TRANSITION_MARK_RECEIVED,
+        transition: transitions.MARK_RECEIVED,
       });
       throw e;
     });
@@ -512,8 +511,12 @@ export const dispute = (id, disputeReason) => (dispatch, getState, sdk) => {
 
   const params = disputeReason ? { protectedData: { disputeReason } } : {};
   dispatch(disputeRequest());
+  // TODO not from config
+  const processName = config.transactionProcessAlias.split('/')[0];
+  const transitions = getProcess(processName)?.transitions;
+
   return sdk.transactions
-    .transition({ id, transition: TRANSITION_DISPUTE, params }, { expand: true })
+    .transition({ id, transition: transitions.DISPUTE, params }, { expand: true })
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       dispatch(disputeSuccess());
@@ -524,7 +527,7 @@ export const dispute = (id, disputeReason) => (dispatch, getState, sdk) => {
       dispatch(disputeError(storableError(e)));
       log.error(e, 'dispute-failed', {
         txId: id,
-        transition: TRANSITION_DISPUTE,
+        transition: transitions.DISPUTE,
       });
       throw e;
     });
@@ -610,9 +613,12 @@ export const sendMessage = (txId, message) => (dispatch, getState, sdk) => {
 };
 
 // If other party has already sent a review, we need to make transition to
-// TRANSITION_REVIEW_2_BY_<CUSTOMER/PROVIDER>
-const sendReviewAsSecond = (id, params, role, dispatch, sdk) => {
-  const transition = getReview2Transition(role === CUSTOMER);
+// transitions.REVIEW_2_BY_<CUSTOMER/PROVIDER>
+const sendReviewAsSecond = (tx, params, role, dispatch, sdk) => {
+  const { id, attributes } = tx;
+  const transitions = getProcess(attributes.processName).transitions;
+  const transition =
+    role === CUSTOMER ? transitions.REVIEW_2_BY_CUSTOMER : transitions.REVIEW_2_BY_PROVIDER;
 
   const include = REVIEW_TX_INCLUDES;
 
@@ -633,12 +639,16 @@ const sendReviewAsSecond = (id, params, role, dispatch, sdk) => {
 };
 
 // If other party has not yet sent a review, we need to make transition to
-// TRANSITION_REVIEW_1_BY_<CUSTOMER/PROVIDER>
+// transitions.REVIEW_1_BY_<CUSTOMER/PROVIDER>
 // However, the other party might have made the review after previous data synch point.
 // So, error is likely to happen and then we must try another state transition
 // by calling sendReviewAsSecond().
-const sendReviewAsFirst = (id, params, role, dispatch, sdk) => {
-  const transition = getReview1Transition(role === CUSTOMER);
+const sendReviewAsFirst = (tx, params, role, dispatch, sdk) => {
+  const { id, attributes } = tx;
+  const transitions = getProcess(attributes.processName).transitions;
+  const transition =
+    role === CUSTOMER ? transitions.REVIEW_1_BY_CUSTOMER : transitions.REVIEW_1_BY_PROVIDER;
+
   const include = REVIEW_TX_INCLUDES;
 
   return sdk.transactions
@@ -664,14 +674,19 @@ const sendReviewAsFirst = (id, params, role, dispatch, sdk) => {
 
 export const sendReview = (role, tx, reviewRating, reviewContent) => (dispatch, getState, sdk) => {
   const params = { reviewRating, reviewContent };
+  const process = getProcess(tx.attributes.processName);
+  const otherPartyReviewedFirstState =
+    role === CUSTOMER ? process.states.REVIEWED_BY_PROVIDER : process.states.REVIEWED_BY_CUSTOMER;
 
-  const txStateOtherPartyFirst = txIsInFirstReviewBy(tx, role !== CUSTOMER);
+  const txStateOtherPartyReviewedFirst = process
+    .getTransitionsToStates(otherPartyReviewedFirstState)
+    .includes(tx.attributes.lastTransition);
 
   dispatch(sendReviewRequest());
 
-  return txStateOtherPartyFirst
-    ? sendReviewAsSecond(tx.id, params, role, dispatch, sdk)
-    : sendReviewAsFirst(tx.id, params, role, dispatch, sdk);
+  return txStateOtherPartyReviewedFirst
+    ? sendReviewAsSecond(tx, params, role, dispatch, sdk)
+    : sendReviewAsFirst(tx, params, role, dispatch, sdk);
 };
 
 const isNonEmpty = value => {
