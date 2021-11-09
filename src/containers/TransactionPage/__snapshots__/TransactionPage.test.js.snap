@@ -155,6 +155,8 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
                   "amount": 900,
                   "currency": "USD",
                 },
+                "processName": "flex-product-default-process",
+                "processVersion": 1,
                 "transitions": Array [
                   Object {
                     "by": "customer",
@@ -451,6 +453,8 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
                   "amount": 900,
                   "currency": "USD",
                 },
+                "processName": "flex-product-default-process",
+                "processVersion": 1,
                 "transitions": Array [
                   Object {
                     "by": "customer",
