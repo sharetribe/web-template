@@ -496,13 +496,20 @@
   /* ================ Inputs ================ */
 
   --marketplaceInputStyles: {
+    /* Font */
+    font-family: var(--fontFamily);
+    font-weight: var(--fontWeightMedium);
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.1px;
+    /* No margins for default font */
+
     /* Dimensions */
     display: block;
     width: 100%;
     margin: 0;
-    padding: 6px 0 4px 12px;
+    padding: 6px 12px 4px 12px;
     background-color: #fff;
-    font-size: 16px;
 
     /* Borders */
     border-radius: 6px;
@@ -538,7 +545,8 @@
     }
 
     @media (--viewportMedium) {
-      padding: 7px 0 7px 16px;
+      padding: 7px 16px 7px 16px;
+      line-height: 32px;
     }
   }
 
