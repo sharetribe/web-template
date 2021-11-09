@@ -11,7 +11,7 @@ import { propTypes } from '../../util/types';
 import { ensureListing, ensureTransaction } from '../../util/data';
 import { timeOfDayFromTimeZoneToLocal } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
-import { txIsPaymentPending } from '../../util/transaction';
+import { getProcess } from '../../util/transaction';
 import routeConfiguration from '../../routing/routeConfiguration';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -108,6 +108,10 @@ export const TransactionPageComponent = props => {
   const currentListing = ensureListing(currentTransaction.listing);
   const isProviderRole = transactionRole === PROVIDER;
   const isCustomerRole = transactionRole === CUSTOMER;
+  const isTxOnPaymentPending = tx => {
+    const process = tx?.attributes?.processName ? getProcess(tx.attributes.processName) : null;
+    return process ? process.getState(tx) === process.states.PAYMENT_PENDING : null;
+  };
 
   const redirectToCheckoutPageWithInitialValues = (initialValues, listing) => {
     const routes = routeConfiguration();
@@ -131,7 +135,8 @@ export const TransactionPageComponent = props => {
 
   // If payment is pending, redirect to CheckoutPage
   if (
-    txIsPaymentPending(currentTransaction) &&
+    currentTransaction?.id &&
+    isTxOnPaymentPending(currentTransaction) &&
     isCustomerRole &&
     currentTransaction.attributes.lineItems
   ) {

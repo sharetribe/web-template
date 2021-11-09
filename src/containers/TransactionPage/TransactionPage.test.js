@@ -7,10 +7,11 @@ import {
   fakeIntl,
 } from '../../util/test-data';
 import { renderShallow } from '../../util/test-helpers';
-import { TRANSITION_CONFIRM_PAYMENT } from '../../util/transaction';
+import { getProcess } from '../../util/transaction';
 import { TransactionPageComponent } from './TransactionPage';
 
 const noop = () => null;
+const transitions = getProcess('flex-product-default-process')?.transitions;
 
 describe('TransactionPage - Sale', () => {
   it('matches snapshot', () => {
@@ -19,7 +20,7 @@ describe('TransactionPage - Sale', () => {
     const end = new Date(Date.UTC(2017, 5, 13));
     const transaction = createTransaction({
       id: txId,
-      lastTransition: TRANSITION_CONFIRM_PAYMENT,
+      lastTransition: transitions.CONFIRM_PAYMENT,
       listing: createListing('listing1'),
       customer: createUser('customer1'),
       provider: createUser('provider1'),
@@ -77,7 +78,7 @@ describe('TransactionPage - Order', () => {
 
     const transaction = createTransaction({
       id: txId,
-      lastTransition: TRANSITION_CONFIRM_PAYMENT,
+      lastTransition: transitions.CONFIRM_PAYMENT,
       listing: createListing('listing1'),
       customer: createUser('customer1'),
       provider: createUser('provider1'),
