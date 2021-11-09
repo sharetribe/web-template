@@ -3,6 +3,7 @@ import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
 import { createSlug, stringify } from '../../../util/urlHelpers';
+import { states as productProcessStates } from '../../../util/transactionProcessProduct';
 
 import { NamedLink } from '../../../components';
 
@@ -45,6 +46,22 @@ const CustomerBannedInfoMaybe = props => {
       <FormattedMessage id="TransactionPanel.customerBannedStatus" />
     </p>
   ) : null;
+};
+
+const productHeadingStates = {
+  // [productProcessStates.INITIAL]: HEADING_ENQUIRED,
+  [productProcessStates.ENQUIRY]: HEADING_ENQUIRED,
+  [productProcessStates.PENDING_PAYMENT]: HEADING_PAYMENT_PENDING,
+  [productProcessStates.PAYMENT_EXPIRED]: HEADING_PAYMENT_EXPIRED,
+  [productProcessStates.PURCHASED]: HEADING_PURCHASED,
+  [productProcessStates.DELIVERED]: HEADING_DELIVERED,
+  [productProcessStates.RECEIVED]: HEADING_RECEIVED,
+  [productProcessStates.DISPUTED]: HEADING_DISPUTED,
+  [productProcessStates.CANCELED]: HEADING_CANCELED,
+  [productProcessStates.COMPLETED]: HEADING_RECEIVED,
+  [productProcessStates.REVIEWED]: HEADING_RECEIVED,
+  [productProcessStates.REVIEWED_BY_CUSTOMER]: HEADING_RECEIVED,
+  [productProcessStates.REVIEWED_BY_PROVIDER]: HEADING_RECEIVED,
 };
 
 const headingTranslationId = (panelHeadingState, isCustomer) => {
@@ -94,7 +111,6 @@ const PanelHeading = props => {
   const {
     className,
     rootClassName,
-    panelHeadingState,
     processName,
     processState,
     transactionRole,
@@ -110,6 +126,9 @@ const PanelHeading = props => {
   const defaultRootClassName = isCustomer ? css.headingOrder : css.headingSale;
   const titleClasses = classNames(rootClassName || defaultRootClassName, className);
   const listingLink = createListingLink(listingId, listingTitle, listingDeleted);
+
+  const productHeadingState = productHeadingStates[processState];
+  const panelHeadingState = productHeadingState || 'unknown';
 
   return (
     <>

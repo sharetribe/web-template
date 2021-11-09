@@ -4,7 +4,6 @@ import classNames from 'classnames';
 
 import config from '../../../config';
 import { getProcess } from '../../../util/transaction';
-import { states as productProcessStates } from '../../../util/transactionProcessProduct';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes } from '../../../util/types';
 import {
@@ -39,22 +38,6 @@ import PanelHeading, {
 } from './PanelHeading';
 
 import css from './TransactionPanel.module.css';
-
-const productHeadingStates = {
-  // [productProcessStates.INITIAL]: HEADING_ENQUIRED,
-  [productProcessStates.ENQUIRY]: HEADING_ENQUIRED,
-  [productProcessStates.PENDING_PAYMENT]: HEADING_PAYMENT_PENDING,
-  [productProcessStates.PAYMENT_EXPIRED]: HEADING_PAYMENT_EXPIRED,
-  [productProcessStates.PURCHASED]: HEADING_PURCHASED,
-  [productProcessStates.DELIVERED]: HEADING_DELIVERED,
-  [productProcessStates.RECEIVED]: HEADING_RECEIVED,
-  [productProcessStates.DISPUTED]: HEADING_DISPUTED,
-  [productProcessStates.CANCELED]: HEADING_CANCELED,
-  [productProcessStates.COMPLETED]: HEADING_RECEIVED,
-  [productProcessStates.REVIEWED]: HEADING_RECEIVED,
-  [productProcessStates.REVIEWED_BY_CUSTOMER]: HEADING_RECEIVED,
-  [productProcessStates.REVIEWED_BY_PROVIDER]: HEADING_RECEIVED,
-};
 
 // Helper function to get display names for different roles
 const displayNames = (currentUser, currentProvider, currentCustomer, intl) => {
@@ -203,9 +186,6 @@ export class TransactionPanelComponent extends Component {
       const txHasBeenReceived = tx =>
         process ? process.hasPassedState(process.states.RECEIVED, tx) : false;
 
-      const productHeadingState = productHeadingStates[state];
-      const headingState = productHeadingState || 'unknown';
-
       if (state === process.states.ENQUIRY) {
         const transitions = Array.isArray(nextTransitions)
           ? nextTransitions.map(transition => {
@@ -215,28 +195,24 @@ export class TransactionPanelComponent extends Component {
         const hasCorrectNextTransition =
           transitions.length > 0 && transitions.includes(REQUEST_PAYMENT_AFTER_ENQUIRY);
         return {
-          headingState,
           processName,
           processState: state,
           showOrderPanel: isCustomer && !isProviderBanned && hasCorrectNextTransition,
         };
       } else if (state === process.states.PAYMENT_PENDING) {
         return {
-          headingState,
           processName,
           processState: state,
           showDetailCardHeadings: isCustomer,
         };
       } else if (state === process.states.PAYMENT_EXPIRED) {
         return {
-          headingState,
           processName,
           processState: state,
           showDetailCardHeadings: isCustomer,
         };
       } else if (state === process.states.PURCHASED) {
         return {
-          headingState,
           processName,
           processState: state,
           showDetailCardHeadings: isCustomer,
@@ -245,7 +221,6 @@ export class TransactionPanelComponent extends Component {
         };
       } else if (state === process.states.CANCELED) {
         return {
-          headingState,
           processName,
           processState: state,
           showDetailCardHeadings: isCustomer,
@@ -253,7 +228,6 @@ export class TransactionPanelComponent extends Component {
       } else if (state === process.states.DELIVERED) {
         const primaryButtonPropsMaybe = isCustomer ? { primaryButtonProps: markReceivedProps } : {};
         return {
-          headingState,
           processName,
           processState: state,
           showDetailCardHeadings: isCustomer,
@@ -263,7 +237,6 @@ export class TransactionPanelComponent extends Component {
         };
       } else if (state === process.states.DISPUTED) {
         return {
-          headingState,
           processName,
           processState: state,
           showDetailCardHeadings: isCustomer,
@@ -275,7 +248,6 @@ export class TransactionPanelComponent extends Component {
         (isProvider && state === process.states.REVIEWED_BY_CUSTOMER)
       ) {
         return {
-          headingState,
           processName,
           processState: state,
           showDetailCardHeadings: isCustomer,
@@ -284,14 +256,12 @@ export class TransactionPanelComponent extends Component {
         };
       } else if (txHasBeenReceived(tx)) {
         return {
-          headingState,
           processName,
           processState: state,
           showDetailCardHeadings: isCustomer,
         };
       } else {
         return {
-          headingState,
           processName,
           processState: state,
         };
@@ -381,7 +351,6 @@ export class TransactionPanelComponent extends Component {
             ) : null}
 
             <PanelHeading
-              panelHeadingState={stateData.headingState}
               processName={stateData.processName}
               processState={stateData.processState}
               transactionRole={transactionRole}
