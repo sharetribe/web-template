@@ -161,7 +161,9 @@ const renderForm = formRenderProps => {
         </FieldSelect>
       ) : (
         <div className={css.deliveryField}>
-          <label>{intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}</label>
+          <p className={css.singleDeliveryMethodLabel}>
+            {intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
+          </p>
           <p className={css.singleDeliveryMethodSelected}>
             {values.deliveryMethod === 'shipping'
               ? intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })

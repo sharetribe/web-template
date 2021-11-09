@@ -10,15 +10,3 @@
 .selectWrapper {
   flex-basis: calc(33% - 12px);
 }
-
-.select {
-}
-
-.notSet {
-}
-
-.selectSuccess {
-}
-
-.selectError {
-}

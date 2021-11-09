@@ -9,28 +9,6 @@
   justify-content: space-between;
 }
 
-.startDateLabel,
-.endDateLabel {
-}
-
-.labelSuccess {
-}
-
-.inputBorders {
-}
-
-.input {
-}
-
-.inputSuccess {
-}
-
-.inputError {
-}
-
-.hover {
-}
-
 /**
  * Mobile margins mean that labels, inputs (incl separate borders) get margins,
  * but calendar popup doesn't.
