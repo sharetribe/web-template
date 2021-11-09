@@ -1,6 +1,7 @@
 import * as log from './log';
 import { ensureTransaction } from './data';
 import * as productProcess from './transactionProcessProduct';
+import * as bookingProcess from './transactionProcessBooking';
 
 /**
  * A process should export:
@@ -17,6 +18,15 @@ const PROCESSES = [
   {
     name: 'flex-product-default-process',
     process: productProcess,
+  },
+  {
+    name: 'flex-hourly-default-process',
+    process: bookingProcess,
+  },
+  {
+    // TODO: ideally, this should be 'flex-daily-default-process'
+    name: 'flex-default-process',
+    process: bookingProcess,
   },
 ];
 
