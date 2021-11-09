@@ -8,7 +8,7 @@ import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { transactionLineItems } from '../../util/api';
 import * as log from '../../util/log';
 import { denormalisedResponseEntities } from '../../util/data';
-import { TRANSITION_ENQUIRE } from '../../util/transaction';
+import { getProcess } from '../../util/transaction';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
   LISTING_PAGE_PENDING_APPROVAL_VARIANT,
@@ -273,8 +273,12 @@ export const fetchTimeSlots = listingId => (dispatch, getState, sdk) => {
 
 export const sendEnquiry = (listingId, message) => (dispatch, getState, sdk) => {
   dispatch(sendEnquiryRequest());
+  // TODO not from config
+  const processName = config.transactionProcessAlias.split('/')[0];
+  const transitions = getProcess(processName)?.transitions;
+
   const bodyParams = {
-    transition: TRANSITION_ENQUIRE,
+    transition: transitions.ENQUIRE,
     processAlias: config.transactionProcessAlias,
     params: { listingId },
   };
