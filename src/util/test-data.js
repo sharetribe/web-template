@@ -2,14 +2,11 @@ import Decimal from 'decimal.js';
 import moment from 'moment';
 import { types as sdkTypes } from './sdkLoader';
 import { daysBetween } from '../util/dates';
-import {
-  TRANSITION_CONFIRM_PAYMENT,
-  TRANSITION_REQUEST_PAYMENT,
-  TX_TRANSITION_ACTOR_CUSTOMER,
-} from '../util/transaction';
+import { TX_TRANSITION_ACTOR_CUSTOMER, getProcess } from '../util/transaction';
 import { LISTING_STATE_PUBLISHED, TIME_SLOT_DAY } from '../util/types';
 
 const { UUID, LatLng, Money } = sdkTypes;
+const processTransitions = getProcess('flex-product-default-process')?.transitions;
 
 // Create a booking that conforms to the util/types booking schema
 export const createBooking = (id, attributes = {}) => ({
@@ -142,7 +139,7 @@ export const createTxTransition = options => {
   return {
     createdAt: new Date(Date.UTC(2017, 4, 1)),
     by: TX_TRANSITION_ACTOR_CUSTOMER,
-    transition: TRANSITION_REQUEST_PAYMENT,
+    transition: processTransitions.REQUEST_PAYMENT,
     ...options,
   };
 };
@@ -150,7 +147,9 @@ export const createTxTransition = options => {
 export const createTransaction = options => {
   const {
     id,
-    lastTransition = TRANSITION_CONFIRM_PAYMENT,
+    processName = 'flex-product-default-process',
+    processVersion = 1,
+    lastTransition = processTransitions.CONFIRM_PAYMENT,
     total = new Money(1000, 'USD'),
     commission = new Money(100, 'USD'),
     booking = null,
@@ -163,12 +162,12 @@ export const createTransaction = options => {
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 4, 1)),
         by: TX_TRANSITION_ACTOR_CUSTOMER,
-        transition: TRANSITION_REQUEST_PAYMENT,
+        transition: processTransitions.REQUEST_PAYMENT,
       }),
       createTxTransition({
         createdAt: new Date(Date.UTC(2017, 4, 1, 0, 0, 1)),
         by: TX_TRANSITION_ACTOR_CUSTOMER,
-        transition: TRANSITION_CONFIRM_PAYMENT,
+        transition: processTransitions.CONFIRM_PAYMENT,
       }),
     ],
   } = options;
@@ -178,6 +177,8 @@ export const createTransaction = options => {
     type: 'transaction',
     attributes: {
       createdAt: new Date(Date.UTC(2017, 4, 1)),
+      processName,
+      processVersion,
       lastTransitionedAt,
       lastTransition,
       payinTotal: total,
