@@ -94,6 +94,7 @@ import * as EditListingPricingForm from './containers/EditListingPage/EditListin
 import * as ReviewForm from './containers/TransactionPage/ReviewForm/ReviewForm.example';
 import * as SendMessageForm from './containers/TransactionPage/SendMessageForm/SendMessageForm.example';
 import * as ActivityFeed from './containers/TransactionPage/ActivityFeed/ActivityFeed.example';
+import * as PanelHeading from './containers/TransactionPage/TransactionPanel/PanelHeading.example';
 import * as SelectMultipleFilter from './containers/SearchPage/SelectMultipleFilter/SelectMultipleFilter.example';
 import * as BookingDateRangeFilter from './containers/SearchPage/BookingDateRangeFilter/BookingDateRangeFilter.example';
 import * as KeywordFilter from './containers/SearchPage/KeywordFilter/KeywordFilter.example';
@@ -189,6 +190,7 @@ export {
   OrderPanel,
   OutsideClickHandler,
   PaginationLinks,
+  PanelHeading,
   PasswordRecoveryForm,
   PasswordResetForm,
   PriceFilter,

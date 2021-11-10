@@ -49,7 +49,7 @@ const CustomerBannedInfoMaybe = props => {
 };
 
 const productHeadingStates = {
-  // [productProcessStates.INITIAL]: HEADING_ENQUIRED,
+  [productProcessStates.INITIAL]: HEADING_ENQUIRED,
   [productProcessStates.ENQUIRY]: HEADING_ENQUIRED,
   [productProcessStates.PENDING_PAYMENT]: HEADING_PAYMENT_PENDING,
   [productProcessStates.PAYMENT_EXPIRED]: HEADING_PAYMENT_EXPIRED,
