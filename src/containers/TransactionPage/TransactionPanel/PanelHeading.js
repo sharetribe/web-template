@@ -32,22 +32,6 @@ const createListingLink = (listingId, label, listingDeleted, searchParams = {}, 
   }
 };
 
-const ListingDeletedInfoMaybe = props => {
-  return props.listingDeleted ? (
-    <p className={css.transactionInfoMessage}>
-      <FormattedMessage id="TransactionPanel.messageDeletedListing" />
-    </p>
-  ) : null;
-};
-
-const CustomerBannedInfoMaybe = props => {
-  return props.isCustomerBanned ? (
-    <p className={css.transactionInfoMessage}>
-      <FormattedMessage id="TransactionPanel.customerBannedStatus" />
-    </p>
-  ) : null;
-};
-
 const productHeadingStates = {
   [productProcessStates.INITIAL]: HEADING_ENQUIRED,
   [productProcessStates.ENQUIRY]: HEADING_ENQUIRED,
@@ -121,7 +105,8 @@ const PanelHeading = props => {
     isCustomerBanned,
   } = props;
 
-  const isCustomer = transactionRole === 'customer';
+  const isProvider = transactionRole === 'provider';
+  const isCustomer = !isProvider;
 
   const defaultRootClassName = isCustomer ? css.headingOrder : css.headingSale;
   const titleClasses = classNames(rootClassName || defaultRootClassName, className);
@@ -140,8 +125,12 @@ const PanelHeading = props => {
           />
         </span>
       </h1>
-      {isCustomer ? <ListingDeletedInfoMaybe listingDeleted={listingDeleted} /> : null}
-      {panelHeadingState === HEADING_PAYMENT_PENDING && !isCustomer ? (
+      {isCustomer && listingDeleted ? (
+        <p className={css.transactionInfoMessage}>
+          <FormattedMessage id="TransactionPanel.messageDeletedListing" />
+        </p>
+      ) : null}
+      {isProvider && panelHeadingState === HEADING_PAYMENT_PENDING ? (
         <p className={css.transactionInfoMessage}>
           <FormattedMessage
             id="TransactionPanel.salePaymentPendingInfo"
@@ -149,7 +138,11 @@ const PanelHeading = props => {
           />
         </p>
       ) : null}
-      {!isCustomer ? <CustomerBannedInfoMaybe isCustomerBanned={isCustomerBanned} /> : null}
+      {isProvider && isCustomerBanned ? (
+        <p className={css.transactionInfoMessage}>
+          <FormattedMessage id="TransactionPanel.customerBannedStatus" />
+        </p>
+      ) : null}
     </>
   );
 };
