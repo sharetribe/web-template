@@ -22,13 +22,21 @@
   }
 }
 
+.error {
+  color: var(--failColor);
+  font-size: 13px !important; /* TODO: Change the <p> tag in front-end to <span> to remove !important */
+  margin-top: 7px !important; /* TODO: Change the <p> tag in front-end to <span> to remove !important */
+}
+
+input.inputError {
+  border: var(--errorMessageStyling);
+}
+
 .longForm {
   width: 100%;
   margin-bottom: 24px;
-}
 
-@media (--viewportSmall) {
-  .longForm {
+  @media (--viewportSmall) {
     width: calc(50% - 9px);
   }
 }

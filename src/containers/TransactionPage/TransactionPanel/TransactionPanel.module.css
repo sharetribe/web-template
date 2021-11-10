@@ -23,7 +23,7 @@
 }
 
 .txInfo {
-  margin-bottom: 210px;
+  margin-bottom: 36px;
 
   @media (--viewportLarge) {
     flex-basis: 538px;

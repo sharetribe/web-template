@@ -14,14 +14,13 @@
   }
 }
 
-.cardSuccess {
-}
-
 .cardError {
+  border: var(--errorMessageStyling);
 }
 
 .error {
   color: var(--failColor);
+  font-size: 13px;
 }
 
 .errorMessage {
@@ -50,17 +49,6 @@
 
   @media (--viewportMedium) {
     margin: 0 0 26px 0;
-  }
-}
-
-.paymentLabel {
-  margin: 0;
-
-  @media (--viewportMedium) {
-    margin-bottom: 2px;
-  }
-  @media (--viewportLarge) {
-    margin-bottom: 4px;
   }
 }
 
