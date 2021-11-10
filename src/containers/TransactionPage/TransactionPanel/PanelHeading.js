@@ -3,20 +3,10 @@ import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
 import { createSlug, stringify } from '../../../util/urlHelpers';
-import { states as productProcessStates } from '../../../util/transactionProcessProduct';
 
 import { NamedLink } from '../../../components';
 
 import css from './TransactionPanel.module.css';
-
-export const HEADING_ENQUIRED = 'enquired';
-export const HEADING_PAYMENT_PENDING = 'pending-payment';
-export const HEADING_PAYMENT_EXPIRED = 'payment-expired';
-export const HEADING_CANCELED = 'canceled';
-export const HEADING_PURCHASED = 'purchased';
-export const HEADING_DELIVERED = 'delivered';
-export const HEADING_DISPUTED = 'disputed';
-export const HEADING_RECEIVED = 'received';
 
 const createListingLink = (listingId, label, listingDeleted, searchParams = {}, className = '') => {
   if (!listingDeleted) {
@@ -32,65 +22,8 @@ const createListingLink = (listingId, label, listingDeleted, searchParams = {}, 
   }
 };
 
-const productHeadingStates = {
-  [productProcessStates.INITIAL]: HEADING_ENQUIRED,
-  [productProcessStates.ENQUIRY]: HEADING_ENQUIRED,
-  [productProcessStates.PENDING_PAYMENT]: HEADING_PAYMENT_PENDING,
-  [productProcessStates.PAYMENT_EXPIRED]: HEADING_PAYMENT_EXPIRED,
-  [productProcessStates.PURCHASED]: HEADING_PURCHASED,
-  [productProcessStates.DELIVERED]: HEADING_DELIVERED,
-  [productProcessStates.RECEIVED]: HEADING_RECEIVED,
-  [productProcessStates.DISPUTED]: HEADING_DISPUTED,
-  [productProcessStates.CANCELED]: HEADING_CANCELED,
-  [productProcessStates.COMPLETED]: HEADING_RECEIVED,
-  [productProcessStates.REVIEWED]: HEADING_RECEIVED,
-  [productProcessStates.REVIEWED_BY_CUSTOMER]: HEADING_RECEIVED,
-  [productProcessStates.REVIEWED_BY_PROVIDER]: HEADING_RECEIVED,
-};
-
-const headingTranslationId = (panelHeadingState, isCustomer) => {
-  // TODO: make the translation key dynamic
-  switch (panelHeadingState) {
-    case HEADING_ENQUIRED:
-      return isCustomer
-        ? 'TransactionPanel.orderEnquiredTitle'
-        : 'TransactionPanel.saleEnquiredTitle';
-    case HEADING_PAYMENT_PENDING:
-      return isCustomer
-        ? 'TransactionPanel.orderPaymentPendingTitle'
-        : 'TransactionPanel.salePaymentPendingTitle';
-    case HEADING_PAYMENT_EXPIRED:
-      return isCustomer
-        ? 'TransactionPanel.orderPaymentExpiredTitle'
-        : 'TransactionPanel.salePaymentExpiredTitle';
-    case HEADING_PURCHASED:
-      return isCustomer
-        ? 'TransactionPanel.orderPurchasedTitle'
-        : 'TransactionPanel.salePurchasedTitle';
-    case HEADING_CANCELED:
-      return isCustomer
-        ? 'TransactionPanel.orderCanceledTitle'
-        : 'TransactionPanel.saleCanceledTitle';
-    case HEADING_DELIVERED:
-      return isCustomer
-        ? 'TransactionPanel.orderDeliveredTitle'
-        : 'TransactionPanel.saleDeliveredTitle';
-    case HEADING_RECEIVED:
-      return isCustomer
-        ? 'TransactionPanel.orderReceivedTitle'
-        : 'TransactionPanel.saleReceivedTitle';
-    case HEADING_DISPUTED:
-      return isCustomer
-        ? 'TransactionPanel.orderDisputedTitle'
-        : 'TransactionPanel.saleDisputedTitle';
-    default:
-      console.warn('Unknown state given to panel heading.');
-      return null;
-  }
-};
-
-// Functional component as a helper to choose and show Order or Sale heading info:
-// title, subtitle, and message
+// Component to render the main heading for an order or a sale. Optionally also
+// renders an info message based on the transaction state.
 const PanelHeading = props => {
   const {
     className,
@@ -108,19 +41,18 @@ const PanelHeading = props => {
   const isProvider = transactionRole === 'provider';
   const isCustomer = !isProvider;
 
+  const isPendingPayment = 'pending-payment' === processState;
+
   const defaultRootClassName = isCustomer ? css.headingOrder : css.headingSale;
   const titleClasses = classNames(rootClassName || defaultRootClassName, className);
   const listingLink = createListingLink(listingId, listingTitle, listingDeleted);
-
-  const productHeadingState = productHeadingStates[processState];
-  const panelHeadingState = productHeadingState || 'unknown';
 
   return (
     <>
       <h1 className={titleClasses}>
         <span className={css.mainTitle}>
           <FormattedMessage
-            id={headingTranslationId(panelHeadingState, isCustomer)}
+            id={`TransactionPanel.${processName}.${transactionRole}.${processState}.title`}
             values={{ customerName, listingLink }}
           />
         </span>
@@ -130,7 +62,7 @@ const PanelHeading = props => {
           <FormattedMessage id="TransactionPanel.messageDeletedListing" />
         </p>
       ) : null}
-      {isProvider && panelHeadingState === HEADING_PAYMENT_PENDING ? (
+      {isProvider && isPendingPayment ? (
         <p className={css.transactionInfoMessage}>
           <FormattedMessage
             id="TransactionPanel.salePaymentPendingInfo"
