@@ -3,6 +3,7 @@ import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
 import { createSlug, stringify } from '../../../util/urlHelpers';
+import { getProcess } from '../../../util/transaction';
 
 import { NamedLink } from '../../../components';
 
@@ -41,7 +42,8 @@ const PanelHeading = props => {
   const isProvider = transactionRole === 'provider';
   const isCustomer = !isProvider;
 
-  const isPendingPayment = 'pending-payment' === processState;
+  const { states } = getProcess(processName);
+  const isPendingPayment = states.PENDING_PAYMENT === processState;
 
   const defaultRootClassName = isCustomer ? css.headingOrder : css.headingSale;
   const titleClasses = classNames(rootClassName || defaultRootClassName, className);
