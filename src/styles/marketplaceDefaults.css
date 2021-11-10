@@ -270,16 +270,13 @@ input {
 
 textarea {
   @apply --marketplaceInputStyles;
-  min-height: 80px; /* 3 rows * 40px */
+  min-height: 84px; /* 3 rows  */
+  max-height: 300px; /* 12 rows fullu visible, scroll after */
 
   @media (--viewportMedium) {
     min-height: 112px; /* 3 rows fully visible */
+    max-height: 496px; /* 15 rows fullu visible, scroll after */
   }
-}
-
-.inputError,
-.selectError {
-  border: var(--errorMessageStyling);
 }
 
 .fontsLoaded {

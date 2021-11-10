@@ -1,2 +1,6 @@
 .root {
 }
+
+.inputError {
+  border: var(--errorMessageStyling);
+}
