@@ -54,7 +54,7 @@ const PanelHeading = props => {
       <h1 className={titleClasses}>
         <span className={css.mainTitle}>
           <FormattedMessage
-            id={`TransactionPanel.${processName}.${transactionRole}.${processState}.title`}
+            id={`TransactionPage.${processName}.${transactionRole}.${processState}.title`}
             values={{ customerName, listingLink }}
           />
         </span>
