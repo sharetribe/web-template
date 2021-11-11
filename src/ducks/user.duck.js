@@ -292,9 +292,9 @@ export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => 
   // TODO what about enquiries
   const processName = config.transactionProcessAlias.split('/')[0];
   const process = getProcess(processName);
-  const transitionsNeedingAttention = process.getTransitionsToStates(
-    process.statesNeedingProviderAttention
-  );
+  const transitionsNeedingAttention = process.getTransitionsToStates([
+    process.statesNeedingProviderAttention,
+  ]);
 
   if (transitionsNeedingAttention.length === 0) {
     // Don't update state, if there's no need to draw user's attention after last transitions.

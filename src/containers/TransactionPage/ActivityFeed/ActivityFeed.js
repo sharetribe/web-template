@@ -88,7 +88,9 @@ const hasUserLeftAReviewFirst = (userRole, transaction) => {
     ? process.states.REVIEWED_BY_CUSTOMER
     : process.states.REVIEWED_BY_PROVIDER;
 
-  return process.getTransitionsToStates(userReviewState).includes(tx.attributes.lastTransition);
+  return process
+    .getTransitionsToStates([userReviewState])
+    .includes(transaction.attributes.lastTransition);
 };
 
 const resolveTransitionMessage = (
