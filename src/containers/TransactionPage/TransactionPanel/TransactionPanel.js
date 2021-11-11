@@ -194,6 +194,7 @@ export class TransactionPanelComponent extends Component {
         return {
           processName,
           processState: state,
+          isPendingPayment: true,
           showDetailCardHeadings: isCustomer,
         };
       } else if (state === process.states.PAYMENT_EXPIRED) {
@@ -344,6 +345,7 @@ export class TransactionPanelComponent extends Component {
             <PanelHeading
               processName={stateData.processName}
               processState={stateData.processState}
+              isPendingPayment={!!stateData.isPendingPayment}
               transactionRole={transactionRole}
               providerName={authorDisplayName}
               customerName={customerDisplayName}

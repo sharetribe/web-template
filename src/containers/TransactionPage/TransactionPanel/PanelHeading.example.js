@@ -7,7 +7,8 @@ import PanelHeading from './PanelHeading';
 const PROCESS_NAME = 'flex-product-default-process';
 
 const ProcessHeadings = () => {
-  const processStates = Object.values(getProcess(PROCESS_NAME).states);
+  const states = getProcess(PROCESS_NAME).states;
+  const processStates = Object.values(states);
   const [formData, setFormData] = useState({
     state: processStates[0],
     transactionRole: 'customer',
@@ -65,6 +66,7 @@ const ProcessHeadings = () => {
       <PanelHeading
         processName={PROCESS_NAME}
         processState={formData.state}
+        isPendingPayment={states.PENDING_PAYMENT === formData.state}
         transactionRole={formData.transactionRole}
         customerName="Cecilia"
         listingId="listing-id"
