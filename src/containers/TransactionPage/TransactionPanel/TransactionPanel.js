@@ -484,6 +484,10 @@ TransactionPanelComponent.defaultProps = {
   timeSlots: null,
   fetchTimeSlotsError: null,
   nextTransitions: null,
+  markReceivedProps: null,
+  markReceivedFromPurchasedProps: null,
+  markDeliveredProps: null,
+  leaveReviewProps: null,
   lineItems: null,
   fetchLineItemsError: null,
 };
@@ -491,7 +495,7 @@ TransactionPanelComponent.defaultProps = {
 const actionButtonShape = shape({
   inProgress: bool.isRequired,
   error: propTypes.error,
-  onTransition: func.isRequired,
+  onAction: func.isRequired,
   buttonText: string.isRequired,
   errorText: string.isRequired,
 });
@@ -522,10 +526,10 @@ TransactionPanelComponent.propTypes = {
   nextTransitions: array,
 
   // Tx process transition related props
-  markReceivedProps: actionButtonShape.isRequired,
-  markReceivedFromPurchasedProps: actionButtonShape.isRequired,
-  markDeliveredProps: actionButtonShape.isRequired,
-  leaveReviewProps: actionButtonShape.isRequired,
+  markReceivedProps: actionButtonShape,
+  markReceivedFromPurchasedProps: actionButtonShape,
+  markDeliveredProps: actionButtonShape,
+  leaveReviewProps: actionButtonShape,
 
   // line items
   onFetchTransactionLineItems: func.isRequired,
