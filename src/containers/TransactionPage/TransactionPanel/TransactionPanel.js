@@ -26,16 +26,7 @@ import DeliveryInfoMaybe from './DeliveryInfoMaybe';
 import FeedSection from './FeedSection';
 import ActionButtonsMaybe from './ActionButtonsMaybe';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
-import PanelHeading, {
-  HEADING_ENQUIRED,
-  HEADING_PAYMENT_PENDING,
-  HEADING_PAYMENT_EXPIRED,
-  HEADING_CANCELED,
-  HEADING_PURCHASED,
-  HEADING_DELIVERED,
-  HEADING_DISPUTED,
-  HEADING_RECEIVED,
-} from './PanelHeading';
+import PanelHeading from './PanelHeading';
 
 import css from './TransactionPanel.module.css';
 
