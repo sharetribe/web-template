@@ -1,5 +1,10 @@
 @import '../../styles/propertySets.css';
 
+:root {
+  --DateInput_selectionHeight: var(--ReactDates_selectionHeight);
+  --DateInput_hoveredOverlayColor: var(--ReactDates_hoveredOverlayColor);
+}
+
 .inputRoot {
   /* Contain repainting to this component only */
   transform: translate3d(0, 0, 0);
@@ -17,7 +22,7 @@
     top: 36px !important;
     left: unset !important;
     width: calc(100% - 48px);
-    background-color: var(--marketplaceColor);
+    background-color: var(--color-marketplace);
 
     @media (--viewportMedium) {
       /* !important is added to top because react-dates uses inline style for height */
@@ -52,7 +57,7 @@
   }
   & :global(.DayPicker__horizontal) {
     margin: 0 auto;
-    background-color: var(--marketplaceColor);
+    background-color: var(--color-marketplace);
     box-shadow: none;
   }
 
@@ -112,7 +117,7 @@
   }
 
   & :global(.CalendarDay__default) {
-    background-color: var(--marketplaceColor);
+    background-color: var(--color-marketplace);
     border: 0;
     padding: 0;
     width: 100%;
@@ -162,7 +167,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateInput_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--color-success);
     transition: all 0.2s ease-out;
   }
   /* Remove default bg-color and use our extra span instead '.renderedDay' */
@@ -176,7 +181,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateInput_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--color-success);
     border-radius: calc(var(--DateInput_selectionHeight) / 2);
   }
   /* Remove default bg-color and use our extra span instead '.renderedDay' */
@@ -204,7 +209,7 @@
   & :global(.CalendarDay__blocked_out_of_range:active),
   & :global(.CalendarDay__blocked_out_of_range:hover) {
     background-color: transparent;
-    color: var(--marketplaceColorDark);
+    color: var(--color-marketplace-900);
     border: 0;
   }
   /* Remove default bg-color and use our extra span instead '.renderedDay' */
@@ -212,7 +217,7 @@
   & :global(.CalendarDay__blocked_calendar:active),
   & :global(.CalendarDay__blocked_calendar:hover) {
     background-color: transparent;
-    color: var(--marketplaceColorDark);
+    color: var(--color-marketplace-900);
     border: 0;
   }
   & :global(.CalendarDay__blocked_out_of_range .CalendarDay__blocked_calendar .renderedDay) {

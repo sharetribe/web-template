@@ -1,5 +1,9 @@
 @import '../../../styles/propertySets.css';
 
+:root { 
+  --SectionHero_desktopTitleMaxWidth: 625px;
+}
+
 /* Animation for the hero elements */
 
 @keyframes animationTitle {

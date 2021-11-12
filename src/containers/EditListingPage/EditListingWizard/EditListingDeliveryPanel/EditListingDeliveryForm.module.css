@@ -14,7 +14,7 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--color-fail);
 }
 
 .deliveryOption {
@@ -48,7 +48,7 @@
   width: 100%;
   top: 36px;
   left: 0;
-  background-color: var(--marketplaceColor);
+  background-color: var(--color-marketplace);
   border-bottom-left-radius: var(--borderRadius);
   border-bottom-right-radius: var(--borderRadius);
   box-shadow: var(--boxShadowPopup);
@@ -60,7 +60,7 @@
 }
 
 .validLocation {
-  /* border-bottom-color: var(--successColor); */
+  /* border-bottom-color: var(--color-success); */
 }
 
 .input {

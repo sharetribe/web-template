@@ -10,7 +10,7 @@ const IconEnquiry = props => {
   return (
     <svg className={classes} width="47" height="46" xmlns="http://www.w3.org/2000/svg">
       <g
-        className={css.marketplaceColorStroke}
+        className={css.colorMarketplaceStroke}
         fill="none"
         fillRule="evenodd"
         strokeLinecap="round"

@@ -28,7 +28,7 @@
 }
 
 .marketplaceFill {
-  fill: var(--marketplaceColor);
+  fill: var(--color-marketplace);
 }
 
 .iconWrapper {

@@ -99,7 +99,7 @@
   right: 17px;
 
   /* Style: red dot with white border */
-  background-color: var(--failColor);
+  background-color: var(--color-fail);
   border: 2px solid var(--matterColorLight);
 
   animation-name: notificationPop;
@@ -230,7 +230,7 @@
 
   /* Bleed the bg color from the bottom */
   padding-bottom: 4px;
-  background-color: var(--marketplaceColor);
+  background-color: var(--color-marketplace);
   border-radius: 4px;
 
   /* Place on top of everything */
@@ -249,7 +249,7 @@
 .genericErrorContent {
   padding: 16px 22px;
   border-radius: 4px;
-  background-color: var(--marketplaceColorLight);
+  background-color: var(--color-marketplace-100);
   border-radius: 4px;
 }
 

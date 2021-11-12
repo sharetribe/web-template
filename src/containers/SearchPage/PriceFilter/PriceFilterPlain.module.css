@@ -43,7 +43,7 @@
 }
 
 .labelSelected {
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
   white-space: nowrap;
 }
 
@@ -63,11 +63,11 @@
   width: 100%;
 
   &:hover {
-    color: var(--marketplaceColor);
+    color: var(--color-marketplace);
 
     & * {
-      color: var(--marketplaceColor);
-      stroke: var(--marketplaceColor);
+      color: var(--color-marketplace);
+      stroke: var(--color-marketplace);
     }
   }
 }

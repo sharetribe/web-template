@@ -141,7 +141,7 @@
   transition: var(--transitionStyleButton);
 
   &:hover {
-    color: var(--marketplaceColor);
+    color: var(--color-marketplace);
     text-decoration: none;
   }
 }
@@ -184,7 +184,7 @@
   margin-bottom: 12px;
 
   &:hover {
-    color: var(--marketplaceColor);
+    color: var(--color-marketplace);
     text-decoration: none;
   }
 
@@ -271,7 +271,7 @@
   margin-bottom: 0;
 
   &:hover {
-    color: var(--marketplaceColor);
+    color: var(--color-marketplace);
     text-decoration: none;
   }
 
@@ -318,7 +318,7 @@
   margin-bottom: 0;
 
   &:hover {
-    color: var(--marketplaceColor);
+    color: var(--color-marketplace);
     text-decoration: none;
   }
 }

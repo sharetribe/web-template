@@ -1,9 +1,9 @@
-.strokeMarketplaceColor {
-  stroke: var(--marketplaceColor);
+.strokecolorMarketplace {
+  stroke: var(--color-marketplace);
 }
 
-.fillSuccessColor {
-  fill: var(--successColor);
+.fillcolorSuccess {
+  fill: var(--color-success);
 }
 
 .strokeLightColor {

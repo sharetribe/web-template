@@ -136,7 +136,7 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--color-fail);
 }
 
 .arrayError {
@@ -144,7 +144,7 @@
   font-size: 15px;
   line-height: 24px;
   letter-spacing: 0;
-  color: var(--failColor);
+  color: var(--color-fail);
   width: 100%;
   clear: both;
 

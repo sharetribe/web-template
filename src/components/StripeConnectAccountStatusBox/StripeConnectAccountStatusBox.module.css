@@ -64,20 +64,20 @@
 
 /* Verification required box */
 .verficiationNeededBox {
-  border: 1px solid var(--attentionColor);
-  background: var(--attentionColorLight);
+  border: 1px solid var(--color-attention);
+  background: var(--color-attention-100);
 }
 
 /* Verification error box */
 .verficiationErrorBox {
   border: var(--errorMessageStyling);
-  background: var(--failColorLight);
+  background: var(--color-fail-100);
 }
 
 /* Verification success box */
 .verficiationSuccessBox {
-  background: var(--successColorLight);
-  border: 1px solid var(--successColor);
+  background: var(--color-success-100);
+  border: 1px solid var(--color-success);
   padding: 8px 24px;
 }
 
@@ -110,6 +110,6 @@
 .spinner {
   width: 24px;
   height: 24px;
-  stroke: var(--successColor);
+  stroke: var(--color-success);
   stroke-width: 3px;
 }

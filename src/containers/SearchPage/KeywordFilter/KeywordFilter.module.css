@@ -34,11 +34,11 @@
   height: auto;
   min-height: 0;
   border-radius: 4px;
-  border: 1px solid var(--marketplaceColor);
+  border: 1px solid var(--color-marketplace);
 
   &:hover,
   &:focus {
-    border: 1px solid var(--marketplaceColorDark);
+    border: 1px solid var(--color-marketplace-900);
   }
 }
 
@@ -47,7 +47,7 @@
 }
 
 .labelPlainSelected {
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
 }
 
 .labelText {

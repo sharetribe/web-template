@@ -74,7 +74,7 @@
 }
 
 .missingStripeKey {
-  color: var(--failColor);
+  color: var(--color-fail);
 }
 
 .accountInformationTitle {
@@ -108,7 +108,7 @@
 
 .savedBankAccount {
   width: 100%;
-  border-bottom: 2px solid var(--successColor);
+  border-bottom: 2px solid var(--color-success);
   margin-bottom: 24px;
   padding: 4px 0 10px 0;
   color: var(--matterColor);

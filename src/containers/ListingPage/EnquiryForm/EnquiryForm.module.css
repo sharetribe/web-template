@@ -25,7 +25,7 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--color-fail);
   margin-top: 0;
 
   @media (--viewportMedium) {

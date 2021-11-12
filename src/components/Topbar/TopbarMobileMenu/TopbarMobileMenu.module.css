@@ -1,5 +1,9 @@
 @import '../../../styles/propertySets.css';
 
+:root {
+  --TopbarMobileMenu_topMargin: 96px;
+}
+
 .root {
   flex-shrink: 0;
   display: flex;
@@ -54,7 +58,7 @@
 .inbox {
   /* Font */
   @apply --marketplaceH2FontStyles;
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
   position: relative;
 
   margin-top: auto;
@@ -64,14 +68,14 @@
 .navigationLink {
   /* Font */
   @apply --marketplaceH2FontStyles;
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
 
   /* Layout */
   margin-top: 0;
   margin-bottom: 11px;
 }
 .currentPageLink {
-  color: var(--marketplaceColorDark);
+  color: var(--color-marketplace-900);
 }
 
 .notificationBadge {
@@ -103,12 +107,12 @@
 .signupLink {
   text-decoration: none;
   white-space: nowrap;
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
 }
 .loginLink {
   text-decoration: none;
   white-space: nowrap;
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
 }
 
 .currentPage {

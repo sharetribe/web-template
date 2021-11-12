@@ -1,6 +1,12 @@
 @import '../../styles/customMediaQueries.css';
 @import '../../styles/propertySets.css';
 
+:root {
+  --LandingPage_sectionMarginTop: 40px;
+  --LandingPage_sectionMarginTopMedium: 60px;
+  --LandingPage_sectionMarginTopLarge: 94px;
+}
+
 .root {
 }
 
@@ -102,7 +108,7 @@
 
 /* A bar on top of light sections */
 .section:nth-of-type(2n) .sectionContent::before {
-  background: var(--marketplaceColor);
+  background: var(--color-marketplace);
   content: '';
   display: block;
   width: 109px;

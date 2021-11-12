@@ -43,7 +43,7 @@ legend {
 .rating > .rateInput:checked ~ .label > .star,
 .rating > .label:hover > .star,
 .rating > .label:hover ~ .label > .star {
-  fill: var(--marketplaceColor);
+  fill: var(--color-marketplace);
   transition: var(--transitionStyleButton);
 }
 
@@ -55,5 +55,5 @@ legend {
 .rating > .rateInput:checked ~ .label:hover > .star,
 .rating > .label:hover ~ .rateInput:checked ~ .label > .star,
 .rating > .rateInput:checked ~ .label:hover ~ .label > .star {
-  fill: var(--marketplaceColorDark);
+  fill: var(--color-marketplace-900);
 }

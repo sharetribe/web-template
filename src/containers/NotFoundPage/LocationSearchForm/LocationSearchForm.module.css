@@ -10,7 +10,7 @@
   display: flex;
   width: 24px;
   align-self: stretch;
-  border-bottom: 2px solid var(--marketplaceColor);
+  border-bottom: 2px solid var(--color-marketplace);
   background-color: var(--matterColorLight);
 }
 
@@ -29,7 +29,7 @@
 
   &:hover,
   &:focus {
-    border-bottom-color: var(--marketplaceColor);
+    border-bottom-color: var(--color-marketplace);
     outline: none;
   }
 
@@ -51,7 +51,7 @@
   width: 100%;
   top: 50px;
   left: 0;
-  background-color: var(--marketplaceColor);
+  background-color: var(--color-marketplace);
   border-bottom-left-radius: var(--borderRadius);
   border-bottom-right-radius: var(--borderRadius);
   box-shadow: var(--boxShadowPopup);

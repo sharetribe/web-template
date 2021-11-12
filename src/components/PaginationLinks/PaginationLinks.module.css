@@ -28,12 +28,12 @@
 
 .arrowIcon {
   /* Color for svg icons */
-  fill: var(--marketplaceColor);
-  stroke: var(--marketplaceColor);
+  fill: var(--color-marketplace);
+  stroke: var(--color-marketplace);
 
   &:hover {
-    fill: var(--marketplaceColorDark);
-    stroke: var(--marketplaceColorDark);
+    fill: var(--color-marketplace-900);
+    stroke: var(--color-marketplace-900);
   }
 }
 

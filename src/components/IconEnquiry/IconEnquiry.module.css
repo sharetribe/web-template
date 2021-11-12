@@ -1,6 +1,6 @@
 .root {
 }
 
-.marketplaceColorStroke {
-  stroke: var(--marketplaceColor);
+.colorMarketplaceStroke {
+  stroke: var(--color-marketplace);
 }

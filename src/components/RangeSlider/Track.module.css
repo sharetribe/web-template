@@ -27,5 +27,5 @@
   top: 50%;
   margin-top: -4px;
   height: 8px;
-  background-color: var(--marketplaceColor);
+  background-color: var(--color-marketplace);
 }

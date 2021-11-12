@@ -37,7 +37,7 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--color-fail);
   margin: 0 24px;
   display: inline-block;
 }
@@ -48,7 +48,7 @@
 
 .sideBarError {
   @apply --marketplaceH4FontStyles;
-  color: var(--failColor);
+  color: var(--color-fail);
   margin: 0 24px 12px 24px;
 
   @media (--viewportMedium) {

@@ -37,7 +37,7 @@
 
   &:hover,
   &:global(.active) {
-    border-color: var(--marketplaceColor);
+    border-color: var(--color-marketplace);
   }
 }
 
@@ -193,8 +193,8 @@
   z-index: 1;
 
   &:hover {
-    background-color: var(--marketplaceColor);
-    border-color: var(--marketplaceColor);
+    background-color: var(--color-marketplace);
+    border-color: var(--color-marketplace);
     color: var(--matterColorLight);
   }
 

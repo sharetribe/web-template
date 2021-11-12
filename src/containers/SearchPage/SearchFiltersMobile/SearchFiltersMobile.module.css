@@ -135,7 +135,7 @@
 }
 
 .showListingsButton {
-  background-color: var(--marketplaceColor);
+  background-color: var(--color-marketplace);
   display: inline-block;
   border-radius: 3px;
 }

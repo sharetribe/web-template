@@ -1,5 +1,5 @@
 .unsupportedCountryError {
-  color: var(--failColor);
+  color: var(--color-fail);
 }
 
 .root {

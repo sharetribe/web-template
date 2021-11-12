@@ -38,12 +38,12 @@
   padding: 0;
 
   &:disabled {
-    background-color: var(--marketplaceColor);
+    background-color: var(--color-marketplace);
   }
 }
 
 .primaryButton.inProgress:disabled {
-  background-color: var(--successColor);
+  background-color: var(--color-success);
 }
 
 .secondaryButton.inProgress:disabled {
@@ -54,12 +54,12 @@
   padding: 0;
 
   &:disabled {
-    background-color: var(--marketplaceColor);
+    background-color: var(--color-marketplace);
   }
 }
 
 .primaryButton.ready:disabled {
-  background-color: var(--successColor);
+  background-color: var(--color-success);
 }
 
 .secondaryButton.ready:disabled {

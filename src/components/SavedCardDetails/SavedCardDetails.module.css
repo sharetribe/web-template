@@ -46,7 +46,7 @@
 }
 
 .iconCheckmark {
-  stroke: var(--successColor);
+  stroke: var(--color-success);
   display: inline-block;
   margin: 12px 0 0 24px;
 }
@@ -63,12 +63,12 @@
 
 .expirationDateExpired {
   padding-left: 24px;
-  color: var(--failColor);
+  color: var(--color-fail);
 }
 
 .cardExpiredText {
   @apply --marketplaceH4FontStyles;
-  color: var(--failColor);
+  color: var(--color-fail);
   font-weight: var(--fontWeightSemiBold);
   margin-top: 13px;
   margin-bottom: 11px;

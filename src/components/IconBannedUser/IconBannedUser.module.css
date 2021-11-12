@@ -1,9 +1,9 @@
 .backgroundLight {
-  stop-color: var(--bannedColorLight);
+  stop-color: var(--color-banned-100);
 }
 
 .backgroundDark {
-  stop-color: var(--bannedColorDark);
+  stop-color: var(--color-banned);
 }
 
 .foregroundFill {

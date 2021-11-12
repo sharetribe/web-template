@@ -1,5 +1,9 @@
 @import '../../styles/propertySets.css';
 
+:root {
+  --DateRangeController_selectionHeight: var(--ReactDates_selectionHeight);
+}
+
 .inputRoot {
   /*
     Calendar component using react-dates has automatically padding so
@@ -162,7 +166,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateRangeController_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--color-success);
     color: var(--matterColorLight);
   }
 
@@ -177,7 +181,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateRangeController_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--color-success);
     color: var(--matterColorLight);
     border-top-left-radius: calc(var(--DateRangeController_selectionHeight) / 2);
     border-bottom-left-radius: calc(var(--DateRangeController_selectionHeight) / 2);
@@ -193,7 +197,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateRangeController_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--color-success);
     color: var(--matterColorLight);
     border-top-right-radius: calc(var(--DateRangeController_selectionHeight) / 2);
     border-bottom-right-radius: calc(var(--DateRangeController_selectionHeight) / 2);
@@ -206,7 +210,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateRangeController_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--color-success);
     color: var(--matterColorLight);
   }
 
@@ -216,7 +220,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateRangeController_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--color-success);
     color: var(--matterColorLight);
     transition: all 0.2s ease-out;
   }
@@ -232,6 +236,6 @@
 }
 
 .arrowIcon {
-  stroke: var(--marketplaceColor);
-  fill: var(--marketplaceColor);
+  stroke: var(--color-marketplace);
+  fill: var(--color-marketplace);
 }

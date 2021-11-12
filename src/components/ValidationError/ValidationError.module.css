@@ -4,7 +4,7 @@
   @apply --marketplaceH4FontStyles;
   margin-top: 7px;
   margin-bottom: 0;
-  color: var(--failColor);
+  color: var(--color-fail);
   overflow: hidden;
   font-size: 13px;
 

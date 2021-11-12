@@ -25,7 +25,7 @@
 }
 
 .filterLabelSelected {
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
 }
 
 .labelButton {

@@ -1,6 +1,11 @@
 @import '../../styles/customMediaQueries.css';
 @import '../../styles/propertySets.css';
 
+:root {
+  --spacingUnit: 6px;
+  --spacingUnitDesktop: 8px;
+}
+
 .root {
   display: flex;
   flex-direction: column;
@@ -52,7 +57,7 @@
 }
 
 .link {
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
 }
 
 .groups {
@@ -65,7 +70,7 @@
 
 .selectedGroup {
   font-weight: bold;
-  color: var(--marketplaceColorDark);
+  color: var(--color-marketplace-900);
 }
 
 /* Typography.example */
@@ -186,34 +191,34 @@
   }
 }
 
-.marketplaceColorBackground {
+.color-marketplaceBackground {
   composes: color;
-  background-color: var(--marketplaceColor);
+  background-color: var(--color-marketplace);
 }
 
-.marketplaceColorLightBackground {
+.color-marketplaceLightBackground {
   composes: color;
-  background-color: var(--marketplaceColorLight);
+  background-color: var(--color-marketplace-100);
 }
 
-.marketplaceColorDarkBackground {
+.color-marketplace-200Background {
   composes: color;
-  background-color: var(--marketplaceColorDark);
+  background-color: var(--color-marketplace-900);
 }
 
-.successColorBackground {
+.color-successBackground {
   composes: color;
-  background-color: var(--successColor);
+  background-color: var(--color-success);
 }
 
-.failColorBackground {
+.color-failBackground {
   composes: color;
-  background-color: var(--failColor);
+  background-color: var(--color-fail);
 }
 
-.attentionColorBackground {
+.color-attentionBackground {
   composes: color;
-  background-color: var(--attentionColor);
+  background-color: var(--color-attention);
 }
 
 .matterColorBackground {

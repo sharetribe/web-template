@@ -55,7 +55,7 @@
 
 .price {
   @apply --marketplaceH2FontStyles;
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
   margin: 0 24px;
 
   @media (--viewportMedium) {
@@ -226,5 +226,5 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--color-fail);
 }

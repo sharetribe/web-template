@@ -2,11 +2,11 @@
 }
 
 .marketplaceStroke {
-  stroke: var(--marketplaceColor);
+  stroke: var(--color-marketplace);
 }
 
 .successFill {
-  fill: var(--successColor);
+  fill: var(--color-success);
 }
 
 .checkStroke {

@@ -81,7 +81,7 @@
 
 .linkSeparator {
   margin: 0 10px;
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
 }
 
 .headingRow {

@@ -84,7 +84,7 @@
 .price {
   flex-shrink: 0;
   font-weight: var(--fontWeightSemiBold);
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
 
   margin-right: 10px;
 }
@@ -94,7 +94,7 @@
 }
 
 .paginationInfo {
-  background-color: var(--marketplaceColor);
+  background-color: var(--color-marketplace);
   color: var(--matterColorLight);
   display: flex;
   justify-content: space-between;
@@ -186,9 +186,9 @@
 }
 
 .caretWithCarousel {
-  background-color: var(--marketplaceColor);
-  border-right-color: var(--marketplaceColor);
-  border-bottom-color: var(--marketplaceColor);
+  background-color: var(--color-marketplace);
+  border-right-color: var(--color-marketplace);
+  border-bottom-color: var(--color-marketplace);
 }
 
 .borderRadiusInheritTop {

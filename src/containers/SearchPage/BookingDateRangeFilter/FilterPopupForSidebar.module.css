@@ -41,7 +41,7 @@
 }
 
 .labelSelected {
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
   white-space: nowrap;
 }
 

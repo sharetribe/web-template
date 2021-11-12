@@ -65,6 +65,6 @@
 
   &:focus,
   &:hover {
-    color: var(--marketplaceColorDark);
+    color: var(--color-marketplace-900);
   }
 }

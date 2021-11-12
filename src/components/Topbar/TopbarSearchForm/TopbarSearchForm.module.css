@@ -1,5 +1,11 @@
 @import '../../../styles/propertySets.css';
 
+:root {
+  --borderRadiusMobileSearch: 3px;
+  --TopbarSearchForm_inputHeight: 53px;
+  --TopbarSearchForm_topbarMargin: 94px;
+}
+
 .mobileInputRoot {
   width: 100%;
 }
@@ -44,7 +50,7 @@
 
   &:hover,
   &:focus {
-    border-bottom-color: var(--marketplaceColor);
+    border-bottom-color: var(--color-marketplace);
     border-bottom-width: 3px;
     border-radius: 0;
     border-top: none;
@@ -83,7 +89,7 @@
 
   &:hover,
   &:focus {
-    border-bottom-color: var(--marketplaceColor);
+    border-bottom-color: var(--color-marketplace);
     outline: none;
     border: 0;
     box-shadow: none;
@@ -123,7 +129,7 @@
       )
   );
   width: 100%;
-  background-color: var(--marketplaceColor);
+  background-color: var(--color-marketplace);
   border-bottom-left-radius: var(--borderRadius);
   border-bottom-right-radius: var(--borderRadius);
   box-shadow: var(--boxShadowPopup);
@@ -142,7 +148,7 @@
   width: 100%;
   top: 50px;
   left: 0;
-  background-color: var(--marketplaceColor);
+  background-color: var(--color-marketplace);
   border-bottom-left-radius: var(--borderRadius);
   border-bottom-right-radius: var(--borderRadius);
   box-shadow: var(--boxShadowPopup);
@@ -182,7 +188,7 @@
   display: flex;
   width: 24px;
   align-self: stretch;
-  border-bottom: 2px solid var(--marketplaceColor);
+  border-bottom: 2px solid var(--color-marketplace);
   background-color: var(--matterColorLight);
 }
 
@@ -191,7 +197,7 @@
 }
 
 .iconSvgGroup {
-  stroke: var(--marketplaceColor);
+  stroke: var(--color-marketplace);
   stroke-width: 2.5px;
 
   @media (--viewportMedium) {

@@ -14,7 +14,7 @@
 .error {
   margin-left: 24px;
   margin-right: 24px;
-  color: var(--failColor);
+  color: var(--color-fail);
 }
 
 .tabContent {

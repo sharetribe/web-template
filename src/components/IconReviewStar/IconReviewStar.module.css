@@ -3,5 +3,5 @@
 }
 
 .filled {
-  fill: var(--marketplaceColor);
+  fill: var(--color-marketplace);
 }

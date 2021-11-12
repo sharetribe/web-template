@@ -166,7 +166,7 @@
 
   &:hover {
     text-decoration: none;
-    background-color: var(--failColor);
+    background-color: var(--color-fail);
   }
 
   @media (--viewportMedium) {
@@ -213,7 +213,7 @@
 .priceValue {
   /* Font */
   @apply --marketplaceH3FontStyles;
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
 
   margin-right: 4px;
 

@@ -2,9 +2,9 @@
 }
 
 .marketplaceStroke {
-  stroke: var(--marketplaceColor);
+  stroke: var(--color-marketplace);
 }
 
 .attentionStroke {
-  stroke: var(--attentionColor);
+  stroke: var(--color-attention);
 }

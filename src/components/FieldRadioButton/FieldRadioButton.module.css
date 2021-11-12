@@ -53,8 +53,8 @@
 
 .checked {
   display: none;
-  stroke: var(--marketplaceColor);
-  fill: var(--marketplaceColor);
+  stroke: var(--color-marketplace);
+  fill: var(--color-marketplace);
 }
 
 .notChecked {
@@ -65,7 +65,7 @@
 }
 
 .required {
-  stroke: var(--attentionColor);
+  stroke: var(--color-attention);
   &:hover {
     stroke: pink;
   }

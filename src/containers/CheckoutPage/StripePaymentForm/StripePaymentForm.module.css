@@ -42,7 +42,7 @@
   height: 36px;
 
   /* Border */
-  border-bottom-color: var(--attentionColor);
+  border-bottom-color: var(--color-attention);
 
   @media (--viewportMedium) {
     height: 38px;
@@ -54,20 +54,20 @@
 }
 
 .cardSuccess {
-  border-bottom-color: var(--successColor);
+  border-bottom-color: var(--color-success);
 }
 
 .cardError {
-  border-bottom-color: var(--failColor);
+  border-bottom-color: var(--color-fail);
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--color-fail);
 }
 
 .errorMessage {
   margin-top: 24px;
-  color: var(--failColor);
+  color: var(--color-fail);
 }
 
 .paymentHeading {
@@ -229,5 +229,5 @@
 }
 
 .missingStripeKey {
-  color: var(--failColor);
+  color: var(--color-fail);
 }

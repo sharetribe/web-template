@@ -35,7 +35,7 @@
   display: block;
 
   & path {
-    fill: var(--marketplaceColor);
+    fill: var(--color-marketplace);
   }
 
   @media (--viewportLarge) {
@@ -67,7 +67,7 @@
 .number {
   @apply --marketplaceHeroTitleFontStyles;
   text-align: center;
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
   margin: 1px 0 0 0;
 
   @media (--viewportMedium) {

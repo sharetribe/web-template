@@ -22,7 +22,7 @@ const IconKeys = props => {
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <g className={css.strokeMarketplaceColor} transform="translate(-538.000000, -240.000000)">
+        <g className={css.strokecolorMarketplace} transform="translate(-538.000000, -240.000000)">
           <g transform="translate(540.000000, 242.000000)">
             <g>
               <path

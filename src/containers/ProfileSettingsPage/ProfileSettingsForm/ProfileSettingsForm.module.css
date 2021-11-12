@@ -1,5 +1,10 @@
 @import '../../../styles/propertySets.css';
 
+:root {
+  --ProfileSettingsForm_avatarSize: 96px;
+  --ProfileSettingsForm_avatarSizeDesktop: 240px;
+}
+
 .root {
   margin-top: 24px;
 
@@ -122,14 +127,14 @@
 .avatarUploadError {
   /* Placeholder border */
   border-style: dashed;
-  border-color: var(--failColor);
+  border-color: var(--color-fail);
   border-width: 2px;
 }
 
 .error {
   /* Font */
   @apply --marketplaceH4FontStyles;
-  color: var(--failColor);
+  color: var(--color-fail);
   margin-top: 18px;
   margin-bottom: 0;
 

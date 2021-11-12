@@ -1,8 +1,8 @@
 .stroke {
-  stroke: var(--marketplaceColor);
+  stroke: var(--color-marketplace);
 }
 
 .strokeAndFill {
-  stroke: var(--marketplaceColor);
-  fill: var(--marketplaceColor);
+  stroke: var(--color-marketplace);
+  fill: var(--color-marketplace);
 }

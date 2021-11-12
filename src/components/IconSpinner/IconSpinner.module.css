@@ -5,6 +5,6 @@
   width: 28px;
   height: 28px;
 
-  stroke: var(--marketplaceColor);
+  stroke: var(--color-marketplace);
   stroke-width: 3px;
 }

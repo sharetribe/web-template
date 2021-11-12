@@ -14,27 +14,27 @@
   &:hover + label .box,
   &:focus + label .box,
   &:checked + label .box {
-    stroke: var(--marketplaceColor);
+    stroke: var(--color-marketplace);
   }
 
-  /* successColor version */
+  /* color-success version */
   &:hover + label .boxSuccess,
   &:focus + label .boxSuccess,
   &:checked + label .boxSuccess {
-    stroke: var(--successColor);
+    stroke: var(--color-success);
   }
 
   /* Display the "check" when checked */
   &:checked + label .checked {
     display: inline;
-    stroke: var(--marketplaceColor);
+    stroke: var(--color-marketplace);
     stroke-width: 1px;
   }
 
   /* Display the "check" when checked */
   &:checked + label .checkedSuccess {
     display: inline;
-    stroke: var(--successColor);
+    stroke: var(--color-success);
     stroke-width: 1px;
   }
 
@@ -69,11 +69,11 @@
 
 .checked {
   display: none;
-  fill: var(--marketplaceColor);
+  fill: var(--color-marketplace);
 }
 .checkedSuccess {
   display: none;
-  fill: var(--successColor);
+  fill: var(--color-success);
 }
 
 .boxSuccess,

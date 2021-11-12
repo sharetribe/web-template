@@ -24,7 +24,7 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--color-fail);
 }
 
 .submitButton {

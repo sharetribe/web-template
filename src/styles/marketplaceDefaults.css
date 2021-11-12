@@ -8,31 +8,33 @@
  * These variables are available in global scope through ":root"
  * element (<html> tag). You can use Custom Properties to achieve
  * more dynamic theming by changing the value on the fly with JS:
- * document.documentElement.style.setProperty("--marketplaceColor", '#55AA55');
+ * document.documentElement.style.setProperty("--color-marketplace", '#55AA55');
  *
  * Read more about how to use CSS Custom Properties
  * https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties
  */
 
 :root {
-  /* ================ Colors to be updated ================ */
 
-  --marketplaceColor: #5d2bc0; /* hsl(260, 63%, 46%) */
-  --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
-  --marketplaceColorDark: #34196c; /* hsl(260, 63%, 26%), -20L from marketplaceColor */
+  /* ================ Colors ================ */
 
-  /* Used with inline CSS SVGs */
-  --marketplaceColorEncoded: %23a02cbf;
+  /* Palette */
+  --color-green: #2ecc71;
+  --color-red: #ff0000;
+  --color-yellow: #ffaa00;
 
-  --successColor: #2ecc71;
-  --successColorDark: #239954;
-  --successColorLight: #f0fff6;
-  --failColor: #ff0000;
-  --failColorLight: #fff0f0;
-  --attentionColor: #ffaa00;
-  --attentionColorLight: #fff7f0;
-  --bannedColorLight: var(--marketplaceColorLight);
-  --bannedColorDark: var(--marketplaceColor);
+  --color-white: #000;
+  --color-grey-50: #000;
+  --color-grey-100: #000;
+  --color-grey-200: #000;
+  --color-grey-300: #000;
+  --color-grey-400: #000;
+  --color-grey-500: #000;
+  --color-grey-600: #000;
+  --color-grey-700: #000;
+  --color-grey-800: #000;
+  --color-grey-900: #000;
+  --color-black: #000;
 
   --matterColorDark: #000000;
   --matterColor: #4a4a4a;
@@ -42,6 +44,26 @@
   --matterColorLight: #ffffff;
 
   --matterColorLightTransparent: rgba(255, 255, 255, 0.65);
+
+  /* Brand */
+  --color-marketplace: #5d2bc0; /* hsl(260, 63%, 46%) */
+  --color-marketplace-100: #7748d5; /* hsl(260, 63%, 56%), +10L from color-marketplace */
+  --color-marketplace-900: #34196c; /* hsl(260, 63%, 26%), -20L from color-marketplace */
+  --color-marketplace-encoded: %23a02cbf;  /* Used with inline CSS SVGs */
+
+  /* UI */
+  --color-success: var(--color-green);
+  --color-success-100: #f0fff6;
+  --color-success-900: #239954;
+
+  --color-fail: var(--color-red);
+  --color-fail-100: #fff0f0;
+
+  --color-attention: var(--color-yellow);
+  --color-attention-100: #fff7f0;
+
+  --color-banned: var(--color-marketplace);
+  --color-banned-100: var(--color-marketplace-100);
 
   /* ================ Font ================ */
   --fontFamily: 'poppins', Helvetica, Arial, sans-serif;
@@ -53,19 +75,12 @@
 
   --fontWeightHighlightEmail: var(--fontWeightBold);
 
-  /* ================ Spacing unites ================ */
-
-  /* Multiples of mobile and desktop spacing units should be used with margins and paddings. */
-  --spacingUnit: 6px;
-  --spacingUnitDesktop: 8px;
-
-  /* Shadows */
+  /* ================ Shadows ================ */
   --boxShadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
   --boxShadowTop: 0 -2px 4px 0 rgba(0, 0, 0, 0.1);
   --boxShadowLight: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
   --boxShadowPopup: 0 8px 16px 0 rgba(0, 0, 0, 0.3);
   --boxShadowPopupLight: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
-  --boxShadowBreakdown: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
   --boxShadowButton: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
   --boxShadowListingCard: 0 0 50px 0 rgba(0, 0, 0, 0.1);
   --boxShadowNotFoundPageSearch: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
@@ -85,32 +100,19 @@
   --zIndexGenericError: 200;
 
   /* ================ Border radius ================ */
-
   --borderRadius: 2px;
-  --borderRadiusMobileSearch: 3px;
 
   /* ================ Transition styles ================ */
-
   --transitionStyle: ease-in 0.2s;
   --transitionStyleButton: ease-in-out 0.1s;
 
-  /* ================ Topbar related ================ */
-
+  /* ================ Topbar & Logo ================ */
   --topbarHeight: 60px;
   --topbarHeightDesktop: 72px;
-
-  --TopbarMobileMenu_topMargin: 96px;
-
   --Topbar_logoHeight: 25px;
-  --CheckoutPage_logoHeight: 25px;
-  --CheckoutPage_logoHeightDesktop: 27px;
-
-  --TopbarSearchForm_inputHeight: 53px;
-  --TopbarSearchForm_topbarMargin: 94px;
-  --TopbarSearchForm_bottomBorder: 3px;
+  --Topbar_logoHeightDesktop: 27px;
 
   /* ================ Modal default padding ================ */
-
   --modalPadding: 24px 24px 48px 24px;
   --modalPaddingMedium: 55px 60px 55px 60px;
 
@@ -121,39 +123,8 @@
   --ReactDates_selectionHeight: 36px;
   --ReactDates_hoveredOverlayColor: rgba(255, 255, 255, 0.2);
 
-  --DateInput_selectionHeight: var(--ReactDates_selectionHeight);
-  --DateInput_hoveredOverlayColor: var(--ReactDates_hoveredOverlayColor);
-  --DateRangeInput_selectionHeight: var(--ReactDates_selectionHeight);
-  --DateRangeInput_hoveredOverlayColor: var(--ReactDates_hoveredOverlayColor);
-  --DateRangeController_selectionHeight: var(--ReactDates_selectionHeight);
-
-  /* ================ SectionHero ================ */
-  --SectionHero_desktopTitleMaxWidth: 625px;
-
-  /* ================ TabNav ================ */
-  --TabNav_linkWidth: 240px;
-
   /* ================ Inputs, textareas and selects ================ */
-  --errorMessageStyling: 1px solid var(--failColor);
-
-  /* ================ LandingPage ================ */
-  --LandingPage_sectionMarginTop: 40px;
-  --LandingPage_sectionMarginTopMedium: 60px;
-  --LandingPage_sectionMarginTopLarge: 94px;
-
-  /* ================ EditListingAvailabilityForm, ManageAvailabilityCalendar ================ */
-  --ManageAvailabilityCalendar_gridColor: #e0e0e0;
-  --ManageAvailabilityCalendar_availableColor: #ffffff;
-  --ManageAvailabilityCalendar_availableColorHover: #fafafa;
-  --ManageAvailabilityCalendar_blockedColor: #ebebeb;
-  --ManageAvailabilityCalendar_blockedColorHover: #e6e6e6;
-  --ManageAvailabilityCalendar_reservedColor: #e6fff0;
-  --ManageAvailabilityCalendar_reservedColorHover: #e1faeb;
-  --ManageAvailabilityCalendar_failedColor: #fff2f2;
-
-  /* ================ ProfileSettingsForm ================ */
-  --ProfileSettingsForm_avatarSize: 96px;
-  --ProfileSettingsForm_avatarSizeDesktop: 240px;
+  --errorMessageStyling: 1px solid var(--color-fail);
 }
 
 /* ================ Global element styles ================ */
@@ -167,13 +138,22 @@ body {
   background-color: var(--matterColorBright);
 }
 
+.fontsLoaded {
+  & body {
+    font-family: var(--fontFamily);
+  }
+  & button {
+    font-family: var(--fontFamily);
+  }
+}
+
 ::selection {
-  background: var(--marketplaceColor); /* WebKit/Blink Browsers */
+  background: var(--color-marketplace); /* WebKit/Blink Browsers */
   color: var(--matterColorLight);
 }
 
 ::-moz-selection {
-  background: var(--marketplaceColor); /* Gecko Browsers */
+  background: var(--color-marketplace); /* Gecko Browsers */
   color: var(--matterColorLight);
 }
 
@@ -280,13 +260,4 @@ textarea {
 .inputError,
 .selectError {
   border: var(--errorMessageStyling);
-}
-
-.fontsLoaded {
-  & body {
-    font-family: var(--fontFamily);
-  }
-  & button {
-    font-family: var(--fontFamily);
-  }
 }

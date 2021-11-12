@@ -1,5 +1,17 @@
 @import '../../../../styles/propertySets.css';
 
+:root {
+  /* Calendar Colors */
+  --ManageAvailabilityCalendar_gridColor: #e0e0e0;
+  --ManageAvailabilityCalendar_availableColor: #ffffff;
+  --ManageAvailabilityCalendar_availableColorHover: #fafafa;
+  --ManageAvailabilityCalendar_blockedColor: #ebebeb;
+  --ManageAvailabilityCalendar_blockedColorHover: #e6e6e6;
+  --ManageAvailabilityCalendar_reservedColor: #e6fff0;
+  --ManageAvailabilityCalendar_reservedColorHover: #e1faeb;
+  --ManageAvailabilityCalendar_failedColor: #fff2f2;
+}
+
 .root {
   @apply --marketplaceH5FontStyles;
   margin-top: 0;
@@ -254,13 +266,13 @@
   margin-top: 7px;
   margin-left: 8px;
 
-  stroke: var(--marketplaceColor);
+  stroke: var(--color-marketplace);
   stroke-width: 4px;
 }
 
 .error {
   @apply --marketplaceH4FontStyles;
-  color: var(--failColor);
+  color: var(--color-fail);
   margin: 6px 0 24px 0;
 }
 

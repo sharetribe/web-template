@@ -21,7 +21,7 @@
   /* Layout */
   width: 20px;
   height: 20px;
-  border: 2px solid var(--marketplaceColor);
+  border: 2px solid var(--color-marketplace);
   border-radius: 50%;
   background-color: var(--matterColorLight);
   cursor: pointer;

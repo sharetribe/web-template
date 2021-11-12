@@ -17,7 +17,7 @@
 }
 
 .errorText {
-  color: var(--failColor);
+  color: var(--color-fail);
   margin: 24px;
 }
 
@@ -89,7 +89,7 @@
 }
 
 .ownListingTextPendingApproval {
-  color: var(--attentionColor);
+  color: var(--color-attention);
 }
 
 .closedListingText {
@@ -165,7 +165,7 @@
   transition: var(--transitionStyleButton);
 
   &:hover {
-    background-color: var(--marketplaceColor);
+    background-color: var(--color-marketplace);
     color: var(--matterColorLight);
   }
 
@@ -360,7 +360,7 @@
 .desktopPriceValue {
   /* Font */
   @apply --marketplaceModalTitleStyles;
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
 
   @media (--viewportMedium) {
     margin-top: 0;

@@ -117,7 +117,7 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--color-fail);
   margin: 23px 24px 24px 24px;
 
   @media (--viewportLarge) {
@@ -204,7 +204,7 @@
 
   &:hover .itemUsername {
     /* Hightlight the username when the whole item is hovered */
-    color: var(--marketplaceColor);
+    color: var(--color-marketplace);
   }
 }
 
@@ -246,7 +246,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: var(--failColor);
+  background-color: var(--color-fail);
 }
 
 .itemInfo {
@@ -365,7 +365,7 @@
 
 .stateActionNeeded {
   font-weight: var(--fontWeightMedium);
-  color: var(--attentionColor);
+  color: var(--color-attention);
 }
 
 .stateNoActionNeeded {

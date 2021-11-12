@@ -68,7 +68,7 @@
 
 .error {
   @apply --marketplaceH4FontStyles;
-  color: var(--failColor);
+  color: var(--color-fail);
 
   padding: 0 24px;
 

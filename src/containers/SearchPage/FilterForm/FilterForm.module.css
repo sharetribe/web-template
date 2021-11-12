@@ -63,7 +63,7 @@
 .submitButton {
   @apply --marketplaceH4FontStyles;
   font-weight: var(--fontWeightMedium);
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
 
   /* Layout */
   margin: 0 0 0 19px;
@@ -76,7 +76,7 @@
 
   &:focus,
   &:hover {
-    color: var(--marketplaceColorDark);
+    color: var(--color-marketplace-900);
     transition: width var(--transitionStyleButton);
   }
 }

@@ -40,7 +40,7 @@
 }
 
 .errorPlaceholder {
-  color: var(--failColor);
+  color: var(--color-fail);
 
   @media (--viewportMedium) {
     margin: 0;
@@ -63,11 +63,11 @@
   margin-top: auto;
   margin-bottom: 96px;
   flex-shrink: 0;
-  background-color: var(--marketplaceColor);
+  background-color: var(--color-marketplace);
 
   &:hover,
   &:focus {
-    background-color: var(--marketplaceColorDark);
+    background-color: var(--color-marketplace-900);
   }
 
   @media (--viewportMedium) {

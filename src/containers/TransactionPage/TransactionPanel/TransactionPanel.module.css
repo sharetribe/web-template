@@ -35,7 +35,7 @@
 }
 
 .genericError {
-  color: var(--failColor);
+  color: var(--color-fail);
   margin: 24px 24px 0 24px;
 
   @media (--viewportMedium) {
@@ -368,7 +368,7 @@
 }
 
 .messageError {
-  color: var(--failColor);
+  color: var(--color-fail);
   margin: 13px 0 22px 0;
 
   @media (--viewportMedium) {
@@ -472,7 +472,7 @@
 
 .actionError {
   @apply --marketplaceH5FontStyles;
-  color: var(--failColor);
+  color: var(--color-fail);
   margin: 0 0 11px 0;
 
   @media (--viewportMedium) {

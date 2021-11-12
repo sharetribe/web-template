@@ -112,7 +112,7 @@ const OneTimePaymentWithCardElement = props => {
           name="saveAfterOnetimePayment"
           label={labelText}
           value="saveAfterOnetimePayment"
-          useSuccessColor
+          usecolor-success
         />
         <span className={css.saveForLaterUseLegalInfo}>
           <FormattedMessage id="StripePaymentForm.saveforLaterUseLegalInfo" />
@@ -538,7 +538,7 @@ class StripePaymentForm extends Component {
                       id: 'StripePaymentForm.sameBillingAndShippingAddress',
                     })}
                     value="sameAddress"
-                    useSuccessColor
+                    usecolor-success
                     onChange={handleSameAddressCheckbox}
                   />
                 ) : null}

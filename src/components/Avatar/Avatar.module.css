@@ -10,8 +10,8 @@
   /* Colors */
   background-image: linear-gradient(
     -180deg,
-    var(--marketplaceColorLight) 0%,
-    var(--marketplaceColor) 100%
+    var(--color-marketplace-100) 0%,
+    var(--color-marketplace) 100%
   );
   color: var(--matterColorLight);
 

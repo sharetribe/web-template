@@ -128,7 +128,7 @@
   }
 }
 .resetAllFiltersButton {
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
   margin: 0;
 
   @media (--viewportMedium) {
@@ -206,7 +206,7 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--color-fail);
   padding-left: 24px;
   padding-right: 24px;
 }

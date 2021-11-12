@@ -38,7 +38,7 @@
 
 .logo {
   /* If height is increased, change link paddings accordingly */
-  height: 27px;
+  height: var(--Topbar_logoHeightDesktop);
 
   /* Good aspect ratio should be less than 160/27 (width/height) */
   /* NOTE: extremely wide logos, need special handling. */
@@ -85,12 +85,12 @@
   flex-shrink: 0;
   height: 100%;
   padding: 0 12px 0 12px;
-  color: var(--marketplaceColor);
+  color: var(--color-marketplace);
   margin-top: 0;
   margin-bottom: 0;
 
   &:hover {
-    color: var(--marketplaceColorDark);
+    color: var(--color-marketplace-900);
   }
 
   @media (--viewportMedium) {
@@ -140,7 +140,7 @@
   right: -9px;
 
   /* Style: red dot */
-  background-color: var(--failColor);
+  background-color: var(--color-fail);
 
   animation-name: notificationPop;
   animation-duration: 0.1s;
@@ -258,7 +258,7 @@
 
     & .menuItemBorder {
       width: 6px;
-      background-color: var(--marketplaceColor);
+      background-color: var(--color-marketplace);
     }
   }
 
@@ -297,7 +297,7 @@
       height: 100%;
       width: 6px;
       top: 0;
-      background-color: var(--marketplaceColor);
+      background-color: var(--color-marketplace);
     }
   }
 
