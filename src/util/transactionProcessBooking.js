@@ -1,8 +1,13 @@
 import { ensureTransaction } from './data';
 
 /**
- * Transaction process graph for product orders:
- *   - flex-product-default-process
+ * Transaction process graph for bookings is similar for both processes:
+ *   - flex-hourly-default-process
+ *   - flex-daily-default-process
+ *
+ * In practice, there needs to be separate processes in Flex backend,
+ * since the notifications differ and booking units too. However, this is about the process graph
+ * and the graph is the same for both processes.
  */
 
 /**
@@ -15,7 +20,7 @@ import { ensureTransaction } from './data';
  */
 
 export const transitions = {
-  // When a customer makes an order for a listing, a transaction is
+  // When a customer makes a booking to a listing, a transaction is
   // created with the initial request-payment transition.
   // At this transition a PaymentIntent is created by Marketplace API.
   // After this transition, the actual payment must be made on client-side directly to Stripe.
@@ -35,40 +40,19 @@ export const transitions = {
   // the transaction will expire automatically.
   EXPIRE_PAYMENT: 'transition/expire-payment',
 
-  // Provider can mark the product shipped/delivered
-  MARK_DELIVERED: 'transition/mark-delivered',
+  // When the provider accepts or declines a transaction from the
+  // SalePage, it is transitioned with the accept or decline transition.
+  ACCEPT: 'transition/accept',
+  DECLINE: 'transition/decline',
 
-  // Customer can mark the product received (e.g. picked up from provider)
-  MARK_RECEIVED_FROM_PURCHASED: 'transition/mark-received-from-purchased',
+  // The backend automatically expire the transaction.
+  EXPIRE: 'transition/expire',
 
-  // Automatic cancellation happens if none marks the delivery happened
-  AUTO_CANCEL: 'transition/auto-cancel',
-
-  // Operator can cancel the purchase before product has been marked as delivered / received
+  // Admin can also cancel the transition.
   CANCEL: 'transition/cancel',
 
-  // If provider has marked the product delivered (e.g. shipped),
-  // customer can then mark the product received
-  MARK_RECEIVED: 'transition/mark-received',
-
-  // If customer doesn't mark the product received manually, it can happen automatically
-  AUTO_MARK_RECEIVED: 'transition/auto-mark-received',
-
-  // When provider has marked the product delivered, customer can dispute the transaction
-  DISPUTE: 'transition/dispute',
-
-  // If nothing is done to disputed transaction it ends up to Canceled state
-  AUTO_CANCEL_FROM_DISPUTED: 'transition/auto-cancel-from-disputed',
-
-  // Operator can cancel disputed transaction manually
-  CANCEL_FROM_DISPUTED: 'transition/cancel-from-disputed',
-
-  // Operator can mark the disputed transaction as received
-  MARK_RECEIVED_FROM_DISPUTED: 'transition/mark-received-from-disputed',
-
-  // System moves transaction automatically from received state to complete state
-  // This makes it possible to to add notifications to that single transition.
-  AUTO_COMPLETE: 'transition/auto-complete',
+  // The backend will mark the transaction completed.
+  COMPLETE: 'transition/complete',
 
   // Reviews are given through transaction transitions. Review 1 can be
   // by provider or customer, and review 2 will be the other party of
@@ -91,18 +75,16 @@ export const transitions = {
  * Note: these states are not in sync with states used transaction process definitions
  *       in Marketplace API. Only last transitions are passed along transaction object.
  */
-
 export const states = {
   INITIAL: 'initial',
   ENQUIRY: 'enquiry',
   PENDING_PAYMENT: 'pending-payment',
   PAYMENT_EXPIRED: 'payment-expired',
-  PURCHASED: 'purchased',
-  DELIVERED: 'delivered',
-  RECEIVED: 'received',
-  DISPUTED: 'disputed',
+  PREAUTHORIZED: 'preauthorized',
+  DECLINED: 'declined',
+  ACCEPTED: 'accepted',
   CANCELED: 'canceled',
-  COMPLETED: 'completed',
+  DELIVERED: 'delivered',
   REVIEWED: 'reviewed',
   REVIEWED_BY_CUSTOMER: 'reviewed-by-customer',
   REVIEWED_BY_PROVIDER: 'reviewed-by-provider',
@@ -121,7 +103,7 @@ export const graph = {
   // id is defined only to support Xstate format.
   // However if you have multiple transaction processes defined,
   // it is best to keep them in sync with transaction process aliases.
-  id: 'flex-product-default-process/release-1',
+  id: 'flex-default-process/release-1',
 
   // This 'initial' state is a starting point for new transaction
   initial: states.INITIAL,
@@ -143,45 +125,29 @@ export const graph = {
     [states.PENDING_PAYMENT]: {
       on: {
         [transitions.EXPIRE_PAYMENT]: states.PAYMENT_EXPIRED,
-        [transitions.CONFIRM_PAYMENT]: states.PURCHASED,
+        [transitions.CONFIRM_PAYMENT]: states.PREAUTHORIZED,
       },
     },
 
     [states.PAYMENT_EXPIRED]: {},
-    [states.PURCHASED]: {
+    [states.PREAUTHORIZED]: {
       on: {
-        [transitions.MARK_DELIVERED]: states.DELIVERED,
-        [transitions.MARK_RECEIVED_FROM_PURCHASED]: states.RECEIVED,
-        [transitions.AUTO_CANCEL]: states.CANCELED,
+        [transitions.DECLINE]: states.DECLINED,
+        [transitions.EXPIRE]: states.DECLINED,
+        [transitions.ACCEPT]: states.ACCEPTED,
+      },
+    },
+
+    [states.DECLINED]: {},
+    [states.ACCEPTED]: {
+      on: {
         [transitions.CANCEL]: states.CANCELED,
+        [transitions.COMPLETE]: states.DELIVERED,
       },
     },
 
     [states.CANCELED]: {},
-
     [states.DELIVERED]: {
-      on: {
-        [transitions.MARK_RECEIVED]: states.RECEIVED,
-        [transitions.AUTO_MARK_RECEIVED]: states.RECEIVED,
-        [transitions.DISPUTE]: states.DISPUTED,
-      },
-    },
-
-    [states.DISPUTED]: {
-      on: {
-        [transitions.AUTO_CANCEL_FROM_DISPUTED]: states.CANCELED,
-        [transitions.CANCEL_FROM_DISPUTED]: states.CANCELED,
-        [transitions.MARK_RECEIVED_FROM_DISPUTED]: states.RECEIVED,
-      },
-    },
-
-    [states.RECEIVED]: {
-      on: {
-        [transitions.AUTO_COMPLETE]: states.COMPLETED,
-      },
-    },
-
-    [states.COMPLETED]: {
       on: {
         [transitions.EXPIRE_REVIEW_PERIOD]: states.REVIEWED,
         [transitions.REVIEW_1_BY_CUSTOMER]: states.REVIEWED_BY_CUSTOMER,
@@ -210,27 +176,27 @@ export const graph = {
 // The first transition and most of the expiration transitions made by system are not relevant
 export const isRelevantPastTransition = transition => {
   return [
-    transitions.CONFIRM_PAYMENT,
-    transitions.AUTO_CANCEL,
+    transitions.ACCEPT,
     transitions.CANCEL,
-    transitions.MARK_RECEIVED_FROM_PURCHASED,
-    transitions.MARK_DELIVERED,
-    transitions.DISPUTE,
-    transitions.MARK_RECEIVED,
-    transitions.AUTO_MARK_RECEIVED,
-    transitions.MARK_RECEIVED_FROM_DISPUTED,
-    transitions.AUTO_CANCEL_FROM_DISPUTED,
-    transitions.CANCEL_FROM_DISPUTED,
+    transitions.COMPLETE,
+    transitions.CONFIRM_PAYMENT,
+    transitions.DECLINE,
+    transitions.EXPIRE,
     transitions.REVIEW_1_BY_CUSTOMER,
     transitions.REVIEW_1_BY_PROVIDER,
     transitions.REVIEW_2_BY_CUSTOMER,
     transitions.REVIEW_2_BY_PROVIDER,
   ].includes(transition);
 };
+
+// Processes might be different on how reviews are handled.
+// Default processes use two-sided diamond shape, where either party can make the review first
 export const isCustomerReview = transition => {
   return [transitions.REVIEW_1_BY_CUSTOMER, transitions.REVIEW_2_BY_CUSTOMER].includes(transition);
 };
 
+// Processes might be different on how reviews are handled.
+// Default processes use two-sided diamond shape, where either party can make the review first
 export const isProviderReview = transition => {
   return [transitions.REVIEW_1_BY_PROVIDER, transitions.REVIEW_2_BY_PROVIDER].includes(transition);
 };
@@ -247,4 +213,4 @@ export const isPrivileged = transition => {
   );
 };
 
-export const statesNeedingProviderAttention = [states.PURCHASED];
+export const statesNeedingProviderAttention = [states.PREAUTHORIZED];

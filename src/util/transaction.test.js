@@ -7,70 +7,84 @@ import {
   getProcess,
 } from './transaction';
 
-const process = getProcess('flex-product-default-process');
-const transitions = process?.transitions;
-const txHasBeenReceived = tx => process.hasPassedState(process.states.RECEIVED, tx);
+describe('transaction utils for flex-product-default-process', () => {
+  const process = getProcess('flex-product-default-process');
+  const transitions = process?.transitions;
+  const txHasBeenReceived = tx => process.hasPassedState(process.states.RECEIVED, tx);
 
-// transitions
-const transitionConfirmPayment = createTxTransition({
-  createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
-  by: TX_TRANSITION_ACTOR_CUSTOMER,
-  transition: transitions.CONFIRM_PAYMENT,
-});
-const transitionMarkDelivered = createTxTransition({
-  createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
-  by: TX_TRANSITION_ACTOR_PROVIDER,
-  transition: transitions.MARK_DELIVERED,
-});
-const transitionMarkReceived = createTxTransition({
-  createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
-  by: TX_TRANSITION_ACTOR_CUSTOMER,
-  transition: transitions.MARK_RECEIVED,
-});
+  // transitions
+  const transitionRequestPayment = createTxTransition({
+    createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
+    by: TX_TRANSITION_ACTOR_CUSTOMER,
+    transition: transitions.REQUEST_PAYMENT,
+  });
 
-const transitionReviewed = createTxTransition({
-  createdAt: new Date(Date.UTC(2017, 10, 16, 8, 12)),
-  by: TX_TRANSITION_ACTOR_SYSTEM,
-  transition: transitions.EXPIRE_REVIEW_PERIOD,
-});
+  const transitionConfirmPayment = createTxTransition({
+    createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
+    by: TX_TRANSITION_ACTOR_CUSTOMER,
+    transition: transitions.CONFIRM_PAYMENT,
+  });
 
-// transactions
-const txPurchased = createTransaction({
-  lastTransition: transitions.CONFIRM_PAYMENT,
-  customer: createUser('user1'),
-  provider: createUser('user2'),
-  listing: createListing('Listing'),
-  transitions: [transitionConfirmPayment],
-});
+  const transitionMarkDelivered = createTxTransition({
+    createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
+    by: TX_TRANSITION_ACTOR_PROVIDER,
+    transition: transitions.MARK_DELIVERED,
+  });
 
-const txReceived = createTransaction({
-  lastTransition: transitions.MARK_RECEIVED,
-  customer: createUser('user1'),
-  provider: createUser('user2'),
-  listing: createListing('Listing'),
-  transitions: [transitionConfirmPayment, transitionMarkDelivered, transitionMarkReceived],
-});
+  const transitionMarkReceived = createTxTransition({
+    createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
+    by: TX_TRANSITION_ACTOR_CUSTOMER,
+    transition: transitions.MARK_RECEIVED,
+  });
 
-const txReviewed = createTransaction({
-  lastTransition: transitions.EXPIRE_REVIEW_PERIOD,
-  customer: createUser('user1'),
-  provider: createUser('user2'),
-  listing: createListing('Listing'),
-  transitions: [
-    transitionConfirmPayment,
-    transitionMarkDelivered,
-    transitionMarkReceived,
-    transitionReviewed,
-  ],
-});
+  const transitionReviewed = createTxTransition({
+    createdAt: new Date(Date.UTC(2017, 10, 16, 8, 12)),
+    by: TX_TRANSITION_ACTOR_SYSTEM,
+    transition: transitions.EXPIRE_REVIEW_PERIOD,
+  });
 
-describe('transaction utils', () => {
+  // transactions
+  const txPurchased = createTransaction({
+    lastTransition: transitions.CONFIRM_PAYMENT,
+    customer: createUser('user1'),
+    provider: createUser('user2'),
+    listing: createListing('Listing'),
+    transitions: [transitionRequestPayment, transitionConfirmPayment],
+  });
+
+  const txReceived = createTransaction({
+    lastTransition: transitions.MARK_RECEIVED,
+    customer: createUser('user1'),
+    provider: createUser('user2'),
+    listing: createListing('Listing'),
+    transitions: [
+      transitionRequestPayment,
+      transitionConfirmPayment,
+      transitionMarkDelivered,
+      transitionMarkReceived,
+    ],
+  });
+
+  const txReviewed = createTransaction({
+    lastTransition: transitions.EXPIRE_REVIEW_PERIOD,
+    customer: createUser('user1'),
+    provider: createUser('user2'),
+    listing: createListing('Listing'),
+    transitions: [
+      transitionRequestPayment,
+      transitionConfirmPayment,
+      transitionMarkDelivered,
+      transitionMarkReceived,
+      transitionReviewed,
+    ],
+  });
+
   describe('tx is in correct state', () => {
     const state = process.getState(txReviewed);
     it(`State is REVIEWED when lastTransition is ${transitions.EXPIRE_REVIEW_PERIOD}`, () => {
       expect(state === process.states.REVIEWED).toEqual(true);
     });
-    it(`State is REVIEWED when lastTransition is  ${transitions.PURCHASED}`, () => {
+    it(`State is REVIEWED when lastTransition is ${transitions.CONFIRM_PAYMENT}`, () => {
       expect(state === process.states.PURCHASED).toEqual(false);
     });
   });
@@ -84,6 +98,127 @@ describe('transaction utils', () => {
     });
     it('txHasBeenReceived(txReviewed) succeeds', () => {
       expect(txHasBeenReceived(txReviewed)).toEqual(true);
+    });
+  });
+});
+
+describe('transaction utils for flex-default-process', () => {
+  const process = getProcess('flex-default-process');
+  const transitions = process?.transitions;
+
+  // const transitionConfirmPayment = createTxTransition({
+  //   createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
+  //   by: TX_TRANSITION_ACTOR_CUSTOMER,
+  //   transition: transitions.CONFIRM_PAYMENT,
+  // });
+
+  // transitions
+  const transitionRequestPayment = createTxTransition({
+    createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
+    by: TX_TRANSITION_ACTOR_CUSTOMER,
+    transition: transitions.REQUEST_PAYMENT,
+  });
+
+  const transitionConfirmPayment = createTxTransition({
+    createdAt: new Date(Date.UTC(2017, 10, 9, 8, 10)),
+    by: TX_TRANSITION_ACTOR_CUSTOMER,
+    transition: transitions.CONFIRM_PAYMENT,
+  });
+
+  const transitionAccept = createTxTransition({
+    createdAt: new Date(Date.UTC(2017, 10, 9, 8, 12)),
+    by: TX_TRANSITION_ACTOR_PROVIDER,
+    transition: transitions.ACCEPT,
+  });
+
+  const transitionComplete = createTxTransition({
+    createdAt: new Date(Date.UTC(2017, 10, 16, 8, 12)),
+    by: TX_TRANSITION_ACTOR_SYSTEM,
+    transition: transitions.COMPLETE,
+  });
+  const transitionReviewed = createTxTransition({
+    createdAt: new Date(Date.UTC(2017, 10, 16, 8, 12)),
+    by: TX_TRANSITION_ACTOR_SYSTEM,
+    transition: transitions.EXPIRE_REVIEW_PERIOD,
+  });
+
+  // transactions
+  const txPreauthorized = createTransaction({
+    lastTransition: transitions.CONFIRM_PAYMENT,
+    customer: createUser('user1'),
+    provider: createUser('user2'),
+    listing: createListing('Listing'),
+    transitions: [transitionRequestPayment, transitionConfirmPayment],
+  });
+
+  const txAccepted = createTransaction({
+    lastTransition: transitions.ACCEPT,
+    customer: createUser('user1'),
+    provider: createUser('user2'),
+    listing: createListing('Listing'),
+    transitions: [transitionRequestPayment, transitionConfirmPayment, transitionAccept],
+  });
+
+  const txCompleted = createTransaction({
+    lastTransition: transitions.COMPLETE,
+    customer: createUser('user1'),
+    provider: createUser('user2'),
+    listing: createListing('Listing'),
+    transitions: [
+      transitionRequestPayment,
+      transitionConfirmPayment,
+      transitionAccept,
+      transitionComplete,
+    ],
+  });
+
+  const txReviewed = createTransaction({
+    lastTransition: transitions.EXPIRE_REVIEW_PERIOD,
+    customer: createUser('user1'),
+    provider: createUser('user2'),
+    listing: createListing('Listing'),
+    transitions: [
+      transitionRequestPayment,
+      transitionConfirmPayment,
+      transitionAccept,
+      transitionComplete,
+      transitionReviewed,
+    ],
+  });
+
+  describe('tx is in correct state', () => {
+    const state = process.getState(txReviewed);
+    it(`State is REVIEWED when lastTransition is ${transitions.EXPIRE_REVIEW_PERIOD}`, () => {
+      expect(state === process.states.REVIEWED).toEqual(true);
+    });
+    it(`State is not REVIEWED when lastTransition is ${transitions.ACCEPT}`, () => {
+      expect(state === process.states.PURCHASED).toEqual(false);
+    });
+  });
+
+  describe('tx has passed a state X', () => {
+    const txHasBeenAccepted = tx => process.hasPassedState(process.states.ACCEPTED, tx);
+    const txHasBeenDelivered = tx => process.hasPassedState(process.states.DELIVERED, tx);
+
+    it('txHasBeenAccepted(txPreauthorized) fails', () => {
+      expect(txHasBeenAccepted(txPreauthorized)).toEqual(false);
+    });
+    it('txHasBeenDelivered(txPreauthorized) fails', () => {
+      expect(txHasBeenDelivered(txPreauthorized)).toEqual(false);
+    });
+
+    it('txHasBeenAccepted(txAccepted) succeeds', () => {
+      expect(txHasBeenAccepted(txAccepted)).toEqual(true);
+    });
+    it('txHasBeenDelivered(txAccepted) fails', () => {
+      expect(txHasBeenDelivered(txAccepted)).toEqual(false);
+    });
+
+    it('txHasBeenAccepted(txReviewed) succeeds', () => {
+      expect(txHasBeenAccepted(txReviewed)).toEqual(true);
+    });
+    it('txHasBeenDelivered(txReviewed) succeeds', () => {
+      expect(txHasBeenDelivered(txReviewed)).toEqual(true);
     });
   });
 });
