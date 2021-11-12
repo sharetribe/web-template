@@ -86,32 +86,13 @@
   }
 }
 
-.minPrice {
-  @apply --marketplaceSearchFilterSublabelFontStyles;
-  width: 48px;
-  text-align: center;
-  border-bottom-color: var(--attentionColor);
-  border-bottom-width: 3px;
-
-  -moz-appearance: textfield;
-  &::-webkit-inner-spin-button,
-  &::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  @media (--viewportMedium) {
-    padding: 1px 0 4px 0;
-  }
-}
+.minPrice,
 .maxPrice {
-  @apply --marketplaceSearchFilterSublabelFontStyles;
   width: 48px;
   text-align: center;
-  border-bottom-color: var(--attentionColor);
-  border-bottom-width: 3px;
 
   -moz-appearance: textfield;
+
   &::-webkit-inner-spin-button,
   &::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -119,7 +100,7 @@
   }
 
   @media (--viewportMedium) {
-    padding: 1px 0 4px 0;
+    padding: 3px 0 3px 0;
   }
 }
 
@@ -128,12 +109,10 @@
 }
 
 .priceSeparator {
-  margin: 4px 8px 0 8px;
-}
+  margin: 6px 8px 0 8px;
 
-@media (--viewportMedium) {
-  .priceSeparator {
-    margin: 2px 8px 0 8px;
+  @media (--viewportMedium) {
+    margin: 5px 8px 0 8px;
   }
 }
 
@@ -143,7 +122,7 @@
 }
 @media (--viewportMedium) {
   .sliderWrapper {
-    padding: 16px 0 24px 0;
+    padding: 3px 0 24px 0;
   }
 }
 

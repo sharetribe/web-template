@@ -3,7 +3,6 @@ import { bool, func, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import { injectIntl, intlShape } from '../../util/reactIntl';
 import {
-  IconArrowHead,
   IconCard,
   IconClose,
   IconCheckmark,
@@ -118,8 +117,6 @@ const SavedCardDetails = props => {
     setIsModalOpen(true);
   };
 
-  const iconArrowClassName = menuOpen ? css.IconArrowAnimation : null;
-
   const replaceCardTitle = intl.formatMessage({
     id: 'SavedCardDetails.replaceCardTitle',
   });
@@ -140,14 +137,6 @@ const SavedCardDetails = props => {
         <MenuLabel className={css.menuLabel}>
           <div className={showExpired ? css.menuLabelWrapperExpired : css.menuLabelWrapper}>
             {active === DEFAULT_CARD ? defaultCard : replaceCard}
-            <span>
-              <IconArrowHead
-                direction="down"
-                size="small"
-                rootClassName={css.iconArrow}
-                className={iconArrowClassName}
-              />
-            </span>
           </div>
         </MenuLabel>
 

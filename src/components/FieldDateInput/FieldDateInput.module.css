@@ -1,18 +1,6 @@
 .fieldRoot {
 }
 
-.pickerSuccess {
-  & :global(.DateInput_input) {
-    border-bottom-color: var(--successColor);
-  }
-}
-
-.pickerError {
-  & :global(.DateInput_input) {
-    border-bottom-color: var(--failColor);
-  }
-}
-
 /**
  * Mobile margins mean that labels, inputs (incl separate borders) get margins,
  * but calendar popup doesn't.

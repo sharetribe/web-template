@@ -9,31 +9,40 @@
   & :global(.DateRangePicker) {
     display: block;
   }
+
   & :global(.DateRangePicker_picker__directionLeft) {
     /* !important is added to top because react-dates uses inline style for height */
     /* Similar problem as in issue: https://github.com/airbnb/react-dates/issues/947 */
+    box-shadow: var(--boxShadowButton);
     top: 36px !important;
-    width: 100%;
-    min-height: calc(100vh - 252px);
+    left: unset !important;
+    width: calc(100% - 48px);
     background-color: var(--marketplaceColor);
 
     @media (--viewportMedium) {
       /* !important is added to top because react-dates uses inline style for height */
       /* Similar problem as in issue: https://github.com/airbnb/react-dates/issues/947 */
-      top: 42px !important;
+      top: 48px !important;
+      left: 0px !important;
+      width: 100%;
+      min-height: calc(100vh - 252px);
       min-height: auto;
-      box-shadow: var(--boxShadowPopup);
-      border-radius: 0 0 2px 2px;
+      border-radius: 0 0 6px 6px;
     }
   }
 
   & :global(.DateInput_input) {
-    @apply --marketplaceH4FontStyles;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    background: none;
+    @apply --marketplaceDefaultFontStyles;
+    @apply --marketplaceInputStyles;
+
+    &:focus {
+      border-radius: 6px 6px 0 0;
+      border-color: #80bdff;
+      box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+      transition: all ease-in-out 100ms;
+    }
   }
+
   & :global(.DateRangePickerInput) {
     width: 100%;
     display: flex;
@@ -80,11 +89,6 @@
   & :global(.DateInput) {
     display: block;
     width: 100%;
-    padding: 5px 0 2px 0;
-
-    @media (--viewportMedium) {
-      padding: 6px 0 9px 0;
-    }
   }
   & :global(.DayPicker_weekHeader) {
     color: var(--matterColorLight);
@@ -267,7 +271,7 @@
     background: none;
 
     @media (--viewportMedium) {
-      width: calc(50% - 12px);
+      width: calc(50% - 6px);
     }
   }
 
@@ -275,7 +279,7 @@
     margin-right: 12px;
 
     @media (--viewportMedium) {
-      margin-right: 24px;
+      margin-right: 0;
     }
   }
 }

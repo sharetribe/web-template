@@ -9,39 +9,40 @@
   & :global(.SingleDatePicker) {
     display: block;
   }
+
   & :global(.SingleDatePicker_picker__directionLeft) {
     /* !important is added to top because react-dates uses inline style for height */
     /* Similar problem as in issue: https://github.com/airbnb/react-dates/issues/947 */
+    box-shadow: var(--boxShadowButton);
     top: 36px !important;
-    width: 100%;
-    min-height: calc(100vh - 252px);
+    left: unset !important;
+    width: calc(100% - 48px);
     background-color: var(--marketplaceColor);
 
     @media (--viewportMedium) {
       /* !important is added to top because react-dates uses inline style for height */
       /* Similar problem as in issue: https://github.com/airbnb/react-dates/issues/947 */
-      top: 40px !important;
+      top: 48px !important;
+      left: 0px !important;
+      width: 100%;
+      min-height: calc(100vh - 252px);
       min-height: auto;
-      box-shadow: var(--boxShadowPopup);
-      border-radius: 0 0 2px 2px;
+      border-radius: 0 0 6px 6px;
     }
   }
 
   & :global(.DateInput_input) {
     @apply --marketplaceDefaultFontStyles;
     @apply --marketplaceInputStyles;
-    border-bottom-style: solid;
-    border-bottom-width: 2px;
-    border-bottom-color: var(--attentionColor);
-    transition: border-bottom-color var(--transitionStyle);
-    transition: all 0.15s ease-out;
-    background: none;
 
-    @media (--viewportMedium) {
-      padding: 4px 0 9px 0;
-      border-bottom-width: 3px;
+    &:focus {
+      border-radius: 6px 6px 0 0;
+      border-color: #80bdff;
+      box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+      transition: all ease-in-out 100ms;
     }
   }
+
   & :global(.SingleDatePickerInput) {
     width: 100%;
     display: flex;
