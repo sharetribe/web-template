@@ -15,7 +15,7 @@ const ActionButtonsMaybe = props => {
     <PrimaryButton
       inProgress={primaryButtonProps.inProgress}
       disabled={buttonsDisabled}
-      onClick={primaryButtonProps.onTransition}
+      onClick={primaryButtonProps.onAction}
     >
       {primaryButtonProps.buttonText}
     </PrimaryButton>
@@ -28,7 +28,7 @@ const ActionButtonsMaybe = props => {
     <SecondaryButton
       inProgress={secondaryButtonProps?.inProgress}
       disabled={buttonsDisabled}
-      onClick={secondaryButtonProps.onTransition}
+      onClick={secondaryButtonProps.onAction}
     >
       {secondaryButtonProps.buttonText}
     </SecondaryButton>

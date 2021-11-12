@@ -57,35 +57,26 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
               "error": undefined,
               "errorText": "TransactionPage.leaveReview.actionError",
               "inProgress": undefined,
-              "onTransition": [Function],
+              "onAction": [Function],
             }
           }
           lineItems={null}
-          markDeliveredProps={
-            Object {
-              "buttonText": "TransactionPage.markDelivered.actionButton",
-              "error": null,
-              "errorText": "TransactionPage.markDelivered.actionError",
-              "inProgress": false,
-              "onTransition": [Function],
-            }
-          }
           markReceivedFromPurchasedProps={
             Object {
-              "buttonText": "TransactionPage.markReceivedFromPurchased.actionButton",
+              "buttonText": "TransactionPage.flex-product-default-process.customer.transition-mark-received-from-purchased.actionButton",
               "error": null,
-              "errorText": "TransactionPage.markReceivedFromPurchased.actionError",
+              "errorText": "TransactionPage.flex-product-default-process.customer.transition-mark-received-from-purchased.actionError",
               "inProgress": false,
-              "onTransition": [Function],
+              "onAction": [Function],
             }
           }
           markReceivedProps={
             Object {
-              "buttonText": "TransactionPage.markReceived.actionButton",
+              "buttonText": "TransactionPage.flex-product-default-process.customer.transition-mark-received.actionButton",
               "error": null,
-              "errorText": "TransactionPage.markReceived.actionError",
+              "errorText": "TransactionPage.flex-product-default-process.customer.transition-mark-received.actionError",
               "inProgress": false,
-              "onTransition": [Function],
+              "onAction": [Function],
             }
           }
           messages={Array []}
@@ -355,35 +346,17 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
               "error": undefined,
               "errorText": "TransactionPage.leaveReview.actionError",
               "inProgress": undefined,
-              "onTransition": [Function],
+              "onAction": [Function],
             }
           }
           lineItems={null}
           markDeliveredProps={
             Object {
-              "buttonText": "TransactionPage.markDelivered.actionButton",
+              "buttonText": "TransactionPage.flex-product-default-process.provider.transition-mark-delivered.actionButtonShipped",
               "error": null,
-              "errorText": "TransactionPage.markDelivered.actionError",
+              "errorText": "TransactionPage.flex-product-default-process.provider.transition-mark-delivered.actionError",
               "inProgress": false,
-              "onTransition": [Function],
-            }
-          }
-          markReceivedFromPurchasedProps={
-            Object {
-              "buttonText": "TransactionPage.markReceivedFromPurchased.actionButton",
-              "error": null,
-              "errorText": "TransactionPage.markReceivedFromPurchased.actionError",
-              "inProgress": false,
-              "onTransition": [Function],
-            }
-          }
-          markReceivedProps={
-            Object {
-              "buttonText": "TransactionPage.markReceived.actionButton",
-              "error": null,
-              "errorText": "TransactionPage.markReceived.actionError",
-              "inProgress": false,
-              "onTransition": [Function],
+              "onAction": [Function],
             }
           }
           messages={Array []}

@@ -35,10 +35,7 @@ import ReviewModal from './ReviewModal/ReviewModal';
 import TransactionPanel from './TransactionPanel/TransactionPanel';
 
 import {
-  dispute,
-  markReceived,
-  markReceivedFromPurchased,
-  markDelivered,
+  makeTransition,
   sendMessage,
   sendReview,
   fetchMoreMessages,
@@ -48,6 +45,66 @@ import css from './TransactionPage.module.css';
 
 const PROVIDER = 'provider';
 const CUSTOMER = 'customer';
+
+// Submit dispute and close the review modal
+const onDisputeOrder = (currentTransactionId, transitionName, onTransition) => values => {
+  const { disputeReason } = values;
+  const params = disputeReason ? { protectedData: { disputeReason } } : {};
+  onTransition(currentTransactionId, transitionName, params)
+    .then(r => {
+      return setState(prevState => ({ ...prevState, disputeSubmitted: true }));
+    })
+    .catch(e => {
+      // Do nothing.
+    });
+};
+
+// Transitions are following process.edn format: "transition/my-transtion-name"
+// This extracts the 'my-transtion-name' string if namespace exists
+const getTransitionKey = transitionName => {
+  const [nameSpace, transitionKey] = transitionName.split('/');
+  return transitionKey || transitionName;
+};
+
+// Find hyphen followed by any character.
+// Then capitalize it and replace the hyphen+character with the capitalised character.
+const camelize = s => s.replace(/-./g, x => x[1].toUpperCase());
+
+// Action button prop for the TransactionPanel
+const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
+  const {
+    processName,
+    transitionName,
+    inProgress,
+    transitionError,
+    onAction,
+    transactionRole,
+    actionButtonTranslationId,
+    actionButtonTranslationErrorId,
+    intl,
+  } = params;
+  const transitionKey = getTransitionKey(transitionName);
+  const transitionPropsKey = `${camelize(transitionKey)}Props`;
+
+  const actionButtonTrId =
+    actionButtonTranslationId ||
+    `TransactionPage.${processName}.${transactionRole}.transition-${transitionKey}.actionButton`;
+  const actionButtonTrErrorId =
+    actionButtonTranslationErrorId ||
+    `TransactionPage.${processName}.${transactionRole}.transition-${transitionKey}.actionError`;
+
+  return onlyForRole === 'both' || onlyForRole === transactionRole
+    ? {
+        [transitionPropsKey]: {
+          inProgress,
+          error: transitionError,
+          onAction,
+          buttonText: intl.formatMessage({ id: actionButtonTrId }),
+          errorText: intl.formatMessage({ id: actionButtonTrErrorId }),
+        },
+      }
+    : {};
+};
 
 // TransactionPage handles data loading for Sale and Order views to transaction pages in Inbox.
 export const TransactionPageComponent = props => {
@@ -81,18 +138,9 @@ export const TransactionPageComponent = props => {
     sendReviewInProgress,
     transaction,
     transactionRole,
-    disputeInProgress,
-    disputeError,
-    onDispute,
-    markReceivedInProgress,
-    markReceivedError,
-    onMarkReceived,
-    markReceivedFromPurchasedInProgress,
-    markReceivedFromPurchasedError,
-    onMarkReceivedFromPurchased,
-    markDeliveredInProgress,
-    markDeliveredError,
-    onMarkDelivered,
+    transitionInProgress,
+    transitionError,
+    onTransition,
     timeSlots,
     fetchTimeSlotsError,
     processTransitions,
@@ -108,8 +156,11 @@ export const TransactionPageComponent = props => {
   const currentListing = ensureListing(currentTransaction.listing);
   const isProviderRole = transactionRole === PROVIDER;
   const isCustomerRole = transactionRole === CUSTOMER;
+
+  const processName = currentTransaction?.attributes?.processName;
+  const process = processName ? getProcess(processName) : null;
+
   const isTxOnPaymentPending = tx => {
-    const process = tx?.attributes?.processName ? getProcess(tx.attributes.processName) : null;
     return process ? process.getState(tx) === process.states.PAYMENT_PENDING : null;
   };
 
@@ -220,17 +271,6 @@ export const TransactionPageComponent = props => {
   const onOpenDisputeModal = () => {
     setState(prevState => ({ ...prevState, isDisputeModalOpen: true }));
   };
-  // Submit dispute and close the review modal
-  const onDisputeOrder = values => {
-    const { disputeReason } = values;
-    onDispute(currentTransaction.id, disputeReason)
-      .then(r => {
-        return setState(prevState => ({ ...prevState, disputeSubmitted: true }));
-      })
-      .catch(e => {
-        // Do nothing.
-      });
-  };
 
   const deletedListingTitle = intl.formatMessage({
     id: 'TransactionPage.deletedListing',
@@ -302,6 +342,22 @@ export const TransactionPageComponent = props => {
     <UserDisplayName user={currentTransaction.customer} intl={intl} />
   );
 
+  const commonActionButtonParams = { processName, transactionRole, intl };
+  // Action buttons that make transition directly without modal popup.
+  const plainActionButtonProps = (transitionName, forRole, extra = {}) => {
+    return getActionButtonPropsMaybe(
+      {
+        ...commonActionButtonParams,
+        transitionName,
+        inProgress: transitionInProgress === transitionName,
+        transitionError,
+        onAction: () => onTransition(currentTransaction.id, transitionName, {}),
+        ...extra,
+      },
+      forRole
+    );
+  };
+
   // TransactionPanel is presentational component
   // that currently handles showing everything inside layout's main view area.
   const panel = isDataAvailable ? (
@@ -324,46 +380,22 @@ export const TransactionPageComponent = props => {
       onOpenReviewModal={onOpenReviewModal}
       onOpenDisputeModal={onOpenDisputeModal}
       transactionRole={transactionRole}
-      markReceivedProps={{
-        inProgress: markReceivedInProgress,
-        error: markReceivedError,
-        onTransition: () => onMarkReceived(currentTransaction.id),
-        buttonText: intl.formatMessage({
-          id: 'TransactionPage.markReceived.actionButton',
-        }),
-        errorText: intl.formatMessage({
-          id: 'TransactionPage.markReceived.actionError',
-        }),
-      }}
-      markReceivedFromPurchasedProps={{
-        inProgress: markReceivedFromPurchasedInProgress,
-        error: markReceivedFromPurchasedError,
-        onTransition: () => onMarkReceivedFromPurchased(currentTransaction.id),
-        buttonText: intl.formatMessage({
-          id: 'TransactionPage.markReceivedFromPurchased.actionButton',
-        }),
-        errorText: intl.formatMessage({
-          id: 'TransactionPage.markReceivedFromPurchased.actionError',
-        }),
-      }}
-      markDeliveredProps={{
-        inProgress: markDeliveredInProgress,
-        error: markDeliveredError,
-        onTransition: () => onMarkDelivered(currentTransaction.id),
-        buttonText: intl.formatMessage({
-          id: isShippable
-            ? 'TransactionPage.markShipped.actionButton'
-            : 'TransactionPage.markDelivered.actionButton',
-        }),
-        errorText: intl.formatMessage({ id: 'TransactionPage.markDelivered.actionError' }),
-      }}
-      leaveReviewProps={{
+      {...plainActionButtonProps(process.transitions.MARK_RECEIVED, CUSTOMER)}
+      {...plainActionButtonProps(process.transitions.MARK_RECEIVED_FROM_PURCHASED, CUSTOMER)}
+      {...plainActionButtonProps(process.transitions.MARK_DELIVERED, PROVIDER, {
+        actionButtonTranslationId: isShippable
+          ? `TransactionPage.${processName}.provider.transition-mark-delivered.actionButton`
+          : `TransactionPage.${processName}.provider.transition-mark-delivered.actionButtonShipped`,
+      })}
+      {...getActionButtonPropsMaybe({
+        ...commonActionButtonParams,
+        transitionName: 'leaveReview',
         inProgress: sendReviewInProgress,
-        error: sendReviewError,
-        onTransition: onOpenReviewModal,
-        buttonText: intl.formatMessage({ id: 'TransactionPage.leaveReview.actionButton' }),
-        errorText: intl.formatMessage({ id: 'TransactionPage.leaveReview.actionError' }),
-      }}
+        transitionError: sendReviewError,
+        onAction: onOpenReviewModal,
+        actionButtonTranslationId: 'TransactionPage.leaveReview.actionButton',
+        actionButtonTranslationErrorId: 'TransactionPage.leaveReview.actionError',
+      })}
       nextTransitions={processTransitions}
       onSubmitOrderRequest={handleSubmitOrderRequest}
       timeSlots={timeSlots}
@@ -399,18 +431,24 @@ export const TransactionPageComponent = props => {
             sendReviewInProgress={sendReviewInProgress}
             sendReviewError={sendReviewError}
           />
-          <DisputeModal
-            id="DisputeOrderModal"
-            isOpen={state.isDisputeModalOpen}
-            onCloseModal={() =>
-              setState(prevState => ({ ...prevState, isDisputeModalOpen: false }))
-            }
-            onManageDisableScrolling={onManageDisableScrolling}
-            onDisputeOrder={onDisputeOrder}
-            disputeSubmitted={state.disputeSubmitted}
-            disputeInProgress={disputeInProgress}
-            disputeError={disputeError}
-          />
+          {process && process.transitions.DISPUTE ? (
+            <DisputeModal
+              id="DisputeOrderModal"
+              isOpen={state.isDisputeModalOpen}
+              onCloseModal={() =>
+                setState(prevState => ({ ...prevState, isDisputeModalOpen: false }))
+              }
+              onManageDisableScrolling={onManageDisableScrolling}
+              onDisputeOrder={onDisputeOrder(
+                currentTransaction?.id,
+                process.transitions.DISPUTE,
+                onTransition
+              )}
+              disputeSubmitted={state.disputeSubmitted}
+              disputeInProgress={transitionInProgress === process.transitions.DISPUTE}
+              disputeError={transitionError}
+            />
+          ) : null}
         </LayoutWrapperMain>
         <LayoutWrapperFooter className={css.footer}>
           <Footer />
@@ -423,10 +461,8 @@ export const TransactionPageComponent = props => {
 TransactionPageComponent.defaultProps = {
   currentUser: null,
   fetchTransactionError: null,
-  disputeError: null,
-  markDeliveredError: null,
-  markReceivedError: null,
-  markReceivedFromPurchasedError: null,
+  transitionInProgress: null,
+  transitionError: null,
   transaction: null,
   fetchMessagesError: null,
   initialMessageFailedToTransaction: null,
@@ -443,18 +479,9 @@ TransactionPageComponent.propTypes = {
   transactionRole: oneOf([PROVIDER, CUSTOMER]).isRequired,
   currentUser: propTypes.currentUser,
   fetchTransactionError: propTypes.error,
-  markReceivedInProgress: bool.isRequired,
-  markReceivedError: propTypes.error,
-  onMarkReceived: func.isRequired,
-  markReceivedFromPurchasedInProgress: bool.isRequired,
-  markReceivedFromPurchasedError: propTypes.error,
-  onMarkReceivedFromPurchased: func.isRequired,
-  markDeliveredInProgress: bool.isRequired,
-  markDeliveredError: propTypes.error,
-  onMarkDelivered: func.isRequired,
-  disputeInProgress: bool.isRequired,
-  disputeError: propTypes.error,
-  onDispute: func.isRequired,
+  transitionInProgress: string,
+  transitionError: propTypes.error,
+  onTransition: func.isRequired,
   scrollingDisabled: bool.isRequired,
   transaction: propTypes.transaction,
   fetchMessagesError: propTypes.error,
@@ -493,14 +520,8 @@ TransactionPageComponent.propTypes = {
 const mapStateToProps = state => {
   const {
     fetchTransactionError,
-    disputeInProgress,
-    disputeError,
-    markReceivedInProgress,
-    markReceivedError,
-    markReceivedFromPurchasedInProgress,
-    markReceivedFromPurchasedError,
-    markDeliveredInProgress,
-    markDeliveredError,
+    transitionInProgress,
+    transitionError,
     transactionRef,
     fetchMessagesInProgress,
     fetchMessagesError,
@@ -528,14 +549,8 @@ const mapStateToProps = state => {
   return {
     currentUser,
     fetchTransactionError,
-    disputeInProgress,
-    disputeError,
-    markReceivedInProgress,
-    markReceivedError,
-    markReceivedFromPurchasedInProgress,
-    markReceivedFromPurchasedError,
-    markDeliveredInProgress,
-    markDeliveredError,
+    transitionInProgress,
+    transitionError,
     scrollingDisabled: isScrollingDisabled(state),
     transaction,
     fetchMessagesInProgress,
@@ -560,11 +575,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onDispute: (transactionId, disputeReason) => dispatch(dispute(transactionId, disputeReason)),
-    onMarkReceived: transactionId => dispatch(markReceived(transactionId)),
-    onMarkReceivedFromPurchased: transactionId =>
-      dispatch(markReceivedFromPurchased(transactionId)),
-    onMarkDelivered: transactionId => dispatch(markDelivered(transactionId)),
+    onTransition: (transactionId, transitionName, params) =>
+      dispatch(makeTransition(transactionId, transitionName, params)),
     onShowMoreMessages: txId => dispatch(fetchMoreMessages(txId)),
     onSendMessage: (txId, message) => dispatch(sendMessage(txId, message)),
     onManageDisableScrolling: (componentId, disableScrolling) =>
