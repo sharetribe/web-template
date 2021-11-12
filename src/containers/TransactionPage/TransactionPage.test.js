@@ -31,7 +31,6 @@ describe('TransactionPage - Sale', () => {
       transactionRole: 'provider',
 
       currentUser: createCurrentUser('provider1'),
-      transitionInProgress: false,
       onTransition: noop,
       scrollingDisabled: false,
       callSetInitialValues: noop,
@@ -100,7 +99,6 @@ describe('TransactionPage - Order', () => {
       fetchLineItemsInProgress: false,
       intl: fakeIntl,
 
-      transitionInProgress: false,
       onTransition: noop,
 
       location: {
