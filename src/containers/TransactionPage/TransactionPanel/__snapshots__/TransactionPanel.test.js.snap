@@ -3380,7 +3380,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
               "error": null,
               "errorText": "mark delivered failed",
               "inProgress": false,
-              "onTransition": [Function],
+              "onAction": [Function],
             }
           }
           showButtons={true}
@@ -3581,7 +3581,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                   "error": null,
                   "errorText": "mark delivered failed",
                   "inProgress": false,
-                  "onTransition": [Function],
+                  "onAction": [Function],
                 }
               }
               showButtons={true}
@@ -4328,7 +4328,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
               "error": null,
               "errorText": "leave review failed",
               "inProgress": false,
-              "onTransition": [Function],
+              "onAction": [Function],
             }
           }
           showButtons={true}
@@ -4539,7 +4539,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                   "error": null,
                   "errorText": "leave review failed",
                   "inProgress": false,
-                  "onTransition": [Function],
+                  "onAction": [Function],
                 }
               }
               showButtons={true}
@@ -7755,7 +7755,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
               "error": null,
               "errorText": "mark delivered failed",
               "inProgress": false,
-              "onTransition": [Function],
+              "onAction": [Function],
             }
           }
           showButtons={true}
@@ -7944,7 +7944,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                   "error": null,
                   "errorText": "mark delivered failed",
                   "inProgress": false,
-                  "onTransition": [Function],
+                  "onAction": [Function],
                 }
               }
               showButtons={true}
@@ -8655,7 +8655,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
               "error": null,
               "errorText": "leave review failed",
               "inProgress": false,
-              "onTransition": [Function],
+              "onAction": [Function],
             }
           }
           showButtons={true}
@@ -8854,7 +8854,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                   "error": null,
                   "errorText": "leave review failed",
                   "inProgress": false,
-                  "onTransition": [Function],
+                  "onAction": [Function],
                 }
               }
               showButtons={true}

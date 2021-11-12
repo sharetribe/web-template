@@ -31,14 +31,7 @@ describe('TransactionPage - Sale', () => {
       transactionRole: 'provider',
 
       currentUser: createCurrentUser('provider1'),
-      markReceivedFromPurchasedInProgress: false,
-      onMarkReceivedFromPurchased: noop,
-      markDeliveredInProgress: false,
-      onMarkDelivered: noop,
-      markReceivedInProgress: false,
-      onMarkReceived: noop,
-      disputeInProgress: false,
-      onDispute: noop,
+      onTransition: noop,
       scrollingDisabled: false,
       callSetInitialValues: noop,
       transaction,
@@ -106,14 +99,7 @@ describe('TransactionPage - Order', () => {
       fetchLineItemsInProgress: false,
       intl: fakeIntl,
 
-      markReceivedFromPurchasedInProgress: false,
-      onMarkReceivedFromPurchased: noop,
-      markDeliveredInProgress: false,
-      onMarkDelivered: noop,
-      markReceivedInProgress: false,
-      onMarkReceived: noop,
-      disputeInProgress: false,
-      onDispute: noop,
+      onTransition: noop,
 
       location: {
         pathname: `/order/${txId}/details`,
