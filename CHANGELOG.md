@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [change] Refactor action button transition thunks and pass transition name to it.
+  [#8](https://github.com/sharetribe/ftw-x/pull/8)
 - [add] Another process graph: src/util/transactionProcessBooking.js
   [#4](https://github.com/sharetribe/ftw-x/pull/4)
 - [change] Refactor TransactionPage title construction and translation keys.
