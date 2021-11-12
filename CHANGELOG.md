@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [add] Another process graph: src/util/transactionProcessBooking.js
+  [#4](https://github.com/sharetribe/ftw-x/pull/4)
 - [change] Refactor TransactionPage title construction and translation keys.
   [#3](https://github.com/sharetribe/ftw-x/pull/3)
 - [fix] Temporarily disallow Node v17, since it causes issues with dependencies.
