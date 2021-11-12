@@ -66,7 +66,7 @@
 
 /* Verification error box */
 .verficiationErrorBox {
-  border: var(--errorMessageStyling);
+  border: var(--borderErrorField);
   background: var(--failColorLight);
 }
 

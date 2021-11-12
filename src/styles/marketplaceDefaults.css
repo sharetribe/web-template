@@ -134,7 +134,7 @@
   --TabNav_linkWidth: 240px;
 
   /* ================ Inputs, textareas and selects ================ */
-  --errorMessageStyling: 1px solid var(--failColor);
+  --borderErrorField: 1px solid var(--failColor);
 
   /* ================ LandingPage ================ */
   --LandingPage_sectionMarginTop: 40px;

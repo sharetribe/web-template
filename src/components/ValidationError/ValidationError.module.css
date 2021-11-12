@@ -2,13 +2,13 @@
 
 .root {
   @apply --marketplaceH4FontStyles;
-  margin-top: 7px;
+  margin-top: 6px;
   margin-bottom: 0;
   color: var(--failColor);
   overflow: hidden;
   font-size: 13px;
 
   @media (--viewportMedium) {
-    margin-top: 7px;
+    margin-top: 8px;
   }
 }
