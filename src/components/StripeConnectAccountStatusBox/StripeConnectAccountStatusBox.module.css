@@ -10,13 +10,11 @@
   flex-wrap: wrap;
 
   padding: 15px 32px 23px 32px;
-  margin-bottom: 24px;
+  margin-bottom: 72px;
 
   border-radius: 4px;
-}
 
-@media (--viewportMedium) {
-  .verificiationBox {
+  @media (--viewportMedium) {
     flex-wrap: nowrap;
   }
 }
@@ -26,10 +24,8 @@
   flex-wrap: wrap;
   padding: 5px 24px 3px 0px;
   margin-bottom: 16px;
-}
 
-@media (--viewportMedium) {
-  .verificiationBoxTextWrapper {
+  @media (--viewportMedium) {
     margin-bottom: 0px;
   }
 }
@@ -70,8 +66,8 @@
 
 /* Verification error box */
 .verficiationErrorBox {
+  border: var(--borderErrorField);
   background: var(--failColorLight);
-  border: 1px solid var(--failColor);
 }
 
 /* Verification success box */

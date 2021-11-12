@@ -15,7 +15,6 @@
 .input {
   /* Parent component should not shrink this field */
   flex-shrink: 0;
-  border-bottom-color: var(--attentionColor);
   margin-bottom: 24px;
   width: 100%;
   &:last-of-type {
@@ -23,25 +22,21 @@
   }
 }
 
+.error {
+  color: var(--failColor);
+  font-size: 13px !important; /* TODO: Change the <p> tag in front-end to <span> to remove !important */
+  margin-top: 7px !important; /* TODO: Change the <p> tag in front-end to <span> to remove !important */
+}
+
+input.inputError {
+  border: var(--borderErrorField);
+}
+
 .longForm {
   width: 100%;
   margin-bottom: 24px;
-}
 
-@media (--viewportSmall) {
-  .longForm {
+  @media (--viewportSmall) {
     width: calc(50% - 9px);
   }
-}
-
-.inputSuccess {
-  border-bottom-color: var(--successColor);
-}
-
-.inputError {
-  border-bottom-color: var(--failColor);
-}
-
-.error {
-  color: var(--failColor);
 }

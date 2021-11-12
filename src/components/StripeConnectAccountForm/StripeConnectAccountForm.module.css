@@ -107,21 +107,12 @@
 }
 
 .savedBankAccount {
-  width: 100%;
-  border-bottom: 2px solid var(--successColor);
-  margin-bottom: 24px;
-  padding: 4px 0 10px 0;
+  @apply --marketplaceInputStyles;
   color: var(--matterColor);
   text-align: left;
 
   &:hover {
     cursor: text;
     text-decoration: none;
-    border-color: var(--matterColor);
-  }
-
-  &:focus {
-    outline: none;
-    border-color: var(--matterColor);
   }
 }

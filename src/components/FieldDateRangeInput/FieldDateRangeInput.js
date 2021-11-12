@@ -87,21 +87,11 @@ class FieldDateRangeInputComponent extends Component {
     const startDateLabelClasses = classNames(css.startDateLabel, {
       [css.labelSuccess]: false, //startDateIsValid,
     });
-    const startDateBorderClasses = classNames(css.input, {
-      [css.inputSuccess]: startDateIsValid,
-      [css.inputError]: touched && !startDateIsValid && typeof error === 'string',
-      [css.hover]: this.state.focusedInput === START_DATE,
-    });
 
     // If endDate is valid label changes color and bottom border changes color too
     const endDateIsValid = value && value.endDate instanceof Date;
     const endDateLabelClasses = classNames(css.endDateLabel, {
       [css.labelSuccess]: false, //endDateIsValid,
-    });
-    const endDateBorderClasses = classNames(css.input, {
-      [css.inputSuccess]: endDateIsValid,
-      [css.inputError]: touched && !endDateIsValid && typeof error === 'string',
-      [css.hover]: this.state.focusedInput === END_DATE,
     });
 
     const label =
@@ -137,14 +127,6 @@ class FieldDateRangeInputComponent extends Component {
       <div className={classes}>
         {label}
         <DateRangeInput {...inputProps} />
-        <div
-          className={classNames(css.inputBorders, {
-            [css.mobileMargins]: useMobileMargins && !this.state.focusedInput,
-          })}
-        >
-          <div className={startDateBorderClasses} />
-          <div className={endDateBorderClasses} />
-        </div>
         <ValidationError className={errorClasses} fieldMeta={meta} />
       </div>
     );

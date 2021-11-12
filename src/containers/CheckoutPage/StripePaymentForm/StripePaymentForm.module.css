@@ -37,32 +37,18 @@
 .card {
   @apply --marketplaceInputStyles;
 
-  /* Layout */
-  padding: 8px 0 6px 0;
-  height: 36px;
-
-  /* Border */
-  border-bottom-color: var(--attentionColor);
-
   @media (--viewportMedium) {
-    height: 38px;
+    padding: 11px 0 11px 16px;
   }
-  @media (--viewportLarge) {
-    height: 38px;
-    padding: 6px 0 14px 0;
-  }
-}
-
-.cardSuccess {
-  border-bottom-color: var(--successColor);
 }
 
 .cardError {
-  border-bottom-color: var(--failColor);
+  border: var(--borderErrorField);
 }
 
 .error {
   color: var(--failColor);
+  font-size: 13px;
 }
 
 .errorMessage {
@@ -155,15 +141,6 @@
 .sameAddressCheckbox {
   display: block;
   margin: 24px 0;
-}
-
-.paymentLabel {
-  margin: 0;
-
-  @media (--viewportMedium) {
-    margin-top: 0px;
-    margin-bottom: 2px;
-  }
 }
 
 .messageHeading {

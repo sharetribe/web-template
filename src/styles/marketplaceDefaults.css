@@ -128,11 +128,13 @@
   --DateRangeController_selectionHeight: var(--ReactDates_selectionHeight);
 
   /* ================ SectionHero ================ */
-
   --SectionHero_desktopTitleMaxWidth: 625px;
 
   /* ================ TabNav ================ */
   --TabNav_linkWidth: 240px;
+
+  /* ================ Inputs, textareas and selects ================ */
+  --borderErrorField: 1px solid var(--failColor);
 
   /* ================ LandingPage ================ */
   --LandingPage_sectionMarginTop: 40px;
@@ -198,22 +200,6 @@ h6 {
   @apply --marketplaceH6FontStyles;
 }
 
-input {
-  font-family: var(--fontFamily);
-  font-weight: var(--fontWeightMedium);
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: -0.1px;
-  /* No margins for default font */
-
-  @media (--viewportMedium) {
-    font-size: 16px;
-    line-height: 32px;
-  }
-}
-
-textarea,
-select,
 li {
   @apply --marketplaceDefaultFontStyles;
 }
@@ -237,8 +223,7 @@ ul {
   padding: 0;
 }
 
-legend,
-label {
+legend {
   @apply --marketplaceH5FontStyles;
   font-weight: var(--fontWeightSemiBold);
   display: block;
@@ -251,6 +236,23 @@ label {
     margin-bottom: 0;
     padding-top: 3px;
     padding-bottom: 5px;
+  }
+}
+
+label {
+  @apply --marketplaceH5FontStyles;
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 13px;
+  display: block;
+  margin-top: 0;
+  margin-bottom: 6px;
+
+  @media (--viewportMedium) {
+    font-weight: var(--fontWeightSemiBold);
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 3px;
+    padding-bottom: 13px;
   }
 }
 
@@ -268,29 +270,20 @@ input {
 
 textarea {
   @apply --marketplaceInputStyles;
-
-  /* Todo: All textareas are using auto-sizing extension which currently calculates required space incorrectly when box-sixing is "border-box" */
-  box-sizing: content-box;
-  padding: 2px 0 8px 0;
-
-  &::placeholder {
-    padding: 0 0 0 0;
-  }
+  min-height: 84px; /* 3 rows  */
+  max-height: 300px; /* 12 rows fullu visible, scroll after */
 
   @media (--viewportMedium) {
-    padding: 6px 0 8px 0;
-
-    &::placeholder {
-      padding: 0 0 0 0;
-    }
+    min-height: 112px; /* 3 rows fully visible */
+    max-height: 496px; /* 15 rows fullu visible, scroll after */
   }
 }
 
 .fontsLoaded {
   & body {
-    font-family: 'poppins', Helvetica, Arial, sans-serif;
+    font-family: var(--fontFamily);
   }
   & button {
-    font-family: 'poppins', Helvetica, Arial, sans-serif;
+    font-family: var(--fontFamily);
   }
 }
