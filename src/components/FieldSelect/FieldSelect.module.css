@@ -2,5 +2,5 @@
 }
 
 .selectError {
-  border: var(--errorMessageStyling);
+  border: var(--borderErrorField);
 }

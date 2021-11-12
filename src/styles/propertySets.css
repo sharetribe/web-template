@@ -508,6 +508,8 @@
     display: block;
     width: 100%;
     margin: 0;
+
+    /* 6 + 24 + 4 + borders are divisible by 6 */
     padding: 6px 12px 4px 12px;
     background-color: #fff;
 
@@ -545,6 +547,7 @@
     }
 
     @media (--viewportMedium) {
+      /* 7 + 32 + 7 + borders = 48, which is divisible by 8. */
       padding: 7px 16px 7px 16px;
       line-height: 32px;
     }

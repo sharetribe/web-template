@@ -46,14 +46,6 @@
   margin-bottom: 24px;
 }
 
-.countryLabel {
-  padding-bottom: 0;
-
-  @media (--viewportMedium) {
-    padding-bottom: 5px;
-  }
-}
-
 .error {
   @apply --marketplaceModalErrorStyles;
 }

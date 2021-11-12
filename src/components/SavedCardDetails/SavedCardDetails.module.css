@@ -127,7 +127,7 @@
 }
 
 .menuLabelWrapperExpired {
-  border: var(--errorMessageStyling);
+  border: var(--borderErrorField);
 }
 
 .menuContent {
