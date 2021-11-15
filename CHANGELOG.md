@@ -14,7 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
-- [change] UI Facelift for field elements, including text field, textarea and select.
+- [change] CheckoutPage: transitions get transition name and isPrivileged as params.
+  [#9](https://github.com/sharetribe/ftw-x/pull/9)
+- [change] UI facelift for field elements, including text field, textarea and select.
   [#1](https://github.com/sharetribe/ftw-x/pull/1)
 - [change] Refactor action button transition thunks and pass transition name to it.
   [#8](https://github.com/sharetribe/ftw-x/pull/8)
