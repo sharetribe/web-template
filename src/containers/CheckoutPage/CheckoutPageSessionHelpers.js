@@ -67,7 +67,7 @@ export const isValidTransaction = transaction => {
     id: id => id instanceof UUID,
     type: type => type === 'transaction',
     attributes: v => {
-      return typeof v === 'object' && process.transitions.includes(v.lastTransition);
+      return typeof v === 'object' && Object.values(process.transitions).includes(v.lastTransition);
     },
   };
   return validateProperties(transaction, props);

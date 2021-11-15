@@ -3,7 +3,6 @@ import config from '../../config';
 import { initiatePrivileged, transitionPrivileged } from '../../util/api';
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
-import { getProcess } from '../../util/transaction';
 import * as log from '../../util/log';
 import { fetchCurrentUserHasOrdersSuccess, fetchCurrentUser } from '../../ducks/user.duck';
 
@@ -155,20 +154,17 @@ export const stripeCustomerError = e => ({
 
 /* ================ Thunks ================ */
 
-export const initiateOrder = (orderParams, transactionId) => (dispatch, getState, sdk) => {
+export const initiateOrder = (
+  orderParams,
+  transactionId,
+  transitionName,
+  isPrivilegedTransition
+) => (dispatch, getState, sdk) => {
   dispatch(initiateOrderRequest());
-  // TODO pass processName to this function or transactionProcessAlias from listing's publicData
-  const processName = config.transactionProcessAlias.split('/')[0];
-  const process = getProcess(processName);
-  const transitions = process.transitions;
 
   // If we already have a transaction ID, we should transition, not
   // initiate.
   const isTransition = !!transactionId;
-  const transition = isTransition
-    ? transitions.REQUEST_PAYMENT_AFTER_ENQUIRY
-    : transitions.REQUEST_PAYMENT;
-  const isPrivilegedTransition = process.isPrivileged(transition);
 
   const { deliveryMethod, quantity, bookingDates, ...otherOrderParams } = orderParams;
   const quantityMaybe = quantity ? { stockReservationQuantity: quantity } : {};
@@ -189,12 +185,12 @@ export const initiateOrder = (orderParams, transactionId) => (dispatch, getState
   const bodyParams = isTransition
     ? {
         id: transactionId,
-        transition,
+        transition: transitionName,
         params: transitionParams,
       }
     : {
         processAlias: config.transactionProcessAlias,
-        transition,
+        transition: transitionName,
         params: transitionParams,
       };
   const queryParams = {
@@ -248,17 +244,17 @@ export const initiateOrder = (orderParams, transactionId) => (dispatch, getState
   }
 };
 
-export const confirmPayment = orderParams => (dispatch, getState, sdk) => {
+export const confirmPayment = (transactionId, transitionName, transitionParams = {}) => (
+  dispatch,
+  getState,
+  sdk
+) => {
   dispatch(confirmPaymentRequest());
-  // TODO pass processName to this function
-  const processName = config.transactionProcessAlias.split('/')[0];
-  const process = getProcess(processName);
-  const transitions = process.transitions;
 
   const bodyParams = {
-    id: orderParams.transactionId,
-    transition: transitions.CONFIRM_PAYMENT,
-    params: {},
+    id: transactionId,
+    transition: transitionName,
+    params: transitionParams,
   };
 
   return sdk.transactions
@@ -270,9 +266,7 @@ export const confirmPayment = orderParams => (dispatch, getState, sdk) => {
     })
     .catch(e => {
       dispatch(confirmPaymentError(storableError(e)));
-      const transactionIdMaybe = orderParams.transactionId
-        ? { transactionId: orderParams.transactionId.uuid }
-        : {};
+      const transactionIdMaybe = transactionId ? { transactionId: transactionId.uuid } : {};
       log.error(e, 'initiate-order-failed', {
         ...transactionIdMaybe,
       });
@@ -312,20 +306,17 @@ export const sendMessage = params => (dispatch, getState, sdk) => {
  * pricing info for the booking breakdown to get a proper estimate for
  * the price with the chosen information.
  */
-export const speculateTransaction = (orderParams, transactionId) => (dispatch, getState, sdk) => {
+export const speculateTransaction = (
+  orderParams,
+  transactionId,
+  transitionName,
+  isPrivilegedTransition
+) => (dispatch, getState, sdk) => {
   dispatch(speculateTransactionRequest());
-  // TODO pass transactionProcessAlias from listing's publicData
-  const processName = config.transactionProcessAlias.split('/')[0];
-  const process = getProcess(processName);
-  const transitions = process.transitions;
 
   // If we already have a transaction ID, we should transition, not
   // initiate.
   const isTransition = !!transactionId;
-  const transition = isTransition
-    ? transitions.REQUEST_PAYMENT_AFTER_ENQUIRY
-    : transitions.REQUEST_PAYMENT;
-  const isPrivilegedTransition = process.isPrivileged(transition);
 
   const { deliveryMethod, quantity, bookingDates, ...otherOrderParams } = orderParams;
   const quantityMaybe = quantity ? { stockReservationQuantity: quantity } : {};
@@ -347,12 +338,12 @@ export const speculateTransaction = (orderParams, transactionId) => (dispatch, g
   const bodyParams = isTransition
     ? {
         id: transactionId,
-        transition,
+        transition: transitionName,
         params: transitionParams,
       }
     : {
         processAlias: config.transactionProcessAlias,
-        transition,
+        transition: transitionName,
         params: transitionParams,
       };
 

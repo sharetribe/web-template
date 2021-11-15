@@ -287,7 +287,7 @@ export class CheckoutPageComponent extends Component {
 
     const txHasPassedPaymentPending = tx => {
       const process = tx?.id ? getProcess(tx?.attributes?.processName) : null;
-      return process ? process.hasPassedState(process.states.PAYMENT_PENDING, tx) : false;
+      return process ? process.hasPassedState(process.states.PENDING_PAYMENT, tx) : false;
     };
 
     // If transaction has passed payment-pending state, speculated tx is not needed.
@@ -302,6 +302,15 @@ export class CheckoutPageComponent extends Component {
       const listingId = pageData.listing.id;
       const transactionId = tx ? tx.id : null;
 
+      const processName =
+        tx?.attributes?.processName || config.transactionProcessAlias.split('/')[0];
+      const process = getProcess(processName);
+      const requestTransition =
+        tx?.attributes?.lastTransition === process.transitions.ENQUIRE
+          ? process.transitions.REQUEST_PAYMENT_AFTER_ENQUIRY
+          : process.transitions.REQUEST_PAYMENT;
+      const isPrivileged = process.isPrivileged(requestTransition);
+
       // Fetch speculated transaction for showing price in order breakdown
       // NOTE: if unit type is line-item/units, quantity needs to be added.
       // The way to pass it to checkout page is through pageData.orderData
@@ -315,7 +324,9 @@ export class CheckoutPageComponent extends Component {
           ...quantityMaybe,
           ...bookingDatesMaybe(pageData.orderData.bookingDates),
         },
-        transactionId
+        transactionId,
+        requestTransition,
+        isPrivileged
       );
     }
 
@@ -362,14 +373,26 @@ export class CheckoutPageComponent extends Component {
 
     const selectedPaymentFlow = paymentFlow(selectedPaymentMethod, saveAfterOnetimePayment);
 
+    const processName =
+      storedTx?.attributes?.processName || config.transactionProcessAlias.split('/')[0];
+    const process = getProcess(processName);
+
     // Step 1: initiate order by requesting payment from Marketplace API
     const fnRequestPayment = fnParams => {
       // fnParams should be { listingId, deliveryMethod, quantity?, bookingDates?, paymentMethod?/setupPaymentMethodForSaving? }
       const hasPaymentIntents =
         storedTx.attributes.protectedData && storedTx.attributes.protectedData.stripePaymentIntents;
 
+      const requestTransition =
+        storedTx?.attributes?.lastTransition === process.transitions.ENQUIRE
+          ? process.transitions.REQUEST_PAYMENT_AFTER_ENQUIRY
+          : process.transitions.REQUEST_PAYMENT;
+      const isPrivileged = process.isPrivileged(requestTransition);
+
       // If paymentIntent exists, order has been initiated previously.
-      return hasPaymentIntents ? Promise.resolve(storedTx) : onInitiateOrder(fnParams, storedTx.id);
+      return hasPaymentIntents
+        ? Promise.resolve(storedTx)
+        : onInitiateOrder(fnParams, storedTx.id, requestTransition, isPrivileged);
     };
 
     // Step 2: pay using Stripe SDK
@@ -432,8 +455,11 @@ export class CheckoutPageComponent extends Component {
     // Step 3: complete order by confirming payment to Marketplace API
     // Parameter should contain { paymentIntent, transactionId } returned in step 2
     const fnConfirmPayment = fnParams => {
+      // Remember the created PaymentIntent for step 5
       createdPaymentIntent = fnParams.paymentIntent;
-      return onConfirmPayment(fnParams);
+      const transactionId = fnParams.transactionId;
+      const transitionName = process.transitions.CONFIRM_PAYMENT;
+      return onConfirmPayment(transactionId, transitionName, {});
     };
 
     // Step 4: send initial message
@@ -1025,13 +1051,15 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   dispatch,
-  fetchSpeculatedTransaction: (params, transactionId) =>
-    dispatch(speculateTransaction(params, transactionId)),
+  fetchSpeculatedTransaction: (params, transactionId, transitionName, isPrivileged) =>
+    dispatch(speculateTransaction(params, transactionId, transitionName, isPrivileged)),
   fetchStripeCustomer: () => dispatch(stripeCustomer()),
-  onInitiateOrder: (params, transactionId) => dispatch(initiateOrder(params, transactionId)),
+  onInitiateOrder: (params, transactionId, transitionName, isPrivileged) =>
+    dispatch(initiateOrder(params, transactionId, transitionName, isPrivileged)),
   onRetrievePaymentIntent: params => dispatch(retrievePaymentIntent(params)),
   onConfirmCardPayment: params => dispatch(confirmCardPayment(params)),
-  onConfirmPayment: params => dispatch(confirmPayment(params)),
+  onConfirmPayment: (transactionId, transitionName, transitionParams) =>
+    dispatch(confirmPayment(transactionId, transitionName, transitionParams)),
   onSendMessage: params => dispatch(sendMessage(params)),
   onSavePaymentMethod: (stripeCustomer, stripePaymentMethodId) =>
     dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
