@@ -1,7 +1,7 @@
 import config from '../config';
 import { denormalisedResponseEntities, ensureOwnListing } from '../util/data';
 import { storableError } from '../util/errors';
-import { getProcess } from '../util/transaction';
+import { getTransitionsNeedingProviderAttention } from '../util/transaction';
 import { LISTING_STATE_DRAFT } from '../util/types';
 import * as log from '../util/log';
 import { authInfo } from './Auth.duck';
@@ -289,13 +289,7 @@ export const fetchCurrentUserHasOrders = () => (dispatch, getState, sdk) => {
 const NOTIFICATION_PAGE_SIZE = 100;
 
 export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => {
-  // TODO what about enquiries
-  const processName = config.transactionProcessAlias.split('/')[0];
-  const process = getProcess(processName);
-  const transitionsNeedingAttention = process.getTransitionsToStates([
-    process.statesNeedingProviderAttention,
-  ]);
-
+  const transitionsNeedingAttention = getTransitionsNeedingProviderAttention();
   if (transitionsNeedingAttention.length === 0) {
     // Don't update state, if there's no need to draw user's attention after last transitions.
     return;
