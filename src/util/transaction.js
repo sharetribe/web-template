@@ -194,6 +194,28 @@ export const getAllTransitionsForEveryProcess = () => {
 };
 
 /**
+ * Get transitions that need provider's attention for every supported process
+ */
+export const getTransitionsNeedingProviderAttention = () => {
+  return PROCESSES.reduce((accTransitions, processInfo) => {
+    const statesNeedingProviderAttention = Object.values(
+      processInfo.process.statesNeedingProviderAttention
+    );
+    const process = processInfo.process;
+    const processTransitions = statesNeedingProviderAttention.reduce(
+      (pickedTransitions, stateName) => {
+        return [...pickedTransitions, ...getTransitionsToState(process, stateName)];
+      },
+      []
+    );
+    // Return only unique transitions names
+    // TODO: this setup is subject to problems if one process has important transition named
+    // similarly as unimportant transition in another process.
+    return [...new Set([...accTransitions, ...processTransitions])];
+  }, []);
+};
+
+/**
  * Actors
  *
  * There are 4 different actors that might initiate transitions:
