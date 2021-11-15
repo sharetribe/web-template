@@ -287,7 +287,7 @@ export class CheckoutPageComponent extends Component {
 
     const txHasPassedPaymentPending = tx => {
       const process = tx?.id ? getProcess(tx?.attributes?.processName) : null;
-      return process ? process.hasPassedState(process.states.PAYMENT_PENDING, tx) : false;
+      return process ? process.hasPassedState(process.states.PENDING_PAYMENT, tx) : false;
     };
 
     // If transaction has passed payment-pending state, speculated tx is not needed.
