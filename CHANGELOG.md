@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [add] Add getTransitionsNeedingProviderAttention to transcation.js and use it in user.duck.js
+  [#10](https://github.com/sharetribe/ftw-x/pull/10)
 - [change] CheckoutPage: transitions get transition name and isPrivileged as params.
   [#9](https://github.com/sharetribe/ftw-x/pull/9)
 - [change] UI facelift for field elements, including text field, textarea and select.
