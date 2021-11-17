@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 
+import config from '../../config';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
-import { propTypes } from '../../util/types';
-import { ensureListing, ensureTransaction } from '../../util/data';
+import { DATE_TYPE_DATE, propTypes } from '../../util/types';
 import { timeOfDayFromTimeZoneToLocal } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import { getProcess } from '../../util/transaction';
@@ -27,9 +27,12 @@ import {
   LayoutWrapperFooter,
   Footer,
   UserDisplayName,
+  OrderBreakdown,
+  OrderPanel,
 } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
+import ActivityFeed from './ActivityFeed/ActivityFeed';
 import DisputeModal from './DisputeModal/DisputeModal';
 import ReviewModal from './ReviewModal/ReviewModal';
 import TransactionPanel from './TransactionPanel/TransactionPanel';
@@ -45,6 +48,8 @@ import css from './TransactionPage.module.css';
 
 const PROVIDER = 'provider';
 const CUSTOMER = 'customer';
+const FLEX_PRODUCT_DEFAULT_PROCESS = 'flex-product-default-process';
+const FLEX_DAILY_DEFAULT_PROCESS = 'flex-default-process';
 
 // Submit dispute and close the review modal
 const onDisputeOrder = (currentTransactionId, transitionName, onTransition) => values => {
@@ -66,10 +71,6 @@ const getTransitionKey = transitionName => {
   return transitionKey || transitionName;
 };
 
-// Find hyphen followed by any character.
-// Then capitalize it and replace the hyphen+character with the capitalised character.
-const camelize = s => s.replace(/-./g, x => x[1].toUpperCase());
-
 // Action button prop for the TransactionPanel
 const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
   const {
@@ -84,7 +85,6 @@ const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
     intl,
   } = params;
   const transitionKey = getTransitionKey(transitionName);
-  const transitionPropsKey = `${camelize(transitionKey)}Props`;
 
   const actionButtonTrId =
     actionButtonTranslationId ||
@@ -95,15 +95,256 @@ const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
 
   return onlyForRole === 'both' || onlyForRole === transactionRole
     ? {
-        [transitionPropsKey]: {
-          inProgress,
-          error: transitionError,
-          onAction,
-          buttonText: intl.formatMessage({ id: actionButtonTrId }),
-          errorText: intl.formatMessage({ id: actionButtonTrErrorId }),
-        },
+        inProgress,
+        error: transitionError,
+        onAction,
+        buttonText: intl.formatMessage({ id: actionButtonTrId }),
+        errorText: intl.formatMessage({ id: actionButtonTrErrorId }),
       }
     : {};
+};
+
+// This class helps to resolve correct UI data for each combination of conditional data [state & role]
+class ConditionalResolver {
+  constructor(data) {
+    this.data = data;
+    this.resolver = null;
+    this.defaultResolver = null;
+  }
+  cond(conditions, resolver) {
+    if (this.resolver == null) {
+      const isWildcard = item => typeof item === 'undefined';
+      const isMatch = conditions.reduce(
+        (isPartialMatch, item, i) => isPartialMatch && (isWildcard(item) || item === this.data[i]),
+        true
+      );
+      this.resolver = isMatch ? resolver : null;
+    }
+    return this;
+  }
+  default(defaultResolver) {
+    this.defaultResolver = defaultResolver;
+    return this;
+  }
+  resolve() {
+    return this.resolver ? this.resolver() : this.defaultResolver ? this.defaultResolver() : {};
+  }
+}
+
+const getStateDataForProductProcess = (params, isCustomer, actionButtonProps, leaveReviewProps) => {
+  const { transaction, transactionRole, nextTransitions } = params;
+  const isShippable = transaction?.attributes?.protectedData?.deliveryMethod === 'shipping';
+
+  const processName = FLEX_PRODUCT_DEFAULT_PROCESS;
+  const process = getProcess(processName);
+  const { getState, states, transitions } = process;
+  const processState = getState(transaction);
+
+  // Undefined underscore works as a wildcard
+  let _;
+  return new ConditionalResolver([processState, transactionRole])
+    .cond([states.ENQUIRY, CUSTOMER], () => {
+      const transitionNames = Array.isArray(nextTransitions)
+        ? nextTransitions.map(t => t.attributes.name)
+        : [];
+      const requestAfterEnquiry = transitions.REQUEST_PAYMENT_AFTER_ENQUIRY;
+      const hasCorrectNextTransition = transitionNames.includes(requestAfterEnquiry);
+      const isProviderBanned = transaction?.provider?.attributes?.banned;
+      const showOrderPanel = !isProviderBanned && hasCorrectNextTransition;
+      return { processName, processState, showOrderPanel };
+    })
+    .cond([states.PURCHASED, CUSTOMER], () => {
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showActionButtons: true,
+        primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED_FROM_PURCHASED, CUSTOMER),
+      };
+    })
+    .cond([states.PURCHASED, PROVIDER], () => {
+      const actionButtonTranslationId = isShippable
+        ? `TransactionPage.${processName}.${PROVIDER}.transition-mark-delivered.actionButton`
+        : `TransactionPage.${processName}.${PROVIDER}.transition-mark-delivered.actionButtonShipped`;
+
+      return {
+        processName,
+        processState,
+        showActionButtons: true,
+        primaryButtonProps: actionButtonProps(transitions.MARK_DELIVERED, PROVIDER, {
+          actionButtonTranslationId,
+        }),
+      };
+    })
+    .cond([states.DELIVERED, CUSTOMER], () => {
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showDispute: true,
+        showActionButtons: true,
+        primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED, CUSTOMER),
+      };
+    })
+    .cond([states.COMPLETED, _], () => {
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: isCustomer,
+        showReviewAsFirstLink: true,
+        showActionButtons: true,
+        primaryButtonProps: leaveReviewProps,
+      };
+    })
+    .cond([states.REVIEWED_BY_PROVIDER, CUSTOMER], () => {
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showReviewAsSecondLink: true,
+        showActionButtons: true,
+        primaryButtonProps: leaveReviewProps,
+      };
+    })
+    .cond([states.REVIEWED_BY_CUSTOMER, PROVIDER], () => {
+      return {
+        processName,
+        processState,
+        showReviewAsSecondLink: true,
+        showActionButtons: true,
+        primaryButtonProps: leaveReviewProps,
+      };
+    })
+    .cond([states.REVIEWED, _], () => {
+      return { processName, processState, showDetailCardHeadings: isCustomer, showReviews: true };
+    })
+    .default(() => {
+      // Default values for other states
+      return { processName, processState, showDetailCardHeadings: isCustomer };
+    })
+    .resolve();
+};
+
+const getStateDataForDailyProcess = (params, isCustomer, actionButtonProps, leaveReviewProps) => {
+  const { transaction, transactionRole, nextTransitions } = params;
+  const isProviderBanned = transaction?.provider?.attributes?.banned;
+  const isCustomerBanned = transaction?.provider?.attributes?.banned;
+
+  const processName = FLEX_DAILY_DEFAULT_PROCESS;
+  const process = getProcess(processName);
+  const { getState, states, transitions } = process;
+  const processState = getState(transaction);
+
+  // Undefined underscore works as a wildcard
+  let _;
+  return new ConditionalResolver([processState, transactionRole])
+    .cond([states.ENQUIRY, CUSTOMER], () => {
+      const transitionNames = Array.isArray(nextTransitions)
+        ? nextTransitions.map(t => t.attributes.name)
+        : [];
+      const requestAfterEnquiry = transitions.REQUEST_PAYMENT_AFTER_ENQUIRY;
+      const hasCorrectNextTransition = transitionNames.includes(requestAfterEnquiry);
+      const showOrderPanel = !isProviderBanned && hasCorrectNextTransition;
+      return { processName, processState, showOrderPanel };
+    })
+    .cond([states.PREAUTHORIZED, PROVIDER], () => {
+      const primary = isCustomerBanned ? null : actionButtonProps(transitions.ACCEPT, PROVIDER);
+      const secondary = isCustomerBanned ? null : actionButtonProps(transitions.DECLINE, PROVIDER);
+      return {
+        processName,
+        processState,
+        showActionButtons: true,
+        primaryButtonProps: primary,
+        secondaryButtonProps: secondary,
+      };
+    })
+    .cond([states.DELIVERED, _], () => {
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: isCustomer,
+        showReviewAsFirstLink: true,
+        showActionButtons: true,
+        primaryButtonProps: leaveReviewProps,
+      };
+    })
+    .cond([states.REVIEWED_BY_PROVIDER, CUSTOMER], () => {
+      return {
+        processName,
+        processState,
+        showDetailCardHeadings: true,
+        showReviewAsSecondLink: true,
+        showActionButtons: true,
+        primaryButtonProps: leaveReviewProps,
+      };
+    })
+    .cond([states.REVIEWED_BY_CUSTOMER, PROVIDER], () => {
+      return {
+        processName,
+        processState,
+        showReviewAsSecondLink: true,
+        showActionButtons: true,
+        primaryButtonProps: leaveReviewProps,
+      };
+    })
+    .cond([states.REVIEWED, _], () => {
+      return { processName, processState, showDetailCardHeadings: isCustomer, showReviews: true };
+    })
+    .default(() => {
+      // Default values for other states
+      return { processName, processState, showDetailCardHeadings: isCustomer };
+    })
+    .resolve();
+};
+
+const getStateData = params => {
+  const {
+    transaction,
+    transactionRole,
+    intl,
+    transitionInProgress,
+    transitionError,
+    onTransition,
+    sendReviewInProgress,
+    sendReviewError,
+    onOpenReviewModal,
+  } = params;
+  const isCustomer = transactionRole === 'customer';
+  const processName = transaction?.attributes?.processName;
+
+  const actionButtonProps = (transitionName, forRole, extra = {}) =>
+    getActionButtonPropsMaybe(
+      {
+        processName,
+        transitionName,
+        transactionRole,
+        intl,
+        inProgress: transitionInProgress === transitionName,
+        transitionError,
+        onAction: () => onTransition(transaction?.id, transitionName, {}),
+        ...extra,
+      },
+      forRole
+    );
+  const leaveReviewProps = getActionButtonPropsMaybe({
+    processName,
+    transitionName: 'leaveReview',
+    transactionRole,
+    intl,
+    inProgress: sendReviewInProgress,
+    transitionError: sendReviewError,
+    onAction: onOpenReviewModal,
+    actionButtonTranslationId: 'TransactionPage.leaveReview.actionButton',
+    actionButtonTranslationErrorId: 'TransactionPage.leaveReview.actionError',
+  });
+
+  if (processName === FLEX_PRODUCT_DEFAULT_PROCESS) {
+    return getStateDataForProductProcess(params, isCustomer, actionButtonProps, leaveReviewProps);
+  } else if (processName === FLEX_DAILY_DEFAULT_PROCESS) {
+    return getStateDataForDailyProcess(params, isCustomer, actionButtonProps, leaveReviewProps);
+  } else {
+    return {};
+  }
 };
 
 // TransactionPage handles data loading for Sale and Order views to transaction pages in Inbox.
@@ -143,7 +384,7 @@ export const TransactionPageComponent = props => {
     onTransition,
     timeSlots,
     fetchTimeSlotsError,
-    processTransitions,
+    nextTransitions,
     callSetInitialValues,
     onInitializeCardPaymentData,
     onFetchTransactionLineItems,
@@ -152,19 +393,19 @@ export const TransactionPageComponent = props => {
     fetchLineItemsError,
   } = props;
 
-  const currentTransaction = ensureTransaction(transaction);
-  const currentListing = ensureListing(currentTransaction.listing);
+  const { listing, provider, customer, booking } = transaction || {};
+  const txTransitions = transaction?.attributes?.transitions || [];
   const isProviderRole = transactionRole === PROVIDER;
   const isCustomerRole = transactionRole === CUSTOMER;
 
-  const processName = currentTransaction?.attributes?.processName;
+  const processName = transaction?.attributes?.processName;
   const process = processName ? getProcess(processName) : null;
 
   const isTxOnPaymentPending = tx => {
     return process ? process.getState(tx) === process.states.PAYMENT_PENDING : null;
   };
 
-  const redirectToCheckoutPageWithInitialValues = (initialValues, listing) => {
+  const redirectToCheckoutPageWithInitialValues = (initialValues, currentListing) => {
     const routes = routeConfiguration();
     // Customize checkout page state with current listing and selected bookingDates
     const { setInitialValues } = findRouteByRouteName('CheckoutPage', routes);
@@ -186,30 +427,26 @@ export const TransactionPageComponent = props => {
 
   // If payment is pending, redirect to CheckoutPage
   if (
-    currentTransaction?.id &&
-    isTxOnPaymentPending(currentTransaction) &&
+    transaction?.id &&
+    isTxOnPaymentPending(transaction) &&
     isCustomerRole &&
-    currentTransaction.attributes.lineItems
+    transaction.attributes.lineItems
   ) {
-    const currentBooking = ensureListing(currentTransaction.booking);
-    const bookingDatesMaybe = currentBooking.id
+    const bookingDatesMaybe = booking.id
       ? {
           bookingDates: {
             // In day-based booking process, booking start and end come in server's time zone.
-            bookingStart: timeOfDayFromTimeZoneToLocal(
-              currentBooking.attributes.start,
-              apiTimeZone
-            ),
-            bookingEnd: timeOfDayFromTimeZoneToLocal(currentBooking.attributes.end, apiTimeZone),
+            bookingStart: timeOfDayFromTimeZoneToLocal(booking?.attributes?.start, apiTimeZone),
+            bookingEnd: timeOfDayFromTimeZoneToLocal(booking?.attributes?.end, apiTimeZone),
           },
         }
       : {};
 
     const apiTimeZone = 'Etc/UTC';
     const initialValues = {
-      listing: currentListing,
+      listing,
       // Transaction with payment pending should be passed to CheckoutPage
-      transaction: currentTransaction,
+      transaction,
       // Original orderData content is not available,
       // but it is already used since booking is created.
       // (E.g. quantity is used when booking is created.)
@@ -218,7 +455,7 @@ export const TransactionPageComponent = props => {
       },
     };
 
-    redirectToCheckoutPageWithInitialValues(initialValues, currentListing);
+    redirectToCheckoutPageWithInitialValues(initialValues, listing);
   }
 
   // Customer can create a booking, if the tx is in "enquiry" state.
@@ -234,9 +471,9 @@ export const TransactionPageComponent = props => {
       : {};
 
     const initialValues = {
-      listing: currentListing,
+      listing,
       // enquired transaction should be passed to CheckoutPage
-      transaction: currentTransaction,
+      transaction,
       orderData: {
         ...bookingDatesMaybe,
         quantity: Number.parseInt(quantityRaw, 10),
@@ -245,7 +482,7 @@ export const TransactionPageComponent = props => {
       confirmPaymentError: null,
     };
 
-    redirectToCheckoutPageWithInitialValues(initialValues, currentListing);
+    redirectToCheckoutPageWithInitialValues(initialValues, listing);
   };
 
   // Open review modal
@@ -294,31 +531,23 @@ export const TransactionPageComponent = props => {
   const deletedListingTitle = intl.formatMessage({
     id: 'TransactionPage.deletedListing',
   });
-  const listingTitle = currentListing.attributes.deleted
+  const listingTitle = listing?.attributes?.deleted
     ? deletedListingTitle
-    : currentListing.attributes.title;
+    : listing?.attributes?.title;
 
   // Redirect users with someone else's direct link to their own inbox/sales or inbox/orders page.
   const isDataAvailable =
     currentUser &&
-    currentTransaction.id &&
-    currentTransaction.id.uuid === params.id &&
-    currentTransaction.attributes.lineItems &&
-    currentTransaction.customer &&
-    currentTransaction.provider &&
+    transaction?.id &&
+    transaction?.id?.uuid === params.id &&
+    transaction?.attributes?.lineItems &&
+    transaction.customer &&
+    transaction.provider &&
     !fetchTransactionError;
 
-  const isShippable =
-    isDataAvailable && currentTransaction.attributes?.protectedData?.deliveryMethod === 'shipping';
-
-  const isOwnSale =
-    isDataAvailable &&
-    isProviderRole &&
-    currentUser.id.uuid === currentTransaction.provider.id.uuid;
+  const isOwnSale = isDataAvailable && isProviderRole && currentUser.id.uuid === provider?.id?.uuid;
   const isOwnOrder =
-    isDataAvailable &&
-    isCustomerRole &&
-    currentUser.id.uuid === currentTransaction.customer.id.uuid;
+    isDataAvailable && isCustomerRole && currentUser.id.uuid === customer?.id?.uuid;
 
   if (isDataAvailable && isProviderRole && !isOwnSale) {
     // eslint-disable-next-line no-console
@@ -351,31 +580,45 @@ export const TransactionPageComponent = props => {
 
   const initialMessageFailed = !!(
     initialMessageFailedToTransaction &&
-    currentTransaction.id &&
-    initialMessageFailedToTransaction.uuid === currentTransaction.id.uuid
+    initialMessageFailedToTransaction.uuid === transaction?.id?.uuid
   );
 
   const otherUserDisplayName = isOwnOrder ? (
-    <UserDisplayName user={currentTransaction.provider} intl={intl} />
+    <UserDisplayName user={provider} intl={intl} />
   ) : (
-    <UserDisplayName user={currentTransaction.customer} intl={intl} />
+    <UserDisplayName user={customer} intl={intl} />
   );
 
-  const commonActionButtonParams = { processName, transactionRole, intl };
-  // Action buttons that make transition directly without modal popup.
-  const plainActionButtonProps = (transitionName, forRole, extra = {}) => {
-    return getActionButtonPropsMaybe(
-      {
-        ...commonActionButtonParams,
-        transitionName,
-        inProgress: transitionInProgress === transitionName,
+  const stateData = isDataAvailable
+    ? getStateData({
+        transaction,
+        transactionRole,
+        nextTransitions,
+        transitionInProgress,
         transitionError,
-        onAction: () => onTransition(currentTransaction.id, transitionName, {}),
-        ...extra,
-      },
-      forRole
-    );
-  };
+        sendReviewInProgress,
+        sendReviewError,
+        onTransition,
+        onOpenReviewModal,
+        intl,
+      })
+    : {};
+
+  const txBookingMaybe = booking?.id ? { booking, dateType: DATE_TYPE_DATE } : {};
+  const hasLineItems = transaction?.attributes?.lineItems?.length > 0;
+  const orderBreakdownMaybe = hasLineItems
+    ? {
+        orderBreakdown: (
+          <OrderBreakdown
+            className={css.breakdown}
+            userRole={transactionRole}
+            unitType={config.lineItemUnitType}
+            transaction={transaction}
+            {...txBookingMaybe}
+          />
+        ),
+      }
+    : {};
 
   // TransactionPanel is presentational component
   // that currently handles showing everything inside layout's main view area.
@@ -383,46 +626,56 @@ export const TransactionPageComponent = props => {
     <TransactionPanel
       className={detailsClassName}
       currentUser={currentUser}
-      transaction={currentTransaction}
-      fetchMessagesInProgress={fetchMessagesInProgress}
-      totalMessagePages={totalMessagePages}
-      oldestMessagePageFetched={oldestMessagePageFetched}
+      transactionId={transaction?.id}
+      listing={listing}
+      customer={customer}
+      provider={provider}
+      hasTransitions={txTransitions.length > 0}
+      protectedData={transaction?.attributes?.protectedData}
       messages={messages}
       initialMessageFailed={initialMessageFailed}
       savePaymentMethodFailed={savePaymentMethodFailed}
       fetchMessagesError={fetchMessagesError}
       sendMessageInProgress={sendMessageInProgress}
       sendMessageError={sendMessageError}
-      onManageDisableScrolling={onManageDisableScrolling}
-      onShowMoreMessages={onShowMoreMessages}
       onSendMessage={onSendMessage}
-      onOpenReviewModal={onOpenReviewModal}
       onOpenDisputeModal={onOpenDisputeModal}
+      stateData={stateData}
       transactionRole={transactionRole}
-      {...plainActionButtonProps(process.transitions.MARK_RECEIVED, CUSTOMER)}
-      {...plainActionButtonProps(process.transitions.MARK_RECEIVED_FROM_PURCHASED, CUSTOMER)}
-      {...plainActionButtonProps(process.transitions.MARK_DELIVERED, PROVIDER, {
-        actionButtonTranslationId: isShippable
-          ? `TransactionPage.${processName}.provider.transition-mark-delivered.actionButton`
-          : `TransactionPage.${processName}.provider.transition-mark-delivered.actionButtonShipped`,
-      })}
-      {...getActionButtonPropsMaybe({
-        ...commonActionButtonParams,
-        transitionName: 'leaveReview',
-        inProgress: sendReviewInProgress,
-        transitionError: sendReviewError,
-        onAction: onOpenReviewModal,
-        actionButtonTranslationId: 'TransactionPage.leaveReview.actionButton',
-        actionButtonTranslationErrorId: 'TransactionPage.leaveReview.actionError',
-      })}
-      nextTransitions={processTransitions}
-      onSubmitOrderRequest={handleSubmitOrderRequest}
-      timeSlots={timeSlots}
-      fetchTimeSlotsError={fetchTimeSlotsError}
-      onFetchTransactionLineItems={onFetchTransactionLineItems}
-      lineItems={lineItems}
-      fetchLineItemsInProgress={fetchLineItemsInProgress}
-      fetchLineItemsError={fetchLineItemsError}
+      activityFeed={
+        <ActivityFeed
+          messages={messages}
+          transaction={transaction}
+          stateData={stateData}
+          intl={intl}
+          currentUser={currentUser}
+          hasOlderMessages={
+            totalMessagePages > oldestMessagePageFetched && !fetchMessagesInProgress
+          }
+          onOpenReviewModal={onOpenReviewModal}
+          onShowOlderMessages={() => onShowMoreMessages(transaction.id)}
+          fetchMessagesInProgress={fetchMessagesInProgress}
+        />
+      }
+      {...orderBreakdownMaybe}
+      orderPanel={
+        <OrderPanel
+          className={css.orderPanel}
+          titleClassName={css.orderTitle}
+          unitType={config.lineItemUnitType}
+          listing={listing}
+          title={listingTitle}
+          author={provider}
+          onSubmit={handleSubmitOrderRequest}
+          onManageDisableScrolling={onManageDisableScrolling}
+          timeSlots={timeSlots}
+          fetchTimeSlotsError={fetchTimeSlotsError}
+          onFetchTransactionLineItems={onFetchTransactionLineItems}
+          lineItems={lineItems}
+          fetchLineItemsInProgress={fetchLineItemsInProgress}
+          fetchLineItemsError={fetchLineItemsError}
+        />
+      }
     />
   ) : (
     loadingOrFailedFetching
@@ -450,7 +703,7 @@ export const TransactionPageComponent = props => {
             sendReviewInProgress={sendReviewInProgress}
             sendReviewError={sendReviewError}
           />
-          {process && process.transitions.DISPUTE ? (
+          {process?.transitions?.DISPUTE ? (
             <DisputeModal
               id="DisputeOrderModal"
               isOpen={state.isDisputeModalOpen}
@@ -459,7 +712,7 @@ export const TransactionPageComponent = props => {
               }
               onManageDisableScrolling={onManageDisableScrolling}
               onDisputeOrder={onDisputeOrder(
-                currentTransaction?.id,
+                transaction?.id,
                 process.transitions.DISPUTE,
                 onTransition
               )}
@@ -585,7 +838,7 @@ const mapStateToProps = state => {
     sendReviewError,
     timeSlots,
     fetchTimeSlotsError,
-    processTransitions,
+    nextTransitions: processTransitions,
     lineItems,
     fetchLineItemsInProgress,
     fetchLineItemsError,
@@ -594,8 +847,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onTransition: (transactionId, transitionName, params) =>
-      dispatch(makeTransition(transactionId, transitionName, params)),
+    onTransition: (txId, transitionName, params) =>
+      dispatch(makeTransition(txId, transitionName, params)),
     onShowMoreMessages: txId => dispatch(fetchMoreMessages(txId)),
     onSendMessage: (txId, message) => dispatch(sendMessage(txId, message)),
     onManageDisableScrolling: (componentId, disableScrolling) =>

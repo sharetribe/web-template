@@ -32,3 +32,31 @@
     display: block;
   }
 }
+
+/* OrderBreakdown subcomponent */
+.breakdown {
+  margin: 14px 24px 0 24px;
+  padding: 1px 0 5px 0;
+
+  @media (--viewportMedium) {
+    margin: 16px 24px 0 24px;
+    padding: 3px 0 5px 0;
+  }
+  @media (--viewportLarge) {
+    margin: 0px 48px 47px 48px;
+    padding: 6px 0 2px 0;
+  }
+}
+
+/* OrderPanel subcomponent */
+.orderPanel {
+  margin: 16px 48px 48px 48px;
+}
+
+.orderTitle {
+  /* Font */
+  color: var(--matterColor);
+
+  margin-top: 0;
+  margin-bottom: 1px;
+}
