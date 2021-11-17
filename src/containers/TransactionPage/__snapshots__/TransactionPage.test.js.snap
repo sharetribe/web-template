@@ -23,6 +23,194 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
         className="root"
       >
         <injectIntl(TransactionPanelComponent)
+          activityFeed={
+            <injectIntl(ActivityFeedComponent)
+              currentUser={
+                Object {
+                  "attributes": Object {
+                    "banned": false,
+                    "deleted": false,
+                    "email": "customer1@example.com",
+                    "emailVerified": true,
+                    "profile": Object {
+                      "abbreviatedName": "customer1 abbreviated name",
+                      "displayName": "customer1 display name",
+                      "firstName": "customer1 first name",
+                      "lastName": "customer1 last name",
+                    },
+                  },
+                  "id": UUID {
+                    "_sdkType": "UUID",
+                    "uuid": "customer1",
+                  },
+                  "type": "currentUser",
+                }
+              }
+              fetchMessagesInProgress={false}
+              hasOlderMessages={false}
+              intl={
+                Object {
+                  "formatDate": [Function],
+                  "formatMessage": [Function],
+                  "formatNumber": [Function],
+                  "formatPlural": [Function],
+                  "formatRelativeTime": [Function],
+                  "formatTime": [Function],
+                  "now": [Function],
+                }
+              }
+              messages={Array []}
+              onOpenReviewModal={[Function]}
+              onShowOlderMessages={[Function]}
+              stateData={
+                Object {
+                  "primaryButtonProps": Object {
+                    "buttonText": "TransactionPage.flex-product-default-process.customer.transition-mark-received-from-purchased.actionButton",
+                    "error": null,
+                    "errorText": "TransactionPage.flex-product-default-process.customer.transition-mark-received-from-purchased.actionError",
+                    "inProgress": false,
+                    "onAction": [Function],
+                  },
+                  "processName": "flex-product-default-process",
+                  "processState": "purchased",
+                  "showActionButtons": true,
+                  "showDetailCardHeadings": true,
+                }
+              }
+              transaction={
+                Object {
+                  "attributes": Object {
+                    "createdAt": 2017-05-01T00:00:00.000Z,
+                    "lastTransition": "transition/confirm-payment",
+                    "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
+                    "lineItems": Array [
+                      Object {
+                        "code": "line-item/day",
+                        "includeFor": Array [
+                          "customer",
+                          "provider",
+                        ],
+                        "lineTotal": Money {
+                          "_sdkType": "Money",
+                          "amount": 1000,
+                          "currency": "USD",
+                        },
+                        "quantity": "1",
+                        "reversal": false,
+                        "unitPrice": Money {
+                          "_sdkType": "Money",
+                          "amount": 1000,
+                          "currency": "USD",
+                        },
+                      },
+                      Object {
+                        "code": "line-item/provider-commission",
+                        "includeFor": Array [
+                          "provider",
+                        ],
+                        "lineTotal": Money {
+                          "_sdkType": "Money",
+                          "amount": -100,
+                          "currency": "USD",
+                        },
+                        "reversal": false,
+                        "unitPrice": Money {
+                          "_sdkType": "Money",
+                          "amount": -100,
+                          "currency": "USD",
+                        },
+                      },
+                    ],
+                    "payinTotal": Money {
+                      "_sdkType": "Money",
+                      "amount": 1000,
+                      "currency": "USD",
+                    },
+                    "payoutTotal": Money {
+                      "_sdkType": "Money",
+                      "amount": 900,
+                      "currency": "USD",
+                    },
+                    "processName": "flex-product-default-process",
+                    "processVersion": 1,
+                    "transitions": Array [
+                      Object {
+                        "by": "customer",
+                        "createdAt": 2017-05-01T00:00:00.000Z,
+                        "transition": "transition/request-payment",
+                      },
+                      Object {
+                        "by": "customer",
+                        "createdAt": 2017-05-01T00:00:01.000Z,
+                        "transition": "transition/confirm-payment",
+                      },
+                    ],
+                  },
+                  "booking": null,
+                  "customer": Object {
+                    "attributes": Object {
+                      "banned": false,
+                      "deleted": false,
+                      "profile": Object {
+                        "abbreviatedName": "TT",
+                        "displayName": "customer1 display name",
+                      },
+                    },
+                    "id": UUID {
+                      "_sdkType": "UUID",
+                      "uuid": "customer1",
+                    },
+                    "type": "user",
+                  },
+                  "id": UUID {
+                    "_sdkType": "UUID",
+                    "uuid": "tx-order-1",
+                  },
+                  "listing": Object {
+                    "attributes": Object {
+                      "deleted": false,
+                      "description": "listing1 description",
+                      "geolocation": LatLng {
+                        "_sdkType": "LatLng",
+                        "lat": 40,
+                        "lng": 60,
+                      },
+                      "price": Money {
+                        "_sdkType": "Money",
+                        "amount": 5500,
+                        "currency": "USD",
+                      },
+                      "publicData": Object {},
+                      "state": "published",
+                      "title": "listing1 title",
+                    },
+                    "id": UUID {
+                      "_sdkType": "UUID",
+                      "uuid": "listing1",
+                    },
+                    "type": "listing",
+                  },
+                  "provider": Object {
+                    "attributes": Object {
+                      "banned": false,
+                      "deleted": false,
+                      "profile": Object {
+                        "abbreviatedName": "TT",
+                        "displayName": "provider1 display name",
+                      },
+                    },
+                    "id": UUID {
+                      "_sdkType": "UUID",
+                      "uuid": "provider1",
+                    },
+                    "type": "user",
+                  },
+                  "reviews": Array [],
+                  "type": "transaction",
+                }
+              }
+            />
+          }
           className="tabContent tabContentVisible"
           currentUser={
             Object {
@@ -45,183 +233,291 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
               "type": "currentUser",
             }
           }
-          fetchLineItemsError={null}
-          fetchLineItemsInProgress={false}
-          fetchMessagesError={null}
-          fetchMessagesInProgress={false}
-          fetchTimeSlotsError={null}
-          initialMessageFailed={false}
-          leaveReviewProps={
-            Object {
-              "buttonText": "TransactionPage.leaveReview.actionButton",
-              "error": undefined,
-              "errorText": "TransactionPage.leaveReview.actionError",
-              "inProgress": undefined,
-              "onAction": [Function],
-            }
-          }
-          lineItems={null}
-          markReceivedFromPurchasedProps={
-            Object {
-              "buttonText": "TransactionPage.flex-product-default-process.customer.transition-mark-received-from-purchased.actionButton",
-              "error": null,
-              "errorText": "TransactionPage.flex-product-default-process.customer.transition-mark-received-from-purchased.actionError",
-              "inProgress": false,
-              "onAction": [Function],
-            }
-          }
-          markReceivedProps={
-            Object {
-              "buttonText": "TransactionPage.flex-product-default-process.customer.transition-mark-received.actionButton",
-              "error": null,
-              "errorText": "TransactionPage.flex-product-default-process.customer.transition-mark-received.actionError",
-              "inProgress": false,
-              "onAction": [Function],
-            }
-          }
-          messages={Array []}
-          oldestMessagePageFetched={0}
-          onFetchTransactionLineItems={[Function]}
-          onOpenDisputeModal={[Function]}
-          onOpenReviewModal={[Function]}
-          onSendMessage={[Function]}
-          onShowMoreMessages={[Function]}
-          onSubmitOrderRequest={[Function]}
-          savePaymentMethodFailed={false}
-          sendMessageError={null}
-          sendMessageInProgress={false}
-          timeSlots={null}
-          totalMessagePages={0}
-          transaction={
+          customer={
             Object {
               "attributes": Object {
-                "createdAt": 2017-05-01T00:00:00.000Z,
-                "lastTransition": "transition/confirm-payment",
-                "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
-                "lineItems": Array [
-                  Object {
-                    "code": "line-item/day",
-                    "includeFor": Array [
-                      "customer",
-                      "provider",
-                    ],
-                    "lineTotal": Money {
-                      "_sdkType": "Money",
-                      "amount": 1000,
-                      "currency": "USD",
-                    },
-                    "quantity": "1",
-                    "reversal": false,
-                    "unitPrice": Money {
-                      "_sdkType": "Money",
-                      "amount": 1000,
-                      "currency": "USD",
-                    },
-                  },
-                  Object {
-                    "code": "line-item/provider-commission",
-                    "includeFor": Array [
-                      "provider",
-                    ],
-                    "lineTotal": Money {
-                      "_sdkType": "Money",
-                      "amount": -100,
-                      "currency": "USD",
-                    },
-                    "reversal": false,
-                    "unitPrice": Money {
-                      "_sdkType": "Money",
-                      "amount": -100,
-                      "currency": "USD",
-                    },
-                  },
-                ],
-                "payinTotal": Money {
-                  "_sdkType": "Money",
-                  "amount": 1000,
-                  "currency": "USD",
+                "banned": false,
+                "deleted": false,
+                "profile": Object {
+                  "abbreviatedName": "TT",
+                  "displayName": "customer1 display name",
                 },
-                "payoutTotal": Money {
-                  "_sdkType": "Money",
-                  "amount": 900,
-                  "currency": "USD",
-                },
-                "processName": "flex-product-default-process",
-                "processVersion": 1,
-                "transitions": Array [
-                  Object {
-                    "by": "customer",
-                    "createdAt": 2017-05-01T00:00:00.000Z,
-                    "transition": "transition/request-payment",
-                  },
-                  Object {
-                    "by": "customer",
-                    "createdAt": 2017-05-01T00:00:01.000Z,
-                    "transition": "transition/confirm-payment",
-                  },
-                ],
-              },
-              "booking": null,
-              "customer": Object {
-                "attributes": Object {
-                  "banned": false,
-                  "deleted": false,
-                  "profile": Object {
-                    "abbreviatedName": "TT",
-                    "displayName": "customer1 display name",
-                  },
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "customer1",
-                },
-                "type": "user",
               },
               "id": UUID {
                 "_sdkType": "UUID",
-                "uuid": "tx-order-1",
+                "uuid": "customer1",
               },
-              "listing": Object {
-                "attributes": Object {
-                  "deleted": false,
-                  "description": "listing1 description",
-                  "geolocation": LatLng {
-                    "_sdkType": "LatLng",
-                    "lat": 40,
-                    "lng": 60,
-                  },
-                  "price": Money {
-                    "_sdkType": "Money",
-                    "amount": 5500,
-                    "currency": "USD",
-                  },
-                  "publicData": Object {},
-                  "state": "published",
-                  "title": "listing1 title",
+              "type": "user",
+            }
+          }
+          fetchMessagesError={null}
+          hasTransitions={true}
+          initialMessageFailed={false}
+          listing={
+            Object {
+              "attributes": Object {
+                "deleted": false,
+                "description": "listing1 description",
+                "geolocation": LatLng {
+                  "_sdkType": "LatLng",
+                  "lat": 40,
+                  "lng": 60,
                 },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "listing1",
+                "price": Money {
+                  "_sdkType": "Money",
+                  "amount": 5500,
+                  "currency": "USD",
                 },
-                "type": "listing",
+                "publicData": Object {},
+                "state": "published",
+                "title": "listing1 title",
               },
-              "provider": Object {
-                "attributes": Object {
-                  "banned": false,
-                  "deleted": false,
-                  "profile": Object {
-                    "abbreviatedName": "TT",
-                    "displayName": "provider1 display name",
-                  },
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "provider1",
-                },
-                "type": "user",
+              "id": UUID {
+                "_sdkType": "UUID",
+                "uuid": "listing1",
               },
-              "reviews": Array [],
-              "type": "transaction",
+              "type": "listing",
+            }
+          }
+          messages={Array []}
+          onOpenDisputeModal={[Function]}
+          onSendMessage={[Function]}
+          orderBreakdown={
+            <OrderBreakdown
+              className="breakdown"
+              transaction={
+                Object {
+                  "attributes": Object {
+                    "createdAt": 2017-05-01T00:00:00.000Z,
+                    "lastTransition": "transition/confirm-payment",
+                    "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
+                    "lineItems": Array [
+                      Object {
+                        "code": "line-item/day",
+                        "includeFor": Array [
+                          "customer",
+                          "provider",
+                        ],
+                        "lineTotal": Money {
+                          "_sdkType": "Money",
+                          "amount": 1000,
+                          "currency": "USD",
+                        },
+                        "quantity": "1",
+                        "reversal": false,
+                        "unitPrice": Money {
+                          "_sdkType": "Money",
+                          "amount": 1000,
+                          "currency": "USD",
+                        },
+                      },
+                      Object {
+                        "code": "line-item/provider-commission",
+                        "includeFor": Array [
+                          "provider",
+                        ],
+                        "lineTotal": Money {
+                          "_sdkType": "Money",
+                          "amount": -100,
+                          "currency": "USD",
+                        },
+                        "reversal": false,
+                        "unitPrice": Money {
+                          "_sdkType": "Money",
+                          "amount": -100,
+                          "currency": "USD",
+                        },
+                      },
+                    ],
+                    "payinTotal": Money {
+                      "_sdkType": "Money",
+                      "amount": 1000,
+                      "currency": "USD",
+                    },
+                    "payoutTotal": Money {
+                      "_sdkType": "Money",
+                      "amount": 900,
+                      "currency": "USD",
+                    },
+                    "processName": "flex-product-default-process",
+                    "processVersion": 1,
+                    "transitions": Array [
+                      Object {
+                        "by": "customer",
+                        "createdAt": 2017-05-01T00:00:00.000Z,
+                        "transition": "transition/request-payment",
+                      },
+                      Object {
+                        "by": "customer",
+                        "createdAt": 2017-05-01T00:00:01.000Z,
+                        "transition": "transition/confirm-payment",
+                      },
+                    ],
+                  },
+                  "booking": null,
+                  "customer": Object {
+                    "attributes": Object {
+                      "banned": false,
+                      "deleted": false,
+                      "profile": Object {
+                        "abbreviatedName": "TT",
+                        "displayName": "customer1 display name",
+                      },
+                    },
+                    "id": UUID {
+                      "_sdkType": "UUID",
+                      "uuid": "customer1",
+                    },
+                    "type": "user",
+                  },
+                  "id": UUID {
+                    "_sdkType": "UUID",
+                    "uuid": "tx-order-1",
+                  },
+                  "listing": Object {
+                    "attributes": Object {
+                      "deleted": false,
+                      "description": "listing1 description",
+                      "geolocation": LatLng {
+                        "_sdkType": "LatLng",
+                        "lat": 40,
+                        "lng": 60,
+                      },
+                      "price": Money {
+                        "_sdkType": "Money",
+                        "amount": 5500,
+                        "currency": "USD",
+                      },
+                      "publicData": Object {},
+                      "state": "published",
+                      "title": "listing1 title",
+                    },
+                    "id": UUID {
+                      "_sdkType": "UUID",
+                      "uuid": "listing1",
+                    },
+                    "type": "listing",
+                  },
+                  "provider": Object {
+                    "attributes": Object {
+                      "banned": false,
+                      "deleted": false,
+                      "profile": Object {
+                        "abbreviatedName": "TT",
+                        "displayName": "provider1 display name",
+                      },
+                    },
+                    "id": UUID {
+                      "_sdkType": "UUID",
+                      "uuid": "provider1",
+                    },
+                    "type": "user",
+                  },
+                  "reviews": Array [],
+                  "type": "transaction",
+                }
+              }
+              unitType="line-item/units"
+              userRole="customer"
+            />
+          }
+          orderPanel={
+            <withRouter(injectIntl(OrderPanel))
+              author={
+                Object {
+                  "attributes": Object {
+                    "banned": false,
+                    "deleted": false,
+                    "profile": Object {
+                      "abbreviatedName": "TT",
+                      "displayName": "provider1 display name",
+                    },
+                  },
+                  "id": UUID {
+                    "_sdkType": "UUID",
+                    "uuid": "provider1",
+                  },
+                  "type": "user",
+                }
+              }
+              className="orderPanel"
+              fetchLineItemsError={null}
+              fetchLineItemsInProgress={false}
+              fetchTimeSlotsError={null}
+              lineItems={null}
+              listing={
+                Object {
+                  "attributes": Object {
+                    "deleted": false,
+                    "description": "listing1 description",
+                    "geolocation": LatLng {
+                      "_sdkType": "LatLng",
+                      "lat": 40,
+                      "lng": 60,
+                    },
+                    "price": Money {
+                      "_sdkType": "Money",
+                      "amount": 5500,
+                      "currency": "USD",
+                    },
+                    "publicData": Object {},
+                    "state": "published",
+                    "title": "listing1 title",
+                  },
+                  "id": UUID {
+                    "_sdkType": "UUID",
+                    "uuid": "listing1",
+                  },
+                  "type": "listing",
+                }
+              }
+              onFetchTransactionLineItems={[Function]}
+              onSubmit={[Function]}
+              timeSlots={null}
+              title="listing1 title"
+              titleClassName="orderTitle"
+              unitType="line-item/units"
+            />
+          }
+          provider={
+            Object {
+              "attributes": Object {
+                "banned": false,
+                "deleted": false,
+                "profile": Object {
+                  "abbreviatedName": "TT",
+                  "displayName": "provider1 display name",
+                },
+              },
+              "id": UUID {
+                "_sdkType": "UUID",
+                "uuid": "provider1",
+              },
+              "type": "user",
+            }
+          }
+          savePaymentMethodFailed={false}
+          sendMessageError={null}
+          sendMessageInProgress={false}
+          stateData={
+            Object {
+              "primaryButtonProps": Object {
+                "buttonText": "TransactionPage.flex-product-default-process.customer.transition-mark-received-from-purchased.actionButton",
+                "error": null,
+                "errorText": "TransactionPage.flex-product-default-process.customer.transition-mark-received-from-purchased.actionError",
+                "inProgress": false,
+                "onAction": [Function],
+              },
+              "processName": "flex-product-default-process",
+              "processState": "purchased",
+              "showActionButtons": true,
+              "showDetailCardHeadings": true,
+            }
+          }
+          transactionId={
+            UUID {
+              "_sdkType": "UUID",
+              "uuid": "tx-order-1",
             }
           }
           transactionRole="customer"
@@ -313,6 +609,192 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
         className="root"
       >
         <injectIntl(TransactionPanelComponent)
+          activityFeed={
+            <injectIntl(ActivityFeedComponent)
+              currentUser={
+                Object {
+                  "attributes": Object {
+                    "banned": false,
+                    "deleted": false,
+                    "email": "provider1@example.com",
+                    "emailVerified": true,
+                    "profile": Object {
+                      "abbreviatedName": "provider1 abbreviated name",
+                      "displayName": "provider1 display name",
+                      "firstName": "provider1 first name",
+                      "lastName": "provider1 last name",
+                    },
+                  },
+                  "id": UUID {
+                    "_sdkType": "UUID",
+                    "uuid": "provider1",
+                  },
+                  "type": "currentUser",
+                }
+              }
+              hasOlderMessages={false}
+              intl={
+                Object {
+                  "formatDate": [Function],
+                  "formatMessage": [Function],
+                  "formatNumber": [Function],
+                  "formatPlural": [Function],
+                  "formatRelativeTime": [Function],
+                  "formatTime": [Function],
+                  "now": [Function],
+                }
+              }
+              messages={Array []}
+              onOpenReviewModal={[Function]}
+              onShowOlderMessages={[Function]}
+              stateData={
+                Object {
+                  "primaryButtonProps": Object {
+                    "buttonText": "TransactionPage.flex-product-default-process.provider.transition-mark-delivered.actionButtonShipped",
+                    "error": null,
+                    "errorText": "TransactionPage.flex-product-default-process.provider.transition-mark-delivered.actionError",
+                    "inProgress": false,
+                    "onAction": [Function],
+                  },
+                  "processName": "flex-product-default-process",
+                  "processState": "purchased",
+                  "showActionButtons": true,
+                }
+              }
+              transaction={
+                Object {
+                  "attributes": Object {
+                    "createdAt": 2017-05-01T00:00:00.000Z,
+                    "lastTransition": "transition/confirm-payment",
+                    "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
+                    "lineItems": Array [
+                      Object {
+                        "code": "line-item/day",
+                        "includeFor": Array [
+                          "customer",
+                          "provider",
+                        ],
+                        "lineTotal": Money {
+                          "_sdkType": "Money",
+                          "amount": 1000,
+                          "currency": "USD",
+                        },
+                        "quantity": "1",
+                        "reversal": false,
+                        "unitPrice": Money {
+                          "_sdkType": "Money",
+                          "amount": 1000,
+                          "currency": "USD",
+                        },
+                      },
+                      Object {
+                        "code": "line-item/provider-commission",
+                        "includeFor": Array [
+                          "provider",
+                        ],
+                        "lineTotal": Money {
+                          "_sdkType": "Money",
+                          "amount": -100,
+                          "currency": "USD",
+                        },
+                        "reversal": false,
+                        "unitPrice": Money {
+                          "_sdkType": "Money",
+                          "amount": -100,
+                          "currency": "USD",
+                        },
+                      },
+                    ],
+                    "payinTotal": Money {
+                      "_sdkType": "Money",
+                      "amount": 1000,
+                      "currency": "USD",
+                    },
+                    "payoutTotal": Money {
+                      "_sdkType": "Money",
+                      "amount": 900,
+                      "currency": "USD",
+                    },
+                    "processName": "flex-product-default-process",
+                    "processVersion": 1,
+                    "transitions": Array [
+                      Object {
+                        "by": "customer",
+                        "createdAt": 2017-05-01T00:00:00.000Z,
+                        "transition": "transition/request-payment",
+                      },
+                      Object {
+                        "by": "customer",
+                        "createdAt": 2017-05-01T00:00:01.000Z,
+                        "transition": "transition/confirm-payment",
+                      },
+                    ],
+                  },
+                  "booking": null,
+                  "customer": Object {
+                    "attributes": Object {
+                      "banned": false,
+                      "deleted": false,
+                      "profile": Object {
+                        "abbreviatedName": "TT",
+                        "displayName": "customer1 display name",
+                      },
+                    },
+                    "id": UUID {
+                      "_sdkType": "UUID",
+                      "uuid": "customer1",
+                    },
+                    "type": "user",
+                  },
+                  "id": UUID {
+                    "_sdkType": "UUID",
+                    "uuid": "tx-sale-1",
+                  },
+                  "listing": Object {
+                    "attributes": Object {
+                      "deleted": false,
+                      "description": "listing1 description",
+                      "geolocation": LatLng {
+                        "_sdkType": "LatLng",
+                        "lat": 40,
+                        "lng": 60,
+                      },
+                      "price": Money {
+                        "_sdkType": "Money",
+                        "amount": 5500,
+                        "currency": "USD",
+                      },
+                      "publicData": Object {},
+                      "state": "published",
+                      "title": "listing1 title",
+                    },
+                    "id": UUID {
+                      "_sdkType": "UUID",
+                      "uuid": "listing1",
+                    },
+                    "type": "listing",
+                  },
+                  "provider": Object {
+                    "attributes": Object {
+                      "banned": false,
+                      "deleted": false,
+                      "profile": Object {
+                        "abbreviatedName": "TT",
+                        "displayName": "provider1 display name",
+                      },
+                    },
+                    "id": UUID {
+                      "_sdkType": "UUID",
+                      "uuid": "provider1",
+                    },
+                    "type": "user",
+                  },
+                  "reviews": Array [],
+                  "type": "transaction",
+                }
+              }
+            />
+          }
           className="tabContent tabContentVisible"
           currentUser={
             Object {
@@ -335,173 +817,290 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
               "type": "currentUser",
             }
           }
-          fetchLineItemsError={null}
-          fetchLineItemsInProgress={false}
-          fetchMessagesError={null}
-          fetchTimeSlotsError={null}
-          initialMessageFailed={false}
-          leaveReviewProps={
-            Object {
-              "buttonText": "TransactionPage.leaveReview.actionButton",
-              "error": undefined,
-              "errorText": "TransactionPage.leaveReview.actionError",
-              "inProgress": undefined,
-              "onAction": [Function],
-            }
-          }
-          lineItems={null}
-          markDeliveredProps={
-            Object {
-              "buttonText": "TransactionPage.flex-product-default-process.provider.transition-mark-delivered.actionButtonShipped",
-              "error": null,
-              "errorText": "TransactionPage.flex-product-default-process.provider.transition-mark-delivered.actionError",
-              "inProgress": false,
-              "onAction": [Function],
-            }
-          }
-          messages={Array []}
-          oldestMessagePageFetched={0}
-          onFetchTransactionLineItems={[Function]}
-          onOpenDisputeModal={[Function]}
-          onOpenReviewModal={[Function]}
-          onSendMessage={[Function]}
-          onShowMoreMessages={[Function]}
-          onSubmitOrderRequest={[Function]}
-          savePaymentMethodFailed={false}
-          sendMessageError={null}
-          sendMessageInProgress={false}
-          timeSlots={null}
-          totalMessagePages={0}
-          transaction={
+          customer={
             Object {
               "attributes": Object {
-                "createdAt": 2017-05-01T00:00:00.000Z,
-                "lastTransition": "transition/confirm-payment",
-                "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
-                "lineItems": Array [
-                  Object {
-                    "code": "line-item/day",
-                    "includeFor": Array [
-                      "customer",
-                      "provider",
-                    ],
-                    "lineTotal": Money {
-                      "_sdkType": "Money",
-                      "amount": 1000,
-                      "currency": "USD",
-                    },
-                    "quantity": "1",
-                    "reversal": false,
-                    "unitPrice": Money {
-                      "_sdkType": "Money",
-                      "amount": 1000,
-                      "currency": "USD",
-                    },
-                  },
-                  Object {
-                    "code": "line-item/provider-commission",
-                    "includeFor": Array [
-                      "provider",
-                    ],
-                    "lineTotal": Money {
-                      "_sdkType": "Money",
-                      "amount": -100,
-                      "currency": "USD",
-                    },
-                    "reversal": false,
-                    "unitPrice": Money {
-                      "_sdkType": "Money",
-                      "amount": -100,
-                      "currency": "USD",
-                    },
-                  },
-                ],
-                "payinTotal": Money {
-                  "_sdkType": "Money",
-                  "amount": 1000,
-                  "currency": "USD",
+                "banned": false,
+                "deleted": false,
+                "profile": Object {
+                  "abbreviatedName": "TT",
+                  "displayName": "customer1 display name",
                 },
-                "payoutTotal": Money {
-                  "_sdkType": "Money",
-                  "amount": 900,
-                  "currency": "USD",
-                },
-                "processName": "flex-product-default-process",
-                "processVersion": 1,
-                "transitions": Array [
-                  Object {
-                    "by": "customer",
-                    "createdAt": 2017-05-01T00:00:00.000Z,
-                    "transition": "transition/request-payment",
-                  },
-                  Object {
-                    "by": "customer",
-                    "createdAt": 2017-05-01T00:00:01.000Z,
-                    "transition": "transition/confirm-payment",
-                  },
-                ],
-              },
-              "booking": null,
-              "customer": Object {
-                "attributes": Object {
-                  "banned": false,
-                  "deleted": false,
-                  "profile": Object {
-                    "abbreviatedName": "TT",
-                    "displayName": "customer1 display name",
-                  },
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "customer1",
-                },
-                "type": "user",
               },
               "id": UUID {
                 "_sdkType": "UUID",
-                "uuid": "tx-sale-1",
+                "uuid": "customer1",
               },
-              "listing": Object {
-                "attributes": Object {
-                  "deleted": false,
-                  "description": "listing1 description",
-                  "geolocation": LatLng {
-                    "_sdkType": "LatLng",
-                    "lat": 40,
-                    "lng": 60,
-                  },
-                  "price": Money {
-                    "_sdkType": "Money",
-                    "amount": 5500,
-                    "currency": "USD",
-                  },
-                  "publicData": Object {},
-                  "state": "published",
-                  "title": "listing1 title",
+              "type": "user",
+            }
+          }
+          fetchMessagesError={null}
+          hasTransitions={true}
+          initialMessageFailed={false}
+          listing={
+            Object {
+              "attributes": Object {
+                "deleted": false,
+                "description": "listing1 description",
+                "geolocation": LatLng {
+                  "_sdkType": "LatLng",
+                  "lat": 40,
+                  "lng": 60,
                 },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "listing1",
+                "price": Money {
+                  "_sdkType": "Money",
+                  "amount": 5500,
+                  "currency": "USD",
                 },
-                "type": "listing",
+                "publicData": Object {},
+                "state": "published",
+                "title": "listing1 title",
               },
-              "provider": Object {
-                "attributes": Object {
-                  "banned": false,
-                  "deleted": false,
-                  "profile": Object {
-                    "abbreviatedName": "TT",
-                    "displayName": "provider1 display name",
-                  },
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "provider1",
-                },
-                "type": "user",
+              "id": UUID {
+                "_sdkType": "UUID",
+                "uuid": "listing1",
               },
-              "reviews": Array [],
-              "type": "transaction",
+              "type": "listing",
+            }
+          }
+          messages={Array []}
+          onOpenDisputeModal={[Function]}
+          onSendMessage={[Function]}
+          orderBreakdown={
+            <OrderBreakdown
+              className="breakdown"
+              transaction={
+                Object {
+                  "attributes": Object {
+                    "createdAt": 2017-05-01T00:00:00.000Z,
+                    "lastTransition": "transition/confirm-payment",
+                    "lastTransitionedAt": 2017-06-01T00:00:00.000Z,
+                    "lineItems": Array [
+                      Object {
+                        "code": "line-item/day",
+                        "includeFor": Array [
+                          "customer",
+                          "provider",
+                        ],
+                        "lineTotal": Money {
+                          "_sdkType": "Money",
+                          "amount": 1000,
+                          "currency": "USD",
+                        },
+                        "quantity": "1",
+                        "reversal": false,
+                        "unitPrice": Money {
+                          "_sdkType": "Money",
+                          "amount": 1000,
+                          "currency": "USD",
+                        },
+                      },
+                      Object {
+                        "code": "line-item/provider-commission",
+                        "includeFor": Array [
+                          "provider",
+                        ],
+                        "lineTotal": Money {
+                          "_sdkType": "Money",
+                          "amount": -100,
+                          "currency": "USD",
+                        },
+                        "reversal": false,
+                        "unitPrice": Money {
+                          "_sdkType": "Money",
+                          "amount": -100,
+                          "currency": "USD",
+                        },
+                      },
+                    ],
+                    "payinTotal": Money {
+                      "_sdkType": "Money",
+                      "amount": 1000,
+                      "currency": "USD",
+                    },
+                    "payoutTotal": Money {
+                      "_sdkType": "Money",
+                      "amount": 900,
+                      "currency": "USD",
+                    },
+                    "processName": "flex-product-default-process",
+                    "processVersion": 1,
+                    "transitions": Array [
+                      Object {
+                        "by": "customer",
+                        "createdAt": 2017-05-01T00:00:00.000Z,
+                        "transition": "transition/request-payment",
+                      },
+                      Object {
+                        "by": "customer",
+                        "createdAt": 2017-05-01T00:00:01.000Z,
+                        "transition": "transition/confirm-payment",
+                      },
+                    ],
+                  },
+                  "booking": null,
+                  "customer": Object {
+                    "attributes": Object {
+                      "banned": false,
+                      "deleted": false,
+                      "profile": Object {
+                        "abbreviatedName": "TT",
+                        "displayName": "customer1 display name",
+                      },
+                    },
+                    "id": UUID {
+                      "_sdkType": "UUID",
+                      "uuid": "customer1",
+                    },
+                    "type": "user",
+                  },
+                  "id": UUID {
+                    "_sdkType": "UUID",
+                    "uuid": "tx-sale-1",
+                  },
+                  "listing": Object {
+                    "attributes": Object {
+                      "deleted": false,
+                      "description": "listing1 description",
+                      "geolocation": LatLng {
+                        "_sdkType": "LatLng",
+                        "lat": 40,
+                        "lng": 60,
+                      },
+                      "price": Money {
+                        "_sdkType": "Money",
+                        "amount": 5500,
+                        "currency": "USD",
+                      },
+                      "publicData": Object {},
+                      "state": "published",
+                      "title": "listing1 title",
+                    },
+                    "id": UUID {
+                      "_sdkType": "UUID",
+                      "uuid": "listing1",
+                    },
+                    "type": "listing",
+                  },
+                  "provider": Object {
+                    "attributes": Object {
+                      "banned": false,
+                      "deleted": false,
+                      "profile": Object {
+                        "abbreviatedName": "TT",
+                        "displayName": "provider1 display name",
+                      },
+                    },
+                    "id": UUID {
+                      "_sdkType": "UUID",
+                      "uuid": "provider1",
+                    },
+                    "type": "user",
+                  },
+                  "reviews": Array [],
+                  "type": "transaction",
+                }
+              }
+              unitType="line-item/units"
+              userRole="provider"
+            />
+          }
+          orderPanel={
+            <withRouter(injectIntl(OrderPanel))
+              author={
+                Object {
+                  "attributes": Object {
+                    "banned": false,
+                    "deleted": false,
+                    "profile": Object {
+                      "abbreviatedName": "TT",
+                      "displayName": "provider1 display name",
+                    },
+                  },
+                  "id": UUID {
+                    "_sdkType": "UUID",
+                    "uuid": "provider1",
+                  },
+                  "type": "user",
+                }
+              }
+              className="orderPanel"
+              fetchLineItemsError={null}
+              fetchLineItemsInProgress={false}
+              fetchTimeSlotsError={null}
+              lineItems={null}
+              listing={
+                Object {
+                  "attributes": Object {
+                    "deleted": false,
+                    "description": "listing1 description",
+                    "geolocation": LatLng {
+                      "_sdkType": "LatLng",
+                      "lat": 40,
+                      "lng": 60,
+                    },
+                    "price": Money {
+                      "_sdkType": "Money",
+                      "amount": 5500,
+                      "currency": "USD",
+                    },
+                    "publicData": Object {},
+                    "state": "published",
+                    "title": "listing1 title",
+                  },
+                  "id": UUID {
+                    "_sdkType": "UUID",
+                    "uuid": "listing1",
+                  },
+                  "type": "listing",
+                }
+              }
+              onFetchTransactionLineItems={[Function]}
+              onSubmit={[Function]}
+              timeSlots={null}
+              title="listing1 title"
+              titleClassName="orderTitle"
+              unitType="line-item/units"
+            />
+          }
+          provider={
+            Object {
+              "attributes": Object {
+                "banned": false,
+                "deleted": false,
+                "profile": Object {
+                  "abbreviatedName": "TT",
+                  "displayName": "provider1 display name",
+                },
+              },
+              "id": UUID {
+                "_sdkType": "UUID",
+                "uuid": "provider1",
+              },
+              "type": "user",
+            }
+          }
+          savePaymentMethodFailed={false}
+          sendMessageError={null}
+          sendMessageInProgress={false}
+          stateData={
+            Object {
+              "primaryButtonProps": Object {
+                "buttonText": "TransactionPage.flex-product-default-process.provider.transition-mark-delivered.actionButtonShipped",
+                "error": null,
+                "errorText": "TransactionPage.flex-product-default-process.provider.transition-mark-delivered.actionError",
+                "inProgress": false,
+                "onAction": [Function],
+              },
+              "processName": "flex-product-default-process",
+              "processState": "purchased",
+              "showActionButtons": true,
+            }
+          }
+          transactionId={
+            UUID {
+              "_sdkType": "UUID",
+              "uuid": "tx-sale-1",
             }
           }
           transactionRole="provider"
