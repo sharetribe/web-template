@@ -16,12 +16,17 @@ import {
 import ActivityFeed from './ActivityFeed';
 
 const noop = () => null;
-const transitions = getProcess('flex-product-default-process')?.transitions;
+const processName = 'flex-product-default-process';
+const { states, transitions } = getProcess(processName);
 
 export const Empty = {
   component: ActivityFeed,
   props: {
     messages: [],
+    stateData: {
+      processName,
+      processState: 'enquiry',
+    },
     hasOlderMessages: false,
     onOpenReviewModal: noop,
     onShowOlderMessages: noop,
@@ -37,6 +42,10 @@ export const WithoutCurrentUser = {
       createMessage('msg1', {}, { sender: createUser('user1') }),
       createMessage('msg2', {}, { sender: createUser('user2') }),
     ],
+    stateData: {
+      processName,
+      processState: 'enquiry',
+    },
     hasOlderMessages: false,
     onOpenReviewModal: noop,
     onShowOlderMessages: noop,
@@ -56,6 +65,10 @@ export const WithCurrentUser = {
       createMessage('msg4', { content: 'ok' }, { sender: createUser('user1') }),
       createMessage('msg5', {}, { sender: createUser('user1') }),
     ],
+    stateData: {
+      processName,
+      processState: states.ENQUIRY,
+    },
     hasOlderMessages: false,
     onOpenReviewModal: noop,
     onShowOlderMessages: noop,
@@ -68,6 +81,10 @@ export const WithTransitions = {
   component: ActivityFeed,
   props: {
     currentUser: createCurrentUser('user2'),
+    stateData: {
+      processName,
+      processState: states.EXPIRE_REVIEW_PERIOD,
+    },
     transaction: createTransaction({
       customer: createUser('user1'),
       provider: createUser('user2'),
@@ -111,6 +128,10 @@ export const WithMessagesTransitionsAndReviews = {
   component: ActivityFeed,
   props: {
     currentUser: createCurrentUser('user2'),
+    stateData: {
+      processName,
+      processState: states.REVIEWED,
+    },
     transaction: createTransaction({
       customer: createUser('user1'),
       provider: createUser('user2'),
@@ -195,6 +216,10 @@ export const WithAReviewFromBothUsers = {
   component: ActivityFeed,
   props: {
     currentUser: createCurrentUser('user1'),
+    stateData: {
+      processName,
+      processState: states.REVIEWED,
+    },
     transaction: createTransaction({
       customer: createUser('user1'),
       provider: createUser('user2'),
@@ -304,6 +329,10 @@ class PagedFeed extends Component {
 
     const feedProps = {
       currentUser,
+      stateData: {
+        processName,
+        processState: states.RECEIVED,
+      },
       transaction,
       messages,
       hasOlderMessages: !this.state.showAllMessages,
