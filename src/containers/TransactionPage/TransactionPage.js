@@ -258,7 +258,26 @@ export const TransactionPageComponent = props => {
   const onSubmitReview = values => {
     const { reviewRating, reviewContent } = values;
     const rating = Number.parseInt(reviewRating, 10);
-    onSendReview(transactionRole, currentTransaction, rating, reviewContent)
+    const { states, transitions } = process;
+    const transitionOptions =
+      transactionRole === CUSTOMER
+        ? {
+            reviewAsFirst: transitions.REVIEW_1_BY_CUSTOMER,
+            reviewAsSecond: ransitions.REVIEW_2_BY_CUSTOMER,
+            hasOtherPartyReviewedFirst: process
+              .getTransitionsToStates([states.REVIEWED_BY_PROVIDER])
+              .includes(transaction.attributes.lastTransition),
+          }
+        : {
+            reviewAsFirst: transitions.REVIEW_1_BY_PROVIDER,
+            reviewAsSecond: transitions.REVIEW_2_BY_PROVIDER,
+            hasOtherPartyReviewedFirst: process
+              .getTransitionsToStates([states.REVIEWED_BY_CUSTOMER])
+              .includes(transaction.attributes.lastTransition),
+          };
+    const params = { reviewRating: rating, reviewContent };
+
+    onSendReview(transaction, transitionOptions, params)
       .then(r =>
         setState(prevState => ({ ...prevState, isReviewModalOpen: false, reviewSubmitted: true }))
       )
@@ -581,8 +600,8 @@ const mapDispatchToProps = dispatch => {
     onSendMessage: (txId, message) => dispatch(sendMessage(txId, message)),
     onManageDisableScrolling: (componentId, disableScrolling) =>
       dispatch(manageDisableScrolling(componentId, disableScrolling)),
-    onSendReview: (role, tx, reviewRating, reviewContent) =>
-      dispatch(sendReview(role, tx, reviewRating, reviewContent)),
+    onSendReview: (tx, transitionOptions, params) =>
+      dispatch(sendReview(tx, transitionOptions, params)),
     callSetInitialValues: (setInitialValues, values) => dispatch(setInitialValues(values)),
     onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
     onFetchTransactionLineItems: (orderData, listingId, isOwnListing) =>

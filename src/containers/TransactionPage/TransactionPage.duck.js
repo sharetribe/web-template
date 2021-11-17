@@ -458,16 +458,11 @@ export const sendMessage = (txId, message) => (dispatch, getState, sdk) => {
 
 // If other party has already sent a review, we need to make transition to
 // transitions.REVIEW_2_BY_<CUSTOMER/PROVIDER>
-const sendReviewAsSecond = (tx, params, role, dispatch, sdk) => {
-  const { id, attributes } = tx;
-  const transitions = getProcess(attributes.processName).transitions;
-  const transition =
-    role === CUSTOMER ? transitions.REVIEW_2_BY_CUSTOMER : transitions.REVIEW_2_BY_PROVIDER;
-
+const sendReviewAsSecond = (txId, transition, params, dispatch, sdk) => {
   const include = REVIEW_TX_INCLUDES;
 
   return sdk.transactions
-    .transition({ id, transition, params }, { expand: true, include, ...getImageVariants() })
+    .transition({ id: txId, transition, params }, { expand: true, include, ...getImageVariants() })
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       dispatch(sendReviewSuccess());
@@ -487,16 +482,11 @@ const sendReviewAsSecond = (tx, params, role, dispatch, sdk) => {
 // However, the other party might have made the review after previous data synch point.
 // So, error is likely to happen and then we must try another state transition
 // by calling sendReviewAsSecond().
-const sendReviewAsFirst = (tx, params, role, dispatch, sdk) => {
-  const { id, attributes } = tx;
-  const transitions = getProcess(attributes.processName).transitions;
-  const transition =
-    role === CUSTOMER ? transitions.REVIEW_1_BY_CUSTOMER : transitions.REVIEW_1_BY_PROVIDER;
-
+const sendReviewAsFirst = (txId, transition, params, dispatch, sdk) => {
   const include = REVIEW_TX_INCLUDES;
 
   return sdk.transactions
-    .transition({ id, transition, params }, { expand: true, include, ...getImageVariants() })
+    .transition({ id: txId, transition, params }, { expand: true, include, ...getImageVariants() })
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       dispatch(sendReviewSuccess());
@@ -516,21 +506,13 @@ const sendReviewAsFirst = (tx, params, role, dispatch, sdk) => {
     });
 };
 
-export const sendReview = (role, tx, reviewRating, reviewContent) => (dispatch, getState, sdk) => {
-  const params = { reviewRating, reviewContent };
-  const process = getProcess(tx.attributes.processName);
-  const otherPartyReviewedFirstState =
-    role === CUSTOMER ? process.states.REVIEWED_BY_PROVIDER : process.states.REVIEWED_BY_CUSTOMER;
-
-  const txStateOtherPartyReviewedFirst = process
-    .getTransitionsToStates([otherPartyReviewedFirstState])
-    .includes(tx.attributes.lastTransition);
-
+export const sendReview = (tx, transitionOptionsInfo, params) => (dispatch, getState, sdk) => {
+  const { reviewAsFirst, reviewAsSecond, hasOtherPartyReviewedFirst } = transitionOptionsInfo;
   dispatch(sendReviewRequest());
 
-  return txStateOtherPartyReviewedFirst
-    ? sendReviewAsSecond(tx, params, role, dispatch, sdk)
-    : sendReviewAsFirst(tx, params, role, dispatch, sdk);
+  return hasOtherPartyReviewedFirst
+    ? sendReviewAsSecond(tx?.id, reviewAsSecond, params, dispatch, sdk)
+    : sendReviewAsFirst(tx?.id, reviewAsFirst, params, dispatch, sdk);
 };
 
 const isNonEmpty = value => {
