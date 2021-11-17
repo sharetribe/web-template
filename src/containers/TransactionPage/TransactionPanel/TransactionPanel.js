@@ -1,20 +1,14 @@
 import React, { Component } from 'react';
-import { array, arrayOf, bool, func, number, shape, string } from 'prop-types';
+import { arrayOf, bool, func, node, object, oneOf, string } from 'prop-types';
 import classNames from 'classnames';
 
 import config from '../../../config';
-import { getProcess } from '../../../util/transaction';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes } from '../../../util/types';
-import {
-  ensureListing,
-  ensureTransaction,
-  ensureUser,
-  userDisplayNameAsString,
-} from '../../../util/data';
+import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
 import { formatMoney } from '../../../util/currency';
-import { AvatarLarge, OrderPanel, NamedLink, UserDisplayName } from '../../../components';
+import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
 
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
 
@@ -31,23 +25,23 @@ import PanelHeading from './PanelHeading';
 import css from './TransactionPanel.module.css';
 
 // Helper function to get display names for different roles
-const displayNames = (currentUser, currentProvider, currentCustomer, intl) => {
-  const authorDisplayName = <UserDisplayName user={currentProvider} intl={intl} />;
-  const customerDisplayName = <UserDisplayName user={currentCustomer} intl={intl} />;
+const displayNames = (currentUser, provider, customer, intl) => {
+  const authorDisplayName = <UserDisplayName user={provider} intl={intl} />;
+  const customerDisplayName = <UserDisplayName user={customer} intl={intl} />;
 
   let otherUserDisplayName = '';
   let otherUserDisplayNameString = '';
   const currentUserIsCustomer =
-    currentUser.id && currentCustomer.id && currentUser.id.uuid === currentCustomer.id.uuid;
+    currentUser.id && customer?.id && currentUser.id.uuid === customer?.id?.uuid;
   const currentUserIsProvider =
-    currentUser.id && currentProvider.id && currentUser.id.uuid === currentProvider.id.uuid;
+    currentUser.id && provider?.id && currentUser.id.uuid === provider?.id?.uuid;
 
   if (currentUserIsCustomer) {
     otherUserDisplayName = authorDisplayName;
-    otherUserDisplayNameString = userDisplayNameAsString(currentProvider, '');
+    otherUserDisplayNameString = userDisplayNameAsString(provider, '');
   } else if (currentUserIsProvider) {
     otherUserDisplayName = customerDisplayName;
-    otherUserDisplayNameString = userDisplayNameAsString(currentCustomer, '');
+    otherUserDisplayNameString = userDisplayNameAsString(customer, '');
   }
 
   return {
@@ -91,13 +85,12 @@ export class TransactionPanelComponent extends Component {
 
   onMessageSubmit(values, form) {
     const message = values.message ? values.message.trim() : null;
-    const { transaction, onSendMessage } = this.props;
-    const ensuredTransaction = ensureTransaction(transaction);
+    const { transactionId, onSendMessage } = this.props;
 
     if (!message) {
       return;
     }
-    onSendMessage(ensuredTransaction.id, message)
+    onSendMessage(transactionId, message)
       .then(messageId => {
         form.reset();
         this.scrollToMessage(messageId);
@@ -123,160 +116,49 @@ export class TransactionPanelComponent extends Component {
       rootClassName,
       className,
       currentUser,
-      transaction,
-      totalMessagePages,
-      oldestMessagePageFetched,
+      transactionRole,
+      listing,
+      customer,
+      provider,
+      hasTransitions,
+      protectedData,
       messages,
       initialMessageFailed,
       savePaymentMethodFailed,
-      fetchMessagesInProgress,
       fetchMessagesError,
       sendMessageInProgress,
       sendMessageError,
-      onManageDisableScrolling,
       onOpenDisputeModal,
-      onOpenReviewModal,
-      onShowMoreMessages,
-      transactionRole,
       intl,
-      markReceivedProps,
-      markReceivedFromPurchasedProps,
-      markDeliveredProps,
-      leaveReviewProps,
-      onSubmitOrderRequest,
-      timeSlots,
-      fetchTimeSlotsError,
-      nextTransitions,
-      onFetchTransactionLineItems,
-      lineItems,
-      fetchLineItemsInProgress,
-      fetchLineItemsError,
+      stateData,
+      activityFeed,
+      orderBreakdown,
+      orderPanel,
     } = this.props;
 
-    const currentTransaction = ensureTransaction(transaction);
-    const currentListing = ensureListing(currentTransaction.listing);
-    const currentProvider = ensureUser(currentTransaction.provider);
-    const currentCustomer = ensureUser(currentTransaction.customer);
     const isCustomer = transactionRole === 'customer';
     const isProvider = transactionRole === 'provider';
 
-    const listingLoaded = !!currentListing.id;
-    const listingDeleted = listingLoaded && currentListing.attributes.deleted;
-    const iscustomerLoaded = !!currentCustomer.id;
-    const isCustomerBanned = iscustomerLoaded && currentCustomer.attributes.banned;
-    const isCustomerDeleted = iscustomerLoaded && currentCustomer.attributes.deleted;
-    const isProviderLoaded = !!currentProvider.id;
-    const isProviderBanned = isProviderLoaded && currentProvider.attributes.banned;
-    const isProviderDeleted = isProviderLoaded && currentProvider.attributes.deleted;
+    const listingDeleted = !!listing?.attributes?.deleted;
+    const isCustomerBanned = !!customer?.attributes?.banned;
+    const isCustomerDeleted = !!customer?.attributes?.deleted;
+    const isProviderBanned = !!provider?.attributes?.banned;
+    const isProviderDeleted = !!provider?.attributes?.deleted;
 
-    const stateDataFn = tx => {
-      const processName = tx?.attributes?.processName;
-      const process = getProcess(processName);
-      const REQUEST_PAYMENT_AFTER_ENQUIRY = process.transitions.REQUEST_PAYMENT_AFTER_ENQUIRY;
-      const state = process.getState(tx);
-      const txHasBeenReceived = tx =>
-        process ? process.hasPassedState(process.states.RECEIVED, tx) : false;
-
-      if (state === process.states.ENQUIRY) {
-        const transitions = Array.isArray(nextTransitions)
-          ? nextTransitions.map(transition => {
-              return transition.attributes.name;
-            })
-          : [];
-        const hasCorrectNextTransition =
-          transitions.length > 0 && transitions.includes(REQUEST_PAYMENT_AFTER_ENQUIRY);
-        return {
-          processName,
-          processState: state,
-          showOrderPanel: isCustomer && !isProviderBanned && hasCorrectNextTransition,
-        };
-      } else if (state === process.states.PAYMENT_PENDING) {
-        return {
-          processName,
-          processState: state,
-          isPendingPayment: true,
-          showDetailCardHeadings: isCustomer,
-        };
-      } else if (state === process.states.PAYMENT_EXPIRED) {
-        return {
-          processName,
-          processState: state,
-          showDetailCardHeadings: isCustomer,
-        };
-      } else if (state === process.states.PURCHASED) {
-        return {
-          processName,
-          processState: state,
-          showDetailCardHeadings: isCustomer,
-          showActionButtons: true,
-          primaryButtonProps: isCustomer ? markReceivedFromPurchasedProps : markDeliveredProps,
-        };
-      } else if (state === process.states.CANCELED) {
-        return {
-          processName,
-          processState: state,
-          showDetailCardHeadings: isCustomer,
-        };
-      } else if (state === process.states.DELIVERED) {
-        const primaryButtonPropsMaybe = isCustomer ? { primaryButtonProps: markReceivedProps } : {};
-        return {
-          processName,
-          processState: state,
-          showDetailCardHeadings: isCustomer,
-          showActionButtons: isCustomer,
-          ...primaryButtonPropsMaybe,
-          showDispute: isCustomer,
-        };
-      } else if (state === process.states.DISPUTED) {
-        return {
-          processName,
-          processState: state,
-          showDetailCardHeadings: isCustomer,
-        };
-      } else if (
-        state === process.states.RECEIVED ||
-        state === process.states.COMPLETED ||
-        (isCustomer && state === process.states.REVIEWED_BY_PROVIDER) ||
-        (isProvider && state === process.states.REVIEWED_BY_CUSTOMER)
-      ) {
-        return {
-          processName,
-          processState: state,
-          showDetailCardHeadings: isCustomer,
-          showActionButtons: true,
-          primaryButtonProps: leaveReviewProps,
-        };
-      } else if (txHasBeenReceived(tx)) {
-        return {
-          processName,
-          processState: state,
-          showDetailCardHeadings: isCustomer,
-        };
-      } else {
-        return {
-          processName,
-          processState: state,
-        };
-      }
-    };
-    const stateData = stateDataFn(currentTransaction);
+    const { authorDisplayName, customerDisplayName, otherUserDisplayNameString } = displayNames(
+      currentUser,
+      provider,
+      customer,
+      intl
+    );
 
     const deletedListingTitle = intl.formatMessage({
       id: 'TransactionPanel.deletedListingTitle',
     });
 
-    const { authorDisplayName, customerDisplayName, otherUserDisplayNameString } = displayNames(
-      currentUser,
-      currentProvider,
-      currentCustomer,
-      intl
-    );
-
-    const { publicData, geolocation } = currentListing.attributes;
-    const location = publicData && publicData.location ? publicData.location : {};
-    const listingTitle = currentListing.attributes.deleted
+    const listingTitle = listing?.attributes?.deleted
       ? deletedListingTitle
-      : currentListing.attributes.title;
+      : listing?.attributes?.title;
 
     const unitType = config.lineItemUnitType;
     const isNightly = unitType === LINE_ITEM_NIGHT;
@@ -288,13 +170,12 @@ export class TransactionPanelComponent extends Component {
       ? 'TransactionPanel.perDay'
       : 'TransactionPanel.perUnit';
 
-    const price = currentListing.attributes.price;
-    const bookingSubTitle = price
+    const price = listing?.attributes?.price;
+    const orderSubTitle = price
       ? `${formatMoney(intl, price)} ${intl.formatMessage({ id: unitTranslationKey })}`
       : '';
 
-    const firstImage =
-      currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
+    const firstImage = listing?.images?.length > 0 ? listing?.images[0] : null;
 
     const actionButtons = (
       <ActionButtonsMaybe
@@ -306,15 +187,6 @@ export class TransactionPanelComponent extends Component {
 
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
-
-    const sendMessagePlaceholder = intl.formatMessage(
-      { id: 'TransactionPanel.sendMessagePlaceholder' },
-      { name: otherUserDisplayNameString }
-    );
-
-    const sendingMessageNotAllowed = intl.formatMessage({
-      id: 'TransactionPanel.sendingMessageNotAllowed',
-    });
 
     const paymentMethodsPageLink = (
       <NamedLink name="PaymentMethodsPage">
@@ -333,12 +205,12 @@ export class TransactionPanelComponent extends Component {
               avatarWrapperClassName={css.avatarWrapperMobile}
               listingTitle={listingTitle}
               image={firstImage}
-              provider={currentProvider}
+              provider={provider}
               isCustomer={isCustomer}
             />
             {isProvider ? (
               <div className={css.avatarWrapperProviderDesktop}>
-                <AvatarLarge user={currentCustomer} className={css.avatarDesktop} />
+                <AvatarLarge user={customer} className={css.avatarDesktop} />
               </div>
             ) : null}
 
@@ -350,17 +222,14 @@ export class TransactionPanelComponent extends Component {
               providerName={authorDisplayName}
               customerName={customerDisplayName}
               isCustomerBanned={isCustomerBanned}
-              listingId={currentListing.id && currentListing.id.uuid}
+              listingId={listing?.id?.uuid}
               listingTitle={listingTitle}
               listingDeleted={listingDeleted}
             />
 
             <div className={css.orderDetails}>
               <div className={css.orderDetailsMobileSection}>
-                <BreakdownMaybe
-                  transaction={currentTransaction}
-                  transactionRole={transactionRole}
-                />
+                <BreakdownMaybe orderBreakdown={orderBreakdown} />
                 <DiminishedActionButtonMaybe
                   showDispute={stateData.showDispute}
                   onOpenDisputeModal={onOpenDisputeModal}
@@ -377,29 +246,27 @@ export class TransactionPanelComponent extends Component {
               ) : null}
               <DeliveryInfoMaybe
                 className={css.deliveryInfoSection}
-                transaction={currentTransaction}
-                listing={currentListing}
+                protectedData={protectedData}
+                listing={listing}
               />
             </div>
 
             <FeedSection
               rootClassName={css.feedContainer}
-              currentTransaction={currentTransaction}
-              currentUser={currentUser}
+              hasMessages={messages.length > 0}
+              hasTransitions={hasTransitions}
               fetchMessagesError={fetchMessagesError}
-              fetchMessagesInProgress={fetchMessagesInProgress}
               initialMessageFailed={initialMessageFailed}
-              messages={messages}
-              oldestMessagePageFetched={oldestMessagePageFetched}
-              onOpenReviewModal={onOpenReviewModal}
-              onShowMoreMessages={() => onShowMoreMessages(currentTransaction.id)}
-              totalMessagePages={totalMessagePages}
+              activityFeed={activityFeed}
             />
             {showSendMessageForm ? (
               <SendMessageForm
                 formId={this.sendMessageFormName}
                 rootClassName={css.sendMessageForm}
-                messagePlaceholder={sendMessagePlaceholder}
+                messagePlaceholder={intl.formatMessage(
+                  { id: 'TransactionPanel.sendMessagePlaceholder' },
+                  { name: otherUserDisplayNameString }
+                )}
                 inProgress={sendMessageInProgress}
                 sendMessageError={sendMessageError}
                 onFocus={this.onSendMessageFormFocus}
@@ -407,7 +274,9 @@ export class TransactionPanelComponent extends Component {
                 onSubmit={this.onMessageSubmit}
               />
             ) : (
-              <div className={css.sendingMessageNotAllowed}>{sendingMessageNotAllowed}</div>
+              <div className={css.sendingMessageNotAllowed}>
+                <FormattedMessage id="TransactionPanel.sendingMessageNotAllowed" />
+              </div>
             )}
 
             {stateData.showActionButtons ? (
@@ -422,38 +291,19 @@ export class TransactionPanelComponent extends Component {
                   avatarWrapperClassName={css.avatarWrapperDesktop}
                   listingTitle={listingTitle}
                   image={firstImage}
-                  provider={currentProvider}
+                  provider={provider}
                   isCustomer={isCustomer}
                 />
 
                 <DetailCardHeadingsMaybe
                   showDetailCardHeadings={stateData.showDetailCardHeadings}
                   listingTitle={listingTitle}
-                  subTitle={bookingSubTitle}
+                  subTitle={orderSubTitle}
                 />
-                {stateData.showOrderPanel ? (
-                  <OrderPanel
-                    className={css.orderPanel}
-                    titleClassName={css.orderTitle}
-                    isOwnListing={false}
-                    unitType={unitType}
-                    listing={currentListing}
-                    title={listingTitle}
-                    author={currentProvider}
-                    onSubmit={onSubmitOrderRequest}
-                    onManageDisableScrolling={onManageDisableScrolling}
-                    timeSlots={timeSlots}
-                    fetchTimeSlotsError={fetchTimeSlotsError}
-                    onFetchTransactionLineItems={onFetchTransactionLineItems}
-                    lineItems={lineItems}
-                    fetchLineItemsInProgress={fetchLineItemsInProgress}
-                    fetchLineItemsError={fetchLineItemsError}
-                  />
-                ) : null}
+                {stateData.showOrderPanel ? orderPanel : null}
                 <BreakdownMaybe
                   className={css.breakdownContainer}
-                  transaction={currentTransaction}
-                  transactionRole={transactionRole}
+                  orderBreakdown={orderBreakdown}
                 />
 
                 {stateData.showActionButtons ? (
@@ -476,66 +326,44 @@ TransactionPanelComponent.defaultProps = {
   rootClassName: null,
   className: null,
   currentUser: null,
+  listing: null,
+  customer: null,
+  provider: null,
+  hasTransitions: false,
   fetchMessagesError: null,
   initialMessageFailed: false,
   savePaymentMethodFailed: false,
   sendMessageError: null,
   sendReviewError: null,
-  timeSlots: null,
-  fetchTimeSlotsError: null,
-  nextTransitions: null,
-  markReceivedProps: null,
-  markReceivedFromPurchasedProps: null,
-  markDeliveredProps: null,
-  leaveReviewProps: null,
-  lineItems: null,
-  fetchLineItemsError: null,
+  stateData: {},
+  activityFeed: null,
+  orderBreakdown: null,
+  orderPanel: null,
 };
-
-const actionButtonShape = shape({
-  inProgress: bool.isRequired,
-  error: propTypes.error,
-  onAction: func.isRequired,
-  buttonText: string.isRequired,
-  errorText: string.isRequired,
-});
 
 TransactionPanelComponent.propTypes = {
   rootClassName: string,
   className: string,
 
   currentUser: propTypes.currentUser,
-  transaction: propTypes.transaction.isRequired,
-  totalMessagePages: number.isRequired,
-  oldestMessagePageFetched: number.isRequired,
+  transactionRole: oneOf(['customer', 'provider']).isRequired,
+  listing: propTypes.listing,
+  customer: propTypes.user,
+  provider: propTypes.user,
+  hasTransitions: bool,
+  transactionId: propTypes.uuid.isRequired,
   messages: arrayOf(propTypes.message).isRequired,
   initialMessageFailed: bool,
   savePaymentMethodFailed: bool,
-  fetchMessagesInProgress: bool.isRequired,
   fetchMessagesError: propTypes.error,
   sendMessageInProgress: bool.isRequired,
   sendMessageError: propTypes.error,
-  onManageDisableScrolling: func.isRequired,
   onOpenDisputeModal: func.isRequired,
-  onOpenReviewModal: func.isRequired,
-  onShowMoreMessages: func.isRequired,
   onSendMessage: func.isRequired,
-  onSubmitOrderRequest: func.isRequired,
-  timeSlots: arrayOf(propTypes.timeSlot),
-  fetchTimeSlotsError: propTypes.error,
-  nextTransitions: array,
-
-  // Tx process transition related props
-  markReceivedProps: actionButtonShape,
-  markReceivedFromPurchasedProps: actionButtonShape,
-  markDeliveredProps: actionButtonShape,
-  leaveReviewProps: actionButtonShape,
-
-  // line items
-  onFetchTransactionLineItems: func.isRequired,
-  lineItems: array,
-  fetchLineItemsInProgress: bool.isRequired,
-  fetchLineItemsError: propTypes.error,
+  stateData: object,
+  activityFeed: node,
+  orderBreakdown: node,
+  orderPanel: node,
 
   // from injectIntl
   intl: intlShape,
