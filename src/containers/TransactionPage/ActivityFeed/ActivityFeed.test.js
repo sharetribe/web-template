@@ -14,18 +14,23 @@ const noop = () => null;
 describe('ActivityFeed', () => {
   it('matches snapshot', () => {
     const props = {
-      currentUser: createCurrentUser('user2'),
-      transaction: createTransaction('tx1'),
       messages: [
         createMessage('msg1', {}, { sender: createUser('user1') }),
         createMessage('msg2', {}, { sender: createUser('user2') }),
       ],
+      transaction: createTransaction('tx1'),
+      stateData: {
+        processName: 'flex-product-default-process',
+        processState: 'enquiry',
+      },
+      currentUser: createCurrentUser('user2'),
       hasOlderMessages: false,
+      fetchMessagesInProgress: false,
       onOpenReviewModal: noop,
       onShowOlderMessages: noop,
-      fetchMessagesInProgress: false,
       intl: fakeIntl,
     };
+
     const tree = renderDeep(<ActivityFeedComponent {...props} />);
     expect(tree).toMatchSnapshot();
   });
