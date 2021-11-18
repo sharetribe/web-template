@@ -32,6 +32,7 @@ const PanelHeading = props => {
     processState,
     isPendingPayment,
     transactionRole,
+    providerName,
     customerName,
     listingId,
     listingTitle,
@@ -45,6 +46,7 @@ const PanelHeading = props => {
   const defaultRootClassName = isCustomer ? css.headingOrder : css.headingSale;
   const titleClasses = classNames(rootClassName || defaultRootClassName, className);
   const listingLink = createListingLink(listingId, listingTitle, listingDeleted);
+  const breakline = <br />;
 
   return (
     <>
@@ -52,7 +54,7 @@ const PanelHeading = props => {
         <span className={css.mainTitle}>
           <FormattedMessage
             id={`TransactionPage.${processName}.${transactionRole}.${processState}.title`}
-            values={{ customerName, listingLink }}
+            values={{ customerName, providerName, listingLink, breakline }}
           />
         </span>
       </h1>
