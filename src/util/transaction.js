@@ -49,6 +49,26 @@ const txLastTransition = tx => tx?.attributes?.lastTransition;
 const statesObjectFromGraph = graph => graph.states || {};
 
 /**
+ * This is a helper function that's attached to exported 'getProcess'.
+ * Get next process state after given transition.
+ *
+ * @param {Object} process imported from a separate file
+ * @returns {function} Returns a function to check the next state after given transition.
+ */
+const getStateAfterTransition = process => transition => {
+  const statesObj = statesObjectFromGraph(process.graph);
+  const stateNames = Object.keys(statesObj);
+  const fromState = stateNames.find(stateName => {
+    const transitionsForward = Object.keys(statesObj[stateName]?.on || {});
+    return transitionsForward.includes(transition);
+  });
+
+  return fromState && transition && statesObj[fromState]?.on[transition]
+    ? statesObj[fromState]?.on[transition]
+    : null;
+};
+
+/**
  * This is a helper function that's attached to exported 'getProcess' as 'getState'
  * Get state based on lastTransition of given transaction entity.
  *
@@ -63,18 +83,7 @@ const statesObjectFromGraph = graph => graph.states || {};
  * given process.
  */
 const getProcessState = process => tx => {
-  const statesObj = statesObjectFromGraph(process.graph);
-  const stateNames = Object.keys(statesObj);
-  const lastTransition = txLastTransition(tx);
-
-  const fromState = stateNames.find(stateName => {
-    const transitionsForward = Object.keys(statesObj[stateName]?.on || {});
-    return transitionsForward.includes(lastTransition);
-  });
-
-  return fromState && lastTransition && statesObj[fromState]?.on[lastTransition]
-    ? statesObj[fromState]?.on[lastTransition]
-    : null;
+  return getStateAfterTransition(process)(txLastTransition(tx));
 };
 
 /**
@@ -174,6 +183,7 @@ export const getProcess = processName => {
     return {
       ...processInfo.process,
       getState: getProcessState(processInfo.process),
+      getStateAfterTransition: getStateAfterTransition(processInfo.process),
       getTransitionsToStates: getTransitionsToStates(processInfo.process),
       hasPassedState: hasPassedState(processInfo.process),
     };

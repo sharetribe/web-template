@@ -1,16 +1,16 @@
 import React from 'react';
-import { string, arrayOf, bool, func, number } from 'prop-types';
+import { string, arrayOf, bool, func, number, object } from 'prop-types';
 import dropWhile from 'lodash/dropWhile';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { formatDateWithProximity } from '../../../util/dates';
-import { ensureTransaction, ensureUser, ensureListing } from '../../../util/data';
 import {
   getProcess,
   getUserTxRole,
-  TX_TRANSITION_ACTOR_CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER,
+  TX_TRANSITION_ACTOR_OPERATOR,
+  TX_TRANSITION_ACTOR_SYSTEM,
 } from '../../../util/transaction';
 import { propTypes } from '../../../util/types';
 import * as log from '../../../util/log';
@@ -20,16 +20,13 @@ import { Avatar, InlineTextButton, ReviewRating, UserDisplayName } from '../../.
 import css from './ActivityFeed.module.css';
 
 const Message = props => {
-  const { message, intl } = props;
-  const todayString = intl.formatMessage({ id: 'ActivityFeed.today' });
+  const { message, formattedDate } = props;
   return (
     <div className={css.message}>
       <Avatar className={css.avatar} user={message.sender} />
       <div>
         <p className={css.messageContent}>{message.attributes.content}</p>
-        <p className={css.messageDate}>
-          {formatDateWithProximity(message.attributes.createdAt, intl, todayString)}
-        </p>
+        <p className={css.messageDate}>{formattedDate}</p>
       </div>
     </div>
   );
@@ -37,27 +34,24 @@ const Message = props => {
 
 Message.propTypes = {
   message: propTypes.message.isRequired,
-  intl: intlShape.isRequired,
+  formattedDate: string.isRequired,
 };
 
 const OwnMessage = props => {
-  const { message, intl } = props;
-  const todayString = intl.formatMessage({ id: 'ActivityFeed.today' });
+  const { message, formattedDate } = props;
   return (
     <div className={css.ownMessage}>
       <div className={css.ownMessageContentWrapper}>
         <p className={css.ownMessageContent}>{message.attributes.content}</p>
       </div>
-      <p className={css.ownMessageDate}>
-        {formatDateWithProximity(message.attributes.createdAt, intl, todayString)}
-      </p>
+      <p className={css.ownMessageDate}>{formattedDate}</p>
     </div>
   );
 };
 
 OwnMessage.propTypes = {
   message: propTypes.message.isRequired,
-  intl: intlShape.isRequired,
+  formattedDate: string.isRequired,
 };
 
 const Review = props => {
@@ -81,130 +75,70 @@ Review.propTypes = {
   rating: number.isRequired,
 };
 
-const hasUserLeftAReviewFirst = (userRole, transaction) => {
-  const isCustomer = userRole === TX_TRANSITION_ACTOR_CUSTOMER;
-  const process = getProcess(transaction.attributes.processName);
-  const userReviewState = isCustomer
-    ? process.states.REVIEWED_BY_CUSTOMER
-    : process.states.REVIEWED_BY_PROVIDER;
+const TransitionMessage = props => {
+  const {
+    transition,
+    nextState,
+    stateData,
+    deliveryMethod,
+    listingTitle,
+    ownRole,
+    otherUsersName,
+    onOpenReviewModal,
+    intl,
+  } = props;
+  const { processName, processState, showReviewAsFirstLink, showReviewAsSecondLink } = stateData;
+  const stateStatus = nextState === processState ? 'current' : 'past';
 
-  return process
-    .getTransitionsToStates([userReviewState])
-    .includes(transaction.attributes.lastTransition);
+  // actor: 'you', 'system', 'operator', or display name of the other party
+  const actor =
+    transition.by === ownRole
+      ? 'you'
+      : [TX_TRANSITION_ACTOR_SYSTEM, TX_TRANSITION_ACTOR_OPERATOR].includes(transition.by)
+      ? transition.by
+      : otherUsersName;
+
+  const reviewLink = showReviewAsFirstLink ? (
+    <InlineTextButton onClick={onOpenReviewModal}>
+      <FormattedMessage id="TransactionPage.ActivityFeed.reviewLink" values={{ otherUsersName }} />
+    </InlineTextButton>
+  ) : showReviewAsSecondLink ? (
+    <InlineTextButton onClick={onOpenReviewModal}>
+      <FormattedMessage
+        id="TransactionPage.ActivityFeed.reviewAsSecondLink"
+        values={{ otherUsersName }}
+      />
+    </InlineTextButton>
+  ) : null;
+
+  // ActivityFeed messages are tied to transaction process and transitions.
+  // However, in practice, transitions leading to same state have had the same message.
+  const message = intl.formatMessage(
+    { id: `TransactionPage.ActivityFeed.${processName}.${nextState}` },
+    { actor, otherUsersName, listingTitle, reviewLink, deliveryMethod, stateStatus }
+  );
+
+  return message;
 };
 
-const resolveTransitionMessage = (
-  transaction,
-  transition,
-  listingTitle,
-  ownRole,
-  otherUsersName,
-  onOpenReviewModal
-) => {
-  const isOwnTransition = transition.by === ownRole;
-  const currentTransition = transition.transition;
-  const displayName = otherUsersName;
-  const process = getProcess(transaction.attributes.processName);
-  const transitions = process.transitions;
-  const state = process.getState(transaction);
+const Transition = props => {
+  const { transitionMessageComponent, formattedDate, reviewComponent } = props;
+  return (
+    <div className={css.transition}>
+      <div className={css.bullet}>
+        <p className={css.transitionContent}>•</p>
+      </div>
+      <div>
+        <p className={css.transitionContent}>{transitionMessageComponent}</p>
+        <p className={css.transitionDate}>{formattedDate}</p>
+        {reviewComponent}
+      </div>
+    </div>
+  );
+};
 
-  switch (currentTransition) {
-    case transitions.CONFIRM_PAYMENT:
-      return isOwnTransition ? (
-        <FormattedMessage id="ActivityFeed.ownTransitionPurchased" values={{ listingTitle }} />
-      ) : (
-        <FormattedMessage
-          id="ActivityFeed.transitionPurchased"
-          values={{ displayName, listingTitle }}
-        />
-      );
-    case transitions.AUTO_CANCEL:
-    case transitions.CANCEL:
-    case transitions.AUTO_CANCEL_FROM_DISPUTED:
-    case transitions.CANCEL_FROM_DISPUTED:
-      return <FormattedMessage id="ActivityFeed.transitionCancel" />;
-    case transitions.MARK_RECEIVED_FROM_PURCHASED:
-    case transitions.MARK_RECEIVED:
-    case transitions.AUTO_MARK_RECEIVED:
-    case transitions.MARK_RECEIVED_FROM_DISPUTED:
-      // Show the leave a review link if the state is completed and
-      // if the current user is the first to leave a review
-      const reviewPeriodJustStarted = state === process.states.COMPLETED;
-
-      const reviewAsFirstLink = reviewPeriodJustStarted ? (
-        <InlineTextButton onClick={onOpenReviewModal}>
-          <FormattedMessage id="ActivityFeed.leaveAReview" values={{ displayName }} />
-        </InlineTextButton>
-      ) : null;
-
-      return reviewAsFirstLink || <FormattedMessage id="ActivityFeed.transitionMarkReceived" />;
-    case transitions.MARK_DELIVERED: {
-      const isShipped = transaction.attributes?.protectedData?.deliveryMethod === 'shipping';
-      return isOwnTransition && isShipped ? (
-        <FormattedMessage id="ActivityFeed.ownTransitionShipped" values={{ listingTitle }} />
-      ) : isOwnTransition && !isShipped ? (
-        <FormattedMessage id="ActivityFeed.ownTransitionDelivered" values={{ listingTitle }} />
-      ) : !isOwnTransition && isShipped ? (
-        <FormattedMessage
-          id="ActivityFeed.transitionShipped"
-          values={{ displayName, listingTitle }}
-        />
-      ) : (
-        <FormattedMessage
-          id="ActivityFeed.transitionDelivered"
-          values={{ displayName, listingTitle }}
-        />
-      );
-    }
-    case transitions.DISPUTE:
-      return isOwnTransition ? (
-        <FormattedMessage id="ActivityFeed.ownTransitionDisputed" values={{ listingTitle }} />
-      ) : (
-        <FormattedMessage
-          id="ActivityFeed.transitionDisputed"
-          values={{ displayName, listingTitle }}
-        />
-      );
-    case transitions.REVIEW_1_BY_PROVIDER:
-    case transitions.REVIEW_1_BY_CUSTOMER:
-      if (isOwnTransition) {
-        return <FormattedMessage id="ActivityFeed.ownTransitionReview" values={{ displayName }} />;
-      } else {
-        // show the leave a review link if current user is not the first
-        // one to leave a review
-        const reviewPeriodIsOver = state === process.states.REVIEWED;
-        const userHasLeftAReview = hasUserLeftAReviewFirst(ownRole, transaction);
-        const reviewAsSecondLink = !(reviewPeriodIsOver || userHasLeftAReview) ? (
-          <InlineTextButton onClick={onOpenReviewModal}>
-            <FormattedMessage id="ActivityFeed.leaveAReviewSecond" values={{ displayName }} />
-          </InlineTextButton>
-        ) : null;
-        return (
-          <FormattedMessage
-            id="ActivityFeed.transitionReview"
-            values={{ displayName, reviewLink: reviewAsSecondLink }}
-          />
-        );
-      }
-    case transitions.REVIEW_2_BY_PROVIDER:
-    case transitions.REVIEW_2_BY_CUSTOMER:
-      if (isOwnTransition) {
-        return <FormattedMessage id="ActivityFeed.ownTransitionReview" values={{ displayName }} />;
-      } else {
-        return (
-          <FormattedMessage
-            id="ActivityFeed.transitionReview"
-            values={{ displayName, reviewLink: null }}
-          />
-        );
-      }
-
-    default:
-      log.error(new Error('Unknown transaction transition type'), 'unknown-transition-type', {
-        transitionType: currentTransition,
-      });
-      return '';
-  }
+Transition.propTypes = {
+  formattedDate: string,
 };
 
 const reviewByAuthorId = (transaction, userId) => {
@@ -213,103 +147,20 @@ const reviewByAuthorId = (transaction, userId) => {
   )[0];
 };
 
-const Transition = props => {
-  const { transition, transaction, currentUser, intl, onOpenReviewModal } = props;
-
-  const currentTransaction = ensureTransaction(transaction);
-  const customer = currentTransaction.customer;
-  const provider = currentTransaction.provider;
-
-  const deletedListing = intl.formatMessage({
-    id: 'ActivityFeed.deletedListing',
-  });
-  const listingTitle = currentTransaction.listing.attributes.deleted
-    ? deletedListing
-    : currentTransaction.listing.attributes.title;
-  const lastTransition = currentTransaction.attributes.lastTransition;
-
-  const ownRole = getUserTxRole(currentUser.id, currentTransaction);
-
-  const otherUsersName =
-    ownRole === TX_TRANSITION_ACTOR_PROVIDER ? (
-      <UserDisplayName user={customer} intl={intl} />
-    ) : (
-      <UserDisplayName user={provider} intl={intl} />
-    );
-
-  const transitionMessage = resolveTransitionMessage(
-    transaction,
-    transition,
-    listingTitle,
-    ownRole,
-    otherUsersName,
-    onOpenReviewModal
-  );
-  const currentTransition = transition.transition;
-
-  const deletedReviewContent = intl.formatMessage({ id: 'ActivityFeed.deletedReviewContent' });
-  let reviewComponent = null;
-
-  const process = getProcess(transaction.attributes.processName);
-  const transitionIsReviewed = transition =>
-    process.getTransitionsToStates([process.states.REVIEWED]).includes(transition);
-
-  if (transitionIsReviewed(lastTransition)) {
-    if (process.isCustomerReview(currentTransition)) {
-      const review = reviewByAuthorId(currentTransaction, customer.id);
-      reviewComponent = review ? (
-        <Review content={review.attributes.content} rating={review.attributes.rating} />
-      ) : (
-        <Review content={deletedReviewContent} />
-      );
-    } else if (process.isProviderReview(currentTransition)) {
-      const review = reviewByAuthorId(currentTransaction, provider.id);
-      reviewComponent = review ? (
-        <Review content={review.attributes.content} rating={review.attributes.rating} />
-      ) : (
-        <Review content={deletedReviewContent} />
-      );
-    }
+const ReviewComponentMaybe = props => {
+  const { showReviews, isRelevantTransition, reviewEntity, intl } = props;
+  if (showReviews && isRelevantTransition) {
+    const deletedReviewContent = intl.formatMessage({
+      id: 'TransactionPage.ActivityFeed.deletedReviewContent',
+    });
+    const content = reviewEntity?.attributes?.deleted
+      ? deletedReviewContent
+      : reviewEntity?.attributes?.content;
+    const rating = reviewEntity?.attributes?.rating;
+    const ratingMaybe = rating ? { rating } : {};
+    return <Review content={content} {...ratingMaybe} />;
   }
-
-  const todayString = intl.formatMessage({ id: 'ActivityFeed.today' });
-
-  return (
-    <div className={css.transition}>
-      <div className={css.bullet}>
-        <p className={css.transitionContent}>•</p>
-      </div>
-      <div>
-        <p className={css.transitionContent}>{transitionMessage}</p>
-        <p className={css.transitionDate}>
-          {formatDateWithProximity(transition.createdAt, intl, todayString)}
-        </p>
-        {reviewComponent}
-      </div>
-    </div>
-  );
-};
-
-Transition.propTypes = {
-  transition: propTypes.transition.isRequired,
-  transaction: propTypes.transaction.isRequired,
-  currentUser: propTypes.currentUser.isRequired,
-  intl: intlShape.isRequired,
-  onOpenReviewModal: func.isRequired,
-};
-
-const EmptyTransition = () => {
-  return (
-    <div className={css.transition}>
-      <div className={css.bullet}>
-        <p className={css.transitionContent}>•</p>
-      </div>
-      <div>
-        <p className={css.transitionContent} />
-        <p className={css.transitionDate} />
-      </div>
-    </div>
-  );
+  return null;
 };
 
 const isMessage = item => item && item.type === 'message';
@@ -338,88 +189,105 @@ export const ActivityFeedComponent = props => {
     className,
     messages,
     transaction,
+    stateData,
     currentUser,
     hasOlderMessages,
+    fetchMessagesInProgress,
     onOpenReviewModal,
     onShowOlderMessages,
-    fetchMessagesInProgress,
     intl,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
+  const processName = stateData.processName;
 
-  const currentTransaction = ensureTransaction(transaction);
-  const processName = currentTransaction.attributes.processName;
-
-  // If currentTransaction doesn't have processName, full tx data has not been fetched.
+  // If stateData doesn't have processName, full tx data has not been fetched.
   if (!processName) {
     return null;
   }
-
-  const transitions = currentTransaction.attributes.transitions
-    ? currentTransaction.attributes.transitions
-    : [];
-  const currentCustomer = ensureUser(currentTransaction.customer);
-  const currentProvider = ensureUser(currentTransaction.provider);
-  const currentListing = ensureListing(currentTransaction.listing);
-
-  const transitionsAvailable = !!(
-    currentUser &&
-    currentUser.id &&
-    currentCustomer.id &&
-    currentProvider.id &&
-    currentListing.id
+  const process = getProcess(processName);
+  const transitions = transaction?.attributes?.transitions || [];
+  const relevantTransitions = transitions.filter(t =>
+    process.isRelevantPastTransition(t.transition)
   );
+  const todayString = intl.formatMessage({ id: 'TransactionPage.ActivityFeed.today' });
 
   // combine messages and transaction transitions
-  const items = organizedItems(messages, transitions, hasOlderMessages || fetchMessagesInProgress);
-
-  const transitionComponent = transition => {
-    if (transitionsAvailable) {
-      return (
-        <Transition
-          transition={transition}
-          transaction={transaction}
-          currentUser={currentUser}
-          intl={intl}
-          onOpenReviewModal={onOpenReviewModal}
-        />
-      );
-    } else {
-      return <EmptyTransition />;
-    }
-  };
-
-  const messageComponent = message => {
-    const isOwnMessage =
-      message.sender &&
-      message.sender.id &&
-      currentUser &&
-      currentUser.id &&
-      message.sender.id.uuid === currentUser.id.uuid;
-    if (isOwnMessage) {
-      return <OwnMessage message={message} intl={intl} />;
-    }
-    return <Message message={message} intl={intl} />;
-  };
+  const hideOldTransitions = hasOlderMessages || fetchMessagesInProgress;
+  const items = organizedItems(messages, relevantTransitions, hideOldTransitions);
 
   const messageListItem = message => {
+    const formattedDate = formatDateWithProximity(message.attributes.createdAt, intl, todayString);
+    const isOwnMessage = currentUser?.id && message?.sender?.id?.uuid === currentUser.id?.uuid;
+    const messageComponent = isOwnMessage ? (
+      <OwnMessage message={message} formattedDate={formattedDate} />
+    ) : (
+      <Message message={message} formattedDate={formattedDate} />
+    );
+
     return (
       <li id={`msg-${message.id.uuid}`} key={message.id.uuid} className={css.messageItem}>
-        {messageComponent(message)}
+        {messageComponent}
       </li>
     );
   };
 
   const transitionListItem = transition => {
-    if (getProcess(processName).isRelevantPastTransition(transition.transition)) {
-      return (
-        <li key={transition.transition} className={css.transitionItem}>
-          {transitionComponent(transition)}
-        </li>
+    const formattedDate = formatDateWithProximity(transition.createdAt, intl, todayString);
+    const { customer, provider, listing } = transaction || {};
+
+    // Initially transition component is empty;
+    let transitionComponent = <Transition />;
+
+    if (currentUser?.id && customer?.id && provider?.id && listing?.id) {
+      const transitionName = transition.transition;
+      const nextState = process.getStateAfterTransition(transition.transition);
+      const isCustomerReview = process.isCustomerReview(transitionName);
+      const isProviderRieview = process.isProviderReview(transitionName);
+      const reviewEntity = isCustomerReview
+        ? reviewByAuthorId(transaction, customer.id)
+        : isProviderRieview
+        ? reviewByAuthorId(transaction, provider.id)
+        : null;
+
+      const listingTitle = listing.attributes.deleted
+        ? intl.formatMessage({ id: 'TransactionPage.ActivityFeed.deletedListing' })
+        : listing.attributes.title;
+
+      const ownRole = getUserTxRole(currentUser.id, transaction);
+      const otherUser = ownRole === TX_TRANSITION_ACTOR_PROVIDER ? customer : provider;
+
+      transitionComponent = (
+        <Transition
+          formattedDate={formattedDate}
+          transitionMessageComponent={
+            <TransitionMessage
+              transition={transition}
+              nextState={nextState}
+              stateData={stateData}
+              deliveryMethod={transaction.attributes?.protectedData?.deliveryMethod}
+              listingTitle={listingTitle}
+              ownRole={ownRole}
+              otherUsersName={<UserDisplayName user={otherUser} intl={intl} />}
+              onOpenReviewModal={onOpenReviewModal}
+              intl={intl}
+            />
+          }
+          reviewComponent={
+            <ReviewComponentMaybe
+              showReviews={stateData.showReviews}
+              isRelevantTransition={isCustomerReview || isProviderRieview}
+              reviewEntity={reviewEntity}
+              intl={intl}
+            />
+          }
+        />
       );
-    } else {
-      return null;
     }
+    return (
+      <li key={transition.transition} className={css.transitionItem}>
+        {transitionComponent}
+      </li>
+    );
   };
 
   return (
@@ -427,7 +295,7 @@ export const ActivityFeedComponent = props => {
       {hasOlderMessages ? (
         <li className={css.showOlderWrapper} key="show-older-messages">
           <InlineTextButton className={css.showOlderButton} onClick={onShowOlderMessages}>
-            <FormattedMessage id="ActivityFeed.showOlderMessages" />
+            <FormattedMessage id="TransactionPage.ActivityFeed.showOlderMessages" />
           </InlineTextButton>
         </li>
       ) : null}
@@ -445,19 +313,21 @@ export const ActivityFeedComponent = props => {
 ActivityFeedComponent.defaultProps = {
   rootClassName: null,
   className: null,
+  stateData: {},
 };
 
 ActivityFeedComponent.propTypes = {
   rootClassName: string,
   className: string,
 
-  currentUser: propTypes.currentUser,
-  transaction: propTypes.transaction,
   messages: arrayOf(propTypes.message),
+  transaction: propTypes.transaction,
+  stateData: object,
+  currentUser: propTypes.currentUser,
   hasOlderMessages: bool.isRequired,
+  fetchMessagesInProgress: bool.isRequired,
   onOpenReviewModal: func.isRequired,
   onShowOlderMessages: func.isRequired,
-  fetchMessagesInProgress: bool.isRequired,
 
   // from injectIntl
   intl: intlShape.isRequired,
