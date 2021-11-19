@@ -1,16 +1,17 @@
 import React from 'react';
+import Decimal from 'decimal.js';
 import { renderShallow, renderDeep } from '../../util/test-helpers';
+import { fakeIntl, createCurrentUser, createUser, createTransaction } from '../../util/test-data';
+import { InboxPageComponent, InboxItem, getStateData } from './InboxPage';
+import { types as sdkTypes } from '../../util/sdkLoader';
 import {
-  fakeIntl,
-  createCurrentUser,
-  createUser,
-  createTransaction,
-  createBooking,
-} from '../../util/test-data';
-import { InboxPageComponent, InboxItem, txState } from './InboxPage';
-import { getProcess } from '../../util/transaction';
-import { LINE_ITEM_NIGHT } from '../../util/types';
+  TX_TRANSITION_ACTOR_CUSTOMER,
+  TX_TRANSITION_ACTOR_PROVIDER,
+  getProcess,
+} from '../../util/transaction';
+import { LINE_ITEM_UNITS } from '../../util/types';
 
+const { Money } = sdkTypes;
 const noop = () => null;
 const transitions = getProcess('flex-product-default-process')?.transitions;
 
@@ -21,28 +22,26 @@ describe('InboxPage', () => {
     const currentUserProvider = createCurrentUser('provider-user-id');
     const currentUserCustomer = createCurrentUser('customer-user-id');
 
-    const startBooking1 = new Date(Date.UTC(2017, 1, 15));
-    const endBooking1 = new Date(Date.UTC(2017, 1, 16));
-
-    const booking1 = createBooking('booking1', {
-      start: startBooking1,
-      end: endBooking1,
-      displayStart: startBooking1,
-      displayEnd: endBooking1,
-    });
-
-    const startBooking2 = new Date(Date.UTC(2017, 2, 15));
-    const endBooking2 = new Date(Date.UTC(2017, 2, 16));
-
-    const booking2 = createBooking('booking2', {
-      start: startBooking2,
-      end: endBooking2,
-      displayStart: startBooking2,
-      displayEnd: endBooking2,
-    });
+    const lineItems = [
+      {
+        code: 'line-item/units',
+        includeFor: ['customer', 'provider'],
+        quantity: new Decimal(1),
+        unitPrice: new Money(1000, 'USD'),
+        lineTotal: new Money(1000, 'USD'),
+        reversal: false,
+      },
+      {
+        code: 'line-item/provider-commission',
+        includeFor: ['provider'],
+        unitPrice: new Money(100 * -1, 'USD'),
+        lineTotal: new Money(100 * -1, 'USD'),
+        reversal: false,
+      },
+    ];
 
     const ordersProps = {
-      unitType: LINE_ITEM_NIGHT,
+      unitType: LINE_ITEM_UNITS,
       location: { search: '' },
       history: {
         push: () => console.log('HistoryPush called'),
@@ -64,7 +63,7 @@ describe('InboxPage', () => {
           customer,
           provider,
           lastTransitionedAt: new Date(Date.UTC(2017, 0, 15)),
-          booking: booking1,
+          lineItems,
         }),
         createTransaction({
           id: 'order-2',
@@ -72,7 +71,7 @@ describe('InboxPage', () => {
           customer,
           provider,
           lastTransitionedAt: new Date(Date.UTC(2016, 0, 15)),
-          booking: booking2,
+          lineItems,
         }),
       ],
       intl: fakeIntl,
@@ -84,14 +83,18 @@ describe('InboxPage', () => {
     const ordersTree = renderShallow(<InboxPageComponent {...ordersProps} />);
     expect(ordersTree).toMatchSnapshot();
 
-    const stateDataOrder = txState(fakeIntl, ordersProps.transactions[0], 'order');
+    const stateDataOrder = getStateData({
+      transaction: ordersProps.transactions[0],
+      transactionRole: TX_TRANSITION_ACTOR_CUSTOMER,
+    });
 
     // Deeply render one InboxItem
     const orderItem = renderDeep(
       <InboxItem
-        unitType={LINE_ITEM_NIGHT}
+        unitType={LINE_ITEM_UNITS}
         type="order"
         tx={ordersProps.transactions[0]}
+        transactionRole={TX_TRANSITION_ACTOR_CUSTOMER}
         intl={fakeIntl}
         stateData={stateDataOrder}
       />
@@ -99,7 +102,7 @@ describe('InboxPage', () => {
     expect(orderItem).toMatchSnapshot();
 
     const salesProps = {
-      unitType: LINE_ITEM_NIGHT,
+      unitType: LINE_ITEM_UNITS,
       location: { search: '' },
       history: {
         push: () => console.log('HistoryPush called'),
@@ -121,7 +124,7 @@ describe('InboxPage', () => {
           customer,
           provider,
           lastTransitionedAt: new Date(Date.UTC(2017, 0, 15)),
-          booking: booking1,
+          lineItems,
         }),
         createTransaction({
           id: 'sale-2',
@@ -129,7 +132,7 @@ describe('InboxPage', () => {
           customer,
           provider,
           lastTransitionedAt: new Date(Date.UTC(2016, 0, 15)),
-          booking: booking2,
+          lineItems,
         }),
       ],
       intl: fakeIntl,
@@ -141,14 +144,18 @@ describe('InboxPage', () => {
     const salesTree = renderShallow(<InboxPageComponent {...salesProps} />);
     expect(salesTree).toMatchSnapshot();
 
-    const stateDataSale = txState(fakeIntl, salesProps.transactions[0], 'sale');
+    const stateDataSale = getStateData({
+      transaction: salesProps.transactions[0],
+      transactionRole: TX_TRANSITION_ACTOR_PROVIDER,
+    });
 
     // Deeply render one InboxItem
     const saleItem = renderDeep(
       <InboxItem
-        unitType={LINE_ITEM_NIGHT}
+        unitType={LINE_ITEM_UNITS}
         type="sale"
         tx={salesProps.transactions[0]}
+        transactionRole={TX_TRANSITION_ACTOR_PROVIDER}
         intl={fakeIntl}
         stateData={stateDataSale}
       />

@@ -170,20 +170,13 @@ export const createTransaction = options => {
         transition: processTransitions.CONFIRM_PAYMENT,
       }),
     ],
+    lineItems: lineItemsParam,
   } = options;
+
   const dayCount = booking ? daysBetween(booking.attributes.start, booking.attributes.end) : 1;
-  return {
-    id: new UUID(id),
-    type: 'transaction',
-    attributes: {
-      createdAt: new Date(Date.UTC(2017, 4, 1)),
-      processName,
-      processVersion,
-      lastTransitionedAt,
-      lastTransition,
-      payinTotal: total,
-      payoutTotal: new Money(total.amount - commission.amount, total.currency),
-      lineItems: [
+  const lineItems = lineItemsParam
+    ? lineItemsParam
+    : [
         {
           code: 'line-item/day',
           includeFor: ['customer', 'provider'],
@@ -199,8 +192,21 @@ export const createTransaction = options => {
           lineTotal: new Money(commission.amount * -1, commission.currency),
           reversal: false,
         },
-      ],
+      ];
+
+  return {
+    id: new UUID(id),
+    type: 'transaction',
+    attributes: {
+      createdAt: new Date(Date.UTC(2017, 4, 1)),
+      processName,
+      processVersion,
+      lastTransitionedAt,
+      lastTransition,
+      payinTotal: total,
+      payoutTotal: new Money(total.amount - commission.amount, total.currency),
       transitions,
+      lineItems,
     },
     booking,
     listing,

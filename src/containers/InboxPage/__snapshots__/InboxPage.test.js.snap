@@ -97,10 +97,11 @@ exports[`InboxPage matches snapshot 1`] = `
             }
             stateData={
               Object {
-                "state": "InboxPage.statePurchased",
-                "stateClassName": "stateNoActionNeeded",
+                "processName": "flex-product-default-process",
+                "processState": "purchased",
               }
             }
+            transactionRole="customer"
             tx={
               Object {
                 "attributes": Object {
@@ -109,7 +110,7 @@ exports[`InboxPage matches snapshot 1`] = `
                   "lastTransitionedAt": 2017-01-15T00:00:00.000Z,
                   "lineItems": Array [
                     Object {
-                      "code": "line-item/day",
+                      "code": "line-item/units",
                       "includeFor": Array [
                         "customer",
                         "provider",
@@ -170,19 +171,7 @@ exports[`InboxPage matches snapshot 1`] = `
                     },
                   ],
                 },
-                "booking": Object {
-                  "attributes": Object {
-                    "displayEnd": 2017-02-16T00:00:00.000Z,
-                    "displayStart": 2017-02-15T00:00:00.000Z,
-                    "end": 2017-02-16T00:00:00.000Z,
-                    "start": 2017-02-15T00:00:00.000Z,
-                  },
-                  "id": UUID {
-                    "_sdkType": "UUID",
-                    "uuid": "booking1",
-                  },
-                  "type": "booking",
-                },
+                "booking": null,
                 "customer": Object {
                   "attributes": Object {
                     "banned": false,
@@ -222,8 +211,7 @@ exports[`InboxPage matches snapshot 1`] = `
                 "type": "transaction",
               }
             }
-            type="order"
-            unitType="line-item/night"
+            unitType="line-item/units"
           />
         </li>
         <li
@@ -244,10 +232,11 @@ exports[`InboxPage matches snapshot 1`] = `
             }
             stateData={
               Object {
-                "state": "InboxPage.statePurchased",
-                "stateClassName": "stateNoActionNeeded",
+                "processName": "flex-product-default-process",
+                "processState": "purchased",
               }
             }
+            transactionRole="customer"
             tx={
               Object {
                 "attributes": Object {
@@ -256,7 +245,7 @@ exports[`InboxPage matches snapshot 1`] = `
                   "lastTransitionedAt": 2016-01-15T00:00:00.000Z,
                   "lineItems": Array [
                     Object {
-                      "code": "line-item/day",
+                      "code": "line-item/units",
                       "includeFor": Array [
                         "customer",
                         "provider",
@@ -317,19 +306,7 @@ exports[`InboxPage matches snapshot 1`] = `
                     },
                   ],
                 },
-                "booking": Object {
-                  "attributes": Object {
-                    "displayEnd": 2017-03-16T00:00:00.000Z,
-                    "displayStart": 2017-03-15T00:00:00.000Z,
-                    "end": 2017-03-16T00:00:00.000Z,
-                    "start": 2017-03-15T00:00:00.000Z,
-                  },
-                  "id": UUID {
-                    "_sdkType": "UUID",
-                    "uuid": "booking2",
-                  },
-                  "type": "booking",
-                },
+                "booking": null,
                 "customer": Object {
                   "attributes": Object {
                     "banned": false,
@@ -369,8 +346,7 @@ exports[`InboxPage matches snapshot 1`] = `
                 "type": "transaction",
               }
             }
-            type="order"
-            unitType="line-item/night"
+            unitType="line-item/units"
           />
         </li>
       </ul>
@@ -448,7 +424,9 @@ exports[`InboxPage matches snapshot 2`] = `
       <div
         className="stateName stateNoActionNeeded"
       >
-        InboxPage.statePurchased
+        <span>
+          InboxPage.flex-product-default-process.customer.purchased.status
+        </span>
       </div>
       <div
         className="lastTransitionedAt"
@@ -558,10 +536,13 @@ exports[`InboxPage matches snapshot 3`] = `
             }
             stateData={
               Object {
-                "state": "InboxPage.statePurchased",
-                "stateClassName": "stateActionNeeded",
+                "actionNeeded": true,
+                "isSaleNotification": true,
+                "processName": "flex-product-default-process",
+                "processState": "purchased",
               }
             }
+            transactionRole="provider"
             tx={
               Object {
                 "attributes": Object {
@@ -570,7 +551,7 @@ exports[`InboxPage matches snapshot 3`] = `
                   "lastTransitionedAt": 2017-01-15T00:00:00.000Z,
                   "lineItems": Array [
                     Object {
-                      "code": "line-item/day",
+                      "code": "line-item/units",
                       "includeFor": Array [
                         "customer",
                         "provider",
@@ -631,19 +612,7 @@ exports[`InboxPage matches snapshot 3`] = `
                     },
                   ],
                 },
-                "booking": Object {
-                  "attributes": Object {
-                    "displayEnd": 2017-02-16T00:00:00.000Z,
-                    "displayStart": 2017-02-15T00:00:00.000Z,
-                    "end": 2017-02-16T00:00:00.000Z,
-                    "start": 2017-02-15T00:00:00.000Z,
-                  },
-                  "id": UUID {
-                    "_sdkType": "UUID",
-                    "uuid": "booking1",
-                  },
-                  "type": "booking",
-                },
+                "booking": null,
                 "customer": Object {
                   "attributes": Object {
                     "banned": false,
@@ -683,8 +652,7 @@ exports[`InboxPage matches snapshot 3`] = `
                 "type": "transaction",
               }
             }
-            type="sale"
-            unitType="line-item/night"
+            unitType="line-item/units"
           />
         </li>
         <li
@@ -705,10 +673,13 @@ exports[`InboxPage matches snapshot 3`] = `
             }
             stateData={
               Object {
-                "state": "InboxPage.statePurchased",
-                "stateClassName": "stateActionNeeded",
+                "actionNeeded": true,
+                "isSaleNotification": true,
+                "processName": "flex-product-default-process",
+                "processState": "purchased",
               }
             }
+            transactionRole="provider"
             tx={
               Object {
                 "attributes": Object {
@@ -717,7 +688,7 @@ exports[`InboxPage matches snapshot 3`] = `
                   "lastTransitionedAt": 2016-01-15T00:00:00.000Z,
                   "lineItems": Array [
                     Object {
-                      "code": "line-item/day",
+                      "code": "line-item/units",
                       "includeFor": Array [
                         "customer",
                         "provider",
@@ -778,19 +749,7 @@ exports[`InboxPage matches snapshot 3`] = `
                     },
                   ],
                 },
-                "booking": Object {
-                  "attributes": Object {
-                    "displayEnd": 2017-03-16T00:00:00.000Z,
-                    "displayStart": 2017-03-15T00:00:00.000Z,
-                    "end": 2017-03-16T00:00:00.000Z,
-                    "start": 2017-03-15T00:00:00.000Z,
-                  },
-                  "id": UUID {
-                    "_sdkType": "UUID",
-                    "uuid": "booking2",
-                  },
-                  "type": "booking",
-                },
+                "booking": null,
                 "customer": Object {
                   "attributes": Object {
                     "banned": false,
@@ -830,8 +789,7 @@ exports[`InboxPage matches snapshot 3`] = `
                 "type": "transaction",
               }
             }
-            type="sale"
-            unitType="line-item/night"
+            unitType="line-item/units"
           />
         </li>
       </ul>
@@ -913,7 +871,9 @@ exports[`InboxPage matches snapshot 4`] = `
       <div
         className="stateName stateActionNeeded"
       >
-        InboxPage.statePurchased
+        <span>
+          InboxPage.flex-product-default-process.provider.purchased.status
+        </span>
       </div>
       <div
         className="lastTransitionedAt"
