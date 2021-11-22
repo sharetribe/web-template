@@ -6,14 +6,18 @@ import classNames from 'classnames';
 
 import config from '../../config';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { getProcess } from '../../util/transaction';
+import {
+  TX_TRANSITION_ACTOR_CUSTOMER,
+  TX_TRANSITION_ACTOR_PROVIDER,
+  getProcess,
+} from '../../util/transaction';
 import { propTypes, DATE_TYPE_DATE } from '../../util/types';
-import { ensureCurrentUser } from '../../util/data';
 import { formatDateIntoPartials } from '../../util/dates';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 import {
   Avatar,
+  BookingTimeInfo,
   NamedLink,
   NotificationBadge,
   Page,
@@ -34,123 +38,188 @@ import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import css from './InboxPage.module.css';
 
-// Translated name of the state of the given transaction
-export const txState = (intl, tx, type) => {
-  const isOrder = type === 'order';
-  const process = getProcess(tx.attributes.processName);
-  const state = process.getState(tx);
+const CUSTOMER = TX_TRANSITION_ACTOR_CUSTOMER;
+const PROVIDER = TX_TRANSITION_ACTOR_PROVIDER;
+const FLEX_PRODUCT_DEFAULT_PROCESS = 'flex-product-default-process';
+const FLEX_DAILY_DEFAULT_PROCESS = 'flex-default-process';
 
-  if (state === process.states.ENQUIRY) {
-    return {
-      lastTransitionedAtClassName: css.lastTransitionedAtEmphasized,
-      stateClassName: css.stateActionNeeded,
-      state: intl.formatMessage({
-        id: 'InboxPage.stateEnquiry',
-      }),
-    };
-  } else if (state === process.states.PENDING_PAYMENT) {
-    return {
-      stateClassName: isOrder ? css.stateActionNeeded : css.stateNoActionNeeded,
-      state: intl.formatMessage({
-        id: 'InboxPage.statePendingPayment',
-      }),
-    };
-  } else if (state === process.states.PAYMENT_EXPIRED) {
-    return {
-      stateClassName: css.stateNoActionNeeded,
-      state: intl.formatMessage({
-        id: 'InboxPage.statePaymentExpired',
-      }),
-    };
-  } else if (state === process.states.CANCELED) {
-    return {
-      stateClassName: css.stateConcluded,
-      state: intl.formatMessage({
-        id: 'InboxPage.stateCanceled',
-      }),
-    };
-  } else if (state === process.states.PURCHASED) {
-    return {
-      stateClassName: isOrder ? css.stateNoActionNeeded : css.stateActionNeeded,
-      state: intl.formatMessage({
-        id: 'InboxPage.statePurchased',
-      }),
-    };
-  } else if (state === process.states.DELIVERED) {
-    return isOrder
-      ? {
-          stateClassName: css.stateActionNeeded,
-          state: intl.formatMessage({ id: 'InboxPage.stateDeliveredCustomer' }),
-        }
-      : {
-          stateClassName: css.stateNoActionNeeded,
-          state: intl.formatMessage({ id: 'InboxPage.stateDeliveredProvider' }),
-        };
-  } else if (state === process.states.DISPUTED) {
-    return {
-      stateClassName: css.stateActionNeeded,
-      state: intl.formatMessage({
-        id: 'InboxPage.stateDisputed',
-      }),
-    };
-  } else if (state === process.states.RECEIVED || state === process.states.COMPLETED) {
-    return {
-      stateClassName: css.stateActionNeeded,
-      state: intl.formatMessage({
-        id: 'InboxPage.stateReceived',
-      }),
-    };
-  } else if (state === process.states.REVIEWED_BY_CUSTOMER) {
-    const translationKey = isOrder ? 'InboxPage.stateReviewGiven' : 'InboxPage.stateReviewNeeded';
-    return {
-      stateClassName: isOrder ? css.stateNoActionNeeded : css.stateActionNeeded,
-      state: intl.formatMessage({
-        id: translationKey,
-      }),
-    };
-  } else if (state === process.states.REVIEWED_BY_PROVIDER) {
-    const translationKey = isOrder ? 'InboxPage.stateReviewNeeded' : 'InboxPage.stateReviewGiven';
-    return {
-      stateClassName: isOrder ? css.stateActionNeeded : css.stateNoActionNeeded,
-      state: intl.formatMessage({
-        id: translationKey,
-      }),
-    };
-  } else if (state === process.states.REVIEWED) {
-    return {
-      stateClassName: css.stateConcluded,
-      state: intl.formatMessage({
-        id: 'InboxPage.stateReviewed',
-      }),
-    };
+// This class helps to resolve correct UI data for each combination of conditional data [state & role]
+class ConditionalResolver {
+  constructor(data) {
+    this.data = data;
+    this.resolver = null;
+    this.defaultResolver = null;
+  }
+  cond(conditions, resolver) {
+    if (this.resolver == null) {
+      const isWildcard = item => typeof item === 'undefined';
+      const isMatch = conditions.reduce(
+        (isPartialMatch, item, i) => isPartialMatch && (isWildcard(item) || item === this.data[i]),
+        true
+      );
+      this.resolver = isMatch ? resolver : null;
+    }
+    return this;
+  }
+  default(defaultResolver) {
+    this.defaultResolver = defaultResolver;
+    return this;
+  }
+  resolve() {
+    return this.resolver ? this.resolver() : this.defaultResolver ? this.defaultResolver() : {};
+  }
+}
+
+// Get UI data mapped to specific transaction state & role
+export const getStateDataForProductProcess = params => {
+  const { transaction, transactionRole } = params;
+
+  const processName = FLEX_PRODUCT_DEFAULT_PROCESS;
+  const process = getProcess(processName);
+  const { getState, states } = process;
+  const processState = getState(transaction);
+
+  // Undefined underscore works as a wildcard
+  let _;
+  return new ConditionalResolver([processState, transactionRole])
+    .cond([states.ENQUIRY, _], () => {
+      return { processName, processState, actionNeeded: true, emphasizeTransitionMoment: true };
+    })
+    .cond([states.PENDING_PAYMENT, CUSTOMER], () => {
+      return { processName, processState, actionNeeded: true };
+    })
+    .cond([states.PENDING_PAYMENT, PROVIDER], () => {
+      return { processName, processState, actionNeeded: true };
+    })
+    .cond([states.CANCELED, _], () => {
+      return { processName, processState, isFinal: true };
+    })
+    .cond([states.PURCHASED, PROVIDER], () => {
+      return { processName, processState, actionNeeded: true, isSaleNotification: true };
+    })
+    .cond([states.DELIVERED, CUSTOMER], () => {
+      return { processName, processState, actionNeeded: true };
+    })
+    .cond([states.DISPUTED, _], () => {
+      return { processName, processState, actionNeeded: true };
+    })
+    .cond([states.COMPLETED, _], () => {
+      return { processName, processState, actionNeeded: true };
+    })
+    .cond([states.REVIEWED_BY_PROVIDER, CUSTOMER], () => {
+      return { processName, processState, actionNeeded: true };
+    })
+    .cond([states.REVIEWED_BY_CUSTOMER, PROVIDER], () => {
+      return { processName, processState, actionNeeded: true };
+    })
+    .cond([states.REVIEWED, _], () => {
+      return { processName, processState, isFinal: true };
+    })
+    .default(() => {
+      // Default values for other states
+      return { processName, processState };
+    })
+    .resolve();
+};
+
+// Get UI data mapped to specific transaction state & role
+export const getStateDataForDailyProcess = params => {
+  const { transaction, transactionRole } = params;
+
+  const processName = FLEX_DAILY_DEFAULT_PROCESS;
+  const process = getProcess(processName);
+  const { getState, states } = process;
+  const processState = getState(transaction);
+
+  // Undefined underscore works as a wildcard
+  let _;
+  return new ConditionalResolver([processState, transactionRole])
+    .cond([states.ENQUIRY, _], () => {
+      return { processName, processState, actionNeeded: true, emphasizeTransitionMoment: true };
+    })
+    .cond([states.PENDING_PAYMENT, CUSTOMER], () => {
+      return { processName, processState, actionNeeded: true };
+    })
+    .cond([states.CANCELED, _], () => {
+      return { processName, processState, isFinal: true };
+    })
+    .cond([states.PREAUTHORIZED, PROVIDER], () => {
+      return { processName, processState, actionNeeded: true };
+    })
+    .cond([states.ACCEPTED, _], () => {
+      return { processName, processState, actionNeeded: true, emphasizeTransitionMoment: true };
+    })
+    .cond([states.DECLINED, _], () => {
+      return { processName, processState, isFinal: true };
+    })
+    .cond([states.DELIVERED, _], () => {
+      return { processName, processState, actionNeeded: true };
+    })
+    .cond([states.REVIEWED_BY_PROVIDER, CUSTOMER], () => {
+      return { processName, processState, actionNeeded: true };
+    })
+    .cond([states.REVIEWED_BY_CUSTOMER, PROVIDER], () => {
+      return { processName, processState, actionNeeded: true };
+    })
+    .cond([states.REVIEWED, _], () => {
+      return { processName, processState, isFinal: true };
+    })
+    .default(() => {
+      // Default values for other states
+      return { processName, processState };
+    })
+    .resolve();
+};
+
+// Translated name of the state of the given transaction
+export const getStateData = params => {
+  const { transaction } = params;
+  const processName = transaction?.attributes?.processName;
+
+  if (processName === FLEX_PRODUCT_DEFAULT_PROCESS) {
+    return getStateDataForProductProcess(params);
+  } else if (processName === FLEX_DAILY_DEFAULT_PROCESS) {
+    return getStateDataForDailyProcess(params);
   } else {
-    console.warn('This transition is unknown:', tx.attributes.lastTransition);
-    return null;
+    return {};
   }
 };
 
 export const InboxItem = props => {
-  const { unitType, type, tx, intl, stateData } = props;
+  const { unitType, transactionRole, tx, intl, stateData } = props;
   const { customer, provider, listing } = tx;
-  const isOrder = type === 'order';
-  const process = getProcess(tx.attributes.processName);
-  const state = process.getState(tx);
+  const {
+    processName,
+    processState,
+    actionNeeded,
+    emphasizeTransitionMoment,
+    isSaleNotification,
+    isFinal,
+  } = stateData;
+  const isCustomer = transactionRole === TX_TRANSITION_ACTOR_CUSTOMER;
 
   const unitPurchase = tx.attributes?.lineItems?.find(
     item => item.code === unitType && !item.reversal
   );
   const quantity = unitPurchase ? unitPurchase.quantity.toString() : null;
 
-  const otherUser = isOrder ? provider : customer;
+  const otherUser = isCustomer ? provider : customer;
   const otherUserDisplayName = <UserDisplayName user={otherUser} intl={intl} />;
   const isOtherUserBanned = otherUser.attributes.banned;
 
-  const isSaleNotification = !isOrder && state === process.states.PURCHASED;
   const rowNotificationDot = isSaleNotification ? <div className={css.notificationDot} /> : null;
   const lastTransitionedAt = formatDateIntoPartials(tx.attributes.lastTransitionedAt, intl);
 
   const linkClasses = classNames(css.itemLink, {
     [css.bannedUserLink]: isOtherUserBanned,
+  });
+  const stateClasses = classNames(css.stateName, {
+    [css.stateConcluded]: isFinal,
+    [css.stateActionNeeded]: actionNeeded,
+    [css.stateNoActionNeeded]: !actionNeeded,
+  });
+  const lastTransitionedAtClasses = classNames(css.lastTransitionedAt, {
+    [css.lastTransitionedAtEmphasized]: emphasizeTransitionMoment,
   });
 
   return (
@@ -160,7 +229,7 @@ export const InboxItem = props => {
       </div>
       <NamedLink
         className={linkClasses}
-        name={isOrder ? 'OrderDetailsPage' : 'SaleDetailsPage'}
+        name={isCustomer ? 'OrderDetailsPage' : 'SaleDetailsPage'}
         params={{ id: tx.id.uuid }}
       >
         <div className={css.rowNotificationDot}>{rowNotificationDot}</div>
@@ -169,17 +238,26 @@ export const InboxItem = props => {
           <div className={css.itemOrderInfo}>
             <span>{listing?.attributes?.title}</span>
             <br />
-            <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
+            {unitPurchase ? (
+              <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
+            ) : tx?.booking ? (
+              <BookingTimeInfo
+                isOrder={isCustomer}
+                intl={intl}
+                tx={tx}
+                unitType={unitType}
+                dateType={DATE_TYPE_DATE}
+              />
+            ) : null}
           </div>
         </div>
         <div className={css.itemState}>
-          <div className={classNames(css.stateName, stateData.stateClassName)}>
-            {stateData.state}
+          <div className={stateClasses}>
+            <FormattedMessage
+              id={`InboxPage.${processName}.${transactionRole}.${processState}.status`}
+            />
           </div>
-          <div
-            className={classNames(css.lastTransitionedAt, stateData.lastTransitionedAtClassName)}
-            title={lastTransitionedAt.dateAndTime}
-          >
+          <div className={lastTransitionedAtClasses} title={lastTransitionedAt.dateAndTime}>
             {lastTransitionedAt.date}
           </div>
         </div>
@@ -190,7 +268,7 @@ export const InboxItem = props => {
 
 InboxItem.propTypes = {
   unitType: propTypes.lineItemUnitType.isRequired,
-  type: oneOf(['order', 'sale']).isRequired,
+  transactionRole: oneOf([TX_TRANSITION_ACTOR_CUSTOMER, TX_TRANSITION_ACTOR_PROVIDER]).isRequired,
   tx: propTypes.transaction.isRequired,
   intl: intlShape.isRequired,
 };
@@ -209,63 +287,43 @@ export const InboxPageComponent = props => {
     transactions,
   } = props;
   const { tab } = params;
-  const ensuredCurrentUser = ensureCurrentUser(currentUser);
-
   const validTab = tab === 'orders' || tab === 'sales';
   if (!validTab) {
     return <NotFoundPage />;
   }
 
   const isOrders = tab === 'orders';
-
+  const hasNoResults = !fetchInProgress && transactions.length === 0 && !fetchOrdersOrSalesError;
   const ordersTitle = intl.formatMessage({ id: 'InboxPage.ordersTitle' });
   const salesTitle = intl.formatMessage({ id: 'InboxPage.salesTitle' });
   const title = isOrders ? ordersTitle : salesTitle;
 
   const toTxItem = tx => {
-    const type = isOrders ? 'order' : 'sale';
-    const stateData = txState(intl, tx, type);
+    const transactionRole = isOrders ? TX_TRANSITION_ACTOR_CUSTOMER : TX_TRANSITION_ACTOR_PROVIDER;
+    const stateData = getStateData({ transaction: tx, transactionRole, intl });
 
     // Render InboxItem only if the latest transition of the transaction is handled in the `txState` function.
     return stateData ? (
       <li key={tx.id.uuid} className={css.listItem}>
-        <InboxItem unitType={unitType} type={type} tx={tx} intl={intl} stateData={stateData} />
+        <InboxItem
+          unitType={unitType}
+          transactionRole={transactionRole}
+          tx={tx}
+          intl={intl}
+          stateData={stateData}
+        />
       </li>
     ) : null;
   };
-
-  const error = fetchOrdersOrSalesError ? (
-    <p className={css.error}>
-      <FormattedMessage id="InboxPage.fetchFailed" />
-    </p>
-  ) : null;
-
-  const noResults =
-    !fetchInProgress && transactions.length === 0 && !fetchOrdersOrSalesError ? (
-      <li key="noResults" className={css.noResults}>
-        <FormattedMessage id={isOrders ? 'InboxPage.noOrdersFound' : 'InboxPage.noSalesFound'} />
-      </li>
-    ) : null;
 
   const hasOrderOrSaleTransactions = (tx, isOrdersTab, user) => {
     return isOrdersTab
-      ? user.id && tx && tx.length > 0 && tx[0].customer.id.uuid === user.id.uuid
-      : user.id && tx && tx.length > 0 && tx[0].provider.id.uuid === user.id.uuid;
+      ? user?.id && tx && tx.length > 0 && tx[0].customer.id.uuid === user?.id?.uuid
+      : user?.id && tx && tx.length > 0 && tx[0].provider.id.uuid === user?.id?.uuid;
   };
   const hasTransactions =
-    !fetchInProgress && hasOrderOrSaleTransactions(transactions, isOrders, ensuredCurrentUser);
-  const pagingLinks =
-    hasTransactions && pagination && pagination.totalPages > 1 ? (
-      <PaginationLinks
-        className={css.pagination}
-        pageName="InboxPage"
-        pagePathParams={params}
-        pagination={pagination}
-      />
-    ) : null;
+    !fetchInProgress && hasOrderOrSaleTransactions(transactions, isOrders, currentUser);
 
-  const providerNotificationBadge =
-    providerNotificationCount > 0 ? <NotificationBadge count={providerNotificationCount} /> : null;
   const tabs = [
     {
       text: (
@@ -283,7 +341,9 @@ export const InboxPageComponent = props => {
       text: (
         <span>
           <FormattedMessage id="InboxPage.salesTabTitle" />
-          {providerNotificationBadge}
+          {providerNotificationCount > 0 ? (
+            <NotificationBadge count={providerNotificationCount} />
+          ) : null}
         </span>
       ),
       selected: !isOrders,
@@ -293,7 +353,6 @@ export const InboxPageComponent = props => {
       },
     },
   ];
-  const nav = <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />;
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
@@ -310,10 +369,14 @@ export const InboxPageComponent = props => {
           <h1 className={css.title}>
             <FormattedMessage id="InboxPage.title" />
           </h1>
-          {nav}
+          <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />
         </LayoutWrapperSideNav>
         <LayoutWrapperMain>
-          {error}
+          {fetchOrdersOrSalesError ? (
+            <p className={css.error}>
+              <FormattedMessage id="InboxPage.fetchFailed" />
+            </p>
+          ) : null}
           <ul className={css.itemList}>
             {!fetchInProgress ? (
               transactions.map(toTxItem)
@@ -322,9 +385,22 @@ export const InboxPageComponent = props => {
                 <IconSpinner />
               </li>
             )}
-            {noResults}
+            {hasNoResults ? (
+              <li key="noResults" className={css.noResults}>
+                <FormattedMessage
+                  id={isOrders ? 'InboxPage.noOrdersFound' : 'InboxPage.noSalesFound'}
+                />
+              </li>
+            ) : null}
           </ul>
-          {pagingLinks}
+          {hasTransactions && pagination && pagination.totalPages > 1 ? (
+            <PaginationLinks
+              className={css.pagination}
+              pageName="InboxPage"
+              pagePathParams={params}
+              pagination={pagination}
+            />
+          ) : null}
         </LayoutWrapperMain>
         <LayoutWrapperFooter>
           <Footer />

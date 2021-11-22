@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [add] InboxPage: support for multiple processes.
+  [#12](https://github.com/sharetribe/ftw-x/pull/12)
 - [add] TransactionPage: support for multiple processes.
   [#11](https://github.com/sharetribe/ftw-x/pull/11)
 - [add] Add getTransitionsNeedingProviderAttention to transcation.js and use it in user.duck.js
