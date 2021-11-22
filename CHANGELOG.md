@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [fix] Fixes issue with default payment card that was created by PR #111. Essentially, before
+  confirming PaymentIntent, we now check if the PaymentIntent has already been confirmed.
+  [#121](https://github.com/sharetribe/ftw-product/pull/121)
 - [fix] StripePaymentForm: add missing optional chaining: defaultPaymentMethod?.id
   [#120](https://github.com/sharetribe/ftw-product/pull/120)
 - [fix] Temporarily disallow Node v17, since it causes issues with dependencies.
