@@ -11,7 +11,11 @@ import { createResourceLocatorString, findRouteByRouteName } from '../../util/ro
 import { DATE_TYPE_DATE, propTypes } from '../../util/types';
 import { timeOfDayFromTimeZoneToLocal } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
-import { getProcess } from '../../util/transaction';
+import {
+  TX_TRANSITION_ACTOR_CUSTOMER,
+  TX_TRANSITION_ACTOR_PROVIDER,
+  getProcess,
+} from '../../util/transaction';
 import routeConfiguration from '../../routing/routeConfiguration';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -46,8 +50,8 @@ import {
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
 
-const PROVIDER = 'provider';
-const CUSTOMER = 'customer';
+const CUSTOMER = TX_TRANSITION_ACTOR_CUSTOMER;
+const PROVIDER = TX_TRANSITION_ACTOR_PROVIDER;
 const FLEX_PRODUCT_DEFAULT_PROCESS = 'flex-product-default-process';
 const FLEX_DAILY_DEFAULT_PROCESS = 'flex-default-process';
 
