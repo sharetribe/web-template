@@ -81,6 +81,55 @@ const categoryLabel = (categories, key) => {
   return cat ? cat.label : key;
 };
 
+const PlainPage = props => {
+  const { title, topbar, scrollingDisabled, children } = props;
+  return (
+    <Page title={title} scrollingDisabled={scrollingDisabled}>
+      <LayoutSingleColumn className={css.pageRoot}>
+        <LayoutWrapperTopbar>{topbar}</LayoutWrapperTopbar>
+        <LayoutWrapperMain>{children}</LayoutWrapperMain>
+        <LayoutWrapperFooter>
+          <Footer />
+        </LayoutWrapperFooter>
+      </LayoutSingleColumn>
+    </Page>
+  );
+};
+
+const ErrorPage = props => {
+  const { topbar, scrollingDisabled, intl } = props;
+  return (
+    <PlainPage
+      title={intl.formatMessage({
+        id: 'ListingPage.errorLoadingListingTitle',
+      })}
+      topbar={topbar}
+      scrollingDisabled={scrollingDisabled}
+    >
+      <p className={css.errorText}>
+        <FormattedMessage id="ListingPage.errorLoadingListingMessage" />
+      </p>
+    </PlainPage>
+  );
+};
+
+const LoadingPage = props => {
+  const { topbar, scrollingDisabled, intl } = props;
+  return (
+    <PlainPage
+      title={intl.formatMessage({
+        id: 'ListingPage.loadingListingTitle',
+      })}
+      topbar={topbar}
+      scrollingDisabled={scrollingDisabled}
+    >
+      <p className={css.loadingText}>
+        <FormattedMessage id="ListingPage.loadingListingMessage" />
+      </p>
+    </PlainPage>
+  );
+};
+
 export class ListingPageComponent extends Component {
   constructor(props) {
     super(props);
@@ -258,6 +307,19 @@ export class ListingPageComponent extends Component {
       publicData,
     } = currentListing.attributes;
 
+    const topbar = <TopbarContainer />;
+
+    if (showListingError && showListingError.status === 404) {
+      // 404 listing not found
+      return <NotFoundPage />;
+    } else if (showListingError) {
+      // Other error in fetching listing
+      return <ErrorPage topbar={topbar} scrollingDisabled={scrollingDisabled} intl={intl} />;
+    } else if (!currentListing.id) {
+      // Still loading the listing
+      return <LoadingPage topbar={topbar} scrollingDisabled={scrollingDisabled} intl={intl} />;
+    }
+
     const richTitle = (
       <span>
         {richText(title, {
@@ -267,70 +329,6 @@ export class ListingPageComponent extends Component {
       </span>
     );
 
-    const bookingTitle = (
-      <FormattedMessage id="ListingPage.bookingTitle" values={{ title: richTitle }} />
-    );
-
-    const topbar = <TopbarContainer />;
-
-    if (showListingError && showListingError.status === 404) {
-      // 404 listing not found
-
-      return <NotFoundPage />;
-    } else if (showListingError) {
-      // Other error in fetching listing
-
-      const errorTitle = intl.formatMessage({
-        id: 'ListingPage.errorLoadingListingTitle',
-      });
-
-      return (
-        <Page title={errorTitle} scrollingDisabled={scrollingDisabled}>
-          <LayoutSingleColumn className={css.pageRoot}>
-            <LayoutWrapperTopbar>{topbar}</LayoutWrapperTopbar>
-            <LayoutWrapperMain>
-              <p className={css.errorText}>
-                <FormattedMessage id="ListingPage.errorLoadingListingMessage" />
-              </p>
-            </LayoutWrapperMain>
-            <LayoutWrapperFooter>
-              <Footer />
-            </LayoutWrapperFooter>
-          </LayoutSingleColumn>
-        </Page>
-      );
-    } else if (!currentListing.id) {
-      // Still loading the listing
-
-      const loadingTitle = intl.formatMessage({
-        id: 'ListingPage.loadingListingTitle',
-      });
-
-      return (
-        <Page title={loadingTitle} scrollingDisabled={scrollingDisabled}>
-          <LayoutSingleColumn className={css.pageRoot}>
-            <LayoutWrapperTopbar>{topbar}</LayoutWrapperTopbar>
-            <LayoutWrapperMain>
-              <p className={css.loadingText}>
-                <FormattedMessage id="ListingPage.loadingListingMessage" />
-              </p>
-            </LayoutWrapperMain>
-            <LayoutWrapperFooter>
-              <Footer />
-            </LayoutWrapperFooter>
-          </LayoutSingleColumn>
-        </Page>
-      );
-    }
-
-    const handleViewPhotosClick = e => {
-      // Stop event from bubbling up to prevent image click handler
-      // trying to open the carousel as well.
-      e.stopPropagation();
-      this.setState({
-        imageCarouselOpen: true,
-      });
-    };
     const authorAvailable = currentListing && currentListing.author;
     const userAndListingAuthorAvailable = !!(currentUser && authorAvailable);
     const isOwnListing =
@@ -506,7 +504,9 @@ export class ListingPageComponent extends Component {
                   isOwnListing={isOwnListing}
                   unitType={unitType}
                   onSubmit={handleOrderSubmit}
-                  title={bookingTitle}
+                  title={
+                    <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
+                  }
                   author={ensuredAuthor}
                   onManageDisableScrolling={onManageDisableScrolling}
                   onContactUser={this.onContactUser}
