@@ -88,7 +88,6 @@ import * as EditListingDetailsForm from './containers/EditListingPage/EditListin
 import * as EditListingDeliveryForm from './containers/EditListingPage/EditListingWizard/EditListingDeliveryPanel/EditListingDeliveryForm.example';
 import * as EditListingLocationForm from './containers/EditListingPage/EditListingWizard/EditListingLocationPanel/EditListingLocationForm.example';
 import * as EditListingPhotosForm from './containers/EditListingPage/EditListingWizard/EditListingPhotosPanel/EditListingPhotosForm.example';
-import * as EditListingPoliciesForm from './containers/EditListingPage/EditListingWizard/EditListingPoliciesPanel/EditListingPoliciesForm.example';
 import * as EditListingPricingForm from './containers/EditListingPage/EditListingWizard/EditListingPricingPanel/EditListingPricingForm.example';
 import * as ActivityFeed from './containers/TransactionPage/ActivityFeed/ActivityFeed.example';
 import * as ReviewForm from './containers/TransactionPage/ReviewForm/ReviewForm.example';
@@ -127,7 +126,6 @@ export {
   EditListingDeliveryForm,
   EditListingLocationForm,
   EditListingPhotosForm,
-  EditListingPoliciesForm,
   EditListingPricingForm,
   EmailVerificationForm,
   EnquiryForm,
