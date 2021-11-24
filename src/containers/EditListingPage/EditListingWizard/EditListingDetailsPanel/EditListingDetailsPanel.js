@@ -5,7 +5,6 @@ import classNames from 'classnames';
 // Import configs and util modules
 import config from '../../../../config';
 import { FormattedMessage } from '../../../../util/reactIntl';
-import { ensureOwnListing } from '../../../../util/data';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
 import { getSupportedProcessesInfo } from '../../../../util/transaction';
 
@@ -32,10 +31,9 @@ const EditListingDetailsPanel = props => {
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
-  const currentListing = ensureOwnListing(listing);
-  const { description, title, publicData } = currentListing.attributes;
+  const { description, title, publicData, state } = listing?.attributes || {};
 
-  const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
+  const isPublished = listing?.id && state !== LISTING_STATE_DRAFT;
   const panelTitle = isPublished ? (
     <FormattedMessage
       id="EditListingDetailsPanel.title"
