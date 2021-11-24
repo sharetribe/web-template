@@ -11,6 +11,20 @@ import { Form, PrimaryButton, FieldTextInput, IconEnquiry } from '../../../compo
 
 import css from './EnquiryForm.module.css';
 
+const ErrorMessage = props => {
+  const { error } = props;
+  // No transaction process attached to listing
+  return error ? (
+    <p className={css.error}>
+      {error.message === 'No transaction process attached to listing' ? (
+        <FormattedMessage id="EnquiryForm.sendEnquiryErrorNoProcess" />
+      ) : (
+        <FormattedMessage id="EnquiryForm.sendEnquiryError" />
+      )}
+    </p>
+  ) : null;
+};
+
 const EnquiryFormComponent = props => (
   <FinalForm
     {...props}
@@ -65,11 +79,7 @@ const EnquiryFormComponent = props => (
             validate={messageRequired}
           />
           <div className={submitButtonWrapperClassName}>
-            {sendEnquiryError ? (
-              <p className={css.error}>
-                <FormattedMessage id="EnquiryForm.sendEnquiryError" />
-              </p>
-            ) : null}
+            <ErrorMessage error={sendEnquiryError} />
             <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
               <FormattedMessage id="EnquiryForm.submitButtonText" />
             </PrimaryButton>

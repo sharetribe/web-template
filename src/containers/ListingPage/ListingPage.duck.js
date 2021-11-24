@@ -271,15 +271,25 @@ export const fetchTimeSlots = listingId => (dispatch, getState, sdk) => {
     });
 };
 
-export const sendEnquiry = (listingId, message) => (dispatch, getState, sdk) => {
+export const sendEnquiry = (listing, message) => (dispatch, getState, sdk) => {
   dispatch(sendEnquiryRequest());
-  // TODO not from config
-  const processName = config.transactionProcessAlias.split('/')[0];
+  const processAlias = listing?.attributes?.publicData?.transactionProcessAlias;
+  if (!processAlias) {
+    const error = new Error('No transaction process attached to listing');
+    log.error(error, 'listing-process-missing', {
+      listingId: listing?.id?.uuid,
+    });
+    dispatch(sendEnquiryError(storableError(error)));
+    return Promise.reject(error);
+  }
+
+  const listingId = listing?.id;
+  const [processName, alias] = processAlias.split('/');
   const transitions = getProcess(processName)?.transitions;
 
   const bodyParams = {
     transition: transitions.ENQUIRE,
-    processAlias: config.transactionProcessAlias,
+    processAlias,
     params: { listingId },
   };
   return sdk.transactions

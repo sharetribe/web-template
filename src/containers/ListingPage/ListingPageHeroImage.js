@@ -164,12 +164,13 @@ export class ListingPageComponent extends Component {
   }
 
   onSubmitEnquiry(values) {
-    const { history, params, onSendEnquiry } = this.props;
+    const { history, params, getListing, onSendEnquiry } = this.props;
     const routes = routeConfiguration();
     const listingId = new UUID(params.id);
+    const listing = getListing(listingId);
     const { message } = values;
 
-    onSendEnquiry(listingId, message.trim())
+    onSendEnquiry(listing, message.trim())
       .then(txId => {
         this.setState({ enquiryModalOpen: false });
 
@@ -642,7 +643,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(setInitialValues(values, saveToSessionStorage)),
   onFetchTransactionLineItems: (orderData, listingId, isOwnListing) =>
     dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)),
-  onSendEnquiry: (listingId, message) => dispatch(sendEnquiry(listingId, message)),
+  onSendEnquiry: (listing, message) => dispatch(sendEnquiry(listing, message)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
 });
 

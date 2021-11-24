@@ -256,6 +256,7 @@
   "EnquiryForm.messagePlaceholder": "Hello {authorDisplayName}! I'm looking forward to…",
   "EnquiryForm.messageRequired": "A message is required",
   "EnquiryForm.sendEnquiryError": "Whoops, something went wrong. Please try again.",
+  "EnquiryForm.sendEnquiryErrorNoProcess": "Whoops, there was not transaction process attached to the listing. Please, contact the marketplace operator.",
   "EnquiryForm.submitButtonText": "Send enquiry",
   "FieldBirthdayInput.birthdayDatePlaceholder": "dd",
   "FieldBirthdayInput.birthdayMonthPlaceholder": "mm",
