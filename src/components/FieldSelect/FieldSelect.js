@@ -7,7 +7,7 @@ import { ValidationError } from '../../components';
 import css from './FieldSelect.module.css';
 
 const FieldSelectComponent = props => {
-  const { rootClassName, className, id, label, input, meta, children, ...rest } = props;
+  const { rootClassName, className, id, label, input, meta, children, onChange, ...rest } = props;
 
   if (label && !id) {
     throw new Error('id required when a label is given');
@@ -23,7 +23,14 @@ const FieldSelectComponent = props => {
     [css.selectSuccess]: valid,
     [css.selectError]: hasError,
   });
-  const selectProps = { className: selectClasses, id, ...input, ...rest };
+  const handleChange = e => {
+    input.onChange(e);
+    if (onChange) {
+      onChange(e.currentTarget.value);
+    }
+  };
+
+  const selectProps = { className: selectClasses, id, ...input, onChange: handleChange, ...rest };
 
   const classes = classNames(rootClassName || css.root, className);
   return (
