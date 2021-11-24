@@ -408,11 +408,10 @@ exports[`ListingPage matches snapshot 1`] = `
               onFetchTransactionLineItems={[Function]}
               onManageDisableScrolling={[Function]}
               onSubmit={[Function]}
-              subTitle="ListingPage.bookingSubTitle"
               timeSlots={null}
               title={
                 <Memo(MemoizedFormattedMessage)
-                  id="ListingPage.bookingTitle"
+                  id="ListingPage.orderTitle"
                   values={
                     Object {
                       "title": <span>

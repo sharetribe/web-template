@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [add] ListingPage: start enquiry from process found from public data.
+  [#14](https://github.com/sharetribe/ftw-x/pull/14)
 - [add] EditListingDetailsPanel: transactionProcessAlias and unitType
 
   - unitType could be 'item', 'day', 'night', 'hour'
