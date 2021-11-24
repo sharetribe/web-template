@@ -86,10 +86,8 @@ import * as StripePaymentForm from './containers/CheckoutPage/StripePaymentForm/
 import * as EditListingAvailabilityForm from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/EditListingAvailabilityForm.example';
 import * as EditListingDetailsForm from './containers/EditListingPage/EditListingWizard/EditListingDetailsPanel/EditListingDetailsForm.example';
 import * as EditListingDeliveryForm from './containers/EditListingPage/EditListingWizard/EditListingDeliveryPanel/EditListingDeliveryForm.example';
-import * as EditListingFeaturesForm from './containers/EditListingPage/EditListingWizard/EditListingFeaturesPanel/EditListingFeaturesForm.example';
 import * as EditListingLocationForm from './containers/EditListingPage/EditListingWizard/EditListingLocationPanel/EditListingLocationForm.example';
 import * as EditListingPhotosForm from './containers/EditListingPage/EditListingWizard/EditListingPhotosPanel/EditListingPhotosForm.example';
-import * as EditListingPoliciesForm from './containers/EditListingPage/EditListingWizard/EditListingPoliciesPanel/EditListingPoliciesForm.example';
 import * as EditListingPricingForm from './containers/EditListingPage/EditListingWizard/EditListingPricingPanel/EditListingPricingForm.example';
 import * as ActivityFeed from './containers/TransactionPage/ActivityFeed/ActivityFeed.example';
 import * as ReviewForm from './containers/TransactionPage/ReviewForm/ReviewForm.example';
@@ -126,10 +124,8 @@ export {
   EditListingAvailabilityForm,
   EditListingDetailsForm,
   EditListingDeliveryForm,
-  EditListingFeaturesForm,
   EditListingLocationForm,
   EditListingPhotosForm,
-  EditListingPoliciesForm,
   EditListingPricingForm,
   EmailVerificationForm,
   EnquiryForm,

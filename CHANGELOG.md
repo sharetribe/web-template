@@ -14,6 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [add] EditListingDetailsPanel: transactionProcessAlias and unitType
+
+  - unitType could be 'item', 'day', 'night', 'hour'
+  - Remove EditListingFeaturesPanel & EditListingFeaturesForm
+  - Remove EditListingPoliciesPanel & EditListingPoliciesForm
+
+  [#13](https://github.com/sharetribe/ftw-x/pull/13)
+
 - [add] InboxPage: support for multiple processes.
   [#12](https://github.com/sharetribe/ftw-x/pull/12)
 - [add] TransactionPage: support for multiple processes.

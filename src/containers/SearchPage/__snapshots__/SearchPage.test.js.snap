@@ -59,6 +59,8 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                 "pub_category",
               ],
               "type": "SelectSingleFilter",
+              "wizardPlaceholder": "Choose…",
+              "wizardRequired": "You need to select a category.",
             }
           }
           getHandleChangedValueFn={[Function]}
@@ -122,6 +124,8 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                 "pub_size",
               ],
               "type": "SelectMultipleFilter",
+              "wizardPlaceholder": "Choose…",
+              "wizardRequired": "You need to select a size.",
             }
           }
           getHandleChangedValueFn={[Function]}
@@ -189,6 +193,8 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                 "pub_brand",
               ],
               "type": "SelectMultipleFilter",
+              "wizardPlaceholder": "Choose…",
+              "wizardRequired": "You need to select a brand.",
             }
           }
           getHandleChangedValueFn={[Function]}
@@ -300,6 +306,8 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                   "pub_category",
                 ],
                 "type": "SelectSingleFilter",
+                "wizardPlaceholder": "Choose…",
+                "wizardRequired": "You need to select a category.",
               }
             }
             getHandleChangedValueFn={[Function]}
@@ -361,6 +369,8 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                   "pub_size",
                 ],
                 "type": "SelectMultipleFilter",
+                "wizardPlaceholder": "Choose…",
+                "wizardRequired": "You need to select a size.",
               }
             }
             getHandleChangedValueFn={[Function]}
@@ -426,6 +436,8 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                   "pub_brand",
                 ],
                 "type": "SelectMultipleFilter",
+                "wizardPlaceholder": "Choose…",
+                "wizardRequired": "You need to select a brand.",
               }
             }
             getHandleChangedValueFn={[Function]}

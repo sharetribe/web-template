@@ -39,15 +39,7 @@ export const isAnyFilterActive = (filterIds, urlQueryParams, filterConfigs) => {
  */
 export const findOptionsForSelectFilter = (filterId, filters) => {
   const filter = filters.find(f => f.id === filterId);
-  return filter && filter.config && filter.config.options ? filter.config.options : [];
-};
-
-/**
- * Return filter config
- */
-export const findConfigForSelectFilter = (filterId, filters) => {
-  const filter = filters.find(f => f.id === filterId);
-  return filter && filter.config ? filter.config : null;
+  return filter?.config?.options || [];
 };
 
 /**
