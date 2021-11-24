@@ -3,9 +3,10 @@ import { bool, func, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 // Import configs and util modules
+import config from '../../../../config';
 import { FormattedMessage } from '../../../../util/reactIntl';
-import { ensureOwnListing } from '../../../../util/data';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
+import { getSupportedProcessesInfo } from '../../../../util/transaction';
 
 // Import shared components
 import { ListingLink } from '../../../../components';
@@ -30,10 +31,9 @@ const EditListingDetailsPanel = props => {
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
-  const currentListing = ensureOwnListing(listing);
-  const { description, title, publicData } = currentListing.attributes;
+  const { description, title, publicData, state } = listing?.attributes || {};
 
-  const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
+  const isPublished = listing?.id && state !== LISTING_STATE_DRAFT;
   const panelTitle = isPublished ? (
     <FormattedMessage
       id="EditListingDetailsPanel.title"
@@ -43,29 +43,53 @@ const EditListingDetailsPanel = props => {
     <FormattedMessage id="EditListingDetailsPanel.createListingTitle" />
   );
 
+  const activeProcesses = config.custom.processes;
+  const supportedProcessesInfo = getSupportedProcessesInfo();
+  const activeProcessInfos = supportedProcessesInfo.filter(processInfo =>
+    activeProcesses.includes(processInfo.name)
+  );
+  const getCustomFields = values => {
+    const filterConfigs = config.custom.filters;
+    return filterConfigs.reduce((fields, filterConfig) => {
+      if (['enum', 'multi-enum'].includes(filterConfig?.config?.schemaType)) {
+        const fieldName = filterConfig.id;
+        const fieldValue = values[fieldName] || null;
+        return { ...fields, [fieldName]: fieldValue };
+      }
+      return fields;
+    }, {});
+  };
+  const initialValues = (title, description, publicData) => {
+    const { transactionProcessAlias, unitType, ...rest } = publicData;
+    const customFields = getCustomFields(rest);
+    return {
+      title,
+      description,
+      transactionProcessAlias,
+      unitType,
+      ...customFields,
+    };
+  };
+
   return (
     <div className={classes}>
       <h1 className={css.title}>{panelTitle}</h1>
       <EditListingDetailsForm
         className={css.form}
-        initialValues={{
-          title,
-          description,
-          category: publicData.category,
-          size: publicData.size,
-          brand: publicData.brand,
-        }}
+        initialValues={initialValues(title, description, publicData)}
         saveActionMsg={submitButtonText}
         onSubmit={values => {
-          const { title, description, category, size, brand } = values;
+          const { title, description, transactionProcessAlias, unitType, ...rest } = values;
+          const customFields = getCustomFields(rest);
           const updateValues = {
             title: title.trim(),
             description,
-            publicData: { category, size, brand },
+            publicData: { transactionProcessAlias, unitType, ...customFields },
           };
 
           onSubmit(updateValues);
         }}
+        processInfos={activeProcessInfos}
         onChange={onChange}
         disabled={disabled}
         ready={ready}
