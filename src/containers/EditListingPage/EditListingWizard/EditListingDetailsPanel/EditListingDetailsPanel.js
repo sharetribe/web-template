@@ -7,6 +7,7 @@ import config from '../../../../config';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { ensureOwnListing } from '../../../../util/data';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
+import { getSupportedProcessesInfo } from '../../../../util/transaction';
 
 // Import shared components
 import { ListingLink } from '../../../../components';
@@ -44,6 +45,11 @@ const EditListingDetailsPanel = props => {
     <FormattedMessage id="EditListingDetailsPanel.createListingTitle" />
   );
 
+  const activeProcesses = config.custom.processes;
+  const supportedProcessesInfo = getSupportedProcessesInfo();
+  const activeProcessInfos = supportedProcessesInfo.filter(processInfo =>
+    activeProcesses.includes(processInfo.name)
+  );
   const getCustomFields = values => {
     const filterConfigs = config.custom.filters;
     return filterConfigs.reduce((fields, filterConfig) => {
@@ -85,6 +91,7 @@ const EditListingDetailsPanel = props => {
 
           onSubmit(updateValues);
         }}
+        processInfos={activeProcessInfos}
         onChange={onChange}
         disabled={disabled}
         ready={ready}
