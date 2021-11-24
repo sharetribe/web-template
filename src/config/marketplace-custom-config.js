@@ -40,11 +40,13 @@ export const processes = ['flex-product-default-process', 'flex-default-process'
  *         and tie them with correct extended data key
  *         (i.e. pub_<key> or meta_<key>).
  */
-
+// TODO This filters setup should be transformed to listing's extended data setup
 export const filters = [
   {
     id: 'category',
     label: 'Category',
+    wizardPlaceholder: 'Choose…',
+    wizardRequired: 'You need to select a category.',
     type: 'SelectSingleFilter',
     group: 'primary',
     queryParamNames: ['pub_category'],
@@ -66,6 +68,8 @@ export const filters = [
   {
     id: 'size',
     label: 'Size (US)',
+    wizardPlaceholder: 'Choose…',
+    wizardRequired: 'You need to select a size.',
     type: 'SelectMultipleFilter',
     group: 'primary',
     queryParamNames: ['pub_size'],
@@ -96,6 +100,8 @@ export const filters = [
   {
     id: 'brand',
     label: 'Brand',
+    wizardPlaceholder: 'Choose…',
+    wizardRequired: 'You need to select a brand.',
     type: 'SelectMultipleFilter',
     group: 'primary',
     queryParamNames: ['pub_brand'],
