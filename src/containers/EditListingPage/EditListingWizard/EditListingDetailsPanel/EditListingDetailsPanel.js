@@ -3,6 +3,7 @@ import { bool, func, object, string } from 'prop-types';
 import classNames from 'classnames';
 
 // Import configs and util modules
+import config from '../../../../config';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { ensureOwnListing } from '../../../../util/data';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
@@ -43,25 +44,43 @@ const EditListingDetailsPanel = props => {
     <FormattedMessage id="EditListingDetailsPanel.createListingTitle" />
   );
 
+  const getCustomFields = values => {
+    const filterConfigs = config.custom.filters;
+    return filterConfigs.reduce((fields, filterConfig) => {
+      if (['enum', 'multi-enum'].includes(filterConfig?.config?.schemaType)) {
+        const fieldName = filterConfig.id;
+        const fieldValue = values[fieldName] || null;
+        return { ...fields, [fieldName]: fieldValue };
+      }
+      return fields;
+    }, {});
+  };
+  const initialValues = (title, description, publicData) => {
+    const { transactionProcessAlias, unitType, ...rest } = publicData;
+    const customFields = getCustomFields(rest);
+    return {
+      title,
+      description,
+      transactionProcessAlias,
+      unitType,
+      ...customFields,
+    };
+  };
+
   return (
     <div className={classes}>
       <h1 className={css.title}>{panelTitle}</h1>
       <EditListingDetailsForm
         className={css.form}
-        initialValues={{
-          title,
-          description,
-          category: publicData.category,
-          size: publicData.size,
-          brand: publicData.brand,
-        }}
+        initialValues={initialValues(title, description, publicData)}
         saveActionMsg={submitButtonText}
         onSubmit={values => {
-          const { title, description, category, size, brand } = values;
+          const { title, description, transactionProcessAlias, unitType, ...rest } = values;
+          const customFields = getCustomFields(rest);
           const updateValues = {
             title: title.trim(),
             description,
-            publicData: { category, size, brand },
+            publicData: { transactionProcessAlias, unitType, ...customFields },
           };
 
           onSubmit(updateValues);
