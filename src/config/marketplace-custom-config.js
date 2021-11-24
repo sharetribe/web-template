@@ -1,6 +1,14 @@
 /*
  * Marketplace specific configuration.
- *
+ */
+
+/**
+ * Active processes.
+ * Note: these should match with the process names in src/util/transaction.js
+ */
+export const processes = ['flex-product-default-process', 'flex-default-process'];
+
+/**
  * Every filter needs to have following keys:
  * - id:     Unique id of the filter.
  * - label:  The default label of the filter.

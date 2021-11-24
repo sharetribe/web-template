@@ -17,16 +17,22 @@ import * as bookingProcess from './transactionProcessBooking';
 const PROCESSES = [
   {
     name: 'flex-product-default-process',
+    alias: 'release-1',
     process: productProcess,
+    unitTypes: ['item'],
   },
   {
     name: 'flex-hourly-default-process',
+    alias: 'release-1',
     process: bookingProcess,
+    unitTypes: ['hour'],
   },
   {
     // TODO: ideally, this should be 'flex-daily-default-process'
     name: 'flex-default-process',
+    alias: 'release-1',
     process: bookingProcess,
+    unitTypes: ['day', 'night'],
   },
 ];
 
@@ -193,6 +199,15 @@ export const getProcess = processName => {
     throw error;
   }
 };
+
+/**
+ * Get the info about supported processes: name, alias, unitTypes
+ */
+export const getSupportedProcessesInfo = () =>
+  PROCESSES.map(p => {
+    const { process, ...rest } = p;
+    return rest;
+  });
 
 /**
  * Get all the transitions for every supported process
