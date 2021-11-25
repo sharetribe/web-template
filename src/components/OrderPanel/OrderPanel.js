@@ -7,7 +7,13 @@ import omit from 'lodash/omit';
 
 import config from '../../config';
 import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
-import { propTypes, LISTING_STATE_CLOSED, LINE_ITEM_NIGHT, LINE_ITEM_DAY } from '../../util/types';
+import {
+  propTypes,
+  LISTING_STATE_CLOSED,
+  LINE_ITEM_NIGHT,
+  LINE_ITEM_DAY,
+  LINE_ITEM_ITEM,
+} from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
 import { userDisplayNameAsString } from '../../util/data';
@@ -88,12 +94,12 @@ const OrderPanel = props => {
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
   const currentStock = listing.currentStock?.attributes?.quantity;
-  const isOutOfStock = config.listingManagementType === 'stock' && currentStock === 0;
+  const isOutOfStock = lineItemUnitType === LINE_ITEM_ITEM && currentStock === 0;
 
   // Show form only when stock is fully loaded. This avoids "Out of stock" UI by
   // default before all data has been downloaded.
   const showProductOrderForm =
-    config.listingManagementType === 'stock' && typeof currentStock === 'number';
+    lineItemUnitType === LINE_ITEM_ITEM && typeof currentStock === 'number';
 
   const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
 

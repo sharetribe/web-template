@@ -337,13 +337,14 @@ export const loadData = (params, search) => dispatch => {
     return dispatch(showListing(listingId, true));
   }
 
-  if (config.listingManagementType === 'availability') {
-    return Promise.all([
-      dispatch(showListing(listingId)),
-      dispatch(fetchTimeSlots(listingId)),
-      dispatch(fetchReviews(listingId)),
-    ]);
-  } else {
-    return Promise.all([dispatch(showListing(listingId)), dispatch(fetchReviews(listingId))]);
-  }
+  return Promise.all([dispatch(showListing(listingId)), dispatch(fetchReviews(listingId))]).then(
+    response => {
+      const listing = response[0].data.data;
+      const productProcess = 'flex-product-default-process';
+      if (listing?.attributes?.publicData?.transactionProcessAlias !== productProcess) {
+        dispatch(fetchTimeSlots(listingId));
+      }
+      return response;
+    }
+  );
 };
