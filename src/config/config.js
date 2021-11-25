@@ -65,10 +65,7 @@ const lineItemUnitType = 'line-item/units';
 // With the default 'stock', availability and bookings are not used, and
 // listings have a specific numeric stock.
 //
-// NOTE: We plan to extend this config to also work for other management types
-// like availability management. But for now, if the stock management doesn't
-// work for you, you should have a look at the other ftw-daily and ftw-hourly
-// templates.
+// TODO: this is only used on SearchPage and there the value should come from filter
 const listingManagementType = 'stock';
 
 // A maximum number of days forwards during which a booking can be made.
