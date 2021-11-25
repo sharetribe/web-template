@@ -21,7 +21,7 @@ describe('TransactionPage - Sale', () => {
     const transaction = createTransaction({
       id: txId,
       lastTransition: transitions.CONFIRM_PAYMENT,
-      listing: createListing('listing1'),
+      listing: createListing('listing1', { publicData: { unitType: 'item' } }),
       customer: createUser('customer1'),
       provider: createUser('provider1'),
     });
@@ -72,7 +72,7 @@ describe('TransactionPage - Order', () => {
     const transaction = createTransaction({
       id: txId,
       lastTransition: transitions.CONFIRM_PAYMENT,
-      listing: createListing('listing1'),
+      listing: createListing('listing1', { publicData: { unitType: 'item' } }),
       customer: createUser('customer1'),
       provider: createUser('provider1'),
     });

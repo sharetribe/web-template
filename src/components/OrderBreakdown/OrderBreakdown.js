@@ -8,6 +8,7 @@ import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import classNames from 'classnames';
 import {
   propTypes,
+  LISTING_UNIT_TYPES,
   LINE_ITEM_CUSTOMER_COMMISSION,
   LINE_ITEM_PROVIDER_COMMISSION,
 } from '../../util/types';
@@ -28,20 +29,15 @@ import LineItemUnknownItemsMaybe from './LineItemUnknownItemsMaybe';
 import css from './OrderBreakdown.module.css';
 
 export const OrderBreakdownComponent = props => {
-  const {
-    rootClassName,
-    className,
-    userRole,
-    unitType,
-    transaction,
-    booking,
-    intl,
-    dateType,
-  } = props;
+  const { rootClassName, className, userRole, transaction, booking, intl, dateType } = props;
 
   const isCustomer = userRole === 'customer';
   const isProvider = userRole === 'provider';
   const lineItems = transaction.attributes.lineItems;
+  const unitLineItem = lineItems?.find(
+    item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
+  );
+  const unitType = unitLineItem?.code;
 
   const hasCommissionLineItem = lineItems.find(item => {
     const hasCustomerCommission = isCustomer && item.code === LINE_ITEM_CUSTOMER_COMMISSION;
@@ -67,9 +63,6 @@ export const OrderBreakdownComponent = props => {
    *
    * LineItemBasePriceMaybe: prints the base price calculation for the listing, e.g.
    * "$150.00 * 2 nights $300"
-   *
-   * LineItemUnitPriceMaybe: prints just the unit price, e.g. "Price per night $32.00".
-   * This line item is not used by default in the OrderBreakdown.
    *
    * LineItemUnknownItemsMaybe: prints the line items that are unknown. In ideal case there
    * should not be unknown line items. If you are using custom pricing, you should create
@@ -147,7 +140,6 @@ OrderBreakdownComponent.propTypes = {
   className: string,
 
   userRole: oneOf(['customer', 'provider']).isRequired,
-  unitType: propTypes.lineItemUnitType.isRequired,
   transaction: propTypes.transaction.isRequired,
   booking: propTypes.booking,
   dateType: propTypes.dateType,

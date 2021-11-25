@@ -11,7 +11,7 @@ import {
   TX_TRANSITION_ACTOR_PROVIDER,
   getProcess,
 } from '../../util/transaction';
-import { propTypes, DATE_TYPE_DATE } from '../../util/types';
+import { propTypes, DATE_TYPE_DATE, LINE_ITEM_ITEM, LISTING_UNIT_TYPES } from '../../util/types';
 import { formatDateIntoPartials } from '../../util/dates';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
@@ -186,7 +186,7 @@ export const getStateData = params => {
 };
 
 export const InboxItem = props => {
-  const { unitType, transactionRole, tx, intl, stateData } = props;
+  const { transactionRole, tx, intl, stateData } = props;
   const { customer, provider, listing } = tx;
   const {
     processName,
@@ -198,10 +198,11 @@ export const InboxItem = props => {
   } = stateData;
   const isCustomer = transactionRole === TX_TRANSITION_ACTOR_CUSTOMER;
 
-  const unitPurchase = tx.attributes?.lineItems?.find(
-    item => item.code === unitType && !item.reversal
+  const unitLineItem = tx.attributes?.lineItems?.find(
+    item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
   );
-  const quantity = unitPurchase ? unitPurchase.quantity.toString() : null;
+  const isProductOrder = unitLineItem?.code === LINE_ITEM_ITEM;
+  const quantity = isProductOrder ? unitLineItem.quantity.toString() : null;
 
   const otherUser = isCustomer ? provider : customer;
   const otherUserDisplayName = <UserDisplayName user={otherUser} intl={intl} />;
@@ -238,14 +239,14 @@ export const InboxItem = props => {
           <div className={css.itemOrderInfo}>
             <span>{listing?.attributes?.title}</span>
             <br />
-            {unitPurchase ? (
+            {isProductOrder ? (
               <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
             ) : tx?.booking ? (
               <BookingTimeInfo
                 isOrder={isCustomer}
                 intl={intl}
-                tx={tx}
-                unitType={unitType}
+                booking={tx.booking}
+                unitType={unitLineItem?.code}
                 dateType={DATE_TYPE_DATE}
               />
             ) : null}
@@ -267,7 +268,6 @@ export const InboxItem = props => {
 };
 
 InboxItem.propTypes = {
-  unitType: propTypes.lineItemUnitType.isRequired,
   transactionRole: oneOf([TX_TRANSITION_ACTOR_CUSTOMER, TX_TRANSITION_ACTOR_PROVIDER]).isRequired,
   tx: propTypes.transaction.isRequired,
   intl: intlShape.isRequired,
@@ -275,7 +275,6 @@ InboxItem.propTypes = {
 
 export const InboxPageComponent = props => {
   const {
-    unitType,
     currentUser,
     fetchInProgress,
     fetchOrdersOrSalesError,
@@ -305,13 +304,7 @@ export const InboxPageComponent = props => {
     // Render InboxItem only if the latest transition of the transaction is handled in the `txState` function.
     return stateData ? (
       <li key={tx.id.uuid} className={css.listItem}>
-        <InboxItem
-          unitType={unitType}
-          transactionRole={transactionRole}
-          tx={tx}
-          intl={intl}
-          stateData={stateData}
-        />
+        <InboxItem transactionRole={transactionRole} tx={tx} intl={intl} stateData={stateData} />
       </li>
     ) : null;
   };
@@ -411,7 +404,6 @@ export const InboxPageComponent = props => {
 };
 
 InboxPageComponent.defaultProps = {
-  unitType: config.lineItemUnitType,
   currentUser: null,
   currentUserHasOrders: null,
   fetchOrdersOrSalesError: null,
@@ -425,7 +417,6 @@ InboxPageComponent.propTypes = {
     tab: string.isRequired,
   }).isRequired,
 
-  unitType: propTypes.lineItemUnitType,
   currentUser: propTypes.currentUser,
   fetchInProgress: bool.isRequired,
   fetchOrdersOrSalesError: propTypes.error,

@@ -12,7 +12,7 @@ import {
   LISTING_STATE_CLOSED,
   LINE_ITEM_NIGHT,
   LINE_ITEM_DAY,
-  LINE_ITEM_UNITS,
+  LINE_ITEM_ITEM,
 } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
@@ -63,7 +63,6 @@ const OrderPanel = props => {
     titleClassName,
     listing,
     isOwnListing,
-    unitType,
     onSubmit,
     title,
     author,
@@ -80,10 +79,9 @@ const OrderPanel = props => {
     fetchLineItemsError,
   } = props;
 
-  const isNightly = unitType === LINE_ITEM_NIGHT;
-  const isDaily = unitType === LINE_ITEM_DAY;
-  const isUnits = unitType === LINE_ITEM_UNITS;
-  const shouldHaveBooking = isNightly || isDaily;
+  const unitType = listing?.attributes?.publicData?.unitType;
+  const lineItemUnitType = `line-item/${unitType}`;
+  const shouldHaveBooking = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
 
   const price = listing.attributes.price;
   const hasListingState = !!listing.attributes.state;
@@ -96,12 +94,12 @@ const OrderPanel = props => {
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
   const currentStock = listing.currentStock?.attributes?.quantity;
-  const isOutOfStock = config.listingManagementType === 'stock' && currentStock === 0;
+  const isOutOfStock = lineItemUnitType === LINE_ITEM_ITEM && currentStock === 0;
 
   // Show form only when stock is fully loaded. This avoids "Out of stock" UI by
   // default before all data has been downloaded.
   const showProductOrderForm =
-    config.listingManagementType === 'stock' && typeof currentStock === 'number';
+    lineItemUnitType === LINE_ITEM_ITEM && typeof currentStock === 'number';
 
   const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
 
@@ -109,6 +107,8 @@ const OrderPanel = props => {
     ? intl.formatMessage({ id: 'OrderPanel.subTitleClosedListing' })
     : null;
 
+  const isNightly = unitType === LINE_ITEM_NIGHT;
+  const isDaily = unitType === LINE_ITEM_DAY;
   const unitTranslationKey = isNightly
     ? 'OrderPanel.perNight'
     : isDaily
@@ -149,7 +149,7 @@ const OrderPanel = props => {
             className={css.bookingForm}
             formId="OrderPanelBookingDatesForm"
             submitButtonWrapperClassName={css.bookingDatesSubmitButtonWrapper}
-            unitType={unitType}
+            unitType={lineItemUnitType}
             onSubmit={onSubmit}
             price={price}
             listingId={listing.id}
@@ -217,7 +217,6 @@ OrderPanel.defaultProps = {
   titleClassName: null,
   isOwnListing: false,
   subTitle: null,
-  unitType: config.lineItemUnitType,
   timeSlots: null,
   fetchTimeSlotsError: null,
   lineItems: null,
@@ -230,7 +229,6 @@ OrderPanel.propTypes = {
   titleClassName: string,
   listing: oneOfType([propTypes.listing, propTypes.ownListing]),
   isOwnListing: bool,
-  unitType: propTypes.lineItemUnitType,
   onSubmit: func.isRequired,
   title: oneOfType([node, string]).isRequired,
   subTitle: oneOfType([node, string]),

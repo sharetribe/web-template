@@ -33,7 +33,12 @@ import { types as sdkTypes } from '../../util/sdkLoader';
 import { FormattedMessage } from '../../util/reactIntl';
 import { timeOfDayFromLocalToTimeZone, getStartOf } from '../../util/dates';
 import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../util/transaction';
-import { DATE_TYPE_DATE, LINE_ITEM_DAY, LINE_ITEM_NIGHT } from '../../util/types';
+import {
+  DATE_TYPE_DATE,
+  LINE_ITEM_DAY,
+  LINE_ITEM_NIGHT,
+  LISTING_UNIT_TYPES,
+} from '../../util/types';
 import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../util/currency';
 
 import { OrderBreakdown } from '../../components';
@@ -125,7 +130,7 @@ const estimatedCustomerTransaction = (
 };
 
 const EstimatedCustomerBreakdownMaybe = props => {
-  const { unitType, breakdownData = {}, lineItems } = props;
+  const { breakdownData = {}, lineItems } = props;
   const { startDate, endDate } = breakdownData;
   const processName = 'flex-product-default-process';
   let process = null;
@@ -140,6 +145,10 @@ const EstimatedCustomerBreakdownMaybe = props => {
     );
   }
 
+  const unitLineItem = lineItems?.find(
+    item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
+  );
+  const unitType = unitLineItem?.code;
   const shouldHaveBooking = unitType === LINE_ITEM_DAY || unitType === LINE_ITEM_NIGHT;
   const hasLineItems = lineItems && lineItems.length > 0;
   const hasRequiredBookingData = !shouldHaveBooking || (startDate && endDate);
@@ -152,7 +161,6 @@ const EstimatedCustomerBreakdownMaybe = props => {
     <OrderBreakdown
       className={css.receipt}
       userRole="customer"
-      unitType={unitType}
       transaction={tx}
       booking={tx.booking}
       dateType={DATE_TYPE_DATE}

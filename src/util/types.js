@@ -330,7 +330,8 @@ propTypes.defaultPaymentMethod = shape({
 
 export const LINE_ITEM_NIGHT = 'line-item/night';
 export const LINE_ITEM_DAY = 'line-item/day';
-export const LINE_ITEM_UNITS = 'line-item/units';
+export const LINE_ITEM_HOUR = 'line-item/hour';
+export const LINE_ITEM_ITEM = 'line-item/item';
 export const LINE_ITEM_CUSTOMER_COMMISSION = 'line-item/customer-commission';
 export const LINE_ITEM_PROVIDER_COMMISSION = 'line-item/provider-commission';
 export const LINE_ITEM_SHIPPING_FEE = 'line-item/shipping-fee';
@@ -339,14 +340,15 @@ export const LINE_ITEM_PICKUP_FEE = 'line-item/pickup-fee';
 export const LINE_ITEMS = [
   LINE_ITEM_NIGHT,
   LINE_ITEM_DAY,
-  LINE_ITEM_UNITS,
+  LINE_ITEM_ITEM,
   LINE_ITEM_CUSTOMER_COMMISSION,
   LINE_ITEM_PROVIDER_COMMISSION,
   LINE_ITEM_SHIPPING_FEE,
   LINE_ITEM_PICKUP_FEE,
 ];
+export const LISTING_UNIT_TYPES = [LINE_ITEM_NIGHT, LINE_ITEM_DAY, LINE_ITEM_ITEM];
 
-propTypes.lineItemUnitType = oneOf([LINE_ITEM_NIGHT, LINE_ITEM_DAY, LINE_ITEM_UNITS]);
+propTypes.lineItemUnitType = oneOf(LISTING_UNIT_TYPES);
 
 const requiredLineItemPropType = (props, propName, componentName) => {
   const prop = props[propName];

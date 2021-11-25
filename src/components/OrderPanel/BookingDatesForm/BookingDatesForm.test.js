@@ -5,7 +5,7 @@ import Decimal from 'decimal.js';
 import { types as sdkTypes } from '../../../util/sdkLoader';
 import { renderShallow, renderDeep } from '../../../util/test-helpers';
 import { fakeIntl } from '../../../util/test-data';
-import { LINE_ITEM_NIGHT } from '../../../util/types';
+import { LINE_ITEM_NIGHT, LISTING_UNIT_TYPES } from '../../../util/types';
 import { timeOfDayFromTimeZoneToLocal } from '../../../util/dates';
 
 import { OrderBreakdown } from '../../../components';
@@ -50,31 +50,20 @@ describe('BookingDatesForm', () => {
 
 describe('EstimatedCustomerBreakdownMaybe', () => {
   it('renders nothing if nightly is missing start and end date', () => {
-    expect(
-      renderDeep(
-        <EstimatedCustomerBreakdownMaybe unitType={LINE_ITEM_NIGHT} lineItems={lineItems} />
-      )
-    ).toBeFalsy();
+    expect(renderDeep(<EstimatedCustomerBreakdownMaybe lineItems={lineItems} />)).toBeFalsy();
   });
   it('renders nothing if nightly is missing end date', () => {
     const data = {
       startDate: new Date(),
     };
     expect(
-      renderDeep(
-        <EstimatedCustomerBreakdownMaybe
-          unitType={LINE_ITEM_NIGHT}
-          breakdownData={data}
-          lineItems={lineItems}
-        />
-      )
+      renderDeep(<EstimatedCustomerBreakdownMaybe breakdownData={data} lineItems={lineItems} />)
     ).toBeFalsy();
   });
   it('renders breakdown with correct transaction data', () => {
     const startDate = new Date(2017, 3, 14, 0, 0, 0);
     const endDate = new Date(2017, 3, 16, 0, 0, 0);
     const props = {
-      unitType: LINE_ITEM_NIGHT,
       breakdownData: {
         startDate,
         endDate,
@@ -84,10 +73,13 @@ describe('EstimatedCustomerBreakdownMaybe', () => {
 
     const tree = shallow(<EstimatedCustomerBreakdownMaybe {...props} />);
     const breakdown = tree.find(OrderBreakdown);
-    const { userRole, unitType, transaction, booking } = breakdown.props();
+    const { userRole, transaction, booking } = breakdown.props();
+    const unitLineItem = transaction.attributes.lineItems.find(
+      item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
+    );
 
+    expect(unitLineItem.code).toEqual(LINE_ITEM_NIGHT);
     expect(userRole).toEqual('customer');
-    expect(unitType).toEqual(LINE_ITEM_NIGHT);
 
     // Local time-of-day (startDate) is converted to server's time-of-day (booking.attributes.start)
     // and it's then verified that it's actually UTC time.

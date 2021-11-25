@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { arrayOf, bool, func, node, object, oneOf, string } from 'prop-types';
 import classNames from 'classnames';
 
-import config from '../../../config';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes } from '../../../util/types';
 import { userDisplayNameAsString } from '../../../util/data';
@@ -118,6 +117,7 @@ export class TransactionPanelComponent extends Component {
       currentUser,
       transactionRole,
       listing,
+      unitType,
       customer,
       provider,
       hasTransitions,
@@ -160,7 +160,6 @@ export class TransactionPanelComponent extends Component {
       ? deletedListingTitle
       : listing?.attributes?.title;
 
-    const unitType = config.lineItemUnitType;
     const isNightly = unitType === LINE_ITEM_NIGHT;
     const isDaily = unitType === LINE_ITEM_DAY;
 

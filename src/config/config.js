@@ -50,25 +50,21 @@ const transactionProcessAlias = 'flex-product-default-process/release-1';
 
 // The transaction line item code for the main unit type for listings.
 //
-// Possible values: ['line-item/night', 'line-item/day', 'line-item/units';]
+// Possible values: ['line-item/night', 'line-item/day', 'line-item/item';]
 //
 // Note 1: This 'lineItemUnitType' variable affects only web app.
 //         If you are using privileged transitions (which is used by the default process),
 //         you also need to configure unit type in API server: server/api-util/lineItems.js
 //
-// Note 2: Translations will use different translation keys for night, day or unit
-//         depending on the value chosen.
-const lineItemUnitType = 'line-item/units';
+// TODO: This is only used on Searchpage (to check nigth vs day mode)
+const lineItemUnitType = 'line-item/item';
 
 // Listing management type. Currently only 'stock' is supported.
 //
 // With the default 'stock', availability and bookings are not used, and
 // listings have a specific numeric stock.
 //
-// NOTE: We plan to extend this config to also work for other management types
-// like availability management. But for now, if the stock management doesn't
-// work for you, you should have a look at the other ftw-daily and ftw-hourly
-// templates.
+// TODO: this is only used on SearchPage and there the value should come from filter
 const listingManagementType = 'stock';
 
 // A maximum number of days forwards during which a booking can be made.
