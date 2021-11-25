@@ -245,7 +245,7 @@ export const InboxItem = props => {
               <BookingTimeInfo
                 isOrder={isCustomer}
                 intl={intl}
-                tx={tx}
+                booking={tx.booking}
                 unitType={unitLineItem?.code}
                 dateType={DATE_TYPE_DATE}
               />
