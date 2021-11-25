@@ -62,9 +62,7 @@ const LineItemSubTotalMaybe = props => {
 
   const refund = lineItems.find(item => item.code === unitType && item.reversal);
 
-  // Show unit purchase line total (unit price * quantity) as a subtotal.
-  // PLEASE NOTE that this assumes that the transaction doesn't have other
-  // line item types than the defined unit type (e.g. week, month, year).
+  // Show subtotal only if commission line-item is applicable to user or refund is issued.
   const showSubTotal = hasCommission(lineItems, userRole) || refund;
 
   // all non-reversal, non-commission line items
