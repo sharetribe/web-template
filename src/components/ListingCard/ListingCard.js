@@ -3,7 +3,7 @@ import { string, func, bool } from 'prop-types';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import classNames from 'classnames';
 import { lazyLoadWithDimensions } from '../../util/contextHelpers';
-import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, propTypes } from '../../util/types';
+import { propTypes } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { ensureListing, ensureUser } from '../../util/data';
 import { richText } from '../../util/richText';
@@ -67,15 +67,6 @@ export const ListingCardComponent = props => {
     : [];
 
   const { formattedPrice, priceTitle } = priceData(price, intl);
-  const unitType = config.lineItemUnitType;
-  const isNightly = unitType === LINE_ITEM_NIGHT;
-  const isDaily = unitType === LINE_ITEM_DAY;
-
-  const unitTranslationKey = isNightly
-    ? 'ListingCard.perNight'
-    : isDaily
-    ? 'ListingCard.perDay'
-    : 'ListingCard.perUnit';
 
   const setActivePropsMaybe = setActiveListing
     ? {
@@ -105,11 +96,6 @@ export const ListingCardComponent = props => {
           <div className={css.priceValue} title={priceTitle}>
             {formattedPrice}
           </div>
-          {config.listing.showUnitTypeTranslations ? (
-            <div className={css.perUnit}>
-              <FormattedMessage id={unitTranslationKey} />
-            </div>
-          ) : null}
         </div>
         <div className={css.mainInfo}>
           <div className={css.title}>
