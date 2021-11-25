@@ -2,7 +2,7 @@ import Decimal from 'decimal.js';
 
 import config from '../../config';
 import { types as sdkTypes } from '../../util/sdkLoader';
-import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, LINE_ITEM_UNITS } from '../../util/types';
+import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, LINE_ITEM_ITEM } from '../../util/types';
 
 import EstimatedCustomerBreakdownMaybe from './EstimatedCustomerBreakdownMaybe';
 
@@ -94,14 +94,14 @@ export const BookingMultipleNights = {
 export const BookingUnits = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
-    unitType: LINE_ITEM_UNITS,
+    unitType: LINE_ITEM_ITEM,
     breakdownData: {
       startDate: new Date(Date.UTC(2017, 3, 14)),
       endDate: new Date(Date.UTC(2017, 3, 16)),
     },
     lineItems: [
       {
-        code: 'line-item/units',
+        code: 'line-item/item',
         includeFor: ['customer', 'provider'],
         quantity: new Decimal(2),
         unitPrice: new Money(4500, CURRENCY),
@@ -116,11 +116,11 @@ export const BookingUnits = {
 export const OrderProductWithShipping = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
-    unitType: LINE_ITEM_UNITS,
+    unitType: LINE_ITEM_ITEM,
     breakdownData: {},
     lineItems: [
       {
-        code: 'line-item/units',
+        code: 'line-item/item',
         includeFor: ['customer', 'provider'],
         quantity: new Decimal(2),
         unitPrice: new Money(4500, CURRENCY),
@@ -143,11 +143,11 @@ export const OrderProductWithShipping = {
 export const OrderProductWithPickup = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
-    unitType: LINE_ITEM_UNITS,
+    unitType: LINE_ITEM_ITEM,
     breakdownData: {},
     lineItems: [
       {
-        code: 'line-item/units',
+        code: 'line-item/item',
         includeFor: ['customer', 'provider'],
         quantity: new Decimal(2),
         unitPrice: new Money(4500, CURRENCY),

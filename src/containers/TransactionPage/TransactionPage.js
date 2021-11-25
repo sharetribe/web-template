@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import config from '../../config';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
-import { DATE_TYPE_DATE, propTypes } from '../../util/types';
+import { DATE_TYPE_DATE, LISTING_UNIT_TYPES, propTypes } from '../../util/types';
 import { timeOfDayFromTimeZoneToLocal } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import {
@@ -616,13 +616,17 @@ export const TransactionPageComponent = props => {
           <OrderBreakdown
             className={css.breakdown}
             userRole={transactionRole}
-            unitType={config.lineItemUnitType}
             transaction={transaction}
             {...txBookingMaybe}
           />
         ),
       }
     : {};
+  const unitLineItem = hasLineItems
+    ? transaction.attributes?.lineItems?.find(
+        item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
+      )
+    : null;
 
   // TransactionPanel is presentational component
   // that currently handles showing everything inside layout's main view area.
@@ -632,6 +636,7 @@ export const TransactionPageComponent = props => {
       currentUser={currentUser}
       transactionId={transaction?.id}
       listing={listing}
+      unitType={unitLineItem?.code}
       customer={customer}
       provider={provider}
       hasTransitions={txTransitions.length > 0}
@@ -666,7 +671,7 @@ export const TransactionPageComponent = props => {
         <OrderPanel
           className={css.orderPanel}
           titleClassName={css.orderTitle}
-          unitType={config.lineItemUnitType}
+          unitType={unitLineItem?.code}
           listing={listing}
           title={listingTitle}
           author={provider}

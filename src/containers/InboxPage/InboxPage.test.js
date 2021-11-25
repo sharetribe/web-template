@@ -1,7 +1,13 @@
 import React from 'react';
 import Decimal from 'decimal.js';
 import { renderShallow, renderDeep } from '../../util/test-helpers';
-import { fakeIntl, createCurrentUser, createUser, createTransaction } from '../../util/test-data';
+import {
+  fakeIntl,
+  createCurrentUser,
+  createUser,
+  createListing,
+  createTransaction,
+} from '../../util/test-data';
 import { InboxPageComponent, InboxItem, getStateData } from './InboxPage';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
@@ -9,7 +15,7 @@ import {
   TX_TRANSITION_ACTOR_PROVIDER,
   getProcess,
 } from '../../util/transaction';
-import { LINE_ITEM_UNITS } from '../../util/types';
+import { LINE_ITEM_ITEM } from '../../util/types';
 
 const { Money } = sdkTypes;
 const noop = () => null;
@@ -21,10 +27,13 @@ describe('InboxPage', () => {
     const customer = createUser('customer-user-id');
     const currentUserProvider = createCurrentUser('provider-user-id');
     const currentUserCustomer = createCurrentUser('customer-user-id');
+    const listing = createListing('ItemX', {
+      publicData: { transactionProcessAlias: 'flex-product-default-process', unitType: 'item' },
+    });
 
     const lineItems = [
       {
-        code: 'line-item/units',
+        code: LINE_ITEM_ITEM,
         includeFor: ['customer', 'provider'],
         quantity: new Decimal(1),
         unitPrice: new Money(1000, 'USD'),
@@ -41,7 +50,6 @@ describe('InboxPage', () => {
     ];
 
     const ordersProps = {
-      unitType: LINE_ITEM_UNITS,
       location: { search: '' },
       history: {
         push: () => console.log('HistoryPush called'),
@@ -62,6 +70,7 @@ describe('InboxPage', () => {
           lastTransition: transitions.CONFIRM_PAYMENT,
           customer,
           provider,
+          listing,
           lastTransitionedAt: new Date(Date.UTC(2017, 0, 15)),
           lineItems,
         }),
@@ -70,6 +79,7 @@ describe('InboxPage', () => {
           lastTransition: transitions.CONFIRM_PAYMENT,
           customer,
           provider,
+          listing,
           lastTransitionedAt: new Date(Date.UTC(2016, 0, 15)),
           lineItems,
         }),
@@ -91,7 +101,7 @@ describe('InboxPage', () => {
     // Deeply render one InboxItem
     const orderItem = renderDeep(
       <InboxItem
-        unitType={LINE_ITEM_UNITS}
+        unitType={LINE_ITEM_ITEM}
         type="order"
         tx={ordersProps.transactions[0]}
         transactionRole={TX_TRANSITION_ACTOR_CUSTOMER}
@@ -102,7 +112,6 @@ describe('InboxPage', () => {
     expect(orderItem).toMatchSnapshot();
 
     const salesProps = {
-      unitType: LINE_ITEM_UNITS,
       location: { search: '' },
       history: {
         push: () => console.log('HistoryPush called'),
@@ -123,6 +132,7 @@ describe('InboxPage', () => {
           lastTransition: transitions.CONFIRM_PAYMENT,
           customer,
           provider,
+          listing,
           lastTransitionedAt: new Date(Date.UTC(2017, 0, 15)),
           lineItems,
         }),
@@ -131,6 +141,7 @@ describe('InboxPage', () => {
           lastTransition: transitions.CONFIRM_PAYMENT,
           customer,
           provider,
+          listing,
           lastTransitionedAt: new Date(Date.UTC(2016, 0, 15)),
           lineItems,
         }),
@@ -152,7 +163,7 @@ describe('InboxPage', () => {
     // Deeply render one InboxItem
     const saleItem = renderDeep(
       <InboxItem
-        unitType={LINE_ITEM_UNITS}
+        unitType={LINE_ITEM_ITEM}
         type="sale"
         tx={salesProps.transactions[0]}
         transactionRole={TX_TRANSITION_ACTOR_PROVIDER}

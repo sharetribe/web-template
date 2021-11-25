@@ -6,7 +6,7 @@ import {
   createUser,
   createListing,
 } from '../../util/test-data';
-import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, LINE_ITEM_UNITS } from '../../util/types';
+import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, LINE_ITEM_HOUR } from '../../util/types';
 
 export const DateAndTimeSingleDay = {
   component: BookingTimeInfo,
@@ -24,7 +24,7 @@ export const DateAndTimeSingleDay = {
         end: new Date(Date.UTC(2019, 8, 30, 4, 0)),
       }),
     }),
-    unitType: LINE_ITEM_UNITS,
+    unitType: LINE_ITEM_HOUR,
     dateType: 'datetime',
   },
   group: 'inbox',
@@ -46,7 +46,7 @@ export const DateAndTimeMultipleDays = {
         end: new Date(Date.UTC(2019, 8, 30, 5, 0)),
       }),
     }),
-    unitType: LINE_ITEM_UNITS,
+    unitType: LINE_ITEM_HOUR,
     dateType: 'datetime',
   },
   group: 'inbox',

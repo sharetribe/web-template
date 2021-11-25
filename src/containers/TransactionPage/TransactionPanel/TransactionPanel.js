@@ -118,6 +118,7 @@ export class TransactionPanelComponent extends Component {
       currentUser,
       transactionRole,
       listing,
+      unitType,
       customer,
       provider,
       hasTransitions,
@@ -160,7 +161,6 @@ export class TransactionPanelComponent extends Component {
       ? deletedListingTitle
       : listing?.attributes?.title;
 
-    const unitType = config.lineItemUnitType;
     const isNightly = unitType === LINE_ITEM_NIGHT;
     const isDaily = unitType === LINE_ITEM_DAY;
 

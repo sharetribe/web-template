@@ -10,7 +10,7 @@ import { injectIntl, intlShape } from '../../util/reactIntl';
 import {
   LINE_ITEM_DAY,
   LINE_ITEM_NIGHT,
-  LINE_ITEM_UNITS,
+  LINE_ITEM_HOUR,
   DATE_TYPE_DATE,
   DATE_TYPE_DATETIME,
   propTypes,
@@ -29,11 +29,11 @@ const orderData = (unitType, tx, intl) => {
   const endDateRaw = timeOfDayFromTimeZoneToLocal(displayEnd || end, apiTimeZone);
   const isDaily = unitType === LINE_ITEM_DAY;
   const isNightly = unitType === LINE_ITEM_NIGHT;
-  const isUnits = unitType === LINE_ITEM_UNITS;
+  const isHourly = unitType === LINE_ITEM_HOUR;
   const isSingleDay = !isNightly && daysBetween(startDate, endDateRaw) <= 1;
   const bookingStart = formatDateIntoPartials(startDate, intl);
   // Shift the exclusive API end date with daily bookings
-  const endDate = isDaily || isUnits ? subtractTime(endDateRaw, 1, 'days') : endDateRaw;
+  const endDate = isDaily || isHourly ? subtractTime(endDateRaw, 1, 'days') : endDateRaw;
   const bookingEnd = formatDateIntoPartials(endDate, intl);
   return { bookingStart, bookingEnd, isSingleDay };
 };

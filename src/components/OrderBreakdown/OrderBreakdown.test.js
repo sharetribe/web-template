@@ -4,7 +4,6 @@ import { fakeIntl, createBooking } from '../../util/test-data';
 import { renderDeep } from '../../util/test-helpers';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../util/transaction';
-import { LINE_ITEM_NIGHT, LINE_ITEM_UNITS } from '../../util/types';
 import { OrderBreakdownComponent } from './OrderBreakdown';
 
 const { UUID, Money } = sdkTypes;
@@ -40,13 +39,12 @@ describe('OrderBreakdown', () => {
     const tree = renderDeep(
       <OrderBreakdownComponent
         userRole="customer"
-        unitType={LINE_ITEM_UNITS}
         transaction={exampleTransaction({
           payinTotal: new Money(3000, 'USD'),
           payoutTotal: new Money(3000, 'USD'),
           lineItems: [
             {
-              code: 'line-item/units',
+              code: 'line-item/item',
               includeFor: ['customer', 'provider'],
               quantity: new Decimal(2),
               lineTotal: new Money(2000, 'USD'),
@@ -73,7 +71,6 @@ describe('OrderBreakdown', () => {
     const tree = renderDeep(
       <OrderBreakdownComponent
         userRole="customer"
-        unitType={LINE_ITEM_NIGHT}
         transaction={exampleTransaction({
           payinTotal: new Money(2000, 'USD'),
           payoutTotal: new Money(2000, 'USD'),
@@ -102,7 +99,6 @@ describe('OrderBreakdown', () => {
     const tree = renderDeep(
       <OrderBreakdownComponent
         userRole="provider"
-        unitType={LINE_ITEM_NIGHT}
         transaction={exampleTransaction({
           payinTotal: new Money(2000, 'USD'),
           payoutTotal: new Money(1800, 'USD'),
