@@ -50,15 +50,14 @@ const transactionProcessAlias = 'flex-product-default-process/release-1';
 
 // The transaction line item code for the main unit type for listings.
 //
-// Possible values: ['line-item/night', 'line-item/day', 'line-item/units';]
+// Possible values: ['line-item/night', 'line-item/day', 'line-item/item';]
 //
 // Note 1: This 'lineItemUnitType' variable affects only web app.
 //         If you are using privileged transitions (which is used by the default process),
 //         you also need to configure unit type in API server: server/api-util/lineItems.js
 //
-// Note 2: Translations will use different translation keys for night, day or unit
-//         depending on the value chosen.
-const lineItemUnitType = 'line-item/units';
+// TODO: This is only used on Searchpage (to check nigth vs day mode)
+const lineItemUnitType = 'line-item/item';
 
 // Listing management type. Currently only 'stock' is supported.
 //
