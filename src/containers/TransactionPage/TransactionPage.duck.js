@@ -14,13 +14,14 @@ import {
   denormalisedEntities,
   denormalisedResponseEntities,
 } from '../../util/data';
+import { LINE_ITEM_ITEM } from '../../util/types';
+
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUserNotifications } from '../../ducks/user.duck';
 
 const { UUID } = sdkTypes;
 
 const MESSAGES_PAGE_SIZE = 100;
-const CUSTOMER = 'customer';
 const REVIEW_TX_INCLUDES = ['reviews', 'reviews.author', 'reviews.subject'];
 
 // ================ Action types ================ //
@@ -318,13 +319,14 @@ export const fetchTransaction = (id, txRole) => (dispatch, getState, sdk) => {
       const transactionRef = { id, type: 'transaction' };
       const denormalised = denormalisedEntities(entities, [listingRef, transactionRef]);
       const listing = denormalised[0];
+      const unitType = listing.attributes.publicData.unitType;
       const transaction = denormalised[1];
       const process = getProcess(transaction.attributes.processName);
       const isEnquiry = process.getState(transaction) === process.states.ENQUIRY;
 
       // Fetch time slots for transactions that are in enquired state
       const canFetchTimeslots =
-        txRole === 'customer' && config.listingManagementType === 'availability' && isEnquiry;
+        txRole === 'customer' && `line-item/${unitType}` !== LINE_ITEM_ITEM && isEnquiry;
 
       if (canFetchTimeslots) {
         dispatch(fetchTimeSlots(listingId));

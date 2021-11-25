@@ -10,7 +10,7 @@ import { injectIntl, intlShape } from '../../util/reactIntl';
 import {
   LINE_ITEM_DAY,
   LINE_ITEM_NIGHT,
-  LINE_ITEM_UNITS,
+  LINE_ITEM_HOUR,
   DATE_TYPE_DATE,
   DATE_TYPE_DATETIME,
   propTypes,
@@ -18,34 +18,34 @@ import {
 
 import css from './BookingTimeInfo.module.css';
 
-const orderData = (unitType, tx, intl) => {
+const orderData = (unitType, booking, intl) => {
   // Attributes: displayStart and displayEnd can be used to differentiate shown time range
   // from actual start and end times used for availability reservation. It can help in situations
   // where there are preparation time needed between bookings.
   // Read more: https://www.sharetribe.com/api-reference/marketplace.html#bookings
-  const { start, end, displayStart, displayEnd } = tx.booking.attributes;
+  const { start, end, displayStart, displayEnd } = booking.attributes;
   const apiTimeZone = 'Etc/UTC';
   const startDate = timeOfDayFromTimeZoneToLocal(displayStart || start, apiTimeZone);
   const endDateRaw = timeOfDayFromTimeZoneToLocal(displayEnd || end, apiTimeZone);
   const isDaily = unitType === LINE_ITEM_DAY;
   const isNightly = unitType === LINE_ITEM_NIGHT;
-  const isUnits = unitType === LINE_ITEM_UNITS;
+  const isHourly = unitType === LINE_ITEM_HOUR;
   const isSingleDay = !isNightly && daysBetween(startDate, endDateRaw) <= 1;
   const bookingStart = formatDateIntoPartials(startDate, intl);
   // Shift the exclusive API end date with daily bookings
-  const endDate = isDaily || isUnits ? subtractTime(endDateRaw, 1, 'days') : endDateRaw;
+  const endDate = isDaily || isHourly ? subtractTime(endDateRaw, 1, 'days') : endDateRaw;
   const bookingEnd = formatDateIntoPartials(endDate, intl);
   return { bookingStart, bookingEnd, isSingleDay };
 };
 
 const BookingTimeInfoComponent = props => {
-  const { bookingClassName, intl, tx, unitType, dateType } = props;
+  const { bookingClassName, intl, booking, unitType, dateType } = props;
 
-  if (!tx.booking) {
+  if (!booking) {
     return null;
   }
 
-  const bookingTimes = orderData(unitType, tx, intl);
+  const bookingTimes = orderData(unitType, booking, intl);
   const { bookingStart, bookingEnd, isSingleDay } = bookingTimes;
 
   if (isSingleDay && dateType === DATE_TYPE_DATE) {
@@ -83,7 +83,7 @@ BookingTimeInfoComponent.defaultProps = { dateType: null };
 
 BookingTimeInfoComponent.propTypes = {
   intl: intlShape.isRequired,
-  tx: propTypes.transaction.isRequired,
+  booking: propTypes.booking.isRequired,
   unitType: propTypes.lineItemUnitType.isRequired,
   dateType: propTypes.dateType,
 };

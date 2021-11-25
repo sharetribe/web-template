@@ -1,13 +1,7 @@
 import Decimal from 'decimal.js';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { TX_TRANSITION_ACTOR_CUSTOMER, getProcess } from '../../util/transaction';
-import {
-  LINE_ITEM_DAY,
-  LINE_ITEM_NIGHT,
-  LINE_ITEM_UNITS,
-  DATE_TYPE_DATE,
-  DATE_TYPE_DATETIME,
-} from '../../util/types';
+import { DATE_TYPE_DATE, DATE_TYPE_DATETIME } from '../../util/types';
 import config from '../../config';
 import OrderBreakdown from './OrderBreakdown';
 
@@ -66,7 +60,6 @@ export const ProductShippingCustomer = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
-    unitType: LINE_ITEM_UNITS,
     transaction: exampleTransaction({
       payinTotal: new Money(basePrice.plus(shipping), CURRENCY),
       payoutTotal: new Money(
@@ -78,7 +71,7 @@ export const ProductShippingCustomer = {
       ),
       lineItems: [
         {
-          code: 'line-item/units',
+          code: 'line-item/item',
           includeFor: ['customer', 'provider'],
           quantity,
           unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
@@ -110,7 +103,6 @@ export const ProductShippingProvider = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
-    unitType: LINE_ITEM_UNITS,
     transaction: exampleTransaction({
       payinTotal: new Money(basePrice.plus(shipping), CURRENCY),
       payoutTotal: new Money(
@@ -122,7 +114,7 @@ export const ProductShippingProvider = {
       ),
       lineItems: [
         {
-          code: 'line-item/units',
+          code: 'line-item/item',
           includeFor: ['customer', 'provider'],
           quantity,
           unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
@@ -154,13 +146,12 @@ export const ProductRefundShippingCustomer = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
-    unitType: LINE_ITEM_UNITS,
     transaction: exampleTransaction({
       payinTotal: new Money(0, CURRENCY),
       payoutTotal: new Money(0, CURRENCY),
       lineItems: [
         {
-          code: 'line-item/units',
+          code: 'line-item/item',
           includeFor: ['customer', 'provider'],
           quantity,
           unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
@@ -168,7 +159,7 @@ export const ProductRefundShippingCustomer = {
           reversal: false,
         },
         {
-          code: 'line-item/units',
+          code: 'line-item/item',
           includeFor: ['customer', 'provider'],
           quantity,
           unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
@@ -215,13 +206,12 @@ export const ProductRefundShippingProvider = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
-    unitType: LINE_ITEM_UNITS,
     transaction: exampleTransaction({
       payinTotal: new Money(0, CURRENCY),
       payoutTotal: new Money(0, CURRENCY),
       lineItems: [
         {
-          code: 'line-item/units',
+          code: 'line-item/item',
           includeFor: ['customer', 'provider'],
           quantity,
           unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
@@ -229,7 +219,7 @@ export const ProductRefundShippingProvider = {
           reversal: false,
         },
         {
-          code: 'line-item/units',
+          code: 'line-item/item',
           includeFor: ['customer', 'provider'],
           quantity,
           unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
@@ -276,13 +266,12 @@ export const ProductRefundPickupCustomer = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
-    unitType: LINE_ITEM_UNITS,
     transaction: exampleTransaction({
       payinTotal: new Money(0, CURRENCY),
       payoutTotal: new Money(0, CURRENCY),
       lineItems: [
         {
-          code: 'line-item/units',
+          code: 'line-item/item',
           includeFor: ['customer', 'provider'],
           quantity,
           unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
@@ -290,7 +279,7 @@ export const ProductRefundPickupCustomer = {
           reversal: false,
         },
         {
-          code: 'line-item/units',
+          code: 'line-item/item',
           includeFor: ['customer', 'provider'],
           quantity,
           unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
@@ -337,13 +326,12 @@ export const ProductRefundPickupProvider = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
-    unitType: LINE_ITEM_UNITS,
     transaction: exampleTransaction({
       payinTotal: new Money(0, CURRENCY),
       payoutTotal: new Money(0, CURRENCY),
       lineItems: [
         {
-          code: 'line-item/units',
+          code: 'line-item/item',
           includeFor: ['customer', 'provider'],
           quantity,
           unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
@@ -351,7 +339,7 @@ export const ProductRefundPickupProvider = {
           reversal: false,
         },
         {
-          code: 'line-item/units',
+          code: 'line-item/item',
           includeFor: ['customer', 'provider'],
           quantity,
           unitPrice: new Money(unitPrice.toNumber(), CURRENCY),
@@ -398,7 +386,6 @@ export const BookingCheckout = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
-    unitType: LINE_ITEM_NIGHT,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       payinTotal: new Money(9000, CURRENCY),
@@ -426,7 +413,6 @@ export const BookingCustomerOrder = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
-    unitType: LINE_ITEM_NIGHT,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       payinTotal: new Money(9000, CURRENCY),
@@ -454,7 +440,6 @@ export const BookingProviderSale = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
-    unitType: LINE_ITEM_NIGHT,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       payinTotal: new Money(9000, CURRENCY),
@@ -489,7 +474,6 @@ export const BookingProviderSaleZeroCommission = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
-    unitType: LINE_ITEM_NIGHT,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       payinTotal: new Money(9000, CURRENCY),
@@ -524,7 +508,6 @@ export const BookingProviderSaleSingleNight = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
-    unitType: LINE_ITEM_NIGHT,
     dateType: DATE_TYPE_DATE,
     transaction: exampleTransaction({
       payinTotal: new Money(4500, CURRENCY),
@@ -559,7 +542,6 @@ export const BookingProviderSalePreauthorized = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
-    unitType: LINE_ITEM_NIGHT,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       lastTransition: transitions.CONFIRM_PAYMENT,
@@ -595,7 +577,6 @@ export const BookingSingleDay = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
-    unitType: LINE_ITEM_DAY,
     dateType: DATE_TYPE_DATE,
     transaction: exampleTransaction({
       payinTotal: new Money(4500, CURRENCY),
@@ -623,7 +604,6 @@ export const BookingMultipleDays = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
-    unitType: LINE_ITEM_DAY,
     dateType: DATE_TYPE_DATE,
     transaction: exampleTransaction({
       payinTotal: new Money(9000, CURRENCY),
@@ -647,18 +627,17 @@ export const BookingMultipleDays = {
   group: 'payment',
 };
 
-export const BookingWithUnitsType = {
+export const BookingWithItemType = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
-    unitType: LINE_ITEM_UNITS,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       payinTotal: new Money(9000, CURRENCY),
       payoutTotal: new Money(9000, CURRENCY),
       lineItems: [
         {
-          code: 'line-item/units',
+          code: 'line-item/item',
           includeFor: ['customer', 'provider'],
           quantity: new Decimal(2),
           unitPrice: new Money(4500, CURRENCY),
@@ -679,7 +658,6 @@ export const BookingCustomPricing = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
-    unitType: LINE_ITEM_NIGHT,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       payinTotal: new Money(12800, CURRENCY),
@@ -731,7 +709,6 @@ export const BookingCustomPricingWithRefund = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
-    unitType: LINE_ITEM_NIGHT,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       payinTotal: new Money(0, CURRENCY),

@@ -8,8 +8,6 @@ import config from '../../../config';
 import routeConfiguration from '../../../routing/routeConfiguration';
 import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
 import {
-  LINE_ITEM_NIGHT,
-  LINE_ITEM_DAY,
   LISTING_STATE_PENDING_APPROVAL,
   LISTING_STATE_CLOSED,
   LISTING_STATE_DRAFT,
@@ -170,16 +168,6 @@ export const ManageListingCardComponent = props => {
   const editListingLinkType = isDraft
     ? LISTING_PAGE_PARAM_TYPE_DRAFT
     : LISTING_PAGE_PARAM_TYPE_EDIT;
-
-  const unitType = config.lineItemUnitType;
-  const isNightly = unitType === LINE_ITEM_NIGHT;
-  const isDaily = unitType === LINE_ITEM_DAY;
-
-  const unitTranslationKey = isNightly
-    ? 'ManageListingCard.perNight'
-    : isDaily
-    ? 'ManageListingCard.perDay'
-    : 'ManageListingCard.perUnit';
 
   const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
   const variants = firstImage
@@ -362,11 +350,6 @@ export const ManageListingCardComponent = props => {
               <div className={css.priceValue} title={priceTitle}>
                 {formattedPrice}
               </div>
-              {config.listing.showUnitTypeTranslations ? (
-                <div className={css.perUnit}>
-                  <FormattedMessage id={unitTranslationKey} />
-                </div>
-              ) : null}
             </React.Fragment>
           ) : (
             <div className={css.noPrice}>

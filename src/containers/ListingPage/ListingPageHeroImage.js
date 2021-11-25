@@ -235,7 +235,6 @@ export class ListingPageComponent extends Component {
 
   render() {
     const {
-      unitType,
       isAuthenticated,
       currentUser,
       getListing,
@@ -469,6 +468,7 @@ export class ListingPageComponent extends Component {
                     priceTitle={priceTitle}
                     formattedPrice={formattedPrice}
                     richTitle={richTitle}
+                    unitType={publicData?.unitType}
                     category={category}
                     authorLink={authorLink}
                     showContactUser={showContactUser}
@@ -507,7 +507,6 @@ export class ListingPageComponent extends Component {
                     className={css.orderPanel}
                     listing={currentListing}
                     isOwnListing={isOwnListing}
-                    unitType={unitType}
                     onSubmit={handleOrderSubmit}
                     title={
                       <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
@@ -536,7 +535,6 @@ export class ListingPageComponent extends Component {
 }
 
 ListingPageComponent.defaultProps = {
-  unitType: config.lineItemUnitType,
   currentUser: null,
   enquiryModalOpenForListingId: null,
   showListingError: null,
@@ -559,7 +557,6 @@ ListingPageComponent.propTypes = {
     search: string,
   }).isRequired,
 
-  unitType: propTypes.lineItemUnitType,
   // from injectIntl
   intl: intlShape.isRequired,
 
@@ -647,8 +644,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
   callSetInitialValues: (setInitialValues, values, saveToSessionStorage) =>
     dispatch(setInitialValues(values, saveToSessionStorage)),
-  onFetchTransactionLineItems: (orderData, listingId, isOwnListing) =>
-    dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)),
+  onFetchTransactionLineItems: params => dispatch(fetchTransactionLineItems(params)),
   onSendEnquiry: (listing, message) => dispatch(sendEnquiry(listing, message)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
 });

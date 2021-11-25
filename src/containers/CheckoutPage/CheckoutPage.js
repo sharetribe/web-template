@@ -775,7 +775,6 @@ export class CheckoutPageComponent extends Component {
         <OrderBreakdown
           className={css.orderBreakdown}
           userRole="customer"
-          unitType={config.lineItemUnitType}
           transaction={tx}
           {...txBookingMaybe}
         />
@@ -817,7 +816,7 @@ export class CheckoutPageComponent extends Component {
       </NamedLink>
     );
 
-    const unitType = config.lineItemUnitType;
+    const unitType = currentListing.attributes.publicData?.unitType;
     const isNightly = unitType === LINE_ITEM_NIGHT;
     const isDaily = unitType === LINE_ITEM_DAY;
 
