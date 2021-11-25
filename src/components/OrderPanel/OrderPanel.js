@@ -7,13 +7,7 @@ import omit from 'lodash/omit';
 
 import config from '../../config';
 import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
-import {
-  propTypes,
-  LISTING_STATE_CLOSED,
-  LINE_ITEM_NIGHT,
-  LINE_ITEM_DAY,
-  LINE_ITEM_UNITS,
-} from '../../util/types';
+import { propTypes, LISTING_STATE_CLOSED, LINE_ITEM_NIGHT, LINE_ITEM_DAY } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
 import { userDisplayNameAsString } from '../../util/data';
@@ -63,7 +57,6 @@ const OrderPanel = props => {
     titleClassName,
     listing,
     isOwnListing,
-    unitType,
     onSubmit,
     title,
     author,
@@ -80,10 +73,9 @@ const OrderPanel = props => {
     fetchLineItemsError,
   } = props;
 
-  const isNightly = unitType === LINE_ITEM_NIGHT;
-  const isDaily = unitType === LINE_ITEM_DAY;
-  const isUnits = unitType === LINE_ITEM_UNITS;
-  const shouldHaveBooking = isNightly || isDaily;
+  const unitType = listing?.attributes?.publicData?.unitType;
+  const lineItemUnitType = `line-item/${unitType}`;
+  const shouldHaveBooking = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
 
   const price = listing.attributes.price;
   const hasListingState = !!listing.attributes.state;
@@ -109,6 +101,8 @@ const OrderPanel = props => {
     ? intl.formatMessage({ id: 'OrderPanel.subTitleClosedListing' })
     : null;
 
+  const isNightly = unitType === LINE_ITEM_NIGHT;
+  const isDaily = unitType === LINE_ITEM_DAY;
   const unitTranslationKey = isNightly
     ? 'OrderPanel.perNight'
     : isDaily
@@ -149,7 +143,7 @@ const OrderPanel = props => {
             className={css.bookingForm}
             formId="OrderPanelBookingDatesForm"
             submitButtonWrapperClassName={css.bookingDatesSubmitButtonWrapper}
-            unitType={unitType}
+            unitType={lineItemUnitType}
             onSubmit={onSubmit}
             price={price}
             listingId={listing.id}
@@ -217,7 +211,6 @@ OrderPanel.defaultProps = {
   titleClassName: null,
   isOwnListing: false,
   subTitle: null,
-  unitType: config.lineItemUnitType,
   timeSlots: null,
   fetchTimeSlotsError: null,
   lineItems: null,
@@ -230,7 +223,6 @@ OrderPanel.propTypes = {
   titleClassName: string,
   listing: oneOfType([propTypes.listing, propTypes.ownListing]),
   isOwnListing: bool,
-  unitType: propTypes.lineItemUnitType,
   onSubmit: func.isRequired,
   title: oneOfType([node, string]).isRequired,
   subTitle: oneOfType([node, string]),

@@ -1,9 +1,8 @@
 import React from 'react';
 
 import { injectIntl } from '../../util/reactIntl';
-import { createUser, createTransaction } from '../../util/test-data';
+import { createUser, createListing, createTransaction } from '../../util/test-data';
 import { getProcess } from '../../util/transaction';
-import { LINE_ITEM_UNITS } from '../../util/types';
 
 import { InboxItem, getStateData } from './InboxPage';
 
@@ -31,6 +30,9 @@ const tx = lastTransition =>
         abbreviatedName: 'JP',
       },
     }),
+    listing: createListing('ItemX', {
+      publicData: { transactionProcessAlias: 'flex-product-default-process', unitType: 'item' },
+    }),
   });
 
 const TranslatedInboxItem = props => {
@@ -52,7 +54,6 @@ const TranslatedInboxItem = props => {
 export const EnquiryPayment = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'customer',
     tx: tx(transitions.ENQUIRE),
   },
@@ -66,7 +67,6 @@ export const EnquiryPayment = {
 export const PendingPayment_Order = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'customer',
     tx: tx(transitions.REQUEST_PAYMENT),
   },
@@ -76,7 +76,6 @@ export const PendingPayment_Order = {
 export const Purchased_Order = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'customer',
     tx: tx(transitions.CONFIRM_PAYMENT),
   },
@@ -86,7 +85,6 @@ export const Purchased_Order = {
 export const Canceled_Order = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'customer',
     tx: tx(transitions.CANCEL),
   },
@@ -96,7 +94,6 @@ export const Canceled_Order = {
 export const Delivered_Order = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'customer',
     tx: tx(transitions.MARK_DELIVERED),
   },
@@ -106,7 +103,6 @@ export const Delivered_Order = {
 export const Disputed_Order = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'customer',
     tx: tx(transitions.DISPUTE),
   },
@@ -116,7 +112,6 @@ export const Disputed_Order = {
 export const Received_Order = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'customer',
     tx: tx(transitions.MARK_RECEIVED),
   },
@@ -126,7 +121,6 @@ export const Received_Order = {
 export const ReviewedByCustomer_Order = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'customer',
     tx: tx(transitions.REVIEW_1_BY_CUSTOMER),
   },
@@ -136,7 +130,6 @@ export const ReviewedByCustomer_Order = {
 export const ReviewedByProvider_Order = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'customer',
     tx: tx(transitions.REVIEW_1_BY_PROVIDER),
   },
@@ -146,7 +139,6 @@ export const ReviewedByProvider_Order = {
 export const Reviewed_Order = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'customer',
     tx: tx(transitions.EXPIRE_REVIEW_PERIOD),
   },
@@ -160,7 +152,6 @@ export const Reviewed_Order = {
 export const PendingPayment_Sale = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'provider',
     tx: tx(transitions.REQUEST_PAYMENT),
   },
@@ -170,7 +161,6 @@ export const PendingPayment_Sale = {
 export const Purchased_Sale = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'provider',
     tx: tx(transitions.CONFIRM_PAYMENT),
   },
@@ -180,7 +170,6 @@ export const Purchased_Sale = {
 export const Canceled_Sale = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'provider',
     tx: tx(transitions.CANCEL),
   },
@@ -190,7 +179,6 @@ export const Canceled_Sale = {
 export const Delivered_Sale = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'provider',
     tx: tx(transitions.MARK_DELIVERED),
   },
@@ -200,7 +188,6 @@ export const Delivered_Sale = {
 export const Disputed_Sale = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'provider',
     tx: tx(transitions.DISPUTE),
   },
@@ -210,7 +197,6 @@ export const Disputed_Sale = {
 export const Received_Sale = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'provider',
     tx: tx(transitions.MARK_RECEIVED),
   },
@@ -220,7 +206,6 @@ export const Received_Sale = {
 export const ReviewedByCustomer_Sale = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'provider',
     tx: tx(transitions.REVIEW_1_BY_CUSTOMER),
   },
@@ -230,7 +215,6 @@ export const ReviewedByCustomer_Sale = {
 export const ReviewedByProvider_Sale = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'provider',
     tx: tx(transitions.REVIEW_1_BY_PROVIDER),
   },
@@ -240,7 +224,6 @@ export const ReviewedByProvider_Sale = {
 export const Reviewed_Sale = {
   component: injectIntl(TranslatedInboxItem),
   props: {
-    unitType: LINE_ITEM_UNITS,
     transactionRole: 'provider',
     tx: tx(transitions.EXPIRE_REVIEW_PERIOD),
   },

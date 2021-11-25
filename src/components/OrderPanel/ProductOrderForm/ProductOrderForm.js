@@ -41,11 +41,11 @@ const renderForm = formRenderProps => {
   } = formRenderProps;
 
   const handleOnChange = formValues => {
-    const { quantity: quantityRaw, deliveryMethod } = formValues.values;
-    const quantity = Number.parseInt(quantityRaw, 10);
-    if (quantity && deliveryMethod && !fetchLineItemsInProgress) {
+    const { quantity, deliveryMethod } = formValues.values;
+    const stockReservationQuantity = Number.parseInt(quantity, 10);
+    if (stockReservationQuantity && deliveryMethod && !fetchLineItemsInProgress) {
       onFetchTransactionLineItems({
-        orderData: { quantity, deliveryMethod },
+        orderData: { stockReservationQuantity, deliveryMethod },
         listingId,
         isOwnListing,
       });
@@ -79,11 +79,7 @@ const renderForm = formRenderProps => {
       <h3>
         <FormattedMessage id="ProductOrderForm.breakdownTitle" />
       </h3>
-      <EstimatedCustomerBreakdownMaybe
-        unitType={config.lineItemUnitType}
-        breakdownData={breakdownData}
-        lineItems={lineItems}
-      />
+      <EstimatedCustomerBreakdownMaybe breakdownData={breakdownData} lineItems={lineItems} />
     </div>
   ) : null;
 

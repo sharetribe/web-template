@@ -180,7 +180,9 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
                         "amount": 5500,
                         "currency": "USD",
                       },
-                      "publicData": Object {},
+                      "publicData": Object {
+                        "unitType": "item",
+                      },
                       "state": "published",
                       "title": "listing1 title",
                     },
@@ -268,7 +270,9 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
                   "amount": 5500,
                   "currency": "USD",
                 },
-                "publicData": Object {},
+                "publicData": Object {
+                  "unitType": "item",
+                },
                 "state": "published",
                 "title": "listing1 title",
               },
@@ -388,7 +392,9 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
                         "amount": 5500,
                         "currency": "USD",
                       },
-                      "publicData": Object {},
+                      "publicData": Object {
+                        "unitType": "item",
+                      },
                       "state": "published",
                       "title": "listing1 title",
                     },
@@ -417,7 +423,6 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
                   "type": "transaction",
                 }
               }
-              unitType="line-item/units"
               userRole="customer"
             />
           }
@@ -460,7 +465,9 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
                       "amount": 5500,
                       "currency": "USD",
                     },
-                    "publicData": Object {},
+                    "publicData": Object {
+                      "unitType": "item",
+                    },
                     "state": "published",
                     "title": "listing1 title",
                   },
@@ -476,7 +483,7 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
               timeSlots={null}
               title="listing1 title"
               titleClassName="orderTitle"
-              unitType="line-item/units"
+              unitType="line-item/day"
             />
           }
           provider={
@@ -521,6 +528,7 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
             }
           }
           transactionRole="customer"
+          unitType="line-item/day"
         />
       </div>
       <injectIntl(ReviewModal)
@@ -764,7 +772,9 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
                         "amount": 5500,
                         "currency": "USD",
                       },
-                      "publicData": Object {},
+                      "publicData": Object {
+                        "unitType": "item",
+                      },
                       "state": "published",
                       "title": "listing1 title",
                     },
@@ -852,7 +862,9 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
                   "amount": 5500,
                   "currency": "USD",
                 },
-                "publicData": Object {},
+                "publicData": Object {
+                  "unitType": "item",
+                },
                 "state": "published",
                 "title": "listing1 title",
               },
@@ -972,7 +984,9 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
                         "amount": 5500,
                         "currency": "USD",
                       },
-                      "publicData": Object {},
+                      "publicData": Object {
+                        "unitType": "item",
+                      },
                       "state": "published",
                       "title": "listing1 title",
                     },
@@ -1001,7 +1015,6 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
                   "type": "transaction",
                 }
               }
-              unitType="line-item/units"
               userRole="provider"
             />
           }
@@ -1044,7 +1057,9 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
                       "amount": 5500,
                       "currency": "USD",
                     },
-                    "publicData": Object {},
+                    "publicData": Object {
+                      "unitType": "item",
+                    },
                     "state": "published",
                     "title": "listing1 title",
                   },
@@ -1060,7 +1075,7 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
               timeSlots={null}
               title="listing1 title"
               titleClassName="orderTitle"
-              unitType="line-item/units"
+              unitType="line-item/day"
             />
           }
           provider={
@@ -1104,6 +1119,7 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
             }
           }
           transactionRole="provider"
+          unitType="line-item/day"
         />
       </div>
       <injectIntl(ReviewModal)

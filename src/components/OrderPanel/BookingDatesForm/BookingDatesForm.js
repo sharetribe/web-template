@@ -157,7 +157,6 @@ export class BookingDatesFormComponent extends Component {
                 <FormattedMessage id="BookingDatesForm.priceBreakdownTitle" />
               </h3>
               <EstimatedCustomerBreakdownMaybe
-                unitType={unitType}
                 breakdownData={breakdownData}
                 lineItems={lineItems}
               />

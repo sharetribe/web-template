@@ -110,7 +110,7 @@ exports[`InboxPage matches snapshot 1`] = `
                   "lastTransitionedAt": 2017-01-15T00:00:00.000Z,
                   "lineItems": Array [
                     Object {
-                      "code": "line-item/units",
+                      "code": "line-item/item",
                       "includeFor": Array [
                         "customer",
                         "provider",
@@ -191,7 +191,33 @@ exports[`InboxPage matches snapshot 1`] = `
                   "_sdkType": "UUID",
                   "uuid": "order-1",
                 },
-                "listing": null,
+                "listing": Object {
+                  "attributes": Object {
+                    "deleted": false,
+                    "description": "ItemX description",
+                    "geolocation": LatLng {
+                      "_sdkType": "LatLng",
+                      "lat": 40,
+                      "lng": 60,
+                    },
+                    "price": Money {
+                      "_sdkType": "Money",
+                      "amount": 5500,
+                      "currency": "USD",
+                    },
+                    "publicData": Object {
+                      "transactionProcessAlias": "flex-product-default-process",
+                      "unitType": "item",
+                    },
+                    "state": "published",
+                    "title": "ItemX title",
+                  },
+                  "id": UUID {
+                    "_sdkType": "UUID",
+                    "uuid": "ItemX",
+                  },
+                  "type": "listing",
+                },
                 "provider": Object {
                   "attributes": Object {
                     "banned": false,
@@ -211,7 +237,6 @@ exports[`InboxPage matches snapshot 1`] = `
                 "type": "transaction",
               }
             }
-            unitType="line-item/units"
           />
         </li>
         <li
@@ -245,7 +270,7 @@ exports[`InboxPage matches snapshot 1`] = `
                   "lastTransitionedAt": 2016-01-15T00:00:00.000Z,
                   "lineItems": Array [
                     Object {
-                      "code": "line-item/units",
+                      "code": "line-item/item",
                       "includeFor": Array [
                         "customer",
                         "provider",
@@ -326,7 +351,33 @@ exports[`InboxPage matches snapshot 1`] = `
                   "_sdkType": "UUID",
                   "uuid": "order-2",
                 },
-                "listing": null,
+                "listing": Object {
+                  "attributes": Object {
+                    "deleted": false,
+                    "description": "ItemX description",
+                    "geolocation": LatLng {
+                      "_sdkType": "LatLng",
+                      "lat": 40,
+                      "lng": 60,
+                    },
+                    "price": Money {
+                      "_sdkType": "Money",
+                      "amount": 5500,
+                      "currency": "USD",
+                    },
+                    "publicData": Object {
+                      "transactionProcessAlias": "flex-product-default-process",
+                      "unitType": "item",
+                    },
+                    "state": "published",
+                    "title": "ItemX title",
+                  },
+                  "id": UUID {
+                    "_sdkType": "UUID",
+                    "uuid": "ItemX",
+                  },
+                  "type": "listing",
+                },
                 "provider": Object {
                   "attributes": Object {
                     "banned": false,
@@ -346,7 +397,6 @@ exports[`InboxPage matches snapshot 1`] = `
                 "type": "transaction",
               }
             }
-            unitType="line-item/units"
           />
         </li>
       </ul>
@@ -411,7 +461,9 @@ exports[`InboxPage matches snapshot 2`] = `
       <div
         className="itemOrderInfo"
       >
-        <span />
+        <span>
+          ItemX title
+        </span>
         <br />
         <span>
           InboxPage.quantity
@@ -551,7 +603,7 @@ exports[`InboxPage matches snapshot 3`] = `
                   "lastTransitionedAt": 2017-01-15T00:00:00.000Z,
                   "lineItems": Array [
                     Object {
-                      "code": "line-item/units",
+                      "code": "line-item/item",
                       "includeFor": Array [
                         "customer",
                         "provider",
@@ -632,7 +684,33 @@ exports[`InboxPage matches snapshot 3`] = `
                   "_sdkType": "UUID",
                   "uuid": "sale-1",
                 },
-                "listing": null,
+                "listing": Object {
+                  "attributes": Object {
+                    "deleted": false,
+                    "description": "ItemX description",
+                    "geolocation": LatLng {
+                      "_sdkType": "LatLng",
+                      "lat": 40,
+                      "lng": 60,
+                    },
+                    "price": Money {
+                      "_sdkType": "Money",
+                      "amount": 5500,
+                      "currency": "USD",
+                    },
+                    "publicData": Object {
+                      "transactionProcessAlias": "flex-product-default-process",
+                      "unitType": "item",
+                    },
+                    "state": "published",
+                    "title": "ItemX title",
+                  },
+                  "id": UUID {
+                    "_sdkType": "UUID",
+                    "uuid": "ItemX",
+                  },
+                  "type": "listing",
+                },
                 "provider": Object {
                   "attributes": Object {
                     "banned": false,
@@ -652,7 +730,6 @@ exports[`InboxPage matches snapshot 3`] = `
                 "type": "transaction",
               }
             }
-            unitType="line-item/units"
           />
         </li>
         <li
@@ -688,7 +765,7 @@ exports[`InboxPage matches snapshot 3`] = `
                   "lastTransitionedAt": 2016-01-15T00:00:00.000Z,
                   "lineItems": Array [
                     Object {
-                      "code": "line-item/units",
+                      "code": "line-item/item",
                       "includeFor": Array [
                         "customer",
                         "provider",
@@ -769,7 +846,33 @@ exports[`InboxPage matches snapshot 3`] = `
                   "_sdkType": "UUID",
                   "uuid": "sale-2",
                 },
-                "listing": null,
+                "listing": Object {
+                  "attributes": Object {
+                    "deleted": false,
+                    "description": "ItemX description",
+                    "geolocation": LatLng {
+                      "_sdkType": "LatLng",
+                      "lat": 40,
+                      "lng": 60,
+                    },
+                    "price": Money {
+                      "_sdkType": "Money",
+                      "amount": 5500,
+                      "currency": "USD",
+                    },
+                    "publicData": Object {
+                      "transactionProcessAlias": "flex-product-default-process",
+                      "unitType": "item",
+                    },
+                    "state": "published",
+                    "title": "ItemX title",
+                  },
+                  "id": UUID {
+                    "_sdkType": "UUID",
+                    "uuid": "ItemX",
+                  },
+                  "type": "listing",
+                },
                 "provider": Object {
                   "attributes": Object {
                     "banned": false,
@@ -789,7 +892,6 @@ exports[`InboxPage matches snapshot 3`] = `
                 "type": "transaction",
               }
             }
-            unitType="line-item/units"
           />
         </li>
       </ul>
@@ -858,7 +960,9 @@ exports[`InboxPage matches snapshot 4`] = `
       <div
         className="itemOrderInfo"
       >
-        <span />
+        <span>
+          ItemX title
+        </span>
         <br />
         <span>
           InboxPage.quantity
