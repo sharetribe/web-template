@@ -13,16 +13,11 @@ export const DateAndTimeSingleDay = {
   props: {
     isOrder: true,
     intl: fakeIntl,
-    tx: createTransaction({
-      customer: createUser('user1'),
-      provider: createUser('user2'),
-      listing: createListing('Listing'),
-      booking: createBooking('example-booking', {
-        displayStart: new Date(Date.UTC(2019, 8, 30, 3, 0)),
-        displayEnd: new Date(Date.UTC(2019, 8, 30, 4, 0)),
-        start: new Date(Date.UTC(2019, 8, 30, 3, 0)),
-        end: new Date(Date.UTC(2019, 8, 30, 4, 0)),
-      }),
+    booking: createBooking('example-booking', {
+      displayStart: new Date(Date.UTC(2019, 8, 30, 3, 0)),
+      displayEnd: new Date(Date.UTC(2019, 8, 30, 4, 0)),
+      start: new Date(Date.UTC(2019, 8, 30, 3, 0)),
+      end: new Date(Date.UTC(2019, 8, 30, 4, 0)),
     }),
     unitType: LINE_ITEM_HOUR,
     dateType: 'datetime',
@@ -35,16 +30,11 @@ export const DateAndTimeMultipleDays = {
   props: {
     isOrder: true,
     intl: fakeIntl,
-    tx: createTransaction({
-      customer: createUser('user1'),
-      provider: createUser('user2'),
-      listing: createListing('Listing'),
-      booking: createBooking('example-booking', {
-        displayStart: new Date(Date.UTC(2019, 8, 28, 3, 0)),
-        displayEnd: new Date(Date.UTC(2019, 8, 30, 5, 0)),
-        start: new Date(Date.UTC(2019, 8, 28, 3, 0)),
-        end: new Date(Date.UTC(2019, 8, 30, 5, 0)),
-      }),
+    booking: createBooking('example-booking', {
+      displayStart: new Date(Date.UTC(2019, 8, 28, 3, 0)),
+      displayEnd: new Date(Date.UTC(2019, 8, 30, 5, 0)),
+      start: new Date(Date.UTC(2019, 8, 28, 3, 0)),
+      end: new Date(Date.UTC(2019, 8, 30, 5, 0)),
     }),
     unitType: LINE_ITEM_HOUR,
     dateType: 'datetime',
@@ -57,16 +47,11 @@ export const OnlyDateSingleDay = {
   props: {
     isOrder: true,
     intl: fakeIntl,
-    tx: createTransaction({
-      customer: createUser('user1'),
-      provider: createUser('user2'),
-      listing: createListing('Listing'),
-      booking: createBooking('example-booking', {
-        displayStart: new Date(Date.UTC(2019, 8, 29, 3, 0)),
-        displayEnd: new Date(Date.UTC(2019, 8, 30, 4, 0)),
-        start: new Date(Date.UTC(2019, 8, 29, 3, 0)),
-        end: new Date(Date.UTC(2019, 8, 30, 4, 0)),
-      }),
+    booking: createBooking('example-booking', {
+      displayStart: new Date(Date.UTC(2019, 8, 29, 3, 0)),
+      displayEnd: new Date(Date.UTC(2019, 8, 30, 4, 0)),
+      start: new Date(Date.UTC(2019, 8, 29, 3, 0)),
+      end: new Date(Date.UTC(2019, 8, 30, 4, 0)),
     }),
     unitType: LINE_ITEM_DAY,
     dateType: 'date',
@@ -79,16 +64,11 @@ export const OnlyDateMultipleDays = {
   props: {
     isOrder: true,
     intl: fakeIntl,
-    tx: createTransaction({
-      customer: createUser('user1'),
-      provider: createUser('user2'),
-      listing: createListing('Listing'),
-      booking: createBooking('example-booking', {
-        displayStart: new Date(Date.UTC(2019, 8, 28, 3, 0)),
-        displayEnd: new Date(Date.UTC(2019, 8, 30, 5, 0)),
-        start: new Date(Date.UTC(2019, 8, 28, 3, 0)),
-        end: new Date(Date.UTC(2019, 8, 30, 5, 0)),
-      }),
+    booking: createBooking('example-booking', {
+      displayStart: new Date(Date.UTC(2019, 8, 28, 3, 0)),
+      displayEnd: new Date(Date.UTC(2019, 8, 30, 5, 0)),
+      start: new Date(Date.UTC(2019, 8, 28, 3, 0)),
+      end: new Date(Date.UTC(2019, 8, 30, 5, 0)),
     }),
     unitType: LINE_ITEM_DAY,
     dateType: 'date',
@@ -101,16 +81,11 @@ export const OnlyDateSingleNight = {
   props: {
     isOrder: true,
     intl: fakeIntl,
-    tx: createTransaction({
-      customer: createUser('user1'),
-      provider: createUser('user2'),
-      listing: createListing('Listing'),
-      booking: createBooking('example-booking', {
-        displayStart: new Date(Date.UTC(2019, 8, 29, 3, 0)),
-        displayEnd: new Date(Date.UTC(2019, 8, 30, 4, 0)),
-        start: new Date(Date.UTC(2019, 8, 29, 3, 0)),
-        end: new Date(Date.UTC(2019, 8, 30, 4, 0)),
-      }),
+    booking: createBooking('example-booking', {
+      displayStart: new Date(Date.UTC(2019, 8, 29, 3, 0)),
+      displayEnd: new Date(Date.UTC(2019, 8, 30, 4, 0)),
+      start: new Date(Date.UTC(2019, 8, 29, 3, 0)),
+      end: new Date(Date.UTC(2019, 8, 30, 4, 0)),
     }),
     unitType: LINE_ITEM_NIGHT,
     dateType: 'date',
@@ -123,16 +98,11 @@ export const OnlyDateMultipleNights = {
   props: {
     isOrder: true,
     intl: fakeIntl,
-    tx: createTransaction({
-      customer: createUser('user1'),
-      provider: createUser('user2'),
-      listing: createListing('Listing'),
-      booking: createBooking('example-booking', {
-        displayStart: new Date(Date.UTC(2019, 8, 28, 3, 0)),
-        displayEnd: new Date(Date.UTC(2019, 8, 30, 5, 0)),
-        start: new Date(Date.UTC(2019, 8, 28, 3, 0)),
-        end: new Date(Date.UTC(2019, 8, 30, 5, 0)),
-      }),
+    booking: createBooking('example-booking', {
+      displayStart: new Date(Date.UTC(2019, 8, 28, 3, 0)),
+      displayEnd: new Date(Date.UTC(2019, 8, 30, 5, 0)),
+      start: new Date(Date.UTC(2019, 8, 28, 3, 0)),
+      end: new Date(Date.UTC(2019, 8, 30, 5, 0)),
     }),
     unitType: LINE_ITEM_NIGHT,
     dateType: 'date',
