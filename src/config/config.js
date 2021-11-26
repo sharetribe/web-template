@@ -147,7 +147,7 @@ const maps = {
   mapboxAccessToken: process.env.REACT_APP_MAPBOX_ACCESS_TOKEN,
   googleMapsAPIKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
 
-  // SearchPage variant in use: 'MAPBOX', 'GOOGLE_MAPS'
+  // Choose map provider: 'MAPBOX', 'GOOGLE_MAPS'
   // Note: you need to have REACT_APP_MAPBOX_ACCESS_TOKEN or REACT_APP_GOOGLE_MAPS_API_KEY
   //       set depending on which one you use in this config.
   mapProvider: 'MAPBOX',
