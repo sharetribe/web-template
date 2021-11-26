@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+## [v9.0.1] 2021-11-26
+
 - [fix] Fixes issue with default payment card that was created by PR #111. Essentially, before
   confirming PaymentIntent, we now check if the PaymentIntent has already been confirmed.
   [#121](https://github.com/sharetribe/ftw-product/pull/121)
@@ -21,6 +23,8 @@ way to update this template, but currently, we follow a pattern:
   [#120](https://github.com/sharetribe/ftw-product/pull/120)
 - [fix] Temporarily disallow Node v17, since it causes issues with dependencies.
   [#119](https://github.com/sharetribe/ftw-product/pull/119)
+
+  [v9.0.1]: https://github.com/sharetribe/ftw-product/compare/v9.0.0...v9.0.1
 
 ## [v9.0.0] 2021-09-30
 
