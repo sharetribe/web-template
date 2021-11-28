@@ -6,7 +6,7 @@ import config from '../../config';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { getStartOf, addTime } from '../../util/dates';
 import { isTransactionsTransitionInvalidTransition, storableError } from '../../util/errors';
-import { getProcess } from '../../util/transaction';
+import { getProcess, isBookingProcess } from '../../util/transaction';
 import { transactionLineItems } from '../../util/api';
 import * as log from '../../util/log';
 import {
@@ -319,14 +319,13 @@ export const fetchTransaction = (id, txRole) => (dispatch, getState, sdk) => {
       const transactionRef = { id, type: 'transaction' };
       const denormalised = denormalisedEntities(entities, [listingRef, transactionRef]);
       const listing = denormalised[0];
-      const unitType = listing.attributes.publicData.unitType;
       const transaction = denormalised[1];
-      const process = getProcess(transaction.attributes.processName);
+      const processName = transaction.attributes.processName;
+      const process = getProcess(processName);
       const isEnquiry = process.getState(transaction) === process.states.ENQUIRY;
 
       // Fetch time slots for transactions that are in enquired state
-      const canFetchTimeslots =
-        txRole === 'customer' && `line-item/${unitType}` !== LINE_ITEM_ITEM && isEnquiry;
+      const canFetchTimeslots = txRole === 'customer' && isBookingProcess(processName) && isEnquiry;
 
       if (canFetchTimeslots) {
         dispatch(fetchTimeSlots(listingId));

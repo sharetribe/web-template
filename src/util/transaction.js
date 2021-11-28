@@ -3,6 +3,11 @@ import { ensureTransaction } from './data';
 import * as productProcess from './transactionProcessProduct';
 import * as bookingProcess from './transactionProcessBooking';
 
+export const ITEM = 'item';
+export const DAY = 'day';
+export const NIGHT = 'night';
+export const HOUR = 'hour';
+
 /**
  * A process should export:
  * - graph
@@ -19,20 +24,20 @@ const PROCESSES = [
     name: 'flex-product-default-process',
     alias: 'release-1',
     process: productProcess,
-    unitTypes: ['item'],
+    unitTypes: [ITEM],
   },
   {
     name: 'flex-hourly-default-process',
     alias: 'release-1',
     process: bookingProcess,
-    unitTypes: ['hour'],
+    unitTypes: [HOUR],
   },
   {
     // TODO: ideally, this should be 'flex-daily-default-process'
     name: 'flex-default-process',
     alias: 'release-1',
     process: bookingProcess,
-    unitTypes: ['day', 'night'],
+    unitTypes: [DAY, NIGHT],
   },
 ];
 
@@ -216,6 +221,16 @@ export const getAllTransitionsForEveryProcess = () => {
   return PROCESSES.reduce((accTransitions, processInfo) => {
     return [...accTransitions, ...Object.values(processInfo.process.transitions)];
   }, []);
+};
+
+/**
+ * Check if the process is booking process
+ *
+ * @param {String} processName
+ */
+export const isBookingProcess = processName => {
+  const processInfo = PROCESSES.find(process => process.name === processName);
+  return [DAY, NIGHT, HOUR].includes(processInfo.unitTypes[0]);
 };
 
 /**
