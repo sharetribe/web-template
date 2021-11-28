@@ -12,7 +12,6 @@ import {
 import { storableError } from '../../util/errors';
 import { renderShallow } from '../../util/test-helpers';
 import {
-  LINE_ITEM_NIGHT,
   LISTING_STATE_PENDING_APPROVAL,
   LISTING_STATE_PUBLISHED,
   LISTING_STATE_CLOSED,
@@ -75,7 +74,6 @@ describe('ListingPage', () => {
     const getOwnListing = () => listing1Own;
 
     const props = {
-      unitType: LINE_ITEM_NIGHT,
       location: {
         pathname: `/l/${slug}/${id}`,
         search: '',
