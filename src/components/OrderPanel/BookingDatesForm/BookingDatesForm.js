@@ -60,7 +60,7 @@ export class BookingDatesFormComponent extends Component {
 
     if (startDate && endDate && !this.props.fetchLineItemsInProgress) {
       this.props.onFetchTransactionLineItems({
-        orderData: { bookingDates: { startDate, endDate } },
+        orderData: { bookingStart: startDate, bookingEnd: endDate },
         listingId,
         isOwnListing,
       });
