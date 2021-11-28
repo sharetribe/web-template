@@ -504,7 +504,7 @@ export const TransactionPageComponent = props => {
       transactionRole === CUSTOMER
         ? {
             reviewAsFirst: transitions.REVIEW_1_BY_CUSTOMER,
-            reviewAsSecond: ransitions.REVIEW_2_BY_CUSTOMER,
+            reviewAsSecond: transitions.REVIEW_2_BY_CUSTOMER,
             hasOtherPartyReviewedFirst: process
               .getTransitionsToStates([states.REVIEWED_BY_PROVIDER])
               .includes(transaction.attributes.lastTransition),
