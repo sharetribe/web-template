@@ -156,6 +156,7 @@ export const stripeCustomerError = e => ({
 
 export const initiateOrder = (
   orderParams,
+  processAlias,
   transactionId,
   transitionName,
   isPrivilegedTransition
@@ -187,7 +188,7 @@ export const initiateOrder = (
         params: transitionParams,
       }
     : {
-        processAlias: config.transactionProcessAlias,
+        processAlias,
         transition: transitionName,
         params: transitionParams,
       };
@@ -306,6 +307,7 @@ export const sendMessage = params => (dispatch, getState, sdk) => {
  */
 export const speculateTransaction = (
   orderParams,
+  processAlias,
   transactionId,
   transitionName,
   isPrivilegedTransition
@@ -338,7 +340,7 @@ export const speculateTransaction = (
         params: transitionParams,
       }
     : {
-        processAlias: config.transactionProcessAlias,
+        processAlias,
         transition: transitionName,
         params: transitionParams,
       };
