@@ -171,9 +171,7 @@ export const initiateOrder = (
   const bookingParamsMaybe = bookingDates || {};
 
   // Parameters only for client app's server
-  const orderData = {
-    deliveryMethod,
-  };
+  const orderData = deliveryMethod ? { deliveryMethod } : {};
 
   // Parameters for Flex API
   const transitionParams = {
@@ -323,9 +321,7 @@ export const speculateTransaction = (
   const bookingParamsMaybe = bookingDates || {};
 
   // Parameters only for client app's server
-  const orderData = {
-    deliveryMethod,
-  };
+  const orderData = deliveryMethod ? { deliveryMethod } : {};
 
   // Parameters for Flex API
   const transitionParams = {
