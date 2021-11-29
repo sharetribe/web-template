@@ -56,7 +56,7 @@ const BookingPeriod = props => {
 };
 
 const LineItemBookingPeriod = props => {
-  const { booking, unitType, dateType } = props;
+  const { booking, code, dateType } = props;
 
   if (!booking) {
     return null;
@@ -71,7 +71,7 @@ const LineItemBookingPeriod = props => {
   const localStartDate = timeOfDayFromTimeZoneToLocal(displayStart || start, apiTimeZone);
   const localEndDateRaw = timeOfDayFromTimeZoneToLocal(displayEnd || end, apiTimeZone);
 
-  const isNightly = unitType === LINE_ITEM_NIGHT;
+  const isNightly = code === LINE_ITEM_NIGHT;
   const endDay = isNightly ? localEndDateRaw : subtractTime(localEndDateRaw, 1, 'days');
 
   return (

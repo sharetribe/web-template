@@ -37,7 +37,8 @@ export const OrderBreakdownComponent = props => {
   const unitLineItem = lineItems?.find(
     item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
   );
-  const unitType = unitLineItem?.code;
+  // Line-item code that matches with base unit: day, night, hour, item
+  const lineItemUnitType = unitLineItem?.code;
 
   const hasCommissionLineItem = lineItems.find(item => {
     const hasCustomerCommission = isCustomer && item.code === LINE_ITEM_CUSTOMER_COMMISSION;
@@ -52,9 +53,6 @@ export const OrderBreakdownComponent = props => {
    *
    * LineItemBookingPeriod: prints booking start and booking end types. Prop dateType
    * determines if the date and time or only the date is shown
-   *
-   * LineItemUnitsMaybe: if he unitType is line-item/unit print the name and
-   * quantity of the unit (Not used with FTW-product).
    *
    * LineItemShippingFeeMaybe: prints the shipping fee (combining additional fee of
    * additional items into it).
@@ -88,16 +86,16 @@ export const OrderBreakdownComponent = props => {
 
   return (
     <div className={classes}>
-      <LineItemBookingPeriod booking={booking} unitType={unitType} dateType={dateType} />
+      <LineItemBookingPeriod booking={booking} code={lineItemUnitType} dateType={dateType} />
 
-      <LineItemBasePriceMaybe lineItems={lineItems} unitType={unitType} intl={intl} />
+      <LineItemBasePriceMaybe lineItems={lineItems} code={lineItemUnitType} intl={intl} />
       <LineItemShippingFeeMaybe lineItems={lineItems} intl={intl} />
       <LineItemPickupFeeMaybe lineItems={lineItems} intl={intl} />
       <LineItemUnknownItemsMaybe lineItems={lineItems} isProvider={isProvider} intl={intl} />
 
       <LineItemSubTotalMaybe
         lineItems={lineItems}
-        unitType={unitType}
+        code={lineItemUnitType}
         userRole={userRole}
         intl={intl}
       />
