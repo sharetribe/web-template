@@ -1,5 +1,5 @@
 import React from 'react';
-import { arrayOf, bool, number, oneOf, shape, string } from 'prop-types';
+import { arrayOf, bool, number, object, oneOf, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -246,7 +246,7 @@ export const InboxItem = props => {
                 isOrder={isCustomer}
                 intl={intl}
                 booking={tx.booking}
-                unitType={unitLineItem?.code}
+                lineItemUnitType={unitLineItem?.code}
                 dateType={DATE_TYPE_DATE}
               />
             ) : null}
@@ -271,6 +271,7 @@ InboxItem.propTypes = {
   transactionRole: oneOf([TX_TRANSITION_ACTOR_CUSTOMER, TX_TRANSITION_ACTOR_PROVIDER]).isRequired,
   tx: propTypes.transaction.isRequired,
   intl: intlShape.isRequired,
+  stateData: object.isRequired,
 };
 
 export const InboxPageComponent = props => {
