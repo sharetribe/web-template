@@ -117,7 +117,7 @@ export class TransactionPanelComponent extends Component {
       currentUser,
       transactionRole,
       listing,
-      unitType,
+      lineItemUnitType,
       customer,
       provider,
       hasTransitions,
@@ -160,9 +160,8 @@ export class TransactionPanelComponent extends Component {
       ? deletedListingTitle
       : listing?.attributes?.title;
 
-    const isNightly = unitType === LINE_ITEM_NIGHT;
-    const isDaily = unitType === LINE_ITEM_DAY;
-
+    const isNightly = lineItemUnitType === LINE_ITEM_NIGHT;
+    const isDaily = lineItemUnitType === LINE_ITEM_DAY;
     const unitTranslationKey = isNightly
       ? 'TransactionPanel.perNight'
       : isDaily
