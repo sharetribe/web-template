@@ -636,7 +636,7 @@ export const TransactionPageComponent = props => {
       currentUser={currentUser}
       transactionId={transaction?.id}
       listing={listing}
-      unitType={unitLineItem?.code}
+      lineItemUnitType={unitLineItem?.code}
       customer={customer}
       provider={provider}
       hasTransitions={txTransitions.length > 0}
@@ -671,8 +671,8 @@ export const TransactionPageComponent = props => {
         <OrderPanel
           className={css.orderPanel}
           titleClassName={css.orderTitle}
-          unitType={unitLineItem?.code}
           listing={listing}
+          lineItemUnitType={unitLineItem?.code}
           title={listingTitle}
           author={provider}
           onSubmit={handleSubmitOrderRequest}
