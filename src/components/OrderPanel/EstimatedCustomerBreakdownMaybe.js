@@ -148,8 +148,8 @@ const EstimatedCustomerBreakdownMaybe = props => {
   const unitLineItem = lineItems?.find(
     item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
   );
-  const unitType = unitLineItem?.code;
-  const shouldHaveBooking = unitType === LINE_ITEM_DAY || unitType === LINE_ITEM_NIGHT;
+  const lineItemUnitType = unitLineItem?.code;
+  const shouldHaveBooking = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
   const hasLineItems = lineItems && lineItems.length > 0;
   const hasRequiredBookingData = !shouldHaveBooking || (startDate && endDate);
   const tx =
