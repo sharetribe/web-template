@@ -202,7 +202,7 @@ export class BookingDatesFormComponent extends Component {
               <FieldDateRangeInput
                 className={css.bookingDates}
                 name="bookingDates"
-                unitType={lineItemUnitType}
+                lineItemUnitType={lineItemUnitType}
                 startDateId={`${formId}.bookingStartDate`}
                 startDateLabel={bookingStartLabel}
                 startDatePlaceholderText={startDatePlaceholderText}
