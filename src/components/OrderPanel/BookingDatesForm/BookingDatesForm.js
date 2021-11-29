@@ -104,7 +104,7 @@ export class BookingDatesFormComponent extends Component {
             intl,
             isOwnListing,
             submitButtonWrapperClassName,
-            unitType,
+            lineItemUnitType,
             values,
             timeSlots,
             fetchTimeSlotsError,
@@ -202,7 +202,7 @@ export class BookingDatesFormComponent extends Component {
               <FieldDateRangeInput
                 className={css.bookingDates}
                 name="bookingDates"
-                unitType={unitType}
+                unitType={lineItemUnitType}
                 startDateId={`${formId}.bookingStartDate`}
                 startDateLabel={bookingStartLabel}
                 startDatePlaceholderText={startDatePlaceholderText}
@@ -265,7 +265,7 @@ BookingDatesFormComponent.propTypes = {
   className: string,
   submitButtonWrapperClassName: string,
 
-  unitType: propTypes.lineItemUnitType.isRequired,
+  lineItemUnitType: propTypes.lineItemUnitType.isRequired,
   price: propTypes.money,
   isOwnListing: bool,
   timeSlots: arrayOf(propTypes.timeSlot),
