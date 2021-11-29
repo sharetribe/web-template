@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { bool, func, instanceOf, object, oneOfType, shape, string } from 'prop-types';
+import { bool, func, object, oneOfType, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -95,10 +95,7 @@ const initializeOrderPage = (initialValues, routes, dispatch) => {
   dispatch(OrderPage.setInitialValues(initialValues));
 };
 
-const checkIsPaymentExpired = existingTransaction => {
-  const processName =
-    existingTransaction.attributes.processName || config.transactionProcessAlias.split('/')[0];
-  const process = getProcess(processName);
+const checkIsPaymentExpired = (existingTransaction, process) => {
   const state = process.getState(existingTransaction);
   return state === process.states.PAYMENT_EXPIRED
     ? true
@@ -284,10 +281,14 @@ export class CheckoutPageComponent extends Component {
     const pageData = hasDataInProps ? { orderData, listing, transaction } : storedData(STORAGE_KEY);
 
     const tx = pageData ? pageData.transaction : null;
+    const pageDataListing = pageData.listing;
+    const processName =
+      tx?.attributes?.processName ||
+      pageDataListing?.attributes?.publicData?.transactionProcessAlias?.split('/')[0];
+    const process = getProcess(processName);
 
     const txHasPassedPaymentPending = tx => {
-      const process = tx?.id ? getProcess(tx?.attributes?.processName) : null;
-      return process ? process.hasPassedState(process.states.PENDING_PAYMENT, tx) : false;
+      return process.hasPassedState(process.states.PENDING_PAYMENT, tx);
     };
 
     // If transaction has passed payment-pending state, speculated tx is not needed.
@@ -300,11 +301,9 @@ export class CheckoutPageComponent extends Component {
 
     if (shouldFetchSpeculatedTransaction) {
       const listingId = pageData.listing.id;
+      const processAlias = pageData.listing.attributes.publicData?.transactionProcessAlias;
       const transactionId = tx ? tx.id : null;
 
-      const processName =
-        tx?.attributes?.processName || config.transactionProcessAlias.split('/')[0];
-      const process = getProcess(processName);
       const requestTransition =
         tx?.attributes?.lastTransition === process.transitions.ENQUIRE
           ? process.transitions.REQUEST_PAYMENT_AFTER_ENQUIRY
@@ -324,6 +323,7 @@ export class CheckoutPageComponent extends Component {
           ...quantityMaybe,
           ...bookingDatesMaybe(pageData.orderData.bookingDates),
         },
+        processAlias,
         transactionId,
         requestTransition,
         isPrivileged
@@ -333,7 +333,7 @@ export class CheckoutPageComponent extends Component {
     this.setState({ pageData: pageData || {}, dataLoaded: true });
   }
 
-  handlePaymentIntent(handlePaymentParams) {
+  handlePaymentIntent(handlePaymentParams, process) {
     const {
       currentUser,
       stripeCustomerFetched,
@@ -345,7 +345,6 @@ export class CheckoutPageComponent extends Component {
     } = this.props;
     const {
       pageData,
-      speculatedTransaction,
       message,
       paymentIntent,
       selectedPaymentMethod,
@@ -359,6 +358,7 @@ export class CheckoutPageComponent extends Component {
     const ensuredDefaultPaymentMethod = ensurePaymentMethodCard(
       ensuredStripeCustomer.defaultPaymentMethod
     );
+    const processAlias = pageData?.listing?.attributes?.publicData?.transactionProcessAlias;
 
     let createdPaymentIntent = null;
 
@@ -373,15 +373,10 @@ export class CheckoutPageComponent extends Component {
 
     const selectedPaymentFlow = paymentFlow(selectedPaymentMethod, saveAfterOnetimePayment);
 
-    const processName =
-      storedTx?.attributes?.processName || config.transactionProcessAlias.split('/')[0];
-    const process = getProcess(processName);
-
     // Step 1: initiate order by requesting payment from Marketplace API
     const fnRequestPayment = fnParams => {
-      // fnParams should be { listingId, deliveryMethod, quantity?, bookingDates?, paymentMethod?/setupPaymentMethodForSaving? }
-      const hasPaymentIntents =
-        storedTx.attributes.protectedData && storedTx.attributes.protectedData.stripePaymentIntents;
+      // fnParams should be { listingId, deliveryMethod, quantity?, bookingDates?, paymentMethod?.setupPaymentMethodForSaving? }
+      const hasPaymentIntents = storedTx.attributes.protectedData?.stripePaymentIntents;
 
       const requestTransition =
         storedTx?.attributes?.lastTransition === process.transitions.ENQUIRE
@@ -392,7 +387,7 @@ export class CheckoutPageComponent extends Component {
       // If paymentIntent exists, order has been initiated previously.
       return hasPaymentIntents
         ? Promise.resolve(storedTx)
-        : onInitiateOrder(fnParams, storedTx.id, requestTransition, isPrivileged);
+        : onInitiateOrder(fnParams, processAlias, storedTx.id, requestTransition, isPrivileged);
     };
 
     // Step 2: pay using Stripe SDK
@@ -407,9 +402,7 @@ export class CheckoutPageComponent extends Component {
         this.setState({ pageData: { ...pageData, transaction: order } });
       }
 
-      const hasPaymentIntents =
-        order.attributes.protectedData && order.attributes.protectedData.stripePaymentIntents;
-
+      const hasPaymentIntents = order.attributes.protectedData?.stripePaymentIntents;
       if (!hasPaymentIntents) {
         throw new Error(
           `Missing StripePaymentIntents key in transaction's protectedData. Check that your transaction process is configured to use payment intents.`
@@ -503,11 +496,6 @@ export class CheckoutPageComponent extends Component {
       fnSavePaymentMethod
     );
 
-    // Create order aka transaction
-    // NOTE: if unit type is line-item/units, quantity needs to be added.
-    // The way to pass it to checkout page is through pageData.orderData
-    const tx = speculatedTransaction ? speculatedTransaction : storedTx;
-
     const deliveryMethod = pageData.orderData?.deliveryMethod;
     const quantity = pageData.orderData?.quantity;
     const quantityMaybe = quantity ? { quantity } : {};
@@ -539,7 +527,7 @@ export class CheckoutPageComponent extends Component {
     return handlePaymentIntentCreation(orderParams);
   }
 
-  handleSubmit(values) {
+  handleSubmit(values, process) {
     if (this.state.submitting) {
       return;
     }
@@ -619,7 +607,7 @@ export class CheckoutPageComponent extends Component {
       ...shippingDetailsMaybe,
     };
 
-    this.handlePaymentIntent(requestPaymentParams)
+    this.handlePaymentIntent(requestPaymentParams, process)
       .then(res => {
         const { orderId, messageSuccess, paymentMethodSaved } = res;
         this.setState({ submitting: false });
@@ -642,12 +630,11 @@ export class CheckoutPageComponent extends Component {
       });
   }
 
-  onStripeInitialized(stripe) {
+  onStripeInitialized(stripe, process) {
     this.stripe = stripe;
 
     const { paymentIntent, onRetrievePaymentIntent } = this.props;
     const tx = this.state.pageData ? this.state.pageData.transaction : null;
-    const process = tx?.attributes?.processName ? getProcess(tx.attributes.processName) : null;
 
     // We need to get up to date PI, if payment is pending but it's not expired.
     const shouldFetchPaymentIntent =
@@ -656,13 +643,11 @@ export class CheckoutPageComponent extends Component {
       tx &&
       tx.id &&
       process?.getState(tx) === process?.states.PAYMENT_PENDING &&
-      !checkIsPaymentExpired(tx);
+      !checkIsPaymentExpired(tx, process);
 
     if (shouldFetchPaymentIntent) {
       const { stripePaymentIntentClientSecret } =
-        tx.attributes.protectedData && tx.attributes.protectedData.stripePaymentIntents
-          ? tx.attributes.protectedData.stripePaymentIntents.default
-          : {};
+        tx.attributes.protectedData?.stripePaymentIntents?.default || {};
 
       // Fetch up to date PaymentIntent from Stripe
       onRetrievePaymentIntent({ stripe, stripePaymentIntentClientSecret });
@@ -730,17 +715,19 @@ export class CheckoutPageComponent extends Component {
       </div>
     );
 
-    // TODO get transactionProcessAlias from listing's publicData (not from config)
-    const processName =
-      existingTransaction?.attributes?.processName || config.transactionProcessAlias.split('/')[0];
-    const process = getProcess(processName);
-    const transitions = process.transitions;
+    const processName = existingTransaction.id
+      ? existingTransaction?.attributes?.processName
+      : listing?.id
+      ? listing.attributes.publicData?.transactionProcessAlias?.split('/')[0]
+      : null;
 
     const isLoading = !this.state.dataLoaded || speculateTransactionInProgress || !processName;
 
     if (isLoading) {
       return <Page {...pageProps}>{topbar}</Page>;
     }
+    const process = getProcess(processName);
+    const transitions = process.transitions;
 
     const isOwnListing =
       currentUser &&
@@ -780,7 +767,7 @@ export class CheckoutPageComponent extends Component {
         />
       ) : null;
 
-    const isPaymentExpired = checkIsPaymentExpired(existingTransaction);
+    const isPaymentExpired = checkIsPaymentExpired(existingTransaction, process);
     const hasDefaultPaymentMethod = !!(
       stripeCustomerFetched &&
       ensureStripeCustomer(currentUser.stripeCustomer).attributes.stripeCustomerId &&
@@ -816,10 +803,9 @@ export class CheckoutPageComponent extends Component {
       </NamedLink>
     );
 
-    const unitType = currentListing.attributes.publicData?.unitType;
-    const isNightly = unitType === LINE_ITEM_NIGHT;
-    const isDaily = unitType === LINE_ITEM_DAY;
-
+    const lineItemUnitType = `line-item/${currentListing.attributes.publicData?.unitType}`;
+    const isNightly = lineItemUnitType === LINE_ITEM_NIGHT;
+    const isDaily = lineItemUnitType === LINE_ITEM_DAY;
     const unitTranslationKey = isNightly
       ? 'CheckoutPage.perNight'
       : isDaily
@@ -835,10 +821,9 @@ export class CheckoutPageComponent extends Component {
     );
 
     // Get first and last name of the current user and use it in the StripePaymentForm to autofill the name field
-    const userName =
-      currentUser && currentUser.attributes
-        ? `${currentUser.attributes.profile.firstName} ${currentUser.attributes.profile.lastName}`
-        : null;
+    const userName = currentUser?.attributes?.profile
+      ? `${currentUser.attributes.profile.firstName} ${currentUser.attributes.profile.lastName}`
+      : null;
 
     // If paymentIntent status is not waiting user action,
     // confirmCardPayment has been called previously.
@@ -900,7 +885,7 @@ export class CheckoutPageComponent extends Component {
               {showPaymentForm ? (
                 <StripePaymentForm
                   className={css.paymentForm}
-                  onSubmit={this.handleSubmit}
+                  onSubmit={values => this.handleSubmit(values, process)}
                   inProgress={this.state.submitting}
                   formId="CheckoutPagePaymentForm"
                   authorDisplayName={currentAuthor.attributes.profile.displayName}
@@ -915,7 +900,7 @@ export class CheckoutPageComponent extends Component {
                     hasDefaultPaymentMethod ? currentUser.stripeCustomer.defaultPaymentMethod : null
                   }
                   paymentIntent={paymentIntent}
-                  onStripeInitialized={this.onStripeInitialized}
+                  onStripeInitialized={stripe => this.onStripeInitialized(stripe, process)}
                   askShippingDetails={orderData?.deliveryMethod === 'shipping'}
                   pickupLocation={currentListing?.attributes?.publicData?.location}
                   totalPrice={tx.id ? getFormattedTotalPrice(tx, intl) : null}
@@ -1050,11 +1035,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   dispatch,
-  fetchSpeculatedTransaction: (params, transactionId, transitionName, isPrivileged) =>
-    dispatch(speculateTransaction(params, transactionId, transitionName, isPrivileged)),
+  fetchSpeculatedTransaction: (params, processAlias, txId, transitionName, isPrivileged) =>
+    dispatch(speculateTransaction(params, processAlias, txId, transitionName, isPrivileged)),
   fetchStripeCustomer: () => dispatch(stripeCustomer()),
-  onInitiateOrder: (params, transactionId, transitionName, isPrivileged) =>
-    dispatch(initiateOrder(params, transactionId, transitionName, isPrivileged)),
+  onInitiateOrder: (params, processAlias, transactionId, transitionName, isPrivileged) =>
+    dispatch(initiateOrder(params, processAlias, transactionId, transitionName, isPrivileged)),
   onRetrievePaymentIntent: params => dispatch(retrievePaymentIntent(params)),
   onConfirmCardPayment: params => dispatch(confirmCardPayment(params)),
   onConfirmPayment: (transactionId, transitionName, transitionParams) =>

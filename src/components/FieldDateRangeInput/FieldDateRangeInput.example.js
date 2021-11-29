@@ -63,7 +63,7 @@ export const Empty = {
     style: { marginBottom: '140px' },
     dateInputProps: {
       name: 'bookingDates',
-      unitType: LINE_ITEM_NIGHT,
+      lineItemUnitType: LINE_ITEM_NIGHT,
       startDateId: 'EmptyDateRange.bookingStartDate',
       startDateLabel: 'Start date',
       startDatePlaceholderText: moment().format('ddd, MMMM D'),

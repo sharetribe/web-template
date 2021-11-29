@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [change] Refactor orderData passing to checkout page, pass processAlias to CheckoutPage thunk
+  functions and unitType variable usage. [#17](https://github.com/sharetribe/ftw-x/pull/17)
 - [add] Refactor unitType usage and make OrderBreakdown work with it.
   [#15](https://github.com/sharetribe/ftw-x/pull/15)
 - [add] ListingPage: start enquiry from process found from public data.

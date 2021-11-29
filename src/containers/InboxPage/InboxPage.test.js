@@ -15,7 +15,7 @@ import {
   TX_TRANSITION_ACTOR_PROVIDER,
   getProcess,
 } from '../../util/transaction';
-import { LINE_ITEM_ITEM } from '../../util/types';
+import { LINE_ITEM_ITEM, LINE_ITEM_PROVIDER_COMMISSION } from '../../util/types';
 
 const { Money } = sdkTypes;
 const noop = () => null;
@@ -41,7 +41,7 @@ describe('InboxPage', () => {
         reversal: false,
       },
       {
-        code: 'line-item/provider-commission',
+        code: LINE_ITEM_PROVIDER_COMMISSION,
         includeFor: ['provider'],
         unitPrice: new Money(100 * -1, 'USD'),
         lineTotal: new Money(100 * -1, 'USD'),
@@ -101,8 +101,6 @@ describe('InboxPage', () => {
     // Deeply render one InboxItem
     const orderItem = renderDeep(
       <InboxItem
-        unitType={LINE_ITEM_ITEM}
-        type="order"
         tx={ordersProps.transactions[0]}
         transactionRole={TX_TRANSITION_ACTOR_CUSTOMER}
         intl={fakeIntl}
@@ -163,7 +161,6 @@ describe('InboxPage', () => {
     // Deeply render one InboxItem
     const saleItem = renderDeep(
       <InboxItem
-        unitType={LINE_ITEM_ITEM}
         type="sale"
         tx={salesProps.transactions[0]}
         transactionRole={TX_TRANSITION_ACTOR_PROVIDER}

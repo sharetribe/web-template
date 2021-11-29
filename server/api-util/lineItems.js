@@ -78,10 +78,9 @@ const getHourQuantityAndLineItems = orderData => {
  */
 const getDateRangeQuantityAndLineItems = (orderData, code) => {
   // bookingStart & bookingend are used with day-based bookings (how many days / nights)
-  const { bookingDates } = orderData || {};
-  const { startDate, endDate } = bookingDates || {};
+  const { bookingStart, bookingEnd } = orderData || {};
   const quantity =
-    startDate && endDate ? calculateQuantityFromDates(startDate, endDate, code) : null;
+    bookingStart && bookingEnd ? calculateQuantityFromDates(bookingStart, bookingEnd, code) : null;
 
   return { quantity, extraLineItems: [] };
 };

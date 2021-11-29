@@ -19,6 +19,7 @@ exports[`BookingDatesForm matches snapshot without selected dates 1`] = `
     }
   }
   isOwnListing={false}
+  lineItemUnitType="line-item/night"
   lineItems={
     Array [
       Object {
@@ -55,6 +56,5 @@ exports[`BookingDatesForm matches snapshot without selected dates 1`] = `
       "currency": "USD",
     }
   }
-  unitType="line-item/night"
 />
 `;
