@@ -48,6 +48,7 @@ export const BookingDateRangeFilterPopup = {
   component: BookingDateRangeFilterWrapper,
   props: {
     id: 'BookingDateRangeFilterPopupExample',
+    label: 'Date range',
     queryParamNames: [URL_PARAM],
     liveEdit: false,
     showAsPopup: true,
@@ -62,6 +63,7 @@ export const BookingDateRangeFilterPlain = {
   component: BookingDateRangeFilterWrapper,
   props: {
     id: 'BookingDateRangeFilterPlainExample',
+    label: 'Date range',
     queryParamNames: [URL_PARAM],
     liveEdit: true,
     showAsPopup: false,

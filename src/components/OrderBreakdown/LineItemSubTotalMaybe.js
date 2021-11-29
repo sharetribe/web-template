@@ -58,9 +58,9 @@ const hasCommission = (lineItems, userRole) => {
 };
 
 const LineItemSubTotalMaybe = props => {
-  const { lineItems, unitType, userRole, intl } = props;
+  const { lineItems, code, userRole, intl } = props;
 
-  const refund = lineItems.find(item => item.code === unitType && item.reversal);
+  const refund = lineItems.find(item => item.code === code && item.reversal);
 
   // Show subtotal only if commission line-item is applicable to user or refund is issued.
   const showSubTotal = hasCommission(lineItems, userRole) || refund;

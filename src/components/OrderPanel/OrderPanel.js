@@ -62,6 +62,7 @@ const OrderPanel = props => {
     className,
     titleClassName,
     listing,
+    lineItemUnitType: lineItemUnitTypeMaybe,
     isOwnListing,
     onSubmit,
     title,
@@ -80,7 +81,7 @@ const OrderPanel = props => {
   } = props;
 
   const unitType = listing?.attributes?.publicData?.unitType;
-  const lineItemUnitType = `line-item/${unitType}`;
+  const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
   const shouldHaveBooking = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
 
   const price = listing.attributes.price;
@@ -107,8 +108,8 @@ const OrderPanel = props => {
     ? intl.formatMessage({ id: 'OrderPanel.subTitleClosedListing' })
     : null;
 
-  const isNightly = unitType === LINE_ITEM_NIGHT;
-  const isDaily = unitType === LINE_ITEM_DAY;
+  const isNightly = lineItemUnitType === LINE_ITEM_NIGHT;
+  const isDaily = lineItemUnitType === LINE_ITEM_DAY;
   const unitTranslationKey = isNightly
     ? 'OrderPanel.perNight'
     : isDaily
@@ -149,7 +150,7 @@ const OrderPanel = props => {
             className={css.bookingForm}
             formId="OrderPanelBookingDatesForm"
             submitButtonWrapperClassName={css.bookingDatesSubmitButtonWrapper}
-            unitType={lineItemUnitType}
+            lineItemUnitType={lineItemUnitType}
             onSubmit={onSubmit}
             price={price}
             listingId={listing.id}

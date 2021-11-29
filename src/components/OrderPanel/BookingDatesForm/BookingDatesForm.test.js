@@ -31,7 +31,7 @@ describe('BookingDatesForm', () => {
   it('matches snapshot without selected dates', () => {
     const tree = renderShallow(
       <BookingDatesFormComponent
-        unitType={LINE_ITEM_NIGHT}
+        lineItemUnitType={LINE_ITEM_NIGHT}
         intl={fakeIntl}
         dispatch={noop}
         onSubmit={v => v}

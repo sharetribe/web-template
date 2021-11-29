@@ -1,13 +1,35 @@
 import React from 'react';
+import Decimal from 'decimal.js';
 
+import { types as sdkTypes } from '../../util/sdkLoader';
 import { injectIntl } from '../../util/reactIntl';
 import { createUser, createListing, createTransaction } from '../../util/test-data';
+import { LINE_ITEM_ITEM } from '../../util/types';
 import { getProcess } from '../../util/transaction';
 
 import { InboxItem, getStateData } from './InboxPage';
 
 const noop = () => null;
+const { Money } = sdkTypes;
 const transitions = getProcess('flex-product-default-process')?.transitions;
+
+const lineItems = [
+  {
+    code: LINE_ITEM_ITEM,
+    includeFor: ['customer', 'provider'],
+    quantity: new Decimal(1),
+    unitPrice: new Money(1000, 'USD'),
+    lineTotal: new Money(1000, 'USD'),
+    reversal: false,
+  },
+  {
+    code: 'line-item/provider-commission',
+    includeFor: ['provider'],
+    unitPrice: new Money(100 * -1, 'USD'),
+    lineTotal: new Money(100 * -1, 'USD'),
+    reversal: false,
+  },
+];
 
 const tx = lastTransition =>
   createTransaction({
@@ -33,11 +55,11 @@ const tx = lastTransition =>
     listing: createListing('ItemX', {
       publicData: { transactionProcessAlias: 'flex-product-default-process', unitType: 'item' },
     }),
+    lineItems,
   });
 
 const TranslatedInboxItem = props => {
-  const { intl, tx, type, ...rest } = props;
-  const transactionRole = isOrders ? TX_TRANSITION_ACTOR_CUSTOMER : TX_TRANSITION_ACTOR_PROVIDER;
+  const { intl, tx, transactionRole, ...rest } = props;
   const stateData = getStateData({ transaction: tx, transactionRole });
 
   return (

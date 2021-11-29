@@ -55,6 +55,7 @@ import SectionReviews from './SectionReviews';
 import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionRulesMaybe from './SectionRulesMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
+
 import css from './ListingPage.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
@@ -154,7 +155,7 @@ export class ListingPageComponent extends Component {
     const listingId = new UUID(params.id);
     const listing = getListing(listingId);
 
-    const { bookingDates, ...otherOrderData } = values;
+    const { bookingDates, quantity: quantityRaw, deliveryMethod, ...otherOrderData } = values;
     const bookingDatesMaybe = bookingDates
       ? {
           bookingDates: {
@@ -163,11 +164,17 @@ export class ListingPageComponent extends Component {
           },
         }
       : {};
+    const quantityMaybe = Number.isInteger(quantityRaw)
+      ? { quantity: Number.parseInt(quantityRaw, 10) }
+      : {};
+    const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
 
     const initialValues = {
       listing,
       orderData: {
         ...bookingDatesMaybe,
+        ...quantityMaybe,
+        ...deliveryMethodMaybe,
         ...otherOrderData,
       },
       confirmPaymentError: null,

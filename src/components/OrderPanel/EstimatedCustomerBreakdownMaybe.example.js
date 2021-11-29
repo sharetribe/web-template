@@ -2,7 +2,6 @@ import Decimal from 'decimal.js';
 
 import config from '../../config';
 import { types as sdkTypes } from '../../util/sdkLoader';
-import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, LINE_ITEM_ITEM } from '../../util/types';
 
 import EstimatedCustomerBreakdownMaybe from './EstimatedCustomerBreakdownMaybe';
 
@@ -11,16 +10,13 @@ const CURRENCY = config.currency;
 
 export const EmptyWithoutDatesOrLineItems = {
   component: EstimatedCustomerBreakdownMaybe,
-  props: {
-    unitType: LINE_ITEM_DAY,
-  },
+  props: {},
   group: 'payment',
 };
 
 export const EmptyWithoutDates = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
-    unitType: LINE_ITEM_DAY,
     lineItems: [
       {
         code: 'line-item/day',
@@ -38,7 +34,6 @@ export const EmptyWithoutDates = {
 export const EmptyWithoutLineItems = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
-    unitType: LINE_ITEM_DAY,
     breakdownData: {
       startDate: new Date(Date.UTC(2017, 3, 14)),
       endDate: new Date(Date.UTC(2017, 3, 15)),
@@ -50,7 +45,6 @@ export const EmptyWithoutLineItems = {
 export const BookingSingleDay = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
-    unitType: LINE_ITEM_DAY,
     breakdownData: {
       startDate: new Date(Date.UTC(2017, 3, 14)),
       endDate: new Date(Date.UTC(2017, 3, 15)),
@@ -72,7 +66,6 @@ export const BookingSingleDay = {
 export const BookingMultipleNights = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
-    unitType: LINE_ITEM_NIGHT,
     breakdownData: {
       startDate: new Date(Date.UTC(2017, 3, 14)),
       endDate: new Date(Date.UTC(2017, 3, 16)),
@@ -94,7 +87,6 @@ export const BookingMultipleNights = {
 export const BookingUnits = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
-    unitType: LINE_ITEM_ITEM,
     breakdownData: {
       startDate: new Date(Date.UTC(2017, 3, 14)),
       endDate: new Date(Date.UTC(2017, 3, 16)),
@@ -116,7 +108,6 @@ export const BookingUnits = {
 export const OrderProductWithShipping = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
-    unitType: LINE_ITEM_ITEM,
     breakdownData: {},
     lineItems: [
       {
@@ -143,7 +134,6 @@ export const OrderProductWithShipping = {
 export const OrderProductWithPickup = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
-    unitType: LINE_ITEM_ITEM,
     breakdownData: {},
     lineItems: [
       {

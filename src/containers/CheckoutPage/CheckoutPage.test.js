@@ -8,7 +8,11 @@ const noop = () => null;
 
 describe('CheckoutPage', () => {
   it('matches snapshot', () => {
-    const listing = createListing('listing1', {}, { author: createUser('author') });
+    const listing = createListing(
+      'listing1',
+      { publicData: { transactionProcessAlias: 'flex-product-default-process', unitType: 'item' } },
+      { author: createUser('author') }
+    );
     const props = {
       orderData: { quantity: 3, deliveryMethod: 'shipping' },
       dispatch: noop,

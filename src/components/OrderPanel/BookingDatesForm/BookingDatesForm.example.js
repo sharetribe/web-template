@@ -9,7 +9,7 @@ const { Money } = sdkTypes;
 export const Form = {
   component: BookingDatesForm,
   props: {
-    unitType: LINE_ITEM_NIGHT,
+    lineItemUnitType: LINE_ITEM_NIGHT,
     onSubmit: values => {
       console.log('Submit BookingDatesForm with values:', values);
     },

@@ -45,7 +45,6 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import { sendEnquiry, fetchTransactionLineItems, setInitialValues } from './ListingPage.duck';
-import SectionAvatar from './SectionAvatar';
 import ActionBarMaybe from './ActionBarMaybe';
 import SectionHeading from './SectionHeading';
 import SectionDescriptionMaybe from './SectionDescriptionMaybe';
@@ -165,13 +164,17 @@ export class ListingPageComponent extends Component {
           },
         }
       : {};
+    const quantityMaybe = Number.isInteger(quantityRaw)
+      ? { quantity: Number.parseInt(quantityRaw, 10) }
+      : {};
+    const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
 
     const initialValues = {
       listing,
       orderData: {
         ...bookingDatesMaybe,
-        quantity: Number.parseInt(quantityRaw, 10),
-        deliveryMethod,
+        ...quantityMaybe,
+        ...deliveryMethodMaybe,
         ...otherOrderData,
       },
       confirmPaymentError: null,
