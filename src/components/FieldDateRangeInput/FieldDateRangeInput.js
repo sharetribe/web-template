@@ -55,7 +55,7 @@ class FieldDateRangeInputComponent extends Component {
     const {
       className,
       rootClassName,
-      unitType,
+      lineItemUnitType,
       startDateId,
       startDateLabel,
       endDateId,
@@ -109,7 +109,7 @@ class FieldDateRangeInputComponent extends Component {
     // eslint-disable-next-line no-unused-vars
     const { onBlur, onFocus, type, checked, ...restOfInput } = input;
     const inputProps = {
-      unitType,
+      lineItemUnitType,
       onBlur: this.handleBlur,
       onFocus: this.handleFocus,
       useMobileMargins,
@@ -151,7 +151,7 @@ FieldDateRangeInputComponent.defaultProps = {
 FieldDateRangeInputComponent.propTypes = {
   className: string,
   rootClassName: string,
-  unitType: propTypes.lineItemUnitType.isRequired,
+  lineItemUnitType: propTypes.lineItemUnitType.isRequired,
   useMobileMargins: bool,
   endDateId: string,
   endDateLabel: string,
