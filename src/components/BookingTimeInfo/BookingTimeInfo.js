@@ -18,7 +18,7 @@ import {
 
 import css from './BookingTimeInfo.module.css';
 
-const orderData = (unitType, booking, intl) => {
+const orderData = (lineItemUnitType, booking, intl) => {
   // Attributes: displayStart and displayEnd can be used to differentiate shown time range
   // from actual start and end times used for availability reservation. It can help in situations
   // where there are preparation time needed between bookings.
@@ -27,9 +27,9 @@ const orderData = (unitType, booking, intl) => {
   const apiTimeZone = 'Etc/UTC';
   const startDate = timeOfDayFromTimeZoneToLocal(displayStart || start, apiTimeZone);
   const endDateRaw = timeOfDayFromTimeZoneToLocal(displayEnd || end, apiTimeZone);
-  const isDaily = unitType === LINE_ITEM_DAY;
-  const isNightly = unitType === LINE_ITEM_NIGHT;
-  const isHourly = unitType === LINE_ITEM_HOUR;
+  const isDaily = lineItemUnitType === LINE_ITEM_DAY;
+  const isNightly = lineItemUnitType === LINE_ITEM_NIGHT;
+  const isHourly = lineItemUnitType === LINE_ITEM_HOUR;
   const isSingleDay = !isNightly && daysBetween(startDate, endDateRaw) <= 1;
   const bookingStart = formatDateIntoPartials(startDate, intl);
   // Shift the exclusive API end date with daily bookings
@@ -39,13 +39,13 @@ const orderData = (unitType, booking, intl) => {
 };
 
 const BookingTimeInfoComponent = props => {
-  const { bookingClassName, intl, booking, unitType, dateType } = props;
+  const { bookingClassName, intl, booking, lineItemUnitType, dateType } = props;
 
   if (!booking) {
     return null;
   }
 
-  const bookingTimes = orderData(unitType, booking, intl);
+  const bookingTimes = orderData(lineItemUnitType, booking, intl);
   const { bookingStart, bookingEnd, isSingleDay } = bookingTimes;
 
   if (isSingleDay && dateType === DATE_TYPE_DATE) {
@@ -84,7 +84,7 @@ BookingTimeInfoComponent.defaultProps = { dateType: null };
 BookingTimeInfoComponent.propTypes = {
   intl: intlShape.isRequired,
   booking: propTypes.booking.isRequired,
-  unitType: propTypes.lineItemUnitType.isRequired,
+  lineItemUnitType: propTypes.lineItemUnitType.isRequired,
   dateType: propTypes.dateType,
 };
 
