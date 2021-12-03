@@ -270,6 +270,7 @@ input {
 
 textarea {
   @apply --marketplaceInputStyles;
+
   min-height: 84px; /* 3 rows  */
   max-height: 300px; /* 12 rows fullu visible, scroll after */
 
