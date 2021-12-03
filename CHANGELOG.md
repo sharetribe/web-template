@@ -55,6 +55,39 @@ way to update this template, but currently, we follow a pattern:
 
   [#2](https://github.com/sharetribe/ftw-x/pull/2)
 
+## [v9.1.0] 2021-12-02
+
+### Updates from upstream (FTW-product v9.1.0)
+
+- [fix] Mobile safari zooms if input-related elements have smaller font-size than 16px. This updates
+  textarea and select element styles too. [#1489](https://github.com/sharetribe/ftw-daily/pull/1489)
+- [fix] Dependabot: Bump passport-oauth2 from 1.5.0 to 1.6.1
+  [#1487](https://github.com/sharetribe/ftw-daily/pull/1487)
+- [fix] Fix bugs in checkout process:
+
+  - Submit button was enabled prematurely for onetime payments
+  - Toggling between default card and onetime payment flows was not working correctly in case of
+    error (e.g. network error).
+  - Calling Stripe.confirmCardPayment when status is requires_capture is unnecessary.
+
+  [#1486](https://github.com/sharetribe/ftw-daily/pull/1486)
+
+- [change] Update many dependencies. See full list in the package.json changes in the PR.
+  [#1483](https://github.com/sharetribe/ftw-daily/pull/1483)
+- [fix] Double click issue. Show dedicated message, when current user doesn't have a pending email
+  address, but there's a verification error.
+  [#1485](https://github.com/sharetribe/ftw-daily/pull/1485)
+- [change] Update comment about how scrollIntoView works with links using hash.
+  [#1484](https://github.com/sharetribe/ftw-daily/pull/1484)
+- [fix] Account pages: mobile tab navigation should only scroll horizontally
+  [#1481](https://github.com/sharetribe/ftw-daily/pull/1481)
+- [fix] Temporarily disallow Node v17, since it causes issues with dependencies.
+  [#1479](https://github.com/sharetribe/ftw-daily/pull/1479)
+- [fix] Fix modal close button text/icon alignment
+  [#1476](https://github.com/sharetribe/ftw-daily/pull/1476)
+
+  [v9.1.0]: https://github.com/sharetribe/ftw-product/compare/v9.0.1...v9.1.0
+
 ## [v9.0.1] 2021-11-26
 
 - [fix] Fixes issue with default payment card that was created by PR #111. Essentially, before
