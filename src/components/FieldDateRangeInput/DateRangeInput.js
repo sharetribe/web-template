@@ -152,7 +152,7 @@ class DateRangeInputComponent extends Component {
   }
 
   onDatesChange(dates) {
-    const { unitType, timeSlots } = this.props;
+    const { lineItemUnitType, timeSlots } = this.props;
     const { startDate, endDate } = dates;
 
     // both dates are selected, a new start date before the previous start
@@ -171,7 +171,7 @@ class DateRangeInputComponent extends Component {
       : false;
 
     const startDateAsDate = startDate instanceof moment ? startDate.toDate() : null;
-    const endDateAsDate = clearEndDate ? null : pickerEndDateToApiDate(unitType, endDate);
+    const endDateAsDate = clearEndDate ? null : pickerEndDateToApiDate(lineItemUnitType, endDate);
 
     this.setState(() => ({
       currentStartDate: startDateAsDate,
@@ -200,7 +200,7 @@ class DateRangeInputComponent extends Component {
     /* eslint-disable no-unused-vars */
     const {
       className,
-      unitType,
+      lineItemUnitType,
       initialDates,
       intl,
       name,
@@ -220,20 +220,20 @@ class DateRangeInputComponent extends Component {
     } = this.props;
     /* eslint-enable no-unused-vars */
 
-    const isDaily = unitType === LINE_ITEM_DAY;
+    const isDaily = lineItemUnitType === LINE_ITEM_DAY;
     const initialStartMoment = initialDates ? moment(initialDates.startDate) : null;
     const initialEndMoment = initialDates ? moment(initialDates.endDate) : null;
     const startDate =
       value && value.startDate instanceof Date ? moment(value.startDate) : initialStartMoment;
     const endDate =
-      apiEndDateToPickerDate(unitType, value ? value.endDate : null) || initialEndMoment;
+      apiEndDateToPickerDate(lineItemUnitType, value ? value.endDate : null) || initialEndMoment;
 
     let isDayBlocked = isDayBlockedFn(
       timeSlots,
       startDate,
       endDate,
       this.state.focusedInput,
-      unitType
+      lineItemUnitType
     );
 
     let isOutsideRange = isOutsideRangeFn(
@@ -241,7 +241,7 @@ class DateRangeInputComponent extends Component {
       startDate,
       endDate,
       this.state.focusedInput,
-      unitType
+      lineItemUnitType
     );
 
     const startDatePlaceholderTxt =
@@ -297,7 +297,7 @@ DateRangeInputComponent.propTypes = {
   className: string,
   startDateId: string,
   endDateId: string,
-  unitType: propTypes.lineItemUnitType.isRequired,
+  lineItemUnitType: propTypes.lineItemUnitType.isRequired,
   focusedInput: oneOf([START_DATE, END_DATE]),
   initialDates: instanceOf(Date),
   intl: intlShape.isRequired,
