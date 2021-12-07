@@ -477,7 +477,7 @@ exports[`InboxPage matches snapshot 2`] = `
         className="stateName stateNoActionNeeded"
       >
         <span>
-          InboxPage.flex-product-default-process.customer.purchased.status
+          InboxPage.flex-product-default-process.purchased.status
         </span>
       </div>
       <div
@@ -976,7 +976,7 @@ exports[`InboxPage matches snapshot 4`] = `
         className="stateName stateActionNeeded"
       >
         <span>
-          InboxPage.flex-product-default-process.provider.purchased.status
+          InboxPage.flex-product-default-process.purchased.status
         </span>
       </div>
       <div
