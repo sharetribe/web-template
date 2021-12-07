@@ -7,7 +7,8 @@ import { createUser, createListing, createTransaction } from '../../util/test-da
 import { LINE_ITEM_ITEM } from '../../util/types';
 import { getProcess } from '../../util/transaction';
 
-import { InboxItem, getStateData } from './InboxPage';
+import { getStateData } from './InboxPage.stateData';
+import { InboxItem } from './InboxPage';
 
 const noop = () => null;
 const { Money } = sdkTypes;
