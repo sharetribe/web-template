@@ -1,5 +1,6 @@
 import React from 'react';
 import Decimal from 'decimal.js';
+
 import { renderShallow, renderDeep } from '../../util/test-helpers';
 import {
   fakeIntl,
@@ -8,7 +9,6 @@ import {
   createListing,
   createTransaction,
 } from '../../util/test-data';
-import { InboxPageComponent, InboxItem, getStateData } from './InboxPage';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   TX_TRANSITION_ACTOR_CUSTOMER,
@@ -16,6 +16,9 @@ import {
   getProcess,
 } from '../../util/transaction';
 import { LINE_ITEM_ITEM, LINE_ITEM_PROVIDER_COMMISSION } from '../../util/types';
+
+import { getStateData } from './InboxPage.stateData';
+import { InboxPageComponent, InboxItem } from './InboxPage';
 
 const { Money } = sdkTypes;
 const noop = () => null;
