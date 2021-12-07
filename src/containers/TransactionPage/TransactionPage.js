@@ -12,10 +12,8 @@ import { DATE_TYPE_DATE, LISTING_UNIT_TYPES, propTypes } from '../../util/types'
 import { timeOfDayFromTimeZoneToLocal } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import {
-  TX_TRANSITION_ACTOR_CUSTOMER,
-  TX_TRANSITION_ACTOR_PROVIDER,
-  CONDITIONAL_RESOLVER_WILDCARD as _,
-  ConditionalResolver,
+  TX_TRANSITION_ACTOR_CUSTOMER as CUSTOMER,
+  TX_TRANSITION_ACTOR_PROVIDER as PROVIDER,
   getProcess,
 } from '../../util/transaction';
 import routeConfiguration from '../../routing/routeConfiguration';
@@ -38,6 +36,7 @@ import {
 } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
+import { getStateData } from './TransactionPage.stateData';
 import ActivityFeed from './ActivityFeed/ActivityFeed';
 import DisputeModal from './DisputeModal/DisputeModal';
 import ReviewModal from './ReviewModal/ReviewModal';
@@ -52,11 +51,6 @@ import {
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
 
-const CUSTOMER = TX_TRANSITION_ACTOR_CUSTOMER;
-const PROVIDER = TX_TRANSITION_ACTOR_PROVIDER;
-const FLEX_PRODUCT_DEFAULT_PROCESS = 'flex-product-default-process';
-const FLEX_DAILY_DEFAULT_PROCESS = 'flex-default-process';
-
 // Submit dispute and close the review modal
 const onDisputeOrder = (currentTransactionId, transitionName, onTransition) => values => {
   const { disputeReason } = values;
@@ -68,258 +62,6 @@ const onDisputeOrder = (currentTransactionId, transitionName, onTransition) => v
     .catch(e => {
       // Do nothing.
     });
-};
-
-// Transitions are following process.edn format: "transition/my-transtion-name"
-// This extracts the 'my-transtion-name' string if namespace exists
-const getTransitionKey = transitionName => {
-  const [nameSpace, transitionKey] = transitionName.split('/');
-  return transitionKey || transitionName;
-};
-
-// Action button prop for the TransactionPanel
-const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
-  const {
-    processName,
-    transitionName,
-    inProgress,
-    transitionError,
-    onAction,
-    transactionRole,
-    actionButtonTranslationId,
-    actionButtonTranslationErrorId,
-    intl,
-  } = params;
-  const transitionKey = getTransitionKey(transitionName);
-
-  const actionButtonTrId =
-    actionButtonTranslationId ||
-    `TransactionPage.${processName}.${transactionRole}.transition-${transitionKey}.actionButton`;
-  const actionButtonTrErrorId =
-    actionButtonTranslationErrorId ||
-    `TransactionPage.${processName}.${transactionRole}.transition-${transitionKey}.actionError`;
-
-  return onlyForRole === 'both' || onlyForRole === transactionRole
-    ? {
-        inProgress,
-        error: transitionError,
-        onAction,
-        buttonText: intl.formatMessage({ id: actionButtonTrId }),
-        errorText: intl.formatMessage({ id: actionButtonTrErrorId }),
-      }
-    : {};
-};
-
-const getStateDataForProductProcess = (params, isCustomer, actionButtonProps, leaveReviewProps) => {
-  const { transaction, transactionRole, nextTransitions } = params;
-  const isShippable = transaction?.attributes?.protectedData?.deliveryMethod === 'shipping';
-
-  const processName = FLEX_PRODUCT_DEFAULT_PROCESS;
-  const process = getProcess(processName);
-  const { getState, states, transitions } = process;
-  const processState = getState(transaction);
-
-  return new ConditionalResolver([processState, transactionRole])
-    .cond([states.ENQUIRY, CUSTOMER], () => {
-      const transitionNames = Array.isArray(nextTransitions)
-        ? nextTransitions.map(t => t.attributes.name)
-        : [];
-      const requestAfterEnquiry = transitions.REQUEST_PAYMENT_AFTER_ENQUIRY;
-      const hasCorrectNextTransition = transitionNames.includes(requestAfterEnquiry);
-      const isProviderBanned = transaction?.provider?.attributes?.banned;
-      const showOrderPanel = !isProviderBanned && hasCorrectNextTransition;
-      return { processName, processState, showOrderPanel };
-    })
-    .cond([states.PURCHASED, CUSTOMER], () => {
-      return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
-        showActionButtons: true,
-        primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED_FROM_PURCHASED, CUSTOMER),
-      };
-    })
-    .cond([states.PURCHASED, PROVIDER], () => {
-      const actionButtonTranslationId = isShippable
-        ? `TransactionPage.${processName}.${PROVIDER}.transition-mark-delivered.actionButton`
-        : `TransactionPage.${processName}.${PROVIDER}.transition-mark-delivered.actionButtonShipped`;
-
-      return {
-        processName,
-        processState,
-        showActionButtons: true,
-        primaryButtonProps: actionButtonProps(transitions.MARK_DELIVERED, PROVIDER, {
-          actionButtonTranslationId,
-        }),
-      };
-    })
-    .cond([states.DELIVERED, CUSTOMER], () => {
-      return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
-        showDispute: true,
-        showActionButtons: true,
-        primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED, CUSTOMER),
-      };
-    })
-    .cond([states.COMPLETED, _], () => {
-      return {
-        processName,
-        processState,
-        showDetailCardHeadings: isCustomer,
-        showReviewAsFirstLink: true,
-        showActionButtons: true,
-        primaryButtonProps: leaveReviewProps,
-      };
-    })
-    .cond([states.REVIEWED_BY_PROVIDER, CUSTOMER], () => {
-      return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
-        showReviewAsSecondLink: true,
-        showActionButtons: true,
-        primaryButtonProps: leaveReviewProps,
-      };
-    })
-    .cond([states.REVIEWED_BY_CUSTOMER, PROVIDER], () => {
-      return {
-        processName,
-        processState,
-        showReviewAsSecondLink: true,
-        showActionButtons: true,
-        primaryButtonProps: leaveReviewProps,
-      };
-    })
-    .cond([states.REVIEWED, _], () => {
-      return { processName, processState, showDetailCardHeadings: isCustomer, showReviews: true };
-    })
-    .default(() => {
-      // Default values for other states
-      return { processName, processState, showDetailCardHeadings: isCustomer };
-    })
-    .resolve();
-};
-
-const getStateDataForDailyProcess = (params, isCustomer, actionButtonProps, leaveReviewProps) => {
-  const { transaction, transactionRole, nextTransitions } = params;
-  const isProviderBanned = transaction?.provider?.attributes?.banned;
-  const isCustomerBanned = transaction?.provider?.attributes?.banned;
-
-  const processName = FLEX_DAILY_DEFAULT_PROCESS;
-  const process = getProcess(processName);
-  const { getState, states, transitions } = process;
-  const processState = getState(transaction);
-
-  return new ConditionalResolver([processState, transactionRole])
-    .cond([states.ENQUIRY, CUSTOMER], () => {
-      const transitionNames = Array.isArray(nextTransitions)
-        ? nextTransitions.map(t => t.attributes.name)
-        : [];
-      const requestAfterEnquiry = transitions.REQUEST_PAYMENT_AFTER_ENQUIRY;
-      const hasCorrectNextTransition = transitionNames.includes(requestAfterEnquiry);
-      const showOrderPanel = !isProviderBanned && hasCorrectNextTransition;
-      return { processName, processState, showOrderPanel };
-    })
-    .cond([states.PREAUTHORIZED, PROVIDER], () => {
-      const primary = isCustomerBanned ? null : actionButtonProps(transitions.ACCEPT, PROVIDER);
-      const secondary = isCustomerBanned ? null : actionButtonProps(transitions.DECLINE, PROVIDER);
-      return {
-        processName,
-        processState,
-        showActionButtons: true,
-        primaryButtonProps: primary,
-        secondaryButtonProps: secondary,
-      };
-    })
-    .cond([states.DELIVERED, _], () => {
-      return {
-        processName,
-        processState,
-        showDetailCardHeadings: isCustomer,
-        showReviewAsFirstLink: true,
-        showActionButtons: true,
-        primaryButtonProps: leaveReviewProps,
-      };
-    })
-    .cond([states.REVIEWED_BY_PROVIDER, CUSTOMER], () => {
-      return {
-        processName,
-        processState,
-        showDetailCardHeadings: true,
-        showReviewAsSecondLink: true,
-        showActionButtons: true,
-        primaryButtonProps: leaveReviewProps,
-      };
-    })
-    .cond([states.REVIEWED_BY_CUSTOMER, PROVIDER], () => {
-      return {
-        processName,
-        processState,
-        showReviewAsSecondLink: true,
-        showActionButtons: true,
-        primaryButtonProps: leaveReviewProps,
-      };
-    })
-    .cond([states.REVIEWED, _], () => {
-      return { processName, processState, showDetailCardHeadings: isCustomer, showReviews: true };
-    })
-    .default(() => {
-      // Default values for other states
-      return { processName, processState, showDetailCardHeadings: isCustomer };
-    })
-    .resolve();
-};
-
-const getStateData = params => {
-  const {
-    transaction,
-    transactionRole,
-    intl,
-    transitionInProgress,
-    transitionError,
-    onTransition,
-    sendReviewInProgress,
-    sendReviewError,
-    onOpenReviewModal,
-  } = params;
-  const isCustomer = transactionRole === 'customer';
-  const processName = transaction?.attributes?.processName;
-
-  const actionButtonProps = (transitionName, forRole, extra = {}) =>
-    getActionButtonPropsMaybe(
-      {
-        processName,
-        transitionName,
-        transactionRole,
-        intl,
-        inProgress: transitionInProgress === transitionName,
-        transitionError,
-        onAction: () => onTransition(transaction?.id, transitionName, {}),
-        ...extra,
-      },
-      forRole
-    );
-  const leaveReviewProps = getActionButtonPropsMaybe({
-    processName,
-    transitionName: 'leaveReview',
-    transactionRole,
-    intl,
-    inProgress: sendReviewInProgress,
-    transitionError: sendReviewError,
-    onAction: onOpenReviewModal,
-    actionButtonTranslationId: 'TransactionPage.leaveReview.actionButton',
-    actionButtonTranslationErrorId: 'TransactionPage.leaveReview.actionError',
-  });
-
-  if (processName === FLEX_PRODUCT_DEFAULT_PROCESS) {
-    return getStateDataForProductProcess(params, isCustomer, actionButtonProps, leaveReviewProps);
-  } else if (processName === FLEX_DAILY_DEFAULT_PROCESS) {
-    return getStateDataForDailyProcess(params, isCustomer, actionButtonProps, leaveReviewProps);
-  } else {
-    return {};
-  }
 };
 
 // TransactionPage handles data loading for Sale and Order views to transaction pages in Inbox.
@@ -565,18 +307,21 @@ export const TransactionPageComponent = props => {
   );
 
   const stateData = isDataAvailable
-    ? getStateData({
-        transaction,
-        transactionRole,
-        nextTransitions,
-        transitionInProgress,
-        transitionError,
-        sendReviewInProgress,
-        sendReviewError,
-        onTransition,
-        onOpenReviewModal,
-        intl,
-      })
+    ? getStateData(
+        {
+          transaction,
+          transactionRole,
+          nextTransitions,
+          transitionInProgress,
+          transitionError,
+          sendReviewInProgress,
+          sendReviewError,
+          onTransition,
+          onOpenReviewModal,
+          intl,
+        },
+        process
+      )
     : {};
 
   const txBookingMaybe = booking?.id ? { booking, dateType: DATE_TYPE_DATE } : {};
