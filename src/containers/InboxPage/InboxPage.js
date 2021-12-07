@@ -9,6 +9,8 @@ import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import {
   TX_TRANSITION_ACTOR_CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER,
+  CONDITIONAL_RESOLVER_WILDCARD as _,
+  ConditionalResolver,
   getProcess,
 } from '../../util/transaction';
 import { propTypes, DATE_TYPE_DATE, LINE_ITEM_ITEM, LISTING_UNIT_TYPES } from '../../util/types';
@@ -43,33 +45,6 @@ const PROVIDER = TX_TRANSITION_ACTOR_PROVIDER;
 const FLEX_PRODUCT_DEFAULT_PROCESS = 'flex-product-default-process';
 const FLEX_DAILY_DEFAULT_PROCESS = 'flex-default-process';
 
-// This class helps to resolve correct UI data for each combination of conditional data [state & role]
-class ConditionalResolver {
-  constructor(data) {
-    this.data = data;
-    this.resolver = null;
-    this.defaultResolver = null;
-  }
-  cond(conditions, resolver) {
-    if (this.resolver == null) {
-      const isWildcard = item => typeof item === 'undefined';
-      const isMatch = conditions.reduce(
-        (isPartialMatch, item, i) => isPartialMatch && (isWildcard(item) || item === this.data[i]),
-        true
-      );
-      this.resolver = isMatch ? resolver : null;
-    }
-    return this;
-  }
-  default(defaultResolver) {
-    this.defaultResolver = defaultResolver;
-    return this;
-  }
-  resolve() {
-    return this.resolver ? this.resolver() : this.defaultResolver ? this.defaultResolver() : {};
-  }
-}
-
 // Get UI data mapped to specific transaction state & role
 export const getStateDataForProductProcess = params => {
   const { transaction, transactionRole } = params;
@@ -79,8 +54,6 @@ export const getStateDataForProductProcess = params => {
   const { getState, states } = process;
   const processState = getState(transaction);
 
-  // Undefined underscore works as a wildcard
-  let _;
   return new ConditionalResolver([processState, transactionRole])
     .cond([states.ENQUIRY, _], () => {
       return { processName, processState, actionNeeded: true, emphasizeTransitionMoment: true };
@@ -131,8 +104,6 @@ export const getStateDataForDailyProcess = params => {
   const { getState, states } = process;
   const processState = getState(transaction);
 
-  // Undefined underscore works as a wildcard
-  let _;
   return new ConditionalResolver([processState, transactionRole])
     .cond([states.ENQUIRY, _], () => {
       return { processName, processState, actionNeeded: true, emphasizeTransitionMoment: true };

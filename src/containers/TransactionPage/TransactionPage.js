@@ -14,6 +14,8 @@ import { createSlug } from '../../util/urlHelpers';
 import {
   TX_TRANSITION_ACTOR_CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER,
+  CONDITIONAL_RESOLVER_WILDCARD as _,
+  ConditionalResolver,
   getProcess,
 } from '../../util/transaction';
 import routeConfiguration from '../../routing/routeConfiguration';
@@ -108,33 +110,6 @@ const getActionButtonPropsMaybe = (params, onlyForRole = 'both') => {
     : {};
 };
 
-// This class helps to resolve correct UI data for each combination of conditional data [state & role]
-class ConditionalResolver {
-  constructor(data) {
-    this.data = data;
-    this.resolver = null;
-    this.defaultResolver = null;
-  }
-  cond(conditions, resolver) {
-    if (this.resolver == null) {
-      const isWildcard = item => typeof item === 'undefined';
-      const isMatch = conditions.reduce(
-        (isPartialMatch, item, i) => isPartialMatch && (isWildcard(item) || item === this.data[i]),
-        true
-      );
-      this.resolver = isMatch ? resolver : null;
-    }
-    return this;
-  }
-  default(defaultResolver) {
-    this.defaultResolver = defaultResolver;
-    return this;
-  }
-  resolve() {
-    return this.resolver ? this.resolver() : this.defaultResolver ? this.defaultResolver() : {};
-  }
-}
-
 const getStateDataForProductProcess = (params, isCustomer, actionButtonProps, leaveReviewProps) => {
   const { transaction, transactionRole, nextTransitions } = params;
   const isShippable = transaction?.attributes?.protectedData?.deliveryMethod === 'shipping';
@@ -144,8 +119,6 @@ const getStateDataForProductProcess = (params, isCustomer, actionButtonProps, le
   const { getState, states, transitions } = process;
   const processState = getState(transaction);
 
-  // Undefined underscore works as a wildcard
-  let _;
   return new ConditionalResolver([processState, transactionRole])
     .cond([states.ENQUIRY, CUSTOMER], () => {
       const transitionNames = Array.isArray(nextTransitions)
@@ -239,8 +212,6 @@ const getStateDataForDailyProcess = (params, isCustomer, actionButtonProps, leav
   const { getState, states, transitions } = process;
   const processState = getState(transaction);
 
-  // Undefined underscore works as a wildcard
-  let _;
   return new ConditionalResolver([processState, transactionRole])
     .cond([states.ENQUIRY, CUSTOMER], () => {
       const transitionNames = Array.isArray(nextTransitions)
