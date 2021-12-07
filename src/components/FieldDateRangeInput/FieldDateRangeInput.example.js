@@ -99,7 +99,7 @@ export const WithAvailableTimeSlotsNighlyBooking = {
     style: { marginBottom: '140px' },
     dateInputProps: {
       name: 'bookingDates',
-      unitType: LINE_ITEM_NIGHT,
+      lineItemUnitType: LINE_ITEM_NIGHT,
       startDateId: 'WithAvailableTimeSlotsDateRangeNightly.bookingStartDate',
       startDateLabel: 'Start date',
       startDatePlaceholderText: moment().format('ddd, MMMM D'),
@@ -135,7 +135,7 @@ export const WithAvailableTimeSlotsDailyBooking = {
   props: {
     dateInputProps: {
       name: 'bookingDates',
-      unitType: LINE_ITEM_DAY,
+      lineItemUnitType: LINE_ITEM_DAY,
       startDateId: 'WithAvailableTimeSlotsDateRangeDaily.bookingStartDate',
       startDateLabel: 'Start date',
       startDatePlaceholderText: moment().format('ddd, MMMM D'),

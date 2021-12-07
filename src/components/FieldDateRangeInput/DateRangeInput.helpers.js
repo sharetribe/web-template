@@ -82,12 +82,22 @@ export const isBlockedBetween = (timeSlots, startDate, endDate) =>
 export const isStartDateSelected = (timeSlots, startDate, endDate, focusedInput) =>
   timeSlots && startDate && (!endDate || focusedInput === END_DATE) && focusedInput !== START_DATE;
 
-export const isSelectingEndDateNightly = (timeSlots, startDate, endDate, focusedInput, unitType) =>
-  timeSlots && !startDate && !endDate && focusedInput === END_DATE && unitType === LINE_ITEM_NIGHT;
+export const isSelectingEndDateNightly = (
+  timeSlots,
+  startDate,
+  endDate,
+  focusedInput,
+  lineItemUnitType
+) =>
+  timeSlots &&
+  !startDate &&
+  !endDate &&
+  focusedInput === END_DATE &&
+  lineItemUnitType === LINE_ITEM_NIGHT;
 
-export const apiEndDateToPickerDate = (unitType, endDate) => {
+export const apiEndDateToPickerDate = (lineItemUnitType, endDate) => {
   const isValid = endDate instanceof Date;
-  const isDaily = unitType === LINE_ITEM_DAY;
+  const isDaily = lineItemUnitType === LINE_ITEM_DAY;
 
   if (!isValid) {
     return null;
@@ -100,9 +110,9 @@ export const apiEndDateToPickerDate = (unitType, endDate) => {
   }
 };
 
-export const pickerEndDateToApiDate = (unitType, endDate) => {
+export const pickerEndDateToApiDate = (lineItemUnitType, endDate) => {
   const isValid = endDate instanceof moment;
-  const isDaily = unitType === LINE_ITEM_DAY;
+  const isDaily = lineItemUnitType === LINE_ITEM_DAY;
 
   if (!isValid) {
     return null;
@@ -119,7 +129,7 @@ export const pickerEndDateToApiDate = (unitType, endDate) => {
  * Returns an isDayBlocked function that can be passed to
  * a react-dates DateRangePicker component.
  */
-export const isDayBlockedFn = (timeSlots, startDate, endDate, focusedInput, unitType) => {
+export const isDayBlockedFn = (timeSlots, startDate, endDate, focusedInput, lineItemUnitType) => {
   const endOfRange = config.dayCountAvailableForBooking - 1;
   const lastBookableDate = moment().add(endOfRange, 'days');
 
@@ -137,7 +147,7 @@ export const isDayBlockedFn = (timeSlots, startDate, endDate, focusedInput, unit
     startDate,
     endDate,
     focusedInput,
-    unitType
+    lineItemUnitType
   );
 
   if (selectingEndDate) {
@@ -159,7 +169,7 @@ export const isDayBlockedFn = (timeSlots, startDate, endDate, focusedInput, unit
  * Returns an isOutsideRange function that can be passed to
  * a react-dates DateRangePicker component.
  */
-export const isOutsideRangeFn = (timeSlots, startDate, endDate, focusedInput, unitType) => {
+export const isOutsideRangeFn = (timeSlots, startDate, endDate, focusedInput, lineItemUnitType) => {
   const endOfRange = config.dayCountAvailableForBooking - 1;
   const lastBookableDate = moment().add(endOfRange, 'days');
 
@@ -174,7 +184,10 @@ export const isOutsideRangeFn = (timeSlots, startDate, endDate, focusedInput, un
     // nightly booking: the day the next booking starts
     // daily booking: the day before the next booking starts
     return day => {
-      const lastDayToEndBooking = apiEndDateToPickerDate(unitType, nextBookingStarts.toDate());
+      const lastDayToEndBooking = apiEndDateToPickerDate(
+        lineItemUnitType,
+        nextBookingStarts.toDate()
+      );
 
       return (
         !isInclusivelyAfterDay(day, startDate) || !isInclusivelyBeforeDay(day, lastDayToEndBooking)
