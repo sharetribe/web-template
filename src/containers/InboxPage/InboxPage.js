@@ -255,7 +255,8 @@ export const InboxItem = props => {
         <div className={css.itemState}>
           <div className={stateClasses}>
             <FormattedMessage
-              id={`InboxPage.${processName}.${transactionRole}.${processState}.status`}
+              id={`InboxPage.${processName}.${processState}.status`}
+              values={{ transactionRole }}
             />
           </div>
           <div className={lastTransitionedAtClasses} title={lastTransitionedAt.dateAndTime}>

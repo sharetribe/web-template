@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [change] InboxPage: use React Intl (ICU) select syntax for tx status.
+  [#19](https://github.com/sharetribe/ftw-x/pull/19)
 - [change] Refactor orderData passing to checkout page, pass processAlias to CheckoutPage thunk
   functions and unitType variable usage. [#17](https://github.com/sharetribe/ftw-x/pull/17)
 - [add] Refactor unitType usage and make OrderBreakdown work with it.
