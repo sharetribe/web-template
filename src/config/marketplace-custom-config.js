@@ -9,6 +9,131 @@
 export const processes = ['flex-product-default-process', 'flex-default-process'];
 
 /**
+ * Configuration options for extended data fields:
+ * - key:                           Unique key for the extended data field.
+ * - scope (optional):              Scope of the extended data can be either 'public' or 'private'.
+ *                                  Default value: 'public'.
+ *                                  Note: listing doesn't support 'protected' scope atm.
+ * - includeForProcessAliases:      An array of transaction process aliases, for which the extended
+ *                                  data is relevant and should be added.
+ * - schemaType (optional):         Schema for this extended data field.
+ *                                  This is relevant when rendering components and querying listings.
+ *                                  Possible values: 'enum', 'multi-enum', 'text', 'long', 'boolean'.
+ * - schemaOptions (optional):      Options shown for 'enum' and 'multi-enum' extended data.
+ *                                  These are used to render options for inputs and filters on
+ *                                  EditListingPage, ListingPage, and SearchPage.
+ * - indexForSearch (optional):     If set as true, it is assumed that the extended data key has
+ *                                  search index in place. I.e. the key can be used to filter
+ *                                  listing queries (then scope needs to be 'public').
+ *                                  Note: Flex CLI can be used to set search index for the key:
+ *                                  https://www.sharetribe.com/docs/references/extended-data/#search-schema
+ *                                  Read more about filtering listings with public data keys from API Reference:
+ *                                  https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
+ * - searchPageConfig:              Search-specific configuration.
+ *   - label:                         Label for the filter, if the field can be used as query filter
+ *   - searchMode (optional):         Search mode for indexed data with multi-enum schema.
+ *                                    Possible values: has_all' or 'has_any'.
+ * - listingPageConfig:             Configuration for rendering listing.
+ *   - label:                         Label for the saved data.
+ * - editListingPageConfig:         Configuration for adding and modifying extended data fields.
+ *   - label:                         Label for the input field.
+ *   - placeholderMessage (optional): Default message for user input.
+ *   - requiredMessage (optional):    Message for those fields, which are mandatory.
+ */
+export const listingExtendedData = [
+  {
+    key: 'category',
+    scope: 'public',
+    includeForProcessAliases: [
+      'flex-product-default-process/release-1',
+      'flex-default-process/release-1',
+    ],
+    schemaType: 'enum',
+    schemaOptions: ['Men', 'Women', 'Kids'],
+    indexForSearch: true,
+    searchPageConfig: {
+      label: 'Category',
+    },
+    listingPageConfig: {
+      label: 'Category',
+    },
+    editListingPageConfig: {
+      label: 'Select category',
+      placeholder: 'Choose…',
+      requiredMessage: 'You need to select a category.',
+    },
+  },
+
+  {
+    key: 'size',
+    scope: 'public',
+    includeForProcessAliases: ['flex-product-default-process/release-1'],
+    schemaType: 'enum',
+    schemaOptions: [4, 5, 6, 7, 8, 9, 10, 11, 12],
+    indexForSearch: true,
+    searchPageConfig: {
+      label: 'Size (US)',
+    },
+    listingPageConfig: {
+      label: 'Size (US)',
+    },
+    editListingPageConfig: {
+      label: 'Select size (US)',
+      placeholder: 'Choose…',
+      requiredMessage: 'You need to select a size.',
+    },
+  },
+  {
+    key: 'brand',
+    scope: 'public',
+    includeForProcessAliases: ['flex-product-default-process/release-1'],
+    schemaType: 'enum',
+    schemaOptions: [
+      'Adidas',
+      'Air Jordan',
+      'Converse',
+      'New Balance',
+      'Nike',
+      'Puma',
+      'Ultraboost',
+      'Vans',
+      'Yeezy',
+      'Other',
+    ],
+    indexForSearch: true,
+    searchPageConfig: {
+      label: 'Brand',
+    },
+    listingPageConfig: {
+      label: 'Brand',
+    },
+    editListingPageConfig: {
+      label: 'Select brand',
+      placeholder: 'Choose…',
+      requiredMessage: 'You need to select a brand.',
+    },
+  },
+  {
+    key: 'amenities',
+    scope: 'public',
+    includeForProcessAliases: ['flex-default-process/release-1'],
+    schemaType: 'multi-enum',
+    schemaOptions: ['Towels', 'Bathroom', 'Swimming pool', 'Barbeque'],
+    indexForSearch: true,
+    searchPageConfig: {
+      label: 'Amenities',
+      searchMode: 'has_all',
+    },
+    listingPageConfig: {
+      label: 'Amenities',
+    },
+    editListingPageConfig: {
+      label: 'Select all the amenities you provide',
+    },
+  },
+];
+
+/**
  * Every filter needs to have following keys:
  * - id:     Unique id of the filter.
  * - label:  The default label of the filter.

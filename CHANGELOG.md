@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [add] marketplace-custom-config.js: add listingExtendedData config.
+  [#22](https://github.com/sharetribe/ftw-x/pull/22)
 - [change] FieldDateRangeInput: rename unitType as lineItemUnitType in DateRangeInput
   [#20](https://github.com/sharetribe/ftw-x/pull/20)
 - [change] InboxPage: use React Intl (ICU) select syntax for tx status.
