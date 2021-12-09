@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { arrayOf, bool, func, node, object, oneOf, string } from 'prop-types';
+import { arrayOf, bool, func, node, oneOf, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
@@ -9,6 +9,7 @@ import { isMobileSafari } from '../../../util/userAgent';
 import { formatMoney } from '../../../util/currency';
 import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
 
+import { stateDataShape } from '../TransactionPage.stateData';
 import SendMessageForm from '../SendMessageForm/SendMessageForm';
 
 // These are internal components that make this file more readable.
@@ -358,7 +359,7 @@ TransactionPanelComponent.propTypes = {
   sendMessageError: propTypes.error,
   onOpenDisputeModal: func.isRequired,
   onSendMessage: func.isRequired,
-  stateData: object,
+  stateData: stateDataShape,
   activityFeed: node,
   orderBreakdown: node,
   orderPanel: node,

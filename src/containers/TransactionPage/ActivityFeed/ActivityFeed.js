@@ -13,9 +13,10 @@ import {
   TX_TRANSITION_ACTOR_SYSTEM,
 } from '../../../util/transaction';
 import { propTypes } from '../../../util/types';
-import * as log from '../../../util/log';
 
 import { Avatar, InlineTextButton, ReviewRating, UserDisplayName } from '../../../components';
+
+import { stateDataShape } from '../TransactionPage.stateData';
 
 import css from './ActivityFeed.module.css';
 
@@ -322,7 +323,7 @@ ActivityFeedComponent.propTypes = {
 
   messages: arrayOf(propTypes.message),
   transaction: propTypes.transaction,
-  stateData: object,
+  stateData: stateDataShape,
   currentUser: propTypes.currentUser,
   hasOlderMessages: bool.isRequired,
   fetchMessagesInProgress: bool.isRequired,

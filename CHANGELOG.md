@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [change] Extract getStateData to own page-specific files.
+  [#21](https://github.com/sharetribe/ftw-x/pull/21)
 - [add] marketplace-custom-config.js: add listingExtendedData config.
   [#22](https://github.com/sharetribe/ftw-x/pull/22)
 - [change] FieldDateRangeInput: rename unitType as lineItemUnitType in DateRangeInput
