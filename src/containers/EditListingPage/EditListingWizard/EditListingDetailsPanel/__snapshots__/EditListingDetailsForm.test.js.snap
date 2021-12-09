@@ -49,14 +49,26 @@ exports[`EditListingDetailsForm matches snapshot 1`] = `
       value=""
     />
   </div>
-  <input
-    name="transactionProcessAlias"
-    onBlur={[Function]}
-    onChange={[Function]}
-    onFocus={[Function]}
-    type="hidden"
-    value=""
-  />
+  <div
+    className="processSelect"
+  >
+    <h5
+      className="selectedLabel"
+    >
+      EditListingDetailsForm.processLabel
+    </h5>
+    <p
+      className="selectedValue"
+    />
+    <input
+      name="transactionProcessAlias"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      type="hidden"
+      value=""
+    />
+  </div>
   <button
     className="root submitButton"
     disabled={true}
