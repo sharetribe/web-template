@@ -293,3 +293,54 @@ export const getUserTxRole = (currentUserId, transaction) => {
       currentUserId: ${currentUserId}, transaction: ${transaction}`);
   }
 };
+
+/**
+ * Wildcard string for ConditionalResolver's conditions.
+ */
+export const CONDITIONAL_RESOLVER_WILDCARD = '*';
+
+/**
+ * This class helps to resolve correct UI data for each combination of conditional data [state & role]
+ *
+ * Usage:
+ *  const stateData = new ConditionalResolver([currentState, currentRole])
+ *    .cond(['enquiry', 'customer'], () => {
+ *      return { showInfoX: true, isSomethingOn: true };
+ *    })
+ *    .cond(['purchase', _], () => {
+ *      return { showInfoX: false, isSomethingOn: true };
+ *    })
+ *    .default(() => {
+ *      return { showDetailCardHeadings: true };
+ *    })
+ *    .resolve();
+ */
+export class ConditionalResolver {
+  constructor(data) {
+    this.data = data;
+    this.resolver = null;
+    this.defaultResolver = null;
+  }
+  cond(conditions, resolver) {
+    if (conditions?.length === this.data.length && this.resolver == null) {
+      const isDefined = item => typeof item !== 'undefined';
+      const isWildcard = item => item === CONDITIONAL_RESOLVER_WILDCARD;
+      const isMatch = conditions.reduce(
+        (isPartialMatch, item, i) =>
+          isPartialMatch && isDefined(item) && (isWildcard(item) || item === this.data[i]),
+        true
+      );
+      this.resolver = isMatch ? resolver : null;
+    }
+    return this;
+  }
+  default(defaultResolver) {
+    this.defaultResolver = defaultResolver;
+    return this;
+  }
+  resolve() {
+    // This resolves the output against current conditions.
+    // Therefore, call for resolve() must be the last call in method chain.
+    return this.resolver ? this.resolver() : this.defaultResolver ? this.defaultResolver() : null;
+  }
+}

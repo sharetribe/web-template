@@ -6,11 +6,7 @@ import classNames from 'classnames';
 
 import config from '../../config';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import {
-  TX_TRANSITION_ACTOR_CUSTOMER,
-  TX_TRANSITION_ACTOR_PROVIDER,
-  getProcess,
-} from '../../util/transaction';
+import { TX_TRANSITION_ACTOR_CUSTOMER, TX_TRANSITION_ACTOR_PROVIDER } from '../../util/transaction';
 import { propTypes, DATE_TYPE_DATE, LINE_ITEM_ITEM, LISTING_UNIT_TYPES } from '../../util/types';
 import { formatDateIntoPartials } from '../../util/dates';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -36,154 +32,8 @@ import {
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
+import { stateDataShape, getStateData } from './InboxPage.stateData';
 import css from './InboxPage.module.css';
-
-const CUSTOMER = TX_TRANSITION_ACTOR_CUSTOMER;
-const PROVIDER = TX_TRANSITION_ACTOR_PROVIDER;
-const FLEX_PRODUCT_DEFAULT_PROCESS = 'flex-product-default-process';
-const FLEX_DAILY_DEFAULT_PROCESS = 'flex-default-process';
-
-// This class helps to resolve correct UI data for each combination of conditional data [state & role]
-class ConditionalResolver {
-  constructor(data) {
-    this.data = data;
-    this.resolver = null;
-    this.defaultResolver = null;
-  }
-  cond(conditions, resolver) {
-    if (this.resolver == null) {
-      const isWildcard = item => typeof item === 'undefined';
-      const isMatch = conditions.reduce(
-        (isPartialMatch, item, i) => isPartialMatch && (isWildcard(item) || item === this.data[i]),
-        true
-      );
-      this.resolver = isMatch ? resolver : null;
-    }
-    return this;
-  }
-  default(defaultResolver) {
-    this.defaultResolver = defaultResolver;
-    return this;
-  }
-  resolve() {
-    return this.resolver ? this.resolver() : this.defaultResolver ? this.defaultResolver() : {};
-  }
-}
-
-// Get UI data mapped to specific transaction state & role
-export const getStateDataForProductProcess = params => {
-  const { transaction, transactionRole } = params;
-
-  const processName = FLEX_PRODUCT_DEFAULT_PROCESS;
-  const process = getProcess(processName);
-  const { getState, states } = process;
-  const processState = getState(transaction);
-
-  // Undefined underscore works as a wildcard
-  let _;
-  return new ConditionalResolver([processState, transactionRole])
-    .cond([states.ENQUIRY, _], () => {
-      return { processName, processState, actionNeeded: true, emphasizeTransitionMoment: true };
-    })
-    .cond([states.PENDING_PAYMENT, CUSTOMER], () => {
-      return { processName, processState, actionNeeded: true };
-    })
-    .cond([states.PENDING_PAYMENT, PROVIDER], () => {
-      return { processName, processState, actionNeeded: true };
-    })
-    .cond([states.CANCELED, _], () => {
-      return { processName, processState, isFinal: true };
-    })
-    .cond([states.PURCHASED, PROVIDER], () => {
-      return { processName, processState, actionNeeded: true, isSaleNotification: true };
-    })
-    .cond([states.DELIVERED, CUSTOMER], () => {
-      return { processName, processState, actionNeeded: true };
-    })
-    .cond([states.DISPUTED, _], () => {
-      return { processName, processState, actionNeeded: true };
-    })
-    .cond([states.COMPLETED, _], () => {
-      return { processName, processState, actionNeeded: true };
-    })
-    .cond([states.REVIEWED_BY_PROVIDER, CUSTOMER], () => {
-      return { processName, processState, actionNeeded: true };
-    })
-    .cond([states.REVIEWED_BY_CUSTOMER, PROVIDER], () => {
-      return { processName, processState, actionNeeded: true };
-    })
-    .cond([states.REVIEWED, _], () => {
-      return { processName, processState, isFinal: true };
-    })
-    .default(() => {
-      // Default values for other states
-      return { processName, processState };
-    })
-    .resolve();
-};
-
-// Get UI data mapped to specific transaction state & role
-export const getStateDataForDailyProcess = params => {
-  const { transaction, transactionRole } = params;
-
-  const processName = FLEX_DAILY_DEFAULT_PROCESS;
-  const process = getProcess(processName);
-  const { getState, states } = process;
-  const processState = getState(transaction);
-
-  // Undefined underscore works as a wildcard
-  let _;
-  return new ConditionalResolver([processState, transactionRole])
-    .cond([states.ENQUIRY, _], () => {
-      return { processName, processState, actionNeeded: true, emphasizeTransitionMoment: true };
-    })
-    .cond([states.PENDING_PAYMENT, CUSTOMER], () => {
-      return { processName, processState, actionNeeded: true };
-    })
-    .cond([states.CANCELED, _], () => {
-      return { processName, processState, isFinal: true };
-    })
-    .cond([states.PREAUTHORIZED, PROVIDER], () => {
-      return { processName, processState, actionNeeded: true };
-    })
-    .cond([states.ACCEPTED, _], () => {
-      return { processName, processState, actionNeeded: true, emphasizeTransitionMoment: true };
-    })
-    .cond([states.DECLINED, _], () => {
-      return { processName, processState, isFinal: true };
-    })
-    .cond([states.DELIVERED, _], () => {
-      return { processName, processState, actionNeeded: true };
-    })
-    .cond([states.REVIEWED_BY_PROVIDER, CUSTOMER], () => {
-      return { processName, processState, actionNeeded: true };
-    })
-    .cond([states.REVIEWED_BY_CUSTOMER, PROVIDER], () => {
-      return { processName, processState, actionNeeded: true };
-    })
-    .cond([states.REVIEWED, _], () => {
-      return { processName, processState, isFinal: true };
-    })
-    .default(() => {
-      // Default values for other states
-      return { processName, processState };
-    })
-    .resolve();
-};
-
-// Translated name of the state of the given transaction
-export const getStateData = params => {
-  const { transaction } = params;
-  const processName = transaction?.attributes?.processName;
-
-  if (processName === FLEX_PRODUCT_DEFAULT_PROCESS) {
-    return getStateDataForProductProcess(params);
-  } else if (processName === FLEX_DAILY_DEFAULT_PROCESS) {
-    return getStateDataForDailyProcess(params);
-  } else {
-    return {};
-  }
-};
 
 export const InboxItem = props => {
   const { transactionRole, tx, intl, stateData } = props;
@@ -272,7 +122,7 @@ InboxItem.propTypes = {
   transactionRole: oneOf([TX_TRANSITION_ACTOR_CUSTOMER, TX_TRANSITION_ACTOR_PROVIDER]).isRequired,
   tx: propTypes.transaction.isRequired,
   intl: intlShape.isRequired,
-  stateData: object.isRequired,
+  stateData: stateDataShape.isRequired,
 };
 
 export const InboxPageComponent = props => {
