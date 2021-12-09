@@ -44,10 +44,7 @@ export const listingExtendedData = [
   {
     key: 'category',
     scope: 'public',
-    includeForProcessAliases: [
-      'flex-product-default-process/release-1',
-      'flex-default-process/release-1',
-    ],
+    includeForProcessAliases: ['flex-product-default-process/release-1'],
     schemaType: 'enum',
     schemaOptions: ['Men', 'Women', 'Kids'],
     indexForSearch: true,
@@ -114,6 +111,25 @@ export const listingExtendedData = [
     },
   },
   {
+    key: 'category_sauna',
+    scope: 'public',
+    includeForProcessAliases: ['flex-default-process/release-1'],
+    schemaType: 'enum',
+    schemaOptions: ['Smoky', 'Electric', 'Wood', 'Other'],
+    indexForSearch: true,
+    searchPageConfig: {
+      label: 'Category',
+    },
+    listingPageConfig: {
+      label: 'Category',
+    },
+    editListingPageConfig: {
+      label: 'Select category',
+      placeholder: 'Choose…',
+      requiredMessage: 'You need to select what type of sauna you have.',
+    },
+  },
+  {
     key: 'amenities',
     scope: 'public',
     includeForProcessAliases: ['flex-default-process/release-1'],
@@ -129,6 +145,72 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Select all the amenities you provide',
+    },
+  },
+
+  {
+    key: 'blaa',
+    scope: 'public',
+    includeForProcessAliases: ['flex-product-default-process/release-1'],
+    schemaType: 'text',
+    indexForSearch: true,
+    searchPageConfig: {
+      label: 'Blaa',
+    },
+    listingPageConfig: {
+      label: 'Blaa',
+    },
+    editListingPageConfig: {
+      label: 'Blaa',
+      placeholder: 'Blaa bla blaa',
+      requiredMessage: 'You need to write something.',
+    },
+  },
+  {
+    key: 'note',
+    scope: 'private',
+    includeForProcessAliases: ['flex-default-process/release-1'],
+    schemaType: 'text',
+    indexForSearch: false,
+    editListingPageConfig: {
+      label: 'Notes',
+      placeholder: 'Blaa bla blaa',
+    },
+  },
+  {
+    key: 'gears',
+    scope: 'public',
+    includeForProcessAliases: ['flex-product-default-process/release-1'],
+    schemaType: 'long',
+    indexForSearch: true,
+    searchPageConfig: {
+      label: 'Gears',
+    },
+    listingPageConfig: {
+      label: 'Gears',
+    },
+    editListingPageConfig: {
+      label: 'Gears',
+      placeholder: 'The number of gears',
+      requiredMessage: 'You need to add details about gears.',
+    },
+  },
+  {
+    key: 'has_lights',
+    scope: 'public',
+    includeForProcessAliases: ['flex-product-default-process/release-1'],
+    schemaType: 'boolean',
+    indexForSearch: true,
+    searchPageConfig: {
+      label: 'Has lights',
+    },
+    listingPageConfig: {
+      label: 'Has lights',
+    },
+    editListingPageConfig: {
+      label: 'Has lights',
+      placeholder: 'Choose yes/no',
+      //requiredMessage: 'You need to tell if the bike has lights.',
     },
   },
 ];
