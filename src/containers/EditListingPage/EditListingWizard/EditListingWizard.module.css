@@ -118,7 +118,7 @@
   @apply --marketplaceModalParagraphStyles;
 }
 
-.detailsSelect {
+.customField {
   margin-bottom: 24px;
 
   @media (--viewportMedium) {
@@ -126,10 +126,10 @@
   }
 }
 
-.multiEnum {
+.customFieldMultiEnum {
   margin-bottom: 24px;
 
   @media (--viewportMedium) {
-    margin-bottom: 32px;
+    margin-bottom: 40px;
   }
 }
