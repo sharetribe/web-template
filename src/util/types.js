@@ -35,8 +35,11 @@ import Decimal from 'decimal.js';
 import { types as sdkTypes } from './sdkLoader';
 import { getAllTransitionsForEveryProcess, TX_TRANSITION_ACTORS } from './transaction';
 
-const TRANSITIONS = getAllTransitionsForEveryProcess();
 const { UUID, LatLng, LatLngBounds, Money } = sdkTypes;
+const TRANSITIONS = getAllTransitionsForEveryProcess();
+
+// Supported schema types for custom fields added to extended data through configuration.
+export const EXTENDED_DATA_SCHEMA_TYPES = ['enum', 'multi-enum', 'text', 'long', 'boolean'];
 
 const propTypes = {};
 

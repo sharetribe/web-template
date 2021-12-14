@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { arrayOf, bool, func, shape, string } from 'prop-types';
+import { arrayOf, bool, func, number, oneOf, oneOfType, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { Field, Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
@@ -8,13 +8,13 @@ import classNames from 'classnames';
 // Import configs and util modules
 import config from '../../../../config';
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
-import { propTypes } from '../../../../util/types';
+import { EXTENDED_DATA_SCHEMA_TYPES, propTypes } from '../../../../util/types';
 import { maxLength, required, composeValidators } from '../../../../util/validators';
 
 // Import shared components
 import { Form, Button, FieldSelect, FieldTextInput } from '../../../../components';
 // Import modules from this directory
-import CustomField from '../CustomField';
+import CustomExtendedDataField from '../CustomExtendedDataField';
 import css from './EditListingDetailsForm.module.css';
 
 const TITLE_MAX_LENGTH = 60;
@@ -40,25 +40,12 @@ const ErrorMessage = props => {
   return null;
 };
 
-// Show children if certain value is present
-const Condition = props => {
-  const { when, is, children } = props;
-  return (
-    <Field name={when} subscription={{ value: true }}>
-      {props => {
-        const inputValue = props?.input?.value;
-        return inputValue === is ? children : null;
-      }}
-    </Field>
-  );
-};
-
 // Hidden input field
 const FieldHidden = props => {
   const { name } = props;
   return (
     <Field id={name} name={name} type="hidden" className={css.unitTypeHidden}>
-      {props => <input {...props?.input} />}
+      {fieldRenderProps => <input {...fieldRenderProps?.input} />}
     </Field>
   );
 };
@@ -66,20 +53,21 @@ const FieldHidden = props => {
 // TransactionProcess selector
 // Adds a single hidden field if only one process is available.
 const FieldTransactionProcessAlias = props => {
-  const { name, processInfos, formApi, intl } = props;
+  const { name, processInfos, hasSetProcessAlias, formApi, intl } = props;
   const handleOnChange = value => {
     const unitTypes = findProcessInfo(value, processInfos)?.unitTypes || [];
     const unitType = unitTypes?.length === 1 ? unitTypes[0] : undefined;
     formApi.change('unitType', unitType);
   };
+  const label = intl.formatMessage({ id: 'EditListingDetailsForm.processLabel' });
   const hasMultipleProcesses = processInfos.length > 1;
 
-  return hasMultipleProcesses ? (
+  return !hasSetProcessAlias && hasMultipleProcesses ? (
     <FieldSelect
       id={name}
       name={name}
       className={css.processSelect}
-      label={intl.formatMessage({ id: 'EditListingDetailsForm.processLabel' })}
+      label={label}
       onChange={handleOnChange}
       validate={required(intl.formatMessage({ id: 'EditListingDetailsForm.processRequired' }))}
     >
@@ -96,20 +84,30 @@ const FieldTransactionProcessAlias = props => {
       })}
     </FieldSelect>
   ) : (
-    <FieldHidden name={name} />
+    <div className={css.processSelect}>
+      <h5 className={css.selectedLabel}>{label}</h5>
+      <p className={css.selectedValue}>{formApi.getFieldState(name)?.value}</p>
+      <FieldHidden name={name} />
+    </div>
   );
 };
 
 // Unit type selector (item, day, night, hour)
 // This needs unitTypes from src/util/transaction.js
 const FieldSelectUnitType = props => {
-  const { unitTypes, intl } = props;
-  return (
+  const { name, unitTypes, formApi, intl } = props;
+  const hasProcessAlias = formApi.getFieldState('transactionProcessAlias')?.value;
+  if (!hasProcessAlias) {
+    return null;
+  }
+
+  const label = intl.formatMessage({ id: 'EditListingDetailsForm.unitTypesLabel' });
+  return unitTypes?.length > 1 ? (
     <FieldSelect
-      id="unitType"
-      name="unitType"
-      className={css.processSelect}
-      label={intl.formatMessage({ id: 'EditListingDetailsForm.unitTypesLabel' })}
+      id={name}
+      name={name}
+      className={css.unitSelect}
+      label={label}
       validate={required(intl.formatMessage({ id: 'EditListingDetailsForm.unitTypesRequired' }))}
     >
       <option disabled value="">
@@ -124,6 +122,12 @@ const FieldSelectUnitType = props => {
         );
       })}
     </FieldSelect>
+  ) : (
+    <div className={css.unitSelect}>
+      <h5 className={css.selectedLabel}>{label}</h5>
+      <p className={css.selectedValue}>{formApi.getFieldState(name)?.value}</p>
+      <FieldHidden name={name} />
+    </div>
   );
 };
 
@@ -145,11 +149,12 @@ const EditListingDetailsFormComponent = props => (
         invalid,
         pristine,
         processInfos,
+        hasSetProcessAlias,
         saveActionMsg,
         updated,
         updateInProgress,
         fetchErrors,
-        filterConfigs,
+        listingExtendedDataConfig,
         values,
       } = formRenderProps;
 
@@ -174,24 +179,26 @@ const EditListingDetailsFormComponent = props => (
         }
       );
       const maxLength60Message = maxLength(maxLengthMessage, TITLE_MAX_LENGTH);
+      const { transactionProcessAlias } = values;
 
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
 
-      const unitTypes =
-        findProcessInfo('flex-default-process/release-1', processInfos)?.unitTypes || [];
+      const addCustomExtendedDataFields = targetProcessAlias => {
+        const extendedDataConfigs = listingExtendedDataConfig || [];
+        return extendedDataConfigs.reduce((pickedFields, extendedDataConfig) => {
+          const { key, includeForProcessAliases = [], schemaType } = extendedDataConfig || {};
+          const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+          const isTargetProcessAlias = includeForProcessAliases.includes(targetProcessAlias);
 
-      // TODO: fields should be tied to process.
-      // When configs are changed, this function could take process name as parameter.
-      const addCustomFields = () => {
-        return filterConfigs.reduce((selectedFilters, filter) => {
-          const fieldId = filter.id;
-          const isEnum = ['enum', 'multi-enum'].includes(filter?.config?.schemaType);
-          return isEnum
-            ? [...selectedFilters, <CustomField key={fieldId} id={fieldId} filterConfig={filter} />]
-            : selectedFilters;
+          return isKnownSchemaType && isTargetProcessAlias
+            ? [
+                ...pickedFields,
+                <CustomExtendedDataField key={key} name={key} fieldConfig={extendedDataConfig} />,
+              ]
+            : pickedFields;
         }, []);
       };
 
@@ -229,19 +236,19 @@ const EditListingDetailsFormComponent = props => (
           <FieldTransactionProcessAlias
             name="transactionProcessAlias"
             processInfos={processInfos}
+            hasSetProcessAlias={hasSetProcessAlias}
             formApi={formApi}
             intl={intl}
           />
 
-          <Condition when="transactionProcessAlias" is={'flex-product-default-process/release-1'}>
-            <FieldHidden name="unitType" />
-            {addCustomFields()}
-          </Condition>
+          <FieldSelectUnitType
+            name="unitType"
+            unitTypes={findProcessInfo(transactionProcessAlias, processInfos)?.unitTypes || []}
+            formApi={formApi}
+            intl={intl}
+          />
 
-          <Condition when="transactionProcessAlias" is={'flex-default-process/release-1'}>
-            <FieldSelectUnitType unitTypes={unitTypes} intl={intl} />
-            {addCustomFields()}
-          </Condition>
+          {addCustomExtendedDataFields(transactionProcessAlias)}
 
           <Button
             className={css.submitButton}
@@ -261,7 +268,8 @@ const EditListingDetailsFormComponent = props => (
 EditListingDetailsFormComponent.defaultProps = {
   className: null,
   fetchErrors: null,
-  filterConfigs: config.custom.filters,
+  hasSetProcessAlias: false,
+  listingExtendedDataConfig: config.custom.listingExtendedData,
 };
 
 EditListingDetailsFormComponent.propTypes = {
@@ -285,7 +293,20 @@ EditListingDetailsFormComponent.propTypes = {
       unitTypes: arrayOf(string).isRequired,
     })
   ).isRequired,
-  filterConfigs: propTypes.filterConfig,
+  hasSetProcessAlias: bool,
+  listingExtendedDataConfig: arrayOf(
+    shape({
+      key: string.isRequired,
+      includeForProcessAliases: arrayOf(string).isRequired,
+      schemaType: oneOf(EXTENDED_DATA_SCHEMA_TYPES).isRequired,
+      schemaOptions: arrayOf(oneOfType([string, number])),
+      editListingPageConfig: shape({
+        label: string.isRequired,
+        placeholder: string,
+        requiredMessage: string,
+      }).isRequired,
+    })
+  ),
 };
 
 export default compose(injectIntl)(EditListingDetailsFormComponent);

@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [add] EditListingDetailsPanel: add more custom extended data fields and initialize form
+  accordingly. Transaction process alias can be set once (i.e. before listing draft is created).
+  [#24](https://github.com/sharetribe/ftw-x/pull/24)
 - [change] Extract getStateData to own page-specific files.
   [#21](https://github.com/sharetribe/ftw-x/pull/21)
 - [add] marketplace-custom-config.js: add listingExtendedData config.
