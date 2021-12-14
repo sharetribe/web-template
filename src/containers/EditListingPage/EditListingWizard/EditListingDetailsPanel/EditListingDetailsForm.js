@@ -14,7 +14,7 @@ import { maxLength, required, composeValidators } from '../../../../util/validat
 // Import shared components
 import { Form, Button, FieldSelect, FieldTextInput } from '../../../../components';
 // Import modules from this directory
-import CustomField from '../CustomField';
+import CustomExtendedDataField from '../CustomExtendedDataField';
 import css from './EditListingDetailsForm.module.css';
 
 const TITLE_MAX_LENGTH = 60;
@@ -186,7 +186,7 @@ const EditListingDetailsFormComponent = props => (
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
 
-      const addCustomFields = targetProcessAlias => {
+      const addCustomExtendedDataFields = targetProcessAlias => {
         const extendedDataConfigs = listingExtendedDataConfig || [];
         return extendedDataConfigs.reduce((pickedFields, extendedDataConfig) => {
           const { key, includeForProcessAliases = [], schemaType } = extendedDataConfig || {};
@@ -196,7 +196,7 @@ const EditListingDetailsFormComponent = props => (
           return isKnownSchemaType && isTargetProcessAlias
             ? [
                 ...pickedFields,
-                <CustomField key={key} name={key} fieldConfig={extendedDataConfig} />,
+                <CustomExtendedDataField key={key} name={key} fieldConfig={extendedDataConfig} />,
               ]
             : pickedFields;
         }, []);
@@ -248,7 +248,7 @@ const EditListingDetailsFormComponent = props => (
             intl={intl}
           />
 
-          {addCustomFields(transactionProcessAlias)}
+          {addCustomExtendedDataFields(transactionProcessAlias)}
 
           <Button
             className={css.submitButton}
