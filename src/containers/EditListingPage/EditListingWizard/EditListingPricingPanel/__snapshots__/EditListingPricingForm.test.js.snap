@@ -26,27 +26,6 @@ exports[`EditListingPricingForm matches snapshot 1`] = `
       value=""
     />
   </div>
-  <div
-    className="root input"
-  >
-    <label
-      htmlFor="stock"
-    >
-      EditListingPricingForm.stockLabel
-    </label>
-    <input
-      className="input"
-      id="stock"
-      min={0}
-      name="stock"
-      onBlur={[Function]}
-      onChange={[Function]}
-      onFocus={[Function]}
-      placeholder="EditListingPricingForm.stockPlaceholder"
-      type="number"
-      value=""
-    />
-  </div>
   <button
     className="root submitButton"
     disabled={true}
