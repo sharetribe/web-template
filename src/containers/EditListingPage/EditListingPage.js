@@ -38,7 +38,6 @@ import {
   requestUpdateListing,
   requestImageUpload,
   removeListingImage,
-  clearUpdatedTab,
   savePayoutDetails,
 } from './EditListingPage.duck';
 import EditListingWizard from './EditListingWizard/EditListingWizard';
@@ -107,7 +106,6 @@ export const EditListingPageComponent = props => {
     onPayoutDetailsSubmit,
     onPayoutDetailsChange,
     onGetStripeConnectAccountLink,
-    onChange,
     page,
     params,
     scrollingDisabled,
@@ -230,7 +228,6 @@ export const EditListingPageComponent = props => {
           getAccountLinkInProgress={getAccountLinkInProgress}
           onImageUpload={onImageUpload}
           onRemoveImage={onRemoveListingImage}
-          onChange={onChange}
           currentUser={currentUser}
           onManageDisableScrolling={onManageDisableScrolling}
           stripeOnboardingReturnURL={params.returnURLType}
@@ -296,7 +293,6 @@ EditListingPageComponent.propTypes = {
   onPayoutDetailsSubmit: func.isRequired,
   onRemoveListingImage: func.isRequired,
   onUpdateListing: func.isRequired,
-  onChange: func.isRequired,
   page: object.isRequired,
   params: shape({
     id: string.isRequired,
@@ -372,7 +368,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(savePayoutDetails(values, isUpdateCall)),
   onGetStripeConnectAccountLink: params => dispatch(getStripeConnectAccountLink(params)),
   onRemoveListingImage: imageId => dispatch(removeListingImage(imageId)),
-  onChange: () => dispatch(clearUpdatedTab()),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

@@ -78,7 +78,6 @@ const EditListingWizardTab = props => {
     onCreateListingDraft,
     onImageUpload,
     onRemoveImage,
-    onChange,
     updatedTab,
     updateInProgress,
     intl,
@@ -131,7 +130,6 @@ const EditListingWizardTab = props => {
       className: css.panel,
       errors,
       listing,
-      onChange,
       panelUpdated: updatedTab === tab,
       updateInProgress,
       // newListingPublished and fetchInProgress are flags for the last wizard tab
@@ -254,7 +252,6 @@ EditListingWizardTab.propTypes = {
   onCreateListingDraft: func.isRequired,
   onImageUpload: func.isRequired,
   onRemoveImage: func.isRequired,
-  onChange: func.isRequired,
   updatedTab: string,
   updateInProgress: bool.isRequired,
 
