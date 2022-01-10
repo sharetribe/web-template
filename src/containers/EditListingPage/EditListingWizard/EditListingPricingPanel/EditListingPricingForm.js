@@ -8,7 +8,6 @@ import classNames from 'classnames';
 import config from '../../../../config';
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
-import { isOldTotalMismatchStockError } from '../../../../util/errors';
 import * as validators from '../../../../util/validators';
 import { formatMoney } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
@@ -61,20 +60,11 @@ export const EditListingPricingFormComponent = props => (
         ? validators.composeValidators(priceRequired, minPriceRequired)
         : priceRequired;
 
-      const stockValidator = validators.numberAtLeast(
-        intl.formatMessage({ id: 'EditListingPricingForm.stockIsRequired' }),
-        0
-      );
-
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
-      const { updateListingError, showListingsError, setStockError } = fetchErrors || {};
-
-      const stockErrorMessage = isOldTotalMismatchStockError(setStockError)
-        ? intl.formatMessage({ id: 'EditListingPricingForm.oldStockTotalWasOutOfSync' })
-        : intl.formatMessage({ id: 'EditListingPricingForm.stockUpdateFailed' });
+      const { updateListingError, showListingsError } = fetchErrors || {};
 
       return (
         <Form onSubmit={handleSubmit} className={classes}>
@@ -98,18 +88,6 @@ export const EditListingPricingFormComponent = props => (
             currencyConfig={config.currencyConfig}
             validate={priceValidators}
           />
-
-          <FieldTextInput
-            className={css.input}
-            id="stock"
-            name="stock"
-            label={intl.formatMessage({ id: 'EditListingPricingForm.stockLabel' })}
-            placeholder={intl.formatMessage({ id: 'EditListingPricingForm.stockPlaceholder' })}
-            type="number"
-            min={0}
-            validate={stockValidator}
-          />
-          {setStockError ? <p className={css.error}>{stockErrorMessage}</p> : null}
 
           <Button
             className={css.submitButton}
