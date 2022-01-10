@@ -74,7 +74,6 @@ const EditListingDetailsPanel = props => {
     disabled,
     ready,
     onSubmit,
-    onChange,
     submitButtonText,
     panelUpdated,
     updateInProgress,
@@ -155,7 +154,6 @@ const EditListingDetailsPanel = props => {
         }}
         processInfos={activeProcessInfos}
         hasSetProcessAlias={hasSetProcessAlias}
-        onChange={onChange}
         disabled={disabled}
         ready={ready}
         updated={panelUpdated}
@@ -184,7 +182,6 @@ EditListingDetailsPanel.propTypes = {
   disabled: bool.isRequired,
   ready: bool.isRequired,
   onSubmit: func.isRequired,
-  onChange: func.isRequired,
   submitButtonText: string.isRequired,
   panelUpdated: bool.isRequired,
   updateInProgress: bool.isRequired,

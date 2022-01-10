@@ -28,7 +28,6 @@ class EditListingPhotosPanel extends Component {
       submitButtonText,
       panelUpdated,
       updateInProgress,
-      onChange,
       onSubmit,
       onRemoveImage,
     } = this.props;
@@ -63,7 +62,6 @@ class EditListingPhotosPanel extends Component {
             const { addImage, ...updateValues } = values;
             onSubmit(updateValues);
           }}
-          onChange={onChange}
           onRemoveImage={onRemoveImage}
           saveActionMsg={submitButtonText}
           updated={panelUpdated}
@@ -95,7 +93,6 @@ EditListingPhotosPanel.propTypes = {
 
   onImageUpload: func.isRequired,
   onSubmit: func.isRequired,
-  onChange: func.isRequired,
   submitButtonText: string.isRequired,
   panelUpdated: bool.isRequired,
   updateInProgress: bool.isRequired,

@@ -56,7 +56,6 @@ class EditListingLocationPanel extends Component {
       disabled,
       ready,
       onSubmit,
-      onChange,
       submitButtonText,
       panelUpdated,
       updateInProgress,
@@ -102,7 +101,6 @@ class EditListingLocationPanel extends Component {
             });
             onSubmit(updateValues);
           }}
-          onChange={onChange}
           saveActionMsg={submitButtonText}
           disabled={disabled}
           ready={ready}
@@ -134,7 +132,6 @@ EditListingLocationPanel.propTypes = {
   disabled: bool.isRequired,
   ready: bool.isRequired,
   onSubmit: func.isRequired,
-  onChange: func.isRequired,
   submitButtonText: string.isRequired,
   panelUpdated: bool.isRequired,
   updateInProgress: bool.isRequired,
