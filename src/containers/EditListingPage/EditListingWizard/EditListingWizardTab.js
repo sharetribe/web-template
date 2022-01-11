@@ -13,20 +13,34 @@ import { ensureListing } from '../../../util/data';
 import { createResourceLocatorString } from '../../../util/routes';
 
 // Import modules from this directory
+import EditListingAvailabilityPanel from './EditListingAvailabilityPanel/EditListingAvailabilityPanel';
 import EditListingDetailsPanel from './EditListingDetailsPanel/EditListingDetailsPanel';
 import EditListingDeliveryPanel from './EditListingDeliveryPanel/EditListingDeliveryPanel';
+import EditListingLocationPanel from './EditListingLocationPanel/EditListingLocationPanel';
 import EditListingPhotosPanel from './EditListingPhotosPanel/EditListingPhotosPanel';
 import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
+import EditListingPricingAndStockPanel from './EditListingPricingAndStockPanel/EditListingPricingAndStockPanel';
 
 import css from './EditListingWizard.module.css';
 
 export const DETAILS = 'details';
-export const DELIVERY = 'delivery';
 export const PRICING = 'pricing';
+export const PRICING_AND_STOCK = 'pricing-and-stock';
+export const DELIVERY = 'delivery';
+export const LOCATION = 'location';
+export const AVAILABILITY = 'availability';
 export const PHOTOS = 'photos';
 
 // EditListingWizardTab component supports these tabs
-export const SUPPORTED_TABS = [DETAILS, DELIVERY, PRICING, PHOTOS];
+export const SUPPORTED_TABS = [
+  DETAILS,
+  PRICING,
+  PRICING_AND_STOCK,
+  DELIVERY,
+  LOCATION,
+  AVAILABILITY,
+  PHOTOS,
+];
 
 const pathParamsToNextTab = (params, tab, marketplaceTabs) => {
   const nextTabIndex = marketplaceTabs.findIndex(s => s === tab) + 1;
@@ -77,6 +91,7 @@ const EditListingWizardTab = props => {
     onUpdateListing,
     onCreateListingDraft,
     onImageUpload,
+    onProcessChange,
     onRemoveImage,
     updatedTab,
     updateInProgress,
@@ -147,6 +162,7 @@ const EditListingWizardTab = props => {
         <EditListingDetailsPanel
           {...panelProps(DETAILS)}
           submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          onProcessChange={onProcessChange}
           onSubmit={values => {
             onCompleteEditListingWizardTab(tab, values);
           }}
@@ -252,6 +268,7 @@ EditListingWizardTab.propTypes = {
   onCreateListingDraft: func.isRequired,
   onImageUpload: func.isRequired,
   onRemoveImage: func.isRequired,
+  onProcessChange: func.isRequired,
   updatedTab: string,
   updateInProgress: bool.isRequired,
 

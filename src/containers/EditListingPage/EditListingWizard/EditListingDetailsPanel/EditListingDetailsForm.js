@@ -53,11 +53,14 @@ const FieldHidden = props => {
 // TransactionProcess selector
 // Adds a single hidden field if only one process is available.
 const FieldTransactionProcessAlias = props => {
-  const { name, processInfos, hasSetProcessAlias, formApi, intl } = props;
+  const { name, processInfos, hasSetProcessAlias, onChange, formApi, intl } = props;
   const handleOnChange = value => {
     const unitTypes = findProcessInfo(value, processInfos)?.unitTypes || [];
     const unitType = unitTypes?.length === 1 ? unitTypes[0] : undefined;
     formApi.change('unitType', unitType);
+    if (onChange) {
+      onChange(value);
+    }
   };
   const label = intl.formatMessage({ id: 'EditListingDetailsForm.processLabel' });
   const hasMultipleProcesses = processInfos.length > 1;
@@ -145,6 +148,7 @@ const EditListingDetailsFormComponent = props => (
         ready,
         form: formApi,
         handleSubmit,
+        onProcessChange,
         intl,
         invalid,
         pristine,
@@ -237,6 +241,7 @@ const EditListingDetailsFormComponent = props => (
             name="transactionProcessAlias"
             processInfos={processInfos}
             hasSetProcessAlias={hasSetProcessAlias}
+            onChange={onProcessChange}
             formApi={formApi}
             intl={intl}
           />
@@ -268,6 +273,7 @@ const EditListingDetailsFormComponent = props => (
 EditListingDetailsFormComponent.defaultProps = {
   className: null,
   fetchErrors: null,
+  onProcessChange: null,
   hasSetProcessAlias: false,
   listingExtendedDataConfig: config.custom.listingExtendedData,
 };
@@ -276,6 +282,7 @@ EditListingDetailsFormComponent.propTypes = {
   className: string,
   intl: intlShape.isRequired,
   onSubmit: func.isRequired,
+  onProcessChange: func,
   saveActionMsg: string.isRequired,
   disabled: bool.isRequired,
   ready: bool.isRequired,
