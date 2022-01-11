@@ -53,19 +53,47 @@ const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = 'success';
 const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
 
-const tabLabel = (intl, tab) => {
-  let key = null;
+/**
+ * Return translations for wizard tab: label and submit button.
+ *
+ * @param {Object} intl
+ * @param {string} tab name of the tab/panel in the wizard
+ * @param {boolean} isNewListingFlow
+ * @param {string} processName
+ */
+const tabLabelAndSubmit = (intl, tab, isNewListingFlow, processName) => {
+  const processNameString = isNewListingFlow ? `${processName}.` : '';
+  const newOrEdit = isNewListingFlow ? 'new' : 'edit';
+
+  let labelKey = null;
+  let submitButtonKey = null;
   if (tab === DETAILS) {
-    key = 'EditListingWizard.tabLabelDetails';
-  } else if (tab === DELIVERY) {
-    key = 'EditListingWizard.tabLabelDelivery';
+    labelKey = 'EditListingWizard.tabLabelDetails';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveDetails`;
   } else if (tab === PRICING) {
-    key = 'EditListingWizard.tabLabelPricing';
+    labelKey = 'EditListingWizard.tabLabelPricing';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePricing`;
+  } else if (tab === PRICING_AND_STOCK) {
+    labelKey = 'EditListingWizard.tabLabelPricingAndStock';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePricingAndStock`;
+  } else if (tab === DELIVERY) {
+    labelKey = 'EditListingWizard.tabLabelDelivery';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveDelivery`;
+  } else if (tab === LOCATION) {
+    labelKey = 'EditListingWizard.tabLabelLocation';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveLocation`;
+  } else if (tab === AVAILABILITY) {
+    labelKey = 'EditListingWizard.tabLabelAvailability';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveAvailability`;
   } else if (tab === PHOTOS) {
-    key = 'EditListingWizard.tabLabelPhotos';
+    labelKey = 'EditListingWizard.tabLabelPhotos';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePhotos`;
   }
 
-  return intl.formatMessage({ id: key });
+  return {
+    label: intl.formatMessage({ id: labelKey }),
+    submitButton: intl.formatMessage({ id: submitButtonKey }),
+  };
 };
 
 /**
@@ -360,17 +388,18 @@ class EditListingWizard extends Component {
           tabRootClassName={css.tab}
         >
           {tabs.map(tab => {
+            const tabTranslations = tabLabelAndSubmit(intl, tab, isNewListingFlow, processName);
             return (
               <EditListingWizardTab
                 {...rest}
                 key={tab}
                 tabId={`${id}_${tab}`}
-                tabLabel={tabLabel(intl, tab)}
+                tabLabel={tabTranslations.label}
+                tabSubmitButtonText={tabTranslations.submitButton}
                 tabLinkProps={tabLink(tab)}
                 selected={selectedTab === tab}
                 disabled={isNewListingFlow && !tabsStatus[tab]}
                 tab={tab}
-                intl={intl}
                 params={params}
                 listing={listing}
                 marketplaceTabs={tabs}
@@ -490,7 +519,7 @@ EditListingWizard.propTypes = {
       publicData: object,
       description: string,
       geolocation: object,
-      pricing: object,
+      price: object,
       title: string,
     }),
     images: array,

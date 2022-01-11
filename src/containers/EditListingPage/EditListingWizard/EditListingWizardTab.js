@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Import configs and util modules
-import { intlShape } from '../../../util/reactIntl';
 import routeConfiguration from '../../../routing/routeConfiguration';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
@@ -95,7 +94,7 @@ const EditListingWizardTab = props => {
     onRemoveImage,
     updatedTab,
     updateInProgress,
-    intl,
+    tabSubmitButtonText,
   } = props;
 
   const { type } = params;
@@ -150,68 +149,40 @@ const EditListingWizardTab = props => {
       // newListingPublished and fetchInProgress are flags for the last wizard tab
       ready: newListingPublished,
       disabled: fetchInProgress,
+      submitButtonText: tabSubmitButtonText,
+      onSubmit: values => {
+        onCompleteEditListingWizardTab(tab, values);
+      },
     };
   };
 
+  // TODO: add missing cases for supported tabs
   switch (tab) {
     case DETAILS: {
-      const submitButtonTranslationKey = isNewListingFlow
-        ? 'EditListingWizard.saveNewDetails'
-        : 'EditListingWizard.saveEditDetails';
-      return (
-        <EditListingDetailsPanel
-          {...panelProps(DETAILS)}
-          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
-          onProcessChange={onProcessChange}
-          onSubmit={values => {
-            onCompleteEditListingWizardTab(tab, values);
-          }}
-        />
-      );
+      return <EditListingDetailsPanel {...panelProps(DETAILS)} onProcessChange={onProcessChange} />;
     }
-    case DELIVERY: {
-      const submitButtonTranslationKey = isNewListingFlow
-        ? 'EditListingWizard.saveNewDelivery'
-        : 'EditListingWizard.saveEditDelivery';
-      return (
-        <EditListingDeliveryPanel
-          {...panelProps(DELIVERY)}
-          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
-          onSubmit={values => {
-            onCompleteEditListingWizardTab(tab, values);
-          }}
-        />
-      );
+    case PRICING_AND_STOCK: {
+      return <EditListingPricingAndStockPanel {...panelProps(PRICING_AND_STOCK)} />;
     }
     case PRICING: {
-      const submitButtonTranslationKey = isNewListingFlow
-        ? 'EditListingWizard.saveNewPricing'
-        : 'EditListingWizard.saveEditPricing';
-      return (
-        <EditListingPricingPanel
-          {...panelProps(PRICING)}
-          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
-          onSubmit={values => {
-            onCompleteEditListingWizardTab(tab, values);
-          }}
-        />
-      );
+      return <EditListingPricingPanel {...panelProps(PRICING)} />;
+    }
+    case DELIVERY: {
+      return <EditListingDeliveryPanel {...panelProps(DELIVERY)} />;
+    }
+    case LOCATION: {
+      return <EditListingLocationPanel {...panelProps(LOCATION)} />;
+    }
+    case AVAILABILITY: {
+      return <EditListingAvailabilityPanel {...panelProps(AVAILABILITY)} />;
     }
     case PHOTOS: {
-      const submitButtonTranslationKey = isNewListingFlow
-        ? 'EditListingWizard.saveNewPhotos'
-        : 'EditListingWizard.saveEditPhotos';
-
       return (
         <EditListingPhotosPanel
           {...panelProps(PHOTOS)}
-          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
           images={images}
           onImageUpload={onImageUpload}
           onRemoveImage={onRemoveImage}
-          onSubmit={values => {
-            onCompleteEditListingWizardTab(tab, values);
-          }}
         />
       );
     }
@@ -271,8 +242,6 @@ EditListingWizardTab.propTypes = {
   onProcessChange: func.isRequired,
   updatedTab: string,
   updateInProgress: bool.isRequired,
-
-  intl: intlShape.isRequired,
 };
 
 export default EditListingWizardTab;
