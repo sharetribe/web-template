@@ -387,7 +387,7 @@ export const ManageListingCardComponent = props => {
           <NamedLink
             className={css.manageLink}
             name="EditListingPage"
-            params={{ id, slug, type: editListingLinkType, tab: 'pricing' }}
+            params={{ id, slug, type: editListingLinkType, tab: 'pricing-and-stock' }}
           >
             {isDraft || isPendingApproval
               ? intl.formatMessage({ id: 'ManageListingCard.setStock' })
