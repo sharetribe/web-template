@@ -54,7 +54,6 @@ exports[`EditListingPageComponent matches snapshot 1`] = `
       }
     }
     newListingPublished={false}
-    onChange={[Function]}
     onCreateListingDraft={[Function]}
     onGetStripeConnectAccountLink={[Function]}
     onImageUpload={[Function]}

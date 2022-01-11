@@ -173,7 +173,7 @@ export const listingExtendedData = [
     schemaType: 'text',
     indexForSearch: false,
     editListingPageConfig: {
-      label: 'Notes',
+      label: 'Private notes',
       placeholder: 'Blaa bla blaa',
     },
   },

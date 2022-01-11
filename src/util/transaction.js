@@ -3,10 +3,15 @@ import { ensureTransaction } from './data';
 import * as productProcess from './transactionProcessProduct';
 import * as bookingProcess from './transactionProcessBooking';
 
+// Supported unit types
 export const ITEM = 'item';
 export const DAY = 'day';
 export const NIGHT = 'night';
 export const HOUR = 'hour';
+
+// Then names of supported processes
+export const PRODUCT_PROCESS_NAME = 'flex-product-default-process';
+export const BOOKING_PROCESS_NAME = 'flex-default-process';
 
 /**
  * A process should export:
@@ -21,7 +26,7 @@ export const HOUR = 'hour';
  */
 const PROCESSES = [
   {
-    name: 'flex-product-default-process',
+    name: PRODUCT_PROCESS_NAME,
     alias: 'release-1',
     process: productProcess,
     unitTypes: [ITEM],
@@ -33,8 +38,8 @@ const PROCESSES = [
     unitTypes: [HOUR],
   },
   {
-    // TODO: ideally, this should be 'flex-daily-default-process'
-    name: 'flex-default-process',
+    // TODO: ideally, this should be 'flex-booking-default-process'
+    name: BOOKING_PROCESS_NAME,
     alias: 'release-1',
     process: bookingProcess,
     unitTypes: [DAY, NIGHT],

@@ -10,6 +10,7 @@ import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl
 import { createResourceLocatorString } from '../../../util/routes';
 import { withViewport } from '../../../util/contextHelpers';
 import { propTypes } from '../../../util/types';
+import { BOOKING_PROCESS_NAME } from '../../../util/transaction';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_NEW,
@@ -27,14 +28,24 @@ import {
 } from '../../../components';
 
 // Import modules from this directory
-import EditListingWizardTab, { DETAILS, DELIVERY, PRICING, PHOTOS } from './EditListingWizardTab';
+import EditListingWizardTab, {
+  DETAILS,
+  PRICING,
+  PRICING_AND_STOCK,
+  DELIVERY,
+  LOCATION,
+  AVAILABILITY,
+  PHOTOS,
+} from './EditListingWizardTab';
 import css from './EditListingWizard.module.css';
 
 // You can reorder these panels.
 // Note 1: You need to change save button translations for new listing flow
 // Note 2: Ensure that draft listing is created after the first panel
 // and listing publishing happens after last panel.
-export const TABS = [DETAILS, PRICING, DELIVERY, PHOTOS];
+const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, DELIVERY, PHOTOS];
+const TABS_BOOKING = [DETAILS, PRICING, LOCATION, PHOTOS];
+const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING];
 
 // Tabs are horizontal in small screens
 const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
@@ -42,19 +53,98 @@ const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = 'success';
 const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
 
-const tabLabel = (intl, tab) => {
-  let key = null;
+/**
+ * Return translations for wizard tab: label and submit button.
+ *
+ * @param {Object} intl
+ * @param {string} tab name of the tab/panel in the wizard
+ * @param {boolean} isNewListingFlow
+ * @param {string} processName
+ */
+const tabLabelAndSubmit = (intl, tab, isNewListingFlow, processName) => {
+  const processNameString = isNewListingFlow ? `${processName}.` : '';
+  const newOrEdit = isNewListingFlow ? 'new' : 'edit';
+
+  let labelKey = null;
+  let submitButtonKey = null;
   if (tab === DETAILS) {
-    key = 'EditListingWizard.tabLabelDetails';
-  } else if (tab === DELIVERY) {
-    key = 'EditListingWizard.tabLabelDelivery';
+    labelKey = 'EditListingWizard.tabLabelDetails';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveDetails`;
   } else if (tab === PRICING) {
-    key = 'EditListingWizard.tabLabelPricing';
+    labelKey = 'EditListingWizard.tabLabelPricing';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePricing`;
+  } else if (tab === PRICING_AND_STOCK) {
+    labelKey = 'EditListingWizard.tabLabelPricingAndStock';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePricingAndStock`;
+  } else if (tab === DELIVERY) {
+    labelKey = 'EditListingWizard.tabLabelDelivery';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveDelivery`;
+  } else if (tab === LOCATION) {
+    labelKey = 'EditListingWizard.tabLabelLocation';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveLocation`;
+  } else if (tab === AVAILABILITY) {
+    labelKey = 'EditListingWizard.tabLabelAvailability';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveAvailability`;
   } else if (tab === PHOTOS) {
-    key = 'EditListingWizard.tabLabelPhotos';
+    labelKey = 'EditListingWizard.tabLabelPhotos';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePhotos`;
   }
 
-  return intl.formatMessage({ id: key });
+  return {
+    label: intl.formatMessage({ id: labelKey }),
+    submitButton: intl.formatMessage({ id: submitButtonKey }),
+  };
+};
+
+/**
+ * Validate extended data fields that are included through marketplace-custom-config.js
+ * This is used to check if listing creation flow can show the "next" tab as active.
+ *
+ * @param {Object} publicData
+ * @param {Object} privateData
+ */
+const hasValidCustomFieldsInExtendedData = (publicData, privateData) => {
+  const isValidField = (fieldConfig, fieldData) => {
+    const {
+      key,
+      includeForProcessAliases,
+      schemaType,
+      schemaOptions = [],
+      editListingPageConfig,
+    } = fieldConfig;
+
+    const getOptionValue = option => `${option}`.toLowerCase().replaceAll(' ', '_');
+    const schemaOptionKeys = schemaOptions.map(o => getOptionValue(o));
+    const hasValidEnumValue = optionData => {
+      return schemaOptionKeys.includes(optionData);
+    };
+    const hasValidMultiEnumValues = savedOptions => {
+      return savedOptions.every(optionData => schemaOptionKeys.includes(optionData));
+    };
+
+    const isRequired =
+      !!editListingPageConfig.requiredMessage &&
+      includeForProcessAliases.includes(publicData?.transactionProcessAlias);
+    if (isRequired) {
+      const savedExtendedData = fieldData[key];
+      return schemaType === 'enum'
+        ? typeof savedExtendedData === 'string' && hasValidEnumValue(savedExtendedData)
+        : schemaType === 'multi-enum'
+        ? Array.isArray(savedExtendedData) && hasValidMultiEnumValues(savedExtendedData)
+        : schemaType === 'text'
+        ? typeof savedExtendedData === 'string'
+        : schemaType === 'long'
+        ? typeof savedExtendedData === 'number' && Number.isInteger(savedExtendedData)
+        : schemaType === 'boolean'
+        ? savedExtendedData === true || savedExtendedData === false
+        : false;
+    }
+    return true;
+  };
+  return config.custom.listingExtendedData.reduce((isValid, fieldConfig) => {
+    const data = fieldConfig.scope === 'private' ? privateData : publicData;
+    return isValid && isValidField(fieldConfig, data);
+  }, true);
 };
 
 /**
@@ -66,18 +156,26 @@ const tabLabel = (intl, tab) => {
  * @return true if tab / step is completed.
  */
 const tabCompleted = (tab, listing) => {
-  const { availabilityPlan, description, price, title, publicData } = listing.attributes;
+  const { description, geolocation, price, title, publicData, privateData } = listing.attributes;
   const images = listing.images;
   const deliveryOptionPicked =
     publicData && (publicData.shippingEnabled || publicData.pickupEnabled);
 
   switch (tab) {
     case DETAILS:
-      return !!(description && title && publicData.size && publicData.brand);
-    case DELIVERY:
-      return !!deliveryOptionPicked;
+      return !!(
+        description &&
+        title &&
+        hasValidCustomFieldsInExtendedData(publicData, privateData)
+      );
     case PRICING:
       return !!price;
+    case PRICING_AND_STOCK:
+      return !!price;
+    case DELIVERY:
+      return !!deliveryOptionPicked;
+    case LOCATION:
+      return !!(geolocation && publicData?.location?.address);
     case PHOTOS:
       return images && images.length > 0;
     default:
@@ -91,14 +189,15 @@ const tabCompleted = (tab, listing) => {
  *
  * @param isNew flag if a new listing is being created or an old one being edited
  * @param listing data to be checked
+ * @param tabs array of tabs used for this listing. These depend on transaction process.
  *
  * @return object containing activity / editability of different tabs of this wizard
  */
-const tabsActive = (isNew, listing) => {
-  return TABS.reduce((acc, tab) => {
-    const previousTabIndex = TABS.findIndex(t => t === tab) - 1;
+const tabsActive = (isNew, listing, tabs) => {
+  return tabs.reduce((acc, tab) => {
+    const previousTabIndex = tabs.findIndex(t => t === tab) - 1;
     const isActive =
-      previousTabIndex >= 0 ? !isNew || tabCompleted(TABS[previousTabIndex], listing) : true;
+      previousTabIndex >= 0 ? !isNew || tabCompleted(tabs[previousTabIndex], listing) : true;
     return { ...acc, [tab]: isActive };
   }, {});
 };
@@ -166,6 +265,7 @@ class EditListingWizard extends Component {
     this.state = {
       draftId: null,
       showPayoutDetails: false,
+      transactionProcessAlias: null,
     };
     this.handleCreateFlowTabScrolling = this.handleCreateFlowTabScrolling.bind(this);
     this.handlePublishListing = this.handlePublishListing.bind(this);
@@ -246,12 +346,20 @@ class EditListingWizard extends Component {
     const rootClasses = rootClassName || css.root;
     const classes = classNames(rootClasses, className);
     const currentListing = ensureListing(listing);
-    const tabsStatus = tabsActive(isNewListingFlow, currentListing);
+    const savedProcessAlias = currentListing.attributes?.publicData?.transactionProcessAlias;
+    const transactionProcessAlias = savedProcessAlias || this.state.transactionProcessAlias;
+    const processName = transactionProcessAlias
+      ? transactionProcessAlias.split('/')[0]
+      : BOOKING_PROCESS_NAME;
+
+    const tabs = processName === BOOKING_PROCESS_NAME ? TABS_BOOKING : TABS_PRODUCT;
+    const tabsStatus = tabsActive(isNewListingFlow, currentListing, tabs);
 
     // If selectedTab is not active, redirect to the beginning of wizard
     if (!tabsStatus[selectedTab]) {
-      const currentTabIndex = TABS.indexOf(selectedTab);
-      const nearestActiveTab = TABS.slice(0, currentTabIndex)
+      const currentTabIndex = tabs.indexOf(selectedTab);
+      const nearestActiveTab = tabs
+        .slice(0, currentTabIndex)
         .reverse()
         .find(t => tabsStatus[t]);
 
@@ -334,25 +442,29 @@ class EditListingWizard extends Component {
           navRootClassName={css.nav}
           tabRootClassName={css.tab}
         >
-          {TABS.map(tab => {
+          {tabs.map(tab => {
+            const tabTranslations = tabLabelAndSubmit(intl, tab, isNewListingFlow, processName);
             return (
               <EditListingWizardTab
                 {...rest}
                 key={tab}
                 tabId={`${id}_${tab}`}
-                tabLabel={tabLabel(intl, tab)}
+                tabLabel={tabTranslations.label}
+                tabSubmitButtonText={tabTranslations.submitButton}
                 tabLinkProps={tabLink(tab)}
                 selected={selectedTab === tab}
                 disabled={isNewListingFlow && !tabsStatus[tab]}
                 tab={tab}
-                intl={intl}
                 params={params}
                 listing={listing}
-                marketplaceTabs={TABS}
+                marketplaceTabs={tabs}
                 errors={errors}
                 handleCreateFlowTabScrolling={this.handleCreateFlowTabScrolling}
                 handlePublishListing={this.handlePublishListing}
                 fetchInProgress={fetchInProgress}
+                onProcessChange={transactionProcessAlias =>
+                  this.setState({ transactionProcessAlias })
+                }
               />
             );
           })}
@@ -451,7 +563,7 @@ EditListingWizard.propTypes = {
     id: string.isRequired,
     slug: string.isRequired,
     type: oneOf(LISTING_PAGE_PARAM_TYPES).isRequired,
-    tab: oneOf(TABS).isRequired,
+    tab: oneOf(TABS_ALL).isRequired,
   }).isRequired,
   stripeAccount: object,
   stripeAccountFetched: bool,
@@ -462,7 +574,7 @@ EditListingWizard.propTypes = {
       publicData: object,
       description: string,
       geolocation: object,
-      pricing: object,
+      price: object,
       title: string,
     }),
     images: array,
