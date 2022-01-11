@@ -97,6 +97,57 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, processName) => {
 };
 
 /**
+ * Validate extended data fields that are included through marketplace-custom-config.js
+ * This is used to check if listing creation flow can show the "next" tab as active.
+ *
+ * @param {Object} publicData
+ * @param {Object} privateData
+ */
+const hasValidCustomFieldsInExtendedData = (publicData, privateData) => {
+  const isValidField = (fieldConfig, fieldData) => {
+    const {
+      key,
+      includeForProcessAliases,
+      schemaType,
+      schemaOptions = [],
+      editListingPageConfig,
+    } = fieldConfig;
+
+    const getOptionValue = option => `${option}`.toLowerCase().replaceAll(' ', '_');
+    const schemaOptionKeys = schemaOptions.map(o => getOptionValue(o));
+    const hasValidEnumValue = optionData => {
+      return schemaOptionKeys.includes(optionData);
+    };
+    const hasValidMultiEnumValues = savedOptions => {
+      return savedOptions.every(optionData => schemaOptionKeys.includes(optionData));
+    };
+
+    const isRequired =
+      !!editListingPageConfig.requiredMessage &&
+      includeForProcessAliases.includes(publicData?.transactionProcessAlias);
+    if (isRequired) {
+      const savedExtendedData = fieldData[key];
+      return schemaType === 'enum'
+        ? typeof savedExtendedData === 'string' && hasValidEnumValue(savedExtendedData)
+        : schemaType === 'multi-enum'
+        ? Array.isArray(savedExtendedData) && hasValidMultiEnumValues(savedExtendedData)
+        : schemaType === 'text'
+        ? typeof savedExtendedData === 'string'
+        : schemaType === 'long'
+        ? typeof savedExtendedData === 'number' && Number.isInteger(savedExtendedData)
+        : schemaType === 'boolean'
+        ? savedExtendedData === true || savedExtendedData === false
+        : false;
+    }
+    return true;
+  };
+  return config.custom.listingExtendedData.reduce((isValid, fieldConfig) => {
+    const data = fieldConfig.scope === 'private' ? privateData : publicData;
+    return isValid && isValidField(fieldConfig, data);
+  }, true);
+};
+
+/**
  * Check if a wizard tab is completed.
  *
  * @param tab wizard's tab
@@ -105,14 +156,18 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, processName) => {
  * @return true if tab / step is completed.
  */
 const tabCompleted = (tab, listing) => {
-  const { description, geolocation, price, title, publicData } = listing.attributes;
+  const { description, geolocation, price, title, publicData, privateData } = listing.attributes;
   const images = listing.images;
   const deliveryOptionPicked =
     publicData && (publicData.shippingEnabled || publicData.pickupEnabled);
 
   switch (tab) {
     case DETAILS:
-      return !!(description && title && publicData.size && publicData.brand);
+      return !!(
+        description &&
+        title &&
+        hasValidCustomFieldsInExtendedData(publicData, privateData)
+      );
     case PRICING:
       return !!price;
     case PRICING_AND_STOCK:
@@ -120,7 +175,7 @@ const tabCompleted = (tab, listing) => {
     case DELIVERY:
       return !!deliveryOptionPicked;
     case LOCATION:
-      return !!(geolocation && publicData && publicData.location && publicData.location.address);
+      return !!(geolocation && publicData?.location?.address);
     case PHOTOS:
       return images && images.length > 0;
     default:
