@@ -13,12 +13,12 @@ import { types as sdkTypes } from '../../../../util/sdkLoader';
 import { ListingLink } from '../../../../components';
 
 // Import modules from this directory
-import EditListingPricingForm from './EditListingPricingForm';
-import css from './EditListingPricingPanel.module.css';
+import EditListingPricingAndStockForm from './EditListingPricingAndStockForm';
+import css from './EditListingPricingAndStockPanel.module.css';
 
 const { Money } = sdkTypes;
 
-const EditListingPricingPanel = props => {
+const EditListingPricingAndStockPanel = props => {
   const {
     className,
     rootClassName,
@@ -35,28 +35,48 @@ const EditListingPricingPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
 
+  // The listing resource has a relationship: `currentStock`,
+  // which you should include when making API calls.
+  const currentStockRaw = currentListing.currentStock?.attributes?.quantity;
+  const currentStock = typeof currentStockRaw != null ? currentStockRaw : 1;
   const { price } = currentListing.attributes;
 
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
   const panelTitle = isPublished ? (
     <FormattedMessage
-      id="EditListingPricingPanel.title"
+      id="EditListingPricingAndStockPanel.title"
       values={{ listingTitle: <ListingLink listing={listing} /> }}
     />
   ) : (
-    <FormattedMessage id="EditListingPricingPanel.createListingTitle" />
+    <FormattedMessage id="EditListingPricingAndStockPanel.createListingTitle" />
   );
 
   const priceCurrencyValid = price instanceof Money ? price.currency === config.currency : true;
   const form = priceCurrencyValid ? (
-    <EditListingPricingForm
+    <EditListingPricingAndStockForm
       className={css.form}
-      initialValues={{ price }}
+      initialValues={{ price, stock: currentStock }}
       onSubmit={values => {
-        const { price } = values;
+        const { price, stock } = values;
+
+        // Update stock only if the value has changed.
+        // NOTE: this is going to be used on a separate call to API
+        // in EditListingPage.duck.js: sdk.stock.compareAndSet();
+        const hasStockQuantityChanged = stock && currentStockRaw !== stock;
+        // currentStockRaw is null or undefined, return null - otherwise use the value
+        const oldTotal = currentStockRaw != null ? currentStockRaw : null;
+        const stockUpdateMaybe = hasStockQuantityChanged
+          ? {
+              stockUpdate: {
+                oldTotal,
+                newTotal: stock,
+              },
+            }
+          : {};
 
         const updateValues = {
           price,
+          ...stockUpdateMaybe,
         };
         onSubmit(updateValues);
       }}
@@ -69,7 +89,7 @@ const EditListingPricingPanel = props => {
     />
   ) : (
     <div className={css.priceCurrencyInvalid}>
-      <FormattedMessage id="EditListingPricingPanel.listingPriceCurrencyInvalid" />
+      <FormattedMessage id="EditListingPricingAndStockPanel.listingPriceCurrencyInvalid" />
     </div>
   );
 
@@ -83,13 +103,13 @@ const EditListingPricingPanel = props => {
 
 const { func, object, string, bool } = PropTypes;
 
-EditListingPricingPanel.defaultProps = {
+EditListingPricingAndStockPanel.defaultProps = {
   className: null,
   rootClassName: null,
   listing: null,
 };
 
-EditListingPricingPanel.propTypes = {
+EditListingPricingAndStockPanel.propTypes = {
   className: string,
   rootClassName: string,
 
@@ -105,4 +125,4 @@ EditListingPricingPanel.propTypes = {
   errors: object.isRequired,
 };
 
-export default EditListingPricingPanel;
+export default EditListingPricingAndStockPanel;

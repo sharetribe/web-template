@@ -23,7 +23,6 @@ const EditListingAvailabilityPanel = props => {
     disabled,
     ready,
     onSubmit,
-    onChange,
     submitButtonText,
     panelUpdated,
     updateInProgress,
@@ -72,7 +71,6 @@ const EditListingAvailabilityPanel = props => {
           // which is visible on this panel.
           onSubmit({ availabilityPlan });
         }}
-        onChange={onChange}
         saveActionMsg={submitButtonText}
         disabled={disabled}
         ready={ready}
@@ -106,7 +104,6 @@ EditListingAvailabilityPanel.propTypes = {
   disabled: bool.isRequired,
   ready: bool.isRequired,
   onSubmit: func.isRequired,
-  onChange: func.isRequired,
   submitButtonText: string.isRequired,
   panelUpdated: bool.isRequired,
   updateInProgress: bool.isRequired,

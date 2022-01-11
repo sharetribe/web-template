@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import config from '../../../../config';
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
+import { isOldTotalMismatchStockError } from '../../../../util/errors';
 import * as validators from '../../../../util/validators';
 import { formatMoney } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
@@ -16,11 +17,11 @@ import { types as sdkTypes } from '../../../../util/sdkLoader';
 import { Button, Form, FieldCurrencyInput, FieldTextInput } from '../../../../components';
 
 // Import modules from this directory
-import css from './EditListingPricingForm.module.css';
+import css from './EditListingPricingAndStockForm.module.css';
 
 const { Money } = sdkTypes;
 
-export const EditListingPricingFormComponent = props => (
+export const EditListingPricingAndStockFormComponent = props => (
   <FinalForm
     {...props}
     render={formRenderProps => {
@@ -41,14 +42,14 @@ export const EditListingPricingFormComponent = props => (
 
       const priceRequired = validators.required(
         intl.formatMessage({
-          id: 'EditListingPricingForm.priceRequired',
+          id: 'EditListingPricingAndStockForm.priceRequired',
         })
       );
       const minPrice = new Money(config.listingMinimumPriceSubUnits, config.currency);
       const minPriceRequired = validators.moneySubUnitAmountAtLeast(
         intl.formatMessage(
           {
-            id: 'EditListingPricingForm.priceTooLow',
+            id: 'EditListingPricingAndStockForm.priceTooLow',
           },
           {
             minPrice: formatMoney(intl, minPrice),
@@ -60,22 +61,31 @@ export const EditListingPricingFormComponent = props => (
         ? validators.composeValidators(priceRequired, minPriceRequired)
         : priceRequired;
 
+      const stockValidator = validators.numberAtLeast(
+        intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockIsRequired' }),
+        0
+      );
+
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
-      const { updateListingError, showListingsError } = fetchErrors || {};
+      const { updateListingError, showListingsError, setStockError } = fetchErrors || {};
+
+      const stockErrorMessage = isOldTotalMismatchStockError(setStockError)
+        ? intl.formatMessage({ id: 'EditListingPricingAndStockForm.oldStockTotalWasOutOfSync' })
+        : intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockUpdateFailed' });
 
       return (
         <Form onSubmit={handleSubmit} className={classes}>
           {updateListingError ? (
             <p className={css.error}>
-              <FormattedMessage id="EditListingPricingForm.updateFailed" />
+              <FormattedMessage id="EditListingPricingAndStockForm.updateFailed" />
             </p>
           ) : null}
           {showListingsError ? (
             <p className={css.error}>
-              <FormattedMessage id="EditListingPricingForm.showListingFailed" />
+              <FormattedMessage id="EditListingPricingAndStockForm.showListingFailed" />
             </p>
           ) : null}
           <FieldCurrencyInput
@@ -83,11 +93,27 @@ export const EditListingPricingFormComponent = props => (
             name="price"
             className={css.input}
             autoFocus={autoFocus}
-            label={intl.formatMessage({ id: 'EditListingPricingForm.pricePerProduct' })}
-            placeholder={intl.formatMessage({ id: 'EditListingPricingForm.priceInputPlaceholder' })}
+            label={intl.formatMessage({ id: 'EditListingPricingAndStockForm.pricePerProduct' })}
+            placeholder={intl.formatMessage({
+              id: 'EditListingPricingAndStockForm.priceInputPlaceholder',
+            })}
             currencyConfig={config.currencyConfig}
             validate={priceValidators}
           />
+
+          <FieldTextInput
+            className={css.input}
+            id="stock"
+            name="stock"
+            label={intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockLabel' })}
+            placeholder={intl.formatMessage({
+              id: 'EditListingPricingAndStockForm.stockPlaceholder',
+            })}
+            type="number"
+            min={0}
+            validate={stockValidator}
+          />
+          {setStockError ? <p className={css.error}>{stockErrorMessage}</p> : null}
 
           <Button
             className={css.submitButton}
@@ -104,9 +130,9 @@ export const EditListingPricingFormComponent = props => (
   />
 );
 
-EditListingPricingFormComponent.defaultProps = { fetchErrors: null };
+EditListingPricingAndStockFormComponent.defaultProps = { fetchErrors: null };
 
-EditListingPricingFormComponent.propTypes = {
+EditListingPricingAndStockFormComponent.propTypes = {
   intl: intlShape.isRequired,
   onSubmit: func.isRequired,
   saveActionMsg: string.isRequired,
@@ -120,4 +146,4 @@ EditListingPricingFormComponent.propTypes = {
   }),
 };
 
-export default compose(injectIntl)(EditListingPricingFormComponent);
+export default compose(injectIntl)(EditListingPricingAndStockFormComponent);
