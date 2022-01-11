@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [add] EditListingWizard: panels get picked based on selected transaction process. In addition,
+  submit button translations and pricing panel are refactored.
+  [#23](https://github.com/sharetribe/ftw-x/pull/23)
 - [add] EditListingDetailsPanel: add more custom extended data fields and initialize form
   accordingly. Transaction process alias can be set once (i.e. before listing draft is created).
   [#24](https://github.com/sharetribe/ftw-x/pull/24)
