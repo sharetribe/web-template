@@ -20,6 +20,7 @@ import 'raf/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { loadableReady } from '@loadable/component';
+import axios from 'axios';
 import { createInstance, types as sdkTypes } from './util/sdkLoader';
 import { ClientApp, renderApp } from './app';
 import configureStore from './store';
@@ -98,6 +99,12 @@ if (typeof window !== 'undefined') {
     typeHandlers: apiUtils.typeHandlers,
     ...baseUrl,
   });
+  console.log('click me in browser\'s console ->');
+  window.axios = axios;
+  axios
+    .get('https://assets-sharetribecom.sharetribe.com/tmp/ftw-config-poc/sHXCvdLA/translations/en.json')
+    .then(resp => console.log(resp))
+    .catch(e => console.log(e));
   const analyticsHandlers = setupAnalyticsHandlers();
   const store = configureStore(initialState, sdk, analyticsHandlers);
 
