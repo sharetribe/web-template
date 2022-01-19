@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { array, arrayOf, func, node, number, object, string } from 'prop-types';
+import { array, arrayOf, func, node, number, object, oneOf, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { injectIntl, intlShape } from '../../../util/reactIntl';
@@ -184,6 +184,7 @@ SelectMultipleFilter.defaultProps = {
   className: null,
   initialValues: null,
   contentPlacementOffset: 0,
+  searchMode: null,
 };
 
 SelectMultipleFilter.propTypes = {
@@ -195,6 +196,8 @@ SelectMultipleFilter.propTypes = {
   label: node.isRequired,
   onSubmit: func.isRequired,
   options: array.isRequired,
+  searchMode: oneOf(['has_all', 'has_any']),
+  schemaType: oneOf(['enum', 'multi-enum']).isRequired,
   initialValues: object,
   contentPlacementOffset: number,
 
