@@ -30,9 +30,12 @@ export const processes = ['flex-product-default-process', 'flex-default-process'
  *                                  Read more about filtering listings with public data keys from API Reference:
  *                                  https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
  * - searchPageConfig:              Search-specific configuration.
+ *   - filterType:                    Sometimes a single schemaType can be rendered with different filter components.
+ *                                    For 'enum' schema, filterType can be 'SelectSingleFilter' or 'SelectMultipleFilter'
  *   - label:                         Label for the filter, if the field can be used as query filter
  *   - searchMode (optional):         Search mode for indexed data with multi-enum schema.
- *                                    Possible values: has_all' or 'has_any'.
+ *                                    Possible values: 'has_all' or 'has_any'.
+ *   - group:                         SearchPageWithMap has grouped filters. Possible values: 'primary' or 'secondary'.
  * - listingPageConfig:             Configuration for rendering listing.
  *   - label:                         Label for the saved data.
  * - editListingPageConfig:         Configuration for adding and modifying extended data fields.
@@ -49,7 +52,9 @@ export const listingExtendedData = [
     schemaOptions: ['Men', 'Women', 'Kids'],
     indexForSearch: true,
     searchPageConfig: {
+      filterType: 'SelectSingleFilter',
       label: 'Category',
+      group: 'primary',
     },
     listingPageConfig: {
       label: 'Category',
@@ -70,6 +75,7 @@ export const listingExtendedData = [
     indexForSearch: true,
     searchPageConfig: {
       label: 'Size (US)',
+      group: 'secondary',
     },
     listingPageConfig: {
       label: 'Size (US)',
@@ -100,6 +106,7 @@ export const listingExtendedData = [
     indexForSearch: true,
     searchPageConfig: {
       label: 'Brand',
+      group: 'secondary',
     },
     listingPageConfig: {
       label: 'Brand',
@@ -118,13 +125,14 @@ export const listingExtendedData = [
     schemaOptions: ['Smoky', 'Electric', 'Wood', 'Other'],
     indexForSearch: true,
     searchPageConfig: {
-      label: 'Category',
+      label: 'Sauna type',
+      group: 'secondary',
     },
     listingPageConfig: {
-      label: 'Category',
+      label: 'Sauna type',
     },
     editListingPageConfig: {
-      label: 'Select category',
+      label: 'Select Sauna type',
       placeholder: 'Choose…',
       requiredMessage: 'You need to select what type of sauna you have.',
     },
@@ -137,8 +145,9 @@ export const listingExtendedData = [
     schemaOptions: ['Towels', 'Bathroom', 'Swimming pool', 'Barbeque'],
     indexForSearch: true,
     searchPageConfig: {
-      label: 'Amenities',
+      label: 'Sauna amenities',
       searchMode: 'has_all',
+      group: 'secondary',
     },
     listingPageConfig: {
       label: 'Amenities',
@@ -153,10 +162,7 @@ export const listingExtendedData = [
     scope: 'public',
     includeForProcessAliases: ['flex-product-default-process/release-1'],
     schemaType: 'text',
-    indexForSearch: true,
-    searchPageConfig: {
-      label: 'Blaa',
-    },
+    indexForSearch: true, // TODO not needed probably
     listingPageConfig: {
       label: 'Blaa',
     },
@@ -182,9 +188,10 @@ export const listingExtendedData = [
     scope: 'public',
     includeForProcessAliases: ['flex-product-default-process/release-1'],
     schemaType: 'long',
-    indexForSearch: true,
+    indexForSearch: true, // TODO There's no filter component available for long
     searchPageConfig: {
       label: 'Gears',
+      group: 'secondary',
     },
     listingPageConfig: {
       label: 'Gears',
@@ -200,9 +207,10 @@ export const listingExtendedData = [
     scope: 'public',
     includeForProcessAliases: ['flex-product-default-process/release-1'],
     schemaType: 'boolean',
-    indexForSearch: true,
+    indexForSearch: true, // TODO There's no filter component available for boolean
     searchPageConfig: {
       label: 'Has lights',
+      group: 'secondary',
     },
     listingPageConfig: {
       label: 'Has lights',
@@ -212,6 +220,28 @@ export const listingExtendedData = [
       placeholder: 'Choose yes/no',
       //requiredMessage: 'You need to tell if the bike has lights.',
     },
+  },
+];
+
+/**
+ * Configuration for default filters.
+ * These are custom configs for each filter.
+ * Common properties: key, schemaType, and label.
+ */
+export const defaultFilters = [
+  {
+    key: 'price',
+    schemaType: 'price',
+    label: 'Price',
+    // Note: unlike most prices this is not handled in subunits
+    min: 0,
+    max: 1000,
+    step: 5,
+  },
+  {
+    key: 'keywords',
+    schemaType: 'text',
+    label: 'Keyword',
   },
 ];
 
@@ -418,7 +448,7 @@ export const sortConfig = {
 
   // Keyword filter is sorting the results by relevance.
   // If keyword filter is active, one might want to disable other sorting options
-  // by adding 'keyword' to this list.
+  // by adding 'keywords' to this list.
   conflictingFilters: [],
 
   options: [
