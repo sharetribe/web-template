@@ -3,15 +3,14 @@ import { array, bool, func, oneOf, object, shape, string } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
-import debounce from 'lodash/debounce';
 import omit from 'lodash/omit';
 import classNames from 'classnames';
 
 import config from '../../config';
 import { injectIntl, intlShape, FormattedMessage } from '../../util/reactIntl';
 import routeConfiguration from '../../routing/routeConfiguration';
-import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
-import { isAnyFilterActive, isMainSearchTypeKeywords, isOriginInUse } from '../../util/search';
+import { createResourceLocatorString } from '../../util/routes';
+import { isAnyFilterActive, isMainSearchTypeKeywords, getQueryParamNames } from '../../util/search';
 import { parse, stringify } from '../../util/urlHelpers';
 import { propTypes } from '../../util/types';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
@@ -37,14 +36,13 @@ import SearchResultsPanel from './SearchResultsPanel/SearchResultsPanel';
 import css from './SearchPage.module.css';
 
 const MODAL_BREAKPOINT = 768; // Search is in modal on mobile layout
-const SEARCH_WITH_MAP_DEBOUNCE = 300; // Little bit of debounce before search is initiated.
 
 // SortBy component has its content in dropdown-popup.
 // With this offset we move the dropdown a few pixels on desktop layout.
 const FILTER_DROPDOWN_OFFSET = -14;
 
 const validUrlQueryParamsFromProps = props => {
-  const { location, filterConfig } = props;
+  const { location, listingExtendedDataConfig, defaultFiltersConfig } = props;
   // eslint-disable-next-line no-unused-vars
   const { mapSearch, page, ...searchInURL } = parse(location.search, {
     latlng: ['origin'],
@@ -52,17 +50,27 @@ const validUrlQueryParamsFromProps = props => {
   });
   // urlQueryParams doesn't contain page specific url params
   // like mapSearch, page or origin (origin depends on config.sortSearchByDistance)
-  return validURLParamsForExtendedData(searchInURL, filterConfig);
+  return validURLParamsForExtendedData(
+    searchInURL,
+    listingExtendedDataConfig,
+    defaultFiltersConfig
+  );
 };
 
-const cleanSearchFromConflictingParams = (searchParams, sortConfig, filterConfig) => {
+const cleanSearchFromConflictingParams = (
+  searchParams,
+  listingExtendedDataConfig,
+  defaultFiltersConfig,
+  sortConfig
+) => {
   // Single out filters that should disable SortBy when an active
   // keyword search sorts the listings according to relevance.
   // In those cases, sort parameter should be removed.
   const sortingFiltersActive = isAnyFilterActive(
     sortConfig.conflictingFilters,
     searchParams,
-    filterConfig
+    listingExtendedDataConfig,
+    defaultFiltersConfig
   );
   return sortingFiltersActive
     ? { ...searchParams, [sortConfig.queryParamName]: null }
@@ -81,60 +89,16 @@ export class SearchPageComponent extends Component {
 
     this.searchMapListingsInProgress = false;
 
-    this.onMapMoveEnd = debounce(this.onMapMoveEnd.bind(this), SEARCH_WITH_MAP_DEBOUNCE);
     this.onOpenMobileModal = this.onOpenMobileModal.bind(this);
     this.onCloseMobileModal = this.onCloseMobileModal.bind(this);
 
     // Filter functions
-    this.applyFilters = this.applyFilters.bind(this);
-    this.cancelFilters = this.cancelFilters.bind(this);
     this.resetAll = this.resetAll.bind(this);
     this.initialValues = this.initialValues.bind(this);
     this.getHandleChangedValueFn = this.getHandleChangedValueFn.bind(this);
 
     // SortBy
     this.handleSortBy = this.handleSortBy.bind(this);
-  }
-
-  // Callback to determine if new search is needed
-  // when map is moved by user or viewport has changed
-  onMapMoveEnd(viewportBoundsChanged, data) {
-    const { viewportBounds, viewportCenter } = data;
-
-    const routes = routeConfiguration();
-    const searchPagePath = pathByRouteName('SearchPage', routes);
-    const currentPath =
-      typeof window !== 'undefined' && window.location && window.location.pathname;
-
-    // When using the ReusableMapContainer onMapMoveEnd can fire from other pages than SearchPage too
-    const isSearchPage = currentPath === searchPagePath;
-
-    // If mapSearch url param is given
-    // or original location search is rendered once,
-    // we start to react to "mapmoveend" events by generating new searches
-    // (i.e. 'moveend' event in Mapbox and 'bounds_changed' in Google Maps)
-    if (viewportBoundsChanged && isSearchPage) {
-      const { history, location, filterConfig } = this.props;
-
-      // parse query parameters, including a custom attribute named category
-      const { address, bounds, mapSearch, ...rest } = parse(location.search, {
-        latlng: ['origin'],
-        latlngBounds: ['bounds'],
-      });
-
-      //const viewportMapCenter = SearchMap.getMapCenter(map);
-      const originMaybe = isOriginInUse(config) ? { origin: viewportCenter } : {};
-
-      const searchParams = {
-        address,
-        ...originMaybe,
-        bounds: viewportBounds,
-        mapSearch: true,
-        ...validFilterParams(rest, filterConfig),
-      };
-
-      history.push(createResourceLocatorString('SearchPage', routes, {}, searchParams));
-    }
   }
 
   // Invoked when a modal is opened from a child component,
@@ -149,26 +113,14 @@ export class SearchPageComponent extends Component {
     this.setState({ isMobileModalOpen: false });
   }
 
-  // Apply the filters by redirecting to SearchPage with new filters.
-  applyFilters() {
-    const { history, sortConfig, filterConfig } = this.props;
-    const urlQueryParams = validUrlQueryParamsFromProps(this.props);
-    const searchParams = { ...urlQueryParams, ...this.state.currentQueryParams };
-    const search = cleanSearchFromConflictingParams(searchParams, sortConfig, filterConfig);
-
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, search));
-  }
-
-  // Close the filters by clicking cancel, revert to the initial params
-  cancelFilters() {
-    this.setState({ currentQueryParams: {} });
-  }
-
   // Reset all filter query parameters
   resetAll(e) {
-    const { history, filterConfig } = this.props;
+    const { history, listingExtendedDataConfig, defaultFiltersConfig } = this.props;
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
-    const filterQueryParamNames = filterConfig.map(f => f.queryParamNames);
+    const filterQueryParamNames = getQueryParamNames(
+      listingExtendedDataConfig,
+      defaultFiltersConfig
+    );
 
     // Reset state
     this.setState({ currentQueryParams: {} });
@@ -203,7 +155,7 @@ export class SearchPageComponent extends Component {
   }
 
   getHandleChangedValueFn(useHistoryPush) {
-    const { history, sortConfig, filterConfig } = this.props;
+    const { history, sortConfig, listingExtendedDataConfig, defaultFiltersConfig } = this.props;
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
     return updatedURLParams => {
@@ -230,7 +182,12 @@ export class SearchPageComponent extends Component {
       const callback = () => {
         if (useHistoryPush) {
           const searchParams = this.state.currentQueryParams;
-          const search = cleanSearchFromConflictingParams(searchParams, sortConfig, filterConfig);
+          const search = cleanSearchFromConflictingParams(
+            searchParams,
+            listingExtendedDataConfig,
+            defaultFiltersConfig,
+            sortConfig
+          );
           history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, search));
         }
       };
@@ -264,7 +221,9 @@ export class SearchPageComponent extends Component {
     const {
       intl,
       listings,
-      filterConfig,
+      activeProcesses,
+      listingExtendedDataConfig,
+      defaultFiltersConfig,
       sortConfig,
       location,
       onManageDisableScrolling,
@@ -282,24 +241,66 @@ export class SearchPageComponent extends Component {
 
     // urlQueryParams doesn't contain page specific url params
     // like mapSearch, page or origin (origin depends on config.sortSearchByDistance)
-    const urlQueryParams = pickSearchParamsOnly(searchInURL, filterConfig, sortConfig);
+    const urlQueryParams = pickSearchParamsOnly(
+      searchInURL,
+      listingExtendedDataConfig,
+      defaultFiltersConfig,
+      sortConfig
+    );
 
     // Page transition might initially use values from previous search
     const urlQueryString = stringify(urlQueryParams);
     const paramsQueryString = stringify(
-      pickSearchParamsOnly(searchParams, filterConfig, sortConfig)
+      pickSearchParamsOnly(
+        searchParams,
+        listingExtendedDataConfig,
+        defaultFiltersConfig,
+        sortConfig
+      )
     );
     const searchParamsAreInSync = urlQueryString === paramsQueryString;
 
-    const validQueryParams = validURLParamsForExtendedData(searchInURL, filterConfig);
+    const validQueryParams = validURLParamsForExtendedData(
+      searchInURL,
+      listingExtendedDataConfig,
+      defaultFiltersConfig
+    );
 
     const isKeywordSearch = isMainSearchTypeKeywords(config);
-    const availableFilters = isKeywordSearch
-      ? filterConfig.filter(f => f.type !== 'KeywordFilter')
-      : filterConfig;
+    const defaultFilters = isKeywordSearch
+      ? defaultFiltersConfig.filter(f => f.key !== 'keywords')
+      : defaultFiltersConfig;
+    const groupConfigs = configs =>
+      configs.reduce(
+        (grouped, config) => {
+          const [primary, secondary] = grouped;
+          const { includeForProcessAliases, indexForSearch, searchPageConfig } = config;
+          const isIndexed = indexForSearch === true;
+          const isActiveProcess = includeForProcessAliases.every(p =>
+            activeProcesses.includes(p.split('/')[0])
+          );
+          const isPrimary = searchPageConfig?.group === 'primary';
+          return isActiveProcess && isIndexed && isPrimary
+            ? [[...primary, config], secondary]
+            : isActiveProcess && isIndexed
+            ? [primary, [...secondary, config]]
+            : grouped;
+        },
+        [[], []]
+      );
+    const [customPrimaryFilters, customSecondaryFilters] = groupConfigs(listingExtendedDataConfig);
+    const availableFilters = [
+      ...customPrimaryFilters,
+      ...defaultFilters,
+      ...customSecondaryFilters,
+    ];
 
     // Selected aka active filters
-    const selectedFilters = validFilterParams(validQueryParams, filterConfig);
+    const selectedFilters = validFilterParams(
+      validQueryParams,
+      listingExtendedDataConfig,
+      defaultFiltersConfig
+    );
     const keysOfSelectedFilters = Object.keys(selectedFilters);
     const selectedFiltersCountForMobile = isKeywordSearch
       ? keysOfSelectedFilters.filter(f => f !== 'keywords').length
@@ -313,7 +314,8 @@ export class SearchPageComponent extends Component {
       const conflictingFilterActive = isAnyFilterActive(
         sortConfig.conflictingFilters,
         validQueryParams,
-        filterConfig
+        listingExtendedDataConfig,
+        defaultFiltersConfig
       );
 
       const mobileClassesMaybe =
@@ -388,10 +390,10 @@ export class SearchPageComponent extends Component {
               {availableFilters.map(config => {
                 return (
                   <FilterComponent
-                    key={`SearchFiltersMobile.${config.id}`}
+                    key={`SearchFiltersMobile.${config.key}`}
                     idPrefix="SearchFiltersMobile"
                     className={css.filter}
-                    filterConfig={config}
+                    config={config}
                     urlQueryParams={urlQueryParams}
                     initialValues={this.initialValues}
                     getHandleChangedValueFn={this.getHandleChangedValueFn}
@@ -430,9 +432,9 @@ export class SearchPageComponent extends Component {
                 {availableFilters.map(config => {
                   return (
                     <FilterComponent
-                      key={`SearchFiltersMobile.${config.id}`}
+                      key={`SearchFiltersMobile.${config.key}`}
                       idPrefix="SearchFiltersMobile"
-                      filterConfig={config}
+                      config={config}
                       urlQueryParams={validQueryParams}
                       initialValues={this.initialValues}
                       getHandleChangedValueFn={this.getHandleChangedValueFn}
@@ -484,7 +486,9 @@ SearchPageComponent.defaultProps = {
   searchListingsError: null,
   searchParams: {},
   tab: 'listings',
-  filterConfig: config.custom.filters,
+  activeProcesses: config.custom.processes,
+  listingExtendedDataConfig: config.custom.listingExtendedData,
+  defaultFiltersConfig: config.custom.defaultFilters,
   sortConfig: config.custom.sortConfig,
 };
 
@@ -498,7 +502,9 @@ SearchPageComponent.propTypes = {
   searchListingsError: propTypes.error,
   searchParams: object,
   tab: oneOf(['filters', 'listings', 'map']).isRequired,
-  filterConfig: propTypes.filterConfig,
+  activeProcesses: array,
+  listingExtendedDataConfig: array, //propTypes.listingExtendedDataConfig,
+  defaultFiltersConfig: array, // TODO
   sortConfig: propTypes.sortConfig,
 
   // from withRouter

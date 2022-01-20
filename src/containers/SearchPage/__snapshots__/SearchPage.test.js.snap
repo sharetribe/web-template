@@ -33,34 +33,23 @@ exports[`SearchPageWithList matches snapshot 1`] = `
       >
         <FilterComponent
           className="filter"
-          filterConfig={
+          config={
             Object {
-              "config": Object {
-                "options": Array [
-                  Object {
-                    "key": "men",
-                    "label": "Men",
-                  },
-                  Object {
-                    "key": "women",
-                    "label": "Women",
-                  },
-                  Object {
-                    "key": "kids",
-                    "label": "Kids",
-                  },
-                ],
-                "schemaType": "enum",
-              },
-              "group": "primary",
-              "id": "category",
-              "label": "Category",
-              "queryParamNames": Array [
-                "pub_category",
+              "includeForProcessAliases": Array [
+                "flex-product-default-process/release-1",
               ],
-              "type": "SelectSingleFilter",
-              "wizardPlaceholder": "Choose…",
-              "wizardRequired": "You need to select a category.",
+              "indexForSearch": true,
+              "key": "category",
+              "schemaOptions": Array [
+                "Cat 1",
+                "Cat 2",
+              ],
+              "schemaType": "enum",
+              "scope": "public",
+              "searchPageConfig": Object {
+                "group": "primary",
+                "label": "Category",
+              },
             }
           }
           getHandleChangedValueFn={[Function]}
@@ -74,154 +63,14 @@ exports[`SearchPageWithList matches snapshot 1`] = `
         />
         <FilterComponent
           className="filter"
-          filterConfig={
+          config={
             Object {
-              "config": Object {
-                "options": Array [
-                  Object {
-                    "key": "4",
-                    "label": "4",
-                  },
-                  Object {
-                    "key": "5",
-                    "label": "5",
-                  },
-                  Object {
-                    "key": "6",
-                    "label": "6",
-                  },
-                  Object {
-                    "key": "7",
-                    "label": "7",
-                  },
-                  Object {
-                    "key": "8",
-                    "label": "8",
-                  },
-                  Object {
-                    "key": "9",
-                    "label": "9",
-                  },
-                  Object {
-                    "key": "10",
-                    "label": "10",
-                  },
-                  Object {
-                    "key": "11",
-                    "label": "11",
-                  },
-                  Object {
-                    "key": "12",
-                    "label": "12",
-                  },
-                ],
-                "schemaType": "enum",
-              },
-              "group": "primary",
-              "id": "size",
-              "label": "Size (US)",
-              "queryParamNames": Array [
-                "pub_size",
-              ],
-              "type": "SelectMultipleFilter",
-              "wizardPlaceholder": "Choose…",
-              "wizardRequired": "You need to select a size.",
-            }
-          }
-          getHandleChangedValueFn={[Function]}
-          idPrefix="SearchFiltersMobile"
-          initialValues={[Function]}
-          isDesktop={true}
-          key="SearchFiltersMobile.size"
-          liveEdit={true}
-          showAsPopup={false}
-          urlQueryParams={Object {}}
-        />
-        <FilterComponent
-          className="filter"
-          filterConfig={
-            Object {
-              "config": Object {
-                "options": Array [
-                  Object {
-                    "key": "adidas",
-                    "label": "Adidas",
-                  },
-                  Object {
-                    "key": "air_jordan",
-                    "label": "Air Jordan",
-                  },
-                  Object {
-                    "key": "converse",
-                    "label": "Converse",
-                  },
-                  Object {
-                    "key": "new_balance",
-                    "label": "New Balance",
-                  },
-                  Object {
-                    "key": "nike",
-                    "label": "Nike",
-                  },
-                  Object {
-                    "key": "puma",
-                    "label": "Puma",
-                  },
-                  Object {
-                    "key": "ultraboost",
-                    "label": "Ultraboost",
-                  },
-                  Object {
-                    "key": "vans",
-                    "label": "Vans",
-                  },
-                  Object {
-                    "key": "yeezy",
-                    "label": "Yeezy",
-                  },
-                  Object {
-                    "key": "other",
-                    "label": "Other",
-                  },
-                ],
-                "schemaType": "enum",
-              },
-              "group": "primary",
-              "id": "brand",
-              "label": "Brand",
-              "queryParamNames": Array [
-                "pub_brand",
-              ],
-              "type": "SelectMultipleFilter",
-              "wizardPlaceholder": "Choose…",
-              "wizardRequired": "You need to select a brand.",
-            }
-          }
-          getHandleChangedValueFn={[Function]}
-          idPrefix="SearchFiltersMobile"
-          initialValues={[Function]}
-          isDesktop={true}
-          key="SearchFiltersMobile.brand"
-          liveEdit={true}
-          showAsPopup={false}
-          urlQueryParams={Object {}}
-        />
-        <FilterComponent
-          className="filter"
-          filterConfig={
-            Object {
-              "config": Object {
-                "max": 1000,
-                "min": 0,
-                "step": 5,
-              },
-              "group": "primary",
-              "id": "price",
+              "key": "price",
               "label": "Price",
-              "queryParamNames": Array [
-                "price",
-              ],
-              "type": "PriceFilter",
+              "max": 1000,
+              "min": 0,
+              "schemaType": "price",
+              "step": 5,
             }
           }
           getHandleChangedValueFn={[Function]}
@@ -229,6 +78,36 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           initialValues={[Function]}
           isDesktop={true}
           key="SearchFiltersMobile.price"
+          liveEdit={true}
+          showAsPopup={false}
+          urlQueryParams={Object {}}
+        />
+        <FilterComponent
+          className="filter"
+          config={
+            Object {
+              "includeForProcessAliases": Array [
+                "flex-default-process/release-1",
+              ],
+              "indexForSearch": true,
+              "key": "amenities",
+              "schemaOptions": Array [
+                "Dog 1",
+                "Dog 2",
+              ],
+              "schemaType": "multi-enum",
+              "scope": "public",
+              "searchPageConfig": Object {
+                "group": "secondary",
+                "label": "Amenities",
+              },
+            }
+          }
+          getHandleChangedValueFn={[Function]}
+          idPrefix="SearchFiltersMobile"
+          initialValues={[Function]}
+          isDesktop={true}
+          key="SearchFiltersMobile.amenities"
           liveEdit={true}
           showAsPopup={false}
           urlQueryParams={Object {}}
@@ -280,34 +159,23 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           urlQueryParams={Object {}}
         >
           <FilterComponent
-            filterConfig={
+            config={
               Object {
-                "config": Object {
-                  "options": Array [
-                    Object {
-                      "key": "men",
-                      "label": "Men",
-                    },
-                    Object {
-                      "key": "women",
-                      "label": "Women",
-                    },
-                    Object {
-                      "key": "kids",
-                      "label": "Kids",
-                    },
-                  ],
-                  "schemaType": "enum",
-                },
-                "group": "primary",
-                "id": "category",
-                "label": "Category",
-                "queryParamNames": Array [
-                  "pub_category",
+                "includeForProcessAliases": Array [
+                  "flex-product-default-process/release-1",
                 ],
-                "type": "SelectSingleFilter",
-                "wizardPlaceholder": "Choose…",
-                "wizardRequired": "You need to select a category.",
+                "indexForSearch": true,
+                "key": "category",
+                "schemaOptions": Array [
+                  "Cat 1",
+                  "Cat 2",
+                ],
+                "schemaType": "enum",
+                "scope": "public",
+                "searchPageConfig": Object {
+                  "group": "primary",
+                  "label": "Category",
+                },
               }
             }
             getHandleChangedValueFn={[Function]}
@@ -319,156 +187,48 @@ exports[`SearchPageWithList matches snapshot 1`] = `
             urlQueryParams={Object {}}
           />
           <FilterComponent
-            filterConfig={
+            config={
               Object {
-                "config": Object {
-                  "options": Array [
-                    Object {
-                      "key": "4",
-                      "label": "4",
-                    },
-                    Object {
-                      "key": "5",
-                      "label": "5",
-                    },
-                    Object {
-                      "key": "6",
-                      "label": "6",
-                    },
-                    Object {
-                      "key": "7",
-                      "label": "7",
-                    },
-                    Object {
-                      "key": "8",
-                      "label": "8",
-                    },
-                    Object {
-                      "key": "9",
-                      "label": "9",
-                    },
-                    Object {
-                      "key": "10",
-                      "label": "10",
-                    },
-                    Object {
-                      "key": "11",
-                      "label": "11",
-                    },
-                    Object {
-                      "key": "12",
-                      "label": "12",
-                    },
-                  ],
-                  "schemaType": "enum",
-                },
-                "group": "primary",
-                "id": "size",
-                "label": "Size (US)",
-                "queryParamNames": Array [
-                  "pub_size",
-                ],
-                "type": "SelectMultipleFilter",
-                "wizardPlaceholder": "Choose…",
-                "wizardRequired": "You need to select a size.",
-              }
-            }
-            getHandleChangedValueFn={[Function]}
-            idPrefix="SearchFiltersMobile"
-            initialValues={[Function]}
-            key="SearchFiltersMobile.size"
-            liveEdit={true}
-            showAsPopup={false}
-            urlQueryParams={Object {}}
-          />
-          <FilterComponent
-            filterConfig={
-              Object {
-                "config": Object {
-                  "options": Array [
-                    Object {
-                      "key": "adidas",
-                      "label": "Adidas",
-                    },
-                    Object {
-                      "key": "air_jordan",
-                      "label": "Air Jordan",
-                    },
-                    Object {
-                      "key": "converse",
-                      "label": "Converse",
-                    },
-                    Object {
-                      "key": "new_balance",
-                      "label": "New Balance",
-                    },
-                    Object {
-                      "key": "nike",
-                      "label": "Nike",
-                    },
-                    Object {
-                      "key": "puma",
-                      "label": "Puma",
-                    },
-                    Object {
-                      "key": "ultraboost",
-                      "label": "Ultraboost",
-                    },
-                    Object {
-                      "key": "vans",
-                      "label": "Vans",
-                    },
-                    Object {
-                      "key": "yeezy",
-                      "label": "Yeezy",
-                    },
-                    Object {
-                      "key": "other",
-                      "label": "Other",
-                    },
-                  ],
-                  "schemaType": "enum",
-                },
-                "group": "primary",
-                "id": "brand",
-                "label": "Brand",
-                "queryParamNames": Array [
-                  "pub_brand",
-                ],
-                "type": "SelectMultipleFilter",
-                "wizardPlaceholder": "Choose…",
-                "wizardRequired": "You need to select a brand.",
-              }
-            }
-            getHandleChangedValueFn={[Function]}
-            idPrefix="SearchFiltersMobile"
-            initialValues={[Function]}
-            key="SearchFiltersMobile.brand"
-            liveEdit={true}
-            showAsPopup={false}
-            urlQueryParams={Object {}}
-          />
-          <FilterComponent
-            filterConfig={
-              Object {
-                "config": Object {
-                  "max": 1000,
-                  "min": 0,
-                  "step": 5,
-                },
-                "group": "primary",
-                "id": "price",
+                "key": "price",
                 "label": "Price",
-                "queryParamNames": Array [
-                  "price",
-                ],
-                "type": "PriceFilter",
+                "max": 1000,
+                "min": 0,
+                "schemaType": "price",
+                "step": 5,
               }
             }
             getHandleChangedValueFn={[Function]}
             idPrefix="SearchFiltersMobile"
             initialValues={[Function]}
             key="SearchFiltersMobile.price"
+            liveEdit={true}
+            showAsPopup={false}
+            urlQueryParams={Object {}}
+          />
+          <FilterComponent
+            config={
+              Object {
+                "includeForProcessAliases": Array [
+                  "flex-default-process/release-1",
+                ],
+                "indexForSearch": true,
+                "key": "amenities",
+                "schemaOptions": Array [
+                  "Dog 1",
+                  "Dog 2",
+                ],
+                "schemaType": "multi-enum",
+                "scope": "public",
+                "searchPageConfig": Object {
+                  "group": "secondary",
+                  "label": "Amenities",
+                },
+              }
+            }
+            getHandleChangedValueFn={[Function]}
+            idPrefix="SearchFiltersMobile"
+            initialValues={[Function]}
+            key="SearchFiltersMobile.amenities"
             liveEdit={true}
             showAsPopup={false}
             urlQueryParams={Object {}}

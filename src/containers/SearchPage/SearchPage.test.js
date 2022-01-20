@@ -5,6 +5,65 @@ import { SearchPageComponent } from './SearchPageWithList';
 
 const noop = () => null;
 
+const listingExtendedDataConfig = [
+  {
+    key: 'category',
+    scope: 'public',
+    includeForProcessAliases: ['flex-product-default-process/release-1'],
+    schemaType: 'enum',
+    schemaOptions: ['Cat 1', 'Cat 2'],
+    indexForSearch: true,
+    searchPageConfig: {
+      label: 'Category',
+      group: 'primary',
+    },
+  },
+  {
+    key: 'amenities',
+    scope: 'public',
+    includeForProcessAliases: ['flex-default-process/release-1'],
+    schemaType: 'multi-enum',
+    schemaOptions: ['Dog 1', 'Dog 2'],
+    indexForSearch: true,
+    searchPageConfig: {
+      label: 'Amenities',
+      //searchMode: 'has_all',
+      group: 'secondary',
+    },
+  },
+];
+
+const defaultFiltersConfig = [
+  {
+    key: 'price',
+    schemaType: 'price',
+    label: 'Price',
+    // Note: unlike most prices this is not handled in subunits
+    min: 0,
+    max: 1000,
+    step: 5,
+  },
+  {
+    key: 'keywords',
+    schemaType: 'text',
+    label: 'Keyword',
+  },
+];
+
+const sortConfig = {
+  active: true,
+  queryParamName: 'sort',
+  relevanceKey: 'relevance',
+  conflictingFilters: [],
+  options: [
+    { key: 'createdAt', label: 'Newest' },
+    { key: '-createdAt', label: 'Oldest' },
+    { key: '-price', label: 'Lowest price' },
+    { key: 'price', label: 'Highest price' },
+    { key: 'relevance', label: 'Relevance', longLabel: 'Relevance (Keyword search)' },
+  ],
+};
+
 describe('SearchPageWithList', () => {
   it('matches snapshot', () => {
     const props = {
@@ -31,8 +90,9 @@ describe('SearchPageWithList', () => {
       onSearchMapListings: noop,
       sendVerificationEmailInProgress: false,
       onResendVerificationEmail: noop,
-      categories: [{ key: 'cat1', label: 'Cat 1' }, { key: 'cat2', label: 'Cat 2' }],
-      amenities: [{ key: 'dog1', label: 'Dog 1' }, { key: 'dog2', label: 'Dog 2' }],
+      listingExtendedDataConfig: listingExtendedDataConfig,
+      defaultFiltersConfig: defaultFiltersConfig,
+      sortConfig: sortConfig,
     };
     const tree = renderShallow(<SearchPageComponent {...props} />);
     expect(tree).toMatchSnapshot();
