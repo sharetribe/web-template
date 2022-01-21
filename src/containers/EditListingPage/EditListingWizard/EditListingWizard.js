@@ -117,7 +117,7 @@ const hasValidCustomFieldsInExtendedData = (publicData, privateData) => {
       includeForProcessAliases,
       schemaType,
       schemaOptions = [],
-      editListingPageConfig,
+      editListingPageConfig = {},
     } = fieldConfig;
 
     const getOptionValue = option => `${option}`.toLowerCase().replace(/\s/g, '');

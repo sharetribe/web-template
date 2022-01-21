@@ -443,6 +443,43 @@ propTypes.filterConfig = arrayOf(
   }).isRequired
 );
 
+// Default search filters definition
+propTypes.defaultFiltersConfig = arrayOf(
+  shape({
+    key: string.isRequired,
+    schemaType: oneOf(['price', 'text', 'dates']).isRequired,
+    label: string.isRequired,
+    min: number,
+    max: number,
+    step: number,
+  }).isRequired
+);
+// Extended data config
+propTypes.listingExtendedDataConfig = arrayOf(
+  shape({
+    key: string.isRequired,
+    scope: string,
+    includeForProcessAliases: arrayOf(string).isRequired,
+    schemaType: oneOf(EXTENDED_DATA_SCHEMA_TYPES).isRequired,
+    schemaOptions: arrayOf(oneOfType([string, number])),
+    indexForSearch: bool,
+    searchPageConfig: shape({
+      label: string.isRequired,
+      group: oneOf(['primary', 'secondary']),
+      filterType: string,
+    }),
+    listingPageConfig: shape({
+      label: string.isRequired,
+      isDetail: bool,
+    }),
+    editListingPageConfig: shape({
+      label: string.isRequired,
+      placeholder: string,
+      requiredMessage: string,
+    }).isRequired,
+  })
+);
+
 propTypes.sortConfig = shape({
   active: bool,
   queryParamName: oneOf(['sort']).isRequired,
