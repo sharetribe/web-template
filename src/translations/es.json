@@ -327,7 +327,6 @@
   "ListingPage.editProfileLink": "Editar perfil",
   "ListingPage.errorLoadingListingMessage": "No se ha podido cargar el anuncio. Por favor, inténtalo de nuevo.",
   "ListingPage.errorLoadingListingTitle": "Error al cargar el anuncio",
-  "ListingPage.featuresTitle": "Servicios",
   "ListingPage.finishListing": "Terminar anuncio",
   "ListingPage.hostedBy": "Publicado por {name}",
   "ListingPage.loadingListingMessage": "Cargando anuncio…",

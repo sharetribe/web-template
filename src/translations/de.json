@@ -295,7 +295,6 @@
   "ListingPage.editProfileLink": "Profil bearbeiten",
   "ListingPage.errorLoadingListingMessage": "Eintrag konnte nicht geladen werden. Bitte erneut versuchen.",
   "ListingPage.errorLoadingListingTitle": "Fehler beim Laden des Eintrags",
-  "ListingPage.featuresTitle": "Ausstattung",
   "ListingPage.finishListing": "Eintrag fertig machen",
   "ListingPage.hostedBy": "Gehostet von {name}",
   "ListingPage.loadingListingMessage": "Eintrag wird geladen…",
