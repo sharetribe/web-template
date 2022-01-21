@@ -1,6 +1,13 @@
 import React from 'react';
 
 // Import config and utils
+import {
+  SCHEMA_TYPE_ENUM,
+  SCHEMA_TYPE_MULTI_ENUM,
+  SCHEMA_TYPE_TEXT,
+  SCHEMA_TYPE_LONG,
+  SCHEMA_TYPE_BOOLEAN,
+} from '../../../util/types';
 import { required } from '../../../util/validators';
 // Import shared components
 import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '../../../components';
@@ -129,15 +136,15 @@ const CustomExtendedDataField = props => {
   const { schemaOptions = [], schemaType } = props?.fieldConfig || {};
   const renderFieldComponent = (FieldComponent, props) => <FieldComponent {...props} />;
 
-  return schemaType === 'enum' && schemaOptions
+  return schemaType === SCHEMA_TYPE_ENUM && schemaOptions
     ? renderFieldComponent(CustomFieldEnum, props)
-    : schemaType === 'multi-enum' && schemaOptions
+    : schemaType === SCHEMA_TYPE_MULTI_ENUM && schemaOptions
     ? renderFieldComponent(CustomFieldMultiEnum, props)
-    : schemaType === 'text'
+    : schemaType === SCHEMA_TYPE_TEXT
     ? renderFieldComponent(CustomFieldText, props)
-    : schemaType === 'long'
+    : schemaType === SCHEMA_TYPE_LONG
     ? renderFieldComponent(CustomFieldLong, props)
-    : schemaType === 'boolean'
+    : schemaType === SCHEMA_TYPE_BOOLEAN
     ? renderFieldComponent(CustomFieldBoolean, props)
     : null;
 };
