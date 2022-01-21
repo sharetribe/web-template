@@ -8,7 +8,12 @@ import config from '../../config';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { findOptionsForSelectFilter } from '../../util/search';
-import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes } from '../../util/types';
+import {
+  LISTING_STATE_PENDING_APPROVAL,
+  LISTING_STATE_CLOSED,
+  SCHEMA_TYPE_MULTI_ENUM,
+  propTypes,
+} from '../../util/types';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
@@ -508,7 +513,7 @@ export class ListingPageComponent extends Component {
                         ? metadata[key]
                         : null;
                     const hasValue = value !== null;
-                    return hasValue && config.schemaType === 'multi-enum'
+                    return hasValue && config.schemaType === SCHEMA_TYPE_MULTI_ENUM
                       ? [
                           ...pickedElements,
                           <SectionMultiEnumMaybe

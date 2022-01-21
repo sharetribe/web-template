@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
 import { constructQueryParamName } from './SearchPage.helpers';
 import SelectSingleFilter from './SelectSingleFilter/SelectSingleFilter';
 import SelectMultipleFilter from './SelectMultipleFilter/SelectMultipleFilter';
@@ -86,7 +87,7 @@ const FilterComponent = props => {
 
   // Custom extended data filters
   switch (schemaType) {
-    case 'enum': {
+    case SCHEMA_TYPE_ENUM: {
       const { scope, schemaOptions, searchPageConfig } = config;
       const queryParamNames = [constructQueryParamName(key, scope)];
       return searchPageConfig.filterType === 'SelectSingleFilter' ? (
@@ -113,7 +114,7 @@ const FilterComponent = props => {
         />
       );
     }
-    case 'multi-enum': {
+    case SCHEMA_TYPE_MULTI_ENUM: {
       const { scope, schemaOptions, searchPageConfig } = config;
       const { label, searchMode } = searchPageConfig;
       const queryParamNames = [constructQueryParamName(key, scope)];
