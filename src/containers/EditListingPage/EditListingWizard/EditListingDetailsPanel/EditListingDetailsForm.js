@@ -193,11 +193,13 @@ const EditListingDetailsFormComponent = props => (
       const addCustomExtendedDataFields = targetProcessAlias => {
         const extendedDataConfigs = listingExtendedDataConfig || [];
         return extendedDataConfigs.reduce((pickedFields, extendedDataConfig) => {
-          const { key, includeForProcessAliases = [], schemaType } = extendedDataConfig || {};
+          const { key, includeForProcessAliases = [], schemaType, scope } =
+            extendedDataConfig || {};
           const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
           const isTargetProcessAlias = includeForProcessAliases.includes(targetProcessAlias);
+          const isProviderScope = ['public', 'private'].includes(scope);
 
-          return isKnownSchemaType && isTargetProcessAlias
+          return isKnownSchemaType && isTargetProcessAlias && isProviderScope
             ? [
                 ...pickedFields,
                 <CustomExtendedDataField key={key} name={key} fieldConfig={extendedDataConfig} />,
