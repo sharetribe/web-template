@@ -88,7 +88,7 @@ const FilterComponent = props => {
   // Custom extended data filters
   switch (schemaType) {
     case SCHEMA_TYPE_ENUM: {
-      const { scope, schemaOptions, searchPageConfig } = config;
+      const { scope, schemaOptions, searchPageConfig = {} } = config;
       const queryParamNames = [constructQueryParamName(key, scope)];
       return searchPageConfig.filterType === 'SelectSingleFilter' ? (
         <SelectSingleFilter
@@ -115,7 +115,7 @@ const FilterComponent = props => {
       );
     }
     case SCHEMA_TYPE_MULTI_ENUM: {
-      const { scope, schemaOptions, searchPageConfig } = config;
+      const { scope, schemaOptions, searchPageConfig = {} } = config;
       const { label, searchMode } = searchPageConfig;
       const queryParamNames = [constructQueryParamName(key, scope)];
       return (

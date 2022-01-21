@@ -19,7 +19,7 @@ const getOptionValue = option => `${option}`.toLowerCase().replace(/\s/g, '_');
 const CustomFieldEnum = props => {
   const { name, fieldConfig } = props;
   const { schemaOptions = [], editListingPageConfig } = fieldConfig || {};
-  const { label, placeholder, requiredMessage } = editListingPageConfig;
+  const { label, placeholder, requiredMessage } = editListingPageConfig || {};
   const validateMaybe = requiredMessage ? { validate: required(requiredMessage) } : {};
 
   return schemaOptions ? (

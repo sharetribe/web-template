@@ -26,39 +26,30 @@ const { UUID } = sdkTypes;
 const noop = () => null;
 
 const customConfig = {
-  filters: [
+  listingExtendedData: [
     {
-      id: 'category',
-      label: 'Category',
-      type: 'SelectSingleFilter',
-      group: 'secondary',
-      queryParamName: 'pub_category',
-      config: {
-        options: [{ key: 'cat1', label: 'Cat 1' }, { key: 'cat2', label: 'Cat 2' }],
+      key: 'category',
+      scope: 'public',
+      includeForProcessAliases: ['flex-product-default-process/release-1'],
+      schemaType: 'enum',
+      schemaOptions: ['Cat 1', 'Cat 2'],
+      indexForSearch: true,
+      listingPageConfig: {
+        label: 'Category',
+        isDetail: true,
       },
     },
     {
-      id: 'amenities',
-      label: 'Amenities',
-      type: 'SelectMultipleFilter',
-      group: 'secondary',
-      queryParamName: 'pub_amenities',
-      config: {
-        mode: 'has_all',
-        options: [
-          {
-            key: 'feat1',
-            label: 'Feat 1',
-          },
-          {
-            key: 'feat2',
-            label: 'Feat 2',
-          },
-          {
-            key: 'feat3',
-            label: 'Feat 3',
-          },
-        ],
+      key: 'amenities',
+      scope: 'public',
+      includeForProcessAliases: ['flex-default-process/release-1'],
+      schemaType: 'multi-enum',
+      schemaOptions: ['Feat 1', 'Feat 2', 'Feat 3'],
+      indexForSearch: true,
+      listingPageConfig: {
+        label: 'Amenities',
+        searchMode: 'has_all',
+        group: 'secondary',
       },
     },
   ],

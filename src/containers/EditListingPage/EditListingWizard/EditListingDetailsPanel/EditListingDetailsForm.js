@@ -303,19 +303,7 @@ EditListingDetailsFormComponent.propTypes = {
     })
   ).isRequired,
   hasSetProcessAlias: bool,
-  listingExtendedDataConfig: arrayOf(
-    shape({
-      key: string.isRequired,
-      includeForProcessAliases: arrayOf(string).isRequired,
-      schemaType: oneOf(EXTENDED_DATA_SCHEMA_TYPES).isRequired,
-      schemaOptions: arrayOf(oneOfType([string, number])),
-      editListingPageConfig: shape({
-        label: string.isRequired,
-        placeholder: string,
-        requiredMessage: string,
-      }).isRequired,
-    })
-  ),
+  listingExtendedDataConfig: propTypes.listingExtendedDataConfig,
 };
 
 export default compose(injectIntl)(EditListingDetailsFormComponent);
