@@ -523,7 +523,7 @@
   letter-spacing: -0.09px;
 }
 
-.sectionFeatures {
+.sectionMultiEnum {
   padding: 0 24px;
   margin-bottom: 32px;
 
@@ -533,7 +533,7 @@
   }
 }
 
-.featuresTitle {
+.multiEnumTitle {
   composes: sectionTitle;
 
   margin-top: 0;

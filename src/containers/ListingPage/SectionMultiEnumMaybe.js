@@ -3,15 +3,15 @@ import { PropertyGroup } from '../../components';
 
 import css from './ListingPage.module.css';
 
-const SectionFeaturesMaybe = props => {
+const SectionMultiEnumMaybe = props => {
   const { heading, options, selectedOptions } = props;
   if (!heading || !options || !selectedOptions) {
     return null;
   }
 
   return (
-    <div className={css.sectionFeatures}>
-      <h2 className={css.featuresTitle}>{heading}</h2>
+    <div className={css.sectionMultiEnum}>
+      <h2 className={css.multiEnumTitle}>{heading}</h2>
       <PropertyGroup
         id="ListingPage.amenities"
         options={options}
@@ -22,4 +22,4 @@ const SectionFeaturesMaybe = props => {
   );
 };
 
-export default SectionFeaturesMaybe;
+export default SectionMultiEnumMaybe;
