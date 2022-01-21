@@ -1,27 +1,22 @@
 import React from 'react';
-import { FormattedMessage } from '../../util/reactIntl';
 import { PropertyGroup } from '../../components';
 
 import css from './ListingPage.module.css';
 
 const SectionFeaturesMaybe = props => {
-  const { options, publicData, extendedDataKey } = props;
-  if (!publicData || !extendedDataKey || !publicData[extendedDataKey]) {
+  const { heading, options, selectedOptions } = props;
+  if (!heading || !options || !selectedOptions) {
     return null;
   }
 
-  const selectedOptions =
-    publicData && publicData[extendedDataKey] ? publicData[extendedDataKey] : [];
   return (
     <div className={css.sectionFeatures}>
-      <h2 className={css.featuresTitle}>
-        <FormattedMessage id="ListingPage.featuresTitle" />
-      </h2>
+      <h2 className={css.featuresTitle}>{heading}</h2>
       <PropertyGroup
         id="ListingPage.amenities"
         options={options}
         selectedOptions={selectedOptions}
-        twoColumns={true}
+        twoColumns={options.length > 5}
       />
     </div>
   );
