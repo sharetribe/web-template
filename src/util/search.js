@@ -71,9 +71,9 @@ export const isAnyFilterActive = (
 /**
  * Check if the filter is currently active.
  */
-export const findOptionsForSelectFilter = (filterId, filters) => {
-  const filter = filters.find(f => f.id === filterId);
-  return filter?.config?.options || [];
+export const findOptionsForSelectFilter = (filterKey, listingExtendedDataConfig) => {
+  const config = listingExtendedDataConfig.find(f => f.key === filterKey);
+  return config?.schemaOptions || [];
 };
 
 /**
