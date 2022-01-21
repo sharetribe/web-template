@@ -672,6 +672,8 @@
   "SearchFiltersSecondary.cancel": "Cancel",
   "SearchFiltersSecondary.resetAll": "Reset all",
   "SearchMapInfoCard.noImage": "No image",
+  "SearchPage.detailYes": "Yes",
+  "SearchPage.detailNo": "No",
   "SearchPage.noResults": "Could not find any listings that match your search criteria.",
   "SearchPage.resetAllFilters": "Reset filters",
   "SearchPage.schemaDescription": "Showing search results",
