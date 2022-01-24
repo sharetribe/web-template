@@ -43,7 +43,8 @@ const renderForm = formRenderProps => {
   const handleOnChange = formValues => {
     const { quantity: quantityRaw, deliveryMethod } = formValues.values;
     const quantity = Number.parseInt(quantityRaw, 10);
-    if (quantity && deliveryMethod && !fetchLineItemsInProgress) {
+    const isBrowser = typeof window !== 'undefined';
+    if (isBrowser && quantity && deliveryMethod && !fetchLineItemsInProgress) {
       onFetchTransactionLineItems({
         orderData: { quantity, deliveryMethod },
         listingId,
