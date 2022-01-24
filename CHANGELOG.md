@@ -14,9 +14,16 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+## [v9.1.1] 2022-01-24
+
 - [fix] A full-page refresh on product when stock = 1 causes 500 error. SSR gets change request
   automatically from Final Form/FromSpy, and therefore window.fetch gets called on the server.
   [#133](https://github.com/sharetribe/ftw-product/pull/133)
+- [fix] Add a missing return statement on ProductOrderForm. The code path is relevant only for
+  listings that are created outside of EditListingWizard.
+  [#127](https://github.com/sharetribe/ftw-product/pull/127)
+
+  [v9.1.1]: https://github.com/sharetribe/ftw-product/compare/v9.1.0...v9.1.1
 
 ## [v9.1.0] 2021-12-02
 
