@@ -439,7 +439,7 @@
   margin: 0;
 }
 
-.sectionDescription {
+.sectionText {
   padding: 0 24px;
   margin-bottom: 36px;
 
@@ -458,7 +458,7 @@
 }
 
 .detailsTitle,
-.descriptionTitle {
+.textHeading {
   composes: sectionTitle;
   margin-top: 0;
   margin-bottom: 12px;
@@ -468,7 +468,7 @@
   }
 }
 
-.description {
+.text {
   padding: 1px 0 5px 0;
   margin-top: 0;
   margin-bottom: 0;
@@ -523,7 +523,7 @@
   letter-spacing: -0.09px;
 }
 
-.sectionFeatures {
+.sectionMultiEnum {
   padding: 0 24px;
   margin-bottom: 32px;
 
@@ -533,7 +533,7 @@
   }
 }
 
-.featuresTitle {
+.multiEnumTitle {
   composes: sectionTitle;
 
   margin-top: 0;

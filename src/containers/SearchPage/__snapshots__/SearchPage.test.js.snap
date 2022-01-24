@@ -35,11 +35,17 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           className="filter"
           config={
             Object {
+              "editListingPageConfig": Object {
+                "label": "Category",
+              },
               "includeForProcessAliases": Array [
                 "flex-product-default-process/release-1",
               ],
               "indexForSearch": true,
               "key": "category",
+              "listingPageConfig": Object {
+                "label": "Category",
+              },
               "schemaOptions": Array [
                 "Cat 1",
                 "Cat 2",
@@ -86,11 +92,17 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           className="filter"
           config={
             Object {
+              "editListingPageConfig": Object {
+                "label": "Category",
+              },
               "includeForProcessAliases": Array [
                 "flex-default-process/release-1",
               ],
               "indexForSearch": true,
               "key": "amenities",
+              "listingPageConfig": Object {
+                "label": "Category",
+              },
               "schemaOptions": Array [
                 "Dog 1",
                 "Dog 2",
@@ -161,11 +173,17 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           <FilterComponent
             config={
               Object {
+                "editListingPageConfig": Object {
+                  "label": "Category",
+                },
                 "includeForProcessAliases": Array [
                   "flex-product-default-process/release-1",
                 ],
                 "indexForSearch": true,
                 "key": "category",
+                "listingPageConfig": Object {
+                  "label": "Category",
+                },
                 "schemaOptions": Array [
                   "Cat 1",
                   "Cat 2",
@@ -208,11 +226,17 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           <FilterComponent
             config={
               Object {
+                "editListingPageConfig": Object {
+                  "label": "Category",
+                },
                 "includeForProcessAliases": Array [
                   "flex-default-process/release-1",
                 ],
                 "indexForSearch": true,
                 "key": "amenities",
+                "listingPageConfig": Object {
+                  "label": "Category",
+                },
                 "schemaOptions": Array [
                   "Dog 1",
                   "Dog 2",

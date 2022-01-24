@@ -8,7 +8,12 @@ import config from '../../config';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { findOptionsForSelectFilter } from '../../util/search';
-import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes } from '../../util/types';
+import {
+  LISTING_STATE_PENDING_APPROVAL,
+  LISTING_STATE_CLOSED,
+  SCHEMA_TYPE_MULTI_ENUM,
+  propTypes,
+} from '../../util/types';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
@@ -48,12 +53,11 @@ import { sendEnquiry, fetchTransactionLineItems, setInitialValues } from './List
 import SectionImages from './SectionImages';
 import SectionAvatar from './SectionAvatar';
 import SectionHeading from './SectionHeading';
-import SectionDescriptionMaybe from './SectionDescriptionMaybe';
+import SectionTextMaybe from './SectionTextMaybe';
 import SectionDetailsMaybe from './SectionDetailsMaybe';
-import SectionFeaturesMaybe from './SectionFeaturesMaybe';
+import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
 import SectionReviews from './SectionReviews';
 import SectionAuthorMaybe from './SectionAuthorMaybe';
-import SectionRulesMaybe from './SectionRulesMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 
 import css from './ListingPage.module.css';
@@ -75,9 +79,9 @@ const priceData = (price, intl) => {
   return {};
 };
 
-const categoryLabel = (categories, key) => {
-  const cat = categories.find(c => c.key === key);
-  return cat ? cat.label : key;
+const categoryLabel = (categories, value) => {
+  const cat = categories.find(c => c.key === value);
+  return cat ? cat.label : value;
 };
 
 const PlainPage = props => {
@@ -306,7 +310,8 @@ export class ListingPageComponent extends Component {
       geolocation = null,
       price = null,
       title = '',
-      publicData,
+      publicData = {},
+      metadata = {},
     } = currentListing.attributes;
 
     const topbar = <TopbarContainer />;
@@ -414,15 +419,20 @@ export class ListingPageComponent extends Component {
       </NamedLink>
     );
 
-    const amenityOptions = findOptionsForSelectFilter('amenities', customConfig.filters);
-    const categoryOptions = findOptionsForSelectFilter('category', customConfig.filters);
-    const category =
-      publicData && publicData.category ? (
-        <span>
-          {categoryLabel(categoryOptions, publicData.category)}
-          <span className={css.separator}>•</span>
-        </span>
-      ) : null;
+    const formatOptionValue = option => `${option}`.toLowerCase().replace(/\s/g, '_');
+    const optionEntities = options => options.map(o => ({ key: formatOptionValue(o), label: o }));
+
+    // TODO: category is custom field. We probably should not support this?
+    const categoryOptions = findOptionsForSelectFilter(
+      'category',
+      customConfig.listingExtendedData
+    );
+    const category = publicData?.category ? (
+      <span>
+        {categoryLabel(optionEntities(categoryOptions), publicData.category)}
+        <span className={css.separator}>•</span>
+      </span>
+    ) : null;
 
     return (
       <Page
@@ -481,14 +491,50 @@ export class ListingPageComponent extends Component {
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
                   />
-                  <SectionDescriptionMaybe description={description} listingTitle={richTitle} />
-                  <SectionDetailsMaybe publicData={publicData} customConfig={customConfig} />
-                  <SectionFeaturesMaybe
-                    extendedDataKey="amenities"
-                    options={amenityOptions}
-                    publicData={publicData}
+                  <SectionTextMaybe
+                    text={description}
+                    heading={intl.formatMessage(
+                      { id: 'ListingPage.descriptionTitle' },
+                      { listingTitle: richTitle }
+                    )}
                   />
-                  <SectionRulesMaybe publicData={publicData} />
+                  <SectionDetailsMaybe
+                    publicData={publicData}
+                    metadata={metadata}
+                    customConfig={customConfig}
+                    intl={intl}
+                  />
+                  {customConfig.listingExtendedData.reduce((pickedElements, config) => {
+                    const { key, schemaOptions, scope = 'public' } = config;
+                    const value =
+                      scope === 'public'
+                        ? publicData[key]
+                        : scope === 'metadata'
+                        ? metadata[key]
+                        : null;
+                    const hasValue = value !== null;
+                    return hasValue && config.schemaType === SCHEMA_TYPE_MULTI_ENUM
+                      ? [
+                          ...pickedElements,
+                          <SectionMultiEnumMaybe
+                            key={key}
+                            heading={config?.listingPageConfig?.label}
+                            options={optionEntities(schemaOptions)}
+                            selectedOptions={value}
+                          />,
+                        ]
+                      : hasValue && config.schemaType === 'text'
+                      ? [
+                          ...pickedElements,
+                          <SectionTextMaybe
+                            key={key}
+                            heading={config?.listingPageConfig?.label}
+                            text={value}
+                          />,
+                        ]
+                      : pickedElements;
+                  }, [])}
+
                   <SectionMapMaybe
                     geolocation={geolocation}
                     publicData={publicData}

@@ -165,94 +165,86 @@ exports[`ListingPage matches snapshot 1`] = `
               }
               showContactUser={true}
             />
-            <SectionDescriptionMaybe
-              description="listing1 description"
-              listingTitle={
-                <span>
-                  
-                  listing1
-                   
-                  title
-                  
-                </span>
-              }
+            <SectionTextMaybe
+              heading="ListingPage.descriptionTitle"
+              text="listing1 description"
             />
             <SectionDetailsMaybe
               customConfig={
                 Object {
-                  "filters": Array [
+                  "listingExtendedData": Array [
                     Object {
-                      "config": Object {
-                        "options": Array [
-                          Object {
-                            "key": "cat1",
-                            "label": "Cat 1",
-                          },
-                          Object {
-                            "key": "cat2",
-                            "label": "Cat 2",
-                          },
-                        ],
+                      "includeForProcessAliases": Array [
+                        "flex-product-default-process/release-1",
+                      ],
+                      "indexForSearch": true,
+                      "key": "category",
+                      "listingPageConfig": Object {
+                        "isDetail": true,
+                        "label": "Category",
                       },
-                      "group": "secondary",
-                      "id": "category",
-                      "label": "Category",
-                      "queryParamName": "pub_category",
-                      "type": "SelectSingleFilter",
+                      "schemaOptions": Array [
+                        "Cat 1",
+                        "Cat 2",
+                      ],
+                      "schemaType": "enum",
+                      "scope": "public",
                     },
                     Object {
-                      "config": Object {
-                        "mode": "has_all",
-                        "options": Array [
-                          Object {
-                            "key": "feat1",
-                            "label": "Feat 1",
-                          },
-                          Object {
-                            "key": "feat2",
-                            "label": "Feat 2",
-                          },
-                          Object {
-                            "key": "feat3",
-                            "label": "Feat 3",
-                          },
-                        ],
+                      "includeForProcessAliases": Array [
+                        "flex-default-process/release-1",
+                      ],
+                      "indexForSearch": true,
+                      "key": "amenities",
+                      "listingPageConfig": Object {
+                        "group": "secondary",
+                        "label": "Amenities",
+                        "searchMode": "has_all",
                       },
-                      "group": "secondary",
-                      "id": "amenities",
-                      "label": "Amenities",
-                      "queryParamName": "pub_amenities",
-                      "type": "SelectMultipleFilter",
+                      "schemaOptions": Array [
+                        "Feat 1",
+                        "Feat 2",
+                        "Feat 3",
+                      ],
+                      "schemaType": "multi-enum",
+                      "scope": "public",
                     },
                   ],
                 }
               }
+              intl={
+                Object {
+                  "formatDate": [Function],
+                  "formatMessage": [Function],
+                  "formatNumber": [Function],
+                  "formatPlural": [Function],
+                  "formatRelativeTime": [Function],
+                  "formatTime": [Function],
+                  "now": [Function],
+                }
+              }
+              metadata={Object {}}
               publicData={Object {}}
             />
-            <SectionFeaturesMaybe
-              extendedDataKey="amenities"
+            <SectionMultiEnumMaybe
+              heading="Amenities"
+              key="amenities"
               options={
                 Array [
                   Object {
-                    "key": "feat1",
+                    "key": "feat_1",
                     "label": "Feat 1",
                   },
                   Object {
-                    "key": "feat2",
+                    "key": "feat_2",
                     "label": "Feat 2",
                   },
                   Object {
-                    "key": "feat3",
+                    "key": "feat_3",
                     "label": "Feat 3",
                   },
                 ]
               }
-              publicData={Object {}}
-            />
-            <SectionRulesMaybe
-              className={null}
-              publicData={Object {}}
-              rootClassName={null}
             />
             <SectionMapMaybe
               className={null}
