@@ -17,6 +17,12 @@ const listingExtendedDataConfig = [
       label: 'Category',
       group: 'primary',
     },
+    listingPageConfig: {
+      label: 'Category',
+    },
+    editListingPageConfig: {
+      label: 'Category',
+    },
   },
   {
     key: 'amenities',
@@ -29,6 +35,12 @@ const listingExtendedDataConfig = [
       label: 'Amenities',
       //searchMode: 'has_all',
       group: 'secondary',
+    },
+    listingPageConfig: {
+      label: 'Category',
+    },
+    editListingPageConfig: {
+      label: 'Category',
     },
   },
 ];

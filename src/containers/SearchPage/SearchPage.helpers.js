@@ -1,5 +1,6 @@
 import intersection from 'lodash/intersection';
 import config from '../../config';
+import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
 import { createResourceLocatorString } from '../../util/routes';
 import { parseSelectFilterOptions, isOriginInUse } from '../../util/search';
 import { createSlug } from '../../util/urlHelpers';
@@ -55,9 +56,9 @@ export const validURLParamForExtendedData = (
 
   if (extendedDataFilterConfig) {
     const { schemaType, schemaOptions = [], searchPageConfig } = extendedDataFilterConfig;
-    if (['enum', 'multi-enum'].includes(schemaType)) {
+    if ([SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM].includes(schemaType)) {
       const getOptionValue = option => `${option}`.toLowerCase().replace(/\s/g, '_');
-      const isSchemaTypeMultiEnum = schemaType === 'multi-enum';
+      const isSchemaTypeMultiEnum = schemaType === SCHEMA_TYPE_MULTI_ENUM;
       const searchMode = searchPageConfig?.searchMode;
 
       // Pick valid select options only

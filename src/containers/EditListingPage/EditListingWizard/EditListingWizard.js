@@ -9,7 +9,14 @@ import routeConfiguration from '../../../routing/routeConfiguration';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { createResourceLocatorString } from '../../../util/routes';
 import { withViewport } from '../../../util/contextHelpers';
-import { propTypes } from '../../../util/types';
+import {
+  SCHEMA_TYPE_ENUM,
+  SCHEMA_TYPE_MULTI_ENUM,
+  SCHEMA_TYPE_TEXT,
+  SCHEMA_TYPE_LONG,
+  SCHEMA_TYPE_BOOLEAN,
+  propTypes,
+} from '../../../util/types';
 import { BOOKING_PROCESS_NAME } from '../../../util/transaction';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
@@ -110,7 +117,7 @@ const hasValidCustomFieldsInExtendedData = (publicData, privateData) => {
       includeForProcessAliases,
       schemaType,
       schemaOptions = [],
-      editListingPageConfig,
+      editListingPageConfig = {},
     } = fieldConfig;
 
     const getOptionValue = option => `${option}`.toLowerCase().replace(/\s/g, '');
@@ -127,15 +134,15 @@ const hasValidCustomFieldsInExtendedData = (publicData, privateData) => {
       includeForProcessAliases.includes(publicData?.transactionProcessAlias);
     if (isRequired) {
       const savedExtendedData = fieldData[key];
-      return schemaType === 'enum'
+      return schemaType === SCHEMA_TYPE_ENUM
         ? typeof savedExtendedData === 'string' && hasValidEnumValue(savedExtendedData)
-        : schemaType === 'multi-enum'
+        : schemaType === SCHEMA_TYPE_MULTI_ENUM
         ? Array.isArray(savedExtendedData) && hasValidMultiEnumValues(savedExtendedData)
-        : schemaType === 'text'
+        : schemaType === SCHEMA_TYPE_TEXT
         ? typeof savedExtendedData === 'string'
-        : schemaType === 'long'
+        : schemaType === SCHEMA_TYPE_LONG
         ? typeof savedExtendedData === 'number' && Number.isInteger(savedExtendedData)
-        : schemaType === 'boolean'
+        : schemaType === SCHEMA_TYPE_BOOLEAN
         ? savedExtendedData === true || savedExtendedData === false
         : false;
     }

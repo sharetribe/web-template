@@ -503,8 +503,8 @@ SearchPageComponent.propTypes = {
   searchParams: object,
   tab: oneOf(['filters', 'listings', 'map']).isRequired,
   activeProcesses: array,
-  listingExtendedDataConfig: array, //propTypes.listingExtendedDataConfig,
-  defaultFiltersConfig: array, // TODO
+  listingExtendedDataConfig: propTypes.listingExtendedDataConfig,
+  defaultFiltersConfig: propTypes.defaultFiltersConfig,
   sortConfig: propTypes.sortConfig,
 
   // from withRouter

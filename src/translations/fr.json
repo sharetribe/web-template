@@ -327,7 +327,6 @@
   "ListingPage.editProfileLink": "Modifier le profil",
   "ListingPage.errorLoadingListingMessage": "Impossible de charger l'annonce. Veuillez essayer de nouveau.",
   "ListingPage.errorLoadingListingTitle": "Impossible de charger l'annonce",
-  "ListingPage.featuresTitle": "Équipements",
   "ListingPage.finishListing": "Terminer la rédaction",
   "ListingPage.hostedBy": "Proposé par {name}",
   "ListingPage.loadingListingMessage": "Chargement de l'annonce…",

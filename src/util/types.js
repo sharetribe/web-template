@@ -39,7 +39,18 @@ const { UUID, LatLng, LatLngBounds, Money } = sdkTypes;
 const TRANSITIONS = getAllTransitionsForEveryProcess();
 
 // Supported schema types for custom fields added to extended data through configuration.
-export const EXTENDED_DATA_SCHEMA_TYPES = ['enum', 'multi-enum', 'text', 'long', 'boolean'];
+export const SCHEMA_TYPE_ENUM = 'enum';
+export const SCHEMA_TYPE_MULTI_ENUM = 'multi-enum';
+export const SCHEMA_TYPE_TEXT = 'text';
+export const SCHEMA_TYPE_LONG = 'long';
+export const SCHEMA_TYPE_BOOLEAN = 'boolean';
+export const EXTENDED_DATA_SCHEMA_TYPES = [
+  SCHEMA_TYPE_ENUM,
+  SCHEMA_TYPE_MULTI_ENUM,
+  SCHEMA_TYPE_TEXT,
+  SCHEMA_TYPE_LONG,
+  SCHEMA_TYPE_BOOLEAN,
+];
 
 const propTypes = {};
 
@@ -430,6 +441,43 @@ propTypes.filterConfig = arrayOf(
     queryParamNames: arrayOf(string).isRequired,
     config: object,
   }).isRequired
+);
+
+// Default search filters definition
+propTypes.defaultFiltersConfig = arrayOf(
+  shape({
+    key: string.isRequired,
+    schemaType: oneOf(['price', 'text', 'dates']).isRequired,
+    label: string.isRequired,
+    min: number,
+    max: number,
+    step: number,
+  }).isRequired
+);
+// Extended data config
+propTypes.listingExtendedDataConfig = arrayOf(
+  shape({
+    key: string.isRequired,
+    scope: string,
+    includeForProcessAliases: arrayOf(string).isRequired,
+    schemaType: oneOf(EXTENDED_DATA_SCHEMA_TYPES).isRequired,
+    schemaOptions: arrayOf(oneOfType([string, number])),
+    indexForSearch: bool,
+    searchPageConfig: shape({
+      label: string.isRequired,
+      group: oneOf(['primary', 'secondary']),
+      filterType: string,
+    }),
+    listingPageConfig: shape({
+      label: string.isRequired,
+      isDetail: bool,
+    }),
+    editListingPageConfig: shape({
+      label: string.isRequired,
+      placeholder: string,
+      requiredMessage: string,
+    }).isRequired,
+  })
 );
 
 propTypes.sortConfig = shape({

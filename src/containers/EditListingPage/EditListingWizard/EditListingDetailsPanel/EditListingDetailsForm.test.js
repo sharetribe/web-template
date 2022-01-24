@@ -12,58 +12,40 @@ const processInfos = [
   },
 ];
 
-const filters = [
+const listingExtendedDataConfig = [
   {
-    id: 'category',
-    label: 'Category',
-    wizardPlaceholder: 'Choose…',
-    wizardRequired: 'You need to select a category.',
-    type: 'SelectSingleFilter',
-    group: 'primary',
-    queryParamNames: ['pub_category'],
-    config: {
-      // Schema type is enum for SelectSingleFilter
-      schemaType: 'enum',
-
-      // "key" is the option you see in Flex Console.
-      // "label" is set here for the UI only.
-      // Note: label is not added through the translation files
-      // to make filter customizations a bit easier.
-      options: [
-        { key: 'men', label: 'Men' },
-        { key: 'women', label: 'Women' },
-        { key: 'kids', label: 'Kids' },
-      ],
+    key: 'category',
+    scope: 'public',
+    includeForProcessAliases: ['flex-product-default-process/release-1'],
+    schemaType: 'enum',
+    schemaOptions: ['Men', 'Women', 'Kids'],
+    indexForSearch: true,
+    searchPageConfig: {
+      label: 'Amenities',
+    },
+    listingPageConfig: {
+      label: 'Category',
+    },
+    editListingPageConfig: {
+      label: 'Category',
+      isDetail: true,
     },
   },
   {
-    id: 'amenities',
-    label: 'Amenities',
-    type: 'SelectMultipleFilter',
-    group: 'secondary',
-    queryParamNames: ['pub_amenities'],
-    config: {
-      // Schema type options: 'enum', 'multi-enum'
-      // Both types can work so that user selects multiple values when filtering search results.
-      // With "enum" the functionality will be OR-semantics (Nike OR Adidas OR Salomon)
-      // With "multi-enum" it's possible to use both AND and OR semantics with searchMode config.
-      schemaType: 'multi-enum',
-
-      // Optional modes: 'has_all', 'has_any'
-      // Note: this is relevant only for schema type 'multi-enum'
-      // https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
-      searchMode: 'has_all',
-
-      // "key" is the option you see in Flex Console.
-      // "label" is set here for this web app's UI only.
-      // Note: label is not added through the translation files
-      // to make filter customizations a bit easier.
-      options: [
-        { key: 'towels', label: 'Towels' },
-        { key: 'bathroom', label: 'Bathroom' },
-        { key: 'swimming_pool', label: 'Swimming pool' },
-        { key: 'barbeque', label: 'Barbeque' },
-      ],
+    key: 'amenities',
+    scope: 'public',
+    includeForProcessAliases: ['flex-default-process/release-1'],
+    schemaType: 'multi-enum',
+    schemaOptions: ['Towels', 'Bathroom', 'Swimming pool', 'Barbeque'],
+    indexForSearch: true,
+    searchPageConfig: {
+      label: 'Amenities',
+    },
+    listingPageConfig: {
+      label: 'Category',
+    },
+    editListingPageConfig: {
+      label: 'Amenities',
     },
   },
 ];
@@ -81,7 +63,7 @@ describe('EditListingDetailsForm', () => {
         disabled={false}
         ready={false}
         processInfos={processInfos}
-        filterConfigs={filters}
+        listingExtendedDataConfig={listingExtendedDataConfig}
       />
     );
     expect(tree).toMatchSnapshot();

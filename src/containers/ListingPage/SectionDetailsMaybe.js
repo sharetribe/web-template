@@ -5,27 +5,39 @@ import { PropertyGroup } from '../../components';
 import css from './ListingPage.module.css';
 
 const SectionDetailsMaybe = props => {
-  const { publicData, customConfig } = props;
-  const { listing, filters } = customConfig || {};
+  const { publicData, metadata = {}, customConfig, intl } = props;
+  const { listingExtendedData } = customConfig || {};
 
-  if (!publicData || !customConfig || !listing?.enumFieldDetails) {
+  if (!publicData || !customConfig) {
     return null;
   }
 
-  const pickExtendedData = filterConfig => (rows, key) => {
+  const pickExtendedData = (filteredConfigs, config) => {
+    const { key, schemaType, schemaOptions, listingPageConfig = {} } = config;
+    const { isDetail, label } = listingPageConfig;
     const publicDataValue = publicData[key];
-    if (publicDataValue) {
-      const filterIfItExists = filterConfig.find(f => f.id === key);
-      const filterOptions = filterIfItExists?.config?.options || [];
-      const value = filterOptions.find(o => o.key === publicDataValue)?.label || publicDataValue;
-      const label = filterIfItExists?.label || `${key.charAt(0).toUpperCase()}${key.slice(1)}`;
+    const metadataValue = metadata[key];
+    const value = publicDataValue || metadataValue;
 
-      return rows.concat({ key, value, label });
+    if (isDetail && typeof value !== 'undefined') {
+      const findSelectedOption = enumValue =>
+        schemaOptions.find(o => enumValue === `${o}`.toLowerCase().replace(/\s/g, '_'));
+      const getBooleanMessage = value =>
+        value
+          ? intl.formatMessage({ id: 'SearchPage.detailYes' })
+          : intl.formatMessage({ id: 'SearchPage.detailNo' });
+      return schemaType === 'enum'
+        ? filteredConfigs.concat({ key, value: findSelectedOption(value), label })
+        : schemaType === 'boolean'
+        ? filteredConfigs.concat({ key, value: getBooleanMessage(value), label })
+        : schemaType === 'long'
+        ? filteredConfigs.concat({ key, value, label })
+        : null;
     }
-    return rows;
+    return filteredConfigs;
   };
 
-  const existingExtendedData = listing?.enumFieldDetails.reduce(pickExtendedData(filters), []);
+  const existingExtendedData = listingExtendedData.reduce(pickExtendedData, []);
 
   return existingExtendedData ? (
     <div className={css.sectionDetails}>
