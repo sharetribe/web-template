@@ -12,7 +12,11 @@ way to update this template, but currently, we follow a pattern:
 
 ---
 
-## Upcoming version 2021-XX-XX
+## Upcoming version 2022-XX-XX
+
+- [fix] A full-page refresh on product when stock = 1 causes 500 error. SSR gets change request
+  automatically from Final Form/FromSpy, and therefore window.fetch gets called on the server.
+  [#133](https://github.com/sharetribe/ftw-product/pull/133)
 
 ## [v9.1.0] 2021-12-02
 
