@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [change] ListingPage: remove filtersConfig. Use listingExtendedData & defaultFilters instead.
+  [#27](https://github.com/sharetribe/ftw-x/pull/27)
 - [change] SearchPage: remove filtersConfig. Use listingExtendedData & defaultFilters instead.
   [#26](https://github.com/sharetribe/ftw-x/pull/26)
 - [add] EditListingWizard: panels get picked based on selected transaction process. In addition,
