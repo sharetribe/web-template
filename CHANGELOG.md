@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [fix] Process graph had an error: provider notification about dispute being canceled was not sent
+  to provider but customer. [#135](https://github.com/sharetribe/ftw-product/pull/135)
 - [fix] CheckoutPage: add missing link for fallback error, when submitting.
   [#137](https://github.com/sharetribe/ftw-product/pull/137)
 - [fix] CheckoutPage: if the saveAfterOnetimePayment checkbox is checked and then unchecked, the
