@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [fix] CheckoutPage: if the saveAfterOnetimePayment checkbox is checked and then unchecked, the
+  value is already an array. [#136](https://github.com/sharetribe/ftw-product/pull/136)
+
 ## [v9.1.1] 2022-01-24
 
 - [fix] A full-page refresh on product when stock = 1 causes 500 error. SSR gets change request
