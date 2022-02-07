@@ -907,6 +907,7 @@
   "StripePaymentForm.paymentCardDetails": "Payment card details",
   "StripePaymentForm.paymentHeading": "Payment",
   "StripePaymentForm.pickupDetailsTitle": "Pickup location",
+  "StripePaymentForm.pickupLocationUnknown": "Pickup location not set. Contact provider.",
   "StripePaymentForm.replaceAfterOnetimePayment": "Replace card …{last4Digits} with the new card for future bookings",
   "StripePaymentForm.sameBillingAndShippingAddress": "My billing and shipping address are the same",
   "StripePaymentForm.saveAfterOnetimePayment": "Save card details for future bookings",
