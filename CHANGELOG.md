@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [fix] CheckoutPage: add missing link for fallback error, when submitting.
+  [#137](https://github.com/sharetribe/ftw-product/pull/137)
 - [fix] CheckoutPage: if the saveAfterOnetimePayment checkbox is checked and then unchecked, the
   value is already an array. [#136](https://github.com/sharetribe/ftw-product/pull/136)
 
