@@ -585,7 +585,8 @@ export class CheckoutPageComponent extends Component {
       message,
       paymentIntent,
       selectedPaymentMethod: paymentMethod,
-      saveAfterOnetimePayment: !!saveAfterOnetimePayment,
+      saveAfterOnetimePayment:
+        Array.isArray(saveAfterOnetimePayment) && saveAfterOnetimePayment.length > 0,
       ...shippingDetailsMaybe,
     };
 
