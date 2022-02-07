@@ -127,7 +127,12 @@ const bookingDatesMaybe = bookingDates => {
 };
 
 // Collect error message checks to a single function.
-const getErrorMessages = (listingNotFound, initiateOrderError, speculateTransactionError) => {
+const getErrorMessages = (
+  listingNotFound,
+  initiateOrderError,
+  speculateTransactionError,
+  listingLink
+) => {
   let listingNotFoundErrorMessage = null;
   let initiateOrderErrorMessage = null;
   let speculateErrorMessage = null;
@@ -666,13 +671,6 @@ export class CheckoutPageComponent extends Component {
       isTransactionInitiateListingNotFoundError(speculateTransactionError) ||
       isTransactionInitiateListingNotFoundError(initiateOrderError);
 
-    const {
-      listingNotFoundErrorMessage,
-      initiateOrderErrorMessage,
-      speculateErrorMessage,
-      speculateTransactionErrorMessage,
-    } = getErrorMessages(listingNotFound, initiateOrderError, speculateTransactionError);
-
     const isLoading = !this.state.dataLoaded || speculateTransactionInProgress;
 
     const { listing, transaction, orderData } = this.state.pageData;
@@ -779,6 +777,18 @@ export class CheckoutPageComponent extends Component {
       >
         <FormattedMessage id="CheckoutPage.errorlistingLinkText" />
       </NamedLink>
+    );
+
+    const {
+      listingNotFoundErrorMessage,
+      initiateOrderErrorMessage,
+      speculateErrorMessage,
+      speculateTransactionErrorMessage,
+    } = getErrorMessages(
+      listingNotFound,
+      initiateOrderError,
+      speculateTransactionError,
+      listingLink
     );
 
     const unitType = config.lineItemUnitType;
