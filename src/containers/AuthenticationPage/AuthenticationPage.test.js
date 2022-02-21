@@ -1,148 +1,114 @@
 import React from 'react';
-import { renderShallow } from '../../util/test-helpers';
-import {
-  AuthenticationOrConfirmInfoForm,
-  AuthenticationForms,
-  SocialLoginButtonsMaybe,
-} from './AuthenticationPage';
+import '@testing-library/jest-dom';
+
+import { renderWithProviders as render, testingLibrary } from '../../util/test-helpers';
+import { fakeIntl } from '../../util/test-data';
+
+import AuthenticationPage from './AuthenticationPage';
+
+const { screen, waitFor, userEvent } = testingLibrary;
 
 const noop = () => null;
 
-describe('AuthenticationOrConfirmInfoForm', () => {
-  // We need to overwrite social login client ids before running the test
-  // to make sure it's same in local environment and in CI
+const props = {
+  tab: 'login',
+  isAuthenticated: false,
+  authInProgress: false,
+  scrollingDisabled: false,
+  currentUserHasListings: false,
+  onLogout: noop,
+  onManageDisableScrolling: noop,
+  onResendVerificationEmail: noop,
+  submitLogin: noop,
+  submitSignup: noop,
+  sendVerificationEmailInProgress: false,
+
+  location: { state: { from: '/protected' } },
+
+  intl: fakeIntl,
+};
+
+describe('AuthenticationPage', () => {
   beforeEach(() => {
+    // This is not defined by default on test env. AuthenticationPage needs it.
+    window.scrollTo = jest.fn();
+
     process.env = Object.assign(process.env, { REACT_APP_FACEBOOK_APP_ID: '' });
     process.env = Object.assign(process.env, { REACT_APP_GOOGLE_CLIENT_ID: '' });
   });
 
-  it('tab=login matches snapshot', () => {
-    const props = {
-      tab: 'login',
-      authInfo: {
-        idpToken: 'idpToken',
-        email: 'email',
-        firstName: 'firstName',
-        lastName: 'lastName',
-        idpId: 'idpId',
-      },
-      authInProgress: false,
-      submitLogin: noop,
-      submitSignup: noop,
-      submitSingupWithIdp: noop,
-      termsAndConditions: '[ ] terms and conditions',
-    };
-    const tree = renderShallow(<AuthenticationOrConfirmInfoForm {...props} />);
-    expect(tree).toMatchSnapshot();
+  afterAll(() => {
+    // Remove window.scrollTo
+    jest.clearAllMocks();
   });
 
-  it('tab=confirm matches snapshot', () => {
-    const props = {
-      tab: 'confirm',
-      authInfo: {
-        idpToken: 'idpToken',
-        email: 'email',
-        firstName: 'firstName',
-        lastName: 'lastName',
-        idpId: 'idpId',
-      },
-      authInProgress: false,
-      submitLogin: noop,
-      submitSignup: noop,
-      submitSingupWithIdp: noop,
-      termsAndConditions: '[ ] terms and conditions',
-    };
-    const tree = renderShallow(<AuthenticationOrConfirmInfoForm {...props} />);
-    expect(tree).toMatchSnapshot();
-  });
-});
-
-describe('AuthenticationForms with Facebook login', () => {
-  // We need to overwrite social login client ids before running the test
-  // to make sure it's same in local environment and in CI
-  beforeEach(() => {
-    process.env = Object.assign(process.env, { REACT_APP_FACEBOOK_APP_ID: 'test' });
-    process.env = Object.assign(process.env, { REACT_APP_GOOGLE_CLIENT_ID: '' });
-  });
-
-  it('matches snapshot', () => {
-    const props = {
-      isLogin: true,
-      showFacebookLogin: !!process.env.REACT_APP_FACEBOOK_APP_ID,
-      showGoogleLogin: !!process.env.REACT_APP_GOOGLE_CLIENT_ID,
-      from: null,
-      loginError: null,
-      signupError: null,
-      submitLogin: noop,
-      authInProgress: false,
-      submitSignup: noop,
-      termsAndConditions: '[ ] terms and conditions',
-    };
-    const tree = renderShallow(<AuthenticationForms {...props} />);
-    expect(tree).toMatchSnapshot();
-  });
-});
-
-describe('AuthenticationForms with Google login', () => {
-  // We need to overwrite social login client ids before running the test
-  // to make sure it's same in local environment and in CI
-  beforeEach(() => {
+  test('AuthenticationPage login tab has just email and password inputs if social logins are not enabled', () => {
+    // We want to make sure that during the test the env variables
+    // for social logins are as we expect them to be
     process.env = Object.assign(process.env, { REACT_APP_FACEBOOK_APP_ID: '' });
-    process.env = Object.assign(process.env, { REACT_APP_GOOGLE_CLIENT_ID: 'test' });
+    process.env = Object.assign(process.env, { REACT_APP_GOOGLE_CLIENT_ID: '' });
+
+    render(<AuthenticationPage {...props} />);
+
+    expect(screen.getByRole('textbox', { name: 'LoginForm.emailLabel' })).toBeInTheDocument();
+    expect(screen.getByLabelText('LoginForm.passwordLabel')).toBeInTheDocument();
+
+    // The standard getBy methods throw an error when they can't find an element,
+    // so if you want to make an assertion that an element is not present in the DOM,
+    // you can use queryBy APIs instead:
+    expect(
+      screen.queryByRole('button', { name: 'AuthenticationPage.loginWithFacebook' })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'AuthenticationPage.loginWithGoogle' })
+    ).not.toBeInTheDocument();
   });
 
-  it('matches snapshot', () => {
-    const props = {
-      isLogin: true,
-      showFacebookLogin: !!process.env.REACT_APP_FACEBOOK_APP_ID,
-      showGoogleLogin: !!process.env.REACT_APP_GOOGLE_CLIENT_ID,
-      from: null,
-      loginError: null,
-      signupError: null,
-      submitLogin: noop,
-      authInProgress: false,
-      submitSignup: noop,
-      onOpenTermsOfService: noop,
-    };
-    const tree = renderShallow(<AuthenticationForms {...props} />);
-    expect(tree).toMatchSnapshot();
+  test('On AuthenticationPage clicking "Sign up" changes the login form to sign up form', async () => {
+    // We want to make sure that during the test the env variables
+    // for social logins are as we expect them to be
+    process.env = Object.assign(process.env, { REACT_APP_FACEBOOK_APP_ID: '' });
+    process.env = Object.assign(process.env, { REACT_APP_GOOGLE_CLIENT_ID: '' });
+
+    render(<AuthenticationPage {...props} />);
+
+    // First we can check that login button is in the document
+    expect(screen.getByRole('button', { name: 'LoginForm.logIn' })).toBeInTheDocument();
+
+    // User event for changing the tab
+    userEvent.click(screen.getByRole('link', { name: 'AuthenticationPage.signupLinkText' }));
+
+    // Then we can check that login sign up button is in the document
+    waitFor(() =>
+      expect(screen.findByRole('button', { name: 'SignupForm.signUp' })).toBeInTheDocument()
+    );
   });
 });
 
-describe('AuthenticationForms with Facebook and Google login', () => {
-  // We need to overwrite social login client ids before running the test
-  // to make sure it's same in local environment and in CI
+describe('AuthenticationPage with SSO', () => {
   beforeEach(() => {
-    process.env = Object.assign(process.env, { REACT_APP_FACEBOOK_APP_ID: 'test' });
-    process.env = Object.assign(process.env, { REACT_APP_GOOGLE_CLIENT_ID: 'test' });
+    // This is not defined by default on test env. AuthenticationPage needs it.
+    window.scrollTo = jest.fn();
   });
 
-  it('matches snapshot', () => {
-    const props = {
-      isLogin: true,
-      showFacebookLogin: !!process.env.REACT_APP_FACEBOOK_APP_ID,
-      showGoogleLogin: !!process.env.REACT_APP_GOOGLE_CLIENT_ID,
-      from: null,
-      loginError: null,
-      signupError: null,
-      submitLogin: noop,
-      authInProgress: false,
-      submitSignup: noop,
-      termsAndConditions: '[ ] terms and conditions',
-    };
-    const tree = renderShallow(<AuthenticationForms {...props} />);
-    expect(tree).toMatchSnapshot();
+  afterAll(() => {
+    // Remove window.scrollTo
+    jest.clearAllMocks();
   });
-});
 
-describe('SocialLoginButtonsMaybe with Facebook and Google login', () => {
-  it('matches snapshot', () => {
-    const props = {
-      isLogin: true,
-      showFacebookLogin: true,
-      showGoogleLogin: true,
-    };
-    const tree = renderShallow(<SocialLoginButtonsMaybe {...props} />);
-    expect(tree).toMatchSnapshot();
+  test('AuthenticationPage login tab has social login buttons when the env variables are in place', () => {
+    // We want to make sure that during the test the env variables
+    // for social logins are as we expect them to be
+    process.env = Object.assign(process.env, { REACT_APP_FACEBOOK_APP_ID: 'test-fb' });
+    process.env = Object.assign(process.env, { REACT_APP_GOOGLE_CLIENT_ID: 'test-google' });
+
+    render(<AuthenticationPage {...props} />);
+
+    expect(
+      screen.getByRole('button', { name: 'AuthenticationPage.loginWithFacebook' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'AuthenticationPage.loginWithGoogle' })
+    ).toBeInTheDocument();
   });
 });

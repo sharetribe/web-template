@@ -38,14 +38,9 @@ function render(ui, { ...renderOptions } = {}) {
 const noop = () => null;
 
 describe('SignupForm', () => {
-
   // Terms and conditions component passed in as props
   const termsAndConditions = (
-    <TermsAndConditions
-      onOpenTermsOfService={noop}
-      onOpenPrivacyPolicy={noop}
-      intl={fakeIntl}
-    />
+    <TermsAndConditions onOpenTermsOfService={noop} onOpenPrivacyPolicy={noop} intl={fakeIntl} />
   );
 
   // // If snapshot testing is preferred, this could be used
@@ -64,7 +59,10 @@ describe('SignupForm', () => {
     expect(screen.getByRole('button', { name: 'SignupForm.signUp' })).toBeDisabled();
 
     // Type the values to the sign up form
-    userEvent.type(screen.getByRole('textbox', { name: 'SignupForm.emailLabel' }), 'joe@example.com');
+    userEvent.type(
+      screen.getByRole('textbox', { name: 'SignupForm.emailLabel' }),
+      'joe@example.com'
+    );
     userEvent.type(screen.getByRole('textbox', { name: 'SignupForm.firstNameLabel' }), 'Joe');
     userEvent.type(screen.getByRole('textbox', { name: 'SignupForm.lastNameLabel' }), 'Dunphy');
     userEvent.type(screen.getByLabelText('SignupForm.passwordLabel'), 'secret-joe');
