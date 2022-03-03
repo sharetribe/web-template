@@ -96,7 +96,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                 "label": "Category",
               },
               "includeForProcessAliases": Array [
-                "flex-default-process/release-1",
+                "flex-booking-default-process/release-1",
               ],
               "indexForSearch": true,
               "key": "amenities",
@@ -230,7 +230,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                   "label": "Category",
                 },
                 "includeForProcessAliases": Array [
-                  "flex-default-process/release-1",
+                  "flex-booking-default-process/release-1",
                 ],
                 "indexForSearch": true,
                 "key": "amenities",
