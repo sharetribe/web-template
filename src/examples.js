@@ -76,6 +76,7 @@ import * as StripeBankAccountTokenInputField from './components/StripeBankAccoun
 import * as TabNav from './components/TabNav/TabNav.example';
 import * as TabNavHorizontal from './components/TabNavHorizontal/TabNavHorizontal.example';
 import * as Tabs from './components/Tabs/Tabs.example';
+import * as TimeRange from './components/TimeRange/TimeRange.example';
 import * as UserCard from './components/UserCard/UserCard.example';
 import * as UserDisplayName from './components/UserDisplayName/UserDisplayName.example';
 
@@ -207,6 +208,7 @@ export {
   TabNav,
   TabNavHorizontal,
   Tabs,
+  TimeRange,
   Typography,
   UserCard,
   UserDisplayName,
