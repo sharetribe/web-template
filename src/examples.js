@@ -15,7 +15,6 @@
 
 // components
 import * as Avatar from './components/Avatar/Avatar.example';
-import * as BookingTimeInfo from './components/BookingTimeInfo/BookingTimeInfo.example';
 import * as Button from './components/Button/Button.example';
 import * as ExpandingTextarea from './components/ExpandingTextarea/ExpandingTextarea.example';
 import * as EstimatedCustomerBreakdownMaybe from './components/OrderPanel/EstimatedCustomerBreakdownMaybe.example';
@@ -120,7 +119,6 @@ export {
   Avatar,
   BookingDateRangeFilter,
   BookingDatesForm,
-  BookingTimeInfo,
   Button,
   Colors,
   EditListingAvailabilityForm,
