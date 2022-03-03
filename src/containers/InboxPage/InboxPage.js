@@ -1,19 +1,25 @@
 import React from 'react';
-import { arrayOf, bool, number, object, oneOf, shape, string } from 'prop-types';
+import { arrayOf, bool, number, oneOf, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
-import config from '../../config';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { TX_TRANSITION_ACTOR_CUSTOMER, TX_TRANSITION_ACTOR_PROVIDER } from '../../util/transaction';
-import { propTypes, DATE_TYPE_DATE, LINE_ITEM_ITEM, LISTING_UNIT_TYPES } from '../../util/types';
-import { formatDateIntoPartials } from '../../util/dates';
+import {
+  propTypes,
+  DATE_TYPE_DATE,
+  LINE_ITEM_ITEM,
+  LINE_ITEM_NIGHT,
+  LISTING_UNIT_TYPES,
+} from '../../util/types';
+import { formatDateIntoPartials, subtractTime } from '../../util/dates';
+import { getProcess } from '../../util/transaction';
+
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 import {
   Avatar,
-  BookingTimeInfo,
   NamedLink,
   NotificationBadge,
   Page,
@@ -26,6 +32,7 @@ import {
   LayoutWrapperFooter,
   Footer,
   IconSpinner,
+  TimeRange,
   UserDisplayName,
 } from '../../components';
 
@@ -34,6 +41,54 @@ import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import { stateDataShape, getStateData } from './InboxPage.stateData';
 import css from './InboxPage.module.css';
+
+const bookingData = (tx, timeZone) => {
+  // Attributes: displayStart and displayEnd can be used to differentiate shown time range
+  // from actual start and end times used for availability reservation. It can help in situations
+  // where there are preparation time needed between bookings.
+  // Read more: https://www.sharetribe.com/api-reference/marketplace.html#bookings
+  const { start, end, displayStart, displayEnd } = tx.booking.attributes;
+  const bookingStart = displayStart || start;
+  const bookingEndRaw = displayEnd || end;
+
+  // When unit type is night, we can assume booking end to be inclusive.
+  const unitType = tx?.listing?.attributes?.publicData?.unitType;
+  const isNight = `line-item/${unitType}` === LINE_ITEM_NIGHT;
+  const bookingEnd = isNight ? bookingEndRaw : subtractTime(bookingEndRaw, 1, 'days', timeZone);
+
+  return { bookingStart, bookingEnd };
+};
+
+const BookingTimeInfoMaybe = props => {
+  const { transaction, dateType, ...rest } = props;
+  const processName = transaction.attributes.processName;
+  const process = getProcess(processName);
+  const isEnquiry = process.getState(transaction) === process.states.ENQUIRY;
+
+  if (isEnquiry) {
+    return null;
+  }
+
+  const timeZone = transaction?.listing?.attributes?.availabilityPlan?.timezone || 'Etc/UTC';
+  const { bookingStart, bookingEnd } = bookingData(transaction, timeZone);
+
+  return (
+    <TimeRange
+      startDate={bookingStart}
+      endDate={bookingEnd}
+      dateType={dateType}
+      timeZone={timeZone}
+      {...rest}
+    />
+  );
+};
+
+BookingTimeInfoMaybe.defaultProps = { dateType: null, timeZone: null };
+
+BookingTimeInfoMaybe.propTypes = {
+  transaction: propTypes.transaction.isRequired,
+  dateType: propTypes.dateType,
+};
 
 export const InboxItem = props => {
   const { transactionRole, tx, intl, stateData } = props;
@@ -91,15 +146,9 @@ export const InboxItem = props => {
             <br />
             {isProductOrder ? (
               <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
-            ) : tx?.booking ? (
-              <BookingTimeInfo
-                isOrder={isCustomer}
-                intl={intl}
-                booking={tx.booking}
-                lineItemUnitType={unitLineItem?.code}
-                dateType={DATE_TYPE_DATE}
-              />
-            ) : null}
+            ) : (
+              <BookingTimeInfoMaybe transaction={tx} dateType={DATE_TYPE_DATE} />
+            )}
           </div>
         </div>
         <div className={css.itemState}>
