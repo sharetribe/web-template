@@ -40,14 +40,6 @@ const listingPageLayout = 'full-image';
 //         search off by removing keyword filter config from filters array in marketplace-custom-config.js
 const sortSearchByDistance = false;
 
-// API supports custom processes to be used in booking process.
-// We need to specify it when we are initiating a new order
-// (or fetching price information by calling 'initiateSpeculative' endpoint).
-//
-// In a way, 'processAlias' defines which transaction process (or processes)
-// this particular web application is able to handle.
-const transactionProcessAlias = 'flex-product-default-process/release-1';
-
 // The transaction line item code for the main unit type for listings.
 //
 // Possible values: ['line-item/night', 'line-item/day', 'line-item/item';]
@@ -230,7 +222,6 @@ const config = {
   env,
   dev,
   locale,
-  transactionProcessAlias,
   lineItemUnitType,
   listingManagementType,
   dayCountAvailableForBooking,
