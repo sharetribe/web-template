@@ -2,6 +2,7 @@ import { createIntl, createIntlCache } from './reactIntl';
 import {
   isDate,
   isSameDate,
+  isSameDay,
   daysBetween,
   minutesBetween,
   diffInTime,
@@ -48,6 +49,24 @@ describe('date utils', () => {
     });
     it('should be truthy if parameters match', () => {
       expect(isSameDate(new Date(2019, 0, 1), new Date(2019, 0, 1))).toBeTruthy();
+    });
+  });
+
+  describe('isSameDay()', () => {
+    it('should fail if the dates are pointing to different days', () => {
+      const d1 = new Date(Date.UTC(2019, 0, 1, 10, 0, 0));
+      const d2 = new Date(Date.UTC(2019, 0, 2, 10, 0, 0));
+      expect(isSameDay(d1, d2, 'Etc/UTC')).toBeFalsy();
+
+      // 1 second difference around midnight
+      const d3 = new Date(Date.UTC(2019, 0, 1, 23, 59, 59));
+      const d4 = new Date(Date.UTC(2019, 0, 2, 0, 0, 0));
+      expect(isSameDay(d3, d4, 'Etc/UTC')).toBeFalsy();
+    });
+    it('should succeed if the dates are pointing to the same days', () => {
+      const d1 = new Date(Date.UTC(2019, 0, 1, 10, 0, 0));
+      const d2 = new Date(Date.UTC(2019, 0, 1, 10, 0, 0));
+      expect(isSameDay(d1, d2, 'Etc/UTC')).toBeTruthy();
     });
   });
 

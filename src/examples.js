@@ -15,7 +15,6 @@
 
 // components
 import * as Avatar from './components/Avatar/Avatar.example';
-import * as BookingTimeInfo from './components/BookingTimeInfo/BookingTimeInfo.example';
 import * as Button from './components/Button/Button.example';
 import * as ExpandingTextarea from './components/ExpandingTextarea/ExpandingTextarea.example';
 import * as EstimatedCustomerBreakdownMaybe from './components/OrderPanel/EstimatedCustomerBreakdownMaybe.example';
@@ -76,6 +75,7 @@ import * as StripeBankAccountTokenInputField from './components/StripeBankAccoun
 import * as TabNav from './components/TabNav/TabNav.example';
 import * as TabNavHorizontal from './components/TabNavHorizontal/TabNavHorizontal.example';
 import * as Tabs from './components/Tabs/Tabs.example';
+import * as TimeRange from './components/TimeRange/TimeRange.example';
 import * as UserCard from './components/UserCard/UserCard.example';
 import * as UserDisplayName from './components/UserDisplayName/UserDisplayName.example';
 
@@ -119,7 +119,6 @@ export {
   Avatar,
   BookingDateRangeFilter,
   BookingDatesForm,
-  BookingTimeInfo,
   Button,
   Colors,
   EditListingAvailabilityForm,
@@ -207,6 +206,7 @@ export {
   TabNav,
   TabNavHorizontal,
   Tabs,
+  TimeRange,
   Typography,
   UserCard,
   UserDisplayName,
