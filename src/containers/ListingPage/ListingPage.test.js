@@ -42,7 +42,7 @@ const customConfig = {
     {
       key: 'amenities',
       scope: 'public',
-      includeForProcessAliases: ['flex-default-process/release-1'],
+      includeForProcessAliases: ['flex-booking-default-process/release-1'],
       schemaType: 'multi-enum',
       schemaOptions: ['Feat 1', 'Feat 2', 'Feat 3'],
       indexForSearch: true,
