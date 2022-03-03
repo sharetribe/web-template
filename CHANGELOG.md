@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+- [add]TimeRange component. (Remove BookingTimeInfo from shared components)
+  [#30](https://github.com/sharetribe/ftw-x/pull/30)
 - [change]Rename the default booking process: flex-booking-default-process.
   [#29](https://github.com/sharetribe/ftw-x/pull/29)
 - [change] ListingPage: remove filtersConfig. Use listingExtendedData & defaultFilters instead.
