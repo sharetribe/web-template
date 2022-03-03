@@ -3,7 +3,7 @@ import { getStateDataForBookingProcess } from './TransactionPage.stateDataBookin
 import { getStateDataForProductProcess } from './TransactionPage.stateDataProduct.js';
 
 const FLEX_PRODUCT_DEFAULT_PROCESS = 'flex-product-default-process';
-const FLEX_DAILY_DEFAULT_PROCESS = 'flex-default-process';
+const FLEX_BOOKING_DEFAULT_PROCESS = 'flex-booking-default-process';
 
 const errorShape = shape({
   type: oneOf(['error']).isRequired,
@@ -131,7 +131,7 @@ export const getStateData = (params, process) => {
 
   if (processName === FLEX_PRODUCT_DEFAULT_PROCESS) {
     return getStateDataForProductProcess(params, processInfo());
-  } else if (processName === FLEX_DAILY_DEFAULT_PROCESS) {
+  } else if (processName === FLEX_BOOKING_DEFAULT_PROCESS) {
     return getStateDataForBookingProcess(params, processInfo());
   } else {
     return {};

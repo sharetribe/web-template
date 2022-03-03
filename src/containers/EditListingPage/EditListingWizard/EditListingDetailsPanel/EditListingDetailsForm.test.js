@@ -34,7 +34,7 @@ const listingExtendedDataConfig = [
   {
     key: 'amenities',
     scope: 'public',
-    includeForProcessAliases: ['flex-default-process/release-1'],
+    includeForProcessAliases: ['flex-booking-default-process/release-1'],
     schemaType: 'multi-enum',
     schemaOptions: ['Towels', 'Bathroom', 'Swimming pool', 'Barbeque'],
     indexForSearch: true,

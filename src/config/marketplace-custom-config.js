@@ -6,7 +6,7 @@
  * Active processes.
  * Note: these should match with the process names in src/util/transaction.js
  */
-export const processes = ['flex-product-default-process', 'flex-default-process'];
+export const processes = ['flex-product-default-process', 'flex-booking-default-process'];
 
 /**
  * Configuration options for extended data fields:
@@ -123,7 +123,7 @@ export const listingExtendedData = [
   {
     key: 'category_sauna',
     scope: 'public',
-    includeForProcessAliases: ['flex-default-process/release-1'],
+    includeForProcessAliases: ['flex-booking-default-process/release-1'],
     schemaType: 'enum',
     schemaOptions: ['Smoky', 'Electric', 'Wood', 'Other'],
     indexForSearch: true,
@@ -143,7 +143,7 @@ export const listingExtendedData = [
   {
     key: 'amenities',
     scope: 'public',
-    includeForProcessAliases: ['flex-default-process/release-1'],
+    includeForProcessAliases: ['flex-booking-default-process/release-1'],
     schemaType: 'multi-enum',
     schemaOptions: ['Towels', 'Bathroom', 'Swimming pool', 'Barbeque'],
     indexForSearch: true,
@@ -178,7 +178,7 @@ export const listingExtendedData = [
   {
     key: 'note',
     scope: 'private',
-    includeForProcessAliases: ['flex-default-process/release-1'],
+    includeForProcessAliases: ['flex-booking-default-process/release-1'],
     schemaType: 'text',
     indexForSearch: false,
     editListingPageConfig: {
