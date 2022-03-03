@@ -104,8 +104,8 @@ describe('transaction utils for flex-product-default-process', () => {
   });
 });
 
-describe('transaction utils for flex-default-process', () => {
-  const process = getProcess('flex-default-process');
+describe('transaction utils for flex-booking-default-process', () => {
+  const process = getProcess('flex-booking-default-process');
   const transitions = process?.transitions;
 
   // const transitionConfirmPayment = createTxTransition({

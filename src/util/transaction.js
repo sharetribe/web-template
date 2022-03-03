@@ -11,7 +11,7 @@ export const HOUR = 'hour';
 
 // Then names of supported processes
 export const PRODUCT_PROCESS_NAME = 'flex-product-default-process';
-export const BOOKING_PROCESS_NAME = 'flex-default-process';
+export const BOOKING_PROCESS_NAME = 'flex-booking-default-process';
 
 /**
  * A process should export:
@@ -32,17 +32,10 @@ const PROCESSES = [
     unitTypes: [ITEM],
   },
   {
-    name: 'flex-hourly-default-process',
-    alias: 'release-1',
-    process: bookingProcess,
-    unitTypes: [HOUR],
-  },
-  {
-    // TODO: ideally, this should be 'flex-booking-default-process'
     name: BOOKING_PROCESS_NAME,
     alias: 'release-1',
     process: bookingProcess,
-    unitTypes: [DAY, NIGHT],
+    unitTypes: [DAY, NIGHT, HOUR],
   },
 ];
 

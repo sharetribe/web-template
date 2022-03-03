@@ -5,7 +5,7 @@ import { getStateDataForBookingProcess } from './InboxPage.stateDataBooking.js';
 import { getStateDataForProductProcess } from './InboxPage.stateDataProduct.js';
 
 const FLEX_PRODUCT_DEFAULT_PROCESS = 'flex-product-default-process';
-const FLEX_DAILY_DEFAULT_PROCESS = 'flex-default-process';
+const FLEX_BOOKING_DEFAULT_PROCESS = 'flex-booking-default-process';
 
 export const stateDataShape = shape({
   processName: string.isRequired,
@@ -34,7 +34,7 @@ export const getStateData = params => {
 
   if (processName === FLEX_PRODUCT_DEFAULT_PROCESS) {
     return getStateDataForProductProcess(params, processInfo());
-  } else if (processName === FLEX_DAILY_DEFAULT_PROCESS) {
+  } else if (processName === FLEX_BOOKING_DEFAULT_PROCESS) {
     return getStateDataForBookingProcess(params, processInfo());
   } else {
     return {};

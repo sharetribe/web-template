@@ -192,7 +192,7 @@ exports[`ListingPage matches snapshot 1`] = `
                     },
                     Object {
                       "includeForProcessAliases": Array [
-                        "flex-default-process/release-1",
+                        "flex-booking-default-process/release-1",
                       ],
                       "indexForSearch": true,
                       "key": "amenities",

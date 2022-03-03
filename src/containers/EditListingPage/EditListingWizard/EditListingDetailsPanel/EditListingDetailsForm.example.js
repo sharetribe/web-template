@@ -40,7 +40,7 @@ const processInfos = [
     unitTypes: ['item'],
   },
   {
-    name: 'flex-default-process',
+    name: 'flex-booking-default-process',
     alias: 'release-1',
     unitTypes: ['day', 'night'],
   },
