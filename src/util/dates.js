@@ -41,6 +41,18 @@ export const isValidTimeZone = timeZone => {
 };
 
 /**
+ * Return the names of the time zones according to IANA timezone db.
+ *
+ * @param {RegExp} relevantZonesRegExp is pattern to filter returned time zones.
+ *
+ * @returns {Array} an array of relevant time zones.
+ */
+export const getTimeZoneNames = relevantZonesRegExp => {
+  const allTimeZones = moment.tz.names();
+  return relevantZonesRegExp ? allTimeZones.filter(z => relevantZonesRegExp.test(z)) : allTimeZones;
+};
+
+/**
  * Check that the given parameter is a Date object.
  *
  * @param {Date} object that should be a Date.

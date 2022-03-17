@@ -83,6 +83,7 @@ import * as UserDisplayName from './components/UserDisplayName/UserDisplayName.e
 import * as SignupForm from './containers/AuthenticationPage/SignupForm/SignupForm.example';
 import * as LoginForm from './containers/AuthenticationPage/LoginForm/LoginForm.example';
 import * as StripePaymentForm from './containers/CheckoutPage/StripePaymentForm/StripePaymentForm.example';
+import * as FieldTimeZoneSelect from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/FieldTimeZoneSelect/FieldTimeZoneSelect.example';
 import * as EditListingAvailabilityForm from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/EditListingAvailabilityForm.example';
 import * as EditListingDetailsForm from './containers/EditListingPage/EditListingWizard/EditListingDetailsPanel/EditListingDetailsForm.example';
 import * as EditListingDeliveryForm from './containers/EditListingPage/EditListingWizard/EditListingDeliveryPanel/EditListingDeliveryForm.example';
@@ -146,6 +147,7 @@ export {
   FieldReviewRating,
   FieldSelect,
   FieldTextInput,
+  FieldTimeZoneSelect,
   FilterForm,
   FilterPlain,
   FilterPopup,
