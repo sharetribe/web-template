@@ -16,7 +16,7 @@ import { intlShape, injectIntl } from '../../util/reactIntl';
 import classNames from 'classnames';
 import moment from 'moment';
 import config from '../../config';
-import { propTypes, TIME_SLOT_DAY } from '../../util/types';
+import { propTypes, TIME_SLOT_TIME } from '../../util/types';
 import { timeOfDayFromTimeZoneToLocal } from '../../util/dates';
 import { ensureTimeSlot } from '../../util/data';
 
@@ -115,7 +115,7 @@ const timeSlotEqualsDay = (timeSlot, day) => {
   const apiTimeZone = 'Etc/UTC';
   const localStartDate = timeOfDayFromTimeZoneToLocal(timeSlot.attributes.start, apiTimeZone);
 
-  const isDay = ensureTimeSlot(timeSlot).attributes.type === TIME_SLOT_DAY;
+  const isDay = ensureTimeSlot(timeSlot).attributes.type === TIME_SLOT_TIME;
   return isDay && isSameDay(day, moment(localStartDate));
 };
 
