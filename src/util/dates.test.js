@@ -1,5 +1,6 @@
 import { createIntl, createIntlCache } from './reactIntl';
 import {
+  getTimeZoneNames,
   isDate,
   isSameDate,
   isSameDay,
@@ -25,6 +26,19 @@ describe('date utils', () => {
   // Tests inject now() function to intl wich returns predefined date
   // Note: fakeIntl uses this same moment
   intl.now = () => Date.UTC(2017, 10, 23, 12, 59);
+
+  describe('getTimeZoneNames()', () => {
+    it('should return false if parameters is string', () => {
+      const europeZonesPattern = new RegExp('^(Europe)');
+      const europeTimeZones = getTimeZoneNames(europeZonesPattern);
+      expect(europeTimeZones.includes('America/New_York')).toBeFalsy();
+    });
+    it('should return "Europe/Helsinki" if Europe time zones are returned', () => {
+      const europeZonesPattern = new RegExp('^(Europe)');
+      const europeTimeZones = getTimeZoneNames(europeZonesPattern);
+      expect(europeTimeZones.includes('Europe/Helsinki')).toBeTruthy();
+    });
+  });
 
   describe('isDate()', () => {
     it('should return false if parameters is string', () => {
