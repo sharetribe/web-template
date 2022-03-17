@@ -20,9 +20,12 @@
   &:hover + label .required,
   &:focus + label .notChecked,
   &:focus + label .required,
-  &:checked + label .notChecked,
   &:checked + label .required {
     stroke: var(--matterColorDark);
+  }
+
+  &:checked + label .notChecked {
+    stroke: none;
   }
 
   /* Hightlight the text on checked, hover and focus */
@@ -51,10 +54,13 @@
   cursor: pointer;
 }
 
-.checked {
-  display: none;
+.checkedStyle {
   stroke: var(--marketplaceColor);
   fill: var(--marketplaceColor);
+}
+
+.checked {
+  display: none;
 }
 
 .notChecked {
