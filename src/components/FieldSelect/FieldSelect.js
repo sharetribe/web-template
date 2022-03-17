@@ -7,7 +7,18 @@ import { ValidationError } from '../../components';
 import css from './FieldSelect.module.css';
 
 const FieldSelectComponent = props => {
-  const { rootClassName, className, id, label, input, meta, children, onChange, ...rest } = props;
+  const {
+    rootClassName,
+    className,
+    selectClassName,
+    id,
+    label,
+    input,
+    meta,
+    children,
+    onChange,
+    ...rest
+  } = props;
 
   if (label && !id) {
     throw new Error('id required when a label is given');
@@ -19,8 +30,8 @@ const FieldSelectComponent = props => {
   // field has been touched and the validation has failed.
   const hasError = touched && invalid && error;
 
-  const selectClasses = classNames(css.select, {
-    [css.selectSuccess]: valid,
+  const selectClasses = classNames(selectClassName, css.select, {
+    [css.selectSuccess]: input.value && valid,
     [css.selectError]: hasError,
   });
   const handleChange = e => {
@@ -45,6 +56,7 @@ const FieldSelectComponent = props => {
 FieldSelectComponent.defaultProps = {
   rootClassName: null,
   className: null,
+  selectClassName: null,
   id: null,
   label: null,
   children: null,
@@ -55,6 +67,7 @@ const { string, object, node } = PropTypes;
 FieldSelectComponent.propTypes = {
   rootClassName: string,
   className: string,
+  selectClassName: string,
 
   // Label is optional, but if it is given, an id is also required so
   // the label can reference the input in the `for` attribute

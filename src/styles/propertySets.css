@@ -555,6 +555,7 @@
 
   --marketplaceSelectStyles: {
     @apply --marketplaceInputStyles;
+    padding: 6px 24px 4px 12px;
     box-shadow: 0 2px 3px 0 rgba(216, 220, 230, 0.7);
 
     /* Unset user agent styles */
@@ -566,6 +567,7 @@
     background-size: 8px 14px;
 
     @media (--viewportMedium) {
+      padding: 7px 32px 7px 16px;
       background-position: center right 16px;
       background-size: 10px 16px;
     }
