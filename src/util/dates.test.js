@@ -4,6 +4,8 @@ import {
   isDate,
   isSameDate,
   isSameDay,
+  isInRange,
+  getStartOf,
   daysBetween,
   minutesBetween,
   diffInTime,
@@ -11,6 +13,10 @@ import {
   formatDateIntoPartials,
   parseDateFromISO8601,
   stringifyDateToISO8601,
+  findNextBoundary,
+  getSharpHours,
+  getStartHours,
+  getEndHours,
   monthIdString,
 } from './dates';
 
@@ -81,6 +87,76 @@ describe('date utils', () => {
       const d1 = new Date(Date.UTC(2019, 0, 1, 10, 0, 0));
       const d2 = new Date(Date.UTC(2019, 0, 1, 10, 0, 0));
       expect(isSameDay(d1, d2, 'Etc/UTC')).toBeTruthy();
+    });
+  });
+
+  describe('isInRange()', () => {
+    const d1 = new Date(Date.UTC(2019, 0, 1, 10, 0, 0));
+    const d2 = new Date(Date.UTC(2019, 0, 2, 10, 0, 0));
+    let undefined;
+
+    it('should fail if day is wrong', () => {
+      const date = new Date(Date.UTC(2019, 0, 3, 10, 0, 0));
+      expect(isInRange(date, d1, d2, 'day', 'Etc/UTC')).toBeFalsy();
+    });
+
+    it('should fail if date is same as exclusive end', () => {
+      expect(isInRange(d2, d1, d2, undefined, 'Etc/UTC')).toBeFalsy();
+    });
+
+    it('should succeed if date is same as inclusive end', () => {
+      const inclusiveEnd = new Date(d2.getTime() - 1);
+      expect(isInRange(inclusiveEnd, d1, d2, undefined, 'Etc/UTC')).toBeTruthy();
+    });
+
+    it('should fail if day is same as exclusive end', () => {
+      const d3 = new Date(Date.UTC(2019, 0, 2, 0, 0, 0));
+      expect(isInRange(d3, d1, d3, 'day', 'Etc/UTC')).toBeFalsy();
+    });
+
+    it('should succeed if day is same as inclusive start', () => {
+      expect(isInRange(d1, d1, d2, 'day', 'Etc/UTC')).toBeTruthy();
+    });
+
+    it('should succeed if date is same as the beginning of start day', () => {
+      const date = new Date(Date.UTC(2019, 0, 1, 0, 0, 0));
+      expect(isInRange(date, d1, d2, 'day', 'Etc/UTC')).toBeTruthy();
+    });
+
+    it('should succeed if date is same as the end of start day', () => {
+      const date = new Date(Date.UTC(2019, 0, 1, 23, 59, 59));
+      expect(isInRange(date, d1, d2, 'day', 'Etc/UTC')).toBeTruthy();
+    });
+  });
+
+  describe('getStartOf()', () => {
+    const date = new Date(Date.UTC(2019, 0, 1, 10, 0, 0));
+
+    it('should find start of day in UTC', () => {
+      const beginningOfDay = new Date(Date.UTC(2019, 0, 1, 0, 0, 0));
+      expect(getStartOf(date, 'day', 'Etc/UTC')).toEqual(beginningOfDay);
+    });
+
+    it('should find start of day in Europe/Helsinki', () => {
+      const beginningOfDayInHelsinki = new Date(Date.UTC(2018, 11, 31, 22, 0, 0));
+      expect(getStartOf(date, 'day', 'Europe/Helsinki')).toEqual(beginningOfDayInHelsinki);
+    });
+
+    it('should find start of day with offset in Etc/UTC', () => {
+      const twoDaysOff = new Date(Date.UTC(2019, 0, 3, 0, 0, 0));
+      expect(getStartOf(date, 'day', 'Etc/UTC', 2, 'days')).toEqual(twoDaysOff);
+    });
+
+    it('should find start of previous month with offset in Etc/UTC', () => {
+      const date = new Date(Date.UTC(2022, 2, 1, 10, 0, 0));
+      const prevMonth = new Date(Date.UTC(2022, 1, 1, 0, 0, 0));
+      expect(getStartOf(date, 'month', 'Etc/UTC', -1, 'months')).toEqual(prevMonth);
+    });
+
+    it('should find start of next month with offset in Etc/UTC', () => {
+      const date = new Date(Date.UTC(2022, 2, 1, 10, 0, 0));
+      const nextMonth = new Date(Date.UTC(2022, 3, 1, 0, 0, 0));
+      expect(getStartOf(date, 'month', 'Etc/UTC', 1, 'months')).toEqual(nextMonth);
     });
   });
 
@@ -216,6 +292,69 @@ describe('date utils', () => {
       const date = new Date(Date.UTC(2020, 3, 7));
       // UTC 2020-04-07 00:00 is previous day in New York
       expect(stringifyDateToISO8601(date, 'America/New_York')).toEqual('2020-04-06');
+    });
+  });
+
+  describe('findNextBoundary()', () => {
+    it('should return 01:00 as next boundary when starting from 00:45', () => {
+      expect(findNextBoundary(new Date('2019-09-18T00:45:00.000Z'), 'Etc/UTC')).toEqual(
+        new Date('2019-09-18T01:00:00.000Z')
+      );
+    });
+    it('should return 02:00 as next boundary when starting from 01:00', () => {
+      expect(findNextBoundary(new Date('2019-09-18T01:00:00.000Z'), 'Etc/UTC')).toEqual(
+        new Date('2019-09-18T02:00:00.000Z')
+      );
+    });
+  });
+
+  describe('getSharpHours()', () => {
+    it('should return sharp hours, when startTime and endTime are sharp hours', () => {
+      const startHour = new Date('2019-09-18T08:00:00.000Z');
+      const endHour = new Date('2019-09-18T09:00:00.000Z');
+      expect(getSharpHours(startHour, endHour, 'Europe/Helsinki', intl)).toEqual([
+        { timestamp: 1568793600000, timeOfDay: '11:00 AM' },
+        { timestamp: 1568797200000, timeOfDay: '12:00 PM' },
+      ]);
+    });
+    it('should return sharp hours, when startTime and endTime are half hours', () => {
+      const startHour = new Date('2019-09-18T08:30:00.000Z');
+      const endHour = new Date('2019-09-18T09:30:00.000Z');
+      expect(getSharpHours(startHour, endHour, 'Europe/Helsinki', intl)).toEqual([
+        { timestamp: 1568797200000, timeOfDay: '12:00 PM' },
+      ]);
+    });
+  });
+
+  describe('getStartHours()', () => {
+    it('should return sharp hours, when startTime and endTime are sharp hours', () => {
+      const startHour = new Date('2019-09-18T08:00:00.000Z');
+      const endHour = new Date('2019-09-18T09:00:00.000Z');
+      expect(getStartHours(startHour, endHour, 'Europe/Helsinki', intl)).toEqual([
+        { timestamp: 1568793600000, timeOfDay: '11:00 AM' },
+      ]);
+    });
+    it('should return sharp hours, when startTime and endTime are half hours', () => {
+      const startHour = new Date('2019-09-18T08:30:00.000Z');
+      const endHour = new Date('2019-09-18T09:30:00.000Z');
+      expect(getStartHours(startHour, endHour, 'Europe/Helsinki', intl)).toEqual([
+        { timestamp: 1568797200000, timeOfDay: '12:00 PM' },
+      ]);
+    });
+  });
+
+  describe('getEndHours()', () => {
+    it('should return sharp hours, when startTime and endTime are sharp hours', () => {
+      const startHour = new Date('2019-09-18T08:00:00.000Z');
+      const endHour = new Date('2019-09-18T09:00:00.000Z');
+      expect(getEndHours(startHour, endHour, 'Europe/Helsinki', intl)).toEqual([
+        { timestamp: 1568797200000, timeOfDay: '12:00 PM' },
+      ]);
+    });
+    it('should return sharp hours, when startTime and endTime are half hours', () => {
+      const startHour = new Date('2019-09-18T08:30:00.000Z');
+      const endHour = new Date('2019-09-18T09:30:00.000Z');
+      expect(getEndHours(startHour, endHour, 'Europe/Helsinki', intl)).toEqual([]);
     });
   });
 

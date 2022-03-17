@@ -3,7 +3,7 @@ import moment from 'moment';
 import { types as sdkTypes } from './sdkLoader';
 import { daysBetween } from '../util/dates';
 import { TX_TRANSITION_ACTOR_CUSTOMER, getProcess } from '../util/transaction';
-import { LISTING_STATE_PUBLISHED, TIME_SLOT_DAY } from '../util/types';
+import { LISTING_STATE_PUBLISHED, TIME_SLOT_TIME } from '../util/types';
 
 const { UUID, LatLng, Money } = sdkTypes;
 const processTransitions = getProcess('flex-product-default-process')?.transitions;
@@ -267,7 +267,7 @@ export const createTimeSlots = (startDate, numberOfDays) => {
         end: moment(startTime)
           .add(i + 1, 'days')
           .toDate(),
-        type: TIME_SLOT_DAY,
+        type: TIME_SLOT_TIME,
       },
     };
   });
