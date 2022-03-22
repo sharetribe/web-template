@@ -51,7 +51,7 @@ import css from './EditListingWizard.module.css';
 // Note 2: Ensure that draft listing is created after the first panel
 // and listing publishing happens after last panel.
 const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, DELIVERY, PHOTOS];
-const TABS_BOOKING = [DETAILS, PRICING, LOCATION, PHOTOS];
+const TABS_BOOKING = [DETAILS, PRICING, LOCATION, AVAILABILITY, PHOTOS];
 const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING];
 
 // Tabs are horizontal in small screens
@@ -163,7 +163,15 @@ const hasValidCustomFieldsInExtendedData = (publicData, privateData) => {
  * @return true if tab / step is completed.
  */
 const tabCompleted = (tab, listing) => {
-  const { description, geolocation, price, title, publicData, privateData } = listing.attributes;
+  const {
+    availabilityPlan,
+    description,
+    geolocation,
+    price,
+    title,
+    publicData,
+    privateData,
+  } = listing.attributes;
   const images = listing.images;
   const deliveryOptionPicked =
     publicData && (publicData.shippingEnabled || publicData.pickupEnabled);
@@ -183,6 +191,8 @@ const tabCompleted = (tab, listing) => {
       return !!deliveryOptionPicked;
     case LOCATION:
       return !!(geolocation && publicData?.location?.address);
+    case AVAILABILITY:
+      return !!availabilityPlan;
     case PHOTOS:
       return images && images.length > 0;
     default:
@@ -472,6 +482,7 @@ class EditListingWizard extends Component {
                 onProcessChange={transactionProcessAlias =>
                   this.setState({ transactionProcessAlias })
                 }
+                onManageDisableScrolling={onManageDisableScrolling}
               />
             );
           })}

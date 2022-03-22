@@ -83,13 +83,17 @@ const EditListingWizardTab = props => {
     newListingPublished,
     history,
     images,
-    availability,
+    onAddAvailabilityException,
+    onDeleteAvailabilityException,
+    fetchExceptionsInProgress,
+    availabilityExceptions,
     listing,
     handleCreateFlowTabScrolling,
     handlePublishListing,
     onUpdateListing,
     onCreateListingDraft,
     onImageUpload,
+    onManageDisableScrolling,
     onProcessChange,
     onRemoveImage,
     updatedTab,
@@ -127,7 +131,7 @@ const EditListingWizardTab = props => {
       ? updateValues
       : { ...updateValues, id: currentListing.id };
 
-    onUpdateListingOrCreateListingDraft(tab, updateListingValues)
+    return onUpdateListingOrCreateListingDraft(tab, updateListingValues)
       .then(r => {
         if (isNewListingFlow) {
           const listingId = r.data.data.id;
@@ -150,8 +154,9 @@ const EditListingWizardTab = props => {
       ready: newListingPublished,
       disabled: fetchInProgress,
       submitButtonText: tabSubmitButtonText,
+      onManageDisableScrolling,
       onSubmit: values => {
-        onCompleteEditListingWizardTab(tab, values);
+        return onCompleteEditListingWizardTab(tab, values);
       },
     };
   };
@@ -174,7 +179,18 @@ const EditListingWizardTab = props => {
       return <EditListingLocationPanel {...panelProps(LOCATION)} />;
     }
     case AVAILABILITY: {
-      return <EditListingAvailabilityPanel {...panelProps(AVAILABILITY)} />;
+      return (
+        <EditListingAvailabilityPanel
+          fetchExceptionsInProgress={fetchExceptionsInProgress}
+          availabilityExceptions={availabilityExceptions}
+          onAddAvailabilityException={onAddAvailabilityException}
+          onDeleteAvailabilityException={onDeleteAvailabilityException}
+          onNextTab={() =>
+            redirectAfterDraftUpdate(listing.id.uuid, params, tab, marketplaceTabs, history)
+          }
+          {...panelProps(AVAILABILITY)}
+        />
+      );
     }
     case PHOTOS: {
       return (
@@ -219,7 +235,6 @@ EditListingWizardTab.propTypes = {
     replace: func.isRequired,
   }).isRequired,
   images: array.isRequired,
-  availability: object.isRequired,
 
   // We cannot use propTypes.listing since the listing might be a draft.
   listing: shape({
