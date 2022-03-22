@@ -29,9 +29,7 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 // Import modules from this directory
 import {
-  requestFetchBookings,
-  requestFetchAvailabilityExceptions,
-  requestCreateAvailabilityException,
+  requestAddAvailabilityException,
   requestDeleteAvailabilityException,
   requestCreateListingDraft,
   requestPublishListingDraft,
@@ -93,10 +91,8 @@ export const EditListingPageComponent = props => {
     getAccountLinkInProgress,
     history,
     intl,
-    onFetchAvailabilityExceptions,
-    onCreateAvailabilityException,
+    onAddAvailabilityException,
     onDeleteAvailabilityException,
-    onFetchBookings,
     onCreateListingDraft,
     onPublishListingDraft,
     onUpdateListing,
@@ -166,6 +162,9 @@ export const EditListingPageComponent = props => {
       uploadedImages,
       uploadedImagesOrder,
       removedImageIds,
+      fetchExceptionsError = null,
+      addExceptionError = null,
+      deleteExceptionError = null,
     } = page;
     const errors = {
       createListingDraftError,
@@ -173,8 +172,11 @@ export const EditListingPageComponent = props => {
       updateListingError,
       showListingsError,
       uploadImageError,
-      createStripeAccountError,
       setStockError,
+      createStripeAccountError,
+      fetchExceptionsError,
+      addExceptionError,
+      deleteExceptionError,
     };
     // TODO: is this dead code? (shouldRedirect is checked before)
     const newListingPublished =
@@ -212,13 +214,8 @@ export const EditListingPageComponent = props => {
           history={history}
           images={images}
           listing={currentListing}
-          availability={{
-            calendar: page.availabilityCalendar,
-            onFetchAvailabilityExceptions,
-            onCreateAvailabilityException,
-            onDeleteAvailabilityException,
-            onFetchBookings,
-          }}
+          onAddAvailabilityException={onAddAvailabilityException}
+          onDeleteAvailabilityException={onDeleteAvailabilityException}
           onUpdateListing={onUpdateListing}
           onCreateListingDraft={onCreateListingDraft}
           onPublishListingDraft={onPublishListingDraft}
@@ -233,6 +230,8 @@ export const EditListingPageComponent = props => {
           stripeOnboardingReturnURL={params.returnURLType}
           updatedTab={page.updatedTab}
           updateInProgress={page.updateInProgress || page.createListingDraftInProgress}
+          fetchExceptionsInProgress={page.fetchExceptionsInProgress}
+          availabilityExceptions={page.availabilityExceptions}
           payoutDetailsSaveInProgress={page.payoutDetailsSaveInProgress}
           payoutDetailsSaved={page.payoutDetailsSaved}
           stripeAccountFetched={stripeAccountFetched}
@@ -280,10 +279,8 @@ EditListingPageComponent.propTypes = {
   currentUser: propTypes.currentUser,
   fetchInProgress: bool.isRequired,
   getOwnListing: func.isRequired,
-  onFetchAvailabilityExceptions: func.isRequired,
-  onCreateAvailabilityException: func.isRequired,
+  onAddAvailabilityException: func.isRequired,
   onDeleteAvailabilityException: func.isRequired,
-  onFetchBookings: func.isRequired,
   onGetStripeConnectAccountLink: func.isRequired,
   onCreateListingDraft: func.isRequired,
   onPublishListingDraft: func.isRequired,
@@ -353,11 +350,10 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  onUpdateListing: (tab, values) => dispatch(requestUpdateListing(tab, values)),
-  onFetchBookings: params => dispatch(requestFetchBookings(params)),
-  onFetchAvailabilityExceptions: params => dispatch(requestFetchAvailabilityExceptions(params)),
-  onCreateAvailabilityException: params => dispatch(requestCreateAvailabilityException(params)),
+  onAddAvailabilityException: params => dispatch(requestAddAvailabilityException(params)),
   onDeleteAvailabilityException: params => dispatch(requestDeleteAvailabilityException(params)),
+
+  onUpdateListing: (tab, values) => dispatch(requestUpdateListing(tab, values)),
   onCreateListingDraft: values => dispatch(requestCreateListingDraft(values)),
   onPublishListingDraft: listingId => dispatch(requestPublishListingDraft(listingId)),
   onImageUpload: data => dispatch(requestImageUpload(data)),
