@@ -12,21 +12,15 @@ exports[`EditListingPageComponent matches snapshot 1`] = `
     mobileRootClassName="mobileTopbar"
   />
   <withViewport(injectIntl(EditListingWizard))
-    availability={
-      Object {
-        "calendar": undefined,
-        "onCreateAvailabilityException": [Function],
-        "onDeleteAvailabilityException": [Function],
-        "onFetchAvailabilityExceptions": [Function],
-        "onFetchBookings": [Function],
-      }
-    }
     className="wizard"
     currentUser={null}
     errors={
       Object {
+        "addExceptionError": null,
         "createListingDraftError": null,
         "createStripeAccountError": null,
+        "deleteExceptionError": null,
+        "fetchExceptionsError": null,
         "publishListingError": null,
         "setStockError": null,
         "showListingsError": null,
@@ -54,7 +48,9 @@ exports[`EditListingPageComponent matches snapshot 1`] = `
       }
     }
     newListingPublished={false}
+    onAddAvailabilityException={[Function]}
     onCreateListingDraft={[Function]}
+    onDeleteAvailabilityException={[Function]}
     onGetStripeConnectAccountLink={[Function]}
     onImageUpload={[Function]}
     onManageDisableScrolling={[Function]}
