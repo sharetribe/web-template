@@ -24,6 +24,34 @@ export const isTimeZoneSupported = () => {
 };
 
 /**
+ * Detect the default timezone of user's browser.
+ * This function can only be called from client side.
+ * I.e. server-side rendering doesn't make sense - it would not return user's timezone.
+ *
+ * @returns {String} string containing IANA timezone key (e.g. 'Europe/Helsinki')
+ */
+export const getDefaultTimeZoneOnBrowser = () => {
+  if (typeof window === 'undefined') {
+    throw new Error(
+      'Utility function: getDefaultTimeZoneOnBrowser() should be called on client-side only.'
+    );
+  }
+
+  if (isTimeZoneSupported()) {
+    const dtf = new Intl.DateTimeFormat();
+    const currentTimeZone = dtf.resolvedOptions().timeZone;
+    if (currentTimeZone) {
+      return currentTimeZone;
+    }
+  }
+
+  console.error(
+    'Utility function: getDefaultTimeZoneOnBrowser() was not able to detect time zone.'
+  );
+  return 'Etc/UTC';
+};
+
+/**
  * Check if the given time zone key is valid.
  *
  * @param {String} timeZone time zone id, see:
