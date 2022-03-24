@@ -1,7 +1,7 @@
 import React from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
-import { arrayOf, array, bool, func, node, oneOfType, shape, string } from 'prop-types';
+import { array, bool, func, node, object, oneOfType, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
 
@@ -13,18 +13,21 @@ import {
   LINE_ITEM_NIGHT,
   LINE_ITEM_DAY,
   LINE_ITEM_ITEM,
+  LINE_ITEM_HOUR,
 } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
 import { userDisplayNameAsString } from '../../util/data';
 import { ModalInMobile, Button, AvatarSmall } from '../../components';
 
+import BookingTimeForm from './BookingTimeForm/BookingTimeForm';
 import BookingDatesForm from './BookingDatesForm/BookingDatesForm';
 import ProductOrderForm from './ProductOrderForm/ProductOrderForm';
 import css from './OrderPanel.module.css';
 
 // This defines when ModalInMobile shows content as Modal
 const MODAL_BREAKPOINT = 1023;
+const TODAY = new Date();
 
 const priceData = (price, intl) => {
   if (price && price.currency === config.currency) {
@@ -56,6 +59,8 @@ const closeOrderModal = (history, location) => {
   history.push(`${pathname}${searchString}`, state);
 };
 
+const dateFormattingOptions = { month: 'short', day: 'numeric', weekday: 'short' };
+
 const OrderPanel = props => {
   const {
     rootClassName,
@@ -68,8 +73,8 @@ const OrderPanel = props => {
     title,
     author,
     onManageDisableScrolling,
-    timeSlots,
-    fetchTimeSlotsError,
+    onFetchTimeSlots,
+    monthlyTimeSlots,
     history,
     location,
     intl,
@@ -82,15 +87,16 @@ const OrderPanel = props => {
 
   const unitType = listing?.attributes?.publicData?.unitType;
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
-  const shouldHaveBooking = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
 
-  const price = listing.attributes.price;
-  const hasListingState = !!listing.attributes.state;
-  const isClosed = hasListingState && listing.attributes.state === LISTING_STATE_CLOSED;
-  const showBookingDatesForm = shouldHaveBooking && hasListingState && !isClosed;
-  const showClosedListingHelpText = listing.id && isClosed;
-  const { formattedPrice, priceTitle } = priceData(price, intl);
-  const isOrderOpen = !!parse(location.search).orderOpen;
+  const price = listing?.attributes?.price;
+  const timeZone = listing?.attributes?.availabilityPlan?.timezone;
+  const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
+
+  const shouldHaveBookingTime = [LINE_ITEM_HOUR].includes(lineItemUnitType);
+  const showBookingTimeForm = shouldHaveBookingTime && !isClosed;
+
+  const shouldHaveBookingDates = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
+  const showBookingDatesForm = false && shouldHaveBookingDates && !isClosed;
 
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
@@ -104,17 +110,24 @@ const OrderPanel = props => {
 
   const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
 
+  const showClosedListingHelpText = listing.id && isClosed;
+  const { formattedPrice, priceTitle } = priceData(price, intl);
+  const isOrderOpen = !!parse(location.search).orderOpen;
+
   const subTitleText = showClosedListingHelpText
     ? intl.formatMessage({ id: 'OrderPanel.subTitleClosedListing' })
     : null;
 
   const isNightly = lineItemUnitType === LINE_ITEM_NIGHT;
   const isDaily = lineItemUnitType === LINE_ITEM_DAY;
+  const isHourly = lineItemUnitType === LINE_ITEM_HOUR;
   const unitTranslationKey = isNightly
     ? 'OrderPanel.perNight'
     : isDaily
     ? 'OrderPanel.perDay'
-    : 'OrderPanel.perUnit';
+    : isHourly
+    ? 'OrderPanel.perHour'
+    : 'OrderPanel.perItem';
 
   const authorDisplayName = userDisplayNameAsString(author, '');
 
@@ -125,7 +138,7 @@ const OrderPanel = props => {
     <div className={classes}>
       <ModalInMobile
         containerClassName={css.modalContainer}
-        id="BookingDatesFormInModal"
+        id="OrderFormInModal"
         isModalOpenOnMobile={isOrderOpen}
         onClose={() => closeOrderModal(history, location)}
         showAsModalMaxWidth={MODAL_BREAKPOINT}
@@ -145,11 +158,31 @@ const OrderPanel = props => {
           <FormattedMessage id="OrderPanel.soldBy" values={{ name: authorDisplayName }} />
         </div>
 
-        {showBookingDatesForm ? (
+        {showBookingTimeForm ? (
+          <BookingTimeForm
+            className={css.bookingForm}
+            formId="OrderPanelBookingTimeForm"
+            submitButtonWrapperClassName={css.bookingSubmitButtonWrapper}
+            lineItemUnitType={lineItemUnitType}
+            onSubmit={onSubmit}
+            price={price}
+            listingId={listing.id}
+            isOwnListing={isOwnListing}
+            monthlyTimeSlots={monthlyTimeSlots}
+            onFetchTimeSlots={onFetchTimeSlots}
+            startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
+            endDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
+            timeZone={timeZone}
+            onFetchTransactionLineItems={onFetchTransactionLineItems}
+            lineItems={lineItems}
+            fetchLineItemsInProgress={fetchLineItemsInProgress}
+            fetchLineItemsError={fetchLineItemsError}
+          />
+        ) : false && showBookingDatesForm ? (
           <BookingDatesForm
             className={css.bookingForm}
             formId="OrderPanelBookingDatesForm"
-            submitButtonWrapperClassName={css.bookingDatesSubmitButtonWrapper}
+            submitButtonWrapperClassName={css.bookingSubmitButtonWrapper}
             lineItemUnitType={lineItemUnitType}
             onSubmit={onSubmit}
             price={price}
@@ -234,8 +267,10 @@ OrderPanel.propTypes = {
   title: oneOfType([node, string]).isRequired,
   subTitle: oneOfType([node, string]),
   onManageDisableScrolling: func.isRequired,
-  timeSlots: arrayOf(propTypes.timeSlot),
+
+  onFetchTimeSlots: func.isRequired,
   fetchTimeSlotsError: propTypes.error,
+  monthlyTimeSlots: object,
   onFetchTransactionLineItems: func.isRequired,
   onContactUser: func,
   lineItems: array,
