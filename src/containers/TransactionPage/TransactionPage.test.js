@@ -47,6 +47,7 @@ describe('TransactionPage - Sale', () => {
       onFetchTransactionLineItems: noop,
       fetchLineItemsInProgress: false,
       intl: fakeIntl,
+      onFetchTimeSlots: noop,
 
       location: {
         pathname: `/sale/${txId}/details`,
@@ -100,6 +101,7 @@ describe('TransactionPage - Order', () => {
       intl: fakeIntl,
 
       onTransition: noop,
+      onFetchTimeSlots: noop,
 
       location: {
         pathname: `/order/${txId}/details`,
