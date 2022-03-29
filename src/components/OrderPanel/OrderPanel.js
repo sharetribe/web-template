@@ -21,7 +21,7 @@ import { userDisplayNameAsString } from '../../util/data';
 import { ModalInMobile, Button, AvatarSmall } from '../../components';
 
 import BookingTimeForm from './BookingTimeForm/BookingTimeForm';
-import BookingDatesForm from './BookingDatesForm/BookingDatesForm';
+// TODO import BookingDatesForm from './BookingDatesForm/BookingDatesForm';
 import ProductOrderForm from './ProductOrderForm/ProductOrderForm';
 import css from './OrderPanel.module.css';
 
@@ -178,24 +178,7 @@ const OrderPanel = props => {
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
           />
-        ) : false && showBookingDatesForm ? (
-          <BookingDatesForm
-            className={css.bookingForm}
-            formId="OrderPanelBookingDatesForm"
-            submitButtonWrapperClassName={css.bookingSubmitButtonWrapper}
-            lineItemUnitType={lineItemUnitType}
-            onSubmit={onSubmit}
-            price={price}
-            listingId={listing.id}
-            isOwnListing={isOwnListing}
-            timeSlots={timeSlots}
-            fetchTimeSlotsError={fetchTimeSlotsError}
-            onFetchTransactionLineItems={onFetchTransactionLineItems}
-            lineItems={lineItems}
-            fetchLineItemsInProgress={fetchLineItemsInProgress}
-            fetchLineItemsError={fetchLineItemsError}
-          />
-        ) : showProductOrderForm ? (
+        ) : false && showBookingDatesForm ? null : showProductOrderForm ? (
           <ProductOrderForm
             formId="OrderPanelProductOrderForm"
             onSubmit={onSubmit}
