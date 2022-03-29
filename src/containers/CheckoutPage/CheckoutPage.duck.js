@@ -1,5 +1,4 @@
 import pick from 'lodash/pick';
-import config from '../../config';
 import { initiatePrivileged, transitionPrivileged } from '../../util/api';
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
