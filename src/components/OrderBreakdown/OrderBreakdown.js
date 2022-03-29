@@ -29,7 +29,16 @@ import LineItemUnknownItemsMaybe from './LineItemUnknownItemsMaybe';
 import css from './OrderBreakdown.module.css';
 
 export const OrderBreakdownComponent = props => {
-  const { rootClassName, className, userRole, transaction, booking, intl, dateType } = props;
+  const {
+    rootClassName,
+    className,
+    userRole,
+    transaction,
+    booking,
+    intl,
+    dateType,
+    timeZone,
+  } = props;
 
   const isCustomer = userRole === 'customer';
   const isProvider = userRole === 'provider';
@@ -86,7 +95,12 @@ export const OrderBreakdownComponent = props => {
 
   return (
     <div className={classes}>
-      <LineItemBookingPeriod booking={booking} code={lineItemUnitType} dateType={dateType} />
+      <LineItemBookingPeriod
+        booking={booking}
+        code={lineItemUnitType}
+        dateType={dateType}
+        timeZone={timeZone}
+      />
 
       <LineItemBasePriceMaybe lineItems={lineItems} code={lineItemUnitType} intl={intl} />
       <LineItemShippingFeeMaybe lineItems={lineItems} intl={intl} />
