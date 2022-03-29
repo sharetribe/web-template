@@ -25,7 +25,7 @@ export const Empty = {
     messages: [],
     stateData: {
       processName,
-      processState: 'enquiry',
+      processState: states.ENQUIRY,
     },
     hasOlderMessages: false,
     onOpenReviewModal: noop,
@@ -44,7 +44,7 @@ export const WithoutCurrentUser = {
     ],
     stateData: {
       processName,
-      processState: 'enquiry',
+      processState: states.ENQUIRY,
     },
     hasOlderMessages: false,
     onOpenReviewModal: noop,
@@ -83,7 +83,7 @@ export const WithTransitions = {
     currentUser: createCurrentUser('user2'),
     stateData: {
       processName,
-      processState: states.EXPIRE_REVIEW_PERIOD,
+      processState: states.REVIEWED,
     },
     transaction: createTransaction({
       customer: createUser('user1'),
