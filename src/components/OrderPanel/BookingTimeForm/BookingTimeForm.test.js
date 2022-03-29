@@ -135,8 +135,9 @@ describe('EstimatedBreakdownMaybe', () => {
     expect(dateType).toEqual(DATE_TYPE_DATETIME);
     expect(timeZone).toEqual('Etc/UTC');
 
-    expect(booking.attributes.start).toEqual(new Date('2022-04-16T12:00:00.000Z'));
-    expect(booking.attributes.end).toEqual(new Date('2022-04-16T14:00:00.000Z'));
+    // booking data doesn't get converted inside EstimatedCustomerBreakdownMaybe
+    expect(booking.attributes.start).toEqual(startDate);
+    expect(booking.attributes.end).toEqual(endDate);
 
     expect(transaction.attributes.payinTotal).toEqual(new Money(2198, 'USD'));
     expect(transaction.attributes.payoutTotal).toEqual(new Money(2198, 'USD'));
