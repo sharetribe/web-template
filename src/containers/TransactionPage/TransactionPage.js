@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
-import { array, arrayOf, bool, func, number, oneOf, shape, string } from 'prop-types';
+import { array, arrayOf, bool, func, number, object, oneOf, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 
-import config from '../../config';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
-import { DATE_TYPE_DATE, LISTING_UNIT_TYPES, propTypes } from '../../util/types';
-import { timeOfDayFromTimeZoneToLocal } from '../../util/dates';
+import {
+  DATE_TYPE_DATE,
+  DATE_TYPE_DATETIME,
+  LISTING_UNIT_TYPES,
+  LINE_ITEM_HOUR,
+  propTypes,
+} from '../../util/types';
+import { timestampToDate, timeOfDayFromTimeZoneToLocal } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import {
   TX_TRANSITION_ACTOR_CUSTOMER as CUSTOMER,
@@ -47,6 +52,7 @@ import {
   sendMessage,
   sendReview,
   fetchMoreMessages,
+  fetchTimeSlots,
   fetchTransactionLineItems,
 } from './TransactionPage.duck';
 import css from './TransactionPage.module.css';
@@ -99,8 +105,8 @@ export const TransactionPageComponent = props => {
     transitionInProgress,
     transitionError,
     onTransition,
-    timeSlots,
-    fetchTimeSlotsError,
+    monthlyTimeSlots,
+    onFetchTimeSlots,
     nextTransitions,
     callSetInitialValues,
     onInitializeCardPaymentData,
@@ -177,23 +183,44 @@ export const TransactionPageComponent = props => {
 
   // Customer can create a booking, if the tx is in "enquiry" state.
   const handleSubmitOrderRequest = values => {
-    const { bookingDates, quantity: quantityRaw, ...otherOrderData } = values;
-    const bookingDatesMaybe = bookingDates
+    const {
+      bookingDates,
+      bookingStartTime,
+      bookingEndTime,
+      quantity: quantityRaw,
+      deliveryMethod,
+      ...otherOrderData
+    } = values;
+
+    const bookingMaybe = bookingDates
       ? {
           bookingDates: {
             bookingStart: bookingDates.startDate,
             bookingEnd: bookingDates.endDate,
           },
         }
+      : bookingStartTime && bookingEndTime
+      ? {
+          bookingDates: {
+            bookingStart: timestampToDate(bookingStartTime),
+            bookingEnd: timestampToDate(bookingEndTime),
+          },
+        }
       : {};
+
+    const quantityMaybe = Number.isInteger(quantityRaw)
+      ? { quantity: Number.parseInt(quantityRaw, 10) }
+      : {};
+    const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
 
     const initialValues = {
       listing,
       // enquired transaction should be passed to CheckoutPage
       transaction,
       orderData: {
-        ...bookingDatesMaybe,
-        quantity: Number.parseInt(quantityRaw, 10),
+        ...bookingMaybe,
+        ...quantityMaybe,
+        ...deliveryMethodMaybe,
         ...otherOrderData,
       },
       confirmPaymentError: null,
@@ -324,8 +351,23 @@ export const TransactionPageComponent = props => {
       )
     : {};
 
-  const txBookingMaybe = booking?.id ? { booking, dateType: DATE_TYPE_DATE } : {};
   const hasLineItems = transaction?.attributes?.lineItems?.length > 0;
+  const unitLineItem = hasLineItems
+    ? transaction.attributes?.lineItems?.find(
+        item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
+      )
+    : null;
+
+  const lineItemUnitType = unitLineItem
+    ? unitLineItem.code
+    : isDataAvailable
+    ? `line-item/${listing?.attributes?.publicData?.unitType}`
+    : null;
+
+  const timeZone = listing?.attributes?.availabilityPlan?.timezone;
+  const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
+
+  const txBookingMaybe = booking?.id ? { booking, dateType, timeZone } : {};
   const orderBreakdownMaybe = hasLineItems
     ? {
         orderBreakdown: (
@@ -338,11 +380,6 @@ export const TransactionPageComponent = props => {
         ),
       }
     : {};
-  const unitLineItem = hasLineItems
-    ? transaction.attributes?.lineItems?.find(
-        item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
-      )
-    : null;
 
   // TransactionPanel is presentational component
   // that currently handles showing everything inside layout's main view area.
@@ -352,7 +389,7 @@ export const TransactionPageComponent = props => {
       currentUser={currentUser}
       transactionId={transaction?.id}
       listing={listing}
-      lineItemUnitType={unitLineItem?.code}
+      lineItemUnitType={lineItemUnitType}
       customer={customer}
       provider={provider}
       hasTransitions={txTransitions.length > 0}
@@ -388,13 +425,14 @@ export const TransactionPageComponent = props => {
           className={css.orderPanel}
           titleClassName={css.orderTitle}
           listing={listing}
-          lineItemUnitType={unitLineItem?.code}
+          isOwnListing={isOwnSale}
+          lineItemUnitType={lineItemUnitType}
           title={listingTitle}
           author={provider}
           onSubmit={handleSubmitOrderRequest}
           onManageDisableScrolling={onManageDisableScrolling}
-          timeSlots={timeSlots}
-          fetchTimeSlotsError={fetchTimeSlotsError}
+          onFetchTimeSlots={onFetchTimeSlots}
+          monthlyTimeSlots={monthlyTimeSlots}
           onFetchTransactionLineItems={onFetchTransactionLineItems}
           lineItems={lineItems}
           fetchLineItemsInProgress={fetchLineItemsInProgress}
@@ -465,7 +503,7 @@ TransactionPageComponent.defaultProps = {
   initialMessageFailedToTransaction: null,
   savePaymentMethodFailed: false,
   sendMessageError: null,
-  timeSlots: null,
+  monthlyTimeSlots: null,
   fetchTimeSlotsError: null,
   lineItems: null,
   fetchLineItemsError: null,
@@ -491,8 +529,16 @@ TransactionPageComponent.propTypes = {
   sendMessageError: propTypes.error,
   onShowMoreMessages: func.isRequired,
   onSendMessage: func.isRequired,
-  timeSlots: arrayOf(propTypes.timeSlot),
-  fetchTimeSlotsError: propTypes.error,
+  onFetchTimeSlots: func.isRequired,
+  monthlyTimeSlots: object,
+  // monthlyTimeSlots could be something like:
+  // monthlyTimeSlots: {
+  //   '2019-11': {
+  //     timeSlots: [],
+  //     fetchTimeSlotsInProgress: false,
+  //     fetchTimeSlotsError: null,
+  //   }
+  // }
   callSetInitialValues: func.isRequired,
   onInitializeCardPaymentData: func.isRequired,
   onFetchTransactionLineItems: func.isRequired,
@@ -531,8 +577,7 @@ const mapStateToProps = state => {
     sendMessageError,
     sendReviewInProgress,
     sendReviewError,
-    timeSlots,
-    fetchTimeSlotsError,
+    monthlyTimeSlots,
     processTransitions,
     lineItems,
     fetchLineItemsInProgress,
@@ -561,8 +606,7 @@ const mapStateToProps = state => {
     sendMessageError,
     sendReviewInProgress,
     sendReviewError,
-    timeSlots,
-    fetchTimeSlotsError,
+    monthlyTimeSlots,
     nextTransitions: processTransitions,
     lineItems,
     fetchLineItemsInProgress,
@@ -584,6 +628,8 @@ const mapDispatchToProps = dispatch => {
     onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
     onFetchTransactionLineItems: (orderData, listingId, isOwnListing) =>
       dispatch(fetchTransactionLineItems(orderData, listingId, isOwnListing)),
+    onFetchTimeSlots: (listingId, start, end, timeZone) =>
+      dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
   };
 };
 
