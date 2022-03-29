@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { array, arrayOf, bool, func, shape, string, oneOf, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -82,18 +82,12 @@ const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
 const { UUID } = sdkTypes;
 
-export class ListingPageComponent extends Component {
-  constructor(props) {
-    super(props);
-    const { enquiryModalOpenForListingId, params } = props;
-    this.state = {
-      pageClassNames: [],
-      imageCarouselOpen: false,
-      enquiryModalOpen: enquiryModalOpenForListingId === params.id,
-    };
-  }
+export const ListingPageComponent = props => {
+  const [enquiryModalOpen, setEnquiryModalOpen] = useState(
+    props.enquiryModalOpenForListingId === props.params.id
+  );
+  const [imageCarouselOpen, setImageCarouselOpen] = useState(false);
 
-  render() {
     const {
       isAuthenticated,
       currentUser,
@@ -120,7 +114,7 @@ export class ListingPageComponent extends Component {
       callSetInitialValues,
       onSendEnquiry,
       onInitializeCardPaymentData,
-    } = this.props;
+    } = props;
 
     const listingId = new UUID(rawParams.id);
     const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
@@ -212,9 +206,14 @@ export class ListingPageComponent extends Component {
       callSetInitialValues,
       location,
       setInitialValues,
-      setState: this.setState,
+      setEnquiryModalOpen,
     });
-    const onSubmitEnquiry = handleSubmitEnquiry({ ...commonParams, getListing, onSendEnquiry });
+    const onSubmitEnquiry = handleSubmitEnquiry({
+      ...commonParams,
+      getListing,
+      onSendEnquiry,
+      setEnquiryModalOpen,
+    });
     const onSubmit = handleSubmit({
       ...commonParams,
       currentUser,
@@ -275,9 +274,7 @@ export class ListingPageComponent extends Component {
       // Stop event from bubbling up to prevent image click handler
       // trying to open the carousel as well.
       e.stopPropagation();
-      this.setState({
-        imageCarouselOpen: true,
-      });
+      setImageCarouselOpen(true);
     };
 
     return (
@@ -319,8 +316,8 @@ export class ListingPageComponent extends Component {
                   type: listingType,
                   tab: listingTab,
                 }}
-                imageCarouselOpen={this.state.imageCarouselOpen}
-                onImageCarouselClose={() => this.setState({ imageCarouselOpen: false })}
+                imageCarouselOpen={imageCarouselOpen}
+                onImageCarouselClose={() => setImageCarouselOpen(false)}
                 handleViewPhotosClick={handleViewPhotosClick}
                 onManageDisableScrolling={onManageDisableScrolling}
               />
@@ -401,8 +398,8 @@ export class ListingPageComponent extends Component {
                     listing={currentListing}
                     authorDisplayName={authorDisplayName}
                     onContactUser={onContactUser}
-                    isEnquiryModalOpen={isAuthenticated && this.state.enquiryModalOpen}
-                    onCloseEnquiryModal={() => this.setState({ enquiryModalOpen: false })}
+                    isEnquiryModalOpen={isAuthenticated && enquiryModalOpen}
+                    onCloseEnquiryModal={() => setEnquiryModalOpen(false)}
                     sendEnquiryError={sendEnquiryError}
                     sendEnquiryInProgress={sendEnquiryInProgress}
                     onSubmitEnquiry={onSubmitEnquiry}
@@ -439,8 +436,7 @@ export class ListingPageComponent extends Component {
         </LayoutSingleColumn>
       </Page>
     );
-  }
-}
+};
 
 ListingPageComponent.defaultProps = {
   currentUser: null,
