@@ -23,8 +23,7 @@ import {
   LISTING_PAGE_PARAM_TYPE_EDIT,
   createSlug,
 } from '../../util/urlHelpers';
-import { formatMoney, convertMoneyToNumber } from '../../util/currency';
-import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
+import { convertMoneyToNumber } from '../../util/currency';
 import {
   ensureListing,
   ensureOwnListing,
@@ -50,7 +49,23 @@ import {
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
-import { sendEnquiry, fetchTransactionLineItems, setInitialValues } from './ListingPage.duck';
+import {
+  sendEnquiry,
+  setInitialValues,
+  fetchTimeSlots,
+  fetchTransactionLineItems,
+} from './ListingPage.duck';
+
+import {
+  LoadingPage,
+  ErrorPage,
+  priceData,
+  categoryLabel,
+  listingImages,
+  handleContactUser,
+  handleSubmitEnquiry,
+  handleSubmit,
+} from './ListingPage.shared';
 import ActionBarMaybe from './ActionBarMaybe';
 import SectionHeading from './SectionHeading';
 import SectionTextMaybe from './SectionTextMaybe';
@@ -67,73 +82,6 @@ const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
 const { UUID } = sdkTypes;
 
-const priceData = (price, intl) => {
-  if (price && price.currency === config.currency) {
-    const formattedPrice = formatMoney(intl, price);
-    return { formattedPrice, priceTitle: formattedPrice };
-  } else if (price) {
-    return {
-      formattedPrice: `(${price.currency})`,
-      priceTitle: `Unsupported currency (${price.currency})`,
-    };
-  }
-  return {};
-};
-
-const categoryLabel = (categories, value) => {
-  const cat = categories.find(c => c.key === value);
-  return cat ? cat.label : value;
-};
-
-const PlainPage = props => {
-  const { title, topbar, scrollingDisabled, children } = props;
-  return (
-    <Page title={title} scrollingDisabled={scrollingDisabled}>
-      <LayoutSingleColumn className={css.pageRoot}>
-        <LayoutWrapperTopbar>{topbar}</LayoutWrapperTopbar>
-        <LayoutWrapperMain>{children}</LayoutWrapperMain>
-        <LayoutWrapperFooter>
-          <Footer />
-        </LayoutWrapperFooter>
-      </LayoutSingleColumn>
-    </Page>
-  );
-};
-
-const ErrorPage = props => {
-  const { topbar, scrollingDisabled, intl } = props;
-  return (
-    <PlainPage
-      title={intl.formatMessage({
-        id: 'ListingPage.errorLoadingListingTitle',
-      })}
-      topbar={topbar}
-      scrollingDisabled={scrollingDisabled}
-    >
-      <p className={css.errorText}>
-        <FormattedMessage id="ListingPage.errorLoadingListingMessage" />
-      </p>
-    </PlainPage>
-  );
-};
-
-const LoadingPage = props => {
-  const { topbar, scrollingDisabled, intl } = props;
-  return (
-    <PlainPage
-      title={intl.formatMessage({
-        id: 'ListingPage.loadingListingTitle',
-      })}
-      topbar={topbar}
-      scrollingDisabled={scrollingDisabled}
-    >
-      <p className={css.loadingText}>
-        <FormattedMessage id="ListingPage.loadingListingMessage" />
-      </p>
-    </PlainPage>
-  );
-};
-
 export class ListingPageComponent extends Component {
   constructor(props) {
     super(props);
@@ -143,106 +91,6 @@ export class ListingPageComponent extends Component {
       imageCarouselOpen: false,
       enquiryModalOpen: enquiryModalOpenForListingId === params.id,
     };
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.onContactUser = this.onContactUser.bind(this);
-    this.onSubmitEnquiry = this.onSubmitEnquiry.bind(this);
-  }
-
-  handleSubmit(values) {
-    const {
-      history,
-      getListing,
-      params,
-      callSetInitialValues,
-      onInitializeCardPaymentData,
-    } = this.props;
-    const listingId = new UUID(params.id);
-    const listing = getListing(listingId);
-
-    const { bookingDates, quantity: quantityRaw, deliveryMethod, ...otherOrderData } = values;
-    const bookingDatesMaybe = bookingDates
-      ? {
-          bookingDates: {
-            bookingStart: bookingDates.startDate,
-            bookingEnd: bookingDates.endDate,
-          },
-        }
-      : {};
-    const quantityMaybe = Number.isInteger(quantityRaw)
-      ? { quantity: Number.parseInt(quantityRaw, 10) }
-      : {};
-    const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
-
-    const initialValues = {
-      listing,
-      orderData: {
-        ...bookingDatesMaybe,
-        ...quantityMaybe,
-        ...deliveryMethodMaybe,
-        ...otherOrderData,
-      },
-      confirmPaymentError: null,
-    };
-
-    const saveToSessionStorage = !this.props.currentUser;
-
-    const routes = routeConfiguration();
-    // Customize checkout page state with current listing and selected orderData
-    const { setInitialValues } = findRouteByRouteName('CheckoutPage', routes);
-
-    callSetInitialValues(setInitialValues, initialValues, saveToSessionStorage);
-
-    // Clear previous Stripe errors from store if there is any
-    onInitializeCardPaymentData();
-
-    // Redirect to CheckoutPage
-    history.push(
-      createResourceLocatorString(
-        'CheckoutPage',
-        routes,
-        { id: listing.id.uuid, slug: createSlug(listing.attributes.title) },
-        {}
-      )
-    );
-  }
-
-  onContactUser() {
-    const { currentUser, history, callSetInitialValues, params, location } = this.props;
-
-    if (!currentUser) {
-      const state = { from: `${location.pathname}${location.search}${location.hash}` };
-
-      // We need to log in before showing the modal, but first we need to ensure
-      // that modal does open when user is redirected back to this listingpage
-      callSetInitialValues(setInitialValues, { enquiryModalOpenForListingId: params.id });
-
-      // signup and return back to listingPage.
-      history.push(createResourceLocatorString('SignupPage', routeConfiguration(), {}, {}), state);
-    } else {
-      this.setState({ enquiryModalOpen: true });
-    }
-  }
-
-  onSubmitEnquiry(values) {
-    const { history, params, getListing, onSendEnquiry } = this.props;
-    const routes = routeConfiguration();
-    const listingId = new UUID(params.id);
-    const listing = getListing(listingId);
-    const { message } = values;
-
-    onSendEnquiry(listing, message.trim())
-      .then(txId => {
-        this.setState({ enquiryModalOpen: false });
-
-        // Redirect to OrderDetailsPage
-        history.push(
-          createResourceLocatorString('OrderDetailsPage', routes, { id: txId.uuid }, {})
-        );
-      })
-      .catch(() => {
-        // Ignore, error handling in duck file
-      });
   }
 
   render() {
@@ -261,13 +109,17 @@ export class ListingPageComponent extends Component {
       fetchReviewsError,
       sendEnquiryInProgress,
       sendEnquiryError,
-      timeSlots,
-      fetchTimeSlotsError,
+      monthlyTimeSlots,
+      onFetchTimeSlots,
       customConfig,
       onFetchTransactionLineItems,
       lineItems,
       fetchLineItemsInProgress,
       fetchLineItemsError,
+      history,
+      callSetInitialValues,
+      onSendEnquiry,
+      onInitializeCardPaymentData,
     } = this.props;
 
     const listingId = new UUID(rawParams.id);
@@ -306,15 +158,6 @@ export class ListingPageComponent extends Component {
       return <NamedRedirect name="ListingPage" params={params} search={location.search} />;
     }
 
-    const {
-      description = '',
-      geolocation = null,
-      price = null,
-      title = '',
-      publicData = {},
-      metadata = {},
-    } = currentListing.attributes;
-
     const topbar = <TopbarContainer />;
 
     if (showListingError && showListingError.status === 404) {
@@ -327,6 +170,15 @@ export class ListingPageComponent extends Component {
       // Still loading the listing
       return <LoadingPage topbar={topbar} scrollingDisabled={scrollingDisabled} intl={intl} />;
     }
+
+    const {
+      description = '',
+      geolocation = null,
+      price = null,
+      title = '',
+      publicData = {},
+      metadata = {},
+    } = currentListing.attributes;
 
     const richTitle = (
       <span>
@@ -351,31 +203,34 @@ export class ListingPageComponent extends Component {
     // banned or deleted display names for the function
     const authorDisplayName = userDisplayNameAsString(ensuredAuthor, '');
 
-    const { formattedPrice, priceTitle } = priceData(price, intl);
+    const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
+
+    const commonParams = { params, history, routes: routeConfiguration() };
+    const onContactUser = handleContactUser({
+      ...commonParams,
+      currentUser,
+      callSetInitialValues,
+      location,
+      setInitialValues,
+      setState: this.setState,
+    });
+    const onSubmitEnquiry = handleSubmitEnquiry({ ...commonParams, getListing, onSendEnquiry });
+    const onSubmit = handleSubmit({
+      ...commonParams,
+      currentUser,
+      callSetInitialValues,
+      getListing,
+      onInitializeCardPaymentData,
+    });
 
     const handleOrderSubmit = values => {
       const isCurrentlyClosed = currentListing.attributes.state === LISTING_STATE_CLOSED;
       if (isOwnListing || isCurrentlyClosed) {
         window.scrollTo(0, 0);
       } else {
-        this.handleSubmit(values);
+        onSubmit(values);
       }
     };
-
-    const listingImages = (listing, variantName) =>
-      (listing.images || [])
-        .map(image => {
-          const variants = image.attributes.variants;
-          const variant = variants ? variants[variantName] : null;
-
-          // deprecated
-          // for backwards combatility only
-          const sizes = image.attributes.sizes;
-          const size = sizes ? sizes.find(i => i.name === variantName) : null;
-
-          return variant || size;
-        })
-        .filter(variant => variant != null);
 
     const facebookImages = listingImages(currentListing, 'facebook');
     const twitterImages = listingImages(currentListing, 'twitter');
@@ -400,17 +255,6 @@ export class ListingPageComponent extends Component {
     const currentStock = currentListing.currentStock?.attributes?.quantity || 0;
     const schemaAvailability =
       currentStock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
-
-    const authorLink = (
-      <NamedLink
-        className={css.authorNameLink}
-        name="ListingPage"
-        params={params}
-        to={{ hash: '#author' }}
-      >
-        {authorDisplayName}
-      </NamedLink>
-    );
 
     const formatOptionValue = option => `${option}`.toLowerCase().replace(/\s/g, '_');
     const optionEntities = options => options.map(o => ({ key: formatOptionValue(o), label: o }));
@@ -478,9 +322,18 @@ export class ListingPageComponent extends Component {
                     richTitle={richTitle}
                     unitType={publicData?.unitType}
                     category={category}
-                    authorLink={authorLink}
+                    authorLink={
+                      <NamedLink
+                        className={css.authorNameLink}
+                        name="ListingPage"
+                        params={params}
+                        to={{ hash: '#author' }}
+                      >
+                        {authorDisplayName}
+                      </NamedLink>
+                    }
                     showContactUser={showContactUser}
-                    onContactUser={this.onContactUser}
+                    onContactUser={onContactUser}
                   />
                 </div>
                 <SectionTextMaybe
@@ -537,12 +390,12 @@ export class ListingPageComponent extends Component {
                   title={title}
                   listing={currentListing}
                   authorDisplayName={authorDisplayName}
-                  onContactUser={this.onContactUser}
+                  onContactUser={onContactUser}
                   isEnquiryModalOpen={isAuthenticated && this.state.enquiryModalOpen}
                   onCloseEnquiryModal={() => this.setState({ enquiryModalOpen: false })}
                   sendEnquiryError={sendEnquiryError}
                   sendEnquiryInProgress={sendEnquiryInProgress}
-                  onSubmitEnquiry={this.onSubmitEnquiry}
+                  onSubmitEnquiry={onSubmitEnquiry}
                   currentUser={currentUser}
                   onManageDisableScrolling={onManageDisableScrolling}
                 />
@@ -558,9 +411,9 @@ export class ListingPageComponent extends Component {
                   }
                   author={ensuredAuthor}
                   onManageDisableScrolling={onManageDisableScrolling}
-                  onContactUser={this.onContactUser}
-                  timeSlots={timeSlots}
-                  fetchTimeSlotsError={fetchTimeSlotsError}
+                  onContactUser={onContactUser}
+                  monthlyTimeSlots={monthlyTimeSlots}
+                  onFetchTimeSlots={onFetchTimeSlots}
                   onFetchTransactionLineItems={onFetchTransactionLineItems}
                   lineItems={lineItems}
                   fetchLineItemsInProgress={fetchLineItemsInProgress}
@@ -584,8 +437,7 @@ ListingPageComponent.defaultProps = {
   showListingError: null,
   reviews: [],
   fetchReviewsError: null,
-  timeSlots: null,
-  fetchTimeSlotsError: null,
+  monthlyTimeSlots: null,
   sendEnquiryError: null,
   customConfig: config.custom,
   lineItems: null,
@@ -621,8 +473,15 @@ ListingPageComponent.propTypes = {
   callSetInitialValues: func.isRequired,
   reviews: arrayOf(propTypes.review),
   fetchReviewsError: propTypes.error,
-  timeSlots: arrayOf(propTypes.timeSlot),
-  fetchTimeSlotsError: propTypes.error,
+  monthlyTimeSlots: object,
+  // monthlyTimeSlots could be something like:
+  // monthlyTimeSlots: {
+  //   '2019-11': {
+  //     timeSlots: [],
+  //     fetchTimeSlotsInProgress: false,
+  //     fetchTimeSlotsError: null,
+  //   }
+  // }
   sendEnquiryInProgress: bool.isRequired,
   sendEnquiryError: propTypes.error,
   onSendEnquiry: func.isRequired,
@@ -640,8 +499,7 @@ const mapStateToProps = state => {
     showListingError,
     reviews,
     fetchReviewsError,
-    timeSlots,
-    fetchTimeSlotsError,
+    monthlyTimeSlots,
     sendEnquiryInProgress,
     sendEnquiryError,
     lineItems,
@@ -673,8 +531,7 @@ const mapStateToProps = state => {
     showListingError,
     reviews,
     fetchReviewsError,
-    timeSlots,
-    fetchTimeSlotsError,
+    monthlyTimeSlots,
     lineItems,
     fetchLineItemsInProgress,
     fetchLineItemsError,
@@ -691,6 +548,8 @@ const mapDispatchToProps = dispatch => ({
   onFetchTransactionLineItems: params => dispatch(fetchTransactionLineItems(params)),
   onSendEnquiry: (listing, message) => dispatch(sendEnquiry(listing, message)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
+  onFetchTimeSlots: (listingId, start, end, timeZone) =>
+    dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

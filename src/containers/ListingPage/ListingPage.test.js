@@ -94,6 +94,7 @@ describe('ListingPage', () => {
       customConfig,
       fetchLineItemsInProgress: false,
       onFetchTransactionLineItems: () => null,
+      onFetchTimeSlots: () => null,
     };
 
     const tree = renderShallow(<ListingPageComponent {...props} />);
