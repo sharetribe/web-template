@@ -9,8 +9,10 @@ import { TX_TRANSITION_ACTOR_CUSTOMER, TX_TRANSITION_ACTOR_PROVIDER } from '../.
 import {
   propTypes,
   DATE_TYPE_DATE,
+  DATE_TYPE_DATETIME,
   LINE_ITEM_ITEM,
   LINE_ITEM_NIGHT,
+  LINE_ITEM_HOUR,
   LISTING_UNIT_TYPES,
 } from '../../util/types';
 import { formatDateIntoPartials, subtractTime } from '../../util/dates';
@@ -42,7 +44,7 @@ import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 import { stateDataShape, getStateData } from './InboxPage.stateData';
 import css from './InboxPage.module.css';
 
-const bookingData = (tx, timeZone) => {
+const bookingData = (tx, lineItemUnitType, timeZone) => {
   // Attributes: displayStart and displayEnd can be used to differentiate shown time range
   // from actual start and end times used for availability reservation. It can help in situations
   // where there are preparation time needed between bookings.
@@ -52,15 +54,16 @@ const bookingData = (tx, timeZone) => {
   const bookingEndRaw = displayEnd || end;
 
   // When unit type is night, we can assume booking end to be inclusive.
-  const unitType = tx?.listing?.attributes?.publicData?.unitType;
-  const isNight = `line-item/${unitType}` === LINE_ITEM_NIGHT;
-  const bookingEnd = isNight ? bookingEndRaw : subtractTime(bookingEndRaw, 1, 'days', timeZone);
+  const isNight = lineItemUnitType === LINE_ITEM_NIGHT;
+  const isHour = lineItemUnitType === LINE_ITEM_HOUR;
+  const bookingEnd =
+    isNight || isHour ? bookingEndRaw : subtractTime(bookingEndRaw, 1, 'days', timeZone);
 
   return { bookingStart, bookingEnd };
 };
 
 const BookingTimeInfoMaybe = props => {
-  const { transaction, dateType, ...rest } = props;
+  const { transaction, ...rest } = props;
   const processName = transaction.attributes.processName;
   const process = getProcess(processName);
   const isEnquiry = process.getState(transaction) === process.states.ENQUIRY;
@@ -69,8 +72,18 @@ const BookingTimeInfoMaybe = props => {
     return null;
   }
 
+  const hasLineItems = transaction?.attributes?.lineItems?.length > 0;
+  const unitLineItem = hasLineItems
+    ? transaction.attributes?.lineItems?.find(
+        item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
+      )
+    : null;
+
+  const lineItemUnitType = unitLineItem ? unitLineItem.code : null;
+  const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
+
   const timeZone = transaction?.listing?.attributes?.availabilityPlan?.timezone || 'Etc/UTC';
-  const { bookingStart, bookingEnd } = bookingData(transaction, timeZone);
+  const { bookingStart, bookingEnd } = bookingData(transaction, lineItemUnitType, timeZone);
 
   return (
     <TimeRange
@@ -83,11 +96,8 @@ const BookingTimeInfoMaybe = props => {
   );
 };
 
-BookingTimeInfoMaybe.defaultProps = { dateType: null, timeZone: null };
-
 BookingTimeInfoMaybe.propTypes = {
   transaction: propTypes.transaction.isRequired,
-  dateType: propTypes.dateType,
 };
 
 export const InboxItem = props => {
@@ -147,7 +157,7 @@ export const InboxItem = props => {
             {isProductOrder ? (
               <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
             ) : (
-              <BookingTimeInfoMaybe transaction={tx} dateType={DATE_TYPE_DATE} />
+              <BookingTimeInfoMaybe transaction={tx} />
             )}
           </div>
         </div>
