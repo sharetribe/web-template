@@ -37,7 +37,9 @@ import {
   DATE_TYPE_DATE,
   LINE_ITEM_DAY,
   LINE_ITEM_NIGHT,
+  LINE_ITEM_HOUR,
   LISTING_UNIT_TYPES,
+  DATE_TYPE_DATETIME,
 } from '../../util/types';
 import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../util/currency';
 
@@ -64,21 +66,14 @@ const estimatedTotalPrice = lineItems => {
   );
 };
 
-const estimatedBooking = (bookingStart, bookingEnd) => {
-  // Server normalizes night/day bookings to start from 00:00 UTC. In this case, it would remove 23 hours.
-  // We convert local (start of day) to the same time-of-day in UTC time zone to prevent untracked conversions.
-  // local noon -> startOf('day') => 00:00 local
-  // => convert to the same time of day to server's tz aka remove timezoneoffset => 00:00 API (UTC)
-  const apiTimeZone = 'Etc/UTC';
-  const serverDayStart = timeOfDayFromLocalToTimeZone(getStartOf(bookingStart, 'day'), apiTimeZone);
-  const serverDayEnd = timeOfDayFromLocalToTimeZone(getStartOf(bookingEnd, 'day'), apiTimeZone);
+const estimatedBooking = (bookingStart, bookingEnd, lineItemUnitType, timeZone = 'Etc/UTC') => {
+  const duration = { start: bookingStart, end: bookingEnd };
 
   return {
     id: new UUID('estimated-booking'),
     type: 'booking',
     attributes: {
-      start: serverDayStart,
-      end: serverDayEnd,
+      ...duration,
     },
   };
 };
@@ -93,6 +88,8 @@ const estimatedCustomerTransaction = (
   lineItems,
   bookingStart,
   bookingEnd,
+  lineItemUnitType,
+  timeZone,
   process,
   processName
 ) => {
@@ -104,7 +101,9 @@ const estimatedCustomerTransaction = (
   const payoutTotal = estimatedTotalPrice(providerLineItems);
 
   const bookingMaybe =
-    bookingStart && bookingEnd ? { booking: estimatedBooking(bookingStart, bookingEnd) } : {};
+    bookingStart && bookingEnd
+      ? { booking: estimatedBooking(bookingStart, bookingEnd, lineItemUnitType, timeZone) }
+      : {};
 
   return {
     id: new UUID('estimated-transaction'),
@@ -130,7 +129,7 @@ const estimatedCustomerTransaction = (
 };
 
 const EstimatedCustomerBreakdownMaybe = props => {
-  const { breakdownData = {}, lineItems } = props;
+  const { breakdownData = {}, lineItems, timeZone } = props;
   const { startDate, endDate } = breakdownData;
   const processName = 'flex-product-default-process';
   let process = null;
@@ -152,9 +151,18 @@ const EstimatedCustomerBreakdownMaybe = props => {
   const shouldHaveBooking = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
   const hasLineItems = lineItems && lineItems.length > 0;
   const hasRequiredBookingData = !shouldHaveBooking || (startDate && endDate);
+  const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
   const tx =
     hasLineItems && hasRequiredBookingData
-      ? estimatedCustomerTransaction(lineItems, startDate, endDate, process, processName)
+      ? estimatedCustomerTransaction(
+          lineItems,
+          startDate,
+          endDate,
+          lineItemUnitType,
+          timeZone,
+          process,
+          processName
+        )
       : null;
 
   return tx ? (
@@ -163,7 +171,8 @@ const EstimatedCustomerBreakdownMaybe = props => {
       userRole="customer"
       transaction={tx}
       booking={tx.booking}
-      dateType={DATE_TYPE_DATE}
+      dateType={dateType}
+      timeZone={timeZone}
     />
   ) : null;
 };
