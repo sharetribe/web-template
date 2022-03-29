@@ -92,7 +92,7 @@ export const handleContactUser = parameters => () => {
     location,
     routes,
     setInitialValues,
-    setState,
+    setEnquiryModalOpen,
   } = parameters;
 
   if (!currentUser) {
@@ -105,7 +105,7 @@ export const handleContactUser = parameters => () => {
     // signup and return back to listingPage.
     history.push(createResourceLocatorString('SignupPage', routes, {}, {}), state);
   } else {
-    setState({ enquiryModalOpen: true });
+    setEnquiryModalOpen(true);
   }
 };
 
@@ -115,14 +115,14 @@ export const handleContactUser = parameters => () => {
  * @param {Object} parameters all the info needed to create enquiry.
  */
 export const handleSubmitEnquiry = parameters => values => {
-  const { history, params, getListing, onSendEnquiry, routes } = parameters;
+  const { history, params, getListing, onSendEnquiry, routes, setEnquiryModalOpen } = parameters;
   const listingId = new UUID(params.id);
   const listing = getListing(listingId);
   const { message } = values;
 
   onSendEnquiry(listing, message.trim())
     .then(txId => {
-      this.setState({ enquiryModalOpen: false });
+      setEnquiryModalOpen(false);
 
       // Redirect to OrderDetailsPage
       history.push(createResourceLocatorString('OrderDetailsPage', routes, { id: txId.uuid }, {}));
