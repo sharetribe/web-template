@@ -94,7 +94,6 @@ export const WithAvailableTimeSlots = {
       label: 'Date',
       placeholderText: moment().format('ddd, MMMM D'),
       format: identity,
-      timeSlots: createAvailableTimeSlots(90, 60),
       validate: composeValidators(required('Required'), bookingDateRequired('Date is not valid')),
       onBlur: () => console.log('onBlur called from DateInput props.'),
       onFocus: () => console.log('onFocus called from DateInput props.'),

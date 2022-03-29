@@ -5,20 +5,18 @@
  * N.B. *isOutsideRange* in defaultProps is defining what dates are available to booking.
  */
 import React, { Component } from 'react';
-import { bool, func, instanceOf, shape, string, arrayOf } from 'prop-types';
-import {
-  SingleDatePicker,
-  isInclusivelyAfterDay,
-  isInclusivelyBeforeDay,
-  isSameDay,
-} from 'react-dates';
-import { intlShape, injectIntl } from '../../util/reactIntl';
+import { bool, func, instanceOf, shape, string } from 'prop-types';
+import { SingleDatePicker, isInclusivelyAfterDay, isInclusivelyBeforeDay } from 'react-dates';
+
+// Import moment from moment-timezone. 10-year range only.
+// The full data included in moment-timezone dependency is mostly irrelevant
+// and slows down the first paint.
+import moment from 'moment-timezone/builds/moment-timezone-with-data-10-year-range.min';
+
 import classNames from 'classnames';
-import moment from 'moment';
 import config from '../../config';
-import { propTypes, TIME_SLOT_TIME } from '../../util/types';
-import { timeOfDayFromTimeZoneToLocal } from '../../util/dates';
-import { ensureTimeSlot } from '../../util/data';
+
+import { intlShape, injectIntl } from '../../util/reactIntl';
 
 import NextMonthIcon from './NextMonthIcon';
 import PreviousMonthIcon from './PreviousMonthIcon';
@@ -105,20 +103,6 @@ const defaultProps = {
   },
 };
 
-// Checks if time slot (propTypes.timeSlot) start time equals a day (moment)
-const timeSlotEqualsDay = (timeSlot, day) => {
-  // Time slots describe available dates by providing a start and
-  // an end date which is the following day. In the single date picker
-  // the start date is used to represent available dates.
-
-  // In day-based booking process, timeSlots come in server's time zone.
-  const apiTimeZone = 'Etc/UTC';
-  const localStartDate = timeOfDayFromTimeZoneToLocal(timeSlot.attributes.start, apiTimeZone);
-
-  const isDay = ensureTimeSlot(timeSlot).attributes.type === TIME_SLOT_TIME;
-  return isDay && isSameDay(day, moment(localStartDate));
-};
-
 class DateInputComponent extends Component {
   constructor(props) {
     super(props);
@@ -131,7 +115,7 @@ class DateInputComponent extends Component {
   }
 
   onDateChange(date) {
-    const selectedDate = date instanceof moment ? date.toDate() : null;
+    const selectedDate = moment && moment.isMoment(date) ? date.toDate() : null;
     this.props.onChange({ date: selectedDate });
   }
 
@@ -165,18 +149,16 @@ class DateInputComponent extends Component {
       value,
       children,
       render,
-      timeSlots,
       ...datePickerProps
     } = this.props;
     /* eslint-enable no-unused-vars */
 
     const initialMoment = initialDate ? moment(initialDate) : null;
 
-    const date = value && value.date instanceof Date ? moment(value.date) : initialMoment;
-
-    const isDayBlocked = timeSlots
-      ? day => !timeSlots.find(timeSlot => timeSlotEqualsDay(timeSlot, day))
-      : () => false;
+    const date =
+      value && value.date instanceof Date && value.date.toString() !== 'Invalid Date'
+        ? moment(value.date)
+        : initialMoment;
 
     const placeholder = placeholderText || intl.formatMessage({ id: 'FieldDateInput.placeholder' });
 
@@ -207,7 +189,6 @@ class DateInputComponent extends Component {
           placeholder={placeholder}
           screenReaderInputMessage={screenReaderInputText}
           phrases={{ closeDatePicker: closeDatePickerText, clearDate: clearDateText }}
-          isDayBlocked={isDayBlocked}
         />
       </div>
     );
@@ -218,7 +199,6 @@ DateInputComponent.defaultProps = {
   className: null,
   useMobileMargins: false,
   ...defaultProps,
-  timeSlots: null,
 };
 
 DateInputComponent.propTypes = {
@@ -232,6 +212,7 @@ DateInputComponent.propTypes = {
   onChange: func.isRequired,
   onBlur: func.isRequired,
   onFocus: func.isRequired,
+  isDayBlocked: func,
   phrases: shape({
     closeDatePicker: string,
     clearDate: string,
@@ -242,7 +223,6 @@ DateInputComponent.propTypes = {
   value: shape({
     date: instanceOf(Date),
   }),
-  timeSlots: arrayOf(propTypes.timeSlot),
 };
 
 export default injectIntl(DateInputComponent);
