@@ -86,10 +86,14 @@ const setupLocale = () => {
 };
 
 export const ClientApp = props => {
-  const { store } = props;
+  const { store, hostedTranslations = {} } = props;
   setupLocale();
   return (
-    <IntlProvider locale={config.locale} messages={localeMessages} textComponent="span">
+    <IntlProvider
+      locale={config.locale}
+      messages={{ ...localeMessages, ...hostedTranslations }}
+      textComponent="span"
+    >
       <Provider store={store}>
         <HelmetProvider>
           <IncludeMapLibraryScripts />
@@ -107,11 +111,15 @@ const { any, string } = PropTypes;
 ClientApp.propTypes = { store: any.isRequired };
 
 export const ServerApp = props => {
-  const { url, context, helmetContext, store } = props;
+  const { url, context, helmetContext, store, hostedTranslations = {} } = props;
   setupLocale();
   HelmetProvider.canUseDOM = false;
   return (
-    <IntlProvider locale={config.locale} messages={localeMessages} textComponent="span">
+    <IntlProvider
+      locale={config.locale}
+      messages={{ ...localeMessages, ...hostedTranslations }}
+      textComponent="span"
+    >
       <Provider store={store}>
         <HelmetProvider context={helmetContext}>
           <IncludeMapLibraryScripts />
@@ -136,7 +144,13 @@ ServerApp.propTypes = { url: string.isRequired, context: any.isRequired, store: 
  *  - {String} body: Rendered application body of the given route
  *  - {Object} head: Application head metadata from react-helmet
  */
-export const renderApp = (url, serverContext, preloadedState, collectChunks) => {
+export const renderApp = (
+  url,
+  serverContext,
+  preloadedState,
+  hostedTranslations,
+  collectChunks
+) => {
   // Don't pass an SDK instance since we're only rendering the
   // component tree with the preloaded store state and components
   // shouldn't do any SDK calls in the (server) rendering lifecycle.
@@ -148,7 +162,13 @@ export const renderApp = (url, serverContext, preloadedState, collectChunks) => 
   // This is needed to figure out correct chunks/scripts to be included to server-rendered page.
   // https://loadable-components.com/docs/server-side-rendering/#3-setup-chunkextractor-server-side
   const WithChunks = collectChunks(
-    <ServerApp url={url} context={serverContext} helmetContext={helmetContext} store={store} />
+    <ServerApp
+      url={url}
+      context={serverContext}
+      helmetContext={helmetContext}
+      store={store}
+      hostedTranslations={hostedTranslations}
+    />
   );
   const body = ReactDOMServer.renderToString(WithChunks);
   const { helmet: head } = helmetContext;
