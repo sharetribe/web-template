@@ -3,7 +3,7 @@ import omit from 'lodash/omit';
 import config from '../../config';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { denormalisedResponseEntities } from '../../util/data';
-import { getStartOf } from '../../util/dates';
+import { getDefaultTimeZoneOnBrowser, getStartOf } from '../../util/dates';
 import { storableError } from '../../util/errors';
 import * as log from '../../util/log';
 
