@@ -721,6 +721,25 @@ export const getEndHours = (startTime, endTime, timeZone, intl) => {
 //////////
 
 /**
+ * Return fucntion for react-dates that returns moment of correct initial visible month.
+ * The time-of-day is converted to given time zone, since timeSlot query is tied to it.
+ *
+ * Note:  The moment object we pass to react-dates is without time zone info.
+ * Otherwise, react-dates would start to behave erroneously.
+ *
+ * @param {Date} date
+ * @param {String} timeZone name. It should represent IANA timezone key.
+ * @returns {Moment} of correct month in the given time zone
+ */
+export const initialVisibleMonth = (date, timeZone) => () => {
+  return moment(
+    moment(date)
+      .tz(timeZone)
+      .format('YYYY-MM-DD HH:mm:ss')
+  );
+};
+
+/**
  * Format the given date to month id/string: 'YYYY-MM'.
  *
  * @param {Date} date to be formatted
