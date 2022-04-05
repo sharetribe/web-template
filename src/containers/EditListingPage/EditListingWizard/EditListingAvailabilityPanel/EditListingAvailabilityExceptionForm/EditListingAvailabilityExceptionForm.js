@@ -68,7 +68,7 @@ const sortExceptionsByStartTime = (a, b) => {
 
 // Convert exceptions list to inverted array of time-ranges that are available for new exceptions.
 const getAvailableTimeRangesForExceptions = (exceptions, timeZone) => {
-  const nextBoundary = findNextBoundary(TODAY, timeZone);
+  const nextBoundary = findNextBoundary(TODAY, 'hour', timeZone);
   const lastBoundary = endOfAvailabilityExceptionRange(timeZone, TODAY);
 
   // If no exceptions, return full time range as free of exceptions.
@@ -237,7 +237,7 @@ const getAllTimeValues = (
   const endDate = selectedEndDate
     ? selectedEndDate
     : startTimeAsDate
-    ? new Date(findNextBoundary(startTimeAsDate, timeZone).getTime() - 1)
+    ? new Date(findNextBoundary(startTimeAsDate, 'hour', timeZone).getTime() - 1)
     : null;
 
   const selectedTimeRange = timeRanges.find(t => isInRange(startTimeAsDate, t.start, t.end));
@@ -492,9 +492,8 @@ const EditListingAvailabilityExceptionForm = props => {
 
         const { updateListingError } = fetchErrors || {};
 
-        const placeholderTime = formatDateIntoPartials(findNextBoundary(TODAY, timeZone), intl, {
-          timeZone,
-        })?.time;
+        const nextBoundary = findNextBoundary(TODAY, 'hour', timeZone);
+        const placeholderTime = formatDateIntoPartials(nextBoundary, intl, { timeZone })?.time;
 
         const submitInProgress = updateInProgress;
         const hasData =

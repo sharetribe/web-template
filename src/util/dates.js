@@ -557,6 +557,7 @@ const findBookingUnitBoundaries = params => {
     nextBoundaryFn,
     intl,
     timeZone,
+    scope = 'hour',
   } = params;
 
   if (moment(currentBoundary).isBetween(startMoment, endMoment, null, '[]')) {
@@ -579,7 +580,7 @@ const findBookingUnitBoundaries = params => {
     return findBookingUnitBoundaries({
       ...params,
       cumulatedResults: [...cumulatedResults, ...newBoundary],
-      currentBoundary: moment(nextBoundaryFn(currentBoundary, timeZone)),
+      currentBoundary: moment(nextBoundaryFn(currentBoundary, scope, timeZone)),
     });
   }
   return cumulatedResults;
@@ -593,12 +594,12 @@ const findBookingUnitBoundaries = params => {
  *
  * @returns {Array} an array of localized hours.
  */
-export const findNextBoundary = (currentMomentOrDate, timeZone) =>
+export const findNextBoundary = (currentMomentOrDate, scope, timeZone) =>
   moment(currentMomentOrDate)
     .clone()
     .tz(timeZone)
-    .add(1, 'hour')
-    .startOf('hour')
+    .add(1, scope)
+    .startOf(scope)
     .toDate();
 
 /**
@@ -642,13 +643,14 @@ export const getSharpHours = (startTime, endTime, timeZone, intl) => {
   // I.e. startTime might be a sharp hour.
   const millisecondBeforeStartTime = new Date(startTime.getTime() - 1);
   return findBookingUnitBoundaries({
-    currentBoundary: findNextBoundary(millisecondBeforeStartTime, timeZone),
+    currentBoundary: findNextBoundary(millisecondBeforeStartTime, 'hour', timeZone),
     startMoment: moment(startTime),
     endMoment: moment(endTime),
     nextBoundaryFn: findNextBoundary,
     cumulatedResults: [],
     intl,
     timeZone,
+    scope: 'hour',
   });
 };
 
