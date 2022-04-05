@@ -113,8 +113,7 @@
   background-image: url('data:image/svg+xml;utf8,<svg width="10" height="6" xmlns="http://www.w3.org/2000/svg"><path d="M4.686 5.315a.445.445 0 00.628 0L8.87 1.759a.444.444 0 10-.629-.628L5 4.37 1.759 1.13a.444.444 0 10-.628.628l3.555 3.556z" fill="%23E6E6E6" stroke="%23E6E6E6" fill-rule="evenodd"/></svg>');
 }
 
-.rootNextMonthIcon,
-.rootPreviousMonthIcon {
+.arrowIcon {
   stroke: var(--matterColorLight);
   fill: var(--matterColorLight);
 }

@@ -20,10 +20,8 @@ import {
 } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { bookingDateRequired } from '../../../util/validators';
-import { FieldDateInput, FieldSelect } from '../../../components';
+import { FieldDateInput, FieldSelect, IconArrowHead } from '../../../components';
 
-import NextMonthIcon from './NextMonthIcon';
-import PreviousMonthIcon from './PreviousMonthIcon';
 import css from './FieldDateAndTimeInput.module.css';
 
 // MAX_TIME_SLOTS_RANGE is the maximum number of days forwards during which a booking can be made.
@@ -191,18 +189,27 @@ const getMonthlyTimeSlots = (monthlyTimeSlots, date, timeZone) => {
     : [];
 };
 
+// IconArrowHead component might not be defined if exposed directly to the file.
+// This component is called before IconArrowHead component in components/index.js
+const PrevIcon = props => (
+  <IconArrowHead {...props} direction="left" rootClassName={css.arrowIcon} />
+);
+const NextIcon = props => (
+  <IconArrowHead {...props} direction="right" rootClassName={css.arrowIcon} />
+);
+
 const Next = props => {
   const { currentMonth, timeZone } = props;
   const nextMonthDate = nextMonthFn(currentMonth, timeZone);
 
-  return isDateSameOrAfter(nextMonthDate, endOfRange(TODAY, timeZone)) ? null : <NextMonthIcon />;
+  return isDateSameOrAfter(nextMonthDate, endOfRange(TODAY, timeZone)) ? null : <NextIcon />;
 };
 const Prev = props => {
   const { currentMonth, timeZone } = props;
   const prevMonthDate = prevMonthFn(currentMonth, timeZone);
   const currentMonthDate = getStartOf(TODAY, 'month', timeZone);
 
-  return isDateSameOrAfter(prevMonthDate, currentMonthDate) ? <PreviousMonthIcon /> : null;
+  return isDateSameOrAfter(prevMonthDate, currentMonthDate) ? <PrevIcon /> : null;
 };
 
 /////////////////////////////////////
