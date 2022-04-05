@@ -17,6 +17,7 @@ import {
   formatDateIntoPartials,
   monthIdString,
   getStartOf,
+  initialVisibleMonth,
 } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { bookingDateRequired } from '../../../util/validators';
@@ -456,6 +457,7 @@ class FieldDateAndTimeInput extends Component {
       timeZone,
     })?.time;
 
+    const startOfToday = getStartOf(TODAY, 'day', timeZone);
     const bookingEndTimeAvailable = bookingStartDate && (bookingStartTime || startTime);
     return (
       <div className={classes}>
@@ -473,6 +475,7 @@ class FieldDateAndTimeInput extends Component {
               parse={v =>
                 v && v.date ? { date: timeOfDayFromLocalToTimeZone(v.date, timeZone) } : v
               }
+              initialVisibleMonth={initialVisibleMonth(bookingStartDate || startOfToday, timeZone)}
               isDayBlocked={isDayBlocked}
               onChange={this.onBookingStartDateChange}
               onPrevMonthClick={() => this.onMonthClick(prevMonthFn)}
