@@ -160,7 +160,7 @@ const getAllTimeValues = (
   const endDate = selectedEndDate
     ? selectedEndDate
     : startTimeAsDate
-    ? new Date(findNextBoundary(startTimeAsDate, timeZone).getTime() - 1)
+    ? new Date(findNextBoundary(startTimeAsDate, 'hour', timeZone).getTime() - 1)
     : null;
 
   const selectedTimeSlot = timeSlots.find(t =>
@@ -453,10 +453,8 @@ class FieldDateAndTimeInput extends Component {
           )
       : () => false;
 
-    const placeholderTime = formatDateIntoPartials(findNextBoundary(TODAY, timeZone), intl, {
-      timeZone,
-    })?.time;
-
+    const nextBoundary = findNextBoundary(TODAY, 'hour', timeZone);
+    const placeholderTime = formatDateIntoPartials(nextBoundary, intl, { timeZone })?.time;
     const startOfToday = getStartOf(TODAY, 'day', timeZone);
     const bookingEndTimeAvailable = bookingStartDate && (bookingStartTime || startTime);
     return (

@@ -336,7 +336,8 @@ const fetchMonthlyTimeSlots = (dispatch, listing) => {
   // Fetch time-zones on client side only.
   if (hasWindow && listing.id && hasTimeZone) {
     const tz = listing.attributes.availabilityPlan.timezone;
-    const nextBoundary = findNextBoundary(new Date(), tz);
+    const scope = 'day';
+    const nextBoundary = findNextBoundary(new Date(), scope, tz);
 
     const nextMonth = getStartOf(nextBoundary, 'month', tz, 1, 'months');
     const nextAfterNextMonth = getStartOf(nextMonth, 'month', tz, 1, 'months');
