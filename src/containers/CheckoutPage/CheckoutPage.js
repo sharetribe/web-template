@@ -121,8 +121,8 @@ const bookingDatesMaybe = (bookingDates, timeZone) => {
   return bookingDates
     ? {
         bookingDates: {
-          bookingStart: timeOfDayFromLocalToTimeZone(bookingDates.bookingStart, timeZone),
-          bookingEnd: timeOfDayFromLocalToTimeZone(bookingDates.bookingEnd, timeZone),
+          bookingStart: bookingDates.bookingStart,
+          bookingEnd: bookingDates.bookingEnd,
         },
       }
     : {};
