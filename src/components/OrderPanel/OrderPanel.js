@@ -21,7 +21,7 @@ import { userDisplayNameAsString } from '../../util/data';
 import { ModalInMobile, Button, AvatarSmall } from '../../components';
 
 import BookingTimeForm from './BookingTimeForm/BookingTimeForm';
-// TODO import BookingDatesForm from './BookingDatesForm/BookingDatesForm';
+import BookingDatesForm from './BookingDatesForm/BookingDatesForm';
 import ProductOrderForm from './ProductOrderForm/ProductOrderForm';
 import css from './OrderPanel.module.css';
 
@@ -96,7 +96,7 @@ const OrderPanel = props => {
   const showBookingTimeForm = shouldHaveBookingTime && !isClosed;
 
   const shouldHaveBookingDates = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
-  const showBookingDatesForm = false && shouldHaveBookingDates && !isClosed;
+  const showBookingDatesForm = shouldHaveBookingDates && !isClosed;
 
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
@@ -178,7 +178,25 @@ const OrderPanel = props => {
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
           />
-        ) : false && showBookingDatesForm ? null : showProductOrderForm ? (
+        ) : showBookingDatesForm ? (
+          <BookingDatesForm
+            className={css.bookingForm}
+            formId="OrderPanelBookingDatesForm"
+            submitButtonWrapperClassName={css.bookingSubmitButtonWrapper}
+            lineItemUnitType={lineItemUnitType}
+            onSubmit={onSubmit}
+            price={price}
+            listingId={listing.id}
+            isOwnListing={isOwnListing}
+            monthlyTimeSlots={monthlyTimeSlots}
+            onFetchTimeSlots={onFetchTimeSlots}
+            timeZone={timeZone}
+            onFetchTransactionLineItems={onFetchTransactionLineItems}
+            lineItems={lineItems}
+            fetchLineItemsInProgress={fetchLineItemsInProgress}
+            fetchLineItemsError={fetchLineItemsError}
+          />
+        ) : showProductOrderForm ? (
           <ProductOrderForm
             formId="OrderPanelProductOrderForm"
             onSubmit={onSubmit}
@@ -234,8 +252,7 @@ OrderPanel.defaultProps = {
   titleClassName: null,
   isOwnListing: false,
   subTitle: null,
-  timeSlots: null,
-  fetchTimeSlotsError: null,
+  monthlyTimeSlots: null,
   lineItems: null,
   fetchLineItemsError: null,
 };
@@ -252,7 +269,6 @@ OrderPanel.propTypes = {
   onManageDisableScrolling: func.isRequired,
 
   onFetchTimeSlots: func.isRequired,
-  fetchTimeSlotsError: propTypes.error,
   monthlyTimeSlots: object,
   onFetchTransactionLineItems: func.isRequired,
   onContactUser: func,
