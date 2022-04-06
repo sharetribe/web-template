@@ -25,7 +25,7 @@ import * as FieldCheckboxGroup from './components/FieldCheckboxGroup/FieldCheckb
 import * as FieldCurrencyInput from './components/FieldCurrencyInput/FieldCurrencyInput.example';
 import * as FieldDateInput from './components/FieldDateInput/FieldDateInput.example';
 import * as FieldDateRangeController from './components/FieldDateRangeController/FieldDateRangeController.example';
-// TODO import * as FieldDateRangeInput from './components/FieldDateRangeInput/FieldDateRangeInput.example';
+import * as FieldDateRangeInput from './components/FieldDateRangeInput/FieldDateRangeInput.example';
 import * as FieldPhoneNumberInput from './components/FieldPhoneNumberInput/FieldPhoneNumberInput.example';
 import * as FieldRadioButton from './components/FieldRadioButton/FieldRadioButton.example';
 import * as FieldRangeSlider from './components/FieldRangeSlider/FieldRangeSlider.example';
@@ -144,7 +144,7 @@ export {
   FieldDateAndTimeInput,
   FieldDateRangeController,
   FieldDateInput,
-  // TODO FieldDateRangeInput,
+  FieldDateRangeInput,
   FieldPhoneNumberInput,
   FieldRadioButton,
   FieldRangeSlider,

@@ -10,19 +10,6 @@ import FieldDateRangeInput from './FieldDateRangeInput';
 
 const identity = v => v;
 
-const createAvailableTimeSlots = (dayCount, availableDayCount) => {
-  const slots = createTimeSlots(new Date(), dayCount);
-
-  const availableSlotIndices = [];
-  while (availableSlotIndices.length < availableDayCount) {
-    const newIndex = Math.floor(Math.random() * dayCount);
-    if (availableSlotIndices.indexOf(newIndex) > -1) continue;
-    availableSlotIndices[availableSlotIndices.length] = newIndex;
-  }
-
-  return availableSlotIndices.sort((a, b) => a - b).map(i => slots[i]);
-};
-
 const FormComponent = props => (
   <FinalForm
     {...props}
@@ -79,79 +66,15 @@ export const Empty = {
       ),
       onBlur: () => console.log('onBlur called from DateRangeInput props.'),
       onFocus: () => console.log('onFocus called from DateRangeInput props.'),
-    },
-    onChange: formState => {
-      const { startDate, endDate } = formState.values;
-      if (startDate || endDate) {
-        console.log('Changed to', moment(startDate).format('L'), moment(endDate).format('L'));
-      }
-    },
-    onSubmit: values => {
-      console.log('Submitting a form with values:', values);
-    },
-  },
-  group: 'inputs',
-};
-
-export const WithAvailableTimeSlotsNighlyBooking = {
-  component: FormComponent,
-  props: {
-    style: { marginBottom: '140px' },
-    dateInputProps: {
-      name: 'bookingDates',
-      lineItemUnitType: LINE_ITEM_NIGHT,
-      startDateId: 'WithAvailableTimeSlotsDateRangeNightly.bookingStartDate',
-      startDateLabel: 'Start date',
-      startDatePlaceholderText: moment().format('ddd, MMMM D'),
-      endDateId: 'WithAvailableTimeSlotsDateRangeNightly.bookingEndDate',
-      endDateLabel: 'End date',
-      endDatePlaceholderText: moment()
-        .add(1, 'days')
-        .format('ddd, MMMM D'),
-      format: identity,
-      timeSlots: createAvailableTimeSlots(90, 60),
-      validate: composeValidators(
-        required('Required'),
-        bookingDatesRequired('Start date is not valid', 'End date is not valid')
-      ),
-      onBlur: () => console.log('onBlur called from DateRangeInput props.'),
-      onFocus: () => console.log('onFocus called from DateRangeInput props.'),
-    },
-    onChange: formState => {
-      const { startDate, endDate } = formState.values;
-      if (startDate || endDate) {
-        console.log('Changed to', moment(startDate).format('L'), moment(endDate).format('L'));
-      }
-    },
-    onSubmit: values => {
-      console.log('Submitting a form with values:', values);
-    },
-  },
-  group: 'inputs',
-};
-
-export const WithAvailableTimeSlotsDailyBooking = {
-  component: FormComponent,
-  props: {
-    dateInputProps: {
-      name: 'bookingDates',
-      lineItemUnitType: LINE_ITEM_DAY,
-      startDateId: 'WithAvailableTimeSlotsDateRangeDaily.bookingStartDate',
-      startDateLabel: 'Start date',
-      startDatePlaceholderText: moment().format('ddd, MMMM D'),
-      endDateId: 'WithAvailableTimeSlotsDateRangeDaily.bookingEndDate',
-      endDateLabel: 'End date',
-      endDatePlaceholderText: moment()
-        .add(1, 'days')
-        .format('ddd, MMMM D'),
-      format: identity,
-      timeSlots: createAvailableTimeSlots(90, 60),
-      validate: composeValidators(
-        required('Required'),
-        bookingDatesRequired('Start date is not valid', 'End date is not valid')
-      ),
-      onBlur: () => console.log('onBlur called from DateRangeInput props.'),
-      onFocus: () => console.log('onFocus called from DateRangeInput props.'),
+      isBlockedBetween: () => {
+        return false;
+      },
+      isDayBlocked: () => () => {
+        return false;
+      },
+      isOutsideRange: () => () => {
+        return false;
+      },
     },
     onChange: formState => {
       const { startDate, endDate } = formState.values;
