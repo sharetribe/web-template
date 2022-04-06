@@ -61,7 +61,7 @@ import * as Modal from './components/Modal/Modal.example';
 import * as ModalInMobile from './components/ModalInMobile/ModalInMobile.example';
 import * as NamedLink from './components/NamedLink/NamedLink.example';
 import * as OrderBreakdown from './components/OrderBreakdown/OrderBreakdown.example';
-// TODO import * as BookingDatesForm from './components/OrderPanel/BookingDatesForm/BookingDatesForm.example';
+import * as BookingDatesForm from './components/OrderPanel/BookingDatesForm/BookingDatesForm.example';
 import * as BookingTimeForm from './components/OrderPanel/BookingTimeForm/BookingTimeForm.example';
 import * as FieldDateAndTimeInput from './components/OrderPanel/BookingTimeForm/FieldDateAndTimeInput.example';
 import * as OrderPanel from './components/OrderPanel/OrderPanel.example';
@@ -121,7 +121,7 @@ export {
   ActivityFeed,
   Avatar,
   BookingDateRangeFilter,
-  // TODO BookingDatesForm,
+  BookingDatesForm,
   BookingTimeForm,
   Button,
   Colors,

@@ -84,3 +84,8 @@
     width: 100%;
   }
 }
+
+.arrowIcon {
+  stroke: var(--matterColorLight);
+  fill: var(--matterColorLight);
+}
