@@ -1,7 +1,11 @@
-/* eslint-disable no-console */
+import loadable from '@loadable/component';
 import { types as sdkTypes } from '../../../util/sdkLoader';
+import { injectIntl } from '../../../util/reactIntl';
 import { LINE_ITEM_HOUR, TIME_SLOT_TIME } from '../../../util/types';
-import BookingTimeForm from './BookingTimeForm';
+
+const BookingTimeForm = loadable(() =>
+  import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm')
+);
 
 const { UUID, Money } = sdkTypes;
 
@@ -67,11 +71,11 @@ const monthlyTimeSlots = {
   },
 };
 
-const noop = () => null;
-
 export const Form = {
-  component: BookingTimeForm,
+  component: injectIntl(BookingTimeForm),
   props: {
+    formId: 'OrderPanelBookingTimeFormExample',
+    listingId: new UUID('listing.id'),
     unitType: LINE_ITEM_HOUR,
     monthlyTimeSlots,
     startDatePlaceholder: new Date(2022, 3, 14).toString(),
@@ -82,10 +86,13 @@ export const Form = {
     onSubmit: values => {
       console.log('Submit BookingTimeForm with values:', values);
     },
-    onFetchTimeSlots: noop,
+    onFetchTimeSlots: () => console.log('onFetchTimeSlots called'),
     fetchLineItemsInProgress: false,
     onFetchTransactionLineItems: params => {
-      console.log('Call to onFetchTransactionLineItems with params:', JSON.stringify(params));
+      console.log(
+        'Call to onFetchTransactionLineItems with params:',
+        JSON.stringify(params, null, 2)
+      );
     },
     price: new Money(1099, 'USD'),
     timeZone: 'Etc/UTC',
