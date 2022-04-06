@@ -2,6 +2,7 @@ import React from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import { array, bool, func, node, object, oneOfType, shape, string } from 'prop-types';
+import loadable from '@loadable/component';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
 
@@ -20,10 +21,17 @@ import { parse, stringify } from '../../util/urlHelpers';
 import { userDisplayNameAsString } from '../../util/data';
 import { ModalInMobile, Button, AvatarSmall } from '../../components';
 
-import BookingTimeForm from './BookingTimeForm/BookingTimeForm';
-import BookingDatesForm from './BookingDatesForm/BookingDatesForm';
-import ProductOrderForm from './ProductOrderForm/ProductOrderForm';
 import css from './OrderPanel.module.css';
+
+const BookingTimeForm = loadable(() =>
+  import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
+);
+const BookingDatesForm = loadable(() =>
+  import(/* webpackChunkName: "BookingDatesForm" */ './BookingDatesForm/BookingDatesForm')
+);
+const ProductOrderForm = loadable(() =>
+  import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm/ProductOrderForm')
+);
 
 // This defines when ModalInMobile shows content as Modal
 const MODAL_BREAKPOINT = 1023;
