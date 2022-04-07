@@ -2,14 +2,14 @@ import React from 'react';
 import { bool } from 'prop-types';
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
-import { getProcess } from '../../util/transaction';
+import { getUpdatedProcessName, getProcess } from '../../util/transaction';
 import { propTypes } from '../../util/types';
 
 import css from './OrderBreakdown.module.css';
 
 const LineItemTotalPrice = props => {
   const { transaction, isProvider, intl } = props;
-  const processName = transaction?.attributes?.processName;
+  const processName = getUpdatedProcessName(transaction?.attributes?.processName);
   if (!processName) {
     return null;
   }
