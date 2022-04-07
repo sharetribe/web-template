@@ -144,20 +144,20 @@ export const isSameDay = (date1, date2, timeZone) => {
  * @param {Date} date to be checked
  * @param {Date} start start of the range
  * @param {Date} end end of the range
- * @param {string} scope scope of the range, e.g. 'day', 'hour', 'minute', can be also null
+ * @param {string} timeUnit scope of the range, e.g. 'day', 'hour', 'minute', can be also null
  * @param {String} timeZone
  *
  * @returns {boolean} is date in range
  */
-export const isInRange = (date, start, end, scope, timeZone) => {
+export const isInRange = (date, start, end, timeUnit, timeZone) => {
   const dateMoment = timeZone ? moment(date).tz(timeZone) : moment(date);
-  // Range usually ends with 00:00, and with day scope,
+  // Range usually ends with 00:00, and with day timeUnit,
   // this means that exclusive end is wrongly taken into range.
-  // Note about scope with isBetween: in the event that the from and to parameters are the same,
+  // Note about timeUnit with isBetween: in the event that the from and to parameters are the same,
   // but the inclusivity parameters are different, false will preside.
   // => we need to use []
   const millisecondBeforeEndTime = new Date(end.getTime() - 1);
-  return dateMoment.isBetween(start, millisecondBeforeEndTime, scope, '[]');
+  return dateMoment.isBetween(start, millisecondBeforeEndTime, timeUnit, '[]');
 };
 
 /**
@@ -184,7 +184,7 @@ export const isDayMomentInsideRange = (dayMoment, start, end, timeZone) => {
   // Removing 1 millisecond, solves the exclusivity issue.
   // Because we are only using the date and not the exact time we can remove the
   // 1ms from the end date.
-  // Note about scope with isBetween: in the event that the from and to parameters are the same,
+  // Note about timeUnit with isBetween: in the event that the from and to parameters are the same,
   // but the inclusivity parameters are different, false will preside.
   // => we need to use []
   const inclusiveEndDate = moment.tz(new Date(end.getTime() - 1), timeZone);
@@ -557,7 +557,7 @@ const findBookingUnitBoundaries = params => {
     nextBoundaryFn,
     intl,
     timeZone,
-    scope = 'hour',
+    timeUnit = 'hour',
   } = params;
 
   if (moment(currentBoundary).isBetween(startMoment, endMoment, null, '[]')) {
@@ -580,7 +580,7 @@ const findBookingUnitBoundaries = params => {
     return findBookingUnitBoundaries({
       ...params,
       cumulatedResults: [...cumulatedResults, ...newBoundary],
-      currentBoundary: moment(nextBoundaryFn(currentBoundary, scope, timeZone)),
+      currentBoundary: moment(nextBoundaryFn(currentBoundary, timeUnit, timeZone)),
     });
   }
   return cumulatedResults;
@@ -589,17 +589,18 @@ const findBookingUnitBoundaries = params => {
 /**
  * Find the next sharp hour after the current moment.
  *
- * @param {String} timezone name. It should represent IANA timezone key.
  * @param {Moment|Date} Start point for looking next sharp hour.
+ * @param {String} timeUnit scope. e.g. 'hour', 'day'
+ * @param {String} timezone name. It should represent IANA timezone key.
  *
  * @returns {Array} an array of localized hours.
  */
-export const findNextBoundary = (currentMomentOrDate, scope, timeZone) =>
+export const findNextBoundary = (currentMomentOrDate, timeUnit, timeZone) =>
   moment(currentMomentOrDate)
     .clone()
     .tz(timeZone)
-    .add(1, scope)
-    .startOf(scope)
+    .add(1, timeUnit)
+    .startOf(timeUnit)
     .toDate();
 
 /**
@@ -650,7 +651,7 @@ export const getSharpHours = (startTime, endTime, timeZone, intl) => {
     cumulatedResults: [],
     intl,
     timeZone,
-    scope: 'hour',
+    timeUnit: 'hour',
   });
 };
 
