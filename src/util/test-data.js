@@ -1,7 +1,6 @@
 import Decimal from 'decimal.js';
-import moment from 'moment';
 import { types as sdkTypes } from './sdkLoader';
-import { daysBetween } from '../util/dates';
+import { daysBetween, getStartOf } from '../util/dates';
 import { TX_TRANSITION_ACTOR_CUSTOMER, getProcess } from '../util/transaction';
 import { LISTING_STATE_PUBLISHED, TIME_SLOT_TIME } from '../util/types';
 
@@ -254,19 +253,13 @@ export const createReview = (id, attributes = {}, includes = {}) => {
  * @return {Array} array of time slots
  */
 export const createTimeSlots = (startDate, numberOfDays) => {
-  const startTime = moment.utc(startDate).startOf('day');
-
   return Array.from({ length: numberOfDays }, (v, i) => i).map(i => {
     return {
       id: new UUID(i),
       type: 'timeSlot',
       attributes: {
-        start: moment(startTime)
-          .add(i, 'days')
-          .toDate(),
-        end: moment(startTime)
-          .add(i + 1, 'days')
-          .toDate(),
+        start: getStartOf(startDate, 'day', 'Etc/UTC', i, 'days'),
+        end: getStartOf(startDate, 'day', 'Etc/UTC', i + 1, 'days'),
         type: TIME_SLOT_TIME,
       },
     };

@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
 import React from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
-import moment from 'moment';
-import { Button } from '../../components';
 import { required, bookingDatesRequired, composeValidators } from '../../util/validators';
-import { LINE_ITEM_NIGHT, LINE_ITEM_DAY } from '../../util/types';
-import { createTimeSlots } from '../../util/test-data';
+import { LINE_ITEM_NIGHT } from '../../util/types';
+import { getStartOf } from '../../util/dates';
+import { Button } from '../../components';
 import FieldDateRangeInput from './FieldDateRangeInput';
 
 const identity = v => v;
@@ -44,6 +43,11 @@ const FormComponent = props => (
   />
 );
 
+const options = { weekday: 'short', month: 'long', day: 'numeric' };
+const formatDate = date => new Intl.DateTimeFormat('en-US', options).format(date);
+const startDatePlaceholderText = formatDate(new Date());
+const endDatePlaceholderText = formatDate(getStartOf(new Date(), 'day', 'Etc/UTC', 1, 'days'));
+
 export const Empty = {
   component: FormComponent,
   props: {
@@ -53,12 +57,10 @@ export const Empty = {
       lineItemUnitType: LINE_ITEM_NIGHT,
       startDateId: 'EmptyDateRange.bookingStartDate',
       startDateLabel: 'Start date',
-      startDatePlaceholderText: moment().format('ddd, MMMM D'),
+      startDatePlaceholderText: startDatePlaceholderText,
       endDateId: 'EmptyDateRangeInputForm.bookingEndDate',
       endDateLabel: 'End date',
-      endDatePlaceholderText: moment()
-        .add(1, 'days')
-        .format('ddd, MMMM D'),
+      endDatePlaceholderText: endDatePlaceholderText,
       format: identity,
       validate: composeValidators(
         required('Required'),
@@ -79,7 +81,7 @@ export const Empty = {
     onChange: formState => {
       const { startDate, endDate } = formState.values;
       if (startDate || endDate) {
-        console.log('Changed to', moment(startDate).format('L'), moment(endDate).format('L'));
+        console.log('Changed to', formatDate(startDate), formatDate(startDate));
       }
     },
     onSubmit: values => {
