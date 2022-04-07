@@ -1,22 +1,15 @@
 /* eslint-disable no-console */
 import React from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
-import moment from 'moment';
 import { Button } from '../../components';
 import { required, bookingDateRequired, composeValidators } from '../../util/validators';
-import { createTimeSlots } from '../../util/test-data';
 import FieldDateInput from './FieldDateInput';
 
 const identity = v => v;
 
-const createAvailableTimeSlots = (dayCount, availableDayCount) => {
-  const slots = createTimeSlots(new Date(), dayCount);
-  const availableSlotIndices = Array.from({ length: availableDayCount }, () =>
-    Math.floor(Math.random() * dayCount)
-  );
-
-  return availableSlotIndices.sort().map(i => slots[i]);
-};
+const options = { weekday: 'short', month: 'long', day: 'numeric' };
+const formatDate = date => new Intl.DateTimeFormat('en-US', options).format(date);
+const placeholderText = formatDate(new Date());
 
 const FormComponent = props => (
   <FinalForm
@@ -65,7 +58,7 @@ export const Empty = {
       useMobileMargins: false,
       id: `EmptyDateInputForm.bookingDate`,
       label: 'Date',
-      placeholderText: moment().format('ddd, MMMM D'),
+      placeholderText,
       format: identity,
       validate: composeValidators(required('Required'), bookingDateRequired('Date is not valid')),
       onBlur: () => console.log('onBlur called from DateInput props.'),
@@ -74,34 +67,8 @@ export const Empty = {
     onChange: formState => {
       const { date } = formState.values;
       if (date) {
-        console.log('Changed to', moment(date).format('L'));
-      }
-    },
-    onSubmit: values => {
-      console.log('Submitting a form with values:', values);
-    },
-  },
-  group: 'inputs',
-};
-
-export const WithAvailableTimeSlots = {
-  component: FormComponent,
-  props: {
-    dateInputProps: {
-      name: 'bookingDate',
-      useMobileMargins: false,
-      id: `AvailableTimeSlotsDateInputForm.bookingDate`,
-      label: 'Date',
-      placeholderText: moment().format('ddd, MMMM D'),
-      format: identity,
-      validate: composeValidators(required('Required'), bookingDateRequired('Date is not valid')),
-      onBlur: () => console.log('onBlur called from DateInput props.'),
-      onFocus: () => console.log('onFocus called from DateInput props.'),
-    },
-    onChange: formState => {
-      const { date } = formState.values;
-      if (date) {
-        console.log('Changed to', moment(date).format('L'));
+        const formattedDate = formatDate(date);
+        console.log('Changed to', formattedDate);
       }
     },
     onSubmit: values => {

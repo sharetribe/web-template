@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import React from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
-import moment from 'moment';
 import { injectIntl } from '../../../util/reactIntl';
 import { types as sdkTypes } from '../../../util/sdkLoader';
 import { Button } from '../../../components';
@@ -13,12 +12,15 @@ const { UUID } = sdkTypes;
 
 const identity = v => v;
 
+const options = { weekday: 'short', month: 'long', day: 'numeric' };
+const placeholderText = new Intl.DateTimeFormat('en-US', options).format(new Date());
+
 const startDateInputProps = {
   name: 'bookingStartDate',
   useMobileMargins: false,
   id: `EmptyDateInputForm.bookingStartDate`,
   label: 'Start Date',
-  placeholderText: moment().format('ddd, MMMM D'),
+  placeholderText,
   format: identity,
   validate: composeValidators(required('Required'), bookingDateRequired('Date is not valid')),
 };
@@ -28,7 +30,7 @@ const endDateInputProps = {
   useMobileMargins: false,
   id: `EmptyDateInputForm.bookingEndDate`,
   label: 'End Date',
-  placeholderText: moment().format('ddd, MMMM D'),
+  placeholderText,
   format: identity,
   validate: composeValidators(required('Required'), bookingDateRequired('Date is not valid')),
 };
