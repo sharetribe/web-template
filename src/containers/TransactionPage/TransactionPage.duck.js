@@ -6,7 +6,7 @@ import config from '../../config';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { findNextBoundary, getStartOf, monthIdString } from '../../util/dates';
 import { isTransactionsTransitionInvalidTransition, storableError } from '../../util/errors';
-import { getProcess, isBookingProcess } from '../../util/transaction';
+import { getUpdatedProcessName, getProcess, isBookingProcess } from '../../util/transaction';
 import { transactionLineItems } from '../../util/api';
 import * as log from '../../util/log';
 import {
@@ -408,7 +408,7 @@ export const fetchTransaction = (id, txRole) => (dispatch, getState, sdk) => {
       const denormalised = denormalisedEntities(entities, [listingRef, transactionRef]);
       const listing = denormalised[0];
       const transaction = denormalised[1];
-      const processName = transaction.attributes.processName;
+      const processName = getUpdatedProcessName(transaction.attributes.processName);
       const process = getProcess(processName);
       const isEnquiry = process.getState(transaction) === process.states.ENQUIRY;
 
