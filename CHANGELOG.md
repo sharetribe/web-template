@@ -12,7 +12,7 @@ way to update this template, but currently, we follow a pattern:
 
 ---
 
-## Upcoming version 2021-XX-XX
+## Upcoming version 2022-XX-XX
 
 - [add]TimeRange component. (Remove BookingTimeInfo from shared components)
   [#30](https://github.com/sharetribe/ftw-x/pull/30)
@@ -76,6 +76,43 @@ way to update this template, but currently, we follow a pattern:
   - transitions and states are accessible through selected process
 
   [#2](https://github.com/sharetribe/ftw-x/pull/2)
+
+## [v9.1.2] 2022-03-16
+
+### Updates from upstream (FTW-product v9.1.2)
+
+- [fix] Process graph had an error: provider notification about dispute being canceled was not sent
+  to provider but customer. [#135](https://github.com/sharetribe/ftw-product/pull/135)
+- [fix] CheckoutPage: add missing link for fallback error, when submitting.
+  [#137](https://github.com/sharetribe/ftw-product/pull/137)
+- [fix] CheckoutPage: if the saveAfterOnetimePayment checkbox is checked and then unchecked, the
+  value is already an array. [#136](https://github.com/sharetribe/ftw-product/pull/136)
+
+### Updates from upstream (FTW-daily v8.4.1)
+
+- [fix] Portal version of Modals couldn't use 100vh on mobile Safari. Safari changes the window's
+  height based on if the location bar is squeezed or not (and that depends on scroll-effect).
+  [#1501](https://github.com/sharetribe/ftw-daily/pull/1501)
+- [fix] Setting multiple environment variables in Windows requires using the set command before each
+  individual variable. Updated the 'for windows users' section in documentation.
+  [#1491](https://github.com/sharetribe/ftw-daily/pull/1491)
+- [add] Code comment about "REACT_APP" prefix in environment variables.
+  [#1492](https://github.com/sharetribe/ftw-daily/pull/1492)
+
+  [v9.1.2]: https://github.com/sharetribe/ftw-product/compare/v9.1.1...v9.1.2
+
+## [v9.1.1] 2022-01-24
+
+### Updates from upstream (FTW-product v9.1.1)
+
+- [fix] A full-page refresh on product when stock = 1 causes 500 error. SSR gets change request
+  automatically from Final Form/FromSpy, and therefore window.fetch gets called on the server.
+  [#133](https://github.com/sharetribe/ftw-product/pull/133)
+- [fix] Add a missing return statement on ProductOrderForm. The code path is relevant only for
+  listings that are created outside of EditListingWizard.
+  [#127](https://github.com/sharetribe/ftw-product/pull/127)
+
+  [v9.1.1]: https://github.com/sharetribe/ftw-product/compare/v9.1.0...v9.1.1
 
 ## [v9.1.0] 2021-12-02
 

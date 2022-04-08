@@ -43,7 +43,8 @@ const renderForm = formRenderProps => {
   const handleOnChange = formValues => {
     const { quantity, deliveryMethod } = formValues.values;
     const stockReservationQuantity = Number.parseInt(quantity, 10);
-    if (stockReservationQuantity && deliveryMethod && !fetchLineItemsInProgress) {
+    const isBrowser = typeof window !== 'undefined';
+    if (isBrowser && stockReservationQuantity && deliveryMethod && !fetchLineItemsInProgress) {
       onFetchTransactionLineItems({
         orderData: { stockReservationQuantity, deliveryMethod },
         listingId,
@@ -201,9 +202,11 @@ const ProductOrderForm = props => {
   // Should not happen for listings that go through EditListingWizard.
   // However, this might happen for imported listings.
   if (!pickupEnabled && !shippingEnabled) {
-    <p className={css.error}>
-      <FormattedMessage id="ProductOrderForm.noDeliveryMethodSet" />
-    </p>;
+    return (
+      <p className={css.error}>
+        <FormattedMessage id="ProductOrderForm.noDeliveryMethodSet" />
+      </p>
+    );
   }
 
   if (!price) {

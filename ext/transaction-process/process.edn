@@ -261,7 +261,7 @@
    :template :order-canceled-from-disputed-customer}
   {:name :notification/canceled-from-disputed-provider,
    :on :transition/cancel-from-disputed,
-   :to :actor.role/customer,
+   :to :actor.role/provider,
    :template :order-canceled-from-disputed-provider}
   {:name :notification/auto-canceled-from-disputed-customer,
    :on :transition/auto-cancel-from-disputed,
