@@ -123,7 +123,12 @@ const bookingDatesMaybe = bookingDates => {
 };
 
 // Collect error message checks to a single function.
-const getErrorMessages = (listingNotFound, initiateOrderError, speculateTransactionError) => {
+const getErrorMessages = (
+  listingNotFound,
+  initiateOrderError,
+  speculateTransactionError,
+  listingLink
+) => {
   let listingNotFoundErrorMessage = null;
   let initiateOrderErrorMessage = null;
   let speculateErrorMessage = null;
@@ -603,7 +608,8 @@ export class CheckoutPageComponent extends Component {
       message,
       paymentIntent,
       selectedPaymentMethod: paymentMethod,
-      saveAfterOnetimePayment: !!saveAfterOnetimePayment,
+      saveAfterOnetimePayment:
+        Array.isArray(saveAfterOnetimePayment) && saveAfterOnetimePayment.length > 0,
       ...shippingDetailsMaybe,
     };
 
@@ -680,13 +686,6 @@ export class CheckoutPageComponent extends Component {
     const listingNotFound =
       isTransactionInitiateListingNotFoundError(speculateTransactionError) ||
       isTransactionInitiateListingNotFoundError(initiateOrderError);
-
-    const {
-      listingNotFoundErrorMessage,
-      initiateOrderErrorMessage,
-      speculateErrorMessage,
-      speculateTransactionErrorMessage,
-    } = getErrorMessages(listingNotFound, initiateOrderError, speculateTransactionError);
 
     const { listing, transaction, orderData } = this.state.pageData;
     const existingTransaction = ensureTransaction(transaction);
@@ -806,6 +805,19 @@ export class CheckoutPageComponent extends Component {
     const lineItemUnitType = `line-item/${currentListing.attributes.publicData?.unitType}`;
     const isNightly = lineItemUnitType === LINE_ITEM_NIGHT;
     const isDaily = lineItemUnitType === LINE_ITEM_DAY;
+
+    const {
+      listingNotFoundErrorMessage,
+      initiateOrderErrorMessage,
+      speculateErrorMessage,
+      speculateTransactionErrorMessage,
+    } = getErrorMessages(
+      listingNotFound,
+      initiateOrderError,
+      speculateTransactionError,
+      listingLink
+    );
+
     const unitTranslationKey = isNightly
       ? 'CheckoutPage.perNight'
       : isDaily
