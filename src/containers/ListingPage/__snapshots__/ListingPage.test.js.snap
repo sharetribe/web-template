@@ -351,7 +351,6 @@ exports[`ListingPage matches snapshot 1`] = `
               className="orderPanel"
               fetchLineItemsError={null}
               fetchLineItemsInProgress={false}
-              fetchTimeSlotsError={null}
               isOwnListing={false}
               lineItems={null}
               listing={
@@ -396,11 +395,12 @@ exports[`ListingPage matches snapshot 1`] = `
                   "type": "listing",
                 }
               }
+              monthlyTimeSlots={null}
               onContactUser={[Function]}
+              onFetchTimeSlots={[Function]}
               onFetchTransactionLineItems={[Function]}
               onManageDisableScrolling={[Function]}
               onSubmit={[Function]}
-              timeSlots={null}
               title={
                 <Memo(MemoizedFormattedMessage)
                   id="ListingPage.orderTitle"

@@ -1,5 +1,6 @@
 const {
   calculateQuantityFromDates,
+  calculateQuantityFromHours,
   calculateTotalFromLineItems,
   calculateShippingFee,
 } = require('./lineItemHelpers');
@@ -65,8 +66,10 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
  * @param {*} orderData should contain quantity
  */
 const getHourQuantityAndLineItems = orderData => {
-  // quantity is used with bookings (time-based process: e.g. units: hours, quantity: 5)
-  const quantity = orderData && orderData.quantity ? orderData.quantity : null;
+  const { bookingStart, bookingEnd } = orderData || {};
+  const quantity =
+    bookingStart && bookingEnd ? calculateQuantityFromHours(bookingStart, bookingEnd) : null;
+
   return { quantity, extraLineItems: [] };
 };
 

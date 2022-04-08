@@ -1,0 +1,265 @@
+import React from 'react';
+import { FormattedMessage } from '../../util/reactIntl';
+import { types as sdkTypes } from '../../util/sdkLoader';
+import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
+import { formatMoney } from '../../util/currency';
+import { timestampToDate } from '../../util/dates';
+import { createSlug } from '../../util/urlHelpers';
+
+import {
+  Page,
+  LayoutSingleColumn,
+  LayoutWrapperTopbar,
+  LayoutWrapperMain,
+  LayoutWrapperFooter,
+  Footer,
+} from '../../components';
+
+import css from './ListingPage.module.css';
+
+/**
+ * This file contains shared functions from each ListingPage variants.
+ */
+
+const { UUID } = sdkTypes;
+
+/**
+ * Helper to get formattedPrice and priceTitle for SectionHeading component.
+ * @param {Money} price listing's price
+ * @param {String} marketplaceCurrency currency of the price (e.g. 'USD')
+ * @param {Object} intl React Intl instance
+ * @returns Object literal containing formattedPrice and priceTitle
+ */
+export const priceData = (price, marketplaceCurrency, intl) => {
+  if (price && price.currency === marketplaceCurrency) {
+    const formattedPrice = formatMoney(intl, price);
+    return { formattedPrice, priceTitle: formattedPrice };
+  } else if (price) {
+    return {
+      formattedPrice: `(${price.currency})`,
+      priceTitle: `Unsupported currency (${price.currency})`,
+    };
+  }
+  return {};
+};
+
+/**
+ * Get category's label.
+ *
+ * @param {Array} categories array of category objects (key & label)
+ * @param {String} value selected category value
+ * @returns label for the selected value
+ */
+export const categoryLabel = (categories, value) => {
+  const cat = categories.find(c => c.key === value);
+  return cat ? cat.label : value;
+};
+
+/**
+ * Filter listing images with correct custom image variant name.
+ * Used for facebook, twitter and page schema images.
+ *
+ * @param {Listing} listing
+ * @param {String} variantName
+ * @returns correct image variant specified by variantName parameter.
+ */
+export const listingImages = (listing, variantName) =>
+  (listing.images || [])
+    .map(image => {
+      const variants = image.attributes.variants;
+      const variant = variants ? variants[variantName] : null;
+
+      // deprecated
+      // for backwards combatility only
+      const sizes = image.attributes.sizes;
+      const size = sizes ? sizes.find(i => i.name === variantName) : null;
+
+      return variant || size;
+    })
+    .filter(variant => variant != null);
+
+/**
+ * Callback for the "contact" button on ListingPage to open enquiry modal.
+ *
+ * @param {Object} parameters all the info needed to open enquiry modal.
+ */
+export const handleContactUser = parameters => () => {
+  const {
+    history,
+    params,
+    currentUser,
+    callSetInitialValues,
+    location,
+    routes,
+    setInitialValues,
+    setEnquiryModalOpen,
+  } = parameters;
+
+  if (!currentUser) {
+    const state = { from: `${location.pathname}${location.search}${location.hash}` };
+
+    // We need to log in before showing the modal, but first we need to ensure
+    // that modal does open when user is redirected back to this listingpage
+    callSetInitialValues(setInitialValues, { enquiryModalOpenForListingId: params.id });
+
+    // signup and return back to listingPage.
+    history.push(createResourceLocatorString('SignupPage', routes, {}, {}), state);
+  } else {
+    setEnquiryModalOpen(true);
+  }
+};
+
+/**
+ * Callback for the enquiry modal to submit aka create enquiry transaction on ListingPage.
+ *
+ * @param {Object} parameters all the info needed to create enquiry.
+ */
+export const handleSubmitEnquiry = parameters => values => {
+  const { history, params, getListing, onSendEnquiry, routes, setEnquiryModalOpen } = parameters;
+  const listingId = new UUID(params.id);
+  const listing = getListing(listingId);
+  const { message } = values;
+
+  onSendEnquiry(listing, message.trim())
+    .then(txId => {
+      setEnquiryModalOpen(false);
+
+      // Redirect to OrderDetailsPage
+      history.push(createResourceLocatorString('OrderDetailsPage', routes, { id: txId.uuid }, {}));
+    })
+    .catch(() => {
+      // Ignore, error handling in duck file
+    });
+};
+
+/**
+ * Handle order submit from OrderPanel.
+ *
+ * @param {Object} parameters all the info needed to redirect user to CheckoutPage.
+ */
+export const handleSubmit = parameters => values => {
+  const {
+    history,
+    params,
+    currentUser,
+    getListing,
+    callSetInitialValues,
+    onInitializeCardPaymentData,
+    routes,
+  } = parameters;
+  const listingId = new UUID(params.id);
+  const listing = getListing(listingId);
+
+  const {
+    bookingDates,
+    bookingStartTime,
+    bookingEndTime,
+    quantity: quantityRaw,
+    deliveryMethod,
+    ...otherOrderData
+  } = values;
+
+  const bookingMaybe = bookingDates
+    ? {
+        bookingDates: {
+          bookingStart: bookingDates.startDate,
+          bookingEnd: bookingDates.endDate,
+        },
+      }
+    : bookingStartTime && bookingEndTime
+    ? {
+        bookingDates: {
+          bookingStart: timestampToDate(bookingStartTime),
+          bookingEnd: timestampToDate(bookingEndTime),
+        },
+      }
+    : {};
+  const quantityMaybe = Number.isInteger(quantityRaw)
+    ? { quantity: Number.parseInt(quantityRaw, 10) }
+    : {};
+  const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
+
+  const initialValues = {
+    listing,
+    orderData: {
+      ...bookingMaybe,
+      ...quantityMaybe,
+      ...deliveryMethodMaybe,
+      ...otherOrderData,
+    },
+    confirmPaymentError: null,
+  };
+
+  const saveToSessionStorage = !currentUser;
+
+  // Customize checkout page state with current listing and selected orderData
+  const { setInitialValues } = findRouteByRouteName('CheckoutPage', routes);
+
+  callSetInitialValues(setInitialValues, initialValues, saveToSessionStorage);
+
+  // Clear previous Stripe errors from store if there is any
+  onInitializeCardPaymentData();
+
+  // Redirect to CheckoutPage
+  history.push(
+    createResourceLocatorString(
+      'CheckoutPage',
+      routes,
+      { id: listing.id.uuid, slug: createSlug(listing.attributes.title) },
+      {}
+    )
+  );
+};
+
+/**
+ * Create fallback views for the ListingPage: LoadingPage and ErrorPage.
+ * The PlainPage is just a helper for them.
+ */
+const PlainPage = props => {
+  const { title, topbar, scrollingDisabled, children } = props;
+  return (
+    <Page title={title} scrollingDisabled={scrollingDisabled}>
+      <LayoutSingleColumn className={css.pageRoot}>
+        <LayoutWrapperTopbar>{topbar}</LayoutWrapperTopbar>
+        <LayoutWrapperMain>{children}</LayoutWrapperMain>
+        <LayoutWrapperFooter>
+          <Footer />
+        </LayoutWrapperFooter>
+      </LayoutSingleColumn>
+    </Page>
+  );
+};
+
+export const ErrorPage = props => {
+  const { topbar, scrollingDisabled, intl } = props;
+  return (
+    <PlainPage
+      title={intl.formatMessage({
+        id: 'ListingPage.errorLoadingListingTitle',
+      })}
+      topbar={topbar}
+      scrollingDisabled={scrollingDisabled}
+    >
+      <p className={css.errorText}>
+        <FormattedMessage id="ListingPage.errorLoadingListingMessage" />
+      </p>
+    </PlainPage>
+  );
+};
+
+export const LoadingPage = props => {
+  const { topbar, scrollingDisabled, intl } = props;
+  return (
+    <PlainPage
+      title={intl.formatMessage({
+        id: 'ListingPage.loadingListingTitle',
+      })}
+      topbar={topbar}
+      scrollingDisabled={scrollingDisabled}
+    >
+      <p className={css.loadingText}>
+        <FormattedMessage id="ListingPage.loadingListingMessage" />
+      </p>
+    </PlainPage>
+  );
+};

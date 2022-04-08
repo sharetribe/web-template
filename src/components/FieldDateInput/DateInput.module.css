@@ -1,9 +1,6 @@
 @import '../../styles/propertySets.css';
 
 .inputRoot {
-  /* Contain repainting to this component only */
-  transform: translate3d(0, 0, 0);
-
   /* Override react-dates default styles to match input styles */
 
   & :global(.SingleDatePicker) {
@@ -15,18 +12,16 @@
     /* Similar problem as in issue: https://github.com/airbnb/react-dates/issues/947 */
     box-shadow: var(--boxShadowButton);
     top: 36px !important;
-    left: unset !important;
-    width: calc(100% - 48px);
+    width: 100%;
+    min-height: calc(100vh - 252px);
     background-color: var(--marketplaceColor);
 
     @media (--viewportMedium) {
       /* !important is added to top because react-dates uses inline style for height */
       /* Similar problem as in issue: https://github.com/airbnb/react-dates/issues/947 */
       top: 48px !important;
-      left: 0px !important;
-      width: 100%;
-      min-height: calc(100vh - 252px);
       min-height: auto;
+      box-shadow: var(--boxShadowPopup);
       border-radius: 0 0 6px 6px;
     }
   }
@@ -35,12 +30,22 @@
     @apply --marketplaceDefaultFontStyles;
     @apply --marketplaceInputStyles;
     font-size: 16px;
+    background-image: url('data:image/svg+xml;utf8,<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g stroke="%234A4A4A" transform="translate(1 1)"><rect stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" x=".292" y="1.459" width="13.417" height="12.25" rx="1"/><path d="M3.208.292V3.21M10.792.292V3.21M.292 4.376h13.416" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.5" y="6.5" width="1" height="1" rx=".5"/><rect x="6.5" y="6.5" width="1" height="1" rx=".5"/><rect x="9.5" y="6.5" width="1" height="1" rx=".5"/><rect x="3.5" y="9.5" width="1" height="1" rx=".5"/><rect x="6.5" y="9.5" width="1" height="1" rx=".5"/><rect x="9.5" y="9.5" width="1" height="1" rx=".5"/></g></g></svg>');
+    background-repeat: no-repeat;
+    background-position: 8px 8px;
+    padding-left: 30px;
 
-    &:focus {
-      border-radius: 6px 6px 0 0;
-      border-color: #80bdff;
-      box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
-      transition: all ease-in-out 100ms;
+    @media (--viewportMedium) {
+      background-position: 8px 13px;
+      padding-left: 32px;
+
+      &:focus {
+        border-radius: 6px 6px 0 0;
+        border-color: #80bdff;
+        border-bottom-width: 3px;
+        box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+        transition: all ease-in-out 100ms;
+      }
     }
   }
 
@@ -224,6 +229,38 @@
   }
   & :global(.CalendarMonth_caption) {
     text-transform: capitalize;
+  }
+
+  & :global(.DateInput__disabled) {
+    background: none;
+  }
+  & :global(.DateInput_input__disabled) {
+    @apply --marketplaceDefaultFontStyles;
+    @apply --marketplaceInputStyles;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: var(--matterColorNegative);
+    transition: border-bottom-color var(--transitionStyle);
+    transition: all 0.15s ease-out;
+    background: none;
+    background-image: url('data:image/svg+xml;utf8,<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g stroke="%23E6E6E6" transform="translate(1 1)"><rect stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" x=".292" y="1.459" width="13.417" height="12.25" rx="1"/><path d="M3.208.292V3.21M10.792.292V3.21M.292 4.376h13.416" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.5" y="6.5" width="1" height="1" rx=".5"/><rect x="6.5" y="6.5" width="1" height="1" rx=".5"/><rect x="9.5" y="6.5" width="1" height="1" rx=".5"/><rect x="3.5" y="9.5" width="1" height="1" rx=".5"/><rect x="6.5" y="9.5" width="1" height="1" rx=".5"/><rect x="9.5" y="9.5" width="1" height="1" rx=".5"/></g></g></svg>');
+    background-repeat: no-repeat;
+    background-position: 8px 8px;
+    padding-left: 30px;
+
+    &:hover {
+      border-bottom-color: var(--matterColorNegative);
+    }
+
+    @media (--viewportMedium) {
+      border-bottom-width: 3px;
+      background-position: 8px 13px;
+    }
+  }
+
+  & :global(.DateInput_input__disabled::placeholder) {
+    color: var(--matterColorNegative);
+    font-style: normal;
   }
 }
 

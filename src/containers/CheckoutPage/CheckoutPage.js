@@ -10,7 +10,14 @@ import config from '../../config';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
-import { propTypes, LINE_ITEM_NIGHT, LINE_ITEM_DAY, DATE_TYPE_DATE } from '../../util/types';
+import {
+  propTypes,
+  LINE_ITEM_NIGHT,
+  LINE_ITEM_DAY,
+  LINE_ITEM_HOUR,
+  DATE_TYPE_DATE,
+  DATE_TYPE_DATETIME,
+} from '../../util/types';
 import {
   ensureListing,
   ensureCurrentUser,
@@ -20,7 +27,7 @@ import {
   ensureStripeCustomer,
   ensurePaymentMethodCard,
 } from '../../util/data';
-import { timeOfDayFromLocalToTimeZone, minutesBetween } from '../../util/dates';
+import { minutesBetween } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import {
   isTransactionInitiateAmountTooLowError,
@@ -110,13 +117,12 @@ const getFormattedTotalPrice = (transaction, intl) => {
 };
 
 // Convert the picked date to moment that will represent the same time of day in UTC time zone.
-const bookingDatesMaybe = bookingDates => {
-  const apiTimeZone = 'Etc/UTC';
+const bookingDatesMaybe = (bookingDates, timeZone) => {
   return bookingDates
     ? {
         bookingDates: {
-          bookingStart: timeOfDayFromLocalToTimeZone(bookingDates.bookingStart, apiTimeZone),
-          bookingEnd: timeOfDayFromLocalToTimeZone(bookingDates.bookingEnd, apiTimeZone),
+          bookingStart: bookingDates.bookingStart,
+          bookingEnd: bookingDates.bookingEnd,
         },
       }
     : {};
@@ -321,12 +327,13 @@ export class CheckoutPageComponent extends Component {
       const quantity = pageData.orderData?.quantity;
       const quantityMaybe = quantity ? { quantity } : {};
       const deliveryMethod = pageData.orderData?.deliveryMethod;
+      const timeZone = pageData.listing.attributes.availabilityPlan?.timezone || 'Etc/UTC';
       fetchSpeculatedTransaction(
         {
           listingId,
           deliveryMethod,
           ...quantityMaybe,
-          ...bookingDatesMaybe(pageData.orderData.bookingDates),
+          ...bookingDatesMaybe(pageData.orderData.bookingDates, timeZone),
         },
         processAlias,
         transactionId,
@@ -501,6 +508,7 @@ export class CheckoutPageComponent extends Component {
       fnSavePaymentMethod
     );
 
+    const timeZone = pageData.listing?.attributes?.availabilityPlan?.timezone || 'Etc/UTC';
     const deliveryMethod = pageData.orderData?.deliveryMethod;
     const quantity = pageData.orderData?.quantity;
     const quantityMaybe = quantity ? { quantity } : {};
@@ -524,7 +532,7 @@ export class CheckoutPageComponent extends Component {
       listingId: pageData.listing.id,
       deliveryMethod,
       ...quantityMaybe,
-      ...bookingDatesMaybe(pageData.orderData.bookingDates),
+      ...bookingDatesMaybe(pageData.orderData.bookingDates, timeZone),
       ...protectedDataMaybe,
       ...optionalPaymentParams,
     };
@@ -753,8 +761,11 @@ export class CheckoutPageComponent extends Component {
     // Show breakdown only when (speculated?) transaction is loaded
     // (i.e. have an id and lineItems)
     const tx = existingTransaction.booking ? existingTransaction : speculatedTransaction;
+    const timeZone = listing?.attributes?.availabilityPlan?.timezone;
+    const lineItemUnitType = `line-item/${currentListing.attributes.publicData?.unitType}`;
+    const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
     const txBookingMaybe = tx.booking?.id
-      ? { booking: ensureBooking(tx.booking), dateType: DATE_TYPE_DATE }
+      ? { booking: ensureBooking(tx.booking), dateType, timeZone }
       : {};
     const breakdown =
       tx.id && tx.attributes.lineItems?.length > 0 ? (
@@ -802,7 +813,6 @@ export class CheckoutPageComponent extends Component {
       </NamedLink>
     );
 
-    const lineItemUnitType = `line-item/${currentListing.attributes.publicData?.unitType}`;
     const isNightly = lineItemUnitType === LINE_ITEM_NIGHT;
     const isDaily = lineItemUnitType === LINE_ITEM_DAY;
 

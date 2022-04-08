@@ -41,6 +41,7 @@ describe('BookingDatesForm', () => {
         endDatePlaceholder="tomorrow"
         fetchLineItemsInProgress={false}
         onFetchTransactionLineItems={noop}
+        onFetchTimeSlots={noop}
         lineItems={lineItems}
       />
     );
@@ -81,14 +82,9 @@ describe('EstimatedCustomerBreakdownMaybe', () => {
     expect(unitLineItem.code).toEqual(LINE_ITEM_NIGHT);
     expect(userRole).toEqual('customer');
 
-    // Local time-of-day (startDate) is converted to server's time-of-day (booking.attributes.start)
-    // and it's then verified that it's actually UTC time.
-    expect(booking.attributes.start).toEqual(new Date(Date.UTC(2017, 3, 14)));
-    expect(booking.attributes.end).toEqual(new Date(Date.UTC(2017, 3, 16)));
-
-    // Server's time-of-day for day-based booking times matches the original local time-of-day
-    expect(timeOfDayFromTimeZoneToLocal(booking.attributes.start, 'Etc/UTC')).toEqual(startDate);
-    expect(timeOfDayFromTimeZoneToLocal(booking.attributes.end, 'Etc/UTC')).toEqual(endDate);
+    // booking data doesn't get converted inside EstimatedCustomerBreakdownMaybe
+    expect(booking.attributes.start).toEqual(startDate);
+    expect(booking.attributes.end).toEqual(endDate);
 
     expect(transaction.attributes.payinTotal).toEqual(new Money(2198, 'USD'));
     expect(transaction.attributes.payoutTotal).toEqual(new Money(2198, 'USD'));

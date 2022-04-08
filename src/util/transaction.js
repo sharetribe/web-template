@@ -183,6 +183,28 @@ const hasPassedState = process => (stateName, tx) => {
 };
 
 /**
+ * If process has been renamed, but the graph itself is the same,
+ * this function allows referencing the updated name of the process.
+ * ProcessName is used in some translation keys and stateData functions.
+ *
+ * Note: If the process graph has changed, you must create a separate process graph for it.
+ *
+ * @param {String} processName
+ */
+export const getUpdatedProcessName = processName => {
+  switch (processName) {
+    case PRODUCT_PROCESS_NAME:
+      return PRODUCT_PROCESS_NAME;
+    case 'flex-default-process':
+    case 'flex-hourly-default-process':
+    case BOOKING_PROCESS_NAME:
+      return BOOKING_PROCESS_NAME;
+    default:
+      return processName;
+  }
+};
+
+/**
  * Get process based on process name
  * @param {String} processName
  */
