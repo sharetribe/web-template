@@ -90,6 +90,7 @@ describe('OrderBreakdown', () => {
           end: new Date(Date.UTC(2017, 3, 16)),
         })}
         intl={fakeIntl}
+        timeZone="Etc/UTC"
       />
     );
     expect(tree).toMatchSnapshot();
@@ -125,6 +126,7 @@ describe('OrderBreakdown', () => {
           end: new Date(Date.UTC(2017, 3, 16)),
         })}
         intl={fakeIntl}
+        timeZone="Etc/UTC"
       />
     );
     expect(tree).toMatchSnapshot();

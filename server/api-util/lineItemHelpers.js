@@ -1,5 +1,5 @@
 const Decimal = require('decimal.js');
-const has = require('lodash/has');
+const moment = require('moment-timezone/builds/moment-timezone-with-data-10-year-range.min');
 const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
 
@@ -140,6 +140,26 @@ exports.calculateQuantityFromDates = (startDate, endDate, type) => {
     return daysBetween(startDate, endDate);
   }
   throw new Error(`Can't calculate quantity from dates to unit type: ${type}`);
+};
+
+/**
+ * Calculate the quantity of hours between start and end dates.
+ * If the length of the timeslot is something else than hour (e.g. 30 minutes)
+ * you can change parameter 'hours' to 'minutes' and use that to calculate the
+ * quantity of timeslots.
+ *
+ * See moment documentation about diff:
+ * https://momentjs.com/docs/#/displaying/difference/
+ *
+ * @param {Date} startDate
+ * @param {Date} endDate
+ *
+ * @returns {int} quantity of hours between start and end
+ *
+ */
+exports.calculateQuantityFromHours = (startDate, endDate) => {
+  // Note: the last parameter (true) ensures that floats are returned.
+  return moment(endDate).diff(moment(startDate), 'hours', true);
 };
 
 /**

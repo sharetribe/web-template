@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { stringify, parse } from '../../../util/urlHelpers';
+import { SCHEMA_TYPE_MULTI_ENUM } from '../../../util/types';
 import SelectMultipleFilter from './SelectMultipleFilter';
 
 const URL_PARAM = 'pub_amenities';
@@ -63,6 +64,7 @@ const AmenitiesFilterPopup = withRouter(props => {
       showAsPopup={true}
       liveEdit={false}
       options={options}
+      schemaType={SCHEMA_TYPE_MULTI_ENUM}
       initialValues={initialValues}
       contentPlacementOffset={-14}
     />
@@ -94,6 +96,7 @@ const AmenitiesFilterPlain = withRouter(props => {
       showAsPopup={false}
       liveEdit={true}
       options={options}
+      schemaType={SCHEMA_TYPE_MULTI_ENUM}
       initialValues={initialValues}
     />
   );

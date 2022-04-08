@@ -2,8 +2,8 @@ import omit from 'lodash/omit';
 
 import config from '../../config';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
-import { denormalisedResponseEntities, ensureAvailabilityException } from '../../util/data';
-import { isSameDate, monthIdString } from '../../util/dates';
+import { denormalisedResponseEntities } from '../../util/data';
+import { getDefaultTimeZoneOnBrowser, getStartOf } from '../../util/dates';
 import { storableError } from '../../util/errors';
 import * as log from '../../util/log';
 
@@ -25,7 +25,7 @@ const imageIds = images => {
 };
 
 // After listing creation & update, we want to make sure that uploadedImages state is cleaned
-const updateUloadedImagesState = (state, payload) => {
+const updateUploadedImagesState = (state, payload) => {
   const { uploadedImages, uploadedImagesOrder } = state;
 
   // Images attached to listing entity
@@ -62,85 +62,6 @@ const getImageVariantInfo = () => {
   };
 };
 
-// A helper function to filter away exception that matches start and end timestamps
-const removeException = (exception, calendar) => {
-  const availabilityException = ensureAvailabilityException(exception.availabilityException);
-  const { start, end } = availabilityException.attributes;
-  // When using time-based process, you might want to deal with local dates using monthIdString
-  const monthId = monthIdString(start, 'Etc/UTC');
-  const monthData = calendar[monthId] || { exceptions: [] };
-
-  const exceptions = monthData.exceptions.filter(e => {
-    const anException = ensureAvailabilityException(e.availabilityException);
-    const exceptionStart = anException.attributes.start;
-    const exceptionEnd = anException.attributes.end;
-
-    return !(isSameDate(exceptionStart, start) && isSameDate(exceptionEnd, end));
-  });
-
-  return {
-    ...calendar,
-    [monthId]: { ...monthData, exceptions },
-  };
-};
-
-// A helper function to add a new exception and remove previous one if there's a matching exception
-const addException = (exception, calendar) => {
-  const { start } = ensureAvailabilityException(exception.availabilityException).attributes;
-  // When using time-based process, you might want to deal with local dates using monthIdString
-  const monthId = monthIdString(start, 'Etc/UTC');
-
-  // TODO: API doesn't support "availability_exceptions/update" yet
-  // So, when user wants to create an exception we need to ensure
-  // that possible existing exception is removed first.
-  const cleanCalendar = removeException(exception, calendar);
-  const monthData = cleanCalendar[monthId] || { exceptions: [] };
-
-  return {
-    ...cleanCalendar,
-    [monthId]: { ...monthData, exceptions: [...monthData.exceptions, exception] },
-  };
-};
-
-// A helper function to update exception that matches start and end timestamps
-const updateException = (exception, calendar) => {
-  const newAvailabilityException = ensureAvailabilityException(exception.availabilityException);
-  const { start, end } = newAvailabilityException.attributes;
-  // When using time-based process, you might want to deal with local dates using monthIdString
-  const monthId = monthIdString(start, 'Etc/UTC');
-  const monthData = calendar[monthId] || { exceptions: [] };
-
-  const exceptions = monthData.exceptions.map(e => {
-    const availabilityException = ensureAvailabilityException(e.availabilityException);
-    const exceptionStart = availabilityException.attributes.start;
-    const exceptionEnd = availabilityException.attributes.end;
-
-    return isSameDate(exceptionStart, start) && isSameDate(exceptionEnd, end) ? exception : e;
-  });
-
-  return {
-    ...calendar,
-    [monthId]: { ...monthData, exceptions },
-  };
-};
-
-// Update calendar data of given month
-const updateCalendarMonth = (state, monthId, data) => {
-  // Ensure that every month has array for bookings and exceptions
-  const defaultMonthData = { bookings: [], exceptions: [] };
-  return {
-    ...state,
-    availabilityCalendar: {
-      ...state.availabilityCalendar,
-      [monthId]: {
-        ...defaultMonthData,
-        ...state.availabilityCalendar[monthId],
-        ...data,
-      },
-    },
-  };
-};
-
 const requestAction = actionType => params => ({ type: actionType, payload: { params } });
 
 const successAction = actionType => result => ({ type: actionType, payload: result.data });
@@ -168,17 +89,13 @@ export const SHOW_LISTINGS_REQUEST = 'app/EditListingPage/SHOW_LISTINGS_REQUEST'
 export const SHOW_LISTINGS_SUCCESS = 'app/EditListingPage/SHOW_LISTINGS_SUCCESS';
 export const SHOW_LISTINGS_ERROR = 'app/EditListingPage/SHOW_LISTINGS_ERROR';
 
-export const FETCH_BOOKINGS_REQUEST = 'app/EditListingPage/FETCH_BOOKINGS_REQUEST';
-export const FETCH_BOOKINGS_SUCCESS = 'app/EditListingPage/FETCH_BOOKINGS_SUCCESS';
-export const FETCH_BOOKINGS_ERROR = 'app/EditListingPage/FETCH_BOOKINGS_ERROR';
-
 export const FETCH_EXCEPTIONS_REQUEST = 'app/EditListingPage/FETCH_AVAILABILITY_EXCEPTIONS_REQUEST';
 export const FETCH_EXCEPTIONS_SUCCESS = 'app/EditListingPage/FETCH_AVAILABILITY_EXCEPTIONS_SUCCESS';
 export const FETCH_EXCEPTIONS_ERROR = 'app/EditListingPage/FETCH_AVAILABILITY_EXCEPTIONS_ERROR';
 
-export const CREATE_EXCEPTION_REQUEST = 'app/EditListingPage/CREATE_AVAILABILITY_EXCEPTION_REQUEST';
-export const CREATE_EXCEPTION_SUCCESS = 'app/EditListingPage/CREATE_AVAILABILITY_EXCEPTION_SUCCESS';
-export const CREATE_EXCEPTION_ERROR = 'app/EditListingPage/CREATE_AVAILABILITY_EXCEPTION_ERROR';
+export const ADD_EXCEPTION_REQUEST = 'app/EditListingPage/ADD_AVAILABILITY_EXCEPTION_REQUEST';
+export const ADD_EXCEPTION_SUCCESS = 'app/EditListingPage/ADD_AVAILABILITY_EXCEPTION_SUCCESS';
+export const ADD_EXCEPTION_ERROR = 'app/EditListingPage/ADD_AVAILABILITY_EXCEPTION_ERROR';
 
 export const DELETE_EXCEPTION_REQUEST = 'app/EditListingPage/DELETE_AVAILABILITY_EXCEPTION_REQUEST';
 export const DELETE_EXCEPTION_SUCCESS = 'app/EditListingPage/DELETE_AVAILABILITY_EXCEPTION_SUCCESS';
@@ -213,19 +130,16 @@ const initialState = {
   createListingDraftInProgress: false,
   submittedListingId: null,
   redirectToListing: false,
-  availabilityCalendar: {
-    // '2018-12': {
-    //   bookings: [],
-    //   exceptions: [],
-    //   fetchExceptionsError: null,
-    //   fetchExceptionsInProgress: false,
-    //   fetchBookingsError: null,
-    //   fetchBookingsInProgress: false,
-    // },
-  },
   uploadedImages: {},
   uploadedImagesOrder: [],
   removedImageIds: [],
+  fetchExceptionsError: null,
+  fetchExceptionsInProgress: false,
+  availabilityExceptions: [],
+  addExceptionError: null,
+  addExceptionInProgress: false,
+  deleteExceptionError: null,
+  deleteExceptionInProgress: false,
   listingDraft: null,
   updatedTab: null,
   updateInProgress: false,
@@ -253,7 +167,7 @@ export default function reducer(state = initialState, action = {}) {
     case CREATE_LISTING_DRAFT_SUCCESS:
       return {
         ...state,
-        ...updateUloadedImagesState(state, payload),
+        ...updateUploadedImagesState(state, payload),
         createListingDraftInProgress: false,
         submittedListingId: payload.data.id,
         listingDraft: payload.data,
@@ -301,9 +215,9 @@ export default function reducer(state = initialState, action = {}) {
     case UPDATE_LISTING_SUCCESS:
       return {
         ...state,
-        ...updateUloadedImagesState(state, payload),
+        ...updateUploadedImagesState(state, payload),
         updateInProgress: false,
-        availabilityCalendar: { ...state.availabilityCalendar },
+        // availabilityCalendar: { ...state.availabilityCalendar },
       };
     case UPDATE_LISTING_ERROR:
       return { ...state, updateInProgress: false, updateListingError: payload };
@@ -311,91 +225,76 @@ export default function reducer(state = initialState, action = {}) {
     case SHOW_LISTINGS_REQUEST:
       return { ...state, showListingsError: null };
     case SHOW_LISTINGS_SUCCESS:
-      return { ...initialState, availabilityCalendar: { ...state.availabilityCalendar } };
+      return initialState; // { ...initialState, availabilityCalendar: { ...state.availabilityCalendar } };
 
     case SHOW_LISTINGS_ERROR:
       // eslint-disable-next-line no-console
       console.error(payload);
       return { ...state, showListingsError: payload, redirectToListing: false };
 
-    case FETCH_BOOKINGS_REQUEST:
-      return updateCalendarMonth(state, payload.params.monthId, {
-        fetchBookingsError: null,
-        fetchBookingsInProgress: true,
-      });
-    case FETCH_BOOKINGS_SUCCESS:
-      return updateCalendarMonth(state, payload.monthId, {
-        bookings: payload.bookings,
-        fetchBookingsInProgress: false,
-      });
-    case FETCH_BOOKINGS_ERROR:
-      return updateCalendarMonth(state, payload.monthId, {
-        fetchBookingsError: payload.error,
-        fetchBookingsInProgress: false,
-      });
-
     case FETCH_EXCEPTIONS_REQUEST:
-      return updateCalendarMonth(state, payload.params.monthId, {
+      return {
+        ...state,
+        availabilityExceptions: [],
         fetchExceptionsError: null,
         fetchExceptionsInProgress: true,
-      });
+      };
     case FETCH_EXCEPTIONS_SUCCESS:
-      return updateCalendarMonth(state, payload.monthId, {
-        exceptions: payload.exceptions,
+      return {
+        ...state,
+        availabilityExceptions: payload,
+        fetchExceptionsError: null,
         fetchExceptionsInProgress: false,
-      });
+      };
     case FETCH_EXCEPTIONS_ERROR:
-      return updateCalendarMonth(state, payload.monthId, {
+      return {
+        ...state,
         fetchExceptionsError: payload.error,
         fetchExceptionsInProgress: false,
-      });
-
-    case CREATE_EXCEPTION_REQUEST: {
-      const { start, end, seats } = payload.params;
-      const draft = ensureAvailabilityException({ attributes: { start, end, seats } });
-      const exception = { availabilityException: draft, inProgress: true };
-      const availabilityCalendar = addException(exception, state.availabilityCalendar);
-      return { ...state, availabilityCalendar };
-    }
-    case CREATE_EXCEPTION_SUCCESS: {
-      const availabilityCalendar = updateException(payload.exception, state.availabilityCalendar);
-      return { ...state, availabilityCalendar };
-    }
-    case CREATE_EXCEPTION_ERROR: {
-      const { availabilityException, error } = payload;
-      const failedException = { availabilityException, error };
-      const availabilityCalendar = updateException(failedException, state.availabilityCalendar);
-      return { ...state, availabilityCalendar };
-    }
-
-    case DELETE_EXCEPTION_REQUEST: {
-      const { id, seats, currentException } = payload.params;
-
-      // We first create temporary exception with given 'seats' count (the default after deletion).
-      // This makes it possible to show the UI element immediately with default color that matches
-      // with the availability plan.
-      const exception = {
-        id,
-        inProgress: true,
-        availabilityException: {
-          ...currentException.availabilityException,
-          attributes: { ...currentException.availabilityException.attributes, seats },
-        },
       };
 
-      const availabilityCalendar = updateException(exception, state.availabilityCalendar);
-      return { ...state, availabilityCalendar };
-    }
+    case ADD_EXCEPTION_REQUEST:
+      return {
+        ...state,
+        addExceptionError: null,
+        addExceptionInProgress: true,
+      };
+    case ADD_EXCEPTION_SUCCESS:
+      return {
+        ...state,
+        availabilityExceptions: [...state.availabilityExceptions, payload],
+        addExceptionInProgress: false,
+      };
+    case ADD_EXCEPTION_ERROR:
+      return {
+        ...state,
+        addExceptionError: payload.error,
+        addExceptionInProgress: false,
+      };
+
+    case DELETE_EXCEPTION_REQUEST:
+      return {
+        ...state,
+        deleteExceptionError: null,
+        deleteExceptionInProgress: true,
+      };
     case DELETE_EXCEPTION_SUCCESS: {
-      const availabilityCalendar = removeException(payload.exception, state.availabilityCalendar);
-      return { ...state, availabilityCalendar };
+      const deletedExceptionId = payload.id;
+      const availabilityExceptions = state.availabilityExceptions.filter(
+        e => e.id.uuid !== deletedExceptionId.uuid
+      );
+      return {
+        ...state,
+        availabilityExceptions,
+        deleteExceptionInProgress: false,
+      };
     }
-    case DELETE_EXCEPTION_ERROR: {
-      const { availabilityException, error } = payload;
-      const failedException = { availabilityException, error };
-      const availabilityCalendar = updateException(failedException, state.availabilityCalendar);
-      return { ...state, availabilityCalendar };
-    }
+    case DELETE_EXCEPTION_ERROR:
+      return {
+        ...state,
+        deleteExceptionError: payload.error,
+        deleteExceptionInProgress: false,
+      };
 
     case UPLOAD_IMAGE_REQUEST: {
       // payload.params: { id: 'tempId', file }
@@ -512,20 +411,15 @@ export const setStockRequest = requestAction(SET_STOCK_REQUEST);
 export const setStockSuccess = successAction(SET_STOCK_SUCCESS);
 export const setStockError = errorAction(SET_STOCK_ERROR);
 
-// SDK method: bookings.query
-export const fetchBookingsRequest = requestAction(FETCH_BOOKINGS_REQUEST);
-export const fetchBookingsSuccess = successAction(FETCH_BOOKINGS_SUCCESS);
-export const fetchBookingsError = errorAction(FETCH_BOOKINGS_ERROR);
-
 // SDK method: availabilityExceptions.query
 export const fetchAvailabilityExceptionsRequest = requestAction(FETCH_EXCEPTIONS_REQUEST);
 export const fetchAvailabilityExceptionsSuccess = successAction(FETCH_EXCEPTIONS_SUCCESS);
 export const fetchAvailabilityExceptionsError = errorAction(FETCH_EXCEPTIONS_ERROR);
 
 // SDK method: availabilityExceptions.create
-export const createAvailabilityExceptionRequest = requestAction(CREATE_EXCEPTION_REQUEST);
-export const createAvailabilityExceptionSuccess = successAction(CREATE_EXCEPTION_SUCCESS);
-export const createAvailabilityExceptionError = errorAction(CREATE_EXCEPTION_ERROR);
+export const addAvailabilityExceptionRequest = requestAction(ADD_EXCEPTION_REQUEST);
+export const addAvailabilityExceptionSuccess = successAction(ADD_EXCEPTION_SUCCESS);
+export const addAvailabilityExceptionError = errorAction(ADD_EXCEPTION_ERROR);
 
 // SDK method: availabilityExceptions.delete
 export const deleteAvailabilityExceptionRequest = requestAction(DELETE_EXCEPTION_REQUEST);
@@ -713,99 +607,47 @@ export function requestImageUpload(actionPayload) {
   };
 }
 
-export const requestFetchBookings = fetchParams => (dispatch, getState, sdk) => {
-  const { listingId, start, end, state } = fetchParams;
-  // When using time-based process, you might want to deal with local dates using monthIdString
-  const monthId = monthIdString(start, 'Etc/UTC');
-
-  dispatch(fetchBookingsRequest({ ...fetchParams, monthId }));
-
-  return sdk.bookings
-    .query({ listingId, start, end, state }, { expand: true })
-    .then(response => {
-      const bookings = denormalisedResponseEntities(response);
-      return dispatch(fetchBookingsSuccess({ data: { monthId, bookings } }));
-    })
-    .catch(e => {
-      return dispatch(fetchBookingsError({ monthId, error: storableError(e) }));
-    });
-};
-
-export const requestFetchAvailabilityExceptions = fetchParams => (dispatch, getState, sdk) => {
-  const { listingId, start, end } = fetchParams;
-  // When using time-based process, you might want to deal with local dates using monthIdString
-  const monthId = monthIdString(start, 'Etc/UTC');
-
-  dispatch(fetchAvailabilityExceptionsRequest({ ...fetchParams, monthId }));
+export const requestAddAvailabilityException = params => (dispatch, getState, sdk) => {
+  dispatch(addAvailabilityExceptionRequest(params));
 
   return sdk.availabilityExceptions
-    .query({ listingId, start, end }, { expand: true })
+    .create(params, { expand: true })
     .then(response => {
-      const exceptions = denormalisedResponseEntities(response).map(availabilityException => ({
-        availabilityException,
-      }));
-      return dispatch(fetchAvailabilityExceptionsSuccess({ data: { monthId, exceptions } }));
+      const availabilityException = response.data.data;
+      return dispatch(addAvailabilityExceptionSuccess({ data: availabilityException }));
     })
     .catch(e => {
-      return dispatch(fetchAvailabilityExceptionsError({ monthId, error: storableError(e) }));
-    });
-};
-
-export const requestCreateAvailabilityException = params => (dispatch, getState, sdk) => {
-  const { currentException, ...createParams } = params;
-
-  dispatch(createAvailabilityExceptionRequest(createParams));
-
-  return sdk.availabilityExceptions
-    .create(createParams, { expand: true })
-    .then(response => {
-      dispatch(
-        createAvailabilityExceptionSuccess({
-          data: {
-            exception: {
-              availabilityException: response.data.data,
-            },
-          },
-        })
-      );
-      return response;
-    })
-    .catch(error => {
-      const availabilityException = currentException && currentException.availabilityException;
-      return dispatch(
-        createAvailabilityExceptionError({
-          error: storableError(error),
-          availabilityException,
-        })
-      );
+      dispatch(addAvailabilityExceptionError({ error: storableError(e) }));
+      throw e;
     });
 };
 
 export const requestDeleteAvailabilityException = params => (dispatch, getState, sdk) => {
-  const { currentException, seats, ...deleteParams } = params;
-
   dispatch(deleteAvailabilityExceptionRequest(params));
 
   return sdk.availabilityExceptions
-    .delete(deleteParams, { expand: true })
+    .delete(params, { expand: true })
     .then(response => {
-      dispatch(
-        deleteAvailabilityExceptionSuccess({
-          data: {
-            exception: currentException,
-          },
-        })
-      );
-      return response;
+      const availabilityException = response.data.data;
+      return dispatch(deleteAvailabilityExceptionSuccess({ data: availabilityException }));
     })
-    .catch(error => {
-      const availabilityException = currentException && currentException.availabilityException;
-      return dispatch(
-        deleteAvailabilityExceptionError({
-          error: storableError(error),
-          availabilityException,
-        })
-      );
+    .catch(e => {
+      dispatch(deleteAvailabilityExceptionError({ error: storableError(e) }));
+      throw e;
+    });
+};
+
+export const requestFetchAvailabilityExceptions = fetchParams => (dispatch, getState, sdk) => {
+  dispatch(fetchAvailabilityExceptionsRequest(fetchParams));
+
+  return sdk.availabilityExceptions
+    .query(fetchParams, { expand: true })
+    .then(response => {
+      const availabilityExceptions = denormalisedResponseEntities(response);
+      return dispatch(fetchAvailabilityExceptionsSuccess({ data: availabilityExceptions }));
+    })
+    .catch(e => {
+      return dispatch(fetchAvailabilityExceptionsError({ error: storableError(e) }));
     });
 };
 
@@ -849,6 +691,39 @@ export const loadData = params => (dispatch, getState, sdk) => {
       if (currentUser && currentUser.stripeAccount) {
         dispatch(fetchStripeAccount());
       }
+
+      // Because of two dispatch functions, response is an array.
+      // We are only interested in the response from requestShowListing here,
+      // so we need to pick the first one
+      if (response[0].data && response[0].data.data) {
+        const listing = response[0].data.data;
+
+        // If the listing doesn't have availabilityPlan yet
+        // use the defaul timezone
+        const availabilityPlan = listing.attributes.availabilityPlan;
+
+        const tz = availabilityPlan
+          ? listing.attributes.availabilityPlan.timezone
+          : typeof window !== 'undefined'
+          ? getDefaultTimeZoneOnBrowser()
+          : 'Etc/UTC';
+
+        const today = new Date();
+        const start = getStartOf(today, 'day', tz);
+        // Query range: today + 364 days
+        const exceptionRange = 364;
+        const end = getStartOf(today, 'day', tz, exceptionRange, 'days');
+
+        // NOTE: in this template, we don't expect more than 100 exceptions.
+        // If there are more exceptions, pagination kicks in and we can't use frontend sorting.
+        const params = {
+          listingId: listing.id,
+          start,
+          end,
+        };
+        dispatch(requestFetchAvailabilityExceptions(params));
+      }
+
       return response;
     })
     .catch(e => {

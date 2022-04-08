@@ -449,7 +449,7 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
               className="orderPanel"
               fetchLineItemsError={null}
               fetchLineItemsInProgress={false}
-              fetchTimeSlotsError={null}
+              isOwnListing={false}
               lineItemUnitType="line-item/day"
               lineItems={null}
               listing={
@@ -480,9 +480,10 @@ exports[`TransactionPage - Order matches snapshot 1`] = `
                   "type": "listing",
                 }
               }
+              monthlyTimeSlots={null}
+              onFetchTimeSlots={[Function]}
               onFetchTransactionLineItems={[Function]}
               onSubmit={[Function]}
-              timeSlots={null}
               title="listing1 title"
               titleClassName="orderTitle"
             />
@@ -1041,7 +1042,7 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
               className="orderPanel"
               fetchLineItemsError={null}
               fetchLineItemsInProgress={false}
-              fetchTimeSlotsError={null}
+              isOwnListing={true}
               lineItemUnitType="line-item/day"
               lineItems={null}
               listing={
@@ -1072,9 +1073,10 @@ exports[`TransactionPage - Sale matches snapshot 1`] = `
                   "type": "listing",
                 }
               }
+              monthlyTimeSlots={null}
+              onFetchTimeSlots={[Function]}
               onFetchTransactionLineItems={[Function]}
               onSubmit={[Function]}
-              timeSlots={null}
               title="listing1 title"
               titleClassName="orderTitle"
             />

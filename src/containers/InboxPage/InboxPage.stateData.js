@@ -1,5 +1,5 @@
 import { bool, shape, string } from 'prop-types';
-import { getProcess } from '../../util/transaction';
+import { getUpdatedProcessName, getProcess } from '../../util/transaction';
 
 import { getStateDataForBookingProcess } from './InboxPage.stateDataBooking.js';
 import { getStateDataForProductProcess } from './InboxPage.stateDataProduct.js';
@@ -19,7 +19,7 @@ export const stateDataShape = shape({
 // Translated name of the state of the given transaction
 export const getStateData = params => {
   const { transaction } = params;
-  const processName = transaction?.attributes?.processName;
+  const processName = getUpdatedProcessName(transaction?.attributes?.processName);
   const process = getProcess(processName);
 
   const processInfo = () => {

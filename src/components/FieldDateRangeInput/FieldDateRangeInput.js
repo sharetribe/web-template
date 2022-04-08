@@ -10,7 +10,7 @@ import { bool, func, object, oneOf, string, arrayOf } from 'prop-types';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
 import { START_DATE, END_DATE } from '../../util/dates';
-import { propTypes } from '../../util/types';
+import { LINE_ITEM_DAY, propTypes } from '../../util/types';
 import { ValidationError } from '../../components';
 
 import DateRangeInput from './DateRangeInput';
@@ -79,20 +79,11 @@ class FieldDateRangeInputComponent extends Component {
       throw new Error('endDateId required when a endDateLabel is given');
     }
 
-    const { touched, error } = meta;
-    const value = input.value;
-
     // If startDate is valid label changes color and bottom border changes color too
-    const startDateIsValid = value && value.startDate instanceof Date;
-    const startDateLabelClasses = classNames(css.startDateLabel, {
-      [css.labelSuccess]: false, //startDateIsValid,
-    });
+    const startDateLabelClasses = classNames(css.startDateLabel);
 
     // If endDate is valid label changes color and bottom border changes color too
-    const endDateIsValid = value && value.endDate instanceof Date;
-    const endDateLabelClasses = classNames(css.endDateLabel, {
-      [css.labelSuccess]: false, //endDateIsValid,
-    });
+    const endDateLabelClasses = classNames(css.endDateLabel);
 
     const label =
       startDateLabel && endDateLabel ? (
@@ -110,6 +101,7 @@ class FieldDateRangeInputComponent extends Component {
     const { onBlur, onFocus, type, checked, ...restOfInput } = input;
     const inputProps = {
       lineItemUnitType,
+      minimumNights: lineItemUnitType === LINE_ITEM_DAY ? 0 : 1,
       onBlur: this.handleBlur,
       onFocus: this.handleFocus,
       useMobileMargins,
@@ -145,7 +137,6 @@ FieldDateRangeInputComponent.defaultProps = {
   startDatePlaceholderText: null,
   focusedInput: null,
   onFocusedInputChange: null,
-  timeSlots: null,
 };
 
 FieldDateRangeInputComponent.propTypes = {
@@ -159,7 +150,6 @@ FieldDateRangeInputComponent.propTypes = {
   startDateId: string,
   startDateLabel: string,
   startDatePlaceholderText: string,
-  timeSlots: arrayOf(propTypes.timeSlot),
   input: object.isRequired,
   meta: object.isRequired,
   focusedInput: oneOf([START_DATE, END_DATE]),
