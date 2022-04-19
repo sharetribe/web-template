@@ -604,7 +604,7 @@ export const BookingDatesFormComponent = props => {
 
             {showEstimatedBreakdown ? (
               <div className={css.priceBreakdownContainer}>
-                <h3 className={css.priceBreakdownTitle}>
+                <h3>
                   <FormattedMessage id="BookingDatesForm.priceBreakdownTitle" />
                 </h3>
                 <EstimatedCustomerBreakdownMaybe
