@@ -21,13 +21,7 @@ import {
   initialVisibleMonth,
 } from '../../../util/dates';
 import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, TIME_SLOT_TIME, propTypes } from '../../../util/types';
-import {
-  Form,
-  IconArrowHead,
-  IconSpinner,
-  PrimaryButton,
-  FieldDateRangeInput,
-} from '../../../components';
+import { Form, IconArrowHead, PrimaryButton, FieldDateRangeInput } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
@@ -458,7 +452,6 @@ export const BookingDatesFormComponent = props => {
           formId,
           handleSubmit,
           intl,
-          submitButtonWrapperClassName,
           lineItemUnitType,
           values,
           monthlyTimeSlots,
@@ -503,9 +496,6 @@ export const BookingDatesFormComponent = props => {
           startDatePlaceholder || intl.formatDate(startOfToday, dateFormatOptions);
         const endDatePlaceholderText =
           endDatePlaceholder || intl.formatDate(tomorrow, dateFormatOptions);
-        const submitButtonClasses = classNames(
-          submitButtonWrapperClassName || css.submitButtonWrapper
-        );
 
         const onMonthClick = handleMonthClick(
           currentMonth,
@@ -614,14 +604,18 @@ export const BookingDatesFormComponent = props => {
                 />
               </div>
             ) : null}
-            {fetchLineItemsInProgress ? <IconSpinner className={css.spinner} /> : null}
             {fetchLineItemsError ? (
               <span className={css.sideBarError}>
                 <FormattedMessage id="BookingDatesForm.fetchLineItemsError" />
               </span>
             ) : null}
 
-            <p className={css.smallPrint}>
+            <div className={css.submitButton}>
+              <PrimaryButton type="submit" inProgress={fetchLineItemsInProgress}>
+                <FormattedMessage id="BookingDatesForm.requestToBook" />
+              </PrimaryButton>
+            </div>
+            <p className={css.finePrint}>
               <FormattedMessage
                 id={
                   isOwnListing
@@ -630,11 +624,6 @@ export const BookingDatesFormComponent = props => {
                 }
               />
             </p>
-            <div className={submitButtonClasses}>
-              <PrimaryButton type="submit">
-                <FormattedMessage id="BookingDatesForm.requestToBook" />
-              </PrimaryButton>
-            </div>
           </Form>
         );
       }}
@@ -645,7 +634,6 @@ export const BookingDatesFormComponent = props => {
 BookingDatesFormComponent.defaultProps = {
   rootClassName: null,
   className: null,
-  submitButtonWrapperClassName: null,
   price: null,
   isOwnListing: false,
   startDatePlaceholder: null,
@@ -658,7 +646,6 @@ BookingDatesFormComponent.defaultProps = {
 BookingDatesFormComponent.propTypes = {
   rootClassName: string,
   className: string,
-  submitButtonWrapperClassName: string,
 
   lineItemUnitType: propTypes.lineItemUnitType.isRequired,
   price: propTypes.money,

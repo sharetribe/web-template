@@ -122,7 +122,6 @@ exports[`BookingTimeForm matches snapshot without selected dates 1`] = `
       "name": "bookingStartTime",
     }
   }
-  submitButtonWrapperClassName={null}
   timeZone="Etc/UTC"
   unitPrice={
     Money {

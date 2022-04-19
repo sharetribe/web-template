@@ -46,7 +46,6 @@ exports[`BookingDatesForm matches snapshot without selected dates 1`] = `
   onSubmit={[Function]}
   render={[Function]}
   startDatePlaceholder="today"
-  submitButtonWrapperClassName={null}
   unitPrice={
     Money {
       "_sdkType": "Money",
