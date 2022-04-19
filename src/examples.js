@@ -18,7 +18,6 @@ import * as Avatar from './components/Avatar/Avatar.example';
 import * as Button from './components/Button/Button.example';
 import * as ExpandingTextarea from './components/ExpandingTextarea/ExpandingTextarea.example';
 import * as EstimatedCustomerBreakdownMaybe from './components/OrderPanel/EstimatedCustomerBreakdownMaybe.example';
-import * as FieldBirthdayInput from './components/FieldBirthdayInput/FieldBirthdayInput.example';
 import * as FieldBoolean from './components/FieldBoolean/FieldBoolean.example';
 import * as FieldCheckbox from './components/FieldCheckbox/FieldCheckbox.example';
 import * as FieldCheckboxGroup from './components/FieldCheckboxGroup/FieldCheckboxGroup.example';
@@ -138,7 +137,6 @@ export {
   EnquiryForm,
   EstimatedCustomerBreakdownMaybe,
   ExpandingTextarea,
-  FieldBirthdayInput,
   FieldBoolean,
   FieldCheckbox,
   FieldCheckboxGroup,

@@ -117,7 +117,7 @@ const getFormattedTotalPrice = (transaction, intl) => {
 };
 
 // Convert the picked date to moment that will represent the same time of day in UTC time zone.
-const bookingDatesMaybe = (bookingDates, timeZone) => {
+const bookingDatesMaybe = bookingDates => {
   return bookingDates
     ? {
         bookingDates: {
@@ -327,13 +327,12 @@ export class CheckoutPageComponent extends Component {
       const quantity = pageData.orderData?.quantity;
       const quantityMaybe = quantity ? { quantity } : {};
       const deliveryMethod = pageData.orderData?.deliveryMethod;
-      const timeZone = pageData.listing.attributes.availabilityPlan?.timezone || 'Etc/UTC';
       fetchSpeculatedTransaction(
         {
           listingId,
           deliveryMethod,
           ...quantityMaybe,
-          ...bookingDatesMaybe(pageData.orderData.bookingDates, timeZone),
+          ...bookingDatesMaybe(pageData.orderData.bookingDates),
         },
         processAlias,
         transactionId,
@@ -508,7 +507,6 @@ export class CheckoutPageComponent extends Component {
       fnSavePaymentMethod
     );
 
-    const timeZone = pageData.listing?.attributes?.availabilityPlan?.timezone || 'Etc/UTC';
     const deliveryMethod = pageData.orderData?.deliveryMethod;
     const quantity = pageData.orderData?.quantity;
     const quantityMaybe = quantity ? { quantity } : {};
@@ -532,7 +530,7 @@ export class CheckoutPageComponent extends Component {
       listingId: pageData.listing.id,
       deliveryMethod,
       ...quantityMaybe,
-      ...bookingDatesMaybe(pageData.orderData.bookingDates, timeZone),
+      ...bookingDatesMaybe(pageData.orderData.bookingDates),
       ...protectedDataMaybe,
       ...optionalPaymentParams,
     };

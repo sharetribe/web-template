@@ -9,7 +9,7 @@ import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl
 import { timestampToDate } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 
-import { Form, IconSpinner, PrimaryButton } from '../../../components';
+import { Form, PrimaryButton } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 import FieldDateAndTimeInput from './FieldDateAndTimeInput';
@@ -91,7 +91,6 @@ export class BookingTimeFormComponent extends Component {
             intl,
             isOwnListing,
             listingId,
-            submitButtonWrapperClassName,
             values,
             monthlyTimeSlots,
             onFetchTimeSlots,
@@ -119,10 +118,6 @@ export class BookingTimeFormComponent extends Component {
 
           const showEstimatedBreakdown =
             breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
-
-          const submitButtonClasses = classNames(
-            submitButtonWrapperClassName || css.submitButtonWrapper
-          );
 
           return (
             <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
@@ -156,7 +151,7 @@ export class BookingTimeFormComponent extends Component {
 
               {showEstimatedBreakdown ? (
                 <div className={css.priceBreakdownContainer}>
-                  <h3 className={css.priceBreakdownTitle}>
+                  <h3>
                     <FormattedMessage id="BookingTimeForm.priceBreakdownTitle" />
                   </h3>
                   <EstimatedCustomerBreakdownMaybe
@@ -167,14 +162,18 @@ export class BookingTimeFormComponent extends Component {
                 </div>
               ) : null}
 
-              {fetchLineItemsInProgress ? <IconSpinner className={css.spinner} /> : null}
               {fetchLineItemsError ? (
                 <span className={css.sideBarError}>
                   <FormattedMessage id="BookingTimeForm.fetchLineItemsError" />
                 </span>
               ) : null}
 
-              <p className={css.smallPrint}>
+              <div className={css.submitButton}>
+                <PrimaryButton type="submit" inProgress={fetchLineItemsInProgress}>
+                  <FormattedMessage id="BookingTimeForm.requestToBook" />
+                </PrimaryButton>
+              </div>
+              <p className={css.finePrint}>
                 <FormattedMessage
                   id={
                     isOwnListing
@@ -183,11 +182,6 @@ export class BookingTimeFormComponent extends Component {
                   }
                 />
               </p>
-              <div className={submitButtonClasses}>
-                <PrimaryButton type="submit">
-                  <FormattedMessage id="BookingTimeForm.requestToBook" />
-                </PrimaryButton>
-              </div>
             </Form>
           );
         }}
@@ -199,7 +193,6 @@ export class BookingTimeFormComponent extends Component {
 BookingTimeFormComponent.defaultProps = {
   rootClassName: null,
   className: null,
-  submitButtonWrapperClassName: null,
   price: null,
   isOwnListing: false,
   listingId: null,
@@ -213,7 +206,6 @@ BookingTimeFormComponent.defaultProps = {
 BookingTimeFormComponent.propTypes = {
   rootClassName: string,
   className: string,
-  submitButtonWrapperClassName: string,
 
   price: propTypes.money,
   isOwnListing: bool,
