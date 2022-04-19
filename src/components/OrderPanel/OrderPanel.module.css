@@ -162,6 +162,13 @@
   flex-shrink: 0;
   margin-right: 22px;
   padding: 5px 12px;
+
+  @media (--viewportLarge) {
+    gap: 5px;
+    flex-direction: row;
+    margin-right: unset;
+    padding: 0;
+  }
 }
 
 .priceValue {
@@ -187,6 +194,10 @@
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 0;
+  }
+
+  @media (--viewportLarge) {
+    padding: 10px 0 6px 0;
   }
 }
 
