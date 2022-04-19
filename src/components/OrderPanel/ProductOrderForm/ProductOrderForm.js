@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { bool, func, number, string } from 'prop-types';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 

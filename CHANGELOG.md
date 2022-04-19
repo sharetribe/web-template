@@ -14,6 +14,13 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] OrderPanel: update consistent look-and-feel for the order forms.
+
+  - Remove unused FieldBirthdayInput component
+  - Remove unused timeZone parameter
+
+  [#34](https://github.com/sharetribe/ftw-x/pull/34)
+
 - [add]TimeRange component. (Remove BookingTimeInfo from shared components)
   [#30](https://github.com/sharetribe/ftw-x/pull/30)
 - [change]Rename the default booking process: flex-booking-default-process.

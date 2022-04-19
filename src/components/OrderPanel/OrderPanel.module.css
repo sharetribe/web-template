@@ -129,23 +129,6 @@
   }
 }
 
-.bookingSubmitButtonWrapper {
-  flex-shrink: 0;
-  padding: 0 24px 24px 24px;
-  width: 100%;
-  position: fixed;
-  bottom: 0;
-  background-color: var(--matterColorLight);
-
-  @media (--viewportMedium) {
-    padding: 0;
-    width: 100%;
-    position: static;
-    bottom: unset;
-    background-color: transparent;
-  }
-}
-
 .openOrderForm {
   /* Ensure that mobile button is over Footer too */
   z-index: 9;
@@ -179,6 +162,13 @@
   flex-shrink: 0;
   margin-right: 22px;
   padding: 5px 12px;
+
+  @media (--viewportLarge) {
+    gap: 5px;
+    flex-direction: row;
+    margin-right: unset;
+    padding: 0;
+  }
 }
 
 .priceValue {
@@ -204,6 +194,10 @@
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 0;
+  }
+
+  @media (--viewportLarge) {
+    padding: 10px 0 6px 0;
   }
 }
 

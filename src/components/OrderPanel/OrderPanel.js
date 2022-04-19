@@ -160,7 +160,14 @@ const OrderPanel = props => {
           <h2 className={titleClasses}>{title}</h2>
           {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
         </div>
-        <p className={css.price}>{formatMoney(intl, price)}</p>
+
+        <div className={css.priceContainer}>
+          <p className={css.price}>{formatMoney(intl, price)}</p>
+          <div className={css.perUnit}>
+            <FormattedMessage id={unitTranslationKey} />
+          </div>
+        </div>
+
         <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
           <FormattedMessage id="OrderPanel.soldBy" values={{ name: authorDisplayName }} />
@@ -170,7 +177,6 @@ const OrderPanel = props => {
           <BookingTimeForm
             className={css.bookingForm}
             formId="OrderPanelBookingTimeForm"
-            submitButtonWrapperClassName={css.bookingSubmitButtonWrapper}
             lineItemUnitType={lineItemUnitType}
             onSubmit={onSubmit}
             price={price}
@@ -190,7 +196,6 @@ const OrderPanel = props => {
           <BookingDatesForm
             className={css.bookingForm}
             formId="OrderPanelBookingDatesForm"
-            submitButtonWrapperClassName={css.bookingSubmitButtonWrapper}
             lineItemUnitType={lineItemUnitType}
             onSubmit={onSubmit}
             price={price}
