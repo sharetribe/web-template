@@ -7,7 +7,6 @@
 
 .bookingDates {
   flex-shrink: 0;
-  margin-bottom: 38px;
 
   /* Ensure that calendar dropdown gets some stacking context relative to other form items below */
   z-index: 1;
@@ -15,24 +14,11 @@
 
 .priceBreakdownContainer {
   padding: 0 24px;
-  margin-bottom: 40px;
+  margin-top: 24px;
 
   @media (--viewportMedium) {
     padding: 0;
-    margin-bottom: 0;
-    margin-top: 1px;
-  }
-}
-
-.priceBreakdownTitle {
-  /* Font */
-  color: var(--matterColorAnti);
-
-  margin-top: 5px;
-  margin-bottom: 14px;
-  @media (--viewportMedium) {
-    margin-top: 5px;
-    margin-bottom: 26px;
+    margin-top: 40px;
   }
 }
 
@@ -47,10 +33,6 @@
   display: inline-block;
 }
 
-.spinner {
-  margin: auto;
-}
-
 .sideBarError {
   @apply --marketplaceH4FontStyles;
   color: var(--failColor);
@@ -61,31 +43,17 @@
   }
 }
 
-.smallPrint {
+.finePrint {
   @apply --marketplaceTinyFontStyles;
-  color: var(--matterColorAnti);
   text-align: center;
-  margin: auto 24px 20px 24px;
-  flex-shrink: 0;
-
-  @media (--viewportMedium) {
-    margin-top: auto;
-    margin-bottom: 20px;
-  }
-
-  @media (--viewportLarge) {
-    margin-top: 4px;
-    margin-bottom: 21px;
-  }
 }
 
-.submitButtonWrapper {
-  flex-shrink: 0;
-  padding: 0 24px 24px 24px;
-  width: 100%;
+.submitButton {
+  padding: 0 24px;
+  margin-top: 24px;
 
   @media (--viewportMedium) {
     padding: 0;
-    width: 100%;
+    margin-top: 72px;
   }
 }

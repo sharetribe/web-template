@@ -170,7 +170,6 @@ const OrderPanel = props => {
           <BookingTimeForm
             className={css.bookingForm}
             formId="OrderPanelBookingTimeForm"
-            submitButtonWrapperClassName={css.bookingSubmitButtonWrapper}
             lineItemUnitType={lineItemUnitType}
             onSubmit={onSubmit}
             price={price}
@@ -190,7 +189,6 @@ const OrderPanel = props => {
           <BookingDatesForm
             className={css.bookingForm}
             formId="OrderPanelBookingDatesForm"
-            submitButtonWrapperClassName={css.bookingSubmitButtonWrapper}
             lineItemUnitType={lineItemUnitType}
             onSubmit={onSubmit}
             price={price}
