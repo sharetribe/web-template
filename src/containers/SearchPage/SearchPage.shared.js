@@ -46,6 +46,8 @@ export const validURLParamForExtendedData = (
     return validValues.length === 2 ? { [queryParamName]: validValues.join(',') } : {};
   } else if (queryParamName === 'keywords') {
     return paramValue.length > 0 ? { [queryParamName]: paramValue } : {};
+  } else if (queryParamName === 'dates') {
+    return paramValue.length > 0 ? { [queryParamName]: paramValue } : {};
   }
   // TODO: handle 'dates' filter for bookings.
 
