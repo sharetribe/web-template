@@ -32,7 +32,7 @@ import {
   validURLParamsForExtendedData,
   validFilterParams,
   createSearchResultSchema,
-} from './SearchPage.helpers';
+} from './SearchPage.shared';
 
 import FilterComponent from './FilterComponent';
 import SearchMap from './SearchMap/SearchMap';
