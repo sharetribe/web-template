@@ -159,6 +159,7 @@ SearchFiltersMobileComponent.defaultProps = {
   searchInProgress: false,
   selectedFiltersCount: 0,
   isMapVariant: true,
+  onMapIconClick: () => {},
 };
 
 SearchFiltersMobileComponent.propTypes = {
@@ -170,7 +171,7 @@ SearchFiltersMobileComponent.propTypes = {
   resultsCount: number,
   searchInProgress: bool,
   showAsModalMaxWidth: number.isRequired,
-  onMapIconClick: func.isRequired,
+  onMapIconClick: func,
   onManageDisableScrolling: func.isRequired,
   onOpenModal: func.isRequired,
   onCloseModal: func.isRequired,
