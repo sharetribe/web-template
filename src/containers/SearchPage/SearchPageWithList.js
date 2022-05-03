@@ -339,11 +339,6 @@ export class SearchPageComponent extends Component {
       ) : null;
     };
 
-    const onMapIconClick = () => {
-      this.useLocationSearchBounds = true;
-      this.setState({ isSearchMapOpenOnMobile: true });
-    };
-
     const { title, description, schema } = createSearchResultSchema(
       listings,
       searchInURL || {},
@@ -420,7 +415,6 @@ export class SearchPageComponent extends Component {
                 searchInProgress={searchInProgress}
                 searchListingsError={searchListingsError}
                 showAsModalMaxWidth={MODAL_BREAKPOINT}
-                onMapIconClick={onMapIconClick}
                 onManageDisableScrolling={onManageDisableScrolling}
                 onOpenModal={this.onOpenMobileModal}
                 onCloseModal={this.onCloseMobileModal}

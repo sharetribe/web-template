@@ -148,7 +148,6 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           noResultsInfo={null}
           onCloseModal={[Function]}
           onManageDisableScrolling={[Function]}
-          onMapIconClick={[Function]}
           onOpenModal={[Function]}
           resetAll={[Function]}
           resultsCount={22}
