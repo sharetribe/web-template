@@ -8,6 +8,8 @@ import { isMainSearchTypeKeywords } from '../../../util/search';
 import SortByPlain from './SortByPlain';
 import SortByPopup from './SortByPopup';
 
+import css from './SortBy.module.css';
+
 const SortBy = props => {
   const {
     sort,
@@ -16,10 +18,19 @@ const SortBy = props => {
     isConflictingFilterActive,
     hasConflictingFilters,
     intl,
+    mode,
     ...rest
   } = props;
 
   const { relevanceKey, relevanceFilter, queryParamName } = config.custom.sortConfig;
+
+  const mobileClassesMaybe =
+    mode === 'mobile'
+      ? {
+          rootClassName: css.sortBy,
+          menuLabelRootClassName: css.sortByMenuLabel,
+        }
+      : { className: css.sortByDesktop };
 
   // Ensure that keywords is included to activeFilter list when needed
   const activeOptions = isMainSearchTypeKeywords(config)
@@ -51,6 +62,7 @@ const SortBy = props => {
     label: intl.formatMessage({ id: 'SortBy.heading' }),
     options,
     initialValue,
+    ...mobileClassesMaybe,
     ...rest,
   };
   return showAsPopup ? <SortByPopup {...componentProps} /> : <SortByPlain {...componentProps} />;
