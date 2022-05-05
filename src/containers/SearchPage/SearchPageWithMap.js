@@ -399,8 +399,16 @@ export class SearchPageComponent extends Component {
       : {};
 
     const hasPaginationInfo = !!pagination && pagination.totalItems != null;
-    const totalItems = searchParamsAreInSync && hasPaginationInfo ? pagination.totalItems : 0;
-    const listingsAreLoaded = !searchInProgress && searchParamsAreInSync && hasPaginationInfo;
+    const totalItems =
+      searchParamsAreInSync && hasPaginationInfo
+        ? pagination.totalItems
+        : pagination?.paginationUnsupported
+        ? listings.length
+        : 0;
+    const listingsAreLoaded =
+      !searchInProgress &&
+      searchParamsAreInSync &&
+      (hasPaginationInfo || pagination?.paginationUnsupported);
 
     const sortBy = mode => {
       const conflictingFilterActive = isAnyFilterActive(
