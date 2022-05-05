@@ -171,9 +171,8 @@ exports[`SearchPageWithList matches snapshot 1`] = `
               contentPlacementOffset={-14}
               hasConflictingFilters={false}
               isConflictingFilterActive={false}
-              menuLabelRootClassName="sortByMenuLabel"
+              mode="mobile"
               onSelect={[Function]}
-              rootClassName="sortBy"
               selectedFilters={Object {}}
               showAsPopup={true}
             />
@@ -289,10 +288,10 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           searchListingsError={null}
           sortByComponent={
             <injectIntl(SortBy)
-              className="sortByDesktop"
               contentPlacementOffset={-14}
               hasConflictingFilters={false}
               isConflictingFilterActive={false}
+              mode="desktop"
               onSelect={[Function]}
               selectedFilters={Object {}}
               showAsPopup={true}
