@@ -32,6 +32,7 @@ import MainPanelHeader from './MainPanelHeader/MainPanelHeader';
 import SearchFiltersMobile from './SearchFiltersMobile/SearchFiltersMobile';
 import SortBy from './SortBy/SortBy';
 import SearchResultsPanel from './SearchResultsPanel/SearchResultsPanel';
+import NoSearchResultsMaybe from './NoSearchResultsMaybe/NoSearchResultsMaybe';
 
 import css from './SearchPage.module.css';
 
@@ -346,26 +347,20 @@ export class SearchPageComponent extends Component {
         />
       ) : null;
     };
+    const noResultsInfo = (
+      <NoSearchResultsMaybe
+        listingsAreLoaded={listingsAreLoaded}
+        totalItems={totalItems}
+        location={location}
+        resetAll={this.resetAll}
+      />
+    );
 
     const { title, description, schema } = createSearchResultSchema(
       listings,
       searchInURL || {},
       intl
     );
-
-    const hasNoResult = listingsAreLoaded && totalItems === 0;
-    const hasSearchParams = location.search?.length > 0;
-    const noResultsInfo = hasNoResult ? (
-      <div className={css.noSearchResults}>
-        <FormattedMessage id="SearchPage.noResults" />
-        <br />
-        {hasSearchParams ? (
-          <button className={css.resetAllFiltersButton} onClick={e => this.resetAll(e)}>
-            <FormattedMessage id={'SearchPage.resetAllFilters'} />
-          </button>
-        ) : null}
-      </div>
-    ) : null;
 
     // Set topbar class based on if a modal is open in
     // a child component
