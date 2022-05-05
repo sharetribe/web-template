@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import config from '../../../../config';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { EXTENDED_DATA_SCHEMA_TYPES, LISTING_STATE_DRAFT } from '../../../../util/types';
-import { getSupportedProcessesInfo } from '../../../../util/transaction';
+import { getSupportedProcessesInfo, isBookingProcess } from '../../../../util/transaction';
 
 // Import shared components
 import { ListingLink } from '../../../../components';
@@ -124,6 +124,27 @@ const EditListingDetailsPanel = props => {
     };
   };
 
+  // If listing represents a product instead of a booking, we set availability-plan to seats=0
+  const setNoAvailabilityForProductListings = transactionProcessAlias => {
+    return isBookingProcess(transactionProcessAlias)
+      ? {}
+      : {
+          availabilityPlan: {
+            type: 'availability-plan/time',
+            timezone: 'Etc/UTC',
+            entries: [
+              { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 0 },
+              { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 0 },
+              { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 0 },
+              { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 0 },
+              { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 0 },
+              { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 0 },
+              { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
+            ],
+          },
+        };
+  };
+
   return (
     <div className={classes}>
       <h1 className={css.title}>
@@ -149,6 +170,7 @@ const EditListingDetailsPanel = props => {
               transactionProcessAlias,
               true
             ),
+            ...setNoAvailabilityForProductListings(transactionProcessAlias),
           };
 
           onSubmit(updateValues);
