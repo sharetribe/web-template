@@ -2,8 +2,8 @@ import intersection from 'lodash/intersection';
 import config from '../../config';
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
 import { createResourceLocatorString } from '../../util/routes';
-import { parseSelectFilterOptions, isOriginInUse } from '../../util/search';
-import { createSlug } from '../../util/urlHelpers';
+import { isAnyFilterActive, parseSelectFilterOptions, isOriginInUse } from '../../util/search';
+import { createSlug, parse, stringify } from '../../util/urlHelpers';
 import routeConfiguration from '../../routing/routeConfiguration';
 
 /**
@@ -158,6 +158,89 @@ export const validURLParamsForExtendedData = (
 };
 
 /**
+ * Helper to pick only valid values of search params from URL (location)
+ * Note: location.search might look like: '?pub_category=men&pub_amenities=towels,bathroom'
+ *
+ * @param {Object} props object containing: location, listingExtendedDataConfig, defaultFiltersConfig
+ * @returns picked search params against extended data config and default filter config
+ */
+export const validUrlQueryParamsFromProps = props => {
+  const { location, listingExtendedDataConfig, defaultFiltersConfig } = props;
+  // eslint-disable-next-line no-unused-vars
+  const { mapSearch, page, ...searchInURL } = parse(location.search, {
+    latlng: ['origin'],
+    latlngBounds: ['bounds'],
+  });
+  // urlQueryParams doesn't contain page specific url params
+  // like mapSearch, page or origin (origin depends on config.sortSearchByDistance)
+  return validURLParamsForExtendedData(
+    searchInURL,
+    listingExtendedDataConfig,
+    defaultFiltersConfig
+  );
+};
+
+/**
+ * Helper to figure out initialValues for Final Form that handles search filters
+ *
+ * @param {Object} props object containing: location, listingExtendedDataConfig, defaultFiltersConfig
+ * @param {Object} currentQueryParams object containing current state of queryParams (used only when isLiveEdit is false)
+ * @returns a function with params queryParamNames, and isLiveEdit.
+ *          It's called from FilterComponent and it returns initial values for the filter.
+ */
+export const initialValues = (props, currentQueryParams) => (queryParamNames, isLiveEdit) => {
+  const urlQueryParams = validUrlQueryParamsFromProps(props);
+
+  // Get initial value for a given parameter from state if its there.
+  const getInitialValue = paramName => {
+    // Query parameters that are in state (user might have not yet clicked "Apply")
+    const currentQueryParam = currentQueryParams[paramName];
+    const hasQueryParamInState = typeof currentQueryParam !== 'undefined';
+    return hasQueryParamInState && !isLiveEdit ? currentQueryParam : urlQueryParams[paramName];
+  };
+
+  // Return all the initial values related to given queryParamNames
+  // InitialValues for "amenities" filter could be
+  // { amenities: "has_any:towel,jacuzzi" }
+  const isArray = Array.isArray(queryParamNames);
+  return isArray
+    ? queryParamNames.reduce((acc, paramName) => {
+        return { ...acc, [paramName]: getInitialValue(paramName) };
+      }, {})
+    : {};
+};
+
+/**
+ * Some parameters could conflict with sort. If sortConfig defines conflictingFilters,
+ * This function checks if they are active and returns "sort" param as null
+ *
+ * @param {*} searchParams
+ * @param {*} listingExtendedDataConfig
+ * @param {*} defaultFiltersConfig
+ * @param {*} sortConfig
+ * @returns sort parameter as null if sortConfig defines conflictingFilters
+ */
+export const cleanSearchFromConflictingParams = (
+  searchParams,
+  listingExtendedDataConfig,
+  defaultFiltersConfig,
+  sortConfig
+) => {
+  // Single out filters that should disable SortBy when an active
+  // keyword search sorts the listings according to relevance.
+  // In those cases, sort parameter should be removed.
+  const sortingFiltersActive = isAnyFilterActive(
+    sortConfig.conflictingFilters,
+    searchParams,
+    listingExtendedDataConfig,
+    defaultFiltersConfig
+  );
+  return sortingFiltersActive
+    ? { ...searchParams, [sortConfig.queryParamName]: null }
+    : searchParams;
+};
+
+/**
  * Extract search parameters, including a custom URL params,
  * which are validated by mapping the values to marketplace custom config.
  *
@@ -186,6 +269,86 @@ export const pickSearchParamsOnly = (
     ...sortMaybe,
   };
 };
+
+/**
+ * This helper has 2 functions:
+ * - It picks search params from Location instance (location.search)
+ * - It verifies that those search params are the same as search params in state.
+ *   In some cases, search params are referencing previous params
+ *   and listings should not be considered loaded.
+ *
+ * @param {Object} searchFromLocation searchParams from URL (location.search)
+ * @param {Object} searchParamsInProps searchParams from store
+ * @param {Object} listingExtendedDataConfig config for listing's extended data
+ * @param {Object} defaultFiltersConfig config for default filters
+ * @param {Object} sortConfig config for SortBy feature
+ * @returns object containing
+ *   1. searchParamsInURL (omit pagination 'page' or 'mapSearch'),
+ *   2. urlQueryParams (picked valid search params for listing query), and
+ *   3. searchParamsAreInSync is true if searchFromLocation and searchParamsInProps match.
+ */
+export const searchParamsPicker = (
+  searchFromLocation,
+  searchParamsInProps,
+  listingExtendedDataConfig,
+  defaultFiltersConfig,
+  sortConfig
+) => {
+  const { mapSearch, page, ...searchParamsInURL } = parse(searchFromLocation, {
+    latlng: ['origin'],
+    latlngBounds: ['bounds'],
+  });
+
+  // Pick only search params that are part of current search configuration
+  const queryParamsFromSearchParams = pickSearchParamsOnly(
+    searchParamsInProps,
+    listingExtendedDataConfig,
+    defaultFiltersConfig,
+    sortConfig
+  );
+  // Pick only search params that are part of current search configuration
+  const queryParamsFromURL = pickSearchParamsOnly(
+    searchParamsInURL,
+    listingExtendedDataConfig,
+    defaultFiltersConfig,
+    sortConfig
+  );
+
+  // Page transition might initially use values from previous search
+  const searchParamsAreInSync =
+    stringify(queryParamsFromURL) === stringify(queryParamsFromSearchParams);
+
+  return {
+    urlQueryParams: queryParamsFromURL,
+    searchParamsInURL,
+    searchParamsAreInSync,
+  };
+};
+
+/**
+ * Returns listing extended data configs grouped into arrays. [primaryConfigArray, secondaryConfigArray]
+ * @param {*} configs listing extended data config
+ * @param {*} activeProcesses select configs that are marked only for these active processes
+ * @returns Array of grouped arrays. First subarray contains primary configs and the second contains secondary configs.
+ */
+export const groupExtendedDataConfigs = (configs, activeProcesses) =>
+  configs.reduce(
+    (grouped, config) => {
+      const [primary, secondary] = grouped;
+      const { includeForProcessAliases, indexForSearch, searchPageConfig } = config;
+      const isIndexed = indexForSearch === true;
+      const isActiveProcess = includeForProcessAliases.every(p =>
+        activeProcesses.includes(p.split('/')[0])
+      );
+      const isPrimary = searchPageConfig?.group === 'primary';
+      return isActiveProcess && isIndexed && isPrimary
+        ? [[...primary, config], secondary]
+        : isActiveProcess && isIndexed
+        ? [primary, [...secondary, config]]
+        : grouped;
+    },
+    [[], []]
+  );
 
 export const createSearchResultSchema = (listings, mainSearchData, intl) => {
   // Schema for search engines (helps them to understand what this page is about)
