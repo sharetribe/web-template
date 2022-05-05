@@ -488,7 +488,6 @@ SearchPageComponent.defaultProps = {
 
 SearchPageComponent.propTypes = {
   listings: array,
-  mapListings: array,
   onManageDisableScrolling: func.isRequired,
   pagination: propTypes.pagination,
   scrollingDisabled: bool.isRequired,
@@ -521,10 +520,10 @@ const mapStateToProps = state => {
     searchListingsError,
     searchParams,
   } = state.SearchPage;
-  const pageListings = getListingsById(state, currentPageResultIds);
+  const listings = getListingsById(state, currentPageResultIds);
 
   return {
-    listings: pageListings,
+    listings,
     pagination,
     scrollingDisabled: isScrollingDisabled(state),
     searchInProgress,

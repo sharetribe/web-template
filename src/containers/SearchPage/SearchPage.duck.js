@@ -34,8 +34,6 @@ const initialState = {
   searchInProgress: false,
   searchListingsError: null,
   currentPageResultIds: [],
-  searchMapListingIds: [],
-  searchMapListingsError: null,
 };
 
 const resultIds = data => data.data.map(l => l.id);
@@ -63,27 +61,6 @@ const listingPageReducer = (state = initialState, action = {}) => {
       console.error(payload);
       return { ...state, searchInProgress: false, searchListingsError: payload };
 
-    case SEARCH_MAP_LISTINGS_REQUEST:
-      return {
-        ...state,
-        searchMapListingsError: null,
-      };
-    case SEARCH_MAP_LISTINGS_SUCCESS: {
-      const searchMapListingIds = unionWith(
-        state.searchMapListingIds,
-        resultIds(payload.data),
-        (id1, id2) => id1.uuid === id2.uuid
-      );
-      return {
-        ...state,
-        searchMapListingIds,
-      };
-    }
-    case SEARCH_MAP_LISTINGS_ERROR:
-      // eslint-disable-next-line no-console
-      console.error(payload);
-      return { ...state, searchMapListingsError: payload };
-
     case SEARCH_MAP_SET_ACTIVE_LISTING:
       return {
         ...state,
@@ -110,19 +87,6 @@ export const searchListingsSuccess = response => ({
 
 export const searchListingsError = e => ({
   type: SEARCH_LISTINGS_ERROR,
-  error: true,
-  payload: e,
-});
-
-export const searchMapListingsRequest = () => ({ type: SEARCH_MAP_LISTINGS_REQUEST });
-
-export const searchMapListingsSuccess = response => ({
-  type: SEARCH_MAP_LISTINGS_SUCCESS,
-  payload: { data: response.data },
-});
-
-export const searchMapListingsError = e => ({
-  type: SEARCH_MAP_LISTINGS_ERROR,
   error: true,
   payload: e,
 });
@@ -193,28 +157,6 @@ export const setActiveListing = listingId => ({
   type: SEARCH_MAP_SET_ACTIVE_LISTING,
   payload: listingId,
 });
-
-export const searchMapListings = searchParams => (dispatch, getState, sdk) => {
-  dispatch(searchMapListingsRequest(searchParams));
-
-  const { perPage, ...rest } = searchParams;
-  const params = {
-    ...rest,
-    per_page: perPage,
-  };
-
-  return sdk.listings
-    .query(params)
-    .then(response => {
-      dispatch(addMarketplaceEntities(response));
-      dispatch(searchMapListingsSuccess(response));
-      return response;
-    })
-    .catch(e => {
-      dispatch(searchMapListingsError(storableError(e)));
-      throw e;
-    });
-};
 
 export const loadData = (params, search) => {
   const queryParams = parse(search, {

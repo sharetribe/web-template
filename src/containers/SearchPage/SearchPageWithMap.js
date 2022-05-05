@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import debounce from 'lodash/debounce';
-import unionWith from 'lodash/unionWith';
 import omit from 'lodash/omit';
 import classNames from 'classnames';
 
@@ -26,7 +25,7 @@ import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck
 import { ModalInMobile, Page } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
-import { searchMapListings, setActiveListing } from './SearchPage.duck';
+import { setActiveListing } from './SearchPage.duck';
 import {
   pickSearchParamsOnly,
   validURLParamsForExtendedData,
@@ -292,7 +291,6 @@ export class SearchPageComponent extends Component {
       defaultFiltersConfig,
       sortConfig,
       location,
-      mapListings,
       onManageDisableScrolling,
       pagination,
       scrollingDisabled,
@@ -604,7 +602,7 @@ export class SearchPageComponent extends Component {
                   center={origin}
                   isSearchMapOpenOnMobile={this.state.isSearchMapOpenOnMobile}
                   location={location}
-                  listings={mapListings || []}
+                  listings={listings || []}
                   onMapMoveEnd={this.onMapMoveEnd}
                   onCloseAsModal={() => {
                     onManageDisableScrolling('SearchPage.map', false);
@@ -622,7 +620,6 @@ export class SearchPageComponent extends Component {
 
 SearchPageComponent.defaultProps = {
   listings: [],
-  mapListings: [],
   pagination: null,
   searchListingsError: null,
   searchParams: {},
@@ -636,10 +633,8 @@ SearchPageComponent.defaultProps = {
 
 SearchPageComponent.propTypes = {
   listings: array,
-  mapListings: array,
   onActivateListing: func.isRequired,
   onManageDisableScrolling: func.isRequired,
-  onSearchMapListings: func.isRequired,
   pagination: propTypes.pagination,
   scrollingDisabled: bool.isRequired,
   searchInProgress: bool.isRequired,
@@ -670,18 +665,12 @@ const mapStateToProps = state => {
     searchInProgress,
     searchListingsError,
     searchParams,
-    searchMapListingIds,
     activeListingId,
   } = state.SearchPage;
-  const pageListings = getListingsById(state, currentPageResultIds);
-  const mapListings = getListingsById(
-    state,
-    unionWith(currentPageResultIds, searchMapListingIds, (id1, id2) => id1.uuid === id2.uuid)
-  );
+  const listings = getListingsById(state, currentPageResultIds);
 
   return {
-    listings: pageListings,
-    mapListings,
+    listings,
     pagination,
     scrollingDisabled: isScrollingDisabled(state),
     searchInProgress,
@@ -694,7 +683,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
-  onSearchMapListings: searchParams => dispatch(searchMapListings(searchParams)),
   onActivateListing: listingId => dispatch(setActiveListing(listingId)),
 });
 
