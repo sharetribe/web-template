@@ -3,7 +3,13 @@ import unionWith from 'lodash/unionWith';
 import config from '../../config';
 import { storableError } from '../../util/errors';
 import { convertUnitToSubUnit, unitDivisor } from '../../util/currency';
-import { parseDateFromISO8601, getExclusiveEndDate } from '../../util/dates';
+import {
+  parseDateFromISO8601,
+  getExclusiveEndDate,
+  addTime,
+  subtractTime,
+  daysBetween,
+} from '../../util/dates';
 import { createImageVariantConfig } from '../../util/sdkLoader';
 import { isOriginInUse, isStockInUse } from '../../util/search';
 import { parse } from '../../util/urlHelpers';
@@ -106,23 +112,52 @@ export const searchListings = searchParams => (dispatch, getState, sdk) => {
   };
 
   const datesSearchParams = datesParam => {
+    const searchTZ = 'Etc/UTC';
+    const datesFilter = config.custom.defaultFilters.find(f => f.key === 'dates');
     const values = datesParam ? datesParam.split(',') : [];
-    const hasValues = datesParam && values.length === 2;
-    const startDate = hasValues ? values[0] : null;
-    const isNightlyBooking = config.lineItemUnitType === 'line-item/night';
+    const hasValues = datesFilter && datesParam && values.length === 2;
+    const { mode, entireRangeAvailable } = datesFilter || {};
+    const isNightlyMode = mode === 'night';
+
+    // SearchPage need to use a single time zone but listings can have different time zones
+    // We need to expand/prolong the time window (start & end) to cover other time zones too.
+    //
+    // NOTE: you might want to consider changing UI so that
+    //   1) location is always asked first before date range
+    //   2) use some 3rd party service to convert location to time zone (IANA tz name)
+    //   3) Make exact dates filtering against that specific time zone
+    //   This setup would be better for dates filter,
+    //   but it enforces a UX where location is always asked first and therefore configurability
+    const getProlongedStart = date => subtractTime(date, 14, 'hours', searchTZ);
+    const getProlongedEnd = date => addTime(date, 12, 'hours', searchTZ);
+
+    const startDate = hasValues ? parseDateFromISO8601(values[0], searchTZ) : null;
+    const endRaw = hasValues ? parseDateFromISO8601(values[1], searchTZ) : null;
     const endDate =
-      hasValues && isNightlyBooking
-        ? values[1]
+      hasValues && isNightlyMode
+        ? endRaw
         : hasValues
-        ? getExclusiveEndDate(values[1], 'Etc/UTC')
+        ? getExclusiveEndDate(endRaw, searchTZ)
         : null;
 
+    const dayCount = entireRangeAvailable ? daysBetween(startDate, endDate) : 1;
+    const day = 1440;
+    const hour = 60;
+    // When entire range is required to be available, we count minutes of included date range,
+    // but there's a need to subtract one hour due to possibility of daylight saving time.
+    // If partial range is needed, then we just make sure that the shortest time unit supported
+    // is available within the range.
+    // You might want to customize this to match with your time units (e.g. day: 1440 - 60)
+    const minDuration = entireRangeAvailable ? dayCount * day - hour : hour;
     return hasValues
       ? {
-          start: parseDateFromISO8601(startDate, 'Etc/UTC'),
-          end: parseDateFromISO8601(endDate, 'Etc/UTC'),
-          // Availability can be full or partial. Default value is full.
-          availability: 'full',
+          start: getProlongedStart(startDate),
+          end: getProlongedEnd(endDate),
+          // Availability can be time-full or time-partial.
+          // However, due to prolonged time window, we need to use time-partial.
+          availability: 'time-partial',
+          // minDuration uses minutes
+          minDuration,
         }
       : {};
   };
@@ -174,7 +209,7 @@ export const loadData = (params, search) => {
   const aspectRatio = aspectHeight / aspectWidth;
 
   return searchListings({
-    // TODO ...minStockMaybe,
+    ...minStockMaybe,
     ...rest,
     ...originMaybe,
     page,

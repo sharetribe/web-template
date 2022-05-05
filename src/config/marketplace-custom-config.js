@@ -243,6 +243,15 @@ export const defaultFilters = [
     max: 1000,
     step: 5,
   },
+  // TODO: dates filter should be removed if marketplace is only product marketplace (unitType: 'item')
+  {
+    key: 'dates',
+    schemaType: 'dates',
+    label: 'Dates',
+    entireRangeAvailable: true,
+    // Options: day/night. This affects counting and whether single day picking is possible.
+    mode: 'day',
+  },
   {
     key: 'keywords',
     schemaType: 'text',
