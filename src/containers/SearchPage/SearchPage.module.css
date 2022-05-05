@@ -100,7 +100,6 @@
   padding-top: 0;
 }
 
-.resetAllFiltersButton,
 .resetAllButton {
   @apply --marketplaceH5FontStyles;
   font-weight: var(--fontWeightMedium);
@@ -125,14 +124,6 @@
   @media (--viewportMedium) {
     margin: 24px 0 0 0;
     padding: 3px 0 5px 0;
-  }
-}
-.resetAllFiltersButton {
-  color: var(--marketplaceColor);
-  margin: 0;
-
-  @media (--viewportMedium) {
-    margin: 0;
   }
 }
 
@@ -168,20 +159,6 @@
   }
   @media (--viewportXLarge) {
     padding: 40px calc((100vw - 1800px) / 2) 0 59px;
-  }
-}
-
-.noSearchResults {
-  @apply --marketplaceH4FontStyles;
-
-  /* Reserves 48px of vertical space */
-  line-height: 24px;
-  margin-top: 18px;
-  margin-bottom: 18px;
-
-  @media (--viewportMedium) {
-    margin-top: 8px;
-    margin-bottom: 8px;
   }
 }
 
