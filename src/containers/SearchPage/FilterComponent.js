@@ -72,13 +72,16 @@ const FilterComponent = props => {
         />
       );
     case 'dates': {
+      const { label, mode } = config;
+      const isNightlyMode = mode === 'night';
       return (
         <BookingDateRangeFilter
           id={componentId}
-          label={config.label}
+          label={label}
           queryParamNames={[key]}
           initialValues={initialValues([key], liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
+          minimumNights={isNightlyMode ? 1 : 0}
           {...rest}
         />
       );

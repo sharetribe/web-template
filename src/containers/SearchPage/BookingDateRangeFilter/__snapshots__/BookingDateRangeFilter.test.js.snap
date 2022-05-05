@@ -20,6 +20,7 @@ exports[`BookingDateRangeFilter matches plain snapshot 1`] = `
   <FieldDateRangeController
     className={null}
     controllerRef={[Function]}
+    minimumNights={0}
     name="dates"
     rootClassName={null}
   />
@@ -47,6 +48,7 @@ exports[`BookingDateRangeFilter matches popup snapshot 1`] = `
   <FieldDateRangeController
     className={null}
     controllerRef={[Function]}
+    minimumNights={0}
     name="dates"
     rootClassName={null}
   />
