@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [delete] Remove old unused translation keys
+  [#146](https://github.com/sharetribe/ftw-product/pull/146)
+
 ## [v9.1.2] 2022-03-16
 
 - [fix] Process graph had an error: provider notification about dispute being canceled was not sent
