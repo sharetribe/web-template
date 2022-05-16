@@ -6,6 +6,13 @@ import { subUnitDivisors, currencyConfiguration } from './currency-config';
 const env = process.env.REACT_APP_ENV;
 const dev = process.env.REACT_APP_ENV === 'development';
 
+// CDN assets for the app. Configurable through Flex Console.
+// Currently, only translation.json is available.
+// Note: the path must match the path defined in Asset Delivery API
+const appCdnAssets = {
+  translations: 'content/translations.json',
+};
+
 // If you want to change the language, remember to also change the
 // locale data and the messages in the app.js file.
 const locale = 'en';
@@ -83,6 +90,7 @@ const dayCountAvailableForBooking = 90;
 // exposing server secrets to the client side.
 const sdkClientId = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
 const sdkBaseUrl = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL;
+const sdkAssetCdnBaseUrl = process.env.REACT_APP_SHARETRIBE_SDK_ASSET_CDN_BASE_URL;
 const sdkTransitVerbose = process.env.REACT_APP_SHARETRIBE_SDK_TRANSIT_VERBOSE === 'true';
 
 // Marketplace currency.
@@ -233,6 +241,7 @@ const maps = {
 const config = {
   env,
   dev,
+  appCdnAssets,
   locale,
   transactionProcessAlias,
   lineItemUnitType,
@@ -242,6 +251,7 @@ const config = {
   sdk: {
     clientId: sdkClientId,
     baseUrl: sdkBaseUrl,
+    assetCdnBaseUrl: sdkAssetCdnBaseUrl,
     transitVerbose: sdkTransitVerbose,
   },
   mainSearchType,
