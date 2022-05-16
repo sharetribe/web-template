@@ -14,8 +14,28 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+## [v9.2.0] 2022-05-16
+
+- Add support for hosted translations. (PR made in upstream repo: FTW-daily)
+
 - [delete] Remove old unused translation keys
   [#146](https://github.com/sharetribe/ftw-product/pull/146)
+
+### Updates from upstream (FTW-daily v8.5.0)
+
+- [add] Add support for hosted translations.
+
+  - This PR fetches "content/translation.json" from a new Asset Delivery API. The file is editable
+    through the Flex Console.
+  - It also adds all the missing translation keys to existing non-English translation files. This
+    means that those files might now include messages in English.
+
+  [#1510](https://github.com/sharetribe/ftw-daily/pull/1510)
+
+- [delete] Remove old unused translation keys.
+  [#1511](https://github.com/sharetribe/ftw-daily/pull/1511)
+
+  [v9.2.0]: https://github.com/sharetribe/ftw-daily/compare/v9.1.2...v9.2.0
 
 ## [v9.1.2] 2022-03-16
 
