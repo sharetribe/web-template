@@ -23,6 +23,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## [v9.3.0] 2022-05-19
 
+Note: this caused an error. Use v9.3.1 instead.
+
 - [fix] undefined REACT_APP_GOOGLE_ANALYTICS_ID caused an error.
   [#149](https://github.com/sharetribe/ftw-product/pull/149)
 
