@@ -14,6 +14,13 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+## [v9.3.1] 2022-05-19
+
+- [fix] undefined REACT_APP_GOOGLE_ANALYTICS_ID caused an error.
+  [#150](https://github.com/sharetribe/ftw-product/pull/150)
+
+  [v9.3.0]: https://github.com/sharetribe/ftw-product/compare/v9.3.0...v9.3.1
+
 ## [v9.3.0] 2022-05-19
 
 - [fix] undefined REACT_APP_GOOGLE_ANALYTICS_ID caused an error.
