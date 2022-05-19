@@ -14,6 +14,21 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+## [v9.3.0] 2022-05-19
+
+### Updates from upstream (FTW-daily v8.6.0)
+
+- [change] Google Analytics: remove Universal Analytics and start supporting GA4.
+
+  NOTE: you need to update the Google Analytics id to GA4's id (starting with 'G-' prefix).
+
+  [#1508](https://github.com/sharetribe/ftw-daily/pull/1508)
+
+- [change] Update some outdated dependencies.
+  [#1514](https://github.com/sharetribe/ftw-daily/pull/1514)
+
+  [v9.3.0]: https://github.com/sharetribe/ftw-product/compare/v9.2.0...v9.3.0
+
 ## [v9.2.0] 2022-05-16
 
 - Add support for hosted translations. (PR made in upstream repo: FTW-daily)
