@@ -16,6 +16,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## [v9.3.0] 2022-05-19
 
+- [fix] undefined REACT_APP_GOOGLE_ANALYTICS_ID caused an error.
+  [#149](https://github.com/sharetribe/ftw-product/pull/149)
+
 ### Updates from upstream (FTW-daily v8.6.0)
 
 - [change] Google Analytics: remove Universal Analytics and start supporting GA4.
