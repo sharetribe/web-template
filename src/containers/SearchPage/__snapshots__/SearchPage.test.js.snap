@@ -145,10 +145,20 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           className="searchFiltersMobileList"
           isMapVariant={false}
           listingsAreLoaded={true}
-          noResultsInfo={null}
+          noResultsInfo={
+            <NoSearchResultsMaybe
+              listingsAreLoaded={true}
+              location={
+                Object {
+                  "search": "",
+                }
+              }
+              resetAll={[Function]}
+              totalItems={22}
+            />
+          }
           onCloseModal={[Function]}
           onManageDisableScrolling={[Function]}
-          onMapIconClick={[Function]}
           onOpenModal={[Function]}
           resetAll={[Function]}
           resultsCount={22}
@@ -161,9 +171,8 @@ exports[`SearchPageWithList matches snapshot 1`] = `
               contentPlacementOffset={-14}
               hasConflictingFilters={false}
               isConflictingFilterActive={false}
-              menuLabelRootClassName="sortByMenuLabel"
+              mode="mobile"
               onSelect={[Function]}
-              rootClassName="sortBy"
               selectedFilters={Object {}}
               showAsPopup={true}
             />
@@ -261,17 +270,28 @@ exports[`SearchPageWithList matches snapshot 1`] = `
         <MainPanelHeader
           className="mainPanel"
           listingsAreLoaded={true}
-          noResultsInfo={null}
+          noResultsInfo={
+            <NoSearchResultsMaybe
+              listingsAreLoaded={true}
+              location={
+                Object {
+                  "search": "",
+                }
+              }
+              resetAll={[Function]}
+              totalItems={22}
+            />
+          }
           resultsCount={22}
           rootClassName={null}
           searchInProgress={false}
           searchListingsError={null}
           sortByComponent={
             <injectIntl(SortBy)
-              className="sortByDesktop"
               contentPlacementOffset={-14}
               hasConflictingFilters={false}
               isConflictingFilterActive={false}
+              mode="desktop"
               onSelect={[Function]}
               selectedFilters={Object {}}
               showAsPopup={true}

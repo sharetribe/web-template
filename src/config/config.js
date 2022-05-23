@@ -40,24 +40,14 @@ const listingPageLayout = 'full-image';
 //         search off by removing keyword filter config from filters array in marketplace-custom-config.js
 const sortSearchByDistance = false;
 
-// The transaction line item code for the main unit type for listings.
-//
-// Possible values: ['line-item/night', 'line-item/day', 'line-item/item';]
-//
-// Note 1: This 'lineItemUnitType' variable affects only web app.
-//         If you are using privileged transitions (which is used by the default process),
-//         you also need to configure unit type in API server: server/api-util/lineItems.js
-//
-// TODO: This is only used on Searchpage (to check nigth vs day mode)
-const lineItemUnitType = 'line-item/item';
-
 // Listing management type. Currently only 'stock' is supported.
 //
 // With the default 'stock', availability and bookings are not used, and
 // listings have a specific numeric stock.
 //
-// TODO: this is only used on SearchPage and there the value should come from filter
-const listingManagementType = 'stock';
+// TODO: this is only used on SearchPage and there the value be decided based on available transaction configs
+//       (if bookings are used or not).
+const listingManagementType = 'availability'; // 'stock'
 
 // A maximum number of days forwards during which a booking can be made.
 // This is limited due to Stripe holding funds up to 90 days from the
@@ -222,7 +212,6 @@ const config = {
   env,
   dev,
   locale,
-  lineItemUnitType,
   listingManagementType,
   dayCountAvailableForBooking,
   i18n,
