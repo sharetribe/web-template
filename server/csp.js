@@ -8,6 +8,10 @@ const data = 'data:';
 const blob = 'blob:';
 const devImagesMaybe = dev ? ['*.localhost:8000'] : [];
 const baseUrl = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL || 'https://flex-api.sharetribe.com';
+// Asset Delivery API is using a different domain than other Flex APIs
+// cdn.st-api.com
+// If assetCdnBaseUrl is used to initialize SDK (for proxy purposes), then that URL needs to be in CSP
+const assetCdnBaseUrl = process.env.REACT_APP_SHARETRIBE_SDK_ASSET_CDN_BASE_URL;
 
 // Default CSP whitelist.
 //
@@ -20,12 +24,15 @@ const defaultDirectives = {
   connectSrc: [
     self,
     baseUrl,
+    assetCdnBaseUrl,
+    '*.st-api.com',
     'maps.googleapis.com',
     '*.tiles.mapbox.com',
     'api.mapbox.com',
     'events.mapbox.com',
 
     // Google Analytics
+    'www.googletagmanager.com',
     'www.google-analytics.com',
     'stats.g.doubleclick.net',
 
@@ -52,6 +59,7 @@ const defaultDirectives = {
     '*.ggpht.com',
 
     // Google Analytics
+    'www.googletagmanager.com',
     'www.google.com',
     'www.google-analytics.com',
     'stats.g.doubleclick.net',
@@ -65,6 +73,7 @@ const defaultDirectives = {
     data,
     'maps.googleapis.com',
     'api.mapbox.com',
+    'www.googletagmanager.com',
     '*.google-analytics.com',
     'js.stripe.com',
   ],

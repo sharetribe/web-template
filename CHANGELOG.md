@@ -93,6 +93,56 @@ way to update this template, but currently, we follow a pattern:
 
   [#2](https://github.com/sharetribe/ftw-x/pull/2)
 
+## [v9.3.1] 2022-05-19
+
+- [fix] undefined REACT_APP_GOOGLE_ANALYTICS_ID caused an error.
+  [#150](https://github.com/sharetribe/ftw-product/pull/150)
+
+  [v9.3.0]: https://github.com/sharetribe/ftw-product/compare/v9.3.0...v9.3.1
+
+## [v9.3.0] 2022-05-19
+
+Note: this caused an error. Use v9.3.1 instead.
+
+- [fix] undefined REACT_APP_GOOGLE_ANALYTICS_ID caused an error.
+  [#149](https://github.com/sharetribe/ftw-product/pull/149)
+
+### Updates from upstream (FTW-daily v8.6.0)
+
+- [change] Google Analytics: remove Universal Analytics and start supporting GA4.
+
+  NOTE: you need to update the Google Analytics id to GA4's id (starting with 'G-' prefix).
+
+  [#1508](https://github.com/sharetribe/ftw-daily/pull/1508)
+
+- [change] Update some outdated dependencies.
+  [#1514](https://github.com/sharetribe/ftw-daily/pull/1514)
+
+  [v9.3.0]: https://github.com/sharetribe/ftw-product/compare/v9.2.0...v9.3.0
+
+## [v9.2.0] 2022-05-16
+
+- Add support for hosted translations. (PR made in upstream repo: FTW-daily)
+
+- [delete] Remove old unused translation keys
+  [#146](https://github.com/sharetribe/ftw-product/pull/146)
+
+### Updates from upstream (FTW-daily v8.5.0)
+
+- [add] Add support for hosted translations.
+
+  - This PR fetches "content/translation.json" from a new Asset Delivery API. The file is editable
+    through the Flex Console.
+  - It also adds all the missing translation keys to existing non-English translation files. This
+    means that those files might now include messages in English.
+
+  [#1510](https://github.com/sharetribe/ftw-daily/pull/1510)
+
+- [delete] Remove old unused translation keys.
+  [#1511](https://github.com/sharetribe/ftw-daily/pull/1511)
+
+  [v9.2.0]: https://github.com/sharetribe/ftw-daily/compare/v9.1.2...v9.2.0
+
 ## [v9.1.2] 2022-03-16
 
 ### Updates from upstream (FTW-product v9.1.2)
