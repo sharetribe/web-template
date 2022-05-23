@@ -28,6 +28,7 @@ import * as sample from './util/sample';
 import * as apiUtils from './util/api';
 import config from './config';
 import { authInfo } from './ducks/Auth.duck';
+import { fetchAppAssets } from './ducks/hostedAssets.duck';
 import { fetchCurrentUser } from './ducks/user.duck';
 import routeConfiguration from './routing/routeConfiguration';
 import * as log from './util/log';
@@ -39,18 +40,32 @@ const render = (store, shouldHydrate) => {
   // If the server already loaded the auth information, render the app
   // immediately. Otherwise wait for the flag to be loaded and render
   // when auth information is present.
-  const authInfoLoaded = store.getState().Auth.authInfoLoaded;
+  const state = store.getState();
+  const cdnAssetsVersion = state.hostedAssets.version;
+  const authInfoLoaded = state.Auth.authInfoLoaded;
   const info = authInfoLoaded ? Promise.resolve({}) : store.dispatch(authInfo());
   info
     .then(() => {
       store.dispatch(fetchCurrentUser());
-      return loadableReady();
+      // Ensure that Loadable Components is ready
+      // and fetch hosted assets in parallel before initializing the ClientApp
+      return Promise.all([
+        loadableReady(),
+        store.dispatch(fetchAppAssets(config.appCdnAssets, cdnAssetsVersion)),
+      ]);
     })
-    .then(() => {
+    .then(([_, fetchedAssets]) => {
+      const translations = fetchedAssets?.translations?.data || {};
       if (shouldHydrate) {
-        ReactDOM.hydrate(<ClientApp store={store} />, document.getElementById('root'));
+        ReactDOM.hydrate(
+          <ClientApp store={store} hostedTranslations={translations} />,
+          document.getElementById('root')
+        );
       } else {
-        ReactDOM.render(<ClientApp store={store} />, document.getElementById('root'));
+        ReactDOM.render(
+          <ClientApp store={store} hostedTranslations={translations} />,
+          document.getElementById('root')
+        );
       }
     })
     .catch(e => {
@@ -66,14 +81,19 @@ const setupAnalyticsHandlers = () => {
     handlers.push(new LoggingAnalyticsHandler());
   }
 
-  // Add Google Analytics handler if tracker ID is found
+  // Add Google Analytics 4 (GA4) handler if tracker ID is found
   if (process.env.REACT_APP_GOOGLE_ANALYTICS_ID) {
-    if (window?.ga) {
-      handlers.push(new GoogleAnalyticsHandler(window.ga));
+    if (window?.gtag) {
+      handlers.push(new GoogleAnalyticsHandler(window.gtag));
     } else {
       // Some adblockers (e.g. Ghostery) might block the Google Analytics integration.
       console.warn(
-        'Google Analytics (window.ga) is not available. It might be that your adblocker is blocking it.'
+        'Google Analytics (window.gtag) is not available. It might be that your adblocker is blocking it.'
+      );
+    }
+    if (process.env.REACT_APP_GOOGLE_ANALYTICS_ID.indexOf('G-') !== 0) {
+      console.warn(
+        'Google Analytics 4 (GA4) should have measurement id that starts with "G-" prefix'
       );
     }
   }
@@ -87,6 +107,9 @@ if (typeof window !== 'undefined') {
   log.setup();
 
   const baseUrl = config.sdk.baseUrl ? { baseUrl: config.sdk.baseUrl } : {};
+  const assetCdnBaseUrl = config.sdk.assetCdnBaseUrl
+    ? { assetCdnBaseUrl: config.sdk.assetCdnBaseUrl }
+    : {};
 
   // eslint-disable-next-line no-underscore-dangle
   const preloadedState = window.__PRELOADED_STATE__ || '{}';
@@ -97,6 +120,7 @@ if (typeof window !== 'undefined') {
     secure: config.usingSSL,
     typeHandlers: apiUtils.typeHandlers,
     ...baseUrl,
+    ...assetCdnBaseUrl,
   });
   const analyticsHandlers = setupAnalyticsHandlers();
   const store = configureStore(initialState, sdk, analyticsHandlers);
@@ -137,4 +161,4 @@ export default renderApp;
 // exporting matchPathname and configureStore for server side rendering.
 // matchPathname helps to figure out which route is called and if it has preloading needs
 // configureStore is used for creating initial store state for Redux after preloading
-export { matchPathname, configureStore, routeConfiguration, config };
+export { matchPathname, configureStore, routeConfiguration, config, fetchAppAssets };
