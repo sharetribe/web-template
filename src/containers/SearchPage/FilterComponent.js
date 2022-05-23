@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
-import { constructQueryParamName } from './SearchPage.helpers';
+import { constructQueryParamName } from './SearchPage.shared';
 import SelectSingleFilter from './SelectSingleFilter/SelectSingleFilter';
 import SelectMultipleFilter from './SelectMultipleFilter/SelectMultipleFilter';
 import BookingDateRangeFilter from './BookingDateRangeFilter/BookingDateRangeFilter';
@@ -72,13 +72,16 @@ const FilterComponent = props => {
         />
       );
     case 'dates': {
+      const { label, mode } = config;
+      const isNightlyMode = mode === 'night';
       return (
         <BookingDateRangeFilter
           id={componentId}
-          label={config.label}
+          label={label}
           queryParamNames={[key]}
           initialValues={initialValues([key], liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
+          minimumNights={isNightlyMode ? 1 : 0}
           {...rest}
         />
       );

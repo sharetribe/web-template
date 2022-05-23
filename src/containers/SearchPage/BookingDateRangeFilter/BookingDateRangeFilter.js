@@ -66,6 +66,7 @@ export class BookingDateRangeFilterComponent extends Component {
       queryParamNames,
       label,
       intl,
+      minimumNights,
       ...rest
     } = this.props;
 
@@ -155,6 +156,7 @@ export class BookingDateRangeFilterComponent extends Component {
       >
         <FieldDateRangeController
           name="dates"
+          minimumNights={minimumNights}
           controllerRef={node => {
             this.popupControllerRef = node;
           }}
@@ -179,6 +181,7 @@ export class BookingDateRangeFilterComponent extends Component {
       >
         <FieldDateRangeController
           name="dates"
+          minimumNights={minimumNights}
           controllerRef={node => {
             this.popupControllerRef = node;
           }}
@@ -202,6 +205,7 @@ export class BookingDateRangeFilterComponent extends Component {
       >
         <FieldDateRangeController
           name="dates"
+          minimumNights={minimumNights}
           controllerRef={node => {
             this.plainControllerRef = node;
           }}
@@ -216,6 +220,7 @@ BookingDateRangeFilterComponent.defaultProps = {
   className: null,
   showAsPopup: true,
   liveEdit: false,
+  minimumNights: 0,
   initialValues: null,
   contentPlacementOffset: 0,
 };
@@ -229,6 +234,7 @@ BookingDateRangeFilterComponent.propTypes = {
   liveEdit: bool,
   queryParamNames: arrayOf(string).isRequired,
   onSubmit: func.isRequired,
+  minimumNights: number,
   initialValues: object,
   contentPlacementOffset: number,
 

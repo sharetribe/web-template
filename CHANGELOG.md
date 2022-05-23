@@ -14,6 +14,15 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] SearchPage changes: cleaning some shared code and add Dates filter.
+
+  - Add Dates filter. It works with listings that have different time zones in use.
+    - Uses prolonged date range: start=ETC-14h & end: ETC+12
+  - Clean SearchPage variants: Rename SearchPage.helpers.js as SearchPage.shared.js and move several
+    shared functions to this shared file.
+
+  [#35](https://github.com/sharetribe/ftw-x/pull/35)
+
 - [change] OrderPanel: update consistent look-and-feel for the order forms.
 
   - Remove unused FieldBirthdayInput component
