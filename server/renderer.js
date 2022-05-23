@@ -90,11 +90,20 @@ const replacer = (key = null, value) => {
   return types.replacer(key, cleanedValue);
 };
 
-exports.render = function(requestUrl, context, preloadedState, renderApp, webExtractor) {
+exports.render = function(requestUrl, context, data, renderApp, webExtractor) {
+  const { preloadedState, translations } = data;
+
   // Bind webExtractor as "this" for collectChunks call.
   const collectWebChunks = webExtractor.collectChunks.bind(webExtractor);
 
-  const { head, body } = renderApp(requestUrl, context, preloadedState, collectWebChunks);
+  // Render the app with given route, preloaded state, hosted translations.
+  const { head, body } = renderApp(
+    requestUrl,
+    context,
+    preloadedState,
+    translations,
+    collectWebChunks
+  );
 
   // Preloaded state needs to be passed for client side too.
   // For security reasons we ensure that preloaded state is considered as a string
@@ -112,20 +121,31 @@ exports.render = function(requestUrl, context, preloadedState, renderApp, webExt
 
   // We want to precisely control where the analytics script is
   // injected in the HTML file so we can catch all events as early as
-  // possible. This is why we inject the GA script separately from
-  // react-helmet. This script also ensures that all the GA scripts
+  // possible. This script also ensures that all the GA scripts
   // are added only when the proper env var is present.
+  // NOTE: when dealing with cookie consents, it might make more sense to
+  //       include this script through react-helmet.
   //
-  // See: https://developers.google.com/analytics/devguides/collection/analyticsjs/#alternative_async_tracking_snippet
-  const googleAnalyticsScript = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
-    ? `
-        <script>
-          window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-          ga('create', '${process.env.REACT_APP_GOOGLE_ANALYTICS_ID}', 'auto');
-        </script>
-        <script async src="https://www.google-analytics.com/analytics.js"></script>
-        `
-    : '';
+  // See: https://developers.google.com/analytics/devguides/collection/gtagjs
+  const googleAnalyticsId = process.env.REACT_APP_GOOGLE_ANALYTICS_ID;
+  // Add Google Analytics script if correct id exists (it should start with 'G-' prefix)
+  const hasGoogleAnalyticsv4Id = googleAnalyticsId?.indexOf('G-') === 0;
+
+  // Google Analytics: gtag.js
+  // NOTE: FTW is a single-page application (SPA).
+  //       gtag.js sends initial page_view event after page load.
+  //       but we need to handle subsequent events for in-app navigation.
+  const gtagScripts = `
+      <script async src="https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+        gtag('config', '${googleAnalyticsId}');
+      </script>
+    `;
+  const googleAnalyticsScript = hasGoogleAnalyticsv4Id ? gtagScripts : '';
 
   return template({
     htmlAttributes: head.htmlAttributes.toString(),
