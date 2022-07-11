@@ -1,4 +1,4 @@
-@import '../../../styles/propertySets.css';
+@import '../../../styles/customMediaQueries.css';
 
 .root {
   position: relative;
@@ -49,7 +49,7 @@
 
 .label,
 .labelSelected {
-  @apply --marketplaceSmallFontStyles;
+  composes: marketplaceSmallFontStyles from global;
   font-weight: var(--fontWeightBold);
 
   /* Baseline adjustment for label text */
@@ -75,7 +75,7 @@
 }
 
 .clearButton {
-  @apply --marketplaceH5FontStyles;
+  composes: h5 from global;
   margin: 0;
   display: block;
   font-weight: var(--fontWeightMedium);
