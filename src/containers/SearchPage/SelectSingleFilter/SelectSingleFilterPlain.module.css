@@ -1,4 +1,4 @@
-@import '../../../styles/propertySets.css';
+@import '../../../styles/customMediaQueries.css';
 
 .root {
   padding-top: 24px;
@@ -18,7 +18,7 @@
 
 .label,
 .labelSelected {
-  @apply --marketplaceSmallFontStyles;
+  composes: marketplaceSmallFontStyles from global;
   font-weight: var(--fontWeightBold);
 
   /* Baseline adjustment for label text */
@@ -114,7 +114,7 @@
 }
 
 .option {
-  @apply --marketplaceH4FontStyles;
+  composes: h4 from global;
   font-weight: var(--fontWeightMedium);
   font-size: 16px;
   color: var(--matterColor);
@@ -160,12 +160,13 @@
 }
 
 .clearButton {
-  @apply --marketplaceH5FontStyles;
+  composes: h5 from global;
+  font-weight: var(--fontWeightMedium);
+  color: var(--matterColorAnti);
+
   display: block;
   margin: 12px 0 0 0;
   padding: 2px 0 4px 12px;
-  font-weight: var(--fontWeightMedium);
-  color: var(--matterColorAnti);
 
   /* Override button styles */
   outline: none;

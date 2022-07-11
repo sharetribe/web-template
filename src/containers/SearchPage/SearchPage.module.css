@@ -1,5 +1,4 @@
 @import '../../styles/customMediaQueries.css';
-@import '../../styles/propertySets.css';
 
 /* Can be given to Topbar when a modal is opened
  * so that the Topbar is not rendered on top of it.*/
@@ -102,7 +101,7 @@
 
 .resetAllFiltersButton,
 .resetAllButton {
-  @apply --marketplaceH5FontStyles;
+  composes: h5 from global;
   font-weight: var(--fontWeightMedium);
   color: var(--matterColorAnti);
 
@@ -172,7 +171,7 @@
 }
 
 .noSearchResults {
-  @apply --marketplaceH4FontStyles;
+  composes: h4 from global;
 
   /* Reserves 48px of vertical space */
   line-height: 24px;
@@ -313,8 +312,8 @@
 }
 
 .sortByMenuLabel {
-  @apply --marketplaceButtonStylesSecondary;
-  @apply --marketplaceTinyFontStyles;
+  composes: button marketplaceTinyFontStyles buttonText buttonBordersSecondary buttonColorsSecondary from global;
+  letter-spacing: 0.2px;
   font-weight: var(--fontWeightMedium);
 
   height: 35px;
