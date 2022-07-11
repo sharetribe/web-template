@@ -348,7 +348,7 @@
 }
 
 .pickupInfoContent {
-  @apply --marketplaceSmallFontStyles;
+  composes: marketplaceSmallFontStyles from global;
   padding: 5px 0 1px 0;
   margin-top: 6px;
 
@@ -534,7 +534,8 @@
 
 /* e.g. dispute "link" */
 .diminishedActionButton {
-  @apply --marketplaceTinyFontStyles;
+  composes: marketplaceTinyFontStyles from global;
+
   width: max-content;
   color: #808080;
   padding: 1px 0 5px 0;

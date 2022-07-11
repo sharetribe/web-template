@@ -1,5 +1,4 @@
 @import '../../styles/customMediaQueries.css';
-@import '../../styles/propertySets.css';
 
 .root {
 }
@@ -57,7 +56,7 @@
 .loadingData,
 .error,
 .title {
-  @apply --marketplaceH2FontStyles;
+  composes: h2 from global;
   margin: 0 24px 24px 24px;
 
   @media (--viewportMedium) {

@@ -318,7 +318,7 @@
 }
 .orderBreakdownTitle {
   /* Font */
-  @apply --marketplaceH3FontStyles;
+  composes: h3 from global;
   color: var(--matterColor);
 
   /* Layout spacing */

@@ -89,20 +89,13 @@
   }
 }
 
-.smallFontStyles {
-  font-family: var(--fontFamily);
-  font-weight: var(--fontWeightMedium);
-  font-size: 14px;
-  line-height: 24px;
-}
-
 .itemLabel {
-  composes: smallFontStyles;
+  composes: marketplaceSmallFontStyles from global;
   flex: 1;
 }
 
 .itemValue {
-  composes: smallFontStyles;
+  composes: marketplaceSmallFontStyles from global;
   margin: 0 0 0 10px;
 }
 
@@ -121,7 +114,7 @@
 }
 
 .totalLabel {
-  composes: smallFontStyles;
+  composes: smallFonmarketplaceSmallFontStylestStyles from global;
 }
 
 .totalPrice {
