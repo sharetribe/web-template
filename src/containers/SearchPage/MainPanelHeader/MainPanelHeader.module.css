@@ -1,5 +1,3 @@
-@import '../../../styles/propertySets.css';
-
 .root {
   display: flex;
   flex-direction: column;
@@ -13,8 +11,9 @@
 }
 
 .searchResultSummary {
-  @apply --marketplaceH4FontStyles;
+  composes: h4 from global;
   line-height: 20px;
+
   margin-top: 10px;
   margin-bottom: 11px;
   margin-left: 0px;
@@ -22,7 +21,7 @@
 }
 
 .loadingResults {
-  @apply --marketplaceH4FontStyles;
+  composes: h4 from global;
   line-height: 20px;
 
   /* Cover parent element's space*/
@@ -49,7 +48,7 @@
 }
 
 .sortyBy {
-  @apply --marketplaceSmallFontStyles;
+  composes: marketplaceSmallFontStyles from global;
   font-weight: var(--fontWeightRegular);
   padding: 8px 8px 8px 0;
 }

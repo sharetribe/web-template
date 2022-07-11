@@ -574,6 +574,13 @@ textarea {
 
 /* ================ Other fonts ================ */
 
+.marketplaceSmallFontStyles {
+  font-family: var(--fontFamily);
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 24px;
+}
+
 .marketplaceTinyFontStyles {
   font-family: var(--fontFamily);
   font-weight: var(--fontWeightRegular);
