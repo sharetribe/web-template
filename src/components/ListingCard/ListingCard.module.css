@@ -1,4 +1,4 @@
-@import '../../styles/propertySets.css';
+@import '../../styles/customMediaQueries.css';
 
 .root {
   /* Layout */
@@ -49,7 +49,7 @@
 
 .priceValue {
   /* Font */
-  @apply --marketplaceH3FontStyles;
+  composes: h3 from global;
 
   /* Remove default margins from font */
   margin-top: 0;
@@ -63,7 +63,7 @@
 
 .perUnit {
   /* Font */
-  @apply --marketplaceTinyFontStyles;
+  composes: marketplaceTinyFontStyles from global;
   color: var(--matterColor);
   display: inline-flex;
   align-items: center;
@@ -86,23 +86,14 @@
 
 .title {
   /* Font */
-  @apply --marketplaceDefaultFontStyles;
+  composes: marketplaceDefaultFontStyles from global;
   line-height: 24px;
   color: var(--matterColor);
-
-  /* Remove default margins from font */
-  margin-top: 0;
-  margin-bottom: 0;
-
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
 }
 
 .authorInfo {
   /* Font */
-  @apply --marketplaceTinyFontStyles;
+  composes: marketplaceTinyFontStyles from global;
   color: var(--matterColor);
 
   padding-top: 4px;
