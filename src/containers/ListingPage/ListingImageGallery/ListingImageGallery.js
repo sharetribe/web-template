@@ -27,6 +27,7 @@ const IMAGE_GALLERY_OPTIONS = {
 };
 
 const ListingImageGallery = props => {
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const { intl, rootClassName, className, images, imageVariants, thumbnailVariants } = props;
   const thumbVariants = thumbnailVariants || imageVariants;
   const items = images.map((img, i) => {
@@ -42,10 +43,10 @@ const ListingImageGallery = props => {
         { id: 'ListingImageGallery.imageThumbnailAltText' },
         { index: i + 1, count: images.length }
       ),
+      thumbnail: img.attributes?.variants?.[thumbVariants[0]],
       image: img,
     };
   });
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const renderItem = item => {
     return (
       <AspectRatioWrapper
