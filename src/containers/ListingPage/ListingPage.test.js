@@ -127,7 +127,7 @@ describe('ListingPage', () => {
               id,
               'imageVariant.listing-card': 'w:400;h:400;fit:crop',
               'imageVariant.listing-card-2x': 'w:800;h:800;fit:crop',
-              include: ['author', 'author.profileImage', 'images'],
+              include: ['author', 'author.profileImage', 'images', 'currentStock'],
             }),
           ],
         ]);
@@ -155,7 +155,7 @@ describe('ListingPage', () => {
               id,
               'imageVariant.listing-card': 'w:400;h:400;fit:crop',
               'imageVariant.listing-card-2x': 'w:800;h:800;fit:crop',
-              include: ['author', 'author.profileImage', 'images'],
+              include: ['author', 'author.profileImage', 'images', 'currentStock'],
             }),
           ],
         ]);
