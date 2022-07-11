@@ -14,6 +14,12 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+## [v10.0.1] 2022-07-11
+
+- ListingPage.test.js needed an update due to missing 'stock' in includes.
+
+  [v10.0.1]: https://github.com/sharetribe/ftw-product/compare/v10.0.0...v10.0.1
+
 ## [v10.0.0] 2022-07-11
 
 This is a major release since it includes a major update to sharetribe-scripts aka our fork of
