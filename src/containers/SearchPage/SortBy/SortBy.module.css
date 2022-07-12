@@ -9,8 +9,8 @@
 }
 
 .sortByMenuLabel {
-  @apply --marketplaceButtonStylesSecondary;
-  @apply --marketplaceTinyFontStyles;
+  composes: button marketplaceTinyFontStyles buttonText buttonBordersSecondary buttonColorsSecondary from global;
+  letter-spacing: 0.2px;
   font-weight: var(--fontWeightMedium);
 
   height: 35px;
