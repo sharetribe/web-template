@@ -40,7 +40,6 @@
 
 .finePrint {
   composes: marketplaceTinyFontStyles from global;
-  color: var(--matterColorAnti);
   text-align: center;
 }
 

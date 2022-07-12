@@ -32,15 +32,23 @@
   }
 
   & :global(.DateInput_input) {
+    font-family: var(--fontFamily);
     font-weight: var(--fontWeightMedium);
     font-size: 16px;
     line-height: 24px;
-    letter-spacing: 0;
+    letter-spacing: -0.1px;
 
-    padding: 0;
+    display: block;
+    width: 100%;
+
+    padding: 6px 12px 4px;
     margin: 0;
-    border: 0;
-    background: none;
+    border-radius: 6px;
+    border: 1px solid #d8dce6;
+    background-color: #fff;
+    outline: none;
+
+    transition: all 0.1s ease-in-out;
 
     &:focus {
       border-radius: 6px 6px 0 0;
@@ -50,7 +58,8 @@
     }
 
     @media (--viewportMedium) {
-      font-weight: var(--fontWeightMedium);
+      line-height: 32px;
+      padding: 7px 16px;
     }
   }
 
