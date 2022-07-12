@@ -18,7 +18,7 @@
 }
 
 .singleDeliveryMethodLabel {
-  @apply --marketplaceH5FontStyles;
+  composes: h5 from global;
   font-weight: var(--fontWeightSemiBold);
   font-size: 13px;
   display: block;

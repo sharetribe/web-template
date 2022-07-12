@@ -20,7 +20,7 @@
 }
 
 .sectionTitle {
-  @apply --marketplaceSearchFilterSublabelFontStyles;
+  composes: marketplaceSearchFilterSublabelFontStyles from global;
   color: var(--matterColorAnti);
 
   margin-top: 18px;
@@ -29,7 +29,7 @@
 }
 
 .editPlanButton {
-  @apply --marketplaceH5FontStyles;
+  composes: h5 from global;
   margin: 0;
   padding-top: 5px;
 }
@@ -53,7 +53,7 @@
 }
 
 .weekDay {
-  @apply --marketplaceTabNavHorizontalFontStyles;
+  composes: marketplaceTabNavHorizontalFontStyles from global;
   display: flex;
   flex-direction: row;
   padding: 24px 24px 23px 24px;
@@ -88,7 +88,8 @@
 }
 
 .noExceptions {
-  @apply --marketplaceH4FontStyles;
+  composes: h4 from global;
+
   display: flex;
   align-items: center;
   margin: 0 0 24px 0;
@@ -136,7 +137,7 @@
 }
 
 .exceptionAvailabilityStatus {
-  @apply --marketplaceH4FontStyles;
+  composes: h4 from global;
   color: var(--matterColor);
   font-weight: var(--fontWeightSemiBold);
   margin: 0;
@@ -144,7 +145,7 @@
 }
 
 .timeRange {
-  @apply --marketplaceH5FontStyles;
+  composes: h5 from global;
   margin: -2px 12px 13px 32px;
   color: var(--matterColorAnti);
 }
@@ -168,7 +169,7 @@
 }
 
 .addExceptionButton {
-  @apply --marketplaceH4FontStyles;
+  composes: h4 from global;
   padding: 1px 0 5px 0;
   margin: 0 0 24px 0;
 }
@@ -180,7 +181,7 @@
 }
 
 .modalContainer {
-  @apply --marketplaceModalBaseStyles;
+  composes: marketplaceModalBaseStyles from global;
   min-height: 100vh;
   height: 100%;
 

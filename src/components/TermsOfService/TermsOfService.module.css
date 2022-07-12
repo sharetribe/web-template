@@ -25,15 +25,17 @@
       margin: 32px 0 0 0;
     }
   }
+  & .lastUpdated {
+    margin-top: 0;
+    margin-bottom: 55px;
+
+    @media (--viewportMedium) {
+      margin-top: 0;
+      margin-bottom: 54px;
+    }
+  }
 }
 
 .lastUpdated {
   composes: marketplaceBodyFontStyles from global;
-  margin-top: 0;
-  margin-bottom: 55px;
-
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 54px;
-  }
 }

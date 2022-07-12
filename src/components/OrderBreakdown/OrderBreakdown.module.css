@@ -113,7 +113,7 @@
 }
 
 .totalLabel {
-  composes: smallFonmarketplaceSmallFontStylestStyles from global;
+  composes: marketplaceSmallFontStyles from global;
 }
 
 .totalPrice {

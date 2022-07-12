@@ -457,7 +457,7 @@ select {
   &::placeholder {
     color: var(--matterColorAnti);
   }
-  
+
   @media (--viewportMedium) {
     padding: 7px 32px 7px 16px;
     line-height: 32px;
@@ -517,7 +517,7 @@ textarea,
 /* Effects */
 input:hover,
 textarea:hover,
-.marketplaceInputStyles:hover{
+.marketplaceInputStyles:hover {
   border: 1px solid #b8bfd1;
   transition: all ease-in-out 100ms;
 }
@@ -707,6 +707,28 @@ textarea {
   font-weight: var(--fontWeightMedium);
   font-size: 16px;
   line-height: 24px;
+}
+
+/* ================ Tabbed navigation font styles ================ */
+
+.marketplaceTabNavFontStyles {
+  font-weight: var(--fontWeightMedium);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0;
+
+  @media (--viewportLarge) {
+    font-weight: var(--fontWeightSemiBold);
+    font-size: 20px;
+    line-height: 24px;
+  }
+}
+
+.marketplaceTabNavHorizontalFontStyles {
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0;
 }
 
 /* ================ Clearfix solution ================ */

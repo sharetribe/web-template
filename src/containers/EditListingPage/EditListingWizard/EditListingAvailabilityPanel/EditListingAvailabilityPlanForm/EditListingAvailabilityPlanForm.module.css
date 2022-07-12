@@ -1,4 +1,4 @@
-@import '../../../../../styles/propertySets.css';
+@import '../../../../../styles/customMediaQueries.css';
 
 .root {
   /* Dimensions */
@@ -57,7 +57,7 @@
 }
 
 .weekDay {
-  @apply --marketplaceTabNavHorizontalFontStyles;
+  composes: marketplaceTabNavHorizontalFontStyles from global;
 
   /* Layout */
   display: flex;
@@ -119,7 +119,8 @@
 }
 
 .closeIcon {
-  @apply --marketplaceModalCloseIcon;
+  composes: marketplaceModalCloseIcon from global;
+
   stroke: none;
   fill: var(--matterColorAnti);
 
@@ -141,7 +142,7 @@
 }
 
 .buttonAddNew {
-  @apply --marketplaceH5FontStyles;
+  composes: h5 from global;
   color: var(--matterColor);
 }
 .submitButton {
@@ -186,7 +187,7 @@
 }
 
 .fieldSelect {
-  @apply --marketplaceTabNavHorizontalFontStyles;
+  composes: marketplaceTabNavHorizontalFontStyles from global;
   background: none;
   padding: 6px 12px 4px 12px;
   min-width: 42px;
