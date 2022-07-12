@@ -1,4 +1,4 @@
-@import '../../../styles/propertySets.css';
+@import '../../../styles/customMediaQueries.css';
 
 .root {
   display: flex;
@@ -24,7 +24,7 @@
 }
 
 .pickupDetails {
-  @apply --marketplaceSmallFontStyles;
+  composes: marketplaceSmallFontStyles from global;
   margin-top: 0;
   margin-bottom: 0;
 
@@ -35,7 +35,7 @@
 }
 
 .card {
-  @apply --marketplaceInputStyles;
+  composes: marketplaceInputStyles from global;
 
   @media (--viewportMedium) {
     padding: 11px 0 11px 16px;
@@ -99,7 +99,8 @@
 }
 
 .saveForLaterUseLabel {
-  @apply --marketplaceH5FontStyles;
+  composes: h5 from global;
+
   color: var(--matterColor);
   margin-top: 3px;
   margin-bottom: 0px;
@@ -107,7 +108,8 @@
 }
 
 .saveForLaterUseLegalInfo {
-  @apply --marketplaceH5FontStyles;
+  composes: h5 from global;
+
   color: var(--matterColorAnti);
   display: inline-block;
   padding: 0px 0 0px 26px;
@@ -182,7 +184,8 @@
 }
 
 .paymentInfo {
-  @apply --marketplaceH5FontStyles;
+  composes: h5 from global;
+
   color: var(--matterColorAnti);
   text-align: center;
   margin: 28px 0 0 0;

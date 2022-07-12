@@ -1,4 +1,4 @@
-@import '../../../styles/propertySets.css';
+@import '../../../styles/customMediaQueries.css';
 
 .quantityField {
   padding: 0 24px;
@@ -18,7 +18,7 @@
 }
 
 .singleDeliveryMethodLabel {
-  @apply --marketplaceH5FontStyles;
+  composes: h5 from global;
   font-weight: var(--fontWeightSemiBold);
   font-size: 13px;
   display: block;
@@ -62,12 +62,12 @@
 }
 
 .finePrint {
-  @apply --marketplaceTinyFontStyles;
+  composes: marketplaceTinyFontStyles from global;
   text-align: center;
 }
 
 .error {
-  @apply --marketplaceH4FontStyles;
+  composes: h4 from global;
   color: var(--failColor);
 
   padding: 0 24px;

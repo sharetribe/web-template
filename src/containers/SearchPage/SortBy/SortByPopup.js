@@ -71,7 +71,7 @@ class SortByPopup extends Component {
         onToggleActive={this.onToggleActive}
         isOpen={this.state.isOpen}
       >
-        <MenuLabel className={menuLabelClasses}>
+        <MenuLabel rootClassName={menuLabelClasses}>
           {menuLabel}
           <SortByIcon className={iconArrowClassName} />
         </MenuLabel>
