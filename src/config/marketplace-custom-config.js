@@ -234,15 +234,6 @@ export const listingExtendedData = [
  * Common properties: key, schemaType, and label.
  */
 export const defaultFilters = [
-  {
-    key: 'price',
-    schemaType: 'price',
-    label: 'Price',
-    // Note: unlike most prices this is not handled in subunits
-    min: 0,
-    max: 1000,
-    step: 5,
-  },
   // TODO: dates filter should be removed if marketplace is only product marketplace (unitType: 'item')
   {
     key: 'dates',
@@ -253,10 +244,19 @@ export const defaultFilters = [
     mode: 'day',
   },
   {
-    key: 'keywords',
-    schemaType: 'text',
-    label: 'Keyword',
+    key: 'price',
+    schemaType: 'price',
+    label: 'Price',
+    // Note: unlike most prices this is not handled in subunits
+    min: 0,
+    max: 1000,
+    step: 5,
   },
+  // {
+  //   key: 'keywords',
+  //   schemaType: 'text',
+  //   label: 'Keyword',
+  // },
 ];
 
 export const sortConfig = {
