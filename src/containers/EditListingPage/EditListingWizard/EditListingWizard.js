@@ -51,7 +51,7 @@ import css from './EditListingWizard.module.css';
 // Note 2: Ensure that draft listing is created after the first panel
 // and listing publishing happens after last panel.
 const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, DELIVERY, PHOTOS];
-const TABS_BOOKING = [DETAILS, PRICING, LOCATION, AVAILABILITY, PHOTOS];
+const TABS_BOOKING = [DETAILS, LOCATION, PRICING, AVAILABILITY, PHOTOS];
 const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING];
 
 // Tabs are horizontal in small screens
