@@ -1,4 +1,4 @@
-@import '../../../styles/propertySets.css';
+@import '../../../styles/customMediaQueries.css';
 
 .root {
   display: flex;
@@ -16,8 +16,8 @@
 }
 
 .searchFiltersPanelClosed {
-  @apply --marketplaceButtonStylesSecondary;
-  @apply --marketplaceSearchFilterLabelFontStyles;
+  composes: button marketplaceSearchFilterLabelFontStyles buttonText buttonBordersSecondary buttonColorsSecondary from global;
+  letter-spacing: 0.2px;
 
   display: inline-block;
   padding: var(--marketplaceButtonSmallDesktopPadding);
@@ -36,8 +36,8 @@
 }
 
 .searchFiltersPanelOpen {
-  @apply --marketplaceButtonStyles;
-  @apply --marketplaceSearchFilterLabelFontStyles;
+  composes: button marketplaceSearchFilterLabelFontStyles buttonText buttonBorders buttonColors from global;
+  letter-spacing: 0.2px;
   font-weight: var(--fontWeightSemiBold);
 
   display: inline-block;

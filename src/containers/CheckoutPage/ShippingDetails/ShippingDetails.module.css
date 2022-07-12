@@ -1,4 +1,4 @@
-@import '../../../styles/propertySets.css';
+@import '../../../styles/customMediaQueries.css';
 
 .root {
   display: flex;

@@ -1,4 +1,4 @@
-@import '../../../styles/propertySets.css';
+@import '../../../styles/customMediaQueries.css';
 
 /* Animation for the hero elements */
 
@@ -29,13 +29,7 @@
 }
 
 .root {
-  /* Gradient direction and overlaying the black color on top of the image for better readability */
-  background: linear-gradient(-45deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)),
-    url('../../../assets/background-1440.jpg');
-  background-color: var(--matterColor);
-  background-size: cover;
-  background-position: center center;
-
+  composes: defaultBackgroundImage from global;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -69,7 +63,7 @@
 }
 
 .heroMainTitle {
-  @apply --marketplaceHeroTitleFontStyles;
+  composes: marketplaceHeroTitleFontStyles from global;
   color: var(--matterColorLight);
   composes: animation;
 
@@ -82,7 +76,7 @@
 }
 
 .heroSubTitle {
-  @apply --marketplaceH4FontStyles;
+  composes: h4 from global;
 
   color: var(--matterColorLight);
   margin: 0 0 32px 0;
@@ -98,7 +92,7 @@
 }
 
 .heroButton {
-  @apply --marketplaceButtonStyles;
+  composes: button buttonFont buttonText buttonBorders buttonColors from global;
   composes: animation;
 
   @media (--viewportMedium) {
