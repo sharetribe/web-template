@@ -1,4 +1,4 @@
-@import '../../../styles/propertySets.css';
+@import '../../../styles/customMediaQueries.css';
 
 :global(.image-gallery-thumbnails-container) {
   /*
@@ -169,7 +169,7 @@
      mobile, and mobile doesn't really benefit from fullscreen anyways. */
   display: none;
 
-  @apply --marketplaceTinyFontStyles;
+  composes: marketplaceTinyFontStyles from global;
   font-weight: var(--fontWeightMedium);
 
   /* Position and dimensions */
@@ -204,7 +204,7 @@
 }
 
 .close {
-  @apply --marketplaceModalCloseStyles;
+  composes: marketplaceModalCloseStyles from global;
 
   color: var(--matterColorAnti);
   transition: var(--transitionStyleButton);
@@ -216,9 +216,9 @@
 }
 
 .closeText {
-  @apply --marketplaceModalCloseText;
+  composes: marketplaceModalCloseText from global;
 }
 
 .closeIcon {
-  @apply --marketplaceModalCloseIcon;
+  composes: marketplaceModalCloseIcon from global;
 }

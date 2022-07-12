@@ -1,4 +1,4 @@
-@import '../../../styles/propertySets.css';
+@import '../../../styles/customMediaQueries.css';
 
 .root {
   flex-grow: 1;
@@ -16,10 +16,39 @@
   margin-top: 8px;
 }
 
-.resetAllButton {
-  @apply --marketplaceLinkStyles;
-  @apply --marketplaceH5FontStyles;
+.filterButton {
+  /* Position and dimensions */
+  display: inline;
+  padding: 0;
+
+  /* Borders */
+  border: none;
+
+  /* Text size should be inherited */
+  text-decoration: none;
+
   font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0;
+  /* margin-top + n * line-height + margin-bottom => x * 6px */
+  margin-top: 10px;
+  margin-bottom: 8px;
+
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  @media (--viewportMedium) {
+    line-height: 16px;
+    /* margin-top + n * line-height + margin-bottom => x * 8px */
+    margin-top: 10px;
+    margin-bottom: 14px;
+  }
+}
+.resetAllButton {
+  composes: filterButton;
   color: var(--matterColorAnti);
 
   /* Layout */
@@ -35,9 +64,7 @@
 }
 
 .cancelButton {
-  @apply --marketplaceLinkStyles;
-  @apply --marketplaceH5FontStyles;
-  font-weight: var(--fontWeightMedium);
+  composes: filterButton;
   color: var(--matterColorAnti);
 
   /* Layout */
@@ -53,9 +80,8 @@
 }
 
 .applyButton {
-  @apply --marketplaceLinkStyles;
-  @apply --marketplaceH5FontStyles;
-  font-weight: var(--fontWeightMedium);
+  composes: filterButton;
+  color: var(--marketplaceColor);
 
   /* Layout */
   margin: 0;

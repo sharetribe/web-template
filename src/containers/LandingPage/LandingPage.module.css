@@ -1,5 +1,4 @@
 @import '../../styles/customMediaQueries.css';
-@import '../../styles/propertySets.css';
 
 .root {
 }
@@ -29,7 +28,7 @@
 }
 
 .heroRoot {
-  @apply --backgroundImage;
+  composes: defaultBackgroundImage from global;
   display: flex;
   flex-direction: column;
   width: 100%;

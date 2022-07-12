@@ -1,9 +1,9 @@
-@import '../../styles/propertySets.css';
+@import '../../styles/customMediaQueries.css';
 
 /* Order form inside modalContainer needs special handling */
 /* since "inMobile" breakpoint is actually --viewportLarge */
 .modalContainer {
-  @apply --marketplaceModalInMobileBaseStyles;
+  composes: marketplaceModalInMobileBaseStyles from global;
 
   height: 100vh;
 
@@ -40,7 +40,6 @@
 
 .title {
   /* Font */
-  @apply --marketplaceH1FontStyles;
   color: var(--matterColor);
 
   /* Layout */
@@ -54,7 +53,8 @@
 }
 
 .price {
-  @apply --marketplaceH2FontStyles;
+  composes: h2 from global;
+
   color: var(--marketplaceColor);
   margin: 0 24px;
 
@@ -64,11 +64,12 @@
 }
 
 .author {
+  composes: h4 from global;
+  margin: 24px 24px 32px 24px;
+
   display: flex;
   flex-direction: row;
   width: 100%;
-  @apply --marketplaceH4FontStyles;
-  margin: 24px 24px 32px 24px;
 
   @media (--viewportMedium) {
     margin: 24px 0 32px 0;
@@ -102,8 +103,8 @@
 }
 
 .orderHelp {
+  composes: h5 from global;
   display: none;
-  @apply --marketplaceH5FontStyles;
 
   @media (--viewportMedium) {
     color: var(--matterColor);
@@ -173,7 +174,7 @@
 
 .priceValue {
   /* Font */
-  @apply --marketplaceH2FontStyles;
+  composes: h2 from global;
   color: var(--matterColor);
 
   margin-top: 0;
@@ -186,7 +187,7 @@
 
 .perUnit {
   /* Font */
-  @apply --marketplaceTinyFontStyles;
+  composes: marketplaceTinyFontStyles from global;
   color: var(--matterColor);
 
   margin-top: 0;
@@ -202,7 +203,7 @@
 }
 
 .orderButton {
-  @apply --marketplaceButtonStylesPrimary;
+  composes: button buttonFont buttonText buttonBorders buttonColorsPrimary from global;
 
   /* Clear padding that is set for link elements looking like buttons */
   padding: 0;
