@@ -49,7 +49,7 @@ export const WithCircleLocation = {
   ),
   props: {
     center: new LatLng(60.16502999999999, 24.940064399999983),
-    obfuscatedCenter: obfuscatedCoordinates(new LatLng(60.16502999999999, 24.940064399999983)),
+    obfuscatedCenter: obfuscatedCoordinates(new LatLng(60.16502999999999, 24.940064399999983), 500),
     address: 'Sharetribe',
     mapsConfig: {
       ...config.maps,
