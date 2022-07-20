@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { any, string } from 'prop-types';
 import ReactDOMServer from 'react-dom/server';
 
 // react-dates needs to be initialized before using any react-dates component
@@ -97,6 +97,16 @@ const setupLocale = () => {
   moment.locale(config.locale);
 };
 
+// Helper to pick params for IncludeMapLibraryScripts
+const paramsForIncludeScripts = config => {
+  return {
+    rootURL: config.canonicalRootURL,
+    mapProvider: config.maps.mapProvider,
+    googleMapsAPIKey: config.maps.googleMapsAPIKey,
+    mapboxAccessToken: config.maps.mapboxAccessToken,
+  };
+};
+
 const getRouteConfiguration = () => {
   const pageVariantConfig = {
     searchPageVariant: config.searchPageVariant,
@@ -117,7 +127,7 @@ export const ClientApp = props => {
       >
         <Provider store={store}>
           <HelmetProvider>
-            <IncludeMapLibraryScripts />
+            <IncludeMapLibraryScripts {...paramsForIncludeScripts(config)} />
             <BrowserRouter>
               <Routes />
             </BrowserRouter>
@@ -127,8 +137,6 @@ export const ClientApp = props => {
     </RouteConfigurationProvider>
   );
 };
-
-const { any, string } = PropTypes;
 
 ClientApp.propTypes = { store: any.isRequired };
 
@@ -145,7 +153,7 @@ export const ServerApp = props => {
       >
         <Provider store={store}>
           <HelmetProvider context={helmetContext}>
-            <IncludeMapLibraryScripts />
+            <IncludeMapLibraryScripts {...paramsForIncludeScripts(config)} />
             <StaticRouter location={url} context={context}>
               <Routes />
             </StaticRouter>
