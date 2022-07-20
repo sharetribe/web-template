@@ -30,7 +30,7 @@ const KeywordSearchField = props => {
             <input
               className={isMobile ? css.mobileInput : css.desktopInput}
               {...input}
-              id="keyword-search"
+              id={isMobile ? 'keyword-search-mobile' : 'keyword-search'}
               ref={inputRef}
               type="text"
               placeholder={intl.formatMessage({
