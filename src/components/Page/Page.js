@@ -139,20 +139,23 @@ class PageComponent extends Component {
       },
     ];
 
-    const metaToHead = metaTagProps({
-      author,
-      contentType,
-      description: metaDescription,
-      facebookImages: facebookImgs,
-      twitterImages: twitterImgs,
-      published,
-      tags,
-      title: metaTitle,
-      twitterHandle,
-      updated,
-      url: canonicalUrl,
-      locale: intl.locale,
-    });
+    const metaToHead = metaTagProps(
+      {
+        author,
+        contentType,
+        description: metaDescription,
+        facebookImages: facebookImgs,
+        twitterImages: twitterImgs,
+        published,
+        tags,
+        title: metaTitle,
+        twitterHandle,
+        updated,
+        url: canonicalUrl,
+        locale: intl.locale,
+      },
+      config
+    );
 
     // eslint-disable-next-line react/no-array-index-key
     const metaTags = metaToHead.map((metaProps, i) => <meta key={i} {...metaProps} />);
