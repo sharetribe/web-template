@@ -12,12 +12,19 @@ import { Provider } from 'react-redux';
 import difference from 'lodash/difference';
 import mapValues from 'lodash/mapValues';
 import moment from 'moment';
+
+// Configs and store setup
+import config from './config';
+import configureStore from './store';
+
+// utils
+import { RouteConfigurationProvider } from './context/routeConfigurationContext';
 import { IntlProvider } from './util/reactIntl';
 import { IncludeMapLibraryScripts } from './util/includeScripts';
-import configureStore from './store';
+
+// routing
 import routeConfiguration from './routing/routeConfiguration';
 import Routes from './routing/Routes';
-import config from './config';
 
 // Flex template application uses English translations as default translations.
 import defaultMessages from './translations/en.json';
