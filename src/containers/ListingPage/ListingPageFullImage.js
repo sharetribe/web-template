@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import config from '../../config';
-import routeConfiguration from '../../routing/routeConfiguration';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { findOptionsForSelectFilter } from '../../util/search';
 import {
@@ -86,6 +86,7 @@ export const ListingPageComponent = props => {
   const [enquiryModalOpen, setEnquiryModalOpen] = useState(
     props.enquiryModalOpenForListingId === props.params.id
   );
+  const routeConfiguration = useRouteConfiguration();
 
   const {
     isAuthenticated,
@@ -196,7 +197,7 @@ export const ListingPageComponent = props => {
 
   const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
 
-  const commonParams = { params, history, routes: routeConfiguration() };
+  const commonParams = { params, history, routes: routeConfiguration };
   const onContactUser = handleContactUser({
     ...commonParams,
     currentUser,

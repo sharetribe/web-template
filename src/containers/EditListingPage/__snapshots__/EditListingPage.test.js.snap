@@ -11,7 +11,7 @@ exports[`EditListingPageComponent matches snapshot 1`] = `
     mobileClassName="mobileTopbar"
     mobileRootClassName="mobileTopbar"
   />
-  <withViewport(injectIntl(EditListingWizard))
+  <withViewport(injectIntl(withRouteConfiguration(EditListingWizard)))
     className="wizard"
     currentUser={null}
     errors={

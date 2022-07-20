@@ -35,7 +35,6 @@ import configureStore from './store';
 // Utils
 import { createInstance, types as sdkTypes } from './util/sdkLoader';
 import { matchPathname } from './util/routes';
-import * as sample from './util/sample';
 import * as apiUtils from './util/api';
 import * as log from './util/log';
 
@@ -148,8 +147,6 @@ if (typeof window !== 'undefined') {
       sdk,
       sdkTypes,
       store,
-      sample,
-      routeConfiguration: routeConfiguration(),
     };
   }
 }

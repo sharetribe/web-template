@@ -6,6 +6,19 @@ import checkoutPageReducer, { SET_INITIAL_VALUES, setInitialValues } from './Che
 
 const noop = () => null;
 
+const routeConfiguration = [
+  {
+    path: '/',
+    name: 'LandingPage',
+    component: props => <div />,
+  },
+  {
+    path: '/about',
+    name: 'AboutPage',
+    component: props => <div />,
+  },
+];
+
 describe('CheckoutPage', () => {
   it('matches snapshot', () => {
     const listing = createListing(
@@ -34,6 +47,7 @@ describe('CheckoutPage', () => {
       onSavePaymentMethod: noop,
       onSendMessage: noop,
       confirmCardPaymentInProgress: false,
+      routeConfiguration,
     };
     const tree = renderShallow(<CheckoutPageComponent {...props} />);
     expect(tree).toMatchSnapshot();

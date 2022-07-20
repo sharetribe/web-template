@@ -1,8 +1,6 @@
 import React from 'react';
 import loadable from '@loadable/component';
 
-import config from '../config';
-
 import getPageDataLoadingAPI from '../containers/pageDataLoadingAPI';
 import NotFoundPage from '../containers/NotFoundPage/NotFoundPage';
 
@@ -40,10 +38,6 @@ const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionP
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
 
-
-const SearchPage = config.searchPageVariant === 'map' ? SearchPageWithMap : SearchPageWithList;
-const ListingPage = config.listingPageLayout === 'full-image' ? ListingPageFullImage : ListingPageHeroImage;
-
 export const ACCOUNT_SETTINGS_PAGES = [
   'ContactDetailsPage',
   'PasswordChangePage',
@@ -65,7 +59,10 @@ const RedirectToLandingPage = () => <NamedRedirect name="LandingPage" />;
 
 // Our routes are exact by default.
 // See behaviour from Routes.js where Route is created.
-const routeConfiguration = () => {
+const routeConfiguration = (pageVariantConfig) => {
+  const SearchPage = pageVariantConfig.searchPageVariant === 'map' ? SearchPageWithMap : SearchPageWithList;
+  const ListingPage = pageVariantConfig.listingPageVariant === 'full-image' ? ListingPageFullImage : ListingPageHeroImage;
+  
   return [
     {
       path: '/',

@@ -5,12 +5,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import routeConfiguration from '../../routing/routeConfiguration';
+
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { pathByRouteName } from '../../util/routes';
 
 const NamedRedirect = props => {
+  const routeConfiguration = useRouteConfiguration();
   const { name, search, state, params, push } = props;
-  const pathname = pathByRouteName(name, routeConfiguration(), params);
+  const pathname = pathByRouteName(name, routeConfiguration, params);
   return <Redirect to={{ pathname, search, state }} push={push} />;
 };
 

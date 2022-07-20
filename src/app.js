@@ -90,24 +90,34 @@ const setupLocale = () => {
   moment.locale(config.locale);
 };
 
+const getRouteConfiguration = () => {
+  const pageVariantConfig = {
+    searchPageVariant: config.searchPageVariant,
+    listingPageVariant: config.listingPageVariant,
+  };
+  return routeConfiguration(pageVariantConfig);
+};
+
 export const ClientApp = props => {
   const { store, hostedTranslations = {} } = props;
   setupLocale();
   return (
-    <IntlProvider
-      locale={config.locale}
-      messages={{ ...localeMessages, ...hostedTranslations }}
-      textComponent="span"
-    >
-      <Provider store={store}>
-        <HelmetProvider>
-          <IncludeMapLibraryScripts />
-          <BrowserRouter>
-            <Routes routes={routeConfiguration()} />
-          </BrowserRouter>
-        </HelmetProvider>
-      </Provider>
-    </IntlProvider>
+    <RouteConfigurationProvider value={getRouteConfiguration()}>
+      <IntlProvider
+        locale={config.locale}
+        messages={{ ...localeMessages, ...hostedTranslations }}
+        textComponent="span"
+      >
+        <Provider store={store}>
+          <HelmetProvider>
+            <IncludeMapLibraryScripts />
+            <BrowserRouter>
+              <Routes />
+            </BrowserRouter>
+          </HelmetProvider>
+        </Provider>
+      </IntlProvider>
+    </RouteConfigurationProvider>
   );
 };
 
@@ -120,20 +130,22 @@ export const ServerApp = props => {
   setupLocale();
   HelmetProvider.canUseDOM = false;
   return (
-    <IntlProvider
-      locale={config.locale}
-      messages={{ ...localeMessages, ...hostedTranslations }}
-      textComponent="span"
-    >
-      <Provider store={store}>
-        <HelmetProvider context={helmetContext}>
-          <IncludeMapLibraryScripts />
-          <StaticRouter location={url} context={context}>
-            <Routes routes={routeConfiguration()} />
-          </StaticRouter>
-        </HelmetProvider>
-      </Provider>
-    </IntlProvider>
+    <RouteConfigurationProvider value={getRouteConfiguration()}>
+      <IntlProvider
+        locale={config.locale}
+        messages={{ ...localeMessages, ...hostedTranslations }}
+        textComponent="span"
+      >
+        <Provider store={store}>
+          <HelmetProvider context={helmetContext}>
+            <IncludeMapLibraryScripts />
+            <StaticRouter location={url} context={context}>
+              <Routes />
+            </StaticRouter>
+          </HelmetProvider>
+        </Provider>
+      </IntlProvider>
+    </RouteConfigurationProvider>
   );
 };
 

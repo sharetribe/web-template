@@ -4,7 +4,6 @@ import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
 import { createResourceLocatorString } from '../../util/routes';
 import { isAnyFilterActive, parseSelectFilterOptions, isOriginInUse } from '../../util/search';
 import { createSlug, parse, stringify } from '../../util/urlHelpers';
-import routeConfiguration from '../../routing/routeConfiguration';
 
 /**
  * Create the name of the query parameter.
@@ -350,7 +349,7 @@ export const groupExtendedDataConfigs = (configs, activeProcesses) =>
     [[], []]
   );
 
-export const createSearchResultSchema = (listings, mainSearchData, intl) => {
+export const createSearchResultSchema = (listings, mainSearchData, intl, routeConfiguration) => {
   // Schema for search engines (helps them to understand what this page is about)
   // http://schema.org
   // We are using JSON-LD format
@@ -367,7 +366,7 @@ export const createSearchResultSchema = (listings, mainSearchData, intl) => {
 
   const schemaListings = listings.map((l, i) => {
     const title = l.attributes.title;
-    const pathToItem = createResourceLocatorString('ListingPage', routeConfiguration(), {
+    const pathToItem = createResourceLocatorString('ListingPage', routeConfiguration, {
       id: l.id.uuid,
       slug: createSlug(title),
     });

@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 
 import config from '../../../config';
-import routeConfiguration from '../../../routing/routeConfiguration';
+import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
 import {
   LISTING_STATE_PENDING_APPROVAL,
@@ -110,6 +110,7 @@ const formatTitle = (title, maxLength) => {
 };
 
 export const ManageListingCardComponent = props => {
+  const routeConfiguration = useRouteConfiguration();
   const {
     className,
     rootClassName,
@@ -153,7 +154,7 @@ export const ManageListingCardComponent = props => {
 
   const onOverListingLink = () => {
     // Enforce preloading of ListingPage (loadable component)
-    const { component: Page } = findRouteByRouteName('ListingPage', routeConfiguration());
+    const { component: Page } = findRouteByRouteName('ListingPage', routeConfiguration);
     // Loadable Component has a "preload" function.
     if (Page.preload) {
       Page.preload();
@@ -188,7 +189,7 @@ export const ManageListingCardComponent = props => {
           //
           // NOTE: It might be better to absolute-position those buttons over a card-links.
           // (So, that they have no parent-child relationship - like '<a>bla<a>blaa</a></a>')
-          history.push(createListingURL(routeConfiguration(), listing));
+          history.push(createListingURL(routeConfiguration, listing));
         }}
         onMouseOver={onOverListingLink}
         onTouchStart={onOverListingLink}
@@ -365,7 +366,7 @@ export const ManageListingCardComponent = props => {
               onClick={event => {
                 event.preventDefault();
                 event.stopPropagation();
-                history.push(createListingURL(routeConfiguration(), listing));
+                history.push(createListingURL(routeConfiguration, listing));
               }}
             >
               {formatTitle(title, MAX_LENGTH_FOR_WORDS_IN_TITLE)}

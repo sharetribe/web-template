@@ -22,7 +22,7 @@ import {
   getUpdatedProcessName,
   getProcess,
 } from '../../util/transaction';
-import routeConfiguration from '../../routing/routeConfiguration';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/UI.duck';
@@ -79,6 +79,7 @@ export const TransactionPageComponent = props => {
     isReviewModalOpen: false,
     reviewSubmitted: false,
   });
+  const routeConfiguration = useRouteConfiguration();
   const {
     currentUser,
     initialMessageFailedToTransaction,
@@ -130,9 +131,8 @@ export const TransactionPageComponent = props => {
   };
 
   const redirectToCheckoutPageWithInitialValues = (initialValues, currentListing) => {
-    const routes = routeConfiguration();
     // Customize checkout page state with current listing and selected bookingDates
-    const { setInitialValues } = findRouteByRouteName('CheckoutPage', routes);
+    const { setInitialValues } = findRouteByRouteName('CheckoutPage', routeConfiguration);
     callSetInitialValues(setInitialValues, initialValues);
 
     // Clear previous Stripe errors from store if there is any
@@ -142,7 +142,7 @@ export const TransactionPageComponent = props => {
     history.push(
       createResourceLocatorString(
         'CheckoutPage',
-        routes,
+        routeConfiguration,
         { id: currentListing.id.uuid, slug: createSlug(currentListing.attributes.title) },
         {}
       )

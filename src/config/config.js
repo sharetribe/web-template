@@ -37,7 +37,7 @@ const searchPageVariant = 'list';
 // ListingPage has 2 layout options: 'hero-image' and 'full-image'.
 // - 'hero-image' means a layout where there's a hero section with cropped image in the beginning of the page
 // - 'full-image' shows image carousel, where listing images are shown with the original aspect ratio
-const listingPageLayout = 'full-image';
+const listingPageVariant = 'full-image';
 
 // Should search results be ordered by distance to origin.
 // NOTE 1: This doesn't affect if the main search type is 'keywords'
@@ -232,7 +232,7 @@ const config = {
   },
   mainSearchType,
   searchPageVariant,
-  listingPageLayout,
+  listingPageVariant,
   sortSearchByDistance,
   currency,
   currencyConfig,

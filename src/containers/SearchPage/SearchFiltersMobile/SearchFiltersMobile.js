@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { bool, func, object, node, number, shape, string } from 'prop-types';
+import { bool, func, object, node, number, shape, string, arrayOf } from 'prop-types';
 import classNames from 'classnames';
 import { withRouter } from 'react-router-dom';
 
-import routeConfiguration from '../../../routing/routeConfiguration';
+import { withRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { propTypes } from '../../../util/types';
 import { createResourceLocatorString } from '../../../util/routes';
 
 import { ModalInMobile, Button } from '../../../components';
@@ -31,12 +32,12 @@ class SearchFiltersMobileComponent extends Component {
 
   // Close the filters by clicking cancel, revert to the initial params
   cancelFilters() {
-    const { history, onCloseModal } = this.props;
+    const { history, onCloseModal, routeConfiguration } = this.props;
 
     history.push(
       createResourceLocatorString(
         'SearchPage',
-        routeConfiguration(),
+        routeConfiguration,
         {},
         this.state.initialQueryParams
       )
@@ -182,12 +183,17 @@ SearchFiltersMobileComponent.propTypes = {
   // from injectIntl
   intl: intlShape.isRequired,
 
+  // from withRouteConfiguration
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
+
   // from withRouter
   history: shape({
     push: func.isRequired,
   }).isRequired,
 };
 
-const SearchFiltersMobile = injectIntl(withRouter(SearchFiltersMobileComponent));
+const SearchFiltersMobile = injectIntl(
+  withRouter(withRouteConfiguration(SearchFiltersMobileComponent))
+);
 
 export default SearchFiltersMobile;

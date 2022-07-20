@@ -8,7 +8,8 @@ import classNames from 'classnames';
 
 import config from '../../config';
 import { injectIntl, intlShape, FormattedMessage } from '../../util/reactIntl';
-import routeConfiguration from '../../routing/routeConfiguration';
+import { withRouteConfiguration } from '../../context/routeConfigurationContext';
+
 import { createResourceLocatorString } from '../../util/routes';
 import { isAnyFilterActive, isMainSearchTypeKeywords, getQueryParamNames } from '../../util/search';
 import { parse } from '../../util/urlHelpers';
@@ -80,7 +81,12 @@ export class SearchPageComponent extends Component {
 
   // Reset all filter query parameters
   resetAll(e) {
-    const { history, listingExtendedDataConfig, defaultFiltersConfig } = this.props;
+    const {
+      history,
+      routeConfiguration,
+      listingExtendedDataConfig,
+      defaultFiltersConfig,
+    } = this.props;
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
     const filterQueryParamNames = getQueryParamNames(
       listingExtendedDataConfig,
@@ -92,11 +98,17 @@ export class SearchPageComponent extends Component {
 
     // Reset routing params
     const queryParams = omit(urlQueryParams, filterQueryParamNames);
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, queryParams));
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams));
   }
 
   getHandleChangedValueFn(useHistoryPush) {
-    const { history, sortConfig, listingExtendedDataConfig, defaultFiltersConfig } = this.props;
+    const {
+      history,
+      routeConfiguration,
+      sortConfig,
+      listingExtendedDataConfig,
+      defaultFiltersConfig,
+    } = this.props;
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
     return updatedURLParams => {
@@ -129,7 +141,7 @@ export class SearchPageComponent extends Component {
             defaultFiltersConfig,
             sortConfig
           );
-          history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, search));
+          history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, search));
         }
       };
 
@@ -138,14 +150,14 @@ export class SearchPageComponent extends Component {
   }
 
   handleSortBy(urlParam, values) {
-    const { history } = this.props;
+    const { history, routeConfiguration } = this.props;
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
     const queryParams = values
       ? { ...urlQueryParams, [urlParam]: values }
       : omit(urlQueryParams, urlParam);
 
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, queryParams));
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams));
   }
 
   // Reset all filter query parameters
@@ -173,6 +185,7 @@ export class SearchPageComponent extends Component {
       searchInProgress,
       searchListingsError,
       searchParams,
+      routeConfiguration,
     } = this.props;
 
     // Page transition might initially use values from previous search
@@ -261,7 +274,8 @@ export class SearchPageComponent extends Component {
     const { title, description, schema } = createSearchResultSchema(
       listings,
       searchParamsInURL || {},
-      intl
+      intl,
+      routeConfiguration
     );
 
     // Set topbar class based on if a modal is open in
@@ -454,7 +468,8 @@ const SearchPage = compose(
     mapStateToProps,
     mapDispatchToProps
   ),
-  injectIntl
+  injectIntl,
+  withRouteConfiguration
 )(SearchPageComponent);
 
 export default SearchPage;

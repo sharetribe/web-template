@@ -1,11 +1,11 @@
 import React, { Component, useEffect } from 'react';
-import { array, bool, func, number, object, oneOf, shape, string } from 'prop-types';
+import { array, arrayOf, bool, func, number, object, oneOf, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import classNames from 'classnames';
 
 // Import configs and util modules
 import config from '../../../config';
-import routeConfiguration from '../../../routing/routeConfiguration';
+import { withRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { createResourceLocatorString } from '../../../util/routes';
 import { withViewport } from '../../../util/contextHelpers';
@@ -353,6 +353,7 @@ class EditListingWizard extends Component {
       stripeAccountError,
       stripeAccountLinkError,
       currentUser,
+      routeConfiguration,
       ...rest
     } = this.props;
 
@@ -409,18 +410,17 @@ class EditListingWizard extends Component {
     const stripeConnected = currentUserLoaded && !!stripeAccount && !!stripeAccount.id;
 
     const rootURL = config.canonicalRootURL;
-    const routes = routeConfiguration();
     const { returnURLType, ...pathParams } = params;
     const successURL = createReturnURL(
       STRIPE_ONBOARDING_RETURN_URL_SUCCESS,
       rootURL,
-      routes,
+      routeConfiguration,
       pathParams
     );
     const failureURL = createReturnURL(
       STRIPE_ONBOARDING_RETURN_URL_FAILURE,
       rootURL,
-      routes,
+      routeConfiguration,
       pathParams
     );
 
@@ -628,9 +628,13 @@ EditListingWizard.propTypes = {
 
   // from injectIntl
   intl: intlShape.isRequired,
+
+  // from withRouteConfiguration
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
 export default compose(
   withViewport,
-  injectIntl
+  injectIntl,
+  withRouteConfiguration
 )(EditListingWizard);
