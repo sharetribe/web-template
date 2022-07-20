@@ -216,11 +216,12 @@ const StripeConnectAccountFormComponent = props => {
   const [showCardUpdateInput, setShowCardUpdateInput] = useState(false);
   const { onSubmit, ...restOfProps } = props;
   const isUpdate = props.stripeConnected;
+  const stripePublishableKey = config.stripe.publishableKey;
 
   return (
     <FinalForm
       {...restOfProps}
-      onSubmit={values => onSubmit(values, isUpdate)}
+      onSubmit={values => onSubmit({ ...values, stripePublishableKey }, isUpdate)}
       mutators={{
         ...arrayMutators,
       }}

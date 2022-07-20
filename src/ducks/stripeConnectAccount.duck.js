@@ -1,6 +1,5 @@
 // This file deals with Flex API which will create Stripe Custom Connect accounts
 // from given bank_account tokens.
-import config from '../config';
 import { storableError } from '../util/errors';
 import * as log from '../util/log';
 
@@ -160,9 +159,15 @@ export const createStripeAccount = params => (dispatch, getState, sdk) => {
   if (typeof window === 'undefined' || !window.Stripe) {
     throw new Error('Stripe must be loaded for submitting PayoutPreferences');
   }
-  const stripe = window.Stripe(config.stripe.publishableKey);
-
-  const { country, accountType, bankAccountToken, businessProfileMCC, businessProfileURL } = params;
+  const {
+    country,
+    accountType,
+    bankAccountToken,
+    businessProfileMCC,
+    businessProfileURL,
+    stripePublishableKey,
+  } = params;
+  const stripe = window.Stripe(stripePublishableKey);
 
   // Capabilities are a collection of settings that can be requested for each provider.
   // What Capabilities are required determines what information Stripe requires to be
@@ -220,7 +225,7 @@ export const createStripeAccount = params => (dispatch, getState, sdk) => {
 // See API reference for more information:
 // https://www.sharetribe.com/api-reference/?javascript#update-stripe-account
 export const updateStripeAccount = params => (dispatch, getState, sdk) => {
-  const bankAccountToken = params.bankAccountToken;
+  const { bankAccountToken } = params;
 
   dispatch(stripeAccountUpdateRequest());
   return sdk.stripeAccount
