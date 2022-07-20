@@ -7,7 +7,7 @@ import classNames from 'classnames';
 
 import config from '../../config';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import routeConfiguration from '../../routing/routeConfiguration';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { createResourceLocatorString } from '../../util/routes';
 import { isStripeError } from '../../util/errors';
 import * as validators from '../../util/validators';
@@ -42,6 +42,7 @@ const countryCurrency = countryCode => {
 };
 
 const CreateStripeAccountFields = props => {
+  const routeConfiguration = useRouteConfiguration();
   const { disabled, countryLabel, showAsRequired, form, values, intl, currentUserId } = props;
 
   /*
@@ -66,7 +67,7 @@ const CreateStripeAccountFields = props => {
   // because Stripe will not allow passing a localhost URL
   if (!hasBusinessURL && currentUserId) {
     const pathToProfilePage = uuid =>
-      createResourceLocatorString('ProfilePage', routeConfiguration(), { id: uuid }, {});
+      createResourceLocatorString('ProfilePage', routeConfiguration, { id: uuid }, {});
     const hasCanonicalRootUrl = config && config.canonicalRootURL;
     const rootUrl = hasCanonicalRootUrl ? config.canonicalRootURL.replace(/\/$/, '') : null;
     const defaultBusinessURL =

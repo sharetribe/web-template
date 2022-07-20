@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { bool, func, string } from 'prop-types';
+import { arrayOf, bool, func, string } from 'prop-types';
 import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import routeConfiguration from '../../routing/routeConfiguration';
+import { withRouteConfiguration } from '../../context/routeConfigurationContext';
+
 import { ensureCurrentUser } from '../../util/data';
 import { propTypes } from '../../util/types';
 import { pathByRouteName } from '../../util/routes';
@@ -52,7 +53,7 @@ class ModalMissingInformation extends Component {
     currentUserHasOrders,
     newLocation
   ) {
-    const routes = routeConfiguration();
+    const routes = this.props.routeConfiguration;
     const whitelistedPaths = MISSING_INFORMATION_MODAL_WHITELIST.map(page =>
       pathByRouteName(page, routes)
     );
@@ -165,8 +166,11 @@ ModalMissingInformation.propTypes = {
   onManageDisableScrolling: func.isRequired,
   sendVerificationEmailError: propTypes.error,
   sendVerificationEmailInProgress: bool.isRequired,
+
+  // from withRouteConfiguration
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
 ModalMissingInformation.displayName = 'ModalMissingInformation';
 
-export default ModalMissingInformation;
+export default withRouteConfiguration(ModalMissingInformation);

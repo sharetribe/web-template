@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 
 import config from '../../../config';
-import routeConfiguration from '../../../routing/routeConfiguration';
+import { withRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { createResourceLocatorString } from '../../../util/routes';
 import { createSlug } from '../../../util/urlHelpers';
 import { propTypes } from '../../../util/types';
@@ -33,7 +33,7 @@ const withCoordinatesObfuscated = listings => {
     const { id, attributes, ...rest } = listing;
     const origGeolocation = attributes.geolocation;
     const cacheKey = id ? `${id.uuid}_${origGeolocation.lat}_${origGeolocation.lng}` : null;
-    const geolocation = obfuscatedCoordinates(origGeolocation, cacheKey);
+    const geolocation = obfuscatedCoordinates(origGeolocation, config.maps.fuzzy.offset, cacheKey);
     return {
       id,
       ...rest,
@@ -76,7 +76,7 @@ export class SearchMapComponent extends Component {
   }
 
   createURLToListing(listing) {
-    const routes = routeConfiguration();
+    const routes = this.props.routeConfiguration;
 
     const id = listing.id.uuid;
     const slug = createSlug(listing.attributes.title);
@@ -215,13 +215,16 @@ SearchMapComponent.propTypes = {
   mapsConfig: object,
   messages: object.isRequired,
 
+  // from withRouteConfiguration
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
+
   // from withRouter
   history: shape({
     push: func.isRequired,
   }).isRequired,
 };
 
-const SearchMap = withRouter(SearchMapComponent);
+const SearchMap = withRouteConfiguration(withRouter(SearchMapComponent));
 
 SearchMap.getMapBounds = getMapBounds;
 SearchMap.getMapCenter = getMapCenter;

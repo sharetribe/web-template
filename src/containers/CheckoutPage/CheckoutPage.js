@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { bool, func, object, oneOfType, shape, string } from 'prop-types';
+import { arrayOf, bool, func, object, oneOfType, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -8,7 +8,7 @@ import classNames from 'classnames';
 // Import configs and util modules
 import config from '../../config';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import routeConfiguration from '../../routing/routeConfiguration';
+import { withRouteConfiguration } from '../../context/routeConfigurationContext';
 import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
 import {
   propTypes,
@@ -544,7 +544,14 @@ export class CheckoutPageComponent extends Component {
     }
     this.setState({ submitting: true });
 
-    const { history, speculatedTransaction, currentUser, paymentIntent, dispatch } = this.props;
+    const {
+      history,
+      routeConfiguration,
+      speculatedTransaction,
+      currentUser,
+      paymentIntent,
+      dispatch,
+    } = this.props;
     const { card, message, paymentMethod, formValues } = values;
     const {
       name,
@@ -624,15 +631,16 @@ export class CheckoutPageComponent extends Component {
         const { orderId, messageSuccess, paymentMethodSaved } = res;
         this.setState({ submitting: false });
 
-        const routes = routeConfiguration();
         const initialMessageFailedToTransaction = messageSuccess ? null : orderId;
-        const orderDetailsPath = pathByRouteName('OrderDetailsPage', routes, { id: orderId.uuid });
+        const orderDetailsPath = pathByRouteName('OrderDetailsPage', routeConfiguration, {
+          id: orderId.uuid,
+        });
         const initialValues = {
           initialMessageFailedToTransaction,
           savePaymentMethodFailed: !paymentMethodSaved,
         };
 
-        initializeOrderPage(initialValues, routes, dispatch);
+        initializeOrderPage(initialValues, routeConfiguration, dispatch);
         clearData(STORAGE_KEY);
         history.push(orderDetailsPath);
       })
@@ -1015,6 +1023,9 @@ CheckoutPageComponent.propTypes = {
   // from injectIntl
   intl: intlShape.isRequired,
 
+  // from withRouteConfiguration
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
+
   // from withRouter
   history: shape({
     push: func.isRequired,
@@ -1075,7 +1086,8 @@ const CheckoutPage = compose(
     mapStateToProps,
     mapDispatchToProps
   ),
-  injectIntl
+  injectIntl,
+  withRouteConfiguration
 )(CheckoutPageComponent);
 
 CheckoutPage.setInitialValues = (initialValues, saveToSessionStorage = false) => {

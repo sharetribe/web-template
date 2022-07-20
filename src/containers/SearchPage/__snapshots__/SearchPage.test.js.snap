@@ -141,7 +141,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
       <div
         className="searchResultContainer"
       >
-        <injectIntl(withRouter(SearchFiltersMobileComponent))
+        <injectIntl(withRouter(withRouteConfiguration(SearchFiltersMobileComponent)))
           className="searchFiltersMobileList"
           isMapVariant={false}
           listingsAreLoaded={true}
@@ -266,7 +266,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
             showAsPopup={false}
             urlQueryParams={Object {}}
           />
-        </injectIntl(withRouter(SearchFiltersMobileComponent))>
+        </injectIntl(withRouter(withRouteConfiguration(SearchFiltersMobileComponent)))>
         <MainPanelHeader
           className="mainPanel"
           listingsAreLoaded={true}

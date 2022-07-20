@@ -9,7 +9,8 @@ import classNames from 'classnames';
 
 import config from '../../config';
 import { injectIntl, intlShape, FormattedMessage } from '../../util/reactIntl';
-import routeConfiguration from '../../routing/routeConfiguration';
+import { withRouteConfiguration } from '../../context/routeConfigurationContext';
+
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
 import {
   isAnyFilterActive,
@@ -86,7 +87,7 @@ export class SearchPageComponent extends Component {
   onMapMoveEnd(viewportBoundsChanged, data) {
     const { viewportBounds, viewportCenter } = data;
 
-    const routes = routeConfiguration();
+    const routes = this.props.routeConfiguration;
     const searchPagePath = pathByRouteName('SearchPage', routes);
     const currentPath =
       typeof window !== 'undefined' && window.location && window.location.pathname;
@@ -136,7 +137,13 @@ export class SearchPageComponent extends Component {
 
   // Apply the filters by redirecting to SearchPage with new filters.
   applyFilters() {
-    const { history, sortConfig, listingExtendedDataConfig, defaultFiltersConfig } = this.props;
+    const {
+      history,
+      routeConfiguration,
+      sortConfig,
+      listingExtendedDataConfig,
+      defaultFiltersConfig,
+    } = this.props;
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
     const searchParams = { ...urlQueryParams, ...this.state.currentQueryParams };
     const search = cleanSearchFromConflictingParams(
@@ -146,7 +153,7 @@ export class SearchPageComponent extends Component {
       sortConfig
     );
 
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, search));
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, search));
   }
 
   // Close the filters by clicking cancel, revert to the initial params
@@ -156,7 +163,12 @@ export class SearchPageComponent extends Component {
 
   // Reset all filter query parameters
   resetAll(e) {
-    const { history, listingExtendedDataConfig, defaultFiltersConfig } = this.props;
+    const {
+      history,
+      routeConfiguration,
+      listingExtendedDataConfig,
+      defaultFiltersConfig,
+    } = this.props;
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
     const filterQueryParamNames = getQueryParamNames(
       listingExtendedDataConfig,
@@ -168,11 +180,17 @@ export class SearchPageComponent extends Component {
 
     // Reset routing params
     const queryParams = omit(urlQueryParams, filterQueryParamNames);
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, queryParams));
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams));
   }
 
   getHandleChangedValueFn(useHistoryPush) {
-    const { history, sortConfig, listingExtendedDataConfig, defaultFiltersConfig } = this.props;
+    const {
+      history,
+      routeConfiguration,
+      sortConfig,
+      listingExtendedDataConfig,
+      defaultFiltersConfig,
+    } = this.props;
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
     return updatedURLParams => {
@@ -205,7 +223,7 @@ export class SearchPageComponent extends Component {
             defaultFiltersConfig,
             sortConfig
           );
-          history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, search));
+          history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, search));
         }
       };
 
@@ -214,14 +232,14 @@ export class SearchPageComponent extends Component {
   }
 
   handleSortBy(urlParam, values) {
-    const { history } = this.props;
+    const { history, routeConfiguration } = this.props;
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
     const queryParams = values
       ? { ...urlQueryParams, [urlParam]: values }
       : omit(urlQueryParams, urlParam);
 
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, queryParams));
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams));
   }
 
   render() {
@@ -233,6 +251,7 @@ export class SearchPageComponent extends Component {
       defaultFiltersConfig,
       sortConfig,
       location,
+      routeConfiguration,
       onManageDisableScrolling,
       pagination,
       scrollingDisabled,
@@ -355,7 +374,8 @@ export class SearchPageComponent extends Component {
     const { title, description, schema } = createSearchResultSchema(
       listings,
       searchParamsInURL || {},
-      intl
+      intl,
+      routeConfiguration
     );
 
     // Set topbar class based on if a modal is open in
@@ -599,7 +619,8 @@ const SearchPage = compose(
     mapStateToProps,
     mapDispatchToProps
   ),
-  injectIntl
+  injectIntl,
+  withRouteConfiguration
 )(SearchPageComponent);
 
 export default SearchPage;

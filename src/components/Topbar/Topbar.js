@@ -5,7 +5,8 @@ import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
 
 import config from '../../config';
-import routeConfiguration from '../../routing/routeConfiguration';
+import { withRouteConfiguration } from '../../context/routeConfigurationContext';
+
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { isMainSearchTypeKeywords, isOriginInUse } from '../../util/search';
 import { withViewport } from '../../util/contextHelpers';
@@ -100,7 +101,7 @@ class TopbarComponent extends Component {
 
   handleSubmit(values) {
     const { currentSearchParams } = this.props;
-    const { history } = this.props;
+    const { history, routeConfiguration } = this.props;
 
     const topbarSearchParams = () => {
       if (isMainSearchTypeKeywords(config)) {
@@ -121,13 +122,13 @@ class TopbarComponent extends Component {
       ...currentSearchParams,
       ...topbarSearchParams(),
     };
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, searchParams));
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
   }
 
   handleLogout() {
-    const { onLogout, history } = this.props;
+    const { onLogout, history, routeConfiguration } = this.props;
     onLogout().then(() => {
-      const path = pathByRouteName('LandingPage', routeConfiguration());
+      const path = pathByRouteName('LandingPage', routeConfiguration);
 
       // In production we ensure that data is really lost,
       // but in development mode we use stored values for debugging
@@ -363,7 +364,8 @@ TopbarComponent.propTypes = {
 
 const Topbar = compose(
   withViewport,
-  injectIntl
+  injectIntl,
+  withRouteConfiguration
 )(TopbarComponent);
 
 Topbar.displayName = 'Topbar';

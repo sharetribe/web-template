@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import config from '../../config';
-import routeConfiguration from '../../routing/routeConfiguration';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { createResourceLocatorString } from '../../util/routes';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { ensureCurrentUser } from '../../util/data';
@@ -79,6 +79,7 @@ const handleGetStripeConnectAccountLinkFn = (getLinkFn, commonParams) => type =>
 };
 
 export const StripePayoutPageComponent = props => {
+  const routes = useRouteConfiguration();
   const {
     currentUser,
     scrollingDisabled,
@@ -108,7 +109,6 @@ export const StripePayoutPageComponent = props => {
   const formDisabled = getAccountLinkInProgress;
 
   const rootURL = config.canonicalRootURL;
-  const routes = routeConfiguration();
   const successURL = createReturnURL(STRIPE_ONBOARDING_RETURN_URL_SUCCESS, rootURL, routes);
   const failureURL = createReturnURL(STRIPE_ONBOARDING_RETURN_URL_FAILURE, rootURL, routes);
 

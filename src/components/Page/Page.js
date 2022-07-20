@@ -1,14 +1,26 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import {
+  any,
+  array,
+  arrayOf,
+  bool,
+  func,
+  number,
+  object,
+  oneOfType,
+  shape,
+  string,
+} from 'prop-types';
 import { Helmet } from 'react-helmet-async';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 
 import config from '../../config';
-import routeConfiguration from '../../routing/routeConfiguration';
+import { withRouteConfiguration } from '../../context/routeConfigurationContext';
 import { injectIntl, intlShape } from '../../util/reactIntl';
 import { metaTagProps } from '../../util/seo';
 import { canonicalRoutePath } from '../../util/routes';
+import { propTypes } from '../../util/types';
 
 import { CookieConsent } from '../../components';
 
@@ -90,6 +102,7 @@ class PageComponent extends Component {
       twitterHandle,
       twitterImages,
       updated,
+      routeConfiguration,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className, {
@@ -101,7 +114,7 @@ class PageComponent extends Component {
 
     const canonicalRootURL = config.canonicalRootURL;
     const shouldReturnPathOnly = referrer && referrer !== 'unsafe-url';
-    const canonicalPath = canonicalRoutePath(routeConfiguration(), location, shouldReturnPathOnly);
+    const canonicalPath = canonicalRoutePath(routeConfiguration, location, shouldReturnPathOnly);
     const canonicalUrl = `${canonicalRootURL}${canonicalPath}`;
 
     const siteTitle = config.siteTitle;
@@ -226,8 +239,6 @@ class PageComponent extends Component {
   }
 }
 
-const { any, array, arrayOf, bool, func, number, object, oneOfType, shape, string } = PropTypes;
-
 PageComponent.defaultProps = {
   className: null,
   rootClassName: null,
@@ -279,6 +290,9 @@ PageComponent.propTypes = {
   twitterHandle: string, // twitter handle
   updated: string, // article:modified_time
 
+  // from withRouteConfiguration
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
+
   // from withRouter
   history: shape({
     listen: func.isRequired,
@@ -289,7 +303,7 @@ PageComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-const Page = injectIntl(withRouter(PageComponent));
+const Page = injectIntl(withRouter(withRouteConfiguration(PageComponent)));
 Page.displayName = 'Page';
 
 export default Page;

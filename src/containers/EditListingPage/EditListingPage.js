@@ -250,7 +250,14 @@ export const EditListingPageComponent = props => {
       id: 'EditListingPage.loadingListingData',
     };
     return (
-      <Page title={intl.formatMessage(loadingPageMsg)} scrollingDisabled={scrollingDisabled} />
+      <Page title={intl.formatMessage(loadingPageMsg)} scrollingDisabled={scrollingDisabled}>
+        <TopbarContainer
+          className={css.topbar}
+          mobileRootClassName={css.mobileTopbar}
+          desktopClassName={css.desktopTopbar}
+          mobileClassName={css.mobileTopbar}
+        />
+      </Page>
     );
   }
 };

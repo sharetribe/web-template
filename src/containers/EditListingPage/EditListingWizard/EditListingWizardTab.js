@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Import configs and util modules
-import routeConfiguration from '../../../routing/routeConfiguration';
+import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_NEW,
@@ -51,14 +51,13 @@ const pathParamsToNextTab = (params, tab, marketplaceTabs) => {
 };
 
 // When user has update draft listing, he should be redirected to next EditListingWizardTab
-const redirectAfterDraftUpdate = (listingId, params, tab, marketplaceTabs, history) => {
+const redirectAfterDraftUpdate = (listingId, params, tab, marketplaceTabs, history, routes) => {
   const listingUUID = listingId.uuid;
   const currentPathParams = {
     ...params,
     type: LISTING_PAGE_PARAM_TYPE_DRAFT,
     id: listingUUID,
   };
-  const routes = routeConfiguration();
 
   // Replace current "new" path to "draft" path.
   // Browser's back button should lead to editing current draft instead of creating a new one.
@@ -74,6 +73,7 @@ const redirectAfterDraftUpdate = (listingId, params, tab, marketplaceTabs, histo
 };
 
 const EditListingWizardTab = props => {
+  const routeConfiguration = useRouteConfiguration();
   const {
     tab,
     marketplaceTabs,
@@ -116,7 +116,14 @@ const EditListingWizardTab = props => {
       handleCreateFlowTabScrolling(false);
 
       // After successful saving of draft data, user should be redirected to next tab
-      redirectAfterDraftUpdate(listingId, params, tab, marketplaceTabs, history);
+      redirectAfterDraftUpdate(
+        listingId,
+        params,
+        tab,
+        marketplaceTabs,
+        history,
+        routeConfiguration
+      );
     } else {
       handlePublishListing(listingId);
     }
@@ -186,7 +193,14 @@ const EditListingWizardTab = props => {
           onAddAvailabilityException={onAddAvailabilityException}
           onDeleteAvailabilityException={onDeleteAvailabilityException}
           onNextTab={() =>
-            redirectAfterDraftUpdate(listing.id.uuid, params, tab, marketplaceTabs, history)
+            redirectAfterDraftUpdate(
+              listing.id.uuid,
+              params,
+              tab,
+              marketplaceTabs,
+              history,
+              routeConfiguration
+            )
           }
           {...panelProps(AVAILABILITY)}
         />

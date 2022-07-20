@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from 'react-router-dom';
 
-import routeConfiguration from '../routing/routeConfiguration';
+import { useRouteConfiguration } from '../context/routeConfigurationContext';
 import { propTypes } from '../util/types';
 import * as log from '../util/log';
 import { canonicalRoutePath } from '../util/routes';
@@ -66,9 +66,9 @@ const setPageScrollPosition = location => {
   }
 };
 
-const handleLocationChanged = (dispatch, location) => {
+const handleLocationChanged = (dispatch, location, routeConfiguration) => {
   setPageScrollPosition(location);
-  const path = canonicalRoutePath(routeConfiguration(), location);
+  const path = canonicalRoutePath(routeConfiguration, location);
   dispatch(locationChanged(location, path));
 };
 
@@ -82,12 +82,14 @@ const handleLocationChanged = (dispatch, location) => {
  */
 class RouteComponentRenderer extends Component {
   componentDidMount() {
+    const { dispatch, location, routeConfiguration } = this.props;
     // Calling loadData on initial rendering (on client side).
     callLoadData(this.props);
-    handleLocationChanged(this.props.dispatch, this.props.location);
+    handleLocationChanged(dispatch, location, routeConfiguration);
   }
 
   componentDidUpdate(prevProps) {
+    const { dispatch, location, routeConfiguration } = this.props;
     // Call for handleLocationChanged affects store/state
     // and it generates an unnecessary update.
     if (prevProps.location !== this.props.location) {
@@ -95,7 +97,7 @@ class RouteComponentRenderer extends Component {
       // This makes it possible to use loadData as default client side data loading technique.
       // However it is better to fetch data before location change to avoid "Loading data" state.
       callLoadData(this.props);
-      handleLocationChanged(this.props.dispatch, this.props.location);
+      handleLocationChanged(dispatch, location, routeConfiguration);
     }
   }
 
@@ -125,6 +127,7 @@ RouteComponentRenderer.propTypes = {
   isAuthenticated: bool.isRequired,
   logoutInProgress: bool.isRequired,
   route: propTypes.route.isRequired,
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
   match: shape({
     params: object.isRequired,
     url: string.isRequired,
@@ -153,13 +156,15 @@ const RouteComponentContainer = compose(connect(mapStateToProps))(RouteComponent
  * </Switch>
  */
 const Routes = (props, context) => {
-  const { isAuthenticated, logoutInProgress, routes } = props;
+  const routeConfiguration = useRouteConfiguration();
+  const { isAuthenticated, logoutInProgress } = props;
 
   const toRouteComponent = route => {
     const renderProps = {
       isAuthenticated,
       logoutInProgress,
       route,
+      routeConfiguration,
     };
 
     // By default, our routes are exact.
@@ -182,19 +187,12 @@ const Routes = (props, context) => {
     );
   };
 
-  // N.B. routes prop within React Router needs to stay the same,
-  // so that React is is not rerendering page component.
-  // That's why we pass-in props.routes instead of calling routeConfiguration here.
   return (
     <Switch>
-      {routes.map(toRouteComponent)}
+      {routeConfiguration.map(toRouteComponent)}
       <Route component={NotFoundPage} />
     </Switch>
   );
-};
-
-Routes.propTypes = {
-  routes: arrayOf(propTypes.route).isRequired,
 };
 
 export default withRouter(Routes);
