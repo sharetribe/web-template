@@ -214,8 +214,7 @@ const routeConfiguration = (pageVariantConfig) => {
       authPage: 'LoginPage',
       component: TransactionPage,
       extraProps: { transactionRole: 'customer' },
-      loadData: params =>
-        pageDataLoadingAPI.TransactionPage.loadData({ ...params, transactionRole: 'customer' }),
+      loadData: pageDataLoadingAPI.TransactionPage.loadData,
       setInitialValues: pageDataLoadingAPI.TransactionPage.setInitialValues,
     },
     {
@@ -232,8 +231,7 @@ const routeConfiguration = (pageVariantConfig) => {
       authPage: 'LoginPage',
       component: TransactionPage,
       extraProps: { transactionRole: 'provider' },
-      loadData: params =>
-        pageDataLoadingAPI.TransactionPage.loadData({ ...params, transactionRole: 'provider' }),
+      loadData: pageDataLoadingAPI.TransactionPage.loadData,
     },
     {
       path: '/listings',
