@@ -8,6 +8,8 @@ import { useRouteConfiguration } from '../context/routeConfigurationContext';
 import { propTypes } from '../util/types';
 import * as log from '../util/log';
 import { canonicalRoutePath } from '../util/routes';
+import { useConfiguration } from '../context/configurationContext';
+
 import { locationChanged } from '../ducks/Routing.duck';
 
 import { NamedRedirect } from '../components';
@@ -22,13 +24,13 @@ const canShowComponent = props => {
 };
 
 const callLoadData = props => {
-  const { match, location, route, dispatch, logoutInProgress } = props;
+  const { match, location, route, dispatch, logoutInProgress, config } = props;
   const { loadData, name } = route;
   const shouldLoadData =
     typeof loadData === 'function' && canShowComponent(props) && !logoutInProgress;
 
   if (shouldLoadData) {
-    dispatch(loadData(match.params, location.search))
+    dispatch(loadData(match.params, location.search, config))
       .then(() => {
         // eslint-disable-next-line no-console
         console.log(`loadData success for ${name} route`);
@@ -157,6 +159,7 @@ const RouteComponentContainer = compose(connect(mapStateToProps))(RouteComponent
  */
 const Routes = (props, context) => {
   const routeConfiguration = useRouteConfiguration();
+  const config = useConfiguration();
   const { isAuthenticated, logoutInProgress } = props;
 
   const toRouteComponent = route => {
@@ -165,6 +168,7 @@ const Routes = (props, context) => {
       logoutInProgress,
       route,
       routeConfiguration,
+      config,
     };
 
     // By default, our routes are exact.

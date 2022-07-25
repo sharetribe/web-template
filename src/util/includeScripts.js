@@ -5,13 +5,14 @@ const MAPBOX_SCRIPT_ID = 'mapbox_GL_JS';
 const GOOGLE_MAPS_SCRIPT_ID = 'GoogleMapsApi';
 
 /**
- * Include Map Provider scripts.
+ * Include scripts (like Map Provider).
  * These scripts are relevant for whole application: location search in Topbar and maps on different pages.
  * However, if you don't need location search and maps, you can just omit this component from app.js
  * Note: another common point to add <scripts>, <links> and <meta> tags is Page.js
  */
-export const IncludeMapLibraryScripts = props => {
-  const { rootURL, mapProvider, googleMapsAPIKey, mapboxAccessToken } = props;
+export const IncludeScripts = props => {
+  const { canonicalRootURL: rootURL, maps } = props?.config || {};
+  const { mapProvider, googleMapsAPIKey, mapboxAccessToken } = maps || {};
   const isGoogleMapsInUse = mapProvider === 'GOOGLE_MAPS';
   const isMapboxInUse = mapProvider === 'MAPBOX';
 

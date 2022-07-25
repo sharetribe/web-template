@@ -14,13 +14,14 @@ import mapValues from 'lodash/mapValues';
 import moment from 'moment';
 
 // Configs and store setup
-import config from './config';
+import { defaultConfig } from './config';
 import configureStore from './store';
 
 // utils
 import { RouteConfigurationProvider } from './context/routeConfigurationContext';
+import { ConfigurationProvider, mergeConfig } from './context/configurationContext';
 import { IntlProvider } from './util/reactIntl';
-import { IncludeMapLibraryScripts } from './util/includeScripts';
+import { IncludeScripts } from './util/includeScripts';
 
 // routing
 import routeConfiguration from './routing/routeConfiguration';
@@ -84,83 +85,76 @@ const localeMessages = isTestEnv
   ? mapValues(defaultMessages, (val, key) => key)
   : addMissingTranslations(defaultMessages, messagesInLocale);
 
-const setupLocale = () => {
+const setupLocale = appConfig => {
   if (isTestEnv) {
     // Use english as a default locale in tests
     // This affects app.test.js and app.node.test.js tests
-    config.locale = 'en';
+    appConfig.locale = 'en';
     return;
   }
 
   // Set the Moment locale globally
   // See: http://momentjs.com/docs/#/i18n/changing-locale/
-  moment.locale(config.locale);
+  moment.locale(appConfig.locale);
 };
 
-// Helper to pick params for IncludeMapLibraryScripts
-const paramsForIncludeScripts = config => {
-  return {
-    rootURL: config.canonicalRootURL,
-    mapProvider: config.maps.mapProvider,
-    googleMapsAPIKey: config.maps.googleMapsAPIKey,
-    mapboxAccessToken: config.maps.mapboxAccessToken,
-  };
-};
-
-const getRouteConfiguration = () => {
-  const pageVariantConfig = {
-    searchPageVariant: config.searchPageVariant,
-    listingPageVariant: config.listingPageVariant,
-  };
-  return routeConfiguration(pageVariantConfig);
+const Configurations = props => {
+  const { appConfig, children } = props;
+  const routeConfig = routeConfiguration(appConfig.pageVariantConfig);
+  setupLocale(appConfig);
+  return (
+    <ConfigurationProvider value={appConfig}>
+      <RouteConfigurationProvider value={routeConfig}>{children}</RouteConfigurationProvider>
+    </ConfigurationProvider>
+  );
 };
 
 export const ClientApp = props => {
-  const { store, hostedTranslations = {} } = props;
-  setupLocale();
+  const { store, hostedTranslations = {}, hostedConfig = {} } = props;
+  const appConfig = mergeConfig(hostedConfig, defaultConfig);
   return (
-    <RouteConfigurationProvider value={getRouteConfiguration()}>
+    <Configurations appConfig={appConfig}>
       <IntlProvider
-        locale={config.locale}
+        locale={appConfig.locale}
         messages={{ ...localeMessages, ...hostedTranslations }}
         textComponent="span"
       >
         <Provider store={store}>
           <HelmetProvider>
-            <IncludeMapLibraryScripts {...paramsForIncludeScripts(config)} />
+            <IncludeScripts config={appConfig} />
             <BrowserRouter>
               <Routes />
             </BrowserRouter>
           </HelmetProvider>
         </Provider>
       </IntlProvider>
-    </RouteConfigurationProvider>
+    </Configurations>
   );
 };
 
 ClientApp.propTypes = { store: any.isRequired };
 
 export const ServerApp = props => {
-  const { url, context, helmetContext, store, hostedTranslations = {} } = props;
-  setupLocale();
+  const { url, context, helmetContext, store, hostedTranslations = {}, hostedConfig = {} } = props;
+  const appConfig = mergeConfig(hostedConfig, defaultConfig);
   HelmetProvider.canUseDOM = false;
   return (
-    <RouteConfigurationProvider value={getRouteConfiguration()}>
+    <Configurations appConfig={appConfig}>
       <IntlProvider
-        locale={config.locale}
+        locale={appConfig.locale}
         messages={{ ...localeMessages, ...hostedTranslations }}
         textComponent="span"
       >
         <Provider store={store}>
           <HelmetProvider context={helmetContext}>
-            <IncludeMapLibraryScripts {...paramsForIncludeScripts(config)} />
+            <IncludeScripts config={appConfig} />
             <StaticRouter location={url} context={context}>
               <Routes />
             </StaticRouter>
           </HelmetProvider>
         </Provider>
       </IntlProvider>
-    </RouteConfigurationProvider>
+    </Configurations>
   );
 };
 
