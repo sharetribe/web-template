@@ -1,3 +1,6 @@
-import config from './config';
+import appSettings from './appSettings';
+import defaultConfig from './defaultConfig';
+export { defaultConfig, appSettings };
 
-export default config;
+// TODO remove
+export default defaultConfig;
