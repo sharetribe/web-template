@@ -8,6 +8,8 @@ import { Provider } from 'react-redux';
 
 import configureStore from '../store';
 import { IntlProvider } from '../util/reactIntl';
+import { defaultConfig } from '../config';
+import { ConfigurationProvider } from '../context/configurationContext';
 import { RouteConfigurationProvider } from '../context/routeConfigurationContext';
 import routeConfiguration from '../routing/routeConfiguration';
 
@@ -18,7 +20,7 @@ import messages from '../translations/en.json';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-const getRouteConfiguration = () => {
+export const getRouteConfiguration = () => {
   const pageVariantConfig = {
     searchPageVariant: 'map',
     listingPageVariant: 'full-image',
@@ -35,13 +37,15 @@ const testMessages = mapValues(messages, (val, key) => key);
 export const TestProvider = props => {
   const store = configureStore();
   return (
-    <RouteConfigurationProvider value={getRouteConfiguration()}>
-      <IntlProvider locale="en" messages={testMessages} textComponent="span">
-        <BrowserRouter>
-          <Provider store={store}>{props.children}</Provider>
-        </BrowserRouter>
-      </IntlProvider>
-    </RouteConfigurationProvider>
+    <ConfigurationProvider value={defaultConfig}>
+      <RouteConfigurationProvider value={getRouteConfiguration()}>
+        <IntlProvider locale="en" messages={testMessages} textComponent="span">
+          <BrowserRouter>
+            <Provider store={store}>{props.children}</Provider>
+          </BrowserRouter>
+        </IntlProvider>
+      </RouteConfigurationProvider>
+    </ConfigurationProvider>
   );
 };
 
