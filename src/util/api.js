@@ -2,8 +2,8 @@
 // so, they are not directly calling Marketplace API or Integration API.
 // You can find these api endpoints from 'server/api/...' directory
 
+import appSettings from '../config/appSettings';
 import { types as sdkTypes, transit } from './sdkLoader';
-import config from '../config';
 import Decimal from 'decimal.js';
 
 export const apiBaseUrl = () => {
@@ -33,7 +33,7 @@ export const typeHandlers = [
 ];
 
 const serialize = data => {
-  return transit.write(data, { typeHandlers, verbose: config.sdk.transitVerbose });
+  return transit.write(data, { typeHandlers, verbose: appSettings.sdk.transitVerbose });
 };
 
 const deserialize = str => {
