@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import config from '../../config';
+import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 import {
@@ -21,6 +21,7 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import css from './PrivacyPolicyPage.module.css';
 
 const PrivacyPolicyPageComponent = props => {
+  const config = useConfiguration();
   const { scrollingDisabled, intl } = props;
 
   const tabs = [
