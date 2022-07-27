@@ -1,11 +1,14 @@
 import React from 'react';
-import { renderShallow, renderDeep } from '../../util/test-helpers';
-import { fakeIntl } from '../../util/test-data';
-import { AuthenticationPageComponent, AuthenticationForms, SocialLoginButtonsMaybe } from './AuthenticationPage';
+import { renderShallow } from '../../util/test-helpers';
+import {
+  AuthenticationOrConfirmInfoForm,
+  AuthenticationForms,
+  SocialLoginButtonsMaybe,
+} from './AuthenticationPage';
 
 const noop = () => null;
 
-describe('AuthenticationPageComponent', () => {
+describe('AuthenticationOrConfirmInfoForm', () => {
   // We need to overwrite social login client ids before running the test
   // to make sure it's same in local environment and in CI
   beforeEach(() => {
@@ -13,24 +16,43 @@ describe('AuthenticationPageComponent', () => {
     process.env = Object.assign(process.env, { REACT_APP_GOOGLE_CLIENT_ID: '' });
   });
 
-  it('matches snapshot', () => {
+  it('tab=login matches snapshot', () => {
     const props = {
-      history: { push: noop },
-      location: { state: { from: '/protected' } },
       tab: 'login',
-      isAuthenticated: false,
+      authInfo: {
+        idpToken: 'idpToken',
+        email: 'email',
+        firstName: 'firstName',
+        lastName: 'lastName',
+        idpId: 'idpId',
+      },
       authInProgress: false,
-      scrollingDisabled: false,
-      currentUserHasListings: false,
-      onLogout: noop,
-      onManageDisableScrolling: noop,
       submitLogin: noop,
       submitSignup: noop,
-      intl: fakeIntl,
-      sendVerificationEmailInProgress: false,
-      onResendVerificationEmail: noop,
+      submitSingupWithIdp: noop,
+      onOpenTermsOfService: noop,
     };
-    const tree = renderShallow(<AuthenticationPageComponent {...props} />);
+    const tree = renderShallow(<AuthenticationOrConfirmInfoForm {...props} />);
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('tab=confirm matches snapshot', () => {
+    const props = {
+      tab: 'confirm',
+      authInfo: {
+        idpToken: 'idpToken',
+        email: 'email',
+        firstName: 'firstName',
+        lastName: 'lastName',
+        idpId: 'idpId',
+      },
+      authInProgress: false,
+      submitLogin: noop,
+      submitSignup: noop,
+      submitSingupWithIdp: noop,
+      onOpenTermsOfService: noop,
+    };
+    const tree = renderShallow(<AuthenticationOrConfirmInfoForm {...props} />);
     expect(tree).toMatchSnapshot();
   });
 });
@@ -114,7 +136,6 @@ describe('AuthenticationForms with Facebook and Google login', () => {
 });
 
 describe('SocialLoginButtonsMaybe with Facebook and Google login', () => {
-
   it('matches snapshot', () => {
     const props = {
       isLogin: true,

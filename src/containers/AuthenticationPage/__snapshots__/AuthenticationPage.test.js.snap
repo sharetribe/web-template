@@ -180,84 +180,31 @@ exports[`AuthenticationForms with Google login matches snapshot 1`] = `
 </div>
 `;
 
-exports[`AuthenticationPageComponent matches snapshot 1`] = `
-<Page
-  schema={
+exports[`AuthenticationOrConfirmInfoForm tab=confirm matches snapshot 1`] = `
+<ConfirmIdProviderInfoForm
+  authInProgress={false}
+  authInfo={
     Object {
-      "@context": "http://schema.org",
-      "@type": "WebPage",
-      "name": "AuthenticationPage.schemaTitleLogin",
+      "email": "email",
+      "firstName": "firstName",
+      "idpId": "idpId",
+      "idpToken": "idpToken",
+      "lastName": "lastName",
     }
   }
-  scrollingDisabled={false}
-  title="AuthenticationPage.schemaTitleLogin"
->
-  <LayoutSingleColumn
-    className={null}
-    rootClassName={null}
-  >
-    <LayoutWrapperTopbar
-      className={null}
-      rootClassName={null}
-    >
-      <withRouter(Connect(TopbarContainerComponent))
-        className=""
-      />
-    </LayoutWrapperTopbar>
-    <LayoutWrapperMain
-      className="layoutWrapperMain"
-      rootClassName={null}
-    >
-      <div
-        className="root"
-      >
-        <AuthenticationOrConfirmInfoForm
-          authInProgress={false}
-          authInfo={null}
-          confirmError={null}
-          from="/protected"
-          loginError={null}
-          onOpenTermsOfService={[Function]}
-          showFacebookLogin={false}
-          showGoogleLogin={false}
-          signupError={null}
-          submitLogin={[Function]}
-          submitSignup={[Function]}
-          tab="login"
-        />
-      </div>
-      <injectIntl(ModalComponent)
-        id="AuthenticationPage.tos"
-        isOpen={false}
-        onClose={[Function]}
-        onManageDisableScrolling={[Function]}
-        usePortal={true}
-      >
-        <div
-          className="termsWrapper"
-        >
-          <h2
-            className="termsHeading"
-          >
-            <MemoizedFormattedMessage
-              id="AuthenticationPage.termsHeading"
-            />
-          </h2>
-          <TermsOfService
-            className={null}
-            rootClassName={null}
-          />
-        </div>
-      </injectIntl(ModalComponent)>
-    </LayoutWrapperMain>
-    <LayoutWrapperFooter
-      className={null}
-      rootClassName={null}
-    >
-      <injectIntl(Footer) />
-    </LayoutWrapperFooter>
-  </LayoutSingleColumn>
-</Page>
+  onOpenTermsOfService={[Function]}
+  submitSingupWithIdp={[Function]}
+/>
+`;
+
+exports[`AuthenticationOrConfirmInfoForm tab=login matches snapshot 1`] = `
+<AuthenticationForms
+  authInProgress={false}
+  isLogin={true}
+  onOpenTermsOfService={[Function]}
+  submitLogin={[Function]}
+  submitSignup={[Function]}
+/>
 `;
 
 exports[`SocialLoginButtonsMaybe with Facebook and Google login matches snapshot 1`] = `
