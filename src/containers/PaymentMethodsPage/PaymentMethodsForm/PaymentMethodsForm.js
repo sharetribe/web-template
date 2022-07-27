@@ -8,8 +8,8 @@ import { func, object, string } from 'prop-types';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
-import config from '../../../config';
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { useConfiguration } from '../../../context/configurationContext';
+import { FormattedMessage, useIntl, intlShape } from '../../../util/reactIntl';
 
 import { Form, PrimaryButton, FieldTextInput, StripePaymentAddress } from '../../../components';
 
@@ -112,8 +112,9 @@ class PaymentMethodsForm extends Component {
       throw new Error('Stripe must be loaded for PaymentMethodsForm');
     }
 
-    if (config.stripe.publishableKey) {
-      this.stripe = window.Stripe(config.stripe.publishableKey);
+    const publishableKey = this.props.config?.stripe?.publishableKey;
+    if (publishableKey) {
+      this.stripe = window.Stripe(publishableKey);
 
       const elements = this.stripe.elements(stripeElementsOptions);
       this.card = elements.create('card', { style: cardStyles });
@@ -184,6 +185,7 @@ class PaymentMethodsForm extends Component {
       createStripeCustomerError,
       handleCardSetupError,
       form,
+      config,
     } = formRenderProps;
 
     this.finalFormAPI = form;
@@ -219,7 +221,13 @@ class PaymentMethodsForm extends Component {
     // Stripe recommends asking billing address.
     // In PaymentMethodsForm, we send name and email as billing details, but address only if it exists.
     const billingAddress = (
-      <StripePaymentAddress intl={intl} form={form} fieldId={formId} card={this.card} />
+      <StripePaymentAddress
+        intl={intl}
+        form={form}
+        fieldId={formId}
+        card={this.card}
+        locale={config.locale}
+      />
     );
 
     const hasStripeKey = config.stripe.publishableKey;
@@ -300,13 +308,22 @@ PaymentMethodsForm.defaultProps = {
 
 PaymentMethodsForm.propTypes = {
   formId: string,
-  intl: intlShape.isRequired,
   onSubmit: func,
   addPaymentMethodError: object,
   deletePaymentMethodError: object,
   createStripeCustomerError: object,
   handleCardSetupError: object,
   form: object,
+
+  // from useIntl
+  intl: intlShape.isRequired,
+  // from useConfiguration
+  config: object.isRequired,
 };
 
-export default injectIntl(PaymentMethodsForm);
+const EnhancedPaymentMethodsForm = props => {
+  const config = useConfiguration();
+  const intl = useIntl();
+  return <PaymentMethodsForm config={config} intl={intl} />;
+};
+export default EnhancedPaymentMethodsForm;
