@@ -1,4 +1,3 @@
-import config from '../../config';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUser } from '../../ducks/user.duck';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
@@ -125,7 +124,7 @@ export const queryReviewsError = e => ({
 
 // ================ Thunks ================ //
 
-export const queryUserListings = userId => (dispatch, getState, sdk) => {
+export const queryUserListings = (userId, config) => (dispatch, getState, sdk) => {
   dispatch(queryListingsRequest(userId));
 
   const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
@@ -180,7 +179,7 @@ export const showUser = userId => (dispatch, getState, sdk) => {
     .catch(e => dispatch(showUserError(storableError(e))));
 };
 
-export const loadData = params => (dispatch, getState, sdk) => {
+export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const userId = new UUID(params.id);
 
   // Clear state so that previously loaded data is not visible
@@ -190,7 +189,7 @@ export const loadData = params => (dispatch, getState, sdk) => {
   return Promise.all([
     dispatch(fetchCurrentUser()),
     dispatch(showUser(userId)),
-    dispatch(queryUserListings(userId)),
+    dispatch(queryUserListings(userId, config)),
     dispatch(queryUserReviews(userId)),
   ]);
 };
