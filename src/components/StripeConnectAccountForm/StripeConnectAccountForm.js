@@ -5,7 +5,7 @@ import { Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
-import config from '../../config';
+import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { createResourceLocatorString } from '../../util/routes';
@@ -25,10 +25,9 @@ import {
 
 import css from './StripeConnectAccountForm.module.css';
 
-const supportedCountries = config.stripe.supportedCountries.map(c => c.code);
-
-export const stripeCountryConfigs = countryCode => {
-  const country = config.stripe.supportedCountries.find(c => c.code === countryCode);
+const getSupportedCountryCodes = supportedCountries => supportedCountries.map(c => c.code);
+const stripeCountryConfigs = (countryCode, supportedCountries) => {
+  const country = supportedCountries.find(c => c.code === countryCode);
 
   if (!country) {
     throw new Error(`Country code not found in Stripe config ${countryCode}`);
@@ -36,14 +35,25 @@ export const stripeCountryConfigs = countryCode => {
   return country;
 };
 
-const countryCurrency = countryCode => {
-  const country = stripeCountryConfigs(countryCode);
+const countryCurrency = (countryCode, supportedCountries) => {
+  const country = stripeCountryConfigs(countryCode, supportedCountries);
   return country.currency;
 };
 
 const CreateStripeAccountFields = props => {
   const routeConfiguration = useRouteConfiguration();
-  const { disabled, countryLabel, showAsRequired, form, values, intl, currentUserId } = props;
+  const {
+    disabled,
+    countryLabel,
+    showAsRequired,
+    form,
+    values,
+    intl,
+    currentUserId,
+    canonicalRootURL,
+    supportedCountries,
+    defaultMCC,
+  } = props;
 
   /*
   We pass some default values to Stripe when creating a new Stripe account in order to reduce couple of steps from Connect Onboarding form.
@@ -68,8 +78,8 @@ const CreateStripeAccountFields = props => {
   if (!hasBusinessURL && currentUserId) {
     const pathToProfilePage = uuid =>
       createResourceLocatorString('ProfilePage', routeConfiguration, { id: uuid }, {});
-    const hasCanonicalRootUrl = config && config.canonicalRootURL;
-    const rootUrl = hasCanonicalRootUrl ? config.canonicalRootURL.replace(/\/$/, '') : null;
+    const hasCanonicalRootUrl = !!canonicalRootURL;
+    const rootUrl = hasCanonicalRootUrl ? canonicalRootURL.replace(/\/$/, '') : null;
     const defaultBusinessURL =
       hasCanonicalRootUrl && !rootUrl.includes('localhost')
         ? `${rootUrl}${pathToProfilePage(currentUserId.uuid)}`
@@ -79,8 +89,8 @@ const CreateStripeAccountFields = props => {
 
   const hasMCC = values && values.businessProfileMCC;
   // Use default merchant category code (MCC) from stripe-config.js
-  if (!hasMCC && config.stripe.defaultMCC) {
-    const defaultBusinessProfileMCC = config.stripe.defaultMCC;
+  if (!hasMCC && defaultMCC) {
+    const defaultBusinessProfileMCC = defaultMCC;
     form.change('businessProfileMCC', defaultBusinessProfileMCC);
   }
 
@@ -125,7 +135,7 @@ const CreateStripeAccountFields = props => {
         <option disabled value="">
           {intl.formatMessage({ id: 'StripeConnectAccountForm.countryPlaceholder' })}
         </option>
-        {supportedCountries.map(c => (
+        {getSupportedCountryCodes(supportedCountries).map(c => (
           <option key={c} value={c}>
             {intl.formatMessage({ id: `StripeConnectAccountForm.countryNames.${c}` })}
           </option>
@@ -139,7 +149,7 @@ const CreateStripeAccountFields = props => {
           name="bankAccountToken"
           formName="StripeConnectAccountForm"
           country={country}
-          currency={countryCurrency(country)}
+          currency={countryCurrency(country, supportedCountries)}
           validate={validators.required(' ')}
         />
       ) : null}
@@ -156,6 +166,7 @@ const UpdateStripeAccountFields = props => {
     submitInProgress,
     setShowCardUpdateInput,
     stripeBankAccountLastDigits,
+    supportedCountries,
   } = props;
 
   return (
@@ -175,7 +186,7 @@ const UpdateStripeAccountFields = props => {
           name="bankAccountToken"
           formName="StripeConnectAccountForm"
           country={savedCountry}
-          currency={countryCurrency(savedCountry)}
+          currency={countryCurrency(savedCountry, supportedCountries)}
           validate={validators.required(' ')}
         />
       ) : !submitInProgress ? (
@@ -214,9 +225,11 @@ const ErrorsMaybe = props => {
 
 const StripeConnectAccountFormComponent = props => {
   const [showCardUpdateInput, setShowCardUpdateInput] = useState(false);
+  const config = useConfiguration();
   const { onSubmit, ...restOfProps } = props;
   const isUpdate = props.stripeConnected;
   const stripePublishableKey = config.stripe.publishableKey;
+  const supportedCountries = config.stripe.supportedCountries.map(c => c.code);
 
   return (
     <FinalForm
@@ -278,6 +291,8 @@ const StripeConnectAccountFormComponent = props => {
             showAsRequired={showAsRequired}
             countryLabel={countryLabel}
             supportedCountries={supportedCountries}
+            canonicalRootURL={config.canonicalRootURL}
+            defaultMCC={config.stripe.defaultMCC}
             currentUserId={currentUserId}
             form={form}
             values={values}
@@ -287,6 +302,7 @@ const StripeConnectAccountFormComponent = props => {
           <UpdateStripeAccountFields
             disabled={disabled}
             countryLabel={countryLabel}
+            supportedCountries={supportedCountries}
             savedCountry={savedCountry}
             stripeBankAccountLastDigits={stripeBankAccountLastDigits}
             showCardUpdateInput={showCardUpdateInput}
