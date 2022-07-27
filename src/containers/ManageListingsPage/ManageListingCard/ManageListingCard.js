@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 
-import config from '../../../config';
+import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
 import {
@@ -44,8 +44,8 @@ import css from './ManageListingCard.module.css';
 const MENU_CONTENT_OFFSET = -12;
 const MAX_LENGTH_FOR_WORDS_IN_TITLE = 7;
 
-const priceData = (price, intl) => {
-  if (price && price.currency === config.currency) {
+const priceData = (price, currency, intl) => {
+  if (price && price.currency === currency) {
     const formattedPrice = formatMoney(intl, price);
     return { formattedPrice, priceTitle: formattedPrice };
   } else if (price) {
@@ -110,6 +110,7 @@ const formatTitle = (title, maxLength) => {
 };
 
 export const ManageListingCardComponent = props => {
+  const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const {
     className,
@@ -146,7 +147,7 @@ export const ManageListingCardComponent = props => {
     [css.menuItemDisabled]: !!actionsInProgressListingId,
   });
 
-  const { formattedPrice, priceTitle } = priceData(price, intl);
+  const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
 
   const hasError = hasOpeningError || hasClosingError;
   const thisListingInProgress =
