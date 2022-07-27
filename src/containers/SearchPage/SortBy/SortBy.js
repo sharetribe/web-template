@@ -1,7 +1,7 @@
 import React from 'react';
 import { string, bool } from 'prop-types';
 
-import config from '../../../config';
+import { useConfiguration } from '../../../context/configurationContext';
 import { intlShape, injectIntl } from '../../../util/reactIntl';
 import { isMainSearchTypeKeywords } from '../../../util/search';
 
@@ -11,6 +11,7 @@ import SortByPopup from './SortByPopup';
 import css from './SortBy.module.css';
 
 const SortBy = props => {
+  const config = useConfiguration();
   const {
     sort,
     showAsPopup,
