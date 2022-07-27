@@ -208,8 +208,12 @@ describe('SearchPage.helpers', () => {
       const location = { search: '?pub_category=men&pub_amenities=towels,bathroom' };
       const pickedParams = validUrlQueryParamsFromProps({
         location,
-        listingExtendedDataConfig,
-        defaultFiltersConfig,
+        config: {
+          custom: {
+            listingExtendedData: listingExtendedDataConfig,
+            defaultFilters: defaultFiltersConfig,
+          },
+        },
       });
       expect(pickedParams).toEqual(urlParams);
     });
@@ -219,8 +223,12 @@ describe('SearchPage.helpers', () => {
       const location = { search: '?pub_category=men&pub_amenities=towels,bathroom,asdf' };
       const pickedParams = validUrlQueryParamsFromProps({
         location,
-        listingExtendedDataConfig,
-        defaultFiltersConfig,
+        config: {
+          custom: {
+            listingExtendedData: listingExtendedDataConfig,
+            defaultFilters: defaultFiltersConfig,
+          },
+        },
       });
       expect(pickedParams).toEqual(urlParams);
     });
@@ -228,7 +236,15 @@ describe('SearchPage.helpers', () => {
 
   describe('initialValues', () => {
     const location = { search: '?pub_category=men&pub_amenities=towels,bathroom' };
-    const props = { location, listingExtendedDataConfig, defaultFiltersConfig };
+    const props = {
+      location,
+      config: {
+        custom: {
+          listingExtendedData: listingExtendedDataConfig,
+          defaultFilters: defaultFiltersConfig,
+        },
+      },
+    };
     const currentQueryParams = {};
 
     it('returns a valid parameter for a selected queryParamName', () => {
@@ -337,6 +353,7 @@ describe('SearchPage.helpers', () => {
   });
 
   describe('pickSearchParamsOnly', () => {
+    const isOriginInUse = false;
     it('returns search parameters', () => {
       const params = {
         address: 'address value',
@@ -347,7 +364,8 @@ describe('SearchPage.helpers', () => {
         params,
         listingExtendedDataConfig,
         defaultFiltersConfig,
-        sortConfig
+        sortConfig,
+        isOriginInUse
       );
       expect(validParams).toEqual({ bounds: 'bounds value' });
     });
@@ -357,7 +375,8 @@ describe('SearchPage.helpers', () => {
         urlParams,
         listingExtendedDataConfig,
         defaultFiltersConfig,
-        sortConfig
+        sortConfig,
+        isOriginInUse
       );
       expect(validParams).toEqual(urlParams);
     });
@@ -368,7 +387,8 @@ describe('SearchPage.helpers', () => {
         params,
         listingExtendedDataConfig,
         defaultFiltersConfig,
-        sortConfig
+        sortConfig,
+        isOriginInUse
       );
       expect(validParams).toEqual({ pub_category: 'men' });
     });
@@ -379,7 +399,8 @@ describe('SearchPage.helpers', () => {
         params,
         listingExtendedDataConfig,
         defaultFiltersConfig,
-        sortConfig
+        sortConfig,
+        isOriginInUse
       );
       expect(validParams).toEqual({ pub_category: 'men' });
     });
@@ -390,13 +411,15 @@ describe('SearchPage.helpers', () => {
         params,
         listingExtendedDataConfig,
         defaultFiltersConfig,
-        sortConfig
+        sortConfig,
+        isOriginInUse
       );
       expect(validParams).toEqual({ sort: '-price' });
     });
   });
 
   describe('searchParamsPicker', () => {
+    const isOriginInUse = false;
     it("returns searchParamsAreInSync: false if searchParamsInProps and location.search don't match", () => {
       const location = { search: '?pub_category=men&pub_amenities=towels,bathroom' };
       const searchParamsInProps = {
@@ -410,7 +433,8 @@ describe('SearchPage.helpers', () => {
         searchParamsInProps,
         listingExtendedDataConfig,
         defaultFiltersConfig,
-        sortConfig
+        sortConfig,
+        isOriginInUse
       );
 
       expect(paramsInfo).toEqual({
@@ -429,7 +453,8 @@ describe('SearchPage.helpers', () => {
         searchParamsInProps,
         listingExtendedDataConfig,
         defaultFiltersConfig,
-        sortConfig
+        sortConfig,
+        isOriginInUse
       );
 
       expect(paramsInfo).toEqual({
@@ -450,7 +475,8 @@ describe('SearchPage.helpers', () => {
         searchParamsInProps,
         listingExtendedDataConfig,
         defaultFiltersConfig,
-        sortConfig
+        sortConfig,
+        isOriginInUse
       );
 
       expect(paramsInfo).toEqual({
@@ -469,7 +495,8 @@ describe('SearchPage.helpers', () => {
         searchParamsInProps,
         listingExtendedDataConfig,
         defaultFiltersConfig,
-        sortConfig
+        sortConfig,
+        isOriginInUse
       );
 
       expect(paramsInfo).toEqual({

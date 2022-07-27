@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { arrayOf, func, node, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
-import config from '../../../config';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
-import { propTypes } from '../../../util/types';
 import { formatCurrencyMajorUnit } from '../../../util/currency';
 
 import IconPlus from '../IconPlus/IconPlus';
@@ -77,7 +75,7 @@ class PriceFilterPlainComponent extends Component {
       max,
       step,
       intl,
-      currencyConfig,
+      marketplaceCurrency,
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
 
@@ -92,8 +90,8 @@ class PriceFilterPlainComponent extends Component {
       ? intl.formatMessage(
           { id: 'PriceFilter.labelSelectedPlain' },
           {
-            minPrice: formatCurrencyMajorUnit(intl, currencyConfig.currency, minPrice),
-            maxPrice: formatCurrencyMajorUnit(intl, currencyConfig.currency, maxPrice),
+            minPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, minPrice),
+            maxPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, maxPrice),
           }
         )
       : null;
@@ -151,7 +149,6 @@ PriceFilterPlainComponent.defaultProps = {
   className: null,
   initialValues: null,
   step: number,
-  currencyConfig: config.currencyConfig,
 };
 
 PriceFilterPlainComponent.propTypes = {
@@ -167,7 +164,7 @@ PriceFilterPlainComponent.propTypes = {
   min: number.isRequired,
   max: number.isRequired,
   step: number,
-  currencyConfig: propTypes.currencyConfig,
+  marketplaceCurrency: string.isRequired,
 
   // form injectIntl
   intl: intlShape.isRequired,

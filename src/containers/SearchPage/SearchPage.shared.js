@@ -1,8 +1,8 @@
 import intersection from 'lodash/intersection';
-import config from '../../config';
+
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
 import { createResourceLocatorString } from '../../util/routes';
-import { isAnyFilterActive, parseSelectFilterOptions, isOriginInUse } from '../../util/search';
+import { isAnyFilterActive, parseSelectFilterOptions } from '../../util/search';
 import { createSlug, parse, stringify } from '../../util/urlHelpers';
 
 /**
@@ -164,7 +164,9 @@ export const validURLParamsForExtendedData = (
  * @returns picked search params against extended data config and default filter config
  */
 export const validUrlQueryParamsFromProps = props => {
-  const { location, listingExtendedDataConfig, defaultFiltersConfig } = props;
+  const { location, config } = props;
+  const { listingExtendedData: listingExtendedDataConfig, defaultFilters: defaultFiltersConfig } =
+    config?.custom || {};
   // eslint-disable-next-line no-unused-vars
   const { mapSearch, page, ...searchInURL } = parse(location.search, {
     latlng: ['origin'],
@@ -252,11 +254,12 @@ export const pickSearchParamsOnly = (
   params,
   listingExtendedDataConfig,
   defaultFiltersConfig,
-  sortConfig
+  sortConfig,
+  isOriginInUse
 ) => {
   const { address, origin, bounds, ...rest } = params || {};
   const boundsMaybe = bounds ? { bounds } : {};
-  const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
+  const originMaybe = isOriginInUse && origin ? { origin } : {};
   const filterParams = validFilterParams(rest, listingExtendedDataConfig, defaultFiltersConfig);
   const sort = rest[sortConfig.queryParamName];
   const sortMaybe = sort ? { sort } : {};
@@ -291,7 +294,8 @@ export const searchParamsPicker = (
   searchParamsInProps,
   listingExtendedDataConfig,
   defaultFiltersConfig,
-  sortConfig
+  sortConfig,
+  isOriginInUse
 ) => {
   const { mapSearch, page, ...searchParamsInURL } = parse(searchFromLocation, {
     latlng: ['origin'],
@@ -303,14 +307,16 @@ export const searchParamsPicker = (
     searchParamsInProps,
     listingExtendedDataConfig,
     defaultFiltersConfig,
-    sortConfig
+    sortConfig,
+    isOriginInUse
   );
   // Pick only search params that are part of current search configuration
   const queryParamsFromURL = pickSearchParamsOnly(
     searchParamsInURL,
     listingExtendedDataConfig,
     defaultFiltersConfig,
-    sortConfig
+    sortConfig,
+    isOriginInUse
   );
 
   // Page transition might initially use values from previous search
@@ -349,7 +355,13 @@ export const groupExtendedDataConfigs = (configs, activeProcesses) =>
     [[], []]
   );
 
-export const createSearchResultSchema = (listings, mainSearchData, intl, routeConfiguration) => {
+export const createSearchResultSchema = (
+  listings,
+  mainSearchData,
+  intl,
+  routeConfiguration,
+  config
+) => {
   // Schema for search engines (helps them to understand what this page is about)
   // http://schema.org
   // We are using JSON-LD format

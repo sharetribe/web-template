@@ -27,6 +27,7 @@ const FilterComponent = props => {
     urlQueryParams,
     initialValues,
     getHandleChangedValueFn,
+    marketplaceCurrency,
     ...rest
   } = props;
   // Note: config can be either
@@ -55,6 +56,7 @@ const FilterComponent = props => {
           min={min}
           max={max}
           step={step}
+          marketplaceCurrency={marketplaceCurrency}
           {...rest}
         />
       );
