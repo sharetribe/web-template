@@ -7,7 +7,6 @@ import Cookies from 'js-cookie';
 import classNames from 'classnames';
 import { isEmpty } from 'lodash';
 
-import config from '../../config';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { pathByRouteName } from '../../util/routes';
 import { apiBaseUrl } from '../../util/api';
@@ -46,6 +45,7 @@ import EmailVerificationInfo from './EmailVerificationInfo';
 
 import css from './AuthenticationPage.module.css';
 import { FacebookLogo, GoogleLogo } from './socialLoginLogos';
+import { useConfiguration } from '../../context/configurationContext';
 
 // Social login buttons are needed by AuthenticationForms
 export const SocialLoginButtonsMaybe = props => {
@@ -276,7 +276,7 @@ const ConfirmIdProviderInfoForm = props => {
   );
 };
 
-const AuthenticationOrConfirmInfoForm = props => {
+export const AuthenticationOrConfirmInfoForm = props => {
   const {
     tab,
     authInfo,
@@ -334,6 +334,7 @@ export const AuthenticationPageComponent = props => {
   const [tosModalOpen, setTosModalOpen] = useState(false);
   const [authInfo, setAuthInfo] = useState(getAuthInfoFromCookies());
   const [authError, setAuthError] = useState(getAuthErrorFromCookies());
+  const config = useConfiguration();
 
   useEffect(() => {
     // Remove the autherror cookie once the content is saved to state
