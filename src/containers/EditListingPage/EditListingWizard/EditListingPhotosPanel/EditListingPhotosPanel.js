@@ -30,6 +30,7 @@ class EditListingPhotosPanel extends Component {
       updateInProgress,
       onSubmit,
       onRemoveImage,
+      listingConfig,
     } = this.props;
 
     const rootClass = rootClassName || css.root;
@@ -66,6 +67,7 @@ class EditListingPhotosPanel extends Component {
           saveActionMsg={submitButtonText}
           updated={panelUpdated}
           updateInProgress={updateInProgress}
+          listingConfig={listingConfig}
         />
       </div>
     );
@@ -97,6 +99,7 @@ EditListingPhotosPanel.propTypes = {
   panelUpdated: bool.isRequired,
   updateInProgress: bool.isRequired,
   onRemoveImage: func.isRequired,
+  listingConfig: object.isRequired,
 };
 
 export default EditListingPhotosPanel;

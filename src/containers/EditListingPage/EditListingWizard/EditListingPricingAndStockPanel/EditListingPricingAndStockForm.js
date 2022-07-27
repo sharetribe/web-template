@@ -1,11 +1,11 @@
 import React from 'react';
-import { bool, func, shape, string } from 'prop-types';
+import { bool, func, number, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 // Import configs and util modules
-import config from '../../../../config';
+import appSettings from '../../../../config/appSettings';
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import { isOldTotalMismatchStockError } from '../../../../util/errors';
@@ -34,6 +34,8 @@ export const EditListingPricingAndStockFormComponent = props => (
         intl,
         invalid,
         pristine,
+        marketplaceCurrency,
+        listingMinimumPriceSubUnits,
         saveActionMsg,
         updated,
         updateInProgress,
@@ -45,7 +47,7 @@ export const EditListingPricingAndStockFormComponent = props => (
           id: 'EditListingPricingAndStockForm.priceRequired',
         })
       );
-      const minPrice = new Money(config.listingMinimumPriceSubUnits, config.currency);
+      const minPrice = new Money(listingMinimumPriceSubUnits, marketplaceCurrency);
       const minPriceRequired = validators.moneySubUnitAmountAtLeast(
         intl.formatMessage(
           {
@@ -55,9 +57,9 @@ export const EditListingPricingAndStockFormComponent = props => (
             minPrice: formatMoney(intl, minPrice),
           }
         ),
-        config.listingMinimumPriceSubUnits
+        listingMinimumPriceSubUnits
       );
-      const priceValidators = config.listingMinimumPriceSubUnits
+      const priceValidators = listingMinimumPriceSubUnits
         ? validators.composeValidators(priceRequired, minPriceRequired)
         : priceRequired;
 
@@ -97,7 +99,7 @@ export const EditListingPricingAndStockFormComponent = props => (
             placeholder={intl.formatMessage({
               id: 'EditListingPricingAndStockForm.priceInputPlaceholder',
             })}
-            currencyConfig={config.currencyConfig}
+            currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
             validate={priceValidators}
           />
 
@@ -130,11 +132,16 @@ export const EditListingPricingAndStockFormComponent = props => (
   />
 );
 
-EditListingPricingAndStockFormComponent.defaultProps = { fetchErrors: null };
+EditListingPricingAndStockFormComponent.defaultProps = {
+  fetchErrors: null,
+  listingMinimumPriceSubUnits: 0,
+};
 
 EditListingPricingAndStockFormComponent.propTypes = {
   intl: intlShape.isRequired,
   onSubmit: func.isRequired,
+  marketplaceCurrency: string.isRequired,
+  listingMinimumPriceSubUnits: number,
   saveActionMsg: string.isRequired,
   disabled: bool.isRequired,
   ready: bool.isRequired,

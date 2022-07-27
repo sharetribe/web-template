@@ -1,8 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { arrayOf } from 'prop-types';
 
 // Import configs and util modules
-import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_NEW,
@@ -10,6 +9,7 @@ import {
 } from '../../../util/urlHelpers';
 import { ensureListing } from '../../../util/data';
 import { createResourceLocatorString } from '../../../util/routes';
+import { propTypes } from '../../../util/types';
 
 // Import modules from this directory
 import EditListingAvailabilityPanel from './EditListingAvailabilityPanel/EditListingAvailabilityPanel';
@@ -73,7 +73,6 @@ const redirectAfterDraftUpdate = (listingId, params, tab, marketplaceTabs, histo
 };
 
 const EditListingWizardTab = props => {
-  const routeConfiguration = useRouteConfiguration();
   const {
     tab,
     marketplaceTabs,
@@ -99,6 +98,8 @@ const EditListingWizardTab = props => {
     updatedTab,
     updateInProgress,
     tabSubmitButtonText,
+    config,
+    routeConfiguration,
   } = props;
 
   const { type } = params;
@@ -131,8 +132,8 @@ const EditListingWizardTab = props => {
 
   const onCompleteEditListingWizardTab = (tab, updateValues) => {
     const onUpdateListingOrCreateListingDraft = isNewURI
-      ? (tab, values) => onCreateListingDraft(values)
-      : onUpdateListing;
+      ? (tab, values) => onCreateListingDraft(values, config)
+      : values => onUpdateListing(values, config);
 
     const updateListingValues = isNewURI
       ? updateValues
@@ -171,16 +172,36 @@ const EditListingWizardTab = props => {
   // TODO: add missing cases for supported tabs
   switch (tab) {
     case DETAILS: {
-      return <EditListingDetailsPanel {...panelProps(DETAILS)} onProcessChange={onProcessChange} />;
+      return (
+        <EditListingDetailsPanel
+          {...panelProps(DETAILS)}
+          onProcessChange={onProcessChange}
+          config={config}
+        />
+      );
     }
     case PRICING_AND_STOCK: {
-      return <EditListingPricingAndStockPanel {...panelProps(PRICING_AND_STOCK)} />;
+      return (
+        <EditListingPricingAndStockPanel
+          {...panelProps(PRICING_AND_STOCK)}
+          marketplaceCurrency={config.currency}
+          listingMinimumPriceSubUnits={config.listingMinimumPriceSubUnits}
+        />
+      );
     }
     case PRICING: {
-      return <EditListingPricingPanel {...panelProps(PRICING)} />;
+      return (
+        <EditListingPricingPanel
+          {...panelProps(PRICING)}
+          marketplaceCurrency={config.currency}
+          listingMinimumPriceSubUnits={config.listingMinimumPriceSubUnits}
+        />
+      );
     }
     case DELIVERY: {
-      return <EditListingDeliveryPanel {...panelProps(DELIVERY)} />;
+      return (
+        <EditListingDeliveryPanel {...panelProps(DELIVERY)} marketplaceCurrency={config.currency} />
+      );
     }
     case LOCATION: {
       return <EditListingLocationPanel {...panelProps(LOCATION)} />;
@@ -210,6 +231,7 @@ const EditListingWizardTab = props => {
       return (
         <EditListingPhotosPanel
           {...panelProps(PHOTOS)}
+          listingConfig={config.listing}
           images={images}
           onImageUpload={onImageUpload}
           onRemoveImage={onRemoveImage}
@@ -271,6 +293,8 @@ EditListingWizardTab.propTypes = {
   onProcessChange: func.isRequired,
   updatedTab: string,
   updateInProgress: bool.isRequired,
+  config: object.isRequired,
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
 export default EditListingWizardTab;
