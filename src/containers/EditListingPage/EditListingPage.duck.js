@@ -1,6 +1,5 @@
 import omit from 'lodash/omit';
 
-import config from '../../config';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { denormalisedResponseEntities } from '../../util/data';
 import { getDefaultTimeZoneOnBrowser, getStartOf } from '../../util/dates';
@@ -48,8 +47,8 @@ const updateUploadedImagesState = (state, payload) => {
       };
 };
 
-const getImageVariantInfo = () => {
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+const getImageVariantInfo = listingConfig => {
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingConfig;
   const aspectRatio = aspectHeight / aspectWidth;
   const fieldsImage = [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`];
 
@@ -432,9 +431,9 @@ export const savePayoutDetailsError = errorAction(SAVE_PAYOUT_DETAILS_ERROR);
 
 // ================ Thunk ================ //
 
-export function requestShowListing(actionPayload) {
+export function requestShowListing(actionPayload, config) {
   return (dispatch, getState, sdk) => {
-    const imageVariantInfo = getImageVariantInfo();
+    const imageVariantInfo = getImageVariantInfo(config.listing);
     const queryParams = {
       include: ['author', 'images', 'currentStock'],
       'fields.image': imageVariantInfo.fieldsImage,
@@ -491,7 +490,7 @@ const updateStockOfListingMaybe = (listingId, stockTotals, dispatch) => {
 // NOTE: we want to keep it possible to include stock management field to the first wizard form.
 // this means that there needs to be a sequence of calls:
 // create, set stock, show listing (to get updated currentStock entity)
-export function requestCreateListingDraft(data) {
+export function requestCreateListingDraft(data, config) {
   return (dispatch, getState, sdk) => {
     dispatch(createListingDraftRequest(data));
     const { stockUpdate, images, ...rest } = data;
@@ -501,7 +500,7 @@ export function requestCreateListingDraft(data) {
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
     const ownListingValues = { ...imageProperty, ...rest };
 
-    const imageVariantInfo = getImageVariantInfo();
+    const imageVariantInfo = getImageVariantInfo(config.listing);
     const queryParams = {
       expand: true,
       include: ['author', 'images', 'currentStock'],
@@ -534,7 +533,7 @@ export function requestCreateListingDraft(data) {
 // the data to the listing, and marks the tab updated so the UI can
 // display the state.
 // NOTE: what comes to stock management, this follows the same pattern used in create listing call
-export function requestUpdateListing(tab, data) {
+export function requestUpdateListing(tab, data, config) {
   return (dispatch, getState, sdk) => {
     dispatch(updateListingRequest(data));
     const { id, stockUpdate, images, ...rest } = data;
@@ -542,7 +541,7 @@ export function requestUpdateListing(tab, data) {
     // If images should be saved, create array out of the image UUIDs for the API call
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
     const ownListingUpdateValues = { id, ...imageProperty, ...rest };
-    const imageVariantInfo = getImageVariantInfo();
+    const imageVariantInfo = getImageVariantInfo(config.listing);
     const queryParams = {
       expand: true,
       include: ['author', 'images', 'currentStock'],
@@ -584,10 +583,10 @@ export const requestPublishListingDraft = listingId => (dispatch, getState, sdk)
 };
 
 // Images return imageId which we need to map with previously generated temporary id
-export function requestImageUpload(actionPayload) {
+export function requestImageUpload(actionPayload, listingConfig) {
   return (dispatch, getState, sdk) => {
     const id = actionPayload.id;
-    const imageVariantInfo = getImageVariantInfo();
+    const imageVariantInfo = getImageVariantInfo(listingConfig);
     const queryParams = {
       expand: true,
       'fields.image': imageVariantInfo.fieldsImage,
@@ -665,7 +664,7 @@ export const savePayoutDetails = (values, isUpdateCall) => (dispatch, getState, 
 
 // loadData is run for each tab of the wizard. When editing an
 // existing listing, the listing must be fetched first.
-export const loadData = params => (dispatch, getState, sdk) => {
+export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   dispatch(clearUpdatedTab());
   const { id, type } = params;
 
@@ -685,7 +684,7 @@ export const loadData = params => (dispatch, getState, sdk) => {
   }
 
   const payload = { id: new UUID(id) };
-  return Promise.all([dispatch(requestShowListing(payload)), dispatch(fetchCurrentUser())])
+  return Promise.all([dispatch(requestShowListing(payload, config)), dispatch(fetchCurrentUser())])
     .then(response => {
       const currentUser = getState().user.currentUser;
       if (currentUser && currentUser.stripeAccount) {
