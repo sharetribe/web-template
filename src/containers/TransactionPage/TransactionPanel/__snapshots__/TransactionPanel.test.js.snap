@@ -14,6 +14,13 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
         avatarWrapperClassName="avatarWrapperMobile"
         image={null}
         isCustomer={true}
+        listingConfig={
+          Object {
+            "aspectHeight": 1,
+            "aspectWidth": 1,
+            "variantPrefix": "listing-card",
+          }
+        }
         listingTitle="listing1 title"
         provider={null}
         rootClassName="imageWrapperMobile"
@@ -143,6 +150,13 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
             avatarWrapperClassName="avatarWrapperDesktop"
             image={null}
             isCustomer={true}
+            listingConfig={
+              Object {
+                "aspectHeight": 1,
+                "aspectWidth": 1,
+                "variantPrefix": "listing-card",
+              }
+            }
             listingTitle="listing1 title"
             provider={null}
           />
@@ -178,6 +192,13 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
         avatarWrapperClassName="avatarWrapperMobile"
         image={null}
         isCustomer={false}
+        listingConfig={
+          Object {
+            "aspectHeight": 1,
+            "aspectWidth": 1,
+            "listingPrefix": "listing-card",
+          }
+        }
         listingTitle="listing1 title"
         provider={null}
         rootClassName="imageWrapperMobile"
@@ -315,6 +336,13 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
             avatarWrapperClassName="avatarWrapperDesktop"
             image={null}
             isCustomer={false}
+            listingConfig={
+              Object {
+                "aspectHeight": 1,
+                "aspectWidth": 1,
+                "listingPrefix": "listing-card",
+              }
+            }
             listingTitle="listing1 title"
             provider={null}
           />

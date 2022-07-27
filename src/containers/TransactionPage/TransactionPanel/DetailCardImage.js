@@ -1,9 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 
-// Import configs and util modules
-import config from '../../../config';
-
 import { AvatarMedium, AspectRatioWrapper, ResponsiveImage } from '../../../components';
 
 import css from './TransactionPanel.module.css';
@@ -17,9 +14,10 @@ const DetailCardImage = props => {
     image,
     provider,
     isCustomer,
+    listingConfig,
   } = props;
   const classes = classNames(rootClassName || css.detailCardImageWrapper, className);
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingConfig;
   const variants = image
     ? Object.keys(image?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
