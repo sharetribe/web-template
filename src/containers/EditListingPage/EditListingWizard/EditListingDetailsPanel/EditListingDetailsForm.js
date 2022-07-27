@@ -5,8 +5,7 @@ import { Field, Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
-// Import configs and util modules
-import config from '../../../../config';
+// Import util modules
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
 import { EXTENDED_DATA_SCHEMA_TYPES, propTypes } from '../../../../util/types';
 import { maxLength, required, composeValidators } from '../../../../util/validators';
@@ -277,7 +276,7 @@ EditListingDetailsFormComponent.defaultProps = {
   fetchErrors: null,
   onProcessChange: null,
   hasSetProcessAlias: false,
-  listingExtendedDataConfig: config.custom.listingExtendedData,
+  listingExtendedDataConfig: null,
 };
 
 EditListingDetailsFormComponent.propTypes = {

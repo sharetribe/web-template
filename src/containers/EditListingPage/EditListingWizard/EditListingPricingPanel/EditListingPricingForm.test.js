@@ -12,6 +12,8 @@ describe('EditListingPricingForm', () => {
         intl={fakeIntl}
         dispatch={noop}
         onSubmit={v => v}
+        marketplaceCurrency="USD"
+        listingMinimumPriceSubUnits={0}
         saveActionMsg="Save price"
         updated={false}
         updateInProgress={false}

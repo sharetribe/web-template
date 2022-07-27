@@ -1,12 +1,11 @@
 import React, { Component, useEffect } from 'react';
 import { array, arrayOf, bool, func, number, object, oneOf, shape, string } from 'prop-types';
-import { compose } from 'redux';
 import classNames from 'classnames';
 
 // Import configs and util modules
-import config from '../../../config';
-import { withRouteConfiguration } from '../../../context/routeConfigurationContext';
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { useConfiguration } from '../../../context/configurationContext';
+import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
+import { FormattedMessage, intlShape } from '../../../util/reactIntl';
 import { createResourceLocatorString } from '../../../util/routes';
 import { withViewport } from '../../../util/contextHelpers';
 import {
@@ -110,7 +109,7 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, processName) => {
  * @param {Object} publicData
  * @param {Object} privateData
  */
-const hasValidCustomFieldsInExtendedData = (publicData, privateData) => {
+const hasValidCustomFieldsInExtendedData = (publicData, privateData, config) => {
   const isValidField = (fieldConfig, fieldData) => {
     const {
       key,
@@ -162,7 +161,7 @@ const hasValidCustomFieldsInExtendedData = (publicData, privateData) => {
  *
  * @return true if tab / step is completed.
  */
-const tabCompleted = (tab, listing) => {
+const tabCompleted = (tab, listing, config) => {
   const {
     availabilityPlan,
     description,
@@ -181,7 +180,7 @@ const tabCompleted = (tab, listing) => {
       return !!(
         description &&
         title &&
-        hasValidCustomFieldsInExtendedData(publicData, privateData)
+        hasValidCustomFieldsInExtendedData(publicData, privateData, config)
       );
     case PRICING:
       return !!price;
@@ -210,11 +209,13 @@ const tabCompleted = (tab, listing) => {
  *
  * @return object containing activity / editability of different tabs of this wizard
  */
-const tabsActive = (isNew, listing, tabs) => {
+const tabsActive = (isNew, listing, tabs, config) => {
   return tabs.reduce((acc, tab) => {
     const previousTabIndex = tabs.findIndex(t => t === tab) - 1;
     const isActive =
-      previousTabIndex >= 0 ? !isNew || tabCompleted(tabs[previousTabIndex], listing) : true;
+      previousTabIndex >= 0
+        ? !isNew || tabCompleted(tabs[previousTabIndex], listing, config)
+        : true;
     return { ...acc, [tab]: isActive };
   }, {});
 };
@@ -353,6 +354,7 @@ class EditListingWizard extends Component {
       stripeAccountError,
       stripeAccountLinkError,
       currentUser,
+      config,
       routeConfiguration,
       ...rest
     } = this.props;
@@ -371,7 +373,7 @@ class EditListingWizard extends Component {
       : BOOKING_PROCESS_NAME;
 
     const tabs = processName === BOOKING_PROCESS_NAME ? TABS_BOOKING : TABS_PRODUCT;
-    const tabsStatus = tabsActive(isNewListingFlow, currentListing, tabs);
+    const tabsStatus = tabsActive(isNewListingFlow, currentListing, tabs, config);
 
     // If selectedTab is not active, redirect to the beginning of wizard
     if (!tabsStatus[selectedTab]) {
@@ -483,6 +485,8 @@ class EditListingWizard extends Component {
                   this.setState({ transactionProcessAlias })
                 }
                 onManageDisableScrolling={onManageDisableScrolling}
+                config={config}
+                routeConfiguration={routeConfiguration}
               />
             );
           })}
@@ -626,15 +630,28 @@ EditListingWizard.propTypes = {
     height: number.isRequired,
   }).isRequired,
 
-  // from injectIntl
+  // from useIntl
   intl: intlShape.isRequired,
 
-  // from withRouteConfiguration
+  // from useConfiguration
+  config: object.isRequired,
+
+  // from useRouteConfiguration
   routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
-export default compose(
-  withViewport,
-  injectIntl,
-  withRouteConfiguration
-)(EditListingWizard);
+const EnhancedEditListingWizard = props => {
+  const config = useConfiguration();
+  const routeConfiguration = useRouteConfiguration();
+  const intl = useIntl();
+  return (
+    <EditListingWizard
+      config={config}
+      routeConfiguration={routeConfiguration}
+      intl={intl}
+      {...props}
+    />
+  );
+};
+
+export default withViewport(EnhancedEditListingWizard);

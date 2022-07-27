@@ -5,7 +5,7 @@ import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 // Import configs and util modules
-import config from '../../../../config';
+import appSettings from '../../../../config/appSettings';
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import {
@@ -44,6 +44,7 @@ export const EditListingDeliveryFormComponent = props => (
         intl,
         pristine,
         invalid,
+        marketplaceCurrency,
         saveActionMsg,
         updated,
         updateInProgress,
@@ -118,6 +119,7 @@ export const EditListingDeliveryFormComponent = props => (
         css.deliveryOption,
         !shippingEnabled ? css.disabled : null
       );
+      const currencyConfig = appSettings.getCurrencyFormatting(marketplaceCurrency);
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
@@ -192,7 +194,7 @@ export const EditListingDeliveryFormComponent = props => (
               placeholder={intl.formatMessage({
                 id: 'EditListingDeliveryForm.shippingOneItemPlaceholder',
               })}
-              currencyConfig={config.currencyConfig}
+              currencyConfig={currencyConfig}
               disabled={!shippingEnabled}
               validate={
                 shippingEnabled
@@ -223,7 +225,7 @@ export const EditListingDeliveryFormComponent = props => (
               placeholder={intl.formatMessage({
                 id: 'EditListingDeliveryForm.shippingAdditionalItemsPlaceholder',
               })}
-              currencyConfig={config.currencyConfig}
+              currencyConfig={currencyConfig}
               disabled={!shippingEnabled}
               validate={
                 shippingEnabled
