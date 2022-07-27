@@ -3,7 +3,7 @@ import { bool, func, oneOf, shape } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import config from '../../config';
+import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { createResourceLocatorString } from '../../util/routes';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
@@ -79,6 +79,7 @@ const handleGetStripeConnectAccountLinkFn = (getLinkFn, commonParams) => type =>
 };
 
 export const StripePayoutPageComponent = props => {
+  const config = useConfiguration();
   const routes = useRouteConfiguration();
   const {
     currentUser,
