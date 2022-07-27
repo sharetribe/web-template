@@ -2,7 +2,6 @@ import React from 'react';
 import { bool, func, number, string } from 'prop-types';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 
-import config from '../../../config';
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { numberAtLeast, required } from '../../../util/validators';
@@ -37,6 +36,7 @@ const renderForm = formRenderProps => {
     lineItems,
     fetchLineItemsInProgress,
     fetchLineItemsError,
+    price,
     values,
   } = formRenderProps;
 
@@ -80,7 +80,11 @@ const renderForm = formRenderProps => {
       <h3>
         <FormattedMessage id="ProductOrderForm.breakdownTitle" />
       </h3>
-      <EstimatedCustomerBreakdownMaybe breakdownData={breakdownData} lineItems={lineItems} />
+      <EstimatedCustomerBreakdownMaybe
+        breakdownData={breakdownData}
+        lineItems={lineItems}
+        currency={price.currency}
+      />
     </div>
   ) : null;
 
@@ -209,20 +213,6 @@ const ProductOrderForm = props => {
     );
   }
 
-  if (!price) {
-    return (
-      <p className={css.error}>
-        <FormattedMessage id="ProductOrderForm.listingPriceMissing" />
-      </p>
-    );
-  }
-  if (price.currency !== config.currency) {
-    return (
-      <p className={css.error}>
-        <FormattedMessage id="ProductOrderForm.listingCurrencyInvalid" />
-      </p>
-    );
-  }
   const hasOneItemLeft = currentStock && currentStock === 1;
   const quantityMaybe = hasOneItemLeft ? { quantity: '1' } : {};
   const singleDeliveryMethodAvailableMaybe =
