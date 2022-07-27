@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { node, string, object } from 'prop-types';
 
-import config from '../../../config';
 import { IntlProvider } from '../../../util/reactIntl';
 
 import css from './SearchMap.module.css';
@@ -59,8 +58,9 @@ class ReusableMapContainer extends React.Component {
     // NOTICE: Children rendered with ReactDOM.render doesn't have Router access
     // You need to provide onClick functions and URLs as props.
     const renderChildren = () => {
+      const { config, messages } = this.props;
       const children = (
-        <IntlProvider locale={config.locale} messages={this.props.messages} textComponent="span">
+        <IntlProvider locale={config.locale} messages={messages} textComponent="span">
           {this.props.children}
         </IntlProvider>
       );

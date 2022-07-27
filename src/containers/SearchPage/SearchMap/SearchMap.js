@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { arrayOf, func, number, string, shape, object } from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 
-import config from '../../../config';
-import { withRouteConfiguration } from '../../../context/routeConfigurationContext';
+import { useConfiguration } from '../../../context/configurationContext';
+import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { createResourceLocatorString } from '../../../util/routes';
 import { createSlug } from '../../../util/urlHelpers';
 import { propTypes } from '../../../util/types';
@@ -18,22 +18,32 @@ import css from './SearchMap.module.css';
 
 const REUSABLE_MAP_HIDDEN_HANDLE = 'reusableMapHidden';
 
-const isGoogleMapsInUse = config.maps.mapProvider === 'GOOGLE_MAPS';
-const searchMapVariant = isGoogleMapsInUse ? searchMapGoogleMaps : searchMapMapbox;
-const LABEL_HANDLE = searchMapVariant.LABEL_HANDLE;
-const INFO_CARD_HANDLE = searchMapVariant.INFO_CARD_HANDLE;
-const fitMapToBounds = searchMapVariant.fitMapToBounds;
-const SearchMapVariantComponent = searchMapVariant.default;
-const isMapsLibLoaded = searchMapVariant.isMapsLibLoaded;
-const getMapBounds = searchMapVariant.getMapBounds;
-const getMapCenter = searchMapVariant.getMapCenter;
+const getSearchMapVariant = mapProvider => {
+  const isGoogleMapsInUse = mapProvider === 'GOOGLE_MAPS';
+  return isGoogleMapsInUse ? searchMapGoogleMaps : searchMapMapbox;
+};
+const getSearchMapVariantHandles = mapProvider => {
+  const searchMapVariant = getSearchMapVariant(mapProvider);
+  return {
+    labelHandle: searchMapVariant.LABEL_HANDLE,
+    infoCardHandle: searchMapVariant.INFO_CARD_HANDLE,
+  };
+};
+const getFitMapToBounds = mapProvider => {
+  const searchMapVariant = getSearchMapVariant(mapProvider);
+  return searchMapVariant.fitMapToBounds;
+};
+const getSearchMapVariantComponent = mapProvider => {
+  const searchMapVariant = getSearchMapVariant(mapProvider);
+  return searchMapVariant.default;
+};
 
-const withCoordinatesObfuscated = listings => {
+const withCoordinatesObfuscated = (listings, offset) => {
   return listings.map(listing => {
     const { id, attributes, ...rest } = listing;
     const origGeolocation = attributes.geolocation;
     const cacheKey = id ? `${id.uuid}_${origGeolocation.lat}_${origGeolocation.lng}` : null;
-    const geolocation = obfuscatedCoordinates(origGeolocation, config.maps.fuzzy.offset, cacheKey);
+    const geolocation = obfuscatedCoordinates(origGeolocation, offset, cacheKey);
     return {
       id,
       ...rest,
@@ -101,8 +111,12 @@ export class SearchMapComponent extends Component {
 
   onMapClicked(e) {
     // Close open listing popup / infobox, unless the click is attached to a price label
-    const labelClicked = hasParentWithClassName(e.nativeEvent.target, LABEL_HANDLE);
-    const infoCardClicked = hasParentWithClassName(e.nativeEvent.target, INFO_CARD_HANDLE);
+    const variantHandles = getSearchMapVariantHandles(this.props.config.maps.mapProvider);
+    const labelClicked = hasParentWithClassName(e.nativeEvent.target, variantHandles.labelHandle);
+    const infoCardClicked = hasParentWithClassName(
+      e.nativeEvent.target,
+      variantHandles.infoCardHandle
+    );
     if (this.state.infoCardOpen != null && !labelClicked && !infoCardClicked) {
       this.setState({ infoCardOpen: null });
     }
@@ -113,6 +127,7 @@ export class SearchMapComponent extends Component {
 
     if (this.mapRef && this.state.mapReattachmentCount === 0) {
       // map is ready, let's fit search area's bounds to map's viewport
+      const fitMapToBounds = getFitMapToBounds(this.props.config.maps.mapProvider);
       fitMapToBounds(this.mapRef, this.props.bounds, { padding: 0, isAutocompleteSearch: true });
     }
   }
@@ -129,15 +144,15 @@ export class SearchMapComponent extends Component {
       listings: originalListings,
       onMapMoveEnd,
       zoom,
-      mapsConfig,
+      config,
       activeListingId,
       messages,
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
 
     const listingsWithLocation = originalListings.filter(l => !!l.attributes.geolocation);
-    const listings = mapsConfig.fuzzy.enabled
-      ? withCoordinatesObfuscated(listingsWithLocation)
+    const listings = config.maps.fuzzy.enabled
+      ? withCoordinatesObfuscated(listingsWithLocation, config.maps.fuzzy.offset)
       : listingsWithLocation;
     const infoCardOpen = this.state.infoCardOpen;
 
@@ -147,13 +162,16 @@ export class SearchMapComponent extends Component {
       // Initiate rerendering
       this.setState({ mapReattachmentCount: window.mapReattachmentCount });
     };
+    const mapProvider = config.maps.mapProvider;
+    const SearchMapVariantComponent = getSearchMapVariantComponent(mapProvider);
 
-    return isMapsLibLoaded() ? (
+    return getSearchMapVariant(mapProvider).isMapsLibLoaded() ? (
       <ReusableMapContainer
         className={reusableContainerClassName}
         reusableMapHiddenHandle={REUSABLE_MAP_HIDDEN_HANDLE}
         onReattach={forceUpdateHandler}
         messages={messages}
+        config={config}
       >
         <SearchMapVariantComponent
           id={id}
@@ -173,6 +191,7 @@ export class SearchMapComponent extends Component {
           onMapMoveEnd={onMapMoveEnd}
           reusableMapHiddenHandle={REUSABLE_MAP_HIDDEN_HANDLE}
           zoom={zoom}
+          config={config}
         />
       </ReusableMapContainer>
     ) : (
@@ -193,7 +212,6 @@ SearchMapComponent.defaultProps = {
   listings: [],
   onCloseAsModal: null,
   zoom: 11,
-  mapsConfig: config.maps,
 };
 
 SearchMapComponent.propTypes = {
@@ -212,21 +230,32 @@ SearchMapComponent.propTypes = {
   onCloseAsModal: func,
   onMapMoveEnd: func.isRequired,
   zoom: number,
-  mapsConfig: object,
   messages: object.isRequired,
 
-  // from withRouteConfiguration
+  // from useConfiguration
+  config: object.isRequired,
+
+  // from useRouteConfiguration
   routeConfiguration: arrayOf(propTypes.route).isRequired,
 
-  // from withRouter
+  // from useHistory
   history: shape({
     push: func.isRequired,
   }).isRequired,
 };
 
-const SearchMap = withRouteConfiguration(withRouter(SearchMapComponent));
-
-SearchMap.getMapBounds = getMapBounds;
-SearchMap.getMapCenter = getMapCenter;
+const SearchMap = props => {
+  const config = useConfiguration();
+  const routeConfiguration = useRouteConfiguration();
+  const history = useHistory();
+  return (
+    <SearchMapComponent
+      config={config}
+      routeConfiguration={routeConfiguration}
+      history={history}
+      {...props}
+    />
+  );
+};
 
 export default SearchMap;
