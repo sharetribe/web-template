@@ -2,7 +2,6 @@ import React from 'react';
 import { bool, object, string } from 'prop-types';
 import classNames from 'classnames';
 
-import config from '../../../config';
 import { FormattedMessage, intlShape } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
 import getCountryCodes from '../../../translations/countryCodes';
@@ -12,7 +11,7 @@ import { FieldSelect, FieldTextInput } from '../../../components';
 import css from './ShippingDetails.module.css';
 
 const ShippingDetails = props => {
-  const { rootClassName, className, intl, disabled, form, fieldId } = props;
+  const { rootClassName, className, locale, intl, disabled, form, fieldId } = props;
   const classes = classNames(rootClassName || css.root, className);
 
   const optionalText = intl.formatMessage({
@@ -20,7 +19,7 @@ const ShippingDetails = props => {
   });
 
   // Use tha language set in config.locale to get the correct translations of the country names
-  const countryCodes = getCountryCodes(config.locale);
+  const countryCodes = getCountryCodes(locale);
 
   return (
     <div className={classes}>

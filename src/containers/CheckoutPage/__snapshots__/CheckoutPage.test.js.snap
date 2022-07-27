@@ -113,10 +113,12 @@ exports[`CheckoutPage matches snapshot 1`] = `
           }
           initiateOrderError={null}
           loadingData={true}
+          locale="en"
           onStripeInitialized={[Function]}
           onSubmit={[Function]}
           paymentIntent={null}
           showInitialMessageInput={true}
+          stripePublishableKey="pk_test_"
           totalPrice={null}
         />
       </section>

@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { arrayOf, bool, func, object, oneOfType, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 
-// Import configs and util modules
-import config from '../../config';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { withRouteConfiguration } from '../../context/routeConfigurationContext';
+// Import contexts and util modules
+import { useConfiguration } from '../../context/configurationContext';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { FormattedMessage, useIntl, intlShape } from '../../util/reactIntl';
 import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
 import {
   propTypes,
@@ -689,6 +689,7 @@ export class CheckoutPageComponent extends Component {
       paymentIntent,
       retrievePaymentIntentError,
       stripeCustomerFetched,
+      config,
     } = this.props;
 
     // Since the listing data is already given from the ListingPage
@@ -780,6 +781,7 @@ export class CheckoutPageComponent extends Component {
           userRole="customer"
           transaction={tx}
           {...txBookingMaybe}
+          currency={config.currency}
         />
       ) : null;
 
@@ -932,6 +934,8 @@ export class CheckoutPageComponent extends Component {
                   askShippingDetails={orderData?.deliveryMethod === 'shipping'}
                   pickupLocation={currentListing?.attributes?.publicData?.location}
                   totalPrice={tx.id ? getFormattedTotalPrice(tx, intl) : null}
+                  locale={config.locale}
+                  stripePublishableKey={config.stripe.publishableKey}
                 />
               ) : null}
               {isPaymentExpired ? (
@@ -1020,16 +1024,36 @@ CheckoutPageComponent.propTypes = {
   // from connect
   dispatch: func.isRequired,
 
-  // from injectIntl
+  // from useIntl
   intl: intlShape.isRequired,
 
-  // from withRouteConfiguration
+  // from useConfiguration
+  config: object.isRequired,
+
+  // from useRouteConfiguration
   routeConfiguration: arrayOf(propTypes.route).isRequired,
 
-  // from withRouter
+  // from useHistory
   history: shape({
     push: func.isRequired,
   }).isRequired,
+};
+
+const EnhancedCheckoutPage = props => {
+  const config = useConfiguration();
+  const routeConfiguration = useRouteConfiguration();
+  const intl = useIntl();
+  const history = useHistory();
+
+  return (
+    <CheckoutPageComponent
+      config={config}
+      routeConfiguration={routeConfiguration}
+      intl={intl}
+      history={history}
+      {...props}
+    />
+  );
 };
 
 const mapStateToProps = state => {
@@ -1081,14 +1105,11 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const CheckoutPage = compose(
-  withRouter,
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  injectIntl,
-  withRouteConfiguration
-)(CheckoutPageComponent);
+  )
+)(EnhancedCheckoutPage);
 
 CheckoutPage.setInitialValues = (initialValues, saveToSessionStorage = false) => {
   if (saveToSessionStorage) {
