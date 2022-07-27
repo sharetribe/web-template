@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { bool } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
-import config from '../../config';
-import { injectIntl, intlShape } from '../../util/reactIntl';
+import { useConfiguration } from '../../context/configurationContext';
+import { useIntl } from '../../util/reactIntl';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 
 import {
@@ -24,10 +24,15 @@ import twitterImage from '../../assets/sneakertimeTwitter-600x314.jpg';
 import SectionHero from './SectionHero/SectionHero';
 import SectionHowItWorks from './SectionHowItWorks/SectionHowItWorks';
 import SectionFilteredSearches from './SectionFilteredSearches/SectionFilteredSearches';
+
 import css from './LandingPage.module.css';
 
 export const LandingPageComponent = props => {
-  const { history, intl, location, scrollingDisabled } = props;
+  const config = useConfiguration();
+  const history = useHistory();
+  const location = useLocation();
+  const intl = useIntl();
+  const { scrollingDisabled } = props;
 
   // Schema for search engines (helps them to understand what this page is about)
   // http://schema.org
@@ -90,17 +95,8 @@ export const LandingPageComponent = props => {
   );
 };
 
-const { bool, object } = PropTypes;
-
 LandingPageComponent.propTypes = {
   scrollingDisabled: bool.isRequired,
-
-  // from withRouter
-  history: object.isRequired,
-  location: object.isRequired,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -115,10 +111,6 @@ const mapStateToProps = state => {
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const LandingPage = compose(
-  withRouter,
-  connect(mapStateToProps),
-  injectIntl
-)(LandingPageComponent);
+const LandingPage = compose(connect(mapStateToProps))(LandingPageComponent);
 
 export default LandingPage;
