@@ -8,7 +8,6 @@ import { bool, func, object, shape, string } from 'prop-types';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
-import config from '../../../config';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { ensurePaymentMethodCard } from '../../../util/data';
@@ -237,14 +236,15 @@ class StripePaymentForm extends Component {
       throw new Error('Stripe must be loaded for StripePaymentForm');
     }
 
-    if (config.stripe.publishableKey) {
+    const publishableKey = this.props.stripePublishableKey;
+    if (publishableKey) {
       const {
         onStripeInitialized,
         hasHandledCardPayment,
         defaultPaymentMethod,
         loadingData,
       } = this.props;
-      this.stripe = window.Stripe(config.stripe.publishableKey);
+      this.stripe = window.Stripe(publishableKey);
       onStripeInitialized(this.stripe);
 
       if (!(hasHandledCardPayment || defaultPaymentMethod || loadingData)) {
@@ -393,6 +393,8 @@ class StripePaymentForm extends Component {
       pickupLocation,
       askShippingDetails,
       totalPrice,
+      locale,
+      stripePublishableKey,
       values,
     } = formRenderProps;
 
@@ -466,7 +468,7 @@ class StripePaymentForm extends Component {
       : intl.formatMessage({ id: 'StripePaymentForm.pickupLocationUnknown' });
 
     const shippingOrPickupDetails = askShippingDetails ? (
-      <ShippingDetails intl={intl} form={form} />
+      <ShippingDetails intl={intl} form={form} locale={locale} />
     ) : (
       <div className={css.pickupWrapper}>
         <h3 className={css.pickupHeading}>
@@ -479,10 +481,16 @@ class StripePaymentForm extends Component {
     // Asking billing address is recommended in PaymentIntent flow.
     // In CheckoutPage, we send name and email as billing details, but address only if it exists.
     const billingAddress = (
-      <StripePaymentAddress intl={intl} form={form} fieldId={formId} card={this.card} />
+      <StripePaymentAddress
+        intl={intl}
+        form={form}
+        fieldId={formId}
+        card={this.card}
+        locale={locale}
+      />
     );
 
-    const hasStripeKey = config.stripe.publishableKey;
+    const hasStripeKey = stripePublishableKey;
 
     const handleSameAddressCheckbox = event => {
       const checked = event.target.checked;
@@ -646,7 +654,6 @@ StripePaymentForm.propTypes = {
   confirmCardPaymentError: object,
   confirmPaymentError: object,
   formId: string.isRequired,
-  intl: intlShape.isRequired,
   onSubmit: func.isRequired,
   paymentInfo: string,
   authorDisplayName: string.isRequired,
@@ -659,6 +666,11 @@ StripePaymentForm.propTypes = {
     building: string,
   }),
   totalPrice: string,
+  locale: string.isRequired,
+  stripePublishableKey: string.isRequired,
+
+  // from injectIntl
+  intl: intlShape.isRequired,
 };
 
 export default injectIntl(StripePaymentForm);

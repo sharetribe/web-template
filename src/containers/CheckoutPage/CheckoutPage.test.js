@@ -1,4 +1,6 @@
 import React from 'react';
+
+import defaultConfig from '../../config/defaultConfig';
 import { renderShallow } from '../../util/test-helpers';
 import { createUser, createCurrentUser, createListing, fakeIntl } from '../../util/test-data';
 import { CheckoutPageComponent } from './CheckoutPage';
@@ -47,6 +49,7 @@ describe('CheckoutPage', () => {
       onSavePaymentMethod: noop,
       onSendMessage: noop,
       confirmCardPaymentInProgress: false,
+      config: { ...defaultConfig, stripe: { ...defaultConfig.stripe, publishableKey: 'pk_test_' } },
       routeConfiguration,
     };
     const tree = renderShallow(<CheckoutPageComponent {...props} />);
