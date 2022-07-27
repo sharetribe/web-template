@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { array, arrayOf, bool, func, number, object, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
 
-import config from '../../config';
-import { withRouteConfiguration } from '../../context/routeConfigurationContext';
+import appSettings from '../../config/appSettings';
+import { useConfiguration } from '../../context/configurationContext';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
-import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
+import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
 import { isMainSearchTypeKeywords, isOriginInUse } from '../../util/search';
 import { withViewport } from '../../util/contextHelpers';
 import { parse, stringify } from '../../util/urlHelpers';
@@ -66,8 +67,6 @@ const GenericError = props => {
   );
 };
 
-const { bool } = PropTypes;
-
 GenericError.propTypes = {
   show: bool.isRequired,
 };
@@ -101,7 +100,7 @@ class TopbarComponent extends Component {
 
   handleSubmit(values) {
     const { currentSearchParams } = this.props;
-    const { history, routeConfiguration } = this.props;
+    const { history, config, routeConfiguration } = this.props;
 
     const topbarSearchParams = () => {
       if (isMainSearchTypeKeywords(config)) {
@@ -132,7 +131,7 @@ class TopbarComponent extends Component {
 
       // In production we ensure that data is really lost,
       // but in development mode we use stored values for debugging
-      if (config.dev) {
+      if (appSettings.dev) {
         history.push(path);
       } else if (typeof window !== 'undefined') {
         window.location = path;
@@ -165,6 +164,7 @@ class TopbarComponent extends Component {
       sendVerificationEmailInProgress,
       sendVerificationEmailError,
       showGenericError,
+      config,
     } = this.props;
 
     const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
@@ -321,8 +321,6 @@ TopbarComponent.defaultProps = {
   authScopes: [],
 };
 
-const { array, func, number, shape, string } = PropTypes;
-
 TopbarComponent.propTypes = {
   className: string,
   rootClassName: string,
@@ -358,16 +356,31 @@ TopbarComponent.propTypes = {
     height: number.isRequired,
   }).isRequired,
 
-  // from injectIntl
+  // from useIntl
   intl: intlShape.isRequired,
+
+  // from useConfiguration
+  config: object.isRequired,
+
+  // from useRouteConfiguration
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
-const Topbar = compose(
-  withViewport,
-  injectIntl,
-  withRouteConfiguration
-)(TopbarComponent);
+const EnhancedTopbar = props => {
+  const config = useConfiguration();
+  const routeConfiguration = useRouteConfiguration();
+  const intl = useIntl();
+  return (
+    <TopbarComponent
+      config={config}
+      routeConfiguration={routeConfiguration}
+      intl={intl}
+      {...props}
+    />
+  );
+};
 
+const Topbar = withViewport(EnhancedTopbar);
 Topbar.displayName = 'Topbar';
 
 export default Topbar;
