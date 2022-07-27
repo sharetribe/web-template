@@ -128,7 +128,8 @@ class ProfileSettingsFormComponent extends Component {
                 id={profileImage.id}
                 className={errorClasses}
                 rootClassName={css.uploadingImage}
-                aspectRatioClassName={css.squareAspectRatio}
+                aspectWidth={1}
+                aspectHeight={1}
                 file={profileImage.file}
               >
                 {uploadingOverlay}
