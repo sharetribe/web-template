@@ -126,6 +126,7 @@ const FormComponent = props => (
         monthlyTimeSlots,
         values,
         intl,
+        dayCountAvailableForBooking,
       } = fieldRenderProps;
       const submitDisabled = pristine || submitting;
 
@@ -152,6 +153,7 @@ const FormComponent = props => (
             form={form}
             pristine={pristine}
             timeZone={timeZone}
+            dayCountAvailableForBooking={dayCountAvailableForBooking}
           />
           <Button type="submit" disabled={submitDisabled} style={{ marginTop: '24px' }}>
             Select
@@ -176,6 +178,7 @@ export const Empty = {
     initialValues: {
       bookingStartDate: { date: new Date(Date.UTC(currentYear, today.getUTCMonth(), 14)) },
     },
+    dayCountAvailableForBooking: 90,
     onChange: formState => {},
     onSubmit: values => {
       console.log('Submitting a form with values:', values);

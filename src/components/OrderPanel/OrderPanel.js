@@ -1,12 +1,11 @@
 import React from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
-import { array, bool, func, node, object, oneOfType, shape, string } from 'prop-types';
+import { array, bool, func, node, number, object, oneOfType, shape, string } from 'prop-types';
 import loadable from '@loadable/component';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
 
-import config from '../../config';
 import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
 import {
   propTypes,
@@ -37,8 +36,8 @@ const ProductOrderForm = loadable(() =>
 const MODAL_BREAKPOINT = 1023;
 const TODAY = new Date();
 
-const priceData = (price, intl) => {
-  if (price && price.currency === config.currency) {
+const priceData = (price, currency, intl) => {
+  if (price && price.currency === currency) {
     const formattedPrice = formatMoney(intl, price);
     return { formattedPrice, priceTitle: formattedPrice };
   } else if (price) {
@@ -89,6 +88,8 @@ const OrderPanel = props => {
     onFetchTransactionLineItems,
     onContactUser,
     lineItems,
+    marketplaceCurrency,
+    dayCountAvailableForBooking,
     fetchLineItemsInProgress,
     fetchLineItemsError,
   } = props;
@@ -97,6 +98,24 @@ const OrderPanel = props => {
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
   const price = listing?.attributes?.price;
+
+  const showPriceMissing = !price;
+  const PriceMissing = () => {
+    return (
+      <p className={css.error}>
+        <FormattedMessage id="ProductOrderForm.listingPriceMissing" />
+      </p>
+    );
+  };
+  const showInvalidCurrency = price.currency !== marketplaceCurrency;
+  const InvalidCurrency = () => {
+    return (
+      <p className={css.error}>
+        <FormattedMessage id="ProductOrderForm.listingCurrencyInvalid" />
+      </p>
+    );
+  };
+
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
 
@@ -119,7 +138,7 @@ const OrderPanel = props => {
   const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
 
   const showClosedListingHelpText = listing.id && isClosed;
-  const { formattedPrice, priceTitle } = priceData(price, intl);
+  const { formattedPrice, priceTitle } = priceData(price, marketplaceCurrency, intl);
   const isOrderOpen = !!parse(location.search).orderOpen;
 
   const subTitleText = showClosedListingHelpText
@@ -173,13 +192,19 @@ const OrderPanel = props => {
           <FormattedMessage id="OrderPanel.soldBy" values={{ name: authorDisplayName }} />
         </div>
 
-        {showBookingTimeForm ? (
+        {showPriceMissing ? (
+          <PriceMissing />
+        ) : showInvalidCurrency ? (
+          <InvalidCurrency />
+        ) : showBookingTimeForm ? (
           <BookingTimeForm
             className={css.bookingForm}
             formId="OrderPanelBookingTimeForm"
             lineItemUnitType={lineItemUnitType}
             onSubmit={onSubmit}
             price={price}
+            marketplaceCurrency={marketplaceCurrency}
+            dayCountAvailableForBooking={dayCountAvailableForBooking}
             listingId={listing.id}
             isOwnListing={isOwnListing}
             monthlyTimeSlots={monthlyTimeSlots}
@@ -199,6 +224,8 @@ const OrderPanel = props => {
             lineItemUnitType={lineItemUnitType}
             onSubmit={onSubmit}
             price={price}
+            marketplaceCurrency={marketplaceCurrency}
+            dayCountAvailableForBooking={dayCountAvailableForBooking}
             listingId={listing.id}
             isOwnListing={isOwnListing}
             monthlyTimeSlots={monthlyTimeSlots}
@@ -214,6 +241,7 @@ const OrderPanel = props => {
             formId="OrderPanelProductOrderForm"
             onSubmit={onSubmit}
             price={price}
+            marketplaceCurrency={marketplaceCurrency}
             currentStock={currentStock}
             pickupEnabled={pickupEnabled}
             shippingEnabled={shippingEnabled}
@@ -288,6 +316,8 @@ OrderPanel.propTypes = {
   lineItems: array,
   fetchLineItemsInProgress: bool.isRequired,
   fetchLineItemsError: propTypes.error,
+  marketplaceCurrency: string.isRequired,
+  dayCountAvailableForBooking: number.isRequired,
 
   // from withRouter
   history: shape({

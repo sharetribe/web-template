@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { array, bool, func, object, string } from 'prop-types';
+import { array, bool, func, number, object, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import classNames from 'classnames';
 
-import config from '../../../config';
 import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
 import { timestampToDate } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
@@ -54,27 +53,14 @@ export class BookingTimeFormComponent extends Component {
   }
 
   render() {
-    const { rootClassName, className, price: unitPrice, ...rest } = this.props;
+    const {
+      rootClassName,
+      className,
+      price: unitPrice,
+      dayCountAvailableForBooking,
+      ...rest
+    } = this.props;
     const classes = classNames(rootClassName || css.root, className);
-
-    if (!unitPrice) {
-      return (
-        <div className={classes}>
-          <p className={css.error}>
-            <FormattedMessage id="BookingTimeForm.listingPriceMissing" />
-          </p>
-        </div>
-      );
-    }
-    if (unitPrice.currency !== config.currency) {
-      return (
-        <div className={classes}>
-          <p className={css.error}>
-            <FormattedMessage id="BookingTimeForm.listingCurrencyInvalid" />
-          </p>
-        </div>
-      );
-    }
 
     return (
       <FinalForm
@@ -146,6 +132,7 @@ export class BookingTimeFormComponent extends Component {
                   form={form}
                   pristine={pristine}
                   timeZone={timeZone}
+                  dayCountAvailableForBooking={dayCountAvailableForBooking}
                 />
               ) : null}
 
@@ -158,6 +145,7 @@ export class BookingTimeFormComponent extends Component {
                     breakdownData={breakdownData}
                     lineItems={lineItems}
                     timeZone={timeZone}
+                    currency={unitPrice.currency}
                   />
                 </div>
               ) : null}
@@ -225,6 +213,8 @@ BookingTimeFormComponent.propTypes = {
   // for tests
   startDatePlaceholder: string,
   endDatePlaceholder: string,
+
+  dayCountAvailableForBooking: number.isRequired,
 };
 
 const BookingTimeForm = compose(injectIntl)(BookingTimeFormComponent);
