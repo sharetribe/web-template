@@ -1,4 +1,4 @@
-import { subUnitDivisors, currencyConfiguration } from './currencySettings';
+import { subUnitDivisors, currencyFormatting } from './currencySettings';
 
 const env = process.env.REACT_APP_ENV;
 const dev = process.env.REACT_APP_ENV === 'development';
@@ -12,14 +12,9 @@ const sdkBaseUrl = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL;
 const sdkAssetCdnBaseUrl = process.env.REACT_APP_SHARETRIBE_SDK_ASSET_CDN_BASE_URL;
 const sdkTransitVerbose = process.env.REACT_APP_SHARETRIBE_SDK_TRANSIT_VERBOSE === 'true';
 
-// Marketplace currency.
-// It should match one of the currencies listed in currencySettings.js
-const currencyConf = process.env.REACT_APP_SHARETRIBE_MARKETPLACE_CURRENCY;
-const currency = currencyConf ? currencyConf.toUpperCase() : currencyConf;
-
-// Currency formatting options.
+// Get currency formatting options for given currency.
 // See: https://github.com/yahoo/react-intl/wiki/API#formatnumber
-const currencyConfig = currencyConfiguration(currency);
+const getCurrencyFormatting = currencyFormatting;
 
 // Sentry DSN (Data Source Name), a client key for authenticating calls to Sentry
 const sentryDsn = process.env.REACT_APP_SENTRY_DSN;
@@ -41,7 +36,7 @@ const appSettings = {
     assetCdnBaseUrl: sdkAssetCdnBaseUrl,
     transitVerbose: sdkTransitVerbose,
   },
-  currencyConfig,
+  getCurrencyFormatting,
   subUnitDivisors,
   canonicalRootURL, // TODO
   sentryDsn,
