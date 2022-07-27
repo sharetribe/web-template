@@ -1,9 +1,9 @@
 import React from 'react';
 import { string } from 'prop-types';
-import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import Decimal from 'decimal.js';
+
+import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
-import config from '../../config';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   propTypes,
@@ -18,11 +18,11 @@ const { Money } = sdkTypes;
 /**
  * Calculates the total price in sub units for multiple line items.
  */
-const lineItemsTotal = lineItems => {
+const lineItemsTotal = (lineItems, marketplaceCurrency) => {
   const amount = lineItems.reduce((total, item) => {
     return total.plus(item.lineTotal.amount);
   }, new Decimal(0));
-  const currency = lineItems[0] ? lineItems[0].lineTotal.currency : config.currency;
+  const currency = lineItems[0] ? lineItems[0].lineTotal.currency : marketplaceCurrency;
   return new Money(amount, currency);
 };
 
@@ -58,7 +58,7 @@ const hasCommission = (lineItems, userRole) => {
 };
 
 const LineItemSubTotalMaybe = props => {
-  const { lineItems, code, userRole, intl } = props;
+  const { lineItems, code, userRole, intl, marketplaceCurrency } = props;
 
   const refund = lineItems.find(item => item.code === code && item.reversal);
 
@@ -68,7 +68,7 @@ const LineItemSubTotalMaybe = props => {
   // all non-reversal, non-commission line items
   const subTotalLineItems = nonCommissionNonReversalLineItems(lineItems);
   // line totals of those line items combined
-  const subTotal = lineItemsTotal(subTotalLineItems);
+  const subTotal = lineItemsTotal(subTotalLineItems, marketplaceCurrency);
 
   const formattedSubTotal = subTotalLineItems.length > 0 ? formatMoney(intl, subTotal) : null;
 

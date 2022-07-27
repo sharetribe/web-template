@@ -39,6 +39,7 @@ describe('OrderBreakdown', () => {
     const tree = renderDeep(
       <OrderBreakdownComponent
         userRole="customer"
+        currency="USD"
         transaction={exampleTransaction({
           payinTotal: new Money(3000, 'USD'),
           payoutTotal: new Money(3000, 'USD'),
@@ -71,6 +72,7 @@ describe('OrderBreakdown', () => {
     const tree = renderDeep(
       <OrderBreakdownComponent
         userRole="customer"
+        currency="USD"
         transaction={exampleTransaction({
           payinTotal: new Money(2000, 'USD'),
           payoutTotal: new Money(2000, 'USD'),
@@ -100,6 +102,7 @@ describe('OrderBreakdown', () => {
     const tree = renderDeep(
       <OrderBreakdownComponent
         userRole="provider"
+        currency="USD"
         transaction={exampleTransaction({
           payinTotal: new Money(2000, 'USD'),
           payoutTotal: new Money(1800, 'USD'),
