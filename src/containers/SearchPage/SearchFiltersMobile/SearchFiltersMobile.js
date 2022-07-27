@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { bool, func, object, node, number, shape, string, arrayOf } from 'prop-types';
 import classNames from 'classnames';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
-import { withRouteConfiguration } from '../../../context/routeConfigurationContext';
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
+import { FormattedMessage, useIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { createResourceLocatorString } from '../../../util/routes';
 
@@ -180,20 +180,31 @@ SearchFiltersMobileComponent.propTypes = {
   selectedFiltersCount: number,
   isMapVariant: bool,
 
-  // from injectIntl
+  // from useIntl
   intl: intlShape.isRequired,
 
-  // from withRouteConfiguration
+  // from useRouteConfiguration
   routeConfiguration: arrayOf(propTypes.route).isRequired,
 
-  // from withRouter
+  // from useHistory
   history: shape({
     push: func.isRequired,
   }).isRequired,
 };
 
-const SearchFiltersMobile = injectIntl(
-  withRouter(withRouteConfiguration(SearchFiltersMobileComponent))
-);
+const SearchFiltersMobile = props => {
+  const routeConfiguration = useRouteConfiguration();
+  const intl = useIntl();
+  const history = useHistory();
+
+  return (
+    <SearchFiltersMobileComponent
+      routeConfiguration={routeConfiguration}
+      intl={intl}
+      history={history}
+      {...props}
+    />
+  );
+};
 
 export default SearchFiltersMobile;

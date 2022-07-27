@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { array, bool, func, oneOf, object, shape, string } from 'prop-types';
+import { array, arrayOf, bool, func, object, oneOf, shape, string } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { withRouter } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import omit from 'lodash/omit';
 import classNames from 'classnames';
 
-import config from '../../config';
-import { injectIntl, intlShape, FormattedMessage } from '../../util/reactIntl';
-import { withRouteConfiguration } from '../../context/routeConfigurationContext';
+import { useIntl, intlShape, FormattedMessage } from '../../util/reactIntl';
+import { useConfiguration } from '../../context/configurationContext';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
 import {
@@ -100,7 +100,11 @@ export class SearchPageComponent extends Component {
     // we start to react to "mapmoveend" events by generating new searches
     // (i.e. 'moveend' event in Mapbox and 'bounds_changed' in Google Maps)
     if (viewportBoundsChanged && isSearchPage) {
-      const { history, location, listingExtendedDataConfig, defaultFiltersConfig } = this.props;
+      const { history, location, config } = this.props;
+      const {
+        listingExtendedData: listingExtendedDataConfig,
+        defaultFilters: defaultFiltersConfig,
+      } = config?.custom || {};
 
       // parse query parameters, including a custom attribute named category
       const { address, bounds, mapSearch, ...rest } = parse(location.search, {
@@ -108,8 +112,7 @@ export class SearchPageComponent extends Component {
         latlngBounds: ['bounds'],
       });
 
-      //const viewportMapCenter = SearchMap.getMapCenter(map);
-      const originMaybe = isOriginInUse(config) ? { origin: viewportCenter } : {};
+      const originMaybe = isOriginInUse(this.props.config) ? { origin: viewportCenter } : {};
 
       const searchParams = {
         address,
@@ -137,13 +140,13 @@ export class SearchPageComponent extends Component {
 
   // Apply the filters by redirecting to SearchPage with new filters.
   applyFilters() {
+    const { history, routeConfiguration, config } = this.props;
     const {
-      history,
-      routeConfiguration,
       sortConfig,
-      listingExtendedDataConfig,
-      defaultFiltersConfig,
-    } = this.props;
+      listingExtendedData: listingExtendedDataConfig,
+      defaultFilters: defaultFiltersConfig,
+    } = config?.custom || {};
+
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
     const searchParams = { ...urlQueryParams, ...this.state.currentQueryParams };
     const search = cleanSearchFromConflictingParams(
@@ -163,12 +166,10 @@ export class SearchPageComponent extends Component {
 
   // Reset all filter query parameters
   resetAll(e) {
-    const {
-      history,
-      routeConfiguration,
-      listingExtendedDataConfig,
-      defaultFiltersConfig,
-    } = this.props;
+    const { history, routeConfiguration, config } = this.props;
+    const { listingExtendedData: listingExtendedDataConfig, defaultFilters: defaultFiltersConfig } =
+      config?.custom || {};
+
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
     const filterQueryParamNames = getQueryParamNames(
       listingExtendedDataConfig,
@@ -184,13 +185,13 @@ export class SearchPageComponent extends Component {
   }
 
   getHandleChangedValueFn(useHistoryPush) {
+    const { history, routeConfiguration, config } = this.props;
     const {
-      history,
-      routeConfiguration,
       sortConfig,
-      listingExtendedDataConfig,
-      defaultFiltersConfig,
-    } = this.props;
+      listingExtendedData: listingExtendedDataConfig,
+      defaultFilters: defaultFiltersConfig,
+    } = config?.custom || {};
+
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
     return updatedURLParams => {
@@ -246,12 +247,7 @@ export class SearchPageComponent extends Component {
     const {
       intl,
       listings,
-      activeProcesses,
-      listingExtendedDataConfig,
-      defaultFiltersConfig,
-      sortConfig,
       location,
-      routeConfiguration,
       onManageDisableScrolling,
       pagination,
       scrollingDisabled,
@@ -260,7 +256,17 @@ export class SearchPageComponent extends Component {
       searchParams,
       activeListingId,
       onActivateListing,
+      routeConfiguration,
+      config,
     } = this.props;
+
+    const {
+      processes: activeProcesses,
+      listingExtendedData: listingExtendedDataConfig,
+      defaultFilters: defaultFiltersConfig,
+      sortConfig,
+    } = config?.custom || {};
+    const marketplaceCurrency = config.currency;
 
     // Page transition might initially use values from previous search
     // urlQueryParams doesn't contain page specific url params
@@ -270,7 +276,8 @@ export class SearchPageComponent extends Component {
       searchParams,
       listingExtendedDataConfig,
       defaultFiltersConfig,
-      sortConfig
+      sortConfig,
+      isOriginInUse(config)
     );
 
     const validQueryParams = validURLParamsForExtendedData(
@@ -375,7 +382,8 @@ export class SearchPageComponent extends Component {
       listings,
       searchParamsInURL || {},
       intl,
-      routeConfiguration
+      routeConfiguration,
+      config
     );
 
     // Set topbar class based on if a modal is open in
@@ -424,6 +432,7 @@ export class SearchPageComponent extends Component {
                     key={`SearchFiltersMobile.${config.key}`}
                     idPrefix="SearchFiltersMobile"
                     config={config}
+                    marketplaceCurrency={marketplaceCurrency}
                     urlQueryParams={validQueryParams}
                     initialValues={initialValues(this.props, this.state.currentQueryParams)}
                     getHandleChangedValueFn={this.getHandleChangedValueFn}
@@ -449,6 +458,7 @@ export class SearchPageComponent extends Component {
                       key={`SearchFiltersPrimary.${config.key}`}
                       idPrefix="SearchFiltersPrimary"
                       config={config}
+                      marketplaceCurrency={marketplaceCurrency}
                       urlQueryParams={validQueryParams}
                       initialValues={initialValues(this.props, this.state.currentQueryParams)}
                       getHandleChangedValueFn={this.getHandleChangedValueFn}
@@ -475,6 +485,7 @@ export class SearchPageComponent extends Component {
                         key={`SearchFiltersSecondary.${config.key}`}
                         idPrefix="SearchFiltersSecondary"
                         config={config}
+                        marketplaceCurrency={marketplaceCurrency}
                         urlQueryParams={validQueryParams}
                         initialValues={initialValues(this.props, this.state.currentQueryParams)}
                         getHandleChangedValueFn={this.getHandleChangedValueFn}
@@ -545,10 +556,6 @@ SearchPageComponent.defaultProps = {
   searchListingsError: null,
   searchParams: {},
   tab: 'listings',
-  activeProcesses: config.custom.processes,
-  listingExtendedDataConfig: config.custom.listingExtendedData,
-  defaultFiltersConfig: config.custom.defaultFilters,
-  sortConfig: config.custom.sortConfig,
   activeListingId: null,
 };
 
@@ -563,20 +570,43 @@ SearchPageComponent.propTypes = {
   searchParams: object,
   tab: oneOf(['filters', 'listings', 'map']).isRequired,
   activeProcesses: array,
-  listingExtendedDataConfig: propTypes.listingExtendedDataConfig,
-  defaultFiltersConfig: propTypes.defaultFiltersConfig,
-  sortConfig: propTypes.sortConfig,
 
-  // from withRouter
+  // from useHistory
   history: shape({
     push: func.isRequired,
   }).isRequired,
+  // from useLocation
   location: shape({
     search: string.isRequired,
   }).isRequired,
 
-  // from injectIntl
+  // from useIntl
   intl: intlShape.isRequired,
+
+  // from useConfiguration
+  config: object.isRequired,
+
+  // from useRouteConfiguration
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
+};
+
+const EnhancedSearchPage = props => {
+  const config = useConfiguration();
+  const routeConfiguration = useRouteConfiguration();
+  const intl = useIntl();
+  const history = useHistory();
+  const location = useLocation();
+
+  return (
+    <SearchPageComponent
+      config={config}
+      routeConfiguration={routeConfiguration}
+      intl={intl}
+      history={history}
+      location={location}
+      {...props}
+    />
+  );
 };
 
 const mapStateToProps = state => {
@@ -614,13 +644,10 @@ const mapDispatchToProps = dispatch => ({
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const SearchPage = compose(
-  withRouter,
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  injectIntl,
-  withRouteConfiguration
-)(SearchPageComponent);
+  )
+)(EnhancedSearchPage);
 
 export default SearchPage;

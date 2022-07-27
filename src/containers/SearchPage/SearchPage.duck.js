@@ -1,6 +1,3 @@
-import unionWith from 'lodash/unionWith';
-
-import config from '../../config';
 import { storableError } from '../../util/errors';
 import { convertUnitToSubUnit, unitDivisor } from '../../util/currency';
 import {
@@ -97,12 +94,11 @@ export const searchListingsError = e => ({
   payload: e,
 });
 
-export const searchListings = searchParams => (dispatch, getState, sdk) => {
+export const searchListings = (searchParams, config) => (dispatch, getState, sdk) => {
   dispatch(searchListingsRequest(searchParams));
 
   const priceSearchParams = priceParam => {
-    const inSubunits = value =>
-      convertUnitToSubUnit(value, unitDivisor(config.currencyConfig.currency));
+    const inSubunits = value => convertUnitToSubUnit(value, unitDivisor(config.currency));
     const values = priceParam ? priceParam.split(',') : [];
     return priceParam && values.length === 2
       ? {
@@ -193,7 +189,7 @@ export const setActiveListing = listingId => ({
   payload: listingId,
 });
 
-export const loadData = (params, search) => {
+export const loadData = (params, search, config) => {
   const queryParams = parse(search, {
     latlng: ['origin'],
     latlngBounds: ['bounds'],
@@ -208,18 +204,21 @@ export const loadData = (params, search) => {
   const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
   const aspectRatio = aspectHeight / aspectWidth;
 
-  return searchListings({
-    ...minStockMaybe,
-    ...rest,
-    ...originMaybe,
-    page,
-    perPage: RESULT_PAGE_SIZE,
-    include: ['author', 'images'],
-    'fields.listing': ['title', 'geolocation', 'price'],
-    'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
-    'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
-    ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
-    ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
-    'limit.images': 1,
-  });
+  return searchListings(
+    {
+      ...minStockMaybe,
+      ...rest,
+      ...originMaybe,
+      page,
+      perPage: RESULT_PAGE_SIZE,
+      include: ['author', 'images'],
+      'fields.listing': ['title', 'geolocation', 'price'],
+      'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
+      'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
+      ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+      ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+      'limit.images': 1,
+    },
+    config
+  );
 };

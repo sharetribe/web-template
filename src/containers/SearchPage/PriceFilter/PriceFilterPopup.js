@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { arrayOf, func, node, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
-import config from '../../../config';
 import { injectIntl, intlShape } from '../../../util/reactIntl';
-import { propTypes } from '../../../util/types';
 import { formatCurrencyMajorUnit } from '../../../util/currency';
 
 import { OutsideClickHandler } from '../../../components';
@@ -131,7 +129,7 @@ class PriceFilterPopup extends Component {
       max,
       step,
       intl,
-      currencyConfig,
+      marketplaceCurrency,
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
 
@@ -147,8 +145,8 @@ class PriceFilterPopup extends Component {
       ? intl.formatMessage(
           { id: 'PriceFilter.labelSelectedButton' },
           {
-            minPrice: formatCurrencyMajorUnit(intl, currencyConfig.currency, minPrice),
-            maxPrice: formatCurrencyMajorUnit(intl, currencyConfig.currency, maxPrice),
+            minPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, minPrice),
+            maxPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, maxPrice),
           }
         )
       : label
@@ -200,7 +198,6 @@ PriceFilterPopup.defaultProps = {
   contentPlacementOffset: 0,
   liveEdit: false,
   step: number,
-  currencyConfig: config.currencyConfig,
 };
 
 PriceFilterPopup.propTypes = {
@@ -217,7 +214,7 @@ PriceFilterPopup.propTypes = {
   min: number.isRequired,
   max: number.isRequired,
   step: number,
-  currencyConfig: propTypes.currencyConfig,
+  marketplaceCurrency: string.isRequired,
 
   // form injectIntl
   intl: intlShape.isRequired,
