@@ -1,23 +1,12 @@
 import React, { Component } from 'react';
-import {
-  any,
-  array,
-  arrayOf,
-  bool,
-  func,
-  number,
-  object,
-  oneOfType,
-  shape,
-  string,
-} from 'prop-types';
+import { any, array, arrayOf, bool, number, object, oneOfType, shape, string } from 'prop-types';
 import { Helmet } from 'react-helmet-async';
-import { withRouter } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 
-import config from '../../config';
-import { withRouteConfiguration } from '../../context/routeConfigurationContext';
-import { injectIntl, intlShape } from '../../util/reactIntl';
+import { useConfiguration } from '../../context/configurationContext';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { useIntl, intlShape } from '../../util/reactIntl';
 import { metaTagProps } from '../../util/seo';
 import { canonicalRoutePath } from '../../util/routes';
 import { propTypes } from '../../util/types';
@@ -102,6 +91,7 @@ class PageComponent extends Component {
       twitterHandle,
       twitterImages,
       updated,
+      config,
       routeConfiguration,
     } = this.props;
 
@@ -293,20 +283,38 @@ PageComponent.propTypes = {
   twitterHandle: string, // twitter handle
   updated: string, // article:modified_time
 
-  // from withRouteConfiguration
+  // from useConfiguration
+  config: object.isRequired,
+
+  // from useRouteConfiguration
   routeConfiguration: arrayOf(propTypes.route).isRequired,
 
-  // from withRouter
-  history: shape({
-    listen: func.isRequired,
-  }).isRequired,
-  location: object.isRequired,
-
-  // from injectIntl
+  // from useIntl
   intl: intlShape.isRequired,
+
+  // from useLocation
+  location: shape({
+    pathname: string.isRequired,
+    search: string.isRequired,
+    hash: string.isRequired,
+  }).isRequired,
 };
 
-const Page = injectIntl(withRouter(withRouteConfiguration(PageComponent)));
-Page.displayName = 'Page';
+const Page = props => {
+  const config = useConfiguration();
+  const routeConfiguration = useRouteConfiguration();
+  const location = useLocation();
+  const intl = useIntl();
+
+  return (
+    <PageComponent
+      config={config}
+      routeConfiguration={routeConfiguration}
+      location={location}
+      intl={intl}
+      {...props}
+    />
+  );
+};
 
 export default Page;
