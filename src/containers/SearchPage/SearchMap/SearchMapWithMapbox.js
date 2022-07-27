@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { arrayOf, func, node, number, shape, string } from 'prop-types';
+import { arrayOf, func, node, number, object, shape, string } from 'prop-types';
 import differenceBy from 'lodash/differenceBy';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
@@ -378,6 +378,7 @@ class SearchMapWithMapbox extends Component {
       onListingInfoCardClicked,
       createURLToListing,
       mapComponentRefreshToken,
+      config,
     } = this.props;
 
     if (this.map) {
@@ -475,7 +476,7 @@ class SearchMapWithMapbox extends Component {
           // Create component portals for correct marker containers
           if (isMapReadyForMarkers && m.type === 'price') {
             return ReactDOM.createPortal(
-              <SearchMapPriceLabel {...m.componentProps} />,
+              <SearchMapPriceLabel {...m.componentProps} config={config} />,
               portalDOMContainer
             );
           } else if (isMapReadyForMarkers && m.type === 'group') {
@@ -488,7 +489,7 @@ class SearchMapWithMapbox extends Component {
         })}
         {this.state.mapContainer && this.currentInfoCard
           ? ReactDOM.createPortal(
-              <SearchMapInfoCard {...this.currentInfoCard.componentProps} />,
+              <SearchMapInfoCard {...this.currentInfoCard.componentProps} config={config} />,
               this.currentInfoCard.markerContainer
             )
           : null}
@@ -519,6 +520,7 @@ SearchMapWithMapbox.propTypes = {
   onMapLoad: func.isRequired,
   zoom: number,
   reusableMapHiddenHandle: string,
+  config: object.isRequired,
 };
 
 export default SearchMapWithMapbox;
