@@ -14,7 +14,7 @@ import mapValues from 'lodash/mapValues';
 import moment from 'moment';
 
 // Configs and store setup
-import { defaultConfig } from './config';
+import defaultConfig from './config/defaultConfig';
 import configureStore from './store';
 
 // utils
