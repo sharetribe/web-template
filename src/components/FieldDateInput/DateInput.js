@@ -6,7 +6,7 @@
  */
 import React, { Component } from 'react';
 import { bool, func, instanceOf, shape, string } from 'prop-types';
-import { SingleDatePicker, isInclusivelyAfterDay, isInclusivelyBeforeDay } from 'react-dates';
+import { SingleDatePicker } from 'react-dates';
 
 // Import moment from moment-timezone. 10-year range only.
 // The full data included in moment-timezone dependency is mostly irrelevant
@@ -14,7 +14,6 @@ import { SingleDatePicker, isInclusivelyAfterDay, isInclusivelyBeforeDay } from 
 import moment from 'moment-timezone/builds/moment-timezone-with-data-10-year-range.min';
 
 import classNames from 'classnames';
-import config from '../../config';
 
 import { intlShape, injectIntl } from '../../util/reactIntl';
 
@@ -55,7 +54,8 @@ const defaultProps = {
   appendToBody: false,
   disableScroll: false,
   initialVisibleMonth: null,
-  firstDayOfWeek: config.i18n.firstDayOfWeek,
+  // This gets default value at FieldDateInput
+  firstDayOfWeek: 0,
   numberOfMonths: 1,
   keepOpenOnDateSelect: false,
   reopenPickerOnClearDate: false,
@@ -81,14 +81,8 @@ const defaultProps = {
   enableOutsideDays: false,
   isDayBlocked: () => false,
 
-  // outside range -><- today ... today+available days -1 -><- outside range
-  isOutsideRange: day => {
-    const endOfRange = config.dayCountAvailableForBooking - 1;
-    return (
-      !isInclusivelyAfterDay(day, moment()) ||
-      !isInclusivelyBeforeDay(day, moment().add(endOfRange, 'days'))
-    );
-  },
+  // This gets default value at FieldDateInput
+  isOutsideRange: day => false,
   isDayHighlighted: () => {},
 
   // Internationalization props
