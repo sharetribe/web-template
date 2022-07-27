@@ -1,6 +1,5 @@
 import pick from 'lodash/pick';
 
-import config from '../../config';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { storableError } from '../../util/errors';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -194,7 +193,7 @@ export const sendEnquiryError = e => ({ type: SEND_ENQUIRY_ERROR, error: true, p
 
 // ================ Thunks ================ //
 
-export const showListing = (listingId, isOwn = false) => (dispatch, getState, sdk) => {
+export const showListing = (listingId, config, isOwn = false) => (dispatch, getState, sdk) => {
   const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
   const aspectRatio = aspectHeight / aspectWidth;
 
@@ -368,7 +367,7 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
     });
 };
 
-export const loadData = (params, search) => dispatch => {
+export const loadData = (params, search, config) => dispatch => {
   const listingId = new UUID(params.id);
 
   // Clear old line-items
@@ -376,21 +375,22 @@ export const loadData = (params, search) => dispatch => {
 
   const ownListingVariants = [LISTING_PAGE_DRAFT_VARIANT, LISTING_PAGE_PENDING_APPROVAL_VARIANT];
   if (ownListingVariants.includes(params.variant)) {
-    return dispatch(showListing(listingId, true));
+    return dispatch(showListing(listingId, config, true));
   }
 
-  return Promise.all([dispatch(showListing(listingId)), dispatch(fetchReviews(listingId))]).then(
-    response => {
-      const listing = response[0].data.data;
-      const processAlias = listing?.attributes?.publicData?.transactionProcessAlias || '';
-      const [processName, alias] = processAlias.split('/');
-      if (isBookingProcess(processName)) {
-        // Fetch timeSlots.
-        // This can happen parallel to loadData.
-        // We are not interested to return them from loadData call.
-        fetchMonthlyTimeSlots(dispatch, listing);
-      }
-      return response;
+  return Promise.all([
+    dispatch(showListing(listingId, config)),
+    dispatch(fetchReviews(listingId)),
+  ]).then(response => {
+    const listing = response[0].data.data;
+    const processAlias = listing?.attributes?.publicData?.transactionProcessAlias || '';
+    const [processName, alias] = processAlias.split('/');
+    if (isBookingProcess(processName)) {
+      // Fetch timeSlots.
+      // This can happen parallel to loadData.
+      // We are not interested to return them from loadData call.
+      fetchMonthlyTimeSlots(dispatch, listing);
     }
-  );
+    return response;
+  });
 };

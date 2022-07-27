@@ -95,6 +95,14 @@ exports[`ListingPage matches snapshot 1`] = `
               "type": "listing",
             }
           }
+          listingConfig={
+            Object {
+              "aspectHeight": 400,
+              "aspectWidth": 400,
+              "showUnitTypeTranslations": false,
+              "variantPrefix": "listing-card",
+            }
+          }
           onImageCarouselClose={[Function]}
           onManageDisableScrolling={[Function]}
           title="listing1 title"
@@ -261,6 +269,128 @@ exports[`ListingPage matches snapshot 1`] = `
                   "uuid": "listing1",
                 }
               }
+              mapsConfig={
+                Object {
+                  "customMarker": Object {
+                    "anchorX": 16,
+                    "anchorY": 32,
+                    "enabled": false,
+                    "height": 32,
+                    "url": "http://localhost:3000/static/icons/map-marker-32x32.png",
+                    "width": 32,
+                  },
+                  "fuzzy": Object {
+                    "circleColor": "#c0392b",
+                    "defaultZoomLevel": 13,
+                    "enabled": false,
+                    "offset": 500,
+                  },
+                  "googleMapsAPIKey": undefined,
+                  "mapProvider": "MAPBOX",
+                  "mapboxAccessToken": "pk.eyJ1Ijoic2hhcmV0cmliZSIsImEiOiJjamtqamN4YWwxYjJ1M2tvNmwzaWR4N2RqIn0.o-72vMkdaAmR3lR0BHJe8Q",
+                  "search": Object {
+                    "currentLocationBoundsDistance": 1000,
+                    "defaults": Array [
+                      Object {
+                        "id": "default-helsinki",
+                        "predictionPlace": Object {
+                          "address": "Helsinki, Finland",
+                          "bounds": LatLngBounds {
+                            "_sdkType": "LatLngBounds",
+                            "ne": LatLng {
+                              "_sdkType": "LatLng",
+                              "lat": 60.29783,
+                              "lng": 25.25448,
+                            },
+                            "sw": LatLng {
+                              "_sdkType": "LatLng",
+                              "lat": 59.92248,
+                              "lng": 24.78287,
+                            },
+                          },
+                        },
+                      },
+                      Object {
+                        "id": "default-turku",
+                        "predictionPlace": Object {
+                          "address": "Turku, Finland",
+                          "bounds": LatLngBounds {
+                            "_sdkType": "LatLngBounds",
+                            "ne": LatLng {
+                              "_sdkType": "LatLng",
+                              "lat": 60.53045,
+                              "lng": 22.38197,
+                            },
+                            "sw": LatLng {
+                              "_sdkType": "LatLng",
+                              "lat": 60.33361,
+                              "lng": 22.06644,
+                            },
+                          },
+                        },
+                      },
+                      Object {
+                        "id": "default-tampere",
+                        "predictionPlace": Object {
+                          "address": "Tampere, Finland",
+                          "bounds": LatLngBounds {
+                            "_sdkType": "LatLngBounds",
+                            "ne": LatLng {
+                              "_sdkType": "LatLng",
+                              "lat": 61.83657,
+                              "lng": 24.11838,
+                            },
+                            "sw": LatLng {
+                              "_sdkType": "LatLng",
+                              "lat": 61.42728,
+                              "lng": 23.5422,
+                            },
+                          },
+                        },
+                      },
+                      Object {
+                        "id": "default-oulu",
+                        "predictionPlace": Object {
+                          "address": "Oulu, Finland",
+                          "bounds": LatLngBounds {
+                            "_sdkType": "LatLngBounds",
+                            "ne": LatLng {
+                              "_sdkType": "LatLng",
+                              "lat": 65.56434,
+                              "lng": 26.77069,
+                            },
+                            "sw": LatLng {
+                              "_sdkType": "LatLng",
+                              "lat": 64.8443,
+                              "lng": 24.11494,
+                            },
+                          },
+                        },
+                      },
+                      Object {
+                        "id": "default-ruka",
+                        "predictionPlace": Object {
+                          "address": "Ruka, Finland",
+                          "bounds": LatLngBounds {
+                            "_sdkType": "LatLngBounds",
+                            "ne": LatLng {
+                              "_sdkType": "LatLng",
+                              "lat": 66.16997,
+                              "lng": 29.16773,
+                            },
+                            "sw": LatLng {
+                              "_sdkType": "LatLng",
+                              "lat": 66.16095,
+                              "lng": 29.13572,
+                            },
+                          },
+                        },
+                      },
+                    ],
+                    "suggestCurrentLocation": true,
+                  },
+                }
+              }
               publicData={Object {}}
               rootClassName={null}
             />
@@ -349,6 +479,7 @@ exports[`ListingPage matches snapshot 1`] = `
             <withRouter(injectIntl(OrderPanel))
               authorDisplayName="user-1 display name"
               className="orderPanel"
+              dayCountAvailableForBooking={90}
               fetchLineItemsError={null}
               fetchLineItemsInProgress={false}
               isOwnListing={false}
@@ -395,6 +526,7 @@ exports[`ListingPage matches snapshot 1`] = `
                   "type": "listing",
                 }
               }
+              marketplaceCurrency="USD"
               monthlyTimeSlots={null}
               onContactUser={[Function]}
               onFetchTimeSlots={[Function]}

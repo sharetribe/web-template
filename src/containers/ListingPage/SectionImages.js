@@ -1,6 +1,5 @@
 import React from 'react';
 
-import config from '../../config';
 import { FormattedMessage } from '../../util/reactIntl';
 import { AspectRatioWrapper, ResponsiveImage, Modal } from '../../components';
 
@@ -13,6 +12,7 @@ const SectionImages = props => {
   const {
     title,
     listing,
+    listingConfig,
     isOwnListing,
     editParams,
     handleViewPhotosClick,
@@ -23,7 +23,7 @@ const SectionImages = props => {
 
   const hasImages = listing.images && listing.images.length > 0;
   const firstImage = hasImages ? listing.images[0] : null;
-  const { aspectWidth, aspectHeight, variantPrefix = 'listing-card' } = config.listing;
+  const { aspectWidth, aspectHeight, variantPrefix = 'listing-card' } = listingConfig;
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
