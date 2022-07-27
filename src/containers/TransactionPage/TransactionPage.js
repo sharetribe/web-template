@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 
+import { useConfiguration } from '../../context/configurationContext';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { createResourceLocatorString, findRouteByRouteName } from '../../util/routes';
 import {
@@ -22,7 +24,6 @@ import {
   getUpdatedProcessName,
   getProcess,
 } from '../../util/transaction';
-import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/UI.duck';
@@ -79,6 +80,7 @@ export const TransactionPageComponent = props => {
     isReviewModalOpen: false,
     reviewSubmitted: false,
   });
+  const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const {
     currentUser,
@@ -259,7 +261,7 @@ export const TransactionPageComponent = props => {
           };
     const params = { reviewRating: rating, reviewContent };
 
-    onSendReview(transaction, transitionOptions, params)
+    onSendReview(transaction, transitionOptions, params, config)
       .then(r =>
         setState(prevState => ({ ...prevState, isReviewModalOpen: false, reviewSubmitted: true }))
       )
@@ -377,6 +379,7 @@ export const TransactionPageComponent = props => {
             userRole={transactionRole}
             transaction={transaction}
             {...txBookingMaybe}
+            currency={config.currency}
           />
         ),
       }
@@ -416,10 +419,11 @@ export const TransactionPageComponent = props => {
             totalMessagePages > oldestMessagePageFetched && !fetchMessagesInProgress
           }
           onOpenReviewModal={onOpenReviewModal}
-          onShowOlderMessages={() => onShowMoreMessages(transaction.id)}
+          onShowOlderMessages={() => onShowMoreMessages(transaction.id, config)}
           fetchMessagesInProgress={fetchMessagesInProgress}
         />
       }
+      config={config}
       {...orderBreakdownMaybe}
       orderPanel={
         <OrderPanel
@@ -438,6 +442,8 @@ export const TransactionPageComponent = props => {
           lineItems={lineItems}
           fetchLineItemsInProgress={fetchLineItemsInProgress}
           fetchLineItemsError={fetchLineItemsError}
+          marketplaceCurrency={config.currency}
+          dayCountAvailableForBooking={config.dayCountAvailableForBooking}
         />
       }
     />
@@ -619,12 +625,12 @@ const mapDispatchToProps = dispatch => {
   return {
     onTransition: (txId, transitionName, params) =>
       dispatch(makeTransition(txId, transitionName, params)),
-    onShowMoreMessages: txId => dispatch(fetchMoreMessages(txId)),
-    onSendMessage: (txId, message) => dispatch(sendMessage(txId, message)),
+    onShowMoreMessages: (txId, config) => dispatch(fetchMoreMessages(txId, config)),
+    onSendMessage: (txId, message, config) => dispatch(sendMessage(txId, message, config)),
     onManageDisableScrolling: (componentId, disableScrolling) =>
       dispatch(manageDisableScrolling(componentId, disableScrolling)),
-    onSendReview: (tx, transitionOptions, params) =>
-      dispatch(sendReview(tx, transitionOptions, params)),
+    onSendReview: (tx, transitionOptions, params, config) =>
+      dispatch(sendReview(tx, transitionOptions, params, config)),
     callSetInitialValues: (setInitialValues, values) => dispatch(setInitialValues(values)),
     onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
     onFetchTransactionLineItems: (orderData, listingId, isOwnListing) =>
