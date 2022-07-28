@@ -28,7 +28,8 @@ import { loadableReady } from '@loadable/component';
 import './styles/marketplaceDefaults.css';
 
 // Configs and store setup
-import { appSettings, defaultConfig } from './config';
+import appSettings from './config/appSettings';
+import defaultConfig from './config/defaultConfig';
 import { LoggingAnalyticsHandler, GoogleAnalyticsHandler } from './analytics/handlers';
 import configureStore from './store';
 

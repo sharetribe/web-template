@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 
 import configureStore from '../store';
 import { IntlProvider } from '../util/reactIntl';
-import { defaultConfig } from '../config';
+import defaultConfig from '../config/defaultConfig';
 import { ConfigurationProvider } from '../context/configurationContext';
 import { RouteConfigurationProvider } from '../context/routeConfigurationContext';
 import routeConfiguration from '../routing/routeConfiguration';
