@@ -193,7 +193,7 @@ const maps = {
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets in this file.
-const config = {
+const defaultConfig = {
   appCdnAssets,
   locale,
   listingManagementType,
@@ -227,4 +227,4 @@ const config = {
   custom,
 };
 
-export default config;
+export default defaultConfig;

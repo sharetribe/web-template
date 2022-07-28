@@ -32,7 +32,7 @@ const canonicalRootURL = process.env.REACT_APP_CANONICAL_ROOT_URL;
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets in this file.
-const config = {
+const appSettings = {
   env,
   dev,
   sdk: {
@@ -48,4 +48,4 @@ const config = {
   usingSSL,
 };
 
-export default config;
+export default appSettings;
