@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { arrayOf, bool, func, string } from 'prop-types';
-import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { withRouteConfiguration } from '../../context/routeConfigurationContext';
 
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+
+import { FormattedMessage } from '../../util/reactIntl';
 import { ensureCurrentUser } from '../../util/data';
 import { propTypes } from '../../util/types';
 import { pathByRouteName } from '../../util/routes';
+
 import { Modal } from '../../components';
 
 import EmailReminder from './EmailReminder';
@@ -167,10 +169,14 @@ ModalMissingInformation.propTypes = {
   sendVerificationEmailError: propTypes.error,
   sendVerificationEmailInProgress: bool.isRequired,
 
-  // from withRouteConfiguration
+  // from useRouteConfiguration
   routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
-ModalMissingInformation.displayName = 'ModalMissingInformation';
+const EnhancedModalMissingInformation = props => {
+  const routeConfiguration = useRouteConfiguration();
 
-export default withRouteConfiguration(ModalMissingInformation);
+  return <ModalMissingInformation routeConfiguration={routeConfiguration} {...props} />;
+};
+
+export default EnhancedModalMissingInformation;
