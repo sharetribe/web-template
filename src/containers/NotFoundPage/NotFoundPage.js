@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { arrayOf, bool, func, object, shape } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
-import { withRouteConfiguration } from '../../context/routeConfigurationContext';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { FormattedMessage, useIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { createResourceLocatorString } from '../../util/routes';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
@@ -87,16 +87,31 @@ NotFoundPageComponent.propTypes = {
   // context object from StaticRouter, injected by the withRouter wrapper
   staticContext: object,
 
-  // from injectIntl
+  // from useIntl
   intl: intlShape.isRequired,
 
-  // from withRouteConfiguration
+  // from useRouteConfiguration
   routeConfiguration: arrayOf(propTypes.route).isRequired,
 
-  // from withRouter
+  // from useHistory
   history: shape({
     push: func.isRequired,
   }).isRequired,
+};
+
+const EnhancedNotFoundPage = props => {
+  const routeConfiguration = useRouteConfiguration();
+  const history = useHistory();
+  const intl = useIntl();
+
+  return (
+    <NotFoundPageComponent
+      routeConfiguration={routeConfiguration}
+      history={history}
+      intl={intl}
+      {...props}
+    />
+  );
 };
 
 const mapStateToProps = state => {
@@ -111,11 +126,6 @@ const mapStateToProps = state => {
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const NotFoundPage = compose(
-  withRouter,
-  connect(mapStateToProps),
-  injectIntl,
-  withRouteConfiguration
-)(NotFoundPageComponent);
+const NotFoundPage = compose(connect(mapStateToProps))(EnhancedNotFoundPage);
 
 export default NotFoundPage;
