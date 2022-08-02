@@ -1,9 +1,10 @@
 import React from 'react';
 import { string } from 'prop-types';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import classNames from 'classnames';
+
+import { useConfiguration } from '../../context/configurationContext';
+import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { twitterPageURL } from '../../util/urlHelpers';
-import config from '../../config';
 import {
   IconSocialMediaFacebook,
   IconSocialMediaInstagram,
@@ -15,7 +16,7 @@ import {
 
 import css from './Footer.module.css';
 
-const renderSocialMediaLinks = intl => {
+const renderSocialMediaLinks = (intl, config) => {
   const { siteFacebookPage, siteInstagramPage, siteTwitterHandle } = config;
   const siteTwitterPage = twitterPageURL(siteTwitterHandle);
 
@@ -54,15 +55,16 @@ const renderSocialMediaLinks = intl => {
 };
 
 const Footer = props => {
+  const config = useConfiguration();
   const { rootClassName, className, intl } = props;
-  const socialMediaLinks = renderSocialMediaLinks(intl);
+  const socialMediaLinks = renderSocialMediaLinks(intl, config);
   const classes = classNames(rootClassName || css.root, className);
 
   return (
     <div className={classes}>
       <div className={css.topBorderWrapper}>
         <div className={css.content}>
-          <div className={css.someLiksMobile}>{socialMediaLinks}</div>
+          <div className={css.socialLinksMobile}>{socialMediaLinks}</div>
           <div className={css.links}>
             <div className={css.organization} id="organization">
               <NamedLink name="LandingPage" className={css.logoLink}>
