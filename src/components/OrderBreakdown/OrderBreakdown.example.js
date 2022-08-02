@@ -2,12 +2,11 @@ import Decimal from 'decimal.js';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { TX_TRANSITION_ACTOR_CUSTOMER, getProcess } from '../../util/transaction';
 import { DATE_TYPE_DATE, DATE_TYPE_DATETIME } from '../../util/types';
-import config from '../../config';
 import OrderBreakdown from './OrderBreakdown';
 
 const { UUID, Money } = sdkTypes;
 
-const CURRENCY = config.currency;
+const CURRENCY = 'USD';
 
 const exampleBooking = attributes => {
   return {

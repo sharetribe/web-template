@@ -1,4 +1,3 @@
-import config from '../../config';
 import { updatedEntities, denormalisedEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import { createImageVariantConfig } from '../../util/sdkLoader';
@@ -268,7 +267,7 @@ export const openListing = listingId => (dispatch, getState, sdk) => {
     });
 };
 
-export const loadData = (params, search) => {
+export const loadData = (params, search, config) => {
   const queryParams = parse(search);
   const page = queryParams.page || 1;
 

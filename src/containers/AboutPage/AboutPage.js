@@ -1,7 +1,5 @@
 import React from 'react';
 
-import config from '../../config';
-import { twitterPageURL } from '../../util/urlHelpers';
 import {
   LayoutSingleColumn,
   LayoutWrapperTopbar,
@@ -17,9 +15,6 @@ import css from './AboutPage.module.css';
 import image from './about-us-1056.jpg';
 
 const AboutPage = () => {
-  const { siteTwitterHandle, siteFacebookPage } = config;
-  const siteTwitterPage = twitterPageURL(siteTwitterHandle);
-
   // prettier-ignore
   return (
     <StaticPage
@@ -70,11 +65,6 @@ const AboutPage = () => {
                 to create your own marketplace platform a bit like Sneakertime? Or perhaps a mobile
                 app? With Sharetribe it's really easy. If you have a marketplace idea in mind, do
                 get in touch!
-              </p>
-              <p>
-                You can also checkout our{' '}
-                <ExternalLink href={siteFacebookPage}>Facebook</ExternalLink> and{' '}
-                <ExternalLink href={siteTwitterPage}>Twitter</ExternalLink>.
               </p>
             </div>
           </div>

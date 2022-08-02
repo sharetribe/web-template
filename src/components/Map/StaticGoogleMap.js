@@ -3,10 +3,10 @@ import { number, object, shape, string } from 'prop-types';
 import pick from 'lodash/pick';
 import isEqual from 'lodash/isEqual';
 import polyline from '@mapbox/polyline';
+
 import { encodeLatLng, stringify } from '../../util/urlHelpers';
 import { lazyLoadWithDimensions } from '../../util/contextHelpers';
 import { circlePolyline } from '../../util/maps';
-import config from '../../config';
 
 const DEFAULT_COLOR = 'FF0000';
 const DEFAULT_STROKE_OPACITY = 0.3;
@@ -99,7 +99,7 @@ class StaticGoogleMap extends Component {
       zoom,
       size: `${width}x${height}`,
       maptype: 'roadmap',
-      key: config.maps.googleMapsAPIKey,
+      key: mapsConfig.googleMapsAPIKey,
       ...targetMaybe,
     });
 
@@ -114,8 +114,6 @@ StaticGoogleMap.defaultProps = {
   rootClassName: null,
   address: '',
   center: null,
-  zoom: config.maps.fuzzy.enabled ? config.maps.fuzzy.defaultZoomLevel : 11,
-  mapsConfig: config.maps,
 };
 
 StaticGoogleMap.propTypes = {
@@ -126,8 +124,8 @@ StaticGoogleMap.propTypes = {
     lat: number.isRequired,
     lng: number.isRequired,
   }).isRequired,
-  zoom: number,
-  mapsConfig: object,
+  zoom: number.isRequired,
+  mapsConfig: object.isRequired,
 
   // from withDimensions
   dimensions: shape({

@@ -42,7 +42,7 @@
   color: var(--matterColor);
 
   /* Borders */
-  border-radius: 17px;
+  border-radius: 19px;
   border-style: solid;
   border-color: var(--matterColorNegative);
   border-width: 1px;

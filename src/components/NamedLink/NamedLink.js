@@ -18,18 +18,19 @@
  * the one in the generated pathname of the link.
  */
 import React from 'react';
-import PropTypes from 'prop-types';
+import { object, string, shape, any } from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import classNames from 'classnames';
-import routeConfiguration from '../../routing/routeConfiguration';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+
 import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
 
 export const NamedLinkComponent = props => {
+  const routeConfiguration = useRouteConfiguration();
   const { name, params, title } = props;
-  const routes = routeConfiguration();
 
   const onOver = () => {
-    const { component: Page } = findRouteByRouteName(name, routes);
+    const { component: Page } = findRouteByRouteName(name, routeConfiguration);
     // Loadable Component has a "preload" function.
     if (Page.preload) {
       Page.preload();
@@ -38,7 +39,7 @@ export const NamedLinkComponent = props => {
 
   // Link props
   const { to, children } = props;
-  const pathname = pathByRouteName(name, routes, params);
+  const pathname = pathByRouteName(name, routeConfiguration, params);
   const { match } = props;
   const active = match.url && match.url === pathname;
 
@@ -56,8 +57,6 @@ export const NamedLinkComponent = props => {
     </Link>
   );
 };
-
-const { object, string, shape, any } = PropTypes;
 
 NamedLinkComponent.defaultProps = {
   params: {},

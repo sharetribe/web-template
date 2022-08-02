@@ -6,8 +6,12 @@
  */
 import React, { Component } from 'react';
 import { bool, func, object, string } from 'prop-types';
+import { isInclusivelyAfterDay, isInclusivelyBeforeDay } from 'react-dates';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
+import moment from 'moment';
+
+import { useConfiguration } from '../../context/configurationContext';
 import { ValidationError } from '../../components';
 
 import DateInput from './DateInput';
@@ -120,7 +124,26 @@ FieldDateInputComponent.propTypes = {
 };
 
 const FieldDateInput = props => {
-  return <Field component={FieldDateInputComponent} {...props} />;
+  const config = useConfiguration();
+  const { isOutsideRange, firstDayOfWeek, ...rest } = props;
+
+  // Outside range -><- today ... today+available days -1 -><- outside range
+  const defaultIsOutSideRange = day => {
+    const endOfRange = config.dayCountAvailableForBooking - 1;
+    return (
+      !isInclusivelyAfterDay(day, moment()) ||
+      !isInclusivelyBeforeDay(day, moment().add(endOfRange, 'days'))
+    );
+  };
+  const defaultFirstDayOfWeek = config.i18n.firstDayOfWeek;
+  return (
+    <Field
+      component={FieldDateInputComponent}
+      isOutsideRange={isOutsideRange || defaultIsOutSideRange}
+      firstDayOfWeek={firstDayOfWeek || defaultFirstDayOfWeek}
+      {...rest}
+    />
+  );
 };
 
 export { DateInput };

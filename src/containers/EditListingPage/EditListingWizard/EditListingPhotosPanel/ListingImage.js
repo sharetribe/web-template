@@ -2,9 +2,6 @@ import React from 'react';
 import { func, object, string } from 'prop-types';
 import classNames from 'classnames';
 
-// Import configs and util modules
-import config from '../../../../config';
-
 // Import shared components
 import {
   AspectRatioWrapper,
@@ -48,13 +45,19 @@ const RemoveImageButton = props => {
 // The image might be one already uploaded and attached to listing entity
 // or representing local image file (before it's uploaded & attached to listing).
 const ListingImage = props => {
-  const { className, image, savedImageAltText, onRemoveImage } = props;
+  const {
+    className,
+    image,
+    savedImageAltText,
+    onRemoveImage,
+    aspectWidth = 1,
+    aspectHeight = 1,
+    variantPrefix = 'listing-card',
+  } = props;
   const handleRemoveClick = e => {
     e.stopPropagation();
     onRemoveImage(image.id);
   };
-
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
 
   if (image.file && !image.attributes) {
     // Add remove button only when the image has been uploaded and can be removed
@@ -73,6 +76,8 @@ const ListingImage = props => {
         className={className}
         rootClassName={css.thumbnail}
         file={image.file}
+        aspectWidth={aspectWidth}
+        aspectHeight={aspectHeight}
       >
         {removeButton}
         {uploadingOverlay}

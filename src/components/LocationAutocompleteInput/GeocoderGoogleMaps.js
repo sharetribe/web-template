@@ -1,8 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import { getPlacePredictions, getPlaceDetails, locationBounds } from '../../util/googleMaps';
+import * as googleMapsUtil from '../../util/googleMaps';
 import { userLocation } from '../../util/maps';
-import config from '../../config';
 
 import css from './LocationAutocompleteInput.module.css';
 
@@ -44,23 +43,23 @@ class GeocoderGoogleMaps {
    * and an array of predictions. The format of the predictions is
    * only relevant for the `getPlaceDetails` function below.
    */
-  getPlacePredictions(search) {
-    const limitCountriesMaybe = config.maps.search.countryLimit
+  getPlacePredictions(search, countryLimit) {
+    const limitCountriesMaybe = countryLimit
       ? {
           componentRestrictions: {
-            country: config.maps.search.countryLimit,
+            country: countryLimit,
           },
         }
       : {};
 
-    return getPlacePredictions(search, this.getSessionToken(), limitCountriesMaybe).then(
-      results => {
+    return googleMapsUtil
+      .getPlacePredictions(search, this.getSessionToken(), limitCountriesMaybe)
+      .then(results => {
         return {
           search,
           predictions: results.predictions,
         };
-      }
-    );
+      });
   }
 
   /**
@@ -94,13 +93,13 @@ class GeocoderGoogleMaps {
    *
    * @return {Promise<util.propTypes.place>} a place object
    */
-  getPlaceDetails(prediction) {
+  getPlaceDetails(prediction, currentLocationBoundsDistance) {
     if (this.getPredictionId(prediction) === CURRENT_LOCATION_ID) {
       return userLocation().then(latlng => {
         return {
           address: '',
           origin: latlng,
-          bounds: locationBounds(latlng, config.maps.search.currentLocationBoundsDistance),
+          bounds: googleMapsUtil.locationBounds(latlng, currentLocationBoundsDistance),
         };
       });
     }
@@ -109,10 +108,12 @@ class GeocoderGoogleMaps {
       return Promise.resolve(prediction.predictionPlace);
     }
 
-    return getPlaceDetails(prediction.place_id, this.getSessionToken()).then(place => {
-      this.sessionToken = null;
-      return place;
-    });
+    return googleMapsUtil
+      .getPlaceDetails(prediction.place_id, this.getSessionToken())
+      .then(place => {
+        this.sessionToken = null;
+        return place;
+      });
   }
 }
 

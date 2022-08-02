@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { bool, func, object, node, number, shape, string } from 'prop-types';
+import { bool, func, object, node, number, shape, string, arrayOf } from 'prop-types';
 import classNames from 'classnames';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
-import routeConfiguration from '../../../routing/routeConfiguration';
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
+import { FormattedMessage, useIntl, intlShape } from '../../../util/reactIntl';
+import { propTypes } from '../../../util/types';
 import { createResourceLocatorString } from '../../../util/routes';
 
 import { ModalInMobile, Button } from '../../../components';
@@ -31,12 +32,12 @@ class SearchFiltersMobileComponent extends Component {
 
   // Close the filters by clicking cancel, revert to the initial params
   cancelFilters() {
-    const { history, onCloseModal } = this.props;
+    const { history, onCloseModal, routeConfiguration } = this.props;
 
     history.push(
       createResourceLocatorString(
         'SearchPage',
-        routeConfiguration(),
+        routeConfiguration,
         {},
         this.state.initialQueryParams
       )
@@ -179,15 +180,31 @@ SearchFiltersMobileComponent.propTypes = {
   selectedFiltersCount: number,
   isMapVariant: bool,
 
-  // from injectIntl
+  // from useIntl
   intl: intlShape.isRequired,
 
-  // from withRouter
+  // from useRouteConfiguration
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
+
+  // from useHistory
   history: shape({
     push: func.isRequired,
   }).isRequired,
 };
 
-const SearchFiltersMobile = injectIntl(withRouter(SearchFiltersMobileComponent));
+const SearchFiltersMobile = props => {
+  const routeConfiguration = useRouteConfiguration();
+  const intl = useIntl();
+  const history = useHistory();
+
+  return (
+    <SearchFiltersMobileComponent
+      routeConfiguration={routeConfiguration}
+      intl={intl}
+      history={history}
+      {...props}
+    />
+  );
+};
 
 export default SearchFiltersMobile;

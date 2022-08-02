@@ -1,7 +1,6 @@
 import memoize from 'lodash/memoize';
 import seedrandom from 'seedrandom';
 import { types as sdkTypes } from './sdkLoader';
-import config from '../config';
 
 const { LatLng, LatLngBounds } = sdkTypes;
 
@@ -33,7 +32,7 @@ const radToDegrees = latlngInRadians => {
  * https://gis.stackexchange.com/questions/25877/generating-random-locations-nearby#answer-213898
  */
 
-const obfuscatedCoordinatesImpl = (latlng, cacheKey) => {
+const obfuscatedCoordinatesImpl = (latlng, fuzzyOffset, cacheKey) => {
   const { lat, lng } = degToRadians(latlng);
   const sinLat = Math.sin(lat);
   const cosLat = Math.cos(lat);
@@ -49,7 +48,7 @@ const obfuscatedCoordinatesImpl = (latlng, cacheKey) => {
     : Math.random();
 
   // Randomize distance and bearing
-  const distance = randomizeDistance * config.maps.fuzzy.offset;
+  const distance = randomizeDistance * fuzzyOffset;
   const bearing = randomizeBearing * TWO_PI;
   const theta = distance / EARTH_RADIUS;
   const sinBearing = Math.sin(bearing);
@@ -68,7 +67,7 @@ const obfuscatedCoordinatesImpl = (latlng, cacheKey) => {
   return new LatLng(result.lat, result.lng);
 };
 
-const obfuscationKeyGetter = (latlng, cacheKey) => cacheKey;
+const obfuscationKeyGetter = (latlng, fuzzyOffset, cacheKey) => cacheKey;
 
 const memoizedObfuscatedCoordinatesImpl = memoize(obfuscatedCoordinatesImpl, obfuscationKeyGetter);
 
@@ -76,6 +75,7 @@ const memoizedObfuscatedCoordinatesImpl = memoize(obfuscatedCoordinatesImpl, obf
  * Make the given coordinates randomly a little bit different.
  *
  * @param {LatLng} latlng coordinates
+ * @param {number} fuzzyOffset configuration of how big offset should be used.
  * @param {String?} cacheKey if given, the results are memoized and
  * the same coordinates are returned for the same key as long as the
  * cache isn't cleared (e.g. with page refresh). This results in
@@ -84,10 +84,10 @@ const memoizedObfuscatedCoordinatesImpl = memoize(obfuscatedCoordinatesImpl, obf
  *
  * @return {LatLng} obfuscated coordinates
  */
-export const obfuscatedCoordinates = (latlng, cacheKey = null) => {
+export const obfuscatedCoordinates = (latlng, fuzzyOffset, cacheKey = null) => {
   return cacheKey
-    ? memoizedObfuscatedCoordinatesImpl(latlng, cacheKey)
-    : obfuscatedCoordinatesImpl(latlng);
+    ? memoizedObfuscatedCoordinatesImpl(latlng, fuzzyOffset, cacheKey)
+    : obfuscatedCoordinatesImpl(latlng, fuzzyOffset);
 };
 
 /**

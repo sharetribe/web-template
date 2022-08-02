@@ -1,4 +1,3 @@
-import config from '../config';
 import { denormalisedResponseEntities, ensureOwnListing } from '../util/data';
 import { storableError } from '../util/errors';
 import { getTransitionsNeedingProviderAttention } from '../util/transaction';

@@ -1,5 +1,3 @@
-import config from '../config';
-
 const ensureOpenGraphLocale = locale => {
   switch (locale) {
     case 'en':
@@ -145,7 +143,7 @@ export const twitterMetaProps = data => {
  * These will be used with Helmet <meta {...metaTagProps} />
  * Creates data for Open Graph and Twitter meta tags.
  */
-export const metaTagProps = tagData => {
+export const metaTagProps = (tagData, config) => {
   const { canonicalRootURL, facebookAppId, siteTitle, siteTwitterHandle } = config;
 
   const author = tagData.author || siteTitle;

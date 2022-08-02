@@ -6,11 +6,10 @@
  */
 import React, { Component } from 'react';
 import { bool, func, instanceOf, oneOf, shape, string } from 'prop-types';
-import { DateRangePicker, isInclusivelyAfterDay, isInclusivelyBeforeDay } from 'react-dates';
+import { DateRangePicker } from 'react-dates';
 import classNames from 'classnames';
 import moment from 'moment';
 
-import config from '../../config';
 import { intlShape, injectIntl } from '../../util/reactIntl';
 import { START_DATE, END_DATE } from '../../util/dates';
 import { LINE_ITEM_DAY, propTypes } from '../../util/types';
@@ -99,7 +98,8 @@ const defaultProps = {
   daySize: 38,
   isRTL: false,
   initialVisibleMonth: null,
-  firstDayOfWeek: config.i18n.firstDayOfWeek,
+  // This gets default value at FieldDateRangeInput
+  firstDayOfWeek: 0,
   numberOfMonths: 1,
   keepOpenOnDateSelect: false,
   reopenPickerOnClearDates: false,
@@ -122,14 +122,8 @@ const defaultProps = {
   enableOutsideDays: false,
   isDayBlocked: () => () => false,
 
-  // outside range -><- today ... today+available days -1 -><- outside range
-  isOutsideRange: day => {
-    const endOfRange = config.dayCountAvailableForBooking - 1;
-    return (
-      !isInclusivelyAfterDay(day, moment()) ||
-      !isInclusivelyBeforeDay(day, moment().add(endOfRange, 'days'))
-    );
-  },
+  // This gets default value at FieldDateRangeInput
+  isOutsideRange: day => false,
   isDayHighlighted: () => {},
 
   // Internationalization props
@@ -303,7 +297,6 @@ DateRangeInputComponent.propTypes = {
   lineItemUnitType: propTypes.lineItemUnitType.isRequired,
   focusedInput: oneOf([START_DATE, END_DATE]),
   initialDates: instanceOf(Date),
-  intl: intlShape.isRequired,
   name: string.isRequired,
   isBlockedBetween: func,
   isDayBlocked: func,
@@ -323,6 +316,9 @@ DateRangeInputComponent.propTypes = {
     startDate: instanceOf(Date),
     endDate: instanceOf(Date),
   }),
+
+  // from injectIntl
+  intl: intlShape.isRequired,
 };
 
 export default injectIntl(DateRangeInputComponent);

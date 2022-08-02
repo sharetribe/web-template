@@ -6,9 +6,13 @@
  */
 
 import React, { Component } from 'react';
-import { bool, func, object, oneOf, string, arrayOf } from 'prop-types';
+import { bool, func, object, oneOf, string, number } from 'prop-types';
+import { isInclusivelyAfterDay, isInclusivelyBeforeDay } from 'react-dates';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
+import moment from 'moment';
+
+import { useConfiguration } from '../../context/configurationContext';
 import { START_DATE, END_DATE } from '../../util/dates';
 import { LINE_ITEM_DAY, propTypes } from '../../util/types';
 import { ValidationError } from '../../components';
@@ -154,10 +158,33 @@ FieldDateRangeInputComponent.propTypes = {
   meta: object.isRequired,
   focusedInput: oneOf([START_DATE, END_DATE]),
   onFocusedInputChange: func,
+
+  isOutsideRange: func.isRequired,
+  firstDayOfWeek: number.isRequired,
 };
 
 const FieldDateRangeInput = props => {
-  return <Field component={FieldDateRangeInputComponent} {...props} />;
+  const config = useConfiguration();
+  const { isOutsideRange, firstDayOfWeek, ...rest } = props;
+
+  // Outside range -><- today ... today+available days -1 -><- outside range
+  const defaultIsOutSideRange = day => {
+    const endOfRange = config.dayCountAvailableForBooking - 1;
+    return (
+      !isInclusivelyAfterDay(day, moment()) ||
+      !isInclusivelyBeforeDay(day, moment().add(endOfRange, 'days'))
+    );
+  };
+  const defaultFirstDayOfWeek = config.i18n.firstDayOfWeek;
+
+  return (
+    <Field
+      component={FieldDateRangeInputComponent}
+      isOutsideRange={isOutsideRange || defaultIsOutSideRange}
+      firstDayOfWeek={firstDayOfWeek || defaultFirstDayOfWeek}
+      {...rest}
+    />
+  );
 };
 
 export { DateRangeInput };

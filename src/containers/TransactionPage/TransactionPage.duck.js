@@ -2,7 +2,6 @@ import pick from 'lodash/pick';
 import pickBy from 'lodash/pickBy';
 import isEmpty from 'lodash/isEmpty';
 
-import config from '../../config';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { findNextBoundary, getStartOf, monthIdString } from '../../util/dates';
 import { isTransactionsTransitionInvalidTransition, storableError } from '../../util/errors';
@@ -353,8 +352,8 @@ const fetchMonthlyTimeSlots = (dispatch, listing) => {
 };
 
 // Helper to fetch correct image variants for different thunk calls
-const getImageVariants = () => {
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+const getImageVariants = listingConfig => {
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingConfig;
   const aspectRatio = aspectHeight / aspectWidth;
   return {
     'fields.image': [
@@ -375,7 +374,7 @@ const listingRelationship = txResponse => {
   return txResponse.data.data.relationships.listing.data;
 };
 
-export const fetchTransaction = (id, txRole) => (dispatch, getState, sdk) => {
+export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk) => {
   dispatch(fetchTransactionRequest());
   let txResponse = null;
 
@@ -395,7 +394,7 @@ export const fetchTransaction = (id, txRole) => (dispatch, getState, sdk) => {
           'reviews.author',
           'reviews.subject',
         ],
-        ...getImageVariants(),
+        ...getImageVariants(config.listing),
       },
       { expand: true }
     )
@@ -424,7 +423,7 @@ export const fetchTransaction = (id, txRole) => (dispatch, getState, sdk) => {
         return sdk.listings.show({
           id: listingId,
           include: ['author', 'author.profileImage', 'images'],
-          ...getImageVariants(),
+          ...getImageVariants(config.listing),
         });
       } else {
         return response;
@@ -466,7 +465,7 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
     });
 };
 
-const fetchMessages = (txId, page) => (dispatch, getState, sdk) => {
+const fetchMessages = (txId, page, config) => (dispatch, getState, sdk) => {
   const paging = { page, per_page: MESSAGES_PAGE_SIZE };
   dispatch(fetchMessagesRequest());
 
@@ -474,7 +473,7 @@ const fetchMessages = (txId, page) => (dispatch, getState, sdk) => {
     .query({
       transaction_id: txId,
       include: ['sender', 'sender.profileImage'],
-      ...getImageVariants(),
+      ...getImageVariants(config.listing),
       ...paging,
     })
     .then(response => {
@@ -491,7 +490,7 @@ const fetchMessages = (txId, page) => (dispatch, getState, sdk) => {
       // TODO if there're more than 100 incoming messages,
       // this should loop through most recent pages instead of fetching just the first one.
       if (totalItems > totalMessages && page > 1) {
-        dispatch(fetchMessages(txId, 1))
+        dispatch(fetchMessages(txId, 1, config))
           .then(() => {
             // Original fetch was enough as a response for user action,
             // this just includes new incoming messages
@@ -507,7 +506,7 @@ const fetchMessages = (txId, page) => (dispatch, getState, sdk) => {
     });
 };
 
-export const fetchMoreMessages = txId => (dispatch, getState, sdk) => {
+export const fetchMoreMessages = (txId, config) => (dispatch, getState, sdk) => {
   const state = getState();
   const { oldestMessagePageFetched, totalMessagePages } = state.TransactionPage;
   const hasMoreOldMessages = totalMessagePages > oldestMessagePageFetched;
@@ -515,10 +514,10 @@ export const fetchMoreMessages = txId => (dispatch, getState, sdk) => {
   // In case there're no more old pages left we default to fetching the current cursor position
   const nextPage = hasMoreOldMessages ? oldestMessagePageFetched + 1 : oldestMessagePageFetched;
 
-  return dispatch(fetchMessages(txId, nextPage));
+  return dispatch(fetchMessages(txId, nextPage, config));
 };
 
-export const sendMessage = (txId, message) => (dispatch, getState, sdk) => {
+export const sendMessage = (txId, message, config) => (dispatch, getState, sdk) => {
   dispatch(sendMessageRequest());
 
   return sdk.messages
@@ -530,7 +529,7 @@ export const sendMessage = (txId, message) => (dispatch, getState, sdk) => {
       // and update possible incoming messages too.
       // TODO if there're more than 100 incoming messages,
       // this should loop through most recent pages instead of fetching just the first one.
-      return dispatch(fetchMessages(txId, 1))
+      return dispatch(fetchMessages(txId, 1, config))
         .then(() => {
           dispatch(sendMessageSuccess());
           return messageId;
@@ -547,11 +546,14 @@ export const sendMessage = (txId, message) => (dispatch, getState, sdk) => {
 
 // If other party has already sent a review, we need to make transition to
 // transitions.REVIEW_2_BY_<CUSTOMER/PROVIDER>
-const sendReviewAsSecond = (txId, transition, params, dispatch, sdk) => {
+const sendReviewAsSecond = (txId, transition, params, dispatch, sdk, config) => {
   const include = REVIEW_TX_INCLUDES;
 
   return sdk.transactions
-    .transition({ id: txId, transition, params }, { expand: true, include, ...getImageVariants() })
+    .transition(
+      { id: txId, transition, params },
+      { expand: true, include, ...getImageVariants(config.listing) }
+    )
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       dispatch(sendReviewSuccess());
@@ -571,11 +573,14 @@ const sendReviewAsSecond = (txId, transition, params, dispatch, sdk) => {
 // However, the other party might have made the review after previous data synch point.
 // So, error is likely to happen and then we must try another state transition
 // by calling sendReviewAsSecond().
-const sendReviewAsFirst = (txId, transition, params, dispatch, sdk) => {
+const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config) => {
   const include = REVIEW_TX_INCLUDES;
 
   return sdk.transactions
-    .transition({ id: txId, transition, params }, { expand: true, include, ...getImageVariants() })
+    .transition(
+      { id: txId, transition, params },
+      { expand: true, include, ...getImageVariants(config.listing) }
+    )
     .then(response => {
       dispatch(addMarketplaceEntities(response));
       dispatch(sendReviewSuccess());
@@ -595,13 +600,17 @@ const sendReviewAsFirst = (txId, transition, params, dispatch, sdk) => {
     });
 };
 
-export const sendReview = (tx, transitionOptionsInfo, params) => (dispatch, getState, sdk) => {
+export const sendReview = (tx, transitionOptionsInfo, params, config) => (
+  dispatch,
+  getState,
+  sdk
+) => {
   const { reviewAsFirst, reviewAsSecond, hasOtherPartyReviewedFirst } = transitionOptionsInfo;
   dispatch(sendReviewRequest());
 
   return hasOtherPartyReviewedFirst
-    ? sendReviewAsSecond(tx?.id, reviewAsSecond, params, dispatch, sdk)
-    : sendReviewAsFirst(tx?.id, reviewAsFirst, params, dispatch, sdk);
+    ? sendReviewAsSecond(tx?.id, reviewAsSecond, params, dispatch, sdk, config)
+    : sendReviewAsFirst(tx?.id, reviewAsFirst, params, dispatch, sdk, config);
 };
 
 const isNonEmpty = value => {
@@ -639,7 +648,7 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
 
 // loadData is a collection of async calls that need to be made
 // before page has all the info it needs to render itself
-export const loadData = params => (dispatch, getState) => {
+export const loadData = (params, search, config) => (dispatch, getState) => {
   const txId = new UUID(params.id);
   const state = getState().TransactionPage;
   const txRef = state.transactionRef;
@@ -653,8 +662,8 @@ export const loadData = params => (dispatch, getState) => {
 
   // Sale / order (i.e. transaction entity in API)
   return Promise.all([
-    dispatch(fetchTransaction(txId, txRole)),
-    dispatch(fetchMessages(txId, 1)),
+    dispatch(fetchTransaction(txId, txRole, config)),
+    dispatch(fetchMessages(txId, 1, config)),
     dispatch(fetchNextTransitions(txId)),
   ]);
 };

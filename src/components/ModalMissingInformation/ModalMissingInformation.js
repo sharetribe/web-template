@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { bool, func, string } from 'prop-types';
-import { FormattedMessage } from '../../util/reactIntl';
+import { arrayOf, bool, func, string } from 'prop-types';
 import classNames from 'classnames';
-import routeConfiguration from '../../routing/routeConfiguration';
+
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+
+import { FormattedMessage } from '../../util/reactIntl';
 import { ensureCurrentUser } from '../../util/data';
 import { propTypes } from '../../util/types';
 import { pathByRouteName } from '../../util/routes';
+
 import { Modal } from '../../components';
 
 import EmailReminder from './EmailReminder';
@@ -52,7 +55,7 @@ class ModalMissingInformation extends Component {
     currentUserHasOrders,
     newLocation
   ) {
-    const routes = routeConfiguration();
+    const routes = this.props.routeConfiguration;
     const whitelistedPaths = MISSING_INFORMATION_MODAL_WHITELIST.map(page =>
       pathByRouteName(page, routes)
     );
@@ -165,8 +168,15 @@ ModalMissingInformation.propTypes = {
   onManageDisableScrolling: func.isRequired,
   sendVerificationEmailError: propTypes.error,
   sendVerificationEmailInProgress: bool.isRequired,
+
+  // from useRouteConfiguration
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
-ModalMissingInformation.displayName = 'ModalMissingInformation';
+const EnhancedModalMissingInformation = props => {
+  const routeConfiguration = useRouteConfiguration();
 
-export default ModalMissingInformation;
+  return <ModalMissingInformation routeConfiguration={routeConfiguration} {...props} />;
+};
+
+export default EnhancedModalMissingInformation;

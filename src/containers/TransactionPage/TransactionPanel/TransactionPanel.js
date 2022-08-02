@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { arrayOf, bool, func, node, oneOf, string } from 'prop-types';
+import { arrayOf, bool, func, node, object, oneOf, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
@@ -85,12 +85,12 @@ export class TransactionPanelComponent extends Component {
 
   onMessageSubmit(values, form) {
     const message = values.message ? values.message.trim() : null;
-    const { transactionId, onSendMessage } = this.props;
+    const { transactionId, onSendMessage, config } = this.props;
 
     if (!message) {
       return;
     }
-    onSendMessage(transactionId, message)
+    onSendMessage(transactionId, message, config)
       .then(messageId => {
         form.reset();
         this.scrollToMessage(messageId);
@@ -135,6 +135,7 @@ export class TransactionPanelComponent extends Component {
       activityFeed,
       orderBreakdown,
       orderPanel,
+      config,
     } = this.props;
 
     const isCustomer = transactionRole === 'customer';
@@ -206,6 +207,7 @@ export class TransactionPanelComponent extends Component {
               image={firstImage}
               provider={provider}
               isCustomer={isCustomer}
+              listingConfig={config.listing}
             />
             {isProvider ? (
               <div className={css.avatarWrapperProviderDesktop}>
@@ -247,6 +249,7 @@ export class TransactionPanelComponent extends Component {
                 className={css.deliveryInfoSection}
                 protectedData={protectedData}
                 listing={listing}
+                locale={config.locale}
               />
             </div>
 
@@ -292,6 +295,7 @@ export class TransactionPanelComponent extends Component {
                   image={firstImage}
                   provider={provider}
                   isCustomer={isCustomer}
+                  listingConfig={config.listing}
                 />
 
                 <DetailCardHeadingsMaybe
@@ -363,6 +367,7 @@ TransactionPanelComponent.propTypes = {
   activityFeed: node,
   orderBreakdown: node,
   orderPanel: node,
+  config: object.isRequired,
 
   // from injectIntl
   intl: intlShape,

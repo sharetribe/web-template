@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { func, object, string } from 'prop-types';
+import { func, number, object, string } from 'prop-types';
 import classNames from 'classnames';
-import config from '../../../config';
+
 import { intlShape } from '../../../util/reactIntl';
 import {
   getStartHours,
@@ -25,15 +25,13 @@ import { FieldDateInput, FieldSelect, IconArrowHead } from '../../../components'
 
 import css from './FieldDateAndTimeInput.module.css';
 
-// MAX_TIME_SLOTS_RANGE is the maximum number of days forwards during which a booking can be made.
+// dayCountAvailableForBooking is the maximum number of days forwards during which a booking can be made.
 // This is limited due to Stripe holding funds up to 90 days from the
 // moment they are charged:
 // https://stripe.com/docs/connect/account-balances#holding-funds
 //
 // See also the API reference for querying time slots:
 // https://www.sharetribe.com/api-reference/marketplace.html#query-time-slots
-
-const MAX_TIME_SLOTS_RANGE = config.dayCountAvailableForBooking;
 
 const TODAY = new Date();
 
@@ -42,8 +40,8 @@ const nextMonthFn = (currentMoment, timeZone) =>
 const prevMonthFn = (currentMoment, timeZone) =>
   getStartOf(currentMoment, 'month', timeZone, -1, 'months');
 
-const endOfRange = (date, timeZone) => {
-  return getStartOf(date, 'day', timeZone, MAX_TIME_SLOTS_RANGE - 1, 'days');
+const endOfRange = (date, dayCountAvailableForBooking, timeZone) => {
+  return getStartOf(date, 'day', timeZone, dayCountAvailableForBooking - 1, 'days');
 };
 
 const getAvailableStartTimes = (intl, timeZone, bookingStart, timeSlotsOnSelectedDate) => {
@@ -200,10 +198,15 @@ const NextIcon = props => (
 );
 
 const Next = props => {
-  const { currentMonth, timeZone } = props;
+  const { currentMonth, dayCountAvailableForBooking, timeZone } = props;
   const nextMonthDate = nextMonthFn(currentMonth, timeZone);
 
-  return isDateSameOrAfter(nextMonthDate, endOfRange(TODAY, timeZone)) ? null : <NextIcon />;
+  return isDateSameOrAfter(
+    nextMonthDate,
+    endOfRange(TODAY, dayCountAvailableForBooking, timeZone)
+  ) ? null : (
+    <NextIcon />
+  );
 };
 const Prev = props => {
   const { currentMonth, timeZone } = props;
@@ -233,8 +236,8 @@ class FieldDateAndTimeInput extends Component {
   }
 
   fetchMonthData(date) {
-    const { listingId, timeZone, onFetchTimeSlots } = this.props;
-    const endOfRangeDate = endOfRange(TODAY, timeZone);
+    const { listingId, timeZone, onFetchTimeSlots, dayCountAvailableForBooking } = this.props;
+    const endOfRangeDate = endOfRange(TODAY, dayCountAvailableForBooking, timeZone);
 
     // Don't fetch timeSlots for past months or too far in the future
     if (isInRange(date, TODAY, endOfRangeDate)) {
@@ -267,7 +270,7 @@ class FieldDateAndTimeInput extends Component {
         const monthId = monthIdString(this.state.currentMonth, timeZone);
         const currentMonthData = this.props.monthlyTimeSlots[monthId];
         if (currentMonthData && currentMonthData.fetchTimeSlotsError) {
-          this.fetchMonthData(this.state.currentMonth, timeZone);
+          this.fetchMonthData(this.state.currentMonth);
         }
 
         // Call onMonthChanged function if it has been passed in among props.
@@ -391,6 +394,7 @@ class FieldDateAndTimeInput extends Component {
       monthlyTimeSlots,
       timeZone,
       intl,
+      dayCountAvailableForBooking,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
@@ -478,7 +482,13 @@ class FieldDateAndTimeInput extends Component {
               onChange={this.onBookingStartDateChange}
               onPrevMonthClick={() => this.onMonthClick(prevMonthFn)}
               onNextMonthClick={() => this.onMonthClick(nextMonthFn)}
-              navNext={<Next currentMonth={this.state.currentMonth} timeZone={timeZone} />}
+              navNext={
+                <Next
+                  currentMonth={this.state.currentMonth}
+                  timeZone={timeZone}
+                  dayCountAvailableForBooking={dayCountAvailableForBooking}
+                />
+              }
               navPrev={<Prev currentMonth={this.state.currentMonth} timeZone={timeZone} />}
               useMobileMargins
               showErrorMessage={false}
@@ -568,6 +578,7 @@ FieldDateAndTimeInput.propTypes = {
   monthlyTimeSlots: object,
   onFetchTimeSlots: func.isRequired,
   timeZone: string,
+  dayCountAvailableForBooking: number,
 
   // from injectIntl
   intl: intlShape.isRequired,

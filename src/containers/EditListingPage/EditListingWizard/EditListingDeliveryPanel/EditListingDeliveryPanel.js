@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 // Import configs and util modules
-import config from '../../../../config';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
 import { ensureOwnListing } from '../../../../util/data';
@@ -30,7 +29,7 @@ class EditListingDeliveryPanel extends Component {
   }
 
   getInitialValues() {
-    const { listing } = this.props;
+    const { listing, marketplaceCurrency } = this.props;
     const currentListing = ensureOwnListing(listing);
     const { geolocation, publicData, price } = currentListing.attributes;
 
@@ -54,7 +53,7 @@ class EditListingDeliveryPanel extends Component {
       deliveryOptions.push('pickup');
     }
 
-    const currency = price?.currency || config.currency;
+    const currency = price?.currency || marketplaceCurrency;
     const shippingOneItemAsMoney = shippingPriceInSubunitsOneItem
       ? new Money(shippingPriceInSubunitsOneItem, currency)
       : null;
@@ -157,6 +156,7 @@ class EditListingDeliveryPanel extends Component {
             });
             onSubmit(updateValues);
           }}
+          marketplaceCurrency={marketplaceCurrency}
           saveActionMsg={submitButtonText}
           disabled={disabled}
           ready={ready}
@@ -184,6 +184,7 @@ EditListingDeliveryPanel.propTypes = {
 
   // We cannot use propTypes.listing since the listing might be a draft.
   listing: object,
+  marketplaceCurrency: string.isRequired,
 
   disabled: bool.isRequired,
   ready: bool.isRequired,

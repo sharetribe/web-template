@@ -1,10 +1,6 @@
-import * as custom from './marketplace-custom-config.js';
-import defaultLocationSearches from './default-location-searches';
-import { defaultMCC, stripePublishableKey, stripeCountryDetails } from './stripe-config';
-import { subUnitDivisors, currencyConfiguration } from './currency-config';
-
-const env = process.env.REACT_APP_ENV;
-const dev = process.env.REACT_APP_ENV === 'development';
+import * as custom from './marketplaceCustomConfig.js';
+import defaultLocationSearches from './defaultLocationSearchesConfig';
+import { defaultMCC, stripePublishableKey, stripeCountryDetails } from './stripeConfig';
 
 // CDN assets for the app. Configurable through Flex Console.
 // Currently, only translation.json is available.
@@ -37,7 +33,7 @@ const searchPageVariant = 'list';
 // ListingPage has 2 layout options: 'hero-image' and 'full-image'.
 // - 'hero-image' means a layout where there's a hero section with cropped image in the beginning of the page
 // - 'full-image' shows image carousel, where listing images are shown with the original aspect ratio
-const listingPageLayout = 'full-image';
+const listingPageVariant = 'full-image';
 
 // Should search results be ordered by distance to origin.
 // NOTE 1: This doesn't affect if the main search type is 'keywords'
@@ -62,33 +58,14 @@ const listingManagementType = 'availability'; // 'stock'
 // be fetched for 180 days in the future.
 const dayCountAvailableForBooking = 90;
 
-// To pass environment variables to the client app in the build
-// script, react-scripts (and the sharetribe-scripts fork of
-// react-scripts) require using the REACT_APP_ prefix to avoid
-// exposing server secrets to the client side.
-const sdkClientId = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
-const sdkBaseUrl = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL;
-const sdkAssetCdnBaseUrl = process.env.REACT_APP_SHARETRIBE_SDK_ASSET_CDN_BASE_URL;
-const sdkTransitVerbose = process.env.REACT_APP_SHARETRIBE_SDK_TRANSIT_VERBOSE === 'true';
-
 // Marketplace currency.
-// It should match one of the currencies listed in currency-config.js
+// It should match one of the currencies listed in currencySettings.js
 const currencyConf = process.env.REACT_APP_SHARETRIBE_MARKETPLACE_CURRENCY;
 const currency = currencyConf ? currencyConf.toUpperCase() : currencyConf;
-
-// Currency formatting options.
-// See: https://github.com/yahoo/react-intl/wiki/API#formatnumber
-const currencyConfig = currencyConfiguration(currency);
 
 // Listing minimum price in currency sub units, e.g. cents.
 // 0 means no restriction to the price
 const listingMinimumPriceSubUnits = 0;
-
-// Sentry DSN (Data Source Name), a client key for authenticating calls to Sentry
-const sentryDsn = process.env.REACT_APP_SENTRY_DSN;
-
-// If webapp is using SSL (i.e. it's behind 'https' protocol)
-const usingSSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';
 
 // Listing and especially listing card related configurations
 const listing = {
@@ -216,34 +193,24 @@ const maps = {
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets in this file.
-const config = {
-  env,
-  dev,
+const defaultConfig = {
   appCdnAssets,
   locale,
   listingManagementType,
   dayCountAvailableForBooking,
   i18n,
-  sdk: {
-    clientId: sdkClientId,
-    baseUrl: sdkBaseUrl,
-    assetCdnBaseUrl: sdkAssetCdnBaseUrl,
-    transitVerbose: sdkTransitVerbose,
-  },
   mainSearchType,
   searchPageVariant,
-  listingPageLayout,
+  listingPageVariant,
   sortSearchByDistance,
   currency,
-  currencyConfig,
-  subUnitDivisors,
   listingMinimumPriceSubUnits,
   stripe: {
     defaultMCC: defaultMCC,
     publishableKey: stripePublishableKey,
     supportedCountries: stripeCountryDetails,
   },
-  canonicalRootURL,
+  canonicalRootURL, // TODO
   address: {
     addressCountry,
     addressRegion,
@@ -255,11 +222,9 @@ const config = {
   siteInstagramPage,
   siteTwitterHandle,
   facebookAppId,
-  sentryDsn,
-  usingSSL,
   listing,
   maps,
   custom,
 };
 
-export default config;
+export default defaultConfig;

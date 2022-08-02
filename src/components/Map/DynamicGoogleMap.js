@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { number, object, shape, string } from 'prop-types';
 import { circlePolyline } from '../../util/maps';
-import config from '../../config';
 
 /**
  * DynamicGoogleMap uses Google Maps API.
@@ -113,8 +112,6 @@ class DynamicGoogleMap extends Component {
 DynamicGoogleMap.defaultProps = {
   address: '',
   center: null,
-  zoom: config.maps.fuzzy.enabled ? config.maps.fuzzy.defaultZoomLevel : 11,
-  mapsConfig: config.maps,
 };
 
 DynamicGoogleMap.propTypes = {
@@ -123,8 +120,8 @@ DynamicGoogleMap.propTypes = {
     lat: number.isRequired,
     lng: number.isRequired,
   }).isRequired,
-  zoom: number,
-  mapsConfig: object,
+  zoom: number.isRequired,
+  mapsConfig: object.isRequired,
 };
 
 export default DynamicGoogleMap;

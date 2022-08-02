@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import config from '../../config';
+import { useConfiguration } from '../../context/configurationContext';
 import LogoImageMobile from './sneakertime-logo-mobile.png';
 import LogoImage from './sneakertime-logo.png';
 
 const Logo = props => {
+  const config = useConfiguration();
   const { className, format, ...rest } = props;
 
   if (format === 'desktop') {

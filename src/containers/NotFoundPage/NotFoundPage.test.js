@@ -5,6 +5,19 @@ import { NotFoundPageComponent } from './NotFoundPage';
 
 const noop = () => null;
 
+const routeConfiguration = [
+  {
+    path: '/',
+    name: 'LandingPage',
+    component: props => <div />,
+  },
+  {
+    path: '/about',
+    name: 'AboutPage',
+    component: props => <div />,
+  },
+];
+
 describe('NotFoundPageComponent', () => {
   it('matches snapshot', () => {
     const tree = renderShallow(
@@ -21,6 +34,7 @@ describe('NotFoundPageComponent', () => {
         sendVerificationEmailInProgress={false}
         onResendVerificationEmail={noop}
         intl={fakeIntl}
+        routeConfiguration={routeConfiguration}
       />
     );
     expect(tree).toMatchSnapshot();

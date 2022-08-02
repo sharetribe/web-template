@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderShallow } from '../../../util/test-helpers';
+import { renderDeep } from '../../../util/test-helpers';
 import { createOwnListing, fakeIntl } from '../../../util/test-data';
 import { ManageListingCardComponent } from './ManageListingCard';
 
@@ -7,7 +7,7 @@ const noop = () => null;
 
 describe('ManageListingCard', () => {
   it('matches snapshot', () => {
-    const tree = renderShallow(
+    const tree = renderDeep(
       <ManageListingCardComponent
         history={{ push: noop }}
         listing={createOwnListing('listing1')}

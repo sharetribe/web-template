@@ -28,10 +28,8 @@
 import React from 'react';
 import Decimal from 'decimal.js';
 
-import config from '../../config';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { FormattedMessage } from '../../util/reactIntl';
-import { timeOfDayFromLocalToTimeZone, getStartOf } from '../../util/dates';
 import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../util/transaction';
 import {
   DATE_TYPE_DATE,
@@ -49,7 +47,7 @@ import css from './OrderPanel.module.css';
 
 const { Money, UUID } = sdkTypes;
 
-const estimatedTotalPrice = lineItems => {
+const estimatedTotalPrice = (lineItems, marketplaceCurrency) => {
   const numericTotalPrice = lineItems.reduce((sum, lineItem) => {
     const numericPrice = convertMoneyToNumber(lineItem.lineTotal);
     return new Decimal(numericPrice).add(sum);
@@ -58,7 +56,7 @@ const estimatedTotalPrice = lineItems => {
   // All the lineItems should have same currency so we can use the first one to check that
   // In case there are no lineItems we use currency from config.js as default
   const currency =
-    lineItems[0] && lineItems[0].unitPrice ? lineItems[0].unitPrice.currency : config.currency;
+    lineItems[0] && lineItems[0].unitPrice ? lineItems[0].unitPrice.currency : marketplaceCurrency;
 
   return new Money(
     convertUnitToSubUnit(numericTotalPrice.toNumber(), unitDivisor(currency)),
@@ -91,14 +89,15 @@ const estimatedCustomerTransaction = (
   lineItemUnitType,
   timeZone,
   process,
-  processName
+  processName,
+  marketplaceCurrency
 ) => {
   const transitions = process?.transitions;
   const now = new Date();
   const customerLineItems = lineItems.filter(item => item.includeFor.includes('customer'));
   const providerLineItems = lineItems.filter(item => item.includeFor.includes('provider'));
-  const payinTotal = estimatedTotalPrice(customerLineItems);
-  const payoutTotal = estimatedTotalPrice(providerLineItems);
+  const payinTotal = estimatedTotalPrice(customerLineItems, marketplaceCurrency);
+  const payoutTotal = estimatedTotalPrice(providerLineItems, marketplaceCurrency);
 
   const bookingMaybe =
     bookingStart && bookingEnd
@@ -129,7 +128,7 @@ const estimatedCustomerTransaction = (
 };
 
 const EstimatedCustomerBreakdownMaybe = props => {
-  const { breakdownData = {}, lineItems, timeZone } = props;
+  const { breakdownData = {}, lineItems, timeZone, currency } = props;
   const { startDate, endDate } = breakdownData;
   const processName = 'flex-product-default-process';
   let process = null;
@@ -161,7 +160,8 @@ const EstimatedCustomerBreakdownMaybe = props => {
           lineItemUnitType,
           timeZone,
           process,
-          processName
+          processName,
+          currency
         )
       : null;
 
@@ -173,6 +173,7 @@ const EstimatedCustomerBreakdownMaybe = props => {
       booking={tx.booking}
       dateType={dateType}
       timeZone={timeZone}
+      currency={currency}
     />
   ) : null;
 };

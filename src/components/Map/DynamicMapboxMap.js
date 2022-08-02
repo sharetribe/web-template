@@ -6,8 +6,8 @@ import { string, shape, number, object } from 'prop-types';
 // TODO: we should add an overlay with text "use two fingers to pan".
 import MultiTouch from 'mapbox-gl-multitouch';
 import uniqueId from 'lodash/uniqueId';
+
 import { circlePolyline } from '../../util/maps';
-import config from '../../config';
 
 const mapMarker = mapsConfig => {
   const { enabled, url, width, height } = mapsConfig.customMarker;
@@ -152,8 +152,6 @@ class DynamicMapboxMap extends Component {
 DynamicMapboxMap.defaultProps = {
   address: '',
   center: null,
-  zoom: config.maps.fuzzy.enabled ? config.maps.fuzzy.defaultZoomLevel : 11,
-  mapsConfig: config.maps,
 };
 
 DynamicMapboxMap.propTypes = {
@@ -162,8 +160,8 @@ DynamicMapboxMap.propTypes = {
     lat: number.isRequired,
     lng: number.isRequired,
   }).isRequired,
-  zoom: number,
-  mapsConfig: object,
+  zoom: number.isRequired,
+  mapsConfig: object.isRequired,
 };
 
 export default DynamicMapboxMap;

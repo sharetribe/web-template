@@ -48,6 +48,7 @@ describe('TransactionPanel - Sale', () => {
     onFetchTransactionLineItems: noop,
     fetchLineItemsInProgress: false,
     intl: fakeIntl,
+    config: { listing: { aspectWidth: 1, aspectHeight: 1, listingPrefix: 'listing-card' } },
   };
 
   it('enquired matches snapshot', () => {
@@ -91,6 +92,7 @@ describe('TransactionPanel - Order', () => {
     onSubmitOrderRequest: noop,
     onFetchTransactionLineItems: noop,
     fetchLineItemsInProgress: false,
+    config: { listing: { aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' } },
   };
 
   it('enquired matches snapshot', () => {

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import EditListingDetailsForm from './EditListingDetailsForm';
-import config from '../../../../config';
+import defaultConfig from '../../../../config/defaultConfig';
 
 const oneProcessInfo = [
   {

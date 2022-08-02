@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import {
-  DayPickerRangeController,
-  isInclusivelyAfterDay,
-  isInclusivelyBeforeDay,
-} from 'react-dates';
+import { string } from 'prop-types';
+import { DayPickerRangeController } from 'react-dates';
 import classNames from 'classnames';
 import moment from 'moment';
 import { START_DATE } from '../../util/dates';
-import config from '../../config';
 
 import { IconArrowHead } from '../../components';
 import css from './DateRangeController.module.css';
@@ -36,7 +31,8 @@ const defaultProps = {
   withPortal: false,
   isRTL: false,
   initialVisibleMonth: null,
-  firstDayOfWeek: config.i18n.firstDayOfWeek,
+  // This gets default value at FieldDateRangeController
+  firstDayOfWeek: 0,
   numberOfMonths: 1,
   daySize: 38,
   keepOpenOnDateSelect: false,
@@ -59,14 +55,8 @@ const defaultProps = {
   enableOutsideDays: false,
   isDayBlocked: () => false,
 
-  // outside range -><- today ... today+available days -1 -><- outside range
-  isOutsideRange: day => {
-    const endOfRange = config.dayCountAvailableForBooking - 1;
-    return (
-      !isInclusivelyAfterDay(day, moment()) ||
-      !isInclusivelyBeforeDay(day, moment().add(endOfRange, 'days'))
-    );
-  },
+  // This gets default value at FieldDateRangeController
+  isOutsideRange: day => false,
   isDayHighlighted: () => {},
 
   // Internationalization props
@@ -179,8 +169,6 @@ DateRangeController.defaultProps = {
   className: null,
   ...defaultProps,
 };
-
-const { string } = PropTypes;
 
 DateRangeController.propTypes = {
   rootClassName: string,

@@ -2,8 +2,7 @@ import React from 'react';
 import { bool, func, object, string } from 'prop-types';
 import classNames from 'classnames';
 
-// Import configs and util modules
-import config from '../../../../config';
+// Import util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { EXTENDED_DATA_SCHEMA_TYPES, LISTING_STATE_DRAFT } from '../../../../util/types';
 import { getSupportedProcessesInfo, isBookingProcess } from '../../../../util/transaction';
@@ -31,9 +30,9 @@ const pickCustomExtendedDataFields = (
   data,
   targetScope,
   targetProcessAlias,
+  extendedDataConfigs,
   clearCustomFields = false
 ) => {
-  const extendedDataConfigs = config.custom.listingExtendedData;
   return extendedDataConfigs.reduce((fields, extendedDataConfig) => {
     const { key, includeForProcessAliases = [], scope = 'public', schemaType } =
       extendedDataConfig || {};
@@ -79,10 +78,12 @@ const EditListingDetailsPanel = props => {
     panelUpdated,
     updateInProgress,
     errors,
+    config,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
   const { description, title, publicData, privateData, state } = listing?.attributes || {};
+  const listingExtendedDataConfig = config.custom.listingExtendedData;
 
   const activeProcesses = config.custom.processes;
   const supportedProcessesInfo = getSupportedProcessesInfo();
@@ -119,8 +120,18 @@ const EditListingDetailsPanel = props => {
       title,
       description,
       ...getProcessAliasAndUnitType(activeProcessInfos, transactionProcessAlias, unitType),
-      ...pickCustomExtendedDataFields(publicData, 'public', transactionProcessAlias),
-      ...pickCustomExtendedDataFields(privateData, 'private', transactionProcessAlias),
+      ...pickCustomExtendedDataFields(
+        publicData,
+        'public',
+        transactionProcessAlias,
+        listingExtendedDataConfig
+      ),
+      ...pickCustomExtendedDataFields(
+        privateData,
+        'private',
+        transactionProcessAlias,
+        listingExtendedDataConfig
+      ),
     };
   };
 
@@ -162,12 +173,19 @@ const EditListingDetailsPanel = props => {
             publicData: {
               transactionProcessAlias,
               unitType,
-              ...pickCustomExtendedDataFields(rest, 'public', transactionProcessAlias, true),
+              ...pickCustomExtendedDataFields(
+                rest,
+                'public',
+                transactionProcessAlias,
+                listingExtendedDataConfig,
+                true
+              ),
             },
             privateData: pickCustomExtendedDataFields(
               rest,
               'private',
               transactionProcessAlias,
+              listingExtendedDataConfig,
               true
             ),
             ...setNoAvailabilityForProductListings(transactionProcessAlias),
@@ -178,6 +196,7 @@ const EditListingDetailsPanel = props => {
         processInfos={activeProcessInfos}
         hasSetProcessAlias={hasSetProcessAlias}
         onProcessChange={onProcessChange}
+        listingExtendedDataConfig={listingExtendedDataConfig}
         disabled={disabled}
         ready={ready}
         updated={panelUpdated}

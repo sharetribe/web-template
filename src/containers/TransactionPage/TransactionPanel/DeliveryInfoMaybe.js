@@ -1,7 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import config from '../../../config';
 import getCountryCodes from '../../../translations/countryCodes';
 import { FormattedMessage } from '../../../util/reactIntl';
 
@@ -11,7 +10,7 @@ import css from './TransactionPanel.module.css';
 
 // Functional component as a helper to build ActivityFeed section
 const DeliveryInfoMaybe = props => {
-  const { className, rootClassName, protectedData, listing } = props;
+  const { className, rootClassName, protectedData, listing, locale } = props;
   const classes = classNames(rootClassName || css.deliveryInfoContainer, className);
   const deliveryMethod = protectedData?.deliveryMethod;
   const isShipping = deliveryMethod === 'shipping';
@@ -44,7 +43,7 @@ const DeliveryInfoMaybe = props => {
       </>
     ) : null;
 
-    const countryCodes = getCountryCodes(config.locale);
+    const countryCodes = getCountryCodes(locale);
     const countryInfo = countryCodes.find(c => c.code === countryCode);
     const country = countryInfo?.name;
 

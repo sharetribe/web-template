@@ -27,6 +27,7 @@
   @media (--viewportMedium) {
     height: calc(0.41 * 100vw);
     max-height: 50vh;
+    overflow-y: hidden;
   }
 }
 

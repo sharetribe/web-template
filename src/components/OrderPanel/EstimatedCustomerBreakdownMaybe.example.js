@@ -1,12 +1,11 @@
 import Decimal from 'decimal.js';
 
-import config from '../../config';
 import { types as sdkTypes } from '../../util/sdkLoader';
 
 import EstimatedCustomerBreakdownMaybe from './EstimatedCustomerBreakdownMaybe';
 
 const { Money } = sdkTypes;
-const CURRENCY = config.currency;
+const CURRENCY = 'USD';
 
 export const EmptyWithoutDatesOrLineItems = {
   component: EstimatedCustomerBreakdownMaybe,

@@ -3,7 +3,6 @@ import { bool, func, object, string } from 'prop-types';
 import { Form as FinalForm, Field } from 'react-final-form';
 import classNames from 'classnames';
 
-import config from '../../../config';
 import { intlShape, injectIntl } from '../../../util/reactIntl';
 import { isMainSearchTypeKeywords } from '../../../util/search';
 
@@ -30,7 +29,7 @@ const KeywordSearchField = props => {
             <input
               className={isMobile ? css.mobileInput : css.desktopInput}
               {...input}
-              id="keyword-search"
+              id={isMobile ? 'keyword-search-mobile' : 'keyword-search'}
               ref={inputRef}
               type="text"
               placeholder={intl.formatMessage({
@@ -180,7 +179,6 @@ TopbarSearchFormComponent.defaultProps = {
   className: null,
   desktopInputRoot: null,
   isMobile: false,
-  appConfig: config,
 };
 
 TopbarSearchFormComponent.propTypes = {
@@ -189,7 +187,7 @@ TopbarSearchFormComponent.propTypes = {
   desktopInputRoot: string,
   onSubmit: func.isRequired,
   isMobile: bool,
-  appConfig: object,
+  appConfig: object.isRequired,
 
   // from injectIntl
   intl: intlShape.isRequired,

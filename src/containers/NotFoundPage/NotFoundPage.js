@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { arrayOf, bool, func, object, shape } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
-import routeConfiguration from '../../routing/routeConfiguration';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { FormattedMessage, useIntl, intlShape } from '../../util/reactIntl';
+import { propTypes } from '../../util/types';
 import { createResourceLocatorString } from '../../util/routes';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 
@@ -34,7 +35,7 @@ export class NotFoundPageComponent extends Component {
   }
 
   render() {
-    const { history, intl, scrollingDisabled } = this.props;
+    const { history, routeConfiguration, intl, scrollingDisabled } = this.props;
 
     const title = intl.formatMessage({
       id: 'NotFoundPage.title',
@@ -44,9 +45,7 @@ export class NotFoundPageComponent extends Component {
       const { search, selectedPlace } = values.location;
       const { origin, bounds } = selectedPlace;
       const searchParams = { address: search, origin, bounds };
-      history.push(
-        createResourceLocatorString('SearchPage', routeConfiguration(), {}, searchParams)
-      );
+      history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
     };
 
     return (
@@ -82,21 +81,37 @@ NotFoundPageComponent.defaultProps = {
   staticContext: {},
 };
 
-const { bool, func, object, shape } = PropTypes;
-
 NotFoundPageComponent.propTypes = {
   scrollingDisabled: bool.isRequired,
 
   // context object from StaticRouter, injected by the withRouter wrapper
   staticContext: object,
 
-  // from injectIntl
+  // from useIntl
   intl: intlShape.isRequired,
 
-  // from withRouter
+  // from useRouteConfiguration
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
+
+  // from useHistory
   history: shape({
     push: func.isRequired,
   }).isRequired,
+};
+
+const EnhancedNotFoundPage = props => {
+  const routeConfiguration = useRouteConfiguration();
+  const history = useHistory();
+  const intl = useIntl();
+
+  return (
+    <NotFoundPageComponent
+      routeConfiguration={routeConfiguration}
+      history={history}
+      intl={intl}
+      {...props}
+    />
+  );
 };
 
 const mapStateToProps = state => {
@@ -111,10 +126,6 @@ const mapStateToProps = state => {
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const NotFoundPage = compose(
-  withRouter,
-  connect(mapStateToProps),
-  injectIntl
-)(NotFoundPageComponent);
+const NotFoundPage = compose(connect(mapStateToProps))(EnhancedNotFoundPage);
 
 export default NotFoundPage;
