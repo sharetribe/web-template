@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Split to defaultConfig.js and appSettings.js and move default configs to React Context.
+  [#39](https://github.com/sharetribe/ftw-x/pull/39)
 - [change] SearchPage changes: cleaning some shared code and add Dates filter.
 
   - Add Dates filter. It works with listings that have different time zones in use.
