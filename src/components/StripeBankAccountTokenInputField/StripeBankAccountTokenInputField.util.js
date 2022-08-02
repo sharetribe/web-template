@@ -1,5 +1,3 @@
-import config from '../../config';
-
 // Possible inputs Stripe might require for a country
 
 // Bank account number (used in countries where IBAN is not in use)
@@ -50,7 +48,7 @@ export const BANK_ACCOUNT_INPUTS = [
   CLABE,
 ];
 
-export const supportedCountries = config.stripe.supportedCountries.map(c => c.code);
+export const getSupportedCountryCodes = supportedCountries => supportedCountries.map(c => c.code);
 
 /**
  * Country specific Stripe configurations
@@ -59,8 +57,8 @@ export const supportedCountries = config.stripe.supportedCountries.map(c => c.co
  *
  * @return {Object} configurations
  */
-export const stripeCountryConfigs = countryCode => {
-  const country = config.stripe.supportedCountries.find(c => c.code === countryCode);
+export const stripeCountryConfigs = (countryCode, supportedCountries) => {
+  const country = supportedCountries.find(c => c.code === countryCode);
 
   if (!country) {
     throw new Error(`Country code not found in Stripe config ${countryCode}`);
@@ -76,8 +74,8 @@ export const stripeCountryConfigs = countryCode => {
  * @return {Array<String>} array containing different input 'types'
  * (e.g. ['routingNumber', 'accountNumber'])
  */
-export const requiredInputs = countryCode => {
-  const bankAccountInputs = stripeCountryConfigs(countryCode).accountConfig;
+export const requiredInputs = (countryCode, supportedCountries) => {
+  const bankAccountInputs = stripeCountryConfigs(countryCode, supportedCountries).accountConfig;
   return BANK_ACCOUNT_INPUTS.filter(inputType => bankAccountInputs[inputType]);
 };
 
@@ -107,9 +105,9 @@ export const inputTypeToString = (inputType, intl) => {
  *
  * @return {String} formatted Stripe error
  */
-export const translateStripeError = (country, intl, stripeError) => {
+export const translateStripeError = (country, supportedCountries, intl, stripeError) => {
   console.error('Stripe error:', stripeError); // eslint-disable-line no-console
-  const inputs = requiredInputs(country);
+  const inputs = requiredInputs(country, supportedCountries);
   const ibanRequired = inputs[IBAN];
   if (ibanRequired) {
     return intl.formatMessage(

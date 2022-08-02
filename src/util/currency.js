@@ -1,10 +1,11 @@
 import has from 'lodash/has';
 import trimEnd from 'lodash/trimEnd';
 import Decimal from 'decimal.js';
-import { types as sdkTypes } from './sdkLoader';
-import config from '../config';
 
-const { subUnitDivisors } = config;
+import appSettings from '../config/appSettings';
+import { types as sdkTypes } from '../util/sdkLoader';
+
+const { subUnitDivisors } = appSettings;
 const { Money } = sdkTypes;
 
 // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER
@@ -24,7 +25,7 @@ export const isSafeNumber = decimalValue => {
 export const unitDivisor = currency => {
   if (!has(subUnitDivisors, currency)) {
     throw new Error(
-      `No minor unit divisor defined for currency: ${currency} in currency-config.js`
+      `No minor unit divisor defined for currency: ${currency} in currencySettings.js`
     );
   }
   return subUnitDivisors[currency];

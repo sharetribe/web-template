@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { func, object, string } from 'prop-types';
 import classNames from 'classnames';
 
-import config from '../../../config';
 import { injectIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { formatMoney } from '../../../util/currency';
@@ -24,7 +23,15 @@ class SearchMapPriceLabel extends Component {
   }
 
   render() {
-    const { className, rootClassName, intl, listing, onListingClicked, isActive } = this.props;
+    const {
+      className,
+      rootClassName,
+      intl,
+      listing,
+      onListingClicked,
+      isActive,
+      config,
+    } = this.props;
     const currentListing = ensureListing(listing);
     const { price } = currentListing.attributes;
 
@@ -51,13 +58,12 @@ SearchMapPriceLabel.defaultProps = {
   rootClassName: null,
 };
 
-const { func, string } = PropTypes;
-
 SearchMapPriceLabel.propTypes = {
   className: string,
   rootClassName: string,
   listing: propTypes.listing.isRequired,
   onListingClicked: func.isRequired,
+  config: object.isRequired,
 
   // from injectIntl
   intl: intlShape.isRequired,

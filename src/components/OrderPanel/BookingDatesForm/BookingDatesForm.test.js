@@ -43,6 +43,8 @@ describe('BookingDatesForm', () => {
         onFetchTransactionLineItems={noop}
         onFetchTimeSlots={noop}
         lineItems={lineItems}
+        currency="USD"
+        dayCountAvailableForBooking={90}
       />
     );
     expect(tree).toMatchSnapshot();
@@ -51,14 +53,22 @@ describe('BookingDatesForm', () => {
 
 describe('EstimatedCustomerBreakdownMaybe', () => {
   it('renders nothing if nightly is missing start and end date', () => {
-    expect(renderDeep(<EstimatedCustomerBreakdownMaybe lineItems={lineItems} />)).toBeFalsy();
+    expect(
+      renderDeep(<EstimatedCustomerBreakdownMaybe lineItems={lineItems} currency="USD" />)
+    ).toBeFalsy();
   });
   it('renders nothing if nightly is missing end date', () => {
     const data = {
       startDate: new Date(),
     };
     expect(
-      renderDeep(<EstimatedCustomerBreakdownMaybe breakdownData={data} lineItems={lineItems} />)
+      renderDeep(
+        <EstimatedCustomerBreakdownMaybe
+          breakdownData={data}
+          lineItems={lineItems}
+          currency="USD"
+        />
+      )
     ).toBeFalsy();
   });
   it('renders breakdown with correct transaction data', () => {
@@ -70,6 +80,7 @@ describe('EstimatedCustomerBreakdownMaybe', () => {
         endDate,
       },
       lineItems,
+      currency: 'USD',
     };
 
     const tree = shallow(<EstimatedCustomerBreakdownMaybe {...props} />);

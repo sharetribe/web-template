@@ -11,22 +11,73 @@ exports[`ManageListingCard matches snapshot 1`] = `
     onTouchStart={[Function]}
     tabIndex={0}
   >
-    <AspectRatioWrapper
-      className={null}
-      height={400}
-      rootClassName={null}
-      width={400}
+    <div
+      className="root"
     >
-      <ResponsiveImage
-        alt="listing1 title"
-        className={null}
-        image={null}
-        noImageMessage={null}
-        rootClassName="rootForImage"
-        sizes={null}
-        variants={Array []}
-      />
-    </AspectRatioWrapper>
+      <div
+        className="aspectPadding"
+        style={
+          Object {
+            "paddingBottom": "100%",
+          }
+        }
+      >
+        <div
+          className="aspectBox"
+        >
+          <div
+            className="rootForImage noImageContainer"
+          >
+            <div
+              className="noImageWrapper"
+            >
+              <svg
+                className="noImageIcon"
+                height="49"
+                viewBox="0 -1 48 49"
+                width="48"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g
+                  fill="none"
+                  fillRule="evenodd"
+                >
+                  <path
+                    d="M13.6 9.6L24 .8l10.4 8.8z"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                  />
+                  <path
+                    d="M.8 46.4h46.4V9.6H.8z"
+                    strokeWidth="2"
+                  />
+                  <path
+                    d="M5.6 41.6h36.8V14.4H5.6z"
+                    strokeWidth="2"
+                  />
+                  <path
+                    d="M19.998 31.636l.835-.835a4.035 4.035 0 0 1 2.853-1.183h.693c1.07 0 2.097.426 2.853 1.183l.835.835"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                  />
+                  <path
+                    d="M21.599 23.983a1.009 1.009 0 1 0 0 2.018 1.009 1.009 0 0 0 0-2.018M26.402 23.983a1.009 1.009 0 1 0 0 2.018 1.009 1.009 0 0 0 0-2.018"
+                  />
+                </g>
+              </svg>
+              <div
+                className="noImageText"
+              >
+                <span>
+                  ResponsiveImage.noImage
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div
       className="menuOverlayWrapper"
     >
@@ -36,9 +87,9 @@ exports[`ManageListingCard matches snapshot 1`] = `
       <div
         className="menuOverlayContent"
       >
-        <MemoizedFormattedMessage
-          id="ManageListingCard.viewListing"
-        />
+        <span>
+          ManageListingCard.viewListing
+        </span>
       </div>
     </div>
     <div
@@ -50,56 +101,97 @@ exports[`ManageListingCard matches snapshot 1`] = `
       <div
         className="menubar"
       >
-        <Menu
-          className="menu cardIsOpen"
-          contentPlacementOffset={-12}
-          contentPosition="left"
-          isOpen={false}
-          onToggleActive={[Function]}
-          rootClassName=""
-          useArrow={false}
+        <div
+          className="root menu cardIsOpen"
+          onBlur={[Function]}
+          onKeyDown={[Function]}
+          tabIndex={0}
         >
-          <MenuLabel
-            className="menuLabel"
-            isOpen={false}
-            isOpenClassName="listingMenuIsOpen"
-            onToggleActive={null}
-            rootClassName=""
+          <button
+            className="root menuLabel"
+            onBlur={[Function]}
+            onClick={[Function]}
           >
             <div
               className="iconWrapper"
             >
-              <MenuIcon
-                className="menuIcon"
-                isActive={false}
-              />
-            </div>
-          </MenuLabel>
-          <MenuContent
-            arrowPosition={null}
-            className={null}
-            contentClassName={null}
-            contentRef={null}
-            isOpen={false}
-            rootClassName="menuContent"
-            style={null}
-          >
-            <MenuItem
-              className={null}
-              key="close-listing"
-              rootClassName=""
-            >
-              <InlineTextButton
-                onClick={[Function]}
-                rootClassName="menuItem"
+              <svg
+                className="menuIcon menuIcon"
+                height="12"
+                viewBox="0 0 26 12"
+                width="26"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <MemoizedFormattedMessage
-                  id="ManageListingCard.closeListing"
-                />
-              </InlineTextButton>
-            </MenuItem>
-          </MenuContent>
-        </Menu>
+                <defs>
+                  <filter
+                    filterUnits="objectBoundingBox"
+                    height="450%"
+                    width="177.8%"
+                    x="-38.9%"
+                    y="-125%"
+                  >
+                    <feOffset
+                      dy="2"
+                      in="SourceAlpha"
+                      result="shadowOffsetOuter1"
+                    />
+                    <feGaussianBlur
+                      in="shadowOffsetOuter1"
+                      result="shadowBlurOuter1"
+                      stdDeviation="2"
+                    />
+                    <feColorMatrix
+                      in="shadowBlurOuter1"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"
+                    />
+                  </filter>
+                </defs>
+                <g
+                  filter="url(#a)"
+                  transform="translate(-342 -18)"
+                >
+                  <path
+                    d="M348 24c-1.105 0-2-.895-2-2s.895-2 2-2 2 .895 2 2-.895 2-2 2zm7 0c-1.105 0-2-.895-2-2s.895-2 2-2 2 .895 2 2-.895 2-2 2zm7 0c-1.105 0-2-.895-2-2s.895-2 2-2 2 .895 2 2-.895 2-2 2z"
+                  />
+                </g>
+                <g
+                  transform="translate(-342 -18)"
+                >
+                  <path
+                    d="M348 24c-1.105 0-2-.895-2-2s.895-2 2-2 2 .895 2 2-.895 2-2 2zm7 0c-1.105 0-2-.895-2-2s.895-2 2-2 2 .895 2 2-.895 2-2 2zm7 0c-1.105 0-2-.895-2-2s.895-2 2-2 2 .895 2 2-.895 2-2 2z"
+                  />
+                </g>
+              </svg>
+            </div>
+          </button>
+          <div
+            className="menuContent isClosed"
+            style={
+              Object {
+                "left": "-10000px",
+              }
+            }
+          >
+            <ul
+              className="content"
+            >
+              <li
+                className="root"
+                role="menuitem"
+              >
+                <button
+                  className="menuItem inlineTextButton"
+                  disabled={false}
+                  onClick={[Function]}
+                >
+                  <span>
+                    ManageListingCard.closeListing
+                  </span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -122,9 +214,10 @@ exports[`ManageListingCard matches snapshot 1`] = `
       <div
         className="titleWrapper"
       >
-        <InlineTextButton
+        <button
+          className="title inlineTextButton"
+          disabled={false}
           onClick={[Function]}
-          rootClassName="title"
         >
           <span
             key="1"
@@ -138,47 +231,41 @@ exports[`ManageListingCard matches snapshot 1`] = `
           </span>
            
           title
-        </InlineTextButton>
+        </button>
       </div>
     </div>
     <div
       className="manageLinks"
     >
-      <NamedLink
+      <a
         className="manageLink"
-        name="EditListingPage"
-        params={
-          Object {
-            "id": "listing1",
-            "slug": "listing1-title",
-            "tab": "details",
-            "type": "edit",
-          }
-        }
+        href="/l/listing1-title/listing1/edit/details"
+        onClick={[Function]}
+        onMouseOver={[Function]}
+        onTouchStart={[Function]}
+        style={Object {}}
+        title={null}
       >
-        <MemoizedFormattedMessage
-          id="ManageListingCard.editListing"
-        />
-      </NamedLink>
+        <span>
+          ManageListingCard.editListing
+        </span>
+      </a>
       <span
         className="manageLinksSeparator"
       >
          • 
       </span>
-      <NamedLink
+      <a
         className="manageLink"
-        name="EditListingPage"
-        params={
-          Object {
-            "id": "listing1",
-            "slug": "listing1-title",
-            "tab": "pricing-and-stock",
-            "type": "edit",
-          }
-        }
+        href="/l/listing1-title/listing1/edit/pricing-and-stock"
+        onClick={[Function]}
+        onMouseOver={[Function]}
+        onTouchStart={[Function]}
+        style={Object {}}
+        title={null}
       >
         ManageListingCard.manageStock
-      </NamedLink>
+      </a>
     </div>
   </div>
 </div>

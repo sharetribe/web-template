@@ -19,9 +19,13 @@ export const subUnitDivisors = {
   USD: 100,
 };
 
-// Currency formatting options.
-// See: https://github.com/yahoo/react-intl/wiki/API#formatnumber
-export const currencyConfiguration = currency => {
+/**
+ * Currency formatting options.
+ * See: https://github.com/yahoo/react-intl/wiki/API#formatnumber
+ *
+ * @param {string} currency
+ */
+export const currencyFormatting = currency => {
   if (!subUnitDivisors[currency]) {
     const currencies = Object.keys(subUnitDivisors);
     throw new Error(

@@ -23,6 +23,13 @@ exports[`EditListingPhotosForm matches snapshot 1`] = `
       "now": [Function],
     }
   }
+  listingConfig={
+    Object {
+      "aspectHeight": 1,
+      "aspectWidth": 1,
+      "variantPrefix": "listing-card",
+    }
+  }
   mutators={
     Object {
       "concat": [Function],

@@ -21,7 +21,6 @@ describe('EditListingPageComponent', () => {
         images={[]}
         intl={fakeIntl}
         onGetStripeConnectAccountLink={noop}
-        onPayoutDetailsSubmit={noop}
         onLogout={noop}
         onManageDisableScrolling={noop}
         onAddAvailabilityException={noop}

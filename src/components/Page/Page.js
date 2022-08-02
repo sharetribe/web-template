@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { any, array, arrayOf, bool, number, object, oneOfType, shape, string } from 'prop-types';
 import { Helmet } from 'react-helmet-async';
-import { withRouter } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 
-import config from '../../config';
-import routeConfiguration from '../../routing/routeConfiguration';
-import { injectIntl, intlShape } from '../../util/reactIntl';
+import { useConfiguration } from '../../context/configurationContext';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { useIntl, intlShape } from '../../util/reactIntl';
 import { metaTagProps } from '../../util/seo';
 import { canonicalRoutePath } from '../../util/routes';
+import { propTypes } from '../../util/types';
 
 import { CookieConsent } from '../../components';
 
@@ -90,6 +91,8 @@ class PageComponent extends Component {
       twitterHandle,
       twitterImages,
       updated,
+      config,
+      routeConfiguration,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className, {
@@ -101,7 +104,7 @@ class PageComponent extends Component {
 
     const canonicalRootURL = config.canonicalRootURL;
     const shouldReturnPathOnly = referrer && referrer !== 'unsafe-url';
-    const canonicalPath = canonicalRoutePath(routeConfiguration(), location, shouldReturnPathOnly);
+    const canonicalPath = canonicalRoutePath(routeConfiguration, location, shouldReturnPathOnly);
     const canonicalUrl = `${canonicalRootURL}${canonicalPath}`;
 
     const siteTitle = config.siteTitle;
@@ -126,20 +129,23 @@ class PageComponent extends Component {
       },
     ];
 
-    const metaToHead = metaTagProps({
-      author,
-      contentType,
-      description: metaDescription,
-      facebookImages: facebookImgs,
-      twitterImages: twitterImgs,
-      published,
-      tags,
-      title: metaTitle,
-      twitterHandle,
-      updated,
-      url: canonicalUrl,
-      locale: intl.locale,
-    });
+    const metaToHead = metaTagProps(
+      {
+        author,
+        contentType,
+        description: metaDescription,
+        facebookImages: facebookImgs,
+        twitterImages: twitterImgs,
+        published,
+        tags,
+        title: metaTitle,
+        twitterHandle,
+        updated,
+        url: canonicalUrl,
+        locale: intl.locale,
+      },
+      config
+    );
 
     // eslint-disable-next-line react/no-array-index-key
     const metaTags = metaToHead.map((metaProps, i) => <meta key={i} {...metaProps} />);
@@ -226,8 +232,6 @@ class PageComponent extends Component {
   }
 }
 
-const { any, array, arrayOf, bool, func, number, object, oneOfType, shape, string } = PropTypes;
-
 PageComponent.defaultProps = {
   className: null,
   rootClassName: null,
@@ -279,17 +283,38 @@ PageComponent.propTypes = {
   twitterHandle: string, // twitter handle
   updated: string, // article:modified_time
 
-  // from withRouter
-  history: shape({
-    listen: func.isRequired,
-  }).isRequired,
-  location: object.isRequired,
+  // from useConfiguration
+  config: object.isRequired,
 
-  // from injectIntl
+  // from useRouteConfiguration
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
+
+  // from useIntl
   intl: intlShape.isRequired,
+
+  // from useLocation
+  location: shape({
+    pathname: string.isRequired,
+    search: string.isRequired,
+    hash: string.isRequired,
+  }).isRequired,
 };
 
-const Page = injectIntl(withRouter(PageComponent));
-Page.displayName = 'Page';
+const Page = props => {
+  const config = useConfiguration();
+  const routeConfiguration = useRouteConfiguration();
+  const location = useLocation();
+  const intl = useIntl();
+
+  return (
+    <PageComponent
+      config={config}
+      routeConfiguration={routeConfiguration}
+      location={location}
+      intl={intl}
+      {...props}
+    />
+  );
+};
 
 export default Page;

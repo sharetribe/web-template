@@ -4,8 +4,9 @@
  */
 import React from 'react';
 import { oneOf, string } from 'prop-types';
-import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import classNames from 'classnames';
+
+import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import {
   propTypes,
   LISTING_UNIT_TYPES,
@@ -38,6 +39,7 @@ export const OrderBreakdownComponent = props => {
     intl,
     dateType,
     timeZone,
+    currency,
   } = props;
 
   const isCustomer = userRole === 'customer';
@@ -112,8 +114,9 @@ export const OrderBreakdownComponent = props => {
         code={lineItemUnitType}
         userRole={userRole}
         intl={intl}
+        marketplaceCurrency={currency}
       />
-      <LineItemRefundMaybe lineItems={lineItems} intl={intl} />
+      <LineItemRefundMaybe lineItems={lineItems} intl={intl} marketplaceCurrency={currency} />
 
       <LineItemCustomerCommissionMaybe lineItems={lineItems} isCustomer={isCustomer} intl={intl} />
       <LineItemCustomerCommissionRefundMaybe

@@ -9,7 +9,6 @@ import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 
 // Import configs and util modules
-import config from '../../../../config';
 import { FormattedMessage, intlShape, injectIntl } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import { nonEmptyArray, composeValidators } from '../../../../util/validators';
@@ -26,8 +25,7 @@ const ACCEPT_IMAGES = 'image/*';
 
 // Field component that uses file-input to allow user to select images.
 const FieldAddImage = props => {
-  const { formApi, onImageUploadHandler, ...rest } = props;
-  const { aspectWidth = 1, aspectHeight = 1 } = config.listing;
+  const { formApi, onImageUploadHandler, aspectWidth = 1, aspectHeight = 1, ...rest } = props;
   return (
     <Field form={null} {...rest}>
       {fieldprops => {
@@ -57,7 +55,7 @@ const FieldAddImage = props => {
 
 // Component that shows listing images from "images" field array
 const FieldListingImage = props => {
-  const { name, intl, onRemoveImage } = props;
+  const { name, intl, onRemoveImage, aspectWidth, aspectHeight, variantPrefix } = props;
   return (
     <Field name={name}>
       {fieldProps => {
@@ -72,6 +70,9 @@ const FieldListingImage = props => {
               id: 'EditListingPhotosForm.savedImageAltText',
             })}
             onRemoveImage={() => onRemoveImage(image?.id)}
+            aspectWidth={aspectWidth}
+            aspectHeight={aspectHeight}
+            variantPrefix={variantPrefix}
           />
         ) : null;
       }}
@@ -91,7 +92,7 @@ export class EditListingPhotosFormComponent extends Component {
     if (file) {
       this.setState({ imageUploadRequested: true });
       this.props
-        .onImageUpload({ id: `${file.name}_${Date.now()}`, file })
+        .onImageUpload({ id: `${file.name}_${Date.now()}`, file }, this.props.listingConfig)
         .then(() => {
           this.setState({ imageUploadRequested: false });
         })
@@ -128,7 +129,9 @@ export class EditListingPhotosFormComponent extends Component {
             updateInProgress,
             touched,
             errors,
+            listingConfig,
           } = formRenderProps;
+          const { aspectWidth = 1, aspectHeight = 1, variantPrefix } = listingConfig;
 
           const chooseImageText = (
             <span className={css.chooseImageText}>
@@ -225,6 +228,9 @@ export class EditListingPhotosFormComponent extends Component {
                           onRemoveImage(imageId);
                         }}
                         intl={intl}
+                        aspectWidth={aspectWidth}
+                        aspectHeight={aspectHeight}
+                        variantPrefix={variantPrefix}
                       />
                     ))
                   }
@@ -239,6 +245,8 @@ export class EditListingPhotosFormComponent extends Component {
                   disabled={imageUploadRequested}
                   formApi={form}
                   onImageUploadHandler={onImageUploadHandler}
+                  aspectWidth={aspectWidth}
+                  aspectHeight={aspectHeight}
                 />
               </div>
               {imagesError ? <div className={css.arrayError}>{imagesError}</div> : null}
@@ -286,6 +294,7 @@ EditListingPhotosFormComponent.propTypes = {
   updated: bool.isRequired,
   updateInProgress: bool.isRequired,
   onRemoveImage: func.isRequired,
+  listingConfig: object.isRequired,
 };
 
 export default compose(injectIntl)(EditListingPhotosFormComponent);

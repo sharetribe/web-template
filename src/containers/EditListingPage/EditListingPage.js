@@ -250,7 +250,14 @@ export const EditListingPageComponent = props => {
       id: 'EditListingPage.loadingListingData',
     };
     return (
-      <Page title={intl.formatMessage(loadingPageMsg)} scrollingDisabled={scrollingDisabled} />
+      <Page title={intl.formatMessage(loadingPageMsg)} scrollingDisabled={scrollingDisabled}>
+        <TopbarContainer
+          className={css.topbar}
+          mobileRootClassName={css.mobileTopbar}
+          desktopClassName={css.desktopTopbar}
+          mobileClassName={css.mobileTopbar}
+        />
+      </Page>
     );
   }
 };
@@ -353,10 +360,10 @@ const mapDispatchToProps = dispatch => ({
   onAddAvailabilityException: params => dispatch(requestAddAvailabilityException(params)),
   onDeleteAvailabilityException: params => dispatch(requestDeleteAvailabilityException(params)),
 
-  onUpdateListing: (tab, values) => dispatch(requestUpdateListing(tab, values)),
-  onCreateListingDraft: values => dispatch(requestCreateListingDraft(values)),
+  onUpdateListing: (tab, values, config) => dispatch(requestUpdateListing(tab, values, config)),
+  onCreateListingDraft: (values, config) => dispatch(requestCreateListingDraft(values, config)),
   onPublishListingDraft: listingId => dispatch(requestPublishListingDraft(listingId)),
-  onImageUpload: data => dispatch(requestImageUpload(data)),
+  onImageUpload: (data, listingConfig) => dispatch(requestImageUpload(data, listingConfig)),
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
   onPayoutDetailsChange: () => dispatch(stripeAccountClearError()),

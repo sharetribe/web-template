@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { array, bool, func, object, string } from 'prop-types';
+import { array, bool, func, number, object, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import classNames from 'classnames';
 
-import config from '../../../config';
 import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
 import { required, bookingDatesRequired, composeValidators } from '../../../util/validators';
 import {
@@ -28,14 +27,13 @@ import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe'
 import css from './BookingDatesForm.module.css';
 
 const TODAY = new Date();
-const MAX_TIME_SLOTS_RANGE = config.dayCountAvailableForBooking;
 
 const nextMonthFn = (currentMoment, timeZone, offset = 1) =>
   getStartOf(currentMoment, 'month', timeZone, offset, 'months');
 const prevMonthFn = (currentMoment, timeZone, offset = 1) =>
   getStartOf(currentMoment, 'month', timeZone, -1 * offset, 'months');
-const endOfRange = (date, timeZone) =>
-  getStartOf(date, 'day', timeZone, MAX_TIME_SLOTS_RANGE - 1, 'days');
+const endOfRange = (date, dayCountAvailableForBooking, timeZone) =>
+  getStartOf(date, 'day', timeZone, dayCountAvailableForBooking - 1, 'days');
 
 /**
  * Return a boolean indicating if given date can be found in an array
@@ -146,9 +144,10 @@ const isOutsideRangeFn = (
   startDate,
   endDate,
   lineItemUnitType,
+  dayCountAvailableForBooking,
   timeZone
 ) => focusedInput => {
-  const endOfAvailableRange = config.dayCountAvailableForBooking - 1;
+  const endOfAvailableRange = dayCountAvailableForBooking - 1;
   const endOfAvailableRangeDate = getStartOf(TODAY, 'day', timeZone, endOfAvailableRange, 'days');
   const outOfBookableDate = getStartOf(TODAY, 'day', timeZone, endOfAvailableRange + 1, 'days');
   const startOfStartDay = getStartOf(startDate, 'day', timeZone);
@@ -226,9 +225,10 @@ const isDayBlockedFn = (
   startDate,
   endDate,
   unitType,
+  dayCountAvailableForBooking,
   timeZone
 ) => focusedInput => {
-  const endOfAvailableRange = config.dayCountAvailableForBooking - 1;
+  const endOfAvailableRange = dayCountAvailableForBooking - 1;
   const outOfBookableDate = getStartOf(TODAY, 'day', timeZone, endOfAvailableRange + 1, 'days');
   const timeSlotsOnSelectedMonth = pickMonthlyTimeSlots(monthlyTimeSlots, startDate, timeZone);
 
@@ -277,8 +277,14 @@ const isDayBlockedFn = (
   }
 };
 
-const fetchMonthData = (date, listingId, timeZone, onFetchTimeSlots) => {
-  const endOfRangeDate = endOfRange(TODAY, timeZone);
+const fetchMonthData = (
+  date,
+  listingId,
+  dayCountAvailableForBooking,
+  timeZone,
+  onFetchTimeSlots
+) => {
+  const endOfRangeDate = endOfRange(TODAY, dayCountAvailableForBooking, timeZone);
 
   // Don't fetch timeSlots for past months or too far in the future
   if (isInRange(date, TODAY, endOfRangeDate)) {
@@ -300,6 +306,7 @@ const handleMonthClick = (
   currentMonth,
   monthlyTimeSlots,
   fetchMonthData,
+  dayCountAvailableForBooking,
   timeZone,
   listingId,
   onFetchTimeSlots
@@ -307,13 +314,25 @@ const handleMonthClick = (
   // Callback function after month has been updated.
   // react-dates component has next and previous months ready (but inivisible).
   // we try to populate those invisible months before user advances there.
-  fetchMonthData(monthFn(currentMonth, timeZone, 2), listingId, timeZone, onFetchTimeSlots);
+  fetchMonthData(
+    monthFn(currentMonth, timeZone, 2),
+    listingId,
+    dayCountAvailableForBooking,
+    timeZone,
+    onFetchTimeSlots
+  );
 
   // If previous fetch for month data failed, try again.
   const monthId = monthIdString(currentMonth, timeZone);
   const currentMonthData = monthlyTimeSlots[monthId];
   if (currentMonthData && currentMonthData.fetchTimeSlotsError) {
-    fetchMonthData(currentMonth, listingId, timeZone, onFetchTimeSlots);
+    fetchMonthData(
+      currentMonth,
+      listingId,
+      dayCountAvailableForBooking,
+      timeZone,
+      onFetchTimeSlots
+    );
   }
 };
 
@@ -375,10 +394,15 @@ const NextIcon = props => (
 );
 
 const Next = props => {
-  const { currentMonth, timeZone } = props;
+  const { currentMonth, dayCountAvailableForBooking, timeZone } = props;
   const nextMonthDate = nextMonthFn(currentMonth, timeZone);
 
-  return isDateSameOrAfter(nextMonthDate, endOfRange(TODAY, timeZone)) ? null : <NextIcon />;
+  return isDateSameOrAfter(
+    nextMonthDate,
+    endOfRange(TODAY, dayCountAvailableForBooking, timeZone)
+  ) ? null : (
+    <NextIcon />
+  );
 };
 const Prev = props => {
   const { currentMonth, timeZone } = props;
@@ -409,28 +433,10 @@ export const BookingDatesFormComponent = props => {
     onFetchTransactionLineItems,
     onSubmit,
     timeZone,
+    dayCountAvailableForBooking,
     ...rest
   } = props;
   const classes = classNames(rootClassName || css.root, className);
-
-  if (!unitPrice) {
-    return (
-      <div className={classes}>
-        <p className={css.error}>
-          <FormattedMessage id="BookingDatesForm.listingPriceMissing" />
-        </p>
-      </div>
-    );
-  }
-  if (unitPrice.currency !== config.currency) {
-    return (
-      <div className={classes}>
-        <p className={css.error}>
-          <FormattedMessage id="BookingDatesForm.listingCurrencyInvalid" />
-        </p>
-      </div>
-    );
-  }
 
   const onFormSubmit = handleFormSubmit(setFocusedInput, onSubmit);
   const onFocusedInputChange = handleFocusedInputChange(setFocusedInput);
@@ -501,6 +507,7 @@ export const BookingDatesFormComponent = props => {
           currentMonth,
           monthlyTimeSlots,
           fetchMonthData,
+          dayCountAvailableForBooking,
           timeZone,
           listingId,
           onFetchTimeSlots
@@ -510,6 +517,7 @@ export const BookingDatesFormComponent = props => {
           startDate,
           endDate,
           lineItemUnitType,
+          dayCountAvailableForBooking,
           timeZone
         );
         const isOutsideRange = isOutsideRangeFn(
@@ -517,6 +525,7 @@ export const BookingDatesFormComponent = props => {
           startDate,
           endDate,
           lineItemUnitType,
+          dayCountAvailableForBooking,
           timeZone
         );
 
@@ -573,7 +582,13 @@ export const BookingDatesFormComponent = props => {
                 bookingDatesRequired(startDateErrorMessage, endDateErrorMessage)
               )}
               initialVisibleMonth={initialVisibleMonth(startDate || startOfToday, timeZone)}
-              navNext={<Next currentMonth={currentMonth} timeZone={timeZone} />}
+              navNext={
+                <Next
+                  currentMonth={currentMonth}
+                  timeZone={timeZone}
+                  dayCountAvailableForBooking={dayCountAvailableForBooking}
+                />
+              }
               navPrev={<Prev currentMonth={currentMonth} timeZone={timeZone} />}
               onPrevMonthClick={() => {
                 setCurrentMonth(prevMonth => prevMonthFn(prevMonth, timeZone));
@@ -601,6 +616,7 @@ export const BookingDatesFormComponent = props => {
                   breakdownData={breakdownData}
                   lineItems={lineItems}
                   timeZone={timeZone}
+                  currency={unitPrice.currency}
                 />
               </div>
             ) : null}
@@ -664,6 +680,7 @@ BookingDatesFormComponent.propTypes = {
   // for tests
   startDatePlaceholder: string,
   endDatePlaceholder: string,
+  dayCountAvailableForBooking: number.isRequired,
 };
 
 const BookingDatesForm = compose(injectIntl)(BookingDatesFormComponent);

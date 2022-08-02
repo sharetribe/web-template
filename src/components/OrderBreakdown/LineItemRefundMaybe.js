@@ -1,9 +1,9 @@
 import React from 'react';
-import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import Decimal from 'decimal.js';
+
+import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
 import { types as sdkTypes } from '../../util/sdkLoader';
-import config from '../../config';
 import {
   propTypes,
   LINE_ITEM_CUSTOMER_COMMISSION,
@@ -17,11 +17,11 @@ const { Money } = sdkTypes;
 /**
  * Calculates the total price in sub units for multiple line items.
  */
-const lineItemsTotal = lineItems => {
+const lineItemsTotal = (lineItems, marketplaceCurrency) => {
   const amount = lineItems.reduce((total, item) => {
     return total.plus(item.lineTotal.amount);
   }, new Decimal(0));
-  const currency = lineItems[0] ? lineItems[0].lineTotal.currency : config.currency;
+  const currency = lineItems[0] ? lineItems[0].lineTotal.currency : marketplaceCurrency;
   return new Money(amount, currency);
 };
 
@@ -43,12 +43,12 @@ const nonCommissionReversalLineItems = lineItems => {
 };
 
 const LineItemRefundMaybe = props => {
-  const { lineItems, intl } = props;
+  const { lineItems, intl, marketplaceCurrency } = props;
 
   // all non-commission, reversal line items
   const refundLineItems = nonCommissionReversalLineItems(lineItems);
 
-  const refund = lineItemsTotal(refundLineItems);
+  const refund = lineItemsTotal(refundLineItems, marketplaceCurrency);
 
   const formattedRefund = refundLineItems.length > 0 ? formatMoney(intl, refund) : null;
 

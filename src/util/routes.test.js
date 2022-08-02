@@ -1,10 +1,15 @@
 import routeConfiguration from '../routing/routeConfiguration';
 import { createResourceLocatorString, findRouteByRouteName, canonicalRoutePath } from './routes';
 
-describe('util/routes.js', () => {
-  describe('createResourceLocatorString', () => {
-    const routes = routeConfiguration();
+const pageVariantConfig = {
+  searchPageVariant: 'map',
+  listingPageVariant: 'full-image',
+};
 
+describe('util/routes.js', () => {
+  const routes = routeConfiguration(pageVariantConfig);
+
+  describe('createResourceLocatorString', () => {
     it('should return meaningful strings if parameters are not needed', () => {
       // default links without params in path or search query
       expect(createResourceLocatorString('SearchPage', routes, undefined, undefined)).toEqual('/s');
@@ -48,7 +53,6 @@ describe('util/routes.js', () => {
   });
 
   describe('findRouteByRouteName', () => {
-    const routes = routeConfiguration();
     it('should return CheckoutPage route', () => {
       const foundRoute = findRouteByRouteName('CheckoutPage', routes);
       expect(foundRoute.name).toEqual('CheckoutPage');
@@ -64,7 +68,6 @@ describe('util/routes.js', () => {
 
   describe('canonicalRoutePath', () => {
     it('handles non-listing route', () => {
-      const routes = routeConfiguration();
       const location = {
         pathname: '/',
         search: '?some=value',
@@ -73,7 +76,6 @@ describe('util/routes.js', () => {
       expect(canonicalRoutePath(routes, location)).toEqual('/?some=value#and-some-hash');
     });
     it('handles ListingPage', () => {
-      const routes = routeConfiguration();
       const location = {
         pathname: '/l/some-slug-here/00000000-0000-0000-0000-000000000000',
         search: '',
@@ -84,7 +86,6 @@ describe('util/routes.js', () => {
       );
     });
     it('handles ListingPage book', () => {
-      const routes = routeConfiguration();
       const location = {
         pathname: '/l/some-slug-here/00000000-0000-0000-0000-000000000000?book=true',
         search: '',
@@ -95,7 +96,6 @@ describe('util/routes.js', () => {
       );
     });
     it('handles ListingBasePage', () => {
-      const routes = routeConfiguration();
       const location = {
         pathname: '/l',
         search: '',
@@ -104,7 +104,6 @@ describe('util/routes.js', () => {
       expect(canonicalRoutePath(routes, location)).toEqual('/l');
     });
     it('handles CheckoutPage', () => {
-      const routes = routeConfiguration();
       const location = {
         pathname: '/l/some-slug-here/00000000-0000-0000-0000-000000000000/checkout',
         search: '',
@@ -115,7 +114,6 @@ describe('util/routes.js', () => {
       );
     });
     it('handles NewListingPage', () => {
-      const routes = routeConfiguration();
       const location = {
         pathname: '/l/new',
         search: '',
@@ -124,7 +122,6 @@ describe('util/routes.js', () => {
       expect(canonicalRoutePath(routes, location)).toEqual('/l/new');
     });
     it('handles ListingPageCanonical', () => {
-      const routes = routeConfiguration();
       const location = {
         pathname: '/l/00000000-0000-0000-0000-000000000000',
         search: '',

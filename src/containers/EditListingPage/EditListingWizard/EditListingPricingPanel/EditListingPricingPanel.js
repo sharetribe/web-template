@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 // Import configs and util modules
-import config from '../../../../config';
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
 import { ensureOwnListing } from '../../../../util/data';
@@ -23,6 +22,8 @@ const EditListingPricingPanel = props => {
     className,
     rootClassName,
     listing,
+    marketplaceCurrency,
+    listingMinimumPriceSubUnits,
     disabled,
     ready,
     onSubmit,
@@ -47,7 +48,7 @@ const EditListingPricingPanel = props => {
     <FormattedMessage id="EditListingPricingPanel.createListingTitle" />
   );
 
-  const priceCurrencyValid = price instanceof Money ? price.currency === config.currency : true;
+  const priceCurrencyValid = price instanceof Money ? price.currency === marketplaceCurrency : true;
   const form = priceCurrencyValid ? (
     <EditListingPricingForm
       className={css.form}
@@ -60,6 +61,8 @@ const EditListingPricingPanel = props => {
         };
         onSubmit(updateValues);
       }}
+      marketplaceCurrency={marketplaceCurrency}
+      listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
       saveActionMsg={submitButtonText}
       disabled={disabled}
       ready={ready}

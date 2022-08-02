@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { array, arrayOf, bool, func, shape, string, oneOf, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
-import config from '../../config';
-import routeConfiguration from '../../routing/routeConfiguration';
-import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
+import { useConfiguration } from '../../context/configurationContext';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
 import { findOptionsForSelectFilter } from '../../util/search';
 import {
   LISTING_STATE_PENDING_APPROVAL,
@@ -104,7 +104,7 @@ export const ListingPageComponent = props => {
     sendEnquiryError,
     monthlyTimeSlots,
     onFetchTimeSlots,
-    customConfig,
+    customConfig: customConfigProp,
     onFetchTransactionLineItems,
     lineItems,
     fetchLineItemsInProgress,
@@ -113,8 +113,13 @@ export const ListingPageComponent = props => {
     callSetInitialValues,
     onSendEnquiry,
     onInitializeCardPaymentData,
+    config,
+    routeConfiguration,
   } = props;
 
+  // prop override makes testing a bit easier
+  // TODO: improve this when updating test setup
+  const customConfig = customConfigProp || config.custom;
   const listingId = new UUID(rawParams.id);
   const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
   const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
@@ -196,7 +201,7 @@ export const ListingPageComponent = props => {
 
   const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
 
-  const commonParams = { params, history, routes: routeConfiguration() };
+  const commonParams = { params, history, routes: routeConfiguration };
   const onContactUser = handleContactUser({
     ...commonParams,
     currentUser,
@@ -307,7 +312,10 @@ export const ListingPageComponent = props => {
                   }}
                 />
               ) : null}
-              <SectionGallery listing={currentListing} />
+              <SectionGallery
+                listing={currentListing}
+                variantPrefix={config.listing.variantPrefix}
+              />
               <div className={css.productMobileHeading}>
                 <SectionHeading
                   priceTitle={priceTitle}
@@ -377,6 +385,7 @@ export const ListingPageComponent = props => {
                 geolocation={geolocation}
                 publicData={publicData}
                 listingId={currentListing.id}
+                mapsConfig={config.maps}
               />
               <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
               <SectionAuthorMaybe
@@ -411,6 +420,8 @@ export const ListingPageComponent = props => {
                 lineItems={lineItems}
                 fetchLineItemsInProgress={fetchLineItemsInProgress}
                 fetchLineItemsError={fetchLineItemsError}
+                marketplaceCurrency={config.currency}
+                dayCountAvailableForBooking={config.dayCountAvailableForBooking}
               />
             </div>
           </div>
@@ -431,22 +442,28 @@ ListingPageComponent.defaultProps = {
   fetchReviewsError: null,
   monthlyTimeSlots: null,
   sendEnquiryError: null,
-  customConfig: config.custom,
+  customConfig: null,
   lineItems: null,
   fetchLineItemsError: null,
 };
 
 ListingPageComponent.propTypes = {
-  // from withRouter
+  // from useHistory
   history: shape({
     push: func.isRequired,
   }).isRequired,
+  // from useLocation
   location: shape({
     search: string,
   }).isRequired,
 
-  // from injectIntl
+  // from useIntl
   intl: intlShape.isRequired,
+
+  // from useConfiguration
+  config: object.isRequired,
+  // from useRouteConfiguration
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
 
   params: shape({
     id: string.isRequired,
@@ -483,6 +500,25 @@ ListingPageComponent.propTypes = {
   lineItems: array,
   fetchLineItemsInProgress: bool.isRequired,
   fetchLineItemsError: propTypes.error,
+};
+
+const EnhancedListingPage = props => {
+  const config = useConfiguration();
+  const routeConfiguration = useRouteConfiguration();
+  const intl = useIntl();
+  const history = useHistory();
+  const location = useLocation();
+
+  return (
+    <ListingPageComponent
+      config={config}
+      routeConfiguration={routeConfiguration}
+      intl={intl}
+      history={history}
+      location={location}
+      {...props}
+    />
+  );
 };
 
 const mapStateToProps = state => {
@@ -551,12 +587,10 @@ const mapDispatchToProps = dispatch => ({
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const ListingPage = compose(
-  withRouter,
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  injectIntl
-)(ListingPageComponent);
+  )
+)(EnhancedListingPage);
 
 export default ListingPage;

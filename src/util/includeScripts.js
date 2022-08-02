@@ -1,20 +1,21 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import config from '../config';
 
 const MAPBOX_SCRIPT_ID = 'mapbox_GL_JS';
 const GOOGLE_MAPS_SCRIPT_ID = 'GoogleMapsApi';
 
-const isGoogleMapsInUse = config.maps.mapProvider === 'GOOGLE_MAPS';
-const isMapboxInUse = config.maps.mapProvider === 'MAPBOX';
-
 /**
- * Include Map Provider scripts.
+ * Include scripts (like Map Provider).
  * These scripts are relevant for whole application: location search in Topbar and maps on different pages.
  * However, if you don't need location search and maps, you can just omit this component from app.js
  * Note: another common point to add <scripts>, <links> and <meta> tags is Page.js
  */
-export const IncludeMapLibraryScripts = () => {
+export const IncludeScripts = props => {
+  const { canonicalRootURL: rootURL, maps } = props?.config || {};
+  const { mapProvider, googleMapsAPIKey, mapboxAccessToken } = maps || {};
+  const isGoogleMapsInUse = mapProvider === 'GOOGLE_MAPS';
+  const isMapboxInUse = mapProvider === 'MAPBOX';
+
   // Collect relevant map libraries
   let mapLibraries = [];
 
@@ -22,10 +23,7 @@ export const IncludeMapLibraryScripts = () => {
     // NOTE: remember to update mapbox-sdk.min.js to a new version regularly.
     // mapbox-sdk.min.js is included from static folder for CSP purposes.
     mapLibraries.push(
-      <script
-        key="mapboxSDK"
-        src={`${config.canonicalRootURL}/static/scripts/mapbox/mapbox-sdk.min.js`}
-      ></script>
+      <script key="mapboxSDK" src={`${rootURL}/static/scripts/mapbox/mapbox-sdk.min.js`}></script>
     );
     // Add CSS for Mapbox map
     mapLibraries.push(
@@ -49,7 +47,7 @@ export const IncludeMapLibraryScripts = () => {
       <script
         id={GOOGLE_MAPS_SCRIPT_ID}
         key="GoogleMapsApi"
-        src={`https://maps.googleapis.com/maps/api/js?key=${config.maps.googleMapsAPIKey}&libraries=places`}
+        src={`https://maps.googleapis.com/maps/api/js?key=${googleMapsAPIKey}&libraries=places`}
       ></script>
     );
   }
@@ -62,7 +60,7 @@ export const IncludeMapLibraryScripts = () => {
   // since SSR includes those map libraries to <head> of the app.
   if (isMapboxInUse && isMapboxLoaded && !window.mapboxgl.accessToken) {
     // Add access token for Mapbox library
-    window.mapboxgl.accessToken = config.maps.mapboxAccessToken;
+    window.mapboxgl.accessToken = mapboxAccessToken;
   }
 
   // If the script is added on client side as a reaction to page navigation or
@@ -72,7 +70,7 @@ export const IncludeMapLibraryScripts = () => {
     // At this point we know that map library is loaded after it's dynamically included
     if (isMapboxInUse && !window.mapboxgl.accessToken) {
       // Add access token for Mapbox sdk.
-      window.mapboxgl.accessToken = config.maps.mapboxAccessToken;
+      window.mapboxgl.accessToken = mapboxAccessToken;
     }
   };
 

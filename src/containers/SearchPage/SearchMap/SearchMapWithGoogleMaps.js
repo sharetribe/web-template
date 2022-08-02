@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import invariant from 'invariant';
-import { arrayOf, func, number, oneOfType, shape, string } from 'prop-types';
+import { arrayOf, func, number, object, oneOfType, shape, string } from 'prop-types';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 
@@ -210,6 +210,7 @@ class SearchMapPriceLabelWithOverlay extends Component {
       listing,
       onListingClicked,
       mapComponentRefreshToken,
+      config,
     } = this.props;
 
     return (
@@ -225,6 +226,7 @@ class SearchMapPriceLabelWithOverlay extends Component {
           listing={listing}
           onListingClicked={onListingClicked}
           mapComponentRefreshToken={mapComponentRefreshToken}
+          config={config}
         />
       </CustomOverlayView>
     );
@@ -286,6 +288,7 @@ const PriceLabelsAndGroups = props => {
     infoCardOpen,
     onListingClicked,
     mapComponentRefreshToken,
+    config,
   } = props;
   const listingArraysInLocations = reducedToArray(groupedByCoordinates(listings));
   const priceLabels = listingArraysInLocations.reverse().map(listingArr => {
@@ -319,6 +322,7 @@ const PriceLabelsAndGroups = props => {
           listing={listing}
           onListingClicked={onListingClicked}
           mapComponentRefreshToken={mapComponentRefreshToken}
+          config={config}
         />
       );
     }
@@ -355,6 +359,7 @@ const InfoCardComponent = props => {
     onListingInfoCardClicked,
     createURLToListing,
     mapComponentRefreshToken,
+    config,
   } = props;
   const listingsArray = Array.isArray(infoCardOpen) ? infoCardOpen : [infoCardOpen];
 
@@ -381,6 +386,7 @@ const InfoCardComponent = props => {
         listings={listingsArray}
         onListingInfoCardClicked={onListingInfoCardClicked}
         createURLToListing={createURLToListing}
+        config={config}
       />
     </CustomOverlayView>
   );
@@ -525,6 +531,7 @@ class SearchMapWithGoogleMaps extends Component {
       mapComponentRefreshToken,
       onListingInfoCardClicked,
       createURLToListing,
+      config,
     } = this.props;
     return (
       <div
@@ -541,6 +548,7 @@ class SearchMapWithGoogleMaps extends Component {
             infoCardOpen={infoCardOpen}
             onListingClicked={onListingClicked}
             mapComponentRefreshToken={mapComponentRefreshToken}
+            config={config}
           />
         ) : null}
         {this.map ? (
@@ -550,6 +558,7 @@ class SearchMapWithGoogleMaps extends Component {
             onListingInfoCardClicked={onListingInfoCardClicked}
             createURLToListing={createURLToListing}
             mapComponentRefreshToken={mapComponentRefreshToken}
+            config={config}
           />
         ) : null}
       </div>
@@ -581,6 +590,7 @@ SearchMapWithGoogleMaps.propTypes = {
   onMapLoad: func.isRequired,
   zoom: number,
   reusableMapHiddenHandle: string,
+  config: object.isRequired,
 };
 
 export default SearchMapWithGoogleMaps;

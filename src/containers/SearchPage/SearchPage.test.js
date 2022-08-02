@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderShallow } from '../../util/test-helpers';
+import { getRouteConfiguration, renderShallow } from '../../util/test-helpers';
 import { fakeIntl } from '../../util/test-data';
 import { SearchPageComponent } from './SearchPageWithList';
 
@@ -102,9 +102,17 @@ describe('SearchPageWithList', () => {
       onSearchMapListings: noop,
       sendVerificationEmailInProgress: false,
       onResendVerificationEmail: noop,
-      listingExtendedDataConfig: listingExtendedDataConfig,
-      defaultFiltersConfig: defaultFiltersConfig,
-      sortConfig: sortConfig,
+      config: {
+        custom: {
+          listingExtendedData: listingExtendedDataConfig,
+          defaultFilters: defaultFiltersConfig,
+          sortConfig: sortConfig,
+          processes: ['flex-product-default-process', 'flex-booking-default-process'],
+        },
+        mainSearchType: 'location',
+        sortSearchByDistance: false,
+      },
+      routeConfiguration: getRouteConfiguration(),
     };
     const tree = renderShallow(<SearchPageComponent {...props} />);
     expect(tree).toMatchSnapshot();

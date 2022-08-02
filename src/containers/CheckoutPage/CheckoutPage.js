@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { bool, func, object, oneOfType, shape, string } from 'prop-types';
+import { arrayOf, bool, func, object, oneOfType, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 
-// Import configs and util modules
-import config from '../../config';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import routeConfiguration from '../../routing/routeConfiguration';
+// Import contexts and util modules
+import { useConfiguration } from '../../context/configurationContext';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { FormattedMessage, useIntl, intlShape } from '../../util/reactIntl';
 import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
 import {
   propTypes,
@@ -544,7 +544,14 @@ export class CheckoutPageComponent extends Component {
     }
     this.setState({ submitting: true });
 
-    const { history, speculatedTransaction, currentUser, paymentIntent, dispatch } = this.props;
+    const {
+      history,
+      routeConfiguration,
+      speculatedTransaction,
+      currentUser,
+      paymentIntent,
+      dispatch,
+    } = this.props;
     const { card, message, paymentMethod, formValues } = values;
     const {
       name,
@@ -624,15 +631,16 @@ export class CheckoutPageComponent extends Component {
         const { orderId, messageSuccess, paymentMethodSaved } = res;
         this.setState({ submitting: false });
 
-        const routes = routeConfiguration();
         const initialMessageFailedToTransaction = messageSuccess ? null : orderId;
-        const orderDetailsPath = pathByRouteName('OrderDetailsPage', routes, { id: orderId.uuid });
+        const orderDetailsPath = pathByRouteName('OrderDetailsPage', routeConfiguration, {
+          id: orderId.uuid,
+        });
         const initialValues = {
           initialMessageFailedToTransaction,
           savePaymentMethodFailed: !paymentMethodSaved,
         };
 
-        initializeOrderPage(initialValues, routes, dispatch);
+        initializeOrderPage(initialValues, routeConfiguration, dispatch);
         clearData(STORAGE_KEY);
         history.push(orderDetailsPath);
       })
@@ -681,6 +689,7 @@ export class CheckoutPageComponent extends Component {
       paymentIntent,
       retrievePaymentIntentError,
       stripeCustomerFetched,
+      config,
     } = this.props;
 
     // Since the listing data is already given from the ListingPage
@@ -772,6 +781,7 @@ export class CheckoutPageComponent extends Component {
           userRole="customer"
           transaction={tx}
           {...txBookingMaybe}
+          currency={config.currency}
         />
       ) : null;
 
@@ -924,6 +934,8 @@ export class CheckoutPageComponent extends Component {
                   askShippingDetails={orderData?.deliveryMethod === 'shipping'}
                   pickupLocation={currentListing?.attributes?.publicData?.location}
                   totalPrice={tx.id ? getFormattedTotalPrice(tx, intl) : null}
+                  locale={config.locale}
+                  stripePublishableKey={config.stripe.publishableKey}
                 />
               ) : null}
               {isPaymentExpired ? (
@@ -1012,13 +1024,36 @@ CheckoutPageComponent.propTypes = {
   // from connect
   dispatch: func.isRequired,
 
-  // from injectIntl
+  // from useIntl
   intl: intlShape.isRequired,
 
-  // from withRouter
+  // from useConfiguration
+  config: object.isRequired,
+
+  // from useRouteConfiguration
+  routeConfiguration: arrayOf(propTypes.route).isRequired,
+
+  // from useHistory
   history: shape({
     push: func.isRequired,
   }).isRequired,
+};
+
+const EnhancedCheckoutPage = props => {
+  const config = useConfiguration();
+  const routeConfiguration = useRouteConfiguration();
+  const intl = useIntl();
+  const history = useHistory();
+
+  return (
+    <CheckoutPageComponent
+      config={config}
+      routeConfiguration={routeConfiguration}
+      intl={intl}
+      history={history}
+      {...props}
+    />
+  );
 };
 
 const mapStateToProps = state => {
@@ -1070,13 +1105,11 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const CheckoutPage = compose(
-  withRouter,
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  injectIntl
-)(CheckoutPageComponent);
+  )
+)(EnhancedCheckoutPage);
 
 CheckoutPage.setInitialValues = (initialValues, saveToSessionStorage = false) => {
   if (saveToSessionStorage) {

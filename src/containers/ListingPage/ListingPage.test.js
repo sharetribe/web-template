@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+
 import { FormattedMessage } from '../../util/reactIntl';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
@@ -10,7 +11,11 @@ import {
   fakeIntl,
 } from '../../util/test-data';
 import { storableError } from '../../util/errors';
-import { renderShallow } from '../../util/test-helpers';
+import {
+  renderShallow,
+  getRouteConfiguration,
+  getDefaultConfiguration,
+} from '../../util/test-helpers';
 import {
   LISTING_STATE_PENDING_APPROVAL,
   LISTING_STATE_PUBLISHED,
@@ -95,6 +100,8 @@ describe('ListingPage', () => {
       fetchLineItemsInProgress: false,
       onFetchTransactionLineItems: () => null,
       onFetchTimeSlots: () => null,
+      config: getDefaultConfiguration(),
+      routeConfiguration: getRouteConfiguration(),
     };
 
     const tree = renderShallow(<ListingPageComponent {...props} />);
@@ -102,6 +109,15 @@ describe('ListingPage', () => {
   });
 
   describe('Duck', () => {
+    const config = {
+      listing: {
+        showUnitTypeTranslations: false,
+        aspectWidth: 400,
+        aspectHeight: 400,
+        variantPrefix: 'listing-card',
+      },
+    };
+
     it('showListing() success', () => {
       const id = new UUID('00000000-0000-0000-0000-000000000000');
       const dispatch = jest.fn(action => action);
@@ -109,7 +125,7 @@ describe('ListingPage', () => {
       const show = jest.fn(() => Promise.resolve(response));
       const sdk = { listings: { show }, currentUser: { show } };
 
-      return showListing(id)(dispatch, null, sdk).then(data => {
+      return showListing(id, config)(dispatch, null, sdk).then(data => {
         expect(data).toEqual(response);
         expect(show.mock.calls).toEqual([
           [
@@ -138,7 +154,7 @@ describe('ListingPage', () => {
 
       // Calling sdk.listings.show is expected to fail now
 
-      return showListing(id)(dispatch, null, sdk).then(data => {
+      return showListing(id, config)(dispatch, null, sdk).then(data => {
         expect(show.mock.calls).toEqual([
           [
             expect.objectContaining({

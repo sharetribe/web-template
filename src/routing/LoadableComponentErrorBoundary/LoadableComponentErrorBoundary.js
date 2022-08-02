@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import config from '../../config';
+import appSettings from '../../config/appSettings';
 
 import { LoadableComponentErrorBoundaryPage } from './LoadableComponentErrorBoundaryPage';
 
@@ -32,7 +32,7 @@ class LoadableComponentErrorBoundary extends Component {
 // Note: in development mode with Hot Module Reloading (HMR) in use, this causes error loops.
 const UseLoadableErrorBoundaryOnlyInProdutionMode = props => {
   const { children } = props;
-  return config.dev ? (
+  return appSettings.dev ? (
     children
   ) : (
     <LoadableComponentErrorBoundary>{children}</LoadableComponentErrorBoundary>

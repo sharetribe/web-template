@@ -1,6 +1,5 @@
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { userLocation } from '../../util/maps';
-import config from '../../config';
 
 const { LatLng: SDKLatLng, LatLngBounds: SDKLatLngBounds } = sdkTypes;
 
@@ -97,17 +96,15 @@ class GeocoderMapbox {
    * and an array of predictions. The format of the predictions is
    * only relevant for the `getPlaceDetails` function below.
    */
-  getPlacePredictions(search) {
-    const limitCountriesMaybe = config.maps.search.countryLimit
-      ? { countries: config.maps.search.countryLimit }
-      : {};
+  getPlacePredictions(search, countryLimit, locale) {
+    const limitCountriesMaybe = countryLimit ? { countries: countryLimit } : {};
 
     return this.getClient()
       .geocoding.forwardGeocode({
         query: search,
         limit: 5,
         ...limitCountriesMaybe,
-        language: [config.locale],
+        language: [locale],
       })
       .send()
       .then(response => {
@@ -144,13 +141,13 @@ class GeocoderMapbox {
    *
    * @return {Promise<util.propTypes.place>} a place object
    */
-  getPlaceDetails(prediction) {
+  getPlaceDetails(prediction, currentLocationBoundsDistance) {
     if (this.getPredictionId(prediction) === CURRENT_LOCATION_ID) {
       return userLocation().then(latlng => {
         return {
           address: '',
           origin: latlng,
-          bounds: locationBounds(latlng, config.maps.search.currentLocationBoundsDistance),
+          bounds: locationBounds(latlng, currentLocationBoundsDistance),
         };
       });
     }

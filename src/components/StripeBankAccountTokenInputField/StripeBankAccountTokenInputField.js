@@ -1,18 +1,19 @@
 /* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
+import { bool, func, shape, string } from 'prop-types';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
 import debounce from 'lodash/debounce';
-import config from '../../config';
+
+import { useConfiguration } from '../../context/configurationContext';
+import { useIntl, FormattedMessage } from '../../util/reactIntl';
 
 import {
   BANK_ACCOUNT_INPUTS,
   formatFieldMessage,
   requiredInputs,
   mapInputsToStripeAccountKeys,
-  supportedCountries,
+  getSupportedCountryCodes,
   translateStripeError,
 } from './StripeBankAccountTokenInputField.util';
 import StripeBankAccountRequiredInput from './StripeBankAccountRequiredInput';
@@ -74,7 +75,7 @@ class TokenInputFieldComponent extends Component {
     if (!window.Stripe) {
       throw new Error('Stripe must be loaded for StripeBankAccountTokenInputField');
     }
-    this.stripe = window.Stripe(config.stripe.publishableKey);
+    this.stripe = window.Stripe(this.props.config.stripe.publishableKey);
     this._isMounted = true;
   }
 
@@ -109,13 +110,15 @@ class TokenInputFieldComponent extends Component {
       currency,
       input: { onChange },
       intl,
+      config,
     } = this.props;
 
     // First we have to clear the current token value so the parent
     // form doesn't submit with an old value.
     onChange('');
 
-    const inputsNeeded = requiredInputs(country);
+    const supportedCountries = config.stripe.supportedCountries;
+    const inputsNeeded = requiredInputs(country, supportedCountries);
     const missingValues = inputsNeeded.filter(inputType => !values[inputType]);
     const invalidValues = inputsNeeded.filter(inputType => !!this.state[inputType].error);
 
@@ -170,13 +173,13 @@ class TokenInputFieldComponent extends Component {
         }
         if (this._isMounted) {
           this.setState({
-            stripeError: translateStripeError(country, intl, e.stripeError),
+            stripeError: translateStripeError(country, supportedCountries, intl, e.stripeError),
           });
         }
       });
   }
 
-  handleInputChange(e, inputType, country, intl) {
+  handleInputChange(e, inputType, country, supportedCountries, intl) {
     const value = e.target.value;
 
     let inputError = null;
@@ -198,7 +201,7 @@ class TokenInputFieldComponent extends Component {
     });
 
     // Request new bank account token
-    const unChangedValues = requiredInputs(country).reduce(
+    const unChangedValues = requiredInputs(country, supportedCountries).reduce(
       (acc, iType) => ({ ...acc, [iType]: this.state[iType].value }),
       {}
     );
@@ -227,9 +230,10 @@ class TokenInputFieldComponent extends Component {
       meta: formMeta,
       intl,
       disabled,
+      config,
     } = this.props;
 
-    if (!supportedCountries.includes(country)) {
+    if (!getSupportedCountryCodes(config.stripe.supportedCountries).includes(country)) {
       return (
         <div className={css.unsupportedCountryError}>
           <FormattedMessage
@@ -240,7 +244,9 @@ class TokenInputFieldComponent extends Component {
       );
     }
 
-    const hasInputErrors = requiredInputs(country).some(inputType => {
+    const supportedCountries = config.stripe.supportedCountries;
+    const inputConfiguration = requiredInputs(country, supportedCountries);
+    const hasInputErrors = inputConfiguration.some(inputType => {
       return (this.state[inputType].touched || formMeta.touched) && !!this.state[inputType].error;
     });
 
@@ -254,8 +260,6 @@ class TokenInputFieldComponent extends Component {
       !showingFieldErrors &&
       !showStripeError
     );
-
-    const inputConfiguration = requiredInputs(country);
 
     // E.g. Japan has 6 fields in the bank account details so we want to
     // show the inputs in two columns on bigger screens
@@ -272,7 +276,9 @@ class TokenInputFieldComponent extends Component {
               formName={formName}
               value={this.state[inputType].value}
               placeholder={formatFieldMessage(intl, inputType, 'placeholder')}
-              onChange={e => this.handleInputChange(e, inputType, country, intl)}
+              onChange={e =>
+                this.handleInputChange(e, inputType, country, supportedCountries, intl)
+              }
               onFocus={this.handleInputFocus}
               onBlur={() => this.handleInputBlur(inputType)}
               isTouched={this.state[inputType].touched || formMeta.touched}
@@ -290,15 +296,19 @@ class TokenInputFieldComponent extends Component {
   }
 }
 
-TokenInputFieldComponent.defaultProps = {
+const EnhancedTokenInputFieldComponent = props => {
+  const config = useConfiguration();
+  const intl = useIntl();
+  return <TokenInputFieldComponent config={config} intl={intl} {...props} />;
+};
+
+EnhancedTokenInputFieldComponent.defaultProps = {
   rootClassName: null,
   className: null,
   disabled: false,
 };
 
-const { string, shape, func, bool } = PropTypes;
-
-TokenInputFieldComponent.propTypes = {
+EnhancedTokenInputFieldComponent.propTypes = {
   rootClassName: string,
   className: string,
   country: string.isRequired,
@@ -314,11 +324,7 @@ TokenInputFieldComponent.propTypes = {
     touched: bool.isRequired,
     error: string,
   }).isRequired,
-
-  intl: intlShape.isRequired,
 };
-
-const EnhancedTokenInputFieldComponent = injectIntl(TokenInputFieldComponent);
 
 const StripeBankAccountTokenInputField = props => {
   return <Field component={EnhancedTokenInputFieldComponent} {...props} />;

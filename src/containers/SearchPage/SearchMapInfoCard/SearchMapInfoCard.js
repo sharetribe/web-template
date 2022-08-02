@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { arrayOf, bool, func, string } from 'prop-types';
+import { arrayOf, bool, func, object, string } from 'prop-types';
 import { compose } from 'redux';
 import classNames from 'classnames';
 
-import config from '../../../config';
 import { injectIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { formatMoney } from '../../../util/currency';
@@ -15,7 +14,7 @@ import css from './SearchMapInfoCard.module.css';
 
 // ListingCard is the listing info without overlayview or carousel controls
 const ListingCard = props => {
-  const { className, clickHandler, intl, isInCarousel, listing, urlToListing } = props;
+  const { className, clickHandler, intl, isInCarousel, listing, urlToListing, config } = props;
 
   const { title, price } = listing.attributes;
   const formattedPrice =
@@ -101,6 +100,7 @@ class SearchMapInfoCard extends Component {
       listings,
       createURLToListing,
       onListingInfoCardClicked,
+      config,
     } = this.props;
     const currentListing = ensureListing(listings[this.state.currentListingIndex]);
     const hasCarousel = listings.length > 1;
@@ -146,6 +146,7 @@ class SearchMapInfoCard extends Component {
           listing={currentListing}
           intl={intl}
           isInCarousel={hasCarousel}
+          config={config}
         />
         {pagination}
         <div className={caretClass} />
@@ -165,6 +166,7 @@ SearchMapInfoCard.propTypes = {
   listings: arrayOf(propTypes.listing).isRequired,
   onListingInfoCardClicked: func.isRequired,
   createURLToListing: func.isRequired,
+  config: object.isRequired,
 
   // from injectIntl
   intl: intlShape.isRequired,

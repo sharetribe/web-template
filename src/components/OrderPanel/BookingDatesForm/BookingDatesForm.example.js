@@ -114,6 +114,8 @@ export const FormWithNightBooking = {
     onFetchTimeSlots: (listingId, start, end, timeZone) =>
       console.log('onFetchTimeSlots called with args:', listingId, start, end, timeZone),
     timeZone: 'Etc/UTC',
+    currency: 'USD',
+    dayCountAvailableForBooking: 90,
   },
   group: 'forms',
 };
@@ -144,6 +146,8 @@ export const FormWithDayBooking = {
     onFetchTimeSlots: (listingId, start, end, timeZone) =>
       console.log('onFetchTimeSlots called with args:', listingId, start, end, timeZone),
     timeZone: 'Etc/UTC',
+    currency: 'USD',
+    dayCountAvailableForBooking: 90,
   },
   group: 'forms',
 };

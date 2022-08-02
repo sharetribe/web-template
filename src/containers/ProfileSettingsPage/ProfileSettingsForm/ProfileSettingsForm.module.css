@@ -224,12 +224,6 @@
   align-items: center;
 }
 
-/* Avatar has square aspect ratio */
-/* Default is 3:2 */
-.squareAspectRatio {
-  padding-bottom: 100%;
-}
-
 .avatarInvisible {
   visibility: hidden;
   position: absolute;

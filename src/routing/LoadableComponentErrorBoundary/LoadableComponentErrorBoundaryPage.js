@@ -1,7 +1,8 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
 import { pathByRouteName } from '../../util/routes';
-import routeConfiguration from '../../routing/routeConfiguration';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+
 import {
   LayoutSingleColumn,
   LayoutWrapperTopbar,
@@ -13,7 +14,8 @@ import {
 import css from './LoadableComponentErrorBoundary.module.css';
 
 export const LoadableComponentErrorBoundaryPage = () => {
-  const landingPagePath = pathByRouteName('LandingPage', routeConfiguration());
+  const routeConfiguration = useRouteConfiguration();
+  const landingPagePath = pathByRouteName('LandingPage', routeConfiguration);
   const handleOnClick = () => {
     if (typeof window !== 'undefined') {
       window.location = landingPagePath;

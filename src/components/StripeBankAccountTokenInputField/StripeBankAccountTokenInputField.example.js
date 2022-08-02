@@ -1,17 +1,21 @@
 /* eslint-disable no-console */
 import React from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
+
+import defaultConfig from '../../config/defaultConfig';
+import * as validators from '../../util/validators';
 import { Button } from '../../components';
+
 import { stripeCountryConfigs } from './StripeBankAccountTokenInputField.util';
 import StripeBankAccountTokenInputField from './StripeBankAccountTokenInputField';
-import * as validators from '../../util/validators';
 
 const formComponent = country => props => (
   <FinalForm
     {...props}
     render={fieldRenderProps => {
       const { formName, handleSubmit, onChange } = fieldRenderProps;
-      const currency = stripeCountryConfigs(country).currency;
+      const currency = stripeCountryConfigs(country, defaultConfig.stripe.supportedCountries)
+        .currency;
 
       return (
         <form
