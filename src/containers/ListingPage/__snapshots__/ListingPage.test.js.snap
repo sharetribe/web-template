@@ -287,7 +287,7 @@ exports[`ListingPage matches snapshot 1`] = `
                   },
                   "googleMapsAPIKey": undefined,
                   "mapProvider": "MAPBOX",
-                  "mapboxAccessToken": "pk.eyJ1Ijoic2hhcmV0cmliZSIsImEiOiJjamtqamN4YWwxYjJ1M2tvNmwzaWR4N2RqIn0.o-72vMkdaAmR3lR0BHJe8Q",
+                  "mapboxAccessToken": undefined,
                   "search": Object {
                     "currentLocationBoundsDistance": 1000,
                     "defaults": Array [

@@ -20,6 +20,25 @@ import messages from '../translations/en.json';
 
 Enzyme.configure({ adapter: new Adapter() });
 
+let undefined;
+export const getDefaultConfiguration = () => {
+  return {
+    ...defaultConfig,
+    currency: 'USD',
+    facebookAppId: undefined,
+    canonicalRootURL: 'http://localhost:3000',
+    maps: {
+      ...defaultConfig.maps,
+      mapboxAccessToken: undefined,
+      googleMapsAPIKey: undefined,
+    },
+    stripe: {
+      ...defaultConfig.stripe,
+      publishableKey: 'pk_test_',
+    },
+  };
+};
+
 export const getRouteConfiguration = () => {
   const pageVariantConfig = {
     searchPageVariant: 'map',

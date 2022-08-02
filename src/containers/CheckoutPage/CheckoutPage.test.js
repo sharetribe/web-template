@@ -1,7 +1,6 @@
 import React from 'react';
 
-import defaultConfig from '../../config/defaultConfig';
-import { renderShallow } from '../../util/test-helpers';
+import { renderShallow, getDefaultConfiguration } from '../../util/test-helpers';
 import { createUser, createCurrentUser, createListing, fakeIntl } from '../../util/test-data';
 import { CheckoutPageComponent } from './CheckoutPage';
 import checkoutPageReducer, { SET_INITIAL_VALUES, setInitialValues } from './CheckoutPage.duck';
@@ -23,6 +22,7 @@ const routeConfiguration = [
 
 describe('CheckoutPage', () => {
   it('matches snapshot', () => {
+    const defaultConfig = getDefaultConfiguration();
     const listing = createListing(
       'listing1',
       { publicData: { transactionProcessAlias: 'flex-product-default-process', unitType: 'item' } },
@@ -49,7 +49,7 @@ describe('CheckoutPage', () => {
       onSavePaymentMethod: noop,
       onSendMessage: noop,
       confirmCardPaymentInProgress: false,
-      config: { ...defaultConfig, stripe: { ...defaultConfig.stripe, publishableKey: 'pk_test_' } },
+      config: getDefaultConfiguration(),
       routeConfiguration,
     };
     const tree = renderShallow(<CheckoutPageComponent {...props} />);

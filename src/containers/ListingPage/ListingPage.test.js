@@ -1,8 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { FormattedMessage } from '../../util/reactIntl';
 
-import defaultConfig from '../../config/defaultConfig';
+import { FormattedMessage } from '../../util/reactIntl';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   createUser,
@@ -12,7 +11,11 @@ import {
   fakeIntl,
 } from '../../util/test-data';
 import { storableError } from '../../util/errors';
-import { renderShallow, getRouteConfiguration } from '../../util/test-helpers';
+import {
+  renderShallow,
+  getRouteConfiguration,
+  getDefaultConfiguration,
+} from '../../util/test-helpers';
 import {
   LISTING_STATE_PENDING_APPROVAL,
   LISTING_STATE_PUBLISHED,
@@ -97,7 +100,7 @@ describe('ListingPage', () => {
       fetchLineItemsInProgress: false,
       onFetchTransactionLineItems: () => null,
       onFetchTimeSlots: () => null,
-      config: defaultConfig,
+      config: getDefaultConfiguration(),
       routeConfiguration: getRouteConfiguration(),
     };
 
