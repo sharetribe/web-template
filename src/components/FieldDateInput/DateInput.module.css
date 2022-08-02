@@ -11,15 +11,17 @@
     /* !important is added to top because react-dates uses inline style for height */
     /* Similar problem as in issue: https://github.com/airbnb/react-dates/issues/947 */
     box-shadow: var(--boxShadowButton);
-    top: 36px !important;
-    width: 100%;
-    min-height: calc(100vh - 252px);
+    left: unset !important;
+    width: calc(100% - 48px);
     background-color: var(--marketplaceColor);
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
 
     @media (--viewportMedium) {
       /* !important is added to top because react-dates uses inline style for height */
       /* Similar problem as in issue: https://github.com/airbnb/react-dates/issues/947 */
       top: 48px !important;
+      width: 100%;
       min-height: auto;
       box-shadow: var(--boxShadowPopup);
       border-radius: 0 0 6px 6px;
@@ -33,25 +35,28 @@
     line-height: 24px;
     letter-spacing: -0.1px;
 
-    /* Dimensions */
     display: block;
     width: 100%;
-    margin: 0;
+
     padding: 5px 0 5px 30px;
+    margin: 0;
+    border-radius: 6px;
+    border: 1px solid #d8dce6;
+    background-color: #fff;
+    outline: none;
 
-    /* Borders */
-    border: none;
-    border-radius: 0;
-    border-bottom-style: solid;
-    border-bottom-width: 2px;
-    border-bottom-color: var(--attentionColor);
-
-    transition: border-bottom-color var(--transitionStyle);
-    transition: all 0.15s ease-out;
+    transition: all 0.1s ease-in-out;
 
     background-image: url('data:image/svg+xml;utf8,<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g stroke="%234A4A4A" transform="translate(1 1)"><rect stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" x=".292" y="1.459" width="13.417" height="12.25" rx="1"/><path d="M3.208.292V3.21M10.792.292V3.21M.292 4.376h13.416" stroke-linecap="round" stroke-linejoin="round"/><rect x="3.5" y="6.5" width="1" height="1" rx=".5"/><rect x="6.5" y="6.5" width="1" height="1" rx=".5"/><rect x="9.5" y="6.5" width="1" height="1" rx=".5"/><rect x="3.5" y="9.5" width="1" height="1" rx=".5"/><rect x="6.5" y="9.5" width="1" height="1" rx=".5"/><rect x="9.5" y="9.5" width="1" height="1" rx=".5"/></g></g></svg>');
     background-repeat: no-repeat;
     background-position: 8px 8px;
+
+    &:focus {
+      border-radius: 6px 6px 0 0;
+      border-color: #80bdff;
+      box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+      transition: all ease-in-out 100ms;
+    }
 
     &::placeholder {
       color: var(--matterColorAnti);
@@ -61,13 +66,11 @@
       background-position: 8px 13px;
       font-size: 16px;
       line-height: 32px;
-      padding: 4px 0 9px 32px;
-      border-bottom-width: 3px;
+      padding: 7px 0 7px 32px;
 
       &:focus {
         border-radius: 6px 6px 0 0;
         border-color: #80bdff;
-        border-bottom-width: 3px;
         box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
         transition: all ease-in-out 100ms;
       }
@@ -356,8 +359,6 @@
     /* !important is added to top because react-dates uses inline style for height */
     /* Similar problem as in issue: https://github.com/airbnb/react-dates/issues/947 */
     top: 34px !important;
-    border-top: 2px solid var(--matterColorDark);
-    min-height: calc(100vh - 252px + 2px);
 
     @media (--viewportMedium) {
       /* !important is added to top because react-dates uses inline style for height */
