@@ -393,7 +393,7 @@ class LocationAutocompleteInputImplementation extends Component {
     this.setState({ fetchingPredictions: true });
 
     return this.getGeocoder()
-      .getPlacePredictions(search, config.maps.search.countryLimit, config.locale)
+      .getPlacePredictions(search, config.maps.search.countryLimit, config.localization.locale)
       .then(results => {
         const { search: currentSearch } = currentValue(this.props);
         this.setState({ fetchingPredictions: false });

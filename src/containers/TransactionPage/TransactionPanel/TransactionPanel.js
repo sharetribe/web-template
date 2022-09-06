@@ -249,7 +249,7 @@ export class TransactionPanelComponent extends Component {
                 className={css.deliveryInfoSection}
                 protectedData={protectedData}
                 listing={listing}
-                locale={config.locale}
+                locale={config.localization.locale}
               />
             </div>
 
