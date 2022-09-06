@@ -140,29 +140,6 @@ const maps = {
     // Color of the circle on the Map component.
     circleColor: '#c0392b',
   },
-
-  // Custom marker image to use in the Map component.
-  //
-  // NOTE: Not used if fuzzy locations are enabled.
-  customMarker: {
-    enabled: false,
-
-    // Publicly accessible URL for the custom marker image.
-    //
-    // The easiest place is /public/static/icons/ folder, but then the
-    // marker image is not available while developing through
-    // localhost.
-    url: encodeURI(`${canonicalRootURL}/static/icons/map-marker-32x32.png`),
-
-    // Dimensions of the marker image.
-    width: 32,
-    height: 32,
-
-    // Position to anchor the image in relation to the coordinates,
-    // ignored when using Mapbox.
-    anchorX: 16,
-    anchorY: 32,
-  },
 };
 
 // NOTE: only expose configuration that should be visible in the

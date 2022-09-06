@@ -26,7 +26,6 @@ class DynamicGoogleMap extends Component {
 
     if (hasDimensions) {
       const { center, zoom, address, mapsConfig } = this.props;
-      const { enabled, url, anchorX, anchorY, width, height } = mapsConfig.customMarker;
       const maps = window.google.maps;
       const controlPosition = window.google.maps.ControlPosition.LEFT_TOP;
 
@@ -76,24 +75,10 @@ class DynamicGoogleMap extends Component {
         const Polygon = window.google.maps.Polygon;
         new Polygon(circleProps);
       } else {
-        const markerIcon = enabled
-          ? {
-              icon: {
-                url,
-
-                // The origin for this image is (0, 0).
-                origin: new window.google.maps.Point(0, 0),
-                size: new window.google.maps.Size(width, height),
-                anchor: new window.google.maps.Point(anchorX, anchorY),
-              },
-            }
-          : {};
-
         new window.google.maps.Marker({
           position: center,
           map: this.map,
           title: address,
-          ...markerIcon,
         });
       }
     }

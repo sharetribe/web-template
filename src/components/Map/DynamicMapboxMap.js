@@ -9,17 +9,8 @@ import uniqueId from 'lodash/uniqueId';
 
 import { circlePolyline } from '../../util/maps';
 
-const mapMarker = mapsConfig => {
-  const { enabled, url, width, height } = mapsConfig.customMarker;
-  if (enabled) {
-    const element = document.createElement('div');
-    element.style.backgroundImage = `url(${url})`;
-    element.style.width = `${width}px`;
-    element.style.height = `${height}px`;
-    return new window.mapboxgl.Marker({ element });
-  } else {
-    return new window.mapboxgl.Marker();
-  }
+const mapMarker = () => {
+  return new window.mapboxgl.Marker();
 };
 
 const circleLayer = (center, mapsConfig, layerId) => {
@@ -78,7 +69,7 @@ class DynamicMapboxMap extends Component {
         this.map.addLayer(circleLayer(center, mapsConfig, this.fuzzyLayerId));
       });
     } else {
-      this.centerMarker = mapMarker(mapsConfig);
+      this.centerMarker = mapMarker();
       this.centerMarker.setLngLat(position).addTo(this.map);
     }
   }
