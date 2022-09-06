@@ -163,6 +163,7 @@ class PageComponent extends Component {
     // This makes it possible to include several different items from the same page.
     // E.g. Product, Place, Video
     const schemaFromProps = Array.isArray(schema) ? schema : [schema];
+    const addressMaybe = config.address?.streetAddress ? { address: config.address } : {};
     const schemaArrayJSONString = JSON.stringify([
       ...schemaFromProps,
       {
@@ -173,7 +174,7 @@ class PageComponent extends Component {
         name: siteTitle,
         sameAs: sameOrganizationAs,
         logo: `${canonicalRootURL}/static/webapp-icon-192x192.png`,
-        address: config.address,
+        ...addressMaybe,
       },
       {
         '@context': 'http://schema.org',
