@@ -271,14 +271,6 @@ exports[`ListingPage matches snapshot 1`] = `
               }
               mapsConfig={
                 Object {
-                  "customMarker": Object {
-                    "anchorX": 16,
-                    "anchorY": 32,
-                    "enabled": false,
-                    "height": 32,
-                    "url": "http://localhost:3000/static/icons/map-marker-32x32.png",
-                    "width": 32,
-                  },
                   "fuzzy": Object {
                     "circleColor": "#c0392b",
                     "defaultZoomLevel": 13,
