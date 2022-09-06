@@ -116,6 +116,7 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
               "type": "listing",
             }
           }
+          locale="en"
         />
       </div>
       <FeedSection
@@ -302,6 +303,7 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
               "type": "listing",
             }
           }
+          locale="en"
         />
       </div>
       <FeedSection

@@ -135,7 +135,7 @@ const FieldDateInput = props => {
       !isInclusivelyBeforeDay(day, moment().add(endOfRange, 'days'))
     );
   };
-  const defaultFirstDayOfWeek = config.i18n.firstDayOfWeek;
+  const defaultFirstDayOfWeek = config.localization.firstDayOfWeek;
   return (
     <Field
       component={FieldDateInputComponent}

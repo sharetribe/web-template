@@ -226,7 +226,7 @@ class PaymentMethodsForm extends Component {
         form={form}
         fieldId={formId}
         card={this.card}
-        locale={config.locale}
+        locale={config.localization.locale}
       />
     );
 

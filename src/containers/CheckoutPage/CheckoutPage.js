@@ -934,7 +934,7 @@ export class CheckoutPageComponent extends Component {
                   askShippingDetails={orderData?.deliveryMethod === 'shipping'}
                   pickupLocation={currentListing?.attributes?.publicData?.location}
                   totalPrice={tx.id ? getFormattedTotalPrice(tx, intl) : null}
-                  locale={config.locale}
+                  locale={config.localization.locale}
                   stripePublishableKey={config.stripe.publishableKey}
                 />
               ) : null}

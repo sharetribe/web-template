@@ -86,16 +86,17 @@ const localeMessages = isTestEnv
   : addMissingTranslations(defaultMessages, messagesInLocale);
 
 const setupLocale = appConfig => {
+  let locale = appConfig.localization.locale;
   if (isTestEnv) {
     // Use english as a default locale in tests
     // This affects app.test.js and app.node.test.js tests
-    appConfig.locale = 'en';
+    locale = 'en';
     return;
   }
 
   // Set the Moment locale globally
   // See: http://momentjs.com/docs/#/i18n/changing-locale/
-  moment.locale(appConfig.locale);
+  moment.locale(locale);
 };
 
 const Configurations = props => {
@@ -115,7 +116,7 @@ export const ClientApp = props => {
   return (
     <Configurations appConfig={appConfig}>
       <IntlProvider
-        locale={appConfig.locale}
+        locale={appConfig.localization.locale}
         messages={{ ...localeMessages, ...hostedTranslations }}
         textComponent="span"
       >
@@ -141,7 +142,7 @@ export const ServerApp = props => {
   return (
     <Configurations appConfig={appConfig}>
       <IntlProvider
-        locale={appConfig.locale}
+        locale={appConfig.localization.locale}
         messages={{ ...localeMessages, ...hostedTranslations }}
         textComponent="span"
       >

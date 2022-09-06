@@ -2,26 +2,6 @@ import * as custom from './marketplaceCustomConfig.js';
 import defaultLocationSearches from './defaultLocationSearchesConfig';
 import { defaultMCC, stripePublishableKey, stripeCountryDetails } from './stripeConfig';
 
-// CDN assets for the app. Configurable through Flex Console.
-// Currently, only translation.json is available.
-// Note: the path must match the path defined in Asset Delivery API
-const appCdnAssets = {
-  translations: 'content/translations.json',
-};
-
-// If you want to change the language, remember to also change the
-// locale data and the messages in the app.js file.
-const locale = 'en';
-const i18n = {
-  /*
-    0: Sunday
-    1: Monday
-    ...
-    6: Saturday
-  */
-  firstDayOfWeek: 0,
-};
-
 // Main search used in Topbar.
 // This can be either 'keywords' or 'location'.
 const mainSearchType = 'keywords';
@@ -194,11 +174,30 @@ const maps = {
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets in this file.
 const defaultConfig = {
-  appCdnAssets,
-  locale,
   listingManagementType,
+
+  // CDN assets for the app. Configurable through Flex Console.
+  // Currently, only translation.json is available.
+  // Note: the path must match the path defined in Asset Delivery API
+  appCdnAssets: {
+    translations: 'content/translations.json',
+  },
+
+  // If you want to change the language, remember to also change the
+  // locale data and the messages in the app.js file.
+  localization: {
+    locale: 'en',
+    i18n: {
+      /*
+        0: Sunday
+        1: Monday
+        ...
+        6: Saturday
+      */
+      firstDayOfWeek: 0,
+    },
+  },
   dayCountAvailableForBooking,
-  i18n,
   mainSearchType,
   searchPageVariant,
   listingPageVariant,
