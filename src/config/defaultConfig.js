@@ -60,12 +60,6 @@ const listing = {
   variantPrefix: 'listing-card',
 };
 
-// Address information is used in SEO schema for Organization (http://schema.org/PostalAddress)
-const addressCountry = 'FI';
-const addressRegion = 'Helsinki';
-const postalCode = '00130';
-const streetAddress = 'Erottajankatu 19 B';
-
 // Canonical root url is needed in social media sharing and SEO optimization purposes.
 const canonicalRootURL = process.env.REACT_APP_CANONICAL_ROOT_URL;
 
@@ -210,11 +204,16 @@ const defaultConfig = {
     supportedCountries: stripeCountryDetails,
   },
   canonicalRootURL, // TODO
+
+  // Optional
+  // Address information is used in SEO schema for Organization (http://schema.org/PostalAddress)
+  // Note: Google doesn't recognize this:
+  // https://developers.google.com/search/docs/advanced/structured-data/logo#structured-data-type-definitions
   address: {
-    addressCountry,
-    addressRegion,
-    postalCode,
-    streetAddress,
+    addressCountry: null, // 'FI',
+    addressRegion: null, // 'Helsinki',
+    postalCode: null, // '00130',
+    streetAddress: null, // 'Erottajankatu 19 B',
   },
   siteTitle,
   siteFacebookPage,
