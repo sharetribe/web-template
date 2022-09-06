@@ -135,7 +135,7 @@ const maps = {
 
     // This affects location search.
     // Example location can be edited in the
-    // `default-location-searches.js` file.
+    // `defaultLocationSearchesConfig.js` file.
     defaults: defaultLocationSearches || [],
 
     // Limit location autocomplete to a one or more countries
