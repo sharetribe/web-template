@@ -56,7 +56,7 @@ const testMessages = mapValues(messages, (val, key) => key);
 export const TestProvider = props => {
   const store = configureStore();
   return (
-    <ConfigurationProvider value={defaultConfig}>
+    <ConfigurationProvider value={getDefaultConfiguration()}>
       <RouteConfigurationProvider value={getRouteConfiguration()}>
         <IntlProvider locale="en" messages={testMessages} textComponent="span">
           <BrowserRouter>

@@ -114,10 +114,6 @@ const mandatoryVariables = settings => {
     settings && settings.REACT_APP_MAPBOX_ACCESS_TOKEN !== ''
       ? { default: settings.REACT_APP_MAPBOX_ACCESS_TOKEN }
       : {};
-  const currencyDefault =
-    settings && settings.REACT_APP_SHARETRIBE_MARKETPLACE_CURRENCY !== ''
-      ? settings.REACT_APP_SHARETRIBE_MARKETPLACE_CURRENCY
-      : 'USD';
 
   return [
     {
@@ -174,24 +170,6 @@ If you don't set the Mapbox key, the map components won't work in the applicatio
 )}
 `,
       ...mapBoxDefaultMaybe,
-    },
-    {
-      type: 'input',
-      name: 'REACT_APP_SHARETRIBE_MARKETPLACE_CURRENCY',
-      message: `What is your marketplace currency?
-${chalk.dim(
-  'The currency used in the Marketplace must be in ISO 4217 currency code. For example USD, EUR, CAD, AUD, etc. The default value is USD.'
-)}
-`,
-      default: function() {
-        return currencyDefault;
-      },
-      validate: function(value) {
-        if (value.match(/^[a-zA-Z]{3}$/)) {
-          return true;
-        }
-        return 'Please enter currency in ISO 4217 format (e.g. USD, EUR, CAD...)';
-      },
     },
   ];
 };

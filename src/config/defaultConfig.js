@@ -59,9 +59,9 @@ const listingManagementType = 'availability'; // 'stock'
 const dayCountAvailableForBooking = 90;
 
 // Marketplace currency.
+// The currency used in the Marketplace must be in ISO 4217 currency code. For example USD, EUR, CAD, AUD, etc. The default value is USD.
 // It should match one of the currencies listed in currencySettings.js
-const currencyConf = process.env.REACT_APP_SHARETRIBE_MARKETPLACE_CURRENCY;
-const currency = currencyConf ? currencyConf.toUpperCase() : currencyConf;
+const currency = 'USD';
 
 // Listing minimum price in currency sub units, e.g. cents.
 // 0 means no restriction to the price
