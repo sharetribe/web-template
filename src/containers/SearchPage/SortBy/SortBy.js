@@ -23,7 +23,7 @@ const SortBy = props => {
     ...rest
   } = props;
 
-  const { relevanceKey, relevanceFilter, queryParamName } = config.custom.sortConfig;
+  const { relevanceKey, relevanceFilter, queryParamName } = config.listing.sortConfig;
 
   const mobileClassesMaybe =
     mode === 'mobile'
@@ -40,7 +40,7 @@ const SortBy = props => {
 
   const isRelevanceOptionActive = activeOptions.includes(relevanceFilter);
 
-  const options = config.custom.sortConfig.options.map(option => {
+  const options = config.listing.sortConfig.options.map(option => {
     const isRelevance = option.key === relevanceKey;
     const isConflictingFilterSetAndActive = hasConflictingFilters && !isConflictingFilterActive;
     return {

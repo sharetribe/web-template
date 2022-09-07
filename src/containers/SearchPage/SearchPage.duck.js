@@ -109,7 +109,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 
   const datesSearchParams = datesParam => {
     const searchTZ = 'Etc/UTC';
-    const datesFilter = config.custom.defaultFilters.find(f => f.key === 'dates');
+    const datesFilter = config.listing.defaultFilters.find(f => f.key === 'dates');
     const values = datesParam ? datesParam.split(',') : [];
     const hasValues = datesFilter && datesParam && values.length === 2;
     const { mode, entireRangeAvailable } = datesFilter || {};
@@ -161,7 +161,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   const { perPage, price, dates, sort, ...rest } = searchParams;
   const priceMaybe = priceSearchParams(price);
   const datesMaybe = datesSearchParams(dates);
-  const sortMaybe = sort === config.custom.sortConfig.relevanceKey ? {} : { sort };
+  const sortMaybe = sort === config.listing.sortConfig.relevanceKey ? {} : { sort };
 
   const params = {
     ...rest,

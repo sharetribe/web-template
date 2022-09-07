@@ -5,10 +5,10 @@ import { PropertyGroup } from '../../components';
 import css from './ListingPage.module.css';
 
 const SectionDetailsMaybe = props => {
-  const { publicData, metadata = {}, customConfig, intl } = props;
-  const { listingExtendedData } = customConfig || {};
+  const { publicData, metadata = {}, listingConfig, intl } = props;
+  const { listingExtendedData } = listingConfig || {};
 
-  if (!publicData || !customConfig) {
+  if (!publicData || !listingConfig) {
     return null;
   }
 

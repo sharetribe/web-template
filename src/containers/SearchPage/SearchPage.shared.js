@@ -166,7 +166,7 @@ export const validURLParamsForExtendedData = (
 export const validUrlQueryParamsFromProps = props => {
   const { location, config } = props;
   const { listingExtendedData: listingExtendedDataConfig, defaultFilters: defaultFiltersConfig } =
-    config?.custom || {};
+    config?.listing || {};
   // eslint-disable-next-line no-unused-vars
   const { mapSearch, page, ...searchInURL } = parse(location.search, {
     latlng: ['origin'],

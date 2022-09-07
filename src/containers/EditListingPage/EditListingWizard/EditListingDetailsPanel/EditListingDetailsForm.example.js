@@ -22,7 +22,7 @@ export const WithInitialValues = {
     updated: false,
     updateInProgress: false,
     processInfos: oneProcessInfo,
-    customConfig: config.custom,
+    listingConfig: config.listing,
     initialValues: {
       title: 'Listing',
       description: 'Lorem ipsum',
@@ -58,7 +58,7 @@ export const MultipleProcessInfos = {
     updated: false,
     updateInProgress: false,
     processInfos: processInfos,
-    customConfig: config.custom,
+    listingConfig: config.listing,
   },
   group: 'page:EditListingPage',
 };
