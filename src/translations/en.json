@@ -194,6 +194,7 @@
   "EditListingDeliveryPanel.createListingTitle": "Delivery options",
   "EditListingDeliveryPanel.title": "Edit the delivery options of {listingTitle}",
   "EditListingDetailsForm.createListingDraftError": "Failed to create a draft listing. Please try again.",
+  "EditListingDetailsForm.defaultRequiredMessage": "Required",
   "EditListingDetailsForm.description": "Description",
   "EditListingDetailsForm.descriptionPlaceholder": "Tell a bit about your sneakers: features, condition, etc…",
   "EditListingDetailsForm.descriptionRequired": "A description is required.",

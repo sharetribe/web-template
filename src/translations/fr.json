@@ -143,6 +143,7 @@
   "EditListingAvailabilityForm.updateFailed": "Impossible de mettre à jour l'annonce. Veuillez essayer de nouveau.",
   "EditListingAvailabilityPanel.createListingTitle": "Quand est-ce disponible ?",
   "EditListingDetailsForm.createListingDraftError": "La création du brouillon de l'annonce a échoué. Veuillez essayer de nouveau.",
+  "EditListingDetailsForm.defaultRequiredMessage": "Required",
   "EditListingDetailsForm.description": "Décrivez votre sauna",
   "EditListingDetailsForm.descriptionPlaceholder": "Combien de personnes peuvent en profiter en même temps ? Proposez vous des serviettes ?",
   "EditListingDetailsForm.descriptionRequired": "Une description est requise.",

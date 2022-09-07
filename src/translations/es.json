@@ -143,6 +143,7 @@
   "EditListingAvailabilityForm.updateFailed": "Error al actualizar el anuncio. Inténtalo de nuevo.",
   "EditListingAvailabilityPanel.createListingTitle": "¿Cuándo está disponible?",
   "EditListingDetailsForm.createListingDraftError": "Error al crear el borrador del anuncio. Por favor intenta de nuevo.",
+  "EditListingDetailsForm.defaultRequiredMessage": "Required",
   "EditListingDetailsForm.description": "Describe tu sauna",
   "EditListingDetailsForm.descriptionPlaceholder": "¿Cuántas personas caben en el sauna? ¿Ofreces toallas a los visitantes?",
   "EditListingDetailsForm.descriptionRequired": "La descripción es necesaria.",

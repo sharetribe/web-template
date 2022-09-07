@@ -17,10 +17,10 @@ import css from './EditListingWizard.module.css';
 const getOptionValue = option => `${option}`.toLowerCase().replace(/\s/g, '_');
 
 const CustomFieldEnum = props => {
-  const { name, fieldConfig } = props;
+  const { name, fieldConfig, defaultRequiredMessage } = props;
   const { schemaOptions = [], editListingPageConfig } = fieldConfig || {};
-  const { label, placeholder, requiredMessage } = editListingPageConfig || {};
-  const validateMaybe = requiredMessage ? { validate: required(requiredMessage) } : {};
+  const { label, placeholder, required, requiredMessage } = editListingPageConfig || {};
+  const validateMaybe = required ? { validate: required(requiredMessage || defaultRequiredMessage) } : {};
 
   return schemaOptions ? (
     <FieldSelect className={css.customField} name={name} id={name} label={label} {...validateMaybe}>
@@ -65,9 +65,9 @@ const CustomFieldMultiEnum = props => {
 };
 
 const CustomFieldText = props => {
-  const { name, fieldConfig } = props;
-  const { label, placeholder, requiredMessage } = fieldConfig?.editListingPageConfig || {};
-  const validateMaybe = requiredMessage ? { validate: required(requiredMessage) } : {};
+  const { name, fieldConfig, defaultRequiredMessage } = props;
+  const { label, placeholder, required, requiredMessage } = fieldConfig?.editListingPageConfig || {};
+  const validateMaybe = required ? { validate: required(requiredMessage || defaultRequiredMessage) } : {};
 
   return (
     <FieldTextInput
@@ -83,9 +83,9 @@ const CustomFieldText = props => {
 };
 
 const CustomFieldLong = props => {
-  const { name, fieldConfig } = props;
-  const { label, placeholder, requiredMessage } = fieldConfig?.editListingPageConfig || {};
-  const validateMaybe = requiredMessage ? { validate: required(requiredMessage) } : {};
+  const { name, fieldConfig, defaultRequiredMessage } = props;
+  const { label, placeholder, required, requiredMessage } = fieldConfig?.editListingPageConfig || {};
+  const validateMaybe = required ? { validate: required(requiredMessage || defaultRequiredMessage) } : {};
 
   return (
     <FieldTextInput
@@ -106,9 +106,9 @@ const CustomFieldLong = props => {
 };
 
 const CustomFieldBoolean = props => {
-  const { name, fieldConfig } = props;
-  const { label, placeholder, requiredMessage } = fieldConfig?.editListingPageConfig || {};
-  const validateMaybe = requiredMessage ? { validate: required(requiredMessage) } : {};
+  const { name, fieldConfig, defaultRequiredMessage } = props;
+  const { label, placeholder, required, requiredMessage } = fieldConfig?.editListingPageConfig || {};
+  const validateMaybe = required ? { validate: required(requiredMessage || defaultRequiredMessage) } : {};
 
   return (
     <FieldBoolean
