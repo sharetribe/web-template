@@ -807,7 +807,11 @@ export class CheckoutPageComponent extends Component {
     const firstImage =
       currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
 
-    const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+    const {
+      aspectWidth = 1,
+      aspectHeight = 1,
+      variantPrefix = 'listing-card',
+    } = config.layout.listingImage;
     const variants = firstImage
       ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
       : [];

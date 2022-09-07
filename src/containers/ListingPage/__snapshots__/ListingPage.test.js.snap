@@ -95,11 +95,10 @@ exports[`ListingPage matches snapshot 1`] = `
               "type": "listing",
             }
           }
-          listingConfig={
+          listingImageConfig={
             Object {
               "aspectHeight": 400,
               "aspectWidth": 400,
-              "showUnitTypeTranslations": false,
               "variantPrefix": "listing-card",
             }
           }

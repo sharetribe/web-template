@@ -1,17 +1,25 @@
 import { createContext, useContext } from 'react';
 
 const mergeLayouts = (layoutConfig, defaultLayout) => {
-  const isValidSearchPageConfig = ['map', 'list'].includes(layoutConfig.searchPageVariant);
+  const isValidSearchPageConfig = ['map', 'list'].includes(layoutConfig?.searchPageVariant);
   const isValidListingPageConfig = ['hero-image', 'full-image'].includes(
-    layoutConfig.listingPageVariant
+    layoutConfig?.listingPageVariant
   );
+
   return {
     searchPageVariant: isValidSearchPageConfig
-      ? layoutConfig.searchPageVariant
-      : defaultLayout?.searchPageVariant,
+      ? layoutConfig?.searchPageVariant
+      : defaultLayout.searchPageVariant,
     listingPageVariant: isValidListingPageConfig
-      ? layoutConfig.listingPageVariant
-      : defaultLayout?.listingPageVariant,
+      ? layoutConfig?.listingPageVariant
+      : defaultLayout.listingPageVariant,
+    listingImage: {
+      aspectWidth:
+        layoutConfig?.listingImage?.aspectWidth || defaultLayout?.listingImage?.aspectWidth,
+      aspectHeight:
+        layoutConfig?.listingImage?.aspectHeight || defaultLayout?.listingImage?.aspectHeight,
+      variantPrefix: defaultLayout.variantPrefix,
+    },
   };
 };
 
@@ -19,7 +27,7 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
   return {
     ...configAsset,
     ...defaultConfigs,
-    layout: mergeLayouts(assetConfig.layout, defaultConfigs.layout),
+    layout: mergeLayouts(configAsset.layout, defaultConfigs.layout),
   };
 };
 

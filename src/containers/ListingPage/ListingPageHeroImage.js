@@ -237,9 +237,10 @@ export const ListingPageComponent = props => {
 
   const facebookImages = listingImages(currentListing, 'facebook');
   const twitterImages = listingImages(currentListing, 'twitter');
-  const schemaImages = listingImages(currentListing, `${config.listing.variantPrefix}-2x`).map(
-    img => img.url
-  );
+  const schemaImages = listingImages(
+    currentListing,
+    `${config.layout.listingImage.variantPrefix}-2x`
+  ).map(img => img.url);
   const siteTitle = config.siteTitle;
   const schemaTitle = intl.formatMessage(
     { id: 'ListingPage.schemaTitle' },
@@ -310,7 +311,7 @@ export const ListingPageComponent = props => {
             <SectionImages
               title={title}
               listing={currentListing}
-              listingConfig={config.listing}
+              listingImageConfig={config.layout.listingImage}
               isOwnListing={isOwnListing}
               editParams={{
                 id: listingId.uuid,

@@ -43,12 +43,6 @@ const listing = {
   // This flag defines if unit type translation is used:
   // e.g. "100 € per night" vs "100 €"
   showUnitTypeTranslations: false,
-
-  // These aspectWidth and aspectHeight values are used to calculate aspect ratio.
-  aspectWidth: 400,
-  aspectHeight: 400,
-  // Listings have custom image variants, which are named here.
-  variantPrefix: 'listing-card',
 };
 
 // Canonical root url is needed in social media sharing and SEO optimization purposes.
@@ -168,6 +162,14 @@ const defaultConfig = {
     // - 'hero-image' means a layout where there's a hero section with cropped image in the beginning of the page
     // - 'full-image' shows image carousel, where listing images are shown with the original aspect ratio
     listingPageVariant: 'full-image',
+
+    listingImage: {
+      // Aspect ratio for listing image variants
+      aspectWidth: 400,
+      aspectHeight: 400,
+      // Listings have custom image variants, which are named here.
+      variantPrefix: 'listing-card',
+    },
   },
   dayCountAvailableForBooking,
   mainSearchType,

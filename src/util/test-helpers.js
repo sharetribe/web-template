@@ -43,6 +43,11 @@ export const getRouteConfiguration = () => {
   const layoutConfig = {
     searchPageVariant: 'map',
     listingPageVariant: 'full-image',
+    listingImage: {
+      aspectWidth: 400,
+      aspectHeight: 400,
+      variantPrefix: 'listing-card',
+    },
   };
   return routeConfiguration(layoutConfig);
 };

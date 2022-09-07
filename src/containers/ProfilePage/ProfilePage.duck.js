@@ -127,7 +127,11 @@ export const queryReviewsError = e => ({
 export const queryUserListings = (userId, config) => (dispatch, getState, sdk) => {
   dispatch(queryListingsRequest(userId));
 
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+  const {
+    aspectWidth = 1,
+    aspectHeight = 1,
+    variantPrefix = 'listing-card',
+  } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
 
   return sdk.listings

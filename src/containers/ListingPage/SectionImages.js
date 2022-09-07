@@ -12,7 +12,7 @@ const SectionImages = props => {
   const {
     title,
     listing,
-    listingConfig,
+    listingImageConfig,
     isOwnListing,
     editParams,
     handleViewPhotosClick,
@@ -23,7 +23,7 @@ const SectionImages = props => {
 
   const hasImages = listing.images && listing.images.length > 0;
   const firstImage = hasImages ? listing.images[0] : null;
-  const { aspectWidth, aspectHeight, variantPrefix = 'listing-card' } = listingConfig;
+  const { aspectWidth, aspectHeight, variantPrefix = 'listing-card' } = listingImageConfig;
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];

@@ -110,11 +110,12 @@ describe('ListingPage', () => {
 
   describe('Duck', () => {
     const config = {
-      listing: {
-        showUnitTypeTranslations: false,
-        aspectWidth: 400,
-        aspectHeight: 400,
-        variantPrefix: 'listing-card',
+      layout: {
+        listingImage: {
+          aspectWidth: 400,
+          aspectHeight: 400,
+          variantPrefix: 'listing-card',
+        },
       },
     };
 
