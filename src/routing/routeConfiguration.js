@@ -59,9 +59,9 @@ const RedirectToLandingPage = () => <NamedRedirect name="LandingPage" />;
 
 // Our routes are exact by default.
 // See behaviour from Routes.js where Route is created.
-const routeConfiguration = (pageVariantConfig) => {
-  const SearchPage = pageVariantConfig.searchPageVariant === 'map' ? SearchPageWithMap : SearchPageWithList;
-  const ListingPage = pageVariantConfig.listingPageVariant === 'full-image' ? ListingPageFullImage : ListingPageHeroImage;
+const routeConfiguration = (layoutConfig) => {
+  const SearchPage = layoutConfig.searchPageVariant === 'map' ? SearchPageWithMap : SearchPageWithList;
+  const ListingPage = layoutConfig.listingPageVariant === 'full-image' ? ListingPageFullImage : ListingPageHeroImage;
   
   return [
     {

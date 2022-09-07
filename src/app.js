@@ -101,7 +101,7 @@ const setupLocale = appConfig => {
 
 const Configurations = props => {
   const { appConfig, children } = props;
-  const routeConfig = routeConfiguration(appConfig.pageVariantConfig);
+  const routeConfig = routeConfiguration(appConfig.layout);
   setupLocale(appConfig);
   return (
     <ConfigurationProvider value={appConfig}>

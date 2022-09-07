@@ -6,15 +6,6 @@ import { defaultMCC, stripePublishableKey, stripeCountryDetails } from './stripe
 // This can be either 'keywords' or 'location'.
 const mainSearchType = 'keywords';
 
-// There are 2 SearchPage variants that can be used:
-// 'map' & 'list'
-const searchPageVariant = 'list';
-
-// ListingPage has 2 layout options: 'hero-image' and 'full-image'.
-// - 'hero-image' means a layout where there's a hero section with cropped image in the beginning of the page
-// - 'full-image' shows image carousel, where listing images are shown with the original aspect ratio
-const listingPageVariant = 'full-image';
-
 // Should search results be ordered by distance to origin.
 // NOTE 1: This doesn't affect if the main search type is 'keywords'
 // NOTE 2: If this is set to true add parameter 'origin' to every location in default-location-searches.js
@@ -168,10 +159,18 @@ const defaultConfig = {
       firstDayOfWeek: 0,
     },
   },
+  layout: {
+    // There are 2 SearchPage variants that can be used:
+    // 'map' & 'list'
+    searchPageVariant: 'list',
+
+    // ListingPage has 2 layout options: 'hero-image' and 'full-image'.
+    // - 'hero-image' means a layout where there's a hero section with cropped image in the beginning of the page
+    // - 'full-image' shows image carousel, where listing images are shown with the original aspect ratio
+    listingPageVariant: 'full-image',
+  },
   dayCountAvailableForBooking,
   mainSearchType,
-  searchPageVariant,
-  listingPageVariant,
   sortSearchByDistance,
   currency,
   listingMinimumPriceSubUnits,
