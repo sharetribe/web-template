@@ -104,7 +104,7 @@ export class SearchPageComponent extends Component {
       const {
         listingExtendedData: listingExtendedDataConfig,
         defaultFilters: defaultFiltersConfig,
-      } = config?.custom || {};
+      } = config?.listing || {};
 
       // parse query parameters, including a custom attribute named category
       const { address, bounds, mapSearch, ...rest } = parse(location.search, {
@@ -145,7 +145,7 @@ export class SearchPageComponent extends Component {
       sortConfig,
       listingExtendedData: listingExtendedDataConfig,
       defaultFilters: defaultFiltersConfig,
-    } = config?.custom || {};
+    } = config?.listing || {};
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
     const searchParams = { ...urlQueryParams, ...this.state.currentQueryParams };
@@ -168,7 +168,7 @@ export class SearchPageComponent extends Component {
   resetAll(e) {
     const { history, routeConfiguration, config } = this.props;
     const { listingExtendedData: listingExtendedDataConfig, defaultFilters: defaultFiltersConfig } =
-      config?.custom || {};
+      config?.listing || {};
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
     const filterQueryParamNames = getQueryParamNames(
@@ -190,7 +190,7 @@ export class SearchPageComponent extends Component {
       sortConfig,
       listingExtendedData: listingExtendedDataConfig,
       defaultFilters: defaultFiltersConfig,
-    } = config?.custom || {};
+    } = config?.listing || {};
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
@@ -265,7 +265,7 @@ export class SearchPageComponent extends Component {
       listingExtendedData: listingExtendedDataConfig,
       defaultFilters: defaultFiltersConfig,
       sortConfig,
-    } = config?.custom || {};
+    } = config?.listing || {};
     const marketplaceCurrency = config.currency;
 
     // Page transition might initially use values from previous search

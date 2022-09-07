@@ -83,9 +83,9 @@ const EditListingDetailsPanel = props => {
 
   const classes = classNames(rootClassName || css.root, className);
   const { description, title, publicData, privateData, state } = listing?.attributes || {};
-  const listingExtendedDataConfig = config.custom.listingExtendedData;
+  const listingExtendedDataConfig = config.listing.listingExtendedData;
 
-  const activeProcesses = config.custom.processes;
+  const activeProcesses = config.listing.processes;
   const supportedProcessesInfo = getSupportedProcessesInfo();
   const activeProcessInfos = supportedProcessesInfo.filter(processInfo =>
     activeProcesses.includes(processInfo.name)

@@ -88,7 +88,7 @@ export class SearchPageComponent extends Component {
   resetAll(e) {
     const { history, routeConfiguration, config } = this.props;
     const { listingExtendedData: listingExtendedDataConfig, defaultFilters: defaultFiltersConfig } =
-      config?.custom || {};
+      config?.listing || {};
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
     const filterQueryParamNames = getQueryParamNames(
@@ -110,7 +110,7 @@ export class SearchPageComponent extends Component {
       sortConfig,
       listingExtendedData: listingExtendedDataConfig,
       defaultFilters: defaultFiltersConfig,
-    } = config?.custom || {};
+    } = config?.listing || {};
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
@@ -193,7 +193,7 @@ export class SearchPageComponent extends Component {
       listingExtendedData: listingExtendedDataConfig,
       defaultFilters: defaultFiltersConfig,
       sortConfig,
-    } = config?.custom || {};
+    } = config?.listing || {};
     const marketplaceCurrency = config.currency;
 
     // Page transition might initially use values from previous search

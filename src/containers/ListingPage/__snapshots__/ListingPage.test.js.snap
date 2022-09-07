@@ -177,7 +177,7 @@ exports[`ListingPage matches snapshot 1`] = `
               text="listing1 description"
             />
             <SectionDetailsMaybe
-              customConfig={
+              listingConfig={
                 Object {
                   "listingExtendedData": Array [
                     Object {

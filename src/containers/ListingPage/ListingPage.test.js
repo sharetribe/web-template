@@ -30,7 +30,7 @@ import ActionBarMaybe from './ActionBarMaybe';
 const { UUID } = sdkTypes;
 const noop = () => null;
 
-const customConfig = {
+const listingConfig = {
   listingExtendedData: [
     {
       key: 'category',
@@ -96,7 +96,7 @@ describe('ListingPage', () => {
       onInitializeCardPaymentData: noop,
       sendEnquiryInProgress: false,
       onSendEnquiry: noop,
-      customConfig,
+      listingConfig,
       fetchLineItemsInProgress: false,
       onFetchTransactionLineItems: () => null,
       onFetchTimeSlots: () => null,

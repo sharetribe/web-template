@@ -1,6 +1,6 @@
-import * as custom from './marketplaceCustomConfig.js';
 import defaultLocationSearches from './defaultLocationSearchesConfig';
 import { defaultMCC, stripePublishableKey, stripeCountryDetails } from './stripeConfig';
+import * as listing from './defaultListingConfig.js';
 
 // Main search used in Topbar.
 // This can be either 'keywords' or 'location'.
@@ -37,13 +37,6 @@ const currency = 'USD';
 // Listing minimum price in currency sub units, e.g. cents.
 // 0 means no restriction to the price
 const listingMinimumPriceSubUnits = 0;
-
-// Listing and especially listing card related configurations
-const listing = {
-  // This flag defines if unit type translation is used:
-  // e.g. "100 € per night" vs "100 €"
-  showUnitTypeTranslations: false,
-};
 
 // Canonical root url is needed in social media sharing and SEO optimization purposes.
 const canonicalRootURL = process.env.REACT_APP_CANONICAL_ROOT_URL;
@@ -171,6 +164,7 @@ const defaultConfig = {
       variantPrefix: 'listing-card',
     },
   },
+  listing,
   dayCountAvailableForBooking,
   mainSearchType,
   sortSearchByDistance,
@@ -198,7 +192,6 @@ const defaultConfig = {
   siteInstagramPage,
   siteTwitterHandle,
   facebookAppId,
-  listing,
   maps,
   custom,
 };
