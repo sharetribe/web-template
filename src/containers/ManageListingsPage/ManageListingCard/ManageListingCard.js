@@ -171,7 +171,11 @@ export const ManageListingCardComponent = props => {
     ? LISTING_PAGE_PARAM_TYPE_DRAFT
     : LISTING_PAGE_PARAM_TYPE_EDIT;
 
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+  const {
+    aspectWidth = 1,
+    aspectHeight = 1,
+    variantPrefix = 'listing-card',
+  } = config.layout.listingImage;
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];

@@ -47,8 +47,8 @@ const updateUploadedImagesState = (state, payload) => {
       };
 };
 
-const getImageVariantInfo = listingConfig => {
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingConfig;
+const getImageVariantInfo = listingImageConfig => {
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingImageConfig;
   const aspectRatio = aspectHeight / aspectWidth;
   const fieldsImage = [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`];
 
@@ -433,7 +433,7 @@ export const savePayoutDetailsError = errorAction(SAVE_PAYOUT_DETAILS_ERROR);
 
 export function requestShowListing(actionPayload, config) {
   return (dispatch, getState, sdk) => {
-    const imageVariantInfo = getImageVariantInfo(config.listing);
+    const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
     const queryParams = {
       include: ['author', 'images', 'currentStock'],
       'fields.image': imageVariantInfo.fieldsImage,
@@ -500,7 +500,7 @@ export function requestCreateListingDraft(data, config) {
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
     const ownListingValues = { ...imageProperty, ...rest };
 
-    const imageVariantInfo = getImageVariantInfo(config.listing);
+    const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
     const queryParams = {
       expand: true,
       include: ['author', 'images', 'currentStock'],
@@ -541,7 +541,7 @@ export function requestUpdateListing(tab, data, config) {
     // If images should be saved, create array out of the image UUIDs for the API call
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
     const ownListingUpdateValues = { id, ...imageProperty, ...rest };
-    const imageVariantInfo = getImageVariantInfo(config.listing);
+    const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
     const queryParams = {
       expand: true,
       include: ['author', 'images', 'currentStock'],
@@ -583,10 +583,10 @@ export const requestPublishListingDraft = listingId => (dispatch, getState, sdk)
 };
 
 // Images return imageId which we need to map with previously generated temporary id
-export function requestImageUpload(actionPayload, listingConfig) {
+export function requestImageUpload(actionPayload, listingImageConfig) {
   return (dispatch, getState, sdk) => {
     const id = actionPayload.id;
-    const imageVariantInfo = getImageVariantInfo(listingConfig);
+    const imageVariantInfo = getImageVariantInfo(listingImageConfig);
     const queryParams = {
       expand: true,
       'fields.image': imageVariantInfo.fieldsImage,

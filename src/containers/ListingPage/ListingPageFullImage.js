@@ -235,9 +235,10 @@ export const ListingPageComponent = props => {
 
   const facebookImages = listingImages(currentListing, 'facebook');
   const twitterImages = listingImages(currentListing, 'twitter');
-  const schemaImages = listingImages(currentListing, `${config.listing.variantPrefix}-2x`).map(
-    img => img.url
-  );
+  const schemaImages = listingImages(
+    currentListing,
+    `${config.layout.listingImage.variantPrefix}-2x`
+  ).map(img => img.url);
   const siteTitle = config.siteTitle;
   const schemaTitle = intl.formatMessage(
     { id: 'ListingPage.schemaTitle' },
@@ -314,7 +315,7 @@ export const ListingPageComponent = props => {
               ) : null}
               <SectionGallery
                 listing={currentListing}
-                variantPrefix={config.listing.variantPrefix}
+                variantPrefix={config.layout.listingImage.variantPrefix}
               />
               <div className={css.productMobileHeading}>
                 <SectionHeading

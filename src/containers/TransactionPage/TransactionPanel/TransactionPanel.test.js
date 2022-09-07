@@ -49,7 +49,9 @@ describe('TransactionPanel - Sale', () => {
     fetchLineItemsInProgress: false,
     intl: fakeIntl,
     config: {
-      listing: { aspectWidth: 1, aspectHeight: 1, listingPrefix: 'listing-card' },
+      layout: {
+        listingImage: { aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' },
+      },
       localization: { locale: 'en' },
     },
   };
@@ -96,7 +98,9 @@ describe('TransactionPanel - Order', () => {
     onFetchTransactionLineItems: noop,
     fetchLineItemsInProgress: false,
     config: {
-      listing: { aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' },
+      layout: {
+        listingImage: { aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' },
+      },
       localization: { locale: 'en' },
     },
   };

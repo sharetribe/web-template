@@ -14,7 +14,7 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
         avatarWrapperClassName="avatarWrapperMobile"
         image={null}
         isCustomer={true}
-        listingConfig={
+        listingImageConfig={
           Object {
             "aspectHeight": 1,
             "aspectWidth": 1,
@@ -151,7 +151,7 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
             avatarWrapperClassName="avatarWrapperDesktop"
             image={null}
             isCustomer={true}
-            listingConfig={
+            listingImageConfig={
               Object {
                 "aspectHeight": 1,
                 "aspectWidth": 1,
@@ -193,11 +193,11 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
         avatarWrapperClassName="avatarWrapperMobile"
         image={null}
         isCustomer={false}
-        listingConfig={
+        listingImageConfig={
           Object {
             "aspectHeight": 1,
             "aspectWidth": 1,
-            "listingPrefix": "listing-card",
+            "variantPrefix": "listing-card",
           }
         }
         listingTitle="listing1 title"
@@ -338,11 +338,11 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
             avatarWrapperClassName="avatarWrapperDesktop"
             image={null}
             isCustomer={false}
-            listingConfig={
+            listingImageConfig={
               Object {
                 "aspectHeight": 1,
                 "aspectWidth": 1,
-                "listingPrefix": "listing-card",
+                "variantPrefix": "listing-card",
               }
             }
             listingTitle="listing1 title"

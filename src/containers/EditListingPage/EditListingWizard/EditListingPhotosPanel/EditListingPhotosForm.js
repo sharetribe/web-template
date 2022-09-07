@@ -92,7 +92,7 @@ export class EditListingPhotosFormComponent extends Component {
     if (file) {
       this.setState({ imageUploadRequested: true });
       this.props
-        .onImageUpload({ id: `${file.name}_${Date.now()}`, file }, this.props.listingConfig)
+        .onImageUpload({ id: `${file.name}_${Date.now()}`, file }, this.props.listingImageConfig)
         .then(() => {
           this.setState({ imageUploadRequested: false });
         })
@@ -129,9 +129,9 @@ export class EditListingPhotosFormComponent extends Component {
             updateInProgress,
             touched,
             errors,
-            listingConfig,
+            listingImageConfig,
           } = formRenderProps;
-          const { aspectWidth = 1, aspectHeight = 1, variantPrefix } = listingConfig;
+          const { aspectWidth = 1, aspectHeight = 1, variantPrefix } = listingImageConfig;
 
           const chooseImageText = (
             <span className={css.chooseImageText}>
@@ -294,7 +294,7 @@ EditListingPhotosFormComponent.propTypes = {
   updated: bool.isRequired,
   updateInProgress: bool.isRequired,
   onRemoveImage: func.isRequired,
-  listingConfig: object.isRequired,
+  listingImageConfig: object.isRequired,
 };
 
 export default compose(injectIntl)(EditListingPhotosFormComponent);

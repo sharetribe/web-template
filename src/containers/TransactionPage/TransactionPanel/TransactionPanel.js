@@ -207,7 +207,7 @@ export class TransactionPanelComponent extends Component {
               image={firstImage}
               provider={provider}
               isCustomer={isCustomer}
-              listingConfig={config.listing}
+              listingImageConfig={config.layout.listingImage}
             />
             {isProvider ? (
               <div className={css.avatarWrapperProviderDesktop}>
@@ -295,7 +295,7 @@ export class TransactionPanelComponent extends Component {
                   image={firstImage}
                   provider={provider}
                   isCustomer={isCustomer}
-                  listingConfig={config.listing}
+                  listingImageConfig={config.layout.listingImage}
                 />
 
                 <DetailCardHeadingsMaybe

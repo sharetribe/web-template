@@ -231,7 +231,7 @@ const EditListingWizardTab = props => {
       return (
         <EditListingPhotosPanel
           {...panelProps(PHOTOS)}
-          listingConfig={config.listing}
+          listingImageConfig={config.layout.listingImage}
           images={images}
           onImageUpload={onImageUpload}
           onRemoveImage={onRemoveImage}
