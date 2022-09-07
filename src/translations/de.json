@@ -143,6 +143,7 @@
   "EditListingAvailabilityForm.updateFailed": "Fehler beim Aktualisieren des Eintrags. Bitte erneut versuchen.",
   "EditListingAvailabilityPanel.createListingTitle": "Wann ist es verfügbar?",
   "EditListingDetailsForm.createListingDraftError": "Das Erstellen des Eintrag-Entwurfs ist fehlgeschlagen. Bitt erneut versuchen.",
+  "EditListingDetailsForm.defaultRequiredMessage": "Required",
   "EditListingDetailsForm.description": "Deine Sauna beschreiben",
   "EditListingDetailsForm.descriptionPlaceholder": "Wie viele Leute passen gleichzeitig rein? Handtücher inklusive?",
   "EditListingDetailsForm.descriptionRequired": "Eine Beschreibung wird benötigt.",

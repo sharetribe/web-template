@@ -41,6 +41,7 @@ export const processes = ['flex-product-default-process', 'flex-booking-default-
  * - editListingPageConfig:         Configuration for adding and modifying extended data fields.
  *   - label:                         Label for the input field.
  *   - placeholderMessage (optional): Default message for user input.
+ *   - required (optional):           Is the field required for providers to fill
  *   - requiredMessage (optional):    Message for those fields, which are mandatory.
  */
 export const listingExtendedData = [
@@ -63,6 +64,7 @@ export const listingExtendedData = [
     editListingPageConfig: {
       label: 'Select category',
       placeholder: 'Choose…',
+      required: true,
       requiredMessage: 'You need to select a category.',
     },
   },
@@ -85,6 +87,7 @@ export const listingExtendedData = [
     editListingPageConfig: {
       label: 'Select size (US)',
       placeholder: 'Choose…',
+      required: true,
       requiredMessage: 'You need to select a size.',
     },
   },
@@ -117,6 +120,7 @@ export const listingExtendedData = [
     editListingPageConfig: {
       label: 'Select brand',
       placeholder: 'Choose…',
+      required: true,
       requiredMessage: 'You need to select a brand.',
     },
   },
@@ -137,6 +141,7 @@ export const listingExtendedData = [
     editListingPageConfig: {
       label: 'Select Sauna type',
       placeholder: 'Choose…',
+      required: true,
       requiredMessage: 'You need to select what type of sauna you have.',
     },
   },
@@ -172,6 +177,7 @@ export const listingExtendedData = [
     editListingPageConfig: {
       label: 'Blaa',
       placeholder: 'Blaa bla blaa',
+      required: true,
       requiredMessage: 'You need to write something.',
     },
   },
@@ -203,6 +209,7 @@ export const listingExtendedData = [
     editListingPageConfig: {
       label: 'Gears',
       placeholder: 'The number of gears',
+      required: true,
       requiredMessage: 'You need to add details about gears.',
     },
   },
