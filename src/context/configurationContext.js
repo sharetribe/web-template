@@ -1,16 +1,25 @@
 import { createContext, useContext } from 'react';
 
-export const mergeConfig = (configAsset, defaultConfigs) => {
-  const searchPageVariant = configAsset.searchPageVariant || defaultConfigs.searchPageVariant;
-  const listingPageVariant = configAsset.listingPageVariant || defaultConfigs.listingPageVariant;
+const mergeLayouts = (layoutConfig, defaultLayout) => {
+  const isValidSearchPageConfig = ['map', 'list'].includes(layoutConfig.searchPageVariant);
+  const isValidListingPageConfig = ['hero-image', 'full-image'].includes(
+    layoutConfig.listingPageVariant
+  );
+  return {
+    searchPageVariant: isValidSearchPageConfig
+      ? layoutConfig.searchPageVariant
+      : defaultLayout?.searchPageVariant,
+    listingPageVariant: isValidListingPageConfig
+      ? layoutConfig.listingPageVariant
+      : defaultLayout?.listingPageVariant,
+  };
+};
 
+export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
   return {
     ...configAsset,
     ...defaultConfigs,
-    pageVariantConfig: {
-      searchPageVariant,
-      listingPageVariant,
-    },
+    layout: mergeLayouts(assetConfig.layout, defaultConfigs.layout),
   };
 };
 

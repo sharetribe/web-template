@@ -40,11 +40,11 @@ export const getDefaultConfiguration = () => {
 };
 
 export const getRouteConfiguration = () => {
-  const pageVariantConfig = {
+  const layoutConfig = {
     searchPageVariant: 'map',
     listingPageVariant: 'full-image',
   };
-  return routeConfiguration(pageVariantConfig);
+  return routeConfiguration(layoutConfig);
 };
 
 // Locale should not affect the tests. We ensure this by providing
