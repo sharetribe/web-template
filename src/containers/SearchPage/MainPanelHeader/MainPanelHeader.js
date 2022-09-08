@@ -12,6 +12,7 @@ const MainPanelHeader = props => {
     className,
     children,
     sortByComponent,
+    isSortByActive,
     listingsAreLoaded,
     resultsCount,
     searchInProgress,
@@ -35,12 +36,14 @@ const MainPanelHeader = props => {
             )}
           </span>
         </div>
-        <div className={css.sortyByWrapper}>
-          <span className={css.sortyBy}>
-            <FormattedMessage id="MainPanelHeader.sortBy" />
-          </span>
-          {sortByComponent}
-        </div>
+        {isSortByActive ? (
+          <div className={css.sortyByWrapper}>
+            <span className={css.sortyBy}>
+              <FormattedMessage id="MainPanelHeader.sortBy" />
+            </span>
+            {sortByComponent}
+          </div>
+        ) : null}
       </div>
 
       {children}

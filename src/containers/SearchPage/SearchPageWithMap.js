@@ -445,6 +445,7 @@ export class SearchPageComponent extends Component {
             <MainPanelHeader
               className={css.mainPanelMapVariant}
               sortByComponent={sortBy('desktop')}
+              isSortByActive={sortConfig.active}
               listingsAreLoaded={listingsAreLoaded}
               resultsCount={totalItems}
               searchInProgress={searchInProgress}
