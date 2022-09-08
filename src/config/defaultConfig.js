@@ -1,5 +1,5 @@
 import defaultLocationSearches from './defaultLocationSearchesConfig';
-import { defaultMCC, stripePublishableKey, stripeCountryDetails } from './stripeConfig';
+import * as stripe from './stripeConfig';
 import * as listing from './defaultListingConfig';
 import * as search from './defaultSearchConfig';
 import * as transaction from './defaultTransactionConfig';
@@ -129,6 +129,13 @@ const defaultConfig = {
   appCdnAssets: {
     translations: 'content/translations.json',
   },
+  // Modify Stripe configuration in stripeConfig.js
+  // - picks REACT_APP_STRIPE_PUBLISHABLE_KEY from environment variables
+  // - dayCountAvailableForBooking: Stripe can hold payments only limited time on Connect Account
+  //                                This adds some restriction for bookings (payouts vs long bookings)
+  // - defaultMCC: sets Default Merchant Category Code
+  // - supportedCountries
+  stripe,
 
   // If you want to change the language, remember to also change the
   // locale data and the messages in the app.js file.
@@ -169,10 +176,6 @@ const defaultConfig = {
   sortSearchByDistance,
   currency,
   listingMinimumPriceSubUnits,
-  stripe: {
-    defaultMCC: defaultMCC,
-    publishableKey: stripePublishableKey,
-    supportedCountries: stripeCountryDetails,
   },
   canonicalRootURL, // TODO
 

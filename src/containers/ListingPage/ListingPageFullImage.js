@@ -422,7 +422,7 @@ export const ListingPageComponent = props => {
                 fetchLineItemsInProgress={fetchLineItemsInProgress}
                 fetchLineItemsError={fetchLineItemsError}
                 marketplaceCurrency={config.currency}
-                dayCountAvailableForBooking={config.dayCountAvailableForBooking}
+                dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
               />
             </div>
           </div>
