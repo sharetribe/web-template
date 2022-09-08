@@ -1,8 +1,8 @@
 import * as stripe from './stripeConfig';
-import * as listing from './defaultListingConfig';
-import * as search from './defaultSearchConfig';
-import * as maps from './defaultMapConfig';
-import * as transaction from './defaultTransactionConfig';
+import * as listing from './listingConfig';
+import * as search from './searchConfig';
+import * as maps from './mapsConfig';
+import * as transaction from './transactionConfig';
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets in this file.
@@ -40,13 +40,13 @@ const defaultConfig = {
   // - supportedCountries
   stripe,
 
-  // Modify listing extended data in defaultListingConfig.js
+  // Modify listing extended data in listingConfig.js
   listing,
-  // Modify search settings data in defaultSearchConfig.js
+  // Modify search settings data in searchConfig.js
   search,
-  // Modify settings for map providers in defaultMapConfig.js
+  // Modify settings for map providers in mapsConfig.js
   maps,
-  // Modify order types in defaultTransactionConfig.js
+  // Modify order types in transactionConfig.js
   transaction,
 
   // Note: Facebook app id is also used for tracking:
