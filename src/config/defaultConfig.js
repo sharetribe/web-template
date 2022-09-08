@@ -7,7 +7,6 @@ import * as transaction from './transactionConfig';
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets in this file.
 const defaultConfig = {
-
   // Canonical root url is the root or domain, where this app is currently running
   // It is needed in social media sharing and SEO optimization purposes and SSO etc.
   // It should be in environment variables (on localhost 'yarn run config' or edit .env file)
