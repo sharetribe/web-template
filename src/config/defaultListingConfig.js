@@ -1,6 +1,7 @@
-/*
- * Marketplace specific configuration.
- */
+/////////////////////////////////////////////////////////
+// Configurations related to listing.                  //
+// Main configuration here is the extended data config //
+/////////////////////////////////////////////////////////
 
 /**
  * Configuration options for extended data fields:

@@ -4,57 +4,34 @@ import * as search from './defaultSearchConfig';
 import * as maps from './defaultMapConfig';
 import * as transaction from './defaultTransactionConfig';
 
-
-
-// A maximum number of days forwards during which a booking can be made.
-// This is limited due to Stripe holding funds up to 90 days from the
-// moment they are charged. Also note that available time slots can only
-// be fetched for 180 days in the future.
-const dayCountAvailableForBooking = 90;
-
-// Marketplace currency.
-// The currency used in the Marketplace must be in ISO 4217 currency code. For example USD, EUR, CAD, AUD, etc. The default value is USD.
-// It should match one of the currencies listed in currencySettings.js
-const currency = 'USD';
-
-// Listing minimum price in currency sub units, e.g. cents.
-// 0 means no restriction to the price
-const listingMinimumPriceSubUnits = 0;
-
-// Canonical root url is needed in social media sharing and SEO optimization purposes.
-const canonicalRootURL = process.env.REACT_APP_CANONICAL_ROOT_URL;
-
-// Site title is needed in meta tags (bots and social media sharing reads those)
-const siteTitle = 'Sneakertime';
-
-// Twitter handle is needed in meta tags (twitter:site). Start it with '@' character
-const siteTwitterHandle = '@sharetribe';
-
-// Instagram page is used in SEO schema (http://schema.org/Organization)
-const siteInstagramPage = 'https://www.instagram.com/sharetribe/';
-
-// Facebook page is used in SEO schema (http://schema.org/Organization)
-const siteFacebookPage = 'https://www.facebook.com/Sharetribe/';
-
-// Social logins & SSO
-
-// Note: Facebook app id is also used for tracking:
-// Facebook counts shares with app or page associated by this id
-// Currently it is unset, but you can read more about fb:app_id from
-// https://developers.facebook.com/docs/sharing/webmasters#basic
-// You should create one to track social sharing in Facebook
-const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
-
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets in this file.
 const defaultConfig = {
 
-  // CDN assets for the app. Configurable through Flex Console.
-  // Currently, only translation.json is available.
-  // Note: the path must match the path defined in Asset Delivery API
-  appCdnAssets: {
-    translations: 'content/translations.json',
-  },
+  // Canonical root url is the root or domain, where this app is currently running
+  // It is needed in social media sharing and SEO optimization purposes and SSO etc.
+  // It should be in environment variables (on localhost 'yarn run config' or edit .env file)
+  canonicalRootURL: process.env.REACT_APP_CANONICAL_ROOT_URL,
+
+  // Marketplace currency.
+  // The currency used in the Marketplace must be in ISO 4217 currency code. For example USD, EUR, CAD, AUD, etc. The default value is USD.
+  // It should match one of the currencies listed in currencySettings.js
+  currency: 'USD',
+
+  // Listing minimum price in currency sub units, e.g. cents.
+  // 0 means no restriction to the price
+  listingMinimumPriceSubUnits: 0,
+
+  // Site title is needed in meta tags (bots and social media sharing reads those)
+  siteTitle: 'Biketribe',
+
+  // Facebook page is used in SEO schema (http://schema.org/Organization)
+  siteFacebookPage: '@sharetribe',
+  // Instagram page is used in SEO schema (http://schema.org/Organization)
+  siteInstagramPage: 'https://www.instagram.com/sharetribe/',
+  // Twitter handle is needed in meta tags (twitter:site). Start it with '@' character
+  siteTwitterHandle: 'https://www.facebook.com/Sharetribe/',
+
   // Modify Stripe configuration in stripeConfig.js
   // - picks REACT_APP_STRIPE_PUBLISHABLE_KEY from environment variables
   // - dayCountAvailableForBooking: Stripe can hold payments only limited time on Connect Account
@@ -63,22 +40,34 @@ const defaultConfig = {
   // - supportedCountries
   stripe,
 
+  // Modify listing extended data in defaultListingConfig.js
+  listing,
+  // Modify search settings data in defaultSearchConfig.js
+  search,
   // Modify settings for map providers in defaultMapConfig.js
   maps,
+  // Modify order types in defaultTransactionConfig.js
+  transaction,
+
+  // Note: Facebook app id is also used for tracking:
+  // Facebook counts shares with app or page associated by this id
+  // Currently it is unset, but you can read more about fb:app_id from
+  // https://developers.facebook.com/docs/sharing/webmasters#basic
+  // You should create one to track social sharing in Facebook
+  facebookAppId: process.env.REACT_APP_FACEBOOK_APP_ID,
+
   // If you want to change the language, remember to also change the
   // locale data and the messages in the app.js file.
   localization: {
     locale: 'en',
-    i18n: {
-      /*
-        0: Sunday
-        1: Monday
-        ...
-        6: Saturday
-      */
-      firstDayOfWeek: 0,
-    },
+    // First day of week
+    // 0: Sunday
+    // 1: Monday
+    // ...
+    // 6: Saturday
+    firstDayOfWeek: 0,
   },
+
   layout: {
     // There are 2 SearchPage variants that can be used:
     // 'map' & 'list'
@@ -97,15 +86,13 @@ const defaultConfig = {
       variantPrefix: 'listing-card',
     },
   },
-  listing,
-  search,
-  transaction,
-  dayCountAvailableForBooking,
-  sortSearchByDistance,
-  currency,
-  listingMinimumPriceSubUnits,
+
+  // CDN assets for the app. Configurable through Flex Console.
+  // Currently, only translation.json is available.
+  // Note: the path must match the path defined in Asset Delivery API
+  appCdnAssets: {
+    translations: 'content/translations.json',
   },
-  canonicalRootURL, // TODO
 
   // Optional
   // Address information is used in SEO schema for Organization (http://schema.org/PostalAddress)
@@ -117,12 +104,6 @@ const defaultConfig = {
     postalCode: null, // '00130',
     streetAddress: null, // 'Erottajankatu 19 B',
   },
-  siteTitle,
-  siteFacebookPage,
-  siteInstagramPage,
-  siteTwitterHandle,
-  facebookAppId,
-  custom,
 };
 
 export default defaultConfig;
