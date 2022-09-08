@@ -177,6 +177,17 @@ exports[`ListingPage matches snapshot 1`] = `
               text="listing1 description"
             />
             <SectionDetailsMaybe
+              intl={
+                Object {
+                  "formatDate": [Function],
+                  "formatMessage": [Function],
+                  "formatNumber": [Function],
+                  "formatPlural": [Function],
+                  "formatRelativeTime": [Function],
+                  "formatTime": [Function],
+                  "now": [Function],
+                }
+              }
               listingConfig={
                 Object {
                   "listingExtendedData": Array [
@@ -217,17 +228,6 @@ exports[`ListingPage matches snapshot 1`] = `
                       "scope": "public",
                     },
                   ],
-                }
-              }
-              intl={
-                Object {
-                  "formatDate": [Function],
-                  "formatMessage": [Function],
-                  "formatNumber": [Function],
-                  "formatPlural": [Function],
-                  "formatRelativeTime": [Function],
-                  "formatTime": [Function],
-                  "now": [Function],
                 }
               }
               metadata={Object {}}

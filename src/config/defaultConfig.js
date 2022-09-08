@@ -1,6 +1,7 @@
 import defaultLocationSearches from './defaultLocationSearchesConfig';
 import { defaultMCC, stripePublishableKey, stripeCountryDetails } from './stripeConfig';
 import * as listing from './defaultListingConfig';
+import * as search from './defaultSearchConfig';
 import * as transaction from './defaultTransactionConfig';
 
 // Main search used in Topbar.
@@ -166,6 +167,7 @@ const defaultConfig = {
     },
   },
   listing,
+  search,
   transaction,
   dayCountAvailableForBooking,
   mainSearchType,
