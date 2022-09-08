@@ -90,4 +90,4 @@ export const isOriginInUse = config =>
 /**
  * Check if the stock management is currently active.
  */
-export const isStockInUse = config => config.listingManagementType === 'stock';
+export const isStockInUse = config => config.search?.listingManagementType === 'stock';
