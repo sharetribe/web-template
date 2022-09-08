@@ -32,7 +32,7 @@ const SectionDetailsMaybe = props => {
         ? filteredConfigs.concat({ key, value: getBooleanMessage(value), label })
         : schemaType === 'long'
         ? filteredConfigs.concat({ key, value, label })
-        : null;
+        : filteredConfigs;
     }
     return filteredConfigs;
   };
