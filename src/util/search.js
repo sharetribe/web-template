@@ -79,13 +79,13 @@ export const findOptionsForSelectFilter = (filterKey, listingExtendedDataConfig)
 /**
  * Check if the main search type is 'keywords'
  */
-export const isMainSearchTypeKeywords = config => config.mainSearchType === 'keywords';
+export const isMainSearchTypeKeywords = config => config.search?.mainSearchType === 'keywords';
 
 /**
  * Check if the origin parameter is currently active.
  */
 export const isOriginInUse = config =>
-  config.mainSearchType === 'location' && config.sortSearchByDistance;
+  config.search?.mainSearchType === 'location' && config.sortSearchByDistance;
 
 /**
  * Check if the stock management is currently active.
