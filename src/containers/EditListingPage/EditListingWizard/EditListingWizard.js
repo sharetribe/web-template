@@ -129,7 +129,7 @@ const hasValidCustomFieldsInExtendedData = (publicData, privateData, config) => 
     };
 
     const isRequired =
-      !!editListingPageConfig.requiredMessage &&
+      !!editListingPageConfig.isRequired &&
       includeForProcessAliases.includes(publicData?.transactionProcessAlias);
     if (isRequired) {
       const savedExtendedData = fieldData[key];

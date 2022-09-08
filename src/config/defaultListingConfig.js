@@ -63,8 +63,8 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Select category',
-      placeholder: 'Choose…',
-      required: true,
+      placeholderMessage: 'Choose…',
+      isRequired: true,
       requiredMessage: 'You need to select a category.',
     },
   },
@@ -86,8 +86,8 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Select size (US)',
-      placeholder: 'Choose…',
-      required: true,
+      placeholderMessage: 'Choose…',
+      isRequired: true,
       requiredMessage: 'You need to select a size.',
     },
   },
@@ -119,8 +119,8 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Select brand',
-      placeholder: 'Choose…',
-      required: true,
+      placeholderMessage: 'Choose…',
+      isRequired: true,
       requiredMessage: 'You need to select a brand.',
     },
   },
@@ -140,8 +140,8 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Select Sauna type',
-      placeholder: 'Choose…',
-      required: true,
+      placeholderMessage: 'Choose…',
+      isRequired: true,
       requiredMessage: 'You need to select what type of sauna you have.',
     },
   },
@@ -176,8 +176,8 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Blaa',
-      placeholder: 'Blaa bla blaa',
-      required: true,
+      placeholderMessage: 'Blaa bla blaa',
+      isRequired: true,
       requiredMessage: 'You need to write something.',
     },
   },
@@ -189,7 +189,7 @@ export const listingExtendedData = [
     indexForSearch: false,
     editListingPageConfig: {
       label: 'Private notes',
-      placeholder: 'Blaa bla blaa',
+      placeholderMessage: 'Blaa bla blaa',
     },
   },
   {
@@ -208,8 +208,8 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Gears',
-      placeholder: 'The number of gears',
-      required: true,
+      placeholderMessage: 'The number of gears',
+      isRequired: true,
       requiredMessage: 'You need to add details about gears.',
     },
   },
@@ -229,7 +229,7 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Has lights',
-      placeholder: 'Choose yes/no',
+      placeholderMessage: 'Choose yes/no',
       //requiredMessage: 'You need to tell if the bike has lights.',
     },
   },

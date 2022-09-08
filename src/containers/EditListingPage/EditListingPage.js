@@ -363,7 +363,8 @@ const mapDispatchToProps = dispatch => ({
   onUpdateListing: (tab, values, config) => dispatch(requestUpdateListing(tab, values, config)),
   onCreateListingDraft: (values, config) => dispatch(requestCreateListingDraft(values, config)),
   onPublishListingDraft: listingId => dispatch(requestPublishListingDraft(listingId)),
-  onImageUpload: (data, listingImageConfig) => dispatch(requestImageUpload(data, listingImageConfig)),
+  onImageUpload: (data, listingImageConfig) =>
+    dispatch(requestImageUpload(data, listingImageConfig)),
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
   onPayoutDetailsChange: () => dispatch(stripeAccountClearError()),

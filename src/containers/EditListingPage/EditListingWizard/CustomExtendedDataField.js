@@ -8,6 +8,7 @@ import {
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
 } from '../../../util/types';
+import { useIntl } from '../../../util/reactIntl';
 import { required } from '../../../util/validators';
 // Import shared components
 import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '../../../components';
@@ -17,10 +18,14 @@ import css from './EditListingWizard.module.css';
 const getOptionValue = option => `${option}`.toLowerCase().replace(/\s/g, '_');
 
 const CustomFieldEnum = props => {
-  const { name, fieldConfig, defaultRequiredMessage } = props;
+  const { name, fieldConfig, defaultRequiredMessage, intl } = props;
   const { schemaOptions = [], editListingPageConfig } = fieldConfig || {};
-  const { label, placeholder, required, requiredMessage } = editListingPageConfig || {};
-  const validateMaybe = required ? { validate: required(requiredMessage || defaultRequiredMessage) } : {};
+  const { label, placeholderMessage, isRequired, requiredMessage } = editListingPageConfig || {};
+  const validateMaybe = isRequired
+    ? { validate: required(requiredMessage || defaultRequiredMessage) }
+    : {};
+  const placeholder =
+    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholder' });
 
   return schemaOptions ? (
     <FieldSelect className={css.customField} name={name} id={name} label={label} {...validateMaybe}>
@@ -65,9 +70,14 @@ const CustomFieldMultiEnum = props => {
 };
 
 const CustomFieldText = props => {
-  const { name, fieldConfig, defaultRequiredMessage } = props;
-  const { label, placeholder, required, requiredMessage } = fieldConfig?.editListingPageConfig || {};
-  const validateMaybe = required ? { validate: required(requiredMessage || defaultRequiredMessage) } : {};
+  const { name, fieldConfig, defaultRequiredMessage, intl } = props;
+  const { label, placeholderMessage, isRequired, requiredMessage } =
+    fieldConfig?.editListingPageConfig || {};
+  const validateMaybe = isRequired
+    ? { validate: required(requiredMessage || defaultRequiredMessage) }
+    : {};
+  const placeholder =
+    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholder' });
 
   return (
     <FieldTextInput
@@ -83,9 +93,14 @@ const CustomFieldText = props => {
 };
 
 const CustomFieldLong = props => {
-  const { name, fieldConfig, defaultRequiredMessage } = props;
-  const { label, placeholder, required, requiredMessage } = fieldConfig?.editListingPageConfig || {};
-  const validateMaybe = required ? { validate: required(requiredMessage || defaultRequiredMessage) } : {};
+  const { name, fieldConfig, defaultRequiredMessage, intl } = props;
+  const { label, placeholderMessage, isRequired, requiredMessage } =
+    fieldConfig?.editListingPageConfig || {};
+  const validateMaybe = isRequired
+    ? { validate: required(requiredMessage || defaultRequiredMessage) }
+    : {};
+  const placeholder =
+    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholder' });
 
   return (
     <FieldTextInput
@@ -106,9 +121,14 @@ const CustomFieldLong = props => {
 };
 
 const CustomFieldBoolean = props => {
-  const { name, fieldConfig, defaultRequiredMessage } = props;
-  const { label, placeholder, required, requiredMessage } = fieldConfig?.editListingPageConfig || {};
-  const validateMaybe = required ? { validate: required(requiredMessage || defaultRequiredMessage) } : {};
+  const { name, fieldConfig, defaultRequiredMessage, intl } = props;
+  const { label, placeholderMessage, isRequired, requiredMessage } =
+    fieldConfig?.editListingPageConfig || {};
+  const validateMaybe = isRequired
+    ? { validate: required(requiredMessage || defaultRequiredMessage) }
+    : {};
+  const placeholder =
+    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholder' });
 
   return (
     <FieldBoolean
@@ -133,8 +153,9 @@ const CustomFieldBoolean = props => {
  * editListingPageConfig for the field.
  */
 const CustomExtendedDataField = props => {
+  const intl = useIntl();
   const { schemaOptions = [], schemaType } = props?.fieldConfig || {};
-  const renderFieldComponent = (FieldComponent, props) => <FieldComponent {...props} />;
+  const renderFieldComponent = (FieldComponent, props) => <FieldComponent {...props} intl={intl} />;
 
   return schemaType === SCHEMA_TYPE_ENUM && schemaOptions
     ? renderFieldComponent(CustomFieldEnum, props)
