@@ -1,3 +1,9 @@
+//////////////////////////////////////////////////////////////////////
+// Configurations related to search                                 //
+// Note: some search experience is also on defaultMapsConfig        //
+// and defaultListingConfig.js is responsible public data filtering //
+//////////////////////////////////////////////////////////////////////
+
 // Main search used in Topbar.
 // This can be either 'keywords' or 'location'.
 export const mainSearchType = 'keywords';
