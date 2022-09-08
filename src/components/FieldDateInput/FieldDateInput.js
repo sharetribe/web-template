@@ -129,7 +129,7 @@ const FieldDateInput = props => {
 
   // Outside range -><- today ... today+available days -1 -><- outside range
   const defaultIsOutSideRange = day => {
-    const endOfRange = config.dayCountAvailableForBooking - 1;
+    const endOfRange = config.stripe?.dayCountAvailableForBooking - 1;
     return (
       !isInclusivelyAfterDay(day, moment()) ||
       !isInclusivelyBeforeDay(day, moment().add(endOfRange, 'days'))

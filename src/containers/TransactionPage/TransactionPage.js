@@ -443,7 +443,7 @@ export const TransactionPageComponent = props => {
           fetchLineItemsInProgress={fetchLineItemsInProgress}
           fetchLineItemsError={fetchLineItemsError}
           marketplaceCurrency={config.currency}
-          dayCountAvailableForBooking={config.dayCountAvailableForBooking}
+          dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
         />
       }
     />
