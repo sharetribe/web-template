@@ -3,6 +3,10 @@
 // Main configuration here is the extended data config //
 /////////////////////////////////////////////////////////
 
+// NOTE: if you want to change the structure of the data,
+// you should also check src/util/configHelpers.js
+// some validation is added there.
+
 /**
  * Configuration options for extended data fields:
  * - key:                           Unique key for the extended data field.
@@ -24,6 +28,7 @@
  *                                  https://www.sharetribe.com/docs/references/extended-data/#search-schema
  *                                  Read more about filtering listings with public data keys from API Reference:
  *                                  https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
+ *                                  Default value: false,
  * - searchPageConfig:              Search-specific configuration.
  *   - filterType:                    Sometimes a single schemaType can be rendered with different filter components.
  *                                    For 'enum' schema, filterType can be 'SelectSingleFilter' or 'SelectMultipleFilter'
@@ -33,6 +38,8 @@
  *   - group:                         SearchPageWithMap has grouped filters. Possible values: 'primary' or 'secondary'.
  * - listingPageConfig:             Configuration for rendering listing.
  *   - label:                         Label for the saved data.
+ *   - isDetail                       Can be used to hide detail row (of type enum, boolean, or long) from listing page.
+ *                                    Default value: true,
  * - editListingPageConfig:         Configuration for adding and modifying extended data fields.
  *   - label:                         Label for the input field.
  *   - placeholderMessage (optional): Default message for user input.
