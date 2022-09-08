@@ -201,7 +201,14 @@ const EditListingDetailsFormComponent = props => (
           return isKnownSchemaType && isTargetProcessAlias && isProviderScope
             ? [
                 ...pickedFields,
-                <CustomExtendedDataField key={key} name={key} fieldConfig={extendedDataConfig} defaultRequiredMessage={intl.formatMessage({ id: 'EditListingDetailsForm.defaultRequiredMessage' })} />,
+                <CustomExtendedDataField
+                  key={key}
+                  name={key}
+                  fieldConfig={extendedDataConfig}
+                  defaultRequiredMessage={intl.formatMessage({
+                    id: 'EditListingDetailsForm.defaultRequiredMessage',
+                  })}
+                />,
               ]
             : pickedFields;
         }, []);

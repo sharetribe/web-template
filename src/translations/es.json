@@ -125,6 +125,8 @@
   "CookieConsent.continue": "Continuar",
   "CookieConsent.cookieLink": "cookies",
   "CookieConsent.message": "Welcome to Sneakertime, friend! We use {cookieLink} to enhance your browsing experience.",
+  "CustomExtendedDataField.placeholder": "Choose…",
+  "CustomExtendedDataField.required": "Required",
   "DisputeModal.close": "Close",
   "DisputeModal.description": "By sending a dispute report, Sneakertime support will contact the seller and work with you to solve the problem as quickly as possible.",
   "DisputeModal.disputePlaceholder": "The item was…",
