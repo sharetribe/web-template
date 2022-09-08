@@ -272,18 +272,64 @@ const validListingExtendedData = (listingExtendedData, processAliasesInUse) => {
 };
 
 const validListingConfig = (config, processAliasesInUse) => {
-  const { listingExtendedData = [], defaultFilters, sortConfig } = config || {};
-
+  const listingExtendedData = config?.listingExtendedData || [];
   return {
     listingExtendedData: validListingExtendedData(listingExtendedData, processAliasesInUse),
-    defaultFilters: defaultFilters,
-    sortConfig: sortConfig,
   };
 };
 
-const mergeListing = (listingConfig, defaultListingConfig, processAliasesInUse) => {
-  // TODO: defaultListingConfig needs to be removed, when config is fetched from assets.
-  return validListingConfig(listingConfig || defaultListingConfig, processAliasesInUse);
+const validDatesConfig = config => {
+  const label = typeof config.label === 'string' ? config.label : 'Dates';
+  const entireRangeAvailable =
+    typeof config.entireRangeAvailable === 'boolean' ? config.entireRangeAvailable : true;
+  const mode = ['day', 'night'].includes(config.mode) ? config.mode : 'day';
+  return { key: 'dates', schemaType: 'dates', label, entireRangeAvailable, mode };
+};
+
+const validPriceConfig = config => {
+  const label = typeof config.label === 'string' ? config.label : 'Price';
+  const min = typeof config.min === 'number' ? config.min : 0;
+  const max = typeof config.max === 'number' ? config.max : 1000;
+  const step = typeof config.step === 'number' ? config.step : 5;
+  return { key: 'price', schemaType: 'price', label, min, max, step };
+};
+
+const validDefaultFilters = defaultFilters => {
+  return defaultFilters.filter(data => {
+    const key = data.key;
+    return key === 'dates'
+      ? validDatesConfig(data)
+      : key === 'price'
+      ? validPriceConfig(data)
+      : data;
+  });
+};
+
+const validSortConfig = config => {
+  const active = typeof config.active === 'boolean' ? config.active : true;
+  const queryParamName = config.queryParamName || 'sort';
+  const relevanceKey = config.relevanceKey || 'relevance';
+  const relevanceFilter = config.relevanceFilter || 'keywords';
+  const conflictingFilters = config.conflictingFilters || [];
+  const optionsRaw = config.options || [];
+  const options = optionsRaw.filter(o => !!o.key && !!o.label);
+  return {
+    active,
+    queryParamName,
+    relevanceKey,
+    relevanceFilter,
+    conflictingFilters,
+    options,
+  };
+};
+
+const validSearchConfig = config => {
+  const { defaultFilters, sortConfig } = config || {};
+
+  return {
+    defaultFilters: validDefaultFilters(defaultFilters),
+    sortConfig: validSortConfig(sortConfig),
+  };
 };
 
 ////////////////////
@@ -294,10 +340,14 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     ...configAsset,
     ...defaultConfigs,
     layout: mergeLayouts(configAsset.layout, defaultConfigs.layout),
-    listing: mergeListing(configAsset.listing, defaultConfigs.listing, [
+
+    // TODO: defaultConfigs.listing probably needs to be removed, when config is fetched from assets.
+    listing: validListingConfig(configAsset.listing || defaultConfigs.listing, [
       'flex-product-default-process/release-1',
       'flex-booking-default-process/release-1',
     ]),
+    // TODO: defaultConfigs.search probably needs to be removed, when config is fetched from assets.
+    search: validSearchConfig(configAsset.search || defaultConfigs.search),
   };
 };
 

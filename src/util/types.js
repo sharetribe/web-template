@@ -448,7 +448,6 @@ propTypes.defaultFiltersConfig = arrayOf(
   shape({
     key: string.isRequired,
     schemaType: oneOf(['price', 'text', 'dates']).isRequired,
-    label: string.isRequired,
     min: number,
     max: number,
     step: number,

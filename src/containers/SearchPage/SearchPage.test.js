@@ -103,13 +103,17 @@ describe('SearchPageWithList', () => {
       sendVerificationEmailInProgress: false,
       onResendVerificationEmail: noop,
       config: {
-        custom: {
+        listing: {
           listingExtendedData: listingExtendedDataConfig,
+        },
+        search: {
+          mainSearchType: 'location',
           defaultFilters: defaultFiltersConfig,
           sortConfig: sortConfig,
+        },
+        transaction: {
           processes: ['flex-product-default-process', 'flex-booking-default-process'],
         },
-        mainSearchType: 'location',
         sortSearchByDistance: false,
       },
       routeConfiguration: getRouteConfiguration(),

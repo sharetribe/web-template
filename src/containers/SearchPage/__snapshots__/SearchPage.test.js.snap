@@ -61,6 +61,17 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           getHandleChangedValueFn={[Function]}
           idPrefix="SearchFiltersMobile"
           initialValues={[Function]}
+          intl={
+            Object {
+              "formatDate": [Function],
+              "formatMessage": [Function],
+              "formatNumber": [Function],
+              "formatPlural": [Function],
+              "formatRelativeTime": [Function],
+              "formatTime": [Function],
+              "now": [Function],
+            }
+          }
           isDesktop={true}
           key="SearchFiltersMobile.category"
           liveEdit={true}
@@ -82,6 +93,17 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           getHandleChangedValueFn={[Function]}
           idPrefix="SearchFiltersMobile"
           initialValues={[Function]}
+          intl={
+            Object {
+              "formatDate": [Function],
+              "formatMessage": [Function],
+              "formatNumber": [Function],
+              "formatPlural": [Function],
+              "formatRelativeTime": [Function],
+              "formatTime": [Function],
+              "now": [Function],
+            }
+          }
           isDesktop={true}
           key="SearchFiltersMobile.price"
           liveEdit={true}
@@ -100,6 +122,17 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           getHandleChangedValueFn={[Function]}
           idPrefix="SearchFiltersMobile"
           initialValues={[Function]}
+          intl={
+            Object {
+              "formatDate": [Function],
+              "formatMessage": [Function],
+              "formatNumber": [Function],
+              "formatPlural": [Function],
+              "formatRelativeTime": [Function],
+              "formatTime": [Function],
+              "now": [Function],
+            }
+          }
           isDesktop={true}
           key="SearchFiltersMobile.keywords"
           liveEdit={true}
@@ -136,6 +169,17 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           getHandleChangedValueFn={[Function]}
           idPrefix="SearchFiltersMobile"
           initialValues={[Function]}
+          intl={
+            Object {
+              "formatDate": [Function],
+              "formatMessage": [Function],
+              "formatNumber": [Function],
+              "formatPlural": [Function],
+              "formatRelativeTime": [Function],
+              "formatTime": [Function],
+              "now": [Function],
+            }
+          }
           isDesktop={true}
           key="SearchFiltersMobile.amenities"
           liveEdit={true}
@@ -226,6 +270,17 @@ exports[`SearchPageWithList matches snapshot 1`] = `
             getHandleChangedValueFn={[Function]}
             idPrefix="SearchFiltersMobile"
             initialValues={[Function]}
+            intl={
+              Object {
+                "formatDate": [Function],
+                "formatMessage": [Function],
+                "formatNumber": [Function],
+                "formatPlural": [Function],
+                "formatRelativeTime": [Function],
+                "formatTime": [Function],
+                "now": [Function],
+              }
+            }
             key="SearchFiltersMobile.category"
             liveEdit={true}
             showAsPopup={false}
@@ -245,6 +300,17 @@ exports[`SearchPageWithList matches snapshot 1`] = `
             getHandleChangedValueFn={[Function]}
             idPrefix="SearchFiltersMobile"
             initialValues={[Function]}
+            intl={
+              Object {
+                "formatDate": [Function],
+                "formatMessage": [Function],
+                "formatNumber": [Function],
+                "formatPlural": [Function],
+                "formatRelativeTime": [Function],
+                "formatTime": [Function],
+                "now": [Function],
+              }
+            }
             key="SearchFiltersMobile.price"
             liveEdit={true}
             showAsPopup={false}
@@ -261,6 +327,17 @@ exports[`SearchPageWithList matches snapshot 1`] = `
             getHandleChangedValueFn={[Function]}
             idPrefix="SearchFiltersMobile"
             initialValues={[Function]}
+            intl={
+              Object {
+                "formatDate": [Function],
+                "formatMessage": [Function],
+                "formatNumber": [Function],
+                "formatPlural": [Function],
+                "formatRelativeTime": [Function],
+                "formatTime": [Function],
+                "now": [Function],
+              }
+            }
             key="SearchFiltersMobile.keywords"
             liveEdit={true}
             showAsPopup={false}
@@ -295,6 +372,17 @@ exports[`SearchPageWithList matches snapshot 1`] = `
             getHandleChangedValueFn={[Function]}
             idPrefix="SearchFiltersMobile"
             initialValues={[Function]}
+            intl={
+              Object {
+                "formatDate": [Function],
+                "formatMessage": [Function],
+                "formatNumber": [Function],
+                "formatPlural": [Function],
+                "formatRelativeTime": [Function],
+                "formatTime": [Function],
+                "now": [Function],
+              }
+            }
             key="SearchFiltersMobile.amenities"
             liveEdit={true}
             showAsPopup={false}
@@ -303,6 +391,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
         </SearchFiltersMobile>
         <MainPanelHeader
           className="mainPanel"
+          isSortByActive={true}
           listingsAreLoaded={true}
           noResultsInfo={
             <NoSearchResultsMaybe
