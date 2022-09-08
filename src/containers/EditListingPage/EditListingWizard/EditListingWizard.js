@@ -5,7 +5,7 @@ import classNames from 'classnames';
 // Import configs and util modules
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
-import { FormattedMessage, intlShape } from '../../../util/reactIntl';
+import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
 import { createResourceLocatorString } from '../../../util/routes';
 import { withViewport } from '../../../util/contextHelpers';
 import {
