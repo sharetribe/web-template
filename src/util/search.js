@@ -85,7 +85,7 @@ export const isMainSearchTypeKeywords = config => config.search?.mainSearchType 
  * Check if the origin parameter is currently active.
  */
 export const isOriginInUse = config =>
-  config.search?.mainSearchType === 'location' && config.sortSearchByDistance;
+  config.search?.mainSearchType === 'location' && config.maps?.search?.sortSearchByDistance;
 
 /**
  * Check if the stock management is currently active.

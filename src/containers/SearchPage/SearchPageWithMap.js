@@ -260,7 +260,7 @@ export class SearchPageComponent extends Component {
 
     // Page transition might initially use values from previous search
     // urlQueryParams doesn't contain page specific url params
-    // like mapSearch, page or origin (origin depends on config.sortSearchByDistance)
+    // like mapSearch, page or origin (origin depends on config.maps.search.sortSearchByDistance)
     const { searchParamsAreInSync, urlQueryParams, searchParamsInURL } = searchParamsPicker(
       location.search,
       searchParams,
