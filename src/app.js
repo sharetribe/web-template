@@ -19,7 +19,8 @@ import configureStore from './store';
 
 // utils
 import { RouteConfigurationProvider } from './context/routeConfigurationContext';
-import { ConfigurationProvider, mergeConfig } from './context/configurationContext';
+import { ConfigurationProvider } from './context/configurationContext';
+import { mergeConfig } from './util/configHelpers';
 import { IntlProvider } from './util/reactIntl';
 import { IncludeScripts } from './util/includeScripts';
 

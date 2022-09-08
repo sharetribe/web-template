@@ -35,7 +35,7 @@ import configureStore from './store';
 
 // Utils
 import { createInstance, types as sdkTypes } from './util/sdkLoader';
-import { mergeConfig } from './context/configurationContext';
+import { mergeConfig } from './util/configHelpers';
 import { matchPathname } from './util/routes';
 import * as apiUtils from './util/api';
 import * as log from './util/log';

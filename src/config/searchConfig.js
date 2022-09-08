@@ -4,6 +4,10 @@
 // and defaultListingConfig.js is responsible public data filtering //
 //////////////////////////////////////////////////////////////////////
 
+// NOTE: if you want to change the structure of the data,
+// you should also check src/util/configHelpers.js
+// some validation is added there.
+
 // Main search used in Topbar.
 // This can be either 'keywords' or 'location'.
 export const mainSearchType = 'keywords';
