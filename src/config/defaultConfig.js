@@ -4,10 +4,6 @@ import * as listing from './defaultListingConfig';
 import * as search from './defaultSearchConfig';
 import * as transaction from './defaultTransactionConfig';
 
-// Main search used in Topbar.
-// This can be either 'keywords' or 'location'.
-const mainSearchType = 'keywords';
-
 // Should search results be ordered by distance to origin.
 // NOTE 1: This doesn't affect if the main search type is 'keywords'
 // NOTE 2: If this is set to true add parameter 'origin' to every location in default-location-searches.js
@@ -170,7 +166,6 @@ const defaultConfig = {
   search,
   transaction,
   dayCountAvailableForBooking,
-  mainSearchType,
   sortSearchByDistance,
   currency,
   listingMinimumPriceSubUnits,
