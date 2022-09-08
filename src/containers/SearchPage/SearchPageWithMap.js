@@ -261,11 +261,11 @@ export class SearchPageComponent extends Component {
     } = this.props;
 
     const {
-      processes: activeProcesses,
       listingExtendedData: listingExtendedDataConfig,
       defaultFilters: defaultFiltersConfig,
       sortConfig,
     } = config?.listing || {};
+    const activeProcesses = config?.transaction?.processes;
     const marketplaceCurrency = config.currency;
 
     // Page transition might initially use values from previous search

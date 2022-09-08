@@ -3,12 +3,6 @@
  */
 
 /**
- * Active processes.
- * Note: these should match with the process names in src/util/transaction.js
- */
-export const processes = ['flex-product-default-process', 'flex-booking-default-process'];
-
-/**
  * Configuration options for extended data fields:
  * - key:                           Unique key for the extended data field.
  * - scope (optional):              Scope of the extended data can be either 'public' or 'private'.
