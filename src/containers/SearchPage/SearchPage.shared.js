@@ -173,7 +173,7 @@ export const validUrlQueryParamsFromProps = props => {
     latlngBounds: ['bounds'],
   });
   // urlQueryParams doesn't contain page specific url params
-  // like mapSearch, page or origin (origin depends on config.sortSearchByDistance)
+  // like mapSearch, page or origin (origin depends on config.maps.search.sortSearchByDistance)
   return validURLParamsForExtendedData(
     searchInURL,
     listingExtendedDataConfig,

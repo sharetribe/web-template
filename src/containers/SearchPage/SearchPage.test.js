@@ -114,7 +114,11 @@ describe('SearchPageWithList', () => {
         transaction: {
           processes: ['flex-product-default-process', 'flex-booking-default-process'],
         },
-        sortSearchByDistance: false,
+        maps: {
+          search: {
+            sortSearchByDistance: false,
+          },
+        },
       },
       routeConfiguration: getRouteConfiguration(),
     };
