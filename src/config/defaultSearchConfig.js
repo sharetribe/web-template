@@ -63,3 +63,12 @@ export const sortConfig = {
     { key: 'relevance', label: 'Relevance', longLabel: 'Relevance (Keyword search)' },
   ],
 };
+
+// Listing management type. Currently only 'stock' is supported.
+//
+// With the default 'stock', availability and bookings are not used, and
+// listings have a specific numeric stock.
+//
+// TODO: this is only used on SearchPage and there the value be decided based on available transaction configs
+//       (if bookings are used or not).
+export const listingManagementType = 'availability'; // 'stock'

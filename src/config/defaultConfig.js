@@ -5,14 +5,6 @@ import * as maps from './defaultMapConfig';
 import * as transaction from './defaultTransactionConfig';
 
 
-// Listing management type. Currently only 'stock' is supported.
-//
-// With the default 'stock', availability and bookings are not used, and
-// listings have a specific numeric stock.
-//
-// TODO: this is only used on SearchPage and there the value be decided based on available transaction configs
-//       (if bookings are used or not).
-const listingManagementType = 'availability'; // 'stock'
 
 // A maximum number of days forwards during which a booking can be made.
 // This is limited due to Stripe holding funds up to 90 days from the
@@ -56,7 +48,6 @@ const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets in this file.
 const defaultConfig = {
-  listingManagementType,
 
   // CDN assets for the app. Configurable through Flex Console.
   // Currently, only translation.json is available.
