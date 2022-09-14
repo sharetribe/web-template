@@ -30,8 +30,8 @@ const FieldSelectComponent = props => {
   // field has been touched and the validation has failed.
   const hasError = touched && invalid && error;
 
-  const selectClasses = classNames(selectClassName, css.select, {
-    [css.selectSuccess]: input.value && valid,
+  const selectClasses = classNames({
+    [selectClassName]: selectClassName,
     [css.selectError]: hasError,
   });
   const handleChange = e => {
