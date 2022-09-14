@@ -1,3 +1,5 @@
+import { getSupportedProcessesInfo } from '../util/transaction';
+
 // Generic helpers for validating config values
 
 // Validate enum type strings (if default value is given, value is considered optional)
@@ -243,8 +245,12 @@ const validListingExtendedData = (listingExtendedData, processAliasesInUse) => {
   }, []);
 };
 
-const validListingConfig = (config, processAliasesInUse) => {
+const getProcessAliasesInUse = transactionTypes => {
+  return transactionTypes.map(tt => `${tt.process}/${tt.alias}`);
+};
+const validListingConfig = (config, transactionTypes) => {
   const listingExtendedData = config?.listingExtendedData || [];
+  const processAliasesInUse = getProcessAliasesInUse(transactionTypes);
   return {
     listingExtendedData: validListingExtendedData(listingExtendedData, processAliasesInUse),
   };
@@ -310,21 +316,56 @@ const validSearchConfig = config => {
   };
 };
 
+const validTransactionConfig = config => {
+  const { transactionTypes } = config || {};
+  // Check what transaction processes this client app supports
+  const supportedProcessesInfo = getSupportedProcessesInfo();
+
+  const validTransactionTypes = transactionTypes.reduce((validConfigs, transactionType) => {
+    const { type, process: processName, alias, unitType, label } = transactionType;
+    const isSupportedProcessName = supportedProcessesInfo.find(p => p.name === processName);
+    const isSupportedProcessAlias = supportedProcessesInfo.find(p => p.alias === alias);
+    const isSupportedUnitType = supportedProcessesInfo.find(p => p.unitTypes.includes(unitType));
+
+    if (isSupportedProcessName && isSupportedProcessAlias && isSupportedUnitType) {
+      return [
+        ...validConfigs,
+        {
+          type,
+          label,
+          process: processName,
+          alias,
+          unitType,
+        },
+      ];
+    }
+    console.warn('Unsupported transaction configurations detected', transactionType);
+    return validConfigs;
+  }, []);
+  return { transactionTypes: validTransactionTypes };
+};
+
 ////////////////////////////////////
 // Validate and merge all configs //
 ////////////////////////////////////
 
 export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
+  // TODO: defaultConfigs.transaction probably needs to be removed, when config is fetched from assets.
+  const validTransactionConfiguration = validTransactionConfig(
+    configAsset.transaction || defaultConfigs.transaction
+  );
+
   return {
     ...defaultConfigs,
     layout: mergeLayouts(configAsset.layout, defaultConfigs.layout),
 
     // TODO: defaultConfigs.listing probably needs to be removed, when config is fetched from assets.
-    listing: validListingConfig(configAsset.listing || defaultConfigs.listing, [
-      'flex-product-default-process/release-1',
-      'flex-booking-default-process/release-1',
-    ]),
+    listing: validListingConfig(
+      configAsset.listing || defaultConfigs.listing,
+      validTransactionConfiguration.transactionTypes
+    ),
     // TODO: defaultConfigs.search probably needs to be removed, when config is fetched from assets.
     search: validSearchConfig(configAsset.search || defaultConfigs.search),
+    transaction: validTransactionConfiguration,
   };
 };

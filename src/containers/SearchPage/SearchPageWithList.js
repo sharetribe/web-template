@@ -187,7 +187,7 @@ export class SearchPageComponent extends Component {
 
     const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
-    const activeProcesses = config?.transaction?.processes;
+    const activeProcesses = config?.transaction?.transactionTypes.map(config => config.process);
     const marketplaceCurrency = config.currency;
 
     // Page transition might initially use values from previous search
