@@ -5,7 +5,7 @@ import classNames from 'classnames';
 // Import util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { EXTENDED_DATA_SCHEMA_TYPES, LISTING_STATE_DRAFT } from '../../../../util/types';
-import { getSupportedProcessesInfo, isBookingProcess } from '../../../../util/transaction';
+import { isBookingProcess } from '../../../../util/transaction';
 
 // Import shared components
 import { ListingLink } from '../../../../components';
@@ -15,23 +15,75 @@ import EditListingDetailsForm from './EditListingDetailsForm';
 import css from './EditListingDetailsPanel.module.css';
 
 /**
+ * Get transaction configuration. For existing listings, it is stored to publicData.
+ * For new listings, the data needs to be figured out from transactionTypes configuration.
+ *
+ * In the latter case, we select first type in the array. However, EditListingDetailsForm component
+ * gets 'selectableTransactionTypes' prop, which it uses to provide a way to make selection,
+ * if multiple transaction type are available.
+ *
+ * @param {Array} transactionTypes
+ * @param {Object} existingTransactionInfo
+ * @returns an object containing information that can be stored to publicData.
+ */
+const getTransactionInfo = (transactionTypes, existingTransactionInfo = {}) => {
+  const { transactionType, transactionProcessAlias, unitType } = existingTransactionInfo;
+
+  if (transactionType && transactionProcessAlias && unitType) {
+    return { transactionType, transactionProcessAlias, unitType };
+  } else if (transactionTypes.length === 1) {
+    const { type, process, alias, unitType: configUnitType, label } = transactionTypes[0];
+    return {
+      transactionType: type,
+      transactionProcessAlias: `${process}/${alias}`,
+      unitType: configUnitType,
+      label: label || type,
+    };
+  }
+  return {};
+};
+
+/**
+ * Check if transactionType has already been set.
+ *
+ * If transaction type (incl. process & unitType) has been set, we won't allow change to it.
+ * It's possible to make it editable, but it becomes somewhat complex to modify following panels,
+ * for the different process. (E.g. adjusting stock vs booking availability settings,
+ * if process has been changed for existing listing.)
+ *
+ * @param {Object} publicData JSON-like data stored to listing entity.
+ * @returns object literal with to keys: { hasExistingTransactionType, existingTransactionType }
+ */
+const hasSetTransactionType = publicData => {
+  const { transactionType, transactionProcessAlias, unitType } = publicData;
+  const existingTransactionType = { transactionType, transactionProcessAlias, unitType };
+
+  return {
+    hasExistingTransactionType:
+      !!transactionType && !!transactionProcessAlias && !!transactionProcessAlias,
+    existingTransactionType,
+  };
+};
+
+/**
  * Pick extended data fields from given data. Picking is based on extended data configuration
  * for the listing and target scopa and transaction process alias.
  *
- * With 'clearCustomFields' parameter can be used to clear unused values for sdk.listings.update call.
+ * With 'clearExtraCustomFields' parameter can be used to clear unused values for sdk.listings.update call.
  * It returns null for those fields that are managed by configuration, but don't match target process alias.
  *
- * @param {Object} data values to look through against marketplace-custom-config
+ * @param {Object} data values to look through against listingConfig.js and util/configHelpers.js
  * @param {String} targetScope Check that the scope of extended data the config matches
  * @param {String} targetProcessAlias Check that the extended data is relevant for this process alias.
- * @param {boolean} clearCustomFields If true, returns also custom extended data fields with null values
+ * @param {boolean} clearExtraCustomFields If true, returns also custom extended data fields with null values
+ * @returns Array of picked extended data fields
  */
 const pickCustomExtendedDataFields = (
   data,
   targetScope,
   targetProcessAlias,
   extendedDataConfigs,
-  clearCustomFields = false
+  clearExtraCustomFields = false
 ) => {
   return extendedDataConfigs.reduce((fields, extendedDataConfig) => {
     const { key, includeForProcessAliases = [], scope = 'public', schemaType } =
@@ -44,7 +96,12 @@ const pickCustomExtendedDataFields = (
     if (isKnownSchemaType && isTargetScope && isTargetProcessAlias) {
       const fieldValue = data[key] || null;
       return { ...fields, [key]: fieldValue };
-    } else if (clearCustomFields && isKnownSchemaType && isTargetScope && !isTargetProcessAlias) {
+    } else if (
+      isKnownSchemaType &&
+      isTargetScope &&
+      !isTargetProcessAlias &&
+      clearExtraCustomFields
+    ) {
       return { ...fields, [key]: null };
     }
     return fields;
@@ -62,6 +119,32 @@ const PanelTitle = props => {
     />
   ) : (
     <FormattedMessage id="EditListingDetailsPanel.createListingTitle" />
+  );
+};
+
+const ErrorMessage = props => {
+  const { invalidExistingTransactionType, siteTitle } = props;
+  return invalidExistingTransactionType ? (
+    <div>
+      <h2>
+        <FormattedMessage id="EditListingDetailsPanel.invalidTransactionTypeSetTitle" />
+      </h2>
+      <p>
+        <FormattedMessage
+          id="EditListingDetailsPanel.invalidTransactionTypeSetDescription"
+          values={{ siteTitle }}
+        />
+      </p>
+    </div>
+  ) : (
+    <div>
+      <h2>
+        <FormattedMessage id="EditListingDetailsPanel.noTransactionTypeSetTitle" />
+      </h2>
+      <p>
+        <FormattedMessage id="EditListingDetailsPanel.noTransactionTypeSetDescription" />
+      </p>
+    </div>
   );
 };
 
@@ -83,43 +166,20 @@ const EditListingDetailsPanel = props => {
 
   const classes = classNames(rootClassName || css.root, className);
   const { description, title, publicData, privateData, state } = listing?.attributes || {};
+  const transactionTypes = config.transaction.transactionTypes;
   const listingExtendedDataConfig = config.listing.listingExtendedData;
-
-  const activeProcesses = config.transaction.processes;
-  const supportedProcessesInfo = getSupportedProcessesInfo();
-  const activeProcessInfos = supportedProcessesInfo.filter(processInfo =>
-    activeProcesses.includes(processInfo.name)
-  );
-
-  // If transaction process alias has been set, we won't allow change to it.
-  // It's possible to make it editable, but it becomes somewhat complex to modify following panels,
-  // according to process that's changed on this initial panel of EditListingWizard.
-  // (E.g. adjusting stock vs booking availability settings,
-  // if process has been changed for existing listing.)
-  const hasSetProcessAlias = !!publicData?.transactionProcessAlias;
+  const { hasExistingTransactionType, existingTransactionType } = hasSetTransactionType(publicData);
+  const hasValidExistingTransactionType =
+    hasExistingTransactionType &&
+    !!transactionTypes.find(conf => conf.type === existingTransactionType.transactionType);
 
   const initialValues = (title, description, publicData, privateData) => {
-    const { transactionProcessAlias, unitType } = publicData;
+    const { transactionProcessAlias } = publicData;
 
-    const getProcessAliasAndUnitType = (processInfos, existingProcessAlias, existingUnitType) => {
-      if (existingProcessAlias) {
-        return { transactionProcessAlias: existingProcessAlias, unitType: existingUnitType };
-      } else if (processInfos.length === 1) {
-        const { name, alias, unitTypes } = processInfos[0];
-        const singleUnitTypeMaybe = unitTypes.length === 1 ? unitTypes[0] : null;
-        return {
-          transactionProcessAlias: existingProcessAlias || `${name}/${alias}`,
-          unitType: existingUnitType || singleUnitTypeMaybe,
-        };
-      }
-      // If there's neither existing tx process alias nor clear single choice,
-      // then user needs to pick them through UI.
-      return {};
-    };
     return {
       title,
       description,
-      ...getProcessAliasAndUnitType(activeProcessInfos, transactionProcessAlias, unitType),
+      ...getTransactionInfo(transactionTypes, existingTransactionType),
       ...pickCustomExtendedDataFields(
         publicData,
         'public',
@@ -156,54 +216,77 @@ const EditListingDetailsPanel = props => {
         };
   };
 
+  const noTransactionTypesSet = transactionTypes.length > 0;
+  const canShowEditListingDetailsForm =
+    noTransactionTypesSet && (!hasExistingTransactionType || hasValidExistingTransactionType);
   return (
     <div className={classes}>
       <h1 className={css.title}>
         <PanelTitle listing={listing} state={state} />
       </h1>
-      <EditListingDetailsForm
-        className={css.form}
-        initialValues={initialValues(title, description, publicData, privateData)}
-        saveActionMsg={submitButtonText}
-        onSubmit={values => {
-          const { title, description, transactionProcessAlias, unitType, ...rest } = values;
-          const updateValues = {
-            title: title.trim(),
-            description,
-            publicData: {
+      {canShowEditListingDetailsForm ? (
+        <EditListingDetailsForm
+          className={css.form}
+          initialValues={initialValues(title, description, publicData, privateData)}
+          saveActionMsg={submitButtonText}
+          onSubmit={values => {
+            const {
+              title,
+              description,
+              transactionType,
               transactionProcessAlias,
               unitType,
-              ...pickCustomExtendedDataFields(
+              ...rest
+            } = values;
+            // Clear custom fields that are not included for the selected process
+            const clearUnrelatedCustomFields = true;
+
+            // Construct values to be updated
+            const updateValues = {
+              title: title.trim(),
+              description,
+              publicData: {
+                transactionType,
+                transactionProcessAlias,
+                unitType,
+                ...pickCustomExtendedDataFields(
+                  rest,
+                  'public',
+                  transactionProcessAlias,
+                  listingExtendedDataConfig,
+                  clearUnrelatedCustomFields
+                ),
+              },
+              privateData: pickCustomExtendedDataFields(
                 rest,
-                'public',
+                'private',
                 transactionProcessAlias,
                 listingExtendedDataConfig,
-                true
+                clearUnrelatedCustomFields
               ),
-            },
-            privateData: pickCustomExtendedDataFields(
-              rest,
-              'private',
-              transactionProcessAlias,
-              listingExtendedDataConfig,
-              true
-            ),
-            ...setNoAvailabilityForProductListings(transactionProcessAlias),
-          };
+              ...setNoAvailabilityForProductListings(transactionProcessAlias),
+            };
 
-          onSubmit(updateValues);
-        }}
-        processInfos={activeProcessInfos}
-        hasSetProcessAlias={hasSetProcessAlias}
-        onProcessChange={onProcessChange}
-        listingExtendedDataConfig={listingExtendedDataConfig}
-        disabled={disabled}
-        ready={ready}
-        updated={panelUpdated}
-        updateInProgress={updateInProgress}
-        fetchErrors={errors}
-        autoFocus
-      />
+            onSubmit(updateValues);
+          }}
+          selectableTransactionTypes={transactionTypes.map(type => getTransactionInfo([type]))}
+          hasExistingTransactionType={hasExistingTransactionType}
+          onProcessChange={onProcessChange}
+          listingExtendedDataConfig={listingExtendedDataConfig}
+          disabled={disabled}
+          ready={ready}
+          updated={panelUpdated}
+          updateInProgress={updateInProgress}
+          fetchErrors={errors}
+          autoFocus
+        />
+      ) : (
+        <ErrorMessage
+          siteTitle={config.siteTitle}
+          noTransactionTypeSet={noTransactionTypeSet}
+          invalidExistingTransactionType={!hasValidExistingTransactionType}
+        />
+      )}
     </div>
   );
 };

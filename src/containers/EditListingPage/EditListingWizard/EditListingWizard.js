@@ -49,6 +49,7 @@ import css from './EditListingWizard.module.css';
 // Note 1: You need to change save button translations for new listing flow
 // Note 2: Ensure that draft listing is created after the first panel
 // and listing publishing happens after last panel.
+const TABS_DETAILS_ONLY = [DETAILS];
 const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, DELIVERY, PHOTOS];
 const TABS_BOOKING = [DETAILS, LOCATION, PRICING, AVAILABILITY, PHOTOS];
 const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING];
@@ -372,7 +373,18 @@ class EditListingWizard extends Component {
       ? transactionProcessAlias.split('/')[0]
       : BOOKING_PROCESS_NAME;
 
-    const tabs = processName === BOOKING_PROCESS_NAME ? TABS_BOOKING : TABS_PRODUCT;
+    // If the listing has invalid transaction configuration in place,
+    // listing is considered deprecated and we don't allow user to modify the listing anymore.
+    const existingtransactionType = currentListing.attributes?.publicData?.transactionType;
+    const invalidExistingTransactionType =
+      existingtransactionType &&
+      !config.transaction.transactionTypes.find(config => config.type === existingtransactionType);
+
+    const tabs = invalidExistingTransactionType
+      ? TABS_DETAILS_ONLY
+      : processName === BOOKING_PROCESS_NAME
+      ? TABS_BOOKING
+      : TABS_PRODUCT;
     const tabsStatus = tabsActive(isNewListingFlow, currentListing, tabs, config);
 
     // If selectedTab is not active, redirect to the beginning of wizard

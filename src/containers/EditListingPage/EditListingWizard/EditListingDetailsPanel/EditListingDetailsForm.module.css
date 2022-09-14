@@ -38,8 +38,7 @@
   flex-shrink: 0;
 }
 
-.unitSelect,
-.processSelect {
+.transactionTypeSelect {
   margin-bottom: 24px;
 
   @media (--viewportMedium) {
