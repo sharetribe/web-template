@@ -112,12 +112,28 @@ describe('SearchPageWithList', () => {
           sortConfig: sortConfig,
         },
         transaction: {
-          processes: ['flex-product-default-process', 'flex-booking-default-process'],
+          transactionTypes: [
+            {
+              type: 'rent-bicycles',
+              process: 'flex-booking-default-process',
+              alias: 'release-1',
+              unitType: 'dapy',
+            },
+            {
+              type: 'sell-bicycles',
+              process: 'flex-product-default-process',
+              alias: 'release-1',
+              unitType: 'item',
+            },
+          ],
         },
         maps: {
           search: {
             sortSearchByDistance: false,
           },
+        },
+        layout: {
+          searchPageVariant: 'list',
         },
       },
       routeConfiguration: getRouteConfiguration(),

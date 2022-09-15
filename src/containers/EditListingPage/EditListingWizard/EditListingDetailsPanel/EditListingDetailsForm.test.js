@@ -4,11 +4,11 @@ import { fakeIntl } from '../../../../util/test-data';
 import EditListingDetailsForm from './EditListingDetailsForm';
 
 const noop = () => null;
-const processInfos = [
+const selectableTransactionTypes = [
   {
-    name: 'flex-product-default-process',
-    alias: 'release-1',
-    unitTypes: ['item'],
+    transactionType: 'sell-bicycles',
+    transactionProcessAlias: 'flex-product-default-process/release-1',
+    unitType: 'item',
   },
 ];
 
@@ -62,8 +62,9 @@ describe('EditListingDetailsForm', () => {
         updateInProgress={false}
         disabled={false}
         ready={false}
-        processInfos={processInfos}
         listingExtendedDataConfig={listingExtendedDataConfig}
+        selectableTransactionTypes={selectableTransactionTypes}
+        hasExistingTransactionType={true}
       />
     );
     expect(tree).toMatchSnapshot();
