@@ -27,6 +27,81 @@ const validLabel = label => {
   return [isValid, labelMaybe];
 };
 
+////////////////////
+// Merge branding //
+////////////////////
+
+// Generate darker and lighter versions of marketplace color,
+// if those values are not set by default.
+// Adjusted from https://gist.github.com/xenozauros/f6e185c8de2a04cdfecf
+const hexToCssHsl = (hexColor, lightnessDiff) => {
+  let hex = hexColor.replace(/^#/, '');
+  if (hex.length === 3) {
+    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+  }
+  const r = parseInt(hex.substr(0, 2), 16) / 255;
+  const g = parseInt(hex.substr(2, 2), 16) / 255;
+  const b = parseInt(hex.substr(4, 2), 16) / 255;
+
+  // r /= 255, g /= 255, b /= 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+
+  let h;
+  let s;
+  let l = (max + min) / 2;
+
+  if (max == min) {
+    // achromatic
+    h = 0;
+    s = 0;
+  } else {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      case b:
+        h = (r - g) / d + 4;
+        break;
+    }
+    h /= 6;
+  }
+
+  h = Math.round(h * 360);
+  s = Math.round(s * 100);
+  l = Math.round(l * 100);
+
+  return `hsl(${h}, ${s}%, ${l + lightnessDiff}%)`;
+};
+
+const mergeBranding = (brandingConfig, defaultBranding) => {
+  const marketplaceColor = brandingConfig?.marketplaceColor || defaultBranding.marketplaceColor;
+  const marketplaceColorDark =
+    brandingConfig?.marketplaceColorDark ||
+    defaultBranding.marketplaceColorDark ||
+    (marketplaceColor ? hexToCssHsl(marketplaceColor, -10) : null);
+  const marketplaceColorLight =
+    brandingConfig?.marketplaceColorLight ||
+    defaultBranding.marketplaceColorLight ||
+    (marketplaceColor ? hexToCssHsl(marketplaceColor, 10) : null);
+
+  return {
+    marketplaceColor,
+    marketplaceColorDark,
+    marketplaceColorLight,
+    logoImageDesktopURL: brandingConfig?.logoImageDesktopURL || defaultBranding.logoImageDesktopURL,
+    logoImageMobileURL: brandingConfig?.logoImageMobileURL || defaultBranding.logoImageMobileURL,
+    brandImageURL: brandingConfig?.brandImageURL || defaultBranding.brandImageURL,
+    facebookImageURL: brandingConfig?.facebookImageURL || defaultBranding.facebookImageURL,
+    twitterImageURL: brandingConfig?.twitterImageURL || defaultBranding.twitterImageURL,
+  };
+};
+
 ///////////////////
 // Merge layouts //
 ///////////////////
@@ -357,6 +432,7 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
   return {
     ...defaultConfigs,
+    branding: mergeBranding(configAsset.branding, defaultConfigs.branding),
     layout: mergeLayouts(configAsset.layout, defaultConfigs.layout),
 
     // TODO: defaultConfigs.listing probably needs to be removed, when config is fetched from assets.

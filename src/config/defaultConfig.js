@@ -3,9 +3,11 @@ import * as listing from './listingConfig';
 import * as search from './searchConfig';
 import * as maps from './mapsConfig';
 import * as transaction from './transactionConfig';
+import * as branding from './brandingConfig';
+import * as layout from './layoutConfig';
 
 // NOTE: only expose configuration that should be visible in the
-// client side, don't add any server secrets in this file.
+// client side, don't add any server secrets to this file.
 const defaultConfig = {
   // Canonical root url is the root or domain, where this app is currently running
   // It is needed in social media sharing and SEO optimization purposes and SSO etc.
@@ -47,6 +49,10 @@ const defaultConfig = {
   maps,
   // Modify order types in transactionConfig.js
   transaction,
+  // Modify branding configs in brandingConfig.js
+  branding,
+  // Modify layout configs in layoutConfig.js
+  layout,
 
   // Note: Facebook app id is also used for tracking:
   // Facebook counts shares with app or page associated by this id
@@ -65,25 +71,6 @@ const defaultConfig = {
     // ...
     // 6: Saturday
     firstDayOfWeek: 0,
-  },
-
-  layout: {
-    // There are 2 SearchPage variants that can be used:
-    // 'map' & 'list'
-    searchPageVariant: 'list',
-
-    // ListingPage has 2 layout options: 'hero-image' and 'full-image'.
-    // - 'hero-image' means a layout where there's a hero section with cropped image in the beginning of the page
-    // - 'full-image' shows image carousel, where listing images are shown with the original aspect ratio
-    listingPageVariant: 'full-image',
-
-    listingImage: {
-      // Aspect ratio for listing image variants
-      aspectWidth: 400,
-      aspectHeight: 400,
-      // Listings have custom image variants, which are named here.
-      variantPrefix: 'listing-card',
-    },
   },
 
   // CDN assets for the app. Configurable through Flex Console.

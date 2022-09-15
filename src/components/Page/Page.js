@@ -13,8 +13,6 @@ import { propTypes } from '../../util/types';
 
 import { CookieConsent } from '../../components';
 
-import facebookImage from '../../assets/sneakertimeFacebook-1200x630.jpg';
-import twitterImage from '../../assets/sneakertimeTwitter-600x314.jpg';
 import css from './Page.module.css';
 
 const preventDefault = e => {
@@ -112,30 +110,39 @@ class PageComponent extends Component {
     const schemaDescription = intl.formatMessage({ id: 'Page.schemaDescription' });
     const metaTitle = title || schemaTitle;
     const metaDescription = description || schemaDescription;
+
+    // Images for social media sharing
+    const defaultFacebookImageURL = config.branding.facebookImageURL;
     const facebookImgs = facebookImages || [
       {
         name: 'facebook',
-        url: `${canonicalRootURL}${facebookImage}`,
+        url: defaultFacebookImageURL,
         width: 1200,
         height: 630,
       },
     ];
+    const facebookImagesMaybe =
+      facebookImages || defaultFacebookImageURL ? { facebookImages: facebookImgs } : {};
+
+    const defaultTwitterImageURL = config.branding.twitterImageURL;
     const twitterImgs = twitterImages || [
       {
         name: 'twitter',
-        url: `${canonicalRootURL}${twitterImage}`,
+        url: defaultTwitterImageURL,
         width: 600,
         height: 314,
       },
     ];
+    const twitterImagesMaybe =
+      twitterImages || defaultTwitterImageURL ? { twitterImages: twitterImgs } : {};
 
     const metaToHead = metaTagProps(
       {
         author,
         contentType,
         description: metaDescription,
-        facebookImages: facebookImgs,
-        twitterImages: twitterImgs,
+        ...facebookImagesMaybe,
+        ...twitterImagesMaybe,
         published,
         tags,
         title: metaTitle,
