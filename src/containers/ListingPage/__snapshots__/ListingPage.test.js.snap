@@ -378,6 +378,7 @@ exports[`ListingPage matches snapshot 1`] = `
                         },
                       },
                     ],
+                    "sortSearchByDistance": false,
                     "suggestCurrentLocation": true,
                   },
                 }
