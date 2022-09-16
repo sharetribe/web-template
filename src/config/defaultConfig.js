@@ -81,6 +81,10 @@ const defaultConfig = {
   },
 
   // Optional
+  // Note that Google Analytics might need opt-out option / cookie consent
+  googleAnalyticsId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
+
+  // Optional
   // Address information is used in SEO schema for Organization (http://schema.org/PostalAddress)
   // Note: Google doesn't recognize this:
   // https://developers.google.com/search/docs/advanced/structured-data/logo#structured-data-type-definitions
