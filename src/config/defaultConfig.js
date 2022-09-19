@@ -82,7 +82,8 @@ const defaultConfig = {
   siteTwitterHandle: null, // e.g. 'https://www.facebook.com/Sharetribe/',
 
   // Optional
-  // Note that Google Analytics might need opt-out option / cookie consent
+  // Note that Google Analytics might need advanced opt-out option / cookie consent
+  // depending on jurisdiction (e.g. EU countries), since it relies on cookies.
   googleAnalyticsId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
 
   // Optional
