@@ -11,8 +11,6 @@ import { metaTagProps } from '../../util/seo';
 import { canonicalRoutePath } from '../../util/routes';
 import { propTypes } from '../../util/types';
 
-import { CookieConsent } from '../../components';
-
 import css from './Page.module.css';
 
 const preventDefault = e => {
@@ -225,7 +223,6 @@ class PageComponent extends Component {
             {schemaArrayJSONString.replace(/</g, '\\u003c')}
           </script>
         </Helmet>
-        <CookieConsent />
         <div
           className={css.content}
           style={scrollPositionStyles}
