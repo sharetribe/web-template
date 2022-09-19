@@ -97,12 +97,12 @@ export const twitterMetaProps = data => {
     url,
   } = data;
 
-  if (!(title && description && siteTwitterHandle && url)) {
+  if (!(title && description && url)) {
     /* eslint-disable no-console */
     if (console && console.warn) {
       console.warn(
         `Can't create twitter card meta tags:
-        title, description, siteTwitterHandle, and url are needed.`
+        title, description, and url are needed.`
       );
     }
     /* eslint-enable no-console */
@@ -113,9 +113,12 @@ export const twitterMetaProps = data => {
     { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:title', content: title },
     { name: 'twitter:description', content: description },
-    { name: 'twitter:site', content: siteTwitterHandle },
     { name: 'twitter:url', content: url },
   ];
+
+  if (siteTwitterHandle) {
+    twitterMeta.push({ name: 'twitter:site', content: siteTwitterHandle });
+  }
 
   if (canonicalRootURL && twitterImages && twitterImages.length > 0) {
     twitterImages.forEach(i => {

@@ -26,13 +26,6 @@ const defaultConfig = {
   // Site title is needed in meta tags (bots and social media sharing reads those)
   siteTitle: 'Biketribe',
 
-  // Facebook page is used in SEO schema (http://schema.org/Organization)
-  siteFacebookPage: '@sharetribe',
-  // Instagram page is used in SEO schema (http://schema.org/Organization)
-  siteInstagramPage: 'https://www.instagram.com/sharetribe/',
-  // Twitter handle is needed in meta tags (twitter:site). Start it with '@' character
-  siteTwitterHandle: 'https://www.facebook.com/Sharetribe/',
-
   // Modify Stripe configuration in stripeConfig.js
   // - picks REACT_APP_STRIPE_PUBLISHABLE_KEY from environment variables
   // - dayCountAvailableForBooking: Stripe can hold payments only limited time on Connect Account
@@ -54,7 +47,7 @@ const defaultConfig = {
   // Modify layout configs in layoutConfig.js
   layout,
 
-  // Note: Facebook app id is also used for tracking:
+  // Note: Facebook app id is used for Facebook login, but it is also used for tracking:
   // Facebook counts shares with app or page associated by this id
   // Currently it is unset, but you can read more about fb:app_id from
   // https://developers.facebook.com/docs/sharing/webmasters#basic
@@ -79,6 +72,14 @@ const defaultConfig = {
   appCdnAssets: {
     translations: 'content/translations.json',
   },
+
+  // Online presence of the same organization:
+  // Facebook page is used in SEO schema (http://schema.org/Organization)
+  siteFacebookPage: null, // e.g. '@sharetribe',
+  // Instagram page is used in SEO schema (http://schema.org/Organization)
+  siteInstagramPage: null, // e.g. 'https://www.instagram.com/sharetribe/',
+  // Twitter handle is needed in meta tags (twitter:site). Start it with '@' character
+  siteTwitterHandle: null, // e.g. 'https://www.facebook.com/Sharetribe/',
 
   // Optional
   // Note that Google Analytics might need opt-out option / cookie consent
