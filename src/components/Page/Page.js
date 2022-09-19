@@ -180,7 +180,7 @@ class PageComponent extends Component {
         url: canonicalRootURL,
         name: siteTitle,
         sameAs: sameOrganizationAs,
-        logo: `${canonicalRootURL}/static/webapp-icon-192x192.png`,
+        logo: config.branding.logoImageMobileURL,
         ...addressMaybe,
       },
       {
