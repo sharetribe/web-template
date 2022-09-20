@@ -109,7 +109,7 @@ export const StripePayoutPageComponent = props => {
 
   const formDisabled = getAccountLinkInProgress;
 
-  const rootURL = config.canonicalRootURL;
+  const rootURL = config.marketplaceRootURL;
   const successURL = createReturnURL(STRIPE_ONBOARDING_RETURN_URL_SUCCESS, rootURL, routes);
   const failureURL = createReturnURL(STRIPE_ONBOARDING_RETURN_URL_FAILURE, rootURL, routes);
 

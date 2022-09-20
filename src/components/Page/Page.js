@@ -98,10 +98,10 @@ class PageComponent extends Component {
     this.scrollingDisabledChanged(scrollingDisabled);
     const referrerMeta = referrer ? <meta name="referrer" content={referrer} /> : null;
 
-    const canonicalRootURL = config.canonicalRootURL;
+    const marketplaceRootURL = config.marketplaceRootURL;
     const shouldReturnPathOnly = referrer && referrer !== 'unsafe-url';
     const canonicalPath = canonicalRoutePath(routeConfiguration, location, shouldReturnPathOnly);
-    const canonicalUrl = `${canonicalRootURL}${canonicalPath}`;
+    const canonicalUrl = `${marketplaceRootURL}${canonicalPath}`;
 
     const marketplaceName = config.marketplaceName;
     const schemaTitle = intl.formatMessage({ id: 'Page.schemaTitle' }, { marketplaceName });
@@ -174,8 +174,8 @@ class PageComponent extends Component {
       {
         '@context': 'http://schema.org',
         '@type': 'Organization',
-        '@id': `${canonicalRootURL}#organization`,
-        url: canonicalRootURL,
+        '@id': `${marketplaceRootURL}#organization`,
+        url: marketplaceRootURL,
         name: marketplaceName,
         sameAs: sameOrganizationAs,
         logo: config.branding.logoImageMobileURL,
@@ -184,11 +184,11 @@ class PageComponent extends Component {
       {
         '@context': 'http://schema.org',
         '@type': 'WebSite',
-        url: canonicalRootURL,
+        url: marketplaceRootURL,
         description: schemaDescription,
         name: schemaTitle,
         publisher: {
-          '@id': `${canonicalRootURL}#organization`,
+          '@id': `${marketplaceRootURL}#organization`,
         },
       },
     ]);

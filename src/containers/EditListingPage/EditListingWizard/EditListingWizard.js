@@ -423,7 +423,7 @@ class EditListingWizard extends Component {
     const currentUserLoaded = !!ensuredCurrentUser.id;
     const stripeConnected = currentUserLoaded && !!stripeAccount && !!stripeAccount.id;
 
-    const rootURL = config.canonicalRootURL;
+    const rootURL = config.marketplaceRootURL;
     const { returnURLType, ...pathParams } = params;
     const successURL = createReturnURL(
       STRIPE_ONBOARDING_RETURN_URL_SUCCESS,

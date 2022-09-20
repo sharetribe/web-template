@@ -385,7 +385,7 @@ export const createSearchResultSchema = (
     return {
       '@type': 'ListItem',
       position: i,
-      url: `${config.canonicalRootURL}${pathToItem}`,
+      url: `${config.marketplaceRootURL}${pathToItem}`,
       name: title,
     };
   });

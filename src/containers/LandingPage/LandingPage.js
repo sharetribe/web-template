@@ -40,7 +40,7 @@ export const LandingPageComponent = props => {
   const marketplaceName = config.marketplaceName;
   const schemaTitle = intl.formatMessage({ id: 'LandingPage.schemaTitle' }, { marketplaceName });
   const schemaDescription = intl.formatMessage({ id: 'LandingPage.schemaDescription' });
-  const schemaImage = `${config.canonicalRootURL}${facebookImage}`;
+  const schemaImage = `${config.marketplaceRootURL}${facebookImage}`;
 
   return (
     <Page
@@ -51,7 +51,7 @@ export const LandingPageComponent = props => {
       title={schemaTitle}
       facebookImages={[{ url: facebookImage, width: 1200, height: 630 }]}
       twitterImages={[
-        { url: `${config.canonicalRootURL}${twitterImage}`, width: 600, height: 314 },
+        { url: `${config.marketplaceRootURL}${twitterImage}`, width: 600, height: 314 },
       ]}
       schema={{
         '@context': 'http://schema.org',
