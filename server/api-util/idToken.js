@@ -3,7 +3,7 @@ const jose = require('jose');
 
 const radix = 10;
 const PORT = parseInt(process.env.REACT_APP_DEV_API_SERVER_PORT, radix);
-const rootUrl = process.env.REACT_APP_CANONICAL_ROOT_URL;
+const rootUrl = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
 const useDevApiServer = process.env.NODE_ENV === 'development' && !!PORT;
 
 const issuerUrl = useDevApiServer ? `http://localhost:${PORT}` : `${rootUrl}`;

@@ -9,10 +9,10 @@ import * as layout from './layoutConfig';
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets to this file.
 const defaultConfig = {
-  // Canonical root url is the root or domain, where this app is currently running
+  // Marketplace root url is the root or domain, where this app is currently running
   // It is needed in social media sharing and SEO optimization purposes and SSO etc.
   // It should be in environment variables (on localhost 'yarn run config' or edit .env file)
-  marketplaceRootURL: process.env.REACT_APP_CANONICAL_ROOT_URL,
+  marketplaceRootURL: process.env.REACT_APP_MARKETPLACE_ROOT_URL,
 
   // Marketplace currency.
   // The currency used in the Marketplace must be in ISO 4217 currency code. For example USD, EUR, CAD, AUD, etc. The default value is USD.

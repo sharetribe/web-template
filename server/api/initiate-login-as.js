@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 
 const CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
-const ROOT_URL = process.env.REACT_APP_CANONICAL_ROOT_URL;
+const ROOT_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
 const CONSOLE_URL =
   process.env.SERVER_SHARETRIBE_CONSOLE_URL || 'https://flex-console.sharetribe.com';
 const USING_SSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';
