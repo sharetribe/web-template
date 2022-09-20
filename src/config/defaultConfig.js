@@ -21,6 +21,7 @@ const defaultConfig = {
 
   // Listing minimum price in currency sub units, e.g. cents.
   // 0 means no restriction to the price
+  // Note: Stripe does have minimum fee that depends on country, currency, etc.
   listingMinimumPriceSubUnits: 0,
 
   // Marketplace name is needed for microcopy and in meta tags (bots and social media sharing reads those)
@@ -73,6 +74,7 @@ const defaultConfig = {
     translations: 'content/translations.json',
   },
 
+  // Optional
   // Online presence of the same organization:
   // Facebook page is used in SEO schema (http://schema.org/Organization)
   siteFacebookPage: null, // e.g. '@sharetribe',
