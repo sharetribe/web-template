@@ -103,8 +103,8 @@ class PageComponent extends Component {
     const canonicalPath = canonicalRoutePath(routeConfiguration, location, shouldReturnPathOnly);
     const canonicalUrl = `${canonicalRootURL}${canonicalPath}`;
 
-    const siteTitle = config.siteTitle;
-    const schemaTitle = intl.formatMessage({ id: 'Page.schemaTitle' }, { siteTitle });
+    const marketplaceName = config.marketplaceName;
+    const schemaTitle = intl.formatMessage({ id: 'Page.schemaTitle' }, { marketplaceName });
     const schemaDescription = intl.formatMessage({ id: 'Page.schemaDescription' });
     const metaTitle = title || schemaTitle;
     const metaDescription = description || schemaDescription;
@@ -176,7 +176,7 @@ class PageComponent extends Component {
         '@type': 'Organization',
         '@id': `${canonicalRootURL}#organization`,
         url: canonicalRootURL,
-        name: siteTitle,
+        name: marketplaceName,
         sameAs: sameOrganizationAs,
         logo: config.branding.logoImageMobileURL,
         ...addressMaybe,

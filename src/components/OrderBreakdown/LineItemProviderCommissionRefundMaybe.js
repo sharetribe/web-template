@@ -8,7 +8,7 @@ import { propTypes, LINE_ITEM_PROVIDER_COMMISSION } from '../../util/types';
 import css from './OrderBreakdown.module.css';
 
 const LineItemProviderCommissionRefundMaybe = props => {
-  const { lineItems, isProvider, siteTitle, intl } = props;
+  const { lineItems, isProvider, marketplaceName, intl } = props;
 
   const refund = lineItems.find(
     item => item.code === LINE_ITEM_PROVIDER_COMMISSION && item.reversal
@@ -17,7 +17,7 @@ const LineItemProviderCommissionRefundMaybe = props => {
   return isProvider && refund ? (
     <div className={css.lineItem}>
       <span className={css.itemLabel}>
-        <FormattedMessage id="OrderBreakdown.refundProviderFee" values={{ siteTitle }} />
+        <FormattedMessage id="OrderBreakdown.refundProviderFee" values={{ marketplaceName }} />
       </span>
       <span className={css.itemValue}>{formatMoney(intl, refund.lineTotal)}</span>
     </div>
@@ -26,7 +26,7 @@ const LineItemProviderCommissionRefundMaybe = props => {
 
 LineItemProviderCommissionRefundMaybe.propTypes = {
   lineItems: propTypes.lineItems.isRequired,
-  siteTitle: string.isRequired,
+  marketplaceName: string.isRequired,
   intl: intlShape.isRequired,
 };
 

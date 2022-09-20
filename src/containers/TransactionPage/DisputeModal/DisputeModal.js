@@ -67,7 +67,7 @@ const DisputeForm = props => (
 // Show dispute form
 const DisputeInfo = props => {
   const config = useConfiguration();
-  const siteTitle = config.siteTitle;
+  const marketplaceName = config.marketplaceName;
 
   return (
     <>
@@ -75,7 +75,7 @@ const DisputeInfo = props => {
         <FormattedMessage id="DisputeModal.title" />
       </p>
       <p className={css.modalMessage}>
-        <FormattedMessage id="DisputeModal.description" values={{ siteTitle }} />
+        <FormattedMessage id="DisputeModal.description" values={{ marketplaceName }} />
       </p>
       <DisputeForm
         onSubmit={props.onDisputeOrder}

@@ -10,10 +10,14 @@ const Logo = props => {
   const { logoImageDesktopURL, logoImageMobileURL } = config.branding;
 
   if (format === 'desktop') {
-    return <img className={className} src={logoImageDesktopURL} alt={config.siteTitle} {...rest} />;
+    return (
+      <img className={className} src={logoImageDesktopURL} alt={config.marketplaceName} {...rest} />
+    );
   }
 
-  return <img className={className} src={logoImageMobileURL} alt={config.siteTitle} {...rest} />;
+  return (
+    <img className={className} src={logoImageMobileURL} alt={config.marketplaceName} {...rest} />
+  );
 };
 
 const { oneOf, string } = PropTypes;

@@ -782,7 +782,7 @@ export class CheckoutPageComponent extends Component {
           transaction={tx}
           {...txBookingMaybe}
           currency={config.currency}
-          siteTitle={config.siteTitle}
+          marketplaceName={config.marketplaceName}
         />
       ) : null;
 
@@ -941,7 +941,7 @@ export class CheckoutPageComponent extends Component {
                   totalPrice={tx.id ? getFormattedTotalPrice(tx, intl) : null}
                   locale={config.localization.locale}
                   stripePublishableKey={config.stripe.publishableKey}
-                  siteTitle={config.siteTitle}
+                  marketplaceName={config.marketplaceName}
                 />
               ) : null}
               {isPaymentExpired ? (

@@ -23,8 +23,8 @@ const defaultConfig = {
   // 0 means no restriction to the price
   listingMinimumPriceSubUnits: 0,
 
-  // Site title is needed in meta tags (bots and social media sharing reads those)
-  siteTitle: 'Biketribe',
+  // Marketplace name is needed for microcopy and in meta tags (bots and social media sharing reads those)
+  marketplaceName: 'Biketribe',
 
   // Modify Stripe configuration in stripeConfig.js
   // - picks REACT_APP_STRIPE_PUBLISHABLE_KEY from environment variables

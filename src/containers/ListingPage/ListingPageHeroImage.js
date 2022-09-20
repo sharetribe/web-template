@@ -241,10 +241,10 @@ export const ListingPageComponent = props => {
     currentListing,
     `${config.layout.listingImage.variantPrefix}-2x`
   ).map(img => img.url);
-  const siteTitle = config.siteTitle;
+  const marketplaceName = config.marketplaceName;
   const schemaTitle = intl.formatMessage(
     { id: 'ListingPage.schemaTitle' },
-    { title, price: formattedPrice, siteTitle }
+    { title, price: formattedPrice, marketplaceName }
   );
   // You could add reviews, sku, etc. into page schema
   // Read more about product schema
@@ -431,7 +431,7 @@ export const ListingPageComponent = props => {
                   fetchLineItemsError={fetchLineItemsError}
                   marketplaceCurrency={config.currency}
                   dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
-                  siteTitle={config.siteTitle}
+                  marketplaceName={config.marketplaceName}
                 />
               </div>
             </div>

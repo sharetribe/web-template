@@ -40,7 +40,7 @@ export const OrderBreakdownComponent = props => {
     dateType,
     timeZone,
     currency,
-    siteTitle,
+    marketplaceName,
   } = props;
 
   const isCustomer = userRole === 'customer';
@@ -122,26 +122,26 @@ export const OrderBreakdownComponent = props => {
       <LineItemCustomerCommissionMaybe
         lineItems={lineItems}
         isCustomer={isCustomer}
-        siteTitle={siteTitle}
+        marketplaceName={marketplaceName}
         intl={intl}
       />
       <LineItemCustomerCommissionRefundMaybe
         lineItems={lineItems}
         isCustomer={isCustomer}
-        siteTitle={siteTitle}
+        marketplaceName={marketplaceName}
         intl={intl}
       />
 
       <LineItemProviderCommissionMaybe
         lineItems={lineItems}
         isProvider={isProvider}
-        siteTitle={siteTitle}
+        marketplaceName={marketplaceName}
         intl={intl}
       />
       <LineItemProviderCommissionRefundMaybe
         lineItems={lineItems}
         isProvider={isProvider}
-        siteTitle={siteTitle}
+        marketplaceName={marketplaceName}
         intl={intl}
       />
 
@@ -167,7 +167,7 @@ OrderBreakdownComponent.propTypes = {
   rootClassName: string,
   className: string,
 
-  siteTitle: string.isRequired,
+  marketplaceName: string.isRequired,
   userRole: oneOf(['customer', 'provider']).isRequired,
   transaction: propTypes.transaction.isRequired,
   booking: propTypes.booking,

@@ -44,7 +44,7 @@ exports[`NotFoundPageComponent matches snapshot 1`] = `
               id="NotFoundPage.description"
               values={
                 Object {
-                  "siteTitle": "MarketplaceX",
+                  "marketplaceName": "MarketplaceX",
                 }
               }
             />

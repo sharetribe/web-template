@@ -123,7 +123,7 @@ const PanelTitle = props => {
 };
 
 const ErrorMessage = props => {
-  const { invalidExistingTransactionType, siteTitle } = props;
+  const { invalidExistingTransactionType, marketplaceName } = props;
   return invalidExistingTransactionType ? (
     <div>
       <h2>
@@ -132,7 +132,7 @@ const ErrorMessage = props => {
       <p>
         <FormattedMessage
           id="EditListingDetailsPanel.invalidTransactionTypeSetDescription"
-          values={{ siteTitle }}
+          values={{ marketplaceName }}
         />
       </p>
     </div>
@@ -282,7 +282,7 @@ const EditListingDetailsPanel = props => {
         />
       ) : (
         <ErrorMessage
-          siteTitle={config.siteTitle}
+          marketplaceName={config.marketplaceName}
           noTransactionTypeSet={noTransactionTypeSet}
           invalidExistingTransactionType={!hasValidExistingTransactionType}
         />

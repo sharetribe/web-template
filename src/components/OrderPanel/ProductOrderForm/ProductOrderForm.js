@@ -37,7 +37,7 @@ const renderForm = formRenderProps => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     price,
-    siteTitle,
+    marketplaceName,
     values,
   } = formRenderProps;
 
@@ -85,7 +85,7 @@ const renderForm = formRenderProps => {
         breakdownData={breakdownData}
         lineItems={lineItems}
         currency={price.currency}
-        siteTitle={siteTitle}
+        marketplaceName={marketplaceName}
       />
     </div>
   ) : null;
@@ -252,7 +252,7 @@ ProductOrderForm.propTypes = {
   rootClassName: string,
   className: string,
 
-  siteTitle: string.isRequired,
+  marketplaceName: string.isRequired,
 
   // form
   formId: string.isRequired,

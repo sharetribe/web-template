@@ -20,7 +20,7 @@ const isValidCommission = commissionLineItem => {
 };
 
 const LineItemCustomerCommissionMaybe = props => {
-  const { lineItems, isCustomer, siteTitle, intl } = props;
+  const { lineItems, isCustomer, marketplaceName, intl } = props;
 
   const customerCommissionLineItem = lineItems.find(
     item => item.code === LINE_ITEM_CUSTOMER_COMMISSION && !item.reversal
@@ -42,7 +42,7 @@ const LineItemCustomerCommissionMaybe = props => {
     commissionItem = (
       <div className={css.lineItem}>
         <span className={css.itemLabel}>
-          <FormattedMessage id="OrderBreakdown.commission" values={{ siteTitle }} />
+          <FormattedMessage id="OrderBreakdown.commission" values={{ marketplaceName }} />
         </span>
         <span className={css.itemValue}>{formattedCommission}</span>
       </div>
@@ -55,7 +55,7 @@ const LineItemCustomerCommissionMaybe = props => {
 LineItemCustomerCommissionMaybe.propTypes = {
   lineItems: propTypes.lineItems.isRequired,
   isCustomer: bool.isRequired,
-  siteTitle: string.isRequired,
+  marketplaceName: string.isRequired,
   intl: intlShape.isRequired,
 };
 

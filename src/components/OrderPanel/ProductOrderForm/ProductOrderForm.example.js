@@ -9,7 +9,7 @@ const ProductOrderForm = loadable(() =>
 );
 
 const CURRENCY = 'USD';
-const siteTitle = 'MarketplaceX';
+const marketplaceName = 'MarketplaceX';
 const { Money, UUID } = sdkTypes;
 
 export const Form = {
@@ -34,7 +34,7 @@ export const Form = {
     lineItems: null,
     fetchLineItemsInProgress: false,
     fetchLineItemsError: null,
-    siteTitle,
+    marketplaceName,
   },
   group: 'forms',
 };

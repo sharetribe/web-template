@@ -40,8 +40,11 @@ const PrivacyPolicyPageComponent = props => {
       },
     },
   ];
-  const siteTitle = config.siteTitle;
-  const schemaTitle = intl.formatMessage({ id: 'PrivacyPolicyPage.schemaTitle' }, { siteTitle });
+  const marketplaceName = config.marketplaceName;
+  const schemaTitle = intl.formatMessage(
+    { id: 'PrivacyPolicyPage.schemaTitle' },
+    { marketplaceName }
+  );
   const schema = {
     '@context': 'http://schema.org',
     '@type': 'WebPage',

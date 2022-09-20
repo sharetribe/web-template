@@ -36,7 +36,7 @@ export class NotFoundPageComponent extends Component {
   }
 
   render() {
-    const { history, routeConfiguration, siteTitle, intl, scrollingDisabled } = this.props;
+    const { history, routeConfiguration, marketplaceName, intl, scrollingDisabled } = this.props;
 
     const title = intl.formatMessage({
       id: 'NotFoundPage.title',
@@ -63,7 +63,7 @@ export class NotFoundPageComponent extends Component {
                   <FormattedMessage id="NotFoundPage.heading" />
                 </h1>
                 <p className={css.description}>
-                  <FormattedMessage id="NotFoundPage.description" values={{ siteTitle }} />
+                  <FormattedMessage id="NotFoundPage.description" values={{ marketplaceName }} />
                 </p>
                 <LocationSearchForm className={css.searchForm} onSubmit={handleSearchSubmit} />
               </div>
@@ -84,7 +84,7 @@ NotFoundPageComponent.defaultProps = {
 
 NotFoundPageComponent.propTypes = {
   scrollingDisabled: bool.isRequired,
-  siteTitle: string.isRequired,
+  marketplaceName: string.isRequired,
 
   // context object from StaticRouter, injected by the withRouter wrapper
   staticContext: object,
@@ -110,7 +110,7 @@ const EnhancedNotFoundPage = props => {
   return (
     <NotFoundPageComponent
       routeConfiguration={routeConfiguration}
-      siteTitle={config.siteTitle}
+      marketplaceName={config.marketplaceName}
       history={history}
       intl={intl}
       {...props}

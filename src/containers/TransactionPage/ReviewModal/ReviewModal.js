@@ -15,7 +15,7 @@ const ReviewModal = props => {
     className,
     rootClassName,
     id,
-    siteTitle,
+    marketplaceName,
     intl,
     isOpen,
     onCloseModal,
@@ -47,7 +47,7 @@ const ReviewModal = props => {
         <FormattedMessage id="ReviewModal.title" values={{ revieweeName: reviewee }} />
       </p>
       <p className={css.modalMessage}>
-        <FormattedMessage id="ReviewModal.description" values={{ siteTitle }} />
+        <FormattedMessage id="ReviewModal.description" values={{ marketplaceName }} />
       </p>
       <ReviewForm
         onSubmit={onSubmitReview}
@@ -76,7 +76,7 @@ ReviewModal.propTypes = {
   reviewSent: bool,
   sendReviewInProgress: bool,
   sendReviewError: propTypes.error,
-  siteTitle: string.isRequired,
+  marketplaceName: string.isRequired,
 };
 
 export default injectIntl(ReviewModal);

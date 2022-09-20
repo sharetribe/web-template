@@ -40,8 +40,11 @@ const TermsOfServicePageComponent = props => {
       },
     },
   ];
-  const siteTitle = config.siteTitle;
-  const schemaTitle = intl.formatMessage({ id: 'TermsOfServicePage.schemaTitle' }, { siteTitle });
+  const marketplaceName = config.marketplaceName;
+  const schemaTitle = intl.formatMessage(
+    { id: 'TermsOfServicePage.schemaTitle' },
+    { marketplaceName }
+  );
   const schema = {
     '@context': 'http://schema.org',
     '@type': 'WebPage',
