@@ -249,7 +249,7 @@ export const ListingPageComponent = props => {
   // You could add reviews, sku, etc. into page schema
   // Read more about product schema
   // https://developers.google.com/search/docs/advanced/structured-data/product
-  const productURL = `${config.canonicalRootURL}${location.pathname}${location.search}${location.hash}`;
+  const productURL = `${config.marketplaceRootURL}${location.pathname}${location.search}${location.hash}`;
   const brand = currentListing?.attributes?.publicData?.brand;
   const brandMaybe = brand ? { brand: { '@type': 'Brand', name: brand } } : {};
   const schemaPriceNumber = intl.formatNumber(convertMoneyToNumber(price), {
