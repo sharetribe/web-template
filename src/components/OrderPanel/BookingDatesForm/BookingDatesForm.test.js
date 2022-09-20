@@ -44,6 +44,7 @@ describe('BookingDatesForm', () => {
         onFetchTimeSlots={noop}
         lineItems={lineItems}
         currency="USD"
+        marketplaceName="MarketplaceX"
         dayCountAvailableForBooking={90}
       />
     );
@@ -67,6 +68,7 @@ describe('EstimatedCustomerBreakdownMaybe', () => {
           breakdownData={data}
           lineItems={lineItems}
           currency="USD"
+          marketplaceName="MarketplaceX"
         />
       )
     ).toBeFalsy();

@@ -103,14 +103,38 @@ describe('SearchPageWithList', () => {
       sendVerificationEmailInProgress: false,
       onResendVerificationEmail: noop,
       config: {
-        custom: {
+        listing: {
           listingExtendedData: listingExtendedDataConfig,
+        },
+        search: {
+          mainSearchType: 'location',
           defaultFilters: defaultFiltersConfig,
           sortConfig: sortConfig,
-          processes: ['flex-product-default-process', 'flex-booking-default-process'],
         },
-        mainSearchType: 'location',
-        sortSearchByDistance: false,
+        transaction: {
+          transactionTypes: [
+            {
+              type: 'rent-bicycles',
+              process: 'flex-booking-default-process',
+              alias: 'release-1',
+              unitType: 'dapy',
+            },
+            {
+              type: 'sell-bicycles',
+              process: 'flex-product-default-process',
+              alias: 'release-1',
+              unitType: 'item',
+            },
+          ],
+        },
+        maps: {
+          search: {
+            sortSearchByDistance: false,
+          },
+        },
+        layout: {
+          searchPageVariant: 'list',
+        },
       },
       routeConfiguration: getRouteConfiguration(),
     };

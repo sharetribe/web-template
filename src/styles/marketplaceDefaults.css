@@ -16,12 +16,13 @@
 :root {
   /* ================ Colors ================ */
 
+  /**
+   * Marketplace color comes by default from src/config/brandingConfig.js
+   * It overwrites these CSS Properties.
+   */
   --marketplaceColor: #5d2bc0; /* hsl(260, 63%, 46%) */
   --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
-  --marketplaceColorDark: #34196c; /* hsl(260, 63%, 26%), -20L from marketplaceColor */
-
-  /* Used with inline CSS SVGs */
-  --marketplaceColorEncoded: %23a02cbf;
+  --marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
 
   --successColor: #2ecc71;
   --successColorDark: #239954;
@@ -563,8 +564,8 @@ textarea {
 /* Full screen Background image located in root-folder/src/assets */
 .defaultBackgroundImage {
   /* Gradient direction and overlaying the black color on top of the image for better readability */
-  background: linear-gradient(-45deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)),
-    url('../assets/background-1440.jpg');
+  /* NOTE: brandImage comes from configs and is set to HTML element on src/app.js */
+  background: linear-gradient(-45deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)), var(--brandImage);
 
   /* Add loading color for the div */
   background-color: var(--matterColor);
@@ -583,9 +584,9 @@ textarea {
 
 .defaultBackgroundImageForDesktop {
   /* Gradient direction and overlaying the black color on top of the image for better readability */
+  /* NOTE: brandImage comes from configs and is set to HTML element on src/app.js */
   @media (--viewportMedium) {
-    background: linear-gradient(-45deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)),
-      url('../assets/background-1440.jpg');
+    background: linear-gradient(-45deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)), var(--brandImage);
 
     /* Add loading color for the div */
     background-color: var(--matterColor);

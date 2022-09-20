@@ -21,7 +21,7 @@ describe('EditListingPhotosForm', () => {
         updateInProgress={false}
         disabled={false}
         onRemoveImage={noop}
-        listingConfig={{ aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' }}
+        listingImageConfig={{ aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' }}
       />
     );
     expect(tree).toMatchSnapshot();

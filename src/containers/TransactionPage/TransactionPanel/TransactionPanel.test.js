@@ -48,7 +48,12 @@ describe('TransactionPanel - Sale', () => {
     onFetchTransactionLineItems: noop,
     fetchLineItemsInProgress: false,
     intl: fakeIntl,
-    config: { listing: { aspectWidth: 1, aspectHeight: 1, listingPrefix: 'listing-card' } },
+    config: {
+      layout: {
+        listingImage: { aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' },
+      },
+      localization: { locale: 'en' },
+    },
   };
 
   it('enquired matches snapshot', () => {
@@ -92,7 +97,12 @@ describe('TransactionPanel - Order', () => {
     onSubmitOrderRequest: noop,
     onFetchTransactionLineItems: noop,
     fetchLineItemsInProgress: false,
-    config: { listing: { aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' } },
+    config: {
+      layout: {
+        listingImage: { aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' },
+      },
+      localization: { locale: 'en' },
+    },
   };
 
   it('enquired matches snapshot', () => {

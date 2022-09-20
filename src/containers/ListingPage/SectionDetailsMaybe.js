@@ -5,10 +5,10 @@ import { PropertyGroup } from '../../components';
 import css from './ListingPage.module.css';
 
 const SectionDetailsMaybe = props => {
-  const { publicData, metadata = {}, customConfig, intl } = props;
-  const { listingExtendedData } = customConfig || {};
+  const { publicData, metadata = {}, listingConfig, intl } = props;
+  const { listingExtendedData } = listingConfig || {};
 
-  if (!publicData || !customConfig) {
+  if (!publicData || !listingConfig) {
     return null;
   }
 
@@ -32,7 +32,7 @@ const SectionDetailsMaybe = props => {
         ? filteredConfigs.concat({ key, value: getBooleanMessage(value), label })
         : schemaType === 'long'
         ? filteredConfigs.concat({ key, value, label })
-        : null;
+        : filteredConfigs;
     }
     return filteredConfigs;
   };

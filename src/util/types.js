@@ -448,7 +448,6 @@ propTypes.defaultFiltersConfig = arrayOf(
   shape({
     key: string.isRequired,
     schemaType: oneOf(['price', 'text', 'dates']).isRequired,
-    label: string.isRequired,
     min: number,
     max: number,
     step: number,
@@ -474,7 +473,8 @@ propTypes.listingExtendedDataConfig = arrayOf(
     }),
     editListingPageConfig: shape({
       label: string.isRequired,
-      placeholder: string,
+      placeholderMessage: string,
+      isRequired: bool,
       requiredMessage: string,
     }).isRequired,
   })

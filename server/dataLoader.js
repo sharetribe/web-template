@@ -17,7 +17,7 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
 
   const dataLoadingCalls = configAsset => {
     const config = mergeConfig(configAsset, defaultConfig);
-    const matchedRoutes = matchPathname(pathname, routeConfiguration(config.pageVariantConfig));
+    const matchedRoutes = matchPathname(pathname, routeConfiguration(config.layout));
     return matchedRoutes.reduce((calls, match) => {
       const { route, params } = match;
       if (typeof route.loadData === 'function' && !route.auth) {

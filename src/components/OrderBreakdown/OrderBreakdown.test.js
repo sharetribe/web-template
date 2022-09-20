@@ -8,6 +8,8 @@ import { OrderBreakdownComponent } from './OrderBreakdown';
 
 const { UUID, Money } = sdkTypes;
 
+const marketplaceName = 'MarketplaceX';
+
 const exampleTransaction = params => {
   const transitions = getProcess('flex-product-default-process')?.transitions;
   const created = new Date(Date.UTC(2017, 1, 1));
@@ -40,6 +42,7 @@ describe('OrderBreakdown', () => {
       <OrderBreakdownComponent
         userRole="customer"
         currency="USD"
+        marketplaceName={marketplaceName}
         transaction={exampleTransaction({
           payinTotal: new Money(3000, 'USD'),
           payoutTotal: new Money(3000, 'USD'),
@@ -73,6 +76,7 @@ describe('OrderBreakdown', () => {
       <OrderBreakdownComponent
         userRole="customer"
         currency="USD"
+        marketplaceName={marketplaceName}
         transaction={exampleTransaction({
           payinTotal: new Money(2000, 'USD'),
           payoutTotal: new Money(2000, 'USD'),
@@ -103,6 +107,7 @@ describe('OrderBreakdown', () => {
       <OrderBreakdownComponent
         userRole="provider"
         currency="USD"
+        marketplaceName={marketplaceName}
         transaction={exampleTransaction({
           payinTotal: new Money(2000, 'USD'),
           payoutTotal: new Money(1800, 'USD'),

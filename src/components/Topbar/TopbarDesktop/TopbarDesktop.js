@@ -41,6 +41,7 @@ const TopbarDesktop = props => {
     setMounted(true);
   }, []);
 
+  const marketplaceName = appConfig.marketplaceName;
   const authenticatedOnClientSide = mounted && isAuthenticated;
   const isAuthenticatedOrJustHydrated = isAuthenticated || !mounted;
 
@@ -142,7 +143,7 @@ const TopbarDesktop = props => {
         <Logo
           format="desktop"
           className={css.logo}
-          alt={intl.formatMessage({ id: 'TopbarDesktop.logo' })}
+          alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
         />
       </NamedLink>
       {search}

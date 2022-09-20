@@ -207,7 +207,7 @@ const ProfilePageComponent = props => {
     ensuredCurrentUser.id && profileUser.id && ensuredCurrentUser.id.uuid === profileUser.id.uuid;
   const { bio, displayName } = profileUser?.attributes?.profile || {};
 
-  const schemaTitleVars = { name: displayName, siteTitle: config.siteTitle };
+  const schemaTitleVars = { name: displayName, marketplaceName: config.marketplaceName };
   const schemaTitle = intl.formatMessage({ id: 'ProfilePage.schemaTitle' }, schemaTitleVars);
 
   if (userShowError && userShowError.status === 404) {

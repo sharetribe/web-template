@@ -106,7 +106,7 @@ export const ListingPageComponent = props => {
     sendEnquiryError,
     monthlyTimeSlots,
     onFetchTimeSlots,
-    customConfig: customConfigProp,
+    listingConfig: listingConfigProp,
     onFetchTransactionLineItems,
     lineItems,
     fetchLineItemsInProgress,
@@ -121,7 +121,7 @@ export const ListingPageComponent = props => {
 
   // prop override makes testing a bit easier
   // TODO: improve this when updating test setup
-  const customConfig = customConfigProp || config.custom;
+  const listingConfig = listingConfigProp || config.listing;
   const listingId = new UUID(rawParams.id);
   const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
   const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
@@ -237,18 +237,19 @@ export const ListingPageComponent = props => {
 
   const facebookImages = listingImages(currentListing, 'facebook');
   const twitterImages = listingImages(currentListing, 'twitter');
-  const schemaImages = listingImages(currentListing, `${config.listing.variantPrefix}-2x`).map(
-    img => img.url
-  );
-  const siteTitle = config.siteTitle;
+  const schemaImages = listingImages(
+    currentListing,
+    `${config.layout.listingImage.variantPrefix}-2x`
+  ).map(img => img.url);
+  const marketplaceName = config.marketplaceName;
   const schemaTitle = intl.formatMessage(
     { id: 'ListingPage.schemaTitle' },
-    { title, price: formattedPrice, siteTitle }
+    { title, price: formattedPrice, marketplaceName }
   );
   // You could add reviews, sku, etc. into page schema
   // Read more about product schema
   // https://developers.google.com/search/docs/advanced/structured-data/product
-  const productURL = `${config.canonicalRootURL}${location.pathname}${location.search}${location.hash}`;
+  const productURL = `${config.marketplaceRootURL}${location.pathname}${location.search}${location.hash}`;
   const brand = currentListing?.attributes?.publicData?.brand;
   const brandMaybe = brand ? { brand: { '@type': 'Brand', name: brand } } : {};
   const schemaPriceNumber = intl.formatNumber(convertMoneyToNumber(price), {
@@ -263,7 +264,7 @@ export const ListingPageComponent = props => {
   const optionEntities = options => options.map(o => ({ key: formatOptionValue(o), label: o }));
 
   // TODO: category is custom field. We probably should not support this?
-  const categoryOptions = findOptionsForSelectFilter('category', customConfig.listingExtendedData);
+  const categoryOptions = findOptionsForSelectFilter('category', listingConfig.listingExtendedData);
   const category = publicData?.category ? (
     <span>
       {categoryLabel(optionEntities(categoryOptions), publicData.category)}
@@ -310,7 +311,7 @@ export const ListingPageComponent = props => {
             <SectionImages
               title={title}
               listing={currentListing}
-              listingConfig={config.listing}
+              listingImageConfig={config.layout.listingImage}
               isOwnListing={isOwnListing}
               editParams={{
                 id: listingId.uuid,
@@ -355,10 +356,10 @@ export const ListingPageComponent = props => {
                 <SectionDetailsMaybe
                   publicData={publicData}
                   metadata={metadata}
-                  customConfig={customConfig}
+                  listingConfig={listingConfig}
                   intl={intl}
                 />
-                {customConfig.listingExtendedData.reduce((pickedElements, config) => {
+                {listingConfig.listingExtendedData.reduce((pickedElements, config) => {
                   const { key, schemaOptions, scope = 'public' } = config;
                   const value =
                     scope === 'public'
@@ -429,7 +430,8 @@ export const ListingPageComponent = props => {
                   fetchLineItemsInProgress={fetchLineItemsInProgress}
                   fetchLineItemsError={fetchLineItemsError}
                   marketplaceCurrency={config.currency}
-                  dayCountAvailableForBooking={config.dayCountAvailableForBooking}
+                  dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
+                  marketplaceName={config.marketplaceName}
                 />
               </div>
             </div>
@@ -451,7 +453,7 @@ ListingPageComponent.defaultProps = {
   fetchReviewsError: null,
   monthlyTimeSlots: null,
   sendEnquiryError: null,
-  customConfig: null,
+  listingConfig: null,
   lineItems: null,
   fetchLineItemsError: null,
 };
@@ -504,7 +506,7 @@ ListingPageComponent.propTypes = {
   sendEnquiryError: propTypes.error,
   onSendEnquiry: func.isRequired,
   onInitializeCardPaymentData: func.isRequired,
-  customConfig: object,
+  listingConfig: object,
   onFetchTransactionLineItems: func.isRequired,
   lineItems: array,
   fetchLineItemsInProgress: bool.isRequired,

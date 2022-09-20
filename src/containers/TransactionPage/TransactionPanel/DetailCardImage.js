@@ -14,10 +14,10 @@ const DetailCardImage = props => {
     image,
     provider,
     isCustomer,
-    listingConfig,
+    listingImageConfig,
   } = props;
   const classes = classNames(rootClassName || css.detailCardImageWrapper, className);
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingConfig;
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingImageConfig;
   const variants = image
     ? Object.keys(image?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];

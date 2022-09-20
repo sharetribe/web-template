@@ -1,13 +1,13 @@
 import routeConfiguration from '../routing/routeConfiguration';
 import { createResourceLocatorString, findRouteByRouteName, canonicalRoutePath } from './routes';
 
-const pageVariantConfig = {
+const layoutConfig = {
   searchPageVariant: 'map',
   listingPageVariant: 'full-image',
 };
 
 describe('util/routes.js', () => {
-  const routes = routeConfiguration(pageVariantConfig);
+  const routes = routeConfiguration(layoutConfig);
 
   describe('createResourceLocatorString', () => {
     it('should return meaningful strings if parameters are not needed', () => {

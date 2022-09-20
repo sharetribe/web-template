@@ -194,7 +194,11 @@ export const sendEnquiryError = e => ({ type: SEND_ENQUIRY_ERROR, error: true, p
 // ================ Thunks ================ //
 
 export const showListing = (listingId, config, isOwn = false) => (dispatch, getState, sdk) => {
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+  const {
+    aspectWidth = 1,
+    aspectHeight = 1,
+    variantPrefix = 'listing-card',
+  } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
 
   dispatch(showListingRequest(listingId));

@@ -79,15 +79,22 @@ export const findOptionsForSelectFilter = (filterKey, listingExtendedDataConfig)
 /**
  * Check if the main search type is 'keywords'
  */
-export const isMainSearchTypeKeywords = config => config.mainSearchType === 'keywords';
+export const isMainSearchTypeKeywords = config => config.search?.mainSearchType === 'keywords';
 
 /**
  * Check if the origin parameter is currently active.
  */
 export const isOriginInUse = config =>
-  config.mainSearchType === 'location' && config.sortSearchByDistance;
+  config.search?.mainSearchType === 'location' && config.maps?.search?.sortSearchByDistance;
 
 /**
  * Check if the stock management is currently active.
  */
-export const isStockInUse = config => config.listingManagementType === 'stock';
+export const isStockInUse = config => {
+  const transactionTypes = config.transaction.transactionTypes;
+  const hasItems = !transactionTypes.find(conf => conf.unitType === 'item');
+
+  // TODO: if there are multiple processes with both products and bookings,
+  // sdk.listings.query needs more thinking on SearchPage. (bookings have stock=0)
+  return hasItems && transactionTypes.length === 1;
+};

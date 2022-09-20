@@ -23,11 +23,6 @@ const fuzzyCircleOverlay = (center, mapsConfig) => {
   return `path${styles}(${encodeURIComponent(polyline.encode(path))})`;
 };
 
-const customMarkerOverlay = (center, mapsConfig) => {
-  const { url } = mapsConfig.customMarker;
-  return `url-${encodeURIComponent(url)}(${center.lng},${center.lat})`;
-};
-
 const markerOverlay = center => {
   return `pin-s(${center.lng},${center.lat})`;
 };
@@ -35,9 +30,6 @@ const markerOverlay = center => {
 const mapOverlay = (center, mapsConfig) => {
   if (mapsConfig.fuzzy.enabled) {
     return fuzzyCircleOverlay(center, mapsConfig);
-  }
-  if (mapsConfig.customMarker.enabled) {
-    return customMarkerOverlay(center, mapsConfig);
   }
   return markerOverlay(center);
 };

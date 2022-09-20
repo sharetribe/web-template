@@ -165,15 +165,15 @@ export const validURLParamsForExtendedData = (
  */
 export const validUrlQueryParamsFromProps = props => {
   const { location, config } = props;
-  const { listingExtendedData: listingExtendedDataConfig, defaultFilters: defaultFiltersConfig } =
-    config?.custom || {};
+  const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
+  const { defaultFilters: defaultFiltersConfig } = config?.search || {};
   // eslint-disable-next-line no-unused-vars
   const { mapSearch, page, ...searchInURL } = parse(location.search, {
     latlng: ['origin'],
     latlngBounds: ['bounds'],
   });
   // urlQueryParams doesn't contain page specific url params
-  // like mapSearch, page or origin (origin depends on config.sortSearchByDistance)
+  // like mapSearch, page or origin (origin depends on config.maps.search.sortSearchByDistance)
   return validURLParamsForExtendedData(
     searchInURL,
     listingExtendedDataConfig,
@@ -365,7 +365,7 @@ export const createSearchResultSchema = (
   // Schema for search engines (helps them to understand what this page is about)
   // http://schema.org
   // We are using JSON-LD format
-  const siteTitle = config.siteTitle;
+  const marketplaceName = config.marketplaceName;
   const { address, keywords } = mainSearchData;
   const keywordsMaybe = keywords ? `"${keywords}"` : null;
   const searchTitle =
@@ -373,7 +373,7 @@ export const createSearchResultSchema = (
   const schemaDescription = intl.formatMessage({ id: 'SearchPage.schemaDescription' });
   const schemaTitle = intl.formatMessage(
     { id: 'SearchPage.schemaTitle' },
-    { searchTitle, siteTitle }
+    { searchTitle, marketplaceName }
   );
 
   const schemaListings = listings.map((l, i) => {
@@ -385,7 +385,7 @@ export const createSearchResultSchema = (
     return {
       '@type': 'ListItem',
       position: i,
-      url: `${config.canonicalRootURL}${pathToItem}`,
+      url: `${config.marketplaceRootURL}${pathToItem}`,
       name: title,
     };
   });

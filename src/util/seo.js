@@ -12,26 +12,26 @@ const ensureOpenGraphLocale = locale => {
  */
 export const openGraphMetaProps = data => {
   const {
-    canonicalRootURL,
+    marketplaceRootURL,
     contentType,
     description,
     facebookAppId,
     facebookImages,
     locale,
     published,
-    siteTitle,
+    marketplaceName,
     tags,
     title,
     updated,
     url,
   } = data;
 
-  if (!(title && description && contentType && url && facebookImages && canonicalRootURL)) {
+  if (!(title && description && contentType && url && facebookImages && marketplaceRootURL)) {
     /* eslint-disable no-console */
     if (console && console.warn) {
       console.warn(
         `Can't create Open Graph meta tags:
-        title, description, contentType, url, facebookImages, and canonicalRootURL are needed.`
+        title, description, contentType, url, facebookImages, and marketplaceRootURL are needed.`
       );
     }
     /* eslint-enable no-console */
@@ -60,8 +60,8 @@ export const openGraphMetaProps = data => {
     });
   }
 
-  if (siteTitle) {
-    openGraphMeta.push({ property: 'og:site_name', content: siteTitle });
+  if (marketplaceName) {
+    openGraphMeta.push({ property: 'og:site_name', content: marketplaceName });
   }
 
   if (facebookAppId) {
@@ -88,7 +88,7 @@ export const openGraphMetaProps = data => {
  */
 export const twitterMetaProps = data => {
   const {
-    canonicalRootURL,
+    marketplaceRootURL,
     description,
     siteTwitterHandle,
     title,
@@ -97,12 +97,12 @@ export const twitterMetaProps = data => {
     url,
   } = data;
 
-  if (!(title && description && siteTwitterHandle && url)) {
+  if (!(title && description && url)) {
     /* eslint-disable no-console */
     if (console && console.warn) {
       console.warn(
         `Can't create twitter card meta tags:
-        title, description, siteTwitterHandle, and url are needed.`
+        title, description, and url are needed.`
       );
     }
     /* eslint-enable no-console */
@@ -113,11 +113,14 @@ export const twitterMetaProps = data => {
     { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:title', content: title },
     { name: 'twitter:description', content: description },
-    { name: 'twitter:site', content: siteTwitterHandle },
     { name: 'twitter:url', content: url },
   ];
 
-  if (canonicalRootURL && twitterImages && twitterImages.length > 0) {
+  if (siteTwitterHandle) {
+    twitterMeta.push({ name: 'twitter:site', content: siteTwitterHandle });
+  }
+
+  if (marketplaceRootURL && twitterImages && twitterImages.length > 0) {
     twitterImages.forEach(i => {
       twitterMeta.push({
         name: 'twitter:image',
@@ -132,8 +135,8 @@ export const twitterMetaProps = data => {
     twitterMeta.push({ name: 'twitter:creator', content: twitterHandle });
   }
 
-  if (canonicalRootURL) {
-    twitterMeta.push({ name: 'twitter:domain', content: canonicalRootURL });
+  if (marketplaceRootURL) {
+    twitterMeta.push({ name: 'twitter:domain', content: marketplaceRootURL });
   }
 
   return twitterMeta;
@@ -144,9 +147,9 @@ export const twitterMetaProps = data => {
  * Creates data for Open Graph and Twitter meta tags.
  */
 export const metaTagProps = (tagData, config) => {
-  const { canonicalRootURL, facebookAppId, siteTitle, siteTwitterHandle } = config;
+  const { marketplaceRootURL, facebookAppId, marketplaceName, siteTwitterHandle } = config;
 
-  const author = tagData.author || siteTitle;
+  const author = tagData.author || marketplaceName;
   const defaultMeta = [
     { name: 'description', content: tagData.description },
     { name: 'author', content: author },
@@ -154,14 +157,14 @@ export const metaTagProps = (tagData, config) => {
 
   const openGraphMeta = openGraphMetaProps({
     ...tagData,
-    canonicalRootURL,
+    marketplaceRootURL,
     facebookAppId,
-    siteTitle,
+    marketplaceName,
   });
 
   const twitterMeta = twitterMetaProps({
     ...tagData,
-    canonicalRootURL,
+    marketplaceRootURL,
     siteTwitterHandle,
   });
 

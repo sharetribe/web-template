@@ -95,11 +95,10 @@ exports[`ListingPage matches snapshot 1`] = `
               "type": "listing",
             }
           }
-          listingConfig={
+          listingImageConfig={
             Object {
               "aspectHeight": 400,
               "aspectWidth": 400,
-              "showUnitTypeTranslations": false,
               "variantPrefix": "listing-card",
             }
           }
@@ -178,7 +177,18 @@ exports[`ListingPage matches snapshot 1`] = `
               text="listing1 description"
             />
             <SectionDetailsMaybe
-              customConfig={
+              intl={
+                Object {
+                  "formatDate": [Function],
+                  "formatMessage": [Function],
+                  "formatNumber": [Function],
+                  "formatPlural": [Function],
+                  "formatRelativeTime": [Function],
+                  "formatTime": [Function],
+                  "now": [Function],
+                }
+              }
+              listingConfig={
                 Object {
                   "listingExtendedData": Array [
                     Object {
@@ -218,17 +228,6 @@ exports[`ListingPage matches snapshot 1`] = `
                       "scope": "public",
                     },
                   ],
-                }
-              }
-              intl={
-                Object {
-                  "formatDate": [Function],
-                  "formatMessage": [Function],
-                  "formatNumber": [Function],
-                  "formatPlural": [Function],
-                  "formatRelativeTime": [Function],
-                  "formatTime": [Function],
-                  "now": [Function],
                 }
               }
               metadata={Object {}}
@@ -271,14 +270,6 @@ exports[`ListingPage matches snapshot 1`] = `
               }
               mapsConfig={
                 Object {
-                  "customMarker": Object {
-                    "anchorX": 16,
-                    "anchorY": 32,
-                    "enabled": false,
-                    "height": 32,
-                    "url": "http://localhost:3000/static/icons/map-marker-32x32.png",
-                    "width": 32,
-                  },
                   "fuzzy": Object {
                     "circleColor": "#c0392b",
                     "defaultZoomLevel": 13,
@@ -387,6 +378,7 @@ exports[`ListingPage matches snapshot 1`] = `
                         },
                       },
                     ],
+                    "sortSearchByDistance": false,
                     "suggestCurrentLocation": true,
                   },
                 }
@@ -527,6 +519,7 @@ exports[`ListingPage matches snapshot 1`] = `
                 }
               }
               marketplaceCurrency="USD"
+              marketplaceName="MarketplaceX"
               monthlyTimeSlots={null}
               onContactUser={[Function]}
               onFetchTimeSlots={[Function]}

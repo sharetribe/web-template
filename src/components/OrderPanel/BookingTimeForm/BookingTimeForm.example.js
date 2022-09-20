@@ -96,6 +96,7 @@ export const Form = {
     },
     price: new Money(1099, 'USD'),
     timeZone: 'Etc/UTC',
+    marketplaceName: 'MarketplaceX',
   },
   group: 'forms',
 };

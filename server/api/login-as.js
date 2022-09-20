@@ -5,7 +5,7 @@ const Decimal = require('decimal.js');
 const sdkUtils = require('../api-util/sdk');
 
 const CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
-const ROOT_URL = process.env.REACT_APP_CANONICAL_ROOT_URL;
+const ROOT_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
 const BASE_URL = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL;
 const TRANSIT_VERBOSE = process.env.REACT_APP_SHARETRIBE_SDK_TRANSIT_VERBOSE === 'true';
 const USING_SSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';

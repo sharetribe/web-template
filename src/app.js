@@ -19,7 +19,8 @@ import configureStore from './store';
 
 // utils
 import { RouteConfigurationProvider } from './context/routeConfigurationContext';
-import { ConfigurationProvider, mergeConfig } from './context/configurationContext';
+import { ConfigurationProvider } from './context/configurationContext';
+import { mergeConfig } from './util/configHelpers';
 import { IntlProvider } from './util/reactIntl';
 import { IncludeScripts } from './util/includeScripts';
 
@@ -86,21 +87,22 @@ const localeMessages = isTestEnv
   : addMissingTranslations(defaultMessages, messagesInLocale);
 
 const setupLocale = appConfig => {
+  let locale = appConfig.localization.locale;
   if (isTestEnv) {
     // Use english as a default locale in tests
     // This affects app.test.js and app.node.test.js tests
-    appConfig.locale = 'en';
+    locale = 'en';
     return;
   }
 
   // Set the Moment locale globally
   // See: http://momentjs.com/docs/#/i18n/changing-locale/
-  moment.locale(appConfig.locale);
+  moment.locale(locale);
 };
 
 const Configurations = props => {
   const { appConfig, children } = props;
-  const routeConfig = routeConfiguration(appConfig.pageVariantConfig);
+  const routeConfig = routeConfiguration(appConfig.layout);
   setupLocale(appConfig);
   return (
     <ConfigurationProvider value={appConfig}>
@@ -112,10 +114,23 @@ const Configurations = props => {
 export const ClientApp = props => {
   const { store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
+
+  // Marketplace color and branding image comes from configs
+  // If set, we need to create CSS Property and set it to DOM (documentElement is selected here)
+  const elem = window.document.documentElement;
+  if (appConfig.branding.marketplaceColor) {
+    elem.style.setProperty('--marketplaceColor', appConfig.branding.marketplaceColor);
+    elem.style.setProperty('--marketplaceColorDark', appConfig.branding.marketplaceColorDark);
+    elem.style.setProperty('--marketplaceColorLight', appConfig.branding.marketplaceColorLight);
+  }
+  if (appConfig.branding.brandImageURL) {
+    elem.style.setProperty('--brandImage', `url(${appConfig.branding.brandImageURL})`);
+  }
+
   return (
     <Configurations appConfig={appConfig}>
       <IntlProvider
-        locale={appConfig.locale}
+        locale={appConfig.localization.locale}
         messages={{ ...localeMessages, ...hostedTranslations }}
         textComponent="span"
       >
@@ -141,7 +156,7 @@ export const ServerApp = props => {
   return (
     <Configurations appConfig={appConfig}>
       <IntlProvider
-        locale={appConfig.locale}
+        locale={appConfig.localization.locale}
         messages={{ ...localeMessages, ...hostedTranslations }}
         textComponent="span"
       >

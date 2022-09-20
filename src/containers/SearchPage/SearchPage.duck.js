@@ -109,7 +109,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 
   const datesSearchParams = datesParam => {
     const searchTZ = 'Etc/UTC';
-    const datesFilter = config.custom.defaultFilters.find(f => f.key === 'dates');
+    const datesFilter = config.search.defaultFilters.find(f => f.key === 'dates');
     const values = datesParam ? datesParam.split(',') : [];
     const hasValues = datesFilter && datesParam && values.length === 2;
     const { mode, entireRangeAvailable } = datesFilter || {};
@@ -161,7 +161,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   const { perPage, price, dates, sort, ...rest } = searchParams;
   const priceMaybe = priceSearchParams(price);
   const datesMaybe = datesSearchParams(dates);
-  const sortMaybe = sort === config.custom.sortConfig.relevanceKey ? {} : { sort };
+  const sortMaybe = sort === config.search.sortConfig.relevanceKey ? {} : { sort };
 
   const params = {
     ...rest,
@@ -201,7 +201,11 @@ export const loadData = (params, search, config) => {
   const { page = 1, address, origin, ...rest } = queryParams;
   const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
 
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+  const {
+    aspectWidth = 1,
+    aspectHeight = 1,
+    variantPrefix = 'listing-card',
+  } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
 
   return searchListings(

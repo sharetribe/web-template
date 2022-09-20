@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { arrayOf, bool, func, number, oneOf, oneOfType, shape, string } from 'prop-types';
+import React from 'react';
+import { arrayOf, bool, func, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { Field, Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
@@ -17,9 +17,6 @@ import CustomExtendedDataField from '../CustomExtendedDataField';
 import css from './EditListingDetailsForm.module.css';
 
 const TITLE_MAX_LENGTH = 60;
-
-const findProcessInfo = (transactionProcessAlias, processInfos) =>
-  processInfos.find(pi => transactionProcessAlias === `${pi.name}/${pi.alias}`);
 
 // Show various error messages
 const ErrorMessage = props => {
@@ -49,87 +46,77 @@ const FieldHidden = props => {
   );
 };
 
-// TransactionProcess selector
-// Adds a single hidden field if only one process is available.
-const FieldTransactionProcessAlias = props => {
-  const { name, processInfos, hasSetProcessAlias, onChange, formApi, intl } = props;
+// Field component that either allows selecting transaction type (if multiple types are available)
+// or just renders hidden fields:
+// - transactionType
+// - transactionProcessAlias
+// - unitType
+const FieldSelectTransactionType = props => {
+  const {
+    name,
+    transactionTypes,
+    hasExistingTransactionType,
+    onProcessChange,
+    formApi,
+    intl,
+  } = props;
+  const hasMultipleTransactionTypes = transactionTypes?.length > 1;
+
   const handleOnChange = value => {
-    const unitTypes = findProcessInfo(value, processInfos)?.unitTypes || [];
-    const unitType = unitTypes?.length === 1 ? unitTypes[0] : undefined;
-    formApi.change('unitType', unitType);
-    if (onChange) {
-      onChange(value);
+    const transactionProcessAlias = formApi.getFieldState('transactionProcessAlias')?.value;
+    const selectedProcess = transactionTypes.find(config => config.transactionType === value);
+    formApi.change('transactionProcessAlias', selectedProcess.transactionProcessAlias);
+    formApi.change('unitType', selectedProcess.unitType);
+
+    const hasProcessChanged = transactionProcessAlias === selectedProcess.transactionProcessAlias;
+    if (onProcessChange && hasProcessChanged) {
+      onProcessChange(selectedProcess.transactionProcessAlias);
     }
   };
-  const label = intl.formatMessage({ id: 'EditListingDetailsForm.processLabel' });
-  const hasMultipleProcesses = processInfos.length > 1;
 
-  return !hasSetProcessAlias && hasMultipleProcesses ? (
-    <FieldSelect
-      id={name}
-      name={name}
-      className={css.processSelect}
-      label={label}
-      onChange={handleOnChange}
-      validate={required(intl.formatMessage({ id: 'EditListingDetailsForm.processRequired' }))}
-    >
-      <option disabled value="">
-        {intl.formatMessage({ id: 'EditListingDetailsForm.processPlaceholder' })}
-      </option>
-      {processInfos.map(processInfo => {
-        const processWithAlias = `${processInfo.name}/${processInfo.alias}`;
-        return (
-          <option key={processWithAlias} value={processWithAlias}>
-            {processInfo.name}
-          </option>
-        );
-      })}
-    </FieldSelect>
-  ) : (
-    <div className={css.processSelect}>
-      <h5 className={css.selectedLabel}>{label}</h5>
+  return hasMultipleTransactionTypes && !hasExistingTransactionType ? (
+    <>
+      <FieldSelect
+        id={name}
+        name={name}
+        className={css.transactionTypeSelect}
+        label={intl.formatMessage({ id: 'EditListingDetailsForm.transactionTypeLabel' })}
+        validate={required(
+          intl.formatMessage({ id: 'EditListingDetailsForm.transactionTypeRequired' })
+        )}
+        onChange={handleOnChange}
+      >
+        <option disabled value="">
+          {intl.formatMessage({ id: 'EditListingDetailsForm.transactionTypePlaceholder' })}
+        </option>
+        {transactionTypes.map(config => {
+          const type = config.transactionType;
+          return (
+            <option key={type} value={type}>
+              {config.label}
+            </option>
+          );
+        })}
+      </FieldSelect>
+      <FieldHidden name="transactionProcessAlias" />
+      <FieldHidden name="unitType" />
+    </>
+  ) : hasMultipleTransactionTypes && hasExistingTransactionType ? (
+    <div className={css.transactionTypeSelect}>
+      <h5 className={css.selectedLabel}>
+        {intl.formatMessage({ id: 'EditListingDetailsForm.transactionTypeLabel' })}
+      </h5>
       <p className={css.selectedValue}>{formApi.getFieldState(name)?.value}</p>
       <FieldHidden name={name} />
+      <FieldHidden name="transactionProcessAlias" />
+      <FieldHidden name="unitType" />
     </div>
-  );
-};
-
-// Unit type selector (item, day, night, hour)
-// This needs unitTypes from src/util/transaction.js
-const FieldSelectUnitType = props => {
-  const { name, unitTypes, formApi, intl } = props;
-  const hasProcessAlias = formApi.getFieldState('transactionProcessAlias')?.value;
-  if (!hasProcessAlias) {
-    return null;
-  }
-
-  const label = intl.formatMessage({ id: 'EditListingDetailsForm.unitTypesLabel' });
-  return unitTypes?.length > 1 ? (
-    <FieldSelect
-      id={name}
-      name={name}
-      className={css.unitSelect}
-      label={label}
-      validate={required(intl.formatMessage({ id: 'EditListingDetailsForm.unitTypesRequired' }))}
-    >
-      <option disabled value="">
-        {intl.formatMessage({ id: 'EditListingDetailsForm.unitTypesPlaceholder' })}
-      </option>
-      {unitTypes.map(unitType => {
-        const unitTypeMsg = unitType.replace(/(^|\s)\S/g, letter => letter.toUpperCase());
-        return (
-          <option key={unitType} value={unitType}>
-            {unitTypeMsg}
-          </option>
-        );
-      })}
-    </FieldSelect>
   ) : (
-    <div className={css.unitSelect}>
-      <h5 className={css.selectedLabel}>{label}</h5>
-      <p className={css.selectedValue}>{formApi.getFieldState(name)?.value}</p>
+    <>
       <FieldHidden name={name} />
-    </div>
+      <FieldHidden name="transactionProcessAlias" />
+      <FieldHidden name="unitType" />
+    </>
   );
 };
 
@@ -151,8 +138,8 @@ const EditListingDetailsFormComponent = props => (
         intl,
         invalid,
         pristine,
-        processInfos,
-        hasSetProcessAlias,
+        selectableTransactionTypes,
+        hasExistingTransactionType,
         saveActionMsg,
         updated,
         updateInProgress,
@@ -160,17 +147,6 @@ const EditListingDetailsFormComponent = props => (
         listingExtendedDataConfig,
         values,
       } = formRenderProps;
-
-      // This is a bug fix for Final Form.
-      // Without this, React will return a warning:
-      //   "Cannot update a component (`ForwardRef(Field)`)
-      //   while rendering a different component (`ForwardRef(Field)`)"
-      // This seems to happen because validation calls listeneres and
-      // that causes state to change inside final-form.
-      // https://github.com/final-form/react-final-form/issues/751
-      const { pauseValidation, resumeValidation } = formApi;
-      pauseValidation(false);
-      useEffect(() => resumeValidation(), [values]);
 
       const titleRequiredMessage = intl.formatMessage({
         id: 'EditListingDetailsForm.titleRequired',
@@ -201,7 +177,14 @@ const EditListingDetailsFormComponent = props => (
           return isKnownSchemaType && isTargetProcessAlias && isProviderScope
             ? [
                 ...pickedFields,
-                <CustomExtendedDataField key={key} name={key} fieldConfig={extendedDataConfig} />,
+                <CustomExtendedDataField
+                  key={key}
+                  name={key}
+                  fieldConfig={extendedDataConfig}
+                  defaultRequiredMessage={intl.formatMessage({
+                    id: 'EditListingDetailsForm.defaultRequiredMessage',
+                  })}
+                />,
               ]
             : pickedFields;
         }, []);
@@ -238,18 +221,11 @@ const EditListingDetailsFormComponent = props => (
             )}
           />
 
-          <FieldTransactionProcessAlias
-            name="transactionProcessAlias"
-            processInfos={processInfos}
-            hasSetProcessAlias={hasSetProcessAlias}
-            onChange={onProcessChange}
-            formApi={formApi}
-            intl={intl}
-          />
-
-          <FieldSelectUnitType
-            name="unitType"
-            unitTypes={findProcessInfo(transactionProcessAlias, processInfos)?.unitTypes || []}
+          <FieldSelectTransactionType
+            name="transactionType"
+            transactionTypes={selectableTransactionTypes}
+            hasExistingTransactionType={hasExistingTransactionType}
+            onProcessChange={onProcessChange}
             formApi={formApi}
             intl={intl}
           />
@@ -275,7 +251,7 @@ EditListingDetailsFormComponent.defaultProps = {
   className: null,
   fetchErrors: null,
   onProcessChange: null,
-  hasSetProcessAlias: false,
+  hasExistingTransactionType: false,
   listingExtendedDataConfig: null,
 };
 
@@ -294,14 +270,14 @@ EditListingDetailsFormComponent.propTypes = {
     showListingsError: propTypes.error,
     updateListingError: propTypes.error,
   }),
-  processInfos: arrayOf(
+  selectableTransactionTypes: arrayOf(
     shape({
-      name: string.isRequired,
-      alias: string.isRequired,
-      unitTypes: arrayOf(string).isRequired,
+      transactionType: string.isRequired,
+      transactionProcessAlias: string.isRequired,
+      unitType: string.isRequired,
     })
   ).isRequired,
-  hasSetProcessAlias: bool,
+  hasExistingTransactionType: bool,
   listingExtendedDataConfig: propTypes.listingExtendedDataConfig,
 };
 

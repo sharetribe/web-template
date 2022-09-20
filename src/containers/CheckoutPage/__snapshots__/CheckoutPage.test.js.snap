@@ -114,6 +114,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
           initiateOrderError={null}
           loadingData={true}
           locale="en"
+          marketplaceName="MarketplaceX"
           onStripeInitialized={[Function]}
           onSubmit={[Function]}
           paymentIntent={null}

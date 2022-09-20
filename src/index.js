@@ -35,7 +35,7 @@ import configureStore from './store';
 
 // Utils
 import { createInstance, types as sdkTypes } from './util/sdkLoader';
-import { mergeConfig } from './context/configurationContext';
+import { mergeConfig } from './util/configHelpers';
 import { matchPathname } from './util/routes';
 import * as apiUtils from './util/api';
 import * as log from './util/log';
@@ -98,18 +98,12 @@ const setupAnalyticsHandlers = () => {
 
   // Add Google Analytics 4 (GA4) handler if tracker ID is found
   if (process.env.REACT_APP_GOOGLE_ANALYTICS_ID) {
-    if (window?.gtag) {
-      handlers.push(new GoogleAnalyticsHandler(window.gtag));
-    } else {
-      // Some adblockers (e.g. Ghostery) might block the Google Analytics integration.
-      console.warn(
-        'Google Analytics (window.gtag) is not available. It might be that your adblocker is blocking it.'
-      );
-    }
     if (process.env.REACT_APP_GOOGLE_ANALYTICS_ID.indexOf('G-') !== 0) {
       console.warn(
         'Google Analytics 4 (GA4) should have measurement id that starts with "G-" prefix'
       );
+    } else {
+      handlers.push(new GoogleAnalyticsHandler());
     }
   }
 

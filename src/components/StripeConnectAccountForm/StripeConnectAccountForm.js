@@ -50,7 +50,7 @@ const CreateStripeAccountFields = props => {
     values,
     intl,
     currentUserId,
-    canonicalRootURL,
+    marketplaceRootURL,
     supportedCountries,
     defaultMCC,
   } = props;
@@ -78,10 +78,10 @@ const CreateStripeAccountFields = props => {
   if (!hasBusinessURL && currentUserId) {
     const pathToProfilePage = uuid =>
       createResourceLocatorString('ProfilePage', routeConfiguration, { id: uuid }, {});
-    const hasCanonicalRootUrl = !!canonicalRootURL;
-    const rootUrl = hasCanonicalRootUrl ? canonicalRootURL.replace(/\/$/, '') : null;
+    const hasMarketplaceRootURL = !!marketplaceRootURL;
+    const rootUrl = hasMarketplaceRootURL ? marketplaceRootURL.replace(/\/$/, '') : null;
     const defaultBusinessURL =
-      hasCanonicalRootUrl && !rootUrl.includes('localhost')
+      hasMarketplaceRootURL && !rootUrl.includes('localhost')
         ? `${rootUrl}${pathToProfilePage(currentUserId.uuid)}`
         : `https://test-marketplace.com${pathToProfilePage(currentUserId.uuid)}`;
     form.change('businessProfileURL', defaultBusinessURL);
@@ -291,7 +291,7 @@ const StripeConnectAccountFormComponent = props => {
             showAsRequired={showAsRequired}
             countryLabel={countryLabel}
             supportedCountries={supportedCountries}
-            canonicalRootURL={config.canonicalRootURL}
+            marketplaceRootURL={config.marketplaceRootURL}
             defaultMCC={config.stripe.defaultMCC}
             currentUserId={currentUserId}
             form={form}

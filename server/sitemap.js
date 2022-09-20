@@ -51,9 +51,9 @@ exports.sitemapStructure = () => {
   const now = moment().format('YYYY-MM-DD');
 
   return {
-    url: domain(process.env.REACT_APP_CANONICAL_ROOT_URL),
+    url: domain(process.env.REACT_APP_MARKETPLACE_ROOT_URL),
     http: USING_SSL ? 'https' : 'http',
-    port: port(process.env.REACT_APP_CANONICAL_ROOT_URL),
+    port: port(process.env.REACT_APP_MARKETPLACE_ROOT_URL),
     sitemap: path.join(buildPath, 'static', 'sitemap.xml'),
     robots: path.join(buildPath, 'robots.txt'),
     sitemapSubmission: '/static/sitemap.xml',

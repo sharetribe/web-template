@@ -209,8 +209,10 @@ describe('SearchPage.helpers', () => {
       const pickedParams = validUrlQueryParamsFromProps({
         location,
         config: {
-          custom: {
+          listing: {
             listingExtendedData: listingExtendedDataConfig,
+          },
+          search: {
             defaultFilters: defaultFiltersConfig,
           },
         },
@@ -224,8 +226,10 @@ describe('SearchPage.helpers', () => {
       const pickedParams = validUrlQueryParamsFromProps({
         location,
         config: {
-          custom: {
+          listing: {
             listingExtendedData: listingExtendedDataConfig,
+          },
+          search: {
             defaultFilters: defaultFiltersConfig,
           },
         },
@@ -239,8 +243,10 @@ describe('SearchPage.helpers', () => {
     const props = {
       location,
       config: {
-        custom: {
+        listing: {
           listingExtendedData: listingExtendedDataConfig,
+        },
+        search: {
           defaultFilters: defaultFiltersConfig,
         },
       },
