@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
+import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
@@ -32,105 +33,106 @@ const onImageUploadHandler = (values, fn) => {
   }
 };
 
-export class ProfileSettingsPageComponent extends Component {
-  render() {
-    const {
-      currentUser,
-      image,
-      onImageUpload,
-      onUpdateProfile,
-      scrollingDisabled,
-      updateInProgress,
-      updateProfileError,
-      uploadImageError,
-      uploadInProgress,
-      intl,
-    } = this.props;
+export const ProfileSettingsPageComponent = props => {
+  const config = useConfiguration();
+  const {
+    currentUser,
+    image,
+    onImageUpload,
+    onUpdateProfile,
+    scrollingDisabled,
+    updateInProgress,
+    updateProfileError,
+    uploadImageError,
+    uploadInProgress,
+    intl,
+  } = props;
 
-    const handleSubmit = values => {
-      const { firstName, lastName, bio: rawBio } = values;
+  const handleSubmit = values => {
+    const { firstName, lastName, bio: rawBio } = values;
 
-      // Ensure that the optional bio is a string
-      const bio = rawBio || '';
+    // Ensure that the optional bio is a string
+    const bio = rawBio || '';
 
-      const profile = {
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        bio,
-      };
-      const uploadedImage = this.props.image;
-
-      // Update profileImage only if file system has been accessed
-      const updatedValues =
-        uploadedImage && uploadedImage.imageId && uploadedImage.file
-          ? { ...profile, profileImageId: uploadedImage.imageId }
-          : profile;
-
-      onUpdateProfile(updatedValues);
+    const profile = {
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      bio,
     };
+    const uploadedImage = this.props.image;
 
-    const user = ensureCurrentUser(currentUser);
-    const { firstName, lastName, bio } = user.attributes.profile;
-    const profileImageId = user.profileImage ? user.profileImage.id : null;
-    const profileImage = image || { imageId: profileImageId };
+    // Update profileImage only if file system has been accessed
+    const updatedValues =
+      uploadedImage && uploadedImage.imageId && uploadedImage.file
+        ? { ...profile, profileImageId: uploadedImage.imageId }
+        : profile;
 
-    const profileSettingsForm = user.id ? (
-      <ProfileSettingsForm
-        className={css.form}
-        currentUser={currentUser}
-        initialValues={{ firstName, lastName, bio, profileImage: user.profileImage }}
-        profileImage={profileImage}
-        onImageUpload={e => onImageUploadHandler(e, onImageUpload)}
-        uploadInProgress={uploadInProgress}
-        updateInProgress={updateInProgress}
-        uploadImageError={uploadImageError}
-        updateProfileError={updateProfileError}
-        onSubmit={handleSubmit}
-      />
-    ) : null;
+    onUpdateProfile(updatedValues);
+  };
 
-    const title = intl.formatMessage({ id: 'ProfileSettingsPage.title' });
+  const user = ensureCurrentUser(currentUser);
+  const { firstName, lastName, bio } = user.attributes.profile;
+  const profileImageId = user.profileImage ? user.profileImage.id : null;
+  const profileImage = image || { imageId: profileImageId };
 
-    return (
-      <Page className={css.root} title={title} scrollingDisabled={scrollingDisabled}>
-        <LayoutSingleColumn>
-          <LayoutWrapperTopbar>
-            <TopbarContainer currentPage="ProfileSettingsPage" />
-            <UserNav selectedPageName="ProfileSettingsPage" />
-          </LayoutWrapperTopbar>
-          <LayoutWrapperMain>
-            <div className={css.content}>
-              <div className={css.headingContainer}>
-                <h1 className={css.heading}>
-                  <FormattedMessage id="ProfileSettingsPage.heading" />
-                </h1>
-                {user.id ? (
-                  <NamedLink
-                    className={css.profileLink}
-                    name="ProfilePage"
-                    params={{ id: user.id.uuid }}
-                  >
-                    <FormattedMessage id="ProfileSettingsPage.viewProfileLink" />
-                  </NamedLink>
-                ) : null}
-              </div>
-              {profileSettingsForm}
+  const profileSettingsForm = user.id ? (
+    <ProfileSettingsForm
+      className={css.form}
+      currentUser={currentUser}
+      initialValues={{ firstName, lastName, bio, profileImage: user.profileImage }}
+      profileImage={profileImage}
+      onImageUpload={e => onImageUploadHandler(e, onImageUpload)}
+      uploadInProgress={uploadInProgress}
+      updateInProgress={updateInProgress}
+      uploadImageError={uploadImageError}
+      updateProfileError={updateProfileError}
+      onSubmit={handleSubmit}
+      siteTitle={config.siteTitle}
+    />
+  ) : null;
+
+  const title = intl.formatMessage({ id: 'ProfileSettingsPage.title' });
+
+  return (
+    <Page className={css.root} title={title} scrollingDisabled={scrollingDisabled}>
+      <LayoutSingleColumn>
+        <LayoutWrapperTopbar>
+          <TopbarContainer currentPage="ProfileSettingsPage" />
+          <UserNav selectedPageName="ProfileSettingsPage" />
+        </LayoutWrapperTopbar>
+        <LayoutWrapperMain>
+          <div className={css.content}>
+            <div className={css.headingContainer}>
+              <h1 className={css.heading}>
+                <FormattedMessage id="ProfileSettingsPage.heading" />
+              </h1>
+              {user.id ? (
+                <NamedLink
+                  className={css.profileLink}
+                  name="ProfilePage"
+                  params={{ id: user.id.uuid }}
+                >
+                  <FormattedMessage id="ProfileSettingsPage.viewProfileLink" />
+                </NamedLink>
+              ) : null}
             </div>
-          </LayoutWrapperMain>
-          <LayoutWrapperFooter>
-            <Footer />
-          </LayoutWrapperFooter>
-        </LayoutSingleColumn>
-      </Page>
-    );
-  }
-}
+            {profileSettingsForm}
+          </div>
+        </LayoutWrapperMain>
+        <LayoutWrapperFooter>
+          <Footer />
+        </LayoutWrapperFooter>
+      </LayoutSingleColumn>
+    </Page>
+  );
+};
 
 ProfileSettingsPageComponent.defaultProps = {
   currentUser: null,
   uploadImageError: null,
   updateProfileError: null,
   image: null,
+  config: null,
 };
 
 const { bool, func, object, shape, string } = PropTypes;
@@ -150,6 +152,9 @@ ProfileSettingsPageComponent.propTypes = {
   updateProfileError: propTypes.error,
   uploadImageError: propTypes.error,
   uploadInProgress: bool.isRequired,
+
+  // from useConfiguration()
+  config: object,
 
   // from injectIntl
   intl: intlShape.isRequired,

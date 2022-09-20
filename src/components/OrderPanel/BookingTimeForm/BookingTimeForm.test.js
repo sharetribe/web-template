@@ -91,6 +91,7 @@ describe('BookingTimeForm', () => {
         startTimeInputProps={startTimeInputProps}
         endTimeInputProps={endTimeInputProps}
         timeZone="Etc/UTC"
+        siteTitle="MarketplaceX"
         monthlyTimeSlots={monthlyTimeSlots}
         initialValues={{ bookingStartDate: { date: new Date('2019-10-14T00:00:00Z') } }}
         onChange={noop}

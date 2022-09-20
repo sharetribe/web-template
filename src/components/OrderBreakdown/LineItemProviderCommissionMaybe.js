@@ -1,5 +1,5 @@
 import React from 'react';
-import { bool } from 'prop-types';
+import { bool, string } from 'prop-types';
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
 import { types as sdkTypes } from '../../util/sdkLoader';
@@ -16,7 +16,7 @@ const isValidCommission = commissionLineItem => {
 };
 
 const LineItemProviderCommissionMaybe = props => {
-  const { lineItems, isProvider, intl } = props;
+  const { lineItems, isProvider, siteTitle, intl } = props;
 
   const providerCommissionLineItem = lineItems.find(
     item => item.code === LINE_ITEM_PROVIDER_COMMISSION && !item.reversal
@@ -41,7 +41,7 @@ const LineItemProviderCommissionMaybe = props => {
     commissionItem = (
       <div className={css.lineItem}>
         <span className={css.itemLabel}>
-          <FormattedMessage id="OrderBreakdown.commission" />
+          <FormattedMessage id="OrderBreakdown.commission" values={{ siteTitle }} />
         </span>
         <span className={css.itemValue}>{formattedCommission}</span>
       </div>
@@ -54,6 +54,7 @@ const LineItemProviderCommissionMaybe = props => {
 LineItemProviderCommissionMaybe.propTypes = {
   lineItems: propTypes.lineItems.isRequired,
   isProvider: bool.isRequired,
+  siteTitle: string.isRequired,
   intl: intlShape.isRequired,
 };
 

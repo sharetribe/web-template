@@ -58,6 +58,7 @@ export class BookingTimeFormComponent extends Component {
       className,
       price: unitPrice,
       dayCountAvailableForBooking,
+      siteTitle,
       ...rest
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
@@ -146,6 +147,7 @@ export class BookingTimeFormComponent extends Component {
                     lineItems={lineItems}
                     timeZone={timeZone}
                     currency={unitPrice.currency}
+                    siteTitle={siteTitle}
                   />
                 </div>
               ) : null}
@@ -195,6 +197,7 @@ BookingTimeFormComponent.propTypes = {
   rootClassName: string,
   className: string,
 
+  siteTitle: string.isRequired,
   price: propTypes.money,
   isOwnListing: bool,
   listingId: propTypes.uuid,

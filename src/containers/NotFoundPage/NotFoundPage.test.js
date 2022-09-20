@@ -35,6 +35,7 @@ describe('NotFoundPageComponent', () => {
         onResendVerificationEmail={noop}
         intl={fakeIntl}
         routeConfiguration={routeConfiguration}
+        siteTitle="MarketplaceX"
       />
     );
     expect(tree).toMatchSnapshot();

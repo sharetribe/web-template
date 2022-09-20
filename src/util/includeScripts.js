@@ -10,7 +10,7 @@ const GOOGLE_MAPS_SCRIPT_ID = 'GoogleMapsApi';
  * However, if you don't need location search and maps, you can just omit this component from app.js
  * Note: another common point to add <scripts>, <links> and <meta> tags is Page.js
  *       and Stripe script is added in public/index.html
- * 
+ *
  * Note 2: When adding new external scripts/styles/fonts/etc.,
  *         if a Content Security Policy (CSP) is turned on, the new URLs
  *         should be whitelisted in the policy. Check: server/csp.js

@@ -128,7 +128,7 @@ const estimatedCustomerTransaction = (
 };
 
 const EstimatedCustomerBreakdownMaybe = props => {
-  const { breakdownData = {}, lineItems, timeZone, currency } = props;
+  const { breakdownData = {}, lineItems, timeZone, currency, siteTitle } = props;
   const { startDate, endDate } = breakdownData;
   const processName = 'flex-product-default-process';
   let process = null;
@@ -174,6 +174,7 @@ const EstimatedCustomerBreakdownMaybe = props => {
       dateType={dateType}
       timeZone={timeZone}
       currency={currency}
+      siteTitle={siteTitle}
     />
   ) : null;
 };

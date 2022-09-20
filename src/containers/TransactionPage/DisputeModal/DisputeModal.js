@@ -3,6 +3,7 @@ import { bool, func, string } from 'prop-types';
 import classNames from 'classnames';
 import { Form as FinalForm } from 'react-final-form';
 
+import { useConfiguration } from '../../../context/configurationContext';
 import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { required } from '../../../util/validators';
@@ -64,23 +65,28 @@ const DisputeForm = props => (
 );
 
 // Show dispute form
-const DisputeInfo = props => (
-  <>
-    <p className={css.modalTitle}>
-      <FormattedMessage id="DisputeModal.title" />
-    </p>
-    <p className={css.modalMessage}>
-      <FormattedMessage id="DisputeModal.description" />
-    </p>
-    <DisputeForm
-      onSubmit={props.onDisputeOrder}
-      disputeSubmitted={props.disputeSubmitted}
-      disputeInProgress={props.disputeInProgress}
-      disputeError={props.disputeError}
-      intl={props.intl}
-    />
-  </>
-);
+const DisputeInfo = props => {
+  const config = useConfiguration();
+  const siteTitle = config.siteTitle;
+
+  return (
+    <>
+      <p className={css.modalTitle}>
+        <FormattedMessage id="DisputeModal.title" />
+      </p>
+      <p className={css.modalMessage}>
+        <FormattedMessage id="DisputeModal.description" values={{ siteTitle }} />
+      </p>
+      <DisputeForm
+        onSubmit={props.onDisputeOrder}
+        disputeSubmitted={props.disputeSubmitted}
+        disputeInProgress={props.disputeInProgress}
+        disputeError={props.disputeError}
+        intl={props.intl}
+      />
+    </>
+  );
+};
 
 // Show info that dispute form has been sent already.
 const DisputeSentInfo = props => (

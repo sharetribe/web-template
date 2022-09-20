@@ -214,9 +214,12 @@ class PaymentMethodsForm extends Component {
       id: 'PaymentMethodsForm.billingDetailsNamePlaceholder',
     });
 
-    const infoText = intl.formatMessage({
-      id: 'PaymentMethodsForm.infoText',
-    });
+    const infoText = intl.formatMessage(
+      {
+        id: 'PaymentMethodsForm.infoText',
+      },
+      { siteTitle: config.siteTitle }
+    );
 
     // Stripe recommends asking billing address.
     // In PaymentMethodsForm, we send name and email as billing details, but address only if it exists.
