@@ -434,6 +434,7 @@ export const BookingDatesFormComponent = props => {
     onSubmit,
     timeZone,
     dayCountAvailableForBooking,
+    siteTitle,
     ...rest
   } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -617,6 +618,7 @@ export const BookingDatesFormComponent = props => {
                   lineItems={lineItems}
                   timeZone={timeZone}
                   currency={unitPrice.currency}
+                  siteTitle={siteTitle}
                 />
               </div>
             ) : null}
@@ -663,6 +665,7 @@ BookingDatesFormComponent.propTypes = {
   rootClassName: string,
   className: string,
 
+  siteTitle: string.isRequired,
   lineItemUnitType: propTypes.lineItemUnitType.isRequired,
   price: propTypes.money,
   isOwnListing: bool,

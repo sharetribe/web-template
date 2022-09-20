@@ -25,6 +25,7 @@ export const getDefaultConfiguration = () => {
   return {
     ...defaultConfig,
     currency: 'USD',
+    siteTitle: 'MarketplaceX',
     facebookAppId: undefined,
     canonicalRootURL: 'http://localhost:3000',
     maps: {

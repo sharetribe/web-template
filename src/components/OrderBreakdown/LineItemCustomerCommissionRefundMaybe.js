@@ -1,4 +1,6 @@
 import React from 'react';
+import { string } from 'prop-types';
+
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
 import { propTypes, LINE_ITEM_CUSTOMER_COMMISSION } from '../../util/types';
@@ -6,7 +8,7 @@ import { propTypes, LINE_ITEM_CUSTOMER_COMMISSION } from '../../util/types';
 import css from './OrderBreakdown.module.css';
 
 const LineItemCustomerCommissionRefundMaybe = props => {
-  const { lineItems, isCustomer, intl } = props;
+  const { lineItems, isCustomer, siteTitle, intl } = props;
 
   const refund = lineItems.find(
     item => item.code === LINE_ITEM_CUSTOMER_COMMISSION && item.reversal
@@ -15,7 +17,7 @@ const LineItemCustomerCommissionRefundMaybe = props => {
   return isCustomer && refund ? (
     <div className={css.lineItem}>
       <span className={css.itemLabel}>
-        <FormattedMessage id="OrderBreakdown.refundCustomerFee" />
+        <FormattedMessage id="OrderBreakdown.refundCustomerFee" values={{ siteTitle }} />
       </span>
       <span className={css.itemValue}>{formatMoney(intl, refund.lineTotal)}</span>
     </div>
@@ -24,6 +26,7 @@ const LineItemCustomerCommissionRefundMaybe = props => {
 
 LineItemCustomerCommissionRefundMaybe.propTypes = {
   lineItems: propTypes.lineItems.isRequired,
+  siteTitle: string.isRequired,
   intl: intlShape.isRequired,
 };
 

@@ -118,6 +118,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
           onSubmit={[Function]}
           paymentIntent={null}
           showInitialMessageInput={true}
+          siteTitle="MarketplaceX"
           stripePublishableKey="pk_test_"
           totalPrice={null}
         />

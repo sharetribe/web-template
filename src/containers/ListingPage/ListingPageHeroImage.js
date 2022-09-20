@@ -431,6 +431,7 @@ export const ListingPageComponent = props => {
                   fetchLineItemsError={fetchLineItemsError}
                   marketplaceCurrency={config.currency}
                   dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
+                  siteTitle={config.siteTitle}
                 />
               </div>
             </div>

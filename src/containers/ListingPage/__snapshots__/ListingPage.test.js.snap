@@ -525,6 +525,7 @@ exports[`ListingPage matches snapshot 1`] = `
               onFetchTransactionLineItems={[Function]}
               onManageDisableScrolling={[Function]}
               onSubmit={[Function]}
+              siteTitle="MarketplaceX"
               title={
                 <Memo(MemoizedFormattedMessage)
                   id="ListingPage.orderTitle"

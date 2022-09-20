@@ -380,6 +380,7 @@ export const TransactionPageComponent = props => {
             transaction={transaction}
             {...txBookingMaybe}
             currency={config.currency}
+            siteTitle={config.siteTitle}
           />
         ),
       }
@@ -444,6 +445,7 @@ export const TransactionPageComponent = props => {
           fetchLineItemsError={fetchLineItemsError}
           marketplaceCurrency={config.currency}
           dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
+          siteTitle={config.siteTitle}
         />
       }
     />
@@ -472,6 +474,7 @@ export const TransactionPageComponent = props => {
             reviewSent={state.reviewSubmitted}
             sendReviewInProgress={sendReviewInProgress}
             sendReviewError={sendReviewError}
+            siteTitle={config.siteTitle}
           />
           {process?.transitions?.DISPUTE ? (
             <DisputeModal

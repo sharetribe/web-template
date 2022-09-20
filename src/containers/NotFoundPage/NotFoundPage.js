@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { arrayOf, bool, func, object, shape } from 'prop-types';
+import { arrayOf, bool, func, object, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
+import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
@@ -35,7 +36,7 @@ export class NotFoundPageComponent extends Component {
   }
 
   render() {
-    const { history, routeConfiguration, intl, scrollingDisabled } = this.props;
+    const { history, routeConfiguration, siteTitle, intl, scrollingDisabled } = this.props;
 
     const title = intl.formatMessage({
       id: 'NotFoundPage.title',
@@ -62,7 +63,7 @@ export class NotFoundPageComponent extends Component {
                   <FormattedMessage id="NotFoundPage.heading" />
                 </h1>
                 <p className={css.description}>
-                  <FormattedMessage id="NotFoundPage.description" />
+                  <FormattedMessage id="NotFoundPage.description" values={{ siteTitle }} />
                 </p>
                 <LocationSearchForm className={css.searchForm} onSubmit={handleSearchSubmit} />
               </div>
@@ -83,6 +84,7 @@ NotFoundPageComponent.defaultProps = {
 
 NotFoundPageComponent.propTypes = {
   scrollingDisabled: bool.isRequired,
+  siteTitle: string.isRequired,
 
   // context object from StaticRouter, injected by the withRouter wrapper
   staticContext: object,
@@ -101,12 +103,14 @@ NotFoundPageComponent.propTypes = {
 
 const EnhancedNotFoundPage = props => {
   const routeConfiguration = useRouteConfiguration();
+  const config = useConfiguration();
   const history = useHistory();
   const intl = useIntl();
 
   return (
     <NotFoundPageComponent
       routeConfiguration={routeConfiguration}
+      siteTitle={config.siteTitle}
       history={history}
       intl={intl}
       {...props}
