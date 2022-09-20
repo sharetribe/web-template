@@ -11,10 +11,6 @@ import { metaTagProps } from '../../util/seo';
 import { canonicalRoutePath } from '../../util/routes';
 import { propTypes } from '../../util/types';
 
-import { CookieConsent } from '../../components';
-
-import facebookImage from '../../assets/sneakertimeFacebook-1200x630.jpg';
-import twitterImage from '../../assets/sneakertimeTwitter-600x314.jpg';
 import css from './Page.module.css';
 
 const preventDefault = e => {
@@ -102,40 +98,49 @@ class PageComponent extends Component {
     this.scrollingDisabledChanged(scrollingDisabled);
     const referrerMeta = referrer ? <meta name="referrer" content={referrer} /> : null;
 
-    const canonicalRootURL = config.canonicalRootURL;
+    const marketplaceRootURL = config.marketplaceRootURL;
     const shouldReturnPathOnly = referrer && referrer !== 'unsafe-url';
     const canonicalPath = canonicalRoutePath(routeConfiguration, location, shouldReturnPathOnly);
-    const canonicalUrl = `${canonicalRootURL}${canonicalPath}`;
+    const canonicalUrl = `${marketplaceRootURL}${canonicalPath}`;
 
-    const siteTitle = config.siteTitle;
-    const schemaTitle = intl.formatMessage({ id: 'Page.schemaTitle' }, { siteTitle });
+    const marketplaceName = config.marketplaceName;
+    const schemaTitle = intl.formatMessage({ id: 'Page.schemaTitle' }, { marketplaceName });
     const schemaDescription = intl.formatMessage({ id: 'Page.schemaDescription' });
     const metaTitle = title || schemaTitle;
     const metaDescription = description || schemaDescription;
+
+    // Images for social media sharing
+    const defaultFacebookImageURL = config.branding.facebookImageURL;
     const facebookImgs = facebookImages || [
       {
         name: 'facebook',
-        url: `${canonicalRootURL}${facebookImage}`,
+        url: defaultFacebookImageURL,
         width: 1200,
         height: 630,
       },
     ];
+    const facebookImagesMaybe =
+      facebookImages || defaultFacebookImageURL ? { facebookImages: facebookImgs } : {};
+
+    const defaultTwitterImageURL = config.branding.twitterImageURL;
     const twitterImgs = twitterImages || [
       {
         name: 'twitter',
-        url: `${canonicalRootURL}${twitterImage}`,
+        url: defaultTwitterImageURL,
         width: 600,
         height: 314,
       },
     ];
+    const twitterImagesMaybe =
+      twitterImages || defaultTwitterImageURL ? { twitterImages: twitterImgs } : {};
 
     const metaToHead = metaTagProps(
       {
         author,
         contentType,
         description: metaDescription,
-        facebookImages: facebookImgs,
-        twitterImages: twitterImgs,
+        ...facebookImagesMaybe,
+        ...twitterImagesMaybe,
         published,
         tags,
         title: metaTitle,
@@ -163,26 +168,27 @@ class PageComponent extends Component {
     // This makes it possible to include several different items from the same page.
     // E.g. Product, Place, Video
     const schemaFromProps = Array.isArray(schema) ? schema : [schema];
+    const addressMaybe = config.address?.streetAddress ? { address: config.address } : {};
     const schemaArrayJSONString = JSON.stringify([
       ...schemaFromProps,
       {
         '@context': 'http://schema.org',
         '@type': 'Organization',
-        '@id': `${canonicalRootURL}#organization`,
-        url: canonicalRootURL,
-        name: siteTitle,
+        '@id': `${marketplaceRootURL}#organization`,
+        url: marketplaceRootURL,
+        name: marketplaceName,
         sameAs: sameOrganizationAs,
-        logo: `${canonicalRootURL}/static/webapp-icon-192x192.png`,
-        address: config.address,
+        logo: config.branding.logoImageMobileURL,
+        ...addressMaybe,
       },
       {
         '@context': 'http://schema.org',
         '@type': 'WebSite',
-        url: canonicalRootURL,
+        url: marketplaceRootURL,
         description: schemaDescription,
         name: schemaTitle,
         publisher: {
-          '@id': `${canonicalRootURL}#organization`,
+          '@id': `${marketplaceRootURL}#organization`,
         },
       },
     ]);
@@ -217,7 +223,6 @@ class PageComponent extends Component {
             {schemaArrayJSONString.replace(/</g, '\\u003c')}
           </script>
         </Helmet>
-        <CookieConsent />
         <div
           className={css.content}
           style={scrollPositionStyles}

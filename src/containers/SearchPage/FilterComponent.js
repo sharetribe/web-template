@@ -28,6 +28,7 @@ const FilterComponent = props => {
     initialValues,
     getHandleChangedValueFn,
     marketplaceCurrency,
+    intl,
     ...rest
   } = props;
   // Note: config can be either
@@ -45,11 +46,11 @@ const FilterComponent = props => {
   // Default filters: price, keywords, dates
   switch (key) {
     case 'price': {
-      const { min, max, step, label } = config;
+      const { min, max, step } = config;
       return (
         <PriceFilter
           id={componentId}
-          label={label}
+          label={intl.formatMessage({ id: 'FilterComponent.priceLabel' })}
           queryParamNames={[key]}
           initialValues={initialValues([key], liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
@@ -65,7 +66,7 @@ const FilterComponent = props => {
       return (
         <KeywordFilter
           id={componentId}
-          label={config.label}
+          label={intl.formatMessage({ id: 'FilterComponent.keywordsLabel' })}
           name={name}
           queryParamNames={[key]}
           initialValues={initialValues([key], liveEdit)}
@@ -74,12 +75,12 @@ const FilterComponent = props => {
         />
       );
     case 'dates': {
-      const { label, mode } = config;
+      const { mode } = config;
       const isNightlyMode = mode === 'night';
       return (
         <BookingDateRangeFilter
           id={componentId}
-          label={label}
+          label={intl.formatMessage({ id: 'FilterComponent.datesLabel' })}
           queryParamNames={[key]}
           initialValues={initialValues([key], liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}

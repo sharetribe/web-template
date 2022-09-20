@@ -42,6 +42,11 @@ exports[`NotFoundPageComponent matches snapshot 1`] = `
           >
             <MemoizedFormattedMessage
               id="NotFoundPage.description"
+              values={
+                Object {
+                  "marketplaceName": "MarketplaceX",
+                }
+              }
             />
           </p>
           <injectIntl(LocationSearchFormComponent)

@@ -119,36 +119,6 @@ exports.render = function(requestUrl, context, data, renderApp, webExtractor) {
       <script>window.__PRELOADED_STATE__ = ${JSON.stringify(serializedState)};</script>
   `;
 
-  // We want to precisely control where the analytics script is
-  // injected in the HTML file so we can catch all events as early as
-  // possible. This script also ensures that all the GA scripts
-  // are added only when the proper env var is present.
-  // NOTE: when dealing with cookie consents, it might make more sense to
-  //       include this script through react-helmet.
-  //
-  // See: https://developers.google.com/analytics/devguides/collection/gtagjs
-  const googleAnalyticsId = process.env.REACT_APP_GOOGLE_ANALYTICS_ID;
-  // Add Google Analytics script if correct id exists (it should start with 'G-' prefix)
-  const hasGoogleAnalyticsv4Id = googleAnalyticsId?.indexOf('G-') === 0;
-
-  // Google Analytics: gtag.js
-  // NOTE: FTW is a single-page application (SPA).
-  //       gtag.js sends initial page_view event after page load.
-  //       but we need to handle subsequent events for in-app navigation.
-  const gtagScripts = `
-      <script async src="https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}"></script>
-      <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-      
-        gtag('config', '${googleAnalyticsId}', {
-          cookie_flags: 'SameSite=None;Secure',
-        });
-      </script>
-    `;
-  const googleAnalyticsScript = hasGoogleAnalyticsv4Id ? gtagScripts : '';
-
   return template({
     htmlAttributes: head.htmlAttributes.toString(),
     title: head.title.toString(),
@@ -156,7 +126,6 @@ exports.render = function(requestUrl, context, data, renderApp, webExtractor) {
     meta: head.meta.toString(),
     script: head.script.toString(),
     preloadedStateScript,
-    googleAnalyticsScript,
     ssrStyles: webExtractor.getStyleTags(),
     ssrLinks: webExtractor.getLinkTags(),
     ssrScripts: webExtractor.getScriptTags(),

@@ -60,7 +60,7 @@ class ReusableMapContainer extends React.Component {
     const renderChildren = () => {
       const { config, messages } = this.props;
       const children = (
-        <IntlProvider locale={config.locale} messages={messages} textComponent="span">
+        <IntlProvider locale={config.localization.locale} messages={messages} textComponent="span">
           {this.props.children}
         </IntlProvider>
       );
@@ -121,6 +121,7 @@ ReusableMapContainer.propTypes = {
   className: string,
   reusableMapHiddenHandle: string.isRequired,
   messages: object.isRequired,
+  config: object.isRequired,
 };
 
 export default ReusableMapContainer;

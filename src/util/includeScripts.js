@@ -9,15 +9,26 @@ const GOOGLE_MAPS_SCRIPT_ID = 'GoogleMapsApi';
  * These scripts are relevant for whole application: location search in Topbar and maps on different pages.
  * However, if you don't need location search and maps, you can just omit this component from app.js
  * Note: another common point to add <scripts>, <links> and <meta> tags is Page.js
+ *       and Stripe script is added in public/index.html
+ *
+ * Note 2: When adding new external scripts/styles/fonts/etc.,
+ *         if a Content Security Policy (CSP) is turned on, the new URLs
+ *         should be whitelisted in the policy. Check: server/csp.js
  */
 export const IncludeScripts = props => {
-  const { canonicalRootURL: rootURL, maps } = props?.config || {};
+  const { marketplaceRootURL: rootURL, maps, googleAnalyticsId } = props?.config || {};
+
   const { mapProvider, googleMapsAPIKey, mapboxAccessToken } = maps || {};
   const isGoogleMapsInUse = mapProvider === 'GOOGLE_MAPS';
   const isMapboxInUse = mapProvider === 'MAPBOX';
 
+  // Add Google Analytics script if correct id exists (it should start with 'G-' prefix)
+  // See: https://developers.google.com/analytics/devguides/collection/gtagjs
+  const hasGoogleAnalyticsv4Id = googleAnalyticsId?.indexOf('G-') === 0;
+
   // Collect relevant map libraries
   let mapLibraries = [];
+  let analyticsLibraries = [];
 
   if (isMapboxInUse) {
     // NOTE: remember to update mapbox-sdk.min.js to a new version regularly.
@@ -49,6 +60,35 @@ export const IncludeScripts = props => {
         key="GoogleMapsApi"
         src={`https://maps.googleapis.com/maps/api/js?key=${googleMapsAPIKey}&libraries=places`}
       ></script>
+    );
+  }
+
+  if (googleAnalyticsId && hasGoogleAnalyticsv4Id) {
+    // Google Analytics: gtag.js
+    // NOTE: FTW is a single-page application (SPA).
+    //       gtag.js sends initial page_view event after page load.
+    //       but we need to handle subsequent events for in-app navigation.
+    //       This is done in src/analytics/handlers.js
+    analyticsLibraries.push(
+      <script
+        key="gtag.js"
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+      ></script>
+    );
+
+    analyticsLibraries.push(
+      <script key="gtag dataLayer">
+        {`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+        gtag('config', '${googleAnalyticsId}', {
+          cookie_flags: 'SameSite=None;Secure',
+        });
+        `}
+      </script>
     );
   }
 
@@ -88,5 +128,6 @@ export const IncludeScripts = props => {
     }
   };
 
-  return <Helmet onChangeClientState={onChangeClientState}>{mapLibraries}</Helmet>;
+  const allScripts = [...analyticsLibraries, ...mapLibraries];
+  return <Helmet onChangeClientState={onChangeClientState}>{allScripts}</Helmet>;
 };

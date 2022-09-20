@@ -114,10 +114,6 @@ const mandatoryVariables = settings => {
     settings && settings.REACT_APP_MAPBOX_ACCESS_TOKEN !== ''
       ? { default: settings.REACT_APP_MAPBOX_ACCESS_TOKEN }
       : {};
-  const currencyDefault =
-    settings && settings.REACT_APP_SHARETRIBE_MARKETPLACE_CURRENCY !== ''
-      ? settings.REACT_APP_SHARETRIBE_MARKETPLACE_CURRENCY
-      : 'USD';
 
   return [
     {
@@ -175,24 +171,6 @@ If you don't set the Mapbox key, the map components won't work in the applicatio
 `,
       ...mapBoxDefaultMaybe,
     },
-    {
-      type: 'input',
-      name: 'REACT_APP_SHARETRIBE_MARKETPLACE_CURRENCY',
-      message: `What is your marketplace currency?
-${chalk.dim(
-  'The currency used in the Marketplace must be in ISO 4217 currency code. For example USD, EUR, CAD, AUD, etc. The default value is USD.'
-)}
-`,
-      default: function() {
-        return currencyDefault;
-      },
-      validate: function(value) {
-        if (value.match(/^[a-zA-Z]{3}$/)) {
-          return true;
-        }
-        return 'Please enter currency in ISO 4217 format (e.g. USD, EUR, CAD...)';
-      },
-    },
   ];
 };
 
@@ -208,7 +186,7 @@ ${chalk.dim(
  */
 
 const advancedSettings = settings => {
-  const rootUrlDefault = settings ? settings.REACT_APP_CANONICAL_ROOT_URL : null;
+  const rootUrlDefault = settings ? settings.REACT_APP_MARKETPLACE_ROOT_URL : null;
   const cspDefault = settings ? settings.REACT_APP_CSP : null;
 
   return [
@@ -220,7 +198,7 @@ const advancedSettings = settings => {
     },
     {
       type: 'input',
-      name: 'REACT_APP_CANONICAL_ROOT_URL',
+      name: 'REACT_APP_MARKETPLACE_ROOT_URL',
       message: `What is your canonical root URL?
 ${chalk.dim(
   'Canonical root URL of the marketplace is needed for social media sharing, SEO optimization, and social logins. When developing the template application locally URL is usually http://localhost:3000 (Note: you should omit any trailing slash)'

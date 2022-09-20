@@ -4,15 +4,8 @@ export class LoggingAnalyticsHandler {
   }
 }
 
-// Google Analytics 4 (GA4) using gtag.js script, which is included in server/rendered.js
-// Note: the script is only available locally when running "yarn run dev-server"
+// Google Analytics 4 (GA4) using gtag.js script, which is included in util/includeScripts.js
 export class GoogleAnalyticsHandler {
-  constructor(gtag) {
-    if (typeof gtag !== 'function') {
-      throw new Error('Variable `gtag` missing for Google Analytics');
-    }
-    this.gtag = gtag;
-  }
   trackPageView(canonicalPath, previousPath) {
     // GA4 property. Manually send page_view events
     // https://developers.google.com/analytics/devguides/collection/gtagjs/single-page-applications
@@ -22,9 +15,9 @@ export class GoogleAnalyticsHandler {
     //         Only in-app navigation needs to be sent manually from SPA.
     // Note 3: Timeout is needed because gtag script picks up <title>,
     //         and location change event happens before initial rendering.
-    if (previousPath) {
+    if (previousPath && window.gtag) {
       window.setTimeout(() => {
-        this.gtag('event', 'page_view', {
+        window.gtag('event', 'page_view', {
           page_path: canonicalPath,
         });
       }, 300);

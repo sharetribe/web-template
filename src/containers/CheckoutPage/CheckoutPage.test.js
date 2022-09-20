@@ -22,7 +22,6 @@ const routeConfiguration = [
 
 describe('CheckoutPage', () => {
   it('matches snapshot', () => {
-    const defaultConfig = getDefaultConfiguration();
     const listing = createListing(
       'listing1',
       { publicData: { transactionProcessAlias: 'flex-product-default-process', unitType: 'item' } },

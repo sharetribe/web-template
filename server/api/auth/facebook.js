@@ -4,7 +4,7 @@ const loginWithIdp = require('./loginWithIdp');
 
 const radix = 10;
 const PORT = parseInt(process.env.REACT_APP_DEV_API_SERVER_PORT, radix);
-const rootUrl = process.env.REACT_APP_CANONICAL_ROOT_URL;
+const rootUrl = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
 const clientID = process.env.REACT_APP_FACEBOOK_APP_ID;
 const clientSecret = process.env.FACEBOOK_APP_SECRET;
 

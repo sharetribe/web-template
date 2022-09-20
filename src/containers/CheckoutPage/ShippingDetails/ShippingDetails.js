@@ -18,7 +18,7 @@ const ShippingDetails = props => {
     id: 'ShippingDetails.optionalText',
   });
 
-  // Use tha language set in config.locale to get the correct translations of the country names
+  // Use the language set in config.localization.locale to get the correct translations of the country names
   const countryCodes = getCountryCodes(locale);
 
   return (

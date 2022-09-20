@@ -1,12 +1,11 @@
-/*
- * Marketplace specific configuration.
- */
+/////////////////////////////////////////////////////////
+// Configurations related to listing.                  //
+// Main configuration here is the extended data config //
+/////////////////////////////////////////////////////////
 
-/**
- * Active processes.
- * Note: these should match with the process names in src/util/transaction.js
- */
-export const processes = ['flex-product-default-process', 'flex-booking-default-process'];
+// NOTE: if you want to change the structure of the data,
+// you should also check src/util/configHelpers.js
+// some validation is added there.
 
 /**
  * Configuration options for extended data fields:
@@ -29,6 +28,7 @@ export const processes = ['flex-product-default-process', 'flex-booking-default-
  *                                  https://www.sharetribe.com/docs/references/extended-data/#search-schema
  *                                  Read more about filtering listings with public data keys from API Reference:
  *                                  https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
+ *                                  Default value: false,
  * - searchPageConfig:              Search-specific configuration.
  *   - filterType:                    Sometimes a single schemaType can be rendered with different filter components.
  *                                    For 'enum' schema, filterType can be 'SelectSingleFilter' or 'SelectMultipleFilter'
@@ -38,9 +38,12 @@ export const processes = ['flex-product-default-process', 'flex-booking-default-
  *   - group:                         SearchPageWithMap has grouped filters. Possible values: 'primary' or 'secondary'.
  * - listingPageConfig:             Configuration for rendering listing.
  *   - label:                         Label for the saved data.
+ *   - isDetail                       Can be used to hide detail row (of type enum, boolean, or long) from listing page.
+ *                                    Default value: true,
  * - editListingPageConfig:         Configuration for adding and modifying extended data fields.
  *   - label:                         Label for the input field.
  *   - placeholderMessage (optional): Default message for user input.
+ *   - required (optional):           Is the field required for providers to fill
  *   - requiredMessage (optional):    Message for those fields, which are mandatory.
  */
 export const listingExtendedData = [
@@ -62,7 +65,8 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Select category',
-      placeholder: 'Choose…',
+      placeholderMessage: 'Choose…',
+      isRequired: true,
       requiredMessage: 'You need to select a category.',
     },
   },
@@ -84,7 +88,8 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Select size (US)',
-      placeholder: 'Choose…',
+      placeholderMessage: 'Choose…',
+      isRequired: true,
       requiredMessage: 'You need to select a size.',
     },
   },
@@ -116,7 +121,8 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Select brand',
-      placeholder: 'Choose…',
+      placeholderMessage: 'Choose…',
+      isRequired: true,
       requiredMessage: 'You need to select a brand.',
     },
   },
@@ -136,7 +142,8 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Select Sauna type',
-      placeholder: 'Choose…',
+      placeholderMessage: 'Choose…',
+      isRequired: true,
       requiredMessage: 'You need to select what type of sauna you have.',
     },
   },
@@ -171,7 +178,8 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Blaa',
-      placeholder: 'Blaa bla blaa',
+      placeholderMessage: 'Blaa bla blaa',
+      isRequired: true,
       requiredMessage: 'You need to write something.',
     },
   },
@@ -183,7 +191,7 @@ export const listingExtendedData = [
     indexForSearch: false,
     editListingPageConfig: {
       label: 'Private notes',
-      placeholder: 'Blaa bla blaa',
+      placeholderMessage: 'Blaa bla blaa',
     },
   },
   {
@@ -202,7 +210,8 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Gears',
-      placeholder: 'The number of gears',
+      placeholderMessage: 'The number of gears',
+      isRequired: true,
       requiredMessage: 'You need to add details about gears.',
     },
   },
@@ -222,72 +231,8 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Has lights',
-      placeholder: 'Choose yes/no',
+      placeholderMessage: 'Choose yes/no',
       //requiredMessage: 'You need to tell if the bike has lights.',
     },
   },
 ];
-
-/**
- * Configuration for default filters.
- * These are custom configs for each filter.
- * Common properties: key, schemaType, and label.
- */
-export const defaultFilters = [
-  // TODO: dates filter should be removed if marketplace is only product marketplace (unitType: 'item')
-  {
-    key: 'dates',
-    schemaType: 'dates',
-    label: 'Dates',
-    entireRangeAvailable: true,
-    // Options: day/night. This affects counting and whether single day picking is possible.
-    mode: 'day',
-  },
-  {
-    key: 'price',
-    schemaType: 'price',
-    label: 'Price',
-    // Note: unlike most prices this is not handled in subunits
-    min: 0,
-    max: 1000,
-    step: 5,
-  },
-  // {
-  //   key: 'keywords',
-  //   schemaType: 'text',
-  //   label: 'Keyword',
-  // },
-];
-
-export const sortConfig = {
-  // Enable/disable the sorting control in the SearchPage
-  active: true,
-
-  // Note: queryParamName 'sort' is fixed,
-  // you can't change it since Flex API expects it to be named as 'sort'
-  queryParamName: 'sort',
-
-  // Internal key for the relevance option, see notes below.
-  relevanceKey: 'relevance',
-
-  // Relevance key is used with keywords filter.
-  // Keywords filter also sorts results according to relevance.
-  relevanceFilter: 'keywords',
-
-  // Keyword filter is sorting the results by relevance.
-  // If keyword filter is active, one might want to disable other sorting options
-  // by adding 'keywords' to this list.
-  conflictingFilters: [],
-
-  options: [
-    { key: 'createdAt', label: 'Newest' },
-    { key: '-createdAt', label: 'Oldest' },
-    { key: '-price', label: 'Lowest price' },
-    { key: 'price', label: 'Highest price' },
-
-    // The relevance is only used for keyword search, but the
-    // parameter isn't sent to the Marketplace API. The key is purely
-    // for handling the internal state of the sorting dropdown.
-    { key: 'relevance', label: 'Relevance', longLabel: 'Relevance (Keyword search)' },
-  ],
-};

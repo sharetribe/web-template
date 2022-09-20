@@ -64,12 +64,6 @@ const drawFuzzyCircle = (mapsConfig, center) => {
   return polylineGraphicTokens.join('|');
 };
 
-// Get custom marker data for static map URI
-const customMarker = (options, lat, lng) => {
-  const { anchorX, anchorY, url } = options;
-  return [`anchor:${anchorX},${anchorY}`, `icon:${url}`, `${lat},${lng}`].join('|');
-};
-
 class StaticGoogleMap extends Component {
   shouldComponentUpdate(nextProps, prevState) {
     // Do not draw the map unless center, zoom or dimensions change
@@ -86,12 +80,9 @@ class StaticGoogleMap extends Component {
 
     // Extra graphics for the static map image
     // 1. if fuzzy coordinates are used, return circle path
-    // 2. if customMarker is defined in config.js, use that
-    // 3. else return default marker
+    // 2. else return default marker
     const targetMaybe = mapsConfig.fuzzy.enabled
       ? { path: drawFuzzyCircle(mapsConfig, center) }
-      : mapsConfig.customMarker.enabled
-      ? { markers: customMarker(mapsConfig.customMarker, lat, lng) }
       : { markers: `${lat},${lng}` };
 
     const srcParams = stringify({

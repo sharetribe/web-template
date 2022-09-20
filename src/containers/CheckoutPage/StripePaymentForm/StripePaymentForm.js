@@ -93,7 +93,16 @@ const cardStyles = {
 };
 
 const OneTimePaymentWithCardElement = props => {
-  const { cardClasses, formId, handleStripeElementRef, hasCardError, error, label, intl } = props;
+  const {
+    cardClasses,
+    formId,
+    handleStripeElementRef,
+    hasCardError,
+    error,
+    label,
+    intl,
+    marketplaceName,
+  } = props;
   const labelText =
     label || intl.formatMessage({ id: 'StripePaymentForm.saveAfterOnetimePayment' });
   return (
@@ -114,7 +123,10 @@ const OneTimePaymentWithCardElement = props => {
           useSuccessColor
         />
         <span className={css.saveForLaterUseLegalInfo}>
-          <FormattedMessage id="StripePaymentForm.saveforLaterUseLegalInfo" />
+          <FormattedMessage
+            id="StripePaymentForm.saveforLaterUseLegalInfo"
+            values={{ marketplaceName }}
+          />
         </span>
       </div>
     </React.Fragment>
@@ -132,6 +144,7 @@ const PaymentMethodSelector = props => {
     error,
     paymentMethod,
     intl,
+    marketplaceName,
   } = props;
   const last4Digits = defaultPaymentMethod.attributes.card.last4Digits;
   const labelText = intl.formatMessage(
@@ -158,6 +171,7 @@ const PaymentMethodSelector = props => {
           error={error}
           label={labelText}
           intl={intl}
+          marketplaceName={marketplaceName}
         />
       ) : null}
     </React.Fragment>
@@ -395,6 +409,7 @@ class StripePaymentForm extends Component {
       totalPrice,
       locale,
       stripePublishableKey,
+      marketplaceName,
       values,
     } = formRenderProps;
 
@@ -513,6 +528,7 @@ class StripePaymentForm extends Component {
                 error={this.state.error}
                 paymentMethod={selectedPaymentMethod}
                 intl={intl}
+                marketplaceName={marketplaceName}
               />
             ) : (
               <React.Fragment>
@@ -526,6 +542,7 @@ class StripePaymentForm extends Component {
                   hasCardError={hasCardError}
                   error={this.state.error}
                   intl={intl}
+                  marketplaceName={marketplaceName}
                 />
               </React.Fragment>
             )}
@@ -668,6 +685,7 @@ StripePaymentForm.propTypes = {
   totalPrice: string,
   locale: string.isRequired,
   stripePublishableKey: string.isRequired,
+  marketplaceName: string.isRequired,
 
   // from injectIntl
   intl: intlShape.isRequired,

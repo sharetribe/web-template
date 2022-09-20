@@ -25,8 +25,9 @@ export const getDefaultConfiguration = () => {
   return {
     ...defaultConfig,
     currency: 'USD',
+    marketplaceName: 'MarketplaceX',
     facebookAppId: undefined,
-    canonicalRootURL: 'http://localhost:3000',
+    marketplaceRootURL: 'http://localhost:3000',
     maps: {
       ...defaultConfig.maps,
       mapboxAccessToken: undefined,
@@ -40,11 +41,16 @@ export const getDefaultConfiguration = () => {
 };
 
 export const getRouteConfiguration = () => {
-  const pageVariantConfig = {
+  const layoutConfig = {
     searchPageVariant: 'map',
     listingPageVariant: 'full-image',
+    listingImage: {
+      aspectWidth: 400,
+      aspectHeight: 400,
+      variantPrefix: 'listing-card',
+    },
   };
-  return routeConfiguration(pageVariantConfig);
+  return routeConfiguration(layoutConfig);
 };
 
 // Locale should not affect the tests. We ensure this by providing
@@ -56,7 +62,7 @@ const testMessages = mapValues(messages, (val, key) => key);
 export const TestProvider = props => {
   const store = configureStore();
   return (
-    <ConfigurationProvider value={defaultConfig}>
+    <ConfigurationProvider value={getDefaultConfiguration()}>
       <RouteConfigurationProvider value={getRouteConfiguration()}>
         <IntlProvider locale="en" messages={testMessages} textComponent="span">
           <BrowserRouter>

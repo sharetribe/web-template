@@ -7,6 +7,7 @@ import OrderBreakdown from './OrderBreakdown';
 const { UUID, Money } = sdkTypes;
 
 const CURRENCY = 'USD';
+const marketplaceName = 'MarketplaceX';
 
 const exampleBooking = attributes => {
   return {
@@ -59,6 +60,7 @@ export const ProductShippingCustomer = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
+    marketplaceName,
     transaction: exampleTransaction({
       payinTotal: new Money(basePrice.plus(shipping), CURRENCY),
       payoutTotal: new Money(
@@ -102,6 +104,7 @@ export const ProductShippingProvider = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
+    marketplaceName,
     transaction: exampleTransaction({
       payinTotal: new Money(basePrice.plus(shipping), CURRENCY),
       payoutTotal: new Money(
@@ -145,6 +148,7 @@ export const ProductRefundShippingCustomer = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
+    marketplaceName,
     transaction: exampleTransaction({
       payinTotal: new Money(0, CURRENCY),
       payoutTotal: new Money(0, CURRENCY),
@@ -205,6 +209,7 @@ export const ProductRefundShippingProvider = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
+    marketplaceName,
     transaction: exampleTransaction({
       payinTotal: new Money(0, CURRENCY),
       payoutTotal: new Money(0, CURRENCY),
@@ -265,6 +270,7 @@ export const ProductRefundPickupCustomer = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
+    marketplaceName,
     transaction: exampleTransaction({
       payinTotal: new Money(0, CURRENCY),
       payoutTotal: new Money(0, CURRENCY),
@@ -325,6 +331,7 @@ export const ProductRefundPickupProvider = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
+    marketplaceName,
     transaction: exampleTransaction({
       payinTotal: new Money(0, CURRENCY),
       payoutTotal: new Money(0, CURRENCY),
@@ -385,6 +392,7 @@ export const BookingCheckout = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
+    marketplaceName,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       payinTotal: new Money(9000, CURRENCY),
@@ -412,6 +420,7 @@ export const BookingCustomerOrder = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
+    marketplaceName,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       payinTotal: new Money(9000, CURRENCY),
@@ -439,6 +448,7 @@ export const BookingProviderSale = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
+    marketplaceName,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       payinTotal: new Money(9000, CURRENCY),
@@ -473,6 +483,7 @@ export const BookingProviderSaleZeroCommission = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
+    marketplaceName,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       payinTotal: new Money(9000, CURRENCY),
@@ -507,6 +518,7 @@ export const BookingProviderSaleSingleNight = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
+    marketplaceName,
     dateType: DATE_TYPE_DATE,
     transaction: exampleTransaction({
       payinTotal: new Money(4500, CURRENCY),
@@ -541,6 +553,7 @@ export const BookingProviderSalePreauthorized = {
   component: OrderBreakdown,
   props: {
     userRole: 'provider',
+    marketplaceName,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       lastTransition: transitions.CONFIRM_PAYMENT,
@@ -576,6 +589,7 @@ export const BookingSingleDay = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
+    marketplaceName,
     dateType: DATE_TYPE_DATE,
     transaction: exampleTransaction({
       payinTotal: new Money(4500, CURRENCY),
@@ -603,6 +617,7 @@ export const BookingMultipleDays = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
+    marketplaceName,
     dateType: DATE_TYPE_DATE,
     transaction: exampleTransaction({
       payinTotal: new Money(9000, CURRENCY),
@@ -630,6 +645,7 @@ export const BookingWithItemType = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
+    marketplaceName,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       payinTotal: new Money(9000, CURRENCY),
@@ -657,6 +673,7 @@ export const BookingCustomPricing = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
+    marketplaceName,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       payinTotal: new Money(12800, CURRENCY),
@@ -708,6 +725,7 @@ export const BookingCustomPricingWithRefund = {
   component: OrderBreakdown,
   props: {
     userRole: 'customer',
+    marketplaceName,
     dateType: DATE_TYPE_DATETIME,
     transaction: exampleTransaction({
       payinTotal: new Money(0, CURRENCY),

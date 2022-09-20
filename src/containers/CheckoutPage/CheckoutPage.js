@@ -782,6 +782,7 @@ export class CheckoutPageComponent extends Component {
           transaction={tx}
           {...txBookingMaybe}
           currency={config.currency}
+          marketplaceName={config.marketplaceName}
         />
       ) : null;
 
@@ -807,7 +808,11 @@ export class CheckoutPageComponent extends Component {
     const firstImage =
       currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
 
-    const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+    const {
+      aspectWidth = 1,
+      aspectHeight = 1,
+      variantPrefix = 'listing-card',
+    } = config.layout.listingImage;
     const variants = firstImage
       ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
       : [];
@@ -934,8 +939,9 @@ export class CheckoutPageComponent extends Component {
                   askShippingDetails={orderData?.deliveryMethod === 'shipping'}
                   pickupLocation={currentListing?.attributes?.publicData?.location}
                   totalPrice={tx.id ? getFormattedTotalPrice(tx, intl) : null}
-                  locale={config.locale}
+                  locale={config.localization.locale}
                   stripePublishableKey={config.stripe.publishableKey}
+                  marketplaceName={config.marketplaceName}
                 />
               ) : null}
               {isPaymentExpired ? (

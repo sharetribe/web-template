@@ -15,7 +15,7 @@ describe('TopbarDesktop', () => {
       onSearchSubmit: noop,
       intl: fakeIntl,
       onLogout: noop,
-      appConfig: { mainSearchType: 'location' },
+      appConfig: { search: { mainSearchType: 'location' } },
     };
     const tree = renderDeep(<TopbarDesktop {...topbarProps} />);
     delete window.google;
@@ -31,7 +31,7 @@ describe('TopbarDesktop', () => {
       onSearchSubmit: noop,
       intl: fakeIntl,
       onLogout: noop,
-      appConfig: { mainSearchType: 'keywords' },
+      appConfig: { search: { mainSearchType: 'keywords' } },
     };
     const tree = renderDeep(<TopbarDesktop {...topbarProps} />);
     delete window.google;

@@ -352,8 +352,8 @@ const fetchMonthlyTimeSlots = (dispatch, listing) => {
 };
 
 // Helper to fetch correct image variants for different thunk calls
-const getImageVariants = listingConfig => {
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingConfig;
+const getImageVariants = listingImageConfig => {
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingImageConfig;
   const aspectRatio = aspectHeight / aspectWidth;
   return {
     'fields.image': [
@@ -394,7 +394,7 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
           'reviews.author',
           'reviews.subject',
         ],
-        ...getImageVariants(config.listing),
+        ...getImageVariants(config.layout.listingImage),
       },
       { expand: true }
     )
@@ -423,7 +423,7 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
         return sdk.listings.show({
           id: listingId,
           include: ['author', 'author.profileImage', 'images'],
-          ...getImageVariants(config.listing),
+          ...getImageVariants(config.layout.listingImage),
         });
       } else {
         return response;
@@ -473,7 +473,7 @@ const fetchMessages = (txId, page, config) => (dispatch, getState, sdk) => {
     .query({
       transaction_id: txId,
       include: ['sender', 'sender.profileImage'],
-      ...getImageVariants(config.listing),
+      ...getImageVariants(config.layout.listingImage),
       ...paging,
     })
     .then(response => {
@@ -552,7 +552,7 @@ const sendReviewAsSecond = (txId, transition, params, dispatch, sdk, config) => 
   return sdk.transactions
     .transition(
       { id: txId, transition, params },
-      { expand: true, include, ...getImageVariants(config.listing) }
+      { expand: true, include, ...getImageVariants(config.layout.listingImage) }
     )
     .then(response => {
       dispatch(addMarketplaceEntities(response));
@@ -579,7 +579,7 @@ const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config) => {
   return sdk.transactions
     .transition(
       { id: txId, transition, params },
-      { expand: true, include, ...getImageVariants(config.listing) }
+      { expand: true, include, ...getImageVariants(config.layout.listingImage) }
     )
     .then(response => {
       dispatch(addMarketplaceEntities(response));

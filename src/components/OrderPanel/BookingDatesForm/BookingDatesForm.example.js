@@ -9,6 +9,7 @@ const BookingDatesForm = loadable(() =>
 );
 
 const CURRENCY = 'USD';
+const marketplaceName = 'MarketplaceX';
 const { Money, UUID } = sdkTypes;
 
 const today = new Date();
@@ -115,6 +116,7 @@ export const FormWithNightBooking = {
       console.log('onFetchTimeSlots called with args:', listingId, start, end, timeZone),
     timeZone: 'Etc/UTC',
     currency: 'USD',
+    marketplaceName,
     dayCountAvailableForBooking: 90,
   },
   group: 'forms',

@@ -90,6 +90,7 @@ const OrderPanel = props => {
     lineItems,
     marketplaceCurrency,
     dayCountAvailableForBooking,
+    marketplaceName,
     fetchLineItemsInProgress,
     fetchLineItemsError,
   } = props;
@@ -212,6 +213,7 @@ const OrderPanel = props => {
             startDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             endDatePlaceholder={intl.formatDate(TODAY, dateFormattingOptions)}
             timeZone={timeZone}
+            marketplaceName={marketplaceName}
             onFetchTransactionLineItems={onFetchTransactionLineItems}
             lineItems={lineItems}
             fetchLineItemsInProgress={fetchLineItemsInProgress}
@@ -231,6 +233,7 @@ const OrderPanel = props => {
             monthlyTimeSlots={monthlyTimeSlots}
             onFetchTimeSlots={onFetchTimeSlots}
             timeZone={timeZone}
+            marketplaceName={marketplaceName}
             onFetchTransactionLineItems={onFetchTransactionLineItems}
             lineItems={lineItems}
             fetchLineItemsInProgress={fetchLineItemsInProgress}
@@ -247,6 +250,7 @@ const OrderPanel = props => {
             shippingEnabled={shippingEnabled}
             listingId={listing.id}
             isOwnListing={isOwnListing}
+            marketplaceName={marketplaceName}
             onFetchTransactionLineItems={onFetchTransactionLineItems}
             onContactUser={onContactUser}
             lineItems={lineItems}
@@ -318,6 +322,7 @@ OrderPanel.propTypes = {
   fetchLineItemsError: propTypes.error,
   marketplaceCurrency: string.isRequired,
   dayCountAvailableForBooking: number.isRequired,
+  marketplaceName: string.isRequired,
 
   // from withRouter
   history: shape({

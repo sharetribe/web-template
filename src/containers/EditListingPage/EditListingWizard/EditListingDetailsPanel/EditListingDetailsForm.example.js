@@ -2,11 +2,11 @@
 import EditListingDetailsForm from './EditListingDetailsForm';
 import defaultConfig from '../../../../config/defaultConfig';
 
-const oneProcessInfo = [
+const selectableTransactionTypes = [
   {
-    name: 'flex-product-default-process',
-    alias: 'release-1',
-    unitTypes: ['item'],
+    transactionType: 'sell-bicycles',
+    transactionProcessAlias: 'flex-product-default-process/release-1',
+    unitType: 'item',
   },
 ];
 
@@ -21,11 +21,12 @@ export const WithInitialValues = {
     ready: false,
     updated: false,
     updateInProgress: false,
-    processInfos: oneProcessInfo,
-    customConfig: config.custom,
+    selectableTransactionTypes: selectableTransactionTypes,
+    listingConfig: defaultConfig.listing,
     initialValues: {
       title: 'Listing',
       description: 'Lorem ipsum',
+      transactionType: 'sell-bicycles',
       transactionProcessAlias: 'flex-product-default-process/release-1',
       unitType: 'item',
     },
@@ -33,16 +34,16 @@ export const WithInitialValues = {
   group: 'page:EditListingPage',
 };
 
-const processInfos = [
+const selectableTransactionTypes2 = [
   {
-    name: 'flex-product-default-process',
-    alias: 'release-1',
-    unitTypes: ['item'],
+    transactionType: 'rent-bicycles',
+    transactionProcessAlias: 'flex-booking-default-process/release-1',
+    unitType: 'day',
   },
   {
-    name: 'flex-booking-default-process',
-    alias: 'release-1',
-    unitTypes: ['day', 'night'],
+    transactionType: 'sell-bicycles',
+    transactionProcessAlias: 'flex-product-default-process/release-1',
+    unitType: 'item',
   },
 ];
 
@@ -58,7 +59,8 @@ export const MultipleProcessInfos = {
     updated: false,
     updateInProgress: false,
     processInfos: processInfos,
-    customConfig: config.custom,
+    selectableTransactionTypes: selectableTransactionTypes2,
+    listingConfig: defaultConfig.listing,
   },
   group: 'page:EditListingPage',
 };

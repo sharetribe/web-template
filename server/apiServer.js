@@ -19,7 +19,7 @@ const app = express();
 // running in a different port than the main app.
 app.use(
   cors({
-    origin: process.env.REACT_APP_CANONICAL_ROOT_URL,
+    origin: process.env.REACT_APP_MARKETPLACE_ROOT_URL,
     credentials: true,
   })
 );

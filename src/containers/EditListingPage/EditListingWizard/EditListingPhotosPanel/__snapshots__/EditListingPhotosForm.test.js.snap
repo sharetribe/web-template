@@ -23,7 +23,7 @@ exports[`EditListingPhotosForm matches snapshot 1`] = `
       "now": [Function],
     }
   }
-  listingConfig={
+  listingImageConfig={
     Object {
       "aspectHeight": 1,
       "aspectWidth": 1,

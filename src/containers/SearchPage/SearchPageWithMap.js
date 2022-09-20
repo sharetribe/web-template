@@ -101,10 +101,8 @@ export class SearchPageComponent extends Component {
     // (i.e. 'moveend' event in Mapbox and 'bounds_changed' in Google Maps)
     if (viewportBoundsChanged && isSearchPage) {
       const { history, location, config } = this.props;
-      const {
-        listingExtendedData: listingExtendedDataConfig,
-        defaultFilters: defaultFiltersConfig,
-      } = config?.custom || {};
+      const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
+      const { defaultFilters: defaultFiltersConfig } = config?.search || {};
 
       // parse query parameters, including a custom attribute named category
       const { address, bounds, mapSearch, ...rest } = parse(location.search, {
@@ -141,11 +139,8 @@ export class SearchPageComponent extends Component {
   // Apply the filters by redirecting to SearchPage with new filters.
   applyFilters() {
     const { history, routeConfiguration, config } = this.props;
-    const {
-      sortConfig,
-      listingExtendedData: listingExtendedDataConfig,
-      defaultFilters: defaultFiltersConfig,
-    } = config?.custom || {};
+    const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
+    const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
     const searchParams = { ...urlQueryParams, ...this.state.currentQueryParams };
@@ -167,8 +162,8 @@ export class SearchPageComponent extends Component {
   // Reset all filter query parameters
   resetAll(e) {
     const { history, routeConfiguration, config } = this.props;
-    const { listingExtendedData: listingExtendedDataConfig, defaultFilters: defaultFiltersConfig } =
-      config?.custom || {};
+    const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
+    const { defaultFilters: defaultFiltersConfig } = config?.search || {};
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
     const filterQueryParamNames = getQueryParamNames(
@@ -186,11 +181,8 @@ export class SearchPageComponent extends Component {
 
   getHandleChangedValueFn(useHistoryPush) {
     const { history, routeConfiguration, config } = this.props;
-    const {
-      sortConfig,
-      listingExtendedData: listingExtendedDataConfig,
-      defaultFilters: defaultFiltersConfig,
-    } = config?.custom || {};
+    const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
+    const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
@@ -260,17 +252,15 @@ export class SearchPageComponent extends Component {
       config,
     } = this.props;
 
-    const {
-      processes: activeProcesses,
-      listingExtendedData: listingExtendedDataConfig,
-      defaultFilters: defaultFiltersConfig,
-      sortConfig,
-    } = config?.custom || {};
+    const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
+    const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
+
+    const activeProcesses = config?.transaction?.transactionTypes.map(config => config.process);
     const marketplaceCurrency = config.currency;
 
     // Page transition might initially use values from previous search
     // urlQueryParams doesn't contain page specific url params
-    // like mapSearch, page or origin (origin depends on config.sortSearchByDistance)
+    // like mapSearch, page or origin (origin depends on config.maps.search.sortSearchByDistance)
     const { searchParamsAreInSync, urlQueryParams, searchParamsInURL } = searchParamsPicker(
       location.search,
       searchParams,
@@ -436,6 +426,7 @@ export class SearchPageComponent extends Component {
                     urlQueryParams={validQueryParams}
                     initialValues={initialValues(this.props, this.state.currentQueryParams)}
                     getHandleChangedValueFn={this.getHandleChangedValueFn}
+                    intl={intl}
                     liveEdit
                     showAsPopup={false}
                   />
@@ -445,6 +436,7 @@ export class SearchPageComponent extends Component {
             <MainPanelHeader
               className={css.mainPanelMapVariant}
               sortByComponent={sortBy('desktop')}
+              isSortByActive={sortConfig.active}
               listingsAreLoaded={listingsAreLoaded}
               resultsCount={totalItems}
               searchInProgress={searchInProgress}
@@ -462,6 +454,7 @@ export class SearchPageComponent extends Component {
                       urlQueryParams={validQueryParams}
                       initialValues={initialValues(this.props, this.state.currentQueryParams)}
                       getHandleChangedValueFn={this.getHandleChangedValueFn}
+                      intl={intl}
                       showAsPopup
                       contentPlacementOffset={FILTER_DROPDOWN_OFFSET}
                     />
@@ -489,6 +482,7 @@ export class SearchPageComponent extends Component {
                         urlQueryParams={validQueryParams}
                         initialValues={initialValues(this.props, this.state.currentQueryParams)}
                         getHandleChangedValueFn={this.getHandleChangedValueFn}
+                        intl={intl}
                         showAsPopup={false}
                       />
                     );

@@ -21,7 +21,11 @@ const ListingCard = props => {
     price && price.currency === config.currency ? formatMoney(intl, price) : price.currency;
   const firstImage = listing.images && listing.images.length > 0 ? listing.images[0] : null;
 
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = config.listing;
+  const {
+    aspectWidth = 1,
+    aspectHeight = 1,
+    variantPrefix = 'listing-card',
+  } = config.layout.listingImage;
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
