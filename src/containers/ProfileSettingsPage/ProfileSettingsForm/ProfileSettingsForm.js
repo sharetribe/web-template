@@ -69,7 +69,7 @@ class ProfileSettingsFormComponent extends Component {
             uploadImageError,
             uploadInProgress,
             form,
-            siteTitle,
+            marketplaceName,
             values,
           } = fieldRenderProps;
 
@@ -300,7 +300,7 @@ class ProfileSettingsFormComponent extends Component {
                   placeholder={bioPlaceholder}
                 />
                 <p className={css.bioInfo}>
-                  <FormattedMessage id="ProfileSettingsForm.bioInfo" values={{ siteTitle }} />
+                  <FormattedMessage id="ProfileSettingsForm.bioInfo" values={{ marketplaceName }} />
                 </p>
               </div>
               {submitError}

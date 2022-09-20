@@ -19,7 +19,7 @@ export const openGraphMetaProps = data => {
     facebookImages,
     locale,
     published,
-    siteTitle,
+    marketplaceName,
     tags,
     title,
     updated,
@@ -60,8 +60,8 @@ export const openGraphMetaProps = data => {
     });
   }
 
-  if (siteTitle) {
-    openGraphMeta.push({ property: 'og:site_name', content: siteTitle });
+  if (marketplaceName) {
+    openGraphMeta.push({ property: 'og:site_name', content: marketplaceName });
   }
 
   if (facebookAppId) {
@@ -147,9 +147,9 @@ export const twitterMetaProps = data => {
  * Creates data for Open Graph and Twitter meta tags.
  */
 export const metaTagProps = (tagData, config) => {
-  const { canonicalRootURL, facebookAppId, siteTitle, siteTwitterHandle } = config;
+  const { canonicalRootURL, facebookAppId, marketplaceName, siteTwitterHandle } = config;
 
-  const author = tagData.author || siteTitle;
+  const author = tagData.author || marketplaceName;
   const defaultMeta = [
     { name: 'description', content: tagData.description },
     { name: 'author', content: author },
@@ -159,7 +159,7 @@ export const metaTagProps = (tagData, config) => {
     ...tagData,
     canonicalRootURL,
     facebookAppId,
-    siteTitle,
+    marketplaceName,
   });
 
   const twitterMeta = twitterMetaProps({

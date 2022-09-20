@@ -87,7 +87,7 @@ export const ProfileSettingsPageComponent = props => {
       uploadImageError={uploadImageError}
       updateProfileError={updateProfileError}
       onSubmit={handleSubmit}
-      siteTitle={config.siteTitle}
+      marketplaceName={config.marketplaceName}
     />
   ) : null;
 

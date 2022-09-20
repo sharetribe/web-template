@@ -365,7 +365,7 @@ export const createSearchResultSchema = (
   // Schema for search engines (helps them to understand what this page is about)
   // http://schema.org
   // We are using JSON-LD format
-  const siteTitle = config.siteTitle;
+  const marketplaceName = config.marketplaceName;
   const { address, keywords } = mainSearchData;
   const keywordsMaybe = keywords ? `"${keywords}"` : null;
   const searchTitle =
@@ -373,7 +373,7 @@ export const createSearchResultSchema = (
   const schemaDescription = intl.formatMessage({ id: 'SearchPage.schemaDescription' });
   const schemaTitle = intl.formatMessage(
     { id: 'SearchPage.schemaTitle' },
-    { searchTitle, siteTitle }
+    { searchTitle, marketplaceName }
   );
 
   const schemaListings = listings.map((l, i) => {

@@ -37,8 +37,8 @@ export const LandingPageComponent = props => {
   // Schema for search engines (helps them to understand what this page is about)
   // http://schema.org
   // We are using JSON-LD format
-  const siteTitle = config.siteTitle;
-  const schemaTitle = intl.formatMessage({ id: 'LandingPage.schemaTitle' }, { siteTitle });
+  const marketplaceName = config.marketplaceName;
+  const schemaTitle = intl.formatMessage({ id: 'LandingPage.schemaTitle' }, { marketplaceName });
   const schemaDescription = intl.formatMessage({ id: 'LandingPage.schemaDescription' });
   const schemaImage = `${config.canonicalRootURL}${facebookImage}`;
 

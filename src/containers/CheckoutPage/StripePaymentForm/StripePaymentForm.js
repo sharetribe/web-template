@@ -101,7 +101,7 @@ const OneTimePaymentWithCardElement = props => {
     error,
     label,
     intl,
-    siteTitle,
+    marketplaceName,
   } = props;
   const labelText =
     label || intl.formatMessage({ id: 'StripePaymentForm.saveAfterOnetimePayment' });
@@ -125,7 +125,7 @@ const OneTimePaymentWithCardElement = props => {
         <span className={css.saveForLaterUseLegalInfo}>
           <FormattedMessage
             id="StripePaymentForm.saveforLaterUseLegalInfo"
-            values={{ siteTitle }}
+            values={{ marketplaceName }}
           />
         </span>
       </div>
@@ -144,7 +144,7 @@ const PaymentMethodSelector = props => {
     error,
     paymentMethod,
     intl,
-    siteTitle,
+    marketplaceName,
   } = props;
   const last4Digits = defaultPaymentMethod.attributes.card.last4Digits;
   const labelText = intl.formatMessage(
@@ -171,7 +171,7 @@ const PaymentMethodSelector = props => {
           error={error}
           label={labelText}
           intl={intl}
-          siteTitle={siteTitle}
+          marketplaceName={marketplaceName}
         />
       ) : null}
     </React.Fragment>
@@ -409,7 +409,7 @@ class StripePaymentForm extends Component {
       totalPrice,
       locale,
       stripePublishableKey,
-      siteTitle,
+      marketplaceName,
       values,
     } = formRenderProps;
 
@@ -528,7 +528,7 @@ class StripePaymentForm extends Component {
                 error={this.state.error}
                 paymentMethod={selectedPaymentMethod}
                 intl={intl}
-                siteTitle={siteTitle}
+                marketplaceName={marketplaceName}
               />
             ) : (
               <React.Fragment>
@@ -542,7 +542,7 @@ class StripePaymentForm extends Component {
                   hasCardError={hasCardError}
                   error={this.state.error}
                   intl={intl}
-                  siteTitle={siteTitle}
+                  marketplaceName={marketplaceName}
                 />
               </React.Fragment>
             )}
@@ -685,7 +685,7 @@ StripePaymentForm.propTypes = {
   totalPrice: string,
   locale: string.isRequired,
   stripePublishableKey: string.isRequired,
-  siteTitle: string.isRequired,
+  marketplaceName: string.isRequired,
 
   // from injectIntl
   intl: intlShape.isRequired,

@@ -399,10 +399,10 @@ export const AuthenticationPageComponent = props => {
     </p>
   ) : null;
 
-  const siteTitle = config.siteTitle;
+  const marketplaceName = config.marketplaceName;
   const schemaTitle = isLogin
-    ? intl.formatMessage({ id: 'AuthenticationPage.schemaTitleLogin' }, { siteTitle })
-    : intl.formatMessage({ id: 'AuthenticationPage.schemaTitleSignup' }, { siteTitle });
+    ? intl.formatMessage({ id: 'AuthenticationPage.schemaTitleLogin' }, { marketplaceName })
+    : intl.formatMessage({ id: 'AuthenticationPage.schemaTitleSignup' }, { marketplaceName });
 
   const topbarClasses = classNames({
     [css.hideOnMobile]: showEmailVerification,
