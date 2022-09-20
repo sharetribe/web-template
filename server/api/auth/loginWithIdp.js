@@ -9,7 +9,7 @@ const CLIENT_SECRET = process.env.SHARETRIBE_SDK_CLIENT_SECRET;
 const TRANSIT_VERBOSE = process.env.REACT_APP_SHARETRIBE_SDK_TRANSIT_VERBOSE === 'true';
 const USING_SSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';
 const BASE_URL = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL;
-const rootUrl = process.env.REACT_APP_CANONICAL_ROOT_URL;
+const rootUrl = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
 
 // Instantiate HTTP(S) Agents with keepAlive set to true.
 // This will reduce the request time for consecutive requests by

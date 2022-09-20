@@ -186,7 +186,7 @@ If you don't set the Mapbox key, the map components won't work in the applicatio
  */
 
 const advancedSettings = settings => {
-  const rootUrlDefault = settings ? settings.REACT_APP_CANONICAL_ROOT_URL : null;
+  const rootUrlDefault = settings ? settings.REACT_APP_MARKETPLACE_ROOT_URL : null;
   const cspDefault = settings ? settings.REACT_APP_CSP : null;
 
   return [
@@ -198,7 +198,7 @@ const advancedSettings = settings => {
     },
     {
       type: 'input',
-      name: 'REACT_APP_CANONICAL_ROOT_URL',
+      name: 'REACT_APP_MARKETPLACE_ROOT_URL',
       message: `What is your canonical root URL?
 ${chalk.dim(
   'Canonical root URL of the marketplace is needed for social media sharing, SEO optimization, and social logins. When developing the template application locally URL is usually http://localhost:3000 (Note: you should omit any trailing slash)'
