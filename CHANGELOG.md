@@ -14,6 +14,30 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Refactor configurations:
+
+  - Split defaultConfig to sub files based on context
+    - brandingConfig sets marketplaceColor, logo, brandImage, social sharing graphics
+    - layoutConfig sets layouts for SearchPage and ListingPage
+    - listingConfig sets extended data config for listing
+    - mapsConfig sets configurations for map provider and location search
+    - searchConfig sets mainSearchType, default filters and sort config
+    - stripeConfig sets Stripe publishable key and other Stripe related configs
+    - transactionConfig creates a preset for selected transaction: process name, alias, unitType,
+      etc.
+  - CookieConsent component is removed!
+    - GA is the only integration that needs cookie consent to our best knowledge
+    - The existing Cookie Consent didn't seem to meet EU requirements anymore.
+  - GA script is set in src/util/includeScripts.js file instead of server/renderer.js
+  - Custom icon for map marker removed (it was not used).
+
+  - Renaming:
+    - REACT_APP_CANONICAL_ROOT_URL > REACT_APP_MARKETPLACE_ROOT_URL
+    - canonicalRootURL > marketplaceRootURL
+    - siteTitle > marketplaceName
+
+  [#41](https://github.com/sharetribe/ftw-x/pull/41)
+
 - [change] Split to defaultConfig.js and appSettings.js and move default configs to React Context.
   [#39](https://github.com/sharetribe/ftw-x/pull/39)
 - [change] SearchPage changes: cleaning some shared code and add Dates filter.
