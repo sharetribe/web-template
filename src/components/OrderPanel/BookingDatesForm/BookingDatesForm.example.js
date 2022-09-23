@@ -149,6 +149,7 @@ export const FormWithDayBooking = {
       console.log('onFetchTimeSlots called with args:', listingId, start, end, timeZone),
     timeZone: 'Etc/UTC',
     currency: 'USD',
+    marketplaceName,
     dayCountAvailableForBooking: 90,
   },
   group: 'forms',
