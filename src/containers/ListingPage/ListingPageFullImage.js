@@ -67,7 +67,6 @@ import {
   handleSubmit,
 } from './ListingPage.shared';
 import ActionBarMaybe from './ActionBarMaybe';
-import SectionHeading from './SectionHeading';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
@@ -317,27 +316,7 @@ export const ListingPageComponent = props => {
                 listing={currentListing}
                 variantPrefix={config.layout.listingImage.variantPrefix}
               />
-              <div className={css.productMobileHeading}>
-                <SectionHeading
-                  priceTitle={priceTitle}
-                  formattedPrice={formattedPrice}
-                  richTitle={richTitle}
-                  unitType={publicData?.unitType}
-                  category={category}
-                  authorLink={
-                    <NamedLink
-                      className={css.authorNameLink}
-                      name="ListingPage"
-                      params={params}
-                      to={{ hash: '#author' }}
-                    >
-                      {authorDisplayName}
-                    </NamedLink>
-                  }
-                  showContactUser={showContactUser}
-                  onContactUser={onContactUser}
-                />
-              </div>
+              <div className={css.productMobileHeading}></div>
               <SectionTextMaybe
                 text={description}
                 heading={intl.formatMessage(
@@ -409,8 +388,23 @@ export const ListingPageComponent = props => {
                 listing={currentListing}
                 isOwnListing={isOwnListing}
                 onSubmit={handleOrderSubmit}
+                authorLink={
+                  <NamedLink
+                    className={css.authorNameLink}
+                    name="ListingPage"
+                    params={params}
+                    to={{ hash: '#author' }}
+                  >
+                    {authorDisplayName}
+                  </NamedLink>
+                }
                 title={
                   <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
+                }
+                titleDesktop={
+                  <h1 className={css.orderPanelTitle}>
+                    <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
+                  </h1>
                 }
                 author={ensuredAuthor}
                 onManageDisableScrolling={onManageDisableScrolling}

@@ -68,8 +68,6 @@ import {
   handleSubmit,
 } from './ListingPage.shared';
 import SectionImages from './SectionImages';
-import SectionAvatar from './SectionAvatar';
-import SectionHeading from './SectionHeading';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
@@ -311,7 +309,6 @@ export const ListingPageComponent = props => {
             <SectionImages
               title={title}
               listing={currentListing}
-              listingImageConfig={config.layout.listingImage}
               isOwnListing={isOwnListing}
               editParams={{
                 id: listingId.uuid,
@@ -325,27 +322,7 @@ export const ListingPageComponent = props => {
               onManageDisableScrolling={onManageDisableScrolling}
             />
             <div className={css.contentWrapperForHeroLayout}>
-              <SectionAvatar user={currentAuthor} params={params} />
               <div className={css.mainColumnForHeroLayout}>
-                <SectionHeading
-                  priceTitle={priceTitle}
-                  formattedPrice={formattedPrice}
-                  richTitle={richTitle}
-                  unitType={publicData?.unitType}
-                  category={category}
-                  authorLink={
-                    <NamedLink
-                      className={css.authorNameLink}
-                      name="ListingPage"
-                      params={params}
-                      to={{ hash: '#author' }}
-                    >
-                      {authorDisplayName}
-                    </NamedLink>
-                  }
-                  showContactUser={showContactUser}
-                  onContactUser={onContactUser}
-                />
                 <SectionTextMaybe
                   text={description}
                   heading={intl.formatMessage(
@@ -417,10 +394,25 @@ export const ListingPageComponent = props => {
                   listing={currentListing}
                   isOwnListing={isOwnListing}
                   onSubmit={handleOrderSubmit}
+                  authorLink={
+                    <NamedLink
+                      className={css.authorNameLink}
+                      name="ListingPage"
+                      params={params}
+                      to={{ hash: '#author' }}
+                    >
+                      {authorDisplayName}
+                    </NamedLink>
+                  }
                   title={
                     <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
                   }
-                  authorDisplayName={authorDisplayName}
+                  titleDesktop={
+                    <h1 className={css.orderPanelTitle}>
+                      <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
+                    </h1>
+                  }
+                  author={ensuredAuthor}
                   onManageDisableScrolling={onManageDisableScrolling}
                   onFetchTransactionLineItems={onFetchTransactionLineItems}
                   onContactUser={onContactUser}
