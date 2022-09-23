@@ -201,8 +201,8 @@
   }
 
   .sectionHeader {
-    padding-top: 3px;
-    padding-bottom: 3px;
+    padding-top: 4px;
+    padding-bottom: 4px;
   }
 
   .title {
@@ -276,8 +276,8 @@
 
 @media (--viewportLarge) {
   .title {
-    margin-bottom: 38px;
-    padding: 1px 0 7px 0;
+    margin-bottom: 40px;
+    padding: 2px 0 6px 0;
   }
 
   .goToNextTabButton {

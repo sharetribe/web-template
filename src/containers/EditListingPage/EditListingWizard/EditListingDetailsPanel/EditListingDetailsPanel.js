@@ -273,6 +273,7 @@ const EditListingDetailsPanel = props => {
           hasExistingTransactionType={hasExistingTransactionType}
           onProcessChange={onProcessChange}
           listingExtendedDataConfig={listingExtendedDataConfig}
+          marketplaceCurrency={config.currency}
           disabled={disabled}
           ready={ready}
           updated={panelUpdated}

@@ -8,6 +8,7 @@ export const Empty = {
       console.log('Submit EditListingPricingAndStockForm with (unformatted) values:', values);
     },
     saveActionMsg: 'Save price',
+    marketplaceCurrency: 'USD',
     updated: false,
     updateInProgress: false,
     disabled: false,

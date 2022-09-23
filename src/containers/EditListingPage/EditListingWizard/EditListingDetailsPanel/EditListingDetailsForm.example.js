@@ -58,7 +58,6 @@ export const MultipleProcessInfos = {
     ready: false,
     updated: false,
     updateInProgress: false,
-    processInfos: processInfos,
     selectableTransactionTypes: selectableTransactionTypes2,
     listingConfig: defaultConfig.listing,
   },
