@@ -6,16 +6,20 @@ import EstimatedCustomerBreakdownMaybe from './EstimatedCustomerBreakdownMaybe';
 
 const { Money } = sdkTypes;
 const CURRENCY = 'USD';
+const marketplaceName = 'MarketplaceX';
 
 export const EmptyWithoutDatesOrLineItems = {
   component: EstimatedCustomerBreakdownMaybe,
-  props: {},
+  props: {
+    marketplaceName,
+  },
   group: 'payment',
 };
 
 export const EmptyWithoutDates = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
+    marketplaceName,
     lineItems: [
       {
         code: 'line-item/day',
@@ -33,6 +37,7 @@ export const EmptyWithoutDates = {
 export const EmptyWithoutLineItems = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
+    marketplaceName,
     breakdownData: {
       startDate: new Date(Date.UTC(2017, 3, 14)),
       endDate: new Date(Date.UTC(2017, 3, 15)),
@@ -44,6 +49,7 @@ export const EmptyWithoutLineItems = {
 export const BookingSingleDay = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
+    marketplaceName,
     breakdownData: {
       startDate: new Date(Date.UTC(2017, 3, 14)),
       endDate: new Date(Date.UTC(2017, 3, 15)),
@@ -65,6 +71,7 @@ export const BookingSingleDay = {
 export const BookingMultipleNights = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
+    marketplaceName,
     breakdownData: {
       startDate: new Date(Date.UTC(2017, 3, 14)),
       endDate: new Date(Date.UTC(2017, 3, 16)),
@@ -86,6 +93,7 @@ export const BookingMultipleNights = {
 export const BookingUnits = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
+    marketplaceName,
     breakdownData: {
       startDate: new Date(Date.UTC(2017, 3, 14)),
       endDate: new Date(Date.UTC(2017, 3, 16)),
@@ -107,6 +115,7 @@ export const BookingUnits = {
 export const OrderProductWithShipping = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
+    marketplaceName,
     breakdownData: {},
     lineItems: [
       {
@@ -133,6 +142,7 @@ export const OrderProductWithShipping = {
 export const OrderProductWithPickup = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
+    marketplaceName,
     breakdownData: {},
     lineItems: [
       {

@@ -78,7 +78,9 @@ const OrderPanel = props => {
     isOwnListing,
     onSubmit,
     title,
+    titleDesktop,
     author,
+    authorLink,
     onManageDisableScrolling,
     onFetchTimeSlots,
     monthlyTimeSlots,
@@ -146,18 +148,8 @@ const OrderPanel = props => {
     ? intl.formatMessage({ id: 'OrderPanel.subTitleClosedListing' })
     : null;
 
-  const isNightly = lineItemUnitType === LINE_ITEM_NIGHT;
-  const isDaily = lineItemUnitType === LINE_ITEM_DAY;
-  const isHourly = lineItemUnitType === LINE_ITEM_HOUR;
-  const unitTranslationKey = isNightly
-    ? 'OrderPanel.perNight'
-    : isDaily
-    ? 'OrderPanel.perDay'
-    : isHourly
-    ? 'OrderPanel.perHour'
-    : 'OrderPanel.perItem';
-
   const authorDisplayName = userDisplayNameAsString(author, '');
+  const name = authorLink || authorDisplayName;
 
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.orderTitle);
@@ -177,20 +169,20 @@ const OrderPanel = props => {
         </div>
 
         <div className={css.orderHeading}>
-          <h2 className={titleClasses}>{title}</h2>
+          {titleDesktop ? titleDesktop : <h2 className={titleClasses}>{title}</h2>}
           {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
         </div>
 
         <div className={css.priceContainer}>
           <p className={css.price}>{formatMoney(intl, price)}</p>
           <div className={css.perUnit}>
-            <FormattedMessage id={unitTranslationKey} />
+            <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
           </div>
         </div>
 
         <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
-          <FormattedMessage id="OrderPanel.soldBy" values={{ name: authorDisplayName }} />
+          <FormattedMessage id="OrderPanel.soldBy" values={{ name }} />
         </div>
 
         {showPriceMissing ? (
@@ -260,12 +252,12 @@ const OrderPanel = props => {
         ) : null}
       </ModalInMobile>
       <div className={css.openOrderForm}>
-        <div className={css.priceContainer}>
+        <div className={css.priceContainerInCTA}>
           <div className={css.priceValue} title={priceTitle}>
             {formattedPrice}
           </div>
-          <div className={css.perUnit}>
-            <FormattedMessage id={unitTranslationKey} />
+          <div className={css.perUnitInCTA}>
+            <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
           </div>
         </div>
 
@@ -296,6 +288,8 @@ OrderPanel.defaultProps = {
   className: null,
   titleClassName: null,
   isOwnListing: false,
+  authorLink: null,
+  titleDesktop: null,
   subTitle: null,
   monthlyTimeSlots: null,
   lineItems: null,
@@ -308,8 +302,11 @@ OrderPanel.propTypes = {
   titleClassName: string,
   listing: oneOfType([propTypes.listing, propTypes.ownListing]),
   isOwnListing: bool,
+  author: propTypes.user.isRequired,
+  authorLink: node,
   onSubmit: func.isRequired,
   title: oneOfType([node, string]).isRequired,
+  titleDesktop: node,
   subTitle: oneOfType([node, string]),
   onManageDisableScrolling: func.isRequired,
 
