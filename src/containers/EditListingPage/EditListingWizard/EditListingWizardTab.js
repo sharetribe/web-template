@@ -133,7 +133,7 @@ const EditListingWizardTab = props => {
   const onCompleteEditListingWizardTab = (tab, updateValues) => {
     const onUpdateListingOrCreateListingDraft = isNewURI
       ? (tab, values) => onCreateListingDraft(values, config)
-      : values => onUpdateListing(values, config);
+      : (tab, values) => onUpdateListing(tab, values, config);
 
     const updateListingValues = isNewURI
       ? updateValues
