@@ -288,8 +288,7 @@
   color: var(--matterColor);
   text-align: left;
 
-  padding-top: 3px;
-  padding-bottom: 3px;
+  padding: 3px 0;
 
   /* Remove default margins from font */
   margin-top: 0;
@@ -301,9 +300,7 @@
   }
 
   @media (--viewportMedium) {
-    padding-top: 0;
-    padding-bottom: 0;
-
+    padding: 0;
     margin-top: 0;
     margin-bottom: 0;
   }
