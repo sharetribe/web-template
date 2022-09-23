@@ -272,6 +272,7 @@ EditListingDeliveryFormComponent.propTypes = {
   onSubmit: func.isRequired,
   saveActionMsg: string.isRequired,
   selectedPlace: propTypes.place,
+  marketplaceCurrency: string.isRequired,
   disabled: bool.isRequired,
   ready: bool.isRequired,
   updated: bool.isRequired,

@@ -14,6 +14,7 @@ describe('EditListingDeliveryForm', () => {
         dispatch={noop}
         onSubmit={noop}
         saveActionMsg="Save location"
+        marketplaceCurrency="USD"
         updated={false}
         updateInProgress={false}
         disabled={false}
