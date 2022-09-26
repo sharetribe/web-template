@@ -65,7 +65,7 @@
 
 .author {
   composes: h4 from global;
-  margin: 24px 24px 32px 24px;
+  margin: 0px 24px 32px 24px;
 
   display: flex;
   flex-direction: row;
@@ -78,7 +78,28 @@
 }
 
 .providerAvatar {
-  margin-right: 10px;
+  display: none;
+
+  @media (--viewportLarge) {
+    display: flex;
+    margin-right: 10px;
+  }
+}
+
+.providerNamePlain {
+  display: inline;
+
+  @media (--viewportLarge) {
+    display: none;
+  }
+}
+
+.providerNameLinked {
+  display: none;
+
+  @media (--viewportLarge) {
+    display: inline;
+  }
 }
 
 .orderHeading {
