@@ -95,13 +95,6 @@ exports[`ListingPage matches snapshot 1`] = `
               "type": "listing",
             }
           }
-          listingImageConfig={
-            Object {
-              "aspectHeight": 400,
-              "aspectWidth": 400,
-              "variantPrefix": "listing-card",
-            }
-          }
           onImageCarouselClose={[Function]}
           onManageDisableScrolling={[Function]}
           title="listing1 title"
@@ -109,71 +102,11 @@ exports[`ListingPage matches snapshot 1`] = `
         <div
           className="contentWrapperForHeroLayout"
         >
-          <SectionAvatar
-            params={
-              Object {
-                "id": "listing1",
-                "slug": "listing1-title",
-              }
-            }
-            user={
-              Object {
-                "attributes": Object {
-                  "banned": false,
-                  "deleted": false,
-                  "profile": Object {
-                    "abbreviatedName": "TT",
-                    "displayName": "user-1 display name",
-                  },
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "user-1",
-                },
-                "type": "user",
-              }
-            }
-          />
           <div
             className="mainColumnForHeroLayout"
           >
-            <SectionHeading
-              authorLink={
-                <NamedLink
-                  className="authorNameLink"
-                  name="ListingPage"
-                  params={
-                    Object {
-                      "id": "listing1",
-                      "slug": "listing1-title",
-                    }
-                  }
-                  to={
-                    Object {
-                      "hash": "#author",
-                    }
-                  }
-                >
-                  user-1 display name
-                </NamedLink>
-              }
-              category={null}
-              formattedPrice={55}
-              onContactUser={[Function]}
-              priceTitle={55}
-              richTitle={
-                <span>
-                  
-                  listing1
-                   
-                  title
-                  
-                </span>
-              }
-              showContactUser={true}
-            />
             <SectionTextMaybe
-              heading="ListingPage.descriptionTitle"
+              showAsIngress={true}
               text="listing1 description"
             />
             <SectionDetailsMaybe
@@ -281,103 +214,7 @@ exports[`ListingPage matches snapshot 1`] = `
                   "mapboxAccessToken": undefined,
                   "search": Object {
                     "currentLocationBoundsDistance": 1000,
-                    "defaults": Array [
-                      Object {
-                        "id": "default-helsinki",
-                        "predictionPlace": Object {
-                          "address": "Helsinki, Finland",
-                          "bounds": LatLngBounds {
-                            "_sdkType": "LatLngBounds",
-                            "ne": LatLng {
-                              "_sdkType": "LatLng",
-                              "lat": 60.29783,
-                              "lng": 25.25448,
-                            },
-                            "sw": LatLng {
-                              "_sdkType": "LatLng",
-                              "lat": 59.92248,
-                              "lng": 24.78287,
-                            },
-                          },
-                        },
-                      },
-                      Object {
-                        "id": "default-turku",
-                        "predictionPlace": Object {
-                          "address": "Turku, Finland",
-                          "bounds": LatLngBounds {
-                            "_sdkType": "LatLngBounds",
-                            "ne": LatLng {
-                              "_sdkType": "LatLng",
-                              "lat": 60.53045,
-                              "lng": 22.38197,
-                            },
-                            "sw": LatLng {
-                              "_sdkType": "LatLng",
-                              "lat": 60.33361,
-                              "lng": 22.06644,
-                            },
-                          },
-                        },
-                      },
-                      Object {
-                        "id": "default-tampere",
-                        "predictionPlace": Object {
-                          "address": "Tampere, Finland",
-                          "bounds": LatLngBounds {
-                            "_sdkType": "LatLngBounds",
-                            "ne": LatLng {
-                              "_sdkType": "LatLng",
-                              "lat": 61.83657,
-                              "lng": 24.11838,
-                            },
-                            "sw": LatLng {
-                              "_sdkType": "LatLng",
-                              "lat": 61.42728,
-                              "lng": 23.5422,
-                            },
-                          },
-                        },
-                      },
-                      Object {
-                        "id": "default-oulu",
-                        "predictionPlace": Object {
-                          "address": "Oulu, Finland",
-                          "bounds": LatLngBounds {
-                            "_sdkType": "LatLngBounds",
-                            "ne": LatLng {
-                              "_sdkType": "LatLng",
-                              "lat": 65.56434,
-                              "lng": 26.77069,
-                            },
-                            "sw": LatLng {
-                              "_sdkType": "LatLng",
-                              "lat": 64.8443,
-                              "lng": 24.11494,
-                            },
-                          },
-                        },
-                      },
-                      Object {
-                        "id": "default-ruka",
-                        "predictionPlace": Object {
-                          "address": "Ruka, Finland",
-                          "bounds": LatLngBounds {
-                            "_sdkType": "LatLngBounds",
-                            "ne": LatLng {
-                              "_sdkType": "LatLng",
-                              "lat": 66.16997,
-                              "lng": 29.16773,
-                            },
-                            "sw": LatLng {
-                              "_sdkType": "LatLng",
-                              "lat": 66.16095,
-                              "lng": 29.13572,
-                            },
-                          },
-                        },
-                      },
-                    ],
+                    "defaults": Array [],
                     "sortSearchByDistance": false,
                     "suggestCurrentLocation": true,
                   },
@@ -469,7 +306,42 @@ exports[`ListingPage matches snapshot 1`] = `
             className="orderColumnForHeroLayout"
           >
             <withRouter(injectIntl(OrderPanel))
-              authorDisplayName="user-1 display name"
+              author={
+                Object {
+                  "attributes": Object {
+                    "banned": false,
+                    "deleted": false,
+                    "profile": Object {
+                      "abbreviatedName": "TT",
+                      "displayName": "user-1 display name",
+                    },
+                  },
+                  "id": UUID {
+                    "_sdkType": "UUID",
+                    "uuid": "user-1",
+                  },
+                  "type": "user",
+                }
+              }
+              authorLink={
+                <NamedLink
+                  className="authorNameLink"
+                  name="ListingPage"
+                  params={
+                    Object {
+                      "id": "listing1",
+                      "slug": "listing1-title",
+                    }
+                  }
+                  to={
+                    Object {
+                      "hash": "#author",
+                    }
+                  }
+                >
+                  user-1 display name
+                </NamedLink>
+              }
               className="orderPanel"
               dayCountAvailableForBooking={90}
               fetchLineItemsError={null}
@@ -541,6 +413,26 @@ exports[`ListingPage matches snapshot 1`] = `
                     }
                   }
                 />
+              }
+              titleDesktop={
+                <h1
+                  className="orderPanelTitle"
+                >
+                  <Memo(MemoizedFormattedMessage)
+                    id="ListingPage.orderTitle"
+                    values={
+                      Object {
+                        "title": <span>
+                          
+                          listing1
+                           
+                          title
+                          
+                        </span>,
+                      }
+                    }
+                  />
+                </h1>
               }
             />
           </div>

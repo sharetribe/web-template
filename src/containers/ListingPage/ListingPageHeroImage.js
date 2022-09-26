@@ -323,13 +323,7 @@ export const ListingPageComponent = props => {
             />
             <div className={css.contentWrapperForHeroLayout}>
               <div className={css.mainColumnForHeroLayout}>
-                <SectionTextMaybe
-                  text={description}
-                  heading={intl.formatMessage(
-                    { id: 'ListingPage.descriptionTitle' },
-                    { listingTitle: richTitle }
-                  )}
-                />
+                <SectionTextMaybe text={description} showAsIngress />
                 <SectionDetailsMaybe
                   publicData={publicData}
                   metadata={metadata}

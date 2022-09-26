@@ -317,13 +317,7 @@ export const ListingPageComponent = props => {
                 variantPrefix={config.layout.listingImage.variantPrefix}
               />
               <div className={css.productMobileHeading}></div>
-              <SectionTextMaybe
-                text={description}
-                heading={intl.formatMessage(
-                  { id: 'ListingPage.descriptionTitle' },
-                  { listingTitle: richTitle }
-                )}
-              />
+              <SectionTextMaybe text={description} showAsIngress />
               <SectionDetailsMaybe
                 publicData={publicData}
                 metadata={metadata}
