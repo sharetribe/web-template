@@ -16,7 +16,7 @@ exports[`TopbarDesktop data with keywords search matches snapshot 1`] = `
     <img
       alt="TopbarDesktop.logo"
       className="logo"
-      src="sneakertime-logo.png"
+      src="biketribe-logo-desktop.png"
     />
   </a>
   <form
@@ -245,7 +245,7 @@ exports[`TopbarDesktop data with location search matches snapshot 1`] = `
     <img
       alt="TopbarDesktop.logo"
       className="logo"
-      src="sneakertime-logo.png"
+      src="biketribe-logo-desktop.png"
     />
   </a>
   <form

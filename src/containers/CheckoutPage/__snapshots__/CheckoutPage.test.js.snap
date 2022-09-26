@@ -39,6 +39,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
         image={null}
         noImageMessage={null}
         rootClassName="rootForImage"
+        sizes={null}
         variants={Array []}
       />
     </AspectRatioWrapper>
@@ -139,6 +140,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
           image={null}
           noImageMessage={null}
           rootClassName="rootForImage"
+          sizes={null}
           variants={Array []}
         />
       </AspectRatioWrapper>
