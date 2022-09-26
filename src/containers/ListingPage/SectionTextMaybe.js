@@ -6,11 +6,12 @@ import css from './ListingPage.module.css';
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 const SectionTextMaybe = props => {
-  const { text, heading } = props;
+  const { text, heading, showAsIngress = false } = props;
+  const textClass = showAsIngress ? css.ingress : css.text;
   return text ? (
     <div className={css.sectionText}>
-      <h2 className={css.textHeading}>{heading}</h2>
-      <p className={css.text}>
+      {heading ? <h2 className={css.textHeading}>{heading}</h2> : null}
+      <p className={textClass}>
         {richText(text, {
           longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
           longWordClass: css.longWord,
