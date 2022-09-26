@@ -149,7 +149,6 @@ const OrderPanel = props => {
     : null;
 
   const authorDisplayName = userDisplayNameAsString(author, '');
-  const name = authorLink || authorDisplayName;
 
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.orderTitle);
@@ -182,7 +181,12 @@ const OrderPanel = props => {
 
         <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
-          <FormattedMessage id="OrderPanel.soldBy" values={{ name }} />
+          <span className={css.providerNameLinked}>
+            <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
+          </span>
+          <span className={css.providerNamePlain}>
+            <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
+          </span>
         </div>
 
         {showPriceMissing ? (
