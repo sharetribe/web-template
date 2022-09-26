@@ -28,6 +28,7 @@ import {
   NamedRedirect,
   LinkTabNavHorizontal,
   SocialLoginButton,
+  ResponsiveBackgroundImageContainer,
   LayoutSingleColumn,
   LayoutWrapperTopbar,
   LayoutWrapperMain,
@@ -423,7 +424,14 @@ export const AuthenticationPageComponent = props => {
           <TopbarContainer className={topbarClasses} />
         </LayoutWrapperTopbar>
         <LayoutWrapperMain className={css.layoutWrapperMain}>
-          <div className={css.root}>
+          <ResponsiveBackgroundImageContainer
+            className={css.root}
+            childrenWrapperClassName={css.contentContainer}
+            as="section"
+            image={config.branding.brandImageURL}
+            sizes="100%"
+            useOverlay
+          >
             {showEmailVerification ? (
               <EmailVerificationInfo
                 name={user.attributes.profile.firstName}
@@ -449,7 +457,7 @@ export const AuthenticationPageComponent = props => {
                 onOpenTermsOfService={() => setTosModalOpen(true)}
               />
             )}
-          </div>
+          </ResponsiveBackgroundImageContainer>
           <Modal
             id="AuthenticationPage.tos"
             isOpen={tosModalOpen}

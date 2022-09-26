@@ -5,6 +5,14 @@ import { PasswordRecoveryPageComponent } from './PasswordRecoveryPage';
 
 const noop = () => null;
 
+jest.mock('../../context/configurationContext', () => ({
+  useConfiguration: () => ({
+    branding: {
+      brandImageURL: 'http://test.image.for/brand.use.png',
+    },
+  }),
+}));
+
 describe('ContactDetailsPage', () => {
   it('matches snapshot', () => {
     const tree = renderShallow(
