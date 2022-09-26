@@ -229,7 +229,7 @@ const StripeConnectAccountFormComponent = props => {
   const { onSubmit, ...restOfProps } = props;
   const isUpdate = props.stripeConnected;
   const stripePublishableKey = config.stripe.publishableKey;
-  const supportedCountries = config.stripe.supportedCountries.map(c => c.code);
+  const supportedCountries = config.stripe.supportedCountries;
 
   return (
     <FinalForm
