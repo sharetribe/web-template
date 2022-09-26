@@ -118,7 +118,9 @@ class PasswordChangeFormComponent extends Component {
           const passwordFailedMessage = intl.formatMessage({
             id: 'PasswordChangeForm.passwordFailed',
           });
-          const passwordTouched = this.submittedValues.currentPassword !== values.currentPassword;
+          const passwordTouched =
+            values.currentPassword &&
+            this.submittedValues.currentPassword !== values.currentPassword;
           const passwordErrorText = isChangePasswordWrongPassword(changePasswordError)
             ? passwordFailedMessage
             : null;
@@ -134,10 +136,8 @@ class PasswordChangeFormComponent extends Component {
               </span>
             ) : null;
 
-          const submittedOnce = Object.keys(this.submittedValues).length > 0;
-          const pristineSinceLastSubmit = submittedOnce && isEqual(values, this.submittedValues);
           const classes = classNames(rootClassName || css.root, className);
-          const submitDisabled = invalid || pristineSinceLastSubmit || inProgress;
+          const submitDisabled = invalid || inProgress;
 
           const sendPasswordLink = (
             <span className={css.helperLink} onClick={this.handleResetPassword} role="button">
@@ -173,7 +173,12 @@ class PasswordChangeFormComponent extends Component {
                 this.submittedValues = values;
                 handleSubmit(e)
                   .then(() => {
-                    this.resetTimeoutId = window.setTimeout(form.reset, RESET_TIMEOUT);
+                    this.resetTimeoutId = window.setTimeout(() => {
+                      form.restart();
+                      if (this.props.onChange) {
+                        this.props.onChange();
+                      }
+                    }, RESET_TIMEOUT);
                   })
                   .catch(() => {
                     // Error is handled in duck file already.
