@@ -123,9 +123,6 @@ export const ClientApp = props => {
     elem.style.setProperty('--marketplaceColorDark', appConfig.branding.marketplaceColorDark);
     elem.style.setProperty('--marketplaceColorLight', appConfig.branding.marketplaceColorLight);
   }
-  if (appConfig.branding.brandImageURL) {
-    elem.style.setProperty('--brandImage', `url(${appConfig.branding.brandImageURL})`);
-  }
 
   return (
     <Configurations appConfig={appConfig}>

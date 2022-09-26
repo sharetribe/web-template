@@ -29,16 +29,10 @@
 }
 
 .root {
-  composes: defaultBackgroundImage from global;
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
-
-  @media (--viewportLarge) {
-    border-radius: 40px;
-    border: solid 36px var(--matterColorBright);
-  }
 }
 
 .heroContent {

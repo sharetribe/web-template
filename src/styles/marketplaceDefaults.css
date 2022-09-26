@@ -568,48 +568,6 @@ textarea {
 
 /* ================ Plain global CSS glasses ================ */
 
-/* Full screen Background image located in root-folder/src/assets */
-.defaultBackgroundImage {
-  /* Gradient direction and overlaying the black color on top of the image for better readability */
-  /* NOTE: brandImage comes from configs and is set to HTML element on src/app.js */
-  background: linear-gradient(-45deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)), var(--brandImage);
-
-  /* Add loading color for the div */
-  background-color: var(--matterColor);
-
-  /* Cover the whole screen with the background image */
-  background-size: cover;
-
-  /* Align the image within the container */
-  background-position: center center;
-
-  @media (--viewportLarge) {
-    border-radius: 40px;
-    border: solid 36px var(--matterColorBright);
-  }
-}
-
-.defaultBackgroundImageForDesktop {
-  /* Gradient direction and overlaying the black color on top of the image for better readability */
-  /* NOTE: brandImage comes from configs and is set to HTML element on src/app.js */
-  @media (--viewportMedium) {
-    background: linear-gradient(-45deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)), var(--brandImage);
-
-    /* Add loading color for the div */
-    background-color: var(--matterColor);
-
-    /* Cover the whole screen with the background image */
-    background-size: cover;
-
-    /* Align the image within the container */
-    background-position: center center;
-  }
-  @media (--viewportLarge) {
-    border-radius: 40px;
-    border: solid 36px var(--matterColorBright);
-  }
-}
-
 /* ================ Hero title ================ */
 
 .marketplaceHeroTitleFontStyles {
