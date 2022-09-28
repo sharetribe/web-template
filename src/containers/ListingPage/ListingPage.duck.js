@@ -7,7 +7,7 @@ import { transactionLineItems } from '../../util/api';
 import * as log from '../../util/log';
 import { denormalisedResponseEntities } from '../../util/data';
 import { findNextBoundary, getStartOf, monthIdString } from '../../util/dates';
-import { getProcess, isBookingProcess } from '../../util/transaction';
+import { getProcess, isBookingUnitType } from '../../util/transaction';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
   LISTING_PAGE_PENDING_APPROVAL_VARIANT,
@@ -387,9 +387,8 @@ export const loadData = (params, search, config) => dispatch => {
     dispatch(fetchReviews(listingId)),
   ]).then(response => {
     const listing = response[0].data.data;
-    const processAlias = listing?.attributes?.publicData?.transactionProcessAlias || '';
-    const [processName, alias] = processAlias.split('/');
-    if (isBookingProcess(processName)) {
+    const unitType = listing?.attributes?.publicData?.unitType || '';
+    if (isBookingUnitType(unitType)) {
       // Fetch timeSlots.
       // This can happen parallel to loadData.
       // We are not interested to return them from loadData call.
