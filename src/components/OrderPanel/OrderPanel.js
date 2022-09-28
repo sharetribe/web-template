@@ -110,7 +110,7 @@ const OrderPanel = props => {
       </p>
     );
   };
-  const showInvalidCurrency = price.currency !== marketplaceCurrency;
+  const showInvalidCurrency = price?.currency !== marketplaceCurrency;
   const InvalidCurrency = () => {
     return (
       <p className={css.error}>
@@ -123,10 +123,10 @@ const OrderPanel = props => {
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
 
   const shouldHaveBookingTime = [LINE_ITEM_HOUR].includes(lineItemUnitType);
-  const showBookingTimeForm = shouldHaveBookingTime && !isClosed;
+  const showBookingTimeForm = shouldHaveBookingTime && !isClosed && timeZone;
 
   const shouldHaveBookingDates = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
-  const showBookingDatesForm = shouldHaveBookingDates && !isClosed;
+  const showBookingDatesForm = shouldHaveBookingDates && !isClosed && timeZone;
 
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
@@ -172,12 +172,14 @@ const OrderPanel = props => {
           {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
         </div>
 
-        <div className={css.priceContainer}>
-          <p className={css.price}>{formatMoney(intl, price)}</p>
-          <div className={css.perUnit}>
-            <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
+        {price ? (
+          <div className={css.priceContainer}>
+            <p className={css.price}>{formatMoney(intl, price)}</p>
+            <div className={css.perUnit}>
+              <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
+            </div>
           </div>
-        </div>
+        ) : null}
 
         <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
@@ -306,7 +308,7 @@ OrderPanel.propTypes = {
   titleClassName: string,
   listing: oneOfType([propTypes.listing, propTypes.ownListing]),
   isOwnListing: bool,
-  author: propTypes.user.isRequired,
+  author: oneOfType([propTypes.user, propTypes.currentUser]).isRequired,
   authorLink: node,
   onSubmit: func.isRequired,
   title: oneOfType([node, string]).isRequired,

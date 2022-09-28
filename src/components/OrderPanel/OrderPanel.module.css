@@ -55,7 +55,7 @@
 .price {
   composes: h2 from global;
 
-  color: var(--marketplaceColor);
+  color: var(--matterColor);
   margin: 0 0 0 24px;
 
   @media (--viewportMedium) {
