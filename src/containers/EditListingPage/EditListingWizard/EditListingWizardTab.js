@@ -162,6 +162,7 @@ const EditListingWizardTab = props => {
       ready: newListingPublished,
       disabled: fetchInProgress,
       submitButtonText: tabSubmitButtonText,
+      transactionTypes: config.transaction.transactionTypes,
       onManageDisableScrolling,
       onSubmit: values => {
         return onCompleteEditListingWizardTab(tab, values);

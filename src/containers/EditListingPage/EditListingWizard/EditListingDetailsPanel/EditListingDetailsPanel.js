@@ -5,12 +5,13 @@ import classNames from 'classnames';
 // Import util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { EXTENDED_DATA_SCHEMA_TYPES, LISTING_STATE_DRAFT } from '../../../../util/types';
-import { isBookingProcess } from '../../../../util/transaction';
+import { isBookingUnitType } from '../../../../util/transaction';
 
 // Import shared components
 import { ListingLink } from '../../../../components';
 
 // Import modules from this directory
+import ErrorMessage from './ErrorMessage';
 import EditListingDetailsForm from './EditListingDetailsForm';
 import css from './EditListingDetailsPanel.module.css';
 
@@ -24,20 +25,25 @@ import css from './EditListingDetailsPanel.module.css';
  *
  * @param {Array} transactionTypes
  * @param {Object} existingTransactionInfo
- * @returns an object containing information that can be stored to publicData.
+ * @returns an object containing mainly information that can be stored to publicData.
  */
-const getTransactionInfo = (transactionTypes, existingTransactionInfo = {}) => {
+const getTransactionInfo = (
+  transactionTypes,
+  existingTransactionInfo = {},
+  inlcudeLabel = false
+) => {
   const { transactionType, transactionProcessAlias, unitType } = existingTransactionInfo;
 
   if (transactionType && transactionProcessAlias && unitType) {
     return { transactionType, transactionProcessAlias, unitType };
   } else if (transactionTypes.length === 1) {
     const { type, process, alias, unitType: configUnitType, label } = transactionTypes[0];
+    const labelMaybe = inlcudeLabel ? { label: label || type } : {};
     return {
       transactionType: type,
       transactionProcessAlias: `${process}/${alias}`,
       unitType: configUnitType,
-      label: label || type,
+      ...labelMaybe,
     };
   }
   return {};
@@ -108,44 +114,73 @@ const pickCustomExtendedDataFields = (
   }, {});
 };
 
-const PanelTitle = props => {
-  const { listing, state } = props;
-  const isPublished = listing?.id && state !== LISTING_STATE_DRAFT;
-
-  return isPublished ? (
-    <FormattedMessage
-      id="EditListingDetailsPanel.title"
-      values={{ listingTitle: <ListingLink listing={listing} /> }}
-    />
-  ) : (
-    <FormattedMessage id="EditListingDetailsPanel.createListingTitle" />
-  );
+/**
+ * If listing represents a product instead of a booking, we set availability-plan to seats=0.
+ * Note: this is a performance improvement since the API is backwards compatible.
+ *
+ * @param {string} unitType selected for this listing
+ * @returns availabilityPlan for product listing
+ */
+const setNoAvailabilityForProductListings = unitType => {
+  return isBookingUnitType(unitType)
+    ? {}
+    : {
+        availabilityPlan: {
+          type: 'availability-plan/time',
+          timezone: 'Etc/UTC',
+          entries: [
+            { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 0 },
+            { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 0 },
+            { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 0 },
+            { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 0 },
+            { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 0 },
+            { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 0 },
+            { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
+          ],
+        },
+      };
 };
 
-const ErrorMessage = props => {
-  const { invalidExistingTransactionType, marketplaceName } = props;
-  return invalidExistingTransactionType ? (
-    <div>
-      <h2>
-        <FormattedMessage id="EditListingDetailsPanel.invalidTransactionTypeSetTitle" />
-      </h2>
-      <p>
-        <FormattedMessage
-          id="EditListingDetailsPanel.invalidTransactionTypeSetDescription"
-          values={{ marketplaceName }}
-        />
-      </p>
-    </div>
-  ) : (
-    <div>
-      <h2>
-        <FormattedMessage id="EditListingDetailsPanel.noTransactionTypeSetTitle" />
-      </h2>
-      <p>
-        <FormattedMessage id="EditListingDetailsPanel.noTransactionTypeSetDescription" />
-      </p>
-    </div>
-  );
+/**
+ * Get initialValues for the form. This function includes
+ * title, description, transactionType, transactionProcessAlias, unitType,
+ * and those publicData & privateData fields that are configured through
+ * config.listing.listingExtendedData.
+ *
+ * @param {object} props
+ * @param {object} existingTransactionType info saved to listing's publicData
+ * @param {object} transactionTypes app's configured types (presets for transactions)
+ * @param {object} listingExtendedDataConfig those extended data fields that are part of configurations
+ * @returns initialValues object for the form
+ */
+const getInitialValues = (
+  props,
+  existingTransactionType,
+  transactionTypes,
+  listingExtendedDataConfig
+) => {
+  const { description, title, publicData, privateData } = props?.listing?.attributes || {};
+  const { transactionProcessAlias } = publicData;
+
+  // Initial values for the form
+  return {
+    title,
+    description,
+    // Transaction type info: transactionType, transactionProcessAlias, unitType
+    ...getTransactionInfo(transactionTypes, existingTransactionType),
+    ...pickCustomExtendedDataFields(
+      publicData,
+      'public',
+      transactionProcessAlias,
+      listingExtendedDataConfig
+    ),
+    ...pickCustomExtendedDataFields(
+      privateData,
+      'private',
+      transactionProcessAlias,
+      listingExtendedDataConfig
+    ),
+  };
 };
 
 const EditListingDetailsPanel = props => {
@@ -165,69 +200,44 @@ const EditListingDetailsPanel = props => {
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
-  const { description, title, publicData, privateData, state } = listing?.attributes || {};
+  const { publicData, state } = listing?.attributes || {};
   const transactionTypes = config.transaction.transactionTypes;
   const listingExtendedDataConfig = config.listing.listingExtendedData;
+
   const { hasExistingTransactionType, existingTransactionType } = hasSetTransactionType(publicData);
   const hasValidExistingTransactionType =
     hasExistingTransactionType &&
     !!transactionTypes.find(conf => conf.type === existingTransactionType.transactionType);
 
-  const initialValues = (title, description, publicData, privateData) => {
-    const { transactionProcessAlias } = publicData;
-
-    return {
-      title,
-      description,
-      ...getTransactionInfo(transactionTypes, existingTransactionType),
-      ...pickCustomExtendedDataFields(
-        publicData,
-        'public',
-        transactionProcessAlias,
-        listingExtendedDataConfig
-      ),
-      ...pickCustomExtendedDataFields(
-        privateData,
-        'private',
-        transactionProcessAlias,
-        listingExtendedDataConfig
-      ),
-    };
-  };
-
-  // If listing represents a product instead of a booking, we set availability-plan to seats=0
-  const setNoAvailabilityForProductListings = transactionProcessAlias => {
-    return isBookingProcess(transactionProcessAlias)
-      ? {}
-      : {
-          availabilityPlan: {
-            type: 'availability-plan/time',
-            timezone: 'Etc/UTC',
-            entries: [
-              { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 0 },
-              { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 0 },
-              { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 0 },
-              { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 0 },
-              { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 0 },
-              { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 0 },
-              { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
-            ],
-          },
-        };
-  };
+  const initialValues = getInitialValues(
+    props,
+    existingTransactionType,
+    transactionTypes,
+    listingExtendedDataConfig
+  );
 
   const noTransactionTypesSet = transactionTypes.length > 0;
   const canShowEditListingDetailsForm =
     noTransactionTypesSet && (!hasExistingTransactionType || hasValidExistingTransactionType);
+  const isPublished = listing?.id && state !== LISTING_STATE_DRAFT;
+
   return (
     <div className={classes}>
       <h1 className={css.title}>
-        <PanelTitle listing={listing} state={state} />
+        {isPublished ? (
+          <FormattedMessage
+            id="EditListingDetailsPanel.title"
+            values={{ listingTitle: <ListingLink listing={listing} /> }}
+          />
+        ) : (
+          <FormattedMessage id="EditListingDetailsPanel.createListingTitle" />
+        )}
       </h1>
+
       {canShowEditListingDetailsForm ? (
         <EditListingDetailsForm
           className={css.form}
-          initialValues={initialValues(title, description, publicData, privateData)}
+          initialValues={initialValues}
           saveActionMsg={submitButtonText}
           onSubmit={values => {
             const {
@@ -241,7 +251,7 @@ const EditListingDetailsPanel = props => {
             // Clear custom fields that are not included for the selected process
             const clearUnrelatedCustomFields = true;
 
-            // Construct values to be updated
+            // New values for listing attributes
             const updateValues = {
               title: title.trim(),
               description,
@@ -264,12 +274,14 @@ const EditListingDetailsPanel = props => {
                 listingExtendedDataConfig,
                 clearUnrelatedCustomFields
               ),
-              ...setNoAvailabilityForProductListings(transactionProcessAlias),
+              ...setNoAvailabilityForProductListings(unitType),
             };
 
             onSubmit(updateValues);
           }}
-          selectableTransactionTypes={transactionTypes.map(type => getTransactionInfo([type]))}
+          selectableTransactionTypes={transactionTypes.map(type =>
+            getTransactionInfo([type], {}, true)
+          )}
           hasExistingTransactionType={hasExistingTransactionType}
           onProcessChange={onProcessChange}
           listingExtendedDataConfig={listingExtendedDataConfig}

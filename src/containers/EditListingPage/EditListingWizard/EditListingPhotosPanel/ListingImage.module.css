@@ -65,3 +65,8 @@
   justify-content: center;
   align-items: center;
 }
+
+.fallbackWhileDownloading {
+  position: absolute;
+  top: 0;
+}

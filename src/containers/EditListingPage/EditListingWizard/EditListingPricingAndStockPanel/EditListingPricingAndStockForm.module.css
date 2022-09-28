@@ -28,6 +28,10 @@
   }
 }
 
+.unitTypeHidden {
+  display: none;
+}
+
 .submitButton {
   margin-top: auto;
   margin-bottom: 24px;

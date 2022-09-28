@@ -5,10 +5,9 @@ exports[`EditListingPhotosForm matches snapshot 1`] = `
   disabled={false}
   dispatch={[Function]}
   fetchErrors={null}
-  imageUploadRequested={false}
-  images={Array []}
   initialValues={
     Object {
+      "country": "US",
       "images": Array [],
     }
   }
@@ -46,7 +45,6 @@ exports[`EditListingPhotosForm matches snapshot 1`] = `
     }
   }
   onImageUpload={[Function]}
-  onImageUploadHandler={[Function]}
   onRemoveImage={[Function]}
   onSubmit={[Function]}
   ready={false}

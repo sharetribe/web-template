@@ -69,10 +69,6 @@ export const EditListingDeliveryFormComponent = props => (
       const shippingEnabled = values.deliveryOptions?.includes('shipping');
       const pickupEnabled = values.deliveryOptions?.includes('pickup');
 
-      const titleRequiredMessage = intl.formatMessage({ id: 'EditListingDeliveryForm.address' });
-      const addressPlaceholderMessage = intl.formatMessage({
-        id: 'EditListingDeliveryForm.addressPlaceholder',
-      });
       const addressRequiredMessage = intl.formatMessage({
         id: 'EditListingDeliveryForm.addressRequired',
       });
@@ -84,26 +80,7 @@ export const EditListingDeliveryFormComponent = props => (
         id: 'EditListingDeliveryForm.optionalText',
       });
 
-      const buildingMessage = intl.formatMessage(
-        { id: 'EditListingDeliveryForm.building' },
-        { optionalText: optionalText }
-      );
-      const buildingPlaceholderMessage = intl.formatMessage({
-        id: 'EditListingDeliveryForm.buildingPlaceholder',
-      });
-
       const { updateListingError, showListingsError } = fetchErrors || {};
-      const errorMessage = updateListingError ? (
-        <p className={css.error}>
-          <FormattedMessage id="EditListingDeliveryForm.updateFailed" />
-        </p>
-      ) : null;
-
-      const errorMessageShowListing = showListingsError ? (
-        <p className={css.error}>
-          <FormattedMessage id="EditListingDeliveryForm.showListingFailed" />
-        </p>
-      ) : null;
 
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
@@ -131,8 +108,18 @@ export const EditListingDeliveryFormComponent = props => (
             value="pickup"
           />
           <div className={pickupClasses}>
-            {errorMessage}
-            {errorMessageShowListing}
+            {updateListingError ? (
+              <p className={css.error}>
+                <FormattedMessage id="EditListingDeliveryForm.updateFailed" />
+              </p>
+            ) : null}
+
+            {showListingsError ? (
+              <p className={css.error}>
+                <FormattedMessage id="EditListingDeliveryForm.showListingFailed" />
+              </p>
+            ) : null}
+
             <LocationAutocompleteInputField
               disabled={!pickupEnabled}
               className={css.input}
@@ -142,8 +129,10 @@ export const EditListingDeliveryFormComponent = props => (
               validClassName={css.validLocation}
               autoFocus={autoFocus}
               name="location"
-              label={titleRequiredMessage}
-              placeholder={addressPlaceholderMessage}
+              label={intl.formatMessage({ id: 'EditListingDeliveryForm.address' })}
+              placeholder={intl.formatMessage({
+                id: 'EditListingDeliveryForm.addressPlaceholder',
+              })}
               useDefaultPredictions={false}
               format={identity}
               valueFromForm={values.location}
@@ -170,8 +159,13 @@ export const EditListingDeliveryFormComponent = props => (
               type="text"
               name="building"
               id="building"
-              label={buildingMessage}
-              placeholder={buildingPlaceholderMessage}
+              label={intl.formatMessage(
+                { id: 'EditListingDeliveryForm.building' },
+                { optionalText }
+              )}
+              placeholder={intl.formatMessage({
+                id: 'EditListingDeliveryForm.buildingPlaceholder',
+              })}
               disabled={!pickupEnabled}
             />
           </div>

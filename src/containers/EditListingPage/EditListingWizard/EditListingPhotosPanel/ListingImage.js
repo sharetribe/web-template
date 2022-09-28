@@ -74,7 +74,6 @@ const ListingImage = props => {
       <ImageFromFile
         id={image.id}
         className={className}
-        rootClassName={css.thumbnail}
         file={image.file}
         aspectWidth={aspectWidth}
         aspectHeight={aspectHeight}
@@ -91,9 +90,27 @@ const ListingImage = props => {
       : [];
     const imgForResponsiveImage = image.imageId ? { ...image, id: image.imageId } : image;
 
+    // This is shown when image is uploaded,
+    // but the new responsive image is not yet downloaded by the browser.
+    // This is absolutely positioned behind the actual image.
+    const fallbackWhileDownloading = image.file ? (
+      <ImageFromFile
+        id={image.id}
+        className={css.fallbackWhileDownloading}
+        file={image.file}
+        aspectWidth={aspectWidth}
+        aspectHeight={aspectHeight}
+      >
+        <div className={css.thumbnailLoading}>
+          <IconSpinner />
+        </div>
+      </ImageFromFile>
+    ) : null;
+
     return (
       <div className={classes}>
         <div className={css.wrapper}>
+          {fallbackWhileDownloading}
           <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
             <ResponsiveImage
               rootClassName={css.rootForImage}

@@ -14,65 +14,65 @@ import { ListingLink } from '../../../../components';
 import EditListingPhotosForm from './EditListingPhotosForm';
 import css from './EditListingPhotosPanel.module.css';
 
-class EditListingPhotosPanel extends Component {
-  render() {
-    const {
-      className,
-      rootClassName,
-      errors,
-      disabled,
-      ready,
-      images,
-      listing,
-      onImageUpload,
-      submitButtonText,
-      panelUpdated,
-      updateInProgress,
-      onSubmit,
-      onRemoveImage,
-      listingImageConfig,
-    } = this.props;
+const getInitialValues = params => {
+  const { images } = params;
+  return { images };
+};
 
-    const rootClass = rootClassName || css.root;
-    const classes = classNames(rootClass, className);
-    const currentListing = ensureOwnListing(listing);
+const EditListingPhotosPanel = props => {
+  const {
+    className,
+    rootClassName,
+    errors,
+    disabled,
+    ready,
+    listing,
+    onImageUpload,
+    submitButtonText,
+    panelUpdated,
+    updateInProgress,
+    onSubmit,
+    onRemoveImage,
+    listingImageConfig,
+  } = props;
 
-    const isPublished =
-      currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
-    const panelTitle = isPublished ? (
-      <FormattedMessage
-        id="EditListingPhotosPanel.title"
-        values={{ listingTitle: <ListingLink listing={listing} /> }}
+  const rootClass = rootClassName || css.root;
+  const classes = classNames(rootClass, className);
+  const currentListing = ensureOwnListing(listing);
+  const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
+
+  return (
+    <div className={classes}>
+      <h1 className={css.title}>
+        {isPublished ? (
+          <FormattedMessage
+            id="EditListingPhotosPanel.title"
+            values={{ listingTitle: <ListingLink listing={listing} /> }}
+          />
+        ) : (
+          <FormattedMessage id="EditListingPhotosPanel.createListingTitle" />
+        )}
+      </h1>
+      <EditListingPhotosForm
+        className={css.form}
+        disabled={disabled}
+        ready={ready}
+        fetchErrors={errors}
+        initialValues={getInitialValues(props)}
+        onImageUpload={onImageUpload}
+        onSubmit={values => {
+          const { addImage, ...updateValues } = values;
+          onSubmit(updateValues);
+        }}
+        onRemoveImage={onRemoveImage}
+        saveActionMsg={submitButtonText}
+        updated={panelUpdated}
+        updateInProgress={updateInProgress}
+        listingImageConfig={listingImageConfig}
       />
-    ) : (
-      <FormattedMessage id="EditListingPhotosPanel.createListingTitle" />
-    );
-
-    return (
-      <div className={classes}>
-        <h1 className={css.title}>{panelTitle}</h1>
-        <EditListingPhotosForm
-          className={css.form}
-          disabled={disabled}
-          ready={ready}
-          fetchErrors={errors}
-          initialValues={{ images }}
-          images={images}
-          onImageUpload={onImageUpload}
-          onSubmit={values => {
-            const { addImage, ...updateValues } = values;
-            onSubmit(updateValues);
-          }}
-          onRemoveImage={onRemoveImage}
-          saveActionMsg={submitButtonText}
-          updated={panelUpdated}
-          updateInProgress={updateInProgress}
-          listingImageConfig={listingImageConfig}
-        />
-      </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 EditListingPhotosPanel.defaultProps = {
   className: null,

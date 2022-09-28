@@ -1,11 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { arrayOf, number, shape } from 'prop-types';
 import classNames from 'classnames';
 
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
-import { ensureOwnListing } from '../../../../util/data';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 
 // Import shared components
@@ -17,6 +16,19 @@ import css from './EditListingPricingAndStockPanel.module.css';
 
 const { Money } = sdkTypes;
 
+const getInitialValues = params => {
+  const { listing } = params;
+  const price = listing?.attributes?.price;
+  const currentStock = listing?.currentStock;
+
+  // The listing resource has a relationship: `currentStock`,
+  // which you should include when making API calls.
+  const currentStockQuantity = currentStock?.attributes?.quantity;
+  const stock = currentStockQuantity != null ? currentStockQuantity : 1;
+
+  return { price, stock };
+};
+
 const EditListingPricingAndStockPanel = props => {
   const {
     className,
@@ -24,6 +36,7 @@ const EditListingPricingAndStockPanel = props => {
     listing,
     marketplaceCurrency,
     listingMinimumPriceSubUnits,
+    transactionTypes,
     disabled,
     ready,
     onSubmit,
@@ -34,72 +47,77 @@ const EditListingPricingAndStockPanel = props => {
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
-  const currentListing = ensureOwnListing(listing);
+  const initialValues = getInitialValues(props);
 
-  // The listing resource has a relationship: `currentStock`,
-  // which you should include when making API calls.
-  const currentStockRaw = currentListing.currentStock?.attributes?.quantity;
-  const currentStock = typeof currentStockRaw != null ? currentStockRaw : 1;
-  const { price } = currentListing.attributes;
-
-  const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
-  const panelTitle = isPublished ? (
-    <FormattedMessage
-      id="EditListingPricingAndStockPanel.title"
-      values={{ listingTitle: <ListingLink listing={listing} /> }}
-    />
-  ) : (
-    <FormattedMessage id="EditListingPricingAndStockPanel.createListingTitle" />
+  // Form needs to know data from transactionType
+  const selectedTransactionType = listing?.attributes?.publicData.transactionType;
+  const transactionTypeConfig = transactionTypes.find(
+    conf => conf.type === selectedTransactionType
   );
 
-  const priceCurrencyValid = price instanceof Money ? price.currency === marketplaceCurrency : true;
-  const form = priceCurrencyValid ? (
-    <EditListingPricingAndStockForm
-      className={css.form}
-      initialValues={{ price, stock: currentStock }}
-      onSubmit={values => {
-        const { price, stock } = values;
-
-        // Update stock only if the value has changed.
-        // NOTE: this is going to be used on a separate call to API
-        // in EditListingPage.duck.js: sdk.stock.compareAndSet();
-        const hasStockQuantityChanged = stock && currentStockRaw !== stock;
-        // currentStockRaw is null or undefined, return null - otherwise use the value
-        const oldTotal = currentStockRaw != null ? currentStockRaw : null;
-        const stockUpdateMaybe = hasStockQuantityChanged
-          ? {
-              stockUpdate: {
-                oldTotal,
-                newTotal: stock,
-              },
-            }
-          : {};
-
-        const updateValues = {
-          price,
-          ...stockUpdateMaybe,
-        };
-        onSubmit(updateValues);
-      }}
-      listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
-      marketplaceCurrency={marketplaceCurrency}
-      saveActionMsg={submitButtonText}
-      disabled={disabled}
-      ready={ready}
-      updated={panelUpdated}
-      updateInProgress={updateInProgress}
-      fetchErrors={errors}
-    />
-  ) : (
-    <div className={css.priceCurrencyInvalid}>
-      <FormattedMessage id="EditListingPricingAndStockPanel.listingPriceCurrencyInvalid" />
-    </div>
-  );
+  const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
+  const priceCurrencyValid =
+    initialValues.price instanceof Money
+      ? initialValues.price?.currency === marketplaceCurrency
+      : true;
 
   return (
     <div className={classes}>
-      <h1 className={css.title}>{panelTitle}</h1>
-      {form}
+      <h1 className={css.title}>
+        {isPublished ? (
+          <FormattedMessage
+            id="EditListingPricingAndStockPanel.title"
+            values={{ listingTitle: <ListingLink listing={listing} /> }}
+          />
+        ) : (
+          <FormattedMessage id="EditListingPricingAndStockPanel.createListingTitle" />
+        )}
+      </h1>
+      {priceCurrencyValid ? (
+        <EditListingPricingAndStockForm
+          className={css.form}
+          initialValues={initialValues}
+          onSubmit={values => {
+            const { price, stock } = values;
+
+            // Update stock only if the value has changed.
+            // NOTE: this is going to be used on a separate call to API
+            // in EditListingPage.duck.js: sdk.stock.compareAndSet();
+
+            const hasStockQuantityChanged = stock && stock !== initialValues.stock;
+            // currentStockQuantity is null or undefined, return null - otherwise use the value
+            const oldTotal = initialValues.stock != null ? initialValues.stock : null;
+            const stockUpdateMaybe = hasStockQuantityChanged
+              ? {
+                  stockUpdate: {
+                    oldTotal,
+                    newTotal: stock,
+                  },
+                }
+              : {};
+
+            // New values for listing attributes
+            const updateValues = {
+              price,
+              ...stockUpdateMaybe,
+            };
+            onSubmit(updateValues);
+          }}
+          listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
+          marketplaceCurrency={marketplaceCurrency}
+          transactionType={transactionTypeConfig}
+          saveActionMsg={submitButtonText}
+          disabled={disabled}
+          ready={ready}
+          updated={panelUpdated}
+          updateInProgress={updateInProgress}
+          fetchErrors={errors}
+        />
+      ) : (
+        <div className={css.priceCurrencyInvalid}>
+          <FormattedMessage id="EditListingPricingAndStockPanel.listingPriceCurrencyInvalid" />
+        </div>
+      )}
     </div>
   );
 };
@@ -118,6 +136,13 @@ EditListingPricingAndStockPanel.propTypes = {
 
   // We cannot use propTypes.listing since the listing might be a draft.
   listing: object,
+  marketplaceCurrency: string.isRequired,
+  listingMinimumPriceSubUnits: number.isRequired,
+  transactionTypes: arrayOf(
+    shape({
+      showStock: bool,
+    })
+  ).isRequired,
 
   disabled: bool.isRequired,
   ready: bool.isRequired,

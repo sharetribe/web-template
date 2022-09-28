@@ -20,6 +20,25 @@ import css from './EditListingPricingForm.module.css';
 
 const { Money } = sdkTypes;
 
+const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, intl) => {
+  const priceRequiredMsgId = { id: 'EditListingPricingForm.priceRequired' };
+  const priceRequiredMsg = intl.formatMessage(priceRequiredMsgId);
+  const priceRequired = validators.required(priceRequiredMsg);
+
+  const minPriceRaw = new Money(listingMinimumPriceSubUnits, marketplaceCurrency);
+  const minPrice = formatMoney(intl, minPriceRaw);
+  const priceTooLowMsgId = { id: 'EditListingPricingForm.priceTooLow' };
+  const priceTooLowMsg = intl.formatMessage(priceTooLowMsgId, { minPrice });
+  const minPriceRequired = validators.moneySubUnitAmountAtLeast(
+    priceTooLowMsg,
+    listingMinimumPriceSubUnits
+  );
+
+  return listingMinimumPriceSubUnits
+    ? validators.composeValidators(priceRequired, minPriceRequired)
+    : priceRequired;
+};
+
 export const EditListingPricingFormComponent = props => (
   <FinalForm
     {...props}
@@ -41,26 +60,11 @@ export const EditListingPricingFormComponent = props => (
         fetchErrors,
       } = formRenderProps;
 
-      const priceRequired = validators.required(
-        intl.formatMessage({
-          id: 'EditListingPricingForm.priceRequired',
-        })
+      const priceValidators = getPriceValidators(
+        listingMinimumPriceSubUnits,
+        marketplaceCurrency,
+        intl
       );
-      const minPrice = new Money(listingMinimumPriceSubUnits, marketplaceCurrency);
-      const minPriceRequired = validators.moneySubUnitAmountAtLeast(
-        intl.formatMessage(
-          {
-            id: 'EditListingPricingForm.priceTooLow',
-          },
-          {
-            minPrice: formatMoney(intl, minPrice),
-          }
-        ),
-        listingMinimumPriceSubUnits
-      );
-      const priceValidators = listingMinimumPriceSubUnits
-        ? validators.composeValidators(priceRequired, minPriceRequired)
-        : priceRequired;
 
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
