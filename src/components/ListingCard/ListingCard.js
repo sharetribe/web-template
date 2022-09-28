@@ -38,12 +38,7 @@ const priceData = (price, currency, intl) => {
   return {};
 };
 
-class ListingImage extends Component {
-  render() {
-    return <ResponsiveImage {...this.props} />;
-  }
-}
-const LazyImage = lazyLoadWithDimensions(ListingImage, { loadAfterInitialRendering: 3000 });
+const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 
 export const ListingCardComponent = props => {
   const config = useConfiguration();
