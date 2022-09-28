@@ -11,7 +11,6 @@ export const stateDataShape = shape({
   processName: string.isRequired,
   processState: string.isRequired,
   actionNeeded: bool,
-  emphasizeTransitionMoment: bool,
   isFinal: bool,
   isSaleNotification: bool,
 });

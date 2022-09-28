@@ -37,6 +37,17 @@ export const getDefaultConfiguration = () => {
       ...defaultConfig.stripe,
       publishableKey: 'pk_test_',
     },
+    transaction: {
+      transactionTypes: [
+        {
+          type: 'rent-bicycles',
+          label: 'Rent bicycles',
+          process: 'flex-booking-default-process',
+          alias: 'release-1',
+          unitType: 'day',
+        },
+      ],
+    },
   };
 };
 
