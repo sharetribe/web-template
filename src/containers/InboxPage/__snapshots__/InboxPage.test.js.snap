@@ -1,6 +1,152 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`InboxPage matches snapshot 1`] = `
+exports[`InboxPage InboxItem matches snapshot of order 1`] = `
+<div
+  className="item"
+>
+  <div
+    className="itemAvatar"
+  >
+    <a
+      className="root"
+      href="/u/provider-user-id"
+      onClick={[Function]}
+      onMouseOver={[Function]}
+      onTouchStart={[Function]}
+      style={Object {}}
+      title="provider-user-id display name"
+    >
+      <span
+        className="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    className="itemLink"
+    href="/order/order-1/details"
+    onClick={[Function]}
+    onMouseOver={[Function]}
+    onTouchStart={[Function]}
+    style={Object {}}
+    title={null}
+  >
+    <div
+      className="rowNotificationDot"
+    />
+    <div
+      className="itemInfo"
+    >
+      <div
+        className="itemUsername"
+      >
+        <span
+          className=""
+        >
+          provider-user-id display name
+        </span>
+      </div>
+      <div
+        className="itemOrderInfo"
+      >
+        <span>
+          ItemX title
+        </span>
+        <br />
+      </div>
+    </div>
+    <div
+      className="itemState"
+    >
+      <div
+        className="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.flex-product-default-process.purchased.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem matches snapshot of sales 1`] = `
+<div
+  className="item"
+>
+  <div
+    className="itemAvatar"
+  >
+    <a
+      className="root"
+      href="/u/customer-user-id"
+      onClick={[Function]}
+      onMouseOver={[Function]}
+      onTouchStart={[Function]}
+      style={Object {}}
+      title="customer-user-id display name"
+    >
+      <span
+        className="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    className="itemLink"
+    href="/sale/sale-1/details"
+    onClick={[Function]}
+    onMouseOver={[Function]}
+    onTouchStart={[Function]}
+    style={Object {}}
+    title={null}
+  >
+    <div
+      className="rowNotificationDot"
+    >
+      <div
+        className="notificationDot"
+      />
+    </div>
+    <div
+      className="itemInfo"
+    >
+      <div
+        className="itemUsername"
+      >
+        <span
+          className=""
+        >
+          customer-user-id display name
+        </span>
+      </div>
+      <div
+        className="itemOrderInfo"
+      >
+        <span>
+          ItemX title
+        </span>
+        <br />
+      </div>
+    </div>
+    <div
+      className="itemState"
+    >
+      <div
+        className="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.flex-product-default-process.purchased.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxPageComponent matches snapshot of order 1`] = `
 <Page
   scrollingDisabled={false}
   title="InboxPage.ordersTitle"
@@ -207,6 +353,7 @@ exports[`InboxPage matches snapshot 1`] = `
                     },
                     "publicData": Object {
                       "transactionProcessAlias": "flex-product-default-process",
+                      "transactionType": "sell-bikes",
                       "unitType": "item",
                     },
                     "state": "published",
@@ -367,6 +514,7 @@ exports[`InboxPage matches snapshot 1`] = `
                     },
                     "publicData": Object {
                       "transactionProcessAlias": "flex-product-default-process",
+                      "transactionType": "sell-bikes",
                       "unitType": "item",
                     },
                     "state": "published",
@@ -411,87 +559,7 @@ exports[`InboxPage matches snapshot 1`] = `
 </Page>
 `;
 
-exports[`InboxPage matches snapshot 2`] = `
-<div
-  className="item"
->
-  <div
-    className="itemAvatar"
-  >
-    <a
-      className="root"
-      href="/u/provider-user-id"
-      onClick={[Function]}
-      onMouseOver={[Function]}
-      onTouchStart={[Function]}
-      style={Object {}}
-      title="provider-user-id display name"
-    >
-      <span
-        className="initials"
-      >
-        TT
-      </span>
-    </a>
-  </div>
-  <a
-    className="itemLink"
-    href="/order/order-1/details"
-    onClick={[Function]}
-    onMouseOver={[Function]}
-    onTouchStart={[Function]}
-    style={Object {}}
-    title={null}
-  >
-    <div
-      className="rowNotificationDot"
-    />
-    <div
-      className="itemInfo"
-    >
-      <div
-        className="itemUsername"
-      >
-        <span
-          className=""
-        >
-          provider-user-id display name
-        </span>
-      </div>
-      <div
-        className="itemOrderInfo"
-      >
-        <span>
-          ItemX title
-        </span>
-        <br />
-        <span>
-          InboxPage.quantity
-        </span>
-      </div>
-    </div>
-    <div
-      className="itemState"
-    >
-      <div
-        className="stateName stateNoActionNeeded"
-      >
-        <span>
-          InboxPage.flex-product-default-process.purchased.status
-        </span>
-      </div>
-      <div
-        className="lastTransitionedAt"
-        title="2017-01-15"
-      >
-        2017-01-15
-      </div>
-    </div>
-  </a>
-</div>
-`;
-
-exports[`InboxPage matches snapshot 3`] = `
+exports[`InboxPage InboxPageComponent matches snapshot of sales 1`] = `
 <Page
   scrollingDisabled={false}
   title="InboxPage.salesTitle"
@@ -700,6 +768,7 @@ exports[`InboxPage matches snapshot 3`] = `
                     },
                     "publicData": Object {
                       "transactionProcessAlias": "flex-product-default-process",
+                      "transactionType": "sell-bikes",
                       "unitType": "item",
                     },
                     "state": "published",
@@ -862,6 +931,7 @@ exports[`InboxPage matches snapshot 3`] = `
                     },
                     "publicData": Object {
                       "transactionProcessAlias": "flex-product-default-process",
+                      "transactionType": "sell-bikes",
                       "unitType": "item",
                     },
                     "state": "published",
@@ -904,88 +974,4 @@ exports[`InboxPage matches snapshot 3`] = `
     </LayoutWrapperFooter>
   </LayoutSideNavigation>
 </Page>
-`;
-
-exports[`InboxPage matches snapshot 4`] = `
-<div
-  className="item"
->
-  <div
-    className="itemAvatar"
-  >
-    <a
-      className="root"
-      href="/u/customer-user-id"
-      onClick={[Function]}
-      onMouseOver={[Function]}
-      onTouchStart={[Function]}
-      style={Object {}}
-      title="customer-user-id display name"
-    >
-      <span
-        className="initials"
-      >
-        TT
-      </span>
-    </a>
-  </div>
-  <a
-    className="itemLink"
-    href="/sale/sale-1/details"
-    onClick={[Function]}
-    onMouseOver={[Function]}
-    onTouchStart={[Function]}
-    style={Object {}}
-    title={null}
-  >
-    <div
-      className="rowNotificationDot"
-    >
-      <div
-        className="notificationDot"
-      />
-    </div>
-    <div
-      className="itemInfo"
-    >
-      <div
-        className="itemUsername"
-      >
-        <span
-          className=""
-        >
-          customer-user-id display name
-        </span>
-      </div>
-      <div
-        className="itemOrderInfo"
-      >
-        <span>
-          ItemX title
-        </span>
-        <br />
-        <span>
-          InboxPage.quantity
-        </span>
-      </div>
-    </div>
-    <div
-      className="itemState"
-    >
-      <div
-        className="stateName stateActionNeeded"
-      >
-        <span>
-          InboxPage.flex-product-default-process.purchased.status
-        </span>
-      </div>
-      <div
-        className="lastTransitionedAt"
-        title="2017-01-15"
-      >
-        2017-01-15
-      </div>
-    </div>
-  </a>
-</div>
 `;

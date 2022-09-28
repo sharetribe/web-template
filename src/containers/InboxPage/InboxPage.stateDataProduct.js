@@ -13,7 +13,7 @@ export const getStateDataForProductProcess = (txInfo, processInfo) => {
 
   return new ConditionalResolver([processState, transactionRole])
     .cond([states.ENQUIRY, _], () => {
-      return { processName, processState, actionNeeded: true, emphasizeTransitionMoment: true };
+      return { processName, processState, actionNeeded: true };
     })
     .cond([states.PENDING_PAYMENT, CUSTOMER], () => {
       return { processName, processState, actionNeeded: true };
