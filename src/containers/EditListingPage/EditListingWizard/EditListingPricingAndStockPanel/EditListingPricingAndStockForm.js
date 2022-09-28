@@ -1,7 +1,7 @@
 import React from 'react';
 import { bool, func, number, shape, string } from 'prop-types';
 import { compose } from 'redux';
-import { Form as FinalForm } from 'react-final-form';
+import { Field, Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 // Import configs and util modules
@@ -21,6 +21,25 @@ import css from './EditListingPricingAndStockForm.module.css';
 
 const { Money } = sdkTypes;
 
+const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, intl) => {
+  const priceRequiredMsgId = { id: 'EditListingPricingAndStockForm.priceRequired' };
+  const priceRequiredMsg = intl.formatMessage(priceRequiredMsgId);
+  const priceRequired = validators.required(priceRequiredMsg);
+
+  const minPriceRaw = new Money(listingMinimumPriceSubUnits, marketplaceCurrency);
+  const minPrice = formatMoney(intl, minPriceRaw);
+  const priceTooLowMsgId = { id: 'EditListingPricingAndStockForm.priceTooLow' };
+  const priceTooLowMsg = intl.formatMessage(priceTooLowMsgId, { minPrice });
+  const minPriceRequired = validators.moneySubUnitAmountAtLeast(
+    priceTooLowMsg,
+    listingMinimumPriceSubUnits
+  );
+
+  return listingMinimumPriceSubUnits
+    ? validators.composeValidators(priceRequired, minPriceRequired)
+    : priceRequired;
+};
+
 export const EditListingPricingAndStockFormComponent = props => (
   <FinalForm
     {...props}
@@ -36,33 +55,19 @@ export const EditListingPricingAndStockFormComponent = props => (
         pristine,
         marketplaceCurrency,
         listingMinimumPriceSubUnits,
+        transactionType,
         saveActionMsg,
         updated,
         updateInProgress,
         fetchErrors,
       } = formRenderProps;
 
-      const priceRequired = validators.required(
-        intl.formatMessage({
-          id: 'EditListingPricingAndStockForm.priceRequired',
-        })
+      const priceValidators = getPriceValidators(
+        listingMinimumPriceSubUnits,
+        marketplaceCurrency,
+        intl
       );
-      const minPrice = new Money(listingMinimumPriceSubUnits, marketplaceCurrency);
-      const minPriceRequired = validators.moneySubUnitAmountAtLeast(
-        intl.formatMessage(
-          {
-            id: 'EditListingPricingAndStockForm.priceTooLow',
-          },
-          {
-            minPrice: formatMoney(intl, minPrice),
-          }
-        ),
-        listingMinimumPriceSubUnits
-      );
-      const priceValidators = listingMinimumPriceSubUnits
-        ? validators.composeValidators(priceRequired, minPriceRequired)
-        : priceRequired;
-
+      const hasStockManagement = transactionType.showStock;
       const stockValidator = validators.numberAtLeast(
         intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockIsRequired' }),
         0
@@ -103,18 +108,24 @@ export const EditListingPricingAndStockFormComponent = props => (
             validate={priceValidators}
           />
 
-          <FieldTextInput
-            className={css.input}
-            id="stock"
-            name="stock"
-            label={intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockLabel' })}
-            placeholder={intl.formatMessage({
-              id: 'EditListingPricingAndStockForm.stockPlaceholder',
-            })}
-            type="number"
-            min={0}
-            validate={stockValidator}
-          />
+          {hasStockManagement ? (
+            <FieldTextInput
+              className={css.input}
+              id="stock"
+              name="stock"
+              label={intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockLabel' })}
+              placeholder={intl.formatMessage({
+                id: 'EditListingPricingAndStockForm.stockPlaceholder',
+              })}
+              type="number"
+              min={0}
+              validate={stockValidator}
+            />
+          ) : (
+            <Field id="stock" name="stock" type="hidden" className={css.unitTypeHidden}>
+              {fieldRenderProps => <input {...fieldRenderProps?.input} />}
+            </Field>
+          )}
           {setStockError ? <p className={css.error}>{stockErrorMessage}</p> : null}
 
           <Button
@@ -142,6 +153,7 @@ EditListingPricingAndStockFormComponent.propTypes = {
   onSubmit: func.isRequired,
   marketplaceCurrency: string.isRequired,
   listingMinimumPriceSubUnits: number,
+  transactionType: shape({ showStock: bool }).isRequired,
   saveActionMsg: string.isRequired,
   disabled: bool.isRequired,
   ready: bool.isRequired,

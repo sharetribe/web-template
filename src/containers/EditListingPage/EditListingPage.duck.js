@@ -600,7 +600,9 @@ export function requestImageUpload(actionPayload, listingImageConfig) {
         const img = resp.data.data;
         // Uploaded image has an existing id that refers to file
         // The UUID was created as a consequence of this upload call - it's saved to imageId property
-        return dispatch(uploadImageSuccess({ data: { ...img, id, imageId: img.id } }));
+        return dispatch(
+          uploadImageSuccess({ data: { ...img, id, imageId: img.id, file: actionPayload.file } })
+        );
       })
       .catch(e => dispatch(uploadImageError({ id, error: storableError(e) })));
   };
