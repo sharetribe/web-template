@@ -30,6 +30,7 @@ import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/UI.duck
 import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
 
 import {
+  NamedLink,
   NamedRedirect,
   Page,
   LayoutSingleColumn,
@@ -278,9 +279,8 @@ export const TransactionPageComponent = props => {
   const deletedListingTitle = intl.formatMessage({
     id: 'TransactionPage.deletedListing',
   });
-  const listingTitle = listing?.attributes?.deleted
-    ? deletedListingTitle
-    : listing?.attributes?.title;
+  const listingDeleted = listing?.attributes?.deleted;
+  const listingTitle = listingDeleted ? deletedListingTitle : listing?.attributes?.title;
 
   // Redirect users with someone else's direct link to their own inbox/sales or inbox/orders page.
   const isDataAvailable =
@@ -394,7 +394,6 @@ export const TransactionPageComponent = props => {
       currentUser={currentUser}
       transactionId={transaction?.id}
       listing={listing}
-      lineItemUnitType={lineItemUnitType}
       customer={customer}
       provider={provider}
       hasTransitions={txTransitions.length > 0}
@@ -434,6 +433,20 @@ export const TransactionPageComponent = props => {
           isOwnListing={isOwnSale}
           lineItemUnitType={lineItemUnitType}
           title={listingTitle}
+          titleDesktop={
+            <h2 className={css.orderPanelTitle}>
+              {listingDeleted ? (
+                listingTitle
+              ) : (
+                <NamedLink
+                  name="ListingPage"
+                  params={{ id: listing.id?.uuid, slug: createSlug(listingTitle) }}
+                >
+                  {listingTitle}
+                </NamedLink>
+              )}
+            </h2>
+          }
           author={provider}
           onSubmit={handleSubmitOrderRequest}
           onManageDisableScrolling={onManageDisableScrolling}
@@ -455,7 +468,7 @@ export const TransactionPageComponent = props => {
 
   return (
     <Page
-      title={intl.formatMessage({ id: 'TransactionPage.title' }, { title: listingTitle })}
+      title={intl.formatMessage({ id: 'TransactionPage.schemaTitle' }, { title: listingTitle })}
       scrollingDisabled={scrollingDisabled}
     >
       <LayoutSingleColumn>

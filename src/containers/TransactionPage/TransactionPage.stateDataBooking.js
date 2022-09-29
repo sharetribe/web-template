@@ -38,12 +38,16 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
       const showOrderPanel = !isProviderBanned && hasCorrectNextTransition;
       return { processName, processState, showOrderPanel };
     })
+    .cond([states.ENQUIRY, PROVIDER], () => {
+      return { processName, processState, showDetailCardHeadings: true };
+    })
     .cond([states.PREAUTHORIZED, PROVIDER], () => {
       const primary = isCustomerBanned ? null : actionButtonProps(transitions.ACCEPT, PROVIDER);
       const secondary = isCustomerBanned ? null : actionButtonProps(transitions.DECLINE, PROVIDER);
       return {
         processName,
         processState,
+        showDetailCardHeadings: true,
         showActionButtons: true,
         primaryButtonProps: primary,
         secondaryButtonProps: secondary,
@@ -53,7 +57,7 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
       return {
         processName,
         processState,
-        showDetailCardHeadings: isCustomer,
+        showDetailCardHeadings: true,
         showReviewAsFirstLink: true,
         showActionButtons: true,
         primaryButtonProps: leaveReviewProps,
@@ -73,17 +77,18 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
       return {
         processName,
         processState,
+        showDetailCardHeadings: true,
         showReviewAsSecondLink: true,
         showActionButtons: true,
         primaryButtonProps: leaveReviewProps,
       };
     })
     .cond([states.REVIEWED, _], () => {
-      return { processName, processState, showDetailCardHeadings: isCustomer, showReviews: true };
+      return { processName, processState, showDetailCardHeadings: true, showReviews: true };
     })
     .default(() => {
       // Default values for other states
-      return { processName, processState, showDetailCardHeadings: isCustomer };
+      return { processName, processState, showDetailCardHeadings: true };
     })
     .resolve();
 };

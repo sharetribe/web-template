@@ -38,6 +38,9 @@ export const getStateDataForProductProcess = (txInfo, processInfo) => {
       const showOrderPanel = !isProviderBanned && hasCorrectNextTransition;
       return { processName, processState, showOrderPanel };
     })
+    .cond([states.ENQUIRY, PROVIDER], () => {
+      return { processName, processState, showDetailCardHeadings: true };
+    })
     .cond([states.PURCHASED, CUSTOMER], () => {
       return {
         processName,
@@ -55,6 +58,7 @@ export const getStateDataForProductProcess = (txInfo, processInfo) => {
       return {
         processName,
         processState,
+        showDetailCardHeadings: true,
         showActionButtons: true,
         primaryButtonProps: actionButtonProps(transitions.MARK_DELIVERED, PROVIDER, {
           actionButtonTranslationId,
@@ -75,7 +79,7 @@ export const getStateDataForProductProcess = (txInfo, processInfo) => {
       return {
         processName,
         processState,
-        showDetailCardHeadings: isCustomer,
+        showDetailCardHeadings: true,
         showReviewAsFirstLink: true,
         showActionButtons: true,
         primaryButtonProps: leaveReviewProps,
@@ -95,17 +99,18 @@ export const getStateDataForProductProcess = (txInfo, processInfo) => {
       return {
         processName,
         processState,
+        showDetailCardHeadings: true,
         showReviewAsSecondLink: true,
         showActionButtons: true,
         primaryButtonProps: leaveReviewProps,
       };
     })
     .cond([states.REVIEWED, _], () => {
-      return { processName, processState, showDetailCardHeadings: isCustomer, showReviews: true };
+      return { processName, processState, showDetailCardHeadings: true, showReviews: true };
     })
     .default(() => {
       // Default values for other states
-      return { processName, processState, showDetailCardHeadings: isCustomer };
+      return { processName, processState, showDetailCardHeadings: true };
     })
     .resolve();
 };

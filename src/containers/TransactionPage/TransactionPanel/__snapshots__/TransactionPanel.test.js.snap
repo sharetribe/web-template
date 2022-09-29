@@ -162,8 +162,19 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
             provider={null}
           />
           <DetailCardHeadingsMaybe
-            listingTitle="listing1 title"
-            subTitle="55 TransactionPanel.perUnit"
+            listingTitle={
+              <NamedLink
+                name="ListingPage"
+                params={
+                  Object {
+                    "id": "listing1",
+                    "slug": "listing1-title",
+                  }
+                }
+              >
+                listing1 title
+              </NamedLink>
+            }
           />
           <BreakdownMaybe
             className="breakdownContainer"
@@ -349,8 +360,19 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
             provider={null}
           />
           <DetailCardHeadingsMaybe
-            listingTitle="listing1 title"
-            subTitle="55 TransactionPanel.perUnit"
+            listingTitle={
+              <NamedLink
+                name="ListingPage"
+                params={
+                  Object {
+                    "id": "listing1",
+                    "slug": "listing1-title",
+                  }
+                }
+              >
+                listing1 title
+              </NamedLink>
+            }
           />
           <BreakdownMaybe
             className="breakdownContainer"
