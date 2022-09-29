@@ -17,7 +17,7 @@ import {
   LISTING_UNIT_TYPES,
 } from '../../util/types';
 import { subtractTime } from '../../util/dates';
-import { getUpdatedProcessName, getProcess, isBookingUnitType } from '../../util/transaction';
+import { resolveLatestProcessName, getProcess, isBookingUnitType } from '../../util/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
@@ -78,7 +78,7 @@ const bookingData = (tx, lineItemUnitType, timeZone) => {
 
 const BookingTimeInfoMaybe = props => {
   const { transaction, ...rest } = props;
-  const processName = getUpdatedProcessName(transaction?.attributes?.processName);
+  const processName = resolveLatestProcessName(transaction?.attributes?.processName);
   const process = getProcess(processName);
   const isEnquiry = process.getState(transaction) === process.states.ENQUIRY;
 

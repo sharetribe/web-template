@@ -1,5 +1,5 @@
 import { bool, func, oneOf, shape, string } from 'prop-types';
-import { getUpdatedProcessName } from '../../util/transaction';
+import { resolveLatestProcessName } from '../../util/transaction';
 import { getStateDataForBookingProcess } from './TransactionPage.stateDataBooking.js';
 import { getStateDataForProductProcess } from './TransactionPage.stateDataProduct.js';
 
@@ -87,7 +87,7 @@ export const getStateData = (params, process) => {
     onOpenReviewModal,
   } = params;
   const isCustomer = transactionRole === 'customer';
-  const processName = getUpdatedProcessName(transaction?.attributes?.processName);
+  const processName = resolveLatestProcessName(transaction?.attributes?.processName);
 
   const getActionButtonProps = (transitionName, forRole, extra = {}) =>
     getActionButtonPropsMaybe(
