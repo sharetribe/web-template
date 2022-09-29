@@ -29,7 +29,7 @@ export const search = {
   // This affects location search.
   // Example location can be edited in the
   // `defaultLocationSearchesConfig.js` file.
-  defaults: defaultLocationSearches || [],
+  defaults: [], //defaultLocationSearches || [],
 
   // Should search results be ordered by distance to origin.
   // NOTE 1: This doesn't affect if the main search type is 'keywords'
