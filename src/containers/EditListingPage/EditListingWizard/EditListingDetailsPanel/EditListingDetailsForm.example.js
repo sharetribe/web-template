@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import EditListingDetailsForm from './EditListingDetailsForm';
-import defaultConfig from '../../../../config/defaultConfig';
+import defaultConfig from '../../../../config/configDefault';
 
 const selectableTransactionTypes = [
   {

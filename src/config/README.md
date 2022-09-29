@@ -2,7 +2,7 @@
 
 The 2 main files here are **defaultConfig.js** and **appSettings.js**.
 
-## [defaultConfig.js](./defaultConfig.js)
+## [configDefault.js](./configDefault.js)
 
 These configurations are saved to React Context and therefore they could be overwritten through
 configs received from Asset Delivery API.

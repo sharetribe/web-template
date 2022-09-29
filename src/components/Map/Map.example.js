@@ -2,7 +2,7 @@ import React from 'react';
 import Map from './Map';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { obfuscatedCoordinates } from '../../util/maps';
-import defaultConfig from '../../config/defaultConfig';
+import defaultConfig from '../../config/configDefault';
 
 const { LatLng } = sdkTypes;
 
