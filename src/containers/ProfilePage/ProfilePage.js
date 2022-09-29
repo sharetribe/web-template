@@ -73,7 +73,7 @@ export const MobileReviews = props => {
     <div className={css.mobileReviews}>
       <h2 className={css.mobileReviewsTitle}>
         <FormattedMessage
-          id="ProfilePage.reviewsOfProviderTitle"
+          id="ProfilePage.reviewsFromMyCustomersTitle"
           values={{ count: reviewsOfProvider.length }}
         />
       </h2>
@@ -81,7 +81,7 @@ export const MobileReviews = props => {
       <Reviews reviews={reviewsOfProvider} />
       <h2 className={css.mobileReviewsTitle}>
         <FormattedMessage
-          id="ProfilePage.reviewsOfCustomerTitle"
+          id="ProfilePage.reviewsAsACustomerTitle"
           values={{ count: reviewsOfCustomer.length }}
         />
       </h2>
@@ -103,7 +103,7 @@ export const DesktopReviews = props => {
       text: (
         <h3 className={css.desktopReviewsTitle}>
           <FormattedMessage
-            id="ProfilePage.reviewsOfProviderTitle"
+            id="ProfilePage.reviewsFromMyCustomersTitle"
             values={{ count: reviewsOfProvider.length }}
           />
         </h3>
@@ -115,7 +115,7 @@ export const DesktopReviews = props => {
       text: (
         <h3 className={css.desktopReviewsTitle}>
           <FormattedMessage
-            id="ProfilePage.reviewsOfCustomerTitle"
+            id="ProfilePage.reviewsAsACustomerTitle"
             values={{ count: reviewsOfCustomer.length }}
           />
         </h3>
