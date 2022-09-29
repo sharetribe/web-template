@@ -16,7 +16,7 @@ import {
 // Import shared components
 import {
   Form,
-  LocationAutocompleteInputField,
+  FieldLocationAutocompleteInput,
   Button,
   FieldTextInput,
 } from '../../../../components';
@@ -78,7 +78,7 @@ export const EditListingLocationFormComponent = props => (
             </p>
           ) : null}
 
-          <LocationAutocompleteInputField
+          <FieldLocationAutocompleteInput
             className={css.locationAddress}
             inputClassName={css.locationAutocompleteInput}
             iconClassName={css.locationAutocompleteInputIcon}
