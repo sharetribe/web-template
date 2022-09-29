@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -14,105 +14,97 @@ import { ListingLink } from '../../../../components';
 import EditListingLocationForm from './EditListingLocationForm';
 import css from './EditListingLocationPanel.module.css';
 
-class EditListingLocationPanel extends Component {
-  constructor(props) {
-    super(props);
+const getInitialValues = props => {
+  const { listing } = props;
+  const { geolocation, publicData } = listing?.attributes || {};
 
-    this.getInitialValues = this.getInitialValues.bind(this);
+  // Only render current search if full place object is available in the URL params
+  // TODO bounds are missing - those need to be queried directly from Google Places
+  const locationFieldsPresent = publicData?.location?.address && geolocation;
+  const location = publicData?.location || {};
+  const { address, building } = location;
 
-    this.state = {
-      initialValues: this.getInitialValues(),
-    };
-  }
+  return {
+    building,
+    location: locationFieldsPresent
+      ? {
+          search: address,
+          selectedPlace: { address, origin: geolocation },
+        }
+      : null,
+  };
+};
 
-  getInitialValues() {
-    const { listing } = this.props;
-    const currentListing = ensureOwnListing(listing);
-    const { geolocation, publicData } = currentListing.attributes;
+const EditListingLocationPanel = props => {
+  // State is needed since LocationAutocompleteInput doesn't have internal state
+  // and therefore re-rendering would overwrite the values during XHR call.
+  const [state, setState] = useState({ initialValues: getInitialValues(props) });
+  const {
+    className,
+    rootClassName,
+    listing,
+    disabled,
+    ready,
+    onSubmit,
+    submitButtonText,
+    panelUpdated,
+    updateInProgress,
+    errors,
+  } = props;
 
-    // Only render current search if full place object is available in the URL params
-    // TODO bounds are missing - those need to be queried directly from Google Places
-    const locationFieldsPresent =
-      publicData && publicData.location && publicData.location.address && geolocation;
-    const location = publicData && publicData.location ? publicData.location : {};
-    const { address, building } = location;
+  const classes = classNames(rootClassName || css.root, className);
+  const isPublished = listing?.id && listing?.attributes.state !== LISTING_STATE_DRAFT;
 
-    return {
-      building,
-      location: locationFieldsPresent
-        ? {
-            search: address,
-            selectedPlace: { address, origin: geolocation },
-          }
-        : null,
-    };
-  }
+  return (
+    <div className={classes}>
+      <h1 className={css.title}>
+        {isPublished ? (
+          <FormattedMessage
+            id="EditListingLocationPanel.title"
+            values={{ listingTitle: <ListingLink listing={listing} /> }}
+          />
+        ) : (
+          <FormattedMessage id="EditListingLocationPanel.createListingTitle" />
+        )}
+      </h1>
+      <EditListingLocationForm
+        className={css.form}
+        initialValues={state.initialValues}
+        onSubmit={values => {
+          const { building = '', location } = values;
+          const {
+            selectedPlace: { address, origin },
+          } = location;
 
-  render() {
-    const {
-      className,
-      rootClassName,
-      listing,
-      disabled,
-      ready,
-      onSubmit,
-      submitButtonText,
-      panelUpdated,
-      updateInProgress,
-      errors,
-    } = this.props;
-
-    const classes = classNames(rootClassName || css.root, className);
-    const currentListing = ensureOwnListing(listing);
-
-    const isPublished =
-      currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
-    const panelTitle = isPublished ? (
-      <FormattedMessage
-        id="EditListingLocationPanel.title"
-        values={{ listingTitle: <ListingLink listing={listing} /> }}
+          // New values for listing attributes
+          const updateValues = {
+            geolocation: origin,
+            publicData: {
+              location: { address, building },
+            },
+          };
+          // Save the initialValues to state
+          // LocationAutocompleteInput doesn't have internal state
+          // and therefore re-rendering would overwrite the values during XHR call.
+          setState({
+            initialValues: {
+              building,
+              location: { search: address, selectedPlace: { address, origin } },
+            },
+          });
+          onSubmit(updateValues);
+        }}
+        saveActionMsg={submitButtonText}
+        disabled={disabled}
+        ready={ready}
+        updated={panelUpdated}
+        updateInProgress={updateInProgress}
+        fetchErrors={errors}
+        autoFocus
       />
-    ) : (
-      <FormattedMessage id="EditListingLocationPanel.createListingTitle" />
-    );
-
-    return (
-      <div className={classes}>
-        <h1 className={css.title}>{panelTitle}</h1>
-        <EditListingLocationForm
-          className={css.form}
-          initialValues={this.state.initialValues}
-          onSubmit={values => {
-            const { building = '', location } = values;
-            const {
-              selectedPlace: { address, origin },
-            } = location;
-            const updateValues = {
-              geolocation: origin,
-              publicData: {
-                location: { address, building },
-              },
-            };
-            this.setState({
-              initialValues: {
-                building,
-                location: { search: address, selectedPlace: { address, origin } },
-              },
-            });
-            onSubmit(updateValues);
-          }}
-          saveActionMsg={submitButtonText}
-          disabled={disabled}
-          ready={ready}
-          updated={panelUpdated}
-          updateInProgress={updateInProgress}
-          fetchErrors={errors}
-          autoFocus
-        />
-      </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 const { func, object, string, bool } = PropTypes;
 

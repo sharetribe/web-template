@@ -30,7 +30,7 @@ export const Form = {
         'onFetchTransactionLineItems called with params:',
         JSON.stringify(params, null, 2)
       ),
-    onContactUser: console.log('onContactUser called'),
+    onContactUser: () => console.log('onContactUser called'),
     lineItems: null,
     fetchLineItemsInProgress: false,
     fetchLineItemsError: null,

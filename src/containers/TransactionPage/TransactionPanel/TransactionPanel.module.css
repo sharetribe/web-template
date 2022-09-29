@@ -172,6 +172,14 @@
   display: block;
 }
 
+.listingTitleMobile {
+  margin: 30px 24px 0 24px;
+
+  @media (--viewportLarge) {
+    display: none;
+  }
+}
+
 .transactionInfoMessage {
   margin: 18px 24px 0 24px;
 
@@ -243,15 +251,16 @@
 
   @media (--viewportLarge) {
     display: block;
-    margin: 0 48px 33px 48px;
+    margin: 24px 48px 32px 48px;
   }
 }
 
 .detailCardTitle {
+  margin-top: 0;
   margin-bottom: 10px;
 
   @media (--viewportLarge) {
-    margin-top: 14px;
+    margin-top: 0;
     margin-bottom: 0;
   }
 }

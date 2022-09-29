@@ -10,14 +10,7 @@ import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl, intlShape } from '../../util/reactIntl';
 import { pathByRouteName, findRouteByRouteName } from '../../util/routes';
-import {
-  propTypes,
-  LINE_ITEM_NIGHT,
-  LINE_ITEM_DAY,
-  LINE_ITEM_HOUR,
-  DATE_TYPE_DATE,
-  DATE_TYPE_DATETIME,
-} from '../../util/types';
+import { propTypes, LINE_ITEM_HOUR, DATE_TYPE_DATE, DATE_TYPE_DATETIME } from '../../util/types';
 import {
   ensureListing,
   ensureCurrentUser,
@@ -72,6 +65,7 @@ import {
 import StripePaymentForm from './StripePaymentForm/StripePaymentForm';
 import { storeData, storedData, clearData } from './CheckoutPageSessionHelpers';
 import css from './CheckoutPage.module.css';
+import { Form } from '../../components/OrderPanel/ProductOrderForm/ProductOrderForm.example';
 
 const STORAGE_KEY = 'CheckoutPage';
 
@@ -708,8 +702,16 @@ export class CheckoutPageComponent extends Component {
     const currentListing = ensureListing(listing);
     const currentAuthor = ensureUser(currentListing.author);
 
+    const processName = existingTransaction.id
+      ? existingTransaction?.attributes?.processName
+      : listing?.id
+      ? listing.attributes.publicData?.transactionProcessAlias?.split('/')[0]
+      : null;
+
     const listingTitle = currentListing.attributes.title;
-    const title = intl.formatMessage({ id: 'CheckoutPage.title' }, { listingTitle });
+    const title = processName
+      ? intl.formatMessage({ id: `CheckoutPage.${processName}.title` }, { listingTitle })
+      : 'Checkout page is loading data';
 
     const pageProps = { title, scrollingDisabled };
     const topbar = (
@@ -728,12 +730,6 @@ export class CheckoutPageComponent extends Component {
         </NamedLink>
       </div>
     );
-
-    const processName = existingTransaction.id
-      ? existingTransaction?.attributes?.processName
-      : listing?.id
-      ? listing.attributes.publicData?.transactionProcessAlias?.split('/')[0]
-      : null;
 
     const isLoading = !this.state.dataLoaded || speculateTransactionInProgress || !processName;
 
@@ -769,7 +765,8 @@ export class CheckoutPageComponent extends Component {
     // (i.e. have an id and lineItems)
     const tx = existingTransaction.booking ? existingTransaction : speculatedTransaction;
     const timeZone = listing?.attributes?.availabilityPlan?.timezone;
-    const lineItemUnitType = `line-item/${currentListing.attributes.publicData?.unitType}`;
+    const unitType = currentListing.attributes.publicData?.unitType;
+    const lineItemUnitType = `line-item/${unitType}`;
     const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
     const txBookingMaybe = tx.booking?.id
       ? { booking: ensureBooking(tx.booking), dateType, timeZone }
@@ -826,9 +823,6 @@ export class CheckoutPageComponent extends Component {
       </NamedLink>
     );
 
-    const isNightly = lineItemUnitType === LINE_ITEM_NIGHT;
-    const isDaily = lineItemUnitType === LINE_ITEM_DAY;
-
     const {
       listingNotFoundErrorMessage,
       initiateOrderErrorMessage,
@@ -840,16 +834,6 @@ export class CheckoutPageComponent extends Component {
       speculateTransactionError,
       listingLink
     );
-
-    const unitTranslationKey = isNightly
-      ? 'CheckoutPage.perNight'
-      : isDaily
-      ? 'CheckoutPage.perDay'
-      : 'CheckoutPage.perUnit';
-
-    const price = currentListing.attributes.price;
-    const formattedPrice = formatMoney(intl, price);
-    const detailsSubTitle = `${formattedPrice} ${intl.formatMessage({ id: unitTranslationKey })}`;
 
     const showInitialMessageInput = !(
       existingTransaction && existingTransaction.attributes.lastTransition === transitions.ENQUIRE
@@ -892,12 +876,9 @@ export class CheckoutPageComponent extends Component {
           <div className={css.bookListingContainer}>
             <div className={css.heading}>
               <h1 className={css.title}>{title}</h1>
-              <div className={css.author}>
-                <FormattedMessage
-                  id="CheckoutPage.providerInfo"
-                  values={{ name: currentAuthor.attributes.profile.displayName }}
-                />
-              </div>
+              <h2>
+                <FormattedMessage id="CheckoutPage.listingTitle" values={{ listingTitle }} />
+              </h2>
             </div>
 
             <div className={css.priceBreakdownContainer}>
@@ -972,8 +953,14 @@ export class CheckoutPageComponent extends Component {
               <AvatarMedium user={currentAuthor} disableProfileLink />
             </div>
             <div className={css.detailsHeadings}>
-              <h2 className={css.detailsTitle}>{listingTitle}</h2>
-              <p className={css.detailsSubtitle}>{detailsSubTitle}</p>
+              <h2 className={css.detailsTitle}>
+                <NamedLink
+                  name="ListingPage"
+                  params={{ id: currentListing.id?.uuid, slug: createSlug(listingTitle) }}
+                >
+                  {listingTitle}
+                </NamedLink>
+              </h2>
             </div>
             {speculateTransactionErrorMessage}
             <h2 className={css.orderBreakdownTitle}>

@@ -20,7 +20,13 @@
   margin: 24px;
 }
 
-.sectionImages {
+.sectionHero {
+  position: relative;
+  margin: 0 0 36px 0;
+
+  @media (--viewportMedium) {
+    margin: 0;
+  }
 }
 
 .heroHeight {
@@ -31,7 +37,7 @@
   }
 }
 
-.imageWrapperForSectionImage {
+.imageWrapperForSectionHero {
   composes: heroHeight;
   background-color: var(--matterColorNegative); /* Loading BG color */
 
@@ -259,7 +265,7 @@
   }
 
   @media (--viewportLarge) {
-    margin-top: 50px;
+    margin-top: 80px;
     margin-bottom: 0px;
     /* contentContainer's full width - (orderColumn + two paddings + margin + border) */
     max-width: calc(100% - 433px);
@@ -274,7 +280,7 @@
   }
   @media (--viewportLarge) {
     display: block;
-    margin-top: 79px;
+    margin-top: 80px;
     margin-left: 60px;
     border-left: 1px solid var(--matterColorNegative);
     padding-left: 60px;
@@ -297,6 +303,17 @@
     position: sticky;
     top: 108px;
   }
+}
+
+.orderPanelTitle {
+  /* Font */
+  composes: h2 from global;
+  color: var(--matterColor);
+
+  /* Layout */
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .sectionAvatar {
@@ -494,18 +511,31 @@
 }
 
 .text {
-  padding: 1px 0 5px 0;
-  margin-top: 0;
-  margin-bottom: 0;
   font-weight: var(--fontWeightRegular);
+  padding: 1px 0 5px 0;
+  margin: 0;
 
   /* Preserve newlines, but collapse other whitespace */
   white-space: pre-line;
 
   @media (--viewportMedium) {
     padding: 3px 0 5px 0;
-    margin-top: 0;
-    margin-bottom: 0;
+    margin: 0;
+  }
+}
+
+.ingress {
+  font-weight: var(--fontWeightRegular);
+  letter-spacing: 0.2px;
+  padding: 1px 0 5px 0;
+  margin: 0;
+
+  /* Preserve newlines, but collapse other whitespace */
+  white-space: pre-line;
+
+  @media (--viewportMedium) {
+    padding: 3px 0 5px 0;
+    margin: 0;
   }
 }
 
@@ -707,7 +737,7 @@
 }
 
 .productGallery {
-  margin: 0;
+  margin: 0 0 36px 0;
 
   @media (--viewportMedium) {
     margin: 24px 0 48px 0;
@@ -718,7 +748,13 @@
   }
 }
 
-.productMobileHeading {
+.mobileHeading {
+  margin: 0 24px 24px 24px;
+
+  @media (--viewportMedium) {
+    margin: 0 0 24px 0;
+  }
+
   @media (--viewportLarge) {
     display: none;
   }

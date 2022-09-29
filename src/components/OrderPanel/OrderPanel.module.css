@@ -55,8 +55,8 @@
 .price {
   composes: h2 from global;
 
-  color: var(--marketplaceColor);
-  margin: 0 24px;
+  color: var(--matterColor);
+  margin: 0 0 0 24px;
 
   @media (--viewportMedium) {
     margin: 0;
@@ -65,20 +65,41 @@
 
 .author {
   composes: h4 from global;
-  margin: 24px 24px 32px 24px;
+  margin: 0px 24px 32px 24px;
 
   display: flex;
   flex-direction: row;
-  width: 100%;
 
   @media (--viewportMedium) {
-    margin: 24px 0 32px 0;
+    width: 100%;
+    margin: 8px 0 32px 0;
     color: var(--matterColor);
   }
 }
 
 .providerAvatar {
-  margin-right: 10px;
+  display: none;
+
+  @media (--viewportLarge) {
+    display: flex;
+    margin-right: 10px;
+  }
+}
+
+.providerNamePlain {
+  display: inline;
+
+  @media (--viewportLarge) {
+    display: none;
+  }
+}
+
+.providerNameLinked {
+  display: none;
+
+  @media (--viewportLarge) {
+    display: inline;
+  }
 }
 
 .orderHeading {
@@ -155,21 +176,32 @@
   }
 }
 
+.priceContainerInCTA,
 .priceContainer {
   /* Layout */
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  gap: 5px;
   flex-shrink: 0;
   margin-right: 22px;
-  padding: 5px 12px;
+  padding: 3px 0;
+
+  @media (--viewportMedium) {
+    padding: 4px 0;
+  }
 
   @media (--viewportLarge) {
-    gap: 5px;
     flex-direction: row;
     margin-right: unset;
     padding: 0;
   }
+}
+.priceContainerInCTA {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: unset;
 }
 
 .priceValue {
@@ -185,21 +217,26 @@
   }
 }
 
+.perUnitInCTA,
 .perUnit {
   /* Font */
   composes: marketplaceTinyFontStyles from global;
   color: var(--matterColor);
+  padding: 10px 0 6px 0;
 
   margin-top: 0;
   margin-bottom: 0px;
+
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 0;
   }
 
   @media (--viewportLarge) {
-    padding: 10px 0 6px 0;
   }
+}
+.perUnitInCTA {
+  padding: 0;
 }
 
 .orderButton {

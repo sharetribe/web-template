@@ -1,10 +1,10 @@
-import * as stripe from './stripeConfig';
-import * as listing from './listingConfig';
-import * as search from './searchConfig';
-import * as maps from './mapsConfig';
-import * as transaction from './transactionConfig';
-import * as branding from './brandingConfig';
-import * as layout from './layoutConfig';
+import * as stripe from './configStripe';
+import * as listing from './configListing';
+import * as search from './configSearch';
+import * as maps from './configMaps';
+import * as transaction from './configTransaction';
+import * as branding from './configBranding';
+import * as layout from './configLayout';
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets to this file.
@@ -22,7 +22,7 @@ const defaultConfig = {
   // Listing minimum price in currency sub units, e.g. cents.
   // 0 means no restriction to the price
   // Note: Stripe does have minimum fee that depends on country, currency, etc.
-  listingMinimumPriceSubUnits: 0,
+  listingMinimumPriceSubUnits: 500,
 
   // Marketplace name is needed for microcopy and in meta tags (bots and social media sharing reads those)
   marketplaceName: 'Biketribe',
@@ -64,7 +64,7 @@ const defaultConfig = {
     // 1: Monday
     // ...
     // 6: Saturday
-    firstDayOfWeek: 0,
+    firstDayOfWeek: 1,
   },
 
   // CDN assets for the app. Configurable through Flex Console.

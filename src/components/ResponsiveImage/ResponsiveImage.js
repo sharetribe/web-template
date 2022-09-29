@@ -97,6 +97,7 @@ ResponsiveImage.defaultProps = {
   className: null,
   rootClassName: null,
   image: null,
+  sizes: null,
   noImageMessage: null,
 };
 
@@ -106,6 +107,7 @@ ResponsiveImage.propTypes = {
   alt: string.isRequired,
   image: propTypes.image,
   variants: arrayOf(string).isRequired,
+  sizes: string,
   noImageMessage: string,
 };
 

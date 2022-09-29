@@ -16,7 +16,7 @@ import {
 // Import shared components
 import {
   Form,
-  LocationAutocompleteInputField,
+  FieldLocationAutocompleteInput,
   Button,
   FieldTextInput,
 } from '../../../../components';
@@ -46,10 +46,6 @@ export const EditListingLocationFormComponent = props => (
         values,
       } = formRenderProps;
 
-      const titleRequiredMessage = intl.formatMessage({ id: 'EditListingLocationForm.address' });
-      const addressPlaceholderMessage = intl.formatMessage({
-        id: 'EditListingLocationForm.addressPlaceholder',
-      });
       const addressRequiredMessage = intl.formatMessage({
         id: 'EditListingLocationForm.addressRequired',
       });
@@ -61,26 +57,7 @@ export const EditListingLocationFormComponent = props => (
         id: 'EditListingLocationForm.optionalText',
       });
 
-      const buildingMessage = intl.formatMessage(
-        { id: 'EditListingLocationForm.building' },
-        { optionalText: optionalText }
-      );
-      const buildingPlaceholderMessage = intl.formatMessage({
-        id: 'EditListingLocationForm.buildingPlaceholder',
-      });
-
       const { updateListingError, showListingsError } = fetchErrors || {};
-      const errorMessage = updateListingError ? (
-        <p className={css.error}>
-          <FormattedMessage id="EditListingLocationForm.updateFailed" />
-        </p>
-      ) : null;
-
-      const errorMessageShowListing = showListingsError ? (
-        <p className={css.error}>
-          <FormattedMessage id="EditListingLocationForm.showListingFailed" />
-        </p>
-      ) : null;
 
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
@@ -89,9 +66,19 @@ export const EditListingLocationFormComponent = props => (
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
-          {errorMessage}
-          {errorMessageShowListing}
-          <LocationAutocompleteInputField
+          {updateListingError ? (
+            <p className={css.error}>
+              <FormattedMessage id="EditListingLocationForm.updateFailed" />
+            </p>
+          ) : null}
+
+          {showListingsError ? (
+            <p className={css.error}>
+              <FormattedMessage id="EditListingLocationForm.showListingFailed" />
+            </p>
+          ) : null}
+
+          <FieldLocationAutocompleteInput
             className={css.locationAddress}
             inputClassName={css.locationAutocompleteInput}
             iconClassName={css.locationAutocompleteInputIcon}
@@ -99,8 +86,10 @@ export const EditListingLocationFormComponent = props => (
             validClassName={css.validLocation}
             autoFocus={autoFocus}
             name="location"
-            label={titleRequiredMessage}
-            placeholder={addressPlaceholderMessage}
+            label={intl.formatMessage({ id: 'EditListingLocationForm.address' })}
+            placeholder={intl.formatMessage({
+              id: 'EditListingLocationForm.addressPlaceholder',
+            })}
             useDefaultPredictions={false}
             format={identity}
             valueFromForm={values.location}
@@ -115,8 +104,10 @@ export const EditListingLocationFormComponent = props => (
             type="text"
             name="building"
             id="building"
-            label={buildingMessage}
-            placeholder={buildingPlaceholderMessage}
+            label={intl.formatMessage({ id: 'EditListingLocationForm.building' }, { optionalText })}
+            placeholder={intl.formatMessage({
+              id: 'EditListingLocationForm.buildingPlaceholder',
+            })}
           />
 
           <Button

@@ -5,7 +5,7 @@ import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 // Import configs and util modules
-import appSettings from '../../../../config/appSettings';
+import appSettings from '../../../../config/settingsApp';
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import {
@@ -18,7 +18,7 @@ import {
 // Import shared components
 import {
   Form,
-  LocationAutocompleteInputField,
+  FieldLocationAutocompleteInput,
   Button,
   FieldCurrencyInput,
   FieldTextInput,
@@ -69,10 +69,6 @@ export const EditListingDeliveryFormComponent = props => (
       const shippingEnabled = values.deliveryOptions?.includes('shipping');
       const pickupEnabled = values.deliveryOptions?.includes('pickup');
 
-      const titleRequiredMessage = intl.formatMessage({ id: 'EditListingDeliveryForm.address' });
-      const addressPlaceholderMessage = intl.formatMessage({
-        id: 'EditListingDeliveryForm.addressPlaceholder',
-      });
       const addressRequiredMessage = intl.formatMessage({
         id: 'EditListingDeliveryForm.addressRequired',
       });
@@ -84,26 +80,7 @@ export const EditListingDeliveryFormComponent = props => (
         id: 'EditListingDeliveryForm.optionalText',
       });
 
-      const buildingMessage = intl.formatMessage(
-        { id: 'EditListingDeliveryForm.building' },
-        { optionalText: optionalText }
-      );
-      const buildingPlaceholderMessage = intl.formatMessage({
-        id: 'EditListingDeliveryForm.buildingPlaceholder',
-      });
-
       const { updateListingError, showListingsError } = fetchErrors || {};
-      const errorMessage = updateListingError ? (
-        <p className={css.error}>
-          <FormattedMessage id="EditListingDeliveryForm.updateFailed" />
-        </p>
-      ) : null;
-
-      const errorMessageShowListing = showListingsError ? (
-        <p className={css.error}>
-          <FormattedMessage id="EditListingDeliveryForm.showListingFailed" />
-        </p>
-      ) : null;
 
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
@@ -131,9 +108,19 @@ export const EditListingDeliveryFormComponent = props => (
             value="pickup"
           />
           <div className={pickupClasses}>
-            {errorMessage}
-            {errorMessageShowListing}
-            <LocationAutocompleteInputField
+            {updateListingError ? (
+              <p className={css.error}>
+                <FormattedMessage id="EditListingDeliveryForm.updateFailed" />
+              </p>
+            ) : null}
+
+            {showListingsError ? (
+              <p className={css.error}>
+                <FormattedMessage id="EditListingDeliveryForm.showListingFailed" />
+              </p>
+            ) : null}
+
+            <FieldLocationAutocompleteInput
               disabled={!pickupEnabled}
               className={css.input}
               inputClassName={css.locationAutocompleteInput}
@@ -142,8 +129,10 @@ export const EditListingDeliveryFormComponent = props => (
               validClassName={css.validLocation}
               autoFocus={autoFocus}
               name="location"
-              label={titleRequiredMessage}
-              placeholder={addressPlaceholderMessage}
+              label={intl.formatMessage({ id: 'EditListingDeliveryForm.address' })}
+              placeholder={intl.formatMessage({
+                id: 'EditListingDeliveryForm.addressPlaceholder',
+              })}
               useDefaultPredictions={false}
               format={identity}
               valueFromForm={values.location}
@@ -170,8 +159,13 @@ export const EditListingDeliveryFormComponent = props => (
               type="text"
               name="building"
               id="building"
-              label={buildingMessage}
-              placeholder={buildingPlaceholderMessage}
+              label={intl.formatMessage(
+                { id: 'EditListingDeliveryForm.building' },
+                { optionalText }
+              )}
+              placeholder={intl.formatMessage({
+                id: 'EditListingDeliveryForm.buildingPlaceholder',
+              })}
               disabled={!pickupEnabled}
             />
           </div>
@@ -272,6 +266,7 @@ EditListingDeliveryFormComponent.propTypes = {
   onSubmit: func.isRequired,
   saveActionMsg: string.isRequired,
   selectedPlace: propTypes.place,
+  marketplaceCurrency: string.isRequired,
   disabled: bool.isRequired,
   ready: bool.isRequired,
   updated: bool.isRequired,

@@ -3,10 +3,11 @@ import { arrayOf, bool, func, node, object, oneOf, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
-import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes } from '../../../util/types';
+import { propTypes } from '../../../util/types';
 import { userDisplayNameAsString } from '../../../util/data';
 import { isMobileSafari } from '../../../util/userAgent';
-import { formatMoney } from '../../../util/currency';
+import { createSlug } from '../../../util/urlHelpers';
+
 import { AvatarLarge, NamedLink, UserDisplayName } from '../../../components';
 
 import { stateDataShape } from '../TransactionPage.stateData';
@@ -118,7 +119,6 @@ export class TransactionPanelComponent extends Component {
       currentUser,
       transactionRole,
       listing,
-      lineItemUnitType,
       customer,
       provider,
       hasTransitions,
@@ -158,23 +158,7 @@ export class TransactionPanelComponent extends Component {
       id: 'TransactionPanel.deletedListingTitle',
     });
 
-    const listingTitle = listing?.attributes?.deleted
-      ? deletedListingTitle
-      : listing?.attributes?.title;
-
-    const isNightly = lineItemUnitType === LINE_ITEM_NIGHT;
-    const isDaily = lineItemUnitType === LINE_ITEM_DAY;
-    const unitTranslationKey = isNightly
-      ? 'TransactionPanel.perNight'
-      : isDaily
-      ? 'TransactionPanel.perDay'
-      : 'TransactionPanel.perUnit';
-
-    const price = listing?.attributes?.price;
-    const orderSubTitle = price
-      ? `${formatMoney(intl, price)} ${intl.formatMessage({ id: unitTranslationKey })}`
-      : '';
-
+    const listingTitle = listingDeleted ? deletedListingTitle : listing?.attributes?.title;
     const firstImage = listing?.images?.length > 0 ? listing?.images[0] : null;
 
     const actionButtons = (
@@ -187,12 +171,6 @@ export class TransactionPanelComponent extends Component {
 
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
-
-    const paymentMethodsPageLink = (
-      <NamedLink name="PaymentMethodsPage">
-        <FormattedMessage id="TransactionPanel.paymentMethodsPageLink" />
-      </NamedLink>
-    );
 
     const classes = classNames(rootClassName || css.root, className);
 
@@ -241,7 +219,13 @@ export class TransactionPanelComponent extends Component {
                 <p className={css.genericError}>
                   <FormattedMessage
                     id="TransactionPanel.savePaymentMethodFailed"
-                    values={{ paymentMethodsPageLink }}
+                    values={{
+                      paymentMethodsPageLink: (
+                        <NamedLink name="PaymentMethodsPage">
+                          <FormattedMessage id="TransactionPanel.paymentMethodsPageLink" />
+                        </NamedLink>
+                      ),
+                    }}
                   />
                 </p>
               ) : null}
@@ -300,8 +284,18 @@ export class TransactionPanelComponent extends Component {
 
                 <DetailCardHeadingsMaybe
                   showDetailCardHeadings={stateData.showDetailCardHeadings}
-                  listingTitle={listingTitle}
-                  subTitle={orderSubTitle}
+                  listingTitle={
+                    listingDeleted ? (
+                      listingTitle
+                    ) : (
+                      <NamedLink
+                        name="ListingPage"
+                        params={{ id: listing.id?.uuid, slug: createSlug(listingTitle) }}
+                      >
+                        {listingTitle}
+                      </NamedLink>
+                    )
+                  }
                 />
                 {stateData.showOrderPanel ? orderPanel : null}
                 <BreakdownMaybe

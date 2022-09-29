@@ -8,6 +8,8 @@ export const Empty = {
       console.log('Submit EditListingPricingAndStockForm with (unformatted) values:', values);
     },
     saveActionMsg: 'Save price',
+    marketplaceCurrency: 'USD',
+    transactionType: { type: 'sell-bikes', showStock: true },
     updated: false,
     updateInProgress: false,
     disabled: false,

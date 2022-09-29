@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { array, arrayOf, bool, func, number, object, shape, string } from 'prop-types';
-import { compose } from 'redux';
 import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
 
-import appSettings from '../../config/appSettings';
+import appSettings from '../../config/settingsApp';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 

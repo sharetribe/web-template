@@ -16,10 +16,13 @@ export const Empty = {
       console.log('form onSubmit:', values);
     },
     intl: fakeIntl,
+    locale: 'en',
+    marketplaceName: 'MarketplaceX',
     onCreateStripePaymentToken: noop,
     onStripeInitialized: noop,
     stripePaymentTokenInProgress: false,
     stripePaymentTokenError: null,
+    stripePublishableKey: 'pk_test_asdfasdf',
   },
   group: 'forms',
 };

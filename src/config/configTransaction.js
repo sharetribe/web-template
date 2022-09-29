@@ -10,6 +10,7 @@ export const transactionTypes = [
     process: 'flex-product-default-process',
     alias: 'release-1',
     unitType: 'item',
+    showStock: false,
   },
   {
     type: 'rent-bicycles',

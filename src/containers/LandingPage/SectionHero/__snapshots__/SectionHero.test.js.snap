@@ -1,39 +1,54 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SectionHero matches snapshot 1`] = `
-<div
-  className="root"
+<section
+  className="root root"
 >
   <div
-    className="heroContent"
+    className="backgroundImageWrapper"
   >
-    <h1
-      className="heroMainTitle heroMainTitleFEDelay"
-    >
-      <span>
-        SectionHero.title
-      </span>
-    </h1>
-    <h2
-      className="heroSubTitle heroSubTitleFEDelay"
-    >
-      <span>
-        SectionHero.subTitle
-      </span>
-    </h2>
-    <a
-      className="heroButton heroButtonFEDelay"
-      href="/s"
-      onClick={[Function]}
-      onMouseOver={[Function]}
-      onTouchStart={[Function]}
-      style={Object {}}
-      title={null}
-    >
-      <span>
-        SectionHero.browseButton
-      </span>
-    </a>
+    <img
+      alt="ResponsiveBackgroundImageContainer.backgroundImageAlt"
+      className="root backgroundImage"
+      sizes="100%"
+      srcSet="biketribe-brandImage-1500.jpg 1200w"
+    />
+    <div
+      className="overlay"
+    />
   </div>
-</div>
+  <div>
+    <div
+      className="heroContent"
+    >
+      <h1
+        className="heroMainTitle heroMainTitleFEDelay"
+      >
+        <span>
+          SectionHero.title
+        </span>
+      </h1>
+      <h2
+        className="heroSubTitle heroSubTitleFEDelay"
+      >
+        <span>
+          SectionHero.subTitle
+        </span>
+      </h2>
+      <a
+        className="heroButton heroButtonFEDelay"
+        href="/s"
+        onClick={[Function]}
+        onMouseOver={[Function]}
+        onTouchStart={[Function]}
+        style={Object {}}
+        title={null}
+      >
+        <span>
+          SectionHero.browseButton
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
 `;

@@ -34,22 +34,30 @@ const SortBy = props => {
       : { className: css.sortByDesktop };
 
   // Ensure that keywords is included to activeFilter list when needed
-  const activeOptions = isMainSearchTypeKeywords(config)
+  const isMainSearchKeywords = isMainSearchTypeKeywords(config);
+  const activeOptions = isMainSearchKeywords
     ? Object.keys({ keywords: '', ...selectedFilters })
     : Object.keys(selectedFilters);
 
   const isRelevanceOptionActive = activeOptions.includes(relevanceFilter);
 
-  const options = config.search.sortConfig.options.map(option => {
+  const options = config.search.sortConfig.options.reduce((selected, option) => {
     const isRelevance = option.key === relevanceKey;
     const isConflictingFilterSetAndActive = hasConflictingFilters && !isConflictingFilterActive;
-    return {
-      ...option,
-      disabled:
-        (isRelevance && (!isRelevanceOptionActive || isConflictingFilterSetAndActive)) ||
-        (!isRelevance && isConflictingFilterActive),
-    };
-  });
+    // Omit relevance option if mainSearchType is not 'keywords'
+    // Note: We might change this in the future, if multiple transaction types are allowed
+    return isRelevance && !isMainSearchKeywords
+      ? selected
+      : [
+          ...selected,
+          {
+            ...option,
+            disabled:
+              (isRelevance && (!isRelevanceOptionActive || isConflictingFilterSetAndActive)) ||
+              (!isRelevance && isConflictingFilterActive),
+          },
+        ];
+  }, []);
   const defaultValue = 'createdAt';
   const isRelevanceSortActive = isRelevanceOptionActive && !sort;
   const relevanceValue =

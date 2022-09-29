@@ -1,6 +1,6 @@
-import logoImageDesktop from '../assets/sneakertime-logo.png';
-import logoImageMobile from '../assets/sneakertime-logo-mobile.png';
-import brandImage from '../assets/background-1440.jpg';
+import logoImageDesktop from '../assets/biketribe-logo-desktop.png';
+import logoImageMobile from '../assets/biketribe-logo-mobile.png';
+import brandImage from '../assets/biketribe-brandImage-1500.jpg';
 import facebookImage from '../assets/sneakertimeFacebook-1200x630.jpg';
 import twitterImage from '../assets/sneakertimeTwitter-600x314.jpg';
 
@@ -15,7 +15,7 @@ import twitterImage from '../assets/sneakertimeTwitter-600x314.jpg';
 // This is saved as CSS Property: --marketplaceColor in src/app.js
 // Also --marketplaceColorDark and --marketplaceColorLight are generated from this one
 // by adding +/- 10% to lightness.
-export const marketplaceColor = '#5d2bc0';
+export const marketplaceColor = '#7c3aed';
 
 // Logo is used in Topbar on mobile and desktop, where height is the limiting factor.
 // Therefore, we strongly suggest that your image file for desktop logo is in landscape!
@@ -28,6 +28,8 @@ export const logoImageMobileURL = logoImageMobile;
 
 // brandImageURL is used as a background image on the "hero" section of several pages.
 // Used on AuthenticationPage, EmailVerificationPage, PasswordRecoveryPage, PasswordResetPage etc.
+// NOTE: Those pages use ResponsiveBackgroundImageContainer component,
+//       it's possible to include more image variants to make image fetching more performant.
 export const brandImageURL = brandImage;
 
 // Default images for social media sharing

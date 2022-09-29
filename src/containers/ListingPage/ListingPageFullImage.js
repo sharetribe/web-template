@@ -7,7 +7,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
-import { findOptionsForSelectFilter } from '../../util/search';
 import {
   LISTING_STATE_PENDING_APPROVAL,
   LISTING_STATE_CLOSED,
@@ -60,14 +59,12 @@ import {
   LoadingPage,
   ErrorPage,
   priceData,
-  categoryLabel,
   listingImages,
   handleContactUser,
   handleSubmitEnquiry,
   handleSubmit,
 } from './ListingPage.shared';
 import ActionBarMaybe from './ActionBarMaybe';
-import SectionHeading from './SectionHeading';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
@@ -189,7 +186,6 @@ export const ListingPageComponent = props => {
   const userAndListingAuthorAvailable = !!(currentUser && authorAvailable);
   const isOwnListing =
     userAndListingAuthorAvailable && currentListing.author.id.uuid === currentUser.id.uuid;
-  const showContactUser = authorAvailable && (!currentUser || (currentUser && !isOwnListing));
 
   const currentAuthor = authorAvailable ? currentListing.author : null;
   const ensuredAuthor = ensureUser(currentAuthor);
@@ -199,7 +195,7 @@ export const ListingPageComponent = props => {
   // banned or deleted display names for the function
   const authorDisplayName = userDisplayNameAsString(ensuredAuthor, '');
 
-  const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
+  const { formattedPrice } = priceData(price, config.currency, intl);
 
   const commonParams = { params, history, routes: routeConfiguration };
   const onContactUser = handleContactUser({
@@ -250,25 +246,21 @@ export const ListingPageComponent = props => {
   const productURL = `${config.marketplaceRootURL}${location.pathname}${location.search}${location.hash}`;
   const brand = currentListing?.attributes?.publicData?.brand;
   const brandMaybe = brand ? { brand: { '@type': 'Brand', name: brand } } : {};
-  const schemaPriceNumber = intl.formatNumber(convertMoneyToNumber(price), {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
+  const schemaPriceMaybe = price
+    ? {
+        price: intl.formatNumber(convertMoneyToNumber(price), {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }),
+        priceCurrency: price.currency,
+      }
+    : {};
   const currentStock = currentListing.currentStock?.attributes?.quantity || 0;
   const schemaAvailability =
     currentStock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
 
   const formatOptionValue = option => `${option}`.toLowerCase().replace(/\s/g, '_');
   const optionEntities = options => options.map(o => ({ key: formatOptionValue(o), label: o }));
-
-  // TODO: category is custom field. We probably should not support this?
-  const categoryOptions = findOptionsForSelectFilter('category', listingConfig.listingExtendedData);
-  const category = publicData?.category ? (
-    <span>
-      {categoryLabel(optionEntities(categoryOptions), publicData.category)}
-      <span className={css.separator}>•</span>
-    </span>
-  ) : null;
 
   return (
     <Page
@@ -289,8 +281,7 @@ export const ListingPageComponent = props => {
         offers: {
           '@type': 'Offer',
           url: productURL,
-          priceCurrency: price.currency,
-          price: schemaPriceNumber,
+          ...schemaPriceMaybe,
           availability: schemaAvailability,
         },
       }}
@@ -317,34 +308,12 @@ export const ListingPageComponent = props => {
                 listing={currentListing}
                 variantPrefix={config.layout.listingImage.variantPrefix}
               />
-              <div className={css.productMobileHeading}>
-                <SectionHeading
-                  priceTitle={priceTitle}
-                  formattedPrice={formattedPrice}
-                  richTitle={richTitle}
-                  unitType={publicData?.unitType}
-                  category={category}
-                  authorLink={
-                    <NamedLink
-                      className={css.authorNameLink}
-                      name="ListingPage"
-                      params={params}
-                      to={{ hash: '#author' }}
-                    >
-                      {authorDisplayName}
-                    </NamedLink>
-                  }
-                  showContactUser={showContactUser}
-                  onContactUser={onContactUser}
-                />
+              <div className={css.mobileHeading}>
+                <h1 className={css.orderPanelTitle}>
+                  <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
+                </h1>
               </div>
-              <SectionTextMaybe
-                text={description}
-                heading={intl.formatMessage(
-                  { id: 'ListingPage.descriptionTitle' },
-                  { listingTitle: richTitle }
-                )}
-              />
+              <SectionTextMaybe text={description} showAsIngress />
               <SectionDetailsMaybe
                 publicData={publicData}
                 metadata={metadata}
@@ -409,8 +378,23 @@ export const ListingPageComponent = props => {
                 listing={currentListing}
                 isOwnListing={isOwnListing}
                 onSubmit={handleOrderSubmit}
+                authorLink={
+                  <NamedLink
+                    className={css.authorNameLink}
+                    name="ListingPage"
+                    params={params}
+                    to={{ hash: '#author' }}
+                  >
+                    {authorDisplayName}
+                  </NamedLink>
+                }
                 title={
                   <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
+                }
+                titleDesktop={
+                  <h1 className={css.orderPanelTitle}>
+                    <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
+                  </h1>
                 }
                 author={ensuredAuthor}
                 onManageDisableScrolling={onManageDisableScrolling}

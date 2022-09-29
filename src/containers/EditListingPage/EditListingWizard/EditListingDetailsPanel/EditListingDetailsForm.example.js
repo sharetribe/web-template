@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import EditListingDetailsForm from './EditListingDetailsForm';
-import defaultConfig from '../../../../config/defaultConfig';
+import defaultConfig from '../../../../config/configDefault';
 
 const selectableTransactionTypes = [
   {
@@ -58,7 +58,6 @@ export const MultipleProcessInfos = {
     ready: false,
     updated: false,
     updateInProgress: false,
-    processInfos: processInfos,
     selectableTransactionTypes: selectableTransactionTypes2,
     listingConfig: defaultConfig.listing,
   },

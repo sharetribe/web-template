@@ -46,7 +46,7 @@ exports[`ProfilePage DesktopReviews matches snapshot 1`] = `
               className="desktopReviewsTitle"
             >
               <Memo(MemoizedFormattedMessage)
-                id="ProfilePage.reviewsOfProviderTitle"
+                id="ProfilePage.reviewsFromMyCustomersTitle"
                 values={
                   Object {
                     "count": 0,
@@ -62,7 +62,7 @@ exports[`ProfilePage DesktopReviews matches snapshot 1`] = `
               className="desktopReviewsTitle"
             >
               <Memo(MemoizedFormattedMessage)
-                id="ProfilePage.reviewsOfCustomerTitle"
+                id="ProfilePage.reviewsAsACustomerTitle"
                 values={
                   Object {
                     "count": 0,
@@ -118,7 +118,7 @@ exports[`ProfilePage MobileReviews matches snapshot 1`] = `
     className="mobileReviewsTitle"
   >
     <MemoizedFormattedMessage
-      id="ProfilePage.reviewsOfProviderTitle"
+      id="ProfilePage.reviewsFromMyCustomersTitle"
       values={
         Object {
           "count": 0,
@@ -136,7 +136,7 @@ exports[`ProfilePage MobileReviews matches snapshot 1`] = `
     className="mobileReviewsTitle"
   >
     <MemoizedFormattedMessage
-      id="ProfilePage.reviewsOfCustomerTitle"
+      id="ProfilePage.reviewsAsACustomerTitle"
       values={
         Object {
           "count": 0,

@@ -3,6 +3,7 @@ import { string, func, bool } from 'prop-types';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
+
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { lazyLoadWithDimensions } from '../../util/contextHelpers';
 import { propTypes } from '../../util/types';
@@ -10,6 +11,7 @@ import { formatMoney } from '../../util/currency';
 import { ensureListing, ensureUser } from '../../util/data';
 import { richText } from '../../util/richText';
 import { createSlug } from '../../util/urlHelpers';
+import { isBookingUnitType } from '../../util/transaction';
 
 import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '../../components';
 
@@ -36,12 +38,7 @@ const priceData = (price, currency, intl) => {
   return {};
 };
 
-class ListingImage extends Component {
-  render() {
-    return <ResponsiveImage {...this.props} />;
-  }
-}
-const LazyImage = lazyLoadWithDimensions(ListingImage, { loadAfterInitialRendering: 3000 });
+const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 
 export const ListingCardComponent = props => {
   const config = useConfiguration();
@@ -57,7 +54,7 @@ export const ListingCardComponent = props => {
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
   const id = currentListing.id.uuid;
-  const { title = '', price } = currentListing.attributes;
+  const { title = '', price, publicData } = currentListing.attributes;
   const slug = createSlug(title);
   const author = ensureUser(listing.author);
   const authorName = author.attributes.profile.displayName;
@@ -103,6 +100,14 @@ export const ListingCardComponent = props => {
           <div className={css.priceValue} title={priceTitle}>
             {formattedPrice}
           </div>
+          {isBookingUnitType(publicData?.unitType) ? (
+            <div className={css.perUnit}>
+              <FormattedMessage
+                id="ListingCard.perUnit"
+                values={{ unitType: publicData?.unitType }}
+              />
+            </div>
+          ) : null}
         </div>
         <div className={css.mainInfo}>
           <div className={css.title}>

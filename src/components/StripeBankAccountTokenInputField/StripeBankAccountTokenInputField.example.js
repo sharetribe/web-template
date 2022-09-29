@@ -2,7 +2,7 @@
 import React from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 
-import defaultConfig from '../../config/defaultConfig';
+import defaultConfig from '../../config/configDefault';
 import * as validators from '../../util/validators';
 import { Button } from '../../components';
 
