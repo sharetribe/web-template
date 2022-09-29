@@ -14,7 +14,7 @@ import mapValues from 'lodash/mapValues';
 import moment from 'moment';
 
 // Configs and store setup
-import defaultConfig from './config/defaultConfig';
+import defaultConfig from './config/configDefault';
 import configureStore from './store';
 
 // utils
@@ -122,9 +122,6 @@ export const ClientApp = props => {
     elem.style.setProperty('--marketplaceColor', appConfig.branding.marketplaceColor);
     elem.style.setProperty('--marketplaceColorDark', appConfig.branding.marketplaceColorDark);
     elem.style.setProperty('--marketplaceColorLight', appConfig.branding.marketplaceColorLight);
-  }
-  if (appConfig.branding.brandImageURL) {
-    elem.style.setProperty('--brandImage', `url(${appConfig.branding.brandImageURL})`);
   }
 
   return (

@@ -120,6 +120,35 @@ const FieldSelectTransactionType = props => {
   );
 };
 
+// Add collect data for extended data fields (both publicData and privateData) based on configuration
+const AddCustomExtendedDataFields = props => {
+  const { transactionProcessAlias, listingExtendedDataConfig, intl } = props;
+  const extendedDataConfigs = listingExtendedDataConfig || [];
+  const fields = extendedDataConfigs.reduce((pickedFields, extendedDataConfig) => {
+    const { key, includeForProcessAliases = [], schemaType, scope } = extendedDataConfig || {};
+
+    const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+    const isTargetProcessAlias = includeForProcessAliases.includes(transactionProcessAlias);
+    const isProviderScope = ['public', 'private'].includes(scope);
+
+    return isKnownSchemaType && isTargetProcessAlias && isProviderScope
+      ? [
+          ...pickedFields,
+          <CustomExtendedDataField
+            key={key}
+            name={key}
+            fieldConfig={extendedDataConfig}
+            defaultRequiredMessage={intl.formatMessage({
+              id: 'EditListingDetailsForm.defaultRequiredMessage',
+            })}
+          />,
+        ]
+      : pickedFields;
+  }, []);
+
+  return <>{fields}</>;
+};
+
 // Form that asks title, description, transaction process and unit type for pricing
 // In addition, it asks about custom fields according to marketplace-custom-config.js
 const EditListingDetailsFormComponent = props => (
@@ -148,6 +177,8 @@ const EditListingDetailsFormComponent = props => (
         values,
       } = formRenderProps;
 
+      const { transactionProcessAlias } = values;
+
       const titleRequiredMessage = intl.formatMessage({
         id: 'EditListingDetailsForm.titleRequired',
       });
@@ -158,37 +189,11 @@ const EditListingDetailsFormComponent = props => (
         }
       );
       const maxLength60Message = maxLength(maxLengthMessage, TITLE_MAX_LENGTH);
-      const { transactionProcessAlias } = values;
 
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
-
-      const addCustomExtendedDataFields = targetProcessAlias => {
-        const extendedDataConfigs = listingExtendedDataConfig || [];
-        return extendedDataConfigs.reduce((pickedFields, extendedDataConfig) => {
-          const { key, includeForProcessAliases = [], schemaType, scope } =
-            extendedDataConfig || {};
-          const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
-          const isTargetProcessAlias = includeForProcessAliases.includes(targetProcessAlias);
-          const isProviderScope = ['public', 'private'].includes(scope);
-
-          return isKnownSchemaType && isTargetProcessAlias && isProviderScope
-            ? [
-                ...pickedFields,
-                <CustomExtendedDataField
-                  key={key}
-                  name={key}
-                  fieldConfig={extendedDataConfig}
-                  defaultRequiredMessage={intl.formatMessage({
-                    id: 'EditListingDetailsForm.defaultRequiredMessage',
-                  })}
-                />,
-              ]
-            : pickedFields;
-        }, []);
-      };
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
@@ -205,6 +210,7 @@ const EditListingDetailsFormComponent = props => (
             validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
             autoFocus={autoFocus}
           />
+
           <FieldTextInput
             id="description"
             name="description"
@@ -230,7 +236,11 @@ const EditListingDetailsFormComponent = props => (
             intl={intl}
           />
 
-          {addCustomExtendedDataFields(transactionProcessAlias)}
+          <AddCustomExtendedDataFields
+            transactionProcessAlias={transactionProcessAlias}
+            listingExtendedDataConfig={listingExtendedDataConfig}
+            intl={intl}
+          />
 
           <Button
             className={css.submitButton}

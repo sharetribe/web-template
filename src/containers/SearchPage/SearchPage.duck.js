@@ -216,7 +216,7 @@ export const loadData = (params, search, config) => {
       page,
       perPage: RESULT_PAGE_SIZE,
       include: ['author', 'images'],
-      'fields.listing': ['title', 'geolocation', 'price'],
+      'fields.listing': ['title', 'geolocation', 'price', 'publicData.unitType'],
       'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
       'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
       ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),

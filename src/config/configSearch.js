@@ -10,7 +10,7 @@
 
 // Main search used in Topbar.
 // This can be either 'keywords' or 'location'.
-export const mainSearchType = 'keywords';
+export const mainSearchType = 'location';
 
 /**
  * Configuration for default filters.

@@ -482,17 +482,6 @@ class StripePaymentForm extends Component {
       ? pickupLocation.address
       : intl.formatMessage({ id: 'StripePaymentForm.pickupLocationUnknown' });
 
-    const shippingOrPickupDetails = askShippingDetails ? (
-      <ShippingDetails intl={intl} form={form} locale={locale} />
-    ) : (
-      <div className={css.pickupWrapper}>
-        <h3 className={css.pickupHeading}>
-          <FormattedMessage id="StripePaymentForm.pickupDetailsTitle" />
-        </h3>
-        <p className={css.pickupDetails}>{pickupDetails}</p>
-      </div>
-    );
-
     // Asking billing address is recommended in PaymentIntent flow.
     // In CheckoutPage, we send name and email as billing details, but address only if it exists.
     const billingAddress = (
@@ -514,7 +503,17 @@ class StripePaymentForm extends Component {
 
     return hasStripeKey ? (
       <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
-        {shippingOrPickupDetails}
+        {askShippingDetails ? (
+          <ShippingDetails intl={intl} form={form} locale={locale} />
+        ) : (
+          <div className={css.pickupWrapper}>
+            <h3 className={css.pickupHeading}>
+              <FormattedMessage id="StripePaymentForm.pickupDetailsTitle" />
+            </h3>
+            <p className={css.pickupDetails}>{pickupDetails}</p>
+          </div>
+        )}
+
         {billingDetailsNeeded && !loadingData ? (
           <React.Fragment>
             {hasDefaultPaymentMethod ? (

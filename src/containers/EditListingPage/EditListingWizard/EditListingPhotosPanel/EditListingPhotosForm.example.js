@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import EditListingPhotosForm from './EditListingPhotosForm';
 
+const listingImageConfig = { aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' };
 export const Empty = {
   component: EditListingPhotosForm,
   props: {
@@ -20,6 +21,7 @@ export const Empty = {
     onRemoveImage: imageId => {
       console.log('remove image:', imageId);
     },
+    listingImageConfig,
   },
   group: 'page:EditListingPage',
 };

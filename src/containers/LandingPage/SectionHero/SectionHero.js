@@ -3,12 +3,14 @@ import { string } from 'prop-types';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
-import { NamedLink } from '../../../components';
+import { NamedLink, ResponsiveBackgroundImageContainer } from '../../../components';
 
 import css from './SectionHero.module.css';
+import { useConfiguration } from '../../../context/configurationContext';
 
 const SectionHero = props => {
   const [mounted, setMounted] = useState(false);
+  const config = useConfiguration();
   const { rootClassName, className } = props;
 
   useEffect(() => {
@@ -18,7 +20,13 @@ const SectionHero = props => {
   const classes = classNames(rootClassName || css.root, className);
 
   return (
-    <div className={classes}>
+    <ResponsiveBackgroundImageContainer
+      className={classes}
+      as="section"
+      image={config.branding.brandImageURL}
+      sizes="100%"
+      useOverlay
+    >
       <div className={css.heroContent}>
         <h1 className={classNames(css.heroMainTitle, { [css.heroMainTitleFEDelay]: mounted })}>
           <FormattedMessage id="SectionHero.title" />
@@ -33,7 +41,7 @@ const SectionHero = props => {
           <FormattedMessage id="SectionHero.browseButton" />
         </NamedLink>
       </div>
-    </div>
+    </ResponsiveBackgroundImageContainer>
   );
 };
 

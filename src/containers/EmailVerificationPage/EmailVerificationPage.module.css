@@ -9,8 +9,11 @@
 }
 
 .root {
+  flex-grow: 1;
+}
+
+.contentContainer {
   composes: marketplaceModalRootStyles from global;
-  composes: defaultBackgroundImageForDesktop from global;
 }
 
 .content {

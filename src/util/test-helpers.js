@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 
 import configureStore from '../store';
 import { IntlProvider } from '../util/reactIntl';
-import defaultConfig from '../config/defaultConfig';
+import defaultConfig from '../config/configDefault';
 import { ConfigurationProvider } from '../context/configurationContext';
 import { RouteConfigurationProvider } from '../context/routeConfigurationContext';
 import routeConfiguration from '../routing/routeConfiguration';
@@ -36,6 +36,17 @@ export const getDefaultConfiguration = () => {
     stripe: {
       ...defaultConfig.stripe,
       publishableKey: 'pk_test_',
+    },
+    transaction: {
+      transactionTypes: [
+        {
+          type: 'rent-bicycles',
+          label: 'Rent bicycles',
+          process: 'flex-booking-default-process',
+          alias: 'release-1',
+          unitType: 'day',
+        },
+      ],
     },
   };
 };

@@ -23,6 +23,7 @@ import {
   createSlug,
 } from '../../../util/urlHelpers';
 import { createResourceLocatorString, findRouteByRouteName } from '../../../util/routes';
+import { isBookingUnitType } from '../../../util/transaction';
 
 import {
   AspectRatioWrapper,
@@ -39,6 +40,7 @@ import {
 import MenuIcon from './MenuIcon';
 import Overlay from './Overlay';
 import css from './ManageListingCard.module.css';
+import { PendingApproval } from './ManageListingCard.example';
 
 // Menu content needs the same padding
 const MENU_CONTENT_OFFSET = -12;
@@ -109,6 +111,159 @@ const formatTitle = (title, maxLength) => {
   });
 };
 
+const ShowFinishDraftOverlayMaybe = props => {
+  const { isDraft, title, id, slug, hasImage, intl } = props;
+
+  return isDraft ? (
+    <React.Fragment>
+      <div className={classNames({ [css.draftNoImage]: !hasImage })} />
+      <Overlay
+        message={intl.formatMessage(
+          { id: 'ManageListingCard.draftOverlayText' },
+          { listingTitle: title }
+        )}
+      >
+        <NamedLink
+          className={css.finishListingDraftLink}
+          name="EditListingPage"
+          params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_DRAFT, tab: 'photos' }}
+        >
+          <FormattedMessage id="ManageListingCard.finishListingDraft" />
+        </NamedLink>
+      </Overlay>
+    </React.Fragment>
+  ) : null;
+};
+
+const ShowClosedOverlayMaybe = props => {
+  const {
+    isClosed,
+    title,
+    actionsInProgressListingId,
+    currentListingId,
+    onOpenListing,
+    intl,
+  } = props;
+
+  return isClosed ? (
+    <Overlay
+      message={intl.formatMessage(
+        { id: 'ManageListingCard.closedListing' },
+        { listingTitle: title }
+      )}
+    >
+      <button
+        className={css.openListingButton}
+        disabled={!!actionsInProgressListingId}
+        onClick={event => {
+          event.preventDefault();
+          event.stopPropagation();
+          if (!actionsInProgressListingId) {
+            onOpenListing(currentListingId);
+          }
+        }}
+      >
+        <FormattedMessage id="ManageListingCard.openListing" />
+      </button>
+    </Overlay>
+  ) : null;
+};
+
+const ShowPendingApprovalOverlayMaybe = props => {
+  const { isPendingApproval, title, intl } = props;
+
+  return isPendingApproval ? (
+    <Overlay
+      message={intl.formatMessage(
+        { id: 'ManageListingCard.pendingApproval' },
+        { listingTitle: title }
+      )}
+    />
+  ) : null;
+};
+
+const ShowOutOfStockOverlayMaybe = props => {
+  const {
+    showOutOfStockOverlay,
+    title,
+    id,
+    slug,
+    actionsInProgressListingId,
+    currentListingId,
+    onCloseListing,
+    intl,
+  } = props;
+
+  return showOutOfStockOverlay ? (
+    <Overlay
+      message={intl.formatMessage(
+        { id: 'ManageListingCard.outOfStockOverlayText' },
+        { listingTitle: title }
+      )}
+    >
+      <NamedLink
+        className={css.finishListingDraftLink}
+        name="EditListingPage"
+        params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_EDIT, tab: 'pricing' }}
+      >
+        <FormattedMessage id="ManageListingCard.setPriceAndStock" />
+      </NamedLink>
+
+      <div className={css.closeListingTextLink}>
+        {intl.formatMessage(
+          { id: 'ManageListingCard.closeListingTextOr' },
+          {
+            closeListingLink: (
+              <InlineTextButton
+                key="closeListingLink"
+                className={css.closeListingText}
+                disabled={!!actionsInProgressListingId}
+                onClick={() => {
+                  if (!actionsInProgressListingId) {
+                    onCloseListing(currentListingId);
+                  }
+                }}
+              >
+                <FormattedMessage id="ManageListingCard.closeListingText" />
+              </InlineTextButton>
+            ),
+          }
+        )}
+      </div>
+    </Overlay>
+  ) : null;
+};
+
+const LinkToStockOrAvailabilityTab = props => {
+  const { id, slug, editListingLinkType, isBookable, currentStock, intl } = props;
+
+  return (
+    <>
+      <span className={css.manageLinksSeparator}>{' • '}</span>
+
+      {isBookable ? (
+        <NamedLink
+          className={css.manageLink}
+          name="EditListingPage"
+          params={{ id, slug, type: editListingLinkType, tab: 'availability' }}
+        >
+          <FormattedMessage id="ManageListingCard.manageAvailability" />
+        </NamedLink>
+      ) : (
+        <NamedLink
+          className={css.manageLink}
+          name="EditListingPage"
+          params={{ id, slug, type: editListingLinkType, tab: 'pricing-and-stock' }}
+        >
+          {currentStock == null
+            ? intl.formatMessage({ id: 'ManageListingCard.setPriceAndStock' })
+            : intl.formatMessage({ id: 'ManageListingCard.manageStock' }, { currentStock })}
+        </NamedLink>
+      )}
+    </>
+  );
+};
+
 export const ManageListingCardComponent = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
@@ -136,9 +291,12 @@ export const ManageListingCardComponent = props => {
   const isClosed = state === LISTING_STATE_CLOSED;
   const isDraft = state === LISTING_STATE_DRAFT;
 
+  const isBookable = isBookingUnitType(listing?.attributes?.publicData?.unitType);
+
   const currentStock = currentListing.currentStock?.attributes?.quantity;
   const isOutOfStock = currentStock === 0;
-  const showOutOfStockOverlay = isOutOfStock && !isPendingApproval && !isClosed && !isDraft;
+  const showOutOfStockOverlay =
+    !isBookable && isOutOfStock && !isPendingApproval && !isClosed && !isDraft;
 
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
@@ -208,8 +366,9 @@ export const ManageListingCardComponent = props => {
             sizes={renderSizes}
           />
         </AspectRatioWrapper>
-        <div className={classNames(css.menuOverlayWrapper, { [css.menuOverlayOpen]: isMenuOpen })}>
-          <div className={classNames(css.menuOverlay)} />
+
+        <div className={classNames(css.menuOverlayWrapper)}>
+          <div className={classNames(css.menuOverlay, { [css.menuOverlayOpen]: isMenuOpen })} />
           <div className={css.menuOverlayContent}>
             <FormattedMessage id="ManageListingCard.viewListing" />
           </div>
@@ -253,93 +412,42 @@ export const ManageListingCardComponent = props => {
             </Menu>
           </div>
         </div>
-        {isDraft ? (
-          <React.Fragment>
-            <div className={classNames({ [css.draftNoImage]: !firstImage })} />
-            <Overlay
-              message={intl.formatMessage(
-                { id: 'ManageListingCard.draftOverlayText' },
-                { listingTitle: title }
-              )}
-            >
-              <NamedLink
-                className={css.finishListingDraftLink}
-                name="EditListingPage"
-                params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_DRAFT, tab: 'photos' }}
-              >
-                <FormattedMessage id="ManageListingCard.finishListingDraft" />
-              </NamedLink>
-            </Overlay>
-          </React.Fragment>
-        ) : null}
-        {isClosed ? (
-          <Overlay
-            message={intl.formatMessage(
-              { id: 'ManageListingCard.closedListing' },
-              { listingTitle: title }
-            )}
-          >
-            <button
-              className={css.openListingButton}
-              disabled={!!actionsInProgressListingId}
-              onClick={event => {
-                event.preventDefault();
-                event.stopPropagation();
-                if (!actionsInProgressListingId) {
-                  onOpenListing(currentListing.id);
-                }
-              }}
-            >
-              <FormattedMessage id="ManageListingCard.openListing" />
-            </button>
-          </Overlay>
-        ) : null}
-        {isPendingApproval ? (
-          <Overlay
-            message={intl.formatMessage(
-              { id: 'ManageListingCard.pendingApproval' },
-              { listingTitle: title }
-            )}
-          />
-        ) : null}
-        {showOutOfStockOverlay ? (
-          <Overlay
-            message={intl.formatMessage(
-              { id: 'ManageListingCard.outOfStockOverlayText' },
-              { listingTitle: title }
-            )}
-          >
-            <NamedLink
-              className={css.finishListingDraftLink}
-              name="EditListingPage"
-              params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_EDIT, tab: 'pricing' }}
-            >
-              <FormattedMessage id="ManageListingCard.setStock" />
-            </NamedLink>
 
-            <div className={css.closeListingTextLink}>
-              {intl.formatMessage(
-                { id: 'ManageListingCard.closeListingTextOr' },
-                {
-                  closeListingLink: (
-                    <InlineTextButton
-                      key="closeListingLink"
-                      className={css.closeListingText}
-                      disabled={!!actionsInProgressListingId}
-                      onClick={() => {
-                        if (!actionsInProgressListingId) {
-                          onCloseListing(currentListing.id);
-                        }
-                      }}
-                    >
-                      <FormattedMessage id="ManageListingCard.closeListingText" />
-                    </InlineTextButton>
-                  ),
-                }
-              )}
-            </div>
-          </Overlay>
-        ) : null}
+        <ShowFinishDraftOverlayMaybe
+          isDraft={isDraft}
+          title={title}
+          id={id}
+          slug={slug}
+          hasImage={!!firstImage}
+          intl={intl}
+        />
+
+        <ShowClosedOverlayMaybe
+          isClosed={isClosed}
+          title={title}
+          actionsInProgressListingId={actionsInProgressListingId}
+          currentListingId={currentListing.id}
+          onOpenListing={onOpenListing}
+          intl={intl}
+        />
+
+        <ShowPendingApprovalOverlayMaybe
+          isPendingApproval={isPendingApproval}
+          title={title}
+          intl={intl}
+        />
+
+        <ShowOutOfStockOverlayMaybe
+          showOutOfStockOverlay={showOutOfStockOverlay}
+          title={title}
+          id={id}
+          slug={slug}
+          actionsInProgressListingId={actionsInProgressListingId}
+          currentListingId={currentListing.id}
+          onCloseListing={onCloseListing}
+          intl={intl}
+        />
+
         {thisListingInProgress ? (
           <Overlay>
             <IconSpinner />
@@ -356,6 +464,14 @@ export const ManageListingCardComponent = props => {
               <div className={css.priceValue} title={priceTitle}>
                 {formattedPrice}
               </div>
+              {isBookable ? (
+                <div className={css.perUnit}>
+                  <FormattedMessage
+                    id="ListingCard.perUnit"
+                    values={{ unitType: listing?.attributes?.publicData?.unitType }}
+                  />
+                </div>
+              ) : null}
             </React.Fragment>
           ) : (
             <div className={css.noPrice}>
@@ -388,17 +504,14 @@ export const ManageListingCardComponent = props => {
             <FormattedMessage id="ManageListingCard.editListing" />
           </NamedLink>
 
-          <span className={css.manageLinksSeparator}>{' • '}</span>
-
-          <NamedLink
-            className={css.manageLink}
-            name="EditListingPage"
-            params={{ id, slug, type: editListingLinkType, tab: 'pricing-and-stock' }}
-          >
-            {isDraft || isPendingApproval
-              ? intl.formatMessage({ id: 'ManageListingCard.setStock' })
-              : intl.formatMessage({ id: 'ManageListingCard.manageStock' }, { currentStock })}
-          </NamedLink>
+          <LinkToStockOrAvailabilityTab
+            id={id}
+            slug={slug}
+            editListingLinkType={editListingLinkType}
+            isBookable={isBookable}
+            currentStock={currentStock}
+            intl={intl}
+          />
         </div>
       </div>
     </div>

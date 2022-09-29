@@ -250,22 +250,24 @@ exports[`ManageListingCard matches snapshot 1`] = `
           ManageListingCard.editListing
         </span>
       </a>
-      <span
-        className="manageLinksSeparator"
-      >
-         • 
-      </span>
-      <a
-        className="manageLink"
-        href="/l/listing1-title/listing1/edit/pricing-and-stock"
-        onClick={[Function]}
-        onMouseOver={[Function]}
-        onTouchStart={[Function]}
-        style={Object {}}
-        title={null}
-      >
-        ManageListingCard.manageStock
-      </a>
+      Array [
+        <span
+          className="manageLinksSeparator"
+        >
+           • 
+        </span>,
+        <a
+          className="manageLink"
+          href="/l/listing1-title/listing1/edit/pricing-and-stock"
+          onClick={[Function]}
+          onMouseOver={[Function]}
+          onTouchStart={[Function]}
+          style={Object {}}
+          title={null}
+        >
+          ManageListingCard.setPriceAndStock
+        </a>,
+      ]
     </div>
   </div>
 </div>

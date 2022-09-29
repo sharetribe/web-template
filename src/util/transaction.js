@@ -191,7 +191,7 @@ const hasPassedState = process => (stateName, tx) => {
  *
  * @param {String} processName
  */
-export const getUpdatedProcessName = processName => {
+export const resolveLatestProcessName = processName => {
   switch (processName) {
     case PRODUCT_PROCESS_NAME:
       return PRODUCT_PROCESS_NAME;
@@ -244,13 +244,22 @@ export const getAllTransitionsForEveryProcess = () => {
 };
 
 /**
+ * Check if the unitType is for bookings
+ *
+ * @param {String} unitType
+ */
+export const isBookingUnitType = unitType => {
+  return [DAY, NIGHT, HOUR].includes(unitType);
+};
+
+/**
  * Check if the process is booking process
  *
  * @param {String} processName
  */
 export const isBookingProcess = processName => {
   const processInfo = PROCESSES.find(process => process.name === processName);
-  return [DAY, NIGHT, HOUR].includes(processInfo.unitTypes[0]);
+  return isBookingUnitType(processInfo.unitTypes[0]);
 };
 
 /**

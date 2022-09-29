@@ -8,6 +8,7 @@ export const Empty = {
       console.log('Submit EditListingDeliveryForm with (unformatted) values:', values);
     },
     saveActionMsg: 'Save location',
+    marketplaceCurrency: 'USD',
     updated: false,
     updateInProgress: false,
     disabled: false,

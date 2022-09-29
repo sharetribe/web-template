@@ -16,6 +16,7 @@ exports[`EditListingDeliveryForm matches snapshot 1`] = `
       "now": [Function],
     }
   }
+  marketplaceCurrency="USD"
   onSubmit={[Function]}
   ready={false}
   render={[Function]}

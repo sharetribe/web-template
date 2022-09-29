@@ -54,10 +54,13 @@ const PanelHeading = props => {
         <span className={css.mainTitle}>
           <FormattedMessage
             id={`TransactionPage.${processName}.${transactionRole}.${processState}.title`}
-            values={{ customerName, providerName, listingLink, breakline }}
+            values={{ customerName, providerName, breakline }}
           />
         </span>
       </h1>
+      <h2 className={css.listingTitleMobile}>
+        <FormattedMessage id="TransactionPage.listingTitleMobile" values={{ listingLink }} />
+      </h2>
       {isCustomer && listingDeleted ? (
         <p className={css.transactionInfoMessage}>
           <FormattedMessage id="TransactionPanel.messageDeletedListing" />

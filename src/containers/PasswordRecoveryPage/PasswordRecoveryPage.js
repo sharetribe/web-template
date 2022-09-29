@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
+import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { isPasswordRecoveryEmailNotFoundError } from '../../util/errors';
@@ -12,6 +13,7 @@ import {
   Page,
   InlineTextButton,
   IconKeys,
+  ResponsiveBackgroundImageContainer,
   LayoutSingleColumn,
   LayoutWrapperMain,
   LayoutWrapperTopbar,
@@ -29,37 +31,9 @@ import {
 } from './PasswordRecoveryPage.duck';
 import css from './PasswordRecoveryPage.module.css';
 
-export const PasswordRecoveryPageComponent = props => {
-  const {
-    scrollingDisabled,
-    initialEmail,
-    submittedEmail,
-    recoveryError,
-    recoveryInProgress,
-    passwordRequested,
-    onChange,
-    onSubmitEmail,
-    onRetypeEmail,
-    intl,
-  } = props;
-
-  const title = intl.formatMessage({
-    id: 'PasswordRecoveryPage.title',
-  });
-
-  const resendEmailLink = (
-    <InlineTextButton rootClassName={css.helperLink} onClick={() => onSubmitEmail(submittedEmail)}>
-      <FormattedMessage id="PasswordRecoveryPage.resendEmailLinkText" />
-    </InlineTextButton>
-  );
-
-  const fixEmailLink = (
-    <InlineTextButton rootClassName={css.helperLink} onClick={onRetypeEmail}>
-      <FormattedMessage id="PasswordRecoveryPage.fixEmailLinkText" />
-    </InlineTextButton>
-  );
-
-  const submitEmailContent = (
+const PasswordRecovery = props => {
+  const { initialEmail, onChange, onSubmitEmail, recoveryInProgress, recoveryError } = props;
+  return (
     <div className={css.submitEmailContent}>
       <IconKeys className={css.modalIcon} />
       <h1 className={css.modalTitle}>
@@ -77,14 +51,49 @@ export const PasswordRecoveryPageComponent = props => {
       />
     </div>
   );
+};
 
-  const submittedEmailText = passwordRequested ? (
-    <span className={css.email}>{initialEmail}</span>
-  ) : (
-    <span className={css.email}>{submittedEmail}</span>
+const GenericError = () => {
+  return (
+    <div className={css.genericErrorContent}>
+      <IconKeys className={css.modalIcon} />
+      <h1 className={css.modalTitle}>
+        <FormattedMessage id="PasswordRecoveryPage.actionFailedTitle" />
+      </h1>
+      <p className={css.modalMessage}>
+        <FormattedMessage id="PasswordRecoveryPage.actionFailedMessage" />
+      </p>
+    </div>
+  );
+};
+
+const EmailSubmittedContent = props => {
+  const {
+    passwordRequested,
+    initialEmail,
+    submittedEmail,
+    onRetypeEmail,
+    onSubmitEmail,
+    recoveryInProgress,
+  } = props;
+
+  const submittedEmailText = (
+    <span className={css.email}>{passwordRequested ? initialEmail : submittedEmail}</span>
   );
 
-  const emailSubmittedContent = (
+  const resendEmailLink = (
+    <InlineTextButton rootClassName={css.helperLink} onClick={() => onSubmitEmail(submittedEmail)}>
+      <FormattedMessage id="PasswordRecoveryPage.resendEmailLinkText" />
+    </InlineTextButton>
+  );
+
+  const fixEmailLink = (
+    <InlineTextButton rootClassName={css.helperLink} onClick={onRetypeEmail}>
+      <FormattedMessage id="PasswordRecoveryPage.fixEmailLinkText" />
+    </InlineTextButton>
+  );
+
+  return (
     <div className={css.emailSubmittedContent}>
       <IconKeys className={css.modalIcon} />
       <h1 className={css.modalTitle}>
@@ -113,38 +122,70 @@ export const PasswordRecoveryPageComponent = props => {
       </div>
     </div>
   );
+};
 
-  const genericErrorContent = (
-    <div className={css.genericErrorContent}>
-      <IconKeys className={css.modalIcon} />
-      <h1 className={css.modalTitle}>
-        <FormattedMessage id="PasswordRecoveryPage.actionFailedTitle" />
-      </h1>
-      <p className={css.modalMessage}>
-        <FormattedMessage id="PasswordRecoveryPage.actionFailedMessage" />
-      </p>
-    </div>
+export const PasswordRecoveryPageComponent = props => {
+  const config = useConfiguration();
+  const {
+    scrollingDisabled,
+    initialEmail,
+    submittedEmail,
+    recoveryError,
+    recoveryInProgress,
+    passwordRequested,
+    onChange,
+    onSubmitEmail,
+    onRetypeEmail,
+    intl,
+  } = props;
+  const alreadyrequested = submittedEmail || passwordRequested;
+  const showPasswordRecoveryForm = (
+    <PasswordRecovery
+      initialEmail={initialEmail}
+      onChange={onChange}
+      onSubmitEmail={onSubmitEmail}
+      recoveryInProgress={recoveryInProgress}
+      recoveryError={recoveryError}
+    />
   );
 
-  let content;
-  if (isPasswordRecoveryEmailNotFoundError(recoveryError)) {
-    content = submitEmailContent;
-  } else if (recoveryError) {
-    content = genericErrorContent;
-  } else if (submittedEmail || passwordRequested) {
-    content = emailSubmittedContent;
-  } else {
-    content = submitEmailContent;
-  }
-
   return (
-    <Page title={title} scrollingDisabled={scrollingDisabled}>
+    <Page
+      title={intl.formatMessage({
+        id: 'PasswordRecoveryPage.title',
+      })}
+      scrollingDisabled={scrollingDisabled}
+    >
       <LayoutSingleColumn>
         <LayoutWrapperTopbar>
           <TopbarContainer />
         </LayoutWrapperTopbar>
         <LayoutWrapperMain className={css.layoutWrapperMain}>
-          <div className={css.root}>{content}</div>
+          <ResponsiveBackgroundImageContainer
+            className={css.root}
+            childrenWrapperClassName={css.contentContainer}
+            as="section"
+            image={config.branding.brandImageURL}
+            sizes="100%"
+            useOverlay
+          >
+            {isPasswordRecoveryEmailNotFoundError(recoveryError) ? (
+              showPasswordRecoveryForm
+            ) : recoveryError ? (
+              <GenericError />
+            ) : alreadyrequested ? (
+              <EmailSubmittedContent
+                passwordRequested={passwordRequested}
+                initialEmail={initialEmail}
+                submittedEmail={submittedEmail}
+                onRetypeEmail={onRetypeEmail}
+                onSubmitEmail={onSubmitEmail}
+                recoveryInProgress={recoveryInProgress}
+              />
+            ) : (
+              showPasswordRecoveryForm
+            )}
+          </ResponsiveBackgroundImageContainer>
         </LayoutWrapperMain>
         <LayoutWrapperFooter>
           <Footer />

@@ -397,7 +397,7 @@ const validTransactionConfig = config => {
   const supportedProcessesInfo = getSupportedProcessesInfo();
 
   const validTransactionTypes = transactionTypes.reduce((validConfigs, transactionType) => {
-    const { type, process: processName, alias, unitType, label } = transactionType;
+    const { type, process: processName, alias, unitType, label, ...rest } = transactionType;
     const isSupportedProcessName = supportedProcessesInfo.find(p => p.name === processName);
     const isSupportedProcessAlias = supportedProcessesInfo.find(p => p.alias === alias);
     const isSupportedUnitType = supportedProcessesInfo.find(p => p.unitTypes.includes(unitType));
@@ -411,6 +411,8 @@ const validTransactionConfig = config => {
           process: processName,
           alias,
           unitType,
+          // e.g. showStock
+          ...rest,
         },
       ];
     }

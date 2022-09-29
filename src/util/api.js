@@ -2,7 +2,7 @@
 // so, they are not directly calling Marketplace API or Integration API.
 // You can find these api endpoints from 'server/api/...' directory
 
-import appSettings from '../config/appSettings';
+import appSettings from '../config/settingsApp';
 import { types as sdkTypes, transit } from './sdkLoader';
 import Decimal from 'decimal.js';
 

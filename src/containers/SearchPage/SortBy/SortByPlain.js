@@ -1,77 +1,69 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { arrayOf, func, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 import css from './SortByPlain.module.css';
 
-class SortByPlain extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { isOpen: true };
-    this.selectOption = this.selectOption.bind(this);
-    this.toggleIsOpen = this.toggleIsOpen.bind(this);
-  }
+const SortByPlain = props => {
+  const [isOpen, setIsOpen] = useState(true);
+  const { rootClassName, className, label, options, initialValue } = props;
 
-  selectOption(option, e) {
-    const { urlParam, onSelect } = this.props;
+  const selectOption = (option, e) => {
+    const { urlParam, onSelect } = props;
     onSelect(urlParam, option);
 
     // blur event target if event is passed
     if (e && e.currentTarget) {
       e.currentTarget.blur();
     }
-  }
+  };
 
-  toggleIsOpen() {
-    this.setState({ isOpen: !this.state.isOpen });
-  }
+  const toggleIsOpen = () => {
+    setIsOpen(prevIsOpen => !prevIsOpen);
+  };
 
-  render() {
-    const { rootClassName, className, label, options, initialValue } = this.props;
+  const labelClass = initialValue ? css.filterLabelSelected : css.filterLabel;
 
-    const labelClass = initialValue ? css.filterLabelSelected : css.filterLabel;
+  const optionsContainerClass = classNames({
+    [css.optionsContainerOpen]: isOpen,
+    [css.optionsContainerClosed]: !isOpen,
+  });
 
-    const optionsContainerClass = classNames({
-      [css.optionsContainerOpen]: this.state.isOpen,
-      [css.optionsContainerClosed]: !this.state.isOpen,
-    });
+  const classes = classNames(rootClassName || css.root, className);
 
-    const classes = classNames(rootClassName || css.root, className);
-
-    return (
-      <div className={classes}>
-        <div className={labelClass}>
-          <button className={css.labelButton} onClick={this.toggleIsOpen}>
-            <span className={labelClass}>{label}</span>
-          </button>
-        </div>
-        <div className={optionsContainerClass}>
-          {options.map(option => {
-            // check if this option is selected
-            const selected = initialValue === option.key;
-            const optionClass = selected ? css.optionSelected : css.option;
-            // menu item selected or border class
-            const optionBorderClass = classNames({
-              [css.optionBorderSelected]: selected,
-              [css.optionBorder]: !selected,
-            });
-            return (
-              <button
-                key={option.key}
-                className={optionClass}
-                disabled={option.disabled}
-                onClick={() => (selected ? null : this.selectOption(option.key))}
-              >
-                <span className={optionBorderClass} />
-                {option.longLabel || option.label}
-              </button>
-            );
-          })}
-        </div>
+  return (
+    <div className={classes}>
+      <div className={labelClass}>
+        <button className={css.labelButton} onClick={toggleIsOpen}>
+          <span className={labelClass}>{label}</span>
+        </button>
       </div>
-    );
-  }
-}
+      <div className={optionsContainerClass}>
+        {options.map(option => {
+          // check if this option is selected
+          const selected = initialValue === option.key;
+          const optionClass = selected ? css.optionSelected : css.option;
+          // menu item selected or border class
+          const optionBorderClass = classNames({
+            [css.optionBorderSelected]: selected,
+            [css.optionBorder]: !selected,
+          });
+          return (
+            <button
+              key={option.key}
+              className={optionClass}
+              disabled={option.disabled}
+              onClick={() => (selected ? null : selectOption(option.key))}
+            >
+              <span className={optionBorderClass} />
+              {option.longLabel || option.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 
 SortByPlain.defaultProps = {
   rootClassName: null,

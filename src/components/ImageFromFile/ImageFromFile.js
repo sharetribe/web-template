@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { any, node, number, string } from 'prop-types';
 import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
@@ -22,41 +22,33 @@ const readImage = file =>
   });
 
 // Create elements out of given thumbnail file
-class ImageFromFile extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      promisedImage: readImage(this.props.file),
-    };
-  }
+const ImageFromFile = props => {
+  const [promisedImage, setPromisedImage] = useState(readImage(props.file));
+  const { className, rootClassName, aspectWidth, aspectHeight, file, id, children } = props;
+  const classes = classNames(rootClassName || css.root, className);
 
-  render() {
-    const { className, rootClassName, aspectWidth, aspectHeight, file, id, children } = this.props;
-    const classes = classNames(rootClassName || css.root, className);
-
-    return (
-      <Promised
-        key={id}
-        promise={this.state.promisedImage}
-        renderFulfilled={dataURL => {
-          return (
-            <div className={classes}>
-              <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
-                <img src={dataURL} alt={file.name} className={css.rootForImage} />
-              </AspectRatioWrapper>
-              {children}
-            </div>
-          );
-        }}
-        renderRejected={() => (
+  return (
+    <Promised
+      key={id}
+      promise={promisedImage}
+      renderFulfilled={dataURL => {
+        return (
           <div className={classes}>
-            <FormattedMessage id="ImageFromFile.couldNotReadFile" />
+            <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
+              <img src={dataURL} alt={file.name} className={css.rootForImage} />
+            </AspectRatioWrapper>
+            {children}
           </div>
-        )}
-      />
-    );
-  }
-}
+        );
+      }}
+      renderRejected={() => (
+        <div className={classes}>
+          <FormattedMessage id="ImageFromFile.couldNotReadFile" />
+        </div>
+      )}
+    />
+  );
+};
 
 ImageFromFile.defaultProps = {
   className: null,

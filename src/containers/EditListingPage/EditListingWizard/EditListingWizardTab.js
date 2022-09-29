@@ -133,7 +133,7 @@ const EditListingWizardTab = props => {
   const onCompleteEditListingWizardTab = (tab, updateValues) => {
     const onUpdateListingOrCreateListingDraft = isNewURI
       ? (tab, values) => onCreateListingDraft(values, config)
-      : values => onUpdateListing(values, config);
+      : (tab, values) => onUpdateListing(tab, values, config);
 
     const updateListingValues = isNewURI
       ? updateValues
@@ -162,6 +162,7 @@ const EditListingWizardTab = props => {
       ready: newListingPublished,
       disabled: fetchInProgress,
       submitButtonText: tabSubmitButtonText,
+      transactionTypes: config.transaction.transactionTypes,
       onManageDisableScrolling,
       onSubmit: values => {
         return onCompleteEditListingWizardTab(tab, values);

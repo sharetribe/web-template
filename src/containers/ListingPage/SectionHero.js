@@ -1,18 +1,17 @@
 import React from 'react';
 
 import { FormattedMessage } from '../../util/reactIntl';
-import { AspectRatioWrapper, ResponsiveImage, Modal } from '../../components';
+import { ResponsiveImage, Modal } from '../../components';
 
 import ImageCarousel from './ImageCarousel/ImageCarousel';
 import ActionBarMaybe from './ActionBarMaybe';
 
 import css from './ListingPage.module.css';
 
-const SectionImages = props => {
+const SectionHero = props => {
   const {
     title,
     listing,
-    listingImageConfig,
     isOwnListing,
     editParams,
     handleViewPhotosClick,
@@ -23,9 +22,8 @@ const SectionImages = props => {
 
   const hasImages = listing.images && listing.images.length > 0;
   const firstImage = hasImages ? listing.images[0] : null;
-  const { aspectWidth, aspectHeight, variantPrefix = 'listing-card' } = listingImageConfig;
   const variants = firstImage
-    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
+    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith('scaled'))
     : [];
 
   // Action bar is wrapped with a div that prevents the click events
@@ -51,13 +49,8 @@ const SectionImages = props => {
   ) : null;
 
   return (
-    <div className={css.sectionImages}>
-      <AspectRatioWrapper
-        className={css.imageWrapperForSectionImage}
-        width={aspectWidth}
-        height={aspectHeight}
-        onClick={handleViewPhotosClick}
-      >
+    <div className={css.sectionHero}>
+      <div className={css.imageWrapperForSectionHero} onClick={handleViewPhotosClick}>
         {actionBar}
         <ResponsiveImage
           rootClassName={css.rootForImage}
@@ -66,7 +59,7 @@ const SectionImages = props => {
           variants={variants}
         />
         {viewPhotosButton}
-      </AspectRatioWrapper>
+      </div>
       <Modal
         id="ListingPage.imageCarousel"
         scrollLayerClassName={css.carouselModalScrollLayer}
@@ -86,4 +79,4 @@ const SectionImages = props => {
   );
 };
 
-export default SectionImages;
+export default SectionHero;

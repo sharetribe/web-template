@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { parse } from '../../util/urlHelpers';
@@ -12,6 +13,7 @@ import { verify } from '../../ducks/EmailVerification.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 import {
   Page,
+  ResponsiveBackgroundImageContainer,
   LayoutSingleColumn,
   LayoutWrapperTopbar,
   LayoutWrapperMain,
@@ -48,6 +50,7 @@ const parseVerificationToken = search => {
 };
 
 export const EmailVerificationPageComponent = props => {
+  const config = useConfiguration();
   const {
     currentUser,
     intl,
@@ -58,9 +61,6 @@ export const EmailVerificationPageComponent = props => {
     verificationError,
     location,
   } = props;
-  const title = intl.formatMessage({
-    id: 'EmailVerificationPage.title',
-  });
 
   const initialValues = {
     verificationToken: parseVerificationToken(location ? location.search : null),
@@ -75,13 +75,26 @@ export const EmailVerificationPageComponent = props => {
   }
 
   return (
-    <Page title={title} scrollingDisabled={scrollingDisabled} referrer="origin">
+    <Page
+      title={intl.formatMessage({
+        id: 'EmailVerificationPage.title',
+      })}
+      scrollingDisabled={scrollingDisabled}
+      referrer="origin"
+    >
       <LayoutSingleColumn>
         <LayoutWrapperTopbar>
           <TopbarContainer />
         </LayoutWrapperTopbar>
         <LayoutWrapperMain className={css.layoutWrapperMain}>
-          <div className={css.root}>
+          <ResponsiveBackgroundImageContainer
+            className={css.root}
+            childrenWrapperClassName={css.contentContainer}
+            as="section"
+            image={config.branding.brandImageURL}
+            sizes="100%"
+            useOverlay
+          >
             <div className={css.content}>
               {user.id ? (
                 <EmailVerificationForm
@@ -95,7 +108,7 @@ export const EmailVerificationPageComponent = props => {
                 <FormattedMessage id="EmailVerificationPage.loadingUserInformation" />
               )}
             </div>
-          </div>
+          </ResponsiveBackgroundImageContainer>
         </LayoutWrapperMain>
         <LayoutWrapperFooter>
           <Footer />

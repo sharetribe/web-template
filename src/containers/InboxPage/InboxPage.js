@@ -4,19 +4,20 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
+import { useConfiguration } from '../../context/configurationContext';
+
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { TX_TRANSITION_ACTOR_CUSTOMER, TX_TRANSITION_ACTOR_PROVIDER } from '../../util/transaction';
 import {
   propTypes,
   DATE_TYPE_DATE,
   DATE_TYPE_DATETIME,
-  LINE_ITEM_ITEM,
   LINE_ITEM_NIGHT,
   LINE_ITEM_HOUR,
   LISTING_UNIT_TYPES,
 } from '../../util/types';
-import { formatDateIntoPartials, subtractTime } from '../../util/dates';
-import { getUpdatedProcessName, getProcess } from '../../util/transaction';
+import { subtractTime } from '../../util/dates';
+import { resolveLatestProcessName, getProcess, isBookingUnitType } from '../../util/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
@@ -44,6 +45,19 @@ import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 import { stateDataShape, getStateData } from './InboxPage.stateData';
 import css from './InboxPage.module.css';
 
+// Check if the transaction line-items use booking-related units
+const getUnitLineItem = lineItems => {
+  const unitLineItem = lineItems?.find(
+    item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
+  );
+  return unitLineItem;
+};
+
+// Get unitType from line-item code (e.g. code: "line-item/<unitType>")
+const getUnitType = unitLineItem => unitLineItem?.code?.split('/')[1];
+
+// Booking data (start & end) are bit different depending on display times and
+// if "end" refers to last day booked or the first exclusive day
 const bookingData = (tx, lineItemUnitType, timeZone) => {
   // Attributes: displayStart and displayEnd can be used to differentiate shown time range
   // from actual start and end times used for availability reservation. It can help in situations
@@ -64,7 +78,7 @@ const bookingData = (tx, lineItemUnitType, timeZone) => {
 
 const BookingTimeInfoMaybe = props => {
   const { transaction, ...rest } = props;
-  const processName = getUpdatedProcessName(transaction?.attributes?.processName);
+  const processName = resolveLatestProcessName(transaction?.attributes?.processName);
   const process = getProcess(processName);
   const isEnquiry = process.getState(transaction) === process.states.ENQUIRY;
 
@@ -101,30 +115,22 @@ BookingTimeInfoMaybe.propTypes = {
 };
 
 export const InboxItem = props => {
-  const { transactionRole, tx, intl, stateData } = props;
+  const { transactionRole, tx, intl, stateData, showStock = true } = props;
   const { customer, provider, listing } = tx;
-  const {
-    processName,
-    processState,
-    actionNeeded,
-    emphasizeTransitionMoment,
-    isSaleNotification,
-    isFinal,
-  } = stateData;
+  const { processName, processState, actionNeeded, isSaleNotification, isFinal } = stateData;
   const isCustomer = transactionRole === TX_TRANSITION_ACTOR_CUSTOMER;
 
-  const unitLineItem = tx.attributes?.lineItems?.find(
-    item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
-  );
-  const isProductOrder = unitLineItem?.code === LINE_ITEM_ITEM;
-  const quantity = isProductOrder ? unitLineItem.quantity.toString() : null;
+  const lineItems = tx.attributes?.lineItems;
+  const hasPricingData = lineItems.length > 0;
+  const unitLineItem = getUnitLineItem(lineItems);
+  const isBooking = isBookingUnitType(getUnitType(unitLineItem));
+  const quantity = hasPricingData && !isBooking ? unitLineItem.quantity.toString() : null;
 
   const otherUser = isCustomer ? provider : customer;
   const otherUserDisplayName = <UserDisplayName user={otherUser} intl={intl} />;
   const isOtherUserBanned = otherUser.attributes.banned;
 
   const rowNotificationDot = isSaleNotification ? <div className={css.notificationDot} /> : null;
-  const lastTransitionedAt = formatDateIntoPartials(tx.attributes.lastTransitionedAt, intl);
 
   const linkClasses = classNames(css.itemLink, {
     [css.bannedUserLink]: isOtherUserBanned,
@@ -133,9 +139,6 @@ export const InboxItem = props => {
     [css.stateConcluded]: isFinal,
     [css.stateActionNeeded]: actionNeeded,
     [css.stateNoActionNeeded]: !actionNeeded,
-  });
-  const lastTransitionedAtClasses = classNames(css.lastTransitionedAt, {
-    [css.lastTransitionedAtEmphasized]: emphasizeTransitionMoment,
   });
 
   return (
@@ -154,11 +157,11 @@ export const InboxItem = props => {
           <div className={css.itemOrderInfo}>
             <span>{listing?.attributes?.title}</span>
             <br />
-            {isProductOrder ? (
-              <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
-            ) : (
+            {isBooking ? (
               <BookingTimeInfoMaybe transaction={tx} />
-            )}
+            ) : hasPricingData && showStock ? (
+              <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
+            ) : null}
           </div>
         </div>
         <div className={css.itemState}>
@@ -167,9 +170,6 @@ export const InboxItem = props => {
               id={`InboxPage.${processName}.${processState}.status`}
               values={{ transactionRole }}
             />
-          </div>
-          <div className={lastTransitionedAtClasses} title={lastTransitionedAt.dateAndTime}>
-            {lastTransitionedAt.date}
           </div>
         </div>
       </NamedLink>
@@ -185,6 +185,7 @@ InboxItem.propTypes = {
 };
 
 export const InboxPageComponent = props => {
+  const config = useConfiguration();
   const {
     currentUser,
     fetchInProgress,
@@ -207,6 +208,12 @@ export const InboxPageComponent = props => {
   const ordersTitle = intl.formatMessage({ id: 'InboxPage.ordersTitle' });
   const salesTitle = intl.formatMessage({ id: 'InboxPage.salesTitle' });
   const title = isOrders ? ordersTitle : salesTitle;
+  const showStock = transactionType => {
+    const transactionTypeConfig = config.transaction?.transactionTypes?.find(
+      conf => conf.type === transactionType
+    );
+    return transactionTypeConfig?.showStock;
+  };
 
   const toTxItem = tx => {
     const transactionRole = isOrders ? TX_TRANSITION_ACTOR_CUSTOMER : TX_TRANSITION_ACTOR_PROVIDER;
@@ -215,7 +222,13 @@ export const InboxPageComponent = props => {
     // Render InboxItem only if the latest transition of the transaction is handled in the `txState` function.
     return stateData ? (
       <li key={tx.id.uuid} className={css.listItem}>
-        <InboxItem transactionRole={transactionRole} tx={tx} intl={intl} stateData={stateData} />
+        <InboxItem
+          transactionRole={transactionRole}
+          tx={tx}
+          intl={intl}
+          stateData={stateData}
+          showStock={showStock(tx?.listing?.attributes?.publicData?.transactionType)}
+        />
       </li>
     ) : null;
   };

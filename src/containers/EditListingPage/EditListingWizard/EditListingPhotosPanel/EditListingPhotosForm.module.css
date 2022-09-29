@@ -9,29 +9,23 @@
   flex-shrink: 0;
 }
 
-.imagesField {
+.imagesFieldArray {
   flex-shrink: 0;
-  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 0 0 24px 0;
 }
 
 .thumbnail {
-  margin: 24px 0 0 0;
-
-  @media (--viewportLarge) {
-    width: calc(50% - 12px);
-    margin: 0 24px 24px 0;
-
-    &:nth-child(even) {
-      margin: 0 0 24px 0;
-    }
-  }
+  width: 100%;
+  background-color: var(--matterColorBright);
 }
 
 .addImageWrapper {
   float: left;
   position: relative;
   width: 100%;
-  margin: 24px 0 0 0;
   overflow: hidden;
 
   &::after {
@@ -40,11 +34,6 @@
     display: block;
     height: 0;
     clear: both;
-  }
-
-  @media (--viewportLarge) {
-    width: calc(50% - 12px);
-    margin: 0 0 24px 0;
   }
 }
 

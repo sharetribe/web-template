@@ -78,7 +78,9 @@ const OrderPanel = props => {
     isOwnListing,
     onSubmit,
     title,
+    titleDesktop,
     author,
+    authorLink,
     onManageDisableScrolling,
     onFetchTimeSlots,
     monthlyTimeSlots,
@@ -108,7 +110,7 @@ const OrderPanel = props => {
       </p>
     );
   };
-  const showInvalidCurrency = price.currency !== marketplaceCurrency;
+  const showInvalidCurrency = price?.currency !== marketplaceCurrency;
   const InvalidCurrency = () => {
     return (
       <p className={css.error}>
@@ -121,10 +123,10 @@ const OrderPanel = props => {
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
 
   const shouldHaveBookingTime = [LINE_ITEM_HOUR].includes(lineItemUnitType);
-  const showBookingTimeForm = shouldHaveBookingTime && !isClosed;
+  const showBookingTimeForm = shouldHaveBookingTime && !isClosed && timeZone;
 
   const shouldHaveBookingDates = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
-  const showBookingDatesForm = shouldHaveBookingDates && !isClosed;
+  const showBookingDatesForm = shouldHaveBookingDates && !isClosed && timeZone;
 
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
@@ -146,17 +148,6 @@ const OrderPanel = props => {
     ? intl.formatMessage({ id: 'OrderPanel.subTitleClosedListing' })
     : null;
 
-  const isNightly = lineItemUnitType === LINE_ITEM_NIGHT;
-  const isDaily = lineItemUnitType === LINE_ITEM_DAY;
-  const isHourly = lineItemUnitType === LINE_ITEM_HOUR;
-  const unitTranslationKey = isNightly
-    ? 'OrderPanel.perNight'
-    : isDaily
-    ? 'OrderPanel.perDay'
-    : isHourly
-    ? 'OrderPanel.perHour'
-    : 'OrderPanel.perItem';
-
   const authorDisplayName = userDisplayNameAsString(author, '');
 
   const classes = classNames(rootClassName || css.root, className);
@@ -177,20 +168,27 @@ const OrderPanel = props => {
         </div>
 
         <div className={css.orderHeading}>
-          <h2 className={titleClasses}>{title}</h2>
+          {titleDesktop ? titleDesktop : <h2 className={titleClasses}>{title}</h2>}
           {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
         </div>
 
-        <div className={css.priceContainer}>
-          <p className={css.price}>{formatMoney(intl, price)}</p>
-          <div className={css.perUnit}>
-            <FormattedMessage id={unitTranslationKey} />
+        {price ? (
+          <div className={css.priceContainer}>
+            <p className={css.price}>{formatMoney(intl, price)}</p>
+            <div className={css.perUnit}>
+              <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
+            </div>
           </div>
-        </div>
+        ) : null}
 
         <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
-          <FormattedMessage id="OrderPanel.soldBy" values={{ name: authorDisplayName }} />
+          <span className={css.providerNameLinked}>
+            <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
+          </span>
+          <span className={css.providerNamePlain}>
+            <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
+          </span>
         </div>
 
         {showPriceMissing ? (
@@ -260,12 +258,12 @@ const OrderPanel = props => {
         ) : null}
       </ModalInMobile>
       <div className={css.openOrderForm}>
-        <div className={css.priceContainer}>
+        <div className={css.priceContainerInCTA}>
           <div className={css.priceValue} title={priceTitle}>
             {formattedPrice}
           </div>
-          <div className={css.perUnit}>
-            <FormattedMessage id={unitTranslationKey} />
+          <div className={css.perUnitInCTA}>
+            <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
           </div>
         </div>
 
@@ -296,6 +294,8 @@ OrderPanel.defaultProps = {
   className: null,
   titleClassName: null,
   isOwnListing: false,
+  authorLink: null,
+  titleDesktop: null,
   subTitle: null,
   monthlyTimeSlots: null,
   lineItems: null,
@@ -308,8 +308,11 @@ OrderPanel.propTypes = {
   titleClassName: string,
   listing: oneOfType([propTypes.listing, propTypes.ownListing]),
   isOwnListing: bool,
+  author: oneOfType([propTypes.user, propTypes.currentUser]).isRequired,
+  authorLink: node,
   onSubmit: func.isRequired,
   title: oneOfType([node, string]).isRequired,
+  titleDesktop: node,
   subTitle: oneOfType([node, string]),
   onManageDisableScrolling: func.isRequired,
 
