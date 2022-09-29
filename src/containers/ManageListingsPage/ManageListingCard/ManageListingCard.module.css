@@ -31,7 +31,7 @@
 
   /* Overlay */
   background-color: var(--matterColorAnti);
-  mix-blend-mode: multiply;
+  mix-blend-mode: overlay;
   opacity: 0;
   transition: var(--transitionStyleButton);
 }
@@ -57,6 +57,10 @@
     margin-top: 0;
     margin-bottom: 0;
   }
+}
+
+.menuOverlayOpen {
+  opacity: 0.4;
 }
 
 .clickWrapper {
