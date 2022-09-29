@@ -3,7 +3,7 @@ import { legacy_createStore as createStore, applyMiddleware, compose } from 'red
 import thunk from 'redux-thunk';
 import createReducer from './reducers';
 import * as analytics from './analytics/analytics';
-import appSettings from './config/appSettings';
+import appSettings from './config/settingsApp';
 
 /**
  * Create a new store with the given initial state. Adds Redux
