@@ -191,7 +191,7 @@ const hasPassedState = process => (stateName, tx) => {
  *
  * @param {String} processName
  */
-export const getUpdatedProcessName = processName => {
+export const resolveLatestProcessName = processName => {
   switch (processName) {
     case PRODUCT_PROCESS_NAME:
       return PRODUCT_PROCESS_NAME;

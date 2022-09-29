@@ -21,7 +21,7 @@ import { createSlug } from '../../util/urlHelpers';
 import {
   TX_TRANSITION_ACTOR_CUSTOMER as CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER as PROVIDER,
-  getUpdatedProcessName,
+  resolveLatestProcessName,
   getProcess,
 } from '../../util/transaction';
 
@@ -126,7 +126,7 @@ export const TransactionPageComponent = props => {
   const isProviderRole = transactionRole === PROVIDER;
   const isCustomerRole = transactionRole === CUSTOMER;
 
-  const processName = getUpdatedProcessName(transaction?.attributes?.processName);
+  const processName = resolveLatestProcessName(transaction?.attributes?.processName);
   const process = processName ? getProcess(processName) : null;
 
   const isTxOnPaymentPending = tx => {
