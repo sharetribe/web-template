@@ -1,6 +1,6 @@
-import logoImageDesktop from '../assets/sneakertime-logo.png';
-import logoImageMobile from '../assets/sneakertime-logo-mobile.png';
-import brandImage from '../assets/background-1440.jpg';
+import logoImageDesktop from '../assets/biketribe-logo-desktop.png';
+import logoImageMobile from '../assets/biketribe-logo-mobile.png';
+import brandImage from '../assets/biketribe-brandImage-1500.jpg';
 import facebookImage from '../assets/sneakertimeFacebook-1200x630.jpg';
 import twitterImage from '../assets/sneakertimeTwitter-600x314.jpg';
 
