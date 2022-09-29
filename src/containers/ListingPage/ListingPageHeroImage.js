@@ -8,7 +8,6 @@ import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
 import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
-import { findOptionsForSelectFilter } from '../../util/search';
 import {
   LISTING_STATE_PENDING_APPROVAL,
   LISTING_STATE_CLOSED,
@@ -61,13 +60,12 @@ import {
   LoadingPage,
   ErrorPage,
   priceData,
-  categoryLabel,
   listingImages,
   handleContactUser,
   handleSubmitEnquiry,
   handleSubmit,
 } from './ListingPage.shared';
-import SectionImages from './SectionImages';
+import SectionHero from './SectionHero';
 import SectionTextMaybe from './SectionTextMaybe';
 import SectionDetailsMaybe from './SectionDetailsMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
@@ -300,7 +298,7 @@ export const ListingPageComponent = props => {
         <LayoutWrapperTopbar>{topbar}</LayoutWrapperTopbar>
         <LayoutWrapperMain>
           <div>
-            <SectionImages
+            <SectionHero
               title={title}
               listing={currentListing}
               isOwnListing={isOwnListing}

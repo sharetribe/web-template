@@ -20,7 +20,7 @@
   margin: 24px;
 }
 
-.sectionImages {
+.sectionHero {
   position: relative;
   margin: 0 0 36px 0;
 
@@ -37,7 +37,7 @@
   }
 }
 
-.imageWrapperForSectionImage {
+.imageWrapperForSectionHero {
   composes: heroHeight;
   background-color: var(--matterColorNegative); /* Loading BG color */
 
