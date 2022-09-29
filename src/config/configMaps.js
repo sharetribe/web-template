@@ -29,8 +29,8 @@ export const search = {
   // This affects location search.
   // These "default locations" can be edited in the
   // `configDefaultLocationSearches.js` file.
-  // NOTE: these are highly recommended, since they 
-  //       1) help customers to find relevant locations, and 
+  // NOTE: these are highly recommended, since they
+  //       1) help customers to find relevant locations, and
   //       2) reduce the cost of using map providers geocoding API
   defaults: defaultLocationSearches || [],
 
