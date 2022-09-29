@@ -616,6 +616,7 @@
   "ProductOrderForm.finePrint": "You won't be charged yet.",
   "ProductOrderForm.finePrintNoStock": "Unfortunately, this listing is out of stock right now but you can {contactSellerLink}.",
   "ProductOrderForm.finePrintNoStockLinkText": "contact the seller",
+  "ProductOrderForm.listingPriceMissing": "Listing price is not set",
   "ProductOrderForm.noDeliveryMethodSet": "Provider hasn't enabled any delivery method.",
   "ProductOrderForm.pickupOption": "Pickup",
   "ProductOrderForm.quantityLabel": "Quantity",
