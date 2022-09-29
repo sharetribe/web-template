@@ -905,7 +905,7 @@
   "TransactionPage.markReceivedFromPurchased.actionButton": "Mark received",
   "TransactionPage.markReceivedFromPurchased.actionError": "Oops, failed to mark the order as received. Please refresh the page and try again.",
   "TransactionPage.markShipped.actionButton": "Mark shipped",
-  "TransactionPage.title": "Verkaufsdetails: {title}",
+  "TransactionPage.schemaTitle": "Verkaufsdetails: {title}",
   "TransactionPanel.activityHeading": "Aktivität",
   "TransactionPanel.customerBannedStatus": "Der Nutzer hat die Anfrage gemacht, wurde aber später gesperrt.",
   "TransactionPanel.deletedListingOrderTitle": "ein Eintrag",

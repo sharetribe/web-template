@@ -9,7 +9,7 @@ const DetailCardHeadingsMaybe = props => {
   return showDetailCardHeadings ? (
     <div className={css.detailCardHeadings}>
       <h2 className={css.detailCardTitle}>{listingTitle}</h2>
-      <p className={css.detailCardSubtitle}>{subTitle}</p>
+      {subTitle ? <p className={css.detailCardSubtitle}>{subTitle}</p> : null}
     </div>
   ) : null;
 };
