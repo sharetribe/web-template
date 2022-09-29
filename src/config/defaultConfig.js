@@ -22,7 +22,7 @@ const defaultConfig = {
   // Listing minimum price in currency sub units, e.g. cents.
   // 0 means no restriction to the price
   // Note: Stripe does have minimum fee that depends on country, currency, etc.
-  listingMinimumPriceSubUnits: 0,
+  listingMinimumPriceSubUnits: 500,
 
   // Marketplace name is needed for microcopy and in meta tags (bots and social media sharing reads those)
   marketplaceName: 'Biketribe',
@@ -64,7 +64,7 @@ const defaultConfig = {
     // 1: Monday
     // ...
     // 6: Saturday
-    firstDayOfWeek: 0,
+    firstDayOfWeek: 1,
   },
 
   // CDN assets for the app. Configurable through Flex Console.
