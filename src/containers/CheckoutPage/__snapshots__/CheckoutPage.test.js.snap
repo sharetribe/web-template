@@ -3,7 +3,7 @@
 exports[`CheckoutPage matches snapshot 1`] = `
 <Page
   scrollingDisabled={false}
-  title="CheckoutPage.title"
+  title="CheckoutPage.flex-product-default-process.title"
 >
   <div
     className="topbar"
@@ -76,20 +76,18 @@ exports[`CheckoutPage matches snapshot 1`] = `
         <h1
           className="title"
         >
-          CheckoutPage.title
+          CheckoutPage.flex-product-default-process.title
         </h1>
-        <div
-          className="author"
-        >
+        <h2>
           <MemoizedFormattedMessage
-            id="CheckoutPage.providerInfo"
+            id="CheckoutPage.listingTitle"
             values={
               Object {
-                "name": "author display name",
+                "listingTitle": "listing1 title",
               }
             }
           />
-        </div>
+        </h2>
       </div>
       <div
         className="priceBreakdownContainer"
@@ -174,13 +172,18 @@ exports[`CheckoutPage matches snapshot 1`] = `
         <h2
           className="detailsTitle"
         >
-          listing1 title
+          <NamedLink
+            name="ListingPage"
+            params={
+              Object {
+                "id": "listing1",
+                "slug": "listing1-title",
+              }
+            }
+          >
+            listing1 title
+          </NamedLink>
         </h2>
-        <p
-          className="detailsSubtitle"
-        >
-          55 CheckoutPage.perUnit
-        </p>
       </div>
       <h2
         className="orderBreakdownTitle"
