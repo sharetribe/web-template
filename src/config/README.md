@@ -9,19 +9,19 @@ configs received from Asset Delivery API.
 
 Some of the content is splitted to separate files:
 
-- **[brandingConfig.js](./brandingConfig.js)**
+- **[configBranding.js](./configBranding.js)**
   - marketplaceColor, logo, etc.
-- **[layoutConfig.js](./layoutConfig.js)**
+- **[configLayout.js](./configLayout.js)**
   - layout for search and listing page
-- **[listingConfig.js](./listingConfig.js)**
+- **[configListing.js](./configListing.js)**
   - Extended data config (also used for enabling search filters)
-- **[searchConfig.js](./searchConfig.js)**
+- **[configSearch.js](./configSearch.js)**
   - mainSearchType, default filters, sort, etc.
-- **[mapsConfig.js](./mapsConfig.js)**
+- **[configMaps.js](./configMaps.js)**
   - mapProvider config, location search config (also in defaultLocationSearchesConfig.js)
-- **[stripeConfig.js](./stripeConfig.js)**
+- **[configStripe.js](./configStripe.js)**
   - Stripe publishable key, day count available for booking, default merchant categry code
-- **[transactionConfig.js](./transactionConfig.js)**
+- **[configTransaction.js](./configTransaction.js)**
   - transactionType (preset for supported transaction config combinations)
 
 ### [src/util/configHelpers.js](../util/configHelpers.js)

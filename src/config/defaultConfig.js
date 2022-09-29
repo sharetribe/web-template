@@ -1,10 +1,10 @@
-import * as stripe from './stripeConfig';
-import * as listing from './listingConfig';
-import * as search from './searchConfig';
-import * as maps from './mapsConfig';
-import * as transaction from './transactionConfig';
-import * as branding from './brandingConfig';
-import * as layout from './layoutConfig';
+import * as stripe from './configStripe';
+import * as listing from './configListing';
+import * as search from './configSearch';
+import * as maps from './configMaps';
+import * as transaction from './configTransaction';
+import * as branding from './configBranding';
+import * as layout from './configLayout';
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets to this file.
