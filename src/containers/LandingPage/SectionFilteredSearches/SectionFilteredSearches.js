@@ -16,12 +16,11 @@ import imageForFilter2 from './images/imageForFilter2_648x448.jpg';
 import imageForFilter3 from './images/imageForFilter3_648x448.jpg';
 
 // Thumbnail image for the search "card"
-class ThumbnailImage extends Component {
-  render() {
-    const { alt, ...rest } = this.props;
-    return <img alt={alt} {...rest} />;
-  }
-}
+const ThumbnailImage = props => {
+  const { alt, ...rest } = props;
+  return <img alt={alt} {...rest} />;
+};
+
 // Load the image only if it's close to viewport (user has scrolled the page enough).
 const LazyImage = lazyLoadWithDimensions(ThumbnailImage);
 

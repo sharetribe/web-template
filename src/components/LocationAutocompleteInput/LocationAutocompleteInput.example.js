@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Form as FinalForm, Field } from 'react-final-form';
 import { propTypes } from '../../util/types';
 import { Button } from '../../components';
@@ -44,27 +44,22 @@ const PlaceInfo = props => {
 
 PlaceInfo.propTypes = { place: propTypes.place.isRequired };
 
-class FormContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { location: {} };
-  }
-  render() {
-    const onSubmit = values => {
-      this.setState({ location: values.location });
-    };
-    const place = this.state.location.selectedPlace;
-    return (
-      <div>
-        <p>
-          Search for a place name or address, select on with mouse or keyboard, and submit the form.
-        </p>
-        <Form onSubmit={onSubmit} />
-        {place ? <PlaceInfo place={place} /> : null}
-      </div>
-    );
-  }
-}
+const FormContainer = props => {
+  const [location, setLocation] = useState({});
+  const onSubmit = values => {
+    setLocation(values.location);
+  };
+  const place = location.selectedPlace;
+  return (
+    <div>
+      <p>
+        Search for a place name or address, select on with mouse or keyboard, and submit the form.
+      </p>
+      <Form onSubmit={onSubmit} />
+      {place ? <PlaceInfo place={place} /> : null}
+    </div>
+  );
+};
 
 export const Empty = {
   component: FormContainer,

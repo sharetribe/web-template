@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { arrayOf, func, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
@@ -25,81 +25,73 @@ const SortByIcon = props => {
   );
 };
 
-class SortByPopup extends Component {
-  constructor(props) {
-    super(props);
+const SortByPopup = props => {
+  const [isOpen, setIsOpen] = useState(false);
+  const {
+    rootClassName,
+    className,
+    menuLabelRootClassName,
+    urlParam,
+    label,
+    options,
+    initialValue,
+    contentPlacementOffset,
+    onSelect,
+  } = props;
 
-    this.state = { isOpen: false };
-    this.onToggleActive = this.onToggleActive.bind(this);
-    this.selectOption = this.selectOption.bind(this);
-  }
+  const onToggleActive = isOpenParam => {
+    setIsOpen(isOpenParam);
+  };
 
-  onToggleActive(isOpen) {
-    this.setState({ isOpen: isOpen });
-  }
+  const selectOption = (urlParameter, option) => {
+    setIsOpen(false);
+    onSelect(urlParameter, option);
+  };
 
-  selectOption(urlParam, option) {
-    this.setState({ isOpen: false });
-    this.props.onSelect(urlParam, option);
-  }
+  // resolve menu label text and class
+  const menuLabel = initialValue ? optionLabel(options, initialValue) : label;
 
-  render() {
-    const {
-      rootClassName,
-      className,
-      menuLabelRootClassName,
-      urlParam,
-      label,
-      options,
-      initialValue,
-      contentPlacementOffset,
-    } = this.props;
+  const classes = classNames(rootClassName || css.root, className);
+  const menuLabelClasses = classNames(menuLabelRootClassName || css.menuLabel);
+  const iconArrowClassName = isOpen ? css.iconArrowAnimation : null;
 
-    // resolve menu label text and class
-    const menuLabel = initialValue ? optionLabel(options, initialValue) : label;
+  return (
+    <Menu
+      className={classes}
+      useArrow={false}
+      contentPlacementOffset={contentPlacementOffset}
+      contentPosition="left"
+      onToggleActive={onToggleActive}
+      isOpen={isOpen}
+    >
+      <MenuLabel rootClassName={menuLabelClasses}>
+        {menuLabel}
+        <SortByIcon className={iconArrowClassName} />
+      </MenuLabel>
+      <MenuContent className={css.menuContent}>
+        {options.map(option => {
+          // check if this option is selected
+          const selected = initialValue === option.key;
+          // menu item border class
+          const menuItemBorderClass = selected ? css.menuItemBorderSelected : css.menuItemBorder;
 
-    const classes = classNames(rootClassName || css.root, className);
-    const menuLabelClasses = classNames(menuLabelRootClassName || css.menuLabel);
-    const iconArrowClassName = this.state.isOpen ? css.iconArrowAnimation : null;
-
-    return (
-      <Menu
-        className={classes}
-        useArrow={false}
-        contentPlacementOffset={contentPlacementOffset}
-        contentPosition="left"
-        onToggleActive={this.onToggleActive}
-        isOpen={this.state.isOpen}
-      >
-        <MenuLabel rootClassName={menuLabelClasses}>
-          {menuLabel}
-          <SortByIcon className={iconArrowClassName} />
-        </MenuLabel>
-        <MenuContent className={css.menuContent}>
-          {options.map(option => {
-            // check if this option is selected
-            const selected = initialValue === option.key;
-            // menu item border class
-            const menuItemBorderClass = selected ? css.menuItemBorderSelected : css.menuItemBorder;
-
-            return (
-              <MenuItem key={option.key}>
-                <button
-                  className={css.menuItem}
-                  disabled={option.disabled}
-                  onClick={() => (selected ? null : this.selectOption(urlParam, option.key))}
-                >
-                  <span className={menuItemBorderClass} />
-                  {option.longLabel || option.label}
-                </button>
-              </MenuItem>
-            );
-          })}
-        </MenuContent>
-      </Menu>
-    );
-  }
-}
+          return (
+            <MenuItem key={option.key}>
+              <button
+                className={css.menuItem}
+                disabled={option.disabled}
+                onClick={() => (selected ? null : selectOption(urlParam, option.key))}
+              >
+                <span className={menuItemBorderClass} />
+                {option.longLabel || option.label}
+              </button>
+            </MenuItem>
+          );
+        })}
+      </MenuContent>
+    </Menu>
+  );
+};
 
 SortByPopup.defaultProps = {
   rootClassName: null,

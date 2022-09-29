@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { array, arrayOf, bool, func, number, object, shape, string } from 'prop-types';
-import { compose } from 'redux';
 import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
 

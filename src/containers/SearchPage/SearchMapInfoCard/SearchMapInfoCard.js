@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { arrayOf, bool, func, object, string } from 'prop-types';
 import { compose } from 'redux';
 import classNames from 'classnames';
@@ -89,75 +89,65 @@ ListingCard.propTypes = {
   isInCarousel: bool.isRequired,
 };
 
-class SearchMapInfoCard extends Component {
-  constructor(props) {
-    super(props);
+const SearchMapInfoCard = props => {
+  const [currentListingIndex, setCurrentListingIndex] = useState(0);
+  const {
+    className,
+    rootClassName,
+    intl,
+    listings,
+    createURLToListing,
+    onListingInfoCardClicked,
+    config,
+  } = props;
+  const currentListing = ensureListing(listings[currentListingIndex]);
+  const hasCarousel = listings.length > 1;
 
-    this.state = { currentListingIndex: 0 };
-  }
+  const classes = classNames(rootClassName || css.root, className);
+  const caretClass = classNames(css.caret, { [css.caretWithCarousel]: hasCarousel });
 
-  render() {
-    const {
-      className,
-      rootClassName,
-      intl,
-      listings,
-      createURLToListing,
-      onListingInfoCardClicked,
-      config,
-    } = this.props;
-    const currentListing = ensureListing(listings[this.state.currentListingIndex]);
-    const hasCarousel = listings.length > 1;
-    const pagination = hasCarousel ? (
-      <div className={classNames(css.paginationInfo, css.borderRadiusInheritBottom)}>
-        <button
-          className={css.paginationPrev}
-          onClick={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            this.setState(prevState => ({
-              currentListingIndex:
-                (prevState.currentListingIndex + listings.length - 1) % listings.length,
-            }));
-          }}
-        />
-        <div className={css.paginationPage}>
-          {`${this.state.currentListingIndex + 1}/${listings.length}`}
+  return (
+    <div className={classes}>
+      <div className={css.caretShadow} />
+      <ListingCard
+        clickHandler={onListingInfoCardClicked}
+        urlToListing={createURLToListing(currentListing)}
+        listing={currentListing}
+        intl={intl}
+        isInCarousel={hasCarousel}
+        config={config}
+      />
+      {hasCarousel ? (
+        <div className={classNames(css.paginationInfo, css.borderRadiusInheritBottom)}>
+          <button
+            className={css.paginationPrev}
+            onClick={e => {
+              e.preventDefault();
+              e.stopPropagation();
+              setCurrentListingIndex(
+                prevListingIndex => (prevListingIndex + listings.length - 1) % listings.length
+              );
+            }}
+          />
+          <div className={css.paginationPage}>
+            {`${currentListingIndex + 1}/${listings.length}`}
+          </div>
+          <button
+            className={css.paginationNext}
+            onClick={e => {
+              e.preventDefault();
+              e.stopPropagation();
+              setCurrentListingIndex(
+                prevListingIndex => (prevListingIndex + listings.length + 1) % listings.length
+              );
+            }}
+          />
         </div>
-        <button
-          className={css.paginationNext}
-          onClick={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            this.setState(prevState => ({
-              currentListingIndex:
-                (prevState.currentListingIndex + listings.length + 1) % listings.length,
-            }));
-          }}
-        />
-      </div>
-    ) : null;
-
-    const classes = classNames(rootClassName || css.root, className);
-    const caretClass = classNames(css.caret, { [css.caretWithCarousel]: hasCarousel });
-
-    return (
-      <div className={classes}>
-        <div className={css.caretShadow} />
-        <ListingCard
-          clickHandler={onListingInfoCardClicked}
-          urlToListing={createURLToListing(currentListing)}
-          listing={currentListing}
-          intl={intl}
-          isInCarousel={hasCarousel}
-          config={config}
-        />
-        {pagination}
-        <div className={caretClass} />
-      </div>
-    );
-  }
-}
+      ) : null}
+      <div className={caretClass} />
+    </div>
+  );
+};
 
 SearchMapInfoCard.defaultProps = {
   className: null,
