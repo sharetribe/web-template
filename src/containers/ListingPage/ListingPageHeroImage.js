@@ -317,6 +317,11 @@ export const ListingPageComponent = props => {
             />
             <div className={css.contentWrapperForHeroLayout}>
               <div className={css.mainColumnForHeroLayout}>
+                <div className={css.mobileHeading}>
+                  <h1 className={css.orderPanelTitle}>
+                    <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
+                  </h1>
+                </div>
                 <SectionTextMaybe text={description} showAsIngress />
                 <SectionDetailsMaybe
                   publicData={publicData}

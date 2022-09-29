@@ -22,6 +22,11 @@
 
 .sectionImages {
   position: relative;
+  margin: 0 0 36px 0;
+
+  @media (--viewportMedium) {
+    margin: 0;
+  }
 }
 
 .heroHeight {
@@ -743,7 +748,13 @@
   }
 }
 
-.productMobileHeading {
+.mobileHeading {
+  margin: 0 24px 24px 24px;
+
+  @media (--viewportMedium) {
+    margin: 0 0 24px 0;
+  }
+
   @media (--viewportLarge) {
     display: none;
   }
