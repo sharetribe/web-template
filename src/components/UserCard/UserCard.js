@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { string, func, oneOfType } from 'prop-types';
-import { FormattedMessage } from '../../util/reactIntl';
 import truncate from 'lodash/truncate';
 import classNames from 'classnames';
-import { AvatarLarge, NamedLink, InlineTextButton } from '../../components';
+
+import { FormattedMessage } from '../../util/reactIntl';
 import { ensureUser, ensureCurrentUser } from '../../util/data';
 import { propTypes } from '../../util/types';
+
+import { AvatarLarge, NamedLink, InlineTextButton } from '../../components';
 
 import css from './UserCard.module.css';
 
@@ -28,32 +30,26 @@ const truncated = s => {
   });
 };
 
-class ExpandableBio extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { expand: false };
-  }
-  render() {
-    const { expand } = this.state;
-    const { className, bio } = this.props;
-    const truncatedBio = truncated(bio);
+const ExpandableBio = props => {
+  const [expand, setExpand] = useState(false);
+  const { className, bio } = props;
+  const truncatedBio = truncated(bio);
 
-    const handleShowMoreClick = () => {
-      this.setState({ expand: true });
-    };
-    const showMore = (
-      <InlineTextButton rootClassName={css.showMore} onClick={handleShowMoreClick}>
-        <FormattedMessage id="UserCard.showFullBioLink" />
-      </InlineTextButton>
-    );
-    return (
-      <p className={className}>
-        {expand ? bio : truncatedBio}
-        {bio !== truncatedBio && !expand ? showMore : null}
-      </p>
-    );
-  }
-}
+  const handleShowMoreClick = () => {
+    setExpand(true);
+  };
+  const showMore = (
+    <InlineTextButton rootClassName={css.showMore} onClick={handleShowMoreClick}>
+      <FormattedMessage id="UserCard.showFullBioLink" />
+    </InlineTextButton>
+  );
+  return (
+    <p className={className}>
+      {expand ? bio : truncatedBio}
+      {bio !== truncatedBio && !expand ? showMore : null}
+    </p>
+  );
+};
 
 ExpandableBio.defaultProps = { className: null };
 

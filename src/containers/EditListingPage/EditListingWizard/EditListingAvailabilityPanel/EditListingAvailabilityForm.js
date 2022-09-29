@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { bool, func, object, string } from 'prop-types';
 import { compose } from 'redux';
 import classNames from 'classnames';
@@ -15,68 +15,66 @@ import { Form, Button } from '../../../../components';
 import ManageAvailabilityCalendar from './ManageAvailabilityCalendar';
 import css from './EditListingAvailabilityForm.module.css';
 
-export class EditListingAvailabilityFormComponent extends Component {
-  render() {
-    return (
-      <FinalForm
-        {...this.props}
-        render={formRenderProps => {
-          const {
-            className,
-            rootClassName,
-            disabled,
-            ready,
-            handleSubmit,
-            //intl,
-            invalid,
-            pristine,
-            saveActionMsg,
-            updated,
-            updateError,
-            updateInProgress,
-            availability,
-            availabilityPlan,
-            listingId,
-          } = formRenderProps;
+export const EditListingAvailabilityFormComponent = props => {
+  return (
+    <FinalForm
+      {...props}
+      render={formRenderProps => {
+        const {
+          className,
+          rootClassName,
+          disabled,
+          ready,
+          handleSubmit,
+          //intl,
+          invalid,
+          pristine,
+          saveActionMsg,
+          updated,
+          updateError,
+          updateInProgress,
+          availability,
+          availabilityPlan,
+          listingId,
+        } = formRenderProps;
 
-          const errorMessage = updateError ? (
-            <p className={css.error}>
-              <FormattedMessage id="EditListingAvailabilityForm.updateFailed" />
-            </p>
-          ) : null;
+        const errorMessage = updateError ? (
+          <p className={css.error}>
+            <FormattedMessage id="EditListingAvailabilityForm.updateFailed" />
+          </p>
+        ) : null;
 
-          const classes = classNames(rootClassName || css.root, className);
-          const submitReady = (updated && pristine) || ready;
-          const submitInProgress = updateInProgress;
-          const submitDisabled = invalid || disabled || submitInProgress;
+        const classes = classNames(rootClassName || css.root, className);
+        const submitReady = (updated && pristine) || ready;
+        const submitInProgress = updateInProgress;
+        const submitDisabled = invalid || disabled || submitInProgress;
 
-          return (
-            <Form className={classes} onSubmit={handleSubmit}>
-              {errorMessage}
-              <div className={css.calendarWrapper}>
-                <ManageAvailabilityCalendar
-                  availability={availability}
-                  availabilityPlan={availabilityPlan}
-                  listingId={listingId}
-                />
-              </div>
+        return (
+          <Form className={classes} onSubmit={handleSubmit}>
+            {errorMessage}
+            <div className={css.calendarWrapper}>
+              <ManageAvailabilityCalendar
+                availability={availability}
+                availabilityPlan={availabilityPlan}
+                listingId={listingId}
+              />
+            </div>
 
-              <Button
-                className={css.submitButton}
-                type="submit"
-                inProgress={submitInProgress}
-                disabled={submitDisabled}
-                ready={submitReady}
-              >
-                {saveActionMsg}
-              </Button>
-            </Form>
-          );
-        }}
-      />
-    );
-  }
-}
+            <Button
+              className={css.submitButton}
+              type="submit"
+              inProgress={submitInProgress}
+              disabled={submitDisabled}
+              ready={submitReady}
+            >
+              {saveActionMsg}
+            </Button>
+          </Form>
+        );
+      }}
+    />
+  );
+};
 
 EditListingAvailabilityFormComponent.defaultProps = {
   updateError: null,

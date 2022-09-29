@@ -1,24 +1,18 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import RangeSlider from './RangeSlider';
 
-class RangeSliderWrapper extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { handles: props.handles };
-  }
-
-  render() {
-    return (
-      <RangeSlider
-        {...this.props}
-        handles={this.state.handles}
-        onChange={v => {
-          this.setState({ handles: v });
-        }}
-      />
-    );
-  }
-}
+const RangeSliderWrapper = props => {
+  const [handles, setHandles] = useState(props.handles);
+  return (
+    <RangeSlider
+      {...props}
+      handles={handles}
+      onChange={v => {
+        setHandles(v);
+      }}
+    />
+  );
+};
 
 export const RangeSliderOneHandle = {
   component: RangeSliderWrapper,
