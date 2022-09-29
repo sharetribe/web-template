@@ -7,7 +7,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
-import { findOptionsForSelectFilter } from '../../util/search';
 import {
   LISTING_STATE_PENDING_APPROVAL,
   LISTING_STATE_CLOSED,
@@ -60,7 +59,6 @@ import {
   LoadingPage,
   ErrorPage,
   priceData,
-  categoryLabel,
   listingImages,
   handleContactUser,
   handleSubmitEnquiry,

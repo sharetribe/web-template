@@ -8,7 +8,7 @@ import ActionBarMaybe from './ActionBarMaybe';
 
 import css from './ListingPage.module.css';
 
-const SectionImages = props => {
+const SectionHero = props => {
   const {
     title,
     listing,
@@ -49,8 +49,8 @@ const SectionImages = props => {
   ) : null;
 
   return (
-    <div className={css.sectionImages}>
-      <div className={css.imageWrapperForSectionImage} onClick={handleViewPhotosClick}>
+    <div className={css.sectionHero}>
+      <div className={css.imageWrapperForSectionHero} onClick={handleViewPhotosClick}>
         {actionBar}
         <ResponsiveImage
           rootClassName={css.rootForImage}
@@ -79,4 +79,4 @@ const SectionImages = props => {
   );
 };
 
-export default SectionImages;
+export default SectionHero;

@@ -41,7 +41,7 @@ exports[`ListingPage matches snapshot 1`] = `
       rootClassName={null}
     >
       <div>
-        <SectionImages
+        <SectionHero
           editParams={
             Object {
               "id": "listing1",
@@ -105,6 +105,28 @@ exports[`ListingPage matches snapshot 1`] = `
           <div
             className="mainColumnForHeroLayout"
           >
+            <div
+              className="mobileHeading"
+            >
+              <h1
+                className="orderPanelTitle"
+              >
+                <MemoizedFormattedMessage
+                  id="ListingPage.orderTitle"
+                  values={
+                    Object {
+                      "title": <span>
+                        
+                        listing1
+                         
+                        title
+                        
+                      </span>,
+                    }
+                  }
+                />
+              </h1>
+            </div>
             <SectionTextMaybe
               showAsIngress={true}
               text="listing1 description"
