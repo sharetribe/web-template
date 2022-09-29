@@ -18,7 +18,7 @@ import {
 // Import shared components
 import {
   Form,
-  LocationAutocompleteInputField,
+  FieldLocationAutocompleteInput,
   Button,
   FieldCurrencyInput,
   FieldTextInput,
@@ -120,7 +120,7 @@ export const EditListingDeliveryFormComponent = props => (
               </p>
             ) : null}
 
-            <LocationAutocompleteInputField
+            <FieldLocationAutocompleteInput
               disabled={!pickupEnabled}
               className={css.input}
               inputClassName={css.locationAutocompleteInput}
