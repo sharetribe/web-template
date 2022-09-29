@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
 
-import appSettings from '../../config/appSettings';
+import appSettings from '../../config/settingsApp';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 

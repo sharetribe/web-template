@@ -5,7 +5,7 @@ import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
 // Import configs and util modules
-import appSettings from '../../../../config/appSettings';
+import appSettings from '../../../../config/settingsApp';
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import {
