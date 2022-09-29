@@ -1,4 +1,4 @@
-import defaultLocationSearches from './defaultLocationSearchesConfig';
+import defaultLocationSearches from './configDefaultLocationSearches';
 
 //////////////////////////////////////////////////////
 // Configurations related to maps and map providers //
@@ -27,9 +27,12 @@ export const search = {
   currentLocationBoundsDistance: 1000,
 
   // This affects location search.
-  // Example location can be edited in the
-  // `defaultLocationSearchesConfig.js` file.
-  defaults: [], //defaultLocationSearches || [],
+  // These "default locations" can be edited in the
+  // `configDefaultLocationSearches.js` file.
+  // NOTE: these are highly recommended, since they 
+  //       1) help customers to find relevant locations, and 
+  //       2) reduce the cost of using map providers geocoding API
+  defaults: defaultLocationSearches || [],
 
   // Should search results be ordered by distance to origin.
   // NOTE 1: This doesn't affect if the main search type is 'keywords'
