@@ -310,7 +310,11 @@ export const ListingPageComponent = props => {
                 listing={currentListing}
                 variantPrefix={config.layout.listingImage.variantPrefix}
               />
-              <div className={css.productMobileHeading}></div>
+              <div className={css.mobileHeading}>
+                <h1 className={css.orderPanelTitle}>
+                  <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
+                </h1>
+              </div>
               <SectionTextMaybe text={description} showAsIngress />
               <SectionDetailsMaybe
                 publicData={publicData}
