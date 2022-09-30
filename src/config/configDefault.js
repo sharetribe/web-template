@@ -40,6 +40,7 @@ const defaultConfig = {
   // Modify search settings data in searchConfig.js
   search,
   // Modify settings for map providers in mapsConfig.js
+  // This includes also default locations for location search
   maps,
   // Modify order types in transactionConfig.js
   transaction,
@@ -47,6 +48,10 @@ const defaultConfig = {
   branding,
   // Modify layout configs in layoutConfig.js
   layout,
+
+  // TODO: Footer configuration will come from hosted assets at some point,
+  //       but, at the moment, it needs to be customized directly in
+  //       src/components/Footer/
 
   // Note: Facebook app id is used for Facebook login, but it is also used for tracking:
   // Facebook counts shares with app or page associated by this id
