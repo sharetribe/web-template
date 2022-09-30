@@ -233,21 +233,20 @@
   @media (--viewportMedium) {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     margin-right: 12px;
   }
   @media (--viewportLarge) {
     margin-right: 0;
   }
 }
+.socialLinks {
+}
 
 .legalMatters {
-  /* Get extra space from parent element (which is using flexbox) */
-  flex-grow: 1;
-
   /* Layout */
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
 }
 
 .tosAndPrivacy {

@@ -14,6 +14,12 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Biketribe theming: update links in footer and add social media sharing images.
+  [#43](https://github.com/sharetribe/ftw-x/pull/43)
+
+- [change] Biketribe theming: lots of UI related changes, but also some refactoring of components.
+  [#42](https://github.com/sharetribe/ftw-x/pull/42)
+
 - [change] Refactor configurations:
 
   - Split defaultConfig to sub files based on context
