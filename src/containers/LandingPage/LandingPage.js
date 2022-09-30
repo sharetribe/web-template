@@ -18,8 +18,8 @@ import {
 } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
-import facebookImage from '../../assets/sneakertimeFacebook-1200x630.jpg';
-import twitterImage from '../../assets/sneakertimeTwitter-600x314.jpg';
+import facebookImage from '../../assets/biketribe-facebook-sharing-1200x630.jpg';
+import twitterImage from '../../assets/biketribe-twitter-sharing-600x314.jpg';
 
 import SectionHero from './SectionHero/SectionHero';
 import SectionHowItWorks from './SectionHowItWorks/SectionHowItWorks';
