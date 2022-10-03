@@ -430,8 +430,11 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
       }
     })
     .then(response => {
-      dispatch(addMarketplaceEntities(txResponse));
-      dispatch(addMarketplaceEntities(response));
+      const listingExtendedData = config?.listing?.listingExtendedData;
+      const sanitizeConfig = { listingExtendedData };
+
+      dispatch(addMarketplaceEntities(txResponse, sanitizeConfig));
+      dispatch(addMarketplaceEntities(response, sanitizeConfig));
       dispatch(fetchTransactionSuccess(txResponse));
       return response;
     })

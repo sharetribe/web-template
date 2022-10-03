@@ -11,11 +11,12 @@ const initialState = {
   entities: {},
 };
 
-const merge = (state, sdkResponse) => {
+const merge = (state, payload) => {
+  const { sdkResponse, sanitizeConfig } = payload;
   const apiResponse = sdkResponse.data;
   return {
     ...state,
-    entities: updatedEntities({ ...state.entities }, apiResponse),
+    entities: updatedEntities({ ...state.entities }, apiResponse, sanitizeConfig),
   };
 };
 
@@ -67,7 +68,7 @@ export const getMarketplaceEntities = (state, entityRefs) => {
 
 // ================ Action creators ================ //
 
-export const addMarketplaceEntities = sdkResponse => ({
+export const addMarketplaceEntities = (sdkResponse, sanitizeConfig) => ({
   type: ADD_MARKETPLACE_ENTITIES,
-  payload: sdkResponse,
+  payload: { sdkResponse, sanitizeConfig },
 });

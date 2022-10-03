@@ -40,7 +40,7 @@ export const combinedResourceObjects = (oldRes, newRes) => {
  * Combine the resource objects form the given api response to the
  * existing entities.
  */
-export const updatedEntities = (oldEntities, apiResponse) => {
+export const updatedEntities = (oldEntities, apiResponse, sanitizeConfig = {}) => {
   const { data, included = [] } = apiResponse;
   const objects = (Array.isArray(data) ? data : [data]).concat(included);
 
@@ -49,7 +49,7 @@ export const updatedEntities = (oldEntities, apiResponse) => {
 
     // Some entities (e.g. listing and user) might include extended data,
     // you should check if src/util/sanitize.js needs to be updated.
-    const current = sanitizeEntity(curr);
+    const current = sanitizeEntity(curr, sanitizeConfig);
 
     entities[type] = entities[type] || {};
     const entity = entities[type][id.uuid];
