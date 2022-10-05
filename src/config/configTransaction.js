@@ -13,7 +13,7 @@ export const transactionTypes = [
     showStock: false,
   },
   {
-    type: 'rent-bicycles',
+    type: 'rent-bicycles-daily',
     label: 'Rent bicycles: daily',
     process: 'flex-booking-default-process',
     alias: 'release-1',
@@ -34,3 +34,11 @@ export const transactionTypes = [
     unitType: 'hour',
   },
 ];
+
+// NOTE: SearchPage enforces searching of listings with valid transactionType, process and unitType
+//       However, it only works if you have set 'enum' type search schema for the public data fields
+//        - transactionType
+//        - transactionProcessAlias
+//        - unitType
+// Read More:
+// https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas

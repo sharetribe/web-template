@@ -34,3 +34,19 @@ assets and defaultConfigs.js
 
 These contain variables that are baked into the app on build time. This one imports currencySettings
 too.
+
+## Search only listings that are supported by transaction type
+
+SearchPage tries to restrict search results to listings with valid transactionType, process/alias,
+and unitType. Validity is defined by transactionTypes array in _configTransaction.js_.
+
+However, it only works if you have set 'enum' type search schema for the public data fields:
+
+- transactionType
+- transactionProcessAlias
+- unitType
+
+Read More:
+
+- [Manage search schemas with Flex CLI](https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas)
+- [SearchPage.duck.js](../containers/SearchPage/SearchPage.duck.js)
