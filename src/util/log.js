@@ -7,7 +7,7 @@
  */
 
 import * as Sentry from '@sentry/browser';
-import appSettings from '../config/settingsApp';
+import appSettings from '../config/settings';
 
 /**
  * Set up error handling. If a Sentry DSN is

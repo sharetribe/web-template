@@ -3,7 +3,7 @@ import { array, arrayOf, bool, func, number, object, shape, string } from 'prop-
 import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
 
-import appSettings from '../../config/settingsApp';
+import appSettings from '../../config/settings';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
