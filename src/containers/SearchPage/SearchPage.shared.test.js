@@ -21,7 +21,11 @@ const listingExtendedDataConfig = [
     scope: 'public',
     includeForProcessAliases: ['flex-product-default-process/release-1'],
     schemaType: 'enum',
-    schemaOptions: ['Men', 'Women', 'Kids'],
+    schemaOptions: [
+      { option: 'men', label: 'Men' },
+      { option: 'women', label: 'Women' },
+      { option: 'kids', label: 'Kids' },
+    ],
     indexForSearch: true,
     searchPageConfig: {
       label: 'Category',
@@ -33,7 +37,7 @@ const listingExtendedDataConfig = [
     scope: 'public',
     includeForProcessAliases: ['flex-product-default-process/release-1'],
     schemaType: 'enum',
-    schemaOptions: ['Smoke', 'Wood'],
+    schemaOptions: [{ option: 'smoke', label: 'Smoke' }, { option: 'wood', label: 'Wood' }],
     indexForSearch: true,
     searchPageConfig: {
       label: 'Test',
@@ -45,7 +49,10 @@ const listingExtendedDataConfig = [
     scope: 'public',
     includeForProcessAliases: ['flex-booking-default-process/release-1'],
     schemaType: 'multi-enum',
-    schemaOptions: ['Towels', 'Bathroom'],
+    schemaOptions: [
+      { option: 'towels', label: 'Towels' },
+      { option: 'bathroom', label: 'Bathroom' },
+    ],
     indexForSearch: true,
     searchPageConfig: {
       label: 'Amenities',

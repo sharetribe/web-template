@@ -174,7 +174,10 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   return sdk.listings
     .query(params)
     .then(response => {
-      dispatch(addMarketplaceEntities(response));
+      const listingExtendedData = config?.listing?.listingExtendedData;
+      const sanitizeConfig = { listingExtendedData };
+
+      dispatch(addMarketplaceEntities(response, sanitizeConfig));
       dispatch(searchListingsSuccess(response));
       return response;
     })

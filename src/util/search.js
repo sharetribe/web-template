@@ -69,14 +69,6 @@ export const isAnyFilterActive = (
 };
 
 /**
- * Check if the filter is currently active.
- */
-export const findOptionsForSelectFilter = (filterKey, listingExtendedDataConfig) => {
-  const config = listingExtendedDataConfig.find(f => f.key === filterKey);
-  return config?.schemaOptions || [];
-};
-
-/**
  * Check if the main search type is 'keywords'
  */
 export const isMainSearchTypeKeywords = config => config.search?.mainSearchType === 'keywords';

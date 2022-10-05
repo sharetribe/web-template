@@ -24,6 +24,18 @@ const sanitizeText = str =>
     ? str.replace(ESCAPE_TEXT_REGEXP, ch => ESCAPE_TEXT_REPLACEMENTS[ch])
     : '';
 
+// Enum and multi-enum work with predefined option configuration
+const sanitizeEnum = (str, options) => (options.map(o => `${o.option}`).includes(str) ? str : null);
+const sanitizeMultiEnum = (arr, options) =>
+  Array.isArray(arr)
+    ? arr.reduce((ret, value) => {
+        const enumValue = sanitizeEnum(value, options);
+        return enumValue ? [...ret, enumValue] : ret;
+      }, [])
+    : [];
+const sanitizeLong = lng => (lng == null || typeof lng === 'number' ? lng : null);
+const sanitizeBoolean = bool => (bool == null || typeof bool === 'boolean' ? bool : null);
+
 /**
  * Sanitize user entity.
  * If you add public data, you should probably sanitize it here.
@@ -63,13 +75,68 @@ export const sanitizeUser = entity => {
 };
 
 /**
+ * Sanitize extended data against configuration (against schemaType)
+ * @param {any} value Any JSON value
+ * @param {object} config containing "schemaType"
+ * @returns sanitized value or null
+ */
+const sanitizedExtendedData = (value, config) => {
+  const { schemaType, schemaOptions } = config;
+  const sanitized =
+    schemaType === 'text'
+      ? sanitizeText(value)
+      : schemaType === 'enum'
+      ? sanitizeEnum(value, schemaOptions)
+      : schemaType === 'multi-enum'
+      ? sanitizeMultiEnum(value, schemaOptions)
+      : schemaType === 'long'
+      ? sanitizeLong(value)
+      : schemaType === 'boolean'
+      ? sanitizeBoolean(value)
+      : null;
+
+  return sanitized;
+};
+
+/**
+ * Some of the public data is configurable. This validates that data against the given config.
+ * (The config paramter contains listingExtendedData config.)
+ *
+ * NOTE: this does not handle nested JSON-like objects or other extra data,
+ * but there's handling for string type content ('<' & '>' characters are replaced with full-width ones).
+ *
+ * @param {object} publicData
+ * @param {*} config
+ * @returns
+ */
+const sanitizeConfiguredPublicData = (publicData, config = {}) => {
+  const sanitizedConfiguredPublicData = Object.entries(publicData).reduce((sanitized, entry) => {
+    const [key, value] = entry;
+    const foundEDConfig = config?.listingExtendedData?.find(d => d.key === key);
+    const sanitizedValue = ['transactionType', 'transactionProcessAlias', 'unitType'].includes(key)
+      ? sanitizeText(value)
+      : foundEDConfig
+      ? sanitizedExtendedData(value, foundEDConfig)
+      : typeof value === 'string'
+      ? sanitizeText(value)
+      : value;
+
+    return {
+      ...sanitized,
+      [key]: sanitizedValue,
+    };
+  }, {});
+  return sanitizedConfiguredPublicData;
+};
+
+/**
  * Sanitize listing entity.
  * If you add public data, you should probably sanitize it here.
  * By default, React DOM escapes any values embedded in JSX before rendering them,
  * but if you use this data on props, it might create XSS vulnerabilities
  * E.g. you should sanitize and encode URI if you are creating links from public data.
  */
-export const sanitizeListing = entity => {
+export const sanitizeListing = (entity, config = {}) => {
   const { attributes, ...restEntity } = entity;
   const { title, description, publicData, ...restAttributes } = attributes || {};
 
@@ -81,11 +148,11 @@ export const sanitizeListing = entity => {
   const sanitizePublicData = publicData => {
     // Here's an example how you could sanitize location and rules from publicData:
     // TODO: If you add public data, you should probably sanitize it here.
-    const { location, rules, ...restPublicData } = publicData || {};
+    const { location, ...restPublicData } = publicData || {};
     const locationMaybe = location ? { location: sanitizeLocation(location) } : {};
-    const rulesMaybe = rules ? { rules: sanitizeText(rules) } : {};
+    const sanitizedConfiguredPublicData = sanitizeConfiguredPublicData(restPublicData, config);
 
-    return publicData ? { publicData: { ...locationMaybe, ...rulesMaybe, ...restPublicData } } : {};
+    return publicData ? { publicData: { ...locationMaybe, ...sanitizedConfiguredPublicData } } : {};
   };
 
   const attributesMaybe = attributes
@@ -106,11 +173,11 @@ export const sanitizeListing = entity => {
  * Sanitize entities if needed.
  * Remember to add your own sanitization rules for your extended data
  */
-export const sanitizeEntity = entity => {
+export const sanitizeEntity = (entity, config) => {
   const { type } = entity;
   switch (type) {
     case 'listing':
-      return sanitizeListing(entity);
+      return sanitizeListing(entity, config);
     case 'user':
       return sanitizeUser(entity);
     default:

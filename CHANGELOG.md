@@ -14,6 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [add] listing extended data:
+
+  - Sanitize configured custom fields
+  - Change schemaOptions to work with objects containing 'option' and 'label'.
+  - Use transactionType in EditListingWizard (active tab feature)
+
+  [#44](https://github.com/sharetribe/ftw-x/pull/44)
+
 - [change] Biketribe theming: update links in footer and add social media sharing images.
   [#43](https://github.com/sharetribe/ftw-x/pull/43)
 

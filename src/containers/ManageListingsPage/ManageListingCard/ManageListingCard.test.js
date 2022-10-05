@@ -10,7 +10,7 @@ describe('ManageListingCard', () => {
     const tree = renderDeep(
       <ManageListingCardComponent
         history={{ push: noop }}
-        listing={createOwnListing('listing1')}
+        listing={createOwnListing('listing1', { publicData: { transactionType: 'sell-bikes' } })}
         intl={fakeIntl}
         isMenuOpen={false}
         onCloseListing={noop}
