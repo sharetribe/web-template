@@ -11,7 +11,7 @@ import { FieldSelect, FieldTextInput } from '../../../components';
 import css from './ShippingDetails.module.css';
 
 const ShippingDetails = props => {
-  const { rootClassName, className, locale, intl, disabled, form, fieldId } = props;
+  const { rootClassName, className, locale, intl, disabled, formApi, fieldId } = props;
   const classes = classNames(rootClassName || css.root, className);
 
   const optionalText = intl.formatMessage({
@@ -40,7 +40,7 @@ const ShippingDetails = props => {
         validate={validators.required(
           intl.formatMessage({ id: 'ShippingDetails.recipientNameRequired' })
         )}
-        onUnmount={() => form.change('recipientName', undefined)}
+        onUnmount={() => formApi.change('recipientName', undefined)}
       />
       <FieldTextInput
         id={`${fieldId}.recipientPhoneNumber`}
@@ -56,7 +56,7 @@ const ShippingDetails = props => {
         placeholder={intl.formatMessage({
           id: 'ShippingDetails.recipientPhoneNumberPlaceholder',
         })}
-        onUnmount={() => form.change('recipientPhoneNumber', undefined)}
+        onUnmount={() => formApi.change('recipientPhoneNumber', undefined)}
       />
       <div className={css.formRow}>
         <FieldTextInput
@@ -73,7 +73,7 @@ const ShippingDetails = props => {
           validate={validators.required(
             intl.formatMessage({ id: 'ShippingDetails.addressLine1Required' })
           )}
-          onUnmount={() => form.change('recipientAddressLine1', undefined)}
+          onUnmount={() => formApi.change('recipientAddressLine1', undefined)}
         />
 
         <FieldTextInput
@@ -90,7 +90,7 @@ const ShippingDetails = props => {
           placeholder={intl.formatMessage({
             id: 'ShippingDetails.addressLine2Placeholder',
           })}
-          onUnmount={() => form.change('recipientAddressLine2', undefined)}
+          onUnmount={() => formApi.change('recipientAddressLine2', undefined)}
         />
       </div>
       <div className={css.formRow}>
@@ -108,7 +108,7 @@ const ShippingDetails = props => {
           validate={validators.required(
             intl.formatMessage({ id: 'ShippingDetails.postalCodeRequired' })
           )}
-          onUnmount={() => form.change('recipientPostal', undefined)}
+          onUnmount={() => formApi.change('recipientPostal', undefined)}
         />
 
         <FieldTextInput
@@ -121,7 +121,7 @@ const ShippingDetails = props => {
           label={intl.formatMessage({ id: 'ShippingDetails.cityLabel' })}
           placeholder={intl.formatMessage({ id: 'ShippingDetails.cityPlaceholder' })}
           validate={validators.required(intl.formatMessage({ id: 'ShippingDetails.cityRequired' }))}
-          onUnmount={() => form.change('recipientCity', undefined)}
+          onUnmount={() => formApi.change('recipientCity', undefined)}
         />
       </div>
       <div className={css.formRow}>
@@ -137,7 +137,7 @@ const ShippingDetails = props => {
             { optionalText: optionalText }
           )}
           placeholder={intl.formatMessage({ id: 'ShippingDetails.statePlaceholder' })}
-          onUnmount={() => form.change('recipientState', undefined)}
+          onUnmount={() => formApi.change('recipientState', undefined)}
         />
 
         <FieldSelect
@@ -177,7 +177,7 @@ ShippingDetails.propTypes = {
   rootClassName: string,
   className: string,
   disabled: bool,
-  form: object.isRequired,
+  formApi: object.isRequired,
   fieldId: string,
 
   // from injectIntl

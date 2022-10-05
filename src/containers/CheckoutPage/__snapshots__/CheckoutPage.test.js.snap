@@ -111,6 +111,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
             }
           }
           initiateOrderError={null}
+          isBooking={false}
           loadingData={true}
           locale="en"
           marketplaceName="MarketplaceX"

@@ -49,7 +49,7 @@ const CustomFieldMultiEnum = props => {
   const { name, fieldConfig } = props;
   const { schemaOptions = [], editListingPageConfig } = fieldConfig || {};
 
-  return options ? (
+  return schemaOptions ? (
     <FieldCheckboxGroup
       className={css.customField}
       id={name}
