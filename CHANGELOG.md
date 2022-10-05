@@ -14,6 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Improve transaction type support:
+
+  - Restrict searches to valid transactionTypes, transactionProcessAlias, and unitType
+  - Note: add search schemas with Flex CLI!
+  - Add more transactionTypes to make testing easier
+
+  [#47](https://github.com/sharetribe/ftw-x/pull/47)
+
 - [change] CheckoutPage: add location for bookingable listings too.
   [#46](https://github.com/sharetribe/ftw-x/pull/46)
 - [change] Make OrderPanel to use React Portal instead of rendering within app's DOM.
