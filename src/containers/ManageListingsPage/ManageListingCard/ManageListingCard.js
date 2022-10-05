@@ -40,7 +40,6 @@ import {
 import MenuIcon from './MenuIcon';
 import Overlay from './Overlay';
 import css from './ManageListingCard.module.css';
-import { PendingApproval } from './ManageListingCard.example';
 
 // Menu content needs the same padding
 const MENU_CONTENT_OFFSET = -12;
@@ -235,7 +234,19 @@ const ShowOutOfStockOverlayMaybe = props => {
 };
 
 const LinkToStockOrAvailabilityTab = props => {
-  const { id, slug, editListingLinkType, isBookable, currentStock, intl } = props;
+  const {
+    id,
+    slug,
+    editListingLinkType,
+    isBookable,
+    hasTransactionType,
+    currentStock,
+    intl,
+  } = props;
+
+  if (!hasTransactionType) {
+    return null;
+  }
 
   return (
     <>
@@ -510,6 +521,7 @@ export const ManageListingCardComponent = props => {
             editListingLinkType={editListingLinkType}
             isBookable={isBookable}
             currentStock={currentStock}
+            hasTransactionType={!!listing?.attributes?.publicData?.transactionType}
             intl={intl}
           />
         </div>
