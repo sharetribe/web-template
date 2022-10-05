@@ -75,6 +75,7 @@ class ModalInMobileComponent extends Component {
       closeButtonMessage,
       onManageDisableScrolling,
       viewport,
+      usePortal,
     } = this.props;
 
     const isMobileLayout = viewport.width <= showAsModalMaxWidth;
@@ -87,7 +88,7 @@ class ModalInMobileComponent extends Component {
     // - mobile layout: content visible inside modal popup
     // - mobile layout: content hidden
     const closedClassName = isClosedInMobile ? css.modalHidden : null;
-    const classes = classNames({ [css.modalInMobile]: isOpenInMobile }, css.root, className);
+    const classes = classNames(css.root, className);
 
     return (
       <Modal
@@ -100,6 +101,7 @@ class ModalInMobileComponent extends Component {
         onClose={this.handleClose}
         closeButtonMessage={closeButtonMessage}
         onManageDisableScrolling={onManageDisableScrolling}
+        usePortal={usePortal && isOpen}
       >
         {children}
       </Modal>
