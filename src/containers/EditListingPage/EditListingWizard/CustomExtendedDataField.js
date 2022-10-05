@@ -15,7 +15,7 @@ import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '.
 // Import modules from this directory
 import css from './EditListingWizard.module.css';
 
-const getOptionValue = option => `${option}`.toLowerCase().replace(/\s/g, '_');
+const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
 
 const CustomFieldEnum = props => {
   const { name, fieldConfig, defaultRequiredMessage, intl } = props;
@@ -26,20 +26,18 @@ const CustomFieldEnum = props => {
     : {};
   const placeholder =
     placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholder' });
+  const filterOptions = createFilterOptions(schemaOptions);
 
-  return schemaOptions ? (
+  return filterOptions ? (
     <FieldSelect className={css.customField} name={name} id={name} label={label} {...validateMaybe}>
       <option disabled value="">
         {placeholder}
       </option>
-      {schemaOptions.map(option => {
-        // Key is used in URL on SearchPage, when making listing queries.
-        // We turn it to more readable form by avoiding encoded space characters
-        // I.e. "My Option" => "my_option"
-        const key = getOptionValue(option);
+      {filterOptions.map(optionConfig => {
+        const key = optionConfig.key;
         return (
           <option key={key} value={key}>
-            {option}
+            {optionConfig.label}
           </option>
         );
       })}
@@ -50,13 +48,6 @@ const CustomFieldEnum = props => {
 const CustomFieldMultiEnum = props => {
   const { name, fieldConfig } = props;
   const { schemaOptions = [], editListingPageConfig } = fieldConfig || {};
-  const options = schemaOptions.map(option => {
-    // Key is used in URL on SearchPage, when making listing queries.
-    // We turn it to more readable form by avoiding encoded space characters
-    // I.e. "My Option" => "my_option"
-    const key = getOptionValue(option);
-    return { key, label: option };
-  });
 
   return options ? (
     <FieldCheckboxGroup
@@ -64,7 +55,7 @@ const CustomFieldMultiEnum = props => {
       id={name}
       name={name}
       label={editListingPageConfig?.label}
-      options={options}
+      options={createFilterOptions(schemaOptions)}
     />
   ) : null;
 };

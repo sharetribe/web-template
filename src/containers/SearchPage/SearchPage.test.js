@@ -11,7 +11,7 @@ const listingExtendedDataConfig = [
     scope: 'public',
     includeForProcessAliases: ['flex-product-default-process/release-1'],
     schemaType: 'enum',
-    schemaOptions: ['Cat 1', 'Cat 2'],
+    schemaOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     indexForSearch: true,
     searchPageConfig: {
       label: 'Category',
@@ -29,7 +29,7 @@ const listingExtendedDataConfig = [
     scope: 'public',
     includeForProcessAliases: ['flex-booking-default-process/release-1'],
     schemaType: 'multi-enum',
-    schemaOptions: ['Dog 1', 'Dog 2'],
+    schemaOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
     indexForSearch: true,
     searchPageConfig: {
       label: 'Amenities',
