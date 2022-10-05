@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Make OrderPanel to use React Portal instead of rendering within app's DOM.
+  [#45](https://github.com/sharetribe/ftw-x/pull/45)
+
 - [add] listing extended data:
 
   - Sanitize configured custom fields
