@@ -25,9 +25,7 @@ const sanitizeText = str =>
     : '';
 
 // Enum and multi-enum work with predefined option configuration
-const getOptionValue = option => `${option}`.toLowerCase().replace(/\s/g, '_');
-const sanitizeEnum = (str, options) =>
-  options.map(o => getOptionValue(o)).includes(str) ? str : null;
+const sanitizeEnum = (str, options) => (options.map(o => `${o.option}`).includes(str) ? str : null);
 const sanitizeMultiEnum = (arr, options) =>
   Array.isArray(arr)
     ? arr.reduce((ret, value) => {

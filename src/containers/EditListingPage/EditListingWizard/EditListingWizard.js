@@ -120,8 +120,7 @@ const hasValidCustomFieldsInExtendedData = (publicData, privateData, config) => 
       editListingPageConfig = {},
     } = fieldConfig;
 
-    const getOptionValue = option => `${option}`.toLowerCase().replace(/\s/g, '_');
-    const schemaOptionKeys = schemaOptions.map(o => getOptionValue(o));
+    const schemaOptionKeys = schemaOptions.map(o => `${o.option}`);
     const hasValidEnumValue = optionData => {
       return schemaOptionKeys.includes(optionData);
     };

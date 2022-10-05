@@ -156,11 +156,18 @@ const validProcessAliases = (includeForProcessAliases, processAliasesInUse) => {
   return [isValid, { includeForProcessAliases: validValue }];
 };
 
+const isStringType = str => typeof str === 'string';
+const pickOptionShapes = o => isStringType(o.option) && isStringType(o.label);
+
 const validSchemaOptions = (schemaOptions, schemaType) => {
   const isUndefined = typeof schemaOptions === 'undefined';
   const isArray = Array.isArray(schemaOptions);
+  const arrayContainsOptionShapes = isArray
+    ? schemaOptions.filter(pickOptionShapes).length === schemaOptions.length
+    : false;
   const shouldHaveSchemaOptions = ['enum', 'multi-enum'].includes(schemaType) && !isUndefined;
-  const isValid = isUndefined || shouldHaveSchemaOptions;
+
+  const isValid = isUndefined || shouldHaveSchemaOptions || arrayContainsOptionShapes;
   const schemaOptionsMaybe = isArray ? { schemaOptions } : {};
   return [isValid, schemaOptionsMaybe];
 };

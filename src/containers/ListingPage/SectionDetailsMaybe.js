@@ -1,6 +1,5 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
-import { PropertyGroup } from '../../components';
 
 import css from './ListingPage.module.css';
 
@@ -20,14 +19,15 @@ const SectionDetailsMaybe = props => {
     const value = publicDataValue || metadataValue;
 
     if (isDetail && typeof value !== 'undefined') {
-      const findSelectedOption = enumValue =>
-        schemaOptions.find(o => enumValue === `${o}`.toLowerCase().replace(/\s/g, '_'));
+      const findSelectedOption = enumValue => schemaOptions?.find(o => enumValue === `${o.option}`);
       const getBooleanMessage = value =>
         value
           ? intl.formatMessage({ id: 'SearchPage.detailYes' })
           : intl.formatMessage({ id: 'SearchPage.detailNo' });
+      const optionConfig = findSelectedOption(value);
+
       return schemaType === 'enum'
-        ? filteredConfigs.concat({ key, value: findSelectedOption(value), label })
+        ? filteredConfigs.concat({ key, value: optionConfig?.option, label: optionConfig?.label })
         : schemaType === 'boolean'
         ? filteredConfigs.concat({ key, value: getBooleanMessage(value), label })
         : schemaType === 'long'

@@ -47,8 +47,14 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                 "label": "Category",
               },
               "schemaOptions": Array [
-                "Cat 1",
-                "Cat 2",
+                Object {
+                  "label": "Cat 1",
+                  "option": "cat_1",
+                },
+                Object {
+                  "label": "Cat 2",
+                  "option": "cat_2",
+                },
               ],
               "schemaType": "enum",
               "scope": "public",
@@ -155,8 +161,14 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                 "label": "Category",
               },
               "schemaOptions": Array [
-                "Dog 1",
-                "Dog 2",
+                Object {
+                  "label": "Dog 1",
+                  "option": "dog_1",
+                },
+                Object {
+                  "label": "Dog 2",
+                  "option": "dog_2",
+                },
               ],
               "schemaType": "multi-enum",
               "scope": "public",
@@ -256,8 +268,14 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                   "label": "Category",
                 },
                 "schemaOptions": Array [
-                  "Cat 1",
-                  "Cat 2",
+                  Object {
+                    "label": "Cat 1",
+                    "option": "cat_1",
+                  },
+                  Object {
+                    "label": "Cat 2",
+                    "option": "cat_2",
+                  },
                 ],
                 "schemaType": "enum",
                 "scope": "public",
@@ -358,8 +376,14 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                   "label": "Category",
                 },
                 "schemaOptions": Array [
-                  "Dog 1",
-                  "Dog 2",
+                  Object {
+                    "label": "Dog 1",
+                    "option": "dog_1",
+                  },
+                  Object {
+                    "label": "Dog 2",
+                    "option": "dog_2",
+                  },
                 ],
                 "schemaType": "multi-enum",
                 "scope": "public",

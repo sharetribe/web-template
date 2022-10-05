@@ -259,8 +259,7 @@ export const ListingPageComponent = props => {
   const schemaAvailability =
     currentStock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
 
-  const formatOptionValue = option => `${option}`.toLowerCase().replace(/\s/g, '_');
-  const optionEntities = options => options.map(o => ({ key: formatOptionValue(o), label: o }));
+  const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
 
   return (
     <Page
@@ -335,7 +334,7 @@ export const ListingPageComponent = props => {
                       <SectionMultiEnumMaybe
                         key={key}
                         heading={config?.listingPageConfig?.label}
-                        options={optionEntities(schemaOptions)}
+                        options={createFilterOptions(schemaOptions)}
                         selectedOptions={value}
                       />,
                     ]

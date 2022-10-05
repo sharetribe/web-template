@@ -8,13 +8,8 @@ import BookingDateRangeFilter from './BookingDateRangeFilter/BookingDateRangeFil
 import KeywordFilter from './KeywordFilter/KeywordFilter';
 import PriceFilter from './PriceFilter/PriceFilter';
 
-// Format single string into a format that works as query parameter
-const getOptionKey = option => `${option}`.toLowerCase().replace(/\s/g, '_');
 // Helper: get schemaOptions in a format that works as query parameter
-const getOptions = schemaOptions =>
-  schemaOptions.map(o => {
-    return { key: getOptionKey(o), label: `${o}` };
-  });
+const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
 
 /**
  * FilterComponent is used to map configured filter types
@@ -103,7 +98,7 @@ const FilterComponent = props => {
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
           onSelect={getHandleChangedValueFn(useHistoryPush)}
-          options={getOptions(schemaOptions)}
+          options={createFilterOptions(schemaOptions)}
           {...rest}
         />
       ) : (
@@ -114,7 +109,7 @@ const FilterComponent = props => {
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
-          options={getOptions(schemaOptions)}
+          options={createFilterOptions(schemaOptions)}
           schemaType={schemaType}
           {...rest}
         />
@@ -132,7 +127,7 @@ const FilterComponent = props => {
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
-          options={getOptions(schemaOptions)}
+          options={createFilterOptions(schemaOptions)}
           schemaType={schemaType}
           searchMode={searchMode}
           {...rest}
