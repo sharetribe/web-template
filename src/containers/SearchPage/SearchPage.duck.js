@@ -97,6 +97,21 @@ export const searchListingsError = e => ({
 export const searchListings = (searchParams, config) => (dispatch, getState, sdk) => {
   dispatch(searchListingsRequest(searchParams));
 
+  // Search only listings that are supported by current transactionTypes
+  // NOTE: this only works if you have set 'enum' type search schema to listing's public data fields
+  //       - transactionType
+  //       - transactionProcessAlias
+  //       - unitType
+  // Read More:
+  // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
+  const searchValidTransactionTypes = transactionTypes => {
+    return {
+      pub_transactionType: transactionTypes.map(t => t.type),
+      pub_transactionProcessAlias: transactionTypes.map(t => `${t.process}/${t.alias}`),
+      pub_unitType: transactionTypes.map(t => t.unitType),
+    };
+  };
+
   const priceSearchParams = priceParam => {
     const inSubunits = value => convertUnitToSubUnit(value, unitDivisor(config.currency));
     const values = priceParam ? priceParam.split(',') : [];
@@ -168,6 +183,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     ...priceMaybe,
     ...datesMaybe,
     ...sortMaybe,
+    ...searchValidTransactionTypes(config.transaction.transactionTypes),
     per_page: perPage,
   };
 
@@ -219,7 +235,14 @@ export const loadData = (params, search, config) => {
       page,
       perPage: RESULT_PAGE_SIZE,
       include: ['author', 'images'],
-      'fields.listing': ['title', 'geolocation', 'price', 'publicData.unitType'],
+      'fields.listing': [
+        'title',
+        'geolocation',
+        'price',
+        'publicData.transactionType',
+        'publicData.transactionProcessAlias',
+        'publicData.unitType',
+      ],
       'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
       'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
       ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
