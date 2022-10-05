@@ -210,6 +210,42 @@ const checkOnetimePaymentFields = (
   };
 };
 
+const LocationOrShippingDetails = props => {
+  const {
+    askShippingDetails,
+    listingLocation,
+    formApi,
+    locale,
+    isBooking,
+    isFuzzyLocation,
+    intl,
+  } = props;
+
+  const locationDetails = listingLocation?.building
+    ? `${listingLocation.building}, ${listingLocation.address}`
+    : listingLocation?.address
+    ? listingLocation.address
+    : intl.formatMessage({ id: 'StripePaymentForm.locationUnknown' });
+
+  return askShippingDetails ? (
+    <ShippingDetails intl={intl} formApi={formApi} locale={locale} />
+  ) : !isBooking ? (
+    <div className={css.pickupWrapper}>
+      <h3 className={css.pickupHeading}>
+        <FormattedMessage id="StripePaymentForm.pickupDetailsTitle" />
+      </h3>
+      <p className={css.pickupDetails}>{locationDetails}</p>
+    </div>
+  ) : isBooking && !isFuzzyLocation ? (
+    <div className={css.locationWrapper}>
+      <h3 className={css.locationHeading}>
+        <FormattedMessage id="StripePaymentForm.locationDetailsTitle" />
+      </h3>
+      <p className={css.locationDetails}>{locationDetails}</p>
+    </div>
+  ) : null;
+};
+
 const initialState = {
   error: null,
   cardValueValid: false,
@@ -401,19 +437,21 @@ class StripePaymentForm extends Component {
       confirmPaymentError,
       invalid,
       handleSubmit,
-      form,
+      form: formApi,
       hasHandledCardPayment,
       defaultPaymentMethod,
-      pickupLocation,
+      listingLocation,
       askShippingDetails,
       totalPrice,
       locale,
       stripePublishableKey,
       marketplaceName,
+      isBooking,
+      isFuzzyLocation,
       values,
     } = formRenderProps;
 
-    this.finalFormAPI = form;
+    this.finalFormAPI = formApi;
 
     const ensuredDefaultPaymentMethod = ensurePaymentMethodCard(defaultPaymentMethod);
     const billingDetailsNeeded = !(hasHandledCardPayment || confirmPaymentError);
@@ -476,18 +514,12 @@ class StripePaymentForm extends Component {
       { messageOptionalText: messageOptionalText }
     );
 
-    const pickupDetails = pickupLocation?.building
-      ? `${pickupLocation.building}, ${pickupLocation.address}`
-      : pickupLocation?.address
-      ? pickupLocation.address
-      : intl.formatMessage({ id: 'StripePaymentForm.pickupLocationUnknown' });
-
     // Asking billing address is recommended in PaymentIntent flow.
     // In CheckoutPage, we send name and email as billing details, but address only if it exists.
     const billingAddress = (
       <StripePaymentAddress
         intl={intl}
-        form={form}
+        form={formApi}
         fieldId={formId}
         card={this.card}
         locale={locale}
@@ -503,16 +535,15 @@ class StripePaymentForm extends Component {
 
     return hasStripeKey ? (
       <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
-        {askShippingDetails ? (
-          <ShippingDetails intl={intl} form={form} locale={locale} />
-        ) : (
-          <div className={css.pickupWrapper}>
-            <h3 className={css.pickupHeading}>
-              <FormattedMessage id="StripePaymentForm.pickupDetailsTitle" />
-            </h3>
-            <p className={css.pickupDetails}>{pickupDetails}</p>
-          </div>
-        )}
+        <LocationOrShippingDetails
+          askShippingDetails={askShippingDetails}
+          listingLocation={listingLocation}
+          isBooking={isBooking}
+          isFuzzyLocation={isFuzzyLocation}
+          formApi={formApi}
+          locale={locale}
+          intl={intl}
+        />
 
         {billingDetailsNeeded && !loadingData ? (
           <React.Fragment>
@@ -657,8 +688,9 @@ StripePaymentForm.defaultProps = {
   confirmPaymentError: null,
   paymentInfo: null,
   askShippingDetails: false,
-  pickupLocation: null,
+  listingLocation: null,
   totalPrice: null,
+  isFuzzyLocation: false,
 };
 
 StripePaymentForm.propTypes = {
@@ -677,7 +709,7 @@ StripePaymentForm.propTypes = {
   hasHandledCardPayment: bool,
   defaultPaymentMethod: propTypes.defaultPaymentMethod,
   askShippingDetails: bool,
-  pickupLocation: shape({
+  listingLocation: shape({
     address: string.isRequired,
     building: string,
   }),
@@ -685,6 +717,8 @@ StripePaymentForm.propTypes = {
   locale: string.isRequired,
   stripePublishableKey: string.isRequired,
   marketplaceName: string.isRequired,
+  isBooking: bool.isRequired,
+  isFuzzyLocation: bool,
 
   // from injectIntl
   intl: intlShape.isRequired,

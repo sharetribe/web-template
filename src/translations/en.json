@@ -905,6 +905,7 @@
   "StripePaymentForm.confirmCardPaymentError": "We are unable to authenticate your payment method. Please check your authentication details and try again.",
   "StripePaymentForm.confirmPaymentError": "Payment has been made but we were unable to confirm the booking. Please try to confirm the booking request again! If the booking is not confirmed in time, the payment will be fully refunded.",
   "StripePaymentForm.genericError": "Could not handle payment data. Please try again.",
+  "StripePaymentForm.locationDetailsTitle": "Location of the booking",
   "StripePaymentForm.messageHeading": "Message",
   "StripePaymentForm.messageLabel": "Send message to the seller {messageOptionalText}",
   "StripePaymentForm.messageOptionalText": "• optional",

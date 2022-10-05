@@ -34,7 +34,7 @@ import {
   transactionInitiateOrderStripeErrors,
 } from '../../util/errors';
 import { formatMoney } from '../../util/currency';
-import { getProcess } from '../../util/transaction';
+import { getProcess, isBookingUnitType } from '../../util/transaction';
 
 // Import global thunk functions
 import { isScrollingDisabled } from '../../ducks/UI.duck';
@@ -65,7 +65,6 @@ import {
 import StripePaymentForm from './StripePaymentForm/StripePaymentForm';
 import { storeData, storedData, clearData } from './CheckoutPageSessionHelpers';
 import css from './CheckoutPage.module.css';
-import { Form } from '../../components/OrderPanel/ProductOrderForm/ProductOrderForm.example';
 
 const STORAGE_KEY = 'CheckoutPage';
 
@@ -918,11 +917,13 @@ export class CheckoutPageComponent extends Component {
                   paymentIntent={paymentIntent}
                   onStripeInitialized={stripe => this.onStripeInitialized(stripe, process)}
                   askShippingDetails={orderData?.deliveryMethod === 'shipping'}
-                  pickupLocation={currentListing?.attributes?.publicData?.location}
+                  listingLocation={currentListing?.attributes?.publicData?.location}
                   totalPrice={tx.id ? getFormattedTotalPrice(tx, intl) : null}
                   locale={config.localization.locale}
                   stripePublishableKey={config.stripe.publishableKey}
                   marketplaceName={config.marketplaceName}
+                  isBooking={isBookingUnitType(unitType)}
+                  isFuzzyLocation={config.maps.enabled}
                 />
               ) : null}
               {isPaymentExpired ? (
