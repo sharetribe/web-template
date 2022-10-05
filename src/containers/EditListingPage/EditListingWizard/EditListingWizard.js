@@ -172,14 +172,18 @@ const tabCompleted = (tab, listing, config) => {
     privateData,
   } = listing.attributes;
   const images = listing.images;
-  const deliveryOptionPicked =
-    publicData && (publicData.shippingEnabled || publicData.pickupEnabled);
+  const { transactionType, transactionProcessAlias, unitType, shippingEnabled, pickupEnabled } =
+    publicData || {};
+  const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
   switch (tab) {
     case DETAILS:
       return !!(
         description &&
         title &&
+        transactionType &&
+        transactionProcessAlias &&
+        unitType &&
         hasValidCustomFieldsInExtendedData(publicData, privateData, config)
       );
     case PRICING:
@@ -212,10 +216,11 @@ const tabCompleted = (tab, listing, config) => {
 const tabsActive = (isNew, listing, tabs, config) => {
   return tabs.reduce((acc, tab) => {
     const previousTabIndex = tabs.findIndex(t => t === tab) - 1;
+    const validTab = previousTabIndex >= 0;
+    const hasTransactionType = !!listing?.attributes?.publicData?.transactionType;
+    const prevTabComletedInNewFlow = tabCompleted(tabs[previousTabIndex], listing, config);
     const isActive =
-      previousTabIndex >= 0
-        ? !isNew || tabCompleted(tabs[previousTabIndex], listing, config)
-        : true;
+      validTab && !isNew ? hasTransactionType : validTab && isNew ? prevTabComletedInNewFlow : true;
     return { ...acc, [tab]: isActive };
   }, {});
 };
@@ -384,6 +389,9 @@ class EditListingWizard extends Component {
       : processName === BOOKING_PROCESS_NAME
       ? TABS_BOOKING
       : TABS_PRODUCT;
+
+    // Check if wizard tab is active / linkable.
+    // When creating a new listing, we don't allow users to access next tab until the current one is completed.
     const tabsStatus = tabsActive(isNewListingFlow, currentListing, tabs, config);
 
     // If selectedTab is not active, redirect to the beginning of wizard
@@ -394,6 +402,9 @@ class EditListingWizard extends Component {
         .reverse()
         .find(t => tabsStatus[t]);
 
+      console.log(
+        `You tried to access an EditListingWizard tab (${selectedTab}), which was not yet activated.`
+      );
       return <NamedRedirect name="EditListingPage" params={{ ...params, tab: nearestActiveTab }} />;
     }
 
