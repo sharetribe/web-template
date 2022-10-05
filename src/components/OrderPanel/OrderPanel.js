@@ -162,6 +162,7 @@ const OrderPanel = props => {
         onClose={() => closeOrderModal(history, location)}
         showAsModalMaxWidth={MODAL_BREAKPOINT}
         onManageDisableScrolling={onManageDisableScrolling}
+        usePortal
       >
         <div className={css.modalHeading}>
           <h1 className={css.title}>{title}</h1>
