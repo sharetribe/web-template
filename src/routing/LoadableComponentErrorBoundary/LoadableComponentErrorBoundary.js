@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import appSettings from '../../config/settingsApp';
+import appSettings from '../../config/settings';
 
 import { LoadableComponentErrorBoundaryPage } from './LoadableComponentErrorBoundaryPage';
 

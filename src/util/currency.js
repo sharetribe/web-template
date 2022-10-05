@@ -2,7 +2,7 @@ import has from 'lodash/has';
 import trimEnd from 'lodash/trimEnd';
 import Decimal from 'decimal.js';
 
-import appSettings from '../config/settingsApp';
+import appSettings from '../config/settings';
 import { types as sdkTypes } from '../util/sdkLoader';
 
 const { subUnitDivisors } = appSettings;

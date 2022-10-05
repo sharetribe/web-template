@@ -30,7 +30,7 @@ The src/util/configHelpers.js contains functions that validate some of the confi
 important function there is **mergeConfig**, which is used on _src/app.js_ to merge possible config
 assets and defaultConfigs.js
 
-## [settingsApp.js](./settingsApp.js)
+## [settings.js](./settings.js)
 
 These contain variables that are baked into the app on build time. This one imports currencySettings
 too.
