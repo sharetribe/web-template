@@ -14,9 +14,23 @@ export const transactionTypes = [
   },
   {
     type: 'rent-bicycles',
-    label: 'Rent bicycles',
+    label: 'Rent bicycles: daily',
     process: 'flex-booking-default-process',
     alias: 'release-1',
     unitType: 'day',
+  },
+  {
+    type: 'rent-bicycles-nightly',
+    label: 'Rent bicycles: nightly',
+    process: 'flex-booking-default-process',
+    alias: 'release-1',
+    unitType: 'night',
+  },
+  {
+    type: 'rent-bicycles-hourly',
+    label: 'Rent bicycles: hourly',
+    process: 'flex-booking-default-process',
+    alias: 'release-1',
+    unitType: 'hour',
   },
 ];
