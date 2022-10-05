@@ -460,7 +460,12 @@ propTypes.listingExtendedDataConfig = arrayOf(
     scope: string,
     includeForProcessAliases: arrayOf(string).isRequired,
     schemaType: oneOf(EXTENDED_DATA_SCHEMA_TYPES).isRequired,
-    schemaOptions: arrayOf(oneOfType([string, number])),
+    schemaOptions: arrayOf(
+      shape({
+        option: oneOfType([string, number]).isRequired,
+        label: string.isRequired,
+      })
+    ),
     indexForSearch: bool,
     searchPageConfig: shape({
       label: string.isRequired,

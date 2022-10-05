@@ -37,7 +37,7 @@ const listingConfig = {
       scope: 'public',
       includeForProcessAliases: ['flex-product-default-process/release-1'],
       schemaType: 'enum',
-      schemaOptions: ['Cat 1', 'Cat 2'],
+      schemaOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
       indexForSearch: true,
       listingPageConfig: {
         label: 'Category',
@@ -49,7 +49,11 @@ const listingConfig = {
       scope: 'public',
       includeForProcessAliases: ['flex-booking-default-process/release-1'],
       schemaType: 'multi-enum',
-      schemaOptions: ['Feat 1', 'Feat 2', 'Feat 3'],
+      schemaOptions: [
+        { option: 'feat_1', label: 'Feat 1' },
+        { option: 'feat_2', label: 'Feat 2' },
+        { option: 'feat_3', label: 'Feat 3' },
+      ],
       indexForSearch: true,
       listingPageConfig: {
         label: 'Amenities',
@@ -109,6 +113,7 @@ describe('ListingPage', () => {
   });
 
   describe('Duck', () => {
+    const listingExtendedData = [];
     const config = {
       layout: {
         listingImage: {
@@ -116,6 +121,9 @@ describe('ListingPage', () => {
           aspectHeight: 400,
           variantPrefix: 'listing-card',
         },
+      },
+      listing: {
+        listingExtendedData,
       },
     };
 
@@ -141,7 +149,7 @@ describe('ListingPage', () => {
         expect(dispatch.mock.calls).toEqual([
           [showListingRequest(id)],
           [expect.anything()], // fetchCurrentUser() call
-          [addMarketplaceEntities(data)],
+          [addMarketplaceEntities(data, { listingExtendedData })],
         ]);
       });
     });

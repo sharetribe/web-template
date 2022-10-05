@@ -24,7 +24,9 @@ export const Published = {
     hasClosingError: false,
     hasOpeningError: false,
     intl: fakeIntl,
-    listing: createOwnListing('listing-published'),
+    listing: createOwnListing('listing-published', {
+      publicData: { transactionType: 'sell-bikes' },
+    }),
     isMenuOpen: false,
     onCloseListing: noop,
     onOpenListing: noop,
@@ -42,6 +44,7 @@ export const Closed = {
     intl: fakeIntl,
     listing: createOwnListing('listing-closed', {
       state: LISTING_STATE_CLOSED,
+      publicData: { transactionType: 'sell-bikes' },
     }),
     isMenuOpen: false,
     onCloseListing: noop,
@@ -60,6 +63,7 @@ export const PendingApproval = {
     intl: fakeIntl,
     listing: createOwnListing('listing-pending', {
       state: LISTING_STATE_PENDING_APPROVAL,
+      publicData: { transactionType: 'sell-bikes' },
     }),
     isMenuOpen: false,
     onCloseListing: noop,
@@ -78,6 +82,7 @@ export const Draft = {
     intl: fakeIntl,
     listing: createOwnListing('listing-draft', {
       state: LISTING_STATE_DRAFT,
+      publicData: { transactionType: 'sell-bikes' },
     }),
     isMenuOpen: false,
     onCloseListing: noop,
@@ -94,7 +99,10 @@ export const OutOfStock = {
     hasClosingError: false,
     hasOpeningError: false,
     intl: fakeIntl,
-    listing: createOwnListing('listing-out-of-stock', { currentStock: 0 }),
+    listing: createOwnListing('listing-out-of-stock', {
+      currentStock: 0,
+      publicData: { transactionType: 'sell-bikes' },
+    }),
     isMenuOpen: false,
     onCloseListing: noop,
     onOpenListing: noop,
