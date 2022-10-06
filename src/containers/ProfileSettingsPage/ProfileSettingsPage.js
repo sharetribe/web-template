@@ -59,7 +59,7 @@ export const ProfileSettingsPageComponent = props => {
       lastName: lastName.trim(),
       bio,
     };
-    const uploadedImage = this.props.image;
+    const uploadedImage = props.image;
 
     // Update profileImage only if file system has been accessed
     const updatedValues =
