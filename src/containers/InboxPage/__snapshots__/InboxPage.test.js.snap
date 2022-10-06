@@ -25,7 +25,7 @@ exports[`InboxPage InboxItem matches snapshot of order 1`] = `
   </div>
   <a
     className="itemLink"
-    href="/order/order-1/details"
+    href="/order/order-1"
     onClick={[Function]}
     onMouseOver={[Function]}
     onTouchStart={[Function]}
@@ -96,7 +96,7 @@ exports[`InboxPage InboxItem matches snapshot of sales 1`] = `
   </div>
   <a
     className="itemLink"
-    href="/sale/sale-1/details"
+    href="/sale/sale-1"
     onClick={[Function]}
     onMouseOver={[Function]}
     onTouchStart={[Function]}
