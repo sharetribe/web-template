@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [fix] ListingImageGallery didn't get variantPrefix due to buggy mergeConfig.
+  [#51](https://github.com/sharetribe/ftw-x/pull/51)
 - [fix] Update configListing.js to more closely match Biketribe configs. Also fix label in
   ListingPage/SectionDetailsMaybe and add grid for secondary filter panel.
   [#50](https://github.com/sharetribe/ftw-x/pull/50)
