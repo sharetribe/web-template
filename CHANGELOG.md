@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [fix] Update configListing.js to more closely match Biketribe configs. Also fix label in
+  ListingPage/SectionDetailsMaybe and add grid for secondary filter panel.
+  [#50](https://github.com/sharetribe/ftw-x/pull/50)
 - [fix] TransactionPage/enquiry: timeSlot query was missing extra parameter
   [#49](https://github.com/sharetribe/ftw-x/pull/49)
 - [change] Rename src/config/settingsApp.js as src/config/settings.js
