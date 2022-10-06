@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [fix] TransactionPage/enquiry: timeSlot query was missing extra parameter
+  [#49](https://github.com/sharetribe/ftw-x/pull/49)
 - [change] Rename src/config/settingsApp.js as src/config/settings.js
   [#48](https://github.com/sharetribe/ftw-x/pull/48)
 - [change] Improve transaction type support:
