@@ -9,6 +9,24 @@
 }
 
 .filtersWrapper {
+  @media (--viewportMedium) {
+    display: grid;
+    grid-gap: 72px;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: auto;
+  }
+
+  @media (--viewportLarge) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (--viewportXLarge) {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .footer {
