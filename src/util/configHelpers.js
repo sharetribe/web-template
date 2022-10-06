@@ -399,7 +399,7 @@ const validSearchConfig = config => {
 };
 
 const validTransactionConfig = config => {
-  const { transactionTypes } = config || {};
+  const { transactionTypes, enforceValidTransactionType, ...rest } = config || {};
   // Check what transaction processes this client app supports
   const supportedProcessesInfo = getSupportedProcessesInfo();
 
@@ -426,7 +426,7 @@ const validTransactionConfig = config => {
     console.warn('Unsupported transaction configurations detected', transactionType);
     return validConfigs;
   }, []);
-  return { transactionTypes: validTransactionTypes };
+  return { transactionTypes: validTransactionTypes, enforceValidTransactionType, ...rest };
 };
 
 ////////////////////////////////////
