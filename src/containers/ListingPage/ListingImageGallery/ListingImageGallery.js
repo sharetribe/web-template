@@ -123,7 +123,6 @@ const ListingImageGallery = props => {
   };
 
   if (items.length === 0) {
-    const classes = classNames(rootClassName || css.noImage, className);
     return <ResponsiveImage className={css.noImage} image={null} variants={[]} alt="" />;
   }
 
