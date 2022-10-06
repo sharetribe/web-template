@@ -102,14 +102,17 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   //       - transactionType
   //       - transactionProcessAlias
   //       - unitType
+  //       ...and then turned enforceValidTransactionType config to true in configTransaction.js
   // Read More:
   // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
   const searchValidTransactionTypes = transactionTypes => {
-    return {
-      pub_transactionType: transactionTypes.map(t => t.type),
-      pub_transactionProcessAlias: transactionTypes.map(t => `${t.process}/${t.alias}`),
-      pub_unitType: transactionTypes.map(t => t.unitType),
-    };
+    return config.transaction.enforceValidTransactionType
+      ? {
+          pub_transactionType: transactionTypes.map(t => t.type),
+          pub_transactionProcessAlias: transactionTypes.map(t => `${t.process}/${t.alias}`),
+          pub_unitType: transactionTypes.map(t => t.unitType),
+        }
+      : {};
   };
 
   const priceSearchParams = priceParam => {
