@@ -129,7 +129,7 @@ const mergeLayouts = (layoutConfig, defaultLayout) => {
     listingImage: {
       aspectWidth: aspectWidth || 1,
       aspectHeight: aspectHeight || 1,
-      variantPrefix: defaultLayout.variantPrefix,
+      variantPrefix: defaultLayout.listingImage.variantPrefix,
     },
   };
 };
