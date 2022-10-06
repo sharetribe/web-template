@@ -39,7 +39,7 @@ const SectionDetailsMaybe = props => {
 
   const existingExtendedData = listingExtendedData.reduce(pickExtendedData, []);
 
-  return existingExtendedData ? (
+  return existingExtendedData.length > 0 ? (
     <div className={css.sectionDetails}>
       <h2 className={css.detailsTitle}>
         <FormattedMessage id="ListingPage.detailsTitle" />

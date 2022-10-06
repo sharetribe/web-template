@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [fix] ListingPage: the title of section details should not be visible if no details is set.
+  [#54](https://github.com/sharetribe/ftw-x/pull/54)
 - [add] Add flag: enforceValidTransactionType for listing query on SearchPage.
   [#53](https://github.com/sharetribe/ftw-x/pull/53)
 - [fix] ListingImageGallery didn't get variantPrefix due to buggy mergeConfig.
