@@ -5,7 +5,12 @@ import isEmpty from 'lodash/isEmpty';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { findNextBoundary, getStartOf, monthIdString } from '../../util/dates';
 import { isTransactionsTransitionInvalidTransition, storableError } from '../../util/errors';
-import { resolveLatestProcessName, getProcess, isBookingProcess } from '../../util/transaction';
+import {
+  resolveLatestProcessName,
+  getProcess,
+  isBookingUnitType,
+  isBookingProcess,
+} from '../../util/transaction';
 import { transactionLineItems } from '../../util/api';
 import * as log from '../../util/log';
 import {
