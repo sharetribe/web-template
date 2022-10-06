@@ -37,14 +37,18 @@ too.
 
 ## Search only listings that are supported by transaction type
 
-SearchPage tries to restrict search results to listings with valid transactionType, process/alias,
-and unitType. Validity is defined by transactionTypes array in _configTransaction.js_.
+SearchPage can restrict search results to listings with valid transactionType, process/alias, and
+unitType. Validity is defined by transactionTypes array in _configTransaction.js_.
 
-However, it only works if you have set 'enum' type search schema for the public data fields:
+However, it only works if you have set 'enum' type search schema for the following public data
+fields:
 
 - transactionType
 - transactionProcessAlias
 - unitType
+
+If you have set the search schema for those public data fields, you can turn
+`enforceValidTransactionType` config to true in [configTransaction.js](./configTransaction.js) file.
 
 Read More:
 

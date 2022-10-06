@@ -90,7 +90,7 @@
   margin: 14px 12px 11px 24px;
 
   @media (--viewportMedium) {
-    margin: 25px 12px 22px 24px;
+    margin: 24px 12px 24px 24px;
   }
 }
 
@@ -125,7 +125,7 @@
 
   @media (--viewportMedium) {
     margin: 0;
-    padding: 25px 24px 22px 12px;
+    padding: 30px 24px 24px 12px;
   }
 }
 

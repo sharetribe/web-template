@@ -35,10 +35,12 @@ export const transactionTypes = [
   },
 ];
 
-// NOTE: SearchPage enforces searching of listings with valid transactionType, process and unitType
-//       However, it only works if you have set 'enum' type search schema for the public data fields
-//        - transactionType
-//        - transactionProcessAlias
-//        - unitType
+// SearchPage can enforce searching of listings with valid transactionType, process and unitType
+// However, it only works if you have set 'enum' type search schema for the public data fields
+//   - transactionType
+//   - transactionProcessAlias
+//   - unitType
+//
 // Read More:
 // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
+export const enforceValidTransactionType = false;
