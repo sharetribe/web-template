@@ -1,5 +1,10 @@
 import React from 'react';
+
+import { FormattedMessage } from '../../util/reactIntl';
+
 import { NamedLink, IconEmailSent, InlineTextButton, IconClose } from '../../components';
+
+import css from './AuthenticationPage.module.css';
 
 const EmailVerificationInfo = props => {
   const {
