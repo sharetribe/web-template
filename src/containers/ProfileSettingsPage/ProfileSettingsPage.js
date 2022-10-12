@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
+import { bool, func, object, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
@@ -134,8 +134,6 @@ ProfileSettingsPageComponent.defaultProps = {
   image: null,
   config: null,
 };
-
-const { bool, func, object, shape, string } = PropTypes;
 
 ProfileSettingsPageComponent.propTypes = {
   currentUser: propTypes.currentUser,
