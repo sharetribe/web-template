@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { bool, func, object, shape, string } from 'prop-types';
 import { compose } from 'redux';
-import { Form as FinalForm } from 'react-final-form';
+import { Field, Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
@@ -40,6 +40,16 @@ const countryCurrency = (countryCode, supportedCountries) => {
   return country.currency;
 };
 
+// Hidden input field
+const FieldHidden = props => {
+  const { name } = props;
+  return (
+    <Field id={name} name={name} type="hidden" className={css.unitTypeHidden}>
+      {fieldRenderProps => <input {...fieldRenderProps?.input} />}
+    </Field>
+  );
+};
+
 const CreateStripeAccountFields = props => {
   const routeConfiguration = useRouteConfiguration();
   const {
@@ -65,41 +75,31 @@ const CreateStripeAccountFields = props => {
   Only country and bank account token are mandatory values. If you decide to remove the additional default values listed here, remember to update the `createStripeAccount` function in `ducks/stripeConnectAccount.duck.js`.
   */
 
-  const individualAccountLabel = intl.formatMessage({
-    id: 'StripeConnectAccountForm.individualAccount',
-  });
+  useEffect(() => {
+    // Use user profile page as business_url on this marketplace
+    // or just fake it if it's dev environment using Stripe test endpoints
+    // because Stripe will not allow passing a localhost URL
+    const hasBusinessURL = values && values.businessProfileURL;
+    if (!hasBusinessURL && currentUserId) {
+      const pathToProfilePage = uuid =>
+        createResourceLocatorString('ProfilePage', routeConfiguration, { id: uuid }, {});
+      const hasMarketplaceRootURL = !!marketplaceRootURL;
+      const rootUrl = hasMarketplaceRootURL ? marketplaceRootURL.replace(/\/$/, '') : null;
+      const defaultBusinessURL =
+        hasMarketplaceRootURL && !rootUrl.includes('localhost')
+          ? `${rootUrl}${pathToProfilePage(currentUserId.uuid)}`
+          : `https://test-marketplace.com${pathToProfilePage(currentUserId.uuid)}`;
+      form.change('businessProfileURL', defaultBusinessURL);
+    }
 
-  const companyAccountLabel = intl.formatMessage({ id: 'StripeConnectAccountForm.companyAccount' });
-
-  const hasBusinessURL = values && values.businessProfileURL;
-  // Use user profile page as business_url on this marketplace
-  // or just fake it if it's dev environment using Stripe test endpoints
-  // because Stripe will not allow passing a localhost URL
-  if (!hasBusinessURL && currentUserId) {
-    const pathToProfilePage = uuid =>
-      createResourceLocatorString('ProfilePage', routeConfiguration, { id: uuid }, {});
-    const hasMarketplaceRootURL = !!marketplaceRootURL;
-    const rootUrl = hasMarketplaceRootURL ? marketplaceRootURL.replace(/\/$/, '') : null;
-    const defaultBusinessURL =
-      hasMarketplaceRootURL && !rootUrl.includes('localhost')
-        ? `${rootUrl}${pathToProfilePage(currentUserId.uuid)}`
-        : `https://test-marketplace.com${pathToProfilePage(currentUserId.uuid)}`;
-    form.change('businessProfileURL', defaultBusinessURL);
-  }
-
-  const hasMCC = values && values.businessProfileMCC;
-  // Use default merchant category code (MCC) from stripe-config.js
-  if (!hasMCC && defaultMCC) {
-    const defaultBusinessProfileMCC = defaultMCC;
-    form.change('businessProfileMCC', defaultBusinessProfileMCC);
-  }
+    const hasMCC = values && values.businessProfileMCC;
+    // Use default merchant category code (MCC) from stripe-config.js
+    if (!hasMCC && defaultMCC) {
+      form.change('businessProfileMCC', defaultMCC);
+    }
+  }, []);
 
   const country = values.country;
-  const countryRequired = validators.required(
-    intl.formatMessage({
-      id: 'StripeConnectAccountForm.countryRequired',
-    })
-  );
 
   return (
     <div className={css.sectionContainer}>
@@ -110,18 +110,23 @@ const CreateStripeAccountFields = props => {
         <FieldRadioButton
           id="individual"
           name="accountType"
-          label={individualAccountLabel}
+          label={intl.formatMessage({
+            id: 'StripeConnectAccountForm.individualAccount',
+          })}
           value="individual"
           showAsRequired={showAsRequired}
         />
         <FieldRadioButton
           id="company"
           name="accountType"
-          label={companyAccountLabel}
+          label={intl.formatMessage({ id: 'StripeConnectAccountForm.companyAccount' })}
           value="company"
           showAsRequired={showAsRequired}
         />
       </div>
+
+      <FieldHidden name="businessProfileURL" />
+      <FieldHidden name="businessProfileMCC" />
 
       <FieldSelect
         id="country"
@@ -130,7 +135,11 @@ const CreateStripeAccountFields = props => {
         className={css.selectCountry}
         autoComplete="country"
         label={countryLabel}
-        validate={countryRequired}
+        validate={validators.required(
+          intl.formatMessage({
+            id: 'StripeConnectAccountForm.countryRequired',
+          })
+        )}
       >
         <option disabled value="">
           {intl.formatMessage({ id: 'StripeConnectAccountForm.countryPlaceholder' })}

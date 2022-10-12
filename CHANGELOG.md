@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [fix] Bug fixes and refactoring: AuthenticationPage/EmailVerificationInfo.js had bugs,
+  StripeConnectAccountInfo caused warnings. [#55](https://github.com/sharetribe/ftw-x/pull/55)
 - [fix] ListingPage: the title of section details should not be visible if no details is set.
   [#54](https://github.com/sharetribe/ftw-x/pull/54)
 - [add] Add flag: enforceValidTransactionType for listing query on SearchPage.
