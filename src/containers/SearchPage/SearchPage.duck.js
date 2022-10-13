@@ -97,9 +97,10 @@ export const searchListingsError = e => ({
 export const searchListings = (searchParams, config) => (dispatch, getState, sdk) => {
   dispatch(searchListingsRequest(searchParams));
 
-  // Search only listings that are supported by current transactionTypes
+  // SearchPage can enforce listing query to only those listings with valid transactionType
   // NOTE: this only works if you have set 'enum' type search schema to listing's public data fields
   //       - transactionType
+  //       Same setup could be expanded to 2 other extended data fields:
   //       - transactionProcessAlias
   //       - unitType
   //       ...and then turned enforceValidTransactionType config to true in configTransaction.js
@@ -109,8 +110,8 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     return config.transaction.enforceValidTransactionType
       ? {
           pub_transactionType: transactionTypes.map(t => t.type),
-          pub_transactionProcessAlias: transactionTypes.map(t => `${t.process}/${t.alias}`),
-          pub_unitType: transactionTypes.map(t => t.unitType),
+          // pub_transactionProcessAlias: transactionTypes.map(t => `${t.process}/${t.alias}`),
+          // pub_unitType: transactionTypes.map(t => t.unitType),
         }
       : {};
   };
