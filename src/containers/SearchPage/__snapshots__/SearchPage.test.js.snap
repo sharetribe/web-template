@@ -38,8 +38,8 @@ exports[`SearchPageWithList matches snapshot 1`] = `
               "editListingPageConfig": Object {
                 "label": "Category",
               },
-              "includeForProcessAliases": Array [
-                "flex-product-default-process/release-1",
+              "includeForTransactionTypes": Array [
+                "sell-bicycles",
               ],
               "indexForSearch": true,
               "key": "category",
@@ -152,8 +152,10 @@ exports[`SearchPageWithList matches snapshot 1`] = `
               "editListingPageConfig": Object {
                 "label": "Category",
               },
-              "includeForProcessAliases": Array [
-                "flex-booking-default-process/release-1",
+              "includeForTransactionTypes": Array [
+                "rent-bicycles-daily",
+                "rent-bicycles-nightly",
+                "rent-bicycles-hourly",
               ],
               "indexForSearch": true,
               "key": "amenities",
@@ -259,8 +261,8 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                 "editListingPageConfig": Object {
                   "label": "Category",
                 },
-                "includeForProcessAliases": Array [
-                  "flex-product-default-process/release-1",
+                "includeForTransactionTypes": Array [
+                  "sell-bicycles",
                 ],
                 "indexForSearch": true,
                 "key": "category",
@@ -367,8 +369,10 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                 "editListingPageConfig": Object {
                   "label": "Category",
                 },
-                "includeForProcessAliases": Array [
-                  "flex-booking-default-process/release-1",
+                "includeForTransactionTypes": Array [
+                  "rent-bicycles-daily",
+                  "rent-bicycles-nightly",
+                  "rent-bicycles-hourly",
                 ],
                 "indexForSearch": true,
                 "key": "amenities",

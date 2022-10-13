@@ -114,7 +114,7 @@ const hasValidCustomFieldsInExtendedData = (publicData, privateData, config) => 
   const isValidField = (fieldConfig, fieldData) => {
     const {
       key,
-      includeForProcessAliases,
+      includeForTransactionTypes,
       schemaType,
       schemaOptions = [],
       editListingPageConfig = {},
@@ -130,7 +130,7 @@ const hasValidCustomFieldsInExtendedData = (publicData, privateData, config) => 
 
     const isRequired =
       !!editListingPageConfig.isRequired &&
-      includeForProcessAliases.includes(publicData?.transactionProcessAlias);
+      includeForTransactionTypes.includes(publicData?.transactionType);
     if (isRequired) {
       const savedExtendedData = fieldData[key];
       return schemaType === SCHEMA_TYPE_ENUM

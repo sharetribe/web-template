@@ -122,13 +122,13 @@ const FieldSelectTransactionType = props => {
 
 // Add collect data for extended data fields (both publicData and privateData) based on configuration
 const AddCustomExtendedDataFields = props => {
-  const { transactionProcessAlias, listingExtendedDataConfig, intl } = props;
+  const { transactionType, listingExtendedDataConfig, intl } = props;
   const extendedDataConfigs = listingExtendedDataConfig || [];
   const fields = extendedDataConfigs.reduce((pickedFields, extendedDataConfig) => {
-    const { key, includeForProcessAliases = [], schemaType, scope } = extendedDataConfig || {};
+    const { key, includeForTransactionTypes = [], schemaType, scope } = extendedDataConfig || {};
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
-    const isTargetProcessAlias = includeForProcessAliases.includes(transactionProcessAlias);
+    const isTargetProcessAlias = includeForTransactionTypes.includes(transactionType);
     const isProviderScope = ['public', 'private'].includes(scope);
 
     return isKnownSchemaType && isTargetProcessAlias && isProviderScope
@@ -177,7 +177,7 @@ const EditListingDetailsFormComponent = props => (
         values,
       } = formRenderProps;
 
-      const { transactionProcessAlias } = values;
+      const { transactionType } = values;
 
       const titleRequiredMessage = intl.formatMessage({
         id: 'EditListingDetailsForm.titleRequired',
@@ -237,7 +237,7 @@ const EditListingDetailsFormComponent = props => (
           />
 
           <AddCustomExtendedDataFields
-            transactionProcessAlias={transactionProcessAlias}
+            transactionType={transactionType}
             listingExtendedDataConfig={listingExtendedDataConfig}
             intl={intl}
           />
