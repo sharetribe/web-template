@@ -3,6 +3,10 @@
 /////////////////////////////////////////////////////
 
 // A presets of supported transaction configurations
+//
+// Note: With first iteration of hosted configs, we are unlikely to support
+//       multiple transaction types, even though this template has some
+//       rudimentary support for it.
 export const transactionTypes = [
   {
     type: 'product-selling',
@@ -35,9 +39,11 @@ export const transactionTypes = [
   },
 ];
 
-// SearchPage can enforce searching of listings with valid transactionType, process and unitType
+// SearchPage can enforce listing query to only those listings with valid transactionType
 // However, it only works if you have set 'enum' type search schema for the public data fields
 //   - transactionType
+//
+//  Similar setup could be expanded to 2 other extended data fields:
 //   - transactionProcessAlias
 //   - unitType
 //
