@@ -5,7 +5,7 @@
 // A presets of supported transaction configurations
 export const transactionTypes = [
   {
-    type: 'sell-bicycles',
+    type: 'product-selling',
     label: 'Sell bicycles',
     process: 'flex-product-default-process',
     alias: 'release-1',
@@ -13,22 +13,22 @@ export const transactionTypes = [
     showStock: false,
   },
   {
-    type: 'rent-bicycles-daily',
-    label: 'Rent bicycles: daily',
+    type: 'daily-booking',
+    label: 'Daily booking',
     process: 'flex-booking-default-process',
     alias: 'release-1',
     unitType: 'day',
   },
   {
-    type: 'rent-bicycles-nightly',
-    label: 'Rent bicycles: nightly',
+    type: 'nightly-booking',
+    label: 'Nightly booking',
     process: 'flex-booking-default-process',
     alias: 'release-1',
     unitType: 'night',
   },
   {
-    type: 'rent-bicycles-hourly',
-    label: 'Rent bicycles: hourly',
+    type: 'hourly-booking',
+    label: 'Hourly booking',
     process: 'flex-booking-default-process',
     alias: 'release-1',
     unitType: 'hour',

@@ -13,7 +13,7 @@
  * - scope (optional):              Scope of the extended data can be either 'public' or 'private'.
  *                                  Default value: 'public'.
  *                                  Note: listing doesn't support 'protected' scope atm.
- * - includeForProcessAliases:      An array of transaction process aliases, for which the extended
+ * - includeForTransactionTypes:    An array of transaction types, for which the extended
  *                                  data is relevant and should be added.
  * - schemaType (optional):         Schema for this extended data field.
  *                                  This is relevant when rendering components and querying listings.
@@ -50,9 +50,11 @@ export const listingExtendedData = [
   {
     key: 'category',
     scope: 'public',
-    includeForProcessAliases: [
-      'flex-product-default-process/release-1',
-      'flex-booking-default-process/release-1',
+    includeForTransactionTypes: [
+      'product-selling',
+      'daily-booking',
+      'nightly-booking',
+      'hourly-booking',
     ],
     schemaType: 'enum',
     schemaOptions: [
@@ -82,9 +84,11 @@ export const listingExtendedData = [
   {
     key: 'tire-size',
     scope: 'public',
-    includeForProcessAliases: [
-      'flex-product-default-process/release-1',
-      'flex-booking-default-process/release-1',
+    includeForTransactionTypes: [
+      'product-selling',
+      'daily-booking',
+      'nightly-booking',
+      'hourly-booking',
     ],
     schemaType: 'enum',
     schemaOptions: [
@@ -115,9 +119,11 @@ export const listingExtendedData = [
   {
     key: 'brand',
     scope: 'public',
-    includeForProcessAliases: [
-      'flex-product-default-process/release-1',
-      'flex-booking-default-process/release-1',
+    includeForTransactionTypes: [
+      'product-selling',
+      'daily-booking',
+      'nightly-booking',
+      'hourly-booking',
     ],
     schemaType: 'enum',
     schemaOptions: [
@@ -149,9 +155,11 @@ export const listingExtendedData = [
   {
     key: 'equipped-with',
     scope: 'public',
-    includeForProcessAliases: [
-      'flex-product-default-process/release-1',
-      'flex-booking-default-process/release-1',
+    includeForTransactionTypes: [
+      'product-selling',
+      'daily-booking',
+      'nightly-booking',
+      'hourly-booking',
     ],
     schemaType: 'multi-enum',
     schemaOptions: [
@@ -179,7 +187,7 @@ export const listingExtendedData = [
   {
     key: 'extra-note',
     scope: 'public',
-    includeForProcessAliases: ['flex-product-default-process/release-1'],
+    includeForTransactionTypes: ['product-selling'],
     schemaType: 'text',
     listingPageConfig: {
       label: 'Extra notes',
@@ -192,7 +200,7 @@ export const listingExtendedData = [
   {
     key: 'private-note',
     scope: 'private',
-    includeForProcessAliases: ['flex-booking-default-process/release-1'],
+    includeForTransactionTypes: ['daily-booking'],
     schemaType: 'text',
     editListingPageConfig: {
       label: 'Private notes',

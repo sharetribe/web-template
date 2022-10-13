@@ -255,7 +255,7 @@ export class SearchPageComponent extends Component {
     const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
-    const activeProcesses = config?.transaction?.transactionTypes.map(config => config.process);
+    const activeTransactionTypes = config?.transaction?.transactionTypes.map(config => config.type);
     const marketplaceCurrency = config.currency;
 
     // Page transition might initially use values from previous search
@@ -287,7 +287,7 @@ export class SearchPageComponent extends Component {
       : defaultFiltersConfig;
     const [customPrimaryFilters, customSecondaryFilters] = groupExtendedDataConfigs(
       listingExtendedDataConfig,
-      activeProcesses
+      activeTransactionTypes
     );
     const availablePrimaryFilters = [...customPrimaryFilters, ...defaultFilters];
     const availableFilters = [
@@ -563,7 +563,6 @@ SearchPageComponent.propTypes = {
   searchListingsError: propTypes.error,
   searchParams: object,
   tab: oneOf(['filters', 'listings', 'map']).isRequired,
-  activeProcesses: array,
 
   // from useHistory
   history: shape({

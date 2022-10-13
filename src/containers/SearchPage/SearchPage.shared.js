@@ -335,19 +335,19 @@ export const searchParamsPicker = (
  * @param {*} activeProcesses select configs that are marked only for these active processes
  * @returns Array of grouped arrays. First subarray contains primary configs and the second contains secondary configs.
  */
-export const groupExtendedDataConfigs = (configs, activeProcesses) =>
+export const groupExtendedDataConfigs = (configs, activeTransactionTypes) =>
   configs.reduce(
     (grouped, config) => {
       const [primary, secondary] = grouped;
-      const { includeForProcessAliases, indexForSearch, searchPageConfig } = config;
+      const { includeForTransactionTypes, indexForSearch, searchPageConfig } = config;
       const isIndexed = indexForSearch === true;
-      const isActiveProcess = includeForProcessAliases.every(p =>
-        activeProcesses.includes(p.split('/')[0])
+      const isActiveTransactionTypes = includeForTransactionTypes.every(tt =>
+        activeTransactionTypes.includes(tt)
       );
       const isPrimary = searchPageConfig?.group === 'primary';
-      return isActiveProcess && isIndexed && isPrimary
+      return isActiveTransactionTypes && isIndexed && isPrimary
         ? [[...primary, config], secondary]
-        : isActiveProcess && isIndexed
+        : isActiveTransactionTypes && isIndexed
         ? [primary, [...secondary, config]]
         : grouped;
     },

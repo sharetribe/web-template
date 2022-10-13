@@ -19,7 +19,7 @@ const listingExtendedDataConfig = [
   {
     key: 'category',
     scope: 'public',
-    includeForProcessAliases: ['flex-product-default-process/release-1'],
+    includeForTransactionTypes: ['sell-bicycles'],
     schemaType: 'enum',
     schemaOptions: [
       { option: 'men', label: 'Men' },
@@ -35,7 +35,7 @@ const listingExtendedDataConfig = [
   {
     key: 'param1',
     scope: 'public',
-    includeForProcessAliases: ['flex-product-default-process/release-1'],
+    includeForTransactionTypes: ['sell-bicycles'],
     schemaType: 'enum',
     schemaOptions: [{ option: 'smoke', label: 'Smoke' }, { option: 'wood', label: 'Wood' }],
     indexForSearch: true,
@@ -47,7 +47,11 @@ const listingExtendedDataConfig = [
   {
     key: 'amenities',
     scope: 'public',
-    includeForProcessAliases: ['flex-booking-default-process/release-1'],
+    includeForTransactionTypes: [
+      'rent-bicycles-daily',
+      'rent-bicycles-nightly',
+      'rent-bicycles-hourly',
+    ],
     schemaType: 'multi-enum',
     schemaOptions: [
       { option: 'towels', label: 'Towels' },
@@ -526,10 +530,15 @@ describe('SearchPage.helpers', () => {
 
   describe('groupExtendedDataConfigs', () => {
     it('returns grouped configs for the extended data of the listinga', () => {
-      const activeProcesses = ['flex-product-default-process', 'flex-booking-default-process'];
+      const activeTransactionTypes = [
+        'sell-bicycles',
+        'rent-bicycles-daily',
+        'rent-bicycles-nightly',
+        'rent-bicycles-hourly',
+      ];
       const [primary, secondary] = groupExtendedDataConfigs(
         listingExtendedDataConfig,
-        activeProcesses
+        activeTransactionTypes
       );
       expect(primary).toEqual([listingExtendedDataConfig[0]]);
       expect(secondary).toEqual([listingExtendedDataConfig[1], listingExtendedDataConfig[2]]);
