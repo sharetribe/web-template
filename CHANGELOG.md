@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] change ListingExtendedData config includeForProcessAliases to includeForTransactionTypes
+  and remove isBookingUnitType in favor of isBookingProcessAlias.
+  [#56](https://github.com/sharetribe/ftw-x/pull/56)
 - [fix] Bug fixes and refactoring: AuthenticationPage/EmailVerificationInfo.js had bugs,
   StripeConnectAccountInfo caused warnings. [#55](https://github.com/sharetribe/ftw-x/pull/55)
 - [fix] ListingPage: the title of section details should not be visible if no details is set.

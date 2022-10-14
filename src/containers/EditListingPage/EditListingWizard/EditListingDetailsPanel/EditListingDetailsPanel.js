@@ -5,7 +5,7 @@ import classNames from 'classnames';
 // Import util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { EXTENDED_DATA_SCHEMA_TYPES, LISTING_STATE_DRAFT } from '../../../../util/types';
-import { isBookingUnitType } from '../../../../util/transaction';
+import { isBookingProcessAlias } from '../../../../util/transaction';
 
 // Import shared components
 import { ListingLink } from '../../../../components';
@@ -80,32 +80,32 @@ const hasSetTransactionType = publicData => {
  *
  * @param {Object} data values to look through against listingConfig.js and util/configHelpers.js
  * @param {String} targetScope Check that the scope of extended data the config matches
- * @param {String} targetProcessAlias Check that the extended data is relevant for this process alias.
+ * @param {String} targetTransactionType Check that the extended data is relevant for this transaction type.
  * @param {boolean} clearExtraCustomFields If true, returns also custom extended data fields with null values
  * @returns Array of picked extended data fields
  */
 const pickCustomExtendedDataFields = (
   data,
   targetScope,
-  targetProcessAlias,
+  targetTransactionType,
   extendedDataConfigs,
   clearExtraCustomFields = false
 ) => {
   return extendedDataConfigs.reduce((fields, extendedDataConfig) => {
-    const { key, includeForProcessAliases = [], scope = 'public', schemaType } =
+    const { key, includeForTransactionTypes = [], scope = 'public', schemaType } =
       extendedDataConfig || {};
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
-    const isTargetProcessAlias = includeForProcessAliases.includes(targetProcessAlias);
+    const isTargetTransactionType = includeForTransactionTypes.includes(targetTransactionType);
 
-    if (isKnownSchemaType && isTargetScope && isTargetProcessAlias) {
+    if (isKnownSchemaType && isTargetScope && isTargetTransactionType) {
       const fieldValue = data[key] || null;
       return { ...fields, [key]: fieldValue };
     } else if (
       isKnownSchemaType &&
       isTargetScope &&
-      !isTargetProcessAlias &&
+      !isTargetTransactionType &&
       clearExtraCustomFields
     ) {
       return { ...fields, [key]: null };
@@ -121,8 +121,8 @@ const pickCustomExtendedDataFields = (
  * @param {string} unitType selected for this listing
  * @returns availabilityPlan for product listing
  */
-const setNoAvailabilityForProductListings = unitType => {
-  return isBookingUnitType(unitType)
+const setNoAvailabilityForProductListings = processAlias => {
+  return isBookingProcessAlias(processAlias)
     ? {}
     : {
         availabilityPlan: {
@@ -160,7 +160,7 @@ const getInitialValues = (
   listingExtendedDataConfig
 ) => {
   const { description, title, publicData, privateData } = props?.listing?.attributes || {};
-  const { transactionProcessAlias } = publicData;
+  const { transactionType } = publicData;
 
   // Initial values for the form
   return {
@@ -171,13 +171,13 @@ const getInitialValues = (
     ...pickCustomExtendedDataFields(
       publicData,
       'public',
-      transactionProcessAlias,
+      transactionType,
       listingExtendedDataConfig
     ),
     ...pickCustomExtendedDataFields(
       privateData,
       'private',
-      transactionProcessAlias,
+      transactionType,
       listingExtendedDataConfig
     ),
   };
@@ -216,7 +216,7 @@ const EditListingDetailsPanel = props => {
     listingExtendedDataConfig
   );
 
-  const noTransactionTypesSet = transactionTypes.length > 0;
+  const noTransactionTypesSet = transactionTypes?.length > 0;
   const canShowEditListingDetailsForm =
     noTransactionTypesSet && (!hasExistingTransactionType || hasValidExistingTransactionType);
   const isPublished = listing?.id && state !== LISTING_STATE_DRAFT;
@@ -262,7 +262,7 @@ const EditListingDetailsPanel = props => {
                 ...pickCustomExtendedDataFields(
                   rest,
                   'public',
-                  transactionProcessAlias,
+                  transactionType,
                   listingExtendedDataConfig,
                   clearUnrelatedCustomFields
                 ),
@@ -270,11 +270,11 @@ const EditListingDetailsPanel = props => {
               privateData: pickCustomExtendedDataFields(
                 rest,
                 'private',
-                transactionProcessAlias,
+                transactionType,
                 listingExtendedDataConfig,
                 clearUnrelatedCustomFields
               ),
-              ...setNoAvailabilityForProductListings(unitType),
+              ...setNoAvailabilityForProductListings(transactionProcessAlias),
             };
 
             onSubmit(updateValues);
@@ -296,7 +296,7 @@ const EditListingDetailsPanel = props => {
       ) : (
         <ErrorMessage
           marketplaceName={config.marketplaceName}
-          noTransactionTypeSet={noTransactionTypeSet}
+          noTransactionTypeSet={noTransactionTypesSet}
           invalidExistingTransactionType={!hasValidExistingTransactionType}
         />
       )}
