@@ -266,7 +266,10 @@ export class TransactionPanelComponent extends Component {
             )}
 
             {stateData.showActionButtons ? (
-              <div className={css.mobileActionButtons}>{actionButtons}</div>
+              <>
+                <div className={css.mobileActionButtonSpacer}></div>
+                <div className={css.mobileActionButtons}>{actionButtons}</div>
+              </>
             ) : null}
           </div>
 

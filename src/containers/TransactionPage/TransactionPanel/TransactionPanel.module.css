@@ -492,6 +492,13 @@
     display: none;
   }
 }
+.mobileActionButtonSpacer {
+  width: 100%;
+  height: 120px;
+  @media (--viewportLarge) {
+    display: none;
+  }
+}
 
 .desktopActionButtons {
   display: none;

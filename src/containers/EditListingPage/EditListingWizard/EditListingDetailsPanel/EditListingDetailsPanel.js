@@ -216,7 +216,7 @@ const EditListingDetailsPanel = props => {
     listingExtendedDataConfig
   );
 
-  const noTransactionTypesSet = transactionTypes.length > 0;
+  const noTransactionTypesSet = transactionTypes?.length > 0;
   const canShowEditListingDetailsForm =
     noTransactionTypesSet && (!hasExistingTransactionType || hasValidExistingTransactionType);
   const isPublished = listing?.id && state !== LISTING_STATE_DRAFT;
@@ -296,7 +296,7 @@ const EditListingDetailsPanel = props => {
       ) : (
         <ErrorMessage
           marketplaceName={config.marketplaceName}
-          noTransactionTypeSet={noTransactionTypeSet}
+          noTransactionTypeSet={noTransactionTypesSet}
           invalidExistingTransactionType={!hasValidExistingTransactionType}
         />
       )}
