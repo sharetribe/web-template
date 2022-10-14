@@ -23,7 +23,7 @@ import {
   createSlug,
 } from '../../../util/urlHelpers';
 import { createResourceLocatorString, findRouteByRouteName } from '../../../util/routes';
-import { isBookingUnitType } from '../../../util/transaction';
+import { isBookingProcessAlias } from '../../../util/transaction';
 
 import {
   AspectRatioWrapper,
@@ -302,7 +302,9 @@ export const ManageListingCardComponent = props => {
   const isClosed = state === LISTING_STATE_CLOSED;
   const isDraft = state === LISTING_STATE_DRAFT;
 
-  const isBookable = isBookingUnitType(listing?.attributes?.publicData?.unitType);
+  const isBookable = isBookingProcessAlias(
+    listing?.attributes?.publicData?.transactionProcessAlias
+  );
 
   const currentStock = currentListing.currentStock?.attributes?.quantity;
   const isOutOfStock = currentStock === 0;

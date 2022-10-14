@@ -11,7 +11,7 @@ import { formatMoney } from '../../util/currency';
 import { ensureListing, ensureUser } from '../../util/data';
 import { richText } from '../../util/richText';
 import { createSlug } from '../../util/urlHelpers';
-import { isBookingUnitType } from '../../util/transaction';
+import { isBookingProcessAlias } from '../../util/transaction';
 
 import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '../../components';
 
@@ -100,7 +100,7 @@ export const ListingCardComponent = props => {
           <div className={css.priceValue} title={priceTitle}>
             {formattedPrice}
           </div>
-          {isBookingUnitType(publicData?.unitType) ? (
+          {isBookingProcessAlias(publicData?.transactionProcessAlias) ? (
             <div className={css.perUnit}>
               <FormattedMessage
                 id="ListingCard.perUnit"

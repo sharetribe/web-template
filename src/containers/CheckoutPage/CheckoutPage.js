@@ -34,7 +34,7 @@ import {
   transactionInitiateOrderStripeErrors,
 } from '../../util/errors';
 import { formatMoney } from '../../util/currency';
-import { getProcess, isBookingUnitType } from '../../util/transaction';
+import { getProcess, isBookingProcessAlias } from '../../util/transaction';
 
 // Import global thunk functions
 import { isScrollingDisabled } from '../../ducks/UI.duck';
@@ -764,6 +764,7 @@ export class CheckoutPageComponent extends Component {
     // (i.e. have an id and lineItems)
     const tx = existingTransaction.booking ? existingTransaction : speculatedTransaction;
     const timeZone = listing?.attributes?.availabilityPlan?.timezone;
+    const transactionProcessAlias = currentListing.attributes.publicData?.transactionProcessAlias;
     const unitType = currentListing.attributes.publicData?.unitType;
     const lineItemUnitType = `line-item/${unitType}`;
     const dateType = lineItemUnitType === LINE_ITEM_HOUR ? DATE_TYPE_DATETIME : DATE_TYPE_DATE;
@@ -922,7 +923,7 @@ export class CheckoutPageComponent extends Component {
                   locale={config.localization.locale}
                   stripePublishableKey={config.stripe.publishableKey}
                   marketplaceName={config.marketplaceName}
-                  isBooking={isBookingUnitType(unitType)}
+                  isBooking={isBookingProcessAlias(transactionProcessAlias)}
                   isFuzzyLocation={config.maps.enabled}
                 />
               ) : null}

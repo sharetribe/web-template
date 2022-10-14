@@ -5,7 +5,7 @@ import classNames from 'classnames';
 // Import util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { EXTENDED_DATA_SCHEMA_TYPES, LISTING_STATE_DRAFT } from '../../../../util/types';
-import { isBookingUnitType } from '../../../../util/transaction';
+import { isBookingProcessAlias } from '../../../../util/transaction';
 
 // Import shared components
 import { ListingLink } from '../../../../components';
@@ -121,8 +121,8 @@ const pickCustomExtendedDataFields = (
  * @param {string} unitType selected for this listing
  * @returns availabilityPlan for product listing
  */
-const setNoAvailabilityForProductListings = unitType => {
-  return isBookingUnitType(unitType)
+const setNoAvailabilityForProductListings = processAlias => {
+  return isBookingProcessAlias(processAlias)
     ? {}
     : {
         availabilityPlan: {
@@ -274,7 +274,7 @@ const EditListingDetailsPanel = props => {
                 listingExtendedDataConfig,
                 clearUnrelatedCustomFields
               ),
-              ...setNoAvailabilityForProductListings(unitType),
+              ...setNoAvailabilityForProductListings(transactionProcessAlias),
             };
 
             onSubmit(updateValues);
