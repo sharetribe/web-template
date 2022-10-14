@@ -1,0 +1,18 @@
+
+<html>
+  <body>
+    {{#with transaction}}
+    <h1>Order for {{listing.title}} has expired</h1>
+
+    {{#eq "shipping" protected-data.deliveryMethod}}
+    <p>Unfortunately the order for {{listing.title}} from {{customer.display-name}} was not marked as shipped within two weeks from the order and was therefore automatically canceled.</p>
+    {{else}}
+    <p>Unfortunately the order for {{listing.title}} from {{customer.display-name}} was not marked as delivered within two weeks from the order and was therefore automatically canceled.</p>
+    {{/eq}}
+    {{/with}}
+
+    <hr />
+
+    <p>You have received this email notification because you are a member of {{marketplace.name}}. If you no longer wish to receive these emails, please contact {{marketplace.name}} team.</p>
+  </body>
+</html>

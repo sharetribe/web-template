@@ -1,0 +1,18 @@
+
+<html>
+  <body>
+    {{#with transaction}}
+    <h1>Your order was canceled</h1>
+
+    <p>Unfortunately the marketplace admin has decided to cancel your order for {{listing.title}} from {{provider.display-name}}. You will be refunded fully.</p>
+
+    <p>If you have any questions, please contact the marketplace admin.</p>
+
+    <p><a href="{{marketplace.url}}/order/{{url-encode id}}/details">Order details</a></p>
+    {{/with}}
+
+    <hr />
+
+    <p>You have received this email notification because you are a member of {{marketplace.name}}. If you no longer wish to receive these emails, please contact {{marketplace.name}} team.</p>
+  </body>
+</html>

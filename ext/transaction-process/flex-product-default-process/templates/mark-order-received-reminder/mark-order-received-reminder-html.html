@@ -1,0 +1,18 @@
+
+<html>
+  <body>
+    {{#with transaction}}
+    <h1>Remember to mark your order as received</h1>
+
+    <p>Have you received your order for {{listing.title}}? Remember to mark the item as received on the order details page. This way we can release your payment to {{provider.display-name}}.</p>
+    {{/with}}
+
+    <p>The order will be marked automatically as completed in two days.</p>
+
+    <p>If you have not received your order, please contact {{provider.display-name}} on the order details page or the marketplace admin.</p>
+
+    <hr />
+
+    <p>You have received this email notification because you are a member of {{marketplace.name}}. If you no longer wish to receive these emails, please contact {{marketplace.name}} team.</p>
+  </body>
+</html>

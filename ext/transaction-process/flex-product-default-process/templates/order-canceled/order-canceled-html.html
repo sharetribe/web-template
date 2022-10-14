@@ -1,0 +1,20 @@
+
+{{~#*inline "format-money"~}}
+{{money-amount money}} {{money.currency}}
+{{~/inline~}}
+
+<html>
+  <body>
+    {{#with transaction}}
+    <h1>Order for {{listing.title}} was canceled</h1>
+
+    <p>Unfortunately the marketplace admin has canceled the order for {{listing.title}} from {{customer.display-name}}.</p>
+
+    <p>If you have any questions, please contact the marketplace admin.</p>
+    {{/with}}
+
+    <hr />
+
+    <p>You have received this email notification because you are a member of {{marketplace.name}}. If you no longer wish to receive these emails, please contact {{marketplace.name}} team.</p>
+  </body>
+</html>

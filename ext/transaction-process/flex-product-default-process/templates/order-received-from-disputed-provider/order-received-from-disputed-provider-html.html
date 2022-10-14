@@ -1,0 +1,75 @@
+
+{{~#*inline "format-money"~}}
+{{money-amount money}} {{money.currency}}
+{{~/inline~}}
+
+<html>
+  <body>
+    {{#with transaction}}
+    <h1>Disputed order for {{listing.title}} was marked as received</h1>
+
+    <p>The disputed order by {{customer.display-name}} for {{listing.title}} was marked as received by the marketplace admin.</p>
+
+    <p>We have sent you {{> format-money money=payout-total}} for the payment for {{listing.title}}. It might take up to seven days for the money to reach your bank account. Here is the breakdown.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align: left;">Payment</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#each tx-line-items}}
+        {{#contains include-for "provider"}}
+          {{#eq "line-item/units" code}}
+            <tr>
+              <td>Unit price</td>
+              <td style="text-align: right; padding-left: 20px">{{> format-money money=unit-price}}</td>
+            </tr>
+            <tr>
+              <td>Quantity</td>
+              <td style="text-align: right; padding-left: 20px">&times; {{number quantity}}</td>
+            </tr>
+            <tr>
+              <th style="text-align: left;">Subtotal</th>
+              <th style="text-align: right; padding-left: 20px">{{> format-money money=line-total}}</th>
+            </tr>
+          {{/eq}}
+
+          {{#eq "line-item/shipping-fee" code}}
+            <tr>
+              <td>Shipping</td>
+              <td style="text-align: right; padding-left: 20px">{{> format-money money=unit-price}}</td>
+            </tr>
+          {{/eq}}
+
+          {{#eq "line-item/pickup-fee" code}}
+            <tr>
+              <td>Pickup</td>
+              <td style="text-align: right; padding-left: 20px">{{> format-money money=unit-price}}</td>
+            </tr>
+          {{/eq}}
+
+          {{#eq "line-item/provider-commission" code}}
+            <tr>
+              <td>{{marketplace.name}} fee</td>
+              <td style="text-align: right; padding-left: 20px;">{{> format-money money=line-total}}</td>
+            </tr>
+          {{/eq}}
+        {{/contains}}
+      {{/each}}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th style="text-align: left;">You earn</th>
+          <th style="text-align: left; padding-left: 20px;">{{> format-money money=payout-total}}</th>
+        </tr>
+      </tfoot>
+    </table>
+    {{/with}}
+
+    <hr />
+
+    <p>You have received this email notification because you are a member of {{marketplace.name}}. If you no longer wish to receive these emails, please contact {{marketplace.name}} team.</p>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+
+<html>
+  <body>
+    {{#with transaction}}
+    <h1>Your order has expired</h1>
+
+    {{#eq "shipping" protected-data.deliveryMethod}}
+    <p>Unfortunately your order for {{listing.title}} was canceled as {{provider.display-name}} did not ship the item on time. You will be refunded fully.</p>
+    {{else}}
+    <p>Unfortunately your order for {{listing.title}} was canceled as {{provider.display-name}} did not deliver the item on time. You will be refunded fully.</p>
+    {{/eq}}
+
+    <p><a href="{{marketplace.url}}/order/{{url-encode id}}/details">Order details</a></p>
+    {{/with}}
+
+    <hr />
+
+    <p>You have received this email notification because you are a member of {{marketplace.name}}. If you no longer wish to receive these emails, please contact {{marketplace.name}} team.</p>
+  </body>
+</html>
