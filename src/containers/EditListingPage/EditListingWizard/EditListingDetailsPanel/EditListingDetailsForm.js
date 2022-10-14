@@ -48,9 +48,9 @@ const FieldHidden = props => {
 
 // Field component that either allows selecting transaction type (if multiple types are available)
 // or just renders hidden fields:
-// - transactionType
-// - transactionProcessAlias
-// - unitType
+// - transactionType          Set of predefined configurations for each transaction type
+// - transactionProcessAlias  Initiate correct transaction against Marketplace API
+// - unitType                 Main use case: pricing unit
 const FieldSelectTransactionType = props => {
   const {
     name,
