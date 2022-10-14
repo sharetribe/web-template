@@ -143,17 +143,24 @@ const validKey = (key, allKeys) => {
   return [isUniqueKey, { key }];
 };
 
-const validProcessAliases = (includeForProcessAliases, processAliasesInUse) => {
-  const isUndefined = typeof includeForProcessAliases === 'undefined';
-  const isArray = Array.isArray(includeForProcessAliases);
-  const validatedProcessAliases = isArray
-    ? includeForProcessAliases.filter(pa => processAliasesInUse.includes(pa))
+const validTransactionTypesForListingConfig = (
+  includeForTransactionTypes,
+  transactionTypesInUse
+) => {
+  const isUndefined = typeof includeForTransactionTypes === 'undefined';
+  const isArray = Array.isArray(includeForTransactionTypes);
+  const validatedTransactionTypes = isArray
+    ? includeForTransactionTypes.filter(pa => transactionTypesInUse.includes(pa))
     : [];
 
-  const hasValidProcessAliases = validatedProcessAliases.length >= 0;
-  const isValid = hasValidProcessAliases || isUndefined;
-  const validValue = hasValidProcessAliases ? validatedProcessAliases : processAliasesInUse;
-  return [isValid, { includeForProcessAliases: validValue }];
+  const hasValidTransactionTypes = validatedTransactionTypes.length > 0;
+  const isValid = hasValidTransactionTypes || isUndefined;
+  const validValue = hasValidTransactionTypes
+    ? validatedTransactionTypes
+    : isUndefined
+    ? transactionTypesInUse
+    : [];
+  return [isValid, { includeForTransactionTypes: validValue }];
 };
 
 const isStringType = str => typeof str === 'string';
@@ -278,7 +285,7 @@ const validEditListingPageConfig = config => {
   return [isValid, validValue];
 };
 
-const validListingExtendedData = (listingExtendedData, processAliasesInUse) => {
+const validListingExtendedData = (listingExtendedData, transactionTypesInUse) => {
   const keys = listingExtendedData.map(d => d.key);
   const scopeOptions = ['public', 'private'];
   const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean'];
@@ -296,8 +303,8 @@ const validListingExtendedData = (listingExtendedData, processAliasesInUse) => {
             ? validKey(value, keys)
             : name === 'scope'
             ? validEnumString('scope', value, scopeOptions, 'public')
-            : name === 'includeForProcessAliases'
-            ? validProcessAliases(value, processAliasesInUse)
+            : name === 'includeForTransactionTypes'
+            ? validTransactionTypesForListingConfig(value, transactionTypesInUse)
             : name === 'schemaType'
             ? validEnumString('schemaType', value, validSchemaTypes)
             : name === 'schemaOptions'
@@ -327,14 +334,14 @@ const validListingExtendedData = (listingExtendedData, processAliasesInUse) => {
   }, []);
 };
 
-const getProcessAliasesInUse = transactionTypes => {
-  return transactionTypes.map(tt => `${tt.process}/${tt.alias}`);
+const getTransactionTypeStringsInUse = transactionTypes => {
+  return transactionTypes.map(tt => `${tt.type}`);
 };
 const validListingConfig = (config, transactionTypes) => {
   const listingExtendedData = config?.listingExtendedData || [];
-  const processAliasesInUse = getProcessAliasesInUse(transactionTypes);
+  const transactionTypesInUse = getTransactionTypeStringsInUse(transactionTypes);
   return {
-    listingExtendedData: validListingExtendedData(listingExtendedData, processAliasesInUse),
+    listingExtendedData: validListingExtendedData(listingExtendedData, transactionTypesInUse),
   };
 };
 

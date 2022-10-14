@@ -241,6 +241,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of order 1`] = `
                 "now": [Function],
               }
             }
+            isBooking={false}
             stateData={
               Object {
                 "processName": "flex-product-default-process",
@@ -402,6 +403,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of order 1`] = `
                 "now": [Function],
               }
             }
+            isBooking={false}
             stateData={
               Object {
                 "processName": "flex-product-default-process",
@@ -654,6 +656,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of sales 1`] = `
                 "now": [Function],
               }
             }
+            isBooking={false}
             stateData={
               Object {
                 "actionNeeded": true,
@@ -817,6 +820,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of sales 1`] = `
                 "now": [Function],
               }
             }
+            isBooking={false}
             stateData={
               Object {
                 "actionNeeded": true,

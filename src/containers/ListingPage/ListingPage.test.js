@@ -35,7 +35,7 @@ const listingConfig = {
     {
       key: 'category',
       scope: 'public',
-      includeForProcessAliases: ['flex-product-default-process/release-1'],
+      includeForTransactionTypes: ['sell-bicycles'],
       schemaType: 'enum',
       schemaOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
       indexForSearch: true,
@@ -47,7 +47,11 @@ const listingConfig = {
     {
       key: 'amenities',
       scope: 'public',
-      includeForProcessAliases: ['flex-booking-default-process/release-1'],
+      includeForTransactionTypes: [
+        'rent-bicycles-daily',
+        'rent-bicycles-nightly',
+        'rent-bicycles-hourly',
+      ],
       schemaType: 'multi-enum',
       schemaOptions: [
         { option: 'feat_1', label: 'Feat 1' },

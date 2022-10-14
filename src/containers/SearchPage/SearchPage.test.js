@@ -5,11 +5,38 @@ import { SearchPageComponent } from './SearchPageWithList';
 
 const noop = () => null;
 
+const transactionTypes = [
+  {
+    type: 'rent-bicycles-daily',
+    process: 'flex-booking-default-process',
+    alias: 'release-1',
+    unitType: 'day',
+  },
+  {
+    type: 'rent-bicycles-nightly',
+    process: 'flex-booking-default-process',
+    alias: 'release-1',
+    unitType: 'night',
+  },
+  {
+    type: 'rent-bicycles-hourly',
+    process: 'flex-booking-default-process',
+    alias: 'release-1',
+    unitType: 'hour',
+  },
+  {
+    type: 'sell-bicycles',
+    process: 'flex-product-default-process',
+    alias: 'release-1',
+    unitType: 'item',
+  },
+];
+
 const listingExtendedDataConfig = [
   {
     key: 'category',
     scope: 'public',
-    includeForProcessAliases: ['flex-product-default-process/release-1'],
+    includeForTransactionTypes: ['sell-bicycles'],
     schemaType: 'enum',
     schemaOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     indexForSearch: true,
@@ -27,7 +54,11 @@ const listingExtendedDataConfig = [
   {
     key: 'amenities',
     scope: 'public',
-    includeForProcessAliases: ['flex-booking-default-process/release-1'],
+    includeForTransactionTypes: [
+      'rent-bicycles-daily',
+      'rent-bicycles-nightly',
+      'rent-bicycles-hourly',
+    ],
     schemaType: 'multi-enum',
     schemaOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
     indexForSearch: true,
@@ -112,20 +143,7 @@ describe('SearchPageWithList', () => {
           sortConfig: sortConfig,
         },
         transaction: {
-          transactionTypes: [
-            {
-              type: 'rent-bicycles',
-              process: 'flex-booking-default-process',
-              alias: 'release-1',
-              unitType: 'dapy',
-            },
-            {
-              type: 'sell-bicycles',
-              process: 'flex-product-default-process',
-              alias: 'release-1',
-              unitType: 'item',
-            },
-          ],
+          transactionTypes,
         },
         maps: {
           search: {

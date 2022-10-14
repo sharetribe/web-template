@@ -16,7 +16,7 @@ const listingExtendedDataConfig = [
   {
     key: 'category',
     scope: 'public',
-    includeForProcessAliases: ['flex-product-default-process/release-1'],
+    includeForTransactionTypes: ['sell-bicycles'],
     schemaType: 'enum',
     schemaOptions: [
       { option: 'men', label: 'Men' },
@@ -38,7 +38,11 @@ const listingExtendedDataConfig = [
   {
     key: 'amenities',
     scope: 'public',
-    includeForProcessAliases: ['flex-booking-default-process/release-1'],
+    includeForTransactionTypes: [
+      'rent-bicycles-daily',
+      'rent-bicycles-nightly',
+      'rent-bicycles-hourly',
+    ],
     schemaType: 'multi-enum',
     schemaOptions: [
       { option: 'towels', label: 'Towels' },

@@ -17,7 +17,7 @@ import {
   LISTING_UNIT_TYPES,
 } from '../../util/types';
 import { subtractTime } from '../../util/dates';
-import { resolveLatestProcessName, getProcess, isBookingUnitType } from '../../util/transaction';
+import { resolveLatestProcessName, getProcess, isBookingProcess } from '../../util/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
@@ -52,9 +52,6 @@ const getUnitLineItem = lineItems => {
   );
   return unitLineItem;
 };
-
-// Get unitType from line-item code (e.g. code: "line-item/<unitType>")
-const getUnitType = unitLineItem => unitLineItem?.code?.split('/')[1];
 
 // Booking data (start & end) are bit different depending on display times and
 // if "end" refers to last day booked or the first exclusive day
@@ -115,7 +112,7 @@ BookingTimeInfoMaybe.propTypes = {
 };
 
 export const InboxItem = props => {
-  const { transactionRole, tx, intl, stateData, showStock = true } = props;
+  const { transactionRole, tx, intl, stateData, isBooking, showStock = true } = props;
   const { customer, provider, listing } = tx;
   const { processName, processState, actionNeeded, isSaleNotification, isFinal } = stateData;
   const isCustomer = transactionRole === TX_TRANSITION_ACTOR_CUSTOMER;
@@ -123,7 +120,6 @@ export const InboxItem = props => {
   const lineItems = tx.attributes?.lineItems;
   const hasPricingData = lineItems.length > 0;
   const unitLineItem = getUnitLineItem(lineItems);
-  const isBooking = isBookingUnitType(getUnitType(unitLineItem));
   const quantity = hasPricingData && !isBooking ? unitLineItem.quantity.toString() : null;
 
   const otherUser = isCustomer ? provider : customer;
@@ -208,16 +204,20 @@ export const InboxPageComponent = props => {
   const ordersTitle = intl.formatMessage({ id: 'InboxPage.ordersTitle' });
   const salesTitle = intl.formatMessage({ id: 'InboxPage.salesTitle' });
   const title = isOrders ? ordersTitle : salesTitle;
-  const showStock = transactionType => {
-    const transactionTypeConfig = config.transaction?.transactionTypes?.find(
-      conf => conf.type === transactionType
-    );
-    return transactionTypeConfig?.showStock;
-  };
 
+  const pickType = tt => conf => `${conf.process}/${conf.alias}` === tt;
+  const findTransactionTypeConfig = processAlias => {
+    const transactionTypeConfigs = config.transaction?.transactionTypes;
+    return transactionTypeConfigs?.find(pickType(processAlias));
+  };
   const toTxItem = tx => {
     const transactionRole = isOrders ? TX_TRANSITION_ACTOR_CUSTOMER : TX_TRANSITION_ACTOR_PROVIDER;
     const stateData = getStateData({ transaction: tx, transactionRole, intl });
+
+    const transactionProcessAlias = tx?.listing?.attributes?.publicData?.transactionProcessAlias;
+    const foundTransactionTypeConfig = findTransactionTypeConfig(transactionProcessAlias);
+    const { process, showStock } = foundTransactionTypeConfig || {};
+    const isBooking = isBookingProcess(process);
 
     // Render InboxItem only if the latest transition of the transaction is handled in the `txState` function.
     return stateData ? (
@@ -227,7 +227,8 @@ export const InboxPageComponent = props => {
           tx={tx}
           intl={intl}
           stateData={stateData}
-          showStock={showStock(tx?.listing?.attributes?.publicData?.transactionType)}
+          showStock={showStock}
+          isBooking={isBooking}
         />
       </li>
     ) : null;

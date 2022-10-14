@@ -244,22 +244,24 @@ export const getAllTransitionsForEveryProcess = () => {
 };
 
 /**
- * Check if the unitType is for bookings
- *
- * @param {String} unitType
- */
-export const isBookingUnitType = unitType => {
-  return [DAY, NIGHT, HOUR].includes(unitType);
-};
-
-/**
  * Check if the process is booking process
  *
  * @param {String} processName
  */
 export const isBookingProcess = processName => {
-  const processInfo = PROCESSES.find(process => process.name === processName);
-  return isBookingUnitType(processInfo.unitTypes[0]);
+  const latestProcessName = resolveLatestProcessName(processName);
+  const processInfo = PROCESSES.find(process => process.name === latestProcessName);
+  return [BOOKING_PROCESS_NAME].includes(processInfo?.name);
+};
+
+/**
+ * Check if the process/alias points to a booking process
+ *
+ * @param {String} processAlias
+ */
+export const isBookingProcessAlias = processAlias => {
+  const processName = processAlias ? processAlias.split('/')[0] : null;
+  return processAlias ? isBookingProcess(processName) : false;
 };
 
 /**
