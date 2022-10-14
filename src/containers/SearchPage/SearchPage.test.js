@@ -29,7 +29,7 @@ const transactionTypes = [
     process: 'flex-product-default-process',
     alias: 'release-1',
     unitType: 'item',
-  },      
+  },
 ];
 
 const listingExtendedDataConfig = [
