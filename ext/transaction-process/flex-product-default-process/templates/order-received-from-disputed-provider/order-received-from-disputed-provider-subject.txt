@@ -1,0 +1,1 @@
+Disputed order for {{transaction.listing.title}} was marked as received

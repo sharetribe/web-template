@@ -1,0 +1,68 @@
+
+{{~#*inline "format-money"~}}
+{{money-amount money}} {{money.currency}}
+{{~/inline~}}
+
+<html>
+  <body>
+    {{#with transaction}}
+    <h1>Your receipt for {{listing.title}}</h1>
+
+    <p>Thank your for purchasing {{listing.title}} from {{provider.display-name}}!</p>
+
+    <p>We have how charged {{> format-money money=payin-total}} from your credit card. Here's your receipt.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align: left;">Payment</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#each tx-line-items}}
+        {{#contains include-for "customer"}}
+          {{#eq "line-item/units" code}}
+            <tr>
+              <td>Unit price</td>
+              <td style="text-align: right; padding-left: 20px">{{> format-money money=unit-price}}</td>
+            </tr>
+            <tr>
+              <td>Quantity</td>
+              <td style="text-align: right; padding-left: 20px">&times; {{number quantity}}</td>
+            </tr>
+            <tr>
+              <th style="text-align: left;">Subtotal</th>
+              <th style="text-align: right; padding-left: 20px">{{> format-money money=line-total}}</th>
+            </tr>
+          {{/eq}}
+
+          {{#eq "line-item/shipping-fee" code}}
+            <tr>
+              <td>Shipping</td>
+              <td style="text-align: right; padding-left: 20px">{{> format-money money=unit-price}}</td>
+            </tr>
+          {{/eq}}
+
+          {{#eq "line-item/pickup-fee" code}}
+            <tr>
+              <td>Pickup</td>
+              <td style="text-align: right; padding-left: 20px">{{> format-money money=unit-price}}</td>
+            </tr>
+          {{/eq}}
+        {{/contains}}
+      {{/each}}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th style="text-align: left;">Payment total</th>
+          <th style="text-align: left; padding-left: 20px;">{{> format-money money=payin-total}}</th>
+        </tr>
+      </tfoot>
+    </table>
+    {{/with}}
+
+    <hr />
+
+    <p>You have received this email notification because you are a member of {{marketplace.name}}. If you no longer wish to receive these emails, please contact {{marketplace.name}} team.</p>
+  </body>
+</html>

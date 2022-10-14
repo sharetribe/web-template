@@ -1,0 +1,17 @@
+
+<html>
+  <body>
+    {{#with transaction}}
+    <h1>Your disputed order for {{listing.title}} was marked as received</h1>
+
+    <p>Your disputed order for {{listing.title}} was marked as received by the marketplace admin.</p>
+
+    <p>If you have any questions, please contact the marketplace admin.</p>
+
+    {{/with}}
+
+    <hr />
+
+    <p>You have received this email notification because you are a member of {{marketplace.name}}. If you no longer wish to receive these emails, please contact {{marketplace.name}} team.</p>
+  </body>
+</html>

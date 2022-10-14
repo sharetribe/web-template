@@ -1,0 +1,1 @@
+{{transaction.customer.display-name}} marked their order as received
