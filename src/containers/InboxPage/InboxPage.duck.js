@@ -110,12 +110,7 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
       'payoutTotal',
       'lineItems',
     ],
-    'fields.listing': [
-      'title',
-      'availabilityPlan',
-      'publicData.transactionType',
-      'publicData.unitType',
-    ],
+    'fields.listing': ['title', 'availabilityPlan', 'publicData.transactionProcessAlias'],
     'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
     'fields.image': ['variants.square-small', 'variants.square-small2x'],
     page,
