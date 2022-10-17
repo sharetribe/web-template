@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "10.0.2",
+  "version": "10.0.3",
   "private": true,
   "license": "Apache-2.0",
   "dependencies": {
@@ -30,7 +30,7 @@
     "final-form-arrays": "^3.0.2",
     "full-icu": "^1.4.0",
     "helmet": "^4.6.0",
-    "jose": "4.8.1",
+    "jose": "4.9.2",
     "lodash": "^4.17.21",
     "mapbox-gl-multitouch": "^1.0.3",
     "moment": "^2.29.4",
