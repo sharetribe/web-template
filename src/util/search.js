@@ -84,7 +84,7 @@ export const isOriginInUse = config =>
  */
 export const isStockInUse = config => {
   const transactionTypes = config.transaction.transactionTypes;
-  const hasItems = !transactionTypes.find(conf => conf.unitType === 'item');
+  const hasItems = !!transactionTypes.find(conf => conf.unitType === 'item');
 
   // TODO: if there are multiple processes with both products and bookings,
   // sdk.listings.query needs more thinking on SearchPage. (bookings have stock=0)

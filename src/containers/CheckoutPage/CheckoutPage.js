@@ -876,7 +876,7 @@ export class CheckoutPageComponent extends Component {
           <div className={css.bookListingContainer}>
             <div className={css.heading}>
               <h1 className={css.title}>{title}</h1>
-              <h2>
+              <h2 className={css.detailsTitleMobile}>
                 <FormattedMessage id="CheckoutPage.listingTitle" values={{ listingTitle }} />
               </h2>
             </div>

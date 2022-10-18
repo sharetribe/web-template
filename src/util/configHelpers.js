@@ -319,8 +319,16 @@ const validListingExtendedData = (listingExtendedData, transactionTypesInUse) =>
             ? validEditListingPageConfig(value)
             : [true, value];
 
-        const hasFoundInvalid = !(acc.isValid === false || isValid === false);
-        return { config: { ...acc.config, ...prop }, isValid: hasFoundInvalid };
+        const hasFoundValid = !(acc.isValid === false || isValid === false);
+        // Let's warn about wrong data in listing extended data config
+        if (isValid === false) {
+          console.warn(
+            `Unsupported listing extended data configurations detected (${name}) in`,
+            data
+          );
+        }
+
+        return { config: { ...acc.config, ...prop }, isValid: hasFoundValid };
       },
       { config: {}, isValid: true }
     );
@@ -328,7 +336,6 @@ const validListingExtendedData = (listingExtendedData, transactionTypesInUse) =>
     if (validationData.isValid) {
       return [...acc, validationData.config];
     } else {
-      console.warn('Unsupported listing extended data configurations detected', data);
       return acc;
     }
   }, []);

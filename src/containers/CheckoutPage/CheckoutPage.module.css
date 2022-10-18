@@ -167,6 +167,11 @@
     margin-bottom: 8px;
   }
 }
+.detailsTitleMobile {
+  @media (--viewportMedium) {
+    display: none;
+  }
+}
 
 .author {
   width: 100%;
