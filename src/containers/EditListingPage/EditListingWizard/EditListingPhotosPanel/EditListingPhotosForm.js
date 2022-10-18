@@ -1,5 +1,5 @@
-import React, { Component, useState } from 'react';
-import { array, bool, func, object, shape, string } from 'prop-types';
+import React, { useState } from 'react';
+import { bool, func, object, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { ARRAY_ERROR } from 'final-form';
 import { Form as FinalForm, Field } from 'react-final-form';

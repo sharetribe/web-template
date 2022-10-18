@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { array, bool, func, object, string } from 'prop-types';
 import classNames from 'classnames';
 
