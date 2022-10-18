@@ -194,24 +194,6 @@
   flex-direction: row;
 }
 
-.itemLink {
-  flex: 1;
-
-  /* Layout */
-  display: flex;
-
-  /* Remove text underline from this link */
-  text-decoration: none;
-  &:hover {
-    text-decoration: none;
-  }
-
-  &:hover .itemUsername {
-    /* Hightlight the username when the whole item is hovered */
-    color: var(--marketplaceColor);
-  }
-}
-
 .itemAvatar {
   display: flex;
   align-items: center;
@@ -227,18 +209,45 @@
   }
 }
 
+.itemLink {
+  flex: 1;
+
+  /* Layout */
+  display: inline-grid;
+  grid-template-columns: 22px auto;
+  grid-template-areas:
+    'dot name    state'
+    '... item    state'
+    '... details state';
+  padding: 2px 0 6px;
+
+  /* Remove text underline from this link */
+  text-decoration: none;
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:hover .itemUsername {
+    /* Hightlight the username when the whole item is hovered */
+    color: var(--marketplaceColor);
+  }
+}
+
 .rowNotificationDot {
+  grid-area: dot;
+  justify-self: center;
+  align-self: flex-start;
+  margin-top: 8px;
+
   width: 6px;
   height: 6px;
-  margin-top: 21px;
-  margin-right: 8px;
 
-  @media (--viewportMedium) {
-    margin-top: 8px;
-  }
   @media (--viewportLarge) {
-    margin-top: 5px;
-    margin-right: 13px;
+    margin-top: 4px;
+  }
+
+  @media (--viewportLarge) {
+    justify-self: flex-start;
     width: 9px;
     height: 9px;
   }
@@ -253,28 +262,9 @@
   background-color: var(--failColor);
 }
 
-.itemInfo {
-  composes: h5 from global;
-
-  font-weight: var(--fontWeightSemiBold);
-
-  /* Layout */
-  flex-grow: 1;
-  flex: 1;
-  flex-direction: column;
-
-  margin-top: 5px;
-  margin-bottom: 0;
-
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-
-  color: var(--matterColor);
-}
-
 .itemUsername {
+  grid-area: name;
+
   /* Font */
   composes: h5 from global;
   font-weight: var(--fontWeightSemiBold);
@@ -290,11 +280,29 @@
     margin-bottom: 0;
   }
 }
-.itemOrderInfo {
-  /* Font */
+.itemTitle {
   composes: marketplaceTinyFontStyles from global;
+  grid-area: item;
   color: var(--matterColor);
   line-height: 18px;
+  letter-spacing: 0px;
+
+  margin-top: 0;
+  margin-bottom: 0;
+
+  @media (--viewportMedium) {
+    line-height: 24px;
+
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+.itemDetails {
+  composes: marketplaceTinyFontStyles from global;
+  grid-area: details;
+  color: var(--matterColor);
+  line-height: 18px;
+  letter-spacing: 0px;
 
   margin-top: 0;
   margin-bottom: 0;
@@ -307,38 +315,17 @@
   }
 }
 
-.bookingInfoWrapper {
-  composes: marketplaceTinyFontStyles from global;
-
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  line-height: 14px;
-  margin-top: 2px;
-  padding-top: 2px;
-
-  @media (--viewportMedium) {
-    padding-top: 0px;
-    margin-top: 2px;
-    line-height: 16px;
-  }
-}
-
-.itemPrice {
-  &::before {
-    font-size: 10px;
-    margin: 0 6px;
-    display: inline-block;
-    content: '\25CF'; /* middot */
-  }
-}
-
 .itemState {
+  grid-area: state;
+
   /* Font */
   composes: marketplaceTinyFontStyles from global;
   line-height: 18px;
   font-weight: var(--fontWeightMedium);
   letter-spacing: normal;
+
+  justify-self: flex-end;
+  text-align: end;
 
   margin-top: 6px;
   margin-bottom: 0px;
@@ -347,14 +334,6 @@
     margin-top: 0;
     margin-bottom: 0;
   }
-}
-
-.lastTransitionedAt {
-  composes: marketplaceTinyFontStyles from global;
-
-  margin: 0;
-  text-align: right;
-  color: var(--matterColor);
 }
 
 .pagination {
@@ -405,9 +384,7 @@
 .bannedUserLink {
   & .itemUsername,
   &:hover .itemUsername,
-  & .bookingInfo,
-  & .stateName,
-  & .lastTransitionedAt {
+  & .stateName {
     color: var(--matterColorAnti);
   }
 }
