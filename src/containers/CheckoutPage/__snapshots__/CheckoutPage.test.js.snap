@@ -78,7 +78,9 @@ exports[`CheckoutPage matches snapshot 1`] = `
         >
           CheckoutPage.flex-product-default-process.title
         </h1>
-        <h2>
+        <h2
+          className="detailsTitleMobile"
+        >
           <MemoizedFormattedMessage
             id="CheckoutPage.listingTitle"
             values={

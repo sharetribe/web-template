@@ -37,6 +37,115 @@ export const getDefaultConfiguration = () => {
       ...defaultConfig.stripe,
       publishableKey: 'pk_test_',
     },
+    listing: {
+      listingExtendedData: [
+        {
+          key: 'category',
+          scope: 'public',
+          includeForTransactionTypes: [
+            'product-selling',
+            'daily-booking',
+            'nightly-booking',
+            'hourly-booking',
+          ],
+          schemaType: 'enum',
+          schemaOptions: [
+            { option: 'city-bikes', label: 'City bikes' },
+            { option: 'e-bikes', label: 'E-bikes' },
+            { option: 'mtb', label: 'MTB' },
+            { option: 'kids-bikes', label: 'Kids bikes' },
+          ],
+          indexForSearch: true,
+          searchPageConfig: {
+            filterType: 'SelectSingleFilter',
+            label: 'Category',
+            group: 'primary',
+          },
+          listingPageConfig: {
+            label: 'Category',
+            isDetail: true,
+          },
+          editListingPageConfig: {
+            label: 'Select category',
+            placeholderMessage: 'Choose…',
+            isRequired: true,
+            requiredMessage: 'You need to select a category.',
+          },
+        },
+
+        {
+          key: 'tire-size',
+          scope: 'public',
+          includeForTransactionTypes: [
+            'product-selling',
+            'daily-booking',
+            'nightly-booking',
+            'hourly-booking',
+          ],
+          schemaType: 'enum',
+          schemaOptions: [
+            { option: 29, label: '29' },
+            { option: 28, label: '28' },
+            { option: 27, label: '27' },
+            { option: 26, label: '26' },
+            { option: 24, label: '24' },
+            { option: 20, label: '20' },
+            { option: 18, label: '18' },
+          ],
+          indexForSearch: true,
+          searchPageConfig: {
+            label: 'Tire size',
+            group: 'secondary',
+          },
+          listingPageConfig: {
+            label: 'Tire size',
+            isDetail: true,
+          },
+          editListingPageConfig: {
+            label: 'Tire size',
+            placeholderMessage: 'Choose…',
+            isRequired: true,
+            requiredMessage: 'You need to select a tire size.',
+          },
+        },
+        {
+          key: 'brand',
+          scope: 'public',
+          includeForTransactionTypes: [
+            'product-selling',
+            'daily-booking',
+            'nightly-booking',
+            'hourly-booking',
+          ],
+          schemaType: 'enum',
+          schemaOptions: [
+            { option: 'cube', label: 'Cube' },
+            { option: 'diamant', label: 'Diamant' },
+            { option: 'ghost', label: 'GHOST' },
+            { option: 'giant', label: 'Giant' },
+            { option: 'kalkhoff', label: 'Kalkhoff' },
+            { option: 'kona', label: 'Kona' },
+            { option: 'otler', label: 'Otler' },
+            { option: 'vermont', label: 'Vermont' },
+          ],
+          indexForSearch: true,
+          searchPageConfig: {
+            label: 'Brand',
+            group: 'secondary',
+          },
+          listingPageConfig: {
+            label: 'Brand',
+            isDetail: true,
+          },
+          editListingPageConfig: {
+            label: 'Brand',
+            placeholderMessage: 'Choose…',
+            isRequired: true,
+            requiredMessage: 'You need to select a brand.',
+          },
+        },
+      ],
+    },
     transaction: {
       transactionTypes: [
         {
@@ -45,6 +154,13 @@ export const getDefaultConfiguration = () => {
           process: 'flex-booking-default-process',
           alias: 'release-1',
           unitType: 'day',
+        },
+        {
+          type: 'product-selling',
+          label: 'Sell products',
+          process: 'flex-product-default-process',
+          alias: 'release-1',
+          unitType: 'item',
         },
       ],
     },
