@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [fix] Initial versions of new supported default transaction processes.
+  [#57](https://github.com/sharetribe/ftw-x/pull/57)
 - [change] change ListingExtendedData config includeForProcessAliases to includeForTransactionTypes
   and remove isBookingUnitType in favor of isBookingProcessAlias.
   [#56](https://github.com/sharetribe/ftw-x/pull/56)
