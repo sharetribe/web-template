@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Update styling of Inbox tabs and InboxItem.
+  [#59](https://github.com/sharetribe/ftw-x/pull/59)
 - [fix] Severa improvements and bug fixes. Most notable ones:
 
   - Reduce transaction types to only 1

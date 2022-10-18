@@ -36,26 +36,22 @@ exports[`InboxPage InboxItem matches snapshot of order 1`] = `
       className="rowNotificationDot"
     />
     <div
-      className="itemInfo"
+      className="itemUsername"
     >
-      <div
-        className="itemUsername"
+      <span
+        className=""
       >
-        <span
-          className=""
-        >
-          provider-user-id display name
-        </span>
-      </div>
-      <div
-        className="itemOrderInfo"
-      >
-        <span>
-          ItemX title
-        </span>
-        <br />
-      </div>
+        provider-user-id display name
+      </span>
     </div>
+    <div
+      className="itemTitle"
+    >
+      ItemX title
+    </div>
+    <div
+      className="itemDetails"
+    />
     <div
       className="itemState"
     >
@@ -111,26 +107,22 @@ exports[`InboxPage InboxItem matches snapshot of sales 1`] = `
       />
     </div>
     <div
-      className="itemInfo"
+      className="itemUsername"
     >
-      <div
-        className="itemUsername"
+      <span
+        className=""
       >
-        <span
-          className=""
-        >
-          customer-user-id display name
-        </span>
-      </div>
-      <div
-        className="itemOrderInfo"
-      >
-        <span>
-          ItemX title
-        </span>
-        <br />
-      </div>
+        customer-user-id display name
+      </span>
     </div>
+    <div
+      className="itemTitle"
+    >
+      ItemX title
+    </div>
+    <div
+      className="itemDetails"
+    />
     <div
       className="itemState"
     >

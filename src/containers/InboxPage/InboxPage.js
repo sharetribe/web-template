@@ -148,17 +148,14 @@ export const InboxItem = props => {
         params={{ id: tx.id.uuid }}
       >
         <div className={css.rowNotificationDot}>{rowNotificationDot}</div>
-        <div className={css.itemInfo}>
-          <div className={css.itemUsername}>{otherUserDisplayName}</div>
-          <div className={css.itemOrderInfo}>
-            <span>{listing?.attributes?.title}</span>
-            <br />
-            {isBooking ? (
-              <BookingTimeInfoMaybe transaction={tx} />
-            ) : hasPricingData && showStock ? (
-              <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
-            ) : null}
-          </div>
+        <div className={css.itemUsername}>{otherUserDisplayName}</div>
+        <div className={css.itemTitle}>{listing?.attributes?.title}</div>
+        <div className={css.itemDetails}>
+          {isBooking ? (
+            <BookingTimeInfoMaybe transaction={tx} />
+          ) : hasPricingData && showStock ? (
+            <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
+          ) : null}
         </div>
         <div className={css.itemState}>
           <div className={stateClasses}>
