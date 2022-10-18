@@ -5,6 +5,7 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import forEach from 'lodash/forEach';
+import { getDefaultConfiguration } from './util/test-helpers';
 import { ServerApp } from './app';
 import configureStore from './store';
 
@@ -14,7 +15,13 @@ const render = (url, context) => {
   const helmetContext = {};
 
   const body = ReactDOMServer.renderToString(
-    <ServerApp url={url} context={context} helmetContext={helmetContext} store={store} />
+    <ServerApp
+      url={url}
+      context={context}
+      helmetContext={helmetContext}
+      store={store}
+      hostedConfig={getDefaultConfiguration()}
+    />
   );
 
   const { helmet: head } = helmetContext;
