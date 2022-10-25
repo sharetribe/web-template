@@ -2,7 +2,7 @@
  :transitions
  [{:name :transition/enquire,
    :actor :actor.role/customer,
-   :actions [],
+   :actions [{:name :action/update-protected-data}],
    :to :state/enquiry}
   {:name :transition/request-payment,
    :actor :actor.role/customer,
