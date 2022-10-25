@@ -5,7 +5,7 @@ import { TX_TRANSITION_ACTOR_CUSTOMER, getProcess } from '../util/transaction';
 import { LISTING_STATE_PUBLISHED, TIME_SLOT_TIME } from '../util/types';
 
 const { UUID, LatLng, Money } = sdkTypes;
-const processTransitions = getProcess('flex-product-default-process')?.transitions;
+const processTransitions = getProcess('default-buying-products')?.transitions;
 
 // Create a booking that conforms to the util/types booking schema
 export const createBooking = (id, attributes = {}) => ({
@@ -146,7 +146,7 @@ export const createTxTransition = options => {
 export const createTransaction = options => {
   const {
     id,
-    processName = 'flex-product-default-process',
+    processName = 'default-buying-products',
     processVersion = 1,
     lastTransition = processTransitions.CONFIRM_PAYMENT,
     total = new Money(1000, 'USD'),

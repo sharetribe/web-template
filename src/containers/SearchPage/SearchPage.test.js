@@ -26,7 +26,7 @@ const transactionTypes = [
   },
   {
     type: 'sell-bicycles',
-    process: 'flex-product-default-process',
+    process: 'default-buying-products',
     alias: 'release-1',
     unitType: 'item',
   },

@@ -12,7 +12,7 @@ import { InboxItem } from './InboxPage';
 
 const noop = () => null;
 const { Money } = sdkTypes;
-const transitions = getProcess('flex-product-default-process')?.transitions;
+const transitions = getProcess('default-buying-products')?.transitions;
 
 const lineItems = [
   {
@@ -54,7 +54,11 @@ const tx = lastTransition =>
       },
     }),
     listing: createListing('ItemX', {
-      publicData: { transactionProcessAlias: 'flex-product-default-process', unitType: 'item' },
+      publicData: {
+        transactionType: 'product-selling',
+        transactionProcessAlias: 'default-buying-products/release-1',
+        unitType: 'item',
+      },
     }),
     lineItems,
   });

@@ -128,11 +128,10 @@ const estimatedCustomerTransaction = (
 };
 
 const EstimatedCustomerBreakdownMaybe = props => {
-  const { breakdownData = {}, lineItems, timeZone, currency, marketplaceName } = props;
+  const { breakdownData = {}, lineItems, timeZone, currency, marketplaceName, processName } = props;
   const { startDate, endDate } = breakdownData;
-  const processName = 'flex-product-default-process';
-  let process = null;
 
+  let process = null;
   try {
     process = getProcess(processName);
   } catch (e) {

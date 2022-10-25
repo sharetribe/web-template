@@ -4,6 +4,7 @@ import { Form as FinalForm, FormSpy } from 'react-final-form';
 
 import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
+import { PRODUCT_PROCESS_NAME } from '../../../util/transaction';
 import { numberAtLeast, required } from '../../../util/validators';
 
 import {
@@ -86,6 +87,7 @@ const renderForm = formRenderProps => {
         lineItems={lineItems}
         currency={price.currency}
         marketplaceName={marketplaceName}
+        processName={PRODUCT_PROCESS_NAME}
       />
     </div>
   ) : null;
