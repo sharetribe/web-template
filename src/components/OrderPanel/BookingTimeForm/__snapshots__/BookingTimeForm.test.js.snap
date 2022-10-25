@@ -103,6 +103,7 @@ exports[`BookingTimeForm matches snapshot without selected dates 1`] = `
   onFetchTimeSlots={[Function]}
   onFetchTransactionLineItems={[Function]}
   onSubmit={[Function]}
+  processName="default-booking"
   render={[Function]}
   startDateInputProps={
     Object {

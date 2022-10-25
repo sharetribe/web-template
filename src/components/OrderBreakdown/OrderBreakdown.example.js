@@ -17,7 +17,7 @@ const exampleBooking = attributes => {
   };
 };
 
-const processName = 'flex-product-default-process';
+const processName = 'default-buying-products';
 const transitions = getProcess(processName)?.transitions;
 
 const exampleTransaction = params => {

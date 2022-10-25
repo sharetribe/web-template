@@ -2,12 +2,13 @@
  :transitions
  [{:name :transition/enquire,
    :actor :actor.role/customer,
-   :actions [],
+   :actions [{:name :action/update-protected-data}],
    :to :state/enquiry}
   {:name :transition/request-payment,
    :actor :actor.role/customer,
    :actions
-   [{:name :action/create-pending-booking, :config {:type :time}}
+   [{:name :action/update-protected-data}
+    {:name :action/create-pending-booking, :config {:type :time}}
     {:name :action/privileged-set-line-items}
     {:name :action/stripe-create-payment-intent}],
    :to :state/pending-payment,
@@ -15,7 +16,8 @@
   {:name :transition/request-payment-after-enquiry,
    :actor :actor.role/customer,
    :actions
-   [{:name :action/create-pending-booking, :config {:type :time}}
+   [{:name :action/update-protected-data}
+    {:name :action/create-pending-booking, :config {:type :time}}
     {:name :action/privileged-set-line-items}
     {:name :action/stripe-create-payment-intent}],
    :from :state/enquiry,
@@ -27,9 +29,11 @@
     [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
      {:fn/period ["PT15M"]}]},
    :actions
-   [{:name :action/decline-booking}
-    {:name :action/calculate-full-refund}
-    {:name :action/stripe-refund-payment}],
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/decline-booking}],
    :from :state/pending-payment,
    :to :state/payment-expired}
   {:name :transition/confirm-payment,
@@ -47,9 +51,11 @@
   {:name :transition/decline,
    :actor :actor.role/provider,
    :actions
-   [{:name :action/decline-booking}
-    {:name :action/calculate-full-refund}
-    {:name :action/stripe-refund-payment}],
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/declined}
   {:name :transition/expire,
@@ -61,9 +67,11 @@
      {:fn/plus
       [{:fn/timepoint [:time/booking-end]} {:fn/period ["P1D"]}]}]},
    :actions
-   [{:name :action/decline-booking}
-    {:name :action/calculate-full-refund}
-    {:name :action/stripe-refund-payment}],
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/declined}
   {:name :transition/complete,
@@ -74,9 +82,11 @@
   {:name :transition/cancel,
    :actor :actor.role/operator,
    :actions
-   [{:name :action/cancel-booking}
-    {:name :action/calculate-full-refund}
-    {:name :action/stripe-refund-payment}],
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/cancel-booking}],
    :from :state/accepted,
    :to :state/cancelled}
   {:name :transition/review-1-by-provider,

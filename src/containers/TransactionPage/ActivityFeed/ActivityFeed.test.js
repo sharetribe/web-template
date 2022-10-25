@@ -20,7 +20,7 @@ describe('ActivityFeed', () => {
       ],
       transaction: createTransaction('tx1'),
       stateData: {
-        processName: 'flex-product-default-process',
+        processName: 'default-buying-products',
         processState: 'enquiry',
       },
       currentUser: createCurrentUser('user2'),

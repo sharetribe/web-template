@@ -34,7 +34,7 @@ export const transactionTypes = [
   {
     type: 'daily-booking',
     label: 'Daily booking',
-    process: 'flex-booking-default-process',
+    process: 'default-booking',
     alias: 'release-1',
     unitType: 'day',
   },
@@ -43,21 +43,21 @@ export const transactionTypes = [
   // {
   //   type: 'nightly-booking',
   //   label: 'Nightly booking',
-  //   process: 'flex-booking-default-process',
+  //   process: 'default-booking',
   //   alias: 'release-1',
   //   unitType: 'night',
   // },
   // {
   //   type: 'hourly-booking',
   //   label: 'Hourly booking',
-  //   process: 'flex-booking-default-process',
+  //   process: 'default-booking',
   //   alias: 'release-1',
   //   unitType: 'hour',
   // },
   // {
   //   type: 'product-selling',
   //   label: 'Sell bicycles',
-  //   process: 'flex-product-default-process',
+  //   process: 'default-buying-products',
   //   alias: 'release-1',
   //   unitType: 'item',
   //   showStock: false,

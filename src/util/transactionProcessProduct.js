@@ -2,7 +2,7 @@ import { ensureTransaction } from './data';
 
 /**
  * Transaction process graph for product orders:
- *   - flex-product-default-process
+ *   - default-buying-products
  */
 
 /**
@@ -121,7 +121,7 @@ export const graph = {
   // id is defined only to support Xstate format.
   // However if you have multiple transaction processes defined,
   // it is best to keep them in sync with transaction process aliases.
-  id: 'flex-product-default-process/release-1',
+  id: 'default-buying-products/release-1',
 
   // This 'initial' state is a starting point for new transaction
   initial: states.INITIAL,

@@ -7,7 +7,7 @@ const noop = () => null;
 const selectableTransactionTypes = [
   {
     transactionType: 'sell-bicycles',
-    transactionProcessAlias: 'flex-product-default-process/release-1',
+    transactionProcessAlias: 'default-buying-products/release-1',
     unitType: 'item',
   },
 ];

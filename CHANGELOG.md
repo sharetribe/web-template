@@ -14,6 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Rename default processes, and the references in code and translations.
+
+  - Reorder actions that decline or cancel booking in reference booking process
+  - Add update-protected-data action to enquiry and payment transitions
+  - This also adds couple of updated translations for biketribe
+
+  [#60](https://github.com/sharetribe/ftw-x/pull/60)
+
 - [change] Update styling of Inbox tabs and InboxItem.
   [#59](https://github.com/sharetribe/ftw-x/pull/59)
 - [fix] Severa improvements and bug fixes. Most notable ones:

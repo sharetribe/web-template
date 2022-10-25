@@ -59,7 +59,7 @@ exports[`InboxPage InboxItem matches snapshot of order 1`] = `
         className="stateName stateNoActionNeeded"
       >
         <span>
-          InboxPage.flex-product-default-process.purchased.status
+          InboxPage.default-buying-products.purchased.status
         </span>
       </div>
     </div>
@@ -130,7 +130,7 @@ exports[`InboxPage InboxItem matches snapshot of sales 1`] = `
         className="stateName stateActionNeeded"
       >
         <span>
-          InboxPage.flex-product-default-process.purchased.status
+          InboxPage.default-buying-products.purchased.status
         </span>
       </div>
     </div>
@@ -236,7 +236,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of order 1`] = `
             isBooking={false}
             stateData={
               Object {
-                "processName": "flex-product-default-process",
+                "processName": "default-buying-products",
                 "processState": "purchased",
               }
             }
@@ -295,7 +295,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of order 1`] = `
                     "amount": 900,
                     "currency": "USD",
                   },
-                  "processName": "flex-product-default-process",
+                  "processName": "default-buying-products",
                   "processVersion": 1,
                   "transitions": Array [
                     Object {
@@ -345,7 +345,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of order 1`] = `
                       "currency": "USD",
                     },
                     "publicData": Object {
-                      "transactionProcessAlias": "flex-product-default-process",
+                      "transactionProcessAlias": "default-buying-products",
                       "transactionType": "sell-bikes",
                       "unitType": "item",
                     },
@@ -398,7 +398,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of order 1`] = `
             isBooking={false}
             stateData={
               Object {
-                "processName": "flex-product-default-process",
+                "processName": "default-buying-products",
                 "processState": "purchased",
               }
             }
@@ -457,7 +457,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of order 1`] = `
                     "amount": 900,
                     "currency": "USD",
                   },
-                  "processName": "flex-product-default-process",
+                  "processName": "default-buying-products",
                   "processVersion": 1,
                   "transitions": Array [
                     Object {
@@ -507,7 +507,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of order 1`] = `
                       "currency": "USD",
                     },
                     "publicData": Object {
-                      "transactionProcessAlias": "flex-product-default-process",
+                      "transactionProcessAlias": "default-buying-products",
                       "transactionType": "sell-bikes",
                       "unitType": "item",
                     },
@@ -653,7 +653,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of sales 1`] = `
               Object {
                 "actionNeeded": true,
                 "isSaleNotification": true,
-                "processName": "flex-product-default-process",
+                "processName": "default-buying-products",
                 "processState": "purchased",
               }
             }
@@ -712,7 +712,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of sales 1`] = `
                     "amount": 900,
                     "currency": "USD",
                   },
-                  "processName": "flex-product-default-process",
+                  "processName": "default-buying-products",
                   "processVersion": 1,
                   "transitions": Array [
                     Object {
@@ -762,7 +762,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of sales 1`] = `
                       "currency": "USD",
                     },
                     "publicData": Object {
-                      "transactionProcessAlias": "flex-product-default-process",
+                      "transactionProcessAlias": "default-buying-products",
                       "transactionType": "sell-bikes",
                       "unitType": "item",
                     },
@@ -817,7 +817,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of sales 1`] = `
               Object {
                 "actionNeeded": true,
                 "isSaleNotification": true,
-                "processName": "flex-product-default-process",
+                "processName": "default-buying-products",
                 "processState": "purchased",
               }
             }
@@ -876,7 +876,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of sales 1`] = `
                     "amount": 900,
                     "currency": "USD",
                   },
-                  "processName": "flex-product-default-process",
+                  "processName": "default-buying-products",
                   "processVersion": 1,
                   "transitions": Array [
                     Object {
@@ -926,7 +926,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of sales 1`] = `
                       "currency": "USD",
                     },
                     "publicData": Object {
-                      "transactionProcessAlias": "flex-product-default-process",
+                      "transactionProcessAlias": "default-buying-products",
                       "transactionType": "sell-bikes",
                       "unitType": "item",
                     },
