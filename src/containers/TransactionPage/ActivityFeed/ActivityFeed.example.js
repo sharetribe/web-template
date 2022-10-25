@@ -16,7 +16,7 @@ import {
 import ActivityFeed from './ActivityFeed';
 
 const noop = () => null;
-const processName = 'flex-product-default-process';
+const processName = 'default-buying-products';
 const { states, transitions } = getProcess(processName);
 
 export const Empty = {

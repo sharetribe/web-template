@@ -4,7 +4,7 @@ import { getProcess } from '../../../util/transaction';
 
 import PanelHeading from './PanelHeading';
 
-const PROCESS_NAME = 'flex-product-default-process';
+const PROCESS_NAME = 'default-buying-products';
 
 const ProcessHeadings = () => {
   const states = getProcess(PROCESS_NAME).states;

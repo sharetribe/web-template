@@ -9,8 +9,8 @@ import {
   getProcess,
 } from './transaction';
 
-describe('transaction utils for flex-product-default-process', () => {
-  const process = getProcess('flex-product-default-process');
+describe('transaction utils for default-buying-products', () => {
+  const process = getProcess('default-buying-products');
   const transitions = process?.transitions;
   const txHasBeenReceived = tx => process.hasPassedState(process.states.RECEIVED, tx);
 

@@ -21,7 +21,7 @@ describe('TransactionPanel - Sale', () => {
   const customerId = 'customer';
 
   const panelBaseProps = {
-    stateData: { processName: 'flex-product-default-process', processState: 'enquiry' },
+    stateData: { processName: 'default-buying-products', processState: 'enquiry' },
     transactionId: new UUID('tx-id'),
     listing: createListing('listing1'),
     currentUser: createCurrentUser(providerId),
@@ -70,7 +70,7 @@ describe('TransactionPanel - Order', () => {
   const customerId = 'customer';
 
   const panelBaseProps = {
-    stateData: { processName: 'flex-product-default-process', processState: 'enquiry' },
+    stateData: { processName: 'default-buying-products', processState: 'enquiry' },
     transactionId: new UUID('tx-id'),
     listing: createListing('listing1'),
     currentUser: createCurrentUser(customerId),

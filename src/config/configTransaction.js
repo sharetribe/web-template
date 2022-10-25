@@ -57,7 +57,7 @@ export const transactionTypes = [
   // {
   //   type: 'product-selling',
   //   label: 'Sell bicycles',
-  //   process: 'flex-product-default-process',
+  //   process: 'default-buying-products',
   //   alias: 'release-1',
   //   unitType: 'item',
   //   showStock: false,

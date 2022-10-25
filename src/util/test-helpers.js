@@ -158,7 +158,7 @@ export const getDefaultConfiguration = () => {
         {
           type: 'product-selling',
           label: 'Sell products',
-          process: 'flex-product-default-process',
+          process: 'default-buying-products',
           alias: 'release-1',
           unitType: 'item',
         },

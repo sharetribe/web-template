@@ -1,11 +1,13 @@
 import { bool, shape, string } from 'prop-types';
-import { resolveLatestProcessName, getProcess } from '../../util/transaction';
+import {
+  BOOKING_PROCESS_NAME,
+  PRODUCT_PROCESS_NAME,
+  resolveLatestProcessName,
+  getProcess,
+} from '../../util/transaction';
 
 import { getStateDataForBookingProcess } from './InboxPage.stateDataBooking.js';
 import { getStateDataForProductProcess } from './InboxPage.stateDataProduct.js';
-
-const FLEX_PRODUCT_DEFAULT_PROCESS = 'flex-product-default-process';
-const FLEX_BOOKING_DEFAULT_PROCESS = 'flex-booking-default-process';
 
 export const stateDataShape = shape({
   processName: string.isRequired,
@@ -31,9 +33,9 @@ export const getStateData = params => {
     };
   };
 
-  if (processName === FLEX_PRODUCT_DEFAULT_PROCESS) {
+  if (processName === PRODUCT_PROCESS_NAME) {
     return getStateDataForProductProcess(params, processInfo());
-  } else if (processName === FLEX_BOOKING_DEFAULT_PROCESS) {
+  } else if (processName === BOOKING_PROCESS_NAME) {
     return getStateDataForBookingProcess(params, processInfo());
   } else {
     return {};

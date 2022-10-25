@@ -51,7 +51,7 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
         listingDeleted={false}
         listingId="listing1"
         listingTitle="listing1 title"
-        processName="flex-product-default-process"
+        processName="default-buying-products"
         processState="enquiry"
         providerName={
           <UserDisplayName
@@ -249,7 +249,7 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
         listingDeleted={false}
         listingId="listing1"
         listingTitle="listing1 title"
-        processName="flex-product-default-process"
+        processName="default-buying-products"
         processState="enquiry"
         providerName={
           <UserDisplayName

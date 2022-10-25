@@ -10,7 +10,7 @@ export const NIGHT = 'night';
 export const HOUR = 'hour';
 
 // Then names of supported processes
-export const PRODUCT_PROCESS_NAME = 'flex-product-default-process';
+export const PRODUCT_PROCESS_NAME = 'default-buying-products';
 export const BOOKING_PROCESS_NAME = 'flex-booking-default-process';
 
 /**
@@ -193,6 +193,7 @@ const hasPassedState = process => (stateName, tx) => {
  */
 export const resolveLatestProcessName = processName => {
   switch (processName) {
+    case 'flex-product-default-process':
     case PRODUCT_PROCESS_NAME:
       return PRODUCT_PROCESS_NAME;
     case 'flex-default-process':
