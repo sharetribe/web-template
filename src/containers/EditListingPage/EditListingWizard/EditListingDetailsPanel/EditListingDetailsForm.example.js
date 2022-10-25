@@ -37,7 +37,7 @@ export const WithInitialValues = {
 const selectableTransactionTypes2 = [
   {
     transactionType: 'rent-bicycles',
-    transactionProcessAlias: 'flex-booking-default-process/release-1',
+    transactionProcessAlias: 'default-booking/release-1',
     unitType: 'day',
   },
   {

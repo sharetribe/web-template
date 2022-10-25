@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl';
 import { timestampToDate } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
+import { BOOKING_PROCESS_NAME } from '../../../util/transaction';
 
 import { Form, PrimaryButton } from '../../../components';
 
@@ -148,6 +149,7 @@ export class BookingTimeFormComponent extends Component {
                     timeZone={timeZone}
                     currency={unitPrice.currency}
                     marketplaceName={marketplaceName}
+                    processName={BOOKING_PROCESS_NAME}
                   />
                 </div>
               ) : null}
