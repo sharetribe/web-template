@@ -184,27 +184,28 @@ export const listingExtendedData = [
     },
   },
 
-  {
-    key: 'extra-note',
-    scope: 'public',
-    includeForTransactionTypes: ['product-selling'],
-    schemaType: 'text',
-    listingPageConfig: {
-      label: 'Extra notes',
-    },
-    editListingPageConfig: {
-      label: 'Extra notes',
-      placeholderMessage: 'Some public extra note about this bike...',
-    },
-  },
-  {
-    key: 'private-note',
-    scope: 'private',
-    includeForTransactionTypes: ['daily-booking'],
-    schemaType: 'text',
-    editListingPageConfig: {
-      label: 'Private notes',
-      placeholderMessage: 'Some private note about this bike...',
-    },
-  },
+  // // An example of how to use transaction type specific custom fields and private data.
+  // {
+  //   key: 'extra-note',
+  //   scope: 'public',
+  //   includeForTransactionTypes: ['product-selling'],
+  //   schemaType: 'text',
+  //   listingPageConfig: {
+  //     label: 'Extra notes',
+  //   },
+  //   editListingPageConfig: {
+  //     label: 'Extra notes',
+  //     placeholderMessage: 'Some public extra note about this bike...',
+  //   },
+  // },
+  // {
+  //   key: 'private-note',
+  //   scope: 'private',
+  //   includeForTransactionTypes: ['daily-booking'],
+  //   schemaType: 'text',
+  //   editListingPageConfig: {
+  //     label: 'Private notes',
+  //     placeholderMessage: 'Some private note about this bike...',
+  //   },
+  // },
 ];

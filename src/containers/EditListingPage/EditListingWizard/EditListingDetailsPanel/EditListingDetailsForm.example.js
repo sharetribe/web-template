@@ -5,7 +5,7 @@ import defaultConfig from '../../../../config/configDefault';
 const selectableTransactionTypes = [
   {
     transactionType: 'sell-bicycles',
-    transactionProcessAlias: 'flex-product-default-process/release-1',
+    transactionProcessAlias: 'default-buying-products/release-1',
     unitType: 'item',
   },
 ];
@@ -27,7 +27,7 @@ export const WithInitialValues = {
       title: 'Listing',
       description: 'Lorem ipsum',
       transactionType: 'sell-bicycles',
-      transactionProcessAlias: 'flex-product-default-process/release-1',
+      transactionProcessAlias: 'default-buying-products/release-1',
       unitType: 'item',
     },
   },
@@ -37,12 +37,12 @@ export const WithInitialValues = {
 const selectableTransactionTypes2 = [
   {
     transactionType: 'rent-bicycles',
-    transactionProcessAlias: 'flex-booking-default-process/release-1',
+    transactionProcessAlias: 'default-booking/release-1',
     unitType: 'day',
   },
   {
     transactionType: 'sell-bicycles',
-    transactionProcessAlias: 'flex-product-default-process/release-1',
+    transactionProcessAlias: 'default-buying-products/release-1',
     unitType: 'item',
   },
 ];

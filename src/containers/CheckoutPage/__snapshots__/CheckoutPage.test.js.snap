@@ -3,7 +3,7 @@
 exports[`CheckoutPage matches snapshot 1`] = `
 <Page
   scrollingDisabled={false}
-  title="CheckoutPage.flex-product-default-process.title"
+  title="CheckoutPage.default-buying-products.title"
 >
   <div
     className="topbar"
@@ -76,7 +76,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
         <h1
           className="title"
         >
-          CheckoutPage.flex-product-default-process.title
+          CheckoutPage.default-buying-products.title
         </h1>
         <h2
           className="detailsTitleMobile"

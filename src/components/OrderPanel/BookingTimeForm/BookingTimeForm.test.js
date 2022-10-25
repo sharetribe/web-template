@@ -92,6 +92,7 @@ describe('BookingTimeForm', () => {
         endTimeInputProps={endTimeInputProps}
         timeZone="Etc/UTC"
         marketplaceName="MarketplaceX"
+        processName="default-booking"
         monthlyTimeSlots={monthlyTimeSlots}
         initialValues={{ bookingStartDate: { date: new Date('2019-10-14T00:00:00Z') } }}
         onChange={noop}
@@ -112,7 +113,14 @@ describe('EstimatedBreakdownMaybe', () => {
   it('renders nothing if missing start and end date', () => {
     const data = {};
     expect(
-      renderDeep(<EstimatedCustomerBreakdownMaybe breakdownData={data} currency="USD" />)
+      renderDeep(
+        <EstimatedCustomerBreakdownMaybe
+          breakdownData={data}
+          currency="USD"
+          marketplaceName="MarketplaceX"
+          processName="default-booking"
+        />
+      )
     ).toBeFalsy();
   });
   it('renders nothing if missing end date', () => {
@@ -120,7 +128,14 @@ describe('EstimatedBreakdownMaybe', () => {
       startDate: new Date(),
     };
     expect(
-      renderDeep(<EstimatedCustomerBreakdownMaybe breakdownData={data} currency="USD" />)
+      renderDeep(
+        <EstimatedCustomerBreakdownMaybe
+          breakdownData={data}
+          currency="USD"
+          marketplaceName="MarketplaceX"
+          processName="default-booking"
+        />
+      )
     ).toBeFalsy();
   });
   it('renders breakdown with correct transaction data', () => {
@@ -133,6 +148,8 @@ describe('EstimatedBreakdownMaybe', () => {
         lineItems={lineItems}
         currency="USD"
         timeZone="Etc/UTC"
+        marketplaceName="MarketplaceX"
+        processName="default-booking"
       />
     );
     const breakdown = tree.find(OrderBreakdown);

@@ -9,8 +9,8 @@ import {
   getProcess,
 } from './transaction';
 
-describe('transaction utils for flex-product-default-process', () => {
-  const process = getProcess('flex-product-default-process');
+describe('transaction utils for default-buying-products', () => {
+  const process = getProcess('default-buying-products');
   const transitions = process?.transitions;
   const txHasBeenReceived = tx => process.hasPassedState(process.states.RECEIVED, tx);
 
@@ -104,8 +104,8 @@ describe('transaction utils for flex-product-default-process', () => {
   });
 });
 
-describe('transaction utils for flex-booking-default-process', () => {
-  const process = getProcess('flex-booking-default-process');
+describe('transaction utils for default-booking', () => {
+  const process = getProcess('default-booking');
   const transitions = process?.transitions;
 
   // const transitionConfirmPayment = createTxTransition({

@@ -12,7 +12,7 @@ Console or
 
 In addition, the client app needs to understand
 
-## Product process
+## Product buying process
 
 Orders in the process use stock management. Pricing uses privileged transitions and the
 [privileged-set-line-items](https://www.sharetribe.com/docs/references/transaction-process-actions/#actionprivileged-set-line-items)

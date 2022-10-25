@@ -11,13 +11,13 @@ const { UUID, Money } = sdkTypes;
 const marketplaceName = 'MarketplaceX';
 
 const exampleTransaction = params => {
-  const transitions = getProcess('flex-product-default-process')?.transitions;
+  const transitions = getProcess('default-buying-products')?.transitions;
   const created = new Date(Date.UTC(2017, 1, 1));
   return {
     id: new UUID('example-transaction'),
     type: 'transaction',
     attributes: {
-      processName: 'flex-product-default-process',
+      processName: 'default-buying-products',
       processVersion: 1,
       createdAt: created,
       lastTransitionedAt: created,

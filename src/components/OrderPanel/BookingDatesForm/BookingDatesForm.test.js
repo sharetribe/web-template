@@ -45,6 +45,7 @@ describe('BookingDatesForm', () => {
         lineItems={lineItems}
         currency="USD"
         marketplaceName="MarketplaceX"
+        processName="default-booking"
         dayCountAvailableForBooking={90}
       />
     );
@@ -55,7 +56,14 @@ describe('BookingDatesForm', () => {
 describe('EstimatedCustomerBreakdownMaybe', () => {
   it('renders nothing if nightly is missing start and end date', () => {
     expect(
-      renderDeep(<EstimatedCustomerBreakdownMaybe lineItems={lineItems} currency="USD" />)
+      renderDeep(
+        <EstimatedCustomerBreakdownMaybe
+          lineItems={lineItems}
+          currency="USD"
+          marketplaceName="MarketplaceX"
+          processName="default-booking"
+        />
+      )
     ).toBeFalsy();
   });
   it('renders nothing if nightly is missing end date', () => {
@@ -69,6 +77,7 @@ describe('EstimatedCustomerBreakdownMaybe', () => {
           lineItems={lineItems}
           currency="USD"
           marketplaceName="MarketplaceX"
+          processName="default-booking"
         />
       )
     ).toBeFalsy();
@@ -83,6 +92,8 @@ describe('EstimatedCustomerBreakdownMaybe', () => {
       },
       lineItems,
       currency: 'USD',
+      marketplaceName: 'MarketplaceX',
+      processName: 'default-booking',
     };
 
     const tree = shallow(<EstimatedCustomerBreakdownMaybe {...props} />);
