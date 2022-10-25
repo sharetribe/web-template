@@ -11,7 +11,7 @@ export const HOUR = 'hour';
 
 // Then names of supported processes
 export const PRODUCT_PROCESS_NAME = 'default-buying-products';
-export const BOOKING_PROCESS_NAME = 'flex-booking-default-process';
+export const BOOKING_PROCESS_NAME = 'default-booking';
 
 /**
  * A process should export:
@@ -198,6 +198,7 @@ export const resolveLatestProcessName = processName => {
       return PRODUCT_PROCESS_NAME;
     case 'flex-default-process':
     case 'flex-hourly-default-process':
+    case 'flex-booking-default-process':
     case BOOKING_PROCESS_NAME:
       return BOOKING_PROCESS_NAME;
     default:

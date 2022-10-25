@@ -146,7 +146,7 @@ describe('InboxPage', () => {
           {
             type: 'rent-bicycles',
             label: 'Rent bicycles',
-            process: 'flex-booking-default-process',
+            process: 'default-booking',
             alias: 'release-1',
             unitType: 'day',
           },
@@ -185,7 +185,7 @@ describe('InboxPage', () => {
           {
             type: 'rent-bicycles',
             label: 'Rent bicycles',
-            process: 'flex-booking-default-process',
+            process: 'default-booking',
             alias: 'release-1',
             unitType: 'day',
           },

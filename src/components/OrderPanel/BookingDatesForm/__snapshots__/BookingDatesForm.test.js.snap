@@ -45,6 +45,7 @@ exports[`BookingDatesForm matches snapshot without selected dates 1`] = `
   monthlyTimeSlots={null}
   onFetchTimeSlots={[Function]}
   onSubmit={[Function]}
+  processName="default-booking"
   render={[Function]}
   startDatePlaceholder="today"
   unitPrice={

@@ -8,19 +8,19 @@ const noop = () => null;
 const transactionTypes = [
   {
     type: 'rent-bicycles-daily',
-    process: 'flex-booking-default-process',
+    process: 'default-booking',
     alias: 'release-1',
     unitType: 'day',
   },
   {
     type: 'rent-bicycles-nightly',
-    process: 'flex-booking-default-process',
+    process: 'default-booking',
     alias: 'release-1',
     unitType: 'night',
   },
   {
     type: 'rent-bicycles-hourly',
-    process: 'flex-booking-default-process',
+    process: 'default-booking',
     alias: 'release-1',
     unitType: 'hour',
   },
