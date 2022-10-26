@@ -213,4 +213,31 @@ export const isPrivileged = transition => {
   );
 };
 
+// Check when transaction is completed (booking over)
+export const isCompleted = transition => {
+  const txCompletedTransitions = [
+    transitions.COMPLETE,
+    transitions.REVIEW_1_BY_CUSTOMER,
+    transitions.REVIEW_1_BY_PROVIDER,
+    transitions.REVIEW_2_BY_CUSTOMER,
+    transitions.REVIEW_2_BY_PROVIDER,
+    transitions.EXPIRE_REVIEW_PERIOD,
+    transitions.EXPIRE_CUSTOMER_REVIEW_PERIOD,
+    transitions.EXPIRE_PROVIDER_REVIEW_PERIOD,
+  ];
+  return txCompletedTransitions.includes(transition);
+};
+
+// Check when transaction is refunded (booking did not happen)
+// In these transitions action/stripe-refund-payment is called
+export const isRefunded = transition => {
+  const txRefundedTransitions = [
+    transitions.EXPIRE_PAYMENT,
+    transitions.EXPIRE,
+    transitions.CANCEL,
+    transitions.DECLINE,
+  ];
+  return txRefundedTransitions.includes(transition);
+};
+
 export const statesNeedingProviderAttention = [states.PREAUTHORIZED];
