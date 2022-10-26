@@ -512,7 +512,7 @@
   "OrderBreakdown.pricePerDay": "Price per day",
   "OrderBreakdown.pricePerNight": "Price per night",
   "OrderBreakdown.pricePerQuantity": "Price per bike",
-  "OrderBreakdown.providerTotalCanceled": "Total price",
+  "OrderBreakdown.providerTotalRefunded": "Total price",
   "OrderBreakdown.providerTotalDefault": "You'll make",
   "OrderBreakdown.providerTotalReceived": "You made",
   "OrderBreakdown.quantity": "{quantity, number} {quantity, plural, one {bike} other {bikes}}",
