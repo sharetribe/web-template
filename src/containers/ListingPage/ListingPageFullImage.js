@@ -244,8 +244,6 @@ export const ListingPageComponent = props => {
   // Read more about product schema
   // https://developers.google.com/search/docs/advanced/structured-data/product
   const productURL = `${config.marketplaceRootURL}${location.pathname}${location.search}${location.hash}`;
-  const brand = currentListing?.attributes?.publicData?.brand;
-  const brandMaybe = brand ? { brand: { '@type': 'Brand', name: brand } } : {};
   const schemaPriceMaybe = price
     ? {
         price: intl.formatNumber(convertMoneyToNumber(price), {
@@ -276,7 +274,6 @@ export const ListingPageComponent = props => {
         description: description,
         name: schemaTitle,
         image: schemaImages,
-        ...brandMaybe,
         offers: {
           '@type': 'Offer',
           url: productURL,
