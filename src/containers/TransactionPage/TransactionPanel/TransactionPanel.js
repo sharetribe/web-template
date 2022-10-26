@@ -166,6 +166,8 @@ export class TransactionPanelComponent extends Component {
         showButtons={stateData.showActionButtons}
         primaryButtonProps={stateData?.primaryButtonProps}
         secondaryButtonProps={stateData?.secondaryButtonProps}
+        isListingDeleted={listingDeleted}
+        isProvider={isProvider}
       />
     );
 
