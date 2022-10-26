@@ -13,6 +13,8 @@
   "AuthenticationPage.resendEmailLinkText": "Resend it",
   "AuthenticationPage.resendFailed": "Resending verification email failed. Please try again.",
   "AuthenticationPage.resendFailedTooManyRequests": "The maximum of 5 verification emails has been reached. Please try again tomorrow.",
+  "AuthenticationPage.schemaDescriptionLogin": "Authenticate to {marketplaceName}",
+  "AuthenticationPage.schemaDescriptionSignup": "Create account to {marketplaceName}",
   "AuthenticationPage.schemaTitleLogin": "Log in | {marketplaceName}",
   "AuthenticationPage.schemaTitleSignup": "Sign up | {marketplaceName}",
   "AuthenticationPage.sendingEmail": "Sending verification email…",
