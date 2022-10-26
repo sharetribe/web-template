@@ -129,6 +129,8 @@ exports.transactionLineItems = (listing, orderData) => {
   const unitType = publicData.unitType;
   const code = `line-item/${unitType}`;
 
+  // Here "extra line-items" means line-items that are tied to unit type
+  // E.g. by default, "shipping-fee" is tied to 'item' aka buying products.
   const quantityAndExtraLineItems =
     unitType === 'item'
       ? getItemQuantityAndLineItems(orderData, publicData, currency)
@@ -168,6 +170,8 @@ exports.transactionLineItems = (listing, orderData) => {
     includeFor: ['customer', 'provider'],
   };
 
+  // Note: extraLineItems for product selling (aka shipping fee)
+  //       is not included to commission calculation.
   const providerCommission = {
     code: 'line-item/provider-commission',
     unitPrice: calculateTotalFromLineItems([order]),
