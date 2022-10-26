@@ -404,6 +404,9 @@ export const AuthenticationPageComponent = props => {
   const schemaTitle = isLogin
     ? intl.formatMessage({ id: 'AuthenticationPage.schemaTitleLogin' }, { marketplaceName })
     : intl.formatMessage({ id: 'AuthenticationPage.schemaTitleSignup' }, { marketplaceName });
+  const schemaDescription = isLogin
+    ? intl.formatMessage({ id: 'AuthenticationPage.schemaDescriptionLogin' }, { marketplaceName })
+    : intl.formatMessage({ id: 'AuthenticationPage.schemaDescriptionSignup' }, { marketplaceName });
 
   const topbarClasses = classNames({
     [css.hideOnMobile]: showEmailVerification,
@@ -417,6 +420,7 @@ export const AuthenticationPageComponent = props => {
         '@context': 'http://schema.org',
         '@type': 'WebPage',
         name: schemaTitle,
+        description: schemaDescription,
       }}
     >
       <LayoutSingleColumn>

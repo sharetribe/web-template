@@ -82,7 +82,6 @@ class PageComponent extends Component {
       facebookImages,
       published,
       schema,
-      tags,
       title,
       twitterHandle,
       twitterImages,
@@ -142,7 +141,6 @@ class PageComponent extends Component {
         ...facebookImagesMaybe,
         ...twitterImagesMaybe,
         published,
-        tags,
         title: metaTitle,
         twitterHandle,
         updated,
@@ -249,7 +247,6 @@ PageComponent.defaultProps = {
   published: null,
   referrer: null,
   schema: null,
-  tags: null,
   twitterHandle: null,
   updated: null,
 };
@@ -283,7 +280,6 @@ PageComponent.propTypes = {
   ),
   published: string, // article:published_time
   schema: oneOfType([object, array]), // http://schema.org
-  tags: string, // article:tag
   title: string.isRequired, // page title
   twitterHandle: string, // twitter handle
   updated: string, // article:modified_time
