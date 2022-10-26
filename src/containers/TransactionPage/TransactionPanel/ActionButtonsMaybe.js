@@ -7,7 +7,22 @@ import css from './TransactionPanel.module.css';
 
 // Functional component as a helper to build ActionButtons
 const ActionButtonsMaybe = props => {
-  const { className, rootClassName, showButtons, primaryButtonProps, secondaryButtonProps } = props;
+  const {
+    className,
+    rootClassName,
+    showButtons,
+    primaryButtonProps,
+    secondaryButtonProps,
+    isListingDeleted,
+    isProvider,
+  } = props;
+
+  // In default processes default processes need special handling
+  // Booking: provider should not be able to accept on-going transactions
+  // Product: customer should be able to dispute etc. on-going transactions
+  if (isListingDeleted && isProvider) {
+    return null;
+  }
 
   const buttonsDisabled = primaryButtonProps?.inProgress || secondaryButtonProps?.inProgress;
 

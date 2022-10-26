@@ -20,7 +20,6 @@ export const openGraphMetaProps = data => {
     locale,
     published,
     marketplaceName,
-    tags,
     title,
     updated,
     url,
@@ -74,10 +73,6 @@ export const openGraphMetaProps = data => {
 
   if (updated) {
     openGraphMeta.push({ property: 'article:modified_time', content: updated });
-  }
-
-  if (tags) {
-    openGraphMeta.push({ property: 'article:tag', content: tags });
   }
 
   return openGraphMeta;

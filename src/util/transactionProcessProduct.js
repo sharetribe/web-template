@@ -244,4 +244,32 @@ export const isPrivileged = transition => {
   );
 };
 
+// Check when transaction is completed (item is received and review notifications sent)
+export const isCompleted = transition => {
+  const txCompletedTransitions = [
+    transitions.AUTO_COMPLETE,
+    transitions.REVIEW_1_BY_CUSTOMER,
+    transitions.REVIEW_1_BY_PROVIDER,
+    transitions.REVIEW_2_BY_CUSTOMER,
+    transitions.REVIEW_2_BY_PROVIDER,
+    transitions.EXPIRE_REVIEW_PERIOD,
+    transitions.EXPIRE_CUSTOMER_REVIEW_PERIOD,
+    transitions.EXPIRE_PROVIDER_REVIEW_PERIOD,
+  ];
+  return txCompletedTransitions.includes(transition);
+};
+
+// Check when transaction is refunded (order did not happen)
+// In these transitions action/stripe-refund-payment is called
+export const isRefunded = transition => {
+  const txRefundedTransitions = [
+    transitions.EXPIRE_PAYMENT,
+    transitions.CANCEL,
+    transitions.AUTO_CANCEL,
+    transitions.AUTO_CANCEL_FROM_DISPUTED,
+    transitions.CANCEL_FROM_DISPUTED,
+  ];
+  return txRefundedTransitions.includes(transition);
+};
+
 export const statesNeedingProviderAttention = [states.PURCHASED];

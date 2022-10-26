@@ -14,16 +14,14 @@ const LineItemTotalPrice = props => {
     return null;
   }
   const process = getProcess(processName);
-  const state = process.getState(transaction);
-  const isReceived = state === process.states.ENQUIRY;
-  const isCompleted = state === process.states.COMPLETED;
-  const isCanceled = state === process.states.CANCELED;
+  const isCompleted = process.isCompleted(transaction?.attributes?.lastTransition);
+  const isRefunded = process.isRefunded(transaction?.attributes?.lastTransition);
 
   let providerTotalMessageId = 'OrderBreakdown.providerTotalDefault';
-  if (isReceived || isCompleted) {
+  if (isCompleted) {
     providerTotalMessageId = 'OrderBreakdown.providerTotalReceived';
-  } else if (isCanceled) {
-    providerTotalMessageId = 'OrderBreakdown.providerTotalCanceled';
+  } else if (isRefunded) {
+    providerTotalMessageId = 'OrderBreakdown.providerTotalRefunded';
   }
 
   const totalLabel = isProvider ? (
