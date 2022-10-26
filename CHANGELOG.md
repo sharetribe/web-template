@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Add fixes, remove some legacy code, and improve code comments.
+  [#61](https://github.com/sharetribe/ftw-x/pull/61)
 - [change] Rename default processes, and the references in code and translations.
 
   - Reorder actions that decline or cancel booking in reference booking process
