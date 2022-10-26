@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { FormattedMessage } from '../../../../util/reactIntl';
+
 /**
  * Error messages (e.g. invalidExistingTransactionType and noTransactionTypeSet)
  * @param {object} props
