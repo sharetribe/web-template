@@ -56,6 +56,11 @@
   min-height: 38px;
   width: 300px;
   max-width: 110px;
+  margin: 12px 0 6px 0;
+
+  @media (--viewportMedium) {
+    margin: 8px 0 16px 0;
+  }
 }
 
 /* Verification required box */

@@ -75,7 +75,7 @@
 }
 @media (--viewportMedium) {
   .label {
-    padding: 8px 0 16px 0;
+    padding: 8px 0 8px 0;
   }
 }
 
@@ -90,6 +90,7 @@
 .minPrice,
 .maxPrice {
   width: 48px;
+  line-height: 24px;
   text-align: center;
 
   -moz-appearance: textfield;
@@ -113,7 +114,7 @@
   margin: 6px 8px 0 8px;
 
   @media (--viewportMedium) {
-    margin: 5px 8px 0 8px;
+    margin: 0 8px 0 8px;
   }
 }
 

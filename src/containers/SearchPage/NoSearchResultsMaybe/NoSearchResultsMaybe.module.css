@@ -21,7 +21,6 @@
 
   /* Layout */
   display: inline;
-  margin: 0;
   padding: 0;
 
   /* Override button styles */
@@ -37,5 +36,6 @@
 
   @media (--viewportMedium) {
     padding: 3px 0 5px 0;
+    margin: 8px 0 16px 0;
   }
 }

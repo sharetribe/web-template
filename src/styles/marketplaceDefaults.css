@@ -286,17 +286,14 @@ h5,
   font-size: 14px;
   line-height: 18px;
   letter-spacing: 0;
-  padding: 5px 0 1px 0;
   /* x * 6px */
-  margin-top: 12px;
-  margin-bottom: 6px;
+  padding: 5px 0 1px 0;
+  margin: 0;
 
   @media (--viewportMedium) {
     line-height: 16px;
-    padding: 2px 0 6px 0;
     /* x * 8px */
-    margin-top: 8px;
-    margin-bottom: 16px;
+    padding: 2px 0 6px 0;
   }
 }
 

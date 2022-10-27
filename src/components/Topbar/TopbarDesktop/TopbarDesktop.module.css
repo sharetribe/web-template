@@ -126,12 +126,13 @@
 }
 
 .topbarDesktopLabel {
+  composes: h5 from global;
   display: inline-block;
   margin: 28px 0;
   text-decoration: inherit;
 
   @media (--viewportMedium) {
-    margin: 28px 0;
+    margin: 26px 0 22px 0;
   }
 }
 
@@ -293,7 +294,7 @@
   text-decoration: inherit;
 
   @media (--viewportMedium) {
-    margin: 28px 0;
+    margin: 26px 0 22px 0;
   }
 }
 

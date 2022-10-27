@@ -389,11 +389,6 @@
   /* Font */
   composes: h5 from global;
   color: var(--matterColor);
-
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
 }
 
 .heading {

@@ -89,15 +89,16 @@ const Fonts = () => {
 
   const h5FontStyling = `Mobile styles:
   font-size: 14px;
+  font-weight: var(--fontWeightMedium);
   line-height: 18px;
-  margin-top: 10px;
-  margin-bottom: 8px;
+  padding: 5px 0 1px 0;
+  margin: 0;
 
   Desktop styles:
   font-size: 14px;
   line-height: 16px;
-  margin-top: 10px;
-  margin-bottom: 14px;`;
+  padding: 2px 0 6px 0;
+  margin: 0;`;
 
   const h6FontStyling = `Mobile styles:
   font-size: 12px;

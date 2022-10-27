@@ -180,17 +180,9 @@
   color: var(--matterColor);
   transition: var(--transitionStyleButton);
 
-  margin-top: 0;
-  margin-bottom: 12px;
-
   &:hover {
     color: var(--marketplaceColor);
     text-decoration: none;
-  }
-
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
   }
 }
 

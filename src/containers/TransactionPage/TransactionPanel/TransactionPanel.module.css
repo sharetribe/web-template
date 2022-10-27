@@ -268,9 +268,6 @@
 .detailCardSubtitle {
   composes: h5 from global;
 
-  margin-top: 0;
-  margin-bottom: 0;
-
   @media (--viewportLarge) {
     margin-top: 9px;
     margin-bottom: 0;
@@ -281,7 +278,10 @@
 .address {
   composes: h5 from global;
   color: var(--matterColor);
-  margin: 0;
+
+  @media (--viewportMedium) {
+    margin: 8px 0 16px 0;
+  }
 }
 
 .viewOnGoogleMapsWrapper {
@@ -290,11 +290,11 @@
 
 .pickupAddress {
   composes: h5 from global;
-  margin: 0;
   display: inline-block;
 
   @media (--viewportMedium) {
     padding: 3px 0 5px 0;
+    margin: 8px 0 16px 0;
   }
 }
 

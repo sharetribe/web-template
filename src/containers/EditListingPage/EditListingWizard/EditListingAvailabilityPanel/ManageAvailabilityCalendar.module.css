@@ -3,8 +3,6 @@
 .root {
   composes: h5 from global;
 
-  margin-top: 0;
-  margin-bottom: 0;
   overflow-x: hidden;
   z-index: 0;
 

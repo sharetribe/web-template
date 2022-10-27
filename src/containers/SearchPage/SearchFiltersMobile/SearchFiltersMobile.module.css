@@ -112,6 +112,10 @@
   &:hover {
     color: var(--matterColor);
   }
+
+  @media (--viewportMedium) {
+    margin: 8px 0 16px 0;
+  }
 }
 
 .filtersWrapper {

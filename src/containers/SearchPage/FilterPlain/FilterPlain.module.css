@@ -76,7 +76,6 @@
 
 .clearButton {
   composes: h5 from global;
-  margin: 0;
   display: block;
   font-weight: var(--fontWeightMedium);
   color: var(--matterColorAnti);
@@ -95,7 +94,7 @@
 
   @media (--viewportMedium) {
     padding: 4px 0 4px 12px;
-    margin-top: 8px;
+    margin: 8px 0 16px 0;
   }
 }
 

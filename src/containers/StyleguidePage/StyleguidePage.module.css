@@ -33,6 +33,10 @@
   box-shadow: var(--boxShadow);
 }
 
+.navBarLabel {
+  font-weight: var(--fontWeightBold);
+}
+
 .main {
   flex-grow: 1;
   composes: withPadding;

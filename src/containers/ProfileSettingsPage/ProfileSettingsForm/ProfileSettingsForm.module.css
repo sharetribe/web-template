@@ -166,15 +166,10 @@
   border: solid 1px var(--matterColorNegative);
   border-radius: 2px;
 
-  margin-top: 0;
-  margin-bottom: 0;
-
   @media (--viewportMedium) {
     /* Position: under */
     bottom: -10px;
     right: auto;
-    margin-top: 0;
-    margin-bottom: 0;
     transition: var(--transitionStyleButton);
     padding: 11px 10px 7px 35px;
   }
@@ -250,14 +245,10 @@
 .fileInfo {
   composes: h5 from global;
   color: var(--matterColorAnti);
-  margin-top: 0;
-  margin-bottom: 0;
   padding-top: 5px;
   padding-bottom: 1px;
 
   @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
     padding: 4px 0 4px 0;
   }
 }

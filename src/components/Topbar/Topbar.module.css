@@ -55,7 +55,6 @@
   /* Layout */
   display: flex;
   width: 66px;
-  margin: 0;
   border-width: 0px;
   background-color: transparent;
 
@@ -256,10 +255,5 @@
 .genericErrorText {
   composes: h5 from global;
   font-weight: var(--fontWeightSemiBold);
-  margin: 0;
   color: var(--matterColorLight);
-
-  @media (--viewportMedium) {
-    margin: 0;
-  }
 }

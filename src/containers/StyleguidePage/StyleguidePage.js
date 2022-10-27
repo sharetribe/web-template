@@ -89,6 +89,8 @@ Example.propTypes = {
   useDefaultWrapperStyles: bool,
 };
 
+const H5 = props => <h5 className={css.navBarLabel} {...props} />;
+
 // Renders the list of component example groups as clickable filters
 const Nav = props => {
   const { groups, selectedGroup } = props;
@@ -142,14 +144,14 @@ const Nav = props => {
   return (
     <nav className={css.withMargin}>
       <ul>{toGroupLink(ALL)}</ul>
-      <h5>Design elements</h5>
+      <H5>Design elements</H5>
       <ul className={css.groups}>{designElementGroups}</ul>
-      <h5>Shared components</h5>
+      <H5>Shared components</H5>
       <ul className={css.groups}>
         {sharedComponentGroups}
         {toGroupLink(DEFAULT_GROUP)}
       </ul>
-      <h5>Page-related components</h5>
+      <H5>Page-related components</H5>
       <ul className={css.groups}>{pageSubComponentGroups}</ul>
     </nav>
   );

@@ -311,14 +311,8 @@
 .detailsSubtitle {
   composes: h5 from global;
 
-  /* Reset margins from font styles */
-  margin-top: 0;
-  margin-bottom: 0;
-
   @media (--viewportLarge) {
     padding: 3px 0 5px 0;
-    margin-top: 0;
-    margin-bottom: 0;
   }
 }
 .orderBreakdownTitle {

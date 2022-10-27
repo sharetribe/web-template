@@ -144,6 +144,11 @@
 .buttonAddNew {
   composes: h5 from global;
   color: var(--matterColor);
+  margin: 12px 0 6px 0;
+
+  @media (--viewportMedium) {
+    margin: 8px 0 16px 0;
+  }
 }
 .submitButton {
   margin-top: auto;

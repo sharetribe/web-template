@@ -39,11 +39,11 @@
 .reviewInfo {
   composes: h5 from global;
   margin-top: 10px;
-  margin-bottom: 0px;
   color: var(--matterColorAnti);
 
   @media (--viewportMedium) {
     margin-top: 9px;
+    margin-bottom: 16px;
   }
 }
 

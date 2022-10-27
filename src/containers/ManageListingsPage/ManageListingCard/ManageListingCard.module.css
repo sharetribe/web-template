@@ -418,4 +418,9 @@
 
 .closeListingText {
   composes: h5 from global;
+  margin: 12px 0 6px 0;
+
+  @media (--viewportMedium) {
+    margin: 8px 0 16px 0;
+  }
 }

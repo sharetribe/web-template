@@ -188,7 +188,6 @@
   composes: h5 from global;
   color: var(--matterColorAnti);
   padding: 14px 24px 2px 24px;
-  margin: 0;
 }
 
 .savedPaymentMethodDelete {

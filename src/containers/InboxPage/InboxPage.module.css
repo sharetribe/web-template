@@ -270,14 +270,9 @@
   font-weight: var(--fontWeightSemiBold);
   color: var(--matterColor);
 
-  margin-top: 0;
-  margin-bottom: 0;
-
   @media (--viewportMedium) {
     line-height: 16px;
     padding: 3px 0 5px 0;
-    margin-top: 0;
-    margin-bottom: 0;
   }
 }
 .itemTitle {

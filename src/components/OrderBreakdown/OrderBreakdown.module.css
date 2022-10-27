@@ -41,7 +41,6 @@
 
 .dayLabel {
   composes: h5 from global;
-  margin: 0;
   line-height: 24px;
   padding-top: 2px;
   padding-bottom: 4px;
