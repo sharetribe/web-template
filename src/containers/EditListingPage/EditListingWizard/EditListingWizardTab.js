@@ -216,7 +216,7 @@ const EditListingWizardTab = props => {
           onDeleteAvailabilityException={onDeleteAvailabilityException}
           onNextTab={() =>
             redirectAfterDraftUpdate(
-              listing.id.uuid,
+              listing.id,
               params,
               tab,
               marketplaceTabs,

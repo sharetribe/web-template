@@ -16,7 +16,7 @@ import {
   SCHEMA_TYPE_BOOLEAN,
   propTypes,
 } from '../../../util/types';
-import { BOOKING_PROCESS_NAME } from '../../../util/transaction';
+import { BOOKING_PROCESS_NAME, isBookingProcess } from '../../../util/transaction';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_NEW,
@@ -386,7 +386,7 @@ class EditListingWizard extends Component {
 
     const tabs = invalidExistingTransactionType
       ? TABS_DETAILS_ONLY
-      : processName === BOOKING_PROCESS_NAME
+      : isBookingProcess(processName)
       ? TABS_BOOKING
       : TABS_PRODUCT;
 
