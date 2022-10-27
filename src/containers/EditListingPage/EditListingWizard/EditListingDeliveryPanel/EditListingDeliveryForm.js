@@ -122,7 +122,7 @@ export const EditListingDeliveryFormComponent = props => (
 
             <FieldLocationAutocompleteInput
               disabled={!pickupEnabled}
-              className={css.input}
+              rootClassName={css.input}
               inputClassName={css.locationAutocompleteInput}
               iconClassName={css.locationAutocompleteInputIcon}
               predictionsClassName={css.predictionsRoot}

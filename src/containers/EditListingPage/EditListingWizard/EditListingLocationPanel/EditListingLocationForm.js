@@ -79,7 +79,7 @@ export const EditListingLocationFormComponent = props => (
           ) : null}
 
           <FieldLocationAutocompleteInput
-            className={css.locationAddress}
+            rootClassName={css.locationAddress}
             inputClassName={css.locationAutocompleteInput}
             iconClassName={css.locationAutocompleteInputIcon}
             predictionsClassName={css.predictionsRoot}
