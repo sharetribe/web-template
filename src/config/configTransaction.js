@@ -38,30 +38,30 @@ export const transactionTypes = [
     alias: 'release-1',
     unitType: 'day',
   },
-  // // Here are some examples for other transactionTypes
-  // // TODO: SearchPage does not work well if both booking and product selling are used at the same time
-  // {
-  //   type: 'nightly-booking',
-  //   label: 'Nightly booking',
-  //   process: 'default-booking',
-  //   alias: 'release-1',
-  //   unitType: 'night',
-  // },
-  // {
-  //   type: 'hourly-booking',
-  //   label: 'Hourly booking',
-  //   process: 'default-booking',
-  //   alias: 'release-1',
-  //   unitType: 'hour',
-  // },
-  // {
-  //   type: 'product-selling',
-  //   label: 'Sell bicycles',
-  //   process: 'default-buying-products',
-  //   alias: 'release-1',
-  //   unitType: 'item',
-  //   showStock: false,
-  // },
+  // Here are some examples for other transactionTypes
+  // TODO: SearchPage does not work well if both booking and product selling are used at the same time
+  {
+    type: 'nightly-booking',
+    label: 'Nightly booking',
+    process: 'default-booking',
+    alias: 'release-1',
+    unitType: 'night',
+  },
+  {
+    type: 'hourly-booking',
+    label: 'Hourly booking',
+    process: 'default-booking',
+    alias: 'release-1',
+    unitType: 'hour',
+  },
+  {
+    type: 'product-selling',
+    label: 'Sell bicycles',
+    process: 'default-buying-products',
+    alias: 'release-1',
+    unitType: 'item',
+    showStock: false,
+  },
 ];
 
 // SearchPage can enforce listing query to only those listings with valid transactionType

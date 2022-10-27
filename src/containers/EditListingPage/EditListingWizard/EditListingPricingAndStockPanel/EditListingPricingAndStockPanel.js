@@ -50,7 +50,9 @@ const EditListingPricingAndStockPanel = props => {
   const initialValues = getInitialValues(props);
 
   // Form needs to know data from transactionType
-  const selectedTransactionType = listing?.attributes?.publicData.transactionType;
+  const publicData = listing?.attributes?.publicData;
+  const selectedTransactionType = publicData.transactionType;
+  const unitType = publicData.unitType;
   const transactionTypeConfig = transactionTypes.find(
     conf => conf.type === selectedTransactionType
   );
@@ -106,6 +108,7 @@ const EditListingPricingAndStockPanel = props => {
           listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
           marketplaceCurrency={marketplaceCurrency}
           transactionType={transactionTypeConfig}
+          unitType={unitType}
           saveActionMsg={submitButtonText}
           disabled={disabled}
           ready={ready}
