@@ -458,7 +458,7 @@ propTypes.listingExtendedDataConfig = arrayOf(
   shape({
     key: string.isRequired,
     scope: string,
-    includeForTransactionTypes: arrayOf(string).isRequired,
+    includeForTransactionTypes: arrayOf(string),
     schemaType: oneOf(EXTENDED_DATA_SCHEMA_TYPES).isRequired,
     schemaOptions: arrayOf(
       shape({
