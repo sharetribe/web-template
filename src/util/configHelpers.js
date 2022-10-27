@@ -147,20 +147,20 @@ const validTransactionTypesForListingConfig = (
   includeForTransactionTypes,
   transactionTypesInUse
 ) => {
-  const isUndefined = typeof includeForTransactionTypes === 'undefined';
+  const isUndefinedOrNull = includeForTransactionTypes == null;
   const isArray = Array.isArray(includeForTransactionTypes);
   const validatedTransactionTypes = isArray
     ? includeForTransactionTypes.filter(pa => transactionTypesInUse.includes(pa))
     : [];
 
   const hasValidTransactionTypes = validatedTransactionTypes.length > 0;
-  const isValid = hasValidTransactionTypes || isUndefined;
+  const isValid = hasValidTransactionTypes || isUndefinedOrNull;
   const validValue = hasValidTransactionTypes
-    ? validatedTransactionTypes
-    : isUndefined
-    ? transactionTypesInUse
-    : [];
-  return [isValid, { includeForTransactionTypes: validValue }];
+    ? { includeForTransactionTypes: validatedTransactionTypes }
+    : isUndefinedOrNull
+    ? { includeForTransactionTypes: transactionTypesInUse }
+    : {};
+  return [isValid, validValue];
 };
 
 const isStringType = str => typeof str === 'string';
@@ -334,7 +334,12 @@ const validListingExtendedData = (listingExtendedData, transactionTypesInUse) =>
     );
 
     if (validationData.isValid) {
-      return [...acc, validationData.config];
+      const hasIncludeForTransactionTypes = validationData.config?.includeForTransactionTypes;
+      const includeForTransactionTypesMaybe = !hasIncludeForTransactionTypes
+        ? { includeForTransactionTypes: transactionTypesInUse }
+        : {};
+
+      return [...acc, { ...validationData.config, ...includeForTransactionTypesMaybe }];
     } else {
       return acc;
     }

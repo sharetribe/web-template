@@ -92,12 +92,14 @@ const pickCustomExtendedDataFields = (
   clearExtraCustomFields = false
 ) => {
   return extendedDataConfigs.reduce((fields, extendedDataConfig) => {
-    const { key, includeForTransactionTypes = [], scope = 'public', schemaType } =
+    const { key, includeForTransactionTypes, scope = 'public', schemaType } =
       extendedDataConfig || {};
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
-    const isTargetTransactionType = includeForTransactionTypes.includes(targetTransactionType);
+    const isTargetTransactionType =
+      includeForTransactionTypes == null ||
+      includeForTransactionTypes.includes(targetTransactionType);
 
     if (isKnownSchemaType && isTargetScope && isTargetTransactionType) {
       const fieldValue = data[key] || null;

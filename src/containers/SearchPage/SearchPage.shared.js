@@ -341,9 +341,9 @@ export const groupExtendedDataConfigs = (configs, activeTransactionTypes) =>
       const [primary, secondary] = grouped;
       const { includeForTransactionTypes, indexForSearch, searchPageConfig } = config;
       const isIndexed = indexForSearch === true;
-      const isActiveTransactionTypes = includeForTransactionTypes.every(tt =>
-        activeTransactionTypes.includes(tt)
-      );
+      const isActiveTransactionTypes =
+        includeForTransactionTypes == null ||
+        includeForTransactionTypes.every(tt => activeTransactionTypes.includes(tt));
       const isPrimary = searchPageConfig?.group === 'primary';
       return isActiveTransactionTypes && isIndexed && isPrimary
         ? [[...primary, config], secondary]
