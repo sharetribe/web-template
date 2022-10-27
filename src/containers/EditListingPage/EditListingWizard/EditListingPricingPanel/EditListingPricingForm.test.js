@@ -13,6 +13,7 @@ describe('EditListingPricingForm', () => {
         dispatch={noop}
         onSubmit={v => v}
         marketplaceCurrency="USD"
+        unitType="day"
         listingMinimumPriceSubUnits={0}
         saveActionMsg="Save price"
         updated={false}

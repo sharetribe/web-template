@@ -9,6 +9,7 @@ export const Empty = {
     },
     saveActionMsg: 'Save price',
     marketplaceCurrency: 'USD',
+    unitType: 'day',
     updated: false,
     updateInProgress: false,
     disabled: false,

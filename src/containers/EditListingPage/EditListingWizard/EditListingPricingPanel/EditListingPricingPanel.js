@@ -46,6 +46,7 @@ const EditListingPricingPanel = props => {
     initialValues.price instanceof Money
       ? initialValues.price.currency === marketplaceCurrency
       : true;
+  const unitType = listing?.attributes?.publicData?.unitType;
 
   return (
     <div className={classes}>
@@ -73,6 +74,7 @@ const EditListingPricingPanel = props => {
             onSubmit(updateValues);
           }}
           marketplaceCurrency={marketplaceCurrency}
+          unitType={unitType}
           listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
           saveActionMsg={submitButtonText}
           disabled={disabled}
