@@ -29,8 +29,8 @@
   color: var(--matterColor);
   padding-bottom: 24px;
 
-  margin-bottom: 0;
+  margin-top: 6px;
   @media (--viewportMedium) {
-    margin-bottom: 0;
+    margin-top: 8px;
   }
 }

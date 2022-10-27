@@ -17,13 +17,7 @@
   padding: 1px 5px 3px 6px;
   margin-left: 4px;
 
-  /* Font margins off */
-  margin-top: 0;
-  margin-bottom: 0;
-
   @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
     padding: 2px 5px 3px 6px;
   }
 

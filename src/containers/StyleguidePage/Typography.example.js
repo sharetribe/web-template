@@ -101,15 +101,17 @@ const Fonts = () => {
 
   const h6FontStyling = `Mobile styles:
   font-size: 12px;
+  font-weight: var(--fontWeightBold);
   line-height: 18px;
-  margin-top: 10px;
-  margin-bottom: 8px;
+  letter-spacing: 1.5px;
+  padding: 2px 0 4px 0;
+  margin: 0;
 
   Desktop styles:
   font-size: 12px;
   line-height: 16px;
-  margin-top: 10px;
-  margin-bottom: 6px;`;
+  padding: 3px 0 5px 0;
+  margin: 0;`;
 
   const bodyFontStyling = `Mobile styles:
   font-size: 18px;

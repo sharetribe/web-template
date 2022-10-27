@@ -309,15 +309,12 @@ h6,
   text-transform: uppercase;
   /* x * 6px */
   padding: 2px 0 4px 0;
-  margin-top: 6px;
-  margin-bottom: 6px;
+  margin: 0;
 
   @media (--viewportMedium) {
     line-height: 16px;
     /* x * 8px */
     padding: 3px 0 5px 0;
-    margin-top: 8px;
-    margin-bottom: 8px;
   }
 }
 
