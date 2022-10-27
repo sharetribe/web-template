@@ -14,7 +14,7 @@
  *                                  Default value: 'public'.
  *                                  Note: listing doesn't support 'protected' scope atm.
  * - includeForTransactionTypes:    An array of transaction types, for which the extended
- *                                  data is relevant and should be added.
+ *   (optional)                     data is relevant and should be added.
  * - schemaType (optional):         Schema for this extended data field.
  *                                  This is relevant when rendering components and querying listings.
  *                                  Possible values: 'enum', 'multi-enum', 'text', 'long', 'boolean'.
@@ -50,12 +50,6 @@ export const listingExtendedData = [
   {
     key: 'category',
     scope: 'public',
-    includeForTransactionTypes: [
-      'product-selling',
-      'daily-booking',
-      'nightly-booking',
-      'hourly-booking',
-    ],
     schemaType: 'enum',
     schemaOptions: [
       { option: 'city-bikes', label: 'City bikes' },
@@ -84,12 +78,6 @@ export const listingExtendedData = [
   {
     key: 'tire-size',
     scope: 'public',
-    includeForTransactionTypes: [
-      'product-selling',
-      'daily-booking',
-      'nightly-booking',
-      'hourly-booking',
-    ],
     schemaType: 'enum',
     schemaOptions: [
       { option: 29, label: '29' },
@@ -119,12 +107,6 @@ export const listingExtendedData = [
   {
     key: 'brand',
     scope: 'public',
-    includeForTransactionTypes: [
-      'product-selling',
-      'daily-booking',
-      'nightly-booking',
-      'hourly-booking',
-    ],
     schemaType: 'enum',
     schemaOptions: [
       { option: 'cube', label: 'Cube' },
@@ -155,12 +137,6 @@ export const listingExtendedData = [
   {
     key: 'equipped-with',
     scope: 'public',
-    includeForTransactionTypes: [
-      'product-selling',
-      'daily-booking',
-      'nightly-booking',
-      'hourly-booking',
-    ],
     schemaType: 'multi-enum',
     schemaOptions: [
       { option: 'bell', label: 'Bell' },

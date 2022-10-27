@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Improve listingExtendedData config / includeForTransactionTypes handling.
+  [#63](https://github.com/sharetribe/ftw-x/pull/63)
 - [change] Refactor microcopy aka translations and pass arguments to them.
   [#62](https://github.com/sharetribe/ftw-x/pull/62)
 - [change] Add fixes, remove some legacy code, and improve code comments.

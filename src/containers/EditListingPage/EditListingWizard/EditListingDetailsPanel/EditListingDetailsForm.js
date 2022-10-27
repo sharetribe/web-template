@@ -125,10 +125,11 @@ const AddCustomExtendedDataFields = props => {
   const { transactionType, listingExtendedDataConfig, intl } = props;
   const extendedDataConfigs = listingExtendedDataConfig || [];
   const fields = extendedDataConfigs.reduce((pickedFields, extendedDataConfig) => {
-    const { key, includeForTransactionTypes = [], schemaType, scope } = extendedDataConfig || {};
+    const { key, includeForTransactionTypes, schemaType, scope } = extendedDataConfig || {};
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
-    const isTargetProcessAlias = includeForTransactionTypes.includes(transactionType);
+    const isTargetProcessAlias =
+      includeForTransactionTypes == null || includeForTransactionTypes.includes(transactionType);
     const isProviderScope = ['public', 'private'].includes(scope);
 
     return isKnownSchemaType && isTargetProcessAlias && isProviderScope
