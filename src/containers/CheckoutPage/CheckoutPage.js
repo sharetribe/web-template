@@ -966,7 +966,7 @@ export class CheckoutPageComponent extends Component {
             </div>
             {speculateTransactionErrorMessage}
             <h2 className={css.orderBreakdownTitle}>
-              <FormattedMessage id="CheckoutPage.orderBreakdown" />
+              <FormattedMessage id={`CheckoutPage.${processName}.orderBreakdown`} />
             </h2>
             {breakdown}
           </div>
