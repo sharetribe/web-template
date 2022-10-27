@@ -83,6 +83,7 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
         >
           <BreakdownMaybe
             orderBreakdown={null}
+            processName="default-buying-products"
           />
           <DiminishedActionButtonMaybe
             onOpenDisputeModal={[Function]}
@@ -179,6 +180,7 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
           <BreakdownMaybe
             className="breakdownContainer"
             orderBreakdown={null}
+            processName="default-buying-products"
           />
         </div>
         <DiminishedActionButtonMaybe
@@ -281,6 +283,7 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
         >
           <BreakdownMaybe
             orderBreakdown={null}
+            processName="default-buying-products"
           />
           <DiminishedActionButtonMaybe
             onOpenDisputeModal={[Function]}
@@ -377,6 +380,7 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
           <BreakdownMaybe
             className="breakdownContainer"
             orderBreakdown={null}
+            processName="default-buying-products"
           />
         </div>
         <DiminishedActionButtonMaybe
