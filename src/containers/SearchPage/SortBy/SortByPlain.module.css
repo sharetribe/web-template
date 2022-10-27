@@ -9,9 +9,12 @@
   composes: h3 from global;
 
   /* Baseline adjustment for label text */
-  margin-top: 0;
-  margin-bottom: 12px;
   padding: 4px 0 2px 0;
+  margin: 0 0 12px 0;
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
+  }
 }
 
 .filterLabel {

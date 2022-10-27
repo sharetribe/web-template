@@ -34,6 +34,10 @@
   padding-top: 19px;
   padding-bottom: 5px;
   color: var(--matterColorAnti);
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
+  }
 }
 
 .error {

@@ -53,4 +53,8 @@
 .subtitle {
   margin-top: 32px;
   margin-bottom: 16px;
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
+  }
 }

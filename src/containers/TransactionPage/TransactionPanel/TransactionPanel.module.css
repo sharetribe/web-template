@@ -325,11 +325,9 @@
 
 .sectionHeading {
   color: var(--matterColor);
-  margin: 0;
 
   @media (--viewportMedium) {
     padding: 7px 0 1px 0;
-    margin: 0;
   }
 }
 .shippingInfoContent {

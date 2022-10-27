@@ -21,16 +21,16 @@ const buttonTabs = [
 const TabNavHorizontalComponent = () => {
   return (
     <div>
-      <h3>Horizontal link tab navigation with light skin</h3>
+      <h3>Horizontal link tab navigation with light skin:</h3>
       <LinkTabNavHorizontal tabs={linkTabs} />
 
-      <h3>Horizontal link tab navigation with dark skin</h3>
+      <h3>Horizontal link tab navigation with dark skin:</h3>
       <LinkTabNavHorizontal tabs={linkTabs} skin="dark" />
 
-      <h3>Horizontal button tab navigation with light skin</h3>
+      <h3>Horizontal button tab navigation with light skin:</h3>
       <ButtonTabNavHorizontal tabs={buttonTabs} />
 
-      <h3>Horizontal button tab navigation with dark skin</h3>
+      <h3>Horizontal button tab navigation with dark skin:</h3>
       <ButtonTabNavHorizontal tabs={buttonTabs} skin="dark" />
     </div>
   );

@@ -24,3 +24,11 @@
   stroke: #fff;
   margin-right: 10px;
 }
+
+.h3Custom {
+  margin: 18px 0 12px 0;
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
+  }
+}

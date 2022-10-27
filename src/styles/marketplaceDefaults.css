@@ -250,14 +250,11 @@ h3,
   font-size: 18px;
   line-height: 24px;
   /* x * 6px */
-  margin-top: 18px;
-  margin-bottom: 12px;
+  margin: 0;
 
   @media (--viewportMedium) {
-    padding: 5px 0 3px 0;
     /* x * 8px */
-    margin-top: 16px;
-    margin-bottom: 16px;
+    padding: 5px 0 3px 0;
   }
 }
 

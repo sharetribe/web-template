@@ -79,7 +79,7 @@ const renderForm = formRenderProps => {
     breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
   const breakdown = showBreakdown ? (
     <div className={css.breakdownWrapper}>
-      <h3>
+      <h3 className={css.breakdownTitle}>
         <FormattedMessage id="ProductOrderForm.breakdownTitle" />
       </h3>
       <EstimatedCustomerBreakdownMaybe

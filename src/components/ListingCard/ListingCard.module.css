@@ -50,15 +50,6 @@
 .priceValue {
   /* Font */
   composes: h3 from global;
-
-  /* Remove default margins from font */
-  margin-top: 0;
-  margin-bottom: 0;
-
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
 }
 
 .perUnit {

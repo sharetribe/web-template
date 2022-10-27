@@ -22,6 +22,14 @@
   }
 }
 
+.subTitle {
+  margin: 18px 0 12px 0;
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
+  }
+}
+
 .formRow {
   display: flex;
   justify-content: space-between;
@@ -92,15 +100,12 @@
 
 .accountInformationTitle {
   composes: h3 from global;
-  margin: 0;
-  padding-top: 5px;
-  padding-bottom: 1px;
-}
+  padding: 5px 0 1px 0;
+  margin: 18px 0 12px 0;
 
-@media (--viewportMedium) {
-  .accountInformationTitle {
-    padding-top: 4px;
-    padding-bottom: 4px;
+  @media (--viewportMedium) {
+    padding: 4px 0;
+    margin: 16px 0;
   }
 }
 

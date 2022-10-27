@@ -64,16 +64,16 @@ const Fonts = () => {
   margin-bottom: 19px;`;
 
   const h3FontStyling = `Mobile styles:
-  font-size: 20px;
+  font-size: 18px;
+  font-weight: var(--fontWeightSemiBold);
   line-height: 24px;
-  margin-top: 16px;
-  margin-bottom: 14px;
+  margin: 0;
 
   Desktop styles:
-  font-size: 20px;
+  font-size: 18px;
   line-height: 24px;
-  margin-top: 16px;
-  margin-bottom: 16px;`;
+  padding: 5px 0 3px 0;
+  margin: 0;`;
 
   const h4FontStyling = `Mobile styles:
   font-size: 15px;

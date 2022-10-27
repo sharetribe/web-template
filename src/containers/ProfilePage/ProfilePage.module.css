@@ -110,7 +110,7 @@
 .listingsTitle {
   composes: h3 from global;
   color: var(--matterColor);
-  margin-bottom: 0;
+  margin: 18px 0 0 0;
 
   @media (--viewportMedium) {
     margin-top: 48px;
@@ -198,7 +198,10 @@
 
 .desktopReviewsTitle {
   composes: h3 from global;
-  margin-bottom: 0;
+
+  @media (--viewportMedium) {
+    margin: 16px 0 0 0;
+  }
 }
 
 .desktopReviewsTabNav {

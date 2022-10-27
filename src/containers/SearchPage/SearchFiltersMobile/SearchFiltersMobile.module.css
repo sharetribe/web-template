@@ -14,7 +14,7 @@
 
 .searchResultSummary {
   composes: h3 from global;
-  margin-top: 6px;
+  margin: 6px 0 12px 0;
 
   display: flex;
   justify-content: space-between;
@@ -22,7 +22,7 @@
   background-color: var(--matterColorBright);
 
   @media (--viewportMedium) {
-    margin-top: 8px;
+    margin: 8px 0 16px 0;
   }
 }
 
