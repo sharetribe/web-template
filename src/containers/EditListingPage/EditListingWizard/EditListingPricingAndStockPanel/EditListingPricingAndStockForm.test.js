@@ -14,6 +14,7 @@ describe('EditListingPricingAndStockForm', () => {
         onSubmit={v => v}
         marketplaceCurrency="USD"
         listingMinimumPriceSubUnits={0}
+        unitType="item"
         transactionType={{ type: 'sell-bikes', showStock: true }}
         saveActionMsg="Save price"
         updated={false}

@@ -192,7 +192,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
         className="orderBreakdownTitle"
       >
         <MemoizedFormattedMessage
-          id="CheckoutPage.orderBreakdown"
+          id="CheckoutPage.default-buying-products.orderBreakdown"
         />
       </h2>
     </div>

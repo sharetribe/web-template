@@ -210,7 +210,10 @@ export class TransactionPanelComponent extends Component {
 
             <div className={css.orderDetails}>
               <div className={css.orderDetailsMobileSection}>
-                <BreakdownMaybe orderBreakdown={orderBreakdown} />
+                <BreakdownMaybe
+                  orderBreakdown={orderBreakdown}
+                  processName={stateData.processName}
+                />
                 <DiminishedActionButtonMaybe
                   showDispute={stateData.showDispute}
                   onOpenDisputeModal={onOpenDisputeModal}
@@ -306,6 +309,7 @@ export class TransactionPanelComponent extends Component {
                 <BreakdownMaybe
                   className={css.breakdownContainer}
                   orderBreakdown={orderBreakdown}
+                  processName={stateData.processName}
                 />
 
                 {stateData.showActionButtons ? (
