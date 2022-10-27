@@ -59,9 +59,9 @@ export const listingExtendedData = [
     schemaType: 'enum',
     schemaOptions: [
       { option: 'city-bikes', label: 'City bikes' },
-      { option: 'e-bikes', label: 'E-bikes' },
-      { option: 'mtb', label: 'MTB' },
-      { option: 'kids-bikes', label: 'Kids bikes' },
+      { option: 'electric-bikes', label: 'Electric bikes' },
+      { option: 'mountain-bikes', label: 'Mountain bikes' },
+      { option: 'childrens-bikes', label: "Children's bikes" },
     ],
     indexForSearch: true,
     searchPageConfig: {
@@ -74,8 +74,8 @@ export const listingExtendedData = [
       isDetail: true,
     },
     editListingPageConfig: {
-      label: 'Select category',
-      placeholderMessage: 'Choose…',
+      label: 'Category',
+      placeholderMessage: 'Select an option…',
       isRequired: true,
       requiredMessage: 'You need to select a category.',
     },
@@ -111,7 +111,7 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Tire size',
-      placeholderMessage: 'Choose…',
+      placeholderMessage: 'Select an option…',
       isRequired: true,
       requiredMessage: 'You need to select a tire size.',
     },
@@ -147,7 +147,7 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Brand',
-      placeholderMessage: 'Choose…',
+      placeholderMessage: 'Select an option…',
       isRequired: true,
       requiredMessage: 'You need to select a brand.',
     },
@@ -179,7 +179,7 @@ export const listingExtendedData = [
     },
     editListingPageConfig: {
       label: 'Equipped with',
-      placeholderMessage: 'Choose…',
+      placeholderMessage: 'Select an option…',
       isRequired: false,
     },
   },
