@@ -50,6 +50,7 @@ export const EditListingPricingFormComponent = props => (
         ready,
         handleSubmit,
         marketplaceCurrency,
+        unitType,
         listingMinimumPriceSubUnits,
         intl,
         invalid,
@@ -89,7 +90,10 @@ export const EditListingPricingFormComponent = props => (
             name="price"
             className={css.input}
             autoFocus={autoFocus}
-            label={intl.formatMessage({ id: 'EditListingPricingForm.pricePerProduct' })}
+            label={intl.formatMessage(
+              { id: 'EditListingPricingForm.pricePerProduct' },
+              { unitType }
+            )}
             placeholder={intl.formatMessage({ id: 'EditListingPricingForm.priceInputPlaceholder' })}
             currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
             validate={priceValidators}
@@ -119,6 +123,7 @@ EditListingPricingFormComponent.propTypes = {
   intl: intlShape.isRequired,
   onSubmit: func.isRequired,
   marketplaceCurrency: string.isRequired,
+  unitType: string.isRequired,
   listingMinimumPriceSubUnits: number,
   saveActionMsg: string.isRequired,
   disabled: bool.isRequired,
