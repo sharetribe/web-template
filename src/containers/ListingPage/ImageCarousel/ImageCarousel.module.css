@@ -143,13 +143,11 @@
   position: absolute;
   top: 21px;
   left: 20px;
-  margin: 0;
 
   /* Colors */
   color: var(--matterColorLight);
 
   @media (--viewportMedium) {
-    margin: 0;
     font-weight: var(--fontWeightSemiBold);
   }
 }

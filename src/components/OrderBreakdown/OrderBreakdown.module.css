@@ -11,16 +11,16 @@
 
 .lineItem {
   composes: h4 from global;
-  margin: 0;
-
-  @media (--viewportMedium) {
-    padding-top: 7px;
-    padding-bottom: 1px;
-  }
 
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
+  @media (--viewportMedium) {
+    padding-top: 7px;
+    padding-bottom: 1px;
+    margin: 16px 0;
+  }
 }
 
 .bookingPeriod {
@@ -58,7 +58,6 @@
 .subTotalLineItem {
   composes: h4 from global;
   font-weight: var(--fontWeightBold);
-  margin: 0;
   padding: 5px 0 1px 0;
 
   @media (--viewportMedium) {
@@ -68,11 +67,15 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+
+  @media (--viewportMedium) {
+    padding: 7px 0 1px 0;
+    margin: 16px 0;
+  }
 }
 
 .lineItemTotal {
   composes: h4 from global;
-  margin: 0;
   padding-top: 6px;
   padding-bottom: 6px;
 
@@ -84,6 +87,7 @@
   @media (--viewportMedium) {
     padding-top: 7px;
     padding-bottom: 1px;
+    margin: 16px 0;
   }
 }
 

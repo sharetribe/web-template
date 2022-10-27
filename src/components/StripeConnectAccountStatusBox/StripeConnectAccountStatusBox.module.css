@@ -37,15 +37,19 @@
   align-self: center;
 
   width: 100%;
-  margin-top: 0;
-  margin-bottom: 0;
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
+  }
 }
 
 .verificationBoxText {
   composes: h4 from global;
   font-weight: var(--fontWeightRegular);
-  margin-top: 0;
-  margin-bottom: 0;
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
+  }
 }
 
 .getVerifiedButton {
@@ -90,13 +94,16 @@
   color: var(--matterColor);
   font-weight: var(--fontWeightNormal);
   min-height: 46px;
-  margin: 0;
   padding-top: 3px;
 
   &:hover,
   &:focus {
     outline: none;
     color: var(--matterColorDark);
+  }
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
   }
 }
 

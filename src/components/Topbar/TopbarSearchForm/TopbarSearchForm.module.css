@@ -102,11 +102,7 @@
     transition: var(--transitionStyleButton);
   }
 
-  margin-top: 0;
-  margin-bottom: 0;
   @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
     font-weight: var(--fontWeightSemiBold);
   }
 }

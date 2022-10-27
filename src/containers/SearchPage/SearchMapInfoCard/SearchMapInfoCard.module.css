@@ -99,14 +99,6 @@
   /* Font */
   composes: h4 from global;
   font-weight: var(--fontWeightSemiBold);
-  margin-top: 0;
-  margin-bottom: 0;
-
-  /* Overwrite dimensions from font styles */
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
 }
 
 .paginationPrev {

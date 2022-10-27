@@ -71,7 +71,6 @@
   /* Layout */
   display: block;
   position: relative;
-  margin: 0;
   padding: 4px 0 8px 20px;
 
   /* Override button styles */
@@ -91,6 +90,10 @@
   &:disabled {
     color: var(--matterColorAnti);
     cursor: default;
+  }
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
   }
 }
 

@@ -32,11 +32,11 @@
 
 .mobileBio,
 .desktopBio {
+  composes: h4 from global;
   /* Preserve newlines, but collapse other whitespace */
   white-space: pre-line;
   margin: 18px 0 0 0;
   transition: all 1s ease-in;
-  composes: h4 from global;
 
   @media (--viewportMedium) {
     margin: 0;
@@ -126,17 +126,19 @@
 .editProfileDesktop {
   composes: h4 from global;
   display: none;
-  margin-bottom: 0;
+  margin: 12px 0 0 0;
   white-space: nowrap;
 
   @media (--viewportMedium) {
     display: inline;
+    margin: 16px 0;
   }
 }
 
 .editProfileMobile {
   composes: h4 from global;
   display: inline;
+  margin: 12px 0;
 
   @media (--viewportMedium) {
     display: none;

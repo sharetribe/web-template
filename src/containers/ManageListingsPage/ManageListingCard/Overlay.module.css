@@ -35,17 +35,6 @@
   justify-content: center;
   align-items: center;
   cursor: default;
-
-  /* Remove default margins from font */
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-@media (--viewportMedium) {
-  .overlayContent {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
 }
 
 .message {

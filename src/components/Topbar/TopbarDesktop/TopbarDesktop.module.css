@@ -316,7 +316,6 @@
 
   /* Dimensions */
   width: 100%;
-  margin: 0;
   padding: 4px 24px;
 
   /* Layout details */
@@ -332,10 +331,6 @@
       width: 6px;
       background-color: var(--marketplaceColor);
     }
-  }
-
-  @media (--viewportMedium) {
-    margin: 0;
   }
 }
 

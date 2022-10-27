@@ -174,17 +174,8 @@
 }
 
 .author {
-  width: 100%;
   composes: h4 from global;
-
-  /* Reset margins from font styles */
-  margin-top: 0;
-  margin-bottom: 0;
-
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+  width: 100%;
 }
 
 .priceBreakdownContainer {

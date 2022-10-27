@@ -32,8 +32,11 @@
 .reviewContent {
   composes: h4 from global;
   font-style: italic;
-  margin: 0;
   white-space: pre-line;
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
+  }
 }
 
 .reviewInfo {

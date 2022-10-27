@@ -106,7 +106,6 @@
   /* Layout */
   position: relative;
   min-width: 300px;
-  margin: 0;
   padding: 32px 30px 18px 30px;
 
   /* Override button styles */
@@ -121,5 +120,9 @@
   &:hover {
     color: var(--matterColor);
     transition: width var(--transitionStyleButton);
+  }
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
   }
 }

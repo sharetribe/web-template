@@ -9,6 +9,6 @@
   font-size: 13px;
 
   @media (--viewportMedium) {
-    margin-top: 8px;
+    margin-top: 8px 0 16px 0;
   }
 }

@@ -7,6 +7,11 @@
   composes: h4 from global;
   font-weight: bold;
   cursor: pointer;
+  margin: 12px 0;
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
+  }
 }
 
 .savedPaymentMethod {
@@ -72,6 +77,10 @@
   font-weight: var(--fontWeightSemiBold);
   margin-top: 13px;
   margin-bottom: 11px;
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
+  }
 }
 
 .menu {
@@ -204,6 +213,10 @@
   &:focus {
     outline: none;
     color: var(--matterColor);
+  }
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
   }
 }
 

@@ -84,13 +84,8 @@
   color: var(--matterColor);
   font-weight: var(--fontWeightSemiBold);
 
-  margin-top: 0;
-  margin-bottom: 0;
-
   @media (--viewportLarge) {
     font-weight: var(--fontWeightSemiBold);
-    margin-top: 0;
-    margin-bottom: 0;
   }
 }
 

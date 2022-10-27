@@ -282,6 +282,10 @@
   composes: h4 from global;
   color: var(--failColor);
   margin: 6px 0 24px 0;
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
+  }
 }
 
 .rootNextMonthIcon,
@@ -329,7 +333,10 @@
 .legendText {
   composes: h4 from global;
   white-space: nowrap;
-  margin: 0;
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
+  }
 }
 
 @media (--viewportSmall) {

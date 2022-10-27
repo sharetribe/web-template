@@ -48,14 +48,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 0;
-  margin-bottom: 0;
   opacity: 0;
 
   @media (--viewportMedium) {
     font-weight: var(--fontWeightSemiBold);
-    margin-top: 0;
-    margin-bottom: 0;
   }
 }
 

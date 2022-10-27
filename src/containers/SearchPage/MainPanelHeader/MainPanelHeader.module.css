@@ -13,11 +13,11 @@
 .searchResultSummary {
   composes: h4 from global;
   line-height: 20px;
+  margin: 10px 8px 11px 0px;
 
-  margin-top: 10px;
-  margin-bottom: 11px;
-  margin-left: 0px;
-  margin-right: 8px;
+  @media (--viewportMedium) {
+    margin: 16px 0;
+  }
 }
 
 .loadingResults {
@@ -36,6 +36,10 @@
   /* Layout */
   padding: 9px 0 0 0;
   margin: 0;
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
+  }
 }
 
 .resultsFound {

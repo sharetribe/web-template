@@ -30,6 +30,10 @@
     color: var(--matterColor);
     transition: width var(--transitionStyleButton);
   }
+
+  @media (--viewportMedium) {
+    margin: 16px auto 16px 0;
+  }
 }
 
 .cancelButton {
@@ -38,7 +42,6 @@
   color: var(--matterColorAnti);
 
   /* Layout */
-  margin: 0;
   padding: 0;
 
   /* Override button styles */
@@ -49,12 +52,16 @@
   /* clearButton will add all available space between cancelButton,
    * but some hard coded margin is still needed
    */
-  margin-left: 48px;
+  margin: 0 0 0 48px;
 
   &:focus,
   &:hover {
     color: var(--matterColor);
     transition: width var(--transitionStyleButton);
+  }
+
+  @media (--viewportMedium) {
+    margin: 16px 0 16px 48px;
   }
 }
 
@@ -76,5 +83,9 @@
   &:hover {
     color: var(--marketplaceColorDark);
     transition: width var(--transitionStyleButton);
+  }
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
   }
 }

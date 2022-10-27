@@ -268,15 +268,12 @@ h4,
   line-height: 24px;
   letter-spacing: 0;
   /* x * 6px */
-  margin-top: 12px;
-  margin-bottom: 12px;
+  margin: 0;
 
   @media (--viewportMedium) {
     font-weight: var(--fontWeightMedium);
-    padding: 6px 0 2px 0;
     /* x * 8px */
-    margin-top: 16px;
-    margin-bottom: 16px;
+    padding: 6px 0 2px 0;
   }
 }
 

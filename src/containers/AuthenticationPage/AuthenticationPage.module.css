@@ -205,6 +205,11 @@
 
 .confirmInfoText {
   composes: h4 from global;
+  margin: 12px 0;
+
+  @media (--viewportMedium) {
+    margin: 16px 0;
+  }
 }
 
 .buttonIcon {
