@@ -7,11 +7,13 @@ import EstimatedCustomerBreakdownMaybe from './EstimatedCustomerBreakdownMaybe';
 const { Money } = sdkTypes;
 const CURRENCY = 'USD';
 const marketplaceName = 'MarketplaceX';
+const processName = 'default-booking';
 
 export const EmptyWithoutDatesOrLineItems = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
     marketplaceName,
+    processName,
   },
   group: 'payment',
 };
@@ -20,6 +22,7 @@ export const EmptyWithoutDates = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
     marketplaceName,
+    processName,
     lineItems: [
       {
         code: 'line-item/day',
@@ -38,6 +41,7 @@ export const EmptyWithoutLineItems = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
     marketplaceName,
+    processName,
     breakdownData: {
       startDate: new Date(Date.UTC(2017, 3, 14)),
       endDate: new Date(Date.UTC(2017, 3, 15)),
@@ -50,6 +54,7 @@ export const BookingSingleDay = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
     marketplaceName,
+    processName,
     breakdownData: {
       startDate: new Date(Date.UTC(2017, 3, 14)),
       endDate: new Date(Date.UTC(2017, 3, 15)),
@@ -72,6 +77,7 @@ export const BookingMultipleNights = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
     marketplaceName,
+    processName,
     breakdownData: {
       startDate: new Date(Date.UTC(2017, 3, 14)),
       endDate: new Date(Date.UTC(2017, 3, 16)),
@@ -94,6 +100,7 @@ export const BookingUnits = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
     marketplaceName,
+    processName,
     breakdownData: {
       startDate: new Date(Date.UTC(2017, 3, 14)),
       endDate: new Date(Date.UTC(2017, 3, 16)),
@@ -116,6 +123,7 @@ export const OrderProductWithShipping = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
     marketplaceName,
+    processName,
     breakdownData: {},
     lineItems: [
       {
@@ -143,6 +151,7 @@ export const OrderProductWithPickup = {
   component: EstimatedCustomerBreakdownMaybe,
   props: {
     marketplaceName,
+    processName,
     breakdownData: {},
     lineItems: [
       {
