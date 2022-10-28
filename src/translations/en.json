@@ -911,6 +911,7 @@
   "StripePaymentForm.confirmPaymentError": "Payment has been made but we were unable to confirm the booking. Please try to confirm the booking request again! If the booking is not confirmed in time, the payment will be fully refunded.",
   "StripePaymentForm.genericError": "Could not handle payment data. Please try again.",
   "StripePaymentForm.locationDetailsTitle": "Location of the bike",
+  "StripePaymentForm.locationUnknown": "Unknown location",
   "StripePaymentForm.messageHeading": "Additional information",
   "StripePaymentForm.messageLabel": "Is there something the bike owner should know? {messageOptionalText}",
   "StripePaymentForm.messageOptionalText": "(optional)",
