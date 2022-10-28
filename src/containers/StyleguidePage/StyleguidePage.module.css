@@ -166,7 +166,6 @@
 
 .colorCard {
   flex-basis: 275px;
-  height: 275px;
   display: flex;
   flex-direction: column;
   margin-bottom: calc(4 * var(--spacingUnit));
@@ -177,8 +176,12 @@
 }
 
 .color {
+  display: grid;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  height: 66.6%;
+  height: 150px;
+  color: white;
 }
 
 .colorDescription {
@@ -190,6 +193,9 @@
   @media (--viewportMedium) {
     padding: calc(2 * var(--spacingUnitDesktop) - 2px) calc(2 * var(--spacingUnitDesktop));
   }
+}
+.colorInput {
+  padding: 2px;
 }
 
 .marketplaceColorBackground {
