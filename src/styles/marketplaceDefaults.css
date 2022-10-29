@@ -286,15 +286,15 @@ h5,
   font-size: 14px;
   line-height: 18px;
   letter-spacing: 0;
-  padding: 5px 0 1px 0;
   /* x * 6px */
+  padding: 3px 0 3px 0;
   margin-top: 12px;
   margin-bottom: 6px;
 
   @media (--viewportMedium) {
     line-height: 16px;
-    padding: 2px 0 6px 0;
     /* x * 8px */
+    padding: 2px 0 6px 0;
     margin-top: 8px;
     margin-bottom: 16px;
   }
@@ -308,7 +308,7 @@ h6,
   letter-spacing: 1.5px;
   text-transform: uppercase;
   /* x * 6px */
-  padding: 2px 0 4px 0;
+  padding: 4px 0 2px 0;
   margin-top: 6px;
   margin-bottom: 6px;
 

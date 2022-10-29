@@ -532,6 +532,7 @@ class StripePaymentForm extends Component {
       const checked = event.target.checked;
       this.updateBillingDetailsToMatchShippingAddress(checked);
     };
+    const isBookingYesNo = isBooking ? 'yes' : 'no';
 
     return hasStripeKey ? (
       <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
@@ -641,7 +642,6 @@ class StripePaymentForm extends Component {
           {hasPaymentErrors ? (
             <span className={css.errorMessage}>{paymentErrorMessage}</span>
           ) : null}
-          {paymentInfo ? <p className={css.paymentInfo}>{paymentInfo}</p> : null}
           <PrimaryButton
             className={css.submitButton}
             type="submit"
@@ -651,15 +651,21 @@ class StripePaymentForm extends Component {
             {billingDetailsNeeded ? (
               <FormattedMessage
                 id="StripePaymentForm.submitPaymentInfo"
-                values={{ totalPrice: totalPriceMaybe }}
+                values={{ totalPrice: totalPriceMaybe, isBooking: isBookingYesNo }}
               />
             ) : (
               <FormattedMessage
                 id="StripePaymentForm.submitConfirmPaymentInfo"
-                values={{ totalPrice: totalPriceMaybe }}
+                values={{ totalPrice: totalPriceMaybe, isBooking: isBookingYesNo }}
               />
             )}
           </PrimaryButton>
+          <p className={css.paymentInfo}>
+            <FormattedMessage
+              id="StripePaymentForm.submitConfirmPaymentFinePrint"
+              values={{ isBooking: isBookingYesNo, name: authorDisplayName }}
+            />
+          </p>
         </div>
       </Form>
     ) : (
@@ -686,7 +692,6 @@ StripePaymentForm.defaultProps = {
   initiateOrderError: null,
   confirmCardPaymentError: null,
   confirmPaymentError: null,
-  paymentInfo: null,
   askShippingDetails: false,
   listingLocation: null,
   totalPrice: null,
@@ -703,7 +708,6 @@ StripePaymentForm.propTypes = {
   confirmPaymentError: object,
   formId: string.isRequired,
   onSubmit: func.isRequired,
-  paymentInfo: string,
   authorDisplayName: string.isRequired,
   showInitialMessageInput: bool,
   hasHandledCardPayment: bool,
