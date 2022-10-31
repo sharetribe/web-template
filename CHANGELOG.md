@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Fix for buggy situation when showStock flag is false.
+  [#66](https://github.com/sharetribe/ftw-x/pull/66)
 - [change] Update styleguide and couple of translations.
   [#64](https://github.com/sharetribe/ftw-x/pull/64)
 - [change] Improve listingExtendedData config / includeForTransactionTypes handling.

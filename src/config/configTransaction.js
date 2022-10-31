@@ -60,7 +60,7 @@ export const transactionTypes = [
     process: 'default-buying-products',
     alias: 'release-1',
     unitType: 'item',
-    showStock: false,
+    showStock: true,
   },
 ];
 
