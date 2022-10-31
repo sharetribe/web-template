@@ -8,6 +8,30 @@
 {{/with}}
 {{~/inline~}}
 
+{{~#*inline "format-date-day"~}}
+{{#with transaction.listing.availability-plan}}
+{{date date format="MMM d, YYYY" tz=timezone}}
+{{/with}}
+{{~/inline~}}
+
+{{~#*inline "format-date-day-before"~}}
+{{#with transaction.listing.availability-plan}}
+{{date-day-before date format="MMM d, YYYY" tz=timezone}}
+{{/with}}
+{{~/inline~}}
+
+{{~#*inline "format-day"~}}
+{{#with transaction.listing.availability-plan}}
+{{date date format="EE" tz=timezone}}
+{{/with}}
+{{~/inline~}}
+
+{{~#*inline "format-day-before"~}}
+{{#with transaction.listing.availability-plan}}
+{{date-day-before date format="EE" tz=timezone}}
+{{/with}}
+{{~/inline~}}
+
 {{~#*inline "format-day-time"~}}
 {{#with transaction.listing.availability-plan}}
 {{date date format="EE h:mm a" tz=timezone}}
@@ -49,10 +73,27 @@
     <h1>Your booking request was accepted!</h1>
 
     {{#with transaction}}
+
+    {{#each tx-line-items}}
+    {{#eq "line-item/hour" code}}
     <p>
       {{ provider.display-name }} has accepted your booking request for {{ listing.title }} from
       {{> format-date date=booking.start}} to {{> format-date date=booking.end}}.
     </p>
+    {{/eq}}
+    {{#eq "line-item/day" code}}
+    <p>
+      {{ provider.display-name }} has accepted your booking request for {{ listing.title }} from
+      {{> format-date-day date=booking.start}} to {{> format-date-day-before date=booking.end}}.
+    </p>
+    {{/eq}}
+    {{#eq "line-item/night" code}}
+    <p>
+      {{ provider.display-name }} has accepted your booking request for {{ listing.title }} from
+      {{> format-date-day date=booking.start}} to {{> format-date-day date=booking.end}}.
+    </p>
+    {{/eq}}
+    {{/each}}
 
     <p>
       We have charged {{> format-money money=payin-total}} from your credit card. Here's your
@@ -65,10 +106,28 @@
           <td class="left">Start date</td>
           <td class="right">End date</td>
         </tr>
+
+        {{#each tx-line-items}}
+        {{#eq "line-item/hour" code}}
         <tr>
           <th class="left">{{> format-day-time date=booking.start}}</th>
           <th class="right">{{> format-day-time date=booking.end}}</th>
         </tr>
+        {{/eq}}
+        {{#eq "line-item/day" code}}
+        <tr>
+          <th class="left">{{> format-day date=booking.start}}</th>
+          <th class="right">{{> format-day-before date=booking.end}}</th>
+        </tr>
+        {{/eq}}
+        {{#eq "line-item/night" code}}
+        <tr>
+          <th class="left">{{> format-day date=booking.start}}</th>
+          <th class="right">{{> format-day date=booking.end}}</th>
+        </tr>
+        {{/eq}}
+        {{/each}}
+
         <tr class="bottom-row">
           <th class="left">{{> format-month-date date=booking.start}}</th>
           <th class="right">{{> format-month-date date=booking.end}}</th>
@@ -77,26 +136,85 @@
       <tbody>
         {{#each tx-line-items}}
         {{#contains include-for "customer"}}
-        {{#eq "line-item/units" code}}
+
+        {{#eq "line-item/hour" code}}
         {{#if seats}}
         <tr class="top-row">
           <td colspan="2">
             {{> format-money money=unit-price}} &times; {{number units}}
-            {{inflect units "unit" "units"}}
+            {{inflect units "hour" "hours"}}
           </td>
         </tr>
         <tr class="bottom-row">
           <td colspan="2">Seats &times; {{number seats}}</td>
         </tr>
+        <tr class="top-row">
+          <th class="left">Line total:</th>
+          <th class="right">{{> format-money money=line-total}}</th>
+        </tr>
         {{else}}
         <tr class="top-row bottom-row">
-          <td colspan="2">
+          <td>
             {{> format-money money=unit-price}} &times; {{number quantity}}
-            {{inflect quantity "unit" "units"}}
+            {{inflect quantity "hour" "hours"}}
           </td>
+          <td class="right">{{> format-money money=line-total}}</td>
         </tr>
         {{/if}}
         {{/eq}}
+
+        {{#eq "line-item/day" code}}
+        {{#if seats}}
+        <tr class="top-row">
+          <td colspan="2">
+            {{> format-money money=unit-price}} &times; {{number units}}
+            {{inflect units "day" "days"}}
+          </td>
+        </tr>
+        <tr class="bottom-row">
+          <td colspan="2">Seats &times; {{number seats}}</td>
+        </tr>
+        <tr class="top-row">
+          <th class="left">Line total:</th>
+          <th class="right">{{> format-money money=line-total}}</th>
+        </tr>
+        {{else}}
+        <tr class="top-row bottom-row">
+          <td>
+            {{> format-money money=unit-price}} &times; {{number quantity}}
+            {{inflect quantity "day" "days"}}
+          </td>
+          <td class="right">{{> format-money money=line-total}}</td>
+        </tr>
+        {{/if}}
+        {{/eq}}
+
+        {{#eq "line-item/night" code}}
+        {{#if seats}}
+        <tr class="top-row">
+          <td colspan="2">
+            {{> format-money money=unit-price}} &times; {{number units}}
+            {{inflect units "night" "night"}}
+          </td>
+        </tr>
+        <tr class="bottom-row">
+          <td colspan="2">Seats &times; {{number seats}}</td>
+        </tr>
+        <tr class="top-row">
+          <th class="left">Line total:</th>
+          <th class="right">{{> format-money money=line-total}}</th>
+        </tr>
+        {{else}}
+        <tr class="top-row bottom-row">
+          <td>
+            {{> format-money money=unit-price}} &times; {{number quantity}}
+            {{inflect quantity "night" "night"}}
+          </td>
+          <td class="right">{{> format-money money=line-total}}</td>
+        </tr>
+        {{/if}}
+        {{/eq}}
+
         {{/contains}}
         {{/each}}
       </tbody>
