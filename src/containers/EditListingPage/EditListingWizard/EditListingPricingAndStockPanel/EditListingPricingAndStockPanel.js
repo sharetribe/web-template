@@ -86,17 +86,19 @@ const EditListingPricingAndStockPanel = props => {
             // NOTE: this is going to be used on a separate call to API
             // in EditListingPage.duck.js: sdk.stock.compareAndSet();
 
+            const hasNoCurrentStock = listing?.currentStock?.attributes?.quantity == null;
             const hasStockQuantityChanged = stock && stock !== initialValues.stock;
             // currentStockQuantity is null or undefined, return null - otherwise use the value
-            const oldTotal = initialValues.stock != null ? initialValues.stock : null;
-            const stockUpdateMaybe = hasStockQuantityChanged
-              ? {
-                  stockUpdate: {
-                    oldTotal,
-                    newTotal: stock,
-                  },
-                }
-              : {};
+            const oldTotal = hasNoCurrentStock ? null : initialValues.stock;
+            const stockUpdateMaybe =
+              hasNoCurrentStock || hasStockQuantityChanged
+                ? {
+                    stockUpdate: {
+                      oldTotal,
+                      newTotal: stock,
+                    },
+                  }
+                : {};
 
             // New values for listing attributes
             const updateValues = {
