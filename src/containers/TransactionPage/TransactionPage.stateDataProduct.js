@@ -47,13 +47,14 @@ export const getStateDataForProductProcess = (txInfo, processInfo) => {
         processState,
         showDetailCardHeadings: true,
         showActionButtons: true,
+        showExtraInfo: true,
         primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED_FROM_PURCHASED, CUSTOMER),
       };
     })
     .cond([states.PURCHASED, PROVIDER], () => {
       const actionButtonTranslationId = isShippable
-        ? `TransactionPage.${processName}.${PROVIDER}.transition-mark-delivered.actionButton`
-        : `TransactionPage.${processName}.${PROVIDER}.transition-mark-delivered.actionButtonShipped`;
+        ? `TransactionPage.${processName}.${PROVIDER}.transition-mark-delivered.actionButtonShipped`
+        : `TransactionPage.${processName}.${PROVIDER}.transition-mark-delivered.actionButton`;
 
       return {
         processName,
