@@ -30,6 +30,8 @@ const PanelHeading = props => {
     rootClassName,
     processName,
     processState,
+    showExtraInfo,
+    deliveryMethod,
     isPendingPayment,
     transactionRole,
     providerName,
@@ -64,6 +66,14 @@ const PanelHeading = props => {
       {isCustomer && listingDeleted ? (
         <p className={css.transactionInfoMessage}>
           <FormattedMessage id="TransactionPanel.messageDeletedListing" />
+        </p>
+      ) : null}
+      {isCustomer && !listingDeleted && showExtraInfo ? (
+        <p className={css.transactionInfoMessage}>
+          <FormattedMessage
+            id={`TransactionPage.${processName}.${transactionRole}.${processState}.extraInfo`}
+            values={{ customerName, providerName, deliveryMethod, breakline }}
+          />
         </p>
       ) : null}
       {isProvider && isPendingPayment ? (
