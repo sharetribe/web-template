@@ -174,6 +174,8 @@ export class TransactionPanelComponent extends Component {
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
 
+    const deliveryMethod = protectedData?.deliveryMethod;
+
     const classes = classNames(rootClassName || css.root, className);
 
     return (
@@ -198,6 +200,8 @@ export class TransactionPanelComponent extends Component {
             <PanelHeading
               processName={stateData.processName}
               processState={stateData.processState}
+              showExtraInfo={stateData.showExtraInfo}
+              deliveryMethod={deliveryMethod}
               isPendingPayment={!!stateData.isPendingPayment}
               transactionRole={transactionRole}
               providerName={authorDisplayName}

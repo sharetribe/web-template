@@ -47,6 +47,7 @@ export const getStateDataForProductProcess = (txInfo, processInfo) => {
         processState,
         showDetailCardHeadings: true,
         showActionButtons: true,
+        showExtraInfo: true,
         primaryButtonProps: actionButtonProps(transitions.MARK_RECEIVED_FROM_PURCHASED, CUSTOMER),
       };
     })
