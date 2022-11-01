@@ -19,6 +19,11 @@ import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe'
 
 import css from './ProductOrderForm.module.css';
 
+// Browsers can't render huge number of select options.
+// (stock is shown inside select element)
+// Note: input element could allow ordering bigger quantities
+const MAX_QUANTITY_FOR_DROPDOWN = 100;
+
 const renderForm = formRenderProps => {
   const {
     // FormRenderProps from final-form
@@ -107,7 +112,9 @@ const renderForm = formRenderProps => {
   const quantityRequiredMsg = intl.formatMessage({ id: 'ProductOrderForm.quantityRequired' });
 
   const hasStock = currentStock && currentStock > 0;
-  const quantities = hasStock ? [...Array(currentStock).keys()].map(i => i + 1) : [];
+  const selectableStock =
+    currentStock > MAX_QUANTITY_FOR_DROPDOWN ? MAX_QUANTITY_FOR_DROPDOWN : currentStock;
+  const quantities = hasStock ? [...Array(selectableStock).keys()].map(i => i + 1) : [];
   const hasNoStockLeft = typeof currentStock != null && currentStock === 0;
   const hasOneItemLeft = typeof currentStock != null && currentStock === 1;
 
