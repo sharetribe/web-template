@@ -203,7 +203,7 @@ const ShowOutOfStockOverlayMaybe = props => {
       <NamedLink
         className={css.finishListingDraftLink}
         name="EditListingPage"
-        params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_EDIT, tab: 'pricing' }}
+        params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_EDIT, tab: 'pricing-and-stock' }}
       >
         <FormattedMessage id="ManageListingCard.setPriceAndStock" />
       </NamedLink>

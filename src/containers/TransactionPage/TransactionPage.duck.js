@@ -456,6 +456,17 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
       dispatch(addMarketplaceEntities(response));
       dispatch(transitionSuccess());
       dispatch(fetchCurrentUserNotifications());
+
+      // There could be automatic transitions after this transition
+      // For example mark-received-from-purchased > auto-complete.
+      // Here, we make one delayed update to tx.
+      // This way "leave a review" link should show up for the customer.
+      window.setTimeout(() => {
+        sdk.transactions.show({ id: txId }, { expand: true }).then(response => {
+          dispatch(addMarketplaceEntities(response));
+        });
+      }, 3000);
+
       return response;
     })
     .catch(e => {
