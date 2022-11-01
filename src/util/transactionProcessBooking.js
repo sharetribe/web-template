@@ -83,6 +83,7 @@ export const states = {
   PREAUTHORIZED: 'preauthorized',
   DECLINED: 'declined',
   ACCEPTED: 'accepted',
+  EXPIRED: 'expired',
   CANCELED: 'canceled',
   DELIVERED: 'delivered',
   REVIEWED: 'reviewed',
@@ -133,12 +134,13 @@ export const graph = {
     [states.PREAUTHORIZED]: {
       on: {
         [transitions.DECLINE]: states.DECLINED,
-        [transitions.EXPIRE]: states.DECLINED,
+        [transitions.EXPIRE]: states.EXPIRED,
         [transitions.ACCEPT]: states.ACCEPTED,
       },
     },
 
     [states.DECLINED]: {},
+    [states.EXPIRED]: {},
     [states.ACCEPTED]: {
       on: {
         [transitions.CANCEL]: states.CANCELED,

@@ -14,6 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Update processes
+
+  - Update email templates: remove outdated link to Transactionpage
+  - Update email templates: to work with different line-items (hour, day, night)
+  - Add new state to booking: expired (use it instead of declined)
+
+  [#67](https://github.com/sharetribe/ftw-x/pull/67)
+
 - [change] Fix for buggy situation when showStock flag is false.
   [#66](https://github.com/sharetribe/ftw-x/pull/66)
 - [change] Update styleguide and couple of translations.
