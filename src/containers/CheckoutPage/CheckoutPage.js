@@ -315,7 +315,7 @@ export class CheckoutPageComponent extends Component {
       const isPrivileged = process.isPrivileged(requestTransition);
 
       // Fetch speculated transaction for showing price in order breakdown
-      // NOTE: if unit type is line-item/units, quantity needs to be added.
+      // NOTE: if unit type is line-item/item, quantity needs to be added.
       // The way to pass it to checkout page is through pageData.orderData
       const quantity = pageData.orderData?.quantity;
       const quantityMaybe = quantity ? { quantity } : {};
