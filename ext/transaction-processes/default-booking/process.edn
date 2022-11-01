@@ -73,7 +73,7 @@
     ;; the transition
     {:name :action/decline-booking}],
    :from :state/preauthorized,
-   :to :state/declined}
+   :to :state/expired}
   {:name :transition/complete,
    :at {:fn/timepoint [:time/booking-end]},
    :actions [{:name :action/stripe-create-payout}],
@@ -147,10 +147,10 @@
    :on :transition/decline,
    :to :actor.role/customer,
    :template :booking-request-declined}
-  {:name :notification/booking-request-auto-declined,
+  {:name :notification/booking-request-expired,
    :on :transition/expire,
    :to :actor.role/customer,
-   :template :booking-request-auto-declined}
+   :template :booking-request-expired}
   {:name :notification/money-paid,
    :on :transition/complete,
    :to :actor.role/provider,
