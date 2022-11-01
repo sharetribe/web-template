@@ -21,7 +21,7 @@
       <tbody>
       {{#each tx-line-items}}
         {{#contains include-for "customer"}}
-          {{#eq "line-item/units" code}}
+          {{#eq "line-item/item" code}}
             <tr>
               <td>Unit price</td>
               <td style="text-align: right; padding-left: 20px">{{> format-money money=unit-price}}</td>
