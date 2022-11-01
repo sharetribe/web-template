@@ -14,6 +14,15 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Update emails in product process and make changes according to bug reports and change
+  requests.
+
+  - Add extra info microcopy in specific states
+  - Add delayed refresh for transaction entity after makeTransition call.
+  - ListingPage: Huge stock can't be rendered as select options (max 100 limit)
+
+  [#68](https://github.com/sharetribe/ftw-x/pull/68)
+
 - [change] Update processes
 
   - Update email templates: remove outdated link to Transactionpage
