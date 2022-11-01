@@ -2,7 +2,7 @@
 
 .root {
   /* Add loading color for the div */
-  background-color: var(--matterColor);
+  background-color: var(--marketplaceColor);
 
   width: 100%;
   position: relative;
