@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] ResponsiveBackgroundImageContainer: allow undefined image (use marketplaceColor).
+  [#69](https://github.com/sharetribe/ftw-x/pull/69)
 - [change] Update emails in product process and make changes according to bug reports and change
   requests.
 

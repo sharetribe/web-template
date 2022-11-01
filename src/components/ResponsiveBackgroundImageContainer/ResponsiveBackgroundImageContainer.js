@@ -60,7 +60,7 @@ const ResponsiveBackgroundImageContainer = props => {
   const Tag = as || 'div';
 
   const imageEntity = typeof image === 'string' ? createFakeImageEntity(image) : image;
-  const { variants } = imageEntity?.attributes || {};
+  const variants = imageEntity?.attributes?.variants || {};
   const variantNames = Object.keys(variants);
 
   const classes = classNames(rootClassName || css.root, className);
@@ -72,16 +72,18 @@ const ResponsiveBackgroundImageContainer = props => {
   return (
     <Tag className={classes} {...otherProps}>
       <div className={css.backgroundImageWrapper}>
-        <ResponsiveImage
-          className={css.backgroundImage}
-          image={imageEntity}
-          alt={
-            alt ||
-            intl.formatMessage({ id: 'ResponsiveBackgroundImageContainer.backgroundImageAlt' })
-          }
-          variants={variantNames}
-          sizes={sizes}
-        />
+        {imageEntity ? (
+          <ResponsiveImage
+            className={css.backgroundImage}
+            image={imageEntity}
+            alt={
+              alt ||
+              intl.formatMessage({ id: 'ResponsiveBackgroundImageContainer.backgroundImageAlt' })
+            }
+            variants={variantNames}
+            sizes={sizes}
+          />
+        ) : null}
         {overlayMaybe}
       </div>
       <div {...childrenWrapperClassNameMaybe}>{children}</div>
@@ -106,7 +108,7 @@ ResponsiveBackgroundImageContainer.propTypes = {
   as: string,
   children: node,
   childrenWrapperClassName: string,
-  image: oneOfType([string, propTypes.image]).isRequired,
+  image: oneOfType([string, propTypes.image]),
   alt: string,
   sizes: string.isRequired,
   useOverlay: bool,
