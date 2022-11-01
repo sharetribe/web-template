@@ -61,12 +61,17 @@ import {
 import css from './TransactionPage.module.css';
 
 // Submit dispute and close the review modal
-const onDisputeOrder = (currentTransactionId, transitionName, onTransition) => values => {
+const onDisputeOrder = (
+  currentTransactionId,
+  transitionName,
+  onTransition,
+  setDisputeSubmitted
+) => values => {
   const { disputeReason } = values;
   const params = disputeReason ? { protectedData: { disputeReason } } : {};
   onTransition(currentTransactionId, transitionName, params)
     .then(r => {
-      return setState(prevState => ({ ...prevState, disputeSubmitted: true }));
+      return setDisputeSubmitted(true);
     })
     .catch(e => {
       // Do nothing.
@@ -75,12 +80,11 @@ const onDisputeOrder = (currentTransactionId, transitionName, onTransition) => v
 
 // TransactionPage handles data loading for Sale and Order views to transaction pages in Inbox.
 export const TransactionPageComponent = props => {
-  const [state, setState] = useState({
-    isDisputeModalOpen: false,
-    disputeSubmitted: false,
-    isReviewModalOpen: false,
-    reviewSubmitted: false,
-  });
+  const [isDisputeModalOpen, setDisputeModalOpen] = useState(false);
+  const [disputeSubmitted, setDisputeSubmitted] = useState(false);
+  const [isReviewModalOpen, setReviewModalOpen] = useState(false);
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const {
@@ -236,7 +240,7 @@ export const TransactionPageComponent = props => {
   // Open review modal
   // This is called from ActivityFeed and from action buttons
   const onOpenReviewModal = () => {
-    setState(prevState => ({ ...prevState, isReviewModalOpen: true }));
+    setReviewModalOpen(true);
   };
 
   // Submit review and close the review modal
@@ -263,9 +267,10 @@ export const TransactionPageComponent = props => {
     const params = { reviewRating: rating, reviewContent };
 
     onSendReview(transaction, transitionOptions, params, config)
-      .then(r =>
-        setState(prevState => ({ ...prevState, isReviewModalOpen: false, reviewSubmitted: true }))
-      )
+      .then(r => {
+        setReviewModalOpen(false);
+        setReviewSubmitted(true);
+      })
       .catch(e => {
         // Do nothing.
       });
@@ -273,7 +278,7 @@ export const TransactionPageComponent = props => {
 
   // Open dispute modal
   const onOpenDisputeModal = () => {
-    setState(prevState => ({ ...prevState, isDisputeModalOpen: true }));
+    setDisputeModalOpen(true);
   };
 
   const deletedListingTitle = intl.formatMessage({
@@ -479,12 +484,12 @@ export const TransactionPageComponent = props => {
           <div className={css.root}>{panel}</div>
           <ReviewModal
             id="ReviewOrderModal"
-            isOpen={state.isReviewModalOpen}
-            onCloseModal={() => setState(prevState => ({ ...prevState, isReviewModalOpen: false }))}
+            isOpen={isReviewModalOpen}
+            onCloseModal={() => setReviewModalOpen(false)}
             onManageDisableScrolling={onManageDisableScrolling}
             onSubmitReview={onSubmitReview}
             revieweeName={otherUserDisplayName}
-            reviewSent={state.reviewSubmitted}
+            reviewSent={reviewSubmitted}
             sendReviewInProgress={sendReviewInProgress}
             sendReviewError={sendReviewError}
             marketplaceName={config.marketplaceName}
@@ -492,17 +497,16 @@ export const TransactionPageComponent = props => {
           {process?.transitions?.DISPUTE ? (
             <DisputeModal
               id="DisputeOrderModal"
-              isOpen={state.isDisputeModalOpen}
-              onCloseModal={() =>
-                setState(prevState => ({ ...prevState, isDisputeModalOpen: false }))
-              }
+              isOpen={isDisputeModalOpen}
+              onCloseModal={() => setDisputeModalOpen(false)}
               onManageDisableScrolling={onManageDisableScrolling}
               onDisputeOrder={onDisputeOrder(
                 transaction?.id,
                 process.transitions.DISPUTE,
-                onTransition
+                onTransition,
+                setDisputeSubmitted
               )}
-              disputeSubmitted={state.disputeSubmitted}
+              disputeSubmitted={disputeSubmitted}
               disputeInProgress={transitionInProgress === process.transitions.DISPUTE}
               disputeError={transitionError}
             />
