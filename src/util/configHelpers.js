@@ -1,4 +1,4 @@
-import { getSupportedProcessesInfo } from '../util/transaction';
+import { getSupportedProcessesInfo } from '../transactions/transaction';
 
 // Generic helpers for validating config values
 

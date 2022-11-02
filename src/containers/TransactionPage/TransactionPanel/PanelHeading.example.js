@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { getProcess } from '../../../util/transaction';
+import { getProcess } from '../../../transactions/transaction';
 
 import PanelHeading from './PanelHeading';
 

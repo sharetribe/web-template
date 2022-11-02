@@ -1,5 +1,5 @@
-import * as log from './log';
-import { ensureTransaction } from './data';
+import * as log from '../util/log';
+import { ensureTransaction } from '../util/data';
 import * as productProcess from './transactionProcessProduct';
 import * as bookingProcess from './transactionProcessBooking';
 
@@ -20,6 +20,8 @@ export const BOOKING_PROCESS_NAME = 'default-booking';
  * - transitions
  * - isRelevantPastTransition(transition)
  * - isPrivileged(transition)
+ * - isCompleted(transition)
+ * - isRefunded(transition)
  * - isCustomerReview(transition)
  * - isProviderReview(transition)
  * - statesNeedingCustomerAttention
@@ -82,7 +84,7 @@ const getStateAfterTransition = process => transition => {
  * Get state based on lastTransition of given transaction entity.
  *
  * How to use this function:
- *   // import { getProcess } from '../../util/transaction';
+ *   // import { getProcess } from '../../transactions/transaction';
  *   const process = getProcess(processName);
  *   const state = process.getState(tx);
  *   const isEnquiry = state === process.states.ENQUIRY

@@ -7,7 +7,6 @@ import classNames from 'classnames';
 import { useConfiguration } from '../../context/configurationContext';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { TX_TRANSITION_ACTOR_CUSTOMER, TX_TRANSITION_ACTOR_PROVIDER } from '../../util/transaction';
 import {
   propTypes,
   DATE_TYPE_DATE,
@@ -17,7 +16,13 @@ import {
   LISTING_UNIT_TYPES,
 } from '../../util/types';
 import { subtractTime } from '../../util/dates';
-import { resolveLatestProcessName, getProcess, isBookingProcess } from '../../util/transaction';
+import {
+  TX_TRANSITION_ACTOR_CUSTOMER,
+  TX_TRANSITION_ACTOR_PROVIDER,
+  resolveLatestProcessName,
+  getProcess,
+  isBookingProcess,
+} from '../../transactions/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';

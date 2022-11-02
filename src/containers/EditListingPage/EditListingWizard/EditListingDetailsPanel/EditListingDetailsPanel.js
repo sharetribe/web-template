@@ -5,7 +5,7 @@ import classNames from 'classnames';
 // Import util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { EXTENDED_DATA_SCHEMA_TYPES, LISTING_STATE_DRAFT } from '../../../../util/types';
-import { isBookingProcessAlias } from '../../../../util/transaction';
+import { isBookingProcessAlias } from '../../../../transactions/transaction';
 
 // Import shared components
 import { ListingLink } from '../../../../components';

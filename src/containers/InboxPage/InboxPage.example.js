@@ -5,7 +5,7 @@ import { types as sdkTypes } from '../../util/sdkLoader';
 import { injectIntl } from '../../util/reactIntl';
 import { createUser, createListing, createTransaction } from '../../util/test-data';
 import { LINE_ITEM_ITEM } from '../../util/types';
-import { getProcess } from '../../util/transaction';
+import { getProcess } from '../../transactions/transaction';
 
 import { getStateData } from './InboxPage.stateData';
 import { InboxItem } from './InboxPage';

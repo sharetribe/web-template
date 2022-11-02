@@ -16,13 +16,13 @@ import {
   SCHEMA_TYPE_BOOLEAN,
   propTypes,
 } from '../../../util/types';
-import { BOOKING_PROCESS_NAME, isBookingProcess } from '../../../util/transaction';
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
   LISTING_PAGE_PARAM_TYPE_NEW,
   LISTING_PAGE_PARAM_TYPES,
 } from '../../../util/urlHelpers';
 import { ensureCurrentUser, ensureListing } from '../../../util/data';
+import { BOOKING_PROCESS_NAME, isBookingProcess } from '../../../transactions/transaction';
 
 // Import shared components
 import {

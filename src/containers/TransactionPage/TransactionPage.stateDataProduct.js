@@ -3,7 +3,7 @@ import {
   TX_TRANSITION_ACTOR_PROVIDER as PROVIDER,
   CONDITIONAL_RESOLVER_WILDCARD,
   ConditionalResolver,
-} from '../../util/transaction';
+} from '../../transactions/transaction';
 
 /**
  * Get state data against product process for TransactionPage's UI.

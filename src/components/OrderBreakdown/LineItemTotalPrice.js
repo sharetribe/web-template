@@ -2,8 +2,8 @@ import React from 'react';
 import { bool } from 'prop-types';
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import { formatMoney } from '../../util/currency';
-import { resolveLatestProcessName, getProcess } from '../../util/transaction';
 import { propTypes } from '../../util/types';
+import { resolveLatestProcessName, getProcess } from '../../transactions/transaction';
 
 import css from './OrderBreakdown.module.css';
 
