@@ -33,7 +33,10 @@ import {
 } from 'prop-types';
 import Decimal from 'decimal.js';
 import { types as sdkTypes } from './sdkLoader';
-import { getAllTransitionsForEveryProcess, TX_TRANSITION_ACTORS } from './transaction';
+import {
+  getAllTransitionsForEveryProcess,
+  TX_TRANSITION_ACTORS,
+} from '../transactions/transaction';
 
 const { UUID, LatLng, LatLngBounds, Money } = sdkTypes;
 const TRANSITIONS = getAllTransitionsForEveryProcess();

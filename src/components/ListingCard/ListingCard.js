@@ -11,7 +11,7 @@ import { formatMoney } from '../../util/currency';
 import { ensureListing, ensureUser } from '../../util/data';
 import { richText } from '../../util/richText';
 import { createSlug } from '../../util/urlHelpers';
-import { isBookingProcessAlias } from '../../util/transaction';
+import { isBookingProcessAlias } from '../../transactions/transaction';
 
 import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '../../components';
 

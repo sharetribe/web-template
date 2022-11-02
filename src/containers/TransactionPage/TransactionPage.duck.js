@@ -5,7 +5,6 @@ import isEmpty from 'lodash/isEmpty';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { findNextBoundary, getStartOf, monthIdString } from '../../util/dates';
 import { isTransactionsTransitionInvalidTransition, storableError } from '../../util/errors';
-import { resolveLatestProcessName, getProcess, isBookingProcess } from '../../util/transaction';
 import { transactionLineItems } from '../../util/api';
 import * as log from '../../util/log';
 import {
@@ -13,6 +12,11 @@ import {
   denormalisedEntities,
   denormalisedResponseEntities,
 } from '../../util/data';
+import {
+  resolveLatestProcessName,
+  getProcess,
+  isBookingProcess,
+} from '../../transactions/transaction';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUserNotifications } from '../../ducks/user.duck';

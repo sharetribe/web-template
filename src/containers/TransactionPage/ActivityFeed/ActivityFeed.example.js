@@ -12,7 +12,7 @@ import {
   TX_TRANSITION_ACTOR_CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER,
   getProcess,
-} from '../../../util/transaction';
+} from '../../../transactions/transaction';
 import ActivityFeed from './ActivityFeed';
 
 const noop = () => null;
