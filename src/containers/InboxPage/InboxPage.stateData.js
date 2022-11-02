@@ -4,7 +4,7 @@ import {
   PRODUCT_PROCESS_NAME,
   resolveLatestProcessName,
   getProcess,
-} from '../../util/transaction';
+} from '../../transactions/transaction';
 
 import { getStateDataForBookingProcess } from './InboxPage.stateDataBooking.js';
 import { getStateDataForProductProcess } from './InboxPage.stateDataProduct.js';

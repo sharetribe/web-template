@@ -1,8 +1,8 @@
 import Decimal from 'decimal.js';
 import { types as sdkTypes } from './sdkLoader';
 import { daysBetween, getStartOf } from '../util/dates';
-import { TX_TRANSITION_ACTOR_CUSTOMER, getProcess } from '../util/transaction';
 import { LISTING_STATE_PUBLISHED, TIME_SLOT_TIME } from '../util/types';
+import { TX_TRANSITION_ACTOR_CUSTOMER, getProcess } from '../transactions/transaction';
 
 const { UUID, LatLng, Money } = sdkTypes;
 const processTransitions = getProcess('default-buying-products')?.transitions;

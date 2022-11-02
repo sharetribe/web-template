@@ -9,7 +9,7 @@ import Decimal from 'decimal.js';
 
 import { isAfterDate, subtractTime } from '../../util/dates';
 import { types as sdkTypes } from '../../util/sdkLoader';
-import { getProcess } from '../../util/transaction';
+import { getProcess } from '../../transactions/transaction';
 
 const { UUID, Money } = sdkTypes;
 

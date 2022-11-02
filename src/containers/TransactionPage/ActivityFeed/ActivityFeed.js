@@ -5,14 +5,14 @@ import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { formatDateWithProximity } from '../../../util/dates';
+import { propTypes } from '../../../util/types';
 import {
   getProcess,
   getUserTxRole,
   TX_TRANSITION_ACTOR_PROVIDER,
   TX_TRANSITION_ACTOR_OPERATOR,
   TX_TRANSITION_ACTOR_SYSTEM,
-} from '../../../util/transaction';
-import { propTypes } from '../../../util/types';
+} from '../../../transactions/transaction';
 
 import { Avatar, InlineTextButton, ReviewRating, UserDisplayName } from '../../../components';
 

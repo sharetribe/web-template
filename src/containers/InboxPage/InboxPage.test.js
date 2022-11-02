@@ -12,12 +12,12 @@ import {
   createTransaction,
 } from '../../util/test-data';
 import { types as sdkTypes } from '../../util/sdkLoader';
+import { LINE_ITEM_ITEM, LINE_ITEM_PROVIDER_COMMISSION } from '../../util/types';
 import {
   TX_TRANSITION_ACTOR_CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER,
   getProcess,
-} from '../../util/transaction';
-import { LINE_ITEM_ITEM, LINE_ITEM_PROVIDER_COMMISSION } from '../../util/types';
+} from '../../transactions/transaction';
 
 import { getStateData } from './InboxPage.stateData';
 import { InboxPageComponent, InboxItem } from './InboxPage';

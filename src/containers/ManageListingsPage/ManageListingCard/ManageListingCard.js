@@ -23,7 +23,7 @@ import {
   createSlug,
 } from '../../../util/urlHelpers';
 import { createResourceLocatorString, findRouteByRouteName } from '../../../util/routes';
-import { isBookingProcessAlias } from '../../../util/transaction';
+import { isBookingProcessAlias } from '../../../transactions/transaction';
 
 import {
   AspectRatioWrapper,

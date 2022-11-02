@@ -3,7 +3,7 @@ import {
   BOOKING_PROCESS_NAME,
   PRODUCT_PROCESS_NAME,
   resolveLatestProcessName,
-} from '../../util/transaction';
+} from '../../transactions/transaction';
 import { getStateDataForBookingProcess } from './TransactionPage.stateDataBooking.js';
 import { getStateDataForProductProcess } from './TransactionPage.stateDataProduct.js';
 

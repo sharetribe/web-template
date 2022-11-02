@@ -1,8 +1,9 @@
 import { denormalisedResponseEntities, ensureOwnListing } from '../util/data';
 import { storableError } from '../util/errors';
-import { getTransitionsNeedingProviderAttention } from '../util/transaction';
 import { LISTING_STATE_DRAFT } from '../util/types';
 import * as log from '../util/log';
+import { getTransitionsNeedingProviderAttention } from '../transactions/transaction';
+
 import { authInfo } from './Auth.duck';
 import { stripeAccountCreateSuccess } from './stripeConnectAccount.duck';
 import { util as sdkUtil } from '../util/sdkLoader';

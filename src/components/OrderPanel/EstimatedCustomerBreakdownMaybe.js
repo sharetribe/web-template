@@ -30,7 +30,6 @@ import Decimal from 'decimal.js';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { FormattedMessage } from '../../util/reactIntl';
-import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../util/transaction';
 import {
   DATE_TYPE_DATE,
   LINE_ITEM_DAY,
@@ -40,6 +39,7 @@ import {
   DATE_TYPE_DATETIME,
 } from '../../util/types';
 import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from '../../util/currency';
+import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../transactions/transaction';
 
 import { OrderBreakdown } from '../../components';
 
