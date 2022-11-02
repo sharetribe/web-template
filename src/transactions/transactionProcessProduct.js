@@ -1,5 +1,3 @@
-import { ensureTransaction } from './data';
-
 /**
  * Transaction process graph for product orders:
  *   - default-buying-products
