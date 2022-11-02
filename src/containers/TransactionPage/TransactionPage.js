@@ -23,7 +23,7 @@ import {
   TX_TRANSITION_ACTOR_PROVIDER as PROVIDER,
   resolveLatestProcessName,
   getProcess,
-} from '../../util/transaction';
+} from '../../transactions/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/UI.duck';

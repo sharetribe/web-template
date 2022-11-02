@@ -3,7 +3,8 @@ import Decimal from 'decimal.js';
 import { fakeIntl, createBooking } from '../../util/test-data';
 import { renderDeep } from '../../util/test-helpers';
 import { types as sdkTypes } from '../../util/sdkLoader';
-import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../util/transaction';
+import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../transactions/transaction';
+
 import { OrderBreakdownComponent } from './OrderBreakdown';
 
 const { UUID, Money } = sdkTypes;

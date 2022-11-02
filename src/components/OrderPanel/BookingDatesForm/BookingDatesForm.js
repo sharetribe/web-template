@@ -20,7 +20,7 @@ import {
   initialVisibleMonth,
 } from '../../../util/dates';
 import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, TIME_SLOT_TIME, propTypes } from '../../../util/types';
-import { BOOKING_PROCESS_NAME } from '../../../util/transaction';
+import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
 
 import { Form, IconArrowHead, PrimaryButton, FieldDateRangeInput } from '../../../components';
 

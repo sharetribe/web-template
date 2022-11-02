@@ -1,13 +1,6 @@
-import { ensureTransaction } from './data';
-
 /**
- * Transaction process graph for bookings is similar for both processes:
- *   - flex-hourly-default-process
- *   - flex-daily-default-process
- *
- * In practice, there needs to be separate processes in Flex backend,
- * since the notifications differ and booking units too. However, this is about the process graph
- * and the graph is the same for both processes.
+ * Transaction process graph for bookings:
+ *   - default-booking
  */
 
 /**

@@ -34,7 +34,7 @@ import {
   transactionInitiateOrderStripeErrors,
 } from '../../util/errors';
 import { formatMoney } from '../../util/currency';
-import { getProcess, isBookingProcessAlias } from '../../util/transaction';
+import { getProcess, isBookingProcessAlias } from '../../transactions/transaction';
 
 // Import global thunk functions
 import { isScrollingDisabled } from '../../ducks/UI.duck';
