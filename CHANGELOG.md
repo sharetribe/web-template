@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] TransactionPage: quantity integer was not parsed early enough.
+  [#71](https://github.com/sharetribe/ftw-x/pull/71)
 - [change] Move src/util/transaction\*.js files to new directory src/transactions/
   [#70](https://github.com/sharetribe/ftw-x/pull/70)
 - [change] ResponsiveBackgroundImageContainer: allow undefined image (use marketplaceColor).
