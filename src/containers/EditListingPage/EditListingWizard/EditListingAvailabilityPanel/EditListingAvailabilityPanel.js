@@ -194,7 +194,9 @@ const EditListingAvailabilityPanel = props => {
     // Final Form can wait for Promises to return.
     return onSubmit(createAvailabilityPlan(values))
       .then(() => {
-        setIsEditPlanModalOpen(false);
+        if (isPublished) {
+          setIsEditPlanModalOpen(false);
+        }
       })
       .catch(e => {
         // Don't close modal if there was an error
