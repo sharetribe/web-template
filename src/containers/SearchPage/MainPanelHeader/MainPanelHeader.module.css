@@ -7,12 +7,11 @@
 .searchOptions {
   display: flex;
   flex-direction: row;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
 }
 
 .searchResultSummary {
-  composes: h4 from global;
-  line-height: 20px;
+  composes: p-small from global;
 
   margin-top: 10px;
   margin-bottom: 11px;
@@ -21,8 +20,7 @@
 }
 
 .loadingResults {
-  composes: h4 from global;
-  line-height: 20px;
+  composes: p-small from global;
 
   /* Cover parent element's space*/
   position: absolute;

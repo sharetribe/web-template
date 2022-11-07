@@ -18,7 +18,7 @@
 }
 
 .heading {
-  composes: h2 from global;
+  composes: h4 from global;
   margin: 20px 0 0 0;
 
   @media (--viewportMedium) {
@@ -36,7 +36,7 @@
   white-space: pre-line;
   margin: 18px 0 0 0;
   transition: all 1s ease-in;
-  composes: h4 from global;
+  composes: p from global;
 
   @media (--viewportMedium) {
     margin: 0;
@@ -92,7 +92,7 @@
 }
 
 .links {
-  composes: h4 from global;
+  composes: p from global;
   margin-top: 13px;
 
   @media (--viewportMedium) {

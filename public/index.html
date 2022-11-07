@@ -19,11 +19,15 @@
     <meta name="msapplication-config" content="/static/icons/browserconfig.xml">
     <!-- End Favicons -->
 
+    <!-- TODO, host fonts from Sharetribe's CDN -->
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+
     <!--!link-->
     <!--!ssrStyles-->
     <!--!ssrLinks-->
 
-    <style>
+    <!-- <style>
      /**
       * Poppins font is downloaded from Google Fonts but served from sharetribe.com / CDN
       */
@@ -110,32 +114,32 @@
         z(p,function(a){h=a;u()});t(p,L(c,'"'+c.family+'",monospace'))})})};"object"===typeof module?module.exports=A:(window.FontFaceObserver=A,window.FontFaceObserver.prototype.load=A.prototype.load);}());
 
 
-        // Fonts we use (Check font-face rules from <style> tag in <head> section)
-        var poppinsRegular = new FontFaceObserver('poppins', { weight: 400 });
-        var poppinsMedium = new FontFaceObserver('poppins', { weight: 500 });
-        var poppinsSemibold = new FontFaceObserver('poppins', { weight: 600 });
-        var poppinsBold = new FontFaceObserver('poppins', { weight: 700 });
+        // // Fonts we use (Check font-face rules from <style> tag in <head> section)
+        // var poppinsRegular = new FontFaceObserver('poppins', { weight: 400 });
+        // var poppinsMedium = new FontFaceObserver('poppins', { weight: 500 });
+        // var poppinsSemibold = new FontFaceObserver('poppins', { weight: 600 });
+        // var poppinsBold = new FontFaceObserver('poppins', { weight: 700 });
 
-        var fontLoadingTimeout = 5000;
+        // var fontLoadingTimeout = 5000;
 
-        Promise.all([
-          poppinsRegular.load(null, fontLoadingTimeout),
-          poppinsMedium.load(null, fontLoadingTimeout),
-          poppinsSemibold.load(null, fontLoadingTimeout),
-          poppinsBold.load(null, fontLoadingTimeout)
-        ])
-          .then(function () {
-            document.documentElement.classList.add("fontsLoaded");
+        // Promise.all([
+        //   poppinsRegular.load(null, fontLoadingTimeout),
+        //   poppinsMedium.load(null, fontLoadingTimeout),
+        //   poppinsSemibold.load(null, fontLoadingTimeout),
+        //   poppinsBold.load(null, fontLoadingTimeout)
+        // ])
+        //   .then(function () {
+        //     document.documentElement.classList.add("fontsLoaded");
 
-            // Optimization for repeated views
-            sessionStorage.fontsLoaded = true;
-          })
-          .catch(function () {
-            // If loading takes over 5 seconds, let's just show fallback fonts.
-            console.warn('Font loading took too long time - using system fonts instead.');
-          });
+        //     // Optimization for repeated views
+        //     sessionStorage.fontsLoaded = true;
+        //   })
+        //   .catch(function () {
+        //     // If loading takes over 5 seconds, let's just show fallback fonts.
+        //     console.warn('Font loading took too long time - using system fonts instead.');
+        //   });
       })(document);
-    </script>
+    </script> -->
 
     <!--
          Stripe script should be on every page, not just the pages that

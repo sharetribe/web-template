@@ -31,9 +31,9 @@ const SectionHero = props => {
         <h1 className={classNames(css.heroMainTitle, { [css.heroMainTitleFEDelay]: mounted })}>
           <FormattedMessage id="SectionHero.title" />
         </h1>
-        <h2 className={classNames(css.heroSubTitle, { [css.heroSubTitleFEDelay]: mounted })}>
+        <p className={classNames(css.heroSubTitle, { [css.heroSubTitleFEDelay]: mounted })}>
           <FormattedMessage id="SectionHero.subTitle" />
-        </h2>
+        </p>
         <NamedLink
           name="SearchPage"
           className={classNames(css.heroButton, { [css.heroButtonFEDelay]: mounted })}

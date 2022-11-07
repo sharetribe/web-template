@@ -86,9 +86,10 @@
 
 .title {
   /* Font */
-  composes: marketplaceDefaultFontStyles from global;
-  line-height: 24px;
+  composes: p from global;
+  font-weight: var(--fontWeightSemiBold);
   color: var(--matterColor);
+  margin: 0;
 }
 
 .authorInfo {

@@ -53,18 +53,20 @@
 }
 
 .price {
-  composes: h2 from global;
+  composes: h4 from global;
+  font-weight: var(--fontWeightSemiBold);
 
-  color: var(--matterColor);
+  color: var(--marketplaceColor);
   margin: 0 0 0 24px;
 
   @media (--viewportMedium) {
     margin: 0;
+    padding: 0;
   }
 }
 
 .author {
-  composes: h4 from global;
+  composes: p from global;
   margin: 0px 24px 32px 24px;
 
   display: flex;
@@ -222,10 +224,10 @@
   /* Font */
   composes: marketplaceTinyFontStyles from global;
   color: var(--matterColor);
-  padding: 10px 0 6px 0;
+  padding: 8px 0 0 0;
 
   margin-top: 0;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 
   @media (--viewportMedium) {
     margin-top: 0;

@@ -131,13 +131,13 @@
   display: flex;
 }
 
-.clearButton {
-  composes: h4 from global;
+.clearButton,
+.cancelButton,
+.submitButton {
+  composes: p-small from global;
   font-weight: var(--fontWeightMedium);
-  color: var(--matterColorAnti);
 
   /* Layout */
-  margin: 0 auto 0 0;
   padding: 0;
 
   /* Override button styles */
@@ -147,25 +147,28 @@
 
   &:focus,
   &:hover {
-    color: var(--matterColor);
     transition: width var(--transitionStyleButton);
   }
 }
 
+.clearButton {
+  color: var(--matterColorAnti);
+
+  /* Layout */
+  margin: 0 auto 0 0;
+  
+  &:focus,
+  &:hover {
+    color: var(--matterColor);
+  }
+}
+
 .cancelButton {
-  composes: h4 from global;
-  font-weight: var(--fontWeightMedium);
   color: var(--matterColorAnti);
 
   /* Layout */
   margin: 0;
-  padding: 0;
-
-  /* Override button styles */
-  outline: none;
-  border: none;
-  cursor: pointer;
-
+  
   /* clearButton will add all available space between cancelButton,
    * but some hard coded margin is still needed
    */
@@ -174,27 +177,17 @@
   &:focus,
   &:hover {
     color: var(--matterColor);
-    transition: width var(--transitionStyleButton);
   }
 }
 
 .submitButton {
-  composes: h4 from global;
-  font-weight: var(--fontWeightMedium);
   color: var(--marketplaceColor);
 
   /* Layout */
   margin: 0 0 0 19px;
-  padding: 0;
-
-  /* Override button styles */
-  outline: none;
-  border: none;
-  cursor: pointer;
 
   &:focus,
   &:hover {
     color: var(--marketplaceColorDark);
-    transition: width var(--transitionStyleButton);
   }
 }

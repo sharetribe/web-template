@@ -45,14 +45,10 @@
 
 .logo {
   /* If height is increased, change link paddings accordingly */
-  height: 27px;
-
-  /* Good aspect ratio should be less than 160/27 (width/height) */
-  /* NOTE: extremely wide logos, need special handling. */
+  height: auto;
   width: auto;
-  max-width: 220px;
-  object-fit: contain;
-  object-position: left center;
+  max-height: 24px;
+  max-width: 240px;
 }
 
 /* Search */
@@ -126,13 +122,13 @@
 }
 
 .topbarDesktopLabel {
-  composes: h5 from global;
+  composes: p-small from global;
   display: inline-block;
   margin: 28px 0;
   text-decoration: inherit;
 
   @media (--viewportMedium) {
-    margin: 28px 0;
+    margin: 26px 0;
   }
 }
 
@@ -287,14 +283,14 @@
 
 .signup,
 .login {
-  composes: h5 from global;
+  composes: p-small from global;
 
   display: inline-block;
-  margin: 28px 0;
+  margin: 26px 0;
   text-decoration: inherit;
 
   @media (--viewportMedium) {
-    margin: 28px 0;
+    margin: 26px 0;
   }
 }
 

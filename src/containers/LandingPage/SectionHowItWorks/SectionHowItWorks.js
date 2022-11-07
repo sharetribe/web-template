@@ -14,33 +14,33 @@ const SectionHowItWorks = props => {
   const classes = classNames(rootClassName || css.root, className);
   return (
     <div className={classes}>
-      <div className={css.title}>
+      <h2>
         <FormattedMessage id="SectionHowItWorks.titleLineOne" />
-      </div>
+      </h2>
 
       <div className={css.steps}>
         <div className={css.step}>
-          <h2 className={css.stepTitle}>
+          <h3 className={css.stepTitle}>
             <FormattedMessage id="SectionHowItWorks.part1Title" />
-          </h2>
+          </h3>
           <p>
             <FormattedMessage id="SectionHowItWorks.part1Text" />
           </p>
         </div>
 
         <div className={css.step}>
-          <h2 className={css.stepTitle}>
+          <h3 className={css.stepTitle}>
             <FormattedMessage id="SectionHowItWorks.part2Title" />
-          </h2>
+          </h3>
           <p>
             <FormattedMessage id="SectionHowItWorks.part2Text" />
           </p>
         </div>
 
         <div className={css.step}>
-          <h2 className={css.stepTitle}>
+          <h3 className={css.stepTitle}>
             <FormattedMessage id="SectionHowItWorks.part3Title" />
-          </h2>
+          </h3>
           <p>
             <FormattedMessage id="SectionHowItWorks.part3Text" />
           </p>

@@ -59,7 +59,6 @@
 
 /* Overwrite Mapbox's specific font rules */
 .root .card {
-  font-family: 'poppins', Helvetica, Arial, sans-serif;
   font-weight: var(--fontWeightSemiBold);
 }
 

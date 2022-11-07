@@ -60,9 +60,9 @@ const SectionFilteredSearches = props => {
   //    The domain doesn't matter, but search query does. (I.e. "?pub_brand=nike")
   return (
     <div className={classes}>
-      <div className={css.title}>
+      <h2>
         <FormattedMessage id="SectionFilteredSearches.title" />
-      </div>
+      </h2>
       <div className={css.filteredSearches}>
         <FilterLink
           name="Nikes"
