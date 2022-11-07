@@ -1,5 +1,4 @@
 .avatarBase {
-  font-family: 'poppins', Helvetica, Arial, sans-serif;
   border-radius: 50%;
 
   /* Position possible initials to the center of the component */
@@ -31,7 +30,7 @@
 }
 
 .initials {
-  font-size: 14px;
+  font-size: 9px;
   font-weight: var(--fontWeightBold);
 }
 

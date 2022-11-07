@@ -57,7 +57,6 @@
 }
 
 .heroMainTitle {
-  composes: marketplaceHeroTitleFontStyles from global;
   color: var(--matterColorLight);
   composes: animation;
 
@@ -70,7 +69,7 @@
 }
 
 .heroSubTitle {
-  composes: h4 from global;
+  composes: p-large from global;
 
   color: var(--matterColorLight);
   margin: 0 0 32px 0;
@@ -88,6 +87,7 @@
 .heroButton {
   composes: button buttonFont buttonText buttonBorders buttonColors from global;
   composes: animation;
+  font-weight: var(--fontWeightSemiBold);
 
   @media (--viewportMedium) {
     display: block;

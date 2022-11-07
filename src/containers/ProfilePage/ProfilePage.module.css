@@ -76,6 +76,7 @@
 
 .desktopHeading {
   display: none;
+  composes: h2 from global;
 
   @media (--viewportLarge) {
     display: block;

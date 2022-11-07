@@ -1,7 +1,7 @@
 @import '../../../styles/customMediaQueries.css';
 
 .title {
-  composes: h1 from global;
+  composes: h2 from global;
   margin-top: 0;
 }
 
@@ -28,12 +28,13 @@
 }
 
 .stepTitle {
-  margin-top: 18px;
-  margin-bottom: 18px;
+  composes: h4 from global;
+  margin-top: 0px;
+  margin-bottom: 0px;
 
   @media (--viewportMedium) {
-    margin-top: 21px;
-    margin-bottom: 18px;
+    margin-top: 5px;
+    margin-bottom: 3px;
   }
 }
 

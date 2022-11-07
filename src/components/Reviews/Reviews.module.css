@@ -30,7 +30,7 @@
 }
 
 .reviewContent {
-  composes: h4 from global;
+  composes: p-small from global;
   font-style: italic;
   margin: 0;
   white-space: pre-line;

@@ -44,12 +44,15 @@
   --matterColorLightTransparent: rgba(255, 255, 255, 0.65);
 
   /* ================ Font ================ */
-  --fontFamily: 'poppins', Helvetica, Arial, sans-serif;
+  --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter var', Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
   --fontWeightRegular: 400;
   --fontWeightMedium: 500;
   --fontWeightSemiBold: 600;
-  --fontWeightBold: 700;
+  --fontWeightBold: 750;
+  --fontWeightHeavy: 800;
+  --fontWeightBlack: 900;
 
   --fontWeightHighlightEmail: var(--fontWeightBold);
 
@@ -151,10 +154,13 @@
  */
 
 body {
-  font-family: Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased; /* http://szafranek.net/blog/2009/02/22/font-smoothing-explained/ */
-  -moz-osx-font-smoothing: grayscale; /* http://szafranek.net/blog/2009/02/22/font-smoothing-explained/ */
+  font-family: var(--fontFamily);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+
   text-rendering: optimizeSpeed;
+  font-optical-sizing: auto;
 
   background-color: var(--matterColorBright);
 }
@@ -193,19 +199,16 @@ a:hover,
 
 h1,
 .h1 {
-  font-weight: var(--fontWeightSemiBold);
   font-size: 24px;
-  line-height: 30px;
-  letter-spacing: -0.5px;
+  line-height: 24px;
+  font-weight: var(--fontWeightBlack);
   /* margin-top + n * line-height + margin-bottom => x * 6px */
   margin-top: 18px;
   margin-bottom: 18px;
 
   @media (--viewportMedium) {
-    font-size: 40px;
-    font-weight: var(--fontWeightSemiBold);
-    line-height: 48px;
-    letter-spacing: -1px;
+    font-size: 64px;
+    line-height: 64px;
     /* margin-top + n * line-height + margin-bottom => x * 8px */
     margin-top: 24px;
     margin-bottom: 24px;
@@ -214,15 +217,18 @@ h1,
 
 h2,
 .h2 {
-  font-weight: var(--fontWeightSemiBold);
   font-size: 21px;
   line-height: 24px;
+  font-weight: var(--fontWeightBold);
+
   padding: 4px 0 2px 0;
   /* x * 6px */
   margin-top: 24px;
   margin-bottom: 18px;
+
   @media (--viewportMedium) {
-    line-height: 32px;
+    font-size: 40px;
+    line-height: 56px;
     padding: 0;
     /* x * 8px */
     margin-top: 24px;
@@ -249,16 +255,14 @@ h3,
 
 h4,
 .h4 {
-  font-weight: var(--fontWeightMedium);
-  font-size: 15px;
-  line-height: 24px;
-  letter-spacing: 0;
+  font-weight: var(--fontWeightBold);
+  font-size: 21px;
+  line-height: 32px;
   /* x * 6px */
   margin-top: 12px;
   margin-bottom: 12px;
 
   @media (--viewportMedium) {
-    font-weight: var(--fontWeightMedium);
     padding: 6px 0 2px 0;
     /* x * 8px */
     margin-top: 16px;
@@ -271,7 +275,6 @@ h5,
   font-weight: var(--fontWeightMedium);
   font-size: 14px;
   line-height: 18px;
-  letter-spacing: 0;
   /* x * 6px */
   padding: 3px 0 3px 0;
   margin-top: 12px;
@@ -291,7 +294,6 @@ h6,
   font-weight: var(--fontWeightBold);
   font-size: 12px;
   line-height: 18px;
-  letter-spacing: 1.5px;
   text-transform: uppercase;
   /* x * 6px */
   padding: 4px 0 2px 0;
@@ -307,41 +309,49 @@ h6,
   }
 }
 
-p,
-pre,
-.marketplaceBodyFontStyles {
+html,
+li,
+.marketplaceDefaultFontStyles {
   font-family: var(--fontFamily);
   font-weight: var(--fontWeightMedium);
+
+  /* No margins for default font */
   font-size: 14px;
   line-height: 24px;
-  letter-spacing: -0.1px;
+
+  @media (--viewportMedium) {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
+p,
+pre,
+.p,
+.marketplaceBodyFontStyles {
+  composes: marketplaceDefaultFontStyles;
+
   /* margin-top + n * line-height + margin-bottom => x * 6px */
   margin-top: 12px;
   margin-bottom: 12px;
 
   @media (--viewportMedium) {
-    font-size: 16px;
-    line-height: 32px;
     /* margin-top + n * line-height + margin-bottom => x * 8px */
     margin-top: 16px;
     margin-bottom: 16px;
   }
 }
 
-html,
-li,
-.marketplaceDefaultFontStyles {
-  font-family: var(--fontFamily);
+.p-large {
+  font-size: 20px;
+  line-height: 32px;
   font-weight: var(--fontWeightMedium);
-  font-size: 14px;
-  line-height: 24px;
-  letter-spacing: -0.1px;
-  /* No margins for default font */
+}
 
-  @media (--viewportMedium) {
-    font-size: 16px;
-    line-height: 32px;
-  }
+.p-small {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: var(--fontWeightMedium);
 }
 
 /* ================ Normalisations ================ */
@@ -364,7 +374,6 @@ legend {
   font-weight: var(--fontWeightSemiBold);
   font-size: 14px;
   line-height: 18px;
-  letter-spacing: 0;
 
   margin-top: 0;
   margin-bottom: 0;
@@ -383,7 +392,6 @@ label {
   font-weight: var(--fontWeightSemiBold);
   font-size: 13px;
   line-height: 18px;
-  letter-spacing: 0;
   display: block;
   margin-top: 0;
   margin-bottom: 6px;
@@ -399,24 +407,25 @@ label {
 }
 
 button {
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--fontFamily);
+  font-weight: var(--fontWeightSemiBold);
+}
+
+.fontsLoaded {
+  & body {
+    font-family: var(--fontFamily);
+  }
+  & button {
+    font-family: var(--fontFamily);
+    font-weight: var(--fontWeightSemiBold);
+  }
 }
 
 /* marketplaceInputFontStyles */
 select,
 input,
 textarea {
-  font-family: var(--fontFamily);
-  font-weight: var(--fontWeightMedium);
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: -0.1px;
-  /* No margins for default font */
-
-  @media (--viewportMedium) {
-    font-size: 16px;
-    line-height: 32px;
-  }
+  composes: marketplaceDefaultFontStyles;
 }
 
 select {
@@ -543,49 +552,17 @@ textarea {
   }
 }
 
-.fontsLoaded {
-  & body {
-    font-family: var(--fontFamily);
-  }
-  & button {
-    font-family: var(--fontFamily);
-  }
-}
-
 /* ================ Plain global CSS glasses ================ */
-
-/* ================ Hero title ================ */
-
-.marketplaceHeroTitleFontStyles {
-  font-weight: var(--fontWeightBold);
-  font-size: 36px;
-  line-height: 36px;
-  letter-spacing: -0.7px;
-  /* margin-top + n * line-height + margin-bottom => x * 6px */
-  margin-top: 25px;
-  margin-bottom: 14px;
-
-  @media (--viewportMedium) {
-    font-size: 64px;
-    line-height: 64px;
-    letter-spacing: -1.5px;
-    /* margin-top + n * line-height + margin-bottom => x * 8px */
-    margin-top: 25px;
-    margin-bottom: 23px;
-  }
-}
 
 /* ================ Other fonts ================ */
 
 .marketplaceSmallFontStyles {
-  font-family: var(--fontFamily);
   font-weight: var(--fontWeightMedium);
   font-size: 14px;
   line-height: 24px;
 }
 
 .marketplaceTinyFontStyles {
-  font-family: var(--fontFamily);
   font-weight: var(--fontWeightRegular);
   font-size: 13px;
   line-height: 18px;
@@ -603,14 +580,10 @@ textarea {
 }
 
 .marketplaceMessageFontStyles {
-  font-family: var(--fontFamily);
-  font-weight: var(--fontWeightRegular);
-  font-size: 16px;
-  line-height: 24px;
+  composes: marketplaceDefaultFontStyles;
 }
 
 .marketplaceMessageDateFontStyles {
-  font-family: var(--fontFamily);
   font-weight: var(--fontWeightRegular);
   font-size: 12px;
   line-height: 18px;
@@ -623,19 +596,10 @@ textarea {
 }
 
 .marketplaceTxTransitionFontStyles {
-  font-family: var(--fontFamily);
-  font-weight: var(--fontWeightMedium);
-  font-size: 16px;
-  line-height: 18px;
-
-  @media (--viewportMedium) {
-    font-size: 16px;
-    line-height: 24px;
-  }
+  composes: marketplaceDefaultFontStyles;
 }
 
 .marketplaceSearchFilterLabelFontStyles {
-  font-family: var(--fontFamily);
   font-weight: var(--fontWeightSemiBold);
   font-size: 13px;
   line-height: 18px;
@@ -648,17 +612,13 @@ textarea {
 }
 
 .marketplaceSearchFilterSublabelFontStyles {
-  font-family: var(--fontFamily);
   font-weight: var(--fontWeightMedium);
   font-size: 18px;
   line-height: 18px;
 }
 
 .marketplaceListingAttributeFontStyles {
-  font-family: var(--fontFamily);
-  font-weight: var(--fontWeightMedium);
-  font-size: 16px;
-  line-height: 24px;
+  composes: marketplaceDefaultFontStyles;
 }
 
 /* ================ Tabbed navigation font styles ================ */
@@ -667,7 +627,6 @@ textarea {
   font-weight: var(--fontWeightMedium);
   font-size: 16px;
   line-height: 24px;
-  letter-spacing: 0;
 
   @media (--viewportLarge) {
     font-weight: var(--fontWeightSemiBold);
@@ -680,7 +639,6 @@ textarea {
   font-weight: var(--fontWeightMedium);
   font-size: 14px;
   line-height: 24px;
-  letter-spacing: 0;
 }
 
 /* ================ Clearfix solution ================ */
@@ -741,11 +699,7 @@ textarea {
 /* Button font */
 /* Default font style for buttons */
 .buttonFont {
-  font-family: 'poppins', Helvetica, Arial, sans-serif;
-  font-weight: var(--fontWeightSemiBold);
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 0.2px;
+  composes: marketplaceDefaultFontStyles;
 }
 
 /* Button text styles */
@@ -899,13 +853,11 @@ textarea {
   font-weight: var(--fontWeightBold);
   font-size: 30px;
   line-height: 36px;
-  letter-spacing: -0.5px;
   margin: 0;
 
   @media (--viewportMedium) {
     font-weight: var(--fontWeightSemiBold);
     line-height: 40px;
-    letter-spacing: -0.9px;
     margin: 0;
   }
 }
@@ -921,7 +873,6 @@ textarea {
     font-weight: var(--fontWeightRegular);
     font-size: 20px;
     line-height: 32px;
-    letter-spacing: -0.11px;
     margin: 24px 0 0 0;
   }
 }
@@ -948,7 +899,6 @@ textarea {
 }
 
 .marketplaceModalHelperText {
-  font-family: var(--fontFamily);
   font-weight: var(--fontWeightRegular);
   font-size: 13px;
   line-height: 18px;
@@ -965,7 +915,6 @@ textarea {
 }
 
 .marketplaceModalHelperLink {
-  font-family: var(--fontFamily);
   font-weight: var(--fontWeightRegular);
   font-size: 13px;
   line-height: 18px;
@@ -1042,7 +991,6 @@ textarea {
   font-weight: var(--fontWeightBold);
   font-size: 12px;
   line-height: 18px;
-  letter-spacing: 1.5px;
   text-transform: uppercase;
 
   margin: 0;
@@ -1071,7 +1019,6 @@ textarea {
   font-weight: var(--fontWeightMedium);
   font-size: 15px;
   line-height: 24px;
-  letter-spacing: 0;
 
   margin-top: 24px;
   color: var(--failColor);

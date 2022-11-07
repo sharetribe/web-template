@@ -81,7 +81,7 @@
 
 .menuLabel {
   text-align: left;
-  font-weight: 500;
+  font-weight: var(--fontWeightMedium);
   padding: 0;
   border-radius: 6px;
   border: 1px solid #d8dce6;
@@ -164,7 +164,7 @@
   padding: 12px 8px;
   color: var(--matterColor);
   text-align: left;
-  font-weight: 500;
+  font-weight: var(--fontWeightMedium);
   width: 80%;
 
   &:hover {

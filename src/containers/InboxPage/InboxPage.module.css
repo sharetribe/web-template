@@ -285,7 +285,6 @@
   grid-area: item;
   color: var(--matterColor);
   line-height: 18px;
-  letter-spacing: 0px;
 
   margin-top: 0;
   margin-bottom: 0;
@@ -302,7 +301,6 @@
   grid-area: details;
   color: var(--matterColor);
   line-height: 18px;
-  letter-spacing: 0px;
 
   margin-top: 0;
   margin-bottom: 0;
