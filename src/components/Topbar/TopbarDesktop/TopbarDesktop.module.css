@@ -306,7 +306,7 @@
 
 .profileSettingsLink,
 .yourListingsLink {
-  composes: h4 from global;
+  composes: p-small from global;
   position: relative;
   display: block;
 

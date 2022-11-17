@@ -17,6 +17,7 @@
 }
 
 .title {
+  composes: h2 from global;
   margin-top: 8px;
   margin-bottom: 19px;
 

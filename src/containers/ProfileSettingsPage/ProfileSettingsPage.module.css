@@ -19,6 +19,7 @@
 }
 
 .heading {
+  composes: h2 from global;
   margin-right: 24px;
   hyphens: auto;
 }

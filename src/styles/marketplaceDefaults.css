@@ -238,7 +238,7 @@ h2,
 
 h3,
 .h3 {
-  font-weight: var(--fontWeightSemiBold);
+  font-weight: var(--fontWeightBold);
   font-size: 18px;
   line-height: 24px;
   /* x * 6px */
@@ -246,6 +246,8 @@ h3,
   margin-bottom: 12px;
 
   @media (--viewportMedium) {
+    font-size: 30px;
+    line-height: 40px;
     padding: 5px 0 3px 0;
     /* x * 8px */
     margin-top: 16px;
@@ -354,6 +356,12 @@ pre,
   font-weight: var(--fontWeightMedium);
 }
 
+.p-xsmall {
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: var(--fontWeightMedium);
+}
+
 /* ================ Normalisations ================ */
 
 html {
@@ -425,7 +433,7 @@ button {
 select,
 input,
 textarea {
-  composes: marketplaceDefaultFontStyles;
+  font-family: var(--fontFamily);
 }
 
 select {
@@ -549,6 +557,7 @@ textarea {
   @media (--viewportMedium) {
     min-height: 112px; /* 3 rows fully visible */
     max-height: 496px; /* 15 rows fullu visible, scroll after */
+    line-height: 24px;
   }
 }
 
@@ -856,7 +865,7 @@ textarea {
   margin: 0;
 
   @media (--viewportMedium) {
-    font-weight: var(--fontWeightSemiBold);
+    font-weight: var(--fontWeightBold);
     line-height: 40px;
     margin: 0;
   }
@@ -864,15 +873,10 @@ textarea {
 
 /* Modal message */
 .marketplaceModalParagraphStyles {
-  font-weight: var(--fontWeightRegular);
-  font-size: 16px;
-  line-height: 24px;
+  composes: p-large;
   margin: 18px 0 0 0;
 
   @media (--viewportMedium) {
-    font-weight: var(--fontWeightRegular);
-    font-size: 20px;
-    line-height: 32px;
     margin: 24px 0 0 0;
   }
 }

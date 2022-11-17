@@ -69,6 +69,7 @@
 
 .title {
   /* Font */
+  composes: h2 from global;
   color: var(--matterColor);
 
   align-self: center;

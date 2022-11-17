@@ -109,7 +109,7 @@
 }
 
 .listingsTitle {
-  composes: h3 from global;
+  composes: h4 from global;
   color: var(--matterColor);
   margin-bottom: 0;
 
@@ -170,7 +170,7 @@
 }
 
 .mobileReviewsTitle {
-  composes: h3 from global;
+  composes: h4 from global;
   color: var(--matterColorAnti);
   margin: 24px 0 26px 0;
 }
@@ -198,7 +198,7 @@
 }
 
 .desktopReviewsTitle {
-  composes: h3 from global;
+  composes: p-large from global;
   margin-bottom: 0;
 }
 

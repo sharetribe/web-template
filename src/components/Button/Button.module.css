@@ -25,6 +25,7 @@
 
 .inlineTextButtonRoot {
   composes: a from global;
+  composes: p-small from global;
 }
 
 .primaryButton {

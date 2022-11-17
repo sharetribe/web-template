@@ -35,8 +35,8 @@
   padding-top: 2px;
 
   @media (--viewportMedium) {
-    min-height: 56px;
-    padding-top: 10px;
+    min-height: 48px;
+    padding-top: 2px;
   }
 
   @media (--viewportLarge) {

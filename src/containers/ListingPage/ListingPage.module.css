@@ -494,10 +494,9 @@
 
 .sectionTitle {
   /* Font for sections titles */
-  composes: h3 from global;
+  composes: p-large from global;
   color: var(--matterColorAnti);
   font-weight: var(--fontWeightSemiBold);
-  letter-spacing: -0.11px;
 }
 
 .detailsTitle,
