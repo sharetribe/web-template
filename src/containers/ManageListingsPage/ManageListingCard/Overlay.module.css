@@ -49,6 +49,7 @@
 }
 
 .message {
+  composes: p-small from global;
   max-width: 220px;
   text-align: center;
 }

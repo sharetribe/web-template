@@ -19,19 +19,20 @@
   }
 }
 
+.bannedUserIcon {
+  width: 100%;
+  height: 100%;
+}
+
 /* Small Avatar */
 
 .root {
   composes: avatarBase;
+  composes: p-xsmall from global;
 
   /* Layout */
   width: 40px;
   height: 40px;
-}
-
-.initials {
-  font-size: 9px;
-  font-weight: var(--fontWeightBold);
 }
 
 .avatarImage {
@@ -40,45 +41,37 @@
   border-radius: inherit;
 }
 
-/* Medium Avatar */
-
 .smallAvatar {
   composes: avatarBase;
+
+  /* Exception and unique font-size for the small avatar */
+  font-size: 8px;
+  font-weight: var(--fontWeightBold);
 
   /* Fixed dimensions */
   width: 24px;
   height: 24px;
 }
 
+
+/* Medium Avatar */
+
 .mediumAvatar {
   composes: avatarBase;
+  composes: p-large from global;
 
   /* Fixed dimensions */
   width: 60px;
   height: 60px;
 }
 
-.mediumAvatar .initials {
-  font-size: 20px;
-  font-weight: var(--fontWeightSemiBold);
-}
-
 /* Large Avatar */
 
 .largeAvatar {
   composes: avatarBase;
+  composes: h3 from global;
 
   /* Fixed dimensions */
   width: 96px;
-  height: 96px;
-}
-
-.largeAvatar .initials {
-  font-size: 30px;
-  font-weight: var(--fontWeightSemiBold);
-}
-
-.bannedUserIcon {
-  width: 100%;
-  height: 100%;
+  height: 96px;;
 }

@@ -43,6 +43,8 @@
   composes: marketplaceModalCloseIcon from global;
   margin-left: 0;
   margin-right: 5px;
+  margin-bottom: 3px;
+  
 }
 
 .iconCheckmark {
@@ -120,7 +122,7 @@
   background-size: 8px 14px;
 
   @media (--viewportMedium) {
-    padding: 8px 24px 8px 12px;
+    padding: 11px 24px 11px 12px;
     background-position: center right 16px;
     background-size: 10px 16px;
   }
