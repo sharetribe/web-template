@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Fixes: image variant creation, FieldDateRangeInput gets isDaily flag instead of
+  line-items, BookingTimeForm should show error message.
+  [#72](https://github.com/sharetribe/ftw-x/pull/72)
 - [change] TransactionPage: quantity integer was not parsed early enough.
   [#71](https://github.com/sharetribe/ftw-x/pull/71)
 - [change] Move src/util/transaction\*.js files to new directory src/transactions/
