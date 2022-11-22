@@ -16,16 +16,26 @@ const { createInstance, types, transit, util } = exportSdk;
 
 // create image variant from variant name, desired width and aspectRatio
 const createImageVariantConfig = (name, width, aspectRatio) => {
-  const height = aspectRatio * width;
-  if (width > 3072 || height > 3072) {
-    throw new Error(`Dimensions of custom image variant (${name}) are too high (w:${width}, h:${height}).
+  let variantWidth = width;
+  let variantHeight = Math.round(aspectRatio * width);
+
+  if (variantWidth > 3072 || variantHeight > 3072) {
+    console.error(`Dimensions of custom image variant (${name}) are too high (w:${variantWidth}, h:${variantHeight}).
     Reduce them to max 3072px. https://www.sharetribe.com/api-reference/marketplace.html#custom-image-variants`);
+
+    if (variantHeight > 3072) {
+      variantHeight = 3072;
+      variantWidth = Math.round(variantHeight / aspectRatio);
+    } else if (variantHeight > 3072) {
+      variantWidth = 3072;
+      variantHeight = Math.round(aspectRatio * variantWidth);
+    }
   }
 
   return {
     [`imageVariant.${name}`]: util.objectQueryString({
-      w: width,
-      h: aspectRatio * width,
+      w: variantWidth,
+      h: variantHeight,
       fit: 'crop',
     }),
   };
