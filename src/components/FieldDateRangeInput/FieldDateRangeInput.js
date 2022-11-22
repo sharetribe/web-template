@@ -59,7 +59,7 @@ class FieldDateRangeInputComponent extends Component {
     const {
       className,
       rootClassName,
-      lineItemUnitType,
+      isDaily,
       startDateId,
       startDateLabel,
       endDateId,
@@ -104,8 +104,8 @@ class FieldDateRangeInputComponent extends Component {
     // eslint-disable-next-line no-unused-vars
     const { onBlur, onFocus, type, checked, ...restOfInput } = input;
     const inputProps = {
-      lineItemUnitType,
-      minimumNights: lineItemUnitType === LINE_ITEM_DAY ? 0 : 1,
+      isDaily,
+      minimumNights: isDaily ? 0 : 1,
       onBlur: this.handleBlur,
       onFocus: this.handleFocus,
       useMobileMargins,
@@ -146,7 +146,7 @@ FieldDateRangeInputComponent.defaultProps = {
 FieldDateRangeInputComponent.propTypes = {
   className: string,
   rootClassName: string,
-  lineItemUnitType: propTypes.lineItemUnitType.isRequired,
+  isDaily: bool.isRequired,
   useMobileMargins: bool,
   endDateId: string,
   endDateLabel: string,

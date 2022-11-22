@@ -22,9 +22,8 @@ export const ANCHOR_LEFT = 'left';
 
 // When the unit type is day, the endDate of booking range is exclusive.
 // In the UI picker, we show only inclusive dates
-const apiEndDateToPickerDate = (lineItemUnitType, endDate) => {
+const apiEndDateToPickerDate = (isDaily, endDate) => {
   const isValid = endDate instanceof Date;
-  const isDaily = lineItemUnitType === LINE_ITEM_DAY;
 
   // API end dates are exlusive, so we need to shift them with daily
   // booking.
@@ -37,13 +36,19 @@ const apiEndDateToPickerDate = (lineItemUnitType, endDate) => {
 
 // When the unit type is day, the endDate of booking range is exclusive.
 // In the UI picker, we show only inclusive dates
-const pickerEndDateToApiDate = (lineItemUnitType, endDate) => {
+const pickerEndDateToApiDate = (isDaily, endDate) => {
   const isValid = endDate instanceof moment;
-  const isDaily = lineItemUnitType === LINE_ITEM_DAY;
 
   // API end dates are exlusive, so we need to shift them with daily
   // booking.
-  return isValid && isDaily ? endDate.add(1, 'days').toDate() : isValid ? endDate.toDate() : null;
+  return isValid && isDaily
+    ? endDate
+        .clone()
+        .add(1, 'days')
+        .toDate()
+    : isValid
+    ? endDate.toDate()
+    : null;
 };
 
 // Since final-form tracks the onBlur event for marking the field as
@@ -166,7 +171,7 @@ class DateRangeInputComponent extends Component {
   }
 
   onDatesChange(dates) {
-    const { lineItemUnitType, isBlockedBetween } = this.props;
+    const { isDaily, isBlockedBetween } = this.props;
     const { startDate, endDate } = dates;
 
     // both dates are selected, a new start date before the previous start
@@ -185,7 +190,7 @@ class DateRangeInputComponent extends Component {
       : false;
 
     const startDateAsDate = startDate instanceof moment ? startDate.toDate() : null;
-    const endDateAsDate = clearEndDate ? null : pickerEndDateToApiDate(lineItemUnitType, endDate);
+    const endDateAsDate = clearEndDate ? null : pickerEndDateToApiDate(isDaily, endDate);
 
     this.setState(() => ({
       currentStartDate: startDateAsDate,
@@ -213,7 +218,7 @@ class DateRangeInputComponent extends Component {
   render() {
     const {
       className,
-      lineItemUnitType,
+      isDaily,
       initialDates,
       intl,
       name,
@@ -234,13 +239,12 @@ class DateRangeInputComponent extends Component {
       ...datePickerProps
     } = this.props;
 
-    const isDaily = lineItemUnitType === LINE_ITEM_DAY;
     const initialStartMoment = initialDates ? moment(initialDates.startDate) : null;
     const initialEndMoment = initialDates ? moment(initialDates.endDate) : null;
     const startDate =
       value && value.startDate instanceof Date ? moment(value.startDate) : initialStartMoment;
     const endDate =
-      apiEndDateToPickerDate(lineItemUnitType, value ? value.endDate : null) || initialEndMoment;
+      apiEndDateToPickerDate(isDaily, value ? value.endDate : null) || initialEndMoment;
 
     const startDatePlaceholderTxt =
       startDatePlaceholderText ||
@@ -294,7 +298,7 @@ DateRangeInputComponent.propTypes = {
   className: string,
   startDateId: string,
   endDateId: string,
-  lineItemUnitType: propTypes.lineItemUnitType.isRequired,
+  isDaily: bool.isRequired,
   focusedInput: oneOf([START_DATE, END_DATE]),
   initialDates: instanceOf(Date),
   name: string.isRequired,
