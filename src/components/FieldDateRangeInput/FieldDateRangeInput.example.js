@@ -54,7 +54,7 @@ export const Empty = {
     style: { marginBottom: '140px' },
     dateInputProps: {
       name: 'bookingDates',
-      lineItemUnitType: LINE_ITEM_NIGHT,
+      isDaily: false,
       startDateId: 'EmptyDateRange.bookingStartDate',
       startDateLabel: 'Start date',
       startDatePlaceholderText: startDatePlaceholderText,

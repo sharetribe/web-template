@@ -538,7 +538,7 @@ export const BookingDatesFormComponent = props => {
             <FieldDateRangeInput
               className={css.bookingDates}
               name="bookingDates"
-              lineItemUnitType={lineItemUnitType}
+              isDaily={lineItemUnitType === LINE_ITEM_DAY}
               startDateId={`${formId}.bookingStartDate`}
               startDateLabel={intl.formatMessage({
                 id: 'BookingDatesForm.bookingStartTitle',
