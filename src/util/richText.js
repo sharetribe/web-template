@@ -3,6 +3,7 @@ import flow from 'lodash/flow';
 import flatMap from 'lodash/flatMap';
 import map from 'lodash/map';
 import { ExternalLink } from '../components';
+// NOTE: This file imports components/index.js, which may lead to circular dependency
 
 /**
  * Add zero width space (zwsp) around given breakchars (default '/') to make word break possible.
