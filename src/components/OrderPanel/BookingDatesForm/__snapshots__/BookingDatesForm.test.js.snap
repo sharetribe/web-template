@@ -10,6 +10,7 @@ exports[`BookingDatesForm matches snapshot without selected dates 1`] = `
   intl={
     Object {
       "formatDate": [Function],
+      "formatDateTimeRange": [Function],
       "formatMessage": [Function],
       "formatNumber": [Function],
       "formatPlural": [Function],

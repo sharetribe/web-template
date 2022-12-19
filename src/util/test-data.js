@@ -283,6 +283,10 @@ const pad = num => {
 // Create fake Internalization object to help with shallow rendering.
 export const fakeIntl = {
   formatDate: d => `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`,
+  formatDateTimeRange: (start, end) =>
+    `${start.getUTCFullYear()}-${pad(start.getUTCMonth() + 1)}-${pad(
+      start.getUTCDate()
+    )} - ${end.getUTCFullYear()}-${pad(end.getUTCMonth() + 1)}-${pad(end.getUTCDate())}`,
   formatMessage: msg => msg.id,
   formatNumber: d => d,
   formatPlural: d => d,

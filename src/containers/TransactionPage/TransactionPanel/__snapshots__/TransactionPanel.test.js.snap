@@ -34,6 +34,7 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
             intl={
               Object {
                 "formatDate": [Function],
+                "formatDateTimeRange": [Function],
                 "formatMessage": [Function],
                 "formatNumber": [Function],
                 "formatPlural": [Function],
@@ -61,6 +62,7 @@ exports[`TransactionPanel - Order enquired matches snapshot 1`] = `
             intl={
               Object {
                 "formatDate": [Function],
+                "formatDateTimeRange": [Function],
                 "formatMessage": [Function],
                 "formatNumber": [Function],
                 "formatPlural": [Function],
@@ -234,6 +236,7 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
             intl={
               Object {
                 "formatDate": [Function],
+                "formatDateTimeRange": [Function],
                 "formatMessage": [Function],
                 "formatNumber": [Function],
                 "formatPlural": [Function],
@@ -261,6 +264,7 @@ exports[`TransactionPanel - Sale enquired matches snapshot 1`] = `
             intl={
               Object {
                 "formatDate": [Function],
+                "formatDateTimeRange": [Function],
                 "formatMessage": [Function],
                 "formatNumber": [Function],
                 "formatPlural": [Function],
