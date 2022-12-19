@@ -37,6 +37,7 @@ import {
   getAllTransitionsForEveryProcess,
   TX_TRANSITION_ACTORS,
 } from '../transactions/transaction';
+// NOTE: This file imports ../transactions/transaction.js, which may lead to circular dependency
 
 const { UUID, LatLng, LatLngBounds, Money } = sdkTypes;
 const TRANSITIONS = getAllTransitionsForEveryProcess();
@@ -568,8 +569,9 @@ propTypes.error = shape({
 
 // Options for showing just date or date and time on TimeRange and OrderBreakdown
 export const DATE_TYPE_DATE = 'date';
+export const DATE_TYPE_TIME = 'time';
 export const DATE_TYPE_DATETIME = 'datetime';
 
-propTypes.dateType = oneOf([DATE_TYPE_DATE, DATE_TYPE_DATETIME]);
+propTypes.dateType = oneOf([DATE_TYPE_DATE, DATE_TYPE_TIME, DATE_TYPE_DATETIME]);
 
 export { propTypes };

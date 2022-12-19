@@ -25,6 +25,7 @@ import {
   ERROR_CODE_TRANSACTION_LISTING_INSUFFICIENT_STOCK,
   ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH,
 } from './types';
+// NOTE: This file imports types.js, which may lead to circular dependency
 
 const errorAPIErrors = error => {
   return error && error.apiErrors ? error.apiErrors : [];
