@@ -3,6 +3,7 @@ import {
   IntlProvider,
   FormattedMessage,
   FormattedDate,
+  FormattedDateTimeRange,
   createIntl,
   createIntlCache,
   injectIntl,
@@ -15,6 +16,7 @@ import {
 
 const intlShape = shape({
   formatDate: func.isRequired,
+  formatDateTimeRange: func.isRequired,
   formatMessage: func.isRequired,
   formatNumber: func.isRequired,
   formatPlural: func.isRequired,
@@ -25,6 +27,7 @@ export {
   IntlProvider,
   FormattedMessage,
   FormattedDate,
+  FormattedDateTimeRange,
   createIntl,
   createIntlCache,
   injectIntl,
