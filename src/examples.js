@@ -36,6 +36,7 @@ import * as IconAdd from './components/IconAdd/IconAdd.example';
 import * as IconBannedUser from './components/IconBannedUser/IconBannedUser.example';
 import * as IconCheckmark from './components/IconCheckmark/IconCheckmark.example';
 import * as IconClose from './components/IconClose/IconClose.example';
+import * as IconDelete from './components/IconDelete/IconDelete.example';
 import * as IconDisputeOrder from './components/IconDisputeOrder/IconDisputeOrder.example';
 import * as IconEdit from './components/IconEdit/IconEdit.example';
 import * as IconEmailAttention from './components/IconEmailAttention/IconEmailAttention.example';
@@ -160,6 +161,7 @@ export {
   IconBannedUser,
   IconCheckmark,
   IconClose,
+  IconDelete,
   IconDisputeOrder,
   IconEdit,
   IconEmailAttention,
