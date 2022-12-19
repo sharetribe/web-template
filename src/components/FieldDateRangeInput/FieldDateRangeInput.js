@@ -14,7 +14,6 @@ import moment from 'moment';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { START_DATE, END_DATE } from '../../util/dates';
-import { LINE_ITEM_DAY, propTypes } from '../../util/types';
 import { ValidationError } from '../../components';
 
 import DateRangeInput from './DateRangeInput';
