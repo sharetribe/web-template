@@ -77,18 +77,21 @@ const EditListingWizardTab = props => {
     tab,
     marketplaceTabs,
     params,
+    locationSearch,
     errors,
     fetchInProgress,
     newListingPublished,
-    history,
-    images,
-    onAddAvailabilityException,
-    onDeleteAvailabilityException,
-    fetchExceptionsInProgress,
-    availabilityExceptions,
-    listing,
     handleCreateFlowTabScrolling,
     handlePublishListing,
+    history,
+    images,
+    listing,
+    weeklyExceptionQueries,
+    monthlyExceptionQueries,
+    allExceptions,
+    onFetchExceptions,
+    onAddAvailabilityException,
+    onDeleteAvailabilityException,
     onUpdateListing,
     onCreateListingDraft,
     onImageUpload,
@@ -157,6 +160,8 @@ const EditListingWizardTab = props => {
       errors,
       listing,
       panelUpdated: updatedTab === tab,
+      params,
+      locationSearch,
       updateInProgress,
       // newListingPublished and fetchInProgress are flags for the last wizard tab
       ready: newListingPublished,
@@ -210,8 +215,10 @@ const EditListingWizardTab = props => {
     case AVAILABILITY: {
       return (
         <EditListingAvailabilityPanel
-          fetchExceptionsInProgress={fetchExceptionsInProgress}
-          availabilityExceptions={availabilityExceptions}
+          allExceptions={allExceptions}
+          weeklyExceptionQueries={weeklyExceptionQueries}
+          monthlyExceptionQueries={monthlyExceptionQueries}
+          onFetchExceptions={onFetchExceptions}
           onAddAvailabilityException={onAddAvailabilityException}
           onDeleteAvailabilityException={onDeleteAvailabilityException}
           onNextTab={() =>
@@ -224,6 +231,9 @@ const EditListingWizardTab = props => {
               routeConfiguration
             )
           }
+          config={config}
+          history={history}
+          routeConfiguration={routeConfiguration}
           {...panelProps(AVAILABILITY)}
         />
       );
@@ -258,6 +268,7 @@ EditListingWizardTab.propTypes = {
     type: oneOf(LISTING_PAGE_PARAM_TYPES).isRequired,
     tab: oneOf(SUPPORTED_TABS).isRequired,
   }).isRequired,
+  locationSearch: object,
   errors: shape({
     createListingDraftError: object,
     publishListingError: object,
