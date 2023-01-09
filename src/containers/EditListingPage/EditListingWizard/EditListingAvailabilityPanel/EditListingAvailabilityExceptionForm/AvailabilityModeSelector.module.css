@@ -1,0 +1,15 @@
+@import '../../../../../styles/customMediaQueries.css';
+
+.radioButtons {
+}
+
+.checkedAvailable {
+  display: none;
+  stroke: var(--successColor);
+  fill: var(--successColor);
+}
+.checkedNotAvailable {
+  display: none;
+  stroke: var(--failColor);
+  fill: var(--failColor);
+}
