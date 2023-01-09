@@ -2,9 +2,19 @@ import omit from 'lodash/omit';
 
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { denormalisedResponseEntities } from '../../util/data';
-import { getDefaultTimeZoneOnBrowser, getStartOf } from '../../util/dates';
+import {
+  getDefaultTimeZoneOnBrowser,
+  getStartOf,
+  getStartOfWeek,
+  monthIdString,
+  parseDateFromISO8601,
+  stringifyDateToISO8601,
+} from '../../util/dates';
+import { uniqueBy } from '../../util/generators';
 import { storableError } from '../../util/errors';
 import * as log from '../../util/log';
+import { parse } from '../../util/urlHelpers';
+import { isBookingProcessAlias } from '../../transactions/transaction';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import {
@@ -15,6 +25,13 @@ import {
 import { fetchCurrentUser } from '../../ducks/user.duck';
 
 const { UUID } = sdkTypes;
+
+// Create array of N items where indexing starts from 1
+const getArrayOfNItems = n =>
+  Array(n)
+    .fill()
+    .map((v, i) => i + 1)
+    .slice(1);
 
 // Return an array of image ids
 const imageIds = images => {
@@ -61,6 +78,41 @@ const getImageVariantInfo = listingImageConfig => {
   };
 };
 
+const sortExceptionsByStartTime = (a, b) => {
+  return a.attributes.start.getTime() - b.attributes.start.getTime();
+};
+
+// When navigating through weekly calendar,
+// we want to merge new week-related data (inProgres, error) to weeklyExceptionQueries hashmap.
+const mergeToWeeklyExceptionQueries = (weeklyExceptionQueries, weekStartId, newDataProps) => {
+  return weekStartId
+    ? {
+        weeklyExceptionQueries: {
+          ...weeklyExceptionQueries,
+          [weekStartId]: {
+            ...weeklyExceptionQueries[weekStartId],
+            ...newDataProps,
+          },
+        },
+      }
+    : {};
+};
+// When navigating through monthly calendar (e.g. when adding a new AvailabilityException),
+// we want to merge new month-related data (inProgres, error) to monthlyExceptionQueries hashmap.
+const mergeToMonthlyExceptionQueries = (monthlyExceptionQueries, monthId, newDataProps) => {
+  return monthId
+    ? {
+        monthlyExceptionQueries: {
+          ...monthlyExceptionQueries,
+          [monthId]: {
+            ...monthlyExceptionQueries[monthId],
+            ...newDataProps,
+          },
+        },
+      }
+    : {};
+};
+
 const requestAction = actionType => params => ({ type: actionType, payload: { params } });
 
 const successAction = actionType => result => ({ type: actionType, payload: result.data });
@@ -91,6 +143,8 @@ export const SHOW_LISTINGS_ERROR = 'app/EditListingPage/SHOW_LISTINGS_ERROR';
 export const FETCH_EXCEPTIONS_REQUEST = 'app/EditListingPage/FETCH_AVAILABILITY_EXCEPTIONS_REQUEST';
 export const FETCH_EXCEPTIONS_SUCCESS = 'app/EditListingPage/FETCH_AVAILABILITY_EXCEPTIONS_SUCCESS';
 export const FETCH_EXCEPTIONS_ERROR = 'app/EditListingPage/FETCH_AVAILABILITY_EXCEPTIONS_ERROR';
+export const FETCH_EXTRA_EXCEPTIONS_SUCCESS =
+  'app/EditListingPage/FETCH_EXTRA_AVAILABILITY_EXCEPTIONS_SUCCESS';
 
 export const ADD_EXCEPTION_REQUEST = 'app/EditListingPage/ADD_AVAILABILITY_EXCEPTION_REQUEST';
 export const ADD_EXCEPTION_SUCCESS = 'app/EditListingPage/ADD_AVAILABILITY_EXCEPTION_SUCCESS';
@@ -132,11 +186,21 @@ const initialState = {
   uploadedImages: {},
   uploadedImagesOrder: [],
   removedImageIds: [],
-  fetchExceptionsError: null,
-  fetchExceptionsInProgress: false,
-  availabilityExceptions: [],
   addExceptionError: null,
   addExceptionInProgress: false,
+  weeklyExceptionQueries: {
+    // '2022-12-12': { // Note: id/key is the start of the week in given time zone
+    //   fetchExceptionsError: null,
+    //   fetchExceptionsInProgress: null,
+    // },
+  },
+  monthlyExceptionQueries: {
+    // '2022-12': {
+    //   fetchExceptionsError: null,
+    //   fetchExceptionsInProgress: null,
+    // },
+  },
+  allExceptions: [],
   deleteExceptionError: null,
   deleteExceptionInProgress: false,
   listingDraft: null,
@@ -221,47 +285,85 @@ export default function reducer(state = initialState, action = {}) {
 
     case SHOW_LISTINGS_REQUEST:
       return { ...state, showListingsError: null };
-    case SHOW_LISTINGS_SUCCESS:
-      return initialState; // { ...initialState, availabilityCalendar: { ...state.availabilityCalendar } };
-
+    case SHOW_LISTINGS_SUCCESS: {
+      const listingIdFromPayload = payload.data.id;
+      const { listingId, allExceptions, weeklyExceptionQueries, monthlyExceptionQueries } = state;
+      // If listing stays the same, we trust previously fetched exception data.
+      return listingIdFromPayload?.uuid === state.listingId?.uuid
+        ? {
+            ...initialState,
+            listingId,
+            allExceptions,
+            weeklyExceptionQueries,
+            monthlyExceptionQueries,
+          }
+        : { ...initialState, listingId: listingIdFromPayload };
+    }
     case SHOW_LISTINGS_ERROR:
       // eslint-disable-next-line no-console
       console.error(payload);
       return { ...state, showListingsError: payload, redirectToListing: false };
 
-    case FETCH_EXCEPTIONS_REQUEST:
-      return {
-        ...state,
-        availabilityExceptions: [],
-        fetchExceptionsError: null,
-        fetchExceptionsInProgress: true,
-      };
-    case FETCH_EXCEPTIONS_SUCCESS:
-      return {
-        ...state,
-        availabilityExceptions: payload,
-        fetchExceptionsError: null,
-        fetchExceptionsInProgress: false,
-      };
-    case FETCH_EXCEPTIONS_ERROR:
-      return {
-        ...state,
-        fetchExceptionsError: payload.error,
-        fetchExceptionsInProgress: false,
-      };
+    case FETCH_EXCEPTIONS_REQUEST: {
+      const { monthId, weekStartId } = payload.params;
+      const newData = { fetchExceptionsError: null, fetchExceptionsInProgress: true };
 
+      const exceptionQueriesMaybe = monthId
+        ? mergeToMonthlyExceptionQueries(state.monthlyExceptionQueries, monthId, newData)
+        : weekStartId
+        ? mergeToWeeklyExceptionQueries(state.weeklyExceptionQueries, weekStartId, newData)
+        : {};
+      return { ...state, ...exceptionQueriesMaybe };
+    }
+    case FETCH_EXCEPTIONS_SUCCESS: {
+      const { exceptions, monthId, weekStartId } = payload;
+      const combinedExceptions = state.allExceptions.concat(exceptions);
+      const selectId = x => x.id.uuid;
+      const allExceptions = uniqueBy(combinedExceptions, selectId).sort(sortExceptionsByStartTime);
+      const newData = { fetchExceptionsInProgress: false };
+
+      const exceptionQueriesMaybe = monthId
+        ? mergeToMonthlyExceptionQueries(state.monthlyExceptionQueries, monthId, newData)
+        : weekStartId
+        ? mergeToWeeklyExceptionQueries(state.weeklyExceptionQueries, weekStartId, newData)
+        : {};
+      return { ...state, allExceptions, ...exceptionQueriesMaybe };
+    }
+    case FETCH_EXCEPTIONS_ERROR: {
+      const { monthId, weekStartId, error } = payload;
+      const newData = { fetchExceptionsInProgress: false, fetchExceptionsError: error };
+
+      const exceptionQueriesMaybe = monthId
+        ? mergeToMonthlyExceptionQueries(state.monthlyExceptionQueries, monthId, newData)
+        : weekStartId
+        ? mergeToWeeklyExceptionQueries(state.weeklyExceptionQueries, weekStartId, newData)
+        : {};
+
+      return { ...state, ...exceptionQueriesMaybe };
+    }
+    case FETCH_EXTRA_EXCEPTIONS_SUCCESS: {
+      const combinedExceptions = state.allExceptions.concat(payload.exceptions);
+      const selectId = x => x.id.uuid;
+      const allExceptions = uniqueBy(combinedExceptions, selectId).sort(sortExceptionsByStartTime);
+      // TODO: currently we don't handle thrown errors from these paginated calls
+      return { ...state, allExceptions };
+    }
     case ADD_EXCEPTION_REQUEST:
       return {
         ...state,
         addExceptionError: null,
         addExceptionInProgress: true,
       };
-    case ADD_EXCEPTION_SUCCESS:
+    case ADD_EXCEPTION_SUCCESS: {
+      const exception = payload;
+      const combinedExceptions = state.allExceptions.concat(exception);
+      const allExceptions = combinedExceptions.sort(sortExceptionsByStartTime);
       return {
         ...state,
-        availabilityExceptions: [...state.availabilityExceptions, payload],
+        allExceptions,
         addExceptionInProgress: false,
       };
+    }
     case ADD_EXCEPTION_ERROR:
       return {
         ...state,
@@ -276,13 +378,12 @@ export default function reducer(state = initialState, action = {}) {
         deleteExceptionInProgress: true,
       };
     case DELETE_EXCEPTION_SUCCESS: {
-      const deletedExceptionId = payload.id;
-      const availabilityExceptions = state.availabilityExceptions.filter(
-        e => e.id.uuid !== deletedExceptionId.uuid
-      );
+      const exception = payload;
+      const id = exception.id.uuid;
+      const allExceptions = state.allExceptions.filter(e => e.id.uuid !== id);
       return {
         ...state,
-        availabilityExceptions,
+        allExceptions,
         deleteExceptionInProgress: false,
       };
     }
@@ -412,6 +513,10 @@ export const setStockError = errorAction(SET_STOCK_ERROR);
 export const fetchAvailabilityExceptionsRequest = requestAction(FETCH_EXCEPTIONS_REQUEST);
 export const fetchAvailabilityExceptionsSuccess = successAction(FETCH_EXCEPTIONS_SUCCESS);
 export const fetchAvailabilityExceptionsError = errorAction(FETCH_EXCEPTIONS_ERROR);
+// Add extra data from additional pages
+export const fetchExtraAvailabilityExceptionsSuccess = successAction(
+  FETCH_EXTRA_EXCEPTIONS_SUCCESS
+);
 
 // SDK method: availabilityExceptions.create
 export const addAvailabilityExceptionRequest = requestAction(ADD_EXCEPTION_REQUEST);
@@ -636,18 +741,139 @@ export const requestDeleteAvailabilityException = params => (dispatch, getState,
     });
 };
 
-export const requestFetchAvailabilityExceptions = fetchParams => (dispatch, getState, sdk) => {
-  dispatch(fetchAvailabilityExceptionsRequest(fetchParams));
+export const requestFetchAvailabilityExceptions = params => (dispatch, getState, sdk) => {
+  const { listingId, start, end, timeZone, page, isWeekly } = params;
+  const fetchParams = { listingId, start, end };
+  const timeUnitIdProp = isWeekly
+    ? { weekStartId: stringifyDateToISO8601(start) }
+    : { monthId: monthIdString(start, timeZone) };
+  dispatch(fetchAvailabilityExceptionsRequest(timeUnitIdProp));
 
   return sdk.availabilityExceptions
-    .query(fetchParams, { expand: true })
+    .query(fetchParams)
     .then(response => {
       const availabilityExceptions = denormalisedResponseEntities(response);
-      return dispatch(fetchAvailabilityExceptionsSuccess({ data: availabilityExceptions }));
+
+      // Fetch potential extra exceptions pagination pages per month.
+      // In theory, there could be several pagination pages worth of exceptions,
+      // if range is month and unit is 'hour': 31 days * 24 hour = 744 slots for exceptions.
+      const totalPages = response.data.meta.totalPages;
+      if (totalPages > 1 && !page) {
+        const extraPages = getArrayOfNItems(totalPages);
+
+        // It's unlikely that this code is reached with default units.
+        // Note:
+        //  - Firing multiple API calls might hit API rate limit
+        //    (This is very unlikely with this query and 'hour' unit.)
+        //  - TODO: this doesn't take care of failures of those extra calls
+        Promise.all(
+          extraPages.map(page => {
+            return sdk.availabilityExceptions.query({ ...fetchParams, page });
+          })
+        ).then(responses => {
+          const denormalizedFlatResults = (all, r) => all.concat(denormalisedResponseEntities(r));
+          const exceptions = responses.reduce(denormalizedFlatResults, []);
+          dispatch(
+            fetchExtraAvailabilityExceptionsSuccess({
+              data: { ...timeUnitIdProp, exceptions },
+            })
+          );
+        });
+      }
+
+      return dispatch(
+        fetchAvailabilityExceptionsSuccess({
+          data: { ...timeUnitIdProp, exceptions: availabilityExceptions },
+        })
+      );
     })
     .catch(e => {
-      return dispatch(fetchAvailabilityExceptionsError({ error: storableError(e) }));
+      return dispatch(
+        fetchAvailabilityExceptionsError({ ...timeUnitIdProp, error: storableError(e) })
+      );
     });
+};
+
+// Helper function for loadData call.
+const fetchLoadDataExceptions = (dispatch, listing, search, firstDayOfWeek) => {
+  const hasWindow = typeof window !== 'undefined';
+  // Listing could be ownListing entity too, so we just check if attributes key exists
+  const hasTimeZone = listing?.attributes?.availabilityPlan?.timezone;
+
+  // Fetch time-zones on client side only.
+  // Note: listing needs to have time zone set!
+  if (hasWindow && listing.id && hasTimeZone) {
+    const listingId = listing.id;
+    // If the listing doesn't have availabilityPlan yet
+    // use the defaul timezone
+    const timezone = listing.attributes.availabilityPlan?.timezone || getDefaultTimeZoneOnBrowser();
+    const todayInListingsTZ = getStartOf(new Date(), 'day', timezone);
+
+    const locationSearch = parse(search);
+    const selectedDate = locationSearch?.d
+      ? parseDateFromISO8601(locationSearch.d, timezone)
+      : todayInListingsTZ;
+    const startOfWeek = getStartOfWeek(selectedDate, timezone, firstDayOfWeek);
+    const prevWeek = getStartOf(startOfWeek, 'day', timezone, -7, 'days');
+    const nextWeek = getStartOf(startOfWeek, 'day', timezone, 7, 'days');
+    const nextAfterNextWeek = getStartOf(nextWeek, 'day', timezone, 7, 'days');
+
+    const nextMonth = getStartOf(todayInListingsTZ, 'month', timezone, 1, 'months');
+    const nextAfterNextMonth = getStartOf(nextMonth, 'month', timezone, 1, 'months');
+
+    const sharedData = { listingId, timeZone: timezone };
+
+    // Fetch data for selected week and nearest weeks for WeeklyCalendar
+    // Plus current month and month after that for EditListingAvailabilityForm
+    //
+    // NOTE: This is making 5 different Thunk calls, which update store 2 times each
+    //       It would make sense to make on thunk function that fires 5 sdk calls/promises,
+    //       but for the time being, it's clearer to push all the calls through
+    //       requestFetchAvailabilityExceptions
+    return Promise.all([
+      dispatch(
+        requestFetchAvailabilityExceptions({
+          ...sharedData,
+          isWeekly: true,
+          start: prevWeek,
+          end: startOfWeek,
+        })
+      ),
+      dispatch(
+        requestFetchAvailabilityExceptions({
+          ...sharedData,
+          isWeekly: true,
+          start: startOfWeek,
+          end: nextWeek,
+        })
+      ),
+      dispatch(
+        requestFetchAvailabilityExceptions({
+          ...sharedData,
+          isWeekly: true,
+          start: nextWeek,
+          end: nextAfterNextWeek,
+        })
+      ),
+      dispatch(
+        requestFetchAvailabilityExceptions({
+          ...sharedData,
+          start: todayInListingsTZ,
+          end: nextMonth,
+        })
+      ),
+      dispatch(
+        requestFetchAvailabilityExceptions({
+          ...sharedData,
+          start: nextMonth,
+          end: nextAfterNextMonth,
+        })
+      ),
+    ]);
+  }
+
+  // By default return an empty array
+  return Promise.all([]);
 };
 
 export const savePayoutDetails = (values, isUpdateCall) => (dispatch, getState, sdk) => {
@@ -694,33 +920,10 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
       // Because of two dispatch functions, response is an array.
       // We are only interested in the response from requestShowListing here,
       // so we need to pick the first one
-      if (response[0].data && response[0].data.data) {
-        const listing = response[0].data.data;
-
-        // If the listing doesn't have availabilityPlan yet
-        // use the defaul timezone
-        const availabilityPlan = listing.attributes.availabilityPlan;
-
-        const tz = availabilityPlan
-          ? listing.attributes.availabilityPlan.timezone
-          : typeof window !== 'undefined'
-          ? getDefaultTimeZoneOnBrowser()
-          : 'Etc/UTC';
-
-        const today = new Date();
-        const start = getStartOf(today, 'day', tz);
-        // Query range: today + 364 days
-        const exceptionRange = 364;
-        const end = getStartOf(today, 'day', tz, exceptionRange, 'days');
-
-        // NOTE: in this template, we don't expect more than 100 exceptions.
-        // If there are more exceptions, pagination kicks in and we can't use frontend sorting.
-        const params = {
-          listingId: listing.id,
-          start,
-          end,
-        };
-        dispatch(requestFetchAvailabilityExceptions(params));
+      const listing = response[0]?.data?.data;
+      const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias;
+      if (listing && isBookingProcessAlias(transactionProcessAlias)) {
+        fetchLoadDataExceptions(dispatch, listing, search, config.localization.firstDayOfWeek);
       }
 
       return response;
