@@ -65,7 +65,7 @@ const requestAction = actionType => params => ({ type: actionType, payload: { pa
 
 const successAction = actionType => result => ({ type: actionType, payload: result.data });
 
-const errorAction = actionType => error => ({ type: actionType, payload: error, error: true });
+const errorAction = actionType => payload => ({ type: actionType, payload, error: true });
 
 // ================ Action types ================ //
 
@@ -119,7 +119,7 @@ export const SAVE_PAYOUT_DETAILS_ERROR = 'app/EditListingPage/SAVE_PAYOUT_DETAIL
 const initialState = {
   // Error instance placeholders for each endpoint
   createListingDraftError: null,
-  publishingListing: null,
+  listingId: null,
   publishListingError: null,
   updateListingError: null,
   showListingsError: null,
@@ -181,14 +181,13 @@ export default function reducer(state = initialState, action = {}) {
     case PUBLISH_LISTING_REQUEST:
       return {
         ...state,
-        publishingListing: payload.listingId,
+        listingId: payload.listingId,
         publishListingError: null,
       };
     case PUBLISH_LISTING_SUCCESS:
       return {
         ...state,
         redirectToListing: true,
-        publishingListing: null,
         createListingDraftError: null,
         updateListingError: null,
         showListingsError: null,
@@ -201,9 +200,8 @@ export default function reducer(state = initialState, action = {}) {
       console.error(payload);
       return {
         ...state,
-        publishingListing: null,
         publishListingError: {
-          listingId: state.publishingListing,
+          listingId: state.listingId,
           error: payload,
         },
       };
