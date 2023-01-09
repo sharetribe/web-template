@@ -4,83 +4,47 @@ import classNames from 'classnames';
 
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
-import { ensureOwnListing } from '../../../../util/data';
 import { getDefaultTimeZoneOnBrowser, timestampToDate } from '../../../../util/dates';
-import { LISTING_STATE_DRAFT, DATE_TYPE_DATETIME, propTypes } from '../../../../util/types';
+import { LISTING_STATE_DRAFT, propTypes } from '../../../../util/types';
+import { DAY, isFullDay } from '../../../../transactions/transaction';
 
 // Import shared components
-import {
-  Button,
-  IconClose,
-  IconEdit,
-  IconSpinner,
-  InlineTextButton,
-  ListingLink,
-  Modal,
-  TimeRange,
-} from '../../../../components';
+import { Button, InlineTextButton, ListingLink, Modal } from '../../../../components';
 
 // Import modules from this directory
 import EditListingAvailabilityPlanForm from './EditListingAvailabilityPlanForm';
 import EditListingAvailabilityExceptionForm from './EditListingAvailabilityExceptionForm';
+import WeeklyCalendar from './WeeklyCalendar/WeeklyCalendar';
 
 import css from './EditListingAvailabilityPanel.module.css';
 
-const WEEKDAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+// This is the order of days as JavaScript understands them
+// The number returned by "new Date().getDay()" refers to day of week starting from sunday.
+const WEEKDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
-// We want to sort exceptions on the client-side, maximum pagination page size is 100,
-// so we need to restrict the amount of exceptions to that.
-const MAX_EXCEPTIONS_COUNT = 100;
+// This is the order of days as JavaScript understands them
+// The number returned by "new Date().getDay()" refers to day of week starting from sunday.
+const rotateDays = (days, startOfWeek) => {
+  return startOfWeek === 0 ? days : days.slice(startOfWeek).concat(days.slice(0, startOfWeek));
+};
 
 const defaultTimeZone = () =>
   typeof window !== 'undefined' ? getDefaultTimeZoneOnBrowser() : 'Etc/UTC';
-
-/////////////
-// Weekday //
-/////////////
-const findEntry = (availabilityPlan, dayOfWeek) =>
-  availabilityPlan.entries.find(d => d.dayOfWeek === dayOfWeek);
-
-const getEntries = (availabilityPlan, dayOfWeek) =>
-  availabilityPlan.entries.filter(d => d.dayOfWeek === dayOfWeek);
-
-const Weekday = props => {
-  const { availabilityPlan, dayOfWeek, openEditModal } = props;
-  const hasEntry = findEntry(availabilityPlan, dayOfWeek);
-
-  return (
-    <div
-      className={classNames(css.weekDay, { [css.blockedWeekDay]: !hasEntry })}
-      onClick={() => openEditModal(true)}
-      role="button"
-    >
-      <div className={css.dayOfWeek}>
-        <FormattedMessage id={`EditListingAvailabilityPanel.dayOfWeek.${dayOfWeek}`} />
-      </div>
-      <div className={css.entries}>
-        {availabilityPlan && hasEntry
-          ? getEntries(availabilityPlan, dayOfWeek).map(e => {
-              return (
-                <span className={css.entry} key={`${e.dayOfWeek}${e.startTime}`}>{`${
-                  e.startTime
-                } - ${e.endTime === '00:00' ? '24:00' : e.endTime}`}</span>
-              );
-            })
-          : null}
-      </div>
-    </div>
-  );
-};
 
 ///////////////////////////////////////////////////
 // EditListingAvailabilityExceptionPanel - utils //
 ///////////////////////////////////////////////////
 
 // Create initial entry mapping for form's initial values
-const createEntryDayGroups = (entries = {}) =>
-  entries.reduce((groupedEntries, entry) => {
+const createEntryDayGroups = (entries = {}) => {
+  // Collect info about which days are active in the availability plan form:
+  let activePlanDays = [];
+  return entries.reduce((groupedEntries, entry) => {
     const { startTime, endTime: endHour, dayOfWeek } = entry;
     const dayGroup = groupedEntries[dayOfWeek] || [];
+    activePlanDays = activePlanDays.includes(dayOfWeek)
+      ? activePlanDays
+      : [...activePlanDays, dayOfWeek];
     return {
       ...groupedEntries,
       [dayOfWeek]: [
@@ -90,8 +54,10 @@ const createEntryDayGroups = (entries = {}) =>
           endTime: endHour === '00:00' ? '24:00' : endHour,
         },
       ],
+      activePlanDays,
     };
   }, {});
+};
 
 // Create initial values
 const createInitialValues = availabilityPlan => {
@@ -132,14 +98,6 @@ const createAvailabilityPlan = values => ({
   },
 });
 
-// Ensure that the AvailabilityExceptions are in sensible order.
-//
-// Note: if you allow fetching more than 100 exception,
-// pagination kicks in and that makes client-side sorting impossible.
-const sortExceptionsByStartTime = (a, b) => {
-  return a.attributes.start.getTime() - b.attributes.start.getTime();
-};
-
 //////////////////////////////////
 // EditListingAvailabilityPanel //
 //////////////////////////////////
@@ -147,29 +105,39 @@ const EditListingAvailabilityPanel = props => {
   const {
     className,
     rootClassName,
+    params,
+    locationSearch,
     listing,
-    availabilityExceptions,
-    fetchExceptionsInProgress,
+    monthlyExceptionQueries,
+    weeklyExceptionQueries,
+    allExceptions,
     onAddAvailabilityException,
     onDeleteAvailabilityException,
     disabled,
     ready,
+    onFetchExceptions,
     onSubmit,
     onManageDisableScrolling,
     onNextTab,
     submitButtonText,
     updateInProgress,
     errors,
+    config,
+    routeConfiguration,
+    history,
   } = props;
   // Hooks
   const [isEditPlanModalOpen, setIsEditPlanModalOpen] = useState(false);
   const [isEditExceptionsModalOpen, setIsEditExceptionsModalOpen] = useState(false);
   const [valuesFromLastSubmit, setValuesFromLastSubmit] = useState(null);
 
+  const firstDayOfWeek = config.localization.firstDayOfWeek;
   const classes = classNames(rootClassName || css.root, className);
-  const currentListing = ensureOwnListing(listing);
-  const isNextButtonDisabled = !currentListing.attributes.availabilityPlan;
-  const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
+  const listingAttributes = listing?.attributes;
+  const unitType = listingAttributes?.publicData?.unitType;
+  const useFullDays = isFullDay(unitType);
+  const hasAvailabilityPlan = !!listingAttributes?.availabilityPlan;
+  const isPublished = listing?.id && listingAttributes?.state !== LISTING_STATE_DRAFT;
   const defaultAvailabilityPlan = {
     type: 'availability-plan/time',
     timezone: defaultTimeZone(),
@@ -183,7 +151,7 @@ const EditListingAvailabilityPanel = props => {
       // { dayOfWeek: 'sun', startTime: '09:00', endTime: '17:00', seats: 1 },
     ],
   };
-  const availabilityPlan = currentListing.attributes.availabilityPlan || defaultAvailabilityPlan;
+  const availabilityPlan = listingAttributes?.availabilityPlan || defaultAvailabilityPlan;
   const initialValues = valuesFromLastSubmit
     ? valuesFromLastSubmit
     : createInitialValues(availabilityPlan);
@@ -203,22 +171,34 @@ const EditListingAvailabilityPanel = props => {
       });
   };
 
-  const exceptionCount = availabilityExceptions ? availabilityExceptions.length : 0;
-  const sortedAvailabilityExceptions = availabilityExceptions.sort(sortExceptionsByStartTime);
+  const sortedAvailabilityExceptions = allExceptions;
 
   // Save exception click handler
   const saveException = values => {
-    const { availability, exceptionStartTime, exceptionEndTime } = values;
+    const { availability, exceptionStartTime, exceptionEndTime, exceptionRange } = values;
 
     // TODO: add proper seat handling
     const seats = availability === 'available' ? 1 : 0;
 
-    return onAddAvailabilityException({
+    // Exception date/time range is given through FieldDateRangeInput or
+    // separate time fields.
+    const range = useFullDays
+      ? {
+          start: exceptionRange?.startDate,
+          end: exceptionRange?.endDate,
+        }
+      : {
+          start: timestampToDate(exceptionStartTime),
+          end: timestampToDate(exceptionEndTime),
+        };
+
+    const params = {
       listingId: listing.id,
       seats,
-      start: timestampToDate(exceptionStartTime),
-      end: timestampToDate(exceptionEndTime),
-    })
+      ...range,
+    };
+
+    return onAddAvailabilityException(params)
       .then(() => {
         setIsEditExceptionsModalOpen(false);
       })
@@ -240,104 +220,57 @@ const EditListingAvailabilityPanel = props => {
         )}
       </h1>
 
-      <section className={css.section}>
-        <header className={css.sectionHeader}>
-          <h2 className={css.sectionTitle}>
-            <FormattedMessage id="EditListingAvailabilityPanel.defaultScheduleTitle" />
-          </h2>
-          <InlineTextButton
-            className={css.editPlanButton}
-            onClick={() => setIsEditPlanModalOpen(true)}
-          >
-            <IconEdit className={css.editPlanIcon} />{' '}
-            <FormattedMessage id="EditListingAvailabilityPanel.edit" />
-          </InlineTextButton>
-        </header>
-        <div className={css.week}>
-          {WEEKDAYS.map(w => (
-            <Weekday
-              dayOfWeek={w}
-              key={w}
-              availabilityPlan={availabilityPlan}
-              openEditModal={setIsEditPlanModalOpen}
-            />
-          ))}
-        </div>
-      </section>
-      <section className={css.section}>
-        <header className={css.sectionHeader}>
-          <h2 className={css.sectionTitle}>
-            {fetchExceptionsInProgress ? (
-              <FormattedMessage id="EditListingAvailabilityPanel.availabilityExceptionsTitleNoCount" />
-            ) : (
-              <FormattedMessage
-                id="EditListingAvailabilityPanel.availabilityExceptionsTitle"
-                values={{ count: exceptionCount }}
-              />
-            )}
-          </h2>
-        </header>
-        {fetchExceptionsInProgress ? (
-          <div className={css.exceptionsLoading}>
-            <IconSpinner />
-          </div>
-        ) : exceptionCount === 0 ? (
-          <div className={css.noExceptions}>
-            <FormattedMessage id="EditListingAvailabilityPanel.noExceptions" />
-          </div>
-        ) : (
-          <div className={css.exceptions}>
-            {sortedAvailabilityExceptions.map(availabilityException => {
-              const { start, end, seats } = availabilityException.attributes;
-              return (
-                <div key={availabilityException.id.uuid} className={css.exception}>
-                  <div className={css.exceptionHeader}>
-                    <div className={css.exceptionAvailability}>
-                      <div
-                        className={classNames(css.exceptionAvailabilityDot, {
-                          [css.isAvailable]: seats > 0,
-                        })}
-                      />
-                      <div className={css.exceptionAvailabilityStatus}>
-                        {seats > 0 ? (
-                          <FormattedMessage id="EditListingAvailabilityPanel.exceptionAvailable" />
-                        ) : (
-                          <FormattedMessage id="EditListingAvailabilityPanel.exceptionNotAvailable" />
-                        )}
-                      </div>
-                    </div>
-                    <button
-                      className={css.removeExceptionButton}
-                      onClick={() =>
-                        onDeleteAvailabilityException({ id: availabilityException.id })
-                      }
-                    >
-                      <IconClose size="normal" className={css.removeIcon} />
-                    </button>
-                  </div>
-                  <TimeRange
-                    className={css.timeRange}
-                    startDate={start}
-                    endDate={end}
-                    dateType={DATE_TYPE_DATETIME}
-                    timeZone={availabilityPlan.timezone}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        )}
-        {exceptionCount <= MAX_EXCEPTIONS_COUNT ? (
-          <InlineTextButton
-            className={css.addExceptionButton}
-            onClick={() => setIsEditExceptionsModalOpen(true)}
-            disabled={disabled}
-            ready={ready}
-          >
-            <FormattedMessage id="EditListingAvailabilityPanel.addException" />
-          </InlineTextButton>
+      <div className={css.planInfo}>
+        {!hasAvailabilityPlan ? (
+          <p>
+            <FormattedMessage id="EditListingAvailabilityPanel.availabilityPlanInfo" />
+          </p>
         ) : null}
-      </section>
+
+        <InlineTextButton
+          className={css.editPlanButton}
+          onClick={() => setIsEditPlanModalOpen(true)}
+        >
+          {hasAvailabilityPlan ? (
+            <FormattedMessage id="EditListingAvailabilityPanel.editAvailabilityPlan" />
+          ) : (
+            <FormattedMessage id="EditListingAvailabilityPanel.setAvailabilityPlan" />
+          )}
+        </InlineTextButton>
+      </div>
+
+      {hasAvailabilityPlan ? (
+        <>
+          <WeeklyCalendar
+            className={css.section}
+            headerClassName={css.sectionHeader}
+            listingId={listing.id}
+            availabilityPlan={availabilityPlan}
+            availabilityExceptions={sortedAvailabilityExceptions}
+            weeklyExceptionQueries={weeklyExceptionQueries}
+            isDaily={unitType === DAY}
+            useFullDays={useFullDays}
+            onDeleteAvailabilityException={onDeleteAvailabilityException}
+            onFetchExceptions={onFetchExceptions}
+            params={params}
+            locationSearch={locationSearch}
+            firstDayOfWeek={firstDayOfWeek}
+            routeConfiguration={routeConfiguration}
+            history={history}
+          />
+
+          <section className={css.section}>
+            <InlineTextButton
+              className={css.addExceptionButton}
+              onClick={() => setIsEditExceptionsModalOpen(true)}
+              disabled={disabled || !hasAvailabilityPlan}
+              ready={ready}
+            >
+              <FormattedMessage id="EditListingAvailabilityPanel.addException" />
+            </InlineTextButton>
+          </section>
+        </>
+      ) : null}
 
       {errors.showListingsError ? (
         <p className={css.error}>
@@ -349,12 +282,12 @@ const EditListingAvailabilityPanel = props => {
         <Button
           className={css.goToNextTabButton}
           onClick={onNextTab}
-          disabled={isNextButtonDisabled}
+          disabled={!hasAvailabilityPlan}
         >
           {submitButtonText}
         </Button>
       ) : null}
-      {onManageDisableScrolling ? (
+      {onManageDisableScrolling && isEditPlanModalOpen ? (
         <Modal
           id="EditAvailabilityPlan"
           isOpen={isEditPlanModalOpen}
@@ -365,9 +298,10 @@ const EditListingAvailabilityPanel = props => {
         >
           <EditListingAvailabilityPlanForm
             formId="EditListingAvailabilityPlanForm"
-            listingTitle={currentListing.attributes.title}
+            listingTitle={listingAttributes?.title}
             availabilityPlan={availabilityPlan}
-            weekdays={WEEKDAYS}
+            weekdays={rotateDays(WEEKDAYS, firstDayOfWeek)}
+            useFullDays={useFullDays}
             onSubmit={handleSubmit}
             initialValues={initialValues}
             inProgress={updateInProgress}
@@ -376,7 +310,7 @@ const EditListingAvailabilityPanel = props => {
         </Modal>
       ) : null}
 
-      {onManageDisableScrolling ? (
+      {onManageDisableScrolling && isEditExceptionsModalOpen ? (
         <Modal
           id="EditAvailabilityExceptions"
           isOpen={isEditExceptionsModalOpen}
@@ -387,11 +321,16 @@ const EditListingAvailabilityPanel = props => {
         >
           <EditListingAvailabilityExceptionForm
             formId="EditListingAvailabilityExceptionForm"
+            listingId={listing.id}
+            allExceptions={allExceptions}
+            monthlyExceptionQueries={monthlyExceptionQueries}
+            fetchErrors={errors}
+            onFetchExceptions={onFetchExceptions}
             onSubmit={saveException}
             timeZone={availabilityPlan.timezone}
-            availabilityExceptions={sortedAvailabilityExceptions}
+            isDaily={unitType === DAY}
             updateInProgress={updateInProgress}
-            fetchErrors={errors}
+            useFullDays={useFullDays}
           />
         </Modal>
       ) : null}
@@ -403,7 +342,9 @@ EditListingAvailabilityPanel.defaultProps = {
   className: null,
   rootClassName: null,
   listing: null,
-  availabilityExceptions: [],
+  monthlyExceptionQueries: null,
+  weeklyExceptionQueries: null,
+  allExceptions: [],
 };
 
 EditListingAvailabilityPanel.propTypes = {
@@ -414,8 +355,9 @@ EditListingAvailabilityPanel.propTypes = {
   listing: object,
   disabled: bool.isRequired,
   ready: bool.isRequired,
-  availabilityExceptions: arrayOf(propTypes.availabilityException),
-  fetchExceptionsInProgress: bool.isRequired,
+  monthlyExceptionQueries: object,
+  weeklyExceptionQueries: object,
+  allExceptions: arrayOf(propTypes.availabilityException),
   onAddAvailabilityException: func.isRequired,
   onDeleteAvailabilityException: func.isRequired,
   onSubmit: func.isRequired,
