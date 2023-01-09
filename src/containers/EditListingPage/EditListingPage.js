@@ -13,6 +13,7 @@ import {
   LISTING_PAGE_PARAM_TYPES,
   LISTING_PAGE_PENDING_APPROVAL_VARIANT,
   createSlug,
+  parse,
 } from '../../util/urlHelpers';
 import { LISTING_STATE_DRAFT, LISTING_STATE_PENDING_APPROVAL, propTypes } from '../../util/types';
 import { ensureOwnListing } from '../../util/data';
@@ -29,6 +30,7 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 // Import modules from this directory
 import {
+  requestFetchAvailabilityExceptions,
   requestAddAvailabilityException,
   requestDeleteAvailabilityException,
   requestCreateListingDraft,
@@ -91,6 +93,7 @@ export const EditListingPageComponent = props => {
     getAccountLinkInProgress,
     history,
     intl,
+    onFetchExceptions,
     onAddAvailabilityException,
     onDeleteAvailabilityException,
     onCreateListingDraft,
@@ -104,6 +107,7 @@ export const EditListingPageComponent = props => {
     onGetStripeConnectAccountLink,
     page,
     params,
+    location,
     scrollingDisabled,
     stripeAccountFetched,
     stripeAccount,
@@ -162,7 +166,6 @@ export const EditListingPageComponent = props => {
       uploadedImages,
       uploadedImagesOrder,
       removedImageIds,
-      fetchExceptionsError = null,
       addExceptionError = null,
       deleteExceptionError = null,
     } = page;
@@ -174,7 +177,6 @@ export const EditListingPageComponent = props => {
       uploadImageError,
       setStockError,
       createStripeAccountError,
-      fetchExceptionsError,
       addExceptionError,
       deleteExceptionError,
     };
@@ -207,6 +209,7 @@ export const EditListingPageComponent = props => {
           id="EditListingWizard"
           className={css.wizard}
           params={params}
+          locationSearch={parse(location.search)}
           disabled={disableForm}
           errors={errors}
           fetchInProgress={fetchInProgress}
@@ -214,6 +217,10 @@ export const EditListingPageComponent = props => {
           history={history}
           images={images}
           listing={currentListing}
+          weeklyExceptionQueries={page.weeklyExceptionQueries}
+          monthlyExceptionQueries={page.monthlyExceptionQueries}
+          allExceptions={page.allExceptions}
+          onFetchExceptions={onFetchExceptions}
           onAddAvailabilityException={onAddAvailabilityException}
           onDeleteAvailabilityException={onDeleteAvailabilityException}
           onUpdateListing={onUpdateListing}
@@ -230,8 +237,6 @@ export const EditListingPageComponent = props => {
           stripeOnboardingReturnURL={params.returnURLType}
           updatedTab={page.updatedTab}
           updateInProgress={page.updateInProgress || page.createListingDraftInProgress}
-          fetchExceptionsInProgress={page.fetchExceptionsInProgress}
-          availabilityExceptions={page.availabilityExceptions}
           payoutDetailsSaveInProgress={page.payoutDetailsSaveInProgress}
           payoutDetailsSaved={page.payoutDetailsSaved}
           stripeAccountFetched={stripeAccountFetched}
@@ -286,6 +291,7 @@ EditListingPageComponent.propTypes = {
   currentUser: propTypes.currentUser,
   fetchInProgress: bool.isRequired,
   getOwnListing: func.isRequired,
+  onFetchExceptions: func.isRequired,
   onAddAvailabilityException: func.isRequired,
   onDeleteAvailabilityException: func.isRequired,
   onGetStripeConnectAccountLink: func.isRequired,
@@ -313,6 +319,9 @@ EditListingPageComponent.propTypes = {
   history: shape({
     push: func.isRequired,
   }).isRequired,
+  location: shape({
+    search: string.isRequired,
+  }).isRequired,
 
   /* from injectIntl */
   intl: intlShape.isRequired,
@@ -331,15 +340,11 @@ const mapStateToProps = state => {
     stripeAccountFetched,
   } = state.stripeConnectAccount;
 
-  const { currentUser } = state.user;
-
-  const fetchInProgress = createStripeAccountInProgress;
-
   const getOwnListing = id => {
     const listings = getMarketplaceEntities(state, [{ id, type: 'ownListing' }]);
-
     return listings.length === 1 ? listings[0] : null;
   };
+
   return {
     getAccountLinkInProgress,
     getAccountLinkError,
@@ -348,8 +353,8 @@ const mapStateToProps = state => {
     fetchStripeAccountError,
     stripeAccount,
     stripeAccountFetched,
-    currentUser,
-    fetchInProgress,
+    currentUser: state.user.currentUser,
+    fetchInProgress: createStripeAccountInProgress,
     getOwnListing,
     page,
     scrollingDisabled: isScrollingDisabled(state),
@@ -357,6 +362,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
+  onFetchExceptions: params => dispatch(requestFetchAvailabilityExceptions(params)),
   onAddAvailabilityException: params => dispatch(requestAddAvailabilityException(params)),
   onDeleteAvailabilityException: params => dispatch(requestDeleteAvailabilityException(params)),
 
@@ -385,7 +391,8 @@ const EditListingPage = compose(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )
-)(injectIntl(EditListingPageComponent));
+  ),
+  injectIntl
+)(EditListingPageComponent);
 
 export default EditListingPage;

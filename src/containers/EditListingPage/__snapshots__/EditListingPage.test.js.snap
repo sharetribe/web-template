@@ -12,6 +12,7 @@ exports[`EditListingPageComponent matches snapshot 1`] = `
     mobileRootClassName="mobileTopbar"
   />
   <withViewport(EnhancedEditListingWizard)
+    allExceptions={Array []}
     className="wizard"
     currentUser={null}
     errors={
@@ -20,7 +21,6 @@ exports[`EditListingPageComponent matches snapshot 1`] = `
         "createListingDraftError": null,
         "createStripeAccountError": null,
         "deleteExceptionError": null,
-        "fetchExceptionsError": null,
         "publishListingError": null,
         "setStockError": null,
         "showListingsError": null,
@@ -47,10 +47,13 @@ exports[`EditListingPageComponent matches snapshot 1`] = `
         "type": "ownListing",
       }
     }
+    locationSearch={Object {}}
+    monthlyExceptionQueries={Object {}}
     newListingPublished={false}
     onAddAvailabilityException={[Function]}
     onCreateListingDraft={[Function]}
     onDeleteAvailabilityException={[Function]}
+    onFetchExceptions={[Function]}
     onGetStripeConnectAccountLink={[Function]}
     onImageUpload={[Function]}
     onManageDisableScrolling={[Function]}
