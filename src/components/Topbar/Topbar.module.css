@@ -231,7 +231,7 @@
   /* Bleed the bg color from the bottom */
   padding-bottom: 4px;
   background-color: var(--marketplaceColor);
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
 
   /* Place on top of everything */
   z-index: var(--zIndexGenericError);
@@ -248,9 +248,8 @@
 
 .genericErrorContent {
   padding: 16px 22px;
-  border-radius: 4px;
   background-color: var(--marketplaceColorLight);
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
 }
 
 .genericErrorText {
