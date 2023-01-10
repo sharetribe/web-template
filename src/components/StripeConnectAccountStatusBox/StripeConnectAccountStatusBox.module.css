@@ -12,7 +12,7 @@
   padding: 15px 32px 23px 32px;
   margin-bottom: 72px;
 
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
 
   @media (--viewportMedium) {
     flex-wrap: nowrap;
@@ -52,7 +52,7 @@
   composes: h5 from global;
   font-weight: var(--fontWeightSemiBold);
 
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
   min-height: 38px;
   width: 300px;
   max-width: 110px;

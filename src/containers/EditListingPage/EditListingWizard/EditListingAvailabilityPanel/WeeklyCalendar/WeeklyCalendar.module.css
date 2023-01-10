@@ -90,7 +90,7 @@
   border-top: solid 1px var(--matterColorNegative);
   border-right: solid 1px var(--matterColorNegative);
   border-left: solid 1px var(--matterColorNegative);
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
   margin-top: 17px;
 
   @media (--viewportMedium) {
@@ -192,7 +192,7 @@
   flex-shrink: 0;
   width: 8px;
   height: 8px;
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
   align-self: center;
   justify-self: center;
   margin: 0 0 2px 0;

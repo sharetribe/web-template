@@ -15,6 +15,6 @@
   min-height: 35px;
   padding: 0 18px;
   margin: 0;
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
   white-space: nowrap;
 }
