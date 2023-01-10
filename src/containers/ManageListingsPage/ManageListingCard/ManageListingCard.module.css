@@ -82,7 +82,7 @@
   composes: coverEverything;
   width: 100%;
   border: solid 1px var(--matterColorNegative);
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
 }
 
 .menubarWrapper {
@@ -128,7 +128,7 @@
 .iconWrapper {
   padding: 0px 10px 1px 10px;
   color: var(--matterColorLight);
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
   transition: var(--transitionStyleButton);
 
   &:hover {
@@ -149,7 +149,7 @@
   z-index: var(--zIndexPopup);
 
   background-color: var(--matterColor);
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
   box-shadow: var(--boxShadowPopup);
 }
 
@@ -171,7 +171,7 @@
   white-space: nowrap;
   text-align: left;
   padding: 8px 14px;
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
 
   /* Remove default margins from font */
   margin-top: 0;
@@ -370,7 +370,7 @@
 
   width: 114px;
   padding: 8px;
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
 }
 
 .menu {

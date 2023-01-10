@@ -40,7 +40,7 @@
   border-style: solid;
   border-color: var(--matterColorNegative);
   border-width: 1px;
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
   box-shadow: var(--boxShadowPopupLight);
 
   /* Dimensions */

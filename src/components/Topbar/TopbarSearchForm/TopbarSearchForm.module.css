@@ -12,9 +12,6 @@
   margin-left: 24px;
   padding: 11px 0 17px 0;
 
-  /* Borders */
-  border-bottom-width: var(--borderRadiusMobileSearch);
-
   display: flex;
   width: 24px;
   align-self: stretch;
@@ -28,13 +25,10 @@
   /* Layout */
   margin: 0 24px 0 0;
   padding: 4px 13px 10px 13px;
-  height: var(--TopbarSearchForm_inputHeight);
+  height: 50px;
 
   /* Borders */
-  border-bottom-width: var(--borderRadiusMobileSearch);
-  border-top: none;
-  border-right: none;
-  border-left: none;
+  border: 0;
   border-radius: 0;
 
   /* Safari bugfix: without this Safari will print placeholder to a wrong place */
@@ -44,12 +38,8 @@
 
   &:hover,
   &:focus {
-    border-bottom-color: var(--marketplaceColor);
-    border-bottom-width: 3px;
     border-radius: 0;
-    border-top: none;
-    border-right: none;
-    border-left: none;
+    border: 0;
     outline: none;
     box-shadow: none;
   }
@@ -113,15 +103,10 @@
 
 .mobilePredictions {
   position: absolute;
-  top: calc(var(--TopbarSearchForm_inputHeight) - var(--TopbarSearchForm_bottomBorder));
+  top: 50px;
   left: 0;
-  min-height: calc(
-    100vh -
-      calc(
-        var(--TopbarSearchForm_topbarMargin) + var(--TopbarSearchForm_inputHeight) -
-          var(--TopbarSearchForm_bottomBorder)
-      )
-  );
+  /* searchContainer margin-top (94px) + mobileInput height (50px) = 144px */
+  min-height: calc(100vh - 144px);
   width: 100%;
   background-color: var(--marketplaceColor);
   border-bottom-left-radius: var(--borderRadius);
@@ -140,7 +125,7 @@
 .desktopPredictions {
   position: absolute;
   width: 100%;
-  top: 50px;
+  top: var(--topbarHeightDesktop);
   left: 0;
   background-color: var(--marketplaceColor);
   border-bottom-left-radius: var(--borderRadius);
@@ -148,10 +133,7 @@
   box-shadow: var(--boxShadowPopup);
   z-index: calc(var(--zIndexPopup) + 1);
 
-  margin-top: calc(
-    var(--topbarHeightDesktop) - var(--TopbarSearchForm_inputHeight) +
-      var(--TopbarSearchForm_bottomBorder)
-  );
+  margin-top: 0;
   max-width: 434px;
 }
 

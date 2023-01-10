@@ -7,7 +7,7 @@ import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
 import { createResourceLocatorString } from '../../../util/routes';
-import { withViewport } from '../../../util/contextHelpers';
+import { withViewport } from '../../../util/uiHelpers';
 import {
   SCHEMA_TYPE_ENUM,
   SCHEMA_TYPE_MULTI_ENUM,
