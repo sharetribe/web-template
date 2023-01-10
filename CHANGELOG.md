@@ -14,6 +14,15 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Availability management has been changed so that default view is Weekly calendar.
+
+  - All the times are shown in listing's time zone
+  - EditListingAvailabilityPlanForm handles the weekly default schedule
+  - EditListingAvailabilityExceptionForm makes it possible to add exceptions to the plan
+  - settings.verbose prints some debug info to browser's console (src/config/settings.js)
+
+  [#74](https://github.com/sharetribe/ftw-x/pull/74)
+
 - [change] Fixes: image variant creation, FieldDateRangeInput gets isDaily flag instead of
   line-items, BookingTimeForm should show error message.
   [#72](https://github.com/sharetribe/ftw-x/pull/72)
