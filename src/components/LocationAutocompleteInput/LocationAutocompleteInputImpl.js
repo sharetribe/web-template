@@ -550,6 +550,7 @@ class LocationAutocompleteInputImplementation extends Component {
             rootClassName={predictionsClass}
             predictions={predictions}
             currentLocationId={geocoderVariant.CURRENT_LOCATION_ID}
+            isGoogleMapsInUse={config.maps.mapProvider === 'GOOGLE_MAPS'}
             geocoder={this.getGeocoder()}
             highlightedIndex={this.state.highlightedIndex}
             onSelectStart={this.handlePredictionsSelectStart}
