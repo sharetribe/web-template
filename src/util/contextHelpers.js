@@ -1,27 +1,5 @@
 import React, { Component as ReactComponent } from 'react';
-import PropTypes from 'prop-types';
 import throttle from 'lodash/throttle';
-
-/**
- * A higher order component (HOC) to take the togglePageClassNames function from
- * the context that the Page component has provided.
- */
-export const withTogglePageClassNames = Component => {
-  const WithTogglePageClassNamesComponent = (props, context) => (
-    <Component togglePageClassNames={context.togglePageClassNames} {...props} />
-  );
-
-  WithTogglePageClassNamesComponent.displayName = `withTogglePageClassNames(${Component.displayName ||
-    Component.name})`;
-
-  const { func } = PropTypes;
-
-  WithTogglePageClassNamesComponent.contextTypes = {
-    togglePageClassNames: func.isRequired,
-  };
-
-  return WithTogglePageClassNamesComponent;
-};
 
 /**
  * A higher order component (HOC) that provides the current viewport
