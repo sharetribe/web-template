@@ -144,7 +144,7 @@ const EditListingWizardTab = props => {
 
     return onUpdateListingOrCreateListingDraft(tab, updateListingValues)
       .then(r => {
-        if (isNewListingFlow) {
+        if (isNewListingFlow && tab !== AVAILABILITY) {
           const listingId = r.data.data.id;
           automaticRedirectsForNewListingFlow(tab, listingId);
         }

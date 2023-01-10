@@ -162,9 +162,7 @@ const EditListingAvailabilityPanel = props => {
     // Final Form can wait for Promises to return.
     return onSubmit(createAvailabilityPlan(values))
       .then(() => {
-        if (isPublished) {
-          setIsEditPlanModalOpen(false);
-        }
+        setIsEditPlanModalOpen(false);
       })
       .catch(e => {
         // Don't close modal if there was an error
@@ -287,6 +285,7 @@ const EditListingAvailabilityPanel = props => {
           {submitButtonText}
         </Button>
       ) : null}
+
       {onManageDisableScrolling && isEditPlanModalOpen ? (
         <Modal
           id="EditAvailabilityPlan"
