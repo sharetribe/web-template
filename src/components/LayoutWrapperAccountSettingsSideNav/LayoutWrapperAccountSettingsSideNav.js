@@ -7,7 +7,7 @@ import { node, number, string, shape } from 'prop-types';
 import { compose } from 'redux';
 
 import { FormattedMessage } from '../../util/reactIntl';
-import { withViewport } from '../../util/contextHelpers';
+import { withViewport } from '../../util/uiHelpers';
 import { LayoutWrapperSideNav } from '../../components';
 
 import { createGlobalState } from './hookGlobalState';

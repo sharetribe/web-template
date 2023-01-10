@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { arrayOf, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
-import { withDimensions } from '../../util/contextHelpers';
+import { withDimensions } from '../../util/uiHelpers';
 
 import Handle from './Handle';
 import Track from './Track';

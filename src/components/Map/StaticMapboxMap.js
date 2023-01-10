@@ -2,7 +2,7 @@ import React from 'react';
 import { string, shape, number, object } from 'prop-types';
 import polyline from '@mapbox/polyline';
 
-import { lazyLoadWithDimensions } from '../../util/contextHelpers';
+import { lazyLoadWithDimensions } from '../../util/uiHelpers';
 import { circlePolyline } from '../../util/maps';
 
 const formatColor = color => {
