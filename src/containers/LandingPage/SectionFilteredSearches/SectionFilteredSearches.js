@@ -3,7 +3,7 @@ import { string } from 'prop-types';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
-import { lazyLoadWithDimensions } from '../../../util/contextHelpers';
+import { lazyLoadWithDimensions } from '../../../util/uiHelpers';
 
 import { NamedLink } from '../../../components';
 

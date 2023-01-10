@@ -5,7 +5,7 @@ import isEqual from 'lodash/isEqual';
 import polyline from '@mapbox/polyline';
 
 import { encodeLatLng, stringify } from '../../util/urlHelpers';
-import { lazyLoadWithDimensions } from '../../util/contextHelpers';
+import { lazyLoadWithDimensions } from '../../util/uiHelpers';
 import { circlePolyline } from '../../util/maps';
 
 const DEFAULT_COLOR = 'FF0000';
