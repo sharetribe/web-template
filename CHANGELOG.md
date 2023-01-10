@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Refactor CSS variables and rename contextHelpers.js as uiHelpers.js
+  [#75](https://github.com/sharetribe/ftw-x/pull/75)
 - [change] Availability management has been changed so that default view is Weekly calendar.
 
   - All the times are shown in listing's time zone

@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { useConfiguration } from '../../context/configurationContext';
 
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
-import { lazyLoadWithDimensions } from '../../util/contextHelpers';
+import { lazyLoadWithDimensions } from '../../util/uiHelpers';
 import { propTypes } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { ensureListing, ensureUser } from '../../util/data';

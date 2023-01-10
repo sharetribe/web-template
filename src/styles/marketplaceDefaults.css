@@ -87,7 +87,7 @@
   /* ================ Border radius ================ */
 
   --borderRadius: 2px;
-  --borderRadiusMobileSearch: 3px;
+  --borderRadiusMedium: 4px;
 
   /* ================ Transition styles ================ */
 
@@ -104,10 +104,6 @@
   --Topbar_logoHeight: 25px;
   --CheckoutPage_logoHeight: 25px;
   --CheckoutPage_logoHeightDesktop: 27px;
-
-  --TopbarSearchForm_inputHeight: 53px;
-  --TopbarSearchForm_topbarMargin: 94px;
-  --TopbarSearchForm_bottomBorder: 3px;
 
   /* ================ Modal default padding ================ */
 

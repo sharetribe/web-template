@@ -15,7 +15,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Modal } from '../../components';
-import { withViewport } from '../../util/contextHelpers';
+import { withViewport } from '../../util/uiHelpers';
 
 import css from './ModalInMobile.module.css';
 

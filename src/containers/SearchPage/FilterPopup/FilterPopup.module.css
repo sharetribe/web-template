@@ -11,7 +11,7 @@
   width: auto;
   height: auto;
   min-height: 0;
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
 
   &:focus {
     outline: none;
@@ -31,7 +31,7 @@
   width: auto;
   height: auto;
   min-height: 0;
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
   border: 1px solid var(--marketplaceColor);
 
   &:hover,
@@ -64,7 +64,7 @@
   /* Borders */
   border-top: 1px solid var(--matterColorNegative);
   box-shadow: var(--boxShadowPopup);
-  border-radius: 4px;
+  border-radius: var(--borderRadiusMedium);
   transition: var(--transitionStyleButton);
 }
 
