@@ -12,7 +12,6 @@ import moment from 'moment';
 
 import { intlShape, injectIntl } from '../../util/reactIntl';
 import { START_DATE, END_DATE } from '../../util/dates';
-import { LINE_ITEM_DAY, propTypes } from '../../util/types';
 
 import { IconArrowHead } from '../../components';
 import css from './DateRangeInput.module.css';
@@ -183,14 +182,18 @@ class DateRangeInputComponent extends Component {
       this.state.currentStartDate &&
       startDate.isBefore(this.state.currentStartDate);
 
-    // clear the end date in case a blocked date can be found
-    // between previous start date and new start date
-    const clearEndDate = startDateUpdated
-      ? isBlockedBetween(startDate, moment(this.state.currentStartDate).add(1, 'days'))
-      : false;
+    let startDateAsDate = startDate instanceof moment ? startDate.startOf('day').toDate() : null;
+    let endDateAsDate = pickerEndDateToApiDate(isDaily, endDate);
 
-    const startDateAsDate = startDate instanceof moment ? startDate.toDate() : null;
-    const endDateAsDate = clearEndDate ? null : pickerEndDateToApiDate(isDaily, endDate);
+    if (startDateUpdated) {
+      // clear the end date in case a blocked date can be found
+      // between previous start date and new start date
+      const clearEndDate = isBlockedBetween(
+        startDate,
+        moment(this.state.currentStartDate).add(1, 'days')
+      );
+      endDateAsDate = clearEndDate ? null : pickerEndDateToApiDate(isDaily, endDate);
+    }
 
     this.setState(() => ({
       currentStartDate: startDateAsDate,

@@ -1,0 +1,49 @@
+.root {
+  position: relative;
+  display: block;
+}
+
+.label {
+  color: var(--matterColor);
+  width: auto;
+  height: auto;
+  min-height: 0;
+  margin-right: 8px;
+
+  &:hover {
+    text-decoration: none;
+  }
+  &:focus {
+    text-decoration: none;
+  }
+}
+
+.popup {
+  /* By default hide the content */
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+
+  /* Position */
+  position: absolute;
+  z-index: var(--zIndexPopup);
+
+  /* Layout */
+  min-width: 300px;
+  margin-top: 7px;
+  background-color: var(--matterColorLight);
+
+  /* Borders */
+  border-top: 1px solid var(--matterColorNegative);
+  box-shadow: var(--boxShadowPopup);
+  border-radius: 4px;
+  transition: var(--transitionStyleButton);
+}
+
+.isOpen {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}

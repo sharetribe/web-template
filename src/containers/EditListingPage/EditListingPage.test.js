@@ -23,6 +23,7 @@ describe('EditListingPageComponent', () => {
         onGetStripeConnectAccountLink={noop}
         onLogout={noop}
         onManageDisableScrolling={noop}
+        onFetchExceptions={noop}
         onAddAvailabilityException={noop}
         onDeleteAvailabilityException={noop}
         onCreateListing={noop}
@@ -33,7 +34,12 @@ describe('EditListingPageComponent', () => {
         onRemoveListingImage={noop}
         onPayoutDetailsChange={noop}
         onPayoutDetailsSubmit={noop}
-        page={{ uploadedImagesOrder: [], images: {} }}
+        page={{
+          uploadedImagesOrder: [],
+          images: {},
+          monthlyExceptionQueries: {},
+          allExceptions: [],
+        }}
         scrollingDisabled={false}
         tab="description"
         type="new"

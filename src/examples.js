@@ -36,6 +36,7 @@ import * as IconAdd from './components/IconAdd/IconAdd.example';
 import * as IconBannedUser from './components/IconBannedUser/IconBannedUser.example';
 import * as IconCheckmark from './components/IconCheckmark/IconCheckmark.example';
 import * as IconClose from './components/IconClose/IconClose.example';
+import * as IconDelete from './components/IconDelete/IconDelete.example';
 import * as IconDisputeOrder from './components/IconDisputeOrder/IconDisputeOrder.example';
 import * as IconEdit from './components/IconEdit/IconEdit.example';
 import * as IconEmailAttention from './components/IconEmailAttention/IconEmailAttention.example';
@@ -86,7 +87,8 @@ import * as SignupForm from './containers/AuthenticationPage/SignupForm/SignupFo
 import * as LoginForm from './containers/AuthenticationPage/LoginForm/LoginForm.example';
 import * as StripePaymentForm from './containers/CheckoutPage/StripePaymentForm/StripePaymentForm.example';
 import * as FieldTimeZoneSelect from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/FieldTimeZoneSelect/FieldTimeZoneSelect.example';
-import * as EditListingAvailabilityForm from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/EditListingAvailabilityForm.example';
+import * as EditListingAvailabilityPlanForm from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/EditListingAvailabilityPlanForm/EditListingAvailabilityPlanForm.example';
+import * as EditListingAvailabilityExceptionForm from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/EditListingAvailabilityExceptionForm/EditListingAvailabilityExceptionForm.example';
 import * as EditListingDetailsForm from './containers/EditListingPage/EditListingWizard/EditListingDetailsPanel/EditListingDetailsForm.example';
 import * as EditListingDeliveryForm from './containers/EditListingPage/EditListingWizard/EditListingDeliveryPanel/EditListingDeliveryForm.example';
 import * as EditListingLocationForm from './containers/EditListingPage/EditListingWizard/EditListingLocationPanel/EditListingLocationForm.example';
@@ -126,7 +128,8 @@ export {
   ProductOrderForm,
   Button,
   Colors,
-  EditListingAvailabilityForm,
+  EditListingAvailabilityPlanForm,
+  EditListingAvailabilityExceptionForm,
   EditListingDetailsForm,
   EditListingDeliveryForm,
   EditListingLocationForm,
@@ -160,6 +163,7 @@ export {
   IconBannedUser,
   IconCheckmark,
   IconClose,
+  IconDelete,
   IconDisputeOrder,
   IconEdit,
   IconEmailAttention,

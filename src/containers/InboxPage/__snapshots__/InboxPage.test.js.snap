@@ -225,6 +225,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of order 1`] = `
             intl={
               Object {
                 "formatDate": [Function],
+                "formatDateTimeRange": [Function],
                 "formatMessage": [Function],
                 "formatNumber": [Function],
                 "formatPlural": [Function],
@@ -387,6 +388,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of order 1`] = `
             intl={
               Object {
                 "formatDate": [Function],
+                "formatDateTimeRange": [Function],
                 "formatMessage": [Function],
                 "formatNumber": [Function],
                 "formatPlural": [Function],
@@ -640,6 +642,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of sales 1`] = `
             intl={
               Object {
                 "formatDate": [Function],
+                "formatDateTimeRange": [Function],
                 "formatMessage": [Function],
                 "formatNumber": [Function],
                 "formatPlural": [Function],
@@ -804,6 +807,7 @@ exports[`InboxPage InboxPageComponent matches snapshot of sales 1`] = `
             intl={
               Object {
                 "formatDate": [Function],
+                "formatDateTimeRange": [Function],
                 "formatMessage": [Function],
                 "formatNumber": [Function],
                 "formatPlural": [Function],

@@ -67,25 +67,36 @@ const FieldCheckboxComponent = props => {
         boxClassName: css.boxSuccess,
       }
     : {};
+  const disabledColorMaybe = rest.disabled
+    ? {
+        checkedClassName: css.checkedDisabled,
+        boxClassName: css.boxDisabled,
+      }
+    : {};
 
   return (
     <span className={classes}>
       <Field type="checkbox" {...rest}>
         {props => {
-          const input = props.input;
+          const { input, disabled } = props;
           return (
             <input
               id={id}
               className={css.input}
               {...input}
               onChange={event => handleOnChange(input, event)}
+              disabled={disabled}
             />
           );
         }}
       </Field>
       <label htmlFor={id} className={css.label}>
         <span className={css.checkboxWrapper}>
-          <IconCheckbox className={svgClassName} {...successColorVariantMaybe} />
+          <IconCheckbox
+            className={svgClassName}
+            {...successColorVariantMaybe}
+            {...disabledColorMaybe}
+          />
         </span>
         <span className={classNames(css.text, textClassName || css.textRoot)}>{label}</span>
       </label>
