@@ -24,6 +24,13 @@
     stroke: var(--successColor);
   }
 
+  /* disabled version */
+  &:hover + label .boxDisabled,
+  &:focus + label .boxDisabled,
+  &:checked + label .boxDisabled {
+    stroke: var(--matterColorAnti);
+  }
+
   /* Display the "check" when checked */
   &:checked + label .checked {
     display: inline;
@@ -35,6 +42,13 @@
   &:checked + label .checkedSuccess {
     display: inline;
     stroke: var(--successColor);
+    stroke-width: 1px;
+  }
+
+  /* Display the disabled when checked */
+  &:checked + label .checkedDisabled {
+    display: inline;
+    stroke: var(--matterColorAnti);
     stroke-width: 1px;
   }
 
@@ -76,6 +90,12 @@
   fill: var(--successColor);
 }
 
+.checkedDisabled {
+  display: none;
+  fill: var(--matterColorAnti);
+}
+
+.boxDisabled,
 .boxSuccess,
 .box {
   stroke: var(--matterColorAnti);

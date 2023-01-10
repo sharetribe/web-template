@@ -51,6 +51,10 @@
     background-repeat: no-repeat;
     background-position: 8px 8px;
 
+    &:hover {
+      border: 1px solid #b8bfd1;
+      transition: all ease-in-out 100ms;
+    }
     &:focus {
       border-radius: 6px 6px 0 0;
       border-color: #80bdff;
@@ -290,7 +294,6 @@
     border-radius: 6px;
     border: 1px solid #d8dce6;
     border-bottom-style: solid;
-    border-bottom-width: 2px;
     border-bottom-color: var(--matterColorNegative);
     outline: none;
 
@@ -306,7 +309,6 @@
     /* Effects */
     &:hover {
       border: 1px solid #b8bfd1;
-      border-bottom-color: var(--matterColorNegative);
       transition: all ease-in-out 100ms;
     }
     &:focus {
@@ -327,9 +329,8 @@
       font-size: 16px;
       line-height: 32px;
       /* 7 + 32 + 7 + borders = 48, which is divisible by 8. */
-      padding: 7px 16px 7px 16px;
+      padding: 7px 16px 7px 32px;
       line-height: 32px;
-      border-bottom-width: 3px;
       background-position: 8px 13px;
     }
   }

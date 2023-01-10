@@ -1,0 +1,8 @@
+.root {
+  stroke: var(--matterColorAnti);
+  transition: var(--transitionStyleButton);
+
+  &:hover {
+    stroke: var(--failColor);
+  }
+}

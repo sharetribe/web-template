@@ -38,7 +38,7 @@
   --matterColor: #4a4a4a;
   --matterColorAnti: #b2b2b2;
   --matterColorNegative: #e7e7e7;
-  --matterColorBright: #fcfcfc;
+  --matterColorBright: #fbfbfb;
   --matterColorLight: #ffffff;
 
   --matterColorLightTransparent: rgba(255, 255, 255, 0.65);
@@ -140,16 +140,6 @@
   --LandingPage_sectionMarginTop: 40px;
   --LandingPage_sectionMarginTopMedium: 60px;
   --LandingPage_sectionMarginTopLarge: 94px;
-
-  /* ================ EditListingAvailabilityForm, ManageAvailabilityCalendar ================ */
-  --ManageAvailabilityCalendar_gridColor: #e0e0e0;
-  --ManageAvailabilityCalendar_availableColor: #ffffff;
-  --ManageAvailabilityCalendar_availableColorHover: #fafafa;
-  --ManageAvailabilityCalendar_blockedColor: #ebebeb;
-  --ManageAvailabilityCalendar_blockedColorHover: #e6e6e6;
-  --ManageAvailabilityCalendar_reservedColor: #e6fff0;
-  --ManageAvailabilityCalendar_reservedColorHover: #e1faeb;
-  --ManageAvailabilityCalendar_failedColor: #fff2f2;
 
   /* ================ ProfileSettingsForm ================ */
   --ProfileSettingsForm_avatarSize: 96px;

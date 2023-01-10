@@ -269,6 +269,17 @@ export const isBookingProcessAlias = processAlias => {
 };
 
 /**
+ * Check from unit type if full days should be used.
+ * E.g. unit type is day or night
+ * This is mainly used for availability management.
+ *
+ * @param {String} unitType
+ */
+export const isFullDay = unitType => {
+  return [DAY, NIGHT].includes(unitType);
+};
+
+/**
  * Get transitions that need provider's attention for every supported process
  */
 export const getTransitionsNeedingProviderAttention = () => {

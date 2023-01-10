@@ -1,6 +1,7 @@
 import isArray from 'lodash/isArray';
 import reduce from 'lodash/reduce';
 import { sanitizeEntity } from './sanitize';
+// NOTE: This file imports sanitize.js, which may lead to circular dependency
 
 /**
  * Combine the given relationships objects

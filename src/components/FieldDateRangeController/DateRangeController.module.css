@@ -176,6 +176,10 @@
     color: var(--matterColorLight);
   }
 
+  & :global(.CalendarDay__hovered_offset) {
+    background-color: var(--matterColorNegative);
+  }
+
   /* Remove default bg-color and use our extra span instead '.renderedDay' */
   & :global(.CalendarDay__selected_start) {
     background-color: transparent;

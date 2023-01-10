@@ -70,6 +70,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           intl={
             Object {
               "formatDate": [Function],
+              "formatDateTimeRange": [Function],
               "formatMessage": [Function],
               "formatNumber": [Function],
               "formatPlural": [Function],
@@ -102,6 +103,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           intl={
             Object {
               "formatDate": [Function],
+              "formatDateTimeRange": [Function],
               "formatMessage": [Function],
               "formatNumber": [Function],
               "formatPlural": [Function],
@@ -131,6 +133,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           intl={
             Object {
               "formatDate": [Function],
+              "formatDateTimeRange": [Function],
               "formatMessage": [Function],
               "formatNumber": [Function],
               "formatPlural": [Function],
@@ -186,6 +189,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
           intl={
             Object {
               "formatDate": [Function],
+              "formatDateTimeRange": [Function],
               "formatMessage": [Function],
               "formatNumber": [Function],
               "formatPlural": [Function],
@@ -293,6 +297,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
             intl={
               Object {
                 "formatDate": [Function],
+                "formatDateTimeRange": [Function],
                 "formatMessage": [Function],
                 "formatNumber": [Function],
                 "formatPlural": [Function],
@@ -323,6 +328,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
             intl={
               Object {
                 "formatDate": [Function],
+                "formatDateTimeRange": [Function],
                 "formatMessage": [Function],
                 "formatNumber": [Function],
                 "formatPlural": [Function],
@@ -350,6 +356,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
             intl={
               Object {
                 "formatDate": [Function],
+                "formatDateTimeRange": [Function],
                 "formatMessage": [Function],
                 "formatNumber": [Function],
                 "formatPlural": [Function],
@@ -403,6 +410,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
             intl={
               Object {
                 "formatDate": [Function],
+                "formatDateTimeRange": [Function],
                 "formatMessage": [Function],
                 "formatNumber": [Function],
                 "formatPlural": [Function],

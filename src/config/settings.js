@@ -11,6 +11,7 @@ import { subUnitDivisors, currencyFormatting } from './settingsCurrency';
 const appSettings = {
   env: process.env.REACT_APP_ENV,
   dev: process.env.REACT_APP_ENV === 'development',
+  verbose: false,
 
   sdk: {
     clientId: process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID,

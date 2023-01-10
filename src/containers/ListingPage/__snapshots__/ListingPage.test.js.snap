@@ -135,6 +135,7 @@ exports[`ListingPage matches snapshot 1`] = `
               intl={
                 Object {
                   "formatDate": [Function],
+                  "formatDateTimeRange": [Function],
                   "formatMessage": [Function],
                   "formatNumber": [Function],
                   "formatPlural": [Function],

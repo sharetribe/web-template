@@ -155,6 +155,7 @@ export const isInRange = (date, start, end, timeUnit, timeZone) => {
   // this means that exclusive end is wrongly taken into range.
   // Note about timeUnit with isBetween: in the event that the from and to parameters are the same,
   // but the inclusivity parameters are different, false will preside.
+  // aka moment('2016-10-30').isBetween('2016-10-30', '2016-10-30', undefined, '(]'); //false
   // => we need to use []
   const millisecondBeforeEndTime = new Date(end.getTime() - 1);
   return dateMoment.isBetween(start, millisecondBeforeEndTime, timeUnit, '[]');
@@ -517,6 +518,19 @@ export const parseDateFromISO8601 = (dateString, timeZone = null) => {
 };
 
 /**
+ * Parses a date string that has format like "YYYY-MM-DD HH:mm" into localized date
+ * @param {String} dateTimeString
+ * @param {String} timeZone time zone id, see:
+ *   https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+ * @returns returns Date object
+ */
+export const parseDateTimeString = (dateTimeString, timeZone = null) => {
+  return timeZone
+    ? moment.tz(dateTimeString, timeZone).toDate()
+    : moment(dateTimeString, 'YYYY-MM-DD HH:mm').toDate();
+};
+
+/**
  * Converts date to string ISO8601 format ('YYYY-MM-DD').
  * This string is used e.g. in urlParam.
  *
@@ -775,3 +789,73 @@ export const getExclusiveEndDate = (dateString, timeZone) => {
     .startOf('day')
     .toDate();
 };
+
+/**
+ * Get the day (number) of the week (similar to "new Date().getDay()")
+ * @param {Date} date
+ * @param {String} timeZone name. It should represent IANA timezone key.
+ * @returns the day of week number 0(Sun) ... 6(Sat)
+ */
+export const getDayOfWeek = (date, timeZone) => {
+  return timeZone
+    ? moment(date)
+        .tz(timeZone)
+        .day()
+    : moment(date).day();
+};
+
+/**
+ * Get the start of a week as a Momemnt instance.
+ * This is used by react-dates library (e.g. WeeklyCalendar)
+ * @param {Moment} dayMoment moment instance representing a day
+ * @param {String} timeZone name. It should represent IANA timezone key.
+ * @param {number} firstDayOfWeek (which weekday is the first day?)
+ * @returns return moment object representing the first moment of the week where dayMoment belongs to
+ */
+export const getStartOfWeekAsMoment = (dayMoment, timeZone, firstDayOfWeek) => {
+  const m = timeZone ? dayMoment.clone().tz(timeZone) : dayMoment.clone();
+  let d = m.startOf('day');
+  const diffToSunday = d.day();
+  const adjustOffset =
+    diffToSunday === 0 && firstDayOfWeek > 0 ? -7 + firstDayOfWeek : firstDayOfWeek;
+  const startOfWeek = d.date() - diffToSunday + adjustOffset; // adjust when day is sunday
+  return d.clone().date(startOfWeek);
+};
+
+/**
+ * Get the end of a week as a Momemnt instance.
+ * This is used by react-dates library (e.g. WeeklyCalendar)
+ *
+ * @param {Moment} dayMoment moment instance representing a day
+ * @param {String} timeZone name. It should represent IANA timezone key.
+ * @param {number} firstDayOfWeek (which weekday is the first day?)
+ * @returns return moment object representing the end day of the week where dayMoment belongs to
+ */
+export const getEndOfWeekAsMoment = (dayMoment, timeZone, firstDayOfWeek) => {
+  const startOfWeek = getStartOfWeekAsMoment(dayMoment, timeZone, firstDayOfWeek);
+  const endOfWeek = startOfWeek.add(6, 'days').startOf('day');
+  return endOfWeek;
+};
+
+/**
+ * Get the start of a week as a Date instance.
+ * This is used by react-dates library (e.g. WeeklyCalendar)
+ * @param {Date} date instance
+ * @param {String} timeZone name. It should represent IANA timezone key.
+ * @param {number} firstDayOfWeek (which weekday is the first day?)
+ * @returns a Date object representing the first day of the week where given date belongs to
+ */
+export const getStartOfWeek = (date, timeZone, firstDayOfWeek) => {
+  return getStartOfWeekAsMoment(moment(date).tz(timeZone), timeZone, firstDayOfWeek).toDate();
+};
+
+/**
+ * Create moment instance from given Date object
+ * This is used by react-dates library (e.g. WeeklyCalendar)
+ *
+ * @param {Date} date instance
+ * @param {String} timeZone name. It should represent IANA timezone key.
+ * @returns moment instance
+ */
+export const getMomentFromDate = (date, timeZone) =>
+  timeZone ? moment(date).tz(timeZone) : moment(date);

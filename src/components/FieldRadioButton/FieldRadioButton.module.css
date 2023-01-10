@@ -1,3 +1,5 @@
+@import '../../styles/customMediaQueries.css';
+
 .root {
   position: relative;
 }
@@ -37,13 +39,19 @@
 .label {
   display: flex;
   align-items: center;
-  padding-top: 6px;
+  padding-top: 1px;
+  padding-bottom: 5px;
+
+  @media (--viewportMedium) {
+    padding-top: 0px;
+    padding-bottom: 8px;
+  }
 }
 
 .radioButtonWrapper {
   /* This should follow line-height */
-  height: 32px;
-  margin-top: -2px;
+  height: 24px;
+  margin-top: -1px;
   margin-right: 12px;
   align-self: baseline;
 

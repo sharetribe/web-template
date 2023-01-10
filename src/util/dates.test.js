@@ -12,12 +12,14 @@ import {
   formatDateWithProximity,
   formatDateIntoPartials,
   parseDateFromISO8601,
+  parseDateTimeString,
   stringifyDateToISO8601,
   findNextBoundary,
   getSharpHours,
   getStartHours,
   getEndHours,
   monthIdString,
+  getStartOfWeek,
 } from './dates';
 
 describe('date utils', () => {
@@ -270,6 +272,26 @@ describe('date utils', () => {
     });
   });
 
+  describe('parseDateTimeString()', () => {
+    it('should return date', () => {
+      const dateTimeString = '2018-11-23 14:00';
+      const date = new Date(2018, 10, 23, 14, 0, 0);
+      expect(parseDateTimeString(dateTimeString)).toEqual(date);
+    });
+
+    it('should read ISO 8601 date as date in Etc/UTC and return date and time in UTC formatted ISO 8601', () => {
+      expect(parseDateTimeString('2020-04-07 01:00', 'Etc/UTC').toISOString()).toEqual(
+        '2020-04-07T01:00:00.000Z'
+      );
+    });
+
+    it('should read ISO 8601 date as date in Europe/Helsinki and return date and time in UTC formetted ISO 8601', () => {
+      expect(parseDateTimeString('2020-02-07 01:00', 'Europe/Helsinki').toISOString()).toEqual(
+        '2020-02-06T23:00:00.000Z'
+      );
+    });
+  });
+
   describe('stringifyDateToISO8601()', () => {
     it('should return string in YYYY-MM-DD format', () => {
       const date = new Date(2018, 10, 23);
@@ -377,6 +399,29 @@ describe('date utils', () => {
       expect(monthIdString(date, 'Etc/UTC')).toEqual(
         `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}`
       );
+    });
+  });
+
+  describe('getStartOfWeek(date, timeZone, firstDayOfWeek)', () => {
+    it('should return the start of week', () => {
+      let firstDayOfWeek = 1; // Monday
+      let startOfWeek = getStartOfWeek(
+        new Date('2023-01-01T08:30:00.000Z'),
+        'Etc/UTC',
+        firstDayOfWeek
+      );
+      const expectedMonday = new Date('2022-12-26T00:00:00.000Z');
+      expect(startOfWeek).toEqual(expectedMonday);
+
+      firstDayOfWeek = 0; // Sunday
+      startOfWeek = getStartOfWeek(new Date('2023-01-01T08:30:00.000Z'), 'Etc/UTC', firstDayOfWeek);
+      const expectedSunday = new Date('2023-01-01T00:00:00.000Z');
+      expect(startOfWeek).toEqual(expectedSunday);
+
+      firstDayOfWeek = 6; // Saturday
+      startOfWeek = getStartOfWeek(new Date('2023-01-01T08:30:00.000Z'), 'Etc/UTC', firstDayOfWeek);
+      const expectedSaturday = new Date('2022-12-31T00:00:00.000Z');
+      expect(startOfWeek).toEqual(expectedSaturday);
     });
   });
 });
