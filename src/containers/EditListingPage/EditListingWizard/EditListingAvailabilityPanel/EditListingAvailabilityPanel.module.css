@@ -6,11 +6,6 @@
   height: auto;
   display: flex;
   flex-direction: column;
-  padding: 12px 24px 0 24px;
-
-  @media (--viewportMedium) {
-    padding: 11px 24px 0 24px;
-  }
 }
 
 .sectionHeader {
