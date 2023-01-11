@@ -24,13 +24,10 @@
 
   margin-top: 0;
   margin-bottom: 12px;
-  padding-top: 3px;
-  padding-bottom: 3px;
 
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 24px;
-    padding: 6px 0 2px 0;
   }
 }
 
@@ -236,14 +233,10 @@
   color: var(--matterColorAnti);
   margin-top: 0;
   margin-bottom: 12px;
-  padding-top: 5px;
-  padding-bottom: 1px;
 
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 0;
-    padding-top: 4px;
-    padding-bottom: 4px;
   }
 }
 
@@ -281,7 +274,7 @@
 }
 
 .bioInfo {
-  composes: p-small from global;
+  composes: textSmall from global;
   color: var(--matterColorAnti);
   margin-top: 11px;
 

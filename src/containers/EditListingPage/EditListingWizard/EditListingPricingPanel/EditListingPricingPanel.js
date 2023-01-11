@@ -54,10 +54,13 @@ const EditListingPricingPanel = props => {
         {isPublished ? (
           <FormattedMessage
             id="EditListingPricingPanel.title"
-            values={{ listingTitle: <ListingLink listing={listing} /> }}
+            values={{ listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> }}
           />
         ) : (
-          <FormattedMessage id="EditListingPricingPanel.createListingTitle" />
+          <FormattedMessage
+            id="EditListingPricingPanel.createListingTitle"
+            values={{ lineBreak: <br /> }}
+          />
         )}
       </h1>
       {priceCurrencyValid ? (

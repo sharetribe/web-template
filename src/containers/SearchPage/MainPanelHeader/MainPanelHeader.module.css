@@ -11,7 +11,7 @@
 }
 
 .searchResultSummary {
-  composes: p-small from global;
+  composes: textSmall from global;
 
   margin-top: 10px;
   margin-bottom: 11px;
@@ -20,7 +20,7 @@
 }
 
 .loadingResults {
-  composes: p-small from global;
+  composes: textSmall from global;
 
   /* Cover parent element's space*/
   position: absolute;

@@ -55,11 +55,7 @@ const stripeErrorTranslation = (intl, stripeError) => {
 const stripeElementsOptions = {
   fonts: [
     {
-      family: '-apple-system, BlinkMacSystemFont, "Inter var", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-      fontSmoothing: 'antialiased',
-      // TODO, insert Inter as a backup font
-      // src:
-      //   'local("poppins"), local("Poppins"), url("https://assets-sharetribecom.sharetribe.com/webfonts/poppins/Poppins-Medium.ttf") format("truetype")',
+      cssSrc: 'https://fonts.googleapis.com/css?family=Inter',
     },
   ],
 };
@@ -70,7 +66,7 @@ const stripeElementsOptions = {
 const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 const cardStyles = {
   base: {
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Inter var", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Inter var", Helvetica, Arial, sans-serif',
     fontSize: isMobile ? '14px' : '16px',
     fontSmoothing: 'antialiased',
     lineHeight: '24px',

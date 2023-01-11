@@ -1,3 +1,5 @@
+@import '../../styles/customMediaQueries.css';
+
 .avatarBase {
   border-radius: 50%;
 
@@ -19,20 +21,19 @@
   }
 }
 
-.bannedUserIcon {
-  width: 100%;
-  height: 100%;
-}
-
 /* Small Avatar */
 
 .root {
   composes: avatarBase;
-  composes: p-xsmall from global;
 
   /* Layout */
   width: 40px;
   height: 40px;
+}
+
+.initials {
+  composes: textXSmall from global;
+  padding: 0;
 }
 
 .avatarImage {
@@ -44,34 +45,51 @@
 .smallAvatar {
   composes: avatarBase;
 
-  /* Exception and unique font-size for the small avatar */
-  font-size: 8px;
-  font-weight: var(--fontWeightBold);
-
   /* Fixed dimensions */
   width: 24px;
   height: 24px;
 }
-
+.initialsSmall {
+  /* Exception and unique font-size for the small avatar */
+  font-size: 8px;
+  font-weight: var(--fontWeightBold);
+}
 
 /* Medium Avatar */
 
 .mediumAvatar {
   composes: avatarBase;
-  composes: p-large from global;
 
   /* Fixed dimensions */
   width: 60px;
   height: 60px;
+}
+.initialsMedium {
+  composes: textLarge from global;
+  padding: 0;
 }
 
 /* Large Avatar */
 
 .largeAvatar {
   composes: avatarBase;
-  composes: h3 from global;
+  padding: 0;
 
   /* Fixed dimensions */
   width: 96px;
-  height: 96px;;
+  height: 96px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+  }
+}
+
+.initialsLarge {
+  composes: h3 from global;
+  padding: 0;
+}
+
+.bannedUserIcon {
+  width: 100%;
+  height: 100%;
 }

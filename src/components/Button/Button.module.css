@@ -24,8 +24,7 @@
 }
 
 .inlineTextButtonRoot {
-  composes: a from global;
-  composes: p-small from global;
+  composes: a textSmall from global;
 }
 
 .primaryButton {
@@ -127,10 +126,6 @@
   /* We need to add this to position the icon inside button */
   position: relative;
 
-  @media (--viewportMedium) {
-    padding: 0;
-  }
-
   &:hover,
   &:focus {
     background-color: var(--matterColorLight);
@@ -138,6 +133,10 @@
   &:disabled {
     background-color: var(--matterColorNegative);
     color: var(--matterColorLight);
+  }
+
+  @media (--viewportMedium) {
+    padding: 0;
   }
 }
 

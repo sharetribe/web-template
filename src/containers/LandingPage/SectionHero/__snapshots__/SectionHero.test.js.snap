@@ -28,13 +28,13 @@ exports[`SectionHero matches snapshot 1`] = `
           SectionHero.title
         </span>
       </h1>
-      <h2
+      <p
         className="heroSubTitle heroSubTitleFEDelay"
       >
         <span>
           SectionHero.subTitle
         </span>
-      </h2>
+      </p>
       <a
         className="heroButton heroButtonFEDelay"
         href="/s"

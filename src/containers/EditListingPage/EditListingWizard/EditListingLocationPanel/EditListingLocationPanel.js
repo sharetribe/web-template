@@ -61,10 +61,13 @@ const EditListingLocationPanel = props => {
         {isPublished ? (
           <FormattedMessage
             id="EditListingLocationPanel.title"
-            values={{ listingTitle: <ListingLink listing={listing} /> }}
+            values={{ listingTitle: <ListingLink listing={listing} />, lineBreak: <br /> }}
           />
         ) : (
-          <FormattedMessage id="EditListingLocationPanel.createListingTitle" />
+          <FormattedMessage
+            id="EditListingLocationPanel.createListingTitle"
+            values={{ lineBreak: <br /> }}
+          />
         )}
       </h1>
       <EditListingLocationForm

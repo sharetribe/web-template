@@ -113,7 +113,7 @@
 }
 
 .logoLink {
-  display: block;
+  display: inline-flex;
   margin-bottom: 14px;
 }
 
@@ -121,7 +121,7 @@
   object-fit: contain;
   object-position: left center;
   width: 100%;
-  height: 27px;
+  height: 24px;
 }
 
 .organizationInfo {
@@ -154,7 +154,6 @@
   margin-bottom: 24px;
 
   @media (--viewportMedium) {
-    padding-top: 2px;
     margin-right: 12px;
   }
 }
@@ -202,7 +201,6 @@
   margin-bottom: 24px;
 
   @media (--viewportMedium) {
-    padding-top: 2px;
     margin-right: 12px;
   }
 }
@@ -216,7 +214,6 @@
   margin-bottom: 24px;
 
   @media (--viewportMedium) {
-    padding-top: 2px;
     margin-right: 12px;
   }
 }
