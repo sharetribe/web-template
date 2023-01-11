@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Refactor EditListingWizard CSS
+  [#76](https://github.com/sharetribe/ftw-x/pull/76)
 - [change] Refactor CSS variables and rename contextHelpers.js as uiHelpers.js
   [#75](https://github.com/sharetribe/ftw-x/pull/75)
 - [change] Availability management has been changed so that default view is Weekly calendar.
