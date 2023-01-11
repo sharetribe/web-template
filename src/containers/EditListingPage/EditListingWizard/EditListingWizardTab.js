@@ -20,7 +20,7 @@ import EditListingPhotosPanel from './EditListingPhotosPanel/EditListingPhotosPa
 import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
 import EditListingPricingAndStockPanel from './EditListingPricingAndStockPanel/EditListingPricingAndStockPanel';
 
-import css from './EditListingWizard.module.css';
+import css from './EditListingWizardTab.module.css';
 
 export const DETAILS = 'details';
 export const PRICING = 'pricing';

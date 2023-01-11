@@ -1,0 +1,16 @@
+@import '../../../styles/customMediaQueries.css';
+
+.panel {
+  flex-grow: 1;
+  padding: 11px 24px 0 24px;
+
+  @media (--viewportLarge) {
+    padding: 88px 36px 82px 59px;
+    border-left: 1px solid var(--matterColorNegative);
+    background-color: var(--matterColorLight);
+  }
+
+  @media (--viewportLargeWithPaddings) {
+    padding: 88px calc((100% - 1056px) / 2) 82px 59px;
+  }
+}
