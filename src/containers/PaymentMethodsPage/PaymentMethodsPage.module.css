@@ -20,7 +20,7 @@
 .title {
   composes: h2 from global;
   hyphens: auto;
-  margin-top: 8px;
+  margin-top: 0px;
   margin-bottom: 19px;
 
   @media (--viewportMedium) {

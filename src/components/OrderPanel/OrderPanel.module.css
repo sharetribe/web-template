@@ -224,7 +224,7 @@
   /* Font */
   composes: marketplaceTinyFontStyles from global;
   color: var(--matterColor);
-  padding: 8px 0 0 0;
+  padding: 8px 0 8px 0;
 
   margin-top: 0;
   margin-bottom: 0;

@@ -134,7 +134,7 @@
 .clearButton,
 .cancelButton,
 .submitButton {
-  composes: p-small from global;
+  composes: textSmall from global;
   font-weight: var(--fontWeightMedium);
 
   /* Layout */
@@ -156,7 +156,7 @@
 
   /* Layout */
   margin: 0 auto 0 0;
-  
+
   &:focus,
   &:hover {
     color: var(--matterColor);
@@ -168,7 +168,7 @@
 
   /* Layout */
   margin: 0;
-  
+
   /* clearButton will add all available space between cancelButton,
    * but some hard coded margin is still needed
    */

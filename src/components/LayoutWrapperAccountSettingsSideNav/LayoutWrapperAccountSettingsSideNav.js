@@ -59,22 +59,26 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
   const [scrollLeft, setScrollLeft] = useGlobalState('scrollLeft');
   useEffect(() => {
     const { currentTab, viewport } = props;
+    let scrollTimeout = null;
 
     const { width } = viewport;
     const hasViewport = width > 0;
     const hasHorizontalTabLayout = hasViewport && width <= MAX_HORIZONTAL_NAV_SCREEN_WIDTH;
-    const hasFontsLoaded =
-      hasViewport && document.documentElement.classList.contains('fontsLoaded');
 
     // Check if scrollToTab call is needed (tab is not visible on mobile)
-    if (hasHorizontalTabLayout && hasFontsLoaded) {
-      scrollToTab(currentTab, scrollLeft, setScrollLeft);
+    if (hasHorizontalTabLayout) {
+      scrollTimeout = window.setTimeout(() => {
+        scrollToTab(currentTab, scrollLeft, setScrollLeft);
+      }, 300);
     }
 
     return () => {
       // Update scroll position when unmounting
       const el = document.querySelector(`#${currentTab}Tab`);
       setScrollLeft(el.parentElement.scrollLeft);
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+      }
     };
   });
 

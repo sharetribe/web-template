@@ -49,7 +49,7 @@
 }
 
 .message {
-  composes: p-small from global;
+  composes: textXSmall from global;
   max-width: 220px;
   text-align: center;
 }

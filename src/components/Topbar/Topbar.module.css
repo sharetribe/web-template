@@ -32,13 +32,20 @@
 
 .home {
   display: flex;
+  justify-content: center;
   height: var(--topbarHeight);
-  /* Calculate vertical padding. Something like: (60px - 25px)/2 */
-  padding: calc((var(--topbarHeight) - var(--Topbar_logoHeight)) / 2) 24px;
+  min-width: 66px;
+  flex-shrink: 0;
+  padding: 0;
 }
 
 .logo {
+  height: 24px;
+  width: auto;
+  max-width: 188px;
   object-fit: contain;
+  object-position: center;
+  margin: 18px 0;
 }
 
 .logoutButton {

@@ -4,8 +4,10 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  flex- @media (--viewportMedium) {
-    padding: 11px 0 3px 0;
+  align-items: baseline;
+
+  @media (--viewportMedium) {
+    padding: 5px 0 3px 0;
   }
 }
 .weekPicker,
@@ -28,6 +30,7 @@
 }
 
 .weekPickerLabel {
+  composes: marketplaceSearchFilterSublabelFontStyles from global;
   display: inline-flex;
   gap: 8px;
   align-items: center;

@@ -9,7 +9,7 @@ exports[`ProfilePage AsideContent matches snapshot 1`] = `
     title="test-user display name"
   >
     <span
-      className="initials"
+      className="initialsLarge"
     >
       TT
     </span>

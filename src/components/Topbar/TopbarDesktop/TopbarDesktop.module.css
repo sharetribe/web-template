@@ -26,15 +26,16 @@
 
 /* logo */
 .logoLink {
+  display: block;
   border-bottom: 0px solid;
   transition: var(--transitionStyleButton);
 
   flex-shrink: 0;
-  padding: 21px 24px 21px 24px;
+  padding: 0 24px;
   height: 100%;
 
   @media (--viewportLarge) {
-    padding: 21px 36px 21px 36px;
+    padding: 0 36px;
   }
 }
 .logoLink:hover {
@@ -44,11 +45,14 @@
 }
 
 .logo {
-  /* If height is increased, change link paddings accordingly */
-  height: auto;
+  /* If height is increased, change link margins accordingly */
+  /* NOTE: extremely wide logos may look bad. This will scale them to container of 24 x 200. */
+  height: 24px;
   width: auto;
-  max-height: 24px;
-  max-width: 240px;
+  max-width: 188px;
+  object-fit: contain;
+  object-position: center;
+  margin: 24px 0;
 }
 
 /* Search */
@@ -99,13 +103,12 @@
   font-size: 14px;
   line-height: 18px;
   letter-spacing: 0;
+  color: var(--marketplaceColor);
 
   flex-shrink: 0;
   height: 100%;
   padding: 0 12px 0 12px;
-  color: var(--marketplaceColor);
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 0;
 
   &:hover {
     color: var(--marketplaceColorDark);
@@ -116,19 +119,18 @@
 
   @media (--viewportMedium) {
     line-height: 16px;
-    margin-top: 0;
-    margin-bottom: 0;
+    margin: 0;
   }
 }
 
 .topbarDesktopLabel {
-  composes: p-small from global;
+  composes: textSmall from global;
   display: inline-block;
   margin: 28px 0;
   text-decoration: inherit;
 
   @media (--viewportMedium) {
-    margin: 26px 0;
+    margin: 24px 0;
   }
 }
 
@@ -145,12 +147,11 @@
   font-size: 14px;
   line-height: 18px;
   letter-spacing: 0;
+  color: var(--matterColor);
 
   height: 100%;
   padding: 0 12px 0 12px;
-  margin-top: 0;
-  margin-bottom: 0;
-  color: var(--matterColor);
+  margin: 0;
 
   &:hover {
     color: var(--matterColorDark);
@@ -161,8 +162,7 @@
 
   @media (--viewportMedium) {
     line-height: 16px;
-    margin-top: 0;
-    margin-bottom: 0;
+    margin: 0;
   }
 }
 
@@ -283,14 +283,14 @@
 
 .signup,
 .login {
-  composes: p-small from global;
+  composes: textSmall from global;
 
   display: inline-block;
-  margin: 26px 0;
+  margin: 24px 0;
   text-decoration: inherit;
 
   @media (--viewportMedium) {
-    margin: 26px 0;
+    margin: 24px 0;
   }
 }
 
@@ -306,7 +306,7 @@
 
 .profileSettingsLink,
 .yourListingsLink {
-  composes: p-small from global;
+  composes: textSmall from global;
   position: relative;
   display: block;
 

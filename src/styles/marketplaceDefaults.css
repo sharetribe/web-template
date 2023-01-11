@@ -44,7 +44,7 @@
   --matterColorLightTransparent: rgba(255, 255, 255, 0.65);
 
   /* ================ Font ================ */
-  --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter var', Helvetica, Arial, sans-serif,
+  --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
   --fontWeightRegular: 400;
@@ -155,6 +155,8 @@
 
 body {
   font-family: var(--fontFamily);
+
+  /* A non-standard feature: https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: antialiased;
   font-smoothing: antialiased;
@@ -202,6 +204,7 @@ h1,
   font-size: 24px;
   line-height: 24px;
   font-weight: var(--fontWeightBlack);
+  padding: 3px 0 3px 0;
   /* margin-top + n * line-height + margin-bottom => x * 6px */
   margin-top: 18px;
   margin-bottom: 18px;
@@ -209,6 +212,7 @@ h1,
   @media (--viewportMedium) {
     font-size: 64px;
     line-height: 64px;
+    padding: 0;
     /* margin-top + n * line-height + margin-bottom => x * 8px */
     margin-top: 24px;
     margin-bottom: 24px;
@@ -229,7 +233,7 @@ h2,
   @media (--viewportMedium) {
     font-size: 40px;
     line-height: 56px;
-    padding: 0;
+    padding: 5px 0 3px 0;
     /* x * 8px */
     margin-top: 24px;
     margin-bottom: 16px;
@@ -248,7 +252,7 @@ h3,
   @media (--viewportMedium) {
     font-size: 30px;
     line-height: 40px;
-    padding: 5px 0 3px 0;
+    padding: 1px 0 7px 0;
     /* x * 8px */
     margin-top: 16px;
     margin-bottom: 16px;
@@ -259,13 +263,15 @@ h4,
 .h4 {
   font-weight: var(--fontWeightBold);
   font-size: 21px;
-  line-height: 32px;
+  line-height: 30px;
+  padding: 1px 0 5px 0;
   /* x * 6px */
   margin-top: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 
   @media (--viewportMedium) {
-    padding: 6px 0 2px 0;
+    line-height: 32px;
+    padding: 0;
     /* x * 8px */
     margin-top: 16px;
     margin-bottom: 16px;
@@ -285,7 +291,7 @@ h5,
   @media (--viewportMedium) {
     line-height: 16px;
     /* x * 8px */
-    padding: 2px 0 6px 0;
+    padding: 3px 0 5px 0;
     margin-top: 8px;
     margin-bottom: 16px;
   }
@@ -313,6 +319,14 @@ h6,
 
 html,
 li,
+p,
+pre,
+.p,
+.buttonFont,
+.marketplaceMessageFontStyles,
+.marketplaceTxTransitionFontStyles,
+.marketplaceListingAttributeFontStyles,
+.marketplaceBodyFontStyles,
 .marketplaceDefaultFontStyles {
   font-family: var(--fontFamily);
   font-weight: var(--fontWeightMedium);
@@ -320,10 +334,12 @@ li,
   /* No margins for default font */
   font-size: 14px;
   line-height: 24px;
+  padding: 0;
 
   @media (--viewportMedium) {
     font-size: 16px;
     line-height: 24px;
+    padding: 5px 0 3px 0;
   }
 }
 
@@ -331,8 +347,6 @@ p,
 pre,
 .p,
 .marketplaceBodyFontStyles {
-  composes: marketplaceDefaultFontStyles;
-
   /* margin-top + n * line-height + margin-bottom => x * 6px */
   margin-top: 12px;
   margin-bottom: 12px;
@@ -344,22 +358,35 @@ pre,
   }
 }
 
-.p-large {
+.textLarge {
   font-size: 20px;
-  line-height: 32px;
+  line-height: 30px;
   font-weight: var(--fontWeightMedium);
+
+  @media (--viewportMedium) {
+    line-height: 32px;
+  }
 }
 
-.p-small {
+.textSmall {
   font-size: 15px;
   line-height: 20px;
+  line-height: 18px;
   font-weight: var(--fontWeightMedium);
+
+  @media (--viewportMedium) {
+    line-height: 24px;
+  }
 }
 
-.p-xsmall {
+.textXSmall {
   font-size: 13px;
-  line-height: 16px;
+  line-height: 18px;
   font-weight: var(--fontWeightMedium);
+
+  @media (--viewportMedium) {
+    line-height: 16px;
+  }
 }
 
 /* ================ Normalisations ================ */
@@ -417,16 +444,6 @@ label {
 button {
   font-family: var(--fontFamily);
   font-weight: var(--fontWeightSemiBold);
-}
-
-.fontsLoaded {
-  & body {
-    font-family: var(--fontFamily);
-  }
-  & button {
-    font-family: var(--fontFamily);
-    font-weight: var(--fontWeightSemiBold);
-  }
 }
 
 /* marketplaceInputFontStyles */
@@ -588,9 +605,9 @@ textarea {
   }
 }
 
-.marketplaceMessageFontStyles {
-  composes: marketplaceDefaultFontStyles;
-}
+/* .marketplaceMessageFontStyles is defined earlier */
+/* .marketplaceTxTransitionFontStyles is defined earlier*/
+/* .marketplaceListingAttributeFontStyles is defined earlier */
 
 .marketplaceMessageDateFontStyles {
   font-weight: var(--fontWeightRegular);
@@ -602,10 +619,6 @@ textarea {
     font-size: 12px;
     line-height: 24px;
   }
-}
-
-.marketplaceTxTransitionFontStyles {
-  composes: marketplaceDefaultFontStyles;
 }
 
 .marketplaceSearchFilterLabelFontStyles {
@@ -624,10 +637,6 @@ textarea {
   font-weight: var(--fontWeightMedium);
   font-size: 18px;
   line-height: 18px;
-}
-
-.marketplaceListingAttributeFontStyles {
-  composes: marketplaceDefaultFontStyles;
 }
 
 /* ================ Tabbed navigation font styles ================ */
@@ -707,9 +716,8 @@ textarea {
 
 /* Button font */
 /* Default font style for buttons */
-.buttonFont {
-  composes: marketplaceDefaultFontStyles;
-}
+
+/* Note: .buttonFont is defined earlier */
 
 /* Button text styles */
 /* Default button text is centered without decorations */
@@ -873,7 +881,9 @@ textarea {
 
 /* Modal message */
 .marketplaceModalParagraphStyles {
-  composes: p-large;
+  font-size: 20px;
+  line-height: 32px;
+  font-weight: var(--fontWeightMedium);
   margin: 18px 0 0 0;
 
   @media (--viewportMedium) {

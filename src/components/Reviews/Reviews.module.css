@@ -30,7 +30,7 @@
 }
 
 .reviewContent {
-  composes: p-small from global;
+  composes: textSmall from global;
   font-style: italic;
   margin: 0;
   white-space: pre-line;
@@ -73,11 +73,10 @@
 .desktopReviewRatingWrapper {
   /* For aligning rating starts in the middle
    * of a paragraph line */
-  position: relative;
   display: none;
 
   @media (--viewportMedium) {
-    display: inline;
+    display: inline-flex;
   }
 }
 
@@ -85,8 +84,6 @@
   /* For aligning rating starts in the middle
    * of a paragraph line */
   display: inline-flex;
-  position: absolute;
-  top: 4px;
   white-space: nowrap;
 }
 

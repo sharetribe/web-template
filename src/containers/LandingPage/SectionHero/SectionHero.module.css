@@ -69,7 +69,7 @@
 }
 
 .heroSubTitle {
-  composes: p-large from global;
+  composes: textLarge from global;
 
   color: var(--matterColorLight);
   margin: 0 0 32px 0;

@@ -33,8 +33,7 @@
   margin-bottom: 0px;
 
   @media (--viewportMedium) {
-    margin-top: 5px;
-    margin-bottom: 3px;
+    margin: 0;
   }
 }
 
@@ -42,6 +41,7 @@
   margin-top: 18px;
 
   @media (--viewportMedium) {
+    padding: 5px 0 3px 0;
     margin-top: 24px;
   }
 }
