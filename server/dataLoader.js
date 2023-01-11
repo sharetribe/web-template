@@ -1,6 +1,8 @@
 const url = require('url');
 const log = require('./log');
 
+const PREVENT_DATA_LOADING_IN_SSR = process.env.PREVENT_DATA_LOADING_IN_SSR === 'true';
+
 exports.loadData = function(requestUrl, sdk, appInfo) {
   const {
     matchPathname,
@@ -14,6 +16,13 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
 
   let translations = {};
   const store = configureStore({}, sdk);
+
+  if (PREVENT_DATA_LOADING_IN_SSR) {
+    // This might help certain temporary scenarios, where DDOS attack adds load to server.
+    // Note: This is not a meaningful mitigation against DDOS attacks.
+    //       Consider adding some kind of edge protection and rate limiter.
+    return Promise.resolve({ preloadedState: store.getState(), translations: {} });
+  }
 
   const dataLoadingCalls = configAsset => {
     const config = mergeConfig(configAsset, defaultConfig);
