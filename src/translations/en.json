@@ -145,7 +145,7 @@
   "EditListingAvailabilityPanel.addException": "+ Add an exception",
   "EditListingAvailabilityPanel.availabilityExceptionsTitle": "Exceptions ({count})",
   "EditListingAvailabilityPanel.availabilityExceptionsTitleNoCount": "Exceptions",
-  "EditListingAvailabilityPanel.availabilityPlanInfo": "Lorem ipsum consectetur adepisci velit",
+  "EditListingAvailabilityPanel.availabilityPlanInfo": "When is your bike available for booking? Start by setting a default weekly schedule. After that you can adjust the availability for each day.",
   "EditListingAvailabilityPanel.createListingTitle": "Set your availability",
   "EditListingAvailabilityPanel.editAvailabilityPlan": "Edit default schedule",
   "EditListingAvailabilityPanel.exceptionAvailable": "Available",
