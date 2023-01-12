@@ -350,7 +350,7 @@ const WeeklyCalendar = props => {
   useEffect(() => {
     // Redirect if the current week is not in year's range
     if (!isInRange(currentWeek, thisWeek, endOfRange, 'day', timeZone)) {
-      setCurrentWeek(new Date());
+      setCurrentWeek(thisWeek);
       const redirectTo = createResourceLocatorString(
         'EditListingPage',
         routeConfiguration,
