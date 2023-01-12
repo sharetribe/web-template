@@ -63,6 +63,7 @@
   justify-content: center;
   padding: 6px 8px;
   border: solid 1px var(--matterColorNegative);
+  cursor: pointer;
 
   &:hover {
     background-color: var(--matterColorBright);
