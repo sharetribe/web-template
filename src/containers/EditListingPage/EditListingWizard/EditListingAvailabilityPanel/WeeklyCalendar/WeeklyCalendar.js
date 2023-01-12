@@ -439,18 +439,6 @@ const WeeklyCalendar = props => {
             endDateOffset={day => getEndOfWeekAsMoment(day, timeZone, firstDayOfWeek)}
             onFocusChange={({ focused }) => setWeekPickerFocused(focused)}
             isOutsideRange={day => !isInRange(day, thisWeek, endOfRange, 'day', timeZone)}
-            navNext={
-              <Next
-                showUntilDate={endOfAvailabilityExceptionRange(timeZone, TODAY)}
-                startOfNextRange={getStartOfNextWeek(currentWeek, timeZone, firstDayOfWeek)}
-              />
-            }
-            navPrev={
-              <Prev
-                showUntilDate={thisWeek}
-                startOfPrevRange={getStartOfPrevWeek(currentWeek, timeZone, firstDayOfWeek)}
-              />
-            }
             timeZone={timeZone}
           />
         </div>

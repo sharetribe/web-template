@@ -2,6 +2,13 @@ import React, { useState } from 'react';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
+import { getStartOf, initialVisibleMonth } from '../../../../../util/dates';
+import {
+  endOfAvailabilityExceptionRange,
+  getStartOfNextMonth,
+  getStartOfPrevMonth,
+} from '../availability.helpers';
+
 import {
   FieldDateRangeController,
   Form,
@@ -9,10 +16,13 @@ import {
   OutsideClickHandler,
 } from '../../../../../components';
 
+import Next from '../NextArrow';
+import Prev from '../PrevArrow';
+
 import css from './WeekPicker.module.css';
-import { initialVisibleMonth } from '../../../../../util/dates';
 
 const KEY_CODE_ESCAPE = 27;
+const TODAY = new Date();
 
 const PickerForm = props => {
   return (
@@ -41,6 +51,7 @@ const handleKeyDown = setIsOpen => e => {
 
 const WeekPicker = props => {
   const [isOpen, setIsOpen] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', props.timeZone));
 
   const {
     rootClassName,
@@ -52,6 +63,9 @@ const WeekPicker = props => {
     initialValues,
     ...rest
   } = props;
+  const onMonthClick = startOfMonth => {
+    setCurrentMonth(startOfMonth);
+  };
   const classes = classNames(rootClassName || css.root, className);
   const popupClasses = classNames(css.popup, { [css.isOpen]: isOpen });
 
@@ -72,6 +86,20 @@ const WeekPicker = props => {
                   setIsOpen(false);
                 }}
                 initialVisibleMonth={initialVisibleMonth(date, timeZone)}
+                onPrevMonthClick={() => onMonthClick(getStartOfPrevMonth(currentMonth, timeZone))}
+                onNextMonthClick={() => onMonthClick(getStartOfNextMonth(currentMonth, timeZone))}
+                navNext={
+                  <Next
+                    showUntilDate={endOfAvailabilityExceptionRange(timeZone, TODAY)}
+                    startOfNextRange={getStartOfNextMonth(currentMonth, timeZone)}
+                  />
+                }
+                navPrev={
+                  <Prev
+                    showUntilDate={getStartOf(TODAY, 'month', timeZone)}
+                    startOfPrevRange={getStartOfPrevMonth(currentMonth, timeZone)}
+                  />
+                }
                 {...rest}
               />
             </PickerForm>
