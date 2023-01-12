@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [fix] WeeklyCalendar should set currentMonth initially to intialVisibleMonth.
+  [#79](https://github.com/sharetribe/ftw-x/pull/79)
+- [fix] WeeklyCalendar had bugs in navigation buttons.
+  [#78](https://github.com/sharetribe/ftw-x/pull/78)
 - [add] Add environment variable to prevent data loading in SSR
   [#77](https://github.com/sharetribe/ftw-x/pull/77)
 - [change] Refactor EditListingWizard CSS [#76](https://github.com/sharetribe/ftw-x/pull/76)
