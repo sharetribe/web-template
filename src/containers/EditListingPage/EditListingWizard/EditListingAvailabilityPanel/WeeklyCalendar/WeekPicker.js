@@ -51,7 +51,7 @@ const handleKeyDown = setIsOpen => e => {
 
 const WeekPicker = props => {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', props.timeZone));
+  const [currentMonth, setCurrentMonth] = useState(initialVisibleMonth(props.date, props.timeZone));
 
   const {
     rootClassName,
