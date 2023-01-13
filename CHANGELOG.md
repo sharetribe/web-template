@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [fix] Update styleguide examples that produced errors.
+  [#81](https://github.com/sharetribe/ftw-x/pull/81)
 - [fix] WeeklyCalendar redirect should use start of week instead of today.
   [#80](https://github.com/sharetribe/ftw-x/pull/80)
 - [fix] WeeklyCalendar should set currentMonth initially to intialVisibleMonth.
