@@ -7,13 +7,20 @@ export const Example = {
   component: EditListingAvailabilityExceptionForm,
   props: {
     formId: 'EditListingAvailabilityExceptionFormExample',
-    availabilityExceptions: [],
+    //form: { initialize: value => console.log('initialize called with', value )},
+    monthlyExceptionQueries: { ['2023-01']: {}, ['2023-02']: {} },
+    allExceptions: [],
     listingTitle: 'Yoga guru',
     weekdays: WEEKDAYS,
     onSubmit(values) {
       console.log('submit with values:', values);
+      return Promise.resolve();
     },
+    onFetchExceptions: values => console.log('onFetchExceptions', values),
+    onMonthChanged: values => console.log('onMonthChanged', values),
     fetchErrors: {},
+    isDaily: false,
+    useFullDays: false,
     intl: fakeIntl,
     timeZone: 'Etc/UTC',
     updated: false,
