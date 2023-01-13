@@ -16,6 +16,7 @@ export const Empty = {
       console.log('form onSubmit:', values);
     },
     intl: fakeIntl,
+    isBooking: true,
     locale: 'en',
     marketplaceName: 'MarketplaceX',
     onCreateStripePaymentToken: noop,
