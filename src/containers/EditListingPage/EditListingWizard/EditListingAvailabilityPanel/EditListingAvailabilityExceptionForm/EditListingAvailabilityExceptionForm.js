@@ -155,11 +155,13 @@ EditListingAvailabilityExceptionForm.propTypes = {
   intl: intlShape.isRequired,
   onSubmit: func.isRequired,
   isDaily: bool.isRequired,
+  useFullDays: bool.isRequired,
   timeZone: string.isRequired,
   updateInProgress: bool.isRequired,
   fetchErrors: shape({
     updateListingError: propTypes.error,
   }),
+  onFetchExceptions: func.isRequired,
 };
 
 export default compose(injectIntl)(EditListingAvailabilityExceptionForm);
