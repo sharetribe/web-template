@@ -1,9 +1,9 @@
-import EnquiryForm from './EnquiryForm';
+import InquiryForm from './InquiryForm';
 
 export const Empty = {
-  component: EnquiryForm,
+  component: InquiryForm,
   props: {
-    formId: 'EnquiryFormExample',
+    formId: 'InquiryFormExample',
     listingTitle: 'Sneaky sneaker',
     authorDisplayName: 'Janne',
     onSubmit(values) {

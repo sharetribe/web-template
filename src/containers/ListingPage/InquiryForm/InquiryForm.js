@@ -7,9 +7,9 @@ import classNames from 'classnames';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
 import { propTypes } from '../../../util/types';
-import { Form, PrimaryButton, FieldTextInput, IconEnquiry } from '../../../components';
+import { Form, PrimaryButton, FieldTextInput, IconInquiry } from '../../../components';
 
-import css from './EnquiryForm.module.css';
+import css from './InquiryForm.module.css';
 
 const ErrorMessage = props => {
   const { error } = props;
@@ -17,15 +17,15 @@ const ErrorMessage = props => {
   return error ? (
     <p className={css.error}>
       {error.message === 'No transaction process attached to listing' ? (
-        <FormattedMessage id="EnquiryForm.sendEnquiryErrorNoProcess" />
+        <FormattedMessage id="InquiryForm.sendInquiryErrorNoProcess" />
       ) : (
-        <FormattedMessage id="EnquiryForm.sendEnquiryError" />
+        <FormattedMessage id="InquiryForm.sendInquiryError" />
       )}
     </p>
   ) : null;
 };
 
-const EnquiryFormComponent = props => (
+const InquiryFormComponent = props => (
   <FinalForm
     {...props}
     render={fieldRenderProps => {
@@ -39,23 +39,23 @@ const EnquiryFormComponent = props => (
         intl,
         listingTitle,
         authorDisplayName,
-        sendEnquiryError,
+        sendInquiryError,
       } = fieldRenderProps;
 
       const messageLabel = intl.formatMessage(
         {
-          id: 'EnquiryForm.messageLabel',
+          id: 'InquiryForm.messageLabel',
         },
         { authorDisplayName }
       );
       const messagePlaceholder = intl.formatMessage(
         {
-          id: 'EnquiryForm.messagePlaceholder',
+          id: 'InquiryForm.messagePlaceholder',
         },
         { authorDisplayName }
       );
       const messageRequiredMessage = intl.formatMessage({
-        id: 'EnquiryForm.messageRequired',
+        id: 'InquiryForm.messageRequired',
       });
       const messageRequired = validators.requiredAndNonEmptyString(messageRequiredMessage);
 
@@ -65,9 +65,9 @@ const EnquiryFormComponent = props => (
 
       return (
         <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
-          <IconEnquiry className={css.icon} />
+          <IconInquiry className={css.icon} />
           <h2 className={css.heading}>
-            <FormattedMessage id="EnquiryForm.heading" values={{ listingTitle }} />
+            <FormattedMessage id="InquiryForm.heading" values={{ listingTitle }} />
           </h2>
           <FieldTextInput
             className={css.field}
@@ -79,9 +79,9 @@ const EnquiryFormComponent = props => (
             validate={messageRequired}
           />
           <div className={submitButtonWrapperClassName}>
-            <ErrorMessage error={sendEnquiryError} />
+            <ErrorMessage error={sendInquiryError} />
             <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
-              <FormattedMessage id="EnquiryForm.submitButtonText" />
+              <FormattedMessage id="InquiryForm.submitButtonText" />
             </PrimaryButton>
           </div>
         </Form>
@@ -90,15 +90,15 @@ const EnquiryFormComponent = props => (
   />
 );
 
-EnquiryFormComponent.defaultProps = {
+InquiryFormComponent.defaultProps = {
   rootClassName: null,
   className: null,
   submitButtonWrapperClassName: null,
   inProgress: false,
-  sendEnquiryError: null,
+  sendInquiryError: null,
 };
 
-EnquiryFormComponent.propTypes = {
+InquiryFormComponent.propTypes = {
   rootClassName: string,
   className: string,
   submitButtonWrapperClassName: string,
@@ -107,14 +107,14 @@ EnquiryFormComponent.propTypes = {
 
   listingTitle: string.isRequired,
   authorDisplayName: string.isRequired,
-  sendEnquiryError: propTypes.error,
+  sendInquiryError: propTypes.error,
 
   // from injectIntl
   intl: intlShape.isRequired,
 };
 
-const EnquiryForm = compose(injectIntl)(EnquiryFormComponent);
+const InquiryForm = compose(injectIntl)(InquiryFormComponent);
 
-EnquiryForm.displayName = 'EnquiryForm';
+InquiryForm.displayName = 'InquiryForm';
 
-export default EnquiryForm;
+export default InquiryForm;
