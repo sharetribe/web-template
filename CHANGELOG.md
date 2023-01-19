@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [delete] Remove unnecessary code and translation keys.
+  [#83](https://github.com/sharetribe/ftw-x/pull/83)
 - [change] Change of terminology: enquire to inquire and enquiry to inquiry. Process change happens
   later. [#82](https://github.com/sharetribe/ftw-x/pull/82)
 - [fix] Update styleguide examples that produced errors.
