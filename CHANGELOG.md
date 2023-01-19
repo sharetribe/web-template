@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Change of terminology: enquire to inquire and enquiry to inquiry. Process change happens
+  later. [#82](https://github.com/sharetribe/ftw-x/pull/82)
 - [fix] Update styleguide examples that produced errors.
   [#81](https://github.com/sharetribe/ftw-x/pull/81)
 - [fix] WeeklyCalendar redirect should use start of week instead of today.
