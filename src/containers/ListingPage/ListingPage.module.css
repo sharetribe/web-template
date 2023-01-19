@@ -674,12 +674,12 @@
   }
 }
 
-.enquiryModalContent {
+.inquiryModalContent {
   flex-grow: 1;
   display: flex;
 }
 
-.enquiryForm {
+.inquiryForm {
   flex-grow: 1;
   margin: 70px 0 100px 0;
 
@@ -691,7 +691,7 @@
   }
 }
 
-.enquirySubmitButtonWrapper {
+.inquirySubmitButtonWrapper {
   position: fixed;
   bottom: 0;
   left: 0;

@@ -290,7 +290,7 @@ exports[`ListingPage matches snapshot 1`] = `
                   "type": "currentUser",
                 }
               }
-              isEnquiryModalOpen={false}
+              isInquiryModalOpen={false}
               listing={
                 Object {
                   "attributes": Object {
@@ -333,12 +333,12 @@ exports[`ListingPage matches snapshot 1`] = `
                   "type": "listing",
                 }
               }
-              onCloseEnquiryModal={[Function]}
+              onCloseInquiryModal={[Function]}
               onContactUser={[Function]}
               onManageDisableScrolling={[Function]}
-              onSubmitEnquiry={[Function]}
-              sendEnquiryError={null}
-              sendEnquiryInProgress={false}
+              onSubmitInquiry={[Function]}
+              sendInquiryError={null}
+              sendInquiryInProgress={false}
               title="listing1 title"
             />
           </div>

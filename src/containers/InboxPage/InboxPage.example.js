@@ -78,11 +78,11 @@ const TranslatedInboxItem = props => {
   );
 };
 
-export const EnquiryPayment = {
+export const InquiryPayment = {
   component: injectIntl(TranslatedInboxItem),
   props: {
     transactionRole: 'customer',
-    tx: tx(transitions.ENQUIRE),
+    tx: tx(transitions.INQUIRE),
   },
   group: 'page:InboxPage',
 };

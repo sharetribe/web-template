@@ -21,7 +21,7 @@ describe('TransactionPanel - Sale', () => {
   const customerId = 'customer';
 
   const panelBaseProps = {
-    stateData: { processName: 'default-buying-products', processState: 'enquiry' },
+    stateData: { processName: 'default-buying-products', processState: 'inquiry' },
     transactionId: new UUID('tx-id'),
     listing: createListing('listing1'),
     currentUser: createCurrentUser(providerId),
@@ -56,7 +56,7 @@ describe('TransactionPanel - Sale', () => {
     },
   };
 
-  it('enquired matches snapshot', () => {
+  it('inquired matches snapshot', () => {
     const props = {
       ...panelBaseProps,
     };
@@ -70,7 +70,7 @@ describe('TransactionPanel - Order', () => {
   const customerId = 'customer';
 
   const panelBaseProps = {
-    stateData: { processName: 'default-buying-products', processState: 'enquiry' },
+    stateData: { processName: 'default-buying-products', processState: 'inquiry' },
     transactionId: new UUID('tx-id'),
     listing: createListing('listing1'),
     currentUser: createCurrentUser(customerId),
@@ -105,7 +105,7 @@ describe('TransactionPanel - Order', () => {
     },
   };
 
-  it('enquired matches snapshot', () => {
+  it('inquired matches snapshot', () => {
     const props = {
       ...panelBaseProps,
     };

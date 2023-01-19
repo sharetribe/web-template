@@ -29,16 +29,16 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
   } = processInfo;
 
   return new ConditionalResolver([processState, transactionRole])
-    .cond([states.ENQUIRY, CUSTOMER], () => {
+    .cond([states.INQUIRY, CUSTOMER], () => {
       const transitionNames = Array.isArray(nextTransitions)
         ? nextTransitions.map(t => t.attributes.name)
         : [];
-      const requestAfterEnquiry = transitions.REQUEST_PAYMENT_AFTER_ENQUIRY;
-      const hasCorrectNextTransition = transitionNames.includes(requestAfterEnquiry);
+      const requestAfterInquiry = transitions.REQUEST_PAYMENT_AFTER_INQUIRY;
+      const hasCorrectNextTransition = transitionNames.includes(requestAfterInquiry);
       const showOrderPanel = !isProviderBanned && hasCorrectNextTransition;
       return { processName, processState, showOrderPanel };
     })
-    .cond([states.ENQUIRY, PROVIDER], () => {
+    .cond([states.INQUIRY, PROVIDER], () => {
       return { processName, processState, showDetailCardHeadings: true };
     })
     .cond([states.PREAUTHORIZED, CUSTOMER], () => {

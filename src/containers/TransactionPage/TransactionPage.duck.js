@@ -413,10 +413,10 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
       const transaction = denormalised[1];
       const processName = resolveLatestProcessName(transaction.attributes.processName);
       const process = getProcess(processName);
-      const isEnquiry = process.getState(transaction) === process.states.ENQUIRY;
+      const isInquiry = process.getState(transaction) === process.states.INQUIRY;
 
-      // Fetch time slots for transactions that are in enquired state
-      const canFetchTimeslots = txRole === 'customer' && isBookingProcess(processName) && isEnquiry;
+      // Fetch time slots for transactions that are in inquired state
+      const canFetchTimeslots = txRole === 'customer' && isBookingProcess(processName) && isInquiry;
 
       if (canFetchTimeslots) {
         fetchMonthlyTimeSlots(dispatch, listing);
