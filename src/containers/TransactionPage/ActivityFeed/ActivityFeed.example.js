@@ -25,7 +25,7 @@ export const Empty = {
     messages: [],
     stateData: {
       processName,
-      processState: states.ENQUIRY,
+      processState: states.INQUIRY,
     },
     hasOlderMessages: false,
     onOpenReviewModal: noop,
@@ -44,7 +44,7 @@ export const WithoutCurrentUser = {
     ],
     stateData: {
       processName,
-      processState: states.ENQUIRY,
+      processState: states.INQUIRY,
     },
     hasOlderMessages: false,
     onOpenReviewModal: noop,
@@ -67,7 +67,7 @@ export const WithCurrentUser = {
     ],
     stateData: {
       processName,
-      processState: states.ENQUIRY,
+      processState: states.INQUIRY,
     },
     hasOlderMessages: false,
     onOpenReviewModal: noop,

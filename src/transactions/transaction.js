@@ -87,7 +87,7 @@ const getStateAfterTransition = process => transition => {
  *   // import { getProcess } from '../../transactions/transaction';
  *   const process = getProcess(processName);
  *   const state = process.getState(tx);
- *   const isEnquiry = state === process.states.ENQUIRY
+ *   const isInquiry = state === process.states.INQUIRY
  *
  * @param {Object} process imported from a separate file
  * @returns {function} Returns a function to check the current state of transaction entity against
@@ -350,7 +350,7 @@ export const CONDITIONAL_RESOLVER_WILDCARD = '*';
  *
  * Usage:
  *  const stateData = new ConditionalResolver([currentState, currentRole])
- *    .cond(['enquiry', 'customer'], () => {
+ *    .cond(['inquiry', 'customer'], () => {
  *      return { showInfoX: true, isSomethingOn: true };
  *    })
  *    .cond(['purchase', _], () => {

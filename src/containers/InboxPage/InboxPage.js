@@ -82,9 +82,9 @@ const BookingTimeInfoMaybe = props => {
   const { transaction, ...rest } = props;
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
   const process = getProcess(processName);
-  const isEnquiry = process.getState(transaction) === process.states.ENQUIRY;
+  const isInquiry = process.getState(transaction) === process.states.INQUIRY;
 
-  if (isEnquiry) {
+  if (isInquiry) {
     return null;
   }
 

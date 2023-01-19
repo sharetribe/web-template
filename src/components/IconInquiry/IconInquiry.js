@@ -2,9 +2,9 @@ import React from 'react';
 import { string } from 'prop-types';
 import classNames from 'classnames';
 
-import css from './IconEnquiry.module.css';
+import css from './IconInquiry.module.css';
 
-const IconEnquiry = props => {
+const IconInquiry = props => {
   const { rootClassName, className } = props;
   const classes = classNames(rootClassName || css.root, className);
   return (
@@ -29,14 +29,14 @@ const IconEnquiry = props => {
   );
 };
 
-IconEnquiry.defaultProps = {
+IconInquiry.defaultProps = {
   rootClassName: null,
   className: null,
 };
 
-IconEnquiry.propTypes = {
+IconInquiry.propTypes = {
   rootClassName: string,
   className: string,
 };
 
-export default IconEnquiry;
+export default IconInquiry;
