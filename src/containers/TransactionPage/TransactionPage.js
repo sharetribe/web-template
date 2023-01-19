@@ -189,7 +189,7 @@ export const TransactionPageComponent = props => {
     redirectToCheckoutPageWithInitialValues(initialValues, listing);
   }
 
-  // Customer can create a booking, if the tx is in "enquiry" state.
+  // Customer can create a booking, if the tx is in "inquiry" state.
   const handleSubmitOrderRequest = values => {
     const {
       bookingDates,
@@ -222,7 +222,7 @@ export const TransactionPageComponent = props => {
 
     const initialValues = {
       listing,
-      // enquired transaction should be passed to CheckoutPage
+      // inquired transaction should be passed to CheckoutPage
       transaction,
       orderData: {
         ...bookingMaybe,

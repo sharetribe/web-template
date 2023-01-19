@@ -401,7 +401,7 @@ propTypes.transaction = shape({
     lastTransitionedAt: instanceOf(Date).isRequired,
     lastTransition: oneOf(TRANSITIONS).isRequired,
 
-    // An enquiry won't need a total sum nor a booking so these are
+    // An inquiry won't need a total sum nor a booking so these are
     // optional.
     payinTotal: propTypes.money,
     payoutTotal: propTypes.money,

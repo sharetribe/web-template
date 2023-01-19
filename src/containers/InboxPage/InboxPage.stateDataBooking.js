@@ -12,7 +12,7 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
   const _ = CONDITIONAL_RESOLVER_WILDCARD;
 
   return new ConditionalResolver([processState, transactionRole])
-    .cond([states.ENQUIRY, _], () => {
+    .cond([states.INQUIRY, _], () => {
       return { processName, processState, actionNeeded: true };
     })
     .cond([states.PENDING_PAYMENT, CUSTOMER], () => {

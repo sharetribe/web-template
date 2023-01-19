@@ -35,9 +35,9 @@ export const FETCH_LINE_ITEMS_REQUEST = 'app/ListingPage/FETCH_LINE_ITEMS_REQUES
 export const FETCH_LINE_ITEMS_SUCCESS = 'app/ListingPage/FETCH_LINE_ITEMS_SUCCESS';
 export const FETCH_LINE_ITEMS_ERROR = 'app/ListingPage/FETCH_LINE_ITEMS_ERROR';
 
-export const SEND_ENQUIRY_REQUEST = 'app/ListingPage/SEND_ENQUIRY_REQUEST';
-export const SEND_ENQUIRY_SUCCESS = 'app/ListingPage/SEND_ENQUIRY_SUCCESS';
-export const SEND_ENQUIRY_ERROR = 'app/ListingPage/SEND_ENQUIRY_ERROR';
+export const SEND_INQUIRY_REQUEST = 'app/ListingPage/SEND_INQUIRY_REQUEST';
+export const SEND_INQUIRY_SUCCESS = 'app/ListingPage/SEND_INQUIRY_SUCCESS';
+export const SEND_INQUIRY_ERROR = 'app/ListingPage/SEND_INQUIRY_ERROR';
 
 // ================ Reducer ================ //
 
@@ -56,9 +56,9 @@ const initialState = {
   lineItems: null,
   fetchLineItemsInProgress: false,
   fetchLineItemsError: null,
-  sendEnquiryInProgress: false,
-  sendEnquiryError: null,
-  enquiryModalOpenForListingId: null,
+  sendInquiryInProgress: false,
+  sendInquiryError: null,
+  inquiryModalOpenForListingId: null,
 };
 
 const listingPageReducer = (state = initialState, action = {}) => {
@@ -122,12 +122,12 @@ const listingPageReducer = (state = initialState, action = {}) => {
     case FETCH_LINE_ITEMS_ERROR:
       return { ...state, fetchLineItemsInProgress: false, fetchLineItemsError: payload };
 
-    case SEND_ENQUIRY_REQUEST:
-      return { ...state, sendEnquiryInProgress: true, sendEnquiryError: null };
-    case SEND_ENQUIRY_SUCCESS:
-      return { ...state, sendEnquiryInProgress: false };
-    case SEND_ENQUIRY_ERROR:
-      return { ...state, sendEnquiryInProgress: false, sendEnquiryError: payload };
+    case SEND_INQUIRY_REQUEST:
+      return { ...state, sendInquiryInProgress: true, sendInquiryError: null };
+    case SEND_INQUIRY_SUCCESS:
+      return { ...state, sendInquiryInProgress: false };
+    case SEND_INQUIRY_ERROR:
+      return { ...state, sendInquiryInProgress: false, sendInquiryError: payload };
 
     default:
       return state;
@@ -187,9 +187,9 @@ export const fetchLineItemsError = error => ({
   payload: error,
 });
 
-export const sendEnquiryRequest = () => ({ type: SEND_ENQUIRY_REQUEST });
-export const sendEnquirySuccess = () => ({ type: SEND_ENQUIRY_SUCCESS });
-export const sendEnquiryError = e => ({ type: SEND_ENQUIRY_ERROR, error: true, payload: e });
+export const sendInquiryRequest = () => ({ type: SEND_INQUIRY_REQUEST });
+export const sendInquirySuccess = () => ({ type: SEND_INQUIRY_SUCCESS });
+export const sendInquiryError = e => ({ type: SEND_INQUIRY_ERROR, error: true, payload: e });
 
 // ================ Thunks ================ //
 
@@ -291,15 +291,15 @@ export const fetchTimeSlots = (listingId, start, end, timeZone) => (dispatch, ge
     });
 };
 
-export const sendEnquiry = (listing, message) => (dispatch, getState, sdk) => {
-  dispatch(sendEnquiryRequest());
+export const sendInquiry = (listing, message) => (dispatch, getState, sdk) => {
+  dispatch(sendInquiryRequest());
   const processAlias = listing?.attributes?.publicData?.transactionProcessAlias;
   if (!processAlias) {
     const error = new Error('No transaction process attached to listing');
     log.error(error, 'listing-process-missing', {
       listingId: listing?.id?.uuid,
     });
-    dispatch(sendEnquiryError(storableError(error)));
+    dispatch(sendInquiryError(storableError(error)));
     return Promise.reject(error);
   }
 
@@ -308,7 +308,7 @@ export const sendEnquiry = (listing, message) => (dispatch, getState, sdk) => {
   const transitions = getProcess(processName)?.transitions;
 
   const bodyParams = {
-    transition: transitions.ENQUIRE,
+    transition: transitions.INQUIRE,
     processAlias,
     params: { listingId },
   };
@@ -319,13 +319,13 @@ export const sendEnquiry = (listing, message) => (dispatch, getState, sdk) => {
 
       // Send the message to the created transaction
       return sdk.messages.send({ transactionId, content: message }).then(() => {
-        dispatch(sendEnquirySuccess());
+        dispatch(sendInquirySuccess());
         dispatch(fetchCurrentUserHasOrdersSuccess(true));
         return transactionId;
       });
     })
     .catch(e => {
-      dispatch(sendEnquiryError(storableError(e)));
+      dispatch(sendInquiryError(storableError(e)));
       throw e;
     });
 };
