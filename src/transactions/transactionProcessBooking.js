@@ -19,10 +19,10 @@ export const transitions = {
   // After this transition, the actual payment must be made on client-side directly to Stripe.
   REQUEST_PAYMENT: 'transition/request-payment',
 
-  // A customer can also initiate a transaction with an enquiry, and
+  // A customer can also initiate a transaction with an inquiry, and
   // then transition that with a request.
-  ENQUIRE: 'transition/enquire',
-  REQUEST_PAYMENT_AFTER_ENQUIRY: 'transition/request-payment-after-enquiry',
+  INQUIRE: 'transition/enquire',
+  REQUEST_PAYMENT_AFTER_INQUIRY: 'transition/request-payment-after-enquiry',
 
   // Stripe SDK might need to ask 3D security from customer, in a separate front-end step.
   // Therefore we need to make another transition to Marketplace API,
@@ -70,7 +70,7 @@ export const transitions = {
  */
 export const states = {
   INITIAL: 'initial',
-  ENQUIRY: 'enquiry',
+  INQUIRY: 'inquiry',
   PENDING_PAYMENT: 'pending-payment',
   PAYMENT_EXPIRED: 'payment-expired',
   PREAUTHORIZED: 'preauthorized',
@@ -106,13 +106,13 @@ export const graph = {
   states: {
     [states.INITIAL]: {
       on: {
-        [transitions.ENQUIRE]: states.ENQUIRY,
+        [transitions.INQUIRE]: states.INQUIRY,
         [transitions.REQUEST_PAYMENT]: states.PENDING_PAYMENT,
       },
     },
-    [states.ENQUIRY]: {
+    [states.INQUIRY]: {
       on: {
-        [transitions.REQUEST_PAYMENT_AFTER_ENQUIRY]: states.PENDING_PAYMENT,
+        [transitions.REQUEST_PAYMENT_AFTER_INQUIRY]: states.PENDING_PAYMENT,
       },
     },
 
@@ -203,7 +203,7 @@ export const isProviderReview = transition => {
 // should go through the local API endpoints, or if using JS SDK is
 // enough.
 export const isPrivileged = transition => {
-  return [transitions.REQUEST_PAYMENT, transitions.REQUEST_PAYMENT_AFTER_ENQUIRY].includes(
+  return [transitions.REQUEST_PAYMENT, transitions.REQUEST_PAYMENT_AFTER_INQUIRY].includes(
     transition
   );
 };

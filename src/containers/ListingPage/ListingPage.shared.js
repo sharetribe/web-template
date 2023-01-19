@@ -79,9 +79,9 @@ export const listingImages = (listing, variantName) =>
     .filter(variant => variant != null);
 
 /**
- * Callback for the "contact" button on ListingPage to open enquiry modal.
+ * Callback for the "contact" button on ListingPage to open inquiry modal.
  *
- * @param {Object} parameters all the info needed to open enquiry modal.
+ * @param {Object} parameters all the info needed to open inquiry modal.
  */
 export const handleContactUser = parameters => () => {
   const {
@@ -92,7 +92,7 @@ export const handleContactUser = parameters => () => {
     location,
     routes,
     setInitialValues,
-    setEnquiryModalOpen,
+    setInquiryModalOpen,
   } = parameters;
 
   if (!currentUser) {
@@ -100,29 +100,29 @@ export const handleContactUser = parameters => () => {
 
     // We need to log in before showing the modal, but first we need to ensure
     // that modal does open when user is redirected back to this listingpage
-    callSetInitialValues(setInitialValues, { enquiryModalOpenForListingId: params.id });
+    callSetInitialValues(setInitialValues, { inquiryModalOpenForListingId: params.id });
 
     // signup and return back to listingPage.
     history.push(createResourceLocatorString('SignupPage', routes, {}, {}), state);
   } else {
-    setEnquiryModalOpen(true);
+    setInquiryModalOpen(true);
   }
 };
 
 /**
- * Callback for the enquiry modal to submit aka create enquiry transaction on ListingPage.
+ * Callback for the inquiry modal to submit aka create inquiry transaction on ListingPage.
  *
- * @param {Object} parameters all the info needed to create enquiry.
+ * @param {Object} parameters all the info needed to create inquiry.
  */
-export const handleSubmitEnquiry = parameters => values => {
-  const { history, params, getListing, onSendEnquiry, routes, setEnquiryModalOpen } = parameters;
+export const handleSubmitInquiry = parameters => values => {
+  const { history, params, getListing, onSendInquiry, routes, setInquiryModalOpen } = parameters;
   const listingId = new UUID(params.id);
   const listing = getListing(listingId);
   const { message } = values;
 
-  onSendEnquiry(listing, message.trim())
+  onSendInquiry(listing, message.trim())
     .then(txId => {
-      setEnquiryModalOpen(false);
+      setInquiryModalOpen(false);
 
       // Redirect to OrderDetailsPage
       history.push(createResourceLocatorString('OrderDetailsPage', routes, { id: txId.uuid }, {}));

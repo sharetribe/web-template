@@ -50,7 +50,7 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import {
-  sendEnquiry,
+  sendInquiry,
   setInitialValues,
   fetchTimeSlots,
   fetchTransactionLineItems,
@@ -62,7 +62,7 @@ import {
   priceData,
   listingImages,
   handleContactUser,
-  handleSubmitEnquiry,
+  handleSubmitInquiry,
   handleSubmit,
 } from './ListingPage.shared';
 import SectionHero from './SectionHero';
@@ -80,8 +80,8 @@ const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 const { UUID } = sdkTypes;
 
 export const ListingPageComponent = props => {
-  const [enquiryModalOpen, setEnquiryModalOpen] = useState(
-    props.enquiryModalOpenForListingId === props.params.id
+  const [inquiryModalOpen, setInquiryModalOpen] = useState(
+    props.inquiryModalOpenForListingId === props.params.id
   );
   const [imageCarouselOpen, setImageCarouselOpen] = useState(false);
 
@@ -98,8 +98,8 @@ export const ListingPageComponent = props => {
     showListingError,
     reviews,
     fetchReviewsError,
-    sendEnquiryInProgress,
-    sendEnquiryError,
+    sendInquiryInProgress,
+    sendInquiryError,
     monthlyTimeSlots,
     onFetchTimeSlots,
     listingConfig: listingConfigProp,
@@ -109,7 +109,7 @@ export const ListingPageComponent = props => {
     fetchLineItemsError,
     history,
     callSetInitialValues,
-    onSendEnquiry,
+    onSendInquiry,
     onInitializeCardPaymentData,
     config,
     routeConfiguration,
@@ -205,13 +205,13 @@ export const ListingPageComponent = props => {
     callSetInitialValues,
     location,
     setInitialValues,
-    setEnquiryModalOpen,
+    setInquiryModalOpen,
   });
-  const onSubmitEnquiry = handleSubmitEnquiry({
+  const onSubmitInquiry = handleSubmitInquiry({
     ...commonParams,
     getListing,
-    onSendEnquiry,
-    setEnquiryModalOpen,
+    onSendInquiry,
+    setInquiryModalOpen,
   });
   const onSubmit = handleSubmit({
     ...commonParams,
@@ -366,11 +366,11 @@ export const ListingPageComponent = props => {
                   listing={currentListing}
                   authorDisplayName={authorDisplayName}
                   onContactUser={onContactUser}
-                  isEnquiryModalOpen={isAuthenticated && enquiryModalOpen}
-                  onCloseEnquiryModal={() => setEnquiryModalOpen(false)}
-                  sendEnquiryError={sendEnquiryError}
-                  sendEnquiryInProgress={sendEnquiryInProgress}
-                  onSubmitEnquiry={onSubmitEnquiry}
+                  isInquiryModalOpen={isAuthenticated && inquiryModalOpen}
+                  onCloseInquiryModal={() => setInquiryModalOpen(false)}
+                  sendInquiryError={sendInquiryError}
+                  sendInquiryInProgress={sendInquiryInProgress}
+                  onSubmitInquiry={onSubmitInquiry}
                   currentUser={currentUser}
                   onManageDisableScrolling={onManageDisableScrolling}
                 />
@@ -426,12 +426,12 @@ export const ListingPageComponent = props => {
 
 ListingPageComponent.defaultProps = {
   currentUser: null,
-  enquiryModalOpenForListingId: null,
+  inquiryModalOpenForListingId: null,
   showListingError: null,
   reviews: [],
   fetchReviewsError: null,
   monthlyTimeSlots: null,
-  sendEnquiryError: null,
+  sendInquiryError: null,
   listingConfig: null,
   lineItems: null,
   fetchLineItemsError: null,
@@ -467,7 +467,7 @@ ListingPageComponent.propTypes = {
   getOwnListing: func.isRequired,
   onManageDisableScrolling: func.isRequired,
   scrollingDisabled: bool.isRequired,
-  enquiryModalOpenForListingId: string,
+  inquiryModalOpenForListingId: string,
   showListingError: propTypes.error,
   callSetInitialValues: func.isRequired,
   reviews: arrayOf(propTypes.review),
@@ -481,9 +481,9 @@ ListingPageComponent.propTypes = {
   //     fetchTimeSlotsError: null,
   //   }
   // }
-  sendEnquiryInProgress: bool.isRequired,
-  sendEnquiryError: propTypes.error,
-  onSendEnquiry: func.isRequired,
+  sendInquiryInProgress: bool.isRequired,
+  sendInquiryError: propTypes.error,
+  onSendInquiry: func.isRequired,
   onInitializeCardPaymentData: func.isRequired,
   listingConfig: object,
   onFetchTransactionLineItems: func.isRequired,
@@ -518,12 +518,12 @@ const mapStateToProps = state => {
     reviews,
     fetchReviewsError,
     monthlyTimeSlots,
-    sendEnquiryInProgress,
-    sendEnquiryError,
+    sendInquiryInProgress,
+    sendInquiryError,
     lineItems,
     fetchLineItemsInProgress,
     fetchLineItemsError,
-    enquiryModalOpenForListingId,
+    inquiryModalOpenForListingId,
   } = state.ListingPage;
   const { currentUser } = state.user;
 
@@ -545,7 +545,7 @@ const mapStateToProps = state => {
     getListing,
     getOwnListing,
     scrollingDisabled: isScrollingDisabled(state),
-    enquiryModalOpenForListingId,
+    inquiryModalOpenForListingId,
     showListingError,
     reviews,
     fetchReviewsError,
@@ -553,8 +553,8 @@ const mapStateToProps = state => {
     lineItems,
     fetchLineItemsInProgress,
     fetchLineItemsError,
-    sendEnquiryInProgress,
-    sendEnquiryError,
+    sendInquiryInProgress,
+    sendInquiryError,
   };
 };
 
@@ -564,7 +564,7 @@ const mapDispatchToProps = dispatch => ({
   callSetInitialValues: (setInitialValues, values, saveToSessionStorage) =>
     dispatch(setInitialValues(values, saveToSessionStorage)),
   onFetchTransactionLineItems: params => dispatch(fetchTransactionLineItems(params)),
-  onSendEnquiry: (listing, message) => dispatch(sendEnquiry(listing, message)),
+  onSendInquiry: (listing, message) => dispatch(sendInquiry(listing, message)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone)),

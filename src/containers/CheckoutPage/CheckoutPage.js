@@ -309,8 +309,8 @@ export class CheckoutPageComponent extends Component {
       const transactionId = tx ? tx.id : null;
 
       const requestTransition =
-        tx?.attributes?.lastTransition === process.transitions.ENQUIRE
-          ? process.transitions.REQUEST_PAYMENT_AFTER_ENQUIRY
+        tx?.attributes?.lastTransition === process.transitions.INQUIRE
+          ? process.transitions.REQUEST_PAYMENT_AFTER_INQUIRY
           : process.transitions.REQUEST_PAYMENT;
       const isPrivileged = process.isPrivileged(requestTransition);
 
@@ -383,8 +383,8 @@ export class CheckoutPageComponent extends Component {
       const hasPaymentIntents = storedTx.attributes.protectedData?.stripePaymentIntents;
 
       const requestTransition =
-        storedTx?.attributes?.lastTransition === process.transitions.ENQUIRE
-          ? process.transitions.REQUEST_PAYMENT_AFTER_ENQUIRY
+        storedTx?.attributes?.lastTransition === process.transitions.INQUIRE
+          ? process.transitions.REQUEST_PAYMENT_AFTER_INQUIRY
           : process.transitions.REQUEST_PAYMENT;
       const isPrivileged = process.isPrivileged(requestTransition);
 
@@ -836,7 +836,7 @@ export class CheckoutPageComponent extends Component {
     );
 
     const showInitialMessageInput = !(
-      existingTransaction && existingTransaction.attributes.lastTransition === transitions.ENQUIRE
+      existingTransaction && existingTransaction.attributes.lastTransition === transitions.INQUIRE
     );
 
     // Get first and last name of the current user and use it in the StripePaymentForm to autofill the name field

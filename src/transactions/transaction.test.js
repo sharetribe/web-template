@@ -234,9 +234,9 @@ describe('transaction utils for ConditionalResolver', () => {
   const _ = CONDITIONAL_RESOLVER_WILDCARD;
 
   it('exact parameter match succeeds', () => {
-    const inputData = ['enquiry', 'customer'];
+    const inputData = ['inquiry', 'customer'];
     const resolvedOutputData = new ConditionalResolver(inputData)
-      .cond(['enquiry', 'customer'], () => ({ showInfoX: true, isSomethingOn: true }))
+      .cond(['inquiry', 'customer'], () => ({ showInfoX: true, isSomethingOn: true }))
       .cond(['purchase', _], () => ({ showInfoX: false, isSomethingOn: true }))
       .default(() => ({ defaultValue: true }))
       .resolve();
@@ -244,10 +244,10 @@ describe('transaction utils for ConditionalResolver', () => {
   });
 
   it('exact parameter match succeeds when cond order is changed ', () => {
-    const inputData = ['enquiry', 'customer'];
+    const inputData = ['inquiry', 'customer'];
     const resolvedOutputData = new ConditionalResolver(inputData)
       .cond(['purchase', _], () => ({ showInfoX: false, isSomethingOn: true }))
-      .cond(['enquiry', 'customer'], () => ({ showInfoX: true, isSomethingOn: true }))
+      .cond(['inquiry', 'customer'], () => ({ showInfoX: true, isSomethingOn: true }))
       .default(() => ({ defaultValue: true }))
       .resolve();
     expect(resolvedOutputData).toEqual({ showInfoX: true, isSomethingOn: true });
@@ -256,7 +256,7 @@ describe('transaction utils for ConditionalResolver', () => {
   it('partial parameters (wildcard) match succeeds', () => {
     const inputData = ['purchase', 'provider'];
     const resolvedOutputData = new ConditionalResolver(inputData)
-      .cond(['enquiry', 'provider'], () => ({ showInfoX: true, isSomethingOn: true }))
+      .cond(['inquiry', 'provider'], () => ({ showInfoX: true, isSomethingOn: true }))
       .cond(['purchase', 'customer'], () => ({ showInfoX: false, isSomethingOn: true }))
       .cond(['purchase', _], () => ({ showInfoX: false, isSomethingOn: true }))
       .default(() => ({ defaultValue: true }))
@@ -267,7 +267,7 @@ describe('transaction utils for ConditionalResolver', () => {
   it('Unknown parameters return default value', () => {
     const inputData = ['asdf', 'asdf'];
     const resolvedOutputData = new ConditionalResolver(inputData)
-      .cond(['enquiry', 'customer'], () => ({ showInfoX: true, isSomethingOn: true }))
+      .cond(['inquiry', 'customer'], () => ({ showInfoX: true, isSomethingOn: true }))
       .cond(['purchase', _], () => ({ showInfoX: false, isSomethingOn: true }))
       .default(() => ({ defaultValue: true }))
       .resolve();
@@ -284,7 +284,7 @@ describe('transaction utils for ConditionalResolver', () => {
   });
 
   it('Empty conditions array does not get picked', () => {
-    const inputData = ['enquiry', 'customer'];
+    const inputData = ['inquiry', 'customer'];
     const resolvedOutputData = new ConditionalResolver(inputData)
       .cond([], () => ({ showInfoX: true, isSomethingOn: true }))
       .default(() => ({ defaultValue: true }))
@@ -293,43 +293,43 @@ describe('transaction utils for ConditionalResolver', () => {
   });
 
   it('Shorter conditions array does not get picked', () => {
-    const inputData = ['enquiry', 'customer'];
+    const inputData = ['inquiry', 'customer'];
     const resolvedOutputData = new ConditionalResolver(inputData)
-      .cond(['enquiry'], () => ({ showInfoX: true, isSomethingOn: true }))
+      .cond(['inquiry'], () => ({ showInfoX: true, isSomethingOn: true }))
       .default(() => ({ defaultValue: true }))
       .resolve();
     expect(resolvedOutputData).toEqual({ defaultValue: true });
   });
 
   it('The order of default and cond functions does not affect', () => {
-    const inputData = ['enquiry', 'customer'];
+    const inputData = ['inquiry', 'customer'];
     const resolvedOutputData = new ConditionalResolver(inputData)
       .default(() => ({ defaultValue: true }))
-      .cond(['enquiry', 'customer'], () => ({ showInfoX: true, isSomethingOn: true }))
+      .cond(['inquiry', 'customer'], () => ({ showInfoX: true, isSomethingOn: true }))
       .cond(['purchase', _], () => ({ showInfoX: false, isSomethingOn: true }))
       .resolve();
     expect(resolvedOutputData).toEqual({ showInfoX: true, isSomethingOn: true });
   });
 
   it('Returns null if mismatching cond and no default method is set', () => {
-    const inputData = ['enquiry', 'provider'];
+    const inputData = ['inquiry', 'provider'];
     const resolvedOutputData = new ConditionalResolver(inputData)
-      .cond(['enquiry', 'customer'], () => ({ showInfoX: true, isSomethingOn: true }))
+      .cond(['inquiry', 'customer'], () => ({ showInfoX: true, isSomethingOn: true }))
       .resolve();
     expect(resolvedOutputData).toEqual(null);
   });
 
   it('Returns null if no cond or default method is set', () => {
-    const inputData = ['enquiry', 'provider'];
+    const inputData = ['inquiry', 'provider'];
     const resolvedOutputData = new ConditionalResolver(inputData).resolve();
     expect(resolvedOutputData).toEqual(null);
   });
 
   it('Throws an error if resolve is not positioned last in the chain', () => {
-    const inputData = ['enquiry', 'customer'];
+    const inputData = ['inquiry', 'customer'];
     const resolveOutputData = () =>
       new ConditionalResolver(inputData)
-        .cond(['enquiry', 'customer'], () => ({ showInfoX: true, isSomethingOn: true }))
+        .cond(['inquiry', 'customer'], () => ({ showInfoX: true, isSomethingOn: true }))
         .resolve()
         .default(() => ({ defaultValue: true }));
     expect(() => resolveOutputData()).toThrow(/is not a function/);

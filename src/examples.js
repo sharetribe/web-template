@@ -42,7 +42,7 @@ import * as IconEdit from './components/IconEdit/IconEdit.example';
 import * as IconEmailAttention from './components/IconEmailAttention/IconEmailAttention.example';
 import * as IconEmailSent from './components/IconEmailSent/IconEmailSent.example';
 import * as IconEmailSuccess from './components/IconEmailSuccess/IconEmailSuccess.example';
-import * as IconEnquiry from './components/IconEnquiry/IconEnquiry.example';
+import * as IconInquiry from './components/IconInquiry/IconInquiry.example';
 import * as IconKeys from './components/IconKeys/IconKeys.example';
 import * as IconKeysSuccess from './components/IconKeysSuccess/IconKeysSuccess.example';
 import * as IconReviewStar from './components/IconReviewStar/IconReviewStar.example';
@@ -107,7 +107,7 @@ import * as FilterForm from './containers/SearchPage/FilterForm/FilterForm.examp
 import * as FilterPlain from './containers/SearchPage/FilterPlain/FilterPlain.example';
 import * as FilterPopup from './containers/SearchPage/FilterPopup/FilterPopup.example';
 import * as EmailVerificationForm from './containers/EmailVerificationPage/EmailVerificationForm/EmailVerificationForm.example';
-import * as EnquiryForm from './containers/ListingPage/EnquiryForm/EnquiryForm.example';
+import * as InquiryForm from './containers/ListingPage/InquiryForm/InquiryForm.example';
 import * as ImageCarousel from './containers/ListingPage/ImageCarousel/ImageCarousel.example';
 import * as ListingImageGallery from './containers/ListingPage/ListingImageGallery/ListingImageGallery.example';
 import * as PasswordRecoveryForm from './containers/PasswordRecoveryPage/PasswordRecoveryForm/PasswordRecoveryForm.example';
@@ -137,7 +137,7 @@ export {
   EditListingPricingForm,
   EditListingPricingAndStockForm,
   EmailVerificationForm,
-  EnquiryForm,
+  InquiryForm,
   EstimatedCustomerBreakdownMaybe,
   ExpandingTextarea,
   FieldBoolean,
@@ -169,7 +169,7 @@ export {
   IconEmailAttention,
   IconEmailSent,
   IconEmailSuccess,
-  IconEnquiry,
+  IconInquiry,
   IconKeys,
   IconKeysSuccess,
   IconReviewStar,

@@ -21,7 +21,7 @@ describe('ActivityFeed', () => {
       transaction: createTransaction('tx1'),
       stateData: {
         processName: 'default-buying-products',
-        processState: 'enquiry',
+        processState: 'inquiry',
       },
       currentUser: createCurrentUser('user2'),
       hasOlderMessages: false,
