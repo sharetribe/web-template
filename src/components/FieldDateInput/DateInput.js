@@ -91,10 +91,6 @@ const defaultProps = {
   displayFormat: 'ddd, MMM D',
   monthFormat: 'MMMM YYYY',
   weekDayFormat: 'dd',
-  phrases: {
-    closeDatePicker: null, // Handled inside component
-    clearDate: null, // Handled inside component
-  },
 };
 
 class DateInputComponent extends Component {
@@ -137,7 +133,6 @@ class DateInputComponent extends Component {
       onBlur,
       onChange,
       onFocus,
-      phrases,
       screenReaderInputMessage,
       useMobileMargins,
       value,
@@ -160,14 +155,6 @@ class DateInputComponent extends Component {
       screenReaderInputMessage ||
       intl.formatMessage({ id: 'FieldDateInput.screenReaderInputMessage' });
 
-    const closeDatePickerText = phrases.closeDatePicker
-      ? phrases.closeDatePicker
-      : intl.formatMessage({ id: 'FieldDateInput.closeDatePicker' });
-
-    const clearDateText = phrases.clearDate
-      ? phrases.clearDate
-      : intl.formatMessage({ id: 'FieldDateInput.clearDate' });
-
     const classes = classNames(css.inputRoot, className, {
       [css.withMobileMargins]: useMobileMargins,
     });
@@ -182,7 +169,6 @@ class DateInputComponent extends Component {
           onDateChange={this.onDateChange}
           placeholder={placeholder}
           screenReaderInputMessage={screenReaderInputText}
-          phrases={{ closeDatePicker: closeDatePickerText, clearDate: clearDateText }}
         />
       </div>
     );
@@ -207,10 +193,6 @@ DateInputComponent.propTypes = {
   onBlur: func.isRequired,
   onFocus: func.isRequired,
   isDayBlocked: func,
-  phrases: shape({
-    closeDatePicker: string,
-    clearDate: string,
-  }),
   useMobileMargins: bool,
   placeholderText: string,
   screenReaderInputMessage: string,

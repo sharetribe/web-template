@@ -84,13 +84,6 @@ exports[`ManageListingCard matches snapshot 1`] = `
       <div
         className="menuOverlay"
       />
-      <div
-        className="menuOverlayContent"
-      >
-        <span>
-          ManageListingCard.viewListing
-        </span>
-      </div>
     </div>
     <div
       className="menubarWrapper"

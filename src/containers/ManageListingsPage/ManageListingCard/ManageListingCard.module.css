@@ -36,29 +36,6 @@
   transition: var(--transitionStyleButton);
 }
 
-.menuOverlayContent {
-  /* Positioning */
-  composes: coverEverything;
-  /* Fonts */
-  composes: h4 from global;
-  font-weight: var(--fontWeightSemiBold);
-  color: var(--matterColorLight);
-
-  /* Layout */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 0;
-  margin-bottom: 0;
-  opacity: 0;
-
-  @media (--viewportMedium) {
-    font-weight: var(--fontWeightSemiBold);
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-}
-
 .menuOverlayOpen {
   opacity: 0.4;
 }
