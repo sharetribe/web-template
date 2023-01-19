@@ -382,9 +382,6 @@ export const ManageListingCardComponent = props => {
 
         <div className={classNames(css.menuOverlayWrapper)}>
           <div className={classNames(css.menuOverlay, { [css.menuOverlayOpen]: isMenuOpen })} />
-          <div className={css.menuOverlayContent}>
-            <FormattedMessage id="ManageListingCard.viewListing" />
-          </div>
         </div>
         <div className={css.menubarWrapper}>
           <div className={css.menubarGradient} />

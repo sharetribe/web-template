@@ -65,7 +65,6 @@ const defaultProps = {
   // displayFormat: 'ddd, MMM D',
   monthFormat: 'MMMM YYYY',
   weekDayFormat: 'dd',
-  phrases: {}, // Add overwrites to default phrases used by react-dates
 };
 
 class DateRangeController extends Component {
