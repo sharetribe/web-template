@@ -51,10 +51,10 @@ const EditListingPricingAndStockPanel = props => {
 
   // Form needs to know data from transactionType
   const publicData = listing?.attributes?.publicData;
-  const selectedTransactionType = publicData.transactionType;
+  const selectedListingType = publicData.listingType;
   const unitType = publicData.unitType;
   const transactionTypeConfig = transactionTypes.find(
-    conf => conf.type === selectedTransactionType
+    conf => conf.type === selectedListingType
   );
 
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;

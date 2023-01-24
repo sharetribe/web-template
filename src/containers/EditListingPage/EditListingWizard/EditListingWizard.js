@@ -130,8 +130,7 @@ const hasValidCustomFieldsInExtendedData = (publicData, privateData, config) => 
 
     const isRequired =
       !!editListingPageConfig.isRequired &&
-      (includeForListingTypes == null ||
-        includeForListingTypes.includes(publicData?.transactionType));
+      (includeForListingTypes == null || includeForListingTypes.includes(publicData?.listingType));
     if (isRequired) {
       const savedExtendedData = fieldData[key];
       return schemaType === SCHEMA_TYPE_ENUM
@@ -173,7 +172,7 @@ const tabCompleted = (tab, listing, config) => {
     privateData,
   } = listing.attributes;
   const images = listing.images;
-  const { transactionType, transactionProcessAlias, unitType, shippingEnabled, pickupEnabled } =
+  const { listingType, transactionProcessAlias, unitType, shippingEnabled, pickupEnabled } =
     publicData || {};
   const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
@@ -182,7 +181,7 @@ const tabCompleted = (tab, listing, config) => {
       return !!(
         description &&
         title &&
-        transactionType &&
+        listingType &&
         transactionProcessAlias &&
         unitType &&
         hasValidCustomFieldsInExtendedData(publicData, privateData, config)
@@ -218,7 +217,7 @@ const tabsActive = (isNew, listing, tabs, config) => {
   return tabs.reduce((acc, tab) => {
     const previousTabIndex = tabs.findIndex(t => t === tab) - 1;
     const validTab = previousTabIndex >= 0;
-    const hasTransactionType = !!listing?.attributes?.publicData?.transactionType;
+    const hasTransactionType = !!listing?.attributes?.publicData?.listingType;
     const prevTabComletedInNewFlow = tabCompleted(tabs[previousTabIndex], listing, config);
     const isActive =
       validTab && !isNew ? hasTransactionType : validTab && isNew ? prevTabComletedInNewFlow : true;
@@ -378,12 +377,13 @@ class EditListingWizard extends Component {
       ? transactionProcessAlias.split('/')[0]
       : BOOKING_PROCESS_NAME;
 
-    // If the listing has invalid transaction configuration in place,
-    // listing is considered deprecated and we don't allow user to modify the listing anymore.
-    const existingtransactionType = currentListing.attributes?.publicData?.transactionType;
     const invalidExistingTransactionType =
       existingtransactionType &&
       !config.transaction.transactionTypes.find(config => config.type === existingtransactionType);
+    // NOTE: If the listing has invalid configuration in place,
+    // the listing is considered deprecated and we don't allow user to modify the listing anymore.
+    // Instead, operator should do that through Console or Integration API.
+    const existingListingType = currentListing.attributes?.publicData?.listingType;
 
     const tabs = invalidExistingTransactionType
       ? TABS_DETAILS_ONLY
