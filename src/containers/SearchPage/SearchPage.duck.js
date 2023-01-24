@@ -97,21 +97,21 @@ export const searchListingsError = e => ({
 export const searchListings = (searchParams, config) => (dispatch, getState, sdk) => {
   dispatch(searchListingsRequest(searchParams));
 
-  // SearchPage can enforce listing query to only those listings with valid transactionType
+  // SearchPage can enforce listing query to only those listings with valid listingType
   // NOTE: this only works if you have set 'enum' type search schema to listing's public data fields
-  //       - transactionType
+  //       - listingType
   //       Same setup could be expanded to 2 other extended data fields:
   //       - transactionProcessAlias
   //       - unitType
-  //       ...and then turned enforceValidTransactionType config to true in configTransaction.js
+  //       ...and then turned enforceValidListingType config to true in configListing.js
   // Read More:
   // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
-  const searchValidTransactionTypes = transactionTypes => {
-    return config.transaction.enforceValidTransactionType
+  const searchValidListingTypes = listingTypes => {
+    return config.listing.enforceValidListingType
       ? {
-          pub_transactionType: transactionTypes.map(t => t.type),
-          // pub_transactionProcessAlias: transactionTypes.map(t => `${t.process}/${t.alias}`),
-          // pub_unitType: transactionTypes.map(t => t.unitType),
+          pub_listingType: listingTypes.map(l => l.type),
+          // pub_transactionProcessAlias: listingTypes.map(l => `${l.transactionType.process}/${l.transactionType.alias}`),
+          // pub_unitType: listingTypes.map(l => l.transactionType.unitType),
         }
       : {};
   };
@@ -187,7 +187,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     ...priceMaybe,
     ...datesMaybe,
     ...sortMaybe,
-    ...searchValidTransactionTypes(config.transaction.transactionTypes),
+    ...searchValidListingTypes(config.listing.listingTypes),
     per_page: perPage,
   };
 
