@@ -365,10 +365,19 @@ export const TransactionPageComponent = props => {
       )
     : null;
 
+  const formatLineItemUnitType = (transaction, listing) => {
+    // unitType should always be saved to transaction's protected data
+    const unitTypeInProtectedData = transaction?.attributes?.protectedData?.unitType;
+    // If unitType is not found (old or mutated data), we check listing's publicData
+    // Note: this might have changed over time
+    const unitTypeInListingPublicData = listing?.attributes?.publicData?.unitType;
+    return `line-item/${unitTypeInProtectedData || unitTypeInListingPublicData}`;
+  };
+
   const lineItemUnitType = unitLineItem
     ? unitLineItem.code
     : isDataAvailable
-    ? `line-item/${listing?.attributes?.publicData?.unitType}`
+    ? formatLineItemUnitType(transaction, listing)
     : null;
 
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;

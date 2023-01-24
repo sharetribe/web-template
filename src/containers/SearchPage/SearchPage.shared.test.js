@@ -530,7 +530,7 @@ describe('SearchPage.helpers', () => {
 
   describe('groupExtendedDataConfigs', () => {
     it('returns grouped configs for the extended data of the listinga', () => {
-      const activeTransactionTypes = [
+      const activeListingTypes = [
         'sell-bicycles',
         'rent-bicycles-daily',
         'rent-bicycles-nightly',
@@ -538,7 +538,7 @@ describe('SearchPage.helpers', () => {
       ];
       const [primary, secondary] = groupExtendedDataConfigs(
         listingExtendedDataConfig,
-        activeTransactionTypes
+        activeListingTypes
       );
       expect(primary).toEqual([listingExtendedDataConfig[0]]);
       expect(secondary).toEqual([listingExtendedDataConfig[1], listingExtendedDataConfig[2]]);

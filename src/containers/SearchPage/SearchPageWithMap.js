@@ -255,7 +255,7 @@ export class SearchPageComponent extends Component {
     const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
-    const activeTransactionTypes = config?.transaction?.transactionTypes.map(config => config.type);
+    const activeListingTypes = config?.listing?.listingTypes.map(config => config.type);
     const marketplaceCurrency = config.currency;
 
     // Page transition might initially use values from previous search
@@ -287,7 +287,7 @@ export class SearchPageComponent extends Component {
       : defaultFiltersConfig;
     const [customPrimaryFilters, customSecondaryFilters] = groupExtendedDataConfigs(
       listingExtendedDataConfig,
-      activeTransactionTypes
+      activeListingTypes
     );
     const availablePrimaryFilters = [...customPrimaryFilters, ...defaultFilters];
     const availableFilters = [

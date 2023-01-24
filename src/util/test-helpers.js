@@ -145,9 +145,7 @@ export const getDefaultConfiguration = () => {
           },
         },
       ],
-    },
-    transaction: {
-      transactionTypes: [
+      listingTypes: [
         {
           type: 'rent-bicycles',
           label: 'Rent bicycles',

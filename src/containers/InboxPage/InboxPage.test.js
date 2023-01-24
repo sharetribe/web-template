@@ -33,7 +33,7 @@ describe('InboxPage', () => {
   const currentUserCustomer = createCurrentUser('customer-user-id');
   const listing = createListing('ItemX', {
     publicData: {
-      transactionType: 'sell-bikes',
+      listingType: 'sell-bikes',
       transactionProcessAlias: 'default-buying-products',
       unitType: 'item',
     },
@@ -141,14 +141,16 @@ describe('InboxPage', () => {
 
   it('InboxPageComponent matches snapshot of order', () => {
     const contextValues = {
-      transaction: {
-        transactionTypes: [
+      listing: {
+        listingTypes: [
           {
             type: 'rent-bicycles',
             label: 'Rent bicycles',
-            process: 'default-booking',
-            alias: 'release-1',
-            unitType: 'day',
+            transactionType: {
+              process: 'default-booking',
+              alias: 'release-1',
+              unitType: 'day',
+            },
           },
         ],
       },
@@ -180,14 +182,16 @@ describe('InboxPage', () => {
 
   it('InboxPageComponent matches snapshot of sales', () => {
     const contextValues = {
-      transaction: {
-        transactionTypes: [
+      listing: {
+        listingTypes: [
           {
             type: 'rent-bicycles',
             label: 'Rent bicycles',
-            process: 'default-booking',
-            alias: 'release-1',
-            unitType: 'day',
+            transactionType: {
+              process: 'default-booking',
+              alias: 'release-1',
+              unitType: 'day',
+            },
           },
         ],
       },

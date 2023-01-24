@@ -2,9 +2,9 @@
 import EditListingDetailsForm from './EditListingDetailsForm';
 import defaultConfig from '../../../../config/configDefault';
 
-const selectableTransactionTypes = [
+const selectableListingTypes = [
   {
-    transactionType: 'sell-bicycles',
+    listingType: 'sell-bicycles',
     transactionProcessAlias: 'default-buying-products/release-1',
     unitType: 'item',
   },
@@ -21,12 +21,12 @@ export const WithInitialValues = {
     ready: false,
     updated: false,
     updateInProgress: false,
-    selectableTransactionTypes: selectableTransactionTypes,
+    selectableListingTypes: selectableListingTypes,
     listingConfig: defaultConfig.listing,
     initialValues: {
       title: 'Listing',
       description: 'Lorem ipsum',
-      transactionType: 'sell-bicycles',
+      listingType: 'sell-bicycles',
       transactionProcessAlias: 'default-buying-products/release-1',
       unitType: 'item',
     },
@@ -34,14 +34,14 @@ export const WithInitialValues = {
   group: 'page:EditListingPage',
 };
 
-const selectableTransactionTypes2 = [
+const selectableListingTypes2 = [
   {
-    transactionType: 'rent-bicycles',
+    listingType: 'rent-bicycles',
     transactionProcessAlias: 'default-booking/release-1',
     unitType: 'day',
   },
   {
-    transactionType: 'sell-bicycles',
+    listingType: 'sell-bicycles',
     transactionProcessAlias: 'default-buying-products/release-1',
     unitType: 'item',
   },
@@ -58,7 +58,7 @@ export const MultipleProcessInfos = {
     ready: false,
     updated: false,
     updateInProgress: false,
-    selectableTransactionTypes: selectableTransactionTypes2,
+    selectableListingTypes: selectableListingTypes2,
     listingConfig: defaultConfig.listing,
   },
   group: 'page:EditListingPage',
