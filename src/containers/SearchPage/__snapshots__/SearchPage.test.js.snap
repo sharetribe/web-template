@@ -38,7 +38,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
               "editListingPageConfig": Object {
                 "label": "Category",
               },
-              "includeForTransactionTypes": Array [
+              "includeForListingTypes": Array [
                 "sell-bicycles",
               ],
               "indexForSearch": true,
@@ -155,7 +155,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
               "editListingPageConfig": Object {
                 "label": "Category",
               },
-              "includeForTransactionTypes": Array [
+              "includeForListingTypes": Array [
                 "rent-bicycles-daily",
                 "rent-bicycles-nightly",
                 "rent-bicycles-hourly",
@@ -265,7 +265,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                 "editListingPageConfig": Object {
                   "label": "Category",
                 },
-                "includeForTransactionTypes": Array [
+                "includeForListingTypes": Array [
                   "sell-bicycles",
                 ],
                 "indexForSearch": true,
@@ -376,7 +376,7 @@ exports[`SearchPageWithList matches snapshot 1`] = `
                 "editListingPageConfig": Object {
                   "label": "Category",
                 },
-                "includeForTransactionTypes": Array [
+                "includeForListingTypes": Array [
                   "rent-bicycles-daily",
                   "rent-bicycles-nightly",
                   "rent-bicycles-hourly",

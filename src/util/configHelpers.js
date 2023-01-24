@@ -143,22 +143,19 @@ const validKey = (key, allKeys) => {
   return [isUniqueKey, { key }];
 };
 
-const validTransactionTypesForListingConfig = (
-  includeForTransactionTypes,
-  transactionTypesInUse
-) => {
-  const isUndefinedOrNull = includeForTransactionTypes == null;
-  const isArray = Array.isArray(includeForTransactionTypes);
+const validTransactionTypesForListingConfig = (includeForListingTypes, transactionTypesInUse) => {
+  const isUndefinedOrNull = includeForListingTypes == null;
+  const isArray = Array.isArray(includeForListingTypes);
   const validatedTransactionTypes = isArray
-    ? includeForTransactionTypes.filter(pa => transactionTypesInUse.includes(pa))
+    ? includeForListingTypes.filter(pa => transactionTypesInUse.includes(pa))
     : [];
 
   const hasValidTransactionTypes = validatedTransactionTypes.length > 0;
   const isValid = hasValidTransactionTypes || isUndefinedOrNull;
   const validValue = hasValidTransactionTypes
-    ? { includeForTransactionTypes: validatedTransactionTypes }
+    ? { includeForListingTypes: validatedTransactionTypes }
     : isUndefinedOrNull
-    ? { includeForTransactionTypes: transactionTypesInUse }
+    ? { includeForListingTypes: transactionTypesInUse }
     : {};
   return [isValid, validValue];
 };
@@ -303,7 +300,7 @@ const validListingExtendedData = (listingExtendedData, transactionTypesInUse) =>
             ? validKey(value, keys)
             : name === 'scope'
             ? validEnumString('scope', value, scopeOptions, 'public')
-            : name === 'includeForTransactionTypes'
+            : name === 'includeForListingTypes'
             ? validTransactionTypesForListingConfig(value, transactionTypesInUse)
             : name === 'schemaType'
             ? validEnumString('schemaType', value, validSchemaTypes)
@@ -334,12 +331,12 @@ const validListingExtendedData = (listingExtendedData, transactionTypesInUse) =>
     );
 
     if (validationData.isValid) {
-      const hasIncludeForTransactionTypes = validationData.config?.includeForTransactionTypes;
-      const includeForTransactionTypesMaybe = !hasIncludeForTransactionTypes
-        ? { includeForTransactionTypes: transactionTypesInUse }
+      const hasIncludeForListingTypes = validationData.config?.includeForListingTypes;
+      const includeForListingTypesMaybe = !hasIncludeForListingTypes
+        ? { includeForListingTypes: transactionTypesInUse }
         : {};
 
-      return [...acc, { ...validationData.config, ...includeForTransactionTypesMaybe }];
+      return [...acc, { ...validationData.config, ...includeForListingTypesMaybe }];
     } else {
       return acc;
     }

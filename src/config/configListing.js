@@ -13,7 +13,7 @@
  * - scope (optional):              Scope of the extended data can be either 'public' or 'private'.
  *                                  Default value: 'public'.
  *                                  Note: listing doesn't support 'protected' scope atm.
- * - includeForTransactionTypes:    An array of transaction types, for which the extended
+ * - includeForListingTypes:        An array of listing types, for which the extended
  *   (optional)                     data is relevant and should be added.
  * - schemaType (optional):         Schema for this extended data field.
  *                                  This is relevant when rendering components and querying listings.
@@ -164,7 +164,7 @@ export const listingExtendedData = [
   // {
   //   key: 'extra-note',
   //   scope: 'public',
-  //   includeForTransactionTypes: ['product-selling'],
+  //   includeForListingTypes: ['product-selling'],
   //   schemaType: 'text',
   //   listingPageConfig: {
   //     label: 'Extra notes',
@@ -177,7 +177,7 @@ export const listingExtendedData = [
   // {
   //   key: 'private-note',
   //   scope: 'private',
-  //   includeForTransactionTypes: ['daily-booking'],
+  //   includeForListingTypes: ['daily-booking'],
   //   schemaType: 'text',
   //   editListingPageConfig: {
   //     label: 'Private notes',

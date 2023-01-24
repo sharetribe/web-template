@@ -36,7 +36,7 @@ const listingExtendedDataConfig = [
   {
     key: 'category',
     scope: 'public',
-    includeForTransactionTypes: ['sell-bicycles'],
+    includeForListingTypes: ['sell-bicycles'],
     schemaType: 'enum',
     schemaOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     indexForSearch: true,
@@ -54,7 +54,7 @@ const listingExtendedDataConfig = [
   {
     key: 'amenities',
     scope: 'public',
-    includeForTransactionTypes: [
+    includeForListingTypes: [
       'rent-bicycles-daily',
       'rent-bicycles-nightly',
       'rent-bicycles-hourly',
