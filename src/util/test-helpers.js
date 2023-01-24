@@ -42,7 +42,7 @@ export const getDefaultConfiguration = () => {
         {
           key: 'category',
           scope: 'public',
-          includeForTransactionTypes: [
+          includeForListingTypes: [
             'product-selling',
             'daily-booking',
             'nightly-booking',
@@ -76,7 +76,7 @@ export const getDefaultConfiguration = () => {
         {
           key: 'tire-size',
           scope: 'public',
-          includeForTransactionTypes: [
+          includeForListingTypes: [
             'product-selling',
             'daily-booking',
             'nightly-booking',
@@ -111,7 +111,7 @@ export const getDefaultConfiguration = () => {
         {
           key: 'brand',
           scope: 'public',
-          includeForTransactionTypes: [
+          includeForListingTypes: [
             'product-selling',
             'daily-booking',
             'nightly-booking',
