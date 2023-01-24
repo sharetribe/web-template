@@ -128,7 +128,9 @@ export const ListingPageComponent = props => {
   const listingSlug = rawParams.slug || createSlug(currentListing.attributes.title || '');
   const params = { slug: listingSlug, ...rawParams };
 
-  const listingType = isDraftVariant ? LISTING_PAGE_PARAM_TYPE_DRAFT : LISTING_PAGE_PARAM_TYPE_EDIT;
+  const listingPathParamType = isDraftVariant
+    ? LISTING_PAGE_PARAM_TYPE_DRAFT
+    : LISTING_PAGE_PARAM_TYPE_EDIT;
   const listingTab = isDraftVariant ? 'photos' : 'details';
 
   const isApproved =
@@ -295,7 +297,7 @@ export const ListingPageComponent = props => {
                   editParams={{
                     id: listingId.uuid,
                     slug: listingSlug,
-                    type: listingType,
+                    type: listingPathParamType,
                     tab: listingTab,
                   }}
                 />
