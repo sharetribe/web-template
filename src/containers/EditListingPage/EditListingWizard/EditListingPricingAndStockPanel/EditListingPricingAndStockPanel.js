@@ -36,7 +36,7 @@ const EditListingPricingAndStockPanel = props => {
     listing,
     marketplaceCurrency,
     listingMinimumPriceSubUnits,
-    transactionTypes,
+    listingTypes,
     disabled,
     ready,
     onSubmit,
@@ -49,13 +49,11 @@ const EditListingPricingAndStockPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const initialValues = getInitialValues(props);
 
-  // Form needs to know data from transactionType
+  // Form needs to know data from listingType
   const publicData = listing?.attributes?.publicData;
   const selectedListingType = publicData.listingType;
   const unitType = publicData.unitType;
-  const transactionTypeConfig = transactionTypes.find(
-    conf => conf.type === selectedListingType
-  );
+  const listingTypeConfig = listingTypes.find(conf => conf.type === selectedListingType);
 
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
   const priceCurrencyValid =
@@ -109,7 +107,7 @@ const EditListingPricingAndStockPanel = props => {
           }}
           listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
           marketplaceCurrency={marketplaceCurrency}
-          transactionType={transactionTypeConfig}
+          listingType={listingTypeConfig}
           unitType={unitType}
           saveActionMsg={submitButtonText}
           disabled={disabled}
@@ -143,7 +141,7 @@ EditListingPricingAndStockPanel.propTypes = {
   listing: object,
   marketplaceCurrency: string.isRequired,
   listingMinimumPriceSubUnits: number.isRequired,
-  transactionTypes: arrayOf(
+  listingTypes: arrayOf(
     shape({
       showStock: bool,
     })

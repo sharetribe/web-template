@@ -3,31 +3,31 @@ import React from 'react';
 import { FormattedMessage } from '../../../../util/reactIntl';
 
 /**
- * Error messages (e.g. invalidExistingTransactionType and noTransactionTypeSet)
+ * Error messages (e.g. invalidExistingListingType and noListingTypesSet)
  * @param {object} props
  * @returns JSX element containing the error message
  */
 const ErrorMessage = props => {
-  const { invalidExistingTransactionType, noTransactionTypeSet, marketplaceName } = props;
-  return invalidExistingTransactionType ? (
+  const { invalidExistingListingType, noListingTypesSet, marketplaceName } = props;
+  return invalidExistingListingType ? (
     <div>
       <h2>
-        <FormattedMessage id="EditListingDetailsPanel.invalidTransactionTypeSetTitle" />
+        <FormattedMessage id="EditListingDetailsPanel.invalidListingTypeSetTitle" />
       </h2>
       <p>
         <FormattedMessage
-          id="EditListingDetailsPanel.invalidTransactionTypeSetDescription"
+          id="EditListingDetailsPanel.invalidListingTypeSetDescription"
           values={{ marketplaceName }}
         />
       </p>
     </div>
-  ) : noTransactionTypeSet ? (
+  ) : noListingTypesSet ? (
     <div>
       <h2>
-        <FormattedMessage id="EditListingDetailsPanel.noTransactionTypeSetTitle" />
+        <FormattedMessage id="EditListingDetailsPanel.noListingTypeSetTitle" />
       </h2>
       <p>
-        <FormattedMessage id="EditListingDetailsPanel.noTransactionTypeSetDescription" />
+        <FormattedMessage id="EditListingDetailsPanel.noListingTypeSetDescription" />
       </p>
     </div>
   ) : null;

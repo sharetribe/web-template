@@ -16,31 +16,28 @@ import EditListingDetailsForm from './EditListingDetailsForm';
 import css from './EditListingDetailsPanel.module.css';
 
 /**
- * Get transaction configuration. For existing listings, it is stored to publicData.
- * For new listings, the data needs to be figured out from transactionTypes configuration.
+ * Get listing configuration. For existing listings, it is stored to publicData.
+ * For new listings, the data needs to be figured out from listingTypes configuration.
  *
  * In the latter case, we select first type in the array. However, EditListingDetailsForm component
- * gets 'selectableTransactionTypes' prop, which it uses to provide a way to make selection,
- * if multiple transaction type are available.
+ * gets 'selectableListingTypes' prop, which it uses to provide a way to make selection,
+ * if multiple listing types are available.
  *
- * @param {Array} transactionTypes
- * @param {Object} existingTransactionInfo
+ * @param {Array} listingTypes
+ * @param {Object} existingListingInfo
  * @returns an object containing mainly information that can be stored to publicData.
  */
-const getTransactionInfo = (
-  transactionTypes,
-  existingTransactionInfo = {},
-  inlcudeLabel = false
-) => {
-  const { transactionType, transactionProcessAlias, unitType } = existingTransactionInfo;
+const getTransactionInfo = (listingTypes, existingListingInfo = {}, inlcudeLabel = false) => {
+  const { listingType, transactionProcessAlias, unitType } = existingListingInfo;
 
-  if (transactionType && transactionProcessAlias && unitType) {
-    return { transactionType, transactionProcessAlias, unitType };
-  } else if (transactionTypes.length === 1) {
-    const { type, process, alias, unitType: configUnitType, label } = transactionTypes[0];
+  if (listingType && transactionProcessAlias && unitType) {
+    return { listingType, transactionProcessAlias, unitType };
+  } else if (listingTypes.length === 1) {
+    const { type, label, transactionType } = listingTypes[0];
+    const { process, alias, unitType: configUnitType } = transactionType;
     const labelMaybe = inlcudeLabel ? { label: label || type } : {};
     return {
-      transactionType: type,
+      listingType: type,
       transactionProcessAlias: `${process}/${alias}`,
       unitType: configUnitType,
       ...labelMaybe,
@@ -50,24 +47,23 @@ const getTransactionInfo = (
 };
 
 /**
- * Check if transactionType has already been set.
+ * Check if listingType has already been set.
  *
- * If transaction type (incl. process & unitType) has been set, we won't allow change to it.
+ * If listing type (incl. process & unitType) has been set, we won't allow change to it.
  * It's possible to make it editable, but it becomes somewhat complex to modify following panels,
  * for the different process. (E.g. adjusting stock vs booking availability settings,
  * if process has been changed for existing listing.)
  *
  * @param {Object} publicData JSON-like data stored to listing entity.
- * @returns object literal with to keys: { hasExistingTransactionType, existingTransactionType }
+ * @returns object literal with to keys: { hasExistingListingType, existingListingType }
  */
-const hasSetTransactionType = publicData => {
-  const { transactionType, transactionProcessAlias, unitType } = publicData;
-  const existingTransactionType = { transactionType, transactionProcessAlias, unitType };
+const hasSetListingType = publicData => {
+  const { listingType, transactionProcessAlias, unitType } = publicData;
+  const existingListingType = { listingType, transactionProcessAlias, unitType };
 
   return {
-    hasExistingTransactionType:
-      !!transactionType && !!transactionProcessAlias && !!transactionProcessAlias,
-    existingTransactionType,
+    hasExistingListingType: !!listingType && !!transactionProcessAlias && !!unitType,
+    existingListingType,
   };
 };
 
@@ -80,14 +76,14 @@ const hasSetTransactionType = publicData => {
  *
  * @param {Object} data values to look through against listingConfig.js and util/configHelpers.js
  * @param {String} targetScope Check that the scope of extended data the config matches
- * @param {String} targetTransactionType Check that the extended data is relevant for this transaction type.
+ * @param {String} targetListingType Check that the extended data is relevant for this listing type.
  * @param {boolean} clearExtraCustomFields If true, returns also custom extended data fields with null values
  * @returns Array of picked extended data fields
  */
 const pickCustomExtendedDataFields = (
   data,
   targetScope,
-  targetTransactionType,
+  targetListingType,
   extendedDataConfigs,
   clearExtraCustomFields = false
 ) => {
@@ -96,16 +92,16 @@ const pickCustomExtendedDataFields = (
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
-    const isTargetTransactionType =
-      includeForListingTypes == null || includeForListingTypes.includes(targetTransactionType);
+    const isTargetListingType =
+      includeForListingTypes == null || includeForListingTypes.includes(targetListingType);
 
-    if (isKnownSchemaType && isTargetScope && isTargetTransactionType) {
+    if (isKnownSchemaType && isTargetScope && isTargetListingType) {
       const fieldValue = data[key] || null;
       return { ...fields, [key]: fieldValue };
     } else if (
       isKnownSchemaType &&
       isTargetScope &&
-      !isTargetTransactionType &&
+      !isTargetListingType &&
       clearExtraCustomFields
     ) {
       return { ...fields, [key]: null };
@@ -143,43 +139,28 @@ const setNoAvailabilityForProductListings = processAlias => {
 
 /**
  * Get initialValues for the form. This function includes
- * title, description, transactionType, transactionProcessAlias, unitType,
+ * title, description, listingType, transactionProcessAlias, unitType,
  * and those publicData & privateData fields that are configured through
  * config.listing.listingExtendedData.
  *
  * @param {object} props
- * @param {object} existingTransactionType info saved to listing's publicData
- * @param {object} transactionTypes app's configured types (presets for transactions)
+ * @param {object} existingListingType info saved to listing's publicData
+ * @param {object} listingTypes app's configured types (presets for listings)
  * @param {object} listingExtendedDataConfig those extended data fields that are part of configurations
  * @returns initialValues object for the form
  */
-const getInitialValues = (
-  props,
-  existingTransactionType,
-  transactionTypes,
-  listingExtendedDataConfig
-) => {
+const getInitialValues = (props, existingListingType, listingTypes, listingExtendedDataConfig) => {
   const { description, title, publicData, privateData } = props?.listing?.attributes || {};
-  const { transactionType } = publicData;
+  const { listingType } = publicData;
 
   // Initial values for the form
   return {
     title,
     description,
-    // Transaction type info: transactionType, transactionProcessAlias, unitType
-    ...getTransactionInfo(transactionTypes, existingTransactionType),
-    ...pickCustomExtendedDataFields(
-      publicData,
-      'public',
-      transactionType,
-      listingExtendedDataConfig
-    ),
-    ...pickCustomExtendedDataFields(
-      privateData,
-      'private',
-      transactionType,
-      listingExtendedDataConfig
-    ),
+    // Transaction type info: listingType, transactionProcessAlias, unitType
+    ...getTransactionInfo(listingTypes, existingListingType),
+    ...pickCustomExtendedDataFields(publicData, 'public', listingType, listingExtendedDataConfig),
+    ...pickCustomExtendedDataFields(privateData, 'private', listingType, listingExtendedDataConfig),
   };
 };
 
@@ -201,24 +182,24 @@ const EditListingDetailsPanel = props => {
 
   const classes = classNames(rootClassName || css.root, className);
   const { publicData, state } = listing?.attributes || {};
-  const transactionTypes = config.transaction.transactionTypes;
+  const listingTypes = config.listing.listingTypes;
   const listingExtendedDataConfig = config.listing.listingExtendedData;
 
-  const { hasExistingTransactionType, existingTransactionType } = hasSetTransactionType(publicData);
-  const hasValidExistingTransactionType =
-    hasExistingTransactionType &&
-    !!transactionTypes.find(conf => conf.type === existingTransactionType.transactionType);
+  const { hasExistingListingType, existingListingType } = hasSetListingType(publicData);
+  const hasValidExistingListingType =
+    hasExistingListingType &&
+    !!listingTypes.find(conf => conf.type === existingListingType.listingType);
 
   const initialValues = getInitialValues(
     props,
-    existingTransactionType,
-    transactionTypes,
+    existingListingType,
+    listingTypes,
     listingExtendedDataConfig
   );
 
-  const noTransactionTypesSet = transactionTypes?.length > 0;
+  const noListingTypesSet = listingTypes?.length > 0;
   const canShowEditListingDetailsForm =
-    noTransactionTypesSet && (!hasExistingTransactionType || hasValidExistingTransactionType);
+    noListingTypesSet && (!hasExistingListingType || hasValidExistingListingType);
   const isPublished = listing?.id && state !== LISTING_STATE_DRAFT;
 
   return (
@@ -243,7 +224,7 @@ const EditListingDetailsPanel = props => {
             const {
               title,
               description,
-              transactionType,
+              listingType,
               transactionProcessAlias,
               unitType,
               ...rest
@@ -256,13 +237,13 @@ const EditListingDetailsPanel = props => {
               title: title.trim(),
               description,
               publicData: {
-                transactionType,
+                listingType,
                 transactionProcessAlias,
                 unitType,
                 ...pickCustomExtendedDataFields(
                   rest,
                   'public',
-                  transactionType,
+                  listingType,
                   listingExtendedDataConfig,
                   clearUnrelatedCustomFields
                 ),
@@ -270,7 +251,7 @@ const EditListingDetailsPanel = props => {
               privateData: pickCustomExtendedDataFields(
                 rest,
                 'private',
-                transactionType,
+                listingType,
                 listingExtendedDataConfig,
                 clearUnrelatedCustomFields
               ),
@@ -279,10 +260,8 @@ const EditListingDetailsPanel = props => {
 
             onSubmit(updateValues);
           }}
-          selectableTransactionTypes={transactionTypes.map(type =>
-            getTransactionInfo([type], {}, true)
-          )}
-          hasExistingTransactionType={hasExistingTransactionType}
+          selectableListingTypes={listingTypes.map(type => getTransactionInfo([type], {}, true))}
+          hasExistingListingType={hasExistingListingType}
           onProcessChange={onProcessChange}
           listingExtendedDataConfig={listingExtendedDataConfig}
           marketplaceCurrency={config.currency}
@@ -296,8 +275,8 @@ const EditListingDetailsPanel = props => {
       ) : (
         <ErrorMessage
           marketplaceName={config.marketplaceName}
-          noTransactionTypeSet={noTransactionTypesSet}
-          invalidExistingTransactionType={!hasValidExistingTransactionType}
+          noListingTypesSet={noListingTypesSet}
+          invalidExistingListingType={!hasValidExistingListingType}
         />
       )}
     </div>

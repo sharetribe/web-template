@@ -217,10 +217,10 @@ const tabsActive = (isNew, listing, tabs, config) => {
   return tabs.reduce((acc, tab) => {
     const previousTabIndex = tabs.findIndex(t => t === tab) - 1;
     const validTab = previousTabIndex >= 0;
-    const hasTransactionType = !!listing?.attributes?.publicData?.listingType;
+    const hasListingType = !!listing?.attributes?.publicData?.listingType;
     const prevTabComletedInNewFlow = tabCompleted(tabs[previousTabIndex], listing, config);
     const isActive =
-      validTab && !isNew ? hasTransactionType : validTab && isNew ? prevTabComletedInNewFlow : true;
+      validTab && !isNew ? hasListingType : validTab && isNew ? prevTabComletedInNewFlow : true;
     return { ...acc, [tab]: isActive };
   }, {});
 };
@@ -377,15 +377,15 @@ class EditListingWizard extends Component {
       ? transactionProcessAlias.split('/')[0]
       : BOOKING_PROCESS_NAME;
 
-    const invalidExistingTransactionType =
-      existingtransactionType &&
-      !config.transaction.transactionTypes.find(config => config.type === existingtransactionType);
     // NOTE: If the listing has invalid configuration in place,
     // the listing is considered deprecated and we don't allow user to modify the listing anymore.
     // Instead, operator should do that through Console or Integration API.
     const existingListingType = currentListing.attributes?.publicData?.listingType;
+    const invalidExistingListingType =
+      existingListingType &&
+      !config.listing.listingTypes.find(config => config.type === existingListingType);
 
-    const tabs = invalidExistingTransactionType
+    const tabs = invalidExistingListingType
       ? TABS_DETAILS_ONLY
       : isBookingProcess(processName)
       ? TABS_BOOKING

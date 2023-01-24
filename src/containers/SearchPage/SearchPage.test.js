@@ -5,30 +5,38 @@ import { SearchPageComponent } from './SearchPageWithList';
 
 const noop = () => null;
 
-const transactionTypes = [
+const listingTypes = [
   {
     type: 'rent-bicycles-daily',
-    process: 'default-booking',
-    alias: 'release-1',
-    unitType: 'day',
+    transactionType: {
+      process: 'default-booking',
+      alias: 'release-1',
+      unitType: 'day',
+    },
   },
   {
     type: 'rent-bicycles-nightly',
-    process: 'default-booking',
-    alias: 'release-1',
-    unitType: 'night',
+    transactionType: {
+      process: 'default-booking',
+      alias: 'release-1',
+      unitType: 'night',
+    },
   },
   {
     type: 'rent-bicycles-hourly',
-    process: 'default-booking',
-    alias: 'release-1',
-    unitType: 'hour',
+    transactionType: {
+      process: 'default-booking',
+      alias: 'release-1',
+      unitType: 'hour',
+    },
   },
   {
     type: 'sell-bicycles',
-    process: 'default-buying-products',
-    alias: 'release-1',
-    unitType: 'item',
+    transactionType: {
+      process: 'default-buying-products',
+      alias: 'release-1',
+      unitType: 'item',
+    },
   },
 ];
 
@@ -142,8 +150,8 @@ describe('SearchPageWithList', () => {
           defaultFilters: defaultFiltersConfig,
           sortConfig: sortConfig,
         },
-        transaction: {
-          transactionTypes,
+        listing: {
+          listingTypes,
         },
         maps: {
           search: {

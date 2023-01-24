@@ -332,22 +332,22 @@ export const searchParamsPicker = (
 /**
  * Returns listing extended data configs grouped into arrays. [primaryConfigArray, secondaryConfigArray]
  * @param {*} configs listing extended data config
- * @param {*} activeProcesses select configs that are marked only for these active processes
+ * @param {*} activeListingTypes select configs that are marked only for these active listing types
  * @returns Array of grouped arrays. First subarray contains primary configs and the second contains secondary configs.
  */
-export const groupExtendedDataConfigs = (configs, activeTransactionTypes) =>
+export const groupExtendedDataConfigs = (configs, activeListingTypes) =>
   configs.reduce(
     (grouped, config) => {
       const [primary, secondary] = grouped;
       const { includeForListingTypes, indexForSearch, searchPageConfig } = config;
       const isIndexed = indexForSearch === true;
-      const isActiveTransactionTypes =
+      const isActiveListingTypes =
         includeForListingTypes == null ||
-        includeForListingTypes.every(tt => activeTransactionTypes.includes(tt));
+        includeForListingTypes.every(lt => activeListingTypes.includes(lt));
       const isPrimary = searchPageConfig?.group === 'primary';
-      return isActiveTransactionTypes && isIndexed && isPrimary
+      return isActiveListingTypes && isIndexed && isPrimary
         ? [[...primary, config], secondary]
-        : isActiveTransactionTypes && isIndexed
+        : isActiveListingTypes && isIndexed
         ? [primary, [...secondary, config]]
         : grouped;
     },

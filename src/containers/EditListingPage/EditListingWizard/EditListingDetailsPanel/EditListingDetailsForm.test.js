@@ -4,9 +4,9 @@ import { fakeIntl } from '../../../../util/test-data';
 import EditListingDetailsForm from './EditListingDetailsForm';
 
 const noop = () => null;
-const selectableTransactionTypes = [
+const selectableListingTypes = [
   {
-    transactionType: 'sell-bicycles',
+    listingType: 'sell-bicycles',
     transactionProcessAlias: 'default-buying-products/release-1',
     unitType: 'item',
   },
@@ -76,8 +76,8 @@ describe('EditListingDetailsForm', () => {
         disabled={false}
         ready={false}
         listingExtendedDataConfig={listingExtendedDataConfig}
-        selectableTransactionTypes={selectableTransactionTypes}
-        hasExistingTransactionType={true}
+        selectableListingTypes={selectableListingTypes}
+        hasExistingListingType={true}
       />
     );
     expect(tree).toMatchSnapshot();

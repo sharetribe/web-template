@@ -143,19 +143,19 @@ const validKey = (key, allKeys) => {
   return [isUniqueKey, { key }];
 };
 
-const validTransactionTypesForListingConfig = (includeForListingTypes, transactionTypesInUse) => {
+const validListingTypesForListingConfig = (includeForListingTypes, listingTypesInUse) => {
   const isUndefinedOrNull = includeForListingTypes == null;
   const isArray = Array.isArray(includeForListingTypes);
-  const validatedTransactionTypes = isArray
-    ? includeForListingTypes.filter(pa => transactionTypesInUse.includes(pa))
+  const validatedListingTypes = isArray
+    ? includeForListingTypes.filter(pa => listingTypesInUse.includes(pa))
     : [];
 
-  const hasValidTransactionTypes = validatedTransactionTypes.length > 0;
-  const isValid = hasValidTransactionTypes || isUndefinedOrNull;
-  const validValue = hasValidTransactionTypes
-    ? { includeForListingTypes: validatedTransactionTypes }
+  const hasValidListingTypes = validatedListingTypes.length > 0;
+  const isValid = hasValidListingTypes || isUndefinedOrNull;
+  const validValue = hasValidListingTypes
+    ? { includeForListingTypes: validatedListingTypes }
     : isUndefinedOrNull
-    ? { includeForListingTypes: transactionTypesInUse }
+    ? { includeForListingTypes: listingTypesInUse }
     : {};
   return [isValid, validValue];
 };
@@ -282,7 +282,7 @@ const validEditListingPageConfig = config => {
   return [isValid, validValue];
 };
 
-const validListingExtendedData = (listingExtendedData, transactionTypesInUse) => {
+const validListingExtendedData = (listingExtendedData, listingTypesInUse) => {
   const keys = listingExtendedData.map(d => d.key);
   const scopeOptions = ['public', 'private'];
   const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean'];
@@ -301,7 +301,7 @@ const validListingExtendedData = (listingExtendedData, transactionTypesInUse) =>
             : name === 'scope'
             ? validEnumString('scope', value, scopeOptions, 'public')
             : name === 'includeForListingTypes'
-            ? validTransactionTypesForListingConfig(value, transactionTypesInUse)
+            ? validListingTypesForListingConfig(value, listingTypesInUse)
             : name === 'schemaType'
             ? validEnumString('schemaType', value, validSchemaTypes)
             : name === 'schemaOptions'
@@ -333,7 +333,7 @@ const validListingExtendedData = (listingExtendedData, transactionTypesInUse) =>
     if (validationData.isValid) {
       const hasIncludeForListingTypes = validationData.config?.includeForListingTypes;
       const includeForListingTypesMaybe = !hasIncludeForListingTypes
-        ? { includeForListingTypes: transactionTypesInUse }
+        ? { includeForListingTypes: listingTypesInUse }
         : {};
 
       return [...acc, { ...validationData.config, ...includeForListingTypesMaybe }];
@@ -343,14 +343,55 @@ const validListingExtendedData = (listingExtendedData, transactionTypesInUse) =>
   }, []);
 };
 
-const getTransactionTypeStringsInUse = transactionTypes => {
-  return transactionTypes.map(tt => `${tt.type}`);
+const getListingTypeStringsInUse = listingTypes => {
+  return listingTypes.map(lt => `${lt.type}`);
 };
-const validListingConfig = (config, transactionTypes) => {
-  const listingExtendedData = config?.listingExtendedData || [];
-  const transactionTypesInUse = getTransactionTypeStringsInUse(transactionTypes);
+
+const validListingTypes = listingTypes => {
+  // Check what transaction processes this client app supports
+  const supportedProcessesInfo = getSupportedProcessesInfo();
+
+  const validTypes = listingTypes.reduce((validConfigs, listingType) => {
+    const { type, label, transactionType, ...restOfListingType } = listingType;
+    const { process: processName, alias, unitType, ...restOfTransactionType } = transactionType;
+
+    const isSupportedProcessName = supportedProcessesInfo.find(p => p.name === processName);
+    const isSupportedProcessAlias = supportedProcessesInfo.find(p => p.alias === alias);
+    const isSupportedUnitType = supportedProcessesInfo.find(p => p.unitTypes.includes(unitType));
+
+    if (isSupportedProcessName && isSupportedProcessAlias && isSupportedUnitType) {
+      return [
+        ...validConfigs,
+        {
+          type,
+          label,
+          transactionType: {
+            process: processName,
+            alias,
+            unitType,
+            ...restOfTransactionType,
+          },
+          // e.g. showStock
+          ...restOfListingType,
+        },
+      ];
+    }
+    console.warn('Unsupported listing type configurations detected', listingType);
+    return validConfigs;
+  }, []);
+
+  return validTypes;
+};
+
+const validListingConfig = config => {
+  const { enforceValidListingType, listingTypes = [], listingExtendedData = [], ...rest } = config;
+  const listingTypesInUse = getListingTypeStringsInUse(listingTypes);
+
   return {
-    listingExtendedData: validListingExtendedData(listingExtendedData, transactionTypesInUse),
+    listingExtendedData: validListingExtendedData(listingExtendedData, listingTypesInUse),
+    listingTypes: validListingTypes(listingTypes),
+    enforceValidListingType,
+    rest,
   };
 };
 
@@ -414,59 +455,19 @@ const validSearchConfig = config => {
   };
 };
 
-const validTransactionConfig = config => {
-  const { transactionTypes, enforceValidListingType, ...rest } = config || {};
-  // Check what transaction processes this client app supports
-  const supportedProcessesInfo = getSupportedProcessesInfo();
-
-  const validTransactionTypes = transactionTypes.reduce((validConfigs, transactionType) => {
-    const { type, process: processName, alias, unitType, label, ...rest } = transactionType;
-    const isSupportedProcessName = supportedProcessesInfo.find(p => p.name === processName);
-    const isSupportedProcessAlias = supportedProcessesInfo.find(p => p.alias === alias);
-    const isSupportedUnitType = supportedProcessesInfo.find(p => p.unitTypes.includes(unitType));
-
-    if (isSupportedProcessName && isSupportedProcessAlias && isSupportedUnitType) {
-      return [
-        ...validConfigs,
-        {
-          type,
-          label,
-          process: processName,
-          alias,
-          unitType,
-          // e.g. showStock
-          ...rest,
-        },
-      ];
-    }
-    console.warn('Unsupported transaction configurations detected', transactionType);
-    return validConfigs;
-  }, []);
-  return { transactionTypes: validTransactionTypes, enforceValidListingType, ...rest };
-};
-
 ////////////////////////////////////
 // Validate and merge all configs //
 ////////////////////////////////////
 
 export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
-  // TODO: defaultConfigs.transaction probably needs to be removed, when config is fetched from assets.
-  const validTransactionConfiguration = validTransactionConfig(
-    configAsset.transaction || defaultConfigs.transaction
-  );
-
   return {
     ...defaultConfigs,
     branding: mergeBranding(configAsset.branding, defaultConfigs.branding),
     layout: mergeLayouts(configAsset.layout, defaultConfigs.layout),
 
     // TODO: defaultConfigs.listing probably needs to be removed, when config is fetched from assets.
-    listing: validListingConfig(
-      configAsset.listing || defaultConfigs.listing,
-      validTransactionConfiguration.transactionTypes
-    ),
+    listing: validListingConfig(configAsset.listing || defaultConfigs.listing),
     // TODO: defaultConfigs.search probably needs to be removed, when config is fetched from assets.
     search: validSearchConfig(configAsset.search || defaultConfigs.search),
-    transaction: validTransactionConfiguration,
   };
 };
