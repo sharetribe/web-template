@@ -234,17 +234,9 @@ const ShowOutOfStockOverlayMaybe = props => {
 };
 
 const LinkToStockOrAvailabilityTab = props => {
-  const {
-    id,
-    slug,
-    editListingLinkType,
-    isBookable,
-    hasTransactionType,
-    currentStock,
-    intl,
-  } = props;
+  const { id, slug, editListingLinkType, isBookable, hasListingType, currentStock, intl } = props;
 
-  if (!hasTransactionType) {
+  if (!hasListingType) {
     return null;
   }
 
@@ -520,7 +512,7 @@ export const ManageListingCardComponent = props => {
             editListingLinkType={editListingLinkType}
             isBookable={isBookable}
             currentStock={currentStock}
-            hasTransactionType={!!listing?.attributes?.publicData?.transactionType}
+            hasListingType={!!listing?.attributes?.publicData?.listingType}
             intl={intl}
           />
         </div>
