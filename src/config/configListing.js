@@ -185,3 +185,15 @@ export const listingExtendedData = [
   //   },
   // },
 ];
+
+// SearchPage can enforce listing query to only those listings with valid listingType
+// However, it only works if you have set 'enum' type search schema for the public data fields
+//   - listingType
+//
+//  Similar setup could be expanded to 2 other extended data fields:
+//   - transactionProcessAlias
+//   - unitType
+//
+// Read More:
+// https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
+export const enforceValidListingType = false;

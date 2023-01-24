@@ -73,13 +73,13 @@ assets and defaultConfigs.js
 These contain variables that are baked into the app on build time. This one imports currencySettings
 too.
 
-## Search only listings that are supported by transaction type
+## Search only listings that are supported by listing type
 
-SearchPage can restrict search results to listings with valid transactionType. Validity is defined
-by transactionTypes array in _configTransaction.js_.
+SearchPage can restrict search results to listings with valid listingType. Validity is defined
+by listingTypes array in _configListing.js_.
 
 However, it only works if you have set 'enum' type search schema for the following public data
-field: **_transactionType_**.
+field: **_listingType_**.
 
 You could even extend that validation to
 
@@ -87,7 +87,7 @@ You could even extend that validation to
 - unitType
 
 If you have set the search schema for those public data fields, you can turn
-`enforceValidTransactionType` config to true in [configTransaction.js](./configTransaction.js) file.
+`enforceValidListingType` config to true in [configListing.js](./configListing.js) file.
 
 Read More:
 
