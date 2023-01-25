@@ -121,6 +121,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
           onSubmit={[Function]}
           paymentIntent={null}
           showInitialMessageInput={true}
+          showPickUplocation={false}
           stripePublishableKey="pk_test_"
           totalPrice={null}
         />

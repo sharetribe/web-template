@@ -19,7 +19,7 @@ const listingExtendedDataConfig = [
   {
     key: 'category',
     scope: 'public',
-    includeForTransactionTypes: ['sell-bicycles'],
+    includeForListingTypes: ['sell-bicycles'],
     schemaType: 'enum',
     schemaOptions: [
       { option: 'men', label: 'Men' },
@@ -35,7 +35,7 @@ const listingExtendedDataConfig = [
   {
     key: 'param1',
     scope: 'public',
-    includeForTransactionTypes: ['sell-bicycles'],
+    includeForListingTypes: ['sell-bicycles'],
     schemaType: 'enum',
     schemaOptions: [{ option: 'smoke', label: 'Smoke' }, { option: 'wood', label: 'Wood' }],
     indexForSearch: true,
@@ -47,7 +47,7 @@ const listingExtendedDataConfig = [
   {
     key: 'amenities',
     scope: 'public',
-    includeForTransactionTypes: [
+    includeForListingTypes: [
       'rent-bicycles-daily',
       'rent-bicycles-nightly',
       'rent-bicycles-hourly',
@@ -530,7 +530,7 @@ describe('SearchPage.helpers', () => {
 
   describe('groupExtendedDataConfigs', () => {
     it('returns grouped configs for the extended data of the listinga', () => {
-      const activeTransactionTypes = [
+      const activeListingTypes = [
         'sell-bicycles',
         'rent-bicycles-daily',
         'rent-bicycles-nightly',
@@ -538,7 +538,7 @@ describe('SearchPage.helpers', () => {
       ];
       const [primary, secondary] = groupExtendedDataConfigs(
         listingExtendedDataConfig,
-        activeTransactionTypes
+        activeListingTypes
       );
       expect(primary).toEqual([listingExtendedDataConfig[0]]);
       expect(secondary).toEqual([listingExtendedDataConfig[1], listingExtendedDataConfig[2]]);

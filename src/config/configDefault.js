@@ -2,7 +2,6 @@ import * as stripe from './configStripe';
 import * as listing from './configListing';
 import * as search from './configSearch';
 import * as maps from './configMaps';
-import * as transaction from './configTransaction';
 import * as branding from './configBranding';
 import * as layout from './configLayout';
 
@@ -35,15 +34,13 @@ const defaultConfig = {
   // - supportedCountries
   stripe,
 
-  // Modify listing extended data in listingConfig.js
+  // Modify listing extended data and listing type in listingConfig.js
   listing,
   // Modify search settings data in searchConfig.js
   search,
   // Modify settings for map providers in mapsConfig.js
   // This includes also default locations for location search
   maps,
-  // Modify order types in transactionConfig.js
-  transaction,
   // Modify branding configs in brandingConfig.js
   branding,
   // Modify layout configs in layoutConfig.js

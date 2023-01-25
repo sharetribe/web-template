@@ -346,8 +346,8 @@ exports[`InboxPage InboxPageComponent matches snapshot of order 1`] = `
                       "currency": "USD",
                     },
                     "publicData": Object {
+                      "listingType": "sell-bikes",
                       "transactionProcessAlias": "default-buying-products",
-                      "transactionType": "sell-bikes",
                       "unitType": "item",
                     },
                     "state": "published",
@@ -509,8 +509,8 @@ exports[`InboxPage InboxPageComponent matches snapshot of order 1`] = `
                       "currency": "USD",
                     },
                     "publicData": Object {
+                      "listingType": "sell-bikes",
                       "transactionProcessAlias": "default-buying-products",
-                      "transactionType": "sell-bikes",
                       "unitType": "item",
                     },
                     "state": "published",
@@ -765,8 +765,8 @@ exports[`InboxPage InboxPageComponent matches snapshot of sales 1`] = `
                       "currency": "USD",
                     },
                     "publicData": Object {
+                      "listingType": "sell-bikes",
                       "transactionProcessAlias": "default-buying-products",
-                      "transactionType": "sell-bikes",
                       "unitType": "item",
                     },
                     "state": "published",
@@ -930,8 +930,8 @@ exports[`InboxPage InboxPageComponent matches snapshot of sales 1`] = `
                       "currency": "USD",
                     },
                     "publicData": Object {
+                      "listingType": "sell-bikes",
                       "transactionProcessAlias": "default-buying-products",
-                      "transactionType": "sell-bikes",
                       "unitType": "item",
                     },
                     "state": "published",

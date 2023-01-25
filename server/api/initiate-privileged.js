@@ -4,13 +4,11 @@ const { getSdk, getTrustedSdk, handleError, serialize } = require('../api-util/s
 module.exports = (req, res) => {
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
 
-  const listingId = bodyParams && bodyParams.params ? bodyParams.params.listingId : null;
-
   const sdk = getSdk(req, res);
   let lineItems = null;
 
   sdk.listings
-    .show({ id: listingId })
+    .show({ id: bodyParams?.params?.listingId })
     .then(listingResponse => {
       const listing = listingResponse.data.data;
       lineItems = transactionLineItems(listing, { ...orderData, ...bodyParams.params });

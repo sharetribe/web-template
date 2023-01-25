@@ -5,30 +5,38 @@ import { SearchPageComponent } from './SearchPageWithList';
 
 const noop = () => null;
 
-const transactionTypes = [
+const listingTypes = [
   {
     type: 'rent-bicycles-daily',
-    process: 'default-booking',
-    alias: 'release-1',
-    unitType: 'day',
+    transactionType: {
+      process: 'default-booking',
+      alias: 'release-1',
+      unitType: 'day',
+    },
   },
   {
     type: 'rent-bicycles-nightly',
-    process: 'default-booking',
-    alias: 'release-1',
-    unitType: 'night',
+    transactionType: {
+      process: 'default-booking',
+      alias: 'release-1',
+      unitType: 'night',
+    },
   },
   {
     type: 'rent-bicycles-hourly',
-    process: 'default-booking',
-    alias: 'release-1',
-    unitType: 'hour',
+    transactionType: {
+      process: 'default-booking',
+      alias: 'release-1',
+      unitType: 'hour',
+    },
   },
   {
     type: 'sell-bicycles',
-    process: 'default-buying-products',
-    alias: 'release-1',
-    unitType: 'item',
+    transactionType: {
+      process: 'default-buying-products',
+      alias: 'release-1',
+      unitType: 'item',
+    },
   },
 ];
 
@@ -36,7 +44,7 @@ const listingExtendedDataConfig = [
   {
     key: 'category',
     scope: 'public',
-    includeForTransactionTypes: ['sell-bicycles'],
+    includeForListingTypes: ['sell-bicycles'],
     schemaType: 'enum',
     schemaOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     indexForSearch: true,
@@ -54,7 +62,7 @@ const listingExtendedDataConfig = [
   {
     key: 'amenities',
     scope: 'public',
-    includeForTransactionTypes: [
+    includeForListingTypes: [
       'rent-bicycles-daily',
       'rent-bicycles-nightly',
       'rent-bicycles-hourly',
@@ -136,14 +144,12 @@ describe('SearchPageWithList', () => {
       config: {
         listing: {
           listingExtendedData: listingExtendedDataConfig,
+          listingTypes,
         },
         search: {
           mainSearchType: 'location',
           defaultFilters: defaultFiltersConfig,
           sortConfig: sortConfig,
-        },
-        transaction: {
-          transactionTypes,
         },
         maps: {
           search: {

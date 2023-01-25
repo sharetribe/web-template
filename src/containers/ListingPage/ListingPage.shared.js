@@ -154,6 +154,8 @@ export const handleSubmit = parameters => values => {
     bookingDates,
     bookingStartTime,
     bookingEndTime,
+    bookingStartDate, // not relevant (omit)
+    bookingEndDate, // not relevant (omit)
     quantity: quantityRaw,
     deliveryMethod,
     ...otherOrderData

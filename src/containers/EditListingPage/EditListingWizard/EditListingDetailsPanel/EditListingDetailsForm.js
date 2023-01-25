@@ -46,51 +46,45 @@ const FieldHidden = props => {
   );
 };
 
-// Field component that either allows selecting transaction type (if multiple types are available)
+// Field component that either allows selecting listing type (if multiple types are available)
 // or just renders hidden fields:
-// - transactionType          Set of predefined configurations for each transaction type
+// - listingType              Set of predefined configurations for each listing type
 // - transactionProcessAlias  Initiate correct transaction against Marketplace API
 // - unitType                 Main use case: pricing unit
-const FieldSelectTransactionType = props => {
-  const {
-    name,
-    transactionTypes,
-    hasExistingTransactionType,
-    onProcessChange,
-    formApi,
-    intl,
-  } = props;
-  const hasMultipleTransactionTypes = transactionTypes?.length > 1;
+const FieldSelectListingType = props => {
+  const { name, listingTypes, hasExistingListingType, onProcessChange, formApi, intl } = props;
+  const hasMultipleListingTypes = listingTypes?.length > 1;
 
   const handleOnChange = value => {
     const transactionProcessAlias = formApi.getFieldState('transactionProcessAlias')?.value;
-    const selectedProcess = transactionTypes.find(config => config.transactionType === value);
-    formApi.change('transactionProcessAlias', selectedProcess.transactionProcessAlias);
-    formApi.change('unitType', selectedProcess.unitType);
+    const selectedListingType = listingTypes.find(config => config.listingType === value);
+    formApi.change('transactionProcessAlias', selectedListingType.transactionProcessAlias);
+    formApi.change('unitType', selectedListingType.unitType);
 
-    const hasProcessChanged = transactionProcessAlias === selectedProcess.transactionProcessAlias;
+    const hasProcessChanged =
+      transactionProcessAlias === selectedListingType.transactionProcessAlias;
     if (onProcessChange && hasProcessChanged) {
-      onProcessChange(selectedProcess.transactionProcessAlias);
+      onProcessChange(selectedListingType.transactionProcessAlias);
     }
   };
 
-  return hasMultipleTransactionTypes && !hasExistingTransactionType ? (
+  return hasMultipleListingTypes && !hasExistingListingType ? (
     <>
       <FieldSelect
         id={name}
         name={name}
-        className={css.transactionTypeSelect}
-        label={intl.formatMessage({ id: 'EditListingDetailsForm.transactionTypeLabel' })}
+        className={css.listingTypeSelect}
+        label={intl.formatMessage({ id: 'EditListingDetailsForm.listingTypeLabel' })}
         validate={required(
-          intl.formatMessage({ id: 'EditListingDetailsForm.transactionTypeRequired' })
+          intl.formatMessage({ id: 'EditListingDetailsForm.listingTypeRequired' })
         )}
         onChange={handleOnChange}
       >
         <option disabled value="">
-          {intl.formatMessage({ id: 'EditListingDetailsForm.transactionTypePlaceholder' })}
+          {intl.formatMessage({ id: 'EditListingDetailsForm.listingTypePlaceholder' })}
         </option>
-        {transactionTypes.map(config => {
-          const type = config.transactionType;
+        {listingTypes.map(config => {
+          const type = config.listingType;
           return (
             <option key={type} value={type}>
               {config.label}
@@ -101,10 +95,10 @@ const FieldSelectTransactionType = props => {
       <FieldHidden name="transactionProcessAlias" />
       <FieldHidden name="unitType" />
     </>
-  ) : hasMultipleTransactionTypes && hasExistingTransactionType ? (
-    <div className={css.transactionTypeSelect}>
+  ) : hasMultipleListingTypes && hasExistingListingType ? (
+    <div className={css.listingTypeSelect}>
       <h5 className={css.selectedLabel}>
-        {intl.formatMessage({ id: 'EditListingDetailsForm.transactionTypeLabel' })}
+        {intl.formatMessage({ id: 'EditListingDetailsForm.listingTypeLabel' })}
       </h5>
       <p className={css.selectedValue}>{formApi.getFieldState(name)?.value}</p>
       <FieldHidden name={name} />
@@ -122,14 +116,14 @@ const FieldSelectTransactionType = props => {
 
 // Add collect data for extended data fields (both publicData and privateData) based on configuration
 const AddCustomExtendedDataFields = props => {
-  const { transactionType, listingExtendedDataConfig, intl } = props;
+  const { listingType, listingExtendedDataConfig, intl } = props;
   const extendedDataConfigs = listingExtendedDataConfig || [];
   const fields = extendedDataConfigs.reduce((pickedFields, extendedDataConfig) => {
-    const { key, includeForTransactionTypes, schemaType, scope } = extendedDataConfig || {};
+    const { key, includeForListingTypes, schemaType, scope } = extendedDataConfig || {};
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetProcessAlias =
-      includeForTransactionTypes == null || includeForTransactionTypes.includes(transactionType);
+      includeForListingTypes == null || includeForListingTypes.includes(listingType);
     const isProviderScope = ['public', 'private'].includes(scope);
 
     return isKnownSchemaType && isTargetProcessAlias && isProviderScope
@@ -168,8 +162,8 @@ const EditListingDetailsFormComponent = props => (
         intl,
         invalid,
         pristine,
-        selectableTransactionTypes,
-        hasExistingTransactionType,
+        selectableListingTypes,
+        hasExistingListingType,
         saveActionMsg,
         updated,
         updateInProgress,
@@ -178,7 +172,7 @@ const EditListingDetailsFormComponent = props => (
         values,
       } = formRenderProps;
 
-      const { transactionType } = values;
+      const { listingType } = values;
 
       const titleRequiredMessage = intl.formatMessage({
         id: 'EditListingDetailsForm.titleRequired',
@@ -228,17 +222,17 @@ const EditListingDetailsFormComponent = props => (
             )}
           />
 
-          <FieldSelectTransactionType
-            name="transactionType"
-            transactionTypes={selectableTransactionTypes}
-            hasExistingTransactionType={hasExistingTransactionType}
+          <FieldSelectListingType
+            name="listingType"
+            listingTypes={selectableListingTypes}
+            hasExistingListingType={hasExistingListingType}
             onProcessChange={onProcessChange}
             formApi={formApi}
             intl={intl}
           />
 
           <AddCustomExtendedDataFields
-            transactionType={transactionType}
+            listingType={listingType}
             listingExtendedDataConfig={listingExtendedDataConfig}
             intl={intl}
           />
@@ -262,7 +256,7 @@ EditListingDetailsFormComponent.defaultProps = {
   className: null,
   fetchErrors: null,
   onProcessChange: null,
-  hasExistingTransactionType: false,
+  hasExistingListingType: false,
   listingExtendedDataConfig: null,
 };
 
@@ -281,14 +275,14 @@ EditListingDetailsFormComponent.propTypes = {
     showListingsError: propTypes.error,
     updateListingError: propTypes.error,
   }),
-  selectableTransactionTypes: arrayOf(
+  selectableListingTypes: arrayOf(
     shape({
-      transactionType: string.isRequired,
+      listingType: string.isRequired,
       transactionProcessAlias: string.isRequired,
       unitType: string.isRequired,
     })
   ).isRequired,
-  hasExistingTransactionType: bool,
+  hasExistingListingType: bool,
   listingExtendedDataConfig: propTypes.listingExtendedDataConfig,
 };
 

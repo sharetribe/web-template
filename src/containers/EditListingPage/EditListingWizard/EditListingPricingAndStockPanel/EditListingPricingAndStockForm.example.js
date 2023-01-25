@@ -10,7 +10,7 @@ export const Empty = {
     saveActionMsg: 'Save price',
     marketplaceCurrency: 'USD',
     unitType: 'item',
-    transactionType: { type: 'sell-bikes', showStock: true },
+    listingType: { type: 'sell-bikes', showStock: true },
     updated: false,
     updateInProgress: false,
     disabled: false,

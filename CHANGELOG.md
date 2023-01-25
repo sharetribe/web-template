@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [change] Add listingType which contains transactionType. Defined in configListing.js
+  [#84](https://github.com/sharetribe/ftw-x/pull/84)
 - [delete] Remove unnecessary code and translation keys.
   [#83](https://github.com/sharetribe/ftw-x/pull/83)
 - [change] Change of terminology: enquire to inquire and enquiry to inquiry. Process change happens
