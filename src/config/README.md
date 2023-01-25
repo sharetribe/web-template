@@ -30,8 +30,8 @@ Some of the content is splitted to separate files:
 
 ### Default listing field: **_listingType_**
 
-Listing type is a custom set of configurations related to listing. It includes *type*, *label*,
-*showStock*, and *transactionType*. Transaction type is a similar concept. It defines which process,
+Listing type is a custom set of configurations related to listing. It includes _type_, _label_,
+_showStock_, and _transactionType_. Transaction type is a similar concept. It defines which process,
 alias, unit type, etc. are releavant for each transaction entity. The **type** string of listing
 type is saved to the listing's public data together with the **transaction process alias**, and
 **unit type**. In addition, _transactionType_ data is saved to transaction's protected data. In the
