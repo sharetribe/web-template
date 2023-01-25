@@ -115,6 +115,15 @@ const bookingDatesMaybe = bookingDates => {
   return bookingDates ? { bookingDates } : {};
 };
 
+// Extract relevant transaction type data from listing type
+// Note: this is saved to protectedData of the transaction entity
+//       therefore, we don't need the process name (nor alias)
+const transactionTypeDataMaybe = (listingType, config) => {
+  const listingTypeConfig = config.listing.listingTypes.find(lt => lt.type === listingType);
+  const { process, alias, unitType, ...rest } = listingTypeConfig.transactionType;
+  return unitType ? { unitType, ...rest } : {};
+};
+
 // Collect error message checks to a single function.
 const getErrorMessages = (
   listingNotFound,
@@ -340,6 +349,7 @@ export class CheckoutPageComponent extends Component {
       onConfirmPayment,
       onSendMessage,
       onSavePaymentMethod,
+      config,
     } = this.props;
     const {
       pageData,
@@ -373,7 +383,7 @@ export class CheckoutPageComponent extends Component {
 
     // Step 1: initiate order by requesting payment from Marketplace API
     const fnRequestPayment = fnParams => {
-      // fnParams should be { listingId, deliveryMethod, quantity?, bookingDates?, paymentMethod?.setupPaymentMethodForSaving? }
+      // fnParams should be { listingId, deliveryMethod, quantity?, bookingDates?, paymentMethod?.setupPaymentMethodForSaving?, protectedData }
       const hasPaymentIntents = storedTx.attributes.protectedData?.stripePaymentIntents;
 
       const requestTransition =
@@ -494,15 +504,19 @@ export class CheckoutPageComponent extends Component {
       fnSavePaymentMethod
     );
 
-    const deliveryMethod = pageData.orderData?.deliveryMethod;
     const quantity = pageData.orderData?.quantity;
     const quantityMaybe = quantity ? { quantity } : {};
-    const protectedDataMaybe =
-      deliveryMethod && shippingDetails
-        ? { protectedData: { deliveryMethod, shippingDetails } }
-        : deliveryMethod
-        ? { protectedData: { deliveryMethod } }
-        : {};
+    const deliveryMethod = pageData.orderData?.deliveryMethod;
+    const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
+    const shippingDetailsMaybe = shippingDetails ? { shippingDetails } : {};
+    const listingType = pageData?.listing?.attributes?.publicData?.listingType;
+    const protectedDataMaybe = {
+      protectedData: {
+        ...transactionTypeDataMaybe(listingType, config),
+        ...deliveryMethodMaybe,
+        ...shippingDetailsMaybe,
+      },
+    };
     // Note: optionalPaymentParams contains Stripe paymentMethod,
     // but that can also be passed on Step 2
     // stripe.confirmCardPayment(stripe, { payment_method: stripePaymentMethodId })
