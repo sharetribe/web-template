@@ -121,6 +121,36 @@ exports[`TransactionPanel - Order inquired matches snapshot 1`] = `
           }
           locale="en"
         />
+        <BookingLocationMaybe
+          className="deliveryInfoSection"
+          listing={
+            Object {
+              "attributes": Object {
+                "deleted": false,
+                "description": "listing1 description",
+                "geolocation": LatLng {
+                  "_sdkType": "LatLng",
+                  "lat": 40,
+                  "lng": 60,
+                },
+                "price": Money {
+                  "_sdkType": "Money",
+                  "amount": 5500,
+                  "currency": "USD",
+                },
+                "publicData": Object {},
+                "state": "published",
+                "title": "listing1 title",
+              },
+              "id": UUID {
+                "_sdkType": "UUID",
+                "uuid": "listing1",
+              },
+              "type": "listing",
+            }
+          }
+          showBookingLocation={false}
+        />
       </div>
       <FeedSection
         activityFeed={null}
@@ -322,6 +352,36 @@ exports[`TransactionPanel - Sale inquired matches snapshot 1`] = `
             }
           }
           locale="en"
+        />
+        <BookingLocationMaybe
+          className="deliveryInfoSection"
+          listing={
+            Object {
+              "attributes": Object {
+                "deleted": false,
+                "description": "listing1 description",
+                "geolocation": LatLng {
+                  "_sdkType": "LatLng",
+                  "lat": 40,
+                  "lng": 60,
+                },
+                "price": Money {
+                  "_sdkType": "Money",
+                  "amount": 5500,
+                  "currency": "USD",
+                },
+                "publicData": Object {},
+                "state": "published",
+                "title": "listing1 title",
+              },
+              "id": UUID {
+                "_sdkType": "UUID",
+                "uuid": "listing1",
+              },
+              "type": "listing",
+            }
+          }
+          showBookingLocation={false}
         />
       </div>
       <FeedSection
