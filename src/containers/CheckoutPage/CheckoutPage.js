@@ -932,7 +932,7 @@ export class CheckoutPageComponent extends Component {
                   stripePublishableKey={config.stripe.publishableKey}
                   marketplaceName={config.marketplaceName}
                   isBooking={isBookingProcessAlias(transactionProcessAlias)}
-                  isFuzzyLocation={config.maps.enabled}
+                  isFuzzyLocation={config.maps.fuzzy.enabled}
                 />
               ) : null}
               {isPaymentExpired ? (
