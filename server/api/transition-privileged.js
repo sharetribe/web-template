@@ -4,13 +4,11 @@ const { getSdk, getTrustedSdk, handleError, serialize } = require('../api-util/s
 module.exports = (req, res) => {
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
 
-  const { listingId, ...restParams } = bodyParams && bodyParams.params ? bodyParams.params : {};
-
   const sdk = getSdk(req, res);
   let lineItems = null;
 
   sdk.listings
-    .show({ id: listingId })
+    .show({ id: bodyParams?.params?.listingId })
     .then(listingResponse => {
       const listing = listingResponse.data.data;
       lineItems = transactionLineItems(listing, { ...orderData, ...bodyParams.params });
@@ -18,6 +16,9 @@ module.exports = (req, res) => {
       return getTrustedSdk(req);
     })
     .then(trustedSdk => {
+      // Omit listingId from params (transition/request-payment-after-enquiry does not need it)
+      const { listingId, ...restParams } = bodyParams?.params || {};
+
       // Add lineItems to the body params
       const body = {
         ...bodyParams,
