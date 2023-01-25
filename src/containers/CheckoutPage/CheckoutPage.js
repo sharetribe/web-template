@@ -109,16 +109,10 @@ const getFormattedTotalPrice = (transaction, intl) => {
   return formatMoney(intl, totalPrice);
 };
 
-// Convert the picked date to moment that will represent the same time of day in UTC time zone.
+// This just makes it easier to transfrom bookingDates object if needed
+// (or manibulate bookingStart and bookingEnd)
 const bookingDatesMaybe = bookingDates => {
-  return bookingDates
-    ? {
-        bookingDates: {
-          bookingStart: bookingDates.bookingStart,
-          bookingEnd: bookingDates.bookingEnd,
-        },
-      }
-    : {};
+  return bookingDates ? { bookingDates } : {};
 };
 
 // Collect error message checks to a single function.
