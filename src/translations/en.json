@@ -1073,6 +1073,7 @@
   "TransactionPanel.messageLoadingFailed": "Something went wrong when loading messages. Please refresh the page and try again.",
   "TransactionPanel.paymentMethodsPageLink": "payment methods page",
   "TransactionPanel.pickupInfoHeading": "Pickup address",
+  "TransactionPanel.bookingLocationHeading": "Location",
   "TransactionPanel.salePaymentPendingInfo": "{customerName} has 15 minutes to confirm the payment.",
   "TransactionPanel.savePaymentMethodFailed": "Saving default payment method failed. Go to {paymentMethodsPageLink} to try again.",
   "TransactionPanel.sendMessagePlaceholder": "Send a message to {name}…",
