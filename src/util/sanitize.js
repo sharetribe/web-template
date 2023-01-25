@@ -113,7 +113,7 @@ const sanitizeConfiguredPublicData = (publicData, config = {}) => {
   const sanitizedConfiguredPublicData = Object.entries(publicData).reduce((sanitized, entry) => {
     const [key, value] = entry;
     const foundEDConfig = config?.listingExtendedData?.find(d => d.key === key);
-    const sanitizedValue = ['transactionType', 'transactionProcessAlias', 'unitType'].includes(key)
+    const sanitizedValue = ['listingType', 'transactionProcessAlias', 'unitType'].includes(key)
       ? sanitizeText(value)
       : foundEDConfig
       ? sanitizedExtendedData(value, foundEDConfig)

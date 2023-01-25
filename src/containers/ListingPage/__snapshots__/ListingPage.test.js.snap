@@ -148,7 +148,7 @@ exports[`ListingPage matches snapshot 1`] = `
                 Object {
                   "listingExtendedData": Array [
                     Object {
-                      "includeForTransactionTypes": Array [
+                      "includeForListingTypes": Array [
                         "sell-bicycles",
                       ],
                       "indexForSearch": true,
@@ -171,7 +171,7 @@ exports[`ListingPage matches snapshot 1`] = `
                       "scope": "public",
                     },
                     Object {
-                      "includeForTransactionTypes": Array [
+                      "includeForListingTypes": Array [
                         "rent-bicycles-daily",
                         "rent-bicycles-nightly",
                         "rent-bicycles-hourly",

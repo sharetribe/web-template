@@ -13,7 +13,7 @@
  * - scope (optional):              Scope of the extended data can be either 'public' or 'private'.
  *                                  Default value: 'public'.
  *                                  Note: listing doesn't support 'protected' scope atm.
- * - includeForTransactionTypes:    An array of transaction types, for which the extended
+ * - includeForListingTypes:        An array of listing types, for which the extended
  *   (optional)                     data is relevant and should be added.
  * - schemaType (optional):         Schema for this extended data field.
  *                                  This is relevant when rendering components and querying listings.
@@ -164,7 +164,7 @@ export const listingExtendedData = [
   // {
   //   key: 'extra-note',
   //   scope: 'public',
-  //   includeForTransactionTypes: ['product-selling'],
+  //   includeForListingTypes: ['product-selling'],
   //   schemaType: 'text',
   //   listingPageConfig: {
   //     label: 'Extra notes',
@@ -177,7 +177,7 @@ export const listingExtendedData = [
   // {
   //   key: 'private-note',
   //   scope: 'private',
-  //   includeForTransactionTypes: ['daily-booking'],
+  //   includeForListingTypes: ['daily-booking'],
   //   schemaType: 'text',
   //   editListingPageConfig: {
   //     label: 'Private notes',
@@ -185,3 +185,93 @@ export const listingExtendedData = [
   //   },
   // },
 ];
+
+///////////////////////////////////////////////////////////////////////
+// Configurations related to listing types and transaction processes //
+///////////////////////////////////////////////////////////////////////
+
+// A presets of supported listing configurations
+//
+// Note 1: With first iteration of hosted configs, we are unlikely to support
+//         multiple listing types, even though this template has some
+//         rudimentary support for it.
+// Note 2: transaction type is part of listing type. It defines what transaction process and units
+//         are used when transaction is created against a specific listing.
+
+/**
+ * Configuration options for listing experience:
+ * - type:            Unique string. This will be saved to listing's public data on
+ *                    EditListingWizard.
+ * - label            Label for the listing type. Used as microcopy for options to select
+ *                    listing type in EditListingWizard.
+ * - transactionType  Set of configurations how this listing type will behave when transaction is
+ *                    created.
+ *   - process          Transaction process. This will be saved to listing's public data
+ *                      (together with alias) as transctionProcessAlias.
+ *                      The process must match one of the processes that this client app can handle
+ *                      (check src/util/transaction.js) and the process must also exists in correct
+ *                      marketplace environment.
+ *   - alias            Valid alias for the aforementioned process.
+ *   - unitType         Unit type is mainly used as pricing unit. This will be saved to
+ *                      transaction's protected data.
+ *                      Recommendation: don't use same unit types in completely different processes
+ *                      ('item' sold should not be priced the same as 'item' booked).
+ * - showStock        This is relevant only to listings with product-selling listing type.
+ *                    If set to false, stock management is not showed and the listing is
+ *                    considered unique (stock = 1).
+ *                    Default: true.
+ */
+
+export const listingTypes = [
+  {
+    type: 'daily-booking',
+    label: 'Daily booking',
+    transactionType: {
+      process: 'default-booking',
+      alias: 'release-1',
+      unitType: 'day',
+    },
+  },
+  // Here are some examples for other listingTypes
+  // TODO: SearchPage does not work well if both booking and product selling are used at the same time
+  {
+    type: 'nightly-booking',
+    label: 'Nightly booking',
+    transactionType: {
+      process: 'default-booking',
+      alias: 'release-1',
+      unitType: 'night',
+    },
+  },
+  {
+    type: 'hourly-booking',
+    label: 'Hourly booking',
+    transactionType: {
+      process: 'default-booking',
+      alias: 'release-1',
+      unitType: 'hour',
+    },
+  },
+  {
+    type: 'product-selling',
+    label: 'Sell bicycles',
+    transactionType: {
+      process: 'default-buying-products',
+      alias: 'release-1',
+      unitType: 'item',
+    },
+    showStock: true,
+  },
+];
+
+// SearchPage can enforce listing query to only those listings with valid listingType
+// However, it only works if you have set 'enum' type search schema for the public data fields
+//   - listingType
+//
+//  Similar setup could be expanded to 2 other extended data fields:
+//   - transactionProcessAlias
+//   - unitType
+//
+// Read More:
+// https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
+export const enforceValidListingType = false;

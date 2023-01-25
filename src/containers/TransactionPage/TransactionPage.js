@@ -14,9 +14,10 @@ import {
   DATE_TYPE_DATETIME,
   LISTING_UNIT_TYPES,
   LINE_ITEM_HOUR,
+  LINE_ITEM_ITEM,
   propTypes,
 } from '../../util/types';
-import { timestampToDate, timeOfDayFromTimeZoneToLocal } from '../../util/dates';
+import { timestampToDate } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 import {
   TX_TRANSITION_ACTOR_CUSTOMER as CUSTOMER,
@@ -134,7 +135,7 @@ export const TransactionPageComponent = props => {
   const process = processName ? getProcess(processName) : null;
 
   const isTxOnPaymentPending = tx => {
-    return process ? process.getState(tx) === process.states.PAYMENT_PENDING : null;
+    return process ? process.getState(tx) === process.states.PENDING_PAYMENT : null;
   };
 
   const redirectToCheckoutPageWithInitialValues = (initialValues, currentListing) => {
@@ -163,27 +164,21 @@ export const TransactionPageComponent = props => {
     isCustomerRole &&
     transaction.attributes.lineItems
   ) {
-    const bookingDatesMaybe = booking.id
-      ? {
-          bookingDates: {
-            // In day-based booking process, booking start and end come in server's time zone.
-            bookingStart: timeOfDayFromTimeZoneToLocal(booking?.attributes?.start, apiTimeZone),
-            bookingEnd: timeOfDayFromTimeZoneToLocal(booking?.attributes?.end, apiTimeZone),
-          },
-        }
-      : {};
+    // Note: we don't need to pass orderData since those are already saved to transaction.
+    //       However, we could do that by extracting the values from transaction entity.
+    //
+    // const bookingMaybe = booking?.id ? { bookingDates: { bookingStart: booking?.attributes?.start, bookingEnd: booking?.attributes?.end } } : {};
+    // const purchaseLineItem = transaction.attributes.lineItems.find(item => item.code === LINE_ITEM_ITEM);
+    // const quantity = purchaseLineItem?.quantity?.toNumber();
+    // const quantityMaybe = quantity ? { quantity } : {};
 
-    const apiTimeZone = 'Etc/UTC';
     const initialValues = {
       listing,
       // Transaction with payment pending should be passed to CheckoutPage
       transaction,
       // Original orderData content is not available,
-      // but it is already used since booking is created.
-      // (E.g. quantity is used when booking is created.)
-      orderData: {
-        ...bookingDatesMaybe,
-      },
+      // but it is already saved since tx is in state: payment-pending.
+      orderData: {},
     };
 
     redirectToCheckoutPageWithInitialValues(initialValues, listing);
@@ -365,10 +360,19 @@ export const TransactionPageComponent = props => {
       )
     : null;
 
+  const formatLineItemUnitType = (transaction, listing) => {
+    // unitType should always be saved to transaction's protected data
+    const unitTypeInProtectedData = transaction?.attributes?.protectedData?.unitType;
+    // If unitType is not found (old or mutated data), we check listing's publicData
+    // Note: this might have changed over time
+    const unitTypeInListingPublicData = listing?.attributes?.publicData?.unitType;
+    return `line-item/${unitTypeInProtectedData || unitTypeInListingPublicData}`;
+  };
+
   const lineItemUnitType = unitLineItem
     ? unitLineItem.code
     : isDataAvailable
-    ? `line-item/${listing?.attributes?.publicData?.unitType}`
+    ? formatLineItemUnitType(transaction, listing)
     : null;
 
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;

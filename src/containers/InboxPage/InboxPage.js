@@ -207,19 +207,23 @@ export const InboxPageComponent = props => {
   const salesTitle = intl.formatMessage({ id: 'InboxPage.salesTitle' });
   const title = isOrders ? ordersTitle : salesTitle;
 
-  const pickType = tt => conf => `${conf.process}/${conf.alias}` === tt;
-  const findTransactionTypeConfig = processAlias => {
-    const transactionTypeConfigs = config.transaction?.transactionTypes;
-    return transactionTypeConfigs?.find(pickType(processAlias));
+  const pickType = lt => conf => conf.type === lt;
+  const findListingTypeConfig = publicData => {
+    const listingTypeConfigs = config.listing?.listingTypes;
+    const { listingType } = publicData || {};
+    const foundConfig = listingTypeConfigs?.find(pickType(listingType));
+    return foundConfig;
   };
   const toTxItem = tx => {
     const transactionRole = isOrders ? TX_TRANSITION_ACTOR_CUSTOMER : TX_TRANSITION_ACTOR_PROVIDER;
     const stateData = getStateData({ transaction: tx, transactionRole, intl });
 
-    const transactionProcessAlias = tx?.listing?.attributes?.publicData?.transactionProcessAlias;
-    const foundTransactionTypeConfig = findTransactionTypeConfig(transactionProcessAlias);
-    const { process, showStock } = foundTransactionTypeConfig || {};
-    const isBooking = isBookingProcess(process);
+    const publicData = tx?.listing?.attributes?.publicData || {};
+    const foundListingTypeConfig = findListingTypeConfig(publicData);
+    const { transactionType, showStock } = foundListingTypeConfig || {};
+    const process = tx?.attributes?.processName || transactionType?.transactionType;
+    const transactionProcess = resolveLatestProcessName(process);
+    const isBooking = isBookingProcess(transactionProcess);
 
     // Render InboxItem only if the latest transition of the transaction is handled in the `txState` function.
     return stateData ? (

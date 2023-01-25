@@ -15,9 +15,10 @@ Some of the content is splitted to separate files:
   - layout for search and listing page
 - **[configListing.js](./configListing.js)**
   - Extended data config (also used for enabling search filters)
+  - Listing type (listingType) config
   - Besides custom extended data fields, listing's extended data can also contain other extra data.
   - Most notable ones are:
-    - transactionType
+    - listingType
     - transactionProcessAlias
     - unitType
 - **[configSearch.js](./configSearch.js)**
@@ -26,14 +27,15 @@ Some of the content is splitted to separate files:
   - mapProvider config, location search config (also in defaultLocationSearchesConfig.js)
 - **[configStripe.js](./configStripe.js)**
   - Stripe publishable key, day count available for booking, default merchant categry code
-- **[configTransaction.js](./configTransaction.js)**
-  - transactionType (preset for supported transaction config combinations)
 
-### Default listing field: **_transactionType_**
+### Default listing field: **_listingType_**
 
-Transaction type is a custom set of configurations related to transactions. Transaction type defines
-which process, alias, unit type, showStock, etc. It is saved to the listing's public data. In the
-future, we are going to allow marketplace operators to define these presets through Console.
+Listing type is a custom set of configurations related to listing. It includes _type_, _label_,
+_showStock_, and _transactionType_. Transaction type is a similar concept. It defines which process,
+alias, unit type, etc. are releavant for each transaction entity. The **type** string of listing
+type is saved to the listing's public data together with the **transaction process alias**, and
+**unit type**. In addition, _transactionType_ data is saved to transaction's protected data. In the
+future, we are going to allow marketplace operators to define listing type presets through Console.
 
 ### Default listing field: **_transactionProcessAlias_**
 
@@ -73,13 +75,13 @@ assets and defaultConfigs.js
 These contain variables that are baked into the app on build time. This one imports currencySettings
 too.
 
-## Search only listings that are supported by transaction type
+## Search only listings that are supported by listing type
 
-SearchPage can restrict search results to listings with valid transactionType. Validity is defined
-by transactionTypes array in _configTransaction.js_.
+SearchPage can restrict search results to listings with valid listingType. Validity is defined by
+listingTypes array in _configListing.js_.
 
 However, it only works if you have set 'enum' type search schema for the following public data
-field: **_transactionType_**.
+field: **_listingType_**.
 
 You could even extend that validation to
 
@@ -87,7 +89,7 @@ You could even extend that validation to
 - unitType
 
 If you have set the search schema for those public data fields, you can turn
-`enforceValidTransactionType` config to true in [configTransaction.js](./configTransaction.js) file.
+`enforceValidListingType` config to true in [configListing.js](./configListing.js) file.
 
 Read More:
 

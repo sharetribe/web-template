@@ -51,7 +51,7 @@ exports[`EditListingDetailsForm matches snapshot 1`] = `
   </div>
   Array [
     <input
-      name="transactionType"
+      name="listingType"
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}

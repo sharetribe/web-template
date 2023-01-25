@@ -42,7 +42,7 @@ export const getDefaultConfiguration = () => {
         {
           key: 'category',
           scope: 'public',
-          includeForTransactionTypes: [
+          includeForListingTypes: [
             'product-selling',
             'daily-booking',
             'nightly-booking',
@@ -76,7 +76,7 @@ export const getDefaultConfiguration = () => {
         {
           key: 'tire-size',
           scope: 'public',
-          includeForTransactionTypes: [
+          includeForListingTypes: [
             'product-selling',
             'daily-booking',
             'nightly-booking',
@@ -111,7 +111,7 @@ export const getDefaultConfiguration = () => {
         {
           key: 'brand',
           scope: 'public',
-          includeForTransactionTypes: [
+          includeForListingTypes: [
             'product-selling',
             'daily-booking',
             'nightly-booking',
@@ -145,22 +145,24 @@ export const getDefaultConfiguration = () => {
           },
         },
       ],
-    },
-    transaction: {
-      transactionTypes: [
+      listingTypes: [
         {
           type: 'rent-bicycles',
           label: 'Rent bicycles',
-          process: 'default-booking',
-          alias: 'release-1',
-          unitType: 'day',
+          transactionType: {
+            process: 'default-booking',
+            alias: 'release-1',
+            unitType: 'day',
+          },
         },
         {
           type: 'product-selling',
           label: 'Sell products',
-          process: 'default-buying-products',
-          alias: 'release-1',
-          unitType: 'item',
+          transactionType: {
+            process: 'default-buying-products',
+            alias: 'release-1',
+            unitType: 'item',
+          },
         },
       ],
     },

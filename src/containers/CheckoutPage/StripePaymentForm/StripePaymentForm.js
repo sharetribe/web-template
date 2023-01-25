@@ -213,6 +213,7 @@ const checkOnetimePaymentFields = (
 const LocationOrShippingDetails = props => {
   const {
     askShippingDetails,
+    showPickUplocation,
     listingLocation,
     formApi,
     locale,
@@ -229,7 +230,7 @@ const LocationOrShippingDetails = props => {
 
   return askShippingDetails ? (
     <ShippingDetails intl={intl} formApi={formApi} locale={locale} />
-  ) : !isBooking ? (
+  ) : !isBooking && showPickUplocation ? (
     <div className={css.pickupWrapper}>
       <h3 className={css.pickupHeading}>
         <FormattedMessage id="StripePaymentForm.pickupDetailsTitle" />
@@ -442,6 +443,7 @@ class StripePaymentForm extends Component {
       defaultPaymentMethod,
       listingLocation,
       askShippingDetails,
+      showPickUplocation,
       totalPrice,
       locale,
       stripePublishableKey,
@@ -538,6 +540,7 @@ class StripePaymentForm extends Component {
       <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
         <LocationOrShippingDetails
           askShippingDetails={askShippingDetails}
+          showPickUplocation={showPickUplocation}
           listingLocation={listingLocation}
           isBooking={isBooking}
           isFuzzyLocation={isFuzzyLocation}
@@ -693,6 +696,7 @@ StripePaymentForm.defaultProps = {
   confirmCardPaymentError: null,
   confirmPaymentError: null,
   askShippingDetails: false,
+  showPickUplocation: false,
   listingLocation: null,
   totalPrice: null,
   isFuzzyLocation: false,
@@ -713,6 +717,7 @@ StripePaymentForm.propTypes = {
   hasHandledCardPayment: bool,
   defaultPaymentMethod: propTypes.defaultPaymentMethod,
   askShippingDetails: bool,
+  showPickUplocation: bool,
   listingLocation: shape({
     address: string.isRequired,
     building: string,

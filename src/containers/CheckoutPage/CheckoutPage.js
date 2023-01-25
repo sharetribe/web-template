@@ -109,16 +109,19 @@ const getFormattedTotalPrice = (transaction, intl) => {
   return formatMoney(intl, totalPrice);
 };
 
-// Convert the picked date to moment that will represent the same time of day in UTC time zone.
+// This just makes it easier to transfrom bookingDates object if needed
+// (or manibulate bookingStart and bookingEnd)
 const bookingDatesMaybe = bookingDates => {
-  return bookingDates
-    ? {
-        bookingDates: {
-          bookingStart: bookingDates.bookingStart,
-          bookingEnd: bookingDates.bookingEnd,
-        },
-      }
-    : {};
+  return bookingDates ? { bookingDates } : {};
+};
+
+// Extract relevant transaction type data from listing type
+// Note: this is saved to protectedData of the transaction entity
+//       therefore, we don't need the process name (nor alias)
+const transactionTypeDataMaybe = (listingType, config) => {
+  const listingTypeConfig = config.listing.listingTypes.find(lt => lt.type === listingType);
+  const { process, alias, unitType, ...rest } = listingTypeConfig.transactionType;
+  return unitType ? { unitType, ...rest } : {};
 };
 
 // Collect error message checks to a single function.
@@ -215,6 +218,10 @@ const getErrorMessages = (
   };
 };
 
+const txHasPassedPendingPayment = (tx, process) => {
+  return process.hasPassedState(process.states.PENDING_PAYMENT, tx);
+};
+
 export class CheckoutPageComponent extends Component {
   constructor(props) {
     super(props);
@@ -291,17 +298,9 @@ export class CheckoutPageComponent extends Component {
       pageDataListing?.attributes?.publicData?.transactionProcessAlias?.split('/')[0];
     const process = getProcess(processName);
 
-    const txHasPassedPaymentPending = tx => {
-      return process.hasPassedState(process.states.PENDING_PAYMENT, tx);
-    };
-
     // If transaction has passed payment-pending state, speculated tx is not needed.
     const shouldFetchSpeculatedTransaction =
-      pageData &&
-      pageData.listing &&
-      pageData.listing.id &&
-      pageData.orderData &&
-      !txHasPassedPaymentPending(tx);
+      pageData?.listing?.id && pageData.orderData && !txHasPassedPendingPayment(tx, process);
 
     if (shouldFetchSpeculatedTransaction) {
       const listingId = pageData.listing.id;
@@ -346,6 +345,7 @@ export class CheckoutPageComponent extends Component {
       onConfirmPayment,
       onSendMessage,
       onSavePaymentMethod,
+      config,
     } = this.props;
     const {
       pageData,
@@ -379,7 +379,7 @@ export class CheckoutPageComponent extends Component {
 
     // Step 1: initiate order by requesting payment from Marketplace API
     const fnRequestPayment = fnParams => {
-      // fnParams should be { listingId, deliveryMethod, quantity?, bookingDates?, paymentMethod?.setupPaymentMethodForSaving? }
+      // fnParams should be { listingId, deliveryMethod, quantity?, bookingDates?, paymentMethod?.setupPaymentMethodForSaving?, protectedData }
       const hasPaymentIntents = storedTx.attributes.protectedData?.stripePaymentIntents;
 
       const requestTransition =
@@ -500,15 +500,19 @@ export class CheckoutPageComponent extends Component {
       fnSavePaymentMethod
     );
 
-    const deliveryMethod = pageData.orderData?.deliveryMethod;
     const quantity = pageData.orderData?.quantity;
     const quantityMaybe = quantity ? { quantity } : {};
-    const protectedDataMaybe =
-      deliveryMethod && shippingDetails
-        ? { protectedData: { deliveryMethod, shippingDetails } }
-        : deliveryMethod
-        ? { protectedData: { deliveryMethod } }
-        : {};
+    const deliveryMethod = pageData.orderData?.deliveryMethod;
+    const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
+    const shippingDetailsMaybe = shippingDetails ? { shippingDetails } : {};
+    const listingType = pageData?.listing?.attributes?.publicData?.listingType;
+    const protectedDataMaybe = {
+      protectedData: {
+        ...transactionTypeDataMaybe(listingType, config),
+        ...deliveryMethodMaybe,
+        ...shippingDetailsMaybe,
+      },
+    };
     // Note: optionalPaymentParams contains Stripe paymentMethod,
     // but that can also be passed on Step 2
     // stripe.confirmCardPayment(stripe, { payment_method: stripePaymentMethodId })
@@ -761,8 +765,8 @@ export class CheckoutPageComponent extends Component {
     }
 
     // Show breakdown only when (speculated?) transaction is loaded
-    // (i.e. have an id and lineItems)
-    const tx = existingTransaction.booking ? existingTransaction : speculatedTransaction;
+    // (i.e. it has an id and lineItems)
+    const tx = existingTransaction.id ? existingTransaction : speculatedTransaction;
     const timeZone = listing?.attributes?.availabilityPlan?.timezone;
     const transactionProcessAlias = currentListing.attributes.publicData?.transactionProcessAlias;
     const unitType = currentListing.attributes.publicData?.unitType;
@@ -853,6 +857,9 @@ export class CheckoutPageComponent extends Component {
     // e.g. {country: 'FI'}
 
     const initalValuesForStripePayment = { name: userName, recipientName: userName };
+    const askShippingDetails =
+      orderData?.deliveryMethod === 'shipping' &&
+      !txHasPassedPendingPayment(existingTransaction, process);
 
     return (
       <Page {...pageProps}>
@@ -917,7 +924,8 @@ export class CheckoutPageComponent extends Component {
                   }
                   paymentIntent={paymentIntent}
                   onStripeInitialized={stripe => this.onStripeInitialized(stripe, process)}
-                  askShippingDetails={orderData?.deliveryMethod === 'shipping'}
+                  askShippingDetails={askShippingDetails}
+                  showPickUplocation={orderData?.deliveryMethod === 'pickup'}
                   listingLocation={currentListing?.attributes?.publicData?.location}
                   totalPrice={tx.id ? getFormattedTotalPrice(tx, intl) : null}
                   locale={config.localization.locale}

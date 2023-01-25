@@ -38,7 +38,7 @@
   flex-shrink: 0;
 }
 
-.transactionTypeSelect {
+.listingTypeSelect {
   margin-bottom: 24px;
 
   @media (--viewportMedium) {
