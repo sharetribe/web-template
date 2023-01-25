@@ -149,16 +149,20 @@ export const getDefaultConfiguration = () => {
         {
           type: 'rent-bicycles',
           label: 'Rent bicycles',
-          process: 'default-booking',
-          alias: 'release-1',
-          unitType: 'day',
+          transactionType: {
+            process: 'default-booking',
+            alias: 'release-1',
+            unitType: 'day',
+          },
         },
         {
           type: 'product-selling',
           label: 'Sell products',
-          process: 'default-buying-products',
-          alias: 'release-1',
-          unitType: 'item',
+          transactionType: {
+            process: 'default-buying-products',
+            alias: 'release-1',
+            unitType: 'item',
+          },
         },
       ],
     },

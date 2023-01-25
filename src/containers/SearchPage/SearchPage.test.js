@@ -144,14 +144,12 @@ describe('SearchPageWithList', () => {
       config: {
         listing: {
           listingExtendedData: listingExtendedDataConfig,
+          listingTypes,
         },
         search: {
           mainSearchType: 'location',
           defaultFilters: defaultFiltersConfig,
           sortConfig: sortConfig,
-        },
-        listing: {
-          listingTypes,
         },
         maps: {
           search: {
