@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [add] Add BookingLocationMaybe section into the TransactionPage.js
+  [#85](https://github.com/sharetribe/ftw-x/pull/85)
 - [change] Add listingType which contains transactionType. Defined in configListing.js
   [#84](https://github.com/sharetribe/ftw-x/pull/84)
 - [delete] Remove unnecessary code and translation keys.
