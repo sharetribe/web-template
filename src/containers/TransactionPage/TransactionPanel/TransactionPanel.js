@@ -18,6 +18,7 @@ import BreakdownMaybe from './BreakdownMaybe';
 import DetailCardHeadingsMaybe from './DetailCardHeadingsMaybe';
 import DetailCardImage from './DetailCardImage';
 import DeliveryInfoMaybe from './DeliveryInfoMaybe';
+import BookingLocationMaybe from './BookingLocationMaybe';
 import FeedSection from './FeedSection';
 import ActionButtonsMaybe from './ActionButtonsMaybe';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
@@ -132,6 +133,7 @@ export class TransactionPanelComponent extends Component {
       onOpenDisputeModal,
       intl,
       stateData,
+      showBookingLocation,
       activityFeed,
       orderBreakdown,
       orderPanel,
@@ -244,6 +246,11 @@ export class TransactionPanelComponent extends Component {
                 listing={listing}
                 locale={config.localization.locale}
               />
+              <BookingLocationMaybe
+                className={css.deliveryInfoSection}
+                listing={listing}
+                showBookingLocation={showBookingLocation}
+              />
             </div>
 
             <FeedSection
@@ -347,6 +354,7 @@ TransactionPanelComponent.defaultProps = {
   sendReviewError: null,
   stateData: {},
   activityFeed: null,
+  showBookingLocation: false,
   orderBreakdown: null,
   orderPanel: null,
 };
@@ -371,6 +379,7 @@ TransactionPanelComponent.propTypes = {
   onOpenDisputeModal: func.isRequired,
   onSendMessage: func.isRequired,
   stateData: stateDataShape,
+  showBookingLocation: bool,
   activityFeed: node,
   orderBreakdown: node,
   orderPanel: node,

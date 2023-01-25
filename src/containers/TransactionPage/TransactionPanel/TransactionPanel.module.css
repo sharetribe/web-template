@@ -288,6 +288,7 @@
   white-space: nowrap;
 }
 
+.bookingLocationAddress,
 .pickupAddress {
   composes: h5 from global;
   margin: 0;
@@ -342,6 +343,7 @@
   }
 }
 
+.bookingLocationContent,
 .pickupInfoContent {
   composes: marketplaceSmallFontStyles from global;
   padding: 5px 0 1px 0;
@@ -376,6 +378,7 @@
 }
 
 /* Passed-in props for FeedSection subcomponent */
+.bookingLocationContainer,
 .deliveryInfoContainer,
 .feedContainer {
   margin: 42px 24px 0 24px;
