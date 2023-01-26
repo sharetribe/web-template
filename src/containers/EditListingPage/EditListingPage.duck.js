@@ -652,6 +652,11 @@ export function requestUpdateListing(tab, data, config) {
       ...imageVariantInfo.imageVariants,
     };
 
+    const state = getState();
+    const existingTimeZone =
+      state.marketplaceData.entities.ownListing[id.uuid]?.attributes?.availabilityPlan?.timezone;
+    const includedTimeZone = rest?.availabilityPlan?.timezone;
+
     // Note: if update values include stockUpdate, we'll do that first
     // That way we get updated currentStock info among ownListings.update
     return updateStockOfListingMaybe(id, stockUpdate, dispatch)
@@ -660,6 +665,16 @@ export function requestUpdateListing(tab, data, config) {
         dispatch(updateListingSuccess(response));
         dispatch(addMarketplaceEntities(response));
         dispatch(markTabUpdated(tab));
+
+        // If time zone has changed, we need to fetch exceptions again
+        // since week and month boundaries might have changed.
+        if (!!includedTimeZone && includedTimeZone !== existingTimeZone) {
+          const searchString = '';
+          const firstDayOfWeek = config.localization.firstDayOfWeek;
+          const listing = response.data.data;
+          fetchLoadDataExceptions(dispatch, listing, searchString, firstDayOfWeek);
+        }
+
         return response;
       })
       .catch(e => {
