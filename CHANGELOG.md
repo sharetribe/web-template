@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+- [fix] When time zone changes, exceptions should be fetch again. (Query boundaries change.)
+  [#87](https://github.com/sharetribe/ftw-x/pull/87)
 - [add] Update translations (en.json). We'll change these later, as these follow biketribe theme.
   [#86](https://github.com/sharetribe/ftw-x/pull/86)
 - [add] Add BookingLocationMaybe section into the TransactionPage.js
