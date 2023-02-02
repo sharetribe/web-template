@@ -52,7 +52,7 @@ exports[`TransactionPanel - Order inquired matches snapshot 1`] = `
         listingDeleted={false}
         listingId="listing1"
         listingTitle="listing1 title"
-        processName="default-buying-products"
+        processName="default-purchase"
         processState="inquiry"
         providerName={
           <UserDisplayName
@@ -85,7 +85,7 @@ exports[`TransactionPanel - Order inquired matches snapshot 1`] = `
         >
           <BreakdownMaybe
             orderBreakdown={null}
-            processName="default-buying-products"
+            processName="default-purchase"
           />
           <DiminishedActionButtonMaybe
             onOpenDisputeModal={[Function]}
@@ -212,7 +212,7 @@ exports[`TransactionPanel - Order inquired matches snapshot 1`] = `
           <BreakdownMaybe
             className="breakdownContainer"
             orderBreakdown={null}
-            processName="default-buying-products"
+            processName="default-purchase"
           />
         </div>
         <DiminishedActionButtonMaybe
@@ -284,7 +284,7 @@ exports[`TransactionPanel - Sale inquired matches snapshot 1`] = `
         listingDeleted={false}
         listingId="listing1"
         listingTitle="listing1 title"
-        processName="default-buying-products"
+        processName="default-purchase"
         processState="inquiry"
         providerName={
           <UserDisplayName
@@ -317,7 +317,7 @@ exports[`TransactionPanel - Sale inquired matches snapshot 1`] = `
         >
           <BreakdownMaybe
             orderBreakdown={null}
-            processName="default-buying-products"
+            processName="default-purchase"
           />
           <DiminishedActionButtonMaybe
             onOpenDisputeModal={[Function]}
@@ -444,7 +444,7 @@ exports[`TransactionPanel - Sale inquired matches snapshot 1`] = `
           <BreakdownMaybe
             className="breakdownContainer"
             orderBreakdown={null}
-            processName="default-buying-products"
+            processName="default-purchase"
           />
         </div>
         <DiminishedActionButtonMaybe

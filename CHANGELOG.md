@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Rename default transaction process and associated files.
+  [#88](https://github.com/sharetribe/ftw-x/pull/88)
 - [change] New font (apple-system & 'Inter') and all kind of changes related to that.
   [#73](https://github.com/sharetribe/ftw-x/pull/73)
 - [fix] When time zone changes, exceptions should be fetch again. (Query boundaries change.)
