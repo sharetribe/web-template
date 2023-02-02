@@ -164,7 +164,7 @@ export const listingExtendedData = [
   // {
   //   key: 'extra-note',
   //   scope: 'public',
-  //   includeForListingTypes: ['default-purchase'],
+  //   includeForListingTypes: ['product-selling'],
   //   schemaType: 'text',
   //   listingPageConfig: {
   //     label: 'Extra notes',
