@@ -5,7 +5,7 @@ import defaultConfig from '../../../../config/configDefault';
 const selectableListingTypes = [
   {
     listingType: 'sell-bicycles',
-    transactionProcessAlias: 'default-buying-products/release-1',
+    transactionProcessAlias: 'default-purchase/release-1',
     unitType: 'item',
   },
 ];
@@ -27,7 +27,7 @@ export const WithInitialValues = {
       title: 'Listing',
       description: 'Lorem ipsum',
       listingType: 'sell-bicycles',
-      transactionProcessAlias: 'default-buying-products/release-1',
+      transactionProcessAlias: 'default-purchase/release-1',
       unitType: 'item',
     },
   },
@@ -42,7 +42,7 @@ const selectableListingTypes2 = [
   },
   {
     listingType: 'sell-bicycles',
-    transactionProcessAlias: 'default-buying-products/release-1',
+    transactionProcessAlias: 'default-purchase/release-1',
     unitType: 'item',
   },
 ];

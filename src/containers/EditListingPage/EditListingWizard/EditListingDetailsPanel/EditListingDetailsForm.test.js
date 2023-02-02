@@ -7,7 +7,7 @@ const noop = () => null;
 const selectableListingTypes = [
   {
     listingType: 'sell-bicycles',
-    transactionProcessAlias: 'default-buying-products/release-1',
+    transactionProcessAlias: 'default-purchase/release-1',
     unitType: 'item',
   },
 ];

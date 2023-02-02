@@ -12,7 +12,7 @@ import {
  * @param {*} txInfo detials about transaction
  * @param {*} processInfo  details about process
  */
-export const getStateDataForProductProcess = (txInfo, processInfo) => {
+export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
   const { transaction, transactionRole, nextTransitions } = txInfo;
   const isProviderBanned = transaction?.provider?.attributes?.banned;
   const isShippable = transaction?.attributes?.protectedData?.deliveryMethod === 'shipping';

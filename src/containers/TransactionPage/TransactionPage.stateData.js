@@ -5,7 +5,7 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 import { getStateDataForBookingProcess } from './TransactionPage.stateDataBooking.js';
-import { getStateDataForProductProcess } from './TransactionPage.stateDataProduct.js';
+import { getStateDataForPurchaseProcess } from './TransactionPage.stateDataPurchase.js';
 
 const errorShape = shape({
   type: oneOf(['error']).isRequired,
@@ -132,7 +132,7 @@ export const getStateData = (params, process) => {
   };
 
   if (processName === PRODUCT_PROCESS_NAME) {
-    return getStateDataForProductProcess(params, processInfo());
+    return getStateDataForPurchaseProcess(params, processInfo());
   } else if (processName === BOOKING_PROCESS_NAME) {
     return getStateDataForBookingProcess(params, processInfo());
   } else {

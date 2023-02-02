@@ -7,7 +7,7 @@ import {
 } from '../../transactions/transaction';
 
 import { getStateDataForBookingProcess } from './InboxPage.stateDataBooking.js';
-import { getStateDataForProductProcess } from './InboxPage.stateDataProduct.js';
+import { getStateDataForPurchaseProcess } from './InboxPage.stateDataPurchase.js';
 
 export const stateDataShape = shape({
   processName: string.isRequired,
@@ -34,7 +34,7 @@ export const getStateData = params => {
   };
 
   if (processName === PRODUCT_PROCESS_NAME) {
-    return getStateDataForProductProcess(params, processInfo());
+    return getStateDataForPurchaseProcess(params, processInfo());
   } else if (processName === BOOKING_PROCESS_NAME) {
     return getStateDataForBookingProcess(params, processInfo());
   } else {

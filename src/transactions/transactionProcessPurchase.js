@@ -1,6 +1,6 @@
 /**
  * Transaction process graph for product orders:
- *   - default-buying-products
+ *   - default-purchase
  */
 
 /**
@@ -33,8 +33,9 @@ export const transitions = {
   // the transaction will expire automatically.
   EXPIRE_PAYMENT: 'transition/expire-payment',
 
-  // Provider can mark the product shipped/delivered
+  // Provider or opeartor can mark the product shipped/delivered
   MARK_DELIVERED: 'transition/mark-delivered',
+  OPERATOR_MARK_DELIVERED: 'transition/operator-mark-delivered',
 
   // Customer can mark the product received (e.g. picked up from provider)
   MARK_RECEIVED_FROM_PURCHASED: 'transition/mark-received-from-purchased',
@@ -52,8 +53,9 @@ export const transitions = {
   // If customer doesn't mark the product received manually, it can happen automatically
   AUTO_MARK_RECEIVED: 'transition/auto-mark-received',
 
-  // When provider has marked the product delivered, customer can dispute the transaction
+  // When provider has marked the product delivered, customer or operator can dispute the transaction
   DISPUTE: 'transition/dispute',
+  OPERATOR_DISPUTE: 'transition/operator-dispute',
 
   // If nothing is done to disputed transaction it ends up to Canceled state
   AUTO_CANCEL_FROM_DISPUTED: 'transition/auto-cancel-from-disputed',
@@ -119,7 +121,7 @@ export const graph = {
   // id is defined only to support Xstate format.
   // However if you have multiple transaction processes defined,
   // it is best to keep them in sync with transaction process aliases.
-  id: 'default-buying-products/release-1',
+  id: 'default-purchase/release-1',
 
   // This 'initial' state is a starting point for new transaction
   initial: states.INITIAL,
@@ -149,6 +151,7 @@ export const graph = {
     [states.PURCHASED]: {
       on: {
         [transitions.MARK_DELIVERED]: states.DELIVERED,
+        [transitions.OPERATOR_MARK_DELIVERED]: states.DELIVERED,
         [transitions.MARK_RECEIVED_FROM_PURCHASED]: states.RECEIVED,
         [transitions.AUTO_CANCEL]: states.CANCELED,
         [transitions.CANCEL]: states.CANCELED,
@@ -162,6 +165,7 @@ export const graph = {
         [transitions.MARK_RECEIVED]: states.RECEIVED,
         [transitions.AUTO_MARK_RECEIVED]: states.RECEIVED,
         [transitions.DISPUTE]: states.DISPUTED,
+        [transitions.OPERATOR_DISPUTE]: states.DISPUTED,
       },
     },
 

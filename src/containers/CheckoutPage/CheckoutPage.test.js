@@ -24,7 +24,7 @@ describe('CheckoutPage', () => {
   it('matches snapshot', () => {
     const listing = createListing(
       'listing1',
-      { publicData: { transactionProcessAlias: 'default-buying-products', unitType: 'item' } },
+      { publicData: { transactionProcessAlias: 'default-purchase', unitType: 'item' } },
       { author: createUser('author') }
     );
     const props = {
