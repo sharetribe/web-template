@@ -178,10 +178,12 @@ export const graph = {
 export const isRelevantPastTransition = transition => {
   return [
     transitions.ACCEPT,
+    transitions.OPERATOR_ACCEPT,
     transitions.CANCEL,
     transitions.COMPLETE,
     transitions.CONFIRM_PAYMENT,
     transitions.DECLINE,
+    transitions.OPERATOR_DECLINE,
     transitions.EXPIRE,
     transitions.REVIEW_1_BY_CUSTOMER,
     transitions.REVIEW_1_BY_PROVIDER,
