@@ -213,6 +213,14 @@
    :on :transition/mark-delivered,
    :to :actor.role/customer,
    :template :order-marked-as-delivered}
+  {:name :notification/purchase-order-operator-marked-as-delivered-to-customer,
+   :on :transition/operator-mark-delivered,
+   :to :actor.role/customer,
+   :template :order-marked-as-delivered}
+  {:name :notification/purchase-order-operator-marked-as-delivered-to-provider,
+   :on :transition/operator-mark-delivered,
+   :to :actor.role/provider,
+   :template :purchase-order-operator-marked-as-delivered}
   {:name :notification/mark-order-received-reminder,
    :on :transition/mark-delivered,
    :at
@@ -257,6 +265,14 @@
    :on :transition/dispute,
    :to :actor.role/provider,
    :template :order-disputed}
+  {:name :notification/purchase-order-operator-disputed-to-customer,
+   :on :transition/operator-dispute,
+   :to :actor.role/customer,
+   :template :purchase-order-operator-disputed}
+  {:name :notification/purchase-order-operator-disputed-to-provider,
+   :on :transition/operator-dispute,
+   :to :actor.role/provider,
+   :template :purchase-order-disputed}
   {:name :notification/order-received-from-disputed-customer,
    :on :transition/mark-received-from-disputed,
    :to :actor.role/customer,

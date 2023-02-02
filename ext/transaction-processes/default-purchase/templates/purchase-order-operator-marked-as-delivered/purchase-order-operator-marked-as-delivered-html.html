@@ -1,0 +1,20 @@
+
+<html>
+  <body>
+    {{#with transaction}}
+    {{#eq "shipping" protected-data.deliveryMethod}}
+    <h1>An order was marked as shipped on your behalf</h1>
+
+    <p>An order for {{listing.title}} was marked shipped on your behalf.</p>
+    {{else}}
+    <h1>An order was marked as delivered on your behalf</h1>
+
+    <p>Ab order for {{listing.title}} was marked delivered on your behalf.</p>
+    {{/eq}}
+    {{/with}}
+
+    <hr />
+
+    <p>You have received this email notification because you are a member of {{marketplace.name}}. If you no longer wish to receive these emails, please contact {{marketplace.name}} team.</p>
+  </body>
+</html>
