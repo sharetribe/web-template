@@ -48,8 +48,25 @@
     {:name :action/stripe-capture-payment-intent}],
    :from :state/preauthorized,
    :to :state/accepted}
+    {:name :transition/operator-accept,
+   :actor :actor.role/operator,
+   :actions
+   [{:name :action/accept-booking}
+    {:name :action/stripe-capture-payment-intent}],
+   :from :state/preauthorized,
+   :to :state/accepted}
   {:name :transition/decline,
    :actor :actor.role/provider,
+   :actions
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
+    ;; Keep this action last in the list of actions for
+    ;; the transition
+    {:name :action/decline-booking}],
+   :from :state/preauthorized,
+   :to :state/declined} 
+    {:name :transition/operator-decline,
+   :actor :actor.role/operator,
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
@@ -143,6 +160,14 @@
    :on :transition/accept,
    :to :actor.role/customer,
    :template :booking-request-accepted}
+  {:name :notification/booking-request-operator-accepted-to-customer,
+   :on :transition/operator-accept,
+   :to :actor.role/customer,
+   :template :booking-request-accepted}
+  {:name :notification/booking-request-operator-accepted-to-provider,
+   :on :transition/operator-accept,
+   :to :actor.role/provider,
+   :template :booking-request-operator-accepted-to-provider}
   {:name :notification/booking-request-declined,
    :on :transition/decline,
    :to :actor.role/customer,
