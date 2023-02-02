@@ -196,6 +196,7 @@ const hasPassedState = process => (stateName, tx) => {
 export const resolveLatestProcessName = processName => {
   switch (processName) {
     case 'flex-product-default-process':
+    case 'default-buying-products':
     case PURCHASE_PROCESS_NAME:
       return PURCHASE_PROCESS_NAME;
     case 'flex-default-process':
