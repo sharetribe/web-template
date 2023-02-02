@@ -18,7 +18,7 @@ const exampleBooking = attributes => {
   };
 };
 
-const processName = 'default-buying-products';
+const processName = 'default-purchase';
 const transitions = getProcess(processName)?.transitions;
 
 const exampleTransaction = params => {

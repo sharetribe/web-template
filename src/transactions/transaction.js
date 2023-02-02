@@ -1,6 +1,6 @@
 import * as log from '../util/log';
 import { ensureTransaction } from '../util/data';
-import * as productProcess from './transactionProcessProduct';
+import * as purchaseProcess from './transactionProcessPurchase';
 import * as bookingProcess from './transactionProcessBooking';
 
 // Supported unit types
@@ -10,7 +10,7 @@ export const NIGHT = 'night';
 export const HOUR = 'hour';
 
 // Then names of supported processes
-export const PRODUCT_PROCESS_NAME = 'default-buying-products';
+export const PURCHASE_PROCESS_NAME = 'default-purchase';
 export const BOOKING_PROCESS_NAME = 'default-booking';
 
 /**
@@ -28,9 +28,9 @@ export const BOOKING_PROCESS_NAME = 'default-booking';
  */
 const PROCESSES = [
   {
-    name: PRODUCT_PROCESS_NAME,
+    name: PURCHASE_PROCESS_NAME,
     alias: 'release-1',
-    process: productProcess,
+    process: purchaseProcess,
     unitTypes: [ITEM],
   },
   {
@@ -196,8 +196,8 @@ const hasPassedState = process => (stateName, tx) => {
 export const resolveLatestProcessName = processName => {
   switch (processName) {
     case 'flex-product-default-process':
-    case PRODUCT_PROCESS_NAME:
-      return PRODUCT_PROCESS_NAME;
+    case PURCHASE_PROCESS_NAME:
+      return PURCHASE_PROCESS_NAME;
     case 'flex-default-process':
     case 'flex-hourly-default-process':
     case 'flex-booking-default-process':

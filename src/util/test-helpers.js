@@ -159,7 +159,7 @@ export const getDefaultConfiguration = () => {
           type: 'product-selling',
           label: 'Sell products',
           transactionType: {
-            process: 'default-buying-products',
+            process: 'default-purchase',
             alias: 'release-1',
             unitType: 'item',
           },

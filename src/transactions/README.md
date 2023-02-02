@@ -39,9 +39,9 @@ components that need to make decisions based on the currently used transaction p
 
 This file defines the process graph of _default-booking_ for the web app.
 
-## [transactionProcessProduct.js](transactionProcessProduct.js)
+## [transactionProcessPurchase.js](transactionProcessPurchase.js)
 
-This file defines the process graph of _default-buying products_ for the web app.
+This file defines the process graph of _default-purchase_ for the web app.
 
 ## [../../ext/transaction-processes](../../ext/transaction-processes/README.md)
 

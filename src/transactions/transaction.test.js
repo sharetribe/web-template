@@ -14,8 +14,8 @@ import {
   getProcess,
 } from './transaction';
 
-describe('transaction utils for default-buying-products', () => {
-  const process = getProcess('default-buying-products');
+describe('transaction utils for default-purchase', () => {
+  const process = getProcess('default-purchase');
   const transitions = process?.transitions;
   const txHasBeenReceived = tx => process.hasPassedState(process.states.RECEIVED, tx);
 
