@@ -54,6 +54,11 @@
    :actions [],
    :from :state/purchased,
    :to :state/delivered}
+  {:name :transition/operator-mark-delivered,
+   :actor :actor.role/operator,
+   :actions [],
+   :from :state/purchased,
+   :to :state/delivered}
   {:name :transition/mark-received,
    :actor :actor.role/customer,
    :actions [{:name :action/stripe-create-payout}],
@@ -70,6 +75,11 @@
   {:name :transition/dispute,
    :actor :actor.role/customer,
    :actions [{:name :action/update-protected-data}],
+   :from :state/delivered,
+   :to :state/disputed}
+  {:name :transition/operator-dispute,
+   :actor :actor.role/operator,
+   :actions [],
    :from :state/delivered,
    :to :state/disputed}
   {:name :transition/mark-received-from-disputed,

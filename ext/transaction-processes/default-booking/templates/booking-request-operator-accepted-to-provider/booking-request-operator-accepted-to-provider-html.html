@@ -1,0 +1,106 @@
+{{~#*inline "format-money"~}}
+{{money-amount money}} {{ money.currency }}
+{{~/inline~}}
+
+{{~#*inline "format-date"~}}
+{{#with transaction.listing.availability-plan}}
+{{date date format="h:mm a" tz=timezone}} on {{date date format="MMM d, YYYY" tz=timezone}}
+{{/with}}
+{{~/inline~}}
+
+{{~#*inline "format-date-day"~}}
+{{#with transaction.listing.availability-plan}}
+{{date date format="MMM d, YYYY" tz=timezone}}
+{{/with}}
+{{~/inline~}}
+
+{{~#*inline "format-date-day-before"~}}
+{{#with transaction.listing.availability-plan}}
+{{date-day-before date format="MMM d, YYYY" tz=timezone}}
+{{/with}}
+{{~/inline~}}
+
+{{~#*inline "format-day"~}}
+{{#with transaction.listing.availability-plan}}
+{{date date format="EE" tz=timezone}}
+{{/with}}
+{{~/inline~}}
+
+{{~#*inline "format-day-before"~}}
+{{#with transaction.listing.availability-plan}}
+{{date-day-before date format="EE" tz=timezone}}
+{{/with}}
+{{~/inline~}}
+
+{{~#*inline "format-day-time"~}}
+{{#with transaction.listing.availability-plan}}
+{{date date format="EE h:mm a" tz=timezone}}
+{{/with}}
+{{~/inline~}}
+
+{{~#*inline "format-month-date"~}}
+{{#with transaction.listing.availability-plan}}
+{{date date format="MMM d" tz=timezone}}
+{{/with}}
+{{~/inline~}}
+
+<html>
+  <head>
+    <style type="text/css">
+      table {
+        border-collapse: collapse;
+      }
+      .left {
+        text-align: left;
+      }
+      .right {
+        text-align: right;
+        padding-left: 20px;
+      }
+      .bottom-row > td {
+        padding-bottom: 5px;
+      }
+      .top-row {
+        border-top: 1px solid #ccc;
+      }
+      .top-row > td,
+      .top-row > th {
+        padding-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>A booking for one of your listings was accepted on your behalf</h1>
+
+    {{#with transaction}}
+
+    {{#each tx-line-items}}
+    {{#eq "line-item/hour" code}}
+    <p>
+      A booking for {{ listing.title }} from
+      {{> format-date date=booking.start}} to {{> format-date date=booking.end}} was accepted on your behalf.
+    </p>
+    {{/eq}}
+    {{#eq "line-item/day" code}}
+    <p>
+      A booking for {{ listing.title }} from
+      {{> format-date-day date=booking.start}} to {{> format-date-day-before date=booking.end}} was accepted on your behalf..
+    </p>
+    {{/eq}}
+    {{#eq "line-item/night" code}}
+    <p>
+      A booking for {{ listing.title }} from
+      {{> format-date-day date=booking.start}} to {{> format-date-day date=booking.end}} was accepted on your behalf..
+    </p>
+    {{/eq}}
+    {{/each}}
+  
+    {{/with}}
+
+    <hr />
+
+    <p>
+      If you think this was an error, please contact {{ marketplace.name }} team.
+    </p>
+  </body>
+</html>
