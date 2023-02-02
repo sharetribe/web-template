@@ -272,7 +272,7 @@
   {:name :notification/purchase-order-operator-disputed-to-provider,
    :on :transition/operator-dispute,
    :to :actor.role/provider,
-   :template :purchase-order-disputed}
+   :template :order-disputed}
   {:name :notification/order-received-from-disputed-customer,
    :on :transition/mark-received-from-disputed,
    :to :actor.role/customer,
