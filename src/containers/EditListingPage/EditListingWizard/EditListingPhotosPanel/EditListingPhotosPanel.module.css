@@ -40,9 +40,5 @@
 
 /* This is the title for the Edit Photos component */
 .title {
-  margin-bottom: 19px;
-
-  @media (--viewportLarge) {
-    margin-bottom: 40px;
-  }
+  composes: h3 from global;
 }

@@ -959,23 +959,26 @@ export class CheckoutPageComponent extends Component {
                 variants={variants}
               />
             </AspectRatioWrapper>
-            <div className={css.avatarWrapper}>
-              <AvatarMedium user={currentAuthor} disableProfileLink />
+            <div class={css.listingDetailsWrapper}>
+              <div className={css.avatarWrapper}>
+                <AvatarMedium user={currentAuthor} disableProfileLink />
+              </div>
+              <div className={css.detailsHeadings}>
+                <h2 className={css.detailsTitle}>
+                  <NamedLink
+                    name="ListingPage"
+                    params={{ id: currentListing.id?.uuid, slug: createSlug(listingTitle) }}
+                  >
+                    {listingTitle}
+                  </NamedLink>
+                </h2>
+              </div>
+              {speculateTransactionErrorMessage}
+              <h3 className={css.orderBreakdownTitle}>
+                <FormattedMessage id={`CheckoutPage.${processName}.orderBreakdown`} />
+              </h3>
+              <hr className={css.totalDivider} />
             </div>
-            <div className={css.detailsHeadings}>
-              <h2 className={css.detailsTitle}>
-                <NamedLink
-                  name="ListingPage"
-                  params={{ id: currentListing.id?.uuid, slug: createSlug(listingTitle) }}
-                >
-                  {listingTitle}
-                </NamedLink>
-              </h2>
-            </div>
-            {speculateTransactionErrorMessage}
-            <h2 className={css.orderBreakdownTitle}>
-              <FormattedMessage id={`CheckoutPage.${processName}.orderBreakdown`} />
-            </h2>
             {breakdown}
           </div>
         </div>

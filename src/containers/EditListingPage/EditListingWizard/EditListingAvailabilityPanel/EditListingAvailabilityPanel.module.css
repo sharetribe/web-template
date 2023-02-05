@@ -25,14 +25,7 @@
 }
 
 .title {
-  margin-bottom: 18px;
-
-  @media (--viewportMedium) {
-    margin-bottom: 16px;
-  }
-  @media (--viewportLarge) {
-    margin-bottom: 32px;
-  }
+  composes: h3 from global;
 }
 
 .planInfo {

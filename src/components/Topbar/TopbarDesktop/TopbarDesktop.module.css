@@ -128,10 +128,6 @@
   display: inline-block;
   margin: 28px 0;
   text-decoration: inherit;
-
-  @media (--viewportMedium) {
-    margin: 24px 0;
-  }
 }
 
 .createListing {
@@ -286,12 +282,8 @@
   composes: textSmall from global;
 
   display: inline-block;
-  margin: 24px 0;
+  margin: 28px 0;
   text-decoration: inherit;
-
-  @media (--viewportMedium) {
-    margin: 24px 0;
-  }
 }
 
 /* left animated "border" like hover element */

@@ -56,7 +56,7 @@
 .loadingData,
 .error,
 .title {
-  composes: h2 from global;
+  composes: h3 from global;
   margin: 0 24px 24px 24px;
 
   @media (--viewportMedium) {

@@ -19,16 +19,7 @@
 }
 
 .sectionTitle {
-  /* Font */
-  color: var(--matterColorAnti);
-
-  margin-top: 0;
-  margin-bottom: 12px;
-
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 24px;
-  }
+  composes: h4 from global;
 }
 
 .lastSection {

@@ -312,7 +312,7 @@
 .orderPanelTitle {
   /* Font */
   composes: h4 from global;
-  font-weight: var(--fontWeightSemiBold);
+  font-weight: var(--fontWeightBold);
   color: var(--matterColor);
 
   /* Layout */
@@ -441,6 +441,7 @@
 }
 
 .authorNameLink {
+  composes: textSmall from global;
   color: var(--matterColor);
 }
 
@@ -498,20 +499,32 @@
 
 .sectionTitle {
   /* Font for sections titles */
-  composes: textLarge from global;
+  composes: p from global;
   padding: 0;
-  color: var(--matterColorAnti);
-  font-weight: var(--fontWeightSemiBold);
+  font-weight: var(--fontWeightBold);
 }
 
 .detailsTitle,
-.textHeading {
+.multiEnumTitle,
+.textHeading,
+.locationTitle,
+.reviewsTitle,
+.aboutProviderTitle {
   composes: sectionTitle;
   margin-top: 0;
   margin-bottom: 12px;
+
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 8px;
+  }
+}
+
+.locationTitle,
+.reviewsTitle,
+.aboutProviderTitle {
+  @media (--viewportMedium) {
+    margin-bottom: 16px;
   }
 }
 
@@ -530,8 +543,7 @@
 }
 
 .ingress {
-  font-weight: var(--fontWeightRegular);
-  letter-spacing: 0.2px;
+  composes: p from global;
   margin: 0;
 
   /* Preserve newlines, but collapse other whitespace */
@@ -542,13 +554,38 @@
   }
 }
 
-.sectionDetails {
+.sectionDetails,
+.sectionMultiEnum {
   padding: 0 24px;
   margin-bottom: 32px;
 
   @media (--viewportMedium) {
     padding: 0;
     margin-bottom: 40px;
+  }
+}
+
+.sectionMap {
+  padding: 0 24px;
+  margin-bottom: 35px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-bottom: 0;
+  }
+}
+
+.sectionReviews,
+.sectionAuthor {
+  padding: 0 24px;
+  margin-top: 42px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-top: 40px;
+  }
+  @media (--viewportLarge) {
+    padding: 8px 0;
   }
 }
 
@@ -572,86 +609,13 @@
 
   @media (--viewportMedium) {
     padding: 5px 0 2px 0;
-    line-height: 40px;
+    line-height: 32px;
   }
 }
 
 .detailLabel {
   font-weight: var(--fontWeightSemiBold);
   letter-spacing: -0.09px;
-}
-
-.sectionMultiEnum {
-  padding: 0 24px;
-  margin-bottom: 32px;
-
-  @media (--viewportMedium) {
-    padding: 0;
-    margin-bottom: 48px;
-  }
-}
-
-.multiEnumTitle {
-  composes: sectionTitle;
-
-  margin-top: 0;
-  margin-bottom: 16px;
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 16px;
-  }
-}
-
-.sectionMap {
-  padding: 0 24px;
-  margin-bottom: 35px;
-
-  @media (--viewportMedium) {
-    padding: 0;
-    margin-bottom: 0;
-  }
-}
-
-.locationTitle {
-  composes: sectionTitle;
-
-  margin-top: 0;
-  margin-bottom: 20px;
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 24px;
-  }
-}
-
-.sectionReviews,
-.sectionAuthor {
-  padding: 0 24px;
-  margin-top: 54px;
-
-  @media (--viewportMedium) {
-    padding: 0;
-    margin-top: 56px;
-  }
-  @media (--viewportLarge) {
-    padding: 8px 0;
-  }
-}
-
-.reviewsTitle {
-  composes: sectionTitle;
-  margin: 0 0 16px 0;
-  @media (--viewportLarge) {
-    padding: 1px 0 7px 0;
-  }
-}
-
-.aboutProviderTitle {
-  composes: sectionTitle;
-  margin: 0 0 16px 0;
-
-  @media (--viewportLarge) {
-    padding: 1px 0 7px 0;
-  }
 }
 
 .inquiryModalContent {
@@ -724,7 +688,7 @@
     margin: 24px 0 48px 0;
   }
   @media (--viewportLarge) {
-    margin: 0 0 72px 0;
+    margin: 0 0 40px 0;
     padding-bottom: 4px;
   }
 }

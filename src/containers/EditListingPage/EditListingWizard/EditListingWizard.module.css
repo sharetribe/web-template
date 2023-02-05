@@ -38,7 +38,7 @@
   overflow-x: scroll;
 
   @media (--viewportLarge) {
-    padding: 128px 0 82px 36px;
+    padding: 72px 0 82px 36px;
     flex-direction: column;
     overflow-x: auto;
     background-color: var(--matterColorBright);
@@ -47,7 +47,7 @@
   }
 
   @media (--viewportLargeWithPaddings) {
-    padding: 128px 0 82px calc((100% - 1056px) / 2);
+    padding: 72px 0 82px calc((100% - 1056px) / 2);
   }
 }
 

@@ -37,7 +37,7 @@ exports[`OrderBreakdown customer transaction data matches snapshot 1`] = `
           </div>
         </div>
         <div
-          className="bookingPeriodSectionRigth"
+          className="bookingPeriodSectionRight"
         >
           <div
             className="dayLabel"
@@ -204,7 +204,7 @@ exports[`OrderBreakdown provider transaction data matches snapshot 1`] = `
           </div>
         </div>
         <div
-          className="bookingPeriodSectionRigth"
+          className="bookingPeriodSectionRight"
         >
           <div
             className="dayLabel"
