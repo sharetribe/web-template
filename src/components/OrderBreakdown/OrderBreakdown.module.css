@@ -35,25 +35,34 @@
   }
 }
 
-.bookingPeriodSectionRigth {
+.bookingPeriodSectionLeft {
+  text-align: left;
+}
+
+.bookingPeriodSectionRight {
   text-align: right;
 }
 
 .dayLabel {
-  composes: h5 from global;
+  composes: textSmall from global;
   margin: 0;
   line-height: 24px;
   padding-top: 2px;
   padding-bottom: 4px;
 
   @media (--viewportMedium) {
-    padding-top: 1px;
-    padding-bottom: 7px;
+    padding: 0;
   }
 }
 
-.dayInfo {
-  composes: buttonFont from global;
+.dayInfo,
+.totalPrice {
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
+  letter-spacing: -0.2px;
+
+  margin: 0;
+  padding: 0;
 }
 
 .subTotalLineItem {
@@ -114,12 +123,6 @@
 
 .totalLabel {
   composes: marketplaceSmallFontStyles from global;
-}
-
-.totalPrice {
-  composes: buttonFont from global;
-  margin: 0 0 0 10px;
-  padding-top: 0px;
 }
 
 .feeInfo {

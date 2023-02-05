@@ -18,12 +18,6 @@
 }
 
 .title {
-  composes: h2 from global;
+  composes: h3 from global;
   hyphens: auto;
-  margin-top: 0px;
-  margin-bottom: 19px;
-
-  @media (--viewportMedium) {
-    margin-bottom: 47px;
-  }
 }

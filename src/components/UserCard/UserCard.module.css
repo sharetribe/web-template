@@ -18,11 +18,11 @@
 }
 
 .heading {
-  composes: h4 from global;
-  margin: 20px 0 0 0;
+  composes: p from global;
+  margin: 0;
 
   @media (--viewportMedium) {
-    margin: 16px 0 0 0;
+    margin: 0;
   }
 }
 
@@ -52,7 +52,11 @@
   display: none;
 
   @media (--viewportMedium) {
-    display: block;
+    display: inline;
+
+    &::before {
+      content: ' ';
+    }
   }
 }
 

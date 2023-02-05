@@ -50,7 +50,7 @@
   --fontWeightRegular: 400;
   --fontWeightMedium: 500;
   --fontWeightSemiBold: 600;
-  --fontWeightBold: 750;
+  --fontWeightBold: 700;
   --fontWeightHeavy: 800;
   --fontWeightBlack: 900;
 
@@ -343,6 +343,10 @@ pre,
   }
 }
 
+.buttonFont {
+  font-weight: var(--fontWeightSemiBold);
+}
+
 p,
 pre,
 .p,
@@ -369,13 +373,13 @@ pre,
 }
 
 .textSmall {
-  font-size: 15px;
-  line-height: 20px;
+  font-size: 14px;
   line-height: 18px;
   font-weight: var(--fontWeightMedium);
+  letter-spacing: -0.1px;
 
   @media (--viewportMedium) {
-    line-height: 24px;
+    line-height: 16px;
   }
 }
 
@@ -689,19 +693,18 @@ textarea {
 .button {
   display: block;
   width: 100%;
-  min-height: 59px;
+  min-height: 56px;
   margin: 0;
 
   /* Padding is only for <a> elements where button styles are applied,
   buttons elements should have zero padding */
-  padding: 17px 0 17px 0;
+  padding: 16px 0 16px 0;
 
   transition: all var(--transitionStyleButton);
   cursor: pointer;
 
   @media (--viewportMedium) {
     padding: 20px 0 20px 0;
-    min-height: 65px;
   }
 }
 .button:focus,
@@ -734,14 +737,14 @@ textarea {
 /* Default button has no borders */
 .buttonBorders {
   border: none;
-  border-radius: var(--borderRadius);
+  border-radius: var(--borderRadiusMedium);
 }
 /* Secondary button has clear borders */
 .buttonBordersSecondary {
   border-width: 1px;
   border-style: solid;
   border-color: var(--matterColorNegative);
-  border-radius: var(--borderRadius);
+  border-radius: var(--borderRadiusMedium);
 }
 .buttonBordersSecondary:hover,
 .buttonBordersSecondary:focus {

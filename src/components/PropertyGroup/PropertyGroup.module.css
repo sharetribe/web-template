@@ -55,23 +55,7 @@
 }
 
 .notSelectedLabel {
-  color: var(--matterColorNegative);
+  color: var(--matterColorAnti);
   position: relative;
-
-  /* line-through */
-  background-image: linear-gradient(
-    transparent 10px,
-    var(--matterColorNegative) 10px,
-    var(--matterColorNegative) 11px,
-    transparent 11px
-  );
-
-  @media (--viewportMedium) {
-    background-image: linear-gradient(
-      transparent 12px,
-      var(--matterColorNegative) 12px,
-      var(--matterColorNegative) 13px,
-      transparent 13px
-    );
-  }
+  text-decoration: line-through;
 }

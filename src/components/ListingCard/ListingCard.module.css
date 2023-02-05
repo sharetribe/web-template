@@ -35,7 +35,7 @@
   /* Layout */
   display: flex;
   flex-direction: column;
-  padding: 16px 0 2px 0;
+  padding: 14px 0 2px 0;
 }
 
 .price {
@@ -44,12 +44,12 @@
   flex-direction: row;
   justify-content: flex-start;
   flex-shrink: 0;
-  margin-right: 18px;
+  margin-bottom: 4px;
 }
 
 .priceValue {
   /* Font */
-  composes: p from global;
+  composes: textSmall from global;
   font-weight: var(--fontWeightSemiBold);
 
   /* Remove default margins from font */
@@ -64,11 +64,13 @@
 
 .perUnit {
   /* Font */
-  composes: marketplaceTinyFontStyles from global;
-  color: var(--matterColor);
+  composes: textSmall from global;
+  font-weight: var(--fontWeightSemiBold);
+
+  color: var(--marketplaceColor);
   display: inline-flex;
   align-items: center;
-  margin-left: 8px;
+  margin-left: 2px;
 
   /* Remove default margins from font */
   margin-top: 0;
@@ -87,8 +89,8 @@
 
 .title {
   /* Font */
-  composes: p from global;
-  font-weight: var(--fontWeightSemiBold);
+  composes: textSmall from global;
+  font-weight: var(--fontWeightBold);
   color: var(--matterColor);
   margin: 0;
 }
@@ -96,6 +98,7 @@
 .authorInfo {
   /* Font */
   composes: marketplaceTinyFontStyles from global;
+  font-weight: var(--fontWeightMedium);
   color: var(--matterColor);
 
   padding-top: 4px;

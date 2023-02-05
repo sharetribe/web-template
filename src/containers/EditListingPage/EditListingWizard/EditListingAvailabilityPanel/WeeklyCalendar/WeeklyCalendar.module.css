@@ -114,6 +114,8 @@
 }
 .dateLabel {
   margin: 0;
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
 
   &::first-letter {
     text-transform: capitalize;
