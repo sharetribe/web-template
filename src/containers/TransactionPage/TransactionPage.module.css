@@ -60,3 +60,15 @@
   margin-top: 0;
   margin-bottom: 1px;
 }
+
+.orderPanelTitle {
+  /* Font */
+  composes: h4 from global;
+  font-weight: var(--fontWeightBold);
+  color: var(--matterColor);
+
+  /* Layout */
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 0;
+}

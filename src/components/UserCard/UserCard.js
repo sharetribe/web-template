@@ -121,8 +121,10 @@ const UserCard = props => {
       <div className={css.content}>
         <AvatarLarge className={css.avatar} user={user} />
         <div className={css.info}>
-          <FormattedMessage id="UserCard.heading" values={{ name: displayName }} />
-          {editProfileDesktop}
+          <div className={css.headingRow}>
+            <FormattedMessage id="UserCard.heading" values={{ name: displayName }} />
+            {editProfileDesktop}
+          </div>
           {hasBio ? <ExpandableBio className={css.desktopBio} bio={bio} /> : null}
           {links}
         </div>

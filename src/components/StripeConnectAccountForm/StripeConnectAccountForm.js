@@ -180,13 +180,13 @@ const UpdateStripeAccountFields = props => {
 
   return (
     <div className={css.savedInformation}>
-      <h3 className={css.accountInformationTitle}>{countryLabel}</h3>
+      <label className={css.accountInformationTitle}>{countryLabel}</label>
       <div className={css.savedCountry}>
         <FormattedMessage id={`StripeConnectAccountForm.countryNames.${savedCountry}`} />
       </div>
-      <h3 className={css.accountInformationTitle}>
+      <label className={css.accountInformationTitle}>
         <FormattedMessage id="StripeConnectAccountForm.bankAccountLabel" />
-      </h3>
+      </label>
 
       {showCardUpdateInput && savedCountry ? (
         <StripeBankAccountTokenInputField

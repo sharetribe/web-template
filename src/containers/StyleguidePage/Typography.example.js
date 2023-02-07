@@ -4,15 +4,14 @@ import classNames from 'classnames';
 import css from './StyleguidePage.module.css';
 
 const Font = props => {
-  const { component: TextComponent, description, styling } = props;
+  const { component: TextComponent, description } = props;
   return (
     <div className={css.fontCard}>
       <div className={css.element}>
         <TextComponent />
       </div>
       <div className={css.description}>
-        <p className={css.descriptionInfo}>{description}</p>
-        <pre className={css.tinyFont}>{styling}</pre>
+        <pre className={css.descriptionInfo}>{description}</pre>
       </div>
     </div>
   );
@@ -23,152 +22,9 @@ const { func, string } = PropTypes;
 Font.propTypes = {
   component: func.isRequired,
   description: string.isRequired,
-  styling: string.isRequired,
 };
 
 const Fonts = () => {
-  const h1FontStyling = `Mobile styles:
-  font-size: 30px;
-  font-weight: var(--fontWeightSemiBold);
-  line-height: 30px;
-  letter-spacing: -0.5px;
-  margin-top: 18px;
-  margin-bottom: 18px;
-
-  Desktop styles:
-  font-size: 40px;
-  font-weight: var(--fontWeightSemiBold);
-  line-height: 48px;
-  letter-spacing: -1px;
-  margin-top: 24px;
-  margin-bottom: 24px;`;
-
-  const h2FontStyling = `Mobile styles:
-  font-size: 21px;
-  font-weight: var(--fontWeightSemiBold);
-  line-height: 24px;
-  padding: 4px 0 2px 0;
-  margin-top: 24px;
-  margin-bottom: 18px;
-
-  Desktop styles:
-  font-size: 21px;
-  font-weight: var(--fontWeightSemiBold);
-  line-height: 32px;
-  padding: 0;
-  margin-top: 24px;
-  margin-bottom: 16px;`;
-
-  const h3FontStyling = `Mobile styles:
-  font-size: 18px;
-  font-weight: var(--fontWeightSemiBold);
-  line-height: 24px;
-  margin-top: 18px;
-  margin-bottom: 12px;
-
-  Desktop styles:
-  font-size: 18px;
-  font-weight: var(--fontWeightSemiBold);
-  line-height: 24px;
-  padding: 5px 0 3px 0;
-  margin-top: 16px;
-  margin-bottom: 16px;`;
-
-  const h4FontStyling = `
-  Can be used as a subtitle and also as
-  a label font for form inputs.
-
-  Mobile styles:
-  font-size: 15px;
-  font-weight: var(--fontWeightMedium);
-  line-height: 24px;
-  margin-top: 12px;
-  margin-bottom: 12px;
-
-  Desktop styles:
-  font-size: 15px;
-  font-weight: var(--fontWeightMedium);
-  line-height: 24px;
-  padding: 6px 0 2px 0;
-  margin-top: 16px;
-  margin-bottom: 16px;`;
-
-  const h5FontStyling = `
-  Can be used as a fine print text.
-
-  Mobile styles:
-  font-size: 14px;
-  font-weight: var(--fontWeightMedium);
-  line-height: 18px;
-  padding: 5px 0 1px 0;
-  margin-top: 12px;
-  margin-bottom: 6px;
-
-  Desktop styles:
-  font-size: 14px;
-  font-weight: var(--fontWeightMedium);
-  line-height: 16px;
-  padding: 2px 0 6px 0;
-  margin-top: 8px;
-  margin-bottom: 16px;`;
-
-  const h6FontStyling = `
-  Can be used as a 'close' button text.
-
-  Mobile styles:
-  font-size: 12px;
-  font-weight: var(--fontWeightBold);
-  line-height: 18px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  padding: 2px 0 4px 0;
-  margin-top: 6px;
-  margin-bottom: 6px;
-
-  Desktop styles:
-  font-size: 12px;
-  font-weight: var(--fontWeightBold);
-  line-height: 16px;
-  padding: 3px 0 5px 0;
-  margin-top: 8px;
-  margin-bottom: 8px;`;
-
-  const bodyFontStyling = `
-  Paragraphs and other body texts.
-
-  Mobile styles:
-  font-size: 14px;
-  font-weight: var(--fontWeightMedium);
-  line-height: 24px;
-  letter-spacing: -0.1px;
-  margin-top: 12px;
-  margin-bottom: 12px;
-
-  Desktop styles:
-  font-size: 16px;
-  font-weight: var(--fontWeightMedium);
-  line-height: 32px;
-  letter-spacing: -0.1px;
-  margin-top: 16px;
-  margin-bottom: 16px;`;
-
-  const tinyFontStyling = `
-  Very small print.
-
-  Mobile styles:
-  font-size: 13px;
-  font-weight: var(--fontWeightRegular);
-  line-height: 18px;
-  margin-top: 9.5px;
-  margin-bottom: 8.5px;
-
-  Desktop styles:
-  font-size: 13px;
-  font-weight: var(--fontWeightRegular);
-  line-height: 16px;
-  margin-top: 10.5px;
-  margin-bottom: 13.5px;`;
-
   const fontsContainerClasses = classNames(css.fontsContainer, css.baselines);
 
   return (
@@ -185,35 +41,47 @@ const Fonts = () => {
       <div className={fontsContainerClasses}>
         <Font
           component={() => <h1>H1 heading</h1>}
-          description="<h1>/composes: h1 from global;"
-          styling={h1FontStyling}
+          description={`<h1>
+.myClass {
+  composes: h1 from global;
+}`}
         />
         <Font
           component={() => <h2>H2 heading</h2>}
-          description="<h2>/composes: h2 from global;"
-          styling={h2FontStyling}
+          description={`<h2>
+.myClass {
+  composes: h2 from global;
+}`}
         />
         <Font
           component={() => <h3>H3 heading</h3>}
-          description="<h3>/composes: h3 from global;"
-          styling={h3FontStyling}
+          description={`<h3>
+.myClass {
+  composes: h3 from global;
+}`}
         />
         <Font
           component={() => <h4>H4: Lorem ipsum dolor sit amet</h4>}
-          description="<h4>/composes: h4 from global;"
-          styling={h4FontStyling}
+          description={`<h4>
+.myClass {
+  composes: h4 from global;
+}`}
         />
         <Font
           component={() => (
             <h5>H5: You will only be charged if your request is accepted by the provider.</h5>
           )}
-          description="<h5>/composes: h5 from global;"
-          styling={h5FontStyling}
+          description={`<h5>
+.myClass {
+  composes: h5 from global;
+}`}
         />
         <Font
           component={() => <h6>H6: Close</h6>}
-          description="<h6>/composes: h6 from global;"
-          styling={h6FontStyling}
+          description={`<h6>
+.myClass {
+  composes: h6 from global;
+}`}
         />
         <Font
           component={() => (
@@ -224,13 +92,16 @@ const Fonts = () => {
               elit.
             </p>
           )}
-          description="<p>, <button>, etc. / composes: marketplaceBodyFontStyles from global;"
-          styling={bodyFontStyling}
+          description={`<p>, <button>, etc.
+.myClass {
+  composes: p from global;
+}`}
         />
         <Font
           component={() => <p className={css.tinyFont}>Hosted by user</p>}
-          description="composes: marketplaceTinyFontStyles from global;"
-          styling={tinyFontStyling}
+          description={`.myClass {
+  composes: marketplaceTinyFontStyles from global;
+}`}
         />
       </div>
     </div>

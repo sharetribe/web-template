@@ -12,7 +12,7 @@ exports[`OrderBreakdown customer transaction data matches snapshot 1`] = `
         className="bookingPeriod"
       >
         <div
-          className="bookingPeriodSection"
+          className="bookingPeriodSectionLeft"
         >
           <div
             className="dayLabel"
@@ -179,7 +179,7 @@ exports[`OrderBreakdown provider transaction data matches snapshot 1`] = `
         className="bookingPeriod"
       >
         <div
-          className="bookingPeriodSection"
+          className="bookingPeriodSectionLeft"
         >
           <div
             className="dayLabel"

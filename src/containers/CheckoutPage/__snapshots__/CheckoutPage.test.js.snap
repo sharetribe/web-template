@@ -148,55 +148,62 @@ exports[`CheckoutPage matches snapshot 1`] = `
         />
       </AspectRatioWrapper>
       <div
-        className="avatarWrapper"
+        class="listingDetailsWrapper"
       >
-        <AvatarMedium
-          disableProfileLink={true}
-          user={
-            Object {
-              "attributes": Object {
-                "banned": false,
-                "deleted": false,
-                "profile": Object {
-                  "abbreviatedName": "TT",
-                  "displayName": "author display name",
-                },
-              },
-              "id": UUID {
-                "_sdkType": "UUID",
-                "uuid": "author",
-              },
-              "type": "user",
-            }
-          }
-        />
-      </div>
-      <div
-        className="detailsHeadings"
-      >
-        <h2
-          className="detailsTitle"
+        <div
+          className="avatarWrapper"
         >
-          <NamedLink
-            name="ListingPage"
-            params={
+          <AvatarMedium
+            disableProfileLink={true}
+            user={
               Object {
-                "id": "listing1",
-                "slug": "listing1-title",
+                "attributes": Object {
+                  "banned": false,
+                  "deleted": false,
+                  "profile": Object {
+                    "abbreviatedName": "TT",
+                    "displayName": "author display name",
+                  },
+                },
+                "id": UUID {
+                  "_sdkType": "UUID",
+                  "uuid": "author",
+                },
+                "type": "user",
               }
             }
+          />
+        </div>
+        <div
+          className="detailsHeadings"
+        >
+          <h2
+            className="detailsTitle"
           >
-            listing1 title
-          </NamedLink>
-        </h2>
-      </div>
-      <h2
-        className="orderBreakdownTitle"
-      >
-        <MemoizedFormattedMessage
-          id="CheckoutPage.default-buying-products.orderBreakdown"
+            <NamedLink
+              name="ListingPage"
+              params={
+                Object {
+                  "id": "listing1",
+                  "slug": "listing1-title",
+                }
+              }
+            >
+              listing1 title
+            </NamedLink>
+          </h2>
+        </div>
+        <h3
+          className="orderBreakdownTitle"
+        >
+          <MemoizedFormattedMessage
+            id="CheckoutPage.default-buying-products.orderBreakdown"
+          />
+        </h3>
+        <hr
+          className="totalDivider"
         />
-      </h2>
+      </div>
     </div>
   </div>
 </Page>
