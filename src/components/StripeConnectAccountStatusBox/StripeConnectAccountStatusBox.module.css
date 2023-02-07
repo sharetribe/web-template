@@ -31,7 +31,7 @@
 }
 
 .verificationBoxTitle {
-  composes: h4 from global;
+  composes: h5 from global;
   font-weight: var(--fontWeightSemiBold);
 
   align-self: center;
@@ -42,7 +42,7 @@
 }
 
 .verificationBoxText {
-  composes: h4 from global;
+  composes: h5 from global;
   font-weight: var(--fontWeightRegular);
   margin-top: 0;
   margin-bottom: 0;

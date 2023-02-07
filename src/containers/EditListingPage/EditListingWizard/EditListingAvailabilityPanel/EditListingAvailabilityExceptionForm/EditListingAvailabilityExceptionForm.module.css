@@ -16,8 +16,8 @@
 }
 
 .heading {
-  margin-bottom: 16px;
   composes: h3 from global;
+  margin-bottom: 16px;
 }
 
 /* Exception start and end inputs */

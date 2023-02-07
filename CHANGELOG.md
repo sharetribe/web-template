@@ -254,6 +254,7 @@ way to update this template, but currently, we follow a pattern:
 ## [v10.1.0] 2023-02-07
 
 ### Updates from upstream (FTW-daily v9.1.0)
+
 - [change] Norway's stripe config should use NOK not EUR.
   [#1579](https://github.com/sharetribe/ftw-daily/pull/1579)
 - [delete] Update README.md after changes in [#1555].
