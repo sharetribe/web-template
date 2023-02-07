@@ -88,13 +88,13 @@
 
   & :global(.CalendarMonth_caption) {
     color: var(--matterColor);
-    font-weight: 400;
+    font-weight: var(--fontWeightRegular);
     font-size: 18px;
     line-height: 20px;
 
     margin: 1px 0 14px;
-    padding-top: 31px;
-    padding-bottom: 37px;
+    padding-top: 28px;
+    padding-bottom: 40px;
 
     &::first-letter {
       text-transform: capitalize;

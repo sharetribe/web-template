@@ -23,10 +23,7 @@
   white-space: nowrap;
 
   /* Font */
-  font-weight: var(--fontWeightMedium);
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 0;
+  composes: textSmall from global;
 
   color: var(--matterColor);
   padding-bottom: 10px;
@@ -58,8 +55,8 @@
     margin-top: 0;
     margin-bottom: 16px;
 
-    padding-top: 6px; /* Drop the text to adjust it to correct baseline */
-    padding-bottom: 2px;
+    padding-top: 5px; /* Drop the text to adjust it to correct baseline */
+    padding-bottom: 3px;
 
     &:hover {
       background-image: url("data:image/svg+xml;utf8,<svg width='4' height='32' viewBox='0 0 4 32' xmlns='http://www.w3.org/2000/svg'><path d='M0 0h4v32H0z' fill='%234a4a4a' fill-rule='evenodd'/></svg>");

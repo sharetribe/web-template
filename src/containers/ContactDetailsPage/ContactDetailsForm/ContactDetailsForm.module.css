@@ -5,12 +5,12 @@
 
 /* Shared styles for infoText variants */
 .infoText {
-  composes: h4 from global;
+  composes: textSmall from global;
 
   display: inline-block;
   padding-left: 18px;
   background-repeat: no-repeat;
-  background-position: top 7px left;
+  background-position: top 4px left;
 
   margin-top: 11px;
   margin-bottom: 0;

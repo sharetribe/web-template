@@ -11,30 +11,21 @@
 }
 
 .locationHeading,
-.pickupHeading {
-  margin: 0 0 12px 0;
-  color: var(--matterColorAnti);
-
-  padding-top: 4px;
-  padding-bottom: 2px;
-
-  @media (--viewportMedium) {
-    margin: 0 0 8px 0;
-    padding-top: 5px;
-    padding-bottom: 3px;
-  }
+.pickupHeading,
+.paymentHeading,
+.billingHeading,
+.messageHeading {
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
+  padding: 0;
+  margin-bottom: 16px;
 }
 
 .locationDetails,
 .pickupDetails {
-  composes: marketplaceSmallFontStyles from global;
-  margin-top: 0;
-  margin-bottom: 0;
-
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+  composes: p from global;
+  padding: 0;
+  margin: 0;
 }
 
 .card {
@@ -57,20 +48,6 @@
 .errorMessage {
   margin-top: 24px;
   color: var(--failColor);
-}
-
-.paymentHeading {
-  margin: 0 0 12px 0;
-  color: var(--matterColor);
-
-  padding-top: 4px;
-  padding-bottom: 2px;
-
-  @media (--viewportMedium) {
-    margin: 0 0 16px 0;
-    padding-top: 5px;
-    padding-bottom: 3px;
-  }
 }
 
 .paymentMethodSelector {
@@ -129,37 +106,9 @@
   margin-bottom: 48px;
 }
 
-.billingHeading {
-  margin: 0 0 12px 0;
-  color: var(--matterColor);
-
-  padding-top: 4px;
-  padding-bottom: 2px;
-
-  @media (--viewportMedium) {
-    margin: 0 0 24px 0;
-    padding-top: 6px;
-    padding-bottom: 2px;
-  }
-}
-
 .sameAddressCheckbox {
   display: block;
   margin: 24px 0;
-}
-
-.messageHeading {
-  color: var(--matterColor);
-  margin: 36px 0 12px 0;
-
-  padding-top: 4px;
-  padding-bottom: 2px;
-
-  @media (--viewportMedium) {
-    margin: 0 0 24px 0;
-    padding-top: 5px;
-    padding-bottom: 3px;
-  }
 }
 
 .messageLabel {

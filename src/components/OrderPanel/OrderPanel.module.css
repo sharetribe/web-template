@@ -26,7 +26,7 @@
 
 .modalHeading {
   margin-top: 89px;
-  margin-bottom: 36px;
+  margin-bottom: 0px;
   padding: 0 24px;
 
   @media (--viewportMedium) {
@@ -53,26 +53,49 @@
 }
 
 .price {
-  composes: h2 from global;
+  composes: h4 from global;
+  font-weight: var(--fontWeightBold);
 
-  color: var(--matterColor);
+  color: var(--marketplaceColor);
   margin: 0 0 0 24px;
 
   @media (--viewportMedium) {
     margin: 0;
+    padding: 0;
+  }
+}
+
+.perUnit {
+  /* Font */
+  composes: h4 from global;
+  font-weight: var(--fontWeightBold);
+
+  color: var(--marketplaceColor);
+  padding: 0;
+
+  margin-top: 0;
+  margin-bottom: 0;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  @media (--viewportLarge) {
   }
 }
 
 .author {
-  composes: h4 from global;
+  composes: p from global;
   margin: 0px 24px 32px 24px;
 
   display: flex;
   flex-direction: row;
+  align-items: center;
 
   @media (--viewportMedium) {
     width: 100%;
-    margin: 8px 0 32px 0;
+    margin: 12px 0 36px 0;
     color: var(--matterColor);
   }
 }
@@ -181,8 +204,8 @@
   /* Layout */
   display: flex;
   flex-direction: row;
-  align-items: center;
-  gap: 5px;
+  align-items: baseline;
+  gap: 4px;
   flex-shrink: 0;
   margin-right: 22px;
   padding: 3px 0;
@@ -206,8 +229,8 @@
 
 .priceValue {
   /* Font */
-  composes: h2 from global;
-  color: var(--matterColor);
+  composes: h3 from global;
+  color: var(--marketplaceColor);
 
   margin-top: 0;
   margin-bottom: 0px;
@@ -217,15 +240,15 @@
   }
 }
 
-.perUnitInCTA,
-.perUnit {
+.perUnitInCTA {
   /* Font */
   composes: marketplaceTinyFontStyles from global;
-  color: var(--matterColor);
-  padding: 10px 0 6px 0;
+  color: var(--marketplaceColor);
+  font-weight: var(--fontWeightSemiBold);
+  padding: 0;
 
   margin-top: 0;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 
   @media (--viewportMedium) {
     margin-top: 0;
@@ -234,9 +257,6 @@
 
   @media (--viewportLarge) {
   }
-}
-.perUnitInCTA {
-  padding: 0;
 }
 
 .orderButton {

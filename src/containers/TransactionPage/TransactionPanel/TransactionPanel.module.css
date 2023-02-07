@@ -147,7 +147,7 @@
 
   @media (--viewportLarge) {
     max-width: 100%;
-    margin: 112px 0 0 0;
+    margin: 57px 0 0 0;
   }
 }
 
@@ -169,7 +169,9 @@
 }
 
 .mainTitle {
+  composes: h3 from global;
   display: block;
+  margin-bottom: 0;
 }
 
 .listingTitleMobile {
@@ -181,13 +183,14 @@
 }
 
 .transactionInfoMessage {
-  margin: 18px 24px 0 24px;
+  margin: 12px 24px 0 24px;
 
   @media (--viewportMedium) {
-    margin: 23px 24px 0 24px;
+    margin: 0 24px 0 24px;
   }
+
   @media (--viewportLarge) {
-    margin: 23px 0 0 0;
+    margin: 0;
   }
 }
 
@@ -223,8 +226,7 @@
    */
 
   @media (--viewportLarge) {
-    margin: 120px 0 0 0;
-    padding-top: 3px;
+    margin: 56px 0 0 0;
   }
 }
 
@@ -256,6 +258,7 @@
 }
 
 .detailCardTitle {
+  composes: h4 from global;
   margin-top: 0;
   margin-bottom: 10px;
 
@@ -305,14 +308,26 @@
 }
 
 .orderBreakdownTitle {
-  /* Font */
-  color: var(--matterColor);
+  composes: h6 from global;
+  letter-spacing: 1px;
+  font-weight: var(--fontWeightMedium);
+  margin: 0 24px;
 
-  margin: 0 24px 0 24px;
+  @media (--viewportMedium) {
+    margin: 0 48px;
+  }
+}
 
-  @media (--viewportLarge) {
-    margin: 32px 48px 0px 48px;
-    padding: 4px 0 4px 0;
+.totalDivider {
+  /* dimensions */
+  height: 1px;
+  margin: 12px 24px 5px 24px;
+
+  border: none;
+  background-color: var(--matterColorNegative);
+
+  @media (--viewportMedium) {
+    margin: 7px 48px 0 48px;
   }
 }
 
@@ -325,14 +340,12 @@
 }
 
 .sectionHeading {
-  color: var(--matterColor);
-  margin: 0;
-
-  @media (--viewportMedium) {
-    padding: 7px 0 1px 0;
-    margin: 0;
-  }
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
+  padding: 0;
+  margin-bottom: 16px;
 }
+
 .shippingInfoContent {
   padding: 0px 0 0px 13px;
   margin-top: 12px;

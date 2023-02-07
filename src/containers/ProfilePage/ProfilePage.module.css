@@ -23,6 +23,7 @@
   width: 100%;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   border-bottom: 1px solid var(--matterColorNegative);
 
   @media (--viewportLarge) {
@@ -36,13 +37,13 @@
   flex-shrink: 0;
 
   @media (--viewportLarge) {
-    margin: 0 96px 44px 0;
+    margin: 0 96px 48px 0;
   }
 }
 
 .mobileHeading {
   flex-shrink: 0;
-  margin: 47px 0 0 0;
+  margin: 60px 0 0 0;
 
   @media (--viewportMedium) {
     margin: 49px 0 0 0;
@@ -71,15 +72,17 @@
 
   @media (--viewportLarge) {
     display: inline;
+    padding: 6px 0 2px 0;
   }
 }
 
 .desktopHeading {
+  composes: h2 from global;
   display: none;
 
   @media (--viewportLarge) {
     display: block;
-    margin: 2px 0 24px 0;
+    margin: 0 0 24px 0;
   }
 }
 
@@ -108,7 +111,7 @@
 }
 
 .listingsTitle {
-  composes: h3 from global;
+  composes: h4 from global;
   color: var(--matterColor);
   margin-bottom: 0;
 
@@ -117,7 +120,7 @@
     margin-bottom: 8px;
   }
   @media (--viewportLarge) {
-    margin-top: 58px;
+    margin-top: 56px;
     margin-bottom: 8px;
   }
 }
@@ -169,7 +172,7 @@
 }
 
 .mobileReviewsTitle {
-  composes: h3 from global;
+  composes: h4 from global;
   color: var(--matterColorAnti);
   margin: 24px 0 26px 0;
 }
@@ -197,7 +200,7 @@
 }
 
 .desktopReviewsTitle {
-  composes: h3 from global;
+  composes: textLarge from global;
   margin-bottom: 0;
 }
 

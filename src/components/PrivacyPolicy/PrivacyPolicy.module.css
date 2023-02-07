@@ -5,7 +5,6 @@
     font-weight: var(--fontWeightMedium);
     font-size: 15px;
     line-height: 24px;
-    letter-spacing: 0;
     /* margin-top + n * line-height + margin-bottom => x * 6px */
     margin-top: 12px;
     margin-bottom: 12px;
