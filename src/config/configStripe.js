@@ -236,7 +236,7 @@ export const supportedCountries = [
   {
     // Norway
     code: 'NO',
-    currency: 'EUR',
+    currency: 'NOK',
     accountConfig: {
       iban: true,
     },
