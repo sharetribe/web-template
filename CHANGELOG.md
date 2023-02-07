@@ -14,6 +14,35 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2022-XX-XX
 
+## [v10.1.0] 2023-02-07
+
+### Updates from upstream (FTW-daily v9.1.0)
+- [change] Norway's stripe config should use NOK not EUR.
+  [#1579](https://github.com/sharetribe/ftw-daily/pull/1579)
+- [delete] Update README.md after changes in [#1555].
+  [#1569](https://github.com/sharetribe/ftw-daily/pull/1569)
+- [change] Added some dependabot updates earlier: passport-0.6.0, loader-utils-2.0.4,
+  decode-uri-component-0.2.2  
+  Note: Passport-0.6.0 changed login and logout parameter list.
+- [change] Update Browserlist db / caniuse-lite.
+  [#1567](https://github.com/sharetribe/ftw-daily/pull/1567)
+- [change] Update minimum Node version to >=16.18.0. (v14.15 had problems with some libs and v14
+  support ends soon.) [#1566](https://github.com/sharetribe/ftw-daily/pull/1566)
+- [delete] Remove unnecessary polyfills (dependencies might still use these)
+
+  - array-includes
+  - array.prototype.find
+  - object.entries
+  - object.values
+  - Number.parseFloat, Number.parseInt, Number.isNaN
+
+  [#1565](https://github.com/sharetribe/ftw-daily/pull/1565)
+
+- [add] Add the cross-env package to better support Windows command prompts
+  [#1555](https://github.com/sharetribe/ftw-daily/pull/1555)
+
+  [v10.1.0]: https://github.com/sharetribe/ftw-product/compare/v10.0.3...v10.1.0
+
 ## [v10.0.3] 2022-10-17
 
 ### Updates from upstream (FTW-daily v9.0.2)
