@@ -140,9 +140,10 @@ export class BookingTimeFormComponent extends Component {
 
               {showEstimatedBreakdown ? (
                 <div className={css.priceBreakdownContainer}>
-                  <h3>
+                  <h3 className={css.bookingBreakdownTitle}>
                     <FormattedMessage id="BookingTimeForm.priceBreakdownTitle" />
                   </h3>
+                  <hr className={css.totalDivider} />
                   <EstimatedCustomerBreakdownMaybe
                     breakdownData={breakdownData}
                     lineItems={lineItems}
@@ -165,6 +166,7 @@ export class BookingTimeFormComponent extends Component {
                   <FormattedMessage id="BookingTimeForm.requestToBook" />
                 </PrimaryButton>
               </div>
+
               <p className={css.finePrint}>
                 <FormattedMessage
                   id={

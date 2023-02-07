@@ -5,6 +5,26 @@
   flex-direction: column;
 }
 
+.bookingBreakdownTitle {
+  composes: h6 from global;
+  letter-spacing: 1px;
+  font-weight: var(--fontWeightMedium);
+}
+
+.totalDivider {
+  /* dimensions */
+  width: 100%;
+  height: 1px;
+  margin: 12px 0 5px 0;
+
+  border: none;
+  background-color: var(--matterColorNegative);
+
+  @media (--viewportMedium) {
+    margin: 7px 0 0px 0;
+  }
+}
+
 .bookingDates {
   flex-shrink: 0;
 
@@ -46,6 +66,7 @@
 .finePrint {
   composes: marketplaceTinyFontStyles from global;
   text-align: center;
+  margin-top: 8px;
 }
 
 .submitButton {

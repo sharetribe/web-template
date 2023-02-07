@@ -13,10 +13,5 @@
 }
 
 .title {
-  margin-bottom: 19px;
-
-  @media (--viewportLarge) {
-    margin-bottom: 40px;
-    padding: 2px 0 6px 0;
-  }
+  composes: h3 from global;
 }

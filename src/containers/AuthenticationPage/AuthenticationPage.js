@@ -427,7 +427,7 @@ export const AuthenticationPageComponent = props => {
         <LayoutWrapperTopbar>
           <TopbarContainer className={topbarClasses} />
         </LayoutWrapperTopbar>
-        <LayoutWrapperMain className={css.layoutWrapperMain}>
+        <LayoutWrapperMain>
           <ResponsiveBackgroundImageContainer
             className={css.root}
             childrenWrapperClassName={css.contentContainer}

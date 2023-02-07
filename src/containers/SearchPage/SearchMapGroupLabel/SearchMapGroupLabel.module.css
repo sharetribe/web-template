@@ -30,8 +30,8 @@
   position: relative;
 
   /* Font */
-  composes: h4 from global;
-  font-weight: var(--fontWeightSemiBold);
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
   margin-top: 0;
   margin-bottom: 0;
 

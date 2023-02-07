@@ -1,13 +1,5 @@
 @import '../../styles/customMediaQueries.css';
 
-.layoutWrapperMain {
-  min-height: calc(100vh - var(--topbarHeight));
-
-  @media (--viewportMedium) {
-    min-height: calc(100vh - var(--topbarHeightDesktop));
-  }
-}
-
 .root {
   flex-grow: 1;
 }
@@ -24,6 +16,12 @@
 .content {
   composes: marketplaceModalBaseStyles from global;
   padding-top: 29px;
+
+  @media (--viewportMedium) {
+    margin-top: 5vh;
+    margin-bottom: 7.5vh;
+    min-height: 700px;
+  }
 }
 
 /* ================ Tabs & Form ================ */

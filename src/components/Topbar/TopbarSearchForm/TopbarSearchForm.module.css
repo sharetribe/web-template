@@ -48,7 +48,7 @@
 .desktopIcon {
   height: var(--topbarHeightDesktop);
   border: none;
-  padding-top: 3px;
+  padding-top: 2px;
 
   display: flex;
   width: 24px;
@@ -57,7 +57,7 @@
 }
 
 .desktopInput {
-  composes: h4 from global;
+  composes: p from global;
   flex-grow: 1;
   /* Font */
   height: var(--topbarHeightDesktop);
@@ -70,6 +70,9 @@
   /* Search text gets ellipsis if it's too wide */
   text-overflow: ellipsis;
   overflow-x: hidden;
+
+  margin-top: 0;
+  margin-bottom: 0;
 
   &:hover,
   &:focus {
@@ -88,16 +91,12 @@
   &::placeholder {
     text-overflow: ellipsis;
     overflow-x: hidden;
-    font-weight: var(--fontWeightMedium);
     transition: var(--transitionStyleButton);
   }
 
-  margin-top: 0;
-  margin-bottom: 0;
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 0;
-    font-weight: var(--fontWeightSemiBold);
   }
 }
 

@@ -55,7 +55,7 @@
 
   @media (--viewportLarge) {
     flex-wrap: unset;
-    padding: 113px 0 82px 36px;
+    padding: 40px 0 82px 36px;
     flex-direction: column;
     justify-content: flex-start;
     border: none;
@@ -63,12 +63,13 @@
     background-color: transparent;
   }
   @media (--viewportLargeWithPaddings) {
-    padding: 113px 0 82px calc((100% - 1056px) / 2);
+    padding: 40px 0 82px calc((100% - 1056px) / 2);
   }
 }
 
 .title {
   /* Font */
+  composes: h2 from global;
   color: var(--matterColor);
 
   align-self: center;
@@ -85,7 +86,7 @@
   }
 
   @media (--viewportLarge) {
-    padding: 0;
+    padding: 5px 0 3px 0;
     align-self: unset;
   }
 }
@@ -103,7 +104,7 @@
   }
 
   @media (--viewportLarge) {
-    padding-top: 53px;
+    padding-top: 24px;
     flex-direction: column;
   }
 }
@@ -135,7 +136,7 @@
   margin-top: 1px;
 
   @media (--viewportLarge) {
-    margin-top: 6px;
+    margin-top: 25px;
   }
 }
 
@@ -185,7 +186,6 @@
 
   @media (--viewportLarge) {
     margin-bottom: 16px;
-    padding-bottom: 7px;
   }
 }
 
@@ -205,7 +205,8 @@
   }
 
   @media (--viewportLarge) {
-    margin-right: 15px;
+    margin-top: 3px;
+    margin-right: 7px;
   }
 }
 
@@ -220,6 +221,7 @@
     '... item    state'
     '... details state';
   padding: 2px 0 6px;
+  gap: 4px 0;
 
   /* Remove text underline from this link */
   text-decoration: none;
@@ -243,13 +245,14 @@
   height: 6px;
 
   @media (--viewportLarge) {
-    margin-top: 4px;
+    margin-top: 5px;
+    margin-left: 5px;
   }
 
   @media (--viewportLarge) {
     justify-self: flex-start;
-    width: 9px;
-    height: 9px;
+    width: 8px;
+    height: 8px;
   }
 }
 
@@ -266,8 +269,8 @@
   grid-area: name;
 
   /* Font */
-  composes: h5 from global;
-  font-weight: var(--fontWeightSemiBold);
+  composes: textSmall from global;
+  font-weight: var(--fontWeightBold);
   color: var(--matterColor);
 
   margin-top: 0;
@@ -275,7 +278,7 @@
 
   @media (--viewportMedium) {
     line-height: 16px;
-    padding: 3px 0 5px 0;
+    padding: 0;
     margin-top: 0;
     margin-bottom: 0;
   }
@@ -284,35 +287,18 @@
   composes: marketplaceTinyFontStyles from global;
   grid-area: item;
   color: var(--matterColor);
-  line-height: 18px;
-  letter-spacing: 0px;
 
   margin-top: 0;
   margin-bottom: 0;
-
-  @media (--viewportMedium) {
-    line-height: 24px;
-
-    margin-top: 0;
-    margin-bottom: 0;
-  }
 }
+
 .itemDetails {
   composes: marketplaceTinyFontStyles from global;
   grid-area: details;
   color: var(--matterColor);
-  line-height: 18px;
-  letter-spacing: 0px;
 
   margin-top: 0;
   margin-bottom: 0;
-
-  @media (--viewportMedium) {
-    line-height: 24px;
-
-    margin-top: 0;
-    margin-bottom: 0;
-  }
 }
 
 .itemState {

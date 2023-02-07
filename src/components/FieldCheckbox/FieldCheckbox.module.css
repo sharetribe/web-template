@@ -106,6 +106,7 @@
 .textRoot {
   composes: marketplaceListingAttributeFontStyles from global;
   color: var(--matterColor);
+  padding: 0;
   margin-top: -1px;
   margin-bottom: 1px;
   cursor: pointer;

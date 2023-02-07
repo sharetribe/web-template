@@ -31,8 +31,8 @@
   }
 
   @media (--viewportMedium) {
-    padding-top: 12px;
-    padding-bottom: 11px;
+    padding-top: 8px;
+    padding-bottom: 16px;
   }
 }
 

@@ -18,6 +18,14 @@
   }
 }
 
+.heading {
+  composes: h3 from global;
+}
+
+.subheading {
+  composes: p from global;
+}
+
 .heading,
 .subheading,
 .timezonePicker,
@@ -35,7 +43,6 @@
   margin: 0 0 6px 0;
   padding-top: 19px;
   padding-bottom: 5px;
-  color: var(--matterColorAnti);
 
   @media (--viewportMedium) {
     margin: 0 0 8px 0;

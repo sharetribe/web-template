@@ -17,10 +17,5 @@
 }
 
 .title {
-  margin-top: 8px;
-  margin-bottom: 19px;
-
-  @media (--viewportMedium) {
-    margin-bottom: 36px;
-  }
+  composes: h3 from global;
 }

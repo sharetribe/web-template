@@ -41,15 +41,7 @@
 }
 
 .billingHeading {
-  margin: 0 0 14px 0;
-  color: var(--matterColorAnti);
-
-  padding-top: 3px;
-  padding-bottom: 2px;
-
-  @media (--viewportMedium) {
-    margin: 0 0 26px 0;
-  }
+  composes: h4 from global;
 }
 
 .messageHeading {

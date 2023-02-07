@@ -59,7 +59,6 @@
 
 /* Overwrite Mapbox's specific font rules */
 .root .card {
-  font-family: 'poppins', Helvetica, Arial, sans-serif;
   font-weight: var(--fontWeightSemiBold);
 }
 
@@ -105,7 +104,7 @@
 
 .paginationPage {
   /* Font */
-  composes: h4 from global;
+  composes: textSmall from global;
   font-weight: var(--fontWeightSemiBold);
   margin-top: 0;
   margin-bottom: 0;

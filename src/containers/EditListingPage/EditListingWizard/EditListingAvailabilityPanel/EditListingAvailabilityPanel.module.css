@@ -25,20 +25,12 @@
 }
 
 .title {
-  margin-bottom: 18px;
-
-  @media (--viewportMedium) {
-    margin-bottom: 16px;
-  }
-  @media (--viewportLarge) {
-    margin-bottom: 32px;
-    padding: 2px 0 6px 0;
-  }
+  composes: h3 from global;
 }
 
 .planInfo {
   @media (--viewportMedium) {
-    padding: 5px 0 3px 0;
+    padding: 1px 0 7px 0;
   }
 }
 

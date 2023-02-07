@@ -130,9 +130,10 @@ bottom of the container.
 }
 
 .currentLocation {
-  composes: h4 from global;
+  composes: p from global;
 }
 
 .currentLocationIcon {
   margin-right: 10px;
+  margin-bottom: 1px;
 }

@@ -15,6 +15,7 @@ const BreakdownMaybe = props => {
       <h3 className={css.orderBreakdownTitle}>
         <FormattedMessage id={`TransactionPanel.${processName}.orderBreakdownTitle`} />
       </h3>
+      <hr className={css.totalDivider} />
       {orderBreakdown}
     </div>
   ) : null;

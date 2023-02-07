@@ -86,7 +86,7 @@
 }
 
 .ownListingText {
-  composes: h4 from global;
+  composes: h5 from global;
   margin: 14px 12px 11px 24px;
 
   @media (--viewportMedium) {
@@ -110,7 +110,7 @@
 }
 
 .editListingLink {
-  composes: h4 from global;
+  composes: h5 from global;
   flex-shrink: 0;
   margin: 0;
   padding: 14px 24px 11px 12px;
@@ -290,7 +290,8 @@
 }
 
 .orderPanel {
-  @media (--viewportLarge) {
+  /* Note: panel height might be too much on small viewport - hence min-height */
+  @media (--viewportLarge) and (min-height: 950px) {
     position: sticky;
     top: 108px;
   }
@@ -300,6 +301,9 @@
   @media (--viewportLarge) {
     display: block;
     margin-top: 24px;
+  }
+  /* Note: panel height might be too much on small viewport - hence min-height */
+  @media (--viewportLarge) and (min-height: 950px) {
     position: sticky;
     top: 108px;
   }
@@ -307,7 +311,8 @@
 
 .orderPanelTitle {
   /* Font */
-  composes: h2 from global;
+  composes: h4 from global;
+  font-weight: var(--fontWeightBold);
   color: var(--matterColor);
 
   /* Layout */
@@ -436,6 +441,7 @@
 }
 
 .authorNameLink {
+  composes: textSmall from global;
   color: var(--matterColor);
 }
 
@@ -493,20 +499,32 @@
 
 .sectionTitle {
   /* Font for sections titles */
-  composes: h3 from global;
-  color: var(--matterColorAnti);
-  font-weight: var(--fontWeightSemiBold);
-  letter-spacing: -0.11px;
+  composes: p from global;
+  padding: 0;
+  font-weight: var(--fontWeightBold);
 }
 
 .detailsTitle,
-.textHeading {
+.multiEnumTitle,
+.textHeading,
+.locationTitle,
+.reviewsTitle,
+.aboutProviderTitle {
   composes: sectionTitle;
   margin-top: 0;
   margin-bottom: 12px;
+
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 8px;
+  }
+}
+
+.locationTitle,
+.reviewsTitle,
+.aboutProviderTitle {
+  @media (--viewportMedium) {
+    margin-bottom: 16px;
   }
 }
 
@@ -525,27 +543,49 @@
 }
 
 .ingress {
-  font-weight: var(--fontWeightRegular);
-  letter-spacing: 0.2px;
-  padding: 1px 0 5px 0;
+  composes: p from global;
   margin: 0;
 
   /* Preserve newlines, but collapse other whitespace */
   white-space: pre-line;
 
   @media (--viewportMedium) {
-    padding: 3px 0 5px 0;
     margin: 0;
   }
 }
 
-.sectionDetails {
+.sectionDetails,
+.sectionMultiEnum {
   padding: 0 24px;
   margin-bottom: 32px;
 
   @media (--viewportMedium) {
     padding: 0;
     margin-bottom: 40px;
+  }
+}
+
+.sectionMap {
+  padding: 0 24px;
+  margin-bottom: 35px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-bottom: 0;
+  }
+}
+
+.sectionReviews,
+.sectionAuthor {
+  padding: 0 24px;
+  margin-top: 42px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-top: 40px;
+  }
+  @media (--viewportLarge) {
+    padding: 8px 0;
   }
 }
 
@@ -568,110 +608,14 @@
   }
 
   @media (--viewportMedium) {
-    padding: 7px 0 0px 0;
-    line-height: 40px;
+    padding: 5px 0 2px 0;
+    line-height: 32px;
   }
 }
 
 .detailLabel {
   font-weight: var(--fontWeightSemiBold);
   letter-spacing: -0.09px;
-}
-
-.sectionMultiEnum {
-  padding: 0 24px;
-  margin-bottom: 32px;
-
-  @media (--viewportMedium) {
-    padding: 0;
-    margin-bottom: 52px;
-  }
-}
-
-.multiEnumTitle {
-  composes: sectionTitle;
-
-  margin-top: 0;
-  margin-bottom: 16px;
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 12px;
-  }
-}
-
-.sectionMap {
-  padding: 0 24px;
-  margin-bottom: 35px;
-
-  @media (--viewportMedium) {
-    padding: 0;
-    margin-bottom: 0;
-  }
-}
-
-.locationTitle {
-  composes: sectionTitle;
-
-  margin-top: 0;
-  margin-bottom: 20px;
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 24px;
-  }
-}
-
-.sectionReviews {
-  padding: 0 24px;
-  margin-bottom: 5px;
-
-  @media (--viewportMedium) {
-    padding: 0;
-  }
-  @media (--viewportLarge) {
-    padding-bottom: 5px;
-    margin-bottom: 0;
-  }
-}
-
-.reviewsTitle {
-  composes: sectionTitle;
-
-  margin: 52px 0 20px 0;
-
-  @media (--viewportMedium) {
-    margin: 53px 0 27px 0;
-  }
-  @media (--viewportLarge) {
-    padding: 5px 0 3px 0;
-    margin: 56px 0 26px 0;
-  }
-}
-
-.sectionAuthor {
-  position: relative;
-  padding: 0 24px;
-  margin-bottom: 5px;
-
-  @media (--viewportMedium) {
-    padding: 0;
-  }
-  @media (--viewportLarge) {
-    margin-bottom: 3px;
-  }
-}
-
-.aboutProviderTitle {
-  composes: sectionTitle;
-
-  margin: 54px 0 23px 0;
-
-  @media (--viewportMedium) {
-    margin: 53px 0 27px 0;
-  }
-  @media (--viewportLarge) {
-    margin: 64px 0 24px 0;
-    padding: 5px 0 3px 0;
-  }
 }
 
 .inquiryModalContent {
@@ -725,6 +669,7 @@
 
   @media (--viewportLarge) {
     height: 417px;
+    margin-bottom: 7px;
   }
 }
 
@@ -743,7 +688,7 @@
     margin: 24px 0 48px 0;
   }
   @media (--viewportLarge) {
-    margin: 0 0 72px 0;
+    margin: 0 0 40px 0;
     padding-bottom: 4px;
   }
 }

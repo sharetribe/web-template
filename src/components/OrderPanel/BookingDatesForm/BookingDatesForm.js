@@ -612,9 +612,10 @@ export const BookingDatesFormComponent = props => {
 
             {showEstimatedBreakdown ? (
               <div className={css.priceBreakdownContainer}>
-                <h3>
+                <h3 className={css.bookingBreakdownTitle}>
                   <FormattedMessage id="BookingDatesForm.priceBreakdownTitle" />
                 </h3>
+                <hr className={css.totalDivider} />
                 <EstimatedCustomerBreakdownMaybe
                   breakdownData={breakdownData}
                   lineItems={lineItems}

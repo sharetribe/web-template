@@ -57,8 +57,8 @@
 }
 
 .heroMainTitle {
-  composes: marketplaceHeroTitleFontStyles from global;
   color: var(--matterColorLight);
+  margin-bottom: 8px;
   composes: animation;
 
   @media (--viewportMedium) {
@@ -70,7 +70,7 @@
 }
 
 .heroSubTitle {
-  composes: h4 from global;
+  composes: textLarge from global;
 
   color: var(--matterColorLight);
   margin: 0 0 32px 0;
@@ -78,7 +78,7 @@
 
   @media (--viewportMedium) {
     max-width: var(--SectionHero_desktopTitleMaxWidth);
-    margin: 0 0 47px 0;
+    margin: 0 0 39px 0;
   }
 }
 .heroSubTitleFEDelay {
@@ -88,6 +88,7 @@
 .heroButton {
   composes: button buttonFont buttonText buttonBorders buttonColors from global;
   composes: animation;
+  font-weight: var(--fontWeightSemiBold);
 
   @media (--viewportMedium) {
     display: block;

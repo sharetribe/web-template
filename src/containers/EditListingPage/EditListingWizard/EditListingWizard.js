@@ -413,13 +413,11 @@ class EditListingWizard extends Component {
     const hasViewport = width > 0;
     const hasHorizontalTabLayout = hasViewport && width <= MAX_HORIZONTAL_NAV_SCREEN_WIDTH;
     const hasVerticalTabLayout = hasViewport && width > MAX_HORIZONTAL_NAV_SCREEN_WIDTH;
-    const hasFontsLoaded =
-      hasViewport && document.documentElement.classList.contains('fontsLoaded');
 
     // Check if scrollToTab call is needed (tab is not visible on mobile)
     if (hasVerticalTabLayout) {
       this.hasScrolledToTab = true;
-    } else if (hasHorizontalTabLayout && !this.hasScrolledToTab && hasFontsLoaded) {
+    } else if (hasHorizontalTabLayout && !this.hasScrolledToTab) {
       const tabPrefix = id;
       scrollToTab(tabPrefix, selectedTab);
       this.hasScrolledToTab = true;

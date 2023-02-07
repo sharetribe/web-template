@@ -84,9 +84,10 @@ const renderForm = formRenderProps => {
     breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
   const breakdown = showBreakdown ? (
     <div className={css.breakdownWrapper}>
-      <h3>
+      <h3 className={css.bookingBreakdownTitle}>
         <FormattedMessage id="ProductOrderForm.breakdownTitle" />
       </h3>
+      <hr className={css.totalDivider} />
       <EstimatedCustomerBreakdownMaybe
         breakdownData={breakdownData}
         lineItems={lineItems}
