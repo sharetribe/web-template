@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] New font (apple-system & 'Inter') and all kind of changes related to that.
+  [#73](https://github.com/sharetribe/ftw-x/pull/73)
 - [fix] When time zone changes, exceptions should be fetch again. (Query boundaries change.)
   [#87](https://github.com/sharetribe/ftw-x/pull/87)
 - [add] Update translations (en.json). We'll change these later, as these follow biketribe theme.
