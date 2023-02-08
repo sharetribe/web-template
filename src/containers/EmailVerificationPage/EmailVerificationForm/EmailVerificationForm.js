@@ -101,7 +101,7 @@ const EmailVerificationFormComponent = props => (
             <p className={css.modalMessage}>
               <FormattedMessage
                 id="EmailVerificationForm.noPendingText"
-                values={{ email: currentEmail, breakline: <br /> }}
+                values={{ email: currentEmail, lineBreak: <br /> }}
               />
             </p>
           </div>
