@@ -3,7 +3,7 @@
 exports[`CheckoutPage matches snapshot 1`] = `
 <Page
   scrollingDisabled={false}
-  title="CheckoutPage.default-buying-products.title"
+  title="CheckoutPage.default-purchase.title"
 >
   <div
     className="topbar"
@@ -76,7 +76,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
         <h1
           className="title"
         >
-          CheckoutPage.default-buying-products.title
+          CheckoutPage.default-purchase.title
         </h1>
         <h2
           className="detailsTitleMobile"
@@ -197,7 +197,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
           className="orderBreakdownTitle"
         >
           <MemoizedFormattedMessage
-            id="CheckoutPage.default-buying-products.orderBreakdown"
+            id="CheckoutPage.default-purchase.orderBreakdown"
           />
         </h3>
         <hr

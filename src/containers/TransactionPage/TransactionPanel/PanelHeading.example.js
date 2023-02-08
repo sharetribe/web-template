@@ -4,7 +4,7 @@ import { getProcess } from '../../../transactions/transaction';
 
 import PanelHeading from './PanelHeading';
 
-const PROCESS_NAME = 'default-buying-products';
+const PROCESS_NAME = 'default-purchase';
 
 const ProcessHeadings = () => {
   const states = getProcess(PROCESS_NAME).states;

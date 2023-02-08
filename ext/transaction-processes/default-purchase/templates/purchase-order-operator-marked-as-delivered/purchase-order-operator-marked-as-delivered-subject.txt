@@ -1,0 +1,1 @@
+An order for your listing {{transaction.listing.title}} was marked as {{#eq "shipping" transaction.protected-data.deliveryMethod}}shipped{{else}}delivered{{/eq}} on your behalf

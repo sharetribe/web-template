@@ -24,7 +24,7 @@ import { InboxPageComponent, InboxItem } from './InboxPage';
 
 const { Money } = sdkTypes;
 const noop = () => null;
-const transitions = getProcess('default-buying-products')?.transitions;
+const transitions = getProcess('default-purchase')?.transitions;
 
 describe('InboxPage', () => {
   const provider = createUser('provider-user-id');
@@ -34,7 +34,7 @@ describe('InboxPage', () => {
   const listing = createListing('ItemX', {
     publicData: {
       listingType: 'sell-bikes',
-      transactionProcessAlias: 'default-buying-products',
+      transactionProcessAlias: 'default-purchase',
       unitType: 'item',
     },
   });

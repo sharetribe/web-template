@@ -38,6 +38,10 @@ export const transitions = {
   ACCEPT: 'transition/accept',
   DECLINE: 'transition/decline',
 
+  // The operator can accept or decline the offer on behalf of the provider
+  OPERATOR_ACCEPT: 'transition/operator-accept',
+  OPERATOR_DECLINE: 'transition/operator-decline',
+
   // The backend automatically expire the transaction.
   EXPIRE: 'transition/expire',
 
@@ -127,8 +131,10 @@ export const graph = {
     [states.PREAUTHORIZED]: {
       on: {
         [transitions.DECLINE]: states.DECLINED,
+        [transitions.OPERATOR_DECLINE]: states.DECLINED,
         [transitions.EXPIRE]: states.EXPIRED,
         [transitions.ACCEPT]: states.ACCEPTED,
+        [transitions.OPERATOR_ACCEPT]: states.ACCEPTED,
       },
     },
 
@@ -172,10 +178,12 @@ export const graph = {
 export const isRelevantPastTransition = transition => {
   return [
     transitions.ACCEPT,
+    transitions.OPERATOR_ACCEPT,
     transitions.CANCEL,
     transitions.COMPLETE,
     transitions.CONFIRM_PAYMENT,
     transitions.DECLINE,
+    transitions.OPERATOR_DECLINE,
     transitions.EXPIRE,
     transitions.REVIEW_1_BY_CUSTOMER,
     transitions.REVIEW_1_BY_PROVIDER,
