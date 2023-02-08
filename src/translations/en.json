@@ -60,8 +60,6 @@
   "CheckoutPage.default-purchase.orderBreakdown": "Order breakdown",
   "CheckoutPage.default-purchase.title": "Complete order",
   "CheckoutPage.errorlistingLinkText": "the listing page",
-  "CheckoutPage.flex-booking-default-process.title": "Complete booking",
-  "CheckoutPage.flex-product-default-process.title": "Complete order",
   "CheckoutPage.goToLandingPage": "Go to the homepage",
   "CheckoutPage.initiateOrderAmountTooLow": "We are unable to process this payment because the payment amount is too low. Please contact support.",
   "CheckoutPage.initiateOrderError": "Payment request failed. Please go back to {listingLink} and try again. If the error persists, try refreshing the page or contacting support.",

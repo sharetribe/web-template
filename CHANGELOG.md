@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [delete] Remove unused microcopy keys from en.json
+  [#90](https://github.com/sharetribe/ftw-x/pull/90)
 - [change] Rename default transaction process and associated files.
   [#88](https://github.com/sharetribe/ftw-x/pull/88)
 - [change] New font (apple-system & 'Inter') and all kind of changes related to that.
