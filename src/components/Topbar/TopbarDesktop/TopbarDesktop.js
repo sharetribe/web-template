@@ -8,7 +8,7 @@ import { propTypes } from '../../../util/types';
 import {
   Avatar,
   InlineTextButton,
-  Logo,
+  LinkedLogo,
   Menu,
   MenuLabel,
   MenuContent,
@@ -139,13 +139,11 @@ const TopbarDesktop = props => {
 
   return (
     <nav className={classes}>
-      <NamedLink className={css.logoLink} name="LandingPage">
-        <Logo
-          format="desktop"
-          className={css.logo}
-          alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
-        />
-      </NamedLink>
+      <LinkedLogo
+        className={css.logoLink}
+        format="desktop"
+        alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
+      />
       {search}
       <NamedLink className={css.createListingLink} name="NewListingPage">
         <span className={css.createListing}>

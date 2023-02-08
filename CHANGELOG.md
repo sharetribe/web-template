@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [delete] Add LinkedLogo and use it in different Topbars.
+  [#91](https://github.com/sharetribe/ftw-x/pull/91)
 - [delete] Remove unused microcopy keys from en.json
   [#90](https://github.com/sharetribe/ftw-x/pull/90)
 - [change] Rename default transaction process and associated files.

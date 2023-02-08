@@ -16,7 +16,7 @@ import { propTypes } from '../../util/types';
 import {
   Button,
   LimitedAccessBanner,
-  Logo,
+  LinkedLogo,
   Modal,
   ModalMissingInformation,
   NamedLink,
@@ -228,13 +228,7 @@ class TopbarComponent extends Component {
             <MenuIcon className={css.menuIcon} />
             {notificationDot}
           </Button>
-          <NamedLink
-            className={css.home}
-            name="LandingPage"
-            title={intl.formatMessage({ id: 'Topbar.logoIcon' })}
-          >
-            <Logo className={css.logo} format="mobile" />
-          </NamedLink>
+          <LinkedLogo format={'mobile'} alt={intl.formatMessage({ id: 'Topbar.logoIcon' })} />
           <Button
             rootClassName={css.searchMenu}
             onClick={this.handleMobileSearchOpen}
