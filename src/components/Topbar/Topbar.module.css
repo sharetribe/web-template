@@ -30,24 +30,6 @@
   }
 }
 
-.home {
-  display: flex;
-  justify-content: center;
-  height: var(--topbarHeight);
-  min-width: 66px;
-  flex-shrink: 0;
-  padding: 0;
-}
-
-.logo {
-  height: 24px;
-  width: auto;
-  max-width: 188px;
-  object-fit: contain;
-  object-position: center;
-  margin: 18px 0;
-}
-
 .logoutButton {
   margin: 0;
 }

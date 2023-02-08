@@ -5,7 +5,7 @@ exports[`TopbarDesktop data with keywords search matches snapshot 1`] = `
   className="root"
 >
   <a
-    className="logoLink NamedLink_active"
+    className="root logoLink NamedLink_active"
     href="/"
     onClick={[Function]}
     onMouseOver={[Function]}
@@ -234,7 +234,7 @@ exports[`TopbarDesktop data with location search matches snapshot 1`] = `
   className="root"
 >
   <a
-    className="logoLink NamedLink_active"
+    className="root logoLink NamedLink_active"
     href="/"
     onClick={[Function]}
     onMouseOver={[Function]}

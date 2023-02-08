@@ -43,12 +43,11 @@ import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
 
 // Import shared components
 import {
-  AvatarMedium,
   AspectRatioWrapper,
-  OrderBreakdown,
-  Logo,
+  AvatarMedium,
   NamedLink,
   NamedRedirect,
+  OrderBreakdown,
   Page,
   ResponsiveImage,
 } from '../../components';
@@ -62,6 +61,7 @@ import {
   confirmPayment,
   sendMessage,
 } from './CheckoutPage.duck';
+import CustomTopbar from './CustomTopbar';
 import StripePaymentForm from './StripePaymentForm/StripePaymentForm';
 import { storeData, storedData, clearData } from './CheckoutPageSessionHelpers';
 import css from './CheckoutPage.module.css';
@@ -717,27 +717,15 @@ export class CheckoutPageComponent extends Component {
       : 'Checkout page is loading data';
 
     const pageProps = { title, scrollingDisabled };
-    const topbar = (
-      <div className={css.topbar}>
-        <NamedLink className={css.home} name="LandingPage">
-          <Logo
-            className={css.logoMobile}
-            title={intl.formatMessage({ id: 'CheckoutPage.goToLandingPage' })}
-            format="mobile"
-          />
-          <Logo
-            className={css.logoDesktop}
-            alt={intl.formatMessage({ id: 'CheckoutPage.goToLandingPage' })}
-            format="desktop"
-          />
-        </NamedLink>
-      </div>
-    );
 
     const isLoading = !this.state.dataLoaded || speculateTransactionInProgress || !processName;
 
     if (isLoading) {
-      return <Page {...pageProps}>{topbar}</Page>;
+      return (
+        <Page {...pageProps}>
+          <CustomTopbar intl={intl} />
+        </Page>
+      );
     }
     const process = getProcess(processName);
     const transitions = process.transitions;
@@ -863,7 +851,7 @@ export class CheckoutPageComponent extends Component {
 
     return (
       <Page {...pageProps}>
-        {topbar}
+        <CustomTopbar intl={intl} />
         <div className={css.contentContainer}>
           <AspectRatioWrapper
             width={aspectWidth}
@@ -959,7 +947,7 @@ export class CheckoutPageComponent extends Component {
                 variants={variants}
               />
             </AspectRatioWrapper>
-            <div class={css.listingDetailsWrapper}>
+            <div className={css.listingDetailsWrapper}>
               <div className={css.avatarWrapper}>
                 <AvatarMedium user={currentAuthor} disableProfileLink />
               </div>

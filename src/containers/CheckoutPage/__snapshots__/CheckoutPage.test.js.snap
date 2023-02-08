@@ -5,25 +5,22 @@ exports[`CheckoutPage matches snapshot 1`] = `
   scrollingDisabled={false}
   title="CheckoutPage.default-purchase.title"
 >
-  <div
-    className="topbar"
-  >
-    <NamedLink
-      className="home"
-      name="LandingPage"
-    >
-      <Logo
-        className="logoMobile"
-        format="mobile"
-        title="CheckoutPage.goToLandingPage"
-      />
-      <Logo
-        alt="CheckoutPage.goToLandingPage"
-        className="logoDesktop"
-        format="desktop"
-      />
-    </NamedLink>
-  </div>
+  <CustomTopbar
+    className={null}
+    intl={
+      Object {
+        "formatDate": [Function],
+        "formatDateTimeRange": [Function],
+        "formatMessage": [Function],
+        "formatNumber": [Function],
+        "formatPlural": [Function],
+        "formatRelativeTime": [Function],
+        "formatTime": [Function],
+        "now": [Function],
+      }
+    }
+    rootClassName={null}
+  />
   <div
     className="contentContainer"
   >
@@ -148,7 +145,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
         />
       </AspectRatioWrapper>
       <div
-        class="listingDetailsWrapper"
+        className="listingDetailsWrapper"
       >
         <div
           className="avatarWrapper"
