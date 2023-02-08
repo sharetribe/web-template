@@ -66,6 +66,7 @@ export { default as ValidationError } from './ValidationError/ValidationError';
 
 export { default as Button, PrimaryButton, SecondaryButton, InlineTextButton, SocialLoginButton } from './Button/Button';
 export { default as ImageFromFile } from './ImageFromFile/ImageFromFile';
+export { default as LinkedLogo } from './Logo/LinkedLogo';
 export { default as ListingLink } from './ListingLink/ListingLink';
 export { default as PaginationLinks } from './PaginationLinks/PaginationLinks';
 export { default as ReviewRating } from './ReviewRating/ReviewRating';
