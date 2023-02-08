@@ -1,11 +1,11 @@
 import { bool, func, oneOf, shape, string } from 'prop-types';
 import {
   BOOKING_PROCESS_NAME,
-  PRODUCT_PROCESS_NAME,
+  PURCHASE_PROCESS_NAME,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 import { getStateDataForBookingProcess } from './TransactionPage.stateDataBooking.js';
-import { getStateDataForProductProcess } from './TransactionPage.stateDataProduct.js';
+import { getStateDataForPurchaseProcess } from './TransactionPage.stateDataPurchase.js';
 
 const errorShape = shape({
   type: oneOf(['error']).isRequired,
@@ -131,8 +131,8 @@ export const getStateData = (params, process) => {
     };
   };
 
-  if (processName === PRODUCT_PROCESS_NAME) {
-    return getStateDataForProductProcess(params, processInfo());
+  if (processName === PURCHASE_PROCESS_NAME) {
+    return getStateDataForPurchaseProcess(params, processInfo());
   } else if (processName === BOOKING_PROCESS_NAME) {
     return getStateDataForBookingProcess(params, processInfo());
   } else {

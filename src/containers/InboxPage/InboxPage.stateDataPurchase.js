@@ -6,7 +6,7 @@ import {
 } from '../../transactions/transaction';
 
 // Get UI data mapped to specific transaction state & role
-export const getStateDataForProductProcess = (txInfo, processInfo) => {
+export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
   const { transactionRole } = txInfo;
   const { processName, processState, states } = processInfo;
   const _ = CONDITIONAL_RESOLVER_WILDCARD;

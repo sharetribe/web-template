@@ -33,7 +33,7 @@ const listingTypes = [
   {
     type: 'sell-bicycles',
     transactionType: {
-      process: 'default-buying-products',
+      process: 'default-purchase',
       alias: 'release-1',
       unitType: 'item',
     },

@@ -1,0 +1,25 @@
+{{~#*inline "format-date"~}}
+{{#with transaction.listing.availability-plan}}
+{{date date format="h:mm a" tz=timezone}} on {{date date format="MMM d, YYYY" tz=timezone}}
+{{/with}}
+{{~/inline~}}
+
+<html>
+  <body>
+    <h1>Your booking for one of your listings was declined on your behalf.</h1>
+
+    {{#with transaction}}
+    <p>
+      The booking for
+      {{ listing.title }} from {{> format-date date=booking.start}} to
+      {{> format-date date=booking.end}} was declined on your behalf.
+    </p>
+    {{/with}}
+
+    <hr />
+
+    <p>
+      If you suspect this was a mistake, please contact {{ marketplace.name }} team.
+    </p>
+  </body>
+</html>

@@ -16,7 +16,7 @@ import {
 import ActivityFeed from './ActivityFeed';
 
 const noop = () => null;
-const processName = 'default-buying-products';
+const processName = 'default-purchase';
 const { states, transitions } = getProcess(processName);
 
 export const Empty = {
