@@ -113,6 +113,11 @@ import * as InboxPage from './containers/InboxPage/InboxPage.example';
 // containers
 import * as Colors from './containers/StyleguidePage/Colors.example';
 import * as Typography from './containers/StyleguidePage/Typography.example';
+import * as CMSSections from './containers/PageBuilder/SectionBuilder/SectionBuilder.example';
+import * as Markdown from './containers/PageBuilder/Markdown.example';
+import * as LayoutComposer from './containers/PageBuilder/LayoutComposer/LayoutComposer.example';
+import * as PageBuilder from './containers/PageBuilder/PageBuilder.example';
+import * as LandingPage from './containers/LandingPage/LandingPage.example';
 
 export {
   ActivityFeed,
@@ -122,6 +127,7 @@ export {
   BookingTimeInfo,
   Button,
   Colors,
+  CMSSections,
   EditListingAvailabilityForm,
   EditListingDetailsForm,
   EditListingDeliveryForm,
@@ -175,12 +181,15 @@ export {
   InboxPage,
   ImageCarousel,
   KeywordFilter,
+  LandingPage,
+  LayoutComposer,
   ListingCard,
   ListingImageGallery,
   LocationAutocompleteInput,
   LoginForm,
   ManageListingCard,
   Map,
+  Markdown,
   Menu,
   Modal,
   ModalInMobile,
@@ -188,6 +197,7 @@ export {
   OrderBreakdown,
   OrderPanel,
   OutsideClickHandler,
+  PageBuilder,
   PaginationLinks,
   PasswordRecoveryForm,
   PasswordResetForm,
