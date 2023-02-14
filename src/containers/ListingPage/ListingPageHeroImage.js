@@ -417,7 +417,6 @@ export class ListingPageComponent extends Component {
         title={schemaTitle}
         scrollingDisabled={scrollingDisabled}
         author={authorDisplayName}
-        contentType="website"
         description={description}
         facebookImages={facebookImages}
         twitterImages={twitterImages}

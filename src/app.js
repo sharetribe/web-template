@@ -93,6 +93,8 @@ const setupLocale = () => {
 export const ClientApp = props => {
   const { store, hostedTranslations = {} } = props;
   setupLocale();
+  // This gives good input for debugging issues on live environments, but with test it's not needed.
+  const logLoadDataCalls = config?.env !== 'test';
   return (
     <IntlProvider
       locale={config.locale}
@@ -103,7 +105,7 @@ export const ClientApp = props => {
         <HelmetProvider>
           <IncludeMapLibraryScripts />
           <BrowserRouter>
-            <Routes routes={routeConfiguration()} />
+            <Routes routes={routeConfiguration()} logLoadDataCalls={logLoadDataCalls} />
           </BrowserRouter>
         </HelmetProvider>
       </Provider>
