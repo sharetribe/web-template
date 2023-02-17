@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] add multiple placeholder texts for custom listing fields.
+  [#93](https://github.com/sharetribe/ftw-x/pull/93)
 - [fix] Some heading style fixes and lineBreak fixes to microcopy.
   [#92](https://github.com/sharetribe/ftw-x/pull/92)
 - [delete] Add LinkedLogo and use it in different Topbars.
