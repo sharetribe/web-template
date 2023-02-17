@@ -21,8 +21,8 @@ export const transitions = {
 
   // A customer can also initiate a transaction with an inquiry, and
   // then transition that with a request.
-  INQUIRE: 'transition/enquire',
-  REQUEST_PAYMENT_AFTER_INQUIRY: 'transition/request-payment-after-enquiry',
+  INQUIRE: 'transition/inquire',
+  REQUEST_PAYMENT_AFTER_INQUIRY: 'transition/request-payment-after-inquiry',
 
   // Stripe SDK might need to ask 3D security from customer, in a separate front-end step.
   // Therefore we need to make another transition to Marketplace API,
