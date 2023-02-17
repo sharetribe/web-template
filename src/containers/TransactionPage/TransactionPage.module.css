@@ -7,8 +7,12 @@
 }
 
 .loading {
-  margin-left: 24px;
-  margin-right: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-grow: 1;
 }
 
 .error {
