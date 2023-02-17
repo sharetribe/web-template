@@ -25,7 +25,8 @@ const CustomFieldEnum = props => {
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
   const placeholder =
-    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholder' });
+    placeholderMessage ||
+    intl.formatMessage({ id: 'CustomExtendedDataField.placeholderSingleSelect' });
   const filterOptions = createFilterOptions(schemaOptions);
 
   return filterOptions ? (
@@ -68,7 +69,7 @@ const CustomFieldText = props => {
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
   const placeholder =
-    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholder' });
+    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholderText' });
 
   return (
     <FieldTextInput
@@ -91,7 +92,7 @@ const CustomFieldLong = props => {
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
   const placeholder =
-    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholder' });
+    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholderLong' });
 
   return (
     <FieldTextInput
