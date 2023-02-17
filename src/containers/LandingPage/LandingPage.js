@@ -1,103 +1,35 @@
 import React from 'react';
-import { bool } from 'prop-types';
+import { bool, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
 
-import { useConfiguration } from '../../context/configurationContext';
-import { useIntl } from '../../util/reactIntl';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { camelize } from '../../util/string';
 
-import {
-  Page,
-  LayoutSingleColumn,
-  LayoutWrapperTopbar,
-  LayoutWrapperMain,
-  LayoutWrapperFooter,
-  Footer,
-} from '../../components';
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import PageBuilder from '../../containers/PageBuilder/PageBuilder';
 
-import facebookImage from '../../assets/biketribe-facebook-sharing-1200x630.jpg';
-import twitterImage from '../../assets/biketribe-twitter-sharing-600x314.jpg';
-
-import SectionHero from './SectionHero/SectionHero';
-import SectionHowItWorks from './SectionHowItWorks/SectionHowItWorks';
-import SectionFilteredSearches from './SectionFilteredSearches/SectionFilteredSearches';
-
-import css from './LandingPage.module.css';
+import FallbackPage from './FallbackPage';
+import { ASSET_NAME } from './LandingPage.duck';
 
 export const LandingPageComponent = props => {
-  const config = useConfiguration();
-  const history = useHistory();
-  const location = useLocation();
-  const intl = useIntl();
-  const { scrollingDisabled } = props;
-
-  // Schema for search engines (helps them to understand what this page is about)
-  // http://schema.org
-  // We are using JSON-LD format
-  const marketplaceName = config.marketplaceName;
-  const schemaTitle = intl.formatMessage({ id: 'LandingPage.schemaTitle' }, { marketplaceName });
-  const schemaDescription = intl.formatMessage({ id: 'LandingPage.schemaDescription' });
-  const schemaImage = `${config.marketplaceRootURL}${facebookImage}`;
+  const { pageAssetsData, inProgress } = props;
 
   return (
-    <Page
-      className={css.root}
-      scrollingDisabled={scrollingDisabled}
-      contentType="website"
-      description={schemaDescription}
-      title={schemaTitle}
-      facebookImages={[{ url: facebookImage, width: 1200, height: 630 }]}
-      twitterImages={[
-        { url: `${config.marketplaceRootURL}${twitterImage}`, width: 600, height: 314 },
-      ]}
-      schema={{
-        '@context': 'http://schema.org',
-        '@type': 'WebPage',
-        description: schemaDescription,
-        name: schemaTitle,
-        image: [schemaImage],
-      }}
-    >
-      <LayoutSingleColumn>
-        <LayoutWrapperTopbar>
-          <TopbarContainer />
-        </LayoutWrapperTopbar>
-        <LayoutWrapperMain>
-          <div className={css.heroContainer}>
-            <SectionHero className={css.hero} history={history} location={location} />
-          </div>
-          <ul className={css.sections}>
-            <li className={css.section}>
-              <div className={css.sectionContentFirstChild}>
-                <SectionFilteredSearches />
-              </div>
-            </li>
-            <li className={css.section}>
-              <div className={css.sectionContent}>
-                <SectionHowItWorks />
-              </div>
-            </li>
-          </ul>
-        </LayoutWrapperMain>
-        <LayoutWrapperFooter>
-          <Footer />
-        </LayoutWrapperFooter>
-      </LayoutSingleColumn>
-    </Page>
+    <PageBuilder
+      pageAssetsData={pageAssetsData?.[camelize(ASSET_NAME)]?.data}
+      inProgress={inProgress}
+      fallbackPage={<FallbackPage />}
+    />
   );
 };
 
 LandingPageComponent.propTypes = {
-  scrollingDisabled: bool.isRequired,
+  pageAssetsData: object,
+  inProgress: bool,
 };
 
 const mapStateToProps = state => {
-  return {
-    scrollingDisabled: isScrollingDisabled(state),
-  };
+  const { pageAssetsData, inProgress } = state.hostedAssets || {};
+  return { pageAssetsData, inProgress };
 };
 
 // Note: it is important that the withRouter HOC is **outside** the
