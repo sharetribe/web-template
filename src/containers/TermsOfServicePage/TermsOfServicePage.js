@@ -1,94 +1,80 @@
 import React from 'react';
-import { bool } from 'prop-types';
+import { bool, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import { useConfiguration } from '../../context/configurationContext';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
-import {
-  Page,
-  LayoutSideNavigation,
-  LayoutWrapperMain,
-  LayoutWrapperSideNav,
-  LayoutWrapperTopbar,
-  LayoutWrapperFooter,
-  Footer,
-  TermsOfService,
-} from '../../components';
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import { camelize } from '../../util/string';
 
-import css from './TermsOfServicePage.module.css';
+import { H1 } from '../PageBuilder/Primitives/Heading';
+import PageBuilder, { SectionBuilder } from '../../containers/PageBuilder/PageBuilder';
 
-const TermsOfServicePageComponent = props => {
-  const config = useConfiguration();
-  const { scrollingDisabled, intl } = props;
+import FallbackPage, { fallbackSections } from './FallbackPage';
+import { ASSET_NAME } from './TermsOfServicePage.duck';
 
-  const tabs = [
-    {
-      text: intl.formatMessage({ id: 'TermsOfServicePage.privacyTabTitle' }),
-      selected: false,
-      linkProps: {
-        name: 'PrivacyPolicyPage',
-      },
-    },
-    {
-      text: intl.formatMessage({ id: 'TermsOfServicePage.tosTabTitle' }),
-      selected: true,
-      linkProps: {
-        name: 'TermsOfServicePage',
-      },
-    },
-  ];
-  const marketplaceName = config.marketplaceName;
-  const schemaTitle = intl.formatMessage(
-    { id: 'TermsOfServicePage.schemaTitle' },
-    { marketplaceName }
-  );
-  const schema = {
-    '@context': 'http://schema.org',
-    '@type': 'WebPage',
-    name: schemaTitle,
+// This "content-only" component can be used in modals etc.
+const TermsOfServiceContent = props => {
+  const { inProgress, error, data } = props;
+
+  if (inProgress) {
+    return null;
+  }
+
+  // We don't want to add h1 heading twice to the HTML (SEO issue).
+  // Modal's header is mapped as h2
+  const hasContent = data => typeof data?.content === 'string';
+  const exposeContentAsChildren = data => {
+    return hasContent(data) ? { children: data.content } : {};
   };
+  const CustomHeading1 = props => <H1 as="h2" {...props} />;
+
+  const hasData = error === null && data;
+  const sectionsData = hasData ? data : fallbackSections;
+
   return (
-    <Page title={schemaTitle} scrollingDisabled={scrollingDisabled} schema={schema}>
-      <LayoutSideNavigation>
-        <LayoutWrapperTopbar>
-          <TopbarContainer currentPage="TermsOfServicePage" />
-        </LayoutWrapperTopbar>
-        <LayoutWrapperSideNav tabs={tabs} />
-        <LayoutWrapperMain>
-          <div className={css.content}>
-            <h1 className={css.heading}>
-              <FormattedMessage id="TermsOfServicePage.heading" />
-            </h1>
-            <TermsOfService />
-          </div>
-        </LayoutWrapperMain>
-        <LayoutWrapperFooter>
-          <Footer />
-        </LayoutWrapperFooter>
-      </LayoutSideNavigation>
-    </Page>
+    <SectionBuilder
+      {...sectionsData}
+      options={{
+        fieldComponents: {
+          heading1: { component: CustomHeading1, pickValidProps: exposeContentAsChildren },
+        },
+        isInsideContainer: true,
+      }}
+    />
+  );
+};
+
+// Presentational component for TermsOfServicePage
+const TermsOfServicePageComponent = props => {
+  const { pageAssetsData, inProgress } = props;
+
+  return (
+    <PageBuilder
+      pageAssetsData={pageAssetsData?.[camelize(ASSET_NAME)]?.data}
+      inProgress={inProgress}
+      fallbackPage={<FallbackPage />}
+    />
   );
 };
 
 TermsOfServicePageComponent.propTypes = {
-  scrollingDisabled: bool.isRequired,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
+  pageAssetsData: object,
+  inProgress: bool,
 };
 
 const mapStateToProps = state => {
-  return {
-    scrollingDisabled: isScrollingDisabled(state),
-  };
+  const { pageAssetsData, inProgress } = state.hostedAssets || {};
+  return { pageAssetsData, inProgress };
 };
 
-const TermsOfServicePage = compose(
-  connect(mapStateToProps),
-  injectIntl
-)(TermsOfServicePageComponent);
+// Note: it is important that the withRouter HOC is **outside** the
+// connect HOC, otherwise React Router won't rerender any Route
+// components since connect implements a shouldComponentUpdate
+// lifecycle hook.
+//
+// See: https://github.com/ReactTraining/react-router/issues/4671
+const TermsOfServicePage = compose(connect(mapStateToProps))(TermsOfServicePageComponent);
+
+const TOS_ASSET_NAME = ASSET_NAME;
+export { TOS_ASSET_NAME, TermsOfServicePageComponent, TermsOfServiceContent };
 
 export default TermsOfServicePage;

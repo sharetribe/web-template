@@ -12,25 +12,24 @@ const ensureOpenGraphLocale = locale => {
  */
 export const openGraphMetaProps = data => {
   const {
-    marketplaceRootURL,
-    contentType,
-    description,
-    facebookAppId,
-    facebookImages,
-    locale,
+    openGraphType,
+    socialSharingTitle,
+    socialSharingDescription,
     published,
-    marketplaceName,
-    title,
     updated,
     url,
+    locale,
+    facebookImages,
+    facebookAppId,
+    marketplaceName,
   } = data;
 
-  if (!(title && description && contentType && url && facebookImages && marketplaceRootURL)) {
+  if (!(socialSharingTitle && socialSharingDescription && openGraphType && url && facebookImages)) {
     /* eslint-disable no-console */
     if (console && console.warn) {
       console.warn(
         `Can't create Open Graph meta tags:
-        title, description, contentType, url, facebookImages, and marketplaceRootURL are needed.`
+        socialSharingTitle, socialSharingDescription, openGraphType, url, and facebookImages are needed.`
       );
     }
     /* eslint-enable no-console */
@@ -38,9 +37,9 @@ export const openGraphMetaProps = data => {
   }
 
   const openGraphMeta = [
-    { property: 'og:description', content: description },
-    { property: 'og:title', content: title },
-    { property: 'og:type', content: contentType },
+    { property: 'og:description', content: socialSharingDescription },
+    { property: 'og:title', content: socialSharingTitle },
+    { property: 'og:type', content: openGraphType },
     { property: 'og:url', content: url },
     { property: 'og:locale', content: ensureOpenGraphLocale(locale) },
   ];
@@ -83,21 +82,21 @@ export const openGraphMetaProps = data => {
  */
 export const twitterMetaProps = data => {
   const {
-    marketplaceRootURL,
-    description,
-    siteTwitterHandle,
-    title,
+    socialSharingTitle,
+    socialSharingDescription,
     twitterHandle,
     twitterImages,
     url,
+    marketplaceRootURL,
+    siteTwitterHandle,
   } = data;
 
-  if (!(title && description && url)) {
+  if (!(socialSharingTitle && socialSharingDescription && url)) {
     /* eslint-disable no-console */
     if (console && console.warn) {
       console.warn(
         `Can't create twitter card meta tags:
-        title, description, and url are needed.`
+        socialSharingTitle, socialSharingDescription, and url are needed.`
       );
     }
     /* eslint-enable no-console */
@@ -106,8 +105,8 @@ export const twitterMetaProps = data => {
 
   const twitterMeta = [
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: title },
-    { name: 'twitter:description', content: description },
+    { name: 'twitter:title', content: socialSharingTitle },
+    { name: 'twitter:description', content: socialSharingDescription },
     { name: 'twitter:url', content: url },
   ];
 
@@ -115,7 +114,7 @@ export const twitterMetaProps = data => {
     twitterMeta.push({ name: 'twitter:site', content: siteTwitterHandle });
   }
 
-  if (marketplaceRootURL && twitterImages && twitterImages.length > 0) {
+  if (twitterImages && twitterImages.length > 0) {
     twitterImages.forEach(i => {
       twitterMeta.push({
         name: 'twitter:image',
@@ -152,7 +151,6 @@ export const metaTagProps = (tagData, config) => {
 
   const openGraphMeta = openGraphMetaProps({
     ...tagData,
-    marketplaceRootURL,
     facebookAppId,
     marketplaceName,
   });
