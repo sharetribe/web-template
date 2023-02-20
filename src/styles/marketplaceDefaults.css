@@ -188,8 +188,7 @@ body {
   color: var(--matterColorLight);
 }
 
-a,
-.a {
+a {
   /* Position and dimensions */
   display: inline;
   margin: 0;
@@ -204,14 +203,12 @@ a,
   /* Text size should be inherited */
   text-decoration: none;
 }
-a:hover,
-.a:hover {
+a:hover {
   text-decoration: underline;
   cursor: pointer;
 }
 
-h1,
-.h1 {
+h1 {
   font-size: 24px;
   line-height: 24px;
   font-weight: var(--fontWeightBlack);
@@ -230,8 +227,7 @@ h1,
   }
 }
 
-h2,
-.h2 {
+h2 {
   font-size: 21px;
   line-height: 24px;
   font-weight: var(--fontWeightBold);
@@ -251,8 +247,7 @@ h2,
   }
 }
 
-h3,
-.h3 {
+h3 {
   font-weight: var(--fontWeightBold);
   font-size: 18px;
   line-height: 24px;
@@ -270,8 +265,7 @@ h3,
   }
 }
 
-h4,
-.h4 {
+h4 {
   font-weight: var(--fontWeightBold);
   font-size: 21px;
   line-height: 30px;
@@ -289,8 +283,7 @@ h4,
   }
 }
 
-h5,
-.h5 {
+h5 {
   font-weight: var(--fontWeightMedium);
   font-size: 14px;
   line-height: 18px;
@@ -308,8 +301,7 @@ h5,
   }
 }
 
-h6,
-.h6 {
+h6 {
   font-weight: var(--fontWeightBold);
   font-size: 12px;
   line-height: 18px;
@@ -331,14 +323,7 @@ h6,
 html,
 li,
 p,
-pre,
-.p,
-.buttonFont,
-.marketplaceMessageFontStyles,
-.marketplaceTxTransitionFontStyles,
-.marketplaceListingAttributeFontStyles,
-.marketplaceBodyFontStyles,
-.marketplaceDefaultFontStyles {
+pre {
   font-family: var(--fontFamily);
   font-weight: var(--fontWeightMedium);
 
@@ -354,14 +339,8 @@ pre,
   }
 }
 
-.buttonFont {
-  font-weight: var(--fontWeightSemiBold);
-}
-
 p,
-pre,
-.p,
-.marketplaceBodyFontStyles {
+pre {
   /* margin-top + n * line-height + margin-bottom => x * 6px */
   margin-top: 12px;
   margin-bottom: 12px;
@@ -370,37 +349,6 @@ pre,
     /* margin-top + n * line-height + margin-bottom => x * 8px */
     margin-top: 16px;
     margin-bottom: 16px;
-  }
-}
-
-.textLarge {
-  font-size: 20px;
-  line-height: 30px;
-  font-weight: var(--fontWeightMedium);
-
-  @media (--viewportMedium) {
-    line-height: 32px;
-  }
-}
-
-.textSmall {
-  font-size: 14px;
-  line-height: 18px;
-  font-weight: var(--fontWeightMedium);
-  letter-spacing: -0.1px;
-
-  @media (--viewportMedium) {
-    line-height: 16px;
-  }
-}
-
-.textXSmall {
-  font-size: 13px;
-  line-height: 18px;
-  font-weight: var(--fontWeightMedium);
-
-  @media (--viewportMedium) {
-    line-height: 16px;
   }
 }
 
@@ -533,8 +481,7 @@ select:disabled {
 }
 
 input,
-textarea,
-.marketplaceInputStyles {
+textarea {
   /* Dimensions */
   display: block;
   width: 100%;
@@ -564,22 +511,19 @@ textarea,
 }
 /* Effects */
 input:hover,
-textarea:hover,
-.marketplaceInputStyles:hover {
+textarea:hover {
   border: 1px solid #b8bfd1;
   transition: all ease-in-out 100ms;
 }
 input:focus,
-textarea:focus,
-.marketplaceInputStyles:focus {
+textarea:focus {
   background-color: #fff;
   border-color: #80bdff;
   box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
   transition: all ease-in-out 100ms;
 }
 input:disabled,
-textarea:disabled,
-.marketplaceInputStyles:disabled {
+textarea:disabled {
   opacity: 0.5;
 
   &:hover {
@@ -599,6 +543,228 @@ textarea {
 }
 
 /* ================ Plain global CSS glasses ================ */
+
+/**
+ * Note: even though these reflect element styles, 
+ * these are below element styles to allow overwrites using classes.
+ */
+
+.a {
+  /* Position and dimensions */
+  display: inline;
+  margin: 0;
+  padding: 0;
+
+  /* Borders */
+  border: none;
+
+  /* Colors */
+  color: var(--marketplaceColor);
+
+  /* Text size should be inherited */
+  text-decoration: none;
+}
+.a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.h1 {
+  font-weight: var(--fontWeightBlack);
+  font-size: 24px;
+  line-height: 24px;
+
+  padding: 3px 0 3px 0;
+  /* margin-top + n * line-height + margin-bottom => x * 6px */
+  margin-top: 18px;
+  margin-bottom: 18px;
+
+  @media (--viewportMedium) {
+    font-size: 64px;
+    line-height: 64px;
+    padding: 0;
+    /* margin-top + n * line-height + margin-bottom => x * 8px */
+    margin-top: 24px;
+    margin-bottom: 24px;
+  }
+}
+
+.h2 {
+  font-weight: var(--fontWeightBold);
+  font-size: 21px;
+  line-height: 24px;
+
+  padding: 4px 0 2px 0;
+  /* x * 6px */
+  margin-top: 24px;
+  margin-bottom: 18px;
+
+  @media (--viewportMedium) {
+    font-size: 40px;
+    line-height: 56px;
+    padding: 5px 0 3px 0;
+    /* x * 8px */
+    margin-top: 24px;
+    margin-bottom: 16px;
+  }
+}
+
+.h3 {
+  font-weight: var(--fontWeightBold);
+  font-size: 18px;
+  line-height: 24px;
+  /* x * 6px */
+  margin-top: 18px;
+  margin-bottom: 12px;
+
+  @media (--viewportMedium) {
+    font-size: 30px;
+    line-height: 40px;
+    padding: 1px 0 7px 0;
+    /* x * 8px */
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+}
+
+.h4 {
+  font-weight: var(--fontWeightBold);
+  font-size: 21px;
+  line-height: 30px;
+  padding: 1px 0 5px 0;
+  /* x * 6px */
+  margin-top: 12px;
+  margin-bottom: 6px;
+
+  @media (--viewportMedium) {
+    line-height: 32px;
+    padding: 0;
+    /* x * 8px */
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+}
+
+.h5 {
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 18px;
+  /* x * 6px */
+  padding: 3px 0 3px 0;
+  margin-top: 12px;
+  margin-bottom: 6px;
+
+  @media (--viewportMedium) {
+    line-height: 16px;
+    /* x * 8px */
+    padding: 3px 0 5px 0;
+    margin-top: 8px;
+    margin-bottom: 16px;
+  }
+}
+
+.h6 {
+  font-weight: var(--fontWeightBold);
+  font-size: 12px;
+  line-height: 18px;
+  text-transform: uppercase;
+  /* x * 6px */
+  padding: 4px 0 2px 0;
+  margin-top: 6px;
+  margin-bottom: 6px;
+
+  @media (--viewportMedium) {
+    line-height: 16px;
+    /* x * 8px */
+    padding: 3px 0 5px 0;
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+}
+
+.label {
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 13px;
+  line-height: 18px;
+  display: block;
+  margin-top: 0;
+  margin-bottom: 6px;
+
+  @media (--viewportMedium) {
+    font-weight: var(--fontWeightSemiBold);
+    line-height: 16px;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 3px;
+    padding-bottom: 13px;
+  }
+}
+
+.p,
+.buttonFont,
+.marketplaceMessageFontStyles,
+.marketplaceTxTransitionFontStyles,
+.marketplaceListingAttributeFontStyles,
+.marketplaceBodyFontStyles,
+.marketplaceDefaultFontStyles {
+  font-family: var(--fontFamily);
+  font-weight: var(--fontWeightMedium);
+
+  /* No margins for default font */
+  font-size: 14px;
+  line-height: 24px;
+  padding: 0;
+
+  @media (--viewportMedium) {
+    font-size: 16px;
+    line-height: 24px;
+    padding: 5px 0 3px 0;
+  }
+}
+
+.p,
+.marketplaceBodyFontStyles {
+  /* margin-top + n * line-height + margin-bottom => x * 6px */
+  margin-top: 12px;
+  margin-bottom: 12px;
+
+  @media (--viewportMedium) {
+    /* margin-top + n * line-height + margin-bottom => x * 8px */
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+}
+
+.textLarge {
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: var(--fontWeightMedium);
+
+  @media (--viewportMedium) {
+    line-height: 32px;
+  }
+}
+
+.textSmall {
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: var(--fontWeightMedium);
+  letter-spacing: -0.1px;
+
+  @media (--viewportMedium) {
+    line-height: 16px;
+  }
+}
+
+.textXSmall {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: var(--fontWeightMedium);
+
+  @media (--viewportMedium) {
+    line-height: 16px;
+  }
+}
 
 /* ================ Other fonts ================ */
 
@@ -657,6 +823,55 @@ textarea {
   font-weight: var(--fontWeightMedium);
   font-size: 18px;
   line-height: 18px;
+}
+
+/* ================ Global class for input styles ================ */
+
+.marketplaceInputStyles {
+  /* Dimensions */
+  display: block;
+  width: 100%;
+  margin: 0;
+
+  /* 6 + 24 + 4 + borders are divisible by 6 */
+  padding: 6px 12px 4px 12px;
+  background-color: #fff;
+
+  /* Borders */
+  border-radius: 6px;
+  border: 1px solid #d8dce6;
+  outline: none;
+
+  /* Transition */
+  transition: all ease-in-out 100ms;
+
+  &::placeholder {
+    color: var(--matterColorAnti);
+  }
+
+  @media (--viewportMedium) {
+    /* 7 + 32 + 7 + borders = 48, which is divisible by 8. */
+    padding: 7px 16px 7px 16px;
+    line-height: 32px;
+  }
+}
+/* Effects */
+.marketplaceInputStyles:hover {
+  border: 1px solid #b8bfd1;
+  transition: all ease-in-out 100ms;
+}
+.marketplaceInputStyles:focus {
+  background-color: #fff;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+  transition: all ease-in-out 100ms;
+}
+.marketplaceInputStyles:disabled {
+  opacity: 0.5;
+
+  &:hover {
+    cursor: not-allowed;
+  }
 }
 
 /* ================ Tabbed navigation font styles ================ */
@@ -736,7 +951,10 @@ textarea {
 /* Button font */
 /* Default font style for buttons */
 
-/* Note: .buttonFont is defined earlier */
+/* Note: some of the buttonFont styles are defined earlier */
+.buttonFont {
+  font-weight: var(--fontWeightSemiBold);
+}
 
 /* Button text styles */
 /* Default button text is centered without decorations */
