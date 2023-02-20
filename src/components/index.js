@@ -35,6 +35,9 @@ export { default as IconSocialMediaTwitter } from './IconSocialMediaTwitter/Icon
 export { default as IconSpinner } from './IconSpinner/IconSpinner';
 export { default as IconSuccess } from './IconSuccess/IconSuccess';
 
+// Typography
+export { Heading, H1, H2, H3, H4, H5, H6  } from './Heading/Heading';
+
 // Other independent components
 export { default as AspectRatioWrapper } from './AspectRatioWrapper/AspectRatioWrapper';
 export { default as ExternalLink } from './ExternalLink/ExternalLink';
