@@ -7,7 +7,9 @@ import Cookies from 'js-cookie';
 import classNames from 'classnames';
 import { isEmpty } from 'lodash';
 
+import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { camelize } from '../../util/string';
 import { pathByRouteName } from '../../util/routes';
 import { apiBaseUrl } from '../../util/api';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
@@ -35,8 +37,8 @@ import {
   LayoutWrapperFooter,
   Footer,
   Modal,
-  TermsOfService,
 } from '../../components';
+
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import ConfirmSignupForm from './ConfirmSignupForm/ConfirmSignupForm';
@@ -44,9 +46,14 @@ import LoginForm from './LoginForm/LoginForm';
 import SignupForm from './SignupForm/SignupForm';
 import EmailVerificationInfo from './EmailVerificationInfo';
 
+// We need to get ToS asset and get it rendered for the modal on this page.
+import {
+  TOS_ASSET_NAME,
+  TermsOfServiceContent,
+} from '../../containers/TermsOfServicePage/TermsOfServicePage';
+
 import css from './AuthenticationPage.module.css';
 import { FacebookLogo, GoogleLogo } from './socialLoginLogos';
-import { useConfiguration } from '../../context/configurationContext';
 
 // Social login buttons are needed by AuthenticationForms
 export const SocialLoginButtonsMaybe = props => {
@@ -363,6 +370,9 @@ export const AuthenticationPageComponent = props => {
     sendVerificationEmailError,
     onResendVerificationEmail,
     onManageDisableScrolling,
+    tosAssetsData,
+    tosFetchInProgress,
+    tosFetchError,
   } = props;
 
   // History API has potentially state tied to this route
@@ -470,10 +480,11 @@ export const AuthenticationPageComponent = props => {
             onManageDisableScrolling={onManageDisableScrolling}
           >
             <div className={css.termsWrapper}>
-              <h2 className={css.termsHeading}>
-                <FormattedMessage id="AuthenticationPage.termsHeading" />
-              </h2>
-              <TermsOfService />
+              <TermsOfServiceContent
+                inProgress={tosFetchInProgress}
+                error={tosFetchError}
+                data={tosAssetsData?.[camelize(TOS_ASSET_NAME)]?.data}
+              />
             </div>
           </Modal>
         </LayoutWrapperMain>
@@ -493,6 +504,9 @@ AuthenticationPageComponent.defaultProps = {
   tab: 'signup',
   sendVerificationEmailError: null,
   showSocialLoginsForTests: false,
+  tosAssetsData: null,
+  tosFetchInProgress: false,
+  tosFetchError: null,
 };
 
 AuthenticationPageComponent.propTypes = {
@@ -513,6 +527,12 @@ AuthenticationPageComponent.propTypes = {
   onResendVerificationEmail: func.isRequired,
   onManageDisableScrolling: func.isRequired,
 
+  // to fetch terms-of-service page asset
+  // which is shown in modal
+  tosAssetsData: object,
+  tosFetchInProgress: bool,
+  tosFetchError: propTypes.error,
+
   // from withRouter
   location: shape({ state: object }).isRequired,
 
@@ -523,6 +543,9 @@ AuthenticationPageComponent.propTypes = {
 const mapStateToProps = state => {
   const { isAuthenticated, loginError, signupError, confirmError } = state.Auth;
   const { currentUser, sendVerificationEmailInProgress, sendVerificationEmailError } = state.user;
+  const { pageAssetsData: tosAssetsData, inProgress: tosFetchInProgress, error: tosFetchError } =
+    state.hostedAssets || {};
+
   return {
     authInProgress: authenticationInProgress(state),
     currentUser,
@@ -533,6 +556,9 @@ const mapStateToProps = state => {
     confirmError,
     sendVerificationEmailInProgress,
     sendVerificationEmailError,
+    tosAssetsData,
+    tosFetchInProgress,
+    tosFetchError,
   };
 };
 

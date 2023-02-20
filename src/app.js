@@ -15,6 +15,7 @@ import moment from 'moment';
 
 // Configs and store setup
 import defaultConfig from './config/configDefault';
+import appSettings from './config/settings';
 import configureStore from './store';
 
 // utils
@@ -123,6 +124,8 @@ export const ClientApp = props => {
     elem.style.setProperty('--marketplaceColorDark', appConfig.branding.marketplaceColorDark);
     elem.style.setProperty('--marketplaceColorLight', appConfig.branding.marketplaceColorLight);
   }
+  // This gives good input for debugging issues on live environments, but with test it's not needed.
+  const logLoadDataCalls = appSettings?.env !== 'test';
 
   return (
     <Configurations appConfig={appConfig}>
@@ -135,7 +138,10 @@ export const ClientApp = props => {
           <HelmetProvider>
             <IncludeScripts config={appConfig} />
             <BrowserRouter>
-              <Routes />
+              <Routes
+                routes={routeConfiguration(appConfig.layout)}
+                logLoadDataCalls={logLoadDataCalls}
+              />
             </BrowserRouter>
           </HelmetProvider>
         </Provider>
