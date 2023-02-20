@@ -52,7 +52,6 @@ const defaultDirectives = {
     // Styleguide placeholder images
     'picsum.photos',
     '*.picsum.photos',
-    'via.placeholder.com',
 
     'api.mapbox.com',
     'maps.googleapis.com',
