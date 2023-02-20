@@ -32,6 +32,7 @@ import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/UI.duck
 import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
 
 import {
+  IconSpinner,
   NamedLink,
   NamedRedirect,
   Page,
@@ -320,9 +321,10 @@ export const TransactionPageComponent = props => {
       <FormattedMessage id={`${fetchErrorMessage}`} />
     </p>
   ) : (
-    <p className={css.loading}>
+    <div className={css.loading}>
       <FormattedMessage id={`${loadingMessage}`} />
-    </p>
+      <IconSpinner />
+    </div>
   );
 
   const initialMessageFailed = !!(
