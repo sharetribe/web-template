@@ -32,8 +32,10 @@ const SectionMaintenanceMode = props => {
       <div className={css.content}>
         <h1>Maintenance mode</h1>
         <p>
-          The marketplace is not fully operational at the moment.<br />Try refreshing the page and if
-          that does not solve the issue, contact the marketplace admins.
+          The marketplace is not fully operational at the moment.
+          <br />
+          Try refreshing the page and if that does not solve the issue, contact the marketplace
+          admins.
         </p>
       </div>
     </section>
