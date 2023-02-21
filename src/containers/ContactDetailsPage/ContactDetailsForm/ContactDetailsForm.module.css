@@ -81,11 +81,14 @@
 }
 
 .helperLink {
+  composes: a from global;
   color: var(--matterColor);
-  border-bottom: solid 1px var(--matterColor);
-  line-height: 20px;
-  margin: 0;
-  cursor: pointer;
+  font-weight: var(--fontWeightMedium);
+  text-decoration: underline;
+
+  &:hover {
+    text-decoration: none;
+  }
 
   @media (--viewportMedium) {
     margin: 0;
@@ -101,9 +104,6 @@
 }
 
 .confirmChangesTitle {
-  /* Font */
-  color: var(--matterColorAnti);
-
   margin-top: 0;
   margin-bottom: 13px;
 

@@ -16,6 +16,7 @@ import {
   LayoutWrapperTopbar,
   LayoutWrapperFooter,
   Footer,
+  H3,
   Page,
   UserNav,
 } from '../../components';
@@ -89,9 +90,9 @@ export const ContactDetailsPageComponent = props => {
         <LayoutWrapperAccountSettingsSideNav currentTab="ContactDetailsPage" />
         <LayoutWrapperMain>
           <div className={css.content}>
-            <h1 className={css.title}>
+            <H3 as="h1">
               <FormattedMessage id="ContactDetailsPage.heading" />
-            </h1>
+            </H3>
             {contactInfoForm}
           </div>
         </LayoutWrapperMain>

@@ -12,6 +12,7 @@ import { createResourceLocatorString } from '../../util/routes';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 
 import {
+  Heading,
   Page,
   LayoutSingleColumn,
   LayoutWrapperTopbar,
@@ -59,9 +60,9 @@ export class NotFoundPageComponent extends Component {
             <div className={css.root}>
               <div className={css.content}>
                 <div className={css.number}>404</div>
-                <h1 className={css.heading}>
+                <Heading as="h1" rootClassName={css.heading}>
                   <FormattedMessage id="NotFoundPage.heading" />
-                </h1>
+                </Heading>
                 <p className={css.description}>
                   <FormattedMessage id="NotFoundPage.description" values={{ marketplaceName }} />
                 </p>

@@ -8,7 +8,7 @@ import { EXTENDED_DATA_SCHEMA_TYPES, LISTING_STATE_DRAFT } from '../../../../uti
 import { isBookingProcessAlias } from '../../../../transactions/transaction';
 
 // Import shared components
-import { ListingLink } from '../../../../components';
+import { H3, ListingLink } from '../../../../components';
 
 // Import modules from this directory
 import ErrorMessage from './ErrorMessage';
@@ -204,7 +204,7 @@ const EditListingDetailsPanel = props => {
 
   return (
     <div className={classes}>
-      <h1 className={css.title}>
+      <H3 as="h1">
         {isPublished ? (
           <FormattedMessage
             id="EditListingDetailsPanel.title"
@@ -216,7 +216,7 @@ const EditListingDetailsPanel = props => {
             values={{ lineBreak: <br /> }}
           />
         )}
-      </h1>
+      </H3>
 
       {canShowEditListingDetailsForm ? (
         <EditListingDetailsForm

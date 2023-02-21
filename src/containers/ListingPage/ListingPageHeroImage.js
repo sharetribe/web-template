@@ -36,6 +36,7 @@ import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck
 import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
 
 import {
+  H4,
   Page,
   NamedLink,
   NamedRedirect,
@@ -313,9 +314,9 @@ export const ListingPageComponent = props => {
             <div className={css.contentWrapperForHeroLayout}>
               <div className={css.mainColumnForHeroLayout}>
                 <div className={css.mobileHeading}>
-                  <h1 className={css.orderPanelTitle}>
+                  <H4 as="h1" className={css.orderPanelTitle}>
                     <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
-                  </h1>
+                  </H4>
                 </div>
                 <SectionTextMaybe text={description} showAsIngress />
                 <SectionDetailsMaybe
@@ -396,9 +397,9 @@ export const ListingPageComponent = props => {
                     <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
                   }
                   titleDesktop={
-                    <h1 className={css.orderPanelTitle}>
+                    <H4 as="h1" className={css.orderPanelTitle}>
                       <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
-                    </h1>
+                    </H4>
                   }
                   author={ensuredAuthor}
                   onManageDisableScrolling={onManageDisableScrolling}

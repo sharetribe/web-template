@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
+import { Heading } from '../../../components';
 
 import css from './TransactionPanel.module.css';
 
@@ -23,9 +24,9 @@ const FeedSection = props => {
 
   return showFeed ? (
     <div className={classes}>
-      <h3 className={css.sectionHeading}>
+      <Heading as="h3" rootClassName={css.sectionHeading}>
         <FormattedMessage id="TransactionPanel.activityHeading" />
-      </h3>
+      </Heading>
       {initialMessageFailed ? (
         <p className={css.messageError}>
           <FormattedMessage id="TransactionPanel.initialMessageFailed" />

@@ -8,7 +8,7 @@ import { LISTING_STATE_DRAFT } from '../../../../util/types';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 
 // Import shared components
-import { ListingLink } from '../../../../components';
+import { Heading, ListingLink } from '../../../../components';
 
 // Import modules from this directory
 import EditListingDeliveryForm from './EditListingDeliveryForm';
@@ -87,7 +87,7 @@ const EditListingDeliveryPanel = props => {
 
   return (
     <div className={classes}>
-      <h1 className={css.title}>
+      <H3 as="h1">
         {isPublished ? (
           <FormattedMessage
             id="EditListingDeliveryPanel.title"
@@ -99,7 +99,7 @@ const EditListingDeliveryPanel = props => {
             values={{ lineBreak: <br /> }}
           />
         )}
-      </h1>
+      </H3>
       <EditListingDeliveryForm
         className={css.form}
         initialValues={state.initialValues}

@@ -16,6 +16,7 @@ import {
   Footer,
   Page,
   UserNav,
+  H3,
 } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
@@ -71,9 +72,9 @@ export const PasswordChangePageComponent = props => {
         <LayoutWrapperAccountSettingsSideNav currentTab="PasswordChangePage" />
         <LayoutWrapperMain>
           <div className={css.content}>
-            <h1 className={css.title}>
+            <H3 as="h1">
               <FormattedMessage id="PasswordChangePage.heading" />
-            </h1>
+            </H3>
             {changePasswordForm}
           </div>
         </LayoutWrapperMain>

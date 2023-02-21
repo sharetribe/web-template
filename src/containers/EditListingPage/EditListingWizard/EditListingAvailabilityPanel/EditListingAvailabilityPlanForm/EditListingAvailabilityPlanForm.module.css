@@ -18,10 +18,6 @@
   }
 }
 
-.heading {
-  composes: h3 from global;
-}
-
 .subheading {
   composes: p from global;
 }

@@ -18,6 +18,7 @@ import {
   ImageFromFile,
   IconSpinner,
   FieldTextInput,
+  H4,
 } from '../../../components';
 
 import css from './ProfileSettingsForm.module.css';
@@ -195,9 +196,9 @@ class ProfileSettingsFormComponent extends Component {
               }}
             >
               <div className={css.sectionContainer}>
-                <h3 className={css.sectionTitle}>
+                <H4 as="h2" className={css.sectionTitle}>
                   <FormattedMessage id="ProfileSettingsForm.yourProfilePicture" />
-                </h3>
+                </H4>
                 <Field
                   accept={ACCEPT_IMAGES}
                   id="profileImage"
@@ -264,9 +265,9 @@ class ProfileSettingsFormComponent extends Component {
                 </div>
               </div>
               <div className={css.sectionContainer}>
-                <h3 className={css.sectionTitle}>
+                <H4 as="h2" className={css.sectionTitle}>
                   <FormattedMessage id="ProfileSettingsForm.yourName" />
-                </h3>
+                </H4>
                 <div className={css.nameContainer}>
                   <FieldTextInput
                     className={css.firstName}
@@ -289,9 +290,9 @@ class ProfileSettingsFormComponent extends Component {
                 </div>
               </div>
               <div className={classNames(css.sectionContainer, css.lastSection)}>
-                <h3 className={css.sectionTitle}>
+                <H4 as="h2" className={css.sectionTitle}>
                   <FormattedMessage id="ProfileSettingsForm.bioHeading" />
-                </h3>
+                </H4>
                 <FieldTextInput
                   type="textarea"
                   id="bio"

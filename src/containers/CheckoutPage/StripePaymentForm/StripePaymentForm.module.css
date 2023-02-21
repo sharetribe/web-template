@@ -5,25 +5,18 @@
   flex-direction: column;
 }
 
-.locationWrapper,
-.pickupWrapper {
+.locationWrapper {
   margin-bottom: 40px;
 }
 
-.locationHeading,
-.pickupHeading,
-.paymentHeading,
-.billingHeading,
-.messageHeading {
+.heading {
   composes: p from global;
   font-weight: var(--fontWeightBold);
   padding: 0;
   margin-bottom: 16px;
 }
 
-.locationDetails,
-.pickupDetails {
-  composes: p from global;
+.locationDetails {
   padding: 0;
   margin: 0;
 }

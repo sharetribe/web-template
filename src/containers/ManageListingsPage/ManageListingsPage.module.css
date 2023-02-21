@@ -53,10 +53,7 @@
   }
 }
 
-.loadingData,
-.error,
-.title {
-  composes: h3 from global;
+.heading {
   margin: 0 24px 24px 24px;
 
   @media (--viewportMedium) {

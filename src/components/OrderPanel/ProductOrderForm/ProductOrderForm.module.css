@@ -1,7 +1,6 @@
 @import '../../../styles/customMediaQueries.css';
 
 .bookingBreakdownTitle {
-  composes: h6 from global;
   letter-spacing: 1px;
   font-weight: var(--fontWeightMedium);
 }
@@ -38,18 +37,9 @@
 }
 
 .singleDeliveryMethodLabel {
-  composes: h5 from global;
-  font-weight: var(--fontWeightSemiBold);
-  font-size: 13px;
-  display: block;
-  margin-top: 0;
-  margin-bottom: 6px;
+  composes: label from global;
 
   @media (--viewportMedium) {
-    font-weight: var(--fontWeightSemiBold);
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 3px;
     padding-bottom: 5px;
   }
 }

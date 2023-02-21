@@ -5,10 +5,9 @@ import classNames from 'classnames';
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
-import { ensureOwnListing } from '../../../../util/data';
 
 // Import shared components
-import { ListingLink } from '../../../../components';
+import { H3, ListingLink } from '../../../../components';
 
 // Import modules from this directory
 import EditListingPhotosForm from './EditListingPhotosForm';
@@ -38,12 +37,11 @@ const EditListingPhotosPanel = props => {
 
   const rootClass = rootClassName || css.root;
   const classes = classNames(rootClass, className);
-  const currentListing = ensureOwnListing(listing);
-  const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
+  const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
 
   return (
     <div className={classes}>
-      <h1 className={css.title}>
+      <H3 as="h1">
         {isPublished ? (
           <FormattedMessage
             id="EditListingPhotosPanel.title"
@@ -55,7 +53,7 @@ const EditListingPhotosPanel = props => {
             values={{ lineBreak: <br /> }}
           />
         )}
-      </h1>
+      </H3>
       <EditListingPhotosForm
         className={css.form}
         disabled={disabled}

@@ -9,6 +9,7 @@ import {
   LayoutWrapperMain,
   InlineTextButton,
   Logo,
+  Heading,
 } from '../../components';
 
 import css from './LoadableComponentErrorBoundary.module.css';
@@ -44,9 +45,9 @@ export const LoadableComponentErrorBoundaryPage = () => {
           <div className={css.root}>
             <div className={css.content}>
               <div className={css.number}>404</div>
-              <h1 className={css.heading}>
+              <Heading as="h1" rootClassName={css.heading}>
                 <FormattedMessage id="LoadableComponentErrorBoundaryPage.heading" />
-              </h1>
+              </Heading>
               <p className={css.description}>
                 <FormattedMessage
                   id="LoadableComponentErrorBoundaryPage.description"

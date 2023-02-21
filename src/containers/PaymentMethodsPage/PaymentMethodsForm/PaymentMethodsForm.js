@@ -11,7 +11,7 @@ import classNames from 'classnames';
 import { useConfiguration } from '../../../context/configurationContext';
 import { FormattedMessage, useIntl, intlShape } from '../../../util/reactIntl';
 
-import { Form, PrimaryButton, FieldTextInput, StripePaymentAddress } from '../../../components';
+import { Form, PrimaryButton, FieldTextInput, StripePaymentAddress, H4 } from '../../../components';
 
 import css from './PaymentMethodsForm.module.css';
 
@@ -248,9 +248,9 @@ class PaymentMethodsForm extends Component {
         <div className={css.infoText}>{infoText}</div>
         {hasCardError ? <span className={css.error}>{this.state.error}</span> : null}
         <div className={css.paymentAddressField}>
-          <h3 className={css.billingHeading}>
+          <H4 as="h3">
             <FormattedMessage id="PaymentMethodsForm.billingDetails" />
-          </h3>
+          </H4>
 
           <FieldTextInput
             className={css.field}

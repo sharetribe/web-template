@@ -16,7 +16,3 @@
 .mobileTopbar {
   box-shadow: none;
 }
-
-.title {
-  composes: h3 from global;
-}

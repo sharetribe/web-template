@@ -68,10 +68,6 @@
 }
 
 .title {
-  /* Font */
-  composes: h2 from global;
-  color: var(--matterColor);
-
   align-self: center;
   padding: 0px 0 8px 0;
 

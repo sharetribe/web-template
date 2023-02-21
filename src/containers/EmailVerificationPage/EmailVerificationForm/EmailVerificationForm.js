@@ -6,6 +6,7 @@ import { Form as FinalForm, Field } from 'react-final-form';
 import { FormattedMessage, injectIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import {
+  Heading,
   Form,
   NamedLink,
   IconEmailAttention,
@@ -38,9 +39,9 @@ const EmailVerificationFormComponent = props => (
         <div className={css.root}>
           <div>
             <IconEmailAttention className={css.modalIcon} />
-            <h1 className={css.modalTitle}>
+            <Heading as="h1" rootClassName={css.modalTitle}>
               <FormattedMessage id="EmailVerificationForm.verifyEmailAddress" />
-            </h1>
+            </Heading>
 
             <p className={css.modalMessage}>
               <FormattedMessage
@@ -72,9 +73,9 @@ const EmailVerificationFormComponent = props => (
         <div className={css.root}>
           <div>
             <IconEmailSuccess className={css.modalIcon} />
-            <h1 className={css.modalTitle}>
+            <Heading as="h1" rootClassName={css.modalTitle}>
               <FormattedMessage id="EmailVerificationForm.successTitle" values={{ name }} />
-            </h1>
+            </Heading>
 
             <p className={css.modalMessage}>
               <FormattedMessage id="EmailVerificationForm.successText" />
@@ -94,9 +95,9 @@ const EmailVerificationFormComponent = props => (
         <div className={css.root}>
           <div>
             <IconEmailSuccess className={css.modalIcon} />
-            <h1 className={css.modalTitle}>
+            <Heading as="h1" rootClassName={css.modalTitle}>
               <FormattedMessage id="EmailVerificationForm.noPendingTitle" values={{ name }} />
-            </h1>
+            </Heading>
 
             <p className={css.modalMessage}>
               <FormattedMessage

@@ -11,7 +11,3 @@
 .form {
   flex-grow: 1;
 }
-
-.title {
-  composes: h3 from global;
-}

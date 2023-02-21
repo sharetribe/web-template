@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { intlShape, injectIntl, FormattedMessage } from '../../../../../util/reactIntl';
 import { propTypes } from '../../../../../util/types';
 
-import { Form, PrimaryButton } from '../../../../../components';
+import { Form, H3, PrimaryButton } from '../../../../../components';
 
 import AvailabilityModeSelector from './AvailabilityModeSelector';
 import ExceptionDateTimeRange from './ExceptionDateTimeRange';
@@ -81,9 +81,9 @@ const EditListingAvailabilityExceptionForm = props => {
               });
             }}
           >
-            <h2 className={css.heading}>
+            <H3 as="h2" className={css.heading}>
               <FormattedMessage id="EditListingAvailabilityExceptionForm.title" />
-            </h2>
+            </H3>
 
             <div className={css.radioButtons}>
               <AvailabilityModeSelector idPrefix={idPrefix} pristine={pristine} intl={intl} />
