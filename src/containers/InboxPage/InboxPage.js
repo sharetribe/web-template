@@ -216,7 +216,12 @@ export const InboxPageComponent = props => {
   };
   const toTxItem = tx => {
     const transactionRole = isOrders ? TX_TRANSITION_ACTOR_CUSTOMER : TX_TRANSITION_ACTOR_PROVIDER;
-    const stateData = getStateData({ transaction: tx, transactionRole, intl });
+    let stateData = null;
+    try {
+      stateData = getStateData({ transaction: tx, transactionRole, intl });
+    } catch (error) {
+      // If stateData is missing, omit the transaction from InboxItem list.
+    }
 
     const publicData = tx?.listing?.attributes?.publicData || {};
     const foundListingTypeConfig = findListingTypeConfig(publicData);
