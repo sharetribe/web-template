@@ -30,13 +30,15 @@ exports[`NotFoundPageComponent matches snapshot 1`] = `
           >
             404
           </div>
-          <h1
-            className="heading"
+          <Heading
+            as="h1"
+            className={null}
+            rootClassName="heading"
           >
             <MemoizedFormattedMessage
               id="NotFoundPage.heading"
             />
-          </h1>
+          </Heading>
           <p
             className="description"
           >

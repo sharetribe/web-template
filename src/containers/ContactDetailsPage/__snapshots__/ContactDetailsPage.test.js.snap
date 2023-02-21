@@ -35,13 +35,15 @@ exports[`ContactDetailsPage matches snapshot 1`] = `
       <div
         className="content"
       >
-        <h1
-          className="title"
+        <H3
+          as="h1"
+          className={null}
+          rootClassName={null}
         >
           <MemoizedFormattedMessage
             id="ContactDetailsPage.heading"
           />
-        </h1>
+        </H3>
       </div>
     </LayoutWrapperMain>
     <LayoutWrapperFooter
