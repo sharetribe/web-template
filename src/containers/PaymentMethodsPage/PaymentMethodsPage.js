@@ -11,6 +11,7 @@ import { handleCardSetup } from '../../ducks/stripe.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck';
 
 import {
+  H3,
   SavedCardDetails,
   LayoutSideNavigation,
   LayoutWrapperMain,
@@ -162,9 +163,9 @@ const PaymentMethodsPageComponent = props => {
         <LayoutWrapperAccountSettingsSideNav currentTab="PaymentMethodsPage" />
         <LayoutWrapperMain>
           <div className={css.content}>
-            <h1 className={css.title}>
+            <H3 as="h1">
               <FormattedMessage id="PaymentMethodsPage.heading" />
-            </h1>
+            </H3>
             {!stripeCustomerFetched ? null : (
               <>
                 {showCardDetails ? (

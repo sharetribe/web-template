@@ -311,9 +311,7 @@
 
 .orderPanelTitle {
   /* Font */
-  composes: h4 from global;
   font-weight: var(--fontWeightBold);
-  color: var(--matterColor);
 
   /* Layout */
   width: 100%;
@@ -356,15 +354,6 @@
   }
 }
 
-.sectionHeading {
-  margin-top: 22px;
-  margin-bottom: 34px;
-
-  @media (--viewportMedium) {
-    display: flex;
-    margin-bottom: 31px;
-  }
-}
 .desktopPriceContainer {
   display: none;
 
@@ -497,20 +486,13 @@
   }
 }
 
-.sectionTitle {
+.sectionHeading,
+.sectionHeadingWithExtraMargin {
   /* Font for sections titles */
   composes: p from global;
   padding: 0;
   font-weight: var(--fontWeightBold);
-}
 
-.detailsTitle,
-.multiEnumTitle,
-.textHeading,
-.locationTitle,
-.reviewsTitle,
-.aboutProviderTitle {
-  composes: sectionTitle;
   margin-top: 0;
   margin-bottom: 12px;
 
@@ -520,9 +502,7 @@
   }
 }
 
-.locationTitle,
-.reviewsTitle,
-.aboutProviderTitle {
+.sectionHeadingWithExtraMargin {
   @media (--viewportMedium) {
     margin-bottom: 16px;
   }

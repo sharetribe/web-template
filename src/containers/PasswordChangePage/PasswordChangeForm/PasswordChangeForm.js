@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
-import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
@@ -11,7 +10,7 @@ import * as validators from '../../../util/validators';
 import { ensureCurrentUser } from '../../../util/data';
 import { isChangePasswordWrongPassword } from '../../../util/errors';
 
-import { Form, PrimaryButton, FieldTextInput } from '../../../components';
+import { Form, PrimaryButton, FieldTextInput, H4 } from '../../../components';
 
 import css from './PasswordChangeForm.module.css';
 
@@ -202,9 +201,9 @@ class PasswordChangeFormComponent extends Component {
               </div>
 
               <div className={confirmClasses}>
-                <h3 className={css.confirmChangesTitle}>
+                <H4 as="h3" className={css.confirmChangesTitle}>
                   <FormattedMessage id="PasswordChangeForm.confirmChangesTitle" />
-                </h3>
+                </H4>
                 <p className={css.confirmChangesInfo}>
                   <FormattedMessage id="PasswordChangeForm.confirmChangesInfo" />
                   <br />

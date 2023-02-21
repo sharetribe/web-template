@@ -10,6 +10,7 @@ import { ensureCurrentUser } from '../../util/data';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 
 import {
+  H3,
   Page,
   UserNav,
   LayoutSingleColumn,
@@ -103,9 +104,9 @@ export const ProfileSettingsPageComponent = props => {
         <LayoutWrapperMain>
           <div className={css.content}>
             <div className={css.headingContainer}>
-              <h1 className={css.heading}>
+              <H3 as="h1" className={css.heading}>
                 <FormattedMessage id="ProfileSettingsPage.heading" />
-              </h1>
+              </H3>
               {user.id ? (
                 <NamedLink
                   className={css.profileLink}

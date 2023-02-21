@@ -11,7 +11,7 @@ import { EXTENDED_DATA_SCHEMA_TYPES, propTypes } from '../../../../util/types';
 import { maxLength, required, composeValidators } from '../../../../util/validators';
 
 // Import shared components
-import { Form, Button, FieldSelect, FieldTextInput } from '../../../../components';
+import { Form, Button, FieldSelect, FieldTextInput, Heading } from '../../../../components';
 // Import modules from this directory
 import CustomExtendedDataField from '../CustomExtendedDataField';
 import css from './EditListingDetailsForm.module.css';
@@ -97,9 +97,9 @@ const FieldSelectListingType = props => {
     </>
   ) : hasMultipleListingTypes && hasExistingListingType ? (
     <div className={css.listingTypeSelect}>
-      <h5 className={css.selectedLabel}>
+      <Heading as="h5" rootClassName={css.selectedLabel}>
         {intl.formatMessage({ id: 'EditListingDetailsForm.listingTypeLabel' })}
-      </h5>
+      </Heading>
       <p className={css.selectedValue}>{formApi.getFieldState(name)?.value}</p>
       <FieldHidden name={name} />
       <FieldHidden name="transactionProcessAlias" />

@@ -47,19 +47,7 @@
 }
 
 .selectedLabel {
-  font-weight: var(--fontWeightSemiBold);
-  font-size: 13px;
-  display: block;
-  margin-top: 0;
-  margin-bottom: 6px;
-
-  @media (--viewportMedium) {
-    font-weight: var(--fontWeightSemiBold);
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 3px;
-    padding-bottom: 13px;
-  }
+  composes: label from global;
 }
 .selectedValue {
   margin-top: 0;

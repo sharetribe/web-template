@@ -32,6 +32,7 @@ import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/UI.duck
 import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
 
 import {
+  H4,
   IconSpinner,
   NamedLink,
   NamedRedirect,
@@ -461,7 +462,7 @@ export const TransactionPageComponent = props => {
           lineItemUnitType={lineItemUnitType}
           title={listingTitle}
           titleDesktop={
-            <h2 className={css.orderPanelTitle}>
+            <H4 as="h2" className={css.orderPanelTitle}>
               {listingDeleted ? (
                 listingTitle
               ) : (
@@ -472,7 +473,7 @@ export const TransactionPageComponent = props => {
                   {listingTitle}
                 </NamedLink>
               )}
-            </h2>
+            </H4>
           }
           author={provider}
           onSubmit={handleSubmitOrderRequest}

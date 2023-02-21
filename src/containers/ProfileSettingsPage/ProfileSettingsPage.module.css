@@ -19,7 +19,6 @@
 }
 
 .heading {
-  composes: h3 from global;
   margin-right: 24px;
 }
 

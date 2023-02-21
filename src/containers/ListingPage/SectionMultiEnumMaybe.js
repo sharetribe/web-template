@@ -1,5 +1,5 @@
 import React from 'react';
-import { PropertyGroup } from '../../components';
+import { Heading, PropertyGroup } from '../../components';
 
 import css from './ListingPage.module.css';
 
@@ -11,7 +11,9 @@ const SectionMultiEnumMaybe = props => {
 
   return (
     <div className={css.sectionMultiEnum}>
-      <h2 className={css.multiEnumTitle}>{heading}</h2>
+      <Heading as="h2" rootClassName={css.sectionHeading}>
+        {heading}
+      </Heading>
       <PropertyGroup
         id="ListingPage.amenities"
         options={options}

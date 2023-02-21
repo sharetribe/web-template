@@ -13,6 +13,7 @@ import { propTypes } from '../../../util/types';
 import { ensurePaymentMethodCard } from '../../../util/data';
 
 import {
+  Heading,
   Form,
   PrimaryButton,
   FieldCheckbox,
@@ -151,9 +152,9 @@ const PaymentMethodSelector = props => {
 
   return (
     <React.Fragment>
-      <h3 className={css.paymentHeading}>
+      <Heading as="h3" rootClassName={css.heading}>
         <FormattedMessage id="StripePaymentForm.payWithHeading" />
-      </h3>
+      </Heading>
       <SavedCardDetails
         className={css.paymentMethodSelector}
         card={defaultPaymentMethod.attributes.card}
@@ -228,17 +229,17 @@ const LocationOrShippingDetails = props => {
   return askShippingDetails ? (
     <ShippingDetails intl={intl} formApi={formApi} locale={locale} />
   ) : !isBooking && showPickUplocation ? (
-    <div className={css.pickupWrapper}>
-      <h3 className={css.pickupHeading}>
+    <div className={css.locationWrapper}>
+      <Heading as="h3" rootClassName={css.heading}>
         <FormattedMessage id="StripePaymentForm.pickupDetailsTitle" />
-      </h3>
-      <p className={css.pickupDetails}>{locationDetails}</p>
+      </Heading>
+      <p className={css.locationDetails}>{locationDetails}</p>
     </div>
   ) : isBooking && !isFuzzyLocation ? (
     <div className={css.locationWrapper}>
-      <h3 className={css.locationHeading}>
+      <Heading as="h3" rootClassName={css.heading}>
         <FormattedMessage id="StripePaymentForm.locationDetailsTitle" />
-      </h3>
+      </Heading>
       <p className={css.locationDetails}>{locationDetails}</p>
     </div>
   ) : null;
@@ -563,9 +564,9 @@ class StripePaymentForm extends Component {
               />
             ) : (
               <React.Fragment>
-                <h3 className={css.paymentHeading}>
+                <Heading as="h3" rootClassName={css.heading}>
                   <FormattedMessage id="StripePaymentForm.paymentHeading" />
-                </h3>
+                </Heading>
                 <OneTimePaymentWithCardElement
                   cardClasses={cardClasses}
                   formId={formId}
@@ -580,9 +581,9 @@ class StripePaymentForm extends Component {
 
             {showOnetimePaymentFields ? (
               <div className={css.billingDetails}>
-                <h3 className={css.billingHeading}>
+                <Heading as="h3" rootClassName={css.heading}>
                   <FormattedMessage id="StripePaymentForm.billingDetails" />
-                </h3>
+                </Heading>
 
                 {askShippingDetails ? (
                   <FieldCheckbox
@@ -624,9 +625,9 @@ class StripePaymentForm extends Component {
         ) : null}
         {showInitialMessageInput ? (
           <div>
-            <h3 className={css.messageHeading}>
+            <Heading as="h3" rootClassName={css.heading}>
               <FormattedMessage id="StripePaymentForm.messageHeading" />
-            </h3>
+            </Heading>
 
             <FieldTextInput
               type="textarea"

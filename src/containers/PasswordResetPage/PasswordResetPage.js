@@ -11,6 +11,7 @@ import { parse } from '../../util/urlHelpers';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 
 import {
+  Heading,
   Page,
   NamedLink,
   IconKeys,
@@ -55,9 +56,9 @@ const ResetFormContent = props => {
   return (
     <div className={css.content}>
       <IconKeys className={css.modalIcon} />
-      <h1 className={css.modalTitle}>
+      <Heading as="h1" rootClassName={css.modalTitle}>
         <FormattedMessage id="PasswordResetPage.mainHeading" />
-      </h1>
+      </Heading>
       <p className={css.modalMessage}>
         <FormattedMessage id="PasswordResetPage.helpText" />
       </p>
@@ -79,9 +80,9 @@ const ResetDoneContent = () => {
   return (
     <div className={css.content}>
       <IconKeysSuccess className={css.modalIcon} />
-      <h1 className={css.modalTitle}>
+      <Heading as="h1" rootClassName={css.modalTitle}>
         <FormattedMessage id="PasswordResetPage.passwordChangedHeading" />
-      </h1>
+      </Heading>
       <p className={css.modalMessage}>
         <FormattedMessage id="PasswordResetPage.passwordChangedHelpText" />
       </p>

@@ -40,10 +40,6 @@
   }
 }
 
-.billingHeading {
-  composes: h4 from global;
-}
-
 .messageHeading {
   color: var(--matterColorAnti);
   margin: 40px 0 14px 0;

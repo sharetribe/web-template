@@ -26,6 +26,7 @@ import { BOOKING_PROCESS_NAME, isBookingProcess } from '../../../transactions/tr
 
 // Import shared components
 import {
+  Heading,
   Modal,
   NamedRedirect,
   Tabs,
@@ -520,11 +521,11 @@ class EditListingWizard extends Component {
           usePortal
         >
           <div className={css.modalPayoutDetailsWrapper}>
-            <h1 className={css.modalTitle}>
+            <Heading as="h2" rootClassName={css.modalTitle}>
               <FormattedMessage id="EditListingWizard.payoutModalTitleOneMoreThing" />
               <br />
               <FormattedMessage id="EditListingWizard.payoutModalTitlePayoutPreferences" />
-            </h1>
+            </Heading>
             {!currentUserLoaded ? (
               <FormattedMessage id="StripePayoutPage.loadingData" />
             ) : returnedAbnormallyFromStripe && !stripeAccountLinkError ? (

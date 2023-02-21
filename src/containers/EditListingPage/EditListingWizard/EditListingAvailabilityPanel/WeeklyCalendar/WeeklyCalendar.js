@@ -21,7 +21,14 @@ import { createResourceLocatorString } from '../../../../../util/routes';
 import { DATE_TYPE_DATE, DATE_TYPE_TIME, propTypes } from '../../../../../util/types';
 
 // Import shared components
-import { IconArrowHead, IconDelete, IconSpinner, TimeRange } from '../../../../../components';
+import {
+  Heading,
+  H4,
+  IconArrowHead,
+  IconDelete,
+  IconSpinner,
+  TimeRange,
+} from '../../../../../components';
 
 import {
   endOfAvailabilityExceptionRange,
@@ -65,13 +72,13 @@ const DateLabel = ({ dateId, hasAvailability, timeZone }) => {
     <div
       className={classNames(css.dateLabelContainer, { [css.blockedDateLabel]: !hasAvailability })}
     >
-      <h4 className={classNames(css.dateLabel)}>
+      <H4 className={classNames(css.dateLabel)}>
         <FormattedDate value={date} weekday="long" timeZone={timeZone} />
         <br />
         <span className={css.dateAndMonth}>
           <FormattedDate value={date} month="long" day="numeric" timeZone={timeZone} />
         </span>
-      </h4>
+      </H4>
     </div>
   );
 };
@@ -154,9 +161,9 @@ const AvailableExecptions = ({
   const hasAvailableExceptions = availableExceptions.length > 0;
   return hasAvailableExceptions ? (
     <>
-      <h6 className={css.exceptionsSubtitle}>
+      <Heading as="h6" rootClassName={css.exceptionsSubtitle}>
         <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.available" />
-      </h6>
+      </Heading>
       {availableExceptions.map(exception => {
         return (
           <ExceptionEntry
@@ -184,9 +191,9 @@ const NotAvailableExecptions = ({
   const hasBlockingExceptions = blockingExceptions.length > 0;
   return hasBlockingExceptions ? (
     <>
-      <h6 className={css.exceptionsSubtitle}>
+      <Heading as="h6" rootClassName={css.exceptionsSubtitle}>
         <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.notAvailable" />
-      </h6>
+      </Heading>
       {blockingExceptions.map(exception => {
         return (
           <ExceptionEntry
@@ -244,9 +251,13 @@ const CalendarDate = props => {
         ) : null}
         {hasExceptions || fetchExceptionsError ? (
           <div className={css.exceptionsContainer}>
-            <h5 className={css.exceptionsTitle} title="Exceptions overwrite weekly schedule">
+            <Heading
+              as="h5"
+              rootClassName={css.exceptionsTitle}
+              title="Exceptions overwrite weekly schedule"
+            >
               <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.exceptions" />
-            </h5>
+            </Heading>
             {fetchExceptionsInProgress ? (
               <IconSpinner />
             ) : fetchExceptionsError ? (
@@ -401,9 +412,9 @@ const WeeklyCalendar = props => {
     <section className={classes}>
       <header className={headerClassName}>
         <div className={css.titleWrapper}>
-          <h2 className={css.sectionTitle}>
+          <Heading as="h2" className={css.sectionTitle}>
             <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.scheduleTitle" />
-          </h2>
+          </Heading>
           <WeekPicker
             className={css.weekPicker}
             label={
