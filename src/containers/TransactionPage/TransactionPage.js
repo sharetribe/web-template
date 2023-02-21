@@ -134,7 +134,12 @@ export const TransactionPageComponent = props => {
   const isCustomerRole = transactionRole === CUSTOMER;
 
   const processName = resolveLatestProcessName(transaction?.attributes?.processName);
-  const process = processName ? getProcess(processName) : null;
+  let process = null;
+  try {
+    process = processName ? getProcess(processName) : null;
+  } catch (error) {
+    // Process was not recognized!
+  }
 
   const isTxOnPaymentPending = tx => {
     return process ? process.getState(tx) === process.states.PENDING_PAYMENT : null;
@@ -285,6 +290,7 @@ export const TransactionPageComponent = props => {
 
   // Redirect users with someone else's direct link to their own inbox/sales or inbox/orders page.
   const isDataAvailable =
+    process &&
     currentUser &&
     transaction?.id &&
     transaction?.id?.uuid === params.id &&
@@ -320,6 +326,10 @@ export const TransactionPageComponent = props => {
     <p className={css.error}>
       <FormattedMessage id={`${fetchErrorMessage}`} />
     </p>
+  ) : !process ? (
+    <div className={css.error}>
+      <FormattedMessage id="TransactionPage.unknownTransactionProcess" />
+    </div>
   ) : (
     <div className={css.loading}>
       <FormattedMessage id={`${loadingMessage}`} />
