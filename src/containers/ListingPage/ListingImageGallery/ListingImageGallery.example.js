@@ -15,7 +15,7 @@ const variant = (name, width, height) => {
     name,
     width,
     height,
-    url: `https://via.placeholder.com/${width}x${height}`,
+    url: `https://picsum.photos/${width}/${height}/`,
   };
 };
 

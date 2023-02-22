@@ -16,6 +16,8 @@ way to update this template, but currently, we follow a pattern:
 
 - [change] change enquiry/enquire to inquiry/inquire.
   [#94](https://github.com/sharetribe/ftw-x/pull/94)
+- [change] Refactor remaining via.placeholder.com references to use picsum.photos instead.
+  [#96](https://github.com/sharetribe/ftw-x/pull/96)
 - [change] add multiple placeholder texts for custom listing fields.
   [#93](https://github.com/sharetribe/ftw-x/pull/93)
 - [fix] Some heading style fixes and lineBreak fixes to microcopy.
@@ -264,6 +266,24 @@ way to update this template, but currently, we follow a pattern:
   - transitions and states are accessible through selected process
 
   [#2](https://github.com/sharetribe/ftw-x/pull/2)
+
+## [v11.0.0] 2023-02-14
+
+### Updates from upstream (FTW-daily v10.0.0)
+
+- [add] This adds support for page asset files that can be created in Console. These asset files are
+  taken into use for
+
+  - LandingPage
+  - TermsOfServicePage
+  - PrivacyPolicyPage
+  - AboutPage
+  - and other static pages can also be created through Console (they'll be visible in route:
+    /p/:asset-name/)
+
+  [#1520](https://github.com/sharetribe/ftw-daily/pull/1520)
+
+  [v11.0.0]: https://github.com/sharetribe/ftw-product/compare/v10.1.0.../v11.0.0
 
 ## [v10.1.0] 2023-02-07
 

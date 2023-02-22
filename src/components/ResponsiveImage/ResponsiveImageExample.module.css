@@ -3,6 +3,7 @@
   position: relative;
   width: 200px;
   margin-bottom: 70px;
+  overflow: hidden;
 }
 
 /* Firefox doesn't support image aspect ratio inside flexbox */

@@ -274,7 +274,6 @@ export const ListingPageComponent = props => {
       title={schemaTitle}
       scrollingDisabled={scrollingDisabled}
       author={authorDisplayName}
-      contentType="website"
       description={description}
       facebookImages={facebookImages}
       twitterImages={twitterImages}
