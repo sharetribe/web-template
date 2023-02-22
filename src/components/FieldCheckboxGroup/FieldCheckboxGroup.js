@@ -16,7 +16,17 @@ import { FieldCheckbox, ValidationError } from '../../components';
 import css from './FieldCheckboxGroup.module.css';
 
 const FieldCheckboxRenderer = props => {
-  const { className, rootClassName, label, twoColumns, id, fields, options, meta } = props;
+  const {
+    className,
+    rootClassName,
+    label,
+    optionLabelClassName,
+    twoColumns,
+    id,
+    fields,
+    options,
+    meta,
+  } = props;
 
   const classes = classNames(rootClassName || css.root, className);
   const listClasses = twoColumns ? classNames(css.list, css.twoColumns) : css.list;
@@ -27,6 +37,8 @@ const FieldCheckboxRenderer = props => {
       <ul className={listClasses}>
         {options.map((option, index) => {
           const fieldId = `${id}.${option.key}`;
+          const textClassName = optionLabelClassName;
+          const textClassNameMaybe = textClassName ? { textClassName } : {};
           return (
             <li key={fieldId} className={css.item}>
               <FieldCheckbox
@@ -34,6 +46,7 @@ const FieldCheckboxRenderer = props => {
                 name={fields.name}
                 label={option.label}
                 value={option.key}
+                {...textClassNameMaybe}
               />
             </li>
           );
