@@ -16,7 +16,7 @@ module.exports = (req, res) => {
       return getTrustedSdk(req);
     })
     .then(trustedSdk => {
-      // Omit listingId from params (transition/request-payment-after-enquiry does not need it)
+      // Omit listingId from params (transition/request-payment-after-inquiry does not need it)
       const { listingId, ...restParams } = bodyParams?.params || {};
 
       // Add lineItems to the body params
