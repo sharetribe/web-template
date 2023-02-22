@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] change enquiry/enquire to inquiry/inquire.
+  [#94](https://github.com/sharetribe/ftw-x/pull/94)
 - [change] Refactor remaining via.placeholder.com references to use picsum.photos instead.
   [#96](https://github.com/sharetribe/ftw-x/pull/96)
 - [change] add multiple placeholder texts for custom listing fields.

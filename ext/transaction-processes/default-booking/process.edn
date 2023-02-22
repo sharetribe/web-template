@@ -1,9 +1,9 @@
 {:format :v3,
  :transitions
- [{:name :transition/enquire,
+ [{:name :transition/inquire,
    :actor :actor.role/customer,
    :actions [{:name :action/update-protected-data}],
-   :to :state/enquiry}
+   :to :state/inquiry}
   {:name :transition/request-payment,
    :actor :actor.role/customer,
    :actions
@@ -13,14 +13,14 @@
     {:name :action/stripe-create-payment-intent}],
    :to :state/pending-payment,
    :privileged? true}
-  {:name :transition/request-payment-after-enquiry,
+  {:name :transition/request-payment-after-inquiry,
    :actor :actor.role/customer,
    :actions
    [{:name :action/update-protected-data}
     {:name :action/create-pending-booking, :config {:type :time}}
     {:name :action/privileged-set-line-items}
     {:name :action/stripe-create-payment-intent}],
-   :from :state/enquiry,
+   :from :state/inquiry,
    :to :state/pending-payment,
    :privileged? true}
   {:name :transition/expire-payment,
