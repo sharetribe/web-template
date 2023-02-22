@@ -256,7 +256,11 @@ const OrderPanel = props => {
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
           />
-        ) : null}
+        ) : (
+          <p className={css.errorSidebar}>
+            <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
+          </p>
+        )}
       </ModalInMobile>
       <div className={css.openOrderForm}>
         <div className={css.priceContainerInCTA}>
