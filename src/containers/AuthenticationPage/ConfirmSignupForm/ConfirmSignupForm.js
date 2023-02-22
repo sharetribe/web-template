@@ -1,7 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { bool, node } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
+import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
@@ -10,11 +11,10 @@ import { Form, PrimaryButton, FieldTextInput } from '../../../components';
 
 import css from './ConfirmSignupForm.module.css';
 
-const KEY_CODE_ENTER = 13;
-
 const ConfirmSignupFormComponent = props => (
   <FinalForm
     {...props}
+    mutators={{ ...arrayMutators }}
     render={formRenderProps => {
       const {
         rootClassName,
@@ -24,72 +24,26 @@ const ConfirmSignupFormComponent = props => (
         inProgress,
         invalid,
         intl,
-        onOpenTermsOfService,
+        termsAndConditions,
         authInfo,
         idp,
       } = formRenderProps;
 
       // email
-      const emailLabel = intl.formatMessage({
-        id: 'ConfirmSignupForm.emailLabel',
-      });
-      const emailPlaceholder = intl.formatMessage({
-        id: 'ConfirmSignupForm.emailPlaceholder',
-      });
-      const emailRequiredMessage = intl.formatMessage({
-        id: 'ConfirmSignupForm.emailRequired',
-      });
-      const emailRequired = validators.required(emailRequiredMessage);
-      const emailInvalidMessage = intl.formatMessage({
-        id: 'ConfirmSignupForm.emailInvalid',
-      });
-      const emailValid = validators.emailFormatValid(emailInvalidMessage);
-
-      // firstName
-      const firstNameLabel = intl.formatMessage({
-        id: 'ConfirmSignupForm.firstNameLabel',
-      });
-      const firstNamePlaceholder = intl.formatMessage({
-        id: 'ConfirmSignupForm.firstNamePlaceholder',
-      });
-      const firstNameRequiredMessage = intl.formatMessage({
-        id: 'ConfirmSignupForm.firstNameRequired',
-      });
-      const firstNameRequired = validators.required(firstNameRequiredMessage);
-
-      // lastName
-      const lastNameLabel = intl.formatMessage({
-        id: 'ConfirmSignupForm.lastNameLabel',
-      });
-      const lastNamePlaceholder = intl.formatMessage({
-        id: 'ConfirmSignupForm.lastNamePlaceholder',
-      });
-      const lastNameRequiredMessage = intl.formatMessage({
-        id: 'ConfirmSignupForm.lastNameRequired',
-      });
-      const lastNameRequired = validators.required(lastNameRequiredMessage);
+      const emailRequired = validators.required(
+        intl.formatMessage({
+          id: 'ConfirmSignupForm.emailRequired',
+        })
+      );
+      const emailValid = validators.emailFormatValid(
+        intl.formatMessage({
+          id: 'ConfirmSignupForm.emailInvalid',
+        })
+      );
 
       const classes = classNames(rootClassName || css.root, className);
       const submitInProgress = inProgress;
       const submitDisabled = invalid || submitInProgress;
-
-      const handleTermsKeyUp = e => {
-        // Allow click action with keyboard like with normal links
-        if (e.keyCode === KEY_CODE_ENTER) {
-          onOpenTermsOfService();
-        }
-      };
-      const termsLink = (
-        <span
-          className={css.termsLink}
-          onClick={onOpenTermsOfService}
-          role="button"
-          tabIndex="0"
-          onKeyUp={handleTermsKeyUp}
-        >
-          <FormattedMessage id="ConfirmSignupForm.termsAndConditionsLinkText" />
-        </span>
-      );
 
       // If authInfo is not available we should not show the ConfirmForm
       if (!authInfo) {
@@ -107,8 +61,12 @@ const ConfirmSignupFormComponent = props => (
               id={formId ? `${formId}.email` : 'email'}
               name="email"
               autoComplete="email"
-              label={emailLabel}
-              placeholder={emailPlaceholder}
+              label={intl.formatMessage({
+                id: 'ConfirmSignupForm.emailLabel',
+              })}
+              placeholder={intl.formatMessage({
+                id: 'ConfirmSignupForm.emailPlaceholder',
+              })}
               initialValue={email}
               validate={validators.composeValidators(emailRequired, emailValid)}
             />
@@ -119,10 +77,18 @@ const ConfirmSignupFormComponent = props => (
                 id={formId ? `${formId}.firstName` : 'firstName'}
                 name="firstName"
                 autoComplete="given-name"
-                label={firstNameLabel}
-                placeholder={firstNamePlaceholder}
+                label={intl.formatMessage({
+                  id: 'ConfirmSignupForm.firstNameLabel',
+                })}
+                placeholder={intl.formatMessage({
+                  id: 'ConfirmSignupForm.firstNamePlaceholder',
+                })}
                 initialValue={firstName}
-                validate={firstNameRequired}
+                validate={validators.required(
+                  intl.formatMessage({
+                    id: 'ConfirmSignupForm.firstNameRequired',
+                  })
+                )}
               />
               <FieldTextInput
                 className={css.lastNameRoot}
@@ -130,23 +96,24 @@ const ConfirmSignupFormComponent = props => (
                 id={formId ? `${formId}.lastName` : 'lastName'}
                 name="lastName"
                 autoComplete="family-name"
-                label={lastNameLabel}
-                placeholder={lastNamePlaceholder}
+                label={intl.formatMessage({
+                  id: 'ConfirmSignupForm.lastNameLabel',
+                })}
+                placeholder={intl.formatMessage({
+                  id: 'ConfirmSignupForm.lastNamePlaceholder',
+                })}
                 initialValue={lastName}
-                validate={lastNameRequired}
+                validate={validators.required(
+                  intl.formatMessage({
+                    id: 'ConfirmSignupForm.lastNameRequired',
+                  })
+                )}
               />
             </div>
           </div>
 
           <div className={css.bottomWrapper}>
-            <p className={css.bottomWrapperText}>
-              <span className={css.termsText}>
-                <FormattedMessage
-                  id="ConfirmSignupForm.termsAndConditionsAcceptText"
-                  values={{ termsLink }}
-                />
-              </span>
-            </p>
+            {termsAndConditions}
             <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
               <FormattedMessage id="ConfirmSignupForm.signUp" values={{ idp: idp }} />
             </PrimaryButton>
@@ -159,12 +126,9 @@ const ConfirmSignupFormComponent = props => (
 
 ConfirmSignupFormComponent.defaultProps = { inProgress: false };
 
-const { bool, func } = PropTypes;
-
 ConfirmSignupFormComponent.propTypes = {
   inProgress: bool,
-
-  onOpenTermsOfService: func.isRequired,
+  termsAndConditions: node.isRequired,
 
   // from injectIntl
   intl: intlShape.isRequired,
