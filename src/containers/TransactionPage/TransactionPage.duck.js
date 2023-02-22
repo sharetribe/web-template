@@ -412,14 +412,19 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
       const listing = denormalised[0];
       const transaction = denormalised[1];
       const processName = resolveLatestProcessName(transaction.attributes.processName);
-      const process = getProcess(processName);
-      const isInquiry = process.getState(transaction) === process.states.INQUIRY;
+      try {
+        const process = getProcess(processName);
+        const isInquiry = process.getState(transaction) === process.states.INQUIRY;
 
-      // Fetch time slots for transactions that are in inquired state
-      const canFetchTimeslots = txRole === 'customer' && isBookingProcess(processName) && isInquiry;
+        // Fetch time slots for transactions that are in inquired state
+        const canFetchTimeslots =
+          txRole === 'customer' && isBookingProcess(processName) && isInquiry;
 
-      if (canFetchTimeslots) {
-        fetchMonthlyTimeSlots(dispatch, listing);
+        if (canFetchTimeslots) {
+          fetchMonthlyTimeSlots(dispatch, listing);
+        }
+      } catch (error) {
+        console.log(`transaction process (${processName}) was not recognized`);
       }
 
       const canFetchListing = listing && listing.attributes && !listing.attributes.deleted;
