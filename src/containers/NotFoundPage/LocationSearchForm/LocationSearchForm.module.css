@@ -12,7 +12,6 @@
   display: flex;
   width: 24px;
   align-self: stretch;
-  border-bottom: 2px solid var(--marketplaceColor);
   background-color: var(--matterColorLight);
 }
 
@@ -22,6 +21,7 @@
   padding-left: 10px;
   margin: 0;
   line-height: unset;
+  border: 0;
   border-bottom-width: 2px;
 
   /* Safari bugfix: without this Safari will print placeholder to a wrong place */
@@ -31,8 +31,9 @@
 
   &:hover,
   &:focus {
-    border-bottom-color: var(--marketplaceColor);
+    border: 0;
     outline: none;
+    box-shadow: unset;
   }
 
   &:hover::placeholder,
