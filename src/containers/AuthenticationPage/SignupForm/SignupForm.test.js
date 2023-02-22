@@ -8,7 +8,7 @@ const noop = () => null;
 describe('SignupForm', () => {
   it('matches snapshot', () => {
     const tree = renderDeep(
-      <SignupForm intl={fakeIntl} onOpenTermsOfService={noop} onSubmit={noop} />
+      <SignupForm intl={fakeIntl} termsAndConditions="[ ] terms and conditions" onSubmit={noop} />
     );
     expect(tree).toMatchSnapshot();
   });

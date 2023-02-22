@@ -30,7 +30,7 @@ describe('AuthenticationOrConfirmInfoForm', () => {
       submitLogin: noop,
       submitSignup: noop,
       submitSingupWithIdp: noop,
-      onOpenTermsOfService: noop,
+      termsAndConditions: '[ ] terms and conditions',
     };
     const tree = renderShallow(<AuthenticationOrConfirmInfoForm {...props} />);
     expect(tree).toMatchSnapshot();
@@ -50,7 +50,7 @@ describe('AuthenticationOrConfirmInfoForm', () => {
       submitLogin: noop,
       submitSignup: noop,
       submitSingupWithIdp: noop,
-      onOpenTermsOfService: noop,
+      termsAndConditions: '[ ] terms and conditions',
     };
     const tree = renderShallow(<AuthenticationOrConfirmInfoForm {...props} />);
     expect(tree).toMatchSnapshot();
@@ -76,7 +76,7 @@ describe('AuthenticationForms with Facebook login', () => {
       submitLogin: noop,
       authInProgress: false,
       submitSignup: noop,
-      onOpenTermsOfService: noop,
+      termsAndConditions: '[ ] terms and conditions',
     };
     const tree = renderShallow(<AuthenticationForms {...props} />);
     expect(tree).toMatchSnapshot();
@@ -128,7 +128,7 @@ describe('AuthenticationForms with Facebook and Google login', () => {
       submitLogin: noop,
       authInProgress: false,
       submitSignup: noop,
-      onOpenTermsOfService: noop,
+      termsAndConditions: '[ ] terms and conditions',
     };
     const tree = renderShallow(<AuthenticationForms {...props} />);
     expect(tree).toMatchSnapshot();

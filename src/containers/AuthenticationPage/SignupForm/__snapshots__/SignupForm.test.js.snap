@@ -100,17 +100,7 @@ exports[`SignupForm matches snapshot 1`] = `
   <div
     className="bottomWrapper"
   >
-    <p
-      className="bottomWrapperText"
-    >
-      <span
-        className="termsText"
-      >
-        <span>
-          SignupForm.termsAndConditionsAcceptText
-        </span>
-      </span>
-    </p>
+    [ ] terms and conditions
     <button
       className="primaryButtonRoot primaryButton"
       disabled={true}

@@ -192,8 +192,8 @@ exports[`AuthenticationOrConfirmInfoForm tab=confirm matches snapshot 1`] = `
       "lastName": "lastName",
     }
   }
-  onOpenTermsOfService={[Function]}
   submitSingupWithIdp={[Function]}
+  termsAndConditions="[ ] terms and conditions"
 />
 `;
 
@@ -201,9 +201,9 @@ exports[`AuthenticationOrConfirmInfoForm tab=login matches snapshot 1`] = `
 <AuthenticationForms
   authInProgress={false}
   isLogin={true}
-  onOpenTermsOfService={[Function]}
   submitLogin={[Function]}
   submitSignup={[Function]}
+  termsAndConditions="[ ] terms and conditions"
 />
 `;
 
