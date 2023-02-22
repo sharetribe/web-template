@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] AuthenticationPage.duck.js: had wrong asset name.
+  [#173](https://github.com/sharetribe/ftw-product/pull/173)
+
 ## [v11.0.0] 2023-02-14
 
 ### Updates from upstream (FTW-daily v10.0.0)
@@ -35,6 +38,7 @@ way to update this template, but currently, we follow a pattern:
 ## [v10.1.0] 2023-02-07
 
 ### Updates from upstream (FTW-daily v9.1.0)
+
 - [change] Norway's stripe config should use NOK not EUR.
   [#1579](https://github.com/sharetribe/ftw-daily/pull/1579)
 - [delete] Update README.md after changes in [#1555].
