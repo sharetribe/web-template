@@ -35,20 +35,3 @@
 .bottomWrapper {
   composes: marketplaceModalBottomWrapper from global;
 }
-
-.bottomWrapperText {
-  composes: marketplaceModalBottomWrapperText from global;
-}
-
-.termsText {
-  composes: marketplaceModalHelperText from global;
-}
-
-.termsLink {
-  composes: marketplaceModalHelperLink from global;
-
-  &:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
-}

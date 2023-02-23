@@ -96,6 +96,7 @@
 
 /* Terms of Service modal*/
 
+.privacyWrapper,
 .termsWrapper {
   width: 100%;
   padding-top: 40px;
@@ -193,7 +194,6 @@
 }
 
 .confirmInfoText {
-  composes: h4 from global;
 }
 
 .buttonIcon {
