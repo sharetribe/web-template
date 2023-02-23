@@ -53,6 +53,7 @@ exports[`AuthenticationForms with Facebook and Google login matches snapshot 1`]
     onSubmit={[Function]}
   />
   <SocialLoginButtonsMaybe
+    from={null}
     isLogin={true}
     showFacebookLogin={true}
     showGoogleLogin={true}
@@ -113,6 +114,7 @@ exports[`AuthenticationForms with Facebook login matches snapshot 1`] = `
     onSubmit={[Function]}
   />
   <SocialLoginButtonsMaybe
+    from={null}
     isLogin={true}
     showFacebookLogin={true}
     showGoogleLogin={false}
@@ -173,6 +175,7 @@ exports[`AuthenticationForms with Google login matches snapshot 1`] = `
     onSubmit={[Function]}
   />
   <SocialLoginButtonsMaybe
+    from={null}
     isLogin={true}
     showFacebookLogin={false}
     showGoogleLogin={true}
@@ -192,8 +195,8 @@ exports[`AuthenticationOrConfirmInfoForm tab=confirm matches snapshot 1`] = `
       "lastName": "lastName",
     }
   }
-  onOpenTermsOfService={[Function]}
   submitSingupWithIdp={[Function]}
+  termsAndConditions="[ ] terms and conditions"
 />
 `;
 
@@ -201,9 +204,9 @@ exports[`AuthenticationOrConfirmInfoForm tab=login matches snapshot 1`] = `
 <AuthenticationForms
   authInProgress={false}
   isLogin={true}
-  onOpenTermsOfService={[Function]}
   submitLogin={[Function]}
   submitSignup={[Function]}
+  termsAndConditions="[ ] terms and conditions"
 />
 `;
 
