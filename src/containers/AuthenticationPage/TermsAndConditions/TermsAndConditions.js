@@ -51,12 +51,12 @@ const TermsAndConditions = props => {
   return (
     <div className={css.root}>
       <FieldCheckboxGroup
-        name="terms-of-service"
-        id={`tos-accepted`}
+        name="terms"
+        id="terms-accepted"
         optionLabelClassName={css.finePrint}
         options={[
           {
-            key: 'tos',
+            key: 'tos-and-privacy',
             label: intl.formatMessage(
               { id: 'AuthenticationPage.termsAndConditionsAcceptText' },
               { termsLink, privacyLink }
