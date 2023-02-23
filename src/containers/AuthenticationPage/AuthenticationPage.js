@@ -61,7 +61,7 @@ import { FacebookLogo, GoogleLogo } from './socialLoginLogos';
 // Social login buttons are needed by AuthenticationForms
 export const SocialLoginButtonsMaybe = props => {
   const routeConfiguration = useRouteConfiguration();
-  const { isLogin, showFacebookLogin, showGoogleLogin } = props;
+  const { isLogin, showFacebookLogin, showGoogleLogin, from } = props;
   const showSocialLogins = showFacebookLogin || showGoogleLogin;
 
   const getDefaultRoutes = () => {
@@ -221,6 +221,7 @@ export const AuthenticationForms = props => {
         isLogin={isLogin}
         showFacebookLogin={showFacebookLogin}
         showGoogleLogin={showGoogleLogin}
+        from={from}
       />
     </div>
   );
@@ -229,7 +230,7 @@ export const AuthenticationForms = props => {
 // Form for confirming information from IdP (e.g. Facebook)
 // This is shown before new user is created to Flex
 const ConfirmIdProviderInfoForm = props => {
-  const { authInfo, authInProgress, confirmError, termsAndConditions } = props;
+  const { authInfo, authInProgress, confirmError, submitSingupWithIdp, termsAndConditions } = props;
   const idp = authInfo ? authInfo.idpId.replace(/^./, str => str.toUpperCase()) : null;
 
   const handleSubmitConfirm = values => {

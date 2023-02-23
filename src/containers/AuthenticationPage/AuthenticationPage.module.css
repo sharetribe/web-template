@@ -194,7 +194,6 @@
 }
 
 .confirmInfoText {
-  composes: h4 from global;
 }
 
 .buttonIcon {
