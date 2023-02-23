@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Footer as FooterContent } from '../../components/index.js';
+import { Footer as FooterContent, IconSpinner } from '../../components/index.js';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer.js';
 
 import { validProps } from './Field';
@@ -50,6 +50,14 @@ const getMetadata = (meta, schemaType, fieldOptions) => {
   };
 };
 
+const LoadingSpinner = () => {
+  return (
+    <div className={css.loading}>
+      <IconSpinner />
+    </div>
+  );
+};
+
 //////////////////
 // Page Builder //
 //////////////////
@@ -73,9 +81,17 @@ const getMetadata = (meta, schemaType, fieldOptions) => {
  * @returns page component
  */
 const PageBuilder = props => {
-  const { pageAssetsData, inProgress, fallbackPage, schemaType, options, ...pageProps } = props;
+  const {
+    pageAssetsData,
+    inProgress,
+    error,
+    fallbackPage,
+    schemaType,
+    options,
+    ...pageProps
+  } = props;
 
-  if (!pageAssetsData && fallbackPage && !inProgress) {
+  if (!pageAssetsData && fallbackPage && !inProgress && error) {
     return fallbackPage;
   }
 
@@ -101,7 +117,11 @@ const PageBuilder = props => {
                 <TopbarContainer />
               </Topbar>
               <Main as="main" className={css.main}>
-                <SectionBuilder sections={sections} options={options} />
+                {inProgress ? (
+                  <LoadingSpinner />
+                ) : (
+                  <SectionBuilder sections={sections} options={options} />
+                )}
               </Main>
               <Footer>
                 <FooterContent />

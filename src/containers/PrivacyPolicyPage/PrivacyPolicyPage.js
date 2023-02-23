@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import { camelize } from '../../util/string';
+import { propTypes } from '../../util/types';
 
 import { H1 } from '../PageBuilder/Primitives/Heading';
 import PageBuilder, { SectionBuilder } from '../../containers/PageBuilder/PageBuilder';
@@ -45,12 +46,13 @@ const PrivacyPolicyContent = props => {
 
 // Presentational component for PrivacyPolicyPage
 const PrivacyPolicyPageComponent = props => {
-  const { pageAssetsData, inProgress } = props;
+  const { pageAssetsData, inProgress, error } = props;
 
   return (
     <PageBuilder
       pageAssetsData={pageAssetsData?.[camelize(ASSET_NAME)]?.data}
       inProgress={inProgress}
+      error={error}
       fallbackPage={<FallbackPage />}
     />
   );
@@ -59,6 +61,7 @@ const PrivacyPolicyPageComponent = props => {
 PrivacyPolicyPageComponent.propTypes = {
   pageAssetsData: object,
   inProgress: bool,
+  error: propTypes.error,
 };
 
 const mapStateToProps = state => {
