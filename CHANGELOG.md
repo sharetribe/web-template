@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Add privacy policy modal to sign up page and make it mandatory to click checkbox. This was
+  suggested as more legally clear way that users have noticed the terms.
+  [#99](https://github.com/sharetribe/ftw-x/pull/99)
 - [change] Handle situations, where tx process name is unrecognized.
   [#98](https://github.com/sharetribe/ftw-x/pull/98)
 - [change] change enquiry/enquire to inquiry/inquire.
