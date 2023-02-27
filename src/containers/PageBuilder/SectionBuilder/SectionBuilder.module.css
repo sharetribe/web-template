@@ -2,7 +2,7 @@
 
 /* Styles for custom sections: classes shared by <SectionColumns>, <SectionArticle>, <SectionFeatures>, <SectionCarousel> etc. */
 .sectionDetails {
-  max-width: var(--contentMaxWidth);
+  max-width: var(--contentMaxWidthPages);
   display: grid;
   justify-content: start;
   margin: 0 auto;
