@@ -701,7 +701,10 @@ textarea {
 }
 
 .p,
-.buttonFont,
+.buttonDefault,
+.buttonPrimary,
+.buttonSecondary,
+.buttonSecondaryInline,
 .marketplaceMessageFontStyles,
 .marketplaceTxTransitionFontStyles,
 .marketplaceListingAttributeFontStyles,
@@ -911,17 +914,21 @@ textarea {
  *
  * To create button look-and-feel for links, etc. combine button classes in CSS Modules:
  * 
- * default button:
- *   composes: button buttonFont buttonText buttonBorders buttonColors from global;
- * primary button:
- *   composes: button buttonFont buttonText buttonBorders buttonColorsPrimary from global;
- * secondary button:
- *   composes: button buttonFont buttonText buttonBordersSecondary buttonColorsSecondary from global;
+ * <Button>:
+ *   composes: buttonDefault from global;
+ * <PrimaryButton>:
+ *   composes: buttonPrimary from global;
+ * <SecondaryButton>:
+ *   composes: buttonSecondary from global;
+ * <SecondaryButtonInline>:
+ *   composes: buttonSecondaryInline from global;
  */
 
-/* Button styles */
-/* Basic styles for button: dimensions, paddings, behaviour, etc. */
-.button {
+/**
+ * Styles for <Button>
+ */
+ .buttonDefault {
+  /* button defaults */
   display: block;
   width: 100%;
   min-height: 56px;
@@ -934,99 +941,218 @@ textarea {
   transition: all var(--transitionStyleButton);
   cursor: pointer;
 
+  /*
+   * Font: most font styles are defined earlier in this file
+   */
+  font-weight: var(--fontWeightSemiBold);
+
+  /* Button text styles */
+  /* Default button text is centered without decorations */
+  text-align: center;
+  text-decoration: none;
+
+  /* Button borders */
+  /* Default button has no borders */
+  border: none;
+  border-radius: var(--borderRadiusMedium);
+
+  /* Button colors */
+  /* Default button uses marketplace color */
+  background-color: var(--marketplaceColor);
+  color: var(--matterColorLight);
+ }
+.buttonDefault:focus,
+.buttonDefault:hover {
+  outline: none;
+  box-shadow: var(--boxShadowButton);
+  background-color: var(--marketplaceColorDark);
+}
+.buttonDefault:disabled {
+  box-shadow: none;
+  cursor: not-allowed;
+  text-decoration: none;
+  background-color: var(--matterColorNegative);
+  color: var(--matterColorLight);
+}
+
+ /**
+ * Styles for <PrimaryButton>
+ */
+.buttonPrimary {
+  /* button defaults */
+  display: block;
+  width: 100%;
+  min-height: 56px;
+  margin: 0;
+
+  /* Padding is only for <a> elements where button styles are applied,
+  buttons elements should have zero padding */
+  padding: 16px 0 16px 0;
+
+  transition: all var(--transitionStyleButton);
+  cursor: pointer;
+
+  /*
+   * Font: most font styles are defined earlier in this file
+   */
+  font-weight: var(--fontWeightSemiBold);
+
+  /* Button text styles */
+  /* Primary button text is centered without decorations */
+  text-align: center;
+  text-decoration: none;
+
+  /* Button borders */
+  /* Primary button has no borders */
+  border: none;
+  border-radius: var(--borderRadiusMedium);
+
+  /* Button colors */
+  /* Primary button uses success color */
+  background-color: var(--successColor);
+  color: var(--matterColorLight);
+
   @media (--viewportMedium) {
     padding: 20px 0 20px 0;
   }
 }
-.button:focus,
-.button:hover {
+.buttonPrimary:focus,
+.buttonPrimary:hover {
   outline: none;
   box-shadow: var(--boxShadowButton);
+  background-color: var(--successColorDark);
+  color: var(--matterColorLight);
 }
-.button:disabled {
+.buttonPrimary:hover {
+  text-decoration: none;
+}
+.buttonPrimary:disabled {
   box-shadow: none;
   cursor: not-allowed;
+  background-color: var(--matterColorNegative);
+  color: var(--matterColor);
 }
 
-/* Button font */
-/* Default font style for buttons */
+/**
+ * Styles for <SecondaryButton>
+ */
+.buttonSecondary {
+  /* button defaults */
+  display: block;
+  width: 100%;
+  min-height: 56px;
+  margin: 0;
 
-/* Note: some of the buttonFont styles are defined earlier */
-.buttonFont {
+  /* Padding is only for <a> elements where button styles are applied,
+  buttons elements should have zero padding */
+  padding: 16px 0 16px 0;
+
+  transition: all var(--transitionStyleButton);
+  cursor: pointer;
+
+  /*
+   * Font: most font styles are defined earlier in this file
+   */
   font-weight: var(--fontWeightSemiBold);
-}
 
-/* Button text styles */
-/* Default button text is centered without decorations */
-.buttonText {
+  /* Button text styles */
+  /* Secondary button text is centered without decorations */
   text-align: center;
   text-decoration: none;
-}
-.buttonText:focus,
-.buttonText:hover {
-  text-decoration: none;
-}
 
-/* Button borders */
-/* Default button has no borders */
-.buttonBorders {
-  border: none;
-  border-radius: var(--borderRadiusMedium);
-}
-/* Secondary button has clear borders */
-.buttonBordersSecondary {
+  /* Secondary button has clear borders */
   border-width: 1px;
   border-style: solid;
   border-color: var(--matterColorNegative);
   border-radius: var(--borderRadiusMedium);
+
+  /* Button colors: secondary */
+  background-color: var(--matterColorLight);
+  color: var(--matterColor);
+
+  @media (--viewportMedium) {
+    padding: 20px 0 20px 0;
+  }
 }
-.buttonBordersSecondary:hover,
-.buttonBordersSecondary:focus {
+.buttonSecondary:focus,
+.buttonSecondary:hover {
+  outline: none;
+  box-shadow: var(--boxShadowButton);
   border-color: var(--matterColorAnti);
+  background-color: var(--matterColorLight);
 }
-.buttonBordersSecondary:disabled {
+.buttonSecondary:hover {
+  text-decoration: none;
+}
+.buttonSecondary:disabled {
+  box-shadow: none;
+  cursor: not-allowed;
+  border-color: var(--matterColorNegative);
+  background-color: var(--matterColorNegative);
+  color: var(--matterColorLight);
+}
+
+/**
+ * Styles for <SecondaryButtonInline>
+ */
+ .buttonSecondaryInline {
+  /* button defaults */
+  display: inline-block;
+  width: auto;
+  min-height: auto;
+  height: 41px;
+  margin: 17px 0 0 0;
+
+  /* Padding is only for <a> elements where button styles are applied,
+  buttons elements should have zero padding */
+  padding: 0 16px;
+
+  transition: all var(--transitionStyleButton);
+  cursor: pointer;
+
+  /*
+   * Font
+   */
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0;
+
+  /* Button text styles */
+  /* Secondary button text is centered without decorations */
+  text-align: center;
+  text-decoration: none;
+
+  /* Secondary button has clear borders */
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--matterColorNegative);
+  border-radius: var(--borderRadiusMedium);
+
+  /* Button colors: secondary */
+  background-color: var(--matterColorLight);
+  color: var(--matterColor);
+
+  @media (--viewportMedium) {
+    padding: 20px 0 20px 0;
+  }
+}
+.buttonSecondaryInline:focus,
+.buttonSecondaryInline:hover {
+  outline: none;
+  box-shadow: var(--boxShadowButton);
+  border-color: var(--matterColorAnti);
+  background-color: var(--matterColorLight);
+}
+.buttonSecondaryInline:hover {
+  text-decoration: none;
+}
+.buttonSecondaryInline:disabled {
+  box-shadow: none;
+  cursor: not-allowed;
   border-color: var(--matterColorNegative);
 }
 
-/* Button colors */
-/* Default button uses marketplace color */
-.buttonColors {
-  background-color: var(--marketplaceColor);
-  color: var(--matterColorLight);
-}
-.buttonColors:focus,
-.buttonColors:hover {
-  background-color: var(--marketplaceColorDark);
-}
-.buttonColors:disabled {
-  background-color: var(--matterColorNegative);
-  color: var(--matterColorLight);
-}
-
-/* Button colors: primary */
-.buttonColorsPrimary {
-  background-color: var(--successColor);
-  color: var(--matterColorLight);
-}
-.buttonColorsPrimary:hover,
-.buttonColorsPrimary:focus {
-  background-color: var(--successColorDark);
-  color: var(--matterColorLight);
-}
-.buttonColorsPrimary:disabled {
-  background-color: var(--matterColorNegative);
-  color: var(--matterColor);
-}
-
-/* Button colors: secondary */
-.buttonColorsSecondary {
-  background-color: var(--matterColorLight);
-  color: var(--matterColor);
-}
-.buttonColorsSecondary:disabled {
-  background-color: var(--matterColorNegative);
-  color: var(--matterColorLight);
-}
 
 /* ================ Modals ================ */
 
