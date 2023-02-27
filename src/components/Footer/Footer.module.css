@@ -47,12 +47,12 @@
   }
 
   @media (--viewportLarge) {
-    max-width: 1128px;
+    max-width: calc(var(--contentMaxWidth) + 72px);
     padding: 0 36px;
   }
 
   @media (--viewportXLarge) {
-    max-width: 1056px;
+    max-width: var(--contentMaxWidth);
     padding: 0;
   }
 }
