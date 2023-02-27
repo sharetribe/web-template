@@ -1,3 +1,5 @@
+@import '../../../styles/customMediaQueries.css';
+
 .sortBy {
   margin-right: 9px;
 }
@@ -7,14 +9,60 @@
 }
 
 .sortByMenuLabel {
-  composes: button marketplaceTinyFontStyles buttonText buttonBordersSecondary buttonColorsSecondary from global;
-  letter-spacing: 0.2px;
-  font-weight: var(--fontWeightMedium);
-
+  display: inline-block;
+  width: auto;
   height: 35px;
   min-height: 35px;
+
   padding: 0 18px;
-  margin: 0;
+  margin: 0 9px 0 0;
+
+  transition: all var(--transitionStyleButton);
+  cursor: pointer;
+
+  /* Font */
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: 0.2px;
+
+  /* Button text styles */
+  /* Default button text is centered without decorations */
+  text-align: center;
+  text-decoration: none;
+
+  /* Button borders */
+  border: 1px solid var(--matterColorNegative);
   border-radius: var(--borderRadiusMedium);
-  white-space: nowrap;
+
+  background-color: var(--matterColorLight);
+
+  &:focus,
+  &:hover {
+    outline: none;
+    box-shadow: var(--boxShadowFilterButton);
+    text-decoration: none;
+    border-color: var(--matterColorAnti);
+  }
+
+  &:disabled {
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  @media (--viewportMedium) {
+    height: auto;
+    min-height: 0;
+    padding: var(--marketplaceButtonSmallDesktopPadding);
+    margin: 0;
+
+    font-weight: var(--fontWeightMedium);
+    font-size: 13px;
+    line-height: 20px;
+
+    &:hover,
+    &:focus {
+      border-color: transparent;
+    }
+  }
 }
