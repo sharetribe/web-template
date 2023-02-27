@@ -7,6 +7,7 @@ import { formatCurrencyMajorUnit } from '../../../util/currency';
 
 import { OutsideClickHandler } from '../../../components';
 
+import PopupOpenerButton from '../PopupOpenerButton/PopupOpenerButton';
 import PriceFilterForm from '../PriceFilterForm/PriceFilterForm';
 import css from './PriceFilterPopup.module.css';
 
@@ -165,9 +166,10 @@ class PriceFilterPopup extends Component {
             this.filter = node;
           }}
         >
-          <button className={labelStyles} onClick={() => this.toggleOpen()}>
+          <PopupOpenerButton isSelected={hasInitialValues} toggleOpen={this.toggleOpen}>
             {currentLabel}
-          </button>
+          </PopupOpenerButton>
+
           <PriceFilterForm
             id={id}
             initialValues={hasInitialValues ? initialPrice : { minPrice: min, maxPrice: max }}

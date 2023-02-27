@@ -10,6 +10,7 @@ import { createResourceLocatorString } from '../../../util/routes';
 
 import { ModalInMobile, Button } from '../../../components';
 
+import PopupOpenerButton from '../PopupOpenerButton/PopupOpenerButton';
 import css from './SearchFiltersMobile.module.css';
 
 class SearchFiltersMobileComponent extends Component {
@@ -95,9 +96,6 @@ class SearchFiltersMobileComponent extends Component {
       { count: resultsCount }
     );
 
-    const filtersButtonClasses =
-      selectedFiltersCount > 0 ? css.filtersButtonSelected : css.filtersButton;
-
     return (
       <div className={classes}>
         <div className={css.searchResultSummary}>
@@ -106,12 +104,13 @@ class SearchFiltersMobileComponent extends Component {
           {searchInProgress ? loadingResults : null}
         </div>
         <div className={css.buttons}>
-          <Button rootClassName={filtersButtonClasses} onClick={this.openFilters}>
+          <PopupOpenerButton isSelected={selectedFiltersCount > 0} toggleOpen={this.openFilters}>
             <FormattedMessage
               id="SearchFiltersMobile.filtersButtonLabel"
               className={css.mapIconText}
             />
-          </Button>
+          </PopupOpenerButton>
+
           {sortByComponent}
           {isMapVariant ? (
             <div className={css.mapIcon} onClick={onMapIconClick}>

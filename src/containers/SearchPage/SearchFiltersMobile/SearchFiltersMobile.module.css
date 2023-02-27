@@ -30,36 +30,6 @@
   display: flex;
 }
 
-.filtersButton {
-  composes: button marketplaceTinyFontStyles buttonText buttonBordersSecondary buttonColorsSecondary from global;
-  letter-spacing: 0.2px;
-  font-weight: var(--fontWeightMedium);
-
-  /* Avoid stretching button width. */
-  flex-basis: 0;
-
-  height: 35px;
-  min-height: 35px;
-  padding: 0 18px;
-  margin: 0 9px 0 0;
-  border-radius: var(--borderRadiusMedium);
-}
-
-.filtersButtonSelected {
-  composes: button marketplaceTinyFontStyles buttonText buttonBorders buttonColors from global;
-  letter-spacing: 0.2px;
-  font-weight: var(--fontWeightMedium);
-
-  /* Avoid stretching button width. */
-  flex-basis: 0;
-
-  height: 35px;
-  min-height: 35px;
-  padding: 0 18px;
-  margin: 0 9px 0 0;
-  border-radius: var(--borderRadiusMedium);
-}
-
 .mapIcon {
   /* Font */
   composes: marketplaceTinyFontStyles from global;
