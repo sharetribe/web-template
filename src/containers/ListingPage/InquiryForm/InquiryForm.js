@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
 import { propTypes } from '../../../util/types';
-import { Form, PrimaryButton, FieldTextInput, IconInquiry } from '../../../components';
+import { Form, PrimaryButton, FieldTextInput, IconInquiry, Heading } from '../../../components';
 
 import css from './InquiryForm.module.css';
 
@@ -66,9 +66,9 @@ const InquiryFormComponent = props => (
       return (
         <Form className={classes} onSubmit={handleSubmit} enforcePagePreloadFor="OrderDetailsPage">
           <IconInquiry className={css.icon} />
-          <h2 className={css.heading}>
+          <Heading as="h2" rootClassName={css.heading}>
             <FormattedMessage id="InquiryForm.heading" values={{ listingTitle }} />
-          </h2>
+          </Heading>
           <FieldTextInput
             className={css.field}
             type="textarea"

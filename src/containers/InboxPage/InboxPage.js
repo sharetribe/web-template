@@ -27,6 +27,7 @@ import {
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 import {
+  H2,
   Avatar,
   NamedLink,
   NotificationBadge,
@@ -295,9 +296,9 @@ export const InboxPageComponent = props => {
           />
         </LayoutWrapperTopbar>
         <LayoutWrapperSideNav className={css.navigation}>
-          <h1 className={css.title}>
+          <H2 as="h1" className={css.title}>
             <FormattedMessage id="InboxPage.title" />
-          </h1>
+          </H2>
           <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />
         </LayoutWrapperSideNav>
         <LayoutWrapperMain>

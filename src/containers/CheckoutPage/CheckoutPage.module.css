@@ -102,7 +102,7 @@
   }
 }
 
-.heading {
+.headingContainer {
   margin-top: 29px;
   margin-bottom: 34px;
   padding: 0 24px;
@@ -119,11 +119,7 @@
   }
 }
 
-.title {
-  /* Font */
-  composes: h3 from global;
-  color: var(--matterColor);
-
+.heading {
   /* Layout */
   width: 100%;
   margin-top: 0;
@@ -139,9 +135,7 @@
   margin: 0 48px;
 }
 
-.detailsTitleMobile {
-  composes: h4 from global;
-
+.detailsHeadingMobile {
   @media (--viewportMedium) {
     display: none;
   }
@@ -272,10 +266,6 @@
   }
 }
 
-.detailsTitle {
-  composes: h4 from global;
-}
-
 .detailsSubtitle {
   composes: h5 from global;
 
@@ -291,10 +281,8 @@
 }
 .orderBreakdownTitle {
   /* Font */
-  composes: h6 from global;
   letter-spacing: 1px;
   font-weight: var(--fontWeightMedium);
-  color: var(--matterColor);
 
   /* Layout spacing */
   margin: 5px 24px 25px 24px;

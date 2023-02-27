@@ -9,7 +9,7 @@ import { LISTING_STATE_DRAFT, propTypes } from '../../../../util/types';
 import { DAY, isFullDay } from '../../../../transactions/transaction';
 
 // Import shared components
-import { Button, InlineTextButton, ListingLink, Modal } from '../../../../components';
+import { Button, H3, InlineTextButton, ListingLink, Modal } from '../../../../components';
 
 // Import modules from this directory
 import EditListingAvailabilityPlanForm from './EditListingAvailabilityPlanForm';
@@ -207,7 +207,7 @@ const EditListingAvailabilityPanel = props => {
 
   return (
     <main className={classes}>
-      <h1 className={css.title}>
+      <H3 as="h1">
         {isPublished ? (
           <FormattedMessage
             id="EditListingAvailabilityPanel.title"
@@ -219,7 +219,7 @@ const EditListingAvailabilityPanel = props => {
             values={{ lineBreak: <br /> }}
           />
         )}
-      </h1>
+      </H3>
 
       <div className={css.planInfo}>
         {!hasAvailabilityPlan ? (

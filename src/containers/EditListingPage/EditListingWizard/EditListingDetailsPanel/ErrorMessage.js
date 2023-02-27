@@ -2,6 +2,8 @@ import React from 'react';
 
 import { FormattedMessage } from '../../../../util/reactIntl';
 
+import { H2 } from '../../../../components';
+
 /**
  * Error messages (e.g. invalidExistingListingType and noListingTypesSet)
  * @param {object} props
@@ -11,9 +13,9 @@ const ErrorMessage = props => {
   const { invalidExistingListingType, noListingTypesSet, marketplaceName } = props;
   return invalidExistingListingType ? (
     <div>
-      <h2>
+      <H2>
         <FormattedMessage id="EditListingDetailsPanel.invalidListingTypeSetTitle" />
-      </h2>
+      </H2>
       <p>
         <FormattedMessage
           id="EditListingDetailsPanel.invalidListingTypeSetDescription"
@@ -23,9 +25,9 @@ const ErrorMessage = props => {
     </div>
   ) : noListingTypesSet ? (
     <div>
-      <h2>
+      <H2>
         <FormattedMessage id="EditListingDetailsPanel.noListingTypeSetTitle" />
-      </h2>
+      </H2>
       <p>
         <FormattedMessage id="EditListingDetailsPanel.noListingTypeSetDescription" />
       </p>

@@ -27,6 +27,7 @@ import { manageDisableScrolling } from '../../ducks/UI.duck';
 
 import {
   Page,
+  Heading,
   NamedRedirect,
   LinkTabNavHorizontal,
   SocialLoginButton,
@@ -149,9 +150,9 @@ export const AuthenticationForms = props => {
   const tabs = [
     {
       text: (
-        <h1 className={css.tab}>
+        <Heading as={!isLogin ? 'h1' : 'h2'} rootClassName={css.tab}>
           <FormattedMessage id="AuthenticationPage.signupLinkText" />
-        </h1>
+        </Heading>
       ),
       selected: !isLogin,
       linkProps: {
@@ -161,9 +162,9 @@ export const AuthenticationForms = props => {
     },
     {
       text: (
-        <h1 className={css.tab}>
+        <Heading as={isLogin ? 'h1' : 'h2'} rootClassName={css.tab}>
           <FormattedMessage id="AuthenticationPage.loginLinkText" />
-        </h1>
+        </Heading>
       ),
       selected: isLogin,
       linkProps: {
@@ -269,9 +270,9 @@ const ConfirmIdProviderInfoForm = props => {
 
   return (
     <div className={css.content}>
-      <h1 className={css.signupWithIdpTitle}>
+      <Heading as="h1" rootClassName={css.signupWithIdpTitle}>
         <FormattedMessage id="AuthenticationPage.confirmSignupWithIdpTitle" values={{ idp }} />
-      </h1>
+      </Heading>
 
       <p className={css.confirmInfoText}>
         <FormattedMessage id="AuthenticationPage.confirmSignupInfoText" />

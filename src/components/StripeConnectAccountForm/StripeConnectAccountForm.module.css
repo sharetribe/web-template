@@ -22,10 +22,6 @@
   }
 }
 
-.subTitle {
-  composes: h4 from global;
-}
-
 .formRow {
   display: flex;
   justify-content: space-between;

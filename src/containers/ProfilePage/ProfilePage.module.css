@@ -77,7 +77,6 @@
 }
 
 .desktopHeading {
-  composes: h2 from global;
   display: none;
 
   @media (--viewportLarge) {
@@ -111,7 +110,6 @@
 }
 
 .listingsTitle {
-  composes: h4 from global;
   color: var(--matterColor);
   margin-bottom: 0;
 
@@ -172,8 +170,6 @@
 }
 
 .mobileReviewsTitle {
-  composes: h4 from global;
-  color: var(--matterColorAnti);
   margin: 24px 0 26px 0;
 }
 

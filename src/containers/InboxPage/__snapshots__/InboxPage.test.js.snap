@@ -164,13 +164,15 @@ exports[`InboxPage InboxPageComponent matches snapshot of order 1`] = `
       rootClassName={null}
       tabs={null}
     >
-      <h1
+      <H2
+        as="h1"
         className="title"
+        rootClassName={null}
       >
         <MemoizedFormattedMessage
           id="InboxPage.title"
         />
-      </h1>
+      </H2>
       <TabNav
         className={null}
         rootClassName="tabs"
@@ -581,13 +583,15 @@ exports[`InboxPage InboxPageComponent matches snapshot of sales 1`] = `
       rootClassName={null}
       tabs={null}
     >
-      <h1
+      <H2
+        as="h1"
         className="title"
+        rootClassName={null}
       >
         <MemoizedFormattedMessage
           id="InboxPage.title"
         />
-      </h1>
+      </H2>
       <TabNav
         className={null}
         rootClassName="tabs"

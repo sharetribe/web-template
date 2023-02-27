@@ -22,7 +22,7 @@ import { propTypes } from '../../util/types';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck';
 
-import { Footer, Page } from '../../components';
+import { Footer, H2, Page } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import {
@@ -381,9 +381,9 @@ export class SearchPageComponent extends Component {
                 })}
               >
                 {searchListingsError ? (
-                  <h2 className={css.error}>
+                  <H2 className={css.error}>
                     <FormattedMessage id="SearchPage.searchError" />
-                  </h2>
+                  </H2>
                 ) : null}
                 <SearchResultsPanel
                   className={css.searchListingsPanel}

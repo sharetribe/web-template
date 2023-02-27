@@ -19,7 +19,6 @@
 }
 
 .sectionTitle {
-  composes: h4 from global;
 }
 
 .lastSection {

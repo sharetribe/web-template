@@ -107,8 +107,10 @@ exports[`ListingPage matches snapshot 1`] = `
             <div
               className="mobileHeading"
             >
-              <h1
+              <H4
+                as="h1"
                 className="orderPanelTitle"
+                rootClassName={null}
               >
                 <MemoizedFormattedMessage
                   id="ListingPage.orderTitle"
@@ -124,7 +126,7 @@ exports[`ListingPage matches snapshot 1`] = `
                     }
                   }
                 />
-              </h1>
+              </H4>
             </div>
             <SectionTextMaybe
               showAsIngress={true}
@@ -454,8 +456,10 @@ exports[`ListingPage matches snapshot 1`] = `
                 />
               }
               titleDesktop={
-                <h1
+                <H4
+                  as="h1"
                   className="orderPanelTitle"
+                  rootClassName={null}
                 >
                   <Memo(MemoizedFormattedMessage)
                     id="ListingPage.orderTitle"
@@ -471,7 +475,7 @@ exports[`ListingPage matches snapshot 1`] = `
                       }
                     }
                   />
-                </h1>
+                </H4>
               }
             />
           </div>

@@ -37,8 +37,3 @@
 .modalMessage {
   composes: marketplaceModalParagraphStyles from global;
 }
-
-/* This is the title for the Edit Photos component */
-.title {
-  composes: h3 from global;
-}

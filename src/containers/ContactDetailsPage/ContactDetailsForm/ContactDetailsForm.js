@@ -15,7 +15,13 @@ import {
   isTooManyEmailVerificationRequestsError,
 } from '../../../util/errors';
 
-import { FieldPhoneNumberInput, Form, PrimaryButton, FieldTextInput } from '../../../components';
+import {
+  FieldPhoneNumberInput,
+  Form,
+  PrimaryButton,
+  FieldTextInput,
+  H4,
+} from '../../../components';
 
 import css from './ContactDetailsForm.module.css';
 
@@ -329,9 +335,9 @@ class ContactDetailsFormComponent extends Component {
               </div>
 
               <div className={confirmClasses}>
-                <h3 className={css.confirmChangesTitle}>
+                <H4 as="h3" className={css.confirmChangesTitle}>
                   <FormattedMessage id="ContactDetailsForm.confirmChangesTitle" />
-                </h3>
+                </H4>
                 <p className={css.confirmChangesInfo}>
                   <FormattedMessage id="ContactDetailsForm.confirmChangesInfo" />
                   <br />

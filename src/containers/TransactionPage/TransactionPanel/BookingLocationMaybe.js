@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
+import { Heading } from '../../../components';
 
 import AddressLinkMaybe from './AddressLinkMaybe';
 
@@ -16,9 +17,9 @@ const BookingLocationMaybe = props => {
     const location = listing?.attributes?.publicData?.location || {};
     return (
       <div className={classes}>
-        <h3 className={css.sectionHeading}>
+        <Heading as="h3" rootClassName={css.sectionHeading}>
           <FormattedMessage id="TransactionPanel.bookingLocationHeading" />
-        </h3>
+        </Heading>
         <div className={css.bookingLocationContent}>
           <AddressLinkMaybe
             linkRootClassName={css.bookingLocationAddress}

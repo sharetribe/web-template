@@ -13,6 +13,8 @@ import {
   FieldTextInput,
   InlineTextButton,
   PrimaryButton,
+  H3,
+  H6,
 } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
@@ -84,9 +86,9 @@ const renderForm = formRenderProps => {
     breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
   const breakdown = showBreakdown ? (
     <div className={css.breakdownWrapper}>
-      <h3 className={css.bookingBreakdownTitle}>
+      <H6 as="h3" className={css.bookingBreakdownTitle}>
         <FormattedMessage id="ProductOrderForm.breakdownTitle" />
-      </h3>
+      </H6>
       <hr className={css.totalDivider} />
       <EstimatedCustomerBreakdownMaybe
         breakdownData={breakdownData}
@@ -174,9 +176,9 @@ const renderForm = formRenderProps => {
         </FieldSelect>
       ) : (
         <div className={css.deliveryField}>
-          <h3 className={css.singleDeliveryMethodLabel}>
+          <H3 rootClassName={css.singleDeliveryMethodLabel}>
             {intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
-          </h3>
+          </H3>
           <p className={css.singleDeliveryMethodSelected}>
             {values.deliveryMethod === 'shipping'
               ? intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })

@@ -4,7 +4,7 @@ import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
 import { propTypes } from '../../util/types';
 import { obfuscatedCoordinates } from '../../util/maps';
-import { Map } from '../../components';
+import { Heading, Map } from '../../components';
 
 import css from './ListingPage.module.css';
 
@@ -32,9 +32,9 @@ class SectionMapMaybe extends Component {
 
     return (
       <div className={classes}>
-        <h2 className={css.locationTitle}>
+        <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>
           <FormattedMessage id="ListingPage.locationTitle" />
-        </h2>
+        </Heading>
         {this.state.isStatic ? (
           <button
             className={css.map}

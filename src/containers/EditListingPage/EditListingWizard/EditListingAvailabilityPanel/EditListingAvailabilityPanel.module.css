@@ -24,10 +24,6 @@
   }
 }
 
-.title {
-  composes: h3 from global;
-}
-
 .planInfo {
   @media (--viewportMedium) {
     padding: 1px 0 7px 0;

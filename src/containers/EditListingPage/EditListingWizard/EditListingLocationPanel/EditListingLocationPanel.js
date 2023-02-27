@@ -5,10 +5,9 @@ import classNames from 'classnames';
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { LISTING_STATE_DRAFT } from '../../../../util/types';
-import { ensureOwnListing } from '../../../../util/data';
 
 // Import shared components
-import { ListingLink } from '../../../../components';
+import { H3, ListingLink } from '../../../../components';
 
 // Import modules from this directory
 import EditListingLocationForm from './EditListingLocationForm';
@@ -57,7 +56,7 @@ const EditListingLocationPanel = props => {
 
   return (
     <div className={classes}>
-      <h1 className={css.title}>
+      <H3 as="h1">
         {isPublished ? (
           <FormattedMessage
             id="EditListingLocationPanel.title"
@@ -69,7 +68,7 @@ const EditListingLocationPanel = props => {
             values={{ lineBreak: <br /> }}
           />
         )}
-      </h1>
+      </H3>
       <EditListingLocationForm
         className={css.form}
         initialValues={state.initialValues}
