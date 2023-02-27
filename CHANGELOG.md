@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Add --contentMaxWidth and --contentMaxWidthPages.
+  [#101](https://github.com/sharetribe/ftw-x/pull/101)
 - [change] Improve error handling on PageBuilder and LandingPage.
   [#100](https://github.com/sharetribe/ftw-x/pull/100)
 - [add] Add privacy policy modal to sign up page and make it mandatory to click checkbox. This was

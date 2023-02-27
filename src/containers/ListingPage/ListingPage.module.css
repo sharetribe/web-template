@@ -193,7 +193,7 @@
 
 .contentWrapperForHeroLayout {
   @media (--viewportMedium) {
-    max-width: 1056px;
+    max-width: var(--contentMaxWidth);
     margin: 0 auto;
     padding: 0 24px;
     display: flex;
@@ -201,13 +201,13 @@
   }
 
   @media (--viewportLarge) {
-    max-width: 1128px;
+    max-width: calc(var(--contentMaxWidth) + 72px);
     padding: 0 36px;
     margin: 0 auto 117px;
   }
 
   @media (--viewportXLarge) {
-    max-width: 1056px;
+    max-width: var(--contentMaxWidth);
     padding: 0;
   }
 }
@@ -240,7 +240,7 @@
 
   @media (--viewportMedium) {
     width: 100%;
-    max-width: 1056px;
+    max-width: var(--contentMaxWidth);
     padding: 0 24px 0 24px;
     margin: 0 auto 56px auto;
   }
@@ -248,7 +248,7 @@
   @media (--viewportLarge) {
     display: flex;
     flex-direction: row;
-    max-width: 1128px;
+    max-width: calc(var(--contentMaxWidth) + 72px);
     padding: 64px 36px 0 36px;
     margin: 0 auto 117px auto;
   }
