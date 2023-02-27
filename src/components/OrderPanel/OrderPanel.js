@@ -18,7 +18,7 @@ import {
 import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
 import { userDisplayNameAsString } from '../../util/data';
-import { ModalInMobile, Button, AvatarSmall, H1, H2 } from '../../components';
+import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
 
 import css from './OrderPanel.module.css';
 
@@ -277,8 +277,7 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.closedListingButtonText" />
           </div>
         ) : (
-          <Button
-            rootClassName={css.orderButton}
+          <PrimaryButton
             onClick={() => openOrderModal(isOwnListing, isClosed, history, location)}
             disabled={isOutOfStock}
           >
@@ -287,7 +286,7 @@ const OrderPanel = props => {
             ) : (
               <FormattedMessage id="OrderPanel.ctaButtonMessage" />
             )}
-          </Button>
+          </PrimaryButton>
         )}
       </div>
     </div>
