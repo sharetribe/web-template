@@ -59,7 +59,7 @@ export const listingExtendedData = [
     ],
     indexForSearch: true,
     searchPageConfig: {
-      filterType: 'SelectSingleFilter',
+      filterType: 'SelectMultipleFilter',
       label: 'Category',
       group: 'primary',
     },

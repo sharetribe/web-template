@@ -42,5 +42,5 @@
 }
 
 .reminderModalLinkButton {
-  composes: button buttonFont buttonText buttonBorders buttonColorsPrimary from global;
+  composes: buttonPrimary from global;
 }
