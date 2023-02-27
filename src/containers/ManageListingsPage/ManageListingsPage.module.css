@@ -45,11 +45,11 @@
 
   @media (--viewportLarge) {
     margin: 72px auto 0 auto;
-    max-width: 1128px;
+    max-width: calc(var(--contentMaxWidth) + 72px);
   }
 
   @media (--viewportXLarge) {
-    max-width: 1056px;
+    max-width: var(--contentMaxWidth);
   }
 }
 
