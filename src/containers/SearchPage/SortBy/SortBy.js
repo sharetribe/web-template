@@ -31,7 +31,10 @@ const SortBy = props => {
           rootClassName: css.sortBy,
           menuLabelRootClassName: css.sortByMenuLabel,
         }
-      : { className: css.sortByDesktop };
+      : {
+          className: css.sortByDesktop,
+          menuLabelRootClassName: css.sortByMenuLabel,
+        };
 
   // Ensure that keywords is included to activeFilter list when needed
   const isMainSearchKeywords = isMainSearchTypeKeywords(config);

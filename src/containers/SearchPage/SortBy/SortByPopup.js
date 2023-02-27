@@ -52,7 +52,7 @@ const SortByPopup = props => {
   const menuLabel = initialValue ? optionLabel(options, initialValue) : label;
 
   const classes = classNames(rootClassName || css.root, className);
-  const menuLabelClasses = classNames(menuLabelRootClassName || css.menuLabel);
+  const menuLabelClasses = classNames(menuLabelRootClassName);
   const iconArrowClassName = isOpen ? css.iconArrowAnimation : null;
 
   return (
