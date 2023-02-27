@@ -49,22 +49,8 @@
 }
 
 .submitButton {
-  composes: button buttonText buttonBordersSecondary buttonColorsSecondary from global;
-
-  font-weight: var(--fontWeightMedium);
-  font-size: 14px;
-  line-height: 18px;
-  letter-spacing: 0;
-
   float: right;
-  padding: 0 16px;
-  min-height: auto;
   min-width: 150px;
-  height: 41px;
-
-  display: inline-block;
-  margin: 17px 0 0 0;
-  width: auto;
 }
 
 .sendIcon {

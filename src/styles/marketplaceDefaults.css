@@ -927,7 +927,7 @@ textarea {
 /**
  * Styles for <Button>
  */
- .buttonDefault {
+.buttonDefault {
   /* button defaults */
   display: block;
   width: 100%;
@@ -960,7 +960,7 @@ textarea {
   /* Default button uses marketplace color */
   background-color: var(--marketplaceColor);
   color: var(--matterColorLight);
- }
+}
 .buttonDefault:focus,
 .buttonDefault:hover {
   outline: none;
@@ -975,7 +975,7 @@ textarea {
   color: var(--matterColorLight);
 }
 
- /**
+/**
  * Styles for <PrimaryButton>
  */
 .buttonPrimary {
@@ -1027,6 +1027,52 @@ textarea {
   text-decoration: none;
 }
 .buttonPrimary:disabled {
+  box-shadow: none;
+  cursor: not-allowed;
+  background-color: var(--matterColorNegative);
+  color: var(--matterColor);
+}
+
+/**
+ * Styles for <PrimaryButtonSmall>
+ */
+.buttonPrimarySmall {
+  display: block;
+  padding: 8px 16px;
+  margin: 0;
+
+  transition: all var(--transitionStyleButton);
+  cursor: pointer;
+
+  /* Font */
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: var(--fontWeightMedium);
+
+  /* Button text styles */
+  text-align: center;
+  text-decoration: none;
+
+  /* Button borders */
+  border: none;
+  border-radius: var(--borderRadiusMedium);
+
+  background-color: var(--successColor);
+  color: var(--matterColorLight);
+
+  @media (--viewportMedium) {
+    line-height: 16px;
+  }
+}
+.buttonPrimarySmall:focus,
+.buttonPrimarySmall:hover {
+  outline: none;
+  box-shadow: var(--boxShadowButton);
+  text-decoration: none;
+  background-color: var(--successColorDark);
+  color: var(--matterColorLight);
+}
+.buttonPrimarySmall:disabled {
   box-shadow: none;
   cursor: not-allowed;
   background-color: var(--matterColorNegative);
@@ -1095,7 +1141,7 @@ textarea {
 /**
  * Styles for <SecondaryButtonInline>
  */
- .buttonSecondaryInline {
+.buttonSecondaryInline {
   /* button defaults */
   display: inline-block;
   width: auto;
@@ -1152,7 +1198,6 @@ textarea {
   cursor: not-allowed;
   border-color: var(--matterColorNegative);
 }
-
 
 /* ================ Modals ================ */
 
