@@ -16,6 +16,7 @@ import {
 } from '../../ducks/stripeConnectAccount.duck';
 
 import {
+  H3,
   NamedRedirect,
   LayoutSideNavigation,
   LayoutWrapperMain,
@@ -160,15 +161,16 @@ export const StripePayoutPageComponent = props => {
         <LayoutWrapperAccountSettingsSideNav currentTab="StripePayoutPage" />
         <LayoutWrapperMain>
           <div className={css.content}>
-            <h1 className={css.title}>
+            <H3 as="h1" className={css.heading}>
               <FormattedMessage id="StripePayoutPage.heading" />
-            </h1>
+            </H3>
             {!currentUserLoaded ? (
               <FormattedMessage id="StripePayoutPage.loadingData" />
             ) : returnedAbnormallyFromStripe && !getAccountLinkError ? (
               <FormattedMessage id="StripePayoutPage.redirectingToStripe" />
             ) : (
               <StripeConnectAccountForm
+                rootClassName={css.stripeConnectAccountForm}
                 disabled={formDisabled}
                 inProgress={payoutDetailsSaveInProgress}
                 ready={payoutDetailsSaved}

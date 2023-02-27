@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
 import classNames from 'classnames';
-import { NamedLink } from '../../components';
+import { H2, H3, H4, H5, NamedLink } from '../../components';
 
 import * as allExamples from '../../examples';
 
@@ -27,7 +27,7 @@ const Example = props => {
   const desc = description ? <p className={css.withMargin}>Description: {description}</p> : null;
   return (
     <li className={css.example}>
-      <h3 className={css.withMargin}>
+      <H3 className={css.withMargin}>
         <NamedLink
           name="StyleguideComponent"
           params={{ component: componentName }}
@@ -43,7 +43,7 @@ const Example = props => {
         >
           {exampleName}
         </NamedLink>
-      </h3>
+      </H3>
       <span className={css.withMargin}>
         <NamedLink
           name="StyleguideComponentExampleRaw"
@@ -144,14 +144,14 @@ const Nav = props => {
   return (
     <nav className={css.withMargin}>
       <ul>{toGroupLink(ALL)}</ul>
-      <h5>Design elements</h5>
+      <H5>Design elements</H5>
       <ul className={css.groups}>{designElementGroups}</ul>
-      <h5>Shared components</h5>
+      <H5>Shared components</H5>
       <ul className={css.groups}>
         {sharedComponentGroups}
         {toGroupLink(DEFAULT_GROUP)}
       </ul>
-      <h5>Page-related components</h5>
+      <H5>Page-related components</H5>
       <ul className={css.groups}>{pageSubComponentGroups}</ul>
     </nav>
   );
@@ -244,20 +244,22 @@ const StyleguidePage = props => {
   return (
     <section className={css.root}>
       <div className={css.navBar}>
-        <h1 className={css.withMargin}>
+        <H2 as="h1" className={css.withMargin}>
           <NamedLink name="Styleguide" className={css.link}>
             Styleguide
           </NamedLink>
-        </h1>
-        <h2 className={css.withMargin}>Select category:</h2>
+        </H2>
+        <H4 as="h2" className={css.withMargin}>
+          Select category:
+        </H4>
         <Nav groups={groups} selectedGroup={selectedGroup} />
       </div>
       <div className={css.main}>
-        <h2>
+        <H2 className={css.contentHeading}>
           {selectedGroupWithoutPrefix
             ? `Selected category: ${selectedGroupWithoutPrefix}`
             : `Component`}
-        </h2>
+        </H2>
         {html}
       </div>
     </section>

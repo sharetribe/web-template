@@ -23,7 +23,7 @@ import { propTypes } from '../../util/types';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck';
 
-import { ModalInMobile, Page } from '../../components';
+import { H2, ModalInMobile, Page } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import { setActiveListing } from './SearchPage.duck';
@@ -496,9 +496,9 @@ export class SearchPageComponent extends Component {
                 })}
               >
                 {searchListingsError ? (
-                  <h2 className={css.error}>
+                  <H2 className={css.error}>
                     <FormattedMessage id="SearchPage.searchError" />
-                  </h2>
+                  </H2>
                 ) : null}
                 <SearchResultsPanel
                   className={css.searchListingsPanel}

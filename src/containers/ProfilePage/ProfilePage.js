@@ -12,6 +12,10 @@ import { withViewport } from '../../util/uiHelpers';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import {
+  Heading,
+  H1,
+  H2,
+  H4,
   Page,
   LayoutSideNavigation,
   LayoutWrapperMain,
@@ -37,11 +41,11 @@ export const AsideContent = props => {
   return (
     <div className={css.asideContent}>
       <AvatarLarge className={css.avatar} user={user} disableProfileLink />
-      <h1 className={css.mobileHeading}>
+      <H1 className={css.mobileHeading}>
         {displayName ? (
           <FormattedMessage id="ProfilePage.mobileHeading" values={{ name: displayName }} />
         ) : null}
-      </h1>
+      </H1>
       {isCurrentUser ? (
         <>
           <NamedLink className={css.editLinkMobile} name="ProfileSettingsPage">
@@ -71,20 +75,20 @@ export const MobileReviews = props => {
   const reviewsOfCustomer = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_CUSTOMER);
   return (
     <div className={css.mobileReviews}>
-      <h2 className={css.mobileReviewsTitle}>
+      <H4 as="h2" className={css.mobileReviewsTitle}>
         <FormattedMessage
           id="ProfilePage.reviewsFromMyCustomersTitle"
           values={{ count: reviewsOfProvider.length }}
         />
-      </h2>
+      </H4>
       <ReviewsErrorMaybe queryReviewsError={queryReviewsError} />
       <Reviews reviews={reviewsOfProvider} />
-      <h2 className={css.mobileReviewsTitle}>
+      <H4 as="h2" className={css.mobileReviewsTitle}>
         <FormattedMessage
           id="ProfilePage.reviewsAsACustomerTitle"
           values={{ count: reviewsOfCustomer.length }}
         />
-      </h2>
+      </H4>
       <ReviewsErrorMaybe queryReviewsError={queryReviewsError} />
       <Reviews reviews={reviewsOfCustomer} />
     </div>
@@ -101,24 +105,24 @@ export const DesktopReviews = props => {
   const desktopReviewTabs = [
     {
       text: (
-        <h3 className={css.desktopReviewsTitle}>
+        <Heading as="h3" rootClassName={css.desktopReviewsTitle}>
           <FormattedMessage
             id="ProfilePage.reviewsFromMyCustomersTitle"
             values={{ count: reviewsOfProvider.length }}
           />
-        </h3>
+        </Heading>
       ),
       selected: isReviewTypeProviderSelected,
       onClick: () => setShowReviewsType(REVIEW_TYPE_OF_PROVIDER),
     },
     {
       text: (
-        <h3 className={css.desktopReviewsTitle}>
+        <Heading as="h3" rootClassName={css.desktopReviewsTitle}>
           <FormattedMessage
             id="ProfilePage.reviewsAsACustomerTitle"
             values={{ count: reviewsOfCustomer.length }}
           />
-        </h3>
+        </Heading>
       ),
       selected: isReviewTypeCustomerSelected,
       onClick: () => setShowReviewsType(REVIEW_TYPE_OF_CUSTOMER),
@@ -171,15 +175,15 @@ export const MainContent = props => {
   }
   return (
     <div>
-      <h1 className={css.desktopHeading}>
+      <H2 as="h1" className={css.desktopHeading}>
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
-      </h1>
+      </H2>
       {hasBio ? <p className={css.bio}>{bio}</p> : null}
       {hasListings ? (
         <div className={listingsContainerClasses}>
-          <h2 className={css.listingsTitle}>
+          <H4 as="h2" className={css.listingsTitle}>
             <FormattedMessage id="ProfilePage.listingsTitle" values={{ count: listings.length }} />
-          </h2>
+          </H4>
           <ul className={css.listings}>
             {listings.map(l => (
               <li className={css.listing} key={l.id.uuid}>

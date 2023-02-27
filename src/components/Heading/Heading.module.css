@@ -1,0 +1,25 @@
+@import '../../styles/customMediaQueries.css';
+
+.h1 {
+  composes: h1 from global;
+}
+
+.h2 {
+  composes: h2 from global;
+}
+
+.h3 {
+  composes: h3 from global;
+}
+
+.h4 {
+  composes: h4 from global;
+}
+
+.h5 {
+  composes: h5 from global;
+}
+
+.h6 {
+  composes: h6 from global;
+}

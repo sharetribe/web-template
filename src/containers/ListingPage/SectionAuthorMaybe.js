@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
-import { UserCard, Modal } from '../../components';
+import { Heading, Modal, UserCard } from '../../components';
 import InquiryForm from './InquiryForm/InquiryForm';
 
 import css from './ListingPage.module.css';
@@ -26,9 +26,9 @@ const SectionAuthorMaybe = props => {
 
   return (
     <div id="author" className={css.sectionAuthor}>
-      <h2 className={css.aboutProviderTitle}>
+      <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>
         <FormattedMessage id="ListingPage.aboutProviderTitle" />
-      </h2>
+      </Heading>
       <UserCard user={listing.author} currentUser={currentUser} onContactUser={onContactUser} />
       <Modal
         id="ListingPage.inquiry"

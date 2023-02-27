@@ -41,47 +41,59 @@ const Fonts = () => {
       <div className={fontsContainerClasses}>
         <Font
           component={() => <h1>H1 heading</h1>}
-          description={`<h1>
-.myClass {
-  composes: h1 from global;
-}`}
+          description={`<H1>H1 heading</H1>
+
+Rendered HTML element can be
+changed with 'as' prop.
+<H1 as="h2">H1 heading</H1>
+`}
         />
         <Font
           component={() => <h2>H2 heading</h2>}
-          description={`<h2>
-.myClass {
-  composes: h2 from global;
-}`}
+          description={`<H2>H2 heading</H2>
+
+Rendered HTML element can be
+changed with 'as' prop.
+<H2 as="h1">H1 heading</H2>
+`}
         />
         <Font
           component={() => <h3>H3 heading</h3>}
-          description={`<h3>
-.myClass {
-  composes: h3 from global;
-}`}
+          description={`<H3>H3 heading</H3>
+
+Rendered HTML element can be
+changed with 'as' prop.
+<H3 as="h2">H1 heading</H3>
+`}
         />
         <Font
           component={() => <h4>H4: Lorem ipsum dolor sit amet</h4>}
-          description={`<h4>
-.myClass {
-  composes: h4 from global;
-}`}
+          description={`<H4>H4 heading</H4>
+
+Rendered HTML element can be
+changed with 'as' prop.
+<HH41 as="h2">H1 heading</H4>
+`}
         />
         <Font
           component={() => (
             <h5>H5: You will only be charged if your request is accepted by the provider.</h5>
           )}
-          description={`<h5>
-.myClass {
-  composes: h5 from global;
-}`}
+          description={`<H5>H5 heading</H5>
+
+Rendered HTML element can be
+changed with 'as' prop.
+<H5 as="h2">H1 heading</H5>
+`}
         />
         <Font
           component={() => <h6>H6: Close</h6>}
-          description={`<h6>
-.myClass {
-  composes: h6 from global;
-}`}
+          description={`<H6>H6: Close</H6>
+
+Rendered element can be
+changed with 'as' prop.
+<H6 as="h2">H6: Close</H6>
+`}
         />
         <Font
           component={() => (

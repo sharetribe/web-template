@@ -22,7 +22,7 @@ import {
 import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, TIME_SLOT_TIME, propTypes } from '../../../util/types';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
 
-import { Form, IconArrowHead, PrimaryButton, FieldDateRangeInput } from '../../../components';
+import { Form, IconArrowHead, PrimaryButton, FieldDateRangeInput, H6 } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
@@ -612,9 +612,9 @@ export const BookingDatesFormComponent = props => {
 
             {showEstimatedBreakdown ? (
               <div className={css.priceBreakdownContainer}>
-                <h3 className={css.bookingBreakdownTitle}>
+                <H6 as="h3" className={css.bookingBreakdownTitle}>
                   <FormattedMessage id="BookingDatesForm.priceBreakdownTitle" />
-                </h3>
+                </H6>
                 <hr className={css.totalDivider} />
                 <EstimatedCustomerBreakdownMaybe
                   breakdownData={breakdownData}

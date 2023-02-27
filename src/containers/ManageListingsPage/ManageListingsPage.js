@@ -8,6 +8,7 @@ import { propTypes } from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 
 import {
+  H3,
   Page,
   PaginationLinks,
   UserNav,
@@ -58,35 +59,35 @@ export class ManageListingsPageComponent extends Component {
 
     const loadingResults = (
       <div className={css.messagePanel}>
-        <h2 className={css.loadingData}>
+        <H3 as="h2" className={css.heading}>
           <FormattedMessage id="ManageListingsPage.loadingOwnListings" />
-        </h2>
+        </H3>
       </div>
     );
 
     const queryError = (
       <div className={css.messagePanel}>
-        <h2 className={css.error}>
+        <H3 as="h2" className={css.heading}>
           <FormattedMessage id="ManageListingsPage.queryError" />
-        </h2>
+        </H3>
       </div>
     );
 
     const noResults =
       listingsAreLoaded && pagination.totalItems === 0 ? (
-        <h1 className={css.title}>
+        <H3 as="h1" className={css.heading}>
           <FormattedMessage id="ManageListingsPage.noResults" />
-        </h1>
+        </H3>
       ) : null;
 
     const heading =
       listingsAreLoaded && pagination.totalItems > 0 ? (
-        <h1 className={css.title}>
+        <H3 as="h1" className={css.heading}>
           <FormattedMessage
             id="ManageListingsPage.youHaveListings"
             values={{ count: pagination.totalItems }}
           />
-        </h1>
+        </H3>
       ) : (
         noResults
       );

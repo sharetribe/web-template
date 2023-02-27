@@ -10,6 +10,7 @@ import { isPasswordRecoveryEmailNotFoundError } from '../../util/errors';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 
 import {
+  Heading,
   Page,
   InlineTextButton,
   IconKeys,
@@ -36,9 +37,9 @@ const PasswordRecovery = props => {
   return (
     <div className={css.submitEmailContent}>
       <IconKeys className={css.modalIcon} />
-      <h1 className={css.modalTitle}>
+      <Heading as="h1" rootClassName={css.modalTitle}>
         <FormattedMessage id="PasswordRecoveryPage.forgotPasswordTitle" />
-      </h1>
+      </Heading>
       <p className={css.modalMessage}>
         <FormattedMessage id="PasswordRecoveryPage.forgotPasswordMessage" />
       </p>
@@ -57,9 +58,9 @@ const GenericError = () => {
   return (
     <div className={css.genericErrorContent}>
       <IconKeys className={css.modalIcon} />
-      <h1 className={css.modalTitle}>
+      <Heading as="h1" rootClassName={css.modalTitle}>
         <FormattedMessage id="PasswordRecoveryPage.actionFailedTitle" />
-      </h1>
+      </Heading>
       <p className={css.modalMessage}>
         <FormattedMessage id="PasswordRecoveryPage.actionFailedMessage" />
       </p>
@@ -96,9 +97,9 @@ const EmailSubmittedContent = props => {
   return (
     <div className={css.emailSubmittedContent}>
       <IconKeys className={css.modalIcon} />
-      <h1 className={css.modalTitle}>
+      <Heading as="h1" rootClassName={css.modalTitle}>
         <FormattedMessage id="PasswordRecoveryPage.emailSubmittedTitle" />
-      </h1>
+      </Heading>
       <p className={css.modalMessage}>
         <FormattedMessage
           id="PasswordRecoveryPage.emailSubmittedMessage"

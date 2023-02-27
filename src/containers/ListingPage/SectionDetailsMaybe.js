@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
+import { Heading } from '../../components';
 
 import css from './ListingPage.module.css';
 
@@ -41,9 +42,9 @@ const SectionDetailsMaybe = props => {
 
   return existingExtendedData.length > 0 ? (
     <div className={css.sectionDetails}>
-      <h2 className={css.detailsTitle}>
+      <Heading as="h2" rootClassName={css.sectionHeading}>
         <FormattedMessage id="ListingPage.detailsTitle" />
-      </h2>
+      </Heading>
       <ul className={css.details}>
         {existingExtendedData.map(detail => (
           <li key={detail.key} className={css.detailsRow}>

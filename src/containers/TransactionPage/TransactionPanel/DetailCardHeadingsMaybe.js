@@ -1,4 +1,5 @@
 import React from 'react';
+import { H4 } from '../../../components';
 
 import css from './TransactionPanel.module.css';
 
@@ -8,7 +9,9 @@ const DetailCardHeadingsMaybe = props => {
 
   return showDetailCardHeadings ? (
     <div className={css.detailCardHeadings}>
-      <h2 className={css.detailCardTitle}>{listingTitle}</h2>
+      <H4 as="h2" className={css.detailCardTitle}>
+        {listingTitle}
+      </H4>
       {subTitle ? <p className={css.detailCardSubtitle}>{subTitle}</p> : null}
     </div>
   ) : null;

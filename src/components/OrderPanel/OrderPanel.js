@@ -18,7 +18,7 @@ import {
 import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
 import { userDisplayNameAsString } from '../../util/data';
-import { ModalInMobile, Button, AvatarSmall } from '../../components';
+import { ModalInMobile, Button, AvatarSmall, H1, H2 } from '../../components';
 
 import css from './OrderPanel.module.css';
 
@@ -165,11 +165,11 @@ const OrderPanel = props => {
         usePortal
       >
         <div className={css.modalHeading}>
-          <h1 className={css.title}>{title}</h1>
+          <H1 className={css.heading}>{title}</H1>
         </div>
 
         <div className={css.orderHeading}>
-          {titleDesktop ? titleDesktop : <h2 className={titleClasses}>{title}</h2>}
+          {titleDesktop ? titleDesktop : <H2 className={titleClasses}>{title}</H2>}
           {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
         </div>
 

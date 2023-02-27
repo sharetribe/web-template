@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Add Heading and H1...H6 components to main app. These are separate from PageBuilder. So that
+  Pages could use different fonts if needed. [#97](https://github.com/sharetribe/ftw-x/pull/97)
 - [add] Add --contentMaxWidth and --contentMaxWidthPages.
   [#101](https://github.com/sharetribe/ftw-x/pull/101)
 - [change] Improve error handling on PageBuilder and LandingPage.

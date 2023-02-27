@@ -3,6 +3,7 @@ import classNames from 'classnames';
 
 import getCountryCodes from '../../../translations/countryCodes';
 import { FormattedMessage } from '../../../util/reactIntl';
+import { Heading } from '../../../components';
 
 import AddressLinkMaybe from './AddressLinkMaybe';
 
@@ -20,9 +21,9 @@ const DeliveryInfoMaybe = props => {
     const pickupLocation = listing?.attributes?.publicData?.location || {};
     return (
       <div className={classes}>
-        <h3 className={css.sectionHeading}>
+        <Heading as="h3" rootClassName={css.sectionHeading}>
           <FormattedMessage id="TransactionPanel.pickupInfoHeading" />
-        </h3>
+        </Heading>
         <div className={css.pickupInfoContent}>
           <AddressLinkMaybe
             linkRootClassName={css.pickupAddress}
@@ -49,9 +50,9 @@ const DeliveryInfoMaybe = props => {
 
     return (
       <div className={classes}>
-        <h3 className={css.sectionHeading}>
+        <Heading as="h3" rootClassName={css.sectionHeading}>
           <FormattedMessage id="TransactionPanel.shippingInfoHeading" />
-        </h3>
+        </Heading>
         <div className={css.shippingInfoContent}>
           {name}
           <br />

@@ -9,7 +9,7 @@ import { timestampToDate } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
 
-import { Form, PrimaryButton } from '../../../components';
+import { Form, H6, PrimaryButton } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 import FieldDateAndTimeInput from './FieldDateAndTimeInput';
@@ -140,9 +140,9 @@ export class BookingTimeFormComponent extends Component {
 
               {showEstimatedBreakdown ? (
                 <div className={css.priceBreakdownContainer}>
-                  <h3 className={css.bookingBreakdownTitle}>
+                  <H6 as="h3" className={css.bookingBreakdownTitle}>
                     <FormattedMessage id="BookingTimeForm.priceBreakdownTitle" />
-                  </h3>
+                  </H6>
                   <hr className={css.totalDivider} />
                   <EstimatedCustomerBreakdownMaybe
                     breakdownData={breakdownData}

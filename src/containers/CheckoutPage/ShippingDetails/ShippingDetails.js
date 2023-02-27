@@ -6,7 +6,7 @@ import { FormattedMessage, intlShape } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
 import getCountryCodes from '../../../translations/countryCodes';
 
-import { FieldSelect, FieldTextInput } from '../../../components';
+import { FieldSelect, FieldTextInput, Heading } from '../../../components';
 
 import css from './ShippingDetails.module.css';
 
@@ -23,9 +23,9 @@ const ShippingDetails = props => {
 
   return (
     <div className={classes}>
-      <h3 className={css.heading}>
+      <Heading as="h3" rootClassName={css.heading}>
         <FormattedMessage id="ShippingDetails.title" />
-      </h3>
+      </Heading>
       <FieldTextInput
         id={`${fieldId}.recipientName`}
         name="recipientName"

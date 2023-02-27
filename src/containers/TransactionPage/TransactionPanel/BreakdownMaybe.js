@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
+import { H6 } from '../../../components';
 
 import css from './TransactionPanel.module.css';
 
@@ -12,9 +13,9 @@ const BreakdownMaybe = props => {
 
   return orderBreakdown ? (
     <div className={classes}>
-      <h3 className={css.orderBreakdownTitle}>
+      <H6 as="h3" className={css.orderBreakdownTitle}>
         <FormattedMessage id={`TransactionPanel.${processName}.orderBreakdownTitle`} />
-      </h3>
+      </H6>
       <hr className={css.totalDivider} />
       {orderBreakdown}
     </div>

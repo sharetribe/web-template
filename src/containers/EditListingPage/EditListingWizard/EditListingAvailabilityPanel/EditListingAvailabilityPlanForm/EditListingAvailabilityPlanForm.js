@@ -6,7 +6,7 @@ import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../../../util/reactIntl';
-import { Form, PrimaryButton } from '../../../../../components';
+import { Form, Heading, H3, PrimaryButton } from '../../../../../components';
 import FieldTimeZoneSelect from '../FieldTimeZoneSelect';
 import AvailabilityPlanEntries from './AvailabilityPlanEntries';
 
@@ -90,21 +90,21 @@ const EditListingAvailabilityPlanFormComponent = props => {
 
         return (
           <Form id={formId} className={classes} onSubmit={handleSubmit}>
-            <h2 className={css.heading}>
+            <H3 as="h2" className={css.heading}>
               <FormattedMessage
                 id="EditListingAvailabilityPlanForm.title"
                 values={{ listingTitle }}
               />
-            </h2>
-            <h3 className={css.subheading}>
+            </H3>
+            <Heading as="h3" rootClassName={css.subheading}>
               <FormattedMessage id="EditListingAvailabilityPlanForm.timezonePickerTitle" />
-            </h3>
+            </Heading>
             <div className={css.timezonePicker}>
               <FieldTimeZoneSelect id="timezone" name="timezone" />
             </div>
-            <h3 className={css.subheading}>
+            <Heading as="h3" rootClassName={css.subheading}>
               <FormattedMessage id="EditListingAvailabilityPlanForm.hoursOfOperationTitle" />
-            </h3>
+            </Heading>
             <div className={css.week}>
               {weekdays.map(w => {
                 return (

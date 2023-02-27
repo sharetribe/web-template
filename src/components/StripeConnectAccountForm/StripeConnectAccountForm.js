@@ -14,6 +14,7 @@ import * as validators from '../../util/validators';
 import { propTypes } from '../../util/types';
 
 import {
+  H4,
   Button,
   ExternalLink,
   InlineTextButton,
@@ -103,9 +104,9 @@ const CreateStripeAccountFields = props => {
 
   return (
     <div className={css.sectionContainer}>
-      <h3 className={css.subTitle}>
+      <H4 as="h3">
         <FormattedMessage id="StripeConnectAccountForm.accountTypeTitle" />
-      </h3>
+      </H4>
       <div className={css.radioButtonRow}>
         <FieldRadioButton
           id="individual"
@@ -249,6 +250,7 @@ const StripeConnectAccountFormComponent = props => {
       }}
       render={fieldRenderProps => {
         const {
+          rootClassName,
           className,
           children,
           stripeAccountError,
@@ -281,7 +283,7 @@ const StripeConnectAccountFormComponent = props => {
         };
 
         const countryLabel = intl.formatMessage({ id: 'StripeConnectAccountForm.countryLabel' });
-        const classes = classNames(css.root, className, {
+        const classes = classNames(rootClassName || css.root, className, {
           [css.disabled]: disabled,
         });
 

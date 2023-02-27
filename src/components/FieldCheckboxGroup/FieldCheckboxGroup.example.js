@@ -1,14 +1,14 @@
 import React from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
-import { Button } from '../../components';
+import { Button, H3 } from '../../components';
 import FieldCheckboxGroup from './FieldCheckboxGroup';
 import { requiredFieldArrayCheckbox } from '../../util/validators';
 
 const formName = 'Styleguide.FieldCheckboxGroup';
 const formNameRequired = 'Styleguide.FieldCheckboxGroupRequired';
 
-const label = <h3>Amenities</h3>;
+const label = <H3>Amenities</H3>;
 
 const commonProps = {
   label: label,

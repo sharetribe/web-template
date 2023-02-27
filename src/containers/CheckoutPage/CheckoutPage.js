@@ -34,7 +34,11 @@ import {
   transactionInitiateOrderStripeErrors,
 } from '../../util/errors';
 import { formatMoney } from '../../util/currency';
-import { getProcess, isBookingProcessAlias } from '../../transactions/transaction';
+import {
+  getProcess,
+  isBookingProcessAlias,
+  resolveLatestProcessName,
+} from '../../transactions/transaction';
 
 // Import global thunk functions
 import { isScrollingDisabled } from '../../ducks/UI.duck';
@@ -45,6 +49,9 @@ import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
 import {
   AspectRatioWrapper,
   AvatarMedium,
+  H3,
+  H4,
+  H6,
   NamedLink,
   NamedRedirect,
   OrderBreakdown,
@@ -710,10 +717,11 @@ export class CheckoutPageComponent extends Component {
       : listing?.id
       ? listing.attributes.publicData?.transactionProcessAlias?.split('/')[0]
       : null;
+    const latestProcessName = resolveLatestProcessName(processName);
 
     const listingTitle = currentListing.attributes.title;
-    const title = processName
-      ? intl.formatMessage({ id: `CheckoutPage.${processName}.title` }, { listingTitle })
+    const title = latestProcessName
+      ? intl.formatMessage({ id: `CheckoutPage.${latestProcessName}.title` }, { listingTitle })
       : 'Checkout page is loading data';
 
     const pageProps = { title, scrollingDisabled };
@@ -727,7 +735,7 @@ export class CheckoutPageComponent extends Component {
         </Page>
       );
     }
-    const process = getProcess(processName);
+    const process = getProcess(latestProcessName);
     const transitions = process.transitions;
 
     const isOwnListing =
@@ -869,11 +877,13 @@ export class CheckoutPageComponent extends Component {
             <AvatarMedium user={currentAuthor} disableProfileLink />
           </div>
           <div className={css.bookListingContainer}>
-            <div className={css.heading}>
-              <h1 className={css.title}>{title}</h1>
-              <h2 className={css.detailsTitleMobile}>
+            <div className={css.headingContainer}>
+              <H3 as="h1" className={css.heading}>
+                {title}
+              </H3>
+              <H4 as="h2" className={css.detailsHeadingMobile}>
                 <FormattedMessage id="CheckoutPage.listingTitle" values={{ listingTitle }} />
-              </h2>
+              </H4>
             </div>
 
             <div className={css.priceBreakdownContainer}>
@@ -952,19 +962,19 @@ export class CheckoutPageComponent extends Component {
                 <AvatarMedium user={currentAuthor} disableProfileLink />
               </div>
               <div className={css.detailsHeadings}>
-                <h2 className={css.detailsTitle}>
+                <H4 as="h2">
                   <NamedLink
                     name="ListingPage"
                     params={{ id: currentListing.id?.uuid, slug: createSlug(listingTitle) }}
                   >
                     {listingTitle}
                   </NamedLink>
-                </h2>
+                </H4>
               </div>
               {speculateTransactionErrorMessage}
-              <h3 className={css.orderBreakdownTitle}>
-                <FormattedMessage id={`CheckoutPage.${processName}.orderBreakdown`} />
-              </h3>
+              <H6 as="h3" className={css.orderBreakdownTitle}>
+                <FormattedMessage id={`CheckoutPage.${latestProcessName}.orderBreakdown`} />
+              </H6>
               <hr className={css.totalDivider} />
             </div>
             {breakdown}

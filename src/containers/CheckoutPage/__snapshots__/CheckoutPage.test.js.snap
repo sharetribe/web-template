@@ -68,15 +68,19 @@ exports[`CheckoutPage matches snapshot 1`] = `
       className="bookListingContainer"
     >
       <div
-        className="heading"
+        className="headingContainer"
       >
-        <h1
-          className="title"
+        <H3
+          as="h1"
+          className="heading"
+          rootClassName={null}
         >
           CheckoutPage.default-purchase.title
-        </h1>
-        <h2
-          className="detailsTitleMobile"
+        </H3>
+        <H4
+          as="h2"
+          className="detailsHeadingMobile"
+          rootClassName={null}
         >
           <MemoizedFormattedMessage
             id="CheckoutPage.listingTitle"
@@ -86,7 +90,7 @@ exports[`CheckoutPage matches snapshot 1`] = `
               }
             }
           />
-        </h2>
+        </H4>
       </div>
       <div
         className="priceBreakdownContainer"
@@ -174,8 +178,10 @@ exports[`CheckoutPage matches snapshot 1`] = `
         <div
           className="detailsHeadings"
         >
-          <h2
-            className="detailsTitle"
+          <H4
+            as="h2"
+            className={null}
+            rootClassName={null}
           >
             <NamedLink
               name="ListingPage"
@@ -188,15 +194,17 @@ exports[`CheckoutPage matches snapshot 1`] = `
             >
               listing1 title
             </NamedLink>
-          </h2>
+          </H4>
         </div>
-        <h3
+        <H6
+          as="h3"
           className="orderBreakdownTitle"
+          rootClassName={null}
         >
           <MemoizedFormattedMessage
             id="CheckoutPage.default-purchase.orderBreakdown"
           />
-        </h3>
+        </H6>
         <hr
           className="totalDivider"
         />

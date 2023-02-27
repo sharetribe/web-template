@@ -20,13 +20,15 @@ exports[`AuthenticationForms with Facebook and Google login matches snapshot 1`]
             },
           },
           "selected": false,
-          "text": <h1
-            className="tab"
+          "text": <Heading
+            as="h2"
+            className={null}
+            rootClassName="tab"
           >
             <Memo(MemoizedFormattedMessage)
               id="AuthenticationPage.signupLinkText"
             />
-          </h1>,
+          </Heading>,
         },
         Object {
           "linkProps": Object {
@@ -36,13 +38,15 @@ exports[`AuthenticationForms with Facebook and Google login matches snapshot 1`]
             },
           },
           "selected": true,
-          "text": <h1
-            className="tab"
+          "text": <Heading
+            as="h1"
+            className={null}
+            rootClassName="tab"
           >
             <Memo(MemoizedFormattedMessage)
               id="AuthenticationPage.loginLinkText"
             />
-          </h1>,
+          </Heading>,
         },
       ]
     }
@@ -81,13 +85,15 @@ exports[`AuthenticationForms with Facebook login matches snapshot 1`] = `
             },
           },
           "selected": false,
-          "text": <h1
-            className="tab"
+          "text": <Heading
+            as="h2"
+            className={null}
+            rootClassName="tab"
           >
             <Memo(MemoizedFormattedMessage)
               id="AuthenticationPage.signupLinkText"
             />
-          </h1>,
+          </Heading>,
         },
         Object {
           "linkProps": Object {
@@ -97,13 +103,15 @@ exports[`AuthenticationForms with Facebook login matches snapshot 1`] = `
             },
           },
           "selected": true,
-          "text": <h1
-            className="tab"
+          "text": <Heading
+            as="h1"
+            className={null}
+            rootClassName="tab"
           >
             <Memo(MemoizedFormattedMessage)
               id="AuthenticationPage.loginLinkText"
             />
-          </h1>,
+          </Heading>,
         },
       ]
     }
@@ -142,13 +150,15 @@ exports[`AuthenticationForms with Google login matches snapshot 1`] = `
             },
           },
           "selected": false,
-          "text": <h1
-            className="tab"
+          "text": <Heading
+            as="h2"
+            className={null}
+            rootClassName="tab"
           >
             <Memo(MemoizedFormattedMessage)
               id="AuthenticationPage.signupLinkText"
             />
-          </h1>,
+          </Heading>,
         },
         Object {
           "linkProps": Object {
@@ -158,13 +168,15 @@ exports[`AuthenticationForms with Google login matches snapshot 1`] = `
             },
           },
           "selected": true,
-          "text": <h1
-            className="tab"
+          "text": <Heading
+            as="h1"
+            className={null}
+            rootClassName="tab"
           >
             <Memo(MemoizedFormattedMessage)
               id="AuthenticationPage.loginLinkText"
             />
-          </h1>,
+          </Heading>,
         },
       ]
     }
