@@ -143,11 +143,11 @@ export const PrimaryButton = props => {
 };
 PrimaryButton.displayName = 'PrimaryButton';
 
-export const PrimaryButtonSmall = props => {
-  const classes = classNames(props.rootClassName || css.primaryButtonSmallRoot, css.primaryButton);
+export const PrimaryButtonInline = props => {
+  const classes = classNames(props.rootClassName || css.primaryButtonInlineRoot, css.primaryButton);
   return <Button {...props} rootClassName={classes} />;
 };
-PrimaryButtonSmall.displayName = 'PrimaryButtonSmall';
+PrimaryButtonInline.displayName = 'PrimaryButtonInline';
 
 export const SecondaryButton = props => {
   const classes = classNames(props.rootClassName || css.secondaryButtonRoot, css.secondaryButton);
