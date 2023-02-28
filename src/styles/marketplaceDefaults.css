@@ -703,6 +703,7 @@ textarea {
 .p,
 .buttonDefault,
 .buttonPrimary,
+.buttonPrimaryInline,
 .buttonSecondary,
 .buttonSecondaryInline,
 .marketplaceMessageFontStyles,
@@ -1034,10 +1035,10 @@ textarea {
 }
 
 /**
- * Styles for <PrimaryButtonSmall>
+ * Styles for <PrimaryButtonInline>
  */
-.buttonPrimarySmall {
-  display: block;
+.buttonPrimaryInline {
+  display: inline-block;
   padding: 8px 16px;
   margin: 0;
 
@@ -1064,15 +1065,15 @@ textarea {
     line-height: 16px;
   }
 }
-.buttonPrimarySmall:focus,
-.buttonPrimarySmall:hover {
+.buttonPrimaryInline:focus,
+.buttonPrimaryInline:hover {
   outline: none;
   box-shadow: var(--boxShadowButton);
   text-decoration: none;
   background-color: var(--successColorDark);
   color: var(--matterColorLight);
 }
-.buttonPrimarySmall:disabled {
+.buttonPrimaryInline:disabled {
   box-shadow: none;
   cursor: not-allowed;
   background-color: var(--matterColorNegative);

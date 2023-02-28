@@ -325,7 +325,7 @@
 
 .openListingButton,
 .finishListingDraftLink {
-  composes: buttonPrimarySmall from global;
+  composes: buttonPrimaryInline from global;
 
   /* margin-top + n * line-height + margin-bottom => x * 6px */
   margin-top: 10px;

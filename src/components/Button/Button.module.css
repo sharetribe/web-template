@@ -14,8 +14,8 @@
   padding: 0;
 }
 
-.primaryButtonSmallRoot {
-  composes: buttonPrimarySmall from global;
+.primaryButtonInlineRoot {
+  composes: buttonPrimaryInline from global;
 }
 
 .secondaryButtonRoot {

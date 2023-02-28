@@ -34,7 +34,7 @@ import {
   MenuItem,
   NamedLink,
   IconSpinner,
-  PrimaryButtonSmall,
+  PrimaryButtonInline,
   ResponsiveImage,
 } from '../../../components';
 
@@ -152,7 +152,7 @@ const ShowClosedOverlayMaybe = props => {
         { listingTitle: title }
       )}
     >
-      <PrimaryButtonSmall
+      <PrimaryButtonInline
         className={css.openListingButton}
         disabled={!!actionsInProgressListingId}
         onClick={event => {
@@ -164,7 +164,7 @@ const ShowClosedOverlayMaybe = props => {
         }}
       >
         <FormattedMessage id="ManageListingCard.openListing" />
-      </PrimaryButtonSmall>
+      </PrimaryButtonInline>
     </Overlay>
   ) : null;
 };
