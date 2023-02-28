@@ -1,3 +1,5 @@
+@import '../../../styles/customMediaQueries.css';
+
 .root {
   display: inline-block;
 
@@ -6,40 +8,93 @@
   }
 }
 
-.menuLabel {
-  composes: button marketplaceSearchFilterLabelFontStyles buttonText buttonBordersSecondary buttonColorsSecondary from global;
+.menuLabel,
+.menuLabelSelected {
+  display: inline-block;
+  width: auto;
+  height: 35px;
+  min-height: 35px;
+
+  padding: 0 18px;
+  margin: 0 9px 0 0;
+
+  transition: all var(--transitionStyleButton);
+  cursor: pointer;
+
+  /* Font */
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 13px;
+  line-height: 18px;
   letter-spacing: 0.2px;
 
-  padding: var(--marketplaceButtonSmallDesktopPadding);
-  width: auto;
-  height: auto;
-  min-height: 0;
+  /* Button text styles */
+  /* Default button text is centered without decorations */
+  text-align: center;
+  text-decoration: none;
+
+  &:focus,
+  &:hover {
+    outline: none;
+    box-shadow: var(--boxShadowFilterButton);
+    text-decoration: none;
+  }
+
+  &:disabled {
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  @media (--viewportMedium) {
+    height: auto;
+    min-height: 0;
+    padding: var(--marketplaceButtonSmallDesktopPadding);
+    margin: 0;
+
+    font-weight: var(--fontWeightMedium);
+    font-size: 13px;
+    line-height: 20px;
+  }
+}
+
+.menuLabel {
+  /* Button borders */
+  border: 1px solid var(--matterColorNegative);
   border-radius: var(--borderRadiusMedium);
 
+  background-color: var(--matterColorLight);
+
+  &:hover,
   &:focus {
-    outline: none;
-    background-color: var(--matterColorLight);
-    border-color: transparent;
-    text-decoration: none;
-    box-shadow: var(--boxShadowFilterButton);
+    border-color: var(--matterColorAnti);
+  }
+  &:disabled {
+    border-color: var(--matterColorNegative);
+  }
+
+  @media (--viewportMedium) {
+    &:hover,
+    &:focus {
+      border-color: transparent;
+    }
   }
 }
 
 .menuLabelSelected {
-  composes: button marketplaceSearchFilterLabelFontStyles buttonText buttonBorders buttonColors from global;
-  letter-spacing: 0.2px;
-  font-weight: var(--fontWeightSemiBold);
-
-  padding: var(--marketplaceButtonSmallDesktopPadding);
-  width: auto;
-  height: auto;
-  min-height: 0;
+  /* Button borders */
   border-radius: var(--borderRadiusMedium);
   border: 1px solid var(--marketplaceColor);
+
+  /* Button colors: secondary */
+  background-color: var(--marketplaceColor);
+  color: var(--matterColorLight);
 
   &:hover,
   &:focus {
     border: 1px solid var(--marketplaceColorDark);
+  }
+  &:disabled {
+    background-color: var(--matterColorNegative);
+    color: var(--matterColorLight);
   }
 }
 
@@ -99,7 +154,7 @@
 }
 
 .clearMenuItem {
-  composes: h4 from global;
+  composes: textSmall from global;
   font-weight: var(--fontWeightMedium);
   color: var(--matterColorAnti);
 

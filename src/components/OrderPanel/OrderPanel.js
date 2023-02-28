@@ -18,7 +18,13 @@ import {
 import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
 import { userDisplayNameAsString } from '../../util/data';
-import { ModalInMobile, Button, AvatarSmall, H1, H2 } from '../../components';
+import {
+  getSupportedProcessesInfo,
+  isBookingProcess,
+  resolveLatestProcessName,
+} from '../../transactions/transaction';
+
+import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
 
 import css from './OrderPanel.module.css';
 
@@ -97,6 +103,8 @@ const OrderPanel = props => {
     fetchLineItemsError,
   } = props;
 
+  const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias || '';
+  const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const unitType = listing?.attributes?.publicData?.unitType;
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
@@ -122,10 +130,12 @@ const OrderPanel = props => {
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
 
-  const shouldHaveBookingTime = [LINE_ITEM_HOUR].includes(lineItemUnitType);
+  const shouldHaveBookingTime =
+    isBookingProcess(processName) && [LINE_ITEM_HOUR].includes(lineItemUnitType);
   const showBookingTimeForm = shouldHaveBookingTime && !isClosed && timeZone;
 
-  const shouldHaveBookingDates = [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
+  const shouldHaveBookingDates =
+    isBookingProcess(processName) && [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
   const showBookingDatesForm = shouldHaveBookingDates && !isClosed && timeZone;
 
   // The listing resource has a relationship: `currentStock`,
@@ -135,8 +145,12 @@ const OrderPanel = props => {
 
   // Show form only when stock is fully loaded. This avoids "Out of stock" UI by
   // default before all data has been downloaded.
-  const showProductOrderForm =
-    lineItemUnitType === LINE_ITEM_ITEM && typeof currentStock === 'number';
+  const shouldHaveProductOrder =
+    !isBookingProcess(processName) && [LINE_ITEM_ITEM].includes(lineItemUnitType);
+  const showProductOrderForm = shouldHaveProductOrder && typeof currentStock === 'number';
+
+  const supportedProcessesInfo = getSupportedProcessesInfo();
+  const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
 
   const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
 
@@ -256,11 +270,11 @@ const OrderPanel = props => {
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
           />
-        ) : (
+        ) : !isKnownProcess ? (
           <p className={css.errorSidebar}>
             <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
           </p>
-        )}
+        ) : null}
       </ModalInMobile>
       <div className={css.openOrderForm}>
         <div className={css.priceContainerInCTA}>
@@ -277,8 +291,7 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.closedListingButtonText" />
           </div>
         ) : (
-          <Button
-            rootClassName={css.orderButton}
+          <PrimaryButton
             onClick={() => openOrderModal(isOwnListing, isClosed, history, location)}
             disabled={isOutOfStock}
           >
@@ -287,7 +300,7 @@ const OrderPanel = props => {
             ) : (
               <FormattedMessage id="OrderPanel.ctaButtonMessage" />
             )}
-          </Button>
+          </PrimaryButton>
         )}
       </div>
     </div>

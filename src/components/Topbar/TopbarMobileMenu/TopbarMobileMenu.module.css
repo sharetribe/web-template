@@ -108,7 +108,7 @@
 }
 
 .createNewListingLink {
-  composes: button buttonFont buttonText marketplaceButtonBorders buttonColors from global;
+  composes: buttonPrimary from global;
 }
 
 .authenticationGreeting {

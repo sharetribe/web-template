@@ -342,7 +342,6 @@ const StripeConnectAccountFormComponent = props => {
               </p>
 
               <Button
-                className={css.submitButton}
                 type="submit"
                 inProgress={submitInProgress}
                 disabled={submitDisabled}

@@ -3,48 +3,6 @@
   display: inline-block;
 }
 
-.label {
-  composes: button marketplaceSearchFilterLabelFontStyles buttonText buttonBordersSecondary buttonColorsSecondary from global;
-  letter-spacing: 0.2px;
-
-  padding: var(--marketplaceButtonSmallDesktopPadding);
-  width: auto;
-  height: auto;
-  min-height: 0;
-  border-radius: var(--borderRadiusMedium);
-
-  &:focus {
-    outline: none;
-    background-color: var(--matterColorLight);
-    border-color: transparent;
-    text-decoration: none;
-    box-shadow: var(--boxShadowFilterButton);
-  }
-}
-
-.labelSelected {
-  composes: button marketplaceSearchFilterLabelFontStyles buttonText buttonBorders buttonColors from global;
-  letter-spacing: 0.2px;
-  font-weight: var(--fontWeightSemiBold);
-
-  padding: var(--marketplaceButtonSmallDesktopPadding);
-  width: auto;
-  height: auto;
-  min-height: 0;
-  border-radius: var(--borderRadiusMedium);
-  border: 1px solid var(--marketplaceColor);
-
-  &:hover,
-  &:focus {
-    border: 1px solid var(--marketplaceColorDark);
-  }
-}
-.labelEllipsis {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .popup {
   /* By default hide the content */
   display: block;

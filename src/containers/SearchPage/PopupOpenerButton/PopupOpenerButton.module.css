@@ -1,14 +1,7 @@
 @import '../../../styles/customMediaQueries.css';
 
-.sortBy {
-  margin-right: 9px;
-}
-
-.sortByDesktop {
-  margin-left: auto;
-}
-
-.sortByMenuLabel {
+.label,
+.labelSelected {
   display: inline-block;
   width: auto;
   height: 35px;
@@ -31,18 +24,11 @@
   text-align: center;
   text-decoration: none;
 
-  /* Button borders */
-  border: 1px solid var(--matterColorNegative);
-  border-radius: var(--borderRadiusMedium);
-
-  background-color: var(--matterColorLight);
-
   &:focus,
   &:hover {
     outline: none;
     box-shadow: var(--boxShadowFilterButton);
     text-decoration: none;
-    border-color: var(--matterColorAnti);
   }
 
   &:disabled {
@@ -59,10 +45,53 @@
     font-weight: var(--fontWeightMedium);
     font-size: 13px;
     line-height: 20px;
+  }
+}
 
+.label {
+  /* Button borders */
+  border: 1px solid var(--matterColorNegative);
+  border-radius: var(--borderRadiusMedium);
+
+  background-color: var(--matterColorLight);
+
+  &:hover,
+  &:focus {
+    border-color: var(--matterColorAnti);
+  }
+  &:disabled {
+    border-color: var(--matterColorNegative);
+  }
+
+  @media (--viewportMedium) {
     &:hover,
     &:focus {
       border-color: transparent;
     }
   }
+}
+
+.labelSelected {
+  /* Button borders */
+  border-radius: var(--borderRadiusMedium);
+  border: 1px solid var(--marketplaceColor);
+
+  /* Button colors: secondary */
+  background-color: var(--marketplaceColor);
+  color: var(--matterColorLight);
+
+  &:hover,
+  &:focus {
+    border: 1px solid var(--marketplaceColorDark);
+  }
+  &:disabled {
+    background-color: var(--matterColorNegative);
+    color: var(--matterColorLight);
+  }
+}
+
+.labelEllipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

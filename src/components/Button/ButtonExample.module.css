@@ -1,17 +1,17 @@
 .buttonLink {
-  composes: button buttonFont buttonText buttonBorders buttonColors from global;
+  composes: buttonDefault from global;
 }
 
 .buttonLinkPrimary {
-  composes: button buttonFont buttonText buttonBorders buttonColorsPrimary from global;
+  composes: buttonPrimary from global;
 }
 
 .buttonLinkSecondary {
-  composes: button buttonFont buttonText buttonBordersSecondary buttonColorsSecondary from global;
+  composes: buttonSecondary from global;
 }
 
 .customButton {
-  composes: button buttonFont buttonText buttonBorders buttonColors from global;
+  composes: buttonDefault from global;
 
   padding: 0;
   border-radius: 8px;

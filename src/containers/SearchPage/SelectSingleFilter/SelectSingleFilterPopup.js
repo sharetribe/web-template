@@ -64,7 +64,7 @@ class SelectSingleFilterPopup extends Component {
         onToggleActive={this.onToggleActive}
         isOpen={this.state.isOpen}
       >
-        <MenuLabel className={menuLabelClass}>{menuLabel}</MenuLabel>
+        <MenuLabel rootClassName={menuLabelClass}>{menuLabel}</MenuLabel>
         <MenuContent className={css.menuContent}>
           {options.map(option => {
             // check if this option is selected

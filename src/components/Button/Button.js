@@ -143,8 +143,23 @@ export const PrimaryButton = props => {
 };
 PrimaryButton.displayName = 'PrimaryButton';
 
+export const PrimaryButtonInline = props => {
+  const classes = classNames(props.rootClassName || css.primaryButtonInlineRoot, css.primaryButton);
+  return <Button {...props} rootClassName={classes} />;
+};
+PrimaryButtonInline.displayName = 'PrimaryButtonInline';
+
 export const SecondaryButton = props => {
   const classes = classNames(props.rootClassName || css.secondaryButtonRoot, css.secondaryButton);
+  return <Button {...props} rootClassName={classes} />;
+};
+SecondaryButton.displayName = 'SecondaryButton';
+
+export const SecondaryButtonInline = props => {
+  const classes = classNames(
+    props.rootClassName || css.secondaryButtonInlineRoot,
+    css.secondaryButtonInline
+  );
   return <Button {...props} rootClassName={classes} />;
 };
 SecondaryButton.displayName = 'SecondaryButton';

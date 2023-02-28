@@ -17,27 +17,6 @@
   transform: rotate(-180deg);
 }
 
-.menuLabel {
-  composes: button marketplaceSearchFilterLabelFontStyles buttonText buttonBordersSecondary buttonColorsSecondary from global;
-  letter-spacing: 0.2px;
-
-  padding: var(--marketplaceButtonSmallDesktopPadding);
-  width: auto;
-  height: auto;
-  min-height: 0;
-  border-radius: var(--borderRadiusMedium);
-
-  white-space: nowrap;
-
-  &:focus {
-    outline: none;
-    background-color: var(--matterColorLight);
-    border-color: transparent;
-    text-decoration: none;
-    box-shadow: var(--boxShadowFilterButton);
-  }
-}
-
 .menuContent {
   margin-top: 7px;
   padding-top: 24px;

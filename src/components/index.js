@@ -67,7 +67,7 @@ export { default as ValidationError } from './ValidationError/ValidationError';
 // First components that include only atomic components //
 //////////////////////////////////////////////////////////
 
-export { default as Button, PrimaryButton, SecondaryButton, InlineTextButton, SocialLoginButton } from './Button/Button';
+export { default as Button, PrimaryButton, PrimaryButtonInline, SecondaryButton, SecondaryButtonInline, InlineTextButton, SocialLoginButton } from './Button/Button';
 export { default as ImageFromFile } from './ImageFromFile/ImageFromFile';
 export { default as LinkedLogo } from './Logo/LinkedLogo';
 export { default as ListingLink } from './ListingLink/ListingLink';

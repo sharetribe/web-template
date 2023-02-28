@@ -6,6 +6,7 @@ import { injectIntl, intlShape } from '../../../util/reactIntl';
 
 import { OutsideClickHandler } from '../../../components';
 
+import PopupOpenerButton from '../PopupOpenerButton/PopupOpenerButton';
 import FilterForm from '../FilterForm/FilterForm';
 
 import css from './FilterPopup.module.css';
@@ -117,9 +118,6 @@ class FilterPopup extends Component {
     const classes = classNames(rootClassName || css.root, className);
     const popupClasses = classNames(css.popup, { [css.isOpen]: this.state.isOpen });
     const popupSizeClasses = popupClassName || css.popupSize;
-    const labelStyles = isSelected ? css.labelSelected : css.label;
-    const labelMaxWidthMaybe = labelMaxWidth ? { maxWidth: `${labelMaxWidth}px` } : {};
-    const labelMaxWidthStyles = labelMaxWidth ? css.labelEllipsis : null;
     const contentStyle = this.positionStyleForContent();
 
     return (
@@ -131,13 +129,13 @@ class FilterPopup extends Component {
             this.filter = node;
           }}
         >
-          <button
-            className={classNames(labelStyles, labelMaxWidthStyles)}
-            style={labelMaxWidthMaybe}
-            onClick={() => this.toggleOpen()}
+          <PopupOpenerButton
+            isSelected={isSelected}
+            labelMaxWidth={labelMaxWidth}
+            toggleOpen={this.toggleOpen}
           >
             {label}
-          </button>
+          </PopupOpenerButton>
           <div
             id={id}
             className={popupClasses}

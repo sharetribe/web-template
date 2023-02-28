@@ -259,13 +259,6 @@
   }
 }
 
-.orderButton {
-  composes: button buttonFont buttonText buttonBorders buttonColorsPrimary from global;
-
-  /* Clear padding that is set for link elements looking like buttons */
-  padding: 0;
-}
-
 .closedListingButton {
   border-left: 1px solid var(--matterColorNegative);
   width: 100%;
