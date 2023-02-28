@@ -198,10 +198,6 @@
   composes: marketplaceModalIconStyles from global;
 }
 
-.reminderModalLinkButton {
-  composes: button buttonFont buttonText buttonBorders buttonColorsPrimary from global;
-}
-
 .genericError {
   position: fixed;
   top: calc(var(--topbarHeight) + 15px);

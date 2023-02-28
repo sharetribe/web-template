@@ -18,13 +18,14 @@ const { Money } = sdkTypes;
 
 const getInitialValues = params => {
   const { listing } = params;
+  const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
   const price = listing?.attributes?.price;
   const currentStock = listing?.currentStock;
 
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
   const currentStockQuantity = currentStock?.attributes?.quantity;
-  const stock = currentStockQuantity != null ? currentStockQuantity : 1;
+  const stock = currentStockQuantity != null ? currentStockQuantity : isPublished ? 0 : 1;
 
   return { price, stock };
 };

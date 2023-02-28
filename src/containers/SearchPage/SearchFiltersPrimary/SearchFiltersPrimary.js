@@ -4,6 +4,8 @@ import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
 
+import PopupOpenerButton from '../PopupOpenerButton/PopupOpenerButton';
+
 import css from './SearchFiltersPrimary.module.css';
 
 const SearchFiltersPrimaryComponent = props => {
@@ -18,14 +20,10 @@ const SearchFiltersPrimaryComponent = props => {
 
   const classes = classNames(rootClassName || css.root, className);
 
-  const toggleSecondaryFiltersOpenButtonClasses =
-    isSecondaryFiltersOpen || selectedSecondaryFiltersCount > 0
-      ? css.searchFiltersPanelOpen
-      : css.searchFiltersPanelClosed;
   const toggleSecondaryFiltersOpenButton = toggleSecondaryFiltersOpen ? (
-    <button
-      className={toggleSecondaryFiltersOpenButtonClasses}
-      onClick={() => {
+    <PopupOpenerButton
+      isSelected={isSecondaryFiltersOpen || selectedSecondaryFiltersCount > 0}
+      toggleOpen={() => {
         toggleSecondaryFiltersOpen(!isSecondaryFiltersOpen);
       }}
     >
@@ -33,7 +31,7 @@ const SearchFiltersPrimaryComponent = props => {
         id="SearchFiltersPrimary.moreFiltersButton"
         values={{ count: selectedSecondaryFiltersCount }}
       />
-    </button>
+    </PopupOpenerButton>
   ) : null;
 
   return (

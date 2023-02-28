@@ -303,7 +303,7 @@
 }
 
 .edit {
-  composes: button buttonFont buttonText buttonBordersSecondary buttonColorsSecondary from global;
+  composes: buttonSecondary from global;
 
   /* TODO: Odd font-size */
   font-size: 14px;
@@ -325,24 +325,17 @@
 
 .openListingButton,
 .finishListingDraftLink {
-  composes: textXSmall button buttonText buttonBorders buttonColorsPrimary from global;
+  composes: buttonPrimaryInline from global;
+
   /* margin-top + n * line-height + margin-bottom => x * 6px */
   margin-top: 10px;
   margin-bottom: 8px;
 
   @media (--viewportMedium) {
-    line-height: 16px;
     /* margin-top + n * line-height + margin-bottom => x * 8px */
     margin-top: 10px;
     margin-bottom: 14px;
   }
-
-  /* Reset min-height from button styles */
-  min-height: 0;
-
-  width: 114px;
-  padding: 8px;
-  border-radius: var(--borderRadiusMedium);
 }
 
 .menu {
