@@ -14,8 +14,24 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+## [v11.1.0] 2023-02-28
+
 - [fix] AuthenticationPage.duck.js: had wrong asset name.
   [#173](https://github.com/sharetribe/ftw-product/pull/173)
+
+### Updates from upstream (FTW-daily v10.1.0)
+
+- [change] remove background-color from images (to allow opacity).
+  [#1590](https://github.com/sharetribe/ftw-daily/pull/1590)
+- [change] improve error handling possibilities on PageBuilder.
+  [#1589](https://github.com/sharetribe/ftw-daily/pull/1589)
+- [fix] AuthenticationPage.duck.js: had wrong asset name.
+  [#1588](https://github.com/sharetribe/ftw-daily/pull/1588)
+- [change] P.js: remove requirement for mandatory children.
+  [#1587](https://github.com/sharetribe/ftw-daily/pull/1587)
+
+  [v11.1.0]: https://github.com/sharetribe/ftw-product/compare/v11.0.0.../v11.1.0
+
 
 ## [v11.0.0] 2023-02-14
 
