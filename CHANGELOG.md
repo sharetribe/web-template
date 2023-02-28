@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Add keyword search option ot NotFoundPage.
+  [#103](https://github.com/sharetribe/ftw-x/pull/103)
 - [add] Add PrimaryButtonInline and SecondaryButtonInline. Refactor utility-classes away from
   Buttons. [#102](https://github.com/sharetribe/ftw-x/pull/102)
 - [add] Add Heading and H1...H6 components to main app. These are separate from PageBuilder. So that
