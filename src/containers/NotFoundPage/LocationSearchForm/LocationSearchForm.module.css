@@ -67,3 +67,51 @@
     margin-bottom: 0;
   }
 }
+
+/**
+ * Keyword search
+ */
+.keywordSearchWrapper {
+  position: relative;
+  display: flex;
+}
+
+.keywordInput {
+  height: 69px;
+  border: 0;
+
+  &:hover,
+  &:focus {
+    outline: none;
+    border: 0;
+    box-shadow: none;
+  }
+}
+
+.searchSubmit {
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    outline: none;
+
+    & .iconSvgGroup {
+      stroke: var(--matterColor);
+    }
+  }
+}
+
+.iconSvg {
+  margin: auto;
+}
+
+.iconSvgGroup {
+  stroke: var(--marketplaceColor);
+  stroke-width: 2.5px;
+
+  @media (--viewportMedium) {
+    stroke-width: 2px;
+  }
+}
