@@ -65,8 +65,8 @@ TermsOfServicePageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { pageAssetsData, inProgress } = state.hostedAssets || {};
-  return { pageAssetsData, inProgress };
+  const { pageAssetsData, inProgress, error } = state.hostedAssets || {};
+  return { pageAssetsData, inProgress, error };
 };
 
 // Note: it is important that the withRouter HOC is **outside** the
