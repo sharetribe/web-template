@@ -9,6 +9,7 @@ import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { createResourceLocatorString } from '../../util/routes';
+import { isMainSearchTypeKeywords } from '../../util/search';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 
 import {
@@ -37,16 +38,24 @@ export class NotFoundPageComponent extends Component {
   }
 
   render() {
-    const { history, routeConfiguration, marketplaceName, intl, scrollingDisabled } = this.props;
+    const {
+      history,
+      routeConfiguration,
+      marketplaceName,
+      isKeywordSearch,
+      intl,
+      scrollingDisabled,
+    } = this.props;
 
     const title = intl.formatMessage({
       id: 'NotFoundPage.title',
     });
 
     const handleSearchSubmit = values => {
-      const { search, selectedPlace } = values.location;
-      const { origin, bounds } = selectedPlace;
-      const searchParams = { address: search, origin, bounds };
+      const { keywords, location } = values;
+      const { search, selectedPlace } = location || {};
+      const { origin, bounds } = selectedPlace || {};
+      const searchParams = keywords ? { keywords } : { address: search, origin, bounds };
       history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
     };
 
@@ -66,7 +75,11 @@ export class NotFoundPageComponent extends Component {
                 <p className={css.description}>
                   <FormattedMessage id="NotFoundPage.description" values={{ marketplaceName }} />
                 </p>
-                <LocationSearchForm className={css.searchForm} onSubmit={handleSearchSubmit} />
+                <LocationSearchForm
+                  className={css.searchForm}
+                  isKeywordSearch={isKeywordSearch}
+                  onSubmit={handleSearchSubmit}
+                />
               </div>
             </div>
           </LayoutWrapperMain>
@@ -86,6 +99,7 @@ NotFoundPageComponent.defaultProps = {
 NotFoundPageComponent.propTypes = {
   scrollingDisabled: bool.isRequired,
   marketplaceName: string.isRequired,
+  isKeywordSearch: bool.isRequired,
 
   // context object from StaticRouter, injected by the withRouter wrapper
   staticContext: object,
@@ -112,6 +126,7 @@ const EnhancedNotFoundPage = props => {
     <NotFoundPageComponent
       routeConfiguration={routeConfiguration}
       marketplaceName={config.marketplaceName}
+      isKeywordSearch={isMainSearchTypeKeywords(config)}
       history={history}
       intl={intl}
       {...props}
