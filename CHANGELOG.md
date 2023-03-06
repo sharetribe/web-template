@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Add isRequired handler for CustomFieldMultiEnum.
+  [#105](https://github.com/sharetribe/ftw-x/pull/105)
 - [add] Add keyword search option ot NotFoundPage.
   [#103](https://github.com/sharetribe/ftw-x/pull/103)
 - [add] Add PrimaryButtonInline and SecondaryButtonInline. Refactor utility-classes away from
@@ -299,7 +301,6 @@ way to update this template, but currently, we follow a pattern:
   [#1587](https://github.com/sharetribe/ftw-daily/pull/1587)
 
   [v11.1.0]: https://github.com/sharetribe/ftw-product/compare/v11.0.0.../v11.1.0
-
 
 ## [v11.0.0] 2023-02-14
 
