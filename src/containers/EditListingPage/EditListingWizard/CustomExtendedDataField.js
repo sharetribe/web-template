@@ -9,7 +9,7 @@ import {
   SCHEMA_TYPE_BOOLEAN,
 } from '../../../util/types';
 import { useIntl } from '../../../util/reactIntl';
-import { required } from '../../../util/validators';
+import { required, nonEmptyArray } from '../../../util/validators';
 // Import shared components
 import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '../../../components';
 // Import modules from this directory
@@ -47,16 +47,21 @@ const CustomFieldEnum = props => {
 };
 
 const CustomFieldMultiEnum = props => {
-  const { name, fieldConfig } = props;
+  const { name, fieldConfig, defaultRequiredMessage } = props;
   const { schemaOptions = [], editListingPageConfig } = fieldConfig || {};
+  const { label, isRequired, requiredMessage } = editListingPageConfig || {};
+  const validateMaybe = isRequired
+    ? { validate: nonEmptyArray(requiredMessage || defaultRequiredMessage) }
+    : {};
 
   return schemaOptions ? (
     <FieldCheckboxGroup
       className={css.customField}
       id={name}
       name={name}
-      label={editListingPageConfig?.label}
+      label={label}
       options={createFilterOptions(schemaOptions)}
+      {...validateMaybe}
     />
   ) : null;
 };
