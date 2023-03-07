@@ -6,11 +6,14 @@ import React, { useEffect } from 'react';
 import { node, number, string, shape } from 'prop-types';
 import { compose } from 'redux';
 
-import { FormattedMessage } from '../../util/reactIntl';
-import { withViewport } from '../../util/uiHelpers';
-import { LayoutWrapperSideNav } from '../../components';
+import { FormattedMessage } from '../../../util/reactIntl';
+import { withViewport } from '../../../util/uiHelpers';
+
+import { TabNav } from '../../../components';
 
 import { createGlobalState } from './hookGlobalState';
+
+import css from './LayoutSideNavigation.module.css';
 
 const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
 
@@ -19,8 +22,8 @@ const initialScrollState = { scrollLeft: 0 };
 const { useGlobalState } = createGlobalState(initialScrollState);
 
 // Horizontal scroll animation using element.scrollTo()
-const scrollToTab = (currentTab, scrollLeft, setScrollLeft) => {
-  const el = document.querySelector(`#${currentTab}Tab`);
+const scrollToTab = (currentPage, scrollLeft, setScrollLeft) => {
+  const el = document.querySelector(`#${currentPage}Tab`);
 
   if (el) {
     // el.scrollIntoView doesn't work with Safari and it considers vertical positioning too.
@@ -58,7 +61,7 @@ const scrollToTab = (currentTab, scrollLeft, setScrollLeft) => {
 const LayoutWrapperAccountSettingsSideNavComponent = props => {
   const [scrollLeft, setScrollLeft] = useGlobalState('scrollLeft');
   useEffect(() => {
-    const { currentTab, viewport } = props;
+    const { currentPage, viewport } = props;
     let scrollTimeout = null;
 
     const { width } = viewport;
@@ -68,13 +71,13 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
     // Check if scrollToTab call is needed (tab is not visible on mobile)
     if (hasHorizontalTabLayout) {
       scrollTimeout = window.setTimeout(() => {
-        scrollToTab(currentTab, scrollLeft, setScrollLeft);
+        scrollToTab(currentPage, scrollLeft, setScrollLeft);
       }, 300);
     }
 
     return () => {
       // Update scroll position when unmounting
-      const el = document.querySelector(`#${currentTab}Tab`);
+      const el = document.querySelector(`#${currentPage}Tab`);
       setScrollLeft(el.parentElement.scrollLeft);
       if (scrollTimeout) {
         clearTimeout(scrollTimeout);
@@ -82,12 +85,12 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
     };
   });
 
-  const { currentTab } = props;
+  const { currentPage } = props;
 
   const tabs = [
     {
       text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.contactDetailsTabTitle" />,
-      selected: currentTab === 'ContactDetailsPage',
+      selected: currentPage === 'ContactDetailsPage',
       id: 'ContactDetailsPageTab',
       linkProps: {
         name: 'ContactDetailsPage',
@@ -95,7 +98,7 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
     },
     {
       text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.passwordTabTitle" />,
-      selected: currentTab === 'PasswordChangePage',
+      selected: currentPage === 'PasswordChangePage',
       id: 'PasswordChangePageTab',
       linkProps: {
         name: 'PasswordChangePage',
@@ -103,7 +106,7 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
     },
     {
       text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentsTabTitle" />,
-      selected: currentTab === 'StripePayoutPage',
+      selected: currentPage === 'StripePayoutPage',
       id: 'StripePayoutPageTab',
       linkProps: {
         name: 'StripePayoutPage',
@@ -111,7 +114,7 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
     },
     {
       text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentMethodsTabTitle" />,
-      selected: currentTab === 'PaymentMethodsPage',
+      selected: currentPage === 'PaymentMethodsPage',
       id: 'PaymentMethodsPageTab',
       linkProps: {
         name: 'PaymentMethodsPage',
@@ -119,21 +122,21 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
     },
   ];
 
-  return <LayoutWrapperSideNav tabs={tabs} />;
+  return <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />;
 };
 
 LayoutWrapperAccountSettingsSideNavComponent.defaultProps = {
   className: null,
   rootClassName: null,
   children: null,
-  currentTab: null,
+  currentPage: null,
 };
 
 LayoutWrapperAccountSettingsSideNavComponent.propTypes = {
   children: node,
   className: string,
   rootClassName: string,
-  currentTab: string,
+  currentPage: string,
 
   // from withViewport
   viewport: shape({

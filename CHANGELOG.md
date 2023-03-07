@@ -14,6 +14,18 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Make old pages to use LayoutComposer. Remove old layout components:
+
+  - LayoutSingleColumn (moved under LayoutComposer)
+  - LayoutSideNavigation (moved under LayoutComposer)
+  - LayoutWrapperTopbar
+  - LayoutWrapperMain
+  - LayoutWrapperSideNav
+  - LayoutWrapperAccountSettingsSideNav (moved under LayoutComposer)
+  - LayoutWrapperFooter
+
+  [#106](https://github.com/sharetribe/ftw-x/pull/106)
+
 - [add] Add isRequired handler for CustomFieldMultiEnum.
   [#105](https://github.com/sharetribe/ftw-x/pull/105)
 - [add] Add keyword search option ot NotFoundPage.

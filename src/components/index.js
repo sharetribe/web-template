@@ -74,14 +74,6 @@ export { default as ListingLink } from './ListingLink/ListingLink';
 export { default as PaginationLinks } from './PaginationLinks/PaginationLinks';
 export { default as ReviewRating } from './ReviewRating/ReviewRating';
 
-// Layout helpers
-export { default as LayoutWrapperFooter } from './LayoutWrapperFooter/LayoutWrapperFooter';
-export { default as LayoutWrapperMain } from './LayoutWrapperMain/LayoutWrapperMain';
-export { default as LayoutWrapperSideNav } from './LayoutWrapperSideNav/LayoutWrapperSideNav';
-export { default as LayoutWrapperTopbar } from './LayoutWrapperTopbar/LayoutWrapperTopbar';
-export { default as LayoutSideNavigation } from './LayoutSideNavigation/LayoutSideNavigation';
-export { default as LayoutSingleColumn } from './LayoutSingleColumn/LayoutSingleColumn';
-
 // Menu
 export { default as MenuItem } from './MenuItem/MenuItem';
 export { default as MenuContent } from './MenuContent/MenuContent';
@@ -139,7 +131,7 @@ export { default as StripeConnectAccountForm } from './StripeConnectAccountForm/
 // Page sections and modal content wrappers //
 //////////////////////////////////////////////
 
-export { default as LayoutWrapperAccountSettingsSideNav } from './LayoutWrapperAccountSettingsSideNav/LayoutWrapperAccountSettingsSideNav';
+export { default as LayoutComposer, LayoutSingleColumn, LayoutSideNavigation } from './LayoutComposer';
 export { default as ModalMissingInformation } from './ModalMissingInformation/ModalMissingInformation';
 export { default as Footer } from './Footer/Footer';
 export { default as Topbar } from './Topbar/Topbar';

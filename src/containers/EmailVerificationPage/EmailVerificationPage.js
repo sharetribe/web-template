@@ -14,13 +14,11 @@ import { isScrollingDisabled } from '../../ducks/UI.duck';
 import {
   Page,
   ResponsiveBackgroundImageContainer,
-  LayoutSingleColumn,
-  LayoutWrapperTopbar,
-  LayoutWrapperMain,
-  LayoutWrapperFooter,
   Footer,
   NamedRedirect,
+  LayoutSingleColumn,
 } from '../../components';
+
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import EmailVerificationForm from './EmailVerificationForm/EmailVerificationForm';
@@ -82,37 +80,33 @@ export const EmailVerificationPageComponent = props => {
       scrollingDisabled={scrollingDisabled}
       referrer="origin"
     >
-      <LayoutSingleColumn>
-        <LayoutWrapperTopbar>
-          <TopbarContainer />
-        </LayoutWrapperTopbar>
-        <LayoutWrapperMain className={css.layoutWrapperMain}>
-          <ResponsiveBackgroundImageContainer
-            className={css.root}
-            childrenWrapperClassName={css.contentContainer}
-            as="section"
-            image={config.branding.brandImageURL}
-            sizes="100%"
-            useOverlay
-          >
-            <div className={css.content}>
-              {user.id ? (
-                <EmailVerificationForm
-                  initialValues={initialValues}
-                  onSubmit={submitVerification}
-                  currentUser={user}
-                  inProgress={emailVerificationInProgress}
-                  verificationError={verificationError}
-                />
-              ) : (
-                <FormattedMessage id="EmailVerificationPage.loadingUserInformation" />
-              )}
-            </div>
-          </ResponsiveBackgroundImageContainer>
-        </LayoutWrapperMain>
-        <LayoutWrapperFooter>
-          <Footer />
-        </LayoutWrapperFooter>
+      <LayoutSingleColumn
+        mainColumnClassName={css.layoutWrapperMain}
+        topbar={<TopbarContainer />}
+        footer={<Footer />}
+      >
+        <ResponsiveBackgroundImageContainer
+          className={css.root}
+          childrenWrapperClassName={css.contentContainer}
+          as="section"
+          image={config.branding.brandImageURL}
+          sizes="100%"
+          useOverlay
+        >
+          <div className={css.content}>
+            {user.id ? (
+              <EmailVerificationForm
+                initialValues={initialValues}
+                onSubmit={submitVerification}
+                currentUser={user}
+                inProgress={emailVerificationInProgress}
+                verificationError={verificationError}
+              />
+            ) : (
+              <FormattedMessage id="EmailVerificationPage.loadingUserInformation" />
+            )}
+          </div>
+        </ResponsiveBackgroundImageContainer>
       </LayoutSingleColumn>
     </Page>
   );
