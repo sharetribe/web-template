@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Terms: add translation key, NotFoundPage: fix tests.
+  [#107](https://github.com/sharetribe/ftw-x/pull/107)
 - [change] Make old pages to use LayoutComposer. Remove old layout components:
 
   - LayoutSingleColumn (moved under LayoutComposer)
