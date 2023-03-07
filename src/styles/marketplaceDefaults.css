@@ -169,7 +169,6 @@ body {
 
   /* A non-standard feature: https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth */
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: antialiased;
   font-smoothing: antialiased;
 
   text-rendering: optimizeSpeed;
