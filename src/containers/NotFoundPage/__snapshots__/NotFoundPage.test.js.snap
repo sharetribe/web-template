@@ -45,6 +45,7 @@ exports[`NotFoundPageComponent matches snapshot 1`] = `
         </p>
         <injectIntl(LocationSearchFormComponent)
           className="searchForm"
+          isKeywordSearch={false}
           onSubmit={[Function]}
         />
       </div>
