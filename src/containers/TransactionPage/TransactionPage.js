@@ -37,15 +37,13 @@ import {
   NamedLink,
   NamedRedirect,
   Page,
-  LayoutSingleColumn,
-  LayoutWrapperTopbar,
-  LayoutWrapperMain,
-  LayoutWrapperFooter,
   Footer,
   UserDisplayName,
   OrderBreakdown,
   OrderPanel,
+  LayoutSingleColumn,
 } from '../../components';
+
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import { getStateData } from './TransactionPage.stateData';
@@ -327,7 +325,7 @@ export const TransactionPageComponent = props => {
     <p className={css.error}>
       <FormattedMessage id={`${fetchErrorMessage}`} />
     </p>
-  ) : !process ? (
+  ) : transaction && !process ? (
     <div className={css.error}>
       <FormattedMessage id="TransactionPage.unknownTransactionProcess" />
     </div>
@@ -499,45 +497,37 @@ export const TransactionPageComponent = props => {
       title={intl.formatMessage({ id: 'TransactionPage.schemaTitle' }, { title: listingTitle })}
       scrollingDisabled={scrollingDisabled}
     >
-      <LayoutSingleColumn>
-        <LayoutWrapperTopbar>
-          <TopbarContainer />
-        </LayoutWrapperTopbar>
-        <LayoutWrapperMain>
-          <div className={css.root}>{panel}</div>
-          <ReviewModal
-            id="ReviewOrderModal"
-            isOpen={isReviewModalOpen}
-            onCloseModal={() => setReviewModalOpen(false)}
+      <LayoutSingleColumn topbar={<TopbarContainer />} footer={<Footer />}>
+        <div className={css.root}>{panel}</div>
+        <ReviewModal
+          id="ReviewOrderModal"
+          isOpen={isReviewModalOpen}
+          onCloseModal={() => setReviewModalOpen(false)}
+          onManageDisableScrolling={onManageDisableScrolling}
+          onSubmitReview={onSubmitReview}
+          revieweeName={otherUserDisplayName}
+          reviewSent={reviewSubmitted}
+          sendReviewInProgress={sendReviewInProgress}
+          sendReviewError={sendReviewError}
+          marketplaceName={config.marketplaceName}
+        />
+        {process?.transitions?.DISPUTE ? (
+          <DisputeModal
+            id="DisputeOrderModal"
+            isOpen={isDisputeModalOpen}
+            onCloseModal={() => setDisputeModalOpen(false)}
             onManageDisableScrolling={onManageDisableScrolling}
-            onSubmitReview={onSubmitReview}
-            revieweeName={otherUserDisplayName}
-            reviewSent={reviewSubmitted}
-            sendReviewInProgress={sendReviewInProgress}
-            sendReviewError={sendReviewError}
-            marketplaceName={config.marketplaceName}
+            onDisputeOrder={onDisputeOrder(
+              transaction?.id,
+              process.transitions.DISPUTE,
+              onTransition,
+              setDisputeSubmitted
+            )}
+            disputeSubmitted={disputeSubmitted}
+            disputeInProgress={transitionInProgress === process.transitions.DISPUTE}
+            disputeError={transitionError}
           />
-          {process?.transitions?.DISPUTE ? (
-            <DisputeModal
-              id="DisputeOrderModal"
-              isOpen={isDisputeModalOpen}
-              onCloseModal={() => setDisputeModalOpen(false)}
-              onManageDisableScrolling={onManageDisableScrolling}
-              onDisputeOrder={onDisputeOrder(
-                transaction?.id,
-                process.transitions.DISPUTE,
-                onTransition,
-                setDisputeSubmitted
-              )}
-              disputeSubmitted={disputeSubmitted}
-              disputeInProgress={transitionInProgress === process.transitions.DISPUTE}
-              disputeError={transitionError}
-            />
-          ) : null}
-        </LayoutWrapperMain>
-        <LayoutWrapperFooter className={css.footer}>
-          <Footer />
-        </LayoutWrapperFooter>
+        ) : null}
       </LayoutSingleColumn>
     </Page>
   );
