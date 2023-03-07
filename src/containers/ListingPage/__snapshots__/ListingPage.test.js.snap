@@ -27,31 +27,262 @@ exports[`ListingPage matches snapshot 1`] = `
 >
   <LayoutSingleColumn
     className="pageRoot"
+    footer={<injectIntl(Footer) />}
     rootClassName={null}
+    topbar={<withRouter(Connect(TopbarContainerComponent)) />}
   >
-    <LayoutWrapperTopbar
-      className={null}
-      rootClassName={null}
+    <SectionHero
+      editParams={
+        Object {
+          "id": "listing1",
+          "slug": "listing1-title",
+          "tab": "details",
+          "type": "edit",
+        }
+      }
+      handleViewPhotosClick={[Function]}
+      imageCarouselOpen={false}
+      isOwnListing={false}
+      listing={
+        Object {
+          "attributes": Object {
+            "deleted": false,
+            "description": "listing1 description",
+            "geolocation": LatLng {
+              "_sdkType": "LatLng",
+              "lat": 40,
+              "lng": 60,
+            },
+            "price": Money {
+              "_sdkType": "Money",
+              "amount": 5500,
+              "currency": "USD",
+            },
+            "publicData": Object {},
+            "state": "published",
+            "title": "listing1 title",
+          },
+          "author": Object {
+            "attributes": Object {
+              "banned": false,
+              "deleted": false,
+              "profile": Object {
+                "abbreviatedName": "TT",
+                "displayName": "user-1 display name",
+              },
+            },
+            "id": UUID {
+              "_sdkType": "UUID",
+              "uuid": "user-1",
+            },
+            "type": "user",
+          },
+          "id": UUID {
+            "_sdkType": "UUID",
+            "uuid": "listing1",
+          },
+          "images": Array [],
+          "type": "listing",
+        }
+      }
+      onImageCarouselClose={[Function]}
+      onManageDisableScrolling={[Function]}
+      title="listing1 title"
+    />
+    <div
+      className="contentWrapperForHeroLayout"
     >
-      <withRouter(Connect(TopbarContainerComponent)) />
-    </LayoutWrapperTopbar>
-    <LayoutWrapperMain
-      className={null}
-      rootClassName={null}
-    >
-      <div>
-        <SectionHero
-          editParams={
+      <div
+        className="mainColumnForHeroLayout"
+      >
+        <div
+          className="mobileHeading"
+        >
+          <H4
+            as="h1"
+            className="orderPanelTitle"
+            rootClassName={null}
+          >
+            <MemoizedFormattedMessage
+              id="ListingPage.orderTitle"
+              values={
+                Object {
+                  "title": <span>
+                    
+                    listing1
+                     
+                    title
+                    
+                  </span>,
+                }
+              }
+            />
+          </H4>
+        </div>
+        <SectionTextMaybe
+          showAsIngress={true}
+          text="listing1 description"
+        />
+        <SectionDetailsMaybe
+          intl={
             Object {
-              "id": "listing1",
-              "slug": "listing1-title",
-              "tab": "details",
-              "type": "edit",
+              "formatDate": [Function],
+              "formatDateTimeRange": [Function],
+              "formatMessage": [Function],
+              "formatNumber": [Function],
+              "formatPlural": [Function],
+              "formatRelativeTime": [Function],
+              "formatTime": [Function],
+              "now": [Function],
             }
           }
-          handleViewPhotosClick={[Function]}
-          imageCarouselOpen={false}
-          isOwnListing={false}
+          listingConfig={
+            Object {
+              "listingExtendedData": Array [
+                Object {
+                  "includeForListingTypes": Array [
+                    "sell-bicycles",
+                  ],
+                  "indexForSearch": true,
+                  "key": "category",
+                  "listingPageConfig": Object {
+                    "isDetail": true,
+                    "label": "Category",
+                  },
+                  "schemaOptions": Array [
+                    Object {
+                      "label": "Cat 1",
+                      "option": "cat_1",
+                    },
+                    Object {
+                      "label": "Cat 2",
+                      "option": "cat_2",
+                    },
+                  ],
+                  "schemaType": "enum",
+                  "scope": "public",
+                },
+                Object {
+                  "includeForListingTypes": Array [
+                    "rent-bicycles-daily",
+                    "rent-bicycles-nightly",
+                    "rent-bicycles-hourly",
+                  ],
+                  "indexForSearch": true,
+                  "key": "amenities",
+                  "listingPageConfig": Object {
+                    "group": "secondary",
+                    "label": "Amenities",
+                    "searchMode": "has_all",
+                  },
+                  "schemaOptions": Array [
+                    Object {
+                      "label": "Feat 1",
+                      "option": "feat_1",
+                    },
+                    Object {
+                      "label": "Feat 2",
+                      "option": "feat_2",
+                    },
+                    Object {
+                      "label": "Feat 3",
+                      "option": "feat_3",
+                    },
+                  ],
+                  "schemaType": "multi-enum",
+                  "scope": "public",
+                },
+              ],
+            }
+          }
+          metadata={Object {}}
+          publicData={Object {}}
+        />
+        <SectionMultiEnumMaybe
+          heading="Amenities"
+          key="amenities"
+          options={
+            Array [
+              Object {
+                "key": "feat_1",
+                "label": "Feat 1",
+              },
+              Object {
+                "key": "feat_2",
+                "label": "Feat 2",
+              },
+              Object {
+                "key": "feat_3",
+                "label": "Feat 3",
+              },
+            ]
+          }
+        />
+        <SectionMapMaybe
+          className={null}
+          geolocation={
+            LatLng {
+              "_sdkType": "LatLng",
+              "lat": 40,
+              "lng": 60,
+            }
+          }
+          listingId={
+            UUID {
+              "_sdkType": "UUID",
+              "uuid": "listing1",
+            }
+          }
+          mapsConfig={
+            Object {
+              "fuzzy": Object {
+                "circleColor": "#c0392b",
+                "defaultZoomLevel": 13,
+                "enabled": false,
+                "offset": 500,
+              },
+              "googleMapsAPIKey": undefined,
+              "mapProvider": "MAPBOX",
+              "mapboxAccessToken": undefined,
+              "search": Object {
+                "currentLocationBoundsDistance": 1000,
+                "defaults": Array [],
+                "sortSearchByDistance": false,
+                "suggestCurrentLocation": true,
+              },
+            }
+          }
+          publicData={Object {}}
+          rootClassName={null}
+        />
+        <SectionReviews
+          fetchReviewsError={null}
+          reviews={Array []}
+        />
+        <SectionAuthorMaybe
+          authorDisplayName="user-1 display name"
+          currentUser={
+            Object {
+              "attributes": Object {
+                "banned": false,
+                "deleted": false,
+                "email": "user-2@example.com",
+                "emailVerified": true,
+                "profile": Object {
+                  "abbreviatedName": "user-2 abbreviated name",
+                  "displayName": "user-2 display name",
+                  "firstName": "user-2 first name",
+                  "lastName": "user-2 last name",
+                },
+              },
+              "id": UUID {
+                "_sdkType": "UUID",
+                "uuid": "user-2",
+              },
+              "type": "currentUser",
+            }
+          }
+          isInquiryModalOpen={false}
           listing={
             Object {
               "attributes": Object {
@@ -94,400 +325,152 @@ exports[`ListingPage matches snapshot 1`] = `
               "type": "listing",
             }
           }
-          onImageCarouselClose={[Function]}
+          onCloseInquiryModal={[Function]}
+          onContactUser={[Function]}
           onManageDisableScrolling={[Function]}
+          onSubmitInquiry={[Function]}
+          sendInquiryError={null}
+          sendInquiryInProgress={false}
           title="listing1 title"
         />
-        <div
-          className="contentWrapperForHeroLayout"
-        >
-          <div
-            className="mainColumnForHeroLayout"
-          >
-            <div
-              className="mobileHeading"
+      </div>
+      <div
+        className="orderColumnForHeroLayout"
+      >
+        <withRouter(injectIntl(OrderPanel))
+          author={
+            Object {
+              "attributes": Object {
+                "banned": false,
+                "deleted": false,
+                "profile": Object {
+                  "abbreviatedName": "TT",
+                  "displayName": "user-1 display name",
+                },
+              },
+              "id": UUID {
+                "_sdkType": "UUID",
+                "uuid": "user-1",
+              },
+              "type": "user",
+            }
+          }
+          authorLink={
+            <NamedLink
+              className="authorNameLink"
+              name="ListingPage"
+              params={
+                Object {
+                  "id": "listing1",
+                  "slug": "listing1-title",
+                }
+              }
+              to={
+                Object {
+                  "hash": "#author",
+                }
+              }
             >
-              <H4
-                as="h1"
-                className="orderPanelTitle"
-                rootClassName={null}
-              >
-                <MemoizedFormattedMessage
-                  id="ListingPage.orderTitle"
-                  values={
-                    Object {
-                      "title": <span>
-                        
-                        listing1
-                         
-                        title
-                        
-                      </span>,
-                    }
-                  }
-                />
-              </H4>
-            </div>
-            <SectionTextMaybe
-              showAsIngress={true}
-              text="listing1 description"
-            />
-            <SectionDetailsMaybe
-              intl={
-                Object {
-                  "formatDate": [Function],
-                  "formatDateTimeRange": [Function],
-                  "formatMessage": [Function],
-                  "formatNumber": [Function],
-                  "formatPlural": [Function],
-                  "formatRelativeTime": [Function],
-                  "formatTime": [Function],
-                  "now": [Function],
-                }
-              }
-              listingConfig={
-                Object {
-                  "listingExtendedData": Array [
-                    Object {
-                      "includeForListingTypes": Array [
-                        "sell-bicycles",
-                      ],
-                      "indexForSearch": true,
-                      "key": "category",
-                      "listingPageConfig": Object {
-                        "isDetail": true,
-                        "label": "Category",
-                      },
-                      "schemaOptions": Array [
-                        Object {
-                          "label": "Cat 1",
-                          "option": "cat_1",
-                        },
-                        Object {
-                          "label": "Cat 2",
-                          "option": "cat_2",
-                        },
-                      ],
-                      "schemaType": "enum",
-                      "scope": "public",
-                    },
-                    Object {
-                      "includeForListingTypes": Array [
-                        "rent-bicycles-daily",
-                        "rent-bicycles-nightly",
-                        "rent-bicycles-hourly",
-                      ],
-                      "indexForSearch": true,
-                      "key": "amenities",
-                      "listingPageConfig": Object {
-                        "group": "secondary",
-                        "label": "Amenities",
-                        "searchMode": "has_all",
-                      },
-                      "schemaOptions": Array [
-                        Object {
-                          "label": "Feat 1",
-                          "option": "feat_1",
-                        },
-                        Object {
-                          "label": "Feat 2",
-                          "option": "feat_2",
-                        },
-                        Object {
-                          "label": "Feat 3",
-                          "option": "feat_3",
-                        },
-                      ],
-                      "schemaType": "multi-enum",
-                      "scope": "public",
-                    },
-                  ],
-                }
-              }
-              metadata={Object {}}
-              publicData={Object {}}
-            />
-            <SectionMultiEnumMaybe
-              heading="Amenities"
-              key="amenities"
-              options={
-                Array [
-                  Object {
-                    "key": "feat_1",
-                    "label": "Feat 1",
-                  },
-                  Object {
-                    "key": "feat_2",
-                    "label": "Feat 2",
-                  },
-                  Object {
-                    "key": "feat_3",
-                    "label": "Feat 3",
-                  },
-                ]
-              }
-            />
-            <SectionMapMaybe
-              className={null}
-              geolocation={
-                LatLng {
+              user-1 display name
+            </NamedLink>
+          }
+          className="orderPanel"
+          dayCountAvailableForBooking={90}
+          fetchLineItemsError={null}
+          fetchLineItemsInProgress={false}
+          isOwnListing={false}
+          lineItems={null}
+          listing={
+            Object {
+              "attributes": Object {
+                "deleted": false,
+                "description": "listing1 description",
+                "geolocation": LatLng {
                   "_sdkType": "LatLng",
                   "lat": 40,
                   "lng": 60,
-                }
-              }
-              listingId={
-                UUID {
+                },
+                "price": Money {
+                  "_sdkType": "Money",
+                  "amount": 5500,
+                  "currency": "USD",
+                },
+                "publicData": Object {},
+                "state": "published",
+                "title": "listing1 title",
+              },
+              "author": Object {
+                "attributes": Object {
+                  "banned": false,
+                  "deleted": false,
+                  "profile": Object {
+                    "abbreviatedName": "TT",
+                    "displayName": "user-1 display name",
+                  },
+                },
+                "id": UUID {
                   "_sdkType": "UUID",
-                  "uuid": "listing1",
-                }
-              }
-              mapsConfig={
+                  "uuid": "user-1",
+                },
+                "type": "user",
+              },
+              "id": UUID {
+                "_sdkType": "UUID",
+                "uuid": "listing1",
+              },
+              "images": Array [],
+              "type": "listing",
+            }
+          }
+          marketplaceCurrency="USD"
+          marketplaceName="MarketplaceX"
+          monthlyTimeSlots={null}
+          onContactUser={[Function]}
+          onFetchTimeSlots={[Function]}
+          onFetchTransactionLineItems={[Function]}
+          onManageDisableScrolling={[Function]}
+          onSubmit={[Function]}
+          title={
+            <Memo(MemoizedFormattedMessage)
+              id="ListingPage.orderTitle"
+              values={
                 Object {
-                  "fuzzy": Object {
-                    "circleColor": "#c0392b",
-                    "defaultZoomLevel": 13,
-                    "enabled": false,
-                    "offset": 500,
-                  },
-                  "googleMapsAPIKey": undefined,
-                  "mapProvider": "MAPBOX",
-                  "mapboxAccessToken": undefined,
-                  "search": Object {
-                    "currentLocationBoundsDistance": 1000,
-                    "defaults": Array [],
-                    "sortSearchByDistance": false,
-                    "suggestCurrentLocation": true,
-                  },
+                  "title": <span>
+                    
+                    listing1
+                     
+                    title
+                    
+                  </span>,
                 }
               }
-              publicData={Object {}}
+            />
+          }
+          titleDesktop={
+            <H4
+              as="h1"
+              className="orderPanelTitle"
               rootClassName={null}
-            />
-            <SectionReviews
-              fetchReviewsError={null}
-              reviews={Array []}
-            />
-            <SectionAuthorMaybe
-              authorDisplayName="user-1 display name"
-              currentUser={
-                Object {
-                  "attributes": Object {
-                    "banned": false,
-                    "deleted": false,
-                    "email": "user-2@example.com",
-                    "emailVerified": true,
-                    "profile": Object {
-                      "abbreviatedName": "user-2 abbreviated name",
-                      "displayName": "user-2 display name",
-                      "firstName": "user-2 first name",
-                      "lastName": "user-2 last name",
-                    },
-                  },
-                  "id": UUID {
-                    "_sdkType": "UUID",
-                    "uuid": "user-2",
-                  },
-                  "type": "currentUser",
-                }
-              }
-              isInquiryModalOpen={false}
-              listing={
-                Object {
-                  "attributes": Object {
-                    "deleted": false,
-                    "description": "listing1 description",
-                    "geolocation": LatLng {
-                      "_sdkType": "LatLng",
-                      "lat": 40,
-                      "lng": 60,
-                    },
-                    "price": Money {
-                      "_sdkType": "Money",
-                      "amount": 5500,
-                      "currency": "USD",
-                    },
-                    "publicData": Object {},
-                    "state": "published",
-                    "title": "listing1 title",
-                  },
-                  "author": Object {
-                    "attributes": Object {
-                      "banned": false,
-                      "deleted": false,
-                      "profile": Object {
-                        "abbreviatedName": "TT",
-                        "displayName": "user-1 display name",
-                      },
-                    },
-                    "id": UUID {
-                      "_sdkType": "UUID",
-                      "uuid": "user-1",
-                    },
-                    "type": "user",
-                  },
-                  "id": UUID {
-                    "_sdkType": "UUID",
-                    "uuid": "listing1",
-                  },
-                  "images": Array [],
-                  "type": "listing",
-                }
-              }
-              onCloseInquiryModal={[Function]}
-              onContactUser={[Function]}
-              onManageDisableScrolling={[Function]}
-              onSubmitInquiry={[Function]}
-              sendInquiryError={null}
-              sendInquiryInProgress={false}
-              title="listing1 title"
-            />
-          </div>
-          <div
-            className="orderColumnForHeroLayout"
-          >
-            <withRouter(injectIntl(OrderPanel))
-              author={
-                Object {
-                  "attributes": Object {
-                    "banned": false,
-                    "deleted": false,
-                    "profile": Object {
-                      "abbreviatedName": "TT",
-                      "displayName": "user-1 display name",
-                    },
-                  },
-                  "id": UUID {
-                    "_sdkType": "UUID",
-                    "uuid": "user-1",
-                  },
-                  "type": "user",
-                }
-              }
-              authorLink={
-                <NamedLink
-                  className="authorNameLink"
-                  name="ListingPage"
-                  params={
-                    Object {
-                      "id": "listing1",
-                      "slug": "listing1-title",
-                    }
+            >
+              <Memo(MemoizedFormattedMessage)
+                id="ListingPage.orderTitle"
+                values={
+                  Object {
+                    "title": <span>
+                      
+                      listing1
+                       
+                      title
+                      
+                    </span>,
                   }
-                  to={
-                    Object {
-                      "hash": "#author",
-                    }
-                  }
-                >
-                  user-1 display name
-                </NamedLink>
-              }
-              className="orderPanel"
-              dayCountAvailableForBooking={90}
-              fetchLineItemsError={null}
-              fetchLineItemsInProgress={false}
-              isOwnListing={false}
-              lineItems={null}
-              listing={
-                Object {
-                  "attributes": Object {
-                    "deleted": false,
-                    "description": "listing1 description",
-                    "geolocation": LatLng {
-                      "_sdkType": "LatLng",
-                      "lat": 40,
-                      "lng": 60,
-                    },
-                    "price": Money {
-                      "_sdkType": "Money",
-                      "amount": 5500,
-                      "currency": "USD",
-                    },
-                    "publicData": Object {},
-                    "state": "published",
-                    "title": "listing1 title",
-                  },
-                  "author": Object {
-                    "attributes": Object {
-                      "banned": false,
-                      "deleted": false,
-                      "profile": Object {
-                        "abbreviatedName": "TT",
-                        "displayName": "user-1 display name",
-                      },
-                    },
-                    "id": UUID {
-                      "_sdkType": "UUID",
-                      "uuid": "user-1",
-                    },
-                    "type": "user",
-                  },
-                  "id": UUID {
-                    "_sdkType": "UUID",
-                    "uuid": "listing1",
-                  },
-                  "images": Array [],
-                  "type": "listing",
                 }
-              }
-              marketplaceCurrency="USD"
-              marketplaceName="MarketplaceX"
-              monthlyTimeSlots={null}
-              onContactUser={[Function]}
-              onFetchTimeSlots={[Function]}
-              onFetchTransactionLineItems={[Function]}
-              onManageDisableScrolling={[Function]}
-              onSubmit={[Function]}
-              title={
-                <Memo(MemoizedFormattedMessage)
-                  id="ListingPage.orderTitle"
-                  values={
-                    Object {
-                      "title": <span>
-                        
-                        listing1
-                         
-                        title
-                        
-                      </span>,
-                    }
-                  }
-                />
-              }
-              titleDesktop={
-                <H4
-                  as="h1"
-                  className="orderPanelTitle"
-                  rootClassName={null}
-                >
-                  <Memo(MemoizedFormattedMessage)
-                    id="ListingPage.orderTitle"
-                    values={
-                      Object {
-                        "title": <span>
-                          
-                          listing1
-                           
-                          title
-                          
-                        </span>,
-                      }
-                    }
-                  />
-                </H4>
-              }
-            />
-          </div>
-        </div>
+              />
+            </H4>
+          }
+        />
       </div>
-    </LayoutWrapperMain>
-    <LayoutWrapperFooter
-      className={null}
-      rootClassName={null}
-    >
-      <injectIntl(Footer) />
-    </LayoutWrapperFooter>
+    </div>
   </LayoutSingleColumn>
 </Page>
 `;

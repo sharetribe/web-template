@@ -4,8 +4,8 @@
 }
 
 .pageRoot {
-  display: flex;
   padding-bottom: 90px;
+
   @media (--viewportLarge) {
     padding-bottom: 0;
   }
@@ -193,6 +193,7 @@
 
 .contentWrapperForHeroLayout {
   @media (--viewportMedium) {
+    width: 100%;
     max-width: var(--contentMaxWidth);
     margin: 0 auto;
     padding: 0 24px;
