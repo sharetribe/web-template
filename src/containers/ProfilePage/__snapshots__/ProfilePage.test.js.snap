@@ -15,7 +15,7 @@ exports[`ProfilePage AsideContent matches snapshot 1`] = `
     </span>
   </div>
   <h1
-    className="h1 mobileHeading"
+    className="h2 mobileHeading"
   >
     <span>
       ProfilePage.mobileHeading

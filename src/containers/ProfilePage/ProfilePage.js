@@ -13,22 +13,18 @@ import { isScrollingDisabled } from '../../ducks/UI.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import {
   Heading,
-  H1,
   H2,
   H4,
   Page,
-  LayoutSideNavigation,
-  LayoutWrapperMain,
-  LayoutWrapperSideNav,
-  LayoutWrapperTopbar,
-  LayoutWrapperFooter,
   Footer,
   AvatarLarge,
   NamedLink,
   ListingCard,
   Reviews,
   ButtonTabNavHorizontal,
+  LayoutSideNavigation,
 } from '../../components';
+
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
@@ -41,11 +37,11 @@ export const AsideContent = props => {
   return (
     <div className={css.asideContent}>
       <AvatarLarge className={css.avatar} user={user} disableProfileLink />
-      <H1 className={css.mobileHeading}>
+      <H2 as="h1" className={css.mobileHeading}>
         {displayName ? (
           <FormattedMessage id="ProfilePage.mobileHeading" values={{ name: displayName }} />
         ) : null}
-      </H1>
+      </H2>
       {isCurrentUser ? (
         <>
           <NamedLink className={css.editLinkMobile} name="ProfileSettingsPage">
@@ -227,24 +223,15 @@ const ProfilePageComponent = props => {
         name: schemaTitle,
       }}
     >
-      <LayoutSideNavigation>
-        <LayoutWrapperTopbar>
-          <TopbarContainer currentPage="ProfilePage" />
-        </LayoutWrapperTopbar>
-        <LayoutWrapperSideNav className={css.aside}>
+      <LayoutSideNavigation
+        sideNavClassName={css.aside}
+        topbar={<TopbarContainer currentPage="ProfilePage" />}
+        sideNav={
           <AsideContent user={user} isCurrentUser={isCurrentUser} displayName={displayName} />
-        </LayoutWrapperSideNav>
-        <LayoutWrapperMain>
-          <MainContent
-            bio={bio}
-            displayName={displayName}
-            userShowError={userShowError}
-            {...rest}
-          />
-        </LayoutWrapperMain>
-        <LayoutWrapperFooter>
-          <Footer />
-        </LayoutWrapperFooter>
+        }
+        footer={<Footer />}
+      >
+        <MainContent bio={bio} displayName={displayName} userShowError={userShowError} {...rest} />
       </LayoutSideNavigation>
     </Page>
   );
