@@ -8,20 +8,20 @@ import { LinkTabNavHorizontal } from '../../components';
 import css from './UserNav.module.css';
 
 const UserNav = props => {
-  const { className, rootClassName, selectedPageName } = props;
+  const { className, rootClassName, currentPage } = props;
   const classes = classNames(rootClassName || css.root, className);
 
   const tabs = [
     {
       text: <FormattedMessage id="ManageListingsPage.yourListings" />,
-      selected: selectedPageName === 'ManageListingsPage',
+      selected: currentPage === 'ManageListingsPage',
       linkProps: {
         name: 'ManageListingsPage',
       },
     },
     {
       text: <FormattedMessage id="ManageListingsPage.profileSettings" />,
-      selected: selectedPageName === 'ProfileSettingsPage',
+      selected: currentPage === 'ProfileSettingsPage',
       disabled: false,
       linkProps: {
         name: 'ProfileSettingsPage',
@@ -29,7 +29,7 @@ const UserNav = props => {
     },
     {
       text: <FormattedMessage id="ManageListingsPage.accountSettings" />,
-      selected: ACCOUNT_SETTINGS_PAGES.includes(selectedPageName),
+      selected: ACCOUNT_SETTINGS_PAGES.includes(currentPage),
       disabled: false,
       linkProps: {
         name: 'ContactDetailsPage',
@@ -52,7 +52,7 @@ const { string } = PropTypes;
 UserNav.propTypes = {
   className: string,
   rootClassName: string,
-  selectedPageName: string.isRequired,
+  currentPage: string.isRequired,
 };
 
 export default UserNav;

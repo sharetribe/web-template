@@ -32,12 +32,9 @@ import {
   LinkTabNavHorizontal,
   SocialLoginButton,
   ResponsiveBackgroundImageContainer,
-  LayoutSingleColumn,
-  LayoutWrapperTopbar,
-  LayoutWrapperMain,
-  LayoutWrapperFooter,
   Footer,
   Modal,
+  LayoutSingleColumn,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
@@ -445,86 +442,82 @@ export const AuthenticationPageComponent = props => {
         description: schemaDescription,
       }}
     >
-      <LayoutSingleColumn>
-        <LayoutWrapperTopbar>
-          <TopbarContainer className={topbarClasses} />
-        </LayoutWrapperTopbar>
-        <LayoutWrapperMain>
-          <ResponsiveBackgroundImageContainer
-            className={css.root}
-            childrenWrapperClassName={css.contentContainer}
-            as="section"
-            image={config.branding.brandImageURL}
-            sizes="100%"
-            useOverlay
-          >
-            {showEmailVerification ? (
-              <EmailVerificationInfo
-                name={user.attributes.profile.firstName}
-                email={<span className={css.email}>{user.attributes.email}</span>}
-                onResendVerificationEmail={onResendVerificationEmail}
-                resendErrorMessage={resendErrorMessage}
-                sendVerificationEmailInProgress={sendVerificationEmailInProgress}
-              />
-            ) : (
-              <AuthenticationOrConfirmInfoForm
-                tab={tab}
-                authInfo={authInfo}
-                from={from}
-                showFacebookLogin={!!process.env.REACT_APP_FACEBOOK_APP_ID}
-                showGoogleLogin={!!process.env.REACT_APP_GOOGLE_CLIENT_ID}
-                submitLogin={submitLogin}
-                submitSignup={submitSignup}
-                submitSingupWithIdp={submitSingupWithIdp}
-                authInProgress={authInProgress}
-                loginError={loginError}
-                signupError={signupError}
-                confirmError={confirmError}
-                termsAndConditions={
-                  <TermsAndConditions
-                    onOpenTermsOfService={() => setTosModalOpen(true)}
-                    onOpenPrivacyPolicy={() => setPrivacyModalOpen(true)}
-                    intl={intl}
-                  />
-                }
-              />
-            )}
-          </ResponsiveBackgroundImageContainer>
-          <Modal
-            id="AuthenticationPage.tos"
-            isOpen={tosModalOpen}
-            onClose={() => setTosModalOpen(false)}
-            usePortal
-            onManageDisableScrolling={onManageDisableScrolling}
-          >
-            <div className={css.termsWrapper}>
-              <TermsOfServiceContent
-                inProgress={tosFetchInProgress}
-                error={tosFetchError}
-                data={tosAssetsData?.[camelize(TOS_ASSET_NAME)]?.data}
-              />
-            </div>
-          </Modal>
-          <Modal
-            id="AuthenticationPage.privacyPolicy"
-            isOpen={privacyModalOpen}
-            onClose={() => setPrivacyModalOpen(false)}
-            usePortal
-            onManageDisableScrolling={onManageDisableScrolling}
-          >
-            <div className={css.privacyWrapper}>
-              <PrivacyPolicyContent
-                inProgress={tosFetchInProgress}
-                error={tosFetchError}
-                data={tosAssetsData?.[camelize(PRIVACY_POLICY_ASSET_NAME)]?.data}
-              />
-            </div>
-          </Modal>
-        </LayoutWrapperMain>
-        <LayoutWrapperFooter>
-          <Footer />
-        </LayoutWrapperFooter>
+      <LayoutSingleColumn
+        mainColumnClassName={css.layoutWrapperMain}
+        topbar={<TopbarContainer className={topbarClasses} />}
+        footer={<Footer />}
+      >
+        <ResponsiveBackgroundImageContainer
+          className={css.root}
+          childrenWrapperClassName={css.contentContainer}
+          as="section"
+          image={config.branding.brandImageURL}
+          sizes="100%"
+          useOverlay
+        >
+          {showEmailVerification ? (
+            <EmailVerificationInfo
+              name={user.attributes.profile.firstName}
+              email={<span className={css.email}>{user.attributes.email}</span>}
+              onResendVerificationEmail={onResendVerificationEmail}
+              resendErrorMessage={resendErrorMessage}
+              sendVerificationEmailInProgress={sendVerificationEmailInProgress}
+            />
+          ) : (
+            <AuthenticationOrConfirmInfoForm
+              tab={tab}
+              authInfo={authInfo}
+              from={from}
+              showFacebookLogin={!!process.env.REACT_APP_FACEBOOK_APP_ID}
+              showGoogleLogin={!!process.env.REACT_APP_GOOGLE_CLIENT_ID}
+              submitLogin={submitLogin}
+              submitSignup={submitSignup}
+              submitSingupWithIdp={submitSingupWithIdp}
+              authInProgress={authInProgress}
+              loginError={loginError}
+              signupError={signupError}
+              confirmError={confirmError}
+              termsAndConditions={
+                <TermsAndConditions
+                  onOpenTermsOfService={() => setTosModalOpen(true)}
+                  onOpenPrivacyPolicy={() => setPrivacyModalOpen(true)}
+                  intl={intl}
+                />
+              }
+            />
+          )}
+        </ResponsiveBackgroundImageContainer>
       </LayoutSingleColumn>
+      <Modal
+        id="AuthenticationPage.tos"
+        isOpen={tosModalOpen}
+        onClose={() => setTosModalOpen(false)}
+        usePortal
+        onManageDisableScrolling={onManageDisableScrolling}
+      >
+        <div className={css.termsWrapper}>
+          <TermsOfServiceContent
+            inProgress={tosFetchInProgress}
+            error={tosFetchError}
+            data={tosAssetsData?.[camelize(TOS_ASSET_NAME)]?.data}
+          />
+        </div>
+      </Modal>
+      <Modal
+        id="AuthenticationPage.privacyPolicy"
+        isOpen={privacyModalOpen}
+        onClose={() => setPrivacyModalOpen(false)}
+        usePortal
+        onManageDisableScrolling={onManageDisableScrolling}
+      >
+        <div className={css.privacyWrapper}>
+          <PrivacyPolicyContent
+            inProgress={tosFetchInProgress}
+            error={tosFetchError}
+            data={tosAssetsData?.[camelize(PRIVACY_POLICY_ASSET_NAME)]?.data}
+          />
+        </div>
+      </Modal>
     </Page>
   );
 };

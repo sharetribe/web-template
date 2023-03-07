@@ -1,0 +1,122 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--zIndexTopbar);
+}
+
+/* Container for side and content */
+.container {
+  /* parent aka root is flexbox, this container takes all available space */
+  flex-grow: 1;
+  flex-shrink: 0;
+
+  /* This container uses flexbox layout */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  /* When side nav is shown as a column, Topbar's box-shadow should be visible */
+  z-index: calc(var(--zIndexTopbar) - 1);
+
+  @media (--viewportLarge) {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.main {
+  /* Expand to the full remaining width of the viewport */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+
+  padding: 24px;
+
+  @media (--viewportLarge) {
+    /**
+     * Calculate right padding to match Footer right border
+     * and left padding together with border should be 60px.
+     */
+    padding: 48px 36px 82px 59px;
+    background-color: var(--matterColorLight);
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-left-color: var(--matterColorNegative);
+  }
+
+  @media (--viewportLargeWithPaddings) {
+    padding: 48px calc((100% - 1056px) / 2) 82px 59px;
+  }
+}
+
+.sideNav {
+  /* Layout */
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100vw;
+  padding: 0 24px;
+
+  border-top-width: 1px;
+  border-top-color: var(--matterColorNegative);
+  border-top-style: solid;
+  background-color: var(--matterColorLight);
+  box-shadow: var(--boxShadow);
+
+  @media (--viewportLarge) {
+    padding: 48px 0 82px 36px;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: unset;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  @media (--viewportLargeWithPaddings) {
+    padding: 48px 0 82px calc((100% - 1056px) / 2);
+  }
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  min-height: 48px;
+  padding-top: 2px;
+
+  @media (--viewportMedium) {
+    min-height: 48px;
+  }
+
+  @media (--viewportLarge) {
+    min-height: auto;
+    flex-direction: column;
+    margin-top: 24px;
+    padding-top: 0;
+  }
+}
+
+.tab {
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  margin-left: 16px;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  @media (--viewportLarge) {
+    margin-left: 0;
+  }
+}

@@ -1147,7 +1147,7 @@ textarea {
   display: inline-block;
   width: auto;
   min-height: auto;
-  height: 41px;
+  height: 42px;
   margin: 17px 0 0 0;
 
   /* Padding is only for <a> elements where button styles are applied,
@@ -1181,7 +1181,7 @@ textarea {
   color: var(--matterColor);
 
   @media (--viewportMedium) {
-    padding: 20px 0 20px 0;
+    height: 40px;
   }
 }
 .buttonSecondaryInline:focus,

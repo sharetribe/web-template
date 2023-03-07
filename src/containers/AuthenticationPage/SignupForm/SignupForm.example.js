@@ -1,4 +1,6 @@
-/* eslint-disable no-console */
+import React from 'react';
+import { fakeIntl } from '../../../util/test-data';
+import TermsAndConditions from '../TermsAndConditions/TermsAndConditions';
 import SignupForm from './SignupForm';
 
 export const Empty = {
@@ -11,6 +13,13 @@ export const Empty = {
     onOpenTermsOfService() {
       console.log('open terms of service');
     },
+    termsAndConditions: (
+      <TermsAndConditions
+        onOpenTermsOfService={() => setTosModalOpen(true)}
+        onOpenPrivacyPolicy={() => setPrivacyModalOpen(true)}
+        intl={fakeIntl}
+      />
+    ),
   },
   group: 'page:AuthenticationPage',
 };

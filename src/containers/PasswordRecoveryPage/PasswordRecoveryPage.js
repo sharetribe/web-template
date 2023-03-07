@@ -15,12 +15,10 @@ import {
   InlineTextButton,
   IconKeys,
   ResponsiveBackgroundImageContainer,
-  LayoutSingleColumn,
-  LayoutWrapperMain,
-  LayoutWrapperTopbar,
-  LayoutWrapperFooter,
   Footer,
+  LayoutSingleColumn,
 } from '../../components';
+
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import PasswordRecoveryForm from './PasswordRecoveryForm/PasswordRecoveryForm';
@@ -157,40 +155,36 @@ export const PasswordRecoveryPageComponent = props => {
       })}
       scrollingDisabled={scrollingDisabled}
     >
-      <LayoutSingleColumn>
-        <LayoutWrapperTopbar>
-          <TopbarContainer />
-        </LayoutWrapperTopbar>
-        <LayoutWrapperMain className={css.layoutWrapperMain}>
-          <ResponsiveBackgroundImageContainer
-            className={css.root}
-            childrenWrapperClassName={css.contentContainer}
-            as="section"
-            image={config.branding.brandImageURL}
-            sizes="100%"
-            useOverlay
-          >
-            {isPasswordRecoveryEmailNotFoundError(recoveryError) ? (
-              showPasswordRecoveryForm
-            ) : recoveryError ? (
-              <GenericError />
-            ) : alreadyrequested ? (
-              <EmailSubmittedContent
-                passwordRequested={passwordRequested}
-                initialEmail={initialEmail}
-                submittedEmail={submittedEmail}
-                onRetypeEmail={onRetypeEmail}
-                onSubmitEmail={onSubmitEmail}
-                recoveryInProgress={recoveryInProgress}
-              />
-            ) : (
-              showPasswordRecoveryForm
-            )}
-          </ResponsiveBackgroundImageContainer>
-        </LayoutWrapperMain>
-        <LayoutWrapperFooter>
-          <Footer />
-        </LayoutWrapperFooter>
+      <LayoutSingleColumn
+        mainColumnClassName={css.layoutWrapperMain}
+        topbar={<TopbarContainer />}
+        footer={<Footer />}
+      >
+        <ResponsiveBackgroundImageContainer
+          className={css.root}
+          childrenWrapperClassName={css.contentContainer}
+          as="section"
+          image={config.branding.brandImageURL}
+          sizes="100%"
+          useOverlay
+        >
+          {isPasswordRecoveryEmailNotFoundError(recoveryError) ? (
+            showPasswordRecoveryForm
+          ) : recoveryError ? (
+            <GenericError />
+          ) : alreadyrequested ? (
+            <EmailSubmittedContent
+              passwordRequested={passwordRequested}
+              initialEmail={initialEmail}
+              submittedEmail={submittedEmail}
+              onRetypeEmail={onRetypeEmail}
+              onSubmitEmail={onSubmitEmail}
+              recoveryInProgress={recoveryInProgress}
+            />
+          ) : (
+            showPasswordRecoveryForm
+          )}
+        </ResponsiveBackgroundImageContainer>
       </LayoutSingleColumn>
     </Page>
   );

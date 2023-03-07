@@ -17,12 +17,10 @@ import {
   IconKeys,
   IconKeysSuccess,
   ResponsiveBackgroundImageContainer,
-  LayoutSingleColumn,
-  LayoutWrapperTopbar,
-  LayoutWrapperMain,
-  LayoutWrapperFooter,
   Footer,
+  LayoutSingleColumn,
 } from '../../components';
+
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import PasswordResetForm from './PasswordResetForm/PasswordResetForm';
@@ -125,35 +123,31 @@ export const PasswordResetPageComponent = props => {
       scrollingDisabled={scrollingDisabled}
       referrer="origin"
     >
-      <LayoutSingleColumn>
-        <LayoutWrapperTopbar>
-          <TopbarContainer />
-        </LayoutWrapperTopbar>
-        <LayoutWrapperMain className={css.layoutWrapperMain}>
-          <ResponsiveBackgroundImageContainer
-            className={css.root}
-            childrenWrapperClassName={css.contentContainer}
-            as="section"
-            image={config.branding.brandImageURL}
-            sizes="100%"
-            useOverlay
-          >
-            {!hasParams ? (
-              <ParamsMissingContent />
-            ) : isPasswordSubmitted ? (
-              <ResetDoneContent />
-            ) : (
-              <ResetFormContent
-                handleSubmit={handleSubmit}
-                resetPasswordInProgress={resetPasswordInProgress}
-                resetPasswordError={resetPasswordError}
-              />
-            )}
-          </ResponsiveBackgroundImageContainer>
-        </LayoutWrapperMain>
-        <LayoutWrapperFooter>
-          <Footer />
-        </LayoutWrapperFooter>
+      <LayoutSingleColumn
+        mainColumnClassName={css.layoutWrapperMain}
+        topbar={<TopbarContainer />}
+        footer={<Footer />}
+      >
+        <ResponsiveBackgroundImageContainer
+          className={css.root}
+          childrenWrapperClassName={css.contentContainer}
+          as="section"
+          image={config.branding.brandImageURL}
+          sizes="100%"
+          useOverlay
+        >
+          {!hasParams ? (
+            <ParamsMissingContent />
+          ) : isPasswordSubmitted ? (
+            <ResetDoneContent />
+          ) : (
+            <ResetFormContent
+              handleSubmit={handleSubmit}
+              resetPasswordInProgress={resetPasswordInProgress}
+              resetPasswordError={resetPasswordError}
+            />
+          )}
+        </ResponsiveBackgroundImageContainer>
       </LayoutSingleColumn>
     </Page>
   );

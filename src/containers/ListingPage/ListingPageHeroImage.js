@@ -40,13 +40,11 @@ import {
   Page,
   NamedLink,
   NamedRedirect,
-  LayoutSingleColumn,
-  LayoutWrapperTopbar,
-  LayoutWrapperMain,
-  LayoutWrapperFooter,
   Footer,
   OrderPanel,
+  LayoutSingleColumn,
 } from '../../components';
+
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
@@ -292,135 +290,121 @@ export const ListingPageComponent = props => {
         },
       }}
     >
-      <LayoutSingleColumn className={css.pageRoot}>
-        <LayoutWrapperTopbar>{topbar}</LayoutWrapperTopbar>
-        <LayoutWrapperMain>
-          <div>
-            <SectionHero
+      <LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<Footer />}>
+        <SectionHero
+          title={title}
+          listing={currentListing}
+          isOwnListing={isOwnListing}
+          editParams={{
+            id: listingId.uuid,
+            slug: listingSlug,
+            type: listingPathParamType,
+            tab: listingTab,
+          }}
+          imageCarouselOpen={imageCarouselOpen}
+          onImageCarouselClose={() => setImageCarouselOpen(false)}
+          handleViewPhotosClick={handleViewPhotosClick}
+          onManageDisableScrolling={onManageDisableScrolling}
+        />
+        <div className={css.contentWrapperForHeroLayout}>
+          <div className={css.mainColumnForHeroLayout}>
+            <div className={css.mobileHeading}>
+              <H4 as="h1" className={css.orderPanelTitle}>
+                <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
+              </H4>
+            </div>
+            <SectionTextMaybe text={description} showAsIngress />
+            <SectionDetailsMaybe
+              publicData={publicData}
+              metadata={metadata}
+              listingConfig={listingConfig}
+              intl={intl}
+            />
+            {listingConfig.listingExtendedData.reduce((pickedElements, config) => {
+              const { key, schemaOptions, scope = 'public' } = config;
+              const value =
+                scope === 'public' ? publicData[key] : scope === 'metadata' ? metadata[key] : null;
+              const hasValue = value !== null;
+              return hasValue && config.schemaType === SCHEMA_TYPE_MULTI_ENUM
+                ? [
+                    ...pickedElements,
+                    <SectionMultiEnumMaybe
+                      key={key}
+                      heading={config?.listingPageConfig?.label}
+                      options={createFilterOptions(schemaOptions)}
+                      selectedOptions={value}
+                    />,
+                  ]
+                : hasValue && config.schemaType === SCHEMA_TYPE_TEXT
+                ? [
+                    ...pickedElements,
+                    <SectionTextMaybe
+                      key={key}
+                      heading={config?.listingPageConfig?.label}
+                      text={value}
+                    />,
+                  ]
+                : pickedElements;
+            }, [])}
+
+            <SectionMapMaybe
+              geolocation={geolocation}
+              publicData={publicData}
+              listingId={currentListing.id}
+              mapsConfig={config.maps}
+            />
+            <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
+            <SectionAuthorMaybe
               title={title}
               listing={currentListing}
-              isOwnListing={isOwnListing}
-              editParams={{
-                id: listingId.uuid,
-                slug: listingSlug,
-                type: listingPathParamType,
-                tab: listingTab,
-              }}
-              imageCarouselOpen={imageCarouselOpen}
-              onImageCarouselClose={() => setImageCarouselOpen(false)}
-              handleViewPhotosClick={handleViewPhotosClick}
+              authorDisplayName={authorDisplayName}
+              onContactUser={onContactUser}
+              isInquiryModalOpen={isAuthenticated && inquiryModalOpen}
+              onCloseInquiryModal={() => setInquiryModalOpen(false)}
+              sendInquiryError={sendInquiryError}
+              sendInquiryInProgress={sendInquiryInProgress}
+              onSubmitInquiry={onSubmitInquiry}
+              currentUser={currentUser}
               onManageDisableScrolling={onManageDisableScrolling}
             />
-            <div className={css.contentWrapperForHeroLayout}>
-              <div className={css.mainColumnForHeroLayout}>
-                <div className={css.mobileHeading}>
-                  <H4 as="h1" className={css.orderPanelTitle}>
-                    <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
-                  </H4>
-                </div>
-                <SectionTextMaybe text={description} showAsIngress />
-                <SectionDetailsMaybe
-                  publicData={publicData}
-                  metadata={metadata}
-                  listingConfig={listingConfig}
-                  intl={intl}
-                />
-                {listingConfig.listingExtendedData.reduce((pickedElements, config) => {
-                  const { key, schemaOptions, scope = 'public' } = config;
-                  const value =
-                    scope === 'public'
-                      ? publicData[key]
-                      : scope === 'metadata'
-                      ? metadata[key]
-                      : null;
-                  const hasValue = value !== null;
-                  return hasValue && config.schemaType === SCHEMA_TYPE_MULTI_ENUM
-                    ? [
-                        ...pickedElements,
-                        <SectionMultiEnumMaybe
-                          key={key}
-                          heading={config?.listingPageConfig?.label}
-                          options={createFilterOptions(schemaOptions)}
-                          selectedOptions={value}
-                        />,
-                      ]
-                    : hasValue && config.schemaType === SCHEMA_TYPE_TEXT
-                    ? [
-                        ...pickedElements,
-                        <SectionTextMaybe
-                          key={key}
-                          heading={config?.listingPageConfig?.label}
-                          text={value}
-                        />,
-                      ]
-                    : pickedElements;
-                }, [])}
-
-                <SectionMapMaybe
-                  geolocation={geolocation}
-                  publicData={publicData}
-                  listingId={currentListing.id}
-                  mapsConfig={config.maps}
-                />
-                <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
-                <SectionAuthorMaybe
-                  title={title}
-                  listing={currentListing}
-                  authorDisplayName={authorDisplayName}
-                  onContactUser={onContactUser}
-                  isInquiryModalOpen={isAuthenticated && inquiryModalOpen}
-                  onCloseInquiryModal={() => setInquiryModalOpen(false)}
-                  sendInquiryError={sendInquiryError}
-                  sendInquiryInProgress={sendInquiryInProgress}
-                  onSubmitInquiry={onSubmitInquiry}
-                  currentUser={currentUser}
-                  onManageDisableScrolling={onManageDisableScrolling}
-                />
-              </div>
-              <div className={css.orderColumnForHeroLayout}>
-                <OrderPanel
-                  className={css.orderPanel}
-                  listing={currentListing}
-                  isOwnListing={isOwnListing}
-                  onSubmit={handleOrderSubmit}
-                  authorLink={
-                    <NamedLink
-                      className={css.authorNameLink}
-                      name="ListingPage"
-                      params={params}
-                      to={{ hash: '#author' }}
-                    >
-                      {authorDisplayName}
-                    </NamedLink>
-                  }
-                  title={
-                    <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
-                  }
-                  titleDesktop={
-                    <H4 as="h1" className={css.orderPanelTitle}>
-                      <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
-                    </H4>
-                  }
-                  author={ensuredAuthor}
-                  onManageDisableScrolling={onManageDisableScrolling}
-                  onFetchTransactionLineItems={onFetchTransactionLineItems}
-                  onContactUser={onContactUser}
-                  monthlyTimeSlots={monthlyTimeSlots}
-                  onFetchTimeSlots={onFetchTimeSlots}
-                  lineItems={lineItems}
-                  fetchLineItemsInProgress={fetchLineItemsInProgress}
-                  fetchLineItemsError={fetchLineItemsError}
-                  marketplaceCurrency={config.currency}
-                  dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
-                  marketplaceName={config.marketplaceName}
-                />
-              </div>
-            </div>
           </div>
-        </LayoutWrapperMain>
-        <LayoutWrapperFooter>
-          <Footer />
-        </LayoutWrapperFooter>
+          <div className={css.orderColumnForHeroLayout}>
+            <OrderPanel
+              className={css.orderPanel}
+              listing={currentListing}
+              isOwnListing={isOwnListing}
+              onSubmit={handleOrderSubmit}
+              authorLink={
+                <NamedLink
+                  className={css.authorNameLink}
+                  name="ListingPage"
+                  params={params}
+                  to={{ hash: '#author' }}
+                >
+                  {authorDisplayName}
+                </NamedLink>
+              }
+              title={<FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />}
+              titleDesktop={
+                <H4 as="h1" className={css.orderPanelTitle}>
+                  <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
+                </H4>
+              }
+              author={ensuredAuthor}
+              onManageDisableScrolling={onManageDisableScrolling}
+              onFetchTransactionLineItems={onFetchTransactionLineItems}
+              onContactUser={onContactUser}
+              monthlyTimeSlots={monthlyTimeSlots}
+              onFetchTimeSlots={onFetchTimeSlots}
+              lineItems={lineItems}
+              fetchLineItemsInProgress={fetchLineItemsInProgress}
+              fetchLineItemsError={fetchLineItemsError}
+              marketplaceCurrency={config.currency}
+              dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
+              marketplaceName={config.marketplaceName}
+            />
+          </div>
+        </div>
       </LayoutSingleColumn>
     </Page>
   );
