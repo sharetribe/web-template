@@ -1,11 +1,10 @@
 import React from 'react';
 
-import { Footer as FooterContent, IconSpinner } from '../../components/index.js';
+import { Footer as FooterContent, IconSpinner, LayoutComposer } from '../../components/index.js';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer.js';
 
 import { validProps } from './Field';
 
-import LayoutComposer from './LayoutComposer/index.js';
 import SectionBuilder from './SectionBuilder/SectionBuilder.js';
 import StaticPage from './StaticPage.js';
 
@@ -134,6 +133,6 @@ const PageBuilder = props => {
   );
 };
 
-export { StaticPage, SectionBuilder };
+export { LayoutComposer, StaticPage, SectionBuilder };
 
 export default PageBuilder;

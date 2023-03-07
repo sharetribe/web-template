@@ -81,6 +81,7 @@ import * as Tabs from './components/Tabs/Tabs.example';
 import * as TimeRange from './components/TimeRange/TimeRange.example';
 import * as UserCard from './components/UserCard/UserCard.example';
 import * as UserDisplayName from './components/UserDisplayName/UserDisplayName.example';
+import * as LayoutComposer from './components/LayoutComposer/LayoutComposer.example';
 
 // components under containers
 import * as SignupForm from './containers/AuthenticationPage/SignupForm/SignupForm.example';
@@ -120,7 +121,6 @@ import * as Colors from './containers/StyleguidePage/Colors.example';
 import * as Typography from './containers/StyleguidePage/Typography.example';
 import * as CMSSections from './containers/PageBuilder/SectionBuilder/SectionBuilder.example';
 import * as Markdown from './containers/PageBuilder/Markdown.example';
-import * as LayoutComposer from './containers/PageBuilder/LayoutComposer/LayoutComposer.example';
 import * as PageBuilder from './containers/PageBuilder/PageBuilder.example';
 import * as LandingPage from './containers/LandingPage/LandingPage.example';
 
