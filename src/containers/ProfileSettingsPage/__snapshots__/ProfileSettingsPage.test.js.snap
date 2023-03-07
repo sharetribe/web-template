@@ -8,49 +8,38 @@ exports[`ContactDetailsPage matches snapshot 1`] = `
 >
   <LayoutSingleColumn
     className={null}
+    footer={<injectIntl(Footer) />}
     rootClassName={null}
+    topbar={
+      <React.Fragment>
+        <withRouter(Connect(TopbarContainerComponent))
+          currentPage="ProfileSettingsPage"
+        />
+        <UserNav
+          className={null}
+          currentPage="ProfileSettingsPage"
+          rootClassName={null}
+        />
+      </React.Fragment>
+    }
   >
-    <LayoutWrapperTopbar
-      className={null}
-      rootClassName={null}
-    >
-      <withRouter(Connect(TopbarContainerComponent))
-        currentPage="ProfileSettingsPage"
-      />
-      <UserNav
-        className={null}
-        rootClassName={null}
-        selectedPageName="ProfileSettingsPage"
-      />
-    </LayoutWrapperTopbar>
-    <LayoutWrapperMain
-      className={null}
-      rootClassName={null}
+    <div
+      className="content"
     >
       <div
-        className="content"
+        className="headingContainer"
       >
-        <div
-          className="headingContainer"
+        <H3
+          as="h1"
+          className="heading"
+          rootClassName={null}
         >
-          <H3
-            as="h1"
-            className="heading"
-            rootClassName={null}
-          >
-            <MemoizedFormattedMessage
-              id="ProfileSettingsPage.heading"
-            />
-          </H3>
-        </div>
+          <MemoizedFormattedMessage
+            id="ProfileSettingsPage.heading"
+          />
+        </H3>
       </div>
-    </LayoutWrapperMain>
-    <LayoutWrapperFooter
-      className={null}
-      rootClassName={null}
-    >
-      <injectIntl(Footer) />
-    </LayoutWrapperFooter>
+    </div>
   </LayoutSingleColumn>
 </Page>
 `;

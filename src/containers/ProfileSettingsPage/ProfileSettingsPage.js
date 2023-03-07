@@ -9,17 +9,8 @@ import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 
-import {
-  H3,
-  Page,
-  UserNav,
-  LayoutSingleColumn,
-  LayoutWrapperTopbar,
-  LayoutWrapperMain,
-  LayoutWrapperFooter,
-  Footer,
-  NamedLink,
-} from '../../components';
+import { H3, Page, UserNav, Footer, NamedLink, LayoutSingleColumn } from '../../components';
+
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
@@ -96,33 +87,32 @@ export const ProfileSettingsPageComponent = props => {
 
   return (
     <Page className={css.root} title={title} scrollingDisabled={scrollingDisabled}>
-      <LayoutSingleColumn>
-        <LayoutWrapperTopbar>
-          <TopbarContainer currentPage="ProfileSettingsPage" />
-          <UserNav selectedPageName="ProfileSettingsPage" />
-        </LayoutWrapperTopbar>
-        <LayoutWrapperMain>
-          <div className={css.content}>
-            <div className={css.headingContainer}>
-              <H3 as="h1" className={css.heading}>
-                <FormattedMessage id="ProfileSettingsPage.heading" />
-              </H3>
-              {user.id ? (
-                <NamedLink
-                  className={css.profileLink}
-                  name="ProfilePage"
-                  params={{ id: user.id.uuid }}
-                >
-                  <FormattedMessage id="ProfileSettingsPage.viewProfileLink" />
-                </NamedLink>
-              ) : null}
-            </div>
-            {profileSettingsForm}
+      <LayoutSingleColumn
+        topbar={
+          <>
+            <TopbarContainer currentPage="ProfileSettingsPage" />
+            <UserNav currentPage="ProfileSettingsPage" />
+          </>
+        }
+        footer={<Footer />}
+      >
+        <div className={css.content}>
+          <div className={css.headingContainer}>
+            <H3 as="h1" className={css.heading}>
+              <FormattedMessage id="ProfileSettingsPage.heading" />
+            </H3>
+            {user.id ? (
+              <NamedLink
+                className={css.profileLink}
+                name="ProfilePage"
+                params={{ id: user.id.uuid }}
+              >
+                <FormattedMessage id="ProfileSettingsPage.viewProfileLink" />
+              </NamedLink>
+            ) : null}
           </div>
-        </LayoutWrapperMain>
-        <LayoutWrapperFooter>
-          <Footer />
-        </LayoutWrapperFooter>
+          {profileSettingsForm}
+        </div>
       </LayoutSingleColumn>
     </Page>
   );
