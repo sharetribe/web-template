@@ -12,15 +12,8 @@ import { createResourceLocatorString } from '../../util/routes';
 import { isMainSearchTypeKeywords } from '../../util/search';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 
-import {
-  Heading,
-  Page,
-  LayoutSingleColumn,
-  LayoutWrapperTopbar,
-  LayoutWrapperMain,
-  LayoutWrapperFooter,
-  Footer,
-} from '../../components';
+import { Heading, Page, Footer, LayoutSingleColumn } from '../../components';
+
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import LocationSearchForm from './LocationSearchForm/LocationSearchForm';
@@ -61,31 +54,23 @@ export class NotFoundPageComponent extends Component {
 
     return (
       <Page title={title} scrollingDisabled={scrollingDisabled}>
-        <LayoutSingleColumn>
-          <LayoutWrapperTopbar>
-            <TopbarContainer />
-          </LayoutWrapperTopbar>
-          <LayoutWrapperMain>
-            <div className={css.root}>
-              <div className={css.content}>
-                <div className={css.number}>404</div>
-                <Heading as="h1" rootClassName={css.heading}>
-                  <FormattedMessage id="NotFoundPage.heading" />
-                </Heading>
-                <p className={css.description}>
-                  <FormattedMessage id="NotFoundPage.description" values={{ marketplaceName }} />
-                </p>
-                <LocationSearchForm
-                  className={css.searchForm}
-                  isKeywordSearch={isKeywordSearch}
-                  onSubmit={handleSearchSubmit}
-                />
-              </div>
+        <LayoutSingleColumn topbar={<TopbarContainer />} footer={<Footer />}>
+          <div className={css.root}>
+            <div className={css.content}>
+              <div className={css.number}>404</div>
+              <Heading as="h1" rootClassName={css.heading}>
+                <FormattedMessage id="NotFoundPage.heading" />
+              </Heading>
+              <p className={css.description}>
+                <FormattedMessage id="NotFoundPage.description" values={{ marketplaceName }} />
+              </p>
+              <LocationSearchForm
+                className={css.searchForm}
+                isKeywordSearch={isKeywordSearch}
+                onSubmit={handleSearchSubmit}
+              />
             </div>
-          </LayoutWrapperMain>
-          <LayoutWrapperFooter>
-            <Footer />
-          </LayoutWrapperFooter>
+          </div>
         </LayoutSingleColumn>
       </Page>
     );
