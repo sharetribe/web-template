@@ -9,17 +9,8 @@ import { ensureCurrentUser } from '../../util/data';
 import { sendVerificationEmail } from '../../ducks/user.duck';
 import { isScrollingDisabled } from '../../ducks/UI.duck';
 
-import {
-  LayoutSideNavigation,
-  LayoutWrapperMain,
-  LayoutWrapperAccountSettingsSideNav,
-  LayoutWrapperTopbar,
-  LayoutWrapperFooter,
-  Footer,
-  H3,
-  Page,
-  UserNav,
-} from '../../components';
+import { Footer, H3, Page, UserNav, LayoutSideNavigation } from '../../components';
+
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import ContactDetailsForm from './ContactDetailsForm/ContactDetailsForm';
@@ -78,27 +69,28 @@ export const ContactDetailsPageComponent = props => {
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
-      <LayoutSideNavigation>
-        <LayoutWrapperTopbar>
-          <TopbarContainer
-            currentPage="ContactDetailsPage"
-            desktopClassName={css.desktopTopbar}
-            mobileClassName={css.mobileTopbar}
-          />
-          <UserNav selectedPageName="ContactDetailsPage" />
-        </LayoutWrapperTopbar>
-        <LayoutWrapperAccountSettingsSideNav currentTab="ContactDetailsPage" />
-        <LayoutWrapperMain>
-          <div className={css.content}>
-            <H3 as="h1">
-              <FormattedMessage id="ContactDetailsPage.heading" />
-            </H3>
-            {contactInfoForm}
-          </div>
-        </LayoutWrapperMain>
-        <LayoutWrapperFooter>
-          <Footer />
-        </LayoutWrapperFooter>
+      <LayoutSideNavigation
+        topbar={
+          <>
+            <TopbarContainer
+              currentPage="ContactDetailsPage"
+              desktopClassName={css.desktopTopbar}
+              mobileClassName={css.mobileTopbar}
+            />
+            <UserNav currentPage="ContactDetailsPage" />
+          </>
+        }
+        sideNav={null}
+        useAccountSettingsNav
+        currentPage="ContactDetailsPage"
+        footer={<Footer />}
+      >
+        <div className={css.content}>
+          <H3 as="h1">
+            <FormattedMessage id="ContactDetailsPage.heading" />
+          </H3>
+          {contactInfoForm}
+        </div>
       </LayoutSideNavigation>
     </Page>
   );

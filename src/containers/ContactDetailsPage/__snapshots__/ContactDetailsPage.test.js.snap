@@ -7,51 +7,39 @@ exports[`ContactDetailsPage matches snapshot 1`] = `
 >
   <LayoutSideNavigation
     className={null}
-    containerClassName={null}
+    currentPage="ContactDetailsPage"
+    footer={<injectIntl(Footer) />}
     rootClassName={null}
+    sideNav={null}
+    topbar={
+      <React.Fragment>
+        <withRouter(Connect(TopbarContainerComponent))
+          currentPage="ContactDetailsPage"
+          desktopClassName="desktopTopbar"
+          mobileClassName="mobileTopbar"
+        />
+        <UserNav
+          className={null}
+          currentPage="ContactDetailsPage"
+          rootClassName={null}
+        />
+      </React.Fragment>
+    }
+    useAccountSettingsNav={true}
   >
-    <LayoutWrapperTopbar
-      className={null}
-      rootClassName={null}
+    <div
+      className="content"
     >
-      <withRouter(Connect(TopbarContainerComponent))
-        currentPage="ContactDetailsPage"
-        desktopClassName="desktopTopbar"
-        mobileClassName="mobileTopbar"
-      />
-      <UserNav
+      <H3
+        as="h1"
         className={null}
         rootClassName={null}
-        selectedPageName="ContactDetailsPage"
-      />
-    </LayoutWrapperTopbar>
-    <withViewport(LayoutWrapperAccountSettingsSideNavComponent)
-      currentTab="ContactDetailsPage"
-    />
-    <LayoutWrapperMain
-      className={null}
-      rootClassName={null}
-    >
-      <div
-        className="content"
       >
-        <H3
-          as="h1"
-          className={null}
-          rootClassName={null}
-        >
-          <MemoizedFormattedMessage
-            id="ContactDetailsPage.heading"
-          />
-        </H3>
-      </div>
-    </LayoutWrapperMain>
-    <LayoutWrapperFooter
-      className={null}
-      rootClassName={null}
-    >
-      <injectIntl(Footer) />
-    </LayoutWrapperFooter>
+        <MemoizedFormattedMessage
+          id="ContactDetailsPage.heading"
+        />
+      </H3>
+    </div>
   </LayoutSideNavigation>
 </Page>
 `;
