@@ -34,15 +34,11 @@ import {
   Page,
   PaginationLinks,
   TabNav,
-  LayoutSideNavigation,
-  LayoutWrapperMain,
-  LayoutWrapperSideNav,
-  LayoutWrapperTopbar,
-  LayoutWrapperFooter,
   Footer,
   IconSpinner,
   TimeRange,
   UserDisplayName,
+  LayoutSideNavigation,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
@@ -286,55 +282,55 @@ export const InboxPageComponent = props => {
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
-      <LayoutSideNavigation>
-        <LayoutWrapperTopbar>
+      <LayoutSideNavigation
+        sideNavClassName={css.navigation}
+        topbar={
           <TopbarContainer
             className={css.topbar}
             mobileRootClassName={css.mobileTopbar}
             desktopClassName={css.desktopTopbar}
             currentPage="InboxPage"
           />
-        </LayoutWrapperTopbar>
-        <LayoutWrapperSideNav className={css.navigation}>
-          <H2 as="h1" className={css.title}>
-            <FormattedMessage id="InboxPage.title" />
-          </H2>
-          <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />
-        </LayoutWrapperSideNav>
-        <LayoutWrapperMain>
-          {fetchOrdersOrSalesError ? (
-            <p className={css.error}>
-              <FormattedMessage id="InboxPage.fetchFailed" />
-            </p>
+        }
+        sideNav={
+          <>
+            <H2 as="h1" className={css.title}>
+              <FormattedMessage id="InboxPage.title" />
+            </H2>
+            <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />{' '}
+          </>
+        }
+        footer={<Footer />}
+      >
+        {fetchOrdersOrSalesError ? (
+          <p className={css.error}>
+            <FormattedMessage id="InboxPage.fetchFailed" />
+          </p>
+        ) : null}
+        <ul className={css.itemList}>
+          {!fetchInProgress ? (
+            transactions.map(toTxItem)
+          ) : (
+            <li className={css.listItemsLoading}>
+              <IconSpinner />
+            </li>
+          )}
+          {hasNoResults ? (
+            <li key="noResults" className={css.noResults}>
+              <FormattedMessage
+                id={isOrders ? 'InboxPage.noOrdersFound' : 'InboxPage.noSalesFound'}
+              />
+            </li>
           ) : null}
-          <ul className={css.itemList}>
-            {!fetchInProgress ? (
-              transactions.map(toTxItem)
-            ) : (
-              <li className={css.listItemsLoading}>
-                <IconSpinner />
-              </li>
-            )}
-            {hasNoResults ? (
-              <li key="noResults" className={css.noResults}>
-                <FormattedMessage
-                  id={isOrders ? 'InboxPage.noOrdersFound' : 'InboxPage.noSalesFound'}
-                />
-              </li>
-            ) : null}
-          </ul>
-          {hasTransactions && pagination && pagination.totalPages > 1 ? (
-            <PaginationLinks
-              className={css.pagination}
-              pageName="InboxPage"
-              pagePathParams={params}
-              pagination={pagination}
-            />
-          ) : null}
-        </LayoutWrapperMain>
-        <LayoutWrapperFooter>
-          <Footer />
-        </LayoutWrapperFooter>
+        </ul>
+        {hasTransactions && pagination && pagination.totalPages > 1 ? (
+          <PaginationLinks
+            className={css.pagination}
+            pageName="InboxPage"
+            pagePathParams={params}
+            pagination={pagination}
+          />
+        ) : null}
       </LayoutSideNavigation>
     </Page>
   );
