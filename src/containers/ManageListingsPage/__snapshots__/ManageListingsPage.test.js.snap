@@ -7,39 +7,28 @@ exports[`ContactDetailsPage matches snapshot 1`] = `
 >
   <LayoutSingleColumn
     className={null}
+    footer={<injectIntl(Footer) />}
     rootClassName={null}
+    topbar={
+      <React.Fragment>
+        <withRouter(Connect(TopbarContainerComponent))
+          currentPage="ManageListingsPage"
+        />
+        <UserNav
+          className={null}
+          currentPage="ManageListingsPage"
+          rootClassName={null}
+        />
+      </React.Fragment>
+    }
   >
-    <LayoutWrapperTopbar
-      className={null}
-      rootClassName={null}
-    >
-      <withRouter(Connect(TopbarContainerComponent))
-        currentPage="ManageListingsPage"
-      />
-      <UserNav
-        className={null}
-        rootClassName={null}
-        selectedPageName="ManageListingsPage"
-      />
-    </LayoutWrapperTopbar>
-    <LayoutWrapperMain
-      className={null}
-      rootClassName={null}
+    <div
+      className="listingPanel"
     >
       <div
-        className="listingPanel"
-      >
-        <div
-          className="listingCards"
-        />
-      </div>
-    </LayoutWrapperMain>
-    <LayoutWrapperFooter
-      className={null}
-      rootClassName={null}
-    >
-      <injectIntl(Footer) />
-    </LayoutWrapperFooter>
+        className="listingCards"
+      />
+    </div>
   </LayoutSingleColumn>
 </Page>
 `;
