@@ -29,6 +29,7 @@ describe('NotFoundPageComponent', () => {
         authInProgress={false}
         currentUserHasListings={false}
         isAuthenticated={false}
+        isKeywordSearch={false}
         onLogout={noop}
         onManageDisableScrolling={noop}
         sendVerificationEmailInProgress={false}
