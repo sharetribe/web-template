@@ -4,7 +4,7 @@ import { func } from 'prop-types';
 import { requiredFieldArrayCheckbox } from '../../../util/validators';
 import { FieldCheckboxGroup } from '../../../components';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { FormattedMessage, intlShape } from '../../../util/reactIntl';
 
 import css from './TermsAndConditions.module.css';
 
@@ -63,7 +63,9 @@ const TermsAndConditions = props => {
             ),
           },
         ]}
-        validate={requiredFieldArrayCheckbox('You need to accept Terms of Service')}
+        validate={requiredFieldArrayCheckbox(
+          intl.formatMessage({ id: 'AuthenticationPage.termsAndConditionsAcceptRequired' })
+        )}
       />
     </div>
   );
@@ -74,6 +76,7 @@ const TermsAndConditions = props => {
 TermsAndConditions.propTypes = {
   onOpenTermsOfService: func.isRequired,
   onOpenPrivacyPolicy: func.isRequired,
+  intl: intlShape.isRequired,
 };
 
 export default TermsAndConditions;
