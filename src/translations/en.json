@@ -598,7 +598,6 @@
   "ProductOrderForm.finePrint": "You won't be charged yet.",
   "ProductOrderForm.finePrintNoStock": "Unfortunately this bike is out of stock right now but you can {contactSellerLink}.",
   "ProductOrderForm.finePrintNoStockLinkText": "contact the bike owner",
-  "ProductOrderForm.listingPriceMissing": "Listing price has not been set",
   "ProductOrderForm.noDeliveryMethodSet": "Provider hasn't enabled any delivery method.",
   "ProductOrderForm.pickupOption": "Pickup",
   "ProductOrderForm.quantityLabel": "Number of bikes",
