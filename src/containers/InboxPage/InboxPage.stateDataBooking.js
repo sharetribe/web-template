@@ -22,7 +22,7 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
       return { processName, processState, isFinal: true };
     })
     .cond([states.PREAUTHORIZED, PROVIDER], () => {
-      return { processName, processState, actionNeeded: true };
+      return { processName, processState, actionNeeded: true, isSaleNotification: true };
     })
     .cond([states.ACCEPTED, _], () => {
       return { processName, processState, actionNeeded: true };
