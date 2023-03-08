@@ -114,7 +114,7 @@ const OrderPanel = props => {
   const PriceMissing = () => {
     return (
       <p className={css.error}>
-        <FormattedMessage id="ProductOrderForm.listingPriceMissing" />
+        <FormattedMessage id="OrderPanel.listingPriceMissing" />
       </p>
     );
   };
@@ -122,7 +122,7 @@ const OrderPanel = props => {
   const InvalidCurrency = () => {
     return (
       <p className={css.error}>
-        <FormattedMessage id="ProductOrderForm.listingCurrencyInvalid" />
+        <FormattedMessage id="OrderPanel.listingCurrencyInvalid" />
       </p>
     );
   };

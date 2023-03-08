@@ -303,11 +303,14 @@ export class CheckoutPageComponent extends Component {
     const processName =
       tx?.attributes?.processName ||
       pageDataListing?.attributes?.publicData?.transactionProcessAlias?.split('/')[0];
-    const process = getProcess(processName);
+    const process = processName ? getProcess(processName) : null;
 
     // If transaction has passed payment-pending state, speculated tx is not needed.
     const shouldFetchSpeculatedTransaction =
-      pageData?.listing?.id && pageData.orderData && !txHasPassedPendingPayment(tx, process);
+      !!pageData?.listing?.id &&
+      !!pageData.orderData &&
+      !!process &&
+      !txHasPassedPendingPayment(tx, process);
 
     if (shouldFetchSpeculatedTransaction) {
       const listingId = pageData.listing.id;
@@ -726,7 +729,7 @@ export class CheckoutPageComponent extends Component {
 
     const pageProps = { title, scrollingDisabled };
 
-    const isLoading = !this.state.dataLoaded || speculateTransactionInProgress || !processName;
+    const isLoading = !this.state.dataLoaded || speculateTransactionInProgress;
 
     if (isLoading) {
       return (
@@ -735,9 +738,6 @@ export class CheckoutPageComponent extends Component {
         </Page>
       );
     }
-    const process = getProcess(latestProcessName);
-    const transitions = process.transitions;
-
     const isOwnListing =
       currentUser &&
       currentUser.id &&
@@ -745,7 +745,7 @@ export class CheckoutPageComponent extends Component {
       currentAuthor.id &&
       currentAuthor.id.uuid === currentUser.id.uuid;
 
-    const hasRequiredData = !!(currentListing.id && currentAuthor.id);
+    const hasRequiredData = !!(currentListing.id && currentAuthor.id && processName);
     const canShowPage = hasRequiredData && !isOwnListing;
     const shouldRedirect = !isLoading && !canShowPage;
 
@@ -783,6 +783,8 @@ export class CheckoutPageComponent extends Component {
         />
       ) : null;
 
+    const process = latestProcessName ? getProcess(latestProcessName) : null;
+    const transitions = process.transitions;
     const isPaymentExpired = checkIsPaymentExpired(existingTransaction, process);
     const hasDefaultPaymentMethod = !!(
       stripeCustomerFetched &&
