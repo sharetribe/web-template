@@ -8,7 +8,7 @@ import { LISTING_STATE_DRAFT } from '../../../../util/types';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 
 // Import shared components
-import { Heading, ListingLink } from '../../../../components';
+import { H3, ListingLink } from '../../../../components';
 
 // Import modules from this directory
 import EditListingDeliveryForm from './EditListingDeliveryForm';
