@@ -36,10 +36,10 @@ export const search = {
 
   // Should search results be ordered by distance to origin.
   // NOTE 1: This doesn't affect if the main search type is 'keywords'
-  // NOTE 2: If this is set to true add parameter 'origin' to every location in default-location-searches.js
+  // NOTE 2: If this is set to true add parameter 'origin' to every location in configDefaultLocationSearches.js
   //         Without the 'origin' parameter, search will not work correctly
-  // NOTE 3: Keyword search and ordering search results by distance can't be used at the same time. You can turn keyword
-  //         search off by removing keyword filter config from filters array in marketplace-custom-config.js
+  // NOTE 3: Keyword search and ordering search results by distance can't be used at the same time.
+  //         You should check that keyword filter is not used in configSearch.js
   sortSearchByDistance: false,
 
   // Limit location autocomplete to a one or more countries
