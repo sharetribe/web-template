@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Update code comments in configMaps.js
+  [#110](https://github.com/sharetribe/ftw-x/pull/110)
 - [fix] EditListingDeliveryPanel: H3 import was missing
   [#109](https://github.com/sharetribe/ftw-x/pull/109)
 - [fix] Fix back-navigation after successful payment and notification dots for booking process.
