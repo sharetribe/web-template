@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Small changes to Signup form according to review feedback.
+  [#111](https://github.com/sharetribe/ftw-x/pull/111)
 - [change] Update code comments in configMaps.js
   [#110](https://github.com/sharetribe/ftw-x/pull/110)
 - [fix] EditListingDeliveryPanel: H3 import was missing
