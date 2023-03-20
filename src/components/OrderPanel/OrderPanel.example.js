@@ -1,5 +1,5 @@
 import React from 'react';
-import { createListing, createUser } from '../../util/test-data';
+import { createListing, createUser } from '../../util/testData';
 import { LISTING_STATE_CLOSED } from '../../util/types';
 import OrderPanel from './OrderPanel';
 import css from './OrderPanelExample.module.css';

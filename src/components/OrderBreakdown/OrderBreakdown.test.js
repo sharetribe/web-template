@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import Decimal from 'decimal.js';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
-import { fakeIntl, createBooking } from '../../util/test-data';
+import { fakeIntl, createBooking } from '../../util/testData';
 import { renderWithProviders as render, testingLibrary } from '../../util/test-helpers';
 import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../transactions/transaction';
 

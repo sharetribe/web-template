@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { createCurrentUser } from '../../../util/test-data';
+import { createCurrentUser } from '../../../util/testData';
 import EmailVerificationForm from './EmailVerificationForm';
 
 const notVerifiedUser = createCurrentUser('not-verified');

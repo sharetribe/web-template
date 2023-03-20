@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 
-import { createListing, fakeIntl } from '../../util/test-data';
+import { createListing, fakeIntl } from '../../util/testData';
 import {
   renderWithProviders as render,
   testingLibrary,

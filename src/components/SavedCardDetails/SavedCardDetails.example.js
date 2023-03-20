@@ -1,4 +1,4 @@
-import { fakeIntl } from '../../util/test-data';
+import { fakeIntl } from '../../util/testData';
 import SavedCardDetails from './SavedCardDetails';
 
 const noop = () => null;

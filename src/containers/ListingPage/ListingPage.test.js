@@ -8,7 +8,7 @@ import {
   createListing,
   createOwnListing,
   fakeIntl,
-} from '../../util/test-data';
+} from '../../util/testData';
 import {
   renderWithProviders as render,
   testingLibrary,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { fakeIntl } from '../../../util/test-data';
+import { fakeIntl } from '../../../util/testData';
 import TermsAndConditions from '../TermsAndConditions/TermsAndConditions';
 import SignupForm from './SignupForm';
 

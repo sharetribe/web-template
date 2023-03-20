@@ -6,7 +6,7 @@ import {
   LISTING_STATE_PENDING_APPROVAL,
   LISTING_STATE_DRAFT,
 } from '../../../util/types';
-import { createOwnListing, fakeIntl } from '../../../util/test-data';
+import { createOwnListing, fakeIntl } from '../../../util/testData';
 
 import ManageListingCard from './ManageListingCard';
 

@@ -3,7 +3,7 @@ import Decimal from 'decimal.js';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { injectIntl } from '../../util/reactIntl';
-import { createUser, createListing, createTransaction } from '../../util/test-data';
+import { createUser, createListing, createTransaction } from '../../util/testData';
 import { LINE_ITEM_ITEM } from '../../util/types';
 import { getProcess } from '../../transactions/transaction';
 
