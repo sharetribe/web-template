@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 
-import { createCurrentUser, fakeIntl } from '../../util/test-data';
+import { createCurrentUser, fakeIntl } from '../../util/testData';
 import { renderWithProviders as render, testingLibrary } from '../../util/test-helpers';
 
 import { ProfileSettingsPageComponent } from './ProfileSettingsPage';

@@ -9,7 +9,7 @@ import {
   createMessage,
   createListing,
   createTransaction,
-} from '../../../util/test-data';
+} from '../../../util/testData';
 import { TX_TRANSITION_ACTOR_CUSTOMER, getProcess } from '../../../transactions/transaction';
 
 import { ActivityFeedComponent } from './ActivityFeed';

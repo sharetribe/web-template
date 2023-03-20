@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 
 import { renderWithProviders as render, testingLibrary } from '../../util/test-helpers';
-import { fakeIntl } from '../../util/test-data';
+import { fakeIntl } from '../../util/testData';
 
 import AuthenticationPage from './AuthenticationPage';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 
-import { fakeIntl } from '../../../../util/test-data';
+import { fakeIntl } from '../../../../util/testData';
 import { renderWithProviders as render, testingLibrary } from '../../../../util/test-helpers';
 
 import EditListingLocationForm from './EditListingLocationForm';

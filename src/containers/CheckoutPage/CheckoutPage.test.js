@@ -9,7 +9,7 @@ import {
   createListing,
   fakeIntl,
   createTransaction,
-} from '../../util/test-data';
+} from '../../util/testData';
 import {
   renderWithProviders as render,
   testingLibrary,

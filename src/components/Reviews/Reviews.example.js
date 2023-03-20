@@ -1,5 +1,5 @@
 import Reviews from './Reviews';
-import { createReview, createUser } from '../../util/test-data';
+import { createReview, createUser } from '../../util/testData';
 
 export const WithNoReviews = {
   component: Reviews,

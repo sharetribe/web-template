@@ -1,4 +1,4 @@
-import { createUser, createCurrentUser } from '../../util/test-data';
+import { createUser, createCurrentUser } from '../../util/testData';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import UserCard from './UserCard';
 

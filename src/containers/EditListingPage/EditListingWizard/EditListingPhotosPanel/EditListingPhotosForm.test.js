@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { Form as FinalForm, Field } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 
-import { fakeIntl } from '../../../../util/test-data';
+import { fakeIntl } from '../../../../util/testData';
 import { renderWithProviders as render, testingLibrary } from '../../../../util/test-helpers';
 
 import EditListingPhotosForm, { FieldAddImage } from './EditListingPhotosForm';
