@@ -6,7 +6,7 @@ import {
   renderWithProviders as render,
   testingLibrary,
   getRouteConfiguration,
-} from '../../util/test-helpers';
+} from '../../util/testHelpers';
 
 import { SearchPageComponent as SearchPageWithList } from './SearchPageWithList';
 import { SearchPageComponent as SearchPageWithMap } from './SearchPageWithMap';

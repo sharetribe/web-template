@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 
 import { fakeIntl } from '../../util/testData';
-import { renderWithProviders as render, testingLibrary } from '../../util/test-helpers';
+import { renderWithProviders as render, testingLibrary } from '../../util/testHelpers';
 
 import { NotFoundPageComponent } from './NotFoundPage';
 

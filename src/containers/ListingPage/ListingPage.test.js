@@ -14,7 +14,7 @@ import {
   testingLibrary,
   getRouteConfiguration,
   getDefaultConfiguration,
-} from '../../util/test-helpers';
+} from '../../util/testHelpers';
 
 import { storableError } from '../../util/errors';
 
