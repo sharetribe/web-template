@@ -4,7 +4,7 @@ import Decimal from 'decimal.js';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { fakeIntl, createBooking } from '../../util/testData';
-import { renderWithProviders as render, testingLibrary } from '../../util/test-helpers';
+import { renderWithProviders as render, testingLibrary } from '../../util/testHelpers';
 import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../transactions/transaction';
 
 import { OrderBreakdownComponent } from './OrderBreakdown';

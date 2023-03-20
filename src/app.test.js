@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { getDefaultConfiguration } from './util/test-helpers';
+import { getDefaultConfiguration } from './util/testHelpers';
 import { ClientApp } from './app';
 import configureStore from './store';
 

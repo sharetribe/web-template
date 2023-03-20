@@ -11,7 +11,7 @@ import {
   fakeIntl,
   createTransaction,
 } from '../../util/testData';
-import { renderWithProviders as render, testingLibrary } from '../../util/test-helpers';
+import { renderWithProviders as render, testingLibrary } from '../../util/testHelpers';
 
 import {
   TX_TRANSITION_ACTOR_CUSTOMER,

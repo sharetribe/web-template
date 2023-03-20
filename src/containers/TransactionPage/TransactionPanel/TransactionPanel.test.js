@@ -9,7 +9,7 @@ import {
   createMessage,
   fakeIntl,
 } from '../../../util/testData';
-import { renderWithProviders as render, testingLibrary } from '../../../util/test-helpers';
+import { renderWithProviders as render, testingLibrary } from '../../../util/testHelpers';
 
 import { TransactionPanelComponent } from './TransactionPanel';
 

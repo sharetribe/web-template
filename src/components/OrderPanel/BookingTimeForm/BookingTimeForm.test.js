@@ -5,7 +5,7 @@ import Decimal from 'decimal.js';
 
 import { LINE_ITEM_HOUR } from '../../../util/types';
 import { types as sdkTypes } from '../../../util/sdkLoader';
-import { renderWithProviders as render, testingLibrary } from '../../../util/test-helpers';
+import { renderWithProviders as render, testingLibrary } from '../../../util/testHelpers';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 

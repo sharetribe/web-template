@@ -14,7 +14,7 @@ import {
   renderWithProviders as render,
   testingLibrary,
   getDefaultConfiguration,
-} from '../../util/test-helpers';
+} from '../../util/testHelpers';
 
 import { CheckoutPageComponent } from './CheckoutPage';
 import checkoutPageReducer, { SET_INITIAL_VALUES, setInitialValues } from './CheckoutPage.duck';

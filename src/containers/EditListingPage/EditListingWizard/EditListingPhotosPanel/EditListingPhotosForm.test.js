@@ -4,7 +4,7 @@ import { Form as FinalForm, Field } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 
 import { fakeIntl } from '../../../../util/testData';
-import { renderWithProviders as render, testingLibrary } from '../../../../util/test-helpers';
+import { renderWithProviders as render, testingLibrary } from '../../../../util/testHelpers';
 
 import EditListingPhotosForm, { FieldAddImage } from './EditListingPhotosForm';
 

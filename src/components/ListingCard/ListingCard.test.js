@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 
-import { renderWithProviders as render } from '../../util/test-helpers';
+import { renderWithProviders as render } from '../../util/testHelpers';
 import { createUser, createListing, fakeIntl } from '../../util/testData';
 
 import { ListingCardComponent } from './ListingCard';
