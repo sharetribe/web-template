@@ -460,14 +460,11 @@
   "ManageListingCard.setPriceAndStock": "Add stock",
   "ManageListingCard.unsupportedPrice": "({currency})",
   "ManageListingCard.unsupportedPriceTitle": "Unsupported currency ({currency})",
-  "ManageListingsPage.accountSettings": "Account settings",
   "ManageListingsPage.loadingOwnListings": "Loading listings…",
   "ManageListingsPage.noResults": "You haven't listed any bikes.",
-  "ManageListingsPage.profileSettings": "Profile settings",
   "ManageListingsPage.queryError": "Query failed. Please try again.",
   "ManageListingsPage.title": "Manage your listings",
   "ManageListingsPage.youHaveListings": "You have {count} {count, plural, one {listing} other {listings}}",
-  "ManageListingsPage.yourListings": "Your bikes",
   "Modal.close": "CLOSE",
   "Modal.closeModal": "Close modal",
   "ModalMissingInformation.checkInbox": "Please check your inbox and verify your email address {email}.",
@@ -1077,5 +1074,8 @@
   "UserCard.showFullBioLink": "more",
   "UserCard.viewProfileLink": "View profile",
   "UserDisplayName.banned": "Banned user",
-  "UserDisplayName.deleted": "Deleted user"
+  "UserDisplayName.deleted": "Deleted user",
+  "UserNav.accountSettings": "Account settings",
+  "UserNav.profileSettings": "Profile settings",
+  "UserNav.yourListings": "Your bikes"
 }
