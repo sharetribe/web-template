@@ -8,17 +8,21 @@ const { UUID, LatLng, Money } = sdkTypes;
 const processTransitions = getProcess('default-purchase')?.transitions;
 
 // Create a booking that conforms to the util/types booking schema
-export const createBooking = (id, attributes = {}) => ({
-  id: new UUID(id),
-  type: 'booking',
-  attributes: {
-    start: new Date(Date.UTC(2017, 5, 10)),
-    displayStart: new Date(Date.UTC(2017, 5, 10)),
-    end: new Date(Date.UTC(2017, 5, 10)),
-    displayEnd: new Date(Date.UTC(2017, 5, 10)),
-    ...attributes,
-  },
-});
+export const createBooking = (id, attributes = {}) => {
+  const start = attributes.start || new Date(Date.UTC(2017, 5, 10));
+  const end = attributes.end || new Date(Date.UTC(2017, 5, 10));
+  return {
+    id: new UUID(id),
+    type: 'booking',
+    attributes: {
+      start,
+      displayStart: start,
+      end,
+      displayEnd: end,
+      ...attributes,
+    },
+  };
+};
 
 // Create a stripeAccount that conforms to the util/types stripeAccount schema
 export const createStripeAccount = (id, attributes = {}) => ({
@@ -177,7 +181,7 @@ export const createTransaction = options => {
     ? lineItemsParam
     : [
         {
-          code: 'line-item/day',
+          code: 'line-item/item',
           includeFor: ['customer', 'provider'],
           quantity: new Decimal(dayCount),
           unitPrice: new Money(total.amount / dayCount, total.currency),
@@ -288,11 +292,12 @@ export const fakeIntl = {
       start.getUTCDate()
     )} - ${end.getUTCFullYear()}-${pad(end.getUTCMonth() + 1)}-${pad(end.getUTCDate())}`,
   formatMessage: msg => msg.id,
-  formatNumber: d => d,
+  formatNumber: d => `${d}`,
   formatPlural: d => d,
   formatRelativeTime: d => d,
   formatTime: d => `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`,
   now: () => Date.UTC(2017, 10, 23, 12, 59),
+  messages: {},
 };
 
 const noop = () => null;
