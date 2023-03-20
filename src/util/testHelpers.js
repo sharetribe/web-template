@@ -12,7 +12,7 @@ import { Provider } from 'react-redux';
 import { HelmetProvider } from 'react-helmet-async';
 
 import configureStore from '../store';
-import { IntlProvider } from '../util/reactIntl';
+import { IntlProvider } from './reactIntl';
 import defaultConfig from '../config/configDefault';
 import { ConfigurationProvider } from '../context/configurationContext';
 import { RouteConfigurationProvider } from '../context/routeConfigurationContext';
