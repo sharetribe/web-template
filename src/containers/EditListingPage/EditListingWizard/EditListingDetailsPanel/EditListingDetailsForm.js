@@ -62,7 +62,7 @@ const FieldSelectListingType = props => {
     formApi.change('unitType', selectedListingType.unitType);
 
     const hasProcessChanged =
-      transactionProcessAlias === selectedListingType.transactionProcessAlias;
+      transactionProcessAlias !== selectedListingType.transactionProcessAlias;
     if (onProcessChange && hasProcessChanged) {
       onProcessChange(selectedListingType.transactionProcessAlias);
     }
