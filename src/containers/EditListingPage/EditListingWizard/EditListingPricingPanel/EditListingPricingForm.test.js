@@ -1,13 +1,19 @@
 import React from 'react';
-import { renderDeep } from '../../../../util/test-helpers';
+import '@testing-library/jest-dom';
+
 import { fakeIntl } from '../../../../util/test-data';
+import { renderWithProviders as render, testingLibrary } from '../../../../util/test-helpers';
+
 import EditListingPricingForm from './EditListingPricingForm';
+
+const { screen, userEvent, fireEvent } = testingLibrary;
 
 const noop = () => null;
 
-describe('EditListingPricingForm', () => {
-  it('matches snapshot', () => {
-    const tree = renderDeep(
+describe('EditListingDeliveryForm', () => {
+  test('Check that price can be given and submit button activates', () => {
+    const saveActionMsg = 'Save price';
+    render(
       <EditListingPricingForm
         intl={fakeIntl}
         dispatch={noop}
@@ -15,13 +21,22 @@ describe('EditListingPricingForm', () => {
         marketplaceCurrency="USD"
         unitType="day"
         listingMinimumPriceSubUnits={0}
-        saveActionMsg="Save price"
+        saveActionMsg={saveActionMsg}
         updated={false}
         updateInProgress={false}
         disabled={false}
         ready={false}
       />
     );
-    expect(tree).toMatchSnapshot();
+
+    // Test that save button is disabled at first
+    expect(screen.getByRole('button', { name: saveActionMsg })).toBeDisabled();
+
+    // Fill mandatory attributes
+    const price = 'EditListingPricingForm.pricePerProduct';
+    userEvent.type(screen.getByRole('textbox', { name: price }), '10');
+
+    // Test that save button is enabled
+    expect(screen.getByRole('button', { name: saveActionMsg })).toBeEnabled();
   });
 });
