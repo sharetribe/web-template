@@ -2,61 +2,56 @@
 
 exports[`InboxPage InboxItem matches snapshot of order 1`] = `
 <div
-  className="item"
+  class="item"
 >
   <div
-    className="itemAvatar"
+    class="itemAvatar"
   >
     <a
-      className="root"
+      class="root"
       href="/u/provider-user-id"
-      onClick={[Function]}
-      onMouseOver={[Function]}
-      onTouchStart={[Function]}
-      style={Object {}}
       title="provider-user-id display name"
     >
       <span
-        className="initials"
+        class="initials"
       >
         TT
       </span>
     </a>
   </div>
   <a
-    className="itemLink"
+    class="itemLink"
     href="/order/order-1"
-    onClick={[Function]}
-    onMouseOver={[Function]}
-    onTouchStart={[Function]}
-    style={Object {}}
-    title={null}
   >
     <div
-      className="rowNotificationDot"
+      class="rowNotificationDot"
     />
     <div
-      className="itemUsername"
+      class="itemUsername"
     >
       <span
-        className=""
+        class=""
       >
         provider-user-id display name
       </span>
     </div>
     <div
-      className="itemTitle"
+      class="itemTitle"
     >
       ItemX title
     </div>
     <div
-      className="itemDetails"
-    />
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
     <div
-      className="itemState"
+      class="itemState"
     >
       <div
-        className="stateName stateNoActionNeeded"
+        class="stateName stateNoActionNeeded"
       >
         <span>
           InboxPage.default-purchase.purchased.status
@@ -69,65 +64,56 @@ exports[`InboxPage InboxItem matches snapshot of order 1`] = `
 
 exports[`InboxPage InboxItem matches snapshot of sales 1`] = `
 <div
-  className="item"
+  class="item"
 >
   <div
-    className="itemAvatar"
+    class="itemAvatar"
   >
     <a
-      className="root"
+      class="root"
       href="/u/customer-user-id"
-      onClick={[Function]}
-      onMouseOver={[Function]}
-      onTouchStart={[Function]}
-      style={Object {}}
       title="customer-user-id display name"
     >
       <span
-        className="initials"
+        class="initials"
       >
         TT
       </span>
     </a>
   </div>
   <a
-    className="itemLink"
+    class="itemLink"
     href="/sale/sale-1"
-    onClick={[Function]}
-    onMouseOver={[Function]}
-    onTouchStart={[Function]}
-    style={Object {}}
-    title={null}
   >
     <div
-      className="rowNotificationDot"
+      class="rowNotificationDot"
     >
       <div
-        className="notificationDot"
+        class="notificationDot"
       />
     </div>
     <div
-      className="itemUsername"
+      class="itemUsername"
     >
       <span
-        className=""
+        class=""
       >
         customer-user-id display name
       </span>
     </div>
     <div
-      className="itemTitle"
+      class="itemTitle"
     >
       ItemX title
     </div>
     <div
-      className="itemDetails"
+      class="itemDetails"
     />
     <div
-      className="itemState"
+      class="itemState"
     >
       <div
-        className="stateName stateActionNeeded"
+        class="stateName stateActionNeeded"
       >
         <span>
           InboxPage.default-purchase.purchased.status
@@ -136,822 +122,4 @@ exports[`InboxPage InboxItem matches snapshot of sales 1`] = `
     </div>
   </a>
 </div>
-`;
-
-exports[`InboxPage InboxPageComponent matches snapshot of order 1`] = `
-<Page
-  scrollingDisabled={false}
-  title="InboxPage.ordersTitle"
->
-  <LayoutSideNavigation
-    className={null}
-    currentPage={null}
-    footer={<injectIntl(Footer) />}
-    rootClassName={null}
-    sideNav={
-      <React.Fragment>
-        <H2
-          as="h1"
-          className="title"
-          rootClassName={null}
-        >
-          <Memo(MemoizedFormattedMessage)
-            id="InboxPage.title"
-          />
-        </H2>
-        <TabNav
-          className={null}
-          rootClassName="tabs"
-          tabClassName={null}
-          tabRootClassName="tab"
-          tabs={
-            Array [
-              Object {
-                "linkProps": Object {
-                  "name": "InboxPage",
-                  "params": Object {
-                    "tab": "orders",
-                  },
-                },
-                "selected": true,
-                "text": <span>
-                  <Memo(MemoizedFormattedMessage)
-                    id="InboxPage.ordersTabTitle"
-                  />
-                </span>,
-              },
-              Object {
-                "linkProps": Object {
-                  "name": "InboxPage",
-                  "params": Object {
-                    "tab": "sales",
-                  },
-                },
-                "selected": false,
-                "text": <span>
-                  <Memo(MemoizedFormattedMessage)
-                    id="InboxPage.salesTabTitle"
-                  />
-                </span>,
-              },
-            ]
-          }
-        />
-         
-      </React.Fragment>
-    }
-    sideNavClassName="navigation"
-    topbar={
-      <withRouter(Connect(TopbarContainerComponent))
-        className="topbar"
-        currentPage="InboxPage"
-        desktopClassName="desktopTopbar"
-        mobileRootClassName="mobileTopbar"
-      />
-    }
-    useAccountSettingsNav={false}
-  >
-    <ul
-      className="itemList"
-    >
-      <li
-        className="listItem"
-        key="order-1"
-      >
-        <InboxItem
-          intl={
-            Object {
-              "formatDate": [Function],
-              "formatDateTimeRange": [Function],
-              "formatMessage": [Function],
-              "formatNumber": [Function],
-              "formatPlural": [Function],
-              "formatRelativeTime": [Function],
-              "formatTime": [Function],
-              "now": [Function],
-            }
-          }
-          isBooking={false}
-          stateData={
-            Object {
-              "processName": "default-purchase",
-              "processState": "purchased",
-            }
-          }
-          transactionRole="customer"
-          tx={
-            Object {
-              "attributes": Object {
-                "createdAt": 2017-05-01T00:00:00.000Z,
-                "lastTransition": "transition/confirm-payment",
-                "lastTransitionedAt": 2017-01-15T00:00:00.000Z,
-                "lineItems": Array [
-                  Object {
-                    "code": "line-item/item",
-                    "includeFor": Array [
-                      "customer",
-                      "provider",
-                    ],
-                    "lineTotal": Money {
-                      "_sdkType": "Money",
-                      "amount": 1000,
-                      "currency": "USD",
-                    },
-                    "quantity": "1",
-                    "reversal": false,
-                    "unitPrice": Money {
-                      "_sdkType": "Money",
-                      "amount": 1000,
-                      "currency": "USD",
-                    },
-                  },
-                  Object {
-                    "code": "line-item/provider-commission",
-                    "includeFor": Array [
-                      "provider",
-                    ],
-                    "lineTotal": Money {
-                      "_sdkType": "Money",
-                      "amount": -100,
-                      "currency": "USD",
-                    },
-                    "reversal": false,
-                    "unitPrice": Money {
-                      "_sdkType": "Money",
-                      "amount": -100,
-                      "currency": "USD",
-                    },
-                  },
-                ],
-                "payinTotal": Money {
-                  "_sdkType": "Money",
-                  "amount": 1000,
-                  "currency": "USD",
-                },
-                "payoutTotal": Money {
-                  "_sdkType": "Money",
-                  "amount": 900,
-                  "currency": "USD",
-                },
-                "processName": "default-purchase",
-                "processVersion": 1,
-                "transitions": Array [
-                  Object {
-                    "by": "customer",
-                    "createdAt": 2017-05-01T00:00:00.000Z,
-                    "transition": "transition/request-payment",
-                  },
-                  Object {
-                    "by": "customer",
-                    "createdAt": 2017-05-01T00:00:01.000Z,
-                    "transition": "transition/confirm-payment",
-                  },
-                ],
-              },
-              "booking": null,
-              "customer": Object {
-                "attributes": Object {
-                  "banned": false,
-                  "deleted": false,
-                  "profile": Object {
-                    "abbreviatedName": "TT",
-                    "displayName": "customer-user-id display name",
-                  },
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "customer-user-id",
-                },
-                "type": "user",
-              },
-              "id": UUID {
-                "_sdkType": "UUID",
-                "uuid": "order-1",
-              },
-              "listing": Object {
-                "attributes": Object {
-                  "deleted": false,
-                  "description": "ItemX description",
-                  "geolocation": LatLng {
-                    "_sdkType": "LatLng",
-                    "lat": 40,
-                    "lng": 60,
-                  },
-                  "price": Money {
-                    "_sdkType": "Money",
-                    "amount": 5500,
-                    "currency": "USD",
-                  },
-                  "publicData": Object {
-                    "listingType": "sell-bikes",
-                    "transactionProcessAlias": "default-purchase",
-                    "unitType": "item",
-                  },
-                  "state": "published",
-                  "title": "ItemX title",
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "ItemX",
-                },
-                "type": "listing",
-              },
-              "provider": Object {
-                "attributes": Object {
-                  "banned": false,
-                  "deleted": false,
-                  "profile": Object {
-                    "abbreviatedName": "TT",
-                    "displayName": "provider-user-id display name",
-                  },
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "provider-user-id",
-                },
-                "type": "user",
-              },
-              "reviews": Array [],
-              "type": "transaction",
-            }
-          }
-        />
-      </li>
-      <li
-        className="listItem"
-        key="order-2"
-      >
-        <InboxItem
-          intl={
-            Object {
-              "formatDate": [Function],
-              "formatDateTimeRange": [Function],
-              "formatMessage": [Function],
-              "formatNumber": [Function],
-              "formatPlural": [Function],
-              "formatRelativeTime": [Function],
-              "formatTime": [Function],
-              "now": [Function],
-            }
-          }
-          isBooking={false}
-          stateData={
-            Object {
-              "processName": "default-purchase",
-              "processState": "purchased",
-            }
-          }
-          transactionRole="customer"
-          tx={
-            Object {
-              "attributes": Object {
-                "createdAt": 2017-05-01T00:00:00.000Z,
-                "lastTransition": "transition/confirm-payment",
-                "lastTransitionedAt": 2016-01-15T00:00:00.000Z,
-                "lineItems": Array [
-                  Object {
-                    "code": "line-item/item",
-                    "includeFor": Array [
-                      "customer",
-                      "provider",
-                    ],
-                    "lineTotal": Money {
-                      "_sdkType": "Money",
-                      "amount": 1000,
-                      "currency": "USD",
-                    },
-                    "quantity": "1",
-                    "reversal": false,
-                    "unitPrice": Money {
-                      "_sdkType": "Money",
-                      "amount": 1000,
-                      "currency": "USD",
-                    },
-                  },
-                  Object {
-                    "code": "line-item/provider-commission",
-                    "includeFor": Array [
-                      "provider",
-                    ],
-                    "lineTotal": Money {
-                      "_sdkType": "Money",
-                      "amount": -100,
-                      "currency": "USD",
-                    },
-                    "reversal": false,
-                    "unitPrice": Money {
-                      "_sdkType": "Money",
-                      "amount": -100,
-                      "currency": "USD",
-                    },
-                  },
-                ],
-                "payinTotal": Money {
-                  "_sdkType": "Money",
-                  "amount": 1000,
-                  "currency": "USD",
-                },
-                "payoutTotal": Money {
-                  "_sdkType": "Money",
-                  "amount": 900,
-                  "currency": "USD",
-                },
-                "processName": "default-purchase",
-                "processVersion": 1,
-                "transitions": Array [
-                  Object {
-                    "by": "customer",
-                    "createdAt": 2017-05-01T00:00:00.000Z,
-                    "transition": "transition/request-payment",
-                  },
-                  Object {
-                    "by": "customer",
-                    "createdAt": 2017-05-01T00:00:01.000Z,
-                    "transition": "transition/confirm-payment",
-                  },
-                ],
-              },
-              "booking": null,
-              "customer": Object {
-                "attributes": Object {
-                  "banned": false,
-                  "deleted": false,
-                  "profile": Object {
-                    "abbreviatedName": "TT",
-                    "displayName": "customer-user-id display name",
-                  },
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "customer-user-id",
-                },
-                "type": "user",
-              },
-              "id": UUID {
-                "_sdkType": "UUID",
-                "uuid": "order-2",
-              },
-              "listing": Object {
-                "attributes": Object {
-                  "deleted": false,
-                  "description": "ItemX description",
-                  "geolocation": LatLng {
-                    "_sdkType": "LatLng",
-                    "lat": 40,
-                    "lng": 60,
-                  },
-                  "price": Money {
-                    "_sdkType": "Money",
-                    "amount": 5500,
-                    "currency": "USD",
-                  },
-                  "publicData": Object {
-                    "listingType": "sell-bikes",
-                    "transactionProcessAlias": "default-purchase",
-                    "unitType": "item",
-                  },
-                  "state": "published",
-                  "title": "ItemX title",
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "ItemX",
-                },
-                "type": "listing",
-              },
-              "provider": Object {
-                "attributes": Object {
-                  "banned": false,
-                  "deleted": false,
-                  "profile": Object {
-                    "abbreviatedName": "TT",
-                    "displayName": "provider-user-id display name",
-                  },
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "provider-user-id",
-                },
-                "type": "user",
-              },
-              "reviews": Array [],
-              "type": "transaction",
-            }
-          }
-        />
-      </li>
-    </ul>
-  </LayoutSideNavigation>
-</Page>
-`;
-
-exports[`InboxPage InboxPageComponent matches snapshot of sales 1`] = `
-<Page
-  scrollingDisabled={false}
-  title="InboxPage.salesTitle"
->
-  <LayoutSideNavigation
-    className={null}
-    currentPage={null}
-    footer={<injectIntl(Footer) />}
-    rootClassName={null}
-    sideNav={
-      <React.Fragment>
-        <H2
-          as="h1"
-          className="title"
-          rootClassName={null}
-        >
-          <Memo(MemoizedFormattedMessage)
-            id="InboxPage.title"
-          />
-        </H2>
-        <TabNav
-          className={null}
-          rootClassName="tabs"
-          tabClassName={null}
-          tabRootClassName="tab"
-          tabs={
-            Array [
-              Object {
-                "linkProps": Object {
-                  "name": "InboxPage",
-                  "params": Object {
-                    "tab": "orders",
-                  },
-                },
-                "selected": false,
-                "text": <span>
-                  <Memo(MemoizedFormattedMessage)
-                    id="InboxPage.ordersTabTitle"
-                  />
-                </span>,
-              },
-              Object {
-                "linkProps": Object {
-                  "name": "InboxPage",
-                  "params": Object {
-                    "tab": "sales",
-                  },
-                },
-                "selected": true,
-                "text": <span>
-                  <Memo(MemoizedFormattedMessage)
-                    id="InboxPage.salesTabTitle"
-                  />
-                </span>,
-              },
-            ]
-          }
-        />
-         
-      </React.Fragment>
-    }
-    sideNavClassName="navigation"
-    topbar={
-      <withRouter(Connect(TopbarContainerComponent))
-        className="topbar"
-        currentPage="InboxPage"
-        desktopClassName="desktopTopbar"
-        mobileRootClassName="mobileTopbar"
-      />
-    }
-    useAccountSettingsNav={false}
-  >
-    <ul
-      className="itemList"
-    >
-      <li
-        className="listItem"
-        key="sale-1"
-      >
-        <InboxItem
-          intl={
-            Object {
-              "formatDate": [Function],
-              "formatDateTimeRange": [Function],
-              "formatMessage": [Function],
-              "formatNumber": [Function],
-              "formatPlural": [Function],
-              "formatRelativeTime": [Function],
-              "formatTime": [Function],
-              "now": [Function],
-            }
-          }
-          isBooking={false}
-          stateData={
-            Object {
-              "actionNeeded": true,
-              "isSaleNotification": true,
-              "processName": "default-purchase",
-              "processState": "purchased",
-            }
-          }
-          transactionRole="provider"
-          tx={
-            Object {
-              "attributes": Object {
-                "createdAt": 2017-05-01T00:00:00.000Z,
-                "lastTransition": "transition/confirm-payment",
-                "lastTransitionedAt": 2017-01-15T00:00:00.000Z,
-                "lineItems": Array [
-                  Object {
-                    "code": "line-item/item",
-                    "includeFor": Array [
-                      "customer",
-                      "provider",
-                    ],
-                    "lineTotal": Money {
-                      "_sdkType": "Money",
-                      "amount": 1000,
-                      "currency": "USD",
-                    },
-                    "quantity": "1",
-                    "reversal": false,
-                    "unitPrice": Money {
-                      "_sdkType": "Money",
-                      "amount": 1000,
-                      "currency": "USD",
-                    },
-                  },
-                  Object {
-                    "code": "line-item/provider-commission",
-                    "includeFor": Array [
-                      "provider",
-                    ],
-                    "lineTotal": Money {
-                      "_sdkType": "Money",
-                      "amount": -100,
-                      "currency": "USD",
-                    },
-                    "reversal": false,
-                    "unitPrice": Money {
-                      "_sdkType": "Money",
-                      "amount": -100,
-                      "currency": "USD",
-                    },
-                  },
-                ],
-                "payinTotal": Money {
-                  "_sdkType": "Money",
-                  "amount": 1000,
-                  "currency": "USD",
-                },
-                "payoutTotal": Money {
-                  "_sdkType": "Money",
-                  "amount": 900,
-                  "currency": "USD",
-                },
-                "processName": "default-purchase",
-                "processVersion": 1,
-                "transitions": Array [
-                  Object {
-                    "by": "customer",
-                    "createdAt": 2017-05-01T00:00:00.000Z,
-                    "transition": "transition/request-payment",
-                  },
-                  Object {
-                    "by": "customer",
-                    "createdAt": 2017-05-01T00:00:01.000Z,
-                    "transition": "transition/confirm-payment",
-                  },
-                ],
-              },
-              "booking": null,
-              "customer": Object {
-                "attributes": Object {
-                  "banned": false,
-                  "deleted": false,
-                  "profile": Object {
-                    "abbreviatedName": "TT",
-                    "displayName": "customer-user-id display name",
-                  },
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "customer-user-id",
-                },
-                "type": "user",
-              },
-              "id": UUID {
-                "_sdkType": "UUID",
-                "uuid": "sale-1",
-              },
-              "listing": Object {
-                "attributes": Object {
-                  "deleted": false,
-                  "description": "ItemX description",
-                  "geolocation": LatLng {
-                    "_sdkType": "LatLng",
-                    "lat": 40,
-                    "lng": 60,
-                  },
-                  "price": Money {
-                    "_sdkType": "Money",
-                    "amount": 5500,
-                    "currency": "USD",
-                  },
-                  "publicData": Object {
-                    "listingType": "sell-bikes",
-                    "transactionProcessAlias": "default-purchase",
-                    "unitType": "item",
-                  },
-                  "state": "published",
-                  "title": "ItemX title",
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "ItemX",
-                },
-                "type": "listing",
-              },
-              "provider": Object {
-                "attributes": Object {
-                  "banned": false,
-                  "deleted": false,
-                  "profile": Object {
-                    "abbreviatedName": "TT",
-                    "displayName": "provider-user-id display name",
-                  },
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "provider-user-id",
-                },
-                "type": "user",
-              },
-              "reviews": Array [],
-              "type": "transaction",
-            }
-          }
-        />
-      </li>
-      <li
-        className="listItem"
-        key="sale-2"
-      >
-        <InboxItem
-          intl={
-            Object {
-              "formatDate": [Function],
-              "formatDateTimeRange": [Function],
-              "formatMessage": [Function],
-              "formatNumber": [Function],
-              "formatPlural": [Function],
-              "formatRelativeTime": [Function],
-              "formatTime": [Function],
-              "now": [Function],
-            }
-          }
-          isBooking={false}
-          stateData={
-            Object {
-              "actionNeeded": true,
-              "isSaleNotification": true,
-              "processName": "default-purchase",
-              "processState": "purchased",
-            }
-          }
-          transactionRole="provider"
-          tx={
-            Object {
-              "attributes": Object {
-                "createdAt": 2017-05-01T00:00:00.000Z,
-                "lastTransition": "transition/confirm-payment",
-                "lastTransitionedAt": 2016-01-15T00:00:00.000Z,
-                "lineItems": Array [
-                  Object {
-                    "code": "line-item/item",
-                    "includeFor": Array [
-                      "customer",
-                      "provider",
-                    ],
-                    "lineTotal": Money {
-                      "_sdkType": "Money",
-                      "amount": 1000,
-                      "currency": "USD",
-                    },
-                    "quantity": "1",
-                    "reversal": false,
-                    "unitPrice": Money {
-                      "_sdkType": "Money",
-                      "amount": 1000,
-                      "currency": "USD",
-                    },
-                  },
-                  Object {
-                    "code": "line-item/provider-commission",
-                    "includeFor": Array [
-                      "provider",
-                    ],
-                    "lineTotal": Money {
-                      "_sdkType": "Money",
-                      "amount": -100,
-                      "currency": "USD",
-                    },
-                    "reversal": false,
-                    "unitPrice": Money {
-                      "_sdkType": "Money",
-                      "amount": -100,
-                      "currency": "USD",
-                    },
-                  },
-                ],
-                "payinTotal": Money {
-                  "_sdkType": "Money",
-                  "amount": 1000,
-                  "currency": "USD",
-                },
-                "payoutTotal": Money {
-                  "_sdkType": "Money",
-                  "amount": 900,
-                  "currency": "USD",
-                },
-                "processName": "default-purchase",
-                "processVersion": 1,
-                "transitions": Array [
-                  Object {
-                    "by": "customer",
-                    "createdAt": 2017-05-01T00:00:00.000Z,
-                    "transition": "transition/request-payment",
-                  },
-                  Object {
-                    "by": "customer",
-                    "createdAt": 2017-05-01T00:00:01.000Z,
-                    "transition": "transition/confirm-payment",
-                  },
-                ],
-              },
-              "booking": null,
-              "customer": Object {
-                "attributes": Object {
-                  "banned": false,
-                  "deleted": false,
-                  "profile": Object {
-                    "abbreviatedName": "TT",
-                    "displayName": "customer-user-id display name",
-                  },
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "customer-user-id",
-                },
-                "type": "user",
-              },
-              "id": UUID {
-                "_sdkType": "UUID",
-                "uuid": "sale-2",
-              },
-              "listing": Object {
-                "attributes": Object {
-                  "deleted": false,
-                  "description": "ItemX description",
-                  "geolocation": LatLng {
-                    "_sdkType": "LatLng",
-                    "lat": 40,
-                    "lng": 60,
-                  },
-                  "price": Money {
-                    "_sdkType": "Money",
-                    "amount": 5500,
-                    "currency": "USD",
-                  },
-                  "publicData": Object {
-                    "listingType": "sell-bikes",
-                    "transactionProcessAlias": "default-purchase",
-                    "unitType": "item",
-                  },
-                  "state": "published",
-                  "title": "ItemX title",
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "ItemX",
-                },
-                "type": "listing",
-              },
-              "provider": Object {
-                "attributes": Object {
-                  "banned": false,
-                  "deleted": false,
-                  "profile": Object {
-                    "abbreviatedName": "TT",
-                    "displayName": "provider-user-id display name",
-                  },
-                },
-                "id": UUID {
-                  "_sdkType": "UUID",
-                  "uuid": "provider-user-id",
-                },
-                "type": "user",
-              },
-              "reviews": Array [],
-              "type": "transaction",
-            }
-          }
-        />
-      </li>
-    </ul>
-  </LayoutSideNavigation>
-</Page>
 `;

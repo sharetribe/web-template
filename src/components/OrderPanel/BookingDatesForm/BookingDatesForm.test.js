@@ -1,21 +1,16 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import '@testing-library/jest-dom';
+import 'react-dates/initialize';
 import Decimal from 'decimal.js';
 
 import { types as sdkTypes } from '../../../util/sdkLoader';
-import { renderShallow, renderDeep } from '../../../util/test-helpers';
-import { fakeIntl } from '../../../util/test-data';
-import { LINE_ITEM_NIGHT, LISTING_UNIT_TYPES } from '../../../util/types';
-import { timeOfDayFromTimeZoneToLocal } from '../../../util/dates';
+import { renderWithProviders as render, testingLibrary } from '../../../util/testHelpers';
 
-import { OrderBreakdown } from '../../../components';
-
-import { BookingDatesFormComponent } from './BookingDatesForm';
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
 const { Money } = sdkTypes;
+const { screen, within } = testingLibrary;
 
-const noop = () => null;
 const lineItems = [
   {
     code: 'line-item/night',
@@ -27,64 +22,38 @@ const lineItems = [
   },
 ];
 
-describe('BookingDatesForm', () => {
-  it('matches snapshot without selected dates', () => {
-    const tree = renderShallow(
-      <BookingDatesFormComponent
-        lineItemUnitType={LINE_ITEM_NIGHT}
-        intl={fakeIntl}
-        dispatch={noop}
-        onSubmit={v => v}
-        price={new Money(1099, 'USD')}
-        bookingDates={{}}
-        startDatePlaceholder="today"
-        endDatePlaceholder="tomorrow"
-        fetchLineItemsInProgress={false}
-        onFetchTransactionLineItems={noop}
-        onFetchTimeSlots={noop}
+describe('EstimatedCustomerBreakdownMaybe', () => {
+  test('renders nothing if nightly is missing start and end date', () => {
+    const tree = render(
+      <EstimatedCustomerBreakdownMaybe
         lineItems={lineItems}
         currency="USD"
         marketplaceName="MarketplaceX"
         processName="default-booking"
-        dayCountAvailableForBooking={90}
       />
     );
-    expect(tree).toMatchSnapshot();
+    expect(tree.asFragment().firstChild).toBeFalsy();
   });
-});
 
-describe('EstimatedCustomerBreakdownMaybe', () => {
-  it('renders nothing if nightly is missing start and end date', () => {
-    expect(
-      renderDeep(
-        <EstimatedCustomerBreakdownMaybe
-          lineItems={lineItems}
-          currency="USD"
-          marketplaceName="MarketplaceX"
-          processName="default-booking"
-        />
-      )
-    ).toBeFalsy();
-  });
-  it('renders nothing if nightly is missing end date', () => {
+  test('renders nothing if nightly is missing end date', () => {
     const data = {
       startDate: new Date(),
     };
-    expect(
-      renderDeep(
-        <EstimatedCustomerBreakdownMaybe
-          breakdownData={data}
-          lineItems={lineItems}
-          currency="USD"
-          marketplaceName="MarketplaceX"
-          processName="default-booking"
-        />
-      )
-    ).toBeFalsy();
+    const tree = render(
+      <EstimatedCustomerBreakdownMaybe
+        breakdownData={data}
+        lineItems={lineItems}
+        currency="USD"
+        marketplaceName="MarketplaceX"
+        processName="default-booking"
+      />
+    );
+    expect(tree.asFragment().firstChild).toBeFalsy();
   });
-  it('renders breakdown with correct transaction data', () => {
-    const startDate = new Date(2017, 3, 14, 0, 0, 0);
-    const endDate = new Date(2017, 3, 16, 0, 0, 0);
+
+  test('renders breakdown with correct transaction data', () => {
+    const startDate = new Date(Date.UTC(2017, 3, 14, 0, 0, 0));
+    const endDate = new Date(Date.UTC(2017, 3, 16, 0, 0, 0));
     const props = {
       breakdownData: {
         startDate,
@@ -96,31 +65,28 @@ describe('EstimatedCustomerBreakdownMaybe', () => {
       processName: 'default-booking',
     };
 
-    const tree = shallow(<EstimatedCustomerBreakdownMaybe {...props} />);
-    const breakdown = tree.find(OrderBreakdown);
-    const { userRole, transaction, booking } = breakdown.props();
-    const unitLineItem = transaction.attributes.lineItems.find(
-      item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
-    );
+    render(<EstimatedCustomerBreakdownMaybe {...props} />);
 
-    expect(unitLineItem.code).toEqual(LINE_ITEM_NIGHT);
-    expect(userRole).toEqual('customer');
+    const bookingStart = screen.getByText('OrderBreakdown.bookingStart');
+    expect(bookingStart).toBeInTheDocument();
+    const bookingStartInfo = within(bookingStart.parentNode.parentNode);
+    expect(bookingStartInfo.getByText('Friday')).toBeInTheDocument();
+    expect(bookingStartInfo.getByText('Apr 14')).toBeInTheDocument();
 
-    // booking data doesn't get converted inside EstimatedCustomerBreakdownMaybe
-    expect(booking.attributes.start).toEqual(startDate);
-    expect(booking.attributes.end).toEqual(endDate);
+    const bookingEnd = screen.getByText('OrderBreakdown.bookingEnd');
+    expect(bookingEnd).toBeInTheDocument();
+    const bookingEndInfo = within(bookingEnd.parentNode.parentNode);
+    expect(bookingEndInfo.getByText('Sunday')).toBeInTheDocument();
+    expect(bookingEndInfo.getByText('Apr 16')).toBeInTheDocument();
 
-    expect(transaction.attributes.payinTotal).toEqual(new Money(2198, 'USD'));
-    expect(transaction.attributes.payoutTotal).toEqual(new Money(2198, 'USD'));
-    expect(transaction.attributes.lineItems).toEqual([
-      {
-        code: 'line-item/night',
-        unitPrice: new Money(1099, 'USD'),
-        quantity: new Decimal(2),
-        includeFor: ['customer', 'provider'],
-        lineTotal: new Money(2198, 'USD'),
-        reversal: false,
-      },
-    ]);
+    const baseUnitNight = screen.getByText('OrderBreakdown.baseUnitNight');
+    expect(baseUnitNight).toBeInTheDocument();
+    const baseUnitNightInfo = within(baseUnitNight.parentNode.parentNode);
+    expect(baseUnitNightInfo.getByText('$21.98')).toBeInTheDocument();
+
+    const total = screen.getByText('OrderBreakdown.total');
+    expect(total).toBeInTheDocument();
+    const totalPayIn = within(total.parentNode.parentNode);
+    expect(totalPayIn.getByText('$21.98')).toBeInTheDocument();
   });
 });

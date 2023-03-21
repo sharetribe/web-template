@@ -8,7 +8,7 @@ import { Form, LocationAutocompleteInput } from '../../../components';
 
 import IconSearchDesktop from './IconSearchDesktop';
 
-import css from './LocationSearchForm.module.css';
+import css from './SearchForm.module.css';
 
 const identity = v => v;
 
@@ -31,7 +31,7 @@ const KeywordSearchField = props => {
               id={'keyword-search-404'}
               type="text"
               placeholder={intl.formatMessage({
-                id: 'LocationSearchForm.placeholder',
+                id: 'NotFoundPage.SearchForm.placeholder',
               })}
               autoComplete="off"
             />
@@ -63,7 +63,7 @@ const LocationSearchField = props => {
         const searchInput = { ...restInput, onChange: searchOnChange };
         return (
           <LocationAutocompleteInput
-            placeholder={intl.formatMessage({ id: 'LocationSearchForm.placeholder' })}
+            placeholder={intl.formatMessage({ id: 'NotFoundPage.SearchForm.placeholder' })}
             iconClassName={css.searchInputIcon}
             inputClassName={css.searchInput}
             predictionsClassName={css.searchPredictions}
@@ -76,7 +76,7 @@ const LocationSearchField = props => {
   );
 };
 
-const LocationSearchFormComponent = props => {
+const SearchFormComponent = props => {
   const handleChange = location => {
     if (location.selectedPlace) {
       // Note that we use `onSubmit` instead of the conventional
@@ -112,9 +112,9 @@ const LocationSearchFormComponent = props => {
   );
 };
 
-LocationSearchFormComponent.defaultProps = { rootClassName: null, className: null };
+SearchFormComponent.defaultProps = { rootClassName: null, className: null };
 
-LocationSearchFormComponent.propTypes = {
+SearchFormComponent.propTypes = {
   rootClassName: string,
   className: string,
   onSubmit: func.isRequired,
@@ -124,6 +124,6 @@ LocationSearchFormComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-const LocationSearchForm = injectIntl(LocationSearchFormComponent);
+const SearchForm = injectIntl(SearchFormComponent);
 
-export default LocationSearchForm;
+export default SearchForm;

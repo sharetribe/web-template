@@ -7,7 +7,7 @@ import {
   createListing,
   createTxTransition,
   createReview,
-} from '../../../util/test-data';
+} from '../../../util/testData';
 import {
   TX_TRANSITION_ACTOR_CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER,

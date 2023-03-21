@@ -1,13 +1,15 @@
 import React from 'react';
 import mapValues from 'lodash/mapValues';
-import Enzyme, { shallow, mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import toJson from 'enzyme-to-json';
-import { BrowserRouter } from 'react-router-dom';
+
+import * as reactTestingLibrary from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { HelmetProvider } from 'react-helmet-async';
 
 import configureStore from '../store';
-import { IntlProvider } from '../util/reactIntl';
+import { IntlProvider } from './reactIntl';
 import defaultConfig from '../config/configDefault';
 import { ConfigurationProvider } from '../context/configurationContext';
 import { RouteConfigurationProvider } from '../context/routeConfigurationContext';
@@ -18,10 +20,10 @@ import routeConfiguration from '../routing/routeConfiguration';
 // be changed here so that there are no missing translation keys in tests.
 import messages from '../translations/en.json';
 
-Enzyme.configure({ adapter: new Adapter() });
-
 let undefined;
 export const getDefaultConfiguration = () => {
+  // TODO: add more relevant data for tests
+  // TODO: make it possible to overwrite configuration for tests
   return {
     ...defaultConfig,
     currency: 'USD',
@@ -166,6 +168,10 @@ export const getDefaultConfiguration = () => {
         },
       ],
     },
+    search: {
+      ...defaultConfig.search,
+      mainSearchType: 'keywords',
+    },
   };
 };
 
@@ -188,37 +194,40 @@ const testMessages = mapValues(messages, (val, key) => key);
 
 // Provide all the context for components that connect to the Redux
 // store, i18n, router, etc.
-export const TestProvider = props => {
+export const TestProvider = ({ children }) => {
   const store = configureStore();
   return (
     <ConfigurationProvider value={getDefaultConfiguration()}>
       <RouteConfigurationProvider value={getRouteConfiguration()}>
         <IntlProvider locale="en" messages={testMessages} textComponent="span">
-          <BrowserRouter>
-            <Provider store={store}>{props.children}</Provider>
-          </BrowserRouter>
+          <Provider store={store}>
+            <HelmetProvider>
+              <MemoryRouter>{children}</MemoryRouter>
+            </HelmetProvider>
+          </Provider>
         </IntlProvider>
       </RouteConfigurationProvider>
     </ConfigurationProvider>
   );
 };
 
-// Use Enzyme's shallow rendering to render the given component to a
-// JSON structure that can be used in snapshot tests. This doesn't
-// render the children within the given component, only a
-// representation of the child component and its props.
-//
-// Useful for snapshot testing components that contain shared
-// components. With deep rendering, if the child component changes
-// internally, the test for the given component would also fail. This
-// avoids the problem by not rendering the full tree but only the
-// relevant structure for the given component.
-export const renderShallow = component => {
-  return toJson(shallow(component));
-};
+// With react-testing-library we don't have option to shallow render
+// so we would need a custom render function to add required wrappers
+// in order to test the whole Page component.
+// Example for creating custom render function
+// for using React Intl with RTL:
+// https://testing-library.com/docs/example-react-intl#creating-a-custom-render-function
+// function render(ui, { preloadedState, store = configureStore(), ...renderOptions } = {}) {
+//   function Wrapper({ children }) {
+//     return (<TestProvider>{children}</TestProvider>);
+//   }
+//   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
+// }
 
-// Fully render the given component to a JSON structure that can be
-// used in snapshot tests.
-export const renderDeep = component => {
-  return toJson(mount(<TestProvider>{component}</TestProvider>), { mode: 'deep' });
+export const renderWithProviders = (ui, renderOptions = {}) => {
+  const Wrapper = ({ children }) => {
+    return <TestProvider>{children}</TestProvider>;
+  };
+  return reactTestingLibrary.render(ui, { wrapper: Wrapper, ...renderOptions });
 };
+export const testingLibrary = { ...reactTestingLibrary, userEvent };

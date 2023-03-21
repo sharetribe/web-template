@@ -1,13 +1,16 @@
 import React from 'react';
-import { renderDeep } from '../../../util/test-helpers';
-import { createOwnListing, fakeIntl } from '../../../util/test-data';
+import '@testing-library/jest-dom';
+
+import { renderWithProviders as render } from '../../../util/testHelpers';
+import { createOwnListing, fakeIntl } from '../../../util/testData';
+
 import { ManageListingCardComponent } from './ManageListingCard';
 
 const noop = () => null;
 
 describe('ManageListingCard', () => {
-  it('matches snapshot', () => {
-    const tree = renderDeep(
+  test('matches snapshot', () => {
+    const tree = render(
       <ManageListingCardComponent
         history={{ push: noop }}
         listing={createOwnListing('listing1', { publicData: { listingType: 'sell-bikes' } })}
@@ -21,6 +24,6 @@ describe('ManageListingCard', () => {
         availabilityEnabled={true}
       />
     );
-    expect(tree).toMatchSnapshot();
+    expect(tree.asFragment().firstChild).toMatchSnapshot();
   });
 });

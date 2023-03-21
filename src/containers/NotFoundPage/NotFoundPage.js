@@ -16,7 +16,7 @@ import { Heading, Page, Footer, LayoutSingleColumn } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
-import LocationSearchForm from './LocationSearchForm/LocationSearchForm';
+import SearchForm from './SearchForm/SearchForm';
 
 import css from './NotFoundPage.module.css';
 
@@ -64,7 +64,7 @@ export class NotFoundPageComponent extends Component {
               <p className={css.description}>
                 <FormattedMessage id="NotFoundPage.description" values={{ marketplaceName }} />
               </p>
-              <LocationSearchForm
+              <SearchForm
                 className={css.searchForm}
                 isKeywordSearch={isKeywordSearch}
                 onSubmit={handleSearchSubmit}

@@ -1,21 +1,18 @@
 import React from 'react';
-import { renderShallow } from '../../util/test-helpers';
-import { fakeIntl } from '../../util/test-data';
+import '@testing-library/jest-dom';
+
+import { fakeIntl } from '../../util/testData';
+import { renderWithProviders as render, testingLibrary } from '../../util/testHelpers';
+
 import { PasswordRecoveryPageComponent } from './PasswordRecoveryPage';
+
+const { screen, userEvent } = testingLibrary;
 
 const noop = () => null;
 
-jest.mock('../../context/configurationContext', () => ({
-  useConfiguration: () => ({
-    branding: {
-      brandImageURL: 'http://test.image.for/brand.use.png',
-    },
-  }),
-}));
-
-describe('ContactDetailsPage', () => {
-  it('matches snapshot', () => {
-    const tree = renderShallow(
+describe('PasswordRecoveryPageComponent', () => {
+  test('Check that email input shows error and submit is enabled if form is filled', () => {
+    render(
       <PasswordRecoveryPageComponent
         params={{ displayName: 'my-shop' }}
         history={{ push: noop }}
@@ -36,6 +33,31 @@ describe('ContactDetailsPage', () => {
         intl={fakeIntl}
       />
     );
-    expect(tree).toMatchSnapshot();
+
+    const emailLabel = 'PasswordRecoveryForm.emailLabel';
+    const emailInput = screen.getByLabelText(emailLabel);
+    expect(emailInput).toBeInTheDocument();
+
+    // Save button is disabled
+    expect(
+      screen.getByRole('button', { name: 'PasswordRecoveryForm.sendInstructions' })
+    ).toBeDisabled();
+
+    // There's a too short password, there is error text visible
+    userEvent.type(emailInput, 'foobar');
+    emailInput.blur();
+
+    const emailInvalid = 'PasswordRecoveryForm.emailInvalid';
+    expect(screen.getByText(emailInvalid)).toBeInTheDocument();
+
+    // There's a valid email written to input => there is no error text visible
+    userEvent.type(emailInput, 'foo@bar.com');
+    emailInput.blur();
+    expect(screen.queryByText(emailInvalid)).not.toBeInTheDocument();
+
+    // Save button is enabled
+    expect(
+      screen.getByRole('button', { name: 'PasswordRecoveryForm.sendInstructions' })
+    ).toBeEnabled();
   });
 });

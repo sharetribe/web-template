@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import { IntlProvider } from '../../util/reactIntl';
-import { currencyConfig } from '../../util/test-data';
+import { currencyConfig } from '../../util/testData';
 import * as validators from '../../util/validators';
 import FieldCurrencyInput, { CurrencyInput } from './FieldCurrencyInput';
 

@@ -1,11 +1,16 @@
 import React from 'react';
-import { renderDeep } from '../../util/test-helpers';
+import '@testing-library/jest-dom';
+
+import { renderWithProviders as render } from '../../util/testHelpers';
+
 import { MenuItem, MenuLabel, MenuContent } from '../../components';
 import Menu from './Menu';
 
 describe('Menu', () => {
-  it('matches snapshot', () => {
-    const tree = renderDeep(
+  // This is quite small component what comes to rendered HTML
+  // For now, we rely on snapshot-testing.
+  test('matches snapshot', () => {
+    const tree = render(
       <Menu>
         <MenuLabel>Label</MenuLabel>
         <MenuContent>
@@ -14,6 +19,6 @@ describe('Menu', () => {
         </MenuContent>
       </Menu>
     );
-    expect(tree).toMatchSnapshot();
+    expect(tree.asFragment()).toMatchSnapshot();
   });
 });

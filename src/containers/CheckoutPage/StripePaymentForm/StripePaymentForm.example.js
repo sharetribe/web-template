@@ -1,4 +1,4 @@
-import { fakeIntl } from '../../../util/test-data';
+import { fakeIntl } from '../../../util/testData';
 import StripePaymentForm from './StripePaymentForm';
 
 const noop = () => null;

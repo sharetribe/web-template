@@ -1,43 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Menu matches snapshot 1`] = `
-<div
-  className="root"
-  onBlur={[Function]}
-  onKeyDown={[Function]}
-  tabIndex={0}
->
-  <button
-    className="root"
-    onBlur={[Function]}
-    onClick={[Function]}
-  >
-    Label
-  </button>
+<DocumentFragment>
   <div
-    className="root isClosed"
-    style={
-      Object {
-        "left": "-10000px",
-      }
-    }
+    class="root"
+    tabindex="0"
   >
-    <ul
-      className="content"
+    <button
+      class="root"
     >
-      <li
-        className="root"
-        role="menuitem"
+      Label
+    </button>
+    <div
+      class="root isClosed"
+      style="left: -10000px;"
+    >
+      <ul
+        class="content"
       >
-        Menu item 1
-      </li>
-      <li
-        className="root"
-        role="menuitem"
-      >
-        Menu item 2
-      </li>
-    </ul>
+        <li
+          class="root"
+          role="menuitem"
+        >
+          Menu item 1
+        </li>
+        <li
+          class="root"
+          role="menuitem"
+        >
+          Menu item 2
+        </li>
+      </ul>
+    </div>
   </div>
-</div>
+</DocumentFragment>
 `;

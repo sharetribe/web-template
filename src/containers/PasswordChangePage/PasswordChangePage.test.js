@@ -1,13 +1,18 @@
 import React from 'react';
-import { renderShallow } from '../../util/test-helpers';
-import { fakeIntl, createCurrentUser } from '../../util/test-data';
+import '@testing-library/jest-dom';
+
+import { createCurrentUser, fakeIntl } from '../../util/testData';
+import { renderWithProviders as render, testingLibrary } from '../../util/testHelpers';
+
 import { PasswordChangePageComponent } from './PasswordChangePage';
+
+const { screen, userEvent } = testingLibrary;
 
 const noop = () => null;
 
-describe('PasswordChangePage', () => {
-  it('matches snapshot', () => {
-    const tree = renderShallow(
+describe('PasswordChangePageComponent', () => {
+  test('Check that newPassword input shows error and submit is enabled if form is filled', () => {
+    render(
       <PasswordChangePageComponent
         params={{ displayName: 'my-shop' }}
         history={{ push: noop }}
@@ -28,6 +33,33 @@ describe('PasswordChangePage', () => {
         intl={fakeIntl}
       />
     );
-    expect(tree).toMatchSnapshot();
+
+    const newPasswordLabel = 'PasswordChangeForm.newPasswordLabel';
+    expect(screen.getByText(newPasswordLabel)).toBeInTheDocument();
+
+    // Save button is disabled
+    expect(screen.getByRole('button', { name: 'PasswordChangeForm.saveChanges' })).toBeDisabled();
+
+    // There's a too short password, there is error text visible
+    const newPasswordInput = screen.getByLabelText(newPasswordLabel);
+    userEvent.type(newPasswordInput, 'short');
+    newPasswordInput.blur();
+
+    const passwordTooShort = 'PasswordChangeForm.passwordTooShort';
+    expect(screen.getByText(passwordTooShort)).toBeInTheDocument();
+
+    // There's a long enough password => there is no error text visible
+    userEvent.type(newPasswordInput, 'morethan8characters');
+    newPasswordInput.blur();
+    expect(screen.queryByText(passwordTooShort)).not.toBeInTheDocument();
+
+    const passwordLabel = 'PasswordChangeForm.passwordLabel';
+    const passwordInput = screen.getByText(passwordLabel);
+    expect(passwordInput).toBeInTheDocument();
+
+    // Save button is enabled
+    userEvent.type(passwordInput, 'somepasswordasoldpassword');
+    expect(screen.queryByText(passwordTooShort)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'PasswordChangeForm.saveChanges' })).toBeEnabled();
   });
 });

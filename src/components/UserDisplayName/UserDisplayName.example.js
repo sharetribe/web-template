@@ -1,6 +1,6 @@
 import UserDisplayName from './UserDisplayName';
 import { types as sdkTypes } from '../../util/sdkLoader';
-import { fakeIntl } from '../../util/test-data';
+import { fakeIntl } from '../../util/testData';
 
 const { UUID } = sdkTypes;
 

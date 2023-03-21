@@ -13,14 +13,14 @@ const UserNav = props => {
 
   const tabs = [
     {
-      text: <FormattedMessage id="ManageListingsPage.yourListings" />,
+      text: <FormattedMessage id="UserNav.yourListings" />,
       selected: currentPage === 'ManageListingsPage',
       linkProps: {
         name: 'ManageListingsPage',
       },
     },
     {
-      text: <FormattedMessage id="ManageListingsPage.profileSettings" />,
+      text: <FormattedMessage id="UserNav.profileSettings" />,
       selected: currentPage === 'ProfileSettingsPage',
       disabled: false,
       linkProps: {
@@ -28,7 +28,7 @@ const UserNav = props => {
       },
     },
     {
-      text: <FormattedMessage id="ManageListingsPage.accountSettings" />,
+      text: <FormattedMessage id="UserNav.accountSettings" />,
       selected: ACCOUNT_SETTINGS_PAGES.includes(currentPage),
       disabled: false,
       linkProps: {

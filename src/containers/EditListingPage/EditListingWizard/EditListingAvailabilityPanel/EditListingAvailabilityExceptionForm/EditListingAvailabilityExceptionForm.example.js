@@ -1,4 +1,4 @@
-import { fakeIntl } from '../../../../../util/test-data';
+import { fakeIntl } from '../../../../../util/testData';
 import EditListingAvailabilityExceptionForm from './EditListingAvailabilityExceptionForm';
 
 const WEEKDAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
