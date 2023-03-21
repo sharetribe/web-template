@@ -1,23 +1,28 @@
 import React from 'react';
-import { renderShallow } from '../../util/test-helpers';
+import '@testing-library/jest-dom';
+
 import { fakeIntl } from '../../util/test-data';
+import { renderWithProviders as render, testingLibrary } from '../../util/test-helpers';
+
 import { EditListingPageComponent } from './EditListingPage';
+
+const { screen, userEvent } = testingLibrary;
 
 const noop = () => null;
 
 describe('EditListingPageComponent', () => {
-  it('matches snapshot', () => {
-    const getOwnListing = () => null;
-    const tree = renderShallow(
+  test('Check that there is correct wizard tabs', () => {
+    render(
       <EditListingPageComponent
-        params={{ id: 'id', slug: 'slug', type: 'new', tab: 'description' }}
+        params={{ id: 'id', slug: 'slug', type: 'new', tab: 'details' }}
         currentUserHasListings={false}
         isAuthenticated={false}
         authInProgress={false}
         fetchInProgress={false}
         location={{ search: '' }}
-        history={{ push: noop }}
-        getOwnListing={getOwnListing}
+        history={{ push: noop, replace: noop }}
+        getAccountLinkInProgress={false}
+        getOwnListing={noop}
         images={[]}
         intl={fakeIntl}
         onGetStripeConnectAccountLink={noop}
@@ -39,14 +44,45 @@ describe('EditListingPageComponent', () => {
           images: {},
           monthlyExceptionQueries: {},
           allExceptions: [],
+          payoutDetailsSaved: false,
+          payoutDetailsSaveInProgress: false,
         }}
         scrollingDisabled={false}
-        tab="description"
-        type="new"
         sendVerificationEmailInProgress={false}
         onResendVerificationEmail={noop}
       />
     );
-    expect(tree).toMatchSnapshot();
+
+    const tabLabelDetails = 'EditListingWizard.tabLabelDetails';
+    expect(screen.getByText(tabLabelDetails)).toBeInTheDocument();
+
+    const tabLabelLocation = 'EditListingWizard.tabLabelLocation';
+    expect(screen.getByText(tabLabelLocation)).toBeInTheDocument();
+
+    const tabLabelPricing = 'EditListingWizard.tabLabelPricing';
+    expect(screen.getByText(tabLabelPricing)).toBeInTheDocument();
+
+    const tabLabelAvailability = 'EditListingWizard.tabLabelAvailability';
+    expect(screen.getByText(tabLabelAvailability)).toBeInTheDocument();
+
+    const tabLabelPhotos = 'EditListingWizard.tabLabelPhotos';
+    expect(screen.getByText(tabLabelPhotos)).toBeInTheDocument();
+
+    userEvent.selectOptions(
+      screen.getByLabelText('EditListingDetailsForm.listingTypeLabel'),
+      'product-selling'
+    );
+
+    // Tabs removed
+    expect(screen.queryByText(tabLabelLocation)).not.toBeInTheDocument();
+    expect(screen.queryByText(tabLabelPricing)).not.toBeInTheDocument();
+    expect(screen.queryByText(tabLabelAvailability)).not.toBeInTheDocument();
+
+    // Tabs added
+    const tabLabelPricingAndStock = 'EditListingWizard.tabLabelPricingAndStock';
+    expect(screen.getByText(tabLabelPricingAndStock)).toBeInTheDocument();
+    const tabLabelDelivery = 'EditListingWizard.tabLabelDelivery';
+    expect(screen.getByText(tabLabelDelivery)).toBeInTheDocument();
+    expect(screen.getByText(tabLabelPhotos)).toBeInTheDocument();
   });
 });
