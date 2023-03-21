@@ -31,6 +31,7 @@ export const EditListingLocationFormComponent = props => (
     {...props}
     render={formRenderProps => {
       const {
+        formId,
         autoFocus,
         className,
         disabled,
@@ -103,7 +104,7 @@ export const EditListingLocationFormComponent = props => (
             className={css.building}
             type="text"
             name="building"
-            id="building"
+            id={`${formId}building`}
             label={intl.formatMessage({ id: 'EditListingLocationForm.building' }, { optionalText })}
             placeholder={intl.formatMessage({
               id: 'EditListingLocationForm.buildingPlaceholder',
@@ -128,9 +129,11 @@ export const EditListingLocationFormComponent = props => (
 EditListingLocationFormComponent.defaultProps = {
   selectedPlace: null,
   fetchErrors: null,
+  formId: 'EditListingLocationForm',
 };
 
 EditListingLocationFormComponent.propTypes = {
+  formId: string,
   intl: intlShape.isRequired,
   onSubmit: func.isRequired,
   saveActionMsg: string.isRequired,

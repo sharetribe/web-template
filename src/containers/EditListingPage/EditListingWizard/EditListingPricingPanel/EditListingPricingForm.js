@@ -44,6 +44,7 @@ export const EditListingPricingFormComponent = props => (
     {...props}
     render={formRenderProps => {
       const {
+        formId,
         autoFocus,
         className,
         disabled,
@@ -86,7 +87,7 @@ export const EditListingPricingFormComponent = props => (
             </p>
           ) : null}
           <FieldCurrencyInput
-            id="price"
+            id={`${formId}price`}
             name="price"
             className={css.input}
             autoFocus={autoFocus}
@@ -117,9 +118,11 @@ export const EditListingPricingFormComponent = props => (
 EditListingPricingFormComponent.defaultProps = {
   fetchErrors: null,
   listingMinimumPriceSubUnits: 0,
+  formId: 'EditListingPricingForm',
 };
 
 EditListingPricingFormComponent.propTypes = {
+  formId: string,
   intl: intlShape.isRequired,
   onSubmit: func.isRequired,
   marketplaceCurrency: string.isRequired,

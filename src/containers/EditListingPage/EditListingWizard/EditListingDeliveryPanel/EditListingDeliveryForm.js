@@ -35,6 +35,7 @@ export const EditListingDeliveryFormComponent = props => (
     {...props}
     render={formRenderProps => {
       const {
+        formId,
         form,
         autoFocus,
         className,
@@ -158,7 +159,7 @@ export const EditListingDeliveryFormComponent = props => (
               className={css.input}
               type="text"
               name="building"
-              id="building"
+              id={`${formId}building`}
               label={intl.formatMessage(
                 { id: 'EditListingDeliveryForm.building' },
                 { optionalText }
@@ -259,9 +260,11 @@ export const EditListingDeliveryFormComponent = props => (
 EditListingDeliveryFormComponent.defaultProps = {
   selectedPlace: null,
   fetchErrors: null,
+  formId: 'EditListingDeliveryForm',
 };
 
 EditListingDeliveryFormComponent.propTypes = {
+  formId: string,
   intl: intlShape.isRequired,
   onSubmit: func.isRequired,
   saveActionMsg: string.isRequired,
