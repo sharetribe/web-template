@@ -1,9 +1,4 @@
-import {
-  createUser,
-  createTransaction,
-  createListing,
-  createTxTransition,
-} from '../util/test-data';
+import { createUser, createTransaction, createListing, createTxTransition } from '../util/testData';
 
 import {
   TX_TRANSITION_ACTOR_CUSTOMER,

@@ -303,7 +303,7 @@ export class SearchPageComponent extends Component {
           currentSearchParams={urlQueryParams}
         />
         <div className={css.layoutWrapperContainer}>
-          <aside className={css.layoutWrapperFilterColumn}>
+          <aside className={css.layoutWrapperFilterColumn} data-testid="filterColumnAside">
             <div className={css.filterColumnContent}>
               {availableFilters.map(config => {
                 return (

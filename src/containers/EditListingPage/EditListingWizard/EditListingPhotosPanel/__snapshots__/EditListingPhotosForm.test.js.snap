@@ -1,58 +1,77 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`EditListingPhotosForm matches snapshot 1`] = `
-<ReactFinalForm
-  disabled={false}
-  dispatch={[Function]}
-  fetchErrors={null}
-  initialValues={
-    Object {
-      "country": "US",
-      "images": Array [],
-    }
-  }
-  intl={
-    Object {
-      "formatDate": [Function],
-      "formatDateTimeRange": [Function],
-      "formatMessage": [Function],
-      "formatNumber": [Function],
-      "formatPlural": [Function],
-      "formatRelativeTime": [Function],
-      "formatTime": [Function],
-      "now": [Function],
-    }
-  }
-  listingImageConfig={
-    Object {
-      "aspectHeight": 1,
-      "aspectWidth": 1,
-      "variantPrefix": "listing-card",
-    }
-  }
-  mutators={
-    Object {
-      "concat": [Function],
-      "insert": [Function],
-      "move": [Function],
-      "pop": [Function],
-      "push": [Function],
-      "remove": [Function],
-      "removeBatch": [Function],
-      "shift": [Function],
-      "swap": [Function],
-      "unshift": [Function],
-      "update": [Function],
-    }
-  }
-  onImageUpload={[Function]}
-  onRemoveImage={[Function]}
-  onSubmit={[Function]}
-  ready={false}
-  render={[Function]}
-  saveActionMsg="Save photos"
-  stripeConnected={false}
-  updateInProgress={false}
-  updated={false}
-/>
+exports[`EditListingDeliveryForm matches snapshot 1`] = `
+<DocumentFragment>
+  <form
+    action="/"
+    class="root"
+    method="post"
+  >
+    <div
+      class="imagesFieldArray"
+    >
+      <div
+        class="addImageWrapper"
+      >
+        <div
+          class="root"
+        >
+          <div
+            class="aspectPadding"
+            style="padding-bottom: 100%;"
+          >
+            <div
+              class="aspectBox"
+            >
+              <input
+                accept="image/*"
+                class="addImageInput"
+                id="addImage"
+                name="addImage"
+                type="file"
+              />
+              <label
+                class="addImage"
+                for="addImage"
+              >
+                <span
+                  class="chooseImageText"
+                >
+                  <span
+                    class="chooseImage"
+                  >
+                    <span>
+                      EditListingPhotosForm.chooseImage
+                    </span>
+                  </span>
+                  <span
+                    class="imageTypes"
+                  >
+                    <span>
+                      EditListingPhotosForm.imageTypes
+                    </span>
+                  </span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p
+      class="tip"
+    >
+      <span>
+        EditListingPhotosForm.addImagesTip
+      </span>
+    </p>
+    <button
+      class="root submitButton"
+      disabled=""
+      type="submit"
+    >
+      Save photos
+    </button>
+  </form>
+</DocumentFragment>
 `;

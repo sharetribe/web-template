@@ -67,13 +67,13 @@
     "url": "^0.11.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
     "bfj": "^7.0.2",
     "chalk": "^v4.1.2",
     "concurrently": "^7.2.0",
     "cross-env": "^7.0.3",
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.6",
-    "enzyme-to-json": "^3.6.2",
     "inquirer": "^8.2.4",
     "nodemon": "^2.0.16",
     "prettier": "^1.18.2"

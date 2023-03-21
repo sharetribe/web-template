@@ -1,6 +1,6 @@
 import React from 'react';
 
-import css from './LocationSearchForm.module.css';
+import css from './SearchForm.module.css';
 
 const IconSearchDesktop = () => (
   <svg

@@ -49,7 +49,7 @@ const SectionHero = props => {
   ) : null;
 
   return (
-    <div className={css.sectionHero}>
+    <div className={css.sectionHero} data-testid="hero">
       <div className={css.imageWrapperForSectionHero} onClick={handleViewPhotosClick}>
         {actionBar}
         <ResponsiveImage

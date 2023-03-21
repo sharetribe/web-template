@@ -55,7 +55,7 @@ const ShowListingsError = props => {
 };
 
 // Field component that uses file-input to allow user to select images.
-const FieldAddImage = props => {
+export const FieldAddImage = props => {
   const { formApi, onImageUploadHandler, aspectWidth = 1, aspectHeight = 1, ...rest } = props;
   return (
     <Field form={null} {...rest}>

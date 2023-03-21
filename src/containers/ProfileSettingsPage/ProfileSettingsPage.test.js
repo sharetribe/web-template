@@ -1,33 +1,43 @@
 import React from 'react';
-import { renderShallow } from '../../util/test-helpers';
-import { fakeIntl } from '../../util/test-data';
+import '@testing-library/jest-dom';
+
+import { createCurrentUser, fakeIntl } from '../../util/testData';
+import { renderWithProviders as render, testingLibrary } from '../../util/testHelpers';
+
 import { ProfileSettingsPageComponent } from './ProfileSettingsPage';
+
+const { screen } = testingLibrary;
 
 const noop = () => null;
 
-describe('ContactDetailsPage', () => {
-  it('matches snapshot', () => {
-    const tree = renderShallow(
-      <ProfileSettingsPageComponent
-        authInProgress={false}
-        currentUserHasListings={false}
-        history={{ push: noop }}
-        isAuthenticated={false}
-        location={{ search: '' }}
-        onChange={noop}
-        onImageUpload={noop}
-        onLogout={noop}
-        onManageDisableScrolling={noop}
-        onUpdateProfile={noop}
-        params={{ displayName: 'my-shop' }}
-        scrollingDisabled={false}
-        updateInProgress={false}
-        uploadInProgress={false}
-        sendVerificationEmailInProgress={false}
-        onResendVerificationEmail={noop}
-        intl={fakeIntl}
-      />
-    );
-    expect(tree).toMatchSnapshot();
+describe('ProfileSettingsPage', () => {
+  test('Check that there is a link to ProfilePage', () => {
+    const props = {
+      authInProgress: false,
+      currentUser: createCurrentUser('userId'),
+      currentUserHasListings: false,
+      history: { push: noop },
+      isAuthenticated: false,
+      location: { search: '' },
+      onChange: noop,
+      onImageUpload: noop,
+      onLogout: noop,
+      onManageDisableScrolling: noop,
+      onUpdateProfile: noop,
+      params: { displayName: 'my-shop' },
+      scrollingDisabled: false,
+      updateInProgress: false,
+      uploadInProgress: false,
+      sendVerificationEmailInProgress: false,
+      onResendVerificationEmail: noop,
+      intl: fakeIntl,
+    };
+
+    render(<ProfileSettingsPageComponent {...props} />);
+
+    const viewProfileLink = 'ProfileSettingsPage.viewProfileLink';
+    expect(screen.getByText(viewProfileLink)).toBeInTheDocument();
+
+    // TODO: ProfileSettingsForm should have a test of its own.
   });
 });

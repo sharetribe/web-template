@@ -1,13 +1,16 @@
 import React from 'react';
+import '@testing-library/jest-dom';
 import Decimal from 'decimal.js';
-import { fakeIntl, createBooking } from '../../util/test-data';
-import { renderDeep } from '../../util/test-helpers';
+
 import { types as sdkTypes } from '../../util/sdkLoader';
+import { fakeIntl, createBooking } from '../../util/testData';
+import { renderWithProviders as render, testingLibrary } from '../../util/testHelpers';
 import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from '../../transactions/transaction';
 
 import { OrderBreakdownComponent } from './OrderBreakdown';
 
 const { UUID, Money } = sdkTypes;
+const { screen, within } = testingLibrary;
 
 const marketplaceName = 'MarketplaceX';
 
@@ -38,8 +41,8 @@ const exampleTransaction = params => {
 };
 
 describe('OrderBreakdown', () => {
-  it('data for product marketplace matches snapshot', () => {
-    const tree = renderDeep(
+  test('data for product has base price, shipping fee and total', () => {
+    render(
       <OrderBreakdownComponent
         userRole="customer"
         currency="USD"
@@ -69,11 +72,28 @@ describe('OrderBreakdown', () => {
         intl={fakeIntl}
       />
     );
-    expect(tree).toMatchSnapshot();
+
+    // Base price
+    const unitPriceXQuantity = screen.getByText('OrderBreakdown.baseUnitQuantity');
+    expect(unitPriceXQuantity).toBeInTheDocument();
+    const lineItemBasePrice = within(unitPriceXQuantity.parentNode.parentNode);
+    expect(lineItemBasePrice.getByText('20')).toBeInTheDocument();
+
+    // Shipping fee
+    const shippingFee = screen.getByText('OrderBreakdown.shippingFee');
+    expect(shippingFee).toBeInTheDocument();
+    const lineItemShippingFee = within(shippingFee.parentNode.parentNode);
+    expect(lineItemShippingFee.getByText('10')).toBeInTheDocument();
+
+    // Total
+    const total = screen.getByText('OrderBreakdown.total');
+    expect(total).toBeInTheDocument();
+    const totalPayIn = within(total.parentNode.parentNode);
+    expect(totalPayIn.getByText('30')).toBeInTheDocument();
   });
 
-  it('customer transaction data matches snapshot', () => {
-    const tree = renderDeep(
+  test('data for booking has base price, booking dates and total', () => {
+    render(
       <OrderBreakdownComponent
         userRole="customer"
         currency="USD"
@@ -100,11 +120,36 @@ describe('OrderBreakdown', () => {
         timeZone="Etc/UTC"
       />
     );
-    expect(tree).toMatchSnapshot();
+
+    // Booking: start
+    const bookingStart = screen.getByText('OrderBreakdown.bookingStart');
+    expect(bookingStart).toBeInTheDocument();
+    const bookingStartInfo = within(bookingStart.parentNode.parentNode);
+    expect(bookingStartInfo.getByText('Fri 12:00 AM')).toBeInTheDocument();
+    expect(bookingStartInfo.getByText('Apr 14')).toBeInTheDocument();
+
+    // Booking: end
+    const bookingEnd = screen.getByText('OrderBreakdown.bookingEnd');
+    expect(bookingEnd).toBeInTheDocument();
+    const bookingEndInfo = within(bookingEnd.parentNode.parentNode);
+    expect(bookingEndInfo.getByText('Sun 12:00 AM')).toBeInTheDocument();
+    expect(bookingEndInfo.getByText('Apr 16')).toBeInTheDocument();
+
+    // Base price
+    const unitPriceXQuantity = screen.getByText('OrderBreakdown.baseUnitNight');
+    expect(unitPriceXQuantity).toBeInTheDocument();
+    const lineItemBasePrice = within(unitPriceXQuantity.parentNode.parentNode);
+    expect(lineItemBasePrice.getByText('20')).toBeInTheDocument();
+
+    // Total
+    const total = screen.getByText('OrderBreakdown.total');
+    expect(total).toBeInTheDocument();
+    const totalPayIn = within(total.parentNode.parentNode);
+    expect(totalPayIn.getByText('20')).toBeInTheDocument();
   });
 
-  it('provider transaction data matches snapshot', () => {
-    const tree = renderDeep(
+  test('data for provider booking has base price, provider-commission and total', () => {
+    render(
       <OrderBreakdownComponent
         userRole="provider"
         currency="USD"
@@ -138,6 +183,37 @@ describe('OrderBreakdown', () => {
         timeZone="Etc/UTC"
       />
     );
-    expect(tree).toMatchSnapshot();
+
+    // Booking: start
+    const bookingStart = screen.getByText('OrderBreakdown.bookingStart');
+    expect(bookingStart).toBeInTheDocument();
+    const bookingStartInfo = within(bookingStart.parentNode.parentNode);
+    expect(bookingStartInfo.getByText('Fri 12:00 AM')).toBeInTheDocument();
+    expect(bookingStartInfo.getByText('Apr 14')).toBeInTheDocument();
+
+    // Booking: end
+    const bookingEnd = screen.getByText('OrderBreakdown.bookingEnd');
+    expect(bookingEnd).toBeInTheDocument();
+    const bookingEndInfo = within(bookingEnd.parentNode.parentNode);
+    expect(bookingEndInfo.getByText('Sun 12:00 AM')).toBeInTheDocument();
+    expect(bookingEndInfo.getByText('Apr 16')).toBeInTheDocument();
+
+    // Base price
+    const unitPriceXQuantity = screen.getByText('OrderBreakdown.baseUnitNight');
+    expect(unitPriceXQuantity).toBeInTheDocument();
+    const lineItemBasePrice = within(unitPriceXQuantity.parentNode.parentNode);
+    expect(lineItemBasePrice.getByText('20')).toBeInTheDocument();
+
+    // Commission
+    const commission = screen.getByText('OrderBreakdown.commission');
+    expect(commission).toBeInTheDocument();
+    const lineItemCommission = within(commission.parentNode.parentNode);
+    expect(lineItemCommission.getByText('-2')).toBeInTheDocument();
+
+    // Total
+    const providerTotal = screen.getByText('OrderBreakdown.providerTotalDefault');
+    expect(providerTotal).toBeInTheDocument();
+    const totalPayIn = within(providerTotal.parentNode.parentNode);
+    expect(totalPayIn.getByText('18')).toBeInTheDocument();
   });
 });

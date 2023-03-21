@@ -1,4 +1,5 @@
 import React from 'react';
+import '@testing-library/jest-dom';
 
 import { types as sdkTypes } from '../../../util/sdkLoader';
 import {
@@ -6,15 +7,16 @@ import {
   createUser,
   createCurrentUser,
   createMessage,
-} from '../../../util/test-data';
-import { renderShallow } from '../../../util/test-helpers';
-import { fakeIntl } from '../../../util/test-data';
+  fakeIntl,
+} from '../../../util/testData';
+import { renderWithProviders as render, testingLibrary } from '../../../util/testHelpers';
 
 import { TransactionPanelComponent } from './TransactionPanel';
 
-const noop = () => null;
-
+const { screen } = testingLibrary;
 const { UUID } = sdkTypes;
+
+const noop = () => null;
 
 describe('TransactionPanel - Sale', () => {
   const providerId = 'provider';
@@ -56,12 +58,18 @@ describe('TransactionPanel - Sale', () => {
     },
   };
 
-  it('inquired matches snapshot', () => {
-    const props = {
-      ...panelBaseProps,
-    };
-    const tree = renderShallow(<TransactionPanelComponent {...props} />);
-    expect(tree).toMatchSnapshot();
+  test('Inquired is shown', () => {
+    render(<TransactionPanelComponent {...panelBaseProps} />);
+
+    const providerTitle = 'TransactionPage.default-purchase.provider.inquiry.title';
+    expect(screen.getByText(providerTitle)).toBeInTheDocument();
+
+    expect(
+      screen.getByPlaceholderText('TransactionPanel.sendMessagePlaceholder')
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'SendMessageForm.sendMessage' })
+    ).toBeInTheDocument();
   });
 });
 
@@ -105,12 +113,17 @@ describe('TransactionPanel - Order', () => {
     },
   };
 
-  it('inquired matches snapshot', () => {
-    const props = {
-      ...panelBaseProps,
-    };
+  test('Inquired is shown', () => {
+    render(<TransactionPanelComponent {...panelBaseProps} />);
 
-    const tree = renderShallow(<TransactionPanelComponent {...props} />);
-    expect(tree).toMatchSnapshot();
+    const customerTitle = 'TransactionPage.default-purchase.customer.inquiry.title';
+    expect(screen.getByText(customerTitle)).toBeInTheDocument();
+
+    expect(
+      screen.getByPlaceholderText('TransactionPanel.sendMessagePlaceholder')
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'SendMessageForm.sendMessage' })
+    ).toBeInTheDocument();
   });
 });
