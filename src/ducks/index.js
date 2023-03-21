@@ -5,7 +5,7 @@
  */
 
 import Auth from './Auth.duck';
-import EmailVerification from './EmailVerification.duck';
+import emailVerification from './emailVerification.duck';
 import routing from './routing.duck';
 import UI from './UI.duck';
 import hostedAssets from './hostedAssets.duck';
@@ -17,7 +17,7 @@ import user from './user.duck';
 
 export {
   Auth,
-  EmailVerification,
+  emailVerification,
   routing,
   UI,
   hostedAssets,
