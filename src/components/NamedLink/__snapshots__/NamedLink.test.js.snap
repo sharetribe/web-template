@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NamedLink matches snapshot 1`] = `
+<div>
+  <a
+    class="my-active-class"
+    href="/"
+  >
+    link to a
+  </a>
+  <a
+    class=""
+    href="/s"
+  >
+    link to b
+  </a>
+</div>
+`;
