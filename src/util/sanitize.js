@@ -130,14 +130,14 @@ export const sanitizeUser = entity => {
  * @returns sanitized value or null
  */
 const sanitizedExtendedData = (value, config) => {
-  const { schemaType, schemaOptions } = config;
+  const { schemaType, enumOptions } = config;
   const sanitized =
     schemaType === 'text'
       ? sanitizeText(value)
       : schemaType === 'enum'
-      ? sanitizeEnum(value, schemaOptions)
+      ? sanitizeEnum(value, enumOptions)
       : schemaType === 'multi-enum'
-      ? sanitizeMultiEnum(value, schemaOptions)
+      ? sanitizeMultiEnum(value, enumOptions)
       : schemaType === 'long'
       ? sanitizeLong(value)
       : schemaType === 'boolean'
