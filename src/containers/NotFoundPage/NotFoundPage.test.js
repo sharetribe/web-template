@@ -1,7 +1,12 @@
 import React from 'react';
-import { renderShallow } from '../../util/test-helpers';
+import '@testing-library/jest-dom';
+
 import { fakeIntl } from '../../util/test-data';
+import { renderWithProviders as render, testingLibrary } from '../../util/test-helpers';
+
 import { NotFoundPageComponent } from './NotFoundPage';
+
+const { screen } = testingLibrary;
 
 const noop = () => null;
 
@@ -18,27 +23,23 @@ const routeConfiguration = [
   },
 ];
 
-describe('NotFoundPageComponent', () => {
-  it('matches snapshot', () => {
-    const tree = renderShallow(
+describe('NotFoundPage', () => {
+  test('LocationSearchForm has placeholder when isKeywordSearch=true', () => {
+    render(
       <NotFoundPageComponent
-        params={{ displayName: 'my-shop' }}
-        history={{ push: noop }}
-        location={{ search: '' }}
         scrollingDisabled={false}
-        authInProgress={false}
-        currentUserHasListings={false}
-        isAuthenticated={false}
-        isKeywordSearch={false}
-        onLogout={noop}
-        onManageDisableScrolling={noop}
-        sendVerificationEmailInProgress={false}
-        onResendVerificationEmail={noop}
+        marketplaceName="My Marketplace"
+        isKeywordSearch={true}
         intl={fakeIntl}
         routeConfiguration={routeConfiguration}
-        marketplaceName="MarketplaceX"
+        history={{
+          push: noop,
+        }}
       />
     );
-    expect(tree).toMatchSnapshot();
+    const placeholder = 'LocationSearchForm.placeholder';
+    expect(screen.getByPlaceholderText(placeholder)).toBeInTheDocument();
+
+    // TODO: when isKeywordSearch = false, the form uses LocationAutocompleteInput, which is code-splitted
   });
 });
