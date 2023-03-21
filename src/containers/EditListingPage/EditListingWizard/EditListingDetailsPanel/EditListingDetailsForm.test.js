@@ -37,7 +37,7 @@ describe('EditListingDetailsForm', () => {
           indexForSearch: true,
           label: 'Amenities',
         },
-        listingPageConfig: {
+        showConfig: {
           label: 'Category',
           isDetail: true,
         },
@@ -64,7 +64,7 @@ describe('EditListingDetailsForm', () => {
           indexForSearch: true,
           label: 'Amenities',
         },
-        listingPageConfig: {
+        showConfig: {
           label: 'Category',
         },
         saveConfig: {

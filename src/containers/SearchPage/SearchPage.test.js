@@ -62,7 +62,7 @@ const listingExtendedDataConfig = [
       label: 'Category',
       group: 'primary',
     },
-    listingPageConfig: {
+    showConfig: {
       label: 'Category',
     },
     saveConfig: {
@@ -85,7 +85,7 @@ const listingExtendedDataConfig = [
       //searchMode: 'has_all',
       group: 'secondary',
     },
-    listingPageConfig: {
+    showConfig: {
       label: 'Category',
     },
     saveConfig: {

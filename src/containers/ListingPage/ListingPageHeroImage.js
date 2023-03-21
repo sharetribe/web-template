@@ -330,7 +330,7 @@ export const ListingPageComponent = props => {
                     ...pickedElements,
                     <SectionMultiEnumMaybe
                       key={key}
-                      heading={config?.listingPageConfig?.label}
+                      heading={config?.showConfig?.label}
                       options={createFilterOptions(enumOptions)}
                       selectedOptions={value}
                     />,
@@ -338,11 +338,7 @@ export const ListingPageComponent = props => {
                 : hasValue && config.schemaType === SCHEMA_TYPE_TEXT
                 ? [
                     ...pickedElements,
-                    <SectionTextMaybe
-                      key={key}
-                      heading={config?.listingPageConfig?.label}
-                      text={value}
-                    />,
+                    <SectionTextMaybe key={key} heading={config?.showConfig?.label} text={value} />,
                   ]
                 : pickedElements;
             }, [])}

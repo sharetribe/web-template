@@ -13,8 +13,8 @@ const SectionDetailsMaybe = props => {
   }
 
   const pickExtendedData = (filteredConfigs, config) => {
-    const { key, schemaType, enumOptions, listingPageConfig = {} } = config;
-    const { isDetail, label } = listingPageConfig;
+    const { key, schemaType, enumOptions, showConfig = {} } = config;
+    const { isDetail, label } = showConfig;
     const publicDataValue = publicData[key];
     const metadataValue = metadata[key];
     const value = publicDataValue || metadataValue;

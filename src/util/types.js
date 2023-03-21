@@ -491,7 +491,7 @@ propTypes.listingExtendedDataConfig = arrayOf(
       group: oneOf(['primary', 'secondary']),
       filterType: string,
     }),
-    listingPageConfig: shape({
+    showConfig: shape({
       label: string.isRequired,
       isDetail: bool,
     }),
