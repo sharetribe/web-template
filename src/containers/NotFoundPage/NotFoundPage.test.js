@@ -24,7 +24,7 @@ const routeConfiguration = [
 ];
 
 describe('NotFoundPage', () => {
-  test('LocationSearchForm has placeholder when isKeywordSearch=true', () => {
+  test('SearchForm has placeholder when isKeywordSearch=true', () => {
     render(
       <NotFoundPageComponent
         scrollingDisabled={false}
@@ -37,7 +37,7 @@ describe('NotFoundPage', () => {
         }}
       />
     );
-    const placeholder = 'LocationSearchForm.placeholder';
+    const placeholder = 'NotFoundPage.SearchForm.placeholder';
     expect(screen.getByPlaceholderText(placeholder)).toBeInTheDocument();
 
     // TODO: when isKeywordSearch = false, the form uses LocationAutocompleteInput, which is code-splitted
