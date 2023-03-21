@@ -1,6 +1,6 @@
 // ================ Action types ================ //
 
-export const LOCATION_CHANGED = 'app/Routing/LOCATION_CHANGED';
+export const LOCATION_CHANGED = 'app/routing/LOCATION_CHANGED';
 
 // ================ Reducer ================ //
 
