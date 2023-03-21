@@ -1,8 +1,5 @@
 import React from 'react';
 import mapValues from 'lodash/mapValues';
-import Enzyme, { shallow, mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import toJson from 'enzyme-to-json';
 
 import * as reactTestingLibrary from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -22,8 +19,6 @@ import routeConfiguration from '../routing/routeConfiguration';
 // are missing from the en translations file, the language for the tests can
 // be changed here so that there are no missing translation keys in tests.
 import messages from '../translations/en.json';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 let undefined;
 export const getDefaultConfiguration = () => {
@@ -236,23 +231,3 @@ export const renderWithProviders = (ui, renderOptions = {}) => {
   return reactTestingLibrary.render(ui, { wrapper: Wrapper, ...renderOptions });
 };
 export const testingLibrary = { ...reactTestingLibrary, userEvent };
-
-// Use Enzyme's shallow rendering to render the given component to a
-// JSON structure that can be used in snapshot tests. This doesn't
-// render the children within the given component, only a
-// representation of the child component and its props.
-//
-// Useful for snapshot testing components that contain shared
-// components. With deep rendering, if the child component changes
-// internally, the test for the given component would also fail. This
-// avoids the problem by not rendering the full tree but only the
-// relevant structure for the given component.
-export const renderShallow = component => {
-  return toJson(shallow(component));
-};
-
-// Fully render the given component to a JSON structure that can be
-// used in snapshot tests.
-export const renderDeep = component => {
-  return toJson(mount(<TestProvider>{component}</TestProvider>), { mode: 'deep' });
-};
