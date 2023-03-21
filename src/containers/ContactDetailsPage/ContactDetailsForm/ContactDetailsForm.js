@@ -195,7 +195,9 @@ class ContactDetailsFormComponent extends Component {
           const currentPhoneNumber = protectedData.phoneNumber;
 
           // has the phone number changed
-          const phoneNumberChanged = currentPhoneNumber !== phoneNumber;
+          const phoneNumberChanged =
+            currentPhoneNumber !== phoneNumber &&
+            !(typeof currentPhoneNumber === 'undefined' && phoneNumber === '');
 
           const phonePlaceholder = intl.formatMessage({
             id: 'ContactDetailsForm.phonePlaceholder',
