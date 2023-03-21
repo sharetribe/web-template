@@ -479,7 +479,7 @@ propTypes.listingExtendedDataConfig = arrayOf(
     scope: string,
     includeForListingTypes: arrayOf(string),
     schemaType: oneOf(EXTENDED_DATA_SCHEMA_TYPES).isRequired,
-    schemaOptions: arrayOf(
+    enumOptions: arrayOf(
       shape({
         option: oneOfType([string, number]).isRequired,
         label: string.isRequired,

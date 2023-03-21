@@ -321,7 +321,7 @@ export const ListingPageComponent = props => {
               intl={intl}
             />
             {listingConfig.listingExtendedData.reduce((pickedElements, config) => {
-              const { key, schemaOptions, scope = 'public' } = config;
+              const { key, enumOptions, scope = 'public' } = config;
               const value =
                 scope === 'public' ? publicData[key] : scope === 'metadata' ? metadata[key] : null;
               const hasValue = value !== null;
@@ -331,7 +331,7 @@ export const ListingPageComponent = props => {
                     <SectionMultiEnumMaybe
                       key={key}
                       heading={config?.listingPageConfig?.label}
-                      options={createFilterOptions(schemaOptions)}
+                      options={createFilterOptions(enumOptions)}
                       selectedOptions={value}
                     />,
                   ]

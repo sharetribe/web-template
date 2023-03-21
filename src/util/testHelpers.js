@@ -51,7 +51,7 @@ export const getDefaultConfiguration = () => {
             'hourly-booking',
           ],
           schemaType: 'enum',
-          schemaOptions: [
+          enumOptions: [
             { option: 'city-bikes', label: 'City bikes' },
             { option: 'e-bikes', label: 'E-bikes' },
             { option: 'mtb', label: 'MTB' },
@@ -85,7 +85,7 @@ export const getDefaultConfiguration = () => {
             'hourly-booking',
           ],
           schemaType: 'enum',
-          schemaOptions: [
+          enumOptions: [
             { option: 29, label: '29' },
             { option: 28, label: '28' },
             { option: 27, label: '27' },
@@ -120,7 +120,7 @@ export const getDefaultConfiguration = () => {
             'hourly-booking',
           ],
           schemaType: 'enum',
-          schemaOptions: [
+          enumOptions: [
             { option: 'cube', label: 'Cube' },
             { option: 'diamant', label: 'Diamant' },
             { option: 'ghost', label: 'GHOST' },

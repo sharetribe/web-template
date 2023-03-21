@@ -28,7 +28,7 @@ describe('EditListingDetailsForm', () => {
         scope: 'public',
         includeForListingTypes: ['sell-bicycles'],
         schemaType: 'enum',
-        schemaOptions: [
+        enumOptions: [
           { option: 'men', label: 'Men' },
           { option: 'women', label: 'Women' },
           { option: 'kids', label: 'Kids' },
@@ -54,7 +54,7 @@ describe('EditListingDetailsForm', () => {
           'rent-bicycles-hourly',
         ],
         schemaType: 'multi-enum',
-        schemaOptions: [
+        enumOptions: [
           { option: 'towels', label: 'Towels' },
           { option: 'bathroom', label: 'Bathroom' },
           { option: 'swimming_pool', label: 'Swimming pool' },

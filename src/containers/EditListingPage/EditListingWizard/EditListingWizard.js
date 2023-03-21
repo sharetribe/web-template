@@ -117,11 +117,11 @@ const hasValidCustomFieldsInExtendedData = (publicData, privateData, config) => 
       key,
       includeForListingTypes,
       schemaType,
-      schemaOptions = [],
+      enumOptions = [],
       editListingPageConfig = {},
     } = fieldConfig;
 
-    const schemaOptionKeys = schemaOptions.map(o => `${o.option}`);
+    const schemaOptionKeys = enumOptions.map(o => `${o.option}`);
     const hasValidEnumValue = optionData => {
       return schemaOptionKeys.includes(optionData);
     };

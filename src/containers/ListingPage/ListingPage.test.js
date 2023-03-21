@@ -42,7 +42,7 @@ const listingConfig = {
       scope: 'public',
       includeForListingTypes: ['sell-bicycles'],
       schemaType: 'enum',
-      schemaOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
+      enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
       indexForSearch: true,
       listingPageConfig: {
         label: 'Category',
@@ -58,7 +58,7 @@ const listingConfig = {
         'rent-bicycles-hourly',
       ],
       schemaType: 'multi-enum',
-      schemaOptions: [
+      enumOptions: [
         { option: 'feat_1', label: 'Feat 1' },
         { option: 'feat_2', label: 'Feat 2' },
         { option: 'feat_3', label: 'Feat 3' },

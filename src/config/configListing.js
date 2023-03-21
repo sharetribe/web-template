@@ -18,7 +18,7 @@
  * - schemaType (optional):         Schema for this extended data field.
  *                                  This is relevant when rendering components and querying listings.
  *                                  Possible values: 'enum', 'multi-enum', 'text', 'long', 'boolean'.
- * - schemaOptions (optional):      Options shown for 'enum' and 'multi-enum' extended data.
+ * - enumOptions (optional):        Options shown for 'enum' and 'multi-enum' extended data.
  *                                  These are used to render options for inputs and filters on
  *                                  EditListingPage, ListingPage, and SearchPage.
  * - indexForSearch (optional):     If set as true, it is assumed that the extended data key has
@@ -51,7 +51,7 @@ export const listingExtendedData = [
     key: 'category',
     scope: 'public',
     schemaType: 'enum',
-    schemaOptions: [
+    enumOptions: [
       { option: 'city-bikes', label: 'City bikes' },
       { option: 'electric-bikes', label: 'Electric bikes' },
       { option: 'mountain-bikes', label: 'Mountain bikes' },
@@ -79,7 +79,7 @@ export const listingExtendedData = [
     key: 'tire-size',
     scope: 'public',
     schemaType: 'enum',
-    schemaOptions: [
+    enumOptions: [
       { option: 29, label: '29' },
       { option: 28, label: '28' },
       { option: 27, label: '27' },
@@ -108,7 +108,7 @@ export const listingExtendedData = [
     key: 'brand',
     scope: 'public',
     schemaType: 'enum',
-    schemaOptions: [
+    enumOptions: [
       { option: 'cube', label: 'Cube' },
       { option: 'diamant', label: 'Diamant' },
       { option: 'ghost', label: 'GHOST' },
@@ -138,7 +138,7 @@ export const listingExtendedData = [
     key: 'equipped-with',
     scope: 'public',
     schemaType: 'multi-enum',
-    schemaOptions: [
+    enumOptions: [
       { option: 'bell', label: 'Bell' },
       { option: 'lights', label: 'Lights' },
       { option: 'lock', label: 'Lock' },

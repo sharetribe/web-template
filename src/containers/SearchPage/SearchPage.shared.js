@@ -56,14 +56,14 @@ export const validURLParamForExtendedData = (
   );
 
   if (extendedDataFilterConfig) {
-    const { schemaType, schemaOptions = [], searchPageConfig } = extendedDataFilterConfig;
+    const { schemaType, enumOptions = [], searchPageConfig } = extendedDataFilterConfig;
     if ([SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM].includes(schemaType)) {
       const isSchemaTypeMultiEnum = schemaType === SCHEMA_TYPE_MULTI_ENUM;
       const searchMode = searchPageConfig?.searchMode;
 
       // Pick valid select options only
       const valueArray = parseSelectFilterOptions(paramValue);
-      const allowedValues = schemaOptions.map(o => `${o.option}`);
+      const allowedValues = enumOptions.map(o => `${o.option}`);
       const validValues = intersection(valueArray, allowedValues).join(',');
 
       return validValues.length > 0

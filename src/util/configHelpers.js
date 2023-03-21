@@ -163,16 +163,16 @@ const validListingTypesForListingConfig = (includeForListingTypes, listingTypesI
 const isStringType = str => typeof str === 'string';
 const pickOptionShapes = o => isStringType(o.option) && isStringType(o.label);
 
-const validSchemaOptions = (schemaOptions, schemaType) => {
-  const isUndefined = typeof schemaOptions === 'undefined';
-  const isArray = Array.isArray(schemaOptions);
+const validSchemaOptions = (enumOptions, schemaType) => {
+  const isUndefined = typeof enumOptions === 'undefined';
+  const isArray = Array.isArray(enumOptions);
   const arrayContainsOptionShapes = isArray
-    ? schemaOptions.filter(pickOptionShapes).length === schemaOptions.length
+    ? enumOptions.filter(pickOptionShapes).length === enumOptions.length
     : false;
   const shouldHaveSchemaOptions = ['enum', 'multi-enum'].includes(schemaType) && !isUndefined;
 
   const isValid = isUndefined || shouldHaveSchemaOptions || arrayContainsOptionShapes;
-  const schemaOptionsMaybe = isArray ? { schemaOptions } : {};
+  const schemaOptionsMaybe = isArray ? { enumOptions } : {};
   return [isValid, schemaOptionsMaybe];
 };
 
@@ -308,7 +308,7 @@ const validListingExtendedData = (listingExtendedData, listingTypesInUse) => {
             ? validListingTypesForListingConfig(value, listingTypesInUse)
             : name === 'schemaType'
             ? validEnumString('schemaType', value, validSchemaTypes)
-            : name === 'schemaOptions'
+            : name === 'enumOptions'
             ? validSchemaOptions(value, schemaType)
             : name === 'indexForSearch'
             ? validBoolean('indexForSearch', value, false)

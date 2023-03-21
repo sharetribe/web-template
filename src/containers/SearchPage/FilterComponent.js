@@ -8,7 +8,7 @@ import BookingDateRangeFilter from './BookingDateRangeFilter/BookingDateRangeFil
 import KeywordFilter from './KeywordFilter/KeywordFilter';
 import PriceFilter from './PriceFilter/PriceFilter';
 
-// Helper: get schemaOptions in a format that works as query parameter
+// Helper: get enumOptions in a format that works as query parameter
 const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
 
 /**
@@ -89,7 +89,7 @@ const FilterComponent = props => {
   // Custom extended data filters
   switch (schemaType) {
     case SCHEMA_TYPE_ENUM: {
-      const { scope, schemaOptions, searchPageConfig = {} } = config;
+      const { scope, enumOptions, searchPageConfig = {} } = config;
       const queryParamNames = [constructQueryParamName(key, scope)];
       return searchPageConfig.filterType === 'SelectSingleFilter' ? (
         <SelectSingleFilter
@@ -98,7 +98,7 @@ const FilterComponent = props => {
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
           onSelect={getHandleChangedValueFn(useHistoryPush)}
-          options={createFilterOptions(schemaOptions)}
+          options={createFilterOptions(enumOptions)}
           {...rest}
         />
       ) : (
@@ -109,14 +109,14 @@ const FilterComponent = props => {
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
-          options={createFilterOptions(schemaOptions)}
+          options={createFilterOptions(enumOptions)}
           schemaType={schemaType}
           {...rest}
         />
       );
     }
     case SCHEMA_TYPE_MULTI_ENUM: {
-      const { scope, schemaOptions, searchPageConfig = {} } = config;
+      const { scope, enumOptions, searchPageConfig = {} } = config;
       const { label, searchMode } = searchPageConfig;
       const queryParamNames = [constructQueryParamName(key, scope)];
       return (
@@ -127,7 +127,7 @@ const FilterComponent = props => {
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
-          options={createFilterOptions(schemaOptions)}
+          options={createFilterOptions(enumOptions)}
           schemaType={schemaType}
           searchMode={searchMode}
           {...rest}
