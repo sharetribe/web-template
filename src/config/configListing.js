@@ -216,8 +216,8 @@ export const listingExtendedData = [
  *                      transaction's protected data.
  *                      Recommendation: don't use same unit types in completely different processes
  *                      ('item' sold should not be priced the same as 'item' booked).
- * - showStock        This is relevant only to listings with product-selling listing type.
- *                    If set to false, stock management is not showed and the listing is
+ * - stockType        This is relevant only to listings with product-selling listing type.
+ *                    If set to 'oneItem', stock management is not showed and the listing is
  *                    considered unique (stock = 1).
  *                    Default: true.
  */
@@ -260,7 +260,7 @@ export const listingTypes = [
       alias: 'release-1',
       unitType: 'item',
     },
-    showStock: true,
+    stockType: 'oneItem',
   },
 ];
 
