@@ -46,7 +46,7 @@ const listingConfig = {
       filterConfig: {
         indexForSearch: true,
       },
-      listingPageConfig: {
+      showConfig: {
         label: 'Category',
         isDetail: true,
       },
@@ -68,7 +68,7 @@ const listingConfig = {
       filterConfig: {
         indexForSearch: true,
       },
-      listingPageConfig: {
+      showConfig: {
         label: 'Amenities',
         searchMode: 'has_all',
         group: 'secondary',

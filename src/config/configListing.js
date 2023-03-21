@@ -36,7 +36,7 @@
  *   - searchMode (optional):         Search mode for indexed data with multi-enum schema.
  *                                    Possible values: 'has_all' or 'has_any'.
  *   - group:                         SearchPageWithMap has grouped filters. Possible values: 'primary' or 'secondary'.
- * - listingPageConfig:             Configuration for rendering listing.
+ * - showConfig:                    Configuration for rendering listing. (How the field should be shown.)
  *   - label:                         Label for the saved data.
  *   - isDetail                       Can be used to hide detail row (of type enum, boolean, or long) from listing page.
  *                                    Default value: true,
@@ -63,7 +63,7 @@ export const listingExtendedData = [
       label: 'Category',
       group: 'primary',
     },
-    listingPageConfig: {
+    showConfig: {
       label: 'Category',
       isDetail: true,
     },
@@ -93,7 +93,7 @@ export const listingExtendedData = [
       label: 'Tire size',
       group: 'secondary',
     },
-    listingPageConfig: {
+    showConfig: {
       label: 'Tire size',
       isDetail: true,
     },
@@ -123,7 +123,7 @@ export const listingExtendedData = [
       label: 'Brand',
       group: 'secondary',
     },
-    listingPageConfig: {
+    showConfig: {
       label: 'Brand',
       isDetail: true,
     },
@@ -150,7 +150,7 @@ export const listingExtendedData = [
       searchMode: 'has_all',
       group: 'secondary',
     },
-    listingPageConfig: {
+    showConfig: {
       label: 'Equipped with',
     },
     saveConfig: {
@@ -166,7 +166,7 @@ export const listingExtendedData = [
   //   scope: 'public',
   //   includeForListingTypes: ['product-selling'],
   //   schemaType: 'text',
-  //   listingPageConfig: {
+  //   showConfig: {
   //     label: 'Extra notes',
   //   },
   //   saveConfig: {

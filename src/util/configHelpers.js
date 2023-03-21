@@ -232,8 +232,8 @@ const validFilterConfig = (config, schemaType) => {
   return [isValid, validValue];
 };
 
-// listingExtendedDataConfig.listingPageConfig
-const validListingPageConfig = config => {
+// listingExtendedDataConfig.showConfig
+const validShowConfig = config => {
   const isUndefined = typeof config === 'undefined';
   if (isUndefined) {
     return [true, {}];
@@ -244,7 +244,7 @@ const validListingPageConfig = config => {
 
   const isValid = isValidLabel && isValidIsDetail;
   const validValue = {
-    listingPageConfig: {
+    showConfig: {
       ...label,
       ...isDetail,
     },
@@ -319,8 +319,8 @@ const validListingExtendedData = (listingExtendedData, listingTypesInUse) => {
             ? validSchemaOptions(value, schemaType)
             : name === 'filterConfig'
             ? validFilterConfig(value, schemaType)
-            : name === 'listingPageConfig'
-            ? validListingPageConfig(value)
+            : name === 'showConfig'
+            ? validShowConfig(value)
             : name === 'saveConfig'
             ? validSaveConfig(value)
             : [true, value];

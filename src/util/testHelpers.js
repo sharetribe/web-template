@@ -63,7 +63,7 @@ export const getDefaultConfiguration = () => {
             label: 'Category',
             group: 'primary',
           },
-          listingPageConfig: {
+          showConfig: {
             label: 'Category',
             isDetail: true,
           },
@@ -99,7 +99,7 @@ export const getDefaultConfiguration = () => {
             label: 'Tire size',
             group: 'secondary',
           },
-          listingPageConfig: {
+          showConfig: {
             label: 'Tire size',
             isDetail: true,
           },
@@ -135,7 +135,7 @@ export const getDefaultConfiguration = () => {
             label: 'Brand',
             group: 'secondary',
           },
-          listingPageConfig: {
+          showConfig: {
             label: 'Brand',
             isDetail: true,
           },
