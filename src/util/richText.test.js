@@ -1,6 +1,8 @@
 import React from 'react';
-import './test-helpers';
-import { shallow } from 'enzyme';
+import '@testing-library/jest-dom';
+
+import { renderWithProviders as render } from '../util/testHelpers';
+
 import {
   zwspAroundSpecialCharsSplit,
   linkifyOrWrapLinkSplit,
@@ -111,15 +113,16 @@ describe('richText', () => {
 
   describe('wrapLongWord(word, key, longWordMinLength, longWordClass)', () => {
     it('should not add anything to short word', () => {
-      const wrapper = shallow(
+      const wrapper = render(
         <span>
           {wrapLongWord('word', 'key', { longWordMinLength: 10, longWordClass: 'longWord' })}
         </span>
       );
-      expect(wrapper.html()).toEqual('<span>word</span>');
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual('<span>word</span>');
     });
     it('should add span around long word', () => {
-      const wrapper = shallow(
+      const wrapper = render(
         <span>
           {wrapLongWord('Pneumonoultramicroscopicsilicovolcanoconiosis', 'key', {
             longWordMinLength: 10,
@@ -127,7 +130,8 @@ describe('richText', () => {
           })}
         </span>
       );
-      expect(wrapper.html()).toEqual(
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
         '<span><span class="longWord">Pneumonoultramicroscopicsilicovolcanoconiosis</span></span>'
       );
     });
@@ -135,15 +139,16 @@ describe('richText', () => {
 
   describe('linkifyOrWrapLinkSplit(word, key, linkClass)', () => {
     it('should not add anything to words without links', () => {
-      const wrapper = shallow(
+      const wrapper = render(
         <span>
           {linkifyOrWrapLinkSplit('word', 'key', { linkify: true, linkClass: 'linkClass' })}
         </span>
       );
-      expect(wrapper.html()).toEqual('<span>word</span>');
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual('<span>word</span>');
     });
     it('should add link around words that are links', () => {
-      const wrapper = shallow(
+      const wrapper = render(
         <span>
           {linkifyOrWrapLinkSplit('http://www.example.com', 'key', {
             linkify: true,
@@ -151,12 +156,13 @@ describe('richText', () => {
           })}
         </span>
       );
-      expect(wrapper.html()).toEqual(
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
         '<span><a href="http://www.example.com" class="linkClass" target="_blank" rel="noopener noreferrer">http://www.example.com</a></span>'
       );
     });
     it('should add link around words that are links even inside parenthesis', () => {
-      const wrapper = shallow(
+      const wrapper = render(
         <span>
           {linkifyOrWrapLinkSplit('(http://www.example.com)', 'key', {
             linkify: true,
@@ -164,12 +170,13 @@ describe('richText', () => {
           })}
         </span>
       );
-      expect(wrapper.html()).toEqual(
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
         '<span>(<a href="http://www.example.com" class="linkClass" target="_blank" rel="noopener noreferrer">http://www.example.com</a>)</span>'
       );
     });
     it('should add link around words that are links even inside brackets', () => {
-      const wrapper = shallow(
+      const wrapper = render(
         <span>
           {linkifyOrWrapLinkSplit('[http://www.example.com]', 'key', {
             linkify: true,
@@ -177,7 +184,8 @@ describe('richText', () => {
           })}
         </span>
       );
-      expect(wrapper.html()).toEqual(
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
         '<span>[<a href="http://www.example.com" class="linkClass" target="_blank" rel="noopener noreferrer">http://www.example.com</a>]</span>'
       );
     });
@@ -187,12 +195,13 @@ describe('richText', () => {
     const options = { longWordMinLength: 10, longWordClass: 'longWord' };
 
     it('should not add anything to strings with short words', () => {
-      const wrapper = shallow(<span>{richText('word word word', options)}</span>);
+      const wrapper = render(<span>{richText('word word word', options)}</span>);
 
-      expect(wrapper.html()).toEqual('<span>word word word</span>');
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual('<span>word word word</span>');
     });
     it('should add span around a string with a single long word', () => {
-      const wrapper = shallow(
+      const wrapper = render(
         <span>
           {richText(
             'word Pneumonoultramicroscopicsilicovolcanoconiosis is the longest word',
@@ -200,12 +209,13 @@ describe('richText', () => {
           )}
         </span>
       );
-      expect(wrapper.html()).toEqual(
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
         '<span>word <span class="longWord">Pneumonoultramicroscopicsilicovolcanoconiosis</span> is the longest word</span>'
       );
     });
     it('should add span around a string with multiple long words', () => {
-      const wrapper = shallow(
+      const wrapper = render(
         <span>
           {richText(
             'word Pneumonoultramicroscopicsilicovolcanoconiosis is the longest word - Pseudopseudohypoparathyroidism is shorter',
@@ -213,37 +223,40 @@ describe('richText', () => {
           )}
         </span>
       );
-      expect(wrapper.html()).toEqual(
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
         '<span>word <span class="longWord">Pneumonoultramicroscopicsilicovolcanoconiosis</span> is the longest word - <span class="longWord">Pseudopseudohypoparathyroidism</span> is shorter</span>'
       );
     });
 
     it('should add span around a string with multiple long words and containing slashes', () => {
-      const wrapper = shallow(
+      const wrapper = render(
         <span>{richText('Chars one/two/three - count until exhaustion…', options)}</span>
       );
       // <span>
       //   Chars one​/​two​/​three - count until <span class=\"classX\">exhaustion…</span>
       // </span>
-      expect(wrapper.html()).toEqual(
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
         `<span>Chars one${slashWithZWSP}two${slashWithZWSP}three - count until <span class="longWord">exhaustion…</span></span>`
       );
     });
 
     it('should add span around a string with a long word and containing slashes and commas', () => {
-      const wrapper = shallow(
+      const wrapper = render(
         <span>{richText('Chars one/two/three, count until exhaustion…', options)}</span>
       );
       // <span>
       //   Chars one​/​two​/​three​,​ count until <span class=\"classX\">exhaustion…</span>
       // </span>
-      expect(wrapper.html()).toEqual(
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
         `<span>Chars one${slashWithZWSP}two${slashWithZWSP}three${commaWithZWSP} count until <span class="longWord">exhaustion…</span></span>`
       );
     });
 
     it('should add span around a string with a long word, containing slashes and a link', () => {
-      const wrapper = shallow(
+      const wrapper = render(
         <span>
           {richText(
             'Chars one/two/three - count until exhaustion… and a random link: http://www.example.com',
@@ -254,23 +267,25 @@ describe('richText', () => {
       // <span>
       //   Chars one​/​two​/​three - count until <span class=\"classX\">exhaustion…</span> and a random link: <a href=\"http://www.example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://www.example.com</a>
       // </span>
-      expect(wrapper.html()).toEqual(
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
         `<span>Chars one${slashWithZWSP}two${slashWithZWSP}three - count until <span class="longWord">exhaustion…</span> and a random link: <a href="http://www.example.com" class="link" target="_blank" rel="noopener noreferrer">http://www.example.com</a></span>`
       );
     });
     it('should add link inside non-whitespace-sequence (http://example.com)', () => {
-      const wrapper = shallow(
+      const wrapper = render(
         <span>{richText('Link: (http://example.com)', { ...options, linkify: true })}</span>
       );
       // <span>
       //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
       // </span>
-      expect(wrapper.html()).toEqual(
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
         `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>)</span>`
       );
     });
     it('should not add span around a string if no linkify option is given', () => {
-      const wrapper = shallow(
+      const wrapper = render(
         <span>
           {richText(
             'Chars one/two/three - count until exhaustion… and a random link: http://www.example.com',
@@ -281,7 +296,8 @@ describe('richText', () => {
       // <span>
       //   Chars one​/​two​/​three - count until <span class=\"classX\">exhaustion…</span> and a random link: http:​/​​/​<span class=\"longWord\">www.example.com</span>
       // </span>
-      expect(wrapper.html()).toEqual(
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
         `<span>Chars one${slashWithZWSP}two${slashWithZWSP}three - count until <span class="longWord">exhaustion…</span> and a random link: <span class="longWord">http://www.example.com</span></span>`
       );
     });
