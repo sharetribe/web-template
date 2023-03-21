@@ -114,7 +114,7 @@ BookingTimeInfoMaybe.propTypes = {
 };
 
 export const InboxItem = props => {
-  const { transactionRole, tx, intl, stateData, isBooking, showStock = true } = props;
+  const { transactionRole, tx, intl, stateData, isBooking, stockType = 'multipleItems' } = props;
   const { customer, provider, listing } = tx;
   const { processName, processState, actionNeeded, isSaleNotification, isFinal } = stateData;
   const isCustomer = transactionRole === TX_TRANSITION_ACTOR_CUSTOMER;
@@ -155,7 +155,7 @@ export const InboxItem = props => {
         <div className={css.itemDetails}>
           {isBooking ? (
             <BookingTimeInfoMaybe transaction={tx} />
-          ) : hasPricingData && showStock ? (
+          ) : hasPricingData && stockType === 'multipleItems' ? (
             <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
           ) : null}
         </div>
@@ -222,7 +222,7 @@ export const InboxPageComponent = props => {
 
     const publicData = tx?.listing?.attributes?.publicData || {};
     const foundListingTypeConfig = findListingTypeConfig(publicData);
-    const { transactionType, showStock } = foundListingTypeConfig || {};
+    const { transactionType, stockType } = foundListingTypeConfig || {};
     const process = tx?.attributes?.processName || transactionType?.transactionType;
     const transactionProcess = resolveLatestProcessName(process);
     const isBooking = isBookingProcess(transactionProcess);
@@ -235,7 +235,7 @@ export const InboxPageComponent = props => {
           tx={tx}
           intl={intl}
           stateData={stateData}
-          showStock={showStock}
+          stockType={stockType}
           isBooking={isBooking}
         />
       </li>

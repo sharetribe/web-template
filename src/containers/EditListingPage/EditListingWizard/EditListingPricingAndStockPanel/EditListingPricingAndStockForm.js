@@ -69,7 +69,7 @@ export const EditListingPricingAndStockFormComponent = props => (
         marketplaceCurrency,
         intl
       );
-      const hasStockManagement = listingType.showStock;
+      const hasStockManagement = listingType.stockType === 'oneItem';
       const stockValidator = validators.numberAtLeast(
         intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockIsRequired' }),
         0
@@ -161,7 +161,7 @@ EditListingPricingAndStockFormComponent.propTypes = {
   marketplaceCurrency: string.isRequired,
   listingMinimumPriceSubUnits: number,
   unitType: string.isRequired,
-  listingType: shape({ showStock: bool }).isRequired,
+  listingType: shape({ stockType: string }).isRequired,
   saveActionMsg: string.isRequired,
   disabled: bool.isRequired,
   ready: bool.isRequired,

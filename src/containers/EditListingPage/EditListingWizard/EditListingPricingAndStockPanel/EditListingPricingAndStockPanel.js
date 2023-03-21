@@ -147,7 +147,7 @@ EditListingPricingAndStockPanel.propTypes = {
   listingMinimumPriceSubUnits: number.isRequired,
   listingTypes: arrayOf(
     shape({
-      showStock: bool,
+      stockType: string,
     })
   ).isRequired,
 
