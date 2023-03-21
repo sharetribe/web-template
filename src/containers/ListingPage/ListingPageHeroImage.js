@@ -32,7 +32,7 @@ import {
 } from '../../util/data';
 import { richText } from '../../util/richText';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
-import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck';
+import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
 
 import {
@@ -498,7 +498,7 @@ const EnhancedListingPage = props => {
 };
 
 const mapStateToProps = state => {
-  const { isAuthenticated } = state.Auth;
+  const { isAuthenticated } = state.auth;
   const {
     showListingError,
     reviews,

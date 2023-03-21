@@ -8,24 +8,24 @@ const authenticated = authInfo => authInfo && authInfo.isAnonymous === false;
 
 // ================ Action types ================ //
 
-export const AUTH_INFO_REQUEST = 'app/Auth/AUTH_INFO_REQUEST';
-export const AUTH_INFO_SUCCESS = 'app/Auth/AUTH_INFO_SUCCESS';
+export const AUTH_INFO_REQUEST = 'app/auth/AUTH_INFO_REQUEST';
+export const AUTH_INFO_SUCCESS = 'app/auth/AUTH_INFO_SUCCESS';
 
-export const LOGIN_REQUEST = 'app/Auth/LOGIN_REQUEST';
-export const LOGIN_SUCCESS = 'app/Auth/LOGIN_SUCCESS';
-export const LOGIN_ERROR = 'app/Auth/LOGIN_ERROR';
+export const LOGIN_REQUEST = 'app/auth/LOGIN_REQUEST';
+export const LOGIN_SUCCESS = 'app/auth/LOGIN_SUCCESS';
+export const LOGIN_ERROR = 'app/auth/LOGIN_ERROR';
 
-export const LOGOUT_REQUEST = 'app/Auth/LOGOUT_REQUEST';
-export const LOGOUT_SUCCESS = 'app/Auth/LOGOUT_SUCCESS';
-export const LOGOUT_ERROR = 'app/Auth/LOGOUT_ERROR';
+export const LOGOUT_REQUEST = 'app/auth/LOGOUT_REQUEST';
+export const LOGOUT_SUCCESS = 'app/auth/LOGOUT_SUCCESS';
+export const LOGOUT_ERROR = 'app/auth/LOGOUT_ERROR';
 
-export const SIGNUP_REQUEST = 'app/Auth/SIGNUP_REQUEST';
-export const SIGNUP_SUCCESS = 'app/Auth/SIGNUP_SUCCESS';
-export const SIGNUP_ERROR = 'app/Auth/SIGNUP_ERROR';
+export const SIGNUP_REQUEST = 'app/auth/SIGNUP_REQUEST';
+export const SIGNUP_SUCCESS = 'app/auth/SIGNUP_SUCCESS';
+export const SIGNUP_ERROR = 'app/auth/SIGNUP_ERROR';
 
-export const CONFIRM_REQUEST = 'app/Auth/CONFIRM_REQUEST';
-export const CONFIRM_SUCCESS = 'app/Auth/CONFIRM_SUCCESS';
-export const CONFIRM_ERROR = 'app/Auth/CONFIRM_ERROR';
+export const CONFIRM_REQUEST = 'app/auth/CONFIRM_REQUEST';
+export const CONFIRM_SUCCESS = 'app/auth/CONFIRM_SUCCESS';
+export const CONFIRM_ERROR = 'app/auth/CONFIRM_ERROR';
 
 // Generic user_logout action that can be handled elsewhere
 // E.g. src/reducers.js clears store as a consequence
@@ -114,7 +114,7 @@ export default function reducer(state = initialState, action = {}) {
 // ================ Selectors ================ //
 
 export const authenticationInProgress = state => {
-  const { loginInProgress, logoutInProgress, signupInProgress } = state.Auth;
+  const { loginInProgress, logoutInProgress, signupInProgress } = state.auth;
   return loginInProgress || logoutInProgress || signupInProgress;
 };
 

@@ -41,7 +41,7 @@ import * as apiUtils from './util/api';
 import * as log from './util/log';
 
 // Import relevant global duck files
-import { authInfo } from './ducks/Auth.duck';
+import { authInfo } from './ducks/auth.duck';
 import { fetchAppAssets } from './ducks/hostedAssets.duck';
 import { fetchCurrentUser } from './ducks/user.duck';
 
@@ -56,7 +56,7 @@ const render = (store, shouldHydrate) => {
   // when auth information is present.
   const state = store.getState();
   const cdnAssetsVersion = state.hostedAssets.version;
-  const authInfoLoaded = state.Auth.authInfoLoaded;
+  const authInfoLoaded = state.auth.authInfoLoaded;
   const info = authInfoLoaded ? Promise.resolve({}) : store.dispatch(authInfo());
   info
     .then(() => {

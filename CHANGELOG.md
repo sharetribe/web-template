@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Rename global duck files to start with lower case letter.
+  [#112](https://github.com/sharetribe/ftw-x/pull/112)
 - [change] Update tests to use React Testing Library instead of Enzyme.
   [#28](https://github.com/sharetribe/ftw-x/pull/28)
 - [change] Small changes to Signup form according to review feedback.

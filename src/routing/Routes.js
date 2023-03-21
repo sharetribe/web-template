@@ -10,7 +10,7 @@ import * as log from '../util/log';
 import { canonicalRoutePath } from '../util/routes';
 import { useConfiguration } from '../context/configurationContext';
 
-import { locationChanged } from '../ducks/Routing.duck';
+import { locationChanged } from '../ducks/routing.duck';
 
 import { NamedRedirect } from '../components';
 import NotFoundPage from '../containers/NotFoundPage/NotFoundPage';
@@ -162,7 +162,7 @@ RouteComponentRenderer.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { isAuthenticated, logoutInProgress } = state.Auth;
+  const { isAuthenticated, logoutInProgress } = state.auth;
   return { isAuthenticated, logoutInProgress };
 };
 const RouteComponentContainer = compose(connect(mapStateToProps))(RouteComponentRenderer);

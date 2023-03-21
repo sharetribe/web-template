@@ -3,9 +3,9 @@ import { fetchCurrentUser } from './user.duck';
 
 // ================ Action types ================ //
 
-export const VERIFICATION_REQUEST = 'app/EmailVerification/VERIFICATION_REQUEST';
-export const VERIFICATION_SUCCESS = 'app/EmailVerification/VERIFICATION_SUCCESS';
-export const VERIFICATION_ERROR = 'app/EmailVerification/VERIFICATION_ERROR';
+export const VERIFICATION_REQUEST = 'app/emailVerification/VERIFICATION_REQUEST';
+export const VERIFICATION_SUCCESS = 'app/emailVerification/VERIFICATION_SUCCESS';
+export const VERIFICATION_ERROR = 'app/emailVerification/VERIFICATION_ERROR';
 
 // ================ Reducer ================ //
 
@@ -38,7 +38,7 @@ export default function reducer(state = initialState, action = {}) {
 // ================ Selectors ================ //
 
 export const verificationInProgress = state => {
-  return state.EmailVerification.verificationInProgress;
+  return state.emailVerification.verificationInProgress;
 };
 
 // ================ Action creators ================ //
