@@ -4,7 +4,7 @@
  * https://github.com/erikras/ducks-modular-redux
  */
 
-import Auth from './Auth.duck';
+import auth from './auth.duck';
 import emailVerification from './emailVerification.duck';
 import routing from './routing.duck';
 import UI from './UI.duck';
@@ -16,7 +16,7 @@ import stripeConnectAccount from './stripeConnectAccount.duck';
 import user from './user.duck';
 
 export {
-  Auth,
+  auth,
   emailVerification,
   routing,
   UI,

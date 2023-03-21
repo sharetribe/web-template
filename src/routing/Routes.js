@@ -162,7 +162,7 @@ RouteComponentRenderer.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { isAuthenticated, logoutInProgress } = state.Auth;
+  const { isAuthenticated, logoutInProgress } = state.auth;
   return { isAuthenticated, logoutInProgress };
 };
 const RouteComponentContainer = compose(connect(mapStateToProps))(RouteComponentRenderer);
