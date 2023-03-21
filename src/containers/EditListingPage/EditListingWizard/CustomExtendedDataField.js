@@ -19,8 +19,8 @@ const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, l
 
 const CustomFieldEnum = props => {
   const { name, fieldConfig, defaultRequiredMessage, intl } = props;
-  const { enumOptions = [], editListingPageConfig } = fieldConfig || {};
-  const { label, placeholderMessage, isRequired, requiredMessage } = editListingPageConfig || {};
+  const { enumOptions = [], saveConfig } = fieldConfig || {};
+  const { label, placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -48,8 +48,8 @@ const CustomFieldEnum = props => {
 
 const CustomFieldMultiEnum = props => {
   const { name, fieldConfig, defaultRequiredMessage } = props;
-  const { enumOptions = [], editListingPageConfig } = fieldConfig || {};
-  const { label, isRequired, requiredMessage } = editListingPageConfig || {};
+  const { enumOptions = [], saveConfig } = fieldConfig || {};
+  const { label, isRequired, requiredMessage } = saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: nonEmptyArray(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -68,8 +68,7 @@ const CustomFieldMultiEnum = props => {
 
 const CustomFieldText = props => {
   const { name, fieldConfig, defaultRequiredMessage, intl } = props;
-  const { label, placeholderMessage, isRequired, requiredMessage } =
-    fieldConfig?.editListingPageConfig || {};
+  const { label, placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -91,8 +90,7 @@ const CustomFieldText = props => {
 
 const CustomFieldLong = props => {
   const { name, fieldConfig, defaultRequiredMessage, intl } = props;
-  const { label, placeholderMessage, isRequired, requiredMessage } =
-    fieldConfig?.editListingPageConfig || {};
+  const { label, placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -119,8 +117,7 @@ const CustomFieldLong = props => {
 
 const CustomFieldBoolean = props => {
   const { name, fieldConfig, defaultRequiredMessage, intl } = props;
-  const { label, placeholderMessage, isRequired, requiredMessage } =
-    fieldConfig?.editListingPageConfig || {};
+  const { label, placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -147,7 +144,7 @@ const CustomFieldBoolean = props => {
  * fields (e.g. shipping fee), but these are independently customizable.
  *
  * @param {Object} props should contain fieldConfig that defines schemaType, enumOptions?, and
- * editListingPageConfig for the field.
+ * saveConfig for the field.
  */
 const CustomExtendedDataField = props => {
   const intl = useIntl();

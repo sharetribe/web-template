@@ -40,10 +40,10 @@
  *   - label:                         Label for the saved data.
  *   - isDetail                       Can be used to hide detail row (of type enum, boolean, or long) from listing page.
  *                                    Default value: true,
- * - editListingPageConfig:         Configuration for adding and modifying extended data fields.
+ * - saveConfig:                    Configuration for adding and modifying extended data fields.
  *   - label:                         Label for the input field.
  *   - placeholderMessage (optional): Default message for user input.
- *   - required (optional):           Is the field required for providers to fill
+ *   - isRequired (optional):         Is the field required for providers to fill
  *   - requiredMessage (optional):    Message for those fields, which are mandatory.
  */
 export const listingExtendedData = [
@@ -67,7 +67,7 @@ export const listingExtendedData = [
       label: 'Category',
       isDetail: true,
     },
-    editListingPageConfig: {
+    saveConfig: {
       label: 'Category',
       placeholderMessage: 'Select an option…',
       isRequired: true,
@@ -97,7 +97,7 @@ export const listingExtendedData = [
       label: 'Tire size',
       isDetail: true,
     },
-    editListingPageConfig: {
+    saveConfig: {
       label: 'Tire size',
       placeholderMessage: 'Select an option…',
       isRequired: true,
@@ -127,7 +127,7 @@ export const listingExtendedData = [
       label: 'Brand',
       isDetail: true,
     },
-    editListingPageConfig: {
+    saveConfig: {
       label: 'Brand',
       placeholderMessage: 'Select an option…',
       isRequired: true,
@@ -153,7 +153,7 @@ export const listingExtendedData = [
     listingPageConfig: {
       label: 'Equipped with',
     },
-    editListingPageConfig: {
+    saveConfig: {
       label: 'Equipped with',
       placeholderMessage: 'Select an option…',
       isRequired: false,
@@ -169,7 +169,7 @@ export const listingExtendedData = [
   //   listingPageConfig: {
   //     label: 'Extra notes',
   //   },
-  //   editListingPageConfig: {
+  //   saveConfig: {
   //     label: 'Extra notes',
   //     placeholderMessage: 'Some public extra note about this bike...',
   //   },
@@ -179,7 +179,7 @@ export const listingExtendedData = [
   //   scope: 'private',
   //   includeForListingTypes: ['daily-booking'],
   //   schemaType: 'text',
-  //   editListingPageConfig: {
+  //   saveConfig: {
   //     label: 'Private notes',
   //     placeholderMessage: 'Some private note about this bike...',
   //   },

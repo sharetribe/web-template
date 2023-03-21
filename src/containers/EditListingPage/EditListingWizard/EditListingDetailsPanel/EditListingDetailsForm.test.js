@@ -39,10 +39,10 @@ describe('EditListingDetailsForm', () => {
         },
         listingPageConfig: {
           label: 'Category',
-        },
-        editListingPageConfig: {
-          label: 'Category',
           isDetail: true,
+        },
+        saveConfig: {
+          label: 'Category',
         },
       },
       {
@@ -67,7 +67,7 @@ describe('EditListingDetailsForm', () => {
         listingPageConfig: {
           label: 'Category',
         },
-        editListingPageConfig: {
+        saveConfig: {
           label: 'Amenities',
         },
       },

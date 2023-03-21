@@ -67,7 +67,7 @@ export const getDefaultConfiguration = () => {
             label: 'Category',
             isDetail: true,
           },
-          editListingPageConfig: {
+          saveConfig: {
             label: 'Select category',
             placeholderMessage: 'Choose…',
             isRequired: true,
@@ -103,7 +103,7 @@ export const getDefaultConfiguration = () => {
             label: 'Tire size',
             isDetail: true,
           },
-          editListingPageConfig: {
+          saveConfig: {
             label: 'Tire size',
             placeholderMessage: 'Choose…',
             isRequired: true,
@@ -139,7 +139,7 @@ export const getDefaultConfiguration = () => {
             label: 'Brand',
             isDetail: true,
           },
-          editListingPageConfig: {
+          saveConfig: {
             label: 'Brand',
             placeholderMessage: 'Choose…',
             isRequired: true,

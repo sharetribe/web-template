@@ -252,7 +252,7 @@ const validListingPageConfig = config => {
   return [isValid, validValue];
 };
 
-// listingExtendedDataConfig.editListingPageConfig
+// listingExtendedDataConfig.saveConfig
 const validPlaceholderMessage = placeholderMessage => {
   const isUndefined = typeof placeholderMessage === 'undefined';
   const isString = typeof placeholderMessage === 'string';
@@ -268,7 +268,7 @@ const validRequiredMessage = requiredMessage => {
   return [isValid, validValue];
 };
 
-const validEditListingPageConfig = config => {
+const validSaveConfig = config => {
   const isUndefined = typeof config === 'undefined';
   if (isUndefined) {
     return [true, {}];
@@ -283,7 +283,7 @@ const validEditListingPageConfig = config => {
 
   const isValid = isValidLabel && isValidPlaceholder && isValidIsRequired && isValidRequiredMessage;
   const validValue = {
-    editListingPageConfig: {
+    saveConfig: {
       ...label,
       ...placeholderMessage,
       ...isRequired,
@@ -321,8 +321,8 @@ const validListingExtendedData = (listingExtendedData, listingTypesInUse) => {
             ? validFilterConfig(value, schemaType)
             : name === 'listingPageConfig'
             ? validListingPageConfig(value)
-            : name === 'editListingPageConfig'
-            ? validEditListingPageConfig(value)
+            : name === 'saveConfig'
+            ? validSaveConfig(value)
             : [true, value];
 
         const hasFoundValid = !(acc.isValid === false || isValid === false);
