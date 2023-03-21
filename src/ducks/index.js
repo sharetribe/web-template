@@ -6,7 +6,6 @@
 
 import Auth from './Auth.duck';
 import EmailVerification from './EmailVerification.duck';
-import LocationFilter from './LocationFilter.duck';
 import Routing from './Routing.duck';
 import UI from './UI.duck';
 import hostedAssets from './hostedAssets.duck';
@@ -19,7 +18,6 @@ import user from './user.duck';
 export {
   Auth,
   EmailVerification,
-  LocationFilter,
   Routing,
   UI,
   hostedAssets,
