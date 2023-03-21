@@ -1,11 +1,22 @@
 import React from 'react';
-import { fakeIntl } from '../../util/test-data';
-import { renderShallow } from '../../util/test-helpers';
+import '@testing-library/jest-dom';
+
+import { renderWithProviders as render } from '../../util/test-helpers';
+
 import { LandingPageComponent } from './LandingPage';
 
 describe('LandingPage', () => {
-  it('matches snapshot', () => {
-    const tree = renderShallow(<LandingPageComponent intl={fakeIntl} pageAssetsData={{}} />);
-    expect(tree).toMatchSnapshot();
+  // For now, we rely on snapshot-testing to check the content of fallback page.
+  test('matches snapshot', () => {
+    let error = new Error('Fake error');
+    error.type = 'error';
+    error.status = 404;
+    error.type;
+
+    // Testing that the fallback page looks as expected
+    const tree = render(
+      <LandingPageComponent pageAssetsData={{}} inProgress={false} error={error} />
+    );
+    expect(tree.asFragment().firstChild).toMatchSnapshot();
   });
 });
