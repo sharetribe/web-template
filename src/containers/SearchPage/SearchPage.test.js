@@ -1,7 +1,17 @@
 import React from 'react';
-import { getRouteConfiguration, renderShallow } from '../../util/test-helpers';
-import { fakeIntl } from '../../util/test-data';
-import { SearchPageComponent } from './SearchPageWithList';
+import '@testing-library/jest-dom';
+
+import { createListing, fakeIntl } from '../../util/test-data';
+import {
+  renderWithProviders as render,
+  testingLibrary,
+  getRouteConfiguration,
+} from '../../util/test-helpers';
+
+import { SearchPageComponent as SearchPageWithList } from './SearchPageWithList';
+import { SearchPageComponent as SearchPageWithMap } from './SearchPageWithMap';
+
+const { screen } = testingLibrary;
 
 const noop = () => null;
 
@@ -116,53 +126,68 @@ const sortConfig = {
 };
 
 describe('SearchPageWithList', () => {
-  it('matches snapshot', () => {
-    const props = {
-      location: { search: '' },
-      history: {
-        push: () => console.log('HistoryPush called'),
+  const props = {
+    location: { search: '' },
+    history: {
+      push: () => console.log('HistoryPush called'),
+    },
+    listings: [createListing('l1'), createListing('l2')],
+    pagination: {
+      page: 1,
+      perPage: 12,
+      totalItems: 22,
+      totalPages: 2,
+    },
+    tab: 'listings',
+    scrollingDisabled: false,
+    searchInProgress: false,
+    authInProgress: false,
+    currentUserHasListings: false,
+    listingsAreLoaded: true,
+    intl: fakeIntl,
+    isAuthenticated: false,
+    onActivateListing: noop,
+    onLogout: noop,
+    onManageDisableScrolling: noop,
+    onSearchMapListings: noop,
+    sendVerificationEmailInProgress: false,
+    onResendVerificationEmail: noop,
+    config: {
+      currency: 'USD',
+      listing: {
+        listingExtendedData: listingExtendedDataConfig,
+        listingTypes,
       },
-      pagination: {
-        page: 1,
-        perPage: 12,
-        totalItems: 22,
-        totalPages: 2,
+      search: {
+        mainSearchType: 'location',
+        defaultFilters: defaultFiltersConfig,
+        sortConfig: sortConfig,
       },
-      tab: 'listings',
-      scrollingDisabled: false,
-      searchInProgress: false,
-      authInProgress: false,
-      currentUserHasListings: false,
-      intl: fakeIntl,
-      isAuthenticated: false,
-      onActivateListing: noop,
-      onLogout: noop,
-      onManageDisableScrolling: noop,
-      onSearchMapListings: noop,
-      sendVerificationEmailInProgress: false,
-      onResendVerificationEmail: noop,
-      config: {
-        listing: {
-          listingExtendedData: listingExtendedDataConfig,
-          listingTypes,
-        },
+      maps: {
         search: {
-          mainSearchType: 'location',
-          defaultFilters: defaultFiltersConfig,
-          sortConfig: sortConfig,
-        },
-        maps: {
-          search: {
-            sortSearchByDistance: false,
-          },
-        },
-        layout: {
-          searchPageVariant: 'list',
+          sortSearchByDistance: false,
         },
       },
-      routeConfiguration: getRouteConfiguration(),
-    };
-    const tree = renderShallow(<SearchPageComponent {...props} />);
-    expect(tree).toMatchSnapshot();
+      layout: {
+        searchPageVariant: 'list',
+      },
+    },
+    routeConfiguration: getRouteConfiguration(),
+  };
+
+  test('Check that filterColumn exists', () => {
+    render(<SearchPageWithList {...props} />);
+    const filterColumnAside = 'filterColumnAside';
+    expect(screen.getByTestId(filterColumnAside)).toBeInTheDocument();
+    const searchMapContainer = 'searchMapContainer';
+    expect(screen.queryByTestId(searchMapContainer)).not.toBeInTheDocument();
+  });
+
+  test('Check that map exists', () => {
+    render(<SearchPageWithMap {...props} />);
+    const filterColumnAside = 'filterColumnAside';
+    expect(screen.queryByTestId(filterColumnAside)).not.toBeInTheDocument();
+    const searchMapContainer = 'searchMapContainer';
+    expect(screen.getByTestId(searchMapContainer)).toBeInTheDocument();
   });
 });
