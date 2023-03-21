@@ -20,10 +20,9 @@ import {
   isTooManyEmailVerificationRequestsError,
 } from '../../util/errors';
 
-import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/Auth.duck';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/auth.duck';
+import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 import { sendVerificationEmail } from '../../ducks/user.duck';
-import { manageDisableScrolling } from '../../ducks/UI.duck';
 
 import {
   Page,
@@ -576,7 +575,7 @@ AuthenticationPageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { isAuthenticated, loginError, signupError, confirmError } = state.Auth;
+  const { isAuthenticated, loginError, signupError, confirmError } = state.auth;
   const { currentUser, sendVerificationEmailInProgress, sendVerificationEmailError } = state.user;
   const {
     pageAssetsData: privacyAssetsData,

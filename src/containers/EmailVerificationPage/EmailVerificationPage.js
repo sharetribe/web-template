@@ -9,8 +9,8 @@ import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { parse } from '../../util/urlHelpers';
 import { ensureCurrentUser } from '../../util/data';
-import { verify } from '../../ducks/EmailVerification.duck';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { verify } from '../../ducks/emailVerification.duck';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
 import {
   Page,
   ResponsiveBackgroundImageContainer,
@@ -136,7 +136,7 @@ EmailVerificationPageComponent.propTypes = {
 
 const mapStateToProps = state => {
   const { currentUser } = state.user;
-  const { isVerified, verificationError, verificationInProgress } = state.EmailVerification;
+  const { isVerified, verificationError, verificationInProgress } = state.emailVerification;
   return {
     isVerified,
     verificationError,

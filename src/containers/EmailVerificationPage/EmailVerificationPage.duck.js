@@ -1,5 +1,5 @@
 import { parse } from '../../util/urlHelpers';
-import { verify } from '../../ducks/EmailVerification.duck';
+import { verify } from '../../ducks/emailVerification.duck';
 
 // ================ Thunks ================ //
 

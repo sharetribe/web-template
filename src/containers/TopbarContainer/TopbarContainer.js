@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { propTypes } from '../../util/types';
 import { sendVerificationEmail, hasCurrentUserErrors } from '../../ducks/user.duck';
-import { logout, authenticationInProgress } from '../../ducks/Auth.duck';
-import { manageDisableScrolling } from '../../ducks/UI.duck';
+import { logout, authenticationInProgress } from '../../ducks/auth.duck';
+import { manageDisableScrolling } from '../../ducks/ui.duck';
 import { Topbar } from '../../components';
 
 export const TopbarContainerComponent = props => {
@@ -91,7 +91,7 @@ TopbarContainerComponent.propTypes = {
 
 const mapStateToProps = state => {
   // Topbar needs isAuthenticated
-  const { isAuthenticated, logoutError, authScopes } = state.Auth;
+  const { isAuthenticated, logoutError, authScopes } = state.auth;
   // Topbar needs user info.
   const {
     currentUser,

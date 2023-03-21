@@ -7,7 +7,7 @@ import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
 import { sendVerificationEmail } from '../../ducks/user.duck';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import { Footer, H3, Page, UserNav, LayoutSideNavigation } from '../../components';
 

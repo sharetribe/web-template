@@ -8,7 +8,7 @@ import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { parse } from '../../util/urlHelpers';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import {
   Heading,

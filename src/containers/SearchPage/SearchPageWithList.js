@@ -20,7 +20,7 @@ import {
 import { parse } from '../../util/urlHelpers';
 import { propTypes } from '../../util/types';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
-import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck';
+import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 
 import { Footer, H2, Page } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';

@@ -7,7 +7,7 @@ import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { isPasswordRecoveryEmailNotFoundError } from '../../util/errors';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import {
   Heading,
