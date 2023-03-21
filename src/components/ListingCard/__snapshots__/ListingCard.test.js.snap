@@ -2,67 +2,48 @@
 
 exports[`ListingCard matches snapshot 1`] = `
 <a
-  className="root"
+  class="root"
   href="/l/listing1-title/listing1"
-  onClick={[Function]}
-  onMouseOver={[Function]}
-  onTouchStart={[Function]}
-  style={Object {}}
-  title={null}
 >
   <div
-    className="root aspectRatioWrapper"
+    class="root aspectRatioWrapper"
   >
     <div
-      className="aspectPadding"
-      style={
-        Object {
-          "paddingBottom": "100%",
-        }
-      }
+      class="aspectPadding"
+      style="padding-bottom: 100%;"
     >
       <div
-        className="aspectBox"
+        class="aspectBox"
       >
         <div
-          style={
-            Object {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
-          }
+          style="position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px;"
         />
       </div>
     </div>
   </div>
   <div
-    className="info"
+    class="info"
   >
     <div
-      className="price"
+      class="price"
     >
       <div
-        className="priceValue"
-        title={55}
+        class="priceValue"
+        title="55"
       >
         55
       </div>
     </div>
     <div
-      className="mainInfo"
+      class="mainInfo"
     >
       <div
-        className="title"
+        class="title"
       >
-        listing1
-         
-        title
+        listing1 title
       </div>
       <div
-        className="authorInfo"
+        class="authorInfo"
       >
         <span>
           ListingCard.author
