@@ -127,7 +127,7 @@ const bookingDatesMaybe = bookingDates => {
 //       therefore, we don't need the process name (nor alias)
 const transactionTypeDataMaybe = (listingType, config) => {
   const listingTypeConfig = config.listing.listingTypes.find(lt => lt.listingType === listingType);
-  const { process, alias, unitType, ...rest } = listingTypeConfig.transactionType;
+  const { process, alias, unitType, ...rest } = listingTypeConfig?.transactionType || {};
   return unitType ? { unitType, ...rest } : {};
 };
 
