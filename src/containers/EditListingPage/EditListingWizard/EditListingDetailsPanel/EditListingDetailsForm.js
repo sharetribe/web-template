@@ -156,6 +156,7 @@ const EditListingDetailsFormComponent = props => (
         className,
         disabled,
         ready,
+        formId,
         form: formApi,
         handleSubmit,
         onProcessChange,
@@ -195,7 +196,7 @@ const EditListingDetailsFormComponent = props => (
           <ErrorMessage fetchErrors={fetchErrors} />
 
           <FieldTextInput
-            id="title"
+            id={`${formId}title`}
             name="title"
             className={css.title}
             type="text"
@@ -207,7 +208,7 @@ const EditListingDetailsFormComponent = props => (
           />
 
           <FieldTextInput
-            id="description"
+            id={`${formId}description`}
             name="description"
             className={css.description}
             type="textarea"
@@ -254,6 +255,7 @@ const EditListingDetailsFormComponent = props => (
 
 EditListingDetailsFormComponent.defaultProps = {
   className: null,
+  formId: 'EditListingDetailsForm',
   fetchErrors: null,
   onProcessChange: null,
   hasExistingListingType: false,
@@ -262,6 +264,7 @@ EditListingDetailsFormComponent.defaultProps = {
 
 EditListingDetailsFormComponent.propTypes = {
   className: string,
+  formId: string,
   intl: intlShape.isRequired,
   onSubmit: func.isRequired,
   onProcessChange: func,
