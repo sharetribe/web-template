@@ -153,7 +153,7 @@ export const getDefaultConfiguration = () => {
           label: 'Rent bicycles',
           transactionType: {
             process: 'default-booking',
-            alias: 'release-1',
+            alias: 'default-booking/release-1',
             unitType: 'day',
           },
         },
@@ -162,7 +162,7 @@ export const getDefaultConfiguration = () => {
           label: 'Sell products',
           transactionType: {
             process: 'default-purchase',
-            alias: 'release-1',
+            alias: 'default-purchase/release-1',
             unitType: 'item',
           },
         },

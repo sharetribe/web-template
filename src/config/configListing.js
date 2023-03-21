@@ -206,12 +206,12 @@ export const listingExtendedData = [
  *                    listing type in EditListingWizard.
  * - transactionType  Set of configurations how this listing type will behave when transaction is
  *                    created.
- *   - process          Transaction process. This will be saved to listing's public data
- *                      (together with alias) as transctionProcessAlias.
+ *   - process          Transaction process.
  *                      The process must match one of the processes that this client app can handle
  *                      (check src/util/transaction.js) and the process must also exists in correct
  *                      marketplace environment.
- *   - alias            Valid alias for the aforementioned process.
+ *   - alias            Valid alias for the aforementioned process. This will be saved to listing's
+ *                      public data as transctionProcessAlias and transaction is initiated with this.
  *   - unitType         Unit type is mainly used as pricing unit. This will be saved to
  *                      transaction's protected data.
  *                      Recommendation: don't use same unit types in completely different processes
@@ -228,7 +228,7 @@ export const listingTypes = [
     label: 'Daily booking',
     transactionType: {
       process: 'default-booking',
-      alias: 'release-1',
+      alias: 'default-booking/release-1',
       unitType: 'day',
     },
   },
@@ -239,7 +239,7 @@ export const listingTypes = [
     label: 'Nightly booking',
     transactionType: {
       process: 'default-booking',
-      alias: 'release-1',
+      alias: 'default-booking/release-1',
       unitType: 'night',
     },
   },
@@ -248,7 +248,7 @@ export const listingTypes = [
     label: 'Hourly booking',
     transactionType: {
       process: 'default-booking',
-      alias: 'release-1',
+      alias: 'default-booking/release-1',
       unitType: 'hour',
     },
   },
@@ -257,7 +257,7 @@ export const listingTypes = [
     label: 'Sell bicycles',
     transactionType: {
       process: 'default-purchase',
-      alias: 'release-1',
+      alias: 'default-purchase/release-1',
       unitType: 'item',
     },
     stockType: 'oneItem',
