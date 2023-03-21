@@ -54,7 +54,7 @@ const EditListingPricingAndStockPanel = props => {
   const publicData = listing?.attributes?.publicData;
   const selectedListingType = publicData.listingType;
   const unitType = publicData.unitType;
-  const listingTypeConfig = listingTypes.find(conf => conf.type === selectedListingType);
+  const listingTypeConfig = listingTypes.find(conf => conf.listingType === selectedListingType);
 
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
   const priceCurrencyValid =

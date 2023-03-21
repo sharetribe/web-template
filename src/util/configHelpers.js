@@ -348,7 +348,7 @@ const validListingExtendedData = (listingExtendedData, listingTypesInUse) => {
 };
 
 const getListingTypeStringsInUse = listingTypes => {
-  return listingTypes.map(lt => `${lt.type}`);
+  return listingTypes.map(lt => `${lt.listingType}`);
 };
 
 const validListingTypes = listingTypes => {
@@ -356,7 +356,7 @@ const validListingTypes = listingTypes => {
   const supportedProcessesInfo = getSupportedProcessesInfo();
 
   const validTypes = listingTypes.reduce((validConfigs, listingType) => {
-    const { type, label, transactionType, ...restOfListingType } = listingType;
+    const { listingType: type, label, transactionType, ...restOfListingType } = listingType;
     const { process: processName, alias, unitType, ...restOfTransactionType } = transactionType;
 
     const isSupportedProcessName = supportedProcessesInfo.find(p => p.name === processName);
@@ -367,7 +367,7 @@ const validListingTypes = listingTypes => {
       return [
         ...validConfigs,
         {
-          type,
+          listingType: type,
           label,
           transactionType: {
             process: processName,

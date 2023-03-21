@@ -33,7 +33,7 @@ const getTransactionInfo = (listingTypes, existingListingInfo = {}, inlcudeLabel
   if (listingType && transactionProcessAlias && unitType) {
     return { listingType, transactionProcessAlias, unitType };
   } else if (listingTypes.length === 1) {
-    const { type, label, transactionType } = listingTypes[0];
+    const { listingType: type, label, transactionType } = listingTypes[0];
     const { process, alias, unitType: configUnitType } = transactionType;
     const labelMaybe = inlcudeLabel ? { label: label || type } : {};
     return {
@@ -188,7 +188,7 @@ const EditListingDetailsPanel = props => {
   const { hasExistingListingType, existingListingType } = hasSetListingType(publicData);
   const hasValidExistingListingType =
     hasExistingListingType &&
-    !!listingTypes.find(conf => conf.type === existingListingType.listingType);
+    !!listingTypes.find(conf => conf.listingType === existingListingType.listingType);
 
   const initialValues = getInitialValues(
     props,
@@ -263,7 +263,7 @@ const EditListingDetailsPanel = props => {
 
             onSubmit(updateValues);
           }}
-          selectableListingTypes={listingTypes.map(type => getTransactionInfo([type], {}, true))}
+          selectableListingTypes={listingTypes.map(conf => getTransactionInfo([conf], {}, true))}
           hasExistingListingType={hasExistingListingType}
           onProcessChange={onProcessChange}
           listingExtendedDataConfig={listingExtendedDataConfig}
