@@ -2,37 +2,30 @@
 
 exports[`ManageListingCard matches snapshot 1`] = `
 <div
-  className="root"
+  class="root"
 >
   <div
-    className="clickWrapper"
-    onClick={[Function]}
-    onMouseOver={[Function]}
-    onTouchStart={[Function]}
-    tabIndex={0}
+    class="clickWrapper"
+    tabindex="0"
   >
     <div
-      className="root"
+      class="root"
     >
       <div
-        className="aspectPadding"
-        style={
-          Object {
-            "paddingBottom": "100%",
-          }
-        }
+        class="aspectPadding"
+        style="padding-bottom: 100%;"
       >
         <div
-          className="aspectBox"
+          class="aspectBox"
         >
           <div
-            className="rootForImage noImageContainer"
+            class="rootForImage noImageContainer"
           >
             <div
-              className="noImageWrapper"
+              class="noImageWrapper"
             >
               <svg
-                className="noImageIcon"
+                class="noImageIcon"
                 height="49"
                 viewBox="0 -1 48 49"
                 width="48"
@@ -40,26 +33,26 @@ exports[`ManageListingCard matches snapshot 1`] = `
               >
                 <g
                   fill="none"
-                  fillRule="evenodd"
+                  fill-rule="evenodd"
                 >
                   <path
                     d="M13.6 9.6L24 .8l10.4 8.8z"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
+                    stroke-linejoin="round"
+                    stroke-width="2"
                   />
                   <path
                     d="M.8 46.4h46.4V9.6H.8z"
-                    strokeWidth="2"
+                    stroke-width="2"
                   />
                   <path
                     d="M5.6 41.6h36.8V14.4H5.6z"
-                    strokeWidth="2"
+                    stroke-width="2"
                   />
                   <path
                     d="M19.998 31.636l.835-.835a4.035 4.035 0 0 1 2.853-1.183h.693c1.07 0 2.097.426 2.853 1.183l.835.835"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
                   />
                   <path
                     d="M21.599 23.983a1.009 1.009 0 1 0 0 2.018 1.009 1.009 0 0 0 0-2.018M26.402 23.983a1.009 1.009 0 1 0 0 2.018 1.009 1.009 0 0 0 0-2.018"
@@ -67,7 +60,7 @@ exports[`ManageListingCard matches snapshot 1`] = `
                 </g>
               </svg>
               <div
-                className="noImageText"
+                class="noImageText"
               >
                 <span>
                   ResponsiveImage.noImage
@@ -79,37 +72,33 @@ exports[`ManageListingCard matches snapshot 1`] = `
       </div>
     </div>
     <div
-      className="menuOverlayWrapper"
+      class="menuOverlayWrapper"
     >
       <div
-        className="menuOverlay"
+        class="menuOverlay"
       />
     </div>
     <div
-      className="menubarWrapper"
+      class="menubarWrapper"
     >
       <div
-        className="menubarGradient"
+        class="menubarGradient"
       />
       <div
-        className="menubar"
+        class="menubar"
       >
         <div
-          className="root menu cardIsOpen"
-          onBlur={[Function]}
-          onKeyDown={[Function]}
-          tabIndex={0}
+          class="root menu cardIsOpen"
+          tabindex="0"
         >
           <button
-            className="root menuLabel"
-            onBlur={[Function]}
-            onClick={[Function]}
+            class="root menuLabel"
           >
             <div
-              className="iconWrapper"
+              class="iconWrapper"
             >
               <svg
-                className="menuIcon menuIcon"
+                class="menuIcon menuIcon"
                 height="12"
                 viewBox="0 0 26 12"
                 width="26"
@@ -123,17 +112,17 @@ exports[`ManageListingCard matches snapshot 1`] = `
                     x="-38.9%"
                     y="-125%"
                   >
-                    <feOffset
+                    <feoffset
                       dy="2"
                       in="SourceAlpha"
                       result="shadowOffsetOuter1"
                     />
-                    <feGaussianBlur
+                    <fegaussianblur
                       in="shadowOffsetOuter1"
                       result="shadowBlurOuter1"
                       stdDeviation="2"
                     />
-                    <feColorMatrix
+                    <fecolormatrix
                       in="shadowBlurOuter1"
                       values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"
                     />
@@ -158,24 +147,18 @@ exports[`ManageListingCard matches snapshot 1`] = `
             </div>
           </button>
           <div
-            className="menuContent isClosed"
-            style={
-              Object {
-                "left": "-10000px",
-              }
-            }
+            class="menuContent isClosed"
+            style="left: -10000px;"
           >
             <ul
-              className="content"
+              class="content"
             >
               <li
-                className="root"
+                class="root"
                 role="menuitem"
               >
                 <button
-                  className="menuItem inlineTextButton"
-                  disabled={false}
-                  onClick={[Function]}
+                  class="menuItem inlineTextButton"
                 >
                   <span>
                     ManageListingCard.closeListing
@@ -189,78 +172,58 @@ exports[`ManageListingCard matches snapshot 1`] = `
     </div>
   </div>
   <div
-    className="info"
+    class="info"
   >
     <div
-      className="price"
+      class="price"
     >
       <div
-        className="priceValue"
-        title={55}
+        class="priceValue"
+        title="55"
       >
         55
       </div>
     </div>
     <div
-      className="mainInfo"
+      class="mainInfo"
     >
       <div
-        className="titleWrapper"
+        class="titleWrapper"
       >
         <button
-          className="title inlineTextButton"
-          disabled={false}
-          onClick={[Function]}
+          class="title inlineTextButton"
         >
           <span
-            key="1"
-            style={
-              Object {
-                "wordBreak": "break-all",
-              }
-            }
+            style="word-break: break-all;"
           >
             listing1
           </span>
-           
-          title
+           title
         </button>
       </div>
     </div>
     <div
-      className="manageLinks"
+      class="manageLinks"
     >
       <a
-        className="manageLink"
+        class="manageLink"
         href="/l/listing1-title/listing1/edit/details"
-        onClick={[Function]}
-        onMouseOver={[Function]}
-        onTouchStart={[Function]}
-        style={Object {}}
-        title={null}
       >
         <span>
           ManageListingCard.editListing
         </span>
       </a>
-      Array [
-        <span
-          className="manageLinksSeparator"
-        >
-           • 
-        </span>,
-        <a
-          className="manageLink"
-          href="/l/listing1-title/listing1/edit/pricing-and-stock"
-          onClick={[Function]}
-          onMouseOver={[Function]}
-          onTouchStart={[Function]}
-          style={Object {}}
-          title={null}
-        >
-          ManageListingCard.setPriceAndStock
-        </a>,
-      ]
+      <span
+        class="manageLinksSeparator"
+      >
+         • 
+      </span>
+      <a
+        class="manageLink"
+        href="/l/listing1-title/listing1/edit/pricing-and-stock"
+      >
+        ManageListingCard.setPriceAndStock
+      </a>
     </div>
   </div>
 </div>
