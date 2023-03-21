@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { USER_LOGOUT } from './ducks/Auth.duck';
+import { USER_LOGOUT } from './ducks/auth.duck';
 import * as globalReducers from './ducks';
 import * as pageReducers from './containers/reducers';
 

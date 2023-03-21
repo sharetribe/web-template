@@ -4,7 +4,7 @@ import { LISTING_STATE_DRAFT } from '../util/types';
 import * as log from '../util/log';
 import { getTransitionsNeedingProviderAttention } from '../transactions/transaction';
 
-import { authInfo } from './Auth.duck';
+import { authInfo } from './auth.duck';
 import { stripeAccountCreateSuccess } from './stripeConnectAccount.duck';
 import { util as sdkUtil } from '../util/sdkLoader';
 
@@ -314,7 +314,7 @@ export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => 
 
 export const fetchCurrentUser = (params = null) => (dispatch, getState, sdk) => {
   dispatch(currentUserShowRequest());
-  const { isAuthenticated } = getState().Auth;
+  const { isAuthenticated } = getState().auth;
 
   if (!isAuthenticated) {
     // Make sure current user is null
