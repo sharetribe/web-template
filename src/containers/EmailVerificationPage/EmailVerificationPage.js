@@ -10,7 +10,7 @@ import { propTypes } from '../../util/types';
 import { parse } from '../../util/urlHelpers';
 import { ensureCurrentUser } from '../../util/data';
 import { verify } from '../../ducks/emailVerification.duck';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
 import {
   Page,
   ResponsiveBackgroundImageContainer,

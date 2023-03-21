@@ -2,7 +2,7 @@ import React from 'react';
 import { node } from 'prop-types';
 import { connect } from 'react-redux';
 
-import { isScrollingDisabled } from '../../ducks/UI.duck.js';
+import { isScrollingDisabled } from '../../ducks/ui.duck.js';
 import { Page } from '../../components/index.js';
 
 const StaticPageComponent = props => {

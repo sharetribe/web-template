@@ -21,9 +21,8 @@ import {
 } from '../../util/errors';
 
 import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/auth.duck';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 import { sendVerificationEmail } from '../../ducks/user.duck';
-import { manageDisableScrolling } from '../../ducks/UI.duck';
 
 import {
   Page,

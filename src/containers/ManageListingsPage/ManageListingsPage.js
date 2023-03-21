@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import { H3, Page, PaginationLinks, UserNav, Footer, LayoutSingleColumn } from '../../components';
 
