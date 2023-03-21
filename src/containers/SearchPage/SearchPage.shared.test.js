@@ -26,8 +26,8 @@ const listingExtendedDataConfig = [
       { option: 'women', label: 'Women' },
       { option: 'kids', label: 'Kids' },
     ],
-    indexForSearch: true,
     filterConfig: {
+      indexForSearch: true,
       label: 'Category',
       group: 'primary',
     },
@@ -38,8 +38,8 @@ const listingExtendedDataConfig = [
     includeForListingTypes: ['sell-bicycles'],
     schemaType: 'enum',
     enumOptions: [{ option: 'smoke', label: 'Smoke' }, { option: 'wood', label: 'Wood' }],
-    indexForSearch: true,
     filterConfig: {
+      indexForSearch: true,
       label: 'Test',
       group: 'secondary',
     },
@@ -53,12 +53,9 @@ const listingExtendedDataConfig = [
       'rent-bicycles-hourly',
     ],
     schemaType: 'multi-enum',
-    enumOptions: [
-      { option: 'towels', label: 'Towels' },
-      { option: 'bathroom', label: 'Bathroom' },
-    ],
-    indexForSearch: true,
+    enumOptions: [{ option: 'towels', label: 'Towels' }, { option: 'bathroom', label: 'Bathroom' }],
     filterConfig: {
+      indexForSearch: true,
       label: 'Amenities',
       //searchMode: 'has_all',
       group: 'secondary',

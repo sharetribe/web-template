@@ -57,8 +57,8 @@ export const getDefaultConfiguration = () => {
             { option: 'mtb', label: 'MTB' },
             { option: 'kids-bikes', label: 'Kids bikes' },
           ],
-          indexForSearch: true,
           filterConfig: {
+            indexForSearch: true,
             filterType: 'SelectSingleFilter',
             label: 'Category',
             group: 'primary',
@@ -94,8 +94,8 @@ export const getDefaultConfiguration = () => {
             { option: 20, label: '20' },
             { option: 18, label: '18' },
           ],
-          indexForSearch: true,
           filterConfig: {
+            indexForSearch: true,
             label: 'Tire size',
             group: 'secondary',
           },
@@ -130,8 +130,8 @@ export const getDefaultConfiguration = () => {
             { option: 'otler', label: 'Otler' },
             { option: 'vermont', label: 'Vermont' },
           ],
-          indexForSearch: true,
           filterConfig: {
+            indexForSearch: true,
             label: 'Brand',
             group: 'secondary',
           },

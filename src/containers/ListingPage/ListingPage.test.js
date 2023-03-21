@@ -43,7 +43,9 @@ const listingConfig = {
       includeForListingTypes: ['sell-bicycles'],
       schemaType: 'enum',
       enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
-      indexForSearch: true,
+      filterConfig: {
+        indexForSearch: true,
+      },
       listingPageConfig: {
         label: 'Category',
         isDetail: true,
@@ -63,7 +65,9 @@ const listingConfig = {
         { option: 'feat_2', label: 'Feat 2' },
         { option: 'feat_3', label: 'Feat 3' },
       ],
-      indexForSearch: true,
+      filterConfig: {
+        indexForSearch: true,
+      },
       listingPageConfig: {
         label: 'Amenities',
         searchMode: 'has_all',

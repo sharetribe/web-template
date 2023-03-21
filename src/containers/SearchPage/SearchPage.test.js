@@ -57,8 +57,8 @@ const listingExtendedDataConfig = [
     includeForListingTypes: ['sell-bicycles'],
     schemaType: 'enum',
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
-    indexForSearch: true,
     filterConfig: {
+      indexForSearch: true,
       label: 'Category',
       group: 'primary',
     },
@@ -79,8 +79,8 @@ const listingExtendedDataConfig = [
     ],
     schemaType: 'multi-enum',
     enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
-    indexForSearch: true,
     filterConfig: {
+      indexForSearch: true,
       label: 'Amenities',
       //searchMode: 'has_all',
       group: 'secondary',

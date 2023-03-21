@@ -485,8 +485,8 @@ propTypes.listingExtendedDataConfig = arrayOf(
         label: string.isRequired,
       })
     ),
-    indexForSearch: bool,
     filterConfig: shape({
+      indexForSearch: bool,
       label: string.isRequired,
       group: oneOf(['primary', 'secondary']),
       filterType: string,

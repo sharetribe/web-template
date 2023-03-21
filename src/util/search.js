@@ -38,7 +38,7 @@ export const getQueryParamNames = (listingExtendedDataConfig, defaultFiltersConf
   const queryParamKeysOfDefaultFilters = defaultFiltersConfig.map(config => config.key);
   const queryParamKeysOfListingExtendedData = listingExtendedDataConfig.reduce((params, config) => {
     const param = constructQueryParamName(config.key, config.scope);
-    return config.indexForSearch ? [...params, param] : params;
+    return config.filterConfig?.indexForSearch ? [...params, param] : params;
   }, []);
   return [...queryParamKeysOfDefaultFilters, ...queryParamKeysOfListingExtendedData];
 };

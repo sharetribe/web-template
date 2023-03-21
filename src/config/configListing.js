@@ -21,15 +21,15 @@
  * - enumOptions (optional):        Options shown for 'enum' and 'multi-enum' extended data.
  *                                  These are used to render options for inputs and filters on
  *                                  EditListingPage, ListingPage, and SearchPage.
- * - indexForSearch (optional):     If set as true, it is assumed that the extended data key has
- *                                  search index in place. I.e. the key can be used to filter
- *                                  listing queries (then scope needs to be 'public').
- *                                  Note: Flex CLI can be used to set search index for the key:
- *                                  https://www.sharetribe.com/docs/references/extended-data/#search-schema
- *                                  Read more about filtering listings with public data keys from API Reference:
- *                                  https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
- *                                  Default value: false,
  * - filterConfig:                  Filter configuration for listings query.
+ *    - indexForSearch (optional):    If set as true, it is assumed that the extended data key has
+ *                                    search index in place. I.e. the key can be used to filter
+ *                                    listing queries (then scope needs to be 'public').
+ *                                    Note: Flex CLI can be used to set search index for the key:
+ *                                    https://www.sharetribe.com/docs/references/extended-data/#search-schema
+ *                                    Read more about filtering listings with public data keys from API Reference:
+ *                                    https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
+ *                                    Default value: false,
  *   - filterType:                    Sometimes a single schemaType can be rendered with different filter components.
  *                                    For 'enum' schema, filterType can be 'SelectSingleFilter' or 'SelectMultipleFilter'
  *   - label:                         Label for the filter, if the field can be used as query filter
@@ -57,8 +57,8 @@ export const listingExtendedData = [
       { option: 'mountain-bikes', label: 'Mountain bikes' },
       { option: 'childrens-bikes', label: "Children's bikes" },
     ],
-    indexForSearch: true,
     filterConfig: {
+      indexForSearch: true,
       filterType: 'SelectMultipleFilter',
       label: 'Category',
       group: 'primary',
@@ -88,8 +88,8 @@ export const listingExtendedData = [
       { option: 20, label: '20' },
       { option: 18, label: '18' },
     ],
-    indexForSearch: true,
     filterConfig: {
+      indexForSearch: true,
       label: 'Tire size',
       group: 'secondary',
     },
@@ -118,8 +118,8 @@ export const listingExtendedData = [
       { option: 'otler', label: 'Otler' },
       { option: 'vermont', label: 'Vermont' },
     ],
-    indexForSearch: true,
     filterConfig: {
+      indexForSearch: true,
       label: 'Brand',
       group: 'secondary',
     },
@@ -144,8 +144,8 @@ export const listingExtendedData = [
       { option: 'lock', label: 'Lock' },
       { option: 'mudguard', label: 'Mudguard' },
     ],
-    indexForSearch: true,
     filterConfig: {
+      indexForSearch: true,
       label: 'Equipped with',
       searchMode: 'has_all',
       group: 'secondary',

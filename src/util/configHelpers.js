@@ -206,16 +206,23 @@ const validFilterConfig = (config, schemaType) => {
   if (isUndefined) {
     return [true, {}];
   }
-  // Validate: label, filterType, searchMode, group
+  // Validate: indexForSearch, label, filterType, searchMode, group
+  const [isValidIndexForSearch, indexForSearch] = validBoolean(
+    'indexForSearch',
+    config.indexForSearch,
+    false
+  );
   const [isValidLabel, label] = validLabel(config.label);
   const [isValidFilterType, filterType] = validFilterType(config.filterType, schemaType);
   const [isValidSearchMode, searchMode] = validSearchMode(config.searchMode, schemaType);
   const groupOptions = ['primary', 'secondary'];
   const [isValidGroup, group] = validEnumString('group', config.group, groupOptions, 'primary');
 
-  const isValid = isValidLabel && isValidFilterType && isValidSearchMode && isValidGroup;
+  const isValid =
+    isValidIndexForSearch && isValidLabel && isValidFilterType && isValidSearchMode && isValidGroup;
   const validValue = {
     filterConfig: {
+      ...indexForSearch,
       ...label,
       ...filterType,
       ...searchMode,
@@ -310,8 +317,6 @@ const validListingExtendedData = (listingExtendedData, listingTypesInUse) => {
             ? validEnumString('schemaType', value, validSchemaTypes)
             : name === 'enumOptions'
             ? validSchemaOptions(value, schemaType)
-            : name === 'indexForSearch'
-            ? validBoolean('indexForSearch', value, false)
             : name === 'filterConfig'
             ? validFilterConfig(value, schemaType)
             : name === 'listingPageConfig'
