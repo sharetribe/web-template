@@ -1,9 +1,16 @@
 import React from 'react';
-import { renderDeep } from '../../util/test-helpers';
-import NamedLink, { NamedLinkComponent } from './NamedLink';
+import '@testing-library/jest-dom';
 
-describe('NamedLinkComponent', () => {
-  it('should mark the link as active if the current URL matches', () => {
+import { renderWithProviders as render, testingLibrary } from '../../util/test-helpers';
+
+import NamedLink from './NamedLink';
+
+const { screen } = testingLibrary;
+
+describe('NamedLink', () => {
+  // This is quite small component what comes to rendered HTML
+  // For now, we rely on snapshot-testing and testing couple of features.
+  test('matches snapshot', () => {
     const activeClassName = 'my-active-class';
     const landingPageProps = {
       name: 'LandingPage',
@@ -15,32 +22,26 @@ describe('NamedLinkComponent', () => {
       activeClassName,
       match: { url: '/' },
     };
-    const tree = renderDeep(
+
+    const tree = render(
       <div>
-        <NamedLinkComponent {...landingPageProps}>link to a</NamedLinkComponent>
-        <NamedLinkComponent {...searchPageProps}>link to b</NamedLinkComponent>
+        <NamedLink {...landingPageProps}>link to a</NamedLink>
+        <NamedLink {...searchPageProps}>link to b</NamedLink>
       </div>
     );
-
-    const aLink = tree.children[0];
-    const bLink = tree.children[1];
-    expect(aLink.type).toEqual('a');
-    expect(bLink.type).toEqual('a');
-    expect(aLink.props.className).toEqual(activeClassName);
-    expect(bLink.props.className).toEqual('');
+    expect(screen.getByRole('link', { name: 'link to a' })).toHaveClass(activeClassName);
+    expect(screen.getByRole('link', { name: 'link to b' })).not.toHaveClass(activeClassName);
+    expect(tree.asFragment().firstChild).toMatchSnapshot();
   });
-});
 
-describe('NamedLink', () => {
-  it('should contain correct link', () => {
+  test('should contain correct link', () => {
     const id = 12;
-    const tree = renderDeep(
+    const tree = render(
       <NamedLink name="ListingPageCanonical" params={{ id }}>
         to ListingPage
       </NamedLink>
     );
-    expect(tree.type).toEqual('a');
-    expect(tree.props.href).toEqual(`/l/${id}`);
-    expect(tree.children).toEqual(['to ListingPage']);
+    const link = screen.getByRole('link', { name: 'to ListingPage' });
+    expect(link.getAttribute('href')).toEqual(`/l/${id}`);
   });
 });
