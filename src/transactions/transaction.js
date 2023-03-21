@@ -29,13 +29,13 @@ export const BOOKING_PROCESS_NAME = 'default-booking';
 const PROCESSES = [
   {
     name: PURCHASE_PROCESS_NAME,
-    alias: 'release-1',
+    alias: `${PURCHASE_PROCESS_NAME}/release-1`,
     process: purchaseProcess,
     unitTypes: [ITEM],
   },
   {
     name: BOOKING_PROCESS_NAME,
-    alias: 'release-1',
+    alias: `${BOOKING_PROCESS_NAME}/release-1`,
     process: bookingProcess,
     unitTypes: [DAY, NIGHT, HOUR],
   },

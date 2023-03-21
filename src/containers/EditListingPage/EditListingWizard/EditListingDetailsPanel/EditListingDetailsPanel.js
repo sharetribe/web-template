@@ -34,11 +34,11 @@ const getTransactionInfo = (listingTypes, existingListingInfo = {}, inlcudeLabel
     return { listingType, transactionProcessAlias, unitType };
   } else if (listingTypes.length === 1) {
     const { listingType: type, label, transactionType } = listingTypes[0];
-    const { process, alias, unitType: configUnitType } = transactionType;
+    const { alias, unitType: configUnitType } = transactionType;
     const labelMaybe = inlcudeLabel ? { label: label || type } : {};
     return {
       listingType: type,
-      transactionProcessAlias: `${process}/${alias}`,
+      transactionProcessAlias: alias,
       unitType: configUnitType,
       ...labelMaybe,
     };

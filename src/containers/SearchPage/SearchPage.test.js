@@ -20,7 +20,7 @@ const listingTypes = [
     listingType: 'rent-bicycles-daily',
     transactionType: {
       process: 'default-booking',
-      alias: 'release-1',
+      alias: 'default-booking/release-1',
       unitType: 'day',
     },
   },
@@ -28,7 +28,7 @@ const listingTypes = [
     listingType: 'rent-bicycles-nightly',
     transactionType: {
       process: 'default-booking',
-      alias: 'release-1',
+      alias: 'default-booking/release-1',
       unitType: 'night',
     },
   },
@@ -36,7 +36,7 @@ const listingTypes = [
     listingType: 'rent-bicycles-hourly',
     transactionType: {
       process: 'default-booking',
-      alias: 'release-1',
+      alias: 'default-booking/release-1',
       unitType: 'hour',
     },
   },
@@ -44,7 +44,7 @@ const listingTypes = [
     listingType: 'sell-bicycles',
     transactionType: {
       process: 'default-purchase',
-      alias: 'release-1',
+      alias: 'default-purchase/release-1',
       unitType: 'item',
     },
   },
