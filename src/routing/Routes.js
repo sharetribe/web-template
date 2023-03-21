@@ -10,7 +10,7 @@ import * as log from '../util/log';
 import { canonicalRoutePath } from '../util/routes';
 import { useConfiguration } from '../context/configurationContext';
 
-import { locationChanged } from '../ducks/Routing.duck';
+import { locationChanged } from '../ducks/routing.duck';
 
 import { NamedRedirect } from '../components';
 import NotFoundPage from '../containers/NotFoundPage/NotFoundPage';

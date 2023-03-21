@@ -6,7 +6,7 @@
 
 import Auth from './Auth.duck';
 import EmailVerification from './EmailVerification.duck';
-import Routing from './Routing.duck';
+import routing from './routing.duck';
 import UI from './UI.duck';
 import hostedAssets from './hostedAssets.duck';
 import marketplaceData from './marketplaceData.duck';
@@ -18,7 +18,7 @@ import user from './user.duck';
 export {
   Auth,
   EmailVerification,
-  Routing,
+  routing,
   UI,
   hostedAssets,
   marketplaceData,
