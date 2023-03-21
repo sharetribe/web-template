@@ -29,7 +29,7 @@
  *                                  Read more about filtering listings with public data keys from API Reference:
  *                                  https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
  *                                  Default value: false,
- * - searchPageConfig:              Search-specific configuration.
+ * - filterConfig:                  Filter configuration for listings query.
  *   - filterType:                    Sometimes a single schemaType can be rendered with different filter components.
  *                                    For 'enum' schema, filterType can be 'SelectSingleFilter' or 'SelectMultipleFilter'
  *   - label:                         Label for the filter, if the field can be used as query filter
@@ -58,7 +58,7 @@ export const listingExtendedData = [
       { option: 'childrens-bikes', label: "Children's bikes" },
     ],
     indexForSearch: true,
-    searchPageConfig: {
+    filterConfig: {
       filterType: 'SelectMultipleFilter',
       label: 'Category',
       group: 'primary',
@@ -89,7 +89,7 @@ export const listingExtendedData = [
       { option: 18, label: '18' },
     ],
     indexForSearch: true,
-    searchPageConfig: {
+    filterConfig: {
       label: 'Tire size',
       group: 'secondary',
     },
@@ -119,7 +119,7 @@ export const listingExtendedData = [
       { option: 'vermont', label: 'Vermont' },
     ],
     indexForSearch: true,
-    searchPageConfig: {
+    filterConfig: {
       label: 'Brand',
       group: 'secondary',
     },
@@ -145,7 +145,7 @@ export const listingExtendedData = [
       { option: 'mudguard', label: 'Mudguard' },
     ],
     indexForSearch: true,
-    searchPageConfig: {
+    filterConfig: {
       label: 'Equipped with',
       searchMode: 'has_all',
       group: 'secondary',

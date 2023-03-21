@@ -27,7 +27,7 @@ const listingExtendedDataConfig = [
       { option: 'kids', label: 'Kids' },
     ],
     indexForSearch: true,
-    searchPageConfig: {
+    filterConfig: {
       label: 'Category',
       group: 'primary',
     },
@@ -39,7 +39,7 @@ const listingExtendedDataConfig = [
     schemaType: 'enum',
     enumOptions: [{ option: 'smoke', label: 'Smoke' }, { option: 'wood', label: 'Wood' }],
     indexForSearch: true,
-    searchPageConfig: {
+    filterConfig: {
       label: 'Test',
       group: 'secondary',
     },
@@ -58,7 +58,7 @@ const listingExtendedDataConfig = [
       { option: 'bathroom', label: 'Bathroom' },
     ],
     indexForSearch: true,
-    searchPageConfig: {
+    filterConfig: {
       label: 'Amenities',
       //searchMode: 'has_all',
       group: 'secondary',

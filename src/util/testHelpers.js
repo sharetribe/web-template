@@ -58,7 +58,7 @@ export const getDefaultConfiguration = () => {
             { option: 'kids-bikes', label: 'Kids bikes' },
           ],
           indexForSearch: true,
-          searchPageConfig: {
+          filterConfig: {
             filterType: 'SelectSingleFilter',
             label: 'Category',
             group: 'primary',
@@ -95,7 +95,7 @@ export const getDefaultConfiguration = () => {
             { option: 18, label: '18' },
           ],
           indexForSearch: true,
-          searchPageConfig: {
+          filterConfig: {
             label: 'Tire size',
             group: 'secondary',
           },
@@ -131,7 +131,7 @@ export const getDefaultConfiguration = () => {
             { option: 'vermont', label: 'Vermont' },
           ],
           indexForSearch: true,
-          searchPageConfig: {
+          filterConfig: {
             label: 'Brand',
             group: 'secondary',
           },

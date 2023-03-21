@@ -89,12 +89,12 @@ const FilterComponent = props => {
   // Custom extended data filters
   switch (schemaType) {
     case SCHEMA_TYPE_ENUM: {
-      const { scope, enumOptions, searchPageConfig = {} } = config;
+      const { scope, enumOptions, filterConfig = {} } = config;
       const queryParamNames = [constructQueryParamName(key, scope)];
-      return searchPageConfig.filterType === 'SelectSingleFilter' ? (
+      return filterConfig.filterType === 'SelectSingleFilter' ? (
         <SelectSingleFilter
           id={componentId}
-          label={searchPageConfig.label}
+          label={filterConfig.label}
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
           onSelect={getHandleChangedValueFn(useHistoryPush)}
@@ -104,7 +104,7 @@ const FilterComponent = props => {
       ) : (
         <SelectMultipleFilter
           id={componentId}
-          label={searchPageConfig.label}
+          label={filterConfig.label}
           name={name}
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
@@ -116,8 +116,8 @@ const FilterComponent = props => {
       );
     }
     case SCHEMA_TYPE_MULTI_ENUM: {
-      const { scope, enumOptions, searchPageConfig = {} } = config;
-      const { label, searchMode } = searchPageConfig;
+      const { scope, enumOptions, filterConfig = {} } = config;
+      const { label, searchMode } = filterConfig;
       const queryParamNames = [constructQueryParamName(key, scope)];
       return (
         <SelectMultipleFilter

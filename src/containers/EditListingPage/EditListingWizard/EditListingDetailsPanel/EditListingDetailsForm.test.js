@@ -34,7 +34,7 @@ describe('EditListingDetailsForm', () => {
           { option: 'kids', label: 'Kids' },
         ],
         indexForSearch: true,
-        searchPageConfig: {
+        filterConfig: {
           label: 'Amenities',
         },
         listingPageConfig: {
@@ -61,7 +61,7 @@ describe('EditListingDetailsForm', () => {
           { option: 'barbeque', label: 'Barbeque' },
         ],
         indexForSearch: true,
-        searchPageConfig: {
+        filterConfig: {
           label: 'Amenities',
         },
         listingPageConfig: {
