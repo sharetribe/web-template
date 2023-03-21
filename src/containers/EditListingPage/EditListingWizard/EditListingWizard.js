@@ -384,7 +384,7 @@ class EditListingWizard extends Component {
     const existingListingType = currentListing.attributes?.publicData?.listingType;
     const invalidExistingListingType =
       existingListingType &&
-      !config.listing.listingTypes.find(config => config.type === existingListingType);
+      !config.listing.listingTypes.find(config => config.listingType === existingListingType);
 
     const tabs = invalidExistingListingType
       ? TABS_DETAILS_ONLY

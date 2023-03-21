@@ -17,7 +17,7 @@ const noop = () => null;
 
 const listingTypes = [
   {
-    type: 'rent-bicycles-daily',
+    listingType: 'rent-bicycles-daily',
     transactionType: {
       process: 'default-booking',
       alias: 'release-1',
@@ -25,7 +25,7 @@ const listingTypes = [
     },
   },
   {
-    type: 'rent-bicycles-nightly',
+    listingType: 'rent-bicycles-nightly',
     transactionType: {
       process: 'default-booking',
       alias: 'release-1',
@@ -33,7 +33,7 @@ const listingTypes = [
     },
   },
   {
-    type: 'rent-bicycles-hourly',
+    listingType: 'rent-bicycles-hourly',
     transactionType: {
       process: 'default-booking',
       alias: 'release-1',
@@ -41,7 +41,7 @@ const listingTypes = [
     },
   },
   {
-    type: 'sell-bicycles',
+    listingType: 'sell-bicycles',
     transactionType: {
       process: 'default-purchase',
       alias: 'release-1',

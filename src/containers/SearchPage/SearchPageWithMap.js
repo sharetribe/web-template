@@ -255,7 +255,7 @@ export class SearchPageComponent extends Component {
     const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
-    const activeListingTypes = config?.listing?.listingTypes.map(config => config.type);
+    const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const marketplaceCurrency = config.currency;
 
     // Page transition might initially use values from previous search

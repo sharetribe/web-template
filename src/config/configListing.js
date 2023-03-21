@@ -200,7 +200,7 @@ export const listingExtendedData = [
 
 /**
  * Configuration options for listing experience:
- * - type:            Unique string. This will be saved to listing's public data on
+ * - listingType:     Unique string. This will be saved to listing's public data on
  *                    EditListingWizard.
  * - label            Label for the listing type. Used as microcopy for options to select
  *                    listing type in EditListingWizard.
@@ -224,7 +224,7 @@ export const listingExtendedData = [
 
 export const listingTypes = [
   {
-    type: 'daily-booking',
+    listingType: 'daily-booking',
     label: 'Daily booking',
     transactionType: {
       process: 'default-booking',
@@ -235,7 +235,7 @@ export const listingTypes = [
   // Here are some examples for other listingTypes
   // TODO: SearchPage does not work well if both booking and product selling are used at the same time
   {
-    type: 'nightly-booking',
+    listingType: 'nightly-booking',
     label: 'Nightly booking',
     transactionType: {
       process: 'default-booking',
@@ -244,7 +244,7 @@ export const listingTypes = [
     },
   },
   {
-    type: 'hourly-booking',
+    listingType: 'hourly-booking',
     label: 'Hourly booking',
     transactionType: {
       process: 'default-booking',
@@ -253,7 +253,7 @@ export const listingTypes = [
     },
   },
   {
-    type: 'product-selling',
+    listingType: 'product-selling',
     label: 'Sell bicycles',
     transactionType: {
       process: 'default-purchase',

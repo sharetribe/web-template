@@ -109,7 +109,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   const searchValidListingTypes = listingTypes => {
     return config.listing.enforceValidListingType
       ? {
-          pub_listingType: listingTypes.map(l => l.type),
+          pub_listingType: listingTypes.map(l => l.listingType),
           // pub_transactionProcessAlias: listingTypes.map(l => `${l.transactionType.process}/${l.transactionType.alias}`),
           // pub_unitType: listingTypes.map(l => l.transactionType.unitType),
         }

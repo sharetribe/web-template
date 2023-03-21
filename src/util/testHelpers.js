@@ -149,7 +149,7 @@ export const getDefaultConfiguration = () => {
       ],
       listingTypes: [
         {
-          type: 'rent-bicycles',
+          listingType: 'rent-bicycles',
           label: 'Rent bicycles',
           transactionType: {
             process: 'default-booking',
@@ -158,7 +158,7 @@ export const getDefaultConfiguration = () => {
           },
         },
         {
-          type: 'product-selling',
+          listingType: 'product-selling',
           label: 'Sell products',
           transactionType: {
             process: 'default-purchase',
