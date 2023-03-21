@@ -495,7 +495,7 @@ propTypes.listingExtendedDataConfig = arrayOf(
       label: string.isRequired,
       isDetail: bool,
     }),
-    editListingPageConfig: shape({
+    saveConfig: shape({
       label: string.isRequired,
       placeholderMessage: string,
       isRequired: bool,

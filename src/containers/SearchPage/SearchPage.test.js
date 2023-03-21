@@ -65,7 +65,7 @@ const listingExtendedDataConfig = [
     listingPageConfig: {
       label: 'Category',
     },
-    editListingPageConfig: {
+    saveConfig: {
       label: 'Category',
     },
   },
@@ -88,7 +88,7 @@ const listingExtendedDataConfig = [
     listingPageConfig: {
       label: 'Category',
     },
-    editListingPageConfig: {
+    saveConfig: {
       label: 'Category',
     },
   },
