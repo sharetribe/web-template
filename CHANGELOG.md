@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Remove dublicate ids from styleguide page.
+  [#113](https://github.com/sharetribe/ftw-x/pull/113)
 - [change] Rename global duck files to start with lower case letter.
   [#112](https://github.com/sharetribe/ftw-x/pull/112)
 - [change] Update tests to use React Testing Library instead of Enzyme.

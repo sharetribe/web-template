@@ -13,6 +13,7 @@ const selectableListingTypes = [
 export const WithInitialValues = {
   component: EditListingDetailsForm,
   props: {
+    formId: 'WithInitialValues',
     onSubmit: values => {
       console.log('Submit EditListingDetailsForm with (unformatted) values:', values);
     },
@@ -50,6 +51,7 @@ const selectableListingTypes2 = [
 export const MultipleProcessInfos = {
   component: EditListingDetailsForm,
   props: {
+    formId: 'MultipleProcessInfos',
     onSubmit: values => {
       console.log('Submit EditListingDetailsForm with (unformatted) values:', values);
     },
