@@ -8,7 +8,7 @@ import { ensureCurrentUser, ensureStripeCustomer, ensurePaymentMethodCard } from
 import { propTypes } from '../../util/types';
 import { savePaymentMethod, deletePaymentMethod } from '../../ducks/paymentMethods.duck';
 import { handleCardSetup } from '../../ducks/stripe.duck';
-import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/UI.duck';
+import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 
 import {
   H3,

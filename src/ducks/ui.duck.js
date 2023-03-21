@@ -1,6 +1,6 @@
 // ================ Action types ================ //
 
-export const DISABLE_SCROLLING = 'app/UI/DISABLE_SCROLLING';
+export const DISABLE_SCROLLING = 'app/ui/DISABLE_SCROLLING';
 
 // ================ Reducer ================ //
 
@@ -48,6 +48,6 @@ export const manageDisableScrolling = (componentId, disableScrolling) => ({
 // ================ Selectors ================ //
 
 export const isScrollingDisabled = state => {
-  const { disableScrollRequests } = state.UI;
+  const { disableScrollRequests } = state.ui;
   return disableScrollRequests.some(r => r.disableScrolling);
 };

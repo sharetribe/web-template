@@ -7,7 +7,7 @@
 import auth from './auth.duck';
 import emailVerification from './emailVerification.duck';
 import routing from './routing.duck';
-import UI from './UI.duck';
+import ui from './ui.duck';
 import hostedAssets from './hostedAssets.duck';
 import marketplaceData from './marketplaceData.duck';
 import paymentMethods from './paymentMethods.duck';
@@ -19,7 +19,7 @@ export {
   auth,
   emailVerification,
   routing,
-  UI,
+  ui,
   hostedAssets,
   marketplaceData,
   paymentMethods,

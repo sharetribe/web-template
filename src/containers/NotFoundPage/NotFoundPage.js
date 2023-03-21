@@ -10,7 +10,7 @@ import { FormattedMessage, useIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { createResourceLocatorString } from '../../util/routes';
 import { isMainSearchTypeKeywords } from '../../util/search';
-import { isScrollingDisabled } from '../../ducks/UI.duck';
+import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import { Heading, Page, Footer, LayoutSingleColumn } from '../../components';
 

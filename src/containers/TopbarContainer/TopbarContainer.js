@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { propTypes } from '../../util/types';
 import { sendVerificationEmail, hasCurrentUserErrors } from '../../ducks/user.duck';
 import { logout, authenticationInProgress } from '../../ducks/auth.duck';
-import { manageDisableScrolling } from '../../ducks/UI.duck';
+import { manageDisableScrolling } from '../../ducks/ui.duck';
 import { Topbar } from '../../components';
 
 export const TopbarContainerComponent = props => {
