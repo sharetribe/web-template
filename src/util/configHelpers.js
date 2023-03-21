@@ -114,18 +114,18 @@ const mergeLayouts = (layoutConfig, defaultLayout) => {
   const aspectHeight =
     layoutConfig?.listingImage?.aspectHeight || defaultLayout?.listingImage?.aspectHeight;
 
-  const isValidSearchPageConfig = ['map', 'list'].includes(searchPageVariant);
-  const isValidListingPageConfig = ['hero-image', 'full-image'].includes(listingPageVariant);
+  const isValidSearchPageVariant = ['map', 'list'].includes(searchPageVariant);
+  const isValidListingPageVariant = ['hero-image', 'full-image'].includes(listingPageVariant);
 
-  if (!isValidSearchPageConfig) {
+  if (!isValidSearchPageVariant) {
     console.warn('Unsupported layout option for search page detected', searchPageVariant);
-  } else if (!isValidListingPageConfig) {
+  } else if (!isValidListingPageVariant) {
     console.warn('Unsupported layout option for listing page detected', listingPageVariant);
   }
 
   return {
-    searchPageVariant: isValidSearchPageConfig ? searchPageVariant : 'list',
-    listingPageVariant: isValidListingPageConfig ? listingPageVariant : 'full-image',
+    searchPageVariant: isValidSearchPageVariant ? searchPageVariant : 'list',
+    listingPageVariant: isValidListingPageVariant ? listingPageVariant : 'full-image',
     listingImage: {
       aspectWidth: aspectWidth || 1,
       aspectHeight: aspectHeight || 1,
