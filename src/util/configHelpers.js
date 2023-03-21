@@ -176,7 +176,7 @@ const validSchemaOptions = (enumOptions, schemaType) => {
   return [isValid, schemaOptionsMaybe];
 };
 
-// listingExtendedDataConfig.searchPageConfig
+// listingExtendedDataConfig.filterConfig
 const filterTypes = ['SelectSingleFilter', 'SelectMultipleFilter'];
 const validFilterType = (filterType, schemaType) => {
   const isEnumSchemaType = ['enum', 'multi-enum'].includes(schemaType);
@@ -201,7 +201,7 @@ const validSearchMode = (searchMode, schemaType) => {
   return [isValid, searchModeMaybe];
 };
 
-const validSearchPageConfig = (config, schemaType) => {
+const validFilterConfig = (config, schemaType) => {
   const isUndefined = typeof config === 'undefined';
   if (isUndefined) {
     return [true, {}];
@@ -215,7 +215,7 @@ const validSearchPageConfig = (config, schemaType) => {
 
   const isValid = isValidLabel && isValidFilterType && isValidSearchMode && isValidGroup;
   const validValue = {
-    searchPageConfig: {
+    filterConfig: {
       ...label,
       ...filterType,
       ...searchMode,
@@ -312,8 +312,8 @@ const validListingExtendedData = (listingExtendedData, listingTypesInUse) => {
             ? validSchemaOptions(value, schemaType)
             : name === 'indexForSearch'
             ? validBoolean('indexForSearch', value, false)
-            : name === 'searchPageConfig'
-            ? validSearchPageConfig(value, schemaType)
+            : name === 'filterConfig'
+            ? validFilterConfig(value, schemaType)
             : name === 'listingPageConfig'
             ? validListingPageConfig(value)
             : name === 'editListingPageConfig'

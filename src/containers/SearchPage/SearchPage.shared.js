@@ -56,10 +56,10 @@ export const validURLParamForExtendedData = (
   );
 
   if (extendedDataFilterConfig) {
-    const { schemaType, enumOptions = [], searchPageConfig } = extendedDataFilterConfig;
+    const { schemaType, enumOptions = [], filterConfig } = extendedDataFilterConfig;
     if ([SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM].includes(schemaType)) {
       const isSchemaTypeMultiEnum = schemaType === SCHEMA_TYPE_MULTI_ENUM;
-      const searchMode = searchPageConfig?.searchMode;
+      const searchMode = filterConfig?.searchMode;
 
       // Pick valid select options only
       const valueArray = parseSelectFilterOptions(paramValue);
@@ -339,12 +339,12 @@ export const groupExtendedDataConfigs = (configs, activeListingTypes) =>
   configs.reduce(
     (grouped, config) => {
       const [primary, secondary] = grouped;
-      const { includeForListingTypes, indexForSearch, searchPageConfig } = config;
+      const { includeForListingTypes, indexForSearch, filterConfig } = config;
       const isIndexed = indexForSearch === true;
       const isActiveListingTypes =
         includeForListingTypes == null ||
         includeForListingTypes.every(lt => activeListingTypes.includes(lt));
-      const isPrimary = searchPageConfig?.group === 'primary';
+      const isPrimary = filterConfig?.group === 'primary';
       return isActiveListingTypes && isIndexed && isPrimary
         ? [[...primary, config], secondary]
         : isActiveListingTypes && isIndexed
