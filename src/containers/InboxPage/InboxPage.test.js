@@ -1,18 +1,18 @@
 import React from 'react';
+import '@testing-library/jest-dom';
 import Decimal from 'decimal.js';
 
-import * as configContext from '../../context/configurationContext';
-
-import { renderShallow, renderDeep } from '../../util/test-helpers';
-import {
-  fakeIntl,
-  createCurrentUser,
-  createUser,
-  createListing,
-  createTransaction,
-} from '../../util/test-data';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { LINE_ITEM_ITEM, LINE_ITEM_PROVIDER_COMMISSION } from '../../util/types';
+import {
+  createUser,
+  createCurrentUser,
+  createListing,
+  fakeIntl,
+  createTransaction,
+} from '../../util/test-data';
+import { renderWithProviders as render, testingLibrary } from '../../util/test-helpers';
+
 import {
   TX_TRANSITION_ACTOR_CUSTOMER,
   TX_TRANSITION_ACTOR_PROVIDER,
@@ -23,7 +23,9 @@ import { getStateData } from './InboxPage.stateData';
 import { InboxPageComponent, InboxItem } from './InboxPage';
 
 const { Money } = sdkTypes;
+const { screen, within } = testingLibrary;
 const noop = () => null;
+
 const transitions = getProcess('default-purchase')?.transitions;
 
 describe('InboxPage', () => {
@@ -139,85 +141,101 @@ describe('InboxPage', () => {
     onResendVerificationEmail: noop,
   };
 
-  it('InboxPageComponent matches snapshot of order', () => {
-    const contextValues = {
-      listing: {
-        listingTypes: [
-          {
-            type: 'rent-bicycles',
-            label: 'Rent bicycles',
-            transactionType: {
-              process: 'default-booking',
-              alias: 'release-1',
-              unitType: 'day',
-            },
-          },
-        ],
-      },
-    };
-    jest.spyOn(configContext, 'useConfiguration').mockImplementation(() => contextValues);
+  test('InboxPageComponent has tabs and inbox items for orders', () => {
+    render(<InboxPageComponent {...ordersProps} />);
 
-    const ordersTree = renderShallow(<InboxPageComponent {...ordersProps} />);
-    expect(ordersTree).toMatchSnapshot();
+    // Has links to orders and sales tabs
+    const ordersTabTitle = screen.getByRole('link', { name: 'InboxPage.ordersTabTitle' });
+    expect(ordersTabTitle).toBeInTheDocument();
+    expect(ordersTabTitle.getAttribute('href')).toContain('/inbox/orders');
+
+    const salesTabTitle = screen.getByRole('link', { name: 'InboxPage.salesTabTitle' });
+    expect(salesTabTitle).toBeInTheDocument();
+    expect(salesTabTitle.getAttribute('href')).toContain('/inbox/sales');
+
+    // Has 2 items
+    const items = screen.queryAllByRole('link', { name: /ItemX/i });
+    expect(items).toHaveLength(2);
+
+    const item1 = items[0];
+    expect(item1.getAttribute('href')).toContain('/order/order-1');
+    const status1 = within(item1).getByText('InboxPage.default-purchase.purchased.status');
+    expect(status1).toBeInTheDocument();
+
+    const item2 = items[1];
+    expect(item2.getAttribute('href')).toContain('/order/order-2');
+    const status2 = within(item2).getByText('InboxPage.default-purchase.purchased.status');
+    expect(status2).toBeInTheDocument();
   });
 
-  it('InboxItem matches snapshot of order', () => {
+  // This is quite small component what comes to rendered HTML
+  // For now, we rely on snapshot-testing and checking quantity.
+  test('InboxItem matches snapshot of order', () => {
     const stateDataOrder = getStateData({
       transaction: ordersProps.transactions[0],
       transactionRole: TX_TRANSITION_ACTOR_CUSTOMER,
     });
 
-    // Deeply render one InboxItem
-    const orderItem = renderDeep(
+    const tree = render(
       <InboxItem
         tx={ordersProps.transactions[0]}
         transactionRole={TX_TRANSITION_ACTOR_CUSTOMER}
         intl={fakeIntl}
         stateData={stateDataOrder}
-        showStock={false}
+        isBooking={false}
+        showStock={true}
       />
     );
-    expect(orderItem).toMatchSnapshot();
+    expect(tree.asFragment().firstChild).toMatchSnapshot();
+    expect(screen.getByText('InboxPage.quantity')).toBeInTheDocument();
   });
 
-  it('InboxPageComponent matches snapshot of sales', () => {
-    const contextValues = {
-      listing: {
-        listingTypes: [
-          {
-            type: 'rent-bicycles',
-            label: 'Rent bicycles',
-            transactionType: {
-              process: 'default-booking',
-              alias: 'release-1',
-              unitType: 'day',
-            },
-          },
-        ],
-      },
-    };
-    jest.spyOn(configContext, 'useConfiguration').mockImplementation(() => contextValues);
-    const salesTree = renderShallow(<InboxPageComponent {...salesProps} />);
-    expect(salesTree).toMatchSnapshot();
+  test('InboxPageComponent has tabs and inbox items for sales', () => {
+    render(<InboxPageComponent {...salesProps} />);
+
+    // Has links to orders and sales tabs
+    const ordersTabTitle = screen.getByRole('link', { name: 'InboxPage.ordersTabTitle' });
+    expect(ordersTabTitle).toBeInTheDocument();
+    expect(ordersTabTitle.getAttribute('href')).toContain('/inbox/orders');
+
+    const salesTabTitle = screen.getByRole('link', { name: 'InboxPage.salesTabTitle' });
+    expect(salesTabTitle).toBeInTheDocument();
+    expect(salesTabTitle.getAttribute('href')).toContain('/inbox/sales');
+
+    // Has 2 items
+    const items = screen.queryAllByRole('link', { name: /ItemX/i });
+    expect(items).toHaveLength(2);
+
+    const item1 = items[0];
+    expect(item1.getAttribute('href')).toContain('/sale/sale-1');
+    const status1 = within(item1).getByText('InboxPage.default-purchase.purchased.status');
+    expect(status1).toBeInTheDocument();
+
+    const item2 = items[1];
+    expect(item2.getAttribute('href')).toContain('/sale/sale-2');
+    const status2 = within(item2).getByText('InboxPage.default-purchase.purchased.status');
+    expect(status2).toBeInTheDocument();
   });
 
-  it('InboxItem matches snapshot of sales', () => {
-    const stateDataSale = getStateData({
+  // This is quite small component what comes to rendered HTML
+  // For now, we rely on snapshot-testing and checking quantity.
+  test('InboxItem matches snapshot of sales', () => {
+    const stateDataOrder = getStateData({
       transaction: salesProps.transactions[0],
       transactionRole: TX_TRANSITION_ACTOR_PROVIDER,
     });
 
-    // Deeply render one InboxItem
-    const saleItem = renderDeep(
+    const tree = render(
       <InboxItem
-        type="sale"
         tx={salesProps.transactions[0]}
         transactionRole={TX_TRANSITION_ACTOR_PROVIDER}
         intl={fakeIntl}
-        stateData={stateDataSale}
+        stateData={stateDataOrder}
+        isBooking={false}
         showStock={false}
       />
     );
-    expect(saleItem).toMatchSnapshot();
+    expect(tree.asFragment().firstChild).toMatchSnapshot();
+    expect(screen.queryByText('InboxPage.quantity')).not.toBeInTheDocument();
   });
 });
