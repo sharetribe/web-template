@@ -171,7 +171,7 @@ describe('SearchPageWithList', () => {
         },
       },
       layout: {
-        searchPageVariant: 'list',
+        searchPage: { variantType: 'grid' },
       },
     },
     routeConfiguration: getRouteConfiguration(),

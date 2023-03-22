@@ -106,15 +106,17 @@ const mergeBranding = (brandingConfig, defaultBranding) => {
 // Merge layouts //
 ///////////////////
 
+const mergeVariants = (page, defaultPage) => page?.variantType || defaultPage?.variantType;
+
 const mergeLayouts = (layoutConfig, defaultLayout) => {
-  const searchPageVariant = layoutConfig?.searchPageVariant || defaultLayout.searchPageVariant;
+  const searchPageVariant = mergeVariants(layoutConfig?.searchPage, defaultLayout?.searchPage);
   const listingPageVariant = layoutConfig?.listingPageVariant || defaultLayout.listingPageVariant;
   const aspectWidth =
     layoutConfig?.listingImage?.aspectWidth || defaultLayout?.listingImage?.aspectWidth;
   const aspectHeight =
     layoutConfig?.listingImage?.aspectHeight || defaultLayout?.listingImage?.aspectHeight;
 
-  const isValidSearchPageVariant = ['map', 'list'].includes(searchPageVariant);
+  const isValidSearchPageVariant = ['map', 'grid'].includes(searchPageVariant);
   const isValidListingPageVariant = ['hero-image', 'full-image'].includes(listingPageVariant);
 
   if (!isValidSearchPageVariant) {
@@ -124,7 +126,7 @@ const mergeLayouts = (layoutConfig, defaultLayout) => {
   }
 
   return {
-    searchPageVariant: isValidSearchPageVariant ? searchPageVariant : 'list',
+    searchPageVariant: isValidSearchPageVariant ? searchPageVariant : 'grid',
     listingPageVariant: isValidListingPageVariant ? listingPageVariant : 'full-image',
     listingImage: {
       aspectWidth: aspectWidth || 1,

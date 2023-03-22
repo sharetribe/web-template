@@ -180,7 +180,7 @@ export const getDefaultConfiguration = () => {
 
 export const getRouteConfiguration = () => {
   const layoutConfig = {
-    searchPageVariant: 'map',
+    searchPage: { variantType: 'map' },
     listingPageVariant: 'full-image',
     listingImage: {
       aspectWidth: 400,

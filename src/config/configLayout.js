@@ -5,8 +5,10 @@
 ///////////////////////////////////////////////////////
 
 // There are 2 SearchPage variants that can be used:
-// 'map' & 'list'
-export const searchPageVariant = 'map';
+// 'map' & 'grid'
+export const searchPage = {
+  variantType: 'map',
+};
 
 // ListingPage has 2 layout options: 'hero-image' and 'full-image'.
 // - 'hero-image' means a layout where there's a hero section with cropped image in the beginning of the page
