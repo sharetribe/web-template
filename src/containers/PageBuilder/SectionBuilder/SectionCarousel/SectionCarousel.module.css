@@ -104,6 +104,10 @@
     width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px);
   }
 
+  @media (--viewportMedium) {
+    margin-right: 32px;
+  }
+
   @media (min-width: 1200px) {
     /* Offset the start of the carousel so it follows the global grid layout (e.g. (1400 - 1200) / 2 = 100px) */
     /* Removing this uses the full page width for the slider pane */
@@ -117,10 +121,6 @@
         min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px
       ); /* 32px (padding-right above) */
     }
-  }
-
-  @media (--viewportMedium) {
-    margin-right: 32px;
   }
 }
 
