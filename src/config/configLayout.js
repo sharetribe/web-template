@@ -17,10 +17,13 @@ export const listingPage = {
   variantType: 'carousel',
 };
 
+// ListingImage currently supports only one variant type, but it has aspectRatio as an extra configuration.
 export const listingImage = {
-  // Aspect ratio for listing image variants
-  aspectWidth: 400,
-  aspectHeight: 400,
+  variantType: 'cropImage',
+  // Aspect ratio for listing image variants (width/height)
+  // Note: This will be converted to separate aspectWidth and aspectHeight values
+  // to make calculations easier.
+  aspectRatio: '1/1',
   // Listings have custom image variants, which are named here.
   variantPrefix: 'listing-card',
 };
