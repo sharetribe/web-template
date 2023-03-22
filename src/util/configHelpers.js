@@ -106,30 +106,42 @@ const mergeBranding = (brandingConfig, defaultBranding) => {
 // Merge layouts //
 ///////////////////
 
-const mergeVariants = (page, defaultPage) => page?.variantType || defaultPage?.variantType;
+const pickVariant = (hostedVariant, defaultVariant) =>
+  hostedVariant?.variantType ? hostedVariant : defaultVariant;
+const validVariantConfig = (hostedVariant, defaultVariant, validVariantTypes, fallback) => {
+  const variant = pickVariant(hostedVariant, defaultVariant);
+  const isValidVariant = validVariantTypes.includes(variant?.variantType);
+
+  if (!isValidVariant) {
+    console.warn('Unsupported layout option detected', variant);
+  }
+
+  return isValidVariant ? variant : fallback;
+};
 
 const mergeLayouts = (layoutConfig, defaultLayout) => {
-  const searchPageVariant = mergeVariants(layoutConfig?.searchPage, defaultLayout?.searchPage);
-  const isValidSearchPageVariant = ['map', 'grid'].includes(searchPageVariant);
-  const searchPageVariantType = isValidSearchPageVariant ? searchPageVariant : 'grid';
+  const searchPage = validVariantConfig(
+    layoutConfig?.searchPage,
+    defaultLayout?.searchPage,
+    ['map', 'grid'],
+    { variantType: 'grid' }
+  );
 
-  const listingPageVariant = layoutConfig?.listingPageVariant || defaultLayout.listingPageVariant;
+  const listingPage = validVariantConfig(
+    layoutConfig?.listingPage,
+    defaultLayout?.listingPage,
+    ['coverPhoto', 'carousel'],
+    { variantType: 'carousel' }
+  );
+
   const aspectWidth =
     layoutConfig?.listingImage?.aspectWidth || defaultLayout?.listingImage?.aspectWidth;
   const aspectHeight =
     layoutConfig?.listingImage?.aspectHeight || defaultLayout?.listingImage?.aspectHeight;
 
-  const isValidListingPageVariant = ['hero-image', 'full-image'].includes(listingPageVariant);
-
-  if (!isValidSearchPageVariant) {
-    console.warn('Unsupported layout option for search page detected', searchPageVariant);
-  } else if (!isValidListingPageVariant) {
-    console.warn('Unsupported layout option for listing page detected', listingPageVariant);
-  }
-
   return {
-    searchPage: { variantType: searchPageVariantType },
-    listingPageVariant: isValidListingPageVariant ? listingPageVariant : 'full-image',
+    searchPage,
+    listingPage,
     listingImage: {
       aspectWidth: aspectWidth || 1,
       aspectHeight: aspectHeight || 1,

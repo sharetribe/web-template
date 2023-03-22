@@ -10,10 +10,12 @@ export const searchPage = {
   variantType: 'map',
 };
 
-// ListingPage has 2 layout options: 'hero-image' and 'full-image'.
-// - 'hero-image' means a layout where there's a hero section with cropped image in the beginning of the page
-// - 'full-image' shows image carousel, where listing images are shown with the original aspect ratio
-export const listingPageVariant = 'full-image';
+// ListingPage has 2 layout options: 'coverPhoto' and 'carousel'.
+// - 'coverPhoto' means a layout where there's a hero section with cropped image in the beginning of the page
+// - 'carousel' shows image carousel, where listing images are shown with the original aspect ratio
+export const listingPage = {
+  variantType: 'carousel',
+};
 
 export const listingImage = {
   // Aspect ratio for listing image variants
