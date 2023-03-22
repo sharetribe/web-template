@@ -173,6 +173,7 @@ export const getDefaultConfiguration = () => {
       mainSearch: {
         searchType: 'keywords',
       },
+      defaultFilters: [defaultConfig.search.dateRangeFilter, defaultConfig.search.priceFilter],
     },
   };
 };
