@@ -13,7 +13,7 @@
 .weekPicker,
 .sectionTitle {
   composes: marketplaceSearchFilterSublabelFontStyles from global;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   padding: 3px 0 3px 0;
   margin-top: 0;
@@ -37,7 +37,7 @@
   text-align: left;
 }
 .weekPicker {
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 }
 
 .weekRange {
@@ -65,11 +65,11 @@
   align-items: center;
   justify-content: center;
   padding: 6px 8px;
-  border: solid 1px var(--matterColorNegative);
+  border: solid 1px var(--colorGrey100);
   cursor: pointer;
 
   &:hover {
-    background-color: var(--matterColorBright);
+    background-color: var(--colorGrey50);
   }
 
   @media (--viewportMedium) {
@@ -91,9 +91,9 @@
 .grid {
   display: grid;
   grid-template-columns: 1fr;
-  border-top: solid 1px var(--matterColorNegative);
-  border-right: solid 1px var(--matterColorNegative);
-  border-left: solid 1px var(--matterColorNegative);
+  border-top: solid 1px var(--colorGrey100);
+  border-right: solid 1px var(--colorGrey100);
+  border-left: solid 1px var(--colorGrey100);
   border-radius: var(--borderRadiusMedium);
   margin-top: 17px;
 
@@ -109,7 +109,7 @@
 
   @media (--viewportMedium) {
     padding: 24px 24px 23px 24px;
-    border-bottom: solid 1px var(--matterColorNegative);
+    border-bottom: solid 1px var(--colorGrey100);
   }
 }
 .dateLabel {
@@ -131,7 +131,7 @@
 
 .blockedDateLabel {
   background-color: #f3f3f3;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 }
 
 .info {
@@ -185,7 +185,7 @@
   composes: marketplaceTinyFontStyles from global;
   display: inline-flex;
   flex-wrap: wrap;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   transition: color var(--transitionStyleButton);
   margin: 0;
 
@@ -220,7 +220,7 @@
 
 .deleteIcon {
   margin-top: -6px;
-  stroke: var(--matterColorAnti);
+  stroke: var(--colorGrey300);
   transition: var(--transitionStyleButton);
 }
 
@@ -234,7 +234,7 @@
   display: inline-flex;
 
   &:hover > .timeRange {
-    color: var(--matterColorDark);
+    color: var(--colorBlack);
   }
   &:hover .deleteIcon {
     stroke: var(--failColor);
@@ -247,7 +247,7 @@
   flex-direction: column;
   gap: 10px;
   padding: 0 24px 23px 24px;
-  border-bottom: solid 1px var(--matterColorNegative);
+  border-bottom: solid 1px var(--colorGrey100);
 
   @media (--viewportMedium) {
     flex-direction: row;
@@ -258,18 +258,18 @@
 
 .blockedDate {
   background-color: #f3f3f3;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   & .timeRange {
-    color: var(--matterColorAnti);
+    color: var(--colorGrey300);
   }
 
   &:hover .exceptionsTitle,
   &:hover .exceptionsSubtitle,
   &:hover .exception > .timeRange {
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
   &:hover .exception:hover > .timeRange {
-    color: var(--matterColorDark);
+    color: var(--colorBlack);
   }
 }

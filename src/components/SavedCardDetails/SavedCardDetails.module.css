@@ -101,7 +101,7 @@
   &:focus {
     outline: none;
     box-shadow: none;
-    background-color: var(--matterColorLight);
+    background-color: var(--colorWhite);
     border: 1px solid #d8dce6;
     text-decoration: none;
     border-radius: 6px 6px 0px 0px;
@@ -136,10 +136,10 @@
   position: absolute;
   z-index: var(--zIndexPopup);
 
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
   box-shadow: var(--boxShadowFilterButton);
   border-radius: 6px;
-  border: 1px solid var(--matterColorNegative);
+  border: 1px solid var(--colorGrey100);
 
   transition: all 0.15s ease-out;
 
@@ -153,7 +153,7 @@
 }
 
 .menuItem {
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   &:hover {
     background-color: #f2f2f2;
   }
@@ -163,7 +163,7 @@
 .menuTextReplaceCard {
   composes: marketplaceMessageFontStyles from global;
   padding: 12px 8px;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   text-align: left;
   font-weight: var(--fontWeightMedium);
   width: 80%;
@@ -187,25 +187,25 @@
 
 .menuDivider {
   composes: h5 from global;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   padding: 14px 24px 2px 24px;
   margin: 0;
 }
 
 .savedPaymentMethodDelete {
   composes: h4 from global;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   cursor: pointer;
   margin-top: 14px;
   margin-bottom: 10px;
 
   &:hover {
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 
   &:focus {
     outline: none;
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 }
 
@@ -229,13 +229,13 @@
 }
 
 .cancelCardDelete {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   cursor: pointer;
   width: 50%;
   text-align: right;
   padding-right: 64px;
 
   &:hover {
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 }

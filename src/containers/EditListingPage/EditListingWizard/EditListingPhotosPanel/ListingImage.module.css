@@ -5,7 +5,7 @@
   width: 100%;
   margin: 0;
   overflow: hidden;
-  background-color: var(--matterColorNegative); /* Loading BG color */
+  background-color: var(--colorGrey100); /* Loading BG color */
 }
 
 .wrapper {
@@ -31,13 +31,13 @@
     left: 12px;
     width: 10px;
     height: 10px;
-    fill: var(--matterColorAnti);
-    stroke: var(--matterColorAnti);
+    fill: var(--colorGrey300);
+    stroke: var(--colorGrey300);
   }
 
   &:hover svg {
-    fill: var(--matterColorLight);
-    stroke: var(--matterColorLight);
+    fill: var(--colorWhite);
+    stroke: var(--colorWhite);
   }
 }
 

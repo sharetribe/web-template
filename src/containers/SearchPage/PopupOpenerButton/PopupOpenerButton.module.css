@@ -50,17 +50,17 @@
 
 .label {
   /* Button borders */
-  border: 1px solid var(--matterColorNegative);
+  border: 1px solid var(--colorGrey100);
   border-radius: var(--borderRadiusMedium);
 
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   &:hover,
   &:focus {
-    border-color: var(--matterColorAnti);
+    border-color: var(--colorGrey300);
   }
   &:disabled {
-    border-color: var(--matterColorNegative);
+    border-color: var(--colorGrey100);
   }
 
   @media (--viewportMedium) {
@@ -78,15 +78,15 @@
 
   /* Button colors: secondary */
   background-color: var(--marketplaceColor);
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
 
   &:hover,
   &:focus {
     border: 1px solid var(--marketplaceColorDark);
   }
   &:disabled {
-    background-color: var(--matterColorNegative);
-    color: var(--matterColorLight);
+    background-color: var(--colorGrey100);
+    color: var(--colorWhite);
   }
 }
 

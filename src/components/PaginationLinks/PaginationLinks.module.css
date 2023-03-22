@@ -39,8 +39,8 @@
 
 .disabled,
 .disabled:hover {
-  fill: var(--matterColorAnti);
-  stroke: var(--matterColorAnti);
+  fill: var(--colorGrey300);
+  stroke: var(--colorGrey300);
 }
 
 .pageNumberList {
@@ -87,7 +87,7 @@
   padding: 21px 5px;
 
   /* Color for svg icons */
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   &:hover {
     text-decoration: none;
@@ -99,10 +99,10 @@
   padding: 21px 5px 18px 5px;
   border-bottom-style: solid;
   border-bottom-width: 3px;
-  border-bottom-color: var(--matterColorDark);
+  border-bottom-color: var(--colorBlack);
 
   /* Color */
-  color: var(--matterColorDark);
+  color: var(--colorBlack);
 }
 
 .paginationGap {
@@ -110,7 +110,7 @@
   padding: 21px 5px;
 
   /* Color for svg icons */
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   /* Ellipsis is raised from baseline */
   line-height: 13px;

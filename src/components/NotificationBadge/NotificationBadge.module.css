@@ -3,7 +3,7 @@
 .root {
   /* Font */
   composes: h6 from global;
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
   text-align: center;
 
   background-color: var(--failColor);

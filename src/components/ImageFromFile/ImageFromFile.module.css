@@ -4,7 +4,7 @@
   width: 100%;
   margin: 0;
   overflow: hidden;
-  background-color: var(--matterColorNegative); /* Loading BG color */
+  background-color: var(--colorGrey100); /* Loading BG color */
 }
 
 .aspectWrapper {

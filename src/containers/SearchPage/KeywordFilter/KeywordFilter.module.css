@@ -6,7 +6,7 @@
 }
 
 .labelPlain {
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 }
 
 .labelPlainSelected {

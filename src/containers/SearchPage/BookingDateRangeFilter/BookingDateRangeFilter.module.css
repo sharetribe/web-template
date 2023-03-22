@@ -21,7 +21,7 @@
 }
 
 .filterLabel {
-  color: var(--matterColorDark);
+  color: var(--colorBlack);
 }
 
 .filterLabelSelected {
@@ -51,7 +51,7 @@
   composes: h5 from global;
   margin: 0;
   font-weight: var(--fontWeightMedium);
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   padding: 2px 0 4px 12px;
 
   /* Override button styles */
@@ -62,7 +62,7 @@
 
   &:focus,
   &:hover {
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 
   @media (--viewportMedium) {

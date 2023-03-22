@@ -74,7 +74,7 @@
 .saveForLaterUseLabel {
   composes: h5 from global;
 
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   margin-top: 3px;
   margin-bottom: 0px;
   cursor: pointer;
@@ -83,7 +83,7 @@
 .saveForLaterUseLegalInfo {
   composes: h5 from global;
 
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   display: inline-block;
   padding: 0px 0 0px 26px;
   margin-top: -2px;
@@ -113,11 +113,11 @@
 }
 
 .messageOptional {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 }
 
 .message {
-  border-bottom-color: var(--matterColorAnti);
+  border-bottom-color: var(--colorGrey300);
 }
 
 .submitContainer {
@@ -131,7 +131,7 @@
 .paymentInfo {
   composes: h5 from global;
 
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   text-align: center;
   margin: 28px 0 0 0;
 

@@ -3,7 +3,7 @@
 .root {
   width: 100%;
   height: 100%;
-  background-color: var(--matterColorNegative);
+  background-color: var(--colorGrey100);
 }
 
 .mapRoot {

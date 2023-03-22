@@ -7,9 +7,9 @@
 }
 
 .foregroundFill {
-  fill: var(--matterColorLight);
+  fill: var(--colorWhite);
 }
 
 .foregroundStroke {
-  stroke: var(--matterColorLight);
+  stroke: var(--colorWhite);
 }

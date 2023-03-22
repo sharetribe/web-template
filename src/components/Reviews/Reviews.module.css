@@ -40,7 +40,7 @@
   composes: h5 from global;
   margin-top: 10px;
   margin-bottom: 0px;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   @media (--viewportMedium) {
     margin-top: 9px;

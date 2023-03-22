@@ -32,17 +32,17 @@
   text-decoration: none;
 
   /* Button borders */
-  border: 1px solid var(--matterColorNegative);
+  border: 1px solid var(--colorGrey100);
   border-radius: var(--borderRadiusMedium);
 
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   &:focus,
   &:hover {
     outline: none;
     box-shadow: var(--boxShadowFilterButton);
     text-decoration: none;
-    border-color: var(--matterColorAnti);
+    border-color: var(--colorGrey300);
   }
 
   &:disabled {

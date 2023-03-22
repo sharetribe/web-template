@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: var(--matterColorNegative);
+  background-color: var(--colorGrey100);
 }
 
 .noImageWrapper {
@@ -21,12 +21,12 @@
 .noImageIcon {
   padding-top: 24px;
   box-sizing: content-box;
-  stroke: var(--matterColor);
+  stroke: var(--colorGrey700);
 }
 
 .noImageText {
   composes: h6 from global;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   padding-bottom: 24px;
 
   margin-bottom: 0;

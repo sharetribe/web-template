@@ -71,7 +71,7 @@
 
 .ownMessageContent {
   background-color: var(--marketplaceColor);
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
   float: right;
 }
 
@@ -80,7 +80,7 @@
   composes: marketplaceMessageDateFontStyles from global;
 
   margin: 11px 0 0 0;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   @media (--viewportMedium) {
     margin: 0 0 0 0;
@@ -127,7 +127,7 @@
 
 .transitionDate {
   composes: marketplaceMessageDateFontStyles from global;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   margin: 7px 0 0 0;
 
   @media (--viewportMedium) {

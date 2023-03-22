@@ -61,7 +61,7 @@
 
 .secondaryButton.inProgress:disabled,
 .secondaryButtonInline.inProgress:disabled {
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 }
 
 .ready {
@@ -78,20 +78,20 @@
 
 .secondaryButton.ready:disabled,
 .secondaryButtonInline.ready:disabled {
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 }
 
 .spinner {
   width: 28px;
   height: 28px;
-  stroke: var(--matterColorLight);
+  stroke: var(--colorWhite);
   stroke-width: 3px;
 }
 
 .checkmark {
   width: 24px;
   height: 24px;
-  stroke: var(--matterColorLight);
+  stroke: var(--colorWhite);
 
   /* Animation */
   animation-name: checkmarkAnimation;
@@ -116,12 +116,12 @@
 
 .secondaryButton .spinner,
 .secondaryButtonInline .spinner {
-  stroke: var(--matterColorAnti);
+  stroke: var(--colorGrey300);
 }
 
 .secondaryButton .checkmark,
 .secondaryButtonInline .checkmark {
-  stroke: var(--matterColorAnti);
+  stroke: var(--colorGrey300);
 }
 
 /* Social logins && SSO buttons */
@@ -148,8 +148,8 @@
   border: 1px solid #d2d2d2;
   border-radius: var(--borderRadiusMedium);
 
-  background-color: var(--matterColorLight);
-  color: var(--matterColorDark);
+  background-color: var(--colorWhite);
+  color: var(--colorBlack);
 
   /* We need to add this to position the icon inside button */
   position: relative;
@@ -158,14 +158,14 @@
   &:focus {
     outline: none;
     box-shadow: var(--boxShadowButton);
-    background-color: var(--matterColorLight);
+    background-color: var(--colorWhite);
     text-decoration: none;
   }
   &:disabled {
     box-shadow: none;
     cursor: not-allowed;
-    background-color: var(--matterColorNegative);
-    color: var(--matterColorLight);
+    background-color: var(--colorGrey100);
+    color: var(--colorWhite);
   }
 
   @media (--viewportMedium) {

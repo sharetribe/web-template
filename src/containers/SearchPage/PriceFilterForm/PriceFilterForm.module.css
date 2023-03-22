@@ -21,10 +21,10 @@
   /* Layout */
   padding: 15px 30px 20px 30px;
   margin-top: 7px;
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   /* Borders */
-  border-top: 1px solid var(--matterColorNegative);
+  border-top: 1px solid var(--colorGrey100);
   box-shadow: var(--boxShadowPopup);
   border-radius: var(--borderRadiusMedium);
   transition: var(--transitionStyleButton);
@@ -152,19 +152,19 @@
 }
 
 .clearButton {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   /* Layout */
   margin: 0 auto 0 0;
 
   &:focus,
   &:hover {
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 }
 
 .cancelButton {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   /* Layout */
   margin: 0;
@@ -176,7 +176,7 @@
 
   &:focus,
   &:hover {
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 }
 

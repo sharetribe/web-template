@@ -188,7 +188,7 @@
   margin-top: 0;
   margin-bottom: 0;
   padding-top: 16px;
-  color: var(--matterColorDark);
+  color: var(--colorBlack);
 
   @media (--viewportMedium) {
     padding: 0;
@@ -218,7 +218,7 @@
   margin: 28px 0 20px 0;
   text-align: center;
   position: relative;
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   &:after {
     content: '';
@@ -239,7 +239,7 @@
 }
 
 .socialButtonsOrText {
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
   width: auto;
   display: inline-block;
   z-index: 3;
