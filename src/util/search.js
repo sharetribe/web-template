@@ -71,13 +71,14 @@ export const isAnyFilterActive = (
 /**
  * Check if the main search type is 'keywords'
  */
-export const isMainSearchTypeKeywords = config => config.search?.mainSearchType === 'keywords';
+export const isMainSearchTypeKeywords = config =>
+  config.search?.mainSearch?.searchType === 'keywords';
 
 /**
  * Check if the origin parameter is currently active.
  */
 export const isOriginInUse = config =>
-  config.search?.mainSearchType === 'location' && config.maps?.search?.sortSearchByDistance;
+  config.search?.mainSearch?.searchType === 'location' && config.maps?.search?.sortSearchByDistance;
 
 /**
  * Check if the stock management is currently active.
