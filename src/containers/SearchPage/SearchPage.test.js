@@ -8,7 +8,7 @@ import {
   getRouteConfiguration,
 } from '../../util/testHelpers';
 
-import { SearchPageComponent as SearchPageWithList } from './SearchPageWithList';
+import { SearchPageComponent as SearchPageWithGrid } from './SearchPageWithGrid';
 import { SearchPageComponent as SearchPageWithMap } from './SearchPageWithMap';
 
 const { screen } = testingLibrary;
@@ -17,34 +17,34 @@ const noop = () => null;
 
 const listingTypes = [
   {
-    type: 'rent-bicycles-daily',
+    listingType: 'rent-bicycles-daily',
     transactionType: {
       process: 'default-booking',
-      alias: 'release-1',
+      alias: 'default-booking/release-1',
       unitType: 'day',
     },
   },
   {
-    type: 'rent-bicycles-nightly',
+    listingType: 'rent-bicycles-nightly',
     transactionType: {
       process: 'default-booking',
-      alias: 'release-1',
+      alias: 'default-booking/release-1',
       unitType: 'night',
     },
   },
   {
-    type: 'rent-bicycles-hourly',
+    listingType: 'rent-bicycles-hourly',
     transactionType: {
       process: 'default-booking',
-      alias: 'release-1',
+      alias: 'default-booking/release-1',
       unitType: 'hour',
     },
   },
   {
-    type: 'sell-bicycles',
+    listingType: 'sell-bicycles',
     transactionType: {
       process: 'default-purchase',
-      alias: 'release-1',
+      alias: 'default-purchase/release-1',
       unitType: 'item',
     },
   },
@@ -56,16 +56,16 @@ const listingExtendedDataConfig = [
     scope: 'public',
     includeForListingTypes: ['sell-bicycles'],
     schemaType: 'enum',
-    schemaOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
-    indexForSearch: true,
-    searchPageConfig: {
+    enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
+    filterConfig: {
+      indexForSearch: true,
       label: 'Category',
       group: 'primary',
     },
-    listingPageConfig: {
+    showConfig: {
       label: 'Category',
     },
-    editListingPageConfig: {
+    saveConfig: {
       label: 'Category',
     },
   },
@@ -78,17 +78,17 @@ const listingExtendedDataConfig = [
       'rent-bicycles-hourly',
     ],
     schemaType: 'multi-enum',
-    schemaOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
-    indexForSearch: true,
-    searchPageConfig: {
+    enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
+    filterConfig: {
+      indexForSearch: true,
       label: 'Amenities',
       //searchMode: 'has_all',
       group: 'secondary',
     },
-    listingPageConfig: {
+    showConfig: {
       label: 'Category',
     },
-    editListingPageConfig: {
+    saveConfig: {
       label: 'Category',
     },
   },
@@ -125,7 +125,7 @@ const sortConfig = {
   ],
 };
 
-describe('SearchPageWithList', () => {
+describe('SearchPageWithGrid', () => {
   const props = {
     location: { search: '' },
     history: {
@@ -159,7 +159,9 @@ describe('SearchPageWithList', () => {
         listingTypes,
       },
       search: {
-        mainSearchType: 'location',
+        mainSearch: {
+          searchType: 'location',
+        },
         defaultFilters: defaultFiltersConfig,
         sortConfig: sortConfig,
       },
@@ -169,14 +171,14 @@ describe('SearchPageWithList', () => {
         },
       },
       layout: {
-        searchPageVariant: 'list',
+        searchPage: { variantType: 'grid' },
       },
     },
     routeConfiguration: getRouteConfiguration(),
   };
 
   test('Check that filterColumn exists', () => {
-    render(<SearchPageWithList {...props} />);
+    render(<SearchPageWithGrid {...props} />);
     const filterColumnAside = 'filterColumnAside';
     expect(screen.getByTestId(filterColumnAside)).toBeInTheDocument();
     const searchMapContainer = 'searchMapContainer';

@@ -126,8 +126,8 @@ const bookingDatesMaybe = bookingDates => {
 // Note: this is saved to protectedData of the transaction entity
 //       therefore, we don't need the process name (nor alias)
 const transactionTypeDataMaybe = (listingType, config) => {
-  const listingTypeConfig = config.listing.listingTypes.find(lt => lt.type === listingType);
-  const { process, alias, unitType, ...rest } = listingTypeConfig.transactionType;
+  const listingTypeConfig = config.listing.listingTypes.find(lt => lt.listingType === listingType);
+  const { process, alias, unitType, ...rest } = listingTypeConfig?.transactionType || {};
   return unitType ? { unitType, ...rest } : {};
 };
 

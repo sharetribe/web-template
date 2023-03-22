@@ -56,14 +56,14 @@ export const validURLParamForExtendedData = (
   );
 
   if (extendedDataFilterConfig) {
-    const { schemaType, schemaOptions = [], searchPageConfig } = extendedDataFilterConfig;
+    const { schemaType, enumOptions = [], filterConfig } = extendedDataFilterConfig;
     if ([SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM].includes(schemaType)) {
       const isSchemaTypeMultiEnum = schemaType === SCHEMA_TYPE_MULTI_ENUM;
-      const searchMode = searchPageConfig?.searchMode;
+      const searchMode = filterConfig?.searchMode;
 
       // Pick valid select options only
       const valueArray = parseSelectFilterOptions(paramValue);
-      const allowedValues = schemaOptions.map(o => `${o.option}`);
+      const allowedValues = enumOptions.map(o => `${o.option}`);
       const validValues = intersection(valueArray, allowedValues).join(',');
 
       return validValues.length > 0
@@ -91,7 +91,9 @@ export const validURLParamForExtendedData = (
  */
 export const validFilterParams = (params, listingExtendedDataConfig, defaultFiltersConfig) => {
   const paramEntries = Object.entries(params);
-  const extendedDataFilters = listingExtendedDataConfig.filter(config => config.indexForSearch);
+  const extendedDataFilters = listingExtendedDataConfig.filter(
+    config => config.filterConfig?.indexForSearch
+  );
   const extendedDataParamNames = extendedDataFilters.map(f =>
     constructQueryParamName(f.key, f.scope)
   );
@@ -129,7 +131,9 @@ export const validURLParamsForExtendedData = (
   listingExtendedDataConfig,
   defaultFiltersConfig
 ) => {
-  const extendedDataFilters = listingExtendedDataConfig.filter(config => config.indexForSearch);
+  const extendedDataFilters = listingExtendedDataConfig.filter(
+    config => config.filterConfig?.indexForSearch
+  );
   const extendedDataParamNames = extendedDataFilters.map(f =>
     constructQueryParamName(f.key, f.scope)
   );
@@ -339,12 +343,12 @@ export const groupExtendedDataConfigs = (configs, activeListingTypes) =>
   configs.reduce(
     (grouped, config) => {
       const [primary, secondary] = grouped;
-      const { includeForListingTypes, indexForSearch, searchPageConfig } = config;
-      const isIndexed = indexForSearch === true;
+      const { includeForListingTypes, filterConfig } = config;
+      const isIndexed = filterConfig?.indexForSearch === true;
       const isActiveListingTypes =
         includeForListingTypes == null ||
         includeForListingTypes.every(lt => activeListingTypes.includes(lt));
-      const isPrimary = searchPageConfig?.group === 'primary';
+      const isPrimary = filterConfig?.group === 'primary';
       return isActiveListingTypes && isIndexed && isPrimary
         ? [[...primary, config], secondary]
         : isActiveListingTypes && isIndexed

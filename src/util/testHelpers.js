@@ -51,23 +51,23 @@ export const getDefaultConfiguration = () => {
             'hourly-booking',
           ],
           schemaType: 'enum',
-          schemaOptions: [
+          enumOptions: [
             { option: 'city-bikes', label: 'City bikes' },
             { option: 'e-bikes', label: 'E-bikes' },
             { option: 'mtb', label: 'MTB' },
             { option: 'kids-bikes', label: 'Kids bikes' },
           ],
-          indexForSearch: true,
-          searchPageConfig: {
+          filterConfig: {
+            indexForSearch: true,
             filterType: 'SelectSingleFilter',
             label: 'Category',
             group: 'primary',
           },
-          listingPageConfig: {
+          showConfig: {
             label: 'Category',
             isDetail: true,
           },
-          editListingPageConfig: {
+          saveConfig: {
             label: 'Select category',
             placeholderMessage: 'Choose…',
             isRequired: true,
@@ -85,7 +85,7 @@ export const getDefaultConfiguration = () => {
             'hourly-booking',
           ],
           schemaType: 'enum',
-          schemaOptions: [
+          enumOptions: [
             { option: 29, label: '29' },
             { option: 28, label: '28' },
             { option: 27, label: '27' },
@@ -94,16 +94,16 @@ export const getDefaultConfiguration = () => {
             { option: 20, label: '20' },
             { option: 18, label: '18' },
           ],
-          indexForSearch: true,
-          searchPageConfig: {
+          filterConfig: {
+            indexForSearch: true,
             label: 'Tire size',
             group: 'secondary',
           },
-          listingPageConfig: {
+          showConfig: {
             label: 'Tire size',
             isDetail: true,
           },
-          editListingPageConfig: {
+          saveConfig: {
             label: 'Tire size',
             placeholderMessage: 'Choose…',
             isRequired: true,
@@ -120,7 +120,7 @@ export const getDefaultConfiguration = () => {
             'hourly-booking',
           ],
           schemaType: 'enum',
-          schemaOptions: [
+          enumOptions: [
             { option: 'cube', label: 'Cube' },
             { option: 'diamant', label: 'Diamant' },
             { option: 'ghost', label: 'GHOST' },
@@ -130,16 +130,16 @@ export const getDefaultConfiguration = () => {
             { option: 'otler', label: 'Otler' },
             { option: 'vermont', label: 'Vermont' },
           ],
-          indexForSearch: true,
-          searchPageConfig: {
+          filterConfig: {
+            indexForSearch: true,
             label: 'Brand',
             group: 'secondary',
           },
-          listingPageConfig: {
+          showConfig: {
             label: 'Brand',
             isDetail: true,
           },
-          editListingPageConfig: {
+          saveConfig: {
             label: 'Brand',
             placeholderMessage: 'Choose…',
             isRequired: true,
@@ -149,20 +149,20 @@ export const getDefaultConfiguration = () => {
       ],
       listingTypes: [
         {
-          type: 'rent-bicycles',
+          listingType: 'rent-bicycles',
           label: 'Rent bicycles',
           transactionType: {
             process: 'default-booking',
-            alias: 'release-1',
+            alias: 'default-booking/release-1',
             unitType: 'day',
           },
         },
         {
-          type: 'product-selling',
+          listingType: 'product-selling',
           label: 'Sell products',
           transactionType: {
             process: 'default-purchase',
-            alias: 'release-1',
+            alias: 'default-purchase/release-1',
             unitType: 'item',
           },
         },
@@ -170,15 +170,18 @@ export const getDefaultConfiguration = () => {
     },
     search: {
       ...defaultConfig.search,
-      mainSearchType: 'keywords',
+      mainSearch: {
+        searchType: 'keywords',
+      },
+      defaultFilters: [defaultConfig.search.dateRangeFilter, defaultConfig.search.priceFilter],
     },
   };
 };
 
 export const getRouteConfiguration = () => {
   const layoutConfig = {
-    searchPageVariant: 'map',
-    listingPageVariant: 'full-image',
+    searchPage: { variantType: 'map' },
+    listingPage: { variantType: 'carousel' },
     listingImage: {
       aspectWidth: 400,
       aspectHeight: 400,

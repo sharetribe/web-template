@@ -2,8 +2,8 @@ import routeConfiguration from '../routing/routeConfiguration';
 import { createResourceLocatorString, findRouteByRouteName, canonicalRoutePath } from './routes';
 
 const layoutConfig = {
-  searchPageVariant: 'map',
-  listingPageVariant: 'full-image',
+  searchPage: { variantType: 'map' },
+  listingPage: { variantType: 'carousel' },
 };
 
 describe('util/routes.js', () => {

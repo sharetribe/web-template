@@ -45,8 +45,8 @@ import {
   LayoutSingleColumn,
 } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
-import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
 import {
   sendInquiry,
@@ -321,7 +321,7 @@ export const ListingPageComponent = props => {
               intl={intl}
             />
             {listingConfig.listingExtendedData.reduce((pickedElements, config) => {
-              const { key, schemaOptions, scope = 'public' } = config;
+              const { key, enumOptions, scope = 'public' } = config;
               const value =
                 scope === 'public' ? publicData[key] : scope === 'metadata' ? metadata[key] : null;
               const hasValue = value !== null;
@@ -330,19 +330,15 @@ export const ListingPageComponent = props => {
                     ...pickedElements,
                     <SectionMultiEnumMaybe
                       key={key}
-                      heading={config?.listingPageConfig?.label}
-                      options={createFilterOptions(schemaOptions)}
+                      heading={config?.showConfig?.label}
+                      options={createFilterOptions(enumOptions)}
                       selectedOptions={value}
                     />,
                   ]
                 : hasValue && config.schemaType === SCHEMA_TYPE_TEXT
                 ? [
                     ...pickedElements,
-                    <SectionTextMaybe
-                      key={key}
-                      heading={config?.listingPageConfig?.label}
-                      text={value}
-                    />,
+                    <SectionTextMaybe key={key} heading={config?.showConfig?.label} text={value} />,
                   ]
                 : pickedElements;
             }, [])}

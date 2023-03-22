@@ -21,13 +21,13 @@ const listingExtendedDataConfig = [
     scope: 'public',
     includeForListingTypes: ['sell-bicycles'],
     schemaType: 'enum',
-    schemaOptions: [
+    enumOptions: [
       { option: 'men', label: 'Men' },
       { option: 'women', label: 'Women' },
       { option: 'kids', label: 'Kids' },
     ],
-    indexForSearch: true,
-    searchPageConfig: {
+    filterConfig: {
+      indexForSearch: true,
       label: 'Category',
       group: 'primary',
     },
@@ -37,9 +37,9 @@ const listingExtendedDataConfig = [
     scope: 'public',
     includeForListingTypes: ['sell-bicycles'],
     schemaType: 'enum',
-    schemaOptions: [{ option: 'smoke', label: 'Smoke' }, { option: 'wood', label: 'Wood' }],
-    indexForSearch: true,
-    searchPageConfig: {
+    enumOptions: [{ option: 'smoke', label: 'Smoke' }, { option: 'wood', label: 'Wood' }],
+    filterConfig: {
+      indexForSearch: true,
       label: 'Test',
       group: 'secondary',
     },
@@ -53,12 +53,9 @@ const listingExtendedDataConfig = [
       'rent-bicycles-hourly',
     ],
     schemaType: 'multi-enum',
-    schemaOptions: [
-      { option: 'towels', label: 'Towels' },
-      { option: 'bathroom', label: 'Bathroom' },
-    ],
-    indexForSearch: true,
-    searchPageConfig: {
+    enumOptions: [{ option: 'towels', label: 'Towels' }, { option: 'bathroom', label: 'Bathroom' }],
+    filterConfig: {
+      indexForSearch: true,
       label: 'Amenities',
       //searchMode: 'has_all',
       group: 'secondary',

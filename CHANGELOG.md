@@ -14,6 +14,17 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Refactor configurations to better work with upcoming config assets.
+
+  - SearchPage layout: 'map' and 'grid'
+  - SearchPageWithList renamed as SearchPageWithGrid
+  - ListingPage layout: 'carousel' and 'coverPhoto'
+  - ListingPageFullImage renamed as ListingPageCarousel
+  - ListingPageHeroImage renamed as ListingPageCoverPhoto
+  - Also other config files were affected
+
+  [#114](https://github.com/sharetribe/ftw-x/pull/114)
+
 - [fix] Remove dublicate ids from styleguide page.
   [#113](https://github.com/sharetribe/ftw-x/pull/113)
 - [change] Rename global duck files to start with lower case letter.

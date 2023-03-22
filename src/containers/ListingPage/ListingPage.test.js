@@ -27,8 +27,8 @@ import {
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { showListingRequest, showListingError, showListing } from './ListingPage.duck';
 
-import { ListingPageComponent as ListingPageHeroImageComponent } from './ListingPageHeroImage';
-import { ListingPageComponent as ListingPageFullImageComponent } from './ListingPageFullImage';
+import { ListingPageComponent as ListingPageCoverPhotoComponent } from './ListingPageCoverPhoto';
+import { ListingPageComponent as ListingPageCarouselComponent } from './ListingPageCarousel';
 import ActionBarMaybe from './ActionBarMaybe';
 
 const { UUID } = sdkTypes;
@@ -42,9 +42,11 @@ const listingConfig = {
       scope: 'public',
       includeForListingTypes: ['sell-bicycles'],
       schemaType: 'enum',
-      schemaOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
-      indexForSearch: true,
-      listingPageConfig: {
+      enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
+      filterConfig: {
+        indexForSearch: true,
+      },
+      showConfig: {
         label: 'Category',
         isDetail: true,
       },
@@ -58,13 +60,15 @@ const listingConfig = {
         'rent-bicycles-hourly',
       ],
       schemaType: 'multi-enum',
-      schemaOptions: [
+      enumOptions: [
         { option: 'feat_1', label: 'Feat 1' },
         { option: 'feat_2', label: 'Feat 2' },
         { option: 'feat_3', label: 'Feat 3' },
       ],
-      indexForSearch: true,
-      listingPageConfig: {
+      filterConfig: {
+        indexForSearch: true,
+      },
+      showConfig: {
         label: 'Amenities',
         searchMode: 'has_all',
         group: 'secondary',
@@ -123,8 +127,8 @@ describe('ListingPage variants', () => {
     routeConfiguration: getRouteConfiguration(),
   };
 
-  test('ListingPageHeroImage has hero section', () => {
-    render(<ListingPageHeroImageComponent {...props} />);
+  test('ListingPageCoverPhoto has hero section', () => {
+    render(<ListingPageCoverPhotoComponent {...props} />);
     expect(screen.getByTestId('hero')).toBeInTheDocument();
 
     const orderTitle = screen.queryAllByRole('heading', { name: 'ListingPage.orderTitle' });
@@ -137,8 +141,8 @@ describe('ListingPage variants', () => {
     ).toBeInTheDocument();
   });
 
-  test('ListingPageFullImage has no hero section', () => {
-    render(<ListingPageFullImageComponent {...props} />);
+  test('ListingPageCarousel has no hero section', () => {
+    render(<ListingPageCarouselComponent {...props} />);
     expect(screen.queryByTestId('hero')).not.toBeInTheDocument();
 
     const orderTitle = screen.queryAllByRole('heading', { name: 'ListingPage.orderTitle' });
