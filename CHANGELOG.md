@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Pages/SectionCarousel: show next card a bit on mobile (fix margin-right)
+  [#116](https://github.com/sharetribe/ftw-x/pull/116)
 - [change] refactor CSS Properties for Grey colors (remove --matterColor\*)
   [#115](https://github.com/sharetribe/ftw-x/pull/115)
 - [change] Refactor configurations to better work with upcoming config assets.
