@@ -44,8 +44,8 @@ import {
   LayoutSingleColumn,
 } from '../../components';
 
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
-import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
+import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
 import {
   sendInquiry,

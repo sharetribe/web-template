@@ -28,7 +28,7 @@ import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { showListingRequest, showListingError, showListing } from './ListingPage.duck';
 
 import { ListingPageComponent as ListingPageHeroImageComponent } from './ListingPageHeroImage';
-import { ListingPageComponent as ListingPageFullImageComponent } from './ListingPageFullImage';
+import { ListingPageComponent as ListingPageCarouselComponent } from './ListingPageCarousel';
 import ActionBarMaybe from './ActionBarMaybe';
 
 const { UUID } = sdkTypes;
@@ -141,8 +141,8 @@ describe('ListingPage variants', () => {
     ).toBeInTheDocument();
   });
 
-  test('ListingPageFullImage has no hero section', () => {
-    render(<ListingPageFullImageComponent {...props} />);
+  test('ListingPageCarousel has no hero section', () => {
+    render(<ListingPageCarouselComponent {...props} />);
     expect(screen.queryByTestId('hero')).not.toBeInTheDocument();
 
     const orderTitle = screen.queryAllByRole('heading', { name: 'ListingPage.orderTitle' });
