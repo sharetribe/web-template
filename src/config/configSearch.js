@@ -18,30 +18,31 @@ export const mainSearch = {
  * Configuration for default filters.
  * These are custom configs for each filter.
  * Common properties: key, schemaType, and label.
+ * Note: the order of default filters is defined in util/configHelpers.js
  */
-export const defaultFilters = [
-  {
-    key: 'dates',
-    schemaType: 'dates',
-    entireRangeAvailable: true,
-    // Options: day/night. This affects counting and whether single day picking is possible.
-    mode: 'day',
-  },
-  {
-    key: 'price',
-    schemaType: 'price',
-    // Note: unlike most prices this is not handled in subunits
-    min: 0,
-    max: 1000,
-    step: 5,
-  },
-  // // This is not in use by default.
-  // // Needs more thinking how it should work together with main search.
-  // {
-  //   key: 'keywords',
-  //   schemaType: 'text',
-  // },
-];
+
+export const dateRangeFilter = {
+  schemaType: 'dates',
+  // Should the entire date range be available, or just part of it
+  // Note: Since we don't enforce location search for dates filtering,
+  //       we don't use API's 'time-full' in actual queries. It would require time zone info.
+  availability: 'time-full', // time-partial
+  // Options: day/night. This affects counting and whether single day picking is possible.
+  dateRangeMode: 'day',
+};
+
+export const priceFilter = {
+  schemaType: 'price',
+  // Note: unlike most prices this is not handled in subunits
+  min: 0,
+  max: 1000,
+  step: 5,
+};
+// // This is not in use by default.
+// // Needs more thinking how it should work together with main search.
+// export const keywordsFilter = {
+//   schemaType: 'text',
+// }
 
 export const sortConfig = {
   // Enable/disable the sorting control in the SearchPage

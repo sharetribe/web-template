@@ -409,30 +409,52 @@ const validListingConfig = config => {
 //////////////////////////////
 
 const validDatesConfig = config => {
-  const label = typeof config.label === 'string' ? config.label : 'Dates';
-  const entireRangeAvailable =
-    typeof config.entireRangeAvailable === 'boolean' ? config.entireRangeAvailable : true;
-  const mode = ['day', 'night'].includes(config.mode) ? config.mode : 'day';
-  return { key: 'dates', schemaType: 'dates', label, entireRangeAvailable, mode };
+  const {
+    enabled = true,
+    label = 'Dates',
+    dateRangeMode = 'day',
+    availability = 'time-full',
+  } = config;
+  const isValidLabel = typeof label === 'string';
+  const isValidMode = ['day', 'night'].includes(dateRangeMode);
+  const isValidAvailability = ['time-full', 'time-partial'].includes(availability);
+
+  if (!(enabled && isValidLabel && isValidMode && isValidAvailability)) {
+    return null;
+  }
+
+  return { key: 'dates', schemaType: 'dates', label, availability, dateRangeMode };
 };
 
 const validPriceConfig = config => {
-  const label = typeof config.label === 'string' ? config.label : 'Price';
-  const min = typeof config.min === 'number' ? config.min : 0;
-  const max = typeof config.max === 'number' ? config.max : 1000;
-  const step = typeof config.step === 'number' ? config.step : 5;
-  return { key: 'price', schemaType: 'price', label, min, max, step };
+  const { enabled = true, label = 'Price', min = 0, max = 1000, step = 5 } = config;
+  const isValidLabel = typeof label === 'string';
+  const isValidMin = typeof min === 'number';
+  const isValidMax = typeof max === 'number';
+  const isValidStep = typeof step === 'number';
+
+  if (!(enabled && isValidLabel && isValidMin && isValidMax && isValidStep)) {
+    return null;
+  }
+
+  const isMaxBigger = max > min;
+  if (!isMaxBigger) {
+    console.error(`Price filter: min value (${min}) needs to be smaller than max (${max})`);
+  }
+  return isMaxBigger ? { key: 'price', schemaType: 'price', label, min, max, step } : null;
 };
 
 const validDefaultFilters = defaultFilters => {
-  return defaultFilters.filter(data => {
-    const key = data.key;
-    return key === 'dates'
-      ? validDatesConfig(data)
-      : key === 'price'
-      ? validPriceConfig(data)
-      : data;
-  });
+  return defaultFilters
+    .map(data => {
+      const schemaType = data.schemaType;
+      return schemaType === 'dates'
+        ? validDatesConfig(data)
+        : schemaType === 'price'
+        ? validPriceConfig(data)
+        : data;
+    })
+    .filter(Boolean);
 };
 
 //////////////////////////
@@ -451,11 +473,17 @@ const validSortConfig = config => {
 };
 
 const validSearchConfig = config => {
-  const { mainSearch, defaultFilters, sortConfig, ...rest } = config || {};
+  const { mainSearch, dateRangeFilter, priceFilter, keywordsFilter, sortConfig, ...rest } =
+    config || {};
   const searchType = ['location', 'keywords'].includes(mainSearch?.searchType)
     ? mainSearch?.searchType
     : 'keywords';
+  const keywordsFilterMaybe = keywordsFilter ? [keywordsFilter] : [];
 
+  // This will define the order of default filters
+  // The reason: later on, we'll add these default filters to config assets and
+  // there they'll be their own separate entities and not wrapped in an array.
+  const defaultFilters = [dateRangeFilter, priceFilter, ...keywordsFilterMaybe];
   return {
     mainSearch: { searchType },
     defaultFilters: validDefaultFilters(defaultFilters),

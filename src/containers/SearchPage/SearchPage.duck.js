@@ -131,8 +131,9 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     const datesFilter = config.search.defaultFilters.find(f => f.key === 'dates');
     const values = datesParam ? datesParam.split(',') : [];
     const hasValues = datesFilter && datesParam && values.length === 2;
-    const { mode, entireRangeAvailable } = datesFilter || {};
-    const isNightlyMode = mode === 'night';
+    const { dateRangeMode, availability } = datesFilter || {};
+    const isNightlyMode = dateRangeMode === 'night';
+    const isEntireRangeAvailable = availability === 'time-full';
 
     // SearchPage need to use a single time zone but listings can have different time zones
     // We need to expand/prolong the time window (start & end) to cover other time zones too.
@@ -155,7 +156,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
         ? getExclusiveEndDate(endRaw, searchTZ)
         : null;
 
-    const dayCount = entireRangeAvailable ? daysBetween(startDate, endDate) : 1;
+    const dayCount = isEntireRangeAvailable ? daysBetween(startDate, endDate) : 1;
     const day = 1440;
     const hour = 60;
     // When entire range is required to be available, we count minutes of included date range,
@@ -163,7 +164,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     // If partial range is needed, then we just make sure that the shortest time unit supported
     // is available within the range.
     // You might want to customize this to match with your time units (e.g. day: 1440 - 60)
-    const minDuration = entireRangeAvailable ? dayCount * day - hour : hour;
+    const minDuration = isEntireRangeAvailable ? dayCount * day - hour : hour;
     return hasValues
       ? {
           start: getProlongedStart(startDate),
