@@ -115,6 +115,12 @@ const validVariantConfig = (hostedVariant, defaultVariant, validVariantTypes, fa
   if (!isValidVariant) {
     console.warn('Unsupported layout option detected', variant);
   }
+  if (variant.variantType === 'cropImage') {
+    const [w, h] = variant.aspectRatio.split('/') || ['1', '1'];
+    const aspectWidth = Number.parseInt(w, 10);
+    const aspectHeight = Number.parseInt(h, 10);
+    return isValidVariant ? { ...variant, aspectWidth, aspectHeight } : fallback;
+  }
 
   return isValidVariant ? variant : fallback;
 };
@@ -134,6 +140,13 @@ const mergeLayouts = (layoutConfig, defaultLayout) => {
     { variantType: 'carousel' }
   );
 
+  const listingImage = validVariantConfig(
+    layoutConfig?.listingImage,
+    defaultLayout?.listingImage,
+    ['cropImage'],
+    { variantType: 'cropImage', aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' }
+  );
+
   const aspectWidth =
     layoutConfig?.listingImage?.aspectWidth || defaultLayout?.listingImage?.aspectWidth;
   const aspectHeight =
@@ -142,11 +155,7 @@ const mergeLayouts = (layoutConfig, defaultLayout) => {
   return {
     searchPage,
     listingPage,
-    listingImage: {
-      aspectWidth: aspectWidth || 1,
-      aspectHeight: aspectHeight || 1,
-      variantPrefix: defaultLayout.listingImage.variantPrefix,
-    },
+    listingImage,
   };
 };
 
