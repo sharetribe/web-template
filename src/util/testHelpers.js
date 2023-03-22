@@ -181,7 +181,7 @@ export const getDefaultConfiguration = () => {
 export const getRouteConfiguration = () => {
   const layoutConfig = {
     searchPage: { variantType: 'map' },
-    listingPageVariant: 'full-image',
+    listingPage: { variantType: 'carousel' },
     listingImage: {
       aspectWidth: 400,
       aspectHeight: 400,

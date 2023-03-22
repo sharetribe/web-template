@@ -64,7 +64,9 @@ const routeConfiguration = (layoutConfig) => {
   const SearchPage = layoutConfig.searchPage?.variantType === 'map' 
     ? SearchPageWithMap 
     : SearchPageWithGrid;
-  const ListingPage = layoutConfig.listingPageVariant === 'full-image' ? ListingPageFullImage : ListingPageHeroImage;
+  const ListingPage = layoutConfig.listingPage?.variantType === 'carousel' 
+    ? ListingPageFullImage 
+    : ListingPageHeroImage;
   
   return [
     {

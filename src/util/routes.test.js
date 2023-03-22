@@ -3,7 +3,7 @@ import { createResourceLocatorString, findRouteByRouteName, canonicalRoutePath }
 
 const layoutConfig = {
   searchPage: { variantType: 'map' },
-  listingPageVariant: 'full-image',
+  listingPage: { variantType: 'carousel' },
 };
 
 describe('util/routes.js', () => {
