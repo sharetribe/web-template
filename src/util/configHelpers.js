@@ -110,13 +110,15 @@ const mergeVariants = (page, defaultPage) => page?.variantType || defaultPage?.v
 
 const mergeLayouts = (layoutConfig, defaultLayout) => {
   const searchPageVariant = mergeVariants(layoutConfig?.searchPage, defaultLayout?.searchPage);
+  const isValidSearchPageVariant = ['map', 'grid'].includes(searchPageVariant);
+  const searchPageVariantType = isValidSearchPageVariant ? searchPageVariant : 'grid';
+
   const listingPageVariant = layoutConfig?.listingPageVariant || defaultLayout.listingPageVariant;
   const aspectWidth =
     layoutConfig?.listingImage?.aspectWidth || defaultLayout?.listingImage?.aspectWidth;
   const aspectHeight =
     layoutConfig?.listingImage?.aspectHeight || defaultLayout?.listingImage?.aspectHeight;
 
-  const isValidSearchPageVariant = ['map', 'grid'].includes(searchPageVariant);
   const isValidListingPageVariant = ['hero-image', 'full-image'].includes(listingPageVariant);
 
   if (!isValidSearchPageVariant) {
@@ -126,7 +128,7 @@ const mergeLayouts = (layoutConfig, defaultLayout) => {
   }
 
   return {
-    searchPageVariant: isValidSearchPageVariant ? searchPageVariant : 'grid',
+    searchPage: { variantType: searchPageVariantType },
     listingPageVariant: isValidListingPageVariant ? listingPageVariant : 'full-image',
     listingImage: {
       aspectWidth: aspectWidth || 1,

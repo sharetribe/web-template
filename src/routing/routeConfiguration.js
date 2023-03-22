@@ -31,7 +31,7 @@ const PrivacyPolicyPage = loadable(() => import(/* webpackChunkName: "PrivacyPol
 const ProfilePage = loadable(() => import(/* webpackChunkName: "ProfilePage" */ '../containers/ProfilePage/ProfilePage'));
 const ProfileSettingsPage = loadable(() => import(/* webpackChunkName: "ProfileSettingsPage" */ '../containers/ProfileSettingsPage/ProfileSettingsPage'));
 const SearchPageWithMap = loadable(() => import(/* webpackChunkName: "SearchPageWithMap" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithMap'));
-const SearchPageWithList = loadable(() => import(/* webpackChunkName: "SearchPageWithList" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithList'));
+const SearchPageWithGrid = loadable(() => import(/* webpackChunkName: "SearchPageWithGrid" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithGrid'));
 const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayoutPage" */ '../containers/StripePayoutPage/StripePayoutPage'));
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ '../containers/TermsOfServicePage/TermsOfServicePage'));
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
@@ -63,7 +63,7 @@ const RedirectToLandingPage = () => <NamedRedirect name="LandingPage" />;
 const routeConfiguration = (layoutConfig) => {
   const SearchPage = layoutConfig.searchPage?.variantType === 'map' 
     ? SearchPageWithMap 
-    : SearchPageWithList;
+    : SearchPageWithGrid;
   const ListingPage = layoutConfig.listingPageVariant === 'full-image' ? ListingPageFullImage : ListingPageHeroImage;
   
   return [
