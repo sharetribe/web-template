@@ -7,5 +7,5 @@
 }
 
 .strokeLightColor {
-  stroke: var(--matterColorLight);
+  stroke: var(--colorWhite);
 }

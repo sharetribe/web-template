@@ -50,7 +50,7 @@
 
 .fieldDisabled {
   background: none;
-  color: --matterColorNegative;
+  color: --colorGrey100;
 }
 
 .fieldDateInput {
@@ -120,8 +120,8 @@
 }
 
 .arrowIcon {
-  stroke: var(--matterColorLight);
-  fill: var(--matterColorLight);
+  stroke: var(--colorWhite);
+  fill: var(--colorWhite);
 }
 
 /**
@@ -156,7 +156,7 @@ Remember to do required code changes also in FieldDateAndTimeInput.js!
   }
 }
 .lineBetweenDisabled {
-  color: var(--matterColorNegative);
+  color: var(--colorGrey100);
 }
 
 /**

@@ -18,13 +18,13 @@
   composes: coverEverything;
 
   /* Overlay background style */
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
   opacity: 0.9;
 }
 
 .overlayContent {
   composes: h4 from global;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   /* Positioning */
   composes: coverEverything;

@@ -32,19 +32,19 @@
 }
 
 .clearButton {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   /* Layout */
   margin: 0 auto 0 0;
 
   &:focus,
   &:hover {
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 }
 
 .cancelButton {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   /* Layout */
   margin: 0;
@@ -56,7 +56,7 @@
 
   &:focus,
   &:hover {
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 }
 

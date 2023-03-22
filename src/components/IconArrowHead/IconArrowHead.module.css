@@ -1,4 +1,4 @@
 .root {
-  stroke: var(--matterColor);
-  fill: var(--matterColor);
+  stroke: var(--colorGrey700);
+  fill: var(--colorGrey700);
 }

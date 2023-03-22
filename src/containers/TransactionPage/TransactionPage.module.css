@@ -58,7 +58,7 @@
 
 .orderTitle {
   /* Font */
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   margin-top: 0;
   margin-bottom: 1px;
@@ -67,7 +67,7 @@
 .orderPanelTitle {
   /* Font */
   font-weight: var(--fontWeightBold);
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   /* Layout */
   width: 100%;

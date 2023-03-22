@@ -30,7 +30,7 @@
 
 .paymentHeading {
   margin: 0 0 14px 0;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   padding-top: 8px;
   padding-bottom: 0px;
@@ -41,7 +41,7 @@
 }
 
 .messageHeading {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   margin: 40px 0 14px 0;
 
   padding-top: 4px;
@@ -64,11 +64,11 @@
 }
 
 .messageOptional {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 }
 
 .message {
-  border-bottom-color: var(--matterColorAnti);
+  border-bottom-color: var(--colorGrey300);
 }
 
 .submitContainer {
@@ -82,7 +82,7 @@
 .infoText {
   composes: h5 from global;
 
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   padding: 0;
   margin: 14px 0 0 0;
 }

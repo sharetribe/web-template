@@ -10,7 +10,7 @@
   width: 24px;
   align-self: stretch;
   border-bottom: 2px solid var(--marketplaceColor);
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 }
 
 .iconSvg {
@@ -104,7 +104,7 @@ bottom of the container.
   padding: 14px 0;
 
   & li {
-    color: var(--matterColorLight);
+    color: var(--colorWhite);
     transition: var(--transitionStyleButton);
     margin: 0; /* Remove the double white space */
     line-height: 24px;
@@ -121,10 +121,10 @@ bottom of the container.
     &:hover,
     &.highlighted {
       cursor: pointer;
-      border-left: 6px solid var(--matterColorLight);
+      border-left: 6px solid var(--colorWhite);
       border-top-right-radius: 20px;
       border-bottom-right-radius: 20px;
-      color: var(--matterColorLight);
+      color: var(--colorWhite);
     }
   }
 }

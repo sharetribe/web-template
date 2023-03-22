@@ -16,7 +16,7 @@
   align-items: center;
 
   /* fill */
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   /* shadows */
   box-shadow: none;
@@ -44,9 +44,9 @@
   padding: 29px 24px 0 24px;
 
   border-top-width: 1px;
-  border-top-color: var(--matterColorNegative);
+  border-top-color: var(--colorGrey100);
   border-top-style: solid;
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
   box-shadow: var(--boxShadow);
 
   @media (--viewportMedium) {
@@ -174,7 +174,7 @@
 
   border-bottom-style: solid;
   border-bottom-width: 1px;
-  border-bottom-color: var(--matterColorNegative);
+  border-bottom-color: var(--colorGrey100);
 
   &:last-child {
     border-bottom: none;
@@ -253,7 +253,7 @@
 }
 
 .notificationDot {
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
 
   width: 100%;
   height: 100%;
@@ -267,7 +267,7 @@
   /* Font */
   composes: textSmall from global;
   font-weight: var(--fontWeightBold);
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   margin-top: 0;
   margin-bottom: 0;
@@ -282,7 +282,7 @@
 .itemTitle {
   composes: marketplaceTinyFontStyles from global;
   grid-area: item;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   margin-top: 0;
   margin-bottom: 0;
@@ -291,7 +291,7 @@
 .itemDetails {
   composes: marketplaceTinyFontStyles from global;
   grid-area: details;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   margin-top: 0;
   margin-bottom: 0;
@@ -334,15 +334,15 @@
 }
 
 .stateNoActionNeeded {
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 }
 
 .stateConcluded {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 }
 
 .bookingActionNeeded {
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   margin-top: 4px;
 
   @media (--viewportMedium) {
@@ -351,22 +351,22 @@
 }
 
 .bookingNoActionNeeded {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 }
 
 .lastTransitionedAtEmphasized {
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   font-weight: var(--fontWeightMedium);
 }
 
 .lastTransitionedAtNotEmphasized {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 }
 
 .bannedUserLink {
   & .itemUsername,
   &:hover .itemUsername,
   & .stateName {
-    color: var(--matterColorAnti);
+    color: var(--colorGrey300);
   }
 }

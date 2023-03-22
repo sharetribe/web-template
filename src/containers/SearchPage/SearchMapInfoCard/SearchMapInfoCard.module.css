@@ -40,9 +40,9 @@
   min-height: 120px;
 
   /* Font */
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   /* Dimensions */
   padding: 0;
@@ -63,7 +63,7 @@
 }
 
 .aspectratioWrapper {
-  background: var(--matterColorNegative); /* Loading BG color */
+  background: var(--colorGrey100); /* Loading BG color */
 }
 
 .rootForImage {
@@ -95,7 +95,7 @@
 
 .paginationInfo {
   background-color: var(--marketplaceColor);
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -176,12 +176,12 @@
   transform: rotate(45deg);
 
   /* Caret should have same bg-color and border as label */
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
   border-right-style: solid;
-  border-right-color: var(--matterColorNegative);
+  border-right-color: var(--colorGrey100);
   border-right-width: 1px;
   border-bottom-style: solid;
-  border-bottom-color: var(--matterColorNegative);
+  border-bottom-color: var(--colorGrey100);
   border-bottom-width: 1px;
 }
 

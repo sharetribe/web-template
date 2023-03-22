@@ -14,7 +14,7 @@
 }
 
 .spinner {
-  stroke: var(--matterColorLight);
+  stroke: var(--colorWhite);
   width: 18px;
   height: 18px;
   stroke-width: 4px;
@@ -25,7 +25,7 @@
 }
 
 .strokeMatter {
-  stroke: var(--matterColor);
+  stroke: var(--colorGrey700);
 }
 
 .submitContainer {

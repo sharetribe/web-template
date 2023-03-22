@@ -126,28 +126,28 @@ const MarketplaceColors = () => {
         <div className={css.colorsGroup}>
           <ColorCard
             mpColor={css.matterColorDarkBackground}
-            name="--matterColorDark"
-            usage="color: var(--matterColorDark);"
+            name="--colorBlack"
+            usage="color: var(--colorBlack);"
           />
           <ColorCard
             mpColor={css.matterColorBackground}
             name="--matterColor"
-            usage="color: var(--matterColor);"
+            usage="color: var(--colorGrey700);"
           />
           <ColorCard
             mpColor={css.matterColorAntiBackground}
-            name="--matterColorAnti"
-            usage="color: var(--matterColorAnti);"
+            name="--colorGrey300"
+            usage="color: var(--colorGrey300);"
           />
           <ColorCard
             mpColor={css.matterColorNegativeBackground}
-            name="--matterColorNegative"
-            usage="color: var(--matterColorNegative);"
+            name="--colorGrey100"
+            usage="color: var(--colorGrey100);"
           />
           <ColorCard
             mpColor={css.matterColorLightBackground}
             name="--matterColorLight"
-            usage="color: var(--matterColorLight);"
+            usage="color: var(--colorWhite);"
           />
         </div>
       </div>

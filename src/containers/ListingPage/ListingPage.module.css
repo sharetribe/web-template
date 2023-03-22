@@ -39,7 +39,7 @@
 
 .imageWrapperForSectionHero {
   composes: heroHeight;
-  background-color: var(--matterColorNegative); /* Loading BG color */
+  background-color: var(--colorGrey100); /* Loading BG color */
 
   /* Image carousel can be opened from the image, therefore we should show a pointer */
   cursor: pointer;
@@ -49,8 +49,8 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  color: var(--matterColorNegative);
-  background-color: var(--matterColor);
+  color: var(--colorGrey100);
+  background-color: var(--colorGrey700);
   z-index: 1; /* bring on top of mobile image */
 
   /* Action bar prevents the image click events going to the parent and
@@ -114,12 +114,12 @@
   flex-shrink: 0;
   margin: 0;
   padding: 14px 24px 11px 12px;
-  color: var(--matterColorNegative);
+  color: var(--colorGrey100);
 
   transition: var(--transitionStyleButton);
 
   &:hover {
-    color: var(--matterColorLight);
+    color: var(--colorWhite);
     text-decoration: none;
   }
 
@@ -161,7 +161,7 @@
   padding: 8px 13px 6px 13px;
 
   /* Colors */
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   /* Borders */
   border: none;
@@ -172,7 +172,7 @@
 
   &:hover {
     background-color: var(--marketplaceColor);
-    color: var(--matterColorLight);
+    color: var(--colorWhite);
   }
 
   @media (--viewportMedium) {
@@ -283,7 +283,7 @@
     display: block;
     margin-top: 80px;
     margin-left: 60px;
-    border-left: 1px solid var(--matterColorNegative);
+    border-left: 1px solid var(--colorGrey100);
     padding-left: 60px;
     flex-basis: 312px;
     flex-shrink: 0;
@@ -383,7 +383,7 @@
 .desktopPerUnit {
   /* Font */
   composes: h5 from global;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   @media (--viewportMedium) {
     margin-top: 0;
@@ -404,7 +404,7 @@
 .title {
   /* Font */
   composes: marketplaceModalTitleStyles from global;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   /* Layout */
   width: 100%;
@@ -426,13 +426,13 @@
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 0;
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 }
 
 .authorNameLink {
   composes: textSmall from global;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 }
 
 .contactWrapper {
@@ -585,7 +585,7 @@
   font-weight: var(--fontWeightRegular);
 
   &:not(:last-child) {
-    border-bottom: 1px solid var(--matterColorNegative);
+    border-bottom: 1px solid var(--colorGrey100);
   }
 
   @media (--viewportMedium) {
@@ -622,7 +622,7 @@
   left: 0;
   right: 0;
   padding: 24px;
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   @media (--viewportMedium) {
     position: static;

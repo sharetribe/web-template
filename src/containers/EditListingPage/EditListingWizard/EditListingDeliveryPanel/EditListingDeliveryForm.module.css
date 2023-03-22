@@ -31,7 +31,7 @@
 }
 
 .disabled {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 }
 
 .locationAutocompleteInput {

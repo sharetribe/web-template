@@ -161,7 +161,7 @@
 .darkTheme h4,
 .darkTheme h5,
 .darkTheme h6 {
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
 
   &::selection {
     background-color: cyan;
@@ -202,16 +202,16 @@
 }
 
 .darkTheme hr {
-  border-color: var(--matterColor);
+  border-color: var(--colorGrey700);
 }
 
 /* dark inline code */
 .darkTheme code {
-  background-color: var(--matterColor);
-  color: var(--matterColorNegative);
+  background-color: var(--colorGrey700);
+  color: var(--colorGrey100);
 }
 
 /* dark code block */
 .darkTheme pre {
-  background-color: var(--matterColor);
+  background-color: var(--colorGrey700);
 }

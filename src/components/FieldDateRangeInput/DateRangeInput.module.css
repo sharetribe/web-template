@@ -98,7 +98,7 @@
   }
 
   & :global(.DayPickerNavigation_button) {
-    color: var(--matterColorLight);
+    color: var(--colorWhite);
     border: 0;
   }
 
@@ -111,7 +111,7 @@
     width: 100%;
   }
   & :global(.DayPicker_weekHeader) {
-    color: var(--matterColorLight);
+    color: var(--colorWhite);
     top: 57px;
   }
 
@@ -127,7 +127,7 @@
     font-weight: var(--fontWeightRegular);
     font-size: 21px;
     line-height: 24px;
-    color: var(--matterColorLight);
+    color: var(--colorWhite);
     margin: 1px 0 14px;
 
     @media (--viewportMedium) {
@@ -150,7 +150,7 @@
     line-height: 24px;
     letter-spacing: 0;
 
-    color: var(--matterColorLight);
+    color: var(--colorWhite);
     border: 0;
     margin-top: 0;
     margin-bottom: 0;
@@ -236,7 +236,7 @@
     background-color: var(--successColor);
     border-top-right-radius: calc(var(--DateRangeInput_selectionHeight) / 2);
     border-bottom-right-radius: calc(var(--DateRangeInput_selectionHeight) / 2);
-    color: var(--matterColorLight);
+    color: var(--colorWhite);
   }
   & :global(.CalendarDay:hover .renderedDay) {
     display: flex;
@@ -312,6 +312,6 @@
 }
 
 .arrowIcon {
-  stroke: var(--matterColorLight);
-  fill: var(--matterColorLight);
+  stroke: var(--colorWhite);
+  fill: var(--colorWhite);
 }

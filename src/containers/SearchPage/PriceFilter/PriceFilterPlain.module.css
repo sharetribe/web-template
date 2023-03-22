@@ -4,7 +4,7 @@
   position: relative;
   padding-top: 24px;
   padding-bottom: 17px;
-  border-bottom: 1px solid var(--matterColorNegative);
+  border-bottom: 1px solid var(--colorGrey100);
 
   @media (--viewportMedium) {
     padding-top: 16px;
@@ -39,7 +39,7 @@
 }
 
 .label {
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 }
 
 .labelSelected {
@@ -85,7 +85,7 @@
   margin: 0;
   display: block;
   font-weight: var(--fontWeightMedium);
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   /* Override button styles */
   outline: none;
@@ -95,7 +95,7 @@
 
   &:focus,
   &:hover {
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 
   @media (--viewportMedium) {

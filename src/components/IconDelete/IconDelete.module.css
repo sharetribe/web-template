@@ -1,5 +1,5 @@
 .root {
-  stroke: var(--matterColorAnti);
+  stroke: var(--colorGrey300);
   transition: var(--transitionStyleButton);
 
   &:hover {

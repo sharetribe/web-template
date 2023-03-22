@@ -20,7 +20,7 @@
   justify-content: center;
 
   /* fill */
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   /* shadows */
   box-shadow: var(--boxShadow);

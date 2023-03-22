@@ -1,7 +1,7 @@
 .root {
   padding-top: 24px;
   padding-bottom: 17px;
-  border-bottom: 1px solid var(--matterColorNegative);
+  border-bottom: 1px solid var(--colorGrey100);
 }
 
 .filterLabel,
@@ -15,7 +15,7 @@
 }
 
 .filterLabel {
-  color: var(--matterColorDark);
+  color: var(--colorBlack);
 }
 
 .filterLabelSelected {
@@ -53,20 +53,20 @@
 /* left animated "border" like hover element */
 .optionBorder {
   width: 0;
-  background-color: var(--matterColorDark);
+  background-color: var(--colorBlack);
 }
 
 /* left static border for selected element */
 .optionBorderSelected {
   width: 8px;
-  background-color: var(--matterColorDark);
+  background-color: var(--colorBlack);
 }
 
 .option {
   composes: h4 from global;
   font-weight: var(--fontWeightMedium);
   font-size: 18px;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   /* Layout */
   display: block;
@@ -81,7 +81,7 @@
 
   &:focus,
   &:hover {
-    color: var(--matterColorDark);
+    color: var(--colorBlack);
   }
 
   &:hover .menuItemBorder {
@@ -89,12 +89,12 @@
   }
 
   &:disabled {
-    color: var(--matterColorAnti);
+    color: var(--colorGrey300);
     cursor: default;
   }
 }
 
 .optionSelected {
   composes: option;
-  color: var(--matterColorDark);
+  color: var(--colorBlack);
 }

@@ -181,7 +181,7 @@
   margin-right: calc(2 * var(--spacingUnit));
   overflow: hidden;
 
-  border: 1px solid var(--matterColorNegative);
+  border: 1px solid var(--colorGrey100);
 }
 
 .color {
@@ -239,25 +239,25 @@
 
 .matterColorBackground {
   composes: color;
-  background-color: var(--matterColor);
+  background-color: var(--colorGrey700);
 }
 
 .matterColorAntiBackground {
   composes: color;
-  background-color: var(--matterColorAnti);
+  background-color: var(--colorGrey300);
 }
 
 .matterColorDarkBackground {
   composes: color;
-  background-color: var(--matterColorDark);
+  background-color: var(--colorBlack);
 }
 
 .matterColorNegativeBackground {
   composes: color;
-  background-color: var(--matterColorNegative);
+  background-color: var(--colorGrey100);
 }
 
 .matterColorLightBackground {
   composes: color;
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 }
