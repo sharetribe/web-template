@@ -27,7 +27,7 @@ import {
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { showListingRequest, showListingError, showListing } from './ListingPage.duck';
 
-import { ListingPageComponent as ListingPageHeroImageComponent } from './ListingPageHeroImage';
+import { ListingPageComponent as ListingPageCoverPhotoComponent } from './ListingPageCoverPhoto';
 import { ListingPageComponent as ListingPageCarouselComponent } from './ListingPageCarousel';
 import ActionBarMaybe from './ActionBarMaybe';
 
@@ -127,8 +127,8 @@ describe('ListingPage variants', () => {
     routeConfiguration: getRouteConfiguration(),
   };
 
-  test('ListingPageHeroImage has hero section', () => {
-    render(<ListingPageHeroImageComponent {...props} />);
+  test('ListingPageCoverPhoto has hero section', () => {
+    render(<ListingPageCoverPhotoComponent {...props} />);
     expect(screen.getByTestId('hero')).toBeInTheDocument();
 
     const orderTitle = screen.queryAllByRole('heading', { name: 'ListingPage.orderTitle' });
