@@ -159,7 +159,9 @@ describe('SearchPageWithList', () => {
         listingTypes,
       },
       search: {
-        mainSearchType: 'location',
+        mainSearch: {
+          searchType: 'location',
+        },
         defaultFilters: defaultFiltersConfig,
         sortConfig: sortConfig,
       },

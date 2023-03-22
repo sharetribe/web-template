@@ -170,7 +170,9 @@ export const getDefaultConfiguration = () => {
     },
     search: {
       ...defaultConfig.search,
-      mainSearchType: 'keywords',
+      mainSearch: {
+        searchType: 'keywords',
+      },
     },
   };
 };

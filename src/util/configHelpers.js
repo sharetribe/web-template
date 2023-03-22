@@ -451,13 +451,13 @@ const validSortConfig = config => {
 };
 
 const validSearchConfig = config => {
-  const { mainSearchType: mainSearchTypeRaw, defaultFilters, sortConfig, ...rest } = config || {};
-  const mainSearchType = ['location', 'keywords'].includes(mainSearchTypeRaw)
-    ? mainSearchTypeRaw
+  const { mainSearch, defaultFilters, sortConfig, ...rest } = config || {};
+  const searchType = ['location', 'keywords'].includes(mainSearch?.searchType)
+    ? mainSearch?.searchType
     : 'keywords';
 
   return {
-    mainSearchType,
+    mainSearch: { searchType },
     defaultFilters: validDefaultFilters(defaultFilters),
     sortConfig: validSortConfig(sortConfig),
     ...rest,
