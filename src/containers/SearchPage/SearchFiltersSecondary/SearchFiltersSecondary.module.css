@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: var(--matterColorBright);
+  background-color: var(--colorGrey50);
 }
 
 .filtersWrapper {
@@ -67,7 +67,7 @@
 }
 .resetAllButton {
   composes: filterButton;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   /* Layout */
   margin: 0 auto 0 0;
@@ -77,13 +77,13 @@
 
   &:focus,
   &:hover {
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 }
 
 .cancelButton {
   composes: filterButton;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   /* Layout */
   margin: 0 24px 0 24px;
@@ -93,7 +93,7 @@
 
   &:focus,
   &:hover {
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 }
 

@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: var(--matterColorBright);
+  background-color: var(--colorGrey50);
 
   /* sticky result summary in mobile */
   position: sticky;
@@ -19,7 +19,7 @@
   display: flex;
   justify-content: space-between;
 
-  background-color: var(--matterColorBright);
+  background-color: var(--colorGrey50);
 
   @media (--viewportMedium) {
     margin-top: 8px;
@@ -54,7 +54,7 @@
 
 .modalHeadingWrapper {
   padding-bottom: 31px;
-  border-bottom: 1px solid var(--matterColorNegative);
+  border-bottom: 1px solid var(--colorGrey100);
 }
 
 .modalHeading {
@@ -65,7 +65,7 @@
 .resetAllButton {
   composes: h5 from global;
   font-weight: var(--fontWeightMedium);
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   /* Layout */
   display: inline;
@@ -80,7 +80,7 @@
 
   &:focus,
   &:hover {
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 }
 
@@ -99,7 +99,7 @@
   width: 100vw;
   padding: 18px 24px;
 
-  background: var(--matterColorLight);
+  background: var(--colorWhite);
   box-shadow: 0 -2px 4px 0 rgba(0, 0, 0, 0.1);
   z-index: 11;
 }

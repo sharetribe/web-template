@@ -82,7 +82,7 @@
 }
 .editVerificationButton {
   composes: h4 from global;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   font-weight: var(--fontWeightNormal);
   min-height: 46px;
   margin: 0;
@@ -91,7 +91,7 @@
   &:hover,
   &:focus {
     outline: none;
-    color: var(--matterColorDark);
+    color: var(--colorBlack);
   }
 }
 
@@ -100,7 +100,7 @@
 }
 
 .iconEditPencil {
-  stroke: var(--matterColor);
+  stroke: var(--colorGrey700);
 }
 
 .spinner {

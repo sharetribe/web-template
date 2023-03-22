@@ -67,7 +67,7 @@
   justify-content: center;
 
   /* Initial coloring */
-  background-color: var(--matterColorBright);
+  background-color: var(--colorGrey50);
   border-radius: calc(var(--ProfileSettingsForm_avatarSize) / 2);
   cursor: pointer;
 
@@ -81,13 +81,13 @@
 .avatarPlaceholder {
   /* Placeholder border */
   border-style: dashed;
-  border-color: var(--matterColorNegative);
+  border-color: var(--colorGrey100);
   border-width: 2px;
 
   transition: var(--transitionStyleButton);
 
   &:hover {
-    border-color: var(--matterColorAnti);
+    border-color: var(--colorGrey300);
   }
 }
 
@@ -146,11 +146,11 @@
   padding: 11px 10px 7px 35px;
 
   /* Look and feel (buttonish) */
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
   background-image: url('data:image/svg+xml;utf8,<svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg"><g stroke="%234A4A4A" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"><path d="M5.307 11.155L1 13l1.846-4.308L10.54 1 13 3.46zM11 5L9 3M5 11L3 9"/></g></svg>');
   background-repeat: no-repeat;
   background-position: 15px 12px;
-  border: solid 1px var(--matterColorNegative);
+  border: solid 1px var(--colorGrey100);
   border-radius: 2px;
 
   margin-top: 0;
@@ -167,7 +167,7 @@
   }
 
   &:hover {
-    border: solid 1px var(--matterColorAnti);
+    border: solid 1px var(--colorGrey300);
   }
 }
 
@@ -178,7 +178,7 @@
 
   /* Image fitted to container */
   object-fit: cover;
-  background-color: var(--matterColorNegative); /* Loading BG color */
+  background-color: var(--colorGrey100); /* Loading BG color */
   border-radius: calc(var(--ProfileSettingsForm_avatarSize) / 2);
   overflow: hidden;
 
@@ -202,7 +202,7 @@
   left: 0;
 
   /* Overlay style */
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
   opacity: 0.8;
 
   /* Center content */
@@ -220,7 +220,7 @@
 
 .tip {
   composes: marketplaceDefaultFontStyles from global;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   margin-top: 0;
   margin-bottom: 12px;
 
@@ -232,7 +232,7 @@
 
 .fileInfo {
   composes: h5 from global;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   margin-top: 0;
   margin-bottom: 0;
   padding-top: 5px;
@@ -265,7 +265,7 @@
 
 .bioInfo {
   composes: textSmall from global;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   margin-top: 11px;
 
   @media (--viewportMedium) {

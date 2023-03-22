@@ -11,7 +11,7 @@
     flex-basis: 576px;
     height: unset;
     padding: var(--modalPaddingMedium);
-    background-color: var(--matterColorLight);
+    background-color: var(--colorWhite);
     margin-top: 12.5vh;
     margin-bottom: 12.5vh;
   }
@@ -40,7 +40,7 @@
 
 .heading {
   /* Font */
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   /* Layout */
   width: 100%;
@@ -96,7 +96,7 @@
   @media (--viewportMedium) {
     width: 100%;
     margin: 12px 0 36px 0;
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 }
 
@@ -136,7 +136,7 @@
 
 .orderTitle {
   /* Font */
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   margin-top: 0;
   margin-bottom: 2px;
@@ -151,7 +151,7 @@
   display: none;
 
   @media (--viewportMedium) {
-    color: var(--matterColor);
+    color: var(--colorGrey700);
     display: block;
     margin-top: 0;
   }
@@ -182,7 +182,7 @@
   left: 0;
   width: 100vw;
   padding: 18px 24px 18px 16px;
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
   box-shadow: var(--boxShadowTop);
   display: flex;
 
@@ -260,7 +260,7 @@
 }
 
 .closedListingButton {
-  border-left: 1px solid var(--matterColorNegative);
+  border-left: 1px solid var(--colorGrey100);
   width: 100%;
   padding: 15px 24px 15px 24px;
   text-align: center;

@@ -4,8 +4,8 @@
   padding: 0.2rem 0.5rem;
   margin: 0 0.2rem;
   white-space: nowrap;
-  background-color: var(--matterColorNegative);
-  border: 1px solid var(--matterColorAnti);
+  background-color: var(--colorGrey100);
+  border: 1px solid var(--colorGrey300);
   border-radius: 4px;
 }
 
@@ -13,8 +13,8 @@
   display: block;
   margin: 8px 0;
   padding: 8px;
-  background-color: var(--matterColorNegative);
-  border: 1px solid var(--matterColorAnti);
+  background-color: var(--colorGrey100);
+  border: 1px solid var(--colorGrey300);
   border-radius: 4px;
   overflow-x: auto;
 

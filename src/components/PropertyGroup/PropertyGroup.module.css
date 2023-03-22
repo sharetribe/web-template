@@ -55,7 +55,7 @@
 }
 
 .notSelectedLabel {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   position: relative;
   text-decoration: line-through;
 }

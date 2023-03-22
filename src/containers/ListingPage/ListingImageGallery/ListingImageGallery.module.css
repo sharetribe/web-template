@@ -42,17 +42,17 @@
 }
 
 :global(.image-gallery-slide-wrapper) {
-  background-color: var(--matterColorLight);
-  border-bottom: 1px solid var(--matterColorNegative);
+  background-color: var(--colorWhite);
+  border-bottom: 1px solid var(--colorGrey100);
 
   @media (--viewportMedium) {
     border-radius: var(--borderRadiusMedium);
-    border: 1px solid var(--matterColorNegative);
+    border: 1px solid var(--colorGrey100);
   }
 }
 
 :global(.fullscreen) {
-  background-color: var(--matterColorLight) !important;
+  background-color: var(--colorWhite) !important;
 
   & :global(.image-gallery-slide-wrapper) {
     background-color: transparent;
@@ -79,7 +79,7 @@
 }
 
 .noImage {
-  border: 1px solid var(--matterColorNegative);
+  border: 1px solid var(--colorGrey100);
   border-radius: var(--borderRadiusMedium);
 }
 
@@ -180,10 +180,10 @@
   padding: 8px 13px 6px 13px;
 
   /* Colors */
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   /* Borders */
-  border: 1px solid var(--matterColorNegative);
+  border: 1px solid var(--colorGrey100);
   border-radius: var(--borderRadius);
 
   cursor: pointer;
@@ -195,7 +195,7 @@
   &:hover {
     background-color: var(--marketplaceColor);
     border-color: var(--marketplaceColor);
-    color: var(--matterColorLight);
+    color: var(--colorWhite);
   }
 
   @media (--viewportLarge) {
@@ -206,12 +206,12 @@
 .close {
   composes: marketplaceModalCloseStyles from global;
 
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   transition: var(--transitionStyleButton);
 
   &:enabled:hover,
   &:enabled:active {
-    color: var(--matterColorDark);
+    color: var(--colorBlack);
   }
 }
 

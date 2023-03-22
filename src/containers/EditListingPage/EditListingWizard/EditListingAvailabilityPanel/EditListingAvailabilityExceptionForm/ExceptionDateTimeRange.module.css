@@ -41,7 +41,7 @@
 
 .fieldDisabled {
   background: none;
-  color: var(--matterColorNegative);
+  color: var(--colorGrey100);
 }
 
 .fieldDateInput {

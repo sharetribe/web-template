@@ -30,7 +30,7 @@
   composes: coverEverything;
 
   /* Overlay */
-  background-color: var(--matterColorAnti);
+  background-color: var(--colorGrey300);
   mix-blend-mode: overlay;
   opacity: 0;
   transition: var(--transitionStyleButton);
@@ -58,7 +58,7 @@
   /* Layout - image will take space defined by aspect ratio wrapper */
   composes: coverEverything;
   width: 100%;
-  border: solid 1px var(--matterColorNegative);
+  border: solid 1px var(--colorGrey100);
   border-radius: var(--borderRadiusMedium);
 }
 
@@ -104,7 +104,7 @@
 
 .iconWrapper {
   padding: 0px 10px 1px 10px;
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
   border-radius: var(--borderRadiusMedium);
   transition: var(--transitionStyleButton);
 
@@ -116,7 +116,7 @@
 .listingMenuIsOpen {
   & .iconWrapper {
     background-color: rgba(0, 0, 0, 0.7);
-    color: var(--matterColorLight);
+    color: var(--colorWhite);
   }
 }
 
@@ -125,7 +125,7 @@
   right: 0;
   z-index: var(--zIndexPopup);
 
-  background-color: var(--matterColor);
+  background-color: var(--colorGrey700);
   border-radius: var(--borderRadiusMedium);
   box-shadow: var(--boxShadowPopup);
 }
@@ -144,7 +144,7 @@
   line-height: 18px;
   letter-spacing: 0;
 
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
   white-space: nowrap;
   text-align: left;
   padding: 8px 14px;
@@ -169,10 +169,10 @@
 }
 
 .menuItemDisabled {
-  color: var(--matterColorNegative);
+  color: var(--colorGrey100);
 
   &:hover {
-    color: var(--matterColorNegative);
+    color: var(--colorGrey100);
   }
 }
 
@@ -224,7 +224,7 @@
 .perUnit {
   /* Font */
   composes: marketplaceTinyFontStyles from global;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   /* Remove default margins from font */
   margin-top: 0;
@@ -269,7 +269,7 @@
   font-weight: var(--fontWeightSemiBold);
   line-height: 24px;
 
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   text-align: left;
 
   padding: 3px 0;
@@ -299,7 +299,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: var(--matterColor);
+  background-color: var(--colorGrey700);
 }
 
 .edit {
@@ -368,12 +368,12 @@
 
 .manageLink {
   text-decoration: underline;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   white-space: pre;
 
   &:hover {
     text-decoration: underline;
-    color: var(--matterColorDark);
+    color: var(--colorBlack);
   }
 }
 

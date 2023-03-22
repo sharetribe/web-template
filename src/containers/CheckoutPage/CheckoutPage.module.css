@@ -13,7 +13,7 @@
   justify-content: center;
 
   /* fill */
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   /* shadows */
   box-shadow: var(--boxShadow);
@@ -59,7 +59,7 @@
 
 .aspectWrapper {
   position: relative;
-  background-color: var(--matterColorNegative); /* Loading BG color */
+  background-color: var(--colorGrey100); /* Loading BG color */
 
   @media (--viewportLarge) {
     display: none;
@@ -170,7 +170,7 @@
 
 .priceBreakdownTitle {
   /* Font */
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   margin-top: 0;
   margin-bottom: 14px;
@@ -246,15 +246,15 @@
     margin: 56px 0 24px 0;
 
     /* Coloring */
-    background-color: var(--matterColorLight);
-    border: 1px solid var(--matterColorNegative);
+    background-color: var(--colorWhite);
+    border: 1px solid var(--colorGrey100);
     border-radius: 2px;
   }
 }
 
 .detailsAspectWrapper {
   position: relative;
-  background-color: var(--matterColorNegative); /* Loading BG color */
+  background-color: var(--colorGrey100); /* Loading BG color */
 }
 
 .detailsHeadings {
@@ -300,7 +300,7 @@
   margin: 12px 0 5px 0;
 
   border: none;
-  background-color: var(--matterColorNegative);
+  background-color: var(--colorGrey100);
 
   @media (--viewportMedium) {
     margin: 7px 0 0 0;

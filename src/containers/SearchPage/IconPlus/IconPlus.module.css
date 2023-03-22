@@ -2,7 +2,7 @@
   display: inline-block;
   position: relative;
   width: 11px;
-  stroke: var(--matterColor);
+  stroke: var(--colorGrey700);
 }
 
 .horizontalLine {

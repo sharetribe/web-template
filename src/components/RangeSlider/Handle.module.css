@@ -23,7 +23,7 @@
   height: 20px;
   border: 2px solid var(--marketplaceColor);
   border-radius: 50%;
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
   cursor: pointer;
 
   &:hover  {

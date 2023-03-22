@@ -22,7 +22,7 @@
   left: 0;
   width: 100vw;
   padding: 24px;
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
   box-shadow: var(--boxShadowTop);
 }
 
@@ -54,7 +54,7 @@
   font-size: 18px;
   line-height: 24px;
 
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   /* Position component */
   width: initial;
@@ -134,7 +134,7 @@
 }
 
 .currentPage {
-  color: var(--matterColorDark);
+  color: var(--colorBlack);
 
   /* black left border */
   border-left: 5px solid black;

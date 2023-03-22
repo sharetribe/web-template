@@ -57,7 +57,7 @@
   max-width: 408px;
   margin: 62px auto 0 auto;
 
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
   border-bottom: 4px solid var(--marketplaceColor);
   box-shadow: var(--boxShadowNotFoundPageSearch);
 

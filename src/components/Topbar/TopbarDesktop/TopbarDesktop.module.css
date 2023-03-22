@@ -14,7 +14,7 @@
   padding: 0 12px 0 0;
 
   /* fill */
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   /* shadows */
   box-shadow: var(--boxShadowLight);
@@ -41,7 +41,7 @@
   margin-right: 24px;
   border-left-style: solid;
   border-left-width: 1px;
-  border-left-color: var(--matterColorNegative);
+  border-left-color: var(--colorGrey100);
 
   @media (--viewportLarge) {
     padding-left: 0;
@@ -53,7 +53,7 @@
   font-size: 15px;
   line-height: 24px;
   letter-spacing: 0;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   display: inline-block;
   margin: 28px 0;
@@ -122,14 +122,14 @@
   font-size: 14px;
   line-height: 18px;
   letter-spacing: 0;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   height: 100%;
   padding: 0 12px 0 12px;
   margin: 0;
 
   &:hover {
-    color: var(--matterColorDark);
+    color: var(--colorBlack);
     border-bottom: 4px solid var(--marketplaceColor);
     border-radius: 0;
     text-decoration: none;
@@ -228,10 +228,10 @@
   height: 100%;
   padding: 0 12px 0 12px;
 
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   &:hover {
-    color: var(--matterColorDark);
+    color: var(--colorBlack);
     border-bottom: 4px solid var(--marketplaceColor);
     border-radius: 0;
     text-decoration: none;
@@ -246,10 +246,10 @@
   height: 100%;
   padding: 0 12px 0 12px;
 
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   &:hover {
-    color: var(--matterColorDark);
+    color: var(--colorBlack);
     border-bottom: 4px solid var(--marketplaceColor);
     border-radius: 0;
     text-decoration: none;
@@ -287,12 +287,12 @@
   padding: 4px 24px;
 
   /* Layout details */
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   text-align: left;
   transition: var(--transitionStyleButton);
 
   &:hover {
-    color: var(--matterColorDark);
+    color: var(--colorBlack);
     text-decoration: none;
 
     & .menuItemBorder {
@@ -326,7 +326,7 @@
   padding: 20px 24px;
 
   /* Layout details */
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   text-align: left;
   white-space: nowrap;
   transition: var(--transitionStyleButton);
@@ -335,11 +335,11 @@
   border: none;
   border-top-width: 1px;
   border-top-style: solid;
-  border-top-color: var(--matterColorNegative);
+  border-top-color: var(--colorGrey100);
 
   &:hover {
     cursor: pointer;
-    color: var(--matterColorDark);
+    color: var(--colorBlack);
     text-decoration: none;
 
     & .menuItemBorder {
@@ -358,17 +358,17 @@
 }
 
 .currentPage {
-  color: var(--matterColorDark);
+  color: var(--colorBlack);
   position: relative;
 
   & .menuItemBorder {
     width: 6px;
-    background-color: var(--matterColorDark);
+    background-color: var(--colorBlack);
   }
 
   &:hover {
     & .menuItemBorder {
-      background-color: var(--matterColorDark);
+      background-color: var(--colorBlack);
     }
   }
 }

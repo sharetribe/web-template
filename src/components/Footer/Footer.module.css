@@ -4,11 +4,11 @@
   position: relative;
   border-top-style: solid;
   border-top-width: 1px;
-  border-top-color: var(--matterColorNegative);
+  border-top-color: var(--colorGrey100);
 
   width: 100%;
   padding: 24px 24px 42px 24px;
-  background-color: var(--matterColorBright);
+  background-color: var(--colorGrey50);
   position: relative;
 
   @media (--viewportMedium) {
@@ -33,7 +33,7 @@
 
     border-top-style: solid;
     border-top-width: 1px;
-    border-top-color: var(--matterColorNegative);
+    border-top-color: var(--colorGrey100);
   }
 }
 
@@ -138,7 +138,7 @@
 }
 
 .copyrightLink {
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   transition: var(--transitionStyleButton);
 
   &:hover {
@@ -177,7 +177,7 @@
   /* Font */
   composes: h5 from global;
   line-height: 20px;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   transition: var(--transitionStyleButton);
 
   margin-top: 0;
@@ -261,7 +261,7 @@
 .terms {
   /* Font */
   composes: marketplaceTinyFontStyles from global;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   transition: var(--transitionStyleButton);
 
   margin-top: 0;
@@ -295,7 +295,7 @@
   justify-content: space-between;
   align-items: flex-end;
 
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   @media (--viewportMedium) {
     display: none;
@@ -305,7 +305,7 @@
 .organizationCopyrightMobile {
   /* Font */
   composes: marketplaceTinyFontStyles from global;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   transition: var(--transitionStyleButton);
 
   /* Tell parent component how much space this one prefers */

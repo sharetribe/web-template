@@ -1,7 +1,7 @@
 @import '../../styles/customMediaQueries.css';
 
 .root {
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 }
 .content {
   width: calc(100% - 48px);

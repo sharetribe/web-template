@@ -17,10 +17,10 @@
   /* Layout */
   min-width: 300px;
   margin-top: 7px;
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   /* Borders */
-  border-top: 1px solid var(--matterColorNegative);
+  border-top: 1px solid var(--colorGrey100);
   box-shadow: var(--boxShadowPopup);
   border-radius: var(--borderRadiusMedium);
   transition: var(--transitionStyleButton);

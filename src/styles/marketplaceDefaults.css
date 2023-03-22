@@ -34,13 +34,20 @@
   --bannedColorLight: var(--marketplaceColorLight);
   --bannedColorDark: var(--marketplaceColor);
 
-  --matterColorDark: #000000;
-  --matterColorAlmostDark: #1d1d1f;
-  --matterColor: #4a4a4a;
-  --matterColorAnti: #b2b2b2;
-  --matterColorNegative: #e7e7e7;
-  --matterColorBright: #fbfbfb;
-  --matterColorLight: #ffffff;
+  /* B&W and Grey palette */
+
+  --colorWhite: hsl(0 0% 100%);
+  --colorGrey50: hsl(240 3% 98%);
+  --colorGrey100: hsl(240 3% 90%);
+  --colorGrey200: hsl(240 3% 80%);
+  --colorGrey300: hsl(240 3% 70%);
+  --colorGrey400: hsl(240 3% 60%);
+  --colorGrey500: hsl(240 3% 50%);
+  --colorGrey600: hsl(240 3% 40%);
+  --colorGrey700: hsl(240 3% 30%);
+  --colorGrey800: hsl(240 3% 20%);
+  --colorGrey900: hsl(240 3% 10%);
+  --colorBlack: hsl(0 0% 0%);
 
   --matterColorLightTransparent: rgba(255, 255, 255, 0.65);
 
@@ -174,17 +181,17 @@ body {
   text-rendering: optimizeSpeed;
   font-optical-sizing: auto;
 
-  background-color: var(--matterColorBright);
+  background-color: var(--colorGrey50);
 }
 
 ::selection {
   background: var(--marketplaceColor); /* WebKit/Blink Browsers */
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
 }
 
 ::-moz-selection {
   background: var(--marketplaceColor); /* Gecko Browsers */
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
 }
 
 a {
@@ -355,7 +362,7 @@ pre {
 
 html {
   /* font is set earlier */
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   padding: 0;
   margin: 0;
   scroll-padding-top: calc(var(--topbarHeight) + 1px);
@@ -450,7 +457,7 @@ select {
   background-size: 8px 14px;
 
   &::placeholder {
-    color: var(--matterColorAnti);
+    color: var(--colorGrey300);
   }
 
   @media (--viewportMedium) {
@@ -499,7 +506,7 @@ textarea {
   transition: all ease-in-out 100ms;
 
   &::placeholder {
-    color: var(--matterColorAnti);
+    color: var(--colorGrey300);
   }
 
   @media (--viewportMedium) {
@@ -849,7 +856,7 @@ textarea {
   transition: all ease-in-out 100ms;
 
   &::placeholder {
-    color: var(--matterColorAnti);
+    color: var(--colorGrey300);
   }
 
   @media (--viewportMedium) {
@@ -959,7 +966,7 @@ textarea {
   /* Button colors */
   /* Default button uses marketplace color */
   background-color: var(--marketplaceColor);
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
 }
 .buttonDefault:focus,
 .buttonDefault:hover {
@@ -971,8 +978,8 @@ textarea {
   box-shadow: none;
   cursor: not-allowed;
   text-decoration: none;
-  background-color: var(--matterColorNegative);
-  color: var(--matterColorLight);
+  background-color: var(--colorGrey100);
+  color: var(--colorWhite);
 }
 
 /**
@@ -1010,7 +1017,7 @@ textarea {
   /* Button colors */
   /* Primary button uses success color */
   background-color: var(--successColor);
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
 
   @media (--viewportMedium) {
     padding: 20px 0 20px 0;
@@ -1021,7 +1028,7 @@ textarea {
   outline: none;
   box-shadow: var(--boxShadowButton);
   background-color: var(--successColorDark);
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
 }
 .buttonPrimary:hover {
   text-decoration: none;
@@ -1029,8 +1036,8 @@ textarea {
 .buttonPrimary:disabled {
   box-shadow: none;
   cursor: not-allowed;
-  background-color: var(--matterColorNegative);
-  color: var(--matterColor);
+  background-color: var(--colorGrey100);
+  color: var(--colorGrey700);
 }
 
 /**
@@ -1058,7 +1065,7 @@ textarea {
   border-radius: var(--borderRadiusMedium);
 
   background-color: var(--successColor);
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
 
   @media (--viewportMedium) {
     line-height: 16px;
@@ -1070,13 +1077,13 @@ textarea {
   box-shadow: var(--boxShadowButton);
   text-decoration: none;
   background-color: var(--successColorDark);
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
 }
 .buttonPrimaryInline:disabled {
   box-shadow: none;
   cursor: not-allowed;
-  background-color: var(--matterColorNegative);
-  color: var(--matterColor);
+  background-color: var(--colorGrey100);
+  color: var(--colorGrey700);
 }
 
 /**
@@ -1109,12 +1116,12 @@ textarea {
   /* Secondary button has clear borders */
   border-width: 1px;
   border-style: solid;
-  border-color: var(--matterColorNegative);
+  border-color: var(--colorGrey100);
   border-radius: var(--borderRadiusMedium);
 
   /* Button colors: secondary */
-  background-color: var(--matterColorLight);
-  color: var(--matterColor);
+  background-color: var(--colorWhite);
+  color: var(--colorGrey700);
 
   @media (--viewportMedium) {
     padding: 20px 0 20px 0;
@@ -1124,8 +1131,8 @@ textarea {
 .buttonSecondary:hover {
   outline: none;
   box-shadow: var(--boxShadowButton);
-  border-color: var(--matterColorAnti);
-  background-color: var(--matterColorLight);
+  border-color: var(--colorGrey300);
+  background-color: var(--colorWhite);
 }
 .buttonSecondary:hover {
   text-decoration: none;
@@ -1133,9 +1140,9 @@ textarea {
 .buttonSecondary:disabled {
   box-shadow: none;
   cursor: not-allowed;
-  border-color: var(--matterColorNegative);
-  background-color: var(--matterColorNegative);
-  color: var(--matterColorLight);
+  border-color: var(--colorGrey100);
+  background-color: var(--colorGrey100);
+  color: var(--colorWhite);
 }
 
 /**
@@ -1172,12 +1179,12 @@ textarea {
   /* Secondary button has clear borders */
   border-width: 1px;
   border-style: solid;
-  border-color: var(--matterColorNegative);
+  border-color: var(--colorGrey100);
   border-radius: var(--borderRadiusMedium);
 
   /* Button colors: secondary */
-  background-color: var(--matterColorLight);
-  color: var(--matterColor);
+  background-color: var(--colorWhite);
+  color: var(--colorGrey700);
 
   @media (--viewportMedium) {
     height: 40px;
@@ -1187,8 +1194,8 @@ textarea {
 .buttonSecondaryInline:hover {
   outline: none;
   box-shadow: var(--boxShadowButton);
-  border-color: var(--matterColorAnti);
-  background-color: var(--matterColorLight);
+  border-color: var(--colorGrey300);
+  background-color: var(--colorWhite);
 }
 .buttonSecondaryInline:hover {
   text-decoration: none;
@@ -1196,7 +1203,7 @@ textarea {
 .buttonSecondaryInline:disabled {
   box-shadow: none;
   cursor: not-allowed;
-  border-color: var(--matterColorNegative);
+  border-color: var(--colorGrey100);
 }
 
 /* ================ Modals ================ */
@@ -1233,7 +1240,7 @@ textarea {
   flex-direction: column;
   padding: var(--modalPadding);
 
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
   border-radius: var(--borderRadius);
   border-bottom: none;
 
@@ -1260,7 +1267,7 @@ textarea {
   height: 100vh;
   padding: 0;
 
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
   border-radius: var(--borderRadius);
 
   @media (--viewportMedium) {
@@ -1327,7 +1334,7 @@ textarea {
 
   -webkit-font-smoothing: subpixel-antialiased;
 
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   margin: 0;
 
   @media (--viewportMedium) {
@@ -1343,7 +1350,7 @@ textarea {
 
   -webkit-font-smoothing: subpixel-antialiased;
 
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   margin: 0;
 
   @media (--viewportMedium) {
@@ -1380,19 +1387,19 @@ textarea {
 
   /* Colors */
   background-color: transparent;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   cursor: pointer;
 }
 .marketplaceModalCloseStyles:enabled:hover {
   background-color: transparent;
-  color: var(--matterColorDark);
+  color: var(--colorBlack);
   box-shadow: none;
   text-decoration: none;
 }
 .marketplaceModalCloseStyles:enabled:active {
   background-color: transparent;
-  color: var(--matterColorDark);
+  color: var(--colorBlack);
 }
 .marketplaceModalCloseStyles:disabled {
   background-color: transparent;

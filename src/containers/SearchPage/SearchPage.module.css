@@ -102,7 +102,7 @@
 .resetAllButton {
   composes: h5 from global;
   font-weight: var(--fontWeightMedium);
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   /* Layout */
   display: inline;
@@ -117,7 +117,7 @@
 
   &:focus,
   &:hover {
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 
   @media (--viewportMedium) {
@@ -139,10 +139,10 @@
      * and left padding together with border should be 60px.
      */
     padding: 24px 24px 0 24px;
-    background-color: var(--matterColorLight);
+    background-color: var(--colorWhite);
     border-left-width: 1px;
     border-left-style: solid;
-    border-left-color: var(--matterColorNegative);
+    border-left-color: var(--colorGrey100);
   }
 
   @media (--viewportLarge) {

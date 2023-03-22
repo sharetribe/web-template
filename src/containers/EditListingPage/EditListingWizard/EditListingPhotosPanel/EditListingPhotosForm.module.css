@@ -19,7 +19,7 @@
 
 .thumbnail {
   width: 100%;
-  background-color: var(--matterColorBright);
+  background-color: var(--colorGrey50);
 }
 
 .addImageWrapper {
@@ -53,14 +53,14 @@
   margin-top: 0;
 
   /* Colors */
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   @media (--viewportLarge) {
-    background-color: var(--matterColorBright);
+    background-color: var(--colorGrey50);
   }
 
   border-style: dashed;
-  border-color: var(--matterColorNegative);
+  border-color: var(--colorGrey100);
   border-width: 2px;
   border-radius: 2px;
 
@@ -69,7 +69,7 @@
   transition: var(--transitionStyleButton);
 
   &:hover {
-    border-color: var(--matterColorAnti);
+    border-color: var(--colorGrey300);
   }
 }
 
@@ -81,7 +81,7 @@
 
 .chooseImage {
   composes: h4 from global;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   font-weight: var(--fontWeightSemiBold);
 
   margin-top: 0;
@@ -96,7 +96,7 @@
 
 .imageTypes {
   composes: marketplaceTinyFontStyles from global;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   margin-top: 0;
   margin-bottom: 0;
@@ -115,7 +115,7 @@
   composes: h5 from global;
 
   flex-shrink: 0;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   margin-top: 24px;
   margin-bottom: 60px;
 
