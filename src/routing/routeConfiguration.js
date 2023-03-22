@@ -21,7 +21,7 @@ const EmailVerificationPage = loadable(() => import(/* webpackChunkName: "EmailV
 const InboxPage = loadable(() => import(/* webpackChunkName: "InboxPage" */ '../containers/InboxPage/InboxPage'));
 const LandingPage = loadable(() => import(/* webpackChunkName: "LandingPage" */ '../containers/LandingPage/LandingPage'));
 const ListingPageHeroImage = loadable(() => import(/* webpackChunkName: "ListingPageHeroImage" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageHeroImage'));
-const ListingPageFullImage = loadable(() => import(/* webpackChunkName: "ListingPageFullImage" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageFullImage'));
+const ListingPageCarousel = loadable(() => import(/* webpackChunkName: "ListingPageCarousel" */ /* webpackPrefetch: true */ '../containers/ListingPage/ListingPageCarousel'));
 const ManageListingsPage = loadable(() => import(/* webpackChunkName: "ManageListingsPage" */ '../containers/ManageListingsPage/ManageListingsPage'));
 const PasswordChangePage = loadable(() => import(/* webpackChunkName: "PasswordChangePage" */ '../containers/PasswordChangePage/PasswordChangePage'));
 const PasswordRecoveryPage = loadable(() => import(/* webpackChunkName: "PasswordRecoveryPage" */ '../containers/PasswordRecoveryPage/PasswordRecoveryPage'));
@@ -65,7 +65,7 @@ const routeConfiguration = (layoutConfig) => {
     ? SearchPageWithMap 
     : SearchPageWithGrid;
   const ListingPage = layoutConfig.listingPage?.variantType === 'carousel' 
-    ? ListingPageFullImage 
+    ? ListingPageCarousel 
     : ListingPageHeroImage;
   
   return [
