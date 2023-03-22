@@ -24,7 +24,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  border-bottom: 1px solid var(--matterColorNegative);
+  border-bottom: 1px solid var(--colorGrey100);
 
   @media (--viewportLarge) {
     flex-direction: column;
@@ -101,7 +101,7 @@
 
 .listingsContainer {
   composes: clearfix from global;
-  border-top: 1px solid var(--matterColorNegative);
+  border-top: 1px solid var(--colorGrey100);
   padding-bottom: 23px;
 
   @media (--viewportMedium) {
@@ -110,7 +110,7 @@
 }
 
 .listingsTitle {
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   margin-bottom: 0;
 
   @media (--viewportMedium) {
@@ -128,7 +128,7 @@
   border-top: none;
 
   @media (--viewportLarge) {
-    border-top: 1px solid var(--matterColorNegative);
+    border-top: 1px solid var(--colorGrey100);
   }
 }
 
@@ -174,12 +174,12 @@
 }
 
 .mobileReviews {
-  border-top: 1px solid var(--matterColorNegative);
+  border-top: 1px solid var(--colorGrey100);
   margin-bottom: 36px;
 }
 
 .desktopReviews {
-  border-top: 1px solid var(--matterColorNegative);
+  border-top: 1px solid var(--colorGrey100);
 
   @media (--viewportMedium) {
     margin-bottom: 48px;

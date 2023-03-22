@@ -21,7 +21,7 @@
   &:focus + label .notChecked,
   &:focus + label .required,
   &:checked + label .required {
-    stroke: var(--matterColorDark);
+    stroke: var(--colorBlack);
   }
 
   &:checked + label .notChecked {
@@ -32,7 +32,7 @@
   &:focus + label .text,
   &:hover + label .text,
   &:checked + label .text {
-    color: var(--matterColorDark);
+    color: var(--colorBlack);
   }
 }
 
@@ -70,7 +70,7 @@
 }
 
 .notChecked {
-  stroke: var(--matterColorAnti);
+  stroke: var(--colorGrey300);
   &:hover {
     stroke: pink;
   }
@@ -85,7 +85,7 @@
 
 .text {
   composes: marketplaceListingAttributeFontStyles from global;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   margin-top: -1px;
   margin-bottom: 1px;
   cursor: pointer;

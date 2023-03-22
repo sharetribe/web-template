@@ -20,7 +20,7 @@
   align-items: center;
 
   /* fill */
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   /* shadows */
   box-shadow: var(--boxShadow);
@@ -39,7 +39,7 @@
 .searchMenu {
   /* Font */
   composes: h5 from global;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   /* Layout */
   display: flex;
@@ -89,7 +89,7 @@
 
   /* Style: red dot with white border */
   background-color: var(--failColor);
-  border: 2px solid var(--matterColorLight);
+  border: 2px solid var(--colorWhite);
 
   animation-name: notificationPop;
   animation-duration: 0.1s;
@@ -122,10 +122,10 @@
 
 /* Icon component styles */
 .rootMenuIcon {
-  fill: var(--matterColor);
+  fill: var(--colorGrey700);
 }
 .rootSearchIcon {
-  stroke: var(--matterColor);
+  stroke: var(--colorGrey700);
 }
 
 .searchContainer {
@@ -135,7 +135,7 @@
 }
 
 .mobileHelp {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   margin: 0 24px;
 
   /* Absolute position to avoid affecting the layout of the autocomplete
@@ -241,7 +241,7 @@
   composes: h5 from global;
   font-weight: var(--fontWeightSemiBold);
   margin: 0;
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
 
   @media (--viewportMedium) {
     margin: 0;

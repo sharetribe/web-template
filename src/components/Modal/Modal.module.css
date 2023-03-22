@@ -12,7 +12,7 @@
 
     /* Add default background color to avoid bouncing scroll showing the
    page contents from behind the modal. */
-    background-color: var(--matterColorLight);
+    background-color: var(--colorWhite);
 
     /* Additional styles for the modal window, dimming the background and positioning the modal */
     min-height: 100vh;
@@ -39,7 +39,7 @@
     flex-direction: column;
     padding: var(--modalPadding);
 
-    background-color: var(--matterColorLight);
+    background-color: var(--colorWhite);
     border-radius: var(--borderRadius);
     border-bottom: none;
 
@@ -111,12 +111,12 @@
 }
 
 .closeLight {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   transition: var(--transitionStyleButton);
 
   &:enabled:hover,
   &:enabled:active {
-    color: var(--matterColorLight);
+    color: var(--colorWhite);
   }
 }
 

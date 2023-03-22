@@ -24,10 +24,10 @@
 
   padding-top: 10px;
   padding-bottom: 13px;
-  border-top: solid 1px var(--matterColorNegative);
+  border-top: solid 1px var(--colorGrey100);
 
   &:last-child {
-    border-bottom: solid 1px var(--matterColorNegative);
+    border-bottom: solid 1px var(--colorGrey100);
   }
 
   @media (--viewportMedium) {
@@ -37,7 +37,7 @@
 }
 
 .hasEntries {
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 }
 
 .dayToggle {
@@ -105,12 +105,12 @@
   composes: marketplaceModalCloseIcon from global;
 
   stroke: none;
-  fill: var(--matterColorAnti);
+  fill: var(--colorGrey300);
   /* align icon with the select fields */
   padding: 5px 0 7px 0;
 
   &:hover {
-    fill: var(--matterColor);
+    fill: var(--colorGrey700);
   }
 
   @media (--viewportMedium) {
@@ -125,7 +125,7 @@
 
 .plus1Day {
   composes: marketplaceTinyFontStyles from global;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   visibility: hidden;
   opacity: 0;
   padding: 5px 0 1px 0;
@@ -143,7 +143,7 @@
 
 .buttonAddNew {
   composes: h5 from global;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
 
   @media (--viewportMedium) {
     margin-bottom: 6px;
@@ -162,5 +162,5 @@
   }
 }
 .notSelected {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 }

@@ -34,8 +34,8 @@
 
 .rootNextMonthIcon,
 .rootPreviousMonthIcon {
-  stroke: var(--matterColorLight);
-  fill: var(--matterColorLight);
+  stroke: var(--colorWhite);
+  fill: var(--colorWhite);
 }
 
 .submitButton {

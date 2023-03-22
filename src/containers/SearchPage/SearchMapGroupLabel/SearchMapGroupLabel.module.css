@@ -16,7 +16,7 @@
       /* Same as active */
       background-color: var(--marketplaceColor);
       border-color: var(--marketplaceColor);
-      color: var(--matterColorLight);
+      color: var(--colorWhite);
       box-shadow: var(--boxShadowPopup);
     }
   }
@@ -38,13 +38,13 @@
   padding: 6px 14px;
 
   /* Coloring */
-  background-color: var(--matterColorLight);
-  color: var(--matterColor);
+  background-color: var(--colorWhite);
+  color: var(--colorGrey700);
 
   /* Borders */
   border-radius: 19px;
   border-style: solid;
-  border-color: var(--matterColorNegative);
+  border-color: var(--colorGrey100);
   border-width: 1px;
   box-shadow: var(--boxShadowPopupLight);
 
@@ -61,7 +61,7 @@
   /* Same as hover */
   background-color: var(--marketplaceColor);
   border-color: var(--marketplaceColor);
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
   box-shadow: var(--boxShadowPopup);
 }
 
@@ -90,7 +90,7 @@
   transform: rotate(45deg);
 
   /* Caret should have same bg-color as label */
-  background-color: var(--matterColorLight);
+  background-color: var(--colorWhite);
 
   transition: var(--transitionStyleButton);
 }

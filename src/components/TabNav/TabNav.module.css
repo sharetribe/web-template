@@ -25,7 +25,7 @@
   /* Font */
   composes: textSmall from global;
 
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   padding-bottom: 10px;
   padding-top: 10px;
 
@@ -42,7 +42,7 @@
 
   &:hover {
     text-decoration: none;
-    color: var(--matterColorDark);
+    color: var(--colorBlack);
   }
 
   @media (--viewportLarge) {
@@ -66,8 +66,8 @@
 }
 
 .selectedLink {
-  border-bottom-color: var(--matterColorDark);
-  color: var(--matterColorDark);
+  border-bottom-color: var(--colorBlack);
+  color: var(--colorBlack);
 
   @media (--viewportLarge) {
     width: var(--TabNav_linkWidth);
@@ -83,6 +83,6 @@
 
 .disabled {
   pointer-events: none;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   text-decoration: none;
 }

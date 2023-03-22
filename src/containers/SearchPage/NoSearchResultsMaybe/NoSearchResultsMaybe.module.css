@@ -32,7 +32,7 @@
 
   &:focus,
   &:hover {
-    color: var(--matterColor);
+    color: var(--colorGrey700);
   }
 
   @media (--viewportMedium) {

@@ -14,7 +14,7 @@
     var(--marketplaceColorLight) 0%,
     var(--marketplaceColor) 100%
   );
-  color: var(--matterColorLight);
+  color: var(--colorWhite);
 
   &:hover {
     text-decoration: none;

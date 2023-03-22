@@ -114,7 +114,7 @@
   margin: 12px 0 5px 0;
 
   border: none;
-  background-color: var(--matterColorNegative);
+  background-color: var(--colorGrey100);
 
   @media (--viewportMedium) {
     margin: 7px 0 0px 0;
@@ -129,7 +129,7 @@
   composes: marketplaceTinyFontStyles from global;
   flex-shrink: 0;
   margin: 0;
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
   padding-top: 4px;
   padding-bottom: 14px;
 

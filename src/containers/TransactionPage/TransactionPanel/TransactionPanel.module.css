@@ -52,7 +52,7 @@
   display: none;
   width: 100%;
   position: relative;
-  background-color: var(--matterColorNegative); /* Loading BG color */
+  background-color: var(--colorGrey100); /* Loading BG color */
 
   @media (--viewportLarge) {
     display: block;
@@ -97,7 +97,7 @@
 /* Passed-in props for DetailCardImage subcomponent */
 .imageWrapperMobile {
   position: relative;
-  background-color: var(--matterColorNegative); /* Loading BG color */
+  background-color: var(--colorGrey100); /* Loading BG color */
 
   @media (--viewportLarge) {
     display: none;
@@ -241,8 +241,8 @@
 
 .detailCard {
   @media (--viewportLarge) {
-    background-color: var(--matterColorLight);
-    border: 1px solid var(--matterColorNegative);
+    background-color: var(--colorWhite);
+    border: 1px solid var(--colorGrey100);
     border-radius: 2px;
   }
 }
@@ -282,7 +282,7 @@
 /* AddressLinkMaybe subcomponent */
 .address {
   composes: h5 from global;
-  color: var(--matterColor);
+  color: var(--colorGrey700);
   margin: 0;
 }
 
@@ -322,7 +322,7 @@
   margin: 12px 24px 5px 24px;
 
   border: none;
-  background-color: var(--matterColorNegative);
+  background-color: var(--colorGrey100);
 
   @media (--viewportMedium) {
     margin: 7px 48px 0 48px;
@@ -418,7 +418,7 @@
 }
 
 .sendingMessageNotAllowed {
-  color: var(--matterColorAnti);
+  color: var(--colorGrey300);
 
   position: relative;
   margin: 46px 24px 0 24px;
