@@ -8,7 +8,7 @@ import {
   getRouteConfiguration,
 } from '../../util/testHelpers';
 
-import { SearchPageComponent as SearchPageWithList } from './SearchPageWithList';
+import { SearchPageComponent as SearchPageWithGrid } from './SearchPageWithGrid';
 import { SearchPageComponent as SearchPageWithMap } from './SearchPageWithMap';
 
 const { screen } = testingLibrary;
@@ -125,7 +125,7 @@ const sortConfig = {
   ],
 };
 
-describe('SearchPageWithList', () => {
+describe('SearchPageWithGrid', () => {
   const props = {
     location: { search: '' },
     history: {
@@ -178,7 +178,7 @@ describe('SearchPageWithList', () => {
   };
 
   test('Check that filterColumn exists', () => {
-    render(<SearchPageWithList {...props} />);
+    render(<SearchPageWithGrid {...props} />);
     const filterColumnAside = 'filterColumnAside';
     expect(screen.getByTestId(filterColumnAside)).toBeInTheDocument();
     const searchMapContainer = 'searchMapContainer';
