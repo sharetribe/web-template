@@ -125,28 +125,63 @@ const MarketplaceColors = () => {
         </div>
         <div className={css.colorsGroup}>
           <ColorCard
-            mpColor={css.matterColorDarkBackground}
+            mpColor={css.colorBlack}
             name="--colorBlack"
             usage="color: var(--colorBlack);"
           />
           <ColorCard
-            mpColor={css.matterColorBackground}
-            name="--matterColor"
+            mpColor={css.colorGrey900}
+            name="--colorGrey900"
+            usage="color: var(--colorGrey900);"
+          />
+          <ColorCard
+            mpColor={css.colorGrey800}
+            name="--colorGrey800"
+            usage="color: var(--colorGrey800);"
+          />
+          <ColorCard
+            mpColor={css.colorGrey700}
+            name="--colorGrey700"
             usage="color: var(--colorGrey700);"
           />
           <ColorCard
-            mpColor={css.matterColorAntiBackground}
+            mpColor={css.colorGrey600}
+            name="--colorGrey600"
+            usage="color: var(--colorGrey600);"
+          />
+          <ColorCard
+            mpColor={css.colorGrey500}
+            name="--colorGrey500"
+            usage="color: var(--colorGrey500);"
+          />
+          <ColorCard
+            mpColor={css.colorGrey400}
+            name="--colorGrey400"
+            usage="color: var(--colorGrey400);"
+          />
+          <ColorCard
+            mpColor={css.colorGrey300}
             name="--colorGrey300"
             usage="color: var(--colorGrey300);"
           />
           <ColorCard
-            mpColor={css.matterColorNegativeBackground}
+            mpColor={css.colorGrey200}
+            name="--colorGrey200"
+            usage="color: var(--colorGrey200);"
+          />
+          <ColorCard
+            mpColor={css.colorGrey100}
             name="--colorGrey100"
             usage="color: var(--colorGrey100);"
           />
           <ColorCard
-            mpColor={css.matterColorLightBackground}
-            name="--matterColorLight"
+            mpColor={css.colorGrey50}
+            name="--colorGrey50"
+            usage="color: var(--colorGrey50);"
+          />
+          <ColorCard
+            mpColor={css.colorWhite}
+            name="--colorWhite"
             usage="color: var(--colorWhite);"
           />
         </div>
