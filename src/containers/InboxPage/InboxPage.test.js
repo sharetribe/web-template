@@ -183,7 +183,7 @@ describe('InboxPage', () => {
         intl={fakeIntl}
         stateData={stateDataOrder}
         isBooking={false}
-        showStock={true}
+        stockType="multipleItems"
       />
     );
     expect(tree.asFragment().firstChild).toMatchSnapshot();
@@ -232,7 +232,7 @@ describe('InboxPage', () => {
         intl={fakeIntl}
         stateData={stateDataOrder}
         isBooking={false}
-        showStock={false}
+        stockType="oneItem"
       />
     );
     expect(tree.asFragment().firstChild).toMatchSnapshot();

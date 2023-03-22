@@ -13,14 +13,14 @@ const SectionDetailsMaybe = props => {
   }
 
   const pickExtendedData = (filteredConfigs, config) => {
-    const { key, schemaType, schemaOptions, listingPageConfig = {} } = config;
-    const { isDetail, label } = listingPageConfig;
+    const { key, schemaType, enumOptions, showConfig = {} } = config;
+    const { isDetail, label } = showConfig;
     const publicDataValue = publicData[key];
     const metadataValue = metadata[key];
     const value = publicDataValue || metadataValue;
 
     if (isDetail && typeof value !== 'undefined') {
-      const findSelectedOption = enumValue => schemaOptions?.find(o => enumValue === `${o.option}`);
+      const findSelectedOption = enumValue => enumOptions?.find(o => enumValue === `${o.option}`);
       const getBooleanMessage = value =>
         value
           ? intl.formatMessage({ id: 'SearchPage.detailYes' })

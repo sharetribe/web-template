@@ -18,32 +18,32 @@
  * - schemaType (optional):         Schema for this extended data field.
  *                                  This is relevant when rendering components and querying listings.
  *                                  Possible values: 'enum', 'multi-enum', 'text', 'long', 'boolean'.
- * - schemaOptions (optional):      Options shown for 'enum' and 'multi-enum' extended data.
+ * - enumOptions (optional):        Options shown for 'enum' and 'multi-enum' extended data.
  *                                  These are used to render options for inputs and filters on
  *                                  EditListingPage, ListingPage, and SearchPage.
- * - indexForSearch (optional):     If set as true, it is assumed that the extended data key has
- *                                  search index in place. I.e. the key can be used to filter
- *                                  listing queries (then scope needs to be 'public').
- *                                  Note: Flex CLI can be used to set search index for the key:
- *                                  https://www.sharetribe.com/docs/references/extended-data/#search-schema
- *                                  Read more about filtering listings with public data keys from API Reference:
- *                                  https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
- *                                  Default value: false,
- * - searchPageConfig:              Search-specific configuration.
+ * - filterConfig:                  Filter configuration for listings query.
+ *    - indexForSearch (optional):    If set as true, it is assumed that the extended data key has
+ *                                    search index in place. I.e. the key can be used to filter
+ *                                    listing queries (then scope needs to be 'public').
+ *                                    Note: Flex CLI can be used to set search index for the key:
+ *                                    https://www.sharetribe.com/docs/references/extended-data/#search-schema
+ *                                    Read more about filtering listings with public data keys from API Reference:
+ *                                    https://www.sharetribe.com/api-reference/marketplace.html#extended-data-filtering
+ *                                    Default value: false,
  *   - filterType:                    Sometimes a single schemaType can be rendered with different filter components.
  *                                    For 'enum' schema, filterType can be 'SelectSingleFilter' or 'SelectMultipleFilter'
  *   - label:                         Label for the filter, if the field can be used as query filter
  *   - searchMode (optional):         Search mode for indexed data with multi-enum schema.
  *                                    Possible values: 'has_all' or 'has_any'.
  *   - group:                         SearchPageWithMap has grouped filters. Possible values: 'primary' or 'secondary'.
- * - listingPageConfig:             Configuration for rendering listing.
+ * - showConfig:                    Configuration for rendering listing. (How the field should be shown.)
  *   - label:                         Label for the saved data.
  *   - isDetail                       Can be used to hide detail row (of type enum, boolean, or long) from listing page.
  *                                    Default value: true,
- * - editListingPageConfig:         Configuration for adding and modifying extended data fields.
+ * - saveConfig:                    Configuration for adding and modifying extended data fields.
  *   - label:                         Label for the input field.
  *   - placeholderMessage (optional): Default message for user input.
- *   - required (optional):           Is the field required for providers to fill
+ *   - isRequired (optional):         Is the field required for providers to fill
  *   - requiredMessage (optional):    Message for those fields, which are mandatory.
  */
 export const listingExtendedData = [
@@ -51,23 +51,23 @@ export const listingExtendedData = [
     key: 'category',
     scope: 'public',
     schemaType: 'enum',
-    schemaOptions: [
+    enumOptions: [
       { option: 'city-bikes', label: 'City bikes' },
       { option: 'electric-bikes', label: 'Electric bikes' },
       { option: 'mountain-bikes', label: 'Mountain bikes' },
       { option: 'childrens-bikes', label: "Children's bikes" },
     ],
-    indexForSearch: true,
-    searchPageConfig: {
+    filterConfig: {
+      indexForSearch: true,
       filterType: 'SelectMultipleFilter',
       label: 'Category',
       group: 'primary',
     },
-    listingPageConfig: {
+    showConfig: {
       label: 'Category',
       isDetail: true,
     },
-    editListingPageConfig: {
+    saveConfig: {
       label: 'Category',
       placeholderMessage: 'Select an option…',
       isRequired: true,
@@ -79,7 +79,7 @@ export const listingExtendedData = [
     key: 'tire-size',
     scope: 'public',
     schemaType: 'enum',
-    schemaOptions: [
+    enumOptions: [
       { option: 29, label: '29' },
       { option: 28, label: '28' },
       { option: 27, label: '27' },
@@ -88,16 +88,16 @@ export const listingExtendedData = [
       { option: 20, label: '20' },
       { option: 18, label: '18' },
     ],
-    indexForSearch: true,
-    searchPageConfig: {
+    filterConfig: {
+      indexForSearch: true,
       label: 'Tire size',
       group: 'secondary',
     },
-    listingPageConfig: {
+    showConfig: {
       label: 'Tire size',
       isDetail: true,
     },
-    editListingPageConfig: {
+    saveConfig: {
       label: 'Tire size',
       placeholderMessage: 'Select an option…',
       isRequired: true,
@@ -108,7 +108,7 @@ export const listingExtendedData = [
     key: 'brand',
     scope: 'public',
     schemaType: 'enum',
-    schemaOptions: [
+    enumOptions: [
       { option: 'cube', label: 'Cube' },
       { option: 'diamant', label: 'Diamant' },
       { option: 'ghost', label: 'GHOST' },
@@ -118,16 +118,16 @@ export const listingExtendedData = [
       { option: 'otler', label: 'Otler' },
       { option: 'vermont', label: 'Vermont' },
     ],
-    indexForSearch: true,
-    searchPageConfig: {
+    filterConfig: {
+      indexForSearch: true,
       label: 'Brand',
       group: 'secondary',
     },
-    listingPageConfig: {
+    showConfig: {
       label: 'Brand',
       isDetail: true,
     },
-    editListingPageConfig: {
+    saveConfig: {
       label: 'Brand',
       placeholderMessage: 'Select an option…',
       isRequired: true,
@@ -138,22 +138,22 @@ export const listingExtendedData = [
     key: 'equipped-with',
     scope: 'public',
     schemaType: 'multi-enum',
-    schemaOptions: [
+    enumOptions: [
       { option: 'bell', label: 'Bell' },
       { option: 'lights', label: 'Lights' },
       { option: 'lock', label: 'Lock' },
       { option: 'mudguard', label: 'Mudguard' },
     ],
-    indexForSearch: true,
-    searchPageConfig: {
+    filterConfig: {
+      indexForSearch: true,
       label: 'Equipped with',
       searchMode: 'has_all',
       group: 'secondary',
     },
-    listingPageConfig: {
+    showConfig: {
       label: 'Equipped with',
     },
-    editListingPageConfig: {
+    saveConfig: {
       label: 'Equipped with',
       placeholderMessage: 'Select an option…',
       isRequired: false,
@@ -166,10 +166,10 @@ export const listingExtendedData = [
   //   scope: 'public',
   //   includeForListingTypes: ['product-selling'],
   //   schemaType: 'text',
-  //   listingPageConfig: {
+  //   showConfig: {
   //     label: 'Extra notes',
   //   },
-  //   editListingPageConfig: {
+  //   saveConfig: {
   //     label: 'Extra notes',
   //     placeholderMessage: 'Some public extra note about this bike...',
   //   },
@@ -179,7 +179,7 @@ export const listingExtendedData = [
   //   scope: 'private',
   //   includeForListingTypes: ['daily-booking'],
   //   schemaType: 'text',
-  //   editListingPageConfig: {
+  //   saveConfig: {
   //     label: 'Private notes',
   //     placeholderMessage: 'Some private note about this bike...',
   //   },
@@ -200,67 +200,67 @@ export const listingExtendedData = [
 
 /**
  * Configuration options for listing experience:
- * - type:            Unique string. This will be saved to listing's public data on
+ * - listingType:     Unique string. This will be saved to listing's public data on
  *                    EditListingWizard.
  * - label            Label for the listing type. Used as microcopy for options to select
  *                    listing type in EditListingWizard.
  * - transactionType  Set of configurations how this listing type will behave when transaction is
  *                    created.
- *   - process          Transaction process. This will be saved to listing's public data
- *                      (together with alias) as transctionProcessAlias.
+ *   - process          Transaction process.
  *                      The process must match one of the processes that this client app can handle
  *                      (check src/util/transaction.js) and the process must also exists in correct
  *                      marketplace environment.
- *   - alias            Valid alias for the aforementioned process.
+ *   - alias            Valid alias for the aforementioned process. This will be saved to listing's
+ *                      public data as transctionProcessAlias and transaction is initiated with this.
  *   - unitType         Unit type is mainly used as pricing unit. This will be saved to
  *                      transaction's protected data.
  *                      Recommendation: don't use same unit types in completely different processes
  *                      ('item' sold should not be priced the same as 'item' booked).
- * - showStock        This is relevant only to listings with product-selling listing type.
- *                    If set to false, stock management is not showed and the listing is
+ * - stockType        This is relevant only to listings with product-selling listing type.
+ *                    If set to 'oneItem', stock management is not showed and the listing is
  *                    considered unique (stock = 1).
  *                    Default: true.
  */
 
 export const listingTypes = [
   {
-    type: 'daily-booking',
+    listingType: 'daily-booking',
     label: 'Daily booking',
     transactionType: {
       process: 'default-booking',
-      alias: 'release-1',
+      alias: 'default-booking/release-1',
       unitType: 'day',
     },
   },
   // Here are some examples for other listingTypes
   // TODO: SearchPage does not work well if both booking and product selling are used at the same time
   {
-    type: 'nightly-booking',
+    listingType: 'nightly-booking',
     label: 'Nightly booking',
     transactionType: {
       process: 'default-booking',
-      alias: 'release-1',
+      alias: 'default-booking/release-1',
       unitType: 'night',
     },
   },
   {
-    type: 'hourly-booking',
+    listingType: 'hourly-booking',
     label: 'Hourly booking',
     transactionType: {
       process: 'default-booking',
-      alias: 'release-1',
+      alias: 'default-booking/release-1',
       unitType: 'hour',
     },
   },
   {
-    type: 'product-selling',
+    listingType: 'product-selling',
     label: 'Sell bicycles',
     transactionType: {
       process: 'default-purchase',
-      alias: 'release-1',
+      alias: 'default-purchase/release-1',
       unitType: 'item',
     },
-    showStock: true,
+    stockType: 'oneItem',
   },
 ];
 

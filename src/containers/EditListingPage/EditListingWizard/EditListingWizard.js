@@ -117,11 +117,11 @@ const hasValidCustomFieldsInExtendedData = (publicData, privateData, config) => 
       key,
       includeForListingTypes,
       schemaType,
-      schemaOptions = [],
-      editListingPageConfig = {},
+      enumOptions = [],
+      saveConfig = {},
     } = fieldConfig;
 
-    const schemaOptionKeys = schemaOptions.map(o => `${o.option}`);
+    const schemaOptionKeys = enumOptions.map(o => `${o.option}`);
     const hasValidEnumValue = optionData => {
       return schemaOptionKeys.includes(optionData);
     };
@@ -130,7 +130,7 @@ const hasValidCustomFieldsInExtendedData = (publicData, privateData, config) => 
     };
 
     const isRequired =
-      !!editListingPageConfig.isRequired &&
+      !!saveConfig.isRequired &&
       (includeForListingTypes == null || includeForListingTypes.includes(publicData?.listingType));
     if (isRequired) {
       const savedExtendedData = fieldData[key];
@@ -384,7 +384,7 @@ class EditListingWizard extends Component {
     const existingListingType = currentListing.attributes?.publicData?.listingType;
     const invalidExistingListingType =
       existingListingType &&
-      !config.listing.listingTypes.find(config => config.type === existingListingType);
+      !config.listing.listingTypes.find(config => config.listingType === existingListingType);
 
     const tabs = invalidExistingListingType
       ? TABS_DETAILS_ONLY

@@ -479,23 +479,23 @@ propTypes.listingExtendedDataConfig = arrayOf(
     scope: string,
     includeForListingTypes: arrayOf(string),
     schemaType: oneOf(EXTENDED_DATA_SCHEMA_TYPES).isRequired,
-    schemaOptions: arrayOf(
+    enumOptions: arrayOf(
       shape({
         option: oneOfType([string, number]).isRequired,
         label: string.isRequired,
       })
     ),
-    indexForSearch: bool,
-    searchPageConfig: shape({
+    filterConfig: shape({
+      indexForSearch: bool,
       label: string.isRequired,
       group: oneOf(['primary', 'secondary']),
       filterType: string,
     }),
-    listingPageConfig: shape({
+    showConfig: shape({
       label: string.isRequired,
       isDetail: bool,
     }),
-    editListingPageConfig: shape({
+    saveConfig: shape({
       label: string.isRequired,
       placeholderMessage: string,
       isRequired: bool,

@@ -28,21 +28,21 @@ describe('EditListingDetailsForm', () => {
         scope: 'public',
         includeForListingTypes: ['sell-bicycles'],
         schemaType: 'enum',
-        schemaOptions: [
+        enumOptions: [
           { option: 'men', label: 'Men' },
           { option: 'women', label: 'Women' },
           { option: 'kids', label: 'Kids' },
         ],
-        indexForSearch: true,
-        searchPageConfig: {
+        filterConfig: {
+          indexForSearch: true,
           label: 'Amenities',
         },
-        listingPageConfig: {
-          label: 'Category',
-        },
-        editListingPageConfig: {
+        showConfig: {
           label: 'Category',
           isDetail: true,
+        },
+        saveConfig: {
+          label: 'Category',
         },
       },
       {
@@ -54,20 +54,20 @@ describe('EditListingDetailsForm', () => {
           'rent-bicycles-hourly',
         ],
         schemaType: 'multi-enum',
-        schemaOptions: [
+        enumOptions: [
           { option: 'towels', label: 'Towels' },
           { option: 'bathroom', label: 'Bathroom' },
           { option: 'swimming_pool', label: 'Swimming pool' },
           { option: 'barbeque', label: 'Barbeque' },
         ],
-        indexForSearch: true,
-        searchPageConfig: {
+        filterConfig: {
+          indexForSearch: true,
           label: 'Amenities',
         },
-        listingPageConfig: {
+        showConfig: {
           label: 'Category',
         },
-        editListingPageConfig: {
+        saveConfig: {
           label: 'Amenities',
         },
       },

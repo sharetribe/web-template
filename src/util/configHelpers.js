@@ -106,31 +106,56 @@ const mergeBranding = (brandingConfig, defaultBranding) => {
 // Merge layouts //
 ///////////////////
 
+const pickVariant = (hostedVariant, defaultVariant) =>
+  hostedVariant?.variantType ? hostedVariant : defaultVariant;
+const validVariantConfig = (hostedVariant, defaultVariant, validVariantTypes, fallback) => {
+  const variant = pickVariant(hostedVariant, defaultVariant);
+  const isValidVariant = validVariantTypes.includes(variant?.variantType);
+
+  if (!isValidVariant) {
+    console.warn('Unsupported layout option detected', variant);
+  }
+  if (variant.variantType === 'cropImage') {
+    const [w, h] = variant.aspectRatio.split('/') || ['1', '1'];
+    const aspectWidth = Number.parseInt(w, 10);
+    const aspectHeight = Number.parseInt(h, 10);
+    return isValidVariant ? { ...variant, aspectWidth, aspectHeight } : fallback;
+  }
+
+  return isValidVariant ? variant : fallback;
+};
+
 const mergeLayouts = (layoutConfig, defaultLayout) => {
-  const searchPageVariant = layoutConfig?.searchPageVariant || defaultLayout.searchPageVariant;
-  const listingPageVariant = layoutConfig?.listingPageVariant || defaultLayout.listingPageVariant;
+  const searchPage = validVariantConfig(
+    layoutConfig?.searchPage,
+    defaultLayout?.searchPage,
+    ['map', 'grid'],
+    { variantType: 'grid' }
+  );
+
+  const listingPage = validVariantConfig(
+    layoutConfig?.listingPage,
+    defaultLayout?.listingPage,
+    ['coverPhoto', 'carousel'],
+    { variantType: 'carousel' }
+  );
+
+  const listingImage = validVariantConfig(
+    layoutConfig?.listingImage,
+    defaultLayout?.listingImage,
+    ['cropImage'],
+    { variantType: 'cropImage', aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' }
+  );
+
   const aspectWidth =
     layoutConfig?.listingImage?.aspectWidth || defaultLayout?.listingImage?.aspectWidth;
   const aspectHeight =
     layoutConfig?.listingImage?.aspectHeight || defaultLayout?.listingImage?.aspectHeight;
 
-  const isValidSearchPageConfig = ['map', 'list'].includes(searchPageVariant);
-  const isValidListingPageConfig = ['hero-image', 'full-image'].includes(listingPageVariant);
-
-  if (!isValidSearchPageConfig) {
-    console.warn('Unsupported layout option for search page detected', searchPageVariant);
-  } else if (!isValidListingPageConfig) {
-    console.warn('Unsupported layout option for listing page detected', listingPageVariant);
-  }
-
   return {
-    searchPageVariant: isValidSearchPageConfig ? searchPageVariant : 'list',
-    listingPageVariant: isValidListingPageConfig ? listingPageVariant : 'full-image',
-    listingImage: {
-      aspectWidth: aspectWidth || 1,
-      aspectHeight: aspectHeight || 1,
-      variantPrefix: defaultLayout.listingImage.variantPrefix,
-    },
+    searchPage,
+    listingPage,
+    listingImage,
   };
 };
 
@@ -163,20 +188,20 @@ const validListingTypesForListingConfig = (includeForListingTypes, listingTypesI
 const isStringType = str => typeof str === 'string';
 const pickOptionShapes = o => isStringType(o.option) && isStringType(o.label);
 
-const validSchemaOptions = (schemaOptions, schemaType) => {
-  const isUndefined = typeof schemaOptions === 'undefined';
-  const isArray = Array.isArray(schemaOptions);
+const validSchemaOptions = (enumOptions, schemaType) => {
+  const isUndefined = typeof enumOptions === 'undefined';
+  const isArray = Array.isArray(enumOptions);
   const arrayContainsOptionShapes = isArray
-    ? schemaOptions.filter(pickOptionShapes).length === schemaOptions.length
+    ? enumOptions.filter(pickOptionShapes).length === enumOptions.length
     : false;
   const shouldHaveSchemaOptions = ['enum', 'multi-enum'].includes(schemaType) && !isUndefined;
 
   const isValid = isUndefined || shouldHaveSchemaOptions || arrayContainsOptionShapes;
-  const schemaOptionsMaybe = isArray ? { schemaOptions } : {};
+  const schemaOptionsMaybe = isArray ? { enumOptions } : {};
   return [isValid, schemaOptionsMaybe];
 };
 
-// listingExtendedDataConfig.searchPageConfig
+// listingExtendedDataConfig.filterConfig
 const filterTypes = ['SelectSingleFilter', 'SelectMultipleFilter'];
 const validFilterType = (filterType, schemaType) => {
   const isEnumSchemaType = ['enum', 'multi-enum'].includes(schemaType);
@@ -201,21 +226,28 @@ const validSearchMode = (searchMode, schemaType) => {
   return [isValid, searchModeMaybe];
 };
 
-const validSearchPageConfig = (config, schemaType) => {
+const validFilterConfig = (config, schemaType) => {
   const isUndefined = typeof config === 'undefined';
   if (isUndefined) {
     return [true, {}];
   }
-  // Validate: label, filterType, searchMode, group
+  // Validate: indexForSearch, label, filterType, searchMode, group
+  const [isValidIndexForSearch, indexForSearch] = validBoolean(
+    'indexForSearch',
+    config.indexForSearch,
+    false
+  );
   const [isValidLabel, label] = validLabel(config.label);
   const [isValidFilterType, filterType] = validFilterType(config.filterType, schemaType);
   const [isValidSearchMode, searchMode] = validSearchMode(config.searchMode, schemaType);
   const groupOptions = ['primary', 'secondary'];
   const [isValidGroup, group] = validEnumString('group', config.group, groupOptions, 'primary');
 
-  const isValid = isValidLabel && isValidFilterType && isValidSearchMode && isValidGroup;
+  const isValid =
+    isValidIndexForSearch && isValidLabel && isValidFilterType && isValidSearchMode && isValidGroup;
   const validValue = {
-    searchPageConfig: {
+    filterConfig: {
+      ...indexForSearch,
       ...label,
       ...filterType,
       ...searchMode,
@@ -225,8 +257,8 @@ const validSearchPageConfig = (config, schemaType) => {
   return [isValid, validValue];
 };
 
-// listingExtendedDataConfig.listingPageConfig
-const validListingPageConfig = config => {
+// listingExtendedDataConfig.showConfig
+const validShowConfig = config => {
   const isUndefined = typeof config === 'undefined';
   if (isUndefined) {
     return [true, {}];
@@ -237,7 +269,7 @@ const validListingPageConfig = config => {
 
   const isValid = isValidLabel && isValidIsDetail;
   const validValue = {
-    listingPageConfig: {
+    showConfig: {
       ...label,
       ...isDetail,
     },
@@ -245,7 +277,7 @@ const validListingPageConfig = config => {
   return [isValid, validValue];
 };
 
-// listingExtendedDataConfig.editListingPageConfig
+// listingExtendedDataConfig.saveConfig
 const validPlaceholderMessage = placeholderMessage => {
   const isUndefined = typeof placeholderMessage === 'undefined';
   const isString = typeof placeholderMessage === 'string';
@@ -261,7 +293,7 @@ const validRequiredMessage = requiredMessage => {
   return [isValid, validValue];
 };
 
-const validEditListingPageConfig = config => {
+const validSaveConfig = config => {
   const isUndefined = typeof config === 'undefined';
   if (isUndefined) {
     return [true, {}];
@@ -276,7 +308,7 @@ const validEditListingPageConfig = config => {
 
   const isValid = isValidLabel && isValidPlaceholder && isValidIsRequired && isValidRequiredMessage;
   const validValue = {
-    editListingPageConfig: {
+    saveConfig: {
       ...label,
       ...placeholderMessage,
       ...isRequired,
@@ -308,16 +340,14 @@ const validListingExtendedData = (listingExtendedData, listingTypesInUse) => {
             ? validListingTypesForListingConfig(value, listingTypesInUse)
             : name === 'schemaType'
             ? validEnumString('schemaType', value, validSchemaTypes)
-            : name === 'schemaOptions'
+            : name === 'enumOptions'
             ? validSchemaOptions(value, schemaType)
-            : name === 'indexForSearch'
-            ? validBoolean('indexForSearch', value, false)
-            : name === 'searchPageConfig'
-            ? validSearchPageConfig(value, schemaType)
-            : name === 'listingPageConfig'
-            ? validListingPageConfig(value)
-            : name === 'editListingPageConfig'
-            ? validEditListingPageConfig(value)
+            : name === 'filterConfig'
+            ? validFilterConfig(value, schemaType)
+            : name === 'showConfig'
+            ? validShowConfig(value)
+            : name === 'saveConfig'
+            ? validSaveConfig(value)
             : [true, value];
 
         const hasFoundValid = !(acc.isValid === false || isValid === false);
@@ -348,7 +378,7 @@ const validListingExtendedData = (listingExtendedData, listingTypesInUse) => {
 };
 
 const getListingTypeStringsInUse = listingTypes => {
-  return listingTypes.map(lt => `${lt.type}`);
+  return listingTypes.map(lt => `${lt.listingType}`);
 };
 
 const validListingTypes = listingTypes => {
@@ -356,7 +386,7 @@ const validListingTypes = listingTypes => {
   const supportedProcessesInfo = getSupportedProcessesInfo();
 
   const validTypes = listingTypes.reduce((validConfigs, listingType) => {
-    const { type, label, transactionType, ...restOfListingType } = listingType;
+    const { listingType: type, label, transactionType, ...restOfListingType } = listingType;
     const { process: processName, alias, unitType, ...restOfTransactionType } = transactionType;
 
     const isSupportedProcessName = supportedProcessesInfo.find(p => p.name === processName);
@@ -367,7 +397,7 @@ const validListingTypes = listingTypes => {
       return [
         ...validConfigs,
         {
-          type,
+          listingType: type,
           label,
           transactionType: {
             process: processName,
@@ -375,7 +405,7 @@ const validListingTypes = listingTypes => {
             unitType,
             ...restOfTransactionType,
           },
-          // e.g. showStock
+          // e.g. stockType
           ...restOfListingType,
         },
       ];
@@ -404,30 +434,52 @@ const validListingConfig = config => {
 //////////////////////////////
 
 const validDatesConfig = config => {
-  const label = typeof config.label === 'string' ? config.label : 'Dates';
-  const entireRangeAvailable =
-    typeof config.entireRangeAvailable === 'boolean' ? config.entireRangeAvailable : true;
-  const mode = ['day', 'night'].includes(config.mode) ? config.mode : 'day';
-  return { key: 'dates', schemaType: 'dates', label, entireRangeAvailable, mode };
+  const {
+    enabled = true,
+    label = 'Dates',
+    dateRangeMode = 'day',
+    availability = 'time-full',
+  } = config;
+  const isValidLabel = typeof label === 'string';
+  const isValidMode = ['day', 'night'].includes(dateRangeMode);
+  const isValidAvailability = ['time-full', 'time-partial'].includes(availability);
+
+  if (!(enabled && isValidLabel && isValidMode && isValidAvailability)) {
+    return null;
+  }
+
+  return { key: 'dates', schemaType: 'dates', label, availability, dateRangeMode };
 };
 
 const validPriceConfig = config => {
-  const label = typeof config.label === 'string' ? config.label : 'Price';
-  const min = typeof config.min === 'number' ? config.min : 0;
-  const max = typeof config.max === 'number' ? config.max : 1000;
-  const step = typeof config.step === 'number' ? config.step : 5;
-  return { key: 'price', schemaType: 'price', label, min, max, step };
+  const { enabled = true, label = 'Price', min = 0, max = 1000, step = 5 } = config;
+  const isValidLabel = typeof label === 'string';
+  const isValidMin = typeof min === 'number';
+  const isValidMax = typeof max === 'number';
+  const isValidStep = typeof step === 'number';
+
+  if (!(enabled && isValidLabel && isValidMin && isValidMax && isValidStep)) {
+    return null;
+  }
+
+  const isMaxBigger = max > min;
+  if (!isMaxBigger) {
+    console.error(`Price filter: min value (${min}) needs to be smaller than max (${max})`);
+  }
+  return isMaxBigger ? { key: 'price', schemaType: 'price', label, min, max, step } : null;
 };
 
 const validDefaultFilters = defaultFilters => {
-  return defaultFilters.filter(data => {
-    const key = data.key;
-    return key === 'dates'
-      ? validDatesConfig(data)
-      : key === 'price'
-      ? validPriceConfig(data)
-      : data;
-  });
+  return defaultFilters
+    .map(data => {
+      const schemaType = data.schemaType;
+      return schemaType === 'dates'
+        ? validDatesConfig(data)
+        : schemaType === 'price'
+        ? validPriceConfig(data)
+        : data;
+    })
+    .filter(Boolean);
 };
 
 //////////////////////////
@@ -446,13 +498,19 @@ const validSortConfig = config => {
 };
 
 const validSearchConfig = config => {
-  const { mainSearchType: mainSearchTypeRaw, defaultFilters, sortConfig, ...rest } = config || {};
-  const mainSearchType = ['location', 'keywords'].includes(mainSearchTypeRaw)
-    ? mainSearchTypeRaw
+  const { mainSearch, dateRangeFilter, priceFilter, keywordsFilter, sortConfig, ...rest } =
+    config || {};
+  const searchType = ['location', 'keywords'].includes(mainSearch?.searchType)
+    ? mainSearch?.searchType
     : 'keywords';
+  const keywordsFilterMaybe = keywordsFilter ? [keywordsFilter] : [];
 
+  // This will define the order of default filters
+  // The reason: later on, we'll add these default filters to config assets and
+  // there they'll be their own separate entities and not wrapped in an array.
+  const defaultFilters = [dateRangeFilter, priceFilter, ...keywordsFilterMaybe];
   return {
-    mainSearchType,
+    mainSearch: { searchType },
     defaultFilters: validDefaultFilters(defaultFilters),
     sortConfig: validSortConfig(sortConfig),
     ...rest,

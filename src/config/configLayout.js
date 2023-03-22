@@ -5,18 +5,25 @@
 ///////////////////////////////////////////////////////
 
 // There are 2 SearchPage variants that can be used:
-// 'map' & 'list'
-export const searchPageVariant = 'map';
+// 'map' & 'grid'
+export const searchPage = {
+  variantType: 'map',
+};
 
-// ListingPage has 2 layout options: 'hero-image' and 'full-image'.
-// - 'hero-image' means a layout where there's a hero section with cropped image in the beginning of the page
-// - 'full-image' shows image carousel, where listing images are shown with the original aspect ratio
-export const listingPageVariant = 'full-image';
+// ListingPage has 2 layout options: 'coverPhoto' and 'carousel'.
+// - 'coverPhoto' means a layout where there's a hero section with cropped image in the beginning of the page
+// - 'carousel' shows image carousel, where listing images are shown with the original aspect ratio
+export const listingPage = {
+  variantType: 'carousel',
+};
 
+// ListingImage currently supports only one variant type, but it has aspectRatio as an extra configuration.
 export const listingImage = {
-  // Aspect ratio for listing image variants
-  aspectWidth: 400,
-  aspectHeight: 400,
+  variantType: 'cropImage',
+  // Aspect ratio for listing image variants (width/height)
+  // Note: This will be converted to separate aspectWidth and aspectHeight values
+  // to make calculations easier.
+  aspectRatio: '1/1',
   // Listings have custom image variants, which are named here.
   variantPrefix: 'listing-card',
 };

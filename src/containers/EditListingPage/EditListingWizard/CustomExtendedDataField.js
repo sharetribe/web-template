@@ -19,15 +19,15 @@ const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, l
 
 const CustomFieldEnum = props => {
   const { name, fieldConfig, defaultRequiredMessage, intl } = props;
-  const { schemaOptions = [], editListingPageConfig } = fieldConfig || {};
-  const { label, placeholderMessage, isRequired, requiredMessage } = editListingPageConfig || {};
+  const { enumOptions = [], saveConfig } = fieldConfig || {};
+  const { label, placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
   const placeholder =
     placeholderMessage ||
     intl.formatMessage({ id: 'CustomExtendedDataField.placeholderSingleSelect' });
-  const filterOptions = createFilterOptions(schemaOptions);
+  const filterOptions = createFilterOptions(enumOptions);
 
   return filterOptions ? (
     <FieldSelect className={css.customField} name={name} id={name} label={label} {...validateMaybe}>
@@ -48,19 +48,19 @@ const CustomFieldEnum = props => {
 
 const CustomFieldMultiEnum = props => {
   const { name, fieldConfig, defaultRequiredMessage } = props;
-  const { schemaOptions = [], editListingPageConfig } = fieldConfig || {};
-  const { label, isRequired, requiredMessage } = editListingPageConfig || {};
+  const { enumOptions = [], saveConfig } = fieldConfig || {};
+  const { label, isRequired, requiredMessage } = saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: nonEmptyArray(requiredMessage || defaultRequiredMessage) }
     : {};
 
-  return schemaOptions ? (
+  return enumOptions ? (
     <FieldCheckboxGroup
       className={css.customField}
       id={name}
       name={name}
       label={label}
-      options={createFilterOptions(schemaOptions)}
+      options={createFilterOptions(enumOptions)}
       {...validateMaybe}
     />
   ) : null;
@@ -68,8 +68,7 @@ const CustomFieldMultiEnum = props => {
 
 const CustomFieldText = props => {
   const { name, fieldConfig, defaultRequiredMessage, intl } = props;
-  const { label, placeholderMessage, isRequired, requiredMessage } =
-    fieldConfig?.editListingPageConfig || {};
+  const { label, placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -91,8 +90,7 @@ const CustomFieldText = props => {
 
 const CustomFieldLong = props => {
   const { name, fieldConfig, defaultRequiredMessage, intl } = props;
-  const { label, placeholderMessage, isRequired, requiredMessage } =
-    fieldConfig?.editListingPageConfig || {};
+  const { label, placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -119,8 +117,7 @@ const CustomFieldLong = props => {
 
 const CustomFieldBoolean = props => {
   const { name, fieldConfig, defaultRequiredMessage, intl } = props;
-  const { label, placeholderMessage, isRequired, requiredMessage } =
-    fieldConfig?.editListingPageConfig || {};
+  const { label, placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -146,17 +143,17 @@ const CustomFieldBoolean = props => {
  * in marketplace-custom-config.js. Other panels in EditListingWizard might add more extended data
  * fields (e.g. shipping fee), but these are independently customizable.
  *
- * @param {Object} props should contain fieldConfig that defines schemaType, schemaOptions?, and
- * editListingPageConfig for the field.
+ * @param {Object} props should contain fieldConfig that defines schemaType, enumOptions?, and
+ * saveConfig for the field.
  */
 const CustomExtendedDataField = props => {
   const intl = useIntl();
-  const { schemaOptions = [], schemaType } = props?.fieldConfig || {};
+  const { enumOptions = [], schemaType } = props?.fieldConfig || {};
   const renderFieldComponent = (FieldComponent, props) => <FieldComponent {...props} intl={intl} />;
 
-  return schemaType === SCHEMA_TYPE_ENUM && schemaOptions
+  return schemaType === SCHEMA_TYPE_ENUM && enumOptions
     ? renderFieldComponent(CustomFieldEnum, props)
-    : schemaType === SCHEMA_TYPE_MULTI_ENUM && schemaOptions
+    : schemaType === SCHEMA_TYPE_MULTI_ENUM && enumOptions
     ? renderFieldComponent(CustomFieldMultiEnum, props)
     : schemaType === SCHEMA_TYPE_TEXT
     ? renderFieldComponent(CustomFieldText, props)
