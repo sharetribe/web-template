@@ -237,27 +237,57 @@
   background-color: var(--attentionColor);
 }
 
-.matterColorBackground {
-  composes: color;
-  background-color: var(--colorGrey700);
-}
-
-.matterColorAntiBackground {
-  composes: color;
-  background-color: var(--colorGrey300);
-}
-
-.matterColorDarkBackground {
+.colorBlack {
   composes: color;
   background-color: var(--colorBlack);
 }
 
-.matterColorNegativeBackground {
+.colorWhite {
   composes: color;
-  background-color: var(--colorGrey100);
+  color: black;
+  background-color: var(--colorWhite);
 }
 
-.matterColorLightBackground {
+.colorGrey50 {
   composes: color;
-  background-color: var(--colorWhite);
+  color: black;
+  background-color: var(--colorGrey50);
+}
+.colorGrey100 {
+  composes: color;
+  color: black;
+  background-color: var(--colorGrey100);
+}
+.colorGrey200 {
+  composes: color;
+  color: black;
+  background-color: var(--colorGrey200);
+}
+.colorGrey300 {
+  composes: color;
+  background-color: var(--colorGrey300);
+}
+.colorGrey400 {
+  composes: color;
+  background-color: var(--colorGrey400);
+}
+.colorGrey500 {
+  composes: color;
+  background-color: var(--colorGrey500);
+}
+.colorGrey600 {
+  composes: color;
+  background-color: var(--colorGrey600);
+}
+.colorGrey700 {
+  composes: color;
+  background-color: var(--colorGrey700);
+}
+.colorGrey800 {
+  composes: color;
+  background-color: var(--colorGrey800);
+}
+.colorGrey900 {
+  composes: color;
+  background-color: var(--colorGrey900);
 }
