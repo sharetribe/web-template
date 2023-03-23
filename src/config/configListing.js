@@ -261,7 +261,7 @@ export const listingTypes = [
       alias: 'default-purchase/release-1',
       unitType: 'item',
     },
-    stockType: 'oneItem',
+    stockType: 'multipleItems',
   },
 ];
 
