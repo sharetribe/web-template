@@ -1,16 +1,19 @@
-# Sharetribe Flex Template for Web
+# Sharetribe Web Template
 
-[![CircleCI](https://circleci.com/gh/sharetribe/ftw-product.svg?style=svg)](https://circleci.com/gh/sharetribe/ftw-product)
+[![CircleCI](https://circleci.com/gh/sharetribe/web-template.svg?style=svg)](https://circleci.com/gh/sharetribe/web-template)
 
 This is a template web application for a Sharetribe Flex marketplace ready to be extended and
 customized. It is based on an application bootstrapped with
 [create-react-app](https://github.com/facebookincubator/create-react-app) with some additions,
 namely server side rendering and a custom CSS setup.
 
-> Note: We also have [FTW-daily](https://github.com/sharetribe/ftw-daily) for day-based processes
-> and [FTW-hourly](https://github.com/sharetribe/ftw-hourly) for time-based processes. You can learn
-> more on
-> [Flex Docs](https://www.sharetribe.com/docs/ftw-introduction/how-to-customize-ftw/#choose-a-template)
+> Note: This is a beta version, but you should consider starting your customization project on top
+> of this instead of old templates:
+>
+> - [FTW-daily](https://github.com/sharetribe/ftw-daily)
+> - [FTW-hourly](https://github.com/sharetribe/ftw-hourly)
+> - [FTW-product](https://github.com/sharetribe/ftw-hourly) > Read more from
+>   [Flex Docs](https://www.sharetribe.com/docs/ftw-introduction/how-to-customize-ftw/#choose-a-template)
 
 ## Quick start
 
@@ -18,15 +21,15 @@ If you just want to get the app running quickly to test it out, first install
 [Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/), and follow along:
 
 ```sh
-git clone git@github.com:sharetribe/ftw-product.git  # clone this repository
-cd ftw-product/                                      # change to the cloned directory
-yarn install                                         # install dependencies
-yarn run config                                      # add the mandatory env vars to your local config
-yarn run dev                                         # start the dev server, this will open a browser in localhost:3000
+git clone git@github.com:sharetribe/web-template.git  # clone this repository
+cd web-template/                                      # change to the cloned directory
+yarn install                                          # install dependencies
+yarn run config                                       # add the mandatory env vars to your local config
+yarn run dev                                          # start the dev server, this will open a browser in localhost:3000
 ```
 
 You can also follow along the
-[Getting started with FTW](https://www.sharetribe.com/docs/tutorials/getting-started-with-ftw/)
+[Getting started with Sharetribe Web Template](https://www.sharetribe.com/docs/tutorials/getting-started-with-ftw/)
 tutorial in the [Flex Docs website](https://www.sharetribe.com/docs/).
 
 For more information of the configuration, see the
@@ -44,8 +47,8 @@ instead of DOS commands.
 ## Getting started with your own customization
 
 If you want to build your own Flex marketplace by customizing the template application, see the
-[How to Customize FTW](https://www.sharetribe.com/docs/guides/how-to-customize-ftw/) guide in Flex
-Docs.
+[How to Customize the Template](https://www.sharetribe.com/docs/guides/how-to-customize-ftw/) guide
+in Flex Docs.
 
 ## Deploying to Heroku
 

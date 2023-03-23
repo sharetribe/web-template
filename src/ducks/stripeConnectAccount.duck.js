@@ -1,4 +1,4 @@
-// This file deals with Flex API which will create Stripe Custom Connect accounts
+// This file deals with Marketplace API which will create Stripe Custom Connect accounts
 // from given bank_account tokens.
 import { storableError } from '../util/errors';
 import * as log from '../util/log';
@@ -173,7 +173,7 @@ export const createStripeAccount = params => (dispatch, getState, sdk) => {
   // What Capabilities are required determines what information Stripe requires to be
   // collected from the providers.
   // You can read more from here: https://stripe.com/docs/connect/capabilities-overview
-  // In Flex both 'card_payments' and 'transfers' are required.
+  // Note: with default processes, both 'card_payments' and 'transfers' are required.
   const requestedCapabilities = ['card_payments', 'transfers'];
 
   const accountInfo = {
