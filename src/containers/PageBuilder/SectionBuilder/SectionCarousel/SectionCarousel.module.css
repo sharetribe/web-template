@@ -70,6 +70,8 @@
   display: flex;
   flex-wrap: nowrap;
   width: var(--carouselWidth);
+  padding-bottom: 24px;
+
   overflow-x: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
