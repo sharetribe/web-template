@@ -135,7 +135,7 @@ export const listingExtendedData = [
     },
   },
   {
-    key: 'equipped-with',
+    key: 'accessories',
     scope: 'public',
     schemaType: 'multi-enum',
     enumOptions: [
@@ -146,15 +146,15 @@ export const listingExtendedData = [
     ],
     filterConfig: {
       indexForSearch: true,
-      label: 'Equipped with',
+      label: 'Accessories',
       searchMode: 'has_all',
       group: 'secondary',
     },
     showConfig: {
-      label: 'Equipped with',
+      label: 'Accessories',
     },
     saveConfig: {
-      label: 'Equipped with',
+      label: 'Accessories',
       placeholderMessage: 'Select an option…',
       isRequired: false,
     },
@@ -162,7 +162,7 @@ export const listingExtendedData = [
 
   // // An example of how to use transaction type specific custom fields and private data.
   // {
-  //   key: 'extra-note',
+  //   key: 'note',
   //   scope: 'public',
   //   includeForListingTypes: ['product-selling'],
   //   schemaType: 'text',
@@ -175,7 +175,7 @@ export const listingExtendedData = [
   //   },
   // },
   // {
-  //   key: 'private-note',
+  //   key: 'privatenote',
   //   scope: 'private',
   //   includeForListingTypes: ['daily-booking'],
   //   schemaType: 'text',
@@ -219,7 +219,8 @@ export const listingExtendedData = [
  * - stockType        This is relevant only to listings with product-selling listing type.
  *                    If set to 'oneItem', stock management is not showed and the listing is
  *                    considered unique (stock = 1).
- *                    Default: true.
+ *                    Possible values: 'oneItem' and 'multipleItems'.
+ *                    Default: 'multipleItems'.
  */
 
 export const listingTypes = [

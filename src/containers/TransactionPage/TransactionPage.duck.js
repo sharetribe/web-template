@@ -106,7 +106,7 @@ const mergeEntityArrays = (a, b) => {
   return a.filter(aEntity => !b.find(bEntity => aEntity.id.uuid === bEntity.id.uuid)).concat(b);
 };
 
-export default function checkoutPageReducer(state = initialState, action = {}) {
+export default function transactionPageReducer(state = initialState, action = {}) {
   const { type, payload } = action;
   switch (type) {
     case SET_INITIAL_VALUES:

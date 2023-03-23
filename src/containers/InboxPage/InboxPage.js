@@ -123,6 +123,7 @@ export const InboxItem = props => {
   const hasPricingData = lineItems.length > 0;
   const unitLineItem = getUnitLineItem(lineItems);
   const quantity = hasPricingData && !isBooking ? unitLineItem.quantity.toString() : null;
+  const showStock = stockType === 'multipleItems' || (quantity && unitLineItem.quantity > 1);
 
   const otherUser = isCustomer ? provider : customer;
   const otherUserDisplayName = <UserDisplayName user={otherUser} intl={intl} />;
@@ -155,7 +156,7 @@ export const InboxItem = props => {
         <div className={css.itemDetails}>
           {isBooking ? (
             <BookingTimeInfoMaybe transaction={tx} />
-          ) : hasPricingData && stockType === 'multipleItems' ? (
+          ) : hasPricingData && showStock ? (
             <FormattedMessage id="InboxPage.quantity" values={{ quantity }} />
           ) : null}
         </div>
