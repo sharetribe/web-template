@@ -12,8 +12,10 @@ namely server side rendering and a custom CSS setup.
 >
 > - [FTW-daily](https://github.com/sharetribe/ftw-daily)
 > - [FTW-hourly](https://github.com/sharetribe/ftw-hourly)
-> - [FTW-product](https://github.com/sharetribe/ftw-hourly) > Read more from
->   [Flex Docs](https://www.sharetribe.com/docs/ftw-introduction/how-to-customize-ftw/#choose-a-template)
+> - [FTW-product](https://github.com/sharetribe/ftw-hourly)
+>
+> Read more from
+> [Flex Docs](https://www.sharetribe.com/docs/ftw-introduction/how-to-customize-ftw/#choose-a-template)
 
 ## Quick start
 
