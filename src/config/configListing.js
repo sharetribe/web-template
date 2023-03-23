@@ -219,7 +219,8 @@ export const listingExtendedData = [
  * - stockType        This is relevant only to listings with product-selling listing type.
  *                    If set to 'oneItem', stock management is not showed and the listing is
  *                    considered unique (stock = 1).
- *                    Default: true.
+ *                    Possible values: 'oneItem' and 'multipleItems'.
+ *                    Default: 'multipleItems'.
  */
 
 export const listingTypes = [
