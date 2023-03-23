@@ -173,7 +173,7 @@ export const initiateOrder = (
   // Parameters only for client app's server
   const orderData = deliveryMethod ? { deliveryMethod } : {};
 
-  // Parameters for Flex API
+  // Parameters for Marketplace API
   const transitionParams = {
     ...quantityMaybe,
     ...bookingParamsMaybe,
@@ -324,7 +324,7 @@ export const speculateTransaction = (
   // Parameters only for client app's server
   const orderData = deliveryMethod ? { deliveryMethod } : {};
 
-  // Parameters for Flex API
+  // Parameters for Marketplace API
   const transitionParams = {
     ...quantityMaybe,
     ...bookingParamsMaybe,

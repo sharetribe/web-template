@@ -225,7 +225,7 @@ export const AuthenticationForms = props => {
 };
 
 // Form for confirming information from IdP (e.g. Facebook)
-// This is shown before new user is created to Flex
+// This is shown before new user is created to Marketplace API
 const ConfirmIdProviderInfoForm = props => {
   const { authInfo, authInProgress, confirmError, submitSingupWithIdp, termsAndConditions } = props;
   const idp = authInfo ? authInfo.idpId.replace(/^./, str => str.toUpperCase()) : null;
@@ -234,7 +234,7 @@ const ConfirmIdProviderInfoForm = props => {
     const { idpToken, email, firstName, lastName, idpId } = authInfo;
     const { email: newEmail, firstName: newFirstName, lastName: newLastName, ...rest } = values;
 
-    // Pass email, fistName or lastName to Flex API only if user has edited them
+    // Pass email, fistName or lastName to Marketplace API only if user has edited them
     // sand they can't be fetched directly from idp provider (e.g. Facebook)
 
     const authParams = {

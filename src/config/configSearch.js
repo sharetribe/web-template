@@ -49,7 +49,7 @@ export const sortConfig = {
   active: true,
 
   // Note: queryParamName 'sort' is fixed,
-  // you can't change it since Flex API expects it to be named as 'sort'
+  // you can't change it since Marketplace API expects it to be named as 'sort'
   queryParamName: 'sort',
 
   // Internal key for the relevance option, see notes below.
