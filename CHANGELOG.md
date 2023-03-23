@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Do not show stock in EditListingWizard if stockType is 'oneItem'.
+  [#121](https://github.com/sharetribe/ftw-x/pull/121)
 - [change] Update README.md and some code comments.
   [#120](https://github.com/sharetribe/ftw-x/pull/120)
 - [delete] remove outdated translation files (fr.json, es.json, de.json). We'll introduce them
