@@ -125,10 +125,12 @@ const bookingDatesMaybe = bookingDates => {
 // Extract relevant transaction type data from listing type
 // Note: this is saved to protectedData of the transaction entity
 //       therefore, we don't need the process name (nor alias)
-const transactionTypeDataMaybe = (listingType, config) => {
+const transactionTypeDataMaybe = (listingType, unitTypeInPublicData, config) => {
   const listingTypeConfig = config.listing.listingTypes.find(lt => lt.listingType === listingType);
   const { process, alias, unitType, ...rest } = listingTypeConfig?.transactionType || {};
-  return unitType ? { unitType, ...rest } : {};
+  // Note: we want to rely on unitType written in public data of the listing entity.
+  //       The listingType configuration might have changed on the fly.
+  return unitTypeInPublicData ? { unitType: unitTypeInPublicData, ...rest } : {};
 };
 
 // Collect error message checks to a single function.
@@ -515,10 +517,10 @@ export class CheckoutPageComponent extends Component {
     const deliveryMethod = pageData.orderData?.deliveryMethod;
     const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
     const shippingDetailsMaybe = shippingDetails ? { shippingDetails } : {};
-    const listingType = pageData?.listing?.attributes?.publicData?.listingType;
+    const { listingType, unitType } = pageData?.listing?.attributes?.publicData || {};
     const protectedDataMaybe = {
       protectedData: {
-        ...transactionTypeDataMaybe(listingType, config),
+        ...transactionTypeDataMaybe(listingType, unitType, config),
         ...deliveryMethodMaybe,
         ...shippingDetailsMaybe,
       },
