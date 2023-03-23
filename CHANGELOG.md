@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [delete] remove outdated translation files (fr.json, es.json, de.json). We'll introduce them
+  again, when they are updated to match the current set of translation keys.
+  [#119](https://github.com/sharetribe/ftw-x/pull/119)
 - [fix] CheckoutPage: save unitType from publicData, not unitType in listingType config.
   [#118](https://github.com/sharetribe/ftw-x/pull/118)
 - [fix] typos, naming and improve the quantity handling if something is configured wrongly.
