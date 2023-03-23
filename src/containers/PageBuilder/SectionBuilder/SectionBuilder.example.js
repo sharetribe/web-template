@@ -657,7 +657,7 @@ export const SectionColumns = {
         callToAction: {
           fieldType: 'externalButtonLink',
           href: 'https://www.sharetribe.com/docs/',
-          content: 'Flex Docs',
+          content: 'Documentation',
         },
       },
       {
@@ -679,7 +679,7 @@ export const SectionColumns = {
         callToAction: {
           fieldType: 'externalButtonLink',
           href: 'https://www.sharetribe.com/docs/',
-          content: 'Flex Docs',
+          content: 'Documentation',
         },
       },
       {

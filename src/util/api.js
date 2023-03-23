@@ -105,7 +105,7 @@ export const transitionPrivileged = body => {
 
 // Create user with identity provider (e.g. Facebook or Google)
 //
-// If loginWithIdp api call fails and user can't authenticate to Flex with idp
+// If loginWithIdp api call fails and user can't authenticate to Marketplace API with idp
 // we will show option to create a new user with idp.
 // For that user needs to confirm data fetched from the idp.
 // After the confirmation, this endpoint is called to create a new user with confirmed data.
