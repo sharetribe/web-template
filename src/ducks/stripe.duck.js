@@ -252,7 +252,7 @@ export const confirmCardPayment = params => dispatch => {
   dispatch(confirmCardPaymentRequest());
 
   // When using default payment method paymentParams.payment_method is
-  // already set Flex API side, when request-payment transition is made
+  // already set Marketplace API side, when request-payment transition is made
   // so there's no need for paymentParams
   const args = paymentParams
     ? [stripePaymentIntentClientSecret, paymentParams]

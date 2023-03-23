@@ -6,7 +6,7 @@
 /**
  * Transitions
  *
- * These strings must sync with values defined in Flex API,
+ * These strings must sync with values defined in Marketplace API,
  * since transaction objects given by API contain info about last transitions.
  * All the actions in API side happen in transitions,
  * so we need to understand what those strings mean.

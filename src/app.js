@@ -29,7 +29,7 @@ import { IncludeScripts } from './util/includeScripts';
 import routeConfiguration from './routing/routeConfiguration';
 import Routes from './routing/Routes';
 
-// Flex template application uses English translations as default translations.
+// Sharetribe Web Template uses English translations as default translations.
 import defaultMessages from './translations/en.json';
 
 // If you want to change the language of default (fallback) translations,

@@ -326,7 +326,7 @@ export const TX_TRANSITION_ACTORS = [
  * Get the role of the current user on given transaction entity.
  *
  * @param {UUID} currentUserId UUID of the currentUser entity
- * @param {Object} transaction Transaction entity from Flex API
+ * @param {Object} transaction Transaction entity from Marketplace API
  */
 export const getUserTxRole = (currentUserId, transaction) => {
   const tx = ensureTransaction(transaction);
