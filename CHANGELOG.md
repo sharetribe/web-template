@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] CheckoutPage: save unitType from publicData, not unitType in listingType config.
+  [#118](https://github.com/sharetribe/ftw-x/pull/118)
 - [fix] typos, naming and improve the quantity handling if something is configured wrongly.
   [#117](https://github.com/sharetribe/ftw-x/pull/117)
 - [change] Pages/SectionCarousel: show next card a bit on mobile (fix margin-right)
