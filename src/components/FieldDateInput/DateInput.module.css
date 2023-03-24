@@ -208,7 +208,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateInput_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--colorSuccess);
     transition: all 0.2s ease-out;
   }
   /* Remove default bg-color and use our extra span instead '.renderedDay' */
@@ -222,7 +222,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateInput_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--colorSuccess);
     border-radius: calc(var(--DateInput_selectionHeight) / 2);
   }
   /* Remove default bg-color and use our extra span instead '.renderedDay' */

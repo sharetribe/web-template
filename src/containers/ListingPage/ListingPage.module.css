@@ -16,7 +16,7 @@
 }
 
 .errorText {
-  color: var(--failColor);
+  color: var(--colorFail);
   margin: 24px;
 }
 
@@ -95,7 +95,7 @@
 }
 
 .ownListingTextPendingApproval {
-  color: var(--attentionColor);
+  color: var(--colorAttention);
 }
 
 .closedListingText {

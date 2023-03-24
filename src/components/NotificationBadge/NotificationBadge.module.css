@@ -6,7 +6,7 @@
   color: var(--colorWhite);
   text-align: center;
 
-  background-color: var(--failColor);
+  background-color: var(--colorFail);
 
   /* Layout of a red dot */
   display: inline-block;

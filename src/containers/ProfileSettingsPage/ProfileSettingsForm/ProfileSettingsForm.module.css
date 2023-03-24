@@ -109,14 +109,14 @@
 .avatarUploadError {
   /* Placeholder border */
   border-style: dashed;
-  border-color: var(--failColor);
+  border-color: var(--colorFail);
   border-width: 2px;
 }
 
 .error {
   /* Font */
   composes: h4 from global;
-  color: var(--failColor);
+  color: var(--colorFail);
   margin-top: 18px;
   margin-bottom: 0;
 

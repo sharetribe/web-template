@@ -3,7 +3,7 @@
 }
 
 .fillSuccessColor {
-  fill: var(--successColor);
+  fill: var(--colorSuccess);
 }
 
 .strokeLightColor {

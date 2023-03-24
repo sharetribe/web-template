@@ -109,18 +109,18 @@ const MarketplaceColors = () => {
         <div className={css.colorsGroup}>
           <ColorCard
             mpColor={css.successColorBackground}
-            name="--successColor"
-            usage="e.g. color: var(--successColor);"
+            name="--colorSuccess"
+            usage="e.g. color: var(--colorSuccess);"
           />
           <ColorCard
             mpColor={css.failColorBackground}
-            name="--failColor"
-            usage="color: var(--failColor);"
+            name="--colorFail"
+            usage="color: var(--colorFail);"
           />
           <ColorCard
             mpColor={css.attentionColorBackground}
-            name="--attentionColor"
-            usage="color: var(--attentionColor);"
+            name="--colorAttention"
+            usage="color: var(--colorAttention);"
           />
         </div>
         <div className={css.colorsGroup}>

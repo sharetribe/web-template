@@ -118,7 +118,7 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--colorFail);
   margin: 23px 24px 24px 24px;
 
   @media (--viewportLarge) {
@@ -258,7 +258,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: var(--failColor);
+  background-color: var(--colorFail);
 }
 
 .itemUsername {
@@ -330,7 +330,7 @@
 
 .stateActionNeeded {
   font-weight: var(--fontWeightMedium);
-  color: var(--attentionColor);
+  color: var(--colorAttention);
 }
 
 .stateNoActionNeeded {

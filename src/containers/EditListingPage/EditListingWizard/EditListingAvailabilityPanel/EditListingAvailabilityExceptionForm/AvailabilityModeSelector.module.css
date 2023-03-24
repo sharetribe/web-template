@@ -5,11 +5,11 @@
 
 .checkedAvailable {
   display: none;
-  stroke: var(--successColor);
-  fill: var(--successColor);
+  stroke: var(--colorSuccess);
+  fill: var(--colorSuccess);
 }
 .checkedNotAvailable {
   display: none;
-  stroke: var(--failColor);
-  fill: var(--failColor);
+  stroke: var(--colorFail);
+  fill: var(--colorFail);
 }

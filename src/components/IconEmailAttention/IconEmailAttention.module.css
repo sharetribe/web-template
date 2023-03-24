@@ -6,5 +6,5 @@
 }
 
 .attentionStroke {
-  stroke: var(--attentionColor);
+  stroke: var(--colorAttention);
 }
