@@ -14,21 +14,25 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Heading was not imported correctly after changes to styling.
+  [#124](https://github.com/sharetribe/web-template/pull/124)
+- [change] rename some color-related CSS Properties.
+  [#122](https://github.com/sharetribe/web-template/pull/122)
 - [fix] Do not show stock in EditListingWizard if stockType is 'oneItem'.
-  [#121](https://github.com/sharetribe/ftw-x/pull/121)
+  [#121](https://github.com/sharetribe/web-template/pull/121)
 - [change] Update README.md and some code comments.
-  [#120](https://github.com/sharetribe/ftw-x/pull/120)
+  [#120](https://github.com/sharetribe/web-template/pull/120)
 - [delete] remove outdated translation files (fr.json, es.json, de.json). We'll introduce them
   again, when they are updated to match the current set of translation keys.
-  [#119](https://github.com/sharetribe/ftw-x/pull/119)
+  [#119](https://github.com/sharetribe/web-template/pull/119)
 - [fix] CheckoutPage: save unitType from publicData, not unitType in listingType config.
-  [#118](https://github.com/sharetribe/ftw-x/pull/118)
+  [#118](https://github.com/sharetribe/web-template/pull/118)
 - [fix] typos, naming and improve the quantity handling if something is configured wrongly.
-  [#117](https://github.com/sharetribe/ftw-x/pull/117)
+  [#117](https://github.com/sharetribe/web-template/pull/117)
 - [change] Pages/SectionCarousel: show next card a bit on mobile (fix margin-right)
-  [#116](https://github.com/sharetribe/ftw-x/pull/116)
+  [#116](https://github.com/sharetribe/web-template/pull/116)
 - [change] refactor CSS Properties for Grey colors (remove --matterColor\*)
-  [#115](https://github.com/sharetribe/ftw-x/pull/115)
+  [#115](https://github.com/sharetribe/web-template/pull/115)
 - [change] Refactor configurations to better work with upcoming config assets.
 
   - SearchPage layout: 'map' and 'grid'
@@ -38,24 +42,24 @@ way to update this template, but currently, we follow a pattern:
   - ListingPageHeroImage renamed as ListingPageCoverPhoto
   - Also other config files were affected
 
-  [#114](https://github.com/sharetribe/ftw-x/pull/114)
+  [#114](https://github.com/sharetribe/web-template/pull/114)
 
 - [fix] Remove dublicate ids from styleguide page.
-  [#113](https://github.com/sharetribe/ftw-x/pull/113)
+  [#113](https://github.com/sharetribe/web-template/pull/113)
 - [change] Rename global duck files to start with lower case letter.
-  [#112](https://github.com/sharetribe/ftw-x/pull/112)
+  [#112](https://github.com/sharetribe/web-template/pull/112)
 - [change] Update tests to use React Testing Library instead of Enzyme.
-  [#28](https://github.com/sharetribe/ftw-x/pull/28)
+  [#28](https://github.com/sharetribe/web-template/pull/28)
 - [change] Small changes to Signup form according to review feedback.
-  [#111](https://github.com/sharetribe/ftw-x/pull/111)
+  [#111](https://github.com/sharetribe/web-template/pull/111)
 - [change] Update code comments in configMaps.js
-  [#110](https://github.com/sharetribe/ftw-x/pull/110)
+  [#110](https://github.com/sharetribe/web-template/pull/110)
 - [fix] EditListingDeliveryPanel: H3 import was missing
-  [#109](https://github.com/sharetribe/ftw-x/pull/109)
+  [#109](https://github.com/sharetribe/web-template/pull/109)
 - [fix] Fix back-navigation after successful payment and notification dots for booking process.
-  [#108](https://github.com/sharetribe/ftw-x/pull/108)
+  [#108](https://github.com/sharetribe/web-template/pull/108)
 - [fix] Terms: add translation key, NotFoundPage: fix tests.
-  [#107](https://github.com/sharetribe/ftw-x/pull/107)
+  [#107](https://github.com/sharetribe/web-template/pull/107)
 - [change] Make old pages to use LayoutComposer. Remove old layout components:
 
   - LayoutSingleColumn (moved under LayoutComposer)
@@ -66,66 +70,66 @@ way to update this template, but currently, we follow a pattern:
   - LayoutWrapperAccountSettingsSideNav (moved under LayoutComposer)
   - LayoutWrapperFooter
 
-  [#106](https://github.com/sharetribe/ftw-x/pull/106)
+  [#106](https://github.com/sharetribe/web-template/pull/106)
 
 - [add] Add isRequired handler for CustomFieldMultiEnum.
-  [#105](https://github.com/sharetribe/ftw-x/pull/105)
+  [#105](https://github.com/sharetribe/web-template/pull/105)
 - [add] Add keyword search option ot NotFoundPage.
-  [#103](https://github.com/sharetribe/ftw-x/pull/103)
+  [#103](https://github.com/sharetribe/web-template/pull/103)
 - [add] Add PrimaryButtonInline and SecondaryButtonInline. Refactor utility-classes away from
-  Buttons. [#102](https://github.com/sharetribe/ftw-x/pull/102)
+  Buttons. [#102](https://github.com/sharetribe/web-template/pull/102)
 - [add] Add Heading and H1...H6 components to main app. These are separate from PageBuilder. So that
-  Pages could use different fonts if needed. [#97](https://github.com/sharetribe/ftw-x/pull/97)
+  Pages could use different fonts if needed. [#97](https://github.com/sharetribe/web-template/pull/97)
 - [add] Add --contentMaxWidth and --contentMaxWidthPages.
-  [#101](https://github.com/sharetribe/ftw-x/pull/101)
+  [#101](https://github.com/sharetribe/web-template/pull/101)
 - [change] Improve error handling on PageBuilder and LandingPage.
-  [#100](https://github.com/sharetribe/ftw-x/pull/100)
+  [#100](https://github.com/sharetribe/web-template/pull/100)
 - [add] Add privacy policy modal to sign up page and make it mandatory to click checkbox. This was
   suggested as more legally clear way that users have noticed the terms.
-  [#99](https://github.com/sharetribe/ftw-x/pull/99)
+  [#99](https://github.com/sharetribe/web-template/pull/99)
 - [change] Handle situations, where tx process name is unrecognized.
-  [#98](https://github.com/sharetribe/ftw-x/pull/98)
+  [#98](https://github.com/sharetribe/web-template/pull/98)
 - [change] change enquiry/enquire to inquiry/inquire.
-  [#94](https://github.com/sharetribe/ftw-x/pull/94)
+  [#94](https://github.com/sharetribe/web-template/pull/94)
 - [change] Refactor remaining via.placeholder.com references to use picsum.photos instead.
-  [#96](https://github.com/sharetribe/ftw-x/pull/96)
+  [#96](https://github.com/sharetribe/web-template/pull/96)
 - [change] add multiple placeholder texts for custom listing fields.
-  [#93](https://github.com/sharetribe/ftw-x/pull/93)
+  [#93](https://github.com/sharetribe/web-template/pull/93)
 - [fix] Some heading style fixes and lineBreak fixes to microcopy.
-  [#92](https://github.com/sharetribe/ftw-x/pull/92)
+  [#92](https://github.com/sharetribe/web-template/pull/92)
 - [delete] Add LinkedLogo and use it in different Topbars.
-  [#91](https://github.com/sharetribe/ftw-x/pull/91)
+  [#91](https://github.com/sharetribe/web-template/pull/91)
 - [delete] Remove unused microcopy keys from en.json
-  [#90](https://github.com/sharetribe/ftw-x/pull/90)
+  [#90](https://github.com/sharetribe/web-template/pull/90)
 - [change] Rename default transaction process and associated files.
-  [#88](https://github.com/sharetribe/ftw-x/pull/88)
+  [#88](https://github.com/sharetribe/web-template/pull/88)
 - [change] New font (apple-system & 'Inter') and all kind of changes related to that.
-  [#73](https://github.com/sharetribe/ftw-x/pull/73)
+  [#73](https://github.com/sharetribe/web-template/pull/73)
 - [fix] When time zone changes, exceptions should be fetch again. (Query boundaries change.)
-  [#87](https://github.com/sharetribe/ftw-x/pull/87)
+  [#87](https://github.com/sharetribe/web-template/pull/87)
 - [add] Update translations (en.json). We'll change these later, as these follow biketribe theme.
-  [#86](https://github.com/sharetribe/ftw-x/pull/86)
+  [#86](https://github.com/sharetribe/web-template/pull/86)
 - [add] Add BookingLocationMaybe section into the TransactionPage.js
-  [#85](https://github.com/sharetribe/ftw-x/pull/85)
+  [#85](https://github.com/sharetribe/web-template/pull/85)
 - [change] Add listingType which contains transactionType. Defined in configListing.js
-  [#84](https://github.com/sharetribe/ftw-x/pull/84)
+  [#84](https://github.com/sharetribe/web-template/pull/84)
 - [delete] Remove unnecessary code and translation keys.
-  [#83](https://github.com/sharetribe/ftw-x/pull/83)
+  [#83](https://github.com/sharetribe/web-template/pull/83)
 - [change] Change of terminology: enquire to inquire and enquiry to inquiry. Process change happens
-  later. [#82](https://github.com/sharetribe/ftw-x/pull/82)
+  later. [#82](https://github.com/sharetribe/web-template/pull/82)
 - [fix] Update styleguide examples that produced errors.
-  [#81](https://github.com/sharetribe/ftw-x/pull/81)
+  [#81](https://github.com/sharetribe/web-template/pull/81)
 - [fix] WeeklyCalendar redirect should use start of week instead of today.
-  [#80](https://github.com/sharetribe/ftw-x/pull/80)
+  [#80](https://github.com/sharetribe/web-template/pull/80)
 - [fix] WeeklyCalendar should set currentMonth initially to intialVisibleMonth.
-  [#79](https://github.com/sharetribe/ftw-x/pull/79)
+  [#79](https://github.com/sharetribe/web-template/pull/79)
 - [fix] WeeklyCalendar had bugs in navigation buttons.
-  [#78](https://github.com/sharetribe/ftw-x/pull/78)
+  [#78](https://github.com/sharetribe/web-template/pull/78)
 - [add] Add environment variable to prevent data loading in SSR
-  [#77](https://github.com/sharetribe/ftw-x/pull/77)
-- [change] Refactor EditListingWizard CSS [#76](https://github.com/sharetribe/ftw-x/pull/76)
+  [#77](https://github.com/sharetribe/web-template/pull/77)
+- [change] Refactor EditListingWizard CSS [#76](https://github.com/sharetribe/web-template/pull/76)
 - [change] Refactor CSS variables and rename contextHelpers.js as uiHelpers.js
-  [#75](https://github.com/sharetribe/ftw-x/pull/75)
+  [#75](https://github.com/sharetribe/web-template/pull/75)
 - [change] Availability management has been changed so that default view is Weekly calendar.
 
   - All the times are shown in listing's time zone
@@ -133,17 +137,17 @@ way to update this template, but currently, we follow a pattern:
   - EditListingAvailabilityExceptionForm makes it possible to add exceptions to the plan
   - settings.verbose prints some debug info to browser's console (src/config/settings.js)
 
-  [#74](https://github.com/sharetribe/ftw-x/pull/74)
+  [#74](https://github.com/sharetribe/web-template/pull/74)
 
 - [change] Fixes: image variant creation, FieldDateRangeInput gets isDaily flag instead of
   line-items, BookingTimeForm should show error message.
-  [#72](https://github.com/sharetribe/ftw-x/pull/72)
+  [#72](https://github.com/sharetribe/web-template/pull/72)
 - [change] TransactionPage: quantity integer was not parsed early enough.
-  [#71](https://github.com/sharetribe/ftw-x/pull/71)
+  [#71](https://github.com/sharetribe/web-template/pull/71)
 - [change] Move src/util/transaction\*.js files to new directory src/transactions/
-  [#70](https://github.com/sharetribe/ftw-x/pull/70)
+  [#70](https://github.com/sharetribe/web-template/pull/70)
 - [change] ResponsiveBackgroundImageContainer: allow undefined image (use marketplaceColor).
-  [#69](https://github.com/sharetribe/ftw-x/pull/69)
+  [#69](https://github.com/sharetribe/web-template/pull/69)
 - [change] Update emails in product process and make changes according to bug reports and change
   requests.
 
@@ -151,7 +155,7 @@ way to update this template, but currently, we follow a pattern:
   - Add delayed refresh for transaction entity after makeTransition call.
   - ListingPage: Huge stock can't be rendered as select options (max 100 limit)
 
-  [#68](https://github.com/sharetribe/ftw-x/pull/68)
+  [#68](https://github.com/sharetribe/web-template/pull/68)
 
 - [change] Update processes
 
@@ -159,80 +163,80 @@ way to update this template, but currently, we follow a pattern:
   - Update email templates: to work with different line-items (hour, day, night)
   - Add new state to booking: expired (use it instead of declined)
 
-  [#67](https://github.com/sharetribe/ftw-x/pull/67)
+  [#67](https://github.com/sharetribe/web-template/pull/67)
 
 - [change] Fix for buggy situation when showStock flag is false.
-  [#66](https://github.com/sharetribe/ftw-x/pull/66)
+  [#66](https://github.com/sharetribe/web-template/pull/66)
 - [change] Update styleguide and couple of translations.
-  [#64](https://github.com/sharetribe/ftw-x/pull/64)
+  [#64](https://github.com/sharetribe/web-template/pull/64)
 - [change] Improve listingExtendedData config / includeForTransactionTypes handling.
-  [#63](https://github.com/sharetribe/ftw-x/pull/63)
+  [#63](https://github.com/sharetribe/web-template/pull/63)
 - [change] Refactor microcopy aka translations and pass arguments to them.
-  [#62](https://github.com/sharetribe/ftw-x/pull/62)
+  [#62](https://github.com/sharetribe/web-template/pull/62)
 - [change] Add fixes, remove some legacy code, and improve code comments.
-  [#61](https://github.com/sharetribe/ftw-x/pull/61)
+  [#61](https://github.com/sharetribe/web-template/pull/61)
 - [change] Rename default processes, and the references in code and translations.
 
   - Reorder actions that decline or cancel booking in reference booking process
   - Add update-protected-data action to enquiry and payment transitions
   - This also adds couple of updated translations for biketribe
 
-  [#60](https://github.com/sharetribe/ftw-x/pull/60)
+  [#60](https://github.com/sharetribe/web-template/pull/60)
 
 - [change] Update styling of Inbox tabs and InboxItem.
-  [#59](https://github.com/sharetribe/ftw-x/pull/59)
+  [#59](https://github.com/sharetribe/web-template/pull/59)
 - [fix] Severa improvements and bug fixes. Most notable ones:
 
   - Reduce transaction types to only 1
   - CheckoutPage: the new listingTitle was only meant for mobile layout
   - util/search.js: isStockInUse had a bug
 
-  [#58](https://github.com/sharetribe/ftw-x/pull/58)
+  [#58](https://github.com/sharetribe/web-template/pull/58)
 
 - [fix] Initial versions of new supported default transaction processes.
-  [#57](https://github.com/sharetribe/ftw-x/pull/57)
+  [#57](https://github.com/sharetribe/web-template/pull/57)
 - [change] change ListingExtendedData config includeForProcessAliases to includeForTransactionTypes
   and remove isBookingUnitType in favor of isBookingProcessAlias.
-  [#56](https://github.com/sharetribe/ftw-x/pull/56)
+  [#56](https://github.com/sharetribe/web-template/pull/56)
 - [fix] Bug fixes and refactoring: AuthenticationPage/EmailVerificationInfo.js had bugs,
-  StripeConnectAccountInfo caused warnings. [#55](https://github.com/sharetribe/ftw-x/pull/55)
+  StripeConnectAccountInfo caused warnings. [#55](https://github.com/sharetribe/web-template/pull/55)
 - [fix] ListingPage: the title of section details should not be visible if no details is set.
-  [#54](https://github.com/sharetribe/ftw-x/pull/54)
+  [#54](https://github.com/sharetribe/web-template/pull/54)
 - [add] Add flag: enforceValidTransactionType for listing query on SearchPage.
-  [#53](https://github.com/sharetribe/ftw-x/pull/53)
+  [#53](https://github.com/sharetribe/web-template/pull/53)
 - [fix] ListingImageGallery didn't get variantPrefix due to buggy mergeConfig.
-  [#51](https://github.com/sharetribe/ftw-x/pull/51)
+  [#51](https://github.com/sharetribe/web-template/pull/51)
 - [fix] Update configListing.js to more closely match Biketribe configs. Also fix label in
   ListingPage/SectionDetailsMaybe and add grid for secondary filter panel.
-  [#50](https://github.com/sharetribe/ftw-x/pull/50)
+  [#50](https://github.com/sharetribe/web-template/pull/50)
 - [fix] TransactionPage/enquiry: timeSlot query was missing extra parameter
-  [#49](https://github.com/sharetribe/ftw-x/pull/49)
+  [#49](https://github.com/sharetribe/web-template/pull/49)
 - [change] Rename src/config/settingsApp.js as src/config/settings.js
-  [#48](https://github.com/sharetribe/ftw-x/pull/48)
+  [#48](https://github.com/sharetribe/web-template/pull/48)
 - [change] Improve transaction type support:
 
   - Restrict searches to valid transactionTypes, transactionProcessAlias, and unitType
   - Note: add search schemas with Flex CLI!
   - Add more transactionTypes to make testing easier
 
-  [#47](https://github.com/sharetribe/ftw-x/pull/47)
+  [#47](https://github.com/sharetribe/web-template/pull/47)
 
 - [change] CheckoutPage: add location for bookingable listings too.
-  [#46](https://github.com/sharetribe/ftw-x/pull/46)
+  [#46](https://github.com/sharetribe/web-template/pull/46)
 - [change] Make OrderPanel to use React Portal instead of rendering within app's DOM.
-  [#45](https://github.com/sharetribe/ftw-x/pull/45)
+  [#45](https://github.com/sharetribe/web-template/pull/45)
 - [add] listing extended data:
 
   - Sanitize configured custom fields
   - Change schemaOptions to work with objects containing 'option' and 'label'.
   - Use transactionType in EditListingWizard (active tab feature)
 
-  [#44](https://github.com/sharetribe/ftw-x/pull/44)
+  [#44](https://github.com/sharetribe/web-template/pull/44)
 
 - [change] Biketribe theming: update links in footer and add social media sharing images.
-  [#43](https://github.com/sharetribe/ftw-x/pull/43)
+  [#43](https://github.com/sharetribe/web-template/pull/43)
 - [change] Biketribe theming: lots of UI related changes, but also some refactoring of components.
-  [#42](https://github.com/sharetribe/ftw-x/pull/42)
+  [#42](https://github.com/sharetribe/web-template/pull/42)
 - [change] Refactor configurations:
 
   - Split defaultConfig to sub files based on context
@@ -255,10 +259,10 @@ way to update this template, but currently, we follow a pattern:
     - canonicalRootURL > marketplaceRootURL
     - siteTitle > marketplaceName
 
-  [#41](https://github.com/sharetribe/ftw-x/pull/41)
+  [#41](https://github.com/sharetribe/web-template/pull/41)
 
 - [change] Split to defaultConfig.js and appSettings.js and move default configs to React Context.
-  [#39](https://github.com/sharetribe/ftw-x/pull/39)
+  [#39](https://github.com/sharetribe/web-template/pull/39)
 - [change] SearchPage changes: cleaning some shared code and add Dates filter.
 
   - Add Dates filter. It works with listings that have different time zones in use.
@@ -266,69 +270,69 @@ way to update this template, but currently, we follow a pattern:
   - Clean SearchPage variants: Rename SearchPage.helpers.js as SearchPage.shared.js and move several
     shared functions to this shared file.
 
-  [#35](https://github.com/sharetribe/ftw-x/pull/35)
+  [#35](https://github.com/sharetribe/web-template/pull/35)
 
 - [change] OrderPanel: update consistent look-and-feel for the order forms.
 
   - Remove unused FieldBirthdayInput component
   - Remove unused timeZone parameter
 
-  [#34](https://github.com/sharetribe/ftw-x/pull/34)
+  [#34](https://github.com/sharetribe/web-template/pull/34)
 
 - [add]TimeRange component. (Remove BookingTimeInfo from shared components)
-  [#30](https://github.com/sharetribe/ftw-x/pull/30)
+  [#30](https://github.com/sharetribe/web-template/pull/30)
 - [change]Rename the default booking process: flex-booking-default-process.
-  [#29](https://github.com/sharetribe/ftw-x/pull/29)
+  [#29](https://github.com/sharetribe/web-template/pull/29)
 - [change] ListingPage: remove filtersConfig. Use listingExtendedData & defaultFilters instead.
-  [#27](https://github.com/sharetribe/ftw-x/pull/27)
+  [#27](https://github.com/sharetribe/web-template/pull/27)
 - [change] SearchPage: remove filtersConfig. Use listingExtendedData & defaultFilters instead.
-  [#26](https://github.com/sharetribe/ftw-x/pull/26)
+  [#26](https://github.com/sharetribe/web-template/pull/26)
 - [add] EditListingWizard: panels get picked based on selected transaction process. In addition,
   submit button translations and pricing panel are refactored.
-  [#23](https://github.com/sharetribe/ftw-x/pull/23)
+  [#23](https://github.com/sharetribe/web-template/pull/23)
 - [add] EditListingDetailsPanel: add more custom extended data fields and initialize form
   accordingly. Transaction process alias can be set once (i.e. before listing draft is created).
-  [#24](https://github.com/sharetribe/ftw-x/pull/24)
+  [#24](https://github.com/sharetribe/web-template/pull/24)
 - [change] Extract getStateData to own page-specific files.
-  [#21](https://github.com/sharetribe/ftw-x/pull/21)
+  [#21](https://github.com/sharetribe/web-template/pull/21)
 - [add] marketplace-custom-config.js: add listingExtendedData config.
-  [#22](https://github.com/sharetribe/ftw-x/pull/22)
+  [#22](https://github.com/sharetribe/web-template/pull/22)
 - [change] FieldDateRangeInput: rename unitType as lineItemUnitType in DateRangeInput
-  [#20](https://github.com/sharetribe/ftw-x/pull/20)
+  [#20](https://github.com/sharetribe/web-template/pull/20)
 - [change] InboxPage: use React Intl (ICU) select syntax for tx status.
-  [#19](https://github.com/sharetribe/ftw-x/pull/19)
+  [#19](https://github.com/sharetribe/web-template/pull/19)
 - [change] Refactor orderData passing to checkout page, pass processAlias to CheckoutPage thunk
-  functions and unitType variable usage. [#17](https://github.com/sharetribe/ftw-x/pull/17)
+  functions and unitType variable usage. [#17](https://github.com/sharetribe/web-template/pull/17)
 - [add] Refactor unitType usage and make OrderBreakdown work with it.
-  [#15](https://github.com/sharetribe/ftw-x/pull/15)
+  [#15](https://github.com/sharetribe/web-template/pull/15)
 - [add] ListingPage: start enquiry from process found from public data.
-  [#14](https://github.com/sharetribe/ftw-x/pull/14)
+  [#14](https://github.com/sharetribe/web-template/pull/14)
 - [add] EditListingDetailsPanel: transactionProcessAlias and unitType
 
   - unitType could be 'item', 'day', 'night', 'hour'
   - Remove EditListingFeaturesPanel & EditListingFeaturesForm
   - Remove EditListingPoliciesPanel & EditListingPoliciesForm
 
-  [#13](https://github.com/sharetribe/ftw-x/pull/13)
+  [#13](https://github.com/sharetribe/web-template/pull/13)
 
 - [add] InboxPage: support for multiple processes.
-  [#12](https://github.com/sharetribe/ftw-x/pull/12)
+  [#12](https://github.com/sharetribe/web-template/pull/12)
 - [add] TransactionPage: support for multiple processes.
-  [#11](https://github.com/sharetribe/ftw-x/pull/11)
+  [#11](https://github.com/sharetribe/web-template/pull/11)
 - [add] Add getTransitionsNeedingProviderAttention to transcation.js and use it in user.duck.js
-  [#10](https://github.com/sharetribe/ftw-x/pull/10)
+  [#10](https://github.com/sharetribe/web-template/pull/10)
 - [change] CheckoutPage: transitions get transition name and isPrivileged as params.
-  [#9](https://github.com/sharetribe/ftw-x/pull/9)
+  [#9](https://github.com/sharetribe/web-template/pull/9)
 - [change] UI facelift for field elements, including text field, textarea and select.
-  [#1](https://github.com/sharetribe/ftw-x/pull/1)
+  [#1](https://github.com/sharetribe/web-template/pull/1)
 - [change] Refactor action button transition thunks and pass transition name to it.
-  [#8](https://github.com/sharetribe/ftw-x/pull/8)
+  [#8](https://github.com/sharetribe/web-template/pull/8)
 - [add] Another process graph: src/util/transactionProcessBooking.js
-  [#4](https://github.com/sharetribe/ftw-x/pull/4)
+  [#4](https://github.com/sharetribe/web-template/pull/4)
 - [change] Refactor TransactionPage title construction and translation keys.
-  [#3](https://github.com/sharetribe/ftw-x/pull/3)
+  [#3](https://github.com/sharetribe/web-template/pull/3)
 - [fix] Temporarily disallow Node v17, since it causes issues with dependencies.
-  [#7](https://github.com/sharetribe/ftw-x/pull/7)
+  [#7](https://github.com/sharetribe/web-template/pull/7)
 - [change] Extract product process graph to separate file and change transaction.js
 
   - process graphs are in separate files
@@ -336,7 +340,7 @@ way to update this template, but currently, we follow a pattern:
     selecting process in UI components
   - transitions and states are accessible through selected process
 
-  [#2](https://github.com/sharetribe/ftw-x/pull/2)
+  [#2](https://github.com/sharetribe/web-template/pull/2)
 
 ## [v11.1.0] 2023-02-28
 

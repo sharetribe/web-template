@@ -2,7 +2,7 @@ import React from 'react';
 
 import { FormattedMessage } from '../../util/reactIntl';
 
-import { NamedLink, IconEmailSent, InlineTextButton, IconClose, H1 } from '../../components';
+import { Heading, NamedLink, IconEmailSent, InlineTextButton, IconClose } from '../../components';
 
 import css from './AuthenticationPage.module.css';
 
