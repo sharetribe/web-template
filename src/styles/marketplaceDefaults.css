@@ -24,9 +24,9 @@
   --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
   --marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
 
-  --successColor: #2ecc71;
-  --successColorDark: #239954;
-  --successColorLight: #f0fff6;
+  --colorSuccess: #2ecc71;
+  --colorSuccessDark: #239954;
+  --colorSuccessLight: #f0fff6;
   --failColor: #ff0000;
   --failColorLight: #fff0f0;
   --attentionColor: #ffaa00;
@@ -1016,7 +1016,7 @@ textarea {
 
   /* Button colors */
   /* Primary button uses success color */
-  background-color: var(--successColor);
+  background-color: var(--colorSuccess);
   color: var(--colorWhite);
 
   @media (--viewportMedium) {
@@ -1027,7 +1027,7 @@ textarea {
 .buttonPrimary:hover {
   outline: none;
   box-shadow: var(--boxShadowButton);
-  background-color: var(--successColorDark);
+  background-color: var(--colorSuccessDark);
   color: var(--colorWhite);
 }
 .buttonPrimary:hover {
@@ -1064,7 +1064,7 @@ textarea {
   border: none;
   border-radius: var(--borderRadiusMedium);
 
-  background-color: var(--successColor);
+  background-color: var(--colorSuccess);
   color: var(--colorWhite);
 
   @media (--viewportMedium) {
@@ -1076,7 +1076,7 @@ textarea {
   outline: none;
   box-shadow: var(--boxShadowButton);
   text-decoration: none;
-  background-color: var(--successColorDark);
+  background-color: var(--colorSuccessDark);
   color: var(--colorWhite);
 }
 .buttonPrimaryInline:disabled {

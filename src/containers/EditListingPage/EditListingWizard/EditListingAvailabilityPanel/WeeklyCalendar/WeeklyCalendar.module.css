@@ -207,7 +207,7 @@
 }
 
 .isAvailable {
-  background-color: var(--successColor);
+  background-color: var(--colorSuccess);
 }
 
 .planEntry {

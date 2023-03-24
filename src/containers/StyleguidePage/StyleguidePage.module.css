@@ -224,7 +224,7 @@
 
 .successColorBackground {
   composes: color;
-  background-color: var(--successColor);
+  background-color: var(--colorSuccess);
 }
 
 .failColorBackground {

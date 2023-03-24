@@ -56,7 +56,7 @@
 }
 
 .primaryButton.inProgress:disabled {
-  background-color: var(--successColor);
+  background-color: var(--colorSuccess);
 }
 
 .secondaryButton.inProgress:disabled,
@@ -73,7 +73,7 @@
 }
 
 .primaryButton.ready:disabled {
-  background-color: var(--successColor);
+  background-color: var(--colorSuccess);
 }
 
 .secondaryButton.ready:disabled,

@@ -47,7 +47,7 @@
 }
 
 .iconCheckmark {
-  stroke: var(--successColor);
+  stroke: var(--colorSuccess);
   display: inline-block;
   margin: 12px 0 0 24px;
 }

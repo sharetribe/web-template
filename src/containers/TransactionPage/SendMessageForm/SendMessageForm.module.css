@@ -21,7 +21,7 @@
 }
 
 .fillSuccess {
-  fill: var(--successColor);
+  fill: var(--colorSuccess);
 }
 
 .strokeMatter {
