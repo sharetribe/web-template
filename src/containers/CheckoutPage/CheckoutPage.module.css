@@ -215,7 +215,7 @@
   color: var(--colorFail);
 }
 .notFoundError {
-  color: var(--attentionColor);
+  color: var(--colorAttention);
 }
 
 .speculateError {

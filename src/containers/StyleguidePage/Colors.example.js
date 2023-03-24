@@ -119,8 +119,8 @@ const MarketplaceColors = () => {
           />
           <ColorCard
             mpColor={css.attentionColorBackground}
-            name="--attentionColor"
-            usage="color: var(--attentionColor);"
+            name="--colorAttention"
+            usage="color: var(--colorAttention);"
           />
         </div>
         <div className={css.colorsGroup}>

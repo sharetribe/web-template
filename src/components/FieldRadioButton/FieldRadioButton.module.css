@@ -77,7 +77,7 @@
 }
 
 .required {
-  stroke: var(--attentionColor);
+  stroke: var(--colorAttention);
   &:hover {
     stroke: pink;
   }

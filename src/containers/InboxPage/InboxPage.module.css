@@ -330,7 +330,7 @@
 
 .stateActionNeeded {
   font-weight: var(--fontWeightMedium);
-  color: var(--attentionColor);
+  color: var(--colorAttention);
 }
 
 .stateNoActionNeeded {
