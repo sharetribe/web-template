@@ -31,8 +31,8 @@
   --colorFailLight: #fff0f0;
   --colorAttention: #ffaa00;
   --colorAttentionLight: #fff7f0;
-  --bannedColorLight: var(--marketplaceColorLight);
-  --bannedColorDark: var(--marketplaceColor);
+  --colorBannedLight: var(--marketplaceColorLight);
+  --colorBannedDark: var(--marketplaceColor);
 
   /* B&W and Grey palette */
 
