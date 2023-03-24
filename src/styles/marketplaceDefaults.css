@@ -19,10 +19,14 @@
   /**
    * Marketplace color comes by default from src/config/brandingConfig.js
    * It overwrites these CSS Properties.
+   * In the future, we are planning to bring more --marketplace* CSS Properties
+   * from hosted assets, which means that they could be managed through Console.
    */
   --marketplaceColor: #5d2bc0; /* hsl(260, 63%, 46%) */
   --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
   --marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
+
+  /* Colors used for different functions (like error texts) */
 
   --colorSuccess: #2ecc71;
   --colorSuccessDark: #239954;
