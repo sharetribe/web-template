@@ -88,7 +88,7 @@
   right: 17px;
 
   /* Style: red dot with white border */
-  background-color: var(--failColor);
+  background-color: var(--colorFail);
   border: 2px solid var(--colorWhite);
 
   animation-name: notificationPop;

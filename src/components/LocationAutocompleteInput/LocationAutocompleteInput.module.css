@@ -113,7 +113,7 @@ bottom of the container.
     padding: 9px 24px;
 
     @media (--viewportMedium) {
-      color: var(--matterColorLightTransparent);
+      color: var(--colorLightTransparent);
       padding: 10px 36px;
       margin: 0;
     }

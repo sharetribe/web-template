@@ -224,17 +224,17 @@
 
 .successColorBackground {
   composes: color;
-  background-color: var(--successColor);
+  background-color: var(--colorSuccess);
 }
 
 .failColorBackground {
   composes: color;
-  background-color: var(--failColor);
+  background-color: var(--colorFail);
 }
 
 .attentionColorBackground {
   composes: color;
-  background-color: var(--attentionColor);
+  background-color: var(--colorAttention);
 }
 
 .colorBlack {

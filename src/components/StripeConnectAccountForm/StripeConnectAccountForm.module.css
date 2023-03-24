@@ -87,7 +87,7 @@
 }
 
 .missingStripeKey {
-  color: var(--failColor);
+  color: var(--colorFail);
 }
 
 .accountInformationTitle {

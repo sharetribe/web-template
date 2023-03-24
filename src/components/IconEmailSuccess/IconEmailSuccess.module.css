@@ -6,7 +6,7 @@
 }
 
 .successFill {
-  fill: var(--successColor);
+  fill: var(--colorSuccess);
 }
 
 .checkStroke {

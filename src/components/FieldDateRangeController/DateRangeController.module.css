@@ -172,7 +172,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateRangeController_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--colorSuccess);
     color: var(--colorWhite);
   }
 
@@ -191,7 +191,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateRangeController_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--colorSuccess);
     color: var(--colorWhite);
     border-top-left-radius: calc(var(--DateRangeController_selectionHeight) / 2);
     border-bottom-left-radius: calc(var(--DateRangeController_selectionHeight) / 2);
@@ -207,7 +207,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateRangeController_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--colorSuccess);
     color: var(--colorWhite);
     border-top-right-radius: calc(var(--DateRangeController_selectionHeight) / 2);
     border-bottom-right-radius: calc(var(--DateRangeController_selectionHeight) / 2);
@@ -220,7 +220,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateRangeController_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--colorSuccess);
     color: var(--colorWhite);
   }
 
@@ -230,7 +230,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateRangeController_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--colorSuccess);
     color: var(--colorWhite);
     transition: all 0.2s ease-out;
   }

@@ -21,7 +21,7 @@
   &:hover + label .boxSuccess,
   &:focus + label .boxSuccess,
   &:checked + label .boxSuccess {
-    stroke: var(--successColor);
+    stroke: var(--colorSuccess);
   }
 
   /* disabled version */
@@ -41,7 +41,7 @@
   /* Display the "check" when checked */
   &:checked + label .checkedSuccess {
     display: inline;
-    stroke: var(--successColor);
+    stroke: var(--colorSuccess);
     stroke-width: 1px;
   }
 
@@ -87,7 +87,7 @@
 }
 .checkedSuccess {
   display: none;
-  fill: var(--successColor);
+  fill: var(--colorSuccess);
 }
 
 .checkedDisabled {

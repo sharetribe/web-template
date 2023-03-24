@@ -3,6 +3,6 @@
   transition: var(--transitionStyleButton);
 
   &:hover {
-    stroke: var(--failColor);
+    stroke: var(--colorFail);
   }
 }

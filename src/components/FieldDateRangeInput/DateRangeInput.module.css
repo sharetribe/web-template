@@ -193,7 +193,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateRangeInput_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--colorSuccess);
     transition: all 0.2s ease-out;
   }
   /* Remove default bg-color and use our extra span instead '.renderedDay' */
@@ -207,7 +207,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateRangeInput_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--colorSuccess);
     border-top-left-radius: calc(var(--DateRangeInput_selectionHeight) / 2);
     border-bottom-left-radius: calc(var(--DateRangeInput_selectionHeight) / 2);
   }
@@ -233,7 +233,7 @@
     align-items: center;
     width: 100%;
     height: var(--DateRangeInput_selectionHeight);
-    background-color: var(--successColor);
+    background-color: var(--colorSuccess);
     border-top-right-radius: calc(var(--DateRangeInput_selectionHeight) / 2);
     border-bottom-right-radius: calc(var(--DateRangeInput_selectionHeight) / 2);
     color: var(--colorWhite);

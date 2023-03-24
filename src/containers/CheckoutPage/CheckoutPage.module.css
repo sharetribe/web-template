@@ -212,14 +212,14 @@
   }
 }
 .orderError {
-  color: var(--failColor);
+  color: var(--colorFail);
 }
 .notFoundError {
-  color: var(--attentionColor);
+  color: var(--colorAttention);
 }
 
 .speculateError {
-  color: var(--failColor);
+  color: var(--colorFail);
   margin: 19px 0 1px 0;
 
   @media (--viewportLarge) {

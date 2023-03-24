@@ -16,7 +16,7 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--colorFail);
 }
 
 .deliveryOption {
@@ -62,7 +62,7 @@
 }
 
 .validLocation {
-  /* border-bottom-color: var(--successColor); */
+  /* border-bottom-color: var(--colorSuccess); */
 }
 
 .input {

@@ -46,7 +46,7 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--colorFail);
 }
 
 .timezonePicker {

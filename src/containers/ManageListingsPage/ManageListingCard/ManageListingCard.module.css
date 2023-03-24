@@ -157,7 +157,7 @@
 
   &:hover {
     text-decoration: none;
-    background-color: var(--failColor);
+    background-color: var(--colorFail);
     cursor: pointer;
   }
 

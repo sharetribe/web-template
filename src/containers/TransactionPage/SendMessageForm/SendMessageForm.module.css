@@ -21,7 +21,7 @@
 }
 
 .fillSuccess {
-  fill: var(--successColor);
+  fill: var(--colorSuccess);
 }
 
 .strokeMatter {
@@ -44,7 +44,7 @@
   composes: h5 from global;
 
   font-weight: var(--fontWeightMedium);
-  color: var(--failColor);
+  color: var(--colorFail);
   margin: 0;
 }
 

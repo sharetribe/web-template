@@ -60,20 +60,20 @@
 
 /* Verification required box */
 .verficiationNeededBox {
-  border: 1px solid var(--attentionColor);
-  background: var(--attentionColorLight);
+  border: 1px solid var(--colorAttention);
+  background: var(--colorAttentionLight);
 }
 
 /* Verification error box */
 .verficiationErrorBox {
   border: var(--borderErrorField);
-  background: var(--failColorLight);
+  background: var(--colorFailLight);
 }
 
 /* Verification success box */
 .verficiationSuccessBox {
-  background: var(--successColorLight);
-  border: 1px solid var(--successColor);
+  background: var(--colorSuccessLight);
+  border: 1px solid var(--colorSuccess);
   padding: 8px 24px;
 }
 
@@ -106,6 +106,6 @@
 .spinner {
   width: 24px;
   height: 24px;
-  stroke: var(--successColor);
+  stroke: var(--colorSuccess);
   stroke-width: 3px;
 }
