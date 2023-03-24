@@ -234,7 +234,7 @@
 
 .attentionColorBackground {
   composes: color;
-  background-color: var(--attentionColor);
+  background-color: var(--colorAttention);
 }
 
 .colorBlack {

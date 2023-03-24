@@ -95,7 +95,7 @@
 }
 
 .ownListingTextPendingApproval {
-  color: var(--attentionColor);
+  color: var(--colorAttention);
 }
 
 .closedListingText {
