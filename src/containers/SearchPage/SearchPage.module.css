@@ -182,7 +182,7 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--colorFail);
   padding-left: 24px;
   padding-right: 24px;
 }

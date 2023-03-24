@@ -34,13 +34,13 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--colorFail);
   font-size: 13px;
 }
 
 .errorMessage {
   margin-top: 24px;
-  color: var(--failColor);
+  color: var(--colorFail);
 }
 
 .paymentMethodSelector {
@@ -154,5 +154,5 @@
 }
 
 .missingStripeKey {
-  color: var(--failColor);
+  color: var(--colorFail);
 }

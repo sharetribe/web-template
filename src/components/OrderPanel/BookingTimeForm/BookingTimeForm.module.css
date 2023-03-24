@@ -47,14 +47,14 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--colorFail);
   margin: 0 24px;
   display: inline-block;
 }
 
 .sideBarError {
   composes: h4 from global;
-  color: var(--failColor);
+  color: var(--colorFail);
   margin: 0 24px 12px 24px;
 
   @media (--viewportMedium) {

@@ -16,7 +16,7 @@
 }
 
 .errorText {
-  color: var(--failColor);
+  color: var(--colorFail);
   margin: 24px;
 }
 

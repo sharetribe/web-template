@@ -17,7 +17,7 @@
 
 .error {
   composes: loading;
-  color: var(--failColor);
+  color: var(--colorFail);
 }
 
 .tabContent {

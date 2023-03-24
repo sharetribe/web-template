@@ -1,7 +1,7 @@
 @import '../../styles/customMediaQueries.css';
 
 .unsupportedCountryError {
-  color: var(--failColor);
+  color: var(--colorFail);
 }
 
 .root {
@@ -25,7 +25,7 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--colorFail);
   font-size: 13px !important; /* TODO: Change the <p> tag in front-end to <span> to remove !important */
   margin-top: 7px !important; /* TODO: Change the <p> tag in front-end to <span> to remove !important */
 }

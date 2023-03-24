@@ -78,7 +78,7 @@
 
 .error {
   composes: h4 from global;
-  color: var(--failColor);
+  color: var(--colorFail);
 
   padding: 0 24px;
 
