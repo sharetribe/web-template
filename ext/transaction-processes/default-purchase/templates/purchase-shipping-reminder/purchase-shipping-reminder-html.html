@@ -5,13 +5,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
 </head>
-{{~#*inline "format-date"~}}
-{{#with transaction.listing.availability-plan}}
-{{date date format="h:mm a" tz=timezone}} on
-{{date date format="MMM d, YYYY" tz=timezone}}
-{{/with}}
-{{~/inline~}}
 {{#with transaction}}
+{{#eq "shipping" protected-data.deliveryMethod}}
 <table
   style="background-color:#FFF;margin:0 auto;padding:24px 12px 0;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif"
   align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
@@ -22,14 +17,33 @@
           style="max-width:600px;margin:0 auto">
           <tr style="width:100%">
             <td>
-              <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">A booking for one of your
-                listings was declined on your behalf</h1>
-              <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
-                {{marketplace.name}} administrator declined a booking by
-                {{ customer.display-name }} for
-                {{ listing.title }} from
-                {{> format-date date=booking.start}} to
-                {{> format-date date=booking.end}} on your behalf.</p>
+              <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">Remember to ship
+                {{listing.title}}</h1>
+              <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">You received an order for
+                {{listing.title}} from
+                {{customer.display-name}} three days ago. Please remember to ship the item and mark it as shipped from
+                <a target="_blank" style="color:#007DF2;text-decoration:none" href="
+{{marketplace.url}}/
+{{#eq recipient-role " customer"}}order {{else}}sale {{/eq}}/ {{url-encode id}}">order details</a> to receive your
+                payment.</p>
+              <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">If the order has not been marked as
+                shipped within two weeks from the original purchase, it will expire automatically and you won&#x27;t get
+                paid.</p>
+
+              {{else}}
+              <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">Remember to arrange pickup for
+                {{listing.title}}</h1>
+              <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">You received an order for
+                {{listing.title}} from
+                {{customer.display-name}} three days ago. Please remember to arrange pickup for
+                {{listing.title}} and, after successfully delivering it, mark it as delivered from <a target="_blank"
+                  style="color:#007DF2;text-decoration:none" href="
+{{marketplace.url}}/order/
+{{url-encode id}}/">order details</a> to receive your payment.</p>
+              <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">If the order has not been marked as
+                delivered within two weeks, it will expire automatically and you won&#x27;t get paid.</p>
+
+              {{/eq}}
               <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0"
                 role="presentation" width="100%">
                 <tbody>
@@ -54,9 +68,6 @@
                   </tr>
                 </tbody>
               </table>
-              <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">If you suspect this was a mistake,
-                please contact
-                {{ marketplace.name }} team.</p>
 
               {{/with}}
               <div>
