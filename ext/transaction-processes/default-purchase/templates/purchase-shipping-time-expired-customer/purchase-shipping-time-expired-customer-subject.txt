@@ -1,0 +1,1 @@
+Your order for {{transaction.listing.title}} was automatically canceled

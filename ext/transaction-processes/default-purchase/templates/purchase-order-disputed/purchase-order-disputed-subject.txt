@@ -1,0 +1,1 @@
+{{transaction.customer.display-name}} disputed an order for {{transaction.listing.title}}
