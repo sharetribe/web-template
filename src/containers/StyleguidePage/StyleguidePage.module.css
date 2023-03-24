@@ -229,7 +229,7 @@
 
 .failColorBackground {
   composes: color;
-  background-color: var(--failColor);
+  background-color: var(--colorFail);
 }
 
 .attentionColorBackground {

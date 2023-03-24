@@ -158,7 +158,7 @@
   right: -9px;
 
   /* Style: red dot */
-  background-color: var(--failColor);
+  background-color: var(--colorFail);
 
   animation-name: notificationPop;
   animation-duration: 0.1s;

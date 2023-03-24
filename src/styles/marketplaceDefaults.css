@@ -27,8 +27,8 @@
   --colorSuccess: #2ecc71;
   --colorSuccessDark: #239954;
   --colorSuccessLight: #f0fff6;
-  --failColor: #ff0000;
-  --failColorLight: #fff0f0;
+  --colorFail: #ff0000;
+  --colorFailLight: #fff0f0;
   --attentionColor: #ffaa00;
   --attentionColorLight: #fff7f0;
   --bannedColorLight: var(--marketplaceColorLight);
@@ -147,7 +147,7 @@
   --TabNav_linkWidth: 240px;
 
   /* ================ Inputs, textareas and selects ================ */
-  --borderErrorField: 1px solid var(--failColor);
+  --borderErrorField: 1px solid var(--colorFail);
 
   /* ================ LandingPage ================ */
   --LandingPage_sectionMarginTop: 40px;
@@ -1450,7 +1450,7 @@ textarea {
   line-height: 24px;
 
   margin-top: 24px;
-  color: var(--failColor);
+  color: var(--colorFail);
 
   @media (--viewportMedium) {
     font-weight: var(--fontWeightMedium);

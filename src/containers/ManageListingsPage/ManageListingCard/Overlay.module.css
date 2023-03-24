@@ -56,5 +56,5 @@
 
 .errorMessage {
   composes: message;
-  color: var(--failColor);
+  color: var(--colorFail);
 }

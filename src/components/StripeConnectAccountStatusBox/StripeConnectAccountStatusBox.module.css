@@ -67,7 +67,7 @@
 /* Verification error box */
 .verficiationErrorBox {
   border: var(--borderErrorField);
-  background: var(--failColorLight);
+  background: var(--colorFailLight);
 }
 
 /* Verification success box */

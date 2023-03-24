@@ -202,7 +202,7 @@
   align-self: center;
   justify-self: center;
   margin: 0 0 2px 0;
-  background-color: var(--failColor);
+  background-color: var(--colorFail);
   margin-right: 8px;
 }
 
@@ -237,7 +237,7 @@
     color: var(--colorBlack);
   }
   &:hover .deleteIcon {
-    stroke: var(--failColor);
+    stroke: var(--colorFail);
   }
 }
 

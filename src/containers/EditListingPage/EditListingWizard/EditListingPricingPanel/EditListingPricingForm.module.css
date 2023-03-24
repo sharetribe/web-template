@@ -15,7 +15,7 @@
 }
 
 .error {
-  color: var(--failColor);
+  color: var(--colorFail);
 }
 
 .input {

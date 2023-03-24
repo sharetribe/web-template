@@ -40,7 +40,7 @@
 }
 
 .errorPlaceholder {
-  color: var(--failColor);
+  color: var(--colorFail);
 
   @media (--viewportMedium) {
     margin: 0;

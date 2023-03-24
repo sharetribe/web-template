@@ -114,8 +114,8 @@ const MarketplaceColors = () => {
           />
           <ColorCard
             mpColor={css.failColorBackground}
-            name="--failColor"
-            usage="color: var(--failColor);"
+            name="--colorFail"
+            usage="color: var(--colorFail);"
           />
           <ColorCard
             mpColor={css.attentionColorBackground}
