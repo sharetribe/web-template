@@ -473,7 +473,7 @@ propTypes.defaultFiltersConfig = arrayOf(
   }).isRequired
 );
 // Extended data config
-propTypes.listingExtendedDataConfig = arrayOf(
+propTypes.listingFieldsConfig = arrayOf(
   shape({
     key: string.isRequired,
     scope: string,

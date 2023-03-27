@@ -15,7 +15,7 @@ const urlParams = {
   pub_amenities: 'towels,bathroom',
 };
 
-const listingExtendedDataConfig = [
+const listingFieldsConfig = [
   {
     key: 'category',
     scope: 'public',
@@ -100,18 +100,14 @@ describe('SearchPage.helpers', () => {
       const validParam = validURLParamForExtendedData(
         'pub_category',
         'women',
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         []
       );
       expect(validParam).toEqual({ pub_category: 'women' });
     });
 
     it('takes empty params', () => {
-      const validParam = validURLParamForExtendedData(
-        'pub_category',
-        '',
-        listingExtendedDataConfig
-      );
+      const validParam = validURLParamForExtendedData('pub_category', '', listingFieldsConfig);
       expect(validParam).toEqual({});
     });
 
@@ -119,54 +115,38 @@ describe('SearchPage.helpers', () => {
       const validParam = validURLParamForExtendedData(
         'pub_category',
         'invalid',
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         sortConfig
       );
       expect(validParam).toEqual({});
     });
 
     it('drops a param with invalid name', () => {
-      const validParam = validURLParamForExtendedData(
-        'pub_invalid',
-        'towels',
-        listingExtendedDataConfig
-      );
+      const validParam = validURLParamForExtendedData('pub_invalid', 'towels', listingFieldsConfig);
       expect(validParam).toEqual({});
     });
   });
 
   describe('validFilterParams', () => {
     it('returns valid parameters', () => {
-      const validParams = validFilterParams(
-        urlParams,
-        listingExtendedDataConfig,
-        defaultFiltersConfig
-      );
+      const validParams = validFilterParams(urlParams, listingFieldsConfig, defaultFiltersConfig);
       expect(validParams).toEqual(urlParams);
     });
 
     it('takes empty params', () => {
-      const validParams = validFilterParams({}, listingExtendedDataConfig, defaultFiltersConfig);
+      const validParams = validFilterParams({}, listingFieldsConfig, defaultFiltersConfig);
       expect(validParams).toEqual({});
     });
 
     it('drops an invalid filter param value', () => {
       const params = { pub_category: 'men', pub_amenities: 'invalid1,invalid2' };
-      const validParams = validFilterParams(
-        params,
-        listingExtendedDataConfig,
-        defaultFiltersConfig
-      );
+      const validParams = validFilterParams(params, listingFieldsConfig, defaultFiltersConfig);
       expect(validParams).toEqual({ pub_category: 'men' });
     });
 
     it('drops non-filter params', () => {
       const params = { pub_category: 'men', other_param: 'somevalue' };
-      const validParams = validFilterParams(
-        params,
-        listingExtendedDataConfig,
-        defaultFiltersConfig
-      );
+      const validParams = validFilterParams(params, listingFieldsConfig, defaultFiltersConfig);
       expect(validParams).toEqual({ pub_category: 'men' });
     });
   });
@@ -175,7 +155,7 @@ describe('SearchPage.helpers', () => {
     it('returns valid parameters', () => {
       const validParams = validURLParamsForExtendedData(
         urlParams,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig
       );
       expect(validParams).toEqual(urlParams);
@@ -184,7 +164,7 @@ describe('SearchPage.helpers', () => {
     it('takes empty params', () => {
       const validParams = validURLParamsForExtendedData(
         {},
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig
       );
       expect(validParams).toEqual({});
@@ -194,7 +174,7 @@ describe('SearchPage.helpers', () => {
       const params = { pub_category: 'men', pub_amenities: 'invalid1,invalid2' };
       const validParams = validURLParamsForExtendedData(
         params,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig
       );
       expect(validParams).toEqual({ pub_category: 'men' });
@@ -204,7 +184,7 @@ describe('SearchPage.helpers', () => {
       const params = { pub_category: 'men', other_param: 'somevalue' };
       const validParams = validURLParamsForExtendedData(
         params,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig
       );
       expect(validParams).toEqual(params);
@@ -218,7 +198,7 @@ describe('SearchPage.helpers', () => {
         location,
         config: {
           listing: {
-            listingExtendedData: listingExtendedDataConfig,
+            listingExtendedData: listingFieldsConfig,
           },
           search: {
             defaultFilters: defaultFiltersConfig,
@@ -235,7 +215,7 @@ describe('SearchPage.helpers', () => {
         location,
         config: {
           listing: {
-            listingExtendedData: listingExtendedDataConfig,
+            listingExtendedData: listingFieldsConfig,
           },
           search: {
             defaultFilters: defaultFiltersConfig,
@@ -252,7 +232,7 @@ describe('SearchPage.helpers', () => {
       location,
       config: {
         listing: {
-          listingExtendedData: listingExtendedDataConfig,
+          listingExtendedData: listingFieldsConfig,
         },
         search: {
           defaultFilters: defaultFiltersConfig,
@@ -324,7 +304,7 @@ describe('SearchPage.helpers', () => {
       };
       const validParams = cleanSearchFromConflictingParams(
         searchParams,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig,
         sortConfig
       );
@@ -341,7 +321,7 @@ describe('SearchPage.helpers', () => {
       };
       const validParams = cleanSearchFromConflictingParams(
         searchParams,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig,
         { ...sortConfig, conflictingFilters: ['origin', 'keywords'] }
       );
@@ -357,7 +337,7 @@ describe('SearchPage.helpers', () => {
       };
       const validParams = cleanSearchFromConflictingParams(
         searchParams,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig,
         sortConfig
       );
@@ -376,7 +356,7 @@ describe('SearchPage.helpers', () => {
       };
       const validParams = pickSearchParamsOnly(
         params,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig,
         sortConfig,
         isOriginInUse
@@ -387,7 +367,7 @@ describe('SearchPage.helpers', () => {
     it('returns filter parameters', () => {
       const validParams = pickSearchParamsOnly(
         urlParams,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig,
         sortConfig,
         isOriginInUse
@@ -399,7 +379,7 @@ describe('SearchPage.helpers', () => {
       const params = { pub_category: 'men', pub_amenities: 'invalid1,invalid2' };
       const validParams = pickSearchParamsOnly(
         params,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig,
         sortConfig,
         isOriginInUse
@@ -411,7 +391,7 @@ describe('SearchPage.helpers', () => {
       const params = { pub_category: 'men', other_param: 'somevalue' };
       const validParams = pickSearchParamsOnly(
         params,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig,
         sortConfig,
         isOriginInUse
@@ -423,7 +403,7 @@ describe('SearchPage.helpers', () => {
       const params = { sort: '-price', other_param: 'somevalue' };
       const validParams = pickSearchParamsOnly(
         params,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig,
         sortConfig,
         isOriginInUse
@@ -445,7 +425,7 @@ describe('SearchPage.helpers', () => {
       const paramsInfo = searchParamsPicker(
         location.search,
         searchParamsInProps,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig,
         sortConfig,
         isOriginInUse
@@ -465,7 +445,7 @@ describe('SearchPage.helpers', () => {
       const paramsInfo = searchParamsPicker(
         location.search,
         searchParamsInProps,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig,
         sortConfig,
         isOriginInUse
@@ -487,7 +467,7 @@ describe('SearchPage.helpers', () => {
       const paramsInfo = searchParamsPicker(
         location.search,
         searchParamsInProps,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig,
         sortConfig,
         isOriginInUse
@@ -507,7 +487,7 @@ describe('SearchPage.helpers', () => {
       const paramsInfo = searchParamsPicker(
         location.search,
         searchParamsInProps,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         defaultFiltersConfig,
         sortConfig,
         isOriginInUse
@@ -534,11 +514,11 @@ describe('SearchPage.helpers', () => {
         'rent-bicycles-hourly',
       ];
       const [primary, secondary] = groupExtendedDataConfigs(
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         activeListingTypes
       );
-      expect(primary).toEqual([listingExtendedDataConfig[0]]);
-      expect(secondary).toEqual([listingExtendedDataConfig[1], listingExtendedDataConfig[2]]);
+      expect(primary).toEqual([listingFieldsConfig[0]]);
+      expect(secondary).toEqual([listingFieldsConfig[1], listingFieldsConfig[2]]);
     });
   });
 });

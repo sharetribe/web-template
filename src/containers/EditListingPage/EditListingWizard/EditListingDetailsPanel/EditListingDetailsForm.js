@@ -116,8 +116,8 @@ const FieldSelectListingType = props => {
 
 // Add collect data for extended data fields (both publicData and privateData) based on configuration
 const AddCustomExtendedDataFields = props => {
-  const { listingType, listingExtendedDataConfig, intl } = props;
-  const extendedDataConfigs = listingExtendedDataConfig || [];
+  const { listingType, listingFieldsConfig, intl } = props;
+  const extendedDataConfigs = listingFieldsConfig || [];
   const fields = extendedDataConfigs.reduce((pickedFields, extendedDataConfig) => {
     const { key, includeForListingTypes, schemaType, scope } = extendedDataConfig || {};
 
@@ -169,7 +169,7 @@ const EditListingDetailsFormComponent = props => (
         updated,
         updateInProgress,
         fetchErrors,
-        listingExtendedDataConfig,
+        listingFieldsConfig,
         values,
       } = formRenderProps;
 
@@ -234,7 +234,7 @@ const EditListingDetailsFormComponent = props => (
 
           <AddCustomExtendedDataFields
             listingType={listingType}
-            listingExtendedDataConfig={listingExtendedDataConfig}
+            listingFieldsConfig={listingFieldsConfig}
             intl={intl}
           />
 
@@ -259,7 +259,7 @@ EditListingDetailsFormComponent.defaultProps = {
   fetchErrors: null,
   onProcessChange: null,
   hasExistingListingType: false,
-  listingExtendedDataConfig: null,
+  listingFieldsConfig: null,
 };
 
 EditListingDetailsFormComponent.propTypes = {
@@ -286,7 +286,7 @@ EditListingDetailsFormComponent.propTypes = {
     })
   ).isRequired,
   hasExistingListingType: bool,
-  listingExtendedDataConfig: propTypes.listingExtendedDataConfig,
+  listingFieldsConfig: propTypes.listingFieldsConfig,
 };
 
 export default compose(injectIntl)(EditListingDetailsFormComponent);

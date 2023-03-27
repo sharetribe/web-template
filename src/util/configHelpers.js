@@ -201,7 +201,7 @@ const validSchemaOptions = (enumOptions, schemaType) => {
   return [isValid, schemaOptionsMaybe];
 };
 
-// listingExtendedDataConfig.filterConfig
+// listingFieldsConfig.filterConfig
 const filterTypes = ['SelectSingleFilter', 'SelectMultipleFilter'];
 const validFilterType = (filterType, schemaType) => {
   const isEnumSchemaType = ['enum', 'multi-enum'].includes(schemaType);
@@ -257,7 +257,7 @@ const validFilterConfig = (config, schemaType) => {
   return [isValid, validValue];
 };
 
-// listingExtendedDataConfig.showConfig
+// listingFieldsConfig.showConfig
 const validShowConfig = config => {
   const isUndefined = typeof config === 'undefined';
   if (isUndefined) {
@@ -277,7 +277,7 @@ const validShowConfig = config => {
   return [isValid, validValue];
 };
 
-// listingExtendedDataConfig.saveConfig
+// listingFieldsConfig.saveConfig
 const validPlaceholderMessage = placeholderMessage => {
   const isUndefined = typeof placeholderMessage === 'undefined';
   const isString = typeof placeholderMessage === 'string';
