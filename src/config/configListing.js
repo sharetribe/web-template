@@ -74,9 +74,8 @@ export const listingExtendedData = [
       requiredMessage: 'You need to select a category.',
     },
   },
-
   {
-    key: 'tire-size',
+    key: 'tire',
     scope: 'public',
     schemaType: 'enum',
     enumOptions: [
