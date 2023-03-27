@@ -101,7 +101,7 @@ export class SearchPageComponent extends Component {
     // (i.e. 'moveend' event in Mapbox and 'bounds_changed' in Google Maps)
     if (viewportBoundsChanged && isSearchPage) {
       const { history, location, config } = this.props;
-      const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
+      const { listingExtendedData: listingFieldsConfig } = config?.listing || {};
       const { defaultFilters: defaultFiltersConfig } = config?.search || {};
 
       // parse query parameters, including a custom attribute named category
@@ -117,7 +117,7 @@ export class SearchPageComponent extends Component {
         ...originMaybe,
         bounds: viewportBounds,
         mapSearch: true,
-        ...validFilterParams(rest, listingExtendedDataConfig, defaultFiltersConfig),
+        ...validFilterParams(rest, listingFieldsConfig, defaultFiltersConfig),
       };
 
       history.push(createResourceLocatorString('SearchPage', routes, {}, searchParams));
@@ -139,14 +139,14 @@ export class SearchPageComponent extends Component {
   // Apply the filters by redirecting to SearchPage with new filters.
   applyFilters() {
     const { history, routeConfiguration, config } = this.props;
-    const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
+    const { listingExtendedData: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
     const searchParams = { ...urlQueryParams, ...this.state.currentQueryParams };
     const search = cleanSearchFromConflictingParams(
       searchParams,
-      listingExtendedDataConfig,
+      listingFieldsConfig,
       defaultFiltersConfig,
       sortConfig
     );
@@ -162,14 +162,11 @@ export class SearchPageComponent extends Component {
   // Reset all filter query parameters
   resetAll(e) {
     const { history, routeConfiguration, config } = this.props;
-    const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
+    const { listingExtendedData: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig } = config?.search || {};
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
-    const filterQueryParamNames = getQueryParamNames(
-      listingExtendedDataConfig,
-      defaultFiltersConfig
-    );
+    const filterQueryParamNames = getQueryParamNames(listingFieldsConfig, defaultFiltersConfig);
 
     // Reset state
     this.setState({ currentQueryParams: {} });
@@ -181,7 +178,7 @@ export class SearchPageComponent extends Component {
 
   getHandleChangedValueFn(useHistoryPush) {
     const { history, routeConfiguration, config } = this.props;
-    const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
+    const { listingExtendedData: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
@@ -212,7 +209,7 @@ export class SearchPageComponent extends Component {
           const searchParams = this.state.currentQueryParams;
           const search = cleanSearchFromConflictingParams(
             searchParams,
-            listingExtendedDataConfig,
+            listingFieldsConfig,
             defaultFiltersConfig,
             sortConfig
           );
@@ -252,7 +249,7 @@ export class SearchPageComponent extends Component {
       config,
     } = this.props;
 
-    const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
+    const { listingExtendedData: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
     const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
@@ -264,7 +261,7 @@ export class SearchPageComponent extends Component {
     const { searchParamsAreInSync, urlQueryParams, searchParamsInURL } = searchParamsPicker(
       location.search,
       searchParams,
-      listingExtendedDataConfig,
+      listingFieldsConfig,
       defaultFiltersConfig,
       sortConfig,
       isOriginInUse(config)
@@ -272,7 +269,7 @@ export class SearchPageComponent extends Component {
 
     const validQueryParams = validURLParamsForExtendedData(
       searchParamsInURL,
-      listingExtendedDataConfig,
+      listingFieldsConfig,
       defaultFiltersConfig
     );
 
@@ -286,7 +283,7 @@ export class SearchPageComponent extends Component {
       ? defaultFiltersConfig.filter(f => f.key !== 'keywords')
       : defaultFiltersConfig;
     const [customPrimaryFilters, customSecondaryFilters] = groupExtendedDataConfigs(
-      listingExtendedDataConfig,
+      listingFieldsConfig,
       activeListingTypes
     );
     const availablePrimaryFilters = [...customPrimaryFilters, ...defaultFilters];
@@ -301,7 +298,7 @@ export class SearchPageComponent extends Component {
     // Selected aka active filters
     const selectedFilters = validFilterParams(
       validQueryParams,
-      listingExtendedDataConfig,
+      listingFieldsConfig,
       defaultFiltersConfig
     );
     const keysOfSelectedFilters = Object.keys(selectedFilters);
@@ -341,7 +338,7 @@ export class SearchPageComponent extends Component {
     const conflictingFilterActive = isAnyFilterActive(
       sortConfig.conflictingFilters,
       validQueryParams,
-      listingExtendedDataConfig,
+      listingFieldsConfig,
       defaultFiltersConfig
     );
     const sortBy = mode => {

@@ -50,7 +50,7 @@ const listingTypes = [
   },
 ];
 
-const listingExtendedDataConfig = [
+const listingFieldsConfig = [
   {
     key: 'category',
     scope: 'public',
@@ -155,7 +155,7 @@ describe('SearchPageWithGrid', () => {
     config: {
       currency: 'USD',
       listing: {
-        listingExtendedData: listingExtendedDataConfig,
+        listingExtendedData: listingFieldsConfig,
         listingTypes,
       },
       search: {

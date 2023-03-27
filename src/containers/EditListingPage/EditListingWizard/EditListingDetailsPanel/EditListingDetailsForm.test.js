@@ -22,7 +22,7 @@ describe('EditListingDetailsForm', () => {
       },
     ];
 
-    const listingExtendedDataConfig = [
+    const listingFieldsConfig = [
       {
         key: 'category',
         scope: 'public',
@@ -83,7 +83,7 @@ describe('EditListingDetailsForm', () => {
         updateInProgress={false}
         disabled={false}
         ready={false}
-        listingExtendedDataConfig={listingExtendedDataConfig}
+        listingFieldsConfig={listingFieldsConfig}
         selectableListingTypes={selectableListingTypes}
         hasExistingListingType={true}
         initialValues={selectableListingTypes[0]}

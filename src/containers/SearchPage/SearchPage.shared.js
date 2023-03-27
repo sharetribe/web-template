@@ -89,9 +89,9 @@ export const validURLParamForExtendedData = (
  * @param {Object} extendedDataFilters extended data configuration with indexForSearch === true
  * @param {Object} defaultFilters configuration for default built-in filters.
  */
-export const validFilterParams = (params, listingExtendedDataConfig, defaultFiltersConfig) => {
+export const validFilterParams = (params, listingFieldsConfig, defaultFiltersConfig) => {
   const paramEntries = Object.entries(params);
-  const extendedDataFilters = listingExtendedDataConfig.filter(
+  const extendedDataFilters = listingFieldsConfig.filter(
     config => config.filterConfig?.indexForSearch
   );
   const extendedDataParamNames = extendedDataFilters.map(f =>
@@ -128,10 +128,10 @@ export const validFilterParams = (params, listingExtendedDataConfig, defaultFilt
  */
 export const validURLParamsForExtendedData = (
   params,
-  listingExtendedDataConfig,
+  listingFieldsConfig,
   defaultFiltersConfig
 ) => {
-  const extendedDataFilters = listingExtendedDataConfig.filter(
+  const extendedDataFilters = listingFieldsConfig.filter(
     config => config.filterConfig?.indexForSearch
   );
   const extendedDataParamNames = extendedDataFilters.map(f =>
@@ -163,12 +163,12 @@ export const validURLParamsForExtendedData = (
  * Helper to pick only valid values of search params from URL (location)
  * Note: location.search might look like: '?pub_category=men&pub_amenities=towels,bathroom'
  *
- * @param {Object} props object containing: location, listingExtendedDataConfig, defaultFiltersConfig
+ * @param {Object} props object containing: location, listingFieldsConfig, defaultFiltersConfig
  * @returns picked search params against extended data config and default filter config
  */
 export const validUrlQueryParamsFromProps = props => {
   const { location, config } = props;
-  const { listingExtendedData: listingExtendedDataConfig } = config?.listing || {};
+  const { listingExtendedData: listingFieldsConfig } = config?.listing || {};
   const { defaultFilters: defaultFiltersConfig } = config?.search || {};
   // eslint-disable-next-line no-unused-vars
   const { mapSearch, page, ...searchInURL } = parse(location.search, {
@@ -177,17 +177,13 @@ export const validUrlQueryParamsFromProps = props => {
   });
   // urlQueryParams doesn't contain page specific url params
   // like mapSearch, page or origin (origin depends on config.maps.search.sortSearchByDistance)
-  return validURLParamsForExtendedData(
-    searchInURL,
-    listingExtendedDataConfig,
-    defaultFiltersConfig
-  );
+  return validURLParamsForExtendedData(searchInURL, listingFieldsConfig, defaultFiltersConfig);
 };
 
 /**
  * Helper to figure out initialValues for Final Form that handles search filters
  *
- * @param {Object} props object containing: location, listingExtendedDataConfig, defaultFiltersConfig
+ * @param {Object} props object containing: location, listingFieldsConfig, defaultFiltersConfig
  * @param {Object} currentQueryParams object containing current state of queryParams (used only when isLiveEdit is false)
  * @returns a function with params queryParamNames, and isLiveEdit.
  *          It's called from FilterComponent and it returns initial values for the filter.
@@ -219,14 +215,14 @@ export const initialValues = (props, currentQueryParams) => (queryParamNames, is
  * This function checks if they are active and returns "sort" param as null
  *
  * @param {*} searchParams
- * @param {*} listingExtendedDataConfig
+ * @param {*} listingFieldsConfig
  * @param {*} defaultFiltersConfig
  * @param {*} sortConfig
  * @returns sort parameter as null if sortConfig defines conflictingFilters
  */
 export const cleanSearchFromConflictingParams = (
   searchParams,
-  listingExtendedDataConfig,
+  listingFieldsConfig,
   defaultFiltersConfig,
   sortConfig
 ) => {
@@ -236,7 +232,7 @@ export const cleanSearchFromConflictingParams = (
   const sortingFiltersActive = isAnyFilterActive(
     sortConfig.conflictingFilters,
     searchParams,
-    listingExtendedDataConfig,
+    listingFieldsConfig,
     defaultFiltersConfig
   );
   return sortingFiltersActive
@@ -255,7 +251,7 @@ export const cleanSearchFromConflictingParams = (
  */
 export const pickSearchParamsOnly = (
   params,
-  listingExtendedDataConfig,
+  listingFieldsConfig,
   defaultFiltersConfig,
   sortConfig,
   isOriginInUse
@@ -263,7 +259,7 @@ export const pickSearchParamsOnly = (
   const { address, origin, bounds, ...rest } = params || {};
   const boundsMaybe = bounds ? { bounds } : {};
   const originMaybe = isOriginInUse && origin ? { origin } : {};
-  const filterParams = validFilterParams(rest, listingExtendedDataConfig, defaultFiltersConfig);
+  const filterParams = validFilterParams(rest, listingFieldsConfig, defaultFiltersConfig);
   const sort = rest[sortConfig.queryParamName];
   const sortMaybe = sort ? { sort } : {};
 
@@ -284,7 +280,7 @@ export const pickSearchParamsOnly = (
  *
  * @param {Object} searchFromLocation searchParams from URL (location.search)
  * @param {Object} searchParamsInProps searchParams from store
- * @param {Object} listingExtendedDataConfig config for listing's extended data
+ * @param {Object} listingFieldsConfig config for listing's extended data
  * @param {Object} defaultFiltersConfig config for default filters
  * @param {Object} sortConfig config for SortBy feature
  * @returns object containing
@@ -295,7 +291,7 @@ export const pickSearchParamsOnly = (
 export const searchParamsPicker = (
   searchFromLocation,
   searchParamsInProps,
-  listingExtendedDataConfig,
+  listingFieldsConfig,
   defaultFiltersConfig,
   sortConfig,
   isOriginInUse
@@ -308,7 +304,7 @@ export const searchParamsPicker = (
   // Pick only search params that are part of current search configuration
   const queryParamsFromSearchParams = pickSearchParamsOnly(
     searchParamsInProps,
-    listingExtendedDataConfig,
+    listingFieldsConfig,
     defaultFiltersConfig,
     sortConfig,
     isOriginInUse
@@ -316,7 +312,7 @@ export const searchParamsPicker = (
   // Pick only search params that are part of current search configuration
   const queryParamsFromURL = pickSearchParamsOnly(
     searchParamsInURL,
-    listingExtendedDataConfig,
+    listingFieldsConfig,
     defaultFiltersConfig,
     sortConfig,
     isOriginInUse
