@@ -316,7 +316,7 @@ export const fetchTimeSlots = (listingId, start, end, timeZone) => (dispatch, ge
 
   // The maximum pagination page size for timeSlots is 500
   const extraParams = {
-    per_page: 500,
+    perPage: 500,
     page: 1,
   };
 
@@ -489,7 +489,7 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
 };
 
 const fetchMessages = (txId, page, config) => (dispatch, getState, sdk) => {
-  const paging = { page, per_page: MESSAGES_PAGE_SIZE };
+  const paging = { page, perPage: MESSAGES_PAGE_SIZE };
   dispatch(fetchMessagesRequest());
 
   return sdk.messages

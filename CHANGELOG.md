@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] search config for dates uses dateRangeMode not mode.
+  [#128](https://github.com/sharetribe/web-template/pull/128)
 - [Change] Rename 'listingExtendedData' and its variants to 'listingFields'.
   [#127](https://github.com/sharetribe/web-template/pull/127)
 - [Change] Rename 'tire-size listing fields as 'tire' and update README.md.

@@ -189,7 +189,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     ...datesMaybe,
     ...sortMaybe,
     ...searchValidListingTypes(config.listing.listingTypes),
-    per_page: perPage,
+    perPage,
   };
 
   return sdk.listings
