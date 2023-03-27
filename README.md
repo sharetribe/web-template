@@ -29,22 +29,26 @@ You need to add the new processes to your marketplace environment. You need to
 [use Flex CLI](https://flex-docs-git-feat-docs-biketribe-sharetribe.vercel.app/introduction/getting-started-with-flex-cli/)
 to do that.
 
-Check the following article about how to add new processes:
-https://flex-docs-git-feat-docs-biketribe-sharetribe.vercel.app/tutorial/create-transaction-process/#create-a-new-process
+Check the following article:
+[Create a new process](https://flex-docs-git-feat-docs-biketribe-sharetribe.vercel.app/tutorial/create-transaction-process/#create-a-new-process)
 
 Add _default-booking_ process and alias for it:
 
 ```sh
+# Create the "default-booking" process
 flex-cli process create --path=./ext/transaction-processes/default-booking --process=default-booking --marketplace=yourmarketplaceident-test
 
+# Create "release-1" alias for the process
 flex-cli process create-alias --process=default-booking --version=1 --alias=release-1 --marketplace=yourmarketplaceident-test
 ```
 
 Add _default-purchase_ process and alias for it:
 
 ```sh
+# Create the "default-purchase" process
 flex-cli process create --path=./ext/transaction-processes/default-purchase --process=default-purchase --marketplace=yourmarketplaceident-test
 
+# Create "release-1" alias for the process
 flex-cli process create-alias --process=default-purchase --version=1 --alias=release-1 --marketplace=yourmarketplaceident-test
 ```
 
@@ -81,8 +85,8 @@ instead of DOS commands.
 ## Getting started with your own customization
 
 If you want to build your own Flex marketplace by customizing the template application, see the
-[How to Customize the Template](https://www.sharetribe.com/docs/guides/how-to-customize-ftw/) guide
-in Flex Docs.
+[How to Customize the Template](https://flex-docs-git-feat-docs-biketribe-sharetribe.vercel.app/ftw/how-to-customize-ftw/)
+guide in Flex Docs.
 
 ## Deploying to Heroku
 
