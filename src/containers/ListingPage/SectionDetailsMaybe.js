@@ -6,13 +6,13 @@ import css from './ListingPage.module.css';
 
 const SectionDetailsMaybe = props => {
   const { publicData, metadata = {}, listingConfig, intl } = props;
-  const { listingExtendedData } = listingConfig || {};
+  const { listingFields } = listingConfig || {};
 
   if (!publicData || !listingConfig) {
     return null;
   }
 
-  const pickExtendedData = (filteredConfigs, config) => {
+  const pickListingFields = (filteredConfigs, config) => {
     const { key, schemaType, enumOptions, showConfig = {} } = config;
     const { isDetail, label } = showConfig;
     const publicDataValue = publicData[key];
@@ -38,15 +38,15 @@ const SectionDetailsMaybe = props => {
     return filteredConfigs;
   };
 
-  const existingExtendedData = listingExtendedData.reduce(pickExtendedData, []);
+  const existingListingFields = listingFields.reduce(pickListingFields, []);
 
-  return existingExtendedData.length > 0 ? (
+  return existingListingFields.length > 0 ? (
     <div className={css.sectionDetails}>
       <Heading as="h2" rootClassName={css.sectionHeading}>
         <FormattedMessage id="ListingPage.detailsTitle" />
       </Heading>
       <ul className={css.details}>
-        {existingExtendedData.map(detail => (
+        {existingListingFields.map(detail => (
           <li key={detail.key} className={css.detailsRow}>
             <span className={css.detailLabel}>{detail.label}</span>
             <span>{detail.value}</span>

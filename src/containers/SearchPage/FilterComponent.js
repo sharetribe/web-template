@@ -27,7 +27,7 @@ const FilterComponent = props => {
     ...rest
   } = props;
   // Note: config can be either
-  // - listingExtendedData config or
+  // - listingFields config or
   // - default filter config
   // They both have 'key' and 'schemaType' included.
   const { key, schemaType } = config;

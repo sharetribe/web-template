@@ -36,7 +36,7 @@ const { screen } = testingLibrary;
 const noop = () => null;
 
 const listingConfig = {
-  listingExtendedData: [
+  listingFields: [
     {
       key: 'category',
       scope: 'public',
@@ -157,7 +157,7 @@ describe('ListingPage variants', () => {
 });
 
 describe('Duck', () => {
-  const listingExtendedData = [];
+  const listingFields = [];
   const config = {
     layout: {
       listingImage: {
@@ -167,7 +167,7 @@ describe('Duck', () => {
       },
     },
     listing: {
-      listingExtendedData,
+      listingFields,
     },
   };
 
@@ -193,7 +193,7 @@ describe('Duck', () => {
       expect(dispatch.mock.calls).toEqual([
         [showListingRequest(id)],
         [expect.anything()], // fetchCurrentUser() call
-        [addMarketplaceEntities(data, { listingExtendedData })],
+        [addMarketplaceEntities(data, { listingFields })],
       ]);
     });
   });

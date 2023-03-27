@@ -320,7 +320,7 @@ export const ListingPageComponent = props => {
               listingConfig={listingConfig}
               intl={intl}
             />
-            {listingConfig.listingExtendedData.reduce((pickedElements, config) => {
+            {listingConfig.listingFields.reduce((pickedElements, config) => {
               const { key, enumOptions, scope = 'public' } = config;
               const value =
                 scope === 'public' ? publicData[key] : scope === 'metadata' ? metadata[key] : null;

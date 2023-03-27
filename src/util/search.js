@@ -31,16 +31,16 @@ const constructQueryParamName = (key, scope) => {
  * The configuration of default filters has key, which is 1-on-1 mapping
  * with the name of the query parameter. E.g. 'price'.
  *
- * @param {Object} listingExtendedDataConfig Custom filters are checked agains extended data config of a listing entity.
+ * @param {Object} listingFieldsConfig Custom filters are checked agains extended data config of a listing entity.
  * @param {Object} defaultFiltersConfig Configuration of default filters.
  */
-export const getQueryParamNames = (listingExtendedDataConfig, defaultFiltersConfig) => {
+export const getQueryParamNames = (listingFieldsConfig, defaultFiltersConfig) => {
   const queryParamKeysOfDefaultFilters = defaultFiltersConfig.map(config => config.key);
-  const queryParamKeysOfListingExtendedData = listingExtendedDataConfig.reduce((params, config) => {
+  const queryParamKeysOfListingFields = listingFieldsConfig.reduce((params, config) => {
     const param = constructQueryParamName(config.key, config.scope);
     return config.filterConfig?.indexForSearch ? [...params, param] : params;
   }, []);
-  return [...queryParamKeysOfDefaultFilters, ...queryParamKeysOfListingExtendedData];
+  return [...queryParamKeysOfDefaultFilters, ...queryParamKeysOfListingFields];
 };
 /**
  * Check if any of the filters (defined by filterKeys) have currently active query parameter in URL.
@@ -48,10 +48,10 @@ export const getQueryParamNames = (listingExtendedDataConfig, defaultFiltersConf
 export const isAnyFilterActive = (
   filterKeys,
   urlQueryParams,
-  listingExtendedDataConfig,
+  listingFieldsConfig,
   defaultFiltersConfig
 ) => {
-  const queryParamKeys = getQueryParamNames(listingExtendedDataConfig, defaultFiltersConfig);
+  const queryParamKeys = getQueryParamNames(listingFieldsConfig, defaultFiltersConfig);
 
   const getQueryParamKeysOfGivenFilters = (pickedKeys, key) => {
     const isFilterIncluded = filterKeys.includes(key);
