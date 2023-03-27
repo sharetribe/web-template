@@ -70,8 +70,8 @@ const FilterComponent = props => {
         />
       );
     case 'dates': {
-      const { mode } = config;
-      const isNightlyMode = mode === 'night';
+      const { dateRangeMode } = config;
+      const isNightlyMode = dateRangeMode === 'night';
       return (
         <BookingDateRangeFilter
           id={componentId}
