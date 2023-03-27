@@ -80,7 +80,7 @@ const estimatedBooking = (bookingStart, bookingEnd, lineItemUnitType, timeZone =
 // out), we must estimate the transaction for booking breakdown. This function creates
 // an estimated transaction object for that use case.
 //
-// We need to use FTW backend to calculate the correct line items through thransactionLineItems
+// We need to use the Template's backend to calculate the correct line items through thransactionLineItems
 // endpoint so that they can be passed to this estimated transaction.
 const estimatedCustomerTransaction = (
   lineItems,

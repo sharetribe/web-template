@@ -1,4 +1,4 @@
-// These helpers are calling FTW's own server-side routes
+// These helpers are calling this template's own server-side routes
 // so, they are not directly calling Marketplace API or Integration API.
 // You can find these api endpoints from 'server/api/...' directory
 

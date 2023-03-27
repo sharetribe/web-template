@@ -29,7 +29,7 @@ export class BookingTimeFormComponent extends Component {
   }
 
   // When the values of the form are updated we need to fetch
-  // lineItems from FTW backend for the EstimatedTransactionMaybe
+  // lineItems from this template's backend for the EstimatedTransactionMaybe
   // In case you add more fields to the form, make sure you add
   // the values here to the orderData object.
   handleOnChange(formValues) {
