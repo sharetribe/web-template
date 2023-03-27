@@ -25,7 +25,7 @@ const run = () => {
 
 ${chalk.bold.red(`You don't have required .env file!`)}
 
-Some environment variables are required before starting Flex template for web. You can create the .env file and configure the variables by running ${chalk.cyan.bold(
+Some environment variables are required before starting Sharetribe Web Template. You can create the .env file and configure the variables by running ${chalk.cyan.bold(
           'yarn run config'
         )}
 
@@ -271,7 +271,7 @@ const showSuccessMessage = () => {
   console.log(`
 ${chalk.green.bold('.env file saved succesfully!')}
 
-Start the Flex template application by running ${chalk.bold.cyan('yarn run dev')}
+Start the Sharetribe Web Template application by running ${chalk.bold.cyan('yarn run dev')}
 
 Note that the .env file is a hidden file so it might not be visible directly in directory listing. If you want to update the environment variables run ${chalk.cyan.bold(
     'yarn run config'

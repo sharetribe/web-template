@@ -84,7 +84,7 @@ export const OrderBreakdownComponent = props => {
    * LineItemRefundMaybe: prints the amount of refund
    *
    * LineItemCustomerCommissionMaybe: prints the amount of customer commission
-   * The default transaction process used by FTW doesn't include the customer commission.
+   * The default transaction process used by this template doesn't include the customer commission.
    *
    * LineItemCustomerCommissionRefundMaybe: prints the amount of refunded customer commission
    *
