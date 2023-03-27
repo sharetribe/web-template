@@ -229,9 +229,9 @@ exports.calculateTotalForCustomer = lineItems => {
 };
 
 /**
- * Constructs lineItems that can be used directly in FTW.
+ * Constructs lineItems that can be used directly in this template.
  * This function checks lineItem code and adds attributes like lineTotal and reversal
- * which are added in API response and some FTW components are expecting.
+ * which are added in API response and some UI components are expecting.
  *
  * This can be used when user is not authenticated and we can't call speculative API endpoints directly
  *
