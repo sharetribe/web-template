@@ -1,1 +1,1 @@
-{{other-party.display-name}} wrote you a review
+{{other-party.display-name}} left you a review

@@ -1,1 +1,1 @@
-{{transaction.provider.display-name}} declined your booking request
+Your booking request was declined
