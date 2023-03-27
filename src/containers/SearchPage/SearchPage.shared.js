@@ -23,13 +23,13 @@ export const constructQueryParamName = (key, scope) => {
  *
  * @param {String} queryParamName Search parameter name
  * @param {Object} paramValue Search parameter value
- * @param {Object} extendedDataFilters extended data configuration with indexForSearch === true
+ * @param {Object} listingFieldFilters extended data configuration with indexForSearch === true
  * @param {Object} defaultFilters configuration for default built-in filters.
  */
 export const validURLParamForExtendedData = (
   queryParamName,
   paramValueRaw,
-  extendedDataFilters,
+  listingFieldFilters,
   defaultFilters
 ) => {
   const paramValue = paramValueRaw.toString();
@@ -51,12 +51,12 @@ export const validURLParamForExtendedData = (
   // TODO: handle 'dates' filter for bookings.
 
   // Resolve configurations for extended data filters
-  const extendedDataFilterConfig = extendedDataFilters.find(
+  const listingFieldFilterConfig = listingFieldFilters.find(
     f => queryParamName === constructQueryParamName(f.key, f.scope)
   );
 
-  if (extendedDataFilterConfig) {
-    const { schemaType, enumOptions = [], filterConfig } = extendedDataFilterConfig;
+  if (listingFieldFilterConfig) {
+    const { schemaType, enumOptions = [], filterConfig } = listingFieldFilterConfig;
     if ([SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM].includes(schemaType)) {
       const isSchemaTypeMultiEnum = schemaType === SCHEMA_TYPE_MULTI_ENUM;
       const searchMode = filterConfig?.searchMode;
@@ -245,9 +245,10 @@ export const cleanSearchFromConflictingParams = (
  * which are validated by mapping the values to marketplace custom config.
  *
  * @param {Object} params Search query params
- * @param {Object} extendedDataFilters extended data configuration with indexForSearch === true
- * @param {Object} defaultFilters configuration for default built-in filters.
+ * @param {Object} listingFieldsConfig extended data configuration with indexForSearch === true
+ * @param {Object} defaultFiltersConfig configuration for default built-in filters.
  * @param {Object} sortConfig config for sort search results feature
+ * @param {boolean} isOriginInUse if origin is in use, return it too.
  */
 export const pickSearchParamsOnly = (
   params,
@@ -330,12 +331,12 @@ export const searchParamsPicker = (
 };
 
 /**
- * Returns listing extended data configs grouped into arrays. [primaryConfigArray, secondaryConfigArray]
- * @param {*} configs listing extended data config
- * @param {*} activeListingTypes select configs that are marked only for these active listing types
+ * Returns listing fields (extended data configs) grouped into arrays. [primaryConfigArray, secondaryConfigArray]
+ * @param {Object} configs listing extended data config
+ * @param {Array<String>} activeListingTypes select configs that are marked only for these active listing types
  * @returns Array of grouped arrays. First subarray contains primary configs and the second contains secondary configs.
  */
-export const groupExtendedDataConfigs = (configs, activeListingTypes) =>
+export const groupListingFieldConfigs = (configs, activeListingTypes) =>
   configs.reduce(
     (grouped, config) => {
       const [primary, secondary] = grouped;

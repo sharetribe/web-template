@@ -105,13 +105,13 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, processName) => {
 };
 
 /**
- * Validate extended data fields that are included through marketplace-custom-config.js
+ * Validate listing fields (in extended data) that are included through configListing.js
  * This is used to check if listing creation flow can show the "next" tab as active.
  *
  * @param {Object} publicData
  * @param {Object} privateData
  */
-const hasValidCustomFieldsInExtendedData = (publicData, privateData, config) => {
+const hasValidListingFieldsInExtendedData = (publicData, privateData, config) => {
   const isValidField = (fieldConfig, fieldData) => {
     const {
       key,
@@ -133,17 +133,17 @@ const hasValidCustomFieldsInExtendedData = (publicData, privateData, config) => 
       !!saveConfig.isRequired &&
       (includeForListingTypes == null || includeForListingTypes.includes(publicData?.listingType));
     if (isRequired) {
-      const savedExtendedData = fieldData[key];
+      const savedListingField = fieldData[key];
       return schemaType === SCHEMA_TYPE_ENUM
-        ? typeof savedExtendedData === 'string' && hasValidEnumValue(savedExtendedData)
+        ? typeof savedListingField === 'string' && hasValidEnumValue(savedListingField)
         : schemaType === SCHEMA_TYPE_MULTI_ENUM
-        ? Array.isArray(savedExtendedData) && hasValidMultiEnumValues(savedExtendedData)
+        ? Array.isArray(savedListingField) && hasValidMultiEnumValues(savedListingField)
         : schemaType === SCHEMA_TYPE_TEXT
-        ? typeof savedExtendedData === 'string'
+        ? typeof savedListingField === 'string'
         : schemaType === SCHEMA_TYPE_LONG
-        ? typeof savedExtendedData === 'number' && Number.isInteger(savedExtendedData)
+        ? typeof savedListingField === 'number' && Number.isInteger(savedListingField)
         : schemaType === SCHEMA_TYPE_BOOLEAN
-        ? savedExtendedData === true || savedExtendedData === false
+        ? savedListingField === true || savedListingField === false
         : false;
     }
     return true;
@@ -185,7 +185,7 @@ const tabCompleted = (tab, listing, config) => {
         listingType &&
         transactionProcessAlias &&
         unitType &&
-        hasValidCustomFieldsInExtendedData(publicData, privateData, config)
+        hasValidListingFieldsInExtendedData(publicData, privateData, config)
       );
     case PRICING:
       return !!price;

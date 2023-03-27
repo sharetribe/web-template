@@ -28,7 +28,7 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import { setActiveListing } from './SearchPage.duck';
 import {
-  groupExtendedDataConfigs,
+  groupListingFieldConfigs,
   initialValues,
   searchParamsPicker,
   validUrlQueryParamsFromProps,
@@ -282,7 +282,7 @@ export class SearchPageComponent extends Component {
     const defaultFilters = isKeywordSearch
       ? defaultFiltersConfig.filter(f => f.key !== 'keywords')
       : defaultFiltersConfig;
-    const [customPrimaryFilters, customSecondaryFilters] = groupExtendedDataConfigs(
+    const [customPrimaryFilters, customSecondaryFilters] = groupListingFieldConfigs(
       listingFieldsConfig,
       activeListingTypes
     );

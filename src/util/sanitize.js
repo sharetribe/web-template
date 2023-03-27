@@ -129,7 +129,7 @@ export const sanitizeUser = entity => {
  * @param {object} config containing "schemaType"
  * @returns sanitized value or null
  */
-const sanitizedExtendedData = (value, config) => {
+const sanitizedListingFields = (value, config) => {
   const { schemaType, enumOptions } = config;
   const sanitized =
     schemaType === 'text'
@@ -165,7 +165,7 @@ const sanitizeConfiguredPublicData = (publicData, config = {}) => {
     const sanitizedValue = ['listingType', 'transactionProcessAlias', 'unitType'].includes(key)
       ? sanitizeText(value)
       : foundListingFieldConfig
-      ? sanitizedExtendedData(value, foundListingFieldConfig)
+      ? sanitizedListingFields(value, foundListingFieldConfig)
       : typeof value === 'string'
       ? sanitizeText(value)
       : value;
