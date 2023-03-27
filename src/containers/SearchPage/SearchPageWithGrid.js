@@ -26,7 +26,7 @@ import { Footer, H2, Page } from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 
 import {
-  groupExtendedDataConfigs,
+  groupListingFieldConfigs,
   initialValues,
   searchParamsPicker,
   validUrlQueryParamsFromProps,
@@ -209,7 +209,7 @@ export class SearchPageComponent extends Component {
     const defaultFilters = isKeywordSearch
       ? defaultFiltersConfig.filter(f => f.key !== 'keywords')
       : defaultFiltersConfig;
-    const [customPrimaryFilters, customSecondaryFilters] = groupExtendedDataConfigs(
+    const [customPrimaryFilters, customSecondaryFilters] = groupListingFieldConfigs(
       listingFieldsConfig,
       activeListingTypes
     );

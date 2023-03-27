@@ -77,18 +77,19 @@ const hasSetListingType = publicData => {
  * @param {Object} data values to look through against listingConfig.js and util/configHelpers.js
  * @param {String} targetScope Check that the scope of extended data the config matches
  * @param {String} targetListingType Check that the extended data is relevant for this listing type.
+ * @param {Object} listingFieldConfigs an extended data configurtions for listing fields.
  * @param {boolean} clearExtraCustomFields If true, returns also custom extended data fields with null values
  * @returns Array of picked extended data fields
  */
-const pickCustomExtendedDataFields = (
+const pickListingFieldsData = (
   data,
   targetScope,
   targetListingType,
-  extendedDataConfigs,
+  listingFieldConfigs,
   clearExtraCustomFields = false
 ) => {
-  return extendedDataConfigs.reduce((fields, extendedDataConfig) => {
-    const { key, includeForListingTypes, scope = 'public', schemaType } = extendedDataConfig || {};
+  return listingFieldConfigs.reduce((fields, field) => {
+    const { key, includeForListingTypes, scope = 'public', schemaType } = field || {};
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
@@ -159,8 +160,8 @@ const getInitialValues = (props, existingListingType, listingTypes, listingField
     description,
     // Transaction type info: listingType, transactionProcessAlias, unitType
     ...getTransactionInfo(listingTypes, existingListingType),
-    ...pickCustomExtendedDataFields(publicData, 'public', listingType, listingFieldsConfig),
-    ...pickCustomExtendedDataFields(privateData, 'private', listingType, listingFieldsConfig),
+    ...pickListingFieldsData(publicData, 'public', listingType, listingFieldsConfig),
+    ...pickListingFieldsData(privateData, 'private', listingType, listingFieldsConfig),
   };
 };
 
@@ -243,7 +244,7 @@ const EditListingDetailsPanel = props => {
                 listingType,
                 transactionProcessAlias,
                 unitType,
-                ...pickCustomExtendedDataFields(
+                ...pickListingFieldsData(
                   rest,
                   'public',
                   listingType,
@@ -251,7 +252,7 @@ const EditListingDetailsPanel = props => {
                   clearUnrelatedCustomFields
                 ),
               },
-              privateData: pickCustomExtendedDataFields(
+              privateData: pickListingFieldsData(
                 rest,
                 'private',
                 listingType,

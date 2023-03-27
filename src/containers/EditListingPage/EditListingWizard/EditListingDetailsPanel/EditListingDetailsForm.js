@@ -114,12 +114,11 @@ const FieldSelectListingType = props => {
   );
 };
 
-// Add collect data for extended data fields (both publicData and privateData) based on configuration
-const AddCustomExtendedDataFields = props => {
-  const { listingType, listingFieldsConfig, intl } = props;
-  const extendedDataConfigs = listingFieldsConfig || [];
-  const fields = extendedDataConfigs.reduce((pickedFields, extendedDataConfig) => {
-    const { key, includeForListingTypes, schemaType, scope } = extendedDataConfig || {};
+// Add collect data for listing fields (both publicData and privateData) based on configuration
+const AddListingFields = props => {
+  const { listingType, listingFieldsConfig = [], intl } = props;
+  const fields = listingFieldsConfig.reduce((pickedFields, fieldConfig) => {
+    const { key, includeForListingTypes, schemaType, scope } = fieldConfig || {};
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetProcessAlias =
@@ -132,7 +131,7 @@ const AddCustomExtendedDataFields = props => {
           <CustomExtendedDataField
             key={key}
             name={key}
-            fieldConfig={extendedDataConfig}
+            fieldConfig={fieldConfig}
             defaultRequiredMessage={intl.formatMessage({
               id: 'EditListingDetailsForm.defaultRequiredMessage',
             })}
@@ -232,7 +231,7 @@ const EditListingDetailsFormComponent = props => (
             intl={intl}
           />
 
-          <AddCustomExtendedDataFields
+          <AddListingFields
             listingType={listingType}
             listingFieldsConfig={listingFieldsConfig}
             intl={intl}

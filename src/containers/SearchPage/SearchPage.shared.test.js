@@ -7,7 +7,7 @@ import {
   cleanSearchFromConflictingParams,
   pickSearchParamsOnly,
   searchParamsPicker,
-  groupExtendedDataConfigs,
+  groupListingFieldConfigs,
 } from './SearchPage.shared.js';
 
 const urlParams = {
@@ -505,7 +505,7 @@ describe('SearchPage.helpers', () => {
     });
   });
 
-  describe('groupExtendedDataConfigs', () => {
+  describe('groupListingFieldConfigs', () => {
     it('returns grouped configs for the extended data of the listinga', () => {
       const activeListingTypes = [
         'sell-bicycles',
@@ -513,7 +513,7 @@ describe('SearchPage.helpers', () => {
         'rent-bicycles-nightly',
         'rent-bicycles-hourly',
       ];
-      const [primary, secondary] = groupExtendedDataConfigs(
+      const [primary, secondary] = groupListingFieldConfigs(
         listingFieldsConfig,
         activeListingTypes
       );
