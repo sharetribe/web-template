@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Add new email templates to default processes.
+  [#122](https://github.com/sharetribe/web-template/pull/122)
 - [fix] add fonts.googleapis.com to CSP connect-src.
   [#129](https://github.com/sharetribe/web-template/pull/129)
 - [fix] search config for dates uses dateRangeMode not mode.

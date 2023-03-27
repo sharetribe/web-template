@@ -1,1 +1,1 @@
-Write a review for {{transaction.customer.display-name}}
+Leave a review for {{transaction.customer.display-name}}

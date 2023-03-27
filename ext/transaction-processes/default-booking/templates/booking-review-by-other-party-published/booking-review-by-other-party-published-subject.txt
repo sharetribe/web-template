@@ -1,1 +1,1 @@
-Read the review {{other-party.display-name}} wrote you
+Review from {{other-party.display-name}} has been published on your profile

@@ -1,1 +1,1 @@
-Write a review for {{transaction.listing.title}}
+Review your experience with {{transaction.listing.title}}
