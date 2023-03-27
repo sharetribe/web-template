@@ -149,43 +149,40 @@ describe('SearchPage.helpers', () => {
       const validParams = validFilterParams(params, listingFieldsConfig, defaultFiltersConfig);
       expect(validParams).toEqual({ pub_category: 'men' });
     });
-  });
 
-  describe('validURLParamsForExtendedData', () => {
-    it('returns valid parameters', () => {
-      const validParams = validURLParamsForExtendedData(
+    it('returns valid parameters, when "dropNonFilterParams" is false', () => {
+      const validParams = validFilterParams(
         urlParams,
         listingFieldsConfig,
-        defaultFiltersConfig
+        defaultFiltersConfig,
+        false
       );
       expect(validParams).toEqual(urlParams);
     });
 
-    it('takes empty params', () => {
-      const validParams = validURLParamsForExtendedData(
-        {},
-        listingFieldsConfig,
-        defaultFiltersConfig
-      );
+    it('takes empty params, when "dropNonFilterParams" is false', () => {
+      const validParams = validFilterParams({}, listingFieldsConfig, defaultFiltersConfig, false);
       expect(validParams).toEqual({});
     });
 
-    it('drops an invalid filter param value', () => {
+    it('drops an invalid filter param value, when "dropNonFilterParams" is false', () => {
       const params = { pub_category: 'men', pub_amenities: 'invalid1,invalid2' };
-      const validParams = validURLParamsForExtendedData(
+      const validParams = validFilterParams(
         params,
         listingFieldsConfig,
-        defaultFiltersConfig
+        defaultFiltersConfig,
+        false
       );
       expect(validParams).toEqual({ pub_category: 'men' });
     });
 
-    it('returns non-filter params', () => {
+    it('returns non-filter params, when "dropNonFilterParams" is false', () => {
       const params = { pub_category: 'men', other_param: 'somevalue' };
-      const validParams = validURLParamsForExtendedData(
+      const validParams = validFilterParams(
         params,
         listingFieldsConfig,
-        defaultFiltersConfig
+        defaultFiltersConfig,
+        false
       );
       expect(validParams).toEqual(params);
     });

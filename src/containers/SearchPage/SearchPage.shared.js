@@ -83,62 +83,27 @@ export const validURLParamForExtendedData = (
 /**
  * Checks filter param value validity.
  *
- * Non-filter params are dropped.
+ * The URL params that are not part of listing.query filters are dropped by default.
  *
  * @param {Object} params Search query params
- * @param {Object} extendedDataFilters extended data configuration with indexForSearch === true
- * @param {Object} defaultFilters configuration for default built-in filters.
+ * @param {Object} listingFieldsConfig extended data configuration with indexForSearch === true
+ * @param {Object} defaultFiltersConfig configuration for default built-in filters.
+ * @param {boolean} dropNonFilterParams if false, extra params are passed through.
  */
-export const validFilterParams = (params, listingFieldsConfig, defaultFiltersConfig) => {
-  const paramEntries = Object.entries(params);
-  const extendedDataFilters = listingFieldsConfig.filter(
-    config => config.filterConfig?.indexForSearch
-  );
-  const extendedDataParamNames = extendedDataFilters.map(f =>
-    constructQueryParamName(f.key, f.scope)
-  );
-  const defaultFilterParamNames = defaultFiltersConfig.map(f => f.key);
-  const paramNames = [...extendedDataParamNames, ...defaultFilterParamNames];
-
-  return paramEntries.reduce((validParams, entry) => {
-    const [paramName, paramValue] = entry;
-
-    return paramNames.includes(paramName)
-      ? {
-          ...validParams,
-          ...validURLParamForExtendedData(
-            paramName,
-            paramValue,
-            extendedDataFilters,
-            defaultFiltersConfig
-          ),
-        }
-      : { ...validParams };
-  }, {});
-};
-
-/**
- * Checks filter param value validity.
- *
- * Non-filter params are returned as they are.
- *
- * @param {Object} params Search query params
- * @param {Object} extendedDataFilters extended data configuration with indexForSearch === true
- * @param {Object} defaultFilters configuration for default built-in filters.
- */
-export const validURLParamsForExtendedData = (
+export const validFilterParams = (
   params,
   listingFieldsConfig,
-  defaultFiltersConfig
+  defaultFiltersConfig,
+  dropNonFilterParams = true
 ) => {
-  const extendedDataFilters = listingFieldsConfig.filter(
+  const listingFieldFiltersConfig = listingFieldsConfig.filter(
     config => config.filterConfig?.indexForSearch
   );
-  const extendedDataParamNames = extendedDataFilters.map(f =>
+  const listingFieldParamNames = listingFieldFiltersConfig.map(f =>
     constructQueryParamName(f.key, f.scope)
   );
-  const builtInFilterParamNames = defaultFiltersConfig.map(df => df.key);
-  const filterParamNames = [...builtInFilterParamNames, ...extendedDataParamNames];
+  const builtInFilterParamNames = defaultFiltersConfig.map(f => f.key);
+  const filterParamNames = [...listingFieldParamNames, ...builtInFilterParamNames];
 
   const paramEntries = Object.entries(params);
 
@@ -151,10 +116,12 @@ export const validURLParamsForExtendedData = (
           ...validURLParamForExtendedData(
             paramName,
             paramValue,
-            extendedDataFilters,
+            listingFieldFiltersConfig,
             defaultFiltersConfig
           ),
         }
+      : dropNonFilterParams
+      ? { ...validParams }
       : { ...validParams, [paramName]: paramValue };
   }, {});
 };
@@ -177,7 +144,7 @@ export const validUrlQueryParamsFromProps = props => {
   });
   // urlQueryParams doesn't contain page specific url params
   // like mapSearch, page or origin (origin depends on config.maps.search.sortSearchByDistance)
-  return validURLParamsForExtendedData(searchInURL, listingFieldsConfig, defaultFiltersConfig);
+  return validFilterParams(searchInURL, listingFieldsConfig, defaultFiltersConfig, false);
 };
 
 /**

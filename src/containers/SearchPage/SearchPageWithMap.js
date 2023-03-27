@@ -32,7 +32,6 @@ import {
   initialValues,
   searchParamsPicker,
   validUrlQueryParamsFromProps,
-  validURLParamsForExtendedData,
   validFilterParams,
   cleanSearchFromConflictingParams,
   createSearchResultSchema,
@@ -267,10 +266,11 @@ export class SearchPageComponent extends Component {
       isOriginInUse(config)
     );
 
-    const validQueryParams = validURLParamsForExtendedData(
+    const validQueryParams = validFilterParams(
       searchParamsInURL,
       listingFieldsConfig,
-      defaultFiltersConfig
+      defaultFiltersConfig,
+      false
     );
 
     const isWindowDefined = typeof window !== 'undefined';
