@@ -7,7 +7,7 @@ const keyId = process.env.KEY_ID;
 
 const router = express.Router();
 
-// These .well-known/* endpoints will be enabled if you are using FTW as OIDC proxy
+// These .well-known/* endpoints will be enabled if you are using this template as OIDC proxy
 // https://www.sharetribe.com/docs/cookbook-social-logins-and-sso/setup-open-id-connect-proxy/
 if (rsaPublicKey && rsaPrivateKey) {
   router.get('/openid-configuration', openIdConfiguration);

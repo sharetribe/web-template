@@ -599,7 +599,7 @@ export function requestCreateListingDraft(data, config) {
     const { stockUpdate, images, ...rest } = data;
 
     // If images should be saved, create array out of the image UUIDs for the API call
-    // Note: in FTW, image upload is not happening at the same time as listing creation.
+    // Note: in this template, image upload is not happening at the same time as listing creation.
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
     const ownListingValues = { ...imageProperty, ...rest };
 

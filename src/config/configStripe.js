@@ -17,7 +17,7 @@ export const dayCountAvailableForBooking = 90;
  * Default merchant category code (MCC)
  * MCCs are used to classify businesses by the type of goods or services they provide.
  *
- * In FTW we use code 5734 Computer Software Stores as a default for all the connected accounts.
+ * In this template, we use code 5734 Computer Software Stores as a default for all the connected accounts.
  *
  * See the whole list of MCC codes from https://stripe.com/docs/connect/setting-mcc#list
  */

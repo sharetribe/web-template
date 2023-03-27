@@ -362,7 +362,7 @@ const handleFocusedInputChange = setFocusedInput => focusedInput => {
 };
 
 // When the values of the form are updated we need to fetch
-// lineItems from FTW backend for the EstimatedTransactionMaybe
+// lineItems from this Template's backend for the EstimatedTransactionMaybe
 // In case you add more fields to the form, make sure you add
 // the values here to the orderData object.
 const handleFormSpyChange = (
@@ -478,7 +478,7 @@ export const BookingDatesFormComponent = props => {
         });
 
         // This is the place to collect breakdown estimation data.
-        // Note: lineItems are calculated and fetched from FTW backend
+        // Note: lineItems are calculated and fetched from this Template's backend
         // so we need to pass only booking data that is needed otherwise
         // If you have added new fields to the form that will affect to pricing,
         // you need to add the values to handleOnChange function

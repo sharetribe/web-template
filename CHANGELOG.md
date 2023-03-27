@@ -79,7 +79,8 @@ way to update this template, but currently, we follow a pattern:
 - [add] Add PrimaryButtonInline and SecondaryButtonInline. Refactor utility-classes away from
   Buttons. [#102](https://github.com/sharetribe/web-template/pull/102)
 - [add] Add Heading and H1...H6 components to main app. These are separate from PageBuilder. So that
-  Pages could use different fonts if needed. [#97](https://github.com/sharetribe/web-template/pull/97)
+  Pages could use different fonts if needed.
+  [#97](https://github.com/sharetribe/web-template/pull/97)
 - [add] Add --contentMaxWidth and --contentMaxWidthPages.
   [#101](https://github.com/sharetribe/web-template/pull/101)
 - [change] Improve error handling on PageBuilder and LandingPage.
@@ -199,7 +200,8 @@ way to update this template, but currently, we follow a pattern:
   and remove isBookingUnitType in favor of isBookingProcessAlias.
   [#56](https://github.com/sharetribe/web-template/pull/56)
 - [fix] Bug fixes and refactoring: AuthenticationPage/EmailVerificationInfo.js had bugs,
-  StripeConnectAccountInfo caused warnings. [#55](https://github.com/sharetribe/web-template/pull/55)
+  StripeConnectAccountInfo caused warnings.
+  [#55](https://github.com/sharetribe/web-template/pull/55)
 - [fix] ListingPage: the title of section details should not be visible if no details is set.
   [#54](https://github.com/sharetribe/web-template/pull/54)
 - [add] Add flag: enforceValidTransactionType for listing query on SearchPage.

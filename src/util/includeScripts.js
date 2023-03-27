@@ -65,7 +65,7 @@ export const IncludeScripts = props => {
 
   if (googleAnalyticsId && hasGoogleAnalyticsv4Id) {
     // Google Analytics: gtag.js
-    // NOTE: FTW is a single-page application (SPA).
+    // NOTE: This template is a single-page application (SPA).
     //       gtag.js sends initial page_view event after page load.
     //       but we need to handle subsequent events for in-app navigation.
     //       This is done in src/analytics/handlers.js

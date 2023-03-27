@@ -18,7 +18,7 @@ In addition to the process that is saved to the Sharetribe Flex platform, you al
 new or modified process here. This directory guides how this web app renders different pages - and
 the app needs to have knowledge about what happens after each transition in the process.
 
-Read more about how to take new or modified transaction processes into use in the FTW template.  
+Read more about how to take new or modified transaction processes into use in this template.  
 https://www.sharetribe.com/docs/how-to/change-transaction-process-in-ftw/
 
 The starting point to take the new process into use in your client app is to define a new process

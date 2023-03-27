@@ -134,7 +134,7 @@ app.use('/static', express.static(path.join(buildPath, 'static')));
 app.use('/robots.txt', express.static(path.join(buildPath, 'robots.txt')));
 app.use(cookieParser());
 
-// These .well-known/* endpoints will be enabled if you are using FTW as OIDC proxy
+// These .well-known/* endpoints will be enabled if you are using this template as OIDC proxy
 // https://www.sharetribe.com/docs/cookbook-social-logins-and-sso/setup-open-id-connect-proxy/
 // We need to handle these endpoints separately so that they are accessible by Flex
 // even if you have enabled basic authentication e.g. in staging environment.
