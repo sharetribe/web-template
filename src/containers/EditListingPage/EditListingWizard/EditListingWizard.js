@@ -148,7 +148,7 @@ const hasValidCustomFieldsInExtendedData = (publicData, privateData, config) => 
     }
     return true;
   };
-  return config.listing.listingExtendedData.reduce((isValid, fieldConfig) => {
+  return config.listing.listingFields.reduce((isValid, fieldConfig) => {
     const data = fieldConfig.scope === 'private' ? privateData : publicData;
     return isValid && isValidField(fieldConfig, data);
   }, true);

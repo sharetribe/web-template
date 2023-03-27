@@ -36,11 +36,11 @@ const constructQueryParamName = (key, scope) => {
  */
 export const getQueryParamNames = (listingFieldsConfig, defaultFiltersConfig) => {
   const queryParamKeysOfDefaultFilters = defaultFiltersConfig.map(config => config.key);
-  const queryParamKeysOfListingExtendedData = listingFieldsConfig.reduce((params, config) => {
+  const queryParamKeysOfListingFields = listingFieldsConfig.reduce((params, config) => {
     const param = constructQueryParamName(config.key, config.scope);
     return config.filterConfig?.indexForSearch ? [...params, param] : params;
   }, []);
-  return [...queryParamKeysOfDefaultFilters, ...queryParamKeysOfListingExtendedData];
+  return [...queryParamKeysOfDefaultFilters, ...queryParamKeysOfListingFields];
 };
 /**
  * Check if any of the filters (defined by filterKeys) have currently active query parameter in URL.

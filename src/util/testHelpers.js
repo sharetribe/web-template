@@ -40,7 +40,7 @@ export const getDefaultConfiguration = () => {
       publishableKey: 'pk_test_',
     },
     listing: {
-      listingExtendedData: [
+      listingFields: [
         {
           key: 'category',
           scope: 'public',

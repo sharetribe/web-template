@@ -141,7 +141,7 @@ const setNoAvailabilityForProductListings = processAlias => {
  * Get initialValues for the form. This function includes
  * title, description, listingType, transactionProcessAlias, unitType,
  * and those publicData & privateData fields that are configured through
- * config.listing.listingExtendedData.
+ * config.listing.listingFields.
  *
  * @param {object} props
  * @param {object} existingListingType info saved to listing's publicData
@@ -183,7 +183,7 @@ const EditListingDetailsPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const { publicData, state } = listing?.attributes || {};
   const listingTypes = config.listing.listingTypes;
-  const listingFieldsConfig = config.listing.listingExtendedData;
+  const listingFieldsConfig = config.listing.listingFields;
 
   const { hasExistingListingType, existingListingType } = hasSetListingType(publicData);
   const hasValidExistingListingType =
