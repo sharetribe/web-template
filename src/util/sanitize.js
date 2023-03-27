@@ -129,7 +129,7 @@ export const sanitizeUser = entity => {
  * @param {object} config containing "schemaType"
  * @returns sanitized value or null
  */
-const sanitizedExtendedData = (value, config) => {
+const sanitizedListingFields = (value, config) => {
   const { schemaType, enumOptions } = config;
   const sanitized =
     schemaType === 'text'
@@ -149,7 +149,7 @@ const sanitizedExtendedData = (value, config) => {
 
 /**
  * Some of the public data is configurable. This validates that data against the given config.
- * (The config paramter contains listingExtendedData config.)
+ * (The config paramter contains listingFields config.)
  *
  * NOTE: this does not handle nested JSON-like objects or other extra data,
  * but there's handling for string type content ('<' & '>' characters are replaced with full-width ones).
@@ -161,11 +161,11 @@ const sanitizedExtendedData = (value, config) => {
 const sanitizeConfiguredPublicData = (publicData, config = {}) => {
   const sanitizedConfiguredPublicData = Object.entries(publicData).reduce((sanitized, entry) => {
     const [key, value] = entry;
-    const foundEDConfig = config?.listingExtendedData?.find(d => d.key === key);
+    const foundListingFieldConfig = config?.listingFields?.find(d => d.key === key);
     const sanitizedValue = ['listingType', 'transactionProcessAlias', 'unitType'].includes(key)
       ? sanitizeText(value)
-      : foundEDConfig
-      ? sanitizedExtendedData(value, foundEDConfig)
+      : foundListingFieldConfig
+      ? sanitizedListingFields(value, foundListingFieldConfig)
       : typeof value === 'string'
       ? sanitizeText(value)
       : value;

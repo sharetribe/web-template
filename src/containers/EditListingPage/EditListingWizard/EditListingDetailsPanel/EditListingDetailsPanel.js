@@ -77,18 +77,19 @@ const hasSetListingType = publicData => {
  * @param {Object} data values to look through against listingConfig.js and util/configHelpers.js
  * @param {String} targetScope Check that the scope of extended data the config matches
  * @param {String} targetListingType Check that the extended data is relevant for this listing type.
+ * @param {Object} listingFieldConfigs an extended data configurtions for listing fields.
  * @param {boolean} clearExtraCustomFields If true, returns also custom extended data fields with null values
  * @returns Array of picked extended data fields
  */
-const pickCustomExtendedDataFields = (
+const pickListingFieldsData = (
   data,
   targetScope,
   targetListingType,
-  extendedDataConfigs,
+  listingFieldConfigs,
   clearExtraCustomFields = false
 ) => {
-  return extendedDataConfigs.reduce((fields, extendedDataConfig) => {
-    const { key, includeForListingTypes, scope = 'public', schemaType } = extendedDataConfig || {};
+  return listingFieldConfigs.reduce((fields, field) => {
+    const { key, includeForListingTypes, scope = 'public', schemaType } = field || {};
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
@@ -141,15 +142,15 @@ const setNoAvailabilityForProductListings = processAlias => {
  * Get initialValues for the form. This function includes
  * title, description, listingType, transactionProcessAlias, unitType,
  * and those publicData & privateData fields that are configured through
- * config.listing.listingExtendedData.
+ * config.listing.listingFields.
  *
  * @param {object} props
  * @param {object} existingListingType info saved to listing's publicData
  * @param {object} listingTypes app's configured types (presets for listings)
- * @param {object} listingExtendedDataConfig those extended data fields that are part of configurations
+ * @param {object} listingFieldsConfig those extended data fields that are part of configurations
  * @returns initialValues object for the form
  */
-const getInitialValues = (props, existingListingType, listingTypes, listingExtendedDataConfig) => {
+const getInitialValues = (props, existingListingType, listingTypes, listingFieldsConfig) => {
   const { description, title, publicData, privateData } = props?.listing?.attributes || {};
   const { listingType } = publicData;
 
@@ -159,8 +160,8 @@ const getInitialValues = (props, existingListingType, listingTypes, listingExten
     description,
     // Transaction type info: listingType, transactionProcessAlias, unitType
     ...getTransactionInfo(listingTypes, existingListingType),
-    ...pickCustomExtendedDataFields(publicData, 'public', listingType, listingExtendedDataConfig),
-    ...pickCustomExtendedDataFields(privateData, 'private', listingType, listingExtendedDataConfig),
+    ...pickListingFieldsData(publicData, 'public', listingType, listingFieldsConfig),
+    ...pickListingFieldsData(privateData, 'private', listingType, listingFieldsConfig),
   };
 };
 
@@ -183,7 +184,7 @@ const EditListingDetailsPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const { publicData, state } = listing?.attributes || {};
   const listingTypes = config.listing.listingTypes;
-  const listingExtendedDataConfig = config.listing.listingExtendedData;
+  const listingFieldsConfig = config.listing.listingFields;
 
   const { hasExistingListingType, existingListingType } = hasSetListingType(publicData);
   const hasValidExistingListingType =
@@ -194,7 +195,7 @@ const EditListingDetailsPanel = props => {
     props,
     existingListingType,
     listingTypes,
-    listingExtendedDataConfig
+    listingFieldsConfig
   );
 
   const noListingTypesSet = listingTypes?.length > 0;
@@ -243,19 +244,19 @@ const EditListingDetailsPanel = props => {
                 listingType,
                 transactionProcessAlias,
                 unitType,
-                ...pickCustomExtendedDataFields(
+                ...pickListingFieldsData(
                   rest,
                   'public',
                   listingType,
-                  listingExtendedDataConfig,
+                  listingFieldsConfig,
                   clearUnrelatedCustomFields
                 ),
               },
-              privateData: pickCustomExtendedDataFields(
+              privateData: pickListingFieldsData(
                 rest,
                 'private',
                 listingType,
-                listingExtendedDataConfig,
+                listingFieldsConfig,
                 clearUnrelatedCustomFields
               ),
               ...setNoAvailabilityForProductListings(transactionProcessAlias),
@@ -266,7 +267,7 @@ const EditListingDetailsPanel = props => {
           selectableListingTypes={listingTypes.map(conf => getTransactionInfo([conf], {}, true))}
           hasExistingListingType={hasExistingListingType}
           onProcessChange={onProcessChange}
-          listingExtendedDataConfig={listingExtendedDataConfig}
+          listingFieldsConfig={listingFieldsConfig}
           marketplaceCurrency={config.currency}
           disabled={disabled}
           ready={ready}

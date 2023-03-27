@@ -8,7 +8,7 @@
 // some validation is added there.
 
 /**
- * Configuration options for extended data fields:
+ * Configuration options for listing fields (custom extended data fields):
  * - key:                           Unique key for the extended data field.
  * - scope (optional):              Scope of the extended data can be either 'public' or 'private'.
  *                                  Default value: 'public'.
@@ -46,7 +46,7 @@
  *   - isRequired (optional):         Is the field required for providers to fill
  *   - requiredMessage (optional):    Message for those fields, which are mandatory.
  */
-export const listingExtendedData = [
+export const listingFields = [
   {
     key: 'category',
     scope: 'public',
