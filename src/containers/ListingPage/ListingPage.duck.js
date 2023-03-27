@@ -278,7 +278,7 @@ export const fetchTimeSlots = (listingId, start, end, timeZone) => (dispatch, ge
 
   // The maximum pagination page size for timeSlots is 500
   const extraParams = {
-    per_page: 500,
+    perPage: 500,
     page: 1,
   };
 
