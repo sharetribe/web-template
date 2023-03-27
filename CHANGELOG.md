@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [Change] Rename 'tire-size listing fields as 'tire' and update README.md.
+  [#126](https://github.com/sharetribe/web-template/pull/126)
 - [Change] Update README.md. Add links to beta version of Docs.
   [#125](https://github.com/sharetribe/web-template/pull/125)
 - [fix] Heading was not imported correctly after changes to styling.
