@@ -114,7 +114,7 @@ export const loadData = (params, search) => (dispatch, getState, sdk) => {
     'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
     'fields.image': ['variants.square-small', 'variants.square-small2x'],
     page,
-    per_page: INBOX_PAGE_SIZE,
+    perPage: INBOX_PAGE_SIZE,
   };
 
   return sdk.transactions

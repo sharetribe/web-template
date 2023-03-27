@@ -246,7 +246,7 @@ export const fetchCurrentUserHasListings = () => (dispatch, getState, sdk) => {
     // Since we are only interested in if the user has
     // listings, we only need at most one result.
     page: 1,
-    per_page: 1,
+    perPage: 1,
   };
 
   return sdk.ownListings
@@ -273,7 +273,7 @@ export const fetchCurrentUserHasOrders = () => (dispatch, getState, sdk) => {
   const params = {
     only: 'order',
     page: 1,
-    per_page: 1,
+    perPage: 1,
   };
 
   return sdk.transactions
@@ -299,7 +299,7 @@ export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => 
     only: 'sale',
     last_transitions: transitionsNeedingAttention,
     page: 1,
-    per_page: NOTIFICATION_PAGE_SIZE,
+    perPage: NOTIFICATION_PAGE_SIZE,
   };
 
   dispatch(fetchCurrentUserNotificationsRequest());
