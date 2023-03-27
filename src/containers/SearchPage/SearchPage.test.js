@@ -155,7 +155,7 @@ describe('SearchPageWithGrid', () => {
     config: {
       currency: 'USD',
       listing: {
-        listingExtendedData: listingFieldsConfig,
+        listingFields: listingFieldsConfig,
         listingTypes,
       },
       search: {

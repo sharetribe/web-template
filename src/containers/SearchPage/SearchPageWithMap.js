@@ -101,7 +101,7 @@ export class SearchPageComponent extends Component {
     // (i.e. 'moveend' event in Mapbox and 'bounds_changed' in Google Maps)
     if (viewportBoundsChanged && isSearchPage) {
       const { history, location, config } = this.props;
-      const { listingExtendedData: listingFieldsConfig } = config?.listing || {};
+      const { listingFields: listingFieldsConfig } = config?.listing || {};
       const { defaultFilters: defaultFiltersConfig } = config?.search || {};
 
       // parse query parameters, including a custom attribute named category
@@ -139,7 +139,7 @@ export class SearchPageComponent extends Component {
   // Apply the filters by redirecting to SearchPage with new filters.
   applyFilters() {
     const { history, routeConfiguration, config } = this.props;
-    const { listingExtendedData: listingFieldsConfig } = config?.listing || {};
+    const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
@@ -162,7 +162,7 @@ export class SearchPageComponent extends Component {
   // Reset all filter query parameters
   resetAll(e) {
     const { history, routeConfiguration, config } = this.props;
-    const { listingExtendedData: listingFieldsConfig } = config?.listing || {};
+    const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig } = config?.search || {};
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
@@ -178,7 +178,7 @@ export class SearchPageComponent extends Component {
 
   getHandleChangedValueFn(useHistoryPush) {
     const { history, routeConfiguration, config } = this.props;
-    const { listingExtendedData: listingFieldsConfig } = config?.listing || {};
+    const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
@@ -249,7 +249,7 @@ export class SearchPageComponent extends Component {
       config,
     } = this.props;
 
-    const { listingExtendedData: listingFieldsConfig } = config?.listing || {};
+    const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
     const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);

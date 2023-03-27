@@ -195,8 +195,8 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   return sdk.listings
     .query(params)
     .then(response => {
-      const listingExtendedData = config?.listing?.listingExtendedData;
-      const sanitizeConfig = { listingExtendedData };
+      const listingFields = config?.listing?.listingFields;
+      const sanitizeConfig = { listingFields };
 
       dispatch(addMarketplaceEntities(response, sanitizeConfig));
       dispatch(searchListingsSuccess(response));

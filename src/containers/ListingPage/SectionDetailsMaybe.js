@@ -6,7 +6,7 @@ import css from './ListingPage.module.css';
 
 const SectionDetailsMaybe = props => {
   const { publicData, metadata = {}, listingConfig, intl } = props;
-  const { listingExtendedData } = listingConfig || {};
+  const { listingFields } = listingConfig || {};
 
   if (!publicData || !listingConfig) {
     return null;
@@ -38,7 +38,7 @@ const SectionDetailsMaybe = props => {
     return filteredConfigs;
   };
 
-  const existingExtendedData = listingExtendedData.reduce(pickExtendedData, []);
+  const existingExtendedData = listingFields.reduce(pickExtendedData, []);
 
   return existingExtendedData.length > 0 ? (
     <div className={css.sectionDetails}>

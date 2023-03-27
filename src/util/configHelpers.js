@@ -318,12 +318,12 @@ const validSaveConfig = config => {
   return [isValid, validValue];
 };
 
-const validListingExtendedData = (listingExtendedData, listingTypesInUse) => {
-  const keys = listingExtendedData.map(d => d.key);
+const validListingFields = (listingFields, listingTypesInUse) => {
+  const keys = listingFields.map(d => d.key);
   const scopeOptions = ['public', 'private'];
   const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean'];
 
-  return listingExtendedData.reduce((acc, data) => {
+  return listingFields.reduce((acc, data) => {
     const schemaType = data.schemaType;
 
     const validationData = Object.entries(data).reduce(
@@ -418,11 +418,11 @@ const validListingTypes = listingTypes => {
 };
 
 const validListingConfig = config => {
-  const { enforceValidListingType, listingTypes = [], listingExtendedData = [], ...rest } = config;
+  const { enforceValidListingType, listingTypes = [], listingFields = [], ...rest } = config;
   const listingTypesInUse = getListingTypeStringsInUse(listingTypes);
 
   return {
-    listingExtendedData: validListingExtendedData(listingExtendedData, listingTypesInUse),
+    listingFields: validListingFields(listingFields, listingTypesInUse),
     listingTypes: validListingTypes(listingTypes),
     enforceValidListingType,
     rest,

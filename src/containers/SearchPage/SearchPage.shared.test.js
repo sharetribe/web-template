@@ -198,7 +198,7 @@ describe('SearchPage.helpers', () => {
         location,
         config: {
           listing: {
-            listingExtendedData: listingFieldsConfig,
+            listingFields: listingFieldsConfig,
           },
           search: {
             defaultFilters: defaultFiltersConfig,
@@ -215,7 +215,7 @@ describe('SearchPage.helpers', () => {
         location,
         config: {
           listing: {
-            listingExtendedData: listingFieldsConfig,
+            listingFields: listingFieldsConfig,
           },
           search: {
             defaultFilters: defaultFiltersConfig,
@@ -232,7 +232,7 @@ describe('SearchPage.helpers', () => {
       location,
       config: {
         listing: {
-          listingExtendedData: listingFieldsConfig,
+          listingFields: listingFieldsConfig,
         },
         search: {
           defaultFilters: defaultFiltersConfig,
