@@ -298,7 +298,7 @@
   {:name :notification/review-by-provider-first,
    :on :transition/review-1-by-provider,
    :to :actor.role/customer,
-   :template :review-by-other-party-unpublished}
+   :template :purchase-review-by-other-party-unpublished}
   {:name :notification/review-by-customer-first,
    :on :transition/review-1-by-customer,
    :to :actor.role/provider,
@@ -306,7 +306,7 @@
   {:name :notification/review-by-provider-second,
    :on :transition/review-2-by-provider,
    :to :actor.role/customer,
-   :template :review-by-other-party-published}
+   :template :purchase-review-by-other-party-published}
   {:name :notification/review-by-customer-second,
    :on :transition/review-2-by-customer,
    :to :actor.role/provider,
