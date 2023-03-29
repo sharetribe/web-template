@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Comment out additional listingTypes. Those are useful for testing purposes, but multiple
+  listingTypes are not fully supported on search page yet.
+  [#130](https://github.com/sharetribe/web-template/pull/130)
 - [change] Add new email templates to default processes.
   [#122](https://github.com/sharetribe/web-template/pull/122)
 - [fix] add fonts.googleapis.com to CSP connect-src.
