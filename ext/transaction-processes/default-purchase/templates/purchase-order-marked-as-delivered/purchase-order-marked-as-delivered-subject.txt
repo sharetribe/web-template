@@ -1,0 +1,1 @@
+Your order for {{transaction.listing.title}} was {{#eq "shipping" transaction.protected-data.deliveryMethod}}shipped{{else}}delivered{{/eq}}

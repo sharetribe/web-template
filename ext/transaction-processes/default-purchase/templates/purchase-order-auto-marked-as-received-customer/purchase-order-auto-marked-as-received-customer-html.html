@@ -11,9 +11,11 @@
             <table align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0" width="100%" style="max-width:600px;margin:0 auto">
               <tr style="width:100%">
                 <td>
-                  <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">An order for {{listing.title}} was disputed</h1>
-                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{marketplace.name}} support has marked an order for {{listing.title}} by {{customer.display-name}} disputed. {{marketplace.name}} support will now evaluate the situation and resolve it.</p>
-                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">If you have any questions, please contact {{marketplace.name}} support.</p>
+                  <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">Your order for {{listing.title}} is now considered completed</h1>{{#eq "shipping" protected-data.deliveryMethod}}
+                    <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{provider.display-name}} shipped {{listing.title}} to you two weeks ago. As we haven't heard from you since, we assume that you have received what you ordered. We now consider your order completed. {{provider.display-name}} has received your payment.</p>
+                    {{else}}
+                      <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{provider.display-name}} delivered {{listing.title}} to you two weeks ago. As we haven't heard from you since, we assume that you have received what you ordered. We now consider your order completed. {{provider.display-name}} has received your payment.</p>
+                  {{/eq}}
                   <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                     <tbody>
                       <tr>
@@ -25,6 +27,7 @@
                       </tr>
                     </tbody>
                   </table>
+                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">If you did not receive {{listing.title}} yet, please contact {{marketplace.name}} support.</p>
   {{/with}}
   <div>
     <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#E1E1E1;margin:20px 0" />

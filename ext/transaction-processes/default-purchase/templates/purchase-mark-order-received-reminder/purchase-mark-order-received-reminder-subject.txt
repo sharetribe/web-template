@@ -1,0 +1,1 @@
+Did you receive {{transaction.listing.title}}? Let us know.
