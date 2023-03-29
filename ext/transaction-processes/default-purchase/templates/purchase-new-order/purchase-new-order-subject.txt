@@ -1,0 +1,1 @@
+{{transaction.customer.display-name}} placed an order for {{transaction.listing.title}}

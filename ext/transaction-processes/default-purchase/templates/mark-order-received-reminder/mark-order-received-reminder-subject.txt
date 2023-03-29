@@ -1,1 +1,0 @@
-Remember to mark your order for {{transaction.listing.title}} as received

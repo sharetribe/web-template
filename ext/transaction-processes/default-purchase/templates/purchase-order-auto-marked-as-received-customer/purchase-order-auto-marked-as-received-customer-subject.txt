@@ -1,0 +1,1 @@
+Your order for {{transaction.listing.title}} is now considered completed

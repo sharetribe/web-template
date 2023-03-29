@@ -48,7 +48,7 @@
     {:name :action/stripe-capture-payment-intent}],
    :from :state/preauthorized,
    :to :state/accepted}
-    {:name :transition/operator-accept,
+  {:name :transition/operator-accept,
    :actor :actor.role/operator,
    :actions
    [{:name :action/accept-booking}
@@ -64,8 +64,8 @@
     ;; the transition
     {:name :action/decline-booking}],
    :from :state/preauthorized,
-   :to :state/declined} 
-    {:name :transition/operator-decline,
+   :to :state/declined}
+  {:name :transition/operator-decline,
    :actor :actor.role/operator,
    :actions
    [{:name :action/calculate-full-refund}
@@ -152,63 +152,63 @@
    :from :state/reviewed-by-provider,
    :to :state/reviewed}],
  :notifications
- [{:name :notification/new-booking-request,
+ [{:name :notification/booking-new-request,
    :on :transition/confirm-payment,
    :to :actor.role/provider,
-   :template :new-booking-request}
-  {:name :notification/booking-request-accepted,
+   :template :booking-new-request}
+  {:name :notification/booking-accepted-request,
    :on :transition/accept,
    :to :actor.role/customer,
-   :template :booking-request-accepted}
+   :template :booking-accepted-request}
   {:name :notification/booking-operator-accepted-request-to-customer,
    :on :transition/operator-accept,
    :to :actor.role/customer,
-   :template :booking-request-accepted}
+   :template :booking-accepted-request}
   {:name :notification/booking-operator-accepted-request-to-provider,
    :on :transition/operator-accept,
    :to :actor.role/provider,
    :template :booking-operator-accepted-request}
-  {:name :notification/booking-request-declined,
+  {:name :notification/booking-declined-request,
    :on :transition/decline,
    :to :actor.role/customer,
-   :template :booking-request-declined}
+   :template :booking-declined-request}
   {:name :notification/booking-operator-declined-request-to-customer,
    :on :transition/operator-decline,
    :to :actor.role/customer,
-   :template :booking-request-declined}
+   :template :booking-declined-request}
   {:name :notification/booking-operator-declined-request-to-provider,
    :on :transition/operator-decline,
    :to :actor.role/provider,
    :template :booking-operator-declined-request}
-  {:name :notification/booking-request-expired,
+  {:name :notification/booking-expired-request,
    :on :transition/expire,
    :to :actor.role/customer,
-   :template :booking-request-expired}
-  {:name :notification/money-paid,
+   :template :booking-expired-request}
+  {:name :notification/booking-money-paid,
    :on :transition/complete,
    :to :actor.role/provider,
-   :template :money-paid}
+   :template :booking-money-paid}
   {:name :notification/review-period-start-provider,
    :on :transition/complete,
    :to :actor.role/provider,
-   :template :review-by-provider-wanted}
+   :template :booking-review-by-provider-wanted}
   {:name :notification/review-period-start-customer,
    :on :transition/complete,
    :to :actor.role/customer,
-   :template :review-by-customer-wanted}
+   :template :booking-review-by-customer-wanted}
   {:name :notification/review-by-provider-first,
    :on :transition/review-1-by-provider,
    :to :actor.role/customer,
-   :template :review-by-other-party-unpublished}
+   :template :booking-review-by-other-party-unpublished}
   {:name :notification/review-by-customer-first,
    :on :transition/review-1-by-customer,
    :to :actor.role/provider,
-   :template :review-by-other-party-unpublished}
+   :template :booking-review-by-other-party-unpublished}
   {:name :notification/review-by-provider-second,
    :on :transition/review-2-by-provider,
    :to :actor.role/customer,
-   :template :review-by-other-party-published}
+   :template :booking-review-by-other-party-published}
   {:name :notification/review-by-customer-second,
    :on :transition/review-2-by-customer,
    :to :actor.role/provider,
-   :template :review-by-other-party-published}]}
+   :template :booking-review-by-other-party-published}]}
