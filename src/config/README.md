@@ -1,6 +1,6 @@
 # Configuration options
 
-The 2 main files here are **defaultConfig.js** and **appSettings.js**.
+The 2 main files here are **configDefault.js** and **settings.js**.
 
 ## [configDefault.js](./configDefault.js)
 
