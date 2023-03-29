@@ -14,6 +14,21 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+## v1.0.0-beta 2023-03-29
+
+This is the Sharetribe Web Template, which combines the features of FTW-daily, FTW-hourly and
+FTW-product into one configurable web template. It makes it easy to do things like change the
+default transaction process (it supports two different processes, booking and purchase, out of the
+box), switch between layout options, add custom fields and filters, and much more, all through
+simple JSON configurations. The new template also features a new availability management experience,
+redesigned email notifications, and several other improvements.
+
+For now, this is a beta release: the official Docs site doesn't yet mention the new template. In the
+coming weeks, the new Template will replace Saunatime as the Template that powers the Demo sites,
+and the Docs will be updated to reflect the fact that this is the new default Template.
+
+### Changes
+
 - [change] Comment out additional listingTypes. Those are useful for testing purposes, but multiple
   listingTypes are not fully supported on search page yet.
   [#130](https://github.com/sharetribe/web-template/pull/130)
