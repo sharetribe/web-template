@@ -333,7 +333,7 @@ export class SearchPageComponent extends Component {
     const listingsAreLoaded =
       !searchInProgress &&
       searchParamsAreInSync &&
-      (hasPaginationInfo || pagination?.paginationUnsupported);
+      !!(hasPaginationInfo || pagination?.paginationUnsupported);
 
     const conflictingFilterActive = isAnyFilterActive(
       sortConfig.conflictingFilters,
