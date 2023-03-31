@@ -6,6 +6,7 @@ import {
   addTime,
   subtractTime,
   daysBetween,
+  getStartOf,
 } from '../../util/dates';
 import { createImageVariantConfig } from '../../util/sdkLoader';
 import { isOriginInUse, isStockInUse } from '../../util/search';
@@ -156,6 +157,13 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
         ? getExclusiveEndDate(endRaw, searchTZ)
         : null;
 
+    const today = getStartOf(new Date(), 'day', searchTZ);
+    const possibleStartDate = subtractTime(today, 14, 'hours', searchTZ);
+    const hasValidDates =
+      hasValues &&
+      startDate.getTime() >= possibleStartDate.getTime() &&
+      startDate.getTime() <= endDate.getTime();
+
     const dayCount = isEntireRangeAvailable ? daysBetween(startDate, endDate) : 1;
     const day = 1440;
     const hour = 60;
@@ -165,7 +173,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     // is available within the range.
     // You might want to customize this to match with your time units (e.g. day: 1440 - 60)
     const minDuration = isEntireRangeAvailable ? dayCount * day - hour : hour;
-    return hasValues
+    return hasValidDates
       ? {
           start: getProlongedStart(startDate),
           end: getProlongedEnd(endDate),
