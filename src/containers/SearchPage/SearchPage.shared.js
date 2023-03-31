@@ -4,6 +4,7 @@ import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
 import { createResourceLocatorString } from '../../util/routes';
 import { isAnyFilterActive, parseSelectFilterOptions } from '../../util/search';
 import { createSlug, parse, stringify } from '../../util/urlHelpers';
+import { getStartOf, parseDateFromISO8601, subtractTime } from '../../util/dates';
 
 /**
  * Create the name of the query parameter.
@@ -46,9 +47,20 @@ export const validURLParamForExtendedData = (
   } else if (queryParamName === 'keywords') {
     return paramValue.length > 0 ? { [queryParamName]: paramValue } : {};
   } else if (queryParamName === 'dates') {
-    return paramValue.length > 0 ? { [queryParamName]: paramValue } : {};
+    const searchTZ = 'Etc/UTC';
+    const today = getStartOf(new Date(), 'day', searchTZ);
+    const possibleStartDate = subtractTime(today, 14, 'hours', searchTZ);
+    const dates = paramValue ? paramValue.split(',') : [];
+    const hasValues = dates.length > 0;
+    const startDate = hasValues ? parseDateFromISO8601(dates[0], searchTZ) : null;
+    const endDate = hasValues ? parseDateFromISO8601(dates[1], searchTZ) : null;
+    const hasValidDates =
+      hasValues &&
+      startDate.getTime() >= possibleStartDate.getTime() &&
+      startDate.getTime() <= endDate.getTime();
+
+    return hasValidDates ? { [queryParamName]: paramValue } : {};
   }
-  // TODO: handle 'dates' filter for bookings.
 
   // Resolve configurations for extended data filters
   const listingFieldFilterConfig = listingFieldFilters.find(
