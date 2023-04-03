@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Add shutdown process for server when receiving close signals.
+  [#135](https://github.com/sharetribe/web-template/pull/135)
 - [fix] SearchPages: show message if date range is invalid and ignore it.
   [#134](https://github.com/sharetribe/web-template/pull/134)
 
