@@ -21,6 +21,7 @@ require('./env').configureEnv();
 
 const http = require('http');
 const https = require('https');
+const fs = require('fs');
 const express = require('express');
 const helmet = require('helmet');
 const compression = require('compression');
@@ -31,13 +32,13 @@ const path = require('path');
 const sharetribeSdk = require('sharetribe-flex-sdk');
 const sitemap = require('express-sitemap');
 const passport = require('passport');
+
 const auth = require('./auth');
 const apiRouter = require('./apiRouter');
 const wellKnownRouter = require('./wellKnownRouter');
 const { getExtractors } = require('./importer');
 const renderer = require('./renderer');
 const dataLoader = require('./dataLoader');
-const fs = require('fs');
 const log = require('./log');
 const { sitemapStructure } = require('./sitemap');
 const csp = require('./csp');
@@ -52,6 +53,11 @@ const BASE_URL = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL;
 const ASSET_CDN_BASE_URL = process.env.REACT_APP_SHARETRIBE_SDK_ASSET_CDN_BASE_URL;
 const TRANSIT_VERBOSE = process.env.REACT_APP_SHARETRIBE_SDK_TRANSIT_VERBOSE === 'true';
 const USING_SSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';
+const redirectSSL =
+  process.env.SERVER_SHARETRIBE_REDIRECT_SSL != null
+    ? process.env.SERVER_SHARETRIBE_REDIRECT_SSL
+    : process.env.REACT_APP_SHARETRIBE_USING_SSL;
+const REDIRECT_SSL = redirectSSL === 'true';
 const TRUST_PROXY = process.env.SERVER_SHARETRIBE_TRUST_PROXY || null;
 const CSP = process.env.REACT_APP_CSP;
 const cspReportUrl = '/csp-report';
@@ -104,13 +110,13 @@ if (cspEnabled) {
   });
 }
 
-// Redirect HTTP to HTTPS if USING_SSL is `true`.
+// Redirect HTTP to HTTPS if REDIRECT_SSL is `true`.
 // This also works behind reverse proxies (load balancers) as they are for example used by Heroku.
 // In such cases, however, the TRUST_PROXY parameter has to be set (see below)
 //
 // Read more: https://github.com/aredo/express-enforces-ssl
 //
-if (USING_SSL) {
+if (REDIRECT_SSL) {
   app.use(enforceSsl());
 }
 
