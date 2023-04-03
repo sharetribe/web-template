@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Split redirection use case away from REACT_APP_SHARETRIBE_USING_SSL into
+  SERVER_SHARETRIBE_REDIRECT_SSL environment variable.
+  [#136](https://github.com/sharetribe/web-template/pull/136)
 - [change] Add shutdown process for server when receiving close signals.
   [#135](https://github.com/sharetribe/web-template/pull/135)
 - [fix] SearchPages: show message if date range is invalid and ignore it.
