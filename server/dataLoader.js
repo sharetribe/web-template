@@ -56,6 +56,6 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
       // Call to loadData failed, let client handle the data loading errors.
       // (It might be recoverable error like lost connection.)
       // Return "empty" store.
-      return store.getState();
+      return { preloadedState: store.getState(), translations };
     });
 };
