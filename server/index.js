@@ -21,6 +21,7 @@ require('./env').configureEnv();
 
 const http = require('http');
 const https = require('https');
+const fs = require('fs');
 const express = require('express');
 const helmet = require('helmet');
 const compression = require('compression');
@@ -31,13 +32,13 @@ const path = require('path');
 const sharetribeSdk = require('sharetribe-flex-sdk');
 const sitemap = require('express-sitemap');
 const passport = require('passport');
+
 const auth = require('./auth');
 const apiRouter = require('./apiRouter');
 const wellKnownRouter = require('./wellKnownRouter');
 const { getExtractors } = require('./importer');
 const renderer = require('./renderer');
 const dataLoader = require('./dataLoader');
-const fs = require('fs');
 const log = require('./log');
 const { sitemapStructure } = require('./sitemap');
 const csp = require('./csp');
