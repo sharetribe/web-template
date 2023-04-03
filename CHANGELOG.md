@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] SearchPages: show message if date range is invalid and ignore it.
+  [#134](https://github.com/sharetribe/web-template/pull/134)
+
 ## v1.0.0-beta 2023-03-29
 
 This is the Sharetribe Web Template, which combines the features of FTW-daily, FTW-hourly and
