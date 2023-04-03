@@ -23,7 +23,7 @@ import { propTypes } from '../../util/types';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { H2, ModalInMobile, Page } from '../../components';
+import { H3, H5, ModalInMobile, Page } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import { setActiveListing } from './SearchPage.duck';
@@ -305,6 +305,9 @@ export class SearchPageComponent extends Component {
     const selectedFiltersCountForMobile = isKeywordSearch
       ? keysOfSelectedFilters.filter(f => f !== 'keywords').length
       : keysOfSelectedFilters.length;
+    const isValidDatesFilter =
+      searchParamsInURL.dates == null ||
+      (searchParamsInURL.dates != null && searchParamsInURL.dates === selectedFilters.dates);
 
     // Selected aka active secondary filters
     const selectedSecondaryFilters = hasSecondaryFilters
@@ -333,7 +336,7 @@ export class SearchPageComponent extends Component {
     const listingsAreLoaded =
       !searchInProgress &&
       searchParamsAreInSync &&
-      (hasPaginationInfo || pagination?.paginationUnsupported);
+      !!(hasPaginationInfo || pagination?.paginationUnsupported);
 
     const conflictingFilterActive = isAnyFilterActive(
       sortConfig.conflictingFilters,
@@ -493,9 +496,14 @@ export class SearchPageComponent extends Component {
                 })}
               >
                 {searchListingsError ? (
-                  <H2 className={css.error}>
+                  <H3 className={css.error}>
                     <FormattedMessage id="SearchPage.searchError" />
-                  </H2>
+                  </H3>
+                ) : null}
+                {!isValidDatesFilter ? (
+                  <H5>
+                    <FormattedMessage id="SearchPage.invalidDatesFilter" />
+                  </H5>
                 ) : null}
                 <SearchResultsPanel
                   className={css.searchListingsPanel}
