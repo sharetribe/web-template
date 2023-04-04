@@ -42,6 +42,7 @@ const defaultDirectives = {
     '*.stripe.com',
   ],
   fontSrc: [self, data, 'assets-sharetribecom.sharetribe.com', 'fonts.gstatic.com'],
+  formAction: [self],
   frameSrc: [self, '*.stripe.com', '*.youtube-nocookie.com'],
   imgSrc: [
     self,
@@ -92,13 +93,10 @@ const defaultDirectives = {
  * @param {String} reportUri URL where the browser will POST the
  * policy violation reports
  *
- * @param {Boolean} enforceSsl When SSL is enforced, all mixed content
- * is blocked/reported by the policy
- *
  * @param {Boolean} reportOnly In the report mode, requests are only
  * reported to the report URL instead of blocked
  */
-module.exports = (reportUri, enforceSsl, reportOnly) => {
+module.exports = (reportUri, reportOnly) => {
   // ================ START CUSTOM CSP URLs ================ //
 
   // Add custom CSP whitelisted URLs here. See commented example
@@ -122,12 +120,13 @@ module.exports = (reportUri, enforceSsl, reportOnly) => {
   // https://github.com/helmetjs/helmet/blob/bdb09348c17c78698b0c94f0f6cc6b3968cd43f9/middlewares/content-security-policy/index.ts#L51
 
   const directives = Object.assign({ reportUri: [reportUri] }, defaultDirectives, customDirectives);
-  if (enforceSsl) {
-    directives.blockAllMixedContent = [];
+  if (!reportOnly) {
+    directives.upgradeInsecureRequests = [];
   }
 
   // See: https://helmetjs.github.io/docs/csp/
   return helmet.contentSecurityPolicy({
+    useDefaults: false,
     directives,
     reportOnly,
   });

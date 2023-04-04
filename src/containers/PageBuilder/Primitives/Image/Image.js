@@ -11,7 +11,7 @@ export const MarkdownImage = React.forwardRef((props, ref) => {
   const { className, rootClassName, ...otherProps } = props;
   const classes = classNames(rootClassName || css.markdownImage, className);
 
-  return <img className={classes} {...otherProps} ref={ref} />;
+  return <img className={classes} {...otherProps} ref={ref} crossOrigin="anonymous" />;
 });
 
 MarkdownImage.displayName = 'MarkdownImage';
