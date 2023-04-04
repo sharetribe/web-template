@@ -109,7 +109,7 @@ if (cspEnabled) {
   // That's why we need to create own middleware function that calls the Helmet's middleware function
   const reportOnly = CSP === 'report';
   app.use((req, res, next) => {
-    csp(cspReportUrl, USING_SSL, reportOnly)(req, res, next);
+    csp(cspReportUrl, reportOnly)(req, res, next);
   });
 }
 
