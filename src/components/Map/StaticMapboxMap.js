@@ -51,7 +51,7 @@ const StaticMapboxMap = props => {
     `/${width}x${height}` +
     `?access_token=${mapsConfig.mapboxAccessToken}`;
 
-  return <img src={src} alt={address} />;
+  return <img src={src} alt={address} crossOrigin="anonymous" />;
 };
 
 StaticMapboxMap.defaultProps = {
