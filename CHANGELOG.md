@@ -14,6 +14,16 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Update helmet library from v4.6.0 to v6.0.1. This causes some breaking changes:
+
+  - https://github.com/helmetjs/helmet/blob/main/CHANGELOG.md#500---2022-01-02
+  - https://github.com/helmetjs/helmet/blob/main/CHANGELOG.md#600---2022-08-26
+
+  From these, we turned the _crossOriginEmbedderPolicy_ off due to issue with Youtube embed and
+  _useDefault_ flag too as these are tracked explicitly in csp.js
+
+  [#137](https://github.com/sharetribe/web-template/pull/137)
+
 - [change] Split redirection use case away from REACT_APP_SHARETRIBE_USING_SSL into
   SERVER_SHARETRIBE_REDIRECT_SSL environment variable.
   [#136](https://github.com/sharetribe/web-template/pull/136)
