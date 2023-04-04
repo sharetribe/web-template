@@ -95,7 +95,11 @@ class StaticGoogleMap extends Component {
     });
 
     return (
-      <img src={`https://maps.googleapis.com/maps/api/staticmap?${srcParams}`} alt={address} />
+      <img
+        src={`https://maps.googleapis.com/maps/api/staticmap?${srcParams}`}
+        alt={address}
+        crossOrigin="anonymous"
+      />
     );
   }
 }

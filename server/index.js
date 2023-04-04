@@ -85,6 +85,9 @@ app.use(log.requestHandler());
 app.use(
   helmet({
     contentSecurityPolicy: false,
+    // This seems to cause problems with Youtube player
+    // Issue tracker: https://issuetracker.google.com/issues/240387105
+    crossOriginEmbedderPolicy: false,
   })
 );
 
@@ -106,7 +109,7 @@ if (cspEnabled) {
   // That's why we need to create own middleware function that calls the Helmet's middleware function
   const reportOnly = CSP === 'report';
   app.use((req, res, next) => {
-    csp(cspReportUrl, USING_SSL, reportOnly)(req, res, next);
+    csp(cspReportUrl, reportOnly)(req, res, next);
   });
 }
 

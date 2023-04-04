@@ -42,6 +42,7 @@ export const IncludeScripts = props => {
         key="mapbox_GL_CSS"
         href="https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css"
         rel="stylesheet"
+        crossOrigin
       />
     );
     // Add Mapbox library
@@ -50,6 +51,7 @@ export const IncludeScripts = props => {
         id={MAPBOX_SCRIPT_ID}
         key="mapbox_GL_JS"
         src="https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js"
+        crossOrigin
       ></script>
     );
   } else if (isGoogleMapsInUse) {
@@ -59,6 +61,7 @@ export const IncludeScripts = props => {
         id={GOOGLE_MAPS_SCRIPT_ID}
         key="GoogleMapsApi"
         src={`https://maps.googleapis.com/maps/api/js?key=${googleMapsAPIKey}&libraries=places`}
+        crossOrigin
       ></script>
     );
   }
@@ -74,6 +77,7 @@ export const IncludeScripts = props => {
         key="gtag.js"
         async
         src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+        crossOrigin
       ></script>
     );
 
