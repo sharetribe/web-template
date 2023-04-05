@@ -14,7 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
-- [fix] EditListingDetailsForm: set listingFieldsConfig default prop to empty array to fix a bug with initial null value not getting a default in props destructuring.
+- [fix] EditListingDetailsForm: set listingFieldsConfig default prop to empty array to fix a bug
+  with initial null value not getting a default in props destructuring.
   [#138](https://github.com/sharetribe/web-template/pull/138)
 - [change] Update helmet library from v4.6.0 to v6.0.1. This causes some breaking changes:
 
