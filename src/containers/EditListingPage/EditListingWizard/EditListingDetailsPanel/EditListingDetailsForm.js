@@ -258,7 +258,7 @@ EditListingDetailsFormComponent.defaultProps = {
   fetchErrors: null,
   onProcessChange: null,
   hasExistingListingType: false,
-  listingFieldsConfig: null,
+  listingFieldsConfig: [],
 };
 
 EditListingDetailsFormComponent.propTypes = {
