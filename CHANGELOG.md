@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] EditListingDetailsForm: set listingFieldsConfig default prop to empty array.
+  [#138](https://github.com/sharetribe/web-template/pull/138)
 - [change] Update helmet library from v4.6.0 to v6.0.1. This causes some breaking changes:
 
   - https://github.com/helmetjs/helmet/blob/main/CHANGELOG.md#500---2022-01-02
