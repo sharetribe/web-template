@@ -492,7 +492,7 @@ export class SearchPageComponent extends Component {
             ) : (
               <div
                 className={classNames(css.listingsForMapVariant, {
-                  [css.newSearchInProgress]: !listingsAreLoaded,
+                  [css.newSearchInProgress]: !(listingsAreLoaded || searchListingsError),
                 })}
               >
                 {searchListingsError ? (
