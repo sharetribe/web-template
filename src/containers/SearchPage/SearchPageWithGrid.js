@@ -376,8 +376,8 @@ export class SearchPageComponent extends Component {
                 noResultsInfo={noResultsInfo}
               />
               <div
-                className={classNames(css.listings, {
-                  [css.newSearchInProgress]: !listingsAreLoaded,
+                className={classNames(css.listingsForGridVariant, {
+                  [css.newSearchInProgress]: !(listingsAreLoaded || searchListingsError),
                 })}
               >
                 {searchListingsError ? (

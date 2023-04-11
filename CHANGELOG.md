@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] SearchPage error transparency and PageBuilder bg colors of sections.
+  [#139](https://github.com/sharetribe/web-template/pull/139)
 - [fix] EditListingDetailsForm: set listingFieldsConfig default prop to empty array to fix a bug
   with initial null value not getting a default in props destructuring.
   [#138](https://github.com/sharetribe/web-template/pull/138)
