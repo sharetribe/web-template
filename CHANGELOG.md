@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] change the default aspect ratio of listing cards to 4/3.
+  [#143](https://github.com/sharetribe/web-template/pull/143)
+- [change] Add a new automatic transition to the default-booking transaction process and adjust the
+  timing of the complete transition [#142](https://github.com/sharetribe/web-template/pull/142)
 - [fix] Email templates: fix layout-breaking condition in purchase templates.
   [141](https://github.com/sharetribe/web-template/pull/141)
 - [fix] SearchPage error transparency and PageBuilder bg colors of sections.
@@ -54,8 +58,6 @@ and the Docs will be updated to reflect the fact that this is the new default Te
 
 ### Changes
 
-- [change] Add a new automatic transition to the default-booking transaction process and adjust the
-  timing of the complete transition [#142](https://github.com/sharetribe/web-template/pull/142)
 - [change] Comment out additional listingTypes. Those are useful for testing purposes, but multiple
   listingTypes are not fully supported on search page yet.
   [#130](https://github.com/sharetribe/web-template/pull/130)
