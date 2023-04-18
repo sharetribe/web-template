@@ -54,6 +54,8 @@ and the Docs will be updated to reflect the fact that this is the new default Te
 
 ### Changes
 
+- [change] Add a new automatic transition to the default-booking transaction process and adjust the
+  timing of the complete transition [#142](https://github.com/sharetribe/web-template/pull/142)
 - [change] Comment out additional listingTypes. Those are useful for testing purposes, but multiple
   listingTypes are not fully supported on search page yet.
   [#130](https://github.com/sharetribe/web-template/pull/130)
