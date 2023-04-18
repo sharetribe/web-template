@@ -218,8 +218,8 @@
   }
   @media (--viewportLarge) {
     /* contentContainer's full width - (orderColumn + paddings + margin) */
-    max-width: calc(100% - 348px);
-    flex-basis: calc(100% - 348px);
+    max-width: calc(100% - 360px);
+    flex-basis: calc(100% - 360px);
     flex-shrink: 0;
     flex-grow: 1;
   }
@@ -231,7 +231,7 @@
   @media (--viewportLarge) {
     display: block;
     margin-left: 48px;
-    flex-basis: 300px;
+    flex-basis: 312px;
     flex-shrink: 0;
   }
 }
