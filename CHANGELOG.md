@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] ListingImageGallery was not setting image dimensions aka sizes.
+  [#144](https://github.com/sharetribe/web-template/pull/144)
 - [change] change the default aspect ratio of listing cards to 4/3.
   [#143](https://github.com/sharetribe/web-template/pull/143)
 - [change] Add a new automatic transition to the default-booking transaction process and adjust the
