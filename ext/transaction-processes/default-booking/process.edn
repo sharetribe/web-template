@@ -92,7 +92,13 @@
    :from :state/preauthorized,
    :to :state/expired}
   {:name :transition/complete,
-   :at {:fn/timepoint [:time/booking-end]},
+   :at {:fn/plus
+    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P2D"]}]},
+   :actions [{:name :action/stripe-create-payout}],
+   :from :state/accepted,
+   :to :state/delivered}
+  {:name :transition/operator-complete, 
+   :actor :actor.role/operator,
    :actions [{:name :action/stripe-create-payout}],
    :from :state/accepted,
    :to :state/delivered}
@@ -194,6 +200,18 @@
    :template :booking-review-by-provider-wanted}
   {:name :notification/review-period-start-customer,
    :on :transition/complete,
+   :to :actor.role/customer,
+   :template :booking-review-by-customer-wanted}
+  {:name :notification/booking-money-paid-operator-complete,
+   :on :transition/operator-complete,
+   :to :actor.role/provider,
+   :template :booking-money-paid}
+  {:name :notification/review-period-start-provider-operator-complete,
+   :on :transition/operator-complete,
+   :to :actor.role/provider,
+   :template :booking-review-by-provider-wanted}
+  {:name :notification/review-period-start-customer-operator-complete,
+   :on :transition/operator-complete,
    :to :actor.role/customer,
    :template :booking-review-by-customer-wanted}
   {:name :notification/review-by-provider-first,
