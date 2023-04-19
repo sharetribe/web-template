@@ -20,6 +20,8 @@ way to update this template, but currently, we follow a pattern:
   timing of the complete transition [#142](https://github.com/sharetribe/web-template/pull/142)
 - [fix] Email templates: fix layout-breaking condition in purchase templates.
   [141](https://github.com/sharetribe/web-template/pull/141)
+- [fix] Fix indentation in default transaction process email templates.
+  [#140](https://github.com/sharetribe/web-template/pull/140)
 - [fix] SearchPage error transparency and PageBuilder bg colors of sections.
   [#139](https://github.com/sharetribe/web-template/pull/139)
 - [fix] EditListingDetailsForm: set listingFieldsConfig default prop to empty array to fix a bug
@@ -448,7 +450,7 @@ and the Docs will be updated to reflect the fact that this is the new default Te
 - [delete] Update README.md after changes in [#1555].
   [#1569](https://github.com/sharetribe/ftw-daily/pull/1569)
 - [change] Added some dependabot updates earlier: passport-0.6.0, loader-utils-2.0.4,
-  decode-uri-component-0.2.2  
+  decode-uri-component-0.2.2
   Note: Passport-0.6.0 changed login and logout parameter list.
 - [change] Update Browserlist db / caniuse-lite.
   [#1567](https://github.com/sharetribe/ftw-daily/pull/1567)
