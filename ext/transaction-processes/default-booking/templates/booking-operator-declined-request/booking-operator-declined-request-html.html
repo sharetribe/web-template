@@ -2,7 +2,11 @@
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
-  </head>{{~#*inline "format-date"~}}{{#with transaction.listing.availability-plan}}{{date date format="h:mm a" tz=timezone}} on {{date date format="MMM d, YYYY" tz=timezone}}{{/with}}{{~/inline~}}{{#with transaction}}
+  </head>
+  {{~#*inline "format-date"~}}{{#with transaction.listing.availability-plan}}{{date date format="h:mm a" tz=timezone}} on {{date date format="MMM d, YYYY" tz=timezone}}{{/with}}{{~/inline~}}
+  {{~#*inline "format-date-day"~}}{{#with transaction.listing.availability-plan}}{{date date format="MMM d, YYYY" tz=timezone}}{{/with}}{{~/inline~}}
+  {{~#*inline "format-date-day-before"~}}{{#with transaction.listing.availability-plan}}{{date-day-before date format="MMM d, YYYY" tz=timezone}}{{/with}}{{~/inline~}}
+  {{#with transaction}}
   <table style="background-color:#FFF;margin:0 auto;padding:24px 12px 0;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
     <tbody>
       <tr>
@@ -11,7 +15,14 @@
             <tr style="width:100%">
               <td>
                 <h1 style="color:#484848;font-size:26px;line-height:1.3;font-weight:700">A booking for one of your listings was declined on your behalf</h1>
-                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{marketplace.name}} administrator declined a booking by {{ customer.display-name }} for {{ listing.title }} from {{> format-date date=booking.start}} to {{> format-date date=booking.end}} on your behalf.</p>
+                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{marketplace.name}} administrator declined a booking by {{ customer.display-name }} for {{ listing.title }} from 
+                  {{#each tx-line-items}}{{#eq "line-item/hour" code}}
+                    {{> format-date date=booking.start}} to {{> format-date date=booking.end}}
+                    {{/ eq}}{{#eq "line-item/day" code}}
+                    {{> format-date-day date=booking.start}} to {{> format-date-day-before date=booking.end}}
+                    {{/ eq}}{{#eq "line-item/night" code}}
+                    {{> format-date-day date=booking.start}} to {{> format-date-day date=booking.end}}
+                  {{/ eq}}{{/each}}                   on your behalf.</p>
                 <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>
                     <tr>
