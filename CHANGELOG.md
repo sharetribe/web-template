@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Email templates: Show booking time based on line item type in booking templates
+  [#145](https://github.com/sharetribe/web-template/pull/145)
 - [change] Listing field of type enum should be explicitly handled as strings.
   [#146](https://github.com/sharetribe/web-template/pull/146)
 - [fix] ListingImageGallery was not setting image dimensions aka sizes.
