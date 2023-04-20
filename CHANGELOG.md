@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] ListingImageGallery: don't use sizes on fullscreen mode.
+  [#148](https://github.com/sharetribe/web-template/pull/148)
 - [fix] Mobile font-size had degraded to too small.
   [#147](https://github.com/sharetribe/web-template/pull/147)
 - [fix] Email templates: Show booking time based on line item type in booking templates
