@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] ListingImageGallery: thumbnail stripe was not overflowing correctly on mobile screens
+  [#150](https://github.com/sharetribe/web-template/pull/150)
 - [change] ListingImageGallery: prefer the aspect ratio of the first image with limits (2/1 ... 4/3)
   [#149](https://github.com/sharetribe/web-template/pull/149)
 - [fix] ListingImageGallery: don't use sizes on fullscreen mode.
