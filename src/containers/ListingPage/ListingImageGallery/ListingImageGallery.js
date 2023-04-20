@@ -47,6 +47,9 @@ const ListingImageGallery = props => {
       image: img,
     };
   });
+  const imageSizesMaybe = isFullscreen
+    ? {}
+    : { sizes: `(max-width: 1024px) 100vw, (max-width: 1200px) calc(100vw - 192px), 708px` };
   const renderItem = item => {
     return (
       <AspectRatioWrapper
@@ -60,7 +63,7 @@ const ListingImageGallery = props => {
             image={item.image}
             alt={item.alt}
             variants={imageVariants}
-            sizes={`(max-width: 1024px) 100vw, (max-width: 1200px) calc(100vw - 192px), 708px`}
+            {...imageSizesMaybe}
           />
         </div>
       </AspectRatioWrapper>
