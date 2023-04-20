@@ -25,11 +25,37 @@ const IMAGE_GALLERY_OPTIONS = {
   showPlayButton: false,
   disableThumbnailScroll: true,
 };
+const MAX_LANDSCAPE_ASPECT_RATIO = 2; // 2:1
+const MAX_PORTRAIT_ASPECT_RATIO = 4 / 3;
+
+const getFirstImageAspectRatio = (firstImage, scaledVariant) => {
+  if (!firstImage) {
+    return { aspectWidth: 1, aspectHeight: 1 };
+  }
+
+  const v = firstImage?.attributes?.variants?.[scaledVariant];
+  const w = v?.width;
+  const h = v?.height;
+  const hasDimensions = !!w && !!h;
+  const aspectRatio = w / h;
+
+  // We keep the fractions separated as these are given to AspectRatioWrapper
+  // which expects separate width and height
+  return hasDimensions && aspectRatio >= MAX_LANDSCAPE_ASPECT_RATIO
+    ? { aspectWidth: 2, aspectHeight: 1 }
+    : hasDimensions && aspectRatio <= MAX_PORTRAIT_ASPECT_RATIO
+    ? { aspectWidth: 4, aspectHeight: 3 }
+    : hasDimensions
+    ? { aspectWidth: w, aspectHeight: h }
+    : { aspectWidth: 1, aspectHeight: 1 };
+};
 
 const ListingImageGallery = props => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const { intl, rootClassName, className, images, imageVariants, thumbnailVariants } = props;
   const thumbVariants = thumbnailVariants || imageVariants;
+  // imageVariants are scaled variants.
+  const { aspectWidth, aspectHeight } = getFirstImageAspectRatio(images?.[0], imageVariants[0]);
   const items = images.map((img, i) => {
     return {
       // We will only use the image resource, but react-image-gallery
@@ -53,8 +79,8 @@ const ListingImageGallery = props => {
   const renderItem = item => {
     return (
       <AspectRatioWrapper
-        width={1}
-        height={1}
+        width={aspectWidth || 1}
+        height={aspectHeight || 1}
         className={isFullscreen ? css.itemWrapperFullscreen : css.itemWrapper}
       >
         <div className={css.itemCentering}>
