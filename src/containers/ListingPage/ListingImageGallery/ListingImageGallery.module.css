@@ -13,6 +13,11 @@
 :global(.image-gallery-thumbnails) {
   padding-top: 24px;
   padding-bottom: 0;
+  width: 100vw;
+
+  @media (--viewportLarge) {
+    width: unset;
+  }
 }
 :global(.image-gallery-thumbnail) {
   width: auto;
