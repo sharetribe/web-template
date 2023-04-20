@@ -429,6 +429,7 @@ select,
 input,
 textarea {
   font-family: var(--fontFamily);
+  font-size: 16px;
 }
 
 select {
