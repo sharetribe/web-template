@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] AuthenticationPage: long email address caused overflow on mobile layout.
+  [#154](https://github.com/sharetribe/web-template/pull/154)
 - [fix] Fix booking email templates to show correct end date in day-based bookings
   [#153](https://github.com/sharetribe/web-template/pull/153)
 - [change] OrderPanel: separate mobile CTA buttons per process type
