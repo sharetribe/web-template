@@ -130,12 +130,12 @@ const OrderPanel = props => {
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
 
-  const shouldHaveBookingTime =
-    isBookingProcess(processName) && [LINE_ITEM_HOUR].includes(lineItemUnitType);
+  const isBooking = isBookingProcess(processName);
+  const shouldHaveBookingTime = isBooking && [LINE_ITEM_HOUR].includes(lineItemUnitType);
   const showBookingTimeForm = shouldHaveBookingTime && !isClosed && timeZone;
 
   const shouldHaveBookingDates =
-    isBookingProcess(processName) && [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
+    isBooking && [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
   const showBookingDatesForm = shouldHaveBookingDates && !isClosed && timeZone;
 
   // The listing resource has a relationship: `currentStock`,
@@ -145,8 +145,7 @@ const OrderPanel = props => {
 
   // Show form only when stock is fully loaded. This avoids "Out of stock" UI by
   // default before all data has been downloaded.
-  const shouldHaveProductOrder =
-    !isBookingProcess(processName) && [LINE_ITEM_ITEM].includes(lineItemUnitType);
+  const shouldHaveProductOrder = !isBooking && [LINE_ITEM_ITEM].includes(lineItemUnitType);
   const showProductOrderForm = shouldHaveProductOrder && typeof currentStock === 'number';
 
   const supportedProcessesInfo = getSupportedProcessesInfo();
@@ -295,10 +294,12 @@ const OrderPanel = props => {
             onClick={() => openOrderModal(isOwnListing, isClosed, history, location)}
             disabled={isOutOfStock}
           >
-            {isOutOfStock ? (
+            {isBooking ? (
+              <FormattedMessage id="OrderPanel.ctaButtonMessageBooking" />
+            ) : isOutOfStock ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessageNoStock" />
             ) : (
-              <FormattedMessage id="OrderPanel.ctaButtonMessage" />
+              <FormattedMessage id="OrderPanel.ctaButtonMessagePurchase" />
             )}
           </PrimaryButton>
         )}
