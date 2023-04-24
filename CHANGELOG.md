@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Fix booking email templates to show correct end date in day-based bookings
+  [#153](https://github.com/sharetribe/web-template/pull/153)
 - [change] OrderPanel: separate mobile CTA buttons per process type
   [#152](https://github.com/sharetribe/web-template/pull/152)
 - [fix] EditListingWizard: fix handling for outdated (old) listings.
