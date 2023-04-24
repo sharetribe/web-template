@@ -386,18 +386,26 @@ class EditListingWizard extends Component {
       existingListingType &&
       !config.listing.listingTypes.find(config => config.listingType === existingListingType);
 
-    const tabs = invalidExistingListingType
-      ? TABS_DETAILS_ONLY
-      : isBookingProcess(processName)
-      ? TABS_BOOKING
-      : TABS_PRODUCT;
+    // For oudated draft listing, we don't show other tabs but the "details"
+    const tabs =
+      invalidExistingListingType && isNewListingFlow
+        ? TABS_DETAILS_ONLY
+        : isBookingProcess(processName)
+        ? TABS_BOOKING
+        : TABS_PRODUCT;
 
     // Check if wizard tab is active / linkable.
     // When creating a new listing, we don't allow users to access next tab until the current one is completed.
     const tabsStatus = tabsActive(isNewListingFlow, currentListing, tabs, config);
 
-    // If selectedTab is not active, redirect to the beginning of wizard
-    if (!tabsStatus[selectedTab]) {
+    // Redirect user to first tab when encoutering outdated draft listings.
+    if (invalidExistingListingType && isNewListingFlow && selectedTab !== tabs[0]) {
+      return <NamedRedirect name="EditListingPage" params={{ ...params, tab: tabs[0] }} />;
+    }
+
+    // If selectedTab is not active for listing with valid listing type,
+    // redirect to the beginning of wizard
+    if (!invalidExistingListingType && !tabsStatus[selectedTab]) {
       const currentTabIndex = tabs.indexOf(selectedTab);
       const nearestActiveTab = tabs
         .slice(0, currentTabIndex)
