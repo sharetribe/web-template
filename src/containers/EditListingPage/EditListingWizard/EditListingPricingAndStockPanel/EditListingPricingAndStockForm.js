@@ -69,7 +69,9 @@ export const EditListingPricingAndStockFormComponent = props => (
         marketplaceCurrency,
         intl
       );
-      const hasStockManagement = listingType.stockType !== 'oneItem';
+      // Note: outdated listings don't have listingType!
+      // I.e. listings that are created with previous listing type setup.
+      const hasStockManagement = listingType?.stockType !== 'oneItem';
       const stockValidator = validators.numberAtLeast(
         intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockIsRequired' }),
         0
