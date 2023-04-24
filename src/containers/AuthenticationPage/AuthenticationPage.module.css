@@ -151,6 +151,12 @@
 /* Make the email pop */
 .email {
   font-weight: var(--fontWeightHighlightEmail);
+
+  /* fallback option */
+  word-break: break-all;
+  /* use break-word if available */
+  word-break: break-word;
+  hyphens: auto;
 }
 
 /* Helper links */
