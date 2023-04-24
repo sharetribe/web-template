@@ -295,9 +295,9 @@ export const ManageListingCardComponent = props => {
   const isClosed = state === LISTING_STATE_CLOSED;
   const isDraft = state === LISTING_STATE_DRAFT;
 
-  const isBookable = isBookingProcessAlias(
-    listing?.attributes?.publicData?.transactionProcessAlias
-  );
+  const { listingType, transactionProcessAlias } = listing?.attributes?.publicData || {};
+  const isBookable = isBookingProcessAlias(transactionProcessAlias);
+  const hasListingType = !!listingType;
 
   const currentStock = currentListing.currentStock?.attributes?.quantity;
   const isOutOfStock = currentStock === 0;
@@ -513,7 +513,7 @@ export const ManageListingCardComponent = props => {
             editListingLinkType={editListingLinkType}
             isBookable={isBookable}
             currentStock={currentStock}
-            hasListingType={!!listing?.attributes?.publicData?.listingType}
+            hasListingType={hasListingType}
             intl={intl}
           />
         </div>
