@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] ListingImageGallery: Mobile Safari was not showing thumbnail stripe correctly, if the
+  content overflew. [#158](https://github.com/sharetribe/web-template/pull/158)
 - [change] Update README.md [#157](https://github.com/sharetribe/web-template/pull/157)
 
 ## [v1.0.0] 2023-04-25
