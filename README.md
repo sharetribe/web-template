@@ -8,49 +8,20 @@ needs. This template is bootstrapped with
 [create-react-app](https://github.com/facebookincubator/create-react-app) with some additions,
 namely server side rendering, code-splitting, and a custom CSS setup.
 
-> **Note**: This is a _**beta**_ version, but you should consider starting your customization
-> project on top of this instead of old templates:
+> **Note**: You should start your customization project on top of this one instead of the old
+> templates:
 >
 > - [FTW-daily](https://github.com/sharetribe/ftw-daily)
 > - [FTW-hourly](https://github.com/sharetribe/ftw-hourly)
 > - [FTW-product](https://github.com/sharetribe/ftw-hourly)
 >
 > Read more from
-> [Flex Docs preview version](https://flex-docs-git-feat-docs-biketribe-sharetribe.vercel.app/ftw/sharetribe-web-template/)
+> [Flex Docs preview version](https://www.sharetribe.com/docs/ftw/sharetribe-web-template/)
 >
 > _Note: The search does not work on the preview version of the Flex Docs. It links to live
 > documentation._
 
 ## Quick start
-
-### Take the new (beta) processes into use
-
-You need to add the new processes to your marketplace environment. You need to
-[use Flex CLI](https://flex-docs-git-feat-docs-biketribe-sharetribe.vercel.app/introduction/getting-started-with-flex-cli/)
-to do that.
-
-Check the following article:
-[Create a new process](https://flex-docs-git-feat-docs-biketribe-sharetribe.vercel.app/tutorial/create-transaction-process/#create-a-new-process)
-
-Add _default-booking_ process and alias for it:
-
-```sh
-# Create the "default-booking" process
-flex-cli process create --path=./ext/transaction-processes/default-booking --process=default-booking --marketplace=yourmarketplaceident-test
-
-# Create "release-1" alias for the process
-flex-cli process create-alias --process=default-booking --version=1 --alias=release-1 --marketplace=yourmarketplaceident-test
-```
-
-Add _default-purchase_ process and alias for it:
-
-```sh
-# Create the "default-purchase" process
-flex-cli process create --path=./ext/transaction-processes/default-purchase --process=default-purchase --marketplace=yourmarketplaceident-test
-
-# Create "release-1" alias for the process
-flex-cli process create-alias --process=default-purchase --version=1 --alias=release-1 --marketplace=yourmarketplaceident-test
-```
 
 ### Setup localhost
 
@@ -66,13 +37,12 @@ yarn run dev                                          # start the dev server, th
 ```
 
 You can also follow along the
-[Getting started with Sharetribe Web Template](https://flex-docs-git-feat-docs-biketribe-sharetribe.vercel.app/introduction/getting-started-with-web-template/)
-tutorial in the
-[Flex Docs website](https://flex-docs-git-feat-docs-biketribe-sharetribe.vercel.app).
+[Getting started with Sharetribe Web Template](https://www.sharetribe.com/docs/introduction/getting-started-with-web-template/)
+tutorial in the [Flex Docs website](https://www.sharetribe.com/docs/).
 
 For more information of the configuration, see the
-[Environment configuration variables](https://flex-docs-git-feat-docs-biketribe-sharetribe.vercel.app/ftw/ftw-env/)
-reference in Flex Docs.
+[Environment configuration variables](https://www.sharetribe.com/docs/ftw/ftw-env/) reference in
+Flex Docs.
 
 ### For Windows users
 
@@ -85,8 +55,8 @@ instead of DOS commands.
 ## Getting started with your own customization
 
 If you want to build your own Flex marketplace by customizing the template application, see the
-[How to Customize the Template](https://flex-docs-git-feat-docs-biketribe-sharetribe.vercel.app/ftw/how-to-customize-ftw/)
-guide in Flex Docs.
+[How to Customize the Template](https://www.sharetribe.com/docs/ftw/how-to-customize-ftw/) guide in
+Flex Docs.
 
 ## Deploying to Heroku
 
@@ -94,15 +64,14 @@ guide in Flex Docs.
 Github repository to Heroku will make manual deploys easier.
 
 See the
-[How to deploy this template to production](https://flex-docs-git-feat-docs-biketribe-sharetribe.vercel.app/ftw/how-to-deploy-ftw-to-production/)
+[How to deploy this template to production](https://www.sharetribe.com/docs/ftw/how-to-deploy-ftw-to-production/)
 guide in Flex Docs for more information.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ## Documentation
 
-See the Flex Docs site:
-[sharetribe.com/docs/ (preview version)](https://flex-docs-git-feat-docs-biketribe-sharetribe.vercel.app)
+See the Flex Docs site: [sharetribe.com/docs/](https://www.sharetribe.com/docs/)
 
 > _**Note**: The search does not work on the preview version of the Flex Docs. It links to live
 > documentation._
