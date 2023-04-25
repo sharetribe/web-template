@@ -14,6 +14,17 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+## [v1.0.0] 2023-04-25
+
+This is the official release of Sharetribe Web Template, which combines the features of FTW-daily,
+FTW-hourly and FTW-product into one configurable web template. It makes it easy to do things like
+change the default transaction process (it supports two different processes, booking and purchase,
+out of the box), switch between layout options, add custom fields and filters, and much more, all
+through simple JSON configurations. The new template also features a new availability management
+experience, redesigned email notifications, and several other improvements.
+
+### Changes on top of the **beta** release
+
 - [change] Update default booking transaction process and email templates.
   [#155](https://github.com/sharetribe/web-template/pull/155)
 - [change] AuthenticationPage: long email address caused overflow on mobile layout.
@@ -68,6 +79,8 @@ way to update this template, but currently, we follow a pattern:
   [#135](https://github.com/sharetribe/web-template/pull/135)
 - [fix] SearchPages: show message if date range is invalid and ignore it.
   [#134](https://github.com/sharetribe/web-template/pull/134)
+
+[v1.0.0]: https://github.com/sharetribe/web-template/compare/v1.0.0-beta...v1.0.0
 
 ## v1.0.0-beta 2023-03-29
 
