@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Update default booking transaction process and email templates.
+  [#155](https://github.com/sharetribe/web-template/pull/155)
 - [change] AuthenticationPage: long email address caused overflow on mobile layout.
   [#154](https://github.com/sharetribe/web-template/pull/154)
 - [fix] Fix booking email templates to show correct end date in day-based bookings
