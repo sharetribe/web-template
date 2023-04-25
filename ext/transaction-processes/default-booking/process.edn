@@ -82,7 +82,8 @@
       [{:fn/timepoint [:time/first-entered-state :state/preauthorized]}
        {:fn/period ["P6D"]}]}
      {:fn/plus
-      [{:fn/timepoint [:time/booking-end]} {:fn/period ["P1D"]}]}]},
+      [{:fn/timepoint [:time/booking-start]} {:fn/period ["P1D"]}]}
+     {:fn/timepoint [:time/booking-end]}]},
    :actions
    [{:name :action/calculate-full-refund}
     {:name :action/stripe-refund-payment}
@@ -92,12 +93,13 @@
    :from :state/preauthorized,
    :to :state/expired}
   {:name :transition/complete,
-   :at {:fn/plus
+   :at
+   {:fn/plus
     [{:fn/timepoint [:time/booking-end]} {:fn/period ["P2D"]}]},
    :actions [{:name :action/stripe-create-payout}],
    :from :state/accepted,
    :to :state/delivered}
-  {:name :transition/operator-complete, 
+  {:name :transition/operator-complete,
    :actor :actor.role/operator,
    :actions [{:name :action/stripe-create-payout}],
    :from :state/accepted,
