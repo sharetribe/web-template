@@ -1,0 +1,153 @@
+@import '../../../../styles/customMediaQueries.css';
+
+
+/* grid example classes */
+
+.footer {
+  padding: 24px;
+  max-width: calc(var(--contentMaxWidth) + 72px);
+  margin: 0 auto;
+}
+
+.footer ul {
+  list-style-type: none;
+  padding-inline-start: 0px;
+}
+
+.linkList {
+  list-style-type: none;
+  padding-left: 12px;
+}
+
+.content {
+  display: grid;
+  justify-content: center;
+  align-content: end;
+  grid-auto-rows: auto;
+  grid-gap: 24px;
+  grid-template-columns: 1fr;
+  grid-template-areas: "details" "grid" "links";
+}
+
+.grid {
+  grid-area: grid;
+  display: grid;
+  justify-content: center;
+  align-content: end;
+  grid-auto-rows: auto;
+  grid-gap: 24px;
+  /* background-color: cyan; */
+}
+
+.gridCol1,
+.gridCol2,
+.gridCol3,
+.gridCol4 {
+  grid-template-columns: 1fr;
+}
+
+.detailsInfo {
+  grid-area: details;
+  padding: 12px;
+
+}
+
+.socialInfo {
+  grid-area: links;
+  padding: 12px;
+
+}
+
+.item {  
+  /* fallback option */
+  word-break: break-all;
+  /* use break-word if available */
+  word-break: break-word;
+  hyphens: auto;
+}
+
+@media (--viewportMedium) {
+
+  .content {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:  "details grid"
+                          "links grid"
+    ;
+  }
+
+  .gridCol1 {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .gridCol2 {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .gridCol3 {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .gridCol4 {
+    grid-template-columns: repeat(2,1fr);
+  }
+}
+
+
+@media (--viewportLarge) {
+
+  .contentCol1 {
+    grid-template-columns: 2fr 3fr 1fr;
+    grid-template-areas: "details . grid";
+  }
+  .contentCol2 {
+    grid-template-columns: 2fr 2fr 2fr;
+    grid-template-areas: "details . grid";
+  }
+  .contentCol3 {
+    grid-template-columns: 2fr 1fr 3fr;
+    grid-template-areas: " details . grid";
+  }
+  .contentCol4 {
+    grid-template-columns: 2fr 4fr;
+    grid-template-areas: "details grid";
+  }
+
+  .gridCol1 {
+    grid-template-columns: 1fr;
+  }
+
+  .gridCol2 {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .gridCol3 {
+    grid-template-columns: repeat(3,1fr);
+  }
+
+  .gridCol4 {
+    grid-template-columns: repeat(4,1fr);
+  }
+}
+
+.icons {
+  padding: 10px 0px 30px;
+}
+
+.icon {
+  font-size: 28px;
+  margin: 15px 15px 0px 0px;
+  padding: 10px 15px;
+  background-color: pink;
+}
+
+.logoLink {
+  display: inline-flex;
+  margin-bottom: 14px;
+}
+
+.logo {
+  object-fit: contain;
+  object-position: left center;
+  width: 100%;
+  height: 24px;
+}
