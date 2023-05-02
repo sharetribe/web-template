@@ -14,6 +14,7 @@ import SectionFeatures from './SectionFeatures';
 // - dark theme overrides
 // TODO: alternatively, we could consider more in-place way of theming components
 import css from './SectionBuilder.module.css';
+import SectionFooter from './SectionFooter';
 
 // These are shared classes.
 // Use these to have consistent styles between different section components
@@ -35,6 +36,7 @@ const defaultSectionComponents = {
   carousel: { component: SectionCarousel },
   columns: { component: SectionColumns },
   features: { component: SectionFeatures },
+  footer: {  component: SectionFooter },
 };
 
 //////////////////////
