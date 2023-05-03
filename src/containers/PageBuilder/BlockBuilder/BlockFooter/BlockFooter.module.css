@@ -17,9 +17,20 @@
 
 .text {
   width: 100%;
-  margin-top: 20px;
 
   &:first-child {
     margin-top: 0;
+  }
+
+  & a {
+    display: block;
+  }
+
+  & ol {
+    margin-top: 0px;
+  }
+
+  & p {
+    padding: 0px;
   }
 }
