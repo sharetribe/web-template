@@ -8,6 +8,7 @@ import { H1, H2, H3, H4, H5, H6 } from '../Primitives/Heading';
 import { Ul, Ol, Li } from '../Primitives/List';
 import { Ingress } from '../Primitives/Ingress';
 import { P } from '../Primitives/P';
+import { Span } from '../Primitives/Span';
 import { Code, CodeBlock } from '../Primitives/Code';
 import { Link } from '../Primitives/Link';
 import { MarkdownImage, FieldImage } from '../Primitives/Image';
@@ -38,6 +39,7 @@ const TEXT_CONTENT = [
   'markdown',
   'metaTitle',
   'metaDescription',
+  'text',
 ];
 
 ////////////////////////
@@ -70,6 +72,7 @@ const defaultFieldComponents = {
     pickValidProps: exposeContentAsChildren,
     omitInvalidPropsWarning,
   },
+  text: { component: Span, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
   externalButtonLink: { component: Link, pickValidProps: exposeLinkProps },
   internalButtonLink: { component: Link, pickValidProps: exposeLinkProps },
   image: { component: FieldImage, pickValidProps: exposeImageProps },
@@ -93,6 +96,7 @@ const defaultFieldComponents = {
         h5: H5,
         h6: H6,
         p: P,
+        span: Span,
         img: MarkdownImage,
         code: Code,
         pre: CodeBlock,
