@@ -70,7 +70,7 @@ const SectionFooter = props => {
             <NamedLink name="LandingPage" className={css.logoLink}>
                 <Logo format="desktop" className={css.logo} />
               </NamedLink>
-              <div>{slogan.content}</div>
+              <Field data={slogan}/>
           </div>
           <div className={css.socialInfo}>
             <div className={css.icons}>
@@ -78,7 +78,7 @@ const SectionFooter = props => {
                 <ExternalLink key={l.url} href={l.url} className={css.icon} >{l.iconLetter}</ExternalLink>
                 )) : null}
             </div>
-            <span>{copyright.content}</span>
+            <Field data={copyright} />
           </div>
           <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
             {blocks.map(block => (
