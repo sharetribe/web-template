@@ -10,7 +10,7 @@ import SectionContainer from '../SectionContainer';
 import css from './SectionFooter.module.css';
 import { ExternalLink, NamedLink } from '../../../../components';
 
-// The number of columns (numColumns) affects styling
+// The number of columns (numberOfColumns) affects styling
 
 const GRID_CONFIG = [
   { contentCss: css.contentCol1, gridCss: css.gridCol1 },
@@ -19,27 +19,25 @@ const GRID_CONFIG = [
   { contentCss: css.contentCol4, gridCss: css.gridCol4 },
 ]
 
-const MOBILE_LAYOUT_BREAKPOINT = 768; // Layout is different on mobile layout
+const getIndex = numberOfColumns => numberOfColumns - 1;
 
-const getIndex = numColumns => numColumns - 1;
-
-const getContentCss = numColumns => {
-  const contentConfig = GRID_CONFIG[getIndex(numColumns)];
+const getContentCss = numberOfColumns => {
+  const contentConfig = GRID_CONFIG[getIndex(numberOfColumns)];
   return contentConfig ? contentConfig.contentCss : GRID_CONFIG[0].contentCss;
 }
 
-const getGridCss = numColumns => {
-  const contentConfig = GRID_CONFIG[getIndex(numColumns)];
+const getGridCss = numberOfColumns => {
+  const contentConfig = GRID_CONFIG[getIndex(numberOfColumns)];
   return contentConfig ? contentConfig.gridCss : GRID_CONFIG[0].gridCss;
 }
 
-// Section component that's able to show blocks in multiple different columns (defined by "numColumns" prop)
+// Section component that's able to show blocks in multiple different columns (defined by "numberOfColumns" prop)
 const SectionFooter = props => {
   const {
     sectionId,
     className,
     rootClassName,
-    numColumns,
+    numberOfColumns,
     socialMediaLinks,
     slogan,
     appearance,
@@ -53,51 +51,8 @@ const SectionFooter = props => {
   const fieldComponents = options?.fieldComponents;
   const fieldOptions = { fieldComponents };
 
-  const contentColClassName = `contentCol${numColumns}`;
-  const gridColClassName = `gridCol${numColumns}`
-  console.log({ contentColClassName }, { gridColClassName })
-  console.log({ socialMediaLinks }, { copyright })
-
-  const isWindowDefined = typeof window !== 'undefined';
-  const isMobileLayout = isWindowDefined && window.innerWidth < MOBILE_LAYOUT_BREAKPOINT;
-
   const showSocialMediaLinks = socialMediaLinks?.length > 0;
-  console.log({ isMobileLayout })
 
-  const detailsSection = isMobileLayout ? (
-    <div>
-      <div className={css.detailsInfo}>
-          <NamedLink name="LandingPage" className={css.logoLink}>
-          <Logo format="desktop" className={css.logo} />
-        </NamedLink>
-      <Field data={slogan} />
-      </div>
-    </div>
-  ) : (
-    <div className={css.detailsInfo}>
-    <NamedLink name="LandingPage" className={css.logoLink}>
-        <Logo format="desktop" className={css.logo} />
-      </NamedLink>
-    <Field data={slogan} />
-    <div className={css.icons}>
-      {showSocialMediaLinks ? socialMediaLinks.map(l => (
-        <ExternalLink key={l.url} href={l.url} className={css.icon} >{l.iconLetter}</ExternalLink>
-      )) : null}
-    </div>
-    <Field data={copyright} />
-  </div>
-  );
-
-  const socialSectionMobileMaybe = isMobileLayout ? (
-      <div className={css.socialInfo}>
-        <div className={css.icons}>
-        {showSocialMediaLinks ? socialMediaLinks.map(l => (
-          <ExternalLink key={l.url} href={l.url} className={css.icon} >{l.iconLetter}</ExternalLink>
-        )) : null}
-      </div>
-      <Field data={copyright} />
-      </div>
-  ) : null;
   // use block builder instead of mapping blocks manually
 
   return (
@@ -110,9 +65,22 @@ const SectionFooter = props => {
       options={fieldOptions}
     >
       <div className={css.footer}>
-        <div className={classNames(css.content, getContentCss(numColumns))}>
-          {detailsSection}
-          <div className={classNames(css.grid, getGridCss(numColumns))}>
+        <div className={classNames(css.content, getContentCss(numberOfColumns))}>
+        <div className={css.detailsInfo}>
+            <NamedLink name="LandingPage" className={css.logoLink}>
+                <Logo format="desktop" className={css.logo} />
+              </NamedLink>
+              <div>{slogan.content}</div>
+          </div>
+          <div className={css.socialInfo}>
+            <div className={css.icons}>
+              {showSocialMediaLinks ? socialMediaLinks.map(l => (
+                <ExternalLink key={l.url} href={l.url} className={css.icon} >{l.iconLetter}</ExternalLink>
+                )) : null}
+            </div>
+            <span>{copyright.content}</span>
+          </div>
+          <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
             {blocks.map(block => (
               <BlockDefault key={block.blockId} {...block} className={css.item}
               />
@@ -120,7 +88,6 @@ const SectionFooter = props => {
           </div>
         </div>
       </div>
-      {socialSectionMobileMaybe}
     </SectionContainer>
     </footer>
   );
@@ -135,7 +102,7 @@ SectionFooter.defaultProps = {
   rootClassName: null,
   defaultClasses: null,
   textClassName: null,
-  numColumns: 1,
+  numberOfColumns: 1,
   title: null,
   description: null,
   appearance: null,
@@ -155,7 +122,7 @@ SectionFooter.propTypes = {
     description: string,
     ctaButton: string,
   }),
-  numColumns: number,
+  numberOfColumns: number,
   title: object,
   description: object,
   appearance: object,
