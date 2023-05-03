@@ -1,7 +1,7 @@
 import React from 'react';
 import { arrayOf, bool, func, node, number, object, shape, string } from 'prop-types';
 import classNames from 'classnames';
-import {Logo} from '../../../../components';
+import {LinkedLogo} from '../../../../components';
 
 import Field, { hasDataInFields } from '../../Field';
 import BlockBuilder from '../../BlockBuilder';
@@ -50,6 +50,7 @@ const SectionFooter = props => {
   // E.g. { h1: { component: MyAwesomeHeader } }
   const fieldComponents = options?.fieldComponents;
   const fieldOptions = { fieldComponents };
+  console.log({ socialMediaLinks })
 
   const showSocialMediaLinks = socialMediaLinks?.length > 0;
 
@@ -67,16 +68,14 @@ const SectionFooter = props => {
       <div className={css.footer}>
         <div className={classNames(css.content, getContentCss(numberOfColumns))}>
         <div className={css.detailsInfo}>
-            <NamedLink name="LandingPage" className={css.logoLink}>
-                <Logo format="desktop" className={css.logo} />
-              </NamedLink>
+            <LinkedLogo className={css.logoLink} />
               <Field data={slogan}/>
           </div>
           <div className={css.socialInfo}>
             <div className={css.icons}>
-              {showSocialMediaLinks ? socialMediaLinks.map(l => (
-                <ExternalLink key={l.url} href={l.url} className={css.icon} >{l.iconLetter}</ExternalLink>
-                )) : null}
+              {showSocialMediaLinks ? (
+                <BlockBuilder blocks={socialMediaLinks} />
+              ) : null}
             </div>
             <Field data={copyright} />
           </div>

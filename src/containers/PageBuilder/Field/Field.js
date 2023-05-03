@@ -10,7 +10,7 @@ import { Ingress } from '../Primitives/Ingress';
 import { P } from '../Primitives/P';
 import { Span } from '../Primitives/Span';
 import { Code, CodeBlock } from '../Primitives/Code';
-import { Link } from '../Primitives/Link';
+import { Link, SocialMediaLink } from '../Primitives/Link';
 import { MarkdownImage, FieldImage } from '../Primitives/Image';
 import { CustomAppearance } from '../Primitives/CustomAppearance';
 import { YoutubeEmbed } from '../Primitives/YoutubeEmbed';
@@ -26,6 +26,7 @@ import {
   exposeImageProps,
   exposeYoutubeProps,
   exposeOpenGraphData,
+  exposeSocialMediaProps,
 } from './Field.helpers';
 
 const TEXT_CONTENT = [
@@ -75,6 +76,7 @@ const defaultFieldComponents = {
   text: { component: Span, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
   externalButtonLink: { component: Link, pickValidProps: exposeLinkProps },
   internalButtonLink: { component: Link, pickValidProps: exposeLinkProps },
+  socialMediaLink: { component: SocialMediaLink, pickValidProps: exposeSocialMediaProps },
   image: { component: FieldImage, pickValidProps: exposeImageProps },
   customAppearance: { component: CustomAppearance, pickValidProps: exposeCustomAppearanceProps },
   youtube: { component: YoutubeEmbed, pickValidProps: exposeYoutubeProps },
@@ -137,11 +139,11 @@ export const validProps = (data, options) => {
     hasOnlyProp(data, 'fieldType') ||
     hasEmptyTextContent(data) ||
     ['none'].includes(data?.fieldType)
-  ) {
-    // If there's no data, the (optional) field in Console has been left untouched or it's removed.
-    return null;
-  }
-
+    ) {
+      // If there's no data, the (optional) field in Console has been left untouched or it's removed.
+      return null;
+    }
+    
   const config = getFieldConfig(data, defaultFieldComponents, options);
   const pickValidProps = config?.pickValidProps;
   if (data && pickValidProps) {
@@ -210,7 +212,7 @@ const propTypeTextContent = shape({
 });
 
 const propTypeLink = shape({
-  fieldType: oneOf(['externalButtonLink', 'internalButtonLink']).isRequired,
+  fieldType: oneOf(['externalButtonLink', 'internalButtonLink', 'socialMediaLink']).isRequired,
   content: string,
   href: string.isRequired,
 });

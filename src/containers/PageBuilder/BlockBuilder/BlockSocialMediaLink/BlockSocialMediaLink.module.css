@@ -1,12 +1,6 @@
-
-/* Todo: figure out font sizes */
-
 .root {
-  /* fallback option */
-  word-break: break-all;
-  /* use break-word if available */
-  word-break: break-word;
-  hyphens: auto;
+  display: inline-block;
+  padding-right: 24px;
 }
 
 .media {

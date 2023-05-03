@@ -4,6 +4,7 @@ import { arrayOf, func, node, oneOf, shape, string } from 'prop-types';
 // Block components
 import BlockDefault from './BlockDefault';
 import BlockFooter from './BlockFooter';
+import BlockSocialMediaLink from './BlockSocialMediaLink';
 
 ///////////////////////////////////////////
 // Mapping of block types and components //
@@ -12,6 +13,7 @@ import BlockFooter from './BlockFooter';
 const defaultBlockComponents = {
   defaultBlock: { component: BlockDefault },
   footerBlock: { component: BlockFooter },
+  socialMediaLink: { component: BlockSocialMediaLink },
 };
 
 ////////////////////
@@ -20,6 +22,7 @@ const defaultBlockComponents = {
 
 const BlockBuilder = props => {
   const { blocks, options, ...otherProps } = props;
+  console.log({ ...props })
 
   // Extract block & field component mappings from props
   // If external mapping has been included for fields
@@ -55,7 +58,7 @@ const BlockBuilder = props => {
 
 const propTypeBlock = shape({
   blockId: string.isRequired,
-  blockType: oneOf(['defaultBlock', 'footerBlock']).isRequired,
+  blockType: oneOf(['defaultBlock', 'footerBlock', 'socialMediaLink']).isRequired,
   // Plus all kind of unknown fields.
   // BlockBuilder doesn't really need to care about those
 });
