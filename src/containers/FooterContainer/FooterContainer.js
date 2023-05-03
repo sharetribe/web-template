@@ -9,6 +9,7 @@ const FooterContainer = props => {
 
 
   // TODO: Figure out how logo gets passed to the footer
+  // –– or do we get it straight from the Logo component?
 
   return (
     <SectionBuilder
