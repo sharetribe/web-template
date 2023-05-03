@@ -24,9 +24,10 @@
   justify-content: center;
   align-content: end;
   grid-auto-rows: auto;
-  grid-gap: 16px;
+  grid-gap: 32px;
+  grid-row-gap: 16px;
   grid-template-columns: 1fr;
-  grid-template-areas: "details" "grid" "links";
+  grid-template-areas: "logo" "details" "grid" "links";
 }
 
 .grid {
@@ -35,27 +36,30 @@
   justify-content: center;
   align-content: end;
   grid-auto-rows: auto;
-  grid-gap: 24px;
+  grid-gap: 32px;
 }
 
 .gridCol1,
 .gridCol2,
 .gridCol3,
 .gridCol4 {
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
 }
 
 .detailsInfo {
   grid-area: details;
-  padding: 12px;
   & span {
     font-size: 16px;
   }
 }
 
+
+.logo {
+  grid-area: logo;
+}
+
 .socialInfo {
   grid-area: links;
-  padding: 12px;
    & span {
     font-size: 12px;
     line-height: 16px;
@@ -68,7 +72,7 @@
 
   .content {
     grid-template-columns: 1fr 1fr;
-    grid-template-areas:  "details grid" "links grid" ". grid";
+    grid-template-areas:  "logo ." "details grid" "links grid" ". grid";
   }
 
   .gridCol1 {
@@ -93,19 +97,19 @@
 
   .contentCol1 {
     grid-template-columns: 2fr 3fr 1fr;
-    grid-template-areas: "details . grid" "links . grid" " . . grid";
+    grid-template-areas: "logo . ." "details . grid" "links . grid" " . . grid";
   }
   .contentCol2 {
     grid-template-columns: 2fr 2fr 2fr;
-    grid-template-areas: "details . grid" "links . grid" ". . grid";
+    grid-template-areas: "logo . ." "details . grid" "links . grid" ". . grid";
   }
   .contentCol3 {
     grid-template-columns: 2fr 1fr 3fr;
-    grid-template-areas: " details . grid" "links . grid" ". . grid";
+    grid-template-areas: "logo . ." "details . grid" "links . grid" ". . grid";
   }
   .contentCol4 {
     grid-template-columns: 2fr 4fr;
-    grid-template-areas: "details grid" "links grid" " . grid";
+    grid-template-areas: "logo . ""details grid" "links grid" " . grid";
   }
 
   .gridCol1 {
@@ -139,11 +143,4 @@
 .logoLink {
   padding: 0px;
   height: 64px;
-}
-
-.logo {
-  object-fit: contain;
-  object-position: left center;
-  width: 100%;
-  height: 24px;
 }
