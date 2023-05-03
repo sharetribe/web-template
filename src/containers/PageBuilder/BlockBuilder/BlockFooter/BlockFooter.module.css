@@ -1,0 +1,22 @@
+.root {
+  /* fallback option */
+  word-break: break-all;
+  /* use break-word if available */
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.media {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 0;
+}
+
+.text {
+  width: 100%;
+  margin-top: 20px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
