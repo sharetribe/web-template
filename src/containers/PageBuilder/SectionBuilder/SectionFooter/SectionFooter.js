@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import {Logo} from '../../../../components';
 
 import Field, { hasDataInFields } from '../../Field';
-import { BlockDefault } from '../../BlockBuilder';
+import BlockBuilder from '../../BlockBuilder';
 
 import SectionContainer from '../SectionContainer';
 import css from './SectionFooter.module.css';
@@ -81,10 +81,9 @@ const SectionFooter = props => {
             <Field data={copyright} />
           </div>
           <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
-            {blocks.map(block => (
-              <BlockDefault key={block.blockId} {...block} className={css.item}
-              />
-            ))}
+            <BlockBuilder
+              blocks={blocks}
+            />
           </div>
         </div>
       </div>
