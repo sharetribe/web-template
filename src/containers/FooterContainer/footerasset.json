@@ -1,0 +1,122 @@
+{
+  "socialMediaLinks": [
+    {
+      "blockType": "socialMediaLink",
+      "link": {
+        "fieldType": "socialMediaLink",
+        "platform": "twitter",
+        "url": "https://www.twitter.com/sharetribe"
+      }
+    },
+    {
+      "blockType": "socialMediaLink",
+      "link": {
+        "fieldType": "socialMediaLink",
+        "platform": "linkedin",
+        "url": "https://www.linkedin.com/sharetribe"
+      }
+    },
+    {
+      "blockType": "socialMediaLink",
+      "link": {
+        "fieldType": "socialMediaLink",
+        "platform": "facebook",
+        "url": "https://facebook.com/sharetribe"
+      }
+    },
+    {
+      "blockType": "socialMediaLink",
+      "link": {
+        "fieldType": "socialMediaLink",
+        "platform": "instagram",
+        "url": "https://instagram.com/sharetribe"
+      }
+    },
+    {
+      "blockType": "socialMediaLink",
+      "link": {
+        "fieldType": "socialMediaLink",
+        "platform": "youtube",
+        "url": "https://youtube.com/sharetribe"
+      }
+    },
+    {
+      "blockType": "socialMediaLink",
+      "link": {
+        "fieldType": "socialMediaLink",
+        "platform": "pinterest",
+        "url": "https://pinterest.com/sharetribe"
+      }
+    },
+    {
+      "blockType": "socialMediaLink",
+      "link": {
+        "fieldType": "socialMediaLink",
+        "platform": "tiktok",
+        "url": "https://tiktok.com/sharetribe"
+      }
+    }
+  ],
+  "numberOfColumns": 1,
+  "blocks": [
+    {
+      "blockType": "footerBlock",
+      "text": {
+        "content": "[About us](/p/about)\n[Find a bike](/s)\n[List your bike](/l/new)",
+        "fieldType": "markdown"
+      },
+      "blockId": "links1"
+    },
+    {
+      "blockType": "footerBlock",
+      "blockId": "links2",
+      "text": {
+        "content": "[Bikes in Helsinki](/s)\n[Bikes in Turku](/s)\n[Bikes in Tampere](/s)\n[Bikes in Oulu](/s)\n[Bikes in Ruka](/s)",
+        "fieldType": "markdown"
+      }
+    },
+    {
+      "blockType": "footerBlock",
+      "blockId": "links3",
+      "text": {
+        "content": "[Bikes in Kuopio](/s)\n[Bikes in Mikkeli](/s)\n[Bikes in Espoo](/s)\n[Bikes in Vantaa](/s)\n[Bikes in Åland Islands](/s)",
+        "fieldType": "markdown"
+      }
+    },
+    {
+      "blockType": "footerBlock",
+      "blockId": "links4",
+      "text": {
+        "content": "-  Contact us\n-  Terms of Service\n-  Privacy Policy",
+        "fieldType": "markdown"
+      }
+    },
+    {
+      "blockType": "footerBlock",
+      "blockId": "links5",
+      "text": {
+        "content": "1. Lorem ipsum 1\n1. Lorem_ipsum_dolor_sit_amet,_consectetur_adipiscing_elit,_sed_do_eiusmod_tempor_incididunt_ut_labore_et_dolore_magna_aliqua._Ut_enim_ad_minim_veniam,_quis_nostrud_exercitation_ullamco_laboris_nisi_ut_aliquip_ex_ea_commodo_consequat._Duis_aute_irure_dolor_in_reprehenderit_in_voluptate_velit_esse_cillum_dolore_eu_fugiat_nulla_pariatur._Excepteur_sint_occaecat_cupidatat_non_proident,_sunt_in_culpa_qui_officia_deserunt_mollit_anim_id_est_laborum\n1._Lorem_ipsum 3\n1. Lorem ipsum 4\n1. Lorem ipsum 1\n1. Lorem ipsum 2\n1. Lorem ipsum 3\n1. Lorem ipsum 4\n1. Lorem ipsum 1\n1. Lorem ipsum 2\n1. Lorem ipsum 3\n1. Lorem ipsum 4",
+        "fieldType": "markdown"
+      }
+    },
+    {
+      "blockType": "footerBlock",
+      "blockId": "links6",
+      "text": {
+        "content": "-  Random\n-  Things\n-  Here",
+        "fieldType": "markdown"
+      }
+    }
+  ],
+  "logo": "http://localhost:3000/static/media/biketribe-logo-desktop.c130ff2b233ec5e2ef55.png",
+  "slogan": {
+    "content": "The largest online marketplace for bike enthusiasts in Finland",
+    "fieldType": "text"
+  },
+  "copyright": {
+    "content": "Copyright © Biketribe 2023. All rights reserved.",
+    "fieldType": "text"
+  },
+  "sectionType": "footer",
+  "sectionId": "footer"
+}
