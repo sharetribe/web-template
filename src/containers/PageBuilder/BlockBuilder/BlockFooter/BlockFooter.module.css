@@ -24,10 +24,24 @@
 
   & a {
     display: block;
+    color: var(--colorGrey700);
+    font-size: 14px;
+    &:hover {
+      color: var(--marketplaceColor);
+      text-decoration: none;
+    }
   }
 
   & ol {
     margin-top: 0px;
+    padding-left: 0px;
+  }
+
+  & li {
+    font-size: 14px;
+    color: var(--colorGrey700);
+    padding: 0px;
+    list-style-position: inside;
   }
 
   & p {
