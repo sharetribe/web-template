@@ -1,10 +1,7 @@
 @import '../../../../styles/customMediaQueries.css';
 
-
-/* grid example classes */
-
 .footer {
-  padding: 24px;
+  padding: 32px;
   max-width: calc(var(--contentMaxWidth) + 72px);
   margin: 0 auto;
 }
@@ -39,7 +36,10 @@
   grid-gap: 32px;
 }
 
-.gridCol1,
+.gridCol1 {
+  grid-template-columns: 1fr;
+}
+
 .gridCol2,
 .gridCol3,
 .gridCol4 {
@@ -74,9 +74,14 @@
     grid-template-columns: 1fr 1fr;
     grid-template-areas:  "logo ." "details grid" "links grid" ". grid";
   }
+  
+  .contentCol1 {
+    grid-template-columns: 2fr 2fr 1fr;
+    grid-template-areas:  "logo . ." "details . grid" "links . grid" ". . grid";
+  }
 
   .gridCol1 {
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: 1fr;
   }
 
   .gridCol2 {
@@ -130,7 +135,7 @@
 }
 
 .icons {
-  padding: 10px 0px 30px;
+  padding: 0px 0px 24px;
 }
 
 .icon {

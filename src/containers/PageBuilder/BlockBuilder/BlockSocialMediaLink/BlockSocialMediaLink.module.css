@@ -1,6 +1,13 @@
 .root {
   display: inline-block;
-  padding-right: 24px;
+  padding: 12px 6px;
+  &:first-child {
+    padding-left: 0px;
+  }
+
+  & a:hover {
+    color: var(--colorGrey700);
+  }
 }
 
 .media {

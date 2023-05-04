@@ -16,6 +16,7 @@ const BlockFooter = props => {
     text,
     options,
   } = props;
+  console.log({ props })
   const classes = classNames(rootClassName || css.root, className);
   const hasTextComponentFields = hasDataInFields([text], options);
 
