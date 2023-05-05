@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Footer as FooterContent, IconSpinner, LayoutComposer } from '../../components/index.js';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer.js';
+import FooterContainer from '../FooterContainer/FooterContainer.js';
 
 import { validProps } from './Field';
 
@@ -87,7 +88,6 @@ const PageBuilder = props => {
     fallbackPage,
     schemaType,
     options,
-    footer: FooterContainer,
     ...pageProps
   } = props;
 
@@ -100,7 +100,6 @@ const PageBuilder = props => {
   // - "meta" (which is data that goes inside <head>)
   const { sections = [], meta = {} } = pageAssetsData || {};
   const pageMetaProps = getMetadata(meta, schemaType, options?.fieldComponents);
-  console.log({ FooterContainer });
 
   const layoutAreas = `
     topbar

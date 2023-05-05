@@ -3,7 +3,6 @@ import { bool, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import FooterContainer from '../FooterContainer/FooterContainer';
 
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 import PageBuilder from '../../containers/PageBuilder/PageBuilder';
@@ -21,7 +20,6 @@ export const CMSPageComponent = props => {
       pageAssetsData={pageAssetsData?.[pageId]?.data}
       inProgress={inProgress}
       schemaType="Article"
-      footer={FooterContainer}
     />
   );
 };

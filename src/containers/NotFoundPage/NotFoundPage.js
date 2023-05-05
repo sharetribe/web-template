@@ -12,9 +12,10 @@ import { createResourceLocatorString } from '../../util/routes';
 import { isMainSearchTypeKeywords } from '../../util/search';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { Heading, Page, Footer, LayoutSingleColumn } from '../../components';
+import { Heading, Page, LayoutSingleColumn } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import SearchForm from './SearchForm/SearchForm';
 
@@ -54,7 +55,7 @@ export class NotFoundPageComponent extends Component {
 
     return (
       <Page title={title} scrollingDisabled={scrollingDisabled}>
-        <LayoutSingleColumn topbar={<TopbarContainer />} footer={<Footer />}>
+        <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
           <div className={css.root}>
             <div className={css.content}>
               <div className={css.number}>404</div>
