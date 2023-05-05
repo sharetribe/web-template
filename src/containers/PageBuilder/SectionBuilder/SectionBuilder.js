@@ -36,7 +36,7 @@ const defaultSectionComponents = {
   carousel: { component: SectionCarousel },
   columns: { component: SectionColumns },
   features: { component: SectionFeatures },
-  footer: {  component: SectionFooter },
+  footer: { component: SectionFooter },
 };
 
 //////////////////////

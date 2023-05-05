@@ -139,11 +139,11 @@ export const validProps = (data, options) => {
     hasOnlyProp(data, 'fieldType') ||
     hasEmptyTextContent(data) ||
     ['none'].includes(data?.fieldType)
-    ) {
-      // If there's no data, the (optional) field in Console has been left untouched or it's removed.
-      return null;
-    }
-    
+  ) {
+    // If there's no data, the (optional) field in Console has been left untouched or it's removed.
+    return null;
+  }
+
   const config = getFieldConfig(data, defaultFieldComponents, options);
   const pickValidProps = config?.pickValidProps;
   if (data && pickValidProps) {
