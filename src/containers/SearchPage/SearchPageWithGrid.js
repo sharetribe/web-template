@@ -22,8 +22,9 @@ import { propTypes } from '../../util/types';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { Footer, H3, H5, Page } from '../../components';
+import { H3, H5, Page } from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import FooterContainer from '../FooterContainer/FooterContainer';
 
 import {
   groupListingFieldConfigs,
@@ -401,7 +402,7 @@ export class SearchPageComponent extends Component {
             </div>
           </div>
         </div>
-        <Footer />
+        <FooterContainer />
       </Page>
     );
   }

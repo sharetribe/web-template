@@ -1,10 +1,6 @@
 import React from 'react';
 import { node, string } from 'prop-types';
 import classNames from 'classnames';
-import { useLocation } from 'react-router-dom';
-
-import { useRouteConfiguration } from '../../../../context/routeConfigurationContext.js';
-import { matchPathname } from '../../../../util/routes.js';
 
 import { ExternalLink } from '../../../../components/index.js';
 import {
@@ -31,18 +27,11 @@ const ICON_CONF = {
 
 const getIconConf = platform => {
   const icon = ICON_CONF[platform] || null;
-  console.log({ icon });
   return icon;
 };
 
 export const SocialMediaLink = React.forwardRef((props, ref) => {
-  const location = useLocation();
-  const routes = useRouteConfiguration();
-  console.log('social media link props', { props });
   const Icon = getIconConf(props.children);
-  console.log({ Icon });
-
-  const iconMaybe = Icon ? <Icon /> : null;
 
   const { className, rootClassName, href, title, children } = props;
   const classes = classNames(rootClassName || css.link, className);
