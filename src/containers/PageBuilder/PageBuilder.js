@@ -100,7 +100,7 @@ const PageBuilder = props => {
   // - "meta" (which is data that goes inside <head>)
   const { sections = [], meta = {} } = pageAssetsData || {};
   const pageMetaProps = getMetadata(meta, schemaType, options?.fieldComponents);
-  console.log({ FooterContainer })
+  console.log({ FooterContainer });
 
   const layoutAreas = `
     topbar
@@ -124,14 +124,13 @@ const PageBuilder = props => {
                   <SectionBuilder sections={sections} options={options} />
                 )}
               </Main>
-              {!! FooterContainer ? (
-                <FooterContainer/>
+              {!!FooterContainer ? (
+                <FooterContainer />
               ) : (
-              <Footer>
-                <FooterContent />
-              </Footer>
-              )
-            }
+                <Footer>
+                  <FooterContent />
+                </Footer>
+              )}
             </>
           );
         }}

@@ -1,10 +1,6 @@
 .span {
-  max-width: 80ch;
   line-height: 1.66;
-  margin-top: 0;
-  margin-bottom: 0;
   letter-spacing: 0;
-  display: block;
 
   /* Handle margin-top of next adjacent element against this span element */
   & + p,

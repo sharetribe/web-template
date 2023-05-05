@@ -8,7 +8,7 @@ import { H1, H2, H3, H4, H5, H6 } from '../Primitives/Heading';
 import { Ul, Ol, Li } from '../Primitives/List';
 import { Ingress } from '../Primitives/Ingress';
 import { P } from '../Primitives/P';
-import { Span } from '../Primitives/Span';
+import { Text } from '../Primitives/Text';
 import { Code, CodeBlock } from '../Primitives/Code';
 import { Link, SocialMediaLink } from '../Primitives/Link';
 import { MarkdownImage, FieldImage } from '../Primitives/Image';
@@ -73,7 +73,7 @@ const defaultFieldComponents = {
     pickValidProps: exposeContentAsChildren,
     omitInvalidPropsWarning,
   },
-  text: { component: Span, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
+  text: { component: Text, pickValidProps: exposeContentAsChildren, omitInvalidPropsWarning },
   externalButtonLink: { component: Link, pickValidProps: exposeLinkProps },
   internalButtonLink: { component: Link, pickValidProps: exposeLinkProps },
   socialMediaLink: { component: SocialMediaLink, pickValidProps: exposeSocialMediaProps },
@@ -98,7 +98,7 @@ const defaultFieldComponents = {
         h5: H5,
         h6: H6,
         p: P,
-        span: Span,
+        span: Text,
         img: MarkdownImage,
         code: Code,
         pre: CodeBlock,
