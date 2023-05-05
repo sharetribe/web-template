@@ -22,7 +22,6 @@ const defaultBlockComponents = {
 
 const BlockBuilder = props => {
   const { blocks, options, ...otherProps } = props;
-  console.log({ ...props })
 
   // Extract block & field component mappings from props
   // If external mapping has been included for fields
