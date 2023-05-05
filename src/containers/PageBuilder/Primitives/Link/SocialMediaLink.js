@@ -27,27 +27,27 @@ const ICON_CONF = {
   tiktok: tiktokIcon,
   twitter: twitterIcon,
   youtube: youtubeIcon,
-}
+};
 
-const getIconConf = (platform) => {
-  const icon =  ICON_CONF[platform] || null;
+const getIconConf = platform => {
+  const icon = ICON_CONF[platform] || null;
   console.log({ icon });
   return icon;
-}
+};
 
 export const SocialMediaLink = React.forwardRef((props, ref) => {
   const location = useLocation();
   const routes = useRouteConfiguration();
-  console.log('social media link props',{ props })
-  const Icon = getIconConf(props.children)
-  console.log({ Icon })
+  console.log('social media link props', { props });
+  const Icon = getIconConf(props.children);
+  console.log({ Icon });
 
-  const iconMaybe = Icon ? <Icon/> : null;
+  const iconMaybe = Icon ? <Icon /> : null;
 
   const { className, rootClassName, href, title, children } = props;
   const classes = classNames(rootClassName || css.link, className);
   const titleMaybe = title ? { title } : {};
-  const iconOrChildren = Icon ? <Icon/> : children;
+  const iconOrChildren = Icon ? <Icon /> : children;
   const linkProps = { className: classes, href, children: iconOrChildren, ...titleMaybe };
 
   // Markdown parser (rehype-sanitize) might return undefined href

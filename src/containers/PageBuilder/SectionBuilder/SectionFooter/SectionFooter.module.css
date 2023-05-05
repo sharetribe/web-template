@@ -24,7 +24,7 @@
   grid-gap: 32px;
   grid-row-gap: 16px;
   grid-template-columns: 1fr;
-  grid-template-areas: "logo" "details" "grid" "links";
+  grid-template-areas: 'logo' 'details' 'grid' 'links';
 }
 
 .grid {
@@ -53,31 +53,28 @@
   }
 }
 
-
 .logo {
   grid-area: logo;
 }
 
 .socialInfo {
   grid-area: links;
-   & span {
+  & span {
     font-size: 12px;
     line-height: 16px;
     color: #6e6e73;
-   }
+  }
 }
 
-
 @media (--viewportMedium) {
-
   .content {
     grid-template-columns: 1fr 1fr;
-    grid-template-areas:  "logo ." "details grid" "links grid" ". grid";
+    grid-template-areas: 'logo .' 'details grid' 'links grid' '. grid';
   }
-  
+
   .contentCol1 {
     grid-template-columns: 2fr 2fr 1fr;
-    grid-template-areas:  "logo . ." "details . grid" "links . grid" ". . grid";
+    grid-template-areas: 'logo . .' 'details . grid' 'links . grid' '. . grid';
   }
 
   .gridCol1 {
@@ -85,36 +82,34 @@
   }
 
   .gridCol2 {
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .gridCol3 {
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .gridCol4 {
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-
 @media (--viewportLarge) {
-
   .contentCol1 {
     grid-template-columns: 2fr 3fr 1fr;
-    grid-template-areas: "logo . ." "details . grid" "links . grid" " . . grid";
+    grid-template-areas: 'logo . .' 'details . grid' 'links . grid' ' . . grid';
   }
   .contentCol2 {
     grid-template-columns: 2fr 2fr 2fr;
-    grid-template-areas: "logo . ." "details . grid" "links . grid" ". . grid";
+    grid-template-areas: 'logo . .' 'details . grid' 'links . grid' '. . grid';
   }
   .contentCol3 {
     grid-template-columns: 2fr 1fr 3fr;
-    grid-template-areas: "logo . ." "details . grid" "links . grid" ". . grid";
+    grid-template-areas: 'logo . .' 'details . grid' 'links . grid' '. . grid';
   }
   .contentCol4 {
     grid-template-columns: 2fr 4fr;
-    grid-template-areas: "logo . ""details grid" "links grid" " . grid";
+    grid-template-areas: 'logo . ' 'details grid' 'links grid' ' . grid';
   }
 
   .gridCol1 {
@@ -122,15 +117,15 @@
   }
 
   .gridCol2 {
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .gridCol3 {
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .gridCol4 {
-    grid-template-columns: repeat(4,1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 

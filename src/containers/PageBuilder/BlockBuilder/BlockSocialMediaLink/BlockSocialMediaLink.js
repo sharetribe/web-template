@@ -8,14 +8,8 @@ import BlockContainer from '../BlockContainer';
 import css from './BlockSocialMediaLink.module.css';
 
 const BlockSocialMediaLink = props => {
-  const {
-    blockId,
-    className,
-    rootClassName,
-    link,
-  } = props;
+  const { blockId, className, rootClassName, link } = props;
 
-  console.log({ props })
   const classes = classNames(rootClassName || css.root, className);
 
   return (
