@@ -50,6 +50,12 @@ const SectionFooter = props => {
   const fieldComponents = options?.fieldComponents;
   const fieldOptions = { fieldComponents };
   console.log({ socialMediaLinks });
+  const linksWithBlockId = socialMediaLinks.map(sml => {
+    return {
+      ...sml,
+      blockId: sml.link.platform,
+    }
+  })
 
   const showSocialMediaLinks = socialMediaLinks?.length > 0;
 
@@ -74,7 +80,7 @@ const SectionFooter = props => {
           </div>
           <div className={css.socialInfo}>
             <div className={css.icons}>
-              {showSocialMediaLinks ? <BlockBuilder blocks={socialMediaLinks} /> : null}
+              {showSocialMediaLinks ? <BlockBuilder blocks={linksWithBlockId} /> : null}
             </div>
             <Field data={copyright} />
           </div>
