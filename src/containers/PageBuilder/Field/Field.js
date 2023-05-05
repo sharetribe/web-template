@@ -212,9 +212,15 @@ const propTypeTextContent = shape({
 });
 
 const propTypeLink = shape({
-  fieldType: oneOf(['externalButtonLink', 'internalButtonLink', 'socialMediaLink']).isRequired,
+  fieldType: oneOf(['externalButtonLink', 'internalButtonLink']).isRequired,
   content: string,
   href: string.isRequired,
+});
+
+const propTypeSocialMediaLink = shape({
+  fieldType: oneOf(['socialMediaLink']).isRequired,
+  platform: string,
+  url: string.isRequired,
 });
 
 const propTypeImageAsset = shape({
@@ -276,6 +282,7 @@ Field.propTypes = {
   data: oneOfType([
     propTypeTextContent,
     propTypeLink,
+    propTypeSocialMediaLink,
     propTypeImage,
     propTypeCustomAppearance,
     propTypeYoutube,
