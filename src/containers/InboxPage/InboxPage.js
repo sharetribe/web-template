@@ -34,7 +34,6 @@ import {
   Page,
   PaginationLinks,
   TabNav,
-  Footer,
   IconSpinner,
   TimeRange,
   UserDisplayName,
@@ -42,6 +41,7 @@ import {
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import { stateDataShape, getStateData } from './InboxPage.stateData';
@@ -301,7 +301,7 @@ export const InboxPageComponent = props => {
             <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />{' '}
           </>
         }
-        footer={<Footer />}
+        footer={<FooterContainer />}
       >
         {fetchOrdersOrSalesError ? (
           <p className={css.error}>
