@@ -3,12 +3,11 @@ import { arrayOf, bool, func, node, number, object, shape, string } from 'prop-t
 import classNames from 'classnames';
 import { LinkedLogo } from '../../../../components';
 
-import Field, { hasDataInFields } from '../../Field';
+import Field from '../../Field';
 import BlockBuilder from '../../BlockBuilder';
 
 import SectionContainer from '../SectionContainer';
 import css from './SectionFooter.module.css';
-import { ExternalLink, NamedLink } from '../../../../components';
 
 // The number of columns (numberOfColumns) affects styling
 
@@ -57,35 +56,34 @@ const SectionFooter = props => {
   // use block builder instead of mapping blocks manually
 
   return (
-    <footer>
-      <SectionContainer
-        id={sectionId}
-        className={className}
-        rootClassName={rootClassName}
-        appearance={appearance}
-        options={fieldOptions}
-      >
-        <div className={css.footer}>
-          <div className={classNames(css.content, getContentCss(numberOfColumns))}>
-            <div>
-              <LinkedLogo className={css.logoLink} />
+    <SectionContainer
+      as="footer"
+      id={sectionId}
+      className={className}
+      rootClassName={rootClassName}
+      appearance={appearance}
+      options={fieldOptions}
+    >
+      <div className={css.footer}>
+        <div className={classNames(css.content, getContentCss(numberOfColumns))}>
+          <div>
+            <LinkedLogo className={css.logoLink} />
+          </div>
+          <div className={css.detailsInfo}>
+            <Field data={slogan} />
+          </div>
+          <div className={css.socialInfo}>
+            <div className={css.icons}>
+              {showSocialMediaLinks ? <BlockBuilder blocks={socialMediaLinks} /> : null}
             </div>
-            <div className={css.detailsInfo}>
-              <Field data={slogan} />
-            </div>
-            <div className={css.socialInfo}>
-              <div className={css.icons}>
-                {showSocialMediaLinks ? <BlockBuilder blocks={socialMediaLinks} /> : null}
-              </div>
-              <Field data={copyright} />
-            </div>
-            <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
-              <BlockBuilder blocks={blocks} />
-            </div>
+            <Field data={copyright} />
+          </div>
+          <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
+            <BlockBuilder blocks={blocks} />
           </div>
         </div>
-      </SectionContainer>
-    </footer>
+      </div>
+    </SectionContainer>
   );
 };
 
