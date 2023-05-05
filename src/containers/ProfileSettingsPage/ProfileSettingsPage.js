@@ -9,9 +9,10 @@ import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { H3, Page, UserNav, Footer, NamedLink, LayoutSingleColumn } from '../../components';
+import { H3, Page, UserNav, NamedLink, LayoutSingleColumn } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
 
@@ -94,7 +95,7 @@ export const ProfileSettingsPageComponent = props => {
             <UserNav currentPage="ProfileSettingsPage" />
           </>
         }
-        footer={<Footer />}
+        footer={<FooterContainer />}
       >
         <div className={css.content}>
           <div className={css.headingContainer}>
