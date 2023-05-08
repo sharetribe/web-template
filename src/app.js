@@ -193,6 +193,7 @@ export const renderApp = (
   serverContext,
   preloadedState,
   hostedTranslations,
+  hostedConfig,
   collectChunks
 ) => {
   // Don't pass an SDK instance since we're only rendering the
@@ -212,6 +213,7 @@ export const renderApp = (
       helmetContext={helmetContext}
       store={store}
       hostedTranslations={hostedTranslations}
+      hostedConfig={hostedConfig}
     />
   );
   const body = ReactDOMServer.renderToString(WithChunks);
