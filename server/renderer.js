@@ -91,7 +91,7 @@ const replacer = (key = null, value) => {
 };
 
 exports.render = function(requestUrl, context, data, renderApp, webExtractor) {
-  const { preloadedState, translations } = data;
+  const { preloadedState, translations, hostedConfig } = data;
 
   // Bind webExtractor as "this" for collectChunks call.
   const collectWebChunks = webExtractor.collectChunks.bind(webExtractor);
@@ -102,6 +102,7 @@ exports.render = function(requestUrl, context, data, renderApp, webExtractor) {
     context,
     preloadedState,
     translations,
+    hostedConfig,
     collectWebChunks
   );
 
