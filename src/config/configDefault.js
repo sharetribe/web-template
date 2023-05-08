@@ -73,7 +73,8 @@ const defaultConfig = {
   // Currently, only translation.json is available.
   // Note: the path must match the path defined in Asset Delivery API
   appCdnAssets: {
-    translations: 'content/translations.json',
+    translations: '/content/translations.json',
+    footer: '/content/footer.json',
   },
 
   // Optional

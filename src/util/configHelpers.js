@@ -531,5 +531,8 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     listing: validListingConfig(configAsset.listing || defaultConfigs.listing),
     // TODO: defaultConfigs.search probably needs to be removed, when config is fetched from assets.
     search: validSearchConfig(configAsset.search || defaultConfigs.search),
+
+    // Include hosted footer config, if it exists
+    footer: configAsset.footer,
   };
 };
