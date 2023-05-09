@@ -80,6 +80,7 @@ const defaultConfig = {
     listingTypes: '/listings/listing-types.json',
     listingFields: '/listings/listing-fields.json',
     search: '/listings/listing-search.json',
+    transactionSize: '/transactions/minimum-transaction-size.json',
   },
 
   // Optional

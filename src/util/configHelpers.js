@@ -521,6 +521,15 @@ const validSearchConfig = config => {
   };
 };
 
+//////////////////////////////////
+// Validate transaction configs //
+//////////////////////////////////
+
+const getListingMinimumPrice = transactionSize => {
+  const { listingMinimumPrice } = transactionSize;
+  return listingMinimumPrice?.type === 'subunit' ? listingMinimumPrice.amount : 0;
+};
+
 ////////////////////////////////////
 // Validate and merge all configs //
 ////////////////////////////////////
@@ -592,9 +601,17 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
       }
     : null;
 
+  // defaultConfigs.listingMinimumPriceSubUnits is the backup for listing's minimum price
+  const listingMinimumPriceSubUnits =
+    getListingMinimumPrice(configAsset.transactionSize) ||
+    defaultConfigs.listingMinimumPriceSubUnits;
+
   return {
     // Use default configs as a starting point for app config.
     ...defaultConfigs,
+
+    // Overwrite default configs if hosted config is available
+    listingMinimumPriceSubUnits,
 
     // Branding configuration comes entirely from hosted assets,
     // but defaults to values set in defaultConfigs.branding for
