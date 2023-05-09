@@ -76,6 +76,7 @@ const defaultConfig = {
     translations: '/content/translations.json',
     footer: '/content/footer.json',
     branding: '/design/branding.json',
+    layout: '/design/layout.json',
   },
 
   // Optional
