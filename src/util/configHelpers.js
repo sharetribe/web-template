@@ -542,12 +542,53 @@ const restructureListingTypes = hostedListingTypes => {
   });
 };
 
+const restructureListingFields = hostedListingFields => {
+  return hostedListingFields.map(listingField => {
+    const {
+      key,
+      scope,
+      schemaType,
+      enumOptions,
+      label,
+      filterConfig = {},
+      showConfig = {},
+      saveConfig = {},
+      ...rest
+    } = listingField;
+    const defaultLabel = label || key;
+
+    return key
+      ? {
+          key,
+          scope,
+          schemaType,
+          enumOptions,
+          filterConfig: {
+            ...filterConfig,
+            label: filterConfig.label || defaultLabel,
+          },
+          showConfig: {
+            ...showConfig,
+            label: showConfig.label || defaultLabel,
+          },
+          saveConfig: {
+            ...saveConfig,
+            label: saveConfig.label || defaultLabel,
+          },
+          ...rest,
+        }
+      : null;
+  });
+};
+
 export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
   // Listing configuration is splitted to several assets in Console
   const hostedListingTypes = configAsset.listingTypes.listingTypes;
+  const hostedListingFields = configAsset.listingFields.listingFields;
   const hostedListingConfig = hostedListingTypes
     ? {
         listingTypes: restructureListingTypes(hostedListingTypes),
+        listingFields: restructureListingFields(hostedListingFields),
       }
     : null;
 
