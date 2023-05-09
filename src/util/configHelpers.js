@@ -79,26 +79,35 @@ const hexToCssHsl = (hexColor, lightnessDiff) => {
   return `hsl(${h}, ${s}%, ${l + lightnessDiff}%)`;
 };
 
+const getVariantURL = (socialSharingImage, variantName) => {
+  return socialSharingImage?.type === 'imageAsset'
+    ? socialSharingImage.attributes.variants[variantName]?.url
+    : null;
+};
+
 const mergeBranding = (brandingConfig, defaultBranding) => {
-  const marketplaceColor = brandingConfig?.marketplaceColor || defaultBranding.marketplaceColor;
-  const marketplaceColorDark =
-    brandingConfig?.marketplaceColorDark ||
-    defaultBranding.marketplaceColorDark ||
-    (marketplaceColor ? hexToCssHsl(marketplaceColor, -10) : null);
-  const marketplaceColorLight =
-    brandingConfig?.marketplaceColorLight ||
-    defaultBranding.marketplaceColorLight ||
-    (marketplaceColor ? hexToCssHsl(marketplaceColor, 10) : null);
+  const { favicon, marketplaceColors, logo, loginBackgroundImage, socialSharingImage } =
+    brandingConfig || {};
+
+  const marketplaceColor = marketplaceColors?.mainColor || defaultBranding.marketplaceColor;
+  const marketplaceColorDark = marketplaceColor ? hexToCssHsl(marketplaceColor, -10) : null;
+  const marketplaceColorLight = marketplaceColor ? hexToCssHsl(marketplaceColor, 10) : null;
+
+  const facebookImage =
+    getVariantURL(socialSharingImage, 'scaled1200') || defaultBranding.facebookImageURL;
+  const twitterImage =
+    getVariantURL(socialSharingImage, 'scaled600') || defaultBranding.twitterImageURL;
 
   return {
     marketplaceColor,
     marketplaceColorDark,
     marketplaceColorLight,
-    logoImageDesktopURL: brandingConfig?.logoImageDesktopURL || defaultBranding.logoImageDesktopURL,
-    logoImageMobileURL: brandingConfig?.logoImageMobileURL || defaultBranding.logoImageMobileURL,
-    brandImageURL: brandingConfig?.brandImageURL || defaultBranding.brandImageURL,
-    facebookImageURL: brandingConfig?.facebookImageURL || defaultBranding.facebookImageURL,
-    twitterImageURL: brandingConfig?.twitterImageURL || defaultBranding.twitterImageURL,
+    logoImageDesktop: logo || defaultBranding.logoImageDesktopURL,
+    logoImageMobile: logo || defaultBranding.logoImageMobileURL,
+    brandImage: loginBackgroundImage || defaultBranding.brandImageURL,
+    facebookImage,
+    twitterImage,
+    favicon,
   };
 };
 
@@ -146,11 +155,6 @@ const mergeLayouts = (layoutConfig, defaultLayout) => {
     ['cropImage'],
     { variantType: 'cropImage', aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' }
   );
-
-  const aspectWidth =
-    layoutConfig?.listingImage?.aspectWidth || defaultLayout?.listingImage?.aspectWidth;
-  const aspectHeight =
-    layoutConfig?.listingImage?.aspectHeight || defaultLayout?.listingImage?.aspectHeight;
 
   return {
     searchPage,
@@ -523,7 +527,12 @@ const validSearchConfig = config => {
 
 export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
   return {
+    // Use default configs as a starting point for app config.
     ...defaultConfigs,
+
+    // Branding configuration comes entirely from hosted assets,
+    // but defaults to values set in defaultConfigs.branding for
+    // marketplace color, logo, brandImage and Facebook and Twitter images
     branding: mergeBranding(configAsset.branding, defaultConfigs.branding),
     layout: mergeLayouts(configAsset.layout, defaultConfigs.layout),
 

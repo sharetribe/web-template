@@ -116,7 +116,7 @@ class PageComponent extends Component {
     } = socialSharing || {};
 
     // Images for social media sharing
-    const defaultFacebookImageURL = config.branding.facebookImageURL;
+    const defaultFacebookImageURL = config.branding.facebookImage;
     const openGraphFallbackImages = [
       {
         name: 'facebook',
@@ -125,7 +125,7 @@ class PageComponent extends Component {
         height: 630,
       },
     ];
-    const defaultTwitterImageURL = config.branding.twitterImageURL;
+    const defaultTwitterImageURL = config.branding.twitterImage;
     const twitterFallbackImages = [
       {
         name: 'twitter',
@@ -204,6 +204,13 @@ class PageComponent extends Component {
       });
     }
 
+    // We add favicon through hosted configs
+    // NOTE: There's no favicon.ico file. This is an imageAsset object which is used together with <meta> tags.
+    // TODO: add app icons too
+    const faviconAsset = config.branding.favicon;
+    const faviconVariants =
+      faviconAsset?.type === 'imageAsset' ? Object.values(faviconAsset.attributes.variants) : [];
+
     return (
       <div className={classes}>
         <Helmet
@@ -214,6 +221,19 @@ class PageComponent extends Component {
           <title>{pageTitle}</title>
           {referrer ? <meta name="referrer" content={referrer} /> : null}
           <link rel="canonical" href={canonicalUrl} />
+
+          {faviconVariants.map(variant => {
+            return (
+              <link
+                key={`icon_${variant.width}`}
+                rel="icon"
+                type="image/png"
+                sizes={`${variant.width}x${variant.height}`}
+                href={variant.url}
+              />
+            );
+          })}
+
           <meta httpEquiv="Content-Type" content="text/html; charset=UTF-8" />
           <meta httpEquiv="Content-Language" content={intl.locale} />
           {metaToHead.map((metaProps, i) => (
