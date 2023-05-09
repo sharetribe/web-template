@@ -605,11 +605,15 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     // but defaultConfigs is used if type of the hosted configs is unknown
     layout: mergeLayouts(configAsset.layout, defaultConfigs.layout),
 
-    // TODO: defaultConfigs.search probably needs to be removed, when config is fetched from assets.
-    search: validSearchConfig(configAsset.search || defaultConfigs.search),
     // Listing configuration comes entirely from hosted assets
     listing: validListingConfig(hostedListingConfig || defaultConfigs.listing),
 
+    // The sortConfig is not yet configurable through Console / hosted assets,
+    // but other default search configs come from hosted assets
+    search: validSearchConfig({
+      sortConfig: defaultConfigs.search.sortConfig,
+      ...configAsset.search,
+    }),
 
     // Include hosted footer config, if it exists
     footer: configAsset.footer,
