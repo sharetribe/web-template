@@ -524,8 +524,33 @@ const validSearchConfig = config => {
 ////////////////////////////////////
 // Validate and merge all configs //
 ////////////////////////////////////
+const restructureListingTypes = hostedListingTypes => {
+  return hostedListingTypes.map(listingType => {
+    const { id, label, transactionProcess, unitType, ...rest } = listingType;
+    return transactionProcess
+      ? {
+          listingType: id,
+          label,
+          transactionType: {
+            process: transactionProcess.name,
+            alias: transactionProcess.alias,
+            unitType,
+          },
+          ...rest,
+        }
+      : null;
+  });
+};
 
 export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
+  // Listing configuration is splitted to several assets in Console
+  const hostedListingTypes = configAsset.listingTypes.listingTypes;
+  const hostedListingConfig = hostedListingTypes
+    ? {
+        listingTypes: restructureListingTypes(hostedListingTypes),
+      }
+    : null;
+
   return {
     // Use default configs as a starting point for app config.
     ...defaultConfigs,
@@ -539,10 +564,11 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     // but defaultConfigs is used if type of the hosted configs is unknown
     layout: mergeLayouts(configAsset.layout, defaultConfigs.layout),
 
-    // TODO: defaultConfigs.listing probably needs to be removed, when config is fetched from assets.
-    listing: validListingConfig(configAsset.listing || defaultConfigs.listing),
     // TODO: defaultConfigs.search probably needs to be removed, when config is fetched from assets.
     search: validSearchConfig(configAsset.search || defaultConfigs.search),
+    // Listing configuration comes entirely from hosted assets
+    listing: validListingConfig(hostedListingConfig || defaultConfigs.listing),
+
 
     // Include hosted footer config, if it exists
     footer: configAsset.footer,
