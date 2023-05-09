@@ -77,6 +77,7 @@ const defaultConfig = {
     footer: '/content/footer.json',
     branding: '/design/branding.json',
     layout: '/design/layout.json',
+    listingTypes: '/listings/listing-types.json',
   },
 
   // Optional
