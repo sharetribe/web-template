@@ -5,7 +5,7 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import forEach from 'lodash/forEach';
-import { getDefaultConfiguration } from './util/testHelpers';
+import { getHostedConfiguration } from './util/testHelpers';
 import { ServerApp } from './app';
 import configureStore from './store';
 
@@ -20,7 +20,7 @@ const render = (url, context) => {
       context={context}
       helmetContext={helmetContext}
       store={store}
-      hostedConfig={getDefaultConfiguration()}
+      hostedConfig={getHostedConfiguration()}
     />
   );
 
