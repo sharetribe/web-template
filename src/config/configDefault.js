@@ -81,6 +81,7 @@ const defaultConfig = {
     listingFields: '/listings/listing-fields.json',
     search: '/listings/listing-search.json',
     transactionSize: '/transactions/minimum-transaction-size.json',
+    // NOTE: we don't fetch commissions configuration here but on the server-side
   },
 
   // Optional
