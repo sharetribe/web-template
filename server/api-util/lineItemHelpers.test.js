@@ -12,6 +12,7 @@ const {
   calculateTotalForProvider,
   calculateTotalForCustomer,
   constructValidLineItems,
+  hasCommissionPercentage,
 } = require('./lineItemHelpers');
 
 describe('calculateTotalPriceFromQuantity()', () => {
@@ -273,6 +274,24 @@ describe('constructValidLineItems()', () => {
 
     expect(() => constructValidLineItems(lineItems)).toThrowError(
       `Invalid line item code: ${code}`
+    );
+  });
+});
+
+describe('hasCommissionPercentage()', () => {
+  it('should return false with object that does not contain percentage', () => {
+    expect(hasCommissionPercentage({})).toBe(false);
+    expect(hasCommissionPercentage({ foo: 'bar' })).toBe(false);
+  });
+  it('should return true with object that does not contain percentage', () => {
+    expect(hasCommissionPercentage({ percentage: 10 })).toBe(true);
+    expect(hasCommissionPercentage({ percentage: 10, foo: 'bar' })).toBe(true);
+  });
+
+  it('should throw error if percentage property does not contain number', () => {
+    expect(() => hasCommissionPercentage({ percentage: '10' })).toThrowError('10 is not a number.');
+    expect(() => hasCommissionPercentage({ percentage: 'asdf' })).toThrowError(
+      'asdf is not a number.'
     );
   });
 });
