@@ -534,6 +534,9 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     // but defaults to values set in defaultConfigs.branding for
     // marketplace color, logo, brandImage and Facebook and Twitter images
     branding: mergeBranding(configAsset.branding, defaultConfigs.branding),
+
+    // Layout configuration comes entirely from hosted assets,
+    // but defaultConfigs is used if type of the hosted configs is unknown
     layout: mergeLayouts(configAsset.layout, defaultConfigs.layout),
 
     // TODO: defaultConfigs.listing probably needs to be removed, when config is fetched from assets.
