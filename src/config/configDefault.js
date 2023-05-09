@@ -75,6 +75,7 @@ const defaultConfig = {
   appCdnAssets: {
     translations: '/content/translations.json',
     footer: '/content/footer.json',
+    branding: '/design/branding.json',
   },
 
   // Optional

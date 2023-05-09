@@ -39,6 +39,14 @@ export const getDefaultConfiguration = () => {
       ...defaultConfig.stripe,
       publishableKey: 'pk_test_',
     },
+    branding: {
+      ...defaultConfig.branding,
+      logoImageDesktop: defaultConfig.branding.logoImageDesktopURL,
+      logoImageMobile: defaultConfig.branding.logoImageMobileURL,
+      brandImage: defaultConfig.branding.brandImageURL,
+      facebookImage: defaultConfig.branding.facebookImageURL,
+      twitterImage: defaultConfig.branding.twitterImageURL,
+    },
     listing: {
       listingFields: [
         {
