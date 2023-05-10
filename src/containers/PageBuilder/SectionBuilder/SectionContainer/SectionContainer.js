@@ -35,7 +35,7 @@ const propTypeOption = shape({
 SectionContainer.defaultProps = {
   rootClassName: null,
   className: null,
-  as: 'div',
+  as: 'section',
   children: null,
   appearance: null,
 };
