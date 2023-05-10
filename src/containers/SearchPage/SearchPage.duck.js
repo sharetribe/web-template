@@ -261,7 +261,12 @@ export const loadData = (params, search, config) => {
         'publicData.shippingEnabled',
       ],
       'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
-      'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
+      'fields.image': [
+        'variants.scaled-small',
+        'variants.scaled-medium',
+        `variants.${variantPrefix}`,
+        `variants.${variantPrefix}-2x`,
+      ],
       ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
       ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
       'limit.images': 1,

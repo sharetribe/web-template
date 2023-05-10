@@ -128,7 +128,9 @@ const validVariantConfig = (hostedVariant, defaultVariant, validVariantTypes, fa
     const [w, h] = variant.aspectRatio.split('/') || ['1', '1'];
     const aspectWidth = Number.parseInt(w, 10);
     const aspectHeight = Number.parseInt(h, 10);
-    return isValidVariant ? { ...variant, aspectWidth, aspectHeight } : fallback;
+    return isValidVariant
+      ? { ...variant, aspectWidth, aspectHeight, variantPrefix: defaultVariant.variantPrefix }
+      : fallback;
   }
 
   return isValidVariant ? variant : fallback;
