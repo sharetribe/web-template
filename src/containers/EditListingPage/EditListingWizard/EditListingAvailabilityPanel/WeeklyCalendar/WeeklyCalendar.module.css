@@ -2,9 +2,13 @@
 
 .titleWrapper {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
   align-items: baseline;
+
+  @media (min-width: 435px) {
+    flex-direction: row;
+  }
 
   @media (--viewportMedium) {
     padding: 5px 0 3px 0;
