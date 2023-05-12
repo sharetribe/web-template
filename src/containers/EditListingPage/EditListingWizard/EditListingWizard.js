@@ -374,17 +374,21 @@ class EditListingWizard extends Component {
     const currentListing = ensureListing(listing);
     const savedProcessAlias = currentListing.attributes?.publicData?.transactionProcessAlias;
     const transactionProcessAlias = savedProcessAlias || this.state.transactionProcessAlias;
-    const processName = transactionProcessAlias
-      ? transactionProcessAlias.split('/')[0]
-      : BOOKING_PROCESS_NAME;
 
     // NOTE: If the listing has invalid configuration in place,
     // the listing is considered deprecated and we don't allow user to modify the listing anymore.
     // Instead, operator should do that through Console or Integration API.
+    const validListingTypes = config.listing.listingTypes;
     const existingListingType = currentListing.attributes?.publicData?.listingType;
     const invalidExistingListingType =
       existingListingType &&
-      !config.listing.listingTypes.find(config => config.listingType === existingListingType);
+      !validListingTypes.find(config => config.listingType === existingListingType);
+
+    const processName = transactionProcessAlias
+      ? transactionProcessAlias.split('/')[0]
+      : validListingTypes.length === 1
+      ? validListingTypes[0].transactionType.process
+      : BOOKING_PROCESS_NAME;
 
     // For oudated draft listing, we don't show other tabs but the "details"
     const tabs =
