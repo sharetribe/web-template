@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
-const PageBuilder = loadable(() => import ('../../containers/PageBuilder/PageBuilder'))
+const PageBuilder = loadable(() => import('../../containers/PageBuilder/PageBuilder'));
 
 export const CMSPageComponent = props => {
   const { params, pageAssetsData, inProgress, error } = props;

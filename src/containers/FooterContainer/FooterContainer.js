@@ -2,9 +2,9 @@ import React from 'react';
 import { useConfiguration } from '../../context/configurationContext';
 import loadable from '@loadable/component';
 
-const SectionBuilder = loadable(() => import ('../PageBuilder/PageBuilder'), {
-  resolveComponent: (components) => components.SectionBuilder,
-})
+const SectionBuilder = loadable(() => import('../PageBuilder/PageBuilder'), {
+  resolveComponent: components => components.SectionBuilder,
+});
 
 const FooterContainer = () => {
   const { footer } = useConfiguration();
