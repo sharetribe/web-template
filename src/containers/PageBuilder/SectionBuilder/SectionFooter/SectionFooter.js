@@ -54,8 +54,8 @@ const SectionFooter = props => {
     return {
       ...sml,
       blockId: sml.link.platform,
-    }
-  })
+    };
+  });
 
   const showSocialMediaLinks = socialMediaLinks?.length > 0;
 
