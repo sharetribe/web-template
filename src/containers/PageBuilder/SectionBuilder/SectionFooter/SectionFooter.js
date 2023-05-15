@@ -49,7 +49,7 @@ const SectionFooter = props => {
   // E.g. { h1: { component: MyAwesomeHeader } }
   const fieldComponents = options?.fieldComponents;
   const fieldOptions = { fieldComponents };
-  const linksWithBlockId = socialMediaLinks.map(sml => {
+  const linksWithBlockId = socialMediaLinks?.map(sml => {
     return {
       ...sml,
       blockId: sml.link.platform,
