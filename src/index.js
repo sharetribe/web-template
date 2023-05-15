@@ -68,9 +68,19 @@ const render = (store, shouldHydrate) => {
         store.dispatch(fetchAppAssets(defaultConfig.appCdnAssets, cdnAssetsVersion)),
       ]);
     })
-    .then(([_, fetchedAssets]) => {
-      const translations = fetchedAssets?.translations?.data || {};
-      const hostedConfig = fetchedAssets?.config?.data || {};
+    .then(([_, fetchedAppAssets]) => {
+      const { assetVersionMismatch, translations: translationsRaw, ...rest } =
+        fetchedAppAssets || {};
+      // We'll handle translations as a separate data.
+      // It's given to React Intl instead of pushing to config Context
+      const translations = translationsRaw?.data || {};
+
+      // Rest of the assets are considered as hosted configs
+      const configEntries = Object.entries(rest);
+      const hostedConfig = configEntries.reduce((collectedData, [name, content]) => {
+        return { ...collectedData, [name]: content.data || {} };
+      }, {});
+
       if (shouldHydrate) {
         ReactDOM.hydrate(
           <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,

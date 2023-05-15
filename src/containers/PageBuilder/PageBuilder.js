@@ -117,7 +117,7 @@ const PageBuilder = props => {
                 <TopbarContainer />
               </Topbar>
               <Main as="main" className={css.main}>
-                {inProgress ? (
+                {sections.length === 0 && inProgress ? (
                   <LoadingSpinner />
                 ) : (
                   <SectionBuilder sections={sections} options={options} />

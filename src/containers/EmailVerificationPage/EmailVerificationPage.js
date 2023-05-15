@@ -89,7 +89,7 @@ export const EmailVerificationPageComponent = props => {
           className={css.root}
           childrenWrapperClassName={css.contentContainer}
           as="section"
-          image={config.branding.brandImageURL}
+          image={config.branding.brandImage}
           sizes="100%"
           useOverlay
         >

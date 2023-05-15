@@ -3,6 +3,13 @@ const log = require('./log');
 
 const PREVENT_DATA_LOADING_IN_SSR = process.env.PREVENT_DATA_LOADING_IN_SSR === 'true';
 
+const extractHostedConfig = configAssets => {
+  const configEntries = Object.entries(configAssets);
+  return configEntries.reduce((collectedData, [name, content]) => {
+    return { ...collectedData, [name]: content?.data || {} };
+  }, {});
+};
+
 exports.loadData = function(requestUrl, sdk, appInfo) {
   const {
     matchPathname,
@@ -15,17 +22,23 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
   const { pathname, query } = url.parse(requestUrl);
 
   let translations = {};
+  let hostedConfig = {};
+
   const store = configureStore({}, sdk);
 
   if (PREVENT_DATA_LOADING_IN_SSR) {
     // This might help certain temporary scenarios, where DDOS attack adds load to server.
     // Note: This is not a meaningful mitigation against DDOS attacks.
     //       Consider adding some kind of edge protection and rate limiter.
-    return Promise.resolve({ preloadedState: store.getState(), translations: {} });
+    return Promise.resolve({
+      preloadedState: store.getState(),
+      translations: {},
+      hostedConfig: {},
+    });
   }
 
-  const dataLoadingCalls = configAsset => {
-    const config = mergeConfig(configAsset, defaultConfig);
+  const dataLoadingCalls = hostedConfigAsset => {
+    const config = mergeConfig(hostedConfigAsset, defaultConfig);
     const matchedRoutes = matchPathname(pathname, routeConfiguration(config.layout));
     return matchedRoutes.reduce((calls, match) => {
       const { route, params } = match;
@@ -43,12 +56,19 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
   return store
     .dispatch(fetchAppAssets(defaultConfig.appCdnAssets))
     .then(fetchedAppAssets => {
-      translations = fetchedAppAssets?.translations?.data || {};
-      const configAsset = {}; // TODO config needs to be included from fetchedAppAssets
-      return Promise.all(dataLoadingCalls(configAsset));
+      const { translations: translationsRaw, ...rest } = fetchedAppAssets || {};
+
+      // We'll handle translations as a separate data.
+      // It's given to React Intl instead of pushing to config Context
+      translations = translationsRaw?.data || {};
+
+      // Rest of the assets are considered as hosted configs
+      // This structure just gives possibilities to add initial config data
+      hostedConfig = { ...hostedConfig, ...extractHostedConfig(rest) };
+      return Promise.all(dataLoadingCalls(hostedConfig));
     })
     .then(() => {
-      return { preloadedState: store.getState(), translations };
+      return { preloadedState: store.getState(), translations, hostedConfig };
     })
     .catch(e => {
       log.error(e, 'server-side-data-load-failed');
@@ -56,6 +76,6 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
       // Call to loadData failed, let client handle the data loading errors.
       // (It might be recoverable error like lost connection.)
       // Return "empty" store.
-      return { preloadedState: store.getState(), translations };
+      return { preloadedState: store.getState(), translations, hostedConfig };
     });
 };

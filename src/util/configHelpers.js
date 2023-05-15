@@ -79,26 +79,35 @@ const hexToCssHsl = (hexColor, lightnessDiff) => {
   return `hsl(${h}, ${s}%, ${l + lightnessDiff}%)`;
 };
 
+const getVariantURL = (socialSharingImage, variantName) => {
+  return socialSharingImage?.type === 'imageAsset'
+    ? socialSharingImage.attributes.variants[variantName]?.url
+    : null;
+};
+
 const mergeBranding = (brandingConfig, defaultBranding) => {
-  const marketplaceColor = brandingConfig?.marketplaceColor || defaultBranding.marketplaceColor;
-  const marketplaceColorDark =
-    brandingConfig?.marketplaceColorDark ||
-    defaultBranding.marketplaceColorDark ||
-    (marketplaceColor ? hexToCssHsl(marketplaceColor, -10) : null);
-  const marketplaceColorLight =
-    brandingConfig?.marketplaceColorLight ||
-    defaultBranding.marketplaceColorLight ||
-    (marketplaceColor ? hexToCssHsl(marketplaceColor, 10) : null);
+  const { favicon, marketplaceColors, logo, loginBackgroundImage, socialSharingImage } =
+    brandingConfig || {};
+
+  const marketplaceColor = marketplaceColors?.mainColor || defaultBranding.marketplaceColor;
+  const marketplaceColorDark = marketplaceColor ? hexToCssHsl(marketplaceColor, -10) : null;
+  const marketplaceColorLight = marketplaceColor ? hexToCssHsl(marketplaceColor, 10) : null;
+
+  const facebookImage =
+    getVariantURL(socialSharingImage, 'scaled1200') || defaultBranding.facebookImageURL;
+  const twitterImage =
+    getVariantURL(socialSharingImage, 'scaled600') || defaultBranding.twitterImageURL;
 
   return {
     marketplaceColor,
     marketplaceColorDark,
     marketplaceColorLight,
-    logoImageDesktopURL: brandingConfig?.logoImageDesktopURL || defaultBranding.logoImageDesktopURL,
-    logoImageMobileURL: brandingConfig?.logoImageMobileURL || defaultBranding.logoImageMobileURL,
-    brandImageURL: brandingConfig?.brandImageURL || defaultBranding.brandImageURL,
-    facebookImageURL: brandingConfig?.facebookImageURL || defaultBranding.facebookImageURL,
-    twitterImageURL: brandingConfig?.twitterImageURL || defaultBranding.twitterImageURL,
+    logoImageDesktop: logo || defaultBranding.logoImageDesktopURL,
+    logoImageMobile: logo || defaultBranding.logoImageMobileURL,
+    brandImage: loginBackgroundImage || defaultBranding.brandImageURL,
+    facebookImage,
+    twitterImage,
+    favicon,
   };
 };
 
@@ -119,7 +128,9 @@ const validVariantConfig = (hostedVariant, defaultVariant, validVariantTypes, fa
     const [w, h] = variant.aspectRatio.split('/') || ['1', '1'];
     const aspectWidth = Number.parseInt(w, 10);
     const aspectHeight = Number.parseInt(h, 10);
-    return isValidVariant ? { ...variant, aspectWidth, aspectHeight } : fallback;
+    return isValidVariant
+      ? { ...variant, aspectWidth, aspectHeight, variantPrefix: defaultVariant.variantPrefix }
+      : fallback;
   }
 
   return isValidVariant ? variant : fallback;
@@ -146,11 +157,6 @@ const mergeLayouts = (layoutConfig, defaultLayout) => {
     ['cropImage'],
     { variantType: 'cropImage', aspectWidth: 1, aspectHeight: 1, variantPrefix: 'listing-card' }
   );
-
-  const aspectWidth =
-    layoutConfig?.listingImage?.aspectWidth || defaultLayout?.listingImage?.aspectWidth;
-  const aspectHeight =
-    layoutConfig?.listingImage?.aspectHeight || defaultLayout?.listingImage?.aspectHeight;
 
   return {
     searchPage,
@@ -517,19 +523,118 @@ const validSearchConfig = config => {
   };
 };
 
+//////////////////////////////////
+// Validate transaction configs //
+//////////////////////////////////
+
+const getListingMinimumPrice = transactionSize => {
+  const { listingMinimumPrice } = transactionSize;
+  return listingMinimumPrice?.type === 'subunit' ? listingMinimumPrice.amount : 0;
+};
+
 ////////////////////////////////////
 // Validate and merge all configs //
 ////////////////////////////////////
+const restructureListingTypes = hostedListingTypes => {
+  return hostedListingTypes.map(listingType => {
+    const { id, label, transactionProcess, unitType, ...rest } = listingType;
+    return transactionProcess
+      ? {
+          listingType: id,
+          label,
+          transactionType: {
+            process: transactionProcess.name,
+            alias: transactionProcess.alias,
+            unitType,
+          },
+          ...rest,
+        }
+      : null;
+  });
+};
+
+const restructureListingFields = hostedListingFields => {
+  return hostedListingFields.map(listingField => {
+    const {
+      key,
+      scope,
+      schemaType,
+      enumOptions,
+      label,
+      filterConfig = {},
+      showConfig = {},
+      saveConfig = {},
+      ...rest
+    } = listingField;
+    const defaultLabel = label || key;
+
+    return key
+      ? {
+          key,
+          scope,
+          schemaType,
+          enumOptions,
+          filterConfig: {
+            ...filterConfig,
+            label: filterConfig.label || defaultLabel,
+          },
+          showConfig: {
+            ...showConfig,
+            label: showConfig.label || defaultLabel,
+          },
+          saveConfig: {
+            ...saveConfig,
+            label: saveConfig.label || defaultLabel,
+          },
+          ...rest,
+        }
+      : null;
+  });
+};
 
 export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
+  // Listing configuration is splitted to several assets in Console
+  const hostedListingTypes = configAsset.listingTypes.listingTypes;
+  const hostedListingFields = configAsset.listingFields.listingFields;
+  const hostedListingConfig = hostedListingTypes
+    ? {
+        listingTypes: restructureListingTypes(hostedListingTypes),
+        listingFields: restructureListingFields(hostedListingFields),
+      }
+    : null;
+
+  // defaultConfigs.listingMinimumPriceSubUnits is the backup for listing's minimum price
+  const listingMinimumPriceSubUnits =
+    getListingMinimumPrice(configAsset.transactionSize) ||
+    defaultConfigs.listingMinimumPriceSubUnits;
+
   return {
+    // Use default configs as a starting point for app config.
     ...defaultConfigs,
+
+    // Overwrite default configs if hosted config is available
+    listingMinimumPriceSubUnits,
+
+    // Branding configuration comes entirely from hosted assets,
+    // but defaults to values set in defaultConfigs.branding for
+    // marketplace color, logo, brandImage and Facebook and Twitter images
     branding: mergeBranding(configAsset.branding, defaultConfigs.branding),
+
+    // Layout configuration comes entirely from hosted assets,
+    // but defaultConfigs is used if type of the hosted configs is unknown
     layout: mergeLayouts(configAsset.layout, defaultConfigs.layout),
 
-    // TODO: defaultConfigs.listing probably needs to be removed, when config is fetched from assets.
-    listing: validListingConfig(configAsset.listing || defaultConfigs.listing),
-    // TODO: defaultConfigs.search probably needs to be removed, when config is fetched from assets.
-    search: validSearchConfig(configAsset.search || defaultConfigs.search),
+    // Listing configuration comes entirely from hosted assets
+    listing: validListingConfig(hostedListingConfig || defaultConfigs.listing),
+
+    // The sortConfig is not yet configurable through Console / hosted assets,
+    // but other default search configs come from hosted assets
+    search: validSearchConfig({
+      sortConfig: defaultConfigs.search.sortConfig,
+      ...configAsset.search,
+    }),
+
+    // Include hosted footer config, if it exists
+    footer: configAsset.footer,
   };
 };
