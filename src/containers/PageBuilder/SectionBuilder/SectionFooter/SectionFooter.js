@@ -49,7 +49,6 @@ const SectionFooter = props => {
   // E.g. { h1: { component: MyAwesomeHeader } }
   const fieldComponents = options?.fieldComponents;
   const fieldOptions = { fieldComponents };
-  console.log({ socialMediaLinks });
   const linksWithBlockId = socialMediaLinks.map(sml => {
     return {
       ...sml,
