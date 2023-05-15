@@ -600,6 +600,7 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     ? {
         listingTypes: restructureListingTypes(hostedListingTypes),
         listingFields: restructureListingFields(hostedListingFields),
+        enforceValidListingType: defaultConfigs.listing.enforceValidListingType,
       }
     : null;
 
