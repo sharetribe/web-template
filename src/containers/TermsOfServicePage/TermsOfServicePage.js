@@ -10,8 +10,8 @@ import { propTypes } from '../../util/types';
 
 import { H1 } from '../PageBuilder/Primitives/Heading';
 
-const PageBuilder = loadable(() => import('../../containers/PageBuilder/PageBuilder'));
-const SectionBuilder = loadable(() => import('../../containers/PageBuilder/PageBuilder'), {
+const PageBuilder = loadable(() => import(/* webpackChunkName: "PageBuilder" */'../PageBuilder/PageBuilder'));
+const SectionBuilder = loadable(() => import(/* webpackChunkName: "SectionBuilder" */'../PageBuilder/PageBuilder'), {
   resolveComponent: components => components.SectionBuilder,
 });
 
