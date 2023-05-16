@@ -12,10 +12,15 @@ import { H1 } from '../PageBuilder/Primitives/Heading';
 import FallbackPage, { fallbackSections } from './FallbackPage';
 import { ASSET_NAME } from './PrivacyPolicyPage.duck';
 
-const PageBuilder = loadable(() => import(/* webpackChunkName: "PageBuilder" */'../PageBuilder/PageBuilder'));
-const SectionBuilder = loadable(() => import(/* webpackChunkName: "SectionBuilder" */'../PageBuilder/PageBuilder'), {
-  resolveComponent: components => components.SectionBuilder,
-});
+const PageBuilder = loadable(() =>
+  import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
+);
+const SectionBuilder = loadable(
+  () => import(/* webpackChunkName: "SectionBuilder" */ '../PageBuilder/PageBuilder'),
+  {
+    resolveComponent: components => components.SectionBuilder,
+  }
+);
 
 // This "content-only" component can be used in modals etc.
 const PrivacyPolicyContent = props => {

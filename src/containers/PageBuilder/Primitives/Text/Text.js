@@ -18,10 +18,12 @@ Text.defaultProps = {
   rootClassName: null,
   className: null,
   children: null,
+  as: 'span',
 };
 
 Text.propTypes = {
   rootClassName: string,
   className: string,
   children: node,
+  as: string,
 };

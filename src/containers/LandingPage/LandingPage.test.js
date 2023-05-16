@@ -6,6 +6,7 @@ import { renderWithProviders as render } from '../../util/testHelpers';
 import { LandingPageComponent } from './LandingPage';
 
 describe('LandingPage', () => {
+  // TODO Update test
   // For now, we rely on snapshot-testing to check the content of fallback page.
   test('matches snapshot', () => {
     let error = new Error('Fake error');
