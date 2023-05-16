@@ -30,6 +30,16 @@ const getIconConf = platform => {
   return icon;
 };
 
+export const supportedPlatforms = [
+  'facebook',
+  'instagram',
+  'linkedin',
+  'pinterest',
+  'tiktok',
+  'twitter',
+  'youtube',
+];
+
 export const SocialMediaLink = React.forwardRef((props, ref) => {
   const Icon = getIconConf(props.children);
 
@@ -50,11 +60,13 @@ export const SocialMediaLink = React.forwardRef((props, ref) => {
 SocialMediaLink.displayName = 'SocialMediaLink';
 
 SocialMediaLink.defaultProps = {
+  title: null,
   rootClassName: null,
   className: null,
 };
 
 SocialMediaLink.propTypes = {
+  title: string,
   rootClassName: string,
   className: string,
   children: node.isRequired,

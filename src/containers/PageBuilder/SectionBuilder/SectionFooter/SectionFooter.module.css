@@ -1,9 +1,6 @@
 @import '../../../../styles/customMediaQueries.css';
 
 .footer {
-  /* padding: 32px;
-  max-width: calc(var(--contentMaxWidth) + 72px);
-  margin: 0 auto; */
   max-width: var(--contentMaxWidthPages);
   display: grid;
   grid-template-columns: repeat(1, 1fr);
@@ -54,9 +51,10 @@
 
 .detailsInfo {
   grid-area: details;
-  & span {
-    font-size: 16px;
-  }
+}
+
+.slogan {
+  font-size: 16px;
 }
 
 .logo {
@@ -65,11 +63,28 @@
 
 .socialInfo {
   grid-area: links;
-  & span {
-    font-size: 12px;
-    line-height: 16px;
-    color: #6e6e73;
-  }
+}
+
+.copyright {
+  font-size: 12px;
+  line-height: 16px;
+  color: #6e6e73;
+}
+
+.icons {
+  padding: 0px 0px 24px;
+}
+
+.icon {
+  font-size: 28px;
+  margin: 15px 15px 0px 0px;
+  padding: 10px 15px;
+  background-color: pink;
+}
+
+.logoLink {
+  padding: 0px;
+  height: 64px;
 }
 
 @media (--viewportMedium) {
@@ -166,20 +181,4 @@
   .gridCol4 {
     grid-template-columns: repeat(4, 1fr);
   }
-}
-
-.icons {
-  padding: 0px 0px 24px;
-}
-
-.icon {
-  font-size: 28px;
-  margin: 15px 15px 0px 0px;
-  padding: 10px 15px;
-  background-color: pink;
-}
-
-.logoLink {
-  padding: 0px;
-  height: 64px;
 }

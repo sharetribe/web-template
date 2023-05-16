@@ -219,7 +219,7 @@ const propTypeLink = shape({
 
 const propTypeSocialMediaLink = shape({
   fieldType: oneOf(['socialMediaLink']).isRequired,
-  platform: string,
+  platform: string.isRequired,
   url: string.isRequired,
 });
 
