@@ -262,6 +262,7 @@ export const loadData = (params, search, config) => {
       ],
       'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
       'fields.image': [
+        'variants.scaled-small',
         'variants.scaled-medium',
         `variants.${variantPrefix}`,
         `variants.${variantPrefix}-2x`,
