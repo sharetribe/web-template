@@ -75,16 +75,18 @@ const SectionFooter = props => {
             <LinkedLogo className={css.logoLink} />
           </div>
           <div className={css.detailsInfo}>
-            <Field data={slogan} />
+            <Field data={slogan} className={css.slogan} />
           </div>
           <div className={css.socialInfo}>
             <div className={css.icons}>
-              {showSocialMediaLinks ? <BlockBuilder blocks={linksWithBlockId} /> : null}
+              {showSocialMediaLinks ? (
+                <BlockBuilder blocks={linksWithBlockId} options={options} />
+              ) : null}
             </div>
-            <Field data={copyright} />
+            <Field data={copyright} className={css.copyright} />
           </div>
           <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
-            <BlockBuilder blocks={blocks} />
+            <BlockBuilder blocks={blocks} options={options} />
           </div>
         </div>
       </div>
@@ -99,15 +101,12 @@ const propTypeOption = shape({
 SectionFooter.defaultProps = {
   className: null,
   rootClassName: null,
-  defaultClasses: null,
   textClassName: null,
   numberOfColumns: 1,
-  title: null,
-  description: null,
+  socialMediaLinks: [],
+  slogan: null,
   appearance: null,
-  callToAction: null,
   blocks: [],
-  isInsideContainer: false,
   options: null,
 };
 
@@ -115,19 +114,11 @@ SectionFooter.propTypes = {
   sectionId: string.isRequired,
   className: string,
   rootClassName: string,
-  defaultClasses: shape({
-    sectionDetails: string,
-    title: string,
-    description: string,
-    ctaButton: string,
-  }),
   numberOfColumns: number,
-  title: object,
-  description: object,
+  socialMediaLinks: arrayOf(object),
+  slogan: string,
   appearance: object,
-  callToAction: object,
   blocks: arrayOf(object),
-  isInsideContainer: bool,
   options: propTypeOption,
 };
 
