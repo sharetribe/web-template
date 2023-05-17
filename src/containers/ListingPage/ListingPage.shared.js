@@ -6,7 +6,8 @@ import { formatMoney } from '../../util/currency';
 import { timestampToDate } from '../../util/dates';
 import { createSlug } from '../../util/urlHelpers';
 
-import { Page, Footer, LayoutSingleColumn } from '../../components';
+import { Page, LayoutSingleColumn } from '../../components';
+import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import css from './ListingPage.module.css';
 
@@ -213,7 +214,7 @@ const PlainPage = props => {
   const { title, topbar, scrollingDisabled, children } = props;
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
-      <LayoutSingleColumn topbar={topbar} footer={<Footer />}>
+      <LayoutSingleColumn topbar={topbar} footer={<FooterContainer />}>
         {children}
       </LayoutSingleColumn>
     </Page>

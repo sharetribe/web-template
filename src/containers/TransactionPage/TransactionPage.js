@@ -37,7 +37,6 @@ import {
   NamedLink,
   NamedRedirect,
   Page,
-  Footer,
   UserDisplayName,
   OrderBreakdown,
   OrderPanel,
@@ -45,6 +44,7 @@ import {
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import { getStateData } from './TransactionPage.stateData';
 import ActivityFeed from './ActivityFeed/ActivityFeed';
@@ -497,7 +497,7 @@ export const TransactionPageComponent = props => {
       title={intl.formatMessage({ id: 'TransactionPage.schemaTitle' }, { title: listingTitle })}
       scrollingDisabled={scrollingDisabled}
     >
-      <LayoutSingleColumn topbar={<TopbarContainer />} footer={<Footer />}>
+      <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
         <div className={css.root}>{panel}</div>
         <ReviewModal
           id="ReviewOrderModal"
