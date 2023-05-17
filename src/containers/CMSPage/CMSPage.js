@@ -1,11 +1,15 @@
 import React from 'react';
+import loadable from '@loadable/component';
+
 import { bool, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
-import PageBuilder from '../../containers/PageBuilder/PageBuilder';
+const PageBuilder = loadable(() =>
+  import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
+);
 
 export const CMSPageComponent = props => {
   const { params, pageAssetsData, inProgress, error } = props;

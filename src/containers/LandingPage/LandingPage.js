@@ -1,4 +1,6 @@
 import React from 'react';
+import loadable from '@loadable/component';
+
 import { bool, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -6,10 +8,12 @@ import { connect } from 'react-redux';
 import { camelize } from '../../util/string';
 import { propTypes } from '../../util/types';
 
-import PageBuilder from '../../containers/PageBuilder/PageBuilder';
-
 import FallbackPage from './FallbackPage';
 import { ASSET_NAME } from './LandingPage.duck';
+
+const PageBuilder = loadable(() =>
+  import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
+);
 
 export const LandingPageComponent = props => {
   const { pageAssetsData, inProgress, error } = props;

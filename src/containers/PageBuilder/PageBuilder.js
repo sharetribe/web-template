@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { Footer as FooterContent, IconSpinner, LayoutComposer } from '../../components/index.js';
+import { IconSpinner, LayoutComposer } from '../../components/index.js';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer.js';
+import FooterContainer from '../FooterContainer/FooterContainer.js';
 
 import { validProps } from './Field';
 
@@ -122,9 +123,7 @@ const PageBuilder = props => {
                   <SectionBuilder sections={sections} options={options} />
                 )}
               </Main>
-              <Footer>
-                <FooterContent />
-              </Footer>
+              <FooterContainer />
             </>
           );
         }}

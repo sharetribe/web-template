@@ -1,6 +1,9 @@
 import React from 'react';
+import loadable from '@loadable/component';
 
-import PageBuilder from '../PageBuilder/PageBuilder';
+const PageBuilder = loadable(() =>
+  import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
+);
 
 // NOTE: You could add the actual Privacy Policy here as a fallback
 //       instead of showing this error message.

@@ -1,0 +1,26 @@
+.root {
+  display: inline-block;
+  padding: 12px 6px;
+  &:first-child {
+    padding-left: 0px;
+  }
+
+  & a:hover {
+    color: var(--colorGrey700);
+  }
+}
+
+.media {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 0;
+}
+
+.text {
+  width: 100%;
+  margin-top: 20px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}

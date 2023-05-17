@@ -18,7 +18,6 @@ import {
 import {
   H3,
   NamedRedirect,
-  Footer,
   Page,
   StripeConnectAccountStatusBox,
   StripeConnectAccountForm,
@@ -27,6 +26,7 @@ import {
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import { savePayoutDetails } from './StripePayoutPage.duck';
 
@@ -160,7 +160,7 @@ export const StripePayoutPageComponent = props => {
         sideNav={null}
         useAccountSettingsNav
         currentPage="StripePayoutPage"
-        footer={<Footer />}
+        footer={<FooterContainer />}
       >
         <div className={css.content}>
           <H3 as="h1" className={css.heading}>
