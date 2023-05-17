@@ -9,7 +9,7 @@ const SectionBuilder = loadable(
   }
 );
 
-const FooterContainer = () => {
+const FooterComponent = () => {
   const { footer } = useConfiguration();
 
   // The footer asset does not specify sectionId or sectionType. However, the SectionBuilder
@@ -24,4 +24,14 @@ const FooterContainer = () => {
   return <SectionBuilder sections={[footerSection]} />;
 };
 
-export default FooterContainer;
+// NOTE: if you want to add dynamic data to FooterComponent,
+//       you could just connect this FooterContainer to Redux Store
+//
+// const mapStateToProps = state => {
+//   const { currentUser } = state.user;
+//   return { currentUser };
+// };
+// const FooterContainer = compose(connect(mapStateToProps))(FooterComponent);
+// export default FooterContainer;
+
+export default FooterComponent;
