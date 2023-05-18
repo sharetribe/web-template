@@ -252,16 +252,16 @@ export const listingTypes = [
   //     unitType: 'hour',
   //   },
   // },
-  // {
-  //   listingType: 'product-selling',
-  //   label: 'Sell bicycles',
-  //   transactionType: {
-  //     process: 'default-purchase',
-  //     alias: 'default-purchase/release-1',
-  //     unitType: 'item',
-  //   },
-  //   stockType: 'multipleItems',
-  // },
+  {
+    listingType: 'product-selling',
+    label: 'Sell bicycles',
+    transactionType: {
+      process: 'default-purchase',
+      alias: 'default-purchase/release-1',
+      unitType: 'item',
+    },
+    stockType: 'multipleItems',
+  },
 ];
 
 // SearchPage can enforce listing query to only those listings with valid listingType
