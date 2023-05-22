@@ -597,12 +597,14 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
   const hostedListingTypes = configAsset.listingTypes.listingTypes;
   const hostedListingFields = configAsset.listingFields.listingFields;
   const hostedListingConfig = hostedListingTypes
+  // The sortConfig is not yet configurable through Console / hosted assets,
+  // but other default search configs come from hosted assets
+  const searchConfig = configAsset.search?.mainSearch
     ? {
-        listingTypes: restructureListingTypes(hostedListingTypes),
-        listingFields: restructureListingFields(hostedListingFields),
-        enforceValidListingType: defaultConfigs.listing.enforceValidListingType,
+        sortConfig: defaultConfigs.search.sortConfig,
+        ...configAsset.search,
       }
-    : null;
+    : defaultConfigs.search;
 
   // defaultConfigs.listingMinimumPriceSubUnits is the backup for listing's minimum price
   const listingMinimumPriceSubUnits =
@@ -628,12 +630,8 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     // Listing configuration comes entirely from hosted assets
     listing: validListingConfig(hostedListingConfig || defaultConfigs.listing),
 
-    // The sortConfig is not yet configurable through Console / hosted assets,
-    // but other default search configs come from hosted assets
-    search: validSearchConfig({
-      sortConfig: defaultConfigs.search.sortConfig,
-      ...configAsset.search,
-    }),
+    // Hosted search configuration does not yet contain sortConfig
+    search: validSearchConfig(searchConfig),
 
     // Include hosted footer config, if it exists
     // Note: if footer asset is not set, Footer is not rendered.
