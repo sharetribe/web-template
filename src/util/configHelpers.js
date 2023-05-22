@@ -636,6 +636,7 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     }),
 
     // Include hosted footer config, if it exists
+    // Note: if footer asset is not set, Footer is not rendered.
     footer: configAsset.footer,
   };
 };
