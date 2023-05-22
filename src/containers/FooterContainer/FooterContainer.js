@@ -10,7 +10,12 @@ const SectionBuilder = loadable(
 );
 
 const FooterComponent = () => {
-  const { footer } = useConfiguration();
+  const { footer = {} } = useConfiguration();
+
+  // If footer asset is not set, let's not render Footer at all.
+  if (Object.keys(footer).length === 0) {
+    return null;
+  }
 
   // The footer asset does not specify sectionId or sectionType. However, the SectionBuilder
   // expects sectionId and sectionType in order to identify the section. We add those
