@@ -180,7 +180,7 @@ const RouteComponentContainer = compose(connect(mapStateToProps))(RouteComponent
 const Routes = (props, context) => {
   const routeConfiguration = useRouteConfiguration();
   const config = useConfiguration();
-  const { isAuthenticated, logoutInProgress } = props;
+  const { isAuthenticated, logoutInProgress, logLoadDataCalls } = props;
 
   const toRouteComponent = route => {
     const renderProps = {
@@ -189,6 +189,7 @@ const Routes = (props, context) => {
       route,
       routeConfiguration,
       config,
+      logLoadDataCalls,
     };
 
     // By default, our routes are exact.
