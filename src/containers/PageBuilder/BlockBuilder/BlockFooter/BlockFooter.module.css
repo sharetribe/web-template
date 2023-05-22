@@ -20,9 +20,8 @@
   }
 
   & a {
-    display: block;
     color: var(--colorGrey700);
-    font-size: 14px;
+
     &:hover {
       color: var(--marketplaceColor);
       text-decoration: none;
