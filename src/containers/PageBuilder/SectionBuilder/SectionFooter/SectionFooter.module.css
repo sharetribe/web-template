@@ -34,7 +34,7 @@
   grid-area: grid;
   display: grid;
   justify-content: center;
-  align-content: end;
+  align-content: start;
   grid-auto-rows: auto;
   grid-gap: 32px;
 }
