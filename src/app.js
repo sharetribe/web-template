@@ -25,6 +25,8 @@ import { mergeConfig } from './util/configHelpers';
 import { IntlProvider } from './util/reactIntl';
 import { IncludeScripts } from './util/includeScripts';
 
+import { MaintenanceMode } from './components';
+
 // routing
 import routeConfiguration from './routing/routeConfiguration';
 import Routes from './routing/Routes';
@@ -116,6 +118,15 @@ export const ClientApp = props => {
   const { store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
 
+  // Show MaintenanceMode if the mandatory configurations are not available
+  if (!appConfig.hasMandatoryConfigurations) {
+    return (
+      <HelmetProvider>
+        <MaintenanceMode />
+      </HelmetProvider>
+    );
+  }
+
   // Marketplace color and branding image comes from configs
   // If set, we need to create CSS Property and set it to DOM (documentElement is selected here)
   const elem = window.document.documentElement;
@@ -156,6 +167,16 @@ export const ServerApp = props => {
   const { url, context, helmetContext, store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
   HelmetProvider.canUseDOM = false;
+
+  // Show MaintenanceMode if the mandatory configurations are not available
+  if (!appConfig.hasMandatoryConfigurations) {
+    return (
+      <HelmetProvider context={helmetContext}>
+        <MaintenanceMode />
+      </HelmetProvider>
+    );
+  }
+
   return (
     <Configurations appConfig={appConfig}>
       <IntlProvider

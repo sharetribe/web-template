@@ -592,11 +592,30 @@ const restructureListingFields = hostedListingFields => {
   });
 };
 
+// Check if all the mandatory info have been retrieved from hosted assets
+const hasMandatoryConfigs = hostedConfig => {
+  const { branding, listingTypes, listingFields, transactionSize } = hostedConfig;
+  return (
+    branding.logo &&
+    listingTypes.listingTypes &&
+    listingFields.listingFields &&
+    transactionSize.listingMinimumPrice
+  );
+};
+
 export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
   // Listing configuration is splitted to several assets in Console
   const hostedListingTypes = configAsset.listingTypes.listingTypes;
   const hostedListingFields = configAsset.listingFields.listingFields;
-  const hostedListingConfig = hostedListingTypes
+  const hostedListingConfig =
+    hostedListingTypes && hostedListingFields
+      ? {
+          listingTypes: restructureListingTypes(hostedListingTypes),
+          listingFields: restructureListingFields(hostedListingFields),
+          enforceValidListingType: defaultConfigs.listing.enforceValidListingType,
+        }
+      : null;
+
   // The sortConfig is not yet configurable through Console / hosted assets,
   // but other default search configs come from hosted assets
   const searchConfig = configAsset.search?.mainSearch
@@ -636,5 +655,8 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     // Include hosted footer config, if it exists
     // Note: if footer asset is not set, Footer is not rendered.
     footer: configAsset.footer,
+
+    // Check if all the mandatory info have been retrieved from hosted assets
+    hasMandatoryConfigurations: hasMandatoryConfigs(configAsset),
   };
 };
