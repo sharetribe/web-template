@@ -51,19 +51,28 @@
 }
 
 .detailsInfo {
-  grid-area: details;
+  grid-area: links;
 }
 
 .slogan {
   font-size: 16px;
 }
+.sloganMobile {
+  grid-area: details;
+
+  @media (--viewportMedium) {
+    display: none;
+  }
+}
+.sloganDesktop {
+  display: none;
+  @media (--viewportMedium) {
+    display: block;
+  }
+}
 
 .logo {
   grid-area: logo;
-}
-
-.socialInfo {
-  grid-area: links;
 }
 
 .copyright {
@@ -104,13 +113,17 @@
 }
 
 @media (--viewportMedium) {
+  .detailsInfo {
+    grid-area: details;
+  }
+
   .content {
     grid-template-columns: 1fr 2fr;
     grid-template-areas:
       'logo .'
       'details grid'
-      'links grid'
-      'links grid';
+      'details grid'
+      'details grid';
   }
 
   .contentCol1 {
@@ -119,8 +132,8 @@
     grid-template-areas:
       'logo . .'
       'details . grid'
-      'links . grid'
-      'links . grid';
+      'details . grid'
+      'details . grid';
   }
 
   .contentCol2 {
@@ -129,8 +142,8 @@
     grid-template-areas:
       'logo . .'
       'details . grid'
-      'links . grid'
-      'links . grid';
+      'details . grid'
+      'details . grid';
   }
 
   .contentCol3,
@@ -140,8 +153,8 @@
     grid-template-areas:
       'logo .'
       'details grid'
-      'links grid'
-      'links grid';
+      'details grid'
+      'details grid';
   }
 
   .gridCol1 {
@@ -170,8 +183,8 @@
     grid-template-areas:
       'logo . .'
       'details . grid'
-      'links . grid'
-      'links . grid';
+      'details . grid'
+      'details . grid';
   }
   .contentCol2 {
     /* 2/6 of space is for grid, and grid splits it to 2 columns */
@@ -179,8 +192,8 @@
     grid-template-areas:
       'logo . .'
       'details . grid'
-      'links . grid'
-      'links . grid';
+      'details . grid'
+      'details . grid';
   }
   .contentCol3 {
     /* 3/6 of space is for grid, and grid splits it to 3 columns */
@@ -188,8 +201,8 @@
     grid-template-areas:
       'logo . .'
       'details . grid'
-      'links . grid'
-      'links . grid';
+      'details . grid'
+      'details . grid';
   }
   .contentCol4 {
     /* 4/6 of space is for grid, and grid splits it to 4 columns */
@@ -197,8 +210,8 @@
     grid-template-areas:
       'logo .'
       'details grid'
-      'links grid'
-      'links grid';
+      'details grid'
+      'details grid';
   }
 
   .gridCol1 {

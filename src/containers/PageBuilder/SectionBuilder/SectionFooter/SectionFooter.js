@@ -74,10 +74,13 @@ const SectionFooter = props => {
           <div>
             <LinkedLogo className={css.logoLink} />
           </div>
-          <div className={css.detailsInfo}>
+          <div className={css.sloganMobile}>
             <Field data={slogan} className={css.slogan} />
           </div>
-          <div className={css.socialInfo}>
+          <div className={css.detailsInfo}>
+            <div className={css.sloganDesktop}>
+              <Field data={slogan} className={css.slogan} />
+            </div>
             <div className={css.icons}>
               {showSocialMediaLinks ? (
                 <BlockBuilder blocks={linksWithBlockId} options={options} />
