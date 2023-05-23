@@ -1,8 +1,8 @@
-import logoImageDesktop from '../assets/thisspacelogo_bluetext2.png';
-import logoImageMobile from '../assets/thisspace-logo-mobile.png';
-import brandImage from '../assets/thisspace-brandImage-1500.jpg';
-import facebookImage from '../assets/thisspace-facebook-sharing-1200x630.jpg';
-import twitterImage from '../assets/thisspace-twitter-sharing-600x314.jpg';
+import logoImageDesktop from '../assets/thisspacelogo_bluetext2';
+import logoImageMobile from '../assets/biketribe-logo-mobile.png';
+import brandImage from '../assets/biketribe-brandImage-1500.jpg';
+import facebookImage from '../assets/biketribe-facebook-sharing-1200x630.jpg';
+import twitterImage from '../assets/biketribe-twitter-sharing-600x314.jpg';
 
 /////////////////////////////////////////////////////////
 // This file contains configs that affect branding     //
