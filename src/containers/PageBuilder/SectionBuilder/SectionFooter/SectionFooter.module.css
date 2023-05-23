@@ -1,5 +1,9 @@
 @import '../../../../styles/customMediaQueries.css';
 
+.root {
+  border-top: 1px solid var(--colorGrey100);
+}
+
 .footer {
   max-width: var(--contentMaxWidthPages);
   display: grid;
