@@ -93,8 +93,19 @@
 }
 
 .logoLink {
-  padding: 0px;
-  height: 64px;
+  display: inline-block;
+  padding: 0;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+.logoImage {
+  height: 24px;
+  width: auto;
+  max-width: 188px;
+  object-fit: contain;
+  object-position: center;
 }
 
 @media (min-width: 350px) {
