@@ -43,14 +43,11 @@
   grid-gap: 32px;
 }
 
-.gridCol1 {
-  grid-template-columns: 1fr;
-}
-
+.gridCol1,
 .gridCol2,
 .gridCol3,
 .gridCol4 {
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
 }
 
 .detailsInfo {
@@ -89,6 +86,21 @@
 .logoLink {
   padding: 0px;
   height: 64px;
+}
+
+@media (min-width: 350px) {
+  .gridCol2,
+  .gridCol3,
+  .gridCol4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 600px) {
+  .gridCol3,
+  .gridCol4 {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 @media (--viewportMedium) {
