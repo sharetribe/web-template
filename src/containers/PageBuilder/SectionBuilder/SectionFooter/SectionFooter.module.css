@@ -64,13 +64,13 @@
 .sloganMobile {
   grid-area: details;
 
-  @media (--viewportMedium) {
+  @media (--viewportLarge) {
     display: none;
   }
 }
 .sloganDesktop {
   display: none;
-  @media (--viewportMedium) {
+  @media (--viewportLarge) {
     display: block;
   }
 }
@@ -128,70 +128,16 @@
 }
 
 @media (--viewportMedium) {
-  .detailsInfo {
-    grid-area: details;
-  }
-
-  .content {
-    grid-template-columns: 1fr 2fr;
-    grid-template-areas:
-      'logo .'
-      'details grid'
-      'details grid'
-      'details grid';
-  }
-
-  .contentCol1 {
-    /* 1/6 of space is for grid, and grid uses 1 column internally */
-    grid-template-columns: 2fr 3fr 1fr;
-    grid-template-areas:
-      'logo . .'
-      'details . grid'
-      'details . grid'
-      'details . grid';
-  }
-
-  .contentCol2 {
-    /* 3/6 of space is for grid, and grid splits it to 2 columns */
-    grid-template-columns: 2fr 1fr 3fr;
-    grid-template-areas:
-      'logo . .'
-      'details . grid'
-      'details . grid'
-      'details . grid';
-  }
-
-  .contentCol3,
-  .contentCol4 {
-    /* 4/6 of space is for grid, and grid splits it to 3 columns */
-    grid-template-columns: 2fr 4fr;
-    grid-template-areas:
-      'logo .'
-      'details grid'
-      'details grid'
-      'details grid';
-  }
-
-  .gridCol1 {
-    grid-template-columns: 1fr;
-  }
-
-  .gridCol2 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .gridCol3 {
-    /** Three columns **/
-    grid-template-columns: repeat(3, 1fr);
-  }
-
   .gridCol4 {
-    /** Three columns **/
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
 @media (--viewportLarge) {
+  .detailsInfo {
+    grid-area: details;
+  }
+
   .contentCol1 {
     /* 1/6 of space is for grid, and grid uses 1 column internally */
     grid-template-columns: 2fr 3fr 1fr;
@@ -212,21 +158,21 @@
   }
   .contentCol3 {
     /* 3/6 of space is for grid, and grid splits it to 3 columns */
-    grid-template-columns: 2fr 1fr 3fr;
+    grid-template-columns: 2fr 1fr 1fr 2fr;
     grid-template-areas:
-      'logo . .'
-      'details . grid'
-      'details . grid'
-      'details . grid';
+      'logo . . .'
+      'details . grid grid'
+      'details . grid grid'
+      'details . grid grid';
   }
   .contentCol4 {
     /* 4/6 of space is for grid, and grid splits it to 4 columns */
-    grid-template-columns: 2fr 4fr;
+    grid-template-columns: 2fr 2fr 2fr;
     grid-template-areas:
-      'logo .'
-      'details grid'
-      'details grid'
-      'details grid';
+      'logo . .'
+      'details grid grid'
+      'details grid grid'
+      'details grid grid';
   }
 
   .gridCol1 {
