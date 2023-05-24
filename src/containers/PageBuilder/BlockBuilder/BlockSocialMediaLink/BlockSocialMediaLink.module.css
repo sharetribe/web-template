@@ -1,8 +1,18 @@
+@import '../../../../styles/customMediaQueries.css';
+
 .root {
   display: inline-block;
-  padding: 12px 6px;
-  &:first-child {
+
+  &:first-child a {
     padding-left: 0px;
+  }
+
+  & a {
+    padding: 12px 6px;
+
+    @media (--viewportLarge) {
+      padding: 12px 12px;
+    }
   }
 
   & a:hover {
