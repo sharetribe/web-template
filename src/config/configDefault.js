@@ -79,6 +79,9 @@ const defaultConfig = {
     search: '/listings/listing-search.json',
     transactionSize: '/transactions/minimum-transaction-size.json',
     // NOTE: we don't fetch commissions configuration here but on the server-side
+
+    // TODO: map provider configuration and analytics service should come from assets too.
+    // maps: 'integrations/map.json',
   },
 
   // Optional
