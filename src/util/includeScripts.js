@@ -16,7 +16,8 @@ const GOOGLE_MAPS_SCRIPT_ID = 'GoogleMapsApi';
  *         should be whitelisted in the policy. Check: server/csp.js
  */
 export const IncludeScripts = props => {
-  const { marketplaceRootURL: rootURL, maps, googleAnalyticsId } = props?.config || {};
+  const { marketplaceRootURL: rootURL, maps, analytics } = props?.config || {};
+  const googleAnalyticsId = analytics.googleAnalyticsId;
 
   const { mapProvider, googleMapsAPIKey, mapboxAccessToken } = maps || {};
   const isGoogleMapsInUse = mapProvider === 'googleMaps';

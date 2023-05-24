@@ -27,6 +27,17 @@ const validLabel = label => {
   return [isValid, labelMaybe];
 };
 
+/////////////////////
+// Merge analytics //
+/////////////////////
+
+const mergeAnalyticsConfig = (hostedAnalyticsConfig, defaultAnalyticsConfig) => {
+  const { enabled, measurementId } = hostedAnalyticsConfig?.googleAnalytics || {};
+  const googleAnalyticsId =
+    enabled && measurementId ? measurementId : defaultAnalyticsConfig.googleAnalyticsId;
+  return { googleAnalyticsId };
+};
+
 ////////////////////
 // Merge branding //
 ////////////////////
@@ -649,6 +660,9 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
     // Overwrite default configs if hosted config is available
     listingMinimumPriceSubUnits,
+
+    // Analytics might come from hosted assets at some point.
+    analytics: mergeAnalyticsConfig(configAsset.analytics, defaultConfigs.analytics),
 
     // Branding configuration comes entirely from hosted assets,
     // but defaults to values set in defaultConfigs.branding for
