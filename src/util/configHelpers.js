@@ -533,6 +533,19 @@ const getListingMinimumPrice = transactionSize => {
 };
 
 ////////////////////////////////////
+// Validate and merge map configs //
+////////////////////////////////////
+const mergeMapConfig = (hostedMapConfig, defaultMapConfig) => {
+  const { mapProvider, mapboxAccessToken, googleMapsAPIKey, ...restOfDefault } = defaultMapConfig;
+  return {
+    ...restOfDefault,
+    mapProvider: hostedMapConfig?.provider || mapProvider,
+    mapboxAccessToken: hostedMapConfig?.mapboxAccessToken || mapboxAccessToken,
+    googleMapsAPIKey: hostedMapConfig?.googleMapsApiKey || googleMapsAPIKey,
+  };
+};
+
+////////////////////////////////////
 // Validate and merge all configs //
 ////////////////////////////////////
 const restructureListingTypes = hostedListingTypes => {
@@ -651,6 +664,9 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
     // Hosted search configuration does not yet contain sortConfig
     search: validSearchConfig(searchConfig),
+
+    // Map provider info might come from hosted assets. Other map configs come from defaultConfigs.
+    maps: mergeMapConfig(configAsset.maps, defaultConfigs.maps),
 
     // Include hosted footer config, if it exists
     // Note: if footer asset is not set, Footer is not rendered.
