@@ -10,12 +10,13 @@
   grid-template-columns: repeat(1, 1fr);
   gap: 32px;
   margin: 0 auto;
-  padding: 32px;
+  padding: 24px 32px;
 }
 
 .footer ul {
   list-style-type: none;
   padding-inline-start: 0px;
+  margin-top: 1px;
 }
 
 .linkList {
@@ -60,9 +61,11 @@
 
 .slogan {
   font-size: 16px;
+  line-height: 24px;
 }
 .sloganMobile {
   grid-area: details;
+  padding-bottom: 24px;
 
   @media (--viewportLarge) {
     display: none;
@@ -70,6 +73,7 @@
 }
 .sloganDesktop {
   display: none;
+
   @media (--viewportLarge) {
     display: block;
   }
@@ -80,20 +84,25 @@
 }
 
 .copyright {
+  display: inline-block;
   font-size: 12px;
   line-height: 16px;
-  color: #6e6e73;
+  color: var(--colorGrey500);
+  margin-top: 24px;
 }
 
 .icons {
-  padding: 0px 0px 24px;
+  margin-top: 24px;
+
+  @media (--viewportLarge) {
+    margin-top: 0px;
+  }
 }
 
 .icon {
   font-size: 28px;
   margin: 15px 15px 0px 0px;
   padding: 10px 15px;
-  background-color: pink;
 }
 
 .logoLink {
