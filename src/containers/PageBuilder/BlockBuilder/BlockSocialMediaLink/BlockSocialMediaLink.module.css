@@ -1,12 +1,22 @@
+@import '../../../../styles/customMediaQueries.css';
+
 .root {
   display: inline-block;
-  padding: 12px 6px;
-  &:first-child {
+
+  &:first-child .link {
     padding-left: 0px;
   }
+}
 
-  & a:hover {
+.link {
+  padding: 12px 10px;
+
+  &:hover {
     color: var(--colorGrey700);
+  }
+
+  @media (--viewportMedium) {
+    padding: 12px 12px;
   }
 }
 

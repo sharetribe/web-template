@@ -14,7 +14,7 @@ const BlockSocialMediaLink = props => {
 
   return (
     <BlockContainer id={blockId} className={classes}>
-      <Field data={link} options={options} />
+      <Field data={link} options={options} className={css.link} />
     </BlockContainer>
   );
 };
