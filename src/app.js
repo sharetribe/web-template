@@ -114,6 +114,17 @@ const Configurations = props => {
   );
 };
 
+const MaintenanceModeError = props => {
+  const { locale, messages, helmetContext } = props;
+  return (
+    <IntlProvider locale={locale} messages={messages} textComponent="span">
+      <HelmetProvider context={helmetContext}>
+        <MaintenanceMode />
+      </HelmetProvider>
+    </IntlProvider>
+  );
+};
+
 export const ClientApp = props => {
   const { store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
@@ -121,9 +132,10 @@ export const ClientApp = props => {
   // Show MaintenanceMode if the mandatory configurations are not available
   if (!appConfig.hasMandatoryConfigurations) {
     return (
-      <HelmetProvider>
-        <MaintenanceMode />
-      </HelmetProvider>
+      <MaintenanceModeError
+        locale={appConfig.localization.locale}
+        messages={{ ...localeMessages, ...hostedTranslations }}
+      />
     );
   }
 
@@ -171,9 +183,11 @@ export const ServerApp = props => {
   // Show MaintenanceMode if the mandatory configurations are not available
   if (!appConfig.hasMandatoryConfigurations) {
     return (
-      <HelmetProvider context={helmetContext}>
-        <MaintenanceMode />
-      </HelmetProvider>
+      <MaintenanceModeError
+        locale={appConfig.localization.locale}
+        messages={{ ...localeMessages, ...hostedTranslations }}
+        helmetContext={helmetContext}
+      />
     );
   }
 
