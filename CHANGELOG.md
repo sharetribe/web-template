@@ -14,6 +14,19 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Take hosted configurations into use.
+
+  - Upgrade sharetribe-flex-sdk
+  - Use multi-asset fetch to retrieve config assets
+  - Add SectionFooter and FooterContainer
+  - Delete the old Footer component
+  - Take _commission.json_ asset into use (provider commission) on server routes:
+    - /api/transaction-line-items/
+    - /api/initiate-privileged/
+    - /api/transition-privileged/
+
+  [#161](https://github.com/sharetribe/web-template/pull/161)
+
 - [fix] ListingImageGallery: Mobile Safari was not showing thumbnail stripe correctly, if the
   content overflew. [#158](https://github.com/sharetribe/web-template/pull/158)
 - [change] Update README.md [#157](https://github.com/sharetribe/web-template/pull/157)
