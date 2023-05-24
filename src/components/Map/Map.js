@@ -23,7 +23,7 @@ export const Map = props => {
     useStaticMap,
   } = props;
   const mapsConfiguration = mapsConfig || config.maps;
-  const isGoogleMapsInUse = mapsConfiguration.mapProvider === 'GOOGLE_MAPS';
+  const isGoogleMapsInUse = mapsConfiguration.mapProvider === 'googleMaps';
   const StaticMap = isGoogleMapsInUse ? googleMapsMap.StaticMap : mapboxMap.StaticMap;
   const DynamicMap = isGoogleMapsInUse ? googleMapsMap.DynamicMap : mapboxMap.DynamicMap;
   const isMapsLibLoaded = isGoogleMapsInUse

@@ -27,6 +27,28 @@ const validLabel = label => {
   return [isValid, labelMaybe];
 };
 
+const printErrorIfMissing = props => {
+  Object.entries(props).map(entry => {
+    const [key, value = {}] = entry || [];
+    if (Object.keys(value)?.length === 0) {
+      console.error(`Mandatory hosted asset for ${key} is missing.
+      Check that "appCdnAssets" property has valid paths in src/config/configDefault.js file,
+      and that the marketplace has added content in Console`);
+    }
+  });
+};
+
+/////////////////////
+// Merge analytics //
+/////////////////////
+
+const mergeAnalyticsConfig = (hostedAnalyticsConfig, defaultAnalyticsConfig) => {
+  const { enabled, measurementId } = hostedAnalyticsConfig?.googleAnalytics || {};
+  const googleAnalyticsId =
+    enabled && measurementId ? measurementId : defaultAnalyticsConfig.googleAnalyticsId;
+  return { googleAnalyticsId };
+};
+
 ////////////////////
 // Merge branding //
 ////////////////////
@@ -423,15 +445,27 @@ const validListingTypes = listingTypes => {
   return validTypes;
 };
 
-const validListingConfig = config => {
-  const { enforceValidListingType, listingTypes = [], listingFields = [], ...rest } = config;
+const mergeListingConfig = (hostedConfig, defaultConfigs) => {
+  // Listing configuration is splitted to several assets in Console
+  const hostedListingTypes = hostedConfig.listingTypes?.listingTypes;
+  const hostedListingFields = hostedConfig.listingFields?.listingFields;
+  const hostedListingConfig =
+    hostedListingTypes && hostedListingFields
+      ? {
+          listingTypes: restructureListingTypes(hostedListingTypes),
+          listingFields: restructureListingFields(hostedListingFields),
+        }
+      : null;
+
+  const { listingTypes = [], listingFields = [], ...rest } =
+    hostedListingConfig || defaultConfigs.listing;
   const listingTypesInUse = getListingTypeStringsInUse(listingTypes);
 
   return {
+    ...rest,
     listingFields: validListingFields(listingFields, listingTypesInUse),
     listingTypes: validListingTypes(listingTypes),
-    enforceValidListingType,
-    rest,
+    enforceValidListingType: defaultConfigs.listing.enforceValidListingType,
   };
 };
 
@@ -503,9 +537,18 @@ const validSortConfig = config => {
   return { active, queryParamName, relevanceKey, relevanceFilter, conflictingFilters, options };
 };
 
-const validSearchConfig = config => {
+const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig) => {
+  // The sortConfig is not yet configurable through Console / hosted assets,
+  // but other default search configs come from hosted assets
+  const searchConfig = hostedSearchConfig?.mainSearch
+    ? {
+        sortConfig: defaultSearchConfig.sortConfig,
+        ...hostedSearchConfig,
+      }
+    : defaultSearchConfig;
+
   const { mainSearch, dateRangeFilter, priceFilter, keywordsFilter, sortConfig, ...rest } =
-    config || {};
+    searchConfig || {};
   const searchType = ['location', 'keywords'].includes(mainSearch?.searchType)
     ? mainSearch?.searchType
     : 'keywords';
@@ -528,8 +571,21 @@ const validSearchConfig = config => {
 //////////////////////////////////
 
 const getListingMinimumPrice = transactionSize => {
-  const { listingMinimumPrice } = transactionSize;
+  const { listingMinimumPrice } = transactionSize || {};
   return listingMinimumPrice?.type === 'subunit' ? listingMinimumPrice.amount : 0;
+};
+
+////////////////////////////////////
+// Validate and merge map configs //
+////////////////////////////////////
+const mergeMapConfig = (hostedMapConfig, defaultMapConfig) => {
+  const { mapProvider, mapboxAccessToken, googleMapsAPIKey, ...restOfDefault } = defaultMapConfig;
+  return {
+    ...restOfDefault,
+    mapProvider: hostedMapConfig?.provider || mapProvider,
+    mapboxAccessToken: hostedMapConfig?.mapboxAccessToken || mapboxAccessToken,
+    googleMapsAPIKey: hostedMapConfig?.googleMapsApiKey || googleMapsAPIKey,
+  };
 };
 
 ////////////////////////////////////
@@ -595,36 +651,16 @@ const restructureListingFields = hostedListingFields => {
 // Check if all the mandatory info have been retrieved from hosted assets
 const hasMandatoryConfigs = hostedConfig => {
   const { branding, listingTypes, listingFields, transactionSize } = hostedConfig;
+  printErrorIfMissing({ branding, listingTypes, listingFields, transactionSize });
   return (
-    branding.logo &&
-    listingTypes.listingTypes &&
-    listingFields.listingFields &&
-    transactionSize.listingMinimumPrice
+    branding?.logo &&
+    listingTypes?.listingTypes &&
+    listingFields?.listingFields &&
+    transactionSize?.listingMinimumPrice
   );
 };
 
 export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
-  // Listing configuration is splitted to several assets in Console
-  const hostedListingTypes = configAsset.listingTypes.listingTypes;
-  const hostedListingFields = configAsset.listingFields.listingFields;
-  const hostedListingConfig =
-    hostedListingTypes && hostedListingFields
-      ? {
-          listingTypes: restructureListingTypes(hostedListingTypes),
-          listingFields: restructureListingFields(hostedListingFields),
-          enforceValidListingType: defaultConfigs.listing.enforceValidListingType,
-        }
-      : null;
-
-  // The sortConfig is not yet configurable through Console / hosted assets,
-  // but other default search configs come from hosted assets
-  const searchConfig = configAsset.search?.mainSearch
-    ? {
-        sortConfig: defaultConfigs.search.sortConfig,
-        ...configAsset.search,
-      }
-    : defaultConfigs.search;
-
   // defaultConfigs.listingMinimumPriceSubUnits is the backup for listing's minimum price
   const listingMinimumPriceSubUnits =
     getListingMinimumPrice(configAsset.transactionSize) ||
@@ -637,6 +673,9 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     // Overwrite default configs if hosted config is available
     listingMinimumPriceSubUnits,
 
+    // Analytics might come from hosted assets at some point.
+    analytics: mergeAnalyticsConfig(configAsset.analytics, defaultConfigs.analytics),
+
     // Branding configuration comes entirely from hosted assets,
     // but defaults to values set in defaultConfigs.branding for
     // marketplace color, logo, brandImage and Facebook and Twitter images
@@ -647,10 +686,13 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     layout: mergeLayouts(configAsset.layout, defaultConfigs.layout),
 
     // Listing configuration comes entirely from hosted assets
-    listing: validListingConfig(hostedListingConfig || defaultConfigs.listing),
+    listing: mergeListingConfig(configAsset, defaultConfigs),
 
     // Hosted search configuration does not yet contain sortConfig
-    search: validSearchConfig(searchConfig),
+    search: mergeSearchConfig(configAsset.search, defaultConfigs.search),
+
+    // Map provider info might come from hosted assets. Other map configs come from defaultConfigs.
+    maps: mergeMapConfig(configAsset.maps, defaultConfigs.maps),
 
     // Include hosted footer config, if it exists
     // Note: if footer asset is not set, Footer is not rendered.
