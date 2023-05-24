@@ -3,20 +3,20 @@
 .root {
   display: inline-block;
 
-  &:first-child a {
+  &:first-child .link {
     padding-left: 0px;
   }
+}
 
-  & a {
-    padding: 12px 6px;
+.link {
+  padding: 12px 10px;
 
-    @media (--viewportLarge) {
-      padding: 12px 12px;
-    }
+  &:hover {
+    color: var(--colorGrey700);
   }
 
-  & a:hover {
-    color: var(--colorGrey700);
+  @media (--viewportMedium) {
+    padding: 12px 12px;
   }
 }
 
