@@ -514,9 +514,18 @@ const validSortConfig = config => {
   return { active, queryParamName, relevanceKey, relevanceFilter, conflictingFilters, options };
 };
 
-const validSearchConfig = config => {
+const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig) => {
+  // The sortConfig is not yet configurable through Console / hosted assets,
+  // but other default search configs come from hosted assets
+  const searchConfig = hostedSearchConfig?.mainSearch
+    ? {
+        sortConfig: defaultSearchConfig.sortConfig,
+        ...hostedSearchConfig,
+      }
+    : defaultSearchConfig;
+
   const { mainSearch, dateRangeFilter, priceFilter, keywordsFilter, sortConfig, ...rest } =
-    config || {};
+    searchConfig || {};
   const searchType = ['location', 'keywords'].includes(mainSearch?.searchType)
     ? mainSearch?.searchType
     : 'keywords';
@@ -640,15 +649,6 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
         }
       : null;
 
-  // The sortConfig is not yet configurable through Console / hosted assets,
-  // but other default search configs come from hosted assets
-  const searchConfig = configAsset.search?.mainSearch
-    ? {
-        sortConfig: defaultConfigs.search.sortConfig,
-        ...configAsset.search,
-      }
-    : defaultConfigs.search;
-
   // defaultConfigs.listingMinimumPriceSubUnits is the backup for listing's minimum price
   const listingMinimumPriceSubUnits =
     getListingMinimumPrice(configAsset.transactionSize) ||
@@ -677,7 +677,7 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     listing: validListingConfig(hostedListingConfig || defaultConfigs.listing),
 
     // Hosted search configuration does not yet contain sortConfig
-    search: validSearchConfig(searchConfig),
+    search: mergeSearchConfig(configAsset.search, defaultConfigs.search),
 
     // Map provider info might come from hosted assets. Other map configs come from defaultConfigs.
     maps: mergeMapConfig(configAsset.maps, defaultConfigs.maps),
