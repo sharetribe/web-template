@@ -27,6 +27,17 @@ const validLabel = label => {
   return [isValid, labelMaybe];
 };
 
+const printErrorIfMissing = props => {
+  Object.entries(props).map(entry => {
+    const [key, value = {}] = entry || [];
+    if (Object.keys(value)?.length === 0) {
+      console.error(`Mandatory hosted asset for ${key} is missing.
+      Check that "appCdnAssets" property has valid paths in src/config/configDefault.js file,
+      and that the marketplace has added content in Console`);
+    }
+  });
+};
+
 /////////////////////
 // Merge analytics //
 /////////////////////
@@ -434,15 +445,27 @@ const validListingTypes = listingTypes => {
   return validTypes;
 };
 
-const validListingConfig = config => {
-  const { enforceValidListingType, listingTypes = [], listingFields = [], ...rest } = config;
+const mergeListingConfig = (hostedConfig, defaultConfigs) => {
+  // Listing configuration is splitted to several assets in Console
+  const hostedListingTypes = hostedConfig.listingTypes?.listingTypes;
+  const hostedListingFields = hostedConfig.listingFields?.listingFields;
+  const hostedListingConfig =
+    hostedListingTypes && hostedListingFields
+      ? {
+          listingTypes: restructureListingTypes(hostedListingTypes),
+          listingFields: restructureListingFields(hostedListingFields),
+        }
+      : null;
+
+  const { listingTypes = [], listingFields = [], ...rest } =
+    hostedListingConfig || defaultConfigs.listing;
   const listingTypesInUse = getListingTypeStringsInUse(listingTypes);
 
   return {
+    ...rest,
     listingFields: validListingFields(listingFields, listingTypesInUse),
     listingTypes: validListingTypes(listingTypes),
-    enforceValidListingType,
-    rest,
+    enforceValidListingType: defaultConfigs.listing.enforceValidListingType,
   };
 };
 
@@ -548,7 +571,7 @@ const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig) => {
 //////////////////////////////////
 
 const getListingMinimumPrice = transactionSize => {
-  const { listingMinimumPrice } = transactionSize;
+  const { listingMinimumPrice } = transactionSize || {};
   return listingMinimumPrice?.type === 'subunit' ? listingMinimumPrice.amount : 0;
 };
 
@@ -628,27 +651,16 @@ const restructureListingFields = hostedListingFields => {
 // Check if all the mandatory info have been retrieved from hosted assets
 const hasMandatoryConfigs = hostedConfig => {
   const { branding, listingTypes, listingFields, transactionSize } = hostedConfig;
+  printErrorIfMissing({ branding, listingTypes, listingFields, transactionSize });
   return (
-    branding.logo &&
-    listingTypes.listingTypes &&
-    listingFields.listingFields &&
-    transactionSize.listingMinimumPrice
+    branding?.logo &&
+    listingTypes?.listingTypes &&
+    listingFields?.listingFields &&
+    transactionSize?.listingMinimumPrice
   );
 };
 
 export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
-  // Listing configuration is splitted to several assets in Console
-  const hostedListingTypes = configAsset.listingTypes.listingTypes;
-  const hostedListingFields = configAsset.listingFields.listingFields;
-  const hostedListingConfig =
-    hostedListingTypes && hostedListingFields
-      ? {
-          listingTypes: restructureListingTypes(hostedListingTypes),
-          listingFields: restructureListingFields(hostedListingFields),
-          enforceValidListingType: defaultConfigs.listing.enforceValidListingType,
-        }
-      : null;
-
   // defaultConfigs.listingMinimumPriceSubUnits is the backup for listing's minimum price
   const listingMinimumPriceSubUnits =
     getListingMinimumPrice(configAsset.transactionSize) ||
@@ -674,7 +686,7 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     layout: mergeLayouts(configAsset.layout, defaultConfigs.layout),
 
     // Listing configuration comes entirely from hosted assets
-    listing: validListingConfig(hostedListingConfig || defaultConfigs.listing),
+    listing: mergeListingConfig(configAsset, defaultConfigs),
 
     // Hosted search configuration does not yet contain sortConfig
     search: mergeSearchConfig(configAsset.search, defaultConfigs.search),
