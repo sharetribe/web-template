@@ -73,6 +73,7 @@
 }
 .sloganDesktop {
   display: none;
+
   @media (--viewportLarge) {
     display: block;
   }
@@ -83,16 +84,18 @@
 }
 
 .copyright {
+  display: inline-block;
   font-size: 12px;
   line-height: 16px;
   color: var(--colorGrey500);
+  margin-top: 24px;
 }
 
 .icons {
-  padding: 24px 0px 24px;
+  margin-top: 24px;
 
   @media (--viewportLarge) {
-    padding: 0px 0px 24px;
+    margin-top: 0px;
   }
 }
 
