@@ -79,6 +79,11 @@ const defaultConfig = {
     search: '/listings/listing-search.json',
     transactionSize: '/transactions/minimum-transaction-size.json',
     // NOTE: we don't fetch commissions configuration here but on the server-side
+
+    // TODO: Map provider configuration and analytics service should come from assets too.
+    //       It might take some time before these are actually available through hosted assets.
+    // maps: '/integrations/map.json',
+    // analytics: '/integrations/analytics.json',
   },
 
   // Optional
@@ -93,7 +98,9 @@ const defaultConfig = {
   // Optional
   // Note that Google Analytics might need advanced opt-out option / cookie consent
   // depending on jurisdiction (e.g. EU countries), since it relies on cookies.
-  googleAnalyticsId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
+  analytics: {
+    googleAnalyticsId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
+  },
 
   // Optional
   // Address information is used in SEO schema for Organization (http://schema.org/PostalAddress)

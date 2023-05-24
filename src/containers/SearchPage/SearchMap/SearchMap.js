@@ -19,7 +19,7 @@ import css from './SearchMap.module.css';
 const REUSABLE_MAP_HIDDEN_HANDLE = 'reusableMapHidden';
 
 const getSearchMapVariant = mapProvider => {
-  const isGoogleMapsInUse = mapProvider === 'GOOGLE_MAPS';
+  const isGoogleMapsInUse = mapProvider === 'googleMaps';
   return isGoogleMapsInUse ? searchMapGoogleMaps : searchMapMapbox;
 };
 const getSearchMapVariantHandles = mapProvider => {
