@@ -32,7 +32,7 @@ import routeConfiguration from './routing/routeConfiguration';
 import Routes from './routing/Routes';
 
 // Sharetribe Web Template uses English translations as default translations.
-import defaultMessages from './translations/en.json';
+import defaultMessages from './translations/defaultMicrocopy.json';
 
 // If you want to change the language of default (fallback) translations,
 // change the imports to match the wanted locale:
@@ -53,8 +53,20 @@ import defaultMessages from './translations/en.json';
 // e.g. for French: import 'moment/locale/fr';
 
 // Step 3:
-// If you are using a non-english locale, point `messagesInLocale` to correct .json file.
-// Remove "const messagesInLocale" and add import for the correct locale:
+// The "./translations/defaultMicrocopy.json" has generic English translations
+// that should work as a default translation if some translation keys are missing
+// from the hosted translation.json (which can be edited in Console). The other files
+// (e.g. en.json) in that directory has Biketribe themed translations.
+//
+// If you are using a non-english locale, point `messagesInLocale` to correct <lang>.json file.
+// That way the priority order would be:
+//   1. hosted translation.json
+//   2. <lang>.json
+//   3. defaultMicrocopy.json
+// But you could just translate the defaultMicrocopy.json file and keep it updated. That way you
+// can avoid including <lang>.json into build files.
+//
+// I.e. remove "const messagesInLocale" and add import for the correct locale:
 // import messagesInLocale from './translations/fr.json';
 const messagesInLocale = {};
 
