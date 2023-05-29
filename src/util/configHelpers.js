@@ -445,6 +445,64 @@ const validListingTypes = listingTypes => {
   return validTypes;
 };
 
+const restructureListingTypes = hostedListingTypes => {
+  return hostedListingTypes.map(listingType => {
+    const { id, label, transactionProcess, unitType, ...rest } = listingType;
+    return transactionProcess
+      ? {
+          listingType: id,
+          label,
+          transactionType: {
+            process: transactionProcess.name,
+            alias: transactionProcess.alias,
+            unitType,
+          },
+          ...rest,
+        }
+      : null;
+  });
+};
+
+const restructureListingFields = hostedListingFields => {
+  return hostedListingFields.map(listingField => {
+    const {
+      key,
+      scope,
+      schemaType,
+      enumOptions,
+      label,
+      filterConfig = {},
+      showConfig = {},
+      saveConfig = {},
+      ...rest
+    } = listingField;
+    const defaultLabel = label || key;
+    const enumOptionsMaybe = ['enum', 'multi-enum'].includes(schemaType) ? { enumOptions } : {};
+
+    return key
+      ? {
+          key,
+          scope,
+          schemaType,
+          ...enumOptionsMaybe,
+          filterConfig: {
+            ...filterConfig,
+            label: filterConfig.label || defaultLabel,
+          },
+          showConfig: {
+            ...showConfig,
+            label: showConfig.label || defaultLabel,
+          },
+          saveConfig: {
+            ...saveConfig,
+            label: saveConfig.label || defaultLabel,
+          },
+          ...rest,
+        }
+      : null;
+  });
+};
+
 const mergeListingConfig = (hostedConfig, defaultConfigs) => {
   // Listing configuration is splitted to several assets in Console
   const hostedListingTypes = hostedConfig.listingTypes?.listingTypes;
@@ -591,62 +649,6 @@ const mergeMapConfig = (hostedMapConfig, defaultMapConfig) => {
 ////////////////////////////////////
 // Validate and merge all configs //
 ////////////////////////////////////
-const restructureListingTypes = hostedListingTypes => {
-  return hostedListingTypes.map(listingType => {
-    const { id, label, transactionProcess, unitType, ...rest } = listingType;
-    return transactionProcess
-      ? {
-          listingType: id,
-          label,
-          transactionType: {
-            process: transactionProcess.name,
-            alias: transactionProcess.alias,
-            unitType,
-          },
-          ...rest,
-        }
-      : null;
-  });
-};
-
-const restructureListingFields = hostedListingFields => {
-  return hostedListingFields.map(listingField => {
-    const {
-      key,
-      scope,
-      schemaType,
-      enumOptions,
-      label,
-      filterConfig = {},
-      showConfig = {},
-      saveConfig = {},
-      ...rest
-    } = listingField;
-    const defaultLabel = label || key;
-
-    return key
-      ? {
-          key,
-          scope,
-          schemaType,
-          enumOptions,
-          filterConfig: {
-            ...filterConfig,
-            label: filterConfig.label || defaultLabel,
-          },
-          showConfig: {
-            ...showConfig,
-            label: showConfig.label || defaultLabel,
-          },
-          saveConfig: {
-            ...saveConfig,
-            label: saveConfig.label || defaultLabel,
-          },
-          ...rest,
-        }
-      : null;
-  });
-};
 
 // Check if all the mandatory info have been retrieved from hosted assets
 const hasMandatoryConfigs = hostedConfig => {
