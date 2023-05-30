@@ -69,8 +69,7 @@ const render = (store, shouldHydrate) => {
       ]);
     })
     .then(([_, fetchedAppAssets]) => {
-      const { assetVersionMismatch, translations: translationsRaw, ...rest } =
-        fetchedAppAssets || {};
+      const { translations: translationsRaw, ...rest } = fetchedAppAssets || {};
       // We'll handle translations as a separate data.
       // It's given to React Intl instead of pushing to config Context
       const translations = translationsRaw?.data || {};
