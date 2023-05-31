@@ -162,7 +162,7 @@
   "EditListingAvailabilityPlanForm.dayOfWeek.tue": "Tuesday",
   "EditListingAvailabilityPlanForm.dayOfWeek.wed": "Wednesday",
   "EditListingAvailabilityPlanForm.endTimePlaceholder": "End",
-  "EditListingAvailabilityPlanForm.hoursOfOperationTitle": "Hours of operation",
+  "EditListingAvailabilityPlanForm.hoursOfOperationTitle": "Weekly schedule",
   "EditListingAvailabilityPlanForm.plus1Day": "+1 day",
   "EditListingAvailabilityPlanForm.saveSchedule": "Save schedule",
   "EditListingAvailabilityPlanForm.startTimePlaceholder": "Start",
