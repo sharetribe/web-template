@@ -478,6 +478,7 @@ const restructureListingFields = hostedListingFields => {
     } = listingField;
     const defaultLabel = label || key;
     const enumOptionsMaybe = ['enum', 'multi-enum'].includes(schemaType) ? { enumOptions } : {};
+    const { required: isRequired, ...restSaveConfig } = saveConfig;
 
     return key
       ? {
@@ -494,7 +495,8 @@ const restructureListingFields = hostedListingFields => {
             label: showConfig.label || defaultLabel,
           },
           saveConfig: {
-            ...saveConfig,
+            ...restSaveConfig,
+            isRequired,
             label: saveConfig.label || defaultLabel,
           },
           ...rest,
