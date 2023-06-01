@@ -9,6 +9,7 @@ import 'react-dates/initialize';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, StaticRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import loadable from '@loadable/component';
 import difference from 'lodash/difference';
 import mapValues from 'lodash/mapValues';
 import moment from 'moment';
@@ -50,7 +51,12 @@ import defaultMessages from './translations/defaultMicrocopy.json';
 // Step 2:
 // If you are using a non-english locale with moment library,
 // you should also import time specific formatting rules for that locale
-// e.g. for French: import 'moment/locale/fr';
+// There are 2 ways to do it:
+// - you can add your preferred locale to MomentLocaleLoader or
+// - stop using MomentLocaleLoader component and directly import the locale here.
+// E.g. for French:
+// import 'moment/locale/fr';
+// const hardCodedLocale = process.env.NODE_ENV === 'test' ? 'en' : 'fr';
 
 // Step 3:
 // The "./translations/defaultMicrocopy.json" has generic English translations
@@ -101,27 +107,56 @@ const localeMessages = isTestEnv
   ? mapValues(defaultMessages, (val, key) => key)
   : addMissingTranslations(defaultMessages, messagesInLocale);
 
-const setupLocale = appConfig => {
-  let locale = appConfig.localization.locale;
-  if (isTestEnv) {
-    // Use english as a default locale in tests
-    // This affects app.test.js and app.node.test.js tests
-    locale = 'en';
-    return;
-  }
+// For customized apps, this dynamic loading of locale files is not necessary.
+// It helps locale change from configDefault.js file or hosted configs, but customizers should probably
+// just remove this and directly import the necessary locale on step 2.
+const MomentLocaleLoader = props => {
+  const { children, locale } = props;
+  const isAlreadyImportedLocale =
+    typeof hardCodedLocale !== 'undefined' && locale === hardCodedLocale;
 
-  // Set the Moment locale globally
-  // See: http://momentjs.com/docs/#/i18n/changing-locale/
-  moment.locale(locale);
+  // Moment's built-in locale does not need loader
+  const NoLoader = props => <>{props.children()}</>;
+
+  // The default locale is en (en-US). Here we dynamically load one of the other common locales.
+  // However, the default is to include all supported locales package from moment library.
+  const MomentLocale =
+    ['en', 'en-US'].includes(locale) || isAlreadyImportedLocale
+      ? NoLoader
+      : ['fr', 'fr-FR'].includes(locale)
+      ? loadable.lib(() => import(/* webpackChunkName: "fr" */ 'moment/locale/fr'))
+      : ['de', 'de-DE'].includes(locale)
+      ? loadable.lib(() => import(/* webpackChunkName: "de" */ 'moment/locale/de'))
+      : ['es', 'es-ES'].includes(locale)
+      ? loadable.lib(() => import(/* webpackChunkName: "es" */ 'moment/locale/es'))
+      : ['fi', 'fi-FI'].includes(locale)
+      ? loadable.lib(() => import(/* webpackChunkName: "fi" */ 'moment/locale/fi'))
+      : ['nl', 'nl-NL'].includes(locale)
+      ? loadable.lib(() => import(/* webpackChunkName: "nl" */ 'moment/locale/nl'))
+      : loadable.lib(() => import(/* webpackChunkName: "locales" */ 'moment/min/locales.min'));
+
+  return (
+    <MomentLocale>
+      {() => {
+        // Set the Moment locale globally
+        // See: http://momentjs.com/docs/#/i18n/changing-locale/
+        moment.locale(locale);
+        return children;
+      }}
+    </MomentLocale>
+  );
 };
 
 const Configurations = props => {
   const { appConfig, children } = props;
   const routeConfig = routeConfiguration(appConfig.layout);
-  setupLocale(appConfig);
+  const locale = isTestEnv ? 'en' : appConfig.localization.locale;
+
   return (
     <ConfigurationProvider value={appConfig}>
-      <RouteConfigurationProvider value={routeConfig}>{children}</RouteConfigurationProvider>
+      <MomentLocaleLoader locale={locale}>
+        <RouteConfigurationProvider value={routeConfig}>{children}</RouteConfigurationProvider>
+      </MomentLocaleLoader>
     </ConfigurationProvider>
   );
 };
