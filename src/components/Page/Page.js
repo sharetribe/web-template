@@ -211,8 +211,17 @@ class PageComponent extends Component {
     const faviconVariants =
       faviconAsset?.type === 'imageAsset' ? Object.values(faviconAsset.attributes.variants) : [];
 
+    // Marketplace color and branding image comes from configs
+    // If set, we need to create CSS Property and set it to DOM (documentElement is selected here)
+    // Note: this is also set to <html> element in app.js to provide marketplace colors for modals/portals.
+    const styles = {
+      ['--marketplaceColor']: config.branding.marketplaceColor,
+      ['--marketplaceColorDark']: config.branding.marketplaceColorDark,
+      ['--marketplaceColorLight']: config.branding.marketplaceColorLight,
+    };
+
     return (
-      <div className={classes}>
+      <div className={classes} style={styles} id="page">
         <Helmet
           htmlAttributes={{
             lang: intl.locale,

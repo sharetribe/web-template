@@ -242,7 +242,7 @@ const StyleguidePage = props => {
   const selectedGroupWithoutPrefix =
     prefixIndex > 0 ? selectedGroup.slice(prefixIndex + 1).trim() : selectedGroup;
   return (
-    <section className={css.root}>
+    <section className={css.root} id="styleguide">
       <div className={css.navBar}>
         <H2 as="h1" className={css.withMargin}>
           <NamedLink name="Styleguide" className={css.link}>

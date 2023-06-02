@@ -153,6 +153,8 @@ export const ClientApp = props => {
 
   // Marketplace color and branding image comes from configs
   // If set, we need to create CSS Property and set it to DOM (documentElement is selected here)
+  // This provides marketplace color for everything under <html> tag (including modals/portals)
+  // Note: This is also set on Page component to provide server-side rendering.
   const elem = window.document.documentElement;
   if (appConfig.branding.marketplaceColor) {
     elem.style.setProperty('--marketplaceColor', appConfig.branding.marketplaceColor);
