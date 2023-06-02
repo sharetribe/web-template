@@ -7,9 +7,10 @@ import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { Footer, Page, UserNav, H3, LayoutSideNavigation } from '../../components';
+import { Page, UserNav, H3, LayoutSideNavigation } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import PasswordChangeForm from './PasswordChangeForm/PasswordChangeForm';
 
@@ -65,7 +66,7 @@ export const PasswordChangePageComponent = props => {
         sideNav={null}
         useAccountSettingsNav
         currentPage="PasswordChangePage"
-        footer={<Footer />}
+        footer={<FooterContainer />}
       >
         <div className={css.content}>
           <H3 as="h1">

@@ -2,6 +2,33 @@ import { denormalizeAssetData } from '../util/data';
 import { storableError } from '../util/errors';
 import * as log from '../util/log';
 
+// Pick paths from entries of appCdnAssets config (in configDefault.js)
+const pickHostedConfigPaths = (assetEntries, excludeAssetNames) => {
+  // E.g. allPaths = ['any/foo.json', 'any/bar.json']
+  return assetEntries.reduce((pickedPaths, [name, path]) => {
+    if (excludeAssetNames.includes(name)) {
+      return pickedPaths;
+    }
+    return [...pickedPaths, path];
+  }, []);
+};
+const getFirstAssetData = response => response?.data?.data[0]?.attributes?.data;
+const getMultiAssetData = response => response?.data?.data;
+const getMultiAssetIncluded = response => response?.data?.included;
+const findJSONAsset = (assets, absolutePath) =>
+  assets.find(a => a.type === 'jsonAsset' && a.attributes.assetPath === absolutePath);
+const getAbsolutePath = path => (path.charAt(0) !== '/' ? `/${path}` : path);
+
+const getGoogleAnalyticsId = (configAssets, path) => {
+  if (!configAssets || !path) {
+    return null;
+  }
+  const configAssetsData = getMultiAssetData(configAssets);
+  const jsonAsset = findJSONAsset(configAssetsData, getAbsolutePath(path));
+  const { enabled, measurementId } = jsonAsset?.attributes?.data?.googleAnalytics || {};
+  return enabled ? measurementId : null;
+};
+
 // ================ Action types ================ //
 
 export const ASSETS_REQUEST = 'app/assets/REQUEST';
@@ -36,6 +63,7 @@ export default function assetReducer(state = initialState, action = {}) {
         ...state,
         appAssets: payload.assets,
         version: state.version || payload.version,
+        googleAnalyticsId: payload.googleAnalyticsId,
         inProgress: false,
       };
     case ASSETS_ERROR:
@@ -56,9 +84,9 @@ export default function assetReducer(state = initialState, action = {}) {
 // ================ Action creators ================ //
 
 export const appAssetsRequested = () => ({ type: ASSETS_REQUEST });
-export const appAssetsSuccess = (assets, version) => ({
+export const appAssetsSuccess = (assets, version, googleAnalyticsId) => ({
   type: ASSETS_SUCCESS,
-  payload: { assets, version },
+  payload: { assets, version, googleAnalyticsId },
 });
 export const appAssetsError = error => ({
   type: ASSETS_ERROR,
@@ -77,18 +105,54 @@ export const pageAssetsError = error => ({
 export const fetchAppAssets = (assets, version) => (dispatch, getState, sdk) => {
   dispatch(appAssetsRequested());
 
+  // App-wide assets include 2 content assets: translations for microcopy and footer
+  const translationsPath = assets.translations;
+  const footerPath = assets.footer;
+
+  // The rest of the assets are considered as configurations
+  const assetEntries = Object.entries(assets);
+  const nonConfigAssets = ['translations', 'footer'];
+  const configPaths = pickHostedConfigPaths(assetEntries, nonConfigAssets);
+
   // If version is given fetch assets by the version,
   // otherwise default to "latest" alias
-  const fetchAssets = version
-    ? assetPath => sdk.assetByVersion({ path: assetPath, version })
-    : assetPath => sdk.assetByAlias({ path: assetPath, alias: 'latest' });
-  const assetEntries = Object.entries(assets);
-  const sdkAssets = assetEntries.map(([key, assetPath]) => fetchAssets(assetPath));
+  const fetchAssets = paths =>
+    version
+      ? sdk.assetsByVersion({ paths, version })
+      : sdk.assetsByAlias({ paths, alias: 'latest' });
 
-  return Promise.all(sdkAssets)
-    .then(responses => {
-      const version = responses[0]?.data?.meta?.version;
-      dispatch(appAssetsSuccess(assets, version));
+  const separateAssetFetches = [
+    // This is a big file, better fetch it alone.
+    // Then browser cache also comes into play.
+    fetchAssets([translationsPath]),
+    // Not a config, and potentially a big file.
+    // It can benefit of browser cache when being a separate fetch.
+    fetchAssets([footerPath]),
+    // App configs
+    fetchAssets(configPaths),
+  ];
+
+  return Promise.all(separateAssetFetches)
+    .then(([translationAsset, footerAsset, configAssets]) => {
+      const getVersionHash = response => response?.data?.meta?.version;
+      const versionInTranslationsCall = getVersionHash(translationAsset);
+      const versionInFooterCall = getVersionHash(footerAsset);
+      const versionInConfigsCall = getVersionHash(configAssets);
+      const hasSameVersions =
+        versionInTranslationsCall === versionInFooterCall &&
+        versionInFooterCall === versionInConfigsCall;
+
+      // NOTE: making separate calls means that there might be version mismatch
+      // when using 'latest' alias.
+      // Since we only fetch translations and footer as a separate calls from configs,
+      // there should not be major problems with this approach.
+      // TODO: potentially show an error page or reload if version mismatch is detected.
+      if (!version && !hasSameVersions) {
+        console.warn("Asset versions between calls don't match.");
+      }
+
+      const googleAnalyticsId = getGoogleAnalyticsId(configAssets, assets.analytics);
+      dispatch(appAssetsSuccess(assets, versionInTranslationsCall, googleAnalyticsId));
 
       // Returned value looks like this for a single asset with name: "translations":
       // {
@@ -99,7 +163,24 @@ export const fetchAppAssets = (assets, version) => (dispatch, getState, sdk) => 
       // }
       return assetEntries.reduce((collectedAssets, assetEntry, i) => {
         const [name, path] = assetEntry;
-        return { ...collectedAssets, [name]: { path, data: responses[i].data.data } };
+
+        if (nonConfigAssets.includes(name)) {
+          // There are distinct calls for these assets
+          const assetResponse = name === 'translations' ? translationAsset : footerAsset;
+          return { ...collectedAssets, [name]: { path, data: getFirstAssetData(assetResponse) } };
+        }
+
+        // Other asset path are assumed to be config assets
+        const fetchedConfigAssets = getMultiAssetData(configAssets);
+        const jsonAsset = findJSONAsset(fetchedConfigAssets, getAbsolutePath(path));
+
+        // branding.json config asset can contain image references,
+        // which should be denormalized from "included" section of the response
+        const data = denormalizeAssetData({
+          data: jsonAsset?.attributes?.data,
+          included: getMultiAssetIncluded(configAssets),
+        });
+        return { ...collectedAssets, [name]: { path, data } };
       }, {});
     })
     .catch(e => {

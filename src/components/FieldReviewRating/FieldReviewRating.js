@@ -31,7 +31,7 @@ const FieldReviewRatingComponent = props => {
   const errorText = customErrorText || error;
   const fieldMeta = { touched, error: errorText };
 
-  const { value, ...restInputProps } = input;
+  const { value, checked, ...restInputProps } = input;
   const inputProps = { ...restInputProps, type: 'radio', name: 'rating', ...rest };
 
   const classes = classNames(rootClassName || css.root, className);
@@ -53,7 +53,7 @@ const FieldReviewRatingComponent = props => {
           id={inputId}
           className={css.rateInput}
           value={inputValue}
-          checked={value === inputValue}
+          checked={typeof checked !== 'undefined' ? checked : value === inputValue}
           {...inputProps}
         />
       );

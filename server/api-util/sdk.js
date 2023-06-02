@@ -9,6 +9,9 @@ const CLIENT_SECRET = process.env.SHARETRIBE_SDK_CLIENT_SECRET;
 const USING_SSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';
 const TRANSIT_VERBOSE = process.env.REACT_APP_SHARETRIBE_SDK_TRANSIT_VERBOSE === 'true';
 
+const BASE_URL = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL;
+const ASSET_CDN_BASE_URL = process.env.REACT_APP_SHARETRIBE_SDK_ASSET_CDN_BASE_URL;
+
 // Application type handlers for JS SDK.
 //
 // NOTE: keep in sync with `typeHandlers` in `src/util/api.js`
@@ -23,9 +26,9 @@ const typeHandlers = [
 ];
 exports.typeHandlers = typeHandlers;
 
-const baseUrlMaybe = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL
-  ? { baseUrl: process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL }
-  : null;
+const baseUrlMaybe = BASE_URL ? { baseUrl: BASE_URL } : {};
+const assetCdnBaseUrlMaybe = ASSET_CDN_BASE_URL ? { assetCdnBaseUrl: ASSET_CDN_BASE_URL } : {};
+
 const httpAgent = new http.Agent({ keepAlive: true });
 const httpsAgent = new https.Agent({ keepAlive: true });
 
@@ -91,6 +94,7 @@ exports.getSdk = (req, res) => {
     }),
     typeHandlers,
     ...baseUrlMaybe,
+    ...assetCdnBaseUrlMaybe,
   });
 };
 
@@ -130,4 +134,23 @@ exports.getTrustedSdk = req => {
       ...baseUrlMaybe,
     });
   });
+};
+
+// Fetch commission asset with 'latest' alias.
+exports.fetchCommission = sdk => {
+  return sdk
+    .assetsByAlias({ paths: ['transactions/commission.json'], alias: 'latest' })
+    .then(response => {
+      // Let's throw an error if we can't fetch commission for some reason
+      const commissionAsset = response?.data?.data?.[0];
+      if (!commissionAsset) {
+        const message = 'Insufficient pricing configuration set.';
+        const error = new Error(message);
+        error.status = 400;
+        error.statusText = message;
+        error.data = {};
+        throw error;
+      }
+      return response;
+    });
 };

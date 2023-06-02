@@ -39,12 +39,12 @@ import {
   Page,
   NamedLink,
   NamedRedirect,
-  Footer,
   OrderPanel,
   LayoutSingleColumn,
 } from '../../components';
 
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import FooterContainer from '../FooterContainer/FooterContainer';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
 import {
@@ -282,7 +282,7 @@ export const ListingPageComponent = props => {
         },
       }}
     >
-      <LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<Footer />}>
+      <LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<FooterContainer />}>
         <div className={css.contentWrapperForProductLayout}>
           <div className={css.mainColumnForProductLayout}>
             {currentListing.id ? (

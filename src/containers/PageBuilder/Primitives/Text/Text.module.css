@@ -1,0 +1,19 @@
+.span {
+  line-height: 1.66;
+  letter-spacing: 0;
+
+  /* Handle margin-top of next adjacent element against this span element */
+  & + p,
+  & + ul,
+  & + ol,
+  & + pre,
+  & + div,
+  & + h1,
+  & + h2,
+  & + h3,
+  & + h4,
+  & + h5,
+  & + h6 {
+    margin-top: 24px;
+  }
+}

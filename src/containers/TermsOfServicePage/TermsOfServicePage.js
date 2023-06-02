@@ -1,4 +1,6 @@
 import React from 'react';
+import loadable from '@loadable/component';
+
 import { bool, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -7,7 +9,16 @@ import { camelize } from '../../util/string';
 import { propTypes } from '../../util/types';
 
 import { H1 } from '../PageBuilder/Primitives/Heading';
-import PageBuilder, { SectionBuilder } from '../../containers/PageBuilder/PageBuilder';
+
+const PageBuilder = loadable(() =>
+  import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
+);
+const SectionBuilder = loadable(
+  () => import(/* webpackChunkName: "SectionBuilder" */ '../PageBuilder/PageBuilder'),
+  {
+    resolveComponent: components => components.SectionBuilder,
+  }
+);
 
 import FallbackPage, { fallbackSections } from './FallbackPage';
 import { ASSET_NAME } from './TermsOfServicePage.duck';

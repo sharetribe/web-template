@@ -108,7 +108,7 @@ ResponsiveBackgroundImageContainer.propTypes = {
   as: string,
   children: node,
   childrenWrapperClassName: string,
-  image: oneOfType([string, propTypes.image]),
+  image: oneOfType([string, propTypes.imageAsset]),
   alt: string,
   sizes: string.isRequired,
   useOverlay: bool,

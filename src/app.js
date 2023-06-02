@@ -25,12 +25,14 @@ import { mergeConfig } from './util/configHelpers';
 import { IntlProvider } from './util/reactIntl';
 import { IncludeScripts } from './util/includeScripts';
 
+import { MaintenanceMode } from './components';
+
 // routing
 import routeConfiguration from './routing/routeConfiguration';
 import Routes from './routing/Routes';
 
 // Sharetribe Web Template uses English translations as default translations.
-import defaultMessages from './translations/en.json';
+import defaultMessages from './translations/defaultMicrocopy.json';
 
 // If you want to change the language of default (fallback) translations,
 // change the imports to match the wanted locale:
@@ -51,8 +53,20 @@ import defaultMessages from './translations/en.json';
 // e.g. for French: import 'moment/locale/fr';
 
 // Step 3:
-// If you are using a non-english locale, point `messagesInLocale` to correct .json file.
-// Remove "const messagesInLocale" and add import for the correct locale:
+// The "./translations/defaultMicrocopy.json" has generic English translations
+// that should work as a default translation if some translation keys are missing
+// from the hosted translation.json (which can be edited in Console). The other files
+// (e.g. en.json) in that directory has Biketribe themed translations.
+//
+// If you are using a non-english locale, point `messagesInLocale` to correct <lang>.json file.
+// That way the priority order would be:
+//   1. hosted translation.json
+//   2. <lang>.json
+//   3. defaultMicrocopy.json
+// But you could just translate the defaultMicrocopy.json file and keep it updated. That way you
+// can avoid including <lang>.json into build files.
+//
+// I.e. remove "const messagesInLocale" and add import for the correct locale:
 // import messagesInLocale from './translations/fr.json';
 const messagesInLocale = {};
 
@@ -112,9 +126,30 @@ const Configurations = props => {
   );
 };
 
+const MaintenanceModeError = props => {
+  const { locale, messages, helmetContext } = props;
+  return (
+    <IntlProvider locale={locale} messages={messages} textComponent="span">
+      <HelmetProvider context={helmetContext}>
+        <MaintenanceMode />
+      </HelmetProvider>
+    </IntlProvider>
+  );
+};
+
 export const ClientApp = props => {
   const { store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
+
+  // Show MaintenanceMode if the mandatory configurations are not available
+  if (!appConfig.hasMandatoryConfigurations) {
+    return (
+      <MaintenanceModeError
+        locale={appConfig.localization.locale}
+        messages={{ ...localeMessages, ...hostedTranslations }}
+      />
+    );
+  }
 
   // Marketplace color and branding image comes from configs
   // If set, we need to create CSS Property and set it to DOM (documentElement is selected here)
@@ -156,6 +191,18 @@ export const ServerApp = props => {
   const { url, context, helmetContext, store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
   HelmetProvider.canUseDOM = false;
+
+  // Show MaintenanceMode if the mandatory configurations are not available
+  if (!appConfig.hasMandatoryConfigurations) {
+    return (
+      <MaintenanceModeError
+        locale={appConfig.localization.locale}
+        messages={{ ...localeMessages, ...hostedTranslations }}
+        helmetContext={helmetContext}
+      />
+    );
+  }
+
   return (
     <Configurations appConfig={appConfig}>
       <IntlProvider
@@ -193,6 +240,7 @@ export const renderApp = (
   serverContext,
   preloadedState,
   hostedTranslations,
+  hostedConfig,
   collectChunks
 ) => {
   // Don't pass an SDK instance since we're only rendering the
@@ -212,6 +260,7 @@ export const renderApp = (
       helmetContext={helmetContext}
       store={store}
       hostedTranslations={hostedTranslations}
+      hostedConfig={hostedConfig}
     />
   );
   const body = ReactDOMServer.renderToString(WithChunks);

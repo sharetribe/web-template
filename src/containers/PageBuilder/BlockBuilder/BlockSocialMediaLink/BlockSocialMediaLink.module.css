@@ -1,0 +1,36 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  display: inline-block;
+
+  &:first-child .link {
+    padding-left: 0px;
+  }
+}
+
+.link {
+  padding: 12px 10px;
+
+  &:hover {
+    color: var(--colorGrey700);
+  }
+
+  @media (--viewportMedium) {
+    padding: 12px 12px;
+  }
+}
+
+.media {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 0;
+}
+
+.text {
+  width: 100%;
+  margin-top: 20px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}

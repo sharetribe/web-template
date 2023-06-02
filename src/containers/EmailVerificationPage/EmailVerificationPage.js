@@ -14,12 +14,12 @@ import { isScrollingDisabled } from '../../ducks/ui.duck';
 import {
   Page,
   ResponsiveBackgroundImageContainer,
-  Footer,
   NamedRedirect,
   LayoutSingleColumn,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import EmailVerificationForm from './EmailVerificationForm/EmailVerificationForm';
 
@@ -83,13 +83,13 @@ export const EmailVerificationPageComponent = props => {
       <LayoutSingleColumn
         mainColumnClassName={css.layoutWrapperMain}
         topbar={<TopbarContainer />}
-        footer={<Footer />}
+        footer={<FooterContainer />}
       >
         <ResponsiveBackgroundImageContainer
           className={css.root}
           childrenWrapperClassName={css.contentContainer}
           as="section"
-          image={config.branding.brandImageURL}
+          image={config.branding.brandImage}
           sizes="100%"
           useOverlay
         >

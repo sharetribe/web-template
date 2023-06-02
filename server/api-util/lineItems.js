@@ -3,11 +3,10 @@ const {
   calculateQuantityFromHours,
   calculateTotalFromLineItems,
   calculateShippingFee,
+  hasCommissionPercentage,
 } = require('./lineItemHelpers');
 const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
-
-const PROVIDER_COMMISSION_PERCENTAGE = -10;
 
 /**
  * Get quantity and add extra line-items that are related to delivery method
@@ -88,7 +87,12 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
   return { quantity, extraLineItems: [] };
 };
 
-/** Returns collection of lineItems (max 50)
+/**
+ * Returns collection of lineItems (max 50)
+ *
+ * All the line-items dedicated to _customer_ define the "payin total".
+ * Similarly, the sum of all the line-items included for _provider_ create "payout total".
+ * Platform gets the commission, which is the difference between payin and payout totals.
  *
  * Each line items has following fields:
  * - `code`: string, mandatory, indentifies line item type (e.g. \"line-item/cleaning-fee\"), maximum length 64 characters.
@@ -106,9 +110,10 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
  *
  * @param {Object} listing
  * @param {Object} orderData
+ * @param {Object} providerCommission
  * @returns {Array} lineItems
  */
-exports.transactionLineItems = (listing, orderData) => {
+exports.transactionLineItems = (listing, orderData, providerCommission) => {
   const publicData = listing.attributes.publicData;
   const unitPrice = listing.attributes.price;
   const currency = unitPrice.currency;
@@ -170,18 +175,28 @@ exports.transactionLineItems = (listing, orderData) => {
     includeFor: ['customer', 'provider'],
   };
 
+  // Provider commission reduces the amount of money that is paid out to provider.
+  // Therefore, the provider commission line-item should have negative effect to the payout total.
+  const getNegation = percentage => {
+    return -1 * percentage;
+  };
+
   // Note: extraLineItems for product selling (aka shipping fee)
   //       is not included to commission calculation.
-  const providerCommission = {
-    code: 'line-item/provider-commission',
-    unitPrice: calculateTotalFromLineItems([order]),
-    percentage: PROVIDER_COMMISSION_PERCENTAGE,
-    includeFor: ['provider'],
-  };
+  const providerCommissionMaybe = hasCommissionPercentage(providerCommission)
+    ? [
+        {
+          code: 'line-item/provider-commission',
+          unitPrice: calculateTotalFromLineItems([order]),
+          percentage: getNegation(providerCommission.percentage),
+          includeFor: ['provider'],
+        },
+      ]
+    : [];
 
   // Let's keep the base price (order) as first line item and provider's commission as last one.
   // Note: the order matters only if OrderBreakdown component doesn't recognize line-item.
-  const lineItems = [order, ...extraLineItems, providerCommission];
+  const lineItems = [order, ...extraLineItems, ...providerCommissionMaybe];
 
   return lineItems;
 };

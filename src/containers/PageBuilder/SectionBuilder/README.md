@@ -52,10 +52,23 @@ sections are
 - **SectionFeatures**
   - Shows block content in a row mode: text and media are shown side by side
   - Create alternating block flow: each row changes the order of text and media
+- **SectionFooter**
+  - Shows hosted footer asset content as columns, with content blocks on the right and logo and
+    other footer details on the left
+  - Mobile layout shows slogan and logo on top of content blocks, and social media links and
+    copyright below content blocks.
 
 Each of these components uses **SectionContainer** to wrap the content. It can be used to include
 some common styling to each section. For example, a responsive background image could be given to
 this container.
+
+### SectionFooter
+
+The footer is a special piece of the UI. It is shown on most pages - even on pages that don't use
+the headless Pages feature, such as ListingPage. Therefore, the content of the footer is fetched
+along with other app-wide configurations, and it gets saved to React Context. We have a special
+container (**_FooterContainer_**), which then uses SectionBuilder to render the SectionFooter
+component using the footer asset data.
 
 ## Add a new section component
 
