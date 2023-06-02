@@ -9,9 +9,10 @@ import { ensureCurrentUser } from '../../util/data';
 import { sendVerificationEmail } from '../../ducks/user.duck';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { Footer, H3, Page, UserNav, LayoutSideNavigation } from '../../components';
+import { H3, Page, UserNav, LayoutSideNavigation } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import ContactDetailsForm from './ContactDetailsForm/ContactDetailsForm';
 
@@ -83,7 +84,7 @@ export const ContactDetailsPageComponent = props => {
         sideNav={null}
         useAccountSettingsNav
         currentPage="ContactDetailsPage"
-        footer={<Footer />}
+        footer={<FooterContainer />}
       >
         <div className={css.content}>
           <H3 as="h1">

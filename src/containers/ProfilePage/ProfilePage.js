@@ -16,7 +16,6 @@ import {
   H2,
   H4,
   Page,
-  Footer,
   AvatarLarge,
   NamedLink,
   ListingCard,
@@ -26,6 +25,7 @@ import {
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import css from './ProfilePage.module.css';
@@ -229,7 +229,7 @@ const ProfilePageComponent = props => {
         sideNav={
           <AsideContent user={user} isCurrentUser={isCurrentUser} displayName={displayName} />
         }
-        footer={<Footer />}
+        footer={<FooterContainer />}
       >
         <MainContent bio={bio} displayName={displayName} userShowError={userShowError} {...rest} />
       </LayoutSideNavigation>

@@ -261,3 +261,18 @@ exports.constructValidLineItems = lineItems => {
   });
   return lineItemsWithTotals;
 };
+
+/**
+ * Check if commission object has percentage property defined.
+ * @param {Object} commission object potentially containing percentage property.
+ * @returns boolean
+ */
+exports.hasCommissionPercentage = commission => {
+  const percentage = commission.percentage;
+  const isDefined = percentage != null;
+  const isNumber = typeof percentage === 'number' && !isNaN(percentage);
+  if (isDefined && !isNumber) {
+    throw new Error(`${percentage} is not a number.`);
+  }
+  return isDefined;
+};

@@ -1,5 +1,5 @@
 const { transactionLineItems } = require('../api-util/lineItems');
-const { getSdk, handleError, serialize } = require('../api-util/sdk');
+const { getSdk, handleError, serialize, fetchCommission } = require('../api-util/sdk');
 const { constructValidLineItems } = require('../api-util/lineItemHelpers');
 
 module.exports = (req, res) => {
@@ -7,14 +7,18 @@ module.exports = (req, res) => {
 
   const sdk = getSdk(req, res);
 
-  const listingPromise = isOwnListing
-    ? sdk.ownListings.show({ id: listingId })
-    : sdk.listings.show({ id: listingId });
+  const listingPromise = () =>
+    isOwnListing ? sdk.ownListings.show({ id: listingId }) : sdk.listings.show({ id: listingId });
 
-  listingPromise
-    .then(apiResponse => {
-      const listing = apiResponse.data.data;
-      const lineItems = transactionLineItems(listing, orderData);
+  Promise.all([listingPromise(), fetchCommission(sdk)])
+    .then(([showListingResponse, fetchAssetsResponse]) => {
+      const listing = showListingResponse.data.data;
+      const commissionAsset = fetchAssetsResponse.data.data[0];
+      const providerCommission =
+        commissionAsset?.type === 'jsonAsset'
+          ? commissionAsset.attributes.data.providerCommission
+          : null;
+      const lineItems = transactionLineItems(listing, orderData, providerCommission);
 
       // Because we are using returned lineItems directly in this template we need to use the helper function
       // to add some attributes like lineTotal and reversal that Marketplace API also adds to the response.

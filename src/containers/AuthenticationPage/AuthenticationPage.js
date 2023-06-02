@@ -31,12 +31,12 @@ import {
   LinkTabNavHorizontal,
   SocialLoginButton,
   ResponsiveBackgroundImageContainer,
-  Footer,
   Modal,
   LayoutSingleColumn,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import TermsAndConditions from './TermsAndConditions/TermsAndConditions';
 import ConfirmSignupForm from './ConfirmSignupForm/ConfirmSignupForm';
@@ -444,13 +444,13 @@ export const AuthenticationPageComponent = props => {
       <LayoutSingleColumn
         mainColumnClassName={css.layoutWrapperMain}
         topbar={<TopbarContainer className={topbarClasses} />}
-        footer={<Footer />}
+        footer={<FooterContainer />}
       >
         <ResponsiveBackgroundImageContainer
           className={css.root}
           childrenWrapperClassName={css.contentContainer}
           as="section"
-          image={config.branding.brandImageURL}
+          image={config.branding.brandImage}
           sizes="100%"
           useOverlay
         >

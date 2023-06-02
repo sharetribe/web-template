@@ -1,5 +1,11 @@
 const { transactionLineItems } = require('../api-util/lineItems');
-const { getSdk, getTrustedSdk, handleError, serialize } = require('../api-util/sdk');
+const {
+  getSdk,
+  getTrustedSdk,
+  handleError,
+  serialize,
+  fetchCommission,
+} = require('../api-util/sdk');
 
 module.exports = (req, res) => {
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
@@ -7,11 +13,21 @@ module.exports = (req, res) => {
   const sdk = getSdk(req, res);
   let lineItems = null;
 
-  sdk.listings
-    .show({ id: bodyParams?.params?.listingId })
-    .then(listingResponse => {
-      const listing = listingResponse.data.data;
-      lineItems = transactionLineItems(listing, { ...orderData, ...bodyParams.params });
+  const listingPromise = () => sdk.listings.show({ id: bodyParams?.params?.listingId });
+
+  Promise.all([listingPromise(), fetchCommission(sdk)])
+    .then(([showListingResponse, fetchAssetsResponse]) => {
+      const listing = showListingResponse.data.data;
+      const commissionAsset = fetchAssetsResponse.data.data[0];
+      const providerCommission =
+        commissionAsset?.type === 'jsonAsset'
+          ? commissionAsset.attributes.data.providerCommission
+          : null;
+      lineItems = transactionLineItems(
+        listing,
+        { ...orderData, ...bodyParams.params },
+        providerCommission
+      );
 
       return getTrustedSdk(req);
     })

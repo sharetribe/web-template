@@ -20,7 +20,8 @@ const defaultConfig = {
 
   // Listing minimum price in currency sub units, e.g. cents.
   // 0 means no restriction to the price
-  // Note: Stripe does have minimum fee that depends on country, currency, etc.
+  // Note 1: hosted configs overwrite this
+  // Note 2: Stripe does have minimum fee that depends on country, currency, etc.
   listingMinimumPriceSubUnits: 500,
 
   // Marketplace name is needed for microcopy and in meta tags (bots and social media sharing reads those)
@@ -46,10 +47,6 @@ const defaultConfig = {
   // Modify layout configs in layoutConfig.js
   layout,
 
-  // TODO: Footer configuration will come from hosted assets at some point,
-  //       but, at the moment, it needs to be customized directly in
-  //       src/components/Footer/
-
   // Note: Facebook app id is used for Facebook login, but it is also used for tracking:
   // Facebook counts shares with app or page associated by this id
   // Currently it is unset, but you can read more about fb:app_id from
@@ -73,7 +70,20 @@ const defaultConfig = {
   // Currently, only translation.json is available.
   // Note: the path must match the path defined in Asset Delivery API
   appCdnAssets: {
-    translations: 'content/translations.json',
+    translations: '/content/translations.json',
+    footer: '/content/footer.json',
+    branding: '/design/branding.json',
+    layout: '/design/layout.json',
+    listingTypes: '/listings/listing-types.json',
+    listingFields: '/listings/listing-fields.json',
+    search: '/listings/listing-search.json',
+    transactionSize: '/transactions/minimum-transaction-size.json',
+    // NOTE: we don't fetch commission configuration here but on the server-side
+
+    // TODO: Map provider configuration and analytics service should come from the assets too.
+    //       It might take some time before these are actually available through hosted assets.
+    // maps: '/integrations/map.json',
+    // analytics: '/integrations/analytics.json',
   },
 
   // Optional
@@ -88,7 +98,9 @@ const defaultConfig = {
   // Optional
   // Note that Google Analytics might need advanced opt-out option / cookie consent
   // depending on jurisdiction (e.g. EU countries), since it relies on cookies.
-  googleAnalyticsId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
+  analytics: {
+    googleAnalyticsId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
+  },
 
   // Optional
   // Address information is used in SEO schema for Organization (http://schema.org/PostalAddress)

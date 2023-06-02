@@ -1,4 +1,5 @@
 import { sanitizeUrl } from '../../../util/sanitize';
+import { supportedPlatforms } from '../Primitives/Link/SocialMediaLink';
 
 /////////////////////////////
 // Pickers for valid props //
@@ -39,6 +40,14 @@ export const exposeLinkProps = data => {
   // If no content is given, use href.
   const linkText = hasContent(data) ? content : cleanUrl;
   return cleanUrl ? { children: linkText, href: cleanUrl } : {};
+};
+
+export const exposeSocialMediaProps = data => {
+  const { platform, url } = data;
+  const hasCorrectProps = typeof url === 'string' && url.length > 0;
+  const cleanUrl = hasCorrectProps ? sanitizeUrl(url) : null;
+  const validPlatform = supportedPlatforms.includes(platform) ? platform : null;
+  return cleanUrl ? { children: validPlatform, href: cleanUrl } : {};
 };
 
 const getValidSanitizedImage = image => {

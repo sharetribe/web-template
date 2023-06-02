@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { getDefaultConfiguration } from './util/testHelpers';
+import { getHostedConfiguration } from './util/testHelpers';
 import { ClientApp } from './app';
 import configureStore from './store';
 
@@ -32,7 +32,7 @@ describe('Application - JSDOM environment', () => {
     const fakeSdk = { assetByVersion: resolvePageAssetCall, assetByAlias: resolvePageAssetCall };
     const store = configureStore({}, fakeSdk);
     const div = document.createElement('div');
-    ReactDOM.render(<ClientApp store={store} hostedConfig={getDefaultConfiguration()} />, div);
+    ReactDOM.render(<ClientApp store={store} hostedConfig={getHostedConfiguration()} />, div);
     delete window.google;
   });
 });

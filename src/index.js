@@ -68,9 +68,18 @@ const render = (store, shouldHydrate) => {
         store.dispatch(fetchAppAssets(defaultConfig.appCdnAssets, cdnAssetsVersion)),
       ]);
     })
-    .then(([_, fetchedAssets]) => {
-      const translations = fetchedAssets?.translations?.data || {};
-      const hostedConfig = fetchedAssets?.config?.data || {};
+    .then(([_, fetchedAppAssets]) => {
+      const { translations: translationsRaw, ...rest } = fetchedAppAssets || {};
+      // We'll handle translations as a separate data.
+      // It's given to React Intl instead of pushing to config Context
+      const translations = translationsRaw?.data || {};
+
+      // Rest of the assets are considered as hosted configs
+      const configEntries = Object.entries(rest);
+      const hostedConfig = configEntries.reduce((collectedData, [name, content]) => {
+        return { ...collectedData, [name]: content.data || {} };
+      }, {});
+
       if (shouldHydrate) {
         ReactDOM.hydrate(
           <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,
@@ -88,7 +97,7 @@ const render = (store, shouldHydrate) => {
     });
 };
 
-const setupAnalyticsHandlers = () => {
+const setupAnalyticsHandlers = googleAnalyticsId => {
   let handlers = [];
 
   // Log analytics page views and events in dev mode
@@ -97,8 +106,8 @@ const setupAnalyticsHandlers = () => {
   }
 
   // Add Google Analytics 4 (GA4) handler if tracker ID is found
-  if (process.env.REACT_APP_GOOGLE_ANALYTICS_ID) {
-    if (process.env.REACT_APP_GOOGLE_ANALYTICS_ID.indexOf('G-') !== 0) {
+  if (googleAnalyticsId) {
+    if (googleAnalyticsId.indexOf('G-') !== 0) {
       console.warn(
         'Google Analytics 4 (GA4) should have measurement id that starts with "G-" prefix'
       );
@@ -131,7 +140,11 @@ if (typeof window !== 'undefined') {
     ...baseUrl,
     ...assetCdnBaseUrl,
   });
-  const analyticsHandlers = setupAnalyticsHandlers();
+
+  // Note: on localhost:3000, you need to use environment variable.
+  const googleAnalyticsIdFromSSR = initialState?.hostedAssets?.googleAnalyticsId;
+  const googleAnalyticsId = googleAnalyticsIdFromSSR || process.env.REACT_APP_GOOGLE_ANALYTICS_ID;
+  const analyticsHandlers = setupAnalyticsHandlers(googleAnalyticsId);
   const store = configureStore(initialState, sdk, analyticsHandlers);
 
   require('./util/polyfills');

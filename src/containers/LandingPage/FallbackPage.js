@@ -1,6 +1,11 @@
 import React from 'react';
-import PageBuilder from '../PageBuilder/PageBuilder';
+import loadable from '@loadable/component';
+
 import css from './FallbackPage.module.css';
+
+const PageBuilder = loadable(() =>
+  import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
+);
 
 // Create fallback content (array of sections) in page asset format:
 export const fallbackSections = error => ({
@@ -36,7 +41,7 @@ const SectionMaintenanceMode = props => {
     <section id={sectionId} className={css.root}>
       {is404 ? (
         <div className={css.content}>
-          <h2>Maintenance mode</h2>
+          <h2>Oops, something went wrong!</h2>
           <p>
             The marketplace is not fully operational at the moment.
             <br />

@@ -7,10 +7,10 @@ import defaultLocationSearches from './configDefaultLocationSearches';
 export const mapboxAccessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 export const googleMapsAPIKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
-// Choose map provider: 'MAPBOX', 'GOOGLE_MAPS'
+// Choose map provider: 'mapbox', 'googleMaps'
 // Note: you need to have REACT_APP_MAPBOX_ACCESS_TOKEN or REACT_APP_GOOGLE_MAPS_API_KEY
 //       set depending on which one you use in this config.
-export const mapProvider = 'MAPBOX';
+export const mapProvider = 'mapbox';
 
 // The location search input can be configured to show default
 // searches when the user focuses on the input and hasn't yet typed

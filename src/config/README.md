@@ -5,7 +5,8 @@ The 2 main files here are **configDefault.js** and **settings.js**.
 ## [configDefault.js](./configDefault.js)
 
 These configurations are saved to React Context and therefore they could be overwritten through
-configs received from Asset Delivery API.
+configs received from Asset Delivery API. The merging of hosted configs and these defaults happen in
+_src/util/configHelpers.js_
 
 Some of the content is splitted to separate files:
 
@@ -27,6 +28,34 @@ Some of the content is splitted to separate files:
   - mapProvider config, location search config (also in defaultLocationSearchesConfig.js)
 - **[configStripe.js](./configStripe.js)**
   - Stripe publishable key, day count available for booking, default merchant categry code
+
+### Hosted app configs
+
+This template assumes that certain configurations are set through Console. Those configs are then
+retrieved through Asset Delivery API. The _configDefault.js_ has a property called **appCdnAssets**,
+which defines those app-wide configs. It's taken into use in 2 places: _src/index.js_ (CSR) and
+_server/dataLoader.js_ (SSR).
+
+The data loading sequence works like this:
+
+1. Fetch app-wide configs
+   1. Extract translations and other configs
+   2. Pass those as hostedTranslations and hostedConfig to the App
+   3. src/app.js then saves those to the correct React Contexts
+2. Page-specific data loading calls
+3. Render the App
+
+Server-side Rendering (SSR) makes the Asset Delivery API call with the "latest" alias. The version
+of the retrieved assets is saved to the Redux store. Then client-side rendering (CSR) uses that
+specific version instead of the alias. (The `yarn run dev` script uses the "latest" alias as it
+doesn't run SSR.)
+
+Provider commission is separately fetched when line-items are created for custom pricing. There are
+3 server routes that use those:
+
+- _/api/transaction-line-items_
+- _/api/initiate-privileged_
+- _/api/transition-privileged_
 
 ### Default listing field: **_listingType_**
 
@@ -67,7 +96,7 @@ booking process.
 ### [src/util/configHelpers.js](../util/configHelpers.js)
 
 The src/util/configHelpers.js contains functions that validate some of the configurations. The most
-important function there is **mergeConfig**, which is used on _src/app.js_ to merge possible config
+important function there is **mergeConfig**, which is used on _src/app.js_ to merge hosted config
 assets and defaultConfigs.js
 
 ## [settings.js](./settings.js)

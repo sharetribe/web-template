@@ -189,7 +189,11 @@ const EditListingDetailsPanel = props => {
   const { hasExistingListingType, existingListingType } = hasSetListingType(publicData);
   const hasValidExistingListingType =
     hasExistingListingType &&
-    !!listingTypes.find(conf => conf.listingType === existingListingType.listingType);
+    !!listingTypes.find(conf => {
+      const listinTypesMatch = conf.listingType === existingListingType.listingType;
+      const unitTypesMatch = conf.transactionType?.unitType === existingListingType.unitType;
+      return listinTypesMatch && unitTypesMatch;
+    });
 
   const initialValues = getInitialValues(
     props,
@@ -198,9 +202,10 @@ const EditListingDetailsPanel = props => {
     listingFieldsConfig
   );
 
-  const noListingTypesSet = listingTypes?.length > 0;
+  const noListingTypesSet = listingTypes?.length === 0;
+  const hasListingTypesSet = listingTypes?.length > 0;
   const canShowEditListingDetailsForm =
-    noListingTypesSet && (!hasExistingListingType || hasValidExistingListingType);
+    hasListingTypesSet && (!hasExistingListingType || hasValidExistingListingType);
   const isPublished = listing?.id && state !== LISTING_STATE_DRAFT;
 
   return (
