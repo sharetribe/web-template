@@ -14,6 +14,47 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+## [v2.0.0] 2023-06-02
+
+This major release takes configurations from hosted assets.
+
+- Upgrade _**sharetribe-flex-sdk**_
+- Use _**multi-asset fetch**_ to retrieve config assets on React app:
+  - **translations**: '/content/translations.json',
+  - **footer**: '/content/footer.json',
+  - **branding**: '/design/branding.json',
+  - **layout**: '/design/layout.json',
+  - **listingTypes**: '/listings/listing-types.json',
+  - **listingFields**: '/listings/listing-fields.json',
+  - **search**: '/listings/listing-search.json',
+  - **transactionSize**: '/transactions/minimum-transaction-size.json',
+- Take **commission.json** asset into use (provider commission) on server routes:
+
+  - /api/transaction-line-items/
+  - /api/initiate-privileged/
+  - /api/transition-privileged/
+
+- Show `MaintenanceMode` component if mandatory configs are not found from hosted assets
+- Add `SectionFooter` to PageBuilder and use it from `FooterContainer`.
+- Delete the old Footer component
+- Add defaultMicrocopy.json. It talks about _listings_ instead of Biketribe _bikes_.
+  - The _**en.json**_ is a good themed starting point to be copied for a _translation.json_ aka
+    Console > Content > Microcopy
+  - If translation.json is not set, _**defaultMicrocopy.json**_ is used instead.
+
+This also includes some bug fixes.
+
+- ListingPage.duck.js: timeUnit should use 'hour', when necessary.
+- Include a couple of scaled image variants on SearchPage to speed up listing page rendering.
+- PageBuilder: add `word-break` and `hyphens` to Link and Headings
+- PageBuilder: don't show spinner if there is content available
+- PageBuilder/SectionContainer: change default element from `<div>` to `<section>`
+- EditListingAvailabilityPanel: fix WeekPicker popup causing overflow on mobile screen
+- EditListingWizard: fix wrong default tabs for purchase and restrict editing if both listingType
+  and unitType do not match
+
+### Changes / PRs
+
 - [add] Take hosted configurations into use.
 
   - Upgrade sharetribe-flex-sdk
