@@ -32,7 +32,7 @@ const ColorCard = props => {
 
   const handleChange = e => {
     const value = e.target.value;
-    const elem = window.document.documentElement;
+    const elem = document.getElementById('styleguide');
     const re = new RegExp('^#([0-9a-f]{3}){1,2}$', 'i');
     const isValidColor = re.test(value);
 
@@ -83,10 +83,6 @@ const MarketplaceColors = () => {
       <p className={css.spacing2x}>
         Marketplace colors have three groups: branding color and its variations, action colors, and
         grey palette for fine tuning UI elements.
-      </p>
-      <p className={css.spacing2x}>
-        If you test different colors, <NamedLink name="LandingPage">Go to LandingPage</NamedLink> to
-        check them.
       </p>
       <div className={css.colorsContainer}>
         <div className={css.colorsGroup}>
