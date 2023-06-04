@@ -1,8 +1,8 @@
-import logoImageDesktop from '../assets/biketribe-logo-desktop.png';
-import logoImageMobile from '../assets/biketribe-logo-mobile.png';
-import brandImage from '../assets/biketribe-brandImage-1500.jpg';
-import facebookImage from '../assets/biketribe-facebook-sharing-1200x630.jpg';
-import twitterImage from '../assets/biketribe-twitter-sharing-600x314.jpg';
+import logoImageDesktop from '../assets/Crememories-Rebrand-no-symbol.png';
+import logoImageMobile from '../assets/Crememories-Rebrand-no-symbol.png';
+import brandImage from '../assets/CreMemories-background-1440.png';
+import facebookImage from '../assets/CreMemories-Facebook-1200x630.jpg';
+import twitterImage from '../assets/CreMemoriesTwitter-600x314.png';
 
 /////////////////////////////////////////////////////////
 // This file contains configs that affect branding     //
@@ -15,7 +15,7 @@ import twitterImage from '../assets/biketribe-twitter-sharing-600x314.jpg';
 // This is saved as CSS Property: --marketplaceColor in src/app.js
 // Also --marketplaceColorDark and --marketplaceColorLight are generated from this one
 // by adding +/- 10% to lightness.
-export const marketplaceColor = '#7c3aed';
+export const marketplaceColor = '#0095cd';
 
 // Logo is used in Topbar on mobile and desktop, where height is the limiting factor.
 // Therefore, we strongly suggest that your image file for desktop logo is in landscape!
