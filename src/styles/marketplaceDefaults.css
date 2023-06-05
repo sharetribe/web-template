@@ -22,7 +22,7 @@
    * In the future, we are planning to bring more --marketplace* CSS Properties
    * from hosted assets, which means that they could be managed through Console.
    */
-  --marketplaceColor: #5d2bc0; /* hsl(260, 63%, 46%) */
+  --marketplaceColor: red; /* hsl(260, 63%, 46%) */
   --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
   --marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
 
