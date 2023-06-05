@@ -22,7 +22,7 @@
    * In the future, we are planning to bring more --marketplace* CSS Properties
    * from hosted assets, which means that they could be managed through Console.
    */
-  --marketplaceColor: #5d2bc0; /* hsl(260, 63%, 46%) */
+  --marketplaceColor: blue; /* hsl(260, 63%, 46%) */
   --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
   --marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
 
@@ -180,7 +180,7 @@ body {
 
   /* A non-standard feature: https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth */
   -webkit-font-smoothing: antialiased;
-  font-smoothing: antialiased;
+  font-smooth: antialiased;
 
   text-rendering: optimizeSpeed;
   font-optical-sizing: auto;
