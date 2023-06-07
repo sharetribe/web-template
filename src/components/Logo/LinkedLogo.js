@@ -10,7 +10,7 @@ const LinkedLogo = props => {
   const { className, rootClassName, format, alt, ...rest } = props;
   const classes = classNames(rootClassName || css.root, className);
   return (
-    <NamedLink className={classes} name="LandingPage" {...rest}>
+    <NamedLink className={classes} name="Home" {...rest}>
       <Logo format={format} className={css.logo} alt={alt} />
     </NamedLink>
   );

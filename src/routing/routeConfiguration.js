@@ -50,7 +50,7 @@ export const ACCOUNT_SETTINGS_PAGES = [
 const draftId = '00000000-0000-0000-0000-000000000000';
 const draftSlug = 'draft';
 
-const RedirectToLandingPage = () => <NamedRedirect name="LandingPage" />;
+const RedirectToLandingPage = () => <NamedRedirect name="Home" />;
 
 // NOTE: Most server-side endpoints are prefixed with /api. Requests to those
 // endpoints are indended to be handled in the server instead of the browser and
@@ -70,10 +70,22 @@ const routeConfiguration = (layoutConfig) => {
   
   return [
     {
-      path: '/',
+      path: '/LandingPage',
       name: 'LandingPage',
       component: LandingPage,
       loadData: pageDataLoadingAPI.LandingPage.loadData,
+    },
+    {
+      path: '/',
+      name: 'SearchPage',
+      component: SearchPage,
+      loadData: pageDataLoadingAPI.SearchPage.loadData,
+    },
+    {
+      path: '/Home',
+      name: 'Home',
+      component: SearchPage,
+      loadData: pageDataLoadingAPI.SearchPage.loadData,
     },
     {
       path: '/p/:pageId',
