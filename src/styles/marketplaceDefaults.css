@@ -22,13 +22,13 @@
    * In the future, we are planning to bring more --marketplace* CSS Properties
    * from hosted assets, which means that they could be managed through Console.
    */
-  --marketplaceColor: #5d2bc0; /* hsl(260, 63%, 46%) */
-  --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
-  --marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
+   --marketplaceColor: #0095cd; /*#5d2bc0;*/ /* hsl(260, 63%, 46%) */
+   --marketplaceColorLight: #51b3d7; /*#7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
+   --marketplaceColorDark: #005c7e; /*#34196c;*/ /* hsl(260, 63%, 26%), -20L from marketplaceColor */
 
   /* Colors used for different functions (like error texts) */
 
-  --colorSuccess: #2ecc71;
+  --successColor: #0095cd;
   --colorSuccessDark: #239954;
   --colorSuccessLight: #f0fff6;
   --colorFail: #ff0000;
