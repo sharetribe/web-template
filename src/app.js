@@ -69,11 +69,12 @@ import defaultMessages from './translations/defaultMicrocopy.json';
 //   1. hosted translation.json
 //   2. <lang>.json
 //   3. defaultMicrocopy.json
-// But you could just translate the defaultMicrocopy.json file and keep it updated. That way you
-// can avoid including <lang>.json into build files.
 //
 // I.e. remove "const messagesInLocale" and add import for the correct locale:
 // import messagesInLocale from './translations/fr.json';
+//
+// However, the recommendation is that you translate the defaultMicrocopy.json file and keep it updated.
+// That way you can avoid importing <lang>.json into build files, which is better for performance.
 const messagesInLocale = {};
 
 // If translation key is missing from `messagesInLocale` (e.g. fr.json),
