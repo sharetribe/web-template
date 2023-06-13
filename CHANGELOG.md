@@ -14,6 +14,16 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] This adds a few fixes to reported bugs
+
+  - BookingTimeForm: do not allow line-item fetch with negative time range.
+  - Listing fields: id might clash with publicData keys set by this client app
+  - BookingDatesForm: fix test (missing timeZone prop)
+  - The marketplaceColor was not added to SSR and that caused a flickering on page load
+    https://github.com/sharetribe/web-template/commit/2f4d8bffaad26bb2ad2ed6844d9edb62761e6be4
+
+  [#176](https://github.com/sharetribe/web-template/pull/176)
+
 ## [v2.0.0] 2023-06-02
 
 This major release takes configurations from hosted assets.
@@ -71,6 +81,8 @@ This also includes some bug fixes.
 - [fix] ListingImageGallery: Mobile Safari was not showing thumbnail stripe correctly, if the
   content overflew. [#158](https://github.com/sharetribe/web-template/pull/158)
 - [change] Update README.md [#157](https://github.com/sharetribe/web-template/pull/157)
+
+[v2.0.0]: https://github.com/sharetribe/web-template/compare/v1.0.0...v2.0.0
 
 ## [v1.0.0] 2023-04-25
 
