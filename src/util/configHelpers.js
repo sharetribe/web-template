@@ -27,7 +27,7 @@ const validLabel = label => {
   return [isValid, labelMaybe];
 };
 
-const printErrorIfMissing = props => {
+const printErrorIfHostedAssetIsMissing = props => {
   Object.entries(props).map(entry => {
     const [key, value = {}] = entry || [];
     if (Object.keys(value)?.length === 0) {
@@ -36,6 +36,36 @@ const printErrorIfMissing = props => {
       and that the marketplace has added content in Console`);
     }
   });
+};
+
+/**
+ * Check that listing fields don't have keys that clash with built-in keys
+ * that this app uses in public data.
+ *
+ * @param {Object} listingFields object that has 'key' property.
+ * @returns true if there's a clash with specific built-in keys.
+ */
+const hasClashWithBuiltInPublicDataKey = listingFields => {
+  const builtInPublicDataKeys = [
+    'listingType',
+    'transactionProcessAlias',
+    'unitType',
+    'location',
+    'pickupEnabled',
+    'shippingEnabled',
+    'shippingPriceInSubunitsOneItem',
+    'shippingPriceInSubunitsAdditionalItems',
+  ];
+  let hasClash = false;
+  listingFields.forEach(field => {
+    if (builtInPublicDataKeys.includes(field.key)) {
+      hasClash = true;
+      console.error(
+        `The id of a listing field ("${field.key}") clashes with the built-in keys that this app uses in public data.`
+      );
+    }
+  });
+  return hasClash;
 };
 
 /////////////////////
@@ -655,12 +685,13 @@ const mergeMapConfig = (hostedMapConfig, defaultMapConfig) => {
 // Check if all the mandatory info have been retrieved from hosted assets
 const hasMandatoryConfigs = hostedConfig => {
   const { branding, listingTypes, listingFields, transactionSize } = hostedConfig;
-  printErrorIfMissing({ branding, listingTypes, listingFields, transactionSize });
+  printErrorIfHostedAssetIsMissing({ branding, listingTypes, listingFields, transactionSize });
   return (
     branding?.logo &&
     listingTypes?.listingTypes &&
     listingFields?.listingFields &&
-    transactionSize?.listingMinimumPrice
+    transactionSize?.listingMinimumPrice &&
+    !hasClashWithBuiltInPublicDataKey(listingFields?.listingFields)
   );
 };
 
