@@ -61,6 +61,7 @@ describe('EstimatedCustomerBreakdownMaybe', () => {
       },
       lineItems,
       currency: 'USD',
+      timeZone: 'Etc/UTC',
       marketplaceName: 'MarketplaceX',
       processName: 'default-booking',
     };
