@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Import moment locales dynamically as a fallback.
+  [#171](https://github.com/sharetribe/web-template/pull/171)
 - [fix] This adds a few fixes to reported bugs
 
   - BookingTimeForm: do not allow line-item fetch with negative time range.
