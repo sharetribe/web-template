@@ -42,3 +42,19 @@
     margin-top: 100px;
   }
 }
+
+.actionButtons{
+  display: flex;
+  justify-content: space-between;
+}
+
+.removeButton{
+  composes: button buttonFont buttonTrash buttonText from global;
+  border: none;
+  min-height: 20px;
+}
+.removeButton:hover{
+  background-color: unset;
+  box-shadow: none;
+  filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.4));
+}

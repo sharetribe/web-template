@@ -331,11 +331,14 @@ export class CheckoutPageComponent extends Component {
       const quantity = pageData.orderData?.quantity;
       const quantityMaybe = quantity ? { quantity } : {};
       const deliveryMethod = pageData.orderData?.deliveryMethod;
+      const variant = pageData.orderData?.variant;
+      const variantMaybe = variant ? { variant } : {};
       fetchSpeculatedTransaction(
         {
           listingId,
           deliveryMethod,
           ...quantityMaybe,
+          ...variantMaybe,
           ...bookingDatesMaybe(pageData.orderData.bookingDates),
         },
         processAlias,
@@ -525,6 +528,8 @@ export class CheckoutPageComponent extends Component {
         ...shippingDetailsMaybe,
       },
     };
+    const variant = pageData.orderData?.variant;
+    const variantMaybe = variant ? { variant } : {};
     // Note: optionalPaymentParams contains Stripe paymentMethod,
     // but that can also be passed on Step 2
     // stripe.confirmCardPayment(stripe, { payment_method: stripePaymentMethodId })
@@ -539,6 +544,7 @@ export class CheckoutPageComponent extends Component {
       listingId: pageData.listing.id,
       deliveryMethod,
       ...quantityMaybe,
+      ...variantMaybe,
       ...bookingDatesMaybe(pageData.orderData.bookingDates),
       ...protectedDataMaybe,
       ...optionalPaymentParams,
@@ -839,6 +845,16 @@ export class CheckoutPageComponent extends Component {
       listingLink
     );
 
+    let variantData = {};
+    const price = currentListing.attributes.price;
+    if(currentListing.attributes.publicData && currentListing.attributes.publicData.variants){
+      if(orderData.variant){
+        variantData = currentListing.attributes.publicData.variants[orderData.variant-1];
+        price.amount = variantData.variantPrice;
+      }
+    }
+    const detailsVariantSubTitle = variantData?variantData.variantLabel:null;
+
     const showInitialMessageInput = !(
       existingTransaction && existingTransaction.attributes.lastTransition === transitions.INQUIRE
     );
@@ -974,6 +990,7 @@ export class CheckoutPageComponent extends Component {
                     {listingTitle}
                   </NamedLink>
                 </H4>
+                <p className={css.detailsSubtitle}>{detailsVariantSubTitle}</p>
               </div>
               {speculateTransactionErrorMessage}
               <H6 as="h3" className={css.orderBreakdownTitle}>

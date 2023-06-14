@@ -6,6 +6,7 @@ import { FormattedMessage, useIntl } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { numberAtLeast, required } from '../../../util/validators';
 import { PURCHASE_PROCESS_NAME } from '../../../transactions/transaction';
+import { formatMoney } from '../../../util/currency';
 
 import {
   Form,
@@ -17,9 +18,15 @@ import {
   H6,
 } from '../../../components';
 
+import { forEach } from 'lodash';
+
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
 import css from './ProductOrderForm.module.css';
+
+import { types as sdkTypes } from '../../../util/sdkLoader';
+
+const { Money } = sdkTypes;
 
 // Browsers can't render huge number of select options.
 // (stock is shown inside select element)
@@ -47,15 +54,20 @@ const renderForm = formRenderProps => {
     price,
     marketplaceName,
     values,
+    variants,
   } = formRenderProps;
 
   const handleOnChange = formValues => {
-    const { quantity, deliveryMethod } = formValues.values;
-    const stockReservationQuantity = Number.parseInt(quantity, 10);
+    const { quantity, deliveryMethod, variant: variantId } = formValues.values;
+    const quantityInt = Number.parseInt(quantity, 10);
     const isBrowser = typeof window !== 'undefined';
+    const variantInt = variants?(Number.parseInt(variants[variantId-1]?variants[variantId-1]['variantStok']:null, 10)):0;
+
+    const stockReservationQuantity = quantityInt ? quantityInt : variantInt ? variantInt: 0;
+
     if (isBrowser && stockReservationQuantity && deliveryMethod && !fetchLineItemsInProgress) {
       onFetchTransactionLineItems({
-        orderData: { stockReservationQuantity, deliveryMethod },
+        orderData: { stockReservationQuantity, deliveryMethod, variantId },
         listingId,
         isOwnListing,
       });
@@ -65,8 +77,8 @@ const renderForm = formRenderProps => {
   // In case quantity and deliveryMethod are missing focus on that select-input.
   // Otherwise continue with the default handleSubmit function.
   const handleFormSubmit = e => {
-    const { quantity, deliveryMethod } = values || {};
-    if (!quantity || quantity < 1) {
+    const { quantity, deliveryMethod, variant  } = values || {};
+    if ((!quantity || quantity < 1) && !variant) {
       e.preventDefault();
       // Blur event will show validator message
       formApi.blur('quantity');
@@ -107,6 +119,23 @@ const renderForm = formRenderProps => {
     onContactUser();
   };
 
+  const hasVarinats = (currentStock,variants) => {
+    return !variants ? null : (()=>{
+      const result = [];
+      forEach(variants,(e,i)=>{
+        currentStock ? result[i] = e : null;
+      })
+      return result.length ? result : null;
+    })();
+  }
+
+  const formatVariantLabel = (intl,variant,price) => {
+    const amount = variant.variantPrice;
+    const variantPrice = new Money(amount,price.currency);
+
+    return formatMoney(intl, variantPrice) +' '+ variant.variantLabel;
+  }
+
   const contactSellerLink = (
     <InlineTextButton onClick={onClickContactUser}>
       <FormattedMessage id="ProductOrderForm.finePrintNoStockLinkText" />
@@ -118,15 +147,43 @@ const renderForm = formRenderProps => {
   const selectableStock =
     currentStock > MAX_QUANTITY_FOR_DROPDOWN ? MAX_QUANTITY_FOR_DROPDOWN : currentStock;
   const quantities = hasStock ? [...Array(selectableStock).keys()].map(i => i + 1) : [];
+  const variantsMap = hasStock ? hasVarinats(currentStock,variants) : null;
   const hasNoStockLeft = typeof currentStock != null && currentStock === 0;
   const hasOneItemLeft = typeof currentStock != null && currentStock === 1;
 
   const submitInProgress = fetchLineItemsInProgress;
   const submitDisabled = !hasStock;
 
+
+  console.log('variantsMap');
+  console.log(variantsMap);
+
   return (
     <Form onSubmit={handleFormSubmit}>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
+
+      {!variantsMap ? null : (
+        
+        <FieldSelect
+          id={`${formId}.variant`}
+          className={css.quantityField}
+          name="variant"
+          disabled={!hasStock}
+          label={intl.formatMessage({ id: 'ProductOrderForm.quantityVariantLabel' })}
+        >
+          <option value="">
+            {intl.formatMessage({ id: 'ProductOrderForm.selectQuantityVariantOption' })}
+          </option>
+
+          {variantsMap.map((variant,index) => (
+
+            <option key={index++} value={index++}>
+              {formatVariantLabel(intl,variant,price)}
+            </option>
+          ))}
+        </FieldSelect>
+      )}
+      
       {hasNoStockLeft ? null : hasOneItemLeft ? (
         <FieldTextInput
           id={`${formId}.quantity`}

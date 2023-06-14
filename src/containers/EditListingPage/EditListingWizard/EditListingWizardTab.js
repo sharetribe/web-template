@@ -101,6 +101,7 @@ const EditListingWizardTab = props => {
     updatedTab,
     updateInProgress,
     tabSubmitButtonText,
+    tabActionAddBtnText,
     config,
     routeConfiguration,
   } = props;
@@ -169,6 +170,7 @@ const EditListingWizardTab = props => {
       ready: newListingPublished,
       disabled: fetchInProgress,
       submitButtonText: tabSubmitButtonText,
+      actionAddBtnText: tabActionAddBtnText,
       listingTypes: config.listing.listingTypes,
       onManageDisableScrolling,
       onSubmit: values => {

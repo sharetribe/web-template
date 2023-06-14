@@ -113,6 +113,11 @@ exports.transactionLineItems = (listing, orderData) => {
   const unitPrice = listing.attributes.price;
   const currency = unitPrice.currency;
 
+  console.log('listing');
+  console.log(listing);
+  console.log('orderData');
+  console.log(orderData);
+
   /**
    * Pricing starts with order's base price:
    * Listing's price is related to a single unit. It needs to be multiplied by quantity
@@ -123,6 +128,14 @@ exports.transactionLineItems = (listing, orderData) => {
    * - quantity
    * - includedFor
    */
+
+  // custom variants prices
+  if( orderData.variantId ){
+    const variantId = orderData.variantId-1;
+    const variantData = publicData.variants[variantId];
+    const variantPrice = variantData.variantPrice;
+    unitPrice.amount = variantPrice;
+  }
 
   // Unit type needs to be one of the following:
   // day, night, hour or item

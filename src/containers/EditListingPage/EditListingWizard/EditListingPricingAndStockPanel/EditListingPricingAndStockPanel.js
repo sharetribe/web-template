@@ -42,6 +42,7 @@ const EditListingPricingAndStockPanel = props => {
     ready,
     onSubmit,
     submitButtonText,
+    actionAddBtnText,
     panelUpdated,
     updateInProgress,
     errors,
@@ -61,6 +62,24 @@ const EditListingPricingAndStockPanel = props => {
     initialValues.price instanceof Money
       ? initialValues.price?.currency === marketplaceCurrency
       : true;
+
+
+  // configure already added variants 
+  const variants = publicData.variants;
+  const pricingVariant = [];
+  const variantKeys = variants ? Object.keys(variants) : null;
+
+  if(variantKeys && priceCurrencyValid){
+    variantKeys.forEach( key => {
+      const variantLabel = variants[key].variantLabel;
+      const variantPrice = new Money;
+      variantPrice.amount = variants[key].variantPrice;
+      variantPrice.currency = initialValues.price.currency;
+      pricingVariant[pricingVariant.length] = {variantPrice,variantLabel}
+    });
+
+    initialValues.pricingVariant = pricingVariant;
+  }
 
   return (
     <div className={classes}>
@@ -84,6 +103,20 @@ const EditListingPricingAndStockPanel = props => {
           onSubmit={values => {
             const { price, stock } = values;
 
+            // configured options for add variant price with descriptions
+            const variantsValues = values.pricingVariant;
+            const variantsUpdate = {};
+        
+            const valuesKeys = Object.keys(variantsValues);
+            valuesKeys.forEach((element) => {
+                const curVariant = variantsValues[element];
+                if(curVariant.variantPrice && curVariant.variantPrice.amount){
+                  const variantPrice = curVariant.variantPrice.amount;
+                  const variantLabel = curVariant.variantLabel;
+                  variantsUpdate[element] = {variantPrice,variantLabel};
+                }
+            });
+
             // Update stock only if the value has changed.
             // NOTE: this is going to be used on a separate call to API
             // in EditListingPage.duck.js: sdk.stock.compareAndSet();
@@ -106,6 +139,7 @@ const EditListingPricingAndStockPanel = props => {
             const updateValues = {
               price,
               ...stockUpdateMaybe,
+              publicData: { variants:variantsUpdate },
             };
             onSubmit(updateValues);
           }}
@@ -114,6 +148,7 @@ const EditListingPricingAndStockPanel = props => {
           listingType={listingTypeConfig}
           unitType={unitType}
           saveActionMsg={submitButtonText}
+          variantLabel={actionAddBtnText}
           disabled={disabled}
           ready={ready}
           updated={panelUpdated}

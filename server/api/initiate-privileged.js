@@ -4,6 +4,13 @@ const { getSdk, getTrustedSdk, handleError, serialize } = require('../api-util/s
 module.exports = (req, res) => {
   const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
 
+  console.log('orderData');
+  console.log(orderData);
+  console.log('bodyParams');
+  console.log(bodyParams);
+  console.log(queryParams);
+  console.log(queryParams);
+
   const sdk = getSdk(req, res);
   let lineItems = null;
 
@@ -11,6 +18,17 @@ module.exports = (req, res) => {
     .show({ id: bodyParams?.params?.listingId })
     .then(listingResponse => {
       const listing = listingResponse.data.data;
+      const variantCheck = (bodyParams.params 
+        && bodyParams.params.stockReservationVariant 
+        && listing.attributes.publicData
+        && listing.attributes.publicData.variants);
+
+      if(variantCheck){
+        const variantId = bodyParams.params.stockReservationVariant - 1;
+        const variantSelected = listing.attributes.publicData.variants[variantId];
+        listing.attributes.price.amount = variantSelected.variantPrice;
+      }
+      
       lineItems = transactionLineItems(listing, { ...orderData, ...bodyParams.params });
 
       return getTrustedSdk(req);

@@ -166,8 +166,9 @@ export const initiateOrder = (
   // initiate.
   const isTransition = !!transactionId;
 
-  const { deliveryMethod, quantity, bookingDates, ...otherOrderParams } = orderParams;
+  const { deliveryMethod, quantity, variant, bookingDates, ...otherOrderParams } = orderParams;
   const quantityMaybe = quantity ? { stockReservationQuantity: quantity } : {};
+  const variantMaybe = quantity ? { stockReservationVariant: variant } : {};
   const bookingParamsMaybe = bookingDates || {};
 
   // Parameters only for client app's server
@@ -177,6 +178,7 @@ export const initiateOrder = (
   const transitionParams = {
     ...quantityMaybe,
     ...bookingParamsMaybe,
+    ...variantMaybe,
     ...otherOrderParams,
   };
 
@@ -211,6 +213,7 @@ export const initiateOrder = (
       ...transactionIdMaybe,
       listingId: orderParams.listingId.uuid,
       ...quantityMaybe,
+      ...variantMaybe,
       ...bookingParamsMaybe,
       ...orderData,
     });
@@ -317,8 +320,9 @@ export const speculateTransaction = (
   // initiate.
   const isTransition = !!transactionId;
 
-  const { deliveryMethod, quantity, bookingDates, ...otherOrderParams } = orderParams;
+  const { deliveryMethod, quantity, variant, bookingDates, ...otherOrderParams } = orderParams;
   const quantityMaybe = quantity ? { stockReservationQuantity: quantity } : {};
+  const variantMaybe = quantity ? { stockReservationVariant: variant } : {};
   const bookingParamsMaybe = bookingDates || {};
 
   // Parameters only for client app's server
@@ -327,6 +331,7 @@ export const speculateTransaction = (
   // Parameters for Marketplace API
   const transitionParams = {
     ...quantityMaybe,
+    ...variantMaybe,
     ...bookingParamsMaybe,
     ...otherOrderParams,
     cardToken: 'CheckoutPage_speculative_card_token',
@@ -362,6 +367,7 @@ export const speculateTransaction = (
     log.error(e, 'speculate-transaction-failed', {
       listingId: transitionParams.listingId.uuid,
       ...quantityMaybe,
+      ...variantMaybe,
       ...bookingParamsMaybe,
       ...orderData,
     });

@@ -98,9 +98,12 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, processName) => {
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePhotos`;
   }
 
+  const buttonAddVarinatPricing = 'EditListingWizard.addNewVariant';
+
   return {
     label: intl.formatMessage({ id: labelKey }),
     submitButton: intl.formatMessage({ id: submitButtonKey }),
+    actionAddVariantButton: intl.formatMessage({ id: buttonAddVarinatPricing }),
   };
 };
 
@@ -495,6 +498,8 @@ class EditListingWizard extends Component {
         >
           {tabs.map(tab => {
             const tabTranslations = tabLabelAndSubmit(intl, tab, isNewListingFlow, processName);
+            // console.log(tabTranslations);
+            console.log(tabTranslations);
             return (
               <EditListingWizardTab
                 {...rest}
@@ -502,6 +507,7 @@ class EditListingWizard extends Component {
                 tabId={`${id}_${tab}`}
                 tabLabel={tabTranslations.label}
                 tabSubmitButtonText={tabTranslations.submitButton}
+                tabActionAddBtnText={tabTranslations.actionAddVariantButton}
                 tabLinkProps={tabLink(tab)}
                 selected={selectedTab === tab}
                 disabled={isNewListingFlow && !tabsStatus[tab]}
