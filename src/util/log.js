@@ -65,7 +65,7 @@ const responseApiErrorInfo = err =>
   }));
 
 /**
- * Logs an execption. If Sentry is configured
+ * Logs an exception. If Sentry is configured
  * sends the error information there. Otherwise
  * prints the error to the console.
  *
