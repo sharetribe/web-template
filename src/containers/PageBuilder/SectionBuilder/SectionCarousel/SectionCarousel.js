@@ -54,7 +54,11 @@ const SectionCarousel = props => {
       if (hasBlocks) {
         const windowWidth = window.innerWidth;
         const elem = window.document.getElementById(sliderContainerId);
-        const carouselWidth = elem.clientWidth > windowWidth ? windowWidth : elem.clientWidth;
+        const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+        const elementWidth =
+          elem.clientWidth >= windowWidth - scrollbarWidth ? windowWidth : elem.clientWidth;
+        const carouselWidth = elementWidth - scrollbarWidth;
+
         elem.style.setProperty('--carouselWidth', `${carouselWidth}px`);
       }
     };
