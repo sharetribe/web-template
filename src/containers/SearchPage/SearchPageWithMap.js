@@ -110,13 +110,14 @@ export class SearchPageComponent extends Component {
       });
 
       const originMaybe = isOriginInUse(this.props.config) ? { origin: viewportCenter } : {};
+      const dropNonFilterParams = false;
 
       const searchParams = {
         address,
         ...originMaybe,
         bounds: viewportBounds,
         mapSearch: true,
-        ...validFilterParams(rest, listingFieldsConfig, defaultFiltersConfig),
+        ...validFilterParams(rest, listingFieldsConfig, defaultFiltersConfig, dropNonFilterParams),
       };
 
       history.push(createResourceLocatorString('SearchPage', routes, {}, searchParams));
