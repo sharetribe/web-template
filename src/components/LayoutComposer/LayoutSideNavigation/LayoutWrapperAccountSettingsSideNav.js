@@ -104,22 +104,22 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
         name: 'PasswordChangePage',
       },
     },
-    {
-      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentsTabTitle" />,
-      selected: currentPage === 'StripePayoutPage',
-      id: 'StripePayoutPageTab',
-      linkProps: {
-        name: 'StripePayoutPage',
-      },
-    },
-    {
-      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentMethodsTabTitle" />,
-      selected: currentPage === 'PaymentMethodsPage',
-      id: 'PaymentMethodsPageTab',
-      linkProps: {
-        name: 'PaymentMethodsPage',
-      },
-    },
+    // {
+    //   text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentsTabTitle" />,
+    //   selected: currentPage === 'StripePayoutPage',
+    //   id: 'StripePayoutPageTab',
+    //   linkProps: {
+    //     name: 'StripePayoutPage',
+    //   },
+    // },
+    // {
+    //   text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentMethodsTabTitle" />,
+    //   selected: currentPage === 'PaymentMethodsPage',
+    //   id: 'PaymentMethodsPageTab',
+    //   linkProps: {
+    //     name: 'PaymentMethodsPage',
+    //   },
+    // },
   ];
 
   return <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />;
