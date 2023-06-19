@@ -633,6 +633,7 @@ const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig) => {
   const searchConfig = hostedSearchConfig?.mainSearch
     ? {
         sortConfig: defaultSearchConfig.sortConfig,
+        keywordsFilter: defaultSearchConfig.keywordsFilter,
         ...hostedSearchConfig,
       }
     : defaultSearchConfig;
