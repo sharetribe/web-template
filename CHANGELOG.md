@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] localization asset: Add localization asset (it won't be available yet).
+  [#180](https://github.com/sharetribe/web-template/pull/180)
 - [fix] EditListingDeliveryPanel:
 
   - Shipping price 0 was shown as undefined.
@@ -24,7 +26,7 @@ way to update this template, but currently, we follow a pattern:
 - [fix] WeeklyCalendar: fix typo
 
   - AvailableExecptions > AvailableExceptionsInfo
-  - NotAvailableExecptions > NotAvailableExceptionsInfo)
+  - NotAvailableExecptions > NotAvailableExceptionsInfo
 
   [#179](https://github.com/sharetribe/web-template/pull/179)
 
