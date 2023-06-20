@@ -1,3 +1,4 @@
+import { subUnitDivisors } from '../config/settingsCurrency';
 import { getSupportedProcessesInfo } from '../transactions/transaction';
 
 // Generic helpers for validating config values
@@ -66,6 +67,30 @@ const hasClashWithBuiltInPublicDataKey = listingFields => {
     }
   });
   return hasClash;
+};
+
+/////////////////////////
+// Merge localizations //
+/////////////////////////
+
+const mergeCurrency = (hostedCurrency, defaultCurrency) => {
+  const currency = hostedCurrency || defaultCurrency;
+  const supportedCurrencies = Object.keys(subUnitDivisors);
+  if (supportedCurrencies.includes(currency)) {
+    // TODO: is the currency a mandatory data coming from a hosted asset?
+    return currency;
+  } else {
+    return null;
+  }
+};
+
+const mergeLocalizations = (hostedLocalization, defaultLocalization) => {
+  // This defaults to 'en', if no locale is set.
+  const locale = hostedLocalization?.locale || defaultLocalization.locale || 'en';
+  // NOTE: We use this with react-dates and moment, the range should be 0 - 6 instead of 1-7.
+  const firstDay = hostedLocalization?.firstDayOfWeek || defaultLocalization.firstDayOfWeek || 1;
+  const firstDayInMomentRange = firstDay % 7;
+  return { locale, firstDayOfWeek: firstDayInMomentRange };
 };
 
 /////////////////////
@@ -708,6 +733,11 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
     // Overwrite default configs if hosted config is available
     listingMinimumPriceSubUnits,
+
+    // Localization: currency is first-level config atm.
+    currency: mergeCurrency(configAsset.localization?.currency, defaultConfigs.currency),
+    // Localization (locale, first day of week)
+    localization: mergeLocalizations(configAsset.localization, defaultConfigs.localization),
 
     // Analytics might come from hosted assets at some point.
     analytics: mergeAnalyticsConfig(configAsset.analytics, defaultConfigs.analytics),

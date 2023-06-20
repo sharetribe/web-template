@@ -57,12 +57,13 @@ const defaultConfig = {
   // If you want to change the language, remember to also change the
   // locale data and the messages in the app.js file.
   localization: {
-    locale: 'en',
+    locale: 'en-US',
     // First day of week
-    // 0: Sunday
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo#return_value
     // 1: Monday
     // ...
     // 6: Saturday
+    // 7: Sunday
     firstDayOfWeek: 1,
   },
 
@@ -84,6 +85,7 @@ const defaultConfig = {
     //       It might take some time before these are actually available through hosted assets.
     // maps: '/integrations/map.json',
     // analytics: '/integrations/analytics.json',
+    // localization: '/general/localization.json',
   },
 
   // Optional
