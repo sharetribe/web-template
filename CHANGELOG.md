@@ -14,6 +14,13 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] EditListingDeliveryPanel:
+
+  - Shipping price 0 was shown as undefined.
+  - Add safeguard: delivery panel can't handle currency change yet.
+
+  [#181](https://github.com/sharetribe/web-template/pull/181)
+
 - [fix] WeeklyCalendar: fix typo
 
   - AvailableExecptions > AvailableExceptionsInfo
