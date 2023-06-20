@@ -11,3 +11,7 @@
 .form {
   flex-grow: 1;
 }
+
+.priceCurrencyInvalid {
+  color: var(--colorFail);
+}
