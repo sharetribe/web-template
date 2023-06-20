@@ -84,6 +84,7 @@ const EditListingDeliveryPanel = props => {
 
   const classes = classNames(rootClassName || css.root, className);
   const isPublished = listing?.id && listing?.attributes.state !== LISTING_STATE_DRAFT;
+  const priceCurrencyValid = listing?.attributes?.price?.currency === marketplaceCurrency;
 
   return (
     <div className={classes}>
@@ -100,71 +101,77 @@ const EditListingDeliveryPanel = props => {
           />
         )}
       </H3>
-      <EditListingDeliveryForm
-        className={css.form}
-        initialValues={state.initialValues}
-        onSubmit={values => {
-          const {
-            building = '',
-            location,
-            shippingPriceInSubunitsOneItem,
-            shippingPriceInSubunitsAdditionalItems,
-            deliveryOptions,
-          } = values;
-
-          const shippingEnabled = deliveryOptions.includes('shipping');
-          const pickupEnabled = deliveryOptions.includes('pickup');
-          const address = location?.selectedPlace?.address || null;
-          const origin = location?.selectedPlace?.origin || null;
-
-          const pickupDataMaybe =
-            pickupEnabled && address ? { location: { address, building } } : {};
-
-          const shippingDataMaybe =
-            shippingEnabled && shippingPriceInSubunitsOneItem
-              ? {
-                  // Note: we only save the "amount" because currency should not differ from listing's price.
-                  // Money is always dealt in subunits (e.g. cents) to avoid float calculations.
-                  shippingPriceInSubunitsOneItem: shippingPriceInSubunitsOneItem.amount,
-                  shippingPriceInSubunitsAdditionalItems:
-                    shippingPriceInSubunitsAdditionalItems?.amount,
-                }
-              : {};
-
-          // New values for listing attributes
-          const updateValues = {
-            geolocation: origin,
-            publicData: {
-              pickupEnabled,
-              ...pickupDataMaybe,
-              shippingEnabled,
-              ...shippingDataMaybe,
-            },
-          };
-
-          // Save the initialValues to state
-          // LocationAutocompleteInput doesn't have internal state
-          // and therefore re-rendering would overwrite the values during XHR call.
-          setState({
-            initialValues: {
-              building,
-              location: { search: address, selectedPlace: { address, origin } },
+      {priceCurrencyValid ? (
+        <EditListingDeliveryForm
+          className={css.form}
+          initialValues={state.initialValues}
+          onSubmit={values => {
+            const {
+              building = '',
+              location,
               shippingPriceInSubunitsOneItem,
               shippingPriceInSubunitsAdditionalItems,
               deliveryOptions,
-            },
-          });
-          onSubmit(updateValues);
-        }}
-        marketplaceCurrency={marketplaceCurrency}
-        saveActionMsg={submitButtonText}
-        disabled={disabled}
-        ready={ready}
-        updated={panelUpdated}
-        updateInProgress={updateInProgress}
-        fetchErrors={errors}
-        autoFocus
-      />
+            } = values;
+
+            const shippingEnabled = deliveryOptions.includes('shipping');
+            const pickupEnabled = deliveryOptions.includes('pickup');
+            const address = location?.selectedPlace?.address || null;
+            const origin = location?.selectedPlace?.origin || null;
+
+            const pickupDataMaybe =
+              pickupEnabled && address ? { location: { address, building } } : {};
+
+            const shippingDataMaybe =
+              shippingEnabled && shippingPriceInSubunitsOneItem
+                ? {
+                    // Note: we only save the "amount" because currency should not differ from listing's price.
+                    // Money is always dealt in subunits (e.g. cents) to avoid float calculations.
+                    shippingPriceInSubunitsOneItem: shippingPriceInSubunitsOneItem.amount,
+                    shippingPriceInSubunitsAdditionalItems:
+                      shippingPriceInSubunitsAdditionalItems?.amount,
+                  }
+                : {};
+
+            // New values for listing attributes
+            const updateValues = {
+              geolocation: origin,
+              publicData: {
+                pickupEnabled,
+                ...pickupDataMaybe,
+                shippingEnabled,
+                ...shippingDataMaybe,
+              },
+            };
+
+            // Save the initialValues to state
+            // LocationAutocompleteInput doesn't have internal state
+            // and therefore re-rendering would overwrite the values during XHR call.
+            setState({
+              initialValues: {
+                building,
+                location: { search: address, selectedPlace: { address, origin } },
+                shippingPriceInSubunitsOneItem,
+                shippingPriceInSubunitsAdditionalItems,
+                deliveryOptions,
+              },
+            });
+            onSubmit(updateValues);
+          }}
+          marketplaceCurrency={marketplaceCurrency}
+          saveActionMsg={submitButtonText}
+          disabled={disabled}
+          ready={ready}
+          updated={panelUpdated}
+          updateInProgress={updateInProgress}
+          fetchErrors={errors}
+          autoFocus
+        />
+      ) : (
+        <div className={css.priceCurrencyInvalid}>
+          <FormattedMessage id="EditListingPricingPanel.listingPriceCurrencyInvalid" />
+        </div>
+      )}
     </div>
   );
 };
