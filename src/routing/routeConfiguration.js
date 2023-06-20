@@ -39,6 +39,13 @@ const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionP
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
 
+// export const ACCOUNT_SETTINGS_PAGES = [
+//   'ContactDetailsPage',
+//   'PasswordChangePage',
+//   'StripePayoutPage',
+//   'PaymentMethodsPage',
+// ];
+
 export const ACCOUNT_SETTINGS_PAGES = ['ContactDetailsPage', 'PasswordChangePage'];
 
 // https://en.wikipedia.org/wiki/Universally_unique_identifier#Nil_UUID

@@ -25,11 +25,11 @@ import { createSlug } from '../../util/urlHelpers';
 import {
   isTransactionInitiateAmountTooLowError,
   isTransactionInitiateListingNotFoundError,
-  isTransactionInitiateMissingStripeAccountError,
+  // isTransactionInitiateMissingStripeAccountError,
   isTransactionInitiateBookingTimeNotAvailableError,
   isTransactionInitiateListingInsufficientStockError,
   isTransactionChargeDisabledError,
-  isTransactionZeroPaymentError,
+  // isTransactionZeroPaymentError,
   isTransitionQuantityInfoMissingError,
   transactionInitiateOrderStripeErrors,
 } from '../../util/errors';
@@ -185,11 +185,12 @@ const getErrorMessages = (
   }
 
   // We want to show one error at a time for speculateTransition
-  if (isTransactionInitiateMissingStripeAccountError(speculateTransactionError)) {
-    speculateErrorMessage = (
-      <FormattedMessage id="CheckoutPage.providerStripeAccountMissingError" />
-    );
-  } else if (isTransactionInitiateBookingTimeNotAvailableError(speculateTransactionError)) {
+  // if (isTransactionInitiateMissingStripeAccountError(speculateTransactionError)) {
+  //   speculateErrorMessage = (
+  //     <FormattedMessage id="CheckoutPage.providerStripeAccountMissingError" />
+  //   );
+  // } else 
+  if (isTransactionInitiateBookingTimeNotAvailableError(speculateTransactionError)) {
     speculateErrorMessage = <FormattedMessage id="CheckoutPage.bookingTimeNotAvailableMessage" />;
   } else if (isTransactionInitiateListingInsufficientStockError(speculateTransactionError)) {
     speculateErrorMessage = <FormattedMessage id="CheckoutPage.notEnoughStockMessage" />;
