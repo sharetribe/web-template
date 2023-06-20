@@ -14,6 +14,13 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] WeeklyCalendar: fix typo
+
+  - AvailableExecptions > AvailableExceptionsInfo
+  - NotAvailableExecptions > NotAvailableExceptionsInfo)
+
+  [#179](https://github.com/sharetribe/web-template/pull/179)
+
 - [fix] SearchPageWithMap: include extra query parameters for onMapMoveEnd callback as they might
   contain 'keywords'. [#178](https://github.com/sharetribe/web-template/pull/178)
 - [fix] SectionCarousel was overflown, when scrollbars were enforced.

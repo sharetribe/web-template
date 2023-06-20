@@ -151,7 +151,7 @@ const ExceptionEntry = ({
 };
 
 // Component that renders all the ExceptionEntry components that allow availability (seats > 0)
-const AvailableExecptions = ({
+const AvailableExceptionsInfo = ({
   availableExceptions,
   useFullDays,
   isDaily,
@@ -181,7 +181,7 @@ const AvailableExecptions = ({
 };
 
 // Component that renders all the ExceptionEntry components that blocks availability (seats === 0)
-const NotAvailableExecptions = ({
+const NotAvailableExceptionsInfo = ({
   blockingExceptions,
   useFullDays,
   isDaily,
@@ -264,14 +264,14 @@ const CalendarDate = props => {
               <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.fetchExceptionsError" />
             ) : (
               <>
-                <AvailableExecptions
+                <AvailableExceptionsInfo
                   availableExceptions={availableExceptions}
                   useFullDays={useFullDays}
                   isDaily={isDaily}
                   timeZone={timeZone}
                   onDeleteAvailabilityException={onDeleteAvailabilityException}
                 />
-                <NotAvailableExecptions
+                <NotAvailableExceptionsInfo
                   blockingExceptions={blockingExceptions}
                   useFullDays={useFullDays}
                   isDaily={isDaily}
