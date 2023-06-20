@@ -658,7 +658,6 @@ const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig) => {
   const searchConfig = hostedSearchConfig?.mainSearch
     ? {
         sortConfig: defaultSearchConfig.sortConfig,
-        keywordsFilter: defaultSearchConfig.keywordsFilter,
         ...hostedSearchConfig,
       }
     : defaultSearchConfig;
@@ -668,7 +667,13 @@ const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig) => {
   const searchType = ['location', 'keywords'].includes(mainSearch?.searchType)
     ? mainSearch?.searchType
     : 'keywords';
-  const keywordsFilterMaybe = keywordsFilter ? [keywordsFilter] : [];
+
+  const keywordsFilterMaybe =
+    keywordsFilter?.enabled === true
+      ? [{ key: 'keywords', schemaType: 'text' }]
+      : defaultSearchConfig.keywordsFilter
+      ? [defaultSearchConfig.keywordsFilter]
+      : [];
 
   // This will define the order of default filters
   // The reason: later on, we'll add these default filters to config assets and
