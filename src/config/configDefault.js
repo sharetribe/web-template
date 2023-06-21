@@ -85,6 +85,7 @@ const defaultConfig = {
     //       It might take some time before these are actually available through hosted assets.
     // maps: '/integrations/map.json',
     // analytics: '/integrations/analytics.json',
+    // googleSearchConsole: '/integrations/google-search-console.json',
     // localization: '/general/localization.json',
   },
 
@@ -102,6 +103,13 @@ const defaultConfig = {
   // depending on jurisdiction (e.g. EU countries), since it relies on cookies.
   analytics: {
     googleAnalyticsId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
+  },
+
+  // Optional
+  // This creates meta tag for Google Search Console verification
+  // I.e. <meta name=“google-site-verification” content=“GOOGLE_SITE_VERIFICATION_TOKEN”/>
+  googleSearchConsole: {
+    googleSiteVerification: null, // Add google-site-verification token as a string
   },
 
   // Optional
