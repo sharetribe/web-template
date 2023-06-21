@@ -767,7 +767,9 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
     // Google Site Verification can be given through configs.
     // Renders a meta tag: <meta name="google-site-verification" content="[token-here]>" />
-    googleSearchConsole: configAsset.googleSearchConsole || defaultConfigs.googleSearchConsole,
+    googleSearchConsole: configAsset.googleSearchConsole?.googleSiteVerification
+      ? configAsset.googleSearchConsole
+      : defaultConfigs.googleSearchConsole,
 
     // Include hosted footer config, if it exists
     // Note: if footer asset is not set, Footer is not rendered.
