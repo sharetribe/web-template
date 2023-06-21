@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Use ternary as picker for site verification for Google Search Console.
+  [#184](https://github.com/sharetribe/web-template/pull/184)
 - [add] Add support for site verification for Google Search Console.
   [#183](https://github.com/sharetribe/web-template/pull/183)
 - [change] Prepare that keywords filter config might come from listing-search asset.
