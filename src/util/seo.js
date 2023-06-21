@@ -141,12 +141,23 @@ export const twitterMetaProps = data => {
  * Creates data for Open Graph and Twitter meta tags.
  */
 export const metaTagProps = (tagData, config) => {
-  const { marketplaceRootURL, facebookAppId, marketplaceName, siteTwitterHandle } = config;
+  const {
+    marketplaceRootURL,
+    facebookAppId,
+    marketplaceName,
+    siteTwitterHandle,
+    googleSearchConsole,
+  } = config;
 
   const author = tagData.author || marketplaceName;
+  const googleSiteVerification = googleSearchConsole?.googleSiteVerification;
+  const googleSiteVerificationMaybe = googleSiteVerification
+    ? [{ name: 'google-site-verification', content: googleSiteVerification }]
+    : [];
   const defaultMeta = [
     { name: 'description', content: tagData.description },
     { name: 'author', content: author },
+    ...googleSiteVerificationMaybe,
   ];
 
   const openGraphMeta = openGraphMetaProps({
