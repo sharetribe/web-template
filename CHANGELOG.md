@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+## [v2.1.0] 2023-06-22
+
 - [fix] Use ternary as picker for site verification for Google Search Console.
   [#184](https://github.com/sharetribe/web-template/pull/184)
 - [add] Add support for site verification for Google Search Console.
@@ -51,6 +53,8 @@ way to update this template, but currently, we follow a pattern:
     https://github.com/sharetribe/web-template/commit/2f4d8bffaad26bb2ad2ed6844d9edb62761e6be4
 
   [#176](https://github.com/sharetribe/web-template/pull/176)
+
+[v2.1.0]: https://github.com/sharetribe/web-template/compare/v2.0.0...v2.1.0
 
 ## [v2.0.0] 2023-06-02
 
