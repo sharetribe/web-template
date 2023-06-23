@@ -909,33 +909,69 @@ export class CheckoutPageComponent extends Component {
                 </p>
               ) : null}
               {showPaymentForm ? (
-                <StripePaymentForm
-                  className={css.paymentForm}
-                  onSubmit={values => this.handleSubmit(values, process)}
-                  inProgress={this.state.submitting}
-                  formId="CheckoutPagePaymentForm"
-                  authorDisplayName={currentAuthor.attributes.profile.displayName}
-                  showInitialMessageInput={showInitialMessageInput}
-                  initialValues={initalValuesForStripePayment}
-                  initiateOrderError={initiateOrderError}
-                  confirmCardPaymentError={confirmCardPaymentError}
-                  confirmPaymentError={confirmPaymentError}
-                  hasHandledCardPayment={hasPaymentIntentUserActionsDone}
-                  loadingData={!stripeCustomerFetched}
-                  defaultPaymentMethod={
-                    hasDefaultPaymentMethod ? currentUser.stripeCustomer.defaultPaymentMethod : null
-                  }
-                  paymentIntent={paymentIntent}
-                  onStripeInitialized={stripe => this.onStripeInitialized(stripe, process)}
-                  askShippingDetails={askShippingDetails}
-                  showPickUplocation={orderData?.deliveryMethod === 'pickup'}
-                  listingLocation={currentListing?.attributes?.publicData?.location}
-                  totalPrice={tx.id ? getFormattedTotalPrice(tx, intl) : null}
-                  locale={config.localization.locale}
-                  stripePublishableKey={config.stripe.publishableKey}
-                  marketplaceName={config.marketplaceName}
-                  isBooking={isBookingProcessAlias(transactionProcessAlias)}
-                  isFuzzyLocation={config.maps.fuzzy.enabled}
+                // <StripePaymentForm
+                //   className={css.paymentForm}
+                //   onSubmit={values => this.handleSubmit(values, process)}
+                //   inProgress={this.state.submitting}
+                //   formId="CheckoutPagePaymentForm"
+                //   authorDisplayName={currentAuthor.attributes.profile.displayName}
+                //   showInitialMessageInput={showInitialMessageInput}
+                //   initialValues={initalValuesForStripePayment}
+                //   initiateOrderError={initiateOrderError}
+                //   confirmCardPaymentError={confirmCardPaymentError}
+                //   confirmPaymentError={confirmPaymentError}
+                //   hasHandledCardPayment={hasPaymentIntentUserActionsDone}
+                //   loadingData={!stripeCustomerFetched}
+                //   defaultPaymentMethod={
+                //     hasDefaultPaymentMethod ? currentUser.stripeCustomer.defaultPaymentMethod : null
+                //   }
+                //   paymentIntent={paymentIntent}
+                //   onStripeInitialized={stripe => this.onStripeInitialized(stripe, process)}
+                //   askShippingDetails={askShippingDetails}
+                //   showPickUplocation={orderData?.deliveryMethod === 'pickup'}
+                //   listingLocation={currentListing?.attributes?.publicData?.location}
+                //   totalPrice={tx.id ? getFormattedTotalPrice(tx, intl) : null}
+                //   locale={config.localization.locale}
+                //   stripePublishableKey={config.stripe.publishableKey}
+                //   marketplaceName={config.marketplaceName}
+                //   isBooking={isBookingProcessAlias(transactionProcessAlias)}
+                //   isFuzzyLocation={config.maps.fuzzy.enabled}
+                // />
+                <FinalForm
+                  onSubmit={values => this.handleSubmit(values)}
+                  render={fieldRenderProps => {
+                    const { handleSubmit } = fieldRenderProps;
+                    return (
+                      <Form onSubmit={handleSubmit}>
+                        {showInitialMessageInput ? (
+                          <div>
+                            <h3 className={css.messageHeading}>
+                              <FormattedMessage id="StripePaymentForm.messageHeading" />
+                            </h3>
+              
+                            <FieldTextInput
+                              type="textarea"
+                              id={`bookingForm-message`}
+                              name="initialMessage"
+                              label={initialMessageLabel}
+                              placeholder={messagePlaceholder}
+                              className={css.message}
+                            />
+                          </div>
+                        ) : null}
+                        <div className={css.submitContainer}>
+                          <PrimaryButton
+                            className={css.submitButton}
+                            type="submit"
+                            inProgress={this.state.submitting}
+                            disabled={false}
+                          >
+                            Confirm booking
+                          </PrimaryButton>
+                        </div>
+                      </Form>
+                    );
+                  }}
                 />
               ) : null}
               {isPaymentExpired ? (
