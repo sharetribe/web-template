@@ -72,7 +72,7 @@ export class BookingTimeFormComponent extends Component {
     return (
       <FinalForm
         {...rest}
-        unitPrice={unitPrice}
+        // unitPrice={unitPrice}
         onSubmit={this.handleFormSubmit}
         render={fieldRenderProps => {
           const {
@@ -143,7 +143,7 @@ export class BookingTimeFormComponent extends Component {
                 />
               ) : null}
 
-              {showEstimatedBreakdown ? (
+              {/* {showEstimatedBreakdown ? (
                 <div className={css.priceBreakdownContainer}>
                   <H6 as="h3" className={css.bookingBreakdownTitle}>
                     <FormattedMessage id="BookingTimeForm.priceBreakdownTitle" />
@@ -164,10 +164,10 @@ export class BookingTimeFormComponent extends Component {
                 <span className={css.sideBarError}>
                   <FormattedMessage id="BookingTimeForm.fetchLineItemsError" />
                 </span>
-              ) : null}
+              ) : null} */}
 
               <div className={css.submitButton}>
-                <PrimaryButton type="submit" inProgress={fetchLineItemsInProgress}>
+                <PrimaryButton type="submit">
                   <FormattedMessage id="BookingTimeForm.requestToBook" />
                 </PrimaryButton>
               </div>

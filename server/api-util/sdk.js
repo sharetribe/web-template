@@ -143,14 +143,14 @@ exports.fetchCommission = sdk => {
     .then(response => {
       // Let's throw an error if we can't fetch commission for some reason
       const commissionAsset = response?.data?.data?.[0];
-      if (!commissionAsset) {
-        const message = 'Insufficient pricing configuration set.';
-        const error = new Error(message);
-        error.status = 400;
-        error.statusText = message;
-        error.data = {};
-        throw error;
-      }
+      // if (!commissionAsset) {
+      //   const message = 'Insufficient pricing configuration set.';
+      //   const error = new Error(message);
+      //   error.status = 400;
+      //   error.statusText = message;
+      //   error.data = {};
+      //   throw error;
+      // }
       return response;
     });
 };
