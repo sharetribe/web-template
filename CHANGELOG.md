@@ -14,10 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+## [v2.1.1] 2023-06-26
+
 - [fix] New message email template contained an old link that was not in use on the new Template.
   [#187](https://github.com/sharetribe/web-template/pull/187)
 - [fix] Add missing translation: StripeConnectAccountForm.missingStripeKey
   [#186](https://github.com/sharetribe/web-template/pull/186)
+
+[v2.1.1]: https://github.com/sharetribe/web-template/compare/v2.1.0...v2.1.1
 
 ## [v2.1.0] 2023-06-22
 
