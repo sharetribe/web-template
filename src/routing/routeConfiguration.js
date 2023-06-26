@@ -220,6 +220,13 @@ const routeConfiguration = (layoutConfig) => {
       setInitialValues: pageDataLoadingAPI.TransactionPage.setInitialValues,
     },
     {
+      path: '/order/:id/details',
+      name: 'OrderDetailsPageRedirect',
+      auth: true,
+      authPage: 'LoginPage',
+      component: props => <NamedRedirect name="OrderDetailsPage" params={{ id: props.params?.id }} />,
+    },
+    {
       path: '/sale/:id',
       name: 'SaleDetailsPage',
       auth: true,
@@ -227,6 +234,13 @@ const routeConfiguration = (layoutConfig) => {
       component: TransactionPage,
       extraProps: { transactionRole: 'provider' },
       loadData: pageDataLoadingAPI.TransactionPage.loadData,
+    },
+    {
+      path: '/sale/:id/details',
+      name: 'SaleDetailsPageRedirect',
+      auth: true,
+      authPage: 'LoginPage',
+      component: props => <NamedRedirect name="SaleDetailsPage" params={{ id: props.params?.id }} />,
     },
     {
       path: '/listings',
