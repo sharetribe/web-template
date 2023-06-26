@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Add missing translation: StripeConnectAccountForm.missingStripeKey
+  [#186](https://github.com/sharetribe/web-template/pull/186)
+
 ## [v2.1.0] 2023-06-22
 
 - [fix] Use ternary as picker for site verification for Google Search Console.
