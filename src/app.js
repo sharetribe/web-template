@@ -211,10 +211,7 @@ export const ClientApp = props => {
           <HelmetProvider>
             <IncludeScripts config={appConfig} />
             <BrowserRouter>
-              <Routes
-                routes={routeConfiguration(appConfig.layout)}
-                logLoadDataCalls={logLoadDataCalls}
-              />
+              <Routes logLoadDataCalls={logLoadDataCalls} />
             </BrowserRouter>
           </HelmetProvider>
         </Provider>
