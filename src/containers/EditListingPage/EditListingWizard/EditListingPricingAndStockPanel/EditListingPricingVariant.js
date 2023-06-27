@@ -12,7 +12,6 @@ import { FieldTextInput, FieldCurrencyInput, IconTrash } from '../../../../compo
 import css from './EditListingPricingAndStockForm.module.css';
 
 const EditListingPricingVariant = props => {
-  console.log(IconTrash);
   const{
     marketplaceCurrency
   }=props;
@@ -45,12 +44,8 @@ const EditListingPricingVariant = props => {
                   placeholder={props.intl.formatMessage({ id: 'EditListingPricingForm.pricePerProductPlaceholderVariant' })}
                   currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
                   validate={props.priceValidators}
-                  onChange={()=>{
-                      let qweqwe = `${name}`;
-                      console.log(JSON.stringify(qweqwe))
-                    }
-                  }
                   />
+                  
                   <FieldTextInput 
                   id={`${name}.variantLabel`}
                   name={`${name}.variantLabel`}
