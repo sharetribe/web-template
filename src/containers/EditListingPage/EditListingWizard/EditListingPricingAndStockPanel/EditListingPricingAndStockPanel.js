@@ -106,16 +106,18 @@ const EditListingPricingAndStockPanel = props => {
             // configured options for add variant price with descriptions
             const variantsValues = values.pricingVariant;
             const variantsUpdate = {};
-        
-            const valuesKeys = Object.keys(variantsValues);
-            valuesKeys.forEach((element) => {
-                const curVariant = variantsValues[element];
-                if(curVariant.variantPrice && curVariant.variantPrice.amount){
-                  const variantPrice = curVariant.variantPrice.amount;
-                  const variantLabel = curVariant.variantLabel;
-                  variantsUpdate[element] = {variantPrice,variantLabel};
-                }
-            });
+            
+            if(typeof variantsValues == "object"){
+              const valuesKeys = Object.keys(variantsValues);
+              valuesKeys.forEach((element) => {
+                  const curVariant = variantsValues[element];
+                  if(curVariant.variantPrice && curVariant.variantPrice.amount){
+                    const variantPrice = curVariant.variantPrice.amount;
+                    const variantLabel = curVariant.variantLabel;
+                    variantsUpdate[element] = {variantPrice,variantLabel};
+                  }
+              });
+            }
 
             // Update stock only if the value has changed.
             // NOTE: this is going to be used on a separate call to API
