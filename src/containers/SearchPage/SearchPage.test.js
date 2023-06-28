@@ -1,56 +1,54 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 
-import { createListing, fakeIntl } from '../../util/testData';
+import { createListing } from '../../util/testData';
 import {
   renderWithProviders as render,
   testingLibrary,
   getRouteConfiguration,
+  getHostedConfiguration,
 } from '../../util/testHelpers';
 
-import { SearchPageComponent as SearchPageWithGrid } from './SearchPageWithGrid';
-import { SearchPageComponent as SearchPageWithMap } from './SearchPageWithMap';
-
-const { screen } = testingLibrary;
+const { screen, waitFor } = testingLibrary;
 
 const noop = () => null;
 
 const listingTypes = [
   {
-    listingType: 'rent-bicycles-daily',
-    transactionType: {
-      process: 'default-booking',
+    id: 'rent-bicycles-daily',
+    transactionProcess: {
+      name: 'default-booking',
       alias: 'default-booking/release-1',
-      unitType: 'day',
     },
+    unitType: 'day',
   },
   {
-    listingType: 'rent-bicycles-nightly',
-    transactionType: {
-      process: 'default-booking',
+    id: 'rent-bicycles-nightly',
+    transactionProcess: {
+      name: 'default-booking',
       alias: 'default-booking/release-1',
-      unitType: 'night',
     },
+    unitType: 'night',
   },
   {
-    listingType: 'rent-bicycles-hourly',
-    transactionType: {
-      process: 'default-booking',
+    id: 'rent-bicycles-hourly',
+    transactionProcess: {
+      name: 'default-booking',
       alias: 'default-booking/release-1',
-      unitType: 'hour',
     },
+    unitType: 'hour',
   },
   {
-    listingType: 'sell-bicycles',
-    transactionType: {
-      process: 'default-purchase',
+    id: 'sell-bicycles',
+    transactionProcess: {
+      name: 'default-purchase',
       alias: 'default-purchase/release-1',
-      unitType: 'item',
     },
+    unitType: 'item',
   },
 ];
 
-const listingFieldsConfig = [
+const listingFields = [
   {
     key: 'category',
     scope: 'public',
@@ -125,71 +123,166 @@ const sortConfig = {
   ],
 };
 
-describe('SearchPageWithGrid', () => {
-  const props = {
-    location: { search: '' },
-    history: {
-      push: () => console.log('HistoryPush called'),
+const getConfig = variantType => {
+  const hostedConfig = getHostedConfiguration();
+  return {
+    ...hostedConfig,
+    listingFields: {
+      listingFields,
     },
-    listings: [createListing('l1'), createListing('l2')],
-    pagination: {
-      page: 1,
-      perPage: 12,
-      totalItems: 22,
-      totalPages: 2,
+    listingTypes: {
+      listingTypes,
     },
-    tab: 'listings',
-    scrollingDisabled: false,
-    searchInProgress: false,
-    authInProgress: false,
-    currentUserHasListings: false,
-    listingsAreLoaded: true,
-    intl: fakeIntl,
-    isAuthenticated: false,
-    onActivateListing: noop,
-    onLogout: noop,
-    onManageDisableScrolling: noop,
-    onSearchMapListings: noop,
-    sendVerificationEmailInProgress: false,
-    onResendVerificationEmail: noop,
-    config: {
-      currency: 'USD',
-      listing: {
-        listingFields: listingFieldsConfig,
-        listingTypes,
+    search: {
+      ...hostedConfig.search,
+      mainSearch: {
+        searchType: 'location',
       },
-      search: {
-        mainSearch: {
-          searchType: 'location',
+      defaultFilters: defaultFiltersConfig,
+      sortConfig: sortConfig,
+    },
+    layout: {
+      ...hostedConfig.layout,
+      searchPage: { variantType },
+    },
+  };
+};
+
+describe('SearchPage', () => {
+  const l1 = createListing('l1');
+  const l2 = createListing('l2');
+
+  // We'll initialize the store with relevant listing data
+  const initialState = {
+    SearchPage: {
+      currentPageResultIds: [l1.id, l2.id],
+      pagination: {
+        page: 1,
+        perPage: 1,
+        totalItems: 2,
+        totalPages: 2,
+      },
+      searchInProgress: false,
+      searchListingsError: null,
+      searchParams: null,
+      activeListingId: null,
+    },
+    marketplaceData: {
+      entities: {
+        listing: {
+          l1,
+          l2,
         },
-        defaultFilters: defaultFiltersConfig,
-        sortConfig: sortConfig,
-      },
-      maps: {
-        search: {
-          sortSearchByDistance: false,
-        },
-      },
-      layout: {
-        searchPage: { variantType: 'grid' },
       },
     },
-    routeConfiguration: getRouteConfiguration(),
   };
 
-  test('Check that filterColumn exists', () => {
-    render(<SearchPageWithGrid {...props} />);
-    const filterColumnAside = 'filterColumnAside';
-    expect(screen.getByTestId(filterColumnAside)).toBeInTheDocument();
-    const searchMapContainer = 'searchMapContainer';
-    expect(screen.queryByTestId(searchMapContainer)).not.toBeInTheDocument();
+  const commonProps = {
+    scrollingDisabled: false,
+    onActivateListing: noop,
+    onManageDisableScrolling: noop,
+  };
+
+  it('Check that filterColumn and filters exist in grid variant', async () => {
+    // Select correct SearchPage variant according to route configuration
+    const config = getConfig('grid');
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const props = { ...commonProps };
+    const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
+    const SearchPage = searchRouteConfig.component;
+
+    const { getByPlaceholderText, getByText, getAllByText, queryByText } = render(
+      <SearchPage {...props} />,
+      {
+        initialState,
+        config,
+        routeConfiguration,
+      }
+    );
+
+    await waitFor(() => {
+      // Has main search in Topbar and it's a location search.
+      expect(getByPlaceholderText('TopbarSearchForm.placeholder')).toBeInTheDocument();
+      expect(screen.getByTestId('location-search')).toBeInTheDocument();
+
+      // Has filter column
+      expect(screen.getByTestId('filterColumnAside')).toBeInTheDocument();
+      // Does not have search map container
+      expect(screen.queryByTestId('searchMapContainer')).not.toBeInTheDocument();
+
+      // Has SortBy component
+      expect(getByText('MainPanelHeader.sortBy')).toBeInTheDocument();
+      expect(getAllByText('Newest')).toHaveLength(4); // desktop and mobile dropdowns & selected
+      expect(getAllByText('Oldest')).toHaveLength(2); // desktop and mobile dropdowns
+
+      // Has Category filter (primary)
+      expect(getByText('Category')).toBeInTheDocument();
+      // Has(!) Amenities filter (secondary filter)
+      expect(getByText('Amenities')).toBeInTheDocument();
+
+      // Has Price filter
+      expect(getByText('FilterComponent.priceLabel')).toBeInTheDocument();
+
+      // Shows listings
+      // Has listing with title
+      expect(getByText('l1 title')).toBeInTheDocument();
+      // Has listing with title
+      expect(getByText('l2 title')).toBeInTheDocument();
+      // 2 listings with the same price
+      expect(getAllByText('$55.00')).toHaveLength(2);
+    });
   });
 
-  test('Check that map exists', () => {
-    render(<SearchPageWithMap {...props} />);
-    const filterColumnAside = 'filterColumnAside';
-    expect(screen.queryByTestId(filterColumnAside)).not.toBeInTheDocument();
-    const searchMapContainer = 'searchMapContainer';
-    expect(screen.getByTestId(searchMapContainer)).toBeInTheDocument();
+  it('Check that map and filters exist in map variant', async () => {
+    // Select correct SearchPage variant according to route configuration
+    const config = getConfig('map');
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const props = { ...commonProps };
+    const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
+    const SearchPage = searchRouteConfig.component;
+
+    const { getByPlaceholderText, getByText, getAllByText, queryByText } = render(
+      <SearchPage {...props} />,
+      {
+        initialState,
+        config,
+        routeConfiguration,
+      }
+    );
+
+    await waitFor(() => {
+      // Has main search in Topbar and it's a location search.
+      expect(getByPlaceholderText('TopbarSearchForm.placeholder')).toBeInTheDocument();
+      expect(screen.getByTestId('location-search')).toBeInTheDocument();
+
+      // Does not have filter column
+      expect(screen.queryByTestId('filterColumnAside')).not.toBeInTheDocument();
+      // Has search map container
+      expect(screen.getByTestId('searchMapContainer')).toBeInTheDocument();
+
+      // Has SortBy component
+      expect(getByText('MainPanelHeader.sortBy')).toBeInTheDocument();
+      expect(getAllByText('Newest')).toHaveLength(4); // desktop and mobile dropdowns & selected
+      expect(getAllByText('Oldest')).toHaveLength(2); // desktop and mobile dropdowns
+
+      // Has Category filter (primary)
+      expect(getByText('Category')).toBeInTheDocument();
+      // Does not have Amenities filter (secondary)
+      expect(queryByText('Amenities')).not.toBeInTheDocument();
+
+      // Has "more filters" button for secondary filters
+      expect(getByText('SearchFiltersPrimary.moreFiltersButton')).toBeInTheDocument();
+
+      // Has Price filter
+      expect(getByText('FilterComponent.priceLabel')).toBeInTheDocument();
+
+      // Shows listings
+      // Has listing with title
+      expect(getByText('l1 title')).toBeInTheDocument();
+      // Has listing with title
+      expect(getByText('l2 title')).toBeInTheDocument();
+      // 2 listings with the same price
+      expect(getAllByText('$55.00')).toHaveLength(2);
+    });
   });
 });

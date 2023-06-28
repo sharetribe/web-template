@@ -61,7 +61,7 @@ export class SearchPageComponent extends Component {
     super(props);
 
     this.state = {
-      isSearchMapOpenOnMobile: props.tab === 'map',
+      isSearchMapOpenOnMobile: false,
       isMobileModalOpen: false,
       currentQueryParams: validUrlQueryParamsFromProps(props),
       isSecondaryFiltersOpen: false,
@@ -555,7 +555,6 @@ SearchPageComponent.defaultProps = {
   pagination: null,
   searchListingsError: null,
   searchParams: {},
-  tab: 'listings',
   activeListingId: null,
 };
 
@@ -568,7 +567,6 @@ SearchPageComponent.propTypes = {
   searchInProgress: bool.isRequired,
   searchListingsError: propTypes.error,
   searchParams: object,
-  tab: oneOf(['filters', 'listings', 'map']).isRequired,
 
   // from useHistory
   history: shape({
