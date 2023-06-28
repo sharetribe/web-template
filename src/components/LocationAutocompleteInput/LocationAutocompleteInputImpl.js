@@ -544,6 +544,7 @@ class LocationAutocompleteInputImplementation extends Component {
               inputRef(node);
             }
           }}
+          data-testid="location-search"
         />
         {renderPredictions ? (
           <LocationPredictionsList

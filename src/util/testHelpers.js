@@ -8,8 +8,10 @@ import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { HelmetProvider } from 'react-helmet-async';
 
-import configureStore from '../store';
 import { IntlProvider } from './reactIntl';
+import { mergeConfig } from './configHelpers';
+
+import configureStore from '../store';
 import defaultConfig from '../config/configDefault';
 import { ConfigurationProvider } from '../context/configurationContext';
 import { RouteConfigurationProvider } from '../context/routeConfigurationContext';
@@ -312,6 +314,15 @@ export const getHostedConfiguration = () => {
           label: 'Daily Booking',
           unitType: 'day',
         },
+        {
+          transactionProcess: {
+            alias: 'default-purchase/release-1',
+            name: 'default-purchase',
+          },
+          id: 'product-selling',
+          label: 'Sell products',
+          unitType: 'item',
+        },
       ],
     },
     listingFields: {
@@ -496,7 +507,7 @@ export const getHostedConfiguration = () => {
   };
 };
 
-export const getRouteConfiguration = () => {
+export const getRouteConfiguration = (layoutConfiguration = {}) => {
   const layoutConfig = {
     searchPage: { variantType: 'map' },
     listingPage: { variantType: 'carousel' },
@@ -505,6 +516,7 @@ export const getRouteConfiguration = () => {
       aspectHeight: 400,
       variantPrefix: 'listing-card',
     },
+    ...layoutConfiguration,
   };
   return routeConfiguration(layoutConfig);
 };
@@ -515,11 +527,12 @@ const testMessages = mapValues(messages, (val, key) => key);
 
 // Provide all the context for components that connect to the Redux
 // store, i18n, router, etc.
-export const TestProvider = ({ children }) => {
-  const store = configureStore();
+export const TestProvider = ({ children, initialState, config, routeConfiguration }) => {
+  const store = configureStore(initialState || {});
+  const hostedConfig = config || getHostedConfiguration();
   return (
-    <ConfigurationProvider value={getDefaultConfiguration()}>
-      <RouteConfigurationProvider value={getRouteConfiguration()}>
+    <ConfigurationProvider value={mergeConfig(hostedConfig, getDefaultConfiguration())}>
+      <RouteConfigurationProvider value={routeConfiguration || getRouteConfiguration()}>
         <IntlProvider locale="en" messages={testMessages} textComponent="span">
           <Provider store={store}>
             <HelmetProvider>
@@ -545,9 +558,20 @@ export const TestProvider = ({ children }) => {
 //   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
 // }
 
-export const renderWithProviders = (ui, renderOptions = {}) => {
+export const renderWithProviders = (
+  ui,
+  { initialState, config, routeConfiguration, ...renderOptions } = {}
+) => {
   const Wrapper = ({ children }) => {
-    return <TestProvider>{children}</TestProvider>;
+    return (
+      <TestProvider
+        initialState={initialState}
+        config={config}
+        routeConfiguration={routeConfiguration}
+      >
+        {children}
+      </TestProvider>
+    );
   };
   return reactTestingLibrary.render(ui, { wrapper: Wrapper, ...renderOptions });
 };
