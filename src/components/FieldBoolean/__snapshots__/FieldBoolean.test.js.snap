@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FieldBoolean matches snapshot 1`] = `
+<form>
+  <div
+    class="root"
+  >
+    <label
+      for="test.boolOption"
+    >
+      Boolean option
+    </label>
+    <select
+      class=""
+      id="test.boolOption"
+      name="boolOption"
+    >
+      <option
+        value=""
+      >
+        Choose yes/no
+      </option>
+      <option
+        value="true"
+      >
+        FieldBoolean.yes
+      </option>
+      <option
+        value="false"
+      >
+        FieldBoolean.no
+      </option>
+    </select>
+  </div>
+  <button
+    disabled=""
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
