@@ -9,7 +9,7 @@ import { ManageListingCardComponent } from './ManageListingCard';
 const noop = () => null;
 
 describe('ManageListingCard', () => {
-  test('matches snapshot', () => {
+  it('matches snapshot', () => {
     const tree = render(
       <ManageListingCardComponent
         history={{ push: noop }}

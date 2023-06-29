@@ -9,7 +9,7 @@ import Menu from './Menu';
 describe('Menu', () => {
   // This is quite small component what comes to rendered HTML
   // For now, we rely on snapshot-testing.
-  test('matches snapshot', () => {
+  it('matches snapshot', () => {
     const tree = render(
       <Menu>
         <MenuLabel>Label</MenuLabel>

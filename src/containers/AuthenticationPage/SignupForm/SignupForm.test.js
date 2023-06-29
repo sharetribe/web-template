@@ -19,14 +19,14 @@ describe('SignupForm', () => {
 
   // // If snapshot testing is preferred, this could be used
   // // However, this form starts to be too big DOM structure to be snapshot tested nicely
-  // test('matches snapshot', () => {
+  // it('matches snapshot', () => {
   //   const tree = render(
   //     <SignupForm intl={fakeIntl} termsAndConditions={termsAndConditions} onSubmit={noop} />
   //   );
   //   expect(tree.asFragment()).toMatchSnapshot();
   // });
 
-  test('Sign up button is enabled when required fields are filled', () => {
+  it('enables Sign up button when required fields are filled', () => {
     render(<SignupForm intl={fakeIntl} termsAndConditions={termsAndConditions} onSubmit={noop} />);
 
     // Test that sign up button is disabled at first

@@ -141,7 +141,7 @@ describe('InboxPage', () => {
     onResendVerificationEmail: noop,
   };
 
-  test('InboxPageComponent has tabs and inbox items for orders', () => {
+  it('has tabs and inbox items for orders on InboxPageComponent', () => {
     render(<InboxPageComponent {...ordersProps} />);
 
     // Has links to orders and sales tabs
@@ -170,7 +170,7 @@ describe('InboxPage', () => {
 
   // This is quite small component what comes to rendered HTML
   // For now, we rely on snapshot-testing and checking quantity.
-  test('InboxItem matches snapshot of order', () => {
+  it('InboxItem matches snapshot of order', () => {
     const stateDataOrder = getStateData({
       transaction: ordersProps.transactions[0],
       transactionRole: TX_TRANSITION_ACTOR_CUSTOMER,
@@ -190,7 +190,7 @@ describe('InboxPage', () => {
     expect(screen.getByText('InboxPage.quantity')).toBeInTheDocument();
   });
 
-  test('InboxPageComponent has tabs and inbox items for sales', () => {
+  it('has tabs and inbox items for sales on InboxPageComponent', () => {
     render(<InboxPageComponent {...salesProps} />);
 
     // Has links to orders and sales tabs
@@ -219,7 +219,7 @@ describe('InboxPage', () => {
 
   // This is quite small component what comes to rendered HTML
   // For now, we rely on snapshot-testing and checking quantity.
-  test('InboxItem matches snapshot of sales', () => {
+  it('InboxItem matches snapshot of sales', () => {
     const stateDataOrder = getStateData({
       transaction: salesProps.transactions[0],
       transactionRole: TX_TRANSITION_ACTOR_PROVIDER,

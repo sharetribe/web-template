@@ -11,7 +11,7 @@ const { screen, userEvent } = testingLibrary;
 const noop = () => null;
 
 describe('PasswordRecoveryPageComponent', () => {
-  test('Check that email input shows error and submit is enabled if form is filled', () => {
+  it('Check that email input shows error and submit is enabled if form is filled', () => {
     render(
       <PasswordRecoveryPageComponent
         params={{ displayName: 'my-shop' }}

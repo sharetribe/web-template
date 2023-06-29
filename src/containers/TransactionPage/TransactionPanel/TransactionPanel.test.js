@@ -58,7 +58,7 @@ describe('TransactionPanel - Sale', () => {
     },
   };
 
-  test('Inquired is shown', () => {
+  it('shows Inquired state', () => {
     render(<TransactionPanelComponent {...panelBaseProps} />);
 
     const providerTitle = 'TransactionPage.default-purchase.provider.inquiry.title';
@@ -113,7 +113,7 @@ describe('TransactionPanel - Order', () => {
     },
   };
 
-  test('Inquired is shown', () => {
+  it('shows Inquired state', () => {
     render(<TransactionPanelComponent {...panelBaseProps} />);
 
     const customerTitle = 'TransactionPage.default-purchase.customer.inquiry.title';
