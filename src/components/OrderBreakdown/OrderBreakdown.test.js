@@ -41,7 +41,7 @@ const exampleTransaction = params => {
 };
 
 describe('OrderBreakdown', () => {
-  test('data for product has base price, shipping fee and total', () => {
+  it('shows base price, shipping fee and total to customer (product)', () => {
     render(
       <OrderBreakdownComponent
         userRole="customer"
@@ -92,7 +92,7 @@ describe('OrderBreakdown', () => {
     expect(totalPayIn.getByText('30')).toBeInTheDocument();
   });
 
-  test('data for booking has base price, booking dates and total', () => {
+  it('shows base price, booking dates and total to customer (booking)', () => {
     render(
       <OrderBreakdownComponent
         userRole="customer"
@@ -148,7 +148,7 @@ describe('OrderBreakdown', () => {
     expect(totalPayIn.getByText('20')).toBeInTheDocument();
   });
 
-  test('data for provider booking has base price, provider-commission and total', () => {
+  it('shows base price, provider-commission and total to provider (booking)', () => {
     render(
       <OrderBreakdownComponent
         userRole="provider"

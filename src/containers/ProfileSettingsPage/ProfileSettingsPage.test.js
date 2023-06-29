@@ -11,7 +11,7 @@ const { screen } = testingLibrary;
 const noop = () => null;
 
 describe('ProfileSettingsPage', () => {
-  test('Check that there is a link to ProfilePage', () => {
+  it('Check that there is a link to ProfilePage', () => {
     const props = {
       authInProgress: false,
       currentUser: createCurrentUser('userId'),

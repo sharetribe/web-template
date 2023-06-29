@@ -302,7 +302,7 @@ describe('Duck', () => {
     },
   };
 
-  test('showListing() success', () => {
+  it('showListing() success', () => {
     const id = new UUID('00000000-0000-0000-0000-000000000000');
     const dispatch = jest.fn(action => action);
     const response = { status: 200 };
@@ -329,7 +329,7 @@ describe('Duck', () => {
     });
   });
 
-  test('showListing() error', () => {
+  it('showListing() error', () => {
     const id = new UUID('00000000-0000-0000-0000-000000000000');
     const dispatch = jest.fn(action => action);
     const error = new Error('fail');
@@ -359,7 +359,7 @@ describe('Duck', () => {
 });
 
 describe('ActionBarMaybe', () => {
-  test('shows users own listing status', () => {
+  it('shows users own listing status', () => {
     const listing = createListing('listing-published', {
       state: LISTING_STATE_PUBLISHED,
     });
@@ -375,7 +375,7 @@ describe('ActionBarMaybe', () => {
     expect(screen.getByText('ListingPage.editListing')).toBeInTheDocument();
   });
 
-  test('shows users own pending listing status', () => {
+  it('shows users own pending listing status', () => {
     const listing = createListing('listing-published', {
       state: LISTING_STATE_PENDING_APPROVAL,
     });
@@ -390,7 +390,7 @@ describe('ActionBarMaybe', () => {
     expect(screen.getByText('ListingPage.editListing')).toBeInTheDocument();
   });
 
-  test('shows users own closed listing status', () => {
+  it('shows users own closed listing status', () => {
     const listing = createListing('listing-closed', {
       state: LISTING_STATE_CLOSED,
     });
@@ -405,7 +405,7 @@ describe('ActionBarMaybe', () => {
     expect(screen.getByText('ListingPage.editListing')).toBeInTheDocument();
   });
 
-  test('shows closed listing status', () => {
+  it('shows closed listing status', () => {
     const listing = createListing('listing-closed', {
       state: LISTING_STATE_CLOSED,
     });
@@ -419,7 +419,7 @@ describe('ActionBarMaybe', () => {
     expect(screen.getByText('ListingPage.closedListing')).toBeInTheDocument();
   });
 
-  test("is missing if listing is not closed or user's own", () => {
+  it("is missing if listing is published but not user's own", () => {
     const listing = createListing('listing-published', {
       state: LISTING_STATE_PUBLISHED,
     });

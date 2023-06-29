@@ -11,7 +11,7 @@ const { screen, userEvent } = testingLibrary;
 const noop = () => null;
 
 describe('EditListingPageComponent', () => {
-  test('Check that there is correct wizard tabs', () => {
+  it('Check that there is correct wizard tabs', () => {
     render(
       <EditListingPageComponent
         params={{ id: 'id', slug: 'slug', type: 'new', tab: 'details' }}

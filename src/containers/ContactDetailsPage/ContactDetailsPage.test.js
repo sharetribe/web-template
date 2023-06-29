@@ -11,7 +11,7 @@ const { screen, act, userEvent } = testingLibrary;
 const noop = () => null;
 
 describe('ContactDetailsPageComponent', () => {
-  test('Check that newPassword input shows error and submit is enabled if form is filled', () => {
+  it('Check that newPassword input shows error and submit is enabled if form is filled', () => {
     act(() => {
       const tree = render(
         <ContactDetailsPageComponent

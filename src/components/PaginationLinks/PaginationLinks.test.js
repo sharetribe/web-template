@@ -19,7 +19,7 @@ describe('PaginationLinks', () => {
 
   // This is quite small component what comes to rendered HTML
   // For now, we rely on snapshot-testing and checking the existence of next & prev buttons.
-  test('should match snapshot with both links enabled', () => {
+  it('should match snapshot with both links enabled', () => {
     const pagination = {
       page: 2,
       perPage: 10,
@@ -32,7 +32,7 @@ describe('PaginationLinks', () => {
     expect(tree.asFragment().firstChild).toMatchSnapshot();
   });
 
-  test('should match snapshot with both links disabled', () => {
+  it('should match snapshot with both links disabled', () => {
     const pagination = {
       page: 1,
       perPage: 10,
@@ -45,7 +45,7 @@ describe('PaginationLinks', () => {
     expect(tree.asFragment().firstChild).toMatchSnapshot();
   });
 
-  test('should match snapshot with prev disabled and next enabled', () => {
+  it('should match snapshot with prev disabled and next enabled', () => {
     const pagination = {
       page: 1,
       perPage: 10,
@@ -58,7 +58,7 @@ describe('PaginationLinks', () => {
     expect(tree.asFragment().firstChild).toMatchSnapshot();
   });
 
-  test('should match snapshot with prev enabled and next disabled', () => {
+  it('should match snapshot with prev enabled and next disabled', () => {
     const pagination = {
       page: 3,
       perPage: 10,

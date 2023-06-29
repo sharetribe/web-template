@@ -42,7 +42,7 @@ describe('AuthenticationPage', () => {
     jest.clearAllMocks();
   });
 
-  test('AuthenticationPage login tab has just email and password inputs if social logins are not enabled', () => {
+  it('has just email and password inputs in login tab if social logins are not enabled', () => {
     // We want to make sure that during the test the env variables
     // for social logins are as we expect them to be
     process.env = Object.assign(process.env, { REACT_APP_FACEBOOK_APP_ID: '' });
@@ -64,7 +64,7 @@ describe('AuthenticationPage', () => {
     ).not.toBeInTheDocument();
   });
 
-  test('On AuthenticationPage clicking "Sign up" changes the login form to sign up form', async () => {
+  it('changes the login form to sign up form by clicking "Sign up" ', async () => {
     // We want to make sure that during the test the env variables
     // for social logins are as we expect them to be
     process.env = Object.assign(process.env, { REACT_APP_FACEBOOK_APP_ID: '' });
@@ -96,7 +96,7 @@ describe('AuthenticationPage with SSO', () => {
     jest.clearAllMocks();
   });
 
-  test('AuthenticationPage login tab has social login buttons when the env variables are in place', () => {
+  it('has social login buttons on login tab when the env variables are in place', () => {
     // We want to make sure that during the test the env variables
     // for social logins are as we expect them to be
     process.env = Object.assign(process.env, { REACT_APP_FACEBOOK_APP_ID: 'test-fb' });

@@ -10,7 +10,7 @@ const { screen } = testingLibrary;
 describe('NamedLink', () => {
   // This is quite small component what comes to rendered HTML
   // For now, we rely on snapshot-testing and testing couple of features.
-  test('matches snapshot', () => {
+  it('matches snapshot', () => {
     const activeClassName = 'my-active-class';
     const landingPageProps = {
       name: 'LandingPage',
@@ -34,7 +34,7 @@ describe('NamedLink', () => {
     expect(tree.asFragment().firstChild).toMatchSnapshot();
   });
 
-  test('should contain correct link', () => {
+  it('should contain correct link', () => {
     const id = 12;
     const tree = render(
       <NamedLink name="ListingPageCanonical" params={{ id }}>
