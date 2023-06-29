@@ -11,7 +11,7 @@
 // Main search used in Topbar.
 // This can be either 'keywords' or 'location'.
 export const mainSearch = {
-  searchType: 'location',
+  searchType: 'keywords',
 };
 
 /**
