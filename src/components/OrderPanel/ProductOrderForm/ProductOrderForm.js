@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { bool, func, number, string } from 'prop-types';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 
@@ -26,7 +26,27 @@ import css from './ProductOrderForm.module.css';
 // Note: input element could allow ordering bigger quantities
 const MAX_QUANTITY_FOR_DROPDOWN = 100;
 
+const handleFetchLineItems = ({
+  quantity,
+  deliveryMethod,
+  listingId,
+  isOwnListing,
+  fetchLineItemsInProgress,
+  onFetchTransactionLineItems,
+}) => {
+  const stockReservationQuantity = Number.parseInt(quantity, 10);
+  const isBrowser = typeof window !== 'undefined';
+  if (isBrowser && stockReservationQuantity && deliveryMethod && !fetchLineItemsInProgress) {
+    onFetchTransactionLineItems({
+      orderData: { stockReservationQuantity, deliveryMethod },
+      listingId,
+      isOwnListing,
+    });
+  }
+};
+
 const renderForm = formRenderProps => {
+  const [mounted, setMounted] = useState(false);
   const {
     // FormRenderProps from final-form
     handleSubmit,
@@ -49,15 +69,35 @@ const renderForm = formRenderProps => {
     values,
   } = formRenderProps;
 
-  const handleOnChange = formValues => {
-    const { quantity, deliveryMethod } = formValues.values;
-    const stockReservationQuantity = Number.parseInt(quantity, 10);
-    const isBrowser = typeof window !== 'undefined';
-    if (isBrowser && stockReservationQuantity && deliveryMethod && !fetchLineItemsInProgress) {
-      onFetchTransactionLineItems({
-        orderData: { stockReservationQuantity, deliveryMethod },
+  // Note: don't add custom logic before useEffect
+  useEffect(() => {
+    setMounted(true);
+
+    // Side-effect: fetch line-items after mounting if possible
+    const { quantity, deliveryMethod } = values;
+    if (quantity && !formRenderProps.hasMultipleDeliveryMethods) {
+      handleFetchLineItems({
+        quantity,
+        deliveryMethod,
         listingId,
         isOwnListing,
+        fetchLineItemsInProgress,
+        onFetchTransactionLineItems,
+      });
+    }
+  }, []);
+
+  // If form values change, update line-items for the order breakdown
+  const handleOnChange = formValues => {
+    const { quantity, deliveryMethod } = formValues.values;
+    if (mounted) {
+      handleFetchLineItems({
+        quantity,
+        deliveryMethod,
+        listingId,
+        isOwnListing,
+        fetchLineItemsInProgress,
+        onFetchTransactionLineItems,
       });
     }
   };
@@ -84,21 +124,6 @@ const renderForm = formRenderProps => {
   const breakdownData = {};
   const showBreakdown =
     breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
-  const breakdown = showBreakdown ? (
-    <div className={css.breakdownWrapper}>
-      <H6 as="h3" className={css.bookingBreakdownTitle}>
-        <FormattedMessage id="ProductOrderForm.breakdownTitle" />
-      </H6>
-      <hr className={css.totalDivider} />
-      <EstimatedCustomerBreakdownMaybe
-        breakdownData={breakdownData}
-        lineItems={lineItems}
-        currency={price.currency}
-        marketplaceName={marketplaceName}
-        processName={PURCHASE_PROCESS_NAME}
-      />
-    </div>
-  ) : null;
 
   const showContactUser = typeof onContactUser === 'function';
 
@@ -192,7 +217,23 @@ const renderForm = formRenderProps => {
           />
         </div>
       )}
-      {breakdown}
+
+      {showBreakdown ? (
+        <div className={css.breakdownWrapper}>
+          <H6 as="h3" className={css.bookingBreakdownTitle}>
+            <FormattedMessage id="ProductOrderForm.breakdownTitle" />
+          </H6>
+          <hr className={css.totalDivider} />
+          <EstimatedCustomerBreakdownMaybe
+            breakdownData={breakdownData}
+            lineItems={lineItems}
+            currency={price.currency}
+            marketplaceName={marketplaceName}
+            processName={PURCHASE_PROCESS_NAME}
+          />
+        </div>
+      ) : null}
+
       <div className={css.submitButton}>
         <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
           {hasStock ? (
