@@ -1,5 +1,5 @@
 .link {
-  display: inline-block;
+  display: inline;
   color: var(--marketplaceColor);
 
   /* fallback option */
