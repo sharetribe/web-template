@@ -123,15 +123,16 @@ export const richText = (text, options) => {
 
   // longWordMinLength & longWordClass are needed for long words to be spanned
   // linkify = true is needed for links to be linkified (linkClass is optional)
-  const { longWordMinLength, longWordClass, linkify = false, linkClass } = options;
+  const { longWordMinLength, longWordClass, linkify = false, linkClass, breakChars } = options;
   const linkOrLongWordClass = linkClass ? linkClass : longWordClass;
   const nonWhiteSpaceSequence = /([^\s]+)/gi;
+  const breakCharsConfig = breakChars != null ? breakChars : '/,';
 
   return text.split(nonWhiteSpaceSequence).reduce((acc, nextChild, i) => {
     const parts = flow([
       v =>
         flatMap(v, w => linkifyOrWrapLinkSplit(w, i, { linkify, linkClass: linkOrLongWordClass })),
-      v => flatMap(v, w => zwspAroundSpecialCharsSplit(w, '/,')),
+      v => flatMap(v, w => zwspAroundSpecialCharsSplit(w, breakCharsConfig)),
       v => map(v, (w, j) => wrapLongWord(w, `${i}${j}`, { longWordMinLength, longWordClass })),
     ])([nextChild]);
     return acc.concat(parts);

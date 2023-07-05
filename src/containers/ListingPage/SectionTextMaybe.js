@@ -9,6 +9,12 @@ const MIN_LENGTH_FOR_LONG_WORDS = 20;
 const SectionTextMaybe = props => {
   const { text, heading, showAsIngress = false } = props;
   const textClass = showAsIngress ? css.ingress : css.text;
+  const content = richText(text, {
+    longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
+    longWordClass: css.longWord,
+    breakChars: '/',
+  });
+
   return text ? (
     <div className={css.sectionText}>
       {heading ? (
@@ -16,12 +22,7 @@ const SectionTextMaybe = props => {
           {heading}
         </Heading>
       ) : null}
-      <p className={textClass}>
-        {richText(text, {
-          longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
-          longWordClass: css.longWord,
-        })}
-      </p>
+      <p className={textClass}>{content}</p>
     </div>
   ) : null;
 };
