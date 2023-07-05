@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Inline formatting was wrong for links in PageBuilder and ListingPage descriptions
+  [#190](https://github.com/sharetribe/web-template/pull/190)
+
 ## [v2.1.1] 2023-06-26
 
 - [fix] New message email template contained an old link that was not in use on the new Template.
