@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`InboxPage InboxItem matches snapshot of order 1`] = `
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/accept 1`] = `
 <div
   class="item"
 >
@@ -9,8 +9,8 @@ exports[`InboxPage InboxItem matches snapshot of order 1`] = `
   >
     <a
       class="root"
-      href="/u/provider-user-id"
-      title="provider-user-id display name"
+      href="/u/customer"
+      title="customer display name"
     >
       <span
         class="initials"
@@ -21,7 +21,7 @@ exports[`InboxPage InboxItem matches snapshot of order 1`] = `
   </div>
   <a
     class="itemLink"
-    href="/order/order-1"
+    href="/sale/id-booking-ACCEPT-sale"
   >
     <div
       class="rowNotificationDot"
@@ -32,13 +32,4315 @@ exports[`InboxPage InboxItem matches snapshot of order 1`] = `
       <span
         class=""
       >
-        provider-user-id display name
+        customer display name
       </span>
     </div>
     <div
       class="itemTitle"
     >
-      ItemX title
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.accepted.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/cancel 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-CANCEL-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.canceled.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/complete 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-COMPLETE-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.delivered.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/confirm-payment 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-CONFIRM_PAYMENT-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    >
+      <div
+        class="notificationDot"
+      />
+    </div>
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.preauthorized.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/decline 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-DECLINE-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.declined.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/expire 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-EXPIRE-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.expired.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/expire-customer-review-period 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-EXPIRE_CUSTOMER_REVIEW_PERIOD-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/expire-payment 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-EXPIRE_PAYMENT-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.payment-expired.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/expire-provider-review-period 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-EXPIRE_PROVIDER_REVIEW_PERIOD-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/expire-review-period 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-EXPIRE_REVIEW_PERIOD-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/inquire 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-INQUIRE-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.inquiry.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/operator-accept 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-OPERATOR_ACCEPT-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.accepted.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/operator-complete 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-OPERATOR_COMPLETE-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.delivered.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/operator-decline 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-OPERATOR_DECLINE-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.declined.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/request-payment 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-REQUEST_PAYMENT-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.pending-payment.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/request-payment-after-inquiry 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-REQUEST_PAYMENT_AFTER_INQUIRY-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.pending-payment.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/review-1-by-customer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-REVIEW_1_BY_CUSTOMER-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed-by-customer.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/review-1-by-provider 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-REVIEW_1_BY_PROVIDER-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed-by-provider.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/review-2-by-customer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-REVIEW_2_BY_CUSTOMER-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/review-2-by-provider 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-booking-REVIEW_2_BY_PROVIDER-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-day title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/accept 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-ACCEPT-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.accepted.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/cancel 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-CANCEL-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.canceled.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/complete 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-COMPLETE-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.delivered.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/confirm-payment 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-CONFIRM_PAYMENT-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.preauthorized.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/decline 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-DECLINE-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.declined.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/expire 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-EXPIRE-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.expired.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/expire-customer-review-period 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-EXPIRE_CUSTOMER_REVIEW_PERIOD-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/expire-payment 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-EXPIRE_PAYMENT-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.payment-expired.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/expire-provider-review-period 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-EXPIRE_PROVIDER_REVIEW_PERIOD-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/expire-review-period 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-EXPIRE_REVIEW_PERIOD-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/inquire 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-INQUIRE-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.inquiry.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/operator-accept 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-OPERATOR_ACCEPT-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.accepted.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/operator-complete 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-OPERATOR_COMPLETE-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.delivered.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/operator-decline 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-OPERATOR_DECLINE-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.declined.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/request-payment 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-REQUEST_PAYMENT-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.pending-payment.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/request-payment-after-inquiry 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-REQUEST_PAYMENT_AFTER_INQUIRY-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.pending-payment.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/review-1-by-customer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-REVIEW_1_BY_CUSTOMER-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed-by-customer.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/review-1-by-provider 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-REVIEW_1_BY_PROVIDER-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed-by-provider.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/review-2-by-customer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-REVIEW_2_BY_CUSTOMER-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/review-2-by-provider 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-REVIEW_2_BY_PROVIDER-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-hour title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14, 2022, 10:00 AM - 1:00 PM
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/accept 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-ACCEPT-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.accepted.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/cancel 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-CANCEL-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.canceled.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/complete 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-COMPLETE-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.delivered.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/confirm-payment 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-CONFIRM_PAYMENT-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.preauthorized.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/decline 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-DECLINE-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.declined.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/expire 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-EXPIRE-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.expired.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/expire-customer-review-period 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-EXPIRE_CUSTOMER_REVIEW_PERIOD-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/expire-payment 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-EXPIRE_PAYMENT-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.payment-expired.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/expire-provider-review-period 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-EXPIRE_PROVIDER_REVIEW_PERIOD-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/expire-review-period 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-EXPIRE_REVIEW_PERIOD-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/inquire 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-INQUIRE-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.inquiry.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/operator-accept 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-OPERATOR_ACCEPT-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.accepted.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/operator-complete 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-OPERATOR_COMPLETE-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.delivered.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/operator-decline 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-OPERATOR_DECLINE-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.declined.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/request-payment 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-REQUEST_PAYMENT-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.pending-payment.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/request-payment-after-inquiry 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-REQUEST_PAYMENT_AFTER_INQUIRY-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.pending-payment.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/review-1-by-customer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-REVIEW_1_BY_CUSTOMER-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed-by-customer.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/review-1-by-provider 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-REVIEW_1_BY_PROVIDER-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed-by-provider.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/review-2-by-customer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-REVIEW_2_BY_CUSTOMER-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-booking process with "night" check booking: transition/review-2-by-provider 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider"
+      title="provider display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/id-booking-REVIEW_2_BY_PROVIDER-order"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing-night title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <div
+        class="root"
+      >
+        <span
+          class="dateSection"
+        >
+          Jun 14 – 16
+        </span>
+      </div>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-booking.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" InboxItem with stockType "oneItem" matches snapshot of purchase sale 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/oneItem-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    >
+      <div
+        class="notificationDot"
+      />
+    </div>
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.purchased.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/auto-cancel 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-AUTO_CANCEL-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.canceled.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/auto-cancel-from-disputed 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-AUTO_CANCEL_FROM_DISPUTED-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.canceled.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/auto-complete 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-AUTO_COMPLETE-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.completed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/auto-mark-received 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-AUTO_MARK_RECEIVED-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
     </div>
     <div
       class="itemDetails"
@@ -54,7 +4356,7 @@ exports[`InboxPage InboxItem matches snapshot of order 1`] = `
         class="stateName stateNoActionNeeded"
       >
         <span>
-          InboxPage.default-purchase.purchased.status
+          InboxPage.default-purchase.received.status
         </span>
       </div>
     </div>
@@ -62,7 +4364,7 @@ exports[`InboxPage InboxItem matches snapshot of order 1`] = `
 </div>
 `;
 
-exports[`InboxPage InboxItem matches snapshot of sales 1`] = `
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/cancel 1`] = `
 <div
   class="item"
 >
@@ -71,8 +4373,8 @@ exports[`InboxPage InboxItem matches snapshot of sales 1`] = `
   >
     <a
       class="root"
-      href="/u/customer-user-id"
-      title="customer-user-id display name"
+      href="/u/customer"
+      title="customer display name"
     >
       <span
         class="initials"
@@ -83,7 +4385,131 @@ exports[`InboxPage InboxItem matches snapshot of sales 1`] = `
   </div>
   <a
     class="itemLink"
-    href="/sale/sale-1"
+    href="/sale/id-purchase-CANCEL-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.canceled.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/cancel-from-disputed 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-CANCEL_FROM_DISPUTED-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.canceled.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/confirm-payment 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-CONFIRM_PAYMENT-sale"
   >
     <div
       class="rowNotificationDot"
@@ -98,13 +4524,385 @@ exports[`InboxPage InboxItem matches snapshot of sales 1`] = `
       <span
         class=""
       >
-        customer-user-id display name
+        customer display name
       </span>
     </div>
     <div
       class="itemTitle"
     >
-      ItemX title
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.purchased.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/dispute 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-DISPUTE-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.disputed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/expire-customer-review-period 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-EXPIRE_CUSTOMER_REVIEW_PERIOD-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/expire-payment 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-EXPIRE_PAYMENT-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.payment-expired.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/expire-provider-review-period 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-EXPIRE_PROVIDER_REVIEW_PERIOD-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/expire-review-period 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-EXPIRE_REVIEW_PERIOD-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/inquire 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-INQUIRE-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
     </div>
     <div
       class="itemDetails"
@@ -116,7 +4914,751 @@ exports[`InboxPage InboxItem matches snapshot of sales 1`] = `
         class="stateName stateActionNeeded"
       >
         <span>
-          InboxPage.default-purchase.purchased.status
+          InboxPage.default-purchase.inquiry.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/mark-delivered 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-MARK_DELIVERED-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.delivered.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/mark-received 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-MARK_RECEIVED-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.received.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/mark-received-from-disputed 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-MARK_RECEIVED_FROM_DISPUTED-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.received.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/mark-received-from-purchased 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-MARK_RECEIVED_FROM_PURCHASED-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.received.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/operator-dispute 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-OPERATOR_DISPUTE-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.disputed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/operator-mark-delivered 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-OPERATOR_MARK_DELIVERED-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.delivered.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/request-payment 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-REQUEST_PAYMENT-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.pending-payment.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/request-payment-after-inquiry 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-REQUEST_PAYMENT_AFTER_INQUIRY-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.pending-payment.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/review-1-by-customer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-REVIEW_1_BY_CUSTOMER-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.reviewed-by-customer.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/review-1-by-provider 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-REVIEW_1_BY_PROVIDER-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.reviewed-by-provider.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/review-2-by-customer 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-REVIEW_2_BY_CUSTOMER-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.reviewed.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem: default-purchase process with "item" check purchase: transition/review-2-by-provider 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-purchase-REVIEW_2_BY_PROVIDER-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateConcluded stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.reviewed.status
         </span>
       </div>
     </div>
