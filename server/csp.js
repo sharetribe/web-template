@@ -40,7 +40,6 @@ const defaultDirectives = {
 
     'sentry.io',
     '*.stripe.com',
-    'crememories-production.herokuapp.com',
   ],
   fontSrc: [self, data, 'assets-sharetribecom.sharetribe.com', 'fonts.gstatic.com'],
   formAction: [self],
@@ -84,6 +83,7 @@ const defaultDirectives = {
     'www.googletagmanager.com',
     '*.google-analytics.com',
     'js.stripe.com',
+    'crememories-production.herokuapp.com',
   ],
   styleSrc: [self, unsafeInline, 'fonts.googleapis.com', 'api.mapbox.com'],
 };
