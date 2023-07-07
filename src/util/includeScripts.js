@@ -33,6 +33,8 @@ export const IncludeScripts = props => {
   if (isMapboxInUse) {
     // NOTE: remember to update mapbox-sdk.min.js to a new version regularly.
     // mapbox-sdk.min.js is included from static folder for CSP purposes.
+    console.log('rootURL');
+    console.log(rootURL);
     mapLibraries.push(
       <script key="mapboxSDK" src={`${rootURL}/static/scripts/mapbox/mapbox-sdk.min.js`}></script>
     );
