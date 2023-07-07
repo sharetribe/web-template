@@ -40,6 +40,7 @@ const defaultDirectives = {
 
     'sentry.io',
     '*.stripe.com',
+    'crememories-production.herokuapp.com',
   ],
   fontSrc: [self, data, 'assets-sharetribecom.sharetribe.com', 'fonts.gstatic.com'],
   formAction: [self],
