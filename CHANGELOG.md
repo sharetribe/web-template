@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] zero commission was throwing error due to 0 being falsy.
+  [#191](https://github.com/sharetribe/web-template/pull/191)
 - [fix] Inline formatting was wrong for links in PageBuilder and ListingPage descriptions
   [#190](https://github.com/sharetribe/web-template/pull/190)
 
