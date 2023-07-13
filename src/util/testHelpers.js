@@ -560,7 +560,7 @@ export const TestProvider = ({ children, initialState, config, routeConfiguratio
 
 export const renderWithProviders = (
   ui,
-  { initialState, config, routeConfiguration, ...renderOptions } = {}
+  { initialState, config, routeConfiguration, withPortals, ...renderOptions } = {}
 ) => {
   const Wrapper = ({ children }) => {
     return (
@@ -573,6 +573,23 @@ export const renderWithProviders = (
       </TestProvider>
     );
   };
-  return reactTestingLibrary.render(ui, { wrapper: Wrapper, ...renderOptions });
+  const WrapperWithPortalRoot = ({ children }) => {
+    return (
+      <>
+        <div id="root">
+          <TestProvider
+            initialState={initialState}
+            config={config}
+            routeConfiguration={routeConfiguration}
+          >
+            {children}
+          </TestProvider>
+        </div>
+        <div id="portal-root"></div>
+      </>
+    );
+  };
+  const WrapperComponent = withPortals ? WrapperWithPortalRoot : Wrapper;
+  return reactTestingLibrary.render(ui, { wrapper: WrapperComponent, ...renderOptions });
 };
 export const testingLibrary = { ...reactTestingLibrary, userEvent };
