@@ -82,9 +82,9 @@ exports.error = (e, code, data) => {
       });
       Sentry.captureException(e);
     });
-  } else {
-    console.error(e);
-    console.error(code);
-    console.error(data);
   }
+  // Let's log always to stdout
+  console.error(e);
+  console.error(code);
+  console.error(data);
 };
