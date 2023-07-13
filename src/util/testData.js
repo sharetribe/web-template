@@ -128,13 +128,13 @@ export const createOwnListing = (id, attributes = {}, includes = {}) => ({
       type: 'availability-plan/time',
       timezone: 'Etc/UTC',
       entries: [
-        { dayOfWeek: 'mon', start: '00:00', end: '00:00', seats: 1 },
-        { dayOfWeek: 'tue', start: '00:00', end: '00:00', seats: 1 },
-        { dayOfWeek: 'wed', start: '00:00', end: '00:00', seats: 1 },
-        { dayOfWeek: 'thu', start: '00:00', end: '00:00', seats: 1 },
-        { dayOfWeek: 'fri', start: '00:00', end: '00:00', seats: 1 },
-        { dayOfWeek: 'sat', start: '00:00', end: '00:00', seats: 1 },
-        { dayOfWeek: 'sun', start: '00:00', end: '00:00', seats: 1 },
+        { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 1 },
+        { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 1 },
+        { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 1 },
+        { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 1 },
+        { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 1 },
+        { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 1 },
+        { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
       ],
     },
     publicData: {},
@@ -142,6 +142,17 @@ export const createOwnListing = (id, attributes = {}, includes = {}) => ({
   },
   ...includes,
 });
+
+export const createStock = (id, attributes = {}) => {
+  return {
+    id: new UUID(id),
+    type: 'stock',
+    attributes: {
+      quantity: 10,
+      ...attributes,
+    },
+  };
+};
 
 export const createTxTransition = options => {
   return {
