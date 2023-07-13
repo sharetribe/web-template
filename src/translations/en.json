@@ -433,6 +433,7 @@
   "ManageListingCard.openListing": "Open listing",
   "ManageListingCard.outOfStockOverlayText": "{listingTitle} is out of stock.",
   "ManageListingCard.pendingApproval": "{listingTitle} is pending admin approval. It's not visible on the marketplace yet.",
+  "ManageListingCard.perUnit": "{unitType, select, day {per day} night {per night} hour {per hour} other {}}",
   "ManageListingCard.priceNotSet": "Price not set",
   "ManageListingCard.setPriceAndStock": "Add stock",
   "ManageListingCard.unsupportedPrice": "({currency})",

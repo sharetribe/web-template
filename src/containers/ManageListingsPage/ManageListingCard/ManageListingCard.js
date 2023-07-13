@@ -470,7 +470,7 @@ export const ManageListingCardComponent = props => {
               {isBookable ? (
                 <div className={css.perUnit}>
                   <FormattedMessage
-                    id="ListingCard.perUnit"
+                    id="ManageListingCard.perUnit"
                     values={{ unitType: listing?.attributes?.publicData?.unitType }}
                   />
                 </div>
