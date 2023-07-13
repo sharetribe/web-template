@@ -119,6 +119,16 @@ describe('calculateLineTotal()', () => {
     expect(calculateLineTotal(lineItem)).toEqual(new Money(300, 'EUR'));
   });
 
+  it('should calculate lineTotal for lineItem with percentage=0', () => {
+    const lineItem = {
+      code: 'line-item/customer-commission',
+      unitPrice: new Money(3000, 'EUR'),
+      percentage: 0,
+      includeFor: ['customer', 'provider'],
+    };
+    expect(calculateLineTotal(lineItem)).toEqual(new Money(0, 'EUR'));
+  });
+
   it('should calculate lineTotal for lineItem with seats and units', () => {
     const lineItem = {
       code: 'line-item/customer-fee',
@@ -286,6 +296,7 @@ describe('hasCommissionPercentage()', () => {
   it('should return true with object that does not contain percentage', () => {
     expect(hasCommissionPercentage({ percentage: 10 })).toBe(true);
     expect(hasCommissionPercentage({ percentage: 10, foo: 'bar' })).toBe(true);
+    expect(hasCommissionPercentage({ percentage: 0 })).toBe(true);
   });
 
   it('should throw error if percentage property does not contain number', () => {

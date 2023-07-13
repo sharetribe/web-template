@@ -178,7 +178,7 @@ exports.calculateLineTotal = lineItem => {
 
   if (quantity) {
     return this.calculateTotalPriceFromQuantity(unitPrice, quantity);
-  } else if (percentage) {
+  } else if (percentage != null) {
     return this.calculateTotalPriceFromPercentage(unitPrice, percentage);
   } else if (seats && units) {
     return this.calculateTotalPriceFromSeats(unitPrice, units, seats);
