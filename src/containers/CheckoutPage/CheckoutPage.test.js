@@ -103,7 +103,7 @@ describe('CheckoutPage', () => {
     routeConfiguration,
   };
 
-  test('Check that purchase has relevant info', () => {
+  it('Check that purchase has relevant info', () => {
     const listing = createListing(
       'listing1',
       { publicData: { transactionProcessAlias: 'default-purchase', unitType: 'item' } },
@@ -172,7 +172,7 @@ describe('CheckoutPage', () => {
     ).toBeInTheDocument();
   });
 
-  test('Check that booking has relevant info', () => {
+  it('Check that booking has relevant info', () => {
     const listing = createListing(
       'listing1',
       { publicData: { transactionProcessAlias: 'default-booking', unitType: 'day' } },

@@ -103,6 +103,10 @@ export const createListing = (id, attributes = {}, includes = {}) => ({
     deleted: false,
     state: LISTING_STATE_PUBLISHED,
     price: new Money(5500, 'USD'),
+    availabilityPlan: {
+      type: 'availability-plan/time',
+      timezone: 'Etc/UTC',
+    },
     publicData: {},
     ...attributes,
   },
@@ -121,15 +125,16 @@ export const createOwnListing = (id, attributes = {}, includes = {}) => ({
     state: LISTING_STATE_PUBLISHED,
     price: new Money(5500, 'USD'),
     availabilityPlan: {
-      type: 'availability-plan/day',
+      type: 'availability-plan/time',
+      timezone: 'Etc/UTC',
       entries: [
-        { dayOfWeek: 'mon', seats: 1 },
-        { dayOfWeek: 'tue', seats: 1 },
-        { dayOfWeek: 'wed', seats: 1 },
-        { dayOfWeek: 'thu', seats: 1 },
-        { dayOfWeek: 'fri', seats: 1 },
-        { dayOfWeek: 'sat', seats: 1 },
-        { dayOfWeek: 'sun', seats: 1 },
+        { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 1 },
+        { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 1 },
+        { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 1 },
+        { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 1 },
+        { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 1 },
+        { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 1 },
+        { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
       ],
     },
     publicData: {},
@@ -137,6 +142,17 @@ export const createOwnListing = (id, attributes = {}, includes = {}) => ({
   },
   ...includes,
 });
+
+export const createStock = (id, attributes = {}) => {
+  return {
+    id: new UUID(id),
+    type: 'stock',
+    attributes: {
+      quantity: 10,
+      ...attributes,
+    },
+  };
+};
 
 export const createTxTransition = options => {
   return {

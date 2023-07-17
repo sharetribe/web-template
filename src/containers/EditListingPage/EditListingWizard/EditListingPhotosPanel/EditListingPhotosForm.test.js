@@ -13,7 +13,7 @@ const { screen, userEvent, waitFor, act } = testingLibrary;
 const noop = () => null;
 
 describe('EditListingDeliveryForm', () => {
-  test('matches snapshot', () => {
+  it('matches snapshot', () => {
     const saveActionMsg = 'Save photos';
     const tree = render(
       <EditListingPhotosForm
@@ -37,7 +37,7 @@ describe('EditListingDeliveryForm', () => {
 
   // TODO to test this fully, we would need to check that store's state changes correctly.
 
-  test('Check that FieldAddImage works', async () => {
+  it('Check that FieldAddImage works', async () => {
     const ACCEPT_IMAGES = 'image/*';
     const tree = render(
       <FinalForm

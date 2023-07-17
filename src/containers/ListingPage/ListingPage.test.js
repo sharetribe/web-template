@@ -7,13 +7,13 @@ import {
   createCurrentUser,
   createListing,
   createOwnListing,
-  fakeIntl,
+  createReview,
 } from '../../util/testData';
 import {
   renderWithProviders as render,
   testingLibrary,
   getRouteConfiguration,
-  getDefaultConfiguration,
+  getHostedConfiguration,
 } from '../../util/testHelpers';
 
 import { storableError } from '../../util/errors';
@@ -27,58 +27,89 @@ import {
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { showListingRequest, showListingError, showListing } from './ListingPage.duck';
 
-import { ListingPageComponent as ListingPageCoverPhotoComponent } from './ListingPageCoverPhoto';
-import { ListingPageComponent as ListingPageCarouselComponent } from './ListingPageCarousel';
 import ActionBarMaybe from './ActionBarMaybe';
 
 const { UUID } = sdkTypes;
-const { screen } = testingLibrary;
+const { screen, waitFor, within } = testingLibrary;
 const noop = () => null;
 
-const listingConfig = {
-  listingFields: [
-    {
-      key: 'category',
-      scope: 'public',
-      includeForListingTypes: ['sell-bicycles'],
-      schemaType: 'enum',
-      enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
-      filterConfig: {
-        indexForSearch: true,
-      },
-      showConfig: {
-        label: 'Category',
-        isDetail: true,
-      },
+const listingTypes = [
+  {
+    id: 'sell-bicycles',
+    transactionProcess: {
+      name: 'default-purchase',
+      alias: 'default-purchase/release-1',
     },
-    {
-      key: 'amenities',
-      scope: 'public',
-      includeForListingTypes: [
-        'rent-bicycles-daily',
-        'rent-bicycles-nightly',
-        'rent-bicycles-hourly',
-      ],
-      schemaType: 'multi-enum',
-      enumOptions: [
-        { option: 'feat_1', label: 'Feat 1' },
-        { option: 'feat_2', label: 'Feat 2' },
-        { option: 'feat_3', label: 'Feat 3' },
-      ],
-      filterConfig: {
-        indexForSearch: true,
-      },
-      showConfig: {
-        label: 'Amenities',
-        searchMode: 'has_all',
-        group: 'secondary',
-      },
+    unitType: 'item',
+  },
+  {
+    id: 'rent-bicycles-nightly',
+    transactionProcess: {
+      name: 'default-booking',
+      alias: 'default-booking/release-1',
     },
-  ],
+    unitType: 'night',
+  },
+];
+
+const listingFields = [
+  {
+    key: 'category',
+    scope: 'public',
+    includeForListingTypes: ['sell-bicycles'],
+    schemaType: 'enum',
+    enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
+    filterConfig: {
+      indexForSearch: true,
+    },
+    showConfig: {
+      label: 'Category',
+      isDetail: true,
+    },
+  },
+  {
+    key: 'amenities',
+    scope: 'public',
+    includeForListingTypes: [
+      'rent-bicycles-daily',
+      'rent-bicycles-nightly',
+      'rent-bicycles-hourly',
+    ],
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'feat_1', label: 'Feat 1' },
+      { option: 'feat_2', label: 'Feat 2' },
+      { option: 'feat_3', label: 'Feat 3' },
+    ],
+    filterConfig: {
+      indexForSearch: true,
+    },
+    showConfig: {
+      label: 'Amenities',
+      searchMode: 'has_all',
+      group: 'secondary',
+    },
+  },
+];
+
+const getConfig = variantType => {
+  const hostedConfig = getHostedConfiguration();
+  return {
+    ...hostedConfig,
+    listingTypes: {
+      listingTypes,
+    },
+    listingFields: {
+      listingFields,
+    },
+    layout: {
+      ...hostedConfig.layout,
+      listingPage: { variantType },
+    },
+  };
 };
 
 describe('ListingPage variants', () => {
-  const currentUser = createCurrentUser('user-2');
   const id = 'listing1';
   const slug = 'listing1-title';
   const publicData = {
@@ -89,70 +120,170 @@ describe('ListingPage variants', () => {
   };
   const listing1 = createListing(id, { publicData }, { author: createUser('user-1') });
   const listing1Own = createOwnListing(id, {}, { author: createCurrentUser('user-1') });
-  const getListing = () => listing1;
-  const getOwnListing = () => listing1Own;
+  const review = createReview(
+    'review-id',
+    {
+      createdAt: new Date(Date.UTC(2023, 5, 19, 11, 34)),
+      rating: 4,
+      type: 'ofProvider',
+      content: 'It was awesome!',
+    },
+    { author: createUser('reviewerA'), listing: listing1 }
+  );
 
-  const props = {
-    location: {
-      pathname: `/l/${slug}/${id}`,
-      search: '',
-      hash: '',
+  // We'll initialize the store with relevant listing data
+  const initialState = {
+    ListingPage: {
+      id: listing1.id,
+      showListingError: null,
+      reviews: [review],
+      fetchReviewsError: null,
+      monthlyTimeSlots: {
+        // '2022-03': {
+        //   timeSlots: [],
+        //   fetchTimeSlotsError: null,
+        //   fetchTimeSlotsInProgress: null,
+        // },
+      },
+      lineItems: null,
+      fetchLineItemsInProgress: false,
+      fetchLineItemsError: null,
+      sendInquiryInProgress: false,
+      sendInquiryError: null,
+      inquiryModalOpenForListingId: null,
     },
-    history: {
-      push: () => console.log('HistoryPush called'),
+    marketplaceData: {
+      entities: {
+        listing: {
+          listing1,
+        },
+        ownListing: {
+          listing1: listing1Own,
+        },
+      },
     },
-    params: { id, slug },
-    currentUser,
-    getListing,
-    getOwnListing,
-    intl: fakeIntl,
-    authInProgress: false,
-    currentUserHasListings: false,
-    isAuthenticated: false,
-    onLogout: noop,
-    onLoadListing: noop,
-    onManageDisableScrolling: noop,
-    scrollingDisabled: false,
-    callSetInitialValues: noop,
-    sendVerificationEmailInProgress: false,
-    onResendVerificationEmail: noop,
-    onInitializeCardPaymentData: noop,
-    sendInquiryInProgress: false,
-    onSendInquiry: noop,
-    listingConfig,
-    fetchLineItemsInProgress: false,
-    onFetchTransactionLineItems: () => null,
-    onFetchTimeSlots: () => null,
-    config: getDefaultConfiguration(),
-    routeConfiguration: getRouteConfiguration(),
   };
 
-  test('ListingPageCoverPhoto has hero section', () => {
-    render(<ListingPageCoverPhotoComponent {...props} />);
-    expect(screen.getByTestId('hero')).toBeInTheDocument();
+  const commonProps = {
+    params: { id, slug },
+    scrollingDisabled: false,
+    onManageDisableScrolling: noop,
+    callSetInitialValues: noop,
+    onFetchTransactionLineItems: noop,
+    onSendInquiry: noop,
+    onInitializeCardPaymentData: noop,
+    onFetchTimeSlots: noop,
+  };
 
-    const orderTitle = screen.queryAllByRole('heading', { name: 'ListingPage.orderTitle' });
-    expect(orderTitle).toHaveLength(3);
-    expect(screen.getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'ListingPage.locationTitle' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'ListingPage.reviewsTitle' })).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: 'ListingPage.aboutProviderTitle' })
-    ).toBeInTheDocument();
+  it('has hero section in coverPhoto mode', async () => {
+    // Select correct SearchPage variant according to route configuration
+    const config = getConfig('coverPhoto');
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const props = { ...commonProps };
+    const listingRouteConfig = routeConfiguration.find(conf => conf.name === 'ListingPage');
+    const ListingPage = listingRouteConfig.component;
+
+    const { getByPlaceholderText, getByRole, queryAllByRole, getByText } = render(
+      <ListingPage {...props} />,
+      {
+        initialState,
+        config,
+        routeConfiguration,
+      }
+    );
+
+    await waitFor(() => {
+      // Has main search in Topbar and it's a location search.
+      expect(getByPlaceholderText('TopbarSearchForm.placeholder')).toBeInTheDocument();
+      expect(screen.getByTestId('location-search')).toBeInTheDocument();
+
+      // Has hero (coverPhoto) section
+      expect(screen.getByTestId('hero')).toBeInTheDocument();
+      expect(screen.queryByTestId('carousel')).not.toBeInTheDocument();
+
+      // Has order title (rendered for )
+      const orderTitle = queryAllByRole('heading', { name: 'ListingPage.orderTitle' });
+      expect(orderTitle).toHaveLength(3);
+
+      // Has details section title and selected category info
+      expect(getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
+      expect(getByText('Category')).toBeInTheDocument();
+      expect(getByText('Cat 1')).toBeInTheDocument();
+
+      // Has details location title
+      expect(getByRole('heading', { name: 'ListingPage.locationTitle' })).toBeInTheDocument();
+
+      // Has details reviews title
+      const reviewsTitle = getByRole('heading', { name: 'ListingPage.reviewsTitle' });
+      expect(reviewsTitle).toBeInTheDocument();
+      const sectionReviews = within(reviewsTitle.parentNode.parentNode);
+      expect(sectionReviews.getByText('It was awesome!')).toBeInTheDocument();
+      expect(sectionReviews.getByText('reviewerA display name')).toBeInTheDocument();
+      expect(sectionReviews.getByText('June 2023')).toBeInTheDocument();
+      expect(sectionReviews.getAllByTitle('4/5')).toHaveLength(2);
+
+      // Has details provider/author title
+      expect(getByRole('heading', { name: 'ListingPage.aboutProviderTitle' })).toBeInTheDocument();
+      // Has link to provider's profile
+      expect(getByRole('link', { name: 'UserCard.viewProfileLink' })).toBeInTheDocument();
+      // Has button to contact provider
+      expect(getByRole('button', { name: 'UserCard.contactUser' })).toBeInTheDocument();
+    });
   });
 
-  test('ListingPageCarousel has no hero section', () => {
-    render(<ListingPageCarouselComponent {...props} />);
-    expect(screen.queryByTestId('hero')).not.toBeInTheDocument();
+  it('has carousel on carousel mode', async () => {
+    // Select correct SearchPage variant according to route configuration
+    const config = getConfig('carousel');
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const props = { ...commonProps };
+    const listingRouteConfig = routeConfiguration.find(conf => conf.name === 'ListingPage');
+    const ListingPage = listingRouteConfig.component;
 
-    const orderTitle = screen.queryAllByRole('heading', { name: 'ListingPage.orderTitle' });
-    expect(orderTitle).toHaveLength(3);
-    expect(screen.getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'ListingPage.locationTitle' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'ListingPage.reviewsTitle' })).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: 'ListingPage.aboutProviderTitle' })
-    ).toBeInTheDocument();
+    const { getByPlaceholderText, getByRole, queryAllByRole, getByText } = render(
+      <ListingPage {...props} />,
+      {
+        initialState,
+        config,
+        routeConfiguration,
+      }
+    );
+    await waitFor(() => {
+      // Has main search in Topbar and it's a location search.
+      expect(getByPlaceholderText('TopbarSearchForm.placeholder')).toBeInTheDocument();
+      expect(screen.getByTestId('location-search')).toBeInTheDocument();
+
+      // Does not have hero (coverPhoto) section on carousel mode
+      expect(screen.getByTestId('carousel')).toBeInTheDocument();
+      expect(screen.queryByTestId('hero')).not.toBeInTheDocument();
+
+      // Has order title (rendered for )
+      const orderTitle = queryAllByRole('heading', { name: 'ListingPage.orderTitle' });
+      expect(orderTitle).toHaveLength(3);
+
+      // Has details section title and selected category info
+      expect(getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
+      expect(getByText('Category')).toBeInTheDocument();
+      expect(getByText('Cat 1')).toBeInTheDocument();
+
+      // Has details location title
+      expect(getByRole('heading', { name: 'ListingPage.locationTitle' })).toBeInTheDocument();
+
+      // Has details reviews title
+      const reviewsTitle = getByRole('heading', { name: 'ListingPage.reviewsTitle' });
+      expect(reviewsTitle).toBeInTheDocument();
+      const sectionReviews = within(reviewsTitle.parentNode.parentNode);
+      expect(sectionReviews.getByText('It was awesome!')).toBeInTheDocument();
+      expect(sectionReviews.getByText('reviewerA display name')).toBeInTheDocument();
+      expect(sectionReviews.getByText('June 2023')).toBeInTheDocument();
+      expect(sectionReviews.getAllByTitle('4/5')).toHaveLength(2);
+
+      // Has details provider/author title
+      expect(getByRole('heading', { name: 'ListingPage.aboutProviderTitle' })).toBeInTheDocument();
+      // Has link to provider's profile
+      expect(getByRole('link', { name: 'UserCard.viewProfileLink' })).toBeInTheDocument();
+      // Has button to contact provider
+      expect(getByRole('button', { name: 'UserCard.contactUser' })).toBeInTheDocument();
+    });
   });
 });
 
@@ -171,7 +302,7 @@ describe('Duck', () => {
     },
   };
 
-  test('showListing() success', () => {
+  it('showListing() success', () => {
     const id = new UUID('00000000-0000-0000-0000-000000000000');
     const dispatch = jest.fn(action => action);
     const response = { status: 200 };
@@ -198,7 +329,7 @@ describe('Duck', () => {
     });
   });
 
-  test('showListing() error', () => {
+  it('showListing() error', () => {
     const id = new UUID('00000000-0000-0000-0000-000000000000');
     const dispatch = jest.fn(action => action);
     const error = new Error('fail');
@@ -228,7 +359,7 @@ describe('Duck', () => {
 });
 
 describe('ActionBarMaybe', () => {
-  test('shows users own listing status', () => {
+  it('shows users own listing status', () => {
     const listing = createListing('listing-published', {
       state: LISTING_STATE_PUBLISHED,
     });
@@ -244,7 +375,7 @@ describe('ActionBarMaybe', () => {
     expect(screen.getByText('ListingPage.editListing')).toBeInTheDocument();
   });
 
-  test('shows users own pending listing status', () => {
+  it('shows users own pending listing status', () => {
     const listing = createListing('listing-published', {
       state: LISTING_STATE_PENDING_APPROVAL,
     });
@@ -259,7 +390,7 @@ describe('ActionBarMaybe', () => {
     expect(screen.getByText('ListingPage.editListing')).toBeInTheDocument();
   });
 
-  test('shows users own closed listing status', () => {
+  it('shows users own closed listing status', () => {
     const listing = createListing('listing-closed', {
       state: LISTING_STATE_CLOSED,
     });
@@ -274,7 +405,7 @@ describe('ActionBarMaybe', () => {
     expect(screen.getByText('ListingPage.editListing')).toBeInTheDocument();
   });
 
-  test('shows closed listing status', () => {
+  it('shows closed listing status', () => {
     const listing = createListing('listing-closed', {
       state: LISTING_STATE_CLOSED,
     });
@@ -288,7 +419,7 @@ describe('ActionBarMaybe', () => {
     expect(screen.getByText('ListingPage.closedListing')).toBeInTheDocument();
   });
 
-  test("is missing if listing is not closed or user's own", () => {
+  it("is missing if listing is published but not user's own", () => {
     const listing = createListing('listing-published', {
       state: LISTING_STATE_PUBLISHED,
     });

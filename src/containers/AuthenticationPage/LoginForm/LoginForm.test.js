@@ -11,7 +11,7 @@ const { screen, userEvent } = testingLibrary;
 const noop = () => null;
 
 describe('LoginForm', () => {
-  test('Log in button is enabled when required fields are filled', () => {
+  it('enables Log in button when required fields are filled', () => {
     render(<LoginForm intl={fakeIntl} onSubmit={noop} />);
 
     // Test that sign up button is disabled at first

@@ -29,7 +29,7 @@ export const createTxTransition = options => {
 };
 
 describe('ActivityFeed', () => {
-  test('check that messages and relevant transition are shown', () => {
+  it('verify that messages and relevant transition are shown', () => {
     const customer = createUser('user1');
     const provider = createUser('user2');
     const listing = createListing('listing');

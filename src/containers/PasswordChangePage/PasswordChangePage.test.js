@@ -11,7 +11,7 @@ const { screen, userEvent } = testingLibrary;
 const noop = () => null;
 
 describe('PasswordChangePageComponent', () => {
-  test('Check that newPassword input shows error and submit is enabled if form is filled', () => {
+  it('Check that newPassword input shows error and submit is enabled if form is filled', () => {
     render(
       <PasswordChangePageComponent
         params={{ displayName: 'my-shop' }}
