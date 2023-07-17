@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Add subdomain wildcard for sentry. (Sentry has started to use subdomains for sending data)
+  [#193](https://github.com/sharetribe/web-template/pull/193)
 - [add] More tests to cover multiple transaction processes, unit types, and page variants
   [#192](https://github.com/sharetribe/web-template/pull/192)
 - [fix] zero commission was throwing error due to 0 being falsy.
