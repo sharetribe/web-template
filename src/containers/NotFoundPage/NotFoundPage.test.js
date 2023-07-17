@@ -24,7 +24,7 @@ const routeConfiguration = [
 ];
 
 describe('NotFoundPage', () => {
-  test('SearchForm has placeholder when isKeywordSearch=true', () => {
+  it('has placeholder for SearchForm when isKeywordSearch=true', () => {
     render(
       <NotFoundPageComponent
         scrollingDisabled={false}

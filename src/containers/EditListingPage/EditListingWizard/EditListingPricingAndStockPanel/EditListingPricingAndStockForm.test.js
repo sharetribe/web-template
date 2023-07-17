@@ -11,7 +11,7 @@ const { screen, userEvent, fireEvent } = testingLibrary;
 const noop = () => null;
 
 describe('EditListingDeliveryForm', () => {
-  test('Check that price can be given and submit button activates', () => {
+  it('Check that price can be given and submit button activates', () => {
     const saveActionMsg = 'Save price';
     render(
       <EditListingPricingAndStockForm

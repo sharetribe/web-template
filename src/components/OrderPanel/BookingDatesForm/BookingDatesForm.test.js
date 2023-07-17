@@ -23,7 +23,7 @@ const lineItems = [
 ];
 
 describe('EstimatedCustomerBreakdownMaybe', () => {
-  test('renders nothing if nightly is missing start and end date', () => {
+  it('renders nothing if nightly is missing start and end date', () => {
     const tree = render(
       <EstimatedCustomerBreakdownMaybe
         lineItems={lineItems}
@@ -35,7 +35,7 @@ describe('EstimatedCustomerBreakdownMaybe', () => {
     expect(tree.asFragment().firstChild).toBeFalsy();
   });
 
-  test('renders nothing if nightly is missing end date', () => {
+  it('renders nothing if nightly is missing end date', () => {
     const data = {
       startDate: new Date(),
     };
@@ -51,7 +51,7 @@ describe('EstimatedCustomerBreakdownMaybe', () => {
     expect(tree.asFragment().firstChild).toBeFalsy();
   });
 
-  test('renders breakdown with correct transaction data', () => {
+  it('renders breakdown with correct transaction data', () => {
     const startDate = new Date(Date.UTC(2017, 3, 14, 0, 0, 0));
     const endDate = new Date(Date.UTC(2017, 3, 16, 0, 0, 0));
     const props = {

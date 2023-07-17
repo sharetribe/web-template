@@ -7,7 +7,7 @@ import { createUser, createListing, fakeIntl } from '../../util/testData';
 import { ListingCardComponent } from './ListingCard';
 
 describe('ListingCard', () => {
-  test('matches snapshot', () => {
+  it('matches snapshot', () => {
     // This is quite small component what comes to rendered HTML
     // For now, we rely on snapshot-testing.
     const listing = createListing('listing1', {}, { author: createUser('user1') });
