@@ -39,6 +39,7 @@ const defaultDirectives = {
     'fonts.googleapis.com',
 
     'sentry.io',
+    '*.sentry.io',
     '*.stripe.com',
   ],
   fontSrc: [self, data, 'assets-sharetribecom.sharetribe.com', 'fonts.gstatic.com'],
