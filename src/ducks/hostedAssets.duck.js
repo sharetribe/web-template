@@ -46,6 +46,7 @@ const initialState = {
   // appAssets: { assetName: 'path/to/asset.json' }
   appAssets: {},
   pageAssetsData: null,
+  currentPageAssets: [],
   // Current version of the saved asset.
   // Typically, the version that is returned by the "latest" alias.
   version: null,
@@ -70,7 +71,7 @@ export default function assetReducer(state = initialState, action = {}) {
       return { ...state, inProgress: false, error: payload };
 
     case PAGE_ASSETS_REQUEST:
-      return { ...state, inProgress: true, error: null };
+      return { ...state, currentPageAssets: payload, inProgress: true, error: null };
     case PAGE_ASSETS_SUCCESS:
       return { ...state, pageAssetsData: payload, inProgress: false };
     case PAGE_ASSETS_ERROR:
@@ -93,7 +94,7 @@ export const appAssetsError = error => ({
   payload: error,
 });
 
-export const pageAssetsRequested = () => ({ type: PAGE_ASSETS_REQUEST });
+export const pageAssetsRequested = assetKeys => ({ type: PAGE_ASSETS_REQUEST, payload: assetKeys });
 export const pageAssetsSuccess = assets => ({ type: PAGE_ASSETS_SUCCESS, payload: assets });
 export const pageAssetsError = error => ({
   type: PAGE_ASSETS_ERROR,
@@ -197,7 +198,7 @@ export const fetchPageAssets = (assets, hasFallback) => (dispatch, getState, sdk
     );
   }
 
-  dispatch(pageAssetsRequested());
+  dispatch(pageAssetsRequested(Object.keys(assets)));
 
   // If version is given fetch assets by the version,
   // otherwise default to "latest" alias
@@ -210,6 +211,20 @@ export const fetchPageAssets = (assets, hasFallback) => (dispatch, getState, sdk
 
   return Promise.all(sdkAssets)
     .then(responses => {
+      const hostedAssetsState = getState()?.hostedAssets;
+      // These are fixed page assets that the app expects to be there. Keep fixed assets always in store.
+      const { termsOfService, privacyPolicy, landingPage, ...rest } =
+        hostedAssetsState?.pageAssetsData || {};
+      const fixedPageAssets = { termsOfService, privacyPolicy, landingPage };
+      // Avoid race condition, which might happen if automatic redirections try to fetch different assets
+      // This could happen, when logged-in user clicks some signup link (AuthenticationPage fetches terms&privacy, LandingPage fetches its asset)
+      const pickLatestPageAssetData = hostedAssetsState?.currentPageAssets.reduce(
+        (collected, pa) => {
+          const cmsPageData = rest[pa];
+          return cmsPageData ? { ...collected, [pa]: cmsPageData } : collected;
+        },
+        {}
+      );
       // Returned value looks like this for a single asset with name: "about-page":
       // {
       //    "about-page": {
@@ -218,11 +233,15 @@ export const fetchPageAssets = (assets, hasFallback) => (dispatch, getState, sdk
       //    },
       //    // etc.
       // }
-      const pageAssets = assetEntries.reduce((collectedAssets, assetEntry, i) => {
-        const [name, path] = assetEntry;
-        const assetData = denormalizeAssetData(responses[i].data);
-        return { ...collectedAssets, [name]: { path, data: assetData } };
-      }, {});
+      // Note: we'll pick fixed page assets and the current page asset always.
+      const pageAssets = assetEntries.reduce(
+        (collectedAssets, assetEntry, i) => {
+          const [name, path] = assetEntry;
+          const assetData = denormalizeAssetData(responses[i].data);
+          return { ...collectedAssets, [name]: { path, data: assetData } };
+        },
+        { ...fixedPageAssets, ...pickLatestPageAssetData }
+      );
       dispatch(pageAssetsSuccess(pageAssets));
       return pageAssets;
     })
