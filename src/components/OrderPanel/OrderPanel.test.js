@@ -218,6 +218,10 @@ describe('OrderPanel', () => {
 
   const config = getConfig();
   const routeConfiguration = getRouteConfiguration(config.layout);
+  const validListingTypes = config.listingTypes.listingTypes.map(({ id, ...rest }) => ({
+    listingType: id,
+    ...rest,
+  }));
 
   it('Booking: daily', async () => {
     const listing = createListing('listing-day', {
@@ -250,7 +254,7 @@ describe('OrderPanel', () => {
       },
     });
 
-    const props = { ...commonProps, listing, isOwnListing: false };
+    const props = { ...commonProps, listing, isOwnListing: false, validListingTypes };
     const { getByText, queryAllByText } = render(<OrderPanel {...props} />, {
       config,
       routeConfiguration,
@@ -299,7 +303,7 @@ describe('OrderPanel', () => {
       },
     });
 
-    const props = { ...commonProps, listing, isOwnListing: false };
+    const props = { ...commonProps, listing, isOwnListing: false, validListingTypes };
     const { getByText, queryAllByText } = render(<OrderPanel {...props} />, {
       config,
       routeConfiguration,
@@ -348,7 +352,7 @@ describe('OrderPanel', () => {
       },
     });
 
-    const props = { ...commonProps, listing, isOwnListing: false };
+    const props = { ...commonProps, listing, isOwnListing: false, validListingTypes };
     const { getByText, queryAllByText } = render(<OrderPanel {...props} />, {
       config,
       routeConfiguration,
@@ -393,14 +397,11 @@ describe('OrderPanel', () => {
       }
     );
 
-    const props = { ...commonProps, listing, isOwnListing: false };
-    const { getByPlaceholderText, getByText, getAllByText, queryAllByText } = render(
-      <OrderPanel {...props} />,
-      {
-        config,
-        routeConfiguration,
-      }
-    );
+    const props = { ...commonProps, listing, isOwnListing: false, validListingTypes };
+    const { getByText, queryAllByText } = render(<OrderPanel {...props} />, {
+      config,
+      routeConfiguration,
+    });
 
     await waitFor(() => {
       expect(queryAllByText('title!')).toHaveLength(2);
@@ -441,14 +442,11 @@ describe('OrderPanel', () => {
       }
     );
 
-    const props = { ...commonProps, listing, isOwnListing: false };
-    const { getByPlaceholderText, getByText, getAllByText, queryAllByText } = render(
-      <OrderPanel {...props} />,
-      {
-        config,
-        routeConfiguration,
-      }
-    );
+    const props = { ...commonProps, listing, isOwnListing: false, validListingTypes };
+    const { getByText, queryAllByText } = render(<OrderPanel {...props} />, {
+      config,
+      routeConfiguration,
+    });
 
     await waitFor(() => {
       expect(queryAllByText('title!')).toHaveLength(2);
