@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { string, func, bool } from 'prop-types';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
 
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
+import { displayPrice } from '../../util/configHelpers';
 import { lazyLoadWithDimensions } from '../../util/uiHelpers';
 import { propTypes } from '../../util/types';
 import { formatMoney } from '../../util/currency';
@@ -40,6 +41,32 @@ const priceData = (price, currency, intl) => {
 
 const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 
+const PriceMaybe = props => {
+  const { price, publicData, config, intl } = props;
+  const { listingType } = publicData || {};
+  const validListingTypes = config.listing.listingTypes;
+  const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+  const showPrice = displayPrice(foundListingTypeConfig);
+  if (!showPrice && price) {
+    return null;
+  }
+
+  const isBookable = isBookingProcessAlias(publicData?.transactionProcessAlias);
+  const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
+  return (
+    <div className={css.price}>
+      <div className={css.priceValue} title={priceTitle}>
+        {formattedPrice}
+      </div>
+      {isBookable ? (
+        <div className={css.perUnit}>
+          <FormattedMessage id="ListingCard.perUnit" values={{ unitType: publicData?.unitType }} />
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
 export const ListingCardComponent = props => {
   const config = useConfiguration();
   const {
@@ -70,8 +97,6 @@ export const ListingCardComponent = props => {
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
 
-  const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
-
   const setActivePropsMaybe = setActiveListing
     ? {
         onMouseEnter: () => setActiveListing(currentListing.id),
@@ -96,19 +121,7 @@ export const ListingCardComponent = props => {
         />
       </AspectRatioWrapper>
       <div className={css.info}>
-        <div className={css.price}>
-          <div className={css.priceValue} title={priceTitle}>
-            {formattedPrice}
-          </div>
-          {isBookingProcessAlias(publicData?.transactionProcessAlias) ? (
-            <div className={css.perUnit}>
-              <FormattedMessage
-                id="ListingCard.perUnit"
-                values={{ unitType: publicData?.unitType }}
-              />
-            </div>
-          ) : null}
-        </div>
+        <PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />
         <div className={css.mainInfo}>
           <div className={css.title}>
             {richText(title, {
