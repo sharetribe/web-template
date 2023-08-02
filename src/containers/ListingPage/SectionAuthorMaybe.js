@@ -1,5 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
+import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../transactions/transaction';
+
 import { Heading, Modal, UserCard } from '../../components';
 import InquiryForm from './InquiryForm/InquiryForm';
 
@@ -24,12 +26,21 @@ const SectionAuthorMaybe = props => {
     return null;
   }
 
+  const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias || '';
+  const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
+  const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
+
   return (
     <div id="author" className={css.sectionAuthor}>
       <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>
         <FormattedMessage id="ListingPage.aboutProviderTitle" />
       </Heading>
-      <UserCard user={listing.author} currentUser={currentUser} onContactUser={onContactUser} />
+      <UserCard
+        user={listing.author}
+        currentUser={currentUser}
+        onContactUser={onContactUser}
+        showContact={!isInquiryProcess}
+      />
       <Modal
         id="ListingPage.inquiry"
         contentClassName={css.inquiryModalContent}
