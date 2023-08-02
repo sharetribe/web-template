@@ -199,27 +199,30 @@ export const listingFields = [
 
 /**
  * Configuration options for listing experience:
- * - listingType:     Unique string. This will be saved to listing's public data on
- *                    EditListingWizard.
- * - label            Label for the listing type. Used as microcopy for options to select
- *                    listing type in EditListingWizard.
- * - transactionType  Set of configurations how this listing type will behave when transaction is
- *                    created.
- *   - process          Transaction process.
- *                      The process must match one of the processes that this client app can handle
- *                      (check src/util/transaction.js) and the process must also exists in correct
- *                      marketplace environment.
- *   - alias            Valid alias for the aforementioned process. This will be saved to listing's
- *                      public data as transctionProcessAlias and transaction is initiated with this.
- *   - unitType         Unit type is mainly used as pricing unit. This will be saved to
- *                      transaction's protected data.
- *                      Recommendation: don't use same unit types in completely different processes
- *                      ('item' sold should not be priced the same as 'item' booked).
- * - stockType        This is relevant only to listings with product-selling listing type.
- *                    If set to 'oneItem', stock management is not showed and the listing is
- *                    considered unique (stock = 1).
- *                    Possible values: 'oneItem' and 'multipleItems'.
- *                    Default: 'multipleItems'.
+ * - listingType:         Unique string. This will be saved to listing's public data on
+ *                        EditListingWizard.
+ * - label                Label for the listing type. Used as microcopy for options to select
+ *                        listing type in EditListingWizard.
+ * - transactionType      Set of configurations how this listing type will behave when transaction is
+ *                        created.
+ *   - process              Transaction process.
+ *                          The process must match one of the processes that this client app can handle
+ *                          (check src/util/transactions/transaction.js) and the process must also exists in correct
+ *                          marketplace environment.
+ *   - alias                Valid alias for the aforementioned process. This will be saved to listing's
+ *                          public data as transctionProcessAlias and transaction is initiated with this.
+ *   - unitType             Unit type is mainly used as pricing unit. This will be saved to
+ *                          transaction's protected data.
+ *                          Recommendation: don't use same unit types in completely different processes
+ *                          ('item' sold should not be priced the same as 'item' booked).
+ * - stockType            This is relevant only to listings using default-purchase process.
+ *                        If set to 'oneItem', stock management is not showed and the listing is
+ *                        considered unique (stock = 1).
+ *                        Possible values: 'oneItem' and 'multipleItems'.
+ *                        Default: 'multipleItems'.
+ * - defaultListingFields This is relevant only to listings using default-inquiry process atm.
+ *                        It contains price: true/false value to indicate, whether price should be shown.
+ *                        If defaultListingFields.price is not explicitly set to _false_, price will be shown.
  */
 
 export const listingTypes = [
@@ -261,6 +264,18 @@ export const listingTypes = [
   //     unitType: 'item',
   //   },
   //   stockType: 'multipleItems',
+  // },
+  // {
+  //   listingType: 'inquiry',
+  //   label: 'Inquiry',
+  //   transactionType: {
+  //     process: 'default-inquiry',
+  //     alias: 'default-inquiry/release-1',
+  //     unitType: 'inquiry',
+  //   },
+  //   defaultListingFields: {
+  //     price: false,
+  //   },
   // },
 ];
 
