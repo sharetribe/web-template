@@ -25,6 +25,8 @@ const ErrorMessage = props => {
   ) : null;
 };
 
+// NOTE: this InquiryForm is only for booking & purchase processes
+// The default-inquiry process is handled differently
 const InquiryFormComponent = props => (
   <FinalForm
     {...props}
