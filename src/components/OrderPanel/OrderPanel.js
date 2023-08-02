@@ -96,12 +96,33 @@ const handleSubmit = (
 
 const dateFormattingOptions = { month: 'short', day: 'numeric', weekday: 'short' };
 
+const PriceMaybe = props => {
+  const { price, publicData, validListingTypes, intl } = props;
+  const { listingType, unitType } = publicData || {};
+
+  const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+  const showPrice = foundListingTypeConfig?.displayPrice !== false;
+  if (!showPrice || !price) {
+    return null;
+  }
+
+  return (
+    <div className={css.priceContainer}>
+      <p className={css.price}>{formatMoney(intl, price)}</p>
+      <div className={css.perUnit}>
+        <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
+      </div>
+    </div>
+  );
+};
+
 const OrderPanel = props => {
   const {
     rootClassName,
     className,
     titleClassName,
     listing,
+    validListingTypes,
     lineItemUnitType: lineItemUnitTypeMaybe,
     isOwnListing,
     onSubmit,
@@ -125,14 +146,15 @@ const OrderPanel = props => {
     fetchLineItemsError,
   } = props;
 
-  const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias || '';
+  const publicData = listing?.attributes?.publicData || {};
+  const { unitType, transactionProcessAlias = '' } = publicData || {};
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
-  const { listingType, unitType } = listing?.attributes?.publicData || {};
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
   const price = listing?.attributes?.price;
+  const isPaymentProcess = processName !== INQUIRY_PROCESS_NAME;
 
-  const showPriceMissing = !price;
+  const showPriceMissing = isPaymentProcess && !price;
   const PriceMissing = () => {
     return (
       <p className={css.error}>
@@ -140,7 +162,7 @@ const OrderPanel = props => {
       </p>
     );
   };
-  const showInvalidCurrency = price?.currency !== marketplaceCurrency;
+  const showInvalidCurrency = isPaymentProcess && price?.currency !== marketplaceCurrency;
   const InvalidCurrency = () => {
     return (
       <p className={css.error}>
@@ -210,14 +232,12 @@ const OrderPanel = props => {
           {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
         </div>
 
-        {price ? (
-          <div className={css.priceContainer}>
-            <p className={css.price}>{formatMoney(intl, price)}</p>
-            <div className={css.perUnit}>
-              <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
-            </div>
-          </div>
-        ) : null}
+        <PriceMaybe
+          price={price}
+          publicData={publicData}
+          validListingTypes={validListingTypes}
+          intl={intl}
+        />
 
         <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
