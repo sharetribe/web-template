@@ -2,7 +2,11 @@ import React from 'react';
 import '@testing-library/jest-dom';
 
 import { types as sdkTypes } from '../../../util/sdkLoader';
-import { renderWithProviders as render, testingLibrary } from '../../../util/testHelpers';
+import {
+  getHostedConfiguration,
+  renderWithProviders as render,
+  testingLibrary,
+} from '../../../util/testHelpers';
 import { createOwnListing, createStock, fakeIntl } from '../../../util/testData';
 
 import { ManageListingCardComponent } from './ManageListingCard';
@@ -12,7 +16,135 @@ const { screen, waitFor } = testingLibrary;
 const { Money } = sdkTypes;
 const noop = () => null;
 
+const getConfig = listingTypes => {
+  const hostedConfig = getHostedConfiguration();
+  return {
+    ...hostedConfig,
+    listingTypes: {
+      listingTypes,
+    },
+  };
+};
+
 describe('ManageListingCard', () => {
+  it('Inquiry (inquiry): no price', () => {
+    const listing = createOwnListing('listing-day', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      price: new Money(1000, 'USD'),
+      availabilityPlan: null,
+
+      publicData: {
+        listingType: 'free-inquiry',
+        transactionProcessAlias: 'default-inquiry/release-1',
+        unitType: 'inquiry',
+        amenities: ['dog_1'],
+        location: {
+          address: 'Main Street 123',
+          building: 'A 1',
+        },
+      },
+    });
+
+    const config = getConfig([
+      {
+        id: 'free-inquiry',
+        transactionProcess: {
+          name: 'default-inquiry',
+          alias: 'default-inquiry/release-1',
+        },
+        unitType: 'inquiry',
+        defaultListingFields: {
+          price: false,
+        },
+      },
+    ]);
+
+    const tree = render(
+      <ManageListingCardComponent
+        history={{ push: noop }}
+        listing={listing}
+        intl={fakeIntl}
+        isMenuOpen={false}
+        onCloseListing={noop}
+        onOpenListing={noop}
+        onToggleMenu={noop}
+        hasClosingError={false}
+        hasOpeningError={false}
+        availabilityEnabled={true}
+      />,
+      { config }
+    );
+
+    expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
+    expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
+    expect(tree.queryByText('ManageListingCard.priceNotSet')).not.toBeInTheDocument();
+    expect(tree.queryByText('10')).not.toBeInTheDocument(); //fakeIntl
+    expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
+    expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
+    expect(tree.queryByText('ManageListingCard.manageAvailability')).not.toBeInTheDocument();
+    expect(tree.queryByText('ManageListingCard.manageStock')).not.toBeInTheDocument();
+  });
+
+  it('Inquiry (inquiry): with price', () => {
+    const listing = createOwnListing('listing-day', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      price: new Money(1000, 'USD'),
+      availabilityPlan: null,
+
+      publicData: {
+        listingType: 'free-inquiry',
+        transactionProcessAlias: 'default-inquiry/release-1',
+        unitType: 'inquiry',
+        amenities: ['dog_1'],
+        location: {
+          address: 'Main Street 123',
+          building: 'A 1',
+        },
+      },
+    });
+
+    const config = getConfig([
+      {
+        id: 'free-inquiry',
+        transactionProcess: {
+          name: 'default-inquiry',
+          alias: 'default-inquiry/release-1',
+        },
+        unitType: 'inquiry',
+        defaultListingFields: {
+          price: true,
+        },
+      },
+    ]);
+
+    const tree = render(
+      <ManageListingCardComponent
+        history={{ push: noop }}
+        listing={listing}
+        intl={fakeIntl}
+        isMenuOpen={false}
+        onCloseListing={noop}
+        onOpenListing={noop}
+        onToggleMenu={noop}
+        hasClosingError={false}
+        hasOpeningError={false}
+        availabilityEnabled={true}
+      />,
+      { config }
+    );
+
+    expect(tree.getByText('ResponsiveImage.noImage')).toBeInTheDocument();
+    expect(tree.getByText('ManageListingCard.closeListing')).toBeInTheDocument();
+    expect(tree.queryByText('ManageListingCard.priceNotSet')).not.toBeInTheDocument();
+    expect(tree.queryByText('10')).toBeInTheDocument(); //fakeIntl
+    expect(tree.getByText(/the Listing/i)).toBeInTheDocument();
+    expect(tree.getByText('ManageListingCard.editListing')).toBeInTheDocument();
+    expect(tree.queryByText('ManageListingCard.manageAvailability')).not.toBeInTheDocument();
+    expect(tree.queryByText('ManageListingCard.manageStock')).not.toBeInTheDocument();
+  });
+
   it('Booking (day): normal', () => {
     const listing = createOwnListing('listing-day', {
       title: 'the listing',
@@ -540,7 +672,12 @@ describe('ManageListingCard', () => {
     const tree = render(
       <ManageListingCardComponent
         history={{ push: noop }}
-        listing={createOwnListing('listing1', { publicData: { listingType: 'sell-bikes' } })}
+        listing={createOwnListing('listing1', {
+          publicData: {
+            listingType: 'product-selling',
+            transactionProcessAlias: 'default-purchase/release-1',
+          },
+        })}
         intl={fakeIntl}
         isMenuOpen={false}
         onCloseListing={noop}
