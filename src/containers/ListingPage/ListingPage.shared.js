@@ -105,6 +105,7 @@ export const handleContactUser = parameters => () => {
 
 /**
  * Callback for the inquiry modal to submit aka create inquiry transaction on ListingPage.
+ * Note: this is for booking and purchase processes. Inquiry process is handled through handleSubmit.
  *
  * @param {Object} parameters all the info needed to create inquiry.
  */
