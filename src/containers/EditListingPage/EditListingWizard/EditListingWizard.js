@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
+import { displayPrice } from '../../../util/configHelpers';
 import { createResourceLocatorString } from '../../../util/routes';
 import { withViewport } from '../../../util/uiHelpers';
 import {
@@ -22,7 +23,11 @@ import {
   LISTING_PAGE_PARAM_TYPES,
 } from '../../../util/urlHelpers';
 import { ensureCurrentUser, ensureListing } from '../../../util/data';
-import { BOOKING_PROCESS_NAME, isBookingProcess } from '../../../transactions/transaction';
+import {
+  INQUIRY_PROCESS_NAME,
+  isBookingProcess,
+  isPurchaseProcess,
+} from '../../../transactions/transaction';
 
 // Import shared components
 import {
@@ -49,11 +54,15 @@ import css from './EditListingWizard.module.css';
 // You can reorder these panels.
 // Note 1: You need to change save button translations for new listing flow
 // Note 2: Ensure that draft listing is created after the first panel
-// and listing publishing happens after last panel.
+//         and listing publishing happens after last panel.
+// Note 3: The first tab creates a draft listing and title is mandatory attribute for it.
+//         Details tab asks for "title" and is therefore the first tab in the wizard flow.
 const TABS_DETAILS_ONLY = [DETAILS];
 const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, DELIVERY, PHOTOS];
 const TABS_BOOKING = [DETAILS, LOCATION, PRICING, AVAILABILITY, PHOTOS];
-const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING];
+const TABS_INQUIRY = [DETAILS, LOCATION, PRICING, PHOTOS];
+const TABS_INQUIRY_WITHOUT_PRICE = [DETAILS, LOCATION, PHOTOS];
+const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING, ...TABS_INQUIRY];
 
 // Tabs are horizontal in small screens
 const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
@@ -69,7 +78,7 @@ const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
  * @param {boolean} isNewListingFlow
  * @param {string} processName
  */
-const tabLabelAndSubmit = (intl, tab, isNewListingFlow, processName) => {
+const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, processName) => {
   const processNameString = isNewListingFlow ? `${processName}.` : '';
   const newOrEdit = isNewListingFlow ? 'new' : 'edit';
 
@@ -89,7 +98,10 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, processName) => {
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveDelivery`;
   } else if (tab === LOCATION) {
     labelKey = 'EditListingWizard.tabLabelLocation';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveLocation`;
+    submitButtonKey =
+      isPriceDisabled && isNewListingFlow
+        ? `EditListingWizard.${processNameString}${newOrEdit}.saveLocationNoPricingTab`
+        : `EditListingWizard.${processNameString}${newOrEdit}.saveLocation`;
   } else if (tab === AVAILABILITY) {
     labelKey = 'EditListingWizard.tabLabelAvailability';
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveAvailability`;
@@ -278,6 +290,18 @@ const RedirectToStripe = ({ redirectFn }) => {
   return <FormattedMessage id="EditListingWizard.redirectingToStripe" />;
 };
 
+const getListingTypeConfig = (listing, config) => {
+  const validListingTypes = config.listing.listingTypes;
+  const hasOneListingTypeOnly = validListingTypes?.length === 1;
+  const existingListingType = listing?.attributes?.publicData?.listingType;
+  const listingTypeConfig = existingListingType
+    ? validListingTypes.find(config => config.listingType === existingListingType)
+    : hasOneListingTypeOnly
+    ? validListingTypes[0]
+    : null;
+  return listingTypeConfig;
+};
+
 // Create a new or edit listing through EditListingWizard
 class EditListingWizard extends Component {
   constructor(props) {
@@ -309,19 +333,17 @@ class EditListingWizard extends Component {
   }
 
   handlePublishListing(id) {
-    const { onPublishListingDraft, currentUser, stripeAccount } = this.props;
+    const { onPublishListingDraft, currentUser, stripeAccount, listing, config } = this.props;
+    const isInquiryProcess = getListingTypeConfig(listing, config);
 
-    const stripeConnected =
-      currentUser && currentUser.stripeAccount && !!currentUser.stripeAccount.id;
-
+    const stripeConnected = !!currentUser?.stripeAccount?.id;
     const stripeAccountData = stripeConnected ? getStripeAccountData(stripeAccount) : null;
-
-    const requirementsMissing =
+    const stripeRequirementsMissing =
       stripeAccount &&
       (hasRequirements(stripeAccountData, 'past_due') ||
         hasRequirements(stripeAccountData, 'currently_due'));
 
-    if (stripeConnected && !requirementsMissing) {
+    if (isInquiryProcess || (stripeConnected && !stripeRequirementsMissing)) {
       onPublishListingDraft(id);
     } else {
       this.setState({
@@ -379,16 +401,18 @@ class EditListingWizard extends Component {
     // the listing is considered deprecated and we don't allow user to modify the listing anymore.
     // Instead, operator should do that through Console or Integration API.
     const validListingTypes = config.listing.listingTypes;
+    const listingTypeConfig = getListingTypeConfig(currentListing, config);
     const existingListingType = currentListing.attributes?.publicData?.listingType;
-    const invalidExistingListingType =
-      existingListingType &&
-      !validListingTypes.find(config => config.listingType === existingListingType);
+    const invalidExistingListingType = existingListingType && !listingTypeConfig;
+    // TODO: displayPrice aka config.defaultListingFields?.price with false value is only available with inquiry process
+    //       if it's enabled with other processes, translations for "new" flow needs to be updated.
+    const isPriceDisabled = !displayPrice(listingTypeConfig);
 
     const processName = transactionProcessAlias
       ? transactionProcessAlias.split('/')[0]
       : validListingTypes.length === 1
       ? validListingTypes[0].transactionType.process
-      : BOOKING_PROCESS_NAME;
+      : INQUIRY_PROCESS_NAME;
 
     // For oudated draft listing, we don't show other tabs but the "details"
     const tabs =
@@ -396,7 +420,11 @@ class EditListingWizard extends Component {
         ? TABS_DETAILS_ONLY
         : isBookingProcess(processName)
         ? TABS_BOOKING
-        : TABS_PRODUCT;
+        : isPurchaseProcess(processName)
+        ? TABS_PRODUCT
+        : isPriceDisabled
+        ? TABS_INQUIRY_WITHOUT_PRICE
+        : TABS_INQUIRY;
 
     // Check if wizard tab is active / linkable.
     // When creating a new listing, we don't allow users to access next tab until the current one is completed.
@@ -496,7 +524,13 @@ class EditListingWizard extends Component {
           tabRootClassName={css.tab}
         >
           {tabs.map(tab => {
-            const tabTranslations = tabLabelAndSubmit(intl, tab, isNewListingFlow, processName);
+            const tabTranslations = tabLabelAndSubmit(
+              intl,
+              tab,
+              isNewListingFlow,
+              isPriceDisabled,
+              processName
+            );
             return (
               <EditListingWizardTab
                 {...rest}
