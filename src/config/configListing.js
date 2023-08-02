@@ -262,6 +262,16 @@ export const listingTypes = [
   //   },
   //   stockType: 'multipleItems',
   // },
+  // {
+  //   listingType: 'inquiry',
+  //   label: 'Inquiry',
+  //   transactionType: {
+  //     process: 'default-inquiry',
+  //     alias: 'default-inquiry/release-1',
+  //     unitType: 'inquiry',
+  //   },
+  //   displayPrice: false,
+  // },
 ];
 
 // SearchPage can enforce listing query to only those listings with valid listingType
