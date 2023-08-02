@@ -3,11 +3,11 @@ import { bool, func, oneOfType, string } from 'prop-types';
 import truncate from 'lodash/truncate';
 import classNames from 'classnames';
 
-import { FormattedMessage } from '../../util/reactIntl';
-import { ensureUser, ensureCurrentUser } from '../../util/data';
-import { propTypes } from '../../util/types';
+import { FormattedMessage } from '../../../util/reactIntl';
+import { ensureUser, ensureCurrentUser } from '../../../util/data';
+import { propTypes } from '../../../util/types';
 
-import { AvatarLarge, NamedLink, InlineTextButton } from '../../components';
+import { AvatarLarge, NamedLink, InlineTextButton } from '../../../components';
 
 import css from './UserCard.module.css';
 
