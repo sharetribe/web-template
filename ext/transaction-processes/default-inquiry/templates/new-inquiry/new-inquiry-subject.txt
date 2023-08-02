@@ -1,0 +1,1 @@
+{{transaction.customer.display-name}} has sent you a new inquiry
