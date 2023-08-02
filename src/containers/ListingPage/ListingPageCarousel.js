@@ -390,6 +390,7 @@ export const ListingPageComponent = props => {
               lineItems={lineItems}
               fetchLineItemsInProgress={fetchLineItemsInProgress}
               fetchLineItemsError={fetchLineItemsError}
+              validListingTypes={config.listing.listingTypes}
               marketplaceCurrency={config.currency}
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
               marketplaceName={config.marketplaceName}
