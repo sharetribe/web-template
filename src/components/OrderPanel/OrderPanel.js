@@ -19,8 +19,10 @@ import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
 import { userDisplayNameAsString } from '../../util/data';
 import {
+  INQUIRY_PROCESS_NAME,
   getSupportedProcessesInfo,
   isBookingProcess,
+  isPurchaseProcess,
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
@@ -33,6 +35,11 @@ const BookingTimeForm = loadable(() =>
 );
 const BookingDatesForm = loadable(() =>
   import(/* webpackChunkName: "BookingDatesForm" */ './BookingDatesForm/BookingDatesForm')
+);
+const InquiryWithoutPaymentForm = loadable(() =>
+  import(
+    /* webpackChunkName: "InquiryWithoutPaymentForm" */ './InquiryWithoutPaymentForm/InquiryWithoutPaymentForm'
+  )
 );
 const ProductOrderForm = loadable(() =>
   import(/* webpackChunkName: "ProductOrderForm" */ './ProductOrderForm/ProductOrderForm')
@@ -72,6 +79,21 @@ const closeOrderModal = (history, location) => {
   history.push(`${pathname}${searchString}`, state);
 };
 
+const handleSubmit = (
+  isOwnListing,
+  isClosed,
+  isInquiryWithoutPayment,
+  onSubmit,
+  history,
+  location
+) => {
+  // TODO: currently, inquiry-process does not have any form to ask more order data.
+  // We can submit without opening any inquiry/order modal.
+  return isInquiryWithoutPayment
+    ? () => onSubmit({})
+    : () => openOrderModal(isOwnListing, isClosed, history, location);
+};
+
 const dateFormattingOptions = { month: 'short', day: 'numeric', weekday: 'short' };
 
 const OrderPanel = props => {
@@ -105,7 +127,7 @@ const OrderPanel = props => {
 
   const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias || '';
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
-  const unitType = listing?.attributes?.publicData?.unitType;
+  const { listingType, unitType } = listing?.attributes?.publicData || {};
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
   const price = listing?.attributes?.price;
@@ -140,13 +162,15 @@ const OrderPanel = props => {
 
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
+  const isPurchase = isPurchaseProcess(processName);
   const currentStock = listing.currentStock?.attributes?.quantity;
-  const isOutOfStock = lineItemUnitType === LINE_ITEM_ITEM && currentStock === 0;
+  const isOutOfStock = isPurchase && lineItemUnitType === LINE_ITEM_ITEM && currentStock === 0;
 
   // Show form only when stock is fully loaded. This avoids "Out of stock" UI by
   // default before all data has been downloaded.
-  const shouldHaveProductOrder = !isBooking && [LINE_ITEM_ITEM].includes(lineItemUnitType);
-  const showProductOrderForm = shouldHaveProductOrder && typeof currentStock === 'number';
+  const showProductOrderForm = isPurchase && typeof currentStock === 'number';
+
+  const showInquiryForm = processName === INQUIRY_PROCESS_NAME;
 
   const supportedProcessesInfo = getSupportedProcessesInfo();
   const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
@@ -269,6 +293,8 @@ const OrderPanel = props => {
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
           />
+        ) : showInquiryForm ? (
+          <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" onSubmit={onSubmit} />
         ) : !isKnownProcess ? (
           <p className={css.errorSidebar}>
             <FormattedMessage id="OrderPanel.unknownTransactionProcess" />
@@ -291,15 +317,24 @@ const OrderPanel = props => {
           </div>
         ) : (
           <PrimaryButton
-            onClick={() => openOrderModal(isOwnListing, isClosed, history, location)}
+            onClick={handleSubmit(
+              isOwnListing,
+              isClosed,
+              showInquiryForm,
+              onSubmit,
+              history,
+              location
+            )}
             disabled={isOutOfStock}
           >
             {isBooking ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessageBooking" />
             ) : isOutOfStock ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessageNoStock" />
-            ) : (
+            ) : isPurchase ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessagePurchase" />
+            ) : (
+              <FormattedMessage id="OrderPanel.ctaButtonMessageInquiry" />
             )}
           </PrimaryButton>
         )}
