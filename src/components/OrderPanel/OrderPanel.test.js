@@ -459,4 +459,38 @@ describe('OrderPanel', () => {
       expect(getByText('OrderPanel.ctaButtonMessagePurchase')).toBeInTheDocument();
     });
   });
+
+  it('Inquiry: inquiry ', async () => {
+    const listing = createListing('listing-inquiry', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      price: new Money(1000, 'USD'),
+
+      publicData: {
+        listingType: 'inquiry',
+        transactionProcessAlias: 'default-inquiry/release-1',
+        unitType: 'inquiry',
+        amenities: ['dog_1'],
+        location: {
+          address: 'Main Street 123',
+          building: 'A 1',
+        },
+      },
+    });
+
+    const props = { ...commonProps, listing, isOwnListing: false, validListingTypes };
+    const { getByText, queryAllByText } = render(<OrderPanel {...props} />, {
+      config,
+      routeConfiguration,
+    });
+
+    await waitFor(() => {
+      expect(queryAllByText('title!')).toHaveLength(2);
+      expect(queryAllByText('$10.00')).toHaveLength(2);
+      expect(queryAllByText('OrderPanel.perUnit')).toHaveLength(2);
+      expect(queryAllByText('OrderPanel.author')).toHaveLength(2);
+      expect(getByText('InquiryWithoutPaymentForm.ctaButton')).toBeInTheDocument();
+      expect(getByText('OrderPanel.ctaButtonMessageInquiry')).toBeInTheDocument();
+    });
+  });
 });
