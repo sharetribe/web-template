@@ -19,6 +19,7 @@ import DetailCardHeadingsMaybe from './DetailCardHeadingsMaybe';
 import DetailCardImage from './DetailCardImage';
 import DeliveryInfoMaybe from './DeliveryInfoMaybe';
 import BookingLocationMaybe from './BookingLocationMaybe';
+import InquiryMessageMaybe from './InquiryMessageMaybe';
 import FeedSection from './FeedSection';
 import ActionButtonsMaybe from './ActionButtonsMaybe';
 import DiminishedActionButtonMaybe from './DiminishedActionButtonMaybe';
@@ -135,6 +136,7 @@ export class TransactionPanelComponent extends Component {
       stateData,
       showBookingLocation,
       activityFeed,
+      isInquiryProcess,
       orderBreakdown,
       orderPanel,
       config,
@@ -173,6 +175,11 @@ export class TransactionPanelComponent extends Component {
       />
     );
 
+    const listingType = listing?.attributes?.publicData?.listingType;
+    const listingTypeConfigs = config.listing.listingTypes;
+    const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
+    const showPrice = isInquiryProcess && listingTypeConfig?.displayPrice !== false;
+
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
 
@@ -203,6 +210,9 @@ export class TransactionPanelComponent extends Component {
               processName={stateData.processName}
               processState={stateData.processState}
               showExtraInfo={stateData.showExtraInfo}
+              showPriceOnMobile={showPrice}
+              price={listing?.attributes?.price}
+              intl={intl}
               deliveryMethod={deliveryMethod}
               isPendingPayment={!!stateData.isPendingPayment}
               transactionRole={transactionRole}
@@ -214,44 +224,51 @@ export class TransactionPanelComponent extends Component {
               listingDeleted={listingDeleted}
             />
 
-            <div className={css.orderDetails}>
-              <div className={css.orderDetailsMobileSection}>
-                <BreakdownMaybe
-                  orderBreakdown={orderBreakdown}
-                  processName={stateData.processName}
+            <InquiryMessageMaybe
+              protectedData={protectedData}
+              showInquiryMessage={isInquiryProcess}
+            />
+
+            {!isInquiryProcess ? (
+              <div className={css.orderDetails}>
+                <div className={css.orderDetailsMobileSection}>
+                  <BreakdownMaybe
+                    orderBreakdown={orderBreakdown}
+                    processName={stateData.processName}
+                  />
+                  <DiminishedActionButtonMaybe
+                    showDispute={stateData.showDispute}
+                    onOpenDisputeModal={onOpenDisputeModal}
+                  />
+                </div>
+
+                {savePaymentMethodFailed ? (
+                  <p className={css.genericError}>
+                    <FormattedMessage
+                      id="TransactionPanel.savePaymentMethodFailed"
+                      values={{
+                        paymentMethodsPageLink: (
+                          <NamedLink name="PaymentMethodsPage">
+                            <FormattedMessage id="TransactionPanel.paymentMethodsPageLink" />
+                          </NamedLink>
+                        ),
+                      }}
+                    />
+                  </p>
+                ) : null}
+                <DeliveryInfoMaybe
+                  className={css.deliveryInfoSection}
+                  protectedData={protectedData}
+                  listing={listing}
+                  locale={config.localization.locale}
                 />
-                <DiminishedActionButtonMaybe
-                  showDispute={stateData.showDispute}
-                  onOpenDisputeModal={onOpenDisputeModal}
+                <BookingLocationMaybe
+                  className={css.deliveryInfoSection}
+                  listing={listing}
+                  showBookingLocation={showBookingLocation}
                 />
               </div>
-
-              {savePaymentMethodFailed ? (
-                <p className={css.genericError}>
-                  <FormattedMessage
-                    id="TransactionPanel.savePaymentMethodFailed"
-                    values={{
-                      paymentMethodsPageLink: (
-                        <NamedLink name="PaymentMethodsPage">
-                          <FormattedMessage id="TransactionPanel.paymentMethodsPageLink" />
-                        </NamedLink>
-                      ),
-                    }}
-                  />
-                </p>
-              ) : null}
-              <DeliveryInfoMaybe
-                className={css.deliveryInfoSection}
-                protectedData={protectedData}
-                listing={listing}
-                locale={config.localization.locale}
-              />
-              <BookingLocationMaybe
-                className={css.deliveryInfoSection}
-                listing={listing}
-                showBookingLocation={showBookingLocation}
-              />
-            </div>
+            ) : null}
 
             <FeedSection
               rootClassName={css.feedContainer}
@@ -260,6 +277,7 @@ export class TransactionPanelComponent extends Component {
               fetchMessagesError={fetchMessagesError}
               initialMessageFailed={initialMessageFailed}
               activityFeed={activityFeed}
+              isConversation={isInquiryProcess}
             />
             {showSendMessageForm ? (
               <SendMessageForm
@@ -315,6 +333,9 @@ export class TransactionPanelComponent extends Component {
                       </NamedLink>
                     )
                   }
+                  showPrice={showPrice}
+                  price={listing?.attributes?.price}
+                  intl={intl}
                 />
                 {stateData.showOrderPanel ? orderPanel : null}
                 <BreakdownMaybe
