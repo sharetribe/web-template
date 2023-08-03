@@ -16,6 +16,7 @@ const FeedSection = props => {
     fetchMessagesError,
     initialMessageFailed,
     hasMessages,
+    isConversation,
   } = props;
 
   const showFeed = hasMessages || hasTransitions || initialMessageFailed || fetchMessagesError;
@@ -25,7 +26,11 @@ const FeedSection = props => {
   return showFeed ? (
     <div className={classes}>
       <Heading as="h3" rootClassName={css.sectionHeading}>
-        <FormattedMessage id="TransactionPanel.activityHeading" />
+        {isConversation ? (
+          <FormattedMessage id="TransactionPanel.conversationHeading" />
+        ) : (
+          <FormattedMessage id="TransactionPanel.activityHeading" />
+        )}
       </Heading>
       {initialMessageFailed ? (
         <p className={css.messageError}>
