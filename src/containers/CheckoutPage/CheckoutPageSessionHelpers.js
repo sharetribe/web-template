@@ -152,3 +152,29 @@ export const clearData = storageKey => {
     window.sessionStorage.removeItem(storageKey);
   }
 };
+
+/**
+ * Save page data to sessionstorage if the data is passed through navigation
+ *
+ * @param {Object} pageData an object containing orderData, listing and transaction entities.
+ * @param {String} storageKey key for the sessionStorage
+ * @param {Object} history navigation related object with pushState action
+ * @returns pageData
+ */
+export const handlePageData = ({ orderData, listing, transaction }, storageKey, history) => {
+  // Browser's back navigation should not rewrite data in session store.
+  // Action is 'POP' on both history.back() and page refresh cases.
+  // Action is 'PUSH' when user has directed through a link
+  // Action is 'REPLACE' when user has directed through login/signup process
+  const hasNavigatedThroughLink = history.action === 'PUSH' || history.action === 'REPLACE';
+
+  const hasDataInProps = !!(orderData && listing && hasNavigatedThroughLink);
+  if (hasDataInProps) {
+    // Store data only if data is passed through props and user has navigated through a link.
+    storeData(orderData, listing, transaction, storageKey);
+  }
+
+  // NOTE: stored data can be empty if user has already successfully completed transaction.
+  const pageData = hasDataInProps ? { orderData, listing, transaction } : storedData(storageKey);
+  return pageData;
+};
