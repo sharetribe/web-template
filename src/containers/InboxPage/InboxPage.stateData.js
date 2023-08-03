@@ -1,12 +1,14 @@
 import { bool, shape, string } from 'prop-types';
 import {
   BOOKING_PROCESS_NAME,
+  INQUIRY_PROCESS_NAME,
   PURCHASE_PROCESS_NAME,
   resolveLatestProcessName,
   getProcess,
 } from '../../transactions/transaction';
 
 import { getStateDataForBookingProcess } from './InboxPage.stateDataBooking.js';
+import { getStateDataForInquiryProcess } from './InboxPage.stateDataInquiry.js';
 import { getStateDataForPurchaseProcess } from './InboxPage.stateDataPurchase.js';
 
 export const stateDataShape = shape({
@@ -37,6 +39,8 @@ export const getStateData = params => {
     return getStateDataForPurchaseProcess(params, processInfo());
   } else if (processName === BOOKING_PROCESS_NAME) {
     return getStateDataForBookingProcess(params, processInfo());
+  } else if (processName === INQUIRY_PROCESS_NAME) {
+    return getStateDataForInquiryProcess(params, processInfo());
   } else {
     return {};
   }

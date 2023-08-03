@@ -4054,6 +4054,64 @@ exports[`InboxPage InboxItem: default-booking process with "night" check booking
 </div>
 `;
 
+exports[`InboxPage InboxItem: default-inquiry process with "inquiry" item check inquiry: transition/inquire-without-payment 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer"
+      title="customer display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/id-inquiry-INQUIRE_WITHOUT_PAYMENT-sale"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      listing1 title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-inquiry.free-inquiry.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
 exports[`InboxPage InboxItem: default-purchase process with "item" InboxItem with stockType "oneItem" matches snapshot of purchase sale 1`] = `
 <div
   class="item"
