@@ -55,8 +55,12 @@
     margin-bottom: 0;
   }
 }
+.noPriceSetLabel {
+  width: 30px;
+  height: 30px;
+}
 
-.priceLabelActive {
+.mapLabelActive {
   /* Same as hover */
   background-color: var(--marketplaceColor);
   border-color: var(--marketplaceColor);

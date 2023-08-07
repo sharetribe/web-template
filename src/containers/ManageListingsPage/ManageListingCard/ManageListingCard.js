@@ -48,7 +48,7 @@ const MENU_CONTENT_OFFSET = -12;
 const MAX_LENGTH_FOR_WORDS_IN_TITLE = 7;
 
 const priceData = (price, currency, intl) => {
-  if (price && price.currency === currency) {
+  if (price?.currency === currency) {
     const formattedPrice = formatMoney(intl, price);
     return { formattedPrice, priceTitle: formattedPrice };
   } else if (price) {
@@ -291,6 +291,8 @@ const PriceMaybe = props => {
         <FormattedMessage id="ManageListingCard.priceNotSet" />
       </div>
     );
+  } else if (!showPrice) {
+    return null;
   }
 
   const isBookable = isBookingProcessAlias(publicData?.transactionProcessAlias);
