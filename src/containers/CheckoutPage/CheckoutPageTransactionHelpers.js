@@ -158,6 +158,16 @@ export const hasTransactionPassedPendingPayment = (tx, process) => {
   return process.hasPassedState(process.states.PENDING_PAYMENT, tx);
 };
 
+const persistTransaction = (order, pageData, storeData, setPageData, sessionStorageKey) => {
+  // Store the returned transaction (order)
+  if (order?.id) {
+    // Store order.
+    const { orderData, listing } = pageData;
+    storeData(orderData, listing, order, sessionStorageKey);
+    setPageData({ ...pageData, transaction: order });
+  }
+};
+
 /**
  * Create call sequence for checkout with Stripe PaymentIntents.
  *
@@ -206,9 +216,16 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     const isPrivileged = process.isPrivileged(requestTransition);
 
     // If paymentIntent exists, order has been initiated previously.
-    return hasPaymentIntents
+    const orderPromise = hasPaymentIntents
       ? Promise.resolve(storedTx)
       : onInitiateOrder(fnParams, processAlias, storedTx.id, requestTransition, isPrivileged);
+
+    orderPromise.then(order => {
+      // Store the returned transaction (order)
+      persistTransaction(order, pageData, storeData, setPageData, sessionStorageKey);
+    });
+
+    return orderPromise;
   };
 
   //////////////////////////////////
@@ -216,16 +233,9 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
   //////////////////////////////////
   const fnConfirmCardPayment = fnParams => {
     // fnParams should be returned transaction entity
+    const order = fnParams;
 
-    const order = ensureTransaction(fnParams);
-    if (order.id) {
-      // Store order.
-      const { orderData, listing } = pageData;
-      storeData(orderData, listing, order, sessionStorageKey);
-      setPageData({ ...pageData, transaction: order });
-    }
-
-    const hasPaymentIntents = order.attributes.protectedData?.stripePaymentIntents;
+    const hasPaymentIntents = order?.attributes?.protectedData?.stripePaymentIntents;
     if (!hasPaymentIntents) {
       throw new Error(
         `Missing StripePaymentIntents key in transaction's protectedData. Check that your transaction process is configured to use payment intents.`
@@ -252,14 +262,14 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
 
     const params = {
       stripePaymentIntentClientSecret,
-      orderId: order.id,
+      orderId: order?.id,
       stripe,
       ...stripeElementMaybe,
       paymentParams,
     };
 
     return hasPaymentIntentUserActionsDone
-      ? Promise.resolve({ transactionId: order.id, paymentIntent })
+      ? Promise.resolve({ transactionId: order?.id, paymentIntent })
       : onConfirmCardPayment(params);
   };
 
@@ -273,14 +283,25 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     createdPaymentIntent = fnParams.paymentIntent;
     const transactionId = fnParams.transactionId;
     const transitionName = process.transitions.CONFIRM_PAYMENT;
-    return onConfirmPayment(transactionId, transitionName, {});
+    const isTransitionedAlready = storedTx?.attributes?.lastTransition === transitionName;
+    const orderPromise = isTransitionedAlready
+      ? Promise.resolve(storedTx)
+      : onConfirmPayment(transactionId, transitionName, {});
+
+    orderPromise.then(order => {
+      // Store the returned transaction (order)
+      persistTransaction(order, pageData, storeData, setPageData, sessionStorageKey);
+    });
+
+    return orderPromise;
   };
 
   //////////////////////////////////
   // Step 4: send initial message //
   //////////////////////////////////
   const fnSendMessage = fnParams => {
-    return onSendMessage({ ...fnParams, message });
+    const orderId = fnParams?.id;
+    return onSendMessage({ id: orderId, message });
   };
 
   //////////////////////////////////////////////////////////
