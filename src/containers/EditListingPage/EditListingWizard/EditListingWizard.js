@@ -289,13 +289,16 @@ const RedirectToStripe = ({ redirectFn }) => {
   return <FormattedMessage id="EditListingWizard.redirectingToStripe" />;
 };
 
-const getListingTypeConfig = (listing, config) => {
-  const validListingTypes = config.listing.listingTypes;
-  const hasOneListingTypeOnly = validListingTypes?.length === 1;
+const getListingTypeConfig = (listing, selectedListingType, config) => {
   const existingListingType = listing?.attributes?.publicData?.listingType;
+  const validListingTypes = config.listing.listingTypes;
+  const hasOnlyOneListingType = validListingTypes?.length === 1;
+
   const listingTypeConfig = existingListingType
     ? validListingTypes.find(config => config.listingType === existingListingType)
-    : hasOneListingTypeOnly
+    : selectedListingType
+    ? validListingTypes.find(config => config.listingType === selectedListingType.listingType)
+    : hasOnlyOneListingType
     ? validListingTypes[0]
     : null;
   return listingTypeConfig;
@@ -312,7 +315,7 @@ class EditListingWizard extends Component {
     this.state = {
       draftId: null,
       showPayoutDetails: false,
-      transactionProcessAlias: null,
+      selectedListingType: null,
     };
     this.handleCreateFlowTabScrolling = this.handleCreateFlowTabScrolling.bind(this);
     this.handlePublishListing = this.handlePublishListing.bind(this);
@@ -333,7 +336,8 @@ class EditListingWizard extends Component {
 
   handlePublishListing(id) {
     const { onPublishListingDraft, currentUser, stripeAccount, listing, config } = this.props;
-    const isInquiryProcess = getListingTypeConfig(listing, config);
+    const processName = listing?.attributes?.publicData?.transactionProcessAlias.split('/')[0];
+    const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
     const stripeConnected = !!currentUser?.stripeAccount?.id;
     const stripeAccountData = stripeConnected ? getStripeAccountData(stripeAccount) : null;
@@ -394,19 +398,26 @@ class EditListingWizard extends Component {
     const classes = classNames(rootClasses, className);
     const currentListing = ensureListing(listing);
     const savedProcessAlias = currentListing.attributes?.publicData?.transactionProcessAlias;
-    const transactionProcessAlias = savedProcessAlias || this.state.transactionProcessAlias;
+    const transactionProcessAlias =
+      savedProcessAlias || this.state.selectedListingType?.transactionProcessAlias;
 
     // NOTE: If the listing has invalid configuration in place,
     // the listing is considered deprecated and we don't allow user to modify the listing anymore.
     // Instead, operator should do that through Console or Integration API.
     const validListingTypes = config.listing.listingTypes;
-    const listingTypeConfig = getListingTypeConfig(currentListing, config);
+    const listingTypeConfig = getListingTypeConfig(
+      currentListing,
+      this.state.selectedListingType,
+      config
+    );
     const existingListingType = currentListing.attributes?.publicData?.listingType;
     const invalidExistingListingType = existingListingType && !listingTypeConfig;
     // TODO: displayPrice is only available with inquiry process
     //       if it's enabled with other processes, translations for "new" flow needs to be updated.
     const isPriceDisabled = listingTypeConfig?.displayPrice === false;
 
+    // Transaction process alias is used here, because the process defineds whether the listing is supported
+    // I.e. old listings might not be supported through listing types, but client app might still support those processes.
     const processName = transactionProcessAlias
       ? transactionProcessAlias.split('/')[0]
       : validListingTypes.length === 1
@@ -548,9 +559,7 @@ class EditListingWizard extends Component {
                 handleCreateFlowTabScrolling={this.handleCreateFlowTabScrolling}
                 handlePublishListing={this.handlePublishListing}
                 fetchInProgress={fetchInProgress}
-                onProcessChange={transactionProcessAlias =>
-                  this.setState({ transactionProcessAlias })
-                }
+                onListingTypeChange={selectedListingType => this.setState({ selectedListingType })}
                 onManageDisableScrolling={onManageDisableScrolling}
                 config={config}
                 routeConfiguration={routeConfiguration}

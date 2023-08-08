@@ -173,7 +173,7 @@ const EditListingDetailsPanel = props => {
     disabled,
     ready,
     onSubmit,
-    onProcessChange,
+    onListingTypeChange,
     submitButtonText,
     panelUpdated,
     updateInProgress,
@@ -271,7 +271,7 @@ const EditListingDetailsPanel = props => {
           }}
           selectableListingTypes={listingTypes.map(conf => getTransactionInfo([conf], {}, true))}
           hasExistingListingType={hasExistingListingType}
-          onProcessChange={onProcessChange}
+          onListingTypeChange={onListingTypeChange}
           listingFieldsConfig={listingFieldsConfig}
           marketplaceCurrency={config.currency}
           disabled={disabled}
@@ -295,7 +295,6 @@ const EditListingDetailsPanel = props => {
 EditListingDetailsPanel.defaultProps = {
   className: null,
   rootClassName: null,
-  onProcessChange: null,
   errors: null,
   listing: null,
 };
@@ -310,7 +309,7 @@ EditListingDetailsPanel.propTypes = {
   disabled: bool.isRequired,
   ready: bool.isRequired,
   onSubmit: func.isRequired,
-  onProcessChange: func,
+  onListingTypeChange: func.isRequired,
   submitButtonText: string.isRequired,
   panelUpdated: bool.isRequired,
   updateInProgress: bool.isRequired,

@@ -52,19 +52,16 @@ const FieldHidden = props => {
 // - transactionProcessAlias  Initiate correct transaction against Marketplace API
 // - unitType                 Main use case: pricing unit
 const FieldSelectListingType = props => {
-  const { name, listingTypes, hasExistingListingType, onProcessChange, formApi, intl } = props;
+  const { name, listingTypes, hasExistingListingType, onListingTypeChange, formApi, intl } = props;
   const hasMultipleListingTypes = listingTypes?.length > 1;
 
   const handleOnChange = value => {
-    const transactionProcessAlias = formApi.getFieldState('transactionProcessAlias')?.value;
     const selectedListingType = listingTypes.find(config => config.listingType === value);
     formApi.change('transactionProcessAlias', selectedListingType.transactionProcessAlias);
     formApi.change('unitType', selectedListingType.unitType);
 
-    const hasProcessChanged =
-      transactionProcessAlias !== selectedListingType.transactionProcessAlias;
-    if (onProcessChange && hasProcessChanged) {
-      onProcessChange(selectedListingType.transactionProcessAlias);
+    if (onListingTypeChange) {
+      onListingTypeChange(selectedListingType);
     }
   };
 
@@ -158,7 +155,7 @@ const EditListingDetailsFormComponent = props => (
         formId,
         form: formApi,
         handleSubmit,
-        onProcessChange,
+        onListingTypeChange,
         intl,
         invalid,
         pristine,
@@ -226,7 +223,7 @@ const EditListingDetailsFormComponent = props => (
             name="listingType"
             listingTypes={selectableListingTypes}
             hasExistingListingType={hasExistingListingType}
-            onProcessChange={onProcessChange}
+            onListingTypeChange={onListingTypeChange}
             formApi={formApi}
             intl={intl}
           />
@@ -256,7 +253,6 @@ EditListingDetailsFormComponent.defaultProps = {
   className: null,
   formId: 'EditListingDetailsForm',
   fetchErrors: null,
-  onProcessChange: null,
   hasExistingListingType: false,
   listingFieldsConfig: [],
 };
@@ -266,7 +262,7 @@ EditListingDetailsFormComponent.propTypes = {
   formId: string,
   intl: intlShape.isRequired,
   onSubmit: func.isRequired,
-  onProcessChange: func,
+  onListingTypeChange: func.isRequired,
   saveActionMsg: string.isRequired,
   disabled: bool.isRequired,
   ready: bool.isRequired,
