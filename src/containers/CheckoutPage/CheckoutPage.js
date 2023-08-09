@@ -849,9 +849,9 @@ export class CheckoutPageComponent extends Component {
       listingLink
     );
 
-    const showInitialMessageInput = !(
-      existingTransaction && existingTransaction.attributes.lastTransition === transitions.INQUIRE
-    );
+    const txTransitions = existingTransaction?.attributes?.transitions || [];
+    const hasInquireTransition = txTransitions.find(tr => tr.transition === transitions.INQUIRE);
+    const showInitialMessageInput = !hasInquireTransition;
 
     // Get first and last name of the current user and use it in the StripePaymentForm to autofill the name field
     const userName = currentUser?.attributes?.profile
