@@ -762,9 +762,13 @@ export class CheckoutPageComponent extends Component {
       return <NamedRedirect name="ListingPage" params={params} />;
     }
 
-    // Show breakdown only when (speculated?) transaction is loaded
-    // (i.e. it has an id and lineItems)
-    const tx = existingTransaction.id ? existingTransaction : speculatedTransaction;
+    // If existing transaction has line-items, it has gone through one of the request-payment transitions.
+    // Otherwise, we try to rely on speculatedTransaction for order breakdown data.
+    const tx =
+      existingTransaction?.attributes?.lineItems?.length > 0
+        ? existingTransaction
+        : speculatedTransaction;
+
     const timeZone = listing?.attributes?.availabilityPlan?.timezone;
     const transactionProcessAlias = currentListing.attributes.publicData?.transactionProcessAlias;
     const unitType = currentListing.attributes.publicData?.unitType;
@@ -773,6 +777,9 @@ export class CheckoutPageComponent extends Component {
     const txBookingMaybe = tx.booking?.id
       ? { booking: ensureBooking(tx.booking), dateType, timeZone }
       : {};
+
+    // Show breakdown only when (speculated?) transaction is loaded
+    // (i.e. it has an id and lineItems)
     const breakdown =
       tx.id && tx.attributes.lineItems?.length > 0 ? (
         <OrderBreakdown
@@ -784,6 +791,9 @@ export class CheckoutPageComponent extends Component {
           marketplaceName={config.marketplaceName}
         />
       ) : null;
+
+    const totalPrice =
+      tx?.attributes?.lineItems?.length > 0 ? getFormattedTotalPrice(tx, intl) : null;
 
     const process = latestProcessName ? getProcess(latestProcessName) : null;
     const transitions = process.transitions;
@@ -929,7 +939,7 @@ export class CheckoutPageComponent extends Component {
                   askShippingDetails={askShippingDetails}
                   showPickUplocation={orderData?.deliveryMethod === 'pickup'}
                   listingLocation={currentListing?.attributes?.publicData?.location}
-                  totalPrice={tx.id ? getFormattedTotalPrice(tx, intl) : null}
+                  totalPrice={totalPrice}
                   locale={config.localization.locale}
                   stripePublishableKey={config.stripe.publishableKey}
                   marketplaceName={config.marketplaceName}
