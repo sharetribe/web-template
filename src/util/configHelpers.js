@@ -560,20 +560,42 @@ const restructureListingFields = hostedListingFields => {
   });
 };
 
+const mergeDefaultTypesAndFieldsForDebugging = isDebugging => {
+  const isDev = process.env.NODE_ENV === 'development';
+  return isDebugging && isDev;
+};
+
+// Note: by default, listing types and fields are only merged if explicitly set for debugging
 const mergeListingConfig = (hostedConfig, defaultConfigs) => {
   // Listing configuration is splitted to several assets in Console
   const hostedListingTypes = hostedConfig.listingTypes?.listingTypes;
   const hostedListingFields = hostedConfig.listingFields?.listingFields;
-  const hostedListingConfig =
-    hostedListingTypes && hostedListingFields
-      ? {
-          listingTypes: restructureListingTypes(hostedListingTypes),
-          listingFields: restructureListingFields(hostedListingFields),
-        }
-      : null;
+  const restructuredListingTypes = restructureListingTypes(hostedListingTypes);
+  const restructuredListingFields = restructureListingFields(hostedListingFields);
 
-  const { listingTypes = [], listingFields = [], ...rest } =
-    hostedListingConfig || defaultConfigs.listing;
+  // The default values for local debugging
+  const { listingTypes: defaultListingTypes, listingFields: defaultListingFields, ...rest } =
+    defaultConfigs.listing || {};
+
+  let listingTypes = restructuredListingTypes;
+  let listingFields = restructuredListingFields;
+
+  // When debugging, include default configs.
+  // Otherwise, use listing types and fields from hosted assets.
+  if (mergeDefaultTypesAndFieldsForDebugging(false)) {
+    // Merge 2 arrays and pick only unique objects according to "key" property
+    // Note: This solution prefers objects from the second array
+    //       I.e. default configs override hosted asset configs if they have the same key.
+    const union = (arr1, arr2, key) => {
+      const all = [...arr1, ...arr2];
+      const map = new Map(all.map(obj => [obj[key], obj]));
+      return [...map.values()];
+    };
+
+    listingTypes = union(restructuredListingTypes, defaultListingTypes, 'listingType');
+    listingFields = union(restructuredListingFields, defaultListingFields, 'key');
+  }
+
   const listingTypesInUse = getListingTypeStringsInUse(listingTypes);
 
   return {
