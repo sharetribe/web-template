@@ -3,31 +3,6 @@ import { getSupportedProcessesInfo } from '../transactions/transaction';
 
 // Generic helpers for validating config values
 
-// Validate enum type strings (if default value is given, value is considered optional)
-const validEnumString = (key, value, options, defaultOption) => {
-  const isUndefined = typeof value === 'undefined';
-  const isValidValue = options.includes(value);
-  const isValid = (typeof defaultOption !== 'undefined' && isUndefined) || isValidValue;
-  const valueMaybe = isValid ? { [key]: value || defaultOption } : {};
-  return [isValid, valueMaybe];
-};
-
-// Validate boolean values (if default value is given, value is considered optional)
-const validBoolean = (key, value, defaultValue) => {
-  const isUndefined = typeof value === 'undefined';
-  const isBoolean = typeof value == 'boolean';
-  const isValid = (typeof defaultValue !== 'undefined' && isUndefined) || isBoolean;
-
-  const validValue = isBoolean ? { [key]: value } : isValid ? { [key]: defaultValue } : {};
-  return [isValid, validValue];
-};
-
-const validLabel = label => {
-  const isValid = typeof label === 'string';
-  const labelMaybe = isValid ? { label } : {};
-  return [isValid, labelMaybe];
-};
-
 const printErrorIfHostedAssetIsMissing = props => {
   Object.entries(props).map(entry => {
     const [key, value = {}] = entry || [];
@@ -242,9 +217,34 @@ const mergeLayouts = (layoutConfig, defaultLayout) => {
   };
 };
 
-/////////////////////////////
-// Validate listing config //
-/////////////////////////////
+////////////////////////////////////
+// Validate listing fields config //
+////////////////////////////////////
+
+// Validate enum type strings (if default value is given, value is considered optional)
+const validEnumString = (key, value, options, defaultOption) => {
+  const isUndefined = typeof value === 'undefined';
+  const isValidValue = options.includes(value);
+  const isValid = (typeof defaultOption !== 'undefined' && isUndefined) || isValidValue;
+  const valueMaybe = isValid ? { [key]: value || defaultOption } : {};
+  return [isValid, valueMaybe];
+};
+
+// Validate boolean values (if default value is given, value is considered optional)
+const validBoolean = (key, value, defaultValue) => {
+  const isUndefined = typeof value === 'undefined';
+  const isBoolean = typeof value == 'boolean';
+  const isValid = (typeof defaultValue !== 'undefined' && isUndefined) || isBoolean;
+
+  const validValue = isBoolean ? { [key]: value } : isValid ? { [key]: defaultValue } : {};
+  return [isValid, validValue];
+};
+
+const validLabel = label => {
+  const isValid = typeof label === 'string';
+  const labelMaybe = isValid ? { label } : {};
+  return [isValid, labelMaybe];
+};
 
 const validKey = (key, allKeys) => {
   const isUniqueKey = allKeys.indexOf(key) === allKeys.lastIndexOf(key);
@@ -460,6 +460,10 @@ const validListingFields = (listingFields, listingTypesInUse) => {
   }, []);
 };
 
+///////////////////////////////////
+// Validate listing types config //
+///////////////////////////////////
+
 const getListingTypeStringsInUse = listingTypes => {
   return listingTypes.map(lt => `${lt.listingType}`);
 };
@@ -499,6 +503,10 @@ const validListingTypes = listingTypes => {
 
   return validTypes;
 };
+
+///////////////////////////////////////
+// Restructure hosted listing config //
+///////////////////////////////////////
 
 const restructureListingTypes = hostedListingTypes => {
   return hostedListingTypes.map(listingType => {
@@ -560,20 +568,47 @@ const restructureListingFields = hostedListingFields => {
   });
 };
 
+///////////////////////////
+// Merge listing configs //
+///////////////////////////
+
+// Merge 2 arrays and pick only unique objects according to "key" property
+// Note: This solution prefers objects from the second array
+//       I.e. default configs override hosted asset configs if they have the same key.
+const union = (arr1, arr2, key) => {
+  const all = [...arr1, ...arr2];
+  const map = new Map(all.map(obj => [obj[key], obj]));
+  return [...map.values()];
+};
+
+// For debugging, it becomes sometimes important to be able to merge and overwrite with local values
+// Note: We don't want to expose this to production by default.
+//       If you customization relies on multiple listing types or custom listing fields, you need to change this.
+const mergeDefaultTypesAndFieldsForDebugging = isDebugging => {
+  const isDev = process.env.NODE_ENV === 'development';
+  return isDebugging && isDev;
+};
+
+// Note: by default, listing types and fields are only merged if explicitly set for debugging
 const mergeListingConfig = (hostedConfig, defaultConfigs) => {
   // Listing configuration is splitted to several assets in Console
-  const hostedListingTypes = hostedConfig.listingTypes?.listingTypes;
-  const hostedListingFields = hostedConfig.listingFields?.listingFields;
-  const hostedListingConfig =
-    hostedListingTypes && hostedListingFields
-      ? {
-          listingTypes: restructureListingTypes(hostedListingTypes),
-          listingFields: restructureListingFields(hostedListingFields),
-        }
-      : null;
+  const hostedListingTypes = restructureListingTypes(hostedConfig.listingTypes?.listingTypes);
+  const hostedListingFields = restructureListingFields(hostedConfig.listingFields?.listingFields);
 
-  const { listingTypes = [], listingFields = [], ...rest } =
-    hostedListingConfig || defaultConfigs.listing;
+  // The default values for local debugging
+  const { listingTypes: defaultListingTypes, listingFields: defaultListingFields, ...rest } =
+    defaultConfigs.listing || {};
+
+  // When debugging, include default configs.
+  // Otherwise, use listing types and fields from hosted assets.
+  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
+  const listingTypes = shouldMerge
+    ? union(hostedListingTypes, defaultListingTypes, 'listingType')
+    : hostedListingTypes;
+  const listingFields = shouldMerge
+    ? union(hostedListingFields, defaultListingFields, 'key')
+    : hostedListingFields;
+
   const listingTypesInUse = getListingTypeStringsInUse(listingTypes);
 
   return {
