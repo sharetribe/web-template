@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+## [v2.2.0] 2023-08-09
+
 - [fix] CheckoutPage: totalPrice caused an error after inquiry transition.
   [#197](https://github.com/sharetribe/web-template/pull/197)
 - [fix] there is was a race condition, if logged in user tries to log in again.
@@ -26,6 +28,8 @@ way to update this template, but currently, we follow a pattern:
   [#191](https://github.com/sharetribe/web-template/pull/191)
 - [fix] Inline formatting was wrong for links in PageBuilder and ListingPage descriptions
   [#190](https://github.com/sharetribe/web-template/pull/190)
+
+[v2.2.0]: https://github.com/sharetribe/web-template/compare/v2.1.1...v2.2.0
 
 ## [v2.1.1] 2023-06-26
 
