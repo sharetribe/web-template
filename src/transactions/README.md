@@ -43,6 +43,16 @@ This file defines the process graph of _default-booking_ for the web app.
 
 This file defines the process graph of _default-purchase_ for the web app.
 
+## [transactionProcessInquiry.js](transactionProcessInquiry.js)
+
+This file defines the process graph of _default-inquiry_ for the web app. The default-inquiry
+process is a very simple transaction process without payments. Its job is to make it possible for
+customers to contact and start messaging with providers. Since Stripe is not available for every
+country, this process could be used instead.
+
+Note: you need to figure out the monetization model separately as payments (and commissions) don't
+happen through the platform with this process.
+
 ## [../../ext/transaction-processes](../../ext/transaction-processes/README.md)
 
 These files reference the actual transaction processes that are available by default on each

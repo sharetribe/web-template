@@ -33,6 +33,9 @@ is only done if the user has not connected the Stripe account.
 A panel is the content for a single wizard tab. It renders the correct form and handles the data
 flow to and from the form.
 
+Note: each process has their own set of panels. Check the
+[EditListingWizard](./EditListingWizard/EditListingWizard.js#L59) for more information.
+
 ### Forms
 
 Panels contain forms that collect input from the user and submit the tab data.
