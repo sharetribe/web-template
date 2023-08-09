@@ -1,14 +1,19 @@
 # Translations files for Microcopy
 
-We'll introduce new languages into this directory one by one. The **en.json** is the default
-microcopy file, and other translation files are added and updated after changes have been reviewed
-by translators.
+We'll introduce new languages into this directory one by one. As the name suggest,
+**defaultMicrocopy.json** file is the default microcopy file and it hold generic terms like "item"
+instead of themed translations like "bike". The **en.json** is currently holding Biketribe-themed
+translations. Other translation files are added and updated after changes have been reviewed by
+translators.
 
-## Hosted microcopy vs en.json
+**Note**: we might drop the Biketribe themed translation file and start using en.json as the default
+file.
+
+## Hosted microcopy vs default translations
 
 By default, this template app tries to fetch microcopy from hosted assets (translations.json). If
 that file is not available (not created in Console), or if the file doesn't contain all the
-translations, the template uses fallback translations from en.json file.
+translations, the template uses fallback translations from defaultMicrocopy.json file.
 
 ## Custom language
 

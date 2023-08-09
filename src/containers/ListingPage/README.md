@@ -5,12 +5,23 @@ starts.
 
 ## Structure
 
-Listing page consists of the generic Topbar and of different page sections:
+There are 2 layout variants in use:
 
-- **SectionImages**: contains the listing image and the image carousel
-- **SectionAvatar**: the listing author image
-- **Main content**: the left column under images
-- **SectionBooking**: Contains the form and breakdown estimation for booking the listing
+- ListingPageCarousel
+- ListingPageConverPhoto
+
+The rendered variant page consists of the generic Topbar and of different page sections.
+
+- **SectionGaller**: contains the image carousel for ListingPageCarousel
+- **SectionHero**: contains the listing image and the image carousel for ListingPageConverPhoto
+- **SectionDetailsMaybe**: This shows all the listing fields with "enum" type search schema.
+- **SectionMultiEnumMaybe**: contains a single listing field with "multi-enum" search schema.
+- **SectionTextMaybe**: contains a single listing field with "text" search schema. It is also used
+  for the _description_ attribute.
+- **SectionMap**: shows map if the listing has geolocation set.
+- **SectionReviews**: contains reviews related to this listing.
+- **SectionAuthorMaybe**: shows info about the author of the listing.
+- **SectionAvatar**: the listing author image.
 
 In the main content, there are several sections that are likely to be customized, e.g. when adding
 new extended data to the listing creation.

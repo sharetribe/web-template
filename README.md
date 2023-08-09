@@ -73,9 +73,6 @@ guide in Flex Docs for more information.
 
 See the Flex Docs site: [sharetribe.com/docs/](https://www.sharetribe.com/docs/)
 
-> _**Note**: The search does not work on the preview version of the Flex Docs. It links to live
-> documentation._
-
 ## Get help – join Sharetribe Flex Developer Slack channel
 
 If you have any questions about development, the best place to ask them is the Flex Developer Slack
