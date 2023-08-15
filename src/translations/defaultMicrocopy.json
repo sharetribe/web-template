@@ -256,7 +256,7 @@
   "EditListingPricingAndStockPanel.listingPriceCurrencyInvalid": "The listing currency is different from the marketplace currency. You cannot edit the price.",
   "EditListingPricingAndStockPanel.title": "Pricing & stock of {listingTitle}",
   "EditListingPricingForm.priceInputPlaceholder": "Add a price…",
-  "EditListingPricingForm.pricePerProduct": "Price per {unitType, select, day {day} night {night} hour {hour} other {unit}}",
+  "EditListingPricingForm.pricePerProduct": "Price {unitType, select, day {per day} night {per night} hour {per hour} other {}}",
   "EditListingPricingForm.priceRequired": "You need to add a valid price.",
   "EditListingPricingForm.priceTooLow": "Price should be at least {minPrice}.",
   "EditListingPricingForm.showListingFailed": "Fetching listing data failed.",
