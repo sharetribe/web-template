@@ -365,6 +365,14 @@ describe('denormalizeAssetData', () => {
     expect(JSON.stringify(denormalizeAssetData(jsonObj))).toEqual(JSON.stringify(jsonObj.data));
   });
 
+  it('should deep clone asset with null values', () => {
+    const jsonObj = {
+      data: { ...jsonObjData, nested2: { foo: null } },
+      included: [],
+    };
+    expect(JSON.stringify(denormalizeAssetData(jsonObj))).toEqual(JSON.stringify(jsonObj.data));
+  });
+
   it('should deep clone asset with image references', () => {
     const jsonObj = {
       data: {

@@ -170,14 +170,10 @@ const denormalizeJsonData = (data, included) => {
     Object.entries(data).forEach(([key, value]) => {
       // Handle denormalization of image reference
       const hasImageRefAsValue =
-        typeof value == 'object' &&
-        value._ref &&
-        value._ref?.type === 'imageAsset' &&
-        value._ref?.id;
+        typeof value == 'object' && value?._ref?.type === 'imageAsset' && value?._ref?.id;
       // If there is no image included,
       // the _ref might contain parameters for image resolver (Asset Delivery API resolves image URLs on the fly)
-      const hasUnresolvedImageRef =
-        typeof value == 'object' && value._ref && value._ref?.resolver === 'image';
+      const hasUnresolvedImageRef = typeof value == 'object' && value?._ref?.resolver === 'image';
 
       if (hasImageRefAsValue) {
         const foundRef = included.find(inc => inc.id === value._ref?.id);
