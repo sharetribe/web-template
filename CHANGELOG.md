@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] asset data denormalization: null values were not handled correctly.
+  [#200](https://github.com/sharetribe/web-template/pull/200)
+
 ## [v2.2.0] 2023-08-09
 
 - [fix] CheckoutPage: totalPrice caused an error after inquiry transition.
