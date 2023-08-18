@@ -504,6 +504,10 @@ const validListingTypes = listingTypes => {
   return validTypes;
 };
 
+export const displayPrice = listingTypeConfig => {
+  return listingTypeConfig?.defaultListingFields?.price !== false;
+};
+
 ///////////////////////////////////////
 // Restructure hosted listing config //
 ///////////////////////////////////////
