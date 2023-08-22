@@ -687,7 +687,7 @@ const validSortConfig = config => {
   const relevanceFilter = config.relevanceFilter || 'keywords';
   const conflictingFilters = config.conflictingFilters || [];
   const optionsRaw = config.options || [];
-  const options = optionsRaw.filter(o => !!o.key && !!o.label);
+  const options = optionsRaw.filter(o => !!o.key && !!(o.label || o.labelTranslationKey));
   return { active, queryParamName, relevanceKey, relevanceFilter, conflictingFilters, options };
 };
 
