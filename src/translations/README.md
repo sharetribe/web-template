@@ -1,19 +1,16 @@
-# Translations files for Microcopy
+# Translations files for copy texts
 
-We'll introduce new languages into this directory one by one. As the name suggest,
-**defaultMicrocopy.json** file is the default microcopy file and it hold generic terms like "item"
-instead of themed translations like "bike". The **en.json** is currently holding Biketribe-themed
-translations. Other translation files are added and updated after changes have been reviewed by
+We'll introduce new languages into this directory one by one. The **en.json** file is the default
+copy texts it hold generic terms like "item" and "order". You should consider changing those to
+something closer to your own marketplace concept. E.g. Bicycle rental marketplace might want to use
+"bike" instead. Other translation files are added and updated after changes have been reviewed by
 translators.
 
-**Note**: we might drop the Biketribe themed translation file and start using en.json as the default
-file.
+## Hosted copy texts vs default translations
 
-## Hosted microcopy vs default translations
-
-By default, this template app tries to fetch microcopy from hosted assets (translations.json). If
+By default, this template app tries to fetch copy-texts from hosted assets (translations.json). If
 that file is not available (not created in Console), or if the file doesn't contain all the
-translations, the template uses fallback translations from defaultMicrocopy.json file.
+translations, the template uses fallback translations from en.json file.
 
 ## Custom language
 
