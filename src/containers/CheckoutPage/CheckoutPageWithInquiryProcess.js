@@ -86,8 +86,7 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
   const transitions = process.transitions;
   const transition = transitions.INQUIRE_WITHOUT_PAYMENT;
 
-  // These are the order parameters for the first payment-related transition
-  // which is either initiate-transition or initiate-transition-after-enquiry
+  // These are the inquiry parameters for the (one and only) transition
   const inquiryParams = {
     listingId: pageData?.listing?.id,
     protectedData: {
@@ -96,7 +95,8 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
     },
   };
 
-  // There are multiple XHR calls that needs to be made against Stripe API and Sharetribe Marketplace API on checkout with payments
+  // This makes a single transition directly to the API endpoint
+  // (unlike in the payment-related processes, where call is proxied through the server to make privileged transition)
   onInquiryWithoutPayment(inquiryParams, transactionProcessAlias, transition)
     .then(transactionId => {
       setSubmitting(false);
