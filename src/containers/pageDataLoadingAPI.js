@@ -17,6 +17,7 @@ import { loadData as ProfilePageLoader } from './ProfilePage/ProfilePage.duck';
 import { loadData as SearchPageLoader } from './SearchPage/SearchPage.duck';
 import { loadData as StripePayoutPageLoader } from './StripePayoutPage/StripePayoutPage.duck';
 import { loadData as TermsOfServicePageLoader } from './TermsOfServicePage/TermsOfServicePage.duck';
+import { loadData as CommissionPageLoader } from './CommissionPage/CommissionPage.duck';
 import {
   loadData as TransactionPageLoader,
   setInitialValues as TransactionPageInitialValues,
@@ -62,6 +63,9 @@ const getPageDataLoadingAPI = () => {
     },
     ProfilePage: {
       loadData: ProfilePageLoader,
+    },
+    CommissionPage: {
+      loadData: CommissionPageLoader,
     },
     SearchPage: {
       loadData: SearchPageLoader,

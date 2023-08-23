@@ -1087,5 +1087,10 @@
   "UserDisplayName.deleted": "Deleted user",
   "UserNav.accountSettings": "Account settings",
   "UserNav.profileSettings": "Profile settings",
-  "UserNav.yourListings": "Your memorials"
+  "UserNav.yourListings": "Your memorials",
+  "CommissionPage.desktopHeading": "Commission details",
+  "CommissionPage.schemaTitle": "Commission details: {marketplaceName}",
+  "CommissionPage.usersTitle": "All users ({count})",
+  "EditCommission.desktopHeading": "Edit Commission",
+  "EditCommission.schemaTitle": "Edit Commission: {marketplaceName}"
 }

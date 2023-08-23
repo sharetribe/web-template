@@ -1,0 +1,86 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+}
+
+.newPasswordSection {
+  margin-top: 16px;
+  margin-bottom: 46px;
+  padding-top: 6px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 56px;
+    padding-top: 0;
+  }
+}
+
+.confirmChangesSection {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 60px;
+  padding: 0;
+  opacity: 0;
+}
+
+.confirmChangesSectionVisible {
+  opacity: 1;
+}
+
+.confirmChangesTitle {
+  margin-top: 0;
+  margin-bottom: 13px;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 16px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+}
+
+.confirmChangesInfo {
+  margin-top: 0;
+  margin-bottom: 37px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 48px;
+  }
+}
+
+.bottomWrapper {
+  margin-top: 46px;
+
+  @media (--viewportMedium) {
+    margin-top: 96px;
+  }
+}
+
+.error {
+  composes: h4 from global;
+  color: var(--colorFail);
+  text-align: center;
+  display: inline-block;
+  width: 100%;
+  margin: 24px 0;
+
+  @media (--viewportMedium) {
+    margin: 24px 0;
+  }
+}
+
+.helperLink {
+  composes: a from global;
+  color: var(--colorGrey700);
+  font-weight: var(--fontWeightMedium);
+  text-decoration: underline;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.emailStyle {
+  font-weight: var(--fontWeightBold);
+  word-wrap: break-word;
+}

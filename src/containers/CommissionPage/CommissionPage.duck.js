@@ -1,0 +1,247 @@
+import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { fetchCurrentUser } from '../../ducks/user.duck';
+import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
+import { denormalisedResponseEntities } from '../../util/data';
+import { storableError } from '../../util/errors';
+import { getUsersAdmin } from '../../util/api';
+import * as log from '../../util/log';
+
+const { UUID } = sdkTypes;
+
+// ================ Action types ================ //
+
+export const SET_INITIAL_STATE = 'app/CommissionPage/SET_INITIAL_STATE';
+
+export const SHOW_USER_REQUEST = 'app/CommissionPage/SHOW_USER_REQUEST';
+export const SHOW_USER_SUCCESS = 'app/CommissionPage/SHOW_USER_SUCCESS';
+export const SHOW_USER_ERROR = 'app/CommissionPage/SHOW_USER_ERROR';
+
+export const QUERY_LISTINGS_REQUEST = 'app/CommissionPage/QUERY_LISTINGS_REQUEST';
+export const QUERY_LISTINGS_SUCCESS = 'app/CommissionPage/QUERY_LISTINGS_SUCCESS';
+export const QUERY_USERS_SUCCESS = 'app/CommissionPage/QUERY_USERS_SUCCESS';
+export const QUERY_LISTINGS_ERROR = 'app/CommissionPage/QUERY_LISTINGS_ERROR';
+
+export const QUERY_REVIEWS_REQUEST = 'app/CommissionPage/QUERY_REVIEWS_REQUEST';
+export const QUERY_REVIEWS_SUCCESS = 'app/CommissionPage/QUERY_REVIEWS_SUCCESS';
+export const QUERY_REVIEWS_ERROR = 'app/CommissionPage/QUERY_REVIEWS_ERROR';
+
+// ================ Reducer ================ //
+
+const initialState = {
+  userId: null,
+  userListingRefs: [],
+  users: [],
+  userShowError: null,
+  queryListingsError: null,
+  reviews: [],
+  queryReviewsError: null,
+};
+
+export default function CommissionPageReducer(state = initialState, action = {}) {
+  const { type, payload } = action;
+
+  switch (type) {
+    case SET_INITIAL_STATE:
+      return { ...initialState };
+    case SHOW_USER_REQUEST:
+      return { ...state, userShowError: null, userId: payload.userId };
+    case SHOW_USER_SUCCESS:
+      return state;
+    case SHOW_USER_ERROR:
+      return { ...state, userShowError: payload };
+
+    case QUERY_LISTINGS_REQUEST:
+      return {
+        ...state,
+
+        // Empty listings only when user id changes
+        userListingRefs: payload.userId === state.userId ? state.userListingRefs : [],
+
+        queryListingsError: null,
+      };
+    case QUERY_LISTINGS_SUCCESS:
+      console.log('QUERY_LISTINGS_SUCCESS');
+      console.log(payload);
+      return { ...state, userListingRefs: payload.listingRefs };
+    case QUERY_USERS_SUCCESS:
+      console.log('QUERY_USERS_SUCCESS');
+      console.log(payload);
+      return { ...state, users: payload.usersRefs };
+    case QUERY_LISTINGS_ERROR:
+      return { ...state, userListingRefs: [], queryListingsError: payload };
+    case QUERY_REVIEWS_REQUEST:
+      return { ...state, queryReviewsError: null };
+    case QUERY_REVIEWS_SUCCESS:
+      return { ...state, reviews: payload };
+    case QUERY_REVIEWS_ERROR:
+      return { ...state, reviews: [], queryReviewsError: payload };
+
+    default:
+      return state;
+  }
+}
+
+// ================ Action creators ================ //
+
+export const setInitialState = () => ({
+  type: SET_INITIAL_STATE,
+});
+
+export const showUserRequest = userId => ({
+  type: SHOW_USER_REQUEST,
+  payload: { userId },
+});
+
+export const showUserSuccess = () => ({
+  type: SHOW_USER_SUCCESS,
+});
+
+export const showUserError = e => ({
+  type: SHOW_USER_ERROR,
+  error: true,
+  payload: e,
+});
+
+export const queryListingsRequest = userId => ({
+  type: QUERY_LISTINGS_REQUEST,
+  payload: { userId },
+});
+
+export const queryListingsSuccess = listingRefs => ({
+  type: QUERY_LISTINGS_SUCCESS,
+  payload: { listingRefs },
+});
+
+export const queryUsersSuccess = usersRefs => ({
+  type: QUERY_USERS_SUCCESS,
+  payload: { usersRefs },
+});
+
+export const queryListingsError = e => ({
+  type: QUERY_LISTINGS_ERROR,
+  error: true,
+  payload: e,
+});
+
+export const queryReviewsRequest = () => ({
+  type: QUERY_REVIEWS_REQUEST,
+});
+
+export const queryReviewsSuccess = reviews => ({
+  type: QUERY_REVIEWS_SUCCESS,
+  payload: reviews,
+});
+
+export const queryReviewsError = e => ({
+  type: QUERY_REVIEWS_ERROR,
+  error: true,
+  payload: e,
+});
+
+// ================ Thunks ================ //
+
+export const queryUserListings = (userId, config) => (dispatch, getState, sdk) => {
+  dispatch(queryListingsRequest(userId));
+
+  const {
+    aspectWidth = 1,
+    aspectHeight = 1,
+    variantPrefix = 'listing-card',
+  } = config.layout.listingImage;
+  const aspectRatio = aspectHeight / aspectWidth;
+
+  return sdk.listings
+    .query({
+      author_id: userId,
+      include: ['author', 'images'],
+      'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
+      ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+      ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+    })
+    .then(response => {
+      // Pick only the id and type properties from the response listings
+      const listingRefs = response.data.data.map(({ id, type }) => ({ id, type }));
+      dispatch(addMarketplaceEntities(response));
+      dispatch(queryListingsSuccess(listingRefs));
+      return response;
+    })
+    .catch(e => dispatch(queryListingsError(storableError(e))));
+};
+
+export const queryUserReviews = userId => (dispatch, getState, sdk) => {
+  sdk.reviews
+    .query({
+      subject_id: userId,
+      state: 'public',
+      include: ['author', 'author.profileImage'],
+      'fields.image': ['variants.square-small', 'variants.square-small2x'],
+    })
+    .then(response => {
+      const reviews = denormalisedResponseEntities(response);
+      dispatch(queryReviewsSuccess(reviews));
+    })
+    .catch(e => dispatch(queryReviewsError(e)));
+};
+
+export const showUser = userId => (dispatch, getState, sdk) => {
+  dispatch(showUserRequest(userId));
+  return sdk.users
+    .show({
+      id: userId,
+      include: ['profileImage'],
+      'fields.image': ['variants.square-small', 'variants.square-small2x'],
+    })
+    .then(response => {
+      dispatch(addMarketplaceEntities(response));
+      dispatch(showUserSuccess());
+      return response;
+    })
+    .catch(e => dispatch(showUserError(storableError(e))));
+};
+
+export const queryUsers = search => (dispatch, getState, sdk) => {
+  
+  // Clear state so that previously loaded data is not visible
+  // in case this page load fails.
+  // dispatch(setInitialState());
+
+  let params = {'asdas':'afssaf'};
+
+  return getUsersAdmin(params)
+  .then(res => {
+    console.log('res test ---------------------------');
+    console.log(res);
+    // dispatch(showAllUsers());
+    return res;
+  })
+  .then(response => {
+    console.log('response');
+    console.log(response);
+    // const reviews = denormalisedResponseEntities(response);
+    let reviews = {'afasfa':"safsaf"};
+    // dispatch(addMarketplaceEntities(response));
+    dispatch(queryUsersSuccess(response));
+  })
+  .catch(e => {
+    log.error(e, 'create-user-with-idp-failed', { params });
+  });
+
+};
+
+export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
+  const userId = new UUID(params.id);
+
+  // Clear state so that previously loaded data is not visible
+  // in case this page load fails.
+  dispatch(setInitialState());
+
+  return Promise.all([
+    dispatch(fetchCurrentUser()),
+    dispatch(showUser(userId)),
+    dispatch(queryUserListings(userId, config)),
+    dispatch(queryUserReviews(userId)),
+    dispatch(queryUsers(userId)),
+  ]);
+};
+
+
