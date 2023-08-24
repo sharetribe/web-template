@@ -38,7 +38,10 @@ const SortBy = props => {
 
   // Ensure that keywords is included to activeFilter list when needed
   const isMainSearchKeywords = isMainSearchTypeKeywords(config);
-  const activeOptions = isMainSearchKeywords
+  const hasKeyworsFilter = config.search.defaultFilters.find(df => df.key === relevanceFilter);
+  const isKeywordsFilterEnabled = isMainSearchKeywords || hasKeyworsFilter;
+
+  const activeOptions = isKeywordsFilterEnabled
     ? Object.keys({ keywords: '', ...selectedFilters })
     : Object.keys(selectedFilters);
 
@@ -47,14 +50,26 @@ const SortBy = props => {
   const options = config.search.sortConfig.options.reduce((selected, option) => {
     const isRelevance = option.key === relevanceKey;
     const isConflictingFilterSetAndActive = hasConflictingFilters && !isConflictingFilterActive;
+
+    // Some default options might be mapped with translation files
+    const translationKeyLongMaybe = option?.labelTranslationKeyLong
+      ? { longLabel: intl.formatMessage({ id: option?.labelTranslationKeyLong }) }
+      : {};
+    const translatedOption = option?.labelTranslationKey
+      ? {
+          key: option.key,
+          label: intl.formatMessage({ id: option.labelTranslationKey }),
+          ...translationKeyLongMaybe,
+        }
+      : option;
     // Omit relevance option if mainSearchType is not 'keywords'
     // Note: We might change this in the future, if multiple transaction types are allowed
-    return isRelevance && !isMainSearchKeywords
+    return isRelevance && !isKeywordsFilterEnabled
       ? selected
       : [
           ...selected,
           {
-            ...option,
+            ...translatedOption,
             disabled:
               (isRelevance && (!isRelevanceOptionActive || isConflictingFilterSetAndActive)) ||
               (!isRelevance && isConflictingFilterActive),

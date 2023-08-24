@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Add default sort options to en.json (microcopy)
+  [#204](https://github.com/sharetribe/web-template/pull/204)
 - [delete] Remove en.json file (Biketribe-themed translations) and rename defaultMicrocopy.json to
   be the new en.json file. [#203](https://github.com/sharetribe/web-template/pull/203)
 - [change] Updates to the copy texts in the defaultMicrocopy.json file.
