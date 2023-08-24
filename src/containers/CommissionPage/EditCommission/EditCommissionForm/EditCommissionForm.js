@@ -1,276 +1,123 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
+import { bool, object, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
+import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../../util/reactIntl';
-import { propTypes } from '../../../../util/types';
-import * as validators from '../../../../util/validators';
-import { ensureCurrentUser } from '../../../../util/data';
-import { isChangePasswordWrongPassword } from '../../../../util/errors';
+import { Form, Heading, H3, PrimaryButton } from '../../../../components';
+// import FieldTimeZoneSelect from '../FieldTimeZoneSelect';
+// import AvailabilityPlanEntries from './AvailabilityPlanEntries';
 
-import { Form, PrimaryButton, FieldTextInput, H4 } from '../../../../components';
+import css from './EditListingAvailabilityPlanForm.module.css';
 
-import css from './EditCommissionForm.module.css';
-
-const RESET_TIMEOUT = 800;
-
-class CommissionFormComponent extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { showResetPasswordMessage: false };
-    this.resetTimeoutId = null;
-    this.submittedValues = {};
-    this.handleResetPassword = this.handleResetPassword.bind(this);
+/**
+ * User might create entries inside the day of week in what ever order.
+ * We sort them before submitting to Marketplace API
+ */
+const sortEntries = () => (a, b) => {
+  if (a.startTime && b.startTime) {
+    const aStart = Number.parseInt(a.startTime.split(':')[0]);
+    const bStart = Number.parseInt(b.startTime.split(':')[0]);
+    return aStart - bStart;
   }
-  componentWillUnmount() {
-    window.clearTimeout(this.resetTimeoutId);
-  }
+  return 0;
+};
 
-  handleResetPassword() {
-    this.setState({ showResetPasswordMessage: true });
-    const email = this.props.currentUser.attributes.email;
+/**
+ * Handle submitted values: sort entries within the day of week
+ * @param {Redux Thunk} onSubmit promise fn.
+ * @param {Array<string>} weekdays ['mon', 'tue', etc.]
+ */
+const submit = (onSubmit, weekdays) => values => {
+  const sortedValues = weekdays.reduce(
+    (submitValues, day) => {
+      return submitValues[day]
+        ? {
+            ...submitValues,
+            [day]: submitValues[day].sort(sortEntries()),
+          }
+        : submitValues;
+    },
+    { ...values }
+  );
 
-    this.props.onResetPassword(email);
-  }
+  onSubmit(sortedValues);
+};
 
-  render() {
-    return (
-      <FinalForm
-        {...this.props}
-        render={fieldRenderProps => {
-          const {
-            rootClassName,
-            className,
-            formId,
-            changeCommissionError,
-            currentUser,
-            handleSubmit,
-            inProgress,
-            resetPasswordInProgress,
-            intl,
-            invalid,
-            pristine,
-            ready,
-            form,
-            values,
-          } = fieldRenderProps;
+/**
+ * Create and edit availability plan of the listing.
+ * This is essentially the weekly schedule.
+ */
+const EditListingAvailabilityPlanFormComponent = props => {
+  const { onSubmit, ...restOfprops } = props;
+  return (
+    <FinalForm
+      {...restOfprops}
+      onSubmit={submit(onSubmit, props.weekdays)}
+      mutators={{
+        ...arrayMutators,
+      }}
+      render={fieldRenderProps => {
+        const {
+          listingTitle,
+          rootClassName,
+          className,
+          formId,
+        } = fieldRenderProps;
 
-          const user = ensureCurrentUser(currentUser);
+        const classes = classNames(rootClassName || css.root, className);
+        const submitInProgress = true;
 
-          // if (!user.id) {
-          //   return null;
-          // }
 
-          Console.log('sssssssssssssssssssssssssssss');
+        return (
+          <Form id={formId} className={classes} >
+            <H3 as="h2" className={css.heading}>
+              <FormattedMessage
+                id="EditListingAvailabilityPlanForm.title"
+                values={{ listingTitle }}
+              />
+            </H3>
+            <Heading as="h3" rootClassName={css.subheading}>
+              <FormattedMessage id="EditListingAvailabilityPlanForm.timezonePickerTitle" />
+            </Heading>
+            <div className={css.timezonePicker}>
+              {/* <FieldTimeZoneSelect id="timezone" name="timezone" /> */}
+            </div>
+            <Heading as="h3" rootClassName={css.subheading}>
+              <FormattedMessage id="EditListingAvailabilityPlanForm.hoursOfOperationTitle" />
+            </Heading>
+            
 
-          // New password
-          const newCommissionLabel = intl.formatMessage({
-            id: 'CommissionForm.newCommissionLabel',
-          });
-          const newPasswordPlaceholder = intl.formatMessage({
-            id: 'CommissionForm.newPasswordPlaceholder',
-          });
-          const newPasswordRequiredMessage = intl.formatMessage({
-            id: 'CommissionForm.newPasswordRequired',
-          });
-          const newPasswordRequired = validators.requiredStringNoTrim(newPasswordRequiredMessage);
+            <div className={css.submitButton}>
+           
+              <PrimaryButton type="submit" inProgress={submitInProgress} >
+                <FormattedMessage id="EditListingAvailabilityPlanForm.saveSchedule" />
+              </PrimaryButton>
+            </div>
+          </Form>
+        );
+      }}
+    />
+  );
+};
 
-          const passwordMinLengthMessage = intl.formatMessage(
-            {
-              id: 'CommissionForm.passwordTooShort',
-            },
-            {
-              minLength: validators.PASSWORD_MIN_LENGTH,
-            }
-          );
-          const passwordMaxLengthMessage = intl.formatMessage(
-            {
-              id: 'CommissionForm.passwordTooLong',
-            },
-            {
-              maxLength: validators.PASSWORD_MAX_LENGTH,
-            }
-          );
-
-          const passwordMinLength = validators.minLength(
-            passwordMinLengthMessage,
-            validators.PASSWORD_MIN_LENGTH
-          );
-          const passwordMaxLength = validators.maxLength(
-            passwordMaxLengthMessage,
-            validators.PASSWORD_MAX_LENGTH
-          );
-
-          // password
-          const passwordLabel = intl.formatMessage({
-            id: 'CommissionForm.passwordLabel',
-          });
-          const passwordPlaceholder = intl.formatMessage({
-            id: 'CommissionForm.passwordPlaceholder',
-          });
-          const passwordRequiredMessage = intl.formatMessage({
-            id: 'CommissionForm.passwordRequired',
-          });
-
-          const passwordRequired = validators.requiredStringNoTrim(passwordRequiredMessage);
-
-          const passwordFailedMessage = intl.formatMessage({
-            id: 'CommissionForm.passwordFailed',
-          });
-          const passwordTouched =
-            values.currentPassword &&
-            this.submittedValues.currentPassword !== values.currentPassword;
-          const changeCommissionText = isChangePasswordWrongPassword(changeCommissionError)
-            ? passwordFailedMessage
-            : null;
-
-          const confirmClasses = classNames(css.confirmChangesSection, {
-            [css.confirmChangesSectionVisible]: !pristine,
-          });
-
-          const genericFailure =
-          changeCommissionError && !changeCommissionText ? (
-              <span className={css.error}>
-                <FormattedMessage id="CommissionForm.genericFailure" />
-              </span>
-            ) : null;
-
-          const classes = classNames(rootClassName || css.root, className);
-          const submitDisabled = invalid || inProgress;
-
-          const sendPasswordLink = (
-            <span className={css.helperLink} onClick={this.handleResetPassword} role="button">
-              <FormattedMessage id="CommissionForm.resetPasswordLinkText" />
-            </span>
-          );
-
-          const resendPasswordLink = (
-            <span className={css.helperLink} onClick={this.handleResetPassword} role="button">
-              <FormattedMessage id="CommissionForm.resendPasswordLinkText" />
-            </span>
-          );
-
-          const resetPasswordLink =
-            this.state.showResetPasswordMessage || resetPasswordInProgress ? (
-              <>
-                <FormattedMessage
-                  id="CommissionForm.resetPasswordLinkSent"
-                  values={{
-                    email: <span className={css.emailStyle}>{currentUser.attributes.email}</span>,
-                  }}
-                />{' '}
-                {resendPasswordLink}
-              </>
-            ) : (
-              sendPasswordLink
-            );
-
-          return (
-            <Form
-              className={classes}
-              onSubmit={e => {
-                this.submittedValues = values;
-                handleSubmit(e)
-                  .then(() => {
-                    this.resetTimeoutId = window.setTimeout(() => {
-                      form.restart();
-                      if (this.props.onChange) {
-                        this.props.onChange();
-                      }
-                    }, RESET_TIMEOUT);
-                  })
-                  .catch(() => {
-                    // Error is handled in duck file already.
-                  });
-              }}
-            >
-              <div className={css.newPasswordSection}>
-                <FieldTextInput
-                  type="password"
-                  id={formId ? `${formId}.newPassword` : 'newPassword'}
-                  name="newPassword"
-                  autoComplete="new-password"
-                  label={newPasswordLabel}
-                  placeholder={newPasswordPlaceholder}
-                  validate={validators.composeValidators(
-                    newPasswordRequired,
-                    passwordMinLength,
-                    passwordMaxLength
-                  )}
-                />
-              </div>
-
-              <div className={confirmClasses}>
-                <H4 as="h3" className={css.confirmChangesTitle}>
-                  <FormattedMessage id="CommissionForm.confirmChangesTitle" />
-                </H4>
-                <p className={css.confirmChangesInfo}>
-                  <FormattedMessage id="CommissionForm.confirmChangesInfo" />
-                  <br />
-                  <FormattedMessage
-                    id="CommissionForm.resetPasswordInfo"
-                    values={{ resetPasswordLink }}
-                  />
-                </p>
-
-                <FieldTextInput
-                  className={css.password}
-                  type="password"
-                  id="currentPassword"
-                  name="currentPassword"
-                  autoComplete="current-password"
-                  label={passwordLabel}
-                  placeholder={passwordPlaceholder}
-                  validate={validators.composeValidators(
-                    passwordRequired,
-                    passwordMinLength,
-                    passwordMaxLength
-                  )}
-                  customErrorText={passwordTouched ? null : passwordErrorText}
-                />
-              </div>
-              <div className={css.bottomWrapper}>
-                {genericFailure}
-                <PrimaryButton
-                  type="submit"
-                  inProgress={inProgress}
-                  ready={ready}
-                  disabled={submitDisabled}
-                >
-                  <FormattedMessage id="CommissionForm.saveChanges" />
-                </PrimaryButton>
-              </div>
-            </Form>
-          );
-        }}
-      />
-    );
-  }
-}
-
-CommissionFormComponent.defaultProps = {
+EditListingAvailabilityPlanFormComponent.defaultProps = {
   rootClassName: null,
   className: null,
-  changeCommissionError: null,
+  submitButtonWrapperClassName: null,
   inProgress: false,
-  formId: null,
 };
 
-const { bool, string } = PropTypes;
-
-CommissionFormComponent.propTypes = {
-  rootClassName: string,
-  className: string,
-  changeCommissionError: propTypes.error,
-  inProgress: bool,
-  intl: intlShape.isRequired,
-  ready: bool.isRequired,
-  formId: string,
+EditListingAvailabilityPlanFormComponent.propTypes = {
+ 
 };
 
-const CommissionForm = compose(injectIntl)(CommissionFormComponent);
-CommissionForm.displayName = 'CommissionForm';
+const EditListingAvailabilityPlanForm = compose(injectIntl)(
+  EditListingAvailabilityPlanFormComponent
+);
 
-export default CommissionForm;
+EditListingAvailabilityPlanForm.displayName = 'EditListingAvailabilityPlanForm';
+
+export default EditListingAvailabilityPlanForm;

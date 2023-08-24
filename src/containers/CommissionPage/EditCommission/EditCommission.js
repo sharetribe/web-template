@@ -34,12 +34,13 @@ export const MainContent = props => {
    
   } = props;
   
+  
   return (
     <div>
       <H2 as="h1" className={css.desktopHeading}>
         <FormattedMessage id="CommissionPage.desktopHeading" values={{ name: 'displayName' }} />
       </H2>
-      {EditCommissionForm}
+
     </div>
   );
 };
@@ -68,6 +69,12 @@ const EditCommissionComponent = props => {
           footer={<Footer />}
         >
           <MainContent  {...rest} />
+          <EditCommissionForm
+            formId="EditCommissionForm"
+            listingTitle={'dsas'}
+          />
+
+          
         </LayoutSingleColumnMidle>
       </Page>
     );
