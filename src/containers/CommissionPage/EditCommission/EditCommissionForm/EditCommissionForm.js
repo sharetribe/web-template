@@ -7,7 +7,7 @@ import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../../util/reactIntl';
 import { Form, Heading, H3, PrimaryButton } from '../../../../components';
-import FieldTimeZoneSelect from './FieldTimeZoneSelect';
+import FieldComissionInput from './FieldComissionInput';
 // import AvailabilityPlanEntries from './AvailabilityPlanEntries';
 
 import css from './EditListingAvailabilityPlanForm.module.css';
@@ -82,8 +82,8 @@ const EditListingAvailabilityPlanFormComponent = props => {
             <Heading as="h3" rootClassName={css.subheading}>
               <FormattedMessage id="EditListingAvailabilityPlanForm.timezonePickerTitle" />
             </Heading>
-            <div className={css.timezonePicker}>
-              <FieldTimeZoneSelect id="timezone" name="timezone" />
+            <div className={css.comission}>
+              <FieldComissionInput id="comission" name="comission" />
             </div>
 
             <div className={css.submitButton}>

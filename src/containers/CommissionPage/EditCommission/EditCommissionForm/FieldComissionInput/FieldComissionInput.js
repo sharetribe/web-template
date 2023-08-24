@@ -1,16 +1,16 @@
 import React from 'react';
 import { string } from 'prop-types';
 import { getTimeZoneNames } from '../../../../../util/dates';
-import { FieldSelect } from '../../../../../components';
+import { FieldSelect, FieldIntegerInput } from '../../../../../components';
 
-const FieldTimeZoneSelect = props => {
+const FieldComissionInput = props => {
   // IANA database contains irrelevant time zones too.
   const relevantZonesPattern = new RegExp(
     '^(Africa|America(?!/(Argentina/ComodRivadavia|Knox_IN|Nuuk))|Antarctica(?!/(DumontDUrville|McMurdo))|Asia(?!/Qostanay)|Atlantic|Australia(?!/(ACT|LHI|NSW))|Europe|Indian|Pacific)'
   );
 
   return (
-    <FieldSelect {...props}>
+    <FieldIntegerInput {...props}>
       <option disabled value="">
         Pick something...
       </option>
@@ -19,18 +19,18 @@ const FieldTimeZoneSelect = props => {
           {tz}
         </option>
       ))}
-    </FieldSelect>
+    </FieldIntegerInput>
   );
 };
 
-FieldTimeZoneSelect.defaultProps = {
+FieldComissionInput.defaultProps = {
   rootClassName: null,
   className: null,
   id: null,
   label: null,
 };
 
-FieldTimeZoneSelect.propTypes = {
+FieldComissionInput.propTypes = {
   rootClassName: string,
   className: string,
 
@@ -41,4 +41,4 @@ FieldTimeZoneSelect.propTypes = {
   name: string.isRequired,
 };
 
-export default FieldTimeZoneSelect;
+export default FieldComissionInput;
