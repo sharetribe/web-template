@@ -59,13 +59,11 @@ export const MainContent = props => {
   const {
     bio,
     displayName,
-    listings,
     users,
     primaryButtonProps,
     viewport,
   } = props;
 
-  const hasListings = listings.length > 0;
   const hasUsers = users.length > 0;
   // const hasUsers = 0;
   
@@ -95,7 +93,7 @@ export const MainContent = props => {
       {hasUsers ? (
         <div className={listingsContainerClasses}>
           <H4 as="h2" className={css.listingsTitle}>
-            <FormattedMessage id="CommissionPage.usersTitle" values={{ count: listings.length }} />
+            <FormattedMessage id="CommissionPage.usersTitle" values={{ count: 5 }} />
           </H4>
           <ul >
             <li>
@@ -166,10 +164,6 @@ const CommissionPageComponent = props => {
     onAction: goToEditCommission
   };
 
-  if (userShowError && userShowError.status === 404) {
-    return <NotFoundPage />;
-  }
-
   return (
     <Page
       scrollingDisabled={scrollingDisabled}
@@ -181,11 +175,10 @@ const CommissionPageComponent = props => {
       }}
     >
       <LayoutSingleColumnMidle
-        sideNavClassName={css.aside}
         topbar={<TopbarContainer currentPage="CommissionPage" />}
         footer={<Footer />}
       >
-        <MainContent bio={bio} displayName={displayName} primaryButtonProps={primaryButtonProps} userShowError={userShowError} {...rest} />
+        <MainContent bio={bio} displayName={displayName} primaryButtonProps={primaryButtonProps} {...rest} />
       </LayoutSingleColumnMidle>
     </Page>
   );
@@ -194,20 +187,12 @@ const CommissionPageComponent = props => {
 CommissionPageComponent.defaultProps = {
   currentUser: null,
   user: null,
-  userShowError: null,
   queryListingsError: null,
-  reviews: [],
   // queryReviewsError: null,
 };
 
 CommissionPageComponent.propTypes = {
   scrollingDisabled: bool.isRequired,
-  currentUser: propTypes.currentUser,
-  user: propTypes.user,
-  userShowError: propTypes.error,
-  queryListingsError: propTypes.error,
-  listings: arrayOf(propTypes.listing).isRequired,
-  reviews: arrayOf(propTypes.review),
   // queryReviewsError: propTypes.error,
 
   // form withViewport
@@ -224,27 +209,13 @@ const mapStateToProps = state => {
   const { currentUser } = state.user;
   
   const {
-    userId,
-    userShowError,
-    queryListingsError,
-    userListingRefs,
     users,
-    reviews,
-    // queryReviewsError,
   } = state.CommissionPage;
 
-  const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: userId }]);
-  const user = userMatches.length === 1 ? userMatches[0] : null;
-  const listings = getMarketplaceEntities(state, userListingRefs);
   return {
     scrollingDisabled: isScrollingDisabled(state),
     currentUser,
-    user,
     users,
-    userShowError,
-    queryListingsError,
-    listings,
-    reviews,
     // queryReviewsError,
   };
 };

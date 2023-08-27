@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { bool, func, object, shape, string } from 'prop-types';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
-import { ValidationError, ExpandingTextarea } from '../../components';
+import { ValidationError } from '..';
 
-import css from './FieldTextInput.module.css';
+import css from './FieldIntegerInput.module.css';
 
 const CONTENT_MAX_LENGTH = 5000;
 
-const FieldTextInputComponent = props => {
+const FieldIntegerInputComponent = props => {
   const {
     rootClassName,
     className,
@@ -19,7 +19,6 @@ const FieldTextInputComponent = props => {
     input,
     meta,
     onUnmount,
-    isUncontrolled,
     inputRef,
     hideErrorMessage,
     ...rest
@@ -30,7 +29,6 @@ const FieldTextInputComponent = props => {
   }
 
   const { valid, invalid, touched, error } = meta;
-  const isTextarea = input.type === 'textarea';
 
   const errorText = customErrorText || error;
 
@@ -41,9 +39,9 @@ const FieldTextInputComponent = props => {
   const fieldMeta = { touched: hasError, error: errorText };
 
   // Textarea doesn't need type.
-  const { type, ...inputWithoutType } = input;
+  const { type } = input;
   // Uncontrolled input uses defaultValue instead of value.
-  const { value: defaultValue, ...inputWithoutValue } = input;
+  const { value: defaultValue } = input;
   // Use inputRef if it is passed as prop.
   const refMaybe = inputRef ? { ref: inputRef } : {};
 
@@ -52,42 +50,21 @@ const FieldTextInputComponent = props => {
     classNames(css.input, {
       [css.inputSuccess]: valid,
       [css.inputError]: hasError,
-      [css.textarea]: isTextarea,
     });
-  const maxLength = CONTENT_MAX_LENGTH;
-  const inputProps = isTextarea
-    ? {
-        className: inputClasses,
-        id,
-        rows: 1,
-        maxLength,
-        ...refMaybe,
-        ...inputWithoutType,
-        ...rest,
-      }
-    : isUncontrolled
-    ? {
-        className: inputClasses,
-        id,
-        type,
-        defaultValue,
-        ...refMaybe,
-        ...inputWithoutValue,
-        ...rest,
-      }
-    : { className: inputClasses, id, type, ...refMaybe, ...input, ...rest };
+
+  const inputProps = { className: inputClasses, id, type, ...refMaybe, ...input, ...rest };
 
   const classes = classNames(rootClassName || css.root, className);
   return (
     <div className={classes}>
       {label ? <label htmlFor={id}>{label}</label> : null}
-      {isTextarea ? <ExpandingTextarea {...inputProps} /> : <input {...inputProps} />}
+      {<input {...inputProps} />}
       {hideErrorMessage ? null : <ValidationError fieldMeta={fieldMeta} />}
     </div>
   );
 };
 
-FieldTextInputComponent.defaultProps = {
+FieldIntegerInputComponent.defaultProps = {
   rootClassName: null,
   className: null,
   inputRootClass: null,
@@ -95,11 +72,11 @@ FieldTextInputComponent.defaultProps = {
   customErrorText: null,
   id: null,
   label: null,
-  isUncontrolled: false,
+  // isUncontrolled: false,
   inputRef: null,
 };
 
-FieldTextInputComponent.propTypes = {
+FieldIntegerInputComponent.propTypes = {
   rootClassName: string,
   className: string,
   inputRootClass: string,
@@ -117,7 +94,7 @@ FieldTextInputComponent.propTypes = {
 
   // Uncontrolled input uses defaultValue prop, but doesn't pass value from form to the field.
   // https://reactjs.org/docs/uncontrolled-components.html#default-values
-  isUncontrolled: bool,
+  // isUncontrolled: bool,
   // a ref object passed for input element.
   inputRef: object,
 
@@ -130,7 +107,7 @@ FieldTextInputComponent.propTypes = {
   meta: object.isRequired,
 };
 
-class FieldTextInput extends Component {
+class FieldIntegerInput extends Component {
   componentWillUnmount() {
     // Unmounting happens too late if it is done inside Field component
     // (Then Form has already registered its (new) fields and
@@ -141,8 +118,8 @@ class FieldTextInput extends Component {
   }
 
   render() {
-    return <Field component={FieldTextInputComponent} {...this.props} />;
+    return <Field component={FieldIntegerInputComponent} {...this.props} />;
   }
 }
 
-export default FieldTextInput;
+export default FieldIntegerInput;

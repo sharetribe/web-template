@@ -2,8 +2,8 @@
 import React from 'react';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import * as validators from '../../util/validators';
-import { Button } from '../../components';
-import FieldTextInput from './FieldTextInput';
+import { Button } from '..';
+import FieldTextInput from './FieldIntegerInput';
 
 import css from './FieldTextInputExample.module.css';
 

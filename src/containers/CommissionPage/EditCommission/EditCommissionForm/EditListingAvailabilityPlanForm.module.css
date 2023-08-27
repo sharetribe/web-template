@@ -23,6 +23,7 @@
 }
 
 .heading,
+.comission,
 .subheading,
 .timezonePicker,
 .submitButton {
@@ -63,6 +64,10 @@
   @media (--viewportLarge) {
     margin-bottom: 95px;
   }
+}
+
+.commissionInput{
+  padding-bottom: 24px;
 }
 
 .submitButton {

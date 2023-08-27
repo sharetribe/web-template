@@ -11,6 +11,11 @@
   }
 }
 
+.main{
+  margin: 32px auto 0 auto;
+  max-width: 564px;
+}
+
 .error {
   color: var(--colorFail);
 }

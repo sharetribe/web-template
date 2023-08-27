@@ -228,5 +228,13 @@ export const validSGID = message => value => {
   return value.length === 9 ? VALID : message;
 };
 
+export const minValue = (minValue,message) => value => {
+  return value >= minValue ? VALID : message;
+};
+
+export const maxValue = (maxValue,message) => value => {
+  return value <= maxValue ? VALID : message;
+};
+
 export const composeValidators = (...validators) => value =>
   validators.reduce((error, validator) => error || validator(value), VALID);

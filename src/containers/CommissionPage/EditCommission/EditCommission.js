@@ -1,24 +1,18 @@
 import React, { useState } from 'react';
-import { bool, arrayOf, number, shape } from 'prop-types';
+import { number, shape } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
 
 import { useConfiguration } from '../../../context/configurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
-import { propTypes } from '../../../util/types';
-import { ensureUser } from '../../../util/data';
+
 import { withViewport } from '../../../util/uiHelpers';
 import { isScrollingDisabled } from '../../../ducks/ui.duck';
 // import { getMarketplaceEntities } from '../../../ducks/marketplaceData.duck';
 import {
   H2,
-  H3,
-  H4,
   Page,
   Footer,
-  AvatarLarge,
-  NamedLink,
   LayoutSingleColumnMidle,
 } from '../../../components';
 
@@ -47,12 +41,12 @@ export const MainContent = props => {
 
 const EditCommissionComponent = props => {
     const config = useConfiguration();
-    const { scrollingDisabled, intl, ...rest } = props;
-  
+    const { scrollingDisabled, commissionInProgress, intl, ...rest } = props;
+    
     const schemaTitleVars = { name: 'displayName', marketplaceName: config.marketplaceName };
     const schemaTitle = intl.formatMessage({ id: 'EditCommission.schemaTitle' }, schemaTitleVars);
 
-    console.log(schemaTitle);
+    console.log(props);
   
     return (
       <Page
@@ -69,11 +63,14 @@ const EditCommissionComponent = props => {
           footer={<Footer />}
         >
           <MainContent  {...rest} />
-          <EditCommissionForm
-            formId="EditCommissionForm"
-            listingTitle={'dsas'}
-          />
-
+            <div className={css.main}>
+              <EditCommissionForm
+                formId="EditCommissionForm"
+                userName={'user name'}
+                inProgress={commissionInProgress}
+                ready={'agasga ag av'}
+              />
+            </div>
           
         </LayoutSingleColumnMidle>
       </Page>
@@ -105,15 +102,17 @@ const EditCommissionComponent = props => {
 
 const mapStateToProps = state => {
   const { currentUser } = state.user;
+
+  console.log(state);
   
   const {
-    // userId,
+    userId,
     // userShowError,
     // queryListingsError,
     // userListingRefs,
-    // users,
+    users,
     intl
-  } = state.CommissionPage;
+  } = state.EditCommission;
 
   // const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: userId }]);
   // const user = userMatches.length === 1 ? userMatches[0] : null;
@@ -122,7 +121,7 @@ const mapStateToProps = state => {
     scrollingDisabled: isScrollingDisabled(state),
     currentUser,
     // user,
-    // users,
+    users,
     // userShowError,
     // queryListingsError,
     // listings,

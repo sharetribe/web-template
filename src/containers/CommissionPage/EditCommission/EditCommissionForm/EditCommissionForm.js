@@ -6,7 +6,7 @@ import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../../util/reactIntl';
-import { Form, Heading, H3, PrimaryButton } from '../../../../components';
+import { Form, H3, PrimaryButton } from '../../../../components';
 import FieldComissionInput from './FieldComissionInput';
 // import AvailabilityPlanEntries from './AvailabilityPlanEntries';
 
@@ -61,34 +61,31 @@ const EditListingAvailabilityPlanFormComponent = props => {
       }}
       render={fieldRenderProps => {
         const {
-          listingTitle,
+          userName,
           rootClassName,
           className,
           formId,
+          inProgress,
         } = fieldRenderProps;
 
         const classes = classNames(rootClassName || css.root, className);
-        const submitInProgress = true;
-
+        const submitInProgress = inProgress;
 
         return (
           <Form id={formId} className={classes} >
             <H3 as="h2" className={css.heading}>
               <FormattedMessage
-                id="EditListingAvailabilityPlanForm.title"
-                values={{ listingTitle }}
+                id="EditCommissionForm.title"
+                values={{ userName }}
               />
             </H3>
-            <Heading as="h3" rootClassName={css.subheading}>
-              <FormattedMessage id="EditListingAvailabilityPlanForm.timezonePickerTitle" />
-            </Heading>
             <div className={css.comission}>
-              <FieldComissionInput id="comission" name="comission" />
+              <FieldComissionInput id="comission" name="comission" className={css.commissionInput} />
             </div>
 
             <div className={css.submitButton}>
               <PrimaryButton type="submit" inProgress={submitInProgress} >
-                <FormattedMessage id="EditListingAvailabilityPlanForm.saveSchedule" />
+                <FormattedMessage id="EditCommissionForm.saveCommission" />
               </PrimaryButton>
             </div>
           </Form>
@@ -106,7 +103,7 @@ EditListingAvailabilityPlanFormComponent.defaultProps = {
 };
 
 EditListingAvailabilityPlanFormComponent.propTypes = {
- 
+  inProgress: bool,
 };
 
 const EditListingAvailabilityPlanForm = compose(injectIntl)(

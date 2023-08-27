@@ -1,10 +1,10 @@
-import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
-import { fetchCurrentUser } from '../../ducks/user.duck';
-import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
-import { denormalisedResponseEntities } from '../../util/data';
-import { storableError } from '../../util/errors';
-import { getUsersAdmin } from '../../util/api';
-import * as log from '../../util/log';
+import { addMarketplaceEntities } from '../../../ducks/marketplaceData.duck';
+import { fetchCurrentUser } from '../../../ducks/user.duck';
+import { types as sdkTypes, createImageVariantConfig } from '../../../util/sdkLoader';
+import { denormalisedResponseEntities } from '../../../util/data';
+import { storableError } from '../../../util/errors';
+import { getUsersAdmin } from '../../../util/api';
+import * as log from '../../../util/log';
 
 const { UUID } = sdkTypes;
 
