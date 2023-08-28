@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] EditListingDetailsPanel: rename setNoAvailabilityForProductListings as
+  setNoAvailabilityForUnbookableListings [#206](https://github.com/sharetribe/web-template/pull/206)
 - [fix] ListingPage: use updated CSS rules with react-image-gallery.
   [#205](https://github.com/sharetribe/web-template/pull/205)
 - [change] Use getSdk function to initialize SDK on server/index.js and server/api/login-as.js.
