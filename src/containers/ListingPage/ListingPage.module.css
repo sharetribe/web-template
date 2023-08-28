@@ -249,7 +249,8 @@
   @media (--viewportLarge) {
     display: flex;
     flex-direction: row;
-    max-width: calc(var(--contentMaxWidth) + 72px);
+    max-width: unset;
+    width: min(calc(var(--contentMaxWidth) + 72px), 100vw);
     padding: 64px 36px 0 36px;
     margin: 0 auto 117px auto;
   }
