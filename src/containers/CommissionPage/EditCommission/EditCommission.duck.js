@@ -3,7 +3,7 @@ import { fetchCurrentUser } from '../../../ducks/user.duck';
 import { types as sdkTypes, createImageVariantConfig } from '../../../util/sdkLoader';
 import { denormalisedResponseEntities } from '../../../util/data';
 import { storableError } from '../../../util/errors';
-import { getUsersAdmin } from '../../../util/api';
+import { getUserAdmin } from '../../../util/api';
 import * as log from '../../../util/log';
 
 const { UUID } = sdkTypes;
@@ -16,14 +16,15 @@ export const SHOW_USER_REQUEST = 'app/CommissionPage/SHOW_USER_REQUEST';
 export const SHOW_USER_SUCCESS = 'app/CommissionPage/SHOW_USER_SUCCESS';
 export const SHOW_USER_ERROR = 'app/CommissionPage/SHOW_USER_ERROR';
 
-export const QUERY_USERS_SUCCESS = 'app/CommissionPage/QUERY_USERS_SUCCESS';
-export const QUERY_LISTINGS_ERROR = 'app/CommissionPage/QUERY_LISTINGS_ERROR';
+export const QUERY_USER_SUCCESS = 'app/CommissionPage/QUERY_USER_SUCCESS';
+export const QUERY_USER_ERROR = 'app/CommissionPage/QUERY_USER_ERROR';
 
 // ================ Reducer ================ //
 
 const initialState = {
   userId: null,
   users: [],
+  userdata: {},
   userShowError: null,
   queryListingsError: null,
 };
@@ -41,11 +42,11 @@ export default function CommissionPageReducer(state = initialState, action = {})
     case SHOW_USER_ERROR:
       return { ...state, userShowError: payload };
 
-    case QUERY_USERS_SUCCESS:
+    case QUERY_USER_SUCCESS:
       console.log('QUERY_USERS_SUCCESS');
       console.log(payload);
       return { ...state, users: payload.usersRefs };
-    case QUERY_LISTINGS_ERROR:
+    case QUERY_USER_ERROR:
       return { ...state, userListingRefs: [], queryListingsError: payload };
     
 
@@ -80,13 +81,13 @@ export const queryListingsSuccess = listingRefs => ({
   payload: { listingRefs },
 });
 
-export const queryUsersSuccess = usersRefs => ({
-  type: QUERY_USERS_SUCCESS,
-  payload: { usersRefs },
+export const queryUserSuccess = userData => ({
+  type: QUERY_USER_SUCCESS,
+  payload: { userData },
 });
 
-export const queryListingsError = e => ({
-  type: QUERY_LISTINGS_ERROR,
+export const queryUserError = e => ({
+  type: QUERY_USER_ERROR,
   error: true,
   payload: e,
 });
@@ -120,21 +121,21 @@ export const showUser = userId => (dispatch, getState, sdk) => {
     .catch(e => dispatch(showUserError(storableError(e))));
 };
 
-export const queryUsers = search => (dispatch, getState, sdk) => {
+export const queryUser = search => (dispatch, getState, sdk) => {
   
   // Clear state so that previously loaded data is not visible
   // in case this page load fails.
   // dispatch(setInitialState());
 
-  let params = {'asdas':'afssaf'};
+  let params = {'search':search};
 
-  return getUsersAdmin(params)
+  return getUserAdmin(params)
   .then(res => {
     return res;
   })
   .then(response => {
     // dispatch(addMarketplaceEntities(response));
-    dispatch(queryUsersSuccess(response));
+    dispatch(queryUserSuccess(response));
   })
   .catch(e => {
     log.error(e, 'create-user-with-idp-failed', { params });
@@ -145,6 +146,8 @@ export const queryUsers = search => (dispatch, getState, sdk) => {
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const userId = new UUID(params.id);
 
+  console.log(params);
+
   // Clear state so that previously loaded data is not visible
   // in case this page load fails.
   dispatch(setInitialState());
@@ -152,7 +155,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   return Promise.all([
     dispatch(fetchCurrentUser()),
     dispatch(showUser(userId)),
-    dispatch(queryUsers(userId)),
+    dispatch(queryUser(userId)),
   ]);
 };
 

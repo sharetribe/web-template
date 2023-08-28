@@ -122,3 +122,9 @@ export const createUserWithIdp = body => {
 export const getUsersAdmin = body => {
   return post('/api/admin-users', body);
 };
+
+// admin without description yet
+//
+export const getUserAdmin = body => {
+  return post('/api/admin-user', body);
+};

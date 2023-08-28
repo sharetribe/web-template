@@ -103,6 +103,7 @@ const EditCommissionComponent = props => {
 const mapStateToProps = state => {
   const { currentUser } = state.user;
 
+  console.log('mapStateToProps');
   console.log(state);
   
   const {
@@ -110,6 +111,7 @@ const mapStateToProps = state => {
     // userShowError,
     // queryListingsError,
     // userListingRefs,
+    userdata,
     users,
     intl
   } = state.EditCommission;
@@ -118,10 +120,12 @@ const mapStateToProps = state => {
   // const user = userMatches.length === 1 ? userMatches[0] : null;
   // const listings = getMarketplaceEntities(state, userListingRefs);
   return {
+    userId,
     scrollingDisabled: isScrollingDisabled(state),
     currentUser,
     // user,
     users,
+    userdata,
     // userShowError,
     // queryListingsError,
     // listings,

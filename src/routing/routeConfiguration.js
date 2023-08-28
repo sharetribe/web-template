@@ -378,7 +378,7 @@ const routeConfiguration = (layoutConfig) => {
       path: '/EditCommission/:id',
       name: 'EditCommission',
       component: EditCommission,
-      // loadData: pageDataLoadingAPI.CommissionPage.loadData,
+      loadData: pageDataLoadingAPI.EditCommission.loadData,
     },
   ];
 };
