@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] ListingPage: use updated CSS rules with react-image-gallery.
+  [#205](https://github.com/sharetribe/web-template/pull/205)
 - [change] Use getSdk function to initialize SDK on server/index.js and server/api/login-as.js.
   [#201](https://github.com/sharetribe/web-template/pull/201)
 - [fix] Add default sort options to en.json (microcopy)
