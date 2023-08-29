@@ -53,7 +53,7 @@ const getMetadata = (meta, schemaType, fieldOptions) => {
 const LoadingSpinner = () => {
   return (
     <div className={css.loading}>
-      <IconSpinner />
+      <IconSpinner delay={600} />
     </div>
   );
 };
