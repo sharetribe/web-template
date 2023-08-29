@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] IconSpinner: add delay prop to reduce fast flicker of spinner on fast connections.
+  [#207](https://github.com/sharetribe/web-template/pull/207)
 - [change] EditListingDetailsPanel: rename setNoAvailabilityForProductListings as
   setNoAvailabilityForUnbookableListings [#206](https://github.com/sharetribe/web-template/pull/206)
 - [fix] ListingPage: use updated CSS rules with react-image-gallery.
