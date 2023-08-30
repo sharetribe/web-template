@@ -1,7 +1,18 @@
 import React from 'react';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
-import { array, bool, func, node, number, object, oneOfType, shape, string } from 'prop-types';
+import {
+  array,
+  arrayOf,
+  bool,
+  func,
+  node,
+  number,
+  object,
+  oneOfType,
+  shape,
+  string,
+} from 'prop-types';
 import loadable from '@loadable/component';
 import classNames from 'classnames';
 import omit from 'lodash/omit';
@@ -382,6 +393,16 @@ OrderPanel.propTypes = {
   className: string,
   titleClassName: string,
   listing: oneOfType([propTypes.listing, propTypes.ownListing]),
+  validListingTypes: arrayOf(
+    shape({
+      id: string.isRequired,
+      transactionType: shape({
+        process: string.isRequired,
+        alias: string.isRequired,
+        unitType: string.isRequired,
+      }).isRequired,
+    })
+  ).isRequired,
   isOwnListing: bool,
   author: oneOfType([propTypes.user, propTypes.currentUser]).isRequired,
   authorLink: node,
