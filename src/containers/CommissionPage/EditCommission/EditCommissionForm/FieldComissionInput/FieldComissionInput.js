@@ -14,7 +14,8 @@ const FieldComissionInputComponent = props => {
 
   const {
     className,
-    intl
+    intl,
+    value
   } = props;
 
   const minValue = 0;
@@ -54,6 +55,7 @@ const FieldComissionInputComponent = props => {
       id={`commission`}
       name="commission"
       className={className}
+      defaultValue={value}
       label="Set new commission variable:"
       validate={commissionValidators}
     />

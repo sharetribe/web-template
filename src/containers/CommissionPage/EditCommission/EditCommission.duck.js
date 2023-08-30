@@ -24,13 +24,17 @@ export const QUERY_USER_ERROR = 'app/CommissionPage/QUERY_USER_ERROR';
 const initialState = {
   userId: null,
   users: [],
-  userdata: {},
+  commission: 0,
+  userName: '',
   userShowError: null,
   queryListingsError: null,
 };
 
 export default function CommissionPageReducer(state = initialState, action = {}) {
   const { type, payload } = action;
+
+//   console.log('CommissionPageReducer');
+//   console.log(action);
 
   switch (type) {
     case SET_INITIAL_STATE:
@@ -45,7 +49,9 @@ export default function CommissionPageReducer(state = initialState, action = {})
     case QUERY_USER_SUCCESS:
       console.log('QUERY_USERS_SUCCESS');
       console.log(payload);
-      return { ...state, users: payload.usersRefs };
+      const userName = payload.userData.attributes.profile.displayName;
+      const commission = payload.userData.attributes.profile.metadata.comission ? payload.userData.attributes.profile.metadata.comission:0;
+      return { ...state, userName, commission };
     case QUERY_USER_ERROR:
       return { ...state, userListingRefs: [], queryListingsError: payload };
     

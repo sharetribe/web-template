@@ -51,7 +51,8 @@ const submit = (onSubmit, weekdays) => values => {
  * This is essentially the weekly schedule.
  */
 const EditListingAvailabilityPlanFormComponent = props => {
-  const { onSubmit, ...restOfprops } = props;
+  const { onSubmit, commission, ...restOfprops } = props;
+
   return (
     <FinalForm
       {...restOfprops}
@@ -68,11 +69,24 @@ const EditListingAvailabilityPlanFormComponent = props => {
           inProgress,
         } = fieldRenderProps;
 
+        const handleSubmit = values => {
+          setValuesFromLastSubmit(values);
+      
+          // Final Form can wait for Promises to return.
+          return onSubmit(createAvailabilityPlan(values))
+            .then(() => {
+              setIsEditPlanModalOpen(false);
+            })
+            .catch(e => {
+              // Don't close modal if there was an error
+            });
+        };
+
         const classes = classNames(rootClassName || css.root, className);
         const submitInProgress = inProgress;
 
         return (
-          <Form id={formId} className={classes} >
+          <Form id={formId} className={classes} onSubmit={handleSubmit} >
             <H3 as="h2" className={css.heading}>
               <FormattedMessage
                 id="EditCommissionForm.title"
@@ -80,7 +94,7 @@ const EditListingAvailabilityPlanFormComponent = props => {
               />
             </H3>
             <div className={css.comission}>
-              <FieldComissionInput id="comission" name="comission" className={css.commissionInput} />
+              <FieldComissionInput id="comission" value={commission} name="comission" className={css.commissionInput} />
             </div>
 
             <div className={css.submitButton}>
@@ -100,6 +114,7 @@ EditListingAvailabilityPlanFormComponent.defaultProps = {
   className: null,
   submitButtonWrapperClassName: null,
   inProgress: false,
+  commission:0,
 };
 
 EditListingAvailabilityPlanFormComponent.propTypes = {

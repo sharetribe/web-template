@@ -41,7 +41,10 @@ export const MainContent = props => {
 
 const EditCommissionComponent = props => {
     const config = useConfiguration();
-    const { scrollingDisabled, commissionInProgress, intl, ...rest } = props;
+    
+    const { scrollingDisabled, commissionInProgress, intl, userName, commission, ...rest } = props;
+    console.log('commission');
+    console.log(commission);
     
     const schemaTitleVars = { name: 'displayName', marketplaceName: config.marketplaceName };
     const schemaTitle = intl.formatMessage({ id: 'EditCommission.schemaTitle' }, schemaTitleVars);
@@ -66,9 +69,10 @@ const EditCommissionComponent = props => {
             <div className={css.main}>
               <EditCommissionForm
                 formId="EditCommissionForm"
-                userName={'user name'}
+                userName={userName}
                 inProgress={commissionInProgress}
                 ready={'agasga ag av'}
+                commission={commission}
               />
             </div>
           
@@ -111,8 +115,8 @@ const mapStateToProps = state => {
     // userShowError,
     // queryListingsError,
     // userListingRefs,
-    userdata,
-    users,
+    commission,
+    userName,
     intl
   } = state.EditCommission;
 
@@ -124,8 +128,8 @@ const mapStateToProps = state => {
     scrollingDisabled: isScrollingDisabled(state),
     currentUser,
     // user,
-    users,
-    userdata,
+    commission,
+    userName,
     // userShowError,
     // queryListingsError,
     // listings,
