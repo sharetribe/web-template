@@ -6,6 +6,17 @@ import css from './OrderPanelExample.module.css';
 
 const noop = () => null;
 
+const validListingTypes = [
+  {
+    id: 'rent-bicycles-daily',
+    transactionType: {
+      process: 'default-booking',
+      alias: 'default-booking/release-1',
+      unitType: 'day',
+    },
+  },
+];
+
 export const Default = {
   component: OrderPanel,
   props: {
@@ -13,7 +24,15 @@ export const Default = {
     marketplaceCurrency: 'USD',
     marketplaceName: 'MarketplaceX',
     dayCountAvailableForBooking: 90,
-    listing: createListing('listing_1', { availabilityPlan: { timezone: 'Etc/UTC' } }),
+    listing: createListing('listing_1', {
+      availabilityPlan: { timezone: 'Etc/UTC' },
+      publicData: {
+        listingType: 'rent-bicycles-daily',
+        transactionProcessAlias: 'default-booking/release-1',
+        unitType: 'day',
+      },
+    }),
+    validListingTypes,
     author: createUser('AuthorX'),
     onSubmit: values => console.log('Submit:', values),
     title: <span>Booking title</span>,
@@ -36,8 +55,14 @@ export const WithClosedListing = {
     dayCountAvailableForBooking: 90,
     listing: createListing('listing_1', {
       availabilityPlan: { timezone: 'Etc/UTC' },
+      publicData: {
+        listingType: 'rent-bicycles-daily',
+        transactionProcessAlias: 'default-booking/release-1',
+        unitType: 'day',
+      },
       state: LISTING_STATE_CLOSED,
     }),
+    validListingTypes,
     author: createUser('AuthorX'),
     onSubmit: values => console.log('Submit:', values),
     title: <span>Booking title</span>,
