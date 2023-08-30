@@ -70,7 +70,7 @@ Spinner.defaultProps = {
 Spinner.propTypes = {
   rootClassName: string,
   className: string,
-  delay: number.isRequired,
+  delay: number,
 };
 
 export default Spinner;
