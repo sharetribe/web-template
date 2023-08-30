@@ -2,6 +2,7 @@
 import EditListingDetailsForm from './EditListingDetailsForm';
 import defaultConfig from '../../../../config/configDefault';
 
+const noop = () => {};
 const selectableListingTypes = [
   {
     listingType: 'sell-bicycles',
@@ -23,6 +24,7 @@ export const WithInitialValues = {
     updated: false,
     updateInProgress: false,
     selectableListingTypes: selectableListingTypes,
+    onListingTypeChange: noop,
     listingConfig: defaultConfig.listing,
     initialValues: {
       title: 'Listing',
@@ -61,6 +63,7 @@ export const MultipleProcessInfos = {
     updated: false,
     updateInProgress: false,
     selectableListingTypes: selectableListingTypes2,
+    onListingTypeChange: noop,
     listingConfig: defaultConfig.listing,
   },
   group: 'page:EditListingPage',
