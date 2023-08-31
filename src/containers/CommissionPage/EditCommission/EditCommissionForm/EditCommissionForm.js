@@ -53,6 +53,9 @@ const submit = (onSubmit, weekdays) => values => {
 const EditListingAvailabilityPlanFormComponent = props => {
   const { onSubmit, commission, ...restOfprops } = props;
 
+  console.log('EditListingAvailabilityPlanFormComponent');
+  console.log(props);
+
   return (
     <FinalForm
       {...restOfprops}
@@ -70,10 +73,13 @@ const EditListingAvailabilityPlanFormComponent = props => {
         } = fieldRenderProps;
 
         const handleSubmit = values => {
-          setValuesFromLastSubmit(values);
+          // setValuesFromLastSubmit(values);
       
           // Final Form can wait for Promises to return.
-          return onSubmit(createAvailabilityPlan(values))
+          return onSubmit(e => {
+            e.preventDefault();
+            handleSubmit(e);
+          })
             .then(() => {
               setIsEditPlanModalOpen(false);
             })
