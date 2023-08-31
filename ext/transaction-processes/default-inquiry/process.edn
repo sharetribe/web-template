@@ -5,7 +5,7 @@
    :actions [{:name :action/update-protected-data}],
    :to :state/free-inquiry}],
  :notifications
- [{:name :notification/new-inquiry,
+ [{:name :notification/inquiry-new-inquiry,
    :on :transition/inquire-without-payment,
    :to :actor.role/provider,
-   :template :new-inquiry}]}
+   :template :inquiry-new-inquiry}]}
