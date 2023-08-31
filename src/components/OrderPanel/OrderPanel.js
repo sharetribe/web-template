@@ -395,7 +395,7 @@ OrderPanel.propTypes = {
   listing: oneOfType([propTypes.listing, propTypes.ownListing]),
   validListingTypes: arrayOf(
     shape({
-      id: string.isRequired,
+      listingType: string.isRequired,
       transactionType: shape({
         process: string.isRequired,
         alias: string.isRequired,
