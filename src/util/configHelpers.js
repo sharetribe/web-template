@@ -156,7 +156,7 @@ const mergeBranding = (brandingConfig, defaultBranding) => {
     marketplaceColorLight,
     logoImageDesktop: logo || defaultBranding.logoImageDesktopURL,
     logoImageMobile: logo || defaultBranding.logoImageMobileURL,
-    brandImage: loginBackgroundImage || defaultBranding.brandImageURL,
+    brandImage: loginBackgroundImage,
     facebookImage,
     twitterImage,
     favicon,
