@@ -220,7 +220,11 @@ describe('OrderPanel', () => {
   const routeConfiguration = getRouteConfiguration(config.layout);
   const validListingTypes = config.listingTypes.listingTypes.map(({ id, ...rest }) => ({
     listingType: id,
-    ...rest,
+    transactionType: {
+      process: rest?.transactionProcess?.name,
+      alias: rest?.transactionProcess?.alias,
+      unitType: rest.unitType,
+    },
   }));
 
   it('Booking: daily', async () => {
