@@ -68,6 +68,9 @@ const EditCommissionComponent = props => {
           <MainContent  {...rest} />
             <div className={css.main}>
               <EditCommissionForm
+                intl={injectIntl}
+                dispatch={noop}
+                onSubmit={v => v}
                 formId="EditCommissionForm"
                 userName={userName}
                 inProgress={commissionInProgress}

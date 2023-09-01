@@ -58,8 +58,7 @@ const EditListingAvailabilityPlanFormComponent = props => {
 
   return (
     <FinalForm
-      {...restOfprops}
-      onSubmit={submit(onSubmit, props.weekdays)}
+      onSubmit={handleSubmit}
       mutators={{
         ...arrayMutators,
       }}
@@ -73,11 +72,11 @@ const EditListingAvailabilityPlanFormComponent = props => {
         } = fieldRenderProps;
 
         const handleSubmit = values => {
+          values.preventDefault();
           // setValuesFromLastSubmit(values);
       
           // Final Form can wait for Promises to return.
           return onSubmit(e => {
-            e.preventDefault();
             handleSubmit(e);
           })
             .then(() => {
