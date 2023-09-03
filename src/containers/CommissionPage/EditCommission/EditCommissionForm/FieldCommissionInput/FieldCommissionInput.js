@@ -6,7 +6,7 @@ import { injectIntl, intlShape } from '../../../../../util/reactIntl';
 import * as validators from '../../../../../util/validators';
 
 
-const FieldComissionInputComponent = props => {
+const FieldCommissionInputComponent = props => {
 
   const {
     className,
@@ -17,14 +17,14 @@ const FieldComissionInputComponent = props => {
   const maxValue = 100;
 
   const minValueMessage = intl.formatMessage({
-    id: 'FieldComissionInput.CommisionMinValue',
+    id: 'FieldCommissionInput.CommisionMinValue',
   },
   {
     minValue: minValue,
   }
   );
   const maxValueMessage = intl.formatMessage({
-    id: 'FieldComissionInput.CommisionMaxValue',
+    id: 'FieldCommissionInput.CommisionMaxValue',
   },
   {
     maxValue: maxValue,
@@ -32,14 +32,14 @@ const FieldComissionInputComponent = props => {
   );
 
   const commissionRequiredMessage = intl.formatMessage({
-    id: 'FieldComissionInput.CommisionRequired',
+    id: 'FieldCommissionInput.CommisionRequired',
   });
   const minValueValidate = validators.minValue(minValue,minValueMessage);
   const maxValueValidate = validators.maxValue(maxValue,maxValueMessage);
-  const comissionValueRequired = validators.required(commissionRequiredMessage);
+  const commissionValueRequired = validators.required(commissionRequiredMessage);
   
   const commissionValidators = validators.composeValidators(
-    comissionValueRequired,
+    commissionValueRequired,
     minValueValidate,
     maxValueValidate
   );
@@ -52,20 +52,20 @@ const FieldComissionInputComponent = props => {
         name="commission"
         className={className}
         label="Set new commission variable:"
-        validate={commissionValidators}
+        validate={commissionValueRequired}
       />
     </div>
   );
 };
 
-FieldComissionInputComponent.defaultProps = {
+FieldCommissionInputComponent.defaultProps = {
   rootClassName: null,
   className: null,
   id: null,
   label: null,
 };
 
-FieldComissionInputComponent.propTypes = {
+FieldCommissionInputComponent.propTypes = {
   rootClassName: string,
   className: string,
 
@@ -79,6 +79,6 @@ FieldComissionInputComponent.propTypes = {
   intl: intlShape.isRequired,
 };
 
-const FieldComissionInput = compose(injectIntl)(FieldComissionInputComponent)
+const FieldCommissionInput = compose(injectIntl)(FieldCommissionInputComponent)
 
-export default FieldComissionInput;
+export default FieldCommissionInput;

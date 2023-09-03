@@ -12,16 +12,32 @@ module.exports = (req, res) => {
         clientSecret: CLIENT_SECRET
     });
 
-    const userId = req.body.id;
+    const userId = req.body.userId;
+    const commission = +req.body.values.commission;
 
+    console.log('userId');
+    console.log(userId);
+    console.log('typeof req.body.values');
+    console.log(typeof req.body.values);
+    console.log(req.body.values);
+    console.log(req.body.values.commission);
+    console.log('commission');
+    console.log(commission);
+    console.log(CLIENT_ID);
+    console.log(CLIENT_SECRET);
+    
     // Query all users
-    integrationSdk.users
-    .show({id: userId})
+    integrationSdk.users.updateProfile({
+        id: userId,
+        metadata: {
+            commission
+        }
+    })
     .then(response => {
         console.log('response = =======');
         // Print listing titles
         let data = response.data.data;
-        console.log(data);
+        // console.log(data);
 
         res.send(
               data

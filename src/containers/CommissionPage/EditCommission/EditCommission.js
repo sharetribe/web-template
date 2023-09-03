@@ -44,16 +44,42 @@ export const MainContent = props => {
 const EditCommissionComponent = props => {
     const config = useConfiguration();
     
-    const { scrollingDisabled, updateInProgress, intl, userName, commission, ...rest } = props;
+    const { scrollingDisabled, updateInProgress, onUpdateCommission, intl, userId, userName, commission, ...rest } = props;
     console.log('commission - props');
     console.log(props);
     
     const schemaTitleVars = { name: 'displayName', marketplaceName: config.marketplaceName };
     const schemaTitle = intl.formatMessage({ id: 'EditCommission.schemaTitle' }, schemaTitleVars);
 
-    console.log('updateCommission');
-    console.log(updateInProgress);
+    const handleSubmit = values => {
+      console.log('handleSubmit');
+      console.log(values);
+      console.log(userId);
+      const data = {
+        values,
+        userId
+      }
+      // const { firstName, lastName, bio: rawBio } = values;
   
+      // Ensure that the optional bio is a string
+      // const bio = rawBio || '';
+  
+      // const profile = {
+      //   firstName: firstName.trim(),
+      //   lastName: lastName.trim(),
+      //   bio,
+      // };
+      // const uploadedImage = props.image;
+  
+      // Update profileImage only if file system has been accessed
+      // const updatedValues =
+      //   uploadedImage && uploadedImage.imageId && uploadedImage.file
+      //     ? { ...profile, profileImageId: uploadedImage.imageId }
+      //     : profile;
+  
+        onUpdateCommission(data);
+    };
+    
     return (
       <Page
         scrollingDisabled={scrollingDisabled}
@@ -73,8 +99,8 @@ const EditCommissionComponent = props => {
               <EditCommissionForm
                 intl={injectIntl}
                 dispatch={noop}
-                onSubmit={updateCommission}
-                initialValues={{ commission:34 }}
+                onSubmit={handleSubmit}
+                initialValues={{ commission:commission }}
                 formId="EditCommissionForm"
                 userName={userName}
                 inProgress={updateInProgress}
@@ -112,9 +138,6 @@ const EditCommissionComponent = props => {
 
 const mapStateToProps = state => {
   const { currentUser } = state.user;
-
-  console.log('mapStateToProps');
-  console.log(state);
   
   const {
     userId,
@@ -125,7 +148,6 @@ const mapStateToProps = state => {
     userName,
     intl,
     params,
-    updateCommission,
     updateInProgress
   } = state.EditCommission;
 
@@ -145,13 +167,17 @@ const mapStateToProps = state => {
     // reviews,
     intl,
     params,
-    updateCommission,
     updateInProgress
   };
 };
 
+
+const mapDispatchToProps = dispatch => ({
+  onUpdateCommission: data => dispatch(updateCommission(data)),
+});
+
 const EditCommission = compose(
-    connect(mapStateToProps),
+    connect(mapStateToProps,mapDispatchToProps),
     withViewport,
     injectIntl
   )(EditCommissionComponent);

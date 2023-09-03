@@ -67,10 +67,6 @@ export const MainContent = props => {
   const hasUsers = users.length > 0;
   // const hasUsers = 0;
   
-  console.log('MainContent');
-  console.log(hasUsers);
-  console.log(users);
-  
   const isMobileLayout = viewport.width < MAX_MOBILE_SCREEN_WIDTH;
   const hasBio = !!bio;
 
@@ -78,10 +74,12 @@ export const MainContent = props => {
     [css.withBioMissingAbove]: !hasBio,
   });
 
-  console.log('listingsContainerClasses');
-  console.log(listingsContainerClasses);
-
   const usersTableTitleClasses = classNames(css.usersTableTitle, css.user);
+
+  const calcCommission = l =>{
+    console.log(l.attributes.profile.metadata);
+    return l.attributes.profile.metadata && l.attributes.profile.metadata.commission ? l.attributes.profile.metadata.commission:0;
+  }
 
   return (
     <div>
@@ -118,7 +116,7 @@ export const MainContent = props => {
                 <ul className={css.user}>
                   <li>{l.attributes.profile.firstName} {l.attributes.profile.lastName}</li>
                   <li>{l.attributes.email}</li>
-                  <li>{44}{'%'}</li>
+                  <li>{calcCommission(l)}{'%'}</li>
                   <li>
                   <PrimaryButton
                     // inProgress={primaryButtonProps.inProgress}

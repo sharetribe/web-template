@@ -1093,11 +1093,11 @@
   "CommissionPage.usersTitle": "All users ({count})",
   "EditCommission.desktopHeading": "Edit Commission",
   "EditCommission.schemaTitle": "Edit Commission: {marketplaceName}",
-  "EditCommissionForm.title": "Edit Comission for {userName}",
+  "EditCommissionForm.title": "Edit Commission for {userName}",
   "EditCommissionForm.saveCommission": "Update Commission",
-  "FieldComissionInput.CommisionMinValue": "This should be bigger then {minValue}",
-  "FieldComissionInput.CommisionMaxValue": "This should be smaller then {maxValue}",
-  "FieldComissionInput.CommisionRequired": "Commision is required."
+  "FieldCommissionInput.CommisionMinValue": "This should be bigger then {minValue}",
+  "FieldCommissionInput.CommisionMaxValue": "This should be smaller then {maxValue}",
+  "FieldCommissionInput.CommisionRequired": "Commision is required."
 
   
 }

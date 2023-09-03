@@ -128,3 +128,9 @@ export const getUsersAdmin = body => {
 export const getUserAdmin = body => {
   return post('/api/admin-user', body);
 };
+
+// admin without description yet
+//
+export const updateUsersAdmin = body => {
+  return post('/api/admin-user-update', body);
+};

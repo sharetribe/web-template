@@ -1,9 +1,9 @@
 import { addMarketplaceEntities } from '../../../ducks/marketplaceData.duck';
 import { fetchCurrentUser } from '../../../ducks/user.duck';
-import { types as sdkTypes, createImageVariantConfig } from '../../../util/sdkLoader';
+import { types as sdkTypes } from '../../../util/sdkLoader';
 import { denormalisedResponseEntities } from '../../../util/data';
 import { storableError } from '../../../util/errors';
-import { getUserAdmin,getUsersAdmin } from '../../../util/api';
+import { getUserAdmin,updateUsersAdmin } from '../../../util/api';
 import * as log from '../../../util/log';
 
 const { UUID } = sdkTypes;
@@ -27,6 +27,7 @@ const initialState = {
   userName: '',
   userShowError: null,
   queryListingsError: null,
+  updateInProgress: false,
 };
 
 export default function CommissionPageReducer(state = initialState, action = {}) {
@@ -43,8 +44,9 @@ export default function CommissionPageReducer(state = initialState, action = {})
       console.log('QUERY_USERS_SUCCESS');
       console.log(payload);
       const userName = payload.userData.attributes.profile.displayName;
-      const commission = payload.userData.attributes.profile.metadata.comission ? payload.userData.attributes.profile.metadata.comission:0;
-      return { ...state, userName, commission };
+      const userId = payload.userData.id.uuid;
+      const commission = payload.userData.attributes.profile.metadata.commission ? payload.userData.attributes.profile.metadata.commission:0;
+      return { ...state, userName, userId, commission };
     case QUERY_USER_ERROR:
       return { ...state, userListingRefs: [], queryListingsError: payload };
 
@@ -97,13 +99,13 @@ export const updateCommissionSuccess = updateResult => ({
 // ================ Thunks ================ //
 
 
-export const queryUser = search => (dispatch, getState, sdk) => {
+export const queryUser = id => (dispatch, getState, sdk) => {
   
   // Clear state so that previously loaded data is not visible
   // in case this page load fails.
   // dispatch(setInitialState());
 
-  let params = {'search':search};
+  let params = {id};
 
   return getUserAdmin(params)
   .then(res => {
@@ -119,37 +121,44 @@ export const queryUser = search => (dispatch, getState, sdk) => {
 
 };
 
+export const updateCommission = actionPayload => {
+  return (dispatch, getState, sdk) => {
+    dispatch(updateCommissionRequest());
 
-export const updateCommission = actionPayload => (dispatch, getState, sdk) =>{
-    // dispatch(updateCommissionRequest());
-    const  restt = {'fasdfas':'fasgags'};
-    console.log('actionPayload');
-    console.log(actionPayload);
-
-
-    return (dispatch, getState, sdk) => {
-        dispatch(updateCommissionRequest(restt))
-        
-        console.log(dispatch);
-    }
-
-    return getUsersAdmin(actionPayload)
+    return updateUsersAdmin(actionPayload)
     .then(res => {
       return res;
     })
     .then(response => {
       // dispatch(addMarketplaceEntities(response));
-      dispatch(queryUsersSuccess(response));
+      dispatch(updateCommissionSuccess(response));
     })
     .catch(e => {
       log.error(e, 'create-user-with-idp-failed', { actionPayload });
     });
-}
+
+    return sdk.currentUser
+      .updateProfile(actionPayload, queryParams)
+      .then(response => {
+        dispatch(updateProfileSuccess(response));
+
+        const entities = denormalisedResponseEntities(response);
+        if (entities.length !== 1) {
+          throw new Error('Expected a resource in the sdk.currentUser.updateProfile response');
+        }
+        const currentUser = entities[0];
+
+        // Update current user in state.user.currentUser through user.duck.js
+        dispatch(currentUserShowSuccess(currentUser));
+      })
+      .catch(e => dispatch(updateProfileError(storableError(e))));
+  };
+};
 
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
-  const userId = new UUID(params.id);
-
+  const userId = params.id;
+  console.log('loadData');
   console.log(params);
 
   // Clear state so that previously loaded data is not visible
@@ -159,7 +168,6 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   return Promise.all([
     dispatch(fetchCurrentUser()),
     dispatch(queryUser(userId)),
-    dispatch(updateCommission(userId)),
   ]);
 };
 

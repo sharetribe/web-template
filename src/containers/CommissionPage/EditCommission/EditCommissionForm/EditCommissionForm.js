@@ -7,7 +7,7 @@ import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../../util/reactIntl';
 import { Form, H3, PrimaryButton } from '../../../../components';
-import FieldComissionInput from './FieldComissionInput';
+import FieldCommissionInput from './FieldCommissionInput';
 // import AvailabilityPlanEntries from './AvailabilityPlanEntries';
 
 import css from './EditListingAvailabilityPlanForm.module.css';
@@ -28,18 +28,10 @@ const sortEntries = () => (a, b) => {
 const EditListingAvailabilityPlanFormComponent = props => {
   const { onSubmit, ...restOfprops } = props;
 
-  console.log('EditListingAvailabilityPlanFormComponent');
-  console.log(props);
+  const handleSubmit = (e,values) => {
+    e.preventDefault();
 
-  const handleSubmit = (values,fasfa) => {
-    values.preventDefault();
-    // setValuesFromLastSubmit(values);
-    // onSubmit(values);
-    // Final Form can wait for Promises to return.
-    console.log(values);
-    console.log(fasfa);
-    // console.log(onSubmit);
-    onSubmit('asfas');
+    onSubmit(values);
   };
 
   return (
@@ -72,8 +64,8 @@ const EditListingAvailabilityPlanFormComponent = props => {
                 values={{ userName }}
               />
             </H3>
-            <div className={css.comission}>
-              <FieldComissionInput id="comission" name="comission" className={css.commissionInput} />
+            <div className={css.commission}>
+              <FieldCommissionInput id="commission" name="commission" className={css.commissionInput} />
             </div>
 
             <div className={css.submitButton}>
