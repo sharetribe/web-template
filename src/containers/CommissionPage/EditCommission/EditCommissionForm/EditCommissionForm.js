@@ -1,5 +1,5 @@
 import React from 'react';
-import { bool, object, string } from 'prop-types';
+import { bool, func, object, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
@@ -25,43 +25,27 @@ const sortEntries = () => (a, b) => {
   return 0;
 };
 
-/**
- * Handle submitted values: sort entries within the day of week
- * @param {Redux Thunk} onSubmit promise fn.
- * @param {Array<string>} weekdays ['mon', 'tue', etc.]
- */
-const submit = (onSubmit, weekdays) => values => {
-  const sortedValues = weekdays.reduce(
-    (submitValues, day) => {
-      return submitValues[day]
-        ? {
-            ...submitValues,
-            [day]: submitValues[day].sort(sortEntries()),
-          }
-        : submitValues;
-    },
-    { ...values }
-  );
-
-  onSubmit(sortedValues);
-};
-
-/**
- * Create and edit availability plan of the listing.
- * This is essentially the weekly schedule.
- */
 const EditListingAvailabilityPlanFormComponent = props => {
-  const { onSubmit, commission, ...restOfprops } = props;
+  const { onSubmit, ...restOfprops } = props;
 
   console.log('EditListingAvailabilityPlanFormComponent');
   console.log(props);
 
+  const handleSubmit = (values,fasfa) => {
+    values.preventDefault();
+    // setValuesFromLastSubmit(values);
+    // onSubmit(values);
+    // Final Form can wait for Promises to return.
+    console.log(values);
+    console.log(fasfa);
+    // console.log(onSubmit);
+    onSubmit('asfas');
+  };
+
   return (
     <FinalForm
-      onSubmit={handleSubmit}
-      mutators={{
-        ...arrayMutators,
-      }}
+      onSubmit={onSubmit}
+      {...restOfprops}
       render={fieldRenderProps => {
         const {
           userName,
@@ -69,29 +53,19 @@ const EditListingAvailabilityPlanFormComponent = props => {
           className,
           formId,
           inProgress,
+          values,
         } = fieldRenderProps;
 
-        const handleSubmit = values => {
-          values.preventDefault();
-          // setValuesFromLastSubmit(values);
-      
-          // Final Form can wait for Promises to return.
-          return onSubmit(e => {
-            handleSubmit(e);
-          })
-            .then(() => {
-              setIsEditPlanModalOpen(false);
-            })
-            .catch(e => {
-              // Don't close modal if there was an error
-            });
-        };
+        console.log('fieldRenderProps');
+        console.log(fieldRenderProps);
 
         const classes = classNames(rootClassName || css.root, className);
         const submitInProgress = inProgress;
 
         return (
-          <Form id={formId} className={classes} onSubmit={handleSubmit} >
+          <Form id={formId} className={classes} onSubmit={e => {
+            handleSubmit(e,values);
+          }} >
             <H3 as="h2" className={css.heading}>
               <FormattedMessage
                 id="EditCommissionForm.title"
@@ -99,7 +73,7 @@ const EditListingAvailabilityPlanFormComponent = props => {
               />
             </H3>
             <div className={css.comission}>
-              <FieldComissionInput id="comission" value={commission} name="comission" className={css.commissionInput} />
+              <FieldComissionInput id="comission" name="comission" className={css.commissionInput} />
             </div>
 
             <div className={css.submitButton}>
@@ -120,10 +94,12 @@ EditListingAvailabilityPlanFormComponent.defaultProps = {
   submitButtonWrapperClassName: null,
   inProgress: false,
   commission:0,
+  onSubmit: func.isRequired
 };
 
 EditListingAvailabilityPlanFormComponent.propTypes = {
   inProgress: bool,
+  onSubmit: func,
 };
 
 const EditListingAvailabilityPlanForm = compose(injectIntl)(

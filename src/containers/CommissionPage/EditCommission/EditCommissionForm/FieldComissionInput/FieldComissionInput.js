@@ -1,21 +1,16 @@
 import React from 'react';
 import { string } from 'prop-types';
 import { compose } from 'redux';
-import { FieldTextInput,FieldIntegerInput } from '../../../../../components';
-import { FormattedMessage, injectIntl, intlShape } from '../../../../../util/reactIntl';
+import { FieldTextInput } from '../../../../../components';
+import { injectIntl, intlShape } from '../../../../../util/reactIntl';
 import * as validators from '../../../../../util/validators';
 
 
 const FieldComissionInputComponent = props => {
-  // IANA database contains irrelevant time zones too.
-  const relevantZonesPattern = new RegExp(
-    '^(Africa|America(?!/(Argentina/ComodRivadavia|Knox_IN|Nuuk))|Antarctica(?!/(DumontDUrville|McMurdo))|Asia(?!/Qostanay)|Atlantic|Australia(?!/(ACT|LHI|NSW))|Europe|Indian|Pacific)'
-  );
 
   const {
     className,
     intl,
-    value
   } = props;
 
   const minValue = 0;
@@ -50,26 +45,16 @@ const FieldComissionInputComponent = props => {
   );
 
   return (
-    <FieldTextInput
-      type="number"
-      id={`commission`}
-      name="commission"
-      className={className}
-      defaultValue={value}
-      label="Set new commission variable:"
-      validate={commissionValidators}
-    />
-
-    // <FieldIntegerInput {...props}>
-    //   <option disabled value="">
-    //     Pick something...
-    //   </option>
-    //   {getTimeZoneNames(relevantZonesPattern).map(tz => (
-    //     <option key={tz} value={tz}>
-    //       {tz}
-    //     </option>
-    //   ))}
-    // </FieldIntegerInput>
+    <div>
+      <FieldTextInput
+        type="number"
+        id={`commission`}
+        name="commission"
+        className={className}
+        label="Set new commission variable:"
+        validate={commissionValidators}
+      />
+    </div>
   );
 };
 

@@ -21,6 +21,8 @@ import NotFoundPage from '../../NotFoundPage/NotFoundPage';
 
 import EditCommissionForm from './EditCommissionForm/EditCommissionForm';
 
+import { updateCommission, uploadImage } from './EditCommission.duck';
+
 import css from './EditCommission.module.css';
 
 export const MainContent = props => {
@@ -42,14 +44,15 @@ export const MainContent = props => {
 const EditCommissionComponent = props => {
     const config = useConfiguration();
     
-    const { scrollingDisabled, commissionInProgress, intl, userName, commission, ...rest } = props;
-    console.log('commission');
-    console.log(commission);
+    const { scrollingDisabled, updateInProgress, intl, userName, commission, ...rest } = props;
+    console.log('commission - props');
+    console.log(props);
     
     const schemaTitleVars = { name: 'displayName', marketplaceName: config.marketplaceName };
     const schemaTitle = intl.formatMessage({ id: 'EditCommission.schemaTitle' }, schemaTitleVars);
 
-    console.log(props);
+    console.log('updateCommission');
+    console.log(updateInProgress);
   
     return (
       <Page
@@ -70,12 +73,12 @@ const EditCommissionComponent = props => {
               <EditCommissionForm
                 intl={injectIntl}
                 dispatch={noop}
-                onSubmit={v => v}
+                onSubmit={updateCommission}
+                initialValues={{ commission:34 }}
                 formId="EditCommissionForm"
                 userName={userName}
-                inProgress={commissionInProgress}
+                inProgress={updateInProgress}
                 ready={false}
-                commission={commission}
               />
             </div>
           
@@ -120,7 +123,10 @@ const mapStateToProps = state => {
     // userListingRefs,
     commission,
     userName,
-    intl
+    intl,
+    params,
+    updateCommission,
+    updateInProgress
   } = state.EditCommission;
 
   // const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: userId }]);
@@ -137,7 +143,10 @@ const mapStateToProps = state => {
     // queryListingsError,
     // listings,
     // reviews,
-    intl
+    intl,
+    params,
+    updateCommission,
+    updateInProgress
   };
 };
 

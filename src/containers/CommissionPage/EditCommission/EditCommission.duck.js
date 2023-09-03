@@ -3,7 +3,7 @@ import { fetchCurrentUser } from '../../../ducks/user.duck';
 import { types as sdkTypes, createImageVariantConfig } from '../../../util/sdkLoader';
 import { denormalisedResponseEntities } from '../../../util/data';
 import { storableError } from '../../../util/errors';
-import { getUserAdmin } from '../../../util/api';
+import { getUserAdmin,getUsersAdmin } from '../../../util/api';
 import * as log from '../../../util/log';
 
 const { UUID } = sdkTypes;
@@ -12,12 +12,11 @@ const { UUID } = sdkTypes;
 
 export const SET_INITIAL_STATE = 'app/CommissionPage/SET_INITIAL_STATE';
 
-export const SHOW_USER_REQUEST = 'app/CommissionPage/SHOW_USER_REQUEST';
-export const SHOW_USER_SUCCESS = 'app/CommissionPage/SHOW_USER_SUCCESS';
-export const SHOW_USER_ERROR = 'app/CommissionPage/SHOW_USER_ERROR';
-
 export const QUERY_USER_SUCCESS = 'app/CommissionPage/QUERY_USER_SUCCESS';
 export const QUERY_USER_ERROR = 'app/CommissionPage/QUERY_USER_ERROR';
+
+export const UPDATE_COMMISSION_REQUEST = 'app/CommissionPage/UPDATE_COMMISSION_REQUEST';
+export const UPDATE_COMMISSION_SUCCESS = 'app/CommissionPage/UPDATE_COMMISSION_SUCCESS';
 
 // ================ Reducer ================ //
 
@@ -39,12 +38,6 @@ export default function CommissionPageReducer(state = initialState, action = {})
   switch (type) {
     case SET_INITIAL_STATE:
       return { ...initialState };
-    case SHOW_USER_REQUEST:
-      return { ...state, userShowError: null, userId: payload.userId };
-    case SHOW_USER_SUCCESS:
-      return state;
-    case SHOW_USER_ERROR:
-      return { ...state, userShowError: payload };
 
     case QUERY_USER_SUCCESS:
       console.log('QUERY_USERS_SUCCESS');
@@ -54,6 +47,18 @@ export default function CommissionPageReducer(state = initialState, action = {})
       return { ...state, userName, commission };
     case QUERY_USER_ERROR:
       return { ...state, userListingRefs: [], queryListingsError: payload };
+
+    case UPDATE_COMMISSION_REQUEST:
+    return {
+        ...state,
+        updateInProgress: true,
+    };
+
+    case UPDATE_COMMISSION_SUCCESS:
+    return {
+        ...state,
+        updateInProgress: false,
+    };
     
 
     default:
@@ -67,26 +72,6 @@ export const setInitialState = () => ({
   type: SET_INITIAL_STATE,
 });
 
-export const showUserRequest = userId => ({
-  type: SHOW_USER_REQUEST,
-  payload: { userId },
-});
-
-export const showUserSuccess = () => ({
-  type: SHOW_USER_SUCCESS,
-});
-
-export const showUserError = e => ({
-  type: SHOW_USER_ERROR,
-  error: true,
-  payload: e,
-});
-
-export const queryListingsSuccess = listingRefs => ({
-  type: QUERY_LISTINGS_SUCCESS,
-  payload: { listingRefs },
-});
-
 export const queryUserSuccess = userData => ({
   type: QUERY_USER_SUCCESS,
   payload: { userData },
@@ -98,34 +83,19 @@ export const queryUserError = e => ({
   payload: e,
 });
 
-export const queryReviewsRequest = () => ({
-  type: QUERY_REVIEWS_REQUEST,
-});
+// SDK method: sdk.currentUser.updateProfile
+export const updateCommissionRequest = params => ({
+    type: UPDATE_COMMISSION_REQUEST,
+    payload: { params },
+  });
 
-export const queryReviewsSuccess = reviews => ({
-  type: QUERY_REVIEWS_SUCCESS,
-  payload: reviews,
-});
-
+export const updateCommissionSuccess = updateResult => ({
+    type: UPDATE_COMMISSION_SUCCESS,
+    payload: { updateResult },
+  });
 
 // ================ Thunks ================ //
 
-
-export const showUser = userId => (dispatch, getState, sdk) => {
-  dispatch(showUserRequest(userId));
-  return sdk.users
-    .show({
-      id: userId,
-      include: ['profileImage'],
-      'fields.image': ['variants.square-small', 'variants.square-small2x'],
-    })
-    .then(response => {
-      dispatch(addMarketplaceEntities(response));
-      dispatch(showUserSuccess());
-      return response;
-    })
-    .catch(e => dispatch(showUserError(storableError(e))));
-};
 
 export const queryUser = search => (dispatch, getState, sdk) => {
   
@@ -149,6 +119,34 @@ export const queryUser = search => (dispatch, getState, sdk) => {
 
 };
 
+
+export const updateCommission = actionPayload => (dispatch, getState, sdk) =>{
+    // dispatch(updateCommissionRequest());
+    const  restt = {'fasdfas':'fasgags'};
+    console.log('actionPayload');
+    console.log(actionPayload);
+
+
+    return (dispatch, getState, sdk) => {
+        dispatch(updateCommissionRequest(restt))
+        
+        console.log(dispatch);
+    }
+
+    return getUsersAdmin(actionPayload)
+    .then(res => {
+      return res;
+    })
+    .then(response => {
+      // dispatch(addMarketplaceEntities(response));
+      dispatch(queryUsersSuccess(response));
+    })
+    .catch(e => {
+      log.error(e, 'create-user-with-idp-failed', { actionPayload });
+    });
+}
+
+
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const userId = new UUID(params.id);
 
@@ -160,8 +158,8 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
 
   return Promise.all([
     dispatch(fetchCurrentUser()),
-    dispatch(showUser(userId)),
     dispatch(queryUser(userId)),
+    dispatch(updateCommission(userId)),
   ]);
 };
 
