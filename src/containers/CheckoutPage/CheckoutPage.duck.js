@@ -1,5 +1,5 @@
 import pick from 'lodash/pick';
-import { initiatePrivileged, transitionPrivileged } from '../../util/api';
+import { initiatePrivileged, transitionPrivileged, getListingOwnerAdmin } from '../../util/api';
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import * as log from '../../util/log';
@@ -25,6 +25,11 @@ export const STRIPE_CUSTOMER_REQUEST = 'app/CheckoutPage/STRIPE_CUSTOMER_REQUEST
 export const STRIPE_CUSTOMER_SUCCESS = 'app/CheckoutPage/STRIPE_CUSTOMER_SUCCESS';
 export const STRIPE_CUSTOMER_ERROR = 'app/CheckoutPage/STRIPE_CUSTOMER_ERROR';
 
+export const COMMISSION_REQUEST = 'app/CheckoutPage/COMMISSION_REQUEST';
+export const COMMISSION_SUCCESS = 'app/CheckoutPage/COMMISSION_SUCCESS';
+export const COMMISSION_ERROR = 'app/CheckoutPage/COMMISSION_ERROR';
+
+
 // ================ Reducer ================ //
 
 const initialState = {
@@ -37,6 +42,7 @@ const initialState = {
   initiateOrderError: null,
   confirmPaymentError: null,
   stripeCustomerFetched: false,
+  comissionValue: 0,
 };
 
 export default function checkoutPageReducer(state = initialState, action = {}) {
@@ -89,6 +95,14 @@ export default function checkoutPageReducer(state = initialState, action = {}) {
     case STRIPE_CUSTOMER_ERROR:
       console.error(payload); // eslint-disable-line no-console
       return { ...state, stripeCustomerFetchError: payload };
+
+    case COMMISSION_REQUEST:
+      return { ...state, comissionValue: false };
+    case COMMISSION_SUCCESS:
+      return { ...state, comissionValue: payload };
+    case COMMISSION_ERROR:
+      console.error(payload); // eslint-disable-line no-console
+      return { ...state, comissionError: payload };
 
     default:
       return state;
@@ -147,6 +161,17 @@ export const stripeCustomerRequest = () => ({ type: STRIPE_CUSTOMER_REQUEST });
 export const stripeCustomerSuccess = () => ({ type: STRIPE_CUSTOMER_SUCCESS });
 export const stripeCustomerError = e => ({
   type: STRIPE_CUSTOMER_ERROR,
+  error: true,
+  payload: e,
+});
+
+export const commissionRequest = () => ({ type: COMMISSION_REQUEST });
+export const commissionSuccess = () => ({ 
+  type: COMMISSION_SUCCESS,
+  payload: { commission },  
+});
+export const commissionError = e => ({
+  type: COMMISSION_ERROR,
   error: true,
   payload: e,
 });
@@ -411,4 +436,23 @@ export const stripeCustomer = () => (dispatch, getState, sdk) => {
     .catch(e => {
       dispatch(stripeCustomerError(storableError(e)));
     });
+};
+
+
+// getCommission is a comission for listing creator
+export const getCommission = (listingId) => (dispatch, getState, sdk) => {
+  dispatch(commissionRequest());
+  
+  return getListingOwnerAdmin(listingId)
+  .then(res => {
+    return res;
+  })
+  .then(response => {
+    // dispatch(addMarketplaceEntities(response));
+    dispatch(commissionSuccess(response));
+  })
+  .catch(e => {
+    log.error(e, 'create-user-with-idp-failed', { listingId });
+    dispatch(commissionError(storableError(e)));
+  });
 };
