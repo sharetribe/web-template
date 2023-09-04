@@ -207,6 +207,7 @@ export const ListingPageComponent = props => {
     setInitialValues,
     setInquiryModalOpen,
   });
+  // Note: this is for inquiry state in booking and purchase processes. Inquiry process is handled through handleSubmit.
   const onSubmitInquiry = handleSubmitInquiry({
     ...commonParams,
     getListing,
@@ -389,6 +390,7 @@ export const ListingPageComponent = props => {
               lineItems={lineItems}
               fetchLineItemsInProgress={fetchLineItemsInProgress}
               fetchLineItemsError={fetchLineItemsError}
+              validListingTypes={config.listing.listingTypes}
               marketplaceCurrency={config.currency}
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
               marketplaceName={config.marketplaceName}

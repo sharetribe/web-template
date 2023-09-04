@@ -78,7 +78,6 @@ import * as TabNav from './components/TabNav/TabNav.example';
 import * as TabNavHorizontal from './components/TabNavHorizontal/TabNavHorizontal.example';
 import * as Tabs from './components/Tabs/Tabs.example';
 import * as TimeRange from './components/TimeRange/TimeRange.example';
-import * as UserCard from './components/UserCard/UserCard.example';
 import * as UserDisplayName from './components/UserDisplayName/UserDisplayName.example';
 import * as LayoutComposer from './components/LayoutComposer/LayoutComposer.example';
 
@@ -110,6 +109,7 @@ import * as EmailVerificationForm from './containers/EmailVerificationPage/Email
 import * as InquiryForm from './containers/ListingPage/InquiryForm/InquiryForm.example';
 import * as ImageCarousel from './containers/ListingPage/ImageCarousel/ImageCarousel.example';
 import * as ListingImageGallery from './containers/ListingPage/ListingImageGallery/ListingImageGallery.example';
+import * as UserCard from './containers/ListingPage/UserCard/UserCard.example';
 import * as PasswordRecoveryForm from './containers/PasswordRecoveryPage/PasswordRecoveryForm/PasswordRecoveryForm.example';
 import * as PasswordResetForm from './containers/PasswordResetPage/PasswordResetForm/PasswordResetForm.example';
 import * as ManageListingCard from './containers/ManageListingsPage/ManageListingCard/ManageListingCard.example';

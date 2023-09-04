@@ -19,8 +19,6 @@ require('source-map-support').install();
 // Configure process.env with .env.* files
 require('./env').configureEnv();
 
-const http = require('http');
-const https = require('https');
 const fs = require('fs');
 const express = require('express');
 const helmet = require('helmet');
@@ -29,7 +27,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const enforceSsl = require('express-enforces-ssl');
 const path = require('path');
-const sharetribeSdk = require('sharetribe-flex-sdk');
 const sitemap = require('express-sitemap');
 const passport = require('passport');
 
@@ -45,14 +42,8 @@ const csp = require('./csp');
 const sdkUtils = require('./api-util/sdk');
 
 const buildPath = path.resolve(__dirname, '..', 'build');
-const env = process.env.REACT_APP_ENV;
 const dev = process.env.REACT_APP_ENV === 'development';
 const PORT = parseInt(process.env.PORT, 10);
-const CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
-const BASE_URL = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL;
-const ASSET_CDN_BASE_URL = process.env.REACT_APP_SHARETRIBE_SDK_ASSET_CDN_BASE_URL;
-const TRANSIT_VERBOSE = process.env.REACT_APP_SHARETRIBE_SDK_TRANSIT_VERBOSE === 'true';
-const USING_SSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';
 const redirectSSL =
   process.env.SERVER_SHARETRIBE_REDIRECT_SSL != null
     ? process.env.SERVER_SHARETRIBE_REDIRECT_SSL
@@ -177,13 +168,6 @@ const noCacheHeaders = {
   'Cache-control': 'no-cache, no-store, must-revalidate',
 };
 
-// Instantiate HTTP(S) Agents with keepAlive set to true.
-// This will reduce the request time for consecutive requests by
-// reusing the existing TCP connection, thus eliminating the time used
-// for setting up new TCP connections.
-const httpAgent = new http.Agent({ keepAlive: true });
-const httpsAgent = new https.Agent({ keepAlive: true });
-
 app.get('*', (req, res) => {
   if (req.url.startsWith('/static/')) {
     // The express.static middleware only handles static resources
@@ -199,29 +183,6 @@ app.get('*', (req, res) => {
 
   const context = {};
 
-  // Get handle to tokenStore
-  // We check in unauthorized cases if requests have set tokens to cookies
-  const tokenStore = sharetribeSdk.tokenStore.expressCookieStore({
-    clientId: CLIENT_ID,
-    req,
-    res,
-    secure: USING_SSL,
-  });
-
-  const baseUrl = BASE_URL ? { baseUrl: BASE_URL } : {};
-  const assetCdnBaseUrl = ASSET_CDN_BASE_URL ? { assetCdnBaseUrl: ASSET_CDN_BASE_URL } : {};
-
-  const sdk = sharetribeSdk.createInstance({
-    transitVerbose: TRANSIT_VERBOSE,
-    clientId: CLIENT_ID,
-    httpAgent: httpAgent,
-    httpsAgent: httpsAgent,
-    tokenStore,
-    typeHandlers: sdkUtils.typeHandlers,
-    ...baseUrl,
-    ...assetCdnBaseUrl,
-  });
-
   // Until we have a better plan for caching dynamic content and we
   // make sure that no sensitive data can appear in the prefetched
   // data, let's disable response caching altogether.
@@ -234,6 +195,8 @@ app.get('*', (req, res) => {
   // Server-side entrypoint provides us the functions for server-side data loading and rendering
   const nodeEntrypoint = nodeExtractor.requireEntrypoint();
   const { default: renderApp, ...appInfo } = nodeEntrypoint;
+
+  const sdk = sdkUtils.getSdk(req, res);
 
   dataLoader
     .loadData(req.url, sdk, appInfo)

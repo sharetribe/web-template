@@ -8,18 +8,12 @@
 
 ## Structure
 
-SearchPage component has roughly 3 sections inside its layout: Topbar, MainPanel (for results and
-filters), and Map
+There are 2 layout variants in use:
 
-So, rough JSX presentation is something like:
-
-```jsx
-<Page>
-  <TopbarContainer />
-  <MainPanel />
-  <SearchMap />
-<Page>
-```
+- SearchPageWithMap
+  - Contains Topbar, main panel (for results and filters), and SearchMap
+- SearchPageWithGrid
+  - Contains Topbar, filter column, main panel for search results (ListingCards).
 
 Searches can be made by each of these components.
 
@@ -30,13 +24,24 @@ Searches can be made by each of these components.
 
 ## Topbar
 
+Topbar contains location search (LocationAutocompleteInput).
+
 In contrast to other pages, Topbar gets `currentSearchParams` among other props. This makes it
 possible for Topbar to take current filters into account.
 
-## MainPanel
+## Filter column (SearchPageWithGrid)
 
-MainPanel has two functions: showing searchResults and showing filters. Filters are primarily added,
-removed, reordered and configured through _marketplace-custom-config.js_.
+Contains all the filters in an order: primary filters, default filters, secondary filters. These
+filters are in live-edit mode: chaning the values immediately fires a new search.
+
+## Main panel (SearchPageWithGrid)
+
+This UI section contains search results (ListingCards)
+
+## Main panel (SearchPageWithMap)
+
+This UI section has two functions: showing search results and filters. Filters are primarily added,
+removed, reordered and configured through hosted config (Listing Fields).
 
 There you can set some filters to be primary filters. They are shown always on top of SearchResults
 as dropdown-selections on Desktop layout. We recommend that only 1 - 3 primary filters are passed in
@@ -46,10 +51,13 @@ If there are secondary filters, they create one more button to the space contain
 _More filters_. This more-filters button opens up a SearchFiltersSecondary component that can be
 changed to show those extra filters passed to it.
 
-On the mobile layout, all the filters are shown in separate mobile filters modal. The order of
-filters is following the order of filters config in _marketplace-custom-config.js_.
+You need to click "Apply" button to apply search filters on desktop layout.
 
-## SearchMap
+On the mobile layout, all the filters are shown in separate mobile filters modal. The order of
+filters is following the order of filters config in hosted config (Listing Fields). These work on
+live-edit mode: chaning the values immediately fires a new search.
+
+## SearchMap (SearchPageWithMap)
 
 SearchMap listens to 'idle' event and SearchPage function `onIndle` can create a new location search
 if SearchMap's bounds have changed enough.

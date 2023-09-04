@@ -69,6 +69,42 @@ const listingTypesPurchase = [
   },
 ];
 
+const listingTypesInquiry = [
+  {
+    id: 'inquiry',
+    label: 'Inquiry',
+    transactionProcess: {
+      name: 'default-inquiry',
+      alias: 'default-inquiry/release-1',
+    },
+    unitType: 'inquiry',
+    defaultListingFields: {
+      price: false,
+    },
+  },
+];
+
+const listingFieldsInquiry = [
+  {
+    key: 'category',
+    scope: 'public',
+    includeForListingTypes: ['inquiry'],
+    schemaType: 'enum',
+    enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Category',
+      group: 'primary',
+    },
+    showConfig: {
+      label: 'Category',
+    },
+    saveConfig: {
+      label: 'Category',
+    },
+  },
+];
+
 const listingFieldsPurchase = [
   {
     key: 'category',
@@ -89,6 +125,7 @@ const listingFieldsPurchase = [
     },
   },
 ];
+
 const listingFieldsBooking = [
   {
     key: 'amenities',
@@ -1312,6 +1349,237 @@ describe('EditListingPage', () => {
       expect(getByText('EditListingWizard.edit.savePhotos')).toBeInTheDocument();
     });
   });
+
+  it('Inquiry: edit flow on details tab', async () => {
+    const config = getConfig(listingTypesInquiry, listingFieldsInquiry);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-inquiry', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      publicData: {
+        listingType: 'inquiry',
+        transactionProcessAlias: 'default-inquiry/release-1',
+        unitType: 'inquiry',
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { getByText, getByRole, getByLabelText } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelDetails';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingDetailsPanel.title')).toBeInTheDocument();
+
+      // Tab/form: form title
+      expect(getByRole('textbox', { name: 'EditListingDetailsForm.title' })).toHaveValue(
+        'the listing'
+      );
+
+      // Tab/form: description
+      expect(getByRole('textbox', { name: 'EditListingDetailsForm.description' })).toHaveValue(
+        'Lorem ipsum'
+      );
+
+      // Tab/form: listing field
+      expect(getByLabelText('Category')).toBeInTheDocument();
+      expect(
+        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+      ).toBe(true);
+      expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(false);
+
+      expect(
+        getByRole('button', { name: 'EditListingWizard.edit.saveDetails' })
+      ).toBeInTheDocument();
+    });
+
+    // Test intercation
+    await waitFor(() => {
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'Cat 1' })
+      );
+    });
+    expect(
+      getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+    ).toBe(false);
+    expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(true);
+  });
+
+  it('Inquiry: edit flow on pricing tab (defaultListingFields?.price = false)', async () => {
+    const config = getConfig(listingTypesInquiry, listingFieldsInquiry);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-item', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      price: new Money(5500, 'USD'),
+      publicData: {
+        listingType: 'inquiry',
+        transactionProcessAlias: 'default-inquiry/release-1',
+        unitType: 'inquiry',
+        category: 'cat_1',
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { queryByText } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel1 = 'EditListingWizard.tabLabelPricingAndStock';
+      expect(queryByText(tabLabel1)).not.toBeInTheDocument();
+      const tabLabel2 = 'EditListingWizard.tabLabelPricing';
+      expect(queryByText(tabLabel2)).not.toBeInTheDocument();
+    });
+  });
+
+  it('Inquiry: edit flow on location tab', async () => {
+    const config = getConfig(listingTypesInquiry, listingFieldsInquiry);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-item', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      price: new Money(5500, 'USD'),
+      publicData: {
+        listingType: 'inquiry',
+        transactionProcessAlias: 'default-inquiry/release-1',
+        unitType: 'inquiry',
+        category: 'cat_1',
+        location: {
+          address: 'Main Street 123',
+          building: 'A 1',
+        },
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: LOCATION,
+      },
+    };
+
+    const { getByText, getByRole, getByLabelText, getByPlaceholderText } = render(
+      <EditListingPage {...props} />,
+      {
+        initialState: initialState(listing),
+        config,
+        routeConfiguration,
+      }
+    );
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelLocation';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingLocationPanel.title')).toBeInTheDocument();
+
+      // Tab/form: existing address
+      expect(getByPlaceholderText('EditListingLocationForm.addressPlaceholder')).toHaveValue(
+        'Main Street 123'
+      );
+
+      // Tab/form: existing building
+      expect(getByLabelText('EditListingLocationForm.building')).toHaveValue('A 1');
+
+      expect(
+        getByRole('button', { name: 'EditListingWizard.edit.saveLocation' })
+      ).toBeInTheDocument();
+    });
+
+    // Test intercation
+    await waitFor(async () => {
+      await userEvent.clear(getByLabelText('EditListingLocationForm.building'));
+      userEvent.type(getByLabelText('EditListingLocationForm.building'), 'B 2');
+    });
+
+    // Tab/form: existing building
+    expect(getByLabelText('EditListingLocationForm.building')).toHaveValue('B 2');
+  });
+
+  it('Inquiry: edit flow on photos tab', async () => {
+    const config = getConfig(listingTypesInquiry, listingFieldsInquiry);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-item', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      price: new Money(5500, 'USD'),
+      publicData: {
+        listingType: 'inquiry',
+        transactionProcessAlias: 'default-inquiry/release-1',
+        unitType: 'inquiry',
+        category: 'cat_1',
+        location: {
+          address: 'Main Street 123',
+          building: 'A 1',
+        },
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: PHOTOS,
+      },
+    };
+
+    const { getByText } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelPhotos';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingPhotosPanel.title')).toBeInTheDocument();
+
+      expect(getByText('EditListingPhotosForm.chooseImage')).toBeInTheDocument();
+      expect(getByText('EditListingPhotosForm.imageTypes')).toBeInTheDocument();
+      expect(getByText('EditListingPhotosForm.addImagesTip')).toBeInTheDocument();
+      expect(getByText('EditListingWizard.edit.savePhotos')).toBeInTheDocument();
+    });
+  });
 });
 
 describe('EditListingPageComponent', () => {
@@ -1366,9 +1634,6 @@ describe('EditListingPageComponent', () => {
     const tabLabelPricing = 'EditListingWizard.tabLabelPricing';
     expect(screen.getByText(tabLabelPricing)).toBeInTheDocument();
 
-    const tabLabelAvailability = 'EditListingWizard.tabLabelAvailability';
-    expect(screen.getByText(tabLabelAvailability)).toBeInTheDocument();
-
     const tabLabelPhotos = 'EditListingWizard.tabLabelPhotos';
     expect(screen.getByText(tabLabelPhotos)).toBeInTheDocument();
 
@@ -1380,6 +1645,7 @@ describe('EditListingPageComponent', () => {
     // Tabs removed
     expect(screen.queryByText(tabLabelLocation)).not.toBeInTheDocument();
     expect(screen.queryByText(tabLabelPricing)).not.toBeInTheDocument();
+    const tabLabelAvailability = 'EditListingWizard.tabLabelAvailability';
     expect(screen.queryByText(tabLabelAvailability)).not.toBeInTheDocument();
 
     // Tabs added

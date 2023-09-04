@@ -7,6 +7,7 @@ import { createSlug, stringify } from '../../../util/urlHelpers';
 import { H1, H2, NamedLink } from '../../../components';
 
 import css from './TransactionPanel.module.css';
+import { formatMoney } from '../../../util/currency';
 
 const createListingLink = (listingId, label, listingDeleted, searchParams = {}, className = '') => {
   if (!listingDeleted) {
@@ -31,6 +32,9 @@ const PanelHeading = props => {
     processName,
     processState,
     showExtraInfo,
+    showPriceOnMobile,
+    price,
+    intl,
     deliveryMethod,
     isPendingPayment,
     transactionRole,
@@ -62,6 +66,13 @@ const PanelHeading = props => {
       </H1>
       <H2 className={css.listingTitleMobile}>
         <FormattedMessage id="TransactionPage.listingTitleMobile" values={{ listingLink }} />
+
+        {showPriceOnMobile && price ? (
+          <>
+            <br />
+            <span className={css.inquiryPrice}>{formatMoney(intl, price)}</span>
+          </>
+        ) : null}
       </H2>
       {isCustomer && listingDeleted ? (
         <p className={css.transactionInfoMessage}>

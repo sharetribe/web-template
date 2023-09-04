@@ -44,7 +44,7 @@
   }
 }
 
-.bookListingContainer {
+.orderFormContainer {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -57,7 +57,7 @@
   }
 }
 
-.aspectWrapper {
+.listingImageMobile {
   position: relative;
   background-color: var(--colorGrey100); /* Loading BG color */
 
@@ -136,7 +136,7 @@
 }
 
 .detailsHeadingMobile {
-  @media (--viewportMedium) {
+  @media (--viewportLarge) {
     display: none;
   }
 }
@@ -240,7 +240,7 @@
     display: block;
     /* Dimensions */
     width: 409px;
-    padding-bottom: 55px;
+    padding-bottom: 36px;
 
     /* Position */
     margin: 56px 0 24px 0;
@@ -279,6 +279,12 @@
     margin-bottom: 0;
   }
 }
+
+.orderBreakdownHeader {
+  @media (--viewportLarge) {
+    margin: 0 48px;
+  }
+}
 .orderBreakdownTitle {
   /* Font */
   letter-spacing: 1px;
@@ -309,6 +315,111 @@
 
 .orderBreakdown {
   @media (--viewportLarge) {
+    padding-bottom: 20px;
     margin: 0 48px;
   }
+}
+
+/* ChekcoutPageWithInquiryProcess */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
+}
+
+.sectionHeading {
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
+  margin: 0 0 12px 0;
+
+  padding-top: 4px;
+  padding-bottom: 2px;
+
+  @media (--viewportMedium) {
+    margin: 0 0 0 0;
+    padding-top: 5px;
+    padding-bottom: 3px;
+  }
+}
+
+.field {
+  margin: 25px 0 24px 0;
+
+  @media (--viewportMedium) {
+    margin: 22px 0 24px 0;
+  }
+}
+
+.fieldInquiryMessage {
+  margin: 0 0 24px 0;
+
+  @media (--viewportMedium) {
+    margin: 16px 0 24px 0;
+  }
+}
+
+.error {
+  color: var(--colorFail);
+  margin-top: 0;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+  }
+}
+
+.priceContainer {
+  /* Layout */
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-right: 22px;
+  padding: 3px 0;
+
+  @media (--viewportMedium) {
+    padding: 4px 0;
+  }
+
+  @media (--viewportLarge) {
+    flex-direction: row;
+    margin-right: unset;
+    padding: 0;
+  }
+}
+.price {
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
+
+  margin: 0 0 0 24px;
+
+  @media (--viewportMedium) {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.perUnit {
+  /* Font */
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
+
+  padding: 0;
+
+  margin-top: 0;
+  margin-bottom: 0;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  @media (--viewportLarge) {
+  }
+}
+
+.inquiryPrice {
+  composes: p from global;
+  font-weight: var(--fontWeightBold);
 }

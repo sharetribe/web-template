@@ -77,6 +77,7 @@ describe('EditListingDetailsForm', () => {
       <EditListingDetailsForm
         intl={fakeIntl}
         dispatch={noop}
+        onListingTypeChange={noop}
         onSubmit={v => v}
         saveActionMsg={saveActionMsg}
         updated={false}
