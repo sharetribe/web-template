@@ -504,18 +504,24 @@ propTypes.listingFieldsConfig = arrayOf(
   })
 );
 
+const sortConfigOptionWithLabel = shape({
+  key: oneOf(['createdAt', '-createdAt', 'price', '-price', 'relevance']).isRequired,
+  label: string.isRequired,
+  longLabel: string,
+});
+
+const sortConfigOptionWithTranslationKey = shape({
+  key: oneOf(['createdAt', '-createdAt', 'price', '-price', 'relevance']).isRequired,
+  labelTranslationKey: string.isRequired,
+  labelTranslationKeyLong: string,
+});
+
 propTypes.sortConfig = shape({
   active: bool,
   queryParamName: oneOf(['sort']).isRequired,
   relevanceKey: string.isRequired,
   conflictingFilters: arrayOf(string),
-  options: arrayOf(
-    shape({
-      key: oneOf(['createdAt', '-createdAt', 'price', '-price', 'relevance']).isRequired,
-      label: string.isRequired,
-      longLabel: string,
-    })
-  ),
+  options: arrayOf(oneOfType([sortConfigOptionWithLabel, sortConfigOptionWithTranslationKey])),
 });
 
 export const ERROR_CODE_TRANSACTION_LISTING_NOT_FOUND = 'transaction-listing-not-found';

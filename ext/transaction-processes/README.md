@@ -27,3 +27,9 @@ be configured to use this process.
 Orders in this process use time-based availability management. The booking times are showed in
 listing's time zone. By default, there are 3 unit types in use: 'hour', 'day', and 'night'. You need
 to define these in your listing type configuration.
+
+## Inquiry process
+
+This process enables free messaging between customer and provider. Any payments etc. need to happen
+face-to-face or somehow outside of the marketplace. The initial inquiry message is saved to the
+protected data of the transaction.

@@ -14,6 +14,34 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] This PR adds a 3rd process (default-inquiry) to the template.
+
+  - As a consequence, CheckoutPage has been refactored heavily
+  - This removes en.json file (Biketribe-themed translations) and
+  - This renames defaultMicrocopy.json (with generic copy-texts) to be the new en.json file
+  - This PR branch evolved to be v3 development branch. It included the following PRs too.
+  - Read more about the changes from PR:
+
+  [195](https://github.com/sharetribe/web-template/pull/195)
+
+- [fix] small UI bug fixes. (The biggest is the removing defaultBranding.brandImageURL)
+  [#209](https://github.com/sharetribe/web-template/pull/209)
+- [change] Change email template name of default inquiry process.
+  [#208](https://github.com/sharetribe/web-template/pull/208)
+- [change] IconSpinner: add delay prop to reduce fast flicker of spinner on fast connections.
+  [#207](https://github.com/sharetribe/web-template/pull/207)
+- [change] EditListingDetailsPanel: rename setNoAvailabilityForProductListings as
+  setNoAvailabilityForUnbookableListings [#206](https://github.com/sharetribe/web-template/pull/206)
+- [fix] ListingPage: use updated CSS rules with react-image-gallery.
+  [#205](https://github.com/sharetribe/web-template/pull/205)
+- [change] Use getSdk function to initialize SDK on server/index.js and server/api/login-as.js.
+  [#201](https://github.com/sharetribe/web-template/pull/201)
+- [fix] Add default sort options to en.json (microcopy)
+  [#204](https://github.com/sharetribe/web-template/pull/204)
+- [delete] Remove en.json file (Biketribe-themed translations) and rename defaultMicrocopy.json to
+  be the new en.json file. [#203](https://github.com/sharetribe/web-template/pull/203)
+- [change] Updates to the copy texts in the defaultMicrocopy.json file.
+  [#199](https://github.com/sharetribe/web-template/pull/199)
 - [fix] asset data denormalization: null values were not handled correctly.
   [#200](https://github.com/sharetribe/web-template/pull/200)
 

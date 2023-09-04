@@ -112,13 +112,13 @@ const pickListingFieldsData = (
 };
 
 /**
- * If listing represents a product instead of a booking, we set availability-plan to seats=0.
+ * If listing represents something else than a bookable listing, we set availability-plan to seats=0.
  * Note: this is a performance improvement since the API is backwards compatible.
  *
- * @param {string} unitType selected for this listing
- * @returns availabilityPlan for product listing
+ * @param {string} processAlias selected for this listing
+ * @returns availabilityPlan without any seats available for the listing
  */
-const setNoAvailabilityForProductListings = processAlias => {
+const setNoAvailabilityForUnbookableListings = processAlias => {
   return isBookingProcessAlias(processAlias)
     ? {}
     : {
@@ -126,13 +126,14 @@ const setNoAvailabilityForProductListings = processAlias => {
           type: 'availability-plan/time',
           timezone: 'Etc/UTC',
           entries: [
-            { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 0 },
-            { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 0 },
-            { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 0 },
-            { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 0 },
-            { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 0 },
-            { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 0 },
-            { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
+            // Note: "no entries" is the same as seats=0 for every entry.
+            // { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 0 },
+            // { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 0 },
+            // { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 0 },
+            // { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 0 },
+            // { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 0 },
+            // { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 0 },
+            // { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
           ],
         },
       };
@@ -173,7 +174,7 @@ const EditListingDetailsPanel = props => {
     disabled,
     ready,
     onSubmit,
-    onProcessChange,
+    onListingTypeChange,
     submitButtonText,
     panelUpdated,
     updateInProgress,
@@ -264,14 +265,14 @@ const EditListingDetailsPanel = props => {
                 listingFieldsConfig,
                 clearUnrelatedCustomFields
               ),
-              ...setNoAvailabilityForProductListings(transactionProcessAlias),
+              ...setNoAvailabilityForUnbookableListings(transactionProcessAlias),
             };
 
             onSubmit(updateValues);
           }}
           selectableListingTypes={listingTypes.map(conf => getTransactionInfo([conf], {}, true))}
           hasExistingListingType={hasExistingListingType}
-          onProcessChange={onProcessChange}
+          onListingTypeChange={onListingTypeChange}
           listingFieldsConfig={listingFieldsConfig}
           marketplaceCurrency={config.currency}
           disabled={disabled}
@@ -295,7 +296,6 @@ const EditListingDetailsPanel = props => {
 EditListingDetailsPanel.defaultProps = {
   className: null,
   rootClassName: null,
-  onProcessChange: null,
   errors: null,
   listing: null,
 };
@@ -310,7 +310,7 @@ EditListingDetailsPanel.propTypes = {
   disabled: bool.isRequired,
   ready: bool.isRequired,
   onSubmit: func.isRequired,
-  onProcessChange: func,
+  onListingTypeChange: func.isRequired,
   submitButtonText: string.isRequired,
   panelUpdated: bool.isRequired,
   updateInProgress: bool.isRequired,

@@ -8,6 +8,8 @@ const CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
 const CLIENT_SECRET = process.env.SHARETRIBE_SDK_CLIENT_SECRET;
 const USING_SSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';
 const TRANSIT_VERBOSE = process.env.REACT_APP_SHARETRIBE_SDK_TRANSIT_VERBOSE === 'true';
+const MAX_SOCKETS = process.env.MAX_SOCKETS;
+const MAX_SOCKETS_DEFAULT = 10;
 
 const BASE_URL = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL;
 const ASSET_CDN_BASE_URL = process.env.REACT_APP_SHARETRIBE_SDK_ASSET_CDN_BASE_URL;
@@ -29,8 +31,17 @@ exports.typeHandlers = typeHandlers;
 const baseUrlMaybe = BASE_URL ? { baseUrl: BASE_URL } : {};
 const assetCdnBaseUrlMaybe = ASSET_CDN_BASE_URL ? { assetCdnBaseUrl: ASSET_CDN_BASE_URL } : {};
 
-const httpAgent = new http.Agent({ keepAlive: true });
-const httpsAgent = new https.Agent({ keepAlive: true });
+// maxSockets is Infinity by default in Node.js
+// This makes it possible to alter that through environment variable.
+// Note: this is only affecting http agents created here.
+const maxSockets = MAX_SOCKETS ? parseInt(MAX_SOCKETS, 10) : MAX_SOCKETS_DEFAULT;
+
+// Instantiate HTTP(S) Agents with keepAlive set to true.
+// This will reduce the request time for consecutive requests by
+// reusing the existing TCP connection, thus eliminating the time used
+// for setting up new TCP connections.
+const httpAgent = new http.Agent({ keepAlive: true, maxSockets });
+const httpsAgent = new https.Agent({ keepAlive: true, maxSockets });
 
 const memoryStore = token => {
   const store = sharetribeSdk.tokenStore.memoryStore();
@@ -80,6 +91,8 @@ exports.handleError = (res, error) => {
   }
 };
 
+// The access token is read from cookie (request) and potentially saved into the cookie (response).
+// This keeps session updated between server and browser even if the token is re-issued.
 exports.getSdk = (req, res) => {
   return sharetribeSdk.createInstance({
     transitVerbose: TRANSIT_VERBOSE,
@@ -98,6 +111,7 @@ exports.getSdk = (req, res) => {
   });
 };
 
+// Trusted token is powerful, it should not be passed away from the server.
 exports.getTrustedSdk = req => {
   const userToken = getUserToken(req);
 

@@ -1,0 +1,11 @@
+{:format :v3,
+ :transitions
+ [{:name :transition/inquire-without-payment,
+   :actor :actor.role/customer,
+   :actions [{:name :action/update-protected-data}],
+   :to :state/free-inquiry}],
+ :notifications
+ [{:name :notification/inquiry-new-inquiry,
+   :on :transition/inquire-without-payment,
+   :to :actor.role/provider,
+   :template :inquiry-new-inquiry}]}

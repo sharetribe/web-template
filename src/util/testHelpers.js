@@ -310,7 +310,7 @@ export const getHostedConfiguration = () => {
             alias: 'default-booking/release-1',
             name: 'default-booking',
           },
-          id: 'dailybooking',
+          id: 'daily-booking',
           label: 'Daily Booking',
           unitType: 'day',
         },
@@ -322,6 +322,18 @@ export const getHostedConfiguration = () => {
           id: 'product-selling',
           label: 'Sell products',
           unitType: 'item',
+        },
+        {
+          transactionProcess: {
+            alias: 'default-inquiry/release-1',
+            name: 'default-inquiry',
+          },
+          id: 'inquiry',
+          label: 'Inquiry',
+          unitType: 'inquiry',
+          defaultListingFields: {
+            price: true,
+          },
         },
       ],
     },

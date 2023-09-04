@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { string, func, oneOfType } from 'prop-types';
+import { bool, func, oneOfType, string } from 'prop-types';
 import truncate from 'lodash/truncate';
 import classNames from 'classnames';
 
-import { FormattedMessage } from '../../util/reactIntl';
-import { ensureUser, ensureCurrentUser } from '../../util/data';
-import { propTypes } from '../../util/types';
+import { FormattedMessage } from '../../../util/reactIntl';
+import { ensureUser, ensureCurrentUser } from '../../../util/data';
+import { propTypes } from '../../../util/types';
 
-import { AvatarLarge, NamedLink, InlineTextButton } from '../../components';
+import { AvatarLarge, NamedLink, InlineTextButton } from '../../../components';
 
 import css from './UserCard.module.css';
 
@@ -59,7 +59,7 @@ ExpandableBio.propTypes = {
 };
 
 const UserCard = props => {
-  const { rootClassName, className, user, currentUser, onContactUser } = props;
+  const { rootClassName, className, user, currentUser, onContactUser, showContact } = props;
 
   const userIsCurrentUser = user && user.type === 'currentUser';
   const ensuredUser = userIsCurrentUser ? ensureCurrentUser(user) : ensureUser(user);
@@ -79,9 +79,10 @@ const UserCard = props => {
     [css.withBioMissingAbove]: !hasBio,
   });
 
-  const separator = isCurrentUser ? null : <span className={css.linkSeparator}>•</span>;
+  const separator =
+    isCurrentUser || !showContact ? null : <span className={css.linkSeparator}>•</span>;
 
-  const contact = (
+  const contact = showContact ? (
     <InlineTextButton
       rootClassName={css.contact}
       onClick={handleContactUserClick}
@@ -89,7 +90,7 @@ const UserCard = props => {
     >
       <FormattedMessage id="UserCard.contactUser" />
     </InlineTextButton>
-  );
+  ) : null;
 
   const editProfileMobile = (
     <span className={css.editProfileMobile}>
@@ -139,6 +140,7 @@ UserCard.defaultProps = {
   className: null,
   user: null,
   currentUser: null,
+  showContact: true,
 };
 
 UserCard.propTypes = {
@@ -147,6 +149,7 @@ UserCard.propTypes = {
   user: oneOfType([propTypes.user, propTypes.currentUser]),
   currentUser: propTypes.currentUser,
   onContactUser: func.isRequired,
+  showContact: bool,
 };
 
 export default UserCard;

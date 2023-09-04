@@ -28,6 +28,7 @@
   color: var(--colorGrey700);
   padding-bottom: 10px;
   padding-top: 10px;
+  height: 100%;
 
   /* push tabs against bottom of tab bar */
   margin-top: auto;
@@ -50,6 +51,7 @@
     font-size: 20px;
     line-height: 24px;
 
+    height: unset;
     width: var(--TabNav_linkWidth);
     border-bottom-width: 0px;
     margin-top: 0;
