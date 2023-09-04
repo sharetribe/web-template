@@ -28,6 +28,7 @@ const initialState = {
   users: [],
   userShowError: null,
   queryListingsError: null,
+  listingData: null
 };
 
 export default function CommissionPageReducer(state = initialState, action = {}) {
@@ -101,7 +102,7 @@ export const queryReviewsRequest = () => ({
 
 export const queryListingSuccess = listingData => ({
   type: QUERY_LISTING_SUCCESS,
-  payload: listingData,
+  payload: 'listingData',
 });
 
 
@@ -146,16 +147,20 @@ export const queryUsers = search => (dispatch, getState, sdk) => {
 
 };
 
-export const queryListings = search => (dispatch, getState, sdk) => {
+export const queryListingOwner = search => (dispatch, getState, sdk) => {
   
   // Clear state so that previously loaded data is not visible
   // in case this page load fails.
   // dispatch(setInitialState());
 
-  let params = {'asdas':'afssaf'};
+  let params = {uuid:'6480d082-682c-4f5a-bbee-502cda7cf0f0'};
+
+  console.log('start getListingAdmin ------->>>>>>>>>>>>>>>>>>>>>');
 
   return getListingAdmin(params)
   .then(res => {
+    console.log('getListingAdmin ------->>>>>>>>>>>>>>>>>>>>>');
+    console.log(res);
     return res;
   })
   .then(response => {
@@ -179,7 +184,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     dispatch(fetchCurrentUser()),
     dispatch(showUser(userId)),
     dispatch(queryUsers(userId)),
-    dispatch(queryListings(userId)),
+    dispatch(queryListingOwner(userId)),
   ]);
 };
 

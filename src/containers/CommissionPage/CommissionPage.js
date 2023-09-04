@@ -65,8 +65,8 @@ export const MainContent = props => {
     getOwnListing
   } = props;
 
-  console.log('6480b757-9042-4d02-aacf-505efa4284e3');
-  console.log(getOwnListing('6480b757-9042-4d02-aacf-505efa4284e3'));
+  console.log('6480d082-682c-4f5a-bbee-502cda7cf0f0');
+  console.log(getOwnListing('6480d082-682c-4f5a-bbee-502cda7cf0f0'));
 
   const hasUsers = users.length > 0;
   // const hasUsers = 0;
@@ -190,6 +190,7 @@ CommissionPageComponent.defaultProps = {
   currentUser: null,
   user: null,
   queryListingsError: null,
+  listingData:null
   // queryReviewsError: null,
 };
 
@@ -215,6 +216,8 @@ const mapStateToProps = state => {
     listingData,
   } = state.CommissionPage;
 
+  console.log('state');
+  console.log(state);
   console.log(state.CommissionPage);
 
   const getOwnListing = id => {
