@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+## [v3.0.0] 2023-09-04
+
+This is a major version release. Mainly due to a new process and big changes to the CheckoutPage.
+
 - [add] This PR adds a 3rd process (default-inquiry) to the template.
 
   - As a consequence, CheckoutPage has been refactored heavily
@@ -44,6 +48,8 @@ way to update this template, but currently, we follow a pattern:
   [#199](https://github.com/sharetribe/web-template/pull/199)
 - [fix] asset data denormalization: null values were not handled correctly.
   [#200](https://github.com/sharetribe/web-template/pull/200)
+
+[v3.0.0]: https://github.com/sharetribe/web-template/compare/v2.2.0...v3.0.0
 
 ## [v2.2.0] 2023-08-09
 
