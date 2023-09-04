@@ -14,6 +14,16 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] This PR adds a 3rd process (default-inquiry) to the template.
+
+  - As a consequence, CheckoutPage has been refactored heavily
+  - This removes en.json file (Biketribe-themed translations) and
+  - This renames defaultMicrocopy.json (with generic copy-texts) to be the new en.json file
+  - This PR branch evolved to be v3 development branch. It included the following PRs too.
+  - Read more about the changes from PR:
+
+  [195](https://github.com/sharetribe/web-template/pull/195)
+
 - [fix] small UI bug fixes. (The biggest is the removing defaultBranding.brandImageURL)
   [#209](https://github.com/sharetribe/web-template/pull/209)
 - [change] Change email template name of default inquiry process.
