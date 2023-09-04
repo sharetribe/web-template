@@ -134,3 +134,9 @@ export const getUserAdmin = body => {
 export const updateUsersAdmin = body => {
   return post('/api/admin-user-update', body);
 };
+
+// admin without description yet
+//
+export const getListingAdmin = body => {
+  return post('/api/admin-get-listing', body);
+};

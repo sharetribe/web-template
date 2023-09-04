@@ -62,7 +62,11 @@ export const MainContent = props => {
     users,
     primaryButtonProps,
     viewport,
+    getOwnListing
   } = props;
+
+  console.log('6480b757-9042-4d02-aacf-505efa4284e3');
+  console.log(getOwnListing('6480b757-9042-4d02-aacf-505efa4284e3'));
 
   const hasUsers = users.length > 0;
   // const hasUsers = 0;
@@ -208,12 +212,23 @@ const mapStateToProps = state => {
   
   const {
     users,
+    listingData,
   } = state.CommissionPage;
+
+  console.log(state.CommissionPage);
+
+  const getOwnListing = id => {
+    const ref = { id, type: 'ownListing' };
+    const listings = getMarketplaceEntities(state, [ref]);
+    return listings.length === 1 ? listings[0] : null;
+  };
 
   return {
     scrollingDisabled: isScrollingDisabled(state),
     currentUser,
     users,
+    listingData,
+    getOwnListing
     // queryReviewsError,
   };
 };

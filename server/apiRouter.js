@@ -18,6 +18,7 @@ const transitionPrivileged = require('./api/transition-privileged');
 const adminUsers = require('./api-flex/admin-users');
 const adminUser = require('./api-flex/admin-user');
 const adminUserUpdate = require('./api-flex/admin-user-update');
+const adminGetListing = require('./api-flex/admin-get-listing');
 
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
 
@@ -60,6 +61,7 @@ router.post('/transition-privileged', transitionPrivileged);
 router.post('/admin-users', adminUsers);
 router.post('/admin-user', adminUser);
 router.post('/admin-user-update', adminUserUpdate);
+router.post('/admin-get-listing', adminGetListing);
 
 // Create user with identity provider (e.g. Facebook or Google)
 // This endpoint is called to create a new user after user has confirmed

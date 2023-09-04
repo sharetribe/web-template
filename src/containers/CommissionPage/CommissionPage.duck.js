@@ -3,7 +3,7 @@ import { fetchCurrentUser } from '../../ducks/user.duck';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
-import { getUsersAdmin } from '../../util/api';
+import { getUsersAdmin, getListingAdmin } from '../../util/api';
 import * as log from '../../util/log';
 
 const { UUID } = sdkTypes;
@@ -18,6 +18,8 @@ export const SHOW_USER_ERROR = 'app/CommissionPage/SHOW_USER_ERROR';
 
 export const QUERY_USERS_SUCCESS = 'app/CommissionPage/QUERY_USERS_SUCCESS';
 export const QUERY_LISTINGS_ERROR = 'app/CommissionPage/QUERY_LISTINGS_ERROR';
+
+export const QUERY_LISTING_SUCCESS = 'app/CommissionPage/QUERY_LISTING_SUCCESS';
 
 // ================ Reducer ================ //
 
@@ -47,6 +49,8 @@ export default function CommissionPageReducer(state = initialState, action = {})
       return { ...state, users: payload.usersRefs };
     case QUERY_LISTINGS_ERROR:
       return { ...state, userListingRefs: [], queryListingsError: payload };
+    case QUERY_LISTING_SUCCESS:
+      return { ...state, listingData:payload };
     
 
     default:
@@ -95,9 +99,9 @@ export const queryReviewsRequest = () => ({
   type: QUERY_REVIEWS_REQUEST,
 });
 
-export const queryReviewsSuccess = reviews => ({
-  type: QUERY_REVIEWS_SUCCESS,
-  payload: reviews,
+export const queryListingSuccess = listingData => ({
+  type: QUERY_LISTING_SUCCESS,
+  payload: listingData,
 });
 
 
@@ -142,6 +146,28 @@ export const queryUsers = search => (dispatch, getState, sdk) => {
 
 };
 
+export const queryListings = search => (dispatch, getState, sdk) => {
+  
+  // Clear state so that previously loaded data is not visible
+  // in case this page load fails.
+  // dispatch(setInitialState());
+
+  let params = {'asdas':'afssaf'};
+
+  return getListingAdmin(params)
+  .then(res => {
+    return res;
+  })
+  .then(response => {
+    // dispatch(addMarketplaceEntities(response));
+    dispatch(queryListingSuccess(response));
+  })
+  .catch(e => {
+    log.error(e, 'create-user-with-idp-failed', { params });
+  });
+
+};
+
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const userId = new UUID(params.id);
 
@@ -153,6 +179,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     dispatch(fetchCurrentUser()),
     dispatch(showUser(userId)),
     dispatch(queryUsers(userId)),
+    dispatch(queryListings(userId)),
   ]);
 };
 
