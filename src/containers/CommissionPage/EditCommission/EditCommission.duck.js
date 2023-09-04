@@ -136,22 +136,6 @@ export const updateCommission = actionPayload => {
     .catch(e => {
       log.error(e, 'create-user-with-idp-failed', { actionPayload });
     });
-
-    return sdk.currentUser
-      .updateProfile(actionPayload, queryParams)
-      .then(response => {
-        dispatch(updateProfileSuccess(response));
-
-        const entities = denormalisedResponseEntities(response);
-        if (entities.length !== 1) {
-          throw new Error('Expected a resource in the sdk.currentUser.updateProfile response');
-        }
-        const currentUser = entities[0];
-
-        // Update current user in state.user.currentUser through user.duck.js
-        dispatch(currentUserShowSuccess(currentUser));
-      })
-      .catch(e => dispatch(updateProfileError(storableError(e))));
   };
 };
 
