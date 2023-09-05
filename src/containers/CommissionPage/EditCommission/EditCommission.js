@@ -98,13 +98,13 @@ const EditCommissionComponent = props => {
             <div className={css.main}>
               <EditCommissionForm
                 intl={injectIntl}
-                dispatch={noop}
+                // dispatch={noop}
                 onSubmit={handleSubmit}
                 initialValues={{ commission:commission }}
                 formId="EditCommissionForm"
                 userName={userName}
                 inProgress={updateInProgress}
-                ready={false}
+                // ready={false}
               />
             </div>
           
