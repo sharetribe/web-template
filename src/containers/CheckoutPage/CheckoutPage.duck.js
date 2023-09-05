@@ -166,7 +166,7 @@ export const stripeCustomerError = e => ({
 });
 
 export const commissionRequest = () => ({ type: COMMISSION_REQUEST });
-export const commissionSuccess = () => ({ 
+export const commissionSuccess = commission => ({ 
   type: COMMISSION_SUCCESS,
   payload: { commission },  
 });
@@ -183,7 +183,8 @@ export const initiateOrder = (
   processAlias,
   transactionId,
   transitionName,
-  isPrivilegedTransition
+  isPrivilegedTransition,
+  commission
 ) => (dispatch, getState, sdk) => {
   dispatch(initiateOrderRequest());
 
@@ -258,7 +259,7 @@ export const initiateOrder = (
       .catch(handleError);
   } else if (isPrivilegedTransition) {
     // initiate privileged
-    return initiatePrivileged({ isSpeculative: false, orderData, bodyParams, queryParams })
+    return initiatePrivileged({ isSpeculative: false, orderData, bodyParams, queryParams, commission })
       .then(handleSucces)
       .catch(handleError);
   } else {
@@ -319,6 +320,35 @@ export const sendMessage = params => (dispatch, getState, sdk) => {
   }
 };
 
+// getCommission is a comission for listing creator
+export const getCommission = (listingId) => (dispatch, getState, sdk) => {
+  dispatch(commissionRequest());
+
+  console.log('export const getCommission');
+  console.log(listingId);
+
+  dispatch(commissionSuccess(44));
+  
+  return getListingOwnerAdmin(listingId)
+  .then(res => {
+    return res;
+  })
+  .then(response => {
+    // dispatch(addMarketplaceEntities(response));
+    // dispatch(commissionSuccess(response));
+    console.log('commissionSuccess(response)');
+    console.log(response);
+    if(response.attributes.profile.metadata && response.attributes.profile.metadata.commission){
+      console.log(response.attributes.profile.metadata.commission);
+      dispatch(commissionSuccess(response.attributes.profile.metadata.commission));
+    }
+  })
+  .catch(e => {
+    log.error(e, 'create-user-with-idp-failed', { listingId });
+    dispatch(commissionError(storableError(e)));
+  });
+};
+
 /**
  * Initiate or transition the speculative transaction with the given
  * booking details
@@ -332,14 +362,21 @@ export const sendMessage = params => (dispatch, getState, sdk) => {
  * pricing info for the booking breakdown to get a proper estimate for
  * the price with the chosen information.
  */
+
 export const speculateTransaction = (
   orderParams,
   processAlias,
   transactionId,
   transitionName,
-  isPrivilegedTransition
+  isPrivilegedTransition,
+  commission,
 ) => (dispatch, getState, sdk) => {
   dispatch(speculateTransactionRequest());
+
+  console.log('orderParams');
+  console.log(orderParams.listingId);
+  console.log(commission);
+
 
   // If we already have a transaction ID, we should transition, not
   // initiate.
@@ -412,9 +449,19 @@ export const speculateTransaction = (
       .catch(handleError);
   } else if (isPrivilegedTransition) {
     // initiate privileged
-    return initiatePrivileged({ isSpeculative: true, orderData, bodyParams, queryParams })
+    console.log('isPrivilegedTransition');
+    console.log(orderData);
+    return getListingOwnerAdmin(orderParams.listingId).then((response)=>{
+
+      const commission = response.attributes.profile.metadata && 
+      response.attributes.profile.metadata.commission ? 
+      response.attributes.profile.metadata.commission : false;
+      
+      console.log(commission);
+      return initiatePrivileged({ isSpeculative: true, orderData, bodyParams, queryParams, commission })
       .then(handleSuccess)
       .catch(handleError);
+    })
   } else {
     // initiate non-privileged
     return sdk.transactions
@@ -438,21 +485,3 @@ export const stripeCustomer = () => (dispatch, getState, sdk) => {
     });
 };
 
-
-// getCommission is a comission for listing creator
-export const getCommission = (listingId) => (dispatch, getState, sdk) => {
-  dispatch(commissionRequest());
-  
-  return getListingOwnerAdmin(listingId)
-  .then(res => {
-    return res;
-  })
-  .then(response => {
-    // dispatch(addMarketplaceEntities(response));
-    dispatch(commissionSuccess(response));
-  })
-  .catch(e => {
-    log.error(e, 'create-user-with-idp-failed', { listingId });
-    dispatch(commissionError(storableError(e)));
-  });
-};

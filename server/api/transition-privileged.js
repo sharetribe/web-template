@@ -11,7 +11,7 @@ module.exports = (req, res) => {
     .show({ id: bodyParams?.params?.listingId })
     .then(listingResponse => {
       const listing = listingResponse.data.data;
-      lineItems = transactionLineItems(listing, { ...orderData, ...bodyParams.params });
+      lineItems = transactionLineItems(listing, { ...orderData, ...bodyParams.params }, 44);
 
       return getTrustedSdk(req);
     })

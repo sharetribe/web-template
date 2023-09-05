@@ -32,14 +32,14 @@ module.exports = (req, res) => {
     .then(response => {
         // Print listing titles
         
-        console.log(' +++++++++++++++++++');
+        // console.log(' +++++++++++++++++++');
 
         let data = response.data.data;
 
-        console.log(data);
+        // console.log(data);
         const creatorId = data.relationships.author.data.id;
 
-        console.log(data.relationships.author.data.id);
+        // console.log(data.relationships.author.data.id);
 
         integrationSdk.users
         .show({id: creatorId})

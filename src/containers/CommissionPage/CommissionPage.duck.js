@@ -3,7 +3,7 @@ import { fetchCurrentUser } from '../../ducks/user.duck';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
-import { getUsersAdmin, getListingAdmin } from '../../util/api';
+import { getUsersAdmin, getListingOwnerAdmin } from '../../util/api';
 import * as log from '../../util/log';
 
 const { UUID } = sdkTypes;
@@ -157,7 +157,7 @@ export const queryListingOwner = search => (dispatch, getState, sdk) => {
 
   console.log('start getListingAdmin ------->>>>>>>>>>>>>>>>>>>>>');
 
-  return getListingAdmin(params)
+  return getListingOwnerAdmin(params)
   .then(res => {
     console.log('getListingAdmin ------->>>>>>>>>>>>>>>>>>>>>');
     console.log(res);

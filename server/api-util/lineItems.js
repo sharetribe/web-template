@@ -6,7 +6,7 @@ const {
 } = require('./lineItemHelpers');
 const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
-const { comissionVariable } = require('../api-flex/comissionVariable');
+// const { comissionVariable } = require('../api-flex/comissionVariable');
 
 const PROVIDER_COMMISSION_PERCENTAGE = -30;
 
@@ -109,13 +109,13 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
  * @param {Object} orderData
  * @returns {Array} lineItems
  */
-exports.transactionLineItems = (listing, orderData) => {
+exports.transactionLineItems = (listing, orderData, commission) => {
   const publicData = listing.attributes.publicData;
   const unitPrice = listing.attributes.price;
   const currency = unitPrice.currency;
   const listingId = '' + listing.id.uuid;
 
-  console.log('afsadasf' + comissionVariable(listingId));
+  // console.log('afsadasf' + comissionVariable(listingId));
 
   console.log('listing');
   console.log(listing);
@@ -187,7 +187,12 @@ exports.transactionLineItems = (listing, orderData) => {
     includeFor: ['customer', 'provider'],
   };
 
-  const configuredComission = commission?commission:PROVIDER_COMMISSION_PERCENTAGE;
+  const configuredComission = commission?-commission:PROVIDER_COMMISSION_PERCENTAGE;
+
+  console.log('configuredComission');
+  console.log(configuredComission);
+  console.log('commission');
+  console.log(commission);
 
   // Note: extraLineItems for product selling (aka shipping fee)
   //       is not included to commission calculation.

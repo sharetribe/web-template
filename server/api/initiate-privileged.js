@@ -2,14 +2,13 @@ const { transactionLineItems } = require('../api-util/lineItems');
 const { getSdk, getTrustedSdk, handleError, serialize } = require('../api-util/sdk');
 
 module.exports = (req, res) => {
-  const { isSpeculative, orderData, bodyParams, queryParams } = req.body;
+  const { isSpeculative, orderData, bodyParams, queryParams,commission } = req.body;
 
-  console.log('orderData');
-  console.log(orderData);
-  console.log('bodyParams');
-  console.log(bodyParams);
-  console.log(queryParams);
-  console.log(queryParams);
+  console.log('comissionValue');
+  console.log(commission);
+  console.log('req.body');
+  console.log(req.body);
+
 
   const sdk = getSdk(req, res);
   let lineItems = null;
@@ -29,7 +28,7 @@ module.exports = (req, res) => {
         listing.attributes.price.amount = variantSelected.variantPrice;
       }
       
-      lineItems = transactionLineItems(listing, { ...orderData, ...bodyParams.params });
+      lineItems = transactionLineItems(listing, { ...orderData, ...bodyParams.params }, commission);
 
       return getTrustedSdk(req);
     })

@@ -67,6 +67,7 @@ import {
   stripeCustomer,
   confirmPayment,
   sendMessage,
+  getCommission,
 } from './CheckoutPage.duck';
 import CustomTopbar from './CustomTopbar';
 import StripePaymentForm from './StripePaymentForm/StripePaymentForm';
@@ -277,8 +278,11 @@ export class CheckoutPageComponent extends Component {
       transaction,
       fetchSpeculatedTransaction,
       fetchStripeCustomer,
+      fetchCommission,
       history,
+      comissionValue
     } = this.props;
+
 
     // Fetch currentUser with stripeCustomer entity
     // Note: since there's need for data loading in "componentWillMount" function,
@@ -299,6 +303,9 @@ export class CheckoutPageComponent extends Component {
 
     // NOTE: stored data can be empty if user has already successfully completed transaction.
     const pageData = hasDataInProps ? { orderData, listing, transaction } : storedData(STORAGE_KEY);
+    if(pageData?.listing?.id){
+      fetchCommission(pageData.listing.id);
+    }
 
     const tx = pageData ? pageData.transaction : null;
     const pageDataListing = pageData.listing;
@@ -361,7 +368,12 @@ export class CheckoutPageComponent extends Component {
       onSendMessage,
       onSavePaymentMethod,
       config,
+      comissionValue
     } = this.props;
+
+    console.log('this.props');
+    console.log(this.props);
+
     const {
       pageData,
       message,
@@ -403,10 +415,12 @@ export class CheckoutPageComponent extends Component {
           : process.transitions.REQUEST_PAYMENT;
       const isPrivileged = process.isPrivileged(requestTransition);
 
+      const commission = comissionValue && comissionValue.commission ? comissionValue.commission : false;
+
       // If paymentIntent exists, order has been initiated previously.
       return hasPaymentIntents
         ? Promise.resolve(storedTx)
-        : onInitiateOrder(fnParams, processAlias, storedTx.id, requestTransition, isPrivileged);
+        : onInitiateOrder(fnParams, processAlias, storedTx.id, requestTransition, isPrivileged, commission);
     };
 
     // Step 2: pay using Stripe SDK
@@ -1092,8 +1106,12 @@ const mapStateToProps = state => {
     transaction,
     initiateOrderError,
     confirmPaymentError,
-    commission
+    comissionValue
   } = state.CheckoutPage;
+
+  console.log('state.CheckoutPage');
+  console.log(state.CheckoutPage);
+
   const { currentUser } = state.user;
   const { confirmCardPaymentError, paymentIntent, retrievePaymentIntentError } = state.stripe;
   return {
@@ -1111,17 +1129,18 @@ const mapStateToProps = state => {
     confirmPaymentError,
     paymentIntent,
     retrievePaymentIntentError,
-    commission
+    comissionValue
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   dispatch,
-  fetchSpeculatedTransaction: (params, processAlias, txId, transitionName, isPrivileged) =>
-    dispatch(speculateTransaction(params, processAlias, txId, transitionName, isPrivileged)),
+  fetchSpeculatedTransaction: (params, processAlias, txId, transitionName, isPrivileged, commission) =>
+    dispatch(speculateTransaction(params, processAlias, txId, transitionName, isPrivileged, commission)),
   fetchStripeCustomer: () => dispatch(stripeCustomer()),
-  onInitiateOrder: (params, processAlias, transactionId, transitionName, isPrivileged) =>
-    dispatch(initiateOrder(params, processAlias, transactionId, transitionName, isPrivileged)),
+  fetchCommission: (listing) => dispatch(getCommission(listing)),
+  onInitiateOrder: (params, processAlias, transactionId, transitionName, isPrivileged, commission) =>
+    dispatch(initiateOrder(params, processAlias, transactionId, transitionName, isPrivileged, commission)),
   onRetrievePaymentIntent: params => dispatch(retrievePaymentIntent(params)),
   onConfirmCardPayment: params => dispatch(confirmCardPayment(params)),
   onConfirmPayment: (transactionId, transitionName, transitionParams) =>
