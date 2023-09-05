@@ -82,7 +82,7 @@ export const MainContent = props => {
 
   const calcCommission = l =>{
     console.log(l.attributes.profile.metadata);
-    return l.attributes.profile.metadata && l.attributes.profile.metadata.commission ? l.attributes.profile.metadata.commission:10;
+    return l.attributes.profile.metadata && l.attributes.profile.metadata.commission ? l.attributes.profile.metadata.commission:15;
   }
 
   return (

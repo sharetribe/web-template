@@ -104,7 +104,7 @@ const EditCommissionComponent = props => {
                 formId="EditCommissionForm"
                 userName={userName}
                 inProgress={updateInProgress}
-                // ready={false}
+                ready={false}
               />
             </div>
           
