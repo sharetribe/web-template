@@ -19,6 +19,10 @@ import LoadableComponentErrorBoundary from './LoadableComponentErrorBoundary/Loa
 
 const canShowComponent = props => {
   const { isAuthenticated, route } = props;
+
+  console.log('canShowComponent');
+  console.log(props);
+
   const { auth } = route;
   return !auth || isAuthenticated;
 };
@@ -162,6 +166,9 @@ RouteComponentRenderer.propTypes = {
 };
 
 const mapStateToProps = state => {
+  console.log('router state');
+  console.log(state);
+  
   const { isAuthenticated, logoutInProgress } = state.auth;
   return { isAuthenticated, logoutInProgress };
 };
@@ -179,6 +186,8 @@ const RouteComponentContainer = compose(connect(mapStateToProps))(RouteComponent
  */
 const Routes = (props, context) => {
   const routeConfiguration = useRouteConfiguration();
+  console.log('routeConfiguration');
+  console.log(routeConfiguration);
   const config = useConfiguration();
   const { isAuthenticated, logoutInProgress } = props;
 

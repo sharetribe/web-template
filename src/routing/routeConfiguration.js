@@ -371,12 +371,14 @@ const routeConfiguration = (layoutConfig) => {
     {
       path: '/Commission',
       name: 'Commission',
+      auth: true,
       component: CommissionPage,
       loadData: pageDataLoadingAPI.CommissionPage.loadData,
     },
     {
       path: '/EditCommission/:id',
       name: 'EditCommission',
+      auth: true,
       component: EditCommission,
       loadData: pageDataLoadingAPI.EditCommission.loadData,
     },
