@@ -8,7 +8,7 @@ const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
 // const { comissionVariable } = require('../api-flex/comissionVariable');
 
-const PROVIDER_COMMISSION_PERCENTAGE = -30;
+const PROVIDER_COMMISSION_PERCENTAGE = -10;
 
 /**
  * Get quantity and add extra line-items that are related to delivery method
