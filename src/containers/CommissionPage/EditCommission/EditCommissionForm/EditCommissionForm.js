@@ -45,7 +45,9 @@ const EditListingAvailabilityPlanFormComponent = props => {
           className,
           formId,
           inProgress,
+          invalid,
           values,
+          ready,
         } = fieldRenderProps;
 
         console.log('fieldRenderProps');
@@ -53,6 +55,7 @@ const EditListingAvailabilityPlanFormComponent = props => {
 
         const classes = classNames(rootClassName || css.root, className);
         const submitInProgress = inProgress;
+        const submitDisabled = invalid || submitInProgress;
 
         return (
           <Form id={formId} className={classes} onSubmit={e => {
@@ -69,7 +72,9 @@ const EditListingAvailabilityPlanFormComponent = props => {
             </div>
 
             <div className={css.submitButton}>
-              <PrimaryButton type="submit" inProgress={submitInProgress} >
+              <PrimaryButton type="submit" inProgress={submitInProgress}
+                  ready={ready}
+                  disabled={submitDisabled} >
                 <FormattedMessage id="EditCommissionForm.saveCommission" />
               </PrimaryButton>
             </div>

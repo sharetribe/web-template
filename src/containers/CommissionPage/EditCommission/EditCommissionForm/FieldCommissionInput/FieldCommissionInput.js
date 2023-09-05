@@ -34,6 +34,7 @@ const FieldCommissionInputComponent = props => {
   const commissionRequiredMessage = intl.formatMessage({
     id: 'FieldCommissionInput.CommisionRequired',
   });
+  
   const minValueValidate = validators.minValue(minValue,minValueMessage);
   const maxValueValidate = validators.maxValue(maxValue,maxValueMessage);
   const commissionValueRequired = validators.required(commissionRequiredMessage);
@@ -52,7 +53,7 @@ const FieldCommissionInputComponent = props => {
         name="commission"
         className={className}
         label="Set new commission variable:"
-        validate={commissionValueRequired}
+        validate={commissionValidators}
       />
     </div>
   );
