@@ -96,7 +96,7 @@ const EditCommissionComponent = props => {
         >
           <MainContent  {...rest} />
             <div className={css.main}>
-              <EditCommissionForm
+              {/* <EditCommissionForm
                 intl={injectIntl}
                 dispatch={noop}
                 onSubmit={handleSubmit}
@@ -105,7 +105,7 @@ const EditCommissionComponent = props => {
                 userName={userName}
                 inProgress={updateInProgress}
                 ready={false}
-              />
+              /> */}
             </div>
           
         </LayoutSingleColumnMidle>
