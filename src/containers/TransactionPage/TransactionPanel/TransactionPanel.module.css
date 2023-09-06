@@ -382,14 +382,28 @@
 
 .inquiryMessage {
   /* Preserve newlines, but collapse other whitespace */
+  display: inline-block;
+  margin: 0;
+  padding: 8.5px 14px 8.5px 14px;
+  border-radius: 8px;
+  box-shadow: var(--boxShadow);
+  background-color: var(--colorWhite);
+
   white-space: pre-line;
-  padding: 0;
+
   margin-top: 12px;
   margin-bottom: 0;
 
   @media (--viewportMedium) {
     margin-top: 8px;
+    padding: 8px 14px 8px 14px;
   }
+}
+
+.ownInquiryMessage {
+  composes: inquiryMessage;
+  background-color: var(--marketplaceColor);
+  color: var(--colorWhite);
 }
 
 .messageError {

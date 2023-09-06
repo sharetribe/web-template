@@ -58,6 +58,7 @@
   padding: 8.5px 14px 8.5px 14px;
   border-radius: 8px;
   box-shadow: var(--boxShadow);
+  background-color: var(--colorWhite);
 
   @media (--viewportMedium) {
     padding: 8px 14px 8px 14px;

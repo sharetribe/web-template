@@ -228,6 +228,7 @@ export class TransactionPanelComponent extends Component {
             <InquiryMessageMaybe
               protectedData={protectedData}
               showInquiryMessage={isInquiryProcess}
+              isCustomer={isCustomer}
             />
 
             {!isInquiryProcess ? (
