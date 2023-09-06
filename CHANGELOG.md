@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] TransactionPanel/InquiryMessageMaybe: highlight initial inquiry message more.
+  [#213](https://github.com/sharetribe/web-template/pull/213)
+
 ## [v3.0.1] 2023-09-06
 
 - [fix] CheckoutPage/ErrorMessages: add missing css import.
