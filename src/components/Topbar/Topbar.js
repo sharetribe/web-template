@@ -30,7 +30,7 @@ import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
 
 import css from './Topbar.module.css';
 
-const MAX_MOBILE_SCREEN_WIDTH = 768;
+const MAX_MOBILE_SCREEN_WIDTH = 1024;
 
 const redirectToURLWithModalState = (props, modalStateParam) => {
   const { history, location } = props;
@@ -254,6 +254,7 @@ class TopbarComponent extends Component {
         </div>
         <Modal
           id="TopbarMobileMenu"
+          containerClassName={css.modalContainer}
           isOpen={isMobileMenuOpen}
           onClose={this.handleMobileMenuClose}
           usePortal
@@ -263,7 +264,7 @@ class TopbarComponent extends Component {
         </Modal>
         <Modal
           id="TopbarMobileSearch"
-          containerClassName={css.modalContainer}
+          containerClassName={css.modalContainerSearchForm}
           isOpen={isMobileSearchOpen}
           onClose={this.handleMobileSearchClose}
           usePortal
