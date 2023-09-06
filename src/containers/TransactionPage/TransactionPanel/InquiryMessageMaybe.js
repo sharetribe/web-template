@@ -8,8 +8,9 @@ import css from './TransactionPanel.module.css';
 
 // Functional component as a helper to build ActivityFeed section
 const InquiryMessageMaybe = props => {
-  const { className, rootClassName, protectedData, showInquiryMessage } = props;
+  const { className, rootClassName, protectedData, showInquiryMessage, isCustomer } = props;
   const classes = classNames(rootClassName || css.deliveryInfoContainer, className);
+  const inquiryMsgClasses = isCustomer ? css.ownInquiryMessage : css.inquiryMessage;
 
   if (showInquiryMessage) {
     return (
@@ -17,7 +18,7 @@ const InquiryMessageMaybe = props => {
         <Heading as="h3" rootClassName={css.sectionHeading}>
           <FormattedMessage id="TransactionPanel.inquiryMessageHeading" />
         </Heading>
-        <p className={css.inquiryMessage}>{protectedData?.inquiryMessage}</p>
+        <p className={inquiryMsgClasses}>{protectedData?.inquiryMessage}</p>
       </div>
     );
   }
