@@ -36,6 +36,10 @@ const TopbarDesktop = props => {
     initialSearchFormValues,
   } = props;
   const [mounted, setMounted] = useState(false);
+  const isAccess = true;
+
+  console.log('const isAccess = true');
+  console.log(props);
 
   useEffect(() => {
     setMounted(true);
@@ -44,6 +48,7 @@ const TopbarDesktop = props => {
   const marketplaceName = appConfig.marketplaceName;
   const authenticatedOnClientSide = mounted && isAuthenticated;
   const isAuthenticatedOrJustHydrated = isAuthenticated || !mounted;
+  const isAuthenticatedAndAccess = isAuthenticated && isAccess || !mounted;
 
   const classes = classNames(rootClassName || css.root, className);
 
@@ -137,6 +142,14 @@ const TopbarDesktop = props => {
     </NamedLink>
   );
 
+  const manageCommission = isAuthenticatedAndAccess ? null : (
+    <NamedLink className={css.createListingLink} name="Commission">
+        <span className={css.createListing}>
+          <FormattedMessage id="TopbarDesktop.Commission" />
+        </span>
+      </NamedLink>
+  );
+
   return (
     <nav className={classes}>
       <LinkedLogo
@@ -145,6 +158,7 @@ const TopbarDesktop = props => {
         alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
       />
       {search}
+      {manageCommission}
       <NamedLink className={css.createListingLink} name="NewListingPage">
         <span className={css.createListing}>
           <FormattedMessage id="TopbarDesktop.createListing" />
