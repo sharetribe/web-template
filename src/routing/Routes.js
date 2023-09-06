@@ -31,8 +31,8 @@ const userRoleAccess = props => {
   const { route, currentUser } = props;
 
   const { authRole } = route;
-  if(currentUser && currentUser.attributes && currentUser.attributes.profile){
-    const { role } = currentUser.attributes.profile;
+  if(currentUser && currentUser.attributes && currentUser.attributes.profile && currentUser.attributes.profile.metadata){
+    const { role } = currentUser.attributes.profile.metadata;
     const access = (authRole === role);
     return !authRole || access;
   }
@@ -150,6 +150,8 @@ class RouteComponentRenderer extends Component {
 
     console.log('userRoleAccess(this.props)')
     const userAccess = userRoleAccess(this.props);
+    console.log('userAccess')
+    console.log(userAccess)
 
     const canShow = canShowComponent(this.props);
     if (!canShow || !userAccess) {
@@ -157,6 +159,7 @@ class RouteComponentRenderer extends Component {
     }
 
     const routeName = !canShow ? authPage : routePage;
+
 
     return canShow && userAccess ? (
       <LoadableComponentErrorBoundary>
@@ -212,8 +215,7 @@ const RouteComponentContainer = compose(connect(mapStateToProps))(RouteComponent
  */
 const Routes = (props, context) => {
   const routeConfiguration = useRouteConfiguration();
-  console.log('routeConfiguration');
-  console.log(routeConfiguration);
+
   const config = useConfiguration();
   const { isAuthenticated, logoutInProgress } = props;
 

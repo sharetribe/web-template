@@ -3,6 +3,7 @@ import { bool, func, object, number, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { FormattedMessage, intlShape } from '../../../util/reactIntl';
+import { AccessRole } from '../../../util/roles';
 import { ACCOUNT_SETTINGS_PAGES } from '../../../routing/routeConfiguration';
 import { propTypes } from '../../../util/types';
 import {
@@ -36,10 +37,8 @@ const TopbarDesktop = props => {
     initialSearchFormValues,
   } = props;
   const [mounted, setMounted] = useState(false);
-  const isAccess = true;
-
-  console.log('const isAccess = true');
-  console.log(props);
+  
+  const isAccess = AccessRole(props,'admin');
 
   useEffect(() => {
     setMounted(true);
@@ -48,7 +47,7 @@ const TopbarDesktop = props => {
   const marketplaceName = appConfig.marketplaceName;
   const authenticatedOnClientSide = mounted && isAuthenticated;
   const isAuthenticatedOrJustHydrated = isAuthenticated || !mounted;
-  const isAuthenticatedAndAccess = isAuthenticated && isAccess || !mounted;
+  const isAuthenticatedAndAccess = isAuthenticated && isAccess;
 
   const classes = classNames(rootClassName || css.root, className);
 
@@ -142,7 +141,7 @@ const TopbarDesktop = props => {
     </NamedLink>
   );
 
-  const manageCommission = isAuthenticatedAndAccess ? null : (
+  const manageCommission = !isAuthenticatedAndAccess ? null : (
     <NamedLink className={css.createListingLink} name="Commission">
         <span className={css.createListing}>
           <FormattedMessage id="TopbarDesktop.Commission" />
