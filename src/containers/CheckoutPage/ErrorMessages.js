@@ -12,6 +12,8 @@ import {
   transactionInitiateOrderStripeErrors,
 } from '../../util/errors';
 
+import css from './CheckoutPage.module.css';
+
 // Collect error message checks to a single function.
 export const getErrorMessages = (
   listingNotFound,
