@@ -19,6 +19,8 @@ way to update this template, but currently, we follow a pattern:
 - [fix] CheckoutPage/ErrorMessages: add missing css import.
   [#211](https://github.com/sharetribe/web-template/pull/211)
 
+[v3.0.1]: https://github.com/sharetribe/web-template/compare/v3.0.0...v3.0.1
+
 ## [v3.0.0] 2023-09-04
 
 This is a major version release. Mainly due to a new process and big changes to the CheckoutPage.
