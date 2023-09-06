@@ -53,6 +53,7 @@ import * as IconSocialMediaTwitter from './components/IconSocialMediaTwitter/Ico
 import * as IconSpinner from './components/IconSpinner/IconSpinner.example';
 import * as IconSuccess from './components/IconSuccess/IconSuccess.example';
 import * as Logo from './components/Logo/Logo.example';
+import * as LinkedLogo from './components/Logo/LinkedLogo.example';
 import * as ListingCard from './components/ListingCard/ListingCard.example';
 import * as LocationAutocompleteInput from './components/LocationAutocompleteInput/LocationAutocompleteInput.example';
 import * as Map from './components/Map/Map.example';
@@ -190,6 +191,7 @@ export {
   KeywordFilter,
   LandingPage,
   LayoutComposer,
+  LinkedLogo,
   ListingCard,
   ListingImageGallery,
   LocationAutocompleteInput,
