@@ -138,12 +138,22 @@ const getVariantURL = (socialSharingImage, variantName) => {
 };
 
 const mergeBranding = (brandingConfig, defaultBranding) => {
-  const { favicon, marketplaceColors, logo, loginBackgroundImage, socialSharingImage } =
-    brandingConfig || {};
+  const {
+    favicon,
+    marketplaceColors,
+    logo,
+    logoSettings,
+    loginBackgroundImage,
+    socialSharingImage,
+  } = brandingConfig || {};
 
   const marketplaceColor = marketplaceColors?.mainColor || defaultBranding.marketplaceColor;
   const marketplaceColorDark = marketplaceColor ? hexToCssHsl(marketplaceColor, -10) : null;
   const marketplaceColorLight = marketplaceColor ? hexToCssHsl(marketplaceColor, 10) : null;
+
+  const logoSettingsRaw = logoSettings || defaultBranding.logoSettings;
+  const validLogoSettings =
+    logoSettingsRaw?.format === 'image' && [24, 36, 48].includes(logoSettingsRaw?.height);
 
   const facebookImage =
     getVariantURL(socialSharingImage, 'scaled1200') || defaultBranding.facebookImageURL;
@@ -154,6 +164,7 @@ const mergeBranding = (brandingConfig, defaultBranding) => {
     marketplaceColor,
     marketplaceColorDark,
     marketplaceColorLight,
+    logoSettings: validLogoSettings ? logoSettingsRaw : { format: 'image', height: 24 },
     logoImageDesktop: logo || defaultBranding.logoImageDesktopURL,
     logoImageMobile: logo || defaultBranding.logoImageMobileURL,
     brandImage: loginBackgroundImage,
