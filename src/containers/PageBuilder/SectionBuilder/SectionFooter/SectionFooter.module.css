@@ -113,12 +113,19 @@
     text-decoration: none;
   }
 }
+.logoWrapper {
+  max-width: 370px;
+}
 .logoImage {
-  height: 24px;
+  height: auto;
   width: auto;
-  max-width: 188px;
+  max-width: 100%;
   object-fit: contain;
   object-position: center;
+
+  @media (--viewportLarge) {
+    max-width: min(100%, 298px);
+  }
 }
 
 @media (min-width: 350px) {
