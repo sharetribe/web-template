@@ -2,7 +2,6 @@ import React from 'react';
 import { bool, func, object, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
-import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../../util/reactIntl';
@@ -12,26 +11,12 @@ import FieldCommissionInput from './FieldCommissionInput';
 
 import css from './EditListingAvailabilityPlanForm.module.css';
 
-/**
- * User might create entries inside the day of week in what ever order.
- * We sort them before submitting to Marketplace API
- */
-const sortEntries = () => (a, b) => {
-  if (a.startTime && b.startTime) {
-    const aStart = Number.parseInt(a.startTime.split(':')[0]);
-    const bStart = Number.parseInt(b.startTime.split(':')[0]);
-    return aStart - bStart;
-  }
-  return 0;
-};
-
 const EditListingAvailabilityPlanFormComponent = props => {
   const { onSubmit, ...restOfprops } = props;
 
   const handleSubmit = (e,values) => {
     e.preventDefault();
-
-    onSubmit(values);
+    return onSubmit(values);
   };
 
   return (

@@ -28,6 +28,7 @@ const initialState = {
   userShowError: null,
   queryListingsError: null,
   updateInProgress: false,
+  updateSuccess: false
 };
 
 export default function CommissionPageReducer(state = initialState, action = {}) {
@@ -54,12 +55,14 @@ export default function CommissionPageReducer(state = initialState, action = {})
     return {
         ...state,
         updateInProgress: true,
+        updateSuccess: false
     };
 
     case UPDATE_COMMISSION_SUCCESS:
     return {
         ...state,
         updateInProgress: false,
+        updateSuccess: true
     };
     
 
@@ -131,6 +134,8 @@ export const updateCommission = actionPayload => {
     })
     .then(response => {
       // dispatch(addMarketplaceEntities(response));
+      console.log('dispatch(updateCommissionSuccess(response))');
+      console.log(response);
       dispatch(updateCommissionSuccess(response));
     })
     .catch(e => {

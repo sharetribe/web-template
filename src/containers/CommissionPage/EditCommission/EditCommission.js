@@ -8,6 +8,7 @@ import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl
 
 import { withViewport } from '../../../util/uiHelpers';
 import { isScrollingDisabled } from '../../../ducks/ui.duck';
+import { NamedRedirect } from '../../../components';
 // import { getMarketplaceEntities } from '../../../ducks/marketplaceData.duck';
 import {
   H2,
@@ -44,41 +45,26 @@ export const MainContent = props => {
 const EditCommissionComponent = props => {
     const config = useConfiguration();
     
-    const { scrollingDisabled, updateInProgress, onUpdateCommission, intl, userId, userName, commission, ...rest } = props;
-    console.log('commission - props');
-    console.log(props);
+    const { scrollingDisabled, updateInProgress, onUpdateCommission, updateSuccess, intl, userId, userName, commission, ...rest } = props;
     
     const schemaTitleVars = { name: 'displayName', marketplaceName: config.marketplaceName };
     const schemaTitle = intl.formatMessage({ id: 'EditCommission.schemaTitle' }, schemaTitleVars);
 
+    const routeName = "Commission";
+
     const handleSubmit = values => {
-      console.log('handleSubmit');
-      console.log(values);
-      console.log(userId);
       const data = {
         values,
         userId
       }
-      // const { firstName, lastName, bio: rawBio } = values;
   
-      // Ensure that the optional bio is a string
-      // const bio = rawBio || '';
-  
-      // const profile = {
-      //   firstName: firstName.trim(),
-      //   lastName: lastName.trim(),
-      //   bio,
-      // };
-      // const uploadedImage = props.image;
-  
-      // Update profileImage only if file system has been accessed
-      // const updatedValues =
-      //   uploadedImage && uploadedImage.imageId && uploadedImage.file
-      //     ? { ...profile, profileImageId: uploadedImage.imageId }
-      //     : profile;
-  
-        onUpdateCommission(data);
+      return onUpdateCommission(data);
     };
+
+    const redirect = !updateSuccess ? null : ( <NamedRedirect
+      name={routeName}
+      state={{ from: `${location.pathname}${location.search}${location.hash}` }}
+    />);
     
     return (
       <Page
@@ -107,6 +93,8 @@ const EditCommissionComponent = props => {
                 ready={false}
               />
             </div>
+
+           {redirect}
           
         </LayoutSingleColumnMidle>
       </Page>
@@ -148,7 +136,8 @@ const mapStateToProps = state => {
     userName,
     intl,
     params,
-    updateInProgress
+    updateInProgress,
+    updateSuccess
   } = state.EditCommission;
 
   // const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: userId }]);
@@ -167,7 +156,8 @@ const mapStateToProps = state => {
     // reviews,
     intl,
     params,
-    updateInProgress
+    updateInProgress,
+    updateSuccess
   };
 };
 
