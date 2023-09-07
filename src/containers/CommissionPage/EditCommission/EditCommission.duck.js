@@ -42,8 +42,6 @@ export default function CommissionPageReducer(state = initialState, action = {})
       return { ...initialState };
 
     case QUERY_USER_SUCCESS:
-      console.log('QUERY_USERS_SUCCESS');
-      console.log(payload);
       const userName = payload.userData.attributes.profile.displayName;
       const userId = payload.userData.id.uuid;
       const commission = payload.userData.attributes.profile.metadata.commission ? payload.userData.attributes.profile.metadata.commission:0;
@@ -134,8 +132,6 @@ export const updateCommission = actionPayload => {
     })
     .then(response => {
       // dispatch(addMarketplaceEntities(response));
-      console.log('dispatch(updateCommissionSuccess(response))');
-      console.log(response);
       dispatch(updateCommissionSuccess(response));
     })
     .catch(e => {
@@ -147,8 +143,6 @@ export const updateCommission = actionPayload => {
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const userId = params.id;
-  console.log('loadData');
-  console.log(params);
 
   // Clear state so that previously loaded data is not visible
   // in case this page load fails.

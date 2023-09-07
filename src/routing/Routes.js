@@ -148,10 +148,7 @@ class RouteComponentRenderer extends Component {
     const { route, match, location, staticContext } = this.props;
     const { component: RouteComponent, authPage = 'SignupPage', routePage = 'Home', extraProps } = route;
 
-    console.log('userRoleAccess(this.props)')
     const userAccess = userRoleAccess(this.props);
-    console.log('userAccess')
-    console.log(userAccess)
 
     const canShow = canShowComponent(this.props);
     if (!canShow || !userAccess) {
@@ -193,8 +190,6 @@ RouteComponentRenderer.propTypes = {
 };
 
 const mapStateToProps = state => {
-  console.log('router state');
-  console.log(state);
   // console.log(state.user.currentUser.attributes.profile.metadata);
   
   const { isAuthenticated, logoutInProgress } = state.auth;

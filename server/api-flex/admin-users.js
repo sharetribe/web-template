@@ -4,26 +4,26 @@ const CLIENT_SECRET = process.env.SHARETRIBE_FLEX_CLIENT_SECRET;
 
 
 module.exports = (req, res) => {
-    console.log(' --------------------------------');
-    console.log(req.body);
+    // console.log(' --------------------------------');
+    // console.log(req.body);
     // Create new SDK instance
     const integrationSdk = sharetribeIntegrationSdk.createInstance({
         clientId: CLIENT_ID,
         clientSecret: CLIENT_SECRET
     });
 
-    console.log(CLIENT_ID);
-    console.log(CLIENT_SECRET);
+    // console.log(CLIENT_ID);
+    // console.log(CLIENT_SECRET);
     
     // Query first 5 listings
     integrationSdk.users
     .query()
     .then(response => {
         // Print listing titles
-        response.data.data.forEach(users => {
-            console.log(`Listing: ${users.attributes.email}`)
-            console.log(`user id: ${users.id.uuid}`)
-        });
+        // response.data.data.forEach(users => {
+        //     console.log(`Listing: ${users.attributes.email}`)
+        //     console.log(`user id: ${users.id.uuid}`)
+        // });
         let data = response.data.data;
         res.send(
               data

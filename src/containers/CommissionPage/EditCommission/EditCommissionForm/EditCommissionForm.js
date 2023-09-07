@@ -35,9 +35,6 @@ const EditListingAvailabilityPlanFormComponent = props => {
           ready,
         } = fieldRenderProps;
 
-        console.log('fieldRenderProps');
-        console.log(fieldRenderProps);
-
         const classes = classNames(rootClassName || css.root, className);
         const submitInProgress = inProgress;
         const submitDisabled = invalid || submitInProgress;

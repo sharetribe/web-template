@@ -4,10 +4,10 @@ const CLIENT_SECRET = process.env.SHARETRIBE_FLEX_CLIENT_SECRET;
 
 
 exports.comissionVariable = (listingId) => {
-  console.log(' --------------------------------+++++++++++++++++++');
-  console.log(listingId);
+//   console.log(' --------------------------------+++++++++++++++++++');
+//   console.log(listingId);
   // console.log(listingId.uuid);
-  console.log('641ccb52-c86e-44ca-bf44-84f9e9d1e7a4');
+//   console.log('641ccb52-c86e-44ca-bf44-84f9e9d1e7a4');
   // Create new SDK instance
   const integrationSdk = sharetribeIntegrationSdk.createInstance({
       clientId: CLIENT_ID,
@@ -31,10 +31,10 @@ exports.comissionVariable = (listingId) => {
       integrationSdk.users
       .show({id: creatorId})
       .then(response => {
-          console.log('response = =======');
+        //   console.log('response = =======');
           // Print listing titles
           let data = response.data.data;
-          console.log(data.attributes.profile.metadata);
+        //   console.log(data.attributes.profile.metadata);
           
           return data;
       })

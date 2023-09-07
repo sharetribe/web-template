@@ -324,9 +324,6 @@ export const sendMessage = params => (dispatch, getState, sdk) => {
 export const getCommission = (listingId) => (dispatch, getState, sdk) => {
   dispatch(commissionRequest());
 
-  console.log('export const getCommission');
-  console.log(listingId);
-
   dispatch(commissionSuccess(44));
   
   return getListingOwnerAdmin(listingId)
@@ -336,10 +333,7 @@ export const getCommission = (listingId) => (dispatch, getState, sdk) => {
   .then(response => {
     // dispatch(addMarketplaceEntities(response));
     // dispatch(commissionSuccess(response));
-    console.log('commissionSuccess(response)');
-    console.log(response);
     if(response.attributes.profile.metadata && response.attributes.profile.metadata.commission){
-      console.log(response.attributes.profile.metadata.commission);
       dispatch(commissionSuccess(response.attributes.profile.metadata.commission));
     }
   })
@@ -372,11 +366,6 @@ export const speculateTransaction = (
   commission,
 ) => (dispatch, getState, sdk) => {
   dispatch(speculateTransactionRequest());
-
-  console.log('orderParams');
-  console.log(orderParams.listingId);
-  console.log(commission);
-
 
   // If we already have a transaction ID, we should transition, not
   // initiate.
@@ -449,15 +438,12 @@ export const speculateTransaction = (
       .catch(handleError);
   } else if (isPrivilegedTransition) {
     // initiate privileged
-    console.log('isPrivilegedTransition');
-    console.log(orderData);
     return getListingOwnerAdmin(orderParams.listingId).then((response)=>{
 
       const commission = response.attributes.profile.metadata && 
       response.attributes.profile.metadata.commission ? 
       response.attributes.profile.metadata.commission : false;
       
-      console.log(commission);
       return initiatePrivileged({ isSpeculative: true, orderData, bodyParams, queryParams, commission })
       .then(handleSuccess)
       .catch(handleError);

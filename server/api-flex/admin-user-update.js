@@ -4,8 +4,8 @@ const CLIENT_SECRET = process.env.SHARETRIBE_FLEX_CLIENT_SECRET;
 
 
 module.exports = (req, res) => {
-    console.log(' --------------------------------');
-    console.log(req.body);
+    // console.log(' --------------------------------');
+    // console.log(req.body);
     // Create new SDK instance
     const integrationSdk = sharetribeIntegrationSdk.createInstance({
         clientId: CLIENT_ID,
@@ -15,16 +15,16 @@ module.exports = (req, res) => {
     const userId = req.body.userId;
     const commission = +req.body.values.commission;
 
-    console.log('userId');
-    console.log(userId);
-    console.log('typeof req.body.values');
-    console.log(typeof req.body.values);
-    console.log(req.body.values);
-    console.log(req.body.values.commission);
-    console.log('commission');
-    console.log(commission);
-    console.log(CLIENT_ID);
-    console.log(CLIENT_SECRET);
+    // console.log('userId');
+    // console.log(userId);
+    // console.log('typeof req.body.values');
+    // console.log(typeof req.body.values);
+    // console.log(req.body.values);
+    // console.log(req.body.values.commission);
+    // console.log('commission');
+    // console.log(commission);
+    // console.log(CLIENT_ID);
+    // console.log(CLIENT_SECRET);
     
     // Query all users
     integrationSdk.users.updateProfile({
@@ -34,7 +34,7 @@ module.exports = (req, res) => {
         }
     })
     .then(response => {
-        console.log('response = =======');
+        // console.log('response = =======');
         // Print listing titles
         let data = response.data.data;
         // console.log(data);

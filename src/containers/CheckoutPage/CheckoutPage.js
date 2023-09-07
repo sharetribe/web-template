@@ -371,9 +371,6 @@ export class CheckoutPageComponent extends Component {
       comissionValue
     } = this.props;
 
-    console.log('this.props');
-    console.log(this.props);
-
     const {
       pageData,
       message,
@@ -1108,9 +1105,6 @@ const mapStateToProps = state => {
     confirmPaymentError,
     comissionValue
   } = state.CheckoutPage;
-
-  console.log('state.CheckoutPage');
-  console.log(state.CheckoutPage);
 
   const { currentUser } = state.user;
   const { confirmCardPaymentError, paymentIntent, retrievePaymentIntentError } = state.stripe;

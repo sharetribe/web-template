@@ -113,14 +113,6 @@ exports.transactionLineItems = (listing, orderData, commission) => {
   const publicData = listing.attributes.publicData;
   const unitPrice = listing.attributes.price;
   const currency = unitPrice.currency;
-  const listingId = '' + listing.id.uuid;
-
-  // console.log('afsadasf' + comissionVariable(listingId));
-
-  console.log('listing');
-  console.log(listing);
-  console.log('orderData');
-  console.log(orderData);
 
   /**
    * Pricing starts with order's base price:
@@ -188,11 +180,6 @@ exports.transactionLineItems = (listing, orderData, commission) => {
   };
 
   const configuredComission = commission?-commission:PROVIDER_COMMISSION_PERCENTAGE;
-
-  console.log('configuredComission');
-  console.log(configuredComission);
-  console.log('commission');
-  console.log(commission);
 
   // Note: extraLineItems for product selling (aka shipping fee)
   //       is not included to commission calculation.
