@@ -1,6 +1,6 @@
 const sharetribeIntegrationSdk = require('sharetribe-flex-integration-sdk');
-const CLIENT_ID = 'bd8cb379-527f-4f9d-9b6a-144ba26f88d4';
-const CLIENT_SECRET = '871d86250e9783c51bd5f28f3341991579c6c20b';
+const CLIENT_ID = process.env.REACT_APP_SHARETRIBE_FLEX_CLIENT_ID;
+const CLIENT_SECRET = process.env.SHARETRIBE_FLEX_CLIENT_SECRET;
 
 
 exports.comissionVariable = (listingId) => {
