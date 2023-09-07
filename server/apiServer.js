@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const apiRouter = require('./apiRouter');
 const wellKnownRouter = require('./wellKnownRouter');
+const webmanifestResourceRoute = require('./resources/webmanifest');
 
 const radix = 10;
 const PORT = parseInt(process.env.REACT_APP_DEV_API_SERVER_PORT, radix);
@@ -26,6 +27,12 @@ app.use(
 app.use(cookieParser());
 app.use('/.well-known', wellKnownRouter);
 app.use('/api', apiRouter);
+
+// Generate web app manifest
+// When developing with "yarn run dev",
+// you can reach the manifest from http://localhost:3500/site.webmanifest
+// The corresponding <link> element is set in src/components/Page/Page.js
+app.get('/site.webmanifest', webmanifestResourceRoute);
 
 app.listen(PORT, () => {
   console.log(`API server listening on ${PORT}`);
