@@ -33,6 +33,7 @@ const passport = require('passport');
 const auth = require('./auth');
 const apiRouter = require('./apiRouter');
 const wellKnownRouter = require('./wellKnownRouter');
+const webmanifestResourceRoute = require('./resources/webmanifest');
 const { getExtractors } = require('./importer');
 const renderer = require('./renderer');
 const dataLoader = require('./dataLoader');
@@ -139,6 +140,12 @@ app.use(cookieParser());
 // We need to handle these endpoints separately so that they are accessible by Flex
 // even if you have enabled basic authentication e.g. in staging environment.
 app.use('/.well-known', wellKnownRouter);
+
+// Generate web app manifest
+// When developing with "yarn run dev",
+// you can reach the manifest from http://localhost:3500/site.webmanifest
+// The corresponding <link> element is set in src/components/Page/Page.js
+app.get('/site.webmanifest', webmanifestResourceRoute);
 
 // Use basic authentication when not in dev mode. This is
 // intentionally after the static middleware and /.well-known
