@@ -6,7 +6,7 @@ import appSettings from '../config/settings';
 import { types as sdkTypes, transit } from './sdkLoader';
 import Decimal from 'decimal.js';
 
-export const apiBaseUrl = () => {
+export const apiBaseUrl = marketplaceRootURL => {
   const port = process.env.REACT_APP_DEV_API_SERVER_PORT;
   const useDevApiServer = process.env.NODE_ENV === 'development' && !!port;
 
@@ -15,8 +15,8 @@ export const apiBaseUrl = () => {
     return `http://localhost:${port}`;
   }
 
-  // Otherwise, use the same domain and port as the frontend
-  return `${window.location.origin}`;
+  // Otherwise, use the given marketplaceRootURL parameter or the same domain and port as the frontend
+  return marketplaceRootURL ? marketplaceRootURL.replace(/\/$/, '') : `${window.location.origin}`;
 };
 
 // Application type handlers for JS SDK.
