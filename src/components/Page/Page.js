@@ -10,6 +10,7 @@ import { useIntl, intlShape } from '../../util/reactIntl';
 import { metaTagProps } from '../../util/seo';
 import { canonicalRoutePath } from '../../util/routes';
 import { propTypes } from '../../util/types';
+import { apiBaseUrl } from '../../util/api';
 
 import css from './Page.module.css';
 
@@ -24,6 +25,31 @@ const twitterPageURL = siteTwitterHandle => {
     return `https://twitter.com/${siteTwitterHandle}`;
   }
   return null;
+};
+
+const webmanifestURL = marketplaceRootURL => {
+  // Note: on localhost (when running "yarn run dev"), the webmanifest is running on apiServer port
+  const baseUrl = apiBaseUrl(marketplaceRootURL);
+  return `${baseUrl}/site.webmanifest`;
+};
+
+const getFaviconVariants = config => {
+  // We add favicon through hosted configs
+  // NOTE: There's no favicon.ico file. This is an imageAsset object which is used together with <meta> tags.
+  const favicon = config.branding.favicon;
+  return favicon?.type === 'imageAsset' ? Object.values(favicon.attributes.variants) : [];
+};
+
+const getAppleTouchIconURL = config => {
+  // The appIcon is used to pick apple-touch-icon
+  // We use 180x180. I.e. we follow the example set by realfavicongenerator
+  const appIcon = config.branding.appIcon;
+  const appIconVariants =
+    appIcon?.type === 'imageAsset' ? Object.values(appIcon.attributes.variants) : [];
+  const appleTouchIconVariant = appIconVariants.find(variant => {
+    return variant.width === 180 && variant.height === 180;
+  });
+  return appleTouchIconVariant?.url;
 };
 
 class PageComponent extends Component {
@@ -204,12 +230,8 @@ class PageComponent extends Component {
       });
     }
 
-    // We add favicon through hosted configs
-    // NOTE: There's no favicon.ico file. This is an imageAsset object which is used together with <meta> tags.
-    // TODO: add app icons too
-    const faviconAsset = config.branding.favicon;
-    const faviconVariants =
-      faviconAsset?.type === 'imageAsset' ? Object.values(faviconAsset.attributes.variants) : [];
+    const faviconVariants = getFaviconVariants(config);
+    const appleTouchIcon = getAppleTouchIconURL(config);
 
     // Marketplace color and branding image comes from configs
     // If set, we need to create CSS Property and set it to DOM (documentElement is selected here)
@@ -242,6 +264,12 @@ class PageComponent extends Component {
               />
             );
           })}
+
+          {appleTouchIcon ? (
+            <link rel="apple-touch-icon" sizes="180x180" href={appleTouchIcon} />
+          ) : null}
+
+          <link rel="manifest" href={webmanifestURL(marketplaceRootURL)} />
 
           <meta httpEquiv="Content-Type" content="text/html; charset=UTF-8" />
           <meta httpEquiv="Content-Language" content={intl.locale} />
