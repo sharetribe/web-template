@@ -62,8 +62,34 @@ export const MainContent = props => {
     users,
     primaryButtonProps,
     viewport,
-    getOwnListing
+    getOwnListing,
+    
   } = props;
+
+  const sortByTitle = (usersss)=>(users)=>{
+    console.log('sortByTitle - usersss');
+    console.log(usersss);
+    console.log('sortByTitle - users');
+    console.log(users);
+  }
+
+  console.log('users.sort(sortByTitle)');
+  users.sort(sortByTitle);
+
+  const sortChoice = 'title';
+
+  switch (sortChoice) {
+    case 'title':
+      users.sort(sortByTitle('afsa'));
+      break;
+
+    case 'status':
+      users.sort(sortByStatus);
+      break;
+  }
+
+  console.log('6480d082-682c-4f5a-bbee-502cda7cf0f0');
+  console.log(getOwnListing('6480d082-682c-4f5a-bbee-502cda7cf0f0'));
 
   const hasUsers = users.length > 0;
   // const hasUsers = 0;
@@ -129,7 +155,7 @@ export const MainContent = props => {
                   </li>
                 </ul>
                 
-                {/* {console.log(l)} */}
+                {console.log(l)}
                 {/* <ListingCard listing={l} showAuthorInfo={false} /> */}
               </li>
             ))}
@@ -141,6 +167,7 @@ export const MainContent = props => {
 };
 
 const goToEditCommission = (uId) => {
+  console.log(uId);
   // const defaultRoutes = getDefaultRoutes();
   // const { baseUrl, fromParam, defaultReturnParam, defaultConfirmParam } = defaultRoutes;
   window.location.href = `/EditCommission/${uId}`;
@@ -211,6 +238,10 @@ const mapStateToProps = state => {
     users,
     listingData,
   } = state.CommissionPage;
+
+  console.log('state');
+  console.log(state);
+  console.log(state.CommissionPage);
 
   const getOwnListing = id => {
     const ref = { id, type: 'ownListing' };
