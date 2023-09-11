@@ -1628,22 +1628,19 @@ describe('EditListingPageComponent', () => {
     const tabLabelDetails = 'EditListingWizard.tabLabelDetails';
     expect(screen.getByText(tabLabelDetails)).toBeInTheDocument();
 
-    const tabLabelLocation = 'EditListingWizard.tabLabelLocation';
-    expect(screen.getByText(tabLabelLocation)).toBeInTheDocument();
-
-    const tabLabelPricing = 'EditListingWizard.tabLabelPricing';
-    expect(screen.getByText(tabLabelPricing)).toBeInTheDocument();
-
+    // Check that default photos panel is not shown initially (it's added after listing type is selected)
     const tabLabelPhotos = 'EditListingWizard.tabLabelPhotos';
-    expect(screen.getByText(tabLabelPhotos)).toBeInTheDocument();
+    expect(screen.queryByText(tabLabelPhotos)).not.toBeInTheDocument();
 
     userEvent.selectOptions(
       screen.getByLabelText('EditListingDetailsForm.listingTypeLabel'),
       'product-selling'
     );
 
-    // Tabs removed
+    // Tabs not in use
+    const tabLabelLocation = 'EditListingWizard.tabLabelLocation';
     expect(screen.queryByText(tabLabelLocation)).not.toBeInTheDocument();
+    const tabLabelPricing = 'EditListingWizard.tabLabelPricing';
     expect(screen.queryByText(tabLabelPricing)).not.toBeInTheDocument();
     const tabLabelAvailability = 'EditListingWizard.tabLabelAvailability';
     expect(screen.queryByText(tabLabelAvailability)).not.toBeInTheDocument();
