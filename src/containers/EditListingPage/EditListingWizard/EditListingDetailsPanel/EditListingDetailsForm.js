@@ -183,6 +183,10 @@ const EditListingDetailsFormComponent = props => (
       );
       const maxLength60Message = maxLength(maxLengthMessage, TITLE_MAX_LENGTH);
 
+      // Show title and description only after listing type is selected
+      const showTitle = listingType;
+      const showDescription = listingType;
+
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
@@ -192,34 +196,6 @@ const EditListingDetailsFormComponent = props => (
         <Form className={classes} onSubmit={handleSubmit}>
           <ErrorMessage fetchErrors={fetchErrors} />
 
-          <FieldTextInput
-            id={`${formId}title`}
-            name="title"
-            className={css.title}
-            type="text"
-            label={intl.formatMessage({ id: 'EditListingDetailsForm.title' })}
-            placeholder={intl.formatMessage({ id: 'EditListingDetailsForm.titlePlaceholder' })}
-            maxLength={TITLE_MAX_LENGTH}
-            validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
-            autoFocus={autoFocus}
-          />
-
-          <FieldTextInput
-            id={`${formId}description`}
-            name="description"
-            className={css.description}
-            type="textarea"
-            label={intl.formatMessage({ id: 'EditListingDetailsForm.description' })}
-            placeholder={intl.formatMessage({
-              id: 'EditListingDetailsForm.descriptionPlaceholder',
-            })}
-            validate={required(
-              intl.formatMessage({
-                id: 'EditListingDetailsForm.descriptionRequired',
-              })
-            )}
-          />
-
           <FieldSelectListingType
             name="listingType"
             listingTypes={selectableListingTypes}
@@ -228,6 +204,38 @@ const EditListingDetailsFormComponent = props => (
             formApi={formApi}
             intl={intl}
           />
+
+          {showTitle ? (
+            <FieldTextInput
+              id={`${formId}title`}
+              name="title"
+              className={css.title}
+              type="text"
+              label={intl.formatMessage({ id: 'EditListingDetailsForm.title' })}
+              placeholder={intl.formatMessage({ id: 'EditListingDetailsForm.titlePlaceholder' })}
+              maxLength={TITLE_MAX_LENGTH}
+              validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
+              autoFocus={autoFocus}
+            />
+          ) : null}
+
+          {showDescription ? (
+            <FieldTextInput
+              id={`${formId}description`}
+              name="description"
+              className={css.description}
+              type="textarea"
+              label={intl.formatMessage({ id: 'EditListingDetailsForm.description' })}
+              placeholder={intl.formatMessage({
+                id: 'EditListingDetailsForm.descriptionPlaceholder',
+              })}
+              validate={required(
+                intl.formatMessage({
+                  id: 'EditListingDetailsForm.descriptionRequired',
+                })
+              )}
+            />
+          ) : null}
 
           <AddListingFields
             listingType={listingType}
