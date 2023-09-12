@@ -14,9 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Add French translations as a reference (fr.json)
+  [#219](https://github.com/sharetribe/web-template/pull/219)
 - [add] Add a create-listing link to blank slates of SearchPage and ManageListingsPage.
   [#218](https://github.com/sharetribe/web-template/pull/218)
-
 - [change] TransactionPanel/InquiryMessageMaybe: highlight initial inquiry message more.
   [#213](https://github.com/sharetribe/web-template/pull/213)
 
