@@ -53,6 +53,18 @@
   }
 }
 
+.noResultsContainer {
+  margin: 0 24px;
+
+  @media (--viewportMedium) {
+    margin: 0 24px;
+  }
+
+  @media (--viewportLarge) {
+    margin: 0 36px;
+  }
+}
+
 .heading {
   margin: 0 24px 24px 24px;
 
@@ -62,6 +74,19 @@
 
   @media (--viewportLarge) {
     margin: 0 36px 32px 36px;
+  }
+}
+
+.createListingParagraph,
+.headingNoListings {
+  margin: 0 0 12px 0;
+
+  @media (--viewportMedium) {
+    margin: 0 0 8px 0;
+  }
+
+  @media (--viewportLarge) {
+    margin: 0 0 8px 0;
   }
 }
 

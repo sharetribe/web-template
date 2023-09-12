@@ -1,5 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from '../../../util/reactIntl';
+import { NamedLink } from '../../../components';
+
 import css from './NoSearchResultsMaybe.module.css';
 
 const NoSearchResultsMaybe = props => {
@@ -15,6 +17,11 @@ const NoSearchResultsMaybe = props => {
           <FormattedMessage id={'SearchPage.resetAllFilters'} />
         </button>
       ) : null}
+      <p>
+        <NamedLink className={css.createListingLink} name="NewListingPage">
+          <FormattedMessage id="SearchPage.createListing" />
+        </NamedLink>
+      </p>
     </div>
   ) : null;
 };
