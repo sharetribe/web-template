@@ -116,6 +116,7 @@ const AddListingFields = props => {
   const { listingType, listingFieldsConfig, intl } = props;
   const fields = listingFieldsConfig.reduce((pickedFields, fieldConfig) => {
     const { key, includeForListingTypes, schemaType, scope } = fieldConfig || {};
+    const namespacedKey = scope === 'public' ? `pub_${key}` : `priv_${key}`;
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetProcessAlias =
@@ -126,8 +127,8 @@ const AddListingFields = props => {
       ? [
           ...pickedFields,
           <CustomExtendedDataField
-            key={key}
-            name={key}
+            key={namespacedKey}
+            name={namespacedKey}
             fieldConfig={fieldConfig}
             defaultRequiredMessage={intl.formatMessage({
               id: 'EditListingDetailsForm.defaultRequiredMessage',

@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] EditListingDetailsPanel: namespace listing field inputs to avoid conflicts in input names.
+  [#216](https://github.com/sharetribe/web-template/pull/216)
 - [add] Add French translations as a reference (fr.json)
   [#219](https://github.com/sharetribe/web-template/pull/219)
 - [add] Add a create-listing link to blank slates of SearchPage and ManageListingsPage.
