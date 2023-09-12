@@ -26,6 +26,7 @@ import MenuIcon from './MenuIcon';
 import SearchIcon from './SearchIcon';
 import TopbarSearchForm from './TopbarSearchForm/TopbarSearchForm';
 import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
+import TopbarSearchFormCommission from './TopbarSearchFormCommission/TopbarSearchFormCommission';
 import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
 
 import css from './Topbar.module.css';
@@ -78,6 +79,7 @@ class TopbarComponent extends Component {
     this.handleMobileSearchOpen = this.handleMobileSearchOpen.bind(this);
     this.handleMobileSearchClose = this.handleMobileSearchClose.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSubmitCommission = this.handleSubmitCommission.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
   }
 
@@ -98,6 +100,33 @@ class TopbarComponent extends Component {
   }
 
   handleSubmit(values) {
+    const { currentSearchParams, currentPage } = this.props;
+    const { history, config, routeConfiguration } = this.props;
+
+    const topbarSearchParams = () => {
+      if (isMainSearchTypeKeywords(config)) {
+        return { keywords: values?.keywords };
+      }
+      // topbar search defaults to 'location' search
+      const { search, selectedPlace } = values?.location;
+      const { origin, bounds } = selectedPlace;
+      const originMaybe = isOriginInUse(config) ? { origin } : {};
+
+      return {
+        ...originMaybe,
+        address: search,
+        bounds,
+      };
+    };
+    const searchParams = {
+      ...currentSearchParams,
+      ...topbarSearchParams(),
+    };
+
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
+  }
+
+  handleSubmitCommission(values) {
     const { currentSearchParams } = this.props;
     const { history, config, routeConfiguration } = this.props;
 
@@ -120,7 +149,9 @@ class TopbarComponent extends Component {
       ...currentSearchParams,
       ...topbarSearchParams(),
     };
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
+
+    const pathParams = {sort:'ask'};
+    history.push(createResourceLocatorString('Commission', routeConfiguration, pathParams, searchParams));
   }
 
   handleLogout() {
@@ -166,6 +197,8 @@ class TopbarComponent extends Component {
       config,
     } = this.props;
 
+    
+
     const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
       latlng: ['origin'],
       latlngBounds: ['bounds'],
@@ -210,6 +243,28 @@ class TopbarComponent extends Component {
 
     const classes = classNames(rootClassName || css.root, className);
 
+    const isCommissionPage = currentPage == 'CommissionPage'? true : false;
+
+    const onSearcSubmit = isCommissionPage ? this.handleSubmitCommission : this.handleSubmit;
+    
+    const topBarSearchFormVariant = isCommissionPage ? (
+      <TopbarSearchFormCommission
+        onSubmit={this.handleSubmitCommission}
+        initialValues={initialSearchFormValues}
+        isMobile
+        appConfig={config}
+        dsagasfd={console.log('TopbarSearchFormCommission')}
+      />
+    ) : (
+      <TopbarSearchForm
+        onSubmit={this.handleSubmit}
+        initialValues={initialSearchFormValues}
+        isMobile
+        appConfig={config}
+        dsagasfd={console.log('TopbarSearchForm')}
+      />
+    );
+
     return (
       <div className={classes}>
         <LimitedAccessBanner
@@ -248,7 +303,7 @@ class TopbarComponent extends Component {
             isAuthenticated={isAuthenticated}
             notificationCount={notificationCount}
             onLogout={this.handleLogout}
-            onSearchSubmit={this.handleSubmit}
+            onSearchSubmit={onSearcSubmit}
             appConfig={config}
           />
         </div>
@@ -270,12 +325,7 @@ class TopbarComponent extends Component {
           onManageDisableScrolling={onManageDisableScrolling}
         >
           <div className={css.searchContainer}>
-            <TopbarSearchForm
-              onSubmit={this.handleSubmit}
-              initialValues={initialSearchFormValues}
-              isMobile
-              appConfig={config}
-            />
+            {topBarSearchFormVariant}
             <p className={css.mobileHelp}>
               <FormattedMessage id="Topbar.mobileSearchHelp" />
             </p>

@@ -18,6 +18,7 @@ import {
 } from '../../../components';
 
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
+import TopbarSearchFormCommission from '../TopbarSearchFormCommission/TopbarSearchFormCommission';
 
 import css from './TopbarDesktop.module.css';
 
@@ -51,14 +52,26 @@ const TopbarDesktop = props => {
 
   const classes = classNames(rootClassName || css.root, className);
 
+  const isCommissionPage = currentPage == 'CommissionPage'? true : false;
+
   const search = (
-    <TopbarSearchForm
-      className={css.searchLink}
-      desktopInputRoot={css.topbarSearchWithLeftPadding}
-      onSubmit={onSearchSubmit}
-      initialValues={initialSearchFormValues}
-      appConfig={appConfig}
-    />
+    isCommissionPage ? (
+      <TopbarSearchFormCommission
+        className={css.searchLink}
+        desktopInputRoot={css.topbarSearchWithLeftPadding}
+        onSubmit={onSearchSubmit}
+        initialValues={initialSearchFormValues}
+        appConfig={appConfig}
+      />
+    ):(
+      <TopbarSearchForm
+        className={css.searchLink}
+        desktopInputRoot={css.topbarSearchWithLeftPadding}
+        onSubmit={onSearchSubmit}
+        initialValues={initialSearchFormValues}
+        appConfig={appConfig}
+      />
+    )
   );
 
   const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
@@ -142,7 +155,7 @@ const TopbarDesktop = props => {
   );
 
   const manageCommission = !isAuthenticatedAndAccess ? null : (
-    <NamedLink className={css.createListingLink} name="Commission">
+    <NamedLink className={css.createListingLink} params={{ sort: 'asc' }} name="Commission">
         <span className={css.createListing}>
           <FormattedMessage id="TopbarDesktop.Commission" />
         </span>

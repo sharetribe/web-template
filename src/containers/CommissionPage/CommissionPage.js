@@ -66,32 +66,30 @@ export const MainContent = props => {
     
   } = props;
 
-  const sortByTitle = (usersss)=>(users)=>{
-    console.log('sortByTitle - usersss');
-    console.log(usersss);
-    console.log('sortByTitle - users');
-    console.log(users);
-  }
+  // const sortByTitle = (usersss)=>(users)=>{
+  //   console.log('sortByTitle - usersss');
+  //   console.log(usersss);
+  //   console.log('sortByTitle - users');
+  //   console.log(users);
+  // }
 
-  console.log('users.sort(sortByTitle)');
-  users.sort(sortByTitle);
+  // console.log('users.sort(sortByTitle)');
+  // users.sort(sortByTitle);
 
-  const sortChoice = 'title';
+  // const sortChoice = 'title';
 
-  switch (sortChoice) {
-    case 'title':
-      users.sort(sortByTitle('afsa'));
-      break;
+  // switch (sortChoice) {
+  //   case 'title':
+  //     users.sort(sortByTitle('afsa'));
+  //     break;
 
-    case 'status':
-      users.sort(sortByStatus);
-      break;
-  }
+  //   case 'status':
+  //     users.sort(sortByStatus);
+  //     break;
+  // }
 
-  console.log('6480d082-682c-4f5a-bbee-502cda7cf0f0');
-  console.log(getOwnListing('6480d082-682c-4f5a-bbee-502cda7cf0f0'));
 
-  const hasUsers = users.length > 0;
+  const hasUsers = users?.length > 0;
   // const hasUsers = 0;
   
   const isMobileLayout = viewport.width < MAX_MOBILE_SCREEN_WIDTH;
@@ -103,8 +101,11 @@ export const MainContent = props => {
 
   const usersTableTitleClasses = classNames(css.usersTableTitle, css.user);
 
+  const consoleFunc = ()=>{
+    console.log('consoleFunc');
+  }
+
   const calcCommission = l =>{
-    console.log(l.attributes.profile.metadata);
     return l.attributes.profile.metadata && l.attributes.profile.metadata.commission ? l.attributes.profile.metadata.commission:15;
   }
 
@@ -146,8 +147,8 @@ export const MainContent = props => {
                   <li>{calcCommission(l)}{'%'}</li>
                   <li>
                   <PrimaryButton
-                    // inProgress={primaryButtonProps.inProgress}
-                    // disabled={buttonsDisabled}
+                    inProgress={false}
+                    disabled={false}
                     onClick={()=>{primaryButtonProps.onAction(l.id.uuid)}}
                   >
                     {'Edit Commission'}
@@ -155,7 +156,7 @@ export const MainContent = props => {
                   </li>
                 </ul>
                 
-                {console.log(l)}
+                {/* {console.log(l)} */}
                 {/* <ListingCard listing={l} showAuthorInfo={false} /> */}
               </li>
             ))}
@@ -239,9 +240,9 @@ const mapStateToProps = state => {
     listingData,
   } = state.CommissionPage;
 
-  console.log('state');
-  console.log(state);
-  console.log(state.CommissionPage);
+  // console.log('state');
+  // console.log(state);
+  // console.log(state.CommissionPage);
 
   const getOwnListing = id => {
     const ref = { id, type: 'ownListing' };

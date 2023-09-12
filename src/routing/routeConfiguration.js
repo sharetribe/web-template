@@ -369,7 +369,7 @@ const routeConfiguration = (layoutConfig) => {
       component: PreviewResolverPage ,
     },
     {
-      path: '/Commission',
+      path: '/Commission/:sort',
       name: 'Commission',
       auth: true,
       authRole:'admin',
@@ -379,7 +379,7 @@ const routeConfiguration = (layoutConfig) => {
       loadData: pageDataLoadingAPI.CommissionPage.loadData,
     },
     {
-      path: '/EditCommission/:id',
+      path: '/EditCommission/:id/',
       name: 'EditCommission',
       auth: true,
       authRole:'admin',
