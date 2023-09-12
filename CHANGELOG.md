@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [chnage] Update browserlist DB (i.e. caniuse-lite entry in yarn.lock file)
+  [#221](https://github.com/sharetribe/web-template/pull/221)
 - [add] Add Spanish translations as a reference (es.json)
   [#220](https://github.com/sharetribe/web-template/pull/220)
 - [fix] EditListingDetailsPanel: namespace listing field inputs to avoid conflicts in input names.
