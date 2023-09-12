@@ -68,28 +68,66 @@ const hasSetListingType = publicData => {
 };
 
 /**
- * Pick extended data fields from given data. Picking is based on extended data configuration
- * for the listing and target scopa and transaction process alias.
+ * Pick extended data fields from given form data.
+ * Picking is based on extended data configuration for the listing and target scope and listing type.
  *
- * With 'clearExtraCustomFields' parameter can be used to clear unused values for sdk.listings.update call.
- * It returns null for those fields that are managed by configuration, but don't match target process alias.
+ * This expects submit data to be namespaced (e.g. 'pub_') and it returns the field without that namespace.
+ * This function is used when form submit values are restructured for the actual API endpoint.
+ *
+ * Note: This returns null for those fields that are managed by configuration, but don't match target listing type.
+ *       These might exists if provider swaps between listing types before saving the draft listing.
  *
  * @param {Object} data values to look through against listingConfig.js and util/configHelpers.js
  * @param {String} targetScope Check that the scope of extended data the config matches
  * @param {String} targetListingType Check that the extended data is relevant for this listing type.
  * @param {Object} listingFieldConfigs an extended data configurtions for listing fields.
- * @param {boolean} clearExtraCustomFields If true, returns also custom extended data fields with null values
+ * @returns Array of picked extended data fields from submitted data.
+ */
+const pickListingFieldsData = (data, targetScope, targetListingType, listingFieldConfigs) => {
+  return listingFieldConfigs.reduce((fields, field) => {
+    const { key, includeForListingTypes, scope = 'public', schemaType } = field || {};
+    const namespacePrefix = scope === 'public' ? `pub_` : `priv_`;
+    const namespacedKey = `${namespacePrefix}${key}`;
+
+    const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+    const isTargetScope = scope === targetScope;
+    const isTargetListingType =
+      includeForListingTypes == null || includeForListingTypes.includes(targetListingType);
+
+    if (isKnownSchemaType && isTargetScope && isTargetListingType) {
+      const fieldValue = data[namespacedKey] || null;
+      return { ...fields, [key]: fieldValue };
+    } else if (isKnownSchemaType && isTargetScope && !isTargetListingType) {
+      // Note: this clears extra custom fields
+      // These might exists if provider swaps between listing types before saving the draft listing.
+      return { ...fields, [key]: null };
+    }
+    return fields;
+  }, {});
+};
+
+/**
+ * Pick extended data fields from given extended data of the listing entity.
+ * Picking is based on extended data configuration for the listing and target scope and listing type.
+ *
+ * This returns namespaced (e.g. 'pub_') initial values for the form.
+ *
+ * @param {Object} data extended data values to look through against listingConfig.js and util/configHelpers.js
+ * @param {String} targetScope Check that the scope of extended data the config matches
+ * @param {String} targetListingType Check that the extended data is relevant for this listing type.
+ * @param {Object} listingFieldConfigs an extended data configurtions for listing fields.
  * @returns Array of picked extended data fields
  */
-const pickListingFieldsData = (
+const initialValuesForListingFields = (
   data,
   targetScope,
   targetListingType,
-  listingFieldConfigs,
-  clearExtraCustomFields = false
+  listingFieldConfigs
 ) => {
   return listingFieldConfigs.reduce((fields, field) => {
     const { key, includeForListingTypes, scope = 'public', schemaType } = field || {};
+    const namespacePrefix = scope === 'public' ? `pub_` : `priv_`;
+    const namespacedKey = `${namespacePrefix}${key}`;
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
@@ -98,14 +136,7 @@ const pickListingFieldsData = (
 
     if (isKnownSchemaType && isTargetScope && isTargetListingType) {
       const fieldValue = data[key] || null;
-      return { ...fields, [key]: fieldValue };
-    } else if (
-      isKnownSchemaType &&
-      isTargetScope &&
-      !isTargetListingType &&
-      clearExtraCustomFields
-    ) {
-      return { ...fields, [key]: null };
+      return { ...fields, [namespacedKey]: fieldValue };
     }
     return fields;
   }, {});
@@ -161,8 +192,8 @@ const getInitialValues = (props, existingListingType, listingTypes, listingField
     description,
     // Transaction type info: listingType, transactionProcessAlias, unitType
     ...getTransactionInfo(listingTypes, existingListingType),
-    ...pickListingFieldsData(publicData, 'public', listingType, listingFieldsConfig),
-    ...pickListingFieldsData(privateData, 'private', listingType, listingFieldsConfig),
+    ...initialValuesForListingFields(publicData, 'public', listingType, listingFieldsConfig),
+    ...initialValuesForListingFields(privateData, 'private', listingType, listingFieldsConfig),
   };
 };
 
@@ -239,8 +270,6 @@ const EditListingDetailsPanel = props => {
               unitType,
               ...rest
             } = values;
-            // Clear custom fields that are not included for the selected process
-            const clearUnrelatedCustomFields = true;
 
             // New values for listing attributes
             const updateValues = {
@@ -250,21 +279,9 @@ const EditListingDetailsPanel = props => {
                 listingType,
                 transactionProcessAlias,
                 unitType,
-                ...pickListingFieldsData(
-                  rest,
-                  'public',
-                  listingType,
-                  listingFieldsConfig,
-                  clearUnrelatedCustomFields
-                ),
+                ...pickListingFieldsData(rest, 'public', listingType, listingFieldsConfig),
               },
-              privateData: pickListingFieldsData(
-                rest,
-                'private',
-                listingType,
-                listingFieldsConfig,
-                clearUnrelatedCustomFields
-              ),
+              privateData: pickListingFieldsData(rest, 'private', listingType, listingFieldsConfig),
               ...setNoAvailabilityForUnbookableListings(transactionProcessAlias),
             };
 
