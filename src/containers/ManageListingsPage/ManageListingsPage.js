@@ -7,7 +7,14 @@ import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { H3, Page, PaginationLinks, UserNav, LayoutSingleColumn } from '../../components';
+import {
+  H3,
+  Page,
+  PaginationLinks,
+  UserNav,
+  LayoutSingleColumn,
+  NamedLink,
+} from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
@@ -67,9 +74,16 @@ export class ManageListingsPageComponent extends Component {
 
     const noResults =
       listingsAreLoaded && pagination.totalItems === 0 ? (
-        <H3 as="h1" className={css.heading}>
-          <FormattedMessage id="ManageListingsPage.noResults" />
-        </H3>
+        <div className={css.noResultsContainer}>
+          <H3 as="h1" className={css.headingNoListings}>
+            <FormattedMessage id="ManageListingsPage.noResults" />
+          </H3>
+          <p className={css.createListingParagraph}>
+            <NamedLink className={css.createListingLink} name="NewListingPage">
+              <FormattedMessage id="ManageListingsPage.createListing" />
+            </NamedLink>
+          </p>
+        </div>
       ) : null;
 
     const heading =
