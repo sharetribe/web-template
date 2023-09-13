@@ -3,6 +3,8 @@ import { bool, arrayOf, number, shape } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
+import { Link } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { PrimaryButton, SecondaryButton } from '../../components';
 
@@ -62,9 +64,8 @@ export const MainContent = props => {
     users,
     primaryButtonProps,
     viewport,
-    getOwnListing,
-    
   } = props;
+
 
   // const sortByTitle = (usersss)=>(users)=>{
   //   console.log('sortByTitle - usersss');
@@ -109,6 +110,27 @@ export const MainContent = props => {
     return l.attributes.profile.metadata && l.attributes.profile.metadata.commission ? l.attributes.profile.metadata.commission:15;
   }
 
+  const handleSortBy = (e,urlParam, values) => {
+    e.preventDefault();
+
+    const history = useHistory();
+
+    history.push('/');
+
+
+    console.log('handleSortBy');
+    console.log(props);
+    console.log(history);
+    return false;
+    const urlQueryParams = validUrlQueryParamsFromProps(this.props);
+
+    const queryParams = values
+      ? { ...urlQueryParams, [urlParam]: values }
+      : omit(urlQueryParams, urlParam);
+
+    history.push(createResourceLocatorString(props.location.pathname, routeConfiguration, {}, queryParams));
+  }
+
   return (
     <div>
       <H2 as="h1" className={css.desktopHeading}>
@@ -119,13 +141,15 @@ export const MainContent = props => {
       {hasUsers ? (
         <div className={listingsContainerClasses}>
           <H4 as="h2" className={css.listingsTitle}>
-            <FormattedMessage id="CommissionPage.usersTitle" values={{ count: 5 }} />
+            <FormattedMessage id="CommissionPage.usersTitle" values={{ count: users.length }} />
           </H4>
           <ul >
             <li>
               <ul className={usersTableTitleClasses}>
                 <li>
-                  <H4 as="h4"> {'Uer Name'} </H4>  
+                  <H4 as="h4"> 
+                    <Link to={props.location.pathname} className={css.editLink} onClick={handleSortBy}>{'Uer Name'}</Link>
+                  </H4>  
                 </li>
                 <li>
                   <H4 as="h4"> {'Uer Email'} </H4>  
@@ -214,7 +238,7 @@ CommissionPageComponent.defaultProps = {
   currentUser: null,
   user: null,
   queryListingsError: null,
-  listingData:null
+  listingData:null,
   // queryReviewsError: null,
 };
 
@@ -255,7 +279,7 @@ const mapStateToProps = state => {
     currentUser,
     users,
     listingData,
-    getOwnListing
+    getOwnListing,
     // queryReviewsError,
   };
 };

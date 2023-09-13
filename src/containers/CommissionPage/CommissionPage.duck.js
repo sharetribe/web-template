@@ -6,6 +6,7 @@ import { storableError } from '../../util/errors';
 import { getUsersAdmin, getListingOwnerAdmin } from '../../util/api';
 import { parse } from '../../util/urlHelpers';
 import * as log from '../../util/log';
+import sortUsersByName from '../../util/sorting';
 import { object } from 'prop-types';
 
 const { UUID } = sdkTypes;
@@ -68,8 +69,7 @@ export default function CommissionPageReducer(state = initialState, action = {})
       return { ...state, users:payload.usersRefs };
     case SEARCH_USERS_ERROR:
       return { ...state, users:[], queryUsersError: payload };
-    
-
+      
     default:
       return state;
   }
@@ -188,10 +188,10 @@ const keywordsSearch = (keywords,user)=>{
   const userId = id.uuid;
 
   return email.includes(keywords) ||
-    firstName.includes(keywords) ||
-    lastName.includes(keywords) ||
-    fullName.includes(keywords) ||
-    userId.includes(keywords);
+    firstName.toLowerCase().includes(keywords) ||
+    lastName.toLowerCase().includes(keywords) ||
+    fullName.toLowerCase().includes(keywords) ||
+    userId.toLowerCase().includes(keywords);
 }
 
 const applySearchParams = (searchParams, usersData) => {
@@ -202,7 +202,41 @@ const applySearchParams = (searchParams, usersData) => {
     const usersKeys = Object.keys(usersData);
 
     usersKeys.forEach((key)=>{
-      if(keywordsSearch(keywords,usersData[key])){
+      if(keywordsSearch(keywords.toLowerCase(),usersData[key])){
+        // const listingUserKey = Object.keys(filterUsers).length;
+        filterUsers[filterUsers.length] = usersData[key];
+      }
+    });
+
+    return filterUsers;
+  }
+  
+  return usersData;
+}
+
+
+const applySortParams = (sortParams, usersData) => {
+  const filterUsers = [];
+  const {sort} = sortParams;
+
+  console.log('applySortParams');
+
+  if(sort){
+    const usersKeys = Object.keys(usersData);
+    const sortChoice = 'title';
+
+    switch (sortChoice) {
+        case 'title':
+            usersData.sort(sortUsersByName);
+            break;
+
+        case 'status':
+          usersData.sort(sortUsersByName);
+            break;
+    }
+
+    usersKeys.forEach((key)=>{
+      if(keywordsSearch(keywords.toLowerCase(),usersData[key])){
         // const listingUserKey = Object.keys(filterUsers).length;
         filterUsers[filterUsers.length] = usersData[key];
       }
@@ -226,6 +260,7 @@ export const searchUsers = (searchParams, config) => (dispatch, getState, sdk) =
     // dispatch(queryUsersSuccess(response));
     console.log(response);
     const filteredUsers = applySearchParams(searchParams,response);
+    const sortedUsers = applySortParams(searchParams,response);
     console.log(filteredUsers);
     dispatch(searchUsersSuccess(filteredUsers));
   })

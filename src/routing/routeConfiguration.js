@@ -369,7 +369,7 @@ const routeConfiguration = (layoutConfig) => {
       component: PreviewResolverPage ,
     },
     {
-      path: '/Commission/:sort',
+      path: '/Commission',
       name: 'Commission',
       auth: true,
       authRole:'admin',
