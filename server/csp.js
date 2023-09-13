@@ -36,6 +36,10 @@ const defaultDirectives = {
     '*.google-analytics.com',
     'stats.g.doubleclick.net',
 
+    // Plausible analytics
+    'plausible.io',
+    '*.plausible.io',
+
     'fonts.googleapis.com',
 
     'sentry.io',
@@ -84,6 +88,8 @@ const defaultDirectives = {
     'www.googletagmanager.com',
     '*.google-analytics.com',
     'js.stripe.com',
+    // Plausible analytics
+    'plausible.io',
   ],
   styleSrc: [self, unsafeInline, 'fonts.googleapis.com', 'api.mapbox.com'],
 };
