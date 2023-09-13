@@ -1,1 +1,1 @@
-Your booking request was accepted
+{{set-translations (asset "email/translations.json")}}{{t "BookingAcceptedRequest.Subject" "Your booking request was accepted" }}

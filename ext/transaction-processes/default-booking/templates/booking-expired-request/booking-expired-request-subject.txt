@@ -1,1 +1,1 @@
-Your booking request expired
+{{set-translations (asset "email/translations.json")}}{{t "BookingExpiredRequest.Subject" "Your booking request expired" }}
