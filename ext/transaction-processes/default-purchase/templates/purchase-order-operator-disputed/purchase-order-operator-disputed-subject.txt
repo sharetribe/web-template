@@ -1,1 +1,1 @@
-An order for {{transaction.listing.title}} was disputed.
+{{set-translations (asset "email/translations.json")}}{{t "PurchaseOrderOperatorDisputed.Subject" "An order for {listingTitle} was disputed" listingTitle=transaction.listing.title}}
