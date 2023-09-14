@@ -6,8 +6,9 @@ import { storableError } from '../../util/errors';
 import { getUsersAdmin, getListingOwnerAdmin } from '../../util/api';
 import { parse } from '../../util/urlHelpers';
 import * as log from '../../util/log';
-import sortUsersByName from '../../util/sorting';
+import {ASC,DSC,sortUsersByName, sortUsersByEmail, sortUsersByCommission} from '../../util/sorting';
 import { object } from 'prop-types';
+import { indexOf } from 'lodash';
 
 const { UUID } = sdkTypes;
 
@@ -222,28 +223,30 @@ const applySortParams = (sortParams, usersData) => {
   console.log('applySortParams');
 
   if(sort){
-    const usersKeys = Object.keys(usersData);
-    const sortChoice = 'title';
+    // const usersKeys = Object.keys(usersData);
+    var filter = function(key, val) {
+      return val.indexOf(key) !== -1 && val !== undefined;
+    };
+
+    const sortChoice = sort.replace('-','');
+    const order = filter('-',sort) ? ASC : DSC;
+
+    console.log(order);
 
     switch (sortChoice) {
-        case 'title':
-            usersData.sort(sortUsersByName);
-            break;
-
-        case 'status':
-          usersData.sort(sortUsersByName);
-            break;
+      case 'name':
+        usersData.sort((a,b)=>sortUsersByName(a,b,order));
+        break;
+      case 'email':
+        usersData.sort((a,b)=>sortUsersByEmail(a,b,order));
+        break;
+      case 'commission':
+        usersData.sort((a,b)=>sortUsersByCommission(a,b,order));
+        break;
     }
-
-    usersKeys.forEach((key)=>{
-      if(keywordsSearch(keywords.toLowerCase(),usersData[key])){
-        // const listingUserKey = Object.keys(filterUsers).length;
-        filterUsers[filterUsers.length] = usersData[key];
-      }
-    });
-
-    return filterUsers;
   }
+
+  console.log(usersData);
   
   return usersData;
 }
@@ -260,9 +263,9 @@ export const searchUsers = (searchParams, config) => (dispatch, getState, sdk) =
     // dispatch(queryUsersSuccess(response));
     console.log(response);
     const filteredUsers = applySearchParams(searchParams,response);
-    const sortedUsers = applySortParams(searchParams,response);
-    console.log(filteredUsers);
-    dispatch(searchUsersSuccess(filteredUsers));
+    const sortedUsers = applySortParams(searchParams,filteredUsers);
+    // console.log(filteredUsers);
+    dispatch(searchUsersSuccess(sortedUsers));
   })
   .catch(e => {
     log.error(e, 'create-user-with-idp-failed', { searchParams });

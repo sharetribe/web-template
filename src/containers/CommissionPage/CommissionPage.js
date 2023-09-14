@@ -3,10 +3,14 @@ import { bool, arrayOf, number, shape } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import { useHistory, useLocation } from 'react-router-dom';
+import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+
 
 import { PrimaryButton, SecondaryButton } from '../../components';
+
+import SortComponent from './sortComponent';
 
 
 import { useConfiguration } from '../../context/configurationContext';
@@ -102,34 +106,12 @@ export const MainContent = props => {
 
   const usersTableTitleClasses = classNames(css.usersTableTitle, css.user);
 
-  const consoleFunc = ()=>{
-    console.log('consoleFunc');
-  }
-
   const calcCommission = l =>{
     return l.attributes.profile.metadata && l.attributes.profile.metadata.commission ? l.attributes.profile.metadata.commission:15;
   }
 
-  const handleSortBy = (e,urlParam, values) => {
-    e.preventDefault();
-
-    const history = useHistory();
-
-    history.push('/');
-
-
-    console.log('handleSortBy');
-    console.log(props);
-    console.log(history);
-    return false;
-    const urlQueryParams = validUrlQueryParamsFromProps(this.props);
-
-    const queryParams = values
-      ? { ...urlQueryParams, [urlParam]: values }
-      : omit(urlQueryParams, urlParam);
-
-    history.push(createResourceLocatorString(props.location.pathname, routeConfiguration, {}, queryParams));
-  }
+  const history = useHistory();
+  const routeConfiguration = useRouteConfiguration();
 
   return (
     <div>
@@ -148,14 +130,37 @@ export const MainContent = props => {
               <ul className={usersTableTitleClasses}>
                 <li>
                   <H4 as="h4"> 
-                    <Link to={props.location.pathname} className={css.editLink} onClick={handleSortBy}>{'Uer Name'}</Link>
+                    <SortComponent
+                      history={history}
+                      routeConfiguration={routeConfiguration}
+                      sort={"name"}
+                      title={'Uer Name'}
+                    >
+                    </SortComponent>
+                    {/* <Link to={props.location.pathname} className={css.editLink} onClick={handleSortBy}>{'Uer Name'}</Link> */}
                   </H4>  
                 </li>
                 <li>
-                  <H4 as="h4"> {'Uer Email'} </H4>  
+                  <H4 as="h4"> 
+                    <SortComponent
+                      history={history}
+                      routeConfiguration={routeConfiguration}
+                      sort={"email"}
+                      title={'Uer Email'}
+                    >
+                    </SortComponent>
+                  </H4>  
                 </li>
                 <li>
-                  <H4 as="h4"> {'Commission %'} </H4>  
+                  <H4 as="h4">  
+                    <SortComponent
+                      history={history}
+                      routeConfiguration={routeConfiguration}
+                      sort={"commission"}
+                      title={'Commission %'}
+                    >
+                    </SortComponent>
+                  </H4>  
                 </li>
                 <li>
                   <H4 as="h4" className={css.textCenter}> {'Action'} </H4>  

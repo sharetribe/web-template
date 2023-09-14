@@ -1,5 +1,5 @@
-const ASC = 'ascending';
-const DSC = 'descending';
+export const ASC = 'ascending';
+export const DSC = 'descending';
 
 export const sortFiledByText = (a, b, field, order = ASC) => {
   const diff = a[field].toLowerCase().localeCompare(b[field].toLowerCase());
@@ -25,14 +25,13 @@ export const sortUsers = () => {
 
 }
 
-export const sortUsersByName = (a, b, order = 'ASC') => {
+export const sortUsersByName = (a, b, order) => {
 
-  console.log('sortUsersByNamea');
-  console.log(a);
   console.log(order);
 
-  const aField = a.field;
-  const bField = b.field;
+  const aField = a.attributes.profile.displayName;
+  const bField = b.attributes.profile.displayName;
+
   const diff = aField.toLowerCase().localeCompare(bField.toLowerCase());
 
   if (order === ASC) {
@@ -42,24 +41,37 @@ export const sortUsersByName = (a, b, order = 'ASC') => {
   return -1 * diff;
 }
 
+export const sortUsersByEmail = (a, b, order = ASC) => {
+  
+  const aField = a.attributes.email;
+  const bField = b.attributes.email;
+
+  const diff = aField.toLowerCase().localeCompare(bField.toLowerCase());
+
+  if (order === ASC) {
+      return diff;
+  }
+
+  return -1 * diff;
+}
+
+export const sortUsersByCommission = (a, b, order = ASC) => {
+    
+  const aField = a.attributes.profile.metadata?.commission ? a.attributes.profile.metadata?.commission : 15;
+  const bField = b.attributes.profile.metadata?.commission ? b.attributes.profile.metadata?.commission : 15;
+
+  console.log('sortUsersByCommission');
+  console.log(aField);
+  console.log(bField);
+  console.log(ASC);
+  
+  const diff = aField - bField;
+
+  if (order === ASC) {
+      return diff;
+  }
+
+  return -1 * diff;
+}
+
 export default sortUsersByName;
-
-export const sortUsersByEmail = (a, b, field, order = ASC) => {
-  const diff = a[field].toLowerCase().localeCompare(b[field].toLowerCase());
-
-  if (order === ASC) {
-      return diff;
-  }
-
-  return -1 * diff;
-}
-
-export const sortUsersByCommission = (a, b, field, order = ASC) => {
-  const diff = a[field].toLowerCase().localeCompare(b[field].toLowerCase());
-
-  if (order === ASC) {
-      return diff;
-  }
-
-  return -1 * diff;
-}
