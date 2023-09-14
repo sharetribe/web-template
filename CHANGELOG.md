@@ -14,7 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
-- [chnage] Update browserlist DB (i.e. caniuse-lite entry in yarn.lock file)
+- [add] Add German translation as a reference (de.json) and update other lang files.
+  [#222](https://github.com/sharetribe/web-template/pull/222)
+- [change] Update browserlist DB (i.e. caniuse-lite entry in yarn.lock file)
   [#221](https://github.com/sharetribe/web-template/pull/221)
 - [add] Add Spanish translations as a reference (es.json)
   [#220](https://github.com/sharetribe/web-template/pull/220)
