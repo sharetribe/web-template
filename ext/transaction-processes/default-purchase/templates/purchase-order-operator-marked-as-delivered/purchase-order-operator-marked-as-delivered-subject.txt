@@ -1,1 +1,1 @@
-An order for {{transaction.listing.title}} was marked as {{#eq "shipping" transaction.protected-data.deliveryMethod}}shipped{{else}}delivered{{/eq}} on your behalf
+{{set-translations (asset "email/translations.json")}}{{t "PurchaseOrderOperatorMarkedAsDelivered.Subject" "An order for {listingTitle} was marked as {option, select, shipping {shipped} other {delivered}} on your behalf" option=transaction.protected-data.deliveryMethod listingTitle=transaction.listing.title}}
