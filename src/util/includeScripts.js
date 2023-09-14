@@ -17,7 +17,7 @@ const GOOGLE_MAPS_SCRIPT_ID = 'GoogleMapsApi';
  */
 export const IncludeScripts = props => {
   const { marketplaceRootURL: rootURL, maps, analytics } = props?.config || {};
-  const googleAnalyticsId = analytics.googleAnalyticsId;
+  const { googleAnalyticsId, plausibleDomains } = analytics;
 
   const { mapProvider, googleMapsAPIKey, mapboxAccessToken } = maps || {};
   const isGoogleMapsInUse = mapProvider === 'googleMaps';
@@ -94,6 +94,19 @@ export const IncludeScripts = props => {
         });
         `}
       </script>
+    );
+  }
+
+  if (plausibleDomains) {
+    // If plausibleDomains is not an empty string, include their script too.
+    analyticsLibraries.push(
+      <script
+        key="plausible"
+        defer
+        src="https://plausible.io/js/script.js"
+        data-domain={plausibleDomains}
+        crossOrigin
+      ></script>
     );
   }
 
