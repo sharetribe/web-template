@@ -513,63 +513,67 @@ export const displayPrice = listingTypeConfig => {
 ///////////////////////////////////////
 
 const restructureListingTypes = hostedListingTypes => {
-  return hostedListingTypes?.map(listingType => {
-    const { id, label, transactionProcess, unitType, ...rest } = listingType;
-    return transactionProcess
-      ? {
-          listingType: id,
-          label,
-          transactionType: {
-            process: transactionProcess.name,
-            alias: transactionProcess.alias,
-            unitType,
-          },
-          ...rest,
-        }
-      : null;
-  }) || [];
+  return (
+    hostedListingTypes?.map(listingType => {
+      const { id, label, transactionProcess, unitType, ...rest } = listingType;
+      return transactionProcess
+        ? {
+            listingType: id,
+            label,
+            transactionType: {
+              process: transactionProcess.name,
+              alias: transactionProcess.alias,
+              unitType,
+            },
+            ...rest,
+          }
+        : null;
+    }) || []
+  );
 };
 
 const restructureListingFields = hostedListingFields => {
-  return hostedListingFields?.map(listingField => {
-    const {
-      key,
-      scope,
-      schemaType,
-      enumOptions,
-      label,
-      filterConfig = {},
-      showConfig = {},
-      saveConfig = {},
-      ...rest
-    } = listingField;
-    const defaultLabel = label || key;
-    const enumOptionsMaybe = ['enum', 'multi-enum'].includes(schemaType) ? { enumOptions } : {};
-    const { required: isRequired, ...restSaveConfig } = saveConfig;
+  return (
+    hostedListingFields?.map(listingField => {
+      const {
+        key,
+        scope,
+        schemaType,
+        enumOptions,
+        label,
+        filterConfig = {},
+        showConfig = {},
+        saveConfig = {},
+        ...rest
+      } = listingField;
+      const defaultLabel = label || key;
+      const enumOptionsMaybe = ['enum', 'multi-enum'].includes(schemaType) ? { enumOptions } : {};
+      const { required: isRequired, ...restSaveConfig } = saveConfig;
 
-    return key
-      ? {
-          key,
-          scope,
-          schemaType,
-          ...enumOptionsMaybe,
-          filterConfig: {
-            ...filterConfig,
-            label: filterConfig.label || defaultLabel,
-          },
-          showConfig: {
-            ...showConfig,
-            label: showConfig.label || defaultLabel,
-          },
-          saveConfig: {
-            ...restSaveConfig,
-            isRequired,
-            label: saveConfig.label || defaultLabel,
-          },
-          ...rest,
-        }
-      : null;
-  }) || [];
+      return key
+        ? {
+            key,
+            scope,
+            schemaType,
+            ...enumOptionsMaybe,
+            filterConfig: {
+              ...filterConfig,
+              label: filterConfig.label || defaultLabel,
+            },
+            showConfig: {
+              ...showConfig,
+              label: showConfig.label || defaultLabel,
+            },
+            saveConfig: {
+              ...restSaveConfig,
+              isRequired,
+              label: saveConfig.label || defaultLabel,
+            },
+            ...rest,
+          }
+        : null;
+    }) || []
+  );
 };
 
 ///////////////////////////
