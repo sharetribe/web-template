@@ -217,7 +217,6 @@ const applySearchParams = (searchParams, usersData) => {
 
 
 const applySortParams = (sortParams, usersData) => {
-  const filterUsers = [];
   const {sort} = sortParams;
 
   if(sort){
