@@ -513,7 +513,7 @@ export const displayPrice = listingTypeConfig => {
 ///////////////////////////////////////
 
 const restructureListingTypes = hostedListingTypes => {
-  return hostedListingTypes.map(listingType => {
+  return hostedListingTypes?.map(listingType => {
     const { id, label, transactionProcess, unitType, ...rest } = listingType;
     return transactionProcess
       ? {
@@ -527,11 +527,11 @@ const restructureListingTypes = hostedListingTypes => {
           ...rest,
         }
       : null;
-  });
+  }) || [];
 };
 
 const restructureListingFields = hostedListingFields => {
-  return hostedListingFields.map(listingField => {
+  return hostedListingFields?.map(listingField => {
     const {
       key,
       scope,
@@ -569,7 +569,7 @@ const restructureListingFields = hostedListingFields => {
           ...rest,
         }
       : null;
-  });
+  }) || [];
 };
 
 ///////////////////////////
