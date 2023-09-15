@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import { arrayOf, number, string } from 'prop-types';
+import { number, string } from 'prop-types';
 
 import { Link } from 'react-router-dom';
 
 import { injectIntl, intlShape } from '../../util/reactIntl';
 import { parse } from '../../util/urlHelpers';
 
-import omit from 'lodash/omit';
 import { createResourceLocatorString } from '../../util/routes';
-
-
 
 /**
  * Helper to pick only valid values of search params from URL (location)
@@ -47,28 +44,13 @@ class SortComponent extends Component {
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
     const {sort} = this.props;
 
-    console.log('getHandleChangedSort');
-    console.log(urlQueryParams);
-    console.log(this.props);
-
     if(urlQueryParams.sort === sort ){
       urlQueryParams.sort = '-'+sort;
     }else{
       urlQueryParams.sort = sort;
     }
     
-
-    const searchParams = omit(urlQueryParams, 'orderOpen');
-
-    console.log('searchParams');
-    console.log(searchParams);
-
-    console.log('createResourceLocatorString(searchParams)');
-    // console.log(createResourceLocatorString('Commission',searchParams));
-    this.history.push(createResourceLocatorString('Commission', this.routeConfiguration, {}, searchParams));
-
-
-    // this.history.push('/Commission');
+    this.history.push(createResourceLocatorString('Commission', this.routeConfiguration, {}, urlQueryParams));
   }
  
   render() {
@@ -77,7 +59,6 @@ class SortComponent extends Component {
       // id,
       // name,
       initialValues,
-      contentPlacementOffset,
       queryParamName,
       intl,
       ...rest
@@ -91,12 +72,9 @@ SortComponent.defaultProps = {
   rootClassName: null,
   className: null,
   initialValues: null,
-  contentPlacementOffset: 0,
 };
 
 SortComponent.propTypes = {
-  contentPlacementOffset: number,
-
   // form injectIntl
   intl: intlShape.isRequired,
 };

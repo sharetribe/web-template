@@ -27,8 +27,6 @@ export const sortUsers = () => {
 
 export const sortUsersByName = (a, b, order) => {
 
-  console.log(order);
-
   const aField = a.attributes.profile.displayName;
   const bField = b.attributes.profile.displayName;
 
@@ -59,11 +57,6 @@ export const sortUsersByCommission = (a, b, order = ASC) => {
     
   const aField = a.attributes.profile.metadata?.commission ? a.attributes.profile.metadata?.commission : 15;
   const bField = b.attributes.profile.metadata?.commission ? b.attributes.profile.metadata?.commission : 15;
-
-  console.log('sortUsersByCommission');
-  console.log(aField);
-  console.log(bField);
-  console.log(ASC);
   
   const diff = aField - bField;
 
@@ -73,5 +66,3 @@ export const sortUsersByCommission = (a, b, order = ASC) => {
 
   return -1 * diff;
 }
-
-export default sortUsersByName;

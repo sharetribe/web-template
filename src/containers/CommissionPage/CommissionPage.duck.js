@@ -118,10 +118,10 @@ export const queryListingsSuccess = listingRefs => ({
   payload: { listingRefs },
 });
 
-export const queryUsersSuccess = usersRefs => ({
-  type: QUERY_USERS_SUCCESS,
-  payload: { usersRefs },
-});
+// export const queryUsersSuccess = usersRefs => ({
+//   type: QUERY_USERS_SUCCESS,
+//   payload: { usersRefs },
+// });
 
 // export const queryListingsError = e => ({
 //   type: QUERY_LISTINGS_ERROR,
@@ -158,27 +158,27 @@ export const queryListingSuccess = listingData => ({
 //     .catch(e => dispatch(showUserError(storableError(e))));
 // };
 
-export const queryUsers = search => (dispatch, getState, sdk) => {
+// export const queryUsers = search => (dispatch, getState, sdk) => {
   
-  // Clear state so that previously loaded data is not visible
-  // in case this page load fails.
-  // dispatch(setInitialState());
+//   // Clear state so that previously loaded data is not visible
+//   // in case this page load fails.
+//   // dispatch(setInitialState());
 
-  let params = {};
+//   let params = {};
 
-  return getUsersAdmin(params)
-  .then(res => {
-    return res;
-  })
-  .then(response => {
-    // dispatch(addMarketplaceEntities(response));
-    dispatch(queryUsersSuccess(response));
-  })
-  .catch(e => {
-    log.error(e, 'create-user-with-idp-failed', { params });
-  });
+//   return getUsersAdmin(params)
+//   .then(res => {
+//     return res;
+//   })
+//   .then(response => {
+//     // dispatch(addMarketplaceEntities(response));
+//     dispatch(queryUsersSuccess(response));
+//   })
+//   .catch(e => {
+//     log.error(e, 'create-user-with-idp-failed', { params });
+//   });
 
-};
+// };
 
 const keywordsSearch = (keywords,user)=>{
   const paramsKeys = Object.keys(user);
@@ -220,18 +220,13 @@ const applySortParams = (sortParams, usersData) => {
   const filterUsers = [];
   const {sort} = sortParams;
 
-  console.log('applySortParams');
-
   if(sort){
-    // const usersKeys = Object.keys(usersData);
     var filter = function(key, val) {
       return val.indexOf(key) !== -1 && val !== undefined;
     };
 
     const sortChoice = sort.replace('-','');
     const order = filter('-',sort) ? ASC : DSC;
-
-    console.log(order);
 
     switch (sortChoice) {
       case 'name':
@@ -245,8 +240,6 @@ const applySortParams = (sortParams, usersData) => {
         break;
     }
   }
-
-  console.log(usersData);
   
   return usersData;
 }
@@ -259,12 +252,8 @@ export const searchUsers = (searchParams, config) => (dispatch, getState, sdk) =
     return res;
   })
   .then(response => {
-    // dispatch(addMarketplaceEntities(response));
-    // dispatch(queryUsersSuccess(response));
-    console.log(response);
     const filteredUsers = applySearchParams(searchParams,response);
     const sortedUsers = applySortParams(searchParams,filteredUsers);
-    // console.log(filteredUsers);
     dispatch(searchUsersSuccess(sortedUsers));
   })
   .catch(e => {
@@ -273,30 +262,6 @@ export const searchUsers = (searchParams, config) => (dispatch, getState, sdk) =
   
 }
 
-// export const queryListingOwner = search => (dispatch, getState, sdk) => {
-  
-//   // Clear state so that previously loaded data is not visible
-//   // in case this page load fails.
-//   // dispatch(setInitialState());
-
-//   let params = {uuid:'6480d082-682c-4f5a-bbee-502cda7cf0f0'};
-
-//   return getListingOwnerAdmin(params)
-//   .then(res => {
-//     // console.log('getListingAdmin ------->>>>>>>>>>>>>>>>>>>>>');
-//     // console.log(res);
-//     return res;
-//   })
-//   .then(response => {
-//     // dispatch(addMarketplaceEntities(response));
-//     dispatch(queryListingSuccess(response));
-//   })
-//   .catch(e => {
-//     log.error(e, 'create-user-with-idp-failed', { params });
-//   });
-
-// };
-
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const userId = new UUID(params);
 
@@ -304,9 +269,6 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     latlng: ['origin'],
     latlngBounds: ['bounds'],
   });
-
-  console.log('loadData params');
-  console.log(queryParams);
 
   const { page = 1, ...rest } = queryParams;
 
@@ -326,10 +288,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
 
   return Promise.all([
     dispatch(fetchCurrentUser()),
-    // dispatch(showUser(userId)),
-    // dispatch(queryUsers(userId)),
     dispatch(searchUsersDis),
-    // dispatch(queryListingOwner(userId)),
   ]);
 };
 

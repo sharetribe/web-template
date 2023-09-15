@@ -253,7 +253,6 @@ class TopbarComponent extends Component {
         initialValues={initialSearchFormValues}
         isMobile
         appConfig={config}
-        dsagasfd={console.log('TopbarSearchFormCommission')}
       />
     ) : (
       <TopbarSearchForm
