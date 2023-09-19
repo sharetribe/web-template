@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Show warning if environment variable key that starts with REACT_APP contains word "SECRET".
+  [#224](https://github.com/sharetribe/web-template/pull/224)
 - [change] SearchPage.duck.js: use minStock and stockMode for listing.queries if dates filter is not
   in use. [#217](https://github.com/sharetribe/web-template/pull/217)
 - [fix] Handle missing hosted configurations to show Maintenance Mode page
