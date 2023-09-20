@@ -24,11 +24,11 @@ import css from './EditListingDetailsPanel.module.css';
  * if multiple listing types are available.
  *
  * @param {Array} listingTypes
- * @param {Object} existingListingInfo
+ * @param {Object} existingListingTypeInfo
  * @returns an object containing mainly information that can be stored to publicData.
  */
-const getTransactionInfo = (listingTypes, existingListingInfo = {}, inlcudeLabel = false) => {
-  const { listingType, transactionProcessAlias, unitType } = existingListingInfo;
+const getTransactionInfo = (listingTypes, existingListingTypeInfo = {}, inlcudeLabel = false) => {
+  const { listingType, transactionProcessAlias, unitType } = existingListingTypeInfo;
 
   if (listingType && transactionProcessAlias && unitType) {
     return { listingType, transactionProcessAlias, unitType };
@@ -55,15 +55,15 @@ const getTransactionInfo = (listingTypes, existingListingInfo = {}, inlcudeLabel
  * if process has been changed for existing listing.)
  *
  * @param {Object} publicData JSON-like data stored to listing entity.
- * @returns object literal with to keys: { hasExistingListingType, existingListingType }
+ * @returns object literal with to keys: { hasExistingListingType, existingListingTypeInfo }
  */
 const hasSetListingType = publicData => {
   const { listingType, transactionProcessAlias, unitType } = publicData;
-  const existingListingType = { listingType, transactionProcessAlias, unitType };
+  const existingListingTypeInfo = { listingType, transactionProcessAlias, unitType };
 
   return {
     hasExistingListingType: !!listingType && !!transactionProcessAlias && !!unitType,
-    existingListingType,
+    existingListingTypeInfo,
   };
 };
 
@@ -177,12 +177,12 @@ const setNoAvailabilityForUnbookableListings = processAlias => {
  * config.listing.listingFields.
  *
  * @param {object} props
- * @param {object} existingListingType info saved to listing's publicData
+ * @param {object} existingListingTypeInfo info saved to listing's publicData
  * @param {object} listingTypes app's configured types (presets for listings)
  * @param {object} listingFieldsConfig those extended data fields that are part of configurations
  * @returns initialValues object for the form
  */
-const getInitialValues = (props, existingListingType, listingTypes, listingFieldsConfig) => {
+const getInitialValues = (props, existingListingTypeInfo, listingTypes, listingFieldsConfig) => {
   const { description, title, publicData, privateData } = props?.listing?.attributes || {};
   const { listingType } = publicData;
 
@@ -191,7 +191,7 @@ const getInitialValues = (props, existingListingType, listingTypes, listingField
     title,
     description,
     // Transaction type info: listingType, transactionProcessAlias, unitType
-    ...getTransactionInfo(listingTypes, existingListingType),
+    ...getTransactionInfo(listingTypes, existingListingTypeInfo),
     ...initialValuesForListingFields(publicData, 'public', listingType, listingFieldsConfig),
     ...initialValuesForListingFields(privateData, 'private', listingType, listingFieldsConfig),
   };
@@ -218,18 +218,18 @@ const EditListingDetailsPanel = props => {
   const listingTypes = config.listing.listingTypes;
   const listingFieldsConfig = config.listing.listingFields;
 
-  const { hasExistingListingType, existingListingType } = hasSetListingType(publicData);
+  const { hasExistingListingType, existingListingTypeInfo } = hasSetListingType(publicData);
   const hasValidExistingListingType =
     hasExistingListingType &&
     !!listingTypes.find(conf => {
-      const listinTypesMatch = conf.listingType === existingListingType.listingType;
-      const unitTypesMatch = conf.transactionType?.unitType === existingListingType.unitType;
+      const listinTypesMatch = conf.listingType === existingListingTypeInfo.listingType;
+      const unitTypesMatch = conf.transactionType?.unitType === existingListingTypeInfo.unitType;
       return listinTypesMatch && unitTypesMatch;
     });
 
   const initialValues = getInitialValues(
     props,
-    existingListingType,
+    existingListingTypeInfo,
     listingTypes,
     listingFieldsConfig
   );

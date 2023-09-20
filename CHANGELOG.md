@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] SearchPage.duck.js: use minStock and stockMode for listing.queries if dates filter is not
+  in use. [#217](https://github.com/sharetribe/web-template/pull/217)
 - [fix] Handle missing hosted configurations to show Maintenance Mode page
   [#223](https://github.com/sharetribe/web-template/pull/223)
 - [add] Add German translation as a reference (de.json) and update other lang files.
