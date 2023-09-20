@@ -85,9 +85,11 @@ export const isOriginInUse = config =>
  */
 export const isStockInUse = config => {
   const listingTypes = config.listing.listingTypes;
-  const hasItems = !!listingTypes.find(conf => conf.transactionType.unitType === 'item');
+  const stockProcesses = ['default-purchase'];
+  const hasStockProcessesInUse = !!listingTypes.find(conf =>
+    stockProcesses.includes(conf.transactionType.process)
+  );
 
-  // TODO: if there are multiple processes with both products and bookings,
-  // sdk.listings.query needs more thinking on SearchPage. (bookings have stock=0)
-  return hasItems && listingTypes.length === 1;
+  // Note: these are active processes!
+  return hasStockProcessesInUse;
 };

@@ -186,15 +186,28 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
       : {};
   };
 
+  const stockFilters = datesMaybe => {
+    const hasDatesFilterInUse = Object.keys(datesMaybe).length > 0;
+
+    // If dates filter is not in use,
+    //   1) Add minStock filter with default value (1)
+    //   2) Add relaxed stockMode: "match-undefined"
+    // The latter is used to filter out all the listings that explicitly are out of stock,
+    // but keeps bookable and inquiry listings.
+    return hasDatesFilterInUse ? {} : { minStock: 1, stockMode: 'match-undefined' };
+  };
+
   const { perPage, price, dates, sort, ...rest } = searchParams;
   const priceMaybe = priceSearchParams(price);
   const datesMaybe = datesSearchParams(dates);
+  const stockMaybe = stockFilters(datesMaybe);
   const sortMaybe = sort === config.search.sortConfig.relevanceKey ? {} : { sort };
 
   const params = {
     ...rest,
     ...priceMaybe,
     ...datesMaybe,
+    ...stockMaybe,
     ...sortMaybe,
     ...searchValidListingTypes(config.listing.listingTypes),
     perPage,
@@ -227,9 +240,6 @@ export const loadData = (params, search, config) => {
     latlngBounds: ['bounds'],
   });
 
-  // Add minStock filter with default value (1), if stock management is in use.
-  // This can be overwriten with passed-in query parameters.
-  const minStockMaybe = isStockInUse(config) ? { minStock: 1 } : {};
   const { page = 1, address, origin, ...rest } = queryParams;
   const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
 
@@ -242,7 +252,6 @@ export const loadData = (params, search, config) => {
 
   return searchListings(
     {
-      ...minStockMaybe,
       ...rest,
       ...originMaybe,
       page,

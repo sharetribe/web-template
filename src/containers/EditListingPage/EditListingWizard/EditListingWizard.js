@@ -296,9 +296,9 @@ const getListingTypeConfig = (listing, selectedListingType, config) => {
   const hasOnlyOneListingType = validListingTypes?.length === 1;
 
   const listingTypeConfig = existingListingType
-    ? validListingTypes.find(config => config.listingType === existingListingType)
+    ? validListingTypes.find(conf => conf.listingType === existingListingType)
     : selectedListingType
-    ? validListingTypes.find(config => config.listingType === selectedListingType.listingType)
+    ? validListingTypes.find(conf => conf.listingType === selectedListingType.listingType)
     : hasOnlyOneListingType
     ? validListingTypes[0]
     : null;
@@ -425,9 +425,11 @@ class EditListingWizard extends Component {
       ? validListingTypes[0].transactionType.process
       : INQUIRY_PROCESS_NAME;
 
+    const hasListingTypeSelected = existingListingType || this.state.selectedListingType;
+
     // For oudated draft listing, we don't show other tabs but the "details"
     const tabs =
-      invalidExistingListingType && isNewListingFlow
+      isNewListingFlow && (invalidExistingListingType || !hasListingTypeSelected)
         ? TABS_DETAILS_ONLY
         : isBookingProcess(processName)
         ? TABS_BOOKING
