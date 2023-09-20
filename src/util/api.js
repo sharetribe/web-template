@@ -40,10 +40,18 @@ const deserialize = str => {
   return transit.read(str, { typeHandlers });
 };
 
-const post = (path, body) => {
+const methods = {
+  POST: 'POST',
+  GET: 'GET',
+  PUT: 'PUT',
+  PATCH: 'PATCH',
+  DELETE: 'DELETE',
+};
+
+const request = (path, method, body) => {
   const url = `${apiBaseUrl()}${path}`;
   const options = {
-    method: 'POST',
+    method,
     credentials: 'include',
     headers: {
       'Content-Type': 'application/transit+json',
@@ -76,7 +84,7 @@ const post = (path, body) => {
 // See `server/api/transaction-line-items.js` to see what data should
 // be sent in the body.
 export const transactionLineItems = body => {
-  return post('/api/transaction-line-items', body);
+  return request('/api/transaction-line-items', methods.POST, body);
 };
 
 // Initiate a privileged transaction.
@@ -88,7 +96,7 @@ export const transactionLineItems = body => {
 // See `server/api/initiate-privileged.js` to see what data should be
 // sent in the body.
 export const initiatePrivileged = body => {
-  return post('/api/initiate-privileged', body);
+  return request('/api/initiate-privileged', methods.POST, body);
 };
 
 // Transition a transaction with a privileged transition.
@@ -100,7 +108,7 @@ export const initiatePrivileged = body => {
 // See `server/api/transition-privileged.js` to see what data should
 // be sent in the body.
 export const transitionPrivileged = body => {
-  return post('/api/transition-privileged', body);
+  return request('/api/transition-privileged', methods.POST, body);
 };
 
 // Create user with identity provider (e.g. Facebook or Google)
@@ -113,5 +121,5 @@ export const transitionPrivileged = body => {
 // See `server/api/auth/createUserWithIdp.js` to see what data should
 // be sent in the body.
 export const createUserWithIdp = body => {
-  return post('/api/auth/create-user-with-idp', body);
+  return request('/api/auth/create-user-with-idp', methods.POST, body);
 };
