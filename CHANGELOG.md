@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+## [v3.1.0] 2023-09-21
+
 - [fix] Add 2 missing error translations to en.json file.
   [#225](https://github.com/sharetribe/web-template/pull/225)
 - [add] Show warning if environment variable key that starts with REACT_APP contains word "SECRET".
@@ -36,6 +38,8 @@ way to update this template, but currently, we follow a pattern:
   [#218](https://github.com/sharetribe/web-template/pull/218)
 - [change] TransactionPanel/InquiryMessageMaybe: highlight initial inquiry message more.
   [#213](https://github.com/sharetribe/web-template/pull/213)
+
+[v3.1.0]: https://github.com/sharetribe/web-template/compare/v3.0.1...v3.1.0
 
 ## [v3.0.1] 2023-09-06
 
