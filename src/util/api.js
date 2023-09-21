@@ -48,7 +48,7 @@ const methods = {
   DELETE: 'DELETE',
 };
 
-const request = (path, method, body) => {
+const request = (path, method, body = {}) => {
   const url = `${apiBaseUrl()}${path}`;
   const options = {
     method,
