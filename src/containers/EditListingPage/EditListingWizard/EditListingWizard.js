@@ -425,7 +425,8 @@ class EditListingWizard extends Component {
       ? validListingTypes[0].transactionType.process
       : INQUIRY_PROCESS_NAME;
 
-    const hasListingTypeSelected = existingListingType || this.state.selectedListingType;
+    const hasListingTypeSelected =
+      existingListingType || this.state.selectedListingType || validListingTypes.length === 1;
 
     // For oudated draft listing, we don't show other tabs but the "details"
     const tabs =
