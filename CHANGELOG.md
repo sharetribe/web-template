@@ -14,12 +14,16 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+## [v3.1.1] 2023-09-22
+
 - [fix] Single listing type caused problem on the EditListingWizard.
   [#231](https://github.com/sharetribe/web-template/pull/231)
 - [fix] ManageListingCard: fix wrong (non-existent) classname.
   [#230](https://github.com/sharetribe/web-template/pull/230)
 - [add] util/api.js: Added rudimentary support for other HTTP Methods. There's a new 'request'
   function, which is easier to extend. [#229](https://github.com/sharetribe/web-template/pull/229)
+
+[v3.1.1]: https://github.com/sharetribe/web-template/compare/v3.1.0...v3.1.1
 
 ## [v3.1.0] 2023-09-21
 
