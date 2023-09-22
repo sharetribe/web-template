@@ -40,17 +40,34 @@ const deserialize = str => {
   return transit.read(str, { typeHandlers });
 };
 
-const post = (path, body) => {
+const methods = {
+  POST: 'POST',
+  GET: 'GET',
+  PUT: 'PUT',
+  PATCH: 'PATCH',
+  DELETE: 'DELETE',
+};
+
+// If server/api returns data from SDK, you should set Content-Type to 'application/transit+json'
+const request = (path, options = {}) => {
   const url = `${apiBaseUrl()}${path}`;
-  const options = {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/transit+json',
-    },
-    body: serialize(body),
+  const { credentials, headers, body, ...rest } = options;
+
+  // If headers are not set, we assume that the body should be serialized as transit format.
+  const shouldSerializeBody =
+    (!headers || headers['Content-Type'] === 'application/transit+json') && body;
+  const bodyMaybe = shouldSerializeBody ? { body: serialize(body) } : {};
+
+  const fetchOptions = {
+    credentials: credentials || 'include',
+    // Since server/api mostly talks to Marketplace API using SDK,
+    // we default to 'application/transit+json' as content type (as SDK uses transit).
+    headers: headers || { 'Content-Type': 'application/transit+json' },
+    ...bodyMaybe,
+    ...rest,
   };
-  return window.fetch(url, options).then(res => {
+
+  return window.fetch(url, fetchOptions).then(res => {
     const contentTypeHeader = res.headers.get('Content-Type');
     const contentType = contentTypeHeader ? contentTypeHeader.split(';')[0] : null;
 
@@ -69,6 +86,18 @@ const post = (path, body) => {
     }
     return res.text();
   });
+};
+
+// Keep the previous parameter order for the post method.
+// For now, only POST has own specific function, but you can create more or use request directly.
+const post = (path, body, options = {}) => {
+  const requestOptions = {
+    ...options,
+    method: methods.POST,
+    body,
+  };
+
+  return request(path, requestOptions);
 };
 
 // Fetch transaction line items from the local API endpoint.
