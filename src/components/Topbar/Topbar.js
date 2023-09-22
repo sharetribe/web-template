@@ -157,7 +157,7 @@ class TopbarComponent extends Component {
   handleLogout() {
     const { onLogout, history, routeConfiguration } = this.props;
     onLogout().then(() => {
-      const path = pathByRouteName('LandingPage', routeConfiguration);
+      const path = pathByRouteName('Home', routeConfiguration);
 
       // In production we ensure that data is really lost,
       // but in development mode we use stored values for debugging

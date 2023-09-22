@@ -404,7 +404,7 @@ export const AuthenticationPageComponent = props => {
   if (isAuthenticated && from) {
     return <Redirect to={from} />;
   } else if (isAuthenticated && currentUserLoaded && !showEmailVerification) {
-    return <NamedRedirect name="LandingPage" />;
+    return <NamedRedirect name="Home" />;
   }
 
   const resendErrorTranslationId = isTooManyEmailVerificationRequestsError(
