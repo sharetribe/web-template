@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] util/api.js: Added rudimentary support for other HTTP Methods. There's a new 'request'
+  function, which is easier to extend. [#229](https://github.com/sharetribe/web-template/pull/229)
+
 ## [v3.1.0] 2023-09-21
 
 - [fix] Add 2 missing error translations to en.json file.
