@@ -210,7 +210,7 @@ const ShowOutOfStockOverlayMaybe = props => {
         <FormattedMessage id="ManageListingCard.setPriceAndStock" />
       </NamedLink>
 
-      <div className={css.closeListingTextLink}>
+      <div className={css.closeListingText}>
         {intl.formatMessage(
           { id: 'ManageListingCard.closeListingTextOr' },
           {
