@@ -34,7 +34,7 @@ const CustomTopbar = props => {
   return (
     <div className={classes}>
       <LinkedLogo
-        format={isMobile ? 'mobile' : 'desktop'}
+        layout={isMobile ? 'mobile' : 'desktop'}
         alt={intl.formatMessage({ id: 'CheckoutPage.goToLandingPage' })}
       />
     </div>

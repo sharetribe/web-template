@@ -28,8 +28,8 @@ export const LoadableComponentErrorBoundaryPage = () => {
         topbar={
           <div className={css.topbar}>
             <InlineTextButton onClick={handleOnClick}>
-              <Logo className={css.logoMobile} format="mobile" />
-              <Logo className={css.logoDesktop} format="desktop" />
+              <Logo className={css.logoMobile} layout="mobile" />
+              <Logo className={css.logoDesktop} layout="desktop" />
             </InlineTextButton>
           </div>
         }

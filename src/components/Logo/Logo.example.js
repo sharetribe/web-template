@@ -16,7 +16,7 @@ const logoImageMobile = scaled24h;
 export const Scaled24h_local_desktop = {
   component: LogoComponent,
   props: {
-    format: 'desktop',
+    layout: 'desktop',
     logoImageDesktop: scaled24h,
     logoImageMobile,
     logoSettings: { format: 'image', height: 24 },
@@ -30,7 +30,7 @@ export const Scaled24h_local_desktop = {
 export const Scaled24h_responsive_desktop = {
   component: LogoComponent,
   props: {
-    format: 'desktop',
+    layout: 'desktop',
     logoImageDesktop: {
       id: '00000000-0000-0000-0000-000000000000',
       type: 'imageAsset',
@@ -63,7 +63,7 @@ export const Scaled24h_responsive_desktop = {
 export const Scaled36h_local_desktop = {
   component: LogoComponent,
   props: {
-    format: 'desktop',
+    layout: 'desktop',
     logoImageDesktop: scaled36h,
     logoImageMobile,
     logoSettings: { format: 'image', height: 36 },
@@ -76,7 +76,7 @@ export const Scaled36h_local_desktop = {
 export const Scaled36h_responsive_desktop = {
   component: LogoComponent,
   props: {
-    format: 'desktop',
+    layout: 'desktop',
     logoImageDesktop: {
       id: '00000000-0000-0000-0000-000000000000',
       type: 'imageAsset',
@@ -109,7 +109,7 @@ export const Scaled36h_responsive_desktop = {
 export const Scaled48h_local_desktop = {
   component: LogoComponent,
   props: {
-    format: 'desktop',
+    layout: 'desktop',
     logoImageDesktop: scaled48h,
     logoImageMobile,
     logoSettings: { format: 'image', height: 48 },
@@ -122,7 +122,7 @@ export const Scaled48h_local_desktop = {
 export const Scaled48h_responsive_desktop = {
   component: LogoComponent,
   props: {
-    format: 'desktop',
+    layout: 'desktop',
     logoImageDesktop: {
       id: '00000000-0000-0000-0000-000000000000',
       type: 'imageAsset',
@@ -179,7 +179,7 @@ const LogoWrapper160w = props => (
 export const Scaled24h_responsive_mobile160w = {
   component: LogoWrapper160w,
   props: {
-    format: 'mobile',
+    layout: 'mobile',
     logoImageDesktop,
     logoImageMobile: {
       id: '00000000-0000-0000-0000-000000000000',
@@ -212,7 +212,7 @@ export const Scaled24h_responsive_mobile160w = {
 export const Scaled36h_responsive_mobile160w = {
   component: LogoWrapper160w,
   props: {
-    format: 'mobile',
+    layout: 'mobile',
     logoImageDesktop,
     logoImageMobile: {
       id: '00000000-0000-0000-0000-000000000000',
@@ -245,7 +245,7 @@ export const Scaled36h_responsive_mobile160w = {
 export const Scaled48h_responsive_mobile160w = {
   component: LogoWrapper160w,
   props: {
-    format: 'mobile',
+    layout: 'mobile',
     logoImageDesktop,
     logoImageMobile: {
       id: '00000000-0000-0000-0000-000000000000',

@@ -228,7 +228,7 @@ class TopbarComponent extends Component {
             <MenuIcon className={css.menuIcon} />
             {notificationDot}
           </Button>
-          <LinkedLogo format={'mobile'} alt={intl.formatMessage({ id: 'Topbar.logoIcon' })} />
+          <LinkedLogo layout={'mobile'} alt={intl.formatMessage({ id: 'Topbar.logoIcon' })} />
           <Button
             rootClassName={css.searchMenu}
             onClick={this.handleMobileSearchOpen}

@@ -12,7 +12,7 @@ const LinkedLogo = props => {
     rootClassName,
     logoClassName,
     logoImageClassName,
-    format,
+    layout,
     alt,
     ...rest
   } = props;
@@ -20,7 +20,7 @@ const LinkedLogo = props => {
   return (
     <NamedLink className={classes} name="LandingPage" {...rest}>
       <Logo
-        format={format}
+        layout={layout}
         className={logoClassName}
         logoImageClassName={logoImageClassName}
         alt={alt}
@@ -34,7 +34,7 @@ LinkedLogo.defaultProps = {
   rootClassName: null,
   logoClassName: null,
   logoImageClassName: null,
-  format: 'desktop',
+  layout: 'desktop',
 };
 
 LinkedLogo.propTypes = {
@@ -42,7 +42,7 @@ LinkedLogo.propTypes = {
   rootClassName: string,
   logoClassName: string,
   logoImageClassName: string,
-  format: oneOf(['desktop', 'mobile']),
+  layout: oneOf(['desktop', 'mobile']),
 };
 
 export default LinkedLogo;

@@ -39,7 +39,7 @@ export const LogoComponent = props => {
   const {
     className,
     logoImageClassName,
-    format,
+    layout,
     marketplaceName,
     logoImageDesktop,
     logoImageMobile,
@@ -55,7 +55,7 @@ export const LogoComponent = props => {
   );
 
   // Logo from hosted asset
-  if (isImageAsset(logoImageDesktop) && hasValidLogoSettings && format === 'desktop') {
+  if (isImageAsset(logoImageDesktop) && hasValidLogoSettings && layout === 'desktop') {
     const variants = logoImageDesktop.attributes.variants;
     const variantNames = getVariantNames(variants);
     const { width } = getVariantData(variants);
@@ -70,7 +70,7 @@ export const LogoComponent = props => {
         />
       </div>
     );
-  } else if (isImageAsset(logoImageMobile) && hasValidLogoSettings && format === 'mobile') {
+  } else if (isImageAsset(logoImageMobile) && hasValidLogoSettings && layout === 'mobile') {
     const variants = logoImageMobile.attributes.variants;
     const variantNames = getVariantNames(variants);
     const { width } = getVariantData(variants);
@@ -92,7 +92,7 @@ export const LogoComponent = props => {
         />
       </div>
     );
-  } else if (format === 'desktop') {
+  } else if (layout === 'desktop') {
     return (
       <div className={logoClasses}>
         <img className={logoImageClasses} src={logoImageDesktop} alt={marketplaceName} {...rest} />
@@ -125,12 +125,12 @@ const Logo = props => {
 
 Logo.defaultProps = {
   className: null,
-  format: 'desktop',
+  layout: 'desktop',
 };
 
 Logo.propTypes = {
   className: string,
-  format: oneOf(['desktop', 'mobile']),
+  layout: oneOf(['desktop', 'mobile']),
 };
 
 export default Logo;
