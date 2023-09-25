@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Prepare for configurable Logo variants. Console will support height variants of 24, 36, and
+  48 pixels. [#234](https://github.com/sharetribe/web-template/pull/234)
 - [change] FieldPhoneNumberInput: change formatter from fi locale to only format E.164. This does
   not change input strings that don't start with a '+'.
   [#233](https://github.com/sharetribe/web-template/pull/233)
