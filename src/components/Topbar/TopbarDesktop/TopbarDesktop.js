@@ -141,7 +141,7 @@ const TopbarDesktop = props => {
     <nav className={classes}>
       <LinkedLogo
         className={css.logoLink}
-        format="desktop"
+        layout="desktop"
         alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
       />
       {search}
