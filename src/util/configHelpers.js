@@ -139,12 +139,12 @@ const getVariantURL = (socialSharingImage, variantName) => {
 
 const mergeBranding = (brandingConfig, defaultBranding) => {
   const {
-    favicon,
     marketplaceColors,
     logo,
     logoSettings,
     loginBackgroundImage,
     socialSharingImage,
+    ...rest
   } = brandingConfig || {};
 
   const marketplaceColor = marketplaceColors?.mainColor || defaultBranding.marketplaceColor;
@@ -170,7 +170,7 @@ const mergeBranding = (brandingConfig, defaultBranding) => {
     brandImage: loginBackgroundImage,
     facebookImage,
     twitterImage,
-    favicon,
+    ...rest,
   };
 };
 
