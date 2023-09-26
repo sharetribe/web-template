@@ -16,15 +16,34 @@
   width: 24px;
   align-self: stretch;
   background-color: var(--colorWhite);
+
+  @media (--viewportMedium) {
+    margin-left: 0;
+  }
 }
 
-.mobileInput {
-  /* Font */
-  composes: h1 from global;
+.fontInput {
+  font-weight: var(--fontWeightBlack);
+  font-size: 24px;
+  line-height: 24px;
 
   /* Layout */
   margin: 0 24px 0 0;
   padding: 4px 13px 10px 13px;
+
+  @media (--viewportMedium) {
+    font-size: 30px;
+    line-height: 40px;
+    padding: 5px 13px 15px 13px;
+    margin: 0;
+  }
+}
+
+.mobileInput {
+  /* Font */
+  composes: fontInput;
+
+  /* Layout */
   height: 50px;
 
   /* Borders */
@@ -112,6 +131,10 @@
   border-bottom-right-radius: var(--borderRadius);
   box-shadow: var(--boxShadowPopup);
   z-index: calc(var(--zIndexPopup) + 1);
+
+  @media (--viewportMedium) {
+    min-height: unset;
+  }
 }
 
 .mobilePredictionsAttribution {

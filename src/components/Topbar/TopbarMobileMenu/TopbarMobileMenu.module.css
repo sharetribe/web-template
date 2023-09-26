@@ -34,9 +34,21 @@
 
 .greeting {
   /* Font */
-  composes: h1 from global;
+  font-weight: var(--fontWeightBlack);
+  font-size: 24px;
+  line-height: 24px;
+
+  padding: 3px 0 3px 0;
   margin-bottom: 1px;
   margin-top: 16px;
+
+  @media (--viewportMedium) {
+    font-size: 40px;
+    line-height: 56px;
+    padding: 5px 0 3px 0;
+    /* x * 8px */
+    margin-top: 24px;
+  }
 }
 
 .logoutButton {
@@ -67,15 +79,31 @@
   }
 
   @media (--viewportMedium) {
-    /* margin-top + n * line-height + margin-bottom => x * 8px */
-    margin-top: 16px;
-    margin-bottom: 16px;
+    margin: 0 0 36px 0;
+  }
+}
+
+.customLinkFont {
+  /* Font */
+  font-weight: var(--fontWeightBold);
+  font-size: 21px;
+  line-height: 24px;
+
+  padding: 4px 0 2px 0;
+  /* x * 6px */
+  margin-top: 24px;
+  margin-bottom: 18px;
+
+  @media (--viewportMedium) {
+    font-size: 30px;
+    line-height: 40px;
+    padding: 1px 0 7px 0;
   }
 }
 
 .inbox {
   /* Font */
-  composes: h2 from global;
+  composes: customLinkFont;
   color: var(--marketplaceColor);
   position: relative;
 
@@ -85,7 +113,7 @@
 
 .navigationLink {
   /* Font */
-  composes: h2 from global;
+  composes: customLinkFont;
   color: var(--marketplaceColor);
 
   /* Layout */

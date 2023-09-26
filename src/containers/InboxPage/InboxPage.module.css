@@ -22,6 +22,10 @@
   box-shadow: none;
 
   @media (--viewportMedium) {
+    height: var(--topbarHeightDesktop);
+  }
+
+  @media (--viewportLarge) {
     display: none;
   }
 }
