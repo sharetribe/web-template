@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] FieldPhoneNumberInput: change formatter from fi locale to only format E.164. This does
+  not change input strings that don't start with a '+'.
+  [#233](https://github.com/sharetribe/web-template/pull/233)
+
 ## [v3.1.1] 2023-09-22
 
 - [fix] Single listing type caused problem on the EditListingWizard.
