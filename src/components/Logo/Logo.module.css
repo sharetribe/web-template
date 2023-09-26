@@ -1,0 +1,38 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  max-width: 370px;
+  margin: 0;
+
+  @media (--viewportMedium) {
+    margin: 6px 0;
+  }
+}
+
+.logo {
+  /* If height is increased, change link margins accordingly */
+  /* NOTE: extremely wide logos may look bad. This will scale them to container of 24 x 200. */
+  height: auto;
+  width: auto;
+  /* Mobile topbar has maximum of 100vw - 132px space for logo */
+  max-width: min(calc(100vw - 132px), 100%, 370px);
+  object-fit: contain;
+  object-position: center;
+
+  @media (--viewportLarge) {
+    max-width: min(100%, 370px);
+  }
+}
+
+.logo24 {
+  max-height: 24px;
+}
+.logo36 {
+  max-height: 36px;
+}
+.logo48 {
+  max-height: 48px;
+}

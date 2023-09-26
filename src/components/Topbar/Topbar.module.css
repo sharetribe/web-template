@@ -26,6 +26,10 @@
   box-shadow: var(--boxShadow);
 
   @media (--viewportMedium) {
+    height: var(--topbarHeightDesktop);
+  }
+
+  @media (--viewportLarge) {
     display: none;
   }
 }
@@ -66,9 +70,17 @@
 .menu {
   padding: 15px 24px;
   position: relative;
+
+  @media (--viewportMedium) {
+    padding: 21px 24px;
+  }
 }
 .searchMenu {
   padding: 12px 24px;
+
+  @media (--viewportMedium) {
+    padding: 18px 24px;
+  }
 }
 
 .menuIcon,
@@ -99,6 +111,10 @@
   animation-timing-function: ease-in;
   opacity: 0;
   transform: scale(0);
+
+  @media (--viewportMedium) {
+    top: 23px;
+  }
 }
 
 @keyframes notificationPop {
@@ -115,7 +131,7 @@
 .desktop {
   display: none;
 
-  @media (--viewportMedium) {
+  @media (--viewportLarge) {
     display: block;
   }
 }
@@ -149,9 +165,23 @@
 .modalContainer {
   composes: marketplaceModalInMobileBaseStyles from global;
   padding: 0;
+  padding: var(--modalPadding);
 
   @media (--viewportMedium) {
     flex-basis: 576px;
+    flex-grow: 1;
+    min-height: 100vh;
+    height: 100%;
+    padding: 24px;
+    background-color: var(--colorWhite);
+    border-bottom: none;
+  }
+}
+.modalContainerSearchForm {
+  composes: modalContainer;
+  padding: 0;
+  @media (--viewportMedium) {
+    padding: var(--modalPaddingMedium);
   }
 }
 
