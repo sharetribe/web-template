@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Plausible analytics integration. This can be used through environment variable:
+  REACT_APP_PLAUSIBLE_DOMAINS [#228](https://github.com/sharetribe/web-template/pull/228)
 - [add] Prepare for appIcon property to come from branding asset. This generates site.webmanifest
   file and apple-touch-icon link. [#215](https://github.com/sharetribe/web-template/pull/215)
 - [add] Prepare for configurable Logo variants. Console will support height variants of 24, 36, and
