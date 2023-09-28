@@ -14,12 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] remove caret from react-image-gallery dependency.
+  [#234](https://github.com/sharetribe/web-template/pull/234)
 - [add] Plausible analytics integration. This can be used through environment variable:
   REACT_APP_PLAUSIBLE_DOMAINS [#228](https://github.com/sharetribe/web-template/pull/228)
 - [add] Prepare for appIcon property to come from branding asset. This generates site.webmanifest
   file and apple-touch-icon link. [#215](https://github.com/sharetribe/web-template/pull/215)
 - [add] Prepare for configurable Logo variants. Console will support height variants of 24, 36, and
-  48 pixels. [#234](https://github.com/sharetribe/web-template/pull/234)
+  48 pixels. [#214](https://github.com/sharetribe/web-template/pull/214)
 - [change] FieldPhoneNumberInput: change formatter from fi locale to only format E.164. This does
   not change input strings that don't start with a '+'.
   [#233](https://github.com/sharetribe/web-template/pull/233)
