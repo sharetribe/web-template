@@ -4,6 +4,7 @@ import * as search from './configSearch';
 import * as maps from './configMaps';
 import * as branding from './configBranding';
 import * as layout from './configLayout';
+import * as analytics from './configAnalytics';
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets to this file.
@@ -27,7 +28,7 @@ const defaultConfig = {
   // Marketplace name is needed for microcopy and in meta tags (bots and social media sharing reads those)
   marketplaceName: 'Biketribe',
 
-  // Modify Stripe configuration in stripeConfig.js
+  // Modify Stripe configuration in configStripe.js
   // - picks REACT_APP_STRIPE_PUBLISHABLE_KEY from environment variables
   // - dayCountAvailableForBooking: Stripe can hold payments only limited time on Connect Account
   //                                This adds some restriction for bookings (payouts vs long bookings)
@@ -35,17 +36,20 @@ const defaultConfig = {
   // - supportedCountries
   stripe,
 
-  // Modify listing extended data and listing type in listingConfig.js
+  // Modify listing extended data and listing type in configListing.js
   listing,
-  // Modify search settings data in searchConfig.js
+  // Modify search settings data in configSearch.js
   search,
-  // Modify settings for map providers in mapsConfig.js
+  // Modify settings for map providers in configMaps.js
   // This includes also default locations for location search
   maps,
-  // Modify branding configs in brandingConfig.js
+  // Modify branding configs in configBranding.js
   branding,
-  // Modify layout configs in layoutConfig.js
+  // Modify layout configs in configLayout.js
   layout,
+  // Modify analytics configs in configAnalytics.js
+  // By default, it doesn't add anything.
+  analytics,
 
   // Note: Facebook app id is used for Facebook login, but it is also used for tracking:
   // Facebook counts shares with app or page associated by this id
@@ -97,13 +101,6 @@ const defaultConfig = {
   siteInstagramPage: null, // e.g. 'https://www.instagram.com/sharetribe/',
   // Twitter handle is needed in meta tags (twitter:site). Start it with '@' character
   siteTwitterHandle: null, // e.g. 'https://www.facebook.com/Sharetribe/',
-
-  // Optional
-  // Note that Google Analytics might need advanced opt-out option / cookie consent
-  // depending on jurisdiction (e.g. EU countries), since it relies on cookies.
-  analytics: {
-    googleAnalyticsId: process.env.REACT_APP_GOOGLE_ANALYTICS_ID,
-  },
 
   // Optional
   // This creates meta tag for Google Search Console verification
