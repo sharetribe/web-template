@@ -353,7 +353,13 @@ const ExceptionDateTimeRange = props => {
   const endDateDisabled = !exceptionStartDate || !exceptionStartTime;
   const endTimeDisabled = !exceptionStartDate || !exceptionStartTime || !exceptionEndDate;
   const nextBoundary = findNextBoundary(TODAY, 'hour', timeZone);
-  const placeholderTime = formatDateIntoPartials(nextBoundary, intl, { timeZone })?.time;
+  let placeholderTime = '08:00';
+  try {
+    placeholderTime = formatDateIntoPartials(nextBoundary, intl, { timeZone })?.time;
+  } catch (error) {
+    // No need to handle error
+  }
+
   const startOfToday = getStartOf(TODAY, 'day', timeZone);
 
   return (
