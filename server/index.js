@@ -27,7 +27,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const enforceSsl = require('express-enforces-ssl');
 const path = require('path');
-const sitemap = require('express-sitemap');
 const passport = require('passport');
 
 const auth = require('./auth');
@@ -38,7 +37,6 @@ const { getExtractors } = require('./importer');
 const renderer = require('./renderer');
 const dataLoader = require('./dataLoader');
 const log = require('./log');
-const { sitemapStructure } = require('./sitemap');
 const csp = require('./csp');
 const sdkUtils = require('./api-util/sdk');
 
@@ -57,10 +55,6 @@ const cspEnabled = CSP === 'block' || CSP === 'report';
 const app = express();
 
 const errorPage = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
-
-// load sitemap and robots file structure
-// and write those into files
-sitemap(sitemapStructure()).toFile();
 
 // Setup error logger
 log.setup();
@@ -131,8 +125,6 @@ if (TRUST_PROXY === 'true') {
 
 app.use(compression());
 app.use('/static', express.static(path.join(buildPath, 'static')));
-// server robots.txt from the root
-app.use('/robots.txt', express.static(path.join(buildPath, 'robots.txt')));
 app.use(cookieParser());
 
 // These .well-known/* endpoints will be enabled if you are using this template as OIDC proxy
