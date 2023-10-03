@@ -78,6 +78,8 @@
   "CheckoutPage.retrievingStripePaymentIntentFailed": "Algo salió mal. Por favor actualiza la pagina. Si el error persiste, regresa a {listingLink} e intenta de nuevo en 15 minutos.",
   "CheckoutPage.speculateFailedMessage": "Algo salió mal. Actualiza la página e inténtalo de nuevo.",
   "CheckoutPage.speculateTransactionError": "Error al recopilar la información desglosada.",
+  "CheckoutPageWithInquiryProcess.initiateInquiryError": "Algo salió mal. Inténtalo de nuevo. Si el problema persiste, contacta al equipo de soporte.",
+  "CheckoutPageWithInquiryProcess.initiateInquiryErrorNoProcess": "No hay ningún proceso de transacción para este anuncio. Por favor contacta con el equipo de soporte",
   "CheckoutPageWithInquiryProcess.messageLabel": "Mensaje de consulta",
   "CheckoutPageWithInquiryProcess.messagePlaceholder": "¡Hola! Estoy interesado en…",
   "CheckoutPageWithInquiryProcess.messageRequired": "Necesitas escribir un mensaje.",
