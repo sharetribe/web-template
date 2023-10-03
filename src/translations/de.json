@@ -78,6 +78,8 @@
   "CheckoutPage.retrievingStripePaymentIntentFailed": "Hoppla! Etwas ist schiefgelaufen. Bitte Seite neu laden. Wenn der Fehler wieder geschieht, gehe zurück zu {listingLink} und veruche es nach 15 Minuten erneut",
   "CheckoutPage.speculateFailedMessage": "Hoppla! Etwas ist schiefgelaufen. Bitte aktualisiere die Seite und versuche es erneut.",
   "CheckoutPage.speculateTransactionError": "Das Abrufen der Aufschlüsselungsinformationen ist fehlgeschlagen.",
+  "CheckoutPageWithInquiryProcess.initiateInquiryError": "Hoppla, etwas ist schiefgelaufen. Bitte versuche es erneut. Wenn das Problem weiterhin besteht, wende dich bitte an den Support.",
+  "CheckoutPageWithInquiryProcess.initiateInquiryErrorNoProcess": "Hoppla, dem Eintrag ist kein Transaktionsprozess zugeordnet. Bitte wende dich an den Support",
   "CheckoutPageWithInquiryProcess.messageLabel": "Anfragenachricht",
   "CheckoutPageWithInquiryProcess.messagePlaceholder": "Hallo! Ich bin interessiert an…",
   "CheckoutPageWithInquiryProcess.messageRequired": "Eine Nachricht wird benötigt.",
