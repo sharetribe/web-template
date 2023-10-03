@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Update translation assets for French, Spanish, and Germany.
+  [#236](https://github.com/sharetribe/web-template/pull/236)
 - [change] remove caret from react-image-gallery dependency.
   [#234](https://github.com/sharetribe/web-template/pull/234)
 - [add] Plausible analytics integration. This can be used through environment variable:
