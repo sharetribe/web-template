@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+## [v3.2.0] 2023-10-04
+
 - [fix] mac OS Sonoma seems to have issues with time zone handling.
   [#235](https://github.com/sharetribe/web-template/pull/235)
 - [add] Update translation assets for French, Spanish, and Germany.
@@ -29,6 +31,8 @@ way to update this template, but currently, we follow a pattern:
 - [change] FieldPhoneNumberInput: change formatter from fi locale to only format E.164. This does
   not change input strings that don't start with a '+'.
   [#233](https://github.com/sharetribe/web-template/pull/233)
+
+  [v3.2.0]: https://github.com/sharetribe/web-template/compare/v3.1.1...v3.2.0
 
 ## [v3.1.1] 2023-09-22
 
