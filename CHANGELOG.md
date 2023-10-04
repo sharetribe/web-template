@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] mac OS Sonoma seems to have issues with time zone handling.
+  [#235](https://github.com/sharetribe/web-template/pull/235)
 - [add] Update translation assets for French, Spanish, and Germany.
   [#236](https://github.com/sharetribe/web-template/pull/236)
 - [change] remove caret from react-image-gallery dependency.

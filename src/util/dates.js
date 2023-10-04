@@ -20,6 +20,17 @@ export const isTimeZoneSupported = () => {
   if (typeof dtf === 'undefined' || typeof dtf.resolvedOptions === 'undefined') {
     return false;
   }
+
+  // TODO: Chrome and Firefox seem to have issues on macOS Sonoma, when populating timeZone on Intl API
+  // https://bugs.chromium.org/p/chromium/issues/detail?id=1487920
+  // https://bugzilla.mozilla.org/show_bug.cgi?id=1856428
+  // Note: we might remove this, when the bugs have been resolved on those browsers
+  if (!dtf.resolvedOptions().timeZone && isValidTimeZone('Europe/Helsinki')) {
+    console.error(`Time zone was undefined (new Intl.DateTimeFormat().resolvedOptions().timeZone).
+    This might cause problems for date and duration calculation on this browser.`);
+    return true;
+  }
+
   return !!dtf.resolvedOptions().timeZone;
 };
 
