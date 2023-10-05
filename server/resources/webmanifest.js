@@ -1,6 +1,10 @@
+const log = require('../log');
 const sdkUtils = require('../api-util/sdk');
 
 const rootUrl = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
+
+// NOTE: This assumes that branding asset is created.
+//       If it's not, then the webmanifest returns dummy data.
 
 // Generate icons with correct syntax for web app manifest
 const generateIcons = variants => {
@@ -70,6 +74,24 @@ module.exports = (req, res) => {
       res.send(json);
     })
     .catch(e => {
-      handleError(res, e);
+      // Log error
+      log.error(e, 'webmanifest-render-failed');
+
+      // Return some generic data as app manifest
+      const defaultJsonData = {
+        name: 'Marketplace',
+        short_name: 'Marketplace',
+        start_url: '/',
+        display: 'standalone',
+        background_color: '#ffffff',
+        icons: [],
+      };
+
+      // Format as JSON string (with indentation of 2 spaces)
+      const json = JSON.stringify(defaultJsonData, null, 2);
+
+      // Set the content type for web app manifest
+      res.setHeader('Content-Type', 'application/manifest+json');
+      res.send(json);
     });
 };
