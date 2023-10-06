@@ -138,11 +138,6 @@ app.get('/favicon.ico', (req, res) => {
 // It creates the sitemap URL with the correct marketplace URL
 app.get('/robots.txt', robotsTxtRoute);
 
-// These .well-known/* endpoints will be enabled if you are using this template as OIDC proxy
-// https://www.sharetribe.com/docs/cookbook-social-logins-and-sso/setup-open-id-connect-proxy/
-// We need to handle these endpoints separately so that they are accessible by Flex
-// even if you have enabled basic authentication e.g. in staging environment.
-app.use('/.well-known', wellKnownRouter);
 // Handle different sitemap-* resources. E.g. /sitemap-index.xml
 app.get('/sitemap-:resource', sitemapResourceRoute);
 
@@ -151,6 +146,12 @@ app.get('/sitemap-:resource', sitemapResourceRoute);
 // you can reach the manifest from http://localhost:3500/site.webmanifest
 // The corresponding <link> element is set in src/components/Page/Page.js
 app.get('/site.webmanifest', webmanifestResourceRoute);
+
+// These .well-known/* endpoints will be enabled if you are using this template as OIDC proxy
+// https://www.sharetribe.com/docs/cookbook-social-logins-and-sso/setup-open-id-connect-proxy/
+// We need to handle these endpoints separately so that they are accessible by Flex
+// even if you have enabled basic authentication e.g. in staging environment.
+app.use('/.well-known', wellKnownRouter);
 
 // Use basic authentication when not in dev mode. This is
 // intentionally after the static middleware and /.well-known
