@@ -34,6 +34,7 @@ const apiRouter = require('./apiRouter');
 const wellKnownRouter = require('./wellKnownRouter');
 const webmanifestResourceRoute = require('./resources/webmanifest');
 const robotsTxtRoute = require('./resources/robotsTxt');
+const sitemapResourceRoute = require('./resources/sitemap');
 const { getExtractors } = require('./importer');
 const renderer = require('./renderer');
 const dataLoader = require('./dataLoader');
@@ -137,6 +138,8 @@ app.get('/robots.txt', robotsTxtRoute);
 // We need to handle these endpoints separately so that they are accessible by Flex
 // even if you have enabled basic authentication e.g. in staging environment.
 app.use('/.well-known', wellKnownRouter);
+// Handle different sitemap-* resources. E.g. /sitemap-index.xml
+app.get('/sitemap-:resource', sitemapResourceRoute);
 
 // Generate web app manifest
 // When developing with "yarn run dev",
