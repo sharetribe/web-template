@@ -803,6 +803,11 @@ const hasMandatoryConfigs = hostedConfig => {
 };
 
 export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
+  // Remove trailing slash from marketplaceRootURL if any
+  const marketplaceRootURL = defaultConfigs.marketplaceRootURL;
+  const cleanedRootURL =
+    typeof marketplaceRootURL === 'string' ? marketplaceRootURL.replace(/\/$/, '') : '';
+
   // defaultConfigs.listingMinimumPriceSubUnits is the backup for listing's minimum price
   const listingMinimumPriceSubUnits =
     getListingMinimumPrice(configAsset.transactionSize) ||
@@ -811,6 +816,8 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
   return {
     // Use default configs as a starting point for app config.
     ...defaultConfigs,
+
+    marketplaceRootURL: cleanedRootURL,
 
     // Overwrite default configs if hosted config is available
     listingMinimumPriceSubUnits,
