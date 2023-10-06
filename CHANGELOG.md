@@ -14,7 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
-- [fix] webmanifest error should use log and return 500 if rendering is not possible.
+- [change] configHelpers.js: remove trailing slash from marketplaceRootURL
+  [#239](https://github.com/sharetribe/web-template/pull/239)
+- [fix] webmanifest error should use log and not return 500 if rendering dynamic data fails.
   [#238](https://github.com/sharetribe/web-template/pull/238)
 
 ## [v3.2.0] 2023-10-04
