@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Prev PR (#241) changed the structure of config.stripe unintentionally.
+  [#242](https://github.com/sharetribe/web-template/pull/242)
 - [fix] Ensure that stripe currencies have valid subunit divisors and add subunit divisors for BGN,
   CZK, PLN, RON. [#241](https://github.com/sharetribe/web-template/pull/241)
 - [change] configHelpers.js: remove trailing slash from marketplaceRootURL
