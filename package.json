@@ -87,6 +87,11 @@
       "js": "node --icu-data-dir=node_modules/full-icu"
     }
   },
+  "jest": {
+    "moduleNameMapper": {
+      "axios": "axios/dist/node/axios.cjs"
+    }
+  },
   "scripts": {
     "audit": "yarn audit --json | node scripts/audit.js",
     "clean": "rm -rf build/*",
