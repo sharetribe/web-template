@@ -52,9 +52,12 @@ const mergeCurrency = (hostedCurrency, defaultCurrency) => {
   const currency = hostedCurrency || defaultCurrency;
   const supportedCurrencies = Object.keys(subUnitDivisors);
   if (supportedCurrencies.includes(currency)) {
-    // TODO: is the currency a mandatory data coming from a hosted asset?
     return currency;
   } else {
+    console.error(
+      `The given currency (${currency}) is not supported.
+      There's a missing entry on subUnitDivisors`
+    );
     return null;
   }
 };
