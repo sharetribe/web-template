@@ -59,6 +59,23 @@ const mergeCurrency = (hostedCurrency, defaultCurrency) => {
   }
 };
 
+const validateStripeCurrency = stripe => {
+  const supportedCountries = stripe.supportedCountries || [];
+  const supportedCurrencies = Object.keys(subUnitDivisors);
+  return supportedCountries.filter(country => {
+    const isSupported = supportedCurrencies.includes(country.currency);
+
+    if (!isSupported) {
+      console.error(
+        `Stripe configuration contained currency that was not supported by the client app.
+        There's a missing entry on subUnitDivisors for ${country.currency}.`
+      );
+    }
+
+    return isSupported;
+  });
+};
+
 const mergeLocalizations = (hostedLocalization, defaultLocalization) => {
   // This defaults to 'en', if no locale is set.
   const locale = hostedLocalization?.locale || defaultLocalization.locale || 'en';
@@ -824,6 +841,10 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
     // Localization: currency is first-level config atm.
     currency: mergeCurrency(configAsset.localization?.currency, defaultConfigs.currency),
+
+    // Stripe config currently comes from defaultConfigs atm.
+    stripe: validateStripeCurrency(defaultConfigs.stripe),
+
     // Localization (locale, first day of week)
     localization: mergeLocalizations(configAsset.localization, defaultConfigs.localization),
 
