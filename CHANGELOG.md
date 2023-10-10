@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Ensure that stripe currencies have valid subunit divisors and add subunit divisors for BGN,
+  CZK, PLN, RON. [#241](https://github.com/sharetribe/web-template/pull/241)
 - [change] configHelpers.js: remove trailing slash from marketplaceRootURL
   [#239](https://github.com/sharetribe/web-template/pull/239)
 - [fix] webmanifest error should use log and not return 500 if rendering dynamic data fails.
