@@ -65,7 +65,7 @@ const mergeCurrency = (hostedCurrency, defaultCurrency) => {
 const validateStripeCurrency = stripe => {
   const supportedCountries = stripe.supportedCountries || [];
   const supportedCurrencies = Object.keys(subUnitDivisors);
-  return supportedCountries.filter(country => {
+  const validSupportedCountries = supportedCountries.filter(country => {
     const isSupported = supportedCurrencies.includes(country.currency);
 
     if (!isSupported) {
@@ -77,6 +77,7 @@ const validateStripeCurrency = stripe => {
 
     return isSupported;
   });
+  return { ...stripe, supportedCountries: validSupportedCountries };
 };
 
 const mergeLocalizations = (hostedLocalization, defaultLocalization) => {
