@@ -58,9 +58,9 @@ const EditListingPricingAndStockPanel = props => {
 
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
   const priceCurrencyValid =
-    initialValues.price instanceof Money
+    marketplaceCurrency && initialValues.price instanceof Money
       ? initialValues.price?.currency === marketplaceCurrency
-      : true;
+      : !!marketplaceCurrency;
 
   return (
     <div className={classes}>
@@ -122,7 +122,10 @@ const EditListingPricingAndStockPanel = props => {
         />
       ) : (
         <div className={css.priceCurrencyInvalid}>
-          <FormattedMessage id="EditListingPricingAndStockPanel.listingPriceCurrencyInvalid" />
+          <FormattedMessage
+            id="EditListingPricingAndStockPanel.listingPriceCurrencyInvalid"
+            values={{ marketplaceCurrency }}
+          />
         </div>
       )}
     </div>
