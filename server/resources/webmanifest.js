@@ -75,7 +75,12 @@ module.exports = (req, res) => {
     })
     .catch(e => {
       // Log error
-      log.error(e, 'webmanifest-render-failed');
+      const is404 = e.status === 404;
+      if (is404) {
+        console.log('webmanifest-render-failed-no-asset-found');
+      } else {
+        log.error(e, 'webmanifest-render-failed');
+      }
 
       // Return some generic data as app manifest
       const defaultJsonData = {
