@@ -14,6 +14,13 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] This removes old express-sitemap setup and adds starts generating sitemap package.
+
+  - Robots.txt and sitemap-\* resources will be generated on request
+  - There's a small in-memory cache in use for these files.
+
+  [#243](https://github.com/sharetribe/web-template/pull/243)
+
 - [fix] Prev PR (#241) changed the structure of config.stripe unintentionally.
   [#242](https://github.com/sharetribe/web-template/pull/242)
 - [fix] Ensure that stripe currencies have valid subunit divisors and add subunit divisors for BGN,
