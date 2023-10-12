@@ -3,10 +3,11 @@
 PageBuilder creates a page according to a page data asset. The page asset represents all the content
 that the page needs and how they are grouped together (excluding the top bar and footer).
 
-The page asset file is created in Flex Console against the page asset schema. When comparing this
-solution with headless CMS services, the schema of the page asset represents the result of **content
-modeling**. It defines what kind of data needs to be asked from a content writer. In Flex, content
-writing happens in Console, which means that content writers are marketplace operators.
+The page asset file is created in Sharetribe Console against the page asset schema. When comparing
+this solution with headless CMS services, the schema of the page asset represents the result of
+**content modeling**. It defines what kind of data needs to be asked from a content writer. In
+Sharetribe Marketplaces, content writing happens in Console, which means that content writers are
+marketplace operators.
 
 The smallest piece of information in page asset is a field. It defines a piece of data and its
 fieldType. For example:

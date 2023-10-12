@@ -65,7 +65,7 @@ Remember to restart the application after editing the environment variables! You
           name: 'createEmptyEnv',
           message: `Do you want to configure required environment variables now?
 ${chalk.dim(
-  `If you don't set up variables now .env file is created based on .env-template file. The application will not work correctly without Flex client ID, Flex client secret, Stripe publishable API key and MapBox acces token.
+  `If you don't set up variables now .env file is created based on .env-template file. The application will not work correctly without Sharetribe marketplace client ID, client secret, Stripe publishable API key and MapBox acces token.
 We recommend setting up the required variables before starting the application!`
 )}`,
           default: true,
@@ -119,26 +119,26 @@ const mandatoryVariables = settings => {
     {
       type: 'input',
       name: 'REACT_APP_SHARETRIBE_SDK_CLIENT_ID',
-      message: `What is your Flex client ID?
+      message: `What is your Sharetribe marketplace client ID?
 ${chalk.dim(
-  'Client ID is needed for connecting with Flex API. You can find your client ID from Flex Console.'
+  'Client ID is needed for connecting with Sharetribe API. You can find your client ID from the Console.'
 )}
 `,
       validate: function(value) {
         if (value.match(/^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$/i)) {
           return true;
         }
-        return 'Please enter valid Flex Client ID. You can check it form Flex Console!';
+        return 'Please enter valid Sharetribe Client ID. You can check it form Sharetribe Console!';
       },
       ...clientIdDefaultMaybe,
     },
     {
       type: 'input',
       name: 'SHARETRIBE_SDK_CLIENT_SECRET',
-      message: `What is your Flex client secret?
+      message: `What is your Sharetribe marketplace client secret?
 ${chalk.dim(
-  `Client Secret is needed for privileged transitions with Flex API.
-Client secret is connected to client ID. You can find your client secret from Flex Console.`
+  `Client Secret is needed for privileged transitions with Marketplace API.
+Client secret is connected to client ID. You can find your client secret from Sharetribe Console.`
 )}
 `,
       ...clientSecretDefaultMaybe,
