@@ -70,7 +70,7 @@ exports.authenticateFacebook = (req, res, next) => {
 };
 
 // Use custom callback for calling loginWithIdp enpoint
-// to log in the user to Flex with the data from Facebook
+// to log in the user to Sharetribe marketplace with the data from Facebook
 exports.authenticateFacebookCallback = (req, res, next) => {
   passport.authenticate('facebook', function(err, user) {
     loginWithIdp(err, user, req, res, clientID, 'facebook');

@@ -8,7 +8,7 @@ const data = 'data:';
 const blob = 'blob:';
 const devImagesMaybe = dev ? ['*.localhost:8000'] : [];
 const baseUrl = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL || 'https://flex-api.sharetribe.com';
-// Asset Delivery API is using a different domain than other Flex APIs
+// Asset Delivery API is using a different domain than other Sharetribe APIs
 // cdn.st-api.com
 // If assetCdnBaseUrl is used to initialize SDK (for proxy purposes), then that URL needs to be in CSP
 const assetCdnBaseUrl = process.env.REACT_APP_SHARETRIBE_SDK_ASSET_CDN_BASE_URL;

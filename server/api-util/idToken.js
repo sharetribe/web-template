@@ -29,7 +29,7 @@ exports.createIdToken = (idpClientId, user, options) => {
 
   const signingAlg = options.signingAlg;
 
-  // Currently Flex supports only RS256 signing algorithm.
+  // Currently Sharetribe Auth API supports only RS256 signing algorithm.
   if (signingAlg !== 'RS256') {
     console.error(`${signingAlg} is not currently supported!`);
     return;

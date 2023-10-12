@@ -25,9 +25,10 @@ const LineItemProviderCommissionMaybe = props => {
   // If commission is passed it will be shown as a fee already reduces from the total price
   let commissionItem = null;
 
-  // Sharetribe Web Template is using the default transaction process (https://www.sharetribe.com/docs/concepts/transaction-process/#sharetribe-flex-default-transaction-process)
-  // which containt provider commissions so by default the providerCommissionLineItem should exist.
+  // Sharetribe Web Template is using the default-booking and default-purchase transaction processes.
+  // They containt the provider commissions, so by default, the providerCommissionLineItem should exist.
   // If you are not using provider commisison you might want to remove this whole component from OrderBreakdown.js file.
+  // https://www.sharetribe.com/docs/concepts/transaction-process/
   if (isProvider && providerCommissionLineItem) {
     if (!isValidCommission(providerCommissionLineItem)) {
       // eslint-disable-next-line no-console

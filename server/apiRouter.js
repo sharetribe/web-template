@@ -67,7 +67,7 @@ router.get('/auth/facebook', authenticateFacebook);
 
 // This is the route for callback URL the user is redirected after authenticating
 // with Facebook. In this route a Passport.js custom callback is used for calling
-// loginWithIdp endpoint in Flex API to authenticate user to Flex
+// loginWithIdp endpoint in Sharetribe Auth API to authenticate user to the marketplace
 router.get('/auth/facebook/callback', authenticateFacebookCallback);
 
 // Google authentication endpoints
@@ -77,7 +77,7 @@ router.get('/auth/google', authenticateGoogle);
 
 // This is the route for callback URL the user is redirected after authenticating
 // with Google. In this route a Passport.js custom callback is used for calling
-// loginWithIdp endpoint in Flex API to authenticate user to Flex
+// loginWithIdp endpoint in Sharetribe Auth API to authenticate user to the marketplace
 router.get('/auth/google/callback', authenticateGoogleCallback);
 
 module.exports = router;
