@@ -73,7 +73,7 @@ See the Sharetribe Developer Docs: [sharetribe.com/docs/](https://www.sharetribe
 ## Get help – join Sharetribe Developer Slack channel
 
 If you have any questions about development, the best place to ask them is the Developer Slack
-channel at https://www.sharetribe.com/flex-slack
+channel at https://www.sharetribe.com/dev-slack
 
 ## License
 
