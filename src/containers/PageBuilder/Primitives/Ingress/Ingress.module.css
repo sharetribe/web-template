@@ -4,6 +4,7 @@
   margin-top: 0;
   margin-bottom: 0;
   letter-spacing: 0;
+  text-wrap: balance;
 
   /* Handle margin-top of next adjacent element against this p element */
   & + p,

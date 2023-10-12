@@ -52,6 +52,9 @@ sections are
 - **SectionFeatures**
   - Shows block content in a row mode: text and media are shown side by side
   - Create alternating block flow: each row changes the order of text and media
+- **SectionHero**
+  - Creates a taller section, designed be used as a first section on the page
+  - Centers the section's title and description
 - **SectionFooter**
   - Shows hosted footer asset content as columns, with content blocks on the right and logo and
     other footer details on the left
@@ -135,3 +138,4 @@ component using the footer asset data.
         // etc.
       };
       ```
+
