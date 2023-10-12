@@ -7,6 +7,7 @@ import SectionArticle from './SectionArticle';
 import SectionCarousel from './SectionCarousel';
 import SectionColumns from './SectionColumns';
 import SectionFeatures from './SectionFeatures';
+import SectionHero from './SectionHero';
 
 // Styles
 // Note: these contain
@@ -37,6 +38,7 @@ const defaultSectionComponents = {
   columns: { component: SectionColumns },
   features: { component: SectionFeatures },
   footer: { component: SectionFooter },
+  hero: { component: SectionHero },
 };
 
 //////////////////////
@@ -91,7 +93,7 @@ const SectionBuilder = props => {
 
 const propTypeSection = shape({
   sectionId: string.isRequired,
-  sectionType: oneOf(['article', 'carousel', 'columns', 'features']).isRequired,
+  sectionType: oneOf(['article', 'carousel', 'columns', 'features', 'hero']).isRequired,
   // Plus all kind of unknown fields.
   // BlockBuilder doesn't really need to care about those
 });
