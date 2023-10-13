@@ -167,11 +167,23 @@ const Footer = props => {
                     name="SearchPage"
                     to={{
                       search:
-                        '?pub_category=other',
+                        '?pub_category=omg',
                     }}
                     className={css.link}
                   >
                     <FormattedMessage id="Footer.link6" />
+                  </NamedLink>
+                </li>
+                <li className={css.listItem}>
+                  <NamedLink
+                    name="SearchPage"
+                    to={{
+                      search:
+                        '?pub_category=other',
+                    }}
+                    className={css.link}
+                  >
+                    <FormattedMessage id="Footer.link7" />
                   </NamedLink>
                 </li>
               </ul>

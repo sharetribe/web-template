@@ -57,6 +57,7 @@ export const listingFields = [
       { option: 'boat', label: 'Boat' },
       { option: 'urn', label: 'Urn' },
       { option: 'art', label: 'Art' },
+      { option: 'omg', label: 'OMG' },
       { option: 'other', label: 'Other' },
     ],
     filterConfig: {

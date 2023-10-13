@@ -28,6 +28,7 @@ import TopbarSearchForm from './TopbarSearchForm/TopbarSearchForm';
 import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
 import TopbarSearchFormCommission from './TopbarSearchFormCommission/TopbarSearchFormCommission';
 import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
+import TopbarCategories from './TopbarCategories/TopbarCategories';
 
 import css from './Topbar.module.css';
 
@@ -292,6 +293,21 @@ class TopbarComponent extends Component {
         </div>
         <div className={css.desktop}>
           <TopbarDesktop
+            className={desktopClassName}
+            currentUserHasListings={currentUserHasListings}
+            currentUser={currentUser}
+            currentPage={currentPage}
+            initialSearchFormValues={initialSearchFormValues}
+            intl={intl}
+            isAuthenticated={isAuthenticated}
+            notificationCount={notificationCount}
+            onLogout={this.handleLogout}
+            onSearchSubmit={onSearcSubmit}
+            appConfig={config}
+          />
+        </div>
+        <div>
+        <TopbarCategories
             className={desktopClassName}
             currentUserHasListings={currentUserHasListings}
             currentUser={currentUser}
