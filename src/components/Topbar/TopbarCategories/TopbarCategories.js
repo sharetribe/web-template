@@ -17,8 +17,8 @@ import {
   NamedLink,
 } from '../..';
 
-import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
-import TopbarSearchFormCommission from '../TopbarSearchFormCommission/TopbarSearchFormCommission';
+// import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
+// import TopbarSearchFormCommission from '../TopbarSearchFormCommission/TopbarSearchFormCommission';
 
 import css from './TopbarCategories.module.css';
 
@@ -54,25 +54,7 @@ const TopbarCategories = props => {
 
   const isCommissionPage = currentPage == 'CommissionPage'? true : false;
 
-  const search = (
-    isCommissionPage ? (
-      <TopbarSearchFormCommission
-        className={css.searchLink}
-        desktopInputRoot={css.topbarSearchWithLeftPadding}
-        onSubmit={onSearchSubmit}
-        initialValues={initialSearchFormValues}
-        appConfig={appConfig}
-      />
-    ):(
-      <TopbarSearchForm
-        className={css.searchLink}
-        desktopInputRoot={css.topbarSearchWithLeftPadding}
-        onSubmit={onSearchSubmit}
-        initialValues={initialSearchFormValues}
-        appConfig={appConfig}
-      />
-    )
-  );
+  const search = '';
 
   const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
 
@@ -138,15 +120,7 @@ const TopbarCategories = props => {
     </Menu>
   ) : null;
 
-  const signupLink = isAuthenticatedOrJustHydrated ? null : (
-    <NamedLink name="SignupPage" className={css.signupLink}>
-      <span className={css.signup}>
-        <FormattedMessage id="TopbarDesktop.signup" />
-      </span>
-    </NamedLink>
-  );
-
-  const loginLink = isAuthenticatedOrJustHydrated ? null : (
+  const searchModalLink = isAuthenticatedOrJustHydrated ? null : (
     <NamedLink name="LoginPage" className={css.loginLink}>
       <span className={css.login}>
         <FormattedMessage id="TopbarDesktop.login" />
@@ -154,32 +128,15 @@ const TopbarCategories = props => {
     </NamedLink>
   );
 
-  const manageCommission = !isAuthenticatedAndAccess ? null : (
-    <NamedLink className={css.createListingLink} params={{ sort: 'asc' }} name="Commission">
-        <span className={css.createListing}>
-          <FormattedMessage id="TopbarDesktop.Commission" />
-        </span>
-      </NamedLink>
-  );
 
   return (
     <nav className={classes}>
-      <LinkedLogo
-        className={css.logoLink}
-        format="desktop"
-        alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
-      />
-      {search}
-      {manageCommission}
       <NamedLink className={css.createListingLink} name="NewListingPage">
         <span className={css.createListing}>
           <FormattedMessage id="TopbarDesktop.createListing" />
         </span>
       </NamedLink>
-      {inboxLink}
-      {profileMenu}
-      {signupLink}
-      {loginLink}
+      {searchModalLink}
     </nav>
   );
 };
