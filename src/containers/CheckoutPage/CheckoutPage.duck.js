@@ -275,9 +275,13 @@ export const confirmPayment = (transactionId, transitionName, transitionParams =
     transition: transitionName,
     params: transitionParams,
   };
+  const queryParams = {
+    include: ['booking', 'provider'],
+    expand: true,
+  };
 
   return sdk.transactions
-    .transition(bodyParams)
+    .transition(bodyParams, queryParams)
     .then(response => {
       const order = response.data.data;
       dispatch(confirmPaymentSuccess(order.id));

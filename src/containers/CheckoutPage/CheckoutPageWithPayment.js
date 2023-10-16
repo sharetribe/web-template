@@ -280,7 +280,7 @@ const onStripeInitialized = (stripe, process, props) => {
     stripe &&
     !paymentIntent &&
     tx?.id &&
-    process?.getState(tx) === process?.states.PAYMENT_PENDING &&
+    process?.getState(tx) === process?.states.PENDING_PAYMENT &&
     !hasPaymentExpired(tx, process);
 
   if (shouldFetchPaymentIntent) {
