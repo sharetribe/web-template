@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] CheckoutPage: Fix wrong pending state name at checkout page.
+  [#246](https://github.com/sharetribe/web-template/pull/246)
 - [add] This removes old express-sitemap setup and adds starts generating sitemap package.
 
   - Robots.txt and sitemap-\* resources will be generated on request
