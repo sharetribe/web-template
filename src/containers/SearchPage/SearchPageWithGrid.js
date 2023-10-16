@@ -282,6 +282,9 @@ export class SearchPageComponent extends Component {
       config
     );
 
+    const categories = ['gasfasf','asfasf']
+
+
     // Set topbar class based on if a modal is open in
     // a child component
     const topbarClasses = this.state.isMobileModalOpen
@@ -301,6 +304,7 @@ export class SearchPageComponent extends Component {
           className={topbarClasses}
           currentPage="SearchPage"
           currentSearchParams={urlQueryParams}
+          categories={categories}
         />
         <div className={css.layoutWrapperContainer}>
           <aside className={css.layoutWrapperFilterColumn} data-testid="filterColumnAside">

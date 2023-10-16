@@ -73,7 +73,10 @@ GenericError.propTypes = {
 };
 
 class TopbarComponent extends Component {
+  
   constructor(props) {
+    console.log('TopbarComponent extends');
+    console.log(props);
     super(props);
     this.handleMobileMenuOpen = this.handleMobileMenuOpen.bind(this);
     this.handleMobileMenuClose = this.handleMobileMenuClose.bind(this);
@@ -82,6 +85,7 @@ class TopbarComponent extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSubmitCommission = this.handleSubmitCommission.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    // this.categories = this.categories.bind(this);
   }
 
   handleMobileMenuOpen() {
@@ -196,7 +200,11 @@ class TopbarComponent extends Component {
       sendVerificationEmailError,
       showGenericError,
       config,
+      categories
     } = this.props;
+
+    console.log('this.props');
+    console.log(this.props);
 
     
 
@@ -264,6 +272,24 @@ class TopbarComponent extends Component {
       />
     );
 
+    const topbarCategoriesContent = categories?(
+      <div>
+        <TopbarCategories
+            className={desktopClassName}
+            currentUserHasListings={currentUserHasListings}
+            currentUser={currentUser}
+            currentPage={currentPage}
+            initialSearchFormValues={initialSearchFormValues}
+            intl={intl}
+            isAuthenticated={isAuthenticated}
+            notificationCount={notificationCount}
+            onLogout={this.handleLogout}
+            onSearchSubmit={onSearcSubmit}
+            appConfig={config}
+          />
+        </div>
+    ):null;
+
     return (
       <div className={classes}>
         <LimitedAccessBanner
@@ -306,21 +332,7 @@ class TopbarComponent extends Component {
             appConfig={config}
           />
         </div>
-        <div>
-        <TopbarCategories
-            className={desktopClassName}
-            currentUserHasListings={currentUserHasListings}
-            currentUser={currentUser}
-            currentPage={currentPage}
-            initialSearchFormValues={initialSearchFormValues}
-            intl={intl}
-            isAuthenticated={isAuthenticated}
-            notificationCount={notificationCount}
-            onLogout={this.handleLogout}
-            onSearchSubmit={onSearcSubmit}
-            appConfig={config}
-          />
-        </div>
+        {topbarCategoriesContent}
         <Modal
           id="TopbarMobileMenu"
           isOpen={isMobileMenuOpen}

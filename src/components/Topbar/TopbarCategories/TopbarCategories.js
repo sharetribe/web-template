@@ -36,10 +36,14 @@ const TopbarCategories = props => {
     onLogout,
     onSearchSubmit,
     initialSearchFormValues,
+    categories,
   } = props;
   const [mounted, setMounted] = useState(false);
   
   const isAccess = AccessRole(props,'admin');
+
+  console.log('TopbarCategories');
+  console.log(props);
 
   useEffect(() => {
     setMounted(true);
@@ -128,6 +132,8 @@ const TopbarCategories = props => {
     </NamedLink>
   );
 
+  console.log('className={classes}');
+  console.log(classes);
 
   return (
     <nav className={classes}>
@@ -136,6 +142,19 @@ const TopbarCategories = props => {
           <FormattedMessage id="TopbarDesktop.createListing" />
         </span>
       </NamedLink>
+
+      {categories.map((variant,index) => (
+        // <NamedLink className={css.createListingLink} name="NewListingPage">
+          <span className={css.createListing}>
+            {variant}
+            {/* <FormattedMessage id="TopbarDesktop.createListing" /> */}
+          </span>
+          // <option key={index++} value={index++}>
+          //   {formatVariantLabel(intl,variant,price)}
+          // </option>
+        // </NamedLink>
+      ))}
+
       {searchModalLink}
     </nav>
   );
