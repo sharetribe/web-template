@@ -133,7 +133,7 @@ export const hasDefaultPaymentMethod = (stripeCustomerFetched, currentUser) =>
   );
 
 /**
- * Check if payment is expired (PAYMENT_EXPIRED state) or if payment has passed 15 minute treshold from PAYMENT_PENDING
+ * Check if payment is expired (PAYMENT_EXPIRED state) or if payment has passed 15 minute treshold from PENDING_PAYMENT
  *
  * @param {Object} existingTransaction
  * @param {Object} process
@@ -143,7 +143,7 @@ export const hasPaymentExpired = (existingTransaction, process) => {
   const state = process.getState(existingTransaction);
   return state === process.states.PAYMENT_EXPIRED
     ? true
-    : state === process.states.PAYMENT_PENDING
+    : state === process.states.PENDING_PAYMENT
     ? minutesBetween(existingTransaction.attributes.lastTransitionedAt, new Date()) >= 15
     : false;
 };
