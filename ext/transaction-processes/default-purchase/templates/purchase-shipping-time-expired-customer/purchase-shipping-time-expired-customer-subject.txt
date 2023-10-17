@@ -1,1 +1,1 @@
-Your order for {{transaction.listing.title}} was automatically canceled
+{{set-translations (asset "email/translations.json")}}{{t "PurchaseShippingTimeExpiredCustomer.Subject" "Your order for {listingTitle} was automatically canceled" listingTitle=transaction.listing.title}}
