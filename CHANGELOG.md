@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+## [v3.3.0] 2023-10-17
+
 - [add] Change transaction process reference to contain updated email templates, which support email
   texts (a content management concept for email templates).
   [#240](https://github.com/sharetribe/web-template/pull/240)
@@ -34,6 +36,8 @@ way to update this template, but currently, we follow a pattern:
   [#239](https://github.com/sharetribe/web-template/pull/239)
 - [fix] webmanifest error should use log and not return 500 if rendering dynamic data fails.
   [#238](https://github.com/sharetribe/web-template/pull/238)
+
+  [v3.3.0]: https://github.com/sharetribe/web-template/compare/v3.2.0...v3.3.0
 
 ## [v3.2.0] 2023-10-04
 
