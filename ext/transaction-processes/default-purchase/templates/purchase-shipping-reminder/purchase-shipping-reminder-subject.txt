@@ -1,1 +1,1 @@
-Remember to {{#eq "shipping" transaction.protected-data.deliveryMethod}}ship{{else}}arrange pickup for{{/eq}} {{transaction.customer.display-name}}'s order
+{{set-translations (asset "email/translations.json")}}{{t "PurchaseShippingReminder.Subject" "Remember to {option, select, shipping {ship} other {arrange pickup for}} {customerDisplayName}'s order" customerDisplayName=transaction.customer.display-name option=transaction.protected-data.deliveryMethod}}

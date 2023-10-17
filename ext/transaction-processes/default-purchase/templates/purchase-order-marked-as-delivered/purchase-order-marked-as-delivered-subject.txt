@@ -1,1 +1,1 @@
-Your order for {{transaction.listing.title}} was {{#eq "shipping" transaction.protected-data.deliveryMethod}}shipped{{else}}delivered{{/eq}}
+{{set-translations (asset "email/translations.json")}}{{t "PurchaseOrderMarkedAsDelivered.Subject" "Your order for {listingTitle} was {option, select, shipping {shipped} other {delivered}}" option=transaction.protected-data.deliveryMethod listingTitle=transaction.listing.title}}

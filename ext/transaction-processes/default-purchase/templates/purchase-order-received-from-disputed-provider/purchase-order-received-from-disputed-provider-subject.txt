@@ -1,1 +1,1 @@
-A disputed order for {{transaction.listing.title}} is now considered completed
+{{set-translations (asset "email/translations.json")}}{{t "PurchaseOrderReceivedFromDisputedProvider.Subject" "A disputed order for {listingTitle} is now considered completed" listingTitle=transaction.listing.title}}
