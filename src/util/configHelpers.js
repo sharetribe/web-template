@@ -129,8 +129,8 @@ const mergeLayouts = (layoutConfig, defaultLayout) => {
   const searchPage = validVariantConfig(
     layoutConfig?.searchPage,
     defaultLayout?.searchPage,
-    ['map', 'grid'],
-    { variantType: 'grid' }
+    ['map', 'grid', 'modal'],
+    { variantType: 'modal' }
   );
 
   const listingPage = validVariantConfig(

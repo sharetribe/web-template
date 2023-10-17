@@ -200,13 +200,8 @@ class TopbarComponent extends Component {
       sendVerificationEmailError,
       showGenericError,
       config,
-      categories
+      categories,
     } = this.props;
-
-    console.log('this.props');
-    console.log(this.props);
-
-    
 
     const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
       latlng: ['origin'],
@@ -281,11 +276,12 @@ class TopbarComponent extends Component {
             currentPage={currentPage}
             initialSearchFormValues={initialSearchFormValues}
             intl={intl}
-            isAuthenticated={isAuthenticated}
-            notificationCount={notificationCount}
-            onLogout={this.handleLogout}
-            onSearchSubmit={onSearcSubmit}
+            // isAuthenticated={isAuthenticated}
+            // notificationCount={notificationCount}
+            // onLogout={this.handleLogout}
+            // onSearchSubmit={onSearcSubmit}
             appConfig={config}
+            categories={categories}
           />
         </div>
     ):null;

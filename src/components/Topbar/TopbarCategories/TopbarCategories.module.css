@@ -11,7 +11,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 0 12px 0 0;
+  padding: 0 36px;
 
   /* fill */
   background-color: var(--colorWhite);
@@ -19,9 +19,9 @@
   /* shadows */
   box-shadow: var(--boxShadowLight);
 
-  @media (--viewportLarge) {
+  /* @media (--viewportLarge) {
     padding: 0 24px 0 0;
-  }
+  } */
 }
 
 /* logo */
@@ -105,7 +105,7 @@
 .topbarDesktopLabel {
   composes: textSmall from global;
   display: inline-block;
-  margin: 14px 0;
+  margin: 6px 0;
   text-decoration: inherit;
 }
 
@@ -371,4 +371,25 @@
       background-color: var(--colorBlack);
     }
   }
+}
+
+.categoryLabel {
+  text-align: center;
+  font-size: 0.75rem;
+}
+.categoryImage{
+  width: 28px;
+}
+.searchModalButtonContainer{
+}
+.categoriesList{
+  flex-grow: 1;
+  display: grid;
+  justify-content: space-around;
+  grid-auto-flow: column;
+}
+.searchModalButton{
+  display: block;
+  padding: 0 20px;
+  margin: 10px 0px;
 }

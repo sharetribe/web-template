@@ -32,6 +32,7 @@ const ProfilePage = loadable(() => import(/* webpackChunkName: "ProfilePage" */ 
 const ProfileSettingsPage = loadable(() => import(/* webpackChunkName: "ProfileSettingsPage" */ '../containers/ProfileSettingsPage/ProfileSettingsPage'));
 const SearchPageWithMap = loadable(() => import(/* webpackChunkName: "SearchPageWithMap" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithMap'));
 const SearchPageWithGrid = loadable(() => import(/* webpackChunkName: "SearchPageWithGrid" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithGrid'));
+const SearchPageWithGridModal = loadable(() => import(/* webpackChunkName: "SearchPageWithGridModal" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithGridModal'));
 const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayoutPage" */ '../containers/StripePayoutPage/StripePayoutPage'));
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ '../containers/TermsOfServicePage/TermsOfServicePage'));
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
@@ -63,9 +64,31 @@ const RedirectToLandingPage = () => <NamedRedirect name="Home" />;
 // Our routes are exact by default.
 // See behaviour from Routes.js where Route is created.
 const routeConfiguration = (layoutConfig) => {
-  const SearchPage = layoutConfig.searchPage?.variantType === 'map' 
-    ? SearchPageWithMap 
-    : SearchPageWithGrid;
+
+  const detectSearcPageType = (variantType) => {
+    switch (variantType) {
+      case 'map':
+        console.log('SearchPageWithMap');
+        return SearchPageWithMap;
+        break;
+        
+      case 'modal':
+        console.log('SearchPageWithGridModal');
+        return SearchPageWithGridModal;
+        break;
+        
+      default:
+        console.log('SearchPageWithGrid');
+        return SearchPageWithGrid;
+        break;
+    }
+  }
+
+  console.log('layoutConfig.searchPage?.variantType');
+  console.log(layoutConfig.searchPage?.variantType);
+  
+  const SearchPage = detectSearcPageType(layoutConfig.searchPage?.variantType);
+    
   const ListingPage = layoutConfig.listingPage?.variantType === 'carousel' 
     ? ListingPageCarousel 
     : ListingPageCoverPhoto;

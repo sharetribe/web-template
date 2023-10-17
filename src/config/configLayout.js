@@ -5,9 +5,9 @@
 ///////////////////////////////////////////////////////
 
 // There are 2 SearchPage variants that can be used:
-// 'map' & 'grid'
+// 'map' & 'grid' & 'modal'
 export const searchPage = {
-  variantType: 'grid',
+  variantType: 'modal',
 };
 
 // ListingPage has 2 layout options: 'coverPhoto' and 'carousel'.

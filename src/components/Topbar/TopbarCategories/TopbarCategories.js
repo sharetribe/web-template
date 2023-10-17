@@ -15,6 +15,7 @@ import {
   MenuContent,
   MenuItem,
   NamedLink,
+  SecondaryButtonInline,
 } from '../..';
 
 // import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
@@ -43,7 +44,7 @@ const TopbarCategories = props => {
   const isAccess = AccessRole(props,'admin');
 
   console.log('TopbarCategories');
-  console.log(props);
+  console.log(categories);
 
   useEffect(() => {
     setMounted(true);
@@ -132,30 +133,42 @@ const TopbarCategories = props => {
     </NamedLink>
   );
 
-  console.log('className={classes}');
-  console.log(classes);
-
   return (
     <nav className={classes}>
-      <NamedLink className={css.createListingLink} name="NewListingPage">
+      {/* <NamedLink className={css.createListingLink} name="NewListingPage">
         <span className={css.createListing}>
           <FormattedMessage id="TopbarDesktop.createListing" />
         </span>
-      </NamedLink>
+      </NamedLink> */}
+        <div className={css.categoriesList}>
+          {categories.map((variant,index) => (
+            <span key={index} className={css.createListing}>
+              <div className={css.categoryLabel}>
+                <img className={css.categoryImage} src={'/static/icons/favicon-32x32.png'} alt={variant.option} />
+              </div>
+              <div className={css.categoryLabel}>
+                {variant.label}
+              </div>
+            </span>
+          ))}
+        </div>
+        <div className={css.searchModalButtonContainer}>
+            <SecondaryButtonInline
+                className={css.searchModalButton}
+                type="submit"
+                // inProgress={submitInProgress}
+                // disabled={submitDisabled}
+                // ready={pristineSinceLastSubmit}
+              >
+                {/* filters */}
+                <FormattedMessage
+                  id="SearchFiltersMobile.filtersButtonLabel"
+                  className={css.mapIconText}
+                />
+              </SecondaryButtonInline>
+        </div>
 
-      {categories.map((variant,index) => (
-        // <NamedLink className={css.createListingLink} name="NewListingPage">
-          <span className={css.createListing}>
-            {variant}
-            {/* <FormattedMessage id="TopbarDesktop.createListing" /> */}
-          </span>
-          // <option key={index++} value={index++}>
-          //   {formatVariantLabel(intl,variant,price)}
-          // </option>
-        // </NamedLink>
-      ))}
-
-      {searchModalLink}
+      {/* {searchModalLink} */}
     </nav>
   );
 };
@@ -176,10 +189,10 @@ TopbarCategories.propTypes = {
   currentUserHasListings: bool.isRequired,
   currentUser: propTypes.currentUser,
   currentPage: string,
-  isAuthenticated: bool.isRequired,
-  onLogout: func.isRequired,
+  // isAuthenticated: bool.isRequired,
+  // onLogout: func.isRequired,
   notificationCount: number,
-  onSearchSubmit: func.isRequired,
+  // onSearchSubmit: func.isRequired,
   initialSearchFormValues: object,
   intl: intlShape.isRequired,
   appConfig: object,
