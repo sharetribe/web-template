@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Change transaction process reference to contain updated email templates, which support email
+  texts (a content management concept for email templates).
+  [#240](https://github.com/sharetribe/web-template/pull/240)
 - [fix] CheckoutPage: Fix wrong pending state name at checkout page.
   [#246](https://github.com/sharetribe/web-template/pull/246)
 - [add] This removes old express-sitemap setup and adds starts generating sitemap package.
