@@ -16,6 +16,10 @@ import {
   MenuItem,
   NamedLink,
   SecondaryButtonInline,
+  IconCategoryBoat,
+  IconCategoryTest,
+  IconCategoryOmg,
+  IconCategoryPlane,
 } from '../..';
 
 // import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
@@ -133,6 +137,32 @@ const TopbarCategories = props => {
     </NamedLink>
   );
 
+  const categoryImage = (name) => {
+    console.log('categoryImage');
+    console.log(name);
+    switch (name) {
+      case 'boat':
+        return <IconCategoryBoat />
+        break;
+    
+      case 'jewelry':
+        return <IconCategoryTest />
+        break;
+    
+      case 'omg':
+        return <IconCategoryOmg />
+        break;
+    
+      case 'plane':
+        return <IconCategoryPlane />
+        break;
+    
+      default:
+        break;
+    }
+    
+  }
+
   return (
     <nav className={classes}>
       {/* <NamedLink className={css.createListingLink} name="NewListingPage">
@@ -144,7 +174,8 @@ const TopbarCategories = props => {
           {categories.map((variant,index) => (
             <span key={index} className={css.createListing}>
               <div className={css.categoryLabel}>
-                <img className={css.categoryImage} src={'/static/icons/favicon-32x32.png'} alt={variant.option} />
+                {categoryImage(variant.option)}
+                {/* <img className={css.categoryImage} src={'/static/icons/favicon-32x32.png'} alt={variant.option} /> */}
               </div>
               <div className={css.categoryLabel}>
                 {variant.label}

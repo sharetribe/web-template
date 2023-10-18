@@ -86,6 +86,14 @@ export class SearchPageComponent extends Component {
     this.setState({ isMobileModalOpen: false });
   }
 
+  handleOpenModal () {
+    this.setState({ showModal: true });
+  }
+  
+  handleCloseModal () {
+    this.setState({ showModal: false });
+  }
+
   // Reset all filter query parameters
   resetAll(e) {
     const { history, routeConfiguration, config } = this.props;
@@ -314,23 +322,9 @@ const customStyles = {
 };
 
   // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
-  Modal.setAppElement('#root');
+  // Modal.setAppElement('#root');
 
-  let subtitle;
-  const [modalIsOpen, setIsOpen] = React.useState(false);
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    subtitle.style.color = '#f00';
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
+  // ReactModal.setAppElement('#root');
 
     return (
       <Page
@@ -346,27 +340,15 @@ const customStyles = {
           categories={enumOptions}
         />
 
-        <div>
-          <button onClick={openModal}>Open Modal</button>
-          <Modal
-            isOpen={modalIsOpen}
-            onAfterOpen={afterOpenModal}
-            onRequestClose={closeModal}
-            style={customStyles}
-            contentLabel="Example Modal"
+        {/* <div>
+          <button onClick={this.handleOpenModal}>Trigger Modal</button>
+          <ReactModal 
+            isOpen={this.state.showModal}
+            contentLabel="Minimal Modal Example"
           >
-            <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Hello</h2>
-            <button onClick={closeModal}>close</button>
-            <div>I am a modal</div>
-            <form>
-              <input />
-              <button>tab navigation</button>
-              <button>stays</button>
-              <button>inside</button>
-              <button>the modal</button>
-            </form>
-          </Modal>
-        </div>
+            <button onClick={this.handleCloseModal}>Close Modal</button>
+          </ReactModal>
+        </div> */}
 
         <div className={css.layoutWrapperContainer}>
           <aside className={css.layoutWrapperFilterColumn} data-testid="filterColumnAside">

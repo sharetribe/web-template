@@ -35,6 +35,10 @@ export { default as IconSocialMediaInstagram } from './IconSocialMediaInstagram/
 export { default as IconSocialMediaTwitter } from './IconSocialMediaTwitter/IconSocialMediaTwitter';
 export { default as IconSpinner } from './IconSpinner/IconSpinner';
 export { default as IconSuccess } from './IconSuccess/IconSuccess';
+export { default as IconCategoryBoat } from './IconCategoryBoat/IconCategoryBoat';
+export { default as IconCategoryTest } from './IconCategoryTest/IconCategoryTest';
+export { default as IconCategoryOmg } from './IconCategoryOmg/IconCategoryOmg';
+export { default as IconCategoryPlane } from './IconCategoryPlane/IconCategoryPlane';
 
 // Typography
 export { Heading, H1, H2, H3, H4, H5, H6  } from './Heading/Heading';
