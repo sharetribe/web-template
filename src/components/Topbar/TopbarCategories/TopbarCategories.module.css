@@ -393,3 +393,14 @@
   padding: 0 20px;
   margin: 10px 0px;
 }
+.categoryIcon{
+  display: block;
+  width: 20px;
+  height: 20px;
+  padding: 0 20px;
+  margin: 10px 0px;
+}
+.categoryContainner{
+  display: block;
+  width: 40px;
+}

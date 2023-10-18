@@ -4,4 +4,5 @@
   &:hover {
     fill: var(--marketplaceColor);
   }
+  height: 28px;
 }

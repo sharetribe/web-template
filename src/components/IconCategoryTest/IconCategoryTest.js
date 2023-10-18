@@ -9,10 +9,11 @@ const IconCategoryTest = props => {
   const classes = classNames(rootClassName || css.root, className);
   return (
     <svg 
+      className={classes}
       xmlns="http://www.w3.org/2000/svg" 
       version="1.1" 
       x="0px" y="0px" 
-      viewBox="0 0 90 112.5" 
+      viewBox="0 0 90 60.5" 
       space="preserve"
     >
       <path 

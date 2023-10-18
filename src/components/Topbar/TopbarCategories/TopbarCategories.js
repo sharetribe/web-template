@@ -18,6 +18,7 @@ import {
   SecondaryButtonInline,
   IconCategoryBoat,
   IconCategoryTest,
+  IconCategoryJewerly,
   IconCategoryOmg,
   IconCategoryPlane,
 } from '../..';
@@ -142,22 +143,23 @@ const TopbarCategories = props => {
     console.log(name);
     switch (name) {
       case 'boat':
-        return <IconCategoryBoat />
+        return <IconCategoryBoat  />
         break;
     
       case 'jewelry':
-        return <IconCategoryTest />
+        return <IconCategoryJewerly  />
         break;
     
       case 'omg':
-        return <IconCategoryOmg />
+        return <IconCategoryOmg  />
         break;
     
       case 'plane':
-        return <IconCategoryPlane />
+        return <IconCategoryPlane  />
         break;
     
       default:
+        return <IconCategoryPlane  />
         break;
     }
     
@@ -172,15 +174,16 @@ const TopbarCategories = props => {
       </NamedLink> */}
         <div className={css.categoriesList}>
           {categories.map((variant,index) => (
-            <span key={index} className={css.createListing}>
+            <div key={index} className={css.categoryContainner}>
               <div className={css.categoryLabel}>
                 {categoryImage(variant.option)}
                 {/* <img className={css.categoryImage} src={'/static/icons/favicon-32x32.png'} alt={variant.option} /> */}
+                <div >
+                  {variant.label}
+                </div>
               </div>
-              <div className={css.categoryLabel}>
-                {variant.label}
-              </div>
-            </span>
+              
+            </div>
           ))}
         </div>
         <div className={css.searchModalButtonContainer}>

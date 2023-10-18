@@ -351,31 +351,7 @@ const customStyles = {
         </div> */}
 
         <div className={css.layoutWrapperContainer}>
-          <aside className={css.layoutWrapperFilterColumn} data-testid="filterColumnAside">
-            <div className={css.filterColumnContent}>
-              {availableFilters.map(config => {
-                return (
-                  <FilterComponent
-                    key={`SearchFiltersMobile.${config.key}`}
-                    idPrefix="SearchFiltersMobile"
-                    className={css.filter}
-                    config={config}
-                    marketplaceCurrency={marketplaceCurrency}
-                    urlQueryParams={urlQueryParams}
-                    initialValues={initialValues(this.props, this.state.currentQueryParams)}
-                    getHandleChangedValueFn={this.getHandleChangedValueFn}
-                    intl={intl}
-                    liveEdit
-                    showAsPopup={false}
-                    isDesktop
-                  />
-                );
-              })}
-              <button className={css.resetAllButton} onClick={e => this.handleResetAll(e)}>
-                <FormattedMessage id={'SearchFiltersMobile.resetAll'} />
-              </button>
-            </div>
-          </aside>
+         
 
           <div className={css.layoutWrapperMain} role="main">
             <div className={css.searchResultContainer}>

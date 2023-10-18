@@ -1,7 +1,7 @@
-import IconCategoryJewelry from './IconCategoryJewelry';
+import IconCategoryJewerly from './IconCategoryJewerly';
 
 export const Icon = {
-  component: IconCategoryJewelry,
+  component: IconCategoryJewerly,
   props: {},
   group: 'icons',
 };

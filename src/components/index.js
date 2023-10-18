@@ -39,6 +39,7 @@ export { default as IconCategoryBoat } from './IconCategoryBoat/IconCategoryBoat
 export { default as IconCategoryTest } from './IconCategoryTest/IconCategoryTest';
 export { default as IconCategoryOmg } from './IconCategoryOmg/IconCategoryOmg';
 export { default as IconCategoryPlane } from './IconCategoryPlane/IconCategoryPlane';
+export { default as IconCategoryJewerly } from './IconCategoryJewerly/IconCategoryJewerly';
 
 // Typography
 export { Heading, H1, H2, H3, H4, H5, H6  } from './Heading/Heading';
