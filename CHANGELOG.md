@@ -14,6 +14,16 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] SectionHero component added to the PageBuilder.
+  [#244](https://github.com/sharetribe/web-template/pull/244)
+- [fix] Map integration is mandatory, but let's not allow error loops if not available.
+  [#250](https://github.com/sharetribe/web-template/pull/250)
+
+## [v3.3.0] 2023-10-17
+
+- [add] Change transaction process reference to contain updated email templates, which support email
+  texts (a content management concept for email templates).
+  [#240](https://github.com/sharetribe/web-template/pull/240)
 - [fix] CheckoutPage: Fix wrong pending state name at checkout page.
   [#246](https://github.com/sharetribe/web-template/pull/246)
 - [add] This removes old express-sitemap setup and adds starts generating sitemap package.
@@ -31,6 +41,8 @@ way to update this template, but currently, we follow a pattern:
   [#239](https://github.com/sharetribe/web-template/pull/239)
 - [fix] webmanifest error should use log and not return 500 if rendering dynamic data fails.
   [#238](https://github.com/sharetribe/web-template/pull/238)
+
+  [v3.3.0]: https://github.com/sharetribe/web-template/compare/v3.2.0...v3.3.0
 
 ## [v3.2.0] 2023-10-04
 

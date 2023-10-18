@@ -1,1 +1,1 @@
-Review from {{other-party.display-name}} has been published on your profile
+{{set-translations (asset "email/translations.json")}}{{t "PurchaseReviewByOtherPartyPublished.Subject" "Review from {otherPartyDisplayName} has been published on your profile" otherPartyDisplayName=other-party.display-name }}

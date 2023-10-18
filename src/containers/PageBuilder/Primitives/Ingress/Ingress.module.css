@@ -4,6 +4,8 @@
   margin-top: 0;
   margin-bottom: 0;
   letter-spacing: 0;
+  /* Note: text-wrap is experimental CSS feature. Most browsers don't support it */
+  text-wrap: balance;
 
   /* Handle margin-top of next adjacent element against this p element */
   & + p,

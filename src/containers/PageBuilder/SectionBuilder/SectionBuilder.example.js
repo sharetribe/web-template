@@ -933,3 +933,37 @@ export const SectionColumns = {
   },
   group: 'PageBuilder',
 };
+
+export const SectionHero = {
+  component: SectionBuilder,
+  props: {
+    sections: [
+      {
+        sectionType: 'hero',
+        sectionId: 'cms-hero-section',
+        appearance: {
+          fieldType: 'customAppearance',
+          backgroundImage: imagePlaceholder(800, 800),
+          alt: 'Background image',
+          backgroundColor: '#000000',
+          textColor: 'white',
+        },
+        title: {
+          fieldType: 'heading1',
+          content: 'Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.',
+        },
+        description: {
+          fieldType: 'paragraph',
+          content:
+            'Maecenas sed diam eget risus varius blandit sit amet non magna. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.',
+        },
+        callToAction: {
+          fieldType: 'externalButtonLink',
+          href: '#',
+          content: 'Justo Tortor Amet',
+        },
+      },
+    ],
+  },
+  group: 'PageBuilder',
+};

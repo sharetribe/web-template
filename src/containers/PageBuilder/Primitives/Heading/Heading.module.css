@@ -1,3 +1,5 @@
+@import '../../../../styles/customMediaQueries.css';
+
 /* Common styles */
 .h1,
 .h2,
@@ -21,6 +23,15 @@
 /* Specific styles */
 .h1 {
   font-size: 40px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  font-weight: 800;
+  /* Note: text-wrap is experimental CSS feature. Most browsers don't support it */
+  text-wrap: balance;
+
+  @media (--viewportMedium) {
+    font-size: 48px;
+  }
 
   /* If ´& + *´ if used, margin-top needs !important to overwrite */
   /* Handle margin-top of next adjacent element against this heading element */
@@ -41,7 +52,7 @@
 }
 
 .h2 {
-  font-size: 30px;
+  font-size: 32px;
 
   /* If ´& + *´ if used, margin-top needs !important to overwrite */
   /* Handle margin-top of next adjacent element against this heading element */
