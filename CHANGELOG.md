@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Map integration is mandatory, but let's not allow error loops if not available.
+  [#250](https://github.com/sharetribe/web-template/pull/250)
+
 ## [v3.3.0] 2023-10-17
 
 - [add] Change transaction process reference to contain updated email templates, which support email
