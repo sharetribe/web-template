@@ -202,3 +202,14 @@ export const hasSameSDKBounds = (sdkBounds1, sdkBounds2) => {
     sdkBounds1.sw.lng === sdkBounds2.sw.lng
   );
 };
+
+/**
+ * Return googleMapsAPIKey or mapboxAccessToken depending on which map provider is selected.
+ *
+ * @param {Object} mapConfig
+ * @returns googleMapsAPIKey or mapboxAccessToken
+ */
+export const getMapProviderApiAccess = mapConfig => {
+  const isGoogleMapsInUse = mapConfig.mapProvider === 'googleMaps';
+  return isGoogleMapsInUse ? mapConfig.googleMapsAPIKey : mapConfig.mapboxAccessToken;
+};
