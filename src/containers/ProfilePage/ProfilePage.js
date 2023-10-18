@@ -34,6 +34,8 @@ const MAX_MOBILE_SCREEN_WIDTH = 768;
 
 export const AsideContent = props => {
   const { user, displayName, isCurrentUser } = props;
+  const profileUser = ensureUser(user);
+  const { hobbiesArray } = profileUser?.attributes?.profile?.publicData || [];
   return (
     <div className={css.asideContent}>
       <AvatarLarge className={css.avatar} user={user} disableProfileLink />
@@ -50,6 +52,23 @@ export const AsideContent = props => {
           <NamedLink className={css.editLinkDesktop} name="ProfileSettingsPage">
             <FormattedMessage id="ProfilePage.editProfileLinkDesktop" />
           </NamedLink>
+          {/* Show hobbies here */}
+          <div className={css.hobbiesWrapper}>
+            <H4 as="h2" className={css.mobileHeading}>
+              <FormattedMessage id="ProfileSettingsForm.hobbiesHeading" />
+            </H4>
+            <H4 as="h2" className={css.desktopHeading}>
+              <FormattedMessage id="ProfileSettingsForm.hobbiesHeading" />
+            </H4>
+            {/* Showing badges of hobby */}
+            <div className={css.badges}>
+              {hobbiesArray?.map(hobby => (
+                <div key={hobby} className={css.badge}>
+                  {hobby}
+                </div>
+              ))}
+            </div>
+          </div>
         </>
       ) : null}
     </div>

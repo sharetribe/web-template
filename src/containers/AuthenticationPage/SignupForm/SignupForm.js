@@ -146,6 +146,25 @@ const SignupFormComponent = props => (
               })}
               validate={passwordValidators}
             />
+            {/* Hobbies text input */}
+            <FieldTextInput
+              className={css.hobbies}
+              type="text"
+              id={formId ? `${formId}.hobbies` : 'hobbies'}
+              name="hobbies"
+              autoComplete="hobbies"
+              label={intl.formatMessage({
+                id: 'SignupForm.hobbiesLabel',
+              })}
+              placeholder={intl.formatMessage({
+                id: 'SignupForm.hobbiesPlaceholder',
+              })}
+              validate={validators.required(
+                intl.formatMessage({
+                  id: 'SignupForm.hobbiesRequired',
+                })
+              )}
+            />
           </div>
 
           <div className={css.bottomWrapper}>

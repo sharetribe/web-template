@@ -32,6 +32,10 @@
   composes: marketplaceModalPasswordMargins from global;
 }
 
+.hobbies {
+  composes: marketplaceModalPasswordMargins from global;
+}
+
 .bottomWrapper {
   composes: marketplaceModalBottomWrapper from global;
 }

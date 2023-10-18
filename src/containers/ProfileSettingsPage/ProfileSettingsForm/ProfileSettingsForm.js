@@ -31,17 +31,41 @@ class ProfileSettingsFormComponent extends Component {
     super(props);
 
     this.uploadDelayTimeoutId = null;
-    this.state = { uploadDelay: false };
+    this.state = {
+      uploadDelay: false,
+      hobbiesValues: '',
+    };
     this.submittedValues = {};
   }
 
+  hobbiesGetter() {
+    const { currentUser } = this.props;
+    const user = ensureCurrentUser(currentUser);
+    const publicData = user.attributes.profile.publicData;
+    const hobbies = publicData.hobbiesArray.join(', ');
+    return hobbies;
+  }
+
+  componentDidMount() {
+    const hobbies = this.hobbiesGetter();
+    this.setState({ hobbiesValues: hobbies });
+  }
+
   componentDidUpdate(prevProps) {
+    const hobbies = this.hobbiesGetter();
+    if (hobbies !== this.state.hobbiesValues) {
+      this.setState({ hobbiesValues: hobbies });
+    }
     // Upload delay is additional time window where Avatar is added to the DOM,
     // but not yet visible (time to load image URL from srcset)
     if (prevProps.uploadInProgress && !this.props.uploadInProgress) {
-      this.setState({ uploadDelay: true });
+      this.setState({
+        uploadDelay: true,
+      });
       this.uploadDelayTimeoutId = window.setTimeout(() => {
-        this.setState({ uploadDelay: false });
+        this.setState({
+          uploadDelay: false,
+        });
       }, UPLOAD_CHANGE_DELAY);
     }
   }
@@ -107,6 +131,18 @@ class ProfileSettingsFormComponent extends Component {
           const bioPlaceholder = intl.formatMessage({
             id: 'ProfileSettingsForm.bioPlaceholder',
           });
+
+          // Hobbies
+          const hobbiesLabel = intl.formatMessage({
+            id: 'ProfileSettingsForm.hobbiesLabel',
+          });
+          const hobbiesPlaceholder = intl.formatMessage({
+            id: 'ProfileSettingsForm.hobbiesPlaceholder',
+          });
+          const hobbiesRequiredMessage = intl.formatMessage({
+            id: 'ProfileSettingsForm.hobbiesRequired',
+          });
+          const hobbiesRequired = validators.required(hobbiesRequiredMessage);
 
           const uploadingOverlay =
             uploadInProgress || this.state.uploadDelay ? (
@@ -186,6 +222,13 @@ class ProfileSettingsFormComponent extends Component {
           const pristineSinceLastSubmit = submittedOnce && isEqual(values, this.submittedValues);
           const submitDisabled =
             invalid || pristine || pristineSinceLastSubmit || uploadInProgress || submitInProgress;
+
+          const handleOnChange = event => {
+            event.preventDefault();
+            const value = event.target.value;
+            form.change('hobbies', value);
+            form.change('publicData.hobbiesArray', value.split(', '));
+          };
 
           return (
             <Form
@@ -302,6 +345,24 @@ class ProfileSettingsFormComponent extends Component {
                 />
                 <p className={css.bioInfo}>
                   <FormattedMessage id="ProfileSettingsForm.bioInfo" values={{ marketplaceName }} />
+                </p>
+              </div>
+              <div className={classNames(css.sectionContainer, css.lastSection)}>
+                <H4 as="h2" className={css.sectionTitle}>
+                  <FormattedMessage id="ProfileSettingsForm.hobbiesHeading" />
+                </H4>
+                <FieldTextInput
+                  type="textarea"
+                  id="hobbies"
+                  name="hobbies"
+                  initialValue={this.state.hobbiesValues}
+                  onChange={event => handleOnChange(event)}
+                  validate={hobbiesRequired}
+                  label={hobbiesLabel}
+                  placeholder={hobbiesPlaceholder}
+                />
+                <p className={css.bioInfo}>
+                  <FormattedMessage id="ProfileSettingsForm.hobbiesInfo" />
                 </p>
               </div>
               {submitError}
