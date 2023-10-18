@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] SectionHero component added to the PageBuilder.
+  [#244](https://github.com/sharetribe/web-template/pull/244)
 - [fix] Map integration is mandatory, but let's not allow error loops if not available.
   [#250](https://github.com/sharetribe/web-template/pull/250)
 
