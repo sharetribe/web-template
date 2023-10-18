@@ -7,6 +7,7 @@ import SectionArticle from './SectionArticle';
 import SectionCarousel from './SectionCarousel';
 import SectionColumns from './SectionColumns';
 import SectionFeatures from './SectionFeatures';
+import SectionHero from './SectionHero';
 
 // Styles
 // Note: these contain
@@ -37,6 +38,7 @@ const defaultSectionComponents = {
   columns: { component: SectionColumns },
   features: { component: SectionFeatures },
   footer: { component: SectionFooter },
+  hero: { component: SectionHero },
 };
 
 //////////////////////
@@ -65,7 +67,9 @@ const SectionBuilder = props => {
         const Section = getComponent(section.sectionType);
         // If the default "dark" theme should be applied (when text color is white).
         // By default, this information is stored to customAppearance field
-        const isDarkTheme = section?.appearance?.textColor === 'white';
+        const isDarkTheme =
+          section?.appearance?.fieldType === 'customAppearance' &&
+          section?.appearance?.textColor === 'white';
         const classes = classNames({ [css.darkTheme]: isDarkTheme });
 
         if (Section) {
@@ -91,7 +95,7 @@ const SectionBuilder = props => {
 
 const propTypeSection = shape({
   sectionId: string.isRequired,
-  sectionType: oneOf(['article', 'carousel', 'columns', 'features']).isRequired,
+  sectionType: oneOf(['article', 'carousel', 'columns', 'features', 'hero']).isRequired,
   // Plus all kind of unknown fields.
   // BlockBuilder doesn't really need to care about those
 });

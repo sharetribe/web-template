@@ -1,6 +1,6 @@
 @import '../../../styles/customMediaQueries.css';
 
-/* Styles for custom sections: classes shared by <SectionColumns>, <SectionArticle>, <SectionFeatures>, <SectionCarousel> etc. */
+/* Styles for custom sections: classes shared by <SectionColumns>, <SectionArticle>, <SectionFeatures>, <SectionCarousel>, <SectionHero> etc. */
 .sectionDetails {
   max-width: var(--contentMaxWidthPages);
   display: grid;
