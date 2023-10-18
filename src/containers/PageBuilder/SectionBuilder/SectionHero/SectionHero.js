@@ -1,5 +1,5 @@
 import React from 'react';
-import { arrayOf, bool, func, node, object, shape, string } from 'prop-types';
+import { bool, func, node, object, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 import Field, { hasDataInFields } from '../../Field';
@@ -19,7 +19,6 @@ const SectionHero = props => {
     description,
     appearance,
     callToAction,
-    isInsideContainer,
     options,
   } = props;
 
@@ -34,7 +33,7 @@ const SectionHero = props => {
     <SectionContainer
       id={sectionId}
       className={className}
-      rootClassName={css.rootHero}
+      rootClassName={classNames(rootClassName || css.root)}
       appearance={appearance}
       options={fieldOptions}
     >

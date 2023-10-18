@@ -1,4 +1,4 @@
-.rootHero {
+.root {
   /* SectionContainer defaults */
   background-size: cover;
   background-position: center center;
@@ -7,7 +7,7 @@
   position: relative;
 
   /* Hero specific */
-  min-height: 80dvh;
+  min-height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
