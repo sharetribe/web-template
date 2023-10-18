@@ -798,11 +798,23 @@ const getListingMinimumPrice = transactionSize => {
 ////////////////////////////////////
 const mergeMapConfig = (hostedMapConfig, defaultMapConfig) => {
   const { mapProvider, mapboxAccessToken, googleMapsAPIKey, ...restOfDefault } = defaultMapConfig;
+  const mapProviderPicked = hostedMapConfig?.provider || mapProvider;
+  const mapboxAccessTokenPicked = hostedMapConfig?.mapboxAccessToken || mapboxAccessToken;
+  const googleMapsAPIKeyPicked = hostedMapConfig?.googleMapsApiKey || googleMapsAPIKey;
+
+  const hasApiAccess =
+    mapProviderPicked === 'googleMaps' ? !!googleMapsAPIKeyPicked : !!mapboxAccessTokenPicked;
+  if (!hasApiAccess) {
+    console.error(
+      `The access tokens are not in place for the selected map provider (${mapProviderPicked})`
+    );
+  }
+
   return {
     ...restOfDefault,
-    mapProvider: hostedMapConfig?.provider || mapProvider,
-    mapboxAccessToken: hostedMapConfig?.mapboxAccessToken || mapboxAccessToken,
-    googleMapsAPIKey: hostedMapConfig?.googleMapsApiKey || googleMapsAPIKey,
+    mapProvider: mapProviderPicked,
+    mapboxAccessToken: mapboxAccessTokenPicked,
+    googleMapsAPIKey: googleMapsAPIKeyPicked,
   };
 };
 

@@ -8,7 +8,7 @@ import { useRouteConfiguration } from '../../../context/routeConfigurationContex
 import { createResourceLocatorString } from '../../../util/routes';
 import { createSlug } from '../../../util/urlHelpers';
 import { propTypes } from '../../../util/types';
-import { obfuscatedCoordinates } from '../../../util/maps';
+import { obfuscatedCoordinates, getMapProviderApiAccess } from '../../../util/maps';
 
 import { hasParentWithClassName } from './SearchMap.helpers.js';
 import * as searchMapMapbox from './SearchMapWithMapbox';
@@ -163,9 +163,12 @@ export class SearchMapComponent extends Component {
       this.setState({ mapReattachmentCount: window.mapReattachmentCount });
     };
     const mapProvider = config.maps.mapProvider;
+    const hasApiAccessForMapProvider = !!getMapProviderApiAccess(config.maps);
     const SearchMapVariantComponent = getSearchMapVariantComponent(mapProvider);
+    const isMapProviderAvailable =
+      hasApiAccessForMapProvider && getSearchMapVariant(mapProvider).isMapsLibLoaded();
 
-    return getSearchMapVariant(mapProvider).isMapsLibLoaded() ? (
+    return isMapProviderAvailable ? (
       <ReusableMapContainer
         className={reusableContainerClassName}
         reusableMapHiddenHandle={REUSABLE_MAP_HIDDEN_HANDLE}
@@ -195,7 +198,7 @@ export class SearchMapComponent extends Component {
         />
       </ReusableMapContainer>
     ) : (
-      <div className={classes} />
+      <div className={classNames(classes, reusableContainerClassName || css.defaultMapLayout)} />
     );
   }
 }
