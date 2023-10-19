@@ -72,8 +72,9 @@ const defaultConfig = {
   },
 
   // CDN assets for the app. Configurable through Flex Console.
-  // Currently, only translation.json is available.
-  // Note: the path must match the path defined in Asset Delivery API
+  // Note 1: The path must match the path defined in Asset Delivery API
+  // Note 2: If you customize the app and rely on custom code instead of a config assets,
+  //         you should remove the unnecessary config asset from this list.
   appCdnAssets: {
     translations: '/content/translations.json',
     footer: '/content/footer.json',
@@ -83,14 +84,14 @@ const defaultConfig = {
     listingFields: '/listings/listing-fields.json',
     search: '/listings/listing-search.json',
     transactionSize: '/transactions/minimum-transaction-size.json',
+    analytics: '/integrations/analytics.json',
+    googleSearchConsole: '/integrations/google-search-console.json',
+    // These assets are not yet editable through Console.
+    // However, Sharetribe onboarding might generate them.
+    // You could still rely on environment variables and comment these out.
+    maps: '/integrations/map.json',
+    localization: '/general/localization.json',
     // NOTE: we don't fetch commission configuration here but on the server-side
-
-    // TODO: Map provider configuration and analytics service should come from the assets too.
-    //       It might take some time before these are actually available through hosted assets.
-    // maps: '/integrations/map.json',
-    // analytics: '/integrations/analytics.json',
-    // googleSearchConsole: '/integrations/google-search-console.json',
-    // localization: '/general/localization.json',
   },
 
   // Optional
