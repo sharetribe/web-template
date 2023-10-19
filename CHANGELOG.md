@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] PaginationLinks: fix pagination limit handling.
+  [#253](https://github.com/sharetribe/web-template/pull/253)
 - [add] Add more config assets: analytics, googleSearchConsole, maps, localization.
   [#252](https://github.com/sharetribe/web-template/pull/252)
 - [add] SectionHero component added to the PageBuilder.
