@@ -87,13 +87,13 @@ const SectionFooter = props => {
             </div>
             {showSocialMediaLinks ? (
               <div className={css.icons}>
-                <BlockBuilder blocks={linksWithBlockId} options={options} />
+                <BlockBuilder blocks={linksWithBlockId} sectionId={sectionId} options={options} />
               </div>
             ) : null}
             <Field data={copyright} className={css.copyright} />
           </div>
           <div className={classNames(css.grid, getGridCss(numberOfColumns))}>
-            <BlockBuilder blocks={blocks} options={options} />
+            <BlockBuilder blocks={blocks} sectionId={sectionId} options={options} />
           </div>
         </div>
       </div>
