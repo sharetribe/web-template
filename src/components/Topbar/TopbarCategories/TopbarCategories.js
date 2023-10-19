@@ -43,6 +43,7 @@ const TopbarCategories = props => {
     onSearchSubmit,
     initialSearchFormValues,
     categories,
+    searchModalOpen,
   } = props;
   const [mounted, setMounted] = useState(false);
   
@@ -50,6 +51,7 @@ const TopbarCategories = props => {
 
   console.log('TopbarCategories');
   console.log(categories);
+  console.log(searchModalOpen);
 
   useEffect(() => {
     setMounted(true);
@@ -172,24 +174,26 @@ const TopbarCategories = props => {
           <FormattedMessage id="TopbarDesktop.createListing" />
         </span>
       </NamedLink> */}
+      <div className={css.categoryIconsContainner}>
         <div className={css.categoriesList}>
-          {categories.map((variant,index) => (
-            <div key={index} className={css.categoryContainner}>
-              <div className={css.categoryLabel}>
-                {categoryImage(variant.option)}
-                {/* <img className={css.categoryImage} src={'/static/icons/favicon-32x32.png'} alt={variant.option} /> */}
-                <div >
-                  {variant.label}
+            {categories.map((variant,index) => (
+              <div key={index} className={css.categoryContainner}>
+                <div className={css.categoryLabel}>
+                  {categoryImage(variant.option)}
+                  <div >
+                    {variant.label}
+                  </div>
                 </div>
+                
               </div>
-              
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
         <div className={css.searchModalButtonContainer}>
             <SecondaryButtonInline
                 className={css.searchModalButton}
                 type="submit"
+                onClick={searchModalOpen}
                 // inProgress={submitInProgress}
                 // disabled={submitDisabled}
                 // ready={pristineSinceLastSubmit}

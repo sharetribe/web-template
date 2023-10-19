@@ -22,7 +22,7 @@ import { propTypes } from '../../util/types';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { Footer, H3, H5, Page } from '../../components';
+import { Footer, H3, H5, Page, Modal } from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 
 import {
@@ -45,7 +45,7 @@ import NoSearchResultsMaybe from './NoSearchResultsMaybe/NoSearchResultsMaybe';
 import css from './SearchPage.module.css';
 
 
-import Modal from 'react-modal';
+// import Modal from 'react-modal';
 
 const MODAL_BREAKPOINT = 768; // Search is in modal on mobile layout
 
@@ -60,11 +60,14 @@ export class SearchPageComponent extends Component {
     this.state = {
       isSearchMapOpenOnMobile: props.tab === 'map',
       isMobileModalOpen: false,
+      showModal: false,
       currentQueryParams: validUrlQueryParamsFromProps(props),
     };
 
     this.onOpenMobileModal = this.onOpenMobileModal.bind(this);
     this.onCloseMobileModal = this.onCloseMobileModal.bind(this);
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
 
     // Filter functions
     this.resetAll = this.resetAll.bind(this);
@@ -87,6 +90,7 @@ export class SearchPageComponent extends Component {
   }
 
   handleOpenModal () {
+    console.log('fffffffffffffffffff')
     this.setState({ showModal: true });
   }
   
@@ -306,6 +310,8 @@ export class SearchPageComponent extends Component {
       ? classNames(css.topbarBehindModal, css.topbar)
       : css.topbar;
 
+    const asfasdf = this.state.showModal;
+
     // N.B. openMobileMap button is sticky.
     // For some reason, stickyness doesn't work on Safari, if the element is <button>
 
@@ -338,21 +344,69 @@ const customStyles = {
           currentPage="SearchPage"
           currentSearchParams={urlQueryParams}
           categories={enumOptions}
+          searchModalOpen={this.handleOpenModal}
         />
-
-        {/* <div>
-          <button onClick={this.handleOpenModal}>Trigger Modal</button>
-          <ReactModal 
-            isOpen={this.state.showModal}
-            contentLabel="Minimal Modal Example"
-          >
-            <button onClick={this.handleCloseModal}>Close Modal</button>
-          </ReactModal>
-        </div> */}
-
+        <div>
+              {/* <button onClick={}>Trigger Modal</button> */}
+              <Modal 
+                isOpen={asfasdf}
+                containerClassName={css.modalContainer}
+                contentLabel="Minimal Modal Example"
+                onManageDisableScrolling={onManageDisableScrolling}
+                onClose={this.handleCloseModal}
+              >
+                <div className={css.filterColumnContent}>
+                  {availableFilters.map(config => {
+                    return (
+                      <FilterComponent
+                        key={`SearchFiltersMobile.${config.key}`}
+                        idPrefix="SearchFiltersMobile"
+                        className={css.filter}
+                        config={config}
+                        marketplaceCurrency={marketplaceCurrency}
+                        urlQueryParams={urlQueryParams}
+                        initialValues={initialValues(this.props, this.state.currentQueryParams)}
+                        getHandleChangedValueFn={this.getHandleChangedValueFn}
+                        intl={intl}
+                        liveEdit
+                        showAsPopup={false}
+                        isDesktop
+                      />
+                    );
+                  })}
+                  <button className={css.resetAllButton} onClick={e => this.handleResetAll(e)}>
+                    <FormattedMessage id={'SearchFiltersMobile.resetAll'} />
+                  </button>
+                </div>
+              </Modal>
+            </div>
         <div className={css.layoutWrapperContainer}>
-         
-
+        {/* <aside className={css.layoutWrapperFilterColumn} data-testid="filterColumnAside">
+            
+            <div className={css.filterColumnContent}>
+              {availableFilters.map(config => {
+                return (
+                  <FilterComponent
+                    key={`SearchFiltersMobile.${config.key}`}
+                    idPrefix="SearchFiltersMobile"
+                    className={css.filter}
+                    config={config}
+                    marketplaceCurrency={marketplaceCurrency}
+                    urlQueryParams={urlQueryParams}
+                    initialValues={initialValues(this.props, this.state.currentQueryParams)}
+                    getHandleChangedValueFn={this.getHandleChangedValueFn}
+                    intl={intl}
+                    liveEdit
+                    showAsPopup={false}
+                    isDesktop
+                  />
+                );
+              })}
+              <button className={css.resetAllButton} onClick={e => this.handleResetAll(e)}>
+                <FormattedMessage id={'SearchFiltersMobile.resetAll'} />
+              </button>
+            </div>
+          </aside> */}
           <div className={css.layoutWrapperMain} role="main">
             <div className={css.searchResultContainer}>
               <SearchFiltersMobile

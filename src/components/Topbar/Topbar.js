@@ -201,6 +201,7 @@ class TopbarComponent extends Component {
       showGenericError,
       config,
       categories,
+      searchModalOpen,
     } = this.props;
 
     const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
@@ -282,6 +283,7 @@ class TopbarComponent extends Component {
             // onSearchSubmit={onSearcSubmit}
             appConfig={config}
             categories={categories}
+            searchModalOpen={searchModalOpen}
           />
         </div>
     ):null;

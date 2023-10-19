@@ -382,10 +382,13 @@
 }
 .searchModalButtonContainer{
 }
+.categoryIconsContainner{
+  flex-grow: 1;
+}
 .categoriesList{
   flex-grow: 1;
   display: grid;
-  justify-content: space-around;
+  justify-content: center;
   grid-auto-flow: column;
 }
 .searchModalButton{
@@ -402,5 +405,6 @@
 }
 .categoryContainner{
   display: block;
-  width: 40px;
+  width: 44px;
+  margin: 0 20px;
 }
