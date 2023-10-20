@@ -123,7 +123,9 @@ const PageBuilder = props => {
                   <SectionBuilder sections={sections} options={options} />
                 )}
               </Main>
-              <FooterContainer />
+              <Footer>
+                <FooterContainer />
+              </Footer>
             </>
           );
         }}
