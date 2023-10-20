@@ -376,7 +376,17 @@
 .categoryLabel {
   text-align: center;
   font-size: 0.75rem;
+  fill: var(--colorGrey700);
+  color: var(--colorGrey700);
+  transition: var(--transitionStyleButton);
 }
+.categoryLabel:hover {
+  color: var(--marketplaceColor);
+}
+.categoryLabel:hover svg {
+  fill: var(--marketplaceColor);
+}
+
 .categoryImage{
   width: 28px;
 }

@@ -5,7 +5,10 @@ import classNames from 'classnames';
 import { FormattedMessage, intlShape } from '../../../util/reactIntl';
 import { AccessRole } from '../../../util/roles';
 import { ACCOUNT_SETTINGS_PAGES } from '../../../routing/routeConfiguration';
+import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { propTypes } from '../../../util/types';
+import { parse } from '../../../util/urlHelpers';
+import { createResourceLocatorString } from '../../../util/routes';
 import {
   Avatar,
   InlineTextButton,
@@ -21,12 +24,26 @@ import {
   IconCategoryJewerly,
   IconCategoryOmg,
   IconCategoryPlane,
+  IconCategoryUrn,
+  IconCategoryArt,
+  
 } from '../..';
 
 // import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
 // import TopbarSearchFormCommission from '../TopbarSearchFormCommission/TopbarSearchFormCommission';
 
 import css from './TopbarCategories.module.css';
+
+export const validUrlQueryParamsFromProps = props => {
+  const { history } = props;
+
+  const { ...searchInURL } = parse(history.location.search, {
+    latlng: ['origin'],
+    latlngBounds: ['bounds'],
+  });
+
+  return { ...searchInURL };
+};
 
 const TopbarCategories = props => {
   const {
@@ -44,6 +61,7 @@ const TopbarCategories = props => {
     initialSearchFormValues,
     categories,
     searchModalOpen,
+    history,
   } = props;
   const [mounted, setMounted] = useState(false);
   
@@ -140,28 +158,55 @@ const TopbarCategories = props => {
     </NamedLink>
   );
 
+  const routeConfiguration = useRouteConfiguration();
+
+  const categoryAction = (name) => {
+
+    console.log('categoryAction categoryAction');
+
+    const urlQueryParams = validUrlQueryParamsFromProps(props);
+
+    urlQueryParams.pub_category = name;
+
+    console.log(name);
+    console.log(urlQueryParams);
+    console.log('history');
+    console.log(history);
+    console.log(routeConfiguration);
+    
+    history.push(createResourceLocatorString('Home', routeConfiguration, {}, urlQueryParams));
+  }
+
   const categoryImage = (name) => {
     console.log('categoryImage');
     console.log(name);
     switch (name) {
       case 'boat':
-        return <IconCategoryBoat  />
+        return <IconCategoryBoat />
         break;
     
       case 'jewelry':
-        return <IconCategoryJewerly  />
+        return <IconCategoryJewerly onClick={categoryAction} />
         break;
     
       case 'omg':
-        return <IconCategoryOmg  />
+        return <IconCategoryOmg onClick={categoryAction} />
         break;
     
       case 'plane':
-        return <IconCategoryPlane  />
+        return <IconCategoryPlane onClick={categoryAction} />
+        break;
+    
+      case 'urn':
+        return <IconCategoryUrn onClick={categoryAction} />
+        break;
+    
+      case 'art':
+        return <IconCategoryArt onClick={categoryAction} />
         break;
     
       default:
-        return <IconCategoryPlane  />
+        return <IconCategoryPlane onClick={categoryAction} />
         break;
     }
     
@@ -178,7 +223,7 @@ const TopbarCategories = props => {
         <div className={css.categoriesList}>
             {categories.map((variant,index) => (
               <div key={index} className={css.categoryContainner}>
-                <div className={css.categoryLabel}>
+                <div onClick={categoryAction} className={css.categoryLabel}>
                   {categoryImage(variant.option)}
                   <div >
                     {variant.label}

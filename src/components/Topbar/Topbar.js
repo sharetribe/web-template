@@ -202,6 +202,7 @@ class TopbarComponent extends Component {
       config,
       categories,
       searchModalOpen,
+      history,
     } = this.props;
 
     const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
@@ -284,6 +285,7 @@ class TopbarComponent extends Component {
             appConfig={config}
             categories={categories}
             searchModalOpen={searchModalOpen}
+            history={history}
           />
         </div>
     ):null;
