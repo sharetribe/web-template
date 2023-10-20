@@ -61,6 +61,23 @@ const SectionBuilder = props => {
     return config?.component;
   };
 
+  // Generate unique ids for sections if operator has managed to create duplicates
+  // E.g. "foobar", "foobar1", and "foobar2"
+  const sectionIds = [];
+  const getUniqueSectionId = (sectionId, index) => {
+    const candidate = sectionId || `section-${index + 1}`;
+    if (sectionIds.includes(candidate)) {
+      let sequentialCandidate = `${candidate}1`;
+      for (let i = 2; sectionIds.includes(sequentialCandidate); i++) {
+        sequentialCandidate = `${candidate}${i}`;
+      }
+      return getUniqueSectionId(sequentialCandidate, index);
+    } else {
+      sectionIds.push(candidate);
+      return candidate;
+    }
+  };
+
   return (
     <>
       {sections.map((section, index) => {
@@ -71,21 +88,25 @@ const SectionBuilder = props => {
           section?.appearance?.fieldType === 'customAppearance' &&
           section?.appearance?.textColor === 'white';
         const classes = classNames({ [css.darkTheme]: isDarkTheme });
+        const sectionId = getUniqueSectionId(section.sectionId, index);
 
         if (Section) {
           return (
             <Section
-              key={`${section.sectionId}_${index}`}
+              key={`${sectionId}_i${index}`}
               className={classes}
               defaultClasses={DEFAULT_CLASSES}
               isInsideContainer={isInsideContainer}
               options={otherOption}
               {...section}
+              sectionId={sectionId}
             />
           );
         } else {
           // If the section type is unknown, the app can't know what to render
-          console.warn(`Unknown section type (${section.sectionType}) detected.`);
+          console.warn(
+            `Unknown section type (${section.sectionType}) detected using sectionName (${section.sectionName}).`
+          );
           return null;
         }
       })}
@@ -94,7 +115,8 @@ const SectionBuilder = props => {
 };
 
 const propTypeSection = shape({
-  sectionId: string.isRequired,
+  sectionId: string,
+  sectionName: string,
   sectionType: oneOf(['article', 'carousel', 'columns', 'features', 'hero']).isRequired,
   // Plus all kind of unknown fields.
   // BlockBuilder doesn't really need to care about those
