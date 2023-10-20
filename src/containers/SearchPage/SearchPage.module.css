@@ -161,6 +161,23 @@
   }
 }
 
+.layoutWrapperMainModal {
+  /* Expand to the full remaining width of the viewport */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 24px 0 24px;
+
+  @media (--viewportLarge) {
+    /**
+     * Calculate right padding to match Footer right border
+     * and left padding together with border should be 60px.
+     */
+    padding: 80px;
+  }
+
+}
+
 .searchResultContainer {
   flex-grow: 1;
   display: flex;

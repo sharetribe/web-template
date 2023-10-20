@@ -169,6 +169,7 @@ const TopbarCategories = props => {
     urlQueryParams.pub_category = name;
 
     console.log(name);
+    
     console.log(urlQueryParams);
     console.log('history');
     console.log(history);
@@ -186,27 +187,27 @@ const TopbarCategories = props => {
         break;
     
       case 'jewelry':
-        return <IconCategoryJewerly onClick={categoryAction} />
+        return <IconCategoryJewerly />
         break;
     
       case 'omg':
-        return <IconCategoryOmg onClick={categoryAction} />
+        return <IconCategoryOmg />
         break;
     
       case 'plane':
-        return <IconCategoryPlane onClick={categoryAction} />
+        return <IconCategoryPlane />
         break;
     
       case 'urn':
-        return <IconCategoryUrn onClick={categoryAction} />
+        return <IconCategoryUrn />
         break;
     
       case 'art':
-        return <IconCategoryArt onClick={categoryAction} />
+        return <IconCategoryArt />
         break;
     
       default:
-        return <IconCategoryPlane onClick={categoryAction} />
+        return <IconCategoryPlane />
         break;
     }
     
@@ -222,15 +223,16 @@ const TopbarCategories = props => {
       <div className={css.categoryIconsContainner}>
         <div className={css.categoriesList}>
             {categories.map((variant,index) => (
-              <div key={index} className={css.categoryContainner}>
-                <div onClick={categoryAction} className={css.categoryLabel}>
+              variant.option !== 'other'?
+              (<div key={index} className={css.categoryContainner}>
+                <div onClick={()=>categoryAction(variant.option)} className={css.categoryLabel}>
                   {categoryImage(variant.option)}
                   <div >
                     {variant.label}
                   </div>
                 </div>
                 
-              </div>
+              </div>): null
             ))}
           </div>
         </div>

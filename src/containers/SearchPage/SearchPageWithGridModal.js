@@ -407,7 +407,7 @@ const customStyles = {
               </button>
             </div>
           </aside> */}
-          <div className={css.layoutWrapperMain} role="main">
+          <div className={css.layoutWrapperMainModal} role="main">
             <div className={css.searchResultContainer}>
               <SearchFiltersMobile
                 className={css.searchFiltersMobileList}

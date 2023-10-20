@@ -13,7 +13,7 @@ const IconCategoryUrn = props => {
       xmlns="http://www.w3.org/2000/svg" 
       version="1.1" 
       x="0px" y="0px" 
-      viewBox="0 0 1080.000000 1080.000000"
+      viewBox="-90 100 1220.000000 800.000000"
       space="preserve"
     >
 
