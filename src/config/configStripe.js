@@ -2,7 +2,7 @@
 
 NOTE: REACT_APP_STRIPE_PUBLISHABLE_KEY is mandatory environment variable.
 This variable is set in a hidden file: .env
-To make Stripe connection work, you also need to set Stripe's private key in the Flex Console.
+To make Stripe connection work, you also need to set Stripe's private key in the Sharetribe Console.
 */
 
 export const publishableKey = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY;

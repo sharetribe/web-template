@@ -29,7 +29,7 @@ const urlifyBase64 = base64Str =>
 // into their marketplace as a user of the marketplace.
 //
 // The authorization code is requested from Console and it is used to request a
-// token from the Flex Auth API.
+// token from the Sharetribe Auth API.
 //
 // This endpoint will return a 302 to Console which requests the authorization
 // code. Console returns a 302 with the code to the `redirect_uri` that is

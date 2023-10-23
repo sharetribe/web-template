@@ -14,7 +14,7 @@ const getPageAssetName = assetPath => {
 
 // This page resolves what route on the client app should be shown,
 // when Console redirects the operator to the client app.
-// The URL that Flex Console uses looks like this:
+// The URL that Sharetribe Console uses looks like this:
 // https://my.marketplace.com/preview?asset-path=content/pages/privacy-policy.json
 //
 // If the asset path starts with "content/pages",
