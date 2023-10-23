@@ -28,7 +28,7 @@ const strategyOptions = {
 const verifyCallback = (req, accessToken, refreshToken, rawReturn, profile, done) => {
   // We need to add additional parameter `rawReturn` to the callback
   // so that we can access the id_token coming from Google
-  // With Google we want to use that id_token instead of accessToken in Flex
+  // With Google we want to use that id_token instead of accessToken in Sharetribe
   const idpToken = rawReturn.id_token;
 
   const { email, given_name, family_name } = profile._json;
@@ -79,7 +79,7 @@ exports.authenticateGoogle = (req, res, next) => {
 };
 
 // Use custom callback for calling loginWithIdp enpoint
-// to log in the user to Flex with the data from Google
+// to log in the user to Sharetribe marketplace with the data from Google
 exports.authenticateGoogleCallback = (req, res, next) => {
   passport.authenticate('google', function(err, user) {
     loginWithIdp(err, user, req, res, clientID, 'google');

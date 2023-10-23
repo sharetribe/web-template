@@ -75,11 +75,11 @@ Essentially, transactionProcessAlias is a contract between _listing_, existing p
 _marketplace environment_, and the _client app_. If the client app supports process name and alias
 saved to the listing's extended data (_src/util/transaction.js_), it assumes that its own codebase
 is capable to render transaction-related UIs for that listing - and it expects that process with the
-same name is also created in connected marketplace environment on Flex backend.
+same name is also created in connected marketplace environment on Sharetribe backend.
 
 A developer/customizer is therefore responsible for keeping these 3 things in sync. If a process is
-added/discarded/edited on the Flex backend, the client app also needs to be updated and listings
-might need to be updated (which can be made with Integration API).
+added/discarded/edited on the Sharetribe backend, the client app also needs to be updated and
+listings might need to be updated (which can be made with Integration API).
 
 ### Default listing field: **_unitType_**
 

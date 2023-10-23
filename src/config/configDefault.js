@@ -71,7 +71,7 @@ const defaultConfig = {
     firstDayOfWeek: 1,
   },
 
-  // CDN assets for the app. Configurable through Flex Console.
+  // CDN assets for the app. Configurable through Sharetribe Console.
   // Note 1: The path must match the path defined in Asset Delivery API
   // Note 2: If you customize the app and rely on custom code instead of a config assets,
   //         you should remove the unnecessary config asset from this list.
