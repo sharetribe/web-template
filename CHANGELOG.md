@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Update Console URL from https://flex-console.sharetribe.com to
+  https://console.sharetribe.com [#249](https://github.com/sharetribe/web-template/pull/249)
 - [change] Remove Flex branding from code comments.
   [#248](https://github.com/sharetribe/web-template/pull/248)
 - [change] PageBuilder: make sectionId and blockId optional.
