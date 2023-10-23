@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+## [v3.4.0] 2023-10-23
+
 - [change] Update Console URL from https://flex-console.sharetribe.com to
   https://console.sharetribe.com [#249](https://github.com/sharetribe/web-template/pull/249)
 - [change] Remove Flex branding from code comments.
@@ -28,6 +30,8 @@ way to update this template, but currently, we follow a pattern:
   [#244](https://github.com/sharetribe/web-template/pull/244)
 - [fix] Map integration is mandatory, but let's not allow error loops if not available.
   [#250](https://github.com/sharetribe/web-template/pull/250)
+
+  [v3.4.0]: https://github.com/sharetribe/web-template/compare/v3.3.0...v3.4.0
 
 ## [v3.3.0] 2023-10-17
 
