@@ -60,14 +60,14 @@ export class SearchPageComponent extends Component {
     this.state = {
       isSearchMapOpenOnMobile: props.tab === 'map',
       isMobileModalOpen: false,
-      showModal: false,
+      isFilterModalOpen: false,
       currentQueryParams: validUrlQueryParamsFromProps(props),
     };
 
     this.onOpenMobileModal = this.onOpenMobileModal.bind(this);
     this.onCloseMobileModal = this.onCloseMobileModal.bind(this);
-    this.handleOpenModal = this.handleOpenModal.bind(this);
-    this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.handleOpenFilterModal = this.handleOpenFilterModal.bind(this);
+    this.handleCloseFilterModal = this.handleCloseFilterModal.bind(this);
 
     // Filter functions
     this.resetAll = this.resetAll.bind(this);
@@ -89,13 +89,12 @@ export class SearchPageComponent extends Component {
     this.setState({ isMobileModalOpen: false });
   }
 
-  handleOpenModal () {
-    console.log('fffffffffffffffffff')
-    this.setState({ showModal: true });
+  handleOpenFilterModal () {
+    this.setState({ isFilterModalOpen: true });
   }
   
-  handleCloseModal () {
-    this.setState({ showModal: false });
+  handleCloseFilterModal () {
+    this.setState({ isFilterModalOpen: false });
   }
 
   // Reset all filter query parameters
@@ -310,7 +309,7 @@ export class SearchPageComponent extends Component {
       ? classNames(css.topbarBehindModal, css.topbar)
       : css.topbar;
 
-    const asfasdf = this.state.showModal;
+    const isFilterModalOpen = this.state.isFilterModalOpen;
 
     // N.B. openMobileMap button is sticky.
     // For some reason, stickyness doesn't work on Safari, if the element is <button>
@@ -344,16 +343,16 @@ const customStyles = {
           currentPage="SearchPage"
           currentSearchParams={urlQueryParams}
           categories={enumOptions}
-          searchModalOpen={this.handleOpenModal}
+          searchModalOpen={this.handleOpenFilterModal}
         />
         <div>
               {/* <button onClick={}>Trigger Modal</button> */}
               <Modal 
-                isOpen={asfasdf}
+                isOpen={isFilterModalOpen}
                 containerClassName={css.modalContainer}
                 contentLabel="Minimal Modal Example"
                 onManageDisableScrolling={onManageDisableScrolling}
-                onClose={this.handleCloseModal}
+                onClose={this.handleCloseFilterModal}
               >
                 <div className={css.filterColumnContent}>
                   {availableFilters.map(config => {

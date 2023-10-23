@@ -12,6 +12,8 @@ import { ensureListing, ensureUser } from '../../util/data';
 import { richText } from '../../util/richText';
 import { createSlug } from '../../util/urlHelpers';
 import { isBookingProcessAlias } from '../../transactions/transaction';
+import ImageCarousel from './ImageCarousel/ImageCarousel';
+
 
 import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '../../components';
 
@@ -72,6 +74,13 @@ export const ListingCardComponent = props => {
 
   const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
 
+  const variantsCarousel = currentListing.images && currentListing.images.length;
+
+  console.log('currentListing.images');
+  console.log(currentListing.images);
+  console.log(firstImage);
+  const carimages = [firstImage];
+
   const setActivePropsMaybe = setActiveListing
     ? {
         onMouseEnter: () => setActiveListing(currentListing.id),
@@ -80,50 +89,58 @@ export const ListingCardComponent = props => {
     : null;
 
   return (
-    <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
+    <div>
       <AspectRatioWrapper
         className={css.aspectRatioWrapper}
         width={aspectWidth}
         height={aspectHeight}
         {...setActivePropsMaybe}
       >
-        <LazyImage
+        {/* <LazyImage
           rootClassName={css.rootForImage}
           alt={title}
           image={firstImage}
           variants={variants}
           sizes={renderSizes}
+        /> */}
+        <ImageCarousel
+          images={currentListing.images}
+          imageVariants={variants}
+          link='ListingPage'
+          linkParams={{ id, slug }}
         />
       </AspectRatioWrapper>
-      <div className={css.info}>
-        <div className={css.price}>
-          <div className={css.priceValue} title={priceTitle}>
-            {formattedPrice}
-          </div>
-          {isBookingProcessAlias(publicData?.transactionProcessAlias) ? (
-            <div className={css.perUnit}>
-              <FormattedMessage
-                id="ListingCard.perUnit"
-                values={{ unitType: publicData?.unitType }}
-              />
+      <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
+        <div className={css.info}>
+          <div className={css.price}>
+            <div className={css.priceValue} title={priceTitle}>
+              {formattedPrice}
             </div>
-          ) : null}
-        </div>
-        <div className={css.mainInfo}>
-          <div className={css.title}>
-            {richText(title, {
-              longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
-              longWordClass: css.longWord,
-            })}
+            {isBookingProcessAlias(publicData?.transactionProcessAlias) ? (
+              <div className={css.perUnit}>
+                <FormattedMessage
+                  id="ListingCard.perUnit"
+                  values={{ unitType: publicData?.unitType }}
+                />
+              </div>
+            ) : null}
           </div>
-          {showAuthorInfo ? (
-            <div className={css.authorInfo}>
-              <FormattedMessage id="ListingCard.author" values={{ authorName }} />
+          <div className={css.mainInfo}>
+            <div className={css.title}>
+              {richText(title, {
+                longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
+                longWordClass: css.longWord,
+              })}
             </div>
-          ) : null}
+            {showAuthorInfo ? (
+              <div className={css.authorInfo}>
+                <FormattedMessage id="ListingCard.author" values={{ authorName }} />
+              </div>
+            ) : null}
+          </div>
         </div>
-      </div>
-    </NamedLink>
+      </NamedLink>
+    </div>
   );
 };
 

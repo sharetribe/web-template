@@ -1,0 +1,132 @@
+@import '../../../styles/customMediaQueries.css';
+
+:global(.image-gallery-content),
+:global(.image-gallery-slide-wrapper),
+:global(.image-gallery-swipe),
+:global(.image-gallery-slides),
+:global(.image-gallery-slide) {
+  width: 100%;
+  /* height: 100%; */
+}
+
+:global(.image-gallery-slide-wrapper) {
+  background-color: var(--colorBlack);
+}
+
+.root {
+  position: relative;
+  /* width: 100%; */
+  /* height: 100vh; */
+  padding: 0;
+  /* background-color: var(--colorBlack); */
+}
+
+.noImage {
+  border: 1px solid var(--colorGrey100);
+  border-radius: var(--borderRadiusMedium);
+}
+
+.itemCentering {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.item {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.arrowHead {
+  fill: var(--colorWhite);
+  stroke: var(--colorWhite);
+}
+
+.navLeft,
+.navRight {
+  position: absolute;
+  /* width: 10vw; */
+  min-width: 52px;
+  /* height: 100%; */
+  border: 0;
+  padding: 0;
+  z-index: 1;
+  top: calc(50% - 25px);
+
+  /* center content */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    cursor: pointer;
+
+    & .navArrowWrapper {
+      background-color: rgba(255, 255, 255, 1);
+    }
+    & .arrowHead {
+      fill: var(--colorGrey300);
+      stroke: var(--colorGrey300);
+    }
+  }
+}
+
+.navLeft {
+  left: 0;
+  justify-content: flex-start;
+  padding-left: 12px;
+}
+
+.navRight {
+  right: 0;
+  justify-content: flex-end;
+  padding-right: 12px;
+}
+
+.navArrowWrapper {
+  display: none;
+
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+  background-color: transparent;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (--viewportMedium) {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.imageWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+
+.imageIndex {
+  /* Fonts */
+  composes: h4 from global;
+  font-weight: var(--fontWeightSemiBold);
+
+  /* Position and dimensions */
+  position: absolute;
+  top: 21px;
+  left: 20px;
+  margin: 0;
+
+  /* Colors */
+  color: var(--colorWhite);
+
+  @media (--viewportMedium) {
+    margin: 0;
+    font-weight: var(--fontWeightSemiBold);
+  }
+}
