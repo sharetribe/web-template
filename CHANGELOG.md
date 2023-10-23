@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Remove Flex branding from code comments.
+  [#248](https://github.com/sharetribe/web-template/pull/248)
 - [change] PageBuilder: make sectionId and blockId optional.
   [#254](https://github.com/sharetribe/web-template/pull/254)
 - [fix] PaginationLinks: fix pagination limit handling.
