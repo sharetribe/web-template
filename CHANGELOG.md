@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] configHelpers: undefined enumOptions was not handled properly.
+  [#257](https://github.com/sharetribe/web-template/pull/257)
+
 ## [v3.4.0] 2023-10-23
 
 - [change] Update Console URL from https://flex-console.sharetribe.com to
