@@ -93,10 +93,32 @@ const ImageCarousel = props => {
   // Render image index info. E.g. "4/12"
   const imageIndex =
     items.length > 0 ? (
-      <span className={css.imageIndex}>
+      <span className={css.imageDots}>
         {naturalIndex(currentIndex)}/{items.length}
+        <span className={css.sliderDot}></span>
       </span>
     ) : null;
+
+    const itemsDots = items.map((img, i) => {
+      const activeSliderDot = currentIndex == i ? css.activeSliderDot : null;
+      const classForDot = classNames( activeSliderDot ,css.sliderDot)
+      return (<span className={classForDot}></span>);
+    });
+    
+    const latestTransition = currentIndex < items.length -2 ? (currentIndex-2) * 11 : (items.length -5) * 11;
+
+    const translateSize = currentIndex > 2 ? latestTransition : 0;
+    const btnStyle = { transform: 'translateX(-'+translateSize+'px)'};
+
+    const dotsContainer = (
+      <div className={css.sliderDotsContainer}>
+        <div className={css.sliderDotsCenter}>
+          <div style={btnStyle} className={css.imageDots}>
+            {itemsDots}
+          </div>
+        </div>
+      </div>
+    );
 
   const classes = classNames(rootClassName || css.root, className);
 
@@ -111,7 +133,8 @@ const ImageCarousel = props => {
         onSlide={handleSlide}
         {...IMAGE_GALLERY_OPTIONS}
       />
-      {imageIndex}
+      {/* {imageIndex} */}
+      {dotsContainer}
     </>
   );
 };

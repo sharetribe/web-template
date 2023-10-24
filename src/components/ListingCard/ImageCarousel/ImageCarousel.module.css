@@ -130,3 +130,41 @@
     font-weight: var(--fontWeightSemiBold);
   }
 }
+
+.sliderDotsContainer{
+  position: absolute;
+  bottom: 8px;
+  margin: 0 auto;
+  width: 100%;
+  justify-content: center;
+  display: flex;
+}
+.imageDots{
+  align-items: flex-end;
+  display: flex;
+  list-style-type: none;
+  transition: all 0.2s;
+}
+.sliderDot {
+  background: #FFFFFF;
+  border-radius: 50%;
+  transition: opacity 0.2s cubic-bezier(0.455,0.03,0.515,0.955);
+  margin-left: 2.5px;
+  margin-right: 2.5px;
+  text-align: center;
+
+  display: inline-block;
+  transform:scale(1);
+  opacity: 0.6;
+  height: 6px;
+  min-width: 6px;
+  width: 6px;
+}
+.activeSliderDot{
+  opacity: 1;
+}
+.sliderDotsCenter{
+  width: 56px;
+  overflow: hidden;
+  justify-content: center;
+}
