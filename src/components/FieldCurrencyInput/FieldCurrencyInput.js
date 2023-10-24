@@ -188,7 +188,7 @@ class CurrencyInputComponent extends Component {
       return { formattedValue, value: unformattedValue, unformattedValue };
     } catch (e) {
       // eslint-disable-next-line no-console
-      console.error(e);
+      console.warn('Not a valid value.', e);
 
       // If an error occurs while filling input field, use previous values
       // This ensures that string like '12.3r' doesn't end up to a state.
