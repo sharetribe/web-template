@@ -331,10 +331,12 @@ const validSchemaOptions = (enumOptions, schemaType) => {
   const arrayContainsOptionShapes = isArray
     ? enumOptions.filter(pickOptionShapes).length === enumOptions.length
     : false;
-  const shouldHaveSchemaOptions = ['enum', 'multi-enum'].includes(schemaType) && !isUndefined;
+  const isEnumSchemaType = ['enum', 'multi-enum'].includes(schemaType);
+  const shouldHaveSchemaOptions = isEnumSchemaType && !isUndefined;
 
-  const isValid = isUndefined || shouldHaveSchemaOptions || arrayContainsOptionShapes;
-  const schemaOptionsMaybe = isArray ? { enumOptions } : {};
+  const isValid = isUndefined || (shouldHaveSchemaOptions && arrayContainsOptionShapes);
+  const schemaOptionsMaybe =
+    isEnumSchemaType && isArray ? { enumOptions } : isEnumSchemaType ? { enumOptions: [] } : {};
   return [isValid, schemaOptionsMaybe];
 };
 
