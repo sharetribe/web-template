@@ -67,10 +67,21 @@ const TopbarCategories = props => {
   const [mounted, setMounted] = useState(false);
   
   const isAccess = AccessRole(props,'admin');
+  const categoryTranslate = {
+    translate:0,
+    showLeftScroll: false,
+    showRightScroll: false,
+    categoryIconsWeight: 0,
+    categoryScrollContainerWidth: 0
+  };
 
-  console.log('TopbarCategories');
-  console.log(categories);
-  console.log(searchModalOpen);
+
+  const scrollRight = ()=>{
+    console.log(categoryTranslate);
+  };
+  const scrollLeft = ()=>{
+    console.log(categoryTranslate);
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -81,6 +92,7 @@ const TopbarCategories = props => {
   const isAuthenticatedOrJustHydrated = isAuthenticated || !mounted;
   const isAuthenticatedAndAccess = isAuthenticated && isAccess;
   const categoryLineRef = React.createRef();
+  const categoryContainerRef = React.createRef();
 
   const classes = classNames(rootClassName || css.root, className);
 
@@ -227,8 +239,29 @@ const TopbarCategories = props => {
     
   }
 
-  const scrollRight = '';
-  const scrollLeft = '';
+  const categoryRender = () => {
+    console.log('categoryLineRef');
+    const widthLine = categoryLineRef.current.offsetWidth;
+    const widthContainer = categoryContainerRef.current.offsetWidth;
+    console.log(categoryLineRef.current.offsetWidth);
+    console.log(categoryContainerRef.current.offsetWidth);
+    if(widthContainer < widthLine){
+      console.log('categoryTranslate.showRightScroll = true');
+      categoryTranslate.showRightScroll = true;
+      console.log(categoryTranslate);
+    }
+  }
+
+  useEffect(() => {
+    // code to run after render goes here
+    categoryRender();
+  });
+
+  console.log('categoryTranslate.showRightScroll');
+  console.log(categoryTranslate.showRightScroll);
+  console.log(categoryTranslate);
+  const showRight = categoryTranslate.showRightScroll?{'display':'block'}:{'display':'none'};
+  console.log(showRight);
 
   return (
     <nav className={classes}>
@@ -237,12 +270,15 @@ const TopbarCategories = props => {
           <FormattedMessage id="TopbarDesktop.createListing" />
         </span>
       </NamedLink> */}
-      <div className={css.scrollerContainerRight}>{renderRightNav(scrollRight,categoryLineRef)}</div>
-      <div className={css.scrollerContainerLeft}>{renderLeftNav(scrollLeft,categoryLineRef)}</div>
-      <div className={css.categoryIconsContainner}>
-    
 
-        <div className={css.categoryCeneterContainner}>
+      {/* style="transform: translateX(-80px);" */}
+      
+      <div className={css.categoryIconsContainner}>
+        <div className={css.scrollerContainerRight} >{renderRightNav(scrollRight,categoryLineRef)}</div>
+        <div className={css.scrollerContainerLeft}>{renderLeftNav(scrollLeft,categoryLineRef)}</div>
+        
+        <div ref={categoryContainerRef} className={css.categoryScrollerContainner}>
+          <div className={css.categoryCeneterContainner}>
             <div ref={categoryLineRef} className={css.categoriesList}>
               {categories.map((variant,index) => (
                 variant.option !== 'other'?
@@ -257,7 +293,9 @@ const TopbarCategories = props => {
                 </div>): null
               ))}
             </div>
+          </div>
         </div>
+        
       </div>
       <div className={css.searchModalButtonContainer}>
           <SecondaryButtonInline

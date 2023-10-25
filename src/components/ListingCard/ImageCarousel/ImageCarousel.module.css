@@ -52,7 +52,7 @@
   border: 0;
   padding: 0;
   z-index: 1;
-  top: calc(50% - 25px);
+  top: calc(50% - 15px);
   transform: scale(0.9);
 
   /* center content */
@@ -99,14 +99,16 @@
   border-radius: 50%;
   transition: all 0.25s;
 
-  background-color: transparent;
+  /* background-color: transparent; */
 
   display: flex;
   align-items: center;
   justify-content: center;
 
+  background-color: rgba(255, 255, 255, 0.8);
+  
   @media (--viewportMedium) {
-    background-color: rgba(255, 255, 255, 0.8);
+
   }
 }
 

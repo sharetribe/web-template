@@ -401,10 +401,15 @@
 }
 .categoryIconsContainner{
   flex-grow: 1;
-  overflow: hidden;
+  /* overflow: hidden; */
   text-align: center;
-  margin: 0 20px;
+  padding: 0 30px;
   position: relative;
+  width: 100%;
+}
+
+.categoryScrollerContainner{
+  overflow: hidden;
 }
 .categoryCeneterContainner{
   display: inline-block;
@@ -414,8 +419,9 @@
   width: 40px;
   height: 50px;
   position: absolute;
-  right: 0;
+  right: 28px;
   background-image: linear-gradient(to right,rgb(255 255 255/0),white 40px);
+  z-index: 1;
 }
 .scrollerContainerLeft{
   width: 40px;
@@ -423,6 +429,7 @@
   position: absolute;
   left: 0;
   background-image: linear-gradient(to left,rgb(255 255 255/0),white 40px);
+  z-index: 1;
 }
 
 .categoriesList{
@@ -464,7 +471,7 @@
   border: 0;
   padding: 0;
   z-index: 1;
-  top: calc(50% - 25px);
+  top: calc(50% - 15px);
   transform: scale(0.9);
 
   /* center content */
@@ -494,13 +501,11 @@
 .navLeft {
   left: 10px;
   justify-content: flex-start;
-  padding-left: 12px;
 }
 
 .navRight {
-  right: 10px;
+  right: -15px;
   justify-content: flex-end;
-  padding-right: 12px;
 }
 
 .navArrowWrapper {
