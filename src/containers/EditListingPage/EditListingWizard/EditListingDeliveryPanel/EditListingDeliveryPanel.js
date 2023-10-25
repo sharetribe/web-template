@@ -74,6 +74,7 @@ const EditListingDeliveryPanel = props => {
     className,
     rootClassName,
     listing,
+    listingTypes,
     marketplaceCurrency,
     disabled,
     ready,
@@ -87,6 +88,9 @@ const EditListingDeliveryPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const isPublished = listing?.id && listing?.attributes.state !== LISTING_STATE_DRAFT;
   const priceCurrencyValid = listing?.attributes?.price?.currency === marketplaceCurrency;
+  const listingType = listing?.attributes?.publicData?.listingType;
+  const listingTypeConfig = listingTypes.find(conf => conf.listingType === listingType);
+  const hasStockInUse = listingTypeConfig.stockType === 'multipleItems';
 
   return (
     <div className={classes}>
@@ -161,6 +165,7 @@ const EditListingDeliveryPanel = props => {
             onSubmit(updateValues);
           }}
           marketplaceCurrency={marketplaceCurrency}
+          hasStockInUse={hasStockInUse}
           saveActionMsg={submitButtonText}
           disabled={disabled}
           ready={ready}
