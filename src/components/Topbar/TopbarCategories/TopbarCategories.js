@@ -26,6 +26,7 @@ import {
   IconCategoryPlane,
   IconCategoryUrn,
   IconCategoryArt,
+  IconArrowHead,
   
 } from '../..';
 
@@ -79,6 +80,7 @@ const TopbarCategories = props => {
   const authenticatedOnClientSide = mounted && isAuthenticated;
   const isAuthenticatedOrJustHydrated = isAuthenticated || !mounted;
   const isAuthenticatedAndAccess = isAuthenticated && isAccess;
+  const categoryLineRef = React.createRef();
 
   const classes = classNames(rootClassName || css.root, className);
 
@@ -161,22 +163,34 @@ const TopbarCategories = props => {
   const routeConfiguration = useRouteConfiguration();
 
   const categoryAction = (name) => {
-
-    console.log('categoryAction categoryAction');
-
     const urlQueryParams = validUrlQueryParamsFromProps(props);
-
     urlQueryParams.pub_category = name;
-
-    console.log(name);
-    
-    console.log(urlQueryParams);
-    console.log('history');
-    console.log(history);
-    console.log(routeConfiguration);
     
     history.push(createResourceLocatorString('Home', routeConfiguration, {}, urlQueryParams));
   }
+
+  const renderLeftNav = (onClick, scrolBar) => {
+    console.log('scrolBarLeft');
+    console.log(scrolBar);
+    return (
+      <button className={css.navLeft} onClick={onClick}>
+        <div className={css.navArrowWrapper}>
+          <IconArrowHead direction="left" size="small" className={css.arrowHead} />
+        </div>
+      </button>
+    );
+  };
+  const renderRightNav = (onClick, scrolBar) => {
+    console.log('scrolBarRight');
+    console.log(scrolBar);
+    return (
+      <button className={css.navRight} onClick={onClick}>
+        <div className={css.navArrowWrapper}>
+          <IconArrowHead direction="right" size="small" className={css.arrowHead} />
+        </div>
+      </button>
+    );
+  };
 
   const categoryImage = (name) => {
     console.log('categoryImage');
@@ -213,6 +227,9 @@ const TopbarCategories = props => {
     
   }
 
+  const scrollRight = '';
+  const scrollLeft = '';
+
   return (
     <nav className={classes}>
       {/* <NamedLink className={css.createListingLink} name="NewListingPage">
@@ -220,38 +237,44 @@ const TopbarCategories = props => {
           <FormattedMessage id="TopbarDesktop.createListing" />
         </span>
       </NamedLink> */}
+      <div className={css.scrollerContainerRight}>{renderRightNav(scrollRight,categoryLineRef)}</div>
+      <div className={css.scrollerContainerLeft}>{renderLeftNav(scrollLeft,categoryLineRef)}</div>
       <div className={css.categoryIconsContainner}>
-        <div className={css.categoriesList}>
-            {categories.map((variant,index) => (
-              variant.option !== 'other'?
-              (<div key={index} className={css.categoryContainner}>
-                <div onClick={()=>categoryAction(variant.option)} className={css.categoryLabel}>
-                  {categoryImage(variant.option)}
-                  <div >
-                    {variant.label}
+    
+
+        <div className={css.categoryCeneterContainner}>
+            <div ref={categoryLineRef} className={css.categoriesList}>
+              {categories.map((variant,index) => (
+                variant.option !== 'other'?
+                (<div key={index} className={css.categoryContainner}>
+                  <div onClick={()=>categoryAction(variant.option)} className={css.categoryLabel}>
+                    {categoryImage(variant.option)}
+                    <div >
+                      {variant.label}
+                    </div>
                   </div>
-                </div>
-                
-              </div>): null
-            ))}
-          </div>
+                  
+                </div>): null
+              ))}
+            </div>
         </div>
-        <div className={css.searchModalButtonContainer}>
-            <SecondaryButtonInline
-                className={css.searchModalButton}
-                type="submit"
-                onClick={searchModalOpen}
-                // inProgress={submitInProgress}
-                // disabled={submitDisabled}
-                // ready={pristineSinceLastSubmit}
-              >
-                {/* filters */}
-                <FormattedMessage
-                  id="SearchFiltersMobile.filtersButtonLabel"
-                  className={css.mapIconText}
-                />
-              </SecondaryButtonInline>
-        </div>
+      </div>
+      <div className={css.searchModalButtonContainer}>
+          <SecondaryButtonInline
+              className={css.searchModalButton}
+              type="submit"
+              onClick={searchModalOpen}
+              // inProgress={submitInProgress}
+              // disabled={submitDisabled}
+              // ready={pristineSinceLastSubmit}
+            >
+              {/* filters */}
+              <FormattedMessage
+                id="SearchFiltersMobile.filtersButtonLabel"
+                className={css.mapIconText}
+              />
+            </SecondaryButtonInline>
+      </div>
 
       {/* {searchModalLink} */}
     </nav>

@@ -40,36 +40,42 @@
 }
 
 .arrowHead {
-  fill: var(--colorWhite);
-  stroke: var(--colorWhite);
+  fill: var(--colorGrey300);
+  stroke: var( --colorGrey300);
 }
 
 .navLeft,
 .navRight {
   position: absolute;
   /* width: 10vw; */
-  min-width: 52px;
   /* height: 100%; */
   border: 0;
   padding: 0;
   z-index: 1;
   top: calc(50% - 25px);
+  transform: scale(0.9);
 
   /* center content */
   display: flex;
   align-items: center;
   justify-content: center;
-
+  border-color: rgba(0,0,0,0.08);
+  
   &:hover {
     cursor: pointer;
+    transform: scale(1);
 
     & .navArrowWrapper {
       background-color: rgba(255, 255, 255, 1);
     }
     & .arrowHead {
-      fill: var(--colorGrey300);
-      stroke: var(--colorGrey300);
+      fill: var(--colorGrey500);
+      stroke: var(--colorGrey500);
     }
+  }
+
+  &:active {
+    transform: scale(0.9);
   }
 }
 
@@ -88,9 +94,10 @@
 .navArrowWrapper {
   display: none;
 
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
+  transition: all 0.25s;
 
   background-color: transparent;
 
@@ -99,7 +106,7 @@
   justify-content: center;
 
   @media (--viewportMedium) {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(255, 255, 255, 0.8);
   }
 }
 

@@ -62,7 +62,7 @@ const ImageCarousel = props => {
     return (
       <button className={css.navLeft} disabled={disabled} onClick={onClick}>
         <div className={css.navArrowWrapper}>
-          <IconArrowHead direction="left" size="big" className={css.arrowHead} />
+          <IconArrowHead direction="left" size="small" className={css.arrowHead} />
         </div>
       </button>
     );
@@ -71,7 +71,7 @@ const ImageCarousel = props => {
     return (
       <button className={css.navRight} disabled={disabled} onClick={onClick}>
         <div className={css.navArrowWrapper}>
-          <IconArrowHead direction="right" size="big" className={css.arrowHead} />
+          <IconArrowHead direction="right" size="small" className={css.arrowHead} />
         </div>
       </button>
     );

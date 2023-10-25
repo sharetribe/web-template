@@ -5,7 +5,7 @@ import ReactImageGallery from 'react-image-gallery';
 
 import { propTypes } from '../../../util/types';
 import { injectIntl, intlShape } from '../../../util/reactIntl';
-import { IconArrowHead, ResponsiveImage } from '../..';
+import { IconArrowHead, ResponsiveImage } from '../../../components';
 
 // Copied directly from
 // `node_modules/react-image-gallery/styles/css/image-gallery.css`. The

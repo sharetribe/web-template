@@ -12,6 +12,7 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 0 36px;
+  position: relative;
 
   /* fill */
   background-color: var(--colorWhite);
@@ -391,15 +392,45 @@
   width: 28px;
 }
 .searchModalButtonContainer{
+  padding: 0 0 0 20px;
+  display: none;
+
+  @media (--viewportMedium) {
+    display: block;
+  }
 }
 .categoryIconsContainner{
   flex-grow: 1;
+  overflow: hidden;
+  text-align: center;
+  margin: 0 20px;
+  position: relative;
 }
+.categoryCeneterContainner{
+  display: inline-block;
+}
+
+.scrollerContainerRight{
+  width: 40px;
+  height: 50px;
+  position: absolute;
+  right: 0;
+  background-image: linear-gradient(to right,rgb(255 255 255/0),white 40px);
+}
+.scrollerContainerLeft{
+  width: 40px;
+  height: 50px;
+  position: absolute;
+  left: 0;
+  background-image: linear-gradient(to left,rgb(255 255 255/0),white 40px);
+}
+
 .categoriesList{
   flex-grow: 1;
   display: grid;
   justify-content: center;
   grid-auto-flow: column;
+  align-items: flex-end;
 }
 .searchModalButton{
   display: block;
@@ -417,4 +448,75 @@
   display: block;
   width: 44px;
   margin: 0 20px;
+}
+
+/* arrows  */
+.arrowHead {
+  fill: var(--colorGrey300);
+  stroke: var( --colorGrey300);
+}
+
+.navLeft,
+.navRight {
+  position: absolute;
+  /* width: 10vw; */
+  /* height: 100%; */
+  border: 0;
+  padding: 0;
+  z-index: 1;
+  top: calc(50% - 25px);
+  transform: scale(0.9);
+
+  /* center content */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-color: rgba(0,0,0,0.08);
+  
+  &:hover {
+    cursor: pointer;
+    transform: scale(1);
+
+    & .navArrowWrapper {
+      background-color: rgba(255, 255, 255, 1);
+    }
+    & .arrowHead {
+      fill: var(--colorGrey500);
+      stroke: var(--colorGrey500);
+    }
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
+.navLeft {
+  left: 10px;
+  justify-content: flex-start;
+  padding-left: 12px;
+}
+
+.navRight {
+  right: 10px;
+  justify-content: flex-end;
+  padding-right: 12px;
+}
+
+.navArrowWrapper {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: all 0.25s;
+
+  background-color: transparent;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
+
+  @media (--viewportMedium) {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
 }
