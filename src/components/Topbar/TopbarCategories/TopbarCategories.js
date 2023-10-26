@@ -11,7 +11,7 @@ import { parse } from '../../../util/urlHelpers';
 import { createResourceLocatorString } from '../../../util/routes';
 
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
-import 'react-horizontal-scrolling-menu/dist/styles.css';
+import './styles.css';
 // NOTE: for hide scrollbar
 import "./hideScrollBar.css";
 
