@@ -34,7 +34,7 @@ export const getDefaultConfiguration = () => {
     marketplaceRootURL: 'http://localhost:3000',
     maps: {
       ...defaultConfig.maps,
-      mapboxAccessToken: undefined,
+      mapboxAccessToken: 'fake-token',
       googleMapsAPIKey: undefined,
     },
     stripe: {
