@@ -422,6 +422,7 @@
   right: 28px;
   background-image: linear-gradient(to right,rgb(255 255 255/0),white 40px);
   z-index: 1;
+  transition: all 0.3s;
 }
 .scrollerContainerLeft{
   width: 40px;
@@ -430,6 +431,7 @@
   left: 0;
   background-image: linear-gradient(to left,rgb(255 255 255/0),white 40px);
   z-index: 1;
+  transition: all 0.3s;
 }
 
 .categoriesList{

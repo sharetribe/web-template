@@ -269,6 +269,17 @@ class TopbarComponent extends Component {
       />
     );
 
+    const categoryTranslate = {
+      translate:0,
+      showLeftScroll: false,
+      showRightScroll: false,
+      categoryIconsWeight: 0,
+      categoryContainerWidth: 0
+    };
+
+    console.log('categoryTranslate - init');
+    console.log(categoryTranslate);
+
     const topbarCategoriesContent = categories?(
       <div>
         <TopbarCategories
@@ -286,6 +297,7 @@ class TopbarComponent extends Component {
             categories={categories}
             searchModalOpen={searchModalOpen}
             history={history}
+            categoryTranslate={categoryTranslate}
           />
         </div>
     ):null;

@@ -9,6 +9,10 @@ import { useRouteConfiguration } from '../../../context/routeConfigurationContex
 import { propTypes } from '../../../util/types';
 import { parse } from '../../../util/urlHelpers';
 import { createResourceLocatorString } from '../../../util/routes';
+
+import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
+import 'react-horizontal-scrolling-menu/dist/styles.css';
+
 import {
   Avatar,
   InlineTextButton,
@@ -34,6 +38,11 @@ import {
 // import TopbarSearchFormCommission from '../TopbarSearchFormCommission/TopbarSearchFormCommission';
 
 import css from './TopbarCategories.module.css';
+
+const getItems = () =>
+  Array(20)
+    .fill(0)
+    .map((_, ind) => ({ id: `element-${ind}` }));
 
 export const validUrlQueryParamsFromProps = props => {
   const { history } = props;
@@ -63,24 +72,114 @@ const TopbarCategories = props => {
     categories,
     searchModalOpen,
     history,
+    categoryTranslate,
   } = props;
   const [mounted, setMounted] = useState(false);
   
   const isAccess = AccessRole(props,'admin');
-  const categoryTranslate = {
-    translate:0,
-    showLeftScroll: false,
-    showRightScroll: false,
-    categoryIconsWeight: 0,
-    categoryScrollContainerWidth: 0
-  };
+  // const categoryTranslate = {
+  //   translate:0,
+  //   showLeftScroll: false,
+  //   showRightScroll: false,
+  //   categoryIconsWeight: 0,
+  //   categoryScrollContainerWidth: 0
+  // };
+
+
+  // start scroller
+  const [items, setItems] = React.useState(getItems);
+  const [selected, setSelected] = React.useState([]);
+  const [position, setPosition] = React.useState(0);
+
+  const isItemSelected = (id) => !!selected.find((el) => el === id);
+
+  const handleClick =
+    (id) =>
+    ({ getItemById, scrollToItem }) => {
+      const itemSelected = isItemSelected(id);
+
+      setSelected((currentSelected) =>
+        itemSelected
+          ? currentSelected.filter((el) => el !== id)
+          : currentSelected.concat(id)
+      );
+    };
+
+    const LeftArrow = () => {
+      const { isFirstItemVisible, scrollPrev } =
+        React.useContext(VisibilityContext);
+    
+      return (
+        <Arrow disabled={isFirstItemVisible} onClick={() => scrollPrev()}>
+          Left
+        </Arrow>
+      );
+    }
+    
+    const RightArrow  = () =>  {
+      const { isLastItemVisible, scrollNext } = React.useContext(VisibilityContext);
+    
+      return (
+        <Arrow disabled={isLastItemVisible} onClick={() => scrollNext()}>
+          Right
+        </Arrow>
+      );
+    }
+    
+    const Card = ({ onClick, selected, title, itemId }) =>  {
+      const visibility = React.useContext(VisibilityContext);
+    
+      return (
+        <div
+          onClick={() => onClick(visibility)}
+          style={{
+            width: '160px',
+          }}
+          tabIndex={0}
+        >
+          <div className="card">
+            <div>{title}</div>
+            <div>visible: {JSON.stringify(!!visibility.isItemVisible(itemId))}</div>
+            <div>selected: {JSON.stringify(!!selected)}</div>
+          </div>
+          <div
+            style={{
+              height: '200px',
+            }}
+          />
+        </div>
+      );
+    }
+  // end scroller
+
+  
+
+
+
+
+
 
 
   const scrollRight = ()=>{
     console.log(categoryTranslate);
+    if(categoryTranslate.translate + categoryTranslate.categoryContainerWidth <= categoryTranslate.categoryIconsWeight){
+      categoryTranslate.translate = categoryTranslate.translate + categoryTranslate.categoryContainerWidth - 40;
+    }else{
+      categoryTranslate.translate = categoryTranslate.translate + categoryTranslate.categoryContainerWidth - 40;
+    }
+    categoryLineRef.current.style.transform = 'translateX(-'+categoryTranslate.translate+'px)';
+
+    console.log(categoryLineRef);
   };
   const scrollLeft = ()=>{
     console.log(categoryTranslate);
+    if(categoryTranslate.translate - categoryTranslate.categoryContainerWidth >= 0){
+      categoryTranslate.translate = categoryTranslate.translate - categoryTranslate.categoryContainerWidth + 40;
+    }else{
+      categoryTranslate.translate = 0;
+    }
+    categoryLineRef.current.style.transform = 'translateX(-'+categoryTranslate.translate+'px)';
+    console.log(categoryLineRef);
   };
 
   useEffect(() => {
@@ -93,6 +192,8 @@ const TopbarCategories = props => {
   const isAuthenticatedAndAccess = isAuthenticated && isAccess;
   const categoryLineRef = React.createRef();
   const categoryContainerRef = React.createRef();
+  const scrollRightButtonref = React.createRef();
+  const scrollLeftButtonref = React.createRef();
 
   const classes = classNames(rootClassName || css.root, className);
 
@@ -245,11 +346,30 @@ const TopbarCategories = props => {
     const widthContainer = categoryContainerRef.current.offsetWidth;
     console.log(categoryLineRef.current.offsetWidth);
     console.log(categoryContainerRef.current.offsetWidth);
+
+    categoryTranslate.categoryContainerWidth = categoryContainerRef.current.offsetWidth;
+    categoryTranslate.categoryLineWidth = categoryContainerRef.current.offsetWidth;
+
+
     if(widthContainer < widthLine){
       console.log('categoryTranslate.showRightScroll = true');
       categoryTranslate.showRightScroll = true;
       console.log(categoryTranslate);
+
+      console.log('scrollRightButtonref');
+      console.log(scrollRightButtonref.current.style.display = 'block');
+      console.log('scrollLeftButtonref');
+      console.log(scrollLeftButtonref.current.style.display = 'block');
+    }else{
+      console.log('scrollRightButtonref');
+      console.log(scrollRightButtonref.current.style.display = 'none');
+      console.log('scrollLeftButtonref');
+      console.log(scrollLeftButtonref.current.style.display = 'none');
     }
+    
+    
+    
+    
   }
 
   useEffect(() => {
@@ -260,7 +380,7 @@ const TopbarCategories = props => {
   console.log('categoryTranslate.showRightScroll');
   console.log(categoryTranslate.showRightScroll);
   console.log(categoryTranslate);
-  const showRight = categoryTranslate.showRightScroll?{'display':'block'}:{'display':'none'};
+  const showRight = categoryTranslate.showRightScroll?{'display':'block'}:{'display':'inline'};
   console.log(showRight);
 
   return (
@@ -274,8 +394,8 @@ const TopbarCategories = props => {
       {/* style="transform: translateX(-80px);" */}
       
       <div className={css.categoryIconsContainner}>
-        <div className={css.scrollerContainerRight} >{renderRightNav(scrollRight,categoryLineRef)}</div>
-        <div className={css.scrollerContainerLeft}>{renderLeftNav(scrollLeft,categoryLineRef)}</div>
+        <div className={css.scrollerContainerRight} ref={scrollRightButtonref} style={showRight} >{renderRightNav(scrollRight,categoryLineRef)}</div>
+        <div className={css.scrollerContainerLeft} ref={scrollLeftButtonref} >{renderLeftNav(scrollLeft,categoryLineRef)}</div>
         
         <div ref={categoryContainerRef} className={css.categoryScrollerContainner}>
           <div className={css.categoryCeneterContainner}>
@@ -295,6 +415,18 @@ const TopbarCategories = props => {
             </div>
           </div>
         </div>
+
+        <ScrollMenu LeftArrow={renderLeftNav} RightArrow={renderRightNav}>
+          {items.map(({ id }) => (
+            <Card
+              itemId={id} // NOTE: itemId is required for track items
+              title={id}
+              key={id}
+              onClick={handleClick(id)}
+              selected={isItemSelected(id)}
+            />
+          ))}
+        </ScrollMenu>
         
       </div>
       <div className={css.searchModalButtonContainer}>

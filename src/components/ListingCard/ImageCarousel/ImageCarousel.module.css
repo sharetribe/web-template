@@ -21,6 +21,14 @@
   /* background-color: var(--colorBlack); */
 }
 
+.root .navLeft,.root .navRight{
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.root:hover .navLeft,.root:hover .navRight{
+  opacity: 1;
+}
+
 .noImage {
   border: 1px solid var(--colorGrey100);
   border-radius: var(--borderRadiusMedium);
