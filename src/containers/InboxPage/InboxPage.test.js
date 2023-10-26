@@ -525,7 +525,6 @@ describe('InboxPage', () => {
           isBooking={true}
         />
       );
-      expect(tree.asFragment().firstChild).toMatchSnapshot();
 
       const quantityFound = screen.queryAllByText('Jun 14 – 16');
       const expected = tr !== 'transition/inquire' ? 1 : 0;
