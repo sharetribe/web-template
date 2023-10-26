@@ -71,7 +71,7 @@ export const EditListingPricingAndStockFormComponent = props => (
       );
       // Note: outdated listings don't have listingType!
       // I.e. listings that are created with previous listing type setup.
-      const hasStockManagement = listingType?.stockType !== 'oneItem';
+      const hasStockManagement = listingType?.stockType === 'multipleItems';
       const stockValidator = validators.numberAtLeast(
         intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockIsRequired' }),
         0
