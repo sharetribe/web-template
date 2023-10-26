@@ -12,6 +12,8 @@ import { createResourceLocatorString } from '../../../util/routes';
 
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
 import 'react-horizontal-scrolling-menu/dist/styles.css';
+// NOTE: for hide scrollbar
+import "./hideScrollBar.css";
 
 import {
   Avatar,
@@ -38,11 +40,6 @@ import {
 // import TopbarSearchFormCommission from '../TopbarSearchFormCommission/TopbarSearchFormCommission';
 
 import css from './TopbarCategories.module.css';
-
-const getItems = () =>
-  Array(20)
-    .fill(0)
-    .map((_, ind) => ({ id: `element-${ind}` }));
 
 export const validUrlQueryParamsFromProps = props => {
   const { history } = props;
@@ -72,118 +69,34 @@ const TopbarCategories = props => {
     categories,
     searchModalOpen,
     history,
-    categoryTranslate,
   } = props;
-  const [mounted, setMounted] = useState(false);
   
+  const [mounted, setMounted] = useState(false);
   const isAccess = AccessRole(props,'admin');
-  // const categoryTranslate = {
-  //   translate:0,
-  //   showLeftScroll: false,
-  //   showRightScroll: false,
-  //   categoryIconsWeight: 0,
-  //   categoryScrollContainerWidth: 0
-  // };
-
 
   // start scroller
-  const [items, setItems] = React.useState(getItems);
-  const [selected, setSelected] = React.useState([]);
-  const [position, setPosition] = React.useState(0);
+  const [categoryActionActive,setCategoryActionActive] = useState(false);
+  const urlQueryParams = validUrlQueryParamsFromProps(props);
 
-  const isItemSelected = (id) => !!selected.find((el) => el === id);
+    const Card = ({ onClick, variant, index }) =>  {
+      const active = variant.option == urlQueryParams.pub_category ? classNames( css.categoryContainner, css.active) : css.categoryContainner ;
 
-  const handleClick =
-    (id) =>
-    ({ getItemById, scrollToItem }) => {
-      const itemSelected = isItemSelected(id);
-
-      setSelected((currentSelected) =>
-        itemSelected
-          ? currentSelected.filter((el) => el !== id)
-          : currentSelected.concat(id)
-      );
-    };
-
-    const LeftArrow = () => {
-      const { isFirstItemVisible, scrollPrev } =
-        React.useContext(VisibilityContext);
-    
-      return (
-        <Arrow disabled={isFirstItemVisible} onClick={() => scrollPrev()}>
-          Left
-        </Arrow>
-      );
-    }
-    
-    const RightArrow  = () =>  {
-      const { isLastItemVisible, scrollNext } = React.useContext(VisibilityContext);
-    
-      return (
-        <Arrow disabled={isLastItemVisible} onClick={() => scrollNext()}>
-          Right
-        </Arrow>
-      );
-    }
-    
-    const Card = ({ onClick, selected, title, itemId }) =>  {
-      const visibility = React.useContext(VisibilityContext);
-    
-      return (
-        <div
-          onClick={() => onClick(visibility)}
-          style={{
-            width: '160px',
-          }}
-          tabIndex={0}
-        >
-          <div className="card">
-            <div>{title}</div>
-            <div>visible: {JSON.stringify(!!visibility.isItemVisible(itemId))}</div>
-            <div>selected: {JSON.stringify(!!selected)}</div>
+      return variant.option !== 'other'?
+      (<div key={index} className={active}>
+        <div onClick={onClick} className={css.categoryLabel}>
+          {categoryImage(variant.option)}
+          <div >
+            {variant.label}
           </div>
-          <div
-            style={{
-              height: '200px',
-            }}
-          />
         </div>
-      );
+        
+      </div>): null
     }
   // end scroller
 
-  
-
-
-
-
-
-
-
-  const scrollRight = ()=>{
-    console.log(categoryTranslate);
-    if(categoryTranslate.translate + categoryTranslate.categoryContainerWidth <= categoryTranslate.categoryIconsWeight){
-      categoryTranslate.translate = categoryTranslate.translate + categoryTranslate.categoryContainerWidth - 40;
-    }else{
-      categoryTranslate.translate = categoryTranslate.translate + categoryTranslate.categoryContainerWidth - 40;
-    }
-    categoryLineRef.current.style.transform = 'translateX(-'+categoryTranslate.translate+'px)';
-
-    console.log(categoryLineRef);
-  };
-  const scrollLeft = ()=>{
-    console.log(categoryTranslate);
-    if(categoryTranslate.translate - categoryTranslate.categoryContainerWidth >= 0){
-      categoryTranslate.translate = categoryTranslate.translate - categoryTranslate.categoryContainerWidth + 40;
-    }else{
-      categoryTranslate.translate = 0;
-    }
-    categoryLineRef.current.style.transform = 'translateX(-'+categoryTranslate.translate+'px)';
-    console.log(categoryLineRef);
-  };
-
   useEffect(() => {
     setMounted(true);
+    // categoryRender();
   }, []);
 
   const marketplaceName = appConfig.marketplaceName;
@@ -278,36 +191,42 @@ const TopbarCategories = props => {
   const categoryAction = (name) => {
     const urlQueryParams = validUrlQueryParamsFromProps(props);
     urlQueryParams.pub_category = name;
+    setCategoryActionActive(name);
     
     history.push(createResourceLocatorString('Home', routeConfiguration, {}, urlQueryParams));
   }
 
   const renderLeftNav = (onClick, scrolBar) => {
-    console.log('scrolBarLeft');
-    console.log(scrolBar);
+    const { isFirstItemVisible, scrollPrev } =
+    React.useContext(VisibilityContext);
+    const show = isFirstItemVisible ?{'display':'none'}:{'display':'block'};
+
     return (
-      <button className={css.navLeft} onClick={onClick}>
-        <div className={css.navArrowWrapper}>
-          <IconArrowHead direction="left" size="small" className={css.arrowHead} />
-        </div>
-      </button>
+      <div className={css.scrollerContainerLeft} style={show} >
+        <button className={css.navLeft} onClick={() => scrollPrev()}>
+          <div className={css.navArrowWrapper}>
+            <IconArrowHead direction="left" size="small" className={css.arrowHead} />
+          </div>
+        </button>
+      </div>
     );
   };
   const renderRightNav = (onClick, scrolBar) => {
-    console.log('scrolBarRight');
-    console.log(scrolBar);
+    const { isLastItemVisible, scrollNext } = React.useContext(VisibilityContext);
+    const show = isLastItemVisible ?{'display':'none'}:{'display':'block'};
+
     return (
-      <button className={css.navRight} onClick={onClick}>
-        <div className={css.navArrowWrapper}>
-          <IconArrowHead direction="right" size="small" className={css.arrowHead} />
-        </div>
-      </button>
+      <div className={css.scrollerContainerRight} style={show} >
+        <button disabled={isLastItemVisible} className={css.navRight} onClick={() => scrollNext()}>
+          <div className={css.navArrowWrapper}>
+            <IconArrowHead direction="right" size="small" className={css.arrowHead} />
+          </div>
+        </button>
+      </div>
     );
   };
 
   const categoryImage = (name) => {
-    console.log('categoryImage');
-    console.log(name);
     switch (name) {
       case 'boat':
         return <IconCategoryBoat />
@@ -340,94 +259,26 @@ const TopbarCategories = props => {
     
   }
 
-  const categoryRender = () => {
-    console.log('categoryLineRef');
-    const widthLine = categoryLineRef.current.offsetWidth;
-    const widthContainer = categoryContainerRef.current.offsetWidth;
-    console.log(categoryLineRef.current.offsetWidth);
-    console.log(categoryContainerRef.current.offsetWidth);
-
-    categoryTranslate.categoryContainerWidth = categoryContainerRef.current.offsetWidth;
-    categoryTranslate.categoryLineWidth = categoryContainerRef.current.offsetWidth;
-
-
-    if(widthContainer < widthLine){
-      console.log('categoryTranslate.showRightScroll = true');
-      categoryTranslate.showRightScroll = true;
-      console.log(categoryTranslate);
-
-      console.log('scrollRightButtonref');
-      console.log(scrollRightButtonref.current.style.display = 'block');
-      console.log('scrollLeftButtonref');
-      console.log(scrollLeftButtonref.current.style.display = 'block');
-    }else{
-      console.log('scrollRightButtonref');
-      console.log(scrollRightButtonref.current.style.display = 'none');
-      console.log('scrollLeftButtonref');
-      console.log(scrollLeftButtonref.current.style.display = 'none');
-    }
-    
-    
-    
-    
-  }
-
-  useEffect(() => {
-    // code to run after render goes here
-    categoryRender();
-  });
-
-  console.log('categoryTranslate.showRightScroll');
-  console.log(categoryTranslate.showRightScroll);
-  console.log(categoryTranslate);
-  const showRight = categoryTranslate.showRightScroll?{'display':'block'}:{'display':'inline'};
-  console.log(showRight);
 
   return (
     <nav className={classes}>
-      {/* <NamedLink className={css.createListingLink} name="NewListingPage">
-        <span className={css.createListing}>
-          <FormattedMessage id="TopbarDesktop.createListing" />
-        </span>
-      </NamedLink> */}
-
-      {/* style="transform: translateX(-80px);" */}
-      
       <div className={css.categoryIconsContainner}>
-        <div className={css.scrollerContainerRight} ref={scrollRightButtonref} style={showRight} >{renderRightNav(scrollRight,categoryLineRef)}</div>
-        <div className={css.scrollerContainerLeft} ref={scrollLeftButtonref} >{renderLeftNav(scrollLeft,categoryLineRef)}</div>
         
         <div ref={categoryContainerRef} className={css.categoryScrollerContainner}>
-          <div className={css.categoryCeneterContainner}>
-            <div ref={categoryLineRef} className={css.categoriesList}>
+          <div ref={categoryLineRef} >
+            <ScrollMenu LeftArrow={renderLeftNav} RightArrow={renderRightNav}>
               {categories.map((variant,index) => (
-                variant.option !== 'other'?
-                (<div key={index} className={css.categoryContainner}>
-                  <div onClick={()=>categoryAction(variant.option)} className={css.categoryLabel}>
-                    {categoryImage(variant.option)}
-                    <div >
-                      {variant.label}
-                    </div>
-                  </div>
-                  
-                </div>): null
+
+                <Card
+                  variant={variant}
+                  key={index}
+                  onClick={()=>categoryAction(variant.option)}
+                  index={index}
+                />
               ))}
-            </div>
+            </ScrollMenu>
           </div>
         </div>
-
-        <ScrollMenu LeftArrow={renderLeftNav} RightArrow={renderRightNav}>
-          {items.map(({ id }) => (
-            <Card
-              itemId={id} // NOTE: itemId is required for track items
-              title={id}
-              key={id}
-              onClick={handleClick(id)}
-              selected={isItemSelected(id)}
-            />
-          ))}
-        </ScrollMenu>
-        
       </div>
       <div className={css.searchModalButtonContainer}>
           <SecondaryButtonInline

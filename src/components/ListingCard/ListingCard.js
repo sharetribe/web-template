@@ -52,6 +52,7 @@ export const ListingCardComponent = props => {
     renderSizes,
     setActiveListing,
     showAuthorInfo,
+    carouselKey,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
@@ -73,13 +74,6 @@ export const ListingCardComponent = props => {
     : [];
 
   const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
-
-  const variantsCarousel = currentListing.images && currentListing.images.length;
-
-  console.log('currentListing.images');
-  console.log(currentListing.images);
-  console.log(firstImage);
-  const carimages = [firstImage];
 
   const setActivePropsMaybe = setActiveListing
     ? {
@@ -104,6 +98,7 @@ export const ListingCardComponent = props => {
           sizes={renderSizes}
         /> */}
         <ImageCarousel
+          key={carouselKey}
           images={currentListing.images}
           imageVariants={variants}
           link='ListingPage'

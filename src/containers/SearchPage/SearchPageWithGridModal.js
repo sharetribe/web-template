@@ -348,6 +348,7 @@ const customStyles = {
         <div>
               {/* <button onClick={}>Trigger Modal</button> */}
               <Modal 
+                id='isFilterModal'
                 isOpen={isFilterModalOpen}
                 containerClassName={css.modalContainer}
                 contentLabel="Minimal Modal Example"

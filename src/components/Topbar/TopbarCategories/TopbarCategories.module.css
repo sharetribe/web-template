@@ -382,10 +382,15 @@
   transition: var(--transitionStyleButton);
 }
 .categoryLabel:hover {
-  color: var(--marketplaceColor);
+  color: var(--colorBlack);
+  border-bottom: 2px solid var(--colorGrey600);
+}
+.categoryLabel:active {
+  transform: scale(0.95);
+
 }
 .categoryLabel:hover svg {
-  fill: var(--marketplaceColor);
+  fill: var(--colorGrey700);
 }
 
 .categoryImage{
@@ -428,7 +433,7 @@
   width: 40px;
   height: 50px;
   position: absolute;
-  left: 0;
+  left: 40;
   background-image: linear-gradient(to left,rgb(255 255 255/0),white 40px);
   z-index: 1;
   transition: all 0.3s;
@@ -501,7 +506,7 @@
 }
 
 .navLeft {
-  left: 10px;
+  left: -15px;
   justify-content: flex-start;
 }
 
@@ -526,4 +531,10 @@
   @media (--viewportMedium) {
     background-color: rgba(255, 255, 255, 0.8);
   }
+}
+.categoryLabel{
+}
+.active .categoryLabel{
+  color: var(--colorBlack);
+  border-bottom: 2px solid var(--colorBlack);
 }

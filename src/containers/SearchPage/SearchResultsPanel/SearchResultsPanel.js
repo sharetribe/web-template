@@ -61,6 +61,7 @@ const SearchResultsPanel = props => {
           <ListingCard
             className={css.listingCard}
             key={l.id.uuid}
+            carouselKey={l.id.uuid}
             listing={l}
             renderSizes={cardRenderSizes(isMapVariant)}
             setActiveListing={setActiveListing}
