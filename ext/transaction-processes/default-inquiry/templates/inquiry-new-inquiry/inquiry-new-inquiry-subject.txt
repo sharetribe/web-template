@@ -1,1 +1,1 @@
-{{set-translations (asset "email/translations.json")}}{{t "InquiryNewInquiry.Subject" "{customerDisplayName} has sent you a new inquiry about {listingTitle}" customerDisplayName=transaction.customer.display-name listingTitle=transaction.listing.title }}
+{{set-translations (asset "content/email-texts.json")}}{{t "InquiryNewInquiry.Subject" "{customerDisplayName} has sent you a new inquiry about {listingTitle}" customerDisplayName=transaction.customer.display-name listingTitle=transaction.listing.title }}
