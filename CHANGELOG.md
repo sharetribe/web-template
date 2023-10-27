@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Use the correct translation asset in email templates.
+  [#259](https://github.com/sharetribe/web-template/pull/259)
 - [fix] When stockType is oneItem: don't show shipping fee for additional items.
   [#258](https://github.com/sharetribe/web-template/pull/258)
 - [fix] configHelpers: undefined enumOptions was not handled properly.
