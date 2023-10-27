@@ -1,1 +1,1 @@
-{{set-translations (asset "email/translations.json")}}{{t "BookingOperatorAcceptedRequest.Subject" "A booking request was accepted on your behalf" }}
+{{set-translations (asset "content/email-texts.json")}}{{t "BookingOperatorAcceptedRequest.Subject" "A booking request was accepted on your behalf" }}
