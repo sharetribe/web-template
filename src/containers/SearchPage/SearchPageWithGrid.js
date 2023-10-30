@@ -308,7 +308,7 @@ export class SearchPageComponent extends Component {
               {availableFilters.map(config => {
                 return (
                   <FilterComponent
-                    key={`SearchFiltersMobile.${config.key}`}
+                    key={`SearchFiltersMobile.${config.scope || 'built-in'}.${config.key}`}
                     idPrefix="SearchFiltersMobile"
                     className={css.filter}
                     config={config}
@@ -351,7 +351,7 @@ export class SearchPageComponent extends Component {
                 {availableFilters.map(config => {
                   return (
                     <FilterComponent
-                      key={`SearchFiltersMobile.${config.key}`}
+                      key={`SearchFiltersMobile.${config.scope || 'built-in'}.${config.key}`}
                       idPrefix="SearchFiltersMobile"
                       config={config}
                       marketplaceCurrency={marketplaceCurrency}
