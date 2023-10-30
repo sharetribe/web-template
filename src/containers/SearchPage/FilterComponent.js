@@ -39,7 +39,7 @@ const FilterComponent = props => {
   const name = key.replace(/\s+/g, '-').toLowerCase();
 
   // Default filters: price, keywords, dates
-  switch (key) {
+  switch (schemaType) {
     case 'price': {
       const { min, max, step } = config;
       return (
