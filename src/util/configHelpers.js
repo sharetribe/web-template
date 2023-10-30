@@ -723,6 +723,16 @@ const validPriceConfig = config => {
   return isMaxBigger ? { key: 'price', schemaType: 'price', label, min, max, step } : null;
 };
 
+const validKeywordsConfig = config => {
+  const { enabled = true } = config;
+
+  if (!enabled) {
+    return null;
+  }
+
+  return { key: 'keywords', schemaType: 'keywords' };
+};
+
 const validDefaultFilters = defaultFilters => {
   return defaultFilters
     .map(data => {
@@ -731,6 +741,8 @@ const validDefaultFilters = defaultFilters => {
         ? validDatesConfig(data)
         : schemaType === 'price'
         ? validPriceConfig(data)
+        : schemaType === 'keywords'
+        ? validKeywordsConfig(data)
         : data;
     })
     .filter(Boolean);
@@ -769,7 +781,7 @@ const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig) => {
 
   const keywordsFilterMaybe =
     keywordsFilter?.enabled === true
-      ? [{ key: 'keywords', schemaType: 'text' }]
+      ? [{ key: 'keywords', schemaType: 'keywords' }]
       : defaultSearchConfig.keywordsFilter
       ? [defaultSearchConfig.keywordsFilter]
       : [];
