@@ -39,10 +39,9 @@ export const priceFilter = {
   step: 5,
 };
 // // This is not in use by default.
-// // Needs more thinking how it should work together with main search.
 // export const keywordsFilter = {
 //   key: 'keywords',
-//   schemaType: 'text',
+//   schemaType: 'keywords',
 // }
 
 export const sortConfig = {
