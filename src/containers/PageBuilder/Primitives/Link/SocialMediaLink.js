@@ -43,11 +43,11 @@ export const supportedPlatforms = [
 export const SocialMediaLink = React.forwardRef((props, ref) => {
   const Icon = getIconConf(props.platform);
 
-  const { className, rootClassName, href, title, platform } = props;
+  const { className, rootClassName, href, platform } = props;
   const classes = classNames(rootClassName || css.link, className);
-  const titleMaybe = Icon ? { title } : {};
-  const iconOrPlatform = Icon ? <Icon /> : platform;
-  const linkProps = { className: classes, href, children: iconOrPlatform, ...titleMaybe };
+  const titleMaybe = Icon ? { title: platform } : {};
+  const children = Icon ? <Icon /> : platform;
+  const linkProps = { className: classes, href, children, ...titleMaybe };
 
   // Markdown parser (rehype-sanitize) might return undefined href
   if (!href || !platform) {
