@@ -133,7 +133,7 @@ const exposeColorValue = color => {
  * @returns object containing valid data.
  */
 export const exposeCustomAppearanceProps = data => {
-  const { backgroundImage, backgroundColor, textColor, alt } = data;
+  const { backgroundImage, backgroundImageOverlay, backgroundColor, textColor, alt } = data;
   const { type } = backgroundImage || {};
 
   if (!!type && type !== 'imageAsset') {
@@ -151,9 +151,25 @@ export const exposeCustomAppearanceProps = data => {
   const sanitizedImage = getValidSanitizedImage(backgroundImage);
   const backgroundImageMaybe = sanitizedImage ? { backgroundImage: sanitizedImage, alt } : {};
 
+  // On top of the background image there could be an overlay that mixes in some color (e.g. black)
+  // with the given opacity.
+  // At this point this is used as a shader to add contrast between foreground text and background.
+  const { preset, color: overlayColor, opacity: overlayOpacity } = backgroundImageOverlay || {};
+  const hasBackgroundOverlay = typeof preset === 'string' && preset !== 'none';
+  const backgroundImageOverlayMaybe = hasBackgroundOverlay
+    ? {
+        backgroundImageOverlay: {
+          preset,
+          color: exposeColorValue(overlayColor),
+          opacity: typeof overlayOpacity === 'number' ? overlayOpacity : 1,
+        },
+      }
+    : {};
+
   return {
     ...backgroundImageMaybe,
     ...backgroundColorMaybe,
+    ...backgroundImageOverlayMaybe,
     ...textColorMaybe,
   };
 };
