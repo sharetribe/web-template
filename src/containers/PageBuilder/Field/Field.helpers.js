@@ -47,7 +47,7 @@ export const exposeSocialMediaProps = data => {
   const hasCorrectProps = typeof url === 'string' && url.length > 0;
   const cleanUrl = hasCorrectProps ? sanitizeUrl(url) : null;
   const validPlatform = supportedPlatforms.includes(platform) ? platform : null;
-  return cleanUrl ? { children: validPlatform, href: cleanUrl } : {};
+  return cleanUrl ? { platform: validPlatform, href: cleanUrl } : {};
 };
 
 const getValidSanitizedImage = image => {
