@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] SectionFooter: add title attributes to social media icons.
+  [#261](https://github.com/sharetribe/web-template/pull/261)
 - [add] PageBuilder: add backgroundImage overlay to shade the image darker.
   [#262](https://github.com/sharetribe/web-template/pull/262)
 - [fix] they keys of built-in filters could have clashed with listing field keys.
