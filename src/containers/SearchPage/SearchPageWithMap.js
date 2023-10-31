@@ -420,7 +420,7 @@ export class SearchPageComponent extends Component {
               {availableFilters.map(config => {
                 return (
                   <FilterComponent
-                    key={`SearchFiltersMobile.${config.key}`}
+                    key={`SearchFiltersMobile.${config.scope || 'built-in'}.${config.key}`}
                     idPrefix="SearchFiltersMobile"
                     config={config}
                     marketplaceCurrency={marketplaceCurrency}
@@ -448,7 +448,7 @@ export class SearchPageComponent extends Component {
                 {availablePrimaryFilters.map(config => {
                   return (
                     <FilterComponent
-                      key={`SearchFiltersPrimary.${config.key}`}
+                      key={`SearchFiltersPrimary.${config.scope || 'built-in'}.${config.key}`}
                       idPrefix="SearchFiltersPrimary"
                       config={config}
                       marketplaceCurrency={marketplaceCurrency}
@@ -476,7 +476,7 @@ export class SearchPageComponent extends Component {
                   {customSecondaryFilters.map(config => {
                     return (
                       <FilterComponent
-                        key={`SearchFiltersSecondary.${config.key}`}
+                        key={`SearchFiltersSecondary.${config.scope || 'built-in'}.${config.key}`}
                         idPrefix="SearchFiltersSecondary"
                         config={config}
                         marketplaceCurrency={marketplaceCurrency}
