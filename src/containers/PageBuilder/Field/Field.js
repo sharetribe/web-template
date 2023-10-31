@@ -1,5 +1,16 @@
 import React from 'react';
-import { exact, func, node, number, objectOf, oneOf, oneOfType, shape, string } from 'prop-types';
+import {
+  exact,
+  func,
+  node,
+  number,
+  object,
+  objectOf,
+  oneOf,
+  oneOfType,
+  shape,
+  string,
+} from 'prop-types';
 
 // Primitive components that are actually used for rendering field data
 // These are essentially calling the index.js
@@ -248,6 +259,7 @@ const propTypeCustomAppearance = shape({
   backgroundColor: string,
   textColor: string,
   backgroundImage: propTypeImageAsset,
+  backgroundImageOverlay: object,
 });
 
 const propTypeYoutube = shape({
