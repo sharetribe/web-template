@@ -325,15 +325,15 @@ export const ListingPageComponent = props => {
               const { key, enumOptions, scope = 'public' } = config;
               const value =
                 scope === 'public' ? publicData[key] : scope === 'metadata' ? metadata[key] : null;
-              const hasValue = value !== null;
-              return hasValue && config.schemaType === SCHEMA_TYPE_MULTI_ENUM
+              const hasValue = value != null;
+              return config.schemaType === SCHEMA_TYPE_MULTI_ENUM
                 ? [
                     ...pickedElements,
                     <SectionMultiEnumMaybe
                       key={key}
                       heading={config?.showConfig?.label}
                       options={createFilterOptions(enumOptions)}
-                      selectedOptions={value}
+                      selectedOptions={value || []}
                     />,
                   ]
                 : hasValue && config.schemaType === SCHEMA_TYPE_TEXT

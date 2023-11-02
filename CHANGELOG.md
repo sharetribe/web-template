@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] ListingPage: always render multi-enum sections.
+  [#264](https://github.com/sharetribe/web-template/pull/264)
 - [add] SectionFooter: add title attributes to social media icons.
   [#261](https://github.com/sharetribe/web-template/pull/261)
 - [add] PageBuilder: add backgroundImage overlay to shade the image darker.
