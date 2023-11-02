@@ -119,11 +119,11 @@ const AddListingFields = props => {
     const namespacedKey = scope === 'public' ? `pub_${key}` : `priv_${key}`;
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
-    const isTargetProcessAlias =
+    const isTargetListingType =
       includeForListingTypes == null || includeForListingTypes.includes(listingType);
     const isProviderScope = ['public', 'private'].includes(scope);
 
-    return isKnownSchemaType && isTargetProcessAlias && isProviderScope
+    return isKnownSchemaType && isTargetListingType && isProviderScope
       ? [
           ...pickedFields,
           <CustomExtendedDataField
