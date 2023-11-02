@@ -491,7 +491,7 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
 
       // There could be automatic transitions after this transition
       // For example mark-received-from-purchased > auto-complete.
-      // Here, we make a delayed update to tx.
+      // Here, we make 1-2 delayed updates for the tx entity.
       // This way "leave a review" link should show up for the customer.
       refreshTransactionEntity(sdk, txId, dispatch);
 
