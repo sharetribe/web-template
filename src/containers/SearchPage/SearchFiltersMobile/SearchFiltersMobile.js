@@ -96,6 +96,8 @@ class SearchFiltersMobileComponent extends Component {
       { count: resultsCount }
     );
 
+    const filtersClasses = this.state.isFiltersOpenOnMobile ? css.filtersWrapper : css.filtersWrapperNone;
+
     return (
       <div className={classes}>
         <div className={css.searchResultSummary}>
@@ -136,10 +138,7 @@ class SearchFiltersMobileComponent extends Component {
               <FormattedMessage id={'SearchFiltersMobile.resetAll'} />
             </button>
           </div>
-          {this.state.isFiltersOpenOnMobile ? (
-            <div className={css.filtersWrapper}>{children}</div>
-          ) : null}
-
+            <div className={filtersClasses}>{children}</div>
           <div className={css.showListingsContainer}>
             <Button className={css.showListingsButton} onClick={this.closeFilters}>
               {showListingsLabel}

@@ -91,6 +91,10 @@
   padding-bottom: 220px;
 }
 
+.filtersWrapperNone {
+  display: none;
+}
+
 .showListingsContainer {
   position: fixed;
   bottom: 0;
