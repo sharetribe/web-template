@@ -30,6 +30,8 @@ way to update this template, but currently, we follow a pattern:
   [#258](https://github.com/sharetribe/web-template/pull/258)
 - [fix] configHelpers: undefined enumOptions was not handled properly.
   [#257](https://github.com/sharetribe/web-template/pull/257)
+- [add] Update translation assets for French.
+  [#267](https://github.com/sharetribe/web-template/pull/267)
 
 ## [v3.4.0] 2023-10-23
 
