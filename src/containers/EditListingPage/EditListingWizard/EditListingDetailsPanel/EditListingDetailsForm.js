@@ -64,6 +64,10 @@ const FieldSelectListingType = props => {
       onListingTypeChange(selectedListingType);
     }
   };
+  const getListingTypeLabel = listingType => {
+    const listingTypeConfig = listingTypes.find(config => config.listingType === listingType);
+    return listingTypeConfig ? listingTypeConfig.label : listingType;
+  };
 
   return hasMultipleListingTypes && !hasExistingListingType ? (
     <>
@@ -97,7 +101,7 @@ const FieldSelectListingType = props => {
       <Heading as="h5" rootClassName={css.selectedLabel}>
         {intl.formatMessage({ id: 'EditListingDetailsForm.listingTypeLabel' })}
       </Heading>
-      <p className={css.selectedValue}>{formApi.getFieldState(name)?.value}</p>
+      <p className={css.selectedValue}>{getListingTypeLabel(formApi.getFieldState(name)?.value)}</p>
       <FieldHidden name={name} />
       <FieldHidden name="transactionProcessAlias" />
       <FieldHidden name="unitType" />
