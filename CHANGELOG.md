@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Update translation assets for French.
+  [#269](https://github.com/sharetribe/web-template/pull/269)
 - [add] Limit listing fields to specific listing types through Console.
   [#268](https://github.com/sharetribe/web-template/pull/268)
 - [add] Update translation assets for French.
