@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Update translation assets for French.
+  [#267](https://github.com/sharetribe/web-template/pull/267)
 - [fix] TransactionPage.duck.js: add another delayed refresh call for tx after transition.
   [#265](https://github.com/sharetribe/web-template/pull/265)
 - [change] ListingPage: always render multi-enum sections.
