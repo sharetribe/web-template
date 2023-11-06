@@ -181,7 +181,7 @@
   opacity: 1;
 }
 .sliderDotsCenter{
-  width: 56px;
+  max-width: 56px;
   overflow: hidden;
   justify-content: center;
 }
