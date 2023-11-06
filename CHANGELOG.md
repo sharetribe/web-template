@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Limit listing fields to specific listing types through Console.
+  [#268](https://github.com/sharetribe/web-template/pull/268)
 - [add] Update translation assets for French.
   [#267](https://github.com/sharetribe/web-template/pull/267)
 - [fix] TransactionPage.duck.js: add another delayed refresh call for tx after transition.
