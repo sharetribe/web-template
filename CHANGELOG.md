@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] PageBuilder - Headings: hyphens:auto CSS rule is too eager to hyphanate and it doesn't
+  try to fit long words into an empty next line before splitting.
+  [#270](https://github.com/sharetribe/web-template/pull/270)
 - [add] Update translation assets for French.
   [#269](https://github.com/sharetribe/web-template/pull/269)
 - [add] Limit listing fields to specific listing types through Console.
