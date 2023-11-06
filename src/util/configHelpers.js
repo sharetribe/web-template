@@ -322,6 +322,27 @@ const validListingTypesForListingConfig = (includeForListingTypes, listingTypesI
   return [isValid, validValue];
 };
 
+const validListingTypesForListingTypeConfig = (listingTypeConfig, listingTypesInUse) => {
+  const { limitToListingTypeIds, listingTypeIds } = listingTypeConfig || {};
+
+  if (limitToListingTypeIds === true) {
+    const isArray = Array.isArray(listingTypeIds);
+    const validatedListingTypes = isArray
+      ? listingTypeIds.filter(lt => listingTypesInUse.includes(lt))
+      : [];
+
+    // If listingTypeIds array contains valid listing types,
+    // we'll rename the array as includeForListingTypes
+    const isValid = validatedListingTypes.length > 0;
+    const validValue = isValid ? { includeForListingTypes: validatedListingTypes } : {};
+    return [isValid, validValue];
+  } else {
+    // If hosted config returns limitToListingTypeIds as false,
+    // we return the full list of active listingTypes.
+    return [true, { includeForListingTypes: listingTypesInUse }];
+  }
+};
+
 const isStringType = str => typeof str === 'string';
 const pickOptionShapes = o => isStringType(o.option) && isStringType(o.label);
 
@@ -477,6 +498,8 @@ const validListingFields = (listingFields, listingTypesInUse) => {
             ? validEnumString('scope', value, scopeOptions, 'public')
             : name === 'includeForListingTypes'
             ? validListingTypesForListingConfig(value, listingTypesInUse)
+            : name === 'listingTypeConfig'
+            ? validListingTypesForListingTypeConfig(value, listingTypesInUse)
             : name === 'schemaType'
             ? validEnumString('schemaType', value, validSchemaTypes)
             : name === 'enumOptions'

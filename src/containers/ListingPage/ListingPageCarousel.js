@@ -316,11 +316,15 @@ export const ListingPageComponent = props => {
               intl={intl}
             />
             {listingConfig.listingFields.reduce((pickedElements, config) => {
-              const { key, enumOptions, scope = 'public' } = config;
+              const { key, enumOptions, includeForListingTypes, scope = 'public' } = config;
+              const listingType = publicData?.listingType;
+              const isTargetListingType =
+                includeForListingTypes == null || includeForListingTypes.includes(listingType);
+
               const value =
                 scope === 'public' ? publicData[key] : scope === 'metadata' ? metadata[key] : null;
               const hasValue = value != null;
-              return config.schemaType === SCHEMA_TYPE_MULTI_ENUM
+              return isTargetListingType && config.schemaType === SCHEMA_TYPE_MULTI_ENUM
                 ? [
                     ...pickedElements,
                     <SectionMultiEnumMaybe
@@ -330,7 +334,7 @@ export const ListingPageComponent = props => {
                       selectedOptions={value || []}
                     />,
                   ]
-                : hasValue && config.schemaType === SCHEMA_TYPE_TEXT
+                : isTargetListingType && hasValue && config.schemaType === SCHEMA_TYPE_TEXT
                 ? [
                     ...pickedElements,
                     <SectionTextMaybe key={key} heading={config?.showConfig?.label} text={value} />,
