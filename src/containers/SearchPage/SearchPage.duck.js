@@ -200,9 +200,6 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     perPage,
   };
 
-  console.log('searchValidListingTypes');
-  console.log(params);
-
   return sdk.listings
     .query(params)
     .then(response => {
