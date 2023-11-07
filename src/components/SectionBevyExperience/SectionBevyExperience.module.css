@@ -1,0 +1,152 @@
+@import '../../styles/customMediaQueries.css';
+
+.sectionbody {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 30px;
+    padding-bottom: 120px;
+}
+
+.sectionleft {
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 49px;
+}
+
+.sectionlefttitle {
+    color: #000;
+
+    /* H2 */
+    font-family: Clash Display;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    /* 48px */
+
+    align-self: stretch;
+}
+
+.sectionleftcontent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+    width: 100%;
+}
+
+.sectionleftitem {
+    border-radius: 20px;
+    background: var(--primary-eaf-6-f-6, #EAF6F6);
+    width: 100%;
+    height: 113px;
+    flex-shrink: 0;
+    padding-top: 41px;
+    padding-left: 45px;
+}
+
+.sectionleftitemcontent {
+    display: inline-flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.sectionleftitemtext {
+    color: var(--primary-1-b-242-d, #1B242D);
+    font-family: Poppins;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    /* 133.333% */
+}
+
+.sectionright {
+    display: flex;
+    height: 398px;
+    padding: 30px 39.496px 30px 29px;
+    align-items: center;
+    flex: 1 0 0;
+
+    border-radius: 20px;
+    background: var(--primary-eaf-6-f-6, #EAF6F6);
+}
+
+.sectionrightcontent {
+    display: flex;
+    height: 338px;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 50px;
+}
+
+.sectionrightitem {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    flex: 1 0 0;
+    align-self: stretch;
+    justify-content: space-between;
+}
+
+.sectionrightitemtext {
+    color: var(--primary-1-b-242-d, #1B242D);
+    font-family: Poppins;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    /* 24px */
+}
+
+.sectionrightitemfooter {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.avatar {
+    width: 52px;
+    height: 52px;
+
+    border-radius: 999px;
+    /* border: 5px solid var(--primary-ffffff, #FFF); */
+    background: url(../../assets/images/home/avatar.png), lightgray 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 3px;
+
+    color: var(--primary-1-b-242-d, #1B242D);
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 150% */
+}
+
+.profilename {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+
+    color: var(--primary-1-b-242-d, #1B242D);
+    font-family: Poppins;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    /* 133.333% */
+}

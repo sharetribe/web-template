@@ -1,0 +1,16 @@
+.root {
+    /* Expand to the available space */
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.content {
+    width: 76.3vw;
+
+    @media (--viewportMedium) {
+        margin-top: 10vh;
+    }
+}

@@ -1,0 +1,119 @@
+@import '../../styles/customMediaQueries.css';
+
+.sectionbody {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 30px;
+    padding-bottom: 120px;
+}
+
+.sectionleft {
+    display: flex;
+    height: 467px;
+    justify-content: center;
+    align-items: center;
+    flex: 1 0 0;
+}
+
+.sectionleftimage {
+    border-radius: 20px;
+    background: url(../../assets/images/home/livedemo.png), lightgray 50% / cover no-repeat;
+    width: 540px;
+    height: 467px;
+}
+
+.sectionright {
+    flex: 1 0 0;
+    width: 540px;
+    height: 467px;
+    flex-shrink: 0;
+    border-radius: 20px;
+    background: var(--primary-1-b-242-d, #1B242D);
+    padding: 35px;
+}
+
+.sectionrightcontent {
+    display: flex;
+    width: 436px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.sectionrightcontenttitle {
+    color: var(--primary-ffffff, #FFF);
+
+    /* H4 */
+    font-family: Clash Display;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    /* 36px */
+}
+
+.sectionrightcontenttitle2 {
+    color: var(--extended-97-eae-5, #97EAE5);
+    /* H4 */
+    font-family: Clash Display;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+}
+
+.sectionrightcontenttext {
+    color: var(--primary-ffffff, #FFF);
+    
+    /* P16 - Medium */
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 140%;
+    /* 22.4px */
+}
+
+.sectionrightcontentaction {
+    display: flex;
+    height: 53px;
+    padding: 15px 30px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    border-radius: 7px;
+    background: var(--extended-06-c-167, #06C167);
+
+    color: var(--primary-1-b-242-d, #1B242D);
+    text-align: center;
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    /* 150% */
+}
+
+.righteffect {
+    display: flex;
+    justify-content: flex-end;
+    height: 125px;
+}
+
+.effect1 {
+    width: 147.196px;
+    height: 211.94px;
+    flex-shrink: 0;
+    margin-right: -30px;
+    margin-top: -70px;
+}
+
+.effect2 {
+    width: 83.227px;
+    height: 120.79px;
+    flex-shrink: 0;
+    margin-top: 30px;
+    margin-right: -17px;
+}

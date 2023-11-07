@@ -13,6 +13,16 @@
  * https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties
  */
 
+@font-face {
+  font-family: Poppins;
+  src: url(../assets/fonts/poppins-regular-webfont.woff);
+}
+
+@font-face {
+  font-family: Clash Display;
+  src: url(../assets/fonts/ClashDisplay-Regular.woff);
+}
+
 :root {
   /* ================ Colors ================ */
 
@@ -185,7 +195,7 @@ body {
   text-rendering: optimizeSpeed;
   font-optical-sizing: auto;
 
-  background-color: var(--colorGrey50);
+  background-color: #FFF;
 }
 
 ::selection {

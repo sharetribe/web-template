@@ -2,26 +2,12 @@
 
 /* Desktop */
 .root {
-  /* Size */
-  width: 100%;
-  height: var(--topbarHeightDesktop);
-
-  /* Layout for child components */
+  width: 76.3vw;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-start;
-  padding: 0 12px 0 0;
-
-  /* fill */
-  background-color: var(--colorWhite);
-
-  /* shadows */
-  box-shadow: var(--boxShadowLight);
-
-  @media (--viewportLarge) {
-    padding: 0 24px 0 0;
-  }
+  align-items: center;  
+  padding: 30px 0px 100px 0px;
 }
 
 /* logo */
@@ -371,4 +357,110 @@
       background-color: var(--colorBlack);
     }
   }
+}
+
+/*** Customize ***/
+
+.headerlogo {
+  width: 111px;
+  height: 38.58px;
+  flex-shrink: 0;
+}
+
+.headercontent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 17px;
+}
+
+.headermenu {
+  display: flex;
+  padding: 3px;
+  align-items: flex-start;
+  gap: 2px;
+  border-radius: 99px;
+  border: 1px solid rgba(34, 118, 103, 0.20);
+  background: var(--primary-eaf-6-f-6, #EAF6F6);
+}
+
+.headermenuitemactive {
+  display: flex;
+  padding: 8px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 99px;
+  background: #FFF;
+  border-radius: 99px;
+
+  color: #000;
+  text-align: center;
+  font-family: Poppins;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 140%;
+  /* 21px */
+}
+
+.headermenuitem {
+  display: flex;
+  padding: 8px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 99px;
+
+  color: #000;
+  text-align: center;
+  font-family: Poppins;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 140%;
+
+  cursor: pointer;
+}
+
+.headerdashboard {
+  display: flex;
+  padding: 6px 0px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 99px;
+
+  color: #000;
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+  /* 150% */
+}
+
+.headeraction {
+  display: flex;
+  height: 42px;
+  padding: 12px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  border-radius: 99px;
+  border: 1px solid rgba(34, 118, 103, 0.20);
+  background: var(--primary-eaf-6-f-6, #EAF6F6);
+}
+
+.headeractionbar {
+  background: #FFF;
+  width: 1px;
+  height: 16px;
+}
+
+.headerdashboardcontent {
+  display: flex;
+  flex-direction: row;
+  gap: 17px;
 }

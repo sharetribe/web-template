@@ -1,0 +1,58 @@
+@import '../../styles/customMediaQueries.css';
+
+.sectionbody {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+    padding-bottom: 120px;
+}
+
+.sectiontitle {
+    color: var(--primary-1-b-242-d, #1B242D);
+    font-family: Clash Display;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+}
+
+.sectioncontent {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+    align-self: stretch;
+}
+
+.tipsitem {
+    display: flex;
+    width: 255px;
+    padding: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    align-self: stretch;
+
+    border-radius: 12px;
+    background: var(--primary-eaf-6-f-6, #EAF6F6);
+}
+
+.tipstitle {
+    color: var(--primary-1-b-242-d, #1B242D);
+    font-family: Clash Display;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.tipsdescription {
+    color: var(--primary-1-b-242-d, #1B242D);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+    opacity: 0.7;
+    align-self: stretch;
+}

@@ -4,7 +4,6 @@
 }
 
 .topbar {
-  position: sticky;
   top: 0;
   z-index: var(--zIndexTopbar);
 }

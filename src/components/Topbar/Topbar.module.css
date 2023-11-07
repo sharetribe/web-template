@@ -130,9 +130,10 @@
 
 .desktop {
   display: none;
-
   @media (--viewportLarge) {
-    display: block;
+    display: flex;
+    width: 100%;
+    justify-content: center;
   }
 }
 
