@@ -15,19 +15,22 @@ import {
 
 import css from './SocialMediaLink.module.css';
 
-const ICON_CONF = {
-  facebook: facebookIcon,
-  instagram: instagramIcon,
-  linkedin: linkedinIcon,
-  pinterest: pinterestIcon,
-  tiktok: tiktokIcon,
-  twitter: twitterIcon,
-  youtube: youtubeIcon,
+const PLATFORM_CONF = {
+  facebook: { icon: facebookIcon, name: 'Facebook' },
+  instagram: { icon: instagramIcon, name: 'Instagram' },
+  linkedin: { icon: linkedinIcon, name: 'LinkedIn' },
+  pinterest: { icon: pinterestIcon, name: 'Pinterest' },
+  tiktok: { icon: tiktokIcon, name: 'TikTok' },
+  twitter: { icon: twitterIcon, name: 'X' },
+  youtube: { icon: youtubeIcon, name: 'YouTube' },
 };
 
 const getIconConf = platform => {
-  const icon = ICON_CONF[platform] || null;
+  const icon = PLATFORM_CONF[platform]?.icon || null;
   return icon;
+};
+const getIconTitle = platform => {
+  return PLATFORM_CONF[platform]?.name || platform;
 };
 
 export const supportedPlatforms = [
@@ -41,16 +44,16 @@ export const supportedPlatforms = [
 ];
 
 export const SocialMediaLink = React.forwardRef((props, ref) => {
-  const Icon = getIconConf(props.children);
+  const Icon = getIconConf(props.platform);
 
-  const { className, rootClassName, href, title, children } = props;
+  const { className, rootClassName, href, platform } = props;
   const classes = classNames(rootClassName || css.link, className);
-  const titleMaybe = title ? { title } : {};
-  const iconOrChildren = Icon ? <Icon /> : children;
-  const linkProps = { className: classes, href, children: iconOrChildren, ...titleMaybe };
+  const titleMaybe = Icon ? { title: getIconTitle(platform) } : {};
+  const children = Icon ? <Icon /> : platform;
+  const linkProps = { className: classes, href, children, ...titleMaybe };
 
   // Markdown parser (rehype-sanitize) might return undefined href
-  if (!href || !children) {
+  if (!href || !platform) {
     return null;
   }
 
@@ -69,6 +72,6 @@ SocialMediaLink.propTypes = {
   title: string,
   rootClassName: string,
   className: string,
-  children: node.isRequired,
+  platform: node.isRequired,
   href: string.isRequired,
 };

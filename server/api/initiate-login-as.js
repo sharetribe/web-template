@@ -2,8 +2,7 @@ const crypto = require('crypto');
 
 const CLIENT_ID = process.env.REACT_APP_SHARETRIBE_SDK_CLIENT_ID;
 const ROOT_URL = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
-const CONSOLE_URL =
-  process.env.SERVER_SHARETRIBE_CONSOLE_URL || 'https://flex-console.sharetribe.com';
+const CONSOLE_URL = process.env.SERVER_SHARETRIBE_CONSOLE_URL || 'https://console.sharetribe.com';
 const USING_SSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';
 
 // redirect_uri param used when initiating a login as authentication flow and
@@ -29,7 +28,7 @@ const urlifyBase64 = base64Str =>
 // into their marketplace as a user of the marketplace.
 //
 // The authorization code is requested from Console and it is used to request a
-// token from the Flex Auth API.
+// token from the Sharetribe Auth API.
 //
 // This endpoint will return a 302 to Console which requests the authorization
 // code. Console returns a 302 with the code to the `redirect_uri` that is

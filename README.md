@@ -2,9 +2,9 @@
 
 [![CircleCI](https://circleci.com/gh/sharetribe/web-template.svg?style=svg)](https://circleci.com/gh/sharetribe/web-template)
 
-This is a template web application for a Sharetribe Flex marketplaces. You could create your own
-unique marketplace web app by cloning this repository and then extending and customizing it to your
-needs. This template is bootstrapped with
+This is a template web application for Sharetribe marketplaces. You could create your own unique
+marketplace web app by cloning this repository and then extending and customizing it to your needs.
+This template is bootstrapped with
 [create-react-app](https://github.com/facebookincubator/create-react-app) with some additions,
 namely server side rendering, code-splitting, and a custom CSS setup.
 
@@ -16,10 +16,7 @@ namely server side rendering, code-splitting, and a custom CSS setup.
 > - [FTW-product](https://github.com/sharetribe/ftw-hourly)
 >
 > Read more from
-> [Flex Docs preview version](https://www.sharetribe.com/docs/ftw/sharetribe-web-template/)
->
-> _Note: The search does not work on the preview version of the Flex Docs. It links to live
-> documentation._
+> [Sharetribe Developer Docs](https://www.sharetribe.com/docs/ftw/sharetribe-web-template/)
 
 ## Quick start
 
@@ -38,25 +35,25 @@ yarn run dev                                          # start the dev server, th
 
 You can also follow along the
 [Getting started with Sharetribe Web Template](https://www.sharetribe.com/docs/introduction/getting-started-with-web-template/)
-tutorial in the [Flex Docs website](https://www.sharetribe.com/docs/).
+tutorial in the [Sharetribe Developer Docs](https://www.sharetribe.com/docs/).
 
 For more information of the configuration, see the
 [Environment configuration variables](https://www.sharetribe.com/docs/ftw/ftw-env/) reference in
-Flex Docs.
+Sharetribe Developer Docs.
 
 ### For Windows users
 
 We strongly recommend installing
 [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/about), if you are
 developing on Windows. These templates are made for Unix-like web services which is the most common
-environment type on host-services for web apps. Also, Flex Docs uses Unix-like commands in articles
-instead of DOS commands.
+environment type on host-services for web apps. Also, the Developer Docs use Unix-like commands in
+articles instead of DOS commands.
 
 ## Getting started with your own customization
 
-If you want to build your own Flex marketplace by customizing the template application, see the
-[How to Customize the Template](https://www.sharetribe.com/docs/ftw/how-to-customize-ftw/) guide in
-Flex Docs.
+If you want to build your own Sharetribe marketplace by customizing the template application, see
+the [How to Customize the Template](https://www.sharetribe.com/docs/ftw/how-to-customize-ftw/) guide
+in Developer Docs.
 
 ## Deploying to Heroku
 
@@ -65,18 +62,18 @@ Github repository to Heroku will make manual deploys easier.
 
 See the
 [How to deploy this template to production](https://www.sharetribe.com/docs/ftw/how-to-deploy-ftw-to-production/)
-guide in Flex Docs for more information.
+guide in Developer Docs for more information.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ## Documentation
 
-See the Flex Docs site: [sharetribe.com/docs/](https://www.sharetribe.com/docs/)
+See the Sharetribe Developer Docs: [sharetribe.com/docs/](https://www.sharetribe.com/docs/)
 
-## Get help – join Sharetribe Flex Developer Slack channel
+## Get help – join Sharetribe Developer Slack channel
 
-If you have any questions about development, the best place to ask them is the Flex Developer Slack
-channel at https://www.sharetribe.com/flex-slack
+If you have any questions about development, the best place to ask them is the Developer Slack
+channel at https://www.sharetribe.com/dev-slack
 
 ## License
 

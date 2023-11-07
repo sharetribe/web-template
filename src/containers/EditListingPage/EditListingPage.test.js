@@ -66,6 +66,7 @@ const listingTypesPurchase = [
       alias: 'default-purchase/release-1',
     },
     unitType: 'item',
+    stockType: 'multipleItems',
   },
 ];
 

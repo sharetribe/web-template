@@ -213,17 +213,6 @@ exports[`ManageListingCard matches snapshot (purchase) 1`] = `
           ManageListingCard.editListing
         </span>
       </a>
-      <span
-        class="manageLinksSeparator"
-      >
-         • 
-      </span>
-      <a
-        class="manageLink"
-        href="/l/listing1-title/listing1/edit/pricing-and-stock"
-      >
-        ManageListingCard.setPriceAndStock
-      </a>
     </div>
   </div>
 </div>

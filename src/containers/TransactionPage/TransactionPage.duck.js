@@ -453,6 +453,29 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
     });
 };
 
+const delay = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+const refreshTx = (sdk, txId) => sdk.transactions.show({ id: txId }, { expand: true });
+const refreshTransactionEntity = (sdk, txId, dispatch) => {
+  delay(3000)
+    .then(() => refreshTx(sdk, txId))
+    .then(response => {
+      dispatch(addMarketplaceEntities(response));
+      const lastTransition = response?.data?.data?.attributes?.lastTransition;
+      // We'll make another attempt if mark-received-from-purchased from default-purchase process is still the latest.
+      if (lastTransition === 'transition/mark-received-from-purchased') {
+        return delay(8000)
+          .then(() => refreshTx(sdk, txId))
+          .then(response => {
+            dispatch(addMarketplaceEntities(response));
+          });
+      }
+    })
+    .catch(e => {
+      // refresh failed, but we don't act upon it.
+      console.log('error', e);
+    });
+};
+
 export const makeTransition = (txId, transitionName, params) => (dispatch, getState, sdk) => {
   if (transitionInProgress(getState())) {
     return Promise.reject(new Error('Transition already in progress'));
@@ -468,13 +491,9 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
 
       // There could be automatic transitions after this transition
       // For example mark-received-from-purchased > auto-complete.
-      // Here, we make one delayed update to tx.
+      // Here, we make 1-2 delayed updates for the tx entity.
       // This way "leave a review" link should show up for the customer.
-      window.setTimeout(() => {
-        sdk.transactions.show({ id: txId }, { expand: true }).then(response => {
-          dispatch(addMarketplaceEntities(response));
-        });
-      }, 3000);
+      refreshTransactionEntity(sdk, txId, dispatch);
 
       return response;
     })

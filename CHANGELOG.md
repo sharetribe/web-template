@@ -14,6 +14,29 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] TransactionPage.duck.js: add another delayed refresh call for tx after transition.
+  [#265](https://github.com/sharetribe/web-template/pull/265)
+- [change] ListingPage: always render multi-enum sections.
+  [#264](https://github.com/sharetribe/web-template/pull/264)
+- [add] SectionFooter: add title attributes to social media icons.
+  [#261](https://github.com/sharetribe/web-template/pull/261)
+- [add] PageBuilder: add backgroundImage overlay to shade the image darker.
+  [#262](https://github.com/sharetribe/web-template/pull/262)
+- [fix] they keys of built-in filters could have clashed with listing field keys.
+  [#260](https://github.com/sharetribe/web-template/pull/260)
+- [fix] Use the correct translation asset in email templates.
+  [#259](https://github.com/sharetribe/web-template/pull/259)
+- [fix] When stockType is oneItem: don't show shipping fee for additional items.
+  [#258](https://github.com/sharetribe/web-template/pull/258)
+- [fix] configHelpers: undefined enumOptions was not handled properly.
+  [#257](https://github.com/sharetribe/web-template/pull/257)
+
+## [v3.4.0] 2023-10-23
+
+- [change] Update Console URL from https://flex-console.sharetribe.com to
+  https://console.sharetribe.com [#249](https://github.com/sharetribe/web-template/pull/249)
+- [change] Remove Flex branding from code comments.
+  [#248](https://github.com/sharetribe/web-template/pull/248)
 - [change] PageBuilder: make sectionId and blockId optional.
   [#254](https://github.com/sharetribe/web-template/pull/254)
 - [fix] PaginationLinks: fix pagination limit handling.
@@ -24,6 +47,8 @@ way to update this template, but currently, we follow a pattern:
   [#244](https://github.com/sharetribe/web-template/pull/244)
 - [fix] Map integration is mandatory, but let's not allow error loops if not available.
   [#250](https://github.com/sharetribe/web-template/pull/250)
+
+  [v3.4.0]: https://github.com/sharetribe/web-template/compare/v3.3.0...v3.4.0
 
 ## [v3.3.0] 2023-10-17
 

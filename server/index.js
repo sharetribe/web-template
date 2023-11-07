@@ -149,7 +149,7 @@ app.get('/site.webmanifest', webmanifestResourceRoute);
 
 // These .well-known/* endpoints will be enabled if you are using this template as OIDC proxy
 // https://www.sharetribe.com/docs/cookbook-social-logins-and-sso/setup-open-id-connect-proxy/
-// We need to handle these endpoints separately so that they are accessible by Flex
+// We need to handle these endpoints separately so that they are accessible by Sharetribe backend
 // even if you have enabled basic authentication e.g. in staging environment.
 app.use('/.well-known', wellKnownRouter);
 
