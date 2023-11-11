@@ -1,0 +1,110 @@
+.root {
+  width: 1110px;
+  height: 442px;
+  border-radius: 20px;
+  background: var(--primary-1-b-242-d, #1B242D);
+  position: relative;
+  margin-bottom: 60px;
+}
+
+.backgroundImage {
+  position: absolute;
+  top: 0;
+  left: 300px;
+}
+
+.subscribeBox {
+  display: flex;
+  width: 468px;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 40px;
+  flex-shrink: 0;
+  padding: 35px 0 35px 35px;
+}
+.iconBox {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1 0 0;
+}
+.iconEnvelope {
+  color: #227667;
+  font-size: 40px;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  flex: 1 0 0;
+  align-self: stretch;
+  margin-top: 60px;
+}
+.inputEmail {
+  width: 351px;
+  height: 56px;
+  position: relative;
+  display: flex;
+  padding: 1px;
+  border: 1px solid rgba(234, 246, 246, 0.50);
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  border-radius: 99px;
+}
+.inputPlaceholder {
+  position: absolute;
+  left: 21px;
+  top: 17px;
+  color: rgba(234, 246, 246, 0.50);
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 200% */
+}
+.btnSubscribe {
+  width: 116px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 99px;
+  background: var(--extended-06-c-167, #06C167);
+  color: var(--primary-1-b-242-d, #1B242D);
+  text-align: center;
+  /* Paragraph/P12 - Medium */
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 200% */
+  padding: 14px 28px;
+}
+.firstLine {
+  color: var(--primary-ffffff, #FFF);
+/* H3 */
+font-family: Clash Display;
+font-size: 35px;
+font-style: normal;
+font-weight: 600;
+line-height: 125%; /* 43.75px */
+}
+.secondLine {
+  color: var(--extended-97-eae-5, #97EAE5);
+
+/* H3 */
+font-family: Clash Display;
+font-size: 35px;
+font-style: normal;
+font-weight: 600;
+line-height: 125%;
+}
+.rightImage {
+  position: absolute;
+  top: 0;
+  right: 0;
+}

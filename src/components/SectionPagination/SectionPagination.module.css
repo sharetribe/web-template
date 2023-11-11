@@ -1,0 +1,46 @@
+.root {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.pagebutton {
+  display: flex;
+  height: 50px;
+  padding: 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: var(--primary-1-b-242-d, #1B242D);
+  text-align: center;
+  /* P16 - Standard */
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.60);
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 22.4px */
+  opacity: 0.7;
+  min-width: 50px;
+}
+.pagebutton_active {
+  display: flex;
+  height: 50px;
+  min-width: 50px;
+  padding: 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  /* P16 - Standard */
+  border-radius: 4px;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 22.4px */
+  opacity: 0.7;
+  background: var(--primary-227667, #227667) !important;
+  color: var(--primary-ffffff, #FFF) !important;
+}

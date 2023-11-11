@@ -1,0 +1,108 @@
+.root {
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 120px;
+}
+
+.content {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 60px;
+  width: 1110px;
+}
+
+.main_content {
+  display: flex;
+  align-items: flex-start;
+  gap: 120px;
+}
+
+.sidebar {
+  display: flex;
+  width: 255px;
+  padding: 3px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  border-radius: 12px;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 40px;
+}
+
+.help_content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 730px;
+  gap: 10px;
+}
+
+h3 {
+  color: #000;
+  /* H3 */
+  font-family: Clash Display;
+  font-size: 35px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 125%; /* 43.75px */
+  align-self: stretch;
+  margin: 0;
+  padding: 0;
+}
+.help_detail {
+  align-self: stretch;
+  color: #000;
+
+  /* P16 - Standard */
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 22.4px */
+}
+
+.help_related_container {
+  display: flex;
+  width: 731px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+h5 {
+  color: var(--primary-1-b-242-d, #1b242d);
+
+  /* H5 */
+  font-family: Clash Display;
+  font-size: 25px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%; /* 30px */
+  margin: 0;
+  padding: 0;
+}
+
+.help_related_index {
+  display: flex;
+  padding: 12px 20px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid #eaf6f6;
+  background: rgba(234, 246, 246, 0.3);
+}
+
+.fontIcon {
+  font-size: 9px;
+  color: #06C167;
+}

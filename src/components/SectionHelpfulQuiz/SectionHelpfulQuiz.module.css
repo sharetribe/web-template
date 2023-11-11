@@ -1,0 +1,47 @@
+.root {
+  display: flex;
+  min-width: 200px;
+  width: 100%;
+  padding: 12px 20px;
+  align-items: center;
+  border-radius: 10px;
+  background: var(--primary-eaf-6-f-6, #eaf6f6);
+}
+
+.bodyText {
+  color: var(--primary-1-b-242-d, #1b242d);
+
+  /* P16 - Standard */
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 22.4px */
+  margin-right: 15px;
+}
+
+.buttonYN {
+  display: flex;
+  padding: 7px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--primary-ffffff, #fff);
+  color: var(--primary-1-b-242-d, #1b242d);
+  text-align: right;
+
+  /* P12 */
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 16.8px */
+  margin-right: 5px;
+}
+
+.fontIcon {
+  font-size: 18px;
+  color: #06c167;
+  margin-right: 15px;
+}

@@ -21,25 +21,25 @@ import SectionLiveDemo from '../../components/SectionLiveDemo/SectionLiveDemo';
 import css from './LandingPage.module.css';
 
 export const LandingPageComponent = props => {
-  
+
   return (
     <Page title={"Home"} scrollingDisabled={false}>
-        <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
-          <div className={css.root}>
-            <div className={css.content}>
-              <SectionCaribbean />
-              <SectionTeamExperience />
-              <SectionCustomerService />
-              <SectionFeaturedExperience />
-              <SectionTips />
-              <SectionCustomExperience />
-              <SectionBevyExperience />
-              <SectionYearExperience />
-              <SectionLiveDemo />
-            </div>
+      <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
+        <div className={css.root}>
+          <div className={css.content}>
+            <SectionCaribbean />
+            <SectionTeamExperience />
+            <SectionCustomerService />
+            <SectionFeaturedExperience />
+            <SectionTips />
+            <SectionCustomExperience />
+            <SectionBevyExperience />
+            <SectionYearExperience />
+            <SectionLiveDemo />
           </div>
-        </LayoutSingleColumn>
-      </Page>
+        </div>
+      </LayoutSingleColumn>
+    </Page>
   );
 };
 

@@ -1,0 +1,30 @@
+.root {
+  display: flex;
+  padding: 15px 20px;
+  align-items: center;
+  align-self: stretch;
+  background: var(--primary-ffffff, #fff);
+  width: 100%;
+}
+
+.root_active {
+  border-left: 2px solid var(--extended-06-c-167, #06c167);
+  display: flex;
+  padding: 15px 20px;
+  align-items: center;
+  align-self: stretch;
+  background: var(--primary-ffffff, #fff);
+  width: 100%;
+}
+
+.text {
+  flex: 1 0 0;
+  color: #000;
+
+  /* P14 */
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 19.6px */
+}

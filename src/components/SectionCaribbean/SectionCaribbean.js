@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import css from './SectionCaribbean.module.css';
 
-const SectionCaribbean = () => { 
+const SectionCaribbean = () => {
     return (
         <div className={css.sectionbody}>
             <div className={css.sectiondescription}>

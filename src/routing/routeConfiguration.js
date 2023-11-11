@@ -35,6 +35,17 @@ const SearchPageWithGrid = loadable(() => import(/* webpackChunkName: "SearchPag
 const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayoutPage" */ '../containers/StripePayoutPage/StripePayoutPage'));
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ '../containers/TermsOfServicePage/TermsOfServicePage'));
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
+const HelpCenterPage = loadable(() => import(/* webpackChunkName: "HelpCenterPage" */ '../containers/HelpCenterPage/HelpCenterPage'));
+const BlogPage = loadable(() => import(/* webpackChunkName: "BlogPage" */ '../containers/BlogPage/BlogPage'));
+const BlogArticlePage = loadable(() => import(/* webpackChunkName: "BlogArticlePage" */ '../containers/BlogArticlePage/BlogArticlePage'));
+const BlogArticleSinglePage = loadable(() => import(/* webpackChunkName: "BlogArticleSinglePage" */ '../containers/BlogArticleSinglePage/BlogArticleSinglePage'));
+const HelpDetailPage = loadable(() => import(/* webpackChunkName: "HelpDetailPage" */ '../containers/HelpDetailPage/HelpDetailPage'));
+const BookingPage = loadable(() => import(/* webpackChunkName: "BookingPage" */ '../containers/BookingPage/BookingPage'));
+const BecomeHostPage = loadable(() => import(/* webpackChunkName: "BecomeHostPage" */ '../containers/BecomeHostPage/BecomeHostPage'));
+const PolicyPage = loadable(() => import(/* webpackChunkName: "PolicyPage" */ '../containers/PolicyPage/PolicyPage'));
+const CancelPolicyPage = loadable(() => import(/* webpackChunkName: "CancelPolicyPage" */ '../containers/PolicyPage/CancelPolicyPage'));
+const RefundPolicyPage = loadable(() => import(/* webpackChunkName: "RefundPolicyPage" */ '../containers/PolicyPage/RefundPolicyPage'));
+const FaqPage = loadable(() => import(/* webpackChunkName: "FaqPage" */ '../containers/FaqPage/FaqPage'));
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -61,19 +72,67 @@ const RedirectToLandingPage = () => <NamedRedirect name="LandingPage" />;
 // Our routes are exact by default.
 // See behaviour from Routes.js where Route is created.
 const routeConfiguration = (layoutConfig) => {
-  const SearchPage = layoutConfig.searchPage?.variantType === 'map' 
-    ? SearchPageWithMap 
+  const SearchPage = layoutConfig.searchPage?.variantType === 'map'
+    ? SearchPageWithMap
     : SearchPageWithGrid;
-  const ListingPage = layoutConfig.listingPage?.variantType === 'carousel' 
-    ? ListingPageCarousel 
+  const ListingPage = layoutConfig.listingPage?.variantType === 'carousel'
+    ? ListingPageCarousel
     : ListingPageCoverPhoto;
-  
+
   return [
     {
       path: '/',
       name: 'LandingPage',
       component: LandingPage,
       loadData: pageDataLoadingAPI.LandingPage.loadData,
+    },
+    {
+      path: '/helpcenter',
+      name: 'HelpCenterPage',
+      component: HelpCenterPage,
+      loadData: pageDataLoadingAPI.HelpCenterPage.loadData,
+    },
+    {
+      path: '/helpcenter/detail',
+      name: 'HelpDetailPage',
+      component: HelpDetailPage,
+      loadData: pageDataLoadingAPI.HelpDetailPage.loadData,
+    },
+    {
+      path: '/booking',
+      name: 'BookingPage',
+      component: BookingPage,
+      loadData: pageDataLoadingAPI.BookingPage.loadData,
+    },
+    {
+      path: '/become',
+      name: 'BecomeHostPage',
+      component: BecomeHostPage,
+      loadData: pageDataLoadingAPI.BecomeHostPage.loadData,
+    },
+    {
+      path: '/policy',
+      name: 'PolicyPage',
+      component: PolicyPage,
+      loadData: pageDataLoadingAPI.PolicyPage.loadData,
+    },
+    {
+      path: '/policy/cancel',
+      name: 'CancelPolicyPage',
+      component: CancelPolicyPage,
+      loadData: pageDataLoadingAPI.PolicyPage.loadData,
+    },
+    {
+      path: '/policy/refund',
+      name: 'RefundPolicyPage',
+      component: RefundPolicyPage,
+      loadData: pageDataLoadingAPI.PolicyPage.loadData,
+    },
+    {
+      path: '/faq',
+      name: 'FaqPage',
+      component: FaqPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
     },
     {
       path: '/p/:pageId',
@@ -367,6 +426,21 @@ const routeConfiguration = (layoutConfig) => {
       path: '/preview',
       name: 'PreviewResolverPage',
       component: PreviewResolverPage ,
+    },
+    {
+      path: '/blog',
+      name: 'BlogPage',
+      component: BlogPage,
+    },
+    {
+      path: '/blog/articles',
+      name: 'BlogArticlePage',
+      component: BlogArticlePage,
+    },
+    {
+      path: '/blog/article',
+      name: 'BlogArticleSinglePage',
+      component: BlogArticleSinglePage,
     },
   ];
 };

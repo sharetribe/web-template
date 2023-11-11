@@ -3,6 +3,7 @@
  */
 import { loadData as AuthenticationPageLoader } from './AuthenticationPage/AuthenticationPage.duck';
 import { loadData as LandingPageLoader } from './LandingPage/LandingPage.duck';
+import { loadData as HelpCenterPageLoader } from './HelpCenterPage/HelpCenterPage.duck';
 import { setInitialValues as CheckoutPageInitialValues } from './CheckoutPage/CheckoutPage.duck';
 import { loadData as CMSPageLoader } from './CMSPage/CMSPage.duck';
 import { loadData as ContactDetailsPageLoader } from './ContactDetailsPage/ContactDetailsPage.duck';
@@ -17,6 +18,14 @@ import { loadData as ProfilePageLoader } from './ProfilePage/ProfilePage.duck';
 import { loadData as SearchPageLoader } from './SearchPage/SearchPage.duck';
 import { loadData as StripePayoutPageLoader } from './StripePayoutPage/StripePayoutPage.duck';
 import { loadData as TermsOfServicePageLoader } from './TermsOfServicePage/TermsOfServicePage.duck';
+import { loadData as BlogPageLoader } from './BlogPage/BlogPage.duck';
+import { loadData as BlogArticlePageLoader } from './BlogArticlePage/BlogArticlePage.duck';
+import { loadData as BlogArticleSinglePageLoader } from './BlogArticleSinglePage/BlogArticleSinglePage.duck';
+import { loadData as HelpDetailPageLoader } from './HelpDetailPage/HelpDetailPage.duck';
+import { loadData as BookingPageLoader } from './BookingPage/BookingPage.duck';
+import { loadData as BecomeHostPageLoader } from './BecomeHostPage/BecomeHostPage.duck';
+import { loadData as PolicyPageLoader } from './PolicyPage/PolicyPage.duck';
+import { loadData as FaqPageLoader } from './FaqPage/FaqPage.duck';
 import {
   loadData as TransactionPageLoader,
   setInitialValues as TransactionPageInitialValues,
@@ -29,6 +38,33 @@ const getPageDataLoadingAPI = () => {
     },
     LandingPage: {
       loadData: LandingPageLoader,
+    },
+    HelpCenterPage: {
+      loadData: HelpCenterPageLoader,
+    },
+    HelpDetailPage: {
+      loadData: HelpDetailPageLoader,
+    },
+    BookingPage: {
+      loadData: BookingPageLoader,
+    },
+    BecomeHostPage: {
+      loadData: BecomeHostPageLoader,
+    },
+    PolicyPage: {
+      loadData: PolicyPageLoader,
+    },
+    FaqPage: {
+      loadData: FaqPageLoader,
+    },
+    TransactionPage: {
+      loadData: BlogPageLoader
+    },
+    TransactionPage: {
+      loadData: BlogArticlePageLoader
+    },
+    TransactionPage: {
+      loadData: BlogArticleSinglePageLoader
     },
     CheckoutPage: {
       setInitialValues: CheckoutPageInitialValues,

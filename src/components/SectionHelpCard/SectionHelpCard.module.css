@@ -1,0 +1,67 @@
+.root {
+  display: flex;
+  width: 350px;
+  padding: 30px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--primary-eaf-6-f-6, #eaf6f6);
+}
+
+.content {
+  align-self: stretch;
+
+  color: var(--primary-1-b-242-d, #1b242d);
+
+  /* P16 - Standard */
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 22.4px */
+}
+
+.buttonPrimary {
+  display: flex;
+  padding: 7px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--primary-227667, #227667);
+  color: var(--primary-ffffff, #fff);
+  text-align: right;
+
+  /* P12 */
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 16.8px */
+}
+
+.buttonSecondary {
+  display: flex;
+  padding: 7px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--primary-ffffff, #fff);
+  color: var(--primary-1-b-242-d, #1b242d);
+  text-align: right;
+
+  /* P12 */
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 16.8px */
+}
+
+.fontIcon {
+  font-size: 9px;
+  color: #06C167;
+}

@@ -1,0 +1,76 @@
+.root {
+  display: flex;
+  padding: 60px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  align-self: stretch;
+  border-radius: 20px;
+  background: var(--primary-1-b-242-d, #1b242d);
+  position: relative;
+}
+
+.section_l {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  flex: 1 0 0;
+}
+
+.section_r {
+}
+
+.fontIcon {
+  width: 28.125px;
+  height: 25px;
+}
+.buttonSurvey {
+  display: flex;
+  height: 53px;
+  padding: 15px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 7px;
+  background: var(--extended-06-c-167, #06c167);
+  color: var(--primary-1-b-242-d, #1b242d);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+}
+.highlight {
+  color: var(--extended-97-eae-5, #97eae5);
+
+  /* H2 */
+  font-family: Clash Display;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%; /* 48px */
+}
+.description {
+  color: var(--primary-ffffff, #fff);
+
+  /* H2 */
+  font-family: Clash Display;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%;
+}
+
+.backR {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.backB {
+  position: absolute;
+  bottom: 0;
+  right: 140px;
+}

@@ -9,15 +9,13 @@ import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { FormattedMessage, useIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { createResourceLocatorString } from '../../util/routes';
-import { isMainSearchTypeKeywords } from '../../util/search';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
+import Image404 from '../../assets/images/404.png';
 
-import { Heading, Page, LayoutSingleColumn } from '../../components';
+import { Heading, Page, LayoutSingleColumn, Button } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
-
-import SearchForm from './SearchForm/SearchForm';
 
 import css from './NotFoundPage.module.css';
 
@@ -36,7 +34,6 @@ export class NotFoundPageComponent extends Component {
       history,
       routeConfiguration,
       marketplaceName,
-      isKeywordSearch,
       intl,
       scrollingDisabled,
     } = this.props;
@@ -46,30 +43,25 @@ export class NotFoundPageComponent extends Component {
     });
 
     const handleSearchSubmit = values => {
-      const { keywords, location } = values;
-      const { search, selectedPlace } = location || {};
       const { origin, bounds } = selectedPlace || {};
       const searchParams = keywords ? { keywords } : { address: search, origin, bounds };
       history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
     };
 
     return (
-      <Page title={title} scrollingDisabled={scrollingDisabled}>
+      <Page title={title} scrollingDisabled={scrollingDisabled} className={css.page}>
         <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
           <div className={css.root}>
             <div className={css.content}>
-              <div className={css.number}>404</div>
-              <Heading as="h1" rootClassName={css.heading}>
-                <FormattedMessage id="NotFoundPage.heading" />
-              </Heading>
-              <p className={css.description}>
-                <FormattedMessage id="NotFoundPage.description" values={{ marketplaceName }} />
-              </p>
-              <SearchForm
-                className={css.searchForm}
-                isKeywordSearch={isKeywordSearch}
-                onSubmit={handleSearchSubmit}
-              />
+              <div className={css.image}>
+                <img src={Image404} />
+              </div>
+              <div className={css.description}>
+                <p>
+                  Sorry! This page doesn't seem to be there.
+                </p>
+                <div className={css.button}>Explore Experiences</div>
+              </div>
             </div>
           </div>
         </LayoutSingleColumn>
@@ -84,8 +76,6 @@ NotFoundPageComponent.defaultProps = {
 
 NotFoundPageComponent.propTypes = {
   scrollingDisabled: bool.isRequired,
-  marketplaceName: string.isRequired,
-  isKeywordSearch: bool.isRequired,
 
   // context object from StaticRouter, injected by the withRouter wrapper
   staticContext: object,
@@ -112,7 +102,6 @@ const EnhancedNotFoundPage = props => {
     <NotFoundPageComponent
       routeConfiguration={routeConfiguration}
       marketplaceName={config.marketplaceName}
-      isKeywordSearch={isMainSearchTypeKeywords(config)}
       history={history}
       intl={intl}
       {...props}
