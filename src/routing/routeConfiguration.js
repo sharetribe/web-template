@@ -46,6 +46,7 @@ const PolicyPage = loadable(() => import(/* webpackChunkName: "PolicyPage" */ '.
 const CancelPolicyPage = loadable(() => import(/* webpackChunkName: "CancelPolicyPage" */ '../containers/PolicyPage/CancelPolicyPage'));
 const RefundPolicyPage = loadable(() => import(/* webpackChunkName: "RefundPolicyPage" */ '../containers/PolicyPage/RefundPolicyPage'));
 const FaqPage = loadable(() => import(/* webpackChunkName: "FaqPage" */ '../containers/FaqPage/FaqPage'));
+const ContactUsPage = loadable(() => import(/* webpackChunkName: "ContactUs" */ '../containers/ContactUsPage/ContactUsPage'));
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -441,6 +442,11 @@ const routeConfiguration = (layoutConfig) => {
       path: '/blog/article',
       name: 'BlogArticleSinglePage',
       component: BlogArticleSinglePage,
+    },
+    {
+      path: '/contactus',
+      name: 'ContactUsPage',
+      component: ContactUsPage,
     },
   ];
 };
