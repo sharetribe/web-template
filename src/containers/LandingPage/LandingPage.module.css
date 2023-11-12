@@ -9,7 +9,7 @@
 }
 
 .content {
-    width: 76.3vw;
+    width: 1100px;
 
     @media (--viewportMedium) {
         margin-top: 10vh;
