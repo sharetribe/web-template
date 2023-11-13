@@ -19,20 +19,7 @@ const SectionCaribbean = () => {
                 </div>
             </div>
             <div className={css.sectionimage}>
-                <div className={css.sectionimageitem1}></div>
-                <div className={css.sectionimageaction1}>
-                    <div className={css.actionitem}>Workshops</div>
-                    <div className={css.actionitem}>Social events</div>
-                    <div className={css.actionitem}>Networking events</div>
-                    <div className={css.actionitem}>Conferences</div>
-                </div>
-                <div className={css.sectionimageitem2}></div>
-                <div className={css.sectionimageaction2}>
-                    <div className={css.actionitem}>In-person</div>
-                    <div className={css.actionitem}>Venues</div>
-                    <div className={css.actionitem}>Retreats</div>
-                    <div className={css.actionitem}>Virtual</div>
-                </div>
+                <div className={css.sectionimageitem}></div>
             </div>
         </div>
     )
