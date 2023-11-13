@@ -2,7 +2,7 @@
 
 /* Desktop */
 .root {
-  width: 76.3vw;
+  width: 1100px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

@@ -21,7 +21,7 @@
     gap: 30px;
 
     @media (--viewportLarge) {
-        width: 30.9vw;
+        width: 445px;
     }
 }
 
@@ -33,7 +33,7 @@
     gap: 15px;
 
     @media (--viewportLarge) {
-        width: 30.9vw;
+        width: 445px;
     }
 }
 
@@ -101,27 +101,22 @@
     }
 }
 
-.sectionimageitem1 {
-    width: 275.112px;
-    height: 337.995px;
+.sectionimageitem {
+    width: 655px;
+    height: 395px;
     flex-shrink: 0;
     border-radius: 8.717px;
-    background: url(../../assets/images/home/image1.png), lightgray -27.716px 0px / 186.863% 100% no-repeat;
-}
+    background: url(../../assets/images/home/landing.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
 
-.sectionimageitem2 {
-    width: 268.234px;
-    height: 394px;
-    flex-shrink: 0;
-    border-radius: 13.075px;
-    background: url(../../assets/images/home/image2.png), lightgray 50% / cover no-repeat;
-}
+    @media (--viewportMobile) {
+        width: 100%;
+    }
 
-.sectionimageaction1 {
-    width: 149.058px;
-    height: 245.814px;
-    flex-shrink: 0;
-    backdrop-filter: blur(5.448009014129639px);
+    @media (--viewportTabletDown) {
+        width: 100%;
+    }
 }
 
 .actionitem {
