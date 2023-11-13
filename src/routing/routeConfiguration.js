@@ -9,6 +9,7 @@ import PreviewResolverPage from '../containers/PreviewResolverPage/PreviewResolv
 // Otherwise, components will import form container eventually and
 // at that point css bundling / imports will happen in wrong order.
 import { NamedRedirect } from '../components';
+import ListingDetailPage from '../containers/ListingDetailPage/ListingDetailPage';
 
 const pageDataLoadingAPI = getPageDataLoadingAPI();
 
@@ -47,6 +48,9 @@ const CancelPolicyPage = loadable(() => import(/* webpackChunkName: "CancelPolic
 const RefundPolicyPage = loadable(() => import(/* webpackChunkName: "RefundPolicyPage" */ '../containers/PolicyPage/RefundPolicyPage'));
 const FaqPage = loadable(() => import(/* webpackChunkName: "FaqPage" */ '../containers/FaqPage/FaqPage'));
 const ContactUsPage = loadable(() => import(/* webpackChunkName: "ContactUs" */ '../containers/ContactUsPage/ContactUsPage'));
+const MarketPlacePage1 = loadable(() => import(/* webpackChunkName: "MarketPlace version 1" */ '../containers/MarketPlacePage1/MarketPlacePage1'));
+const MarketPlacePage2 = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/MarketPlacePage2/MarketPlacePage2'));
+const ListingDetaiPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/ListingDetailPage/ListingDetailPage'));
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -81,60 +85,6 @@ const routeConfiguration = (layoutConfig) => {
     : ListingPageCoverPhoto;
 
   return [
-    {
-      path: '/',
-      name: 'LandingPage',
-      component: LandingPage,
-      loadData: pageDataLoadingAPI.LandingPage.loadData,
-    },
-    {
-      path: '/helpcenter',
-      name: 'HelpCenterPage',
-      component: HelpCenterPage,
-      loadData: pageDataLoadingAPI.HelpCenterPage.loadData,
-    },
-    {
-      path: '/helpcenter/detail',
-      name: 'HelpDetailPage',
-      component: HelpDetailPage,
-      loadData: pageDataLoadingAPI.HelpDetailPage.loadData,
-    },
-    {
-      path: '/booking',
-      name: 'BookingPage',
-      component: BookingPage,
-      loadData: pageDataLoadingAPI.BookingPage.loadData,
-    },
-    {
-      path: '/become',
-      name: 'BecomeHostPage',
-      component: BecomeHostPage,
-      loadData: pageDataLoadingAPI.BecomeHostPage.loadData,
-    },
-    {
-      path: '/policy',
-      name: 'PolicyPage',
-      component: PolicyPage,
-      loadData: pageDataLoadingAPI.PolicyPage.loadData,
-    },
-    {
-      path: '/policy/cancel',
-      name: 'CancelPolicyPage',
-      component: CancelPolicyPage,
-      loadData: pageDataLoadingAPI.PolicyPage.loadData,
-    },
-    {
-      path: '/policy/refund',
-      name: 'RefundPolicyPage',
-      component: RefundPolicyPage,
-      loadData: pageDataLoadingAPI.PolicyPage.loadData,
-    },
-    {
-      path: '/faq',
-      name: 'FaqPage',
-      component: FaqPage,
-      loadData: pageDataLoadingAPI.FaqPage.loadData,
-    },
     {
       path: '/p/:pageId',
       name: 'CMSPage',
@@ -428,6 +378,13 @@ const routeConfiguration = (layoutConfig) => {
       name: 'PreviewResolverPage',
       component: PreviewResolverPage ,
     },
+    // Custom Routings
+    {
+      path: '/',
+      name: 'LandingPage',
+      component: LandingPage,
+      loadData: pageDataLoadingAPI.LandingPage.loadData,
+    },
     {
       path: '/blog',
       name: 'BlogPage',
@@ -448,6 +405,72 @@ const routeConfiguration = (layoutConfig) => {
       name: 'ContactUsPage',
       component: ContactUsPage,
     },
+    {
+      path: '/helpcenter',
+      name: 'HelpCenterPage',
+      component: HelpCenterPage,
+      loadData: pageDataLoadingAPI.HelpCenterPage.loadData,
+    },
+    {
+      path: '/helpcenter/detail',
+      name: 'HelpDetailPage',
+      component: HelpDetailPage,
+      loadData: pageDataLoadingAPI.HelpDetailPage.loadData,
+    },
+    {
+      path: '/booking',
+      name: 'BookingPage',
+      component: BookingPage,
+      loadData: pageDataLoadingAPI.BookingPage.loadData,
+    },
+    {
+      path: '/become',
+      name: 'BecomeHostPage',
+      component: BecomeHostPage,
+      loadData: pageDataLoadingAPI.BecomeHostPage.loadData,
+    },
+    {
+      path: '/policy',
+      name: 'PolicyPage',
+      component: PolicyPage,
+      loadData: pageDataLoadingAPI.PolicyPage.loadData,
+    },
+    {
+      path: '/policy/cancel',
+      name: 'CancelPolicyPage',
+      component: CancelPolicyPage,
+      loadData: pageDataLoadingAPI.PolicyPage.loadData,
+    },
+    {
+      path: '/policy/refund',
+      name: 'RefundPolicyPage',
+      component: RefundPolicyPage,
+      loadData: pageDataLoadingAPI.PolicyPage.loadData,
+    },
+    {
+      path: '/faq',
+      name: 'FaqPage',
+      component: FaqPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/marketplace1',
+      name: 'MarketPlacePage1',
+      component: MarketPlacePage1,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/marketplace2',
+      name: 'MarketPlacePage2',
+      component: MarketPlacePage2,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/listingdetail',
+      name: 'ListingDetailPage',
+      component: ListingDetailPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    }
   ];
 };
 

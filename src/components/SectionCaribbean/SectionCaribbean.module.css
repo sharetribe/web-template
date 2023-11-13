@@ -109,6 +109,14 @@
     background: url(../../assets/images/home/landing.svg);
     background-repeat: no-repeat;
     background-size: cover;
+
+    @media (--viewportMobile) {
+        width: 100%;
+    }
+
+    @media (--viewportTabletDown) {
+        width: 100%;
+    }
 }
 
 .actionitem {
