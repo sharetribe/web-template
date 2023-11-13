@@ -64,6 +64,10 @@ const FieldSelectListingType = props => {
       onListingTypeChange(selectedListingType);
     }
   };
+  const getListingTypeLabel = listingType => {
+    const listingTypeConfig = listingTypes.find(config => config.listingType === listingType);
+    return listingTypeConfig ? listingTypeConfig.label : listingType;
+  };
 
   return hasMultipleListingTypes && !hasExistingListingType ? (
     <>
@@ -97,7 +101,7 @@ const FieldSelectListingType = props => {
       <Heading as="h5" rootClassName={css.selectedLabel}>
         {intl.formatMessage({ id: 'EditListingDetailsForm.listingTypeLabel' })}
       </Heading>
-      <p className={css.selectedValue}>{formApi.getFieldState(name)?.value}</p>
+      <p className={css.selectedValue}>{getListingTypeLabel(formApi.getFieldState(name)?.value)}</p>
       <FieldHidden name={name} />
       <FieldHidden name="transactionProcessAlias" />
       <FieldHidden name="unitType" />
@@ -119,11 +123,11 @@ const AddListingFields = props => {
     const namespacedKey = scope === 'public' ? `pub_${key}` : `priv_${key}`;
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
-    const isTargetProcessAlias =
+    const isTargetListingType =
       includeForListingTypes == null || includeForListingTypes.includes(listingType);
     const isProviderScope = ['public', 'private'].includes(scope);
 
-    return isKnownSchemaType && isTargetProcessAlias && isProviderScope
+    return isKnownSchemaType && isTargetListingType && isProviderScope
       ? [
           ...pickedFields,
           <CustomExtendedDataField

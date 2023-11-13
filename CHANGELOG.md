@@ -14,6 +14,17 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] Add missing update to yarn.lock file.
+  [#272](https://github.com/sharetribe/web-template/pull/272)
+- [fix] Final Form: iOS 17.0.x initializes unreliably Object.assign. This is fixed in iOS 17.1, but
+  for the transition period, we decided to introduce a patch to remedy the situation.
+  [#271](https://github.com/sharetribe/web-template/pull/271)
+- [add] Update translation assets for French.
+  [#269](https://github.com/sharetribe/web-template/pull/269)
+- [add] Limit listing fields to specific listing types through Console.
+  [#268](https://github.com/sharetribe/web-template/pull/268)
+- [add] Update translation assets for French.
+  [#267](https://github.com/sharetribe/web-template/pull/267)
 - [fix] TransactionPage.duck.js: add another delayed refresh call for tx after transition.
   [#265](https://github.com/sharetribe/web-template/pull/265)
 - [change] ListingPage: always render multi-enum sections.
