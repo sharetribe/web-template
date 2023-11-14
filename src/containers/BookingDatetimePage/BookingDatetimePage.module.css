@@ -1,0 +1,363 @@
+.root {
+    flex-shrink: 0;
+    flex-grow: 1;
+    background: var(--primary-eaf-6-f-6, #EAF6F6);
+    backdrop-filter: blur(25px);
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    align-items: center;
+    gap: 90px;
+}
+
+.header {
+    padding-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1100px;
+}
+
+.headertab {
+    display: inline-flex;
+    padding: 3px;
+    align-items: flex-start;
+    gap: 2px;
+
+    border-radius: 99px;
+    background: var(--primary-ffffff, #FFF);
+}
+
+.datetime {
+    display: flex;
+    padding: 8px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    border-radius: 99px;
+    background: #DCEFEF;
+
+    color: #000;
+    text-align: center;
+    font-family: Poppins;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 140%;
+    /* 21px */
+}
+
+.payment {
+    display: flex;
+    padding: 8px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    border-radius: 99px;
+
+    color: #000;
+    text-align: center;
+    font-family: Poppins;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 140%;
+    /* 21px */
+}
+
+.gethelp {
+    color: var(--primary-1-b-242-d, #1B242D);
+    text-align: center;
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    /* 171.429% */
+
+    display: inline-flex;
+    height: 43px;
+    padding: 15px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+    border-radius: 99px;
+    background: var(--primary-ffffff, #FFF);
+
+    margin-right: 10px;
+}
+
+.sharequote {
+    display: inline-flex;
+    height: 43px;
+    padding: 15px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+
+    border-radius: 99px;
+    background: var(--primary-1-b-242-d, #1B242D);
+
+    color: var(--White, #FFF);
+    text-align: center;
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    /* 171.429% */
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 125px;
+    padding-bottom: 191px;
+}
+
+.leftcontent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 50px;
+}
+
+.lefttitle {
+    display: flex;
+    width: 445px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+
+    color: var(--primary-1-b-242-d, #1B242D);
+    font-family: Clash Display;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    /* 48px */
+}
+
+.subtitle {
+    color: var(--primary-1-b-242-d, #1B242D);
+    font-family: Poppins;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+}
+
+.leftform {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.formitemtext {
+    color: var(--primary-1-b-242-d, #1B242D);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 171.429% */
+}
+
+.formitemicon {
+    display: flex;
+    padding: 8px;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    border-radius: 99px;
+    background: var(--primary-eaf-6-f-6, #EAF6F6);
+}
+
+.formitem {
+    display: flex;
+    height: 53px;
+    padding: 8px 17px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+
+    border-radius: 7px;
+    border: 1px solid #D3EBEB;
+    background: var(--primary-ffffff, #FFF);
+
+    justify-content: space-between;
+}
+
+.continuebtn {
+    display: flex;
+    width: 445px;
+    height: 53px;
+    padding: 15px 30px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    border-radius: 7px;
+    background: var(--primary-227667, #227667);
+
+    color: var(--White, #FFF);
+    text-align: center;
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    /* 150% */
+}
+
+.rightcontent {
+    display: flex;
+    width: 540px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.bookingdetail {
+    display: flex;
+    padding: 30px;
+    align-items: center;
+    gap: 15px;
+    align-self: stretch;
+    border-radius: 12px;
+    background: #FFF;
+}
+
+.bookingdetailcontent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 15px;
+    flex: 1 0 0;
+}
+
+.bookingdetailtitle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 15px;
+    flex: 1 0 0;
+}
+
+.bookingdetailtags {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bookingdetailtag {
+    display: flex;
+    padding: 5px 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    border-radius: 3px;
+    border: 1px solid var(--primary-eaf-6-f-6, #EAF6F6);
+    background: var(--primary-eaf-6-f-6, #EAF6F6);
+    color: var(--primary-1-b-242-d, #1B242D);
+    text-align: center;
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    /* 200% */
+}
+
+.bookingdetailimage {
+    width: 83px;
+    height: 84px;
+    border-radius: 10px;
+    background: url(../../assets/images/bookingdetail/detail.png), lightgray 50%;
+}
+
+.bookingpersons {
+    display: flex;
+    padding: 30px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    align-self: stretch;
+
+    border-radius: 10px;
+    background: #FFF;
+
+    color: var(--primary-1-b-242-d, #1B242D);
+    font-family: Poppins;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 140%;
+    /* 25.2px */
+}
+
+.bookingpersonicon {
+    display: flex;
+    padding: 10px;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 99px;
+    background: var(--primary-eaf-6-f-6, #EAF6F6);
+}
+
+.totalinvoice {
+    display: flex;
+    padding: 30px;
+    align-items: flex-start;
+    gap: 20px;
+    align-self: stretch;
+
+    border-radius: 12px;
+    background: #FFF;
+}
+
+.invoiceitems {
+    display: flex;
+    width: 233px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+}
+
+.invoicevalues {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 7px;
+    flex: 1 0 0;
+}
+
+.invoicetitle {
+    color: var(--primary-1-b-242-d, #1B242D);
+    font-family: Poppins;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 140%;
+    /* 25.2px */
+}
+
+.invoiceitem {
+    color: var(--primary-1-b-242-d, #1B242D);
+
+    /* P14 */
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+    /* 19.6px */
+}
