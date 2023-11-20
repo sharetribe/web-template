@@ -9,7 +9,6 @@ import PreviewResolverPage from '../containers/PreviewResolverPage/PreviewResolv
 // Otherwise, components will import form container eventually and
 // at that point css bundling / imports will happen in wrong order.
 import { NamedRedirect } from '../components';
-import ListingDetailPage from '../containers/ListingDetailPage/ListingDetailPage';
 
 const pageDataLoadingAPI = getPageDataLoadingAPI();
 
@@ -50,7 +49,10 @@ const FaqPage = loadable(() => import(/* webpackChunkName: "FaqPage" */ '../cont
 const ContactUsPage = loadable(() => import(/* webpackChunkName: "ContactUs" */ '../containers/ContactUsPage/ContactUsPage'));
 const MarketPlacePage1 = loadable(() => import(/* webpackChunkName: "MarketPlace version 1" */ '../containers/MarketPlacePage1/MarketPlacePage1'));
 const MarketPlacePage2 = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/MarketPlacePage2/MarketPlacePage2'));
-const ListingDetaiPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/ListingDetailPage/ListingDetailPage'));
+const ListingDetailPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/ListingDetailPage/ListingDetailPage'));
+const ExperiencesHomePage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/ExperiencesPages/ExperiencesHomePage'));
+const ExperiencesExplorePage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/ExperiencesPages/ExperiencesExplorePage'));
+
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -470,7 +472,19 @@ const routeConfiguration = (layoutConfig) => {
       name: 'ListingDetailPage',
       component: ListingDetailPage,
       loadData: pageDataLoadingAPI.FaqPage.loadData,
-    }
+    },
+    {
+      path: '/dashboard/experiences',
+      name: 'ExperiencesHomePage',
+      component: ExperiencesHomePage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/experiences/explore',
+      name: 'ExperiencesHomePage',
+      component: ExperiencesHomePage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
   ];
 };
 
