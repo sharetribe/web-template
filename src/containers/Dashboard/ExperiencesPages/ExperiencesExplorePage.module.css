@@ -118,67 +118,7 @@
 }
 
 .content {
-    width: 1130px;
-    height: 356px;
-    flex-shrink: 0;
-    border-radius: 15px;
-    background: url(../../../assets/images/dashboard/experience_bg.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-
     display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    padding: 32px;
-}
-
-.dashboardcontent {
-    display: flex;
-    width: 1064px;
-    align-items: flex-end;
-    gap: 133px;
-}
-
-.contenttext {
-    display: flex;
-    flex-direction: column;
     align-items: flex-start;
-    flex: 1 0 0;
-    color: var(--primary-ffffff, #FFF);
-    /* H2 */
-    font-family: Clash Display;
-    font-size: 40px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 120%;
-    /* 48px */
-}
-
-.contentsubtext {
-    color: var(--primary-ffffff, #FFF);
-    font-family: Poppins;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 140%;
-    /* 28px */
-}
-
-.contentbtn {
-    display: flex;
-    height: 53px;
-    padding: 15px 30px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    border-radius: 7px;
-    background: var(--primary-ffffff, #FFF);
-    color: var(--primary-1-b-242-d, #1B242D);
-    text-align: center;
-    font-family: Poppins;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 24px;
-    /* 150% */
+    gap: 29px;
 }

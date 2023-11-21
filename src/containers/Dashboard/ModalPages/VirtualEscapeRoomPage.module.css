@@ -1,0 +1,30 @@
+.page {
+  padding: 30px 0 66px 0;
+  justify-content: center;
+  align-items: center;
+  background: var(--primary-eaf-6-f-6, #eaf6f6);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.root {
+  width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 65px;
+}
+
+.content {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+}
+
+.rightContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 81px;
+}

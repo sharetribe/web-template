@@ -53,6 +53,8 @@ const ListingDetailPage = loadable(() => import(/* webpackChunkName: "MarketPlac
 const ExperiencesHomePage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/ExperiencesPages/ExperiencesHomePage'));
 const ExperiencesExplorePage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/ExperiencesPages/ExperiencesExplorePage'));
 
+const BookingDateTimePage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/BookingDatetimePage/BookingDatetimePage'));
+const BookingPaymentPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/BookingPaymentPage/BookingPaymentPage'));
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -474,6 +476,18 @@ const routeConfiguration = (layoutConfig) => {
       loadData: pageDataLoadingAPI.FaqPage.loadData,
     },
     {
+      path: '/bookingdetail/datetime',
+      name: 'BookingDatetimePage',
+      component: BookingDateTimePage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/bookingdetail/payment',
+      name: 'BookingPaymentPage',
+      component: BookingPaymentPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
       path: '/dashboard/experiences',
       name: 'ExperiencesHomePage',
       component: ExperiencesHomePage,
@@ -481,8 +495,8 @@ const routeConfiguration = (layoutConfig) => {
     },
     {
       path: '/dashboard/experiences/explore',
-      name: 'ExperiencesHomePage',
-      component: ExperiencesHomePage,
+      name: 'ExperiencesExplorePage',
+      component: ExperiencesExplorePage,
       loadData: pageDataLoadingAPI.FaqPage.loadData,
     },
   ];

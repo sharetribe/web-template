@@ -1,0 +1,127 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.title {
+  color: var(--primary-1-b-242-d, #1b242d);
+  font-family: Poppins;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%; /* 30.8px */
+  align-self: stretch;
+}
+.subTitle {
+  color: var(--primary-1-b-242-d, #1b242d);
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 140%; /* 16.8px */
+  align-self: stretch;
+}
+
+.dateContainer {
+  display: flex;
+  padding: 20px 14px;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 7px;
+  border: 1px solid #d3ebeb;
+  background: var(--primary-ffffff, #fff);
+}
+
+.dateAndTime {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: -3px;
+  flex: 1 0 0;
+}
+
+.date {
+  color: var(--primary-1-b-242-d, #1b242d);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 171.429% */
+}
+
+.time {
+  color: var(--primary-1-b-242-d, #1b242d);
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 200% */
+}
+
+.editButton {
+  display: flex;
+  padding: 10px;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 99px;
+  background: var(--primary-eaf-6-f-6, #eaf6f6);
+}
+
+.image {
+  width: 255px;
+  height: 329px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background-image: url('../../assets/images/dashboard/exp1.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.buttons {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  align-self: stretch;
+}
+
+.btnPrimary {
+  display: flex;
+  height: 53px;
+  padding: 15px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: 7px;
+  background: var(--primary-227667, #227667);
+  color: var(--White, #fff);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+}
+
+.btnSecondary {
+  display: flex;
+  height: 53px;
+  padding: 15px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: 7px;
+  border: 1px solid #b3d3d3;
+  color: var(--primary-1-b-242-d, #1b242d);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+}

@@ -136,3 +136,4 @@ export { default as ModalMissingInformation } from './ModalMissingInformation/Mo
 export { default as Topbar } from './Topbar/Topbar';
 
 export { default as DashboardMenu } from './DashboradMenu/DashboardMenu';
+export { default as ExperienceCard } from './ExperienceCard/ExperienceCard';

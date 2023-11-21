@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Page, LayoutSingleColumn, DashboardMenu } from '../../../components';
+import { Page, LayoutSingleColumn, DashboardMenu, ExperienceCard } from '../../../components';
 import TopbarContainer from '../../TopbarContainer/TopbarContainer';
 import FooterContainer from '../../FooterContainer/FooterContainer';
 
@@ -28,17 +28,7 @@ export const ExperiencesExplorePage = props => {
                     </div>
                 </div>
                 <div className={css.content}>
-                    <div className={css.dashboardcontent}>
-                        <div className={css.contenttext}>
-                            Time for your next adventure?
-                            <div className={css.contentsubtext}>
-                                Book unique + extraordinary experiences from a highly curated selection of creators, brands, and venues.
-                            </div>      
-                        </div>
-                        <div className={css.contentbtn}>
-                            Explore Experiences
-                        </div>
-                    </div>          
+                    <ExperienceCard category='Virtual' title='Virtual escape room' subtitle='X Game' date='October 26, 2023' booker='Janay' time='01:30 PM SET' status='Pending' count='7' background='../../assets/images/dashboard/exp1.png' />
                 </div>
             </div>
         </div>
