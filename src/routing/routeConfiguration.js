@@ -61,14 +61,14 @@ const DashboardPollsPage = loadable(() => import(/* webpackChunkName: "MarketPla
 const DashboardPollsDetailPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/PollsPages/PollsDetailPage'));
 const DashboardFavoriteDetailPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/FavouritePages/FavoriteDetailPage'));
 const DashboardFavoriteResultsPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/FavouritePages/FavoriteResultsPage'));
-const VirtualEscapeRoomPage = loadable(() => import('../containers/Dashboard/ModalPages/VirtualEscapeRoomPage'));
-const ConfirmationWizardPage = loadable(() => import('../containers/Dashboard/ModalPages/WizardPage'));
+const VirtualEscapeRoomPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */'../containers/Dashboard/ModalPages/VirtualEscapeRoomPage'));
+const ConfirmationWizardPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */'../containers/Dashboard/ModalPages/WizardPage'));
 
 // Dashboard Modal pages
-const RSVPListPage = loadable(() => import('../containers/Dashboard/RSVPListPages/RSVPListPage'));
-const RSVPListConfirmedPage = loadable(() => import('../containers/Dashboard/RSVPListPages/RSVPListConfirmedPage'));
-const RSVPListProgressingPage = loadable(() => import('../containers/Dashboard/RSVPListPages/RSVPListProgressingPage'));
-const InviteGuestPage = loadable(() => import('../containers/Dashboard/InviteGuestPage/InviteGuestPage'));
+const RSVPListPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */'../containers/Dashboard/RSVPListPages/RSVPListPage'));
+const RSVPListConfirmedPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */'../containers/Dashboard/RSVPListPages/RSVPListConfirmedPage'));
+const RSVPListProgressingPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */'../containers/Dashboard/RSVPListPages/RSVPListProgressingPage'));
+const InviteGuestPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */'../containers/Dashboard/InviteGuestPage/InviteGuestPage'));
 
 const BookingDateTimePage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/BookingDatetimePage/BookingDatetimePage'));
 const BookingPaymentPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/BookingPaymentPage/BookingPaymentPage'));
