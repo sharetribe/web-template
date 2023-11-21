@@ -1,0 +1,125 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  /* Expand to the available space */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  padding-bottom: 60px;
+}
+
+.content {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 30px;
+}
+
+.title {
+  color: var(--primary-1-b-242-d, #1b242d);
+
+  /* H4 */
+  font-family: Clash Display;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%; /* 36px */
+}
+
+.tableContainer {
+  display: flex;
+  width: 1123px;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  border-radius: 10px;
+  background: var(--primary-eaf-6-f-6, #eaf6f6);
+}
+
+.thead {
+  display: flex;
+  padding: 15px 20px;
+  align-items: flex-start;
+  gap: 128px;
+  align-self: stretch;
+}
+.thGroup {
+  display: flex;
+  align-items: flex-start;
+  width: 366px;
+}
+.th {
+  color: var(--primary-1-b-242-d, #1b242d);
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%; /* 22.4px */
+}
+.tr {
+  display: flex;
+  padding: 15px 20px;
+  align-items: center;
+  gap: 128px;
+  align-self: stretch;
+  border-bottom: 1px solid #c7e0e0;
+}
+.td {
+  color: var(--primary-1-b-242-d, #1b242d);
+  font-family: Poppins;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 21px */
+}
+.w153 {
+  width: 153px;
+}
+.w160 {
+  width: 160px;
+}
+.w110 {
+  width: 110px;
+}
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+  align-self: stretch;
+}
+
+.btnSecondary {
+  display: flex;
+  padding: 15px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 7px;
+  background: var(--primary-ffffff, #fff);
+  color: var(--primary-1-b-242-d, #1b242d);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+}
+
+.btnDark {
+  display: flex;
+  padding: 15px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 7px;
+  background: var(--primary-1-b-242-d, #1b242d);
+  color: var(--White, #fff);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+}

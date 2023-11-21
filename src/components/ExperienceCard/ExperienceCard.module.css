@@ -1,0 +1,235 @@
+.cardbody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+  width: 255px;
+  border-radius: 12px;
+  position: relative;
+  background: var(--primary-eaf-6-f-6, #eaf6f6);
+}
+
+.cardIntro {
+  width: 100%;
+  height: 329px;
+  flex-shrink: 0;
+  position: relative;
+  background: lightgray 50% / cover no-repeat, #d9d9d9;
+}
+
+.cardBackground {
+  position: absolute;
+  left: 0;
+  height: 0;
+  height: 329px;
+  border-radius: 12px 12px 0 0;
+}
+
+.cardUsers {
+  display: flex;
+  padding: 5px 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3.5px);
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
+
+.fontUserGroup {
+  color: #06c167;
+  size: 12px;
+}
+
+.cardUserCount {
+  color: var(--primary-ffffff, #fff);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 200% */
+}
+
+.cardStatus {
+  position: absolute;
+  display: flex;
+  padding: 5px 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3.5px);
+  right: 10px;
+  top: 10px;
+}
+
+.cardTitleMain {
+  align-self: stretch;
+  color: var(--primary-ffffff, #fff);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%; /* 19.6px */
+  padding-top: 7px;
+}
+.cardTitleSub {
+  color: var(--primary-ffffff, #fff);
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 140%; /* 16.8px */
+}
+
+.cardDate {
+  display: flex;
+  width: 255px;
+  height: 18px;
+  padding: 0px 15px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.fontStatusPending {
+  color: #06c167;
+  size: 12px;
+}
+
+.cardStatusText {
+  color: var(--primary-ffffff, #fff);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 200% */
+}
+
+.cardTitleInfo {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 100%;
+}
+
+.cardTitleCategory {
+  display: inline-flex;
+  padding: 5px 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3.5px);
+  color: var(--primary-ffffff, #fff);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 200% */
+}
+
+.fontCategoryVirtual {
+}
+
+.cardDateText {
+  color: var(--primary-1-b-242-d, #1b242d);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px; /* 150% */
+}
+
+.cardInfo {
+  display: flex;
+  align-items: flex-start;
+  padding: 0px 15px;
+  width: 100%;
+  position: relative;
+  gap: 20px;
+}
+
+.cardInfoTitles {
+  display: flex;
+  gap: 0;
+  flex-direction: column;
+  color: var(--primary-1-b-242-d, #1b242d);
+
+  /* P14 - Medium */
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 140%; /* 19.6px */
+}
+
+.cardInfoContents {
+  display: flex;
+  gap: 0;
+  flex-direction: column;
+  color: var(--primary-1-b-242-d, #1b242d);
+
+  /* P14 */
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 19.6px */
+}
+
+.cardActions {
+  display: flex;
+  padding: 0px 15px 15px 15px;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+}
+
+.cardActionSecondary {
+  display: flex;
+  height: 45px;
+  padding: 15px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  color: var(--primary-1-b-242-d, #1b242d);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+  border-radius: 7px;
+  background: var(--primary-ffffff, #fff);
+}
+
+.cardActionDefault {
+  display: flex;
+  height: 45px;
+  padding: 15px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+  border-radius: 7px;
+  background: var(--primary-227667, #227667);
+  color: var(--White, #fff);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+}

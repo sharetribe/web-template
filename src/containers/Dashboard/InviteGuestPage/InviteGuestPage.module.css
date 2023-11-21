@@ -1,0 +1,153 @@
+.page {
+  padding: 30px 0 66px 0;
+  justify-content: center;
+  align-items: center;
+  background: var(--primary-eaf-6-f-6, #eaf6f6);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.root {
+  width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 65px;
+}
+
+.content {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+}
+
+.rightContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 36px;
+}
+
+.rTitleArea {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.title {
+  color: var(--primary-1-b-242-d, #1b242d);
+
+  /* H4 */
+  font-family: Clash Display;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%; /* 36px */
+}
+
+.subtitle {
+  color: var(--primary-1-b-242-d, #1b242d);
+
+  /* P20 - Standard */
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
+  width: 636px;
+}
+
+.rContentArea {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 15px;
+}
+
+.textarea {
+  width: 825px;
+  height: 178px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 1px solid #d3ebeb;
+  background: var(--primary-ffffff, #fff);
+}
+
+.textContent {
+  width: 739px;
+  color: rgba(27, 36, 45, 0.6);
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 22.4px */
+  padding: 16px 20px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 15px;
+  align-self: stretch;
+}
+
+.copyLinkContainer {
+  display: flex;
+  padding-right: 0px;
+  align-items: center;
+  flex: 1 0 0;
+}
+
+.btnCopyLink {
+  display: flex;
+  padding: 15px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 7px;
+  background: var(--primary-ffffff, #fff);
+  color: var(--primary-1-b-242-d, #1b242d);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+}
+
+.btnTestEmail {
+  display: flex;
+  padding: 15px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 7px;
+  background: var(--primary-ffffff, #fff);
+  color: var(--primary-1-b-242-d, #1b242d);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+}
+
+.btnInvite {
+  display: flex;
+  padding: 15px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 7px;
+  background: var(--primary-1-b-242-d, #1b242d);
+  color: var(--primary-ffffff, #fff);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+}

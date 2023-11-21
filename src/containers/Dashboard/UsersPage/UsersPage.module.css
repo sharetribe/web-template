@@ -1,0 +1,122 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  /* Expand to the available space */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  padding-bottom: 60px;
+}
+
+.content {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 30px;
+}
+
+.contentHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  align-self: stretch;
+}
+
+.title {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  align-self: stretch;
+  color: var(--primary-1-b-242-d, #1b242d);
+
+  /* H4 */
+  font-family: Clash Display;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%; /* 36px */
+  width: 920px;
+}
+.btnInviteUser {
+  display: flex;
+  padding: 15px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 7px;
+  background: var(--primary-1-b-242-d, #1b242d);
+  color: var(--primary-ffffff, #fff);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+}
+.tableContainer {
+  display: flex;
+  width: 1123px;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  border-radius: 10px;
+  background: var(--primary-eaf-6-f-6, #eaf6f6);
+}
+
+.tableHeader {
+  height: 54px;
+  align-self: stretch;
+  border-bottom: 1px solid #c7e0e0;
+  padding: 16px 20px;
+  display: flex;
+}
+.th {
+  color: var(--primary-1-b-242-d, #1b242d);
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%; /* 22.4px */
+}
+.w207 {
+  width: 207px;
+}
+.w169 {
+  width: 169px;
+}
+.w160 {
+  width: 160px;
+}
+.w261 {
+  width: 261px;
+}
+.w86 {
+  width: 86px;
+}
+.w187 {
+  width: 187px;
+}
+.tr {
+  height: 54px;
+  align-self: stretch;
+  border-bottom: 1px solid #c7e0e0;
+  display: flex;
+  align-items: flex-start;
+  padding: 16px 20px;
+}
+.td {
+  color: var(--primary-1-b-242-d, #1b242d);
+  text-align: right;
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 19.6px */
+  display: flex;
+  gap: 4px;
+}
+.alignRight {
+  display: block;
+  text-align: right;
+}

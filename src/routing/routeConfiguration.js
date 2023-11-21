@@ -9,7 +9,6 @@ import PreviewResolverPage from '../containers/PreviewResolverPage/PreviewResolv
 // Otherwise, components will import form container eventually and
 // at that point css bundling / imports will happen in wrong order.
 import { NamedRedirect } from '../components';
-import ListingDetailPage from '../containers/ListingDetailPage/ListingDetailPage';
 
 const pageDataLoadingAPI = getPageDataLoadingAPI();
 
@@ -50,7 +49,29 @@ const FaqPage = loadable(() => import(/* webpackChunkName: "FaqPage" */ '../cont
 const ContactUsPage = loadable(() => import(/* webpackChunkName: "ContactUs" */ '../containers/ContactUsPage/ContactUsPage'));
 const MarketPlacePage1 = loadable(() => import(/* webpackChunkName: "MarketPlace version 1" */ '../containers/MarketPlacePage1/MarketPlacePage1'));
 const MarketPlacePage2 = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/MarketPlacePage2/MarketPlacePage2'));
-const ListingDetaiPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/ListingDetailPage/ListingDetailPage'));
+const ListingDetailPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/ListingDetailPage/ListingDetailPage'));
+
+// Dashboard
+const ExperiencesHomePage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/ExperiencesPages/ExperiencesHomePage'));
+const ExperiencesExplorePage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/ExperiencesPages/ExperiencesExplorePage'));
+const BillingPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/BillingPages/BillingPage'));
+const DashboardProfilePage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/ProfilePages/ProfilePage'));
+const DashboardUsersPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/UsersPage/UsersPage'));
+const DashboardPollsPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/PollsPages/PollsPage'));
+const DashboardPollsDetailPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/PollsPages/PollsDetailPage'));
+const DashboardFavoriteDetailPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/FavouritePages/FavoriteDetailPage'));
+const DashboardFavoriteResultsPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Dashboard/FavouritePages/FavoriteResultsPage'));
+const VirtualEscapeRoomPage = loadable(() => import('../containers/Dashboard/ModalPages/VirtualEscapeRoomPage'));
+const ConfirmationWizardPage = loadable(() => import('../containers/Dashboard/ModalPages/WizardPage'));
+
+// Dashboard Modal pages
+const RSVPListPage = loadable(() => import('../containers/Dashboard/RSVPListPages/RSVPListPage'));
+const RSVPListConfirmedPage = loadable(() => import('../containers/Dashboard/RSVPListPages/RSVPListConfirmedPage'));
+const RSVPListProgressingPage = loadable(() => import('../containers/Dashboard/RSVPListPages/RSVPListProgressingPage'));
+const InviteGuestPage = loadable(() => import('../containers/Dashboard/InviteGuestPage/InviteGuestPage'));
+
+const BookingDateTimePage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/BookingDatetimePage/BookingDatetimePage'));
+const BookingPaymentPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/BookingPaymentPage/BookingPaymentPage'));
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -470,7 +491,109 @@ const routeConfiguration = (layoutConfig) => {
       name: 'ListingDetailPage',
       component: ListingDetailPage,
       loadData: pageDataLoadingAPI.FaqPage.loadData,
-    }
+    },
+    {
+      path: '/bookingdetail/datetime',
+      name: 'BookingDatetimePage',
+      component: BookingDateTimePage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/bookingdetail/payment',
+      name: 'BookingPaymentPage',
+      component: BookingPaymentPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/experiences',
+      name: 'ExperiencesHomePage',
+      component: ExperiencesHomePage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/experiences/explore',
+      name: 'ExperiencesExplorePage',
+      component: ExperiencesExplorePage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/modal/rsvp_list',
+      name: 'RSVPListPage',
+      component: RSVPListPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/modal/rsvp_confirmed',
+      name: 'RSVPListConfirmedPage',
+      component: RSVPListConfirmedPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/modal/rsvp_progressing',
+      name: 'RSVPListProgressingPage',
+      component: RSVPListProgressingPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/modal/virtual_esc_room',
+      name: 'VirtualEscapeRoomPage',
+      component: VirtualEscapeRoomPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/modal/wizard',
+      name: 'ConfirmationWizardPage',
+      component: ConfirmationWizardPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/modal/invite',
+      name: 'InviteGuestPage',
+      component: InviteGuestPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/billing',
+      name: 'BillingPage',
+      component: BillingPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/profile',
+      name: 'DashboardProfilePage',
+      component: DashboardProfilePage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/users',
+      name: 'DashboardUsersPage',
+      component: DashboardUsersPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/polls',
+      name: 'DashboardPollsPage',
+      component: DashboardPollsPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/polls/detail',
+      name: 'DashboardPollsDetailPage',
+      component: DashboardPollsDetailPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/favourites',
+      name: 'DashboardFavoriteDetailPage',
+      component: DashboardFavoriteDetailPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/dashboard/favourites/search',
+      name: 'DashboardFavoriteResultsPage',
+      component: DashboardFavoriteResultsPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
   ];
 };
 

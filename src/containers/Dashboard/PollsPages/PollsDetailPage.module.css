@@ -1,0 +1,75 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  /* Expand to the available space */
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  padding-bottom: 60px;
+}
+
+.content {
+  width: 1134px;
+  height: 356px;
+  border-radius: 15px;
+  position: relative;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.35) 100%),
+    url('../../../assets/images/dashboard/poll-back.png'), lightgray 50% / cover no-repeat;
+}
+
+.titleArea {
+  display: flex;
+  width: 1072px;
+  align-items: flex-end;
+  gap: 133px;
+  position: absolute;
+  left: 31px;
+  bottom: 32px;
+}
+
+.titleRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1 0 0;
+}
+
+.btnExplore {
+  display: flex;
+  height: 53px;
+  padding: 15px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: var(--primary-1-b-242-d, #1b242d);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+  border-radius: 7px;
+  background: var(--primary-ffffff, #fff);
+}
+.title {
+  color: var(--primary-ffffff, #fff);
+
+  /* H2 */
+  font-family: Clash Display;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%; /* 48px */
+}
+.subTitle {
+  width: 682px;
+  color: var(--primary-ffffff, #fff);
+
+  /* P20 - Standard */
+  font-family: Poppins;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 28px */
+}

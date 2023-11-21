@@ -1,0 +1,220 @@
+.page {
+  padding: 30px 0 66px 0;
+  justify-content: center;
+  align-items: center;
+  background: var(--primary-eaf-6-f-6, #eaf6f6);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.root {
+  width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 65px;
+}
+
+.content {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+}
+
+.rightContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 30px;
+}
+
+.rTitleArea {
+  display: flex;
+  align-items: flex-start;
+  gap: 138px;
+}
+
+.rTitle {
+  display: flex;
+  width: 238px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--primary-1-b-242-d, #1b242d);
+
+  /* H4 */
+  font-family: Clash Display;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 120%; /* 36px */
+}
+.rTitleButtons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.buttonSlack {
+  display: flex;
+  padding: 15px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 7px;
+  background: #000;
+  color: var(--primary-ffffff, #fff);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+}
+.buttonInvite {
+  display: flex;
+  padding: 15px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 7px;
+  background: var(--primary-227667, #227667);
+  color: var(--primary-ffffff, #fff);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+}
+.rListArea {
+  display: flex;
+  width: 825px;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  border-radius: 10px;
+  background: var(--primary-ffffff, #fff);
+}
+
+.rListRow {
+  display: flex;
+  padding: 15px 20px;
+  align-items: flex-start;
+  gap: 128px;
+  align-self: stretch;
+  position: relative;
+}
+.listContentRow {
+  display: flex;
+  padding: 15px 20px;
+  align-items: flex-start;
+  gap: 128px;
+  align-self: stretch;
+  position: relative;
+  border-bottom: 1px solid #e3eeee;
+}
+.rListInfo {
+  display: flex;
+  padding: 5px 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  position: absolute;
+  right: 20px;
+  top: 0;
+  border-radius: 3px;
+  border: 1px solid var(--primary-eaf-6-f-6, #eaf6f6);
+  background: var(--primary-eaf-6-f-6, #eaf6f6);
+  color: var(--primary-1-b-242-d, #1b242d);
+  text-align: center;
+  font-family: Poppins;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 18.2px */
+}
+.listCols {
+  display: flex;
+  width: 360px;
+  align-items: flex-start;
+  color: var(--primary-1-b-242-d, #1b242d);
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%; /* 22.4px */
+}
+.nameHeader {
+  width: 153px;
+  flex-shrink: 0;
+  color: var(--primary-1-b-242-d, #1b242d);
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%; /* 22.4px */
+}
+.emailHeader {
+  display: flex;
+  width: 360px;
+  align-items: flex-start;
+  color: var(--primary-1-b-242-d, #1b242d);
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%; /* 22.4px */
+}
+.listCol {
+  flex: 1 0 0;
+  color: var(--primary-1-b-242-d, #1b242d);
+  text-align: right;
+  font-family: Poppins;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 140%; /* 22.4px */
+}
+.nameCol {
+  color: #4b545c;
+  font-family: Poppins;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 21px */
+  width: 153px;
+  flex-shrink: 0;
+}
+.emailCol {
+  color: #4b545c;
+  font-family: Poppins;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%; /* 21px */
+  width: 180px;
+  flex-shrink: 0;
+}
+.lastCol {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  flex: 1 0 0;
+}
+
+.iconContainer {
+  display: flex;
+  width: 16px;
+  height: 16px;
+  padding: 2px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 99px;
+  background: var(--primary-eaf-6-f-6, #eaf6f6);
+}
