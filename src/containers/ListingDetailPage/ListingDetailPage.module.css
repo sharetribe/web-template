@@ -4,7 +4,7 @@
     background: var(--primary-eaf-6-f-6, #EAF6F6);
     backdrop-filter: blur(25px);
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     flex-direction: column;
     align-items: center;
 }
@@ -454,7 +454,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
-    align-self: stretch;    
+    align-self: stretch;
 }
 
 .hostname {
@@ -504,7 +504,7 @@
 
 .groupcountsubtitle {
     color: rgba(27, 36, 45, 0.60);
-    
+
     /* P14 */
     font-family: Poppins;
     font-size: 14px;
