@@ -193,9 +193,10 @@
 
 /* button on dark theme */
 .darkTheme .ctaButton {
-  border: 1px solid var(--marketplaceColorDark);
+  border: 1px solid; /*var(--marketplaceColorDark);*/
   text-decoration: none;
-
+  background-color: #f9bc60;
+  color: #f2f2f2;
   &:hover {
     color: white;
   }
