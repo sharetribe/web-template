@@ -17,7 +17,7 @@ const defaultConfig = {
   // Marketplace currency.
   // The currency used in the Marketplace must be in ISO 4217 currency code. For example USD, EUR, CAD, AUD, etc. The default value is USD.
   // It should match one of the currencies listed in currencySettings.js
-  currency: 'USD',
+  currency: 'EUR',
 
   // Listing minimum price in currency sub units, e.g. cents.
   // 0 means no restriction to the price
