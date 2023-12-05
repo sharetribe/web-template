@@ -1,0 +1,38 @@
+runtime: nodejs16
+
+env: standard
+instance_class: F1
+
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  min_instances: 0
+  max_instances: 5
+
+env_variables:
+  # Define your environment variables here
+  NODE_ENV: "production"
+
+handlers:
+  # Serve all static files with url ending with a file extension
+  - url: /(.*\.(json|ico|js|css|png|jpg|jpeg|svg|gif|webp|bmp|tif|tiff|woff|woff2|ttf|eot))$
+    static_files: build/\1
+    upload: build/.*\.(json|ico|js|css|png|jpg|jpeg|svg|gif|webp|bmp|tif|tiff|woff|woff2|ttf|eot)$
+    secure: always
+
+  # Serve index.html for all other requests (SPA routing)
+  - url: /.*
+    static_files: build/index.html
+    upload: build/index.html
+    secure: always
+
+skip_files:
+  - ^(.*/)?#.*#$
+  - ^(.*/)?.*~$
+  - ^(.*/)?.*\.py[co]$
+  - ^(.*/)?.*/RCS/.*$
+  - ^(.*/)?\..*$
+  - ^(.*/)?node_modules/.*$
+  - ^(.*/)?scripts/.*$
+  - ^(.*/)?src/.*$
+  - ^(.*/)?public/.*$
+  - ^(.*/)?patches/.*$
