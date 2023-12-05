@@ -17,6 +17,8 @@
     background-size: cover;
 
     padding: 15px;
+
+    cursor: pointer;
 }
 
 .cardcontent {
@@ -35,6 +37,10 @@
     font-style: normal;
     font-weight: 600;
     line-height: 24px;
+
+    &:hover {
+        text-decoration: none;
+    }
 }
 
 .cardhotel {

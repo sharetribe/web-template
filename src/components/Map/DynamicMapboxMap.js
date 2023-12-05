@@ -30,7 +30,7 @@ const circleLayer = (center, mapsConfig, layerId) => {
     },
     paint: {
       'fill-color': mapsConfig.fuzzy.circleColor,
-      'fill-opacity': 0.2,
+      fillOpacity: 0.2,
     },
   };
 };

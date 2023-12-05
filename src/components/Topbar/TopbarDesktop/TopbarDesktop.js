@@ -17,7 +17,6 @@ import {
 } from '../../../components';
 
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
-
 import css from './TopbarDesktop.module.css';
 
 const TopbarDesktop = props => {
@@ -25,7 +24,6 @@ const TopbarDesktop = props => {
   const {
     className,
     appConfig,
-    currentUser,
     currentPage,
     rootClassName,
     currentUserHasListings,
@@ -50,7 +48,7 @@ const TopbarDesktop = props => {
 
   return (
     <nav className={classes}>
-      <div className={css.headerlogo}>
+      <NamedLink className={css.headerlogo} name="LandingPage">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="111"
@@ -65,11 +63,11 @@ const TopbarDesktop = props => {
             fill="#111111"
           />
         </svg>
-      </div>
+      </NamedLink>
       <div className={css.headermenu}>
         <div
           className={
-            (activeMenu == '' || activeMenu == 'in-person')
+            activeMenu == '' || activeMenu == 'in-person'
               ? css.headermenuitemactive
               : css.headermenuitem
           }

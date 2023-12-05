@@ -54,6 +54,11 @@
     font-weight: 500;
     line-height: 24px;
     /* 150% */
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: none;
+    }
 }
 
 .sectiondescriptiontitle {
