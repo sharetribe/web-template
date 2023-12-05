@@ -10,7 +10,7 @@ import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import SectionCaribbean from '../../components/SectionCaribbean/SectionCaribbean';
 import SectionTeamExperience from '../../components/SectionTeamExperience/SectionTeamExperience';
-import SectionCustomerService from '../../components/SectionCustomerService/SectionCustomerService'
+import SectionCustomerService from '../../components/SectionCustomerService/SectionCustomerService';
 import SectionFeaturedExperience from '../../components/SectionFeaturedExperience/SectionFeaturedExperience';
 import SectionTips from '../../components/SectionTips/SectionTips';
 import SectionCustomExperience from '../../components/SectionCustomExperience/SectionCustomExperience';
@@ -21,9 +21,8 @@ import SectionLiveDemo from '../../components/SectionLiveDemo/SectionLiveDemo';
 import css from './LandingPage.module.css';
 
 export const LandingPageComponent = props => {
-
   return (
-    <Page title={"Home"} scrollingDisabled={false}>
+    <Page title={'Home'} scrollingDisabled={false}>
       <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
         <div className={css.root}>
           <div className={css.content}>

@@ -421,6 +421,10 @@
   line-height: 140%;
 
   cursor: pointer;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.50);
+  }
 }
 
 .headerdashboard {

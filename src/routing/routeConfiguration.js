@@ -48,7 +48,7 @@ const RefundPolicyPage = loadable(() => import(/* webpackChunkName: "RefundPolic
 const FaqPage = loadable(() => import(/* webpackChunkName: "FaqPage" */ '../containers/FaqPage/FaqPage'));
 const ContactUsPage = loadable(() => import(/* webpackChunkName: "ContactUs" */ '../containers/ContactUsPage/ContactUsPage'));
 const MarketPlacePage1 = loadable(() => import(/* webpackChunkName: "MarketPlace version 1" */ '../containers/MarketPlacePage1/MarketPlacePage1'));
-const MarketPlacePage2 = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/MarketPlacePage2/MarketPlacePage2'));
+const Experiences = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/Experiences/Experiences'));
 const ListingDetailPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/ListingDetailPage/ListingDetailPage'));
 
 // Dashboard
@@ -474,16 +474,16 @@ const routeConfiguration = (layoutConfig) => {
       component: FaqPage,
       loadData: pageDataLoadingAPI.FaqPage.loadData,
     },
+    // {
+    //   path: '/marketplace1',
+    //   name: 'MarketPlacePage1',
+    //   component: MarketPlacePage1,
+    //   loadData: pageDataLoadingAPI.FaqPage.loadData,
+    // },
     {
-      path: '/marketplace1',
-      name: 'MarketPlacePage1',
-      component: MarketPlacePage1,
-      loadData: pageDataLoadingAPI.FaqPage.loadData,
-    },
-    {
-      path: '/marketplace2',
-      name: 'MarketPlacePage2',
-      component: MarketPlacePage2,
+      path: '/experiences/category',
+      name: 'ExperiencesPage',
+      component: Experiences,
       loadData: pageDataLoadingAPI.FaqPage.loadData,
     },
     {

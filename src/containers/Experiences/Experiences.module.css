@@ -1,5 +1,53 @@
-@import '../../styles/customMediaQueries.css';
-@import '../../styles/customMediaQueries.css';
+.root {
+    /* Expand to the available space */
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 70px;
+}
+
+.content {
+    width: 1100px;
+
+    @media (--viewportMedium) {
+        margin-top: 10vh;
+    }
+}
+
+.header {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+
+    color: var(--primary-1-b-242-d, #1B242D);
+
+    /* P20 - Standard */
+    font-family: Poppins;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+    /* 28px */
+}
+
+.title {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    color: var(--primary-1-b-242-d, #1B242D);
+
+    /* H1 */
+    font-family: Clash Display;
+    font-size: 55px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    /* 66px */
+}
 
 .sectionbody {
     display: flex;
@@ -34,6 +82,7 @@
 .sectionfilter {
     display: inline-flex;
     height: 53px;
+    padding: 3px;
     align-items: flex-start;
     gap: 2px;
     flex-shrink: 0;
@@ -62,7 +111,8 @@
     font-style: normal;
     font-weight: 500;
     line-height: 140%;
-    /* 22.4px */
+
+    cursor: pointer;
 }
 
 .filteritemactive {
@@ -105,6 +155,13 @@
     font-style: normal;
     font-weight: 500;
     line-height: 140%;
+
+    cursor: pointer;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.50);
+    }
+
     /* 22.4px */
 }
 
@@ -213,4 +270,26 @@
     font-weight: 500;
     line-height: 24px;
     /* 150% */
+}
+
+.experiencefilter {
+    position: absolute;
+}
+
+.overlay {
+    width: 100%;
+    height: 100vh;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.50);
+    backdrop-filter: blur(37.5px);
+    position: absolute;
+    z-index: 20;
+}
+
+.filtermodalcontainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    position: absolute;
 }
