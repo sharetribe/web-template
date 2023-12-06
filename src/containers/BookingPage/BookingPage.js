@@ -21,7 +21,7 @@ import { faCircleCheck } from '@fortawesome/free-regular-svg-icons';
 
 export const BookingPageComponent = props => {
   return (
-    <Page title={'Booking'} className={css.page} scrollingDisabled={false}>
+    <Page title={'About Us'} className={css.page} scrollingDisabled={false}>
       <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
         <div className={css.root}>
           <div className={css.slider}>

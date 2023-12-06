@@ -14,13 +14,13 @@ import SectionBreadcrumb from '../../components/SectionBreadcrumb/SectionBreadcr
 
 export const RefundPolicyComponent = props => {
   return (
-    <Page title={'Refund policy'} className={css.page} scrollingDisabled={false}>
+    <Page title={'Refund Policy'} className={css.page} scrollingDisabled={false}>
       <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
         <div className={css.root}>
           <SectionBreadcrumb
             secondary={0}
-            title="Refund policy"
-            currentPath="Refund policy"
+            title="Refund Policy"
+            currentPath="Refund Policy"
             middlePath=""
             subTitle="Last update  JUL 26, 2023 7:15:10 AM"
           />
