@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  webapp:
+    build: 
+      context: .
+      args:
+        REACT_APP_CSP: "block"
+        REACT_APP_SHARETRIBE_MARKETPLACE_CURRENCY: "EUR"
+        REACT_APP_SHARETRIBE_SDK_CLIENT_ID: "465c0714-4f4d-41a7-bd29-c2cd149c512d"
+        REACT_APP_STRIPE_PUBLISHABLE_KEY: "pk_live_51OK5JJB776jQNbtuwfeFb7RgbXzwX3QDRxLpEpE9vcFeXncEl0Nse0SPOkf5jGP9g4pVdWYAazwML7Qy65g1iw1q00vR9lCJFJ"
+        REACT_APP_MAPBOX_ACCESS_TOKEN: "pk.eyJ1IjoiY2FsZXhpb3UiLCJhIjoiY2xwc3Q2NGVqMDd1NDJsb3BrZXQxaWFmcSJ9.2LPX-xvE-l4HBBDQ16ShkA"
+        REACT_APP_MARKETPLACE_ROOT_URL: "http://localhost:4000"
+        REACT_APP_ENV: "development"
+        REACT_APP_SHARETRIBE_USING_SSL: "false"
+        REACT_APP_AVAILABILITY_ENABLED: "true"
+        REACT_APP_DEFAULT_SEARCHES_ENABLED: "true"
+    ports:
+      - "4000:4000"
+    environment:
+      BASIC_AUTH_USERNAME: "admin"
+      BASIC_AUTH_PASSWORD: "admin2024"
+      NODE_ENV: "development"
+      SERVER_SHARETRIBE_TRUST_PROXY: "false"
+      SHARETRIBE_SDK_CLIENT_SECRET: "86cef4350e3efee05b9c903eee362247f9bf9509"
