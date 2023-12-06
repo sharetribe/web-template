@@ -1,0 +1,19 @@
+# Temporary files
+*#*
+.*~
+*.pyc
+*.pyo
+
+# Version control system folders
+.RCS/
+
+# Hidden files and directories
+.*
+
+# Specific directories
+node_modules/
+scripts/
+src/
+public/
+patches/
+
