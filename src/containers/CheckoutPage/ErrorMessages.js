@@ -9,6 +9,7 @@ import {
   isTransactionChargeDisabledError,
   isTransactionZeroPaymentError,
   isTransitionQuantityInfoMissingError,
+  isTooManyRequestsError,
   transactionInitiateOrderStripeErrors,
 } from '../../util/errors';
 
@@ -60,6 +61,9 @@ export const getErrorMessages = (
         values={{ stripeErrors: stripeErrorsAsString }}
       />
     );
+  } else if (isTooManyRequestsError(initiateOrderError)) {
+    // 429 Too Many Requests
+    initiateOrderErrorMessage = <FormattedMessage id="CheckoutPage.tooManyRequestsError" />;
   } else if (initiateOrderError) {
     // Generic initiate order error
     initiateOrderErrorMessage = (
