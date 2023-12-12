@@ -12,6 +12,16 @@ const { LatLng, LatLngBounds } = sdkTypes;
 //       1) help customers to find relevant locations, and
 //       2) reduce the cost of using map providers geocoding API
 const defaultLocations = [
+  {
+    id: 'default-bariloche',
+    predictionPlace: {
+      address: 'San Carlos de Bariloche, Río Negro, Argentina',
+      bounds: new LatLngBounds(
+        new LatLng(-41.140536, -71.308623),
+        new LatLng(-41.125837, -71.288113)
+      ),
+    },
+  }
   // {
   //   id: 'default-helsinki',
   //   predictionPlace: {
