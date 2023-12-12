@@ -3,11 +3,14 @@ import { array, bool, func, number, object, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+
 import { propTypes } from '../../util/types';
+
 import { sendVerificationEmail, hasCurrentUserErrors } from '../../ducks/user.duck';
 import { logout, authenticationInProgress } from '../../ducks/auth.duck';
 import { manageDisableScrolling } from '../../ducks/ui.duck';
-import { Topbar } from '../../components';
+
+import Topbar from './Topbar/Topbar';
 
 export const TopbarContainerComponent = props => {
   const {
