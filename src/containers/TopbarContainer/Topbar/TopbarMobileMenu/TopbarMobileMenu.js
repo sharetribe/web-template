@@ -6,12 +6,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import { ACCOUNT_SETTINGS_PAGES } from '../../../routing/routeConfiguration';
-import { FormattedMessage } from '../../../util/reactIntl';
-import { propTypes } from '../../../util/types';
-import { ensureCurrentUser } from '../../../util/data';
+import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
+import { FormattedMessage } from '../../../../util/reactIntl';
+import { propTypes } from '../../../../util/types';
+import { ensureCurrentUser } from '../../../../util/data';
 
-import { AvatarLarge, InlineTextButton, NamedLink, NotificationBadge } from '../../../components';
+import {
+  AvatarLarge,
+  InlineTextButton,
+  NamedLink,
+  NotificationBadge,
+} from '../../../../components';
 
 import css from './TopbarMobileMenu.module.css';
 
