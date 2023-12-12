@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+## [v3.5.0] 2023-12-12
+
 - [fix] OrderPanel: showed price for inquiry on mobile layout even if price was marked hidden
   [#278](https://github.com/sharetribe/web-template/pull/278)
 - [add] Add a specific message for too-many-request error on ListingPage and CheckoutPage
@@ -45,6 +47,8 @@ way to update this template, but currently, we follow a pattern:
   [#258](https://github.com/sharetribe/web-template/pull/258)
 - [fix] configHelpers: undefined enumOptions was not handled properly.
   [#257](https://github.com/sharetribe/web-template/pull/257)
+
+  [v3.5.0]: https://github.com/sharetribe/web-template/compare/v3.4.0...v3.5.0
 
 ## [v3.4.0] 2023-10-23
 
