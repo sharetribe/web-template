@@ -17,13 +17,13 @@ const defaultConfig = {
   // Marketplace currency.
   // The currency used in the Marketplace must be in ISO 4217 currency code. For example USD, EUR, CAD, AUD, etc. The default value is USD.
   // It should match one of the currencies listed in currencySettings.js
-  currency: 'USD',
+  currency: 'ARS',
 
   // Listing minimum price in currency sub units, e.g. cents.
   // 0 means no restriction to the price
   // Note 1: hosted configs overwrite this
   // Note 2: Stripe does have minimum fee that depends on country, currency, etc.
-  listingMinimumPriceSubUnits: 500,
+  listingMinimumPriceSubUnits: 0,
 
   // Marketplace name is needed for microcopy and in meta tags (bots and social media sharing reads those)
   marketplaceName: 'Biketribe',
@@ -61,7 +61,7 @@ const defaultConfig = {
   // If you want to change the language, remember to also change the
   // locale data and the messages in the app.js file.
   localization: {
-    locale: 'en-US',
+    locale: 'es-ES',
     // First day of week
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo#return_value
     // 1: Monday
@@ -99,7 +99,7 @@ const defaultConfig = {
   // Facebook page is used in SEO schema (http://schema.org/Organization)
   siteFacebookPage: null, // e.g. '@sharetribe',
   // Instagram page is used in SEO schema (http://schema.org/Organization)
-  siteInstagramPage: null, // e.g. 'https://www.instagram.com/sharetribe/',
+  siteInstagramPage: 'https://www.instagram.com/rundo.co/', // e.g. 'https://www.instagram.com/sharetribe/',
   // Twitter handle is needed in meta tags (twitter:site). Start it with '@' character
   siteTwitterHandle: null, // e.g. 'https://www.facebook.com/Sharetribe/',
 
