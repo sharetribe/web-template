@@ -21,6 +21,26 @@ const defaultLocations = [
         new LatLng(-41.125837, -71.288113)
       ),
     },
+  },
+  {
+    id: 'default-bariloche2',
+    predictionPlace: {
+      address: 'Bariloche, Río Negro, Argentina',
+      bounds: new LatLngBounds(
+        new LatLng(-41.140536, -71.308623),
+        new LatLng(-41.125837, -71.288113)
+      ),
+    },
+  },
+  {
+    id: 'default-dina-huapi',
+    predictionPlace: {
+      address: 'Dina Huapi, Río Negro, Argentina',
+      bounds: new LatLngBounds(
+        new LatLng(-41.133472, -71.310693),
+        new LatLng(-41.122620, -71.286236)
+      ),
+    },
   }
   // {
   //   id: 'default-helsinki',
