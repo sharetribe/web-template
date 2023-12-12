@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Add a specific message for too-many-request error on ListingPage and CheckoutPage
+  [#277](https://github.com/sharetribe/web-template/pull/277)
 - [fix] Add missing update to yarn.lock file.
   [#272](https://github.com/sharetribe/web-template/pull/272)
 - [fix] Final Form: iOS 17.0.x initializes unreliably Object.assign. This is fixed in iOS 17.1, but
