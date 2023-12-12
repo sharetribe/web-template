@@ -1,5 +1,6 @@
 @import '../assets/sanitize.css';
 @import './customMediaQueries.css';
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@500&display=swap');
 
 /* ================ Custom Properties aka CSS variables ================ */
 
@@ -65,6 +66,11 @@
   --fontWeightBold: 700;
   --fontWeightHeavy: 800;
   --fontWeightBlack: 900;
+
+  /* Font Family Variables */
+  --fontFamilyAnton: 'Anton', sans-serif;
+  --fontFamilyManrope: 'Manrope', sans-serif;
+
 
   --fontWeightHighlightEmail: var(--fontWeightBold);
 
@@ -175,12 +181,14 @@
  * NOTE: components use CSS Modules for styles.
  */
 
+ body {
+  font-family: var(--fontFamilyManrope);
+}
+
 body {
-  font-family: var(--fontFamily);
 
   /* A non-standard feature: https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth */
   -webkit-font-smoothing: antialiased;
-  font-smoothing: antialiased;
 
   text-rendering: optimizeSpeed;
   font-optical-sizing: auto;
@@ -216,6 +224,10 @@ a {
 a:hover {
   text-decoration: underline;
   cursor: pointer;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--fontFamilyAnton);
 }
 
 h1 {
