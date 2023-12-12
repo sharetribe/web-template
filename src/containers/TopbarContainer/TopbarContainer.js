@@ -3,6 +3,7 @@ import { array, bool, func, number, object, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import loadable from '@loadable/component';
 
 import { propTypes } from '../../util/types';
 
@@ -10,7 +11,7 @@ import { sendVerificationEmail, hasCurrentUserErrors } from '../../ducks/user.du
 import { logout, authenticationInProgress } from '../../ducks/auth.duck';
 import { manageDisableScrolling } from '../../ducks/ui.duck';
 
-import Topbar from './Topbar/Topbar';
+const Topbar = loadable(() => import(/* webpackChunkName: "Topbar" */ './Topbar/Topbar'));
 
 export const TopbarContainerComponent = props => {
   const {
