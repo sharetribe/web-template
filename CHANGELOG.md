@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] OrderPanel: showed price for inquiry on mobile layout even if price was marked hidden
+  [#278](https://github.com/sharetribe/web-template/pull/278)
 - [add] Add a specific message for too-many-request error on ListingPage and CheckoutPage
   [#277](https://github.com/sharetribe/web-template/pull/277)
 - [fix] Add missing update to yarn.lock file.
