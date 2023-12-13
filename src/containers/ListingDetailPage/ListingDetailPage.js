@@ -468,28 +468,30 @@ export const ListingDetailPage = props => {
                     <div className={css.pricetext}>$223</div>
                     <div className={css.priceper}>per person</div>
                   </div>
-                  <div className={css.instantbooking}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="8"
-                      height="11"
-                      viewBox="0 0 8 11"
-                      fill="none"
-                    >
-                      <g clipPath="url(#clip0_57_1665)">
-                        <path
-                          d="M0 5.5L0.59375 0.601562C0.635417 0.257812 0.91875 0 1.25625 0H4.76875C5.08125 0 5.33333 0.259961 5.33333 0.582227C5.33333 0.650977 5.32083 0.721875 5.29792 0.786328L4.33333 3.4375H7.23542C7.65625 3.4375 8 3.78984 8 4.22598C8 4.38496 7.95417 4.53965 7.86667 4.6707L3.8625 10.7078C3.73958 10.8926 3.5375 11.0021 3.32292 11.0021H3.2625C2.93542 11.0021 2.66875 10.7271 2.66875 10.3898C2.66875 10.3404 2.675 10.291 2.6875 10.2416L3.66667 6.1875H0.666667C0.297917 6.1875 0 5.88027 0 5.5Z"
-                          fill="white"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_57_1665">
-                          <rect width="8" height="11" fill="white" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                    <div>Instant Book</div>
-                  </div>
+                  <NamedLink name="BookingDatetimePage">
+                    <div className={css.instantbooking}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="8"
+                        height="11"
+                        viewBox="0 0 8 11"
+                        fill="none"
+                      >
+                        <g clipPath="url(#clip0_57_1665)">
+                          <path
+                            d="M0 5.5L0.59375 0.601562C0.635417 0.257812 0.91875 0 1.25625 0H4.76875C5.08125 0 5.33333 0.259961 5.33333 0.582227C5.33333 0.650977 5.32083 0.721875 5.29792 0.786328L4.33333 3.4375H7.23542C7.65625 3.4375 8 3.78984 8 4.22598C8 4.38496 7.95417 4.53965 7.86667 4.6707L3.8625 10.7078C3.73958 10.8926 3.5375 11.0021 3.32292 11.0021H3.2625C2.93542 11.0021 2.66875 10.7271 2.66875 10.3898C2.66875 10.3404 2.675 10.291 2.6875 10.2416L3.66667 6.1875H0.666667C0.297917 6.1875 0 5.88027 0 5.5Z"
+                            fill="white"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_57_1665">
+                            <rect width="8" height="11" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <div style={{ textDecoration: 'none' }}>Instant Book</div>
+                    </div>
+                  </NamedLink>
                 </div>
                 <div className={css.sectiontotalcount}>
                   <div className={css.totalcounttitle}>

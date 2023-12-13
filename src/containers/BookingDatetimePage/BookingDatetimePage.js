@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Page, LayoutSingleColumn } from '../../components';
+import { Page, LayoutSingleColumn, NamedLink } from '../../components';
 import FooterContainer from '../FooterContainer/FooterContainer';
 
 import css from './BookingDatetimePage.module.css';
@@ -11,55 +11,59 @@ export const BookingDatetimePage = props => {
       <LayoutSingleColumn footer={<FooterContainer />}>
         <div className={css.root}>
           <div className={css.header}>
-            <svg
-              width="47"
-              height="47"
-              viewBox="0 0 47 47"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g filter="url(#filter0_b_62_2112)">
-                <circle
-                  cx="23.5"
-                  cy="23.5"
-                  r="23.5"
-                  transform="matrix(-1 0 0 1 47 0)"
-                  fill="white"
-                />
-                <path
-                  d="M18.2934 23.2937C17.9027 23.6843 17.9027 24.3187 18.2934 24.7093L24.2934 30.7093C24.684 31.0999 25.3184 31.0999 25.709 30.7093C26.0996 30.3187 26.0996 29.6843 25.709 29.2937L20.4152 23.9999L25.7059 18.7062C26.0965 18.3155 26.0965 17.6812 25.7059 17.2905C25.3152 16.8999 24.6809 16.8999 24.2902 17.2905L18.2902 23.2905L18.2934 23.2937Z"
-                  fill="black"
-                />
-              </g>
-              <defs>
-                <filter
-                  id="filter0_b_62_2112"
-                  x="-10"
-                  y="-10"
-                  width="67"
-                  height="67"
-                  filterUnits="userSpaceOnUse"
-                  color-interpolation-filters="sRGB"
-                >
-                  <feFlood flood-opacity="0" result="BackgroundImageFix" />
-                  <feGaussianBlur in="BackgroundImageFix" stdDeviation="5" />
-                  <feComposite
-                    in2="SourceAlpha"
-                    operator="in"
-                    result="effect1_backgroundBlur_62_2112"
+            <NamedLink name="ListingDetailPage">
+              <svg
+                width="47"
+                height="47"
+                viewBox="0 0 47 47"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g filter="url(#filter0_b_62_2112)">
+                  <circle
+                    cx="23.5"
+                    cy="23.5"
+                    r="23.5"
+                    transform="matrix(-1 0 0 1 47 0)"
+                    fill="white"
                   />
-                  <feBlend
-                    mode="normal"
-                    in="SourceGraphic"
-                    in2="effect1_backgroundBlur_62_2112"
-                    result="shape"
+                  <path
+                    d="M18.2934 23.2937C17.9027 23.6843 17.9027 24.3187 18.2934 24.7093L24.2934 30.7093C24.684 31.0999 25.3184 31.0999 25.709 30.7093C26.0996 30.3187 26.0996 29.6843 25.709 29.2937L20.4152 23.9999L25.7059 18.7062C26.0965 18.3155 26.0965 17.6812 25.7059 17.2905C25.3152 16.8999 24.6809 16.8999 24.2902 17.2905L18.2902 23.2905L18.2934 23.2937Z"
+                    fill="black"
                   />
-                </filter>
-              </defs>
-            </svg>
+                </g>
+                <defs>
+                  <filter
+                    id="filter0_b_62_2112"
+                    x="-10"
+                    y="-10"
+                    width="67"
+                    height="67"
+                    filterUnits="userSpaceOnUse"
+                    color-interpolation-filters="sRGB"
+                  >
+                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feGaussianBlur in="BackgroundImageFix" stdDeviation="5" />
+                    <feComposite
+                      in2="SourceAlpha"
+                      operator="in"
+                      result="effect1_backgroundBlur_62_2112"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in="SourceGraphic"
+                      in2="effect1_backgroundBlur_62_2112"
+                      result="shape"
+                    />
+                  </filter>
+                </defs>
+              </svg>
+            </NamedLink>
             <div className={css.headertab}>
               <div className={css.datetime}>Date + Time</div>
-              <div className={css.payment}>Payment</div>
+              <NamedLink className={css.payment} name="BookingPaymentPage">
+                Payment
+              </NamedLink>
             </div>
             <div className={css.headeraction}>
               <div className={css.gethelp}>

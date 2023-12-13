@@ -115,7 +115,7 @@
     background-repeat: no-repeat;
     background-size: cover;
 
-    @media (--viewportMobile) {
+    @media (--viewportSmall) {
         width: 100%;
     }
 

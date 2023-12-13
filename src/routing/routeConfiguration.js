@@ -422,7 +422,7 @@ const routeConfiguration = (layoutConfig) => {
       component: BlogArticleSinglePage,
     },
     {
-      path: '/contactus',
+      path: '/gethelp',
       name: 'ContactUsPage',
       component: ContactUsPage,
     },
@@ -439,19 +439,19 @@ const routeConfiguration = (layoutConfig) => {
       loadData: pageDataLoadingAPI.HelpDetailPage.loadData,
     },
     {
-      path: '/booking',
+      path: '/about-us',
       name: 'BookingPage',
       component: BookingPage,
       loadData: pageDataLoadingAPI.BookingPage.loadData,
     },
     {
-      path: '/become',
+      path: '/join-us',
       name: 'BecomeHostPage',
       component: BecomeHostPage,
       loadData: pageDataLoadingAPI.BecomeHostPage.loadData,
     },
     {
-      path: '/policy',
+      path: '/privacy-policy',
       name: 'PolicyPage',
       component: PolicyPage,
       loadData: pageDataLoadingAPI.PolicyPage.loadData,

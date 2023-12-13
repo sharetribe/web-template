@@ -12,7 +12,7 @@ import { createResourceLocatorString } from '../../util/routes';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import Image404 from '../../assets/images/404.png';
 
-import { Heading, Page, LayoutSingleColumn, Button } from '../../components';
+import { Heading, Page, LayoutSingleColumn, Button, NamedLink } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
@@ -30,13 +30,7 @@ export class NotFoundPageComponent extends Component {
   }
 
   render() {
-    const {
-      history,
-      routeConfiguration,
-      marketplaceName,
-      intl,
-      scrollingDisabled,
-    } = this.props;
+    const { history, routeConfiguration, marketplaceName, intl, scrollingDisabled } = this.props;
 
     const title = intl.formatMessage({
       id: 'NotFoundPage.title',
@@ -57,10 +51,10 @@ export class NotFoundPageComponent extends Component {
                 <img src={Image404} />
               </div>
               <div className={css.description}>
-                <p>
-                  Sorry! This page doesn't seem to be there.
-                </p>
-                <div className={css.button}>Explore Experiences</div>
+                <p>Sorry! This page doesn't seem to be there.</p>
+                <NamedLink className={css.button} name="ExperiencesPage">
+                  Explore Experiences
+                </NamedLink>
               </div>
             </div>
           </div>

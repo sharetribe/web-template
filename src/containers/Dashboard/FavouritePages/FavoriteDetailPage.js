@@ -1,6 +1,12 @@
 import React from 'react';
 
-import { Page, LayoutSingleColumn, DashboardMenu, ExperienceCard } from '../../../components';
+import {
+  Page,
+  LayoutSingleColumn,
+  DashboardMenu,
+  ExperienceCard,
+  NamedLink,
+} from '../../../components';
 import TopbarContainer from '../../TopbarContainer/TopbarContainer';
 import FooterContainer from '../../FooterContainer/FooterContainer';
 
@@ -11,7 +17,7 @@ export const FavoriteDetailPage = props => {
     <Page title={'Favourites'} className={css.page} scrollingDisabled={false}>
       <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
         <div className={css.root}>
-          <DashboardMenu active={1} hover={0} />
+          <DashboardMenu active={2} hover={0} />
           <div className={css.content}>
             <div className={css.titleArea}>
               <div className={css.titleRow}>
@@ -21,7 +27,9 @@ export const FavoriteDetailPage = props => {
                   page.
                 </div>
               </div>
-              <div className={css.btnExplore}>Explore Experiences</div>
+              <NamedLink className={css.btnExplore} name="DashboardFavoriteResultsPage">
+                Explore Experiences
+              </NamedLink>
             </div>
           </div>
         </div>

@@ -1,0 +1,107 @@
+.sectionbody {
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.50);
+    backdrop-filter: blur(37.5px);
+    position: absolute;
+}
+
+.sectionsidebar {
+    display: flex;
+    width: 402px;
+    padding: 130px 60px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+    flex-shrink: 0;
+    position: absolute;
+    right: 0px;
+    height: 100vh;
+    border-radius: 30px 0px 0px 30px;
+    background: var(--primary-eaf-6-f-6, #EAF6F6);
+}
+
+.sectioncategory {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    align-self: stretch;
+}
+
+.categoryitem {
+    display: flex;
+    height: 26px;
+    flex-direction: column;
+    justify-content: center;
+    align-self: stretch;
+    color: var(--primary-1-b-242-d, #1B242D);
+
+    /* H4 */
+    font-family: Clash Display;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    /* 36px */
+}
+
+.sectionpages {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 7px;
+    align-self: stretch;
+}
+
+.pageitem {
+    display: flex;
+    height: 26px;
+    flex-direction: column;
+    justify-content: center;
+    align-self: stretch;
+    color: var(--primary-1-b-242-d, #1B242D);
+
+    /* H6 */
+    font-family: Clash Display;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    /* 120% */
+    cursor: pointer;
+}
+
+.menubtn {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+
+    cursor: pointer;
+}
+
+.menubtncontainer {
+    display: flex;
+    padding: 15px 30px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    border-radius: 7px;
+    background: var(--primary-1-b-242-d, #1B242D);
+    color: var(--White, #FFF);
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    /* 150% */
+}

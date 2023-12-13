@@ -42,7 +42,7 @@
 
     flex-shrink: 0;
     border-radius: 20px;
-    background: linear-gradient(178deg, #000 -16.2%, rgba(0, 0, 0, 0.00) 43.42%), url(../../assets/images/home/team1.png), lightgray 50%;
+    background: linear-gradient(178deg, #000 -16.2%, rgba(0, 0, 0, 0.00) 43.42%), url(../../assets/images/home/team5.png), lightgray 50%;
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -63,7 +63,7 @@
 
     flex-shrink: 0;
     border-radius: 20px;
-    background: linear-gradient(178deg, #000 -16.2%, rgba(0, 0, 0, 0.00) 43.42%), url(../../assets/images/home/team1.png), lightgray 50%;
+    background: linear-gradient(178deg, #000 -16.2%, rgba(0, 0, 0, 0.00) 43.42%), url(../../assets/images/home/team6.png), lightgray 50%;
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -84,7 +84,7 @@
 
     flex-shrink: 0;
     border-radius: 20px;
-    background: linear-gradient(178deg, #000 -16.2%, rgba(0, 0, 0, 0.00) 43.42%), url(../../assets/images/home/team3.png), lightgray 50%;
+    background: linear-gradient(178deg, #000 -16.2%, rgba(0, 0, 0, 0.00) 43.42%), url(../../assets/images/home/team7.png), lightgray 50%;
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -105,7 +105,7 @@
 
     flex-shrink: 0;
     border-radius: 20px;
-    background: linear-gradient(178deg, #000 -16.2%, rgba(0, 0, 0, 0.00) 43.42%), url(../../assets/images/home/team4.png), lightgray 50%;
+    background: linear-gradient(178deg, #000 -16.2%, rgba(0, 0, 0, 0.00) 43.42%), url(../../assets/images/home/team8.png), lightgray 50%;
     background-repeat: no-repeat;
     background-size: cover;
 }
