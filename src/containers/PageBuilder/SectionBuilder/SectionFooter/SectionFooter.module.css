@@ -142,7 +142,7 @@
   text-align: center;
   /* Paragraph/P12 - Medium */
   font-family: Poppins;
-  font-size: 12px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: 24px;
@@ -154,6 +154,7 @@
 
   &:focus {
     background-color: transparent;
+    box-shadow: none;
     outline: none;
     border: 0;
   }

@@ -24,7 +24,7 @@ import {
 
 export const BecomeHostPageComponent = props => {
   return (
-    <Page title={'Become a Host'} className={css.page} scrollingDisabled={false}>
+    <Page title={'Join US'} className={css.page} scrollingDisabled={false}>
       <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
         <div className={css.root}>
           <div className={css.content}>

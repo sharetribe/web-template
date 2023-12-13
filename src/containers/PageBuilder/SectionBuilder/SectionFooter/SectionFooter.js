@@ -93,7 +93,7 @@ const SectionFooter = props => {
                 <div className={css.sectioncontent1contactustitle2}>Get exclusive perks + fresh experiences.</div>
               </div>
               <div className={css.emailcontainer}>
-                <input type="text" placeholder="" className={css.emailedit} />
+                <input type="text" placeholder="Your email" className={css.emailedit} />
                 <div className={css.emailenter}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="17" viewBox="0 0 14 17" fill="none">
                     <path d="M13.7063 9.59531C14.0969 9.20469 14.0969 8.57031 13.7063 8.17969L8.70625 3.17969C8.31563 2.78906 7.68125 2.78906 7.29063 3.17969C6.9 3.57031 6.9 4.20469 7.29063 4.59531L10.5875 7.88906H1C0.446875 7.88906 0 8.33594 0 8.88906C0 9.44219 0.446875 9.88906 1 9.88906H10.5844L7.29375 13.1828C6.90313 13.5734 6.90313 14.2078 7.29375 14.5984C7.68438 14.9891 8.31875 14.9891 8.70938 14.5984L13.7094 9.59844L13.7063 9.59531Z" fill="#1B242D"/>

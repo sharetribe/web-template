@@ -366,7 +366,7 @@ const routeConfiguration = (layoutConfig) => {
       extraProps: { raw: true },
     },
     {
-      path: '/notfound',
+      path: '/page-not-found',
       name: 'NotFoundPage',
       component: props => <NotFoundPage {...props} />,
     },
@@ -463,7 +463,7 @@ const routeConfiguration = (layoutConfig) => {
       loadData: pageDataLoadingAPI.PolicyPage.loadData,
     },
     {
-      path: '/policy/refund',
+      path: '/refund-policy',
       name: 'RefundPolicyPage',
       component: RefundPolicyPage,
       loadData: pageDataLoadingAPI.PolicyPage.loadData,
@@ -541,7 +541,7 @@ const routeConfiguration = (layoutConfig) => {
       loadData: pageDataLoadingAPI.FaqPage.loadData,
     },
     {
-      path: '/dashboard/modal/wizard',
+      path: '/dashboard/modal/status',
       name: 'ConfirmationWizardPage',
       component: ConfirmationWizardPage,
       loadData: pageDataLoadingAPI.FaqPage.loadData,
