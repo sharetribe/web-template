@@ -26,7 +26,7 @@ const defaultConfig = {
   listingMinimumPriceSubUnits: 0,
 
   // Marketplace name is needed for microcopy and in meta tags (bots and social media sharing reads those)
-  marketplaceName: 'Biketribe',
+  marketplaceName: 'Rundo',
 
   // Modify Stripe configuration in configStripe.js
   // - picks REACT_APP_STRIPE_PUBLISHABLE_KEY from environment variables
@@ -115,9 +115,9 @@ const defaultConfig = {
   // Note: Google doesn't recognize this:
   // https://developers.google.com/search/docs/advanced/structured-data/logo#structured-data-type-definitions
   address: {
-    addressCountry: null, // 'FI',
-    addressRegion: null, // 'Helsinki',
-    postalCode: null, // '00130',
+    addressCountry: 'ARG', // 'FI',
+    addressRegion: 'Patagonia', // 'Helsinki',
+    postalCode: '8400', // '00130',
     streetAddress: null, // 'Erottajankatu 19 B',
   },
 };
