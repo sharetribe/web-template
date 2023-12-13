@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "BookingNewRequest.Subject" "{customerDisplayName} requested to book {listingTitle}" customerDisplayName=transaction.customer.display-name listingTitle=transaction.listing.title}}
