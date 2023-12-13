@@ -1,7 +1,7 @@
 // See: https://en.wikipedia.org/wiki/ISO_4217
 // See: https://stripe.com/docs/currencies
 export const subUnitDivisors = {
-  ARG: 100,
+  ARS: 100,
   AUD: 100,
   BGN: 100,
   CAD: 100,
