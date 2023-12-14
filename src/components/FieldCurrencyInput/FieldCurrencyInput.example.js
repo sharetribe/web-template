@@ -17,6 +17,10 @@ const currencyConfigEUR = {
   currency: 'EUR',
 };
 
+const currencyConfigARS = {
+  ...currencyConfig,
+  currency: 'ARS',
+};
 // eslint-disable-next-line no-console
 const onChange = price => console.log('CurrencyInput - value:', price);
 
@@ -69,6 +73,25 @@ export const defaultValueWithFiEUR = {
   props: {
     currencyConfig: currencyConfigEUR,
     locale: 'fi',
+    defaultValue: 9999.99,
+  },
+  group: 'inputs',
+};
+
+export const EmptyWithEsARS = {
+  component: CurrencyInputWithIntl,
+  props: {
+    currencyConfig: currencyConfigARS,
+    locale: 'es',
+  },
+  group: 'inputs',
+};
+
+export const defaultValueWithEsARS = {
+  component: CurrencyInputWithIntl,
+  props: {
+    currencyConfig: currencyConfigARS,
+    locale: 'es',
     defaultValue: 9999.99,
   },
   group: 'inputs',
