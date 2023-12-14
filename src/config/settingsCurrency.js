@@ -44,7 +44,7 @@ export const currencyFormatting = currency => {
     ? {
         style: 'currency',
         currency,
-        currencyDisplay: 'symbol',
+        currencyDisplay: 'ARS',
         useGrouping: true,
         // If the currency is not using subunits (like JPY), remove fractions.
         minimumFractionDigits: 0,
@@ -53,7 +53,7 @@ export const currencyFormatting = currency => {
     : {
         style: 'currency',
         currency,
-        currencyDisplay: 'symbol',
+        currencyDisplay: 'ARS',
         useGrouping: true,
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
