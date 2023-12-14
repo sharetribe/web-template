@@ -112,23 +112,15 @@ export const graph = {
     [states.INITIAL]: {
       on: {
         [transitions.INQUIRE]: states.INQUIRY,
-        [transitions.REQUEST_PAYMENT]: states.PENDING_PAYMENT,
+        [transitions.REQUEST_PAYMENT]: states.PREAUTHORIZED,
       },
     },
     [states.INQUIRY]: {
       on: {
-        [transitions.REQUEST_PAYMENT_AFTER_INQUIRY]: states.PENDING_PAYMENT,
+        [transitions.REQUEST_PAYMENT_AFTER_INQUIRY]: states.PREAUTHORIZED,
       },
     },
-
-    [states.PENDING_PAYMENT]: {
-      on: {
-        [transitions.EXPIRE_PAYMENT]: states.PAYMENT_EXPIRED,
-        [transitions.CONFIRM_PAYMENT]: states.PREAUTHORIZED,
-      },
-    },
-
-    [states.PAYMENT_EXPIRED]: {},
+    
     [states.PREAUTHORIZED]: {
       on: {
         [transitions.DECLINE]: states.DECLINED,
@@ -138,39 +130,6 @@ export const graph = {
         [transitions.OPERATOR_ACCEPT]: states.ACCEPTED,
       },
     },
-
-    [states.DECLINED]: {},
-    [states.EXPIRED]: {},
-    [states.ACCEPTED]: {
-      on: {
-        [transitions.CANCEL]: states.CANCELED,
-        [transitions.COMPLETE]: states.DELIVERED,
-        [transitions.OPERATOR_COMPLETE]: states.DELIVERED,
-      },
-    },
-
-    [states.CANCELED]: {},
-    [states.DELIVERED]: {
-      on: {
-        [transitions.EXPIRE_REVIEW_PERIOD]: states.REVIEWED,
-        [transitions.REVIEW_1_BY_CUSTOMER]: states.REVIEWED_BY_CUSTOMER,
-        [transitions.REVIEW_1_BY_PROVIDER]: states.REVIEWED_BY_PROVIDER,
-      },
-    },
-
-    [states.REVIEWED_BY_CUSTOMER]: {
-      on: {
-        [transitions.REVIEW_2_BY_PROVIDER]: states.REVIEWED,
-        [transitions.EXPIRE_PROVIDER_REVIEW_PERIOD]: states.REVIEWED,
-      },
-    },
-    [states.REVIEWED_BY_PROVIDER]: {
-      on: {
-        [transitions.REVIEW_2_BY_CUSTOMER]: states.REVIEWED,
-        [transitions.EXPIRE_CUSTOMER_REVIEW_PERIOD]: states.REVIEWED,
-      },
-    },
-    [states.REVIEWED]: { type: 'final' },
   },
 };
 
