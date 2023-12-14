@@ -335,7 +335,7 @@ class EditListingWizard extends Component {
     this.hasScrolledToTab = shouldScroll;
   }
 
-  handlePublishListing(id) {
+  /**handlePublishListing(id) {
     const { onPublishListingDraft, currentUser, stripeAccount, listing, config } = this.props;
     const processName = listing?.attributes?.publicData?.transactionProcessAlias.split('/')[0];
     const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
@@ -356,7 +356,21 @@ class EditListingWizard extends Component {
       });
     }
   }
-
+  **/
+  handlePublishListing(id) {
+    const { onPublishListingDraft, listing } = this.props;
+    const processName = listing?.attributes?.publicData?.transactionProcessAlias.split('/')[0];
+    const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
+  
+    if (isInquiryProcess) {
+      onPublishListingDraft(id);
+    } else {
+      this.setState({
+        draftId: id,
+        showPayoutDetails: true,
+      });
+    }
+  }
   handlePayoutModalClose() {
     this.setState({ showPayoutDetails: false });
   }
