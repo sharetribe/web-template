@@ -3,10 +3,12 @@
 .sectionbody {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 32px;
     justify-content: space-between;
     padding-bottom: 120px;
+    padding-left: 25px;
+    padding-right: 25px;
 
     @media (--viewportLarge) {
         flex-direction: row;
@@ -56,6 +58,10 @@
     /* 150% */
     cursor: pointer;
 
+    @media (--viewportLarge) {
+        width: auto;
+    }
+
     &:hover {
         text-decoration: none;
     }
@@ -69,11 +75,15 @@
     align-self: stretch;
     color: var(--primary-1-b-242-d, #1B242D);
     font-family: Clash Display;
-    font-size: 38px;
+    font-size: 35px;
     font-style: normal;
     font-weight: 600;
     line-height: 120%;
     /* 45.6px */
+
+    @media (--viewportLarge) {
+        font-size: 38px;
+    }
 }
 
 .sectiondescriptiontitle2 {
@@ -83,7 +93,6 @@
     font-style: normal;
     font-weight: 400;
     line-height: 140%;
-    /* 22.4px */
 }
 
 .sectiondescriptiontitle3 {
@@ -119,7 +128,7 @@
         width: 100%;
     }
 
-    @media (--viewportTabletDown) {
+    @media (--viewportMedium) {
         width: 100%;
     }
 }

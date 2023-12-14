@@ -1,10 +1,6 @@
 /* ================ Custom media queries ================ */
-@custom-media --viewportMobile (max-width: 550px);
 @custom-media --viewportSmall (min-width: 550px);
 @custom-media --viewportMedium (min-width: 768px);
 @custom-media --viewportLarge (min-width: 1025px);
 @custom-media --viewportLargeWithPaddings (min-width: 1128px);
-@custom-media --viewportLaptop (min-width: 1366px);
 @custom-media --viewportXLarge (min-width: 1921px);
-@custom-media --viewportTabletDown (max-width: 768px);
-@custom-media --viewportLaptopDown (max-width: 1024px);

@@ -11,7 +11,7 @@
 .container {
   /* Size */
   width: 100%;
-  height: var(--topbarHeight);
+  height: auto;
 
   /* Layout for child components */
   display: flex;
@@ -22,16 +22,39 @@
   /* fill */
   background-color: var(--colorWhite);
 
-  /* shadows */
-  box-shadow: var(--boxShadow);
+  padding: 25px;
 
   @media (--viewportMedium) {
-    height: var(--topbarHeightDesktop);
+    height: auto;
   }
 
   @media (--viewportLarge) {
     display: none;
   }
+}
+
+.headeraction {
+  display: flex;
+  height: 42px;
+  padding: 12px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  border-radius: 99px;
+  border: 1px solid rgba(34, 118, 103, 0.20);
+  background: var(--primary-eaf-6-f-6, #EAF6F6);
+}
+
+.headeractionbar {
+  background: #FFF;
+  width: 1px;
+  height: 16px;
+}
+
+.headerdashboardcontent {
+  display: flex;
+  flex-direction: row;
+  gap: 17px;
 }
 
 .logoutButton {

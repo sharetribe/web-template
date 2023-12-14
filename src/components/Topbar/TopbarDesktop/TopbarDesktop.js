@@ -44,9 +44,9 @@ const TopbarDesktop = props => {
   const marketplaceName = appConfig.marketplaceName;
   const authenticatedOnClientSide = mounted && isAuthenticated;
   const isAuthenticatedOrJustHydrated = isAuthenticated || !mounted;
-  const [isSidebarOpened, setSidebarOpened] = useState(false);
-
   const classes = classNames(rootClassName || css.root, className);
+
+  const [isSidebarOpened, setSidebarOpened] = useState(false);
 
   const handleSidebar = () => {
     if (!isSidebarOpened) document.body.style.overflowY = 'hidden';

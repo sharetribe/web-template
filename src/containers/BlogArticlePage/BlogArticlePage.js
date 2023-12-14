@@ -22,36 +22,40 @@ import SectionBlogCard from '../../components/SectionBlogCard/SectionBlogCard';
 import SectionPagination from '../../components/SectionPagination/SectionPagination';
 import SectionSubscribe from '../../components/SectionSubscribe/SectionSubscribe';
 
-import SubscribeImage from "../../assets/images/blog-subscribe.png";
+import SubscribeImage from '../../assets/images/blog-subscribe.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faInstagram, faLinkedin, faTwitter } from '@fortawesome/free-brands-svg-icons';
 
-export const BlogArticlePageComponent = props => {
+import NamedLink from '../../components/NamedLink/NamedLink';
 
+export const BlogArticlePageComponent = props => {
   return (
-    <Page title={"Article"} className={css.page} scrollingDisabled={false}>
+    <Page title={'Article'} className={css.page} scrollingDisabled={false}>
       <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
         <div className={css.root}>
-          <SectionBreadcrumb secondary={0} title="How Bevy help Axiom Cloud" currentPath="Article" middlePath="Blog" subTitle="John Doe  JUL 26, 2023 7:15:10 AM" />
+          <SectionBreadcrumb
+            secondary={0}
+            title="How Bevy help Axiom Cloud"
+            currentPath="Article"
+            middlePath="Blog"
+            subTitle="John Doe  JUL 26, 2023 7:15:10 AM"
+          />
           <div className={css.list}>
             <div className={css.articles}>
               <div className={css.article_row}>
-                <div className={css.article_title}>
-                  Lorem ipsum dolor sit amet consectetur.
-                </div>
+                <div className={css.article_title}>Lorem ipsum dolor sit amet consectetur.</div>
                 <div className={css.article_content}>
-                  Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum
+                  Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida
+                  pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum
                 </div>
               </div>
               <div className={css.article_row}>
-                <div className={css.article_title}>
-                  Lorem ipsum dolor sit amet consectetur.
-                </div>
+                <div className={css.article_title}>Lorem ipsum dolor sit amet consectetur.</div>
                 <div className={css.article_content}>
-                  Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum
+                  Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida
+                  pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum
                 </div>
               </div>
-
               <div className={css.social_box}>
                 <FontAwesomeIcon icon={faInstagram} className={css.social_icon} />
                 <FontAwesomeIcon icon={faFacebook} className={css.social_icon} />
@@ -63,18 +67,30 @@ export const BlogArticlePageComponent = props => {
               <div className={css.latest_title}>Latest articles</div>
               <div className={css.latest_articles}>
                 <div>
-                  <div className={css.latest_article_title}>Lorem ipsum dolor sit amet consectetur.</div>
-                  <div className={css.latest_article_content}>Lorem ipsum dolor sit amet consectetur. Urna condimentum...</div>
+                  <NamedLink className={css.latest_article_title} name="BlogArticleSinglePage">
+                    Lorem ipsum dolor sit amet consectetur.
+                  </NamedLink>
+                  <div className={css.latest_article_content}>
+                    Lorem ipsum dolor sit amet consectetur. Urna condimentum...
+                  </div>
                 </div>
                 <div className={css.latest_article_line}></div>
                 <div>
-                  <div className={css.latest_article_title}>Lorem ipsum dolor sit amet consectetur.</div>
-                  <div className={css.latest_article_content}>Lorem ipsum dolor sit amet consectetur. Urna condimentum...</div>
+                  <NamedLink className={css.latest_article_title} name="BlogArticleSinglePage">
+                    Lorem ipsum dolor sit amet consectetur.
+                  </NamedLink>
+                  <div className={css.latest_article_content}>
+                    Lorem ipsum dolor sit amet consectetur. Urna condimentum...
+                  </div>
                 </div>
                 <div className={css.latest_article_line}></div>
                 <div>
-                  <div className={css.latest_article_title}>Lorem ipsum dolor sit amet consectetur.</div>
-                  <div className={css.latest_article_content}>Lorem ipsum dolor sit amet consectetur. Urna condimentum...</div>
+                  <NamedLink className={css.latest_article_title} name="BlogArticleSinglePage">
+                    Lorem ipsum dolor sit amet consectetur.
+                  </NamedLink>
+                  <div className={css.latest_article_content}>
+                    Lorem ipsum dolor sit amet consectetur. Urna condimentum...
+                  </div>
                 </div>
               </div>
             </div>

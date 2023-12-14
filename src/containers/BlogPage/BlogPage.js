@@ -22,12 +22,11 @@ import SectionBlogCard from '../../components/SectionBlogCard/SectionBlogCard';
 import SectionPagination from '../../components/SectionPagination/SectionPagination';
 import SectionSubscribe from '../../components/SectionSubscribe/SectionSubscribe';
 
-import SubscribeImage from "../../assets/images/blog-subscribe.png";
+import SubscribeImage from '../../assets/images/blog-subscribe.png';
 
 export const BlogPageComponent = props => {
-
   return (
-    <Page title={"Blog"} className={css.page} scrollingDisabled={false}>
+    <Page title={'Blog'} className={css.page} scrollingDisabled={false}>
       <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
         <div className={css.root}>
           <SectionBreadcrumb secondary={0} title="Blog Page" currentPath="Blog" />
@@ -35,30 +34,48 @@ export const BlogPageComponent = props => {
             <div className={css.cardrow}>
               <SectionBlogCard
                 image={CardImage1}
-                title={"Lorem ipsum dolor sit amet consectetur."}
-                description={"Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum"} />
+                title={'Lorem ipsum dolor sit amet consectetur.'}
+                description={
+                  'Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum'
+                }
+              />
               <SectionBlogCard
                 image={CardImage2}
-                title={"Lorem ipsum dolor sit amet consectetur."}
-                description={"Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum"} />
+                title={'Lorem ipsum dolor sit amet consectetur.'}
+                description={
+                  'Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum'
+                }
+              />
               <SectionBlogCard
                 image={CardImage3}
-                title={"Lorem ipsum dolor sit amet consectetur."}
-                description={"Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum"} />
+                title={'Lorem ipsum dolor sit amet consectetur.'}
+                description={
+                  'Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum'
+                }
+              />
             </div>
             <div className={css.cardrow}>
               <SectionBlogCard
                 image={CardImage4}
-                title={"Lorem ipsum dolor sit amet consectetur."}
-                description={"Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum"} />
+                title={'Lorem ipsum dolor sit amet consectetur.'}
+                description={
+                  'Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum'
+                }
+              />
               <SectionBlogCard
                 image={CardImage5}
-                title={"Lorem ipsum dolor sit amet consectetur."}
-                description={"Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum"} />
+                title={'Lorem ipsum dolor sit amet consectetur.'}
+                description={
+                  'Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum'
+                }
+              />
               <SectionBlogCard
                 image={CardImage6}
-                title={"Lorem ipsum dolor sit amet consectetur."}
-                description={"Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum"} />
+                title={'Lorem ipsum dolor sit amet consectetur.'}
+                description={
+                  'Lorem ipsum dolor sit amet consectetur. Urna condimentum tristique gravida pulvinar sit. Quisque integer a aliquam eleifend ultricies. Lorem ipsum'
+                }
+              />
             </div>
           </div>
           <div className={css.pagination}>
