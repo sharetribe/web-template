@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import NamedLink from '../NamedLink/NamedLink';
 import css from './SectionCaribbean.module.css';
 
+import landingImg from '../../assets/images/home/landing.svg';
+
 const SectionCaribbean = () => {
   return (
     <div className={css.sectionbody}>
@@ -24,7 +26,7 @@ const SectionCaribbean = () => {
         </NamedLink>
       </div>
       <div className={css.sectionimage}>
-        <div className={css.sectionimageitem}></div>
+        <img src={landingImg} class={css.sectionimageitem} alt="landing" />
       </div>
     </div>
   );

@@ -4,8 +4,22 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 30px;
-    padding-bottom: 120px;
+    gap: 32px;
+    justify-content: space-between;
+
+    @media (--viewMiddleScreenMax) {
+        flex-direction: column;
+        padding-bottom: 60px;
+        width: 100%;
+    }
+
+    @media (--viewLargeScreenMin) and (--viewLargeScreenMax) {
+        padding-bottom: 100px;
+    }
+
+    @media (--viewXLargeScreenMin) {
+        padding-bottom: 100px;
+    }
 }
 
 .sectioncontent {
@@ -20,6 +34,14 @@
     height: 442px;
     background-repeat: no-repeat;
     background-size: cover;
+
+    @media (--viewMiddleScreenMax) {
+        height: 600px;
+    }
+
+    @media (--viewMiddleScreenMax) {
+        height: auto;
+    }
 }
 
 .sectiondescription {
@@ -27,7 +49,20 @@
     align-items: flex-end;
     gap: 63px;
 
-    padding: 245px 51px 45px 45px;
+    @media (--viewMiddleScreenMax) {
+        padding: 100px 51px 45px 45px;
+        flex-direction: column;
+    }
+
+    @media (--viewLargeScreenMin) and (--viewLargeScreenMax) {
+        padding: 100px 51px 45px 45px;
+        flex-direction: column;
+    }
+
+    @media (--viewXLargeScreenMin) {
+        padding: 245px 51px 45px 45px;
+        flex-direction: row;
+    }
 }
 
 .sectiondescriptioncontent {
@@ -47,11 +82,22 @@
 
     /* H2 */
     font-family: Clash Display;
-    font-size: 40px;
     font-style: normal;
     font-weight: 600;
     line-height: 120%;
     /* 48px */
+
+    @media (--viewMiddleScreenMax) {
+        font-size: 35px;
+    }
+
+    @media (--viewLargeScreenMin) and (--viewLargeScreenMax) {
+        font-size: 38px;
+    }
+
+    @media (--viewXLargeScreenMin) {
+        font-size: 38px;
+    }
 }
 
 .sectiondescriptiontext {
@@ -84,4 +130,8 @@
     font-weight: 500;
     line-height: 24px;
     /* 150% */
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+    }
 }

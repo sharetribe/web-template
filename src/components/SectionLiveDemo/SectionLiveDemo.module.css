@@ -2,10 +2,20 @@
 
 .sectionbody {
     display: flex;
-    flex-direction: row;
     align-items: flex-start;
-    gap: 30px;
-    padding-bottom: 120px;
+    gap: 32px;
+    justify-content: space-between;
+
+    @media (--viewMiddleScreenMax) {
+        padding-bottom: 60px;
+        width: 100%;
+        flex-direction: column-reverse;
+    }
+
+    @media (--viewLargeScreenMin) {
+        padding-bottom: 100px;
+        flex-direction: row;
+    }
 }
 
 .sectionleft {
@@ -14,13 +24,26 @@
     justify-content: center;
     align-items: center;
     flex: 1 0 0;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+        height: 373px;
+    }
 }
 
 .sectionleftimage {
     border-radius: 20px;
-    background: url(../../assets/images/home/livedemo.png), lightgray 50% / cover no-repeat;
+    background: url(../../assets/images/home/livedemo.png), lightgray 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     width: 540px;
     height: 467px;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+        height: 373px;
+    }
 }
 
 .sectionright {
@@ -31,6 +54,11 @@
     border-radius: 20px;
     background: var(--primary-1-b-242-d, #1B242D);
     padding: 35px;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+        height: 373px;
+    }
 }
 
 .sectionrightcontent {
@@ -39,6 +67,10 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 20px;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+    }
 }
 
 .sectionrightcontenttitle {
@@ -94,6 +126,10 @@
     font-weight: 500;
     line-height: 24px;
     /* 150% */
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+    }
 }
 
 .righteffect {

@@ -3,16 +3,47 @@
 .root {
     /* Expand to the available space */
     flex-grow: 1;
-
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding-top: 60px;
+
+    @media (--viewSmallScreenMax) {
+        width: 100vw;
+        align-items: flex-start;
+    }
+
+    @media (--viewMiddleScreenMin) and (--viewMiddleScreenMax) {
+        width: 100vw;
+        align-items: flex-start;
+    }
+
+    @media (--viewLargeScreenMin) and (--viewLargeScreenMax) {
+        padding-top: 60px;
+        align-items: center;
+    }
+
+    @media (--viewXLargeScreenMin) {
+        padding-top: 60px;
+        align-items: center;
+    }
 }
 
 .content {
-    width: 100%;
-    @media (--viewportLarge) {
+    padding-left: 25px;
+    padding-right: 25px;
+    @media (--viewSmallScreenMax) {
+        width: 100vw;
+    }
+
+    @media (--viewMiddleScreenMin) and (--viewMiddleScreenMax) {
+        width: 100vw;
+    }
+
+    @media (--viewLargeScreenMin) and (--viewLargeScreenMax) {
+        width: 1100px;
+        padding: 0px;
+    }
+
+    @media (--viewXLargeScreenMin) {
         width: 1100px;
         padding: 0px;
     }

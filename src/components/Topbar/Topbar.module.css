@@ -10,7 +10,7 @@
 
 .container {
   /* Size */
-  width: 100%;
+  width: 100vw;
   height: auto;
 
   /* Layout for child components */

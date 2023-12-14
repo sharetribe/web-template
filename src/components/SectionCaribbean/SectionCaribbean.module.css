@@ -6,11 +6,20 @@
     align-items: flex-start;
     gap: 32px;
     justify-content: space-between;
-    padding-bottom: 120px;
-    padding-left: 25px;
-    padding-right: 25px;
 
-    @media (--viewportLarge) {
+    @media (--viewMiddleScreenMax) {
+        flex-direction: column;
+        padding-bottom: 60px;
+        width: 100%;
+    }
+
+    @media (--viewLargeScreenMin) and (--viewLargeScreenMax) {
+        padding-bottom: 100px;
+        flex-direction: row;
+    }
+
+    @media (--viewXLargeScreenMin) {
+        padding-bottom: 100px;
         flex-direction: row;
     }
 }
@@ -58,12 +67,12 @@
     /* 150% */
     cursor: pointer;
 
-    @media (--viewportLarge) {
-        width: auto;
+    @media (--viewSmallScreenMax) {
+        width: 100%;
     }
 
-    &:hover {
-        text-decoration: none;
+    @media (--viewMiddleScreenMin) and (--viewMiddleScreenMax) {
+        width: 100%;
     }
 }
 
@@ -75,15 +84,22 @@
     align-self: stretch;
     color: var(--primary-1-b-242-d, #1B242D);
     font-family: Clash Display;
-    font-size: 35px;
     font-style: normal;
     font-weight: 600;
     line-height: 120%;
-    /* 45.6px */
 
-    @media (--viewportLarge) {
+    @media (--viewMiddleScreenMax) {
+        font-size: 35px;
+    }
+
+    @media (--viewLargeScreenMin) and (--viewLargeScreenMax) {
         font-size: 38px;
     }
+
+    @media (--viewXLargeScreenMin) {
+        font-size: 38px;
+    }
+
 }
 
 .sectiondescriptiontitle2 {
@@ -106,30 +122,41 @@
 }
 
 .sectionimage {
-    width: 100%;
-    height: 394px;
     display: flex;
 
-    @media (--viewportLarge) {
-        width: calc(76.3vw - 477px);
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    @media (--viewLargeScreenMin) and (--viewLargeScreenMax) {
+        width: 647.496px;
+    }
+
+    @media (--viewXLargeScreenMin) {
+        width: 647.496px;
     }
 }
 
 .sectionimageitem {
-    width: 655px;
-    height: 395px;
     flex-shrink: 0;
     border-radius: 8.717px;
-    background: url(../../assets/images/home/landing.svg);
-    background-repeat: no-repeat;
-    background-size: cover;
 
-    @media (--viewportSmall) {
+    @media (--viewMiddleScreenMax) {
         width: 100%;
+        height: auto;
     }
 
-    @media (--viewportMedium) {
-        width: 100%;
+    @media (--viewLargeScreenMin) and (--viewLargeScreenMax) {
+        width: 647.496px;
+        height: 394px;
+    }
+
+    @media (--viewXLargeScreenMin) {
+        width: 647.496px;
+        height: 394px;
     }
 }
 

@@ -9,6 +9,16 @@
     align-items: center;
     flex-shrink: 0;
     background: var(--primary-1-b-242-d, #1B242D);
+
+    @media (--viewMiddleScreenMax) {
+      display: flex;
+      width: 100%;
+      height: 861px;
+      padding: 70px 53px 76.481px 53px;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
 }
 
 .sectioncontent {
@@ -16,6 +26,10 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 60px;
+
+  @media (--viewMiddleScreenMax) {
+    align-items: center;
+  }
 }
 
 .sectioncontent1 {
@@ -24,6 +38,10 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 60px;
+
+  @media (--viewMiddleScreenMax) {
+    align-items: center;
+  }
 }
 
 .sectioncontent1main {
@@ -32,12 +50,26 @@
   justify-content: center;
   align-items: flex-start;
   gap: 337px;
+
+  @media (--viewMiddleScreenMax) {
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+  }
 }
 
 .sectioncontent1menu {
   display: flex;
   align-items: flex-start;
   gap: 181px;
+
+  @media (--viewMiddleScreenMax) {
+    flex-direction: column;
+    gap: 40px;
+    text-align: center;
+    align-items: center;
+    width: 100%;
+  }
 }
 
 .sectioncontent1leftmenu {
@@ -45,6 +77,10 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 15px;
+
+  @media (--viewMiddleScreenMax) {
+    align-items: center;
+  }
 }
 
 .sectioncontent1menucontainer {
@@ -52,6 +88,11 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    align-items: center;
+  }
 }
 
 .sectioncontent1rightmenu {
@@ -184,6 +225,10 @@
   align-items: center;
   gap: 26px;
   justify-content: space-between;
+
+  @media (--viewMiddleScreenMax) {
+    flex-direction: column-reverse;
+  }
 }
 
 .sectioncontent2text {

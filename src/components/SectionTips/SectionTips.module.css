@@ -4,17 +4,42 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 30px;
-    padding-bottom: 120px;
+    gap: 32px;
+    justify-content: space-between;
+
+    @media (--viewMiddleScreenMax) {
+        flex-direction: column;
+        padding-bottom: 60px;
+        width: 100%;
+    }
+
+    @media (--viewLargeScreenMin) and (--viewLargeScreenMax) {
+        padding-bottom: 100px;
+    }
+
+    @media (--viewXLargeScreenMin) {
+        padding-bottom: 100px;
+    }
 }
 
 .sectiontitle {
     color: var(--primary-1-b-242-d, #1B242D);
     font-family: Clash Display;
-    font-size: 40px;
     font-style: normal;
     font-weight: 600;
     line-height: 120%;
+
+    @media (--viewMiddleScreenMax) {
+        font-size: 35px;
+    }
+
+    @media (--viewLargeScreenMin) and (--viewLargeScreenMax) {
+        font-size: 38px;
+    }
+
+    @media (--viewXLargeScreenMin) {
+        font-size: 38px;
+    }
 }
 
 .sectioncontent {
@@ -22,11 +47,22 @@
     align-items: flex-start;
     gap: 30px;
     align-self: stretch;
+
+    @media (--viewMiddleScreenMax) {
+        flex-direction: column;
+    }
+
+    @media (--viewLargeScreenMin) and (--viewLargeScreenMax) {
+        flex-direction: column;
+    }
+
+    @media (--viewXLargeScreenMin) {
+        flex-direction: row;
+    }
 }
 
 .tipsitem {
     display: flex;
-    width: 255px;
     padding: 20px;
     flex-direction: column;
     align-items: flex-start;
@@ -35,6 +71,18 @@
 
     border-radius: 12px;
     background: var(--primary-eaf-6-f-6, #EAF6F6);
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+    }
+
+    @media (--viewLargeScreenMin) and (--viewLargeScreenMax) {
+        width: 100%;
+    }
+
+    @media (--viewXLargeScreenMin) {
+        width: 255px;
+    }
 }
 
 .tipstitle {

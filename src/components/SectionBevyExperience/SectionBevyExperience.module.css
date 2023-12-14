@@ -2,10 +2,25 @@
 
 .sectionbody {
     display: flex;
-    flex-direction: row;
     align-items: flex-start;
     gap: 30px;
-    padding-bottom: 120px;
+    justify-content: space-between;
+
+    @media (--viewMiddleScreenMax) {
+        flex-direction: column;
+        padding-bottom: 60px;
+        width: 100%;
+    }
+
+    @media (--viewLargeScreenMin) and (--viewLargeScreenMax) {
+        padding-bottom: 100px;
+        flex-direction: row;
+    }
+
+    @media (--viewXLargeScreenMin) {
+        padding-bottom: 100px;
+        flex-direction: row;
+    }
 }
 
 .sectionleft {
@@ -14,6 +29,10 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 49px;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+    }
 }
 
 .sectionlefttitle {
@@ -21,13 +40,24 @@
 
     /* H2 */
     font-family: Clash Display;
-    font-size: 40px;
     font-style: normal;
     font-weight: 600;
     line-height: 120%;
     /* 48px */
 
     align-self: stretch;
+
+    @media (--viewMiddleScreenMax) {
+        font-size: 35px;
+    }
+
+    @media (--viewLargeScreenMin) and (--viewLargeScreenMax) {
+        font-size: 38px;
+    }
+
+    @media (--viewXLargeScreenMin) {
+        font-size: 38px;
+    }
 }
 
 .sectionleftcontent {
@@ -46,12 +76,28 @@
     flex-shrink: 0;
     padding-top: 41px;
     padding-left: 45px;
+
+    @media (--viewMiddleScreenMax) {
+        padding: 18px 49px 18px 49px;
+        height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }
 
 .sectionleftitemcontent {
     display: inline-flex;
     align-items: center;
     gap: 24px;
+
+    @media (--viewMiddleScreenMax) {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        text-align: center;
+    }
 }
 
 .sectionleftitemtext {
@@ -73,6 +119,10 @@
 
     border-radius: 20px;
     background: var(--primary-eaf-6-f-6, #EAF6F6);
+
+    @media (--viewMiddleScreenMax) {
+        height: auto;
+    }
 }
 
 .sectionrightcontent {
@@ -81,6 +131,10 @@
     justify-content: flex-end;
     align-items: flex-end;
     gap: 50px;
+
+    @media (--viewMiddleScreenMax) {
+        height: auto;
+    }
 }
 
 .sectionrightitem {
