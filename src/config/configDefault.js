@@ -116,7 +116,7 @@ const defaultConfig = {
   // https://developers.google.com/search/docs/advanced/structured-data/logo#structured-data-type-definitions
   address: {
     addressCountry: 'ARG', // 'FI',
-    addressRegion: 'Patagonia', // 'Helsinki',
+    addressRegion: null, // 'Helsinki',
     postalCode: '8400', // '00130',
     streetAddress: null, // 'Erottajankatu 19 B',
   },
