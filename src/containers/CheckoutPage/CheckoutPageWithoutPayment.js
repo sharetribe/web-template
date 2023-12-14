@@ -48,6 +48,10 @@ import MobileOrderBreakdown from './MobileOrderBreakdown';
 
 import css from './CheckoutPage.module.css';
 
+import {
+  processCheckoutWithoutPayment,
+} from './CheckoutPageTransactionHelpers';
+
 /**
  * Construct orderParams object using pageData from session storage, shipping details, and optional payment params.
  * Note: This is used for both speculate transition and real transition
@@ -143,7 +147,7 @@ const fetchSpeculatedTransactionIfNeeded = (
  * This function also sets of fetching the speculative transaction
  * based on this initial data.
  */
-export const loadInitialData = ({
+/**export const loadInitialData = ({
   pageData,
   fetchSpeculatedTransaction,
   config,
@@ -160,7 +164,22 @@ export const loadInitialData = ({
     fetchSpeculatedTransaction
   );
 };
+**/
+export const loadInitialData = ({
+  pageData,
+  fetchSpeculatedTransaction,
+  config,
+}) => {
+  const shippingDetails = {};
+  const orderParams = getOrderParams(pageData, shippingDetails, config);
 
+  fetchSpeculatedTransactionIfNeeded(
+    orderParams,
+    pageData,
+    fetchSpeculatedTransaction
+  );
+};
+/** 
 const handleSubmit = (values, process, props, submitting, setSubmitting) => {
   if (submitting) {
     return;
@@ -195,7 +214,6 @@ const handleSubmit = (values, process, props, submitting, setSubmitting) => {
     sessionStorageKey,
     setPageData,
   };
-
   const shippingDetails = getShippingDetailsMaybe(formValues);
 
   // These are the order parameters for the first payment-related transition
@@ -203,6 +221,65 @@ const handleSubmit = (values, process, props, submitting, setSubmitting) => {
   const orderParams = getOrderParams(pageData, shippingDetails, config);
 
   // There are multiple XHR calls that needs to be made against the Sharetribe Marketplace API on checkout with payments
+  processCheckoutWithoutPayment(orderParams, requestPaymentParams)
+    .then(response => {
+      const { orderId, messageSuccess } = response;
+      setSubmitting(false);
+
+      const initialMessageFailedToTransaction = messageSuccess ? null : orderId;
+      const orderDetailsPath = pathByRouteName(
+        'OrderDetailsPage',
+        routeConfiguration,
+        {
+          id: orderId.uuid,
+        }
+      );
+      const initialValues = {
+        initialMessageFailedToTransaction,
+      };
+
+      setOrderPageInitialValues(initialValues, routeConfiguration, dispatch);
+      onSubmitCallback();
+      history.push(orderDetailsPath);
+    })
+    .catch(err => {
+      console.error(err);
+      setSubmitting(false);
+    });
+};
+*/
+const handleSubmit = (values, process, props, submitting, setSubmitting) => {
+  if (submitting) {
+    return;
+  }
+  setSubmitting(true);
+  console.log({ values });
+
+  const {
+    history,
+    config,
+    routeConfiguration,
+    // ... (otras variables)
+    onSendMessage,
+    onSubmitCallback,
+    pageData,
+    setPageData,
+    sessionStorageKey,
+  } = props;
+  const { message, formValues } = values;
+
+  const requestPaymentParams = {
+    pageData,
+    // ... (otras variables)
+    onSendMessage,
+    sessionStorageKey,
+    setPageData,
+  };
+
+  const shippingDetails = getShippingDetailsMaybe(formValues);
+
+  const orderParams = getOrderParams(pageData, shippingDetails, config);
+
   processCheckoutWithoutPayment(orderParams, requestPaymentParams)
     .then(response => {
       const { orderId, messageSuccess } = response;
