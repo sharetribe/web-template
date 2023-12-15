@@ -8,7 +8,7 @@ const SectionBlogCard = props => {
 
   return (
     <div className={css.root}>
-      <div>
+      <div className={css.cardimagecontainer}>
         <img src={image} className={css.cardimaage} />
       </div>
       <NamedLink className={css.title} name="BlogArticlePage">

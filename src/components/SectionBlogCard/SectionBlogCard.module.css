@@ -17,11 +17,21 @@
   }
 }
 
+.cardimagecontainer {
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+  }
+}
+
 .cardimaage {
   height: 221px;
   align-self: stretch;
   border-radius: 9px;
   background: lightgray 50% / cover no-repeat, #D9D9D9;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    height: auto;
+  }
 }
 
 .title {

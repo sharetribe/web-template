@@ -7,6 +7,12 @@
     flex-direction: row;
     gap: 30px;
     padding-bottom: 60px;
+
+    @media (--viewMiddleScreenMax) {
+        padding-left: 25px;
+        padding-right: 25px;
+        width: 100vw;
+    }
 }
 
 .container {
@@ -15,6 +21,11 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 30px;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+        flex-direction: column;
+    }
 }
 
 .header {
@@ -22,6 +33,12 @@
     align-items: center;
     gap: 367px;
     align-self: stretch;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+        flex-direction: column;
+        gap: 30px;
+    }
 }
 
 .headermenu {
@@ -32,6 +49,13 @@
     align-self: stretch;
     border-radius: 99px;
     background: var(--primary-eaf-6-f-6, #EAF6F6);
+    width: fit-content;
+
+    @media (max-width: 560px) {
+        width: 100%;
+        padding-bottom: 3px;
+        overflow-x: auto;
+    }
 }
 
 .headermenuitemactive {
@@ -52,6 +76,12 @@
     font-weight: 500;
     line-height: 140%;
     /* 21px */
+
+    @media (--viewMiddleScreenMax) {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    white-space: nowrap;
 }
 
 .headermenuitemhover {
@@ -70,6 +100,12 @@
     font-style: normal;
     font-weight: 500;
     line-height: 140%;
+    white-space: nowrap;
+
+    @media (--viewMiddleScreenMax) {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
 }
 
 .headermenuitem {
@@ -87,6 +123,12 @@
     font-style: normal;
     font-weight: 500;
     line-height: 140%;
+    white-space: nowrap;
+
+    @media (--viewMiddleScreenMax) {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
 }
 
 .headeraction {
@@ -96,6 +138,11 @@
     align-items: flex-end;
     gap: 10px;
     flex: 1 0 0;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+        flex-direction: column;
+    }
 }
 
 .headeractionbtn {
@@ -115,6 +162,9 @@
     font-weight: 500;
     line-height: 24px;
     /* 150% */
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+    }
 }
 
 .content {
@@ -125,11 +175,18 @@
     background: url(../../../assets/images/dashboard/experience_bg.png);
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center center;
 
     display: flex;
     justify-content: center;
     align-items: flex-end;
     padding: 32px;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+    }
 }
 
 .dashboardcontent {
@@ -137,6 +194,12 @@
     width: 1064px;
     align-items: flex-end;
     gap: 133px;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+        flex-direction: column;
+        gap: 30px;
+    }
 }
 
 .contenttext {
@@ -152,6 +215,9 @@
     font-weight: 600;
     line-height: 120%;
     /* 48px */
+    @media (--viewMiddleScreenMax) {
+        font-size: 35px;
+    }
 }
 
 .contentsubtext {

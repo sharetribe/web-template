@@ -1,10 +1,20 @@
+@import '../../styles/customMediaQueries.css';
+
 .root {
   position: relative;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+  }
 }
 
 .topContainer {
   position: relative;
   width: 265px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+  }
 }
 
 .background {
@@ -12,6 +22,11 @@
   height: 322px;
   flex-shrink: 0;
   border-radius: 15px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    height: calc((100vw - 50px) * 1.26)
+  }
 }
 
 .favIcon {

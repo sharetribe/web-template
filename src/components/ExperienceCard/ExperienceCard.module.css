@@ -1,4 +1,6 @@
-.cardbody {
+@import '../../styles/customMediaQueries.css';
+
+ .cardbody {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -7,6 +9,11 @@
   border-radius: 12px;
   position: relative;
   background: var(--primary-eaf-6-f-6, #eaf6f6);
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .cardIntro {
@@ -15,6 +22,12 @@
   flex-shrink: 0;
   position: relative;
   background: lightgray 50% / cover no-repeat, #d9d9d9;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    height: calc((100vw - 50px) * 1.2);
+    flex-direction: column;
+  }
 }
 
 .cardBackground {
@@ -23,6 +36,12 @@
   height: 0;
   height: 329px;
   border-radius: 12px 12px 0 0;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    height: calc((100vw - 50px) * 1.2);
+    flex-direction: column;
+  }
 }
 
 .cardUsers {

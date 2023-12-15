@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Page, LayoutSingleColumn, DashboardMenu, ExperienceCard } from '../../../components';
 import TopbarContainer from '../../TopbarContainer/TopbarContainer';
@@ -14,6 +14,7 @@ import BackgroundImage4 from '../../../assets/images/dashboard/exp4.png';
 import css from './ExperiencesExplorePage.module.css';
 
 export const ExperiencesExplorePage = props => {
+  const [category, setCategory] = useState('all');
   return (
     <Page title={'Experiences'} className={css.page} scrollingDisabled={false}>
       <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
@@ -22,9 +23,24 @@ export const ExperiencesExplorePage = props => {
           <div className={css.container}>
             <div className={css.header}>
               <div className={css.headermenu}>
-                <div className={css.headermenuitemactive}>View All</div>
-                <div className={css.headermenuitem}>Upcoming experiences</div>
-                <div className={css.headermenuitem}>Past experiences</div>
+                <div
+                  className={category == 'all' ? css.headermenuitemactive : css.headermenuitem}
+                  onClick={() => setCategory('all')}
+                >
+                  View All
+                </div>
+                <div
+                  className={category == 'upcoming' ? css.headermenuitemactive : css.headermenuitem}
+                  onClick={() => setCategory('upcoming')}
+                >
+                  Upcoming experiences
+                </div>
+                <div
+                  className={category == 'past' ? css.headermenuitemactive : css.headermenuitem}
+                  onClick={() => setCategory('past')}
+                >
+                  Past experiences
+                </div>
               </div>
               <div className={css.headeraction}>
                 <div className={css.headeractionbtn}>

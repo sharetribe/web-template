@@ -1,3 +1,5 @@
+@import '../../../styles/customMediaQueries.css';
+
 .page {
   padding: 30px 0 66px 0;
   justify-content: center;
@@ -14,12 +16,22 @@
   display: flex;
   flex-direction: column;
   gap: 65px;
-}
 
+  @media (--viewMiddleScreenMax) {
+    width: 100vw;
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+}
 .content {
   display: flex;
   align-items: flex-start;
   gap: 30px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .rightContainer {
@@ -27,6 +39,10 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 36px;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .rTitleArea {
@@ -34,6 +50,11 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .title {
@@ -45,6 +66,11 @@
   font-style: normal;
   font-weight: 600;
   line-height: 120%; /* 36px */
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .subtitle {
@@ -57,6 +83,11 @@
   font-weight: 400;
   line-height: 140%; /* 28px */
   width: 636px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .rContentArea {
@@ -64,19 +95,29 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 15px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .textarea {
   width: 825px;
-  height: 178px;
   flex-shrink: 0;
   border-radius: 12px;
   border: 1px solid #d3ebeb;
   background: var(--primary-ffffff, #fff);
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .textContent {
-  width: 739px;
+  width: 100%;
+  height: 100%;
   color: rgba(27, 36, 45, 0.6);
   font-family: Poppins;
   font-size: 16px;
@@ -84,6 +125,7 @@
   font-weight: 400;
   line-height: 140%; /* 22.4px */
   padding: 16px 20px;
+  resize: none; 
 }
 
 .actions {
@@ -92,6 +134,11 @@
   align-items: flex-start;
   gap: 15px;
   align-self: stretch;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .copyLinkContainer {
@@ -99,6 +146,11 @@
   padding-right: 0px;
   align-items: center;
   flex: 1 0 0;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .btnCopyLink {
@@ -116,6 +168,10 @@
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+  }
 }
 
 .btnTestEmail {
@@ -133,6 +189,10 @@
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+  }
 }
 
 .btnInvite {
@@ -150,4 +210,8 @@
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+  }
 }

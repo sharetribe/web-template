@@ -2,6 +2,12 @@
   width: 100%;
   height: 48px;
   position: relative;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100vw;
+    padding-left: 25px;
+    padding-right: 25px;
+  }
 }
 
 .btnBack {

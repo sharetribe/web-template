@@ -14,6 +14,13 @@
   display: flex;
   flex-direction: column;
   gap: 65px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100vw;
+    padding-left: 25px;
+    padding-right: 25px;
+    flex-direction: column;
+  }
 }
 
 .content {

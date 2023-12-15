@@ -571,13 +571,13 @@ const routeConfiguration = (layoutConfig) => {
       loadData: pageDataLoadingAPI.FaqPage.loadData,
     },
     {
-      path: '/dashboard/polls',
+      path: '/dashboard/polls/explore',
       name: 'DashboardPollsPage',
       component: DashboardPollsPage,
       loadData: pageDataLoadingAPI.FaqPage.loadData,
     },
     {
-      path: '/dashboard/polls/detail',
+      path: '/dashboard/polls',
       name: 'DashboardPollsDetailPage',
       component: DashboardPollsDetailPage,
       loadData: pageDataLoadingAPI.FaqPage.loadData,

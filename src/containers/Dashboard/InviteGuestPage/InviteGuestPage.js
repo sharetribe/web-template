@@ -1,6 +1,12 @@
 import React from 'react';
 
-import { Page, LayoutSingleColumn, DashboardMenu, ExperienceCard } from '../../../components';
+import {
+  Page,
+  LayoutSingleColumn,
+  DashboardMenu,
+  ExperienceCard,
+  NamedLink,
+} from '../../../components';
 
 import css from './InviteGuestPage.module.css';
 import ModalPageHeader from '../../../components/ModalPageHeader/ModalPageHeader';
@@ -27,21 +33,11 @@ export const InviteGuestPage = props => {
             </div>
             <div className={css.rContentArea}>
               <div className={css.textarea}>
-                <div className={css.textContent}>
-                  JohnDoe@gmail.com
-                  <br />
-                  JohnDoe@gmail.com
-                  <br />
-                  <br />
-                  or
-                  <br />
-                  <br />
-                  JohnDoe@gmail.com, JohnDoe@gmail.com, JohnDoe@gmail.com,
-                </div>
+                <textarea className={css.textContent}></textarea>
               </div>
               <div className={css.actions}>
                 <div className={css.copyLinkContainer}>
-                  <div className={css.btnCopyLink}>
+                  <NamedLink className={css.btnCopyLink} name="VirtualEscapeRoomPage">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="13"
@@ -62,7 +58,7 @@ export const InviteGuestPage = props => {
                       </defs>
                     </svg>
                     <div>Copy link</div>
-                  </div>
+                  </NamedLink>
                 </div>
                 <div className={css.btnTestEmail}>
                   <svg
@@ -86,7 +82,7 @@ export const InviteGuestPage = props => {
                   </svg>
                   <div>Send me a test email</div>
                 </div>
-                <div className={css.btnInvite}>
+                <NamedLink name="RSVPListConfirmedPage" className={css.btnInvite}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -100,7 +96,7 @@ export const InviteGuestPage = props => {
                     />
                   </svg>
                   <div>Invite guests</div>
-                </div>
+                </NamedLink>
               </div>
             </div>
           </div>

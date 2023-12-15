@@ -7,6 +7,12 @@
   flex-direction: row;
   gap: 30px;
   padding-bottom: 60px;
+
+  @media (--viewMiddleScreenMax) {
+    padding-left: 25px;
+    padding-right: 25px;
+    width: 100vw;
+  }
 }
 
 .content {
@@ -14,6 +20,10 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 30px;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .contentHeader {
@@ -21,6 +31,10 @@
   align-items: flex-start;
   gap: 30px;
   align-self: stretch;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .title {
@@ -37,6 +51,11 @@
   font-weight: 600;
   line-height: 120%; /* 36px */
   width: 920px;
+
+  @media (--viewMiddleScreenMax) {
+      width: 100%;
+      flex-direction: column;
+    }
 }
 .btnInviteUser {
   display: flex;
@@ -53,6 +72,9 @@
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+  }
 }
 .tableContainer {
   display: flex;
@@ -62,6 +84,10 @@
   align-items: flex-start;
   border-radius: 10px;
   background: var(--primary-eaf-6-f-6, #eaf6f6);
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    overflow-x: auto;
+  }
 }
 
 .tableHeader {
@@ -69,8 +95,9 @@
   align-self: stretch;
   border-bottom: 1px solid #c7e0e0;
   padding: 16px 20px;
-  display: flex;
+  display: -webkit-inline-box;
 }
+
 .th {
   color: var(--primary-1-b-242-d, #1b242d);
   font-family: Poppins;
@@ -101,7 +128,7 @@
   height: 54px;
   align-self: stretch;
   border-bottom: 1px solid #c7e0e0;
-  display: flex;
+  display: -webkit-inline-box;
   align-items: flex-start;
   padding: 16px 20px;
 }

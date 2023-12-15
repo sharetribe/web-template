@@ -1,6 +1,12 @@
 import React from 'react';
 
-import { Page, LayoutSingleColumn, DashboardMenu, ExperienceCard } from '../../../components';
+import {
+  Page,
+  LayoutSingleColumn,
+  DashboardMenu,
+  ExperienceCard,
+  NamedLink,
+} from '../../../components';
 import TopbarContainer from '../../TopbarContainer/TopbarContainer';
 import FooterContainer from '../../FooterContainer/FooterContainer';
 
@@ -21,7 +27,9 @@ export const PollsDetailPage = props => {
                   polls with your team and view real-time results.
                 </div>
               </div>
-              <div className={css.btnExplore}>Explore Experiences</div>
+              <NamedLink className={css.btnExplore} name="DashboardPollsPage">
+                Explore Experiences
+              </NamedLink>
             </div>
           </div>
         </div>

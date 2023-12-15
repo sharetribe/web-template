@@ -7,6 +7,12 @@
   flex-direction: row;
   gap: 30px;
   padding-bottom: 60px;
+
+  @media (--viewMiddleScreenMax) {
+    padding-left: 25px;
+    padding-right: 25px;
+    width: 100vw;
+  }
 }
 
 .content {
@@ -16,6 +22,11 @@
   position: relative;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.35) 100%),
     url('../../../assets/images/dashboard/poll-back.png'), lightgray 50% / cover no-repeat;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .titleArea {
@@ -26,6 +37,14 @@
   position: absolute;
   left: 31px;
   bottom: 32px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+    position: initial;
+    padding: 30px;
+    gap: 50px;
+  }
 }
 
 .titleRow {
@@ -33,6 +52,11 @@
   flex-direction: column;
   align-items: flex-start;
   flex: 1 0 0;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .btnExplore {
@@ -51,6 +75,10 @@
   line-height: 24px; /* 150% */
   border-radius: 7px;
   background: var(--primary-ffffff, #fff);
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 .title {
   color: var(--primary-ffffff, #fff);
@@ -72,4 +100,9 @@
   font-style: normal;
   font-weight: 400;
   line-height: 140%; /* 28px */
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }

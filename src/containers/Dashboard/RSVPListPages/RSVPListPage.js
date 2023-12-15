@@ -1,6 +1,12 @@
 import React from 'react';
 
-import { Page, LayoutSingleColumn, DashboardMenu, ExperienceCard } from '../../../components';
+import {
+  Page,
+  LayoutSingleColumn,
+  DashboardMenu,
+  ExperienceCard,
+  NamedLink,
+} from '../../../components';
 
 import SlackIcon from '../../../assets/images/dashboard/slack.png';
 
@@ -25,7 +31,7 @@ export const RSVPListPage = props => {
                   <img src={SlackIcon} />
                   <div>Invite with Slack</div>
                 </div>
-                <div className={css.buttonInvite}>
+                <NamedLink name="InviteGuestPage" className={css.buttonInvite}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -39,7 +45,7 @@ export const RSVPListPage = props => {
                     />
                   </svg>
                   <div>Invite with email</div>
-                </div>
+                </NamedLink>
               </div>
             </div>
             <div className={css.rListArea}>
@@ -54,7 +60,7 @@ export const RSVPListPage = props => {
                 </div>
                 <div className={css.listCol}>Calendar invite</div>
               </div>
-              <div className={css.listContentRow}>
+              <NamedLink className={css.listContentRow} name="ConfirmationWizardPage">
                 <div className={css.listCols}>
                   <div className={css.nameCol}>John Doe</div>
                   <div className={css.emailCol}>JohnDoe@gmail.com</div>
@@ -80,9 +86,8 @@ export const RSVPListPage = props => {
                     </defs>
                   </svg>
                 </div>
-              </div>
-
-              <div className={css.listContentRow}>
+              </NamedLink>
+              <NamedLink className={css.listContentRow} name="ConfirmationWizardPage">
                 <div className={css.listCols}>
                   <div className={css.nameCol}>John Doe</div>
                   <div className={css.emailCol}>JohnDoe@gmail.com</div>
@@ -108,9 +113,9 @@ export const RSVPListPage = props => {
                     </defs>
                   </svg>
                 </div>
-              </div>
+              </NamedLink>
 
-              <div className={css.listContentRow}>
+              <NamedLink className={css.listContentRow} name="ConfirmationWizardPage">
                 <div className={css.listCols}>
                   <div className={css.nameCol}>John Doe</div>
                   <div className={css.emailCol}>JohnDoe@gmail.com</div>
@@ -131,9 +136,9 @@ export const RSVPListPage = props => {
                     </svg>
                   </div>
                 </div>
-              </div>
+              </NamedLink>
 
-              <div className={css.listContentRow}>
+              <NamedLink className={css.listContentRow} name="ConfirmationWizardPage">
                 <div className={css.listCols}>
                   <div className={css.nameCol}>John Doe</div>
                   <div className={css.emailCol}>JohnDoe@gmail.com</div>
@@ -159,9 +164,9 @@ export const RSVPListPage = props => {
                     </defs>
                   </svg>
                 </div>
-              </div>
+              </NamedLink>
 
-              <div className={css.listContentRow}>
+              <NamedLink className={css.listContentRow} name="ConfirmationWizardPage">
                 <div className={css.listCols}>
                   <div className={css.nameCol}>John Doe</div>
                   <div className={css.emailCol}>JohnDoe@gmail.com</div>
@@ -187,9 +192,9 @@ export const RSVPListPage = props => {
                     </defs>
                   </svg>
                 </div>
-              </div>
+              </NamedLink>
 
-              <div className={css.listContentRow}>
+              <NamedLink className={css.listContentRow} name="ConfirmationWizardPage">
                 <div className={css.listCols}>
                   <div className={css.nameCol}>John Doe</div>
                   <div className={css.emailCol}>JohnDoe@gmail.com</div>
@@ -210,9 +215,9 @@ export const RSVPListPage = props => {
                     </svg>
                   </div>
                 </div>
-              </div>
+              </NamedLink>
 
-              <div className={css.listContentRow}>
+              <NamedLink className={css.listContentRow} name="ConfirmationWizardPage">
                 <div className={css.listCols}>
                   <div className={css.nameCol}>John Doe</div>
                   <div className={css.emailCol}>JohnDoe@gmail.com</div>
@@ -238,9 +243,9 @@ export const RSVPListPage = props => {
                     </defs>
                   </svg>
                 </div>
-              </div>
+              </NamedLink>
 
-              <div className={css.listContentRow}>
+              <NamedLink className={css.listContentRow} name="ConfirmationWizardPage">
                 <div className={css.listCols}>
                   <div className={css.nameCol}>John Doe</div>
                   <div className={css.emailCol}>JohnDoe@gmail.com</div>
@@ -266,9 +271,9 @@ export const RSVPListPage = props => {
                     </defs>
                   </svg>
                 </div>
-              </div>
+              </NamedLink>
 
-              <div className={css.listContentRow}>
+              <NamedLink className={css.listContentRow} name="ConfirmationWizardPage">
                 <div className={css.listCols}>
                   <div className={css.nameCol}>John Doe</div>
                   <div className={css.emailCol}>JohnDoe@gmail.com</div>
@@ -289,9 +294,9 @@ export const RSVPListPage = props => {
                     </svg>
                   </div>
                 </div>
-              </div>
+              </NamedLink>
 
-              <div className={css.listContentRow}>
+              <NamedLink className={css.listContentRow} name="ConfirmationWizardPage">
                 <div className={css.listCols}>
                   <div className={css.nameCol}>John Doe</div>
                   <div className={css.emailCol}>JohnDoe@gmail.com</div>
@@ -317,9 +322,9 @@ export const RSVPListPage = props => {
                     </defs>
                   </svg>
                 </div>
-              </div>
+              </NamedLink>
 
-              <div className={css.listContentRow}>
+              <NamedLink className={css.listContentRow} name="ConfirmationWizardPage">
                 <div className={css.listCols}>
                   <div className={css.nameCol}>John Doe</div>
                   <div className={css.emailCol}>JohnDoe@gmail.com</div>
@@ -345,9 +350,8 @@ export const RSVPListPage = props => {
                     </defs>
                   </svg>
                 </div>
-              </div>
-
-              <div className={css.listContentRow}>
+              </NamedLink>
+              <NamedLink className={css.listContentRow} name="ConfirmationWizardPage">
                 <div className={css.listCols}>
                   <div className={css.nameCol}>John Doe</div>
                   <div className={css.emailCol}>JohnDoe@gmail.com</div>
@@ -368,7 +372,7 @@ export const RSVPListPage = props => {
                     </svg>
                   </div>
                 </div>
-              </div>
+              </NamedLink>
             </div>
           </div>
         </div>

@@ -7,6 +7,12 @@
   flex-direction: row;
   gap: 30px;
   padding-bottom: 60px;
+
+  @media (--viewMiddleScreenMax) {
+    padding-left: 25px;
+    padding-right: 25px;
+    width: 100vw;
+  }
 }
 
 .content {
@@ -14,6 +20,11 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 40px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .top {
@@ -22,13 +33,24 @@
   align-items: flex-start;
   gap: 40px;
   width: 1120px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 .titleContainer {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
+
 .h4 {
   color: var(--primary-1-b-242-d, #1b242d);
 
@@ -38,7 +60,12 @@
   font-style: normal;
   font-weight: 600;
   line-height: 120%; /* 36px */
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
+
 .p20 {
   color: var(--primary-1-b-242-d, #1b242d);
 
@@ -49,6 +76,11 @@
   font-weight: 400;
   line-height: 140%; /* 28px */
   width: 960px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .buttons {
@@ -56,12 +88,22 @@
   align-items: flex-start;
   gap: 10px;
   align-self: stretch;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .leftBtnGroup {
   display: flex;
   align-items: flex-start;
   gap: 15px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 .rightBtnGroup {
   display: flex;
@@ -70,6 +112,9 @@
   align-items: flex-end;
   gap: 10px;
   flex: 1 0 0;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+  }
 }
 .btnDark {
   display: flex;
@@ -87,6 +132,10 @@
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+  }
 }
 .btnSecondary {
   display: flex;
@@ -104,6 +153,9 @@
   border-radius: 7px;
   background: var(--primary-eaf-6-f-6, #eaf6f6);
   line-height: 24px; /* 150% */
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+  }
 }
 .bottom {
   display: flex;
@@ -111,4 +163,9 @@
   justify-content: center;
   align-items: flex-start;
   gap: 21px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }

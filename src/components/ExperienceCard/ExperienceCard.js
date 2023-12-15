@@ -3,6 +3,7 @@ import { func, string } from 'prop-types';
 import css from './ExperienceCard.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHistory, faThumbsUp, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import NamedLink from '../NamedLink/NamedLink';
 
 const ExperienceCard = props => {
   const { category, title, subtitle, date, booker, time, status, count, background } = props;
@@ -197,7 +198,9 @@ const ExperienceCard = props => {
       </div>
       <div className={css.cardActions}>
         <div className={css.cardActionSecondary}>Edit</div>
-        <div className={css.cardActionDefault}>Guests</div>
+        <NamedLink name="RSVPListPage" className={css.cardActionDefault}>
+          Guests
+        </NamedLink>
       </div>
     </div>
   );

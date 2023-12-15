@@ -1,3 +1,5 @@
+@import '../../styles/customMediaQueries.css';
+
 .menucontainer {
     display: flex;
     width: 250px;
@@ -10,6 +12,10 @@
 
     border-radius: 0px 20px 20px 0px;
     background: var(--primary-eaf-6-f-6, #EAF6F6);
+
+    @media (--viewMiddleScreenMax) {
+        display: none;
+    }
 }
 
 .menuitemactive {

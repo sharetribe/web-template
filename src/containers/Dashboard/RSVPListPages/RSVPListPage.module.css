@@ -1,3 +1,5 @@
+@import '../../../styles/customMediaQueries.css';
+
 .page {
   padding: 30px 0 66px 0;
   justify-content: center;
@@ -14,12 +16,23 @@
   display: flex;
   flex-direction: column;
   gap: 65px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100vw;
+    padding-left: 25px;
+    padding-right: 25px;
+  }
 }
 
 .content {
   display: flex;
   align-items: flex-start;
   gap: 30px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .rightContainer {
@@ -27,12 +40,23 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 30px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .rTitleArea {
   display: flex;
   align-items: flex-start;
   gap: 138px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    gap: 30px;
+    flex-direction: column;
+  }
 }
 
 .rTitle {
@@ -49,12 +73,23 @@
   font-style: normal;
   font-weight: 600;
   line-height: 120%; /* 36px */
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 .rTitleButtons {
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
   gap: 15px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .buttonSlack {
@@ -72,6 +107,10 @@
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+  }
 }
 .buttonInvite {
   display: flex;
@@ -88,6 +127,10 @@
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+  }
 }
 .rListArea {
   display: flex;
@@ -97,6 +140,13 @@
   align-items: flex-start;
   border-radius: 10px;
   background: var(--primary-ffffff, #fff);
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: auto;
+  }
 }
 
 .rListRow {
@@ -107,6 +157,7 @@
   align-self: stretch;
   position: relative;
 }
+
 .listContentRow {
   display: flex;
   padding: 15px 20px;

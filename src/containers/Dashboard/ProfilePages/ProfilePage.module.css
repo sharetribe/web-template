@@ -7,6 +7,12 @@
   flex-direction: row;
   gap: 30px;
   padding-bottom: 60px;
+
+  @media (--viewMiddleScreenMax) {
+    padding-left: 25px;
+    padding-right: 25px;
+    width: 100vw;
+  }
 }
 
 .content {
@@ -14,6 +20,10 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 30px;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .title {
@@ -36,6 +46,11 @@
   gap: 15px;
   border-radius: 12px;
   background: var(--primary-eaf-6-f-6, #eaf6f6);
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .form {
@@ -51,6 +66,9 @@
   align-items: flex-start;
   gap: 10px;
   flex: 1 0 0;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+  }
 }
 .formLabel {
   color: var(--primary-1-b-242-d, #1b242d);
@@ -97,6 +115,10 @@
 }
 .w100 {
   width: 380px;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 .btnSubmit {
   display: flex;
@@ -113,6 +135,10 @@
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .nameContainer {

@@ -55,7 +55,7 @@ const DashboardMenu = props => {
           <div>Favorites</div>
         </div>
       </NamedLink>
-      <NamedLink name="DashboardPollsPage" style={{ width: '100%' }}>
+      <NamedLink name="DashboardPollsDetailPage" style={{ width: '100%' }}>
         <div
           className={
             active == 3 ? css.menuitemactive : hover == 3 ? css.menuitemhover : css.menuitem

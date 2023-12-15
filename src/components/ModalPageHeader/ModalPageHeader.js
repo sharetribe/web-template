@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { number, string } from 'prop-types';
 import css from './ModalPageHeader.module.css';
+import NamedLink from '../NamedLink/NamedLink';
 
 const ModalPageHeader = () => {
-
   return (
     <div className={css.root}>
-      <div className={css.btnBack}>
+      <NamedLink className={css.btnBack} name="ExperiencesExplorePage">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="10"
@@ -20,8 +20,8 @@ const ModalPageHeader = () => {
             fill="black"
           />
         </svg>
-      </div>
-      <div className={css.btnClose}>
+      </NamedLink>
+      <NamedLink className={css.btnClose} name="ExperiencesExplorePage">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="10"
@@ -35,7 +35,7 @@ const ModalPageHeader = () => {
             fill="black"
           />
         </svg>
-      </div>
+      </NamedLink>
     </div>
   );
 };
