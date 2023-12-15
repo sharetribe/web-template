@@ -1,3 +1,5 @@
+@import '../../styles/customMediaQueries.css';
+
 .root {
   flex-grow: 1;
 
@@ -6,6 +8,13 @@
   align-items: center;
   padding-bottom: 120px;
   padding-top: 60px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100vw;
+    padding-top: 0px;
+    padding-left: 25px;
+    padding-right: 25px;
+  }
 }
 .content {
   display: inline-flex;
@@ -13,19 +22,32 @@
   align-items: flex-start;
   gap: 120px;
   width: 1110px;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .section_head {
   display: flex;
   align-items: center;
   gap: 54px;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
+
 .section_head_l {
   display: flex;
   width: 445px;
   flex-direction: column;
   align-items: flex-start;
   gap: 30px;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 .section_head_l_desc {
   display: flex;
@@ -34,6 +56,7 @@
   gap: 10px;
   align-self: stretch;
 }
+
 .section_head_l_desc_title {
   width: 329px;
   color: var(--primary-1-b-242-d, #1b242d);
@@ -44,6 +67,11 @@
   font-style: normal;
   font-weight: 600;
   line-height: 120%; /* 48px */
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+    font-size: 35px
+  }
 }
 .section_head_l_desc_content {
   width: 390px;
@@ -69,12 +97,22 @@
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .section_head_r {
   width: 615.987px;
   height: 423px;
   background-image: url('../../assets/images/become-banner.png');
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    height: calc((100vw - 50px) * 0.687);
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
 }
 
 .section_case_study {
@@ -82,15 +120,28 @@
   align-items: flex-start;
   gap: 30px;
   align-self: stretch;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .section_case_study_l {
   width: 540px;
   height: 467px;
   border-radius: 20px;
-  background: url('../../assets/images/become-case-study.png'), lightgray 50% / cover no-repeat;
+  background: url('../../assets/images/become-case-study.png'), lightgray 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    height: calc((100vw - 50px) * 0.864);
+    flex-direction: column;
+  }
 }
 .section_case_study_r {
+  display: flex;
   width: 543px;
   height: 467px;
   flex-shrink: 0;
@@ -98,13 +149,18 @@
   background: var(--primary-eaf-6-f-6, #eaf6f6);
   padding: 35px;
   position: relative;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    gap: 40px;
+  }
 }
 .fontIcon {
   font-size: 48px;
   color: #227667;
 }
 .section_case_study_content {
-  position: absolute;
   left: 35px;
   bottom: 35px;
   display: flex;
@@ -112,6 +168,15 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
+  
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  @media (--viewXLargeScreenMin) {
+    position: absolute;
+  }
 }
 .section_case_study_content_title {
   align-self: stretch;
@@ -134,6 +199,10 @@
   font-weight: 500;
   line-height: 140%; /* 22.4px */
   align-self: stretch;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 .section_case_study_content_button {
   display: flex;
@@ -151,6 +220,10 @@
   line-height: 24px; /* 150% */
   border-radius: 7px;
   background: var(--extended-06-c-167, #06c167);
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 h3 {
   color: var(--primary-1-b-242-d, #1b242d);
@@ -170,6 +243,10 @@ h3 {
   align-items: flex-start;
   gap: 34px;
   align-self: stretch;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 .section_become_host_l {
   display: flex;
@@ -182,6 +259,10 @@ h3 {
   width: 631px;
   align-items: flex-start;
   gap: 30px;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .secton_become_host_r_item {
@@ -211,6 +292,11 @@ h3 {
   font-weight: 400;
   line-height: 140%; /* 19.6px */
   width: 190px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 .becomeHostIcon {
   color: #06c167;
@@ -223,6 +309,10 @@ h3 {
   flex-direction: column;
   align-items: center;
   gap: 30px;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 h2 {
   width: 592px;
@@ -235,12 +325,21 @@ h2 {
   font-style: normal;
   font-weight: 600;
   line-height: 120%; /* 48px */
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+    font-size: 35px;
+  }
 }
 .section_creating_culture_container {
   display: flex;
   align-items: flex-start;
   gap: 30px;
   align-self: stretch;
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .section_creating_culture_item {

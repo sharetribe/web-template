@@ -2,10 +2,136 @@ import React from 'react';
 import { Page, LayoutSingleColumn } from '../../components';
 import NamedLink from '../../components/NamedLink/NamedLink';
 import FooterContainer from '../../containers/FooterContainer/FooterContainer';
-
+import Slider from 'react-slick';
 import css from './ListingDetailPage.module.css';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+function SampleNextArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <svg
+      width="47"
+      height="47"
+      viewBox="0 0 47 47"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      onClick={onClick}
+      style={{
+        position: 'absolute',
+        zIndex: 99,
+        top: '45%',
+        right: 0,
+      }}
+    >
+      <g filter="url(#filter0_b_430_2987)">
+        <circle cx="23.5" cy="23.5" r="23.5" fill="#F6FCFC" fill-opacity="0.6" />
+        <path
+          d="M28.7066 23.2937C29.0973 23.6843 29.0973 24.3187 28.7066 24.7093L22.7066 30.7093C22.316 31.0999 21.6816 31.0999 21.291 30.7093C20.9004 30.3187 20.9004 29.6843 21.291 29.2937L26.5848 23.9999L21.2941 18.7062C20.9035 18.3155 20.9035 17.6812 21.2941 17.2905C21.6848 16.8999 22.3191 16.8999 22.7098 17.2905L28.7098 23.2905L28.7066 23.2937Z"
+          fill="black"
+        />
+      </g>
+      <defs>
+        <filter
+          id="filter0_b_430_2987"
+          x="-10"
+          y="-10"
+          width="67"
+          height="67"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feGaussianBlur in="BackgroundImageFix" stdDeviation="5" />
+          <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_430_2987" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="effect1_backgroundBlur_430_2987"
+            result="shape"
+          />
+        </filter>
+      </defs>
+    </svg>
+  );
+}
+
+function SamplePrevArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <svg
+      width="47"
+      height="47"
+      viewBox="0 0 47 47"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      onClick={onClick}
+      style={{
+        position: 'absolute',
+        zIndex: 99,
+        top: '45%',
+      }}
+    >
+      <g filter="url(#filter0_b_430_2983)">
+        <circle
+          cx="23.5"
+          cy="23.5"
+          r="23.5"
+          transform="matrix(-1 0 0 1 47 0)"
+          fill="#F6FCFC"
+          fill-opacity="0.6"
+        />
+        <path
+          d="M18.2934 23.2937C17.9027 23.6843 17.9027 24.3187 18.2934 24.7093L24.2934 30.7093C24.684 31.0999 25.3184 31.0999 25.709 30.7093C26.0996 30.3187 26.0996 29.6843 25.709 29.2937L20.4152 23.9999L25.7059 18.7062C26.0965 18.3155 26.0965 17.6812 25.7059 17.2905C25.3152 16.8999 24.6809 16.8999 24.2902 17.2905L18.2902 23.2905L18.2934 23.2937Z"
+          fill="black"
+        />
+      </g>
+      <defs>
+        <filter
+          id="filter0_b_430_2983"
+          x="-10"
+          y="-10"
+          width="67"
+          height="67"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feGaussianBlur in="BackgroundImageFix" stdDeviation="5" />
+          <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_430_2983" />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="effect1_backgroundBlur_430_2983"
+            result="shape"
+          />
+        </filter>
+      </defs>
+    </svg>
+  );
+}
 
 export const ListingDetailPage = props => {
+  const slickSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        },
+      },
+    ],
+  };
   return (
     <Page title={'Listing Detail'} scrollingDisabled={false}>
       <LayoutSingleColumn footer={<FooterContainer />}>
@@ -21,8 +147,8 @@ export const ListingDetailPage = props => {
                   fill="none"
                 >
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M0 31.2281H6.43505V24.793H6.85171C7.68503 29.3763 10.7405 31.691 16.1108 31.691C23.3329 31.691 27.268 26.9689 27.268 19.6543C27.268 12.247 23.3792 7.57117 16.4349 7.57117C10.9257 7.57117 8.10169 10.4569 7.31467 14.3457H6.9443V0.210205H0V31.2281ZM13.7034 25.3486C9.30537 25.3486 6.9443 23.8208 6.9443 19.7931V19.4228C6.9443 15.3951 9.25907 13.9136 13.7497 13.9136C18.1941 13.9136 20.2311 15.3951 20.2311 19.6543C20.2311 23.8671 18.1941 25.3486 13.7034 25.3486ZM28.5488 19.7005C28.5488 27.9411 33.8265 31.7373 41.5578 31.7373C48.9188 31.7373 53.8261 28.2189 53.8261 23.1727V22.6634H46.8818V23.1264C46.8818 25.1171 45.4466 26.1819 41.3264 26.1819C36.8357 26.1819 35.1691 24.6541 34.9839 21.0894H53.8724C53.887 20.9652 53.9016 20.8457 53.9158 20.7292L53.9158 20.7291C53.9919 20.1067 54.0576 19.569 54.0576 18.8672C54.0576 11.5988 49.0114 7.61743 41.4189 7.61743C33.7802 7.61743 28.5488 12.2933 28.5488 19.7005ZM35.0765 17.432C35.4005 14.4228 37.1598 13.034 41.2801 13.034C45.354 13.034 47.2059 14.3766 47.391 17.432H35.0765ZM71.3768 30.9659H62.8122L52.2568 7.77197H59.9882L66.9325 24.2068H67.3954L74.386 7.77197H81.9784L71.3768 30.9659ZM85.6841 38.7899H89.3196C94.9059 38.7899 97.8764 37.4493 100.005 32.5955L111 7.77198H103.596L99.3838 18.3116L97.6104 23.8125H97.167L95.3049 18.3578L90.6053 7.77198H83.0682L93.9305 31.0238C93.4871 32.0408 92.7778 32.5031 91.1374 32.5031H85.6841V38.7899Z"
                     fill="#111111"
                   />
@@ -89,40 +215,17 @@ export const ListingDetailPage = props => {
               </div>
             </div>
             <div className={css.sectionimages}>
-              <div className={css.imageitem1}></div>
-              <div className={css.imageitem2}></div>
-              <div className={css.imageitem3}>
-                <div className={css.imagepagination}>
-                  <div className={css.imagepaginationbutton}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="10"
-                      height="16"
-                      viewBox="0 0 10 16"
-                      fill="none"
-                    >
-                      <path
-                        d="M0.293359 7.29365C-0.0972652 7.68428 -0.0972652 8.31865 0.293359 8.70928L6.29336 14.7093C6.68398 15.0999 7.31836 15.0999 7.70898 14.7093C8.09961 14.3187 8.09961 13.6843 7.70898 13.2937L2.41523 7.9999L7.70586 2.70615C8.09648 2.31553 8.09648 1.68115 7.70586 1.29053C7.31523 0.899902 6.68086 0.899902 6.29023 1.29053L0.290234 7.29053L0.293359 7.29365Z"
-                        fill="black"
-                      />
-                    </svg>
-                  </div>
-                  <div className={css.imagepaginationbutton}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="10"
-                      height="16"
-                      viewBox="0 0 10 16"
-                      fill="none"
-                    >
-                      <path
-                        d="M9.70664 7.29365C10.0973 7.68428 10.0973 8.31865 9.70664 8.70928L3.70664 14.7093C3.31602 15.0999 2.68164 15.0999 2.29102 14.7093C1.90039 14.3187 1.90039 13.6843 2.29102 13.2937L7.58477 7.9999L2.29414 2.70615C1.90352 2.31553 1.90352 1.68115 2.29414 1.29053C2.68477 0.899902 3.31914 0.899902 3.70977 1.29053L9.70977 7.29053L9.70664 7.29365Z"
-                        fill="black"
-                      />
-                    </svg>
-                  </div>
+              <Slider {...slickSettings}>
+                <div>
+                  <div className={css.imageitem1}></div>
                 </div>
-              </div>
+                <div>
+                  <div className={css.imageitem2}></div>
+                </div>
+                <div>
+                  <div className={css.imageitem3}></div>
+                </div>
+              </Slider>
             </div>
             <div className={css.sectiondetail}>
               <div className={css.leftdetail}>
@@ -540,9 +643,9 @@ export const ListingDetailPage = props => {
                           width="89"
                           height="89"
                           filterUnits="userSpaceOnUse"
-                          color-interpolation-filters="sRGB"
+                          colorInterpolationFilters="sRGB"
                         >
-                          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                          <feFlood floodOpacity="0" result="BackgroundImageFix" />
                           <feGaussianBlur in="BackgroundImageFix" stdDeviation="5" />
                           <feComposite
                             in2="SourceAlpha"

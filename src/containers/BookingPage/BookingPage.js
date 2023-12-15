@@ -59,7 +59,7 @@ export const BookingPageComponent = props => {
                 </p>
               </div>
               <div className={css.section_team_image}>
-                <img src={BookingTeamImage} />
+                <img src={BookingTeamImage} className={css.team_image} />
               </div>
             </div>
             <div className={css.section_mission}>
@@ -140,11 +140,17 @@ export const BookingPageComponent = props => {
                 <h2>More Reasons to Trust in Bevy Experiences</h2>
                 <div className={css.section_more_reasons_l_list}>
                   <div className={css.section_more_reasons_l_list_item}>
-                    <FontAwesomeIcon icon={faCircleCheck} className={css.section_more_reasions_l_icon} />
+                    <FontAwesomeIcon
+                      icon={faCircleCheck}
+                      className={css.section_more_reasions_l_icon}
+                    />
                     <div>100% Money Back Guarantee</div>
                   </div>
                   <div className={css.section_more_reasons_l_list_item}>
-                    <FontAwesomeIcon icon={faCircleCheck} className={css.section_more_reasions_l_icon} />
+                    <FontAwesomeIcon
+                      icon={faCircleCheck}
+                      className={css.section_more_reasions_l_icon}
+                    />
                     <div>Our team knows the best experience hosts</div>
                   </div>
                 </div>
@@ -168,16 +174,18 @@ export const BookingPageComponent = props => {
               </div>
             </div>
 
-
             <div className={css.section_live_demo}>
               <div>
                 <div className={css.section_live_demo_title}>Book A Live Demo and get</div>
                 <div className={css.section_live_demo_discount}>15% off any booking. </div>
               </div>
               <div>
-                <div className={css.section_live_demo_desc}>Want to learn more? Our pleasure! Book a demo with our founder and dedicate experience coordinators and get 15% off your first booking.</div>
+                <div className={css.section_live_demo_desc}>
+                  Want to learn more? Our pleasure! Book a demo with our founder and dedicate
+                  experience coordinators and get 15% off your first booking.
+                </div>
               </div>
-              <div>
+              <div className={css.section_live_demo_button_container}>
                 <div className={css.section_live_demo_button}>Give it a try</div>
               </div>
             </div>

@@ -12,6 +12,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100vw;
+    padding-left: 25px;
+    padding-right: 25px;
+  }
 }
 
 .content {

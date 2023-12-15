@@ -1,3 +1,5 @@
+@import '../../styles/customMediaQueries.css';
+
 .root {
   width: 1110px;
   height: 442px;
@@ -5,12 +7,21 @@
   background: var(--primary-1-b-242-d, #1B242D);
   position: relative;
   margin-bottom: 60px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .backgroundImage {
   position: absolute;
   top: 0;
   left: 300px;
+
+  @media (--viewMiddleScreenMax) {
+    display: none;
+  }
 }
 
 .subscribeBox {
@@ -23,6 +34,12 @@
   gap: 40px;
   flex-shrink: 0;
   padding: 35px 0 35px 35px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+    padding: 35px 35px 35px 35px;
+  }
 }
 .iconBox {
   display: flex;
@@ -56,6 +73,11 @@
   align-items: flex-end;
   gap: 10px;
   border-radius: 99px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 .inputPlaceholder {
   position: absolute;
@@ -95,16 +117,18 @@ line-height: 125%; /* 43.75px */
 }
 .secondLine {
   color: var(--extended-97-eae-5, #97EAE5);
-
-/* H3 */
-font-family: Clash Display;
-font-size: 35px;
-font-style: normal;
-font-weight: 600;
-line-height: 125%;
+  /* H3 */
+  font-family: Clash Display;
+  font-size: 35px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 125%;
 }
 .rightImage {
   position: absolute;
   top: 0;
   right: 0;
+  @media (--viewMiddleScreenMax) {
+    display: none;
+  }
 }

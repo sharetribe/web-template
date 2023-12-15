@@ -8,6 +8,25 @@ const Sidebar = props => {
     <>
       <div className={css.sectionbody} onClick={onClickMenu}></div>
       <div className={css.sectionsidebar}>
+        <svg
+          width="34"
+          height="34"
+          viewBox="0 0 34 34"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={{
+            position: 'absolute',
+            top: '25px',
+            right: '10px',
+          }}
+          onClick={onClickMenu}
+        >
+          <rect width="33.171" height="33.6295" rx="16.5855" fill="white" />
+          <path
+            d="M20.8995 13.6445C21.2576 13.2685 21.2576 12.658 20.8995 12.282C20.5415 11.906 19.96 11.906 19.6019 12.282L16.5855 15.4522L13.5662 12.285C13.2081 11.909 12.6266 11.909 12.2686 12.285C11.9105 12.661 11.9105 13.2716 12.2686 13.6475L15.2878 16.8148L12.2714 19.985C11.9133 20.361 11.9133 20.9716 12.2714 21.3475C12.6295 21.7235 13.211 21.7235 13.5691 21.3475L16.5855 18.1773L19.6048 21.3445C19.9628 21.7205 20.5443 21.7205 20.9024 21.3445C21.2605 20.9685 21.2605 20.358 20.9024 19.982L17.8831 16.8148L20.8995 13.6445Z"
+            fill="black"
+          />
+        </svg>
         <div className={css.sectioncategory}>
           <div className={css.categoryitem}>In-person</div>
           <div className={css.categoryitem}>Retreats</div>

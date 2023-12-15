@@ -1,4 +1,6 @@
-.root {
+@import '../../styles/customMediaQueries.css';
+
+ .root {
   display: flex;
   padding: 60px;
   justify-content: center;
@@ -8,6 +10,11 @@
   border-radius: 20px;
   background: var(--primary-1-b-242-d, #1b242d);
   position: relative;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .section_l {
@@ -19,6 +26,10 @@
 }
 
 .section_r {
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .fontIcon {
@@ -41,6 +52,10 @@
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 .highlight {
   color: var(--extended-97-eae-5, #97eae5);
@@ -51,6 +66,9 @@
   font-style: normal;
   font-weight: 600;
   line-height: 120%; /* 48px */
+  @media (--viewMiddleScreenMax) {
+    font-size: 35px
+  }
 }
 .description {
   color: var(--primary-ffffff, #fff);
@@ -61,16 +79,25 @@
   font-style: normal;
   font-weight: 600;
   line-height: 120%;
+  @media (--viewMiddleScreenMax) {
+    font-size: 35px;
+  }
 }
 
 .backR {
   position: absolute;
   right: 0;
   bottom: 0;
+  @media (--viewMiddleScreenMax) {
+    display: none;
+  }
 }
 
 .backB {
   position: absolute;
   bottom: 0;
   right: 140px;
+  @media (--viewMiddleScreenMax) {
+    display: none;
+  }
 }

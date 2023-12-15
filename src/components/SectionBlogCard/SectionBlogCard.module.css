@@ -1,3 +1,5 @@
+@import '../../styles/customMediaQueries.css';
+
 .root {
   display: flex;
   width: 350px;
@@ -8,6 +10,11 @@
   border-radius: 12px;
   background: var(--primary-ffffff, #FFF);
   cursor: pointer;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .cardimaage {

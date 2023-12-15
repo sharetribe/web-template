@@ -1,3 +1,5 @@
+@import '../../styles/customMediaQueries.css';
+
 .background {
   flex-shrink: 0;
   height: 310px;
@@ -8,6 +10,15 @@
   background-repeat: no-repeat;
   background-position: right top;
   position: relative;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    top: 40px;
+    text-align: center;
+    background-position: bottom;
+    background-size: 80%;
+    background-image: url(../../assets/images/helpcenter_mobile.svg);
+  }
 }
 
 .breadcrumb {
@@ -18,6 +29,13 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
+
+  @media (--viewMiddleScreenMax) {
+    top: 40px;
+    left: 0px;
+    width: 100%;
+    align-items: center;
+  }
 }
 
 .title {
@@ -30,6 +48,10 @@
   font-style: normal;
   font-weight: 600;
   line-height: 120%; /* 66px */
+
+  @media (--viewMiddleScreenMax) {
+    font-size: 35px;
+  }
 }
 .subTitle {
   color: var(--primary-1-b-242-d, #1B242D);

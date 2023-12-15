@@ -1,3 +1,5 @@
+@import '../../styles/customMediaQueries.css';
+
 .root {
     /* Expand to the available space */
     flex-grow: 1;
@@ -5,14 +7,21 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 70px;
+    padding-top: 60px;
+
+    @media (--viewMiddleScreenMax) {
+        padding-left: 25px;
+        padding-right: 25px;
+        width: 100vw;
+        padding-top: 0px;
+    }
 }
 
 .content {
     width: 1100px;
 
-    @media (--viewportMedium) {
-        margin-top: 10vh;
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
     }
 }
 
@@ -31,6 +40,10 @@
     font-weight: 400;
     line-height: 140%;
     /* 28px */
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+    }
 }
 
 .title {
@@ -47,6 +60,10 @@
     font-weight: 600;
     line-height: 120%;
     /* 66px */
+
+    @media (--viewMiddleScreenMax) {
+        font-size: 35px;
+    }
 }
 
 .sectionbody {
@@ -56,6 +73,12 @@
     gap: 30px;
     padding-bottom: 60px;
     padding-top: 60px;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+        padding-bottom: 34px;
+        padding-top: 34px;
+    }
 }
 
 .sectioncontent {
@@ -63,12 +86,42 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 30px;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+    }
 }
 
 .sectionfiltercontet {
     display: inline-flex;
     align-items: flex-start;
     gap: 20px;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+        overflow-x: auto;
+    }
+}
+
+.desktopfilter {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 20px;
+    @media (--viewMiddleScreenMax) {
+        display: none;
+    }
+}
+
+.mobilefilter {
+    @media (--viewLargeScreenMin) {
+        display: none;
+    }
+}
+
+.sectionfilterdiv {
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+    }
 }
 
 .sectionfiltercontainer {
@@ -77,6 +130,12 @@
     flex-direction: row;
     width: 100%;
     align-items: flex-end;
+
+    @media (--viewMiddleScreenMax) {
+        flex-direction: column;
+        gap: 34px;
+        align-items: flex-start;
+    }
 }
 
 .sectionfilter {
@@ -181,6 +240,11 @@
     display: flex;
     align-items: flex-start;
     gap: 30px;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+        overflow-x: auto;
+    }
 }
 
 .schedulebody {
@@ -192,6 +256,11 @@
 
     width: 1110px;
     height: 356px;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+        height: 600px;
+    }
 }
 
 .schedulecontent {
@@ -206,6 +275,12 @@
     height: 356px;
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+        height: 600px;
+    }
 }
 
 .scheduledescription {
@@ -214,6 +289,11 @@
     gap: 63px;
 
     padding: 245px 51px 45px 45px;
+
+    @media (--viewMiddleScreenMax) {
+        padding: 100px 51px 45px 45px;
+        flex-direction: column;
+    }
 }
 
 .scheduledescriptioncontent {
@@ -270,6 +350,10 @@
     font-weight: 500;
     line-height: 24px;
     /* 150% */
+
+    @media (--viewMiddleScreenMax) {
+        width: 100%;
+    }
 }
 
 .experiencefilter {

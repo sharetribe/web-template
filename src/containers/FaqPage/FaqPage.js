@@ -14,13 +14,12 @@ import SectionBreadcrumb from '../../components/SectionBreadcrumb/SectionBreadcr
 import SectionFaqBlock from '../../components/SectionFaqBlock/SectionFaqBlock';
 
 export const FaqPageComponent = props => {
-
   return (
-    <Page title={"FAQ"} className={css.page} scrollingDisabled={false}>
+    <Page title={'FAQ'} className={css.page} scrollingDisabled={false}>
       <LayoutSingleColumn topbar={<TopbarContainer />} footer={<FooterContainer />}>
         <div className={css.root}>
           <SectionBreadcrumb secondary={1} title="FAQ Page" currentPath="FAQ" />
-          <div class={css.content}>
+          <div className={css.content}>
             <SectionFaqBlock />
             <SectionFaqBlock />
             <SectionFaqBlock />

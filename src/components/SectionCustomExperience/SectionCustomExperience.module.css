@@ -34,11 +34,7 @@
     height: 442px;
     background-repeat: no-repeat;
     background-size: cover;
-
-    @media (--viewMiddleScreenMax) {
-        height: 600px;
-    }
-
+    
     @media (--viewMiddleScreenMax) {
         height: auto;
     }

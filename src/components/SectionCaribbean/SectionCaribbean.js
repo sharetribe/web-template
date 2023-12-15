@@ -26,7 +26,7 @@ const SectionCaribbean = () => {
         </NamedLink>
       </div>
       <div className={css.sectionimage}>
-        <img src={landingImg} class={css.sectionimageitem} alt="landing" />
+        <img src={landingImg} className={css.sectionimageitem} alt="landing" />
       </div>
     </div>
   );

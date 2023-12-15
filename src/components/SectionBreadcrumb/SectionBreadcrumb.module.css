@@ -1,3 +1,5 @@
+@import '../../styles/customMediaQueries.css';
+
 .background {
   flex-shrink: 0;
   border-radius: 20px;
@@ -7,6 +9,14 @@
   background-image: url(../../assets/images/bread-back.png);
   background-repeat: no-repeat;
   position: relative;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+    background-image: url(../../assets/images/blog_mobile.svg);
+    background-position: bottom;
+    margin-top: 30px;
+  }
 }
 
 .background_secondary {
@@ -19,6 +29,11 @@
   background-image: url('../../assets/images/leafs-white.svg');
   background-repeat: no-repeat;
   position: relative;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
 
 .breadcrumb {
@@ -29,12 +44,26 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
+
+  @media (--viewMiddleScreenMax) {
+    position: initial;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
 }
 
 .path {
   display: flex;
   align-items: flex-start;
   gap: 13px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .path div {
@@ -61,10 +90,20 @@
   font-style: normal;
   font-weight: 600;
   line-height: 120%; /* 66px */
+
+  @media (--viewMiddleScreenMax) {
+    font-size: 35px;
+  }
 }
+
 .hasSub {
   font-size: 40px !important;
+
+  @media (--viewMiddleScreenMax) {
+    font-size: 35px !important;
+  }
 }
+
 .subTitle {
   color: rgba(27, 36, 45, 0.6);
   font-family: Poppins;

@@ -1,15 +1,22 @@
+@import '../../styles/customMediaQueries.css';
+
 .page {
   background: var(--primary-eaf-6-f-6, #EAF6F6);
 }
 .root {
-  /* Expand to the available space */
   flex-grow: 1;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 60px;
-  padding-bottom: 60px;
+  padding-bottom: 120px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100vw;
+    padding-top: 0px;
+    padding-left: 25px;
+    padding-right: 25px;
+  }
 }
 
 .cards {
@@ -17,10 +24,26 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 30px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+  }
 }
 
 .cardrow {
   display: flex;
   align-items: flex-start;
   gap: 30px;
+
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
+}
+
+.subscribe {
+  @media (--viewMiddleScreenMax) {
+    width: 100%;
+    flex-direction: column;
+  }
 }
