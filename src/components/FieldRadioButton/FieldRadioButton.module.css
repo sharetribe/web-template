@@ -34,6 +34,15 @@
   &:checked + label .text {
     color: var(--colorBlack);
   }
+
+  /* Disabled radio-button label should look like disabled */
+  &:disabled + label {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  &:disabled + label .text {
+    cursor: not-allowed;
+  }
 }
 
 .label {
