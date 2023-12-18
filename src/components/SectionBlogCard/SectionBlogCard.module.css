@@ -11,14 +11,14 @@
   background: var(--primary-ffffff, #FFF);
   cursor: pointer;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
 }
 
 .cardimagecontainer {
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
   }
 }
@@ -28,7 +28,7 @@
   align-self: stretch;
   border-radius: 9px;
   background: lightgray 50% / cover no-repeat, #D9D9D9;
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     height: auto;
   }

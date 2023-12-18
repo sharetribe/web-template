@@ -7,7 +7,7 @@
     gap: 32px;
     justify-content: space-between;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         flex-direction: column;
         padding-bottom: 60px;
         width: 100%;
@@ -29,7 +29,7 @@
     font-weight: 600;
     line-height: 120%;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         font-size: 35px;
     }
 
@@ -48,7 +48,7 @@
     gap: 30px;
     align-self: stretch;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         flex-direction: column;
     }
 
@@ -71,7 +71,7 @@
     border-radius: 20px;
     background: var(--primary-eaf-6-f-6, #EAF6F6);
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 
@@ -88,7 +88,7 @@
     flex: 1 0 0;
     width: 44vw;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 
@@ -142,7 +142,7 @@
     line-height: 24px;
     /* 133.333% */
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 }
@@ -161,7 +161,7 @@
     font-weight: 600;
     line-height: 24px;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 }

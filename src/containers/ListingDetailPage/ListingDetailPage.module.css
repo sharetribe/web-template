@@ -10,7 +10,7 @@
     flex-direction: column;
     align-items: center;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         padding-left: 25px;
         padding-right: 25px;
         width: 100vw;
@@ -23,13 +23,13 @@
     height: 49px;
     padding-top: 50px;
     
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         justify-content: space-between;
         width: 100%;
         padding-top: 50px;
     }
 
-    @media (--viewLargeScreenMin) {
+    @media (--viewXLargeScreenMin) {
         justify-content: center;
         gap: 839px;
     }
@@ -62,7 +62,7 @@
     padding-top: 100px;
     gap: 60px;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 }
@@ -106,7 +106,7 @@
     line-height: 120%;
     /* 66px */
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         font-size: 35px;
     }
 }
@@ -120,7 +120,7 @@
     border-radius: 99px;
     background: var(--primary-eaf-6-f-6, #EAF6F6);
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         flex-wrap: wrap;
     }
 }
@@ -149,7 +149,7 @@
     align-items: flex-start;
     gap: 30px; */
 /* 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         display: none;
     } */
 }
@@ -168,7 +168,7 @@
     background-repeat: no-repeat;
     background-position: center;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
         height: calc((100vw - 50px) * 1.225);
     }
@@ -188,7 +188,7 @@
     background-repeat: no-repeat;
     background-position: center;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
         height: calc((100vw - 50px) * 1.225);
     }
@@ -209,7 +209,7 @@
     background-repeat: no-repeat;
     background-position: center;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
         height: calc((100vw - 50px) * 1.225);
     }
@@ -240,7 +240,7 @@
     flex-direction: row;
     justify-content: space-between;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         flex-direction: column;
     }
 }
@@ -252,7 +252,7 @@
     gap: 70px;
     width: 635px;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 }
@@ -263,7 +263,7 @@
     align-items: flex-start;
     gap: 70px;
     width: 350px;
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 }
@@ -275,7 +275,7 @@
     gap: 70px;
     width: 635px;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 }
@@ -286,7 +286,7 @@
     align-items: flex-start;
     gap: 10px;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 }
@@ -296,7 +296,7 @@
     align-items: flex-start;
     gap: 10px;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
         flex-direction: column;
     }
@@ -311,7 +311,7 @@
     border-radius: 10px;
     background: #FFF;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 }
@@ -505,7 +505,7 @@
     align-items: flex-start;
     gap: 10px;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         flex-direction: column;
         width: 100%;
     }
@@ -522,7 +522,7 @@
     border-radius: 10px;
     background: #FFF;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 }
@@ -587,7 +587,7 @@
     border-radius: 12px;
     background: #FFF;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         flex-direction: column;
         width: 100%;
     }
@@ -621,7 +621,7 @@
     gap: 20px;
     align-self: stretch;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         flex-direction: column;
         width: 100%;
     }
@@ -639,7 +639,7 @@
     border: 1px solid #B8D8D8;
     background: var(--primary-ffffff, #FFF);
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         padding-top: 13px;
         padding-bottom: 13px;
     }
@@ -664,7 +664,7 @@
     line-height: 24px;
     /* 150% */
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         flex-direction: column;
         width: 100%;
     }
@@ -676,7 +676,7 @@
     align-items: flex-start;
     gap: 10px;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         flex-direction: column;
         width: 100%;
     }
@@ -691,7 +691,7 @@
     border-radius: 12px;
     background: #FFF;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 }
@@ -753,7 +753,7 @@
     border-radius: 12px;
     background: #FFF;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         flex-direction: column;
         width: 100%;
     }
@@ -797,7 +797,7 @@
     border: 1px solid #D3EBEB;
     background: var(--primary-ffffff, #FFF);
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         padding-top: 13px;
         padding-bottom: 13px;
     }
@@ -838,7 +838,7 @@
     line-height: 140%;
     /* 28px */
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         flex-direction: column;
         width: 100%;
     }
@@ -873,7 +873,7 @@
     line-height: 24px;
     /* 171.429% */
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
         padding-top: 13px;
         padding-bottom: 13px;
@@ -898,7 +898,7 @@
     line-height: 140%;
     /* 28px */
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 }

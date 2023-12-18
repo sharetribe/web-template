@@ -11,7 +11,7 @@
   background-position: right top;
   position: relative;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     top: 40px;
     text-align: center;
@@ -30,7 +30,7 @@
   align-items: flex-start;
   gap: 12px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     top: 40px;
     left: 0px;
     width: 100%;
@@ -49,7 +49,7 @@
   font-weight: 600;
   line-height: 120%; /* 66px */
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     font-size: 35px;
   }
 }

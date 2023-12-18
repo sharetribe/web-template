@@ -79,8 +79,6 @@ const Sidebar = props => {
           <>
             <div className={css.sectioncategory}>
               <div className={css.categoryitem}>In-person</div>
-              <div className={css.categoryitem}>Retreats</div>
-              <div className={css.categoryitem}>Virtual</div>
               <div className={css.categoryitem}>Venues</div>
             </div>
             <div className={css.sectionpages}>

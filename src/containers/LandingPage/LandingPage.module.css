@@ -11,7 +11,7 @@
         align-items: flex-start;
     }
 
-    @media (--viewMiddleScreenMin) and (--viewMiddleScreenMax) {
+    @media (--viewMiddleScreenMin) and (--viewLargeScreenMax) {
         width: 100vw;
         align-items: flex-start;
     }
@@ -34,7 +34,7 @@
         width: 100vw;
     }
 
-    @media (--viewMiddleScreenMin) and (--viewMiddleScreenMax) {
+    @media (--viewMiddleScreenMin) and (--viewLargeScreenMax) {
         width: 100vw;
     }
 

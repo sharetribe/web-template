@@ -9,7 +9,7 @@
   padding-bottom: 120px;
   padding-top: 60px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100vw;
     padding-top: 0px;
     padding-left: 25px;
@@ -22,7 +22,7 @@
   align-items: flex-start;
   gap: 120px;
   width: 1110px;
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -32,7 +32,7 @@
   display: flex;
   align-items: center;
   gap: 54px;
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -44,7 +44,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 30px;
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -67,7 +67,7 @@
   font-style: normal;
   font-weight: 600;
   line-height: 120%; /* 48px */
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
     font-size: 35px
@@ -97,7 +97,7 @@
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 150% */
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -107,7 +107,7 @@
   width: 615.987px;
   height: 423px;
   background-image: url('../../assets/images/become-banner.png');
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     height: calc((100vw - 50px) * 0.687);
     background-size: cover;
@@ -121,7 +121,7 @@
   gap: 30px;
   align-self: stretch;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -134,7 +134,7 @@
   background: url('../../assets/images/become-case-study.png'), lightgray 50%;
   background-size: cover;
   background-repeat: no-repeat;
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     height: calc((100vw - 50px) * 0.864);
     flex-direction: column;
@@ -149,7 +149,7 @@
   background: var(--primary-eaf-6-f-6, #eaf6f6);
   padding: 35px;
   position: relative;
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     height: auto;
     flex-direction: column;
@@ -169,7 +169,7 @@
   align-items: flex-start;
   gap: 20px;
   
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -199,7 +199,7 @@
   font-weight: 500;
   line-height: 140%; /* 22.4px */
   align-self: stretch;
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -220,7 +220,7 @@
   line-height: 24px; /* 150% */
   border-radius: 7px;
   background: var(--extended-06-c-167, #06c167);
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -243,7 +243,7 @@ h3 {
   align-items: flex-start;
   gap: 34px;
   align-self: stretch;
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -259,7 +259,7 @@ h3 {
   width: 631px;
   align-items: flex-start;
   gap: 30px;
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -293,7 +293,7 @@ h3 {
   line-height: 140%; /* 19.6px */
   width: 190px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -309,7 +309,7 @@ h3 {
   flex-direction: column;
   align-items: center;
   gap: 30px;
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -325,7 +325,7 @@ h2 {
   font-style: normal;
   font-weight: 600;
   line-height: 120%; /* 48px */
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
     font-size: 35px;
@@ -336,7 +336,7 @@ h2 {
   align-items: flex-start;
   gap: 30px;
   align-self: stretch;
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }

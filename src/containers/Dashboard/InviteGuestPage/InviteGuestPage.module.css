@@ -17,7 +17,7 @@
   flex-direction: column;
   gap: 65px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100vw;
     padding-left: 25px;
     padding-right: 25px;
@@ -28,7 +28,7 @@
   align-items: flex-start;
   gap: 30px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -39,7 +39,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 36px;
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -51,7 +51,7 @@
   align-items: flex-start;
   gap: 10px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -67,7 +67,7 @@
   font-weight: 600;
   line-height: 120%; /* 36px */
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -84,7 +84,7 @@
   line-height: 140%; /* 28px */
   width: 636px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -96,7 +96,7 @@
   align-items: flex-end;
   gap: 15px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -109,7 +109,7 @@
   border: 1px solid #d3ebeb;
   background: var(--primary-ffffff, #fff);
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -135,7 +135,7 @@
   gap: 15px;
   align-self: stretch;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -147,7 +147,7 @@
   align-items: center;
   flex: 1 0 0;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -169,7 +169,7 @@
   font-weight: 500;
   line-height: 24px; /* 150% */
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
   }
 }
@@ -190,7 +190,7 @@
   font-weight: 500;
   line-height: 24px; /* 150% */
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
   }
 }
@@ -211,7 +211,7 @@
   font-weight: 500;
   line-height: 24px; /* 150% */
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
   }
 }

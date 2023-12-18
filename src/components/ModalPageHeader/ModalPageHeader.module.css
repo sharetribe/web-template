@@ -3,7 +3,7 @@
   height: 48px;
   position: relative;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100vw;
     padding-left: 25px;
     padding-right: 25px;

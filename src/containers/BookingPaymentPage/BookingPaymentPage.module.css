@@ -168,7 +168,7 @@
   /* 28px */
 }
 
-.paymentoption {
+.paymentoptionactive {
   display: flex;
   padding: 30px;
   flex-direction: column;
@@ -179,6 +179,20 @@
   border-radius: 10px;
   border: 1px solid var(--primary-227667, #227667);
   background: #fff;
+  cursor: pointer;
+}
+
+.paymentoption {
+  display: flex;
+  padding: 30px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  align-self: stretch;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
 }
 
 .paymentoptiontext {

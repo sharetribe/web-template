@@ -7,7 +7,7 @@
     gap: 32px;
     justify-content: space-between;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         padding-bottom: 60px;
         width: 100%;
     }
@@ -29,7 +29,7 @@
     gap: 68px;
     width: 100%;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         flex-direction: column;
         gap: 15px;
     }
@@ -50,7 +50,7 @@
     align-items: flex-start;
     gap: 40px;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
         background: var(--primary-1-b-242-d, #1B242D);
         border-radius: 20px;
@@ -66,7 +66,7 @@
     background-size: cover;
     background-repeat: no-repeat;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 }
@@ -98,7 +98,7 @@
     align-items: flex-start;
     gap: 10px;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 }
@@ -126,7 +126,7 @@
     border-radius: 7px;
     background: var(--extended-06-c-167, #06C167);
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 }

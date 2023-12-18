@@ -12,7 +12,7 @@
   gap: 60px;
   padding-bottom: 120px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100vw;
     padding-top: 0px;
     padding-left: 25px;
@@ -27,7 +27,7 @@
   min-height: 720px;
   width: 1110px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
     min-height: auto;
@@ -46,7 +46,7 @@
   border-radius: 20px;
   background: var(--primary-ffffff, #FFF);
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
     height: auto;
@@ -68,7 +68,7 @@
   line-height: 125%; /* 43.75px */
   align-self: stretch;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     font-size: 30px;
   }
 }
@@ -93,7 +93,7 @@
   border-radius: 20px;
   padding: 30px;
   background: var(--primary-ffffff, #FFF);
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -163,7 +163,7 @@
 }
 .subscribe {
   padding-top: 60px;
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }

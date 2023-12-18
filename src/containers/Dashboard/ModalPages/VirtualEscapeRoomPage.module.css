@@ -15,7 +15,7 @@
   flex-direction: column;
   gap: 65px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100vw;
     padding-left: 25px;
     padding-right: 25px;

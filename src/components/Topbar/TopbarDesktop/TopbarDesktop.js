@@ -87,22 +87,6 @@ const TopbarDesktop = props => {
             In-person
           </div>
           <div
-            className={activeMenu == 'retreats' ? css.headermenuitemactive : css.headermenuitem}
-            onClick={() => {
-              setActiveMenu('retreats');
-            }}
-          >
-            Retreats
-          </div>
-          <div
-            className={activeMenu == 'virtual' ? css.headermenuitemactive : css.headermenuitem}
-            onClick={() => {
-              setActiveMenu('virtual');
-            }}
-          >
-            Virtual
-          </div>
-          <div
             className={activeMenu == 'venues' ? css.headermenuitemactive : css.headermenuitem}
             onClick={() => {
               setActiveMenu('venues');

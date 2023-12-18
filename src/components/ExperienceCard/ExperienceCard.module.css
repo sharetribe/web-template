@@ -10,7 +10,7 @@
   position: relative;
   background: var(--primary-eaf-6-f-6, #eaf6f6);
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -23,7 +23,7 @@
   position: relative;
   background: lightgray 50% / cover no-repeat, #d9d9d9;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     height: calc((100vw - 50px) * 1.2);
     flex-direction: column;
@@ -37,7 +37,7 @@
   height: 329px;
   border-radius: 12px 12px 0 0;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     height: calc((100vw - 50px) * 1.2);
     flex-direction: column;

@@ -7,7 +7,7 @@
     backdrop-filter: blur(37.5px);
     position: absolute;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         display: none;
     }
 }
@@ -27,7 +27,7 @@
     border-radius: 30px 0px 0px 30px;
     background: var(--primary-eaf-6-f-6, #EAF6F6);
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
         top: 0px;
         border-radius: 0px 0px 0px 0px;

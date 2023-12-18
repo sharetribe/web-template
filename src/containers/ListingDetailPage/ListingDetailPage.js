@@ -122,7 +122,7 @@ export const ListingDetailPage = props => {
     prevArrow: <SamplePrevArrow />,
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 1320,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,

@@ -8,7 +8,7 @@
   position: relative;
   margin-bottom: 60px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -19,7 +19,7 @@
   top: 0;
   left: 300px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     display: none;
   }
 }
@@ -35,7 +35,7 @@
   flex-shrink: 0;
   padding: 35px 0 35px 35px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
     padding: 35px 35px 35px 35px;
@@ -74,7 +74,7 @@
   gap: 10px;
   border-radius: 99px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -128,7 +128,7 @@ line-height: 125%; /* 43.75px */
   position: absolute;
   top: 0;
   right: 0;
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     display: none;
   }
 }

@@ -1,0 +1,67 @@
+.modalbody {
+    width: 448px;
+    margin-top: 48px;
+    display: inline-flex;
+    padding: 30px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+    border-radius: 20px;
+    border: 1px solid var(--primary-eaf-6-f-6, #EAF6F6);
+    background: var(--primary-ffffff, #FFF);
+    z-index: 99;
+}
+
+.calendar {
+    width: 100%;
+}
+
+.availablebtn {
+    display: flex;
+    padding: 5px 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    border-radius: 3px;
+    background: var(--extended-06-c-167, #06C167);
+
+    color: var(--primary-ffffff, #FFF);
+    text-align: center;
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    /* 200% */
+}
+
+.description {
+    color: #000;
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 140%;
+}
+
+.continuebtn {
+    display: flex;
+    height: 53px;
+    padding: 15px 30px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 7px;
+    background: var(--primary-227667, #227667);
+    color: var(--White, #FFF);
+    text-align: center;
+    font-family: Poppins;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    /* 150% */
+
+    cursor: pointer;
+}

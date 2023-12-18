@@ -8,7 +8,7 @@
   gap: 30px;
   padding-bottom: 60px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     padding-left: 25px;
     padding-right: 25px;
     width: 100vw;
@@ -21,7 +21,7 @@
   align-items: flex-start;
   gap: 30px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
   }
 }
@@ -46,7 +46,7 @@
   border-radius: 10px;
   background: var(--primary-eaf-6-f-6, #eaf6f6);
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     overflow-x: auto;
     flex-direction: column;
@@ -60,7 +60,7 @@
   gap: 128px;
   align-self: stretch;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
   }
 }

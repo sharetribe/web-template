@@ -8,7 +8,7 @@
   gap: 30px;
   padding-bottom: 60px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     padding-left: 25px;
     padding-right: 25px;
     width: 100vw;
@@ -21,7 +21,7 @@
   align-items: flex-start;
   gap: 30px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -33,7 +33,7 @@
   gap: 367px;
   align-self: stretch;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
     gap: 30px;
@@ -76,7 +76,7 @@
   line-height: 140%;
   /* 21px */
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     padding-top: 10px;
     padding-bottom: 10px;
   }
@@ -102,7 +102,7 @@
   line-height: 140%;
   white-space: nowrap;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     padding-top: 10px;
     padding-bottom: 10px;
   }
@@ -125,7 +125,7 @@
   line-height: 140%;
   white-space: nowrap;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     padding-top: 10px;
     padding-bottom: 10px;
   }
@@ -139,7 +139,7 @@
   gap: 10px;
   flex: 1 0 0;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -163,7 +163,7 @@
   line-height: 24px;
 
   /* 150% */
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
   }
 }
@@ -173,7 +173,7 @@
   align-items: flex-start;
   gap: 29px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }

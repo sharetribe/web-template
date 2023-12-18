@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Page, LayoutSingleColumn, NamedLink } from '../../components';
 import FooterContainer from '../FooterContainer/FooterContainer';
@@ -6,6 +6,12 @@ import FooterContainer from '../FooterContainer/FooterContainer';
 import css from './BookingPaymentPage.module.css';
 
 export const BookingPaymentPage = props => {
+  const [payment, setPayment] = useState('full');
+
+  const onClickPaymentOption = paymentoption => {
+    setPayment(paymentoption);
+  };
+
   return (
     <Page title={'Booking Detail'} scrollingDisabled={false}>
       <LayoutSingleColumn footer={<FooterContainer />}>
@@ -60,9 +66,7 @@ export const BookingPaymentPage = props => {
               </svg>
             </NamedLink>
             <div className={css.headertab}>
-              <NamedLink name="BookingDatetimePage" className={css.datetime}>
-                Date + Time
-              </NamedLink>
+              <div className={css.datetime}>Date + Time</div>
               <div className={css.payment}>Payment</div>
             </div>
             <div className={css.headeraction}>
@@ -121,20 +125,27 @@ export const BookingPaymentPage = props => {
                     Your date and time looks available! Pay below to reserve it for your team now.
                   </div>
                 </div>
-                <div className={css.paymentoption}>
+                <div
+                  className={payment == 'full' ? css.paymentoptionactive : css.paymentoption}
+                  onClick={() => {
+                    onClickPaymentOption('full');
+                  }}
+                >
                   <div className={css.paymentoptiontext}>
                     <div className={css.paymentoptiontitle}>
                       Pay in full
                       <div className={css.optionselect}>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="12"
-                          height="12"
-                          viewBox="0 0 12 12"
-                          fill="none"
-                        >
-                          <circle cx="6" cy="6" r="6" fill="#227667" />
-                        </svg>
+                        {payment == 'full' && (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            height="12"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                          >
+                            <circle cx="6" cy="6" r="6" fill="#227667" />
+                          </svg>
+                        )}
                       </div>
                     </div>
                     <div className={css.paymentoptiondescription}>
@@ -167,11 +178,28 @@ export const BookingPaymentPage = props => {
                     </div>
                   </div>
                 </div>
-                <div className={css.paymentoption}>
+                <div
+                  className={payment == 'deposit' ? css.paymentoptionactive : css.paymentoption}
+                  onClick={() => {
+                    onClickPaymentOption('deposit');
+                  }}
+                >
                   <div className={css.paymentoptiontext}>
                     <div className={css.paymentoptiontitle}>
                       Pay a deposit
-                      <div className={css.optionselect}></div>
+                      <div className={css.optionselect}>
+                        {payment == 'deposit' && (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            height="12"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                          >
+                            <circle cx="6" cy="6" r="6" fill="#227667" />
+                          </svg>
+                        )}
+                      </div>
                     </div>
                     <div className={css.paymentoptiondescription}>
                       Reserve your time with a deposit now. Your remaining balance will be charged
@@ -351,7 +379,9 @@ export const BookingPaymentPage = props => {
                     placeholder="Is there something the host should know? (optional)"
                   ></textarea>
                 </div>
-                <div className={css.bookbtn}>Book Now ($1,466.72)</div>
+                <NamedLink className={css.bookbtn} name="BookingSuccessPage">
+                  Book Now ($1,466.72)
+                </NamedLink>
               </div>
             </div>
             <div className={css.rightcontent}>

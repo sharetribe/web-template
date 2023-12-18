@@ -7,7 +7,7 @@
     gap: 32px;
     justify-content: space-between;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         flex-direction: column;
         padding-bottom: 60px;
         width: 100%;
@@ -35,7 +35,7 @@
     background-repeat: no-repeat;
     background-size: cover;
     
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         height: auto;
     }
 }
@@ -45,7 +45,7 @@
     align-items: flex-end;
     gap: 63px;
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         padding: 100px 51px 45px 45px;
         flex-direction: column;
     }
@@ -83,7 +83,7 @@
     line-height: 120%;
     /* 48px */
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         font-size: 35px;
     }
 
@@ -127,7 +127,7 @@
     line-height: 24px;
     /* 150% */
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         width: 100%;
     }
 }

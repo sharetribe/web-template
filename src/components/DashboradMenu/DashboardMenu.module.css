@@ -13,7 +13,7 @@
     border-radius: 0px 20px 20px 0px;
     background: var(--primary-eaf-6-f-6, #EAF6F6);
 
-    @media (--viewMiddleScreenMax) {
+    @media (--viewLargeScreenMax) {
         display: none;
     }
 }

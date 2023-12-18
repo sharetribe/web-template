@@ -47,6 +47,7 @@
     "query-string": "^7.1.1",
     "raf": "^3.4.0",
     "react": "^16.13.1",
+    "react-calendar": "^4.7.0",
     "react-dates": "^21.8.0",
     "react-dom": "^16.13.1",
     "react-final-form": "6.5.9",

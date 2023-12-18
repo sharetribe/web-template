@@ -72,6 +72,7 @@ const InviteGuestPage = loadable(() => import(/* webpackChunkName: "MarketPlace 
 
 const BookingDateTimePage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/BookingDatetimePage/BookingDatetimePage'));
 const BookingPaymentPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/BookingPaymentPage/BookingPaymentPage'));
+const BookingSuccessPage = loadable(() => import(/* webpackChunkName: "MarketPlace version 2" */ '../containers/BookingSuccessPage/BookingSuccessPage'));
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -502,6 +503,12 @@ const routeConfiguration = (layoutConfig) => {
       path: '/bookingdetail/payment',
       name: 'BookingPaymentPage',
       component: BookingPaymentPage,
+      loadData: pageDataLoadingAPI.FaqPage.loadData,
+    },
+    {
+      path: '/booking/confirm',
+      name: 'BookingSuccessPage',
+      component: BookingSuccessPage,
       loadData: pageDataLoadingAPI.FaqPage.loadData,
     },
     {

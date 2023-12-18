@@ -10,7 +10,7 @@
   background-repeat: no-repeat;
   position: relative;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
     background-image: url(../../assets/images/blog_mobile.svg);
@@ -30,7 +30,7 @@
   background-repeat: no-repeat;
   position: relative;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     flex-direction: column;
   }
@@ -45,7 +45,7 @@
   align-items: flex-start;
   gap: 12px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     position: initial;
     display: flex;
     justify-content: center;
@@ -59,7 +59,7 @@
   align-items: flex-start;
   gap: 13px;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     width: 100%;
     justify-content: center;
     align-items: center;
@@ -91,7 +91,7 @@
   font-weight: 600;
   line-height: 120%; /* 66px */
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     font-size: 35px;
   }
 }
@@ -99,7 +99,7 @@
 .hasSub {
   font-size: 40px !important;
 
-  @media (--viewMiddleScreenMax) {
+  @media (--viewLargeScreenMax) {
     font-size: 35px !important;
   }
 }

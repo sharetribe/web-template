@@ -10,6 +10,16 @@
     gap: 90px;
 }
 
+.overlay {
+    width: 100%;
+    height: 100vh;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.50);
+    backdrop-filter: blur(37.5px);
+    position: absolute;
+    z-index: 20;
+}
+
 .header {
     padding-top: 30px;
     display: flex;
@@ -192,6 +202,27 @@
     background: var(--primary-ffffff, #FFF);
 
     justify-content: space-between;
+
+    cursor: pointer;
+}
+
+.formitemsub {
+    display: flex;
+    height: 53px;
+    padding: 8px 17px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+
+    border-radius: 7px;
+    border: 1px solid #D3EBEB;
+    background: var(--primary-ffffff, #FFF);
+
+    justify-content: space-between;
+
+    margin-top: -15px;
+
+    cursor: pointer;
 }
 
 .continuebtn {
@@ -306,11 +337,30 @@
 
 .bookingpersonicon {
     display: flex;
-    padding: 10px;
     align-items: flex-start;
     gap: 10px;
     border-radius: 99px;
-    background: var(--primary-eaf-6-f-6, #EAF6F6);
+
+    cursor: pointer;
+}
+
+.guesteditbox {
+    border-radius: 7px;
+    border: 1px solid #D3EBEB;
+    background: var(--primary-ffffff, #FFF);
+    display: flex;
+    height: 53px;
+    padding: 8px 17px;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    color: var(--primary-1-b-242-d, #1B242D);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 171.429% */
 }
 
 .totalinvoice {
@@ -360,4 +410,73 @@
     font-weight: 400;
     line-height: 140%;
     /* 19.6px */
+}
+
+.filtermodalcontainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    position: absolute;
+}
+
+.registereddate {
+    display: flex;
+    height: 68px;
+    padding: 8px 17px;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 7px;
+    border: 1px solid #D3EBEB;
+    background: var(--primary-ffffff, #FFF);
+}
+
+.leftside {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: -3px;
+    flex: 1 0 0;
+}
+
+.date {
+    color: var(--primary-1-b-242-d, #1B242D);
+    font-family: Poppins;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    /* 171.429% */
+}
+
+.time {
+    color: var(--primary-1-b-242-d, #1B242D);
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 200% */
+}
+
+.rightside {
+    display: flex;
+    padding: 5px 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    border-radius: 3px;
+    border: 1px solid var(--primary-eaf-6-f-6, #EAF6F6);
+    background: var(--primary-eaf-6-f-6, #EAF6F6);
+
+    color: var(--primary-1-b-242-d, #1B242D);
+    text-align: center;
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    /* 200% */
 }
