@@ -38,8 +38,8 @@ You can also follow along the
 tutorial in the [Sharetribe Developer Docs](https://www.sharetribe.com/docs/).
 
 For more information of the configuration, see the
-[Environment configuration variables](https://www.sharetribe.com/docs/template/template-env/) reference in
-Sharetribe Developer Docs.
+[Environment configuration variables](https://www.sharetribe.com/docs/template/template-env/)
+reference in Sharetribe Developer Docs.
 
 ### For Windows users
 
@@ -52,8 +52,9 @@ articles instead of DOS commands.
 ## Getting started with your own customization
 
 If you want to build your own Sharetribe marketplace by customizing the template application, see
-the [How to Customize the Template](https://www.sharetribe.com/docs/template/how-to-customize-template/) guide
-in Developer Docs.
+the
+[How to Customize the Template](https://www.sharetribe.com/docs/template/how-to-customize-template/)
+guide in Developer Docs.
 
 ## Deploying to Heroku
 
