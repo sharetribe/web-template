@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] PageBuilder/YoutubeEmbed: add rel=0 search param (related videos only from same channel).
+  This also adds width and height to iframe element.
+  [#286](https://github.com/sharetribe/web-template/pull/286)
 - [fix] FieldRadioButton: disabled style was missing.
   [#284](https://github.com/sharetribe/web-template/pull/284)
 - [fix] Add missing imports to an email template file
