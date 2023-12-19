@@ -140,6 +140,124 @@ export const BookingDatetimePage = props => {
                 </div>
               </div>
             </div>
+            <div className={css.headermobile}>
+              <NamedLink name="ListingDetailPage">
+                <svg
+                  width="47"
+                  height="47"
+                  viewBox="0 0 47 47"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g filter="url(#filter0_b_62_2112)">
+                    <circle
+                      cx="23.5"
+                      cy="23.5"
+                      r="23.5"
+                      transform="matrix(-1 0 0 1 47 0)"
+                      fill="white"
+                    />
+                    <path
+                      d="M18.2934 23.2937C17.9027 23.6843 17.9027 24.3187 18.2934 24.7093L24.2934 30.7093C24.684 31.0999 25.3184 31.0999 25.709 30.7093C26.0996 30.3187 26.0996 29.6843 25.709 29.2937L20.4152 23.9999L25.7059 18.7062C26.0965 18.3155 26.0965 17.6812 25.7059 17.2905C25.3152 16.8999 24.6809 16.8999 24.2902 17.2905L18.2902 23.2905L18.2934 23.2937Z"
+                      fill="black"
+                    />
+                  </g>
+                  <defs>
+                    <filter
+                      id="filter0_b_62_2112"
+                      x="-10"
+                      y="-10"
+                      width="67"
+                      height="67"
+                      filterUnits="userSpaceOnUse"
+                      colorInterpolationFilters="sRGB"
+                    >
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                      <feGaussianBlur in="BackgroundImageFix" stdDeviation="5" />
+                      <feComposite
+                        in2="SourceAlpha"
+                        operator="in"
+                        result="effect1_backgroundBlur_62_2112"
+                      />
+                      <feBlend
+                        mode="normal"
+                        in="SourceGraphic"
+                        in2="effect1_backgroundBlur_62_2112"
+                        result="shape"
+                      />
+                    </filter>
+                  </defs>
+                </svg>
+              </NamedLink>
+              <svg
+                width="201"
+                height="5"
+                viewBox="0 0 201 5"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect width="100.5" height="5" rx="2.5" fill="#227667" />
+                <rect
+                  x="100.5"
+                  width="100.5"
+                  height="5"
+                  rx="2.5"
+                  fill="white"
+                  fill-opacity="0.85"
+                />
+              </svg>
+              <svg
+                width="47"
+                height="47"
+                viewBox="0 0 47 47"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g filter="url(#filter0_b_1081_5847)">
+                  <circle
+                    cx="23.5"
+                    cy="23.5"
+                    r="23.5"
+                    transform="matrix(-1 0 0 1 47 0)"
+                    fill="white"
+                  />
+                  <g clip-path="url(#clip0_1081_5847)">
+                    <path
+                      d="M25.1558 16.2573C24.7931 15.9155 24.204 15.9155 23.8413 16.2573L20.127 19.7573C19.7643 20.0991 19.7643 20.6542 20.127 20.996C20.4897 21.3378 21.0788 21.3378 21.4415 20.996L23.5714 18.989V24.7503C23.5714 25.2343 23.9864 25.6253 24.5 25.6253C25.0136 25.6253 25.4286 25.2343 25.4286 24.7503V18.989L27.5585 20.996C27.9212 21.3378 28.5103 21.3378 28.873 20.996C29.2357 20.6542 29.2357 20.0991 28.873 19.7573L25.1587 16.2573H25.1558ZM19.8571 25.6253C19.8571 25.1413 19.4422 24.7503 18.9286 24.7503C18.415 24.7503 18 25.1413 18 25.6253V27.3753C18 28.8245 19.2478 30.0003 20.7857 30.0003H28.2143C29.7522 30.0003 31 28.8245 31 27.3753V25.6253C31 25.1413 30.585 24.7503 30.0714 24.7503C29.5578 24.7503 29.1429 25.1413 29.1429 25.6253V27.3753C29.1429 27.8593 28.7279 28.2503 28.2143 28.2503H20.7857C20.2721 28.2503 19.8571 27.8593 19.8571 27.3753V25.6253Z"
+                      fill="#06C167"
+                    />
+                  </g>
+                </g>
+                <defs>
+                  <filter
+                    id="filter0_b_1081_5847"
+                    x="-10"
+                    y="-10"
+                    width="67"
+                    height="67"
+                    filterUnits="userSpaceOnUse"
+                    color-interpolation-filters="sRGB"
+                  >
+                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feGaussianBlur in="BackgroundImageFix" stdDeviation="5" />
+                    <feComposite
+                      in2="SourceAlpha"
+                      operator="in"
+                      result="effect1_backgroundBlur_1081_5847"
+                    />
+                    <feBlend
+                      mode="normal"
+                      in="SourceGraphic"
+                      in2="effect1_backgroundBlur_1081_5847"
+                      result="shape"
+                    />
+                  </filter>
+                  <clipPath id="clip0_1081_5847">
+                    <rect width="13" height="14" fill="white" transform="translate(18 16)" />
+                  </clipPath>
+                </defs>
+              </svg>
+            </div>
             <div className={css.content}>
               <div className={css.leftcontent}>
                 <div className={css.lefttitle}>

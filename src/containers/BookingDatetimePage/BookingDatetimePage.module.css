@@ -1,13 +1,21 @@
+@import '../../styles/customMediaQueries.css';
+
 .root {
     flex-shrink: 0;
     flex-grow: 1;
-    background: var(--primary-eaf-6-f-6, #EAF6F6);
+    background: var(--primary-eaf-6-f-6, #eaf6f6);
     backdrop-filter: blur(25px);
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
     align-items: center;
     gap: 90px;
+
+    @media (--viewLargeScreenMax) {
+        padding-left: 25px;
+        padding-right: 25px;
+        width: 100vw;
+    }
 }
 
 .overlay {
@@ -26,16 +34,22 @@
     justify-content: space-between;
     align-items: center;
     width: 1100px;
+
+    @media (--viewLargeScreenMax) {
+        display: none;
+    }
 }
 
-.headertab {
-    display: inline-flex;
-    padding: 3px;
-    align-items: flex-start;
-    gap: 2px;
+.headermobile {
+    padding-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
 
-    border-radius: 99px;
-    background: var(--primary-ffffff, #FFF);
+    @media (--viewXLargeScreenMin) {
+        display: none;
+    }
 }
 
 .datetime {
@@ -128,6 +142,11 @@
     align-items: flex-start;
     gap: 125px;
     padding-bottom: 191px;
+
+    @media (--viewLargeScreenMax) {
+        width: 100%;
+        flex-direction: column;
+    }
 }
 
 .leftcontent {
@@ -135,6 +154,11 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 50px;
+
+    @media (--viewLargeScreenMax) {
+        width: 100%;
+        flex-direction: column;
+    }
 }
 
 .lefttitle {
@@ -151,6 +175,12 @@
     font-weight: 600;
     line-height: 120%;
     /* 48px */
+
+    @media (--viewLargeScreenMax) {
+        width: 100%;
+        flex-direction: column;
+        font-size: 35px;
+    }
 }
 
 .subtitle {
@@ -167,6 +197,11 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
+
+    @media (--viewLargeScreenMax) {
+        width: 100%;
+        flex-direction: column;
+    }
 }
 
 .formitemtext {
@@ -244,6 +279,11 @@
     font-style: normal;
     font-weight: 500;
     line-height: 24px;
+
+    @media (--viewLargeScreenMax) {
+        width: 100%;
+        flex-direction: column;
+    }
     /* 150% */
 }
 
@@ -253,6 +293,10 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
+
+    @media (--viewLargeScreenMax) {
+        display: none;
+    }
 }
 
 .bookingdetail {

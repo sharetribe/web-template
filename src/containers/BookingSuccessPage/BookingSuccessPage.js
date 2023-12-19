@@ -40,7 +40,7 @@ export const BookingSuccessPage = props => {
               </NamedLink>
             </div>
             <div className={css.pageright}>
-              <img src={BookingImg} />
+              <img src={BookingImg} className={css.rightimg} />
             </div>
           </div>
         </div>

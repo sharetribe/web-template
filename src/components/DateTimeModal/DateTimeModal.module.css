@@ -1,3 +1,5 @@
+@import '../../styles/customMediaQueries.css';
+
 .modalbody {
     width: 448px;
     margin-top: 48px;
@@ -10,6 +12,12 @@
     border: 1px solid var(--primary-eaf-6-f-6, #EAF6F6);
     background: var(--primary-ffffff, #FFF);
     z-index: 99;
+
+    @media (--viewLargeScreenMax) {
+        margin-left: 25px;
+        margin-right: 25px;
+        width: 100vw;
+    }
 }
 
 .calendar {
