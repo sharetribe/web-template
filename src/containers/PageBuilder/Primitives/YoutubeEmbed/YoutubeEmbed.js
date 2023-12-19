@@ -25,7 +25,7 @@ export const YoutubeEmbed = props => {
   return (
     <AspectRatioWrapper className={classes} width={width} height={height}>
       <LazyIFrame
-        src={`https://www.youtube-nocookie.com/embed/${youtubeVideoId}`}
+        src={`https://www.youtube-nocookie.com/embed/${youtubeVideoId}?rel=0`}
         className={css.iframe}
         style={{ background: BLACK_BG }}
         frameBorder="0"
