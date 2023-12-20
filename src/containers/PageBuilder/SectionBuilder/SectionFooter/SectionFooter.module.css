@@ -113,6 +113,13 @@
   font-weight: 600;
   line-height: 120%;
   /* 30px */
+
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+    color: #06C167;
+  }
 }
 
 .sectioncontent1contactus {

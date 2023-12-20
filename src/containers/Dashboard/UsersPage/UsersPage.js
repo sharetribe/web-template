@@ -38,7 +38,7 @@ export const UsersPage = props => {
                 <div className={`${css.th} ${css.w169}`}>Email</div>
                 <div className={`${css.th} ${css.w160}`}>Status</div>
                 <div className={`${css.th} ${css.w261}`}>Spend this month</div>
-                <div className={`${css.th} ${css.w86} ${css.alignRight}`}>Role</div>
+                <div className={`${css.th} ${css.w86} `}>Role</div>
               </div>
               <div className={css.tr}>
                 <div className={`${css.td} ${css.w207}`}>John</div>
@@ -62,7 +62,7 @@ export const UsersPage = props => {
                   <div>Active</div>
                 </div>
                 <div className={`${css.td} ${css.w261}`}>$ 123</div>
-                <div className={`${css.td} ${css.w86} ${css.alignRight}`}>Admin</div>
+                <div className={`${css.td} ${css.w86} `}>Admin</div>
               </div>
 
               <div className={css.tr}>
@@ -87,7 +87,7 @@ export const UsersPage = props => {
                   <div>Disabled</div>
                 </div>
                 <div className={`${css.td} ${css.w187}`}>$ 123</div>
-                <div className={`${css.td} ${css.w160} ${css.alignRight}`}>Team member</div>
+                <div className={`${css.td} ${css.w160}`}>Team member</div>
               </div>
             </div>
           </div>

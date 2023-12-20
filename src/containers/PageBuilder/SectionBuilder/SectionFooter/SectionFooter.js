@@ -83,8 +83,6 @@ const SectionFooter = props => {
               <div className={css.sectioncontent1leftmenu}>
                 <div className={css.sectioncontent1menucontainer}>
                   <div className={css.sectionmenuitem}>In-person</div>
-                  <div className={css.sectionmenuitem}>Retreats</div>
-                  <div className={css.sectionmenuitem}>Virtual</div>
                   <div className={css.sectionmenuitem}>Venues</div>
                 </div>
               </div>
