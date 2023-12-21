@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] AuthenticationPage/lodash: do not import the whole library. 
+  [#288](https://github.com/sharetribe/web-template/pull/288)
 - [change] PageBuilder/YoutubeEmbed: add rel=0 search param (related videos only from same channel).
   This also adds width and height to iframe element.
   [#286](https://github.com/sharetribe/web-template/pull/286)
