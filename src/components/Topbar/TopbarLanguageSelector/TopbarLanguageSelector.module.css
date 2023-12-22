@@ -1,0 +1,61 @@
+.languageSelector {
+    position: relative;
+    display: flex;
+    /* Using flex display */
+    align-items: stretch;
+    /* Stretch children vertically */
+    justify-content: center;
+    /* Center children horizontally */
+    width: 100%;
+    /* Full width of the parent container */
+    height: 100%;
+    /* Full height of the parent container */
+    cursor: pointer;
+}
+
+.currentLanguage {
+    padding: 0.5rem 1rem;
+    /* Adjust padding as needed, or remove to fill the entire area */
+    background-color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    width: 100%;
+    /* Full width of the .languageSelector */
+    display: flex;
+    /* Align the text properly */
+    align-items: center;
+    /* Center the text vertically */
+    justify-content: center;
+    /* Center the text horizontally */
+}
+
+.languageOptions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    /* Match the width of the .currentLanguage */
+    z-index: 10;
+}
+
+.languageOption {
+    padding: 0.5rem 1rem;
+    width: 100%;
+    /* Ensure options take up full width */
+    box-sizing: border-box;
+
+    /* Include padding in the width */
+    &:hover {
+        background-color: #ffffff;
+    }
+}
+
+.flagEmoji {
+    margin-right: 8px;
+    /* Add some space between the flag emoji and the language name */
+    font-size: 1.2em;
+    /* Adjust the size of emoji as needed */
+}
