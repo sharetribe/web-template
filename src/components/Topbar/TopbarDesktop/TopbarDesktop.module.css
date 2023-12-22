@@ -102,6 +102,34 @@
   }
 }
 
+.languageSelector {
+  border-bottom: 0px solid;
+  transition: var(--transitionStyleButton);
+
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0;
+  color: var(--marketplaceColor);
+
+  flex-shrink: 0;
+  height: 100%;
+  padding: 0 12px 0 12px;
+  margin: 0;
+
+  &:hover {
+    color: var(--marketplaceColorDark);
+    border-bottom: 4px solid var(--marketplaceColor);
+    border-radius: 0;
+    text-decoration: none;
+  }
+
+  @media (--viewportMedium) {
+    line-height: 16px;
+    margin: 0;
+  }
+}
+
 .topbarDesktopLabel {
   composes: textSmall from global;
   display: inline-block;

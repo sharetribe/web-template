@@ -17,6 +17,7 @@ import {
 } from '../../../components';
 
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
+import TopbarLanguageSelector from '../TopbarLanguageSelector/TopbarLanguageSelector';
 
 import css from './TopbarDesktop.module.css';
 
@@ -137,6 +138,9 @@ const TopbarDesktop = props => {
     </NamedLink>
   );
 
+  const subdomain = window.location.hostname.split('.')[0];
+  const currentLanguage = subdomain === 'el' ? 'el' : 'en';
+
   return (
     <nav className={classes}>
       <LinkedLogo
@@ -154,6 +158,9 @@ const TopbarDesktop = props => {
       {profileMenu}
       {signupLink}
       {loginLink}
+      <div className={css.languageSelector} >
+        <TopbarLanguageSelector currentLanguage={currentLanguage} />
+      </div>
     </nav>
   );
 };
