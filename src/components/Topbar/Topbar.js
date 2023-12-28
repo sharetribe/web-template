@@ -202,6 +202,8 @@ class TopbarComponent extends Component {
       config,
       categories,
       searchModalOpen,
+      handleShowMap,
+      isMapShow,
       history,
     } = this.props;
 
@@ -286,6 +288,8 @@ class TopbarComponent extends Component {
             categories={categories}
             searchModalOpen={searchModalOpen}
             history={history}
+            handleShowMap={handleShowMap}
+            isMapShow={isMapShow}
           />
         </div>
     ):null;

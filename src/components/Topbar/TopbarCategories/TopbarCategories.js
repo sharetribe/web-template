@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { bool, func, object, number, string } from 'prop-types';
 import classNames from 'classnames';
 
+import Switch from "react-switch";
+
 import { FormattedMessage, intlShape } from '../../../util/reactIntl';
 import { AccessRole } from '../../../util/roles';
 import { ACCOUNT_SETTINGS_PAGES } from '../../../routing/routeConfiguration';
@@ -69,6 +71,8 @@ const TopbarCategories = props => {
     categories,
     searchModalOpen,
     history,
+    handleShowMap,
+    isMapShow,
   } = props;
   
   const [mounted, setMounted] = useState(false);
@@ -259,6 +263,14 @@ const TopbarCategories = props => {
     
   }
 
+  const labelShowMApSwitcher = (isMapShow)=>{
+    if(isMapShow){
+      return 'Hide map';
+    }else{
+      return 'Show map';
+    }
+  }
+
 
   return (
     <nav className={classes}>
@@ -295,6 +307,14 @@ const TopbarCategories = props => {
                 className={css.mapIconText}
               />
             </SecondaryButtonInline>
+      </div>
+      <div className={css.searchModalButtonContainer}>
+        <label className={css.showMapSwitcher}>
+          <span>{labelShowMApSwitcher(isMapShow)}</span>
+          <span className={css.mapSwitcherContainer}>
+            <Switch width={44} height={20} onColor={'#0095cd'} uncheckedIcon={false} checkedIcon={false} onChange={handleShowMap} checked={isMapShow} />
+          </span>
+        </label>
       </div>
 
       {/* {searchModalLink} */}
