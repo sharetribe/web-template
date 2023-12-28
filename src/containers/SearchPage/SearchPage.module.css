@@ -197,25 +197,6 @@
     flex-basis: 62.5%;
   }
 }
-.searchResultContainerWithoutMap {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 2px 0 0 0;
-
-  @media (--viewportMedium) {
-    padding: 0;
-    /**
-     * .container is using flexbox,
-     * This specifies that searchResultContainer is taking 60% from the viewport width
-     */
-    flex-basis: 50%;
-  }
-
-  @media (--viewportLarge) {
-    flex-basis: 100%;
-  }
-}
 
 .error {
   color: var(--colorFail);
@@ -317,9 +298,6 @@
     flex-basis: 37.5%;
   }
 }
-.mapPanelHidden{
-  display: none;
-}
 
 .mapWrapper {
   width: 100%;
@@ -343,41 +321,5 @@
 
   @media (--viewportLarge) {
     width: 37.5vw;
-  }
-}
-
-.mapSub {
-  width: 100vw;
-  height: 100vh;
-
-  @media (--viewportMedium) {
-    /* Map is fixed so that it doesn't scroll along search results */
-    position: fixed;
-    top: var(--topbarHeightDesktopSearch);
-    right: 0;
-
-    /* Fixed content needs width relative to viewport */
-    width: 50vw;
-    height: calc(100vh - var(--topbarHeightDesktopSearch));
-  }
-
-  @media (--viewportLarge) {
-    width: 37.5vw;
-  }
-}
-
-.mapSubFullwidth {
-  width: 100vw;
-  height: 100vh;
-
-  @media (--viewportMedium) {
-    /* Map is fixed so that it doesn't scroll along search results */
-    position: fixed;
-    top: var(--topbarHeightDesktopSearch);
-    right: 0;
-
-    /* Fixed content needs width relative to viewport */
-    width: 100vw;
-    height: calc(100vh - var(--topbarHeightDesktopSearch));
   }
 }

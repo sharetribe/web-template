@@ -61,7 +61,7 @@ class DynamicMapboxMap extends Component {
       zoom,
       scrollZoom: false,
     });
-    this.map.addControl(new window.mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+    this.map.addControl(new window.mapboxgl.NavigationControl({ showCompass: false }), 'top-left');
     this.map.addControl(new MultiTouch());
 
     if (mapsConfig.fuzzy.enabled) {

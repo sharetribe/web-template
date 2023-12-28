@@ -31,7 +31,6 @@ const PrivacyPolicyPage = loadable(() => import(/* webpackChunkName: "PrivacyPol
 const ProfilePage = loadable(() => import(/* webpackChunkName: "ProfilePage" */ '../containers/ProfilePage/ProfilePage'));
 const ProfileSettingsPage = loadable(() => import(/* webpackChunkName: "ProfileSettingsPage" */ '../containers/ProfileSettingsPage/ProfileSettingsPage'));
 const SearchPageWithMap = loadable(() => import(/* webpackChunkName: "SearchPageWithMap" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithMap'));
-const SearchPageWithMapSub = loadable(() => import(/* webpackChunkName: "SearchPageWithMapSub" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithMapSub'));
 const SearchPageWithGrid = loadable(() => import(/* webpackChunkName: "SearchPageWithGrid" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithGrid'));
 const SearchPageWithGridModal = loadable(() => import(/* webpackChunkName: "SearchPageWithGridModal" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithGridModal'));
 const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayoutPage" */ '../containers/StripePayoutPage/StripePayoutPage'));
@@ -76,11 +75,6 @@ const routeConfiguration = (layoutConfig) => {
       case 'modal':
         console.log('SearchPageWithGridModal');
         return SearchPageWithGridModal;
-        break;
-
-      case 'mapsub':
-        console.log('SearchPageWithMapSub');
-        return SearchPageWithMapSub;
         break;
         
       default:

@@ -4,10 +4,10 @@
 // Most of the work happens in components.           //
 ///////////////////////////////////////////////////////
 
-// There are 4 SearchPage variants that can be used:
-// 'map' & 'grid' & 'modal' & 'mapSub'
+// There are 2 SearchPage variants that can be used:
+// 'map' & 'grid' & 'modal'
 export const searchPage = {
-  variantType: 'mapsub',
+  variantType: 'modal',
 };
 
 // ListingPage has 2 layout options: 'coverPhoto' and 'carousel'.

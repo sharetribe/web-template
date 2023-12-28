@@ -538,21 +538,3 @@
   color: var(--colorBlack);
   border-bottom: 2px solid var(--colorBlack);
 }
-
-.showMapSwitcher{
-  display: inline-flex;
-  flex-direction: row;
-  border: solid 1px var(--colorGrey100);
-  border-radius: 18px;
-  height: 40px;
-  width: 150px;
-  align-items: center;
-  vertical-align: middle;
-  padding: 0 10px;
-  justify-content: space-between;
-  margin: 10px 0px;
-}
-.mapSwitcherContainer{
-  padding-left: 10px;
-  padding-top: 4px;
-}
