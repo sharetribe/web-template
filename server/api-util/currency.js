@@ -41,6 +41,7 @@ const subUnitDivisors = {
   SEK: 100,
   SGD: 100,
   USD: 100,
+  ARS: 100,
 };
 
 // Get the minor unit divisor for the given currency

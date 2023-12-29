@@ -49,7 +49,7 @@ const hasClashWithBuiltInPublicDataKey = listingFields => {
 /////////////////////////
 
 const mergeCurrency = (hostedCurrency, defaultCurrency) => {
-  const currency = hostedCurrency || defaultCurrency;
+  const currency = defaultCurrency;
   const supportedCurrencies = Object.keys(subUnitDivisors);
   if (supportedCurrencies.includes(currency)) {
     return currency;
