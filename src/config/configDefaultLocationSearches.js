@@ -41,12 +41,23 @@ const defaultLocations = [
         new LatLng(-41.122620, -71.286236)
       ),
     },
+  },
+  {
+    id: 'default-villa-la-angostura',
+    predictionPlace: {
+      address: 'Villa la Angostura, Neuquén, Argentina',
+      bounds: new LatLngBounds(
+        new LatLng(-40.7627426, -71.6417984),
+        new LatLng(-40.7616474, -71.6447641)
+      ),
+    },
   }
   // {
   //   id: 'default-helsinki',
   //   predictionPlace: {
   //     address: 'Helsinki, Finland',
-  //     bounds: new LatLngBounds(new LatLng(60.29783, 25.25448), new LatLng(59.92248, 24.78287)),
+  //     bounds: new LatLngBounds(new LatLng(60.29783, 25.25448),
+  //                              new LatLng(59.92248, 24.78287)),
   //   },
   // },
   // {
