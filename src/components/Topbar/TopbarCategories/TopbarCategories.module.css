@@ -20,9 +20,9 @@
   /* shadows */
   box-shadow: var(--boxShadowLight);
 
-  /* @media (--viewportLarge) {
-    padding: 0 24px 0 0;
-  } */
+  @media (--viewportLarge) {
+    padding-left: 270px;
+  }
   border-top: 1px solid var(--colorGrey100);
   padding-top: 8px;
 }
