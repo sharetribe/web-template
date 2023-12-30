@@ -42,6 +42,9 @@ import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../compone
 
 import css from './OrderPanel.module.css';
 
+// INE.
+import { Link } from 'react-router-dom';
+
 const BookingTimeForm = loadable(() =>
   import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
 );
@@ -224,6 +227,9 @@ const OrderPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.orderTitle);
 
+  // INE
+  const whatsappUrl = `https://wa.me/+5492944232664?text=Hola, estoy interesado en reservar: ${listing.attributes.title}`;
+
   return (
     <div className={classes}>
       <ModalInMobile
@@ -348,17 +354,19 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.closedListingButtonText" />
           </div>
         ) : (
-          <PrimaryButton
-            onClick={handleSubmit(
-              isOwnListing,
-              isClosed,
-              showInquiryForm,
-              onSubmit,
-              history,
-              location
-            )}
-            disabled={isOutOfStock}
-          >
+          // INE
+          <Link to={whatsappUrl} target="_blank" rel="noopener noreferrer">
+            <PrimaryButton
+              onClick={handleSubmit(
+                isOwnListing,
+                isClosed,
+                showInquiryForm,
+                onSubmit,
+                history,
+                location
+              )}
+              disabled={isOutOfStock}
+            >
             {isBooking ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessageBooking" />
             ) : isOutOfStock ? (
@@ -368,7 +376,8 @@ const OrderPanel = props => {
             ) : (
               <FormattedMessage id="OrderPanel.ctaButtonMessageInquiry" />
             )}
-          </PrimaryButton>
+            </PrimaryButton>
+          </Link>
         )}
       </div>
     </div>
