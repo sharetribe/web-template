@@ -24,6 +24,7 @@
     padding: 0 24px 0 0;
   } */
   border-top: 1px solid var(--colorGrey100);
+  padding-top: 8px;
 }
 
 /* logo */
