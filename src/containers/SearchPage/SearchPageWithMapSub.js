@@ -39,7 +39,7 @@ import {
 
 import FilterComponent from './FilterComponent';
 import SearchMapSub from './SearchMapSub/SearchMapSub';
-import MainPanelHeader from './MainPanelHeader/MainPanelHeader';
+import MainPanelHeaderMapSub from './MainPanelHeaderMapSub/MainPanelHeaderMapSub';
 import SearchFiltersSecondary from './SearchFiltersSecondary/SearchFiltersSecondary';
 import SearchFiltersPrimary from './SearchFiltersPrimary/SearchFiltersPrimary';
 import SearchFiltersMobile from './SearchFiltersMobile/SearchFiltersMobile';
@@ -554,7 +554,7 @@ export class SearchPageComponent extends Component {
                 );
               })}
             </SearchFiltersMobile>
-            <MainPanelHeader
+            <MainPanelHeaderMapSub
               className={css.mainPanelMapVariant}
               sortByComponent={sortBy('desktop')}
               isSortByActive={sortConfig.active}
@@ -563,26 +563,17 @@ export class SearchPageComponent extends Component {
               searchInProgress={searchInProgress}
               searchListingsError={searchListingsError}
               noResultsInfo={noResultsInfo}
+              propsForSecondaryFiltersToggle={propsForSecondaryFiltersToggle}
+              availablePrimaryFilters={availablePrimaryFilters}
+              config={config}
+              marketplaceCurrency={marketplaceCurrency}
+              validQueryParams={validQueryParams}
+              initialValues={initialValues(this.props, this.state.currentQueryParams)}
+              getHandleChangedValueFn={this.getHandleChangedValueFn}
+              intl={intl}
+              contentPlacementOffset={FILTER_DROPDOWN_OFFSET}
             >
-              <SearchFiltersPrimary {...propsForSecondaryFiltersToggle}>
-                {availablePrimaryFilters.map(config => {
-                  return (
-                    <FilterComponent
-                      key={`SearchFiltersPrimary.${config.key}`}
-                      idPrefix="SearchFiltersPrimary"
-                      config={config}
-                      marketplaceCurrency={marketplaceCurrency}
-                      urlQueryParams={validQueryParams}
-                      initialValues={initialValues(this.props, this.state.currentQueryParams)}
-                      getHandleChangedValueFn={this.getHandleChangedValueFn}
-                      intl={intl}
-                      showAsPopup
-                      contentPlacementOffset={FILTER_DROPDOWN_OFFSET}
-                    />
-                  );
-                })}
-              </SearchFiltersPrimary>
-            </MainPanelHeader>
+            </MainPanelHeaderMapSub>
             {isSecondaryFiltersOpen ? (
               <div className={classNames(css.searchFiltersPanel)}>
                 <SearchFiltersSecondary

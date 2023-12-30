@@ -508,7 +508,8 @@ const validSearchConfig = config => {
   // This will define the order of default filters
   // The reason: later on, we'll add these default filters to config assets and
   // there they'll be their own separate entities and not wrapped in an array.
-  const defaultFilters = [dateRangeFilter, priceFilter, ...keywordsFilterMaybe];
+  // const defaultFilters = [dateRangeFilter, priceFilter, ...keywordsFilterMaybe];
+  const defaultFilters = [ priceFilter, ...keywordsFilterMaybe];
   return {
     mainSearch: { searchType },
     defaultFilters: validDefaultFilters(defaultFilters),
