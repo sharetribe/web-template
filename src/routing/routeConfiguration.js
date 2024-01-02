@@ -32,19 +32,20 @@ const ProfilePage = loadable(() => import(/* webpackChunkName: "ProfilePage" */ 
 const ProfileSettingsPage = loadable(() => import(/* webpackChunkName: "ProfileSettingsPage" */ '../containers/ProfileSettingsPage/ProfileSettingsPage'));
 const SearchPageWithMap = loadable(() => import(/* webpackChunkName: "SearchPageWithMap" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithMap'));
 const SearchPageWithGrid = loadable(() => import(/* webpackChunkName: "SearchPageWithGrid" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithGrid'));
-const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayoutPage" */ '../containers/StripePayoutPage/StripePayoutPage'));
+//const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayoutPage" */ '../containers/StripePayoutPage/StripePayoutPage'));
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ '../containers/TermsOfServicePage/TermsOfServicePage'));
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
 
-export const ACCOUNT_SETTINGS_PAGES = [
-  'ContactDetailsPage',
-  'PasswordChangePage',
-  'StripePayoutPage',
-  'PaymentMethodsPage',
-];
+//export const ACCOUNT_SETTINGS_PAGES = [
+//  'ContactDetailsPage',
+//  'PasswordChangePage',
+//  'StripePayoutPage',
+//  'PaymentMethodsPage',
+//];
+export const ACCOUNT_SETTINGS_PAGES = ['ContactDetailsPage', 'PasswordChangePage'];
 
 // https://en.wikipedia.org/wiki/Universally_unique_identifier#Nil_UUID
 const draftId = '00000000-0000-0000-0000-000000000000';
@@ -133,7 +134,7 @@ const routeConfiguration = (layoutConfig) => {
     },
     {
       path: '/l/:slug/:id/:type/:tab/:returnURLType',
-      name: 'EditListingStripeOnboardingPage',
+      //name: 'EditListingStripeOnboardingPage',
       auth: true,
       component: EditListingPage,
       loadData: pageDataLoadingAPI.EditListingPage.loadData,
@@ -274,19 +275,19 @@ const routeConfiguration = (layoutConfig) => {
     },
     {
       path: '/account/payments',
-      name: 'StripePayoutPage',
+      //name: 'StripePayoutPage',
       auth: true,
       authPage: 'LoginPage',
-      component: StripePayoutPage,
+      //component: StripePayoutPage,
       loadData: pageDataLoadingAPI.StripePayoutPage.loadData,
     },
     {
       path: '/account/payments/:returnURLType',
-      name: 'StripePayoutOnboardingPage',
+      //name: 'StripePayoutOnboardingPage',
       auth: true,
       authPage: 'LoginPage',
-      component: StripePayoutPage,
-      loadData: pageDataLoadingAPI.StripePayoutPage.loadData,
+      //component: StripePayoutPage,
+      //loadData: pageDataLoadingAPI.StripePayoutPage.loadData,
     },
     {
       path: '/account/payment-methods',
