@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Move IconCard under SaveCardDetails (might be code-splitted later).
+  [#283](https://github.com/sharetribe/web-template/pull/283)
 - [change] Code-split Topbar component and move it under TopbarContainer.
   [#282](https://github.com/sharetribe/web-template/pull/282)
 - [fix] AuthenticationPage/lodash: do not import the whole library.
