@@ -3,16 +3,16 @@ import { array, arrayOf, bool, func, number, object, shape, string } from 'prop-
 import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
 
-import appSettings from '../../config/settings';
-import { useConfiguration } from '../../context/configurationContext';
-import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import appSettings from '../../../config/settings';
+import { useConfiguration } from '../../../context/configurationContext';
+import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 
-import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
-import { isMainSearchTypeKeywords, isOriginInUse } from '../../util/search';
-import { withViewport } from '../../util/uiHelpers';
-import { parse, stringify } from '../../util/urlHelpers';
-import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
-import { propTypes } from '../../util/types';
+import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
+import { isMainSearchTypeKeywords, isOriginInUse } from '../../../util/search';
+import { withViewport } from '../../../util/uiHelpers';
+import { parse, stringify } from '../../../util/urlHelpers';
+import { createResourceLocatorString, pathByRouteName } from '../../../util/routes';
+import { propTypes } from '../../../util/types';
 import {
   Button,
   LimitedAccessBanner,
@@ -20,7 +20,7 @@ import {
   Modal,
   ModalMissingInformation,
   NamedLink,
-} from '../../components';
+} from '../../../components';
 
 import MenuIcon from './MenuIcon';
 import SearchIcon from './SearchIcon';
