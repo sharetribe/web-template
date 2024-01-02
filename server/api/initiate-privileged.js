@@ -23,10 +23,17 @@ module.exports = (req, res) => {
         commissionAsset?.type === 'jsonAsset'
           ? commissionAsset.attributes.data.providerCommission
           : null;
+
+      // TODO: Replace hard-coded customerCommission with asset-based one
+      const customerCommission = {
+        percentage: 10,
+      };
+
       lineItems = transactionLineItems(
         listing,
         { ...orderData, ...bodyParams.params },
-        providerCommission
+        providerCommission,
+        customerCommission
       );
 
       return getTrustedSdk(req);
