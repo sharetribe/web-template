@@ -393,7 +393,7 @@ export class SearchPageComponent extends Component {
         schema={schema}
       >
         <TopbarContainer
-          className={topbarClasses}
+          rootClassName={topbarClasses}
           currentPage="SearchPage"
           currentSearchParams={urlQueryParams}
         />
