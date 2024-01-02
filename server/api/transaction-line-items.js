@@ -18,7 +18,13 @@ module.exports = (req, res) => {
         commissionAsset?.type === 'jsonAsset'
           ? commissionAsset.attributes.data.providerCommission
           : null;
-      const lineItems = transactionLineItems(listing, orderData, providerCommission);
+
+      // TODO: Replace hard-coded customerCommission with asset-based one
+      const customerCommission = {
+        percentage: 10,
+      };
+      
+      const lineItems = transactionLineItems(listing, orderData, providerCommission, customerCommission);
 
       // Because we are using returned lineItems directly in this template we need to use the helper function
       // to add some attributes like lineTotal and reversal that Marketplace API also adds to the response.

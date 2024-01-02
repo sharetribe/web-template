@@ -113,7 +113,7 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
  * @param {Object} providerCommission
  * @returns {Array} lineItems
  */
-exports.transactionLineItems = (listing, orderData, providerCommission) => {
+exports.transactionLineItems = (listing, orderData, providerCommission, customerCommission) => {
   const publicData = listing.attributes.publicData;
   const unitPrice = listing.attributes.price;
   const currency = unitPrice.currency;
@@ -194,9 +194,25 @@ exports.transactionLineItems = (listing, orderData, providerCommission) => {
       ]
     : [];
 
+  const customerCommissionMaybe = hasCommissionPercentage(customerCommission)
+    ? [
+        {
+          code: 'line-item/customer-commission',
+          unitPrice: calculateTotalFromLineItems([order]),
+          percentage: customerCommission?.percentage,
+          includeFor: ['customer'],
+        },
+      ]
+    : [];
+
   // Let's keep the base price (order) as first line item and provider's commission as last one.
   // Note: the order matters only if OrderBreakdown component doesn't recognize line-item.
-  const lineItems = [order, ...extraLineItems, ...providerCommissionMaybe];
+  const lineItems = [
+    order,
+    ...extraLineItems,
+    ...providerCommissionMaybe,
+    ...customerCommissionMaybe,
+  ];
 
   return lineItems;
 };
