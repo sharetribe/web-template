@@ -1,0 +1,129 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  display: flex;
+  flex-direction: column;
+  margin-top: 40px;
+}
+
+.card {
+  composes: marketplaceInputStyles from global;
+
+  @media (--viewportMedium) {
+    padding: 11px 0 11px 16px;
+  }
+}
+
+.cardError {
+  border: var(--borderErrorField);
+}
+
+.error {
+  color: var(--colorFail);
+  font-size: 13px;
+}
+
+.errorMessage {
+  margin-top: 24px;
+  color: var(--colorFail);
+}
+
+.paymentHeading {
+  margin: 0 0 14px 0;
+  color: var(--colorGrey300);
+
+  padding-top: 8px;
+  padding-bottom: 0px;
+
+  @media (--viewportMedium) {
+    margin: 0 0 26px 0;
+  }
+}
+
+.messageHeading {
+  color: var(--colorGrey300);
+  margin: 40px 0 14px 0;
+
+  padding-top: 4px;
+  padding-bottom: 4px;
+
+  @media (--viewportMedium) {
+    margin: 41px 0 26px 0;
+  }
+  @media (--viewportLarge) {
+    margin: 40px 0 26px 0;
+  }
+}
+
+.messageLabel {
+  margin: 0 0 5px 0;
+
+  @media (--viewportMedium) {
+    margin: 0 0 6px 0;
+  }
+}
+
+.messageOptional {
+  color: var(--colorGrey300);
+}
+
+.message {
+  border-bottom-color: var(--colorGrey300);
+}
+
+.submitContainer {
+  margin-top: auto;
+  margin-top: 48px;
+  @media (--viewportLarge) {
+    margin-top: 72px;
+  }
+}
+
+.infoText {
+  composes: h5 from global;
+
+  color: var(--colorGrey300);
+  padding: 0;
+  margin: 14px 0 0 0;
+}
+
+.submitButton {
+  margin-top: 22px;
+
+  @media (--viewportMedium) {
+    margin-top: 26px;
+  }
+  @media (--viewportLarge) {
+    margin-top: 17px;
+  }
+}
+
+.missingStripeKey {
+  color: var(--colorFail);
+}
+
+.paymentAddressField {
+  padding-top: 38px;
+}
+
+.formRow {
+  display: flex;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.postalCode {
+  margin-top: 24px;
+  width: calc(40% - 9px);
+}
+
+.city {
+  margin-top: 24px;
+  width: calc(60% - 9px);
+}
+
+.field {
+  margin-top: 24px;
+}
