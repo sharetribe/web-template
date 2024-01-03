@@ -1,0 +1,111 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+}
+
+.verificiationBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  padding: 15px 32px 23px 32px;
+  margin-bottom: 72px;
+
+  border-radius: var(--borderRadiusMedium);
+
+  @media (--viewportMedium) {
+    flex-wrap: nowrap;
+  }
+}
+
+.verificiationBoxTextWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 5px 24px 3px 0px;
+  margin-bottom: 16px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 0px;
+  }
+}
+
+.verificationBoxTitle {
+  composes: h5 from global;
+  font-weight: var(--fontWeightSemiBold);
+
+  align-self: center;
+
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.verificationBoxText {
+  composes: h5 from global;
+  font-weight: var(--fontWeightRegular);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.getVerifiedButton {
+  composes: h5 from global;
+  font-weight: var(--fontWeightSemiBold);
+
+  border-radius: var(--borderRadiusMedium);
+  min-height: 38px;
+  width: 300px;
+  max-width: 110px;
+}
+
+/* Verification required box */
+.verficiationNeededBox {
+  border: 1px solid var(--colorAttention);
+  background: var(--colorAttentionLight);
+}
+
+/* Verification error box */
+.verficiationErrorBox {
+  border: var(--borderErrorField);
+  background: var(--colorFailLight);
+}
+
+/* Verification success box */
+.verficiationSuccessBox {
+  background: var(--colorSuccessLight);
+  border: 1px solid var(--colorSuccess);
+  padding: 8px 24px;
+}
+
+.verificationBoxSuccessTextWrapper {
+  margin-bottom: 0;
+}
+.editVerificationButton {
+  composes: h4 from global;
+  color: var(--colorGrey700);
+  font-weight: var(--fontWeightNormal);
+  min-height: 46px;
+  margin: 0;
+  padding-top: 3px;
+
+  &:hover,
+  &:focus {
+    outline: none;
+    color: var(--colorBlack);
+  }
+}
+
+.icon {
+  margin-right: 10px;
+}
+
+.iconEditPencil {
+  stroke: var(--colorGrey700);
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  stroke: var(--colorSuccess);
+  stroke-width: 3px;
+}
