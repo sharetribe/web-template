@@ -75,6 +75,7 @@ import * as ResponsiveImage from './components/ResponsiveImage/ResponsiveImage.e
 import * as ReviewRating from './components/ReviewRating/ReviewRating.example';
 import * as Reviews from './components/Reviews/Reviews.example';
 import * as SavedCardDetails from './components/SavedCardDetails/SavedCardDetails.example';
+import * as StripeBankAccountTokenInputField from './components/StripeBankAccountTokenInputField/StripeBankAccountTokenInputField.example';
 import * as TabNav from './components/TabNav/TabNav.example';
 import * as TabNavHorizontal from './components/TabNavHorizontal/TabNavHorizontal.example';
 import * as Tabs from './components/Tabs/Tabs.example';
@@ -85,6 +86,7 @@ import * as LayoutComposer from './components/LayoutComposer/LayoutComposer.exam
 // components under containers
 import * as SignupForm from './containers/AuthenticationPage/SignupForm/SignupForm.example';
 import * as LoginForm from './containers/AuthenticationPage/LoginForm/LoginForm.example';
+import * as StripePaymentForm from './containers/CheckoutPage/StripePaymentForm/StripePaymentForm.example';
 import * as FieldTimeZoneSelect from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/FieldTimeZoneSelect/FieldTimeZoneSelect.example';
 import * as EditListingAvailabilityPlanForm from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/EditListingAvailabilityPlanForm/EditListingAvailabilityPlanForm.example';
 import * as EditListingAvailabilityExceptionForm from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/EditListingAvailabilityExceptionForm/EditListingAvailabilityExceptionForm.example';
@@ -221,6 +223,8 @@ export {
   SelectMultipleFilter,
   SendMessageForm,
   SignupForm,
+  StripeBankAccountTokenInputField,
+  StripePaymentForm,
   TabNav,
   TabNavHorizontal,
   Tabs,
