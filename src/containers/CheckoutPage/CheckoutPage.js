@@ -12,7 +12,6 @@ import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../transactio
 
 // Import global thunk functions
 import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { confirmCardPayment, retrievePaymentIntent } from '../../ducks/stripe.duck';
 import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
 
 // Import shared components
@@ -26,16 +25,12 @@ import {
   initiateOrder,
   setInitialValues,
   speculateTransaction,
-  stripeCustomer,
   confirmPayment,
   sendMessage,
   initiateInquiryWithoutPayment,
 } from './CheckoutPage.duck';
 
 import CustomTopbar from './CustomTopbar';
-import CheckoutPageWithPayment, {
-  loadInitialDataForStripePayments,
-} from './CheckoutPageWithPayment';
 import CheckoutPageWithInquiryProcess from './CheckoutPageWithInquiryProcess';
 
 const STORAGE_KEY = 'CheckoutPage';
@@ -68,23 +63,14 @@ const EnhancedCheckoutPage = props => {
       listing,
       transaction,
       fetchSpeculatedTransaction,
-      fetchStripeCustomer,
+      
     } = props;
     const initialData = { orderData, listing, transaction };
     const data = handlePageData(initialData, STORAGE_KEY, history);
     setPageData(data || {});
     setIsDataLoaded(true);
 
-    // This is for processes using payments with Stripe integration
-    if (getProcessName(data) !== INQUIRY_PROCESS_NAME) {
-      // Fetch StripeCustomer and speculateTransition for transactions that include Stripe payments
-      loadInitialDataForStripePayments({
-        pageData: data || {},
-        fetchSpeculatedTransaction,
-        fetchStripeCustomer,
-        config,
-      });
-    }
+    
   }, []);
 
   const {
@@ -162,7 +148,6 @@ const mapStateToProps = state => {
   const {
     listing,
     orderData,
-    stripeCustomerFetched,
     speculateTransactionInProgress,
     speculateTransactionError,
     speculatedTransaction,
@@ -172,11 +157,9 @@ const mapStateToProps = state => {
     confirmPaymentError,
   } = state.CheckoutPage;
   const { currentUser } = state.user;
-  const { confirmCardPaymentError, paymentIntent, retrievePaymentIntentError } = state.stripe;
   return {
     scrollingDisabled: isScrollingDisabled(state),
     currentUser,
-    stripeCustomerFetched,
     orderData,
     speculateTransactionInProgress,
     speculateTransactionError,
@@ -196,7 +179,6 @@ const mapDispatchToProps = dispatch => ({
   dispatch,
   fetchSpeculatedTransaction: (params, processAlias, txId, transitionName, isPrivileged) =>
     dispatch(speculateTransaction(params, processAlias, txId, transitionName, isPrivileged)),
-  fetchStripeCustomer: () => dispatch(stripeCustomer()),
   onInquiryWithoutPayment: (params, processAlias, transitionName) =>
     dispatch(initiateInquiryWithoutPayment(params, processAlias, transitionName)),
   onInitiateOrder: (params, processAlias, transactionId, transitionName, isPrivileged) =>
@@ -206,8 +188,7 @@ const mapDispatchToProps = dispatch => ({
   onConfirmPayment: (transactionId, transitionName, transitionParams) =>
     dispatch(confirmPayment(transactionId, transitionName, transitionParams)),
   onSendMessage: params => dispatch(sendMessage(params)),
-  onSavePaymentMethod: (stripeCustomer, stripePaymentMethodId) =>
-    dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
+  
 });
 
 const CheckoutPage = compose(
