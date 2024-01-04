@@ -19,15 +19,11 @@ module.exports = (req, res) => {
     .then(([showListingResponse, fetchAssetsResponse]) => {
       const listing = showListingResponse.data.data;
       const commissionAsset = fetchAssetsResponse.data.data[0];
-      const providerCommission =
+      
+      const { providerCommission, customerCommission } =
         commissionAsset?.type === 'jsonAsset'
-          ? commissionAsset.attributes.data.providerCommission
+          ? commissionAsset.attributes.data
           : null;
-
-      // TODO: Replace hard-coded customerCommission with asset-based one
-      const customerCommission = {
-        percentage: 10,
-      };
 
       lineItems = transactionLineItems(
         listing,

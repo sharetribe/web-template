@@ -182,7 +182,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   };
 
   // Note: extraLineItems for product selling (aka shipping fee)
-  //       is not included to commission calculation.
+  //       is not included in either customer or provider commission calculation.
   const providerCommissionMaybe = hasCommissionPercentage(providerCommission)
     ? [
         {
@@ -199,7 +199,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
         {
           code: 'line-item/customer-commission',
           unitPrice: calculateTotalFromLineItems([order]),
-          percentage: customerCommission?.percentage,
+          percentage: customerCommission.percentage,
           includeFor: ['customer'],
         },
       ]
