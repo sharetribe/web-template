@@ -228,7 +228,7 @@ const OrderPanel = props => {
   const titleClasses = classNames(titleClassName || css.orderTitle);
 
   // INE
-  const whatsappUrl = `https://wa.me/+5492944232664?text=Hola, estoy interesado en reservar: ${listing.attributes.title}`;
+  const whatsappUrl = `https://wa.me/5492944232664?text=Hola, estoy interesado en reservar: ${listing.attributes.title}`;
 
   return (
     <div className={classes}>
