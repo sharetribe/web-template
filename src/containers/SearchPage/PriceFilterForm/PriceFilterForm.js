@@ -123,7 +123,7 @@ const PriceFilterFormComponent = props => {
             onSubmit={handleSubmit}
             tabIndex="0"
             contentRef={contentRef}
-            style={{ minWidth: '300px', ...style }}
+            style={{ minWidth: '310px', ...style }}
           >
             <div className={css.contentWrapper}>
               {showAsPopup ? (
