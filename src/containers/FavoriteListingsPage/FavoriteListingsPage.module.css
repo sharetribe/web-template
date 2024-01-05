@@ -1,0 +1,89 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+}
+
+.messagePanel,
+.listingPanel {
+  width: 100%;
+  margin: 24px auto 0 auto;
+
+  @media (--viewportMedium) {
+    margin: 48px auto 0 auto;
+  }
+
+  @media (--viewportLarge) {
+    margin: 72px auto 0 auto;
+    max-width: calc(var(--contentMaxWidth) + 72px);
+  }
+
+  @media (--viewportXLarge) {
+    max-width: var(--contentMaxWidth);
+  }
+}
+
+.heading {
+  margin: 0 24px 24px 24px;
+
+  @media (--viewportMedium) {
+    margin: 0 24px 32px 24px;
+  }
+
+  @media (--viewportLarge) {
+    margin: 0 36px 32px 36px;
+  }
+}
+
+.listingCards {
+  padding: 0 24px;
+
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 24px;
+  width: 100%;
+
+  @media (min-width: 550px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (--viewportLarge) {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 36px;
+  }
+}
+
+.listingCard {
+  margin-bottom: 36px;
+  width: 100%;
+}
+
+/**
+ * Remove margin-right from listingCards on the last column
+ * This is a special case in the world of breakpoints. Nth-of-type effects every nth item.
+ * Here we take margin-right away, but we don't want it affect the next column breakpoint.
+ */
+
+.listingCard:nth-of-type(2n) {
+  @media screen and (min-width: 768px) and (max-width: 1920px) {
+    margin-right: 0;
+  }
+}
+
+.listingCard:nth-of-type(3n) {
+  @media (--viewportXLarge) {
+    margin-right: 0;
+  }
+}
+
+.pagination {
+  /* margin-top: auto; pushes pagination to the end of the page. */
+  margin: auto 24px 0 24px;
+
+  @media (--viewportLarge) {
+    margin: auto 36px 0 36px;
+  }
+}
