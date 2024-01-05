@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
-import { displayPrice } from '../../../util/configHelpers';
+import { displayPrice, requirePayoutDetails } from '../../../util/configHelpers';
 import { createResourceLocatorString } from '../../../util/routes';
 import { withViewport } from '../../../util/uiHelpers';
 import {
@@ -340,6 +340,12 @@ class EditListingWizard extends Component {
     const processName = listing?.attributes?.publicData?.transactionProcessAlias.split('/')[0];
     const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
+    const listingTypeConfig = getListingTypeConfig(listing, this.state.selectedListingType, config);
+    // Through hosted configs (listingTypeConfig.defaultListingFields?.payoutDetails),
+    // it's possible to publish listing without payout details set by provider.
+    // Customers can't purchase these listings - but it gives operator opportunity to discuss with providers who fail to do so.
+    const isPayoutDetailsRequired = requirePayoutDetails(listingTypeConfig);
+
     const stripeConnected = !!currentUser?.stripeAccount?.id;
     const stripeAccountData = stripeConnected ? getStripeAccountData(stripeAccount) : null;
     const stripeRequirementsMissing =
@@ -347,7 +353,11 @@ class EditListingWizard extends Component {
       (hasRequirements(stripeAccountData, 'past_due') ||
         hasRequirements(stripeAccountData, 'currently_due'));
 
-    if (isInquiryProcess || (stripeConnected && !stripeRequirementsMissing)) {
+    if (
+      isInquiryProcess ||
+      !isPayoutDetailsRequired ||
+      (stripeConnected && !stripeRequirementsMissing)
+    ) {
       onPublishListingDraft(id);
     } else {
       this.setState({
