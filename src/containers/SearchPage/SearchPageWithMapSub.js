@@ -67,7 +67,7 @@ export class SearchPageComponent extends Component {
       isSecondaryFiltersOpen: false,
       isFilterModalOpen: false,
       fullMap : false,
-      isMapShow : true
+      isMapShow : false
     };
     
     this.onMapMoveEnd = debounce(this.onMapMoveEnd.bind(this), SEARCH_WITH_MAP_DEBOUNCE);

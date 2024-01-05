@@ -89,7 +89,7 @@
 
 .minPrice,
 .maxPrice {
-  width: 48px;
+  width: 60px;
   text-align: center;
 
   -moz-appearance: textfield;
