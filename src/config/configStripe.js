@@ -33,7 +33,7 @@ You can find the bank account formats from https://stripe.com/docs/connect/payou
 export const supportedCountries = [
   {
     // Argentina
-    code: 'ARS',
+    code: 'AR',
     currency: 'ARS',
     accountConfig: {
       iban: true,
