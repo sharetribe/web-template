@@ -586,6 +586,9 @@ const validListingTypes = listingTypes => {
 export const displayPrice = listingTypeConfig => {
   return listingTypeConfig?.defaultListingFields?.price !== false;
 };
+export const requirePayoutDetails = listingTypeConfig => {
+  return listingTypeConfig?.defaultListingFields?.payoutDetails !== false;
+};
 
 ///////////////////////////////////////
 // Restructure hosted listing config //
