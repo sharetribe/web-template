@@ -176,6 +176,7 @@ const OrderPanel = props => {
     marketplaceName,
     fetchLineItemsInProgress,
     fetchLineItemsError,
+    payoutDetailsWarning,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -306,6 +307,7 @@ const OrderPanel = props => {
             lineItems={lineItems}
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
+            payoutDetailsWarning={payoutDetailsWarning}
           />
         ) : showBookingDatesForm ? (
           <BookingDatesForm
@@ -326,6 +328,7 @@ const OrderPanel = props => {
             lineItems={lineItems}
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
+            payoutDetailsWarning={payoutDetailsWarning}
           />
         ) : showProductOrderForm ? (
           <ProductOrderForm
@@ -344,6 +347,7 @@ const OrderPanel = props => {
             lineItems={lineItems}
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
+            payoutDetailsWarning={payoutDetailsWarning}
           />
         ) : showInquiryForm ? (
           <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" onSubmit={onSubmit} />
@@ -401,6 +405,7 @@ OrderPanel.defaultProps = {
   titleClassName: null,
   isOwnListing: false,
   authorLink: null,
+  payoutDetailsWarning: null,
   titleDesktop: null,
   subTitle: null,
   monthlyTimeSlots: null,
@@ -426,6 +431,7 @@ OrderPanel.propTypes = {
   isOwnListing: bool,
   author: oneOfType([propTypes.user, propTypes.currentUser]).isRequired,
   authorLink: node,
+  payoutDetailsWarning: node,
   onSubmit: func.isRequired,
   title: oneOfType([node, string]).isRequired,
   titleDesktop: node,
