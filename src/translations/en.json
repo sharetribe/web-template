@@ -401,6 +401,8 @@
   "ListingImageGallery.imageThumbnailAltText": "listing photo thumbnail {index}/{count}",
   "ListingImageGallery.viewImagesButton": "View large photos ({count})",
   "ListingPage.aboutProviderTitle": "About the listing author",
+  "ListingPage.addPayoutDetails": "Add payout details",
+  "ListingPage.addPayoutDetailsMessage": "Please add your payout details to start accepting orders.",
   "ListingPage.closedListing": "This listing is not available right now.",
   "ListingPage.contactUser": "Contact",
   "ListingPage.detailsTitle": "Details",
