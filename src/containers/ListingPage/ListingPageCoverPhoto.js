@@ -191,6 +191,7 @@ export const ListingPageComponent = props => {
 
   const currentAuthor = authorAvailable ? currentListing.author : null;
   const ensuredAuthor = ensureUser(currentAuthor);
+  const noPayoutDetailsSetWithOwnListing = isOwnListing && !currentUser?.attributes?.stripeConnected;
 
   // When user is banned or deleted the listing is also deleted.
   // Because listing can be never showed with banned or deleted user we don't have to provide
@@ -306,6 +307,7 @@ export const ListingPageComponent = props => {
           onImageCarouselClose={() => setImageCarouselOpen(false)}
           handleViewPhotosClick={handleViewPhotosClick}
           onManageDisableScrolling={onManageDisableScrolling}
+          noPayoutDetailsSetWithOwnListing={noPayoutDetailsSetWithOwnListing}
         />
         <div className={css.contentWrapperForHeroLayout}>
           <div className={css.mainColumnForHeroLayout}>
