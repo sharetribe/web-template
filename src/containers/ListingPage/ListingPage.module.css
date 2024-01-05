@@ -79,12 +79,17 @@
   }
 }
 
-.actionBarForHeroLayout {
+.actionBarContainerForHeroLayout {
   position: absolute;
   top: 13px;
   left: 13px;
   width: calc(100% - 26px);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
 
+.actionBarForHeroLayout {
   /* Action bar prevents the image click events going to the parent and
    should not show a pointer */
   cursor: initial;
