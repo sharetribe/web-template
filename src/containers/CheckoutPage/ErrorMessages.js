@@ -100,11 +100,13 @@ export const getErrorMessages = (
   const speculateErrorMessageParagraph = speculateErrorMessage ? (
     <p className={css.orderError}>{speculateErrorMessage}</p>
   ) : null;
-  const speculateTransactionErrorMessageParagraph = speculateTransactionError ? (
-    <p className={css.speculateError}>
-      <FormattedMessage id="CheckoutPage.speculateTransactionError" />
-    </p>
-  ) : null;
+  const speculateTransactionErrorMessageParagraph =
+    speculateTransactionError &&
+    !isTransactionInitiateMissingStripeAccountError(speculateTransactionError) ? (
+      <p className={css.speculateError}>
+        <FormattedMessage id="CheckoutPage.speculateTransactionError" />
+      </p>
+    ) : null;
 
   // Stripe might throw error when retrieving payment intent
   const retrievePaymentIntentErrorMessageParagraph = retrievePaymentIntentError ? (
