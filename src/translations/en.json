@@ -74,7 +74,7 @@
   "CheckoutPage.notEnoughStockMessage": "Unfortunately, you can't complete your order. There's not enough stock left.",
   "CheckoutPage.paymentExpiredMessage": "Payment was not completed in 15 minutes. Please go back to {listingLink} and try again.",
   "CheckoutPage.providerInfo": "{name}",
-  "CheckoutPage.providerStripeAccountMissingError": "This listing is currently unavailable because the listing author has not added their payment information.",
+  "CheckoutPage.providerStripeAccountMissingError": "This listing is currently unavailable because the listing author has not added their payment information. Please contact support.",
   "CheckoutPage.retrievingStripePaymentIntentFailed": "Oops, something went wrong. Please refresh the page. If the error persists, go back to {listingLink} and try again after 15 minutes",
   "CheckoutPage.speculateFailedMessage": "Oops, something went wrong. Please refresh the page and try again.",
   "CheckoutPage.speculateTransactionError": "Failed to fetch breakdown information.",
