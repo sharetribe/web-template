@@ -38,11 +38,11 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
+import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2, Button, SecondaryButton, } from '../../components';
 
 import css from './OrderPanel.module.css';
 
-// INE.
+// INE: para WA
 import { Link } from 'react-router-dom';
 
 const BookingTimeForm = loadable(() =>
@@ -159,6 +159,8 @@ const OrderPanel = props => {
     marketplaceName,
     fetchLineItemsInProgress,
     fetchLineItemsError,
+    onToggleFavorites,
+    currentUser,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
@@ -229,7 +231,24 @@ const OrderPanel = props => {
 
   // INE
   const whatsappUrl = `https://wa.me/5492944232664?text=Hola, estoy interesado en reservar: ${listing.attributes.title}`;
-
+  const isFavorite = currentUser?.attributes.profile.privateData.favorites?.includes(
+    listing.id.uuid
+  );
+  
+  const toggleFavorites = () => onToggleFavorites(isFavorite);
+  
+  const favoriteButton = isFavorite ? (
+    <SecondaryButton
+      className={css.favoriteButton}
+      onClick={toggleFavorites}
+    >
+      <FormattedMessage id="OrderPanel.unfavoriteButton" />
+    </SecondaryButton>
+  ) : (
+    <Button className={css.favoriteButton} onClick={toggleFavorites}>
+      <FormattedMessage id="OrderPanel.addFavoriteButton" />
+    </Button>
+  );
   return (
     <div className={classes}>
       <ModalInMobile
@@ -266,7 +285,7 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
           </span>
         </div>
-
+        
         {showPriceMissing ? (
           <PriceMissing />
         ) : showInvalidCurrency ? (
@@ -380,6 +399,7 @@ const OrderPanel = props => {
           </Link>
         )}
       </div>
+      {favoriteButton}
     </div>
   );
 };
@@ -442,6 +462,9 @@ OrderPanel.propTypes = {
 
   // from injectIntl
   intl: intlShape.isRequired,
+
+  onToggleFavorites: func.isRequired,
+  currentUser: propTypes.currentUser.isRequired,
 };
 
 export default compose(
