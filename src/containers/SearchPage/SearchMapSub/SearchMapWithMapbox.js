@@ -248,6 +248,8 @@ class SearchMapWithMapbox extends Component {
     this.state = { mapContainer: null, isMapReady: false };
     this.viewportBounds = null;
     this.changeMapSize = props.changeMapSize;
+    this.fullMap = props.fullMap;
+    this.fullMapButton = null;
 
     this.changeMapSizeAction = this.changeMapSizeAction.bind(this);
     this.onMount = this.onMount.bind(this);
@@ -288,6 +290,8 @@ class SearchMapWithMapbox extends Component {
     } else if (prevProps.mapComponentRefreshToken !== this.props.mapComponentRefreshToken) {
       /* Notify parent component that Mapbox map is loaded */
       this.props.onMapLoad(this.map);
+      this.fullMapButton.actionSwithc(this.fullMap);
+      this.map.resize();
     }
   }
 
@@ -341,6 +345,9 @@ class SearchMapWithMapbox extends Component {
 
   changeMapSizeAction() {
     this.props.changeMapSize();
+    console.log('this.props.fullMap');
+    console.log(this.props.fullMap);
+    return this.props.fullMap;
   }
 
   initializeMap() {
@@ -354,8 +361,8 @@ class SearchMapWithMapbox extends Component {
       });
       window.mapboxMap = this.map;
 
-      const fullMapButton = new SearchShowFulscreenMap(this);
-      this.map.addControl(fullMapButton, "top-left");
+      this.fullMapButton = new SearchShowFulscreenMap(this);
+      this.map.addControl(this.fullMapButton, "top-left");
 
       var nav = new window.mapboxgl.NavigationControl({ showCompass: false });
       this.map.addControl(nav, 'top-right');

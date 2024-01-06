@@ -1,0 +1,60 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  position: fixed;
+  pointer-events: none;
+  bottom: 0;
+  display: grid;
+
+  width: 100%;
+  padding: 0 0 40px 0;
+}
+
+/* Wrapper to limit the top border in desktop
+ * view from the outermost paddings*/
+.footerContainer {
+  display: grid;
+}
+
+.mapActionContainer {
+  align-self: end;
+  pointer-events: auto;
+  justify-self: center;
+
+
+}
+
+.mapActionButton {
+  cursor: pointer;
+  -webkit-box-pack: center;
+  -webkit-box-align: center;
+  appearance: none;
+  display: inline-flex;
+  border-radius: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  outline: none;
+  margin: 0px;
+  padding: 14px 19px;
+  cursor: pointer;
+  touch-action: manipulation;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap ;
+  background: rgb(34, 34, 34);
+  font-weight: var(--fontWeightMedium);
+  transition: -ms-transform 0.25s cubic-bezier(0.2,0,0,1),
+    -webkit-transform 0.25s cubic-bezier(0.2,0,0,1),
+    transform 0.25s cubic-bezier(0.2,0,0,1);
+  
+  &:hover{
+    transform: scale(1.04);
+  }
+}
+.iconMap, .iconList{
+  margin-left: 8px;
+}
+
+.buttonText{
+  color: rgb(255, 255, 255);
+  line-height: 16px;
+}

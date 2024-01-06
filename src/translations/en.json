@@ -692,6 +692,8 @@
   "SearchPage.schemaForSearch": "a query",
   "SearchPage.schemaTitle": "Create your extraordinary memory | {marketplaceName}",
   "SearchPage.searchError": "Search failed. Please try again.",
+  "FooterSearch.showMap": "Show Map",
+  "FooterSearch.showList": "Show List",
   "SectionFilteredSearches.filteredSearch": "{filter}",
   "SectionFilteredSearches.title": "Discover unique memorials",
   "SectionHero.browseButton": "Browse memorials",

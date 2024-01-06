@@ -23,7 +23,7 @@ import { propTypes } from '../../util/types';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { H3, H5, ModalInMobile, Page, Modal } from '../../components';
+import { H3, H5, ModalInMobile, Page, Modal, FooterSearch } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import { setActiveListing } from './SearchPage.duck';
@@ -624,6 +624,7 @@ export class SearchPageComponent extends Component {
                   search={parse(location.search)}
                   setActiveListing={onActivateListing}
                   isMapVariant={this.state.isMapShow}
+                  fullMap={this.state.fullMap}
                 />
               </div>
             )}
@@ -648,6 +649,7 @@ export class SearchPageComponent extends Component {
                   listings={listings || []}
                   onMapMoveEnd={this.onMapMoveEnd}
                   changeMapSize={this.changeMapSize}
+                  fullMap={this.state.fullMap}
                   onCloseAsModal={() => {
                     onManageDisableScrolling('SearchPage.map', false);
                   }}
@@ -657,6 +659,12 @@ export class SearchPageComponent extends Component {
             </div>
           </ModalInMobile>
         </div>
+        <FooterSearch
+          isMapShow={this.state.isMapShow}
+          fullMap={this.state.fullMap}
+          changeMapSize={this.changeMapSize}
+          handleShowMap={this.handleShowMap}
+        />
       </Page>
     );
   }
