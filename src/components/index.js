@@ -42,6 +42,8 @@ export { default as IconCategoryPlane } from './IconCategoryPlane/IconCategoryPl
 export { default as IconCategoryJewerly } from './IconCategoryJewerly/IconCategoryJewerly';
 export { default as IconCategoryUrn } from './IconCategoryUrn/IconCategoryUrn';
 export { default as IconCategoryArt } from './IconCategoryArt/IconCategoryArt';
+export { default as IconMap } from './IconMap/IconMap';
+export { default as IconList } from './IconList/IconList';
 
 // Typography
 export { Heading, H1, H2, H3, H4, H5, H6  } from './Heading/Heading';
@@ -143,4 +145,5 @@ export { default as StripeConnectAccountForm } from './StripeConnectAccountForm/
 export { default as LayoutComposer, LayoutSingleColumn, LayoutSingleColumnMidle, LayoutSideNavigation } from './LayoutComposer';
 export { default as ModalMissingInformation } from './ModalMissingInformation/ModalMissingInformation';
 export { default as Footer } from './Footer/Footer';
+export { default as FooterSearch } from './FooterSearch/FooterSearch';
 export { default as Topbar } from './Topbar/Topbar';

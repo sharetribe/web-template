@@ -11,20 +11,27 @@ import { IconArrowHead } from '../../../components';
 class SearchShowFulscreenMap {
   constructor (props) {
     // console.log(changeMapSize);
-    this.isMapFullWidth = false;
+    this.fullMap = props.fullMap;
+    this.div = null;
+    this.map = null;
     this.changeMapSizeAction = props.changeMapSizeAction;
     this.actionChangeMapSize = this.actionChangeMapSize.bind(this);
   }
+  
+  actionSwithc (fullMap) {
+    this.fullMap = fullMap;
+    console.log(this.fullMap);
+    this.div.innerHTML = '<button>'+ this.getArrow() +'</button>';
+  }
 
-  actionChangeMapSize (div,map) {
-    this.changeMapSizeAction();
-    this.isMapFullWidth = !this.isMapFullWidth;
-    div.innerHTML = '<button>'+ this.getArrow() +'</button>';
-    map.resize();
+  actionChangeMapSize () {
+    this.fullMap = this.changeMapSizeAction();
+    this.div.innerHTML = '<button>'+ this.getArrow() +'</button>';
+    this.map.resize();
   }
 
   getArrow () {
-    if(this.isMapFullWidth){
+    if(this.fullMap){
       return renderToString(<IconArrowHead direction="right" size="small" />);
     }else{
       return renderToString(<IconArrowHead direction="left" size="small" />);
@@ -32,14 +39,14 @@ class SearchShowFulscreenMap {
   }
 
   onAdd(map) {
-    
-    const div = document.createElement("div");
-    div.className = "mapboxgl-ctrl mapboxgl-ctrl-group";
-    div.innerHTML = '<button>'+ this.getArrow() +'</button>';
-    div.addEventListener("contextmenu", (e) => e.preventDefault());
-    div.addEventListener("click", () => {this.actionChangeMapSize(div,map)});
+    this.map = map;
+    this.div = document.createElement("div");
+    this.div.className = "mapboxgl-ctrl mapboxgl-ctrl-group";
+    this.div.innerHTML = '<button>'+ this.getArrow() +'</button>';
+    this.div.addEventListener("contextmenu", (e) => e.preventDefault());
+    this.div.addEventListener("click", () => {this.actionChangeMapSize()});
 
-    return div;
+    return this.div;
   }
 }
 

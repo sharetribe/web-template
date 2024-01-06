@@ -124,7 +124,7 @@ export class SearchMapSubComponent extends Component {
 
   onMapLoadHandler(map) {
     this.mapRef = map;
-
+  
     if (this.mapRef && this.state.mapReattachmentCount === 0) {
       // map is ready, let's fit search area's bounds to map's viewport
       const fitMapToBounds = getFitMapToBounds(this.props.config.maps.mapProvider);
@@ -195,6 +195,7 @@ export class SearchMapSubComponent extends Component {
           zoom={zoom}
           config={config}
           changeMapSize={changeMapSize}
+          fullMap={fullMap}
         />
       </ReusableMapContainer>
     ) : (
