@@ -41,9 +41,8 @@ import {
 import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2, Button, SecondaryButton, } from '../../components';
 
 import css from './OrderPanel.module.css';
-import WhatsAppButton from 'src/components/Button/WhatsAppButton.js';
-// INE: para WA
-import { Link } from 'react-router-dom';
+import WhatsAppButton from '../../components/Button/WhatsAppButton';
+import '../../components/Button/Button.module.css';
 
 const BookingTimeForm = loadable(() =>
   import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
@@ -421,10 +420,12 @@ const OrderPanel = props => {
             )}
           </PrimaryButton>
         )}
+        <WhatsAppButton rootClassName="whatsAppButton" />
       </div>
+
       <div>
         <a href="https://wa.me/5492944232664" target="_blank" class="WhatsAppButton">
-	          <img src="public/static/icons/whatsapp.png" alt="WhatsApp"></img>
+	          <img src="public/static/icons/whatsapp.png" alt="WhatsApp"/>
         </a>
       </div>
       {favoriteButton}
