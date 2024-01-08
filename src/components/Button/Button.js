@@ -7,6 +7,7 @@ import { findRouteByRouteName } from '../../util/routes';
 import { IconSpinner, IconCheckmark } from '../../components';
 
 import css from './Button.module.css';
+//import WhatsAppButton from './WhatsAppButton';
 
 const PlainButton = props => {
   const [mounted, setMounted] = useState(false);
@@ -174,5 +175,11 @@ export const SocialLoginButton = props => {
   const classes = classNames(props.rootClassName || css.socialButtonRoot, css.socialButton);
   return <Button {...props} rootClassName={classes} />;
 };
+
+export const WhatsAppButton = props => {
+  const classes = classNames(props.rootClassName || css.whatsAppButtonRoot, css.whatsAppButton);
+  return <WhatsAppButton {...props} rootClassName={classes} />;
+};
+WhatsAppButton.displayName = 'WhatsAppButton';
 
 SocialLoginButton.displayName = 'SocialLoginButton';

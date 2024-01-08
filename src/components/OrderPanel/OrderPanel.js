@@ -41,7 +41,7 @@ import {
 import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2, Button, SecondaryButton, } from '../../components';
 
 import css from './OrderPanel.module.css';
-
+import WhatsAppButton from 'src/components/Button/WhatsAppButton.js';
 // INE: para WA
 import { Link } from 'react-router-dom';
 
@@ -109,6 +109,32 @@ const handleSubmit = (
     : () => openOrderModal(isOwnListing, isClosed, history, location);
 };
 
+/* INE:
+const handleSubmit = (
+  isOwnListing,
+  isClosed,
+  isInquiryWithoutPayment,
+  onSubmit,
+  history,
+  location
+) => {
+  // TODO: currently, inquiry-process does not have any form to ask more order data.
+  // We can submit without opening any inquiry/order modal.
+
+  // Nueva lógica para redirección si el artículo está disponible
+  if (!isOutOfStock) {
+    // Reemplaza 'https://wa.me/5492944232664?text=' con tu URL de WhatsApp
+    const whatsappUrl = 'https://wa.me/5492944232664?text=' + encodeURIComponent(`Hola, estoy interesado en reservar: ${listing.attributes.title}`);
+    // Realiza la redirección a la URL de WhatsApp
+    window.location.href = whatsappUrl;
+  } else {
+    // Lógica actual para otros casos
+    return isInquiryWithoutPayment
+      ? () => onSubmit({})
+      : () => openOrderModal(isOwnListing, isClosed, history, location);
+  }
+};
+*/
 const dateFormattingOptions = { month: 'short', day: 'numeric', weekday: 'short' };
 
 const PriceMaybe = props => {
@@ -373,31 +399,33 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.closedListingButtonText" />
           </div>
         ) : (
-          // INE
-          <Link to={whatsappUrl} target="_blank" rel="noopener noreferrer">
-            <PrimaryButton
-              onClick={handleSubmit(
-                isOwnListing,
-                isClosed,
-                showInquiryForm,
-                onSubmit,
-                history,
-                location
-              )}
-              disabled={isOutOfStock}
-            >
-              {isBooking ? (
-                <FormattedMessage id="OrderPanel.ctaButtonMessageBooking" />
-              ) : isOutOfStock ? (
-                <FormattedMessage id="OrderPanel.ctaButtonMessageNoStock" />
-              ) : isPurchase ? (
-                <FormattedMessage id="OrderPanel.ctaButtonMessagePurchase" />
-              ) : (
-                <FormattedMessage id="OrderPanel.ctaButtonMessageInquiry" />
-              )}
-            </PrimaryButton>
-          </Link>
+          <PrimaryButton
+            onClick={handleSubmit(
+              isOwnListing,
+              isClosed,
+              showInquiryForm,
+              onSubmit,
+              history,
+              location
+            )}
+            disabled={isOutOfStock}
+          >
+            {isBooking ? (
+              <FormattedMessage id="OrderPanel.ctaButtonMessageBooking" />
+            ) : isOutOfStock ? (
+              <FormattedMessage id="OrderPanel.ctaButtonMessageNoStock" />
+            ) : isPurchase ? (
+              <FormattedMessage id="OrderPanel.ctaButtonMessagePurchase" />
+            ) : (
+              <FormattedMessage id="OrderPanel.ctaButtonMessageInquiry" />
+            )}
+          </PrimaryButton>
         )}
+      </div>
+      <div>
+        <a href="https://wa.me/5492944232664" target="_blank" class="WhatsAppButton">
+	          <img src="public/static/icons/whatsapp.png" alt="WhatsApp"></img>
+        </a>
       </div>
       {favoriteButton}
     </div>

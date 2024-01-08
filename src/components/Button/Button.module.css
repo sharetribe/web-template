@@ -176,5 +176,19 @@
   }
 }
 
-.socialButton {
+.whatsAppButton {
+  position: fixed;
+  bottom: 6%;
+  right: 6%;
+  z-index: 999;
+  height: 35px;
+  width: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.whatsAppButtonRoot {
+  max-width: 100%;
+  max-height: 100%;
 }
