@@ -254,14 +254,12 @@ const OrderPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.orderTitle);
 
-  // INE
-  const whatsappUrl = `https://wa.me/5492944232664?text=Hola, estoy interesado en reservar: ${listing.attributes.title}`;
   const isFavorite = currentUser?.attributes.profile.privateData.favorites?.includes(
     listing.id.uuid
   );
-  
+
   const toggleFavorites = () => onToggleFavorites(isFavorite);
-  
+
   const favoriteButton = isFavorite ? (
     <SecondaryButton
       className={css.favoriteButton}

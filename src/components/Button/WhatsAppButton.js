@@ -9,18 +9,15 @@ const WhatsAppButton = ({ rootClassName, className, children, ...rest }) => {
   const classes = classNames(rootClassName || css.whatsAppButton, className);
 
   const handleWhatsAppButtonClick = () => {
-    // Reemplaza 'tuNúmeroDeTeléfono' con tu número de teléfono real, incluyendo el código de país
-    const phoneNumber = '5492944232664'; //https://wa.me/5492944232664
-
-    // Genera el enlace de WhatsApp
+    const phoneNumber = '5492944232664';
     const whatsappLink = `https://wa.me/${phoneNumber}`;
-
-    // Redirige a la página de WhatsApp
     window.location.href = whatsappLink;
   };
 
   return (
     <button className={classes} onClick={handleWhatsAppButtonClick} {...rest}>
+      {/* Puedes agregar un elemento <img> aquí para mostrar el logo */}
+      <img src="public/static/icons/whatsapp.png" alt="WhatsApp" />
       {children}
     </button>
   );
