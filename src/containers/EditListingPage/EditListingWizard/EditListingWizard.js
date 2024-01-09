@@ -6,7 +6,13 @@ import classNames from 'classnames';
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
-import { displayPrice, requirePayoutDetails } from '../../../util/configHelpers';
+import {
+  displayDeliveryPickup,
+  displayDeliveryShipping,
+  displayLocation,
+  displayPrice,
+  requirePayoutDetails,
+} from '../../../util/configHelpers';
 import { createResourceLocatorString } from '../../../util/routes';
 import { withViewport } from '../../../util/uiHelpers';
 import {
@@ -61,7 +67,6 @@ const TABS_DETAILS_ONLY = [DETAILS];
 const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, DELIVERY, PHOTOS];
 const TABS_BOOKING = [DETAILS, LOCATION, PRICING, AVAILABILITY, PHOTOS];
 const TABS_INQUIRY = [DETAILS, LOCATION, PRICING, PHOTOS];
-const TABS_INQUIRY_WITHOUT_PRICE = [DETAILS, LOCATION, PHOTOS];
 const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING, ...TABS_INQUIRY];
 
 // Tabs are horizontal in small screens
@@ -69,6 +74,31 @@ const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
 
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = 'success';
 const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
+
+// Pick only allowed tabs from the given list
+const getTabs = (processTabs, disallowedTabs) => {
+  return disallowedTabs.length > 0
+    ? processTabs.filter(tab => !disallowedTabs.includes(tab))
+    : processTabs;
+};
+// Pick only allowed booking tabs (location could be omitted)
+const tabsForBookingProcess = (processTabs, listingTypeConfig) => {
+  const disallowedTabs = !displayLocation(listingTypeConfig) ? [LOCATION] : [];
+  return getTabs(processTabs, disallowedTabs);
+};
+// Pick only allowed purchase tabs (delivery could be omitted)
+const tabsForPurchaseProcess = (processTabs, listingTypeConfig) => {
+  const isDeliveryDisabled =
+    !displayDeliveryPickup(listingTypeConfig) && !displayDeliveryShipping(listingTypeConfig);
+  const disallowedTabs = isDeliveryDisabled ? [DELIVERY] : [];
+  return getTabs(processTabs, disallowedTabs);
+};
+// Pick only allowed inquiry tabs (location and pricing could be omitted)
+const tabsForInquiryProcess = (processTabs, listingTypeConfig) => {
+  const locationMaybe = !displayLocation(listingTypeConfig) ? [LOCATION] : [];
+  const priceMaybe = !displayPrice(listingTypeConfig) ? [PRICING] : [];
+  return getTabs(processTabs, [...locationMaybe, ...priceMaybe]);
+};
 
 /**
  * Return translations for wizard tab: label and submit button.
@@ -443,12 +473,10 @@ class EditListingWizard extends Component {
       isNewListingFlow && (invalidExistingListingType || !hasListingTypeSelected)
         ? TABS_DETAILS_ONLY
         : isBookingProcess(processName)
-        ? TABS_BOOKING
+        ? tabsForBookingProcess(TABS_BOOKING, listingTypeConfig)
         : isPurchaseProcess(processName)
-        ? TABS_PRODUCT
-        : isPriceDisabled
-        ? TABS_INQUIRY_WITHOUT_PRICE
-        : TABS_INQUIRY;
+        ? tabsForPurchaseProcess(TABS_PRODUCT, listingTypeConfig)
+        : tabsForInquiryProcess(TABS_INQUIRY, listingTypeConfig);
 
     // Check if wizard tab is active / linkable.
     // When creating a new listing, we don't allow users to access next tab until the current one is completed.
