@@ -57,6 +57,7 @@
 }
 
 .primaryButton.inProgress:disabled {
+  /*background-color: #f9a398;*/
   background-color: var(--colorSuccess);
 }
 
@@ -74,6 +75,7 @@
 }
 
 .primaryButton.ready:disabled {
+  /*background-color:#f9a398;*/
   background-color: var(--colorSuccess);
 }
 

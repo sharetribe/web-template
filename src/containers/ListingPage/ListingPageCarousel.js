@@ -352,7 +352,6 @@ export const ListingPageComponent = props => {
                   ]
                 : pickedElements;
             }, [])}
-          
             <SectionTextMaybe
               text={publicData.extraFeatures}
               heading={intl.formatMessage({ id: 'ListingPage.extraFeaturesTitle' })}
