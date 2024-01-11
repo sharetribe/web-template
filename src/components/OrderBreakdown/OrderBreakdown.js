@@ -45,7 +45,7 @@ export const OrderBreakdownComponent = props => {
 
   const isCustomer = userRole === 'customer';
   const isProvider = userRole === 'provider';
-  const lineItems = transaction.attributes.lineItems;
+  const lineItems = transaction.attributes.lineItems.filter(lineItem => lineItem.includeFor.includes(userRole));
   const unitLineItem = lineItems?.find(
     item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
   );
