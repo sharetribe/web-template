@@ -359,3 +359,60 @@ export const setOrderPageInitialValues = (initialValues, routes, dispatch) => {
   // sending failed, we tell it to the OrderDetailsPage.
   dispatch(OrderPage.setInitialValues(initialValues));
 };
+
+export const processCheckoutWithoutPayment = (orderParams, extraParams) => {
+  const {
+    message,
+    onInitiateOrder,
+    onSendMessage,
+    pageData,
+    process,
+    setPageData,
+    sessionStorageKey,
+  } = extraParams;
+
+  const storedTx = ensureTransaction(pageData.transaction);
+
+  const processAlias = pageData?.listing?.attributes?.publicData?.transactionProcessAlias;
+
+  ////////////////////////////////////////////////
+  // Step 1: initiate order                     //
+  // by requesting booking from Marketplace API //
+  ////////////////////////////////////////////////
+  const fnRequest = fnParams => {
+    // fnParams should be { listingId, deliveryMethod, quantity?, bookingDates?, protectedData }
+
+    const requestTransition =
+      storedTx?.attributes?.lastTransition === process.transitions.INQUIRE
+        ? process.transitions.REQUEST_PAYMENT_AFTER_INQUIRY
+        : process.transitions.REQUEST_PAYMENT;
+    const isPrivileged = process.isPrivileged(requestTransition);
+
+    onInitiateOrder(
+      fnParams,
+      processAlias,
+      storedTx.id,
+      requestTransition,
+      isPrivileged
+    ).then(order => {
+      // Store the returned transaction (order)
+      persistTransaction(order, pageData, storeData, setPageData, sessionStorageKey);
+    });
+
+    return orderPromise;
+  };
+
+  //////////////////////////////////
+  // Step 2: send initial message //
+  //////////////////////////////////
+  const fnSendMessage = fnParams => {
+    const orderId = fnParams?.id;
+    return onSendMessage({ id: orderId, message });
+  };
+
+  /////////////////////////////////
+  // Call each step in sequence //
+  ////////////////////////////////
+
+  return fnRequest(orderParams).then(res => fnSendMessage({...res}))
+};
