@@ -4,8 +4,6 @@ import * as purchaseProcess from './transactionProcessPurchase';
 import * as bookingProcess from './transactionProcessBooking';
 import * as inquiryProcess from './transactionProcessInquiry';
 
-
-
 // Supported unit types
 // Note: These are passed to translations/microcopy in certain cases.
 //       Therefore, they can't contain wordbreaks like '-' or space ' '
@@ -51,12 +49,6 @@ const PROCESSES = [
     alias: `${INQUIRY_PROCESS_NAME}/release-1`,
     process: inquiryProcess,
     unitTypes: [INQUIRY],
-  },
-  {
-    name: INSTANT_PROCESS_NAME,
-    alias: `${INSTANT_PROCESS_NAME}/release-1`,
-    process: instantProcess,
-    unitTypes: [DAY, NIGHT, HOUR],
   },
 ];
 
