@@ -208,7 +208,6 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
   const fnRequestPayment = fnParams => {
     // fnParams should be { listingId, deliveryMethod, quantity?, bookingDates?, paymentMethod?.setupPaymentMethodForSaving?, protectedData }
     const hasPaymentIntents = storedTx.attributes.protectedData?.stripePaymentIntents;
-    
     const requestTransition =
       storedTx?.attributes?.lastTransition === process.transitions.INQUIRE
         ? process.transitions.REQUEST_PAYMENT_AFTER_INQUIRY
@@ -387,7 +386,9 @@ export const processCheckoutWithoutPayment = (orderParams, extraParams) => {
         ? process.transitions.REQUEST_PAYMENT_AFTER_INQUIRY
         : process.transitions.REQUEST_PAYMENT;
     const isPrivileged = process.isPrivileged(requestTransition);
-
+    // Diego added 
+    const orderPromise = Promise.resolve(storedTx)
+    // Diego added end
     onInitiateOrder(
       fnParams,
       processAlias,
@@ -400,6 +401,7 @@ export const processCheckoutWithoutPayment = (orderParams, extraParams) => {
     });
 
     return orderPromise;
+
   };
 
   //////////////////////////////////
@@ -413,6 +415,5 @@ export const processCheckoutWithoutPayment = (orderParams, extraParams) => {
   /////////////////////////////////
   // Call each step in sequence //
   ////////////////////////////////
-
   return fnRequest(orderParams).then(res => fnSendMessage({...res}))
 };
