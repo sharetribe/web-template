@@ -3,10 +3,6 @@ import { ensureTransaction } from '../util/data';
 import * as purchaseProcess from './transactionProcessPurchase';
 import * as bookingProcess from './transactionProcessBooking';
 import * as inquiryProcess from './transactionProcessInquiry';
-//ine
-import * as instantProcess from './transactionProcessInstantBooking';
-// fin ine
-
 
 // Supported unit types
 // Note: These are passed to translations/microcopy in certain cases.
@@ -21,10 +17,6 @@ export const INQUIRY = 'inquiry';
 export const PURCHASE_PROCESS_NAME = 'default-purchase';
 export const BOOKING_PROCESS_NAME = 'default-booking';
 export const INQUIRY_PROCESS_NAME = 'default-inquiry';
-//ine
-export const INSTANT_PROCESS_NAME = 'biketribe-instant-booking';
-//fin ine
-
 
 /**
  * A process should export:
