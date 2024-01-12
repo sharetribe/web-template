@@ -689,9 +689,12 @@ const mergeListingConfig = (hostedConfig, defaultConfigs) => {
   // When debugging, include default configs.
   // Otherwise, use listing types and fields from hosted assets.
   const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
-  const listingTypes = shouldMerge
-    ? union(hostedListingTypes, defaultListingTypes, 'listingType')
-    : hostedListingTypes;
+  //INE
+  // const listingTypes = shouldMerge
+    // ? union(hostedListingTypes, defaultListingTypes, 'listingType')
+    // : hostedListingTypes;
+  const listingTypes = union(hostedListingTypes, defaultListingTypes, 'listingType');
+  //fin INE
   const listingFields = shouldMerge
     ? union(hostedListingFields, defaultListingFields, 'key')
     : hostedListingFields;
