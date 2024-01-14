@@ -81,7 +81,7 @@ SearchResultsPanel.defaultProps = {
   pagination: null,
   rootClassName: null,
   search: null,
-  isMapVariant: true,
+  isMapVariant: false,
 };
 
 SearchResultsPanel.propTypes = {
