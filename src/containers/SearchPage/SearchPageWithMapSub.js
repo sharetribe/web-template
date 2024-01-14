@@ -636,7 +636,7 @@ export class SearchPageComponent extends Component {
             onClose={() => this.setState({ isSearchMapOpenOnMobile: false })}
             showAsModalMaxWidth={MODAL_BREAKPOINT}
             onManageDisableScrolling={onManageDisableScrolling}
-            handleShowMap={this.handleShowMap}
+            hideClose={true}
           >
             <div className={css.mapWrapper} data-testid="searchMapContainer">
               {shouldShowSearchMap ? (
