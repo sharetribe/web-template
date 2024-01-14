@@ -8,6 +8,7 @@
 
   width: 100%;
   padding: 0 0 40px 0;
+  z-index: 101;
 }
 
 /* Wrapper to limit the top border in desktop

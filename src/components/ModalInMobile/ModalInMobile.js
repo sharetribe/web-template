@@ -100,6 +100,7 @@ class ModalInMobileComponent extends Component {
         isOpen={isOpen}
         isClosedClassName={closedClassName}
         onClose={this.handleClose}
+        hideClose={true}
         closeButtonMessage={closeButtonMessage}
         onManageDisableScrolling={onManageDisableScrolling}
         usePortal={usePortal && isOpen}
