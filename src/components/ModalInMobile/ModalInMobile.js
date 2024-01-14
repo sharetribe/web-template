@@ -63,6 +63,7 @@ class ModalInMobileComponent extends Component {
     if (onClose) {
       onClose(event);
     }
+    this.props.handleShowMap()
   }
 
   render() {

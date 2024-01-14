@@ -14,13 +14,14 @@ import {
 import css from './FooterSearch.module.css';
 
 const FooterSearch = props => {
-  const { rootClassName, className, isMapShow, changeMapSize, handleShowMap, fullMap } = props;
+  const { rootClassName, className, isMapShow, changeMapSize, handleShowMap, fullMap, showMapMobile } = props;
   const classes = classNames(rootClassName || css.root, className);
 
   const handleMapAction = (e) => {
     if(!fullMap){
       changeMapSize();
     }
+    showMapMobile();
     handleShowMap(!isMapShow);
   }
 
