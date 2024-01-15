@@ -268,7 +268,7 @@ exports.constructValidLineItems = lineItems => {
  * @returns boolean
  */
 exports.hasCommissionPercentage = commission => {
-  const percentage = commission.percentage;
+  const percentage = commission?.percentage;
   const isDefined = percentage != null;
   const isNumber = typeof percentage === 'number' && !isNaN(percentage);
   if (isDefined && !isNumber) {
