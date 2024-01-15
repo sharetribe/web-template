@@ -423,7 +423,7 @@ const OrderPanel = props => {
 
       <div>
         <a href="https://wa.me/5492944232664" target="_blank" class="WhatsAppButton">
-	          <img src="../public/static/icons/whatsapp.png" alt="WhatsApp"/>
+	          <img src="/static/icons/whatsapp.png" alt="WhatsApp"/>
         </a>
       </div>
       {favoriteButton}
