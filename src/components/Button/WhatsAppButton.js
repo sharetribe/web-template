@@ -15,6 +15,8 @@ const WhatsAppButton = ({ rootClassName, className, children, ...rest }) => {
   };
 
   return (
+    // Diego Changed to css.whatsapp 
+    //<button className={css.whatsAppButton} onClick={handleWhatsAppButtonClick} {...rest}>
     <button className={classes} onClick={handleWhatsAppButtonClick} {...rest}>
       {/* Puedes agregar un elemento <img> aquí para mostrar el logo */}
       <img src="public/static/icons/whatsapp.png" alt="WhatsApp" />

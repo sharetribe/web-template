@@ -418,14 +418,14 @@ const OrderPanel = props => {
             )}
           </PrimaryButton>
         )}
-        <WhatsAppButton rootClassName="whatsAppButton" />
+        {/*Diego Changed it to css.WhatsAppButton added to OrderPanel.module.css
+         Eliminate WhatsAppButton */}
+       {/*<WhatsAppButton className={css.WhatsAppButton} /> */} 
       </div>
-
-      <div>
-        <a href="https://wa.me/5492944232664" target="_blank" class="WhatsAppButton">
-	          <img src="/static/icons/whatsapp.png" alt="WhatsApp"/>
+      {/*Diego eliminating classname */}
+        <a href="https://wa.me/5492944232664" target="_blank" className={css.A_css} >
+	          <img src="/static/icons/whatsapp.png" alt="WhatsApp" className={css.whatsAppButton}  />
         </a>
-      </div>
       {favoriteButton}
     </div>
   );

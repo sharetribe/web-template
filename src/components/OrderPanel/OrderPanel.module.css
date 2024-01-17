@@ -292,3 +292,29 @@
 .favoriteButton {
   margin: 12px 0 36px 0;
 }
+
+.A_css {
+  display: flex;
+  justify-content: center;
+  
+}
+
+.whatsAppButton {
+  /*width: 20%;
+  align-content: center;
+  align-items: center;*/
+  bottom: 6%;
+  right: 6%;
+  z-index: 999;
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*
+.whatsAppButtonRoot {
+  max-width: 100%;
+  max-height: 100%;
+}
+*/
