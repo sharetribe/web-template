@@ -13,6 +13,11 @@ import {
   displayPrice,
   requirePayoutDetails,
 } from '../../../util/configHelpers';
+import {
+  LISTING_PAGE_PARAM_TYPE_DRAFT,
+  LISTING_PAGE_PARAM_TYPE_NEW,
+  LISTING_PAGE_PARAM_TYPES,
+} from '../../../util/urlHelpers';
 import { createResourceLocatorString } from '../../../util/routes';
 import { withViewport } from '../../../util/uiHelpers';
 import {
@@ -23,11 +28,6 @@ import {
   SCHEMA_TYPE_BOOLEAN,
   propTypes,
 } from '../../../util/types';
-import {
-  LISTING_PAGE_PARAM_TYPE_DRAFT,
-  LISTING_PAGE_PARAM_TYPE_NEW,
-  LISTING_PAGE_PARAM_TYPES,
-} from '../../../util/urlHelpers';
 import { ensureCurrentUser, ensureListing } from '../../../util/data';
 import {
   INQUIRY_PROCESS_NAME,
