@@ -242,12 +242,12 @@ const LinkToStockOrAvailabilityTab = props => {
     editListingLinkType,
     isBookable,
     hasListingType,
-    hasStockInUse,
+    hasStockManagementInUse,
     currentStock,
     intl,
   } = props;
 
-  if (!hasListingType || !(isBookable || hasStockInUse)) {
+  if (!hasListingType || !(isBookable || hasStockManagementInUse)) {
     return null;
   }
 
@@ -541,7 +541,9 @@ export const ManageListingCardComponent = props => {
             isBookable={isBookable}
             currentStock={currentStock}
             hasListingType={hasListingType}
-            hasStockInUse={isProductOrder && foundListingTypeConfig?.stockType === 'multipleItems'}
+            hasStockManagementInUse={
+              isProductOrder && foundListingTypeConfig?.stockType === 'multipleItems'
+            }
             intl={intl}
           />
         </div>
