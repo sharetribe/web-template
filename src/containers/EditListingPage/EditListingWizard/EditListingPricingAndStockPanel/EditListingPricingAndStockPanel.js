@@ -15,6 +15,7 @@ import EditListingPricingAndStockForm from './EditListingPricingAndStockForm';
 import css from './EditListingPricingAndStockPanel.module.css';
 
 const { Money } = sdkTypes;
+const BILLIARD = 1000000000000000;
 
 const getInitialValues = params => {
   const { listing } = params;
@@ -24,10 +25,12 @@ const getInitialValues = params => {
 
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
+  // Note: infinite stock is refilled to billiard using "stockUpdateMaybe"
   const currentStockQuantity = currentStock?.attributes?.quantity;
   const stock = currentStockQuantity != null ? currentStockQuantity : isPublished ? 0 : 1;
+  const stockTypeInfinity = [];
 
-  return { price, stock };
+  return { price, stock, stockTypeInfinity };
 };
 
 const EditListingPricingAndStockPanel = props => {
@@ -59,6 +62,10 @@ const EditListingPricingAndStockPanel = props => {
   const unitType = publicData.unitType;
   const listingTypeConfig = listingTypes.find(conf => conf.listingType === selectedListingType);
 
+  const hasInfiniteStock = ['infiniteOneItem', 'infiniteMultipleItems'].includes(
+    listingTypeConfig?.stockType
+  );
+
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
   const priceCurrencyValid =
     marketplaceCurrency && initialValues.price instanceof Money
@@ -85,18 +92,27 @@ const EditListingPricingAndStockPanel = props => {
           className={css.form}
           initialValues={initialValues}
           onSubmit={values => {
-            const { price, stock } = values;
+            const { price, stock, stockTypeInfinity } = values;
 
-            // Update stock only if the value has changed.
+            // Update stock only if the value has changed, or stock is infinity in stockType,
+            // but not current stock is a small number (might happen with old listings)
             // NOTE: this is going to be used on a separate call to API
             // in EditListingPage.duck.js: sdk.stock.compareAndSet();
 
+            const hasStockTypeInfinityChecked = stockTypeInfinity?.[0] === 'infinity';
             const hasNoCurrentStock = listing?.currentStock?.attributes?.quantity == null;
             const hasStockQuantityChanged = stock && stock !== initialValues.stock;
             // currentStockQuantity is null or undefined, return null - otherwise use the value
             const oldTotal = hasNoCurrentStock ? null : initialValues.stock;
             const stockUpdateMaybe =
-              hasNoCurrentStock || hasStockQuantityChanged
+              hasInfiniteStock && (hasNoCurrentStock || hasStockTypeInfinityChecked)
+                ? {
+                    stockUpdate: {
+                      oldTotal,
+                      newTotal: BILLIARD,
+                    },
+                  }
+                : hasNoCurrentStock || hasStockQuantityChanged
                 ? {
                     stockUpdate: {
                       oldTotal,
@@ -116,6 +132,7 @@ const EditListingPricingAndStockPanel = props => {
               initialValues: {
                 price,
                 stock: stockUpdateMaybe?.stockUpdate?.newTotal || stock,
+                stockTypeInfinity,
               },
             });
             onSubmit(updateValues);

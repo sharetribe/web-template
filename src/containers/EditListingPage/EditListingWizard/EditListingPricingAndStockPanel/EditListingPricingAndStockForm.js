@@ -2,6 +2,7 @@ import React from 'react';
 import { bool, func, number, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { Field, Form as FinalForm } from 'react-final-form';
+import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 // Import configs and util modules
@@ -14,12 +15,19 @@ import { formatMoney } from '../../../../util/currency';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 
 // Import shared components
-import { Button, Form, FieldCurrencyInput, FieldTextInput } from '../../../../components';
+import {
+  Button,
+  Form,
+  FieldCurrencyInput,
+  FieldCheckboxGroup,
+  FieldTextInput,
+} from '../../../../components';
 
 // Import modules from this directory
 import css from './EditListingPricingAndStockForm.module.css';
 
 const { Money } = sdkTypes;
+const MILLION = 1000000;
 
 const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, intl) => {
   const priceRequiredMsgId = { id: 'EditListingPricingAndStockForm.priceRequired' };
@@ -40,9 +48,55 @@ const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, in
     : priceRequired;
 };
 
+/**
+ * If stock type is changed to infinity (on the fly),
+ * we show checkbox for providers to update their current stock to infinity.
+ * This is created to avoid overselling problem, if operator changes stock type
+ * from finite to infinite. I.e. the provider notices, if stock management configuration has changed.
+ *
+ * Note 1: infinity is faked using billiard aka 10^15
+ * Note 2: If stock is less than a million (10^6) items, we show this checkbox component.
+ *
+ * @param {Object} props contains { hasInfiniteStock, currentStock, formId, intl }
+ * @returns a component containing checkbox group (stockTypeInfinity) with one key: infinity
+ */
+const UpdateStockToInfinityCheckboxMaybe = ({ hasInfiniteStock, currentStock, formId, intl }) => {
+  return hasInfiniteStock && currentStock != null && currentStock < MILLION ? (
+    <div className={css.input}>
+      <p>
+        <FormattedMessage
+          id="EditListingPricingAndStockForm.updateToInfiniteInfo"
+          values={{
+            currentStock,
+            b: msgFragment => <b>{msgFragment}</b>,
+          }}
+        />
+      </p>
+      <FieldCheckboxGroup
+        id={`${formId}.stockTypeInfinity`}
+        name="stockTypeInfinity"
+        options={[
+          {
+            key: 'infinity',
+            label: intl.formatMessage({
+              id: 'EditListingPricingAndStockForm.updateToInfinite',
+            }),
+          },
+        ]}
+        validate={validators.requiredFieldArrayCheckbox(
+          intl.formatMessage({
+            id: 'EditListingPricingAndStockForm.updateToInfiniteRequired',
+          })
+        )}
+      />
+    </div>
+  ) : null;
+};
+
 export const EditListingPricingAndStockFormComponent = props => (
   <FinalForm
     {...props}
+    mutators={{ ...arrayMutators }}
     render={formRenderProps => {
       const {
         formId,
@@ -62,6 +116,7 @@ export const EditListingPricingAndStockFormComponent = props => (
         updated,
         updateInProgress,
         fetchErrors,
+        values,
       } = formRenderProps;
 
       const priceValidators = getPriceValidators(
@@ -76,6 +131,10 @@ export const EditListingPricingAndStockFormComponent = props => (
         intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockIsRequired' }),
         0
       );
+      const hasInfiniteStock = ['infiniteOneItem', 'infiniteMultipleItems'].includes(
+        listingType?.stockType
+      );
+      const currentStock = values.stock;
 
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
@@ -100,7 +159,7 @@ export const EditListingPricingAndStockFormComponent = props => (
             </p>
           ) : null}
           <FieldCurrencyInput
-            id={`${formId}price`}
+            id={`${formId}.price`}
             name="price"
             className={css.input}
             autoFocus={autoFocus}
@@ -115,10 +174,17 @@ export const EditListingPricingAndStockFormComponent = props => (
             validate={priceValidators}
           />
 
+          <UpdateStockToInfinityCheckboxMaybe
+            formId={formId}
+            hasInfiniteStock={hasInfiniteStock}
+            currentStock={currentStock}
+            intl={intl}
+          />
+
           {hasStockManagement ? (
             <FieldTextInput
               className={css.input}
-              id="stock"
+              id={`${formId}.stock`}
               name="stock"
               label={intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockLabel' })}
               placeholder={intl.formatMessage({
