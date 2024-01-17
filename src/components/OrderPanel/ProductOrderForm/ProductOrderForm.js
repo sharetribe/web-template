@@ -112,6 +112,7 @@ const renderForm = formRenderProps => {
     intl,
     formId,
     currentStock,
+    allowOrdersOfMultipleItems,
     hasMultipleDeliveryMethods,
     displayDeliveryMethod,
     listingId,
@@ -213,7 +214,7 @@ const renderForm = formRenderProps => {
   return (
     <Form onSubmit={handleFormSubmit}>
       <FormSpy subscription={{ values: true }} onChange={handleOnChange} />
-      {hasNoStockLeft ? null : hasOneItemLeft ? (
+      {hasNoStockLeft ? null : hasOneItemLeft || !allowOrdersOfMultipleItems ? (
         <FieldTextInput
           id={`${formId}.quantity`}
           className={css.quantityField}
@@ -292,7 +293,14 @@ const renderForm = formRenderProps => {
 
 const ProductOrderForm = props => {
   const intl = useIntl();
-  const { price, currentStock, pickupEnabled, shippingEnabled, displayDeliveryMethod } = props;
+  const {
+    price,
+    currentStock,
+    pickupEnabled,
+    shippingEnabled,
+    displayDeliveryMethod,
+    allowOrdersOfMultipleItems,
+  } = props;
 
   // Should not happen for listings that go through EditListingWizard.
   // However, this might happen for imported listings.
@@ -305,7 +313,8 @@ const ProductOrderForm = props => {
   }
 
   const hasOneItemLeft = currentStock && currentStock === 1;
-  const quantityMaybe = hasOneItemLeft ? { quantity: '1' } : {};
+  const hasOneItemMode = !allowOrdersOfMultipleItems && currentStock > 0;
+  const quantityMaybe = hasOneItemLeft || hasOneItemMode ? { quantity: '1' } : {};
   const singleDeliveryMethodAvailableMaybe =
     shippingEnabled && !pickupEnabled
       ? { deliveryMethod: 'shipping' }
