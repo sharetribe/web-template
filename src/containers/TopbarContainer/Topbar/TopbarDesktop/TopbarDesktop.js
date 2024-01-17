@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { bool, func, object, number, string } from 'prop-types';
 import classNames from 'classnames';
 
-import { FormattedMessage, intlShape } from '../../../util/reactIntl';
-import { ACCOUNT_SETTINGS_PAGES } from '../../../routing/routeConfiguration';
-import { propTypes } from '../../../util/types';
+import { FormattedMessage, intlShape } from '../../../../util/reactIntl';
+import { ACCOUNT_SETTINGS_PAGES } from '../../../../routing/routeConfiguration';
+import { propTypes } from '../../../../util/types';
 import {
   Avatar,
   InlineTextButton,
@@ -14,7 +14,7 @@ import {
   MenuContent,
   MenuItem,
   NamedLink,
-} from '../../../components';
+} from '../../../../components';
 
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
 

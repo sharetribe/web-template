@@ -14,6 +14,31 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] ext/ directory: update email translation defaults for no-delivery-method scenario.
+  [#292](https://github.com/sharetribe/web-template/pull/292)
+- [change] Code-split FieldDateInput, FieldDateRangeInput, FieldDateRangeController. The consequence
+  is that react-dates library is code-splitted too.
+  [#290](https://github.com/sharetribe/web-template/pull/290)
+- [change] Move IconCard under SaveCardDetails (might be code-splitted later).
+  [#283](https://github.com/sharetribe/web-template/pull/283)
+- [change] Code-split Topbar component and move it under TopbarContainer.
+  [#282](https://github.com/sharetribe/web-template/pull/282)
+- [fix] AuthenticationPage/lodash: do not import the whole library.
+  [#288](https://github.com/sharetribe/web-template/pull/288)
+- [change] PageBuilder/YoutubeEmbed: add rel=0 search param (related videos only from same channel).
+  This also adds width and height to iframe element.
+  [#286](https://github.com/sharetribe/web-template/pull/286)
+- [fix] FieldRadioButton: disabled style was missing.
+  [#284](https://github.com/sharetribe/web-template/pull/284)
+- [fix] Add missing imports to an email template file
+  [#279](https://github.com/sharetribe/web-template/pull/279)
+
+## [v3.5.0] 2023-12-12
+
+- [fix] OrderPanel: showed price for inquiry on mobile layout even if price was marked hidden
+  [#278](https://github.com/sharetribe/web-template/pull/278)
+- [add] Add a specific message for too-many-request error on ListingPage and CheckoutPage
+  [#277](https://github.com/sharetribe/web-template/pull/277)
 - [fix] Add missing update to yarn.lock file.
   [#272](https://github.com/sharetribe/web-template/pull/272)
 - [fix] Final Form: iOS 17.0.x initializes unreliably Object.assign. This is fixed in iOS 17.1, but
@@ -41,6 +66,8 @@ way to update this template, but currently, we follow a pattern:
   [#258](https://github.com/sharetribe/web-template/pull/258)
 - [fix] configHelpers: undefined enumOptions was not handled properly.
   [#257](https://github.com/sharetribe/web-template/pull/257)
+
+  [v3.5.0]: https://github.com/sharetribe/web-template/compare/v3.4.0...v3.5.0
 
 ## [v3.4.0] 2023-10-23
 

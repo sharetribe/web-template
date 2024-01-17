@@ -137,7 +137,14 @@ const handleSubmit = (
 const dateFormattingOptions = { month: 'short', day: 'numeric', weekday: 'short' };
 
 const PriceMaybe = props => {
-  const { price, publicData, validListingTypes, intl } = props;
+  const {
+    price,
+    publicData,
+    validListingTypes,
+    intl,
+    marketplaceCurrency,
+    showCurrencyMismatch = false,
+  } = props;
   const { listingType, unitType } = publicData || {};
 
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
@@ -146,7 +153,20 @@ const PriceMaybe = props => {
     return null;
   }
 
-  return (
+  // Get formatted price or currency code if the currency does not match with marketplace currency
+  const { formattedPrice, priceTitle } = priceData(price, marketplaceCurrency, intl);
+  // TODO: In CTA, we don't have space to show proper error message for a mismatch of marketplace currency
+  //       Instead, we show the currency code in place of the price
+  return showCurrencyMismatch ? (
+    <div className={css.priceContainerInCTA}>
+      <div className={css.priceValue} title={priceTitle}>
+        {formattedPrice}
+      </div>
+      <div className={css.perUnitInCTA}>
+        <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
+      </div>
+    </div>
+  ) : (
     <div className={css.priceContainer}>
       <p className={css.price}>{formatMoney(intl, price)}</p>
       <div className={css.perUnit}>
@@ -242,7 +262,6 @@ const OrderPanel = props => {
   const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
 
   const showClosedListingHelpText = listing.id && isClosed;
-  const { formattedPrice, priceTitle } = priceData(price, marketplaceCurrency, intl);
   const isOrderOpen = !!parse(location.search).orderOpen;
 
   const subTitleText = showClosedListingHelpText
@@ -297,6 +316,7 @@ const OrderPanel = props => {
           publicData={publicData}
           validListingTypes={validListingTypes}
           intl={intl}
+          marketplaceCurrency={marketplaceCurrency}
         />
 
         <div className={css.author}>
@@ -382,14 +402,14 @@ const OrderPanel = props => {
         ) : null}
       </ModalInMobile>
       <div className={css.openOrderForm}>
-        <div className={css.priceContainerInCTA}>
-          <div className={css.priceValue} title={priceTitle}>
-            {formattedPrice}
-          </div>
-          <div className={css.perUnitInCTA}>
-            <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
-          </div>
-        </div>
+        <PriceMaybe
+          price={price}
+          publicData={publicData}
+          validListingTypes={validListingTypes}
+          intl={intl}
+          marketplaceCurrency={marketplaceCurrency}
+          showCurrencyMismatch
+        />
 
         {isClosed ? (
           <div className={css.closedListingButton}>

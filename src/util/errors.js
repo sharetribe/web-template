@@ -45,6 +45,11 @@ const responseAPIErrors = error => {
 };
 
 /**
+ * 429 Too Many Requests error
+ */
+export const isTooManyRequestsError = error => error && error.status === 429;
+
+/**
  * Check if the given API error (from `sdk.currentuser.create()`) is
  * due to the email address already being in use.
  */
