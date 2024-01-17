@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes, { arrayOf, number, shape } from 'prop-types';
 import classNames from 'classnames';
 
@@ -31,6 +31,9 @@ const getInitialValues = params => {
 };
 
 const EditListingPricingAndStockPanel = props => {
+  // State is needed since re-rendering would overwrite the values during XHR call.
+  const [state, setState] = useState({ initialValues: getInitialValues(props) });
+
   const {
     className,
     rootClassName,
@@ -48,7 +51,7 @@ const EditListingPricingAndStockPanel = props => {
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
-  const initialValues = getInitialValues(props);
+  const initialValues = state.initialValues;
 
   // Form needs to know data from listingType
   const publicData = listing?.attributes?.publicData;
@@ -107,6 +110,14 @@ const EditListingPricingAndStockPanel = props => {
               price,
               ...stockUpdateMaybe,
             };
+            // Save the initialValues to state
+            // Otherwise, re-rendering would overwrite the values during XHR call.
+            setState({
+              initialValues: {
+                price,
+                stock: stockUpdateMaybe?.stockUpdate?.newTotal || stock,
+              },
+            });
             onSubmit(updateValues);
           }}
           listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
