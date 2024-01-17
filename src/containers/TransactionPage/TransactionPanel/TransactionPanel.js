@@ -184,7 +184,7 @@ export class TransactionPanelComponent extends Component {
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
 
-    const deliveryMethod = protectedData?.deliveryMethod;
+    const deliveryMethod = protectedData?.deliveryMethod || 'none';
 
     const classes = classNames(rootClassName || css.root, className);
 

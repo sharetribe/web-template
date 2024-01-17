@@ -265,7 +265,7 @@ export const ActivityFeedComponent = props => {
               transition={transition}
               nextState={nextState}
               stateData={stateData}
-              deliveryMethod={transaction.attributes?.protectedData?.deliveryMethod}
+              deliveryMethod={transaction.attributes?.protectedData?.deliveryMethod || 'none'}
               listingTitle={listingTitle}
               ownRole={ownRole}
               otherUsersName={<UserDisplayName user={otherUser} intl={intl} />}
