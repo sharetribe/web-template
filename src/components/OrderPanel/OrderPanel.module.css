@@ -293,7 +293,15 @@
   margin: 12px 0 36px 0;
 }
 
-img.WhatsAppButton {
-  width: 20px !important;
-  height: 20px !important;
+.A_css {
+  display: flex;
+  justify-content: center;
+}
+
+.whatsAppButton {
+  z-index: -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
 }
