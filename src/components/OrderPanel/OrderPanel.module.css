@@ -305,7 +305,7 @@
   align-items: center;*/
   bottom: 6%;
   right: 6%;
-  z-index: 999;
+  z-index: -1;
   width: 20%;
   display: flex;
   align-items: center;
