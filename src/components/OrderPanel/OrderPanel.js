@@ -239,6 +239,9 @@ const OrderPanel = props => {
   const listingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const displayShipping = displayDeliveryShipping(listingTypeConfig);
   const displayPickup = displayDeliveryPickup(listingTypeConfig);
+  const allowOrdersOfMultipleItems = ['multipleItems', 'infiniteMultipleItems'].includes(
+    listingTypeConfig?.stockType
+  );
 
   const showClosedListingHelpText = listing.id && isClosed;
   const isOrderOpen = !!parse(location.search).orderOpen;
@@ -345,6 +348,7 @@ const OrderPanel = props => {
             price={price}
             marketplaceCurrency={marketplaceCurrency}
             currentStock={currentStock}
+            allowOrdersOfMultipleItems={allowOrdersOfMultipleItems}
             pickupEnabled={pickupEnabled && displayPickup}
             shippingEnabled={shippingEnabled && displayShipping}
             displayDeliveryMethod={displayPickup || displayShipping}

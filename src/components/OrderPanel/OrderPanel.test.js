@@ -56,6 +56,7 @@ const listingTypes = [
       alias: 'default-purchase/release-1',
     },
     unitType: 'item',
+    stockType: 'multipleItems',
   },
 ];
 
@@ -218,6 +219,7 @@ describe('OrderPanel', () => {
 
   const config = getConfig();
   const routeConfiguration = getRouteConfiguration(config.layout);
+  const stockTypeMaybe = stockType => (stockType ? { stockType } : {});
   const validListingTypes = config.listingTypes.listingTypes.map(({ id, ...rest }) => ({
     listingType: id,
     transactionType: {
@@ -225,6 +227,7 @@ describe('OrderPanel', () => {
       alias: rest?.transactionProcess?.alias,
       unitType: rest.unitType,
     },
+    ...stockTypeMaybe(rest?.stockType),
   }));
 
   it('Booking: daily', async () => {
