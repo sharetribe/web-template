@@ -220,9 +220,15 @@ export const listingFields = [
  *                        considered unique (stock = 1).
  *                        Possible values: 'oneItem' and 'multipleItems'.
  *                        Default: 'multipleItems'.
- * - defaultListingFields This is relevant only to listings using default-inquiry process atm.
- *                        It contains price: true/false value to indicate, whether price should be shown.
- *                        If defaultListingFields.price is not explicitly set to _false_, price will be shown.
+ * - defaultListingFields These are tied to transaction processes. Different processes have different flags.
+ *                        E.g. default-inquiry can toggle price and location to true/false value to indicate,
+ *                        whether price (or location) tab should be shown. If defaultListingFields.price is not
+ *                        explicitly set to _false_, price will be shown.
+ *                        If the location or pickup is not used, listing won't be returned with location search.
+ *                        Use keyword search as main search type if location is not enforced.
+ *                        The payoutDetails flag allows provider to bypass setting of payout details.
+ *                        Note: customers can't order listings, if provider has not set payout details! Monitor
+ *                        providers who have not set payout details and contact them to ensure that they add the details.
  */
 
 export const listingTypes = [
@@ -235,6 +241,7 @@ export const listingTypes = [
       unitType: 'day',
     },
     defaultListingFields: {
+      location: true,
       payoutDetails: true,
     },
   },
@@ -267,6 +274,11 @@ export const listingTypes = [
   //     unitType: 'item',
   //   },
   //   stockType: 'multipleItems',
+  //   defaultListingFields: {
+  //     shipping: true,
+  //     pickup: true,
+  //     payoutDetails: true,
+  //   },
   // },
   // {
   //   listingType: 'inquiry',
@@ -278,6 +290,7 @@ export const listingTypes = [
   //   },
   //   defaultListingFields: {
   //     price: false,
+  //     location: true,
   //   },
   // },
 ];
