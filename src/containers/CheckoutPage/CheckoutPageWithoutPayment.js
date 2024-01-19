@@ -127,9 +127,6 @@ const fetchSpeculatedTransactionIfNeeded = (
   }
 };
 
-// agregamos la constante para deshabilitar los mensajes privados
-const privateMessagingEnabled = false; // O false si quieres deshabilitar los mensajes privados
-
 
 /**
  * Load initial data for the page
@@ -198,7 +195,7 @@ const handleSubmit = (values, process, props, submitting, setSubmitting) => {
     process,
     onInitiateOrder,
     //Ine
-    OnSendMessage,
+    onSendMessage,
     //fin Ine
     sessionStorageKey,
     setPageData,
