@@ -181,7 +181,7 @@ const handleSubmit = (values, process, props, submitting, setSubmitting) => {
     dispatch,
     onInitiateOrder,
     // Ine
-    //onSendMessage,
+    onSendMessage,
     //fin ine
     onSubmitCallback,
     pageData,
@@ -198,7 +198,7 @@ const handleSubmit = (values, process, props, submitting, setSubmitting) => {
     process,
     onInitiateOrder,
     //Ine
-    //onSendMessage,
+    OnSendMessage,
     //fin Ine
     sessionStorageKey,
     setPageData,
@@ -478,7 +478,7 @@ CheckoutPageWithoutPayment.propTypes = {
   }).isRequired,
   onInitiateOrder: func.isRequired,
   // Ine
-  //onSendMessage: func.isRequired,
+  onSendMessage: func.isRequired,
   // Fin Ine
   initiateOrderError: propTypes.error,
 
