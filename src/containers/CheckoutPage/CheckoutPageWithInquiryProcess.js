@@ -34,6 +34,10 @@ import MobileListingImage from './MobileListingImage';
 
 import css from './CheckoutPage.module.css';
 
+// agregamos la constante para deshabilitar los mensajes privados
+const privateMessagingEnabled = false; // O false si quieres deshabilitar los mensajes privados
+
+
 const ErrorMessage = props => {
   const { error } = props;
 

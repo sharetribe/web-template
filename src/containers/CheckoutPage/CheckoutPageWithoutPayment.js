@@ -127,6 +127,10 @@ const fetchSpeculatedTransactionIfNeeded = (
   }
 };
 
+// agregamos la constante para deshabilitar los mensajes privados
+const privateMessagingEnabled = false; // O false si quieres deshabilitar los mensajes privados
+
+
 /**
  * Load initial data for the page
  *
@@ -176,7 +180,9 @@ const handleSubmit = (values, process, props, submitting, setSubmitting) => {
     currentUser,
     dispatch,
     onInitiateOrder,
-    onSendMessage,
+    // Ine
+    //onSendMessage,
+    //fin ine
     onSubmitCallback,
     pageData,
     setPageData,
@@ -191,7 +197,9 @@ const handleSubmit = (values, process, props, submitting, setSubmitting) => {
     message,
     process,
     onInitiateOrder,
-    onSendMessage,
+    //Ine
+    //onSendMessage,
+    //fin Ine
     sessionStorageKey,
     setPageData,
   };
@@ -202,7 +210,8 @@ const handleSubmit = (values, process, props, submitting, setSubmitting) => {
   // which is either initiate-transition or initiate-transition-after-enquiry
   const orderParams = getOrderParams(pageData, shippingDetails, config);
 
-  // There are multiple XHR calls that needs to be made against the Sharetribe Marketplace API on checkout with payments
+  // There are multiple XHR calls that needs to be made against the
+  // Sharetribe Marketplace API on checkout with payments
   processCheckoutWithoutPayment(orderParams, requestPaymentParams)
     .then(response => {
       const { orderId, messageSuccess } = response;
@@ -468,7 +477,9 @@ CheckoutPageWithoutPayment.propTypes = {
     slug: string,
   }).isRequired,
   onInitiateOrder: func.isRequired,
-  onSendMessage: func.isRequired,
+  // Ine
+  //onSendMessage: func.isRequired,
+  // Fin Ine
   initiateOrderError: propTypes.error,
 
   // from connect

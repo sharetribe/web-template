@@ -13,7 +13,9 @@ import {
   Heading,
   Form,
   PrimaryButton,
-  FieldTextInput,
+  //Ine
+  //FieldTextInput,
+  //Fin ine
 } from '../../../components';
 
 import ShippingDetails from '../ShippingDetails/ShippingDetails';
@@ -169,7 +171,7 @@ class SimpleOrderForm extends Component {
             <Heading as="h3" rootClassName={css.heading}>
               <FormattedMessage id="StripePaymentForm.messageHeading" />
             </Heading>
-
+          {/* Ine
             <FieldTextInput
               type="textarea"
               id={`${formId}-message`}
@@ -178,6 +180,8 @@ class SimpleOrderForm extends Component {
               placeholder={messagePlaceholder}
               className={css.message}
             />
+          Fin Ine
+          */}
           </div>
         ) : null}
         <div className={css.submitContainer}>

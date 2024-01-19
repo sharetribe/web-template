@@ -34,7 +34,6 @@
    :to :state/payment-expired}
   {:name :transition/confirm-payment,
    :actor :actor.role/customer,
-   
    :from :state/pending-payment,
    :to :state/preauthorized}
   {:name :transition/accept,
@@ -55,7 +54,6 @@
    :actor :actor.role/provider,
    :actions
    [{:name :action/calculate-full-refund}
-    
     {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/declined}
@@ -63,7 +61,6 @@
    :actor :actor.role/operator,
    :actions
    [{:name :action/calculate-full-refund}
-    
     {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/declined}
@@ -78,7 +75,6 @@
      {:fn/timepoint [:time/booking-end]}]},
    :actions
    [{:name :action/calculate-full-refund}
-    
     {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/expired}
@@ -86,19 +82,16 @@
    :at
    {:fn/plus
     [{:fn/timepoint [:time/booking-end]} {:fn/period ["P2D"]}]},
-   
    :from :state/accepted,
    :to :state/delivered}
   {:name :transition/operator-complete,
    :actor :actor.role/operator,
-   
    :from :state/accepted,
    :to :state/delivered}
   {:name :transition/cancel,
    :actor :actor.role/operator,
    :actions
    [{:name :action/calculate-full-refund}
-    
     {:name :action/cancel-booking}],
    :from :state/accepted,
    :to :state/cancelled}

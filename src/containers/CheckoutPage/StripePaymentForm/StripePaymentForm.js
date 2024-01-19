@@ -499,12 +499,12 @@ class StripePaymentForm extends Component {
     const billingDetailsNamePlaceholder = intl.formatMessage({
       id: 'StripePaymentForm.billingDetailsNamePlaceholder',
     });
-
-    const messagePlaceholder = intl.formatMessage(
-      { id: 'StripePaymentForm.messagePlaceholder' },
-      { name: authorDisplayName }
-    );
-
+    /* Ine */
+    // const messagePlaceholder = intl.formatMessage(
+    //   { id: 'StripePaymentForm.messagePlaceholder' },
+    //   { name: authorDisplayName }
+    // );
+    /* fin Ine*/
     const messageOptionalText = intl.formatMessage({
       id: 'StripePaymentForm.messageOptionalText',
     });

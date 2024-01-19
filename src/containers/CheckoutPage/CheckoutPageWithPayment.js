@@ -54,6 +54,9 @@ const paymentFlow = (selectedPaymentMethod, saveAfterOnetimePayment) => {
     : ONETIME_PAYMENT;
 };
 
+// agregamos la constante para deshabilitar los mensajes privados
+const privateMessagingEnabled = false; // O false si quieres deshabilitar los mensajes privados
+
 /**
  * Construct orderParams object using pageData from session storage, shipping details, and optional payment params.
  * Note: This is used for both speculate transition and real transition
@@ -450,41 +453,45 @@ export const CheckoutPageWithPayment = props => {
             {errorMessages.paymentExpiredMessage}
 
             {showPaymentForm ? (
-              <StripePaymentForm
-                className={css.paymentForm}
-                onSubmit={values =>
-                  handleSubmit(values, process, props, stripe, submitting, setSubmitting)
-                }
-                inProgress={submitting}
-                formId="CheckoutPagePaymentForm"
-                authorDisplayName={listing?.author?.attributes?.profile?.displayName}
-                showInitialMessageInput={showInitialMessageInput}
-                initialValues={initalValuesForStripePayment}
-                initiateOrderError={initiateOrderError}
-                confirmCardPaymentError={confirmCardPaymentError}
-                confirmPaymentError={confirmPaymentError}
-                hasHandledCardPayment={hasPaymentIntentUserActionsDone}
-                loadingData={!stripeCustomerFetched}
-                defaultPaymentMethod={
-                  hasDefaultPaymentMethod(stripeCustomerFetched, currentUser)
-                    ? currentUser.stripeCustomer.defaultPaymentMethod
-                    : null
-                }
-                paymentIntent={paymentIntent}
-                onStripeInitialized={stripe => {
-                  setStripe(stripe);
-                  return onStripeInitialized(stripe, process, props);
-                }}
-                askShippingDetails={askShippingDetails}
-                showPickUplocation={orderData?.deliveryMethod === 'pickup'}
-                listingLocation={listing?.attributes?.publicData?.location}
-                totalPrice={totalPrice}
-                locale={config.localization.locale}
-                stripePublishableKey={config.stripe.publishableKey}
-                marketplaceName={config.marketplaceName}
-                isBooking={isBookingProcessAlias(transactionProcessAlias)}
-                isFuzzyLocation={config.maps.fuzzy.enabled}
-              />
+              <>
+                {privateMessagingEnabled && (
+                  <StripePaymentForm
+                    className={css.paymentForm}
+                    onSubmit={values =>
+                      handleSubmit(values, process, props, stripe, submitting, setSubmitting)
+                    }
+                    inProgress={submitting}
+                    formId="CheckoutPagePaymentForm"
+                    authorDisplayName={listing?.author?.attributes?.profile?.displayName}
+                    showInitialMessageInput={showInitialMessageInput}
+                    initialValues={initalValuesForStripePayment}
+                    initiateOrderError={initiateOrderError}
+                    confirmCardPaymentError={confirmCardPaymentError}
+                    confirmPaymentError={confirmPaymentError}
+                    hasHandledCardPayment={hasPaymentIntentUserActionsDone}
+                    loadingData={!stripeCustomerFetched}
+                    defaultPaymentMethod={
+                      hasDefaultPaymentMethod(stripeCustomerFetched, currentUser)
+                        ? currentUser.stripeCustomer.defaultPaymentMethod
+                        : null
+                    }
+                    paymentIntent={paymentIntent}
+                    onStripeInitialized={stripe => {
+                      setStripe(stripe);
+                      return onStripeInitialized(stripe, process, props);
+                    }}
+                    askShippingDetails={askShippingDetails}
+                    showPickUplocation={orderData?.deliveryMethod === 'pickup'}
+                    listingLocation={listing?.attributes?.publicData?.location}
+                    totalPrice={totalPrice}
+                    locale={config.localization.locale}
+                    stripePublishableKey={config.stripe.publishableKey}
+                    marketplaceName={config.marketplaceName}
+                    isBooking={isBookingProcessAlias(transactionProcessAlias)}
+                    isFuzzyLocation={config.maps.fuzzy.enabled}
+                  />
+                )}
+              </>
             ) : null}
           </section>
         </div>
