@@ -26,13 +26,13 @@ const defaultLocations = [
       bounds: new LatLngBounds(new LatLng(60.53045, 22.38197), new LatLng(60.33361, 22.06644)),
      },
    },
-  // {
-  //   id: 'default-tampere',
-  //   predictionPlace: {
-  //     address: 'Tampere, Finland',
-  //     bounds: new LatLngBounds(new LatLng(61.83657, 24.11838), new LatLng(61.42728, 23.5422)),
-  //   },
-  // },
+   {
+     id: 'default-tampere',
+     predictionPlace: {
+       address: 'Tampere, Finland',
+       bounds: new LatLngBounds(new LatLng(61.83657, 24.11838), new LatLng(61.42728, 23.5422)),
+     },
+   },
   // {
   //   id: 'default-oulu',
   //   predictionPlace: {
