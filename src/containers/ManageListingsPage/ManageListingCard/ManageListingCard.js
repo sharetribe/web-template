@@ -191,6 +191,7 @@ const ShowOutOfStockOverlayMaybe = props => {
     slug,
     actionsInProgressListingId,
     currentListingId,
+    hasStockManagementInUse,
     onCloseListing,
     intl,
   } = props;
@@ -202,35 +203,54 @@ const ShowOutOfStockOverlayMaybe = props => {
         { listingTitle: title }
       )}
     >
-      <NamedLink
-        className={css.finishListingDraftLink}
-        name="EditListingPage"
-        params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_EDIT, tab: 'pricing-and-stock' }}
-      >
-        <FormattedMessage id="ManageListingCard.setPriceAndStock" />
-      </NamedLink>
+      {hasStockManagementInUse ? (
+        <>
+          <NamedLink
+            className={css.finishListingDraftLink}
+            name="EditListingPage"
+            params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_EDIT, tab: 'pricing-and-stock' }}
+          >
+            <FormattedMessage id="ManageListingCard.setPriceAndStock" />
+          </NamedLink>
 
-      <div className={css.closeListingText}>
-        {intl.formatMessage(
-          { id: 'ManageListingCard.closeListingTextOr' },
-          {
-            closeListingLink: (
-              <InlineTextButton
-                key="closeListingLink"
-                className={css.closeListingText}
-                disabled={!!actionsInProgressListingId}
-                onClick={() => {
-                  if (!actionsInProgressListingId) {
-                    onCloseListing(currentListingId);
-                  }
-                }}
-              >
-                <FormattedMessage id="ManageListingCard.closeListingText" />
-              </InlineTextButton>
-            ),
-          }
-        )}
-      </div>
+          <div className={css.closeListingText}>
+            {intl.formatMessage(
+              { id: 'ManageListingCard.closeListingTextOr' },
+              {
+                closeListingLink: (
+                  <InlineTextButton
+                    key="closeListingLink"
+                    className={css.closeListingText}
+                    disabled={!!actionsInProgressListingId}
+                    onClick={() => {
+                      if (!actionsInProgressListingId) {
+                        onCloseListing(currentListingId);
+                      }
+                    }}
+                  >
+                    <FormattedMessage id="ManageListingCard.closeListingText" />
+                  </InlineTextButton>
+                ),
+              }
+            )}
+          </div>
+        </>
+      ) : (
+        <div className={css.closeListingText}>
+          <InlineTextButton
+            key="closeListingLink"
+            className={css.closeListingText}
+            disabled={!!actionsInProgressListingId}
+            onClick={() => {
+              if (!actionsInProgressListingId) {
+                onCloseListing(currentListingId);
+              }
+            }}
+          >
+            <FormattedMessage id="ManageListingCard.closeListingText" />
+          </InlineTextButton>
+        </div>
+      )}
     </Overlay>
   ) : null;
 };
@@ -352,6 +372,8 @@ export const ManageListingCardComponent = props => {
   const isOutOfStock = currentStock === 0;
   const showOutOfStockOverlay =
     !isBookable && isOutOfStock && !isPendingApproval && !isClosed && !isDraft;
+  const hasStockManagementInUse =
+    isProductOrder && foundListingTypeConfig?.stockType === 'multipleItems';
 
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
@@ -495,6 +517,7 @@ export const ManageListingCardComponent = props => {
           actionsInProgressListingId={actionsInProgressListingId}
           currentListingId={currentListing.id}
           onCloseListing={onCloseListing}
+          hasStockManagementInUse={hasStockManagementInUse}
           intl={intl}
         />
 
@@ -541,9 +564,7 @@ export const ManageListingCardComponent = props => {
             isBookable={isBookable}
             currentStock={currentStock}
             hasListingType={hasListingType}
-            hasStockManagementInUse={
-              isProductOrder && foundListingTypeConfig?.stockType === 'multipleItems'
-            }
+            hasStockManagementInUse={hasStockManagementInUse}
             intl={intl}
           />
         </div>
