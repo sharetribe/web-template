@@ -17,17 +17,35 @@ import css from './EditListingPricingAndStockPanel.module.css';
 const { Money } = sdkTypes;
 const BILLIARD = 1000000000000000;
 
-const getInitialValues = params => {
-  const { listing } = params;
+const getListingTypeConfig = (publicData, listingTypes) => {
+  const selectedListingType = publicData.listingType;
+  return listingTypes.find(conf => conf.listingType === selectedListingType);
+};
+
+const getInitialValues = props => {
+  const { listing, listingTypes } = props;
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
   const price = listing?.attributes?.price;
   const currentStock = listing?.currentStock;
+
+  const publicData = listing?.attributes?.publicData;
+  const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
+  const hasInfiniteStock = ['infiniteOneItem', 'infiniteMultipleItems'].includes(
+    listingTypeConfig?.stockType
+  );
 
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
   // Note: infinite stock is refilled to billiard using "stockUpdateMaybe"
   const currentStockQuantity = currentStock?.attributes?.quantity;
-  const stock = currentStockQuantity != null ? currentStockQuantity : isPublished ? 0 : 1;
+  const stock =
+    currentStockQuantity != null
+      ? currentStockQuantity
+      : isPublished
+      ? 0
+      : hasInfiniteStock
+      ? BILLIARD
+      : 1;
   const stockTypeInfinity = [];
 
   return { price, stock, stockTypeInfinity };
@@ -58,9 +76,8 @@ const EditListingPricingAndStockPanel = props => {
 
   // Form needs to know data from listingType
   const publicData = listing?.attributes?.publicData;
-  const selectedListingType = publicData.listingType;
   const unitType = publicData.unitType;
-  const listingTypeConfig = listingTypes.find(conf => conf.listingType === selectedListingType);
+  const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
 
   const hasInfiniteStock = ['infiniteOneItem', 'infiniteMultipleItems'].includes(
     listingTypeConfig?.stockType
