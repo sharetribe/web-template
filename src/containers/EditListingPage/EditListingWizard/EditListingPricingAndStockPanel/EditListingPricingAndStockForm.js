@@ -8,7 +8,7 @@ import classNames from 'classnames';
 // Import configs and util modules
 import appSettings from '../../../../config/settings';
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
-import { propTypes } from '../../../../util/types';
+import { STOCK_INFINITE_ITEMS, STOCK_MULTIPLE_ITEMS, propTypes } from '../../../../util/types';
 import { isOldTotalMismatchStockError } from '../../../../util/errors';
 import * as validators from '../../../../util/validators';
 import { formatMoney } from '../../../../util/currency';
@@ -126,14 +126,12 @@ export const EditListingPricingAndStockFormComponent = props => (
       );
       // Note: outdated listings don't have listingType!
       // I.e. listings that are created with previous listing type setup.
-      const hasStockManagement = listingType?.stockType === 'multipleItems';
+      const hasStockManagement = listingType?.stockType === STOCK_MULTIPLE_ITEMS;
       const stockValidator = validators.numberAtLeast(
         intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockIsRequired' }),
         0
       );
-      const hasInfiniteStock = ['infiniteOneItem', 'infiniteMultipleItems'].includes(
-        listingType?.stockType
-      );
+      const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingType?.stockType);
       const currentStock = values.stock;
 
       const classes = classNames(css.root, className);

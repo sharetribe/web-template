@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import PropTypes, { arrayOf, number, shape } from 'prop-types';
+import PropTypes, { arrayOf, number, oneOf, shape } from 'prop-types';
 import classNames from 'classnames';
 
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
-import { LISTING_STATE_DRAFT } from '../../../../util/types';
+import { LISTING_STATE_DRAFT, STOCK_INFINITE_ITEMS, STOCK_TYPES } from '../../../../util/types';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 
 // Import shared components
@@ -30,9 +30,7 @@ const getInitialValues = props => {
 
   const publicData = listing?.attributes?.publicData;
   const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
-  const hasInfiniteStock = ['infiniteOneItem', 'infiniteMultipleItems'].includes(
-    listingTypeConfig?.stockType
-  );
+  const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingTypeConfig?.stockType);
 
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
@@ -79,9 +77,7 @@ const EditListingPricingAndStockPanel = props => {
   const unitType = publicData.unitType;
   const listingTypeConfig = getListingTypeConfig(publicData, listingTypes);
 
-  const hasInfiniteStock = ['infiniteOneItem', 'infiniteMultipleItems'].includes(
-    listingTypeConfig?.stockType
-  );
+  const hasInfiniteStock = STOCK_INFINITE_ITEMS.includes(listingTypeConfig?.stockType);
 
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
   const priceCurrencyValid =
@@ -195,7 +191,7 @@ EditListingPricingAndStockPanel.propTypes = {
   listingMinimumPriceSubUnits: number.isRequired,
   listingTypes: arrayOf(
     shape({
-      stockType: string,
+      stockType: oneOf(STOCK_TYPES),
     })
   ).isRequired,
 

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
-import { LISTING_STATE_DRAFT } from '../../../../util/types';
+import { LISTING_STATE_DRAFT, STOCK_MULTIPLE_ITEMS } from '../../../../util/types';
 import { displayDeliveryPickup, displayDeliveryShipping } from '../../../../util/configHelpers';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 
@@ -97,7 +97,7 @@ const EditListingDeliveryPanel = props => {
   const priceCurrencyValid = listing?.attributes?.price?.currency === marketplaceCurrency;
   const listingType = listing?.attributes?.publicData?.listingType;
   const listingTypeConfig = listingTypes.find(conf => conf.listingType === listingType);
-  const hasStockInUse = listingTypeConfig.stockType === 'multipleItems';
+  const hasStockInUse = listingTypeConfig.stockType === STOCK_MULTIPLE_ITEMS;
 
   return (
     <div className={classes}>
