@@ -293,11 +293,13 @@ describe('hasCommissionPercentage()', () => {
     expect(hasCommissionPercentage({})).toBe(false);
     expect(hasCommissionPercentage({ foo: 'bar' })).toBe(false);
   });
-  it('should return true with object that does not contain percentage', () => {
+  it('should return true with object that does contain percentage', () => {
     expect(hasCommissionPercentage({ percentage: 10 })).toBe(true);
     expect(hasCommissionPercentage({ percentage: 10, foo: 'bar' })).toBe(true);
-    expect(hasCommissionPercentage({ percentage: 0 })).toBe(true);
   });
+  it('should return false with object that contains percentage zero', () => {
+    expect(hasCommissionPercentage({ percentage: 0 })).toBe(false);
+  })
 
   it('should throw error if percentage property does not contain number', () => {
     expect(() => hasCommissionPercentage({ percentage: '10' })).toThrowError('10 is not a number.');
