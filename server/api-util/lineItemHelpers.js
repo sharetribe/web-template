@@ -275,7 +275,7 @@ exports.hasCommissionPercentage = commission => {
     throw new Error(`${percentage} is not a number.`);
   }
 
-  // Only create a line item if the percentage is not zero
-  const isZero = percentage === 0;
-  return isDefined && !isZero;
+  // Only create a line item if the percentage is set to be more than zero
+  const isMoreThanZero = percentage > 0;
+  return isDefined && isMoreThanZero;
 };
