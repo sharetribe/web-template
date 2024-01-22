@@ -4,11 +4,11 @@
   background-position: center center;
   background-repeat: no-repeat;
   width: 100%;
-  position: relative;
+  position: absolute;
 
   /* Hero specific */
-  min-height: 80vh;
+  min-height: 800vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: start;
+  align-items: end;
 }
