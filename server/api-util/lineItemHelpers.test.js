@@ -299,7 +299,7 @@ describe('hasCommissionPercentage()', () => {
   });
   it('should return false with object that contains percentage zero', () => {
     expect(hasCommissionPercentage({ percentage: 0 })).toBe(false);
-  })
+  });
 
   it('should throw error if percentage property does not contain number', () => {
     expect(() => hasCommissionPercentage({ percentage: '10' })).toThrowError('10 is not a number.');
