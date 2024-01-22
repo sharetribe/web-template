@@ -13,6 +13,7 @@ import {
   LISTING_STATE_CLOSED,
   LISTING_STATE_DRAFT,
   propTypes,
+  STOCK_MULTIPLE_ITEMS,
 } from '../../../util/types';
 import { formatMoney } from '../../../util/currency';
 import { ensureOwnListing } from '../../../util/data';
@@ -373,7 +374,7 @@ export const ManageListingCardComponent = props => {
   const showOutOfStockOverlay =
     !isBookable && isOutOfStock && !isPendingApproval && !isClosed && !isDraft;
   const hasStockManagementInUse =
-    isProductOrder && foundListingTypeConfig?.stockType === 'multipleItems';
+    isProductOrder && foundListingTypeConfig?.stockType === STOCK_MULTIPLE_ITEMS;
 
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;

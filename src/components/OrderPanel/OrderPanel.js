@@ -30,6 +30,8 @@ import {
   LINE_ITEM_DAY,
   LINE_ITEM_ITEM,
   LINE_ITEM_HOUR,
+  STOCK_MULTIPLE_ITEMS,
+  STOCK_INFINITE_MULTIPLE_ITEMS,
 } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
@@ -239,7 +241,7 @@ const OrderPanel = props => {
   const listingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const displayShipping = displayDeliveryShipping(listingTypeConfig);
   const displayPickup = displayDeliveryPickup(listingTypeConfig);
-  const allowOrdersOfMultipleItems = ['multipleItems', 'infiniteMultipleItems'].includes(
+  const allowOrdersOfMultipleItems = [STOCK_MULTIPLE_ITEMS, STOCK_INFINITE_MULTIPLE_ITEMS].includes(
     listingTypeConfig?.stockType
   );
 
