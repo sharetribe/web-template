@@ -387,15 +387,15 @@ export const processCheckoutWithoutPayment = (orderParams, extraParams) => {
         : process.transitions.REQUEST_PAYMENT;
     const isPrivileged = process.isPrivileged(requestTransition);
     // Diego added 
-    const orderPromise = Promise.resolve(storedTx)
-    // Diego added end
-    onInitiateOrder(
+    const orderPromise = onInitiateOrder(
       fnParams,
       processAlias,
       storedTx.id,
       requestTransition,
       isPrivileged
-    ).then(order => {
+    // Diego added end
+    )
+    orderPromise.then(order => {
       // Store the returned transaction (order)
       persistTransaction(order, pageData, storeData, setPageData, sessionStorageKey);
     });
