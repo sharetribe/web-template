@@ -1,5 +1,5 @@
-import logoImageDesktop from '../assets/Crememories-Rebrand-no-symbol.png';
-import logoImageMobile from '../assets/Crememories-Rebrand-no-symbol.png';
+import logoImageDesktop from '../assets/89e8e49c-5a59-463b-8633-4290f17afe83.jpg';
+import logoImageMobile from '../assets/89e8e49c-5a59-463b-8633-4290f17afe83.jpg';
 import brandImage from '../assets/CreMemories-background-1440.png';
 import facebookImage from '../assets/CreMemories-Facebook-1200x630.jpg';
 import twitterImage from '../assets/CreMemoriesTwitter-600x314.png';
