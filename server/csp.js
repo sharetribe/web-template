@@ -70,6 +70,9 @@ const defaultDirectives = {
     '*.googleapis.com',
     '*.ggpht.com',
 
+    // Giphy
+    '*.giphy.com',
+
     // Google Analytics
     'www.googletagmanager.com',
     'www.google.com',
