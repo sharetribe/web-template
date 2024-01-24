@@ -32,8 +32,11 @@ const defaultDirectives = {
     'events.mapbox.com',
 
     // Google Analytics
+    // TODO: Signals support needs more work
+    // https://developers.google.com/tag-platform/security/guides/csp
     'www.googletagmanager.com',
     '*.google-analytics.com',
+    '*.analytics.google.com',
     'stats.g.doubleclick.net',
 
     // Plausible analytics
@@ -67,6 +70,9 @@ const defaultDirectives = {
     '*.googleapis.com',
     '*.ggpht.com',
 
+    // Giphy
+    '*.giphy.com',
+
     // Google Analytics
     'www.googletagmanager.com',
     'www.google.com',
@@ -76,6 +82,7 @@ const defaultDirectives = {
     // Youtube (static image)
     '*.ytimg.com',
 
+    // Stripe
     '*.stripe.com',
   ],
   scriptSrc: [
