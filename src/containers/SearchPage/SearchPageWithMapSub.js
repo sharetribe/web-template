@@ -452,12 +452,21 @@ export class SearchPageComponent extends Component {
       ? classNames(css.topbarBehindModal, css.topbar)
       : css.topbar;
 
-    const categories = config.listing.listingFields;
-    const categoriesFileds = categories.reduce((pickedFields, fieldConfig) =>{
-      return fieldConfig;
+    // const categories = config.listing.listingFields;
+
+    // const categoriesFileds = categories.reduce((pickedFields, fieldConfig) =>{
+    //     return fieldConfig;
+    // });
+
+    let onlyCategorries = {};
+    config.listing.listingFields.map((list,key)=>{
+      if(list.key == 'category'){
+        onlyCategorries = list;
+        return list;
+      }
     });
 
-    const { enumOptions = [] } = categoriesFileds || {};
+    const { enumOptions = [] } = onlyCategorries || {};
 
     const isFilterModalOpen = this.state.isFilterModalOpen;
 

@@ -77,6 +77,83 @@ export const listingFields = [
       requiredMessage: 'You need to select a category.',
     },
   },
+  {
+    key: 'boatLength',
+    scope: 'public',
+    includeForListingTypes: ['boatListing'],
+    schemaType: 'text',
+    showConfig: {
+      label: 'Boat Length',
+    },
+    saveConfig: {
+      label: 'Boat Length',
+      // placeholderMessage: 'Some public extra note about this bike...',
+    },
+  },
+  {
+    key: 'boatMaxCapacity',
+    scope: 'public',
+    includeForListingTypes: ['boatListing'],
+    schemaType: 'text',
+    showConfig: {
+      label: 'Boat Max Capacity',
+    },
+    saveConfig: {
+      label: 'Boat Max Capacity',
+      // placeholderMessage: 'Some public extra note about this bike...',
+    },
+  },
+  {
+    key: 'boatBathroom',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'yes', label: 'Yes' },
+      { option: 'no', label: 'No' },
+    ],
+    filterConfig: {
+      indexForSearch: true,
+      filterType: 'SelectSingleFilter',
+      label: 'Boat Bathroom',
+      group: 'secondary',
+    },
+    showConfig: {
+      label: 'Boat Bathroom',
+      isDetail: true,
+    },
+    saveConfig: {
+      label: 'Boat Bathroom',
+      placeholderMessage: 'Select an option…',
+      isRequired: false,
+      requiredMessage: 'You need to select a boat bathroom.',
+    },
+  },
+  {
+    key: 'typeofplane',
+    scope: 'public',
+    includeForListingTypes: ['planeListing'],
+    schemaType: 'text',
+    showConfig: {
+      label: 'Type of plane',
+    },
+    saveConfig: {
+      label: 'Type of plane',
+      // placeholderMessage: 'Some public extra note about this bike...',
+    },
+  },
+  {
+    key: 'planeCapacity',
+    scope: 'public',
+    includeForListingTypes: ['planeListing'],
+    schemaType: 'text',
+    showConfig: {
+      label: 'Plane capacity',
+    },
+    saveConfig: {
+      label: 'Plane capacity',
+      // placeholderMessage: 'Some public extra note about this bike...',
+    },
+  },
   // {
   //   key: 'tire',
   //   scope: 'public',
@@ -261,6 +338,66 @@ export const listingTypes = [
       unitType: 'item',
     },
     stockType: 'multipleItems',
+  },
+  {
+    listingType: 'boatListing',
+    label: 'Boat',
+    transactionType: {
+      process: 'default-purchase',
+      alias: 'default-purchase/release-1',
+      unitType: 'item',
+    },
+    stockType: 'oneItem',
+  },
+  {
+    listingType: 'planeListing',
+    label: 'Plane',
+    transactionType: {
+      process: 'default-purchase',
+      alias: 'default-purchase/release-1',
+      unitType: 'item',
+    },
+    stockType: 'oneItem',
+  },
+  {
+    listingType: 'urnListing',
+    label: 'Urn',
+    transactionType: {
+      process: 'default-purchase',
+      alias: 'default-purchase/release-1',
+      unitType: 'item',
+    },
+    stockType: 'oneItem',
+  },
+  {
+    listingType: 'jewelryListing',
+    label: 'Jewelry',
+    transactionType: {
+      process: 'default-purchase',
+      alias: 'default-purchase/release-1',
+      unitType: 'item',
+    },
+    stockType: 'oneItem',
+  },
+  {
+    listingType: 'artListing',
+    label: 'Art',
+    transactionType: {
+      process: 'default-purchase',
+      alias: 'default-purchase/release-1',
+      unitType: 'item',
+    },
+    stockType: 'oneItem',
+  },
+  {
+    listingType: 'omgListing',
+    label: 'OMG',
+    transactionType: {
+      process: 'default-purchase',
+      alias: 'default-purchase/release-1',
+      unitType: 'item',
+    },
+    stockType: 'oneItem',
   },
 ];
 
