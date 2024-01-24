@@ -116,7 +116,10 @@ const FieldSelectListingType = props => {
 
 // Add collect data for listing fields (both publicData and privateData) based on configuration
 const AddListingFields = props => {
-  const { listingType, listingFieldsConfig, intl } = props;
+  const { listingType, listingFieldsConfig, intl, typeCategory } = props;
+
+  const { category } = typeCategory;
+
   const fields = listingFieldsConfig.reduce((pickedFields, fieldConfig) => {
     const { key, includeForListingTypes, schemaType, scope } = fieldConfig || {};
 
@@ -125,6 +128,9 @@ const AddListingFields = props => {
       includeForListingTypes == null || includeForListingTypes.includes(listingType);
     const isProviderScope = ['public', 'private'].includes(scope);
 
+    const defaultVal = fieldConfig.key == 'category' ? category : null;
+    const disabled = fieldConfig.key == 'category' ? true : false;
+
     return isKnownSchemaType && isTargetProcessAlias && isProviderScope
       ? [
           ...pickedFields,
@@ -132,6 +138,8 @@ const AddListingFields = props => {
             key={key}
             name={key}
             fieldConfig={fieldConfig}
+            defaultVal={defaultVal}
+            disabled={disabled}
             defaultRequiredMessage={intl.formatMessage({
               id: 'EditListingDetailsForm.defaultRequiredMessage',
             })}
@@ -172,7 +180,13 @@ const EditListingDetailsFormComponent = props => (
         values,
       } = formRenderProps;
 
+
       const { listingType } = values;
+
+      const listingTypeCategory = selectableListingTypes.filter((e) => e.listingType === listingType);
+      const typeCategory = listingTypeCategory.length ? listingTypeCategory.reduce((prev, current) => prev.concat(current)) : {};
+
+      values.category = typeCategory.category;
 
       const titleRequiredMessage = intl.formatMessage({
         id: 'EditListingDetailsForm.titleRequired',
@@ -193,6 +207,15 @@ const EditListingDetailsFormComponent = props => (
       return (
         <Form className={classes} onSubmit={handleSubmit}>
           <ErrorMessage fetchErrors={fetchErrors} />
+
+          <FieldSelectListingType
+            name="listingType"
+            listingTypes={selectableListingTypes}
+            hasExistingListingType={hasExistingListingType}
+            onProcessChange={onProcessChange}
+            formApi={formApi}
+            intl={intl}
+          />
 
           <FieldTextInput
             id={`${formId}title`}
@@ -222,18 +245,10 @@ const EditListingDetailsFormComponent = props => (
             )}
           />
 
-          <FieldSelectListingType
-            name="listingType"
-            listingTypes={selectableListingTypes}
-            hasExistingListingType={hasExistingListingType}
-            onProcessChange={onProcessChange}
-            formApi={formApi}
-            intl={intl}
-          />
-
           <AddListingFields
             listingType={listingType}
             listingFieldsConfig={listingFieldsConfig}
+            typeCategory={typeCategory}
             intl={intl}
           />
 

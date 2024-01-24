@@ -106,6 +106,7 @@ export const listingFields = [
   {
     key: 'boatBathroom',
     scope: 'public',
+    includeForListingTypes: ['boatListing'],
     schemaType: 'enum',
     enumOptions: [
       { option: 'yes', label: 'Yes' },
@@ -329,18 +330,26 @@ export const listingTypes = [
   //     unitType: 'hour',
   //   },
   // },
-  {
-    listingType: 'product-selling',
-    label: 'Sell bicycles',
-    transactionType: {
-      process: 'default-purchase',
-      alias: 'default-purchase/release-1',
-      unitType: 'item',
-    },
-    stockType: 'multipleItems',
-  },
+  // {
+  //   listingType: 'product-selling',
+  //   label: 'Sell bicycles',
+  //   transactionType: {
+  //     process: 'default-purchase',
+  //     alias: 'default-purchase/release-1',
+  //     unitType: 'item',
+  //   },
+  //   stockType: 'multipleItems',
+  // },
+  // { option: 'jewelry', label: 'Jewelry' },
+  // { option: 'plane', label: 'Plane' },
+  // { option: 'boat', label: 'Boat' },
+  // { option: 'urn', label: 'Urn' },
+  // { option: 'art', label: 'Art' },
+  // { option: 'omg', label: 'OMG' },
+  // { option: 'other', label: 'Other' },
   {
     listingType: 'boatListing',
+    category: 'boat',
     label: 'Boat',
     transactionType: {
       process: 'default-purchase',
@@ -351,6 +360,7 @@ export const listingTypes = [
   },
   {
     listingType: 'planeListing',
+    category: 'plane',
     label: 'Plane',
     transactionType: {
       process: 'default-purchase',
@@ -361,6 +371,7 @@ export const listingTypes = [
   },
   {
     listingType: 'urnListing',
+    category: 'urn',
     label: 'Urn',
     transactionType: {
       process: 'default-purchase',
@@ -371,6 +382,7 @@ export const listingTypes = [
   },
   {
     listingType: 'jewelryListing',
+    category: 'jewelry',
     label: 'Jewelry',
     transactionType: {
       process: 'default-purchase',
@@ -381,6 +393,7 @@ export const listingTypes = [
   },
   {
     listingType: 'artListing',
+    category: 'art',
     label: 'Art',
     transactionType: {
       process: 'default-purchase',
@@ -391,6 +404,7 @@ export const listingTypes = [
   },
   {
     listingType: 'omgListing',
+    category: 'omg',
     label: 'OMG',
     transactionType: {
       process: 'default-purchase',

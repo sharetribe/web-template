@@ -18,7 +18,7 @@ import css from './EditListingWizard.module.css';
 const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
 
 const CustomFieldEnum = props => {
-  const { name, fieldConfig, defaultRequiredMessage, intl } = props;
+  const { name, fieldConfig, defaultRequiredMessage, intl, defaultVal, disabled } = props;
   const { enumOptions = [], saveConfig } = fieldConfig || {};
   const { label, placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
   const validateMaybe = isRequired
@@ -30,14 +30,14 @@ const CustomFieldEnum = props => {
   const filterOptions = createFilterOptions(enumOptions);
 
   return filterOptions ? (
-    <FieldSelect className={css.customField} name={name} id={name} label={label} {...validateMaybe}>
+    <FieldSelect className={css.customField} name={name} id={name} defaultValue={defaultVal} disabled={disabled} label={label} {...validateMaybe}>
       <option disabled value="">
         {placeholder}
       </option>
       {filterOptions.map(optionConfig => {
         const key = optionConfig.key;
         return (
-          <option key={key} value={key}>
+          <option key={key} value={key} >
             {optionConfig.label}
           </option>
         );
