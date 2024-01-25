@@ -19,6 +19,11 @@ way to update this template, but currently, we follow a pattern:
   [#304](https://github.com/sharetribe/web-template/pull/304)
 - [add] CSP: add new rules: _.analytics.google.com and _.giphy.com
   [#303](https://github.com/sharetribe/web-template/pull/303)
+- [change] Fetch customer commission from assets and add handling
+- [change] Fetch customer commission from assets and add handling. This update introduces
+  changes to the transaction process email templates, so the transaction process needs to be
+  updated in Sharetribe backend.
+  [#293](https://github.com/sharetribe/web-template/pull/293)
 - [change] ext/ directory: update email translation defaults for no-delivery-method scenario.
   [#292](https://github.com/sharetribe/web-template/pull/292)
 - [change] Code-split FieldDateInput, FieldDateRangeInput, FieldDateRangeController. The consequence
