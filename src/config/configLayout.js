@@ -14,7 +14,7 @@ export const searchPage = {
 // - 'coverPhoto' means a layout where there's a hero section with cropped image in the beginning of the page
 // - 'carousel' shows image carousel, where listing images are shown with the original aspect ratio
 export const listingPage = {
-  variantType: 'carousel',
+  variantType: 'coverPhoto',
 };
 
 // ListingImage currently supports only one variant type, but it has aspectRatio as an extra configuration.
