@@ -26,7 +26,7 @@ const LineItemCustomerCommissionMaybe = props => {
     item => item.code === LINE_ITEM_CUSTOMER_COMMISSION && !item.reversal
   );
 
-  // If commission is passed it will be shown as a fee already reduces from the total price
+  // If commission is passed it will be shown as a fee already added to the total price
   let commissionItem = null;
 
   if (isCustomer && customerCommissionLineItem) {

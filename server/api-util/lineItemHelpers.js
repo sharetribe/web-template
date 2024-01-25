@@ -268,11 +268,14 @@ exports.constructValidLineItems = lineItems => {
  * @returns boolean
  */
 exports.hasCommissionPercentage = commission => {
-  const percentage = commission.percentage;
+  const percentage = commission?.percentage;
   const isDefined = percentage != null;
   const isNumber = typeof percentage === 'number' && !isNaN(percentage);
   if (isDefined && !isNumber) {
     throw new Error(`${percentage} is not a number.`);
   }
-  return isDefined;
+
+  // Only create a line item if the percentage is set to be more than zero
+  const isMoreThanZero = percentage > 0;
+  return isDefined && isMoreThanZero;
 };
