@@ -27,7 +27,7 @@
     "final-form-arrays": "3.0.2",
     "full-icu": "^1.4.0",
     "helmet": "^7.1.0",
-    "jose": "4.9.2",
+    "jose": "5.2.0",
     "lodash": "^4.17.21",
     "mapbox-gl-multitouch": "^1.0.3",
     "moment": "^2.30.1",
