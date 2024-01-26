@@ -213,6 +213,21 @@ ${chalk.dim(
     },
     {
       type: 'input',
+      name: 'REACT_APP_MARKETPLACE_NAME',
+      message: `What is the name of your marketplace?
+${chalk.dim(
+  'The marketplace name is needed for the marketplace texts. If not set through environment variables, the name defaults to "Biketribe" (set in src/config/configDefault.js)'
+)}
+`,
+      default: function() {
+        return 'MyMarketplace';
+      },
+      when: function(answers) {
+        return answers.showAdvancedSettings;
+      },
+    },
+    {
+      type: 'input',
       name: 'REACT_APP_CSP',
       message: `Should Content Security Policy (CSP) be on block mode?
 ${chalk.dim(
