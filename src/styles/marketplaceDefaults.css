@@ -190,7 +190,7 @@ body {
 
 ::selection {
   background: var(--marketplaceColor); /* WebKit/Blink Browsers */
-  color: var(--colorWhite);
+  color: var(--colorBlack);
 }
 
 ::-moz-selection {
