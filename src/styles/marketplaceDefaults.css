@@ -195,7 +195,7 @@ body {
 
 ::-moz-selection {
   background: var(--marketplaceColor); /* Gecko Browsers */
-  color: var(--colorWhite);
+  color: var(--colorBlack);
 }
 
 a {
