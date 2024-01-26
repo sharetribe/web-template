@@ -28,8 +28,8 @@ const defaultConfig = {
   // Note 2: Stripe does have minimum fee that depends on country, currency, etc.
   listingMinimumPriceSubUnits: 500,
 
-  // Marketplace name is needed for microcopy and in meta tags (bots and social media sharing reads those)
-  marketplaceName: 'Biketribe',
+  // Marketplace name is needed for microcopy (aka marketplace texts) and in meta tags (bots and social media sharing reads those)
+  marketplaceName: process.env.REACT_APP_MARKETPLACE_NAME || 'Biketribe',
 
   // Modify Stripe configuration in configStripe.js
   // - picks REACT_APP_STRIPE_PUBLISHABLE_KEY from environment variables
