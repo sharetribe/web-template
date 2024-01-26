@@ -39,10 +39,10 @@
   border-radius: 100%;
   border: none;
 
-  background-color: lightgrey;
+  background-color: rgb(189, 7, 7);
   opacity: 0.9;
   font-size: 30px;
-  color: black;
+  color: rgb(202, 15, 15);
   transition: all ease-in-out 100ms;
 
   &:hover {
