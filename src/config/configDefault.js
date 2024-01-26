@@ -17,11 +17,14 @@ const defaultConfig = {
   // Marketplace currency.
   // The currency used in the Marketplace must be in ISO 4217 currency code. For example USD, EUR, CAD, AUD, etc. The default value is USD.
   // It should match one of the currencies listed in currencySettings.js
+  // Note: The currency comes from localization asset nowadays by default.
+  //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeCurrency func)
   currency: 'USD',
 
   // Listing minimum price in currency sub units, e.g. cents.
   // 0 means no restriction to the price
-  // Note 1: hosted configs overwrite this
+  // Note 1: The listingMinimumPriceSubUnits comes from transactionSize asset nowadays by default.
+  //         To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeConfig func)
   // Note 2: Stripe does have minimum fee that depends on country, currency, etc.
   listingMinimumPriceSubUnits: 500,
 
@@ -60,6 +63,8 @@ const defaultConfig = {
 
   // If you want to change the language, remember to also change the
   // locale data and the messages in the app.js file.
+  // Note: The localization comes from localization asset nowadays by default.
+  //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeLocalizations func)
   localization: {
     locale: 'en-US',
     // First day of week
@@ -86,10 +91,10 @@ const defaultConfig = {
     transactionSize: '/transactions/minimum-transaction-size.json',
     analytics: '/integrations/analytics.json',
     googleSearchConsole: '/integrations/google-search-console.json',
+    maps: '/integrations/map.json',
     // These assets are not yet editable through Console.
     // However, Sharetribe onboarding might generate them.
-    // You could still rely on environment variables and comment these out.
-    maps: '/integrations/map.json',
+    // You could still rely on built-in variables and comment these out.
     localization: '/general/localization.json',
     // NOTE: we don't fetch commission configuration here but on the server-side
   },
@@ -106,6 +111,8 @@ const defaultConfig = {
   // Optional
   // This creates meta tag for Google Search Console verification
   // I.e. <meta name=“google-site-verification” content=“GOOGLE_SITE_VERIFICATION_TOKEN”/>
+  // Note: The googleSearchConsole comes from googleSearchConsole asset nowadays by default.
+  //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeConfig func)
   googleSearchConsole: {
     googleSiteVerification: null, // Add google-site-verification token as a string
   },
