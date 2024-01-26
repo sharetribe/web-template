@@ -3,9 +3,9 @@
 // Main configuration here is the extended data config //
 /////////////////////////////////////////////////////////
 
-// NOTE: if you want to change the structure of the data,
-// you should also check src/util/configHelpers.js
-// some validation is added there.
+// Note: The listingFields come from listingFields asset nowadays by default.
+//       To use this built-in configuration, you need to change the overwrite from configHelper.js
+//       (E.g. use mergeDefaultTypesAndFieldsForDebugging func)
 
 /**
  * Configuration options for listing fields (custom extended data fields):
@@ -191,9 +191,9 @@ export const listingFields = [
 
 // A presets of supported listing configurations
 //
-// Note 1: With first iteration of hosted configs, we are unlikely to support
-//         multiple listing types, even though this template has some
-//         rudimentary support for it.
+// Note 1: The listingTypes come from listingTypes asset nowadays by default.
+//         To use this built-in configuration, you need to change the overwrite from configHelper.js
+//         (E.g. use mergeDefaultTypesAndFieldsForDebugging func)
 // Note 2: transaction type is part of listing type. It defines what transaction process and units
 //         are used when transaction is created against a specific listing.
 

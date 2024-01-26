@@ -10,6 +10,8 @@
 
 // Main search used in Topbar.
 // This can be either 'keywords' or 'location'.
+// Note: The mainSearch comes from the listing-search asset nowadays by default.
+//       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeSearchConfig func)
 export const mainSearch = {
   searchType: 'location',
 };
@@ -19,6 +21,7 @@ export const mainSearch = {
  * These are custom configs for each filter.
  * Common properties: key, schemaType, and label.
  * Note: the order of default filters is defined in util/configHelpers.js
+ * To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeSearchConfig func)
  */
 
 export const dateRangeFilter = {
@@ -31,6 +34,10 @@ export const dateRangeFilter = {
   dateRangeMode: 'day',
 };
 
+/**
+ * Note: the order of default filters is defined in util/configHelpers.js
+ * To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeSearchConfig func)
+ */
 export const priceFilter = {
   schemaType: 'price',
   // Note: unlike most prices this is not handled in subunits
