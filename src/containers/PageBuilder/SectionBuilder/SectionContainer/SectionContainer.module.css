@@ -8,7 +8,7 @@
   position: relative;
 
   &:nth-of-type(odd) {
-    background-color: var(--colorBlack);
+    background-color: var(--colorWhite);
   }
 }
 
