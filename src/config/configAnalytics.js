@@ -2,6 +2,9 @@
 // This file contains configs that add analytics integrations     //
 ////////////////////////////////////////////////////////////////////
 
+// Note: These come from the analytics asset nowadays by default.
+//       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeAnalyticsConfig func)
+
 // Optional
 // Note that Google Analytics might need advanced opt-out option / cookie consent
 // depending on jurisdiction (e.g. EU countries), since it relies on cookies.
