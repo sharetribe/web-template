@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Allow distinguishing customer and provider commission translations in OrderBreakdown and
+  email templates
 - [change] Add environment variable REACT_APP_MARKETPLACE_NAME and add code-comments to built-in
   configs about hosted configs, which might overwrite them. Check that the line doesn't use
   'Biketribe' if you take update from the upstream!
@@ -23,7 +25,6 @@ way to update this template, but currently, we follow a pattern:
   [#304](https://github.com/sharetribe/web-template/pull/304)
 - [add] CSP: add new rules: _.analytics.google.com and _.giphy.com
   [#303](https://github.com/sharetribe/web-template/pull/303)
-- [change] Fetch customer commission from assets and add handling
 - [change] Fetch customer commission from assets and add handling. This update introduces changes to
   the transaction process email templates, so the transaction process needs to be updated in
   Sharetribe backend. [#293](https://github.com/sharetribe/web-template/pull/293)
