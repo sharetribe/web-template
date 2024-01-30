@@ -42,7 +42,10 @@ const LineItemProviderCommissionMaybe = props => {
     commissionItem = (
       <div className={css.lineItem}>
         <span className={css.itemLabel}>
-          <FormattedMessage id="OrderBreakdown.commission" values={{ marketplaceName }} />
+          <FormattedMessage
+            id="OrderBreakdown.commission"
+            values={{ marketplaceName, role: 'provider' }}
+          />
         </span>
         <span className={css.itemValue}>{formattedCommission}</span>
       </div>
