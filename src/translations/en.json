@@ -485,7 +485,7 @@
   "OrderBreakdown.baseUnitQuantity": "{quantity, plural, one {Unit price} other {{unitPrice} x #}}",
   "OrderBreakdown.bookingEnd": "Booking end",
   "OrderBreakdown.bookingStart": "Booking start",
-  "OrderBreakdown.commission": "{marketplaceName} fee *",
+  "OrderBreakdown.commission": "{role, select, customer {{marketplaceName} fee *} provider {{marketplaceName} fee *} other {}}",
   "OrderBreakdown.commissionFeeNote": "* The fee helps us run this platform and provide the best possible service to you!",
   "OrderBreakdown.pickupFee": "Pickup",
   "OrderBreakdown.providerTotalDefault": "You'll make",
