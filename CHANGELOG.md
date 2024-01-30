@@ -16,6 +16,7 @@ way to update this template, but currently, we follow a pattern:
 
 - [change] Allow distinguishing customer and provider commission translations in OrderBreakdown and
   email templates
+  [#307](https://github.com/sharetribe/web-template/pull/307)
 - [change] Add environment variable REACT_APP_MARKETPLACE_NAME and add code-comments to built-in
   configs about hosted configs, which might overwrite them. Check that the line doesn't use
   'Biketribe' if you take update from the upstream!
