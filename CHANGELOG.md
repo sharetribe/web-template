@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [fix] The destructuring of undefined commissionAsset can't be against null.
+  [#308](https://github.com/sharetribe/web-template/pull/308)
 - [change] Allow distinguishing customer and provider commission translations in OrderBreakdown and
   email templates
   [#307](https://github.com/sharetribe/web-template/pull/307)

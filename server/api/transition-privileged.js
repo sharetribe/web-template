@@ -21,7 +21,7 @@ module.exports = (req, res) => {
       const commissionAsset = fetchAssetsResponse.data.data[0];
 
       const { providerCommission, customerCommission } =
-        commissionAsset?.type === 'jsonAsset' ? commissionAsset.attributes.data : null;
+        commissionAsset?.type === 'jsonAsset' ? commissionAsset.attributes.data : {};
 
       lineItems = transactionLineItems(
         listing,
