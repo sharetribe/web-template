@@ -253,7 +253,7 @@ class TopbarComponent extends Component {
             notificationCount={notificationCount}
             onLogout={this.handleLogout}
             onSearchSubmit={this.handleSubmit}
-            appConfig={config}
+            config={config}
           />
         </div>
         <Modal

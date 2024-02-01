@@ -110,7 +110,7 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
 const TopbarDesktop = props => {
   const {
     className,
-    appConfig,
+    config,
     currentUser,
     currentPage,
     rootClassName,
@@ -128,7 +128,7 @@ const TopbarDesktop = props => {
     setMounted(true);
   }, []);
 
-  const marketplaceName = appConfig.marketplaceName;
+  const marketplaceName = config.marketplaceName;
   const authenticatedOnClientSide = mounted && isAuthenticated;
   const isAuthenticatedOrJustHydrated = isAuthenticated || !mounted;
 
@@ -154,14 +154,14 @@ const TopbarDesktop = props => {
         className={css.logoLink}
         layout="desktop"
         alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
-        linkToExternalSite={appConfig?.topbar?.logoLink}
+        linkToExternalSite={config?.topbar?.logoLink}
       />
       <TopbarSearchForm
         className={css.searchLink}
         desktopInputRoot={css.topbarSearchWithLeftPadding}
         onSubmit={onSearchSubmit}
         initialValues={initialSearchFormValues}
-        appConfig={appConfig}
+        appConfig={config}
       />
 
       <NamedLink className={css.createListingLink} name="NewListingPage">
@@ -185,7 +185,7 @@ TopbarDesktop.defaultProps = {
   currentPage: null,
   notificationCount: 0,
   initialSearchFormValues: {},
-  appConfig: null,
+  config: null,
 };
 
 TopbarDesktop.propTypes = {
@@ -200,7 +200,7 @@ TopbarDesktop.propTypes = {
   onSearchSubmit: func.isRequired,
   initialSearchFormValues: object,
   intl: intlShape.isRequired,
-  appConfig: object,
+  config: object,
 };
 
 export default TopbarDesktop;
