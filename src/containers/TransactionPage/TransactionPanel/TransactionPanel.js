@@ -309,7 +309,7 @@ export class TransactionPanelComponent extends Component {
               )
             ) : (
               <div className={css.sendingMessageNotAllowed}>
-                <FormattedMessage id="TransactionPanel.privateMessagingDisabled" />
+                
               </div>
             )}
 
