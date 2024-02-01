@@ -20,46 +20,29 @@ import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
 
 import css from './TopbarDesktop.module.css';
 
-const TopbarDesktop = props => {
-  const {
-    className,
-    appConfig,
-    currentUser,
-    currentPage,
-    rootClassName,
-    currentUserHasListings,
-    notificationCount,
-    intl,
-    isAuthenticated,
-    onLogout,
-    onSearchSubmit,
-    initialSearchFormValues,
-  } = props;
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const marketplaceName = appConfig.marketplaceName;
-  const authenticatedOnClientSide = mounted && isAuthenticated;
-  const isAuthenticatedOrJustHydrated = isAuthenticated || !mounted;
-
-  const classes = classNames(rootClassName || css.root, className);
-
-  const search = (
-    <TopbarSearchForm
-      className={css.searchLink}
-      desktopInputRoot={css.topbarSearchWithLeftPadding}
-      onSubmit={onSearchSubmit}
-      initialValues={initialSearchFormValues}
-      appConfig={appConfig}
-    />
+const SignupLink = () => {
+  return (
+    <NamedLink name="SignupPage" className={css.signupLink}>
+      <span className={css.signup}>
+        <FormattedMessage id="TopbarDesktop.signup" />
+      </span>
+    </NamedLink>
   );
+};
 
+const LoginLink = () => {
+  return (
+    <NamedLink name="LoginPage" className={css.loginLink}>
+      <span className={css.login}>
+        <FormattedMessage id="TopbarDesktop.login" />
+      </span>
+    </NamedLink>
+  );
+};
+
+const InboxLink = ({ notificationCount, currentUserHasListings }) => {
   const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
-
-  const inboxLink = authenticatedOnClientSide ? (
+  return (
     <NamedLink
       className={css.inboxLink}
       name="InboxPage"
@@ -70,15 +53,17 @@ const TopbarDesktop = props => {
         {notificationDot}
       </span>
     </NamedLink>
-  ) : null;
+  );
+};
 
+const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
   const currentPageClass = page => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
     return currentPage === page || isAccountSettingsPage ? css.currentPage : null;
   };
 
-  const profileMenu = authenticatedOnClientSide ? (
+  return (
     <Menu>
       <MenuLabel className={css.profileMenuLabel} isOpenClassName={css.profileMenuIsOpen}>
         <Avatar className={css.avatar} user={currentUser} disableProfileLink />
@@ -119,23 +104,49 @@ const TopbarDesktop = props => {
         </MenuItem>
       </MenuContent>
     </Menu>
+  );
+};
+
+const TopbarDesktop = props => {
+  const {
+    className,
+    appConfig,
+    currentUser,
+    currentPage,
+    rootClassName,
+    currentUserHasListings,
+    notificationCount,
+    intl,
+    isAuthenticated,
+    onLogout,
+    onSearchSubmit,
+    initialSearchFormValues,
+  } = props;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const marketplaceName = appConfig.marketplaceName;
+  const authenticatedOnClientSide = mounted && isAuthenticated;
+  const isAuthenticatedOrJustHydrated = isAuthenticated || !mounted;
+
+  const classes = classNames(rootClassName || css.root, className);
+
+  const inboxLinkMaybe = authenticatedOnClientSide ? (
+    <InboxLink
+      notificationCount={notificationCount}
+      currentUserHasListings={currentUserHasListings}
+    />
   ) : null;
 
-  const signupLink = isAuthenticatedOrJustHydrated ? null : (
-    <NamedLink name="SignupPage" className={css.signupLink}>
-      <span className={css.signup}>
-        <FormattedMessage id="TopbarDesktop.signup" />
-      </span>
-    </NamedLink>
-  );
+  const profileMenuMaybe = authenticatedOnClientSide ? (
+    <ProfileMenu currentPage={currentPage} currentUser={currentUser} onLogout={onLogout} />
+  ) : null;
 
-  const loginLink = isAuthenticatedOrJustHydrated ? null : (
-    <NamedLink name="LoginPage" className={css.loginLink}>
-      <span className={css.login}>
-        <FormattedMessage id="TopbarDesktop.login" />
-      </span>
-    </NamedLink>
-  );
+  const signupLinkMaybe = isAuthenticatedOrJustHydrated ? null : <SignupLink />;
+  const loginLinkMaybe = isAuthenticatedOrJustHydrated ? null : <LoginLink />;
 
   return (
     <nav className={classes}>
@@ -145,16 +156,24 @@ const TopbarDesktop = props => {
         alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
         linkToExternalSite={appConfig?.topbar?.logoLink}
       />
-      {search}
+      <TopbarSearchForm
+        className={css.searchLink}
+        desktopInputRoot={css.topbarSearchWithLeftPadding}
+        onSubmit={onSearchSubmit}
+        initialValues={initialSearchFormValues}
+        appConfig={appConfig}
+      />
+
       <NamedLink className={css.createListingLink} name="NewListingPage">
         <span className={css.createListing}>
           <FormattedMessage id="TopbarDesktop.createListing" />
         </span>
       </NamedLink>
-      {inboxLink}
-      {profileMenu}
-      {signupLink}
-      {loginLink}
+
+      {inboxLinkMaybe}
+      {profileMenuMaybe}
+      {signupLinkMaybe}
+      {loginLinkMaybe}
     </nav>
   );
 };
