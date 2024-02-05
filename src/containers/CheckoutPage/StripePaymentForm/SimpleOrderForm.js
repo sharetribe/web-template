@@ -166,12 +166,14 @@ class SimpleOrderForm extends Component {
         {initiateOrderError ? (
           <span className={css.errorMessage}>{initiateOrderError.message}</span>
         ) : null}
+                  {/* Ine
         {showInitialMessageInput ? (
+
           <div>
             <Heading as="h3" rootClassName={css.heading}>
               <FormattedMessage id="StripePaymentForm.messageHeading" />
             </Heading>
-          {/* Ine
+
             <FieldTextInput
               type="textarea"
               id={`${formId}-message`}
@@ -181,9 +183,9 @@ class SimpleOrderForm extends Component {
               className={css.message}
             />
           Fin Ine
-          */}
+          
           </div>
-        ) : null}
+        ) : null}*/}
         <div className={css.submitContainer}>
           <PrimaryButton
             className={css.submitButton}
