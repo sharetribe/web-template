@@ -14,6 +14,7 @@ import {
   MenuContent,
   MenuItem,
   NamedLink,
+  Button,
 } from '../../../components';
 
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
@@ -154,6 +155,12 @@ const TopbarDesktop = props => {
         alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
       />
       {search}
+      <Button style={{width: '20%', height: '100%'}}>
+        <a style={{width: '100%', height: '100%', display: 'flex', alignItems: 'center'}} href="https://wa.me/5492944232664" target="_blank" >
+        <p style={{color: "white"}}>Si no encontras lo que buscas comunicate con nosotros</p>
+        <img src="/static/icons/whatsapp.png" alt="WhatsApp" style={{width: '20%'}}/>
+        </a>
+      </Button>
       <NamedLink className={css.createListingLink} name="NewListingPage">
         <span className={css.createListing}>
           <FormattedMessage id="TopbarDesktop.createListing" />
