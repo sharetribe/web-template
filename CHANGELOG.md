@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Update translation assets for German, French, and Spanish.
+  [#309](https://github.com/sharetribe/web-template/pull/309)
 - [change] Update default email templates (no need to use triple handlebars anymore).
   [#310](https://github.com/sharetribe/web-template/pull/310)
 - [add] Add stock types: infiniteOneItem and infiniteMultipleItems (faked through 10^15)
