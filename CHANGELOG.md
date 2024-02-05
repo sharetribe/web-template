@@ -14,8 +14,6 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
-- [add] Update translation assets for German, French, and Spanish.
-  [#309](https://github.com/sharetribe/web-template/pull/309)
 - [fix] The destructuring of undefined commissionAsset can't be against null.
   [#308](https://github.com/sharetribe/web-template/pull/308)
 - [change] Allow distinguishing customer and provider commission translations in OrderBreakdown and
