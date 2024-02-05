@@ -10,7 +10,7 @@
    [{:name :action/update-protected-data}
     {:name :action/create-pending-booking, :config {:type :time}}
     {:name :action/privileged-set-line-items}
-],
+    {:name :action/stripe-create-payment-intent}],
    :to :state/pending-payment,
    :privileged? true}
   {:name :transition/request-payment-after-inquiry,
@@ -18,7 +18,8 @@
    :actions
    [{:name :action/update-protected-data}
     {:name :action/create-pending-booking, :config {:type :time}}
-    {:name :action/privileged-set-line-items}],
+    {:name :action/privileged-set-line-items}
+    {:name :action/stripe-create-payment-intent}],
    :from :state/inquiry,
    :to :state/pending-payment,
    :privileged? true}
@@ -28,32 +29,35 @@
     [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
      {:fn/period ["PT15M"]}]},
    :actions
-   [{:name :action/calculate-full-refund},
+   [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
     {:name :action/decline-booking}],
    :from :state/pending-payment,
    :to :state/payment-expired}
   {:name :transition/confirm-payment,
    :actor :actor.role/customer,
+   :actions [{:name :action/stripe-confirm-payment-intent}],
    :from :state/pending-payment,
    :to :state/preauthorized}
   {:name :transition/accept,
    :actor :actor.role/provider,
    :actions
    [{:name :action/accept-booking}
-    ],
+    {:name :action/stripe-capture-payment-intent}],
    :from :state/preauthorized,
    :to :state/accepted}
   {:name :transition/operator-accept,
    :actor :actor.role/operator,
    :actions
    [{:name :action/accept-booking}
-    ],
+    {:name :action/stripe-capture-payment-intent}],
    :from :state/preauthorized,
    :to :state/accepted}
   {:name :transition/decline,
    :actor :actor.role/provider,
    :actions
    [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
     {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/declined}
@@ -61,6 +65,7 @@
    :actor :actor.role/operator,
    :actions
    [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
     {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/declined}
@@ -75,6 +80,7 @@
      {:fn/timepoint [:time/booking-end]}]},
    :actions
    [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
     {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/expired}
@@ -82,16 +88,19 @@
    :at
    {:fn/plus
     [{:fn/timepoint [:time/booking-end]} {:fn/period ["P2D"]}]},
+   :actions [{:name :action/stripe-create-payout}],
    :from :state/accepted,
    :to :state/delivered}
   {:name :transition/operator-complete,
    :actor :actor.role/operator,
+   :actions [{:name :action/stripe-create-payout}],
    :from :state/accepted,
    :to :state/delivered}
   {:name :transition/cancel,
    :actor :actor.role/operator,
    :actions
    [{:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}
     {:name :action/cancel-booking}],
    :from :state/accepted,
    :to :state/cancelled}
@@ -122,21 +131,21 @@
   {:name :transition/expire-review-period,
    :at
    {:fn/plus
-    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P7D"]}]},
+    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P11D"]}]},
    :actions [],
    :from :state/delivered,
    :to :state/reviewed}
   {:name :transition/expire-provider-review-period,
    :at
    {:fn/plus
-    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P7D"]}]},
+    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P11D"]}]},
    :actions [{:name :action/publish-reviews}],
    :from :state/reviewed-by-customer,
    :to :state/reviewed}
   {:name :transition/expire-customer-review-period,
    :at
    {:fn/plus
-    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P7D"]}]},
+    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P11D"]}]},
    :actions [{:name :action/publish-reviews}],
    :from :state/reviewed-by-provider,
    :to :state/reviewed}],
