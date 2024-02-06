@@ -31,6 +31,8 @@ import {
   userDisplayNameAsString,
 } from '../../util/data';
 import { richText } from '../../util/richText';
+import { isBookingProcess, resolveLatestProcessName } from '../../transactions/transaction';
+
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
@@ -101,7 +103,6 @@ export const ListingPageComponent = props => {
     sendInquiryError,
     monthlyTimeSlots,
     onFetchTimeSlots,
-    listingConfig: listingConfigProp,
     onFetchTransactionLineItems,
     lineItems,
     fetchLineItemsInProgress,
@@ -114,9 +115,7 @@ export const ListingPageComponent = props => {
     routeConfiguration,
   } = props;
 
-  // prop override makes testing a bit easier
-  // TODO: improve this when updating test setup
-  const listingConfig = listingConfigProp || config.listing;
+  const listingConfig = config.listing;
   const listingId = new UUID(rawParams.id);
   const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
   const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
@@ -189,8 +188,23 @@ export const ListingPageComponent = props => {
   const isOwnListing =
     userAndListingAuthorAvailable && currentListing.author.id.uuid === currentUser.id.uuid;
 
+  const transactionProcessAlias = publicData?.transactionProcessAlias;
+  const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
+  const isBooking = isBookingProcess(processName);
+  const processType = isBooking ? 'booking' : 'purchase';
+
   const currentAuthor = authorAvailable ? currentListing.author : null;
   const ensuredAuthor = ensureUser(currentAuthor);
+  const noPayoutDetailsSetWithOwnListing =
+    isOwnListing && !currentUser?.attributes?.stripeConnected;
+  const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
+    <div>
+      <FormattedMessage id="ListingPage.payoutDetailsWarning" values={{ processType }} />
+      <NamedLink name="StripePayoutPage">
+        <FormattedMessage id="ListingPage.payoutDetailsWarningLink" />
+      </NamedLink>
+    </div>
+  ) : null;
 
   // When user is banned or deleted the listing is also deleted.
   // Because listing can be never showed with banned or deleted user we don't have to provide
@@ -306,6 +320,7 @@ export const ListingPageComponent = props => {
           onImageCarouselClose={() => setImageCarouselOpen(false)}
           handleViewPhotosClick={handleViewPhotosClick}
           onManageDisableScrolling={onManageDisableScrolling}
+          noPayoutDetailsSetWithOwnListing={noPayoutDetailsSetWithOwnListing}
         />
         <div className={css.contentWrapperForHeroLayout}>
           <div className={css.mainColumnForHeroLayout}>
@@ -391,6 +406,7 @@ export const ListingPageComponent = props => {
                   <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
                 </H4>
               }
+              payoutDetailsWarning={payoutDetailsWarning}
               author={ensuredAuthor}
               onManageDisableScrolling={onManageDisableScrolling}
               onFetchTransactionLineItems={onFetchTransactionLineItems}
@@ -420,7 +436,6 @@ ListingPageComponent.defaultProps = {
   fetchReviewsError: null,
   monthlyTimeSlots: null,
   sendInquiryError: null,
-  listingConfig: null,
   lineItems: null,
   fetchLineItemsError: null,
 };
@@ -473,7 +488,6 @@ ListingPageComponent.propTypes = {
   sendInquiryError: propTypes.error,
   onSendInquiry: func.isRequired,
   onInitializeCardPaymentData: func.isRequired,
-  listingConfig: object,
   onFetchTransactionLineItems: func.isRequired,
   lineItems: array,
   fetchLineItemsInProgress: bool.isRequired,

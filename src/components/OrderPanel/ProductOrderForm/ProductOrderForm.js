@@ -65,6 +65,7 @@ const renderForm = formRenderProps => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     price,
+    payoutDetailsWarning,
     marketplaceName,
     values,
   } = formRenderProps;
@@ -244,7 +245,11 @@ const renderForm = formRenderProps => {
         </PrimaryButton>
       </div>
       <p className={css.finePrint}>
-        {hasStock ? (
+        {payoutDetailsWarning ? (
+          payoutDetailsWarning
+        ) : hasStock && isOwnListing ? (
+          <FormattedMessage id="ProductOrderForm.ownListing" />
+        ) : hasStock ? (
           <FormattedMessage id="ProductOrderForm.finePrint" />
         ) : showContactUser ? (
           <FormattedMessage id="ProductOrderForm.finePrintNoStock" values={{ contactSellerLink }} />
