@@ -234,6 +234,9 @@ export const listingTypes = [
       alias: 'default-booking/release-1',
       unitType: 'day',
     },
+    defaultListingFields: {
+      payoutDetails: true,
+    },
   },
   // // Here are some examples for other listingTypes
   // // TODO: SearchPage does not work well if both booking and product selling are used at the same time

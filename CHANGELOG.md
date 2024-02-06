@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [change] Make the requirement of payout details configurable on EditListingWizard. This just
+  prepares the codebase for an upcoming feature, when the configuration is ready on Console.
+  [#297](https://github.com/sharetribe/web-template/pull/297)
 - [fix] The destructuring of undefined commissionAsset can't be against null.
   [#308](https://github.com/sharetribe/web-template/pull/308)
 - [change] Allow distinguishing customer and provider commission translations in OrderBreakdown and
