@@ -309,6 +309,18 @@ propTypes.availabilityException = shape({
   }),
 });
 
+export const STOCK_ONE_ITEM = 'oneItem';
+export const STOCK_MULTIPLE_ITEMS = 'multipleItems';
+export const STOCK_INFINITE_ONE_ITEM = 'infiniteOneItem';
+export const STOCK_INFINITE_MULTIPLE_ITEMS = 'infiniteMultipleItems';
+export const STOCK_INFINITE_ITEMS = [STOCK_INFINITE_ONE_ITEM, STOCK_INFINITE_MULTIPLE_ITEMS];
+export const STOCK_TYPES = [
+  STOCK_ONE_ITEM,
+  STOCK_MULTIPLE_ITEMS,
+  STOCK_INFINITE_ONE_ITEM,
+  STOCK_INFINITE_MULTIPLE_ITEMS,
+];
+
 propTypes.transition = shape({
   createdAt: instanceOf(Date).isRequired,
   by: oneOf(TX_TRANSITION_ACTORS).isRequired,

@@ -6,6 +6,7 @@ const noop = () => {};
 const selectableListingTypes = [
   {
     listingType: 'sell-bicycles',
+    label: 'Sell bicycles',
     transactionProcessAlias: 'default-purchase/release-1',
     unitType: 'item',
   },
@@ -39,12 +40,14 @@ export const WithInitialValues = {
 
 const selectableListingTypes2 = [
   {
-    listingType: 'rent-bicycles',
+    listingType: 'daily-booking',
+    label: 'Daily booking',
     transactionProcessAlias: 'default-booking/release-1',
     unitType: 'day',
   },
   {
     listingType: 'sell-bicycles',
+    label: 'Sell bicycles',
     transactionProcessAlias: 'default-purchase/release-1',
     unitType: 'item',
   },

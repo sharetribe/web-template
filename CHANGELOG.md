@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Add stock types: infiniteOneItem and infiniteMultipleItems (faked through 10^15)
+  [#299](https://github.com/sharetribe/web-template/pull/299)
 - [change] Make location and delivery method configurable on EditListingWizard. This just
   prepares the codebase for an upcoming feature, when the configuration is ready on Console.
   [#298](https://github.com/sharetribe/web-template/pull/298)

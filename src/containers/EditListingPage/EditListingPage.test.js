@@ -513,6 +513,82 @@ describe('EditListingPage', () => {
     });
   });
 
+  it('Purchase: edit flow with infinity on pricing-and-stock tab', async () => {
+    const listingTypePurchase = listingTypesPurchase[0];
+    const purchaseWithInfinityStock = {
+      ...listingTypePurchase,
+      stockType: 'infiniteMultipleItems',
+    };
+    const config = getConfig([purchaseWithInfinityStock], listingFieldsPurchase);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing(
+      'listing-item',
+      {
+        title: 'the listing',
+        description: 'Lorem ipsum',
+        price: new Money(5500, 'USD'),
+        publicData: {
+          listingType: 'sell-bicycles',
+          transactionProcessAlias: 'default-purchase/release-1',
+          unitType: 'item',
+          category: 'cat_1',
+        },
+      },
+      {
+        currentStock: createStock('stock-id', { quantity: 5 }),
+      }
+    );
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: PRICING_AND_STOCK,
+      },
+    };
+
+    const { getByText, getByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelPricingAndStock';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingPricingAndStockPanel.title')).toBeInTheDocument();
+
+      // Tab/form: price
+      expect(
+        getByRole('textbox', { name: 'EditListingPricingAndStockForm.pricePerProduct' })
+      ).toHaveValue('$55.00');
+
+      // Tab/form: infinity stock warning
+      expect(
+        getByRole('checkbox', { name: /EditListingPricingAndStockForm.updateToInfinite/i })
+      ).not.toBeChecked();
+
+      const saveButton = getByRole('button', {
+        name: 'EditListingWizard.edit.savePricingAndStock',
+      });
+      expect(saveButton).toBeInTheDocument();
+      expect(saveButton).toBeDisabled();
+    });
+    // Test intercation
+    await waitFor(() => {
+      userEvent.click(
+        getByRole('checkbox', { name: /EditListingPricingAndStockForm.updateToInfinite/i })
+      );
+    });
+    const saveButton = getByRole('button', { name: 'EditListingWizard.edit.savePricingAndStock' });
+    expect(saveButton).not.toBeDisabled();
+  });
+
   it('Purchase: edit flow no shipping on delivery tab', async () => {
     const listingTypePurchase = listingTypesPurchase[0];
     const purchaseNoShipping = {
