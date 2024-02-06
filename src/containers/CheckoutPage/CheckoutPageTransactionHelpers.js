@@ -206,7 +206,7 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
   // by requesting payment from Marketplace API //
   ////////////////////////////////////////////////
   const fnRequestPayment = fnParams => {
-    // fnParams should be { listingId, deliveryMethod, quantity?, bookingDates?, paymentMethod?.setupPaymentMethodForSaving?, protectedData }
+    // fnParams should be { listingId, deliveryMethod?, quantity?, bookingDates?, paymentMethod?.setupPaymentMethodForSaving?, protectedData }
     const hasPaymentIntents = storedTx.attributes.protectedData?.stripePaymentIntents;
 
     const requestTransition =

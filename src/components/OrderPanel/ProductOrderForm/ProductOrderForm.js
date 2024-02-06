@@ -29,20 +29,76 @@ const MAX_QUANTITY_FOR_DROPDOWN = 100;
 const handleFetchLineItems = ({
   quantity,
   deliveryMethod,
+  displayDeliveryMethod,
   listingId,
   isOwnListing,
   fetchLineItemsInProgress,
   onFetchTransactionLineItems,
 }) => {
   const stockReservationQuantity = Number.parseInt(quantity, 10);
+  const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
   const isBrowser = typeof window !== 'undefined';
-  if (isBrowser && stockReservationQuantity && deliveryMethod && !fetchLineItemsInProgress) {
+  if (
+    isBrowser &&
+    stockReservationQuantity &&
+    (!displayDeliveryMethod || deliveryMethod) &&
+    !fetchLineItemsInProgress
+  ) {
     onFetchTransactionLineItems({
-      orderData: { stockReservationQuantity, deliveryMethod },
+      orderData: { stockReservationQuantity, ...deliveryMethodMaybe },
       listingId,
       isOwnListing,
     });
   }
+};
+
+const DeliveryMethodMaybe = props => {
+  const {
+    displayDeliveryMethod,
+    hasMultipleDeliveryMethods,
+    deliveryMethod,
+    hasStock,
+    formId,
+    intl,
+  } = props;
+  const showDeliveryMethodSelector = displayDeliveryMethod && hasMultipleDeliveryMethods;
+  const showSingleDeliveryMethod = displayDeliveryMethod && deliveryMethod;
+  return !hasStock ? null : showDeliveryMethodSelector ? (
+    <FieldSelect
+      id={`${formId}.deliveryMethod`}
+      className={css.deliveryField}
+      name="deliveryMethod"
+      label={intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
+      validate={required(intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodRequired' }))}
+    >
+      <option disabled value="">
+        {intl.formatMessage({ id: 'ProductOrderForm.selectDeliveryMethodOption' })}
+      </option>
+      <option value={'pickup'}>
+        {intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
+      </option>
+      <option value={'shipping'}>
+        {intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })}
+      </option>
+    </FieldSelect>
+  ) : showSingleDeliveryMethod ? (
+    <div className={css.deliveryField}>
+      <H3 rootClassName={css.singleDeliveryMethodLabel}>
+        {intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
+      </H3>
+      <p className={css.singleDeliveryMethodSelected}>
+        {deliveryMethod === 'shipping'
+          ? intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })
+          : intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
+      </p>
+      <FieldTextInput
+        id={`${formId}.deliveryMethod`}
+        className={css.deliveryField}
+        name="deliveryMethod"
+        type="hidden"
+      />
+    </div>
+  ) : null;
 };
 
 const renderForm = formRenderProps => {
@@ -57,6 +113,7 @@ const renderForm = formRenderProps => {
     formId,
     currentStock,
     hasMultipleDeliveryMethods,
+    displayDeliveryMethod,
     listingId,
     isOwnListing,
     onFetchTransactionLineItems,
@@ -80,6 +137,7 @@ const renderForm = formRenderProps => {
       handleFetchLineItems({
         quantity,
         deliveryMethod,
+        displayDeliveryMethod,
         listingId,
         isOwnListing,
         fetchLineItemsInProgress,
@@ -112,7 +170,7 @@ const renderForm = formRenderProps => {
       // Blur event will show validator message
       formApi.blur('quantity');
       formApi.focus('quantity');
-    } else if (!deliveryMethod) {
+    } else if (displayDeliveryMethod && !deliveryMethod) {
       e.preventDefault();
       // Blur event will show validator message
       formApi.blur('deliveryMethod');
@@ -140,12 +198,14 @@ const renderForm = formRenderProps => {
   );
   const quantityRequiredMsg = intl.formatMessage({ id: 'ProductOrderForm.quantityRequired' });
 
+  // Listing is out of stock if currentStock is zero.
+  // Undefined/null stock means that stock has never been set.
+  const hasNoStockLeft = typeof currentStock != null && currentStock === 0;
   const hasStock = currentStock && currentStock > 0;
+  const hasOneItemLeft = currentStock === 1;
   const selectableStock =
     currentStock > MAX_QUANTITY_FOR_DROPDOWN ? MAX_QUANTITY_FOR_DROPDOWN : currentStock;
   const quantities = hasStock ? [...Array(selectableStock).keys()].map(i => i + 1) : [];
-  const hasNoStockLeft = typeof currentStock != null && currentStock === 0;
-  const hasOneItemLeft = typeof currentStock != null && currentStock === 1;
 
   const submitInProgress = fetchLineItemsInProgress;
   const submitDisabled = !hasStock;
@@ -181,43 +241,14 @@ const renderForm = formRenderProps => {
         </FieldSelect>
       )}
 
-      {hasNoStockLeft ? null : hasMultipleDeliveryMethods ? (
-        <FieldSelect
-          id={`${formId}.deliveryMethod`}
-          className={css.deliveryField}
-          name="deliveryMethod"
-          disabled={!hasStock}
-          label={intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
-          validate={required(intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodRequired' }))}
-        >
-          <option disabled value="">
-            {intl.formatMessage({ id: 'ProductOrderForm.selectDeliveryMethodOption' })}
-          </option>
-          <option value={'pickup'}>
-            {intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
-          </option>
-          <option value={'shipping'}>
-            {intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })}
-          </option>
-        </FieldSelect>
-      ) : (
-        <div className={css.deliveryField}>
-          <H3 rootClassName={css.singleDeliveryMethodLabel}>
-            {intl.formatMessage({ id: 'ProductOrderForm.deliveryMethodLabel' })}
-          </H3>
-          <p className={css.singleDeliveryMethodSelected}>
-            {values.deliveryMethod === 'shipping'
-              ? intl.formatMessage({ id: 'ProductOrderForm.shippingOption' })
-              : intl.formatMessage({ id: 'ProductOrderForm.pickupOption' })}
-          </p>
-          <FieldTextInput
-            id={`${formId}.deliveryMethod`}
-            className={css.deliveryField}
-            name="deliveryMethod"
-            type="hidden"
-          />
-        </div>
-      )}
+      <DeliveryMethodMaybe
+        displayDeliveryMethod={displayDeliveryMethod}
+        hasMultipleDeliveryMethods={hasMultipleDeliveryMethods}
+        deliveryMethod={values?.deliveryMethod}
+        hasStock={hasStock}
+        formId={formId}
+        intl={intl}
+      />
 
       {showBreakdown ? (
         <div className={css.breakdownWrapper}>
@@ -261,11 +292,11 @@ const renderForm = formRenderProps => {
 
 const ProductOrderForm = props => {
   const intl = useIntl();
-  const { price, currentStock, pickupEnabled, shippingEnabled } = props;
+  const { price, currentStock, pickupEnabled, shippingEnabled, displayDeliveryMethod } = props;
 
   // Should not happen for listings that go through EditListingWizard.
   // However, this might happen for imported listings.
-  if (!pickupEnabled && !shippingEnabled) {
+  if (displayDeliveryMethod && !pickupEnabled && !shippingEnabled) {
     return (
       <p className={css.error}>
         <FormattedMessage id="ProductOrderForm.noDeliveryMethodSet" />
@@ -288,6 +319,7 @@ const ProductOrderForm = props => {
     <FinalForm
       initialValues={initialValues}
       hasMultipleDeliveryMethods={hasMultipleDeliveryMethods}
+      displayDeliveryMethod={displayDeliveryMethod}
       {...props}
       intl={intl}
       render={renderForm}
@@ -302,6 +334,9 @@ ProductOrderForm.defaultProps = {
   currentStock: null,
   listingId: null,
   isOwnListing: false,
+  pickupEnabled: false,
+  shippingEnabled: false,
+  displayDeliveryMethod: false,
   lineItems: null,
   fetchLineItemsError: null,
 };
@@ -321,6 +356,9 @@ ProductOrderForm.propTypes = {
   price: propTypes.money,
   currentStock: number,
   isOwnListing: bool,
+  pickupEnabled: bool,
+  shippingEnabled: bool,
+  displayDeliveryMethod: bool,
 
   // line items
   lineItems: propTypes.lineItems,
