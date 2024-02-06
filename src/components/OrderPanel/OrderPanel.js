@@ -18,7 +18,11 @@ import classNames from 'classnames';
 import omit from 'lodash/omit';
 
 import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
-import { displayPrice } from '../../util/configHelpers';
+import {
+  displayDeliveryPickup,
+  displayDeliveryShipping,
+  displayPrice,
+} from '../../util/configHelpers';
 import {
   propTypes,
   LISTING_STATE_CLOSED,
@@ -180,7 +184,7 @@ const OrderPanel = props => {
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
-  const { unitType, transactionProcessAlias = '' } = publicData || {};
+  const { listingType, unitType, transactionProcessAlias = '' } = publicData || {};
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
@@ -231,6 +235,10 @@ const OrderPanel = props => {
   const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
 
   const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
+
+  const listingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+  const displayShipping = displayDeliveryShipping(listingTypeConfig);
+  const displayPickup = displayDeliveryPickup(listingTypeConfig);
 
   const showClosedListingHelpText = listing.id && isClosed;
   const isOrderOpen = !!parse(location.search).orderOpen;
@@ -337,8 +345,9 @@ const OrderPanel = props => {
             price={price}
             marketplaceCurrency={marketplaceCurrency}
             currentStock={currentStock}
-            pickupEnabled={pickupEnabled}
-            shippingEnabled={shippingEnabled}
+            pickupEnabled={pickupEnabled && displayPickup}
+            shippingEnabled={shippingEnabled && displayShipping}
+            displayDeliveryMethod={displayPickup || displayShipping}
             listingId={listing.id}
             isOwnListing={isOwnListing}
             marketplaceName={marketplaceName}
