@@ -14,5 +14,3 @@ build
 .env
 npm-debug.log
 yarn-error.log
-v1
-.cache

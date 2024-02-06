@@ -48,35 +48,16 @@ date=date}}{{/with}}{{~/inline~}}
                 dateEnd=(date-transform booking.end days=-1) listingTitle=listing.title
                 providerDisplayName=provider.display-name}}</p>
               {{/eq}}{{#eq "line-item/night" code}}
-              <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t
+              <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#f90505">{{t
                 "BookingAcceptedRequest.DescriptionDaily" "{providerDisplayName} has accepted your booking request for
                 {listingTitle} from {dateStart,date,::YYYYMMMd} to {dateEnd,date,::YYYYMMMd}." dateStart=booking.start
                 dateEnd=booking.end listingTitle=listing.title providerDisplayName=provider.display-name}}</p>
-                {{/eq}}{{#eq "line-item/provider-commission" code}}
-                <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
-                  <tbody>
-                    <tr>
-                      <td>
-                      <td>
-                        <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px">{{t
-                          "BookingMoneyPaid.FeeLabel" "{marketplaceName} fee" marketplaceName=marketplace.name }}</p>
-                      </td>
-                      <td style="text-align:right">
-                        <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#f90505;margin-top:1px">{{> format-money
-                          money=line-total}}</p>
-                      </td>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                {{/eq}}{{/each}}
+              {{/eq}}{{/each}}
               <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#f90505">{{t
                 "BookingAcceptedRequest.BookingBreakdown" "Your card has been charged for {amount,number,::.00}
-                {currency}. Here's the booking breakdown." amount=payout-total.amount currency=payout-total.currency listingTitle=listing.title}}</p>             
-                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#f90505;margin-top:1px">{{> format-money
-                  money=line-total}}</p>
-                <table
-                style="color:#484848;font-size:16px;line-height:1.4;background-color:#FFF;padding:8px 24px;border-radius:8px;border:1px solid;border-color:#E1E1E1;margin:24px 0"
+                {currency}. Here's the booking breakdown." amount=payin-total.amount currency=payin-total.currency}}</p>
+              <table
+                style="color:#f90505;font-size:16px;line-height:1.4;background-color:#FFF;padding:8px 24px;border-radius:8px;border:1px solid;border-color:#E1E1E1;margin:24px 0"
                 align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                 <tbody>
                   <tr>
@@ -330,11 +311,11 @@ date=date}}{{/with}}{{~/inline~}}
     <tr>
       <td>
       <td>
-        <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;font-weight:700">{{t
+        <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#ed1d1d;margin-top:1px;font-weight:700">{{t
           "BookingAcceptedRequest.TotalPrice" "Total price"}}</p>
       </td>
       <td style="text-align:right">
-        <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;font-weight:700">{{>
+        <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#f60b0b;margin-top:1px;font-weight:700">{{>
           format-money money=payin-total}}</p>
       </td>
       </td>
