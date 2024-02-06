@@ -134,7 +134,7 @@
                   </p>
                 {{else}}
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">
-                  {{{t "PurchaseNewOrder.DeliveryDetails" "Once {customerDisplayName} has received {listingTitle}, remember to mark it as delivered from <salelink>order details</salelink> to receive your payment." customerDisplayName=customer.display-name listingTitle=listing.title salelink=(html-tag "a" target=(concat "_blank") style=(concat "color:#007DF2;text-decoration:none") href=(concat marketplace.url "/sale/" (url-encode id) "/"))}}}
+                  {{t "PurchaseNewOrder.DeliveryDetails" "Once {customerDisplayName} has received {listingTitle}, remember to mark it as delivered from <salelink>order details</salelink> to receive your payment." customerDisplayName=customer.display-name listingTitle=listing.title salelink=(html-tag "a" target=(concat "_blank") style=(concat "color:#007DF2;text-decoration:none") href=(concat marketplace.url "/sale/" (url-encode id) "/"))}}
 
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;font-weight:700">{{t "PurchaseNewOrder.MarkAsDelivered" "If the order has not been marked as delivered within two weeks, it will expire automatically and you won't get paid."}}</p>
                 {{/eq}}
