@@ -245,7 +245,7 @@
   "EditListingPhotosForm.updateFailed": "Failed to update listing. Please try again.",
   "EditListingPhotosPanel.createListingTitle": "Photos",
   "EditListingPhotosPanel.title": "Edit the photos of {listingTitle}",
-  "EditListingPricingAndStockForm.oldStockTotalWasOutOfSync": "Oops, it seems there's not enough stock. Someone else might just have bought this item. Please refresh the page and try again.",
+  "EditListingPricingAndStockForm.oldStockTotalWasOutOfSync": "Oops, the stock of this listing is out of sync. Someone might just have bought this item. Please refresh the page and try again.",
   "EditListingPricingAndStockForm.priceInputPlaceholder": "Add a price…",
   "EditListingPricingAndStockForm.pricePerProduct": "Price",
   "EditListingPricingAndStockForm.priceRequired": "You need to add a valid price.",
