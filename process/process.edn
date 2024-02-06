@@ -1,53 +1,21 @@
 {:format :v3,
  :transitions
- [{:name :transition/inquire,
-   :actor :actor.role/customer,
-   :actions [{:name :action/update-protected-data}],
-   :to :state/inquiry}
-  {:name :transition/request-payment,
-   :actor :actor.role/customer,
-   :actions
-   [{:name :action/update-protected-data}
-    {:name :action/create-pending-booking, :config {:type :time}}
-    {:name :action/privileged-set-line-items}
-],
-   :to :state/pending-payment,
-   :privileged? true}
-  {:name :transition/request-payment-after-inquiry,
+ [{:name :transition/request-payment,
    :actor :actor.role/customer,
    :actions
    [{:name :action/update-protected-data}
     {:name :action/create-pending-booking, :config {:type :time}}
     {:name :action/privileged-set-line-items}],
-   :from :state/inquiry,
-   :to :state/pending-payment,
+   :to :state/preauthorized,
    :privileged? true}
-  {:name :transition/expire-payment,
-   :at
-   {:fn/plus
-    [{:fn/timepoint [:time/first-entered-state :state/pending-payment]}
-     {:fn/period ["PT15M"]}]},
-   :actions
-   [{:name :action/calculate-full-refund},
-    {:name :action/decline-booking}],
-   :from :state/pending-payment,
-   :to :state/payment-expired}
-  {:name :transition/confirm-payment,
-   :actor :actor.role/customer,
-   :from :state/pending-payment,
-   :to :state/preauthorized}
   {:name :transition/accept,
    :actor :actor.role/provider,
-   :actions
-   [{:name :action/accept-booking}
-    ],
+   :actions [{:name :action/accept-booking}],
    :from :state/preauthorized,
    :to :state/accepted}
   {:name :transition/operator-accept,
    :actor :actor.role/operator,
-   :actions
-   [{:name :action/accept-booking}
-    ],
+   :actions [{:name :action/accept-booking}],
    :from :state/preauthorized,
    :to :state/accepted}
   {:name :transition/decline,
@@ -142,7 +110,7 @@
    :to :state/reviewed}],
  :notifications
  [{:name :notification/booking-new-request,
-   :on :transition/confirm-payment,
+   :on :transition/request-payment,
    :to :actor.role/provider,
    :template :booking-new-request}
   {:name :notification/booking-accepted-request,
