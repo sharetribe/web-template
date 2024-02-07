@@ -14,12 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Update translation assets for German, French, and Spanish.
+  [#309](https://github.com/sharetribe/web-template/pull/309)
 - [change] Update default email templates (no need to use triple handlebars anymore).
   [#310](https://github.com/sharetribe/web-template/pull/310)
 - [add] Add stock types: infiniteOneItem and infiniteMultipleItems (faked through 10^15)
   [#299](https://github.com/sharetribe/web-template/pull/299)
-- [change] Make location and delivery method configurable on EditListingWizard. This just
-  prepares the codebase for an upcoming feature, when the configuration is ready on Console.
+- [change] Make location and delivery method configurable on EditListingWizard. This just prepares
+  the codebase for an upcoming feature, when the configuration is ready on Console.
   [#298](https://github.com/sharetribe/web-template/pull/298)
 - [change] Make the requirement of payout details configurable on EditListingWizard. This just
   prepares the codebase for an upcoming feature, when the configuration is ready on Console.
@@ -27,8 +29,7 @@ way to update this template, but currently, we follow a pattern:
 - [fix] The destructuring of undefined commissionAsset can't be against null.
   [#308](https://github.com/sharetribe/web-template/pull/308)
 - [change] Allow distinguishing customer and provider commission translations in OrderBreakdown and
-  email templates
-  [#307](https://github.com/sharetribe/web-template/pull/307)
+  email templates [#307](https://github.com/sharetribe/web-template/pull/307)
 - [change] Add environment variable REACT_APP_MARKETPLACE_NAME and add code-comments to built-in
   configs about hosted configs, which might overwrite them. Check that the line doesn't use
   'Biketribe' if you take update from the upstream!
