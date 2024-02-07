@@ -611,7 +611,7 @@ const validListingFields = (listingFields, listingTypesInUse) => {
             ? validShowConfig(value)
             : name === 'saveConfig'
             ? validSaveConfig(value)
-            : [true, value];
+            : [true, { [name]: value }];
 
         const hasFoundValid = !(acc.isValid === false || isValid === false);
         // Let's warn about wrong data in listing extended data config
@@ -871,6 +871,60 @@ const restructureUserFields = hostedUserFields => {
 ///////////////////////////
 // Merge listing configs //
 ///////////////////////////
+
+// The expected structure of the category configuration should be an object with a 'categories' key,
+// where 'categories' is an array containing objects representing different categories. Each category object should have:
+//   - 'name': A string representing the name of the category.
+//   - 'id': A string representing the unique identifier of the category.
+//   - 'subcategories': An array containing objects representing subcategories within the category (can also be an empty array).
+// Each subcategory object should have:
+//   - 'name': A string representing the name of the subcategory.
+//   - 'id': A string representing the unique identifier of the subcategory.
+//   - 'subcategories': (optional) An array of subcategories following the same structure as above,
+//    allowing for nesting of subcategories.
+// Example structure:
+// {
+//   categories: [
+//     {
+//       name: 'Cats',
+//       id: 'cats',
+//       subcategories: [
+//         { name: 'Burmese', id: 'burmese' },
+//         { name: 'Egyptian Mau', id: 'egyptian-mau' },
+//         // Additional subcategories can be added here, including nested subcategories if needed.
+//       ],
+//     },
+//     // Additional categories can be added here.
+//   ],
+// }
+const validateCategoryConfig = hostedConfig => {
+  const validateData = data => {
+    if (!data || !data.categories || !Array.isArray(data.categories)) {
+      return {};
+    }
+
+    return {
+      categories: data.categories.map(({ name, id, subcategories }) => ({
+        name,
+        id,
+        subcategories: validateSubcategories(subcategories),
+      })),
+    };
+  };
+
+  const validateSubcategories = subcategories => {
+    if (!subcategories || !Array.isArray(subcategories)) {
+      return [];
+    }
+
+    return subcategories.map(({ name, id, subcategories }) => ({
+      name,
+      id,
+      subcategories: validateSubcategories(subcategories),
+    }));
+  };
+  return validateData(hostedConfig).categories;
+};
 
 // Merge 2 arrays and pick only unique objects according to "key" property
 // Note: This solution prefers objects from the second array
@@ -1159,6 +1213,8 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
     // Map provider info might come from hosted assets. Other map configs come from defaultConfigs.
     maps: mergeMapConfig(configAsset.maps, defaultConfigs.maps),
+
+    categories: validateCategoryConfig(configAsset.categories),
 
     // Google Site Verification can be given through configs.
     // Renders a meta tag: <meta name="google-site-verification" content="[token-here]>" />
