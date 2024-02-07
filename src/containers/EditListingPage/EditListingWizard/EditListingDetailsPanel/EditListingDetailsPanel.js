@@ -15,6 +15,8 @@ import ErrorMessage from './ErrorMessage';
 import EditListingDetailsForm from './EditListingDetailsForm';
 import css from './EditListingDetailsPanel.module.css';
 
+const CATEGORY_PREFIX = 'categoryLevel';
+
 /**
  * Get listing configuration. For existing listings, it is stored to publicData.
  * For new listings, the data needs to be figured out from listingTypes configuration.
@@ -142,6 +144,32 @@ const initialValuesForListingFields = (
   }, {});
 };
 
+// Generates initial values for listing categories based on provided public data and configuration.
+// This function validates if the initial values match with the configuration received via assets.
+// If a categoryLevel value doesn't match with the category configuration, it is not passed on to the form.
+
+const pickCategoryFields = (data, level, categoryLevelOptions = []) => {
+  const currentCategoryKey = `${CATEGORY_PREFIX}${level}`;
+  const currentCategoryValue = data[currentCategoryKey];
+  const isCategoryLevelSet = typeof currentCategoryValue !== 'undefined';
+
+  // Validate the value against category options
+  const categoryOptionConfig = categoryLevelOptions.find(
+    category => category.id === currentCategoryValue
+  );
+  const isValidCategoryValue = !!categoryOptionConfig;
+  const nextLevelOptions = categoryOptionConfig?.subcategories || [];
+
+  // Return category level property if it's found from the data and the value is one of the valid options.
+  // Go through all the nested levels.
+  return isCategoryLevelSet && isValidCategoryValue
+    ? {
+        [currentCategoryKey]: currentCategoryValue,
+        ...pickCategoryFields(data, ++level, nextLevelOptions),
+      }
+    : {};
+};
+
 /**
  * If listing represents something else than a bookable listing, we set availability-plan to seats=0.
  * Note: this is a performance improvement since the API is backwards compatible.
@@ -182,7 +210,13 @@ const setNoAvailabilityForUnbookableListings = processAlias => {
  * @param {object} listingFieldsConfig those extended data fields that are part of configurations
  * @returns initialValues object for the form
  */
-const getInitialValues = (props, existingListingTypeInfo, listingTypes, listingFieldsConfig) => {
+const getInitialValues = (
+  props,
+  existingListingTypeInfo,
+  listingTypes,
+  listingFieldsConfig,
+  listingCategoriesConfig
+) => {
   const { description, title, publicData, privateData } = props?.listing?.attributes || {};
   const { listingType } = publicData;
 
@@ -190,6 +224,7 @@ const getInitialValues = (props, existingListingTypeInfo, listingTypes, listingF
   return {
     title,
     description,
+    ...pickCategoryFields(publicData, 1, listingCategoriesConfig),
     // Transaction type info: listingType, transactionProcessAlias, unitType
     ...getTransactionInfo(listingTypes, existingListingTypeInfo),
     ...initialValuesForListingFields(publicData, 'public', listingType, listingFieldsConfig),
@@ -217,6 +252,7 @@ const EditListingDetailsPanel = props => {
   const { publicData, state } = listing?.attributes || {};
   const listingTypes = config.listing.listingTypes;
   const listingFieldsConfig = config.listing.listingFields;
+  const listingCategoriesConfig = config.categories;
 
   const { hasExistingListingType, existingListingTypeInfo } = hasSetListingType(publicData);
   const hasValidExistingListingType =
@@ -231,7 +267,8 @@ const EditListingDetailsPanel = props => {
     props,
     existingListingTypeInfo,
     listingTypes,
-    listingFieldsConfig
+    listingFieldsConfig,
+    listingCategoriesConfig
   );
 
   const noListingTypesSet = listingTypes?.length === 0;
@@ -279,6 +316,7 @@ const EditListingDetailsPanel = props => {
                 listingType,
                 transactionProcessAlias,
                 unitType,
+                ...pickCategoryFields(rest, 1, listingCategoriesConfig),
                 ...pickListingFieldsData(rest, 'public', listingType, listingFieldsConfig),
               },
               privateData: pickListingFieldsData(rest, 'private', listingType, listingFieldsConfig),
@@ -289,6 +327,7 @@ const EditListingDetailsPanel = props => {
           }}
           selectableListingTypes={listingTypes.map(conf => getTransactionInfo([conf], {}, true))}
           hasExistingListingType={hasExistingListingType}
+          selectableCategories={listingCategoriesConfig}
           onListingTypeChange={onListingTypeChange}
           listingFieldsConfig={listingFieldsConfig}
           marketplaceCurrency={config.currency}
