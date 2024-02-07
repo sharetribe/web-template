@@ -14,6 +14,7 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2023-XX-XX
 
+- [add] Update de.json asset. [#313](https://github.com/sharetribe/web-template/pull/313)
 - [add] Update fr.json asset. [#311](https://github.com/sharetribe/web-template/pull/311)
 - [add] Update translation assets for German, French, and Spanish.
   [#309](https://github.com/sharetribe/web-template/pull/309)
