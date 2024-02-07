@@ -12,7 +12,16 @@ way to update this template, but currently, we follow a pattern:
 
 ---
 
-## Upcoming version 2023-XX-XX
+## Upcoming version 2024-XX-XX
+
+## [v4.0.0] 2024-02-07
+
+Breaking change: if you have customized your transaction process, you need to update the email templates. The new customer commission (#293) adds changes to emails that contain a receipt aka order breakdown information. In addition, also PR 310 touches the email templates.
+
+This also prepares the codebase for future configuration possibilities:
+- Postponing the requirement for a provider to give payout details (but it is still needed)
+- Makes certain listing features optional (location, delivery method)
+- Adds infinity stock (It is just emulated through a big number 10^15)
 
 - [add] Update de.json asset. [#313](https://github.com/sharetribe/web-template/pull/313)
 - [add] Update fr.json asset. [#311](https://github.com/sharetribe/web-template/pull/311)
@@ -62,6 +71,8 @@ way to update this template, but currently, we follow a pattern:
   [#284](https://github.com/sharetribe/web-template/pull/284)
 - [fix] Add missing imports to an email template file
   [#279](https://github.com/sharetribe/web-template/pull/279)
+
+  [v4.0.0]: https://github.com/sharetribe/web-template/compare/v3.5.0...v4.0.0
 
 ## [v3.5.0] 2023-12-12
 
