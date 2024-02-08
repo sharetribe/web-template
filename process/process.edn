@@ -141,7 +141,8 @@
    :from :state/reviewed-by-provider,
    :to :state/reviewed}],
  :notifications
- [{:name :notification/booking-new-request,
+ [
+  {:name :notification/booking-new-request,
    :on :transition/confirm-payment,
    :to :actor.role/provider,
    :template :booking-new-request}
@@ -220,10 +221,4 @@
    :at {:fn/minus
         [{:fn/timepoint [:time/booking-start]}
          {:fn/period ["P1D"]}]}}
-  [{:name :notification/booking-accepted-notification
-  :on :transition/accept-booking,
-  :to "rundo.adm@gmail.com", ; o el campo apropiado que contenga el correo del administrador
-  :template :booking-accepted-notification
-  :at {:fn/ignore-if-past
-       [{:fn/timepoint [:time/booking-accepted]}
-        {:fn/period ["PT0M"]}]}}]}
+  ]}
