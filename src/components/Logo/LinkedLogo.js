@@ -1,8 +1,8 @@
 import React from 'react';
-import { oneOf, string } from 'prop-types';
+import { oneOf, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
-import { NamedLink, Logo } from '../../components';
+import { ExternalLink, Logo, NamedLink } from '../../components';
 
 import css from './LinkedLogo.module.css';
 
@@ -13,11 +13,22 @@ const LinkedLogo = props => {
     logoClassName,
     logoImageClassName,
     layout,
+    linkToExternalSite,
     alt,
     ...rest
   } = props;
   const classes = classNames(rootClassName || css.root, className);
-  return (
+  // Note: href might come as an empty string (falsy), in which case we default to 'LandingPage'.
+  return linkToExternalSite?.href ? (
+    <ExternalLink className={classes} href={linkToExternalSite.href} target="_self" {...rest}>
+      <Logo
+        layout={layout}
+        className={logoClassName}
+        logoImageClassName={logoImageClassName}
+        alt={alt}
+      />
+    </ExternalLink>
+  ) : (
     <NamedLink className={classes} name="LandingPage" {...rest}>
       <Logo
         layout={layout}
@@ -35,6 +46,7 @@ LinkedLogo.defaultProps = {
   logoClassName: null,
   logoImageClassName: null,
   layout: 'desktop',
+  linkToExternalSite: null,
 };
 
 LinkedLogo.propTypes = {
@@ -43,6 +55,9 @@ LinkedLogo.propTypes = {
   logoClassName: string,
   logoImageClassName: string,
   layout: oneOf(['desktop', 'mobile']),
+  linkToExternalSite: shape({
+    href: string.isRequired,
+  }),
 };
 
 export default LinkedLogo;
