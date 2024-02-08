@@ -143,6 +143,7 @@ const TopbarDesktop = props => {
         className={css.logoLink}
         layout="desktop"
         alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
+        linkToExternalSite={appConfig?.topbar?.logoLink}
       />
       {search}
       <NamedLink className={css.createListingLink} name="NewListingPage">
