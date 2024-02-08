@@ -43,6 +43,7 @@ const SectionFooter = props => {
     copyright,
     blocks,
     options,
+    linkLogoToExternalSite,
   } = props;
 
   // If external mapping has been included for fields
@@ -76,6 +77,7 @@ const SectionFooter = props => {
               rootClassName={css.logoLink}
               logoClassName={css.logoWrapper}
               logoImageClassName={css.logoImage}
+              linkToExternalSite={linkLogoToExternalSite}
             />
           </div>
           <div className={css.sloganMobile}>
