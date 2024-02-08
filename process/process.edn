@@ -109,8 +109,14 @@
    :from :state/reviewed-by-provider,
    :to :state/reviewed}],
  :notifications
+<<<<<<< HEAD
+ [
+  {:name :notification/booking-new-request,
+   :on :transition/confirm-payment,
+=======
  [{:name :notification/booking-new-request,
    :on :transition/request-payment,
+>>>>>>> 050252317be0d50b0c3f091b3e19daa30d16de14
    :to :actor.role/provider,
    :template :booking-new-request}
   {:name :notification/booking-accepted-request,
@@ -180,4 +186,12 @@
   {:name :notification/review-by-customer-second,
    :on :transition/review-2-by-customer,
    :to :actor.role/provider,
-   :template :booking-review-by-other-party-published}]}
+   :template :booking-review-by-other-party-published}
+  {:name :notification/booking-reminder-customer
+   :on :transition/confirm-payment,
+   :to :actor.role/customer
+   :template :booking-reminder-customer
+   :at {:fn/minus
+        [{:fn/timepoint [:time/booking-start]}
+         {:fn/period ["P1D"]}]}}
+  ]}

@@ -7,9 +7,11 @@ import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
-import { Form, PrimaryButton, FieldTextInput } from '../../../components';
+import { Form, PrimaryButton, FieldTextInput, FieldPhoneNumberInput} from '../../../components';
 
 import css from './SignupForm.module.css';
+
+// import FieldPhoneNumberInput from '../../../components';
 
 const SignupFormComponent = props => (
   <FinalForm
@@ -38,6 +40,18 @@ const SignupFormComponent = props => (
           id: 'SignupForm.emailInvalid',
         })
       );
+
+      // phone number
+      const phoneLabel = intl.formatMessage({
+        id: 'SignupForm.phoneLabel',
+      });
+      const phonePlaceholder = intl.formatMessage({
+        id: 'SignupForm.phonePlaceholder',
+      });
+      const phoneRequiredMessage = intl.formatMessage({
+        id: 'SignupForm.phoneRequired',
+      });
+      const phoneRequired = validators.required(phoneRequiredMessage);
 
       // password
       const passwordRequiredMessage = intl.formatMessage({
@@ -93,6 +107,14 @@ const SignupFormComponent = props => (
                 id: 'SignupForm.emailPlaceholder',
               })}
               validate={validators.composeValidators(emailRequired, emailValid)}
+            />
+            <FieldPhoneNumberInput
+              className={css.phone}
+              id={formId ? `${formId}.phoneNumber` : 'phoneNumber'}
+              name="phoneNumber"
+              label={phoneLabel}
+              placeholder={phonePlaceholder}
+              validate={phoneRequired}
             />
             <div className={css.name}>
               <FieldTextInput

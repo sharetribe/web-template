@@ -1,0 +1,555 @@
+[33mcommit ed719a4406550048da9ede3a5a0e9a0b158f918d[m[33m ([m[1;36mHEAD -> [m[1;32mIne_Rundo[m[33m)[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Mon Jan 29 13:31:13 2024 -0300
+
+    Phone number en el login
+
+[33mcommit 0ad8ac8b40a75f3e619d09d77a5358eb10a86a9c[m[33m ([m[1;31morigin/Ine_Rundo[m[33m)[m
+Merge: 36e88468 cd0ca0d2
+Author: inepicone <inespicone@hotmail.com>
+Date:   Mon Jan 29 11:09:43 2024 -0300
+
+    Merge branch 'Patricio_Rundo' of https://github.com/inepicone/web-template into Ine_Rundo
+
+[33mcommit cd0ca0d232c8d2fc21415c11917e38d074dc8234[m[33m ([m[1;31morigin/Patricio_Rundo[m[33m)[m
+Author: Patricio <patricio_cristaldo@outlook.com>
+Date:   Mon Jan 29 11:01:07 2024 -0300
+
+    "Comunicate con Rundo" agregado arriba del icono de wsp en reserva
+
+[33mcommit 9859bf64ee50d87759b1954fe1689577f3de0cd0[m
+Author: Patricio <patricio_cristaldo@outlook.com>
+Date:   Mon Jan 29 10:40:15 2024 -0300
+
+    Se agrega icon wsp y texto en header (TopbarDestop.js)
+
+[33mcommit 36e88468539e93b8cefdc73e0bdb3ba0735c5b44[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Tue Jan 23 10:50:04 2024 -0300
+
+    en SimpleOrderForm: Solo sacar que no aparesca el texto "información adicional" que era parte de la entrada de texto.
+    En CheckoutParge.... : Eliminar el error del order ID que no se retorna. Comentario Linea 396
+
+[33mcommit a830460612c127f1ca59238ee7d4127c0b633707[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m, [m[1;32mPatricio_Rundo[m[33m)[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 19 11:15:49 2024 -0300
+
+    igual a die
+
+[33mcommit 29a00e91942ff9740a0acc5bc5cf6aa11a22f44c[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 19 11:10:56 2024 -0300
+
+    Please enter the commit message for your changes. Lines starting
+    with '#' will be ignored, and an empty message aborts the commit.
+    On branch main
+    Your branch is ahead of 'origin/main' by 1 commit.
+      (use "git push" to publish your local commits)
+    Changes to be committed:        modified:   src/containers/CheckoutPage/CheckoutPageWithoutPayment.js
+
+[33mcommit 65e6447995682c78f8c6aaa5a913d06999f50755[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 19 11:10:49 2024 -0300
+
+    Vuelven los mensajes
+
+[33mcommit 6b99648b8164a3de9af8d401944d1654c4a070f8[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 17 09:40:21 2024 -0300
+
+    setting json
+
+[33mcommit be65159e39408b58df0a27c31604b0179ed3d811[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 17 09:39:38 2024 -0300
+
+    whatsapp buen tamaño
+
+[33mcommit df2975664c91eaf67e7962649bdb5c1811c062bf[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Tue Jan 16 21:44:39 2024 -0300
+
+    intento de boton
+
+[33mcommit 34c0222827ef02e72aaadaacab17367c0c24e7da[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Mon Jan 15 16:52:44 2024 -0300
+
+    path de whatsapp
+
+[33mcommit d71a406c4c9d4a26cb041a153aadd1f13fa15f77[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Mon Jan 15 10:54:28 2024 -0300
+
+    currencyHelper const currency = defaultCurrency;
+
+[33mcommit a8c4401b48cb59c641b00cd3ccb1811951317a25[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 12 13:24:59 2024 -0300
+
+    configHelpers back
+
+[33mcommit e3c5b4574dcb5411754ab30e551b56d84393f680[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 12 13:20:57 2024 -0300
+
+    volvió transaction al original
+
+[33mcommit 28fa02ac1bcaad16623c6c1432af580e74baf3ac[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 12 13:15:04 2024 -0300
+
+    saque lo que habia puesto en transaction
+
+[33mcommit 9171c289d788b9c4371e62c931dd0bb6968f162e[m
+Merge: 06e7d725 e3d147d6
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 12 13:13:32 2024 -0300
+
+    Merge branch 'main' of https://github.com/inepicone/web-template
+
+[33mcommit 06e7d72500df33c7fc259e14b3951a399cd61cc2[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 12 13:11:57 2024 -0300
+
+    no se
+
+[33mcommit 9b7488e34e00c76a0fe0d8444d82123f7965d7ca[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 12 13:11:36 2024 -0300
+
+    a ver
+
+[33mcommit e3d147d6dc0b208c065c62400b7eaa25a73658b4[m
+Merge: 49f354a1 906c68c3
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 12 11:17:30 2024 -0300
+
+    Merge branch 'main' of https://github.com/inepicone/web-template
+
+[33mcommit 49f354a14786f88d5fad486ecd005d326647e1aa[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 12 11:17:23 2024 -0300
+
+    a ver
+
+[33mcommit 906c68c3688e8162e4e34a8cae71c5e522030d56[m
+Merge: 2d5ac856 764d44f8
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 12 11:16:19 2024 -0300
+
+    Merge branch 'main' of https://github.com/inepicone/web-template
+
+[33mcommit 2d5ac856519945b2c239e989951d631dbf2fd279[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 12 11:15:37 2024 -0300
+
+    creo
+
+[33mcommit 2a9ab975a018e6737be89289e1685532377ed26a[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 12 11:14:34 2024 -0300
+
+    confirmacion
+
+[33mcommit 764d44f8d64b8b99319334915fe9adc1f5b48aaf[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 12 11:07:35 2024 -0300
+
+    vuelta a transaction original
+
+[33mcommit 3e196f67a5b266bafb703cd54fe9f3a674499e57[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 12 07:02:27 2024 -0300
+
+    confirmacion
+
+[33mcommit bd00ea79ab88fd7ce0008044f13c254207a58daf[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Thu Jan 11 15:24:09 2024 -0300
+
+    chau stripe
+
+[33mcommit d1a854f70ce6de29febd6a03955449afdd4bb7d9[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Thu Jan 11 11:35:55 2024 -0300
+
+    correccion errores compilacion
+
+[33mcommit 00c1ce11eae6ad03a4c6b8e6f65cb623a788e51a[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Thu Jan 11 10:47:00 2024 -0300
+
+    Importing and using loadInitialData instead of loadInitialDataForStripePayments in CheckoutPage.js.
+
+[33mcommit b74ed792f2a1ff55af866f418e9c5db5bc2e12b1[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Thu Jan 11 10:43:15 2024 -0300
+
+    exporting processCheckoutWithPayment function
+
+[33mcommit 7d129eb32a9048eaee4375e869c20034a4758b5b[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Thu Jan 11 10:35:11 2024 -0300
+
+    new SimpleOrderForm.js
+
+[33mcommit 70d47a0016817d1152a2f8f4c42e5d9d6b6a8a57[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Thu Jan 11 10:32:51 2024 -0300
+
+    new CheckoutPageWithoutPayments
+
+[33mcommit cafcf4e6ae3c8a2ea0503d5d5861509296f62792[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Tue Jan 9 15:08:51 2024 -0300
+
+    intentando cambiar el color
+
+[33mcommit 60b90dd43247d7775a7730aab3c57b3435d365e5[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Tue Jan 9 06:49:26 2024 -0300
+
+    deposito en garantía check
+
+[33mcommit 6c7262592d04ad2cbdde08a9e21c3251831c9fb0[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Mon Jan 8 11:29:27 2024 -0300
+
+    wa 4
+
+[33mcommit a3b7501080c14fd754e69b3c47370837f64b813f[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Mon Jan 8 10:22:07 2024 -0300
+
+    whatsapp 2
+
+[33mcommit 7c098568f3927e71f2804270d69b3181bc32307d[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Mon Jan 8 09:55:43 2024 -0300
+
+    intento wa
+
+[33mcommit 00eb5dc595498810dde23fc18ada1be3ea71d7d9[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Mon Jan 8 06:13:24 2024 -0300
+
+    wishlist 4
+
+[33mcommit 62a65e1585bc44f8a8ad1ec72e48af313bb44c9c[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 5 09:58:05 2024 -0300
+
+    favorites 3
+
+[33mcommit a26708f8035cf9bde120f969072b9a6b67753e0e[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 5 09:15:14 2024 -0300
+
+    wish buton 2
+
+[33mcommit 0809e2d57eb8dcafa3e25a481518c72a210f751f[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Jan 5 06:44:28 2024 -0300
+
+    ARS-> AR
+
+[33mcommit 6bc065827eba04b985044a5d63e9026d97337225[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Thu Jan 4 15:09:42 2024 -0300
+
+    wa2
+
+[33mcommit 9ab163efb57493f43970e0752dbc1c16d035573a[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Thu Jan 4 15:06:40 2024 -0300
+
+    numero whatsapp
+
+[33mcommit 9ba75eb103df86587dedfa100298e1f59895b5df[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Thu Jan 4 10:24:07 2024 -0300
+
+    alimino un archivo vacio y duplicado que nada que ver
+
+[33mcommit 80fdded79b895161933bd5d840438348369d1825[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 16:33:28 2024 -0300
+
+    Revert "removing stripe"
+    
+    This reverts commit 6e06620932a0ee8fc93b1e258cbe89d0c0d48947.
+
+[33mcommit eee60c2155176b1e505950c7d689698efdab65d1[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 16:31:51 2024 -0300
+
+    Revert "Removing stripe"
+    
+    This reverts commit 8b4d24b6b10ca9386df4a9e36979bb62eecfedf6.
+
+[33mcommit 2e5ed6df122c2db2213d3343664e49ea835e965e[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 16:30:39 2024 -0300
+
+    Revert "removing payment method"
+    
+    This reverts commit f24c06bd9adcf676ec2c88236eec865f086af63a.
+
+[33mcommit e20661c9650bb5e74d2ac9e3acfe12565adb89b0[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 16:26:58 2024 -0300
+
+    Revert "layout y routes"
+    
+    This reverts commit d40aab9515dfb274940f7d6597d5a5eb99e3e9e1.
+
+[33mcommit 32d85f565f64fa8e2177a9a4aa8e337c7c8452ac[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 16:24:34 2024 -0300
+
+    Revert "removing stripe"
+    
+    This reverts commit ce565b175e976890ee9a78bab95f5191334b910c.
+
+[33mcommit 06d18d5b08899d36526b29ddaf584edc1eab056a[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 16:22:56 2024 -0300
+
+    Revert "chau stripe"
+    
+    This reverts commit bd808a18cc0bf58920aff4dc2c58e8538f338d2b.
+
+[33mcommit 7a971202249655ebad5f56e90d57d456da07fa31[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 16:21:47 2024 -0300
+
+    Revert "chau stripe 3"
+    
+    This reverts commit e98295b3c0cb6b620f80bfeff79cc77c25469c28.
+
+[33mcommit 172059b1e0758c97a98e3cb55393db388147c82a[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 16:19:51 2024 -0300
+
+    Revert "chau stripe 4"
+    
+    This reverts commit c144e8dfc8e4461a6df64e627f42934d76133751.
+
+[33mcommit cd31c52023677755aa2914c7354923477a8f9099[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 16:16:46 2024 -0300
+
+    Revert "chau stripe 5"
+    
+    This reverts commit db827b61d4f6cdf65bcd31b05e93861bfd8a923f.
+
+[33mcommit 138a005505d4f28056707fee8a4f662dff2bb39c[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 16:11:50 2024 -0300
+
+    Revert "chau stripe 6"
+    
+    This reverts commit 47a52d20e6cf80b990f94bb479149765505a00c9.
+
+[33mcommit a6dd66a7ead35a7e4950cffccdf8e17fa34bdccc[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 16:10:57 2024 -0300
+
+    Revert "chau stripe 7"
+    
+    This reverts commit eed64019b765e1374348a27199495333294afb97.
+
+[33mcommit ccbc7b4de8a2e1d583c7fa54b34c40a3899814ad[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 16:03:15 2024 -0300
+
+    Revert "me confundi de archivo"
+    
+    This reverts commit 6aa02322c524f258cc5c5e5db004d45564b0cfff.
+
+[33mcommit 634d5ddaef6ce818ad184fdf367b3b984767e036[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 16:01:25 2024 -0300
+
+    Revert "chau stripe en routes"
+    
+    This reverts commit 00413b8f93fdd4ef99dea26cbb6e326ce47368c9.
+
+[33mcommit 1a9c7c2dd79e3fae7af6e26b5c5f161093edcc46[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 15:56:41 2024 -0300
+
+    Revert "chau stripe 9"
+    
+    This reverts commit 7939eea1c205d8549c3b28b93d1162a7be3f293c.
+
+[33mcommit 4f78fef234aaafffc6ef1cc96c069757ba655169[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 15:45:27 2024 -0300
+
+    chau stripe 10
+
+[33mcommit 074b9ae573cb9d26a05725b1d55c1d159ce2eeb1[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 09:44:58 2024 -0300
+
+    chau stripe 10
+
+[33mcommit 7939eea1c205d8549c3b28b93d1162a7be3f293c[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 09:36:33 2024 -0300
+
+    chau stripe 9
+
+[33mcommit 00413b8f93fdd4ef99dea26cbb6e326ce47368c9[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 09:34:49 2024 -0300
+
+    chau stripe en routes
+
+[33mcommit 6aa02322c524f258cc5c5e5db004d45564b0cfff[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 09:31:31 2024 -0300
+
+    me confundi de archivo
+
+[33mcommit eed64019b765e1374348a27199495333294afb97[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 09:30:42 2024 -0300
+
+    chau stripe 7
+
+[33mcommit 47a52d20e6cf80b990f94bb479149765505a00c9[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 09:27:59 2024 -0300
+
+    chau stripe 6
+
+[33mcommit db827b61d4f6cdf65bcd31b05e93861bfd8a923f[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 09:25:23 2024 -0300
+
+    chau stripe 5
+
+[33mcommit c144e8dfc8e4461a6df64e627f42934d76133751[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 09:22:29 2024 -0300
+
+    chau stripe 4
+
+[33mcommit e98295b3c0cb6b620f80bfeff79cc77c25469c28[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 09:17:56 2024 -0300
+
+    chau stripe 3
+
+[33mcommit bd808a18cc0bf58920aff4dc2c58e8538f338d2b[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Jan 3 09:14:01 2024 -0300
+
+    chau stripe
+
+[33mcommit ce565b175e976890ee9a78bab95f5191334b910c[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Tue Jan 2 06:57:15 2024 -0300
+
+    removing stripe
+
+[33mcommit d40aab9515dfb274940f7d6597d5a5eb99e3e9e1[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Tue Jan 2 06:50:13 2024 -0300
+
+    layout y routes
+
+[33mcommit f24c06bd9adcf676ec2c88236eec865f086af63a[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Tue Jan 2 06:44:05 2024 -0300
+
+    removing payment method
+
+[33mcommit 8b4d24b6b10ca9386df4a9e36979bb62eecfedf6[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Tue Jan 2 06:39:18 2024 -0300
+
+    Removing stripe
+
+[33mcommit 6e06620932a0ee8fc93b1e258cbe89d0c0d48947[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Tue Jan 2 06:24:47 2024 -0300
+
+    removing stripe
+
+[33mcommit fe92aa6421b227ee12e7b9c31f7978164e503ff1[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Sat Dec 30 07:04:30 2023 -0300
+
+    Boton de wa 1
+
+[33mcommit 97876b5f39d8f15456289b990556607722ab2a65[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Dec 29 09:35:10 2023 -0300
+
+    Solo argentina y amplie el circulo de busqueda
+
+[33mcommit 3e6d00c5f42a3598c82facf6d0cd6b898450cc41[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Dec 29 08:47:33 2023 -0300
+
+    Currency lo que faltaba
+
+[33mcommit 2b71a43bb0ae42c223567667fd660d7e7e4d9c79[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Fri Dec 29 07:22:00 2023 -0300
+
+    villa la angostura
+
+[33mcommit b751bb3139c7f1441c44cf8a449aa985d6177e3f[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Thu Dec 14 16:09:04 2023 -0300
+
+    remplace  currencyDisplay a ARS
+
+[33mcommit 4cd6a7eadf752fddd224a82a5e3462ae4738ad17[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Thu Dec 14 15:52:58 2023 -0300
+
+    No estoy segura
+
+[33mcommit a28b3c6062151eecd12398e14c3c83deabb73bbd[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Thu Dec 14 12:41:09 2023 -0300
+
+    Currency
+
+[33mcommit 9b7464413e24610bc210e64bb642d140677952dd[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Thu Dec 14 11:35:11 2023 -0300
+
+    wizard
+
+[33mcommit fe9f118097092f894fa7e3dddaca69d6bca4b5b4[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Thu Dec 14 09:41:36 2023 -0300
+
+    tranasction
+
+[33mcommit dc1e55057ee046db86314c7613cfcc0a803c0d0e[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Dec 13 23:29:44 2023 -0300
+
+    checkout without payment
+
+[33mcommit ce356c8f162d4fd6487bafc51c4c27f08f3efe3c[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Dec 13 23:19:23 2023 -0300
+
+    checkout sin payment
+
+[33mcommit c9b7d721a7591ab7beb3858286dc3ccc7680ca54[m
+Author: inepicone <inespicone@hotmail.com>
+Date:   Wed Dec 13 23:02:50 2023 -0300
+
+    chau stripe
+
+[33mcommit 8e3ad3a0b44812eb7df11e15c12f23085c9f
