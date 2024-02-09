@@ -202,10 +202,6 @@ class SimpleOrderForm extends Component {
             />
           </PrimaryButton>
           <p className={css.paymentInfo}>
-            <FormattedMessage
-              id="StripePaymentForm.submitConfirmPaymentFinePrint"
-              values={{ isBooking: isBookingYesNo, name: authorDisplayName }}
-            />
           </p>
         </div>
       </Form>
