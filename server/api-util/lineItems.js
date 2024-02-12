@@ -111,6 +111,7 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
  * @param {Object} listing
  * @param {Object} orderData
  * @param {Object} providerCommission
+ * @param {Object} customerCommission
  * @returns {Array} lineItems
  */
 exports.transactionLineItems = (listing, orderData, providerCommission, customerCommission) => {
