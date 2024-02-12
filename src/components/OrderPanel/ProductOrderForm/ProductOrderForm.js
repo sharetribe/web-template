@@ -98,7 +98,14 @@ const DeliveryMethodMaybe = props => {
         type="hidden"
       />
     </div>
-  ) : null;
+  ) : (
+    <FieldTextInput
+      id={`${formId}.deliveryMethod`}
+      className={css.deliveryField}
+      name="deliveryMethod"
+      type="hidden"
+    />
+  );
 };
 
 const renderForm = formRenderProps => {
@@ -315,14 +322,16 @@ const ProductOrderForm = props => {
   const hasOneItemLeft = currentStock && currentStock === 1;
   const hasOneItemMode = !allowOrdersOfMultipleItems && currentStock > 0;
   const quantityMaybe = hasOneItemLeft || hasOneItemMode ? { quantity: '1' } : {};
-  const singleDeliveryMethodAvailableMaybe =
+  const deliveryMethodMaybe =
     shippingEnabled && !pickupEnabled
       ? { deliveryMethod: 'shipping' }
       : !shippingEnabled && pickupEnabled
       ? { deliveryMethod: 'pickup' }
+      : !shippingEnabled && !pickupEnabled
+      ? { deliveryMethod: 'none' }
       : {};
   const hasMultipleDeliveryMethods = pickupEnabled && shippingEnabled;
-  const initialValues = { ...quantityMaybe, ...singleDeliveryMethodAvailableMaybe };
+  const initialValues = { ...quantityMaybe, ...deliveryMethodMaybe };
 
   return (
     <FinalForm
