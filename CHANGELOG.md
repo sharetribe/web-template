@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Update translations for de.json, es.json, and fr.json.
+  [#317](https://github.com/sharetribe/web-template/pull/317)
 - [fix] When delivery method is not set, it's still better to maintain the value as string, because
   it's used as an argument in translations.
   [#316](https://github.com/sharetribe/web-template/pull/316)
