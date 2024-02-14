@@ -30,7 +30,7 @@ git clone git@github.com:sharetribe/web-template.git  # clone this repository
 cd web-template/                                      # change to the cloned directory
 yarn install                                          # install dependencies
 yarn run config                                       # add the mandatory env vars to your local config
-yarn run dev                                          # start the dev server, this will open a browser in localhost:3000
+yarn run dev                                          # start the dev server, this will open a browser in https://rundo-v1-6a83580be092.herokuapp.com
 ```
 
 You can also follow along the

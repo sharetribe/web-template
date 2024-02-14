@@ -31,7 +31,7 @@ export const getDefaultConfiguration = () => {
     currency: 'USD',
     marketplaceName: 'MarketplaceX',
     facebookAppId: undefined,
-    marketplaceRootURL: 'http://localhost:3000',
+    marketplaceRootURL: 'http://https://rundo-v1-6a83580be092.herokuapp.com',
     maps: {
       ...defaultConfig.maps,
       mapboxAccessToken: 'fake-token',

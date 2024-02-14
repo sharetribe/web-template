@@ -141,7 +141,7 @@ if (typeof window !== 'undefined') {
     ...assetCdnBaseUrl,
   });
 
-  // Note: on localhost:3000, you need to use environment variable.
+  // Note: on https://rundo-v1-6a83580be092.herokuapp.com, you need to use environment variable.
   const googleAnalyticsIdFromSSR = initialState?.hostedAssets?.googleAnalyticsId;
   const googleAnalyticsId = googleAnalyticsIdFromSSR || process.env.REACT_APP_GOOGLE_ANALYTICS_ID;
   const analyticsHandlers = setupAnalyticsHandlers(googleAnalyticsId);
