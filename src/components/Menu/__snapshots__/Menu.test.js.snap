@@ -4,7 +4,6 @@ exports[`Menu matches snapshot 1`] = `
 <DocumentFragment>
   <div
     class="root"
-    tabindex="0"
   >
     <button
       class="root"

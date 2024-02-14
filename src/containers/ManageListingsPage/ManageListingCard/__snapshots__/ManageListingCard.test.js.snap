@@ -89,7 +89,6 @@ exports[`ManageListingCard matches snapshot (purchase) 1`] = `
       >
         <div
           class="root menu cardIsOpen"
-          tabindex="0"
         >
           <button
             class="root menuLabel"
