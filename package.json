@@ -119,7 +119,7 @@
     "heroku-postbuild": "yarn run build",
     "postinstall": "patch-package",
     "translate": "node scripts/translations.js",
-    "install": "npm install --offline --no-progress --prefer-offline --check-files"
+    "install": "npm install --offline --no-progress --prefer-offline --check-files && cd client && npm install --offline --no-progress --prefer-offline --check-files && cd .."
   },
   "browserslist": {
     "production": [
