@@ -17,13 +17,14 @@ import {
 } from '../../../../components';
 
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
+import CustomLinksMenu from './CustomLinksMenu/CustomLinksMenu';
 
 import css from './TopbarDesktop.module.css';
 
 const SignupLink = () => {
   return (
-    <NamedLink name="SignupPage" className={css.signupLink}>
-      <span className={css.signup}>
+    <NamedLink name="SignupPage" className={css.topbarLink}>
+      <span className={css.topbarLinkLabel}>
         <FormattedMessage id="TopbarDesktop.signup" />
       </span>
     </NamedLink>
@@ -32,8 +33,8 @@ const SignupLink = () => {
 
 const LoginLink = () => {
   return (
-    <NamedLink name="LoginPage" className={css.loginLink}>
-      <span className={css.login}>
+    <NamedLink name="LoginPage" className={css.topbarLink}>
+      <span className={css.topbarLinkLabel}>
         <FormattedMessage id="TopbarDesktop.login" />
       </span>
     </NamedLink>
@@ -44,11 +45,11 @@ const InboxLink = ({ notificationCount, currentUserHasListings }) => {
   const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
   return (
     <NamedLink
-      className={css.inboxLink}
+      className={css.topbarLink}
       name="InboxPage"
       params={{ tab: currentUserHasListings ? 'sales' : 'orders' }}
     >
-      <span className={css.inbox}>
+      <span className={css.topbarLinkLabel}>
         <FormattedMessage id="TopbarDesktop.inbox" />
         {notificationDot}
       </span>
@@ -71,7 +72,7 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
       <MenuContent className={css.profileMenuContent}>
         <MenuItem key="ManageListingsPage">
           <NamedLink
-            className={classNames(css.yourListingsLink, currentPageClass('ManageListingsPage'))}
+            className={classNames(css.menuLink, currentPageClass('ManageListingsPage'))}
             name="ManageListingsPage"
           >
             <span className={css.menuItemBorder} />
@@ -80,7 +81,7 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
         </MenuItem>
         <MenuItem key="ProfileSettingsPage">
           <NamedLink
-            className={classNames(css.profileSettingsLink, currentPageClass('ProfileSettingsPage'))}
+            className={classNames(css.menuLink, currentPageClass('ProfileSettingsPage'))}
             name="ProfileSettingsPage"
           >
             <span className={css.menuItemBorder} />
@@ -89,7 +90,7 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
         </MenuItem>
         <MenuItem key="AccountSettingsPage">
           <NamedLink
-            className={classNames(css.yourListingsLink, currentPageClass('AccountSettingsPage'))}
+            className={classNames(css.menuLink, currentPageClass('AccountSettingsPage'))}
             name="AccountSettingsPage"
           >
             <span className={css.menuItemBorder} />
@@ -111,6 +112,7 @@ const TopbarDesktop = props => {
   const {
     className,
     config,
+    customLinks,
     currentUser,
     currentPage,
     rootClassName,
@@ -164,11 +166,12 @@ const TopbarDesktop = props => {
         appConfig={config}
       />
 
-      <NamedLink className={css.createListingLink} name="NewListingPage">
-        <span className={css.createListing}>
-          <FormattedMessage id="TopbarDesktop.createListing" />
-        </span>
-      </NamedLink>
+      <CustomLinksMenu
+        currentPage={currentPage}
+        customLinks={customLinks}
+        intl={intl}
+        hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
+      />
 
       {inboxLinkMaybe}
       {profileMenuMaybe}
