@@ -10,7 +10,7 @@ import { useRouteConfiguration } from '../../../context/routeConfigurationContex
 import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
 import { isMainSearchTypeKeywords, isOriginInUse } from '../../../util/search';
 import { parse, stringify } from '../../../util/urlHelpers';
-import { createResourceLocatorString, pathByRouteName } from '../../../util/routes';
+import { createResourceLocatorString, matchPathname, pathByRouteName } from '../../../util/routes';
 import { propTypes } from '../../../util/types';
 import {
   Button,
@@ -18,7 +18,6 @@ import {
   LinkedLogo,
   Modal,
   ModalMissingInformation,
-  NamedLink,
 } from '../../../components';
 
 import MenuIcon from './MenuIcon';
@@ -47,6 +46,47 @@ const redirectToURLWithoutModalState = (props, modalStateParam) => {
   const stringified = stringify(queryParams);
   const searchString = stringified ? `?${stringified}` : '';
   history.push(`${pathname}${searchString}`, state);
+};
+
+const isPrimary = o => o.group === 'primary';
+const isSecondary = o => o.group === 'secondary';
+const compareGroups = (a, b) => {
+  const isAHigherGroupThanB = isPrimary(a) && isSecondary(b);
+  const isALesserGroupThanB = isSecondary(a) && isPrimary(b);
+  // Note: sort order is stable in JS
+  return isAHigherGroupThanB ? -1 : isALesserGroupThanB ? 1 : 0;
+};
+// Returns links in order where primary links are returned first
+const sortCustomLinks = customLinks => {
+  const links = Array.isArray(customLinks) ? customLinks : [];
+  return links.sort(compareGroups);
+};
+
+// Resolves in-app links against route configuration
+const getResolvedCustomLinks = (customLinks, routeConfiguration) => {
+  const links = Array.isArray(customLinks) ? customLinks : [];
+  return links.map(linkConfig => {
+    const { type, href } = linkConfig;
+    const isInternalLink = type === 'internal' || href.charAt(0) === '/';
+    if (isInternalLink) {
+      // Internal link
+      const testURL = new URL('http://my.marketplace.com' + href);
+      const matchedRoutes = matchPathname(testURL.pathname, routeConfiguration);
+      if (matchedRoutes.length > 0) {
+        const found = matchedRoutes[0];
+        const to = { search: testURL.search, hash: testURL.hash };
+        return {
+          ...linkConfig,
+          route: {
+            name: found.route?.name,
+            params: found.params,
+            to,
+          },
+        };
+      }
+    }
+    return linkConfig;
+  });
 };
 
 const GenericError = props => {
@@ -162,12 +202,17 @@ class TopbarComponent extends Component {
       sendVerificationEmailError,
       showGenericError,
       config,
+      routeConfiguration,
     } = this.props;
 
     const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
       latlng: ['origin'],
       latlngBounds: ['bounds'],
     });
+
+    // Custom links are sorted so that group="primary" are always at the beginning of the list.
+    const sortedCustomLinks = sortCustomLinks(config.topbar?.customLinks);
+    const customLinks = getResolvedCustomLinks(sortedCustomLinks, routeConfiguration);
 
     const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
 
@@ -186,6 +231,7 @@ class TopbarComponent extends Component {
         onLogout={this.handleLogout}
         notificationCount={notificationCount}
         currentPage={currentPage}
+        customLinks={customLinks}
       />
     );
 
@@ -255,6 +301,7 @@ class TopbarComponent extends Component {
             onLogout={this.handleLogout}
             onSearchSubmit={this.handleSubmit}
             config={config}
+            customLinks={customLinks}
           />
         </div>
         <Modal
