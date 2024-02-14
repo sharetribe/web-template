@@ -79,7 +79,8 @@
     "cross-env": "^7.0.3",
     "inquirer": "^8.2.4",
     "nodemon": "^2.0.16",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "yarn": "^1.22.21"
   },
   "resolutions": {
     "react-dates/lodash": "^4.17.21",
@@ -118,7 +119,8 @@
     "heroku-postbuild": "yarn run build",
     "postinstall": "patch-package",
     "translate": "node scripts/translations.js",
-    "install": "yarn install --offline --no-progress --prefer-offline --check-files"
+    "install": "yarn install --offline --no-progress --prefer-offline --check-files",
+    "install": "npm install"
   },
   "browserslist": {
     "production": [
@@ -133,7 +135,8 @@
     ]
   },
   "engines": {
-    "node": ">=16.18.0"
+    "node": ">=16.18.0",
+    "npm": ">=7.3.0"
   },
   "prettier": {
     "singleQuote": true,
