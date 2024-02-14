@@ -184,16 +184,16 @@ class Menu extends Component {
   }
 
   render() {
-    const { className, rootClassName } = this.props;
+    const { id, className, rootClassName } = this.props;
     const rootClass = rootClassName || css.root;
     const classes = classNames(rootClass, className);
     const menuChildren = this.state.ready ? this.prepareChildren() : null;
 
     return (
       <div
+        id={id}
         className={classes}
         onBlur={this.onBlur}
-        tabIndex={0}
         onKeyDown={this.onKeyDown}
         ref={c => {
           this.menu = c;
