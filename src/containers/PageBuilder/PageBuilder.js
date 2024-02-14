@@ -88,6 +88,7 @@ const PageBuilder = props => {
     fallbackPage,
     schemaType,
     options,
+    currentPage,
     ...pageProps
   } = props;
 
@@ -114,7 +115,7 @@ const PageBuilder = props => {
           return (
             <>
               <Topbar as="header" className={css.topbar}>
-                <TopbarContainer />
+                <TopbarContainer currentPage={currentPage} />
               </Topbar>
               <Main as="main" className={css.main}>
                 {sections.length === 0 && inProgress ? (
