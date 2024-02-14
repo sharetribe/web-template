@@ -91,7 +91,7 @@ export const ProfileSettingsPageComponent = props => {
       <LayoutSingleColumn
         topbar={
           <>
-            <TopbarContainer currentPage="ProfileSettingsPage" />
+            <TopbarContainer />
             <UserNav currentPage="ProfileSettingsPage" />
           </>
         }

@@ -74,7 +74,6 @@ export const ContactDetailsPageComponent = props => {
         topbar={
           <>
             <TopbarContainer
-              currentPage="ContactDetailsPage"
               desktopClassName={css.desktopTopbar}
               mobileClassName={css.mobileTopbar}
             />
