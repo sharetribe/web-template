@@ -13,12 +13,47 @@ import { ensureCurrentUser } from '../../../../util/data';
 
 import {
   AvatarLarge,
+  ExternalLink,
   InlineTextButton,
   NamedLink,
   NotificationBadge,
 } from '../../../../components';
 
 import css from './TopbarMobileMenu.module.css';
+
+const CustomLinkComponent = ({ linkConfig, currentPage }) => {
+  const { group, text, type, href, route } = linkConfig;
+  const getCurrentPageClass = page => {
+    const hasPageName = name => currentPage?.indexOf(name) === 0;
+    const isCMSPage = pageId => hasPageName('CMSPage') && currentPage === `${page}:${pageId}`;
+    const isInboxPage = tab => hasPageName('InboxPage') && currentPage === `${page}:${tab}`;
+    const isCurrentPage = currentPage === page;
+
+    return isCMSPage(route?.params?.pageId) || isInboxPage(route?.params?.tab) || isCurrentPage
+      ? css.currentPage
+      : null;
+  };
+
+  // Note: if the config contains 'route' keyword,
+  // then in-app linking config has been resolved already.
+  if (type === 'internal' && route) {
+    // Internal link
+    const { name, params, to } = route || {};
+    const className = classNames(css.navigationLink, getCurrentPageClass(name));
+    return (
+      <NamedLink name={name} params={params} to={to} className={className}>
+        <span className={css.menuItemBorder} />
+        {text}
+      </NamedLink>
+    );
+  }
+  return (
+    <ExternalLink href={href} className={css.navigationLink}>
+      <span className={css.menuItemBorder} />
+      {text}
+    </ExternalLink>
+  );
+};
 
 const TopbarMobileMenu = props => {
   const {
@@ -27,10 +62,21 @@ const TopbarMobileMenu = props => {
     currentUserHasListings,
     currentUser,
     notificationCount,
+    customLinks,
     onLogout,
   } = props;
 
   const user = ensureCurrentUser(currentUser);
+
+  const extraLinks = customLinks.map(linkConfig => {
+    return (
+      <CustomLinkComponent
+        key={linkConfig.text}
+        linkConfig={linkConfig}
+        currentPage={currentPage}
+      />
+    );
+  });
 
   if (!isAuthenticated) {
     const signup = (
@@ -59,6 +105,10 @@ const TopbarMobileMenu = props => {
               values={{ lineBreak: <br />, signupOrLogin }}
             />
           </div>
+
+          <div className={css.customLinksWrapper}>{extraLinks}</div>
+
+          <div className={css.spacer} />
         </div>
         <div className={css.footer}>
           <NamedLink className={css.createNewListingLink} name="NewListingPage">
@@ -78,8 +128,10 @@ const TopbarMobileMenu = props => {
   const currentPageClass = page => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
-    return currentPage === page || isAccountSettingsPage ? css.currentPage : null;
+    const isInboxPage = currentPage?.indexOf('InboxPage') === 0 && page?.indexOf('InboxPage') === 0;
+    return currentPage === page || isAccountSettingsPage || isInboxPage ? css.currentPage : null;
   };
+  const inboxTab = currentUserHasListings ? 'sales' : 'orders';
 
   return (
     <div className={css.root}>
@@ -91,32 +143,36 @@ const TopbarMobileMenu = props => {
         <InlineTextButton rootClassName={css.logoutButton} onClick={onLogout}>
           <FormattedMessage id="TopbarMobileMenu.logoutLink" />
         </InlineTextButton>
-        <NamedLink
-          className={classNames(css.inbox, currentPageClass('InboxPage'))}
-          name="InboxPage"
-          params={{ tab: currentUserHasListings ? 'sales' : 'orders' }}
-        >
-          <FormattedMessage id="TopbarMobileMenu.inboxLink" />
-          {notificationCountBadge}
-        </NamedLink>
-        <NamedLink
-          className={classNames(css.navigationLink, currentPageClass('ManageListingsPage'))}
-          name="ManageListingsPage"
-        >
-          <FormattedMessage id="TopbarMobileMenu.yourListingsLink" />
-        </NamedLink>
-        <NamedLink
-          className={classNames(css.navigationLink, currentPageClass('ProfileSettingsPage'))}
-          name="ProfileSettingsPage"
-        >
-          <FormattedMessage id="TopbarMobileMenu.profileSettingsLink" />
-        </NamedLink>
-        <NamedLink
-          className={classNames(css.navigationLink, currentPageClass('AccountSettingsPage'))}
-          name="AccountSettingsPage"
-        >
-          <FormattedMessage id="TopbarMobileMenu.accountSettingsLink" />
-        </NamedLink>
+
+        <div className={css.accountLinksWrapper}>
+          <NamedLink
+            className={classNames(css.inbox, currentPageClass(`InboxPage:${inboxTab}`))}
+            name="InboxPage"
+            params={{ tab: inboxTab }}
+          >
+            <FormattedMessage id="TopbarMobileMenu.inboxLink" />
+            {notificationCountBadge}
+          </NamedLink>
+          <NamedLink
+            className={classNames(css.navigationLink, currentPageClass('ManageListingsPage'))}
+            name="ManageListingsPage"
+          >
+            <FormattedMessage id="TopbarMobileMenu.yourListingsLink" />
+          </NamedLink>
+          <NamedLink
+            className={classNames(css.navigationLink, currentPageClass('ProfileSettingsPage'))}
+            name="ProfileSettingsPage"
+          >
+            <FormattedMessage id="TopbarMobileMenu.profileSettingsLink" />
+          </NamedLink>
+          <NamedLink
+            className={classNames(css.navigationLink, currentPageClass('AccountSettingsPage'))}
+            name="AccountSettingsPage"
+          >
+            <FormattedMessage id="TopbarMobileMenu.accountSettingsLink" />
+          </NamedLink>
+        </div>
+        <div className={css.customLinksWrapper}>{extraLinks}</div>
         <div className={css.spacer} />
       </div>
       <div className={css.footer}>
