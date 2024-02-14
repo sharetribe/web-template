@@ -31,7 +31,11 @@ import {
   userDisplayNameAsString,
 } from '../../util/data';
 import { richText } from '../../util/richText';
-import { isBookingProcess, resolveLatestProcessName } from '../../transactions/transaction';
+import {
+  isBookingProcess,
+  isPurchaseProcess,
+  resolveLatestProcessName,
+} from '../../transactions/transaction';
 
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
@@ -191,12 +195,13 @@ export const ListingPageComponent = props => {
   const transactionProcessAlias = publicData?.transactionProcessAlias;
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const isBooking = isBookingProcess(processName);
-  const processType = isBooking ? 'booking' : 'purchase';
+  const isPurchase = isPurchaseProcess(processName);
+  const processType = isBooking ? ('booking' ? isPurchase : 'purchase') : 'inquiry';
 
   const currentAuthor = authorAvailable ? currentListing.author : null;
   const ensuredAuthor = ensureUser(currentAuthor);
   const noPayoutDetailsSetWithOwnListing =
-    isOwnListing && !currentUser?.attributes?.stripeConnected;
+    isOwnListing && (processType !== 'inquiry' && !currentUser?.attributes?.stripeConnected);
   const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
     <div>
       <FormattedMessage id="ListingPage.payoutDetailsWarning" values={{ processType }} />
