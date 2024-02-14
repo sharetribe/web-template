@@ -89,6 +89,22 @@ const getResolvedCustomLinks = (customLinks, routeConfiguration) => {
   });
 };
 
+const isCMSPage = found =>
+  found.route?.name === 'CMSPage' ? `CMSPage:${found.params?.pageId}` : null;
+const isInboxPage = found =>
+  found.route?.name === 'InboxPage' ? `InboxPage:${found.params?.tab}` : null;
+// Find the name of the current route/pathname.
+// It's used as handle for currentPage check.
+const getResolvedCurrentPage = (location, routeConfiguration) => {
+  const matchedRoutes = matchPathname(location.pathname, routeConfiguration);
+  if (matchedRoutes.length > 0) {
+    const found = matchedRoutes[0];
+    const cmsPageName = isCMSPage(found);
+    const inboxPageName = isInboxPage(found);
+    return cmsPageName ? cmsPageName : inboxPageName ? inboxPageName : `${found.route?.name}`;
+  }
+};
+
 const GenericError = props => {
   const { show } = props;
   const classes = classNames(css.genericError, {
@@ -213,6 +229,7 @@ class TopbarComponent extends Component {
     // Custom links are sorted so that group="primary" are always at the beginning of the list.
     const sortedCustomLinks = sortCustomLinks(config.topbar?.customLinks);
     const customLinks = getResolvedCustomLinks(sortedCustomLinks, routeConfiguration);
+    const resolvedCurrentPage = currentPage || getResolvedCurrentPage(location, routeConfiguration);
 
     const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
 
@@ -230,7 +247,7 @@ class TopbarComponent extends Component {
         currentUser={currentUser}
         onLogout={this.handleLogout}
         notificationCount={notificationCount}
-        currentPage={currentPage}
+        currentPage={resolvedCurrentPage}
         customLinks={customLinks}
       />
     );
@@ -264,7 +281,7 @@ class TopbarComponent extends Component {
           authScopes={authScopes}
           currentUser={currentUser}
           onLogout={this.handleLogout}
-          currentPage={currentPage}
+          currentPage={resolvedCurrentPage}
         />
         <div className={classNames(mobileRootClassName || css.container, mobileClassName)}>
           <Button
@@ -293,7 +310,7 @@ class TopbarComponent extends Component {
             className={desktopClassName}
             currentUserHasListings={currentUserHasListings}
             currentUser={currentUser}
-            currentPage={currentPage}
+            currentPage={resolvedCurrentPage}
             initialSearchFormValues={initialSearchFormValues}
             intl={intl}
             isAuthenticated={isAuthenticated}
