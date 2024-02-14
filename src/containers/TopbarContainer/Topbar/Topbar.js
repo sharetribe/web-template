@@ -9,7 +9,6 @@ import { useRouteConfiguration } from '../../../context/routeConfigurationContex
 
 import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
 import { isMainSearchTypeKeywords, isOriginInUse } from '../../../util/search';
-import { withViewport } from '../../../util/uiHelpers';
 import { parse, stringify } from '../../../util/urlHelpers';
 import { createResourceLocatorString, pathByRouteName } from '../../../util/routes';
 import { propTypes } from '../../../util/types';
@@ -155,7 +154,6 @@ class TopbarComponent extends Component {
       currentUserHasOrders,
       currentPage,
       notificationCount,
-      viewport,
       intl,
       location,
       onManageDisableScrolling,
@@ -173,7 +171,10 @@ class TopbarComponent extends Component {
 
     const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
 
-    const isMobileLayout = viewport.width < MAX_MOBILE_SCREEN_WIDTH;
+    const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
+    const isMobileLayout = hasMatchMedia
+      ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
+      : true;
     const isMobileMenuOpen = isMobileLayout && mobilemenu === 'open';
     const isMobileSearchOpen = isMobileLayout && mobilesearch === 'open';
 
@@ -348,12 +349,6 @@ TopbarComponent.propTypes = {
     search: string.isRequired,
   }).isRequired,
 
-  // from withViewport
-  viewport: shape({
-    width: number.isRequired,
-    height: number.isRequired,
-  }).isRequired,
-
   // from useIntl
   intl: intlShape.isRequired,
 
@@ -364,7 +359,7 @@ TopbarComponent.propTypes = {
   routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
-const EnhancedTopbar = props => {
+const Topbar = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
@@ -377,8 +372,5 @@ const EnhancedTopbar = props => {
     />
   );
 };
-
-const Topbar = withViewport(EnhancedTopbar);
-Topbar.displayName = 'Topbar';
 
 export default Topbar;
