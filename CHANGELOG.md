@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] OrderBreakdown: ensure that only those line-items are shown that have been included for
+  the currentUser's role (customer vs provider).
+  [#321](https://github.com/sharetribe/web-template/pull/321)
 - [fix] A listing using the inquiry transaction process should not show the payout details warning
   to the user.
 - [add] Update translations for de.json, es.json, and fr.json.
