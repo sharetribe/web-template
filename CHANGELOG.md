@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] new component CustomLinksMenu added to the Topbar. It shows custom links if there's enough
+  space available, or adds a new menu component that includes those links in a dropdown list.
+  [#320](https://github.com/sharetribe/web-template/pull/320)
 - [add] Mention Sharetribe Experts in the README.md
   [#332](https://github.com/sharetribe/web-template/pull/332)
 - [fix] AuthenticationPage: fix mobile layout issue when content was too long
@@ -34,7 +37,7 @@ way to update this template, but currently, we follow a pattern:
   the currentUser's role (customer vs provider).
   [#321](https://github.com/sharetribe/web-template/pull/321)
 - [fix] A listing using the inquiry transaction process should not show the payout details warning
-  to the user.
+  to the user. [#319](https://github.com/sharetribe/web-template/pull/319)
 - [add] Update translations for de.json, es.json, and fr.json.
   [#317](https://github.com/sharetribe/web-template/pull/317)
 - [fix] When delivery method is not set, it's still better to maintain the value as string, because
