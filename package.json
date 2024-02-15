@@ -79,7 +79,8 @@
     "cross-env": "^7.0.3",
     "inquirer": "^8.2.4",
     "nodemon": "^2.0.16",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "yarn": "latest"
   },
   "resolutions": {
     "react-dates/lodash": "^4.17.21",
@@ -115,7 +116,7 @@
     "start": "node --icu-data-dir=node_modules/full-icu server/index.js",
     "dev-server": "cross-env-shell NODE_ENV=development PORT=4000 REACT_APP_MARKETPLACE_ROOT_URL=http://localhost:4000 \"yarn run build&&nodemon --watch server server/index.js\"",
     "test-server": "jest ./server/**/*.test.js",
-    "heroku-postbuild": "yarn run build",
+    "heroku-postbuild": "npm run build",
     "postinstall": "patch-package",
     "translate": "node scripts/translations.js"
   },
@@ -132,7 +133,9 @@
     ]
   },
   "engines": {
-    "node": ">=16.18.0"
+    "node": ">=16.18.0",
+    "npm": ">=7.3.0",
+    "yarn": ">=1.22.5"
   },
   "prettier": {
     "singleQuote": true,
