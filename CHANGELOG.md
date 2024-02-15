@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] PageBuilder/SectionContainer: break long words (e.g. links) so that mobile layout does not
+  break. [#322](https://github.com/sharetribe/web-template/pull/322)
 - [change] OrderBreakdown: ensure that only those line-items are shown that have been included for
   the currentUser's role (customer vs provider).
   [#321](https://github.com/sharetribe/web-template/pull/321)
