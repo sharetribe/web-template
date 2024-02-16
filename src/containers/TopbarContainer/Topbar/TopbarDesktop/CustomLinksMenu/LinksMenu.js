@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 
 import {
@@ -67,6 +68,7 @@ const MeasureMoreMenu = props => {
     }
   }, [moreMenuRef, width]);
 
+  const isServer = typeof window === 'undefined';
   // Component is measured outside of the viewport
   const styleWrapper = !!width
     ? {}
@@ -82,11 +84,19 @@ const MeasureMoreMenu = props => {
         },
       };
 
-  return !width ? (
-    <div id="measureMoreLabel" className={css.linkMenuLabel} ref={moreMenuRef} {...styleWrapper}>
-      {label}
-    </div>
-  ) : null;
+  return !width && !isServer
+    ? ReactDOM.createPortal(
+        <div
+          id="measureMoreLabel"
+          className={css.linkMenuLabel}
+          ref={moreMenuRef}
+          {...styleWrapper}
+        >
+          {label}
+        </div>,
+        document.body
+      )
+    : null;
 };
 
 /**
