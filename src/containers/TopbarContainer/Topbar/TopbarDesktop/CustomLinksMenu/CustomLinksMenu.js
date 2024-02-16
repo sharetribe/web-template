@@ -93,7 +93,7 @@ const calculateContainerWidth = (containerRefTarget, parentWidth) => {
  * @param {*} props contains currentPage, customLinks, intl, and hasClientSideContentReady
  * @returns
  */
-const CustomLinksMenu = ({ currentPage, customLinks = [], intl, hasClientSideContentReady }) => {
+const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentReady, intl }) => {
   const containerRef = useRef(null);
   const observer = useRef(null);
   const [mounted, setMounted] = useState(false);
@@ -163,7 +163,7 @@ const CustomLinksMenu = ({ currentPage, customLinks = [], intl, hasClientSideCon
 
   // If there are no custom links, just render createListing link.
   if (customLinks?.length === 0) {
-    return <CreateListingMenuLink customLinksMenuClass={css.customLinksMenu} />;
+    return <CreateListingMenuLink customLinksMenuClass={css.createListingLinkOnly} />;
   }
 
   const styleMaybe = mounted ? { style: { width: `${containerWidth}px` } } : {};
