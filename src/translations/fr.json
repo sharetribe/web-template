@@ -1018,7 +1018,7 @@
   "TransactionPage.default-purchase.customer.inquiry.title": "Vous avez fait une demande à propos d'une annonce.",
   "TransactionPage.default-purchase.customer.payment-expired.title": "{customerName}, vous n'avez pas confirmé le paiement à temps.",
   "TransactionPage.default-purchase.customer.pending-payment.title": "{customerName}, vous n'avez pas encore confirmé le paiement.",
-  "TransactionPage.default-purchase.customer.purchased.extraInfo": "{deliveryMethod, select, shipping {Vous serez averti lorsque {providerName} expédiera l'article.} other {Utilisez la fonction de chat ci-dessous pour convenir d'une heure de retrait.}}",
+  "TransactionPage.default-purchase.customer.purchased.extraInfo": "{deliveryMethod, select, shipping {Vous serez averti lorsque {providerName} expédiera l'article.} pickup {Utilisez la fonction de chat ci-dessous pour convenir d'une heure de retrait.}} other {Utilisez la fonction de chat ci-dessous pour convenir des détails de la commande.}}",
   "TransactionPage.default-purchase.customer.purchased.title": "Votre paiement a réussi !",
   "TransactionPage.default-purchase.customer.received.title": "Vous avez reçu votre commande !",
   "TransactionPage.default-purchase.customer.reviewed-by-customer.title": "Vous avez reçu votre commande !",
