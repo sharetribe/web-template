@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../../../util/reactIntl';
@@ -81,6 +82,7 @@ const PriorityLinks = props => {
   }, [containerRef]);
 
   const { links, priorityLinks } = props;
+  const isServer = typeof window === 'undefined';
   const isMeasured = links?.[0]?.width && (priorityLinks.length === 0 || priorityLinks?.[0]?.width);
   const styleWrapper = !!isMeasured
     ? {}
@@ -97,12 +99,21 @@ const PriorityLinks = props => {
       };
   const linkConfigs = isMeasured ? priorityLinks : links;
 
-  return (
+  return isMeasured || isServer ? (
     <div className={css.priorityLinkWrapper} {...styleWrapper} ref={containerRef}>
       {linkConfigs.map(linkConfig => {
         return <PriorityLink key={linkConfig.text} linkConfig={linkConfig} />;
       })}
     </div>
+  ) : (
+    ReactDOM.createPortal(
+      <div className={css.priorityLinkWrapper} {...styleWrapper} ref={containerRef}>
+        {linkConfigs.map(linkConfig => {
+          return <PriorityLink key={linkConfig.text} linkConfig={linkConfig} />;
+        })}
+      </div>,
+      document.body
+    )
   );
 };
 
