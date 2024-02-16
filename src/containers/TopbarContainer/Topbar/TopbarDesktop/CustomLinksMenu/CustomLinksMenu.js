@@ -88,10 +88,17 @@ const calculateContainerWidth = (containerRefTarget, parentWidth) => {
  * renders primary links directly there if there's enough space - and secondary links are shown inside a "More" menu.
  * If the space is limited, primary links as well as secondary links are shown inside the "More" menu.
  *
+ * Note: this component is inherently a bit fragile as it needs to deal with DOM directly. If you customize TopbarDesktop,
+ * test the responsiveness thoroughly.
+ *
  * props:
+ * - customLinks: array of link configurations.
  * - hasClientSideContentReady: indicates if TopbarDesktop is ready to render
+ * - currentPage: string that indicates if this is "LandingPage" or "SearchPage", etc.
+ * - intl: React Intl instance
+ *
  * @param {*} props contains currentPage, customLinks, intl, and hasClientSideContentReady
- * @returns
+ * @returns component to be placed inside TopbarDesktop
  */
 const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentReady, intl }) => {
   const containerRef = useRef(null);
