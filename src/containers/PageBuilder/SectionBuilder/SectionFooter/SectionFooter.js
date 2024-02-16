@@ -17,6 +17,7 @@ const GRID_CONFIG = [
   { contentCss: css.contentCol3, gridCss: css.gridCol3 },
   { contentCss: css.contentCol4, gridCss: css.gridCol4 },
 ];
+const MAX_MOBILE_SCREEN_WIDTH = 1024;
 
 const getIndex = numberOfColumns => numberOfColumns - 1;
 
@@ -58,6 +59,11 @@ const SectionFooter = props => {
   });
 
   const showSocialMediaLinks = socialMediaLinks?.length > 0;
+  const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
+  const isMobileLayout = hasMatchMedia
+    ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
+    : true;
+  const logoLayout = isMobileLayout ? 'mobile' : 'desktop';
 
   // use block builder instead of mapping blocks manually
 
@@ -78,6 +84,7 @@ const SectionFooter = props => {
               logoClassName={css.logoWrapper}
               logoImageClassName={css.logoImage}
               linkToExternalSite={linkLogoToExternalSite}
+              layout={logoLayout}
             />
           </div>
           <div className={css.sloganMobile}>
