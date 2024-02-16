@@ -211,7 +211,7 @@ export const ClientApp = props => {
   const { store, hostedTranslations = {}, hostedConfig = {} } = props;
   const appConfig = mergeConfig(hostedConfig, defaultConfig);
 
-  // Show warning on the localhost:3000, if the environment variable key contains "SECRET"
+  // Show warning on the https://rundo-v1-6a83580be092.herokuapp.com, if the environment variable key contains "SECRET"
   if (appSettings.dev) {
     const envVars = process.env || {};
     const envVarKeys = Object.keys(envVars);
