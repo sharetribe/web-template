@@ -7,6 +7,12 @@ import { ExternalLink, NamedLink } from '../../../../../components';
 
 import css from './PriorityLinks.module.css';
 
+/**
+ * Create component that shows only a single "Post a new listing" link.
+ *
+ * @param {*} props contains customLinksMenuClass
+ * @returns div with only one link inside.
+ */
 export const CreateListingMenuLink = props => {
   return (
     <div className={props.customLinksMenuClass}>
