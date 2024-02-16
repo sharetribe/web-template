@@ -59,6 +59,10 @@
   }
 }
 
+.takeAvailableSpace {
+  flex-grow: 1;
+}
+
 .topbarSearchWithLeftPadding {
   padding-left: 24px;
   padding-right: 24px;

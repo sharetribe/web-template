@@ -134,6 +134,7 @@ const TopbarDesktop = props => {
   const authenticatedOnClientSide = mounted && isAuthenticated;
   const isAuthenticatedOrJustHydrated = isAuthenticated || !mounted;
 
+  const giveSpaceForSearch = customLinks == null || customLinks?.length === 0;
   const classes = classNames(rootClassName || css.root, className);
 
   const inboxLinkMaybe = authenticatedOnClientSide ? (
@@ -159,7 +160,7 @@ const TopbarDesktop = props => {
         linkToExternalSite={config?.topbar?.logoLink}
       />
       <TopbarSearchForm
-        className={css.searchLink}
+        className={classNames(css.searchLink, { [css.takeAvailableSpace]: giveSpaceForSearch })}
         desktopInputRoot={css.topbarSearchWithLeftPadding}
         onSubmit={onSearchSubmit}
         initialValues={initialSearchFormValues}
