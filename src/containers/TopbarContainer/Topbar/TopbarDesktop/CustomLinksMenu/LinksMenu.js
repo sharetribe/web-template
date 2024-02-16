@@ -114,7 +114,7 @@ const MenuLabelContent = ({ showMoreLabel, isOpen, intl }) => (
 const LinksMenu = props => {
   const [isOpen, setIsOpen] = useState(false);
   const { id, currentPage, links, showMoreLabel, moreLabelWidth, setMoreLabelWidth, intl } = props;
-  const contentPlacementOffset = moreLabelWidth ? -1 * (moreLabelWidth / 2) : 48;
+  const contentPlacementOffset = moreLabelWidth ? -1 * (moreLabelWidth / 2) : 24;
   return (
     <>
       <Menu
