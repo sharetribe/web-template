@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] Update the copy of TransactionPage.default-purchase.customer.purchased.extraInfo
+  [#322](https://github.com/sharetribe/web-template/pull/322)
 - [add] PageBuilder/SectionContainer: break long words (e.g. links) so that mobile layout does not
   break. [#322](https://github.com/sharetribe/web-template/pull/322)
 - [change] OrderBreakdown: ensure that only those line-items are shown that have been included for
