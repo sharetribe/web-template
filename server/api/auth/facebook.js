@@ -77,14 +77,11 @@ if (clientID) {
  * @param {*} next Call the next middleware function in the stack
  */
 exports.authenticateFacebook = (req, res, next) => {
-  const from = req.query.from ? req.query.from : null;
-  const defaultReturn = req.query.defaultReturn ? req.query.defaultReturn : null;
-  const defaultConfirm = req.query.defaultConfirm ? req.query.defaultConfirm : null;
-
+  const { from, defaultReturn, defaultConfirm } = req.query || {};
   const params = {
-    ...(!!from && { from }),
-    ...(!!defaultReturn && { defaultReturn }),
-    ...(!!defaultConfirm && { defaultConfirm }),
+    ...(from ? { from } : {}),
+    ...(defaultReturn ? { defaultReturn } : {}),
+    ...(defaultConfirm ? { defaultConfirm } : {}),
   };
 
   const paramsAsString = JSON.stringify(params);
