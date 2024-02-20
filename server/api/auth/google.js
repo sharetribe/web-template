@@ -25,6 +25,22 @@ const strategyOptions = {
   passReqToCallback: true,
 };
 
+/**
+ * Function Passport calls when a redirect returns the user from Google to the application.
+ *
+ * Normally with Passport, this function is used to validate the received user data, and possibly
+ * create a new user and the `done` callback is a session management function provided by Passport.
+ * In our case, the Sharetribe SDK handles user creation and session management. Therefore, we only
+ * extract user data here and provide a custom session management function in
+ * `authenticateGoogleCallback`, that servers as the `done` callback here.
+ *
+ * @param {*} req Express request object
+ * @param {*} accessToken Access token obtained from Google
+ * @param {*} refreshToken Refres token obtained from Google
+ * @param {*} rawReturn Object containing authentication data
+ * @param {*} profile Object containing user information
+ * @param {*} done Session management function, introduced in `authenticateGoogleCallback`
+ */
 const verifyCallback = (req, accessToken, refreshToken, rawReturn, profile, done) => {
   // We need to add additional parameter `rawReturn` to the callback
   // so that we can access the id_token coming from Google
@@ -55,6 +71,14 @@ if (clientID) {
   passport.use(new GoogleStrategy(strategyOptions, verifyCallback));
 }
 
+/**
+ * Initiate authentication with Google. When the funcion is called, Passport redirects the
+ * user to Google to perform authentication.
+ *
+ * @param {*} req Express request object
+ * @param {*} res Express response object
+ * @param {*} next Call the next middleware function in the stack
+ */
 exports.authenticateGoogle = (req, res, next) => {
   const from = req.query.from ? req.query.from : null;
   const defaultReturn = req.query.defaultReturn ? req.query.defaultReturn : null;
@@ -78,9 +102,23 @@ exports.authenticateGoogle = (req, res, next) => {
   })(req, res, next);
 };
 
-// Use custom callback for calling loginWithIdp enpoint
-// to log in the user to Sharetribe marketplace with the data from Google
+/**
+ * This function is called when user returns to this application after authenticating with
+ * Google. Passport verifies the recieved tokens and calls a callback function that we've defined
+ * for the authentication strategy and an additional session management function, that we introduce
+ * in this function.
+ *
+ * @param {*} req Express request object
+ * @param {*} res Express response object
+ * @param {*} next Call the next middleware function in the stack
+ */
 exports.authenticateGoogleCallback = (req, res, next) => {
+  // We've already defined the `verifyCallback` function for the Passport Google authentication
+  // strategy. That function is normally used to verify the user information obtained from identity
+  // provider, or alternatively create a new use while an internal Passport function is used to
+  // store the user data into session. In our case however, we use the SDK to manage sessions.
+  // Therefore, we provide an additional session management function here, that is called from the
+  // `verifyCallback` fn.
   passport.authenticate('google', function(err, user) {
     loginWithIdp(err, user, req, res, clientID, 'google');
   })(req, res, next);
