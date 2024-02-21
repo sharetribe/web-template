@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] Show an error message on authentication page in case identity provider authentication fails
+  [#326](https://github.com/sharetribe/web-template/pull/326)
+- [change] Upgrade Sharetribe SDK to 1.20.1
+  [#326](https://github.com/sharetribe/web-template/pull/326)
 - [change] Update the copy of TransactionPage.default-purchase.customer.purchased.extraInfo
   [#323](https://github.com/sharetribe/web-template/pull/323)
 - [add] PageBuilder/SectionContainer: break long words (e.g. links) so that mobile layout does not
