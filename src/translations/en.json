@@ -4,6 +4,7 @@
   "AuthenticationPage.confirmSignupWithIdpTitle": "Sign up with {idp}",
   "AuthenticationPage.fixEmail": "Is there an error in your email? {fixEmailLink}.",
   "AuthenticationPage.fixEmailLinkText": "Fix it",
+  "AuthenticationPage.idpAuthFailed": "Failed to authenticate with an external identity provider.",
   "AuthenticationPage.loginFailed": "The email and password you provided don't match our records. Please double-check and try again.",
   "AuthenticationPage.loginLinkText": "Log in",
   "AuthenticationPage.loginWithFacebook": "Log in with Facebook",

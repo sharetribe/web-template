@@ -137,6 +137,7 @@ export const AuthenticationForms = props => {
     from,
     submitLogin,
     loginError,
+    idpAuthError,
     signupError,
     authInProgress,
     submitSignup,
@@ -182,6 +183,12 @@ export const AuthenticationForms = props => {
     </div>
   );
 
+  const idpAuthErrorMessage = (
+    <div className={css.error}>
+      <FormattedMessage id="AuthenticationPage.idpAuthFailed" />
+    </div>
+  );
+
   const signupErrorMessage = (
     <div className={css.error}>
       {isSignupEmailTakenError(signupError) ? (
@@ -192,11 +199,14 @@ export const AuthenticationForms = props => {
     </div>
   );
 
-  // eslint-disable-next-line no-confusing-arrow
-  const errorMessage = (error, message) => (error ? message : null);
-  const loginOrSignupError = isLogin
-    ? errorMessage(loginError, loginErrorMessage)
-    : errorMessage(signupError, signupErrorMessage);
+  const loginOrSignupError =
+    isLogin && !!idpAuthError
+      ? idpAuthErrorMessage
+      : isLogin && !!loginError
+      ? loginErrorMessage
+      : !!signupError
+      ? signupErrorMessage
+      : null;
 
   return (
     <div className={css.content}>
@@ -298,6 +308,7 @@ export const AuthenticationOrConfirmInfoForm = props => {
     submitSingupWithIdp,
     authInProgress,
     loginError,
+    idpAuthError,
     signupError,
     confirmError,
     termsAndConditions,
@@ -320,6 +331,7 @@ export const AuthenticationOrConfirmInfoForm = props => {
       showGoogleLogin={showGoogleLogin}
       from={from}
       loginError={loginError}
+      idpAuthError={idpAuthError}
       signupError={signupError}
       submitLogin={submitLogin}
       authInProgress={authInProgress}
@@ -474,6 +486,7 @@ export const AuthenticationPageComponent = props => {
               submitSingupWithIdp={submitSingupWithIdp}
               authInProgress={authInProgress}
               loginError={loginError}
+              idpAuthError={authError}
               signupError={signupError}
               confirmError={confirmError}
               termsAndConditions={
