@@ -112,7 +112,6 @@ class FilterPopupForSidebar extends Component {
       children,
       initialValues,
       keepDirtyOnReinitialize,
-      contentPlacementOffset,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
@@ -162,7 +161,6 @@ class FilterPopupForSidebar extends Component {
                 id={`${id}.form`}
                 paddingClasses={popupSizeClasses}
                 showAsPopup
-                contentPlacementOffset={contentPlacementOffset}
                 initialValues={initialValues}
                 keepDirtyOnReinitialize={keepDirtyOnReinitialize}
                 onSubmit={this.handleSubmit}
