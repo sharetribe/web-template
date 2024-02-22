@@ -36,11 +36,11 @@ const strategyOptions = {
  * extract user data here and provide a custom session management function in
  * `authenticateFacebookCallback`, that servers as the `done` callback here.
  *
- * @param {*} req Express request object
- * @param {*} accessToken Access token obtained from Facebook
- * @param {*} refreshToken Refres token obtained from Facebook
- * @param {*} profile Object containing user information
- * @param {*} done Session management function, introduced in `authenticateFacebookCallback`
+ * @param {Object} req Express request object
+ * @param {String} accessToken Access token obtained from Facebook
+ * @param {String} refreshToken Refres token obtained from Facebook
+ * @param {Object} profile Object containing user information
+ * @param {Function} done Session management function, introduced in `authenticateFacebookCallback`
  */
 const verifyCallback = (req, accessToken, refreshToken, profile, done) => {
   const { email, first_name, last_name } = profile._json;
@@ -72,9 +72,9 @@ if (clientID) {
  * Initiate authentication with Facebook. When the funcion is called, Passport redirects the
  * user to Facebook to perform authentication.
  *
- * @param {*} req Express request object
- * @param {*} res Express response object
- * @param {*} next Call the next middleware function in the stack
+ * @param {Object} req Express request object
+ * @param {Object} res Express response object
+ * @param {Function} next Call the next middleware function in the stack
  */
 exports.authenticateFacebook = (req, res, next) => {
   const { from, defaultReturn, defaultConfirm } = req.query || {};
@@ -95,9 +95,9 @@ exports.authenticateFacebook = (req, res, next) => {
  * for the authentication strategy and an additional session management function, that we introduce
  * in this function.
  *
- * @param {*} req Express request object
- * @param {*} res Express response object
- * @param {*} next Call the next middleware function in the stack
+ * @param {Object} req Express request object
+ * @param {Object} res Express response object
+ * @param {Function} next Call the next middleware function in the stack
  */
 exports.authenticateFacebookCallback = (req, res, next) => {
   // We've already defined the `verifyCallback` function for the Passport Facebook authentication
