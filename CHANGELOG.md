@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] Update social login button labels to be aligned with branding guides
+  [#327](https://github.com/sharetribe/web-template/pull/327)
 - [fix] Show an error message on authentication page in case identity provider authentication fails
   [#326](https://github.com/sharetribe/web-template/pull/326)
 - [change] Upgrade Sharetribe SDK to 1.20.1
