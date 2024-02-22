@@ -106,7 +106,7 @@ exports.authenticateFacebookCallback = (req, res, next) => {
   // store the user data into session. In our case however, we use the SDK to manage sessions.
   // Therefore, we provide an additional session management function here, that is called from the
   // `verifyCallback` fn.
-  passport.authenticate('facebook', function(err, user) {
-    loginWithIdp(err, user, req, res, clientID, 'facebook');
-  })(req, res, next);
+  const sessionFn = (err, user) => loginWithIdp(err, user, req, res, clientID, 'facebook');
+
+  passport.authenticate('facebook', sessionFn)(req, res, next);
 };

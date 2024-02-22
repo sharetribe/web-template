@@ -116,7 +116,7 @@ exports.authenticateGoogleCallback = (req, res, next) => {
   // store the user data into session. In our case however, we use the SDK to manage sessions.
   // Therefore, we provide an additional session management function here, that is called from the
   // `verifyCallback` fn.
-  passport.authenticate('google', function(err, user) {
-    loginWithIdp(err, user, req, res, clientID, 'google');
-  })(req, res, next);
+  const sessionFn = (err, user) => loginWithIdp(err, user, req, res, clientID, 'google');
+
+  passport.authenticate('google', sessionFn)(req, res, next);
 };
