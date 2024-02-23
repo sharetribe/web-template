@@ -6,10 +6,12 @@
 
 .contentContainer {
   composes: marketplaceModalRootStyles from global;
-  height: calc(100vh - 60px);
+  min-height: calc(100vh - 60px);
+  height: auto;
 
   @media (--viewportMedium) {
     height: unset;
+    min-height: unset;
   }
 }
 
