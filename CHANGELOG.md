@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] AuthenticationPage: fix mobile layout issue when content was too long
+  [#330](https://github.com/sharetribe/web-template/pull/330)
 - [add] Update translations for de.json, es.json, and fr.json.
   [#328](https://github.com/sharetribe/web-template/pull/328)
 - [change] Update social login button labels to be aligned with branding guides
