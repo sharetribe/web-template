@@ -1,0 +1,2 @@
+# Ignore node_modules because they get installed in the Dockerfile.
+node_modules
