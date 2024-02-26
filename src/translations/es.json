@@ -258,7 +258,7 @@
   "EditListingPricingAndStockPanel.listingPriceCurrencyInvalid": "La moneda del anuncio es diferente de la moneda del sistema ({marketplaceCurrency}). No es posible editar el precio.",
   "EditListingPricingAndStockPanel.title": "Precio e inventario de {listingTitle}",
   "EditListingPricingForm.priceInputPlaceholder": "Agrega un precio…",
-  "EditListingPricingForm.pricePerProduct": "Precio {unitType, select, day {por día} night {por noche} hour {por hora} other {}}",
+  "EditListingPricingForm.pricePerProduct": "Precio {unitType, select, day {por día en ARS} night {por noche en ARS} hour {por hora en ARS} other {}}",
   "EditListingPricingForm.priceRequired": "Necesitas agregar un precio válido.",
   "EditListingPricingForm.priceTooLow": "El precio mínimo es de {minPrice}.",
   "EditListingPricingForm.showListingFailed": "Error al obtener los datos del anuncio.",
