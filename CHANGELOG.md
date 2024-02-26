@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+## [v4.1.0] 2024-02-26
+
 - [add] new component CustomLinksMenu added to the Topbar. It shows custom links if there's enough
   space available, or adds a new menu component that includes those links in a dropdown list.
   [#320](https://github.com/sharetribe/web-template/pull/320)
@@ -43,6 +45,8 @@ way to update this template, but currently, we follow a pattern:
 - [fix] When delivery method is not set, it's still better to maintain the value as string, because
   it's used as an argument in translations.
   [#316](https://github.com/sharetribe/web-template/pull/316)
+
+  [v4.1.0]: https://github.com/sharetribe/web-template/compare/v4.0.0...v4.1.0
 
 ## [v4.0.0] 2024-02-07
 
