@@ -69,6 +69,9 @@ class SearchFiltersSecondaryComponent extends Component {
           <InlineTextButton rootClassName={css.resetAllButton} onClick={this.resetAll}>
             <FormattedMessage id={'SearchFiltersSecondary.resetAll'} />
           </InlineTextButton>
+          <InlineTextButton rootClassName={css.resetAllButton} onClick={this.resetAll}>
+            <FormattedMessage id={'SearchFiltersSecondary.contactoWA'} />
+          </InlineTextButton>
           <InlineTextButton rootClassName={css.cancelButton} onClick={this.cancelFilters}>
             <FormattedMessage id={'SearchFiltersSecondary.cancel'} />
           </InlineTextButton>
