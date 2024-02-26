@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Mention Sharetribe Experts in the README.md
+  [#332](https://github.com/sharetribe/web-template/pull/332)
 - [fix] AuthenticationPage: fix mobile layout issue when content was too long
   [#330](https://github.com/sharetribe/web-template/pull/330)
 - [add] Update translations for de.json, es.json, and fr.json.
