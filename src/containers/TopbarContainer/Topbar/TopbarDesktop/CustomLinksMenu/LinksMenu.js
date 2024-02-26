@@ -110,7 +110,7 @@ const MenuLabelContent = ({ showMoreLabel, isOpen, intl }) => (
     {showMoreLabel
       ? intl.formatMessage({ id: 'TopbarDesktop.LinksMenu.more' })
       : intl.formatMessage({ id: 'TopbarDesktop.LinksMenu.all' })}
-    <IconArrowHead direction={isOpen ? 'up' : 'down'} size="small" rootClassName={css.arrowIcon} />
+    <IconArrowHead direction="down" size="small" rootClassName={css.arrowIcon} />
   </span>
 );
 
