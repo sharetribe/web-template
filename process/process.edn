@@ -48,8 +48,8 @@
    :to :state/expired}
   {:name :transition/complete,
    :at
-   {:fn/plus
-    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P2D"]}]},
+   {:fn/minus
+    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P1D"]}]},
    :from :state/accepted,
    :to :state/delivered}
   {:name :transition/operator-complete,
