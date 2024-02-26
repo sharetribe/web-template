@@ -76,6 +76,9 @@ See the Sharetribe Developer Docs: [sharetribe.com/docs/](https://www.sharetribe
 If you have any questions about development, the best place to ask them is the Developer Slack
 channel at https://www.sharetribe.com/dev-slack
 
+If you need help with development, you can hire a verified software developer with Sharetribe
+experience from the [Expert Network](https://www.sharetribe.com/experts/).
+
 ## License
 
 This project is licensed under the terms of the Apache-2.0 license.
