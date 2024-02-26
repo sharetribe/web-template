@@ -10,7 +10,7 @@ const SectionBuilder = loadable(
 );
 
 const FooterComponent = () => {
-  const { footer = {} } = useConfiguration();
+  const { footer = {}, topbar } = useConfiguration();
 
   // If footer asset is not set, let's not render Footer at all.
   if (Object.keys(footer).length === 0) {
@@ -24,6 +24,7 @@ const FooterComponent = () => {
     ...footer,
     sectionId: 'footer',
     sectionType: 'footer',
+    linkLogoToExternalSite: topbar?.logoLink,
   };
 
   return <SectionBuilder sections={[footerSection]} />;

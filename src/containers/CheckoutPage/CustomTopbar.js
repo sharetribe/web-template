@@ -28,7 +28,7 @@ const CustomTopbar = props => {
     };
   });
 
-  const { className, rootClassName, intl } = props;
+  const { className, rootClassName, intl, linkToExternalSite } = props;
   const classes = classNames(rootClassName || css.topbar, className);
 
   return (
@@ -36,6 +36,7 @@ const CustomTopbar = props => {
       <LinkedLogo
         layout={isMobile ? 'mobile' : 'desktop'}
         alt={intl.formatMessage({ id: 'CheckoutPage.goToLandingPage' })}
+        linkToExternalSite={linkToExternalSite}
       />
     </div>
   );

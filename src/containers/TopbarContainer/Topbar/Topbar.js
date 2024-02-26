@@ -9,9 +9,8 @@ import { useRouteConfiguration } from '../../../context/routeConfigurationContex
 
 import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
 import { isMainSearchTypeKeywords, isOriginInUse } from '../../../util/search';
-import { withViewport } from '../../../util/uiHelpers';
 import { parse, stringify } from '../../../util/urlHelpers';
-import { createResourceLocatorString, pathByRouteName } from '../../../util/routes';
+import { createResourceLocatorString, matchPathname, pathByRouteName } from '../../../util/routes';
 import { propTypes } from '../../../util/types';
 import {
   Button,
@@ -19,7 +18,6 @@ import {
   LinkedLogo,
   Modal,
   ModalMissingInformation,
-  NamedLink,
 } from '../../../components';
 
 import MenuIcon from './MenuIcon';
@@ -48,6 +46,63 @@ const redirectToURLWithoutModalState = (props, modalStateParam) => {
   const stringified = stringify(queryParams);
   const searchString = stringified ? `?${stringified}` : '';
   history.push(`${pathname}${searchString}`, state);
+};
+
+const isPrimary = o => o.group === 'primary';
+const isSecondary = o => o.group === 'secondary';
+const compareGroups = (a, b) => {
+  const isAHigherGroupThanB = isPrimary(a) && isSecondary(b);
+  const isALesserGroupThanB = isSecondary(a) && isPrimary(b);
+  // Note: sort order is stable in JS
+  return isAHigherGroupThanB ? -1 : isALesserGroupThanB ? 1 : 0;
+};
+// Returns links in order where primary links are returned first
+const sortCustomLinks = customLinks => {
+  const links = Array.isArray(customLinks) ? customLinks : [];
+  return links.sort(compareGroups);
+};
+
+// Resolves in-app links against route configuration
+const getResolvedCustomLinks = (customLinks, routeConfiguration) => {
+  const links = Array.isArray(customLinks) ? customLinks : [];
+  return links.map(linkConfig => {
+    const { type, href } = linkConfig;
+    const isInternalLink = type === 'internal' || href.charAt(0) === '/';
+    if (isInternalLink) {
+      // Internal link
+      const testURL = new URL('http://my.marketplace.com' + href);
+      const matchedRoutes = matchPathname(testURL.pathname, routeConfiguration);
+      if (matchedRoutes.length > 0) {
+        const found = matchedRoutes[0];
+        const to = { search: testURL.search, hash: testURL.hash };
+        return {
+          ...linkConfig,
+          route: {
+            name: found.route?.name,
+            params: found.params,
+            to,
+          },
+        };
+      }
+    }
+    return linkConfig;
+  });
+};
+
+const isCMSPage = found =>
+  found.route?.name === 'CMSPage' ? `CMSPage:${found.params?.pageId}` : null;
+const isInboxPage = found =>
+  found.route?.name === 'InboxPage' ? `InboxPage:${found.params?.tab}` : null;
+// Find the name of the current route/pathname.
+// It's used as handle for currentPage check.
+const getResolvedCurrentPage = (location, routeConfiguration) => {
+  const matchedRoutes = matchPathname(location.pathname, routeConfiguration);
+  if (matchedRoutes.length > 0) {
+    const found = matchedRoutes[0];
+    const cmsPageName = isCMSPage(found);
+    const inboxPageName = isInboxPage(found);
+    return cmsPageName ? cmsPageName : inboxPageName ? inboxPageName : `${found.route?.name}`;
+  }
 };
 
 const GenericError = props => {
@@ -155,7 +210,6 @@ class TopbarComponent extends Component {
       currentUserHasOrders,
       currentPage,
       notificationCount,
-      viewport,
       intl,
       location,
       onManageDisableScrolling,
@@ -164,6 +218,7 @@ class TopbarComponent extends Component {
       sendVerificationEmailError,
       showGenericError,
       config,
+      routeConfiguration,
     } = this.props;
 
     const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
@@ -171,9 +226,17 @@ class TopbarComponent extends Component {
       latlngBounds: ['bounds'],
     });
 
+    // Custom links are sorted so that group="primary" are always at the beginning of the list.
+    const sortedCustomLinks = sortCustomLinks(config.topbar?.customLinks);
+    const customLinks = getResolvedCustomLinks(sortedCustomLinks, routeConfiguration);
+    const resolvedCurrentPage = currentPage || getResolvedCurrentPage(location, routeConfiguration);
+
     const notificationDot = notificationCount > 0 ? <div className={css.notificationDot} /> : null;
 
-    const isMobileLayout = viewport.width < MAX_MOBILE_SCREEN_WIDTH;
+    const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
+    const isMobileLayout = hasMatchMedia
+      ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
+      : true;
     const isMobileMenuOpen = isMobileLayout && mobilemenu === 'open';
     const isMobileSearchOpen = isMobileLayout && mobilesearch === 'open';
 
@@ -184,7 +247,8 @@ class TopbarComponent extends Component {
         currentUser={currentUser}
         onLogout={this.handleLogout}
         notificationCount={notificationCount}
-        currentPage={currentPage}
+        currentPage={resolvedCurrentPage}
+        customLinks={customLinks}
       />
     );
 
@@ -217,7 +281,7 @@ class TopbarComponent extends Component {
           authScopes={authScopes}
           currentUser={currentUser}
           onLogout={this.handleLogout}
-          currentPage={currentPage}
+          currentPage={resolvedCurrentPage}
         />
         <div className={classNames(mobileRootClassName || css.container, mobileClassName)}>
           <Button
@@ -228,7 +292,11 @@ class TopbarComponent extends Component {
             <MenuIcon className={css.menuIcon} />
             {notificationDot}
           </Button>
-          <LinkedLogo layout={'mobile'} alt={intl.formatMessage({ id: 'Topbar.logoIcon' })} />
+          <LinkedLogo
+            layout={'mobile'}
+            alt={intl.formatMessage({ id: 'Topbar.logoIcon' })}
+            linkToExternalSite={config?.topbar?.logoLink}
+          />
           <Button
             rootClassName={css.searchMenu}
             onClick={this.handleMobileSearchOpen}
@@ -242,14 +310,15 @@ class TopbarComponent extends Component {
             className={desktopClassName}
             currentUserHasListings={currentUserHasListings}
             currentUser={currentUser}
-            currentPage={currentPage}
+            currentPage={resolvedCurrentPage}
             initialSearchFormValues={initialSearchFormValues}
             intl={intl}
             isAuthenticated={isAuthenticated}
             notificationCount={notificationCount}
             onLogout={this.handleLogout}
             onSearchSubmit={this.handleSubmit}
-            appConfig={config}
+            config={config}
+            customLinks={customLinks}
           />
         </div>
         <Modal
@@ -344,12 +413,6 @@ TopbarComponent.propTypes = {
     search: string.isRequired,
   }).isRequired,
 
-  // from withViewport
-  viewport: shape({
-    width: number.isRequired,
-    height: number.isRequired,
-  }).isRequired,
-
   // from useIntl
   intl: intlShape.isRequired,
 
@@ -360,7 +423,7 @@ TopbarComponent.propTypes = {
   routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
-const EnhancedTopbar = props => {
+const Topbar = props => {
   const config = useConfiguration();
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
@@ -373,8 +436,5 @@ const EnhancedTopbar = props => {
     />
   );
 };
-
-const Topbar = withViewport(EnhancedTopbar);
-Topbar.displayName = 'Topbar';
 
 export default Topbar;
