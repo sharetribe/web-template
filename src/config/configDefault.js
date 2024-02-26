@@ -83,6 +83,7 @@ const defaultConfig = {
   appCdnAssets: {
     translations: '/content/translations.json',
     footer: '/content/footer.json',
+    topbar: '/content/top-bar.json',
     branding: '/design/branding.json',
     layout: '/design/layout.json',
     listingTypes: '/listings/listing-types.json',

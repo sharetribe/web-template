@@ -933,6 +933,8 @@
   "Topbar.menuIcon": "Open menu",
   "Topbar.mobileSearchHelp": "Find what you are looking for.",
   "Topbar.searchIcon": "Open search",
+  "TopbarDesktop.LinksMenu.all": "Menu",
+  "TopbarDesktop.LinksMenu.more": "More",
   "TopbarDesktop.accountSettingsLink": "Account settings",
   "TopbarDesktop.createListing": "Post a new listing",
   "TopbarDesktop.inbox": "Inbox",

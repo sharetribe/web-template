@@ -225,7 +225,7 @@ const ProfilePageComponent = props => {
     >
       <LayoutSideNavigation
         sideNavClassName={css.aside}
-        topbar={<TopbarContainer currentPage="ProfilePage" />}
+        topbar={<TopbarContainer />}
         sideNav={
           <AsideContent user={user} isCurrentUser={isCurrentUser} displayName={displayName} />
         }

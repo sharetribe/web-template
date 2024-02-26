@@ -297,7 +297,6 @@ export const InboxPageComponent = props => {
           <TopbarContainer
             mobileRootClassName={css.mobileTopbar}
             desktopClassName={css.desktopTopbar}
-            currentPage="InboxPage"
           />
         }
         sideNav={

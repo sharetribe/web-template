@@ -56,7 +56,6 @@ export const PasswordChangePageComponent = props => {
         topbar={
           <>
             <TopbarContainer
-              currentPage="PasswordChangePage"
               desktopClassName={css.desktopTopbar}
               mobileClassName={css.mobileTopbar}
             />
