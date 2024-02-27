@@ -31,7 +31,6 @@ const SearchResultsPanel = props => {
 
   const cardRenderSizes = isMapVariant => {
     if (isMapVariant) {
-      // Panel width relative to the viewport
       const panelMediumWidth = 50;
       const panelLargeWidth = 62.5;
       return [
@@ -41,7 +40,6 @@ const SearchResultsPanel = props => {
         `${panelLargeWidth / 3}vw`,
       ].join(', ');
     } else {
-      // Panel width relative to the viewport
       const panelMediumWidth = 50;
       const panelLargeWidth = 62.5;
       return [
@@ -56,10 +54,15 @@ const SearchResultsPanel = props => {
 
   return (
     <div className={classes}>
-      {/* Agrega el botón aquí */}
-      <button className={css.whatsappButton} onClick={() => window.open('https://api.whatsapp.com/send/?phone=5492944232664&text&type=phone_number&app_absent=0')}>
-        Si no encontrás lo que necesitas, ¡escribinos por acá!
-      </button>
+      <div className={classNames(css.stickyButtonContainer)}>
+        <button
+          className={classNames(css.stickyButton, css.whatsappButton)}
+          onClick={() => window.open('https://api.whatsapp.com/send/?phone=5492944232664&text&type=phone_number&app_absent=0')}
+        >
+          Si no encontrás lo que necesitas, ¡escribinos por acá!
+        </button>
+      </div>
+
       <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
         {listings.map(l => (
           <ListingCard

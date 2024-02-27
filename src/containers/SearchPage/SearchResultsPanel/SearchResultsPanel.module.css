@@ -66,7 +66,7 @@
 .stickyButton {
   position: sticky;
   top: 0;
-  background-color: #4CAF50; /* Color de fondo del botón */
+  background-color: #07bc60; /* Color de fondo del botón */
   color: white; /* Color del texto del botón */
   padding: 10px 15px; /* Relleno del botón */
   border: none; /* Sin borde */
@@ -74,4 +74,11 @@
   text-decoration: none;
   font-size: 16px;
   cursor: pointer;
+  z-index: 1000; /* Asegura que el botón esté sobre otros elementos */
+  width: 100%;
+}
+
+/* Agrega este estilo para el espacio entre el botón y la grilla de artículos */
+.listingCards {
+  margin-top: 20px; /* Ajusta el espacio según tus preferencias */
 }
