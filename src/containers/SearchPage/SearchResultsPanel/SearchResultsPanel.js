@@ -56,6 +56,9 @@ const SearchResultsPanel = props => {
 
   return (
     <div className={classes}>
+      {/* Agrega el botón aquí */}
+      <button className={css.stickyButton}>Si no encontras lo que necesitas, escribinos por acá</button>
+
       <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
         {listings.map(l => (
           <ListingCard

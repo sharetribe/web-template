@@ -61,3 +61,17 @@
   margin-top: auto;
   background-color: transparent;
 }
+
+/* Ine*/
+.stickyButton {
+  position: sticky;
+  top: 0;
+  background-color: #4CAF50; /* Color de fondo del botón */
+  color: white; /* Color del texto del botón */
+  padding: 10px 15px; /* Relleno del botón */
+  border: none; /* Sin borde */
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+}
