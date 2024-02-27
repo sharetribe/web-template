@@ -57,7 +57,7 @@ const SearchResultsPanel = props => {
   return (
     <div className={classes}>
       {/* Agrega el botón aquí */}
-      <button className={css.stickyButton}>Si no encontras lo que necesitas, escribinos por acá</button>
+      <button className={css.stickyButton} href="https://api.whatsapp.com/send/?phone=5492944232664&text&type=phone_number&app_absent=0">Si no encontras lo que necesitas, escribinos por acá</button>
 
       <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
         {listings.map(l => (
