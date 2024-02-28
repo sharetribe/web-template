@@ -254,7 +254,7 @@ const OrderPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.orderTitle);
 
-  const isFavorite = currentUser?.attributes.profile.privateData.favorites?.includes(
+  /*const isFavorite = currentUser?.attributes.profile.privateData.favorites?.includes(
     listing.id.uuid
   );
 
@@ -272,6 +272,7 @@ const OrderPanel = props => {
       <FormattedMessage id="OrderPanel.addFavoriteButton" />
     </Button>
   );
+  */
   return (
     <div className={classes}>
       <ModalInMobile
@@ -427,7 +428,6 @@ const OrderPanel = props => {
 	          <img src="/static/icons/whatsapp.png" alt="WhatsApp" className={css.whatsAppButton}/>
         </a>
       </div>
-      {favoriteButton}
     </div>
   );
 };

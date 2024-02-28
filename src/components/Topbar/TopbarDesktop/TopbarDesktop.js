@@ -94,15 +94,7 @@ const TopbarDesktop = props => {
             <FormattedMessage id="TopbarDesktop.yourListingsLink" />
           </NamedLink>
         </MenuItem>
-        <MenuItem key="FavoriteListingsPage">
-          <NamedLink
-            className={classNames(css.yourListingsLink, currentPageClass('FavoriteListingsPage'))}
-            name="FavoriteListingsPage"
-          >
-            <span className={css.menuItemBorder} />
-            <FormattedMessage id="TopbarDesktop.favoriteListingsLink" />
-          </NamedLink>
-        </MenuItem>
+        
         <MenuItem key="ProfileSettingsPage">
           <NamedLink
             className={classNames(css.profileSettingsLink, currentPageClass('ProfileSettingsPage'))}
@@ -130,12 +122,12 @@ const TopbarDesktop = props => {
       </MenuContent>
     </Menu>
   ) : null;
-
+  
   const signupLink = isAuthenticatedOrJustHydrated ? null : (
     <NamedLink name="SignupPage" className={css.signupLink}>
-      <span className={css.signup}>
-        <FormattedMessage id="TopbarDesktop.signup" />
-      </span>
+       <span className={css.signup}>
+         <FormattedMessage id="TopbarDesktop.signup" />
+       </span>
     </NamedLink>
   );
 
