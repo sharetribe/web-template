@@ -1,5 +1,5 @@
 import React from 'react';
-import { bool, func, node, number, string } from 'prop-types';
+import { bool, func, node, number, string } from 'prop-types'; // Agregué 'func' aquí
 import classNames from 'classnames';
 
 import { FormattedMessage } from '../../../util/reactIntl';
@@ -17,6 +17,7 @@ const MainPanelHeader = props => {
     resultsCount,
     searchInProgress,
     noResultsInfo,
+    onOpenWhatsApp,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -49,6 +50,7 @@ const MainPanelHeader = props => {
       {children}
 
       {noResultsInfo ? noResultsInfo : null}
+
     </div>
   );
 };
@@ -68,6 +70,7 @@ MainPanelHeader.propTypes = {
   resultsCount: number,
   searchInProgress: bool,
   sortByComponent: node,
+  onOpenWhatsApp: func.isRequired,
 };
 
 export default MainPanelHeader;
