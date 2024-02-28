@@ -158,7 +158,7 @@ const TopbarDesktop = props => {
       <a style={{width: '20%', height: '100%'}}>
         <a style={{ height: '100%', display: 'flex', alignItems: 'center'}} href="https://wa.me/5492944232664" target="_blank" >
         <p style={{color: "green",textAlign: "center", display: "flex",
-        color: "#07bc60",alignItems: "center"}}>Comunicate con nosotros
+        color: "#07bc60",alignItems: "center"}}>
         <img src="/static/icons/whatsapp.png" alt="WhatsApp" style={{marginLeft: "10%",width: '15%'}}/></p>
         </a>
       </a>
