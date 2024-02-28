@@ -59,7 +59,7 @@ const SearchResultsPanel = props => {
           className={classNames(css.stickyButton, css.whatsappButton)}
           onClick={() => window.open('https://api.whatsapp.com/send/?phone=5492944232664&text&type=phone_number&app_absent=0')}
         >
-          Si no encontrás lo que necesitas, ¡escribinos por acá!
+          Si no encontrás lo que necesitás, ¡escribinos por acá!
         </button>
       </div>
 
@@ -85,7 +85,7 @@ const SearchResultsPanel = props => {
             )
           }
         >
-          Si no encontrás lo que necesitas, ¡escribinos por acá!
+          Si no encontrás lo que necesitás, ¡escribinos por acá!
         </button>
       </div>
       {paginationLinks}
