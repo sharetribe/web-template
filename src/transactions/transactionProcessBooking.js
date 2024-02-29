@@ -120,7 +120,7 @@ export const graph = {
         [transitions.REQUEST_PAYMENT_AFTER_INQUIRY]: states.PREAUTHORIZED,
       },
     },
-    
+
     [states.PREAUTHORIZED]: {
       on: {
         [transitions.DECLINE]: states.DECLINED,
@@ -128,6 +128,16 @@ export const graph = {
         [transitions.EXPIRE]: states.EXPIRED,
         [transitions.ACCEPT]: states.ACCEPTED,
         [transitions.OPERATOR_ACCEPT]: states.ACCEPTED,
+      },
+    },
+    
+    [states.DECLINED]: {},
+    [states.EXPIRED]: {},
+    [states.ACCEPTED]: {
+      on: {
+        [transitions.CANCEL]: states.CANCELED,
+        [transitions.COMPLETE]: states.DELIVERED,
+        [transitions.OPERATOR_COMPLETE]: states.DELIVERED,
       },
     },
     [states.CANCELED]: {},
