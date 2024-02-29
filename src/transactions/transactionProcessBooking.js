@@ -120,7 +120,7 @@ export const graph = {
         [transitions.REQUEST_PAYMENT_AFTER_INQUIRY]: states.PREAUTHORIZED,
       },
     },
-    
+
     [states.PREAUTHORIZED]: {
       on: {
         [transitions.DECLINE]: states.DECLINED,
@@ -130,6 +130,37 @@ export const graph = {
         [transitions.OPERATOR_ACCEPT]: states.ACCEPTED,
       },
     },
+    
+    [states.DECLINED]: {},
+    [states.EXPIRED]: {},
+    [states.ACCEPTED]: {
+      on: {
+        [transitions.CANCEL]: states.CANCELED,
+        [transitions.COMPLETE]: states.DELIVERED,
+        [transitions.OPERATOR_COMPLETE]: states.DELIVERED,
+      },
+    },
+    [states.CANCELED]: {},
+    [states.DELIVERED]: {
+      on: {
+        [transitions.EXPIRE_REVIEW_PERIOD]: states.REVIEWED,
+        [transitions.REVIEW_1_BY_CUSTOMER]: states.REVIEWED_BY_CUSTOMER,
+        [transitions.REVIEW_1_BY_PROVIDER]: states.REVIEWED_BY_PROVIDER,
+      },
+    },
+    [states.REVIEWED_BY_CUSTOMER]: {
+      on: {
+        [transitions.REVIEW_2_BY_PROVIDER]: states.REVIEWED,
+        [transitions.EXPIRE_PROVIDER_REVIEW_PERIOD]: states.REVIEWED,
+      },
+    },
+    [states.REVIEWED_BY_PROVIDER]: {
+      on: {
+        [transitions.REVIEW_2_BY_CUSTOMER]: states.REVIEWED,
+        [transitions.EXPIRE_CUSTOMER_REVIEW_PERIOD]: states.REVIEWED,
+      },
+    },
+    [states.REVIEWED]: { type: 'final' },
   },
 };
 
