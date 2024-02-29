@@ -130,6 +130,27 @@ export const graph = {
         [transitions.OPERATOR_ACCEPT]: states.ACCEPTED,
       },
     },
+    [states.CANCELED]: {},
+    [states.DELIVERED]: {
+      on: {
+        [transitions.EXPIRE_REVIEW_PERIOD]: states.REVIEWED,
+        [transitions.REVIEW_1_BY_CUSTOMER]: states.REVIEWED_BY_CUSTOMER,
+        [transitions.REVIEW_1_BY_PROVIDER]: states.REVIEWED_BY_PROVIDER,
+      },
+    },
+    [states.REVIEWED_BY_CUSTOMER]: {
+      on: {
+        [transitions.REVIEW_2_BY_PROVIDER]: states.REVIEWED,
+        [transitions.EXPIRE_PROVIDER_REVIEW_PERIOD]: states.REVIEWED,
+      },
+    },
+    [states.REVIEWED_BY_PROVIDER]: {
+      on: {
+        [transitions.REVIEW_2_BY_CUSTOMER]: states.REVIEWED,
+        [transitions.EXPIRE_CUSTOMER_REVIEW_PERIOD]: states.REVIEWED,
+      },
+    },
+    [states.REVIEWED]: { type: 'final' },
   },
 };
 
