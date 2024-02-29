@@ -161,7 +161,7 @@ const TopbarDesktop = props => {
       </NamedLink>
       {inboxLink}
       {profileMenu}
-      {signupLink}
+      
       {loginLink}
     </nav>
   );
