@@ -31,6 +31,9 @@ const hasClashWithBuiltInPublicDataKey = listingFields => {
     'shippingEnabled',
     'shippingPriceInSubunitsOneItem',
     'shippingPriceInSubunitsAdditionalItems',
+    'categoryLevel1',
+    'categoryLevel2',
+    'categoryLevel3',
   ];
   let hasClash = false;
   listingFields.forEach(field => {
