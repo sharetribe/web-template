@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Add support for hosted category configuration
+  [#314](https://github.com/sharetribe/web-template/pull/314)
 - [change] formatMoney should use correct formattingOptions (JPY gets correct formatting)
   [#356](https://github.com/sharetribe/web-template/pull/356)
 - [change] Twitter's brand and logo has changed to X.
