@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Add support for hosted category configuration
+  [#314](https://github.com/sharetribe/web-template/pull/314)
 - [add] Add support for user fields, which will be released later as a new hosted asset.
 
   - The hosted asset will support enums, multi-enums, and text fields in the same manner as listing
