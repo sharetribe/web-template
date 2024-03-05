@@ -3,7 +3,11 @@ import '@testing-library/jest-dom';
 import 'react-dates/initialize';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
-import { LISTING_PAGE_PARAM_TYPE_EDIT } from '../../util/urlHelpers';
+import {
+  LISTING_PAGE_PARAM_TYPE_DRAFT,
+  LISTING_PAGE_PARAM_TYPE_EDIT,
+  LISTING_PAGE_PARAM_TYPE_NEW,
+} from '../../util/urlHelpers';
 import { createCurrentUser, createStock, createOwnListing, fakeIntl } from '../../util/testData';
 import {
   renderWithProviders as render,
@@ -150,7 +154,52 @@ const listingFieldsBooking = [
   },
 ];
 
-const getConfig = (listingTypes, listingFields) => {
+const categoryConfig = {
+  categories: [
+    {
+      subcategories: [
+        {
+          name: 'Adidas',
+          id: 'adidas',
+        },
+        {
+          name: 'Nike',
+          id: 'nike',
+        },
+      ],
+      name: 'Sneakers',
+      id: 'sneakers',
+    },
+    {
+      subcategories: [
+        {
+          name: 'City bikes',
+          id: 'city-bikes',
+        },
+        {
+          name: 'Mountain bikes',
+          id: 'mountain-bikes',
+        },
+      ],
+      name: 'Bikes',
+      id: 'bikes',
+    },
+  ],
+};
+const categoryConfigWithoutSubcategories = {
+  categories: [
+    {
+      name: 'Sneakers',
+      id: 'sneakers',
+    },
+    {
+      name: 'Bikes',
+      id: 'bikes',
+    },
+  ],
+};
+
+const getConfig = (listingTypes, listingFields, categoryConfig) => {
   const hostedConfig = getHostedConfiguration();
   return {
     ...hostedConfig,
@@ -160,6 +209,7 @@ const getConfig = (listingTypes, listingFields) => {
     listingTypes: {
       listingTypes,
     },
+    categories: { ...categoryConfig },
   };
 };
 
@@ -232,6 +282,274 @@ describe('EditListingPage', () => {
     // We add currentUser through props, because we don't want to test TopbarContainer here
     currentUser: createCurrentUser('id-of-me-myself'),
   };
+
+  // Test for new listing flow with categories
+  it('Purchase: new listing flow with categories', async () => {
+    // add category configuration, define above
+    const config = getConfig(listingTypesPurchase, listingFieldsPurchase, categoryConfig);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+
+    // Set up props for the component
+    const props = {
+      ...commonProps,
+      params: {
+        id: '00000000-0000-0000-0000-000000000000',
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_NEW,
+        tab: DETAILS,
+      },
+    };
+
+    // Render the EditListingPage component with provided props and configurations
+    const { getByText, getByRole, getByLabelText, queryAllByRole } = render(
+      <EditListingPage {...props} />,
+      {
+        config,
+        routeConfiguration,
+      }
+    );
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelDetails';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingDetailsPanel.createListingTitle')).toBeInTheDocument();
+    });
+
+    // Select parent category
+    await waitFor(() => {
+      // Simulate user selecting options
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'Sneakers' })
+      );
+    });
+
+    // Assert that the selected option is as expected
+    expect(
+      queryAllByRole('option', { name: 'EditListingDetailsForm.categoryPlaceholder' })[0].selected
+    ).toBe(false);
+    expect(getByRole('option', { name: 'Sneakers' }).selected).toBe(true);
+    expect(getByText('EditListingDetailsForm.subCategoryLabel')).toBeInTheDocument();
+
+    // Simulate user selecting subcategory
+    await waitFor(() => {
+      const selectSubcategory = screen.getAllByRole('combobox')[1];
+      userEvent.selectOptions(selectSubcategory, screen.getByRole('option', { name: 'Adidas' }));
+    });
+    expect(getByRole('option', { name: 'Adidas' }).selected).toBe(true);
+
+    // Assert the presence of the default listing fields after selecting both categories
+    await waitFor(() => {
+      expect(getByRole('textbox', { name: 'EditListingDetailsForm.title' })).toBeInTheDocument();
+      //
+      expect(
+        getByRole('textbox', { name: 'EditListingDetailsForm.description' })
+      ).toBeInTheDocument();
+      expect(getByLabelText('Category')).toBeInTheDocument();
+      //
+      expect(
+        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+      ).toBe(true);
+      //
+      expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(false);
+      //
+      expect(
+        getByRole('button', { name: 'EditListingWizard.default-purchase.new.saveDetails' })
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('Purchase: new listing flow without a category configuration set', async () => {
+    const config = getConfig(listingTypesPurchase, listingFieldsPurchase);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: '00000000-0000-0000-0000-000000000000',
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_NEW,
+        tab: DETAILS,
+      },
+    };
+
+    // Render the EditListingPage component with provided props and configurations
+    const { getByText, getByRole, getByLabelText, queryAllByRole } = render(
+      <EditListingPage {...props} />,
+      {
+        config,
+        routeConfiguration,
+      }
+    );
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelDetails';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingDetailsPanel.createListingTitle')).toBeInTheDocument();
+      expect(getByRole('textbox', { name: 'EditListingDetailsForm.title' })).toBeInTheDocument();
+      // Check description exists
+      expect(
+        getByRole('textbox', { name: 'EditListingDetailsForm.description' })
+      ).toBeInTheDocument();
+      expect(getByLabelText('Category')).toBeInTheDocument();
+      // Check custom extended data field exists
+      expect(
+        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+      ).toBe(true);
+      // Check there is no selection
+      expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(false);
+      // Check the submit button exists
+      expect(
+        getByRole('button', { name: 'EditListingWizard.default-purchase.new.saveDetails' })
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('Purchase: edit existing listings that has no predefined categories', async () => {
+    const config = getConfig(listingTypesPurchase, listingFieldsPurchase, categoryConfig);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-item', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      publicData: {
+        listingType: 'sell-bicycles',
+        transactionProcessAlias: 'default-purchase/release-1',
+        unitType: 'item',
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { getByText, getByRole, getByLabelText, queryAllByRole } = render(
+      <EditListingPage {...props} />,
+      {
+        initialState: initialState(listing),
+        config,
+        routeConfiguration,
+      }
+    );
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelDetails';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingDetailsPanel.title')).toBeInTheDocument();
+    });
+
+    // Simulate user interaction and select parent level category
+    await waitFor(() => {
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'Sneakers' })
+      );
+    });
+
+    expect(
+      queryAllByRole('option', { name: 'EditListingDetailsForm.categoryPlaceholder' })[0].selected
+    ).toBe(false);
+    expect(getByRole('option', { name: 'Sneakers' }).selected).toBe(true);
+    expect(getByText('EditListingDetailsForm.subCategoryLabel')).toBeInTheDocument();
+
+    // Simulate user interaction and select sub level category
+    await waitFor(() => {
+      const selectSubcategory = screen.getAllByRole('combobox')[1];
+      userEvent.selectOptions(selectSubcategory, screen.getByRole('option', { name: 'Adidas' }));
+    });
+    expect(getByRole('option', { name: 'Adidas' }).selected).toBe(true);
+    expect(
+      getByRole('textbox', { name: 'EditListingDetailsForm.description' })
+    ).toBeInTheDocument();
+    expect(getByLabelText('Category')).toBeInTheDocument();
+    expect(
+      getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+    ).toBe(true);
+    //
+    expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(false);
+    expect(getByRole('button', { name: 'EditListingWizard.edit.saveDetails' })).toBeInTheDocument();
+  });
+
+  it('Purchase: Create new listing with only a parent-level category', async () => {
+    // add category configuration, define above
+    const config = getConfig(
+      listingTypesPurchase,
+      listingFieldsPurchase,
+      categoryConfigWithoutSubcategories
+    );
+    const routeConfiguration = getRouteConfiguration(config.layout);
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: '00000000-0000-0000-0000-000000000000',
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_NEW,
+        tab: DETAILS,
+      },
+    };
+
+    const { getByText, getByRole, getByLabelText, queryAllByRole } = render(
+      <EditListingPage {...props} />,
+      {
+        config,
+        routeConfiguration,
+      }
+    );
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelDetails';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingDetailsPanel.createListingTitle')).toBeInTheDocument();
+    });
+
+    // Simulate user interaction and select parent level category
+    await waitFor(() => {
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'Sneakers' })
+      );
+    });
+
+    expect(
+      queryAllByRole('option', { name: 'EditListingDetailsForm.categoryPlaceholder' })[0].selected
+    ).toBe(false);
+    expect(getByRole('option', { name: 'Sneakers' }).selected).toBe(true);
+
+    await waitFor(() => {
+      expect(getByRole('textbox', { name: 'EditListingDetailsForm.title' })).toBeInTheDocument();
+
+      expect(
+        getByRole('textbox', { name: 'EditListingDetailsForm.description' })
+      ).toBeInTheDocument();
+      expect(getByLabelText('Category')).toBeInTheDocument();
+
+      expect(
+        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+      ).toBe(true);
+
+      expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(false);
+
+      expect(
+        getByRole('button', { name: 'EditListingWizard.default-purchase.new.saveDetails' })
+      ).toBeInTheDocument();
+    });
+  });
 
   it('Purchase: edit flow on details tab', async () => {
     const config = getConfig(listingTypesPurchase, listingFieldsPurchase);
