@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] TopbarDesktop: when CustomLinksMenu is not in use, reduce the min-width of search input.
+  [#334](https://github.com/sharetribe/web-template/pull/334)
+
 ## [v4.1.0] 2024-02-26
 
 - [add] new component CustomLinksMenu added to the Topbar. It shows custom links if there's enough
