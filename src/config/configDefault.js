@@ -5,6 +5,7 @@ import * as maps from './configMaps';
 import * as branding from './configBranding';
 import * as layout from './configLayout';
 import * as analytics from './configAnalytics';
+import * as user from './configUser';
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets to this file.
@@ -41,6 +42,8 @@ const defaultConfig = {
 
   // Modify listing extended data and listing type in configListing.js
   listing,
+
+  user,
   // Modify search settings data in configSearch.js
   search,
   // Modify settings for map providers in configMaps.js
@@ -129,5 +132,7 @@ const defaultConfig = {
     streetAddress: null, // 'Erottajankatu 19 B',
   },
 };
+
+console.log({ defaultConfig });
 
 export default defaultConfig;
