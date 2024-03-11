@@ -722,6 +722,12 @@ const mergeListingConfig = (hostedConfig, defaultConfigs) => {
   };
 };
 
+const mergeUserConfig = (hostedConfig, defaultConfigs) => {
+  console.log('mergeUserConfig TODO');
+  console.log({ hostedConfig }, { defaultConfigs });
+  return defaultConfigs;
+};
+
 //////////////////////////////
 // Validate Default filters //
 //////////////////////////////
@@ -931,6 +937,7 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
     // Listing configuration comes entirely from hosted assets
     listing: mergeListingConfig(configAsset, defaultConfigs),
+    user: mergeUserConfig(configAsset, defaultConfigs.user),
 
     // Hosted search configuration does not yet contain sortConfig
     search: mergeSearchConfig(configAsset.search, defaultConfigs.search),
