@@ -610,6 +610,7 @@
   "ProductOrderForm.selectDeliveryMethodOption": "Select delivery method",
   "ProductOrderForm.selectQuantityOption": "Select...",
   "ProductOrderForm.shippingOption": "Shipping",
+  "ProfilePage.customFieldsHeading": "User information",
   "ProfilePage.desktopHeading": "Hello, I'm {name}.",
   "ProfilePage.editProfileLinkDesktop": "Edit profile",
   "ProfilePage.editProfileLinkMobile": "Edit",
