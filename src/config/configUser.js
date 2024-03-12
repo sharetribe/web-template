@@ -69,6 +69,7 @@ export const userFields = [
       label: 'Can you cook?',
       displayInSignUp: true, // key might change
       required: true,
+      placeholderMessage: 'Select...',
     },
     userTypeConfig: {
       limitToUserTypeIds: true,
@@ -105,6 +106,7 @@ export const userFields = [
       label: 'Description of your kitchen',
       displayInSignUp: true, // key might change
       required: true,
+      placeholderMessage: 'Describe your kitchen...',
     },
     userTypeConfig: {
       label: 'Description of your kitchen',
