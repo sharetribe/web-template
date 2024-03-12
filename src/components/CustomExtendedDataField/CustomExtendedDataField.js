@@ -34,7 +34,13 @@ const CustomFieldEnum = props => {
   const label = getLabel(fieldConfig);
 
   return filterOptions ? (
-    <FieldSelect className={css.customField} name={name} id={name} label={label} {...validateMaybe}>
+    <FieldSelect
+      className={css.customField}
+      name={name}
+      id={name}
+      label={label || fieldLabel}
+      {...validateMaybe}
+    >
       <option disabled value="">
         {placeholder}
       </option>
