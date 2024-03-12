@@ -152,7 +152,7 @@ export const DesktopReviews = props => {
 };
 
 export const CustomUserFields = props => {
-  const { publicData, userFields } = props;
+  const { publicData, metadata, userFields } = props;
   return (
     <>
       <H4 as="h2" className={css.listingsTitle}>
@@ -169,7 +169,13 @@ export const CustomUserFields = props => {
         const createFilterOptions = options =>
           options.map(o => ({ key: `${o.option}`, label: o.label }));
 
-        const value = scope === 'public' && !!publicData ? publicData[key] : null;
+        const value =
+          scope === 'public' && !!publicData
+            ? publicData[key]
+            : scope === 'metadata' && !!metadata
+            ? metadata[key]
+            : null;
+
         const hasValue = value != null;
         return isTargetListingType && config.schemaType === SCHEMA_TYPE_MULTI_ENUM
           ? [
@@ -200,6 +206,7 @@ export const MainContent = props => {
     queryReviewsError,
     viewport,
     publicData,
+    metadata,
     userFields,
     intl,
   } = props;
@@ -225,7 +232,12 @@ export const MainContent = props => {
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
       </H2>
       {hasBio ? <p className={css.bio}>{bio}</p> : null}
-      <CustomUserFields publicData={publicData} userFields={userFields} intl={intl} />
+      <CustomUserFields
+        publicData={publicData}
+        metadata={metadata}
+        userFields={userFields}
+        intl={intl}
+      />
       {hasListings ? (
         <div className={listingsContainerClasses}>
           <H4 as="h2" className={css.listingsTitle}>
@@ -256,7 +268,7 @@ export const ProfilePageComponent = props => {
   const profileUser = ensureUser(user);
   const isCurrentUser =
     ensuredCurrentUser.id && profileUser.id && ensuredCurrentUser.id.uuid === profileUser.id.uuid;
-  const { bio, displayName, publicData } = profileUser?.attributes?.profile || {};
+  const { bio, displayName, publicData, metadata } = profileUser?.attributes?.profile || {};
   const { userFields } = config.user;
 
   const schemaTitleVars = { name: displayName, marketplaceName: config.marketplaceName };
@@ -288,6 +300,7 @@ export const ProfilePageComponent = props => {
           displayName={displayName}
           userShowError={userShowError}
           publicData={publicData}
+          metadata={metadata}
           userFields={userFields}
           intl={intl}
           {...rest}

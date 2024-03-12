@@ -5,7 +5,7 @@ import { Heading } from '../../components';
 import css from './ProfilePage.module.css';
 
 const SectionDetailsMaybe = props => {
-  const { publicData, userFields, intl } = props;
+  const { publicData, metadata, userFields, intl } = props;
 
   if (!publicData || !userFields) {
     return null;
@@ -18,8 +18,9 @@ const SectionDetailsMaybe = props => {
       includeForListingTypes == null || includeForListingTypes.includes(listingType);
 
     const { displayInProfile } = showConfig;
-    const publicDataValue = publicData[key];
-    const value = publicDataValue;
+    const publicDataValue = publicData && publicData[key];
+    const metadataValue = metadata && metadata[key];
+    const value = publicDataValue || metadataValue;
 
     if (displayInProfile && isTargetListingType && typeof value !== 'undefined') {
       const findSelectedOption = enumValue => enumOptions?.find(o => enumValue === `${o.option}`);
