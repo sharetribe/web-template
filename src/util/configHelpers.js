@@ -603,7 +603,7 @@ const validListingFields = (listingFields, listingTypesInUse) => {
 
 const validUserFields = (userFields, userTypesInUse) => {
   const keys = userFields.map(d => d.key);
-  const scopeOptions = ['public', 'private'];
+  const scopeOptions = ['public', 'private', 'metadata'];
   const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean'];
 
   return userFields.reduce((acc, data) => {
