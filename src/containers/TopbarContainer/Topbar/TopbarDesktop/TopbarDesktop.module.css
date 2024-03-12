@@ -61,6 +61,9 @@
 
 .takeAvailableSpace {
   flex-grow: 1;
+
+  /* At 1024px, the translations might need more space than what searchLink otherwise gets. */
+  min-width: 220px;
 }
 
 .topbarSearchWithLeftPadding {
