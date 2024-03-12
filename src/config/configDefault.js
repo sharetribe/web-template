@@ -133,6 +133,4 @@ const defaultConfig = {
   },
 };
 
-console.log({ defaultConfig });
-
 export default defaultConfig;
