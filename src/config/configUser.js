@@ -100,3 +100,22 @@ export const userFields = [
     },
   },
 ];
+
+export const userTypes = [
+  {
+    userType: 'a',
+    label: 'Seller',
+  },
+  {
+    userType: 'b',
+    label: 'Buyer',
+  },
+  {
+    userType: 'c',
+    label: 'Guest',
+  },
+  {
+    userType: 'd',
+    label: 'Host',
+  },
+];
