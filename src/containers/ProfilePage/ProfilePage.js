@@ -249,7 +249,7 @@ export const MainContent = props => {
   );
 };
 
-const ProfilePageComponent = props => {
+export const ProfilePageComponent = props => {
   const config = useConfiguration();
   const { scrollingDisabled, currentUser, userShowError, user, intl, ...rest } = props;
   const ensuredCurrentUser = ensureCurrentUser(currentUser);

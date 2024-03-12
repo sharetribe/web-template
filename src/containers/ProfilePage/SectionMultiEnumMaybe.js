@@ -5,7 +5,6 @@ import css from './ProfilePage.module.css';
 
 const SectionMultiEnumMaybe = props => {
   const { heading, options, selectedOptions } = props;
-  console.log({ props });
   if (!heading || !options || !selectedOptions) {
     return null;
   }

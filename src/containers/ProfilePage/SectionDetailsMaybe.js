@@ -25,8 +25,8 @@ const SectionDetailsMaybe = props => {
       const findSelectedOption = enumValue => enumOptions?.find(o => enumValue === `${o.option}`);
       const getBooleanMessage = value =>
         value
-          ? intl.formatMessage({ id: 'SearchPage.detailYes' })
-          : intl.formatMessage({ id: 'SearchPage.detailNo' });
+          ? intl.formatMessage({ id: 'ProfilePage.detailYes' })
+          : intl.formatMessage({ id: 'ProfilePage.detailNo' });
       const optionConfig = findSelectedOption(value);
 
       return schemaType === 'enum'
@@ -45,7 +45,7 @@ const SectionDetailsMaybe = props => {
   return existingUserFields.length > 0 ? (
     <div className={css.sectionDetails}>
       <Heading as="h2" rootClassName={css.sectionHeading}>
-        <FormattedMessage id="ListingPage.detailsTitle" />
+        <FormattedMessage id="ProfilePage.detailsTitle" />
       </Heading>
       <ul className={css.details}>
         {existingUserFields.map(detail => (
