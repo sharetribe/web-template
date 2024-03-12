@@ -493,6 +493,7 @@ export const getHostedConfiguration = () => {
         },
       ],
     },
+    // TODO: userFields?
     search: {
       dateRangeFilter: {
         enabled: true,

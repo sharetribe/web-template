@@ -723,8 +723,8 @@ const mergeListingConfig = (hostedConfig, defaultConfigs) => {
 };
 
 const mergeUserConfig = (hostedConfig, defaultConfigs) => {
-  console.log('mergeUserConfig TODO');
-  console.log({ hostedConfig }, { defaultConfigs });
+  // console.log('mergeUserConfig TODO');
+  // console.log({ hostedConfig }, { defaultConfigs });
   return defaultConfigs;
 };
 
