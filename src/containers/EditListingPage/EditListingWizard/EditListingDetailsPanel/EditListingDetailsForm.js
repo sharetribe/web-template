@@ -11,9 +11,15 @@ import { EXTENDED_DATA_SCHEMA_TYPES, propTypes } from '../../../../util/types';
 import { maxLength, required, composeValidators } from '../../../../util/validators';
 
 // Import shared components
-import { Form, Button, FieldSelect, FieldTextInput, Heading } from '../../../../components';
+import {
+  Form,
+  Button,
+  FieldSelect,
+  FieldTextInput,
+  Heading,
+  CustomExtendedDataField,
+} from '../../../../components';
 // Import modules from this directory
-import CustomExtendedDataField from '../CustomExtendedDataField';
 import css from './EditListingDetailsForm.module.css';
 
 const TITLE_MAX_LENGTH = 60;
@@ -118,6 +124,7 @@ const FieldSelectListingType = props => {
 // Add collect data for listing fields (both publicData and privateData) based on configuration
 const AddListingFields = props => {
   const { listingType, listingFieldsConfig, intl } = props;
+  console.log(listingFieldsConfig);
   const fields = listingFieldsConfig.reduce((pickedFields, fieldConfig) => {
     const { key, includeForListingTypes, schemaType, scope } = fieldConfig || {};
     const namespacedKey = scope === 'public' ? `pub_${key}` : `priv_${key}`;

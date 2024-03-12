@@ -7,20 +7,22 @@ import {
   SCHEMA_TYPE_TEXT,
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
-} from '../../../util/types';
-import { useIntl } from '../../../util/reactIntl';
-import { required, nonEmptyArray } from '../../../util/validators';
+} from '../../util/types';
+import { useIntl } from '../../util/reactIntl';
+import { required, nonEmptyArray } from '../../util/validators';
 // Import shared components
-import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '../../../components';
+import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '..';
 // Import modules from this directory
-import css from './EditListingWizard.module.css';
+import css from './CustomExtendedDataField.module.css';
 
 const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
+
+const getLabel = fieldConfig => fieldConfig?.saveConfig?.label || fieldConfig?.label;
 
 const CustomFieldEnum = props => {
   const { name, fieldConfig, defaultRequiredMessage, intl } = props;
   const { enumOptions = [], saveConfig } = fieldConfig || {};
-  const { label, placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
+  const { placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -29,8 +31,16 @@ const CustomFieldEnum = props => {
     intl.formatMessage({ id: 'CustomExtendedDataField.placeholderSingleSelect' });
   const filterOptions = createFilterOptions(enumOptions);
 
+  const label = getLabel(fieldConfig);
+
   return filterOptions ? (
-    <FieldSelect className={css.customField} name={name} id={name} label={label} {...validateMaybe}>
+    <FieldSelect
+      className={css.customField}
+      name={name}
+      id={name}
+      label={label || fieldLabel}
+      {...validateMaybe}
+    >
       <option disabled value="">
         {placeholder}
       </option>
@@ -49,7 +59,8 @@ const CustomFieldEnum = props => {
 const CustomFieldMultiEnum = props => {
   const { name, fieldConfig, defaultRequiredMessage } = props;
   const { enumOptions = [], saveConfig } = fieldConfig || {};
-  const { label, isRequired, requiredMessage } = saveConfig || {};
+  const { isRequired, requiredMessage } = saveConfig || {};
+  const label = getLabel(fieldConfig);
   const validateMaybe = isRequired
     ? { validate: nonEmptyArray(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -68,7 +79,8 @@ const CustomFieldMultiEnum = props => {
 
 const CustomFieldText = props => {
   const { name, fieldConfig, defaultRequiredMessage, intl } = props;
-  const { label, placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
+  const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
+  const label = getLabel(fieldConfig);
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -90,7 +102,8 @@ const CustomFieldText = props => {
 
 const CustomFieldLong = props => {
   const { name, fieldConfig, defaultRequiredMessage, intl } = props;
-  const { label, placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
+  const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
+  const label = getLabel(fieldConfig);
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -117,7 +130,8 @@ const CustomFieldLong = props => {
 
 const CustomFieldBoolean = props => {
   const { name, fieldConfig, defaultRequiredMessage, intl } = props;
-  const { label, placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
+  const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
+  const label = getLabel(fieldConfig);
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
