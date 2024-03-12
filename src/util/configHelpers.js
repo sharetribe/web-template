@@ -646,7 +646,7 @@ const getUserTypeStringsInUse = userTypes => {
 
 const validUserFields = (userFields, userTypesInUse) => {
   const keys = userFields.map(d => d.key);
-  const scopeOptions = ['public', 'private', 'metadata'];
+  const scopeOptions = ['public', 'private', 'protected', 'metadata'];
   const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean'];
 
   return userFields.reduce((acc, data) => {
@@ -924,7 +924,7 @@ const mergeUserConfig = (hostedConfig, defaultConfigs) => {
 
   // When debugging, include default configs by passing 'true' here.
   // Otherwise, use user fields from hosted assets.
-  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
+  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(true);
   const userFields = shouldMerge
     ? union(hostedUserFields, defaultUserFields, 'key')
     : hostedUserFields;

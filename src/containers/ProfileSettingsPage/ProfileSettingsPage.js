@@ -18,6 +18,7 @@ import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
 
 import { updateProfile, uploadImage } from './ProfileSettingsPage.duck';
 import css from './ProfileSettingsPage.module.css';
+import { initialValuesForUserFields, pickUserFieldsData } from '../../util/userHelpers';
 
 const onImageUploadHandler = (values, fn) => {
   const { id, imageId, file } = values;
@@ -41,8 +42,10 @@ export const ProfileSettingsPageComponent = props => {
     intl,
   } = props;
 
-  const handleSubmit = values => {
-    const { firstName, lastName, bio: rawBio } = values;
+  const { userFields } = config.user;
+
+  const handleSubmit = (values, userType) => {
+    const { firstName, lastName, bio: rawBio, ...rest } = values;
 
     // Ensure that the optional bio is a string
     const bio = rawBio || '';
@@ -51,6 +54,15 @@ export const ProfileSettingsPageComponent = props => {
       firstName: firstName.trim(),
       lastName: lastName.trim(),
       bio,
+      publicData: {
+        ...pickUserFieldsData(rest, 'public', userType, userFields),
+      },
+      protectedData: {
+        ...pickUserFieldsData(rest, 'protected', userType, userFields),
+      },
+      privateData: {
+        ...pickUserFieldsData(rest, 'private', userType, userFields),
+      },
     };
     const uploadedImage = props.image;
 
@@ -64,7 +76,15 @@ export const ProfileSettingsPageComponent = props => {
   };
 
   const user = ensureCurrentUser(currentUser);
-  const { firstName, lastName, bio } = user.attributes.profile;
+  const {
+    firstName,
+    lastName,
+    bio,
+    publicData,
+    protectedData,
+    privateData,
+  } = user?.attributes.profile;
+  const { userType } = publicData || {};
   const profileImageId = user.profileImage ? user.profileImage.id : null;
   const profileImage = image || { imageId: profileImageId };
 
@@ -72,15 +92,25 @@ export const ProfileSettingsPageComponent = props => {
     <ProfileSettingsForm
       className={css.form}
       currentUser={currentUser}
-      initialValues={{ firstName, lastName, bio, profileImage: user.profileImage }}
+      initialValues={{
+        firstName,
+        lastName,
+        bio,
+        profileImage: user.profileImage,
+        ...initialValuesForUserFields(publicData, 'public', userType, userFields),
+        ...initialValuesForUserFields(protectedData, 'protected', userType, userFields),
+        ...initialValuesForUserFields(privateData, 'private', userType, userFields),
+      }}
       profileImage={profileImage}
       onImageUpload={e => onImageUploadHandler(e, onImageUpload)}
       uploadInProgress={uploadInProgress}
       updateInProgress={updateInProgress}
       uploadImageError={uploadImageError}
       updateProfileError={updateProfileError}
-      onSubmit={handleSubmit}
+      onSubmit={values => handleSubmit(values, userType)}
       marketplaceName={config.marketplaceName}
+      userFields={userFields}
+      userType={userType}
     />
   ) : null;
 
