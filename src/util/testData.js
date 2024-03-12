@@ -249,6 +249,7 @@ export const createMessage = (id, attributes = {}, includes = {}) => {
 };
 
 export const createReview = (id, attributes = {}, includes = {}) => {
+  console.log('createReview attributes', { attributes });
   return {
     id: new UUID(id),
     attributes: {
