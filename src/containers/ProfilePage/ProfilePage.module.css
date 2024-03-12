@@ -206,7 +206,7 @@
 
 .sectionText {
   padding: 0 24px;
-  margin-bottom: 36px;
+  margin-bottom: 30px;
 
   @media (--viewportMedium) {
     padding: 0;
@@ -266,10 +266,10 @@
   }
 }
 
-.sectionDetails,
-.sectionMultiEnum {
+.sectionMultiEnum,
+.sectionDetails {
   padding: 0 24px;
-  margin-bottom: 32px;
+  margin-bottom: 30px;
 
   @media (--viewportMedium) {
     padding: 0;
