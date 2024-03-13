@@ -103,11 +103,11 @@ const defaultConfig = {
   // Optional
   // Online presence of the same organization:
   // Facebook page is used in SEO schema (http://schema.org/Organization)
-  siteFacebookPage: null, // e.g. '@sharetribe',
+  siteFacebookPage: null, // e.g. 'https://www.facebook.com/Sharetribe/',
   // Instagram page is used in SEO schema (http://schema.org/Organization)
   siteInstagramPage: null, // e.g. 'https://www.instagram.com/sharetribe/',
   // Twitter handle is needed in meta tags (twitter:site). Start it with '@' character
-  siteTwitterHandle: null, // e.g. 'https://www.facebook.com/Sharetribe/',
+  siteTwitterHandle: null, // e.g. '@sharetribe',
 
   // Optional
   // This creates meta tag for Google Search Console verification
