@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+## [v4.1.1] 2024-03-13
+
 - [fix] configDefault.js: fix Fb & twitter examples.
   [#339](https://github.com/sharetribe/web-template/pull/339)
 - [fix] Daylight saving time bug on those time zones that change exactly at midnight.
@@ -22,6 +24,8 @@ way to update this template, but currently, we follow a pattern:
   [#335](https://github.com/sharetribe/web-template/pull/335)
 - [fix] TopbarDesktop: when CustomLinksMenu is not in use, reduce the min-width of search input.
   [#334](https://github.com/sharetribe/web-template/pull/334)
+
+  [v4.1.1]: https://github.com/sharetribe/web-template/compare/v4.1.0...v4.1.1
 
 ## [v4.1.0] 2024-02-26
 
