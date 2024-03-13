@@ -25,7 +25,7 @@ export const pickUserFieldsData = (data, targetScope, targetUserType, userFieldC
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
     const isTargetUserType =
-      includeForUserTypes == null || includeForUserTypes.includes(targetUserType);
+      !userTypeConfig.limitToUserTypeIds || userTypeConfig.userTypeIds.includes(targetUserType);
 
     if (isKnownSchemaType && isTargetScope && isTargetUserType) {
       const fieldValue = getFieldValue(data, namespacedKey);
@@ -59,7 +59,7 @@ export const initialValuesForUserFields = (data, targetScope, targetUserType, us
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
     const isTargetUserType =
-      includeForUserTypes == null || includeForUserTypes.includes(targetUserType);
+      !userTypeConfig?.limitToUserTypeIds || userTypeConfig?.userTypeIds?.includes(targetUserType);
 
     if (isKnownSchemaType && isTargetScope && isTargetUserType) {
       const fieldValue = getFieldValue(data, key);
@@ -92,14 +92,12 @@ export const getCustomUserFieldInputs = (userFieldsConfig, intl, userType = null
             name: namespacedKey,
             fieldConfig: fieldConfig,
             defaultRequiredMessage: intl.formatMessage({
-              id: 'EditListingDetailsForm.defaultRequiredMessage', // TODO CHANGE KEY
+              id: 'CustomExtendedDataField.required',
             }),
           },
         ]
       : pickedFields;
   }, []);
-
-  return fields;
 };
 
 /**
