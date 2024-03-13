@@ -136,7 +136,7 @@ const CustomFieldBoolean = props => {
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
   const placeholder =
-    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholder' });
+    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholderBoolean' });
 
   return (
     <FieldBoolean
