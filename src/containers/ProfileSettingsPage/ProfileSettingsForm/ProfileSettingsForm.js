@@ -77,6 +77,7 @@ class ProfileSettingsFormComponent extends Component {
             marketplaceName,
             values,
             userFields,
+            userType,
           } = fieldRenderProps;
 
           const user = ensureCurrentUser(currentUser);
@@ -192,7 +193,7 @@ class ProfileSettingsFormComponent extends Component {
           const submitDisabled =
             invalid || pristine || pristineSinceLastSubmit || uploadInProgress || submitInProgress;
 
-          const userFieldProps = getCustomUserFieldInputs(userFields, intl);
+          const userFieldProps = getCustomUserFieldInputs(userFields, intl, userType);
 
           return (
             <Form
