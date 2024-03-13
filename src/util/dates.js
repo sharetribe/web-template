@@ -265,7 +265,31 @@ export const getStartOf = (date, unit, timeZone, offset = 0, offsetUnit = 'days'
     : moment(date).clone();
 
   const startOfUnit = m.startOf(unit);
-  const startOfUnitWithOffset = offset === 0 ? startOfUnit : startOfUnit.add(offset, offsetUnit);
+  // Note: there is an issue with the Moment library when dealing with
+  //  Daylight Saving Times (DST) in the 'Atlantic/Azores' time zone.
+  //  When calculating the start of the day that follows March 30th, Moment
+  // returns 23:00 on the same day due to the switch in DST. The point
+  // in time 00:00 does not exist in this timezone when DST takes effect.
+  // This creates an infinite loop in the code as it expects to receive the
+  // date following the date that was queried. A couple of other time
+  // zones apply DST around midnight too. Most time zones apply DST
+  // at 03:00 to avoid this issue.
+  //
+  // The fix (for the infinite loop) is to ask for the next day and then add extra hours
+  // (10 hours) to that date. After that, we can ask the start of the day using
+  // startOf 'day' (or week/month). Using this logic, calculating the
+  // start of the next day in the Atlantic/Azores timezone on the 30th of March,
+  // this returns 01:00 (March 31st), which is the actual start of the next day.
+  // https://github.com/moment/moment-timezone/issues/409
+  const startOfUnitWithOffset =
+    offset === 0
+      ? startOfUnit
+      : ['day', 'week', 'month'].includes(unit)
+      ? startOfUnit
+          .add(offset, offsetUnit)
+          .add(10, 'hours')
+          .startOf(unit)
+      : startOfUnit.add(offset, offsetUnit);
   return startOfUnitWithOffset.toDate();
 };
 
