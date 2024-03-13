@@ -836,6 +836,7 @@ const restructureUserFields = hostedUserFields => {
         label,
         showConfig = {},
         saveConfig = {},
+        userTypeConfig = {},
         ...rest
       } = userField;
       const defaultLabel = label || key;
@@ -856,6 +857,9 @@ const restructureUserFields = hostedUserFields => {
               ...restSaveConfig,
               isRequired,
               label: saveConfig.label || defaultLabel,
+            },
+            userTypeConfig: {
+              ...userTypeConfig,
             },
             ...rest,
           }
@@ -922,7 +926,7 @@ const mergeUserConfig = (hostedConfig, defaultConfigs) => {
 
   // When debugging, include default configs by passing 'true' here.
   // Otherwise, use user fields from hosted assets.
-  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(true);
+  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
   const userFields = shouldMerge
     ? union(hostedUserFields, defaultUserFields, 'key')
     : hostedUserFields;
