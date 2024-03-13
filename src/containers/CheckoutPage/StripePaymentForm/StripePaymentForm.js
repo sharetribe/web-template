@@ -20,7 +20,6 @@ import {
   FieldTextInput,
   IconSpinner,
   SavedCardDetails,
-  StripePaymentAddress,
 } from '../../../components';
 
 import ShippingDetails from '../ShippingDetails/ShippingDetails';
@@ -516,15 +515,7 @@ class StripePaymentForm extends Component {
 
     // Asking billing address is recommended in PaymentIntent flow.
     // In CheckoutPage, we send name and email as billing details, but address only if it exists.
-    const billingAddress = (
-      <StripePaymentAddress
-        intl={intl}
-        form={formApi}
-        fieldId={formId}
-        card={this.card}
-        locale={locale}
-      />
-    );
+
 
     const hasStripeKey = stripePublishableKey;
 

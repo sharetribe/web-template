@@ -35,7 +35,6 @@ import {
   Modal,
   NamedRedirect,
   Tabs,
-  StripeConnectAccountStatusBox,
   StripeConnectAccountForm,
 } from '../../../components';
 
@@ -613,43 +612,7 @@ class EditListingWizard extends Component {
                 <p className={css.modalMessage}>
                   <FormattedMessage id="EditListingWizard.payoutModalInfo" />
                 </p>
-                <StripeConnectAccountForm
-                  disabled={formDisabled}
-                  inProgress={payoutDetailsSaveInProgress}
-                  ready={payoutDetailsSaved}
-                  currentUser={ensuredCurrentUser}
-                  stripeBankAccountLastDigits={getBankAccountLast4Digits(stripeAccountData)}
-                  savedCountry={savedCountry}
-                  submitButtonText={intl.formatMessage({
-                    id: 'StripePayoutPage.submitButtonText',
-                  })}
-                  stripeAccountError={stripeAccountError}
-                  stripeAccountFetched={stripeAccountFetched}
-                  stripeAccountLinkError={stripeAccountLinkError}
-                  onChange={onPayoutDetailsChange}
-                  onSubmit={rest.onPayoutDetailsSubmit}
-                  onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink}
-                  stripeConnected={stripeConnected}
-                >
-                  {stripeConnected && !returnedAbnormallyFromStripe && showVerificationNeeded ? (
-                    <StripeConnectAccountStatusBox
-                      type="verificationNeeded"
-                      inProgress={getAccountLinkInProgress}
-                      onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink(
-                        'custom_account_verification'
-                      )}
-                    />
-                  ) : stripeConnected && savedCountry && !returnedAbnormallyFromStripe ? (
-                    <StripeConnectAccountStatusBox
-                      type="verificationSuccess"
-                      inProgress={getAccountLinkInProgress}
-                      disabled={payoutDetailsSaveInProgress}
-                      onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink(
-                        'custom_account_update'
-                      )}
-                    />
-                  ) : null}
-                </StripeConnectAccountForm>
+                
               </>
             )}
           </div>
