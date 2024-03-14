@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { array, arrayOf, func, node, number, object, oneOf, string } from 'prop-types';
 import classNames from 'classnames';
 
-import { injectIntl, intlShape } from '../../../util/reactIntl';
+import { useIntl } from '../../../util/reactIntl';
 import { parseSelectFilterOptions } from '../../../util/search';
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../../util/types';
 
@@ -46,107 +46,101 @@ const format = (selectedOptions, queryParamName, schemaType, searchMode) => {
   return { [queryParamName]: value };
 };
 
-class SelectMultipleFilter extends Component {
-  constructor(props) {
-    super(props);
-  }
+const SelectMultipleFilter = props => {
+  const intl = useIntl();
+  const {
+    rootClassName,
+    className,
+    id,
+    name,
+    label,
+    options,
+    initialValues,
+    contentPlacementOffset,
+    onSubmit,
+    queryParamNames,
+    schemaType,
+    searchMode,
+    showAsPopup,
+    ...rest
+  } = props;
 
-  render() {
-    const {
-      rootClassName,
-      className,
-      id,
-      name,
-      label,
-      options,
-      initialValues,
-      contentPlacementOffset,
-      onSubmit,
-      queryParamNames,
-      schemaType,
-      searchMode,
-      intl,
-      showAsPopup,
-      ...rest
-    } = this.props;
+  const classes = classNames(rootClassName || css.root, className);
 
-    const classes = classNames(rootClassName || css.root, className);
+  const queryParamName = getQueryParamName(queryParamNames);
+  const hasInitialValues = !!initialValues && !!initialValues[queryParamName];
+  // Parse options from param strings like "has_all:a,b,c" or "a,b,c"
+  const selectedOptions = hasInitialValues
+    ? parseSelectFilterOptions(initialValues[queryParamName])
+    : [];
 
-    const queryParamName = getQueryParamName(queryParamNames);
-    const hasInitialValues = !!initialValues && !!initialValues[queryParamName];
-    // Parse options from param strings like "has_all:a,b,c" or "a,b,c"
-    const selectedOptions = hasInitialValues
-      ? parseSelectFilterOptions(initialValues[queryParamName])
-      : [];
+  const labelForPopup = hasInitialValues
+    ? intl.formatMessage(
+        { id: 'SelectMultipleFilter.labelSelected' },
+        { labelText: label, count: selectedOptions.length }
+      )
+    : label;
 
-    const labelForPopup = hasInitialValues
-      ? intl.formatMessage(
-          { id: 'SelectMultipleFilter.labelSelected' },
-          { labelText: label, count: selectedOptions.length }
-        )
-      : label;
+  const labelSelectionForPlain = hasInitialValues
+    ? intl.formatMessage(
+        { id: 'SelectMultipleFilterPlainForm.labelSelected' },
+        { count: selectedOptions.length }
+      )
+    : '';
 
-    const labelSelectionForPlain = hasInitialValues
-      ? intl.formatMessage(
-          { id: 'SelectMultipleFilterPlainForm.labelSelected' },
-          { count: selectedOptions.length }
-        )
-      : '';
+  // pass the initial values with the name key so that
+  // they can be passed to the correct field
+  const namedInitialValues = { [name]: selectedOptions };
 
-    // pass the initial values with the name key so that
-    // they can be passed to the correct field
-    const namedInitialValues = { [name]: selectedOptions };
+  const handleSubmit = values => {
+    const usedValue = values ? values[name] : values;
+    onSubmit(format(usedValue, queryParamName, schemaType, searchMode));
+  };
 
-    const handleSubmit = values => {
-      const usedValue = values ? values[name] : values;
-      onSubmit(format(usedValue, queryParamName, schemaType, searchMode));
-    };
-
-    return showAsPopup ? (
-      <FilterPopup
-        className={classes}
-        rootClassName={rootClassName}
-        popupClassName={css.popupSize}
-        label={labelForPopup}
-        isSelected={hasInitialValues}
-        id={`${id}.popup`}
-        showAsPopup
-        contentPlacementOffset={contentPlacementOffset}
-        onSubmit={handleSubmit}
-        initialValues={namedInitialValues}
-        keepDirtyOnReinitialize
-        {...rest}
-      >
-        <GroupOfFieldCheckboxes
-          className={css.fieldGroup}
-          name={name}
-          id={`${id}-checkbox-group`}
-          options={options}
-        />
-      </FilterPopup>
-    ) : (
-      <FilterPlain
-        className={className}
-        rootClassName={rootClassName}
-        label={label}
-        labelSelection={labelSelectionForPlain}
-        isSelected={hasInitialValues}
-        id={`${id}.plain`}
-        liveEdit
-        onSubmit={handleSubmit}
-        initialValues={namedInitialValues}
-        {...rest}
-      >
-        <GroupOfFieldCheckboxes
-          className={css.fieldGroupPlain}
-          name={name}
-          id={`${id}-checkbox-group`}
-          options={options}
-        />
-      </FilterPlain>
-    );
-  }
-}
+  return showAsPopup ? (
+    <FilterPopup
+      className={classes}
+      rootClassName={rootClassName}
+      popupClassName={css.popupSize}
+      label={labelForPopup}
+      isSelected={hasInitialValues}
+      id={`${id}.popup`}
+      showAsPopup
+      contentPlacementOffset={contentPlacementOffset}
+      onSubmit={handleSubmit}
+      initialValues={namedInitialValues}
+      keepDirtyOnReinitialize
+      {...rest}
+    >
+      <GroupOfFieldCheckboxes
+        className={css.fieldGroup}
+        name={name}
+        id={`${id}-checkbox-group`}
+        options={options}
+      />
+    </FilterPopup>
+  ) : (
+    <FilterPlain
+      className={className}
+      rootClassName={rootClassName}
+      label={label}
+      labelSelection={labelSelectionForPlain}
+      isSelected={hasInitialValues}
+      id={`${id}.plain`}
+      liveEdit
+      onSubmit={handleSubmit}
+      initialValues={namedInitialValues}
+      {...rest}
+    >
+      <GroupOfFieldCheckboxes
+        className={css.fieldGroupPlain}
+        name={name}
+        id={`${id}-checkbox-group`}
+        options={options}
+      />
+    </FilterPlain>
+  );
+};
 
 SelectMultipleFilter.defaultProps = {
   rootClassName: null,
@@ -169,9 +163,6 @@ SelectMultipleFilter.propTypes = {
   schemaType: oneOf([SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM]).isRequired,
   initialValues: object,
   contentPlacementOffset: number,
-
-  // form injectIntl
-  intl: intlShape.isRequired,
 };
 
-export default injectIntl(SelectMultipleFilter);
+export default SelectMultipleFilter;
