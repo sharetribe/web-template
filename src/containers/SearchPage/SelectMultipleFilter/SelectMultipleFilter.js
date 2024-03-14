@@ -49,34 +49,6 @@ const format = (selectedOptions, queryParamName, schemaType, searchMode) => {
 class SelectMultipleFilter extends Component {
   constructor(props) {
     super(props);
-
-    this.filter = null;
-    this.filterContent = null;
-
-    this.positionStyleForContent = this.positionStyleForContent.bind(this);
-  }
-
-  positionStyleForContent() {
-    if (this.filter && this.filterContent) {
-      // Render the filter content to the right from the menu
-      // unless there's no space in which case it is rendered
-      // to the left
-      const distanceToRight = window.innerWidth - this.filter.getBoundingClientRect().right;
-      const labelWidth = this.filter.offsetWidth;
-      const contentWidth = this.filterContent.offsetWidth;
-      const contentWidthBiggerThanLabel = contentWidth - labelWidth;
-      const renderToRight = distanceToRight > contentWidthBiggerThanLabel;
-      const contentPlacementOffset = this.props.contentPlacementOffset;
-
-      const offset = renderToRight
-        ? { left: contentPlacementOffset }
-        : { right: contentPlacementOffset };
-      // set a min-width if the content is narrower than the label
-      const minWidth = contentWidth < labelWidth ? { minWidth: labelWidth } : null;
-
-      return { ...offset, ...minWidth };
-    }
-    return {};
   }
 
   render() {
@@ -121,8 +93,6 @@ class SelectMultipleFilter extends Component {
         )
       : '';
 
-    const contentStyle = this.positionStyleForContent();
-
     // pass the initial values with the name key so that
     // they can be passed to the correct field
     const namedInitialValues = { [name]: selectedOptions };
@@ -137,7 +107,6 @@ class SelectMultipleFilter extends Component {
         className={classes}
         rootClassName={rootClassName}
         popupClassName={css.popupSize}
-        name={name}
         label={labelForPopup}
         isSelected={hasInitialValues}
         id={`${id}.popup`}
@@ -164,7 +133,6 @@ class SelectMultipleFilter extends Component {
         isSelected={hasInitialValues}
         id={`${id}.plain`}
         liveEdit
-        contentPlacementOffset={contentStyle}
         onSubmit={handleSubmit}
         initialValues={namedInitialValues}
         {...rest}
