@@ -15,6 +15,7 @@ import {
 } from '../../util/types';
 import { ensureCurrentUser, ensureUser } from '../../util/data';
 import { withViewport } from '../../util/uiHelpers';
+import { pickCustomFieldProps } from '../../util/fieldHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import {
@@ -152,45 +153,20 @@ export const DesktopReviews = props => {
 };
 
 export const CustomUserFields = props => {
-  const { publicData, metadata, userFields } = props;
+  const { publicData, metadata, userFieldConfig } = props;
+  const propsForCustomFields =
+    pickCustomFieldProps(publicData, metadata, userFieldConfig, 'userType') || [];
   return (
     <>
-      <H4 as="h2" className={css.listingsTitle}>
-        <FormattedMessage id="ProfilePage.customFieldsHeading" />
-      </H4>
       <SectionDetailsMaybe {...props} />
-      {userFields.reduce((pickedElements, config) => {
-        const { key, enumOptions, includeForListingTypes, scope = 'public' } = config;
-        // TODO fix isTargetListingType => isTargetUserType
-        const listingType = publicData?.listingType;
-        const isTargetListingType =
-          includeForListingTypes == null || includeForListingTypes.includes(listingType);
-
-        const createFilterOptions = options =>
-          options.map(o => ({ key: `${o.option}`, label: o.label }));
-
-        const value =
-          scope === 'public' && !!publicData
-            ? publicData[key]
-            : scope === 'metadata' && !!metadata
-            ? metadata[key]
-            : null;
-
-        const hasValue = value != null;
-        return isTargetListingType && config.schemaType === SCHEMA_TYPE_MULTI_ENUM
-          ? [
-              ...pickedElements,
-              <SectionMultiEnumMaybe
-                key={key}
-                heading={config?.label}
-                options={createFilterOptions(enumOptions)}
-                selectedOptions={value || []}
-              />,
-            ]
-          : isTargetListingType && hasValue && config.schemaType === SCHEMA_TYPE_TEXT
-          ? [...pickedElements, <SectionTextMaybe key={key} heading={config?.label} text={value} />]
-          : pickedElements;
-      }, [])}
+      {propsForCustomFields.map(customFieldProps => {
+        const { schemaType, ...fieldProps } = customFieldProps;
+        return schemaType === SCHEMA_TYPE_MULTI_ENUM ? (
+          <SectionMultiEnumMaybe {...fieldProps} />
+        ) : schemaType === SCHEMA_TYPE_TEXT ? (
+          <SectionTextMaybe {...fieldProps} />
+        ) : null;
+      })}
     </>
   );
 };
@@ -207,7 +183,7 @@ export const MainContent = props => {
     viewport,
     publicData,
     metadata,
-    userFields,
+    userFieldConfig,
     intl,
   } = props;
 
@@ -235,7 +211,7 @@ export const MainContent = props => {
       <CustomUserFields
         publicData={publicData}
         metadata={metadata}
-        userFields={userFields}
+        userFieldConfig={userFieldConfig}
         intl={intl}
       />
       {hasListings ? (
@@ -301,7 +277,7 @@ export const ProfilePageComponent = props => {
           userShowError={userShowError}
           publicData={publicData}
           metadata={metadata}
-          userFields={userFields}
+          userFieldConfig={userFields}
           intl={intl}
           {...rest}
         />

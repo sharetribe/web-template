@@ -218,8 +218,7 @@
  * Custom field component classes 
  */
 
-.sectionHeading,
-.sectionHeadingWithExtraMargin {
+.sectionHeading {
   /* Font for sections titles */
   composes: p from global;
   padding: 0;
@@ -231,12 +230,6 @@
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 8px;
-  }
-}
-
-.sectionHeadingWithExtraMargin {
-  @media (--viewportMedium) {
-    margin-bottom: 16px;
   }
 }
 
