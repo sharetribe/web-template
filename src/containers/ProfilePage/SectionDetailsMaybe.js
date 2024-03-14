@@ -5,9 +5,9 @@ import { Heading } from '../../components';
 import css from './ProfilePage.module.css';
 
 const SectionDetailsMaybe = props => {
-  const { publicData, metadata, userFields, intl } = props;
+  const { publicData, metadata, userFieldConfig, intl } = props;
 
-  if (!publicData || !userFields) {
+  if (!publicData || !userFieldConfig) {
     return null;
   }
 
@@ -41,7 +41,7 @@ const SectionDetailsMaybe = props => {
     return filteredConfigs;
   };
 
-  const existingUserFields = userFields.reduce(pickUserFields, []);
+  const existingUserFields = userFieldConfig.reduce(pickUserFields, []);
 
   return existingUserFields.length > 0 ? (
     <div className={css.sectionDetails}>

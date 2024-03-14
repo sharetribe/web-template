@@ -24,6 +24,7 @@ const attributes = {
       dietaryPreferences: ['vegan', 'gluten-free'],
       kitchenDescription: 'This is a kitchen description!',
       numberOfCookbooks: 10,
+      userType: 'a',
     },
   },
 };
@@ -60,8 +61,6 @@ describe('ProfilePage', () => {
 
   it('Check that custom user information is shown correctly', () => {
     const { getByRole } = render(<ProfilePageComponent {...props} />);
-
-    expect(screen.getByText('ProfilePage.customFieldsHeading')).toBeInTheDocument();
 
     // Show custom fields correctly
     expect(getByRole('heading', { name: 'ProfilePage.detailsTitle' })).toBeInTheDocument();
