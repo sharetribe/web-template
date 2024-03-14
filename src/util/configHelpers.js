@@ -892,8 +892,11 @@ const mergeUserConfig = (hostedConfig, defaultConfigs) => {
 
   const { userFields: defaultUserFields } = defaultConfigs.user;
 
-  // TODO: add shouldMerge logic
-  const userFields = union(hostedUserFields, defaultUserFields, 'key');
+  // const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(true);
+  const shouldMerge = true; // TODO this needs to be set to true for test to pass until hosted user conf exists
+  const userFields = shouldMerge
+    ? union(hostedUserFields, defaultUserFields, 'key')
+    : hostedUserFields;
   return {
     userFields: validUserFields(userFields),
   };
