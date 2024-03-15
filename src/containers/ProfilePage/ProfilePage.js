@@ -154,8 +154,10 @@ export const DesktopReviews = props => {
 
 export const CustomUserFields = props => {
   const { publicData, metadata, userFieldConfig } = props;
+
   const propsForCustomFields =
     pickCustomFieldProps(publicData, metadata, userFieldConfig, 'userType') || [];
+
   return (
     <>
       <SectionDetailsMaybe {...props} />
