@@ -1,7 +1,6 @@
 export const userFields = [
   {
     key: 'cuisine',
-    label: 'Favorite cuisine',
     scope: 'public',
     schemaType: 'enum',
     enumOptions: [
@@ -10,9 +9,11 @@ export const userFields = [
       { option: 'thai', label: 'Thai' },
     ],
     showConfig: {
+      label: 'Favorite cuisine',
       displayInProfile: true, // key might change
     },
     saveConfig: {
+      label: 'Favorite cuisine',
       displayInSignUp: true, // key might change
       required: true,
     },
@@ -23,13 +24,14 @@ export const userFields = [
   },
   {
     key: 'canCook',
-    label: 'Can you cook?',
     scope: 'public',
     schemaType: 'boolean',
     showConfig: {
+      label: 'Can you cook?',
       displayInProfile: true, // key might change
     },
     saveConfig: {
+      label: 'Can you cook?',
       displayInSignUp: true, // key might change
       required: true,
     },
@@ -40,13 +42,14 @@ export const userFields = [
   },
   {
     key: 'numberOfCookbooks',
-    label: 'How many cookbooks do you have',
     scope: 'public',
     schemaType: 'long',
     showConfig: {
+      label: 'How many cookbooks do you have',
       displayInProfile: true, // key might change
     },
     saveConfig: {
+      label: 'How many cookbooks do you have',
       displayInSignUp: true, // key might change
       required: true,
     },
@@ -57,24 +60,25 @@ export const userFields = [
   },
   {
     key: 'kitchenDescription',
-    label: 'Description of your kitchen',
     scope: 'public',
     schemaType: 'text',
     showConfig: {
+      label: 'Description of your kitchen',
       displayInProfile: true, // key might change
     },
     saveConfig: {
+      label: 'Description of your kitchen',
       displayInSignUp: true, // key might change
       required: true,
     },
     userTypeConfig: {
+      label: 'Description of your kitchen',
       limitToUserTypeIds: true,
       userTypeIds: ['a', 'b', 'c'],
     },
   },
   {
     key: 'dietaryPreferences',
-    label: 'Dietary preferences',
     scope: 'public',
     schemaType: 'multi-enum',
     enumOptions: [
@@ -88,10 +92,12 @@ export const userFields = [
       { option: 'low-fat', label: 'Low fat' },
     ],
     showConfig: {
+      label: 'Dietary preferences',
       displayInProfile: true, // key might change
     },
     saveConfig: {
       displayInSignUp: true, // key might change
+      label: 'Dietary preferences',
       required: true,
     },
     userTypeConfig: {

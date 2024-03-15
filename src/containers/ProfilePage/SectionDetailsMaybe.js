@@ -12,12 +12,12 @@ const SectionDetailsMaybe = props => {
   }
 
   const pickUserFields = (filteredConfigs, config) => {
-    const { key, schemaType, enumOptions, includeForListingTypes, label, showConfig = {} } = config;
+    const { key, schemaType, enumOptions, includeForListingTypes, showConfig = {} } = config;
     const listingType = publicData.listingType;
     const isTargetListingType =
       includeForListingTypes == null || includeForListingTypes.includes(listingType);
 
-    const { displayInProfile } = showConfig;
+    const { label, displayInProfile } = showConfig;
     const publicDataValue = publicData && publicData[key];
     const metadataValue = metadata && metadata[key];
     const value = publicDataValue || metadataValue;
