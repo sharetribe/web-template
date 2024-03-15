@@ -13,6 +13,8 @@ export const pickCustomFieldProps = (publicData, metadata, fieldConfig, entityTy
     const entityType = publicData && publicData[entityTypeKey];
     const isTargetEntityType = !limitToUserTypeIds || userTypeIds.includes(entityType);
 
+    // console.log({ config })
+
     const createFilterOptions = options =>
       options.map(o => ({ key: `${o.option}`, label: o.label }));
 
@@ -30,7 +32,7 @@ export const pickCustomFieldProps = (publicData, metadata, fieldConfig, entityTy
           {
             schemaType,
             key,
-            heading: config?.label,
+            heading: config?.showConfig?.label,
             options: createFilterOptions(enumOptions),
             selectedOptions: value || [],
           },
@@ -41,7 +43,7 @@ export const pickCustomFieldProps = (publicData, metadata, fieldConfig, entityTy
           {
             schemaType,
             key,
-            heading: config?.label,
+            heading: config?.showConfig?.label,
             text: value,
           },
         ]

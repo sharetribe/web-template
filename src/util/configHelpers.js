@@ -305,20 +305,40 @@ const validKey = (key, allKeys) => {
   return [isUniqueKey, { key }];
 };
 
-const validUserTypesForUserConfig = (includeForUserTypes, userTypesInUse) => {
-  const isUndefinedOrNull = includeForUserTypes == null;
-  const isArray = Array.isArray(includeForUserTypes);
-  const validatedUserTypes = isArray
-    ? includeForUserTypes.filter(pa => userTypesInUse.includes(pa))
-    : [];
+const validUserTypesForUserConfig = (userTypeConfig, userTypesInUse = null) => {
+  const { limitToUserTypeIds, userTypeIds } = userTypeConfig;
 
+  // When no user types are in use, fields by default cannot be limited to a subset of types
+  if (!userTypesInUse) {
+    const isValid = true;
+    const validValue = {
+      userTypeConfig: {
+        limitToUserTypeIds: false,
+      },
+    };
+
+    return [isValid, validValue];
+  }
+
+  const isArray = Array.isArray(userTypeIds);
+  const validatedUserTypes = isArray ? userTypeIds.filter(ut => userTypesInUse?.includes(ut)) : [];
+
+  // If a field is limited to user type ids, it has to have at least one valid type
   const hasValidUserTypes = validatedUserTypes.length > 0;
-  const isValid = hasValidUserTypes || isUndefinedOrNull;
+  const isValid = hasValidUserTypes || !limitToUserTypeIds;
+
   const validValue = hasValidUserTypes
-    ? { includeForUserTypes: validatedUserTypes }
-    : isUndefinedOrNull
-    ? { includeForUserTypes: userTypesInUse }
-    : {};
+    ? {
+        userTypeConfig: {
+          limitToUserTypeIds,
+          userTypeIds: validatedUserTypes,
+        },
+      }
+    : {
+        userTypeConfig: {
+          limitToUserTypeIds: false,
+        },
+      };
   return [isValid, validValue];
 };
 
@@ -463,16 +483,18 @@ const validUserShowConfig = config => {
     return [true, {}];
   }
 
-  // Validate: displayInProfile.
+  // Validate: label, displayInProfile.
+  const [isValidLabel, label] = validLabel(config.label);
   const [isValidDisplayInProfile, displayInProfile] = validBoolean(
     'displayInProfile',
     config.displayInProfile,
     true
   );
 
-  const isValid = isValidDisplayInProfile;
+  const isValid = isValidLabel && isValidDisplayInProfile;
   const validValue = {
     showConfig: {
+      ...label,
       ...displayInProfile,
     },
   };
@@ -524,16 +546,18 @@ const validUserSaveConfig = config => {
   if (isUndefined) {
     return [true, {}];
   }
-  // Validate: placeholderMessage, required, requiredMessage
+  // Validate: label, placeholderMessage, required, requiredMessage
+  const [isValidLabel, label] = validLabel(config.label);
   const [isValidPlaceholder, placeholderMessage] = validPlaceholderMessage(
     config.placeholderMessage
   );
   const [isValidIsRequired, isRequired] = validBoolean('isRequired', config.isRequired, false);
   const [isValidRequiredMessage, requiredMessage] = validRequiredMessage(config.requiredMessage);
 
-  const isValid = isValidPlaceholder && isValidIsRequired && isValidRequiredMessage;
+  const isValid = isValidLabel && isValidPlaceholder && isValidIsRequired && isValidRequiredMessage;
   const validValue = {
     saveConfig: {
+      ...label,
       ...placeholderMessage,
       ...isRequired,
       ...requiredMessage,
@@ -603,6 +627,10 @@ const validListingFields = (listingFields, listingTypesInUse) => {
   }, []);
 };
 
+const getUserTypeStringsInUse = userTypes => {
+  return userTypes.map(ut => `${ut.userType}`);
+};
+
 const validUserFields = (userFields, userTypesInUse) => {
   const keys = userFields.map(d => d.key);
   const scopeOptions = ['public', 'private', 'metadata'];
@@ -629,6 +657,8 @@ const validUserFields = (userFields, userTypesInUse) => {
             ? validSchemaOptions(value, schemaType)
             : name === 'showConfig'
             ? validUserShowConfig(value)
+            : name === 'userTypeConfig'
+            ? validUserTypesForUserConfig(value, userTypesInUse)
             : name === 'saveConfig'
             ? validUserSaveConfig(value)
             : [true, value];
@@ -644,16 +674,7 @@ const validUserFields = (userFields, userTypesInUse) => {
       { config: {}, isValid: true }
     );
 
-    if (validationData.isValid) {
-      const hasIncludeForListingTypes = validationData.config?.includeForListingTypes;
-      const includeForListingTypesMaybe = !hasIncludeForListingTypes
-        ? { includeForListingTypes: userTypesInUse }
-        : {};
-
-      return [...acc, { ...validationData.config, ...includeForListingTypesMaybe }];
-    } else {
-      return acc;
-    }
+    return validationData.isValid ? [...acc, validationData.config] : acc;
   }, []);
 };
 
@@ -790,8 +811,9 @@ const restructureListingFields = hostedListingFields => {
 };
 
 ///////////////////////////////////////
-// Restructure hosted listing config //
+// Restructure hosted user config //
 ///////////////////////////////////////
+
 const restructureUserFields = hostedUserFields => {
   return (
     hostedUserFields?.map(userField => {
@@ -801,7 +823,6 @@ const restructureUserFields = hostedUserFields => {
         schemaType,
         enumOptions,
         label,
-        filterConfig = {},
         showConfig = {},
         saveConfig = {},
         ...rest
@@ -816,10 +837,6 @@ const restructureUserFields = hostedUserFields => {
             scope,
             schemaType,
             ...enumOptionsMaybe,
-            filterConfig: {
-              ...filterConfig,
-              label: filterConfig.label || defaultLabel,
-            },
             showConfig: {
               ...showConfig,
               label: showConfig.label || defaultLabel,
@@ -890,7 +907,7 @@ const mergeListingConfig = (hostedConfig, defaultConfigs) => {
 const mergeUserConfig = (hostedConfig, defaultConfigs) => {
   const hostedUserFields = restructureUserFields(hostedConfig?.userFields?.userFields);
 
-  const { userFields: defaultUserFields } = defaultConfigs.user;
+  const { userFields: defaultUserFields, userTypes: defaultUserTypes } = defaultConfigs.user;
 
   // When debugging, include default configs by passing 'true' here.
   // Otherwise, use user fields from hosted assets.
@@ -898,6 +915,14 @@ const mergeUserConfig = (hostedConfig, defaultConfigs) => {
   const userFields = shouldMerge
     ? union(hostedUserFields, defaultUserFields, 'key')
     : hostedUserFields;
+
+  // To include user type validation (if you have user types in your default configuration),
+  // pass userTypes to the validUserFields function as well:
+  // const userTypes = getUserTypeStringsInUse(defaultUserTypes);
+  // return {
+  //   userFields: validUserFields(userFields, userTypes)
+  // };
+
   return {
     userFields: validUserFields(userFields),
   };
