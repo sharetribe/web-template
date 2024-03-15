@@ -865,7 +865,7 @@ const mergeListingConfig = (hostedConfig, defaultConfigs) => {
   const { listingTypes: defaultListingTypes, listingFields: defaultListingFields, ...rest } =
     defaultConfigs.listing || {};
 
-  // When debugging, include default configs.
+  // When debugging, include default configs by passing 'true' here.
   // Otherwise, use listing types and fields from hosted assets.
   const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
   const listingTypes = shouldMerge
@@ -890,8 +890,9 @@ const mergeUserConfig = (hostedConfig, defaultConfigs) => {
 
   const { userFields: defaultUserFields } = defaultConfigs.user;
 
-  // const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(true);
-  const shouldMerge = true; // TODO this needs to be set to true for test to pass until hosted user conf exists
+  // When debugging, include default configs by passing 'true' here.
+  // Otherwise, use user fields from hosted assets.
+  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
   const userFields = shouldMerge
     ? union(hostedUserFields, defaultUserFields, 'key')
     : hostedUserFields;
