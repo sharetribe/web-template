@@ -280,7 +280,7 @@ export class SearchPageComponent extends Component {
       isOriginInUse(config)
     );
 
-    const validQueryParams = validFilterParams(searchParamsInURL, filterConfigs, false);
+    const validQueryParams = urlQueryParams;
 
     const isWindowDefined = typeof window !== 'undefined';
     const isMobileLayout = isWindowDefined && window.innerWidth < MODAL_BREAKPOINT;
@@ -305,7 +305,7 @@ export class SearchPageComponent extends Component {
     const hasSecondaryFilters = !!(customSecondaryFilters && customSecondaryFilters.length > 0);
 
     // Selected aka active filters
-    const selectedFilters = validFilterParams(validQueryParams, filterConfigs);
+    const selectedFilters = validQueryParams;
     const keysOfSelectedFilters = Object.keys(selectedFilters);
     const selectedFiltersCountForMobile = isKeywordSearch
       ? keysOfSelectedFilters.filter(f => f !== 'keywords').length
@@ -399,7 +399,7 @@ export class SearchPageComponent extends Component {
         title={title}
         schema={schema}
       >
-        <TopbarContainer rootClassName={topbarClasses} currentSearchParams={urlQueryParams} />
+        <TopbarContainer rootClassName={topbarClasses} currentSearchParams={validQueryParams} />
         <div className={css.container}>
           <div className={css.searchResultContainer}>
             <SearchFiltersMobile
