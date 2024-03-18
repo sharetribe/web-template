@@ -301,13 +301,16 @@ export class SearchPageComponent extends Component {
         <div className={css.layoutWrapperContainer}>
           <aside className={css.layoutWrapperFilterColumn} data-testid="filterColumnAside">
             <div className={css.filterColumnContent}>
-              {availableFilters.map(config => {
+              {availableFilters.map(filterConfig => {
+                const key = `SearchFiltersDesktop.${filterConfig.scope || 'built-in'}.${
+                  filterConfig.key
+                }`;
                 return (
                   <FilterComponent
-                    key={`SearchFiltersMobile.${config.scope || 'built-in'}.${config.key}`}
-                    idPrefix="SearchFiltersMobile"
+                    key={key}
+                    idPrefix="SearchFiltersDesktop"
                     className={css.filter}
-                    config={config}
+                    config={filterConfig}
                     marketplaceCurrency={marketplaceCurrency}
                     urlQueryParams={urlQueryParams}
                     initialValues={initialValues(this.props, this.state.currentQueryParams)}
@@ -344,12 +347,16 @@ export class SearchPageComponent extends Component {
                 isMapVariant={false}
                 noResultsInfo={noResultsInfo}
               >
-                {availableFilters.map(config => {
+                {availableFilters.map(filterConfig => {
+                  const key = `SearchFiltersMobile.${filterConfig.scope || 'built-in'}.${
+                    filterConfig.key
+                  }`;
+
                   return (
                     <FilterComponent
-                      key={`SearchFiltersMobile.${config.scope || 'built-in'}.${config.key}`}
+                      key={key}
                       idPrefix="SearchFiltersMobile"
-                      config={config}
+                      config={filterConfig}
                       marketplaceCurrency={marketplaceCurrency}
                       urlQueryParams={validQueryParams}
                       initialValues={initialValues(this.props, this.state.currentQueryParams)}
