@@ -104,6 +104,10 @@ export class SearchPageComponent extends Component {
     const { history, routeConfiguration, config } = this.props;
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
+    const filterConfigs = {
+      listingFieldsConfig,
+      defaultFiltersConfig,
+    };
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
@@ -131,12 +135,7 @@ export class SearchPageComponent extends Component {
       const callback = () => {
         if (useHistoryPush) {
           const searchParams = this.state.currentQueryParams;
-          const search = cleanSearchFromConflictingParams(
-            searchParams,
-            listingFieldsConfig,
-            defaultFiltersConfig,
-            sortConfig
-          );
+          const search = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
           history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, search));
         }
       };
@@ -185,6 +184,10 @@ export class SearchPageComponent extends Component {
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
     const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const marketplaceCurrency = config.currency;
+    const filterConfigs = {
+      listingFieldsConfig,
+      defaultFiltersConfig,
+    };
 
     // Page transition might initially use values from previous search
     // urlQueryParams doesn't contain page specific url params
@@ -192,18 +195,12 @@ export class SearchPageComponent extends Component {
     const { searchParamsAreInSync, urlQueryParams, searchParamsInURL } = searchParamsPicker(
       location.search,
       searchParams,
-      listingFieldsConfig,
-      defaultFiltersConfig,
+      filterConfigs,
       sortConfig,
       isOriginInUse(config)
     );
 
-    const validQueryParams = validFilterParams(
-      searchParamsInURL,
-      listingFieldsConfig,
-      defaultFiltersConfig,
-      false
-    );
+    const validQueryParams = validFilterParams(searchParamsInURL, filterConfigs, false);
 
     const isKeywordSearch = isMainSearchTypeKeywords(config);
     const defaultFilters = isKeywordSearch
@@ -220,11 +217,7 @@ export class SearchPageComponent extends Component {
     ];
 
     // Selected aka active filters
-    const selectedFilters = validFilterParams(
-      validQueryParams,
-      listingFieldsConfig,
-      defaultFiltersConfig
-    );
+    const selectedFilters = validFilterParams(validQueryParams, filterConfigs);
     const isValidDatesFilter =
       searchParamsInURL.dates == null ||
       (searchParamsInURL.dates != null && searchParamsInURL.dates === selectedFilters.dates);
@@ -248,8 +241,7 @@ export class SearchPageComponent extends Component {
     const conflictingFilterActive = isAnyFilterActive(
       sortConfig.conflictingFilters,
       validQueryParams,
-      listingFieldsConfig,
-      defaultFiltersConfig
+      filterConfigs
     );
     const sortBy = mode => {
       return sortConfig.active ? (
