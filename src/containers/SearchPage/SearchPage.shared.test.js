@@ -80,6 +80,11 @@ const defaultFiltersConfig = [
   },
 ];
 
+const filterConfigs = {
+  listingFieldsConfig,
+  defaultFiltersConfig,
+};
+
 const sortConfig = {
   active: true,
   queryParamName: 'sort',
@@ -129,61 +134,46 @@ describe('SearchPage.helpers', () => {
 
   describe('validFilterParams', () => {
     it('returns valid parameters', () => {
-      const validParams = validFilterParams(urlParams, listingFieldsConfig, defaultFiltersConfig);
+      const validParams = validFilterParams(urlParams, filterConfigs);
       expect(validParams).toEqual(urlParams);
     });
 
     it('takes empty params', () => {
-      const validParams = validFilterParams({}, listingFieldsConfig, defaultFiltersConfig);
+      const validParams = validFilterParams({}, filterConfigs);
       expect(validParams).toEqual({});
     });
 
     it('drops an invalid filter param value', () => {
       const params = { pub_category: 'men', pub_amenities: 'invalid1,invalid2' };
-      const validParams = validFilterParams(params, listingFieldsConfig, defaultFiltersConfig);
+      const validParams = validFilterParams(params, filterConfigs);
       expect(validParams).toEqual({ pub_category: 'men' });
     });
 
     it('drops non-filter params', () => {
       const params = { pub_category: 'men', other_param: 'somevalue' };
-      const validParams = validFilterParams(params, listingFieldsConfig, defaultFiltersConfig);
+      const validParams = validFilterParams(params, filterConfigs);
       expect(validParams).toEqual({ pub_category: 'men' });
     });
 
     it('returns valid parameters, when "dropNonFilterParams" is false', () => {
-      const validParams = validFilterParams(
-        urlParams,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        false
-      );
+      const validParams = validFilterParams(urlParams, filterConfigs, false);
       expect(validParams).toEqual(urlParams);
     });
 
     it('takes empty params, when "dropNonFilterParams" is false', () => {
-      const validParams = validFilterParams({}, listingFieldsConfig, defaultFiltersConfig, false);
+      const validParams = validFilterParams({}, filterConfigs, false);
       expect(validParams).toEqual({});
     });
 
     it('drops an invalid filter param value, when "dropNonFilterParams" is false', () => {
       const params = { pub_category: 'men', pub_amenities: 'invalid1,invalid2' };
-      const validParams = validFilterParams(
-        params,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        false
-      );
+      const validParams = validFilterParams(params, filterConfigs, false);
       expect(validParams).toEqual({ pub_category: 'men' });
     });
 
     it('returns non-filter params, when "dropNonFilterParams" is false', () => {
       const params = { pub_category: 'men', other_param: 'somevalue' };
-      const validParams = validFilterParams(
-        params,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        false
-      );
+      const validParams = validFilterParams(params, filterConfigs, false);
       expect(validParams).toEqual(params);
     });
   });
@@ -299,12 +289,7 @@ describe('SearchPage.helpers', () => {
         keywords: 'asdf',
         sort: 'createdAt',
       };
-      const validParams = cleanSearchFromConflictingParams(
-        searchParams,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        sortConfig
-      );
+      const validParams = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
 
       expect(validParams).toEqual({ ...searchParams, sort: null });
     });
@@ -316,12 +301,10 @@ describe('SearchPage.helpers', () => {
         keywords: 'asdf',
         sort: 'createdAt',
       };
-      const validParams = cleanSearchFromConflictingParams(
-        searchParams,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        { ...sortConfig, conflictingFilters: ['origin', 'keywords'] }
-      );
+      const validParams = cleanSearchFromConflictingParams(searchParams, filterConfigs, {
+        ...sortConfig,
+        conflictingFilters: ['origin', 'keywords'],
+      });
 
       expect(validParams).toEqual({ ...searchParams, sort: null });
     });
@@ -332,12 +315,7 @@ describe('SearchPage.helpers', () => {
         bounds: 'bounds value',
         sort: 'createdAt',
       };
-      const validParams = cleanSearchFromConflictingParams(
-        searchParams,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        sortConfig
-      );
+      const validParams = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
 
       expect(validParams).toEqual(searchParams);
     });
@@ -351,60 +329,30 @@ describe('SearchPage.helpers', () => {
         origin: 'origin value',
         bounds: 'bounds value',
       };
-      const validParams = pickSearchParamsOnly(
-        params,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        sortConfig,
-        isOriginInUse
-      );
+      const validParams = pickSearchParamsOnly(params, filterConfigs, sortConfig, isOriginInUse);
       expect(validParams).toEqual({ bounds: 'bounds value' });
     });
 
     it('returns filter parameters', () => {
-      const validParams = pickSearchParamsOnly(
-        urlParams,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        sortConfig,
-        isOriginInUse
-      );
+      const validParams = pickSearchParamsOnly(urlParams, filterConfigs, sortConfig, isOriginInUse);
       expect(validParams).toEqual(urlParams);
     });
 
     it('drops an invalid filter param value', () => {
       const params = { pub_category: 'men', pub_amenities: 'invalid1,invalid2' };
-      const validParams = pickSearchParamsOnly(
-        params,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        sortConfig,
-        isOriginInUse
-      );
+      const validParams = pickSearchParamsOnly(params, filterConfigs, sortConfig, isOriginInUse);
       expect(validParams).toEqual({ pub_category: 'men' });
     });
 
     it('drops non-search params', () => {
       const params = { pub_category: 'men', other_param: 'somevalue' };
-      const validParams = pickSearchParamsOnly(
-        params,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        sortConfig,
-        isOriginInUse
-      );
+      const validParams = pickSearchParamsOnly(params, filterConfigs, sortConfig, isOriginInUse);
       expect(validParams).toEqual({ pub_category: 'men' });
     });
 
     it('returns sort param', () => {
       const params = { sort: '-price', other_param: 'somevalue' };
-      const validParams = pickSearchParamsOnly(
-        params,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        sortConfig,
-        isOriginInUse
-      );
+      const validParams = pickSearchParamsOnly(params, filterConfigs, sortConfig, isOriginInUse);
       expect(validParams).toEqual({ sort: '-price' });
     });
   });
@@ -422,8 +370,7 @@ describe('SearchPage.helpers', () => {
       const paramsInfo = searchParamsPicker(
         location.search,
         searchParamsInProps,
-        listingFieldsConfig,
-        defaultFiltersConfig,
+        filterConfigs,
         sortConfig,
         isOriginInUse
       );
@@ -442,8 +389,7 @@ describe('SearchPage.helpers', () => {
       const paramsInfo = searchParamsPicker(
         location.search,
         searchParamsInProps,
-        listingFieldsConfig,
-        defaultFiltersConfig,
+        filterConfigs,
         sortConfig,
         isOriginInUse
       );
@@ -464,8 +410,7 @@ describe('SearchPage.helpers', () => {
       const paramsInfo = searchParamsPicker(
         location.search,
         searchParamsInProps,
-        listingFieldsConfig,
-        defaultFiltersConfig,
+        filterConfigs,
         sortConfig,
         isOriginInUse
       );
@@ -484,8 +429,7 @@ describe('SearchPage.helpers', () => {
       const paramsInfo = searchParamsPicker(
         location.search,
         searchParamsInProps,
-        listingFieldsConfig,
-        defaultFiltersConfig,
+        filterConfigs,
         sortConfig,
         isOriginInUse
       );
