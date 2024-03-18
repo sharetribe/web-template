@@ -80,9 +80,21 @@ const defaultFiltersConfig = [
   },
 ];
 
+const listingCategories = {
+  categories: [
+    { id: 'a', name: 'A' },
+    { id: 'b', name: 'B' },
+    { id: 'c', name: 'C' },
+    { id: 'd', name: 'D' },
+    { id: 'e', name: 'E' },
+    { id: 'f', name: 'F' },
+  ],
+};
+
 const filterConfigs = {
   listingFieldsConfig,
   defaultFiltersConfig,
+  listingCategories,
 };
 
 const sortConfig = {

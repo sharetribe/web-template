@@ -145,9 +145,11 @@ export const validUrlQueryParamsFromProps = props => {
   const { location, config } = props;
   const { listingFields: listingFieldsConfig } = config?.listing || {};
   const { defaultFilters: defaultFiltersConfig } = config?.search || {};
+  const listingCategories = config.categories;
   const filterConfigs = {
     listingFieldsConfig,
     defaultFiltersConfig,
+    listingCategories,
   };
 
   // eslint-disable-next-line no-unused-vars
