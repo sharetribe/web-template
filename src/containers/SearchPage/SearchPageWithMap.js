@@ -102,9 +102,11 @@ export class SearchPageComponent extends Component {
       const { history, location, config } = this.props;
       const { listingFields: listingFieldsConfig } = config?.listing || {};
       const { defaultFilters: defaultFiltersConfig } = config?.search || {};
+      const listingCategories = config.categories;
       const filterConfigs = {
         listingFieldsConfig,
         defaultFiltersConfig,
+        listingCategories,
       };
 
       // parse query parameters, including a custom attribute named category
@@ -145,9 +147,11 @@ export class SearchPageComponent extends Component {
     const { history, routeConfiguration, config } = this.props;
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
+    const listingCategories = config.categories;
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
+      listingCategories,
     };
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
@@ -183,9 +187,11 @@ export class SearchPageComponent extends Component {
     const { history, routeConfiguration, config } = this.props;
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
+    const listingCategories = config.categories;
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
+      listingCategories,
     };
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
@@ -256,9 +262,11 @@ export class SearchPageComponent extends Component {
 
     const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const marketplaceCurrency = config.currency;
+    const listingCategories = config.categories;
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
+      listingCategories,
     };
 
     // Page transition might initially use values from previous search
@@ -311,6 +319,7 @@ export class SearchPageComponent extends Component {
       ? validFilterParams(validQueryParams, {
           listingFieldsConfig: customSecondaryFilters,
           defaultFiltersConfig: [],
+          listingCategories,
         })
       : {};
     const selectedSecondaryFiltersCount = Object.keys(selectedSecondaryFilters).length;
@@ -420,6 +429,7 @@ export class SearchPageComponent extends Component {
                     key={key}
                     idPrefix="SearchFiltersMobile"
                     config={filterConfig}
+                    listingCategories={listingCategories}
                     marketplaceCurrency={marketplaceCurrency}
                     urlQueryParams={validQueryParams}
                     initialValues={initialValues(this.props, this.state.currentQueryParams)}
@@ -451,6 +461,7 @@ export class SearchPageComponent extends Component {
                       key={key}
                       idPrefix="SearchFiltersPrimary"
                       config={filterConfig}
+                      listingCategories={listingCategories}
                       marketplaceCurrency={marketplaceCurrency}
                       urlQueryParams={validQueryParams}
                       initialValues={initialValues(this.props, this.state.currentQueryParams)}
@@ -482,6 +493,7 @@ export class SearchPageComponent extends Component {
                         key={key}
                         idPrefix="SearchFiltersSecondary"
                         config={filterConfig}
+                        listingCategories={listingCategories}
                         marketplaceCurrency={marketplaceCurrency}
                         urlQueryParams={validQueryParams}
                         initialValues={initialValues(this.props, this.state.currentQueryParams)}
