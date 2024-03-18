@@ -203,8 +203,7 @@ export class SearchPageComponent extends Component {
       sortConfig,
       isOriginInUse(config)
     );
-
-    const validQueryParams = validFilterParams(searchParamsInURL, filterConfigs, false);
+    const validQueryParams = urlQueryParams;
 
     const isKeywordSearch = isMainSearchTypeKeywords(config);
     const defaultFilters = isKeywordSearch
@@ -221,7 +220,7 @@ export class SearchPageComponent extends Component {
     ];
 
     // Selected aka active filters
-    const selectedFilters = validFilterParams(validQueryParams, filterConfigs);
+    const selectedFilters = validQueryParams;
     const isValidDatesFilter =
       searchParamsInURL.dates == null ||
       (searchParamsInURL.dates != null && searchParamsInURL.dates === selectedFilters.dates);
@@ -293,7 +292,7 @@ export class SearchPageComponent extends Component {
         title={title}
         schema={schema}
       >
-        <TopbarContainer rootClassName={topbarClasses} currentSearchParams={urlQueryParams} />
+        <TopbarContainer rootClassName={topbarClasses} currentSearchParams={validQueryParams} />
         <div className={css.layoutWrapperContainer}>
           <aside className={css.layoutWrapperFilterColumn} data-testid="filterColumnAside">
             <div className={css.filterColumnContent}>
@@ -309,7 +308,7 @@ export class SearchPageComponent extends Component {
                     config={filterConfig}
                     listingCategories={listingCategories}
                     marketplaceCurrency={marketplaceCurrency}
-                    urlQueryParams={urlQueryParams}
+                    urlQueryParams={validQueryParams}
                     initialValues={initialValues(this.props, this.state.currentQueryParams)}
                     getHandleChangedValueFn={this.getHandleChangedValueFn}
                     intl={intl}
