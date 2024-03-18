@@ -104,9 +104,11 @@ export class SearchPageComponent extends Component {
     const { history, routeConfiguration, config } = this.props;
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
+    const listingCategories = config.categories;
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
+      listingCategories,
     };
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
@@ -184,9 +186,11 @@ export class SearchPageComponent extends Component {
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
     const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const marketplaceCurrency = config.currency;
+    const listingCategories = config.categories;
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,
+      listingCategories,
     };
 
     // Page transition might initially use values from previous search
@@ -303,6 +307,7 @@ export class SearchPageComponent extends Component {
                     idPrefix="SearchFiltersDesktop"
                     className={css.filter}
                     config={filterConfig}
+                    listingCategories={listingCategories}
                     marketplaceCurrency={marketplaceCurrency}
                     urlQueryParams={urlQueryParams}
                     initialValues={initialValues(this.props, this.state.currentQueryParams)}
@@ -349,6 +354,7 @@ export class SearchPageComponent extends Component {
                       key={key}
                       idPrefix="SearchFiltersMobile"
                       config={filterConfig}
+                      listingCategories={listingCategories}
                       marketplaceCurrency={marketplaceCurrency}
                       urlQueryParams={validQueryParams}
                       initialValues={initialValues(this.props, this.state.currentQueryParams)}
