@@ -102,6 +102,10 @@ export class SearchPageComponent extends Component {
       const { history, location, config } = this.props;
       const { listingFields: listingFieldsConfig } = config?.listing || {};
       const { defaultFilters: defaultFiltersConfig } = config?.search || {};
+      const filterConfigs = {
+        listingFieldsConfig,
+        defaultFiltersConfig,
+      };
 
       // parse query parameters, including a custom attribute named category
       const { address, bounds, mapSearch, ...rest } = parse(location.search, {
@@ -117,7 +121,7 @@ export class SearchPageComponent extends Component {
         ...originMaybe,
         bounds: viewportBounds,
         mapSearch: true,
-        ...validFilterParams(rest, listingFieldsConfig, defaultFiltersConfig, dropNonFilterParams),
+        ...validFilterParams(rest, filterConfigs, dropNonFilterParams),
       };
 
       history.push(createResourceLocatorString('SearchPage', routes, {}, searchParams));
@@ -141,15 +145,14 @@ export class SearchPageComponent extends Component {
     const { history, routeConfiguration, config } = this.props;
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
+    const filterConfigs = {
+      listingFieldsConfig,
+      defaultFiltersConfig,
+    };
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
     const searchParams = { ...urlQueryParams, ...this.state.currentQueryParams };
-    const search = cleanSearchFromConflictingParams(
-      searchParams,
-      listingFieldsConfig,
-      defaultFiltersConfig,
-      sortConfig
-    );
+    const search = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
 
     history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, search));
   }
@@ -180,6 +183,10 @@ export class SearchPageComponent extends Component {
     const { history, routeConfiguration, config } = this.props;
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
+    const filterConfigs = {
+      listingFieldsConfig,
+      defaultFiltersConfig,
+    };
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
@@ -207,12 +214,7 @@ export class SearchPageComponent extends Component {
       const callback = () => {
         if (useHistoryPush) {
           const searchParams = this.state.currentQueryParams;
-          const search = cleanSearchFromConflictingParams(
-            searchParams,
-            listingFieldsConfig,
-            defaultFiltersConfig,
-            sortConfig
-          );
+          const search = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
           history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, search));
         }
       };
@@ -254,6 +256,10 @@ export class SearchPageComponent extends Component {
 
     const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const marketplaceCurrency = config.currency;
+    const filterConfigs = {
+      listingFieldsConfig,
+      defaultFiltersConfig,
+    };
 
     // Page transition might initially use values from previous search
     // urlQueryParams doesn't contain page specific url params
@@ -261,18 +267,12 @@ export class SearchPageComponent extends Component {
     const { searchParamsAreInSync, urlQueryParams, searchParamsInURL } = searchParamsPicker(
       location.search,
       searchParams,
-      listingFieldsConfig,
-      defaultFiltersConfig,
+      filterConfigs,
       sortConfig,
       isOriginInUse(config)
     );
 
-    const validQueryParams = validFilterParams(
-      searchParamsInURL,
-      listingFieldsConfig,
-      defaultFiltersConfig,
-      false
-    );
+    const validQueryParams = validFilterParams(searchParamsInURL, filterConfigs, false);
 
     const isWindowDefined = typeof window !== 'undefined';
     const isMobileLayout = isWindowDefined && window.innerWidth < MODAL_BREAKPOINT;
@@ -297,11 +297,7 @@ export class SearchPageComponent extends Component {
     const hasSecondaryFilters = !!(customSecondaryFilters && customSecondaryFilters.length > 0);
 
     // Selected aka active filters
-    const selectedFilters = validFilterParams(
-      validQueryParams,
-      listingFieldsConfig,
-      defaultFiltersConfig
-    );
+    const selectedFilters = validFilterParams(validQueryParams, filterConfigs);
     const keysOfSelectedFilters = Object.keys(selectedFilters);
     const selectedFiltersCountForMobile = isKeywordSearch
       ? keysOfSelectedFilters.filter(f => f !== 'keywords').length
@@ -312,7 +308,10 @@ export class SearchPageComponent extends Component {
 
     // Selected aka active secondary filters
     const selectedSecondaryFilters = hasSecondaryFilters
-      ? validFilterParams(validQueryParams, customSecondaryFilters, [])
+      ? validFilterParams(validQueryParams, {
+          listingFieldsConfig: customSecondaryFilters,
+          defaultFiltersConfig: [],
+        })
       : {};
     const selectedSecondaryFiltersCount = Object.keys(selectedSecondaryFilters).length;
 
@@ -342,8 +341,7 @@ export class SearchPageComponent extends Component {
     const conflictingFilterActive = isAnyFilterActive(
       sortConfig.conflictingFilters,
       validQueryParams,
-      listingFieldsConfig,
-      defaultFiltersConfig
+      filterConfigs
     );
     const sortBy = mode => {
       return sortConfig.active ? (
