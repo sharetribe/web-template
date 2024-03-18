@@ -12,17 +12,17 @@ const SectionDetailsMaybe = props => {
   }
 
   const pickUserFields = (filteredConfigs, config) => {
-    const { key, schemaType, enumOptions, includeForListingTypes, showConfig = {} } = config;
-    const listingType = publicData.listingType;
-    const isTargetListingType =
-      includeForListingTypes == null || includeForListingTypes.includes(listingType);
+    const { key, schemaType, enumOptions, userTypeConfig = {}, showConfig = {} } = config;
+    const { limitToUserTypeIds, userTypeIds } = userTypeConfig;
+    const userType = publicData.userType;
+    const isTargetUserType = !limitToUserTypeIds || userTypeIds.includes(userType);
 
     const { label, displayInProfile } = showConfig;
     const publicDataValue = publicData && publicData[key];
     const metadataValue = metadata && metadata[key];
     const value = publicDataValue || metadataValue;
 
-    if (displayInProfile && isTargetListingType && typeof value !== 'undefined') {
+    if (displayInProfile && isTargetUserType && typeof value !== 'undefined') {
       const findSelectedOption = enumValue => enumOptions?.find(o => enumValue === `${o.option}`);
       const getBooleanMessage = value =>
         value
