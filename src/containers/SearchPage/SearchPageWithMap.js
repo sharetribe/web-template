@@ -413,12 +413,15 @@ export class SearchPageComponent extends Component {
               noResultsInfo={noResultsInfo}
               isMapVariant
             >
-              {availableFilters.map(config => {
+              {availableFilters.map(filterConfig => {
+                const key = `SearchFiltersMobile.${filterConfig.scope || 'built-in'}.${
+                  filterConfig.key
+                }`;
                 return (
                   <FilterComponent
-                    key={`SearchFiltersMobile.${config.scope || 'built-in'}.${config.key}`}
+                    key={key}
                     idPrefix="SearchFiltersMobile"
-                    config={config}
+                    config={filterConfig}
                     marketplaceCurrency={marketplaceCurrency}
                     urlQueryParams={validQueryParams}
                     initialValues={initialValues(this.props, this.state.currentQueryParams)}
@@ -441,12 +444,15 @@ export class SearchPageComponent extends Component {
               noResultsInfo={noResultsInfo}
             >
               <SearchFiltersPrimary {...propsForSecondaryFiltersToggle}>
-                {availablePrimaryFilters.map(config => {
+                {availablePrimaryFilters.map(filterConfig => {
+                  const key = `SearchFiltersPrimary.${filterConfig.scope || 'built-in'}.${
+                    filterConfig.key
+                  }`;
                   return (
                     <FilterComponent
-                      key={`SearchFiltersPrimary.${config.scope || 'built-in'}.${config.key}`}
+                      key={key}
                       idPrefix="SearchFiltersPrimary"
-                      config={config}
+                      config={filterConfig}
                       marketplaceCurrency={marketplaceCurrency}
                       urlQueryParams={validQueryParams}
                       initialValues={initialValues(this.props, this.state.currentQueryParams)}
@@ -469,12 +475,15 @@ export class SearchPageComponent extends Component {
                   resetAll={this.resetAll}
                   onClosePanel={() => this.setState({ isSecondaryFiltersOpen: false })}
                 >
-                  {customSecondaryFilters.map(config => {
+                  {customSecondaryFilters.map(filterConfig => {
+                    const key = `SearchFiltersSecondary.${filterConfig.scope || 'built-in'}.${
+                      filterConfig.key
+                    }`;
                     return (
                       <FilterComponent
-                        key={`SearchFiltersSecondary.${config.scope || 'built-in'}.${config.key}`}
+                        key={key}
                         idPrefix="SearchFiltersSecondary"
-                        config={config}
+                        config={filterConfig}
                         marketplaceCurrency={marketplaceCurrency}
                         urlQueryParams={validQueryParams}
                         initialValues={initialValues(this.props, this.state.currentQueryParams)}
