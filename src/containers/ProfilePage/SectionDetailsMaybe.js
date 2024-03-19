@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
 import { Heading } from '../../components';
+import { getFieldValue } from '../../util/fieldHelpers';
 
 import css from './ProfilePage.module.css';
 
@@ -18,8 +19,8 @@ const SectionDetailsMaybe = props => {
     const isTargetUserType = !limitToUserTypeIds || userTypeIds.includes(userType);
 
     const { label, displayInProfile } = showConfig;
-    const publicDataValue = publicData && publicData[key];
-    const metadataValue = metadata && metadata[key];
+    const publicDataValue = getFieldValue(publicData, key);
+    const metadataValue = getFieldValue(metadata, key);
     const value = publicDataValue || metadataValue;
 
     if (displayInProfile && isTargetUserType && typeof value !== 'undefined') {
