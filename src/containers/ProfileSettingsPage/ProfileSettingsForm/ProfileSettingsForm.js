@@ -24,7 +24,7 @@ import {
 } from '../../../components';
 
 import css from './ProfileSettingsForm.module.css';
-import { getCustomUserFieldInputs } from '../../../util/userHelpers';
+import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
 
 const ACCEPT_IMAGES = 'image/*';
 const UPLOAD_CHANGE_DELAY = 2000; // Show spinner so that browser has time to load img srcset
@@ -193,7 +193,7 @@ class ProfileSettingsFormComponent extends Component {
           const submitDisabled =
             invalid || pristine || pristineSinceLastSubmit || uploadInProgress || submitInProgress;
 
-          const userFieldProps = getCustomUserFieldInputs(userFields, intl, userType);
+          const userFieldProps = getPropsForCustomUserFieldInputs(userFields, intl, userType);
 
           return (
             <Form
@@ -313,8 +313,8 @@ class ProfileSettingsFormComponent extends Component {
                 </p>
               </div>
               <div className={classNames(css.sectionContainer, css.lastSection)}>
-                {userFieldProps.map(f => (
-                  <CustomExtendedDataField {...f} />
+                {userFieldProps.map(fieldProps => (
+                  <CustomExtendedDataField {...fieldProps} />
                 ))}
               </div>
               {submitError}
