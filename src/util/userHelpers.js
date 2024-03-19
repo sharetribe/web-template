@@ -2,6 +2,18 @@ import { EXTENDED_DATA_SCHEMA_TYPES } from './types';
 import { getFieldValue } from './fieldHelpers';
 
 /**
+ * Get the namespaced attribute key based on the specified extended data scope and attribute key
+ * @param {*} scope extended data scope
+ * @param {*} key attribute key in extended data
+ * @returns a string containing the namespace prefix and the attribute name
+ */
+const getNamespacedKey = (scope, key) => {
+  const namespacePrefix = scope === 'public' ? `pub_` : scope === 'protected' ? 'prot_' : `priv_`;
+
+  return `${namespacePrefix}${key}`;
+};
+
+/**
  * Pick extended data fields from given form data.
  * Picking is based on extended data configuration for the user and target scope and user type.
  *
@@ -70,11 +82,14 @@ export const initialValuesForUserFields = (data, targetScope, targetUserType, us
 };
 
 /**
- * Returns input fields for custom user fields
- * @param {*} props
- * @returns an array of <CustomExtendedDataField> components
+ * Returns props for custom user fields
+ * @param {*} userFieldsConfig Configuration for user fields
+ * @param {*} intl
+ * @param {*} userType User type to restrict fields to (optional)
+ * @returns an array of props for CustomExtendedDataField: key, name, fieldConfig, defaultRequiredMessage
  */
-export const getCustomUserFieldInputs = (userFieldsConfig, intl, userType = null) => {
+
+export const getPropsForCustomUserFieldInputs = (userFieldsConfig, intl, userType = null) => {
   return userFieldsConfig.reduce((pickedFields, fieldConfig) => {
     const { key, userTypeConfig, schemaType, scope } = fieldConfig || {};
     const namespacedKey = getNamespacedKey(scope, key);
@@ -98,16 +113,4 @@ export const getCustomUserFieldInputs = (userFieldsConfig, intl, userType = null
         ]
       : pickedFields;
   }, []);
-};
-
-/**
- * Get the namespaced attribute key based on the specified extended data scope and attribute key
- * @param {*} scope extended data scope
- * @param {*} key attribute key in extended data
- * @returns a string containing the namespace prefix and the attribute name
- */
-const getNamespacedKey = (scope, key) => {
-  const namespacePrefix = scope === 'public' ? `pub_` : scope === 'protected' ? 'prot_' : `priv_`;
-
-  return `${namespacePrefix}${key}`;
 };
