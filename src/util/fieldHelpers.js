@@ -44,10 +44,10 @@ export const pickCustomFieldProps = (publicData, metadata, fieldConfig, entityTy
       options.map(o => ({ key: `${o.option}`, label: o.label }));
 
     const value =
-      scope === 'public' && !!publicData
-        ? publicData[key]
-        : scope === 'metadata' && !!metadata
-        ? metadata[key]
+      scope === 'public'
+        ? getFieldValue(publicData, key)
+        : scope === 'metadata'
+        ? getFieldValue(metadata, key)
         : null;
 
     const hasValue = value != null;
@@ -74,4 +74,15 @@ export const pickCustomFieldProps = (publicData, metadata, fieldConfig, entityTy
         ]
       : pickedElements;
   }, []);
+};
+
+/**
+ * Returns the value of the attribute in extended data.
+ * @param {*} data extended data containing the value
+ * @param {*} key attribute key in extended data
+ * @returns
+ */
+export const getFieldValue = (data, key) => {
+  const value = data?.[key];
+  return value != null ? value : null;
 };
