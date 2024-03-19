@@ -1,7 +1,7 @@
 import {
   pickUserFieldsData,
   initialValuesForUserFields,
-  getCustomUserFieldInputs,
+  getPropsForCustomUserFieldInputs,
 } from './userHelpers';
 
 import { fakeIntl } from './testData';
@@ -238,9 +238,9 @@ describe('userHelpers', () => {
     });
   });
 
-  describe('getCustomUserFieldInputs', () => {
+  describe('getPropsForCustomUserFieldInputs', () => {
     it('returns the correct input config if no user type is specified', () => {
-      const inputConfig1 = getCustomUserFieldInputs(config, fakeIntl);
+      const inputConfig1 = getPropsForCustomUserFieldInputs(config, fakeIntl);
       const sharedConfig = [
         {
           key: 'priv_textField',
@@ -276,8 +276,8 @@ describe('userHelpers', () => {
     });
 
     it('returns the correct input config based on user type', () => {
-      const inputConfig1 = getCustomUserFieldInputs(config, fakeIntl, 'a');
-      const inputConfig2 = getCustomUserFieldInputs(config, fakeIntl, 'c');
+      const inputConfig1 = getPropsForCustomUserFieldInputs(config, fakeIntl, 'a');
+      const inputConfig2 = getPropsForCustomUserFieldInputs(config, fakeIntl, 'c');
 
       expect(inputConfig1).toEqual(expectedUserFieldInput(1, ['a', 'b']));
       expect(inputConfig2).toEqual(expectedUserFieldInput(2, ['c', 'd']));
