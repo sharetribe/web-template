@@ -82,7 +82,7 @@ export const states = {
   DECLINED: 'declined',
   ACCEPTED: 'accepted',
   EXPIRED: 'expired',
-  CANCELED: 'canceled',
+  CANCELED: 'cancelled',
   DELIVERED: 'delivered',
   REVIEWED: 'reviewed',
   REVIEWED_BY_CUSTOMER: 'reviewed-by-customer',
