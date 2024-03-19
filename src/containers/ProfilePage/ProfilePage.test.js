@@ -23,7 +23,7 @@ const attributes = {
   profile: {
     bio: 'I am a great cook!',
     publicData: {
-      canCook: true,
+      canCook: false,
       cuisine: 'italian',
       dietaryPreferences: ['vegan', 'gluten-free'],
       kitchenDescription: 'This is a kitchen description!',
@@ -123,7 +123,7 @@ describe('ProfilePage', () => {
     expect(screen.getByText('Favorite cuisine')).toBeInTheDocument();
     expect(screen.getByText('Italian')).toBeInTheDocument();
     expect(screen.getByText('Can you cook?')).toBeInTheDocument();
-    expect(screen.getByText('ProfilePage.detailYes')).toBeInTheDocument();
+    expect(screen.getByText('ProfilePage.detailNo')).toBeInTheDocument();
     expect(screen.getByText('How many cookbooks do you have')).toBeInTheDocument();
     expect(screen.getByText('10')).toBeInTheDocument();
     expect(screen.getByText('This is a kitchen description!')).toBeInTheDocument();
