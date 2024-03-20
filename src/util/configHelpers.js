@@ -1266,6 +1266,9 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     // Set category structure if given
     categories: validHostedCategories,
 
+    // Set category structure if given
+    categories: validHostedCategories,
+
     // Hosted search configuration does not yet contain sortConfig
     search: mergeSearchConfig(configAsset.search, defaultConfigs.search, validHostedCategories),
 
