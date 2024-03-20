@@ -35,7 +35,14 @@ const constructQueryParamName = (key, scope) => {
  * @param {Object} defaultFiltersConfig Configuration of default filters.
  */
 export const getQueryParamNames = (listingFieldsConfig, defaultFiltersConfig) => {
-  const queryParamKeysOfDefaultFilters = defaultFiltersConfig.map(config => config.key);
+  const queryParamKeysOfDefaultFilters = defaultFiltersConfig.reduce((pickedKeys, config) => {
+    const { key, schemaType, scope, nestedParams } = config;
+    const newKeys =
+      schemaType === 'category' && nestedParams
+        ? nestedParams?.map(p => constructQueryParamName(p, scope))
+        : [key];
+    return [...pickedKeys, ...newKeys];
+  }, []);
   const queryParamKeysOfListingFields = listingFieldsConfig.reduce((params, config) => {
     const param = constructQueryParamName(config.key, config.scope);
     return config.filterConfig?.indexForSearch ? [...params, param] : params;
