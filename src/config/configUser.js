@@ -45,12 +45,12 @@ export const userFields = [
     ],
     showConfig: {
       label: 'Favorite cuisine',
-      displayInProfile: true, // key might change
+      displayInProfile: true,
     },
     saveConfig: {
       label: 'Favorite cuisine',
-      displayInSignUp: true, // key might change
-      required: true,
+      displayInSignUp: true,
+      isRequired: true,
     },
     userTypeConfig: {
       limitToUserTypeIds: true,
@@ -63,12 +63,12 @@ export const userFields = [
     schemaType: 'boolean',
     showConfig: {
       label: 'Can you cook?',
-      displayInProfile: true, // key might change
+      displayInProfile: true,
     },
     saveConfig: {
       label: 'Can you cook?',
-      displayInSignUp: true, // key might change
-      required: true,
+      displayInSignUp: true,
+      isRequired: true,
       placeholderMessage: 'Select...',
     },
     userTypeConfig: {
@@ -82,12 +82,12 @@ export const userFields = [
     schemaType: 'long',
     showConfig: {
       label: 'How many cookbooks do you have',
-      displayInProfile: true, // key might change
+      displayInProfile: true,
     },
     saveConfig: {
       label: 'How many cookbooks do you have',
-      displayInSignUp: true, // key might change
-      required: true,
+      displayInSignUp: true,
+      isRequired: true,
     },
     userTypeConfig: {
       limitToUserTypeIds: true,
@@ -100,12 +100,12 @@ export const userFields = [
     schemaType: 'text',
     showConfig: {
       label: 'Description of your kitchen',
-      displayInProfile: true, // key might change
+      displayInProfile: true,
     },
     saveConfig: {
       label: 'Description of your kitchen',
-      displayInSignUp: true, // key might change
-      required: true,
+      displayInSignUp: true,
+      isRequired: true,
       placeholderMessage: 'Describe your kitchen...',
     },
     userTypeConfig: {
@@ -118,14 +118,17 @@ export const userFields = [
     key: 'arrivalInstructions',
     scope: 'protected',
     schemaType: 'text',
+    showConfig: {
+      label: 'How do people arrive at your kitchen?',
+      displayInProfile: true,
+    },
     saveConfig: {
       label: 'How do people arrive at your kitchen?',
-      displayInSignUp: true, // key might change
-      required: true,
+      displayInSignUp: true,
+      isRequired: true,
     },
     userTypeConfig: {
-      label: 'How do people arrive at your kitchen?',
-      limitToUserTypeIds: true,
+      limitToUserTypeIds: false,
       userTypeIds: ['a', 'b', 'c'],
     },
   },
@@ -145,12 +148,12 @@ export const userFields = [
     ],
     showConfig: {
       label: 'Dietary preferences',
-      displayInProfile: true, // key might change
+      displayInProfile: true,
     },
     saveConfig: {
-      displayInSignUp: true, // key might change
+      displayInSignUp: true,
       label: 'Dietary preferences',
-      required: true,
+      isRequired: true,
     },
     userTypeConfig: {
       limitToUserTypeIds: true,

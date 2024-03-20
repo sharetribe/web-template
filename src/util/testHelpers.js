@@ -511,7 +511,7 @@ export const getHostedConfiguration = () => {
           saveConfig: {
             label: 'Favorite cuisine',
             displayInSignUp: true,
-            required: true,
+            isRequired: true,
           },
           userTypeConfig: {
             limitToUserTypeIds: true,
@@ -529,7 +529,7 @@ export const getHostedConfiguration = () => {
           saveConfig: {
             label: 'Can you cook?',
             displayInSignUp: true,
-            required: true,
+            isRequired: true,
           },
           userTypeConfig: {
             limitToUserTypeIds: true,
@@ -547,7 +547,7 @@ export const getHostedConfiguration = () => {
           saveConfig: {
             label: 'How many cookbooks do you have',
             displayInSignUp: true,
-            required: true,
+            isRequired: true,
           },
           userTypeConfig: {
             limitToUserTypeIds: true,
@@ -565,7 +565,7 @@ export const getHostedConfiguration = () => {
           saveConfig: {
             label: 'Description of your kitchen',
             displayInSignUp: true,
-            required: true,
+            isRequired: true,
           },
           userTypeConfig: {
             limitToUserTypeIds: true,
@@ -593,7 +593,7 @@ export const getHostedConfiguration = () => {
           saveConfig: {
             label: 'Dietary preferences',
             displayInSignUp: true,
-            required: true,
+            isRequired: true,
           },
           userTypeConfig: {
             limitToUserTypeIds: true,
@@ -611,7 +611,7 @@ export const getHostedConfiguration = () => {
           saveConfig: {
             label: "Don't show in profile",
             displayInSignUp: false,
-            required: false,
+            isRequired: false,
           },
         },
       ],
