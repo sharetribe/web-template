@@ -22,6 +22,17 @@ const getEntityTypeRestrictions = (entityTypeKey, config) => {
 };
 
 /**
+ * Returns the value of the attribute in extended data.
+ * @param {*} data extended data containing the value
+ * @param {*} key attribute key in extended data
+ * @returns
+ */
+export const getFieldValue = (data, key) => {
+  const value = data?.[key];
+  return value != null ? value : null;
+};
+
+/**
  * Pick props for SectionMultiEnumMaybe and SectionTextMaybe display components.
  * @param {*} publicData entity public data containing the value(s) to be displayed
  * @param {*} metadata entity metadata containing the value(s) to be displayed
@@ -35,7 +46,8 @@ const getEntityTypeRestrictions = (entityTypeKey, config) => {
  */
 export const pickCustomFieldProps = (publicData, metadata, fieldConfig, entityTypeKey) => {
   return fieldConfig?.reduce((pickedElements, config) => {
-    const { key, enumOptions, schemaType, scope = 'public' } = config;
+    const { key, enumOptions, schemaType, showConfig = {}, scope = 'public' } = config;
+    const { displayInProfile } = showConfig;
     const { isLimited, limitToIds } = getEntityTypeRestrictions(entityTypeKey, config);
     const entityType = publicData && publicData[entityTypeKey];
     const isTargetEntityType = !isLimited || limitToIds.includes(entityType);
@@ -50,8 +62,7 @@ export const pickCustomFieldProps = (publicData, metadata, fieldConfig, entityTy
         ? getFieldValue(metadata, key)
         : null;
 
-    const hasValue = value != null;
-    return isTargetEntityType && schemaType === SCHEMA_TYPE_MULTI_ENUM
+    return isTargetEntityType && schemaType === SCHEMA_TYPE_MULTI_ENUM && displayInProfile
       ? [
           ...pickedElements,
           {
@@ -62,7 +73,7 @@ export const pickCustomFieldProps = (publicData, metadata, fieldConfig, entityTy
             selectedOptions: value || [],
           },
         ]
-      : isTargetEntityType && hasValue && config.schemaType === SCHEMA_TYPE_TEXT
+      : isTargetEntityType && !!value && config.schemaType === SCHEMA_TYPE_TEXT && displayInProfile
       ? [
           ...pickedElements,
           {
@@ -74,15 +85,4 @@ export const pickCustomFieldProps = (publicData, metadata, fieldConfig, entityTy
         ]
       : pickedElements;
   }, []);
-};
-
-/**
- * Returns the value of the attribute in extended data.
- * @param {*} data extended data containing the value
- * @param {*} key attribute key in extended data
- * @returns
- */
-export const getFieldValue = (data, key) => {
-  const value = data?.[key];
-  return value != null ? value : null;
 };
