@@ -497,7 +497,6 @@ export const getHostedConfiguration = () => {
       userFields: [
         {
           key: 'cuisine',
-          label: 'Favorite cuisine',
           scope: 'public',
           schemaType: 'enum',
           enumOptions: [
@@ -506,10 +505,12 @@ export const getHostedConfiguration = () => {
             { option: 'thai', label: 'Thai' },
           ],
           showConfig: {
-            displayInProfile: true, // key might change
+            label: 'Favorite cuisine',
+            displayInProfile: true,
           },
           saveConfig: {
-            displayInSignUp: true, // key might change
+            label: 'Favorite cuisine',
+            displayInSignUp: true,
             required: true,
           },
           userTypeConfig: {
@@ -519,14 +520,15 @@ export const getHostedConfiguration = () => {
         },
         {
           key: 'canCook',
-          label: 'Can you cook?',
           scope: 'public',
           schemaType: 'boolean',
           showConfig: {
-            displayInProfile: true, // key might change
+            label: 'Can you cook?',
+            displayInProfile: true,
           },
           saveConfig: {
-            displayInSignUp: true, // key might change
+            label: 'Can you cook?',
+            displayInSignUp: true,
             required: true,
           },
           userTypeConfig: {
@@ -536,14 +538,15 @@ export const getHostedConfiguration = () => {
         },
         {
           key: 'numberOfCookbooks',
-          label: 'How many cookbooks do you have',
           scope: 'public',
           schemaType: 'long',
           showConfig: {
-            displayInProfile: true, // key might change
+            label: 'How many cookbooks do you have',
+            displayInProfile: true,
           },
           saveConfig: {
-            displayInSignUp: true, // key might change
+            label: 'How many cookbooks do you have',
+            displayInSignUp: true,
             required: true,
           },
           userTypeConfig: {
@@ -553,14 +556,15 @@ export const getHostedConfiguration = () => {
         },
         {
           key: 'kitchenDescription',
-          label: 'Description of your kitchen',
           scope: 'public',
           schemaType: 'text',
           showConfig: {
-            displayInProfile: true, // key might change
+            label: 'Description of your kitchen',
+            displayInProfile: true,
           },
           saveConfig: {
-            displayInSignUp: true, // key might change
+            label: 'Description of your kitchen',
+            displayInSignUp: true,
             required: true,
           },
           userTypeConfig: {
@@ -570,7 +574,6 @@ export const getHostedConfiguration = () => {
         },
         {
           key: 'dietaryPreferences',
-          label: 'Dietary preferences',
           scope: 'public',
           schemaType: 'multi-enum',
           enumOptions: [
@@ -584,15 +587,31 @@ export const getHostedConfiguration = () => {
             { option: 'low-fat', label: 'Low fat' },
           ],
           showConfig: {
-            displayInProfile: true, // key might change
+            label: 'Dietary preferences',
+            displayInProfile: true,
           },
           saveConfig: {
-            displayInSignUp: true, // key might change
+            label: 'Dietary preferences',
+            displayInSignUp: true,
             required: true,
           },
           userTypeConfig: {
             limitToUserTypeIds: true,
             userTypeIds: ['a', 'b', 'c'],
+          },
+        },
+        {
+          key: 'notShownInProfileAttribute',
+          scope: 'public',
+          schemaType: 'text',
+          showConfig: {
+            label: 'Not shown in profile',
+            displayInProfile: false,
+          },
+          saveConfig: {
+            label: "Don't show in profile",
+            displayInSignUp: false,
+            required: false,
           },
         },
       ],

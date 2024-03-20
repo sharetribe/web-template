@@ -544,20 +544,33 @@ const validUserSaveConfig = config => {
   if (isUndefined) {
     return [true, {}];
   }
-  // Validate: label, placeholderMessage, required, requiredMessage
+  // Validate: label, placeholderMessage, required, displayInSignup, requiredMessage
   const [isValidLabel, label] = validLabel(config.label);
   const [isValidPlaceholder, placeholderMessage] = validPlaceholderMessage(
     config.placeholderMessage
   );
-  const [isValidIsRequired, isRequired] = validBoolean('isRequired', config.isRequired, false);
+
+  // At this point, all user fields are required by default, and shown in signup by default.
+  const [isValidIsRequired, isRequired] = validBoolean('isRequired', config.isRequired, true);
+  const [isValidDisplayInSignup, displayInSignup] = validBoolean(
+    'displayInSignup',
+    config.displayInSignup,
+    true
+  );
   const [isValidRequiredMessage, requiredMessage] = validRequiredMessage(config.requiredMessage);
 
-  const isValid = isValidLabel && isValidPlaceholder && isValidIsRequired && isValidRequiredMessage;
+  const isValid =
+    isValidLabel &&
+    isValidPlaceholder &&
+    isValidIsRequired &&
+    isValidDisplayInSignup &&
+    isValidRequiredMessage;
   const validValue = {
     saveConfig: {
       ...label,
       ...placeholderMessage,
       ...isRequired,
+      ...displayInSignup,
       ...requiredMessage,
     },
   };

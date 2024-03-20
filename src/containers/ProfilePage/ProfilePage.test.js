@@ -29,6 +29,7 @@ const attributes = {
       kitchenDescription: 'This is a kitchen description!',
       numberOfCookbooks: 10,
       userType: 'a',
+      notShownInProfileAttribute: 'Do not show this in profile',
     },
   },
 };
@@ -127,6 +128,9 @@ describe('ProfilePage', () => {
     expect(screen.getByText('How many cookbooks do you have')).toBeInTheDocument();
     expect(screen.getByText('10')).toBeInTheDocument();
     expect(screen.getByText('This is a kitchen description!')).toBeInTheDocument();
+
+    // For attributes with displayInProfile: false, do not show the attribute
+    expect(screen.queryByText('Not shown in profile')).toBeNull();
   });
 
   it('Check that listing information is shown correctly', () => {
