@@ -234,7 +234,7 @@ export const setActiveListing = listingId => ({
   payload: listingId,
 });
 
-export const loadData = (params, search, config) => {
+export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const queryParams = parse(search, {
     latlng: ['origin'],
     latlngBounds: ['bounds'],
@@ -250,7 +250,7 @@ export const loadData = (params, search, config) => {
   } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
 
-  return searchListings(
+  const searchListingsCall = searchListings(
     {
       ...rest,
       ...originMaybe,
@@ -282,4 +282,5 @@ export const loadData = (params, search, config) => {
     },
     config
   );
+  return dispatch(searchListingsCall);
 };
