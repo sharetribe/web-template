@@ -8,9 +8,6 @@ import BookingDateRangeFilter from './BookingDateRangeFilter/BookingDateRangeFil
 import KeywordFilter from './KeywordFilter/KeywordFilter';
 import PriceFilter from './PriceFilter/PriceFilter';
 
-// Helper: get enumOptions in a format that works as query parameter
-const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
-
 /**
  * FilterComponent is used to map configured filter types
  * to actual filter components
@@ -90,6 +87,7 @@ const FilterComponent = props => {
   switch (schemaType) {
     case SCHEMA_TYPE_ENUM: {
       const { scope, enumOptions, filterConfig = {} } = config;
+      const { label, filterType } = filterConfig;
       const queryParamNames = [constructQueryParamName(key, scope)];
       return filterConfig.filterType === 'SelectSingleFilter' ? (
         <SelectSingleFilter
@@ -104,12 +102,12 @@ const FilterComponent = props => {
       ) : (
         <SelectMultipleFilter
           id={componentId}
-          label={filterConfig.label}
+          label={label}
           name={name}
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
-          options={createFilterOptions(enumOptions)}
+          options={enumOptions}
           schemaType={schemaType}
           {...rest}
         />
@@ -127,7 +125,7 @@ const FilterComponent = props => {
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
-          options={createFilterOptions(enumOptions)}
+          options={enumOptions}
           schemaType={schemaType}
           searchMode={searchMode}
           {...rest}
