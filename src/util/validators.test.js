@@ -8,6 +8,7 @@ import {
   composeValidators,
   validBusinessURL,
   validHKID,
+  requiredSelectTreeOption,
 } from './validators';
 
 const { Money } = sdkTypes;
@@ -66,6 +67,17 @@ describe('validators', () => {
     });
     it('should allow string with chars', () => {
       expect(requiredStringNoTrim('fail')('abc')).toBeUndefined();
+    });
+  });
+  describe('requiredSelectTreeOption()', () => {
+    it('should not allow no value', () => {
+      expect(requiredSelectTreeOption('fail')()).toEqual('fail');
+    });
+    it('should not allow empty object as value', () => {
+      expect(requiredSelectTreeOption('fail')({})).toEqual('fail');
+    });
+    it('should allow empty object as value', () => {
+      expect(requiredSelectTreeOption('fail')({ nestedLevel1: 'foobar' })).toBeUndefined();
     });
   });
   describe('minLength()', () => {
