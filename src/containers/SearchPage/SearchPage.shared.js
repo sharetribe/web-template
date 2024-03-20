@@ -231,7 +231,9 @@ export const initialValues = (props, currentQueryParams) => (queryParamNames, is
   const isArray = Array.isArray(queryParamNames);
   return isArray
     ? queryParamNames.reduce((acc, paramName) => {
-        return { ...acc, [paramName]: getInitialValue(paramName) };
+        const initValue = getInitialValue(paramName);
+        const addInitialValueMaybe = initValue ? { [paramName]: initValue } : {};
+        return { ...acc, ...addInitialValueMaybe };
       }, {})
     : {};
 };
