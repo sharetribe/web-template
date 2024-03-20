@@ -89,14 +89,14 @@ const FilterComponent = props => {
       const { scope, enumOptions, filterConfig = {} } = config;
       const { label, filterType } = filterConfig;
       const queryParamNames = [constructQueryParamName(key, scope)];
-      return filterConfig.filterType === 'SelectSingleFilter' ? (
+      return filterType === 'SelectSingleFilter' ? (
         <SelectSingleFilter
           id={componentId}
-          label={filterConfig.label}
+          label={label}
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
           onSelect={getHandleChangedValueFn(useHistoryPush)}
-          options={createFilterOptions(enumOptions)}
+          options={enumOptions}
           {...rest}
         />
       ) : (
