@@ -2,20 +2,13 @@ import intersection from 'lodash/intersection';
 
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
 import { createResourceLocatorString } from '../../util/routes';
-import { isAnyFilterActive, parseSelectFilterOptions } from '../../util/search';
+import {
+  isAnyFilterActive,
+  parseSelectFilterOptions,
+  constructQueryParamName,
+} from '../../util/search';
 import { createSlug, parse, stringify } from '../../util/urlHelpers';
 import { getStartOf, parseDateFromISO8601, subtractTime } from '../../util/dates';
-
-/**
- * Create the name of the query parameter.
- *
- * @param {String} key Key extracted from listingExtendData config.
- * @param {String} scope Scope extracted from listingExtendData config.
- */
-export const constructQueryParamName = (key, scope) => {
-  const paramName = scope === 'meta' ? `meta_${key}` : `pub_${key}`;
-  return paramName.replace(/\s/g, '_');
-};
 
 /**
  * Validates a filter search param against the default and extended data configuration of listings.
