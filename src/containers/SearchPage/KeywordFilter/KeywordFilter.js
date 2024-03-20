@@ -184,7 +184,9 @@ class KeywordFilter extends Component {
         {...rest}
       >
         <fieldset className={css.fieldPlain}>
-          <label className={css.fieldPlainLabel}>{filterText}</label>
+          <label className={css.fieldPlainLabel} htmlFor={`${id}-input`}>
+            {filterText}
+          </label>
           <FieldTextInput
             name={name}
             id={`${id}-input`}
