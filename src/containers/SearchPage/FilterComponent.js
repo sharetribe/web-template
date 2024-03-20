@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
-import { constructQueryParamName } from '../../util/search';
+import { convertCategoriesToSelectTreeOptions, constructQueryParamName } from '../../util/search';
+
 import SelectSingleFilter from './SelectSingleFilter/SelectSingleFilter';
 import SelectMultipleFilter from './SelectMultipleFilter/SelectMultipleFilter';
 import BookingDateRangeFilter from './BookingDateRangeFilter/BookingDateRangeFilter';
@@ -19,6 +20,7 @@ const FilterComponent = props => {
     urlQueryParams,
     initialValues,
     getHandleChangedValueFn,
+    listingCategories,
     marketplaceCurrency,
     intl,
     ...rest
@@ -37,6 +39,23 @@ const FilterComponent = props => {
 
   // Default filters: price, keywords, dates
   switch (schemaType) {
+    case 'category': {
+      const { scope, isNestedEnum, nestedParams } = config;
+      const queryParamNames = nestedParams?.map(p => constructQueryParamName(p, scope));
+      return (
+        <SelectSingleFilter
+          id={componentId}
+          name={key}
+          label={intl.formatMessage({ id: 'FilterComponent.categoryLabel' })}
+          queryParamNames={queryParamNames}
+          initialValues={initialValues(queryParamNames, liveEdit)}
+          onSubmit={getHandleChangedValueFn(useHistoryPush)}
+          options={convertCategoriesToSelectTreeOptions(listingCategories)}
+          isNestedEnum={isNestedEnum}
+          {...rest}
+        />
+      );
+    }
     case 'price': {
       const { min, max, step } = config;
       return (
@@ -93,10 +112,12 @@ const FilterComponent = props => {
         <SelectSingleFilter
           id={componentId}
           label={label}
+          name={name}
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
-          onSelect={getHandleChangedValueFn(useHistoryPush)}
+          onSubmit={getHandleChangedValueFn(useHistoryPush)}
           options={enumOptions}
+          isNestedEnum={false}
           {...rest}
         />
       ) : (
