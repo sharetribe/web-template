@@ -1,7 +1,6 @@
 import {
   validURLParamForExtendedData,
   validFilterParams,
-  validURLParamsForExtendedData,
   validUrlQueryParamsFromProps,
   initialValues,
   cleanSearchFromConflictingParams,
@@ -121,6 +120,26 @@ describe('SearchPage.helpers', () => {
         []
       );
       expect(validParam).toEqual({ pub_category: 'women' });
+    });
+
+    it('returns a valid parameter for price filter', () => {
+      const validParam = validURLParamForExtendedData(
+        'price',
+        '5,200',
+        listingFieldsConfig,
+        defaultFiltersConfig
+      );
+      expect(validParam).toEqual({ price: '5,200' });
+    });
+
+    it('returns a valid parameter for price filter, when params exceed config', () => {
+      const validParam = validURLParamForExtendedData(
+        'price',
+        '-5,2000',
+        listingFieldsConfig,
+        defaultFiltersConfig
+      );
+      expect(validParam).toEqual({ price: '0,1000' });
     });
 
     it('takes empty params', () => {
