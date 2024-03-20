@@ -872,7 +872,7 @@ const restructureUserFields = hostedUserFields => {
 };
 
 ///////////////////////////
-// Merge listing configs //
+// Merge category config //
 ///////////////////////////
 
 // The expected structure of the category configuration should be an object with a 'categories' key,
@@ -928,6 +928,10 @@ const validateCategoryConfig = hostedConfig => {
   };
   return validateData(hostedConfig).categories;
 };
+
+///////////////////////////
+// Merge listing configs //
+///////////////////////////
 
 // Merge 2 arrays and pick only unique objects according to "key" property
 // Note: This solution prefers objects from the second array
@@ -1004,6 +1008,33 @@ const mergeUserConfig = (hostedConfig, defaultConfigs) => {
 // Validate Default filters //
 //////////////////////////////
 
+const depthFirstSearch = (category, iterator, depth = 0) => {
+  const { subcategories = [] } = category;
+  return iterator(depth, subcategories.map(cat => depthFirstSearch(cat, iterator, depth + 1)));
+};
+// Pick maximum depth from subcategories or default to given depth parameter
+const getMaxDepth = (depth, subcategories) =>
+  subcategories.length ? Math.max(...subcategories) : depth;
+const createArray = length => [...Array(length)].fill(null).map((_, i) => i + 1);
+
+const validCategoryConfig = (config, listingCategories) => {
+  const { enabled = true } = config;
+
+  if (!enabled) {
+    return null;
+  }
+
+  const key = 'categoryLevel';
+  const maxDepth = depthFirstSearch({ subcategories: listingCategories }, getMaxDepth);
+  const isNestedEnum = maxDepth > 1;
+  const nestedParams = isNestedEnum ? createArray(maxDepth).map(i => `${key}${i}`) : [key];
+
+  // Note: this adds more configurations to category filter configs
+  // - The scope unifies the URL parameter handling (category is behaving like built-in, but handled through public data)
+  // - isNestedEnum & nestedParams help to reason out if multiple URL search parameters are needed or not.
+  return { key, schemaType: 'category', scope: 'public', isNestedEnum, nestedParams };
+};
+
 const validDatesConfig = config => {
   const {
     enabled = true,
@@ -1050,11 +1081,13 @@ const validKeywordsConfig = config => {
   return { key: 'keywords', schemaType: 'keywords' };
 };
 
-const validDefaultFilters = defaultFilters => {
+const validDefaultFilters = (defaultFilters, listingCategories) => {
   return defaultFilters
     .map(data => {
       const schemaType = data.schemaType;
-      return schemaType === 'dates'
+      return schemaType === 'category'
+        ? validCategoryConfig(data, listingCategories)
+        : schemaType === 'dates'
         ? validDatesConfig(data)
         : schemaType === 'price'
         ? validPriceConfig(data)
@@ -1080,7 +1113,7 @@ const validSortConfig = config => {
   return { active, queryParamName, relevanceKey, relevanceFilter, conflictingFilters, options };
 };
 
-const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig) => {
+const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig, listingCategories) => {
   // The sortConfig is not yet configurable through Console / hosted assets,
   // but other default search configs come from hosted assets
   const searchConfig = hostedSearchConfig?.mainSearch
@@ -1090,12 +1123,21 @@ const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig) => {
       }
     : defaultSearchConfig;
 
-  const { mainSearch, dateRangeFilter, priceFilter, keywordsFilter, sortConfig, ...rest } =
-    searchConfig || {};
+  const {
+    mainSearch,
+    categoryFilter,
+    dateRangeFilter,
+    priceFilter,
+    keywordsFilter,
+    sortConfig,
+    ...rest
+  } = searchConfig || {};
   const searchType = ['location', 'keywords'].includes(mainSearch?.searchType)
     ? mainSearch?.searchType
     : 'keywords';
 
+  const categoryFilterMaybe =
+    categoryFilter && listingCategories?.length > 0 ? [categoryFilter] : [];
   const keywordsFilterMaybe =
     keywordsFilter?.enabled === true
       ? [{ key: 'keywords', schemaType: 'keywords' }]
@@ -1104,12 +1146,20 @@ const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig) => {
       : [];
 
   // This will define the order of default filters
-  // The reason: later on, we'll add these default filters to config assets and
+  // The reason: These default filters come from config assets and
   // there they'll be their own separate entities and not wrapped in an array.
-  const defaultFilters = [dateRangeFilter, priceFilter, ...keywordsFilterMaybe];
+  // Note: The category filter might affect the visibility of custom filters (listing fields).
+  //       It might be somewhat strange experience if a primary filter is among those filters
+  //       that are affected by category selection.
+  const defaultFilters = [
+    ...categoryFilterMaybe,
+    dateRangeFilter,
+    priceFilter,
+    ...keywordsFilterMaybe,
+  ];
   return {
     mainSearch: { searchType },
-    defaultFilters: validDefaultFilters(defaultFilters),
+    defaultFilters: validDefaultFilters(defaultFilters, listingCategories),
     sortConfig: validSortConfig(sortConfig),
     ...rest,
   };
@@ -1177,6 +1227,8 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     getListingMinimumPrice(configAsset.transactionSize) ||
     defaultConfigs.listingMinimumPriceSubUnits;
 
+  const validHostedCategories = validateCategoryConfig(configAsset.categories);
+
   return {
     // Use default configs as a starting point for app config.
     ...defaultConfigs,
@@ -1211,13 +1263,14 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     listing: mergeListingConfig(configAsset, defaultConfigs),
     user: mergeUserConfig(configAsset, defaultConfigs),
 
+    // Set category structure if given
+    categories: validHostedCategories,
+
     // Hosted search configuration does not yet contain sortConfig
-    search: mergeSearchConfig(configAsset.search, defaultConfigs.search),
+    search: mergeSearchConfig(configAsset.search, defaultConfigs.search, validHostedCategories),
 
     // Map provider info might come from hosted assets. Other map configs come from defaultConfigs.
     maps: mergeMapConfig(configAsset.maps, defaultConfigs.maps),
-
-    categories: validateCategoryConfig(configAsset.categories),
 
     // Google Site Verification can be given through configs.
     // Renders a meta tag: <meta name="google-site-verification" content="[token-here]>" />
