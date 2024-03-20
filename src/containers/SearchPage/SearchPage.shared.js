@@ -60,6 +60,9 @@ export const validURLParamForExtendedData = (
       startDate.getTime() <= endDate.getTime();
 
     return hasValidDates ? { [queryParamName]: paramValue } : {};
+  } else if (queryParamName === 'pub_categoryLevel') {
+    const { isNestedEnum } = defaultFilters.find(conf => conf.schemaType === 'category') || {};
+    return !isNestedEnum && paramValue ? { [queryParamName]: paramValue } : {};
   }
 
   // Resolve configurations for extended data filters
@@ -92,6 +95,21 @@ export const validURLParamForExtendedData = (
   return {};
 };
 
+const validURLParamForCategoryData = (prefix, categories, level, params) => {
+  const levelKey = constructQueryParamName(`${prefix}${level}`, 'public');
+  const levelValue = params?.[levelKey];
+  const foundCategory = categories.find(cat => cat.id === params?.[levelKey]);
+  const subcategories = foundCategory?.subcategories || [];
+  return foundCategory && subcategories.length > 0
+    ? {
+        [levelKey]: levelValue,
+        ...validURLParamForCategoryData(prefix, subcategories, level + 1, params),
+      }
+    : foundCategory
+    ? { [levelKey]: levelValue }
+    : {};
+};
+
 /**
  * Checks filter param value validity.
  *
@@ -102,7 +120,7 @@ export const validURLParamForExtendedData = (
  * @param {boolean} dropNonFilterParams if false, extra params are passed through.
  */
 export const validFilterParams = (params, filterConfigs, dropNonFilterParams = true) => {
-  const { listingFieldsConfig, defaultFiltersConfig } = filterConfigs;
+  const { listingFieldsConfig, defaultFiltersConfig, listingCategories } = filterConfigs;
 
   const listingFieldFiltersConfig = listingFieldsConfig.filter(
     config => config.filterConfig?.indexForSearch
@@ -110,15 +128,37 @@ export const validFilterParams = (params, filterConfigs, dropNonFilterParams = t
   const listingFieldParamNames = listingFieldFiltersConfig.map(f =>
     constructQueryParamName(f.key, f.scope)
   );
-  const builtInFilterParamNames = defaultFiltersConfig.map(f => f.key);
+  // Note: builtInFilterParamNames might include categoryLevel,
+  //       even though it isn't a paramname that's used with nested category tree.
+  //       (pub_categoryLevel1, pub_categoryLevel2, and pub_categoryLevel3 are used instead.)
+  const builtInFilterParamNames = defaultFiltersConfig.map(f => {
+    return f.schemaType === 'category' ? `pub_${f.key}` : f.key;
+  });
   const filterParamNames = [...listingFieldParamNames, ...builtInFilterParamNames];
 
   const paramEntries = Object.entries(params);
 
-  return paramEntries.reduce((validParams, entry) => {
-    const [paramName, paramValue] = entry;
+  // Note: currently, we only support nested enums with a single default filter
+  //       that has schema type: "category"
+  const categorySearchConfig = defaultFiltersConfig.find(f => f.schemaType === 'category');
+  const validNestedCategoryParamNames = categorySearchConfig
+    ? validURLParamForCategoryData(categorySearchConfig.key, listingCategories, 1, params)
+    : {};
+  const isParamNameNestedEnumRelated = (paramName, key, isNestedEnum) => {
+    return isNestedEnum && key ? paramName.indexOf(key) > -1 : false;
+  };
 
-    return filterParamNames.includes(paramName)
+  const listingFieldsAndBuiltInFilterParamNames = paramEntries.reduce((validParams, entry) => {
+    const [paramName, paramValue] = entry;
+    const isIndependentParam = filterParamNames.includes(paramName);
+    const isNestedEnum = isIndependentParam
+      ? false
+      : isParamNameNestedEnumRelated(
+          paramName,
+          categorySearchConfig?.key,
+          categorySearchConfig?.isNestedEnum
+        );
+    return isIndependentParam
       ? {
           ...validParams,
           ...validURLParamForExtendedData(
@@ -128,10 +168,14 @@ export const validFilterParams = (params, filterConfigs, dropNonFilterParams = t
             defaultFiltersConfig
           ),
         }
-      : dropNonFilterParams
+      : dropNonFilterParams || isNestedEnum
       ? { ...validParams }
       : { ...validParams, [paramName]: paramValue };
   }, {});
+
+  // TODO: Currently this only supports categoryLevel with nested param names.
+  //       This needs more work to make other enum fields to understand nested keys.
+  return { ...listingFieldsAndBuiltInFilterParamNames, ...validNestedCategoryParamNames };
 };
 
 /**
