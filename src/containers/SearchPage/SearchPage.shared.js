@@ -38,7 +38,7 @@ export const validURLParamForExtendedData = (
   // Price is built-in filter for listing entities
   if (queryParamName === 'price') {
     // Restrict price range to correct min & max
-    const { min, max } = defaultFilters || {};
+    const { min, max } = defaultFilters.find(conf => conf.schemaType === 'price') || {};
     const valueArray = paramValue ? paramValue.split(',') : [];
     const validValues = valueArray.map(v => {
       return v < min ? min : v > max ? max : v;
