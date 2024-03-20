@@ -21,7 +21,7 @@ export const parseSelectFilterOptions = uriComponentValue => {
  * @param {String} key Key extracted from listingExtendData config.
  * @param {String} scope Scope extracted from listingExtendData config.
  */
-const constructQueryParamName = (key, scope) => {
+export const constructQueryParamName = (key, scope) => {
   const prefixedKey = scope === 'meta' ? `meta_${key}` : `pub_${key}`;
   return prefixedKey.replace(/\s/g, '_');
 };
