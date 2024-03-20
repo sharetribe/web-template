@@ -72,6 +72,26 @@ export const isAnyFilterActive = (filterKeys, urlQueryParams, filterConfigs) => 
 };
 
 /**
+ * Pick initial vales for FieldSelectTree component.
+ * The value object should be an object containing search params:
+ * { pub_categoryLevel1: 'cats', pub_categoryLevel2: 'egyptian-mau', meta_foo: 'bar' }
+ *
+ * @param {String} prefix like "pub_categoryLevel"
+ * @param {Object} values object literal containing level-specific info
+ *
+ * @returns returns properties, which have a key that starts with the given prefix.
+ */
+export const pickInitialValuesForFieldSelectTree = (prefix, values) => {
+  const pickValuesFn = (picked, entry) => {
+    const [key, value] = entry;
+    const startsWithPrefix = key.indexOf(prefix) > -1;
+    return startsWithPrefix ? { ...picked, [key]: value } : picked;
+  };
+  const prefixCollection = Object.entries(values).reduce(pickValuesFn, {});
+  return prefixCollection;
+};
+
+/**
  * Check if the main search type is 'keywords'
  */
 export const isMainSearchTypeKeywords = config =>
