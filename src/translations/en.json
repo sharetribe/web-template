@@ -701,8 +701,6 @@
   "SearchPage.searchError": "Search failed. Please try again.",
   "SelectMultipleFilter.labelSelected": "{labelText} • {count}",
   "SelectMultipleFilterPlainForm.labelSelected": "• {count}",
-  "SelectSingleFilter.plainClear": "Clear",
-  "SelectSingleFilter.popupClear": "Clear",
   "SendMessageForm.sendFailed": "Failed to send. Please try again.",
   "SendMessageForm.sendMessage": "Send message",
   "ShippingDetails.addressLine1Label": "Street address",
