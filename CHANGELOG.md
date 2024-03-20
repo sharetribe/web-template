@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Add support for hosted category configuration
+  [#314](https://github.com/sharetribe/web-template/pull/314)
 - [fix] KeywordsFilter: add missing attribute: htmlFor
   [#343](https://github.com/sharetribe/web-template/pull/343)
 
