@@ -19,6 +19,7 @@ import {
   isSignupEmailTakenError,
   isTooManyEmailVerificationRequestsError,
 } from '../../util/errors';
+import { pickUserFieldsData } from '../../util/userHelpers';
 
 import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/auth.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
@@ -142,6 +143,7 @@ export const AuthenticationForms = props => {
     authInProgress,
     submitSignup,
     termsAndConditions,
+    userFields,
   } = props;
   const fromState = { state: from ? { from } : null };
   const tabs = [
@@ -171,9 +173,38 @@ export const AuthenticationForms = props => {
     },
   ];
 
+  const getNonUserFields = values => {
+    return Object.keys(values).reduce((picked, key) => {
+      const prefixes = ['pub_', 'prot_', 'priv_'];
+      const isPrefixedKey = prefixes.some(pf => key.includes(pf));
+
+      return isPrefixedKey
+        ? picked
+        : {
+            ...picked,
+            [key]: values[key],
+          };
+    }, {});
+  };
+
   const handleSubmitSignup = values => {
     const { fname, lname, ...rest } = values;
-    const params = { firstName: fname.trim(), lastName: lname.trim(), ...rest };
+
+    const params = {
+      firstName: fname.trim(),
+      lastName: lname.trim(),
+      publicData: {
+        ...pickUserFieldsData(rest, 'public', null, userFields),
+      },
+      privateData: {
+        ...pickUserFieldsData(rest, 'private', null, userFields),
+      },
+      protectedData: {
+        ...pickUserFieldsData(rest, 'protected', null, userFields),
+      },
+      ...getNonUserFields(rest),
+    };
+
     submitSignup(params);
   };
 
@@ -221,6 +252,7 @@ export const AuthenticationForms = props => {
           onSubmit={handleSubmitSignup}
           inProgress={authInProgress}
           termsAndConditions={termsAndConditions}
+          userFields={userFields}
         />
       )}
 
@@ -312,6 +344,7 @@ export const AuthenticationOrConfirmInfoForm = props => {
     signupError,
     confirmError,
     termsAndConditions,
+    userFields,
   } = props;
   const isConfirm = tab === 'confirm';
   const isLogin = tab === 'login';
@@ -323,6 +356,7 @@ export const AuthenticationOrConfirmInfoForm = props => {
       authInProgress={authInProgress}
       confirmError={confirmError}
       termsAndConditions={termsAndConditions}
+      userFields={userFields}
     />
   ) : (
     <AuthenticationForms
@@ -337,6 +371,7 @@ export const AuthenticationOrConfirmInfoForm = props => {
       authInProgress={authInProgress}
       submitSignup={submitSignup}
       termsAndConditions={termsAndConditions}
+      userFields={userFields}
     ></AuthenticationForms>
   );
 };
@@ -358,6 +393,7 @@ export const AuthenticationPageComponent = props => {
   const [authInfo, setAuthInfo] = useState(getAuthInfoFromCookies());
   const [authError, setAuthError] = useState(getAuthErrorFromCookies());
   const config = useConfiguration();
+  const { userFields } = config.user;
 
   useEffect(() => {
     // Remove the autherror cookie once the content is saved to state
@@ -489,6 +525,7 @@ export const AuthenticationPageComponent = props => {
               idpAuthError={authError}
               signupError={signupError}
               confirmError={confirmError}
+              userFields={userFields}
               termsAndConditions={
                 <TermsAndConditions
                   onOpenTermsOfService={() => setTosModalOpen(true)}

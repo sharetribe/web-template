@@ -26,7 +26,7 @@ const getNamespacedKey = (scope, key) => {
  * @param {Object} data values to look through against userConfig.js and util/configHelpers.js
  * @param {String} targetScope Check that the scope of extended data the config matches
  * @param {String} targetUserType Check that the extended data is relevant for this user type.
- * @param {Object} userFieldConfigs an extended data configurtions for user fields.
+ * @param {Object} userFieldConfigs Extended data configurations for user fields.
  * @returns Array of picked extended data fields from submitted data.
  */
 export const pickUserFieldsData = (data, targetScope, targetUserType, userFieldConfigs) => {
@@ -60,7 +60,7 @@ export const pickUserFieldsData = (data, targetScope, targetUserType, userFieldC
  * @param {Object} data extended data values to look through against userConfig.js and util/configHelpers.js
  * @param {String} targetScope Check that the scope of extended data the config matches
  * @param {String} targetUserType Check that the extended data is relevant for this user type.
- * @param {Object} userFieldConfigs an extended data configurtions for user fields.
+ * @param {Object} userFieldConfigs Extended data configurations for user fields.
  * @returns Array of picked extended data fields
  */
 export const initialValuesForUserFields = (data, targetScope, targetUserType, userFieldConfigs) => {
@@ -85,32 +85,44 @@ export const initialValuesForUserFields = (data, targetScope, targetUserType, us
  * Returns props for custom user fields
  * @param {*} userFieldsConfig Configuration for user fields
  * @param {*} intl
- * @param {*} userType User type to restrict fields to (optional)
- * @returns an array of props for CustomExtendedDataField: key, name, fieldConfig, defaultRequiredMessage
+ * @param {*} userType User type to restrict fields to. If none is passed,
+ * only user fields applying to all user types are returned.
+ * @param {*} isSignup Optional flag to determine whether the target context
+ * is a signup form. Defaults to true.
+ * @returns an array of props for CustomExtendedDataField: key, name,
+ * fieldConfig, defaultRequiredMessage
  */
 
-export const getPropsForCustomUserFieldInputs = (userFieldsConfig, intl, userType = null) => {
-  return userFieldsConfig.reduce((pickedFields, fieldConfig) => {
-    const { key, userTypeConfig, schemaType, scope } = fieldConfig || {};
-    const namespacedKey = getNamespacedKey(scope, key);
+export const getPropsForCustomUserFieldInputs = (
+  userFieldsConfig,
+  intl,
+  userType = null,
+  isSignup = true
+) => {
+  return (
+    userFieldsConfig?.reduce((pickedFields, fieldConfig) => {
+      const { key, userTypeConfig, schemaType, scope, saveConfig = {} } = fieldConfig || {};
+      const namespacedKey = getNamespacedKey(scope, key);
+      const showField = isSignup ? saveConfig.displayInSignUp : true;
 
-    const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
-    const isTargetUserType =
-      !userTypeConfig?.limitToUserTypeIds || userTypeConfig?.userTypeIds?.includes(userType);
-    const isProviderScope = ['public', 'private', 'protected'].includes(scope);
+      const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+      const isTargetUserType =
+        !userTypeConfig?.limitToUserTypeIds || userTypeConfig?.userTypeIds?.includes(userType);
+      const isUserScope = ['public', 'private', 'protected'].includes(scope);
 
-    return isKnownSchemaType && isTargetUserType && isProviderScope
-      ? [
-          ...pickedFields,
-          {
-            key: namespacedKey,
-            name: namespacedKey,
-            fieldConfig: fieldConfig,
-            defaultRequiredMessage: intl.formatMessage({
-              id: 'CustomExtendedDataField.required',
-            }),
-          },
-        ]
-      : pickedFields;
-  }, []);
+      return isKnownSchemaType && isTargetUserType && isUserScope && showField
+        ? [
+            ...pickedFields,
+            {
+              key: namespacedKey,
+              name: namespacedKey,
+              fieldConfig: fieldConfig,
+              defaultRequiredMessage: intl.formatMessage({
+                id: 'CustomExtendedDataField.required',
+              }),
+            },
+          ]
+        : pickedFields;
+    }, []) || []
+  );
 };
