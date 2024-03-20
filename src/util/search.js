@@ -92,6 +92,26 @@ export const pickInitialValuesForFieldSelectTree = (prefix, values) => {
 };
 
 /**
+ * This converts the category structure to the format that that's understood by SelectSingleFilter
+ * and its child component: FieldSelectTree.
+ *
+ * @param {Array} categories contain objects with props: _id_, _name_, potentially _subcategories_.
+ * @returns an array that contains objects with props: _option_, _label_ and potentially _suboptions_.
+ */
+export const convertCategoriesToSelectTreeOptions = categories => {
+  const convertSubcategoryData = params => {
+    const { id, name, subcategories } = params;
+    const suboptionsMaybe = subcategories
+      ? { suboptions: subcategories.map(cat => convertSubcategoryData(cat)) }
+      : {};
+    return { option: id, label: name, ...suboptionsMaybe };
+  };
+
+  const categoriesArray = Array.isArray(categories) ? categories : [];
+  return categoriesArray.map(cat => convertSubcategoryData(cat));
+};
+
+/**
  * Check if the main search type is 'keywords'
  */
 export const isMainSearchTypeKeywords = config =>
