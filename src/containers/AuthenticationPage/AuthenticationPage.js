@@ -19,6 +19,7 @@ import {
   isSignupEmailTakenError,
   isTooManyEmailVerificationRequestsError,
 } from '../../util/errors';
+import { pickUserFieldsData, addScopePrefix } from '../../util/userHelpers';
 
 import { login, authenticationInProgress, signup, signupWithIdp } from '../../ducks/auth.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
@@ -128,6 +129,21 @@ export const SocialLoginButtonsMaybe = props => {
   ) : null;
 };
 
+const getNonUserFieldParams = (values, userFieldConfigs) => {
+  const userFieldKeys = userFieldConfigs.map(({ scope, key }) => addScopePrefix(scope, key));
+
+  return Object.entries(values).reduce((picked, [key, value]) => {
+    const isUserFieldKey = userFieldKeys.includes(key);
+
+    return isUserFieldKey
+      ? picked
+      : {
+          ...picked,
+          [key]: value,
+        };
+  }, {});
+};
+
 // Tabs for SignupForm and LoginForm
 export const AuthenticationForms = props => {
   const {
@@ -143,6 +159,9 @@ export const AuthenticationForms = props => {
     submitSignup,
     termsAndConditions,
   } = props;
+  const config = useConfiguration();
+  const { userFields } = config.user;
+
   const fromState = { state: from ? { from } : null };
   const tabs = [
     {
@@ -173,7 +192,22 @@ export const AuthenticationForms = props => {
 
   const handleSubmitSignup = values => {
     const { fname, lname, ...rest } = values;
-    const params = { firstName: fname.trim(), lastName: lname.trim(), ...rest };
+
+    const params = {
+      firstName: fname.trim(),
+      lastName: lname.trim(),
+      publicData: {
+        ...pickUserFieldsData(rest, 'public', null, userFields),
+      },
+      privateData: {
+        ...pickUserFieldsData(rest, 'private', null, userFields),
+      },
+      protectedData: {
+        ...pickUserFieldsData(rest, 'protected', null, userFields),
+      },
+      ...getNonUserFieldParams(rest, userFields),
+    };
+
     submitSignup(params);
   };
 
@@ -221,6 +255,7 @@ export const AuthenticationForms = props => {
           onSubmit={handleSubmitSignup}
           inProgress={authInProgress}
           termsAndConditions={termsAndConditions}
+          userFields={userFields}
         />
       )}
 

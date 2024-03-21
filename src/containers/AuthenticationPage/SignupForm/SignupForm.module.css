@@ -20,6 +20,14 @@
   }
 }
 
+.customFields {
+  margin-top: 24px;
+
+  @media (--viewportMedium) {
+    margin-top: 32px;
+  }
+}
+
 .firstNameRoot {
   width: calc(34% - 9px);
 }

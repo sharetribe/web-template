@@ -7,9 +7,10 @@ import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
-import { Form, PrimaryButton, FieldTextInput } from '../../../components';
+import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '../../../components';
 
 import css from './SignupForm.module.css';
+import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
 
 const SignupFormComponent = props => (
   <FinalForm
@@ -25,6 +26,7 @@ const SignupFormComponent = props => (
         invalid,
         intl,
         termsAndConditions,
+        userFields,
       } = fieldRenderProps;
 
       // email
@@ -73,6 +75,10 @@ const SignupFormComponent = props => (
         passwordMinLength,
         passwordMaxLength
       );
+
+      // Custom user fields. Since user types are not supported here,
+      // only fields with no user type id limitation are selected.
+      const userFieldProps = getPropsForCustomUserFieldInputs(userFields, intl);
 
       const classes = classNames(rootClassName || css.root, className);
       const submitInProgress = inProgress;
@@ -146,6 +152,11 @@ const SignupFormComponent = props => (
               })}
               validate={passwordValidators}
             />
+            <div className={css.customFields}>
+              {userFieldProps.map(fieldProps => (
+                <CustomExtendedDataField {...fieldProps} />
+              ))}
+            </div>
           </div>
 
           <div className={css.bottomWrapper}>
