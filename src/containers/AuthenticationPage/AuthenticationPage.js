@@ -273,6 +273,9 @@ export const AuthenticationForms = props => {
 // This is shown before new user is created to Marketplace API
 const ConfirmIdProviderInfoForm = props => {
   const { authInfo, authInProgress, confirmError, submitSingupWithIdp, termsAndConditions } = props;
+  const config = useConfiguration();
+  const { userFields } = config.user;
+
   const idp = authInfo ? authInfo.idpId.replace(/^./, str => str.toUpperCase()) : null;
 
   const handleSubmitConfirm = values => {
@@ -280,7 +283,7 @@ const ConfirmIdProviderInfoForm = props => {
     const { email: newEmail, firstName: newFirstName, lastName: newLastName, ...rest } = values;
 
     // Pass email, fistName or lastName to Marketplace API only if user has edited them
-    // sand they can't be fetched directly from idp provider (e.g. Facebook)
+    // and they can't be fetched directly from idp provider (e.g. Facebook)
 
     const authParams = {
       ...(newEmail !== email && { email: newEmail }),
@@ -288,14 +291,28 @@ const ConfirmIdProviderInfoForm = props => {
       ...(newLastName !== lastName && { lastName: newLastName }),
     };
 
-    // If the confirm form has any additional values, pass them forward as user's protected data
-    const protectedData = !isEmpty(rest) ? { ...rest } : null;
+    // Pass other values as extended data according to user field configuration
+    const extendedDataMaybe = !isEmpty(rest)
+      ? {
+          publicData: {
+            ...pickUserFieldsData(rest, 'public', null, userFields),
+          },
+          privateData: {
+            ...pickUserFieldsData(rest, 'private', null, userFields),
+          },
+          protectedData: {
+            ...pickUserFieldsData(rest, 'protected', null, userFields),
+            // If the confirm form has any additional values, pass them forward as user's protected data
+            ...getNonUserFieldParams(rest, userFields),
+          },
+        }
+      : {};
 
     submitSingupWithIdp({
       idpToken,
       idpId,
       ...authParams,
-      ...(!!protectedData && { protectedData }),
+      ...extendedDataMaybe,
     });
   };
 
@@ -326,6 +343,7 @@ const ConfirmIdProviderInfoForm = props => {
         termsAndConditions={termsAndConditions}
         authInfo={authInfo}
         idp={idp}
+        userFields={userFields}
       />
     </div>
   );
