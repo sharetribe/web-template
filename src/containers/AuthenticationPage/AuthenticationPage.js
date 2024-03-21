@@ -129,6 +129,20 @@ export const SocialLoginButtonsMaybe = props => {
   ) : null;
 };
 
+const getNonUserFields = values => {
+  return Object.keys(values).reduce((picked, key) => {
+    const prefixes = ['pub_', 'prot_', 'priv_'];
+    const isPrefixedKey = prefixes.some(pf => key.includes(pf));
+
+    return isPrefixedKey
+      ? picked
+      : {
+          ...picked,
+          [key]: values[key],
+        };
+  }, {});
+};
+
 // Tabs for SignupForm and LoginForm
 export const AuthenticationForms = props => {
   const {
@@ -172,20 +186,6 @@ export const AuthenticationForms = props => {
       },
     },
   ];
-
-  const getNonUserFields = values => {
-    return Object.keys(values).reduce((picked, key) => {
-      const prefixes = ['pub_', 'prot_', 'priv_'];
-      const isPrefixedKey = prefixes.some(pf => key.includes(pf));
-
-      return isPrefixedKey
-        ? picked
-        : {
-            ...picked,
-            [key]: values[key],
-          };
-    }, {});
-  };
 
   const handleSubmitSignup = values => {
     const { fname, lname, ...rest } = values;
@@ -269,7 +269,14 @@ export const AuthenticationForms = props => {
 // Form for confirming information from IdP (e.g. Facebook)
 // This is shown before new user is created to Marketplace API
 const ConfirmIdProviderInfoForm = props => {
-  const { authInfo, authInProgress, confirmError, submitSingupWithIdp, termsAndConditions } = props;
+  const {
+    authInfo,
+    authInProgress,
+    confirmError,
+    submitSingupWithIdp,
+    termsAndConditions,
+    userFields,
+  } = props;
   const idp = authInfo ? authInfo.idpId.replace(/^./, str => str.toUpperCase()) : null;
 
   const handleSubmitConfirm = values => {
@@ -277,7 +284,7 @@ const ConfirmIdProviderInfoForm = props => {
     const { email: newEmail, firstName: newFirstName, lastName: newLastName, ...rest } = values;
 
     // Pass email, fistName or lastName to Marketplace API only if user has edited them
-    // sand they can't be fetched directly from idp provider (e.g. Facebook)
+    // and they can't be fetched directly from idp provider (e.g. Facebook)
 
     const authParams = {
       ...(newEmail !== email && { email: newEmail }),
@@ -285,14 +292,28 @@ const ConfirmIdProviderInfoForm = props => {
       ...(newLastName !== lastName && { lastName: newLastName }),
     };
 
-    // If the confirm form has any additional values, pass them forward as user's protected data
-    const protectedData = !isEmpty(rest) ? { ...rest } : null;
+    // Pass other values as extended data according to user field configuration
+    const extendedDataMaybe = !isEmpty(rest)
+      ? {
+          publicData: {
+            ...pickUserFieldsData(rest, 'public', null, userFields),
+          },
+          privateData: {
+            ...pickUserFieldsData(rest, 'private', null, userFields),
+          },
+          protectedData: {
+            ...pickUserFieldsData(rest, 'protected', null, userFields),
+            // If the confirm form has any additional values, pass them forward as user's protected data
+            ...getNonUserFields(rest),
+          },
+        }
+      : {};
 
     submitSingupWithIdp({
       idpToken,
       idpId,
       ...authParams,
-      ...(!!protectedData && { protectedData }),
+      ...extendedDataMaybe,
     });
   };
 
@@ -323,6 +344,7 @@ const ConfirmIdProviderInfoForm = props => {
         termsAndConditions={termsAndConditions}
         authInfo={authInfo}
         idp={idp}
+        userFields={userFields}
       />
     </div>
   );
