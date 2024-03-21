@@ -7,10 +7,18 @@ import { getFieldValue } from './fieldHelpers';
  * @param {*} key attribute key in extended data
  * @returns a string containing the namespace prefix and the attribute name
  */
-const getNamespacedKey = (scope, key) => {
-  const namespacePrefix = scope === 'public' ? `pub_` : scope === 'protected' ? 'prot_' : `priv_`;
+export const addScopePrefix = (scope, key) => {
+  const scopeFnMap = {
+    private: k => `priv_${k}`,
+    protected: k => `prot_${k}`,
+    public: k => `pub_${k}`,
+    meta: k => `meta_${k}`,
+  };
 
-  return `${namespacePrefix}${key}`;
+  const validKey = key.replace(/\s/g, '_');
+  const keyScoper = scopeFnMap[scope];
+
+  return !!keyScoper ? keyScoper(validKey) : validKey;
 };
 
 /**
@@ -26,13 +34,13 @@ const getNamespacedKey = (scope, key) => {
  * @param {Object} data values to look through against userConfig.js and util/configHelpers.js
  * @param {String} targetScope Check that the scope of extended data the config matches
  * @param {String} targetUserType Check that the extended data is relevant for this user type.
- * @param {Object} userFieldConfigs an extended data configurtions for user fields.
+ * @param {Object} userFieldConfigs Extended data configurations for user fields.
  * @returns Array of picked extended data fields from submitted data.
  */
 export const pickUserFieldsData = (data, targetScope, targetUserType, userFieldConfigs) => {
   return userFieldConfigs.reduce((fields, field) => {
     const { key, userTypeConfig, scope = 'public', schemaType } = field || {};
-    const namespacedKey = getNamespacedKey(scope, key);
+    const namespacedKey = addScopePrefix(scope, key);
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
@@ -60,13 +68,13 @@ export const pickUserFieldsData = (data, targetScope, targetUserType, userFieldC
  * @param {Object} data extended data values to look through against userConfig.js and util/configHelpers.js
  * @param {String} targetScope Check that the scope of extended data the config matches
  * @param {String} targetUserType Check that the extended data is relevant for this user type.
- * @param {Object} userFieldConfigs an extended data configurtions for user fields.
+ * @param {Object} userFieldConfigs Extended data configurations for user fields.
  * @returns Array of picked extended data fields
  */
 export const initialValuesForUserFields = (data, targetScope, targetUserType, userFieldConfigs) => {
   return userFieldConfigs.reduce((fields, field) => {
     const { key, userTypeConfig, scope = 'public', schemaType } = field || {};
-    const namespacedKey = getNamespacedKey(scope, key);
+    const namespacedKey = addScopePrefix(scope, key);
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
@@ -85,32 +93,43 @@ export const initialValuesForUserFields = (data, targetScope, targetUserType, us
  * Returns props for custom user fields
  * @param {*} userFieldsConfig Configuration for user fields
  * @param {*} intl
- * @param {*} userType User type to restrict fields to (optional)
- * @returns an array of props for CustomExtendedDataField: key, name, fieldConfig, defaultRequiredMessage
+ * @param {*} userType User type to restrict fields to. If none is passed,
+ * only user fields applying to all user types are returned.
+ * @param {*} isSignup Optional flag to determine whether the target context
+ * is a signup form. Defaults to true.
+ * @returns an array of props for CustomExtendedDataField: key, name,
+ * fieldConfig, defaultRequiredMessage
  */
+export const getPropsForCustomUserFieldInputs = (
+  userFieldsConfig,
+  intl,
+  userType = null,
+  isSignup = true
+) => {
+  return (
+    userFieldsConfig?.reduce((pickedFields, fieldConfig) => {
+      const { key, userTypeConfig, schemaType, scope, saveConfig = {} } = fieldConfig || {};
+      const namespacedKey = addScopePrefix(scope, key);
+      const showField = isSignup ? saveConfig.displayInSignUp : true;
 
-export const getPropsForCustomUserFieldInputs = (userFieldsConfig, intl, userType = null) => {
-  return userFieldsConfig.reduce((pickedFields, fieldConfig) => {
-    const { key, userTypeConfig, schemaType, scope } = fieldConfig || {};
-    const namespacedKey = getNamespacedKey(scope, key);
+      const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+      const isTargetUserType =
+        !userTypeConfig?.limitToUserTypeIds || userTypeConfig?.userTypeIds?.includes(userType);
+      const isUserScope = ['public', 'private', 'protected'].includes(scope);
 
-    const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
-    const isTargetUserType =
-      !userTypeConfig?.limitToUserTypeIds || userTypeConfig?.userTypeIds?.includes(userType);
-    const isProviderScope = ['public', 'private', 'protected'].includes(scope);
-
-    return isKnownSchemaType && isTargetUserType && isProviderScope
-      ? [
-          ...pickedFields,
-          {
-            key: namespacedKey,
-            name: namespacedKey,
-            fieldConfig: fieldConfig,
-            defaultRequiredMessage: intl.formatMessage({
-              id: 'CustomExtendedDataField.required',
-            }),
-          },
-        ]
-      : pickedFields;
-  }, []);
+      return isKnownSchemaType && isTargetUserType && isUserScope && showField
+        ? [
+            ...pickedFields,
+            {
+              key: namespacedKey,
+              name: namespacedKey,
+              fieldConfig: fieldConfig,
+              defaultRequiredMessage: intl.formatMessage({
+                id: 'CustomExtendedDataField.required',
+              }),
+            },
+          ]
+        : pickedFields;
+    }, []) || []
+  );
 };
