@@ -9,7 +9,6 @@ import { fakeIntl } from './testData';
 const config = [
   {
     key: 'enumField1',
-    label: 'Enum Field 1',
     scope: 'public',
     schemaType: 'enum',
     enumOptions: [
@@ -17,6 +16,11 @@ const config = [
       { option: 'o2', label: 'l2' },
       { option: 'o3', label: 'l3' },
     ],
+    saveConfig: {
+      label: 'Enum Field 1',
+      displayInSignUp: true,
+      isRequired: true,
+    },
     userTypeConfig: {
       limitToUserTypeIds: true,
       userTypeIds: ['a', 'b'],
@@ -24,7 +28,6 @@ const config = [
   },
   {
     key: 'enumField2',
-    label: 'Enum Field 2',
     scope: 'public',
     schemaType: 'enum',
     enumOptions: [
@@ -32,6 +35,11 @@ const config = [
       { option: 'o2', label: 'l2' },
       { option: 'o3', label: 'l3' },
     ],
+    saveConfig: {
+      label: 'Enum Field 2',
+      displayInSignUp: true,
+      isRequired: true,
+    },
     userTypeConfig: {
       limitToUserTypeIds: true,
       userTypeIds: ['c', 'd'],
@@ -39,18 +47,26 @@ const config = [
   },
   {
     key: 'textField',
-    label: 'Text Field',
     scope: 'private',
     schemaType: 'text',
+    saveConfig: {
+      label: 'Text Field',
+      displayInSignUp: true,
+      isRequired: true,
+    },
     userTypeConfig: {
       limitToUserTypeIds: false,
     },
   },
   {
     key: 'booleanField',
-    label: 'Boolean Field',
     scope: 'protected',
     schemaType: 'boolean',
+    saveConfig: {
+      label: 'Boolean Field',
+      displayInSignUp: false,
+      isRequired: true,
+    },
     userTypeConfig: {
       limitToUserTypeIds: false,
     },
@@ -103,9 +119,13 @@ const expectedUserFieldInput = (n, userTypeArray) => [
         { label: 'l3', option: 'o3' },
       ],
       key: `enumField${n}`,
-      label: `Enum Field ${n}`,
       schemaType: 'enum',
       scope: 'public',
+      saveConfig: {
+        label: `Enum Field ${n}`,
+        displayInSignUp: true,
+        isRequired: true,
+      },
       userTypeConfig: {
         limitToUserTypeIds: true,
         userTypeIds: userTypeArray,
@@ -117,9 +137,13 @@ const expectedUserFieldInput = (n, userTypeArray) => [
     name: 'priv_textField',
     fieldConfig: {
       key: 'textField',
-      label: 'Text Field',
       schemaType: 'text',
       scope: 'private',
+      saveConfig: {
+        label: 'Text Field',
+        displayInSignUp: true,
+        isRequired: true,
+      },
       userTypeConfig: {
         limitToUserTypeIds: false,
       },
@@ -131,9 +155,13 @@ const expectedUserFieldInput = (n, userTypeArray) => [
     name: 'prot_booleanField',
     fieldConfig: {
       key: 'booleanField',
-      label: 'Boolean Field',
       schemaType: 'boolean',
       scope: 'protected',
+      saveConfig: {
+        label: 'Boolean Field',
+        displayInSignUp: false,
+        isRequired: true,
+      },
       userTypeConfig: {
         limitToUserTypeIds: false,
       },
@@ -239,17 +267,21 @@ describe('userHelpers', () => {
   });
 
   describe('getPropsForCustomUserFieldInputs', () => {
-    it('returns the correct input config if no user type is specified', () => {
-      const inputConfig1 = getPropsForCustomUserFieldInputs(config, fakeIntl);
+    it('returns the correct input config if no user type is specified in a non-signup setting', () => {
+      const inputConfig1 = getPropsForCustomUserFieldInputs(config, fakeIntl, null, false);
       const sharedConfig = [
         {
           key: 'priv_textField',
           name: 'priv_textField',
           fieldConfig: {
             key: 'textField',
-            label: 'Text Field',
             schemaType: 'text',
             scope: 'private',
+            saveConfig: {
+              label: 'Text Field',
+              displayInSignUp: true,
+              isRequired: true,
+            },
             userTypeConfig: {
               limitToUserTypeIds: false,
             },
@@ -261,9 +293,13 @@ describe('userHelpers', () => {
           name: 'prot_booleanField',
           fieldConfig: {
             key: 'booleanField',
-            label: 'Boolean Field',
             schemaType: 'boolean',
             scope: 'protected',
+            saveConfig: {
+              label: 'Boolean Field',
+              displayInSignUp: false,
+              isRequired: true,
+            },
             userTypeConfig: {
               limitToUserTypeIds: false,
             },
@@ -275,12 +311,49 @@ describe('userHelpers', () => {
       expect(inputConfig1).toEqual(sharedConfig);
     });
 
-    it('returns the correct input config based on user type', () => {
-      const inputConfig1 = getPropsForCustomUserFieldInputs(config, fakeIntl, 'a');
-      const inputConfig2 = getPropsForCustomUserFieldInputs(config, fakeIntl, 'c');
+    it('returns the correct input config based on user type in a non-signup setting', () => {
+      const inputConfig1 = getPropsForCustomUserFieldInputs(config, fakeIntl, 'a', false);
+      const inputConfig2 = getPropsForCustomUserFieldInputs(config, fakeIntl, 'c', false);
 
       expect(inputConfig1).toEqual(expectedUserFieldInput(1, ['a', 'b']));
       expect(inputConfig2).toEqual(expectedUserFieldInput(2, ['c', 'd']));
+    });
+
+    it('returns the correct input config if no user type is specified in a signup setting', () => {
+      const inputConfig1 = getPropsForCustomUserFieldInputs(config, fakeIntl);
+      const sharedConfig = [
+        {
+          key: 'priv_textField',
+          name: 'priv_textField',
+          fieldConfig: {
+            key: 'textField',
+            schemaType: 'text',
+            scope: 'private',
+            saveConfig: {
+              label: 'Text Field',
+              displayInSignUp: true,
+              isRequired: true,
+            },
+            userTypeConfig: {
+              limitToUserTypeIds: false,
+            },
+          },
+          defaultRequiredMessage: 'CustomExtendedDataField.required',
+        },
+      ];
+
+      expect(inputConfig1).toEqual(sharedConfig);
+    });
+
+    it('returns the correct input config based on user type in a signup setting', () => {
+      const inputConfig1 = getPropsForCustomUserFieldInputs(config, fakeIntl, 'a');
+      const inputConfig2 = getPropsForCustomUserFieldInputs(config, fakeIntl, 'c');
+
+      const filterFn = f => f.fieldConfig.saveConfig.displayInSignUp;
+      const filteredConfig1 = expectedUserFieldInput(1, ['a', 'b']).filter(filterFn);
+      expect(inputConfig1).toEqual(filteredConfig1);
+      const filteredConfig2 = expectedUserFieldInput(2, ['c', 'd']).filter(filterFn);
+      expect(inputConfig2).toEqual(filteredConfig2);
     });
   });
 });

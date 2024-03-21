@@ -193,7 +193,12 @@ class ProfileSettingsFormComponent extends Component {
           const submitDisabled =
             invalid || pristine || pristineSinceLastSubmit || uploadInProgress || submitInProgress;
 
-          const userFieldProps = getPropsForCustomUserFieldInputs(userFields, intl, userType);
+          const userFieldProps = getPropsForCustomUserFieldInputs(
+            userFields,
+            intl,
+            userType,
+            false
+          );
 
           return (
             <Form
