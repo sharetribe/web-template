@@ -10,6 +10,13 @@
   &:nth-of-type(odd) {
     background-color: var(--colorWhite);
   }
+
+  &:target {
+    scroll-margin-top: var(--topbarHeight);
+    @media (--viewportMedium) {
+      scroll-margin-top: var(--topbarHeightDesktop);
+    }
+  }
 }
 
 .sectionContent {
