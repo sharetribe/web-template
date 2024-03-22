@@ -45,7 +45,7 @@ const SectionDetailsMaybe = props => {
   const existingListingFields = listingFields.reduce(pickListingFields, []);
 
   return existingListingFields.length > 0 ? (
-    <div className={css.sectionDetails}>
+    <section className={css.sectionDetails}>
       <Heading as="h2" rootClassName={css.sectionHeading}>
         <FormattedMessage id="ListingPage.detailsTitle" />
       </Heading>
@@ -57,7 +57,7 @@ const SectionDetailsMaybe = props => {
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   ) : null;
 };
 
