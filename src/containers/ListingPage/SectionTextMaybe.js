@@ -16,14 +16,14 @@ const SectionTextMaybe = props => {
   });
 
   return text ? (
-    <div className={css.sectionText}>
+    <section className={css.sectionText}>
       {heading ? (
         <Heading as="h2" rootClassName={css.sectionHeading}>
           {heading}
         </Heading>
       ) : null}
       <p className={textClass}>{content}</p>
-    </div>
+    </section>
   ) : null;
 };
 

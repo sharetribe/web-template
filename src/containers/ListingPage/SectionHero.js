@@ -37,7 +37,7 @@ const SectionHero = props => {
   ) : null;
 
   return (
-    <div className={css.sectionHero} data-testid="hero">
+    <section className={css.sectionHero} data-testid="hero">
       <div className={css.imageWrapperForSectionHero} onClick={handleViewPhotosClick}>
         {listing.id && isOwnListing ? (
           <div onClick={e => e.stopPropagation()} className={css.actionBarContainerForHeroLayout}>
@@ -82,7 +82,7 @@ const SectionHero = props => {
           imageVariants={['scaled-small', 'scaled-medium', 'scaled-large', 'scaled-xlarge']}
         />
       </Modal>
-    </div>
+    </section>
   );
 };
 
