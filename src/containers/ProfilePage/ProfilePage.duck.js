@@ -167,7 +167,7 @@ export const queryUserReviews = userId => (dispatch, getState, sdk) => {
     .catch(e => dispatch(queryReviewsError(e)));
 };
 
-export const showUser = userId => (dispatch, getState, sdk) => {
+export const showUser = (userId, config) => (dispatch, getState, sdk) => {
   dispatch(showUserRequest(userId));
   return sdk.users
     .show({
@@ -176,7 +176,9 @@ export const showUser = userId => (dispatch, getState, sdk) => {
       'fields.image': ['variants.square-small', 'variants.square-small2x'],
     })
     .then(response => {
-      dispatch(addMarketplaceEntities(response));
+      const userFields = config?.user?.userFields;
+      const sanitizeConfig = { userFields };
+      dispatch(addMarketplaceEntities(response, sanitizeConfig));
       dispatch(showUserSuccess());
       return response;
     })
@@ -192,7 +194,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
 
   return Promise.all([
     dispatch(fetchCurrentUser()),
-    dispatch(showUser(userId)),
+    dispatch(showUser(userId, config)),
     dispatch(queryUserListings(userId, config)),
     dispatch(queryUserReviews(userId)),
   ]);
