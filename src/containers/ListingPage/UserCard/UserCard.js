@@ -88,7 +88,7 @@ const UserCard = props => {
       onClick={handleContactUserClick}
       enforcePagePreloadFor="SignupPage"
     >
-      <FormattedMessage id="UserCard.contactUser" />
+      
     </InlineTextButton>
   ) : null;
 

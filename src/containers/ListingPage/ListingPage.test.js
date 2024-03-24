@@ -226,9 +226,7 @@ describe('ListingPage variants', () => {
       expect(getByRole('heading', { name: 'ListingPage.aboutProviderTitle' })).toBeInTheDocument();
       // Has link to provider's profile
       expect(getByRole('link', { name: 'UserCard.viewProfileLink' })).toBeInTheDocument();
-      // Has button to contact provider
-      expect(getByRole('button', { name: 'UserCard.contactUser' })).toBeInTheDocument();
-    });
+   });
   });
 
   it('has carousel on carousel mode', async () => {
