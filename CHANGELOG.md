@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] Input inside sticky element caused scroll effect on keystrokes, when scroll-padding was
+  used. [#347](https://github.com/sharetribe/web-template/pull/347)
 - [fix] KeywordsFilter: add missing attribute: htmlFor
   [#343](https://github.com/sharetribe/web-template/pull/343)
 
