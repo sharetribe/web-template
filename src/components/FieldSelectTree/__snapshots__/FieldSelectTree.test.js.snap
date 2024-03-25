@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FieldSelectTree matches snapshot 1`] = `
+<form>
+  <div
+    class="root"
+  >
+    <label>
+      Nested options
+    </label>
+    <ul
+      class="optionList"
+    >
+      <li
+        class="option"
+        style="padding-left: 12px; cursor: pointer;"
+      >
+        <button
+          class="optionBtn"
+        >
+          Dogs
+        </button>
+      </li>
+      <li
+        class="option"
+        style="padding-left: 12px; cursor: pointer;"
+      >
+        <button
+          class="optionBtn"
+        >
+          Cats
+        </button>
+      </li>
+      <li
+        class="option"
+        style="padding-left: 12px; cursor: pointer;"
+      >
+        <button
+          class="optionBtn"
+        >
+          Fish
+        </button>
+      </li>
+      <li
+        class="option"
+        style="padding-left: 12px; cursor: pointer;"
+      >
+        <button
+          class="optionBtn"
+        >
+          Birds
+        </button>
+      </li>
+      <li
+        class="option"
+        style="padding-left: 12px; cursor: pointer;"
+      >
+        <button
+          class="optionBtn"
+        >
+          Reptiles
+        </button>
+      </li>
+    </ul>
+  </div>
+  <button
+    disabled=""
+    style="margin-top: 24px;"
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;

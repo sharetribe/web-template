@@ -1,7 +1,6 @@
 import {
   validURLParamForExtendedData,
   validFilterParams,
-  validURLParamsForExtendedData,
   validUrlQueryParamsFromProps,
   initialValues,
   cleanSearchFromConflictingParams,
@@ -11,13 +10,13 @@ import {
 } from './SearchPage.shared.js';
 
 const urlParams = {
-  pub_category: 'men',
+  pub_rider: 'men',
   pub_amenities: 'towels,bathroom',
 };
 
 const listingFieldsConfig = [
   {
-    key: 'category',
+    key: 'rider',
     scope: 'public',
     includeForListingTypes: ['sell-bicycles'],
     schemaType: 'enum',
@@ -28,7 +27,7 @@ const listingFieldsConfig = [
     ],
     filterConfig: {
       indexForSearch: true,
-      label: 'Category',
+      label: 'Bicycle rider',
       group: 'primary',
     },
   },
@@ -65,6 +64,13 @@ const listingFieldsConfig = [
 
 const defaultFiltersConfig = [
   {
+    key: 'categoryLevel',
+    schemaType: 'category',
+    scope: 'public',
+    isNestedEnum: false,
+    nestedParams: ['categoryLevel'],
+  },
+  {
     key: 'price',
     schemaType: 'price',
     label: 'Price',
@@ -79,6 +85,21 @@ const defaultFiltersConfig = [
     label: 'Keyword',
   },
 ];
+
+const listingCategories = [
+  { id: 'a', name: 'A' },
+  { id: 'b', name: 'B' },
+  { id: 'c', name: 'C' },
+  { id: 'd', name: 'D' },
+  { id: 'e', name: 'E' },
+  { id: 'f', name: 'F' },
+];
+
+const filterConfigs = {
+  listingFieldsConfig,
+  defaultFiltersConfig,
+  listingCategories,
+};
 
 const sortConfig = {
   active: true,
@@ -98,99 +119,109 @@ describe('SearchPage.helpers', () => {
   describe('validURLParamForExtendedData', () => {
     it('returns a valid parameter', () => {
       const validParam = validURLParamForExtendedData(
-        'pub_category',
+        'pub_rider',
         'women',
         listingFieldsConfig,
         []
       );
-      expect(validParam).toEqual({ pub_category: 'women' });
+      expect(validParam).toEqual({ pub_rider: 'women' });
+    });
+
+    it('returns a valid parameter for price filter', () => {
+      const validParam = validURLParamForExtendedData(
+        'price',
+        '5,200',
+        listingFieldsConfig,
+        defaultFiltersConfig
+      );
+      expect(validParam).toEqual({ price: '5,200' });
+    });
+
+    it('returns a valid parameter for price filter, when params exceed config', () => {
+      const validParam = validURLParamForExtendedData(
+        'price',
+        '-5,2000',
+        listingFieldsConfig,
+        defaultFiltersConfig
+      );
+      expect(validParam).toEqual({ price: '0,1000' });
     });
 
     it('takes empty params', () => {
-      const validParam = validURLParamForExtendedData('pub_category', '', listingFieldsConfig);
+      const validParam = validURLParamForExtendedData('pub_rider', '', listingFieldsConfig, []);
       expect(validParam).toEqual({});
     });
 
     it('drops an invalid param value', () => {
       const validParam = validURLParamForExtendedData(
-        'pub_category',
+        'pub_rider',
         'invalid',
         listingFieldsConfig,
-        sortConfig
+        []
       );
       expect(validParam).toEqual({});
     });
 
     it('drops a param with invalid name', () => {
-      const validParam = validURLParamForExtendedData('pub_invalid', 'towels', listingFieldsConfig);
+      const validParam = validURLParamForExtendedData(
+        'pub_invalid',
+        'towels',
+        listingFieldsConfig,
+        []
+      );
       expect(validParam).toEqual({});
     });
   });
 
   describe('validFilterParams', () => {
     it('returns valid parameters', () => {
-      const validParams = validFilterParams(urlParams, listingFieldsConfig, defaultFiltersConfig);
+      const validParams = validFilterParams(urlParams, filterConfigs);
       expect(validParams).toEqual(urlParams);
     });
 
     it('takes empty params', () => {
-      const validParams = validFilterParams({}, listingFieldsConfig, defaultFiltersConfig);
+      const validParams = validFilterParams({}, filterConfigs);
       expect(validParams).toEqual({});
     });
 
     it('drops an invalid filter param value', () => {
-      const params = { pub_category: 'men', pub_amenities: 'invalid1,invalid2' };
-      const validParams = validFilterParams(params, listingFieldsConfig, defaultFiltersConfig);
-      expect(validParams).toEqual({ pub_category: 'men' });
+      const params = { pub_rider: 'men', pub_amenities: 'invalid1,invalid2' };
+      const validParams = validFilterParams(params, filterConfigs);
+      expect(validParams).toEqual({ pub_rider: 'men' });
     });
 
     it('drops non-filter params', () => {
-      const params = { pub_category: 'men', other_param: 'somevalue' };
-      const validParams = validFilterParams(params, listingFieldsConfig, defaultFiltersConfig);
-      expect(validParams).toEqual({ pub_category: 'men' });
+      const params = { pub_rider: 'men', other_param: 'somevalue' };
+      const validParams = validFilterParams(params, filterConfigs);
+      expect(validParams).toEqual({ pub_rider: 'men' });
     });
 
     it('returns valid parameters, when "dropNonFilterParams" is false', () => {
-      const validParams = validFilterParams(
-        urlParams,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        false
-      );
+      const validParams = validFilterParams(urlParams, filterConfigs, false);
       expect(validParams).toEqual(urlParams);
     });
 
     it('takes empty params, when "dropNonFilterParams" is false', () => {
-      const validParams = validFilterParams({}, listingFieldsConfig, defaultFiltersConfig, false);
+      const validParams = validFilterParams({}, filterConfigs, false);
       expect(validParams).toEqual({});
     });
 
     it('drops an invalid filter param value, when "dropNonFilterParams" is false', () => {
-      const params = { pub_category: 'men', pub_amenities: 'invalid1,invalid2' };
-      const validParams = validFilterParams(
-        params,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        false
-      );
-      expect(validParams).toEqual({ pub_category: 'men' });
+      const params = { pub_rider: 'men', pub_amenities: 'invalid1,invalid2' };
+      const validParams = validFilterParams(params, filterConfigs, false);
+      expect(validParams).toEqual({ pub_rider: 'men' });
     });
 
     it('returns non-filter params, when "dropNonFilterParams" is false', () => {
-      const params = { pub_category: 'men', other_param: 'somevalue' };
-      const validParams = validFilterParams(
-        params,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        false
-      );
+      const params = { pub_rider: 'men', other_param: 'somevalue' };
+      const validParams = validFilterParams(params, filterConfigs, false);
       expect(validParams).toEqual(params);
     });
   });
 
   describe('validUrlQueryParamsFromProps', () => {
     it('returns a valid parameter', () => {
-      const location = { search: '?pub_category=men&pub_amenities=towels,bathroom' };
+      const location = { search: '?pub_rider=men&pub_amenities=towels,bathroom' };
       const pickedParams = validUrlQueryParamsFromProps({
         location,
         config: {
@@ -200,6 +231,7 @@ describe('SearchPage.helpers', () => {
           search: {
             defaultFilters: defaultFiltersConfig,
           },
+          categories: listingCategories,
         },
       });
       expect(pickedParams).toEqual(urlParams);
@@ -207,7 +239,7 @@ describe('SearchPage.helpers', () => {
 
     it('returns valid values for parameters when also invalid is given', () => {
       // asdf is invalid value
-      const location = { search: '?pub_category=men&pub_amenities=towels,bathroom,asdf' };
+      const location = { search: '?pub_rider=men&pub_amenities=towels,bathroom,asdf' };
       const pickedParams = validUrlQueryParamsFromProps({
         location,
         config: {
@@ -217,6 +249,7 @@ describe('SearchPage.helpers', () => {
           search: {
             defaultFilters: defaultFiltersConfig,
           },
+          categories: listingCategories,
         },
       });
       expect(pickedParams).toEqual(urlParams);
@@ -224,7 +257,7 @@ describe('SearchPage.helpers', () => {
   });
 
   describe('initialValues', () => {
-    const location = { search: '?pub_category=men&pub_amenities=towels,bathroom' };
+    const location = { search: '?pub_rider=men&pub_amenities=towels,bathroom' };
     const props = {
       location,
       config: {
@@ -234,6 +267,7 @@ describe('SearchPage.helpers', () => {
         search: {
           defaultFilters: defaultFiltersConfig,
         },
+        categories: listingCategories,
       },
     };
     const currentQueryParams = {};
@@ -247,7 +281,7 @@ describe('SearchPage.helpers', () => {
     });
 
     it('returns a valid parameter for a selected queryParamNames', () => {
-      const queryParamNames = ['pub_category', 'pub_amenities'];
+      const queryParamNames = ['pub_rider', 'pub_amenities'];
       const isLiveEdit = true;
 
       const iv = initialValues(props, currentQueryParams)(queryParamNames, isLiveEdit);
@@ -263,31 +297,31 @@ describe('SearchPage.helpers', () => {
     });
 
     it('returns a valid parameter for a selected queryParamNames if currentQueryParams is overwritten', () => {
-      const queryParamNames = ['pub_category', 'pub_amenities'];
+      const queryParamNames = ['pub_rider', 'pub_amenities'];
       const isLiveEdit = true;
 
-      const iv = initialValues(props, { pub_category: 'women' })(queryParamNames, isLiveEdit);
+      const iv = initialValues(props, { pub_rider: 'women' })(queryParamNames, isLiveEdit);
       expect(iv).toEqual(urlParams);
     });
 
     it('returns a valid parameters lisLiveEdit=false (uses currentQueryParams)', () => {
       const amenitiesOnly = { search: '?pub_amenities=towels,bathroom' };
       const props2 = { ...props, location: amenitiesOnly };
-      const queryParamNames = ['pub_category', 'pub_amenities'];
+      const queryParamNames = ['pub_rider', 'pub_amenities'];
       const isLiveEdit = false;
 
-      const iv = initialValues(props2, { pub_category: 'men' })(queryParamNames, isLiveEdit);
+      const iv = initialValues(props2, { pub_rider: 'men' })(queryParamNames, isLiveEdit);
       expect(iv).toEqual(urlParams);
     });
 
     it("returns a valid parameters lisLiveEdit=true (doesn't use currentQueryParams)", () => {
       const amenitiesOnly = { search: '?pub_amenities=towels,bathroom' };
       const props2 = { ...props, location: amenitiesOnly };
-      const queryParamNames = ['pub_category', 'pub_amenities'];
+      const queryParamNames = ['pub_rider', 'pub_amenities'];
       const isLiveEdit = true;
 
-      const iv = initialValues(props2, { pub_category: 'men' })(queryParamNames, isLiveEdit);
-      expect(iv).toEqual({ ...urlParams, pub_category: undefined });
+      const iv = initialValues(props2, { pub_rider: 'men' })(queryParamNames, isLiveEdit);
+      expect(iv).toEqual({ ...urlParams, pub_rider: undefined });
     });
   });
 
@@ -299,12 +333,7 @@ describe('SearchPage.helpers', () => {
         keywords: 'asdf',
         sort: 'createdAt',
       };
-      const validParams = cleanSearchFromConflictingParams(
-        searchParams,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        sortConfig
-      );
+      const validParams = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
 
       expect(validParams).toEqual({ ...searchParams, sort: null });
     });
@@ -316,12 +345,10 @@ describe('SearchPage.helpers', () => {
         keywords: 'asdf',
         sort: 'createdAt',
       };
-      const validParams = cleanSearchFromConflictingParams(
-        searchParams,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        { ...sortConfig, conflictingFilters: ['origin', 'keywords'] }
-      );
+      const validParams = cleanSearchFromConflictingParams(searchParams, filterConfigs, {
+        ...sortConfig,
+        conflictingFilters: ['origin', 'keywords'],
+      });
 
       expect(validParams).toEqual({ ...searchParams, sort: null });
     });
@@ -332,12 +359,7 @@ describe('SearchPage.helpers', () => {
         bounds: 'bounds value',
         sort: 'createdAt',
       };
-      const validParams = cleanSearchFromConflictingParams(
-        searchParams,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        sortConfig
-      );
+      const validParams = cleanSearchFromConflictingParams(searchParams, filterConfigs, sortConfig);
 
       expect(validParams).toEqual(searchParams);
     });
@@ -351,60 +373,30 @@ describe('SearchPage.helpers', () => {
         origin: 'origin value',
         bounds: 'bounds value',
       };
-      const validParams = pickSearchParamsOnly(
-        params,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        sortConfig,
-        isOriginInUse
-      );
+      const validParams = pickSearchParamsOnly(params, filterConfigs, sortConfig, isOriginInUse);
       expect(validParams).toEqual({ bounds: 'bounds value' });
     });
 
     it('returns filter parameters', () => {
-      const validParams = pickSearchParamsOnly(
-        urlParams,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        sortConfig,
-        isOriginInUse
-      );
+      const validParams = pickSearchParamsOnly(urlParams, filterConfigs, sortConfig, isOriginInUse);
       expect(validParams).toEqual(urlParams);
     });
 
     it('drops an invalid filter param value', () => {
-      const params = { pub_category: 'men', pub_amenities: 'invalid1,invalid2' };
-      const validParams = pickSearchParamsOnly(
-        params,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        sortConfig,
-        isOriginInUse
-      );
-      expect(validParams).toEqual({ pub_category: 'men' });
+      const params = { pub_rider: 'men', pub_amenities: 'invalid1,invalid2' };
+      const validParams = pickSearchParamsOnly(params, filterConfigs, sortConfig, isOriginInUse);
+      expect(validParams).toEqual({ pub_rider: 'men' });
     });
 
     it('drops non-search params', () => {
-      const params = { pub_category: 'men', other_param: 'somevalue' };
-      const validParams = pickSearchParamsOnly(
-        params,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        sortConfig,
-        isOriginInUse
-      );
-      expect(validParams).toEqual({ pub_category: 'men' });
+      const params = { pub_rider: 'men', other_param: 'somevalue' };
+      const validParams = pickSearchParamsOnly(params, filterConfigs, sortConfig, isOriginInUse);
+      expect(validParams).toEqual({ pub_rider: 'men' });
     });
 
     it('returns sort param', () => {
       const params = { sort: '-price', other_param: 'somevalue' };
-      const validParams = pickSearchParamsOnly(
-        params,
-        listingFieldsConfig,
-        defaultFiltersConfig,
-        sortConfig,
-        isOriginInUse
-      );
+      const validParams = pickSearchParamsOnly(params, filterConfigs, sortConfig, isOriginInUse);
       expect(validParams).toEqual({ sort: '-price' });
     });
   });
@@ -412,7 +404,7 @@ describe('SearchPage.helpers', () => {
   describe('searchParamsPicker', () => {
     const isOriginInUse = false;
     it("returns searchParamsAreInSync: false if searchParamsInProps and location.search don't match", () => {
-      const location = { search: '?pub_category=men&pub_amenities=towels,bathroom' };
+      const location = { search: '?pub_rider=men&pub_amenities=towels,bathroom' };
       const searchParamsInProps = {
         address: 'address value',
         origin: 'origin value',
@@ -422,70 +414,66 @@ describe('SearchPage.helpers', () => {
       const paramsInfo = searchParamsPicker(
         location.search,
         searchParamsInProps,
-        listingFieldsConfig,
-        defaultFiltersConfig,
+        filterConfigs,
         sortConfig,
         isOriginInUse
       );
 
       expect(paramsInfo).toEqual({
         searchParamsAreInSync: false,
-        searchParamsInURL: { pub_amenities: 'towels,bathroom', pub_category: 'men' },
-        urlQueryParams: { pub_amenities: 'towels,bathroom', pub_category: 'men' },
+        searchParamsInURL: { pub_amenities: 'towels,bathroom', pub_rider: 'men' },
+        urlQueryParams: { pub_amenities: 'towels,bathroom', pub_rider: 'men' },
       });
     });
 
     it('returns searchParamsAreInSync: true if searchParamsInProps and location.search match', () => {
-      const location = { search: '?pub_category=men&pub_amenities=towels,bathroom' };
-      const searchParamsInProps = { pub_amenities: 'towels,bathroom', pub_category: 'men' };
+      const location = { search: '?pub_rider=men&pub_amenities=towels,bathroom' };
+      const searchParamsInProps = { pub_amenities: 'towels,bathroom', pub_rider: 'men' };
 
       const paramsInfo = searchParamsPicker(
         location.search,
         searchParamsInProps,
-        listingFieldsConfig,
-        defaultFiltersConfig,
+        filterConfigs,
         sortConfig,
         isOriginInUse
       );
 
       expect(paramsInfo).toEqual({
         searchParamsAreInSync: true,
-        searchParamsInURL: { pub_amenities: 'towels,bathroom', pub_category: 'men' },
-        urlQueryParams: { pub_amenities: 'towels,bathroom', pub_category: 'men' },
+        searchParamsInURL: { pub_amenities: 'towels,bathroom', pub_rider: 'men' },
+        urlQueryParams: { pub_amenities: 'towels,bathroom', pub_rider: 'men' },
       });
     });
 
     it('returns correct info even if location.search contains page and mapSearch params', () => {
       const location = {
-        search: '?pub_category=men&pub_amenities=towels,bathroom&page=2&mapSearch=true',
+        search: '?pub_rider=men&pub_amenities=towels,bathroom&page=2&mapSearch=true',
       };
-      const searchParamsInProps = { pub_amenities: 'towels,bathroom', pub_category: 'men' };
+      const searchParamsInProps = { pub_amenities: 'towels,bathroom', pub_rider: 'men' };
 
       const paramsInfo = searchParamsPicker(
         location.search,
         searchParamsInProps,
-        listingFieldsConfig,
-        defaultFiltersConfig,
+        filterConfigs,
         sortConfig,
         isOriginInUse
       );
 
       expect(paramsInfo).toEqual({
         searchParamsAreInSync: true,
-        searchParamsInURL: { pub_amenities: 'towels,bathroom', pub_category: 'men' },
-        urlQueryParams: { pub_amenities: 'towels,bathroom', pub_category: 'men' },
+        searchParamsInURL: { pub_amenities: 'towels,bathroom', pub_rider: 'men' },
+        urlQueryParams: { pub_amenities: 'towels,bathroom', pub_rider: 'men' },
       });
     });
 
     it('returns correct urlQueryParams even if location.search contains unknown search params', () => {
-      const location = { search: '?pub_category=men&pub_amenities=towels,bathroom&pub_asdf=true' };
-      const searchParamsInProps = { pub_amenities: 'towels,bathroom', pub_category: 'men' };
+      const location = { search: '?pub_rider=men&pub_amenities=towels,bathroom&pub_asdf=true' };
+      const searchParamsInProps = { pub_amenities: 'towels,bathroom', pub_rider: 'men' };
 
       const paramsInfo = searchParamsPicker(
         location.search,
         searchParamsInProps,
-        listingFieldsConfig,
-        defaultFiltersConfig,
+        filterConfigs,
         sortConfig,
         isOriginInUse
       );
@@ -494,10 +482,10 @@ describe('SearchPage.helpers', () => {
         searchParamsAreInSync: true,
         searchParamsInURL: {
           pub_amenities: 'towels,bathroom',
-          pub_category: 'men',
+          pub_rider: 'men',
           pub_asdf: true,
         },
-        urlQueryParams: { pub_amenities: 'towels,bathroom', pub_category: 'men' },
+        urlQueryParams: { pub_amenities: 'towels,bathroom', pub_rider: 'men' },
       });
     });
   });

@@ -9,7 +9,7 @@ import {
   getHostedConfiguration,
 } from '../../util/testHelpers';
 
-const { screen, waitFor } = testingLibrary;
+const { screen, userEvent, waitFor } = testingLibrary;
 
 const noop = () => null;
 
@@ -48,23 +48,64 @@ const listingTypes = [
   },
 ];
 
+const capitalizeFirstLetter = str => str.charAt(0).toUpperCase() + str.slice(1);
+const addSpaces = str => str.split('-').join(' ');
+const labelize = str => addSpaces(capitalizeFirstLetter(str));
+
+const generateCategories = optionStrings => {
+  return optionStrings.reduce((converted, entry) => {
+    const isArray = Array.isArray(entry);
+    const option = isArray
+      ? { id: entry[0], name: labelize(entry[0]), subcategories: generateCategories(entry[1]) }
+      : { id: entry, name: labelize(entry) };
+    return [...converted, option];
+  }, []);
+};
+const categories = generateCategories([
+  ['dogs', ['labradors', 'poodles']],
+  ['cats', ['burmese', 'egyptian-mau']],
+  ['fish', [['freshwater', ['grayling', 'arctic-char', 'pike']], 'saltwater']],
+  ['birds', ['parrot', 'macaw']],
+]);
+//console.log(JSON.stringify(categories, null, 2));
+
 const listingFields = [
   {
-    key: 'category',
+    // Formerly used for category, but now there's dedicated category setup
+    key: 'cat',
     scope: 'public',
     includeForListingTypes: ['sell-bicycles'],
     schemaType: 'enum',
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
       indexForSearch: true,
-      label: 'Category',
+      label: 'Cat',
       group: 'primary',
     },
     showConfig: {
-      label: 'Category',
+      label: 'Cat',
     },
     saveConfig: {
-      label: 'Category',
+      label: 'Cat',
+    },
+  },
+  {
+    key: 'singleSelectTest',
+    scope: 'public',
+    includeForListingTypes: ['sell-bicycles'],
+    schemaType: 'enum',
+    enumOptions: [{ option: 'enum1', label: 'Enum 1' }, { option: 'enum2', label: 'Enum 2' }],
+    filterConfig: {
+      indexForSearch: true,
+      filterType: 'SelectSingleFilter',
+      label: 'Single Select Test',
+      group: 'primary',
+    },
+    showConfig: {
+      label: 'Single Select Test',
+    },
+    saveConfig: {
+      label: 'Single Select Test',
     },
   },
   {
@@ -84,15 +125,22 @@ const listingFields = [
       group: 'secondary',
     },
     showConfig: {
-      label: 'Category',
+      label: 'Amenities',
     },
     saveConfig: {
-      label: 'Category',
+      label: 'Amenities',
     },
   },
 ];
 
 const defaultFiltersConfig = [
+  {
+    key: 'categoryLevel',
+    schemaType: 'category',
+    scope: 'public',
+    isNestedEnum: true,
+    nestedParams: ['categoryLevel1', 'categoryLevel2', 'categoryLevel3'],
+  },
   {
     key: 'price',
     schemaType: 'price',
@@ -123,16 +171,17 @@ const sortConfig = {
   ],
 };
 
-const getConfig = variantType => {
+const getConfig = (variantType, customListingFields) => {
   const hostedConfig = getHostedConfiguration();
   return {
     ...hostedConfig,
     listingFields: {
-      listingFields,
+      listingFields: customListingFields || listingFields,
     },
     listingTypes: {
       listingTypes,
     },
+    categories: { categories },
     search: {
       ...hostedConfig.search,
       mainSearch: {
@@ -191,7 +240,7 @@ describe('SearchPage', () => {
     const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
     const SearchPage = searchRouteConfig.component;
 
-    const { getByPlaceholderText, getByText, getAllByText, queryByText } = render(
+    const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
       <SearchPage {...props} />,
       {
         initialState,
@@ -215,10 +264,23 @@ describe('SearchPage', () => {
       expect(getAllByText('Newest')).toHaveLength(4); // desktop and mobile dropdowns & selected
       expect(getAllByText('Oldest')).toHaveLength(2); // desktop and mobile dropdowns
 
-      // Has Category filter (primary)
-      expect(getByText('Category')).toBeInTheDocument();
+      // Has Cat filter (primary)
+      expect(getByText('Cat')).toBeInTheDocument();
       // Has(!) Amenities filter (secondary filter)
       expect(getByText('Amenities')).toBeInTheDocument();
+      // Has Single Select Test filter
+      expect(getByText('Single Select Test')).toBeInTheDocument();
+      expect(getByText('Enum 1')).toBeInTheDocument();
+      expect(getByText('Enum 2')).toBeInTheDocument();
+
+      // Has Category filter
+      expect(getByText('FilterComponent.categoryLabel')).toBeInTheDocument();
+      expect(getByText('Dogs')).toBeInTheDocument();
+      expect(queryByText('Poodle')).not.toBeInTheDocument();
+      expect(getByText('Cats')).toBeInTheDocument();
+      expect(queryByText('Burmese')).not.toBeInTheDocument();
+      expect(getByText('Fish')).toBeInTheDocument();
+      expect(queryByText('Freshwater')).not.toBeInTheDocument();
 
       // Has Price filter
       expect(getByText('FilterComponent.priceLabel')).toBeInTheDocument();
@@ -231,6 +293,20 @@ describe('SearchPage', () => {
       // 2 listings with the same price
       expect(getAllByText('$55.00')).toHaveLength(2);
     });
+
+    // Test category intercation: click "Fish"
+    await waitFor(() => {
+      userEvent.click(getByRole('button', { name: 'Fish' }));
+    });
+
+    expect(getByText('Dogs')).toBeInTheDocument();
+    expect(queryByText('Poodle')).not.toBeInTheDocument();
+    expect(getByText('Cats')).toBeInTheDocument();
+    expect(queryByText('Burmese')).not.toBeInTheDocument();
+    // Subcategories of Fish should be visible
+    expect(getByText('Fish')).toBeInTheDocument();
+    expect(getByText('Freshwater')).toBeInTheDocument();
+    expect(getByText('Saltwater')).toBeInTheDocument();
   });
 
   it('Check that map and filters exist in map variant', async () => {
@@ -241,7 +317,7 @@ describe('SearchPage', () => {
     const searchRouteConfig = routeConfiguration.find(conf => conf.name === 'SearchPage');
     const SearchPage = searchRouteConfig.component;
 
-    const { getByPlaceholderText, getByText, getAllByText, queryByText } = render(
+    const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
       <SearchPage {...props} />,
       {
         initialState,
@@ -265,10 +341,20 @@ describe('SearchPage', () => {
       expect(getAllByText('Newest')).toHaveLength(4); // desktop and mobile dropdowns & selected
       expect(getAllByText('Oldest')).toHaveLength(2); // desktop and mobile dropdowns
 
-      // Has Category filter (primary)
-      expect(getByText('Category')).toBeInTheDocument();
+      // Has Cat filter (primary)
+      expect(getByText('Cat')).toBeInTheDocument();
       // Does not have Amenities filter (secondary)
       expect(queryByText('Amenities')).not.toBeInTheDocument();
+      // Has Single Select Test filter
+      expect(getByText('Single Select Test')).toBeInTheDocument();
+      expect(queryByText('Enum 1')).not.toBeInTheDocument();
+      expect(queryByText('Enum 2')).not.toBeInTheDocument();
+
+      // Has Category filter
+      expect(getByText('FilterComponent.categoryLabel')).toBeInTheDocument();
+      expect(queryByText('Dogs')).not.toBeInTheDocument();
+      expect(queryByText('Cats')).not.toBeInTheDocument();
+      expect(queryByText('Fish')).not.toBeInTheDocument();
 
       // Has "more filters" button for secondary filters
       expect(getByText('SearchFiltersPrimary.moreFiltersButton')).toBeInTheDocument();
@@ -284,5 +370,29 @@ describe('SearchPage', () => {
       // 2 listings with the same price
       expect(getAllByText('$55.00')).toHaveLength(2);
     });
+
+    // Test category intercation
+    await waitFor(() => {
+      userEvent.click(getByRole('button', { name: 'FilterComponent.categoryLabel' }));
+    });
+    expect(getByText('Dogs')).toBeInTheDocument();
+    expect(queryByText('Poodle')).not.toBeInTheDocument();
+    expect(getByText('Cats')).toBeInTheDocument();
+    expect(queryByText('Burmese')).not.toBeInTheDocument();
+    expect(getByText('Fish')).toBeInTheDocument();
+    expect(queryByText('Freshwater')).not.toBeInTheDocument();
+
+    // Test category intercation: click "Fish"
+    await waitFor(() => {
+      userEvent.click(getByRole('button', { name: 'Fish' }));
+    });
+    expect(getByText('Dogs')).toBeInTheDocument();
+    expect(queryByText('Poodle')).not.toBeInTheDocument();
+    expect(getByText('Cats')).toBeInTheDocument();
+    expect(queryByText('Burmese')).not.toBeInTheDocument();
+    // Subcategories of Fish should be visible
+    expect(getByText('Fish')).toBeInTheDocument();
+    expect(getByText('Freshwater')).toBeInTheDocument();
+    expect(getByText('Saltwater')).toBeInTheDocument();
   });
 });

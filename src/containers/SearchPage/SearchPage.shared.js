@@ -2,20 +2,13 @@ import intersection from 'lodash/intersection';
 
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
 import { createResourceLocatorString } from '../../util/routes';
-import { isAnyFilterActive, parseSelectFilterOptions } from '../../util/search';
+import {
+  isAnyFilterActive,
+  parseSelectFilterOptions,
+  constructQueryParamName,
+} from '../../util/search';
 import { createSlug, parse, stringify } from '../../util/urlHelpers';
 import { getStartOf, parseDateFromISO8601, subtractTime } from '../../util/dates';
-
-/**
- * Create the name of the query parameter.
- *
- * @param {String} key Key extracted from listingExtendData config.
- * @param {String} scope Scope extracted from listingExtendData config.
- */
-export const constructQueryParamName = (key, scope) => {
-  const paramName = scope === 'meta' ? `meta_${key}` : `pub_${key}`;
-  return paramName.replace(/\s/g, '_');
-};
 
 /**
  * Validates a filter search param against the default and extended data configuration of listings.
@@ -38,7 +31,7 @@ export const validURLParamForExtendedData = (
   // Price is built-in filter for listing entities
   if (queryParamName === 'price') {
     // Restrict price range to correct min & max
-    const { min, max } = defaultFilters || {};
+    const { min, max } = defaultFilters.find(conf => conf.schemaType === 'price') || {};
     const valueArray = paramValue ? paramValue.split(',') : [];
     const validValues = valueArray.map(v => {
       return v < min ? min : v > max ? max : v;
@@ -60,6 +53,9 @@ export const validURLParamForExtendedData = (
       startDate.getTime() <= endDate.getTime();
 
     return hasValidDates ? { [queryParamName]: paramValue } : {};
+  } else if (queryParamName === 'pub_categoryLevel') {
+    const { isNestedEnum } = defaultFilters.find(conf => conf.schemaType === 'category') || {};
+    return !isNestedEnum && paramValue ? { [queryParamName]: paramValue } : {};
   }
 
   // Resolve configurations for extended data filters
@@ -92,37 +88,70 @@ export const validURLParamForExtendedData = (
   return {};
 };
 
+const validURLParamForCategoryData = (prefix, categories, level, params) => {
+  const levelKey = constructQueryParamName(`${prefix}${level}`, 'public');
+  const levelValue = params?.[levelKey];
+  const foundCategory = categories.find(cat => cat.id === params?.[levelKey]);
+  const subcategories = foundCategory?.subcategories || [];
+  return foundCategory && subcategories.length > 0
+    ? {
+        [levelKey]: levelValue,
+        ...validURLParamForCategoryData(prefix, subcategories, level + 1, params),
+      }
+    : foundCategory
+    ? { [levelKey]: levelValue }
+    : {};
+};
+
 /**
  * Checks filter param value validity.
  *
  * The URL params that are not part of listing.query filters are dropped by default.
  *
  * @param {Object} params Search query params
- * @param {Object} listingFieldsConfig extended data configuration with indexForSearch === true
- * @param {Object} defaultFiltersConfig configuration for default built-in filters.
+ * @param {Object} filterConfigs contains listingFieldsConfig and defaultFiltersConfig.
  * @param {boolean} dropNonFilterParams if false, extra params are passed through.
  */
-export const validFilterParams = (
-  params,
-  listingFieldsConfig,
-  defaultFiltersConfig,
-  dropNonFilterParams = true
-) => {
+export const validFilterParams = (params, filterConfigs, dropNonFilterParams = true) => {
+  const { listingFieldsConfig, defaultFiltersConfig, listingCategories } = filterConfigs;
+
   const listingFieldFiltersConfig = listingFieldsConfig.filter(
     config => config.filterConfig?.indexForSearch
   );
   const listingFieldParamNames = listingFieldFiltersConfig.map(f =>
     constructQueryParamName(f.key, f.scope)
   );
-  const builtInFilterParamNames = defaultFiltersConfig.map(f => f.key);
+  // Note: builtInFilterParamNames might include categoryLevel,
+  //       even though it isn't a paramname that's used with nested category tree.
+  //       (pub_categoryLevel1, pub_categoryLevel2, and pub_categoryLevel3 are used instead.)
+  const builtInFilterParamNames = defaultFiltersConfig.map(f => {
+    return f.schemaType === 'category' ? `pub_${f.key}` : f.key;
+  });
   const filterParamNames = [...listingFieldParamNames, ...builtInFilterParamNames];
 
   const paramEntries = Object.entries(params);
 
-  return paramEntries.reduce((validParams, entry) => {
-    const [paramName, paramValue] = entry;
+  // Note: currently, we only support nested enums with a single default filter
+  //       that has schema type: "category"
+  const categorySearchConfig = defaultFiltersConfig.find(f => f.schemaType === 'category');
+  const validNestedCategoryParamNames = categorySearchConfig
+    ? validURLParamForCategoryData(categorySearchConfig.key, listingCategories, 1, params)
+    : {};
+  const isParamNameNestedEnumRelated = (paramName, key, isNestedEnum) => {
+    return isNestedEnum && key ? paramName.indexOf(key) > -1 : false;
+  };
 
-    return filterParamNames.includes(paramName)
+  const listingFieldsAndBuiltInFilterParamNames = paramEntries.reduce((validParams, entry) => {
+    const [paramName, paramValue] = entry;
+    const isIndependentParam = filterParamNames.includes(paramName);
+    const isNestedEnum = isIndependentParam
+      ? false
+      : isParamNameNestedEnumRelated(
+          paramName,
+          categorySearchConfig?.key,
+          categorySearchConfig?.isNestedEnum
+        );
+    return isIndependentParam
       ? {
           ...validParams,
           ...validURLParamForExtendedData(
@@ -132,23 +161,34 @@ export const validFilterParams = (
             defaultFiltersConfig
           ),
         }
-      : dropNonFilterParams
+      : dropNonFilterParams || isNestedEnum
       ? { ...validParams }
       : { ...validParams, [paramName]: paramValue };
   }, {});
+
+  // TODO: Currently this only supports categoryLevel with nested param names.
+  //       This needs more work to make other enum fields to understand nested keys.
+  return { ...listingFieldsAndBuiltInFilterParamNames, ...validNestedCategoryParamNames };
 };
 
 /**
  * Helper to pick only valid values of search params from URL (location)
  * Note: location.search might look like: '?pub_category=men&pub_amenities=towels,bathroom'
  *
- * @param {Object} props object containing: location, listingFieldsConfig, defaultFiltersConfig
+ * @param {Object} props object containing: location and (app) config
  * @returns picked search params against extended data config and default filter config
  */
 export const validUrlQueryParamsFromProps = props => {
   const { location, config } = props;
   const { listingFields: listingFieldsConfig } = config?.listing || {};
   const { defaultFilters: defaultFiltersConfig } = config?.search || {};
+  const listingCategories = config.categories;
+  const filterConfigs = {
+    listingFieldsConfig,
+    defaultFiltersConfig,
+    listingCategories,
+  };
+
   // eslint-disable-next-line no-unused-vars
   const { mapSearch, page, ...searchInURL } = parse(location.search, {
     latlng: ['origin'],
@@ -156,7 +196,7 @@ export const validUrlQueryParamsFromProps = props => {
   });
   // urlQueryParams doesn't contain page specific url params
   // like mapSearch, page or origin (origin depends on config.maps.search.sortSearchByDistance)
-  return validFilterParams(searchInURL, listingFieldsConfig, defaultFiltersConfig, false);
+  return validFilterParams(searchInURL, filterConfigs, false);
 };
 
 /**
@@ -184,7 +224,9 @@ export const initialValues = (props, currentQueryParams) => (queryParamNames, is
   const isArray = Array.isArray(queryParamNames);
   return isArray
     ? queryParamNames.reduce((acc, paramName) => {
-        return { ...acc, [paramName]: getInitialValue(paramName) };
+        const initValue = getInitialValue(paramName);
+        const addInitialValueMaybe = initValue ? { [paramName]: initValue } : {};
+        return { ...acc, ...addInitialValueMaybe };
       }, {})
     : {};
 };
@@ -194,25 +236,18 @@ export const initialValues = (props, currentQueryParams) => (queryParamNames, is
  * This function checks if they are active and returns "sort" param as null
  *
  * @param {*} searchParams
- * @param {*} listingFieldsConfig
- * @param {*} defaultFiltersConfig
+ * @param {*} filterConfigs contains config like listingFieldsConfig and defaultFiltersConfig
  * @param {*} sortConfig
  * @returns sort parameter as null if sortConfig defines conflictingFilters
  */
-export const cleanSearchFromConflictingParams = (
-  searchParams,
-  listingFieldsConfig,
-  defaultFiltersConfig,
-  sortConfig
-) => {
+export const cleanSearchFromConflictingParams = (searchParams, filterConfigs, sortConfig) => {
   // Single out filters that should disable SortBy when an active
   // keyword search sorts the listings according to relevance.
   // In those cases, sort parameter should be removed.
   const sortingFiltersActive = isAnyFilterActive(
     sortConfig.conflictingFilters,
     searchParams,
-    listingFieldsConfig,
-    defaultFiltersConfig
+    filterConfigs
   );
   return sortingFiltersActive
     ? { ...searchParams, [sortConfig.queryParamName]: null }
@@ -229,17 +264,11 @@ export const cleanSearchFromConflictingParams = (
  * @param {Object} sortConfig config for sort search results feature
  * @param {boolean} isOriginInUse if origin is in use, return it too.
  */
-export const pickSearchParamsOnly = (
-  params,
-  listingFieldsConfig,
-  defaultFiltersConfig,
-  sortConfig,
-  isOriginInUse
-) => {
+export const pickSearchParamsOnly = (params, filterConfigs, sortConfig, isOriginInUse) => {
   const { address, origin, bounds, ...rest } = params || {};
   const boundsMaybe = bounds ? { bounds } : {};
   const originMaybe = isOriginInUse && origin ? { origin } : {};
-  const filterParams = validFilterParams(rest, listingFieldsConfig, defaultFiltersConfig);
+  const filterParams = validFilterParams(rest, filterConfigs);
   const sort = rest[sortConfig.queryParamName];
   const sortMaybe = sort ? { sort } : {};
 
@@ -271,8 +300,7 @@ export const pickSearchParamsOnly = (
 export const searchParamsPicker = (
   searchFromLocation,
   searchParamsInProps,
-  listingFieldsConfig,
-  defaultFiltersConfig,
+  filterConfigs,
   sortConfig,
   isOriginInUse
 ) => {
@@ -284,16 +312,14 @@ export const searchParamsPicker = (
   // Pick only search params that are part of current search configuration
   const queryParamsFromSearchParams = pickSearchParamsOnly(
     searchParamsInProps,
-    listingFieldsConfig,
-    defaultFiltersConfig,
+    filterConfigs,
     sortConfig,
     isOriginInUse
   );
   // Pick only search params that are part of current search configuration
   const queryParamsFromURL = pickSearchParamsOnly(
     searchParamsInURL,
-    listingFieldsConfig,
-    defaultFiltersConfig,
+    filterConfigs,
     sortConfig,
     isOriginInUse
   );

@@ -1,0 +1,8 @@
+@import '../../../styles/customMediaQueries.css';
+
+.labelPlain {
+}
+
+.labelPlainSelected {
+  color: var(--marketplaceColor);
+}
