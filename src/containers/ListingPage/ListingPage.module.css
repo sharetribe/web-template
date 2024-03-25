@@ -580,10 +580,12 @@
 .sectionAuthor {
   padding: 0 24px;
   margin-top: 42px;
+  scroll-margin-top: calc(var(--topbarHeight) + 24px);
 
   @media (--viewportMedium) {
     padding: 0;
     margin-top: 40px;
+    scroll-margin-top: calc(var(--topbarHeightDesktop) + 24px);
   }
   @media (--viewportLarge) {
     padding: 8px 0;

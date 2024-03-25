@@ -10,7 +10,7 @@ const SectionMultiEnumMaybe = props => {
   }
 
   return (
-    <div className={css.sectionMultiEnum}>
+    <section className={css.sectionMultiEnum}>
       <Heading as="h2" rootClassName={css.sectionHeading}>
         {heading}
       </Heading>
@@ -20,7 +20,7 @@ const SectionMultiEnumMaybe = props => {
         selectedOptions={selectedOptions}
         twoColumns={options.length > 5}
       />
-    </div>
+    </section>
   );
 };
 

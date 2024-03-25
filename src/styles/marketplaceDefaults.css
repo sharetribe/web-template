@@ -198,6 +198,18 @@ body {
   color: var(--colorWhite);
 }
 
+/* Default elements that are targets */
+/* In addition, let's ensure that section components have scroll-margin */
+/* Since target does not work in every situation */
+:target,
+section {
+  scroll-margin-top: var(--topbarHeight);
+
+  @media (--viewportMedium) {
+    scroll-margin-top: var(--topbarHeightDesktop);
+  }
+}
+
 a {
   /* Position and dimensions */
   display: inline;
@@ -369,11 +381,6 @@ html {
   color: var(--colorGrey700);
   padding: 0;
   margin: 0;
-  scroll-padding-top: calc(var(--topbarHeight) + 1px);
-
-  @media (--viewportMedium) {
-    scroll-padding-top: calc(var(--topbarHeightDesktop) + 1px);
-  }
 }
 
 ul {
