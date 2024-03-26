@@ -26,7 +26,10 @@ describe('EditListingDetailsForm', () => {
       {
         key: 'category',
         scope: 'public',
-        includeForListingTypes: ['sell-bicycles'],
+        listingTypeConfig: {
+          limitToListingTypeIds: true,
+          listingTypeIds: ['sell-bicycles'],
+        },
         schemaType: 'enum',
         enumOptions: [
           { option: 'men', label: 'Men' },
@@ -48,11 +51,10 @@ describe('EditListingDetailsForm', () => {
       {
         key: 'amenities',
         scope: 'public',
-        includeForListingTypes: [
-          'rent-bicycles-daily',
-          'rent-bicycles-nightly',
-          'rent-bicycles-hourly',
-        ],
+        listingTypeConfig: {
+          limitToListingTypeIds: true,
+          listingTypeIds: ['rent-bicycles-daily', 'rent-bicycles-nightly', 'rent-bicycles-hourly'],
+        },
         schemaType: 'multi-enum',
         enumOptions: [
           { option: 'towels', label: 'Towels' },
