@@ -87,14 +87,15 @@ const hasSetListingType = publicData => {
  */
 const pickListingFieldsData = (data, targetScope, targetListingType, listingFieldConfigs) => {
   return listingFieldConfigs.reduce((fields, field) => {
-    const { key, includeForListingTypes, scope = 'public', schemaType } = field || {};
+    const { key, scope = 'public', schemaType, listingTypeConfig = {} } = field || {};
     const namespacePrefix = scope === 'public' ? `pub_` : `priv_`;
     const namespacedKey = `${namespacePrefix}${key}`;
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
     const isTargetListingType =
-      includeForListingTypes == null || includeForListingTypes.includes(targetListingType);
+      !listingTypeConfig.limitToListingTypeIds ||
+      listingTypeConfig.listingTypeIds.includes(targetListingType);
 
     if (isKnownSchemaType && isTargetScope && isTargetListingType) {
       const fieldValue = data[namespacedKey] || null;
@@ -127,14 +128,15 @@ const initialValuesForListingFields = (
   listingFieldConfigs
 ) => {
   return listingFieldConfigs.reduce((fields, field) => {
-    const { key, includeForListingTypes, scope = 'public', schemaType } = field || {};
+    const { key, scope = 'public', schemaType, listingTypeConfig = {} } = field || {};
     const namespacePrefix = scope === 'public' ? `pub_` : `priv_`;
     const namespacedKey = `${namespacePrefix}${key}`;
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
     const isTargetListingType =
-      includeForListingTypes == null || includeForListingTypes.includes(targetListingType);
+      !listingTypeConfig.limitToListingTypeIds ||
+      listingTypeConfig.listingTypeIds.includes(targetListingType);
 
     if (isKnownSchemaType && isTargetScope && isTargetListingType) {
       const fieldValue = data[key] || null;

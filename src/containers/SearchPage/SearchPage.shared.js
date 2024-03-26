@@ -345,11 +345,11 @@ export const groupListingFieldConfigs = (configs, activeListingTypes) =>
   configs.reduce(
     (grouped, config) => {
       const [primary, secondary] = grouped;
-      const { includeForListingTypes, filterConfig } = config;
+      const { listingTypeConfig = {}, filterConfig } = config;
       const isIndexed = filterConfig?.indexForSearch === true;
       const isActiveListingTypes =
-        includeForListingTypes == null ||
-        includeForListingTypes.every(lt => activeListingTypes.includes(lt));
+        !listingTypeConfig.limitToListingTypeIds ||
+        listingTypeConfig.listingTypeIds.every(lt => activeListingTypes.includes(lt));
       const isPrimary = filterConfig?.group === 'primary';
       return isActiveListingTypes && isIndexed && isPrimary
         ? [[...primary, config], secondary]

@@ -13,10 +13,11 @@ const SectionDetailsMaybe = props => {
   }
 
   const pickListingFields = (filteredConfigs, config) => {
-    const { key, schemaType, enumOptions, includeForListingTypes, showConfig = {} } = config;
+    const { key, schemaType, enumOptions, showConfig = {}, listingTypeConfig = {} } = config;
     const listingType = publicData.listingType;
     const isTargetListingType =
-      includeForListingTypes == null || includeForListingTypes.includes(listingType);
+      !listingTypeConfig.limitToListingTypeIds ||
+      listingTypeConfig.listingTypeIds.includes(listingType);
 
     const { isDetail, label } = showConfig;
     const publicDataValue = publicData[key];

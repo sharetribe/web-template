@@ -342,10 +342,11 @@ export const ListingPageComponent = props => {
               intl={intl}
             />
             {listingConfig.listingFields.reduce((pickedElements, config) => {
-              const { key, enumOptions, includeForListingTypes, scope = 'public' } = config;
+              const { key, enumOptions, scope = 'public', listingTypeConfig = {} } = config;
               const listingType = publicData?.listingType;
               const isTargetListingType =
-                includeForListingTypes == null || includeForListingTypes.includes(listingType);
+                !listingTypeConfig.limitToListingTypeIds ||
+                listingTypeConfig.listingTypeIds.includes(listingType);
 
               const value =
                 scope === 'public' ? publicData[key] : scope === 'metadata' ? metadata[key] : null;

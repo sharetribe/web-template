@@ -227,15 +227,16 @@ const FieldSelectCategory = props => {
 const AddListingFields = props => {
   const { listingType, listingFieldsConfig, intl } = props;
   const fields = listingFieldsConfig.reduce((pickedFields, fieldConfig) => {
-    const { key, includeForListingTypes, schemaType, scope } = fieldConfig || {};
+    const { key, schemaType, scope, listingTypeConfig = {} } = fieldConfig || {};
     const namespacedKey = scope === 'public' ? `pub_${key}` : `priv_${key}`;
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
-    const isTargetListingType =
-      includeForListingTypes == null || includeForListingTypes.includes(listingType);
     const isProviderScope = ['public', 'private'].includes(scope);
+    const isTargetListingType =
+      !listingTypeConfig.limitToListingTypeIds ||
+      listingTypeConfig.listingTypeIds.includes(listingType);
 
-    return isKnownSchemaType && isTargetListingType && isProviderScope
+    return isKnownSchemaType && isProviderScope && isTargetListingType
       ? [
           ...pickedFields,
           <CustomExtendedDataField
