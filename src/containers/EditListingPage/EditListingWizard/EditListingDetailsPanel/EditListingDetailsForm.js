@@ -275,6 +275,7 @@ const EditListingDetailsFormComponent = props => (
         selectableListingTypes,
         selectableCategories,
         hasExistingListingType,
+        categoryPrefix,
         saveActionMsg,
         updated,
         updateInProgress,
@@ -325,7 +326,7 @@ const EditListingDetailsFormComponent = props => (
           {showCategories ? (
             <FieldSelectCategory
               values={values}
-              prefix="categoryLevel"
+              prefix={categoryPrefix}
               listingCategories={selectableCategories}
               formApi={formApi}
               intl={intl}
