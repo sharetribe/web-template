@@ -5,6 +5,7 @@ import classNames from 'classnames';
 // Import util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { EXTENDED_DATA_SCHEMA_TYPES, LISTING_STATE_DRAFT } from '../../../../util/types';
+import { isFieldForListingType } from '../../../../util/fieldHelpers';
 import { isBookingProcessAlias } from '../../../../transactions/transaction';
 
 // Import shared components
@@ -86,21 +87,19 @@ const hasSetListingType = publicData => {
  * @returns Array of picked extended data fields from submitted data.
  */
 const pickListingFieldsData = (data, targetScope, targetListingType, listingFieldConfigs) => {
-  return listingFieldConfigs.reduce((fields, field) => {
-    const { key, scope = 'public', schemaType, listingTypeConfig = {} } = field || {};
+  return listingFieldConfigs.reduce((fields, fieldConfig) => {
+    const { key, scope = 'public', schemaType } = fieldConfig || {};
     const namespacePrefix = scope === 'public' ? `pub_` : `priv_`;
     const namespacedKey = `${namespacePrefix}${key}`;
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
-    const isTargetListingType =
-      !listingTypeConfig.limitToListingTypeIds ||
-      listingTypeConfig.listingTypeIds.includes(targetListingType);
+    const isTargetListingType = isFieldForListingType(targetListingType, fieldConfig);
 
     if (isKnownSchemaType && isTargetScope && isTargetListingType) {
       const fieldValue = data[namespacedKey] || null;
       return { ...fields, [key]: fieldValue };
-    } else if (isKnownSchemaType && isTargetScope && !isTargetListingType) {
+    } else if (isKnownSchemaType && isTargetScope) {
       // Note: this clears extra custom fields
       // These might exists if provider swaps between listing types before saving the draft listing.
       return { ...fields, [key]: null };
@@ -127,16 +126,14 @@ const initialValuesForListingFields = (
   targetListingType,
   listingFieldConfigs
 ) => {
-  return listingFieldConfigs.reduce((fields, field) => {
-    const { key, scope = 'public', schemaType, listingTypeConfig = {} } = field || {};
+  return listingFieldConfigs.reduce((fields, fieldConfig) => {
+    const { key, scope = 'public', schemaType } = fieldConfig || {};
     const namespacePrefix = scope === 'public' ? `pub_` : `priv_`;
     const namespacedKey = `${namespacePrefix}${key}`;
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
-    const isTargetListingType =
-      !listingTypeConfig.limitToListingTypeIds ||
-      listingTypeConfig.listingTypeIds.includes(targetListingType);
+    const isTargetListingType = isFieldForListingType(targetListingType, fieldConfig);
 
     if (isKnownSchemaType && isTargetScope && isTargetListingType) {
       const fieldValue = data[key] || null;
