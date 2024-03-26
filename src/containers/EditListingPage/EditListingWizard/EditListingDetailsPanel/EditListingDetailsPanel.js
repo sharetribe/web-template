@@ -327,6 +327,7 @@ const EditListingDetailsPanel = props => {
           selectableListingTypes={listingTypes.map(conf => getTransactionInfo([conf], {}, true))}
           hasExistingListingType={hasExistingListingType}
           selectableCategories={listingCategoriesConfig}
+          categoryPrefix={CATEGORY_PREFIX}
           onListingTypeChange={onListingTypeChange}
           listingFieldsConfig={listingFieldsConfig}
           marketplaceCurrency={config.currency}
