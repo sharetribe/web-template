@@ -8,6 +8,7 @@ import classNames from 'classnames';
 // Import util modules
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
 import { EXTENDED_DATA_SCHEMA_TYPES, propTypes } from '../../../../util/types';
+import { isFieldForListingType } from '../../../../util/fieldHelpers';
 import { maxLength, required, composeValidators } from '../../../../util/validators';
 
 // Import shared components
@@ -227,14 +228,12 @@ const FieldSelectCategory = props => {
 const AddListingFields = props => {
   const { listingType, listingFieldsConfig, intl } = props;
   const fields = listingFieldsConfig.reduce((pickedFields, fieldConfig) => {
-    const { key, schemaType, scope, listingTypeConfig = {} } = fieldConfig || {};
+    const { key, schemaType, scope } = fieldConfig || {};
     const namespacedKey = scope === 'public' ? `pub_${key}` : `priv_${key}`;
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isProviderScope = ['public', 'private'].includes(scope);
-    const isTargetListingType =
-      !listingTypeConfig.limitToListingTypeIds ||
-      listingTypeConfig.listingTypeIds.includes(listingType);
+    const isTargetListingType = isFieldForListingType(listingType, fieldConfig);
 
     return isKnownSchemaType && isProviderScope && isTargetListingType
       ? [
