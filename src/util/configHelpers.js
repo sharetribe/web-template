@@ -860,9 +860,7 @@ const restructureUserFields = hostedUserFields => {
               isRequired,
               label: saveConfig.label || defaultLabel,
             },
-            userTypeConfig: {
-              ...userTypeConfig,
-            },
+            userTypeConfig,
             ...rest,
           }
         : null;
