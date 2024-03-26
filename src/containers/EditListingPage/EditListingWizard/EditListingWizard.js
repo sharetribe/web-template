@@ -157,10 +157,10 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
   const isValidField = (fieldConfig, fieldData) => {
     const {
       key,
-      includeForListingTypes,
       schemaType,
       enumOptions = [],
       saveConfig = {},
+      listingTypeConfig = {},
     } = fieldConfig;
 
     const schemaOptionKeys = enumOptions.map(o => `${o.option}`);
@@ -173,7 +173,8 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
 
     const isRequired =
       !!saveConfig.isRequired &&
-      (includeForListingTypes == null || includeForListingTypes.includes(publicData?.listingType));
+      (!listingTypeConfig.limitToListingTypeIds ||
+        listingTypeConfig.listingTypeIds.includes(publicData?.listingType));
     if (isRequired) {
       const savedListingField = fieldData[key];
       return schemaType === SCHEMA_TYPE_ENUM

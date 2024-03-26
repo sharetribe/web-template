@@ -13,14 +13,16 @@
  * - scope (optional):              Scope of the extended data can be either 'public' or 'private'.
  *                                  Default value: 'public'.
  *                                  Note: listing doesn't support 'protected' scope atm.
- * - includeForListingTypes:        An array of listing types, for which the extended
- *   (optional)                     data is relevant and should be added.
  * - schemaType (optional):         Schema for this extended data field.
  *                                  This is relevant when rendering components and querying listings.
  *                                  Possible values: 'enum', 'multi-enum', 'text', 'long', 'boolean'.
  * - enumOptions (optional):        Options shown for 'enum' and 'multi-enum' extended data.
  *                                  These are used to render options for inputs and filters on
  *                                  EditListingPage, ListingPage, and SearchPage.
+ * - listingTypeConfig (optional):  Relationship configuration against listing types.
+ *   - limitToListingTypeIds:         Indicator whether this listing field is relevant to a limited set of listing types.
+ *   - listingTypeIds:                An array of listing types, for which this custom listing field is
+ *                                    relevant and should be added. This is mandatory if limitToListingTypeIds is true.
  * - filterConfig:                  Filter configuration for listings query.
  *    - indexForSearch (optional):    If set as true, it is assumed that the extended data key has
  *                                    search index in place. I.e. the key can be used to filter
@@ -163,8 +165,11 @@ export const listingFields = [
   // {
   //   key: 'note',
   //   scope: 'public',
-  //   includeForListingTypes: ['product-selling'],
   //   schemaType: 'text',
+  //   listingTypeConfig: {
+  //     limitToListingTypeIds: true,
+  //     listingTypeIds: ['product-selling'],
+  //   },
   //   showConfig: {
   //     label: 'Extra notes',
   //   },
@@ -176,8 +181,11 @@ export const listingFields = [
   // {
   //   key: 'privatenote',
   //   scope: 'private',
-  //   includeForListingTypes: ['daily-booking'],
   //   schemaType: 'text',
+  //   listingTypeConfig: {
+  //     limitToListingTypeIds: true,
+  //     listingTypeIds: ['daily-booking'],
+  //   },
   //   saveConfig: {
   //     label: 'Private notes',
   //     placeholderMessage: 'Some private note about this bike...',
