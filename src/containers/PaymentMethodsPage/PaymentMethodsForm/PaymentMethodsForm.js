@@ -11,7 +11,6 @@ import classNames from 'classnames';
 import { useConfiguration } from '../../../context/configurationContext';
 import { FormattedMessage, useIntl, intlShape } from '../../../util/reactIntl';
 
-import { Form, PrimaryButton, FieldTextInput, StripePaymentAddress, H4 } from '../../../components';
 
 import css from './PaymentMethodsForm.module.css';
 
@@ -220,15 +219,7 @@ class PaymentMethodsForm extends Component {
 
     // Stripe recommends asking billing address.
     // In PaymentMethodsForm, we send name and email as billing details, but address only if it exists.
-    const billingAddress = (
-      <StripePaymentAddress
-        intl={intl}
-        form={form}
-        fieldId={formId}
-        card={this.card}
-        locale={config.localization.locale}
-      />
-    );
+
 
     const hasStripeKey = config.stripe.publishableKey;
 

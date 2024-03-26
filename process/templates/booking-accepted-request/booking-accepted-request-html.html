@@ -34,8 +34,15 @@
                       <td>
                         <td style="text-align:right">
                           <p style="text-align:left;font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingAcceptedRequest.BookingBreakdown" "Your card has been charged for {providerDisplayName} {currency}. Here's the booking breakdown." amount=payin-total.amount currency=payin-total.currency }}
-                             {{> format-money money=line-total}} a <span style="color:#07bc60">rundo.alquileres.mp</span> y nos envíes el comprobante por <a target="_blank" style="color:#07bc60;text-decoration:none" href="https://api.whatsapp.com/send/?phone=5492944232664&text&type=phone_number&app_absent=0">whatsapp</a> o al +54 9 294 423-2664. 
-                             <br>Una vez recibida esta información te enviaremos el contacto del oferente para que coordinen entre ustedes la entrega y devolución del artículo.</p>
+                             {{> format-money money=line-total}} debe ser transferido a la siguiente cuenta: 
+                             <br>
+                             <br>ALIAS: <span style="color:#7cc9bc">rundo.alquileres.mp</span>
+                             <br>CBU: 0000003100011729313797
+                             <br>CUIT: 27-33159662-6
+                             <br>
+                             <br>Una vez realizada la transferencia, por favor envianos el comprobante por WhatsApp al <a target="_blank" style="color:#7cc9bc;text-decoration:none" href="https://api.whatsapp.com/send/?phone=5492944232664&text&type=phone_number&app_absent=0">+54 9 294 423-2664</a> para que podamos proporcionarte los datos del oferente y así pueden coordinar la entrega del artículo. 
+                             <br>
+                             <br>Si no podés abonar mediante transferencia bancaria, no dudes en contactarnos por WhatsApp para coordinar otro método de pago de la reserva.</p>
                         </td>
                       </td>
                     </tr>
@@ -269,7 +276,7 @@
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;font-weight:700">{{t "BookingAcceptedRequest.TotalPrice" "Total price"}}</p>
                                 </td>
                                 <td style="text-align:right">
-                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;font-weight:700">{{> format-money money=payin-total}}</p>
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px;font-weight:700">{{> format-money money=payout-total}}</p>
                                 </td>
                               </td>
                             </tr>
@@ -282,9 +289,9 @@
                 <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>
                     <tr>
-                      <td><a href="{{marketplace.url}}/order/{{url-encode id}}/" target="_blank" style="color:#FFF;background-color:#07BC60;border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:0px 0px;line-height:100%;max-width:100%"><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%;mso-text-raise:0" hidden>&nbsp;</i><![endif]--></span><span style="color:#FFF;background-color:#07bc60;border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:16px 32px;max-width:100%;line-height:120%;text-transform:none;mso-padding-alt:0px;mso-text-raise:0">{{t "BookingAcceptedRequest.Cta" "View order details"}}</span><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a>
+                      <td><a href="{{marketplace.url}}/order/{{url-encode id}}/" target="_blank" style="color:#FFF;background-color:#7cc9bc;border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:0px 0px;line-height:100%;max-width:100%"><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%;mso-text-raise:0" hidden>&nbsp;</i><![endif]--></span><span style="color:#FFF;background-color:#7cc9bc;border-radius:4px;font-size:15px;text-decoration:none;text-align:center;display:inline-block;min-width:210px;padding:16px 32px;max-width:100%;line-height:120%;text-transform:none;mso-padding-alt:0px;mso-text-raise:0">{{t "BookingAcceptedRequest.Cta" "View order details"}}</span><span><!--[if mso]><i style="letter-spacing: undefinedpx;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a>
                         <div>
-                          <p style="font-size:14px;line-height:1.5;margin:16px 0;color:#484848">{{t "TransactionEmails.AccessibleLinkText" "Can't click the button? Here's the link for your convenience:"}} <a target="_blank" style="color:#07BC60;text-decoration:none" href="{{marketplace.url}}/order/{{url-encode id}}/">{{marketplace.url}}/order/{{url-encode id}}/</a></p>
+                          <p style="font-size:14px;line-height:1.5;margin:16px 0;color:#484848">{{t "TransactionEmails.AccessibleLinkText" "Can't click the button? Here's the link for your convenience:"}} <a target="_blank" style="color:#7cc9bc;text-decoration:none" href="{{marketplace.url}}/order/{{url-encode id}}/">{{marketplace.url}}/order/{{url-encode id}}/</a></p>
                         </div>
                       </td>
                     </tr>

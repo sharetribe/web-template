@@ -195,7 +195,7 @@
 .darkTheme .ctaButton {
   border: 1px solid; /*var(--marketplaceColorDark);*/
   text-decoration: none;
-  background-color: #07bc60;
+  background-color: #7cc9bc;
   color: #f2f2f2;
   &:hover {
     color: white;
