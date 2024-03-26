@@ -4,8 +4,10 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 
+// Contexts
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+// Utils
 import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
 import {
   LISTING_STATE_PENDING_APPROVAL,
@@ -23,6 +25,7 @@ import {
   createSlug,
 } from '../../util/urlHelpers';
 import { convertMoneyToNumber } from '../../util/currency';
+import { isFieldForListingType } from '../../util/fieldHelpers.js';
 import {
   ensureListing,
   ensureOwnListing,
@@ -36,10 +39,12 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
+// Global ducks (for Redux actions and thunks)
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
 
+// Shared components
 import {
   H4,
   Page,
@@ -49,6 +54,7 @@ import {
   LayoutSingleColumn,
 } from '../../components';
 
+// Related components and modules
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
@@ -343,11 +349,9 @@ export const ListingPageComponent = props => {
               intl={intl}
             />
             {listingConfig.listingFields.reduce((pickedElements, config) => {
-              const { key, enumOptions, scope = 'public', listingTypeConfig = {} } = config;
+              const { key, enumOptions, scope = 'public' } = config;
               const listingType = publicData?.listingType;
-              const isTargetListingType =
-                !listingTypeConfig.limitToListingTypeIds ||
-                listingTypeConfig.listingTypeIds.includes(listingType);
+              const isTargetListingType = isFieldForListingType(listingType, config);
 
               const value =
                 scope === 'public' ? publicData[key] : scope === 'metadata' ? metadata[key] : null;

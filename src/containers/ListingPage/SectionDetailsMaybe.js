@@ -1,5 +1,8 @@
 import React from 'react';
+
 import { FormattedMessage } from '../../util/reactIntl';
+import { isFieldForListingType } from '../../util/fieldHelpers';
+
 import { Heading } from '../../components';
 
 import css from './ListingPage.module.css';
@@ -13,11 +16,9 @@ const SectionDetailsMaybe = props => {
   }
 
   const pickListingFields = (filteredConfigs, config) => {
-    const { key, schemaType, enumOptions, showConfig = {}, listingTypeConfig = {} } = config;
+    const { key, schemaType, enumOptions, showConfig = {} } = config;
     const listingType = publicData.listingType;
-    const isTargetListingType =
-      !listingTypeConfig.limitToListingTypeIds ||
-      listingTypeConfig.listingTypeIds.includes(listingType);
+    const isTargetListingType = isFieldForListingType(listingType, config);
 
     const { isDetail, label } = showConfig;
     const publicDataValue = publicData[key];
