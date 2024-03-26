@@ -28,6 +28,7 @@ import {
   SCHEMA_TYPE_BOOLEAN,
   propTypes,
 } from '../../../util/types';
+import { isFieldForListingType } from '../../../util/fieldHelpers';
 import { ensureCurrentUser, ensureListing } from '../../../util/data';
 import {
   INQUIRY_PROCESS_NAME,
@@ -155,13 +156,7 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, process
  */
 const hasValidListingFieldsInExtendedData = (publicData, privateData, config) => {
   const isValidField = (fieldConfig, fieldData) => {
-    const {
-      key,
-      schemaType,
-      enumOptions = [],
-      saveConfig = {},
-      listingTypeConfig = {},
-    } = fieldConfig;
+    const { key, schemaType, enumOptions = [], saveConfig = {} } = fieldConfig;
 
     const schemaOptionKeys = enumOptions.map(o => `${o.option}`);
     const hasValidEnumValue = optionData => {
@@ -171,10 +166,8 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
       return savedOptions.every(optionData => schemaOptionKeys.includes(optionData));
     };
 
-    const isRequired =
-      !!saveConfig.isRequired &&
-      (!listingTypeConfig.limitToListingTypeIds ||
-        listingTypeConfig.listingTypeIds.includes(publicData?.listingType));
+    const isTargetListingType = isFieldForListingType(publicData?.listingType, fieldConfig);
+    const isRequired = !!saveConfig.isRequired && isTargetListingType;
     if (isRequired) {
       const savedListingField = fieldData[key];
       return schemaType === SCHEMA_TYPE_ENUM
