@@ -11,6 +11,7 @@ import { ensureCurrentUser } from '../../../util/data';
 import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../util/errors';
+import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
 
 import {
   Form,
@@ -24,7 +25,6 @@ import {
 } from '../../../components';
 
 import css from './ProfileSettingsForm.module.css';
-import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
 
 const ACCEPT_IMAGES = 'image/*';
 const UPLOAD_CHANGE_DELAY = 2000; // Show spinner so that browser has time to load img srcset
