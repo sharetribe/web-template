@@ -489,7 +489,6 @@ propTypes.listingFieldsConfig = arrayOf(
   shape({
     key: string.isRequired,
     scope: string,
-    includeForListingTypes: arrayOf(string),
     schemaType: oneOf(EXTENDED_DATA_SCHEMA_TYPES).isRequired,
     enumOptions: arrayOf(
       shape({
@@ -497,6 +496,10 @@ propTypes.listingFieldsConfig = arrayOf(
         label: string.isRequired,
       })
     ),
+    listingTypeConfig: shape({
+      limitToListingTypeIds: bool.isRequired,
+      listingTypeIds: arrayOf(string),
+    }),
     filterConfig: shape({
       indexForSearch: bool,
       label: string.isRequired,

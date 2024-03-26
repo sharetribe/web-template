@@ -18,7 +18,10 @@ const listingFieldsConfig = [
   {
     key: 'rider',
     scope: 'public',
-    includeForListingTypes: ['sell-bicycles'],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['sell-bicycles'],
+    },
     schemaType: 'enum',
     enumOptions: [
       { option: 'men', label: 'Men' },
@@ -34,7 +37,10 @@ const listingFieldsConfig = [
   {
     key: 'param1',
     scope: 'public',
-    includeForListingTypes: ['sell-bicycles'],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['sell-bicycles'],
+    },
     schemaType: 'enum',
     enumOptions: [{ option: 'smoke', label: 'Smoke' }, { option: 'wood', label: 'Wood' }],
     filterConfig: {
@@ -46,11 +52,10 @@ const listingFieldsConfig = [
   {
     key: 'amenities',
     scope: 'public',
-    includeForListingTypes: [
-      'rent-bicycles-daily',
-      'rent-bicycles-nightly',
-      'rent-bicycles-hourly',
-    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['rent-bicycles-daily', 'rent-bicycles-nightly', 'rent-bicycles-hourly'],
+    },
     schemaType: 'multi-enum',
     enumOptions: [{ option: 'towels', label: 'Towels' }, { option: 'bathroom', label: 'Bathroom' }],
     filterConfig: {

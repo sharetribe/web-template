@@ -345,7 +345,10 @@ const validUserTypesForUserConfig = (userTypeConfig, userTypesInUse = null) => {
   return [isValid, validValue];
 };
 
-const validListingTypesForListingConfig = (includeForListingTypes, listingTypesInUse) => {
+// TODO: this (includeForListingTypes) is deprecated config key!
+// You should change your buil-in listing field configs:
+// do not use includeForListingTypes but listingTypeConfig: { limitToListingTypeIds, listingTypeIds }
+const validListingTypesForBuiltInSetup = (includeForListingTypes, listingTypesInUse) => {
   const isUndefinedOrNull = includeForListingTypes == null;
   const isArray = Array.isArray(includeForListingTypes);
   const validatedListingTypes = isArray
@@ -355,9 +358,9 @@ const validListingTypesForListingConfig = (includeForListingTypes, listingTypesI
   const hasValidListingTypes = validatedListingTypes.length > 0;
   const isValid = hasValidListingTypes || isUndefinedOrNull;
   const validValue = hasValidListingTypes
-    ? { includeForListingTypes: validatedListingTypes }
+    ? { listingTypeConfig: { limitToListingTypeIds: true, listingTypeIds: validatedListingTypes } }
     : isUndefinedOrNull
-    ? { includeForListingTypes: listingTypesInUse }
+    ? { listingTypeConfig: { limitToListingTypeIds: false } }
     : {};
   return [isValid, validValue];
 };
@@ -365,22 +368,36 @@ const validListingTypesForListingConfig = (includeForListingTypes, listingTypesI
 const validListingTypesForListingTypeConfig = (listingTypeConfig, listingTypesInUse) => {
   const { limitToListingTypeIds, listingTypeIds } = listingTypeConfig || {};
 
-  if (limitToListingTypeIds === true) {
-    const isArray = Array.isArray(listingTypeIds);
-    const validatedListingTypes = isArray
-      ? listingTypeIds.filter(lt => listingTypesInUse.includes(lt))
-      : [];
+  // When no user types are in use, fields by default cannot be limited to a subset of types
+  if (!listingTypesInUse) {
+    const isValid = true;
+    const validValue = {
+      listingTypeConfig: {
+        limitToListingTypeIds: false,
+      },
+    };
 
-    // If listingTypeIds array contains valid listing types,
-    // we'll rename the array as includeForListingTypes
-    const isValid = validatedListingTypes.length > 0;
-    const validValue = isValid ? { includeForListingTypes: validatedListingTypes } : {};
     return [isValid, validValue];
-  } else {
-    // If hosted config returns limitToListingTypeIds as false,
-    // we return the full list of active listingTypes.
-    return [true, { includeForListingTypes: listingTypesInUse }];
   }
+
+  const isArray = Array.isArray(listingTypeIds);
+  const validatedListingTypeIds = isArray
+    ? listingTypeIds.filter(c => listingTypesInUse?.includes(c))
+    : [];
+
+  // If a field is limited to user type ids, it has to have at least one valid type
+  const hasValidListingTypeIds = validatedListingTypeIds.length > 0;
+  const isValid = hasValidListingTypeIds || !limitToListingTypeIds;
+
+  const validValue = hasValidListingTypeIds
+    ? {
+        listingTypeConfig: {
+          limitToListingTypeIds,
+          listingTypeIds: validatedListingTypeIds,
+        },
+      }
+    : { listingTypeConfig: { limitToListingTypeIds: false } };
+  return [isValid, validValue];
 };
 
 const isStringType = str => typeof str === 'string';
@@ -601,7 +618,7 @@ const validListingFields = (listingFields, listingTypesInUse) => {
             : name === 'scope'
             ? validEnumString('scope', value, scopeOptions, 'public')
             : name === 'includeForListingTypes'
-            ? validListingTypesForListingConfig(value, listingTypesInUse)
+            ? validListingTypesForBuiltInSetup(value, listingTypesInUse)
             : name === 'listingTypeConfig'
             ? validListingTypesForListingTypeConfig(value, listingTypesInUse)
             : name === 'schemaType'
@@ -631,12 +648,7 @@ const validListingFields = (listingFields, listingTypesInUse) => {
     );
 
     if (validationData.isValid) {
-      const hasIncludeForListingTypes = validationData.config?.includeForListingTypes;
-      const includeForListingTypesMaybe = !hasIncludeForListingTypes
-        ? { includeForListingTypes: listingTypesInUse }
-        : {};
-
-      return [...acc, { ...validationData.config, ...includeForListingTypesMaybe }];
+      return [...acc, validationData.config];
     } else {
       return acc;
     }

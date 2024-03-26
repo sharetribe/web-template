@@ -54,12 +54,15 @@ export const getDefaultConfiguration = () => {
         {
           key: 'category',
           scope: 'public',
-          includeForListingTypes: [
-            'product-selling',
-            'daily-booking',
-            'nightly-booking',
-            'hourly-booking',
-          ],
+          listingTypeConfig: {
+            limitToListingTypeIds: true,
+            listingTypeIds: [
+              'product-selling',
+              'daily-booking',
+              'nightly-booking',
+              'hourly-booking',
+            ],
+          },
           schemaType: 'enum',
           enumOptions: [
             { option: 'city-bikes', label: 'City bikes' },
@@ -88,12 +91,15 @@ export const getDefaultConfiguration = () => {
         {
           key: 'tire-size',
           scope: 'public',
-          includeForListingTypes: [
-            'product-selling',
-            'daily-booking',
-            'nightly-booking',
-            'hourly-booking',
-          ],
+          listingTypeConfig: {
+            limitToListingTypeIds: true,
+            listingTypeIds: [
+              'product-selling',
+              'daily-booking',
+              'nightly-booking',
+              'hourly-booking',
+            ],
+          },
           schemaType: 'enum',
           enumOptions: [
             { option: 29, label: '29' },
@@ -123,12 +129,15 @@ export const getDefaultConfiguration = () => {
         {
           key: 'brand',
           scope: 'public',
-          includeForListingTypes: [
-            'product-selling',
-            'daily-booking',
-            'nightly-booking',
-            'hourly-booking',
-          ],
+          listingTypeConfig: {
+            limitToListingTypeIds: true,
+            listingTypeIds: [
+              'product-selling',
+              'daily-booking',
+              'nightly-booking',
+              'hourly-booking',
+            ],
+          },
           schemaType: 'enum',
           enumOptions: [
             { option: 'cube', label: 'Cube' },
