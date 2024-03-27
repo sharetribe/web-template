@@ -14,6 +14,32 @@ const printErrorIfHostedAssetIsMissing = props => {
   });
 };
 
+// Functions to create built-in specs for category setup.
+const depthFirstSearch = (category, iterator, depth = 0) => {
+  const { subcategories = [] } = category;
+  return iterator(depth, subcategories.map(cat => depthFirstSearch(cat, iterator, depth + 1)));
+};
+// Pick maximum depth from subcategories or default to given depth parameter
+const getMaxDepth = (depth, subcategories) =>
+  subcategories.length ? Math.max(...subcategories) : depth;
+const createArray = length => [...Array(length)].fill(null).map((_, i) => i + 1);
+
+/**
+ * Returns the fixed/built-in configs. Marketplace API has specified search schema for
+ * categoryLevel1, categoryLevel2, categoryLevel3
+ *
+ * @param {Array} categories config from listing-categories.json asset
+ * @returns object-literal containing fixed key and array of extended data keys used with nested categories.
+ */
+const getBuiltInCategorySpecs = categories => {
+  // Don't change! The search schema is fixed to categoryLevel1, categoryLevel2, categoryLevel3
+  const key = 'categoryLevel';
+  const maxDepth = depthFirstSearch({ subcategories: categories }, getMaxDepth);
+  const categoryLevelKeys = createArray(maxDepth).map(i => `${key}${i}`);
+
+  return { key, scope: 'public', categoryLevelKeys, categories };
+};
+
 /**
  * Check that listing fields don't have keys that clash with built-in keys
  * that this app uses in public data.
@@ -1020,31 +1046,22 @@ const mergeUserConfig = (hostedConfig, defaultConfigs) => {
 // Validate Default filters //
 //////////////////////////////
 
-const depthFirstSearch = (category, iterator, depth = 0) => {
-  const { subcategories = [] } = category;
-  return iterator(depth, subcategories.map(cat => depthFirstSearch(cat, iterator, depth + 1)));
-};
-// Pick maximum depth from subcategories or default to given depth parameter
-const getMaxDepth = (depth, subcategories) =>
-  subcategories.length ? Math.max(...subcategories) : depth;
-const createArray = length => [...Array(length)].fill(null).map((_, i) => i + 1);
-
-const validCategoryConfig = (config, listingCategories) => {
+const validCategoryConfig = (config, categoryConfiguration) => {
   const { enabled = true } = config;
 
   if (!enabled) {
     return null;
   }
 
-  const key = 'categoryLevel';
-  const maxDepth = depthFirstSearch({ subcategories: listingCategories }, getMaxDepth);
-  const isNestedEnum = maxDepth > 1;
-  const nestedParams = isNestedEnum ? createArray(maxDepth).map(i => `${key}${i}`) : [key];
+  const { key, scope, categoryLevelKeys } = categoryConfiguration;
+  // This ensures that flat category structure still uses categoryLevel1 key
+  const isNestedEnum = true;
+  const nestedParams = categoryLevelKeys;
 
   // Note: this adds more configurations to category filter configs
   // - The scope unifies the URL parameter handling (category is behaving like built-in, but handled through public data)
   // - isNestedEnum & nestedParams help to reason out if multiple URL search parameters are needed or not.
-  return { key, schemaType: 'category', scope: 'public', isNestedEnum, nestedParams };
+  return { key, schemaType: 'category', scope, isNestedEnum, nestedParams };
 };
 
 const validDatesConfig = config => {
@@ -1093,12 +1110,12 @@ const validKeywordsConfig = config => {
   return { key: 'keywords', schemaType: 'keywords' };
 };
 
-const validDefaultFilters = (defaultFilters, listingCategories) => {
+const validDefaultFilters = (defaultFilters, categoryConfiguration) => {
   return defaultFilters
     .map(data => {
       const schemaType = data.schemaType;
       return schemaType === 'category'
-        ? validCategoryConfig(data, listingCategories)
+        ? validCategoryConfig(data, categoryConfiguration)
         : schemaType === 'dates'
         ? validDatesConfig(data)
         : schemaType === 'price'
@@ -1125,7 +1142,7 @@ const validSortConfig = config => {
   return { active, queryParamName, relevanceKey, relevanceFilter, conflictingFilters, options };
 };
 
-const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig, listingCategories) => {
+const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig, categoryConfiguration) => {
   // The sortConfig is not yet configurable through Console / hosted assets,
   // but other default search configs come from hosted assets
   const searchConfig = hostedSearchConfig?.mainSearch
@@ -1149,7 +1166,7 @@ const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig, listingCateg
     : 'keywords';
 
   const categoryFilterMaybe =
-    categoryFilter && listingCategories?.length > 0 ? [categoryFilter] : [];
+    categoryFilter && categoryConfiguration.categories?.length > 0 ? [categoryFilter] : [];
   const keywordsFilterMaybe =
     keywordsFilter?.enabled === true
       ? [{ key: 'keywords', schemaType: 'keywords' }]
@@ -1171,7 +1188,7 @@ const mergeSearchConfig = (hostedSearchConfig, defaultSearchConfig, listingCateg
   ];
   return {
     mainSearch: { searchType },
-    defaultFilters: validDefaultFilters(defaultFilters, listingCategories),
+    defaultFilters: validDefaultFilters(defaultFilters, categoryConfiguration),
     sortConfig: validSortConfig(sortConfig),
     ...rest,
   };
@@ -1240,6 +1257,7 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     defaultConfigs.listingMinimumPriceSubUnits;
 
   const validHostedCategories = validateCategoryConfig(configAsset.categories);
+  const categoryConfiguration = getBuiltInCategorySpecs(validHostedCategories);
 
   return {
     // Use default configs as a starting point for app config.
@@ -1278,11 +1296,12 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     // Set category structure if given
     categories: validHostedCategories,
 
-    // Set category structure if given
-    categories: validHostedCategories,
+    // Set category configuration (includes fixed key, array of categories etc.
+    categoryConfiguration,
+
 
     // Hosted search configuration does not yet contain sortConfig
-    search: mergeSearchConfig(configAsset.search, defaultConfigs.search, validHostedCategories),
+    search: mergeSearchConfig(configAsset.search, defaultConfigs.search, categoryConfiguration),
 
     // Map provider info might come from hosted assets. Other map configs come from defaultConfigs.
     maps: mergeMapConfig(configAsset.maps, defaultConfigs.maps),
