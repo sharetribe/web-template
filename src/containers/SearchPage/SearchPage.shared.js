@@ -182,7 +182,7 @@ export const validUrlQueryParamsFromProps = props => {
   const { location, config } = props;
   const { listingFields: listingFieldsConfig } = config?.listing || {};
   const { defaultFilters: defaultFiltersConfig } = config?.search || {};
-  const listingCategories = config.categories;
+  const listingCategories = config.categoryConfiguration.categories;
   const filterConfigs = {
     listingFieldsConfig,
     defaultFiltersConfig,

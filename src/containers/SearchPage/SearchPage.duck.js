@@ -120,7 +120,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 
   const omitInvalidCategoryParams = params => {
     const categoryConfig = config.search.defaultFilters?.find(f => f.schemaType === 'category');
-    const categories = config.categories;
+    const categories = config.categoryConfiguration.categories;
     const { key: prefix, scope } = categoryConfig || {};
     const categoryParamPrefix = constructQueryParamName(prefix, scope);
 
