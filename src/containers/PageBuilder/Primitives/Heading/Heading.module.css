@@ -27,7 +27,7 @@
   letter-spacing: -0.5px;
   font-weight: 800;
   /* Note: text-wrap is experimental CSS feature. Most browsers don't support it */
-  text-wrap: balance;
+  word-break: auto-phrase;
 
   @media (--viewportMedium) {
     font-size: 48px;
