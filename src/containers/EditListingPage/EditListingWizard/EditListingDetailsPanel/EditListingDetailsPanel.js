@@ -16,8 +16,6 @@ import ErrorMessage from './ErrorMessage';
 import EditListingDetailsForm from './EditListingDetailsForm';
 import css from './EditListingDetailsPanel.module.css';
 
-const CATEGORY_PREFIX = 'categoryLevel';
-
 /**
  * Get listing configuration. For existing listings, it is stored to publicData.
  * For new listings, the data needs to be figured out from listingTypes configuration.
@@ -252,6 +250,7 @@ const EditListingDetailsPanel = props => {
   const listingTypes = config.listing.listingTypes;
   const listingFieldsConfig = config.listing.listingFields;
   const listingCategoriesConfig = config.categories;
+  const categoryKey = config.categoryConfiguration.key;
 
   const { hasExistingListingType, existingListingTypeInfo } = hasSetListingType(publicData);
   const hasValidExistingListingType =
@@ -327,7 +326,7 @@ const EditListingDetailsPanel = props => {
           selectableListingTypes={listingTypes.map(conf => getTransactionInfo([conf], {}, true))}
           hasExistingListingType={hasExistingListingType}
           selectableCategories={listingCategoriesConfig}
-          categoryPrefix={CATEGORY_PREFIX}
+          categoryPrefix={categoryKey}
           onListingTypeChange={onListingTypeChange}
           listingFieldsConfig={listingFieldsConfig}
           marketplaceCurrency={config.currency}
