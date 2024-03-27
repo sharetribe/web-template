@@ -500,6 +500,10 @@ propTypes.listingFieldsConfig = arrayOf(
       limitToListingTypeIds: bool.isRequired,
       listingTypeIds: arrayOf(string),
     }),
+    categoryConfig: shape({
+      limitToCategoryIds: bool.isRequired,
+      categoryIds: arrayOf(string),
+    }),
     filterConfig: shape({
       indexForSearch: bool,
       label: string.isRequired,
