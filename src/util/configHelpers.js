@@ -31,7 +31,7 @@ const createArray = length => [...Array(length)].fill(null).map((_, i) => i + 1)
  * @param {Array} categories config from listing-categories.json asset
  * @returns object-literal containing fixed key and array of extended data keys used with nested categories.
  */
-const getBuiltInCategorySpecs = categories => {
+const getBuiltInCategorySpecs = (categories = []) => {
   // Don't change! The search schema is fixed to categoryLevel1, categoryLevel2, categoryLevel3
   const key = 'categoryLevel';
   const maxDepth = depthFirstSearch({ subcategories: categories }, getMaxDepth);
@@ -426,6 +426,51 @@ const validListingTypesForListingTypeConfig = (listingTypeConfig, listingTypesIn
   return [isValid, validValue];
 };
 
+const getCategoryIds = categories => {
+  return categories.reduce((picked, conf) => {
+    const { id, subcategories } = conf;
+    return Array.isArray(subcategories) && subcategories.length > 0
+      ? [...picked, id, ...getCategoryIds(subcategories)]
+      : [...picked, id];
+  }, []);
+};
+
+const validListingTypesForCategoryConfig = (categoryConfig, categoriesInUse) => {
+  const { limitToCategoryIds, categoryIds } = categoryConfig || {};
+
+  // When no user types are in use, fields by default cannot be limited to a subset of types
+  if (!categoriesInUse) {
+    const isValid = true;
+    const validValue = {
+      categoryConfig: {
+        limitToCategoryIds: false,
+      },
+    };
+
+    return [isValid, validValue];
+  }
+
+  const validCategoryIds = getCategoryIds(categoriesInUse);
+  const isArray = Array.isArray(categoryIds);
+  const validatedCategoryIds = isArray
+    ? categoryIds.filter(c => validCategoryIds?.includes(c))
+    : [];
+
+  // If a field is limited to user type ids, it has to have at least one valid type
+  const hasValidCategoryIds = validatedCategoryIds.length > 0;
+  const isValid = hasValidCategoryIds || !limitToCategoryIds;
+
+  const validValue = hasValidCategoryIds
+    ? {
+        categoryConfig: {
+          limitToCategoryIds,
+          categoryIds: validatedCategoryIds,
+        },
+      }
+    : { categoryConfig: { limitToCategoryIds: false } };
+  return [isValid, validValue];
+};
+
 const isStringType = str => typeof str === 'string';
 const pickOptionShapes = o => isStringType(o.option) && isStringType(o.label);
 
@@ -625,7 +670,7 @@ const validUserSaveConfig = config => {
   return [isValid, validValue];
 };
 
-const validListingFields = (listingFields, listingTypesInUse) => {
+const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) => {
   const keys = listingFields.map(d => d.key);
   const scopeOptions = ['public', 'private'];
   const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean'];
@@ -647,6 +692,8 @@ const validListingFields = (listingFields, listingTypesInUse) => {
             ? validListingTypesForBuiltInSetup(value, listingTypesInUse)
             : name === 'listingTypeConfig'
             ? validListingTypesForListingTypeConfig(value, listingTypesInUse)
+            : name === 'categoryConfig'
+            ? validListingTypesForCategoryConfig(value, categoriesInUse)
             : name === 'schemaType'
             ? validEnumString('schemaType', value, validSchemaTypes)
             : name === 'enumOptions'
@@ -832,6 +879,7 @@ const restructureListingFields = hostedListingFields => {
         filterConfig = {},
         showConfig = {},
         saveConfig = {},
+        categoryConfig = {},
         ...rest
       } = listingField;
       const defaultLabel = label || key;
@@ -857,6 +905,7 @@ const restructureListingFields = hostedListingFields => {
               isRequired,
               label: saveConfig.label || defaultLabel,
             },
+            categoryConfig,
             ...rest,
           }
         : null;
@@ -989,7 +1038,7 @@ const mergeDefaultTypesAndFieldsForDebugging = isDebugging => {
 };
 
 // Note: by default, listing types and fields are only merged if explicitly set for debugging
-const mergeListingConfig = (hostedConfig, defaultConfigs) => {
+const mergeListingConfig = (hostedConfig, defaultConfigs, categoriesInUse) => {
   // Listing configuration is splitted to several assets in Console
   const hostedListingTypes = restructureListingTypes(hostedConfig.listingTypes?.listingTypes);
   const hostedListingFields = restructureListingFields(hostedConfig.listingFields?.listingFields);
@@ -1000,7 +1049,7 @@ const mergeListingConfig = (hostedConfig, defaultConfigs) => {
 
   // When debugging, include default configs by passing 'true' here.
   // Otherwise, use listing types and fields from hosted assets.
-  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
+  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(true);
   const listingTypes = shouldMerge
     ? union(hostedListingTypes, defaultListingTypes, 'listingType')
     : hostedListingTypes;
@@ -1012,7 +1061,7 @@ const mergeListingConfig = (hostedConfig, defaultConfigs) => {
 
   return {
     ...rest,
-    listingFields: validListingFields(listingFields, listingTypesInUse),
+    listingFields: validListingFields(listingFields, listingTypesInUse, categoriesInUse),
     listingTypes: validListingTypes(listingTypes),
     enforceValidListingType: defaultConfigs.listing.enforceValidListingType,
   };
@@ -1289,16 +1338,14 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
     // but defaultConfigs is used if type of the hosted configs is unknown
     layout: mergeLayouts(configAsset.layout, defaultConfigs.layout),
 
-    // Listing configuration comes entirely from hosted assets
-    listing: mergeListingConfig(configAsset, defaultConfigs),
+    // User configuration comes entirely from hosted assets by default.
     user: mergeUserConfig(configAsset, defaultConfigs),
-
-    // Set category structure if given
-    categories: validHostedCategories,
 
     // Set category configuration (includes fixed key, array of categories etc.
     categoryConfiguration,
 
+    // Listing configuration comes entirely from hosted assets by default.
+    listing: mergeListingConfig(configAsset, defaultConfigs, validHostedCategories),
 
     // Hosted search configuration does not yet contain sortConfig
     search: mergeSearchConfig(configAsset.search, defaultConfigs.search, categoryConfiguration),
