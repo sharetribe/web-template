@@ -96,25 +96,33 @@ export const pickCategoryFields = (data, prefix, level, categoryLevelOptions = [
 
 /**
  * Pick props for SectionMultiEnumMaybe and SectionTextMaybe display components.
+ *
  * @param {*} publicData entity public data containing the value(s) to be displayed
  * @param {*} metadata entity metadata containing the value(s) to be displayed
- * @param {*} fieldConfigs array of custom field configuration objects
- * @param {*} entityTypeKey the name of the key denoting the entity type in publicData.
- * Currently supports 'userType' and 'listingType'.
+ * @param {Array<Object>} fieldConfigs array of custom field configuration objects
+ * @param {String} entityTypeKey the name of the key denoting the entity type in publicData.
+ * E.g. 'listingType', 'userType', or 'category'
+ * @param {function} shouldPickFn an optional function to add extra check before including the field props
  * @returns an object with attributes 'schemaType', 'key', and 'heading', as well as either
  * - 'options' and 'selectedOptions' for SCHEMA_TYPE_MULTI_ENUM
  * - or 'text' for SCHEMA_TYPE_TEXT
- *
  */
-export const pickCustomFieldProps = (publicData, metadata, fieldConfigs, entityTypeKey) => {
+export const pickCustomFieldProps = (
+  publicData,
+  metadata,
+  fieldConfigs,
+  entityTypeKey,
+  shouldPickFn
+) => {
   return fieldConfigs?.reduce((pickedElements, config) => {
-    const { key, enumOptions, schemaType, showConfig = {}, scope = 'public' } = config;
-    const { displayInProfile } = showConfig;
+    const { key, enumOptions, schemaType, scope = 'public' } = config;
     const entityType = publicData && publicData[entityTypeKey];
     const isTargetEntityType = isFieldFor(entityTypeKey, entityType, config);
 
     const createFilterOptions = options =>
       options.map(o => ({ key: `${o.option}`, label: o.label }));
+
+    const shouldPick = shouldPickFn ? shouldPickFn(config) : true;
 
     const value =
       scope === 'public'
@@ -123,7 +131,7 @@ export const pickCustomFieldProps = (publicData, metadata, fieldConfigs, entityT
         ? getFieldValue(metadata, key)
         : null;
 
-    return isTargetEntityType && schemaType === SCHEMA_TYPE_MULTI_ENUM && displayInProfile
+    return isTargetEntityType && schemaType === SCHEMA_TYPE_MULTI_ENUM && shouldPick
       ? [
           ...pickedElements,
           {
@@ -134,7 +142,7 @@ export const pickCustomFieldProps = (publicData, metadata, fieldConfigs, entityT
             selectedOptions: value || [],
           },
         ]
-      : isTargetEntityType && !!value && config.schemaType === SCHEMA_TYPE_TEXT && displayInProfile
+      : isTargetEntityType && !!value && config.schemaType === SCHEMA_TYPE_TEXT && shouldPick
       ? [
           ...pickedElements,
           {
