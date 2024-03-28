@@ -9,13 +9,7 @@ import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 // Utils
 import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
-import {
-  LISTING_STATE_PENDING_APPROVAL,
-  LISTING_STATE_CLOSED,
-  SCHEMA_TYPE_MULTI_ENUM,
-  SCHEMA_TYPE_TEXT,
-  propTypes,
-} from '../../util/types';
+import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes } from '../../util/types';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
@@ -25,7 +19,6 @@ import {
   createSlug,
 } from '../../util/urlHelpers';
 import { convertMoneyToNumber } from '../../util/currency';
-import { isFieldForListingType } from '../../util/fieldHelpers.js';
 import {
   ensureListing,
   ensureOwnListing,
@@ -77,11 +70,10 @@ import {
 } from './ListingPage.shared';
 import SectionHero from './SectionHero';
 import SectionTextMaybe from './SectionTextMaybe';
-import SectionDetailsMaybe from './SectionDetailsMaybe';
-import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
 import SectionReviews from './SectionReviews';
 import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
+import CustomListingFields from './CustomListingFields';
 
 import css from './ListingPage.module.css';
 
@@ -284,8 +276,6 @@ export const ListingPageComponent = props => {
   const schemaAvailability =
     currentStock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
 
-  const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
-
   const handleViewPhotosClick = e => {
     // Stop event from bubbling up to prevent image click handler
     // trying to open the carousel as well.
@@ -340,37 +330,14 @@ export const ListingPageComponent = props => {
               </H4>
             </div>
             <SectionTextMaybe text={description} showAsIngress />
-            <SectionDetailsMaybe
+
+            <CustomListingFields
               publicData={publicData}
               metadata={metadata}
-              listingConfig={listingConfig}
+              listingFieldConfigs={listingConfig.listingFields}
+              categoryConfiguration={config.categoryConfiguration}
               intl={intl}
             />
-            {listingConfig.listingFields.reduce((pickedElements, config) => {
-              const { key, enumOptions, scope = 'public' } = config;
-              const listingType = publicData?.listingType;
-              const isTargetListingType = isFieldForListingType(listingType, config);
-
-              const value =
-                scope === 'public' ? publicData[key] : scope === 'metadata' ? metadata[key] : null;
-              const hasValue = value != null;
-              return isTargetListingType && config.schemaType === SCHEMA_TYPE_MULTI_ENUM
-                ? [
-                    ...pickedElements,
-                    <SectionMultiEnumMaybe
-                      key={key}
-                      heading={config?.showConfig?.label}
-                      options={createFilterOptions(enumOptions)}
-                      selectedOptions={value || []}
-                    />,
-                  ]
-                : isTargetListingType && hasValue && config.schemaType === SCHEMA_TYPE_TEXT
-                ? [
-                    ...pickedElements,
-                    <SectionTextMaybe key={key} heading={config?.showConfig?.label} text={value} />,
-                  ]
-                : pickedElements;
-            }, [])}
 
             <SectionMapMaybe
               geolocation={geolocation}
