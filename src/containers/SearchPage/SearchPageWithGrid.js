@@ -34,6 +34,7 @@ import {
   validFilterParams,
   cleanSearchFromConflictingParams,
   createSearchResultSchema,
+  pickListingFieldFilters,
 } from './SearchPage.shared';
 
 import FilterComponent from './FilterComponent';
@@ -182,11 +183,17 @@ export class SearchPageComponent extends Component {
       config,
     } = this.props;
 
-    const { listingFields: listingFieldsConfig } = config?.listing || {};
+    const { listingFields } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
     const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
     const marketplaceCurrency = config.currency;
-    const listingCategories = config.categoryConfiguration.categories;
+    const categoryConfiguration = config.categoryConfiguration;
+    const listingCategories = categoryConfiguration.categories;
+    const listingFieldsConfig = pickListingFieldFilters({
+      listingFields,
+      locationSearch: location.search,
+      categoryConfiguration,
+    });
     const filterConfigs = {
       listingFieldsConfig,
       defaultFiltersConfig,

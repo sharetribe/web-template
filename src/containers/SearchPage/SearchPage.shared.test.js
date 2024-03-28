@@ -236,7 +236,7 @@ describe('SearchPage.helpers', () => {
           search: {
             defaultFilters: defaultFiltersConfig,
           },
-          categories: listingCategories,
+          categoryConfiguration: { categories: listingCategories },
         },
       });
       expect(pickedParams).toEqual(urlParams);
@@ -254,7 +254,7 @@ describe('SearchPage.helpers', () => {
           search: {
             defaultFilters: defaultFiltersConfig,
           },
-          categories: listingCategories,
+          categoryConfiguration: { categories: listingCategories },
         },
       });
       expect(pickedParams).toEqual(urlParams);
@@ -272,7 +272,7 @@ describe('SearchPage.helpers', () => {
         search: {
           defaultFilters: defaultFiltersConfig,
         },
-        categories: listingCategories,
+        categoryConfiguration: { categories: listingCategories },
       },
     };
     const currentQueryParams = {};
