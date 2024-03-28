@@ -6,9 +6,16 @@ import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { REVIEW_TYPE_OF_PROVIDER, REVIEW_TYPE_OF_CUSTOMER, propTypes } from '../../util/types';
+import {
+  REVIEW_TYPE_OF_PROVIDER,
+  REVIEW_TYPE_OF_CUSTOMER,
+  SCHEMA_TYPE_MULTI_ENUM,
+  SCHEMA_TYPE_TEXT,
+  propTypes,
+} from '../../util/types';
 import { ensureCurrentUser, ensureUser } from '../../util/data';
 import { withViewport } from '../../util/uiHelpers';
+import { pickCustomFieldProps } from '../../util/fieldHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import {
@@ -29,6 +36,9 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import css from './ProfilePage.module.css';
+import SectionDetailsMaybe from './SectionDetailsMaybe';
+import SectionTextMaybe from './SectionTextMaybe';
+import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 
@@ -142,6 +152,27 @@ export const DesktopReviews = props => {
   );
 };
 
+export const CustomUserFields = props => {
+  const { publicData, metadata, userFieldConfig } = props;
+
+  const propsForCustomFields =
+    pickCustomFieldProps(publicData, metadata, userFieldConfig, 'userType') || [];
+
+  return (
+    <>
+      <SectionDetailsMaybe {...props} />
+      {propsForCustomFields.map(customFieldProps => {
+        const { schemaType, ...fieldProps } = customFieldProps;
+        return schemaType === SCHEMA_TYPE_MULTI_ENUM ? (
+          <SectionMultiEnumMaybe {...fieldProps} />
+        ) : schemaType === SCHEMA_TYPE_TEXT ? (
+          <SectionTextMaybe {...fieldProps} />
+        ) : null;
+      })}
+    </>
+  );
+};
+
 export const MainContent = props => {
   const {
     userShowError,
@@ -152,6 +183,10 @@ export const MainContent = props => {
     reviews,
     queryReviewsError,
     viewport,
+    publicData,
+    metadata,
+    userFieldConfig,
+    intl,
   } = props;
 
   const hasListings = listings.length > 0;
@@ -175,6 +210,12 @@ export const MainContent = props => {
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
       </H2>
       {hasBio ? <p className={css.bio}>{bio}</p> : null}
+      <CustomUserFields
+        publicData={publicData}
+        metadata={metadata}
+        userFieldConfig={userFieldConfig}
+        intl={intl}
+      />
       {hasListings ? (
         <div className={listingsContainerClasses}>
           <H4 as="h2" className={css.listingsTitle}>
@@ -198,14 +239,15 @@ export const MainContent = props => {
   );
 };
 
-const ProfilePageComponent = props => {
+export const ProfilePageComponent = props => {
   const config = useConfiguration();
   const { scrollingDisabled, currentUser, userShowError, user, intl, ...rest } = props;
   const ensuredCurrentUser = ensureCurrentUser(currentUser);
   const profileUser = ensureUser(user);
   const isCurrentUser =
     ensuredCurrentUser.id && profileUser.id && ensuredCurrentUser.id.uuid === profileUser.id.uuid;
-  const { bio, displayName } = profileUser?.attributes?.profile || {};
+  const { bio, displayName, publicData, metadata } = profileUser?.attributes?.profile || {};
+  const { userFields } = config.user;
 
   const schemaTitleVars = { name: displayName, marketplaceName: config.marketplaceName };
   const schemaTitle = intl.formatMessage({ id: 'ProfilePage.schemaTitle' }, schemaTitleVars);
@@ -231,7 +273,16 @@ const ProfilePageComponent = props => {
         }
         footer={<FooterContainer />}
       >
-        <MainContent bio={bio} displayName={displayName} userShowError={userShowError} {...rest} />
+        <MainContent
+          bio={bio}
+          displayName={displayName}
+          userShowError={userShowError}
+          publicData={publicData}
+          metadata={metadata}
+          userFieldConfig={userFields}
+          intl={intl}
+          {...rest}
+        />
       </LayoutSideNavigation>
     </Page>
   );

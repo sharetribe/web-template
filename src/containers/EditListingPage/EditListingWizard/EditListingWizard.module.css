@@ -95,14 +95,6 @@
   composes: marketplaceModalParagraphStyles from global;
 }
 
-.customField {
-  margin-bottom: 24px;
-
-  @media (--viewportMedium) {
-    margin-bottom: 32px;
-  }
-}
-
 .customFieldMultiEnum {
   margin-bottom: 24px;
 

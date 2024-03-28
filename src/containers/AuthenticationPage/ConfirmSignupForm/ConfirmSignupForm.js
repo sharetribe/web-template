@@ -7,7 +7,8 @@ import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
-import { Form, PrimaryButton, FieldTextInput } from '../../../components';
+import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '../../../components';
+import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
 
 import css from './ConfirmSignupForm.module.css';
 
@@ -27,6 +28,7 @@ const ConfirmSignupFormComponent = props => (
         termsAndConditions,
         authInfo,
         idp,
+        userFields,
       } = formRenderProps;
 
       // email
@@ -52,6 +54,10 @@ const ConfirmSignupFormComponent = props => (
 
       // Initial values from idp provider
       const { email, firstName, lastName } = authInfo;
+
+      // Custom user fields. Since user types are not supported here,
+      // only fields with no user type id limitation are selected.
+      const userFieldProps = getPropsForCustomUserFieldInputs(userFields, intl);
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
@@ -109,6 +115,11 @@ const ConfirmSignupFormComponent = props => (
                   })
                 )}
               />
+            </div>
+            <div className={css.customFields}>
+              {userFieldProps.map(fieldProps => (
+                <CustomExtendedDataField {...fieldProps} />
+              ))}
             </div>
           </div>
 

@@ -37,7 +37,5 @@ describe('ProfileSettingsPage', () => {
 
     const viewProfileLink = 'ProfileSettingsPage.viewProfileLink';
     expect(screen.getByText(viewProfileLink)).toBeInTheDocument();
-
-    // TODO: ProfileSettingsForm should have a test of its own.
   });
 });
