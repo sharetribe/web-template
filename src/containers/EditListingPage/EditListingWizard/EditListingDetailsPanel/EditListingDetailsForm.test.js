@@ -1,6 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 
+import { pickCategoryFields } from '../../../../util/fieldHelpers';
 import { fakeIntl } from '../../../../util/testData';
 import { renderWithProviders as render, testingLibrary } from '../../../../util/testHelpers';
 
@@ -24,7 +25,7 @@ describe('EditListingDetailsForm', () => {
 
     const listingFieldsConfig = [
       {
-        key: 'category',
+        key: 'clothing',
         scope: 'public',
         listingTypeConfig: {
           limitToListingTypeIds: true,
@@ -38,14 +39,14 @@ describe('EditListingDetailsForm', () => {
         ],
         filterConfig: {
           indexForSearch: true,
-          label: 'Amenities',
+          label: 'Clothing',
         },
         showConfig: {
-          label: 'Category',
+          label: 'Clothing',
           isDetail: true,
         },
         saveConfig: {
-          label: 'Category',
+          label: 'Clothing',
         },
       },
       {
@@ -67,7 +68,7 @@ describe('EditListingDetailsForm', () => {
           label: 'Amenities',
         },
         showConfig: {
-          label: 'Category',
+          label: 'Amenities',
         },
         saveConfig: {
           label: 'Amenities',
@@ -87,6 +88,9 @@ describe('EditListingDetailsForm', () => {
         disabled={false}
         ready={false}
         listingFieldsConfig={listingFieldsConfig}
+        categoryPrefix="categoryLevel"
+        selectableCategories={[]}
+        pickSelectedCategories={values => pickCategoryFields(values, 'categoryLevel', 1, [])}
         selectableListingTypes={selectableListingTypes}
         hasExistingListingType={true}
         initialValues={selectableListingTypes[0]}
@@ -108,7 +112,7 @@ describe('EditListingDetailsForm', () => {
     userEvent.type(screen.getByRole('textbox', { name: description }), 'Lorem ipsum');
 
     // Fill custom listing field
-    userEvent.selectOptions(screen.getByLabelText('Category'), 'kids');
+    userEvent.selectOptions(screen.getByLabelText('Clothing'), 'kids');
 
     // Test that save button is enabled
     expect(screen.getByRole('button', { name: saveActionMsg })).toBeEnabled();
