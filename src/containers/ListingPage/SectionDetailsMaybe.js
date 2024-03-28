@@ -8,10 +8,9 @@ import { Heading } from '../../components';
 import css from './ListingPage.module.css';
 
 const SectionDetailsMaybe = props => {
-  const { publicData, metadata = {}, listingConfig, intl } = props;
-  const { listingFields } = listingConfig || {};
+  const { publicData, metadata = {}, listingFieldConfigs, isFieldForCategory, intl } = props;
 
-  if (!publicData || !listingConfig) {
+  if (!publicData || !listingFieldConfigs) {
     return null;
   }
 
@@ -19,13 +18,14 @@ const SectionDetailsMaybe = props => {
     const { key, schemaType, enumOptions, showConfig = {} } = config;
     const listingType = publicData.listingType;
     const isTargetListingType = isFieldForListingType(listingType, config);
+    const isTargetCategory = isFieldForCategory(config);
 
     const { isDetail, label } = showConfig;
     const publicDataValue = publicData[key];
     const metadataValue = metadata[key];
     const value = publicDataValue || metadataValue;
 
-    if (isDetail && isTargetListingType && typeof value !== 'undefined') {
+    if (isDetail && isTargetListingType && isTargetCategory && typeof value !== 'undefined') {
       const findSelectedOption = enumValue => enumOptions?.find(o => enumValue === `${o.option}`);
       const getBooleanMessage = value =>
         value
@@ -44,7 +44,7 @@ const SectionDetailsMaybe = props => {
     return filteredConfigs;
   };
 
-  const existingListingFields = listingFields.reduce(pickListingFields, []);
+  const existingListingFields = listingFieldConfigs.reduce(pickListingFields, []);
 
   return existingListingFields.length > 0 ? (
     <section className={css.sectionDetails}>
