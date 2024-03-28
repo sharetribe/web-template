@@ -8,7 +8,7 @@ import classNames from 'classnames';
 // Import util modules
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
 import { EXTENDED_DATA_SCHEMA_TYPES, propTypes } from '../../../../util/types';
-import { isFieldForListingType } from '../../../../util/fieldHelpers';
+import { isFieldForCategory, isFieldForListingType } from '../../../../util/fieldHelpers';
 import { maxLength, required, composeValidators } from '../../../../util/validators';
 
 // Import shared components
@@ -226,7 +226,9 @@ const FieldSelectCategory = props => {
 
 // Add collect data for listing fields (both publicData and privateData) based on configuration
 const AddListingFields = props => {
-  const { listingType, listingFieldsConfig, intl } = props;
+  const { listingType, listingFieldsConfig, selectedCategories, intl } = props;
+  const targetCategoryIds = Object.values(selectedCategories);
+
   const fields = listingFieldsConfig.reduce((pickedFields, fieldConfig) => {
     const { key, schemaType, scope } = fieldConfig || {};
     const namespacedKey = scope === 'public' ? `pub_${key}` : `priv_${key}`;
@@ -234,8 +236,9 @@ const AddListingFields = props => {
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isProviderScope = ['public', 'private'].includes(scope);
     const isTargetListingType = isFieldForListingType(listingType, fieldConfig);
+    const isTargetCategory = isFieldForCategory(targetCategoryIds, fieldConfig);
 
-    return isKnownSchemaType && isProviderScope && isTargetListingType
+    return isKnownSchemaType && isProviderScope && isTargetListingType && isTargetCategory
       ? [
           ...pickedFields,
           <CustomExtendedDataField
@@ -275,6 +278,7 @@ const EditListingDetailsFormComponent = props => (
         selectableListingTypes,
         selectableCategories,
         hasExistingListingType,
+        pickSelectedCategories,
         categoryPrefix,
         saveActionMsg,
         updated,
@@ -371,6 +375,7 @@ const EditListingDetailsFormComponent = props => (
             <AddListingFields
               listingType={listingType}
               listingFieldsConfig={listingFieldsConfig}
+              selectedCategories={pickSelectedCategories(values)}
               intl={intl}
             />
           ) : null}
@@ -414,6 +419,7 @@ EditListingDetailsFormComponent.propTypes = {
     showListingsError: propTypes.error,
     updateListingError: propTypes.error,
   }),
+  pickSelectedCategories: func.isRequired,
   selectableListingTypes: arrayOf(
     shape({
       listingType: string.isRequired,
