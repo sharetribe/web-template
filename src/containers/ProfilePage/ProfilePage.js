@@ -155,8 +155,10 @@ export const DesktopReviews = props => {
 export const CustomUserFields = props => {
   const { publicData, metadata, userFieldConfig } = props;
 
+  const shouldPickUserField = fieldConfig => fieldConfig?.showConfig?.displayInProfile !== false;
   const propsForCustomFields =
-    pickCustomFieldProps(publicData, metadata, userFieldConfig, 'userType') || [];
+    pickCustomFieldProps(publicData, metadata, userFieldConfig, 'userType', shouldPickUserField) ||
+    [];
 
   return (
     <>
