@@ -9,6 +9,7 @@ import {
 } from '../../util/search';
 import { createSlug, parse, stringify } from '../../util/urlHelpers';
 import { getStartOf, parseDateFromISO8601, subtractTime } from '../../util/dates';
+import { isFieldForCategory } from '../../util/fieldHelpers';
 
 /**
  * Validates a filter search param against the default and extended data configuration of listings.
@@ -53,9 +54,6 @@ export const validURLParamForExtendedData = (
       startDate.getTime() <= endDate.getTime();
 
     return hasValidDates ? { [queryParamName]: paramValue } : {};
-  } else if (queryParamName === 'pub_categoryLevel') {
-    const { isNestedEnum } = defaultFilters.find(conf => conf.schemaType === 'category') || {};
-    return !isNestedEnum && paramValue ? { [queryParamName]: paramValue } : {};
   }
 
   // Resolve configurations for extended data filters
@@ -335,6 +333,20 @@ export const searchParamsPicker = (
   };
 };
 
+export const pickListingFieldFilters = params => {
+  const { listingFields, locationSearch, categoryConfiguration } = params;
+  const searchParams = parse(locationSearch);
+  const categories = categoryConfiguration.categories;
+  const validNestedCategoryParamNames = categories
+    ? validURLParamForCategoryData(categoryConfiguration.key, categories, 1, searchParams)
+    : {};
+  const currentCategories = Object.values(validNestedCategoryParamNames);
+  const pickedFields = listingFields.reduce((picked, fieldConfig) => {
+    const isTargetCategory = isFieldForCategory(currentCategories, fieldConfig);
+    return isTargetCategory ? [...picked, fieldConfig] : picked;
+  }, []);
+  return pickedFields;
+};
 /**
  * Returns listing fields (extended data configs) grouped into arrays. [primaryConfigArray, secondaryConfigArray]
  * @param {Object} configs listing extended data config
