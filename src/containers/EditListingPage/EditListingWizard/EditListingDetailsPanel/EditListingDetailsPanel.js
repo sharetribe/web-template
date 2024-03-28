@@ -5,7 +5,11 @@ import classNames from 'classnames';
 // Import util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
 import { EXTENDED_DATA_SCHEMA_TYPES, LISTING_STATE_DRAFT } from '../../../../util/types';
-import { isFieldForListingType } from '../../../../util/fieldHelpers';
+import {
+  isFieldForCategory,
+  isFieldForListingType,
+  pickCategoryFields,
+} from '../../../../util/fieldHelpers';
 import { isBookingProcessAlias } from '../../../../transactions/transaction';
 
 // Import shared components
@@ -84,7 +88,15 @@ const hasSetListingType = publicData => {
  * @param {Object} listingFieldConfigs an extended data configurtions for listing fields.
  * @returns Array of picked extended data fields from submitted data.
  */
-const pickListingFieldsData = (data, targetScope, targetListingType, listingFieldConfigs) => {
+const pickListingFieldsData = (
+  data,
+  targetScope,
+  targetListingType,
+  targetCategories,
+  listingFieldConfigs
+) => {
+  const targetCategoryIds = Object.values(targetCategories);
+
   return listingFieldConfigs.reduce((fields, fieldConfig) => {
     const { key, scope = 'public', schemaType } = fieldConfig || {};
     const namespacePrefix = scope === 'public' ? `pub_` : `priv_`;
@@ -93,8 +105,9 @@ const pickListingFieldsData = (data, targetScope, targetListingType, listingFiel
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
     const isTargetListingType = isFieldForListingType(targetListingType, fieldConfig);
+    const isTargetCategory = isFieldForCategory(targetCategoryIds, fieldConfig);
 
-    if (isKnownSchemaType && isTargetScope && isTargetListingType) {
+    if (isKnownSchemaType && isTargetScope && isTargetListingType && isTargetCategory) {
       const fieldValue = data[namespacedKey] || null;
       return { ...fields, [key]: fieldValue };
     } else if (isKnownSchemaType && isTargetScope) {
@@ -122,8 +135,11 @@ const initialValuesForListingFields = (
   data,
   targetScope,
   targetListingType,
+  targetCategories,
   listingFieldConfigs
 ) => {
+  const targetCategoryIds = Object.values(targetCategories);
+
   return listingFieldConfigs.reduce((fields, fieldConfig) => {
     const { key, scope = 'public', schemaType } = fieldConfig || {};
     const namespacePrefix = scope === 'public' ? `pub_` : `priv_`;
@@ -132,39 +148,14 @@ const initialValuesForListingFields = (
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
     const isTargetScope = scope === targetScope;
     const isTargetListingType = isFieldForListingType(targetListingType, fieldConfig);
+    const isTargetCategory = isFieldForCategory(targetCategoryIds, fieldConfig);
 
-    if (isKnownSchemaType && isTargetScope && isTargetListingType) {
+    if (isKnownSchemaType && isTargetScope && isTargetListingType && isTargetCategory) {
       const fieldValue = data[key] || null;
       return { ...fields, [namespacedKey]: fieldValue };
     }
     return fields;
   }, {});
-};
-
-// Generates initial values for listing categories based on provided public data and configuration.
-// This function validates if the initial values match with the configuration received via assets.
-// If a categoryLevel value doesn't match with the category configuration, it is not passed on to the form.
-
-const pickCategoryFields = (data, level, categoryLevelOptions = []) => {
-  const currentCategoryKey = `${CATEGORY_PREFIX}${level}`;
-  const currentCategoryValue = data[currentCategoryKey];
-  const isCategoryLevelSet = typeof currentCategoryValue !== 'undefined';
-
-  // Validate the value against category options
-  const categoryOptionConfig = categoryLevelOptions.find(
-    category => category.id === currentCategoryValue
-  );
-  const isValidCategoryValue = !!categoryOptionConfig;
-  const nextLevelOptions = categoryOptionConfig?.subcategories || [];
-
-  // Return category level property if it's found from the data and the value is one of the valid options.
-  // Go through all the nested levels.
-  return isCategoryLevelSet && isValidCategoryValue
-    ? {
-        [currentCategoryKey]: currentCategoryValue,
-        ...pickCategoryFields(data, ++level, nextLevelOptions),
-      }
-    : {};
 };
 
 /**
@@ -204,28 +195,42 @@ const setNoAvailabilityForUnbookableListings = processAlias => {
  * @param {object} props
  * @param {object} existingListingTypeInfo info saved to listing's publicData
  * @param {object} listingTypes app's configured types (presets for listings)
- * @param {object} listingFieldsConfig those extended data fields that are part of configurations
+ * @param {object} listingFields those extended data fields that are part of configurations
  * @returns initialValues object for the form
  */
 const getInitialValues = (
   props,
   existingListingTypeInfo,
   listingTypes,
-  listingFieldsConfig,
-  listingCategoriesConfig
+  listingFields,
+  listingCategories,
+  categoryKey
 ) => {
   const { description, title, publicData, privateData } = props?.listing?.attributes || {};
   const { listingType } = publicData;
 
+  const nestedCategories = pickCategoryFields(publicData, categoryKey, 1, listingCategories);
   // Initial values for the form
   return {
     title,
     description,
-    ...pickCategoryFields(publicData, 1, listingCategoriesConfig),
+    ...nestedCategories,
     // Transaction type info: listingType, transactionProcessAlias, unitType
     ...getTransactionInfo(listingTypes, existingListingTypeInfo),
-    ...initialValuesForListingFields(publicData, 'public', listingType, listingFieldsConfig),
-    ...initialValuesForListingFields(privateData, 'private', listingType, listingFieldsConfig),
+    ...initialValuesForListingFields(
+      publicData,
+      'public',
+      listingType,
+      nestedCategories,
+      listingFields
+    ),
+    ...initialValuesForListingFields(
+      privateData,
+      'private',
+      listingType,
+      nestedCategories,
+      listingFields
+    ),
   };
 };
 
@@ -248,8 +253,8 @@ const EditListingDetailsPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const { publicData, state } = listing?.attributes || {};
   const listingTypes = config.listing.listingTypes;
-  const listingFieldsConfig = config.listing.listingFields;
-  const listingCategoriesConfig = config.categories;
+  const listingFields = config.listing.listingFields;
+  const listingCategories = config.categoryConfiguration.categories;
   const categoryKey = config.categoryConfiguration.key;
 
   const { hasExistingListingType, existingListingTypeInfo } = hasSetListingType(publicData);
@@ -265,8 +270,9 @@ const EditListingDetailsPanel = props => {
     props,
     existingListingTypeInfo,
     listingTypes,
-    listingFieldsConfig,
-    listingCategoriesConfig
+    listingFields,
+    listingCategories,
+    categoryKey
   );
 
   const noListingTypesSet = listingTypes?.length === 0;
@@ -306,6 +312,21 @@ const EditListingDetailsPanel = props => {
               ...rest
             } = values;
 
+            const nestedCategories = pickCategoryFields(rest, categoryKey, 1, listingCategories);
+            const publicListingFields = pickListingFieldsData(
+              rest,
+              'public',
+              listingType,
+              nestedCategories,
+              listingFields
+            );
+            const privateListingFields = pickListingFieldsData(
+              rest,
+              'private',
+              listingType,
+              nestedCategories,
+              listingFields
+            );
             // New values for listing attributes
             const updateValues = {
               title: title.trim(),
@@ -314,10 +335,10 @@ const EditListingDetailsPanel = props => {
                 listingType,
                 transactionProcessAlias,
                 unitType,
-                ...pickCategoryFields(rest, 1, listingCategoriesConfig),
-                ...pickListingFieldsData(rest, 'public', listingType, listingFieldsConfig),
+                ...nestedCategories,
+                ...publicListingFields,
               },
-              privateData: pickListingFieldsData(rest, 'private', listingType, listingFieldsConfig),
+              privateData: privateListingFields,
               ...setNoAvailabilityForUnbookableListings(transactionProcessAlias),
             };
 
@@ -325,10 +346,13 @@ const EditListingDetailsPanel = props => {
           }}
           selectableListingTypes={listingTypes.map(conf => getTransactionInfo([conf], {}, true))}
           hasExistingListingType={hasExistingListingType}
-          selectableCategories={listingCategoriesConfig}
+          selectableCategories={listingCategories}
+          pickSelectedCategories={values =>
+            pickCategoryFields(values, categoryKey, 1, listingCategories)
+          }
           categoryPrefix={categoryKey}
           onListingTypeChange={onListingTypeChange}
-          listingFieldsConfig={listingFieldsConfig}
+          listingFieldsConfig={listingFields}
           marketplaceCurrency={config.currency}
           disabled={disabled}
           ready={ready}
