@@ -11,6 +11,11 @@ const keyMapping = {
     limitTo: 'limitToListingTypeIds',
     ids: 'listingTypeIds',
   },
+  category: {
+    wrapper: 'categoryConfig',
+    limitTo: 'limitToCategoryIds',
+    ids: 'categoryIds',
+  },
 };
 
 const getEntityTypeRestrictions = (entityTypeKey, config) => {
@@ -25,12 +30,16 @@ const getEntityTypeRestrictions = (entityTypeKey, config) => {
  * Check if the given listing type is allowed according to the given listing field config.
  *
  * @param {String} entityTypeKey entity type key (e.g. 'listingType', 'userType')
- * @param {String} entityType entity type to be checked (e.g. 'amenities')
+ * @param {String|Array<String>} entityType entity type to be checked (e.g. 'amenities'). Accepts an array too.
  * @param {*} fieldConfig the config of a custom listing field
  * @returns true if listingTypeConfig allows the listingType
  */
 export const isFieldFor = (entityTypeKey, entityType, fieldConfig) => {
   const { isLimited, limitToIds } = getEntityTypeRestrictions(entityTypeKey, fieldConfig);
+
+  if (Array.isArray(entityType)) {
+    return !isLimited || limitToIds.some(cid => entityType.includes(cid));
+  }
   return !isLimited || limitToIds.includes(entityType);
 };
 
@@ -38,6 +47,9 @@ export const isFieldForUserType = (userType, fieldConfig) =>
   isFieldFor('userType', userType, fieldConfig);
 export const isFieldForListingType = (listingType, fieldConfig) =>
   isFieldFor('listingType', listingType, fieldConfig);
+export const isFieldForCategory = (categories, fieldConfig) =>
+  isFieldFor('category', categories, fieldConfig);
+
 /**
  * Returns the value of the attribute in extended data.
  * @param {*} data extended data containing the value
@@ -47,6 +59,39 @@ export const isFieldForListingType = (listingType, fieldConfig) =>
 export const getFieldValue = (data, key) => {
   const value = data?.[key];
   return value != null ? value : null;
+};
+
+/**
+ * Picks current values for listing categories based on provided public data and configuration.
+ * This function validates if the initial values match with the configuration received via assets.
+ * If a categoryLevel value doesn't match with the category configuration, it is not passed on to the form.
+ *
+ * @param {*} data publicData or some other set where category-related nested data is available
+ * @param {String} prefix prefix used for storing nested values.
+ * @param {Number} level refers to nesting level (starts from 1)
+ * @param {Array} categoryLevelOptions array of nested category structure
+ * @returns pick valid prefixed properties
+ */
+export const pickCategoryFields = (data, prefix, level, categoryLevelOptions = []) => {
+  const currentCategoryKey = `${prefix}${level}`;
+  const currentCategoryValue = data[currentCategoryKey];
+  const isCategoryLevelSet = typeof currentCategoryValue !== 'undefined';
+
+  // Validate the value against category options
+  const categoryOptionConfig = categoryLevelOptions.find(
+    category => category.id === currentCategoryValue
+  );
+  const isValidCategoryValue = !!categoryOptionConfig;
+  const nextLevelOptions = categoryOptionConfig?.subcategories || [];
+
+  // Return category level property if it's found from the data and the value is one of the valid options.
+  // Go through all the nested levels.
+  return isCategoryLevelSet && isValidCategoryValue
+    ? {
+        [currentCategoryKey]: currentCategoryValue,
+        ...pickCategoryFields(data, prefix, ++level, nextLevelOptions),
+      }
+    : {};
 };
 
 /**
