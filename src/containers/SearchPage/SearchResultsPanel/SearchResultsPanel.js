@@ -55,7 +55,7 @@ const SearchResultsPanel = props => {
   return (
     <div className={classes}>
       <div className={classNames(css.stickyButtonContainer)}>
-        <button
+        <button style={{position:'static'}}
           className={classNames(css.stickyButton, css.whatsappButton)}
           onClick={() => window.open('https://api.whatsapp.com/send/?phone=5492944232664&text&type=phone_number&app_absent=0')}
         >
