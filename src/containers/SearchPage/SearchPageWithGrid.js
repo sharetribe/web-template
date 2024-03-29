@@ -365,8 +365,8 @@ export class SearchPageComponent extends Component {
                   );
                 })}
               </SearchFiltersMobile>
-              <MainPanelHeader
-                className={css.mainPanel}
+              <MainPanelHeader  
+                className={css.mainPanel}                    
                 sortByComponent={sortBy('desktop')}
                 isSortByActive={sortConfig.active}
                 listingsAreLoaded={listingsAreLoaded}
