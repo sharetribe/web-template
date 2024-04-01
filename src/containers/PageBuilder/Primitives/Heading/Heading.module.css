@@ -14,10 +14,10 @@
   color: var(--colorGrey900);
 
   /* fallback option */
-  word-break: break-all;
+  word-break: auto-phrase;
   /* use break-word if available */
-  word-break: break-word;
-  hyphens: auto;
+  word-break: auto-phrase;
+  hyphens: manual;
 }
 
 /* Specific styles */
@@ -27,10 +27,11 @@
   letter-spacing: -0.5px;
   font-weight: 800;
   /* Note: text-wrap is experimental CSS feature. Most browsers don't support it */
-  text-wrap: balance;
+  word-break: auto-phrase;
 
   @media (--viewportMedium) {
     font-size: 48px;
+    word-break: auto-phrase;
   }
 
   /* If ´& + *´ if used, margin-top needs !important to overwrite */
@@ -48,12 +49,13 @@
   & + h5,
   & + h6 {
     margin-top: 24px;
+    word-break: auto-phrase;
   }
 }
 
 .h2 {
   font-size: 32px;
-
+  word-break: auto-phrase;
   /* If ´& + *´ if used, margin-top needs !important to overwrite */
   /* Handle margin-top of next adjacent element against this heading element */
   & + p,
@@ -69,15 +71,18 @@
   & + h5,
   & + h6 {
     margin-top: 16px;
+    word-break: auto-phrase;
   }
 }
 
 .h3 {
   font-size: 24px;
+  word-break: auto-phrase;
 }
 
 .h4 {
   font-size: 21px;
+  word-break: auto-phrase;
 }
 
 .h3,
@@ -99,5 +104,6 @@
   & + h5,
   & + h6 {
     margin-top: 8px;
+    word-break: auto-phrase;
   }
 }
