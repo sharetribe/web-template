@@ -9,8 +9,12 @@ export const publishableKey = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY;
 
 // A maximum number of days forwards during which a booking can be made.
 // This is limited due to Stripe holding funds up to 90 days from the
-// moment they are charged. Also note that available time slots can only
-// be fetched for 180 days in the future.
+// moment they are charged. However, US accounts can hold funds up to 2 years.
+// https://docs.stripe.com/connect/manual-payouts
+//
+// If your marketplace is for US only, you should also be aware that available
+// time slots can only be fetched for 366 days into the future.
+// https://www.sharetribe.com/api-reference/marketplace.html#query-time-slots
 export const dayCountAvailableForBooking = 90;
 
 /**
