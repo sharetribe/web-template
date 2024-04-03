@@ -178,6 +178,7 @@ class TopbarComponent extends Component {
     const isMobileSearchOpen = isMobileLayout && mobilesearch === 'open';
 
     const mobileMenu = (
+      <div> 
       <TopbarMobileMenu
         isAuthenticated={isAuthenticated}
         currentUserHasListings={currentUserHasListings}
@@ -185,8 +186,10 @@ class TopbarComponent extends Component {
         onLogout={this.handleLogout}
         notificationCount={notificationCount}
         currentPage={currentPage}
-      />
-    );
+        />
+        </div>
+
+        );
 
     const topbarSearcInitialValues = () => {
       if (isMainSearchTypeKeywords(config)) {

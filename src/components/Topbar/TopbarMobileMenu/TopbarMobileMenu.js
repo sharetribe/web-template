@@ -112,6 +112,13 @@ const TopbarMobileMenu = props => {
         >
           <FormattedMessage id="TopbarMobileMenu.accountSettingsLink" />
         </NamedLink>
+        <a
+          className={classNames(css.navigationLink, currentPageClass('faqs'))}
+          name="AccountSettingsPage" href="https://www.rundo.com.ar/p/frequent-asked-questions"
+        >
+          <a href="https://www.rundo.com.ar/p/frequent-asked-questions"></a>
+          <FormattedMessage id="Preguntas Frecuentes" />
+        </a>
         <div className={css.spacer} />
       </div>
       <div className={css.footer}>
