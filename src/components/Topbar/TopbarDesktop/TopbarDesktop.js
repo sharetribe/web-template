@@ -113,6 +113,15 @@ const TopbarDesktop = props => {
             <FormattedMessage id="TopbarDesktop.accountSettingsLink" />
           </NamedLink>
         </MenuItem>
+        <MenuItem key="FAQS">
+          <a
+            className={classNames(css.yourListingsLink, currentPageClass('AccountSettingsPage'))}
+            name="FAQS" href="https://www.rundo.com.ar/p/frequent-asked-questions"
+          >
+            <span className={css.menuItemBorder} />
+            <FormattedMessage id="Preguntas Frecuentes" />
+          </a>
+        </MenuItem>
         <MenuItem key="logout">
           <InlineTextButton rootClassName={css.logoutButton} onClick={onLogout}>
             <span className={css.menuItemBorder} />
