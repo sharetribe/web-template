@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] Some email templates were not using the correct helper to format currencies and dates based
+  on localization. [#351](https://github.com/sharetribe/web-template/pull/351)
+
 ## [v4.1.2] 2024-03-26
 
 - [fix] SSO signups didn't show hosted Terms & Privacy policy assets due to missing loadData.
