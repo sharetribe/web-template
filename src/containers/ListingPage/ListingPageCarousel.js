@@ -319,13 +319,16 @@ export const ListingPageComponent = props => {
                 <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
               </H4>
             </div>
+            <h4 className={css.mobileHeading2}>
+                <FormattedMessage id="Descripción del artículo"/>
+            </h4>
             <SectionTextMaybe text={description} showAsIngress />
             <SectionDetailsMaybe
               publicData={publicData}
               metadata={metadata}
               listingConfig={listingConfig}
               intl={intl}
-            />
+              />
             {listingConfig.listingFields.reduce((pickedElements, config) => {
               const { key, enumOptions, includeForListingTypes, scope = 'public' } = config;
               const listingType = publicData?.listingType;
