@@ -68,7 +68,7 @@ marketplace at https://marketplace.your-website.com. The logo (see LinkedLogo.js
 links to the landing page of your website if no logoLink property is present.
 
 Note: the logoLink property does not support in-app navigation at the moment. If the URL is the
-marketplace's domain (https://marketplace.famouswebsite.com), a full page refresh is performed every
+marketplace's domain (https://marketplace.your-website.com), a full page refresh is performed every
 time a user clicks the logo.
 
 ## Responsiveness
@@ -97,6 +97,32 @@ secondary links.
 The component uses the following translation keys:
 
 ```
+  "Topbar.genericError": "Oh no, something went wrong. Please check your network connection and try again.",
+  "Topbar.logoIcon": "Go to homepage",
+  "Topbar.menuIcon": "Open menu",
+  "Topbar.mobileSearchHelp": "Find what you are looking for.",
+  "Topbar.searchIcon": "Open search",
   "TopbarDesktop.LinksMenu.all": "Menu",
   "TopbarDesktop.LinksMenu.more": "More",
+  "TopbarDesktop.accountSettingsLink": "Account settings",
+  "TopbarDesktop.createListing": "Post a new listing",
+  "TopbarDesktop.inbox": "Inbox",
+  "TopbarDesktop.login": "Log in",
+  "TopbarDesktop.logo": "{marketplaceName}",
+  "TopbarDesktop.logout": "Log out",
+  "TopbarDesktop.profileSettingsLink": "Profile settings",
+  "TopbarDesktop.signup": "Sign up",
+  "TopbarDesktop.yourListingsLink": "Your listings",
+  "TopbarMobileMenu.accountSettingsLink": "Account settings",
+  "TopbarMobileMenu.greeting": "Hello {displayName}",
+  "TopbarMobileMenu.inboxLink": "Inbox",
+  "TopbarMobileMenu.loginLink": "Log in",
+  "TopbarMobileMenu.logoutLink": "Log out",
+  "TopbarMobileMenu.newListingLink": "Post a new listing",
+  "TopbarMobileMenu.profileSettingsLink": "Profile settings",
+  "TopbarMobileMenu.signupLink": "Sign up",
+  "TopbarMobileMenu.signupOrLogin": "{signup} or {login}",
+  "TopbarMobileMenu.unauthorizedGreeting": "Hello there,{lineBreak}would you like to {signupOrLogin}?",
+  "TopbarMobileMenu.yourListingsLink": "Your listings",
+  "TopbarSearchForm.placeholder": "Search listings…",
 ```
