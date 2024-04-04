@@ -686,6 +686,17 @@
     display: none;
   }
 }
+.mobileHeading2 {
+  margin: 0 24px 24px 24px;
+
+  @media (--viewportMedium) {
+    margin: 0 0 24px 0;
+  }
+
+  @media (--viewportLarge) {
+    display: block;
+  }
+}
 
 .productDesktopHeading {
   display: none;
