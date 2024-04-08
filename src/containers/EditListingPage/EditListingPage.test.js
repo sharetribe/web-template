@@ -88,7 +88,7 @@ const listingTypesInquiry = [
 
 const listingFieldsInquiry = [
   {
-    key: 'category',
+    key: 'cat',
     scope: 'public',
     listingTypeConfig: {
       limitToListingTypeIds: true,
@@ -98,21 +98,21 @@ const listingFieldsInquiry = [
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
       indexForSearch: true,
-      label: 'Category',
+      label: 'Cat',
       group: 'primary',
     },
     showConfig: {
-      label: 'Category',
+      label: 'Cat',
     },
     saveConfig: {
-      label: 'Category',
+      label: 'Cat',
     },
   },
 ];
 
 const listingFieldsPurchase = [
   {
-    key: 'category',
+    key: 'cat',
     scope: 'public',
     listingTypeConfig: {
       limitToListingTypeIds: true,
@@ -122,14 +122,14 @@ const listingFieldsPurchase = [
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
       indexForSearch: true,
-      label: 'Category',
+      label: 'Cat',
       group: 'primary',
     },
     showConfig: {
-      label: 'Category',
+      label: 'Cat',
     },
     saveConfig: {
-      label: 'Category',
+      label: 'Cat',
     },
   },
 ];
@@ -353,7 +353,7 @@ describe('EditListingPage', () => {
       expect(
         getByRole('textbox', { name: 'EditListingDetailsForm.description' })
       ).toBeInTheDocument();
-      expect(getByLabelText('Category')).toBeInTheDocument();
+      expect(getByLabelText('Cat')).toBeInTheDocument();
       //
       expect(
         getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
@@ -402,7 +402,7 @@ describe('EditListingPage', () => {
       expect(
         getByRole('textbox', { name: 'EditListingDetailsForm.description' })
       ).toBeInTheDocument();
-      expect(getByLabelText('Category')).toBeInTheDocument();
+      expect(getByLabelText('Cat')).toBeInTheDocument();
       // Check custom extended data field exists
       expect(
         getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
@@ -479,7 +479,7 @@ describe('EditListingPage', () => {
     expect(
       getByRole('textbox', { name: 'EditListingDetailsForm.description' })
     ).toBeInTheDocument();
-    expect(getByLabelText('Category')).toBeInTheDocument();
+    expect(getByLabelText('Cat')).toBeInTheDocument();
     expect(
       getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
     ).toBe(true);
@@ -542,7 +542,7 @@ describe('EditListingPage', () => {
       expect(
         getByRole('textbox', { name: 'EditListingDetailsForm.description' })
       ).toBeInTheDocument();
-      expect(getByLabelText('Category')).toBeInTheDocument();
+      expect(getByLabelText('Cat')).toBeInTheDocument();
 
       expect(
         getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
@@ -604,7 +604,7 @@ describe('EditListingPage', () => {
       );
 
       // Tab/form: listing field
-      expect(getByLabelText('Category')).toBeInTheDocument();
+      expect(getByLabelText('Cat')).toBeInTheDocument();
       expect(
         getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
       ).toBe(true);
@@ -2051,7 +2051,7 @@ describe('EditListingPage', () => {
       );
 
       // Tab/form: listing field
-      expect(getByLabelText('Category')).toBeInTheDocument();
+      expect(getByLabelText('Cat')).toBeInTheDocument();
       expect(
         getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
       ).toBe(true);

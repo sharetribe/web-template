@@ -54,7 +54,7 @@ const listingTypes = [
 
 const listingFields = [
   {
-    key: 'category',
+    key: 'cat',
     scope: 'public',
     listingTypeConfig: {
       limitToListingTypeIds: true,
@@ -66,7 +66,7 @@ const listingFields = [
       indexForSearch: true,
     },
     showConfig: {
-      label: 'Category',
+      label: 'Cat',
       isDetail: true,
     },
   },
@@ -118,7 +118,7 @@ describe('ListingPage variants', () => {
     listingType: 'sell-bicycles',
     transactionProcessAlias: 'default-purchase/release-1',
     unitType: 'item',
-    category: 'cat_1',
+    cat: 'cat_1',
   };
   const listing1 = createListing(id, { publicData }, { author: createUser('user-1') });
   const listing1Own = createOwnListing(id, {}, { author: createCurrentUser('user-1') });
@@ -209,7 +209,7 @@ describe('ListingPage variants', () => {
 
       // Has details section title and selected category info
       expect(getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
-      expect(getByText('Category')).toBeInTheDocument();
+      expect(getByText('Cat')).toBeInTheDocument();
       expect(getByText('Cat 1')).toBeInTheDocument();
 
       // Has details location title
@@ -264,7 +264,7 @@ describe('ListingPage variants', () => {
 
       // Has details section title and selected category info
       expect(getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
-      expect(getByText('Category')).toBeInTheDocument();
+      expect(getByText('Cat')).toBeInTheDocument();
       expect(getByText('Cat 1')).toBeInTheDocument();
 
       // Has details location title
