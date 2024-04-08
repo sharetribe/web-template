@@ -37,6 +37,7 @@ const initialState = {
   speculateTransactionInProgress: false,
   speculateTransactionError: null,
   speculatedTransaction: null,
+  isClockInSync: false,
   transaction: null,
   initiateOrderError: null,
   confirmPaymentError: null,
@@ -58,12 +59,18 @@ export default function checkoutPageReducer(state = initialState, action = {}) {
         speculateTransactionError: null,
         speculatedTransaction: null,
       };
-    case SPECULATE_TRANSACTION_SUCCESS:
+    case SPECULATE_TRANSACTION_SUCCESS: {
+      // Check that the local devices clock is within a minute from the server
+      const lastTransitionedAt = payload.transaction?.attributes?.lastTransitionedAt;
+      const localTime = new Date();
+      const minute = 60000;
       return {
         ...state,
         speculateTransactionInProgress: false,
         speculatedTransaction: payload.transaction,
+        isClockInSync: Math.abs(lastTransitionedAt?.getTime() - localTime.getTime()) < minute,
       };
+    }
     case SPECULATE_TRANSACTION_ERROR:
       console.error(payload); // eslint-disable-line no-console
       return {
