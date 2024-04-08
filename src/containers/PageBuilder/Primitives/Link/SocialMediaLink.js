@@ -9,7 +9,7 @@ import {
   linkedinIcon,
   pinterestIcon,
   tiktokIcon,
-  twitterIcon,
+  xIcon,
   youtubeIcon,
 } from './Icons';
 
@@ -21,7 +21,7 @@ const PLATFORM_CONF = {
   linkedin: { icon: linkedinIcon, name: 'LinkedIn' },
   pinterest: { icon: pinterestIcon, name: 'Pinterest' },
   tiktok: { icon: tiktokIcon, name: 'TikTok' },
-  twitter: { icon: twitterIcon, name: 'X' },
+  twitter: { icon: xIcon, name: 'X' },
   youtube: { icon: youtubeIcon, name: 'YouTube' },
 };
 
