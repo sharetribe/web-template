@@ -52,7 +52,7 @@ export const getDefaultConfiguration = () => {
     listing: {
       listingFields: [
         {
-          key: 'category',
+          key: 'bikeType',
           scope: 'public',
           listingTypeConfig: {
             limitToListingTypeIds: true,
@@ -73,18 +73,18 @@ export const getDefaultConfiguration = () => {
           filterConfig: {
             indexForSearch: true,
             filterType: 'SelectSingleFilter',
-            label: 'Category',
+            label: 'Bike type',
             group: 'primary',
           },
           showConfig: {
-            label: 'Category',
+            label: 'Bike type',
             isDetail: true,
           },
           saveConfig: {
-            label: 'Select category',
+            label: 'Select a bike type',
             placeholderMessage: 'Choose…',
             isRequired: true,
-            requiredMessage: 'You need to select a category.',
+            requiredMessage: 'You need to select the type of the bike.',
           },
         },
 
@@ -372,8 +372,8 @@ export const getHostedConfiguration = () => {
             group: 'primary',
           },
           scope: 'public',
-          label: 'Category',
-          key: 'category',
+          label: 'Bike type',
+          key: 'bikeType',
           schemaType: 'enum',
           saveConfig: {
             required: true,
