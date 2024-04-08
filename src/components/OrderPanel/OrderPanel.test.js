@@ -62,7 +62,7 @@ const listingTypes = [
 
 const listingFields = [
   {
-    key: 'category',
+    key: 'cat',
     scope: 'public',
     listingTypeConfig: {
       limitToListingTypeIds: true,
@@ -72,14 +72,14 @@ const listingFields = [
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
       indexForSearch: true,
-      label: 'Category',
+      label: 'Cat',
       group: 'primary',
     },
     showConfig: {
-      label: 'Category',
+      label: 'Cat',
     },
     saveConfig: {
-      label: 'Category',
+      label: 'Cat',
     },
   },
   {
