@@ -139,11 +139,11 @@ export const hasDefaultPaymentMethod = (stripeCustomerFetched, currentUser) =>
  * @param {Object} process
  * @returns true if payment has expired.
  */
-export const hasPaymentExpired = (existingTransaction, process) => {
+export const hasPaymentExpired = (existingTransaction, process, isClockInSync) => {
   const state = process.getState(existingTransaction);
   return state === process.states.PAYMENT_EXPIRED
     ? true
-    : state === process.states.PENDING_PAYMENT
+    : state === process.states.PENDING_PAYMENT && isClockInSync
     ? minutesBetween(existingTransaction.attributes.lastTransitionedAt, new Date()) >= 15
     : false;
 };
