@@ -14,6 +14,7 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Add a readme for the Topbar component [#353](https://github.com/sharetribe/web-template/pull/353)
 - [fix] Some email templates were not using the correct helper to format currencies and dates based
   on localization. [#351](https://github.com/sharetribe/web-template/pull/351)
 
