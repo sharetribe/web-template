@@ -14,9 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] Twitter's brand and logo has changed to X.
+  [#355](https://github.com/sharetribe/web-template/pull/355)
+- [fix] Verify that browser's clock is not more than a minute out of sync.
+  [#354](https://github.com/sharetribe/web-template/pull/354)
 - [change] configStripe.js: update code-comment for dayCountAvailableForBooking.
   [#352](https://github.com/sharetribe/web-template/pull/352)
-- [add] Add a readme for the Topbar component [#353](https://github.com/sharetribe/web-template/pull/353)
+- [add] Add a readme for the Topbar component
+  [#353](https://github.com/sharetribe/web-template/pull/353)
 - [fix] Some email templates were not using the correct helper to format currencies and dates based
   on localization. [#351](https://github.com/sharetribe/web-template/pull/351)
 
