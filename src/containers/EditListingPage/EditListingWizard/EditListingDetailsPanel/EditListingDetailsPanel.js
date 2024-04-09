@@ -4,7 +4,12 @@ import classNames from 'classnames';
 
 // Import util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
-import { EXTENDED_DATA_SCHEMA_TYPES, LISTING_STATE_DRAFT } from '../../../../util/types';
+import {
+  EXTENDED_DATA_SCHEMA_TYPES,
+  LISTING_STATE_DRAFT,
+  SCHEMA_TYPE_ENUM,
+  SCHEMA_TYPE_MULTI_ENUM,
+} from '../../../../util/types';
 import {
   isFieldForCategory,
   isFieldForListingType,
@@ -141,17 +146,27 @@ const initialValuesForListingFields = (
   const targetCategoryIds = Object.values(targetCategories);
 
   return listingFieldConfigs.reduce((fields, fieldConfig) => {
-    const { key, scope = 'public', schemaType } = fieldConfig || {};
+    const { key, scope = 'public', schemaType, enumOptions } = fieldConfig || {};
     const namespacePrefix = scope === 'public' ? `pub_` : `priv_`;
     const namespacedKey = `${namespacePrefix}${key}`;
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+    const isEnumSchemaType = schemaType === SCHEMA_TYPE_ENUM;
+    const shouldHaveValidEnumOptions =
+      !isEnumSchemaType ||
+      (isEnumSchemaType && !!enumOptions?.find(conf => conf.option === data?.[key]));
     const isTargetScope = scope === targetScope;
     const isTargetListingType = isFieldForListingType(targetListingType, fieldConfig);
     const isTargetCategory = isFieldForCategory(targetCategoryIds, fieldConfig);
 
-    if (isKnownSchemaType && isTargetScope && isTargetListingType && isTargetCategory) {
-      const fieldValue = data[key] || null;
+    if (
+      isKnownSchemaType &&
+      isTargetScope &&
+      isTargetListingType &&
+      isTargetCategory &&
+      shouldHaveValidEnumOptions
+    ) {
+      const fieldValue = data?.[key] || null;
       return { ...fields, [namespacedKey]: fieldValue };
     }
     return fields;
