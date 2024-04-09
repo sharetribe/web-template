@@ -29,8 +29,9 @@ export const subUnitDivisors = {
  *
  * @param {string} currency
  */
-export const currencyFormatting = currency => {
-  if (!subUnitDivisors[currency]) {
+export const currencyFormatting = (currency, options) => {
+  const { enforceSupportedCurrencies = true } = options || {};
+  if (enforceSupportedCurrencies && !subUnitDivisors[currency]) {
     const currencies = Object.keys(subUnitDivisors);
     throw new Error(
       `Configuration missing for currency: ${currency}. Supported currencies: ${currencies.join(
