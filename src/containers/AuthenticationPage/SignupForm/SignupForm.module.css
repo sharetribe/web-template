@@ -35,3 +35,17 @@
 .bottomWrapper {
   composes: marketplaceModalBottomWrapper from global;
 }
+
+.checkboxesContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 26px;
+}
+
+.checkboxText {
+  composes: marketplaceModalHelperLink from global;
+  padding: 3px 0 5px 0;
+  text-align: left;
+}

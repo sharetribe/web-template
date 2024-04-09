@@ -172,8 +172,16 @@ export const AuthenticationForms = props => {
   ];
 
   const handleSubmitSignup = values => {
-    const { fname, lname, ...rest } = values;
-    const params = { firstName: fname.trim(), lastName: lname.trim(), ...rest };
+    const { fname, lname, ageConsent, newsletterConsent, ...rest } = values;
+
+    const params = {
+      firstName: fname.trim(),
+      lastName: lname.trim(),
+      ageConsent: ageConsent ? ageConsent[0] : 'Not confirmed',
+      newsletterConsent: newsletterConsent ? newsletterConsent[0] : 'Not confirmed',
+      ...rest,
+    };
+
     submitSignup(params);
   };
 

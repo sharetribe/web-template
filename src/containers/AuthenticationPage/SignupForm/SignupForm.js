@@ -7,7 +7,7 @@ import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
-import { Form, PrimaryButton, FieldTextInput } from '../../../components';
+import { Form, PrimaryButton, FieldTextInput, FieldCheckbox } from '../../../components';
 
 import css from './SignupForm.module.css';
 
@@ -149,6 +149,22 @@ const SignupFormComponent = props => (
           </div>
 
           <div className={css.bottomWrapper}>
+            <div className={css.checkboxesContainer}>
+              <FieldCheckbox
+                id="ageConsent"
+                name="ageConsent"
+                label="I am 18 years of age or older"
+                value="Yes, I am 18 years of age or older"
+                textClassName={css.checkboxText}
+              />
+              <FieldCheckbox
+                id="newsletterConsent"
+                name="newsletterConsent"
+                label="Consent to receive email communication"
+                value="Yes, I consent to receive email communication"
+                textClassName={css.checkboxText}
+              />
+            </div>
             {termsAndConditions}
             <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
               <FormattedMessage id="SignupForm.signUp" />
