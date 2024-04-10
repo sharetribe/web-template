@@ -12,6 +12,33 @@ import { getStartOf, parseDateFromISO8601, subtractTime } from '../../util/dates
 import { isFieldForCategory } from '../../util/fieldHelpers';
 
 /**
+ * Omit those listing field parameters, that are not allowed with current category selection
+ *
+ * @param {Object} searchParams current search params
+ * @param {Object} filterConfigs contains listingFieldsConfig and defaultFiltersConfig.
+ * @returns search parameters without currently restricted listing fields
+ */
+export const omitLimitedListingFieldParams = (searchParams, filterConfigs) => {
+  const { listingFieldsConfig, defaultFiltersConfig, listingCategories } = filterConfigs;
+  const categorySearchConfig = defaultFiltersConfig.find(f => f.schemaType === 'category');
+  const validNestedCategoryParamNames = categorySearchConfig
+    ? validURLParamForCategoryData(categorySearchConfig.key, listingCategories, 1, searchParams)
+    : {};
+
+  return Object.entries(searchParams).reduce((picked, searchParam) => {
+    const [searchParamKey, searchParamValue] = searchParam;
+    const foundConfig = listingFieldsConfig.find(
+      f => constructQueryParamName(f.key, f.scope) === searchParamKey
+    );
+    const currentCategories = Object.values(validNestedCategoryParamNames);
+    const isForCategory = isFieldForCategory(currentCategories, foundConfig);
+    const searchParamMaybe =
+      !foundConfig || (foundConfig && isForCategory) ? { [searchParamKey]: searchParamValue } : {};
+    return { ...picked, ...searchParamMaybe };
+  }, {});
+};
+
+/**
  * Validates a filter search param against the default and extended data configuration of listings.
  *
  * All invalid param names and values are dropped
@@ -127,8 +154,6 @@ export const validFilterParams = (params, filterConfigs, dropNonFilterParams = t
   });
   const filterParamNames = [...listingFieldParamNames, ...builtInFilterParamNames];
 
-  const paramEntries = Object.entries(params);
-
   // Note: currently, we only support nested enums with a single default filter
   //       that has schema type: "category"
   const categorySearchConfig = defaultFiltersConfig.find(f => f.schemaType === 'category');
@@ -138,6 +163,10 @@ export const validFilterParams = (params, filterConfigs, dropNonFilterParams = t
   const isParamNameNestedEnumRelated = (paramName, key, isNestedEnum) => {
     return isNestedEnum && key ? paramName.indexOf(key) > -1 : false;
   };
+
+  // search params without category-restricted params
+  const unlimitedSearchParams = omitLimitedListingFieldParams(params, filterConfigs);
+  const paramEntries = Object.entries(unlimitedSearchParams);
 
   const listingFieldsAndBuiltInFilterParamNames = paramEntries.reduce((validParams, entry) => {
     const [paramName, paramValue] = entry;
@@ -247,9 +276,13 @@ export const cleanSearchFromConflictingParams = (searchParams, filterConfigs, so
     searchParams,
     filterConfigs
   );
+
+  // search params without category-restricted params
+  const unlimitedSearchParams = omitLimitedListingFieldParams(searchParams, filterConfigs);
+
   return sortingFiltersActive
-    ? { ...searchParams, [sortConfig.queryParamName]: null }
-    : searchParams;
+    ? { ...unlimitedSearchParams, [sortConfig.queryParamName]: null }
+    : unlimitedSearchParams;
 };
 
 /**
