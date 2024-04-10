@@ -295,17 +295,25 @@ export class SearchPageComponent extends Component {
       !isMobileLayout || (isMobileLayout && this.state.isSearchMapOpenOnMobile);
 
     const isKeywordSearch = isMainSearchTypeKeywords(config);
-    const defaultFilters = isKeywordSearch
-      ? defaultFiltersConfig.filter(f => f.key !== 'keywords')
-      : defaultFiltersConfig;
+    const builtInPrimaryFilters = defaultFiltersConfig.filter(f =>
+      ['categoryLevel'].includes(f.key)
+    );
+    const builtInFilters = isKeywordSearch
+      ? defaultFiltersConfig.filter(f => !['keywords', 'categoryLevel'].includes(f.key))
+      : defaultFiltersConfig.filter(f => !['categoryLevel'].includes(f.key));
     const [customPrimaryFilters, customSecondaryFilters] = groupListingFieldConfigs(
       listingFieldsConfig,
       activeListingTypes
     );
-    const availablePrimaryFilters = [...customPrimaryFilters, ...defaultFilters];
-    const availableFilters = [
+    const availablePrimaryFilters = [
+      ...builtInPrimaryFilters,
       ...customPrimaryFilters,
-      ...defaultFilters,
+      ...builtInFilters,
+    ];
+    const availableFilters = [
+      ...builtInPrimaryFilters,
+      ...customPrimaryFilters,
+      ...builtInFilters,
       ...customSecondaryFilters,
     ];
 

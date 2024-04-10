@@ -213,16 +213,20 @@ export class SearchPageComponent extends Component {
     const validQueryParams = urlQueryParams;
 
     const isKeywordSearch = isMainSearchTypeKeywords(config);
-    const defaultFilters = isKeywordSearch
-      ? defaultFiltersConfig.filter(f => f.key !== 'keywords')
-      : defaultFiltersConfig;
+    const builtInPrimaryFilters = defaultFiltersConfig.filter(f =>
+      ['categoryLevel'].includes(f.key)
+    );
+    const builtInFilters = isKeywordSearch
+      ? defaultFiltersConfig.filter(f => !['keywords', 'categoryLevel'].includes(f.key))
+      : defaultFiltersConfig.filter(f => !['categoryLevel'].includes(f.key));
     const [customPrimaryFilters, customSecondaryFilters] = groupListingFieldConfigs(
       listingFieldsConfig,
       activeListingTypes
     );
     const availableFilters = [
+      ...builtInPrimaryFilters,
       ...customPrimaryFilters,
-      ...defaultFilters,
+      ...builtInFilters,
       ...customSecondaryFilters,
     ];
 
