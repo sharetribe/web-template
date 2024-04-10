@@ -35,6 +35,7 @@ import {
   cleanSearchFromConflictingParams,
   createSearchResultSchema,
   pickListingFieldFilters,
+  omitLimitedListingFieldParams,
 } from './SearchPage.shared';
 
 import FilterComponent from './FilterComponent';
@@ -125,13 +126,16 @@ export class SearchPageComponent extends Component {
         // The same applies to keywords, if the main search type is keyword search.
         const keywordsMaybe = isMainSearchTypeKeywords(config) ? { keywords } : {};
         return {
-          currentQueryParams: {
-            ...mergedQueryParams,
-            ...updatedURLParams,
-            ...keywordsMaybe,
-            address,
-            bounds,
-          },
+          currentQueryParams: omitLimitedListingFieldParams(
+            {
+              ...mergedQueryParams,
+              ...updatedURLParams,
+              ...keywordsMaybe,
+              address,
+              bounds,
+            },
+            filterConfigs
+          ),
         };
       };
 
