@@ -1,0 +1,61 @@
+name: Deploy to QA
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  check-comment:
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '/deploy_qa')
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get branch name based on PR ID
+      uses: andrevalentin/get-branch-name-by-pr@v1
+      id: pr_data
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        pr-id: ${{ github.event.issue.number }}
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ steps.pr_data.outputs.branch }}
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18' # Set this to your Node.js version
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build
+      run: npm run build  # Run your build script, remove if not needed
+
+    - name: Deploy to Heroku
+      uses: akhileshns/heroku-deploy@v3.12.12 # This is a community action for Heroku deployment
+      if: github.event.comment.body == '/deploy_qa'
+      with:
+        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+        heroku_app_name: "stableworx-sharetribe-dev" # Replace with your Heroku app name
+        heroku_email: "stanislav.fedii@gmail.com" # Replace with your Heroku account email
+        usedocker: false  # Set to true if you are deploying a Docker container
+        dontautocreate: true  # Set to false if you want the action to create a Heroku app if it doesn't exist
+        branch: ${{ steps.pr_data.outputs.branch }} # Replace with the branch you want to deploy
+      env:
+        # Port
+        HD_PORT: 8443
+
+        # Client
+        HD_CLIENT_URL: "https://stableworx.qa"
+
+        # Sharetribe
+        HD_NODE_ENV: development
+        HD_REACT_APP_CSP: block
+        HD_REACT_APP_ENV: development
+        HD_REACT_APP_MARKETPLACE_ROOT_URL: stableworx.dev
+        HD_REACT_APP_SHARETRIBE_SDK_CLIENT_ID: ${{ secrets.QA_SHARETRIBE_SDK_CLIENT_ID }}
+        HD_REACT_APP_SHARETRIBE_SDK_CLIENT_SECRET: ${{ secrets.QA_SHARETRIBE_SDK_CLIENT_SECRET }}
+        HD_REACT_APP_SHARETRIBE_USING_SSL: true
+        HD_REACT_APP_STRIPE_PUBLISHABLE_KEY: ${{ secrets.QA_STRIPE_PUBLISHABLE_KEY }}
+        HD_SERVER_SHARETRIBE_TRUST_PROXY: true
