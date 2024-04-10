@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] Update Node.js version to >= 18.20.1 (engine) 20.12.1 (circleci)
+  [#360](https://github.com/sharetribe/web-template/pull/360)
 - [change] formatMoney should use correct formattingOptions (JPY gets correct formatting)
   [#356](https://github.com/sharetribe/web-template/pull/356)
 - [change] Twitter's brand and logo has changed to X.
