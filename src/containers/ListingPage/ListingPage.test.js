@@ -52,6 +52,27 @@ const listingTypes = [
   },
 ];
 
+const capitalizeFirstLetter = str => str.charAt(0).toUpperCase() + str.slice(1);
+const addSpaces = str => str.split('-').join(' ');
+const labelize = str => addSpaces(capitalizeFirstLetter(str));
+
+const generateCategories = optionStrings => {
+  return optionStrings.reduce((converted, entry) => {
+    const isArray = Array.isArray(entry);
+    const option = isArray
+      ? { id: entry[0], name: labelize(entry[0]), subcategories: generateCategories(entry[1]) }
+      : { id: entry, name: labelize(entry) };
+    return [...converted, option];
+  }, []);
+};
+const categories = generateCategories([
+  ['dogs', ['labradors', 'poodles']],
+  ['cats', ['burmese', 'egyptian-mau']],
+  ['fish', [['freshwater', ['grayling', 'arctic-char', 'pike']], 'saltwater']],
+  ['birds', ['parrot', 'macaw']],
+]);
+//console.log(JSON.stringify(categories, null, 2));
+
 const listingFields = [
   {
     key: 'cat',
@@ -59,6 +80,10 @@ const listingFields = [
     listingTypeConfig: {
       limitToListingTypeIds: true,
       listingTypeIds: ['sell-bicycles'],
+    },
+    categoryConfig: {
+      limitToCategoryIds: true,
+      categoryIds: ['cats'],
     },
     schemaType: 'enum',
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
@@ -104,6 +129,7 @@ const getConfig = variantType => {
     listingFields: {
       listingFields,
     },
+    categories: { categories },
     layout: {
       ...hostedConfig.layout,
       listingPage: { variantType },
@@ -115,9 +141,10 @@ describe('ListingPage variants', () => {
   const id = 'listing1';
   const slug = 'listing1-title';
   const publicData = {
-    listingType: 'sell-bicycles',
+    listingType: 'sell-bicycles', // Ensure listing field can be tied to listing type
     transactionProcessAlias: 'default-purchase/release-1',
     unitType: 'item',
+    categoryLevel1: 'cats', // Ensure listing field can be tied to category
     cat: 'cat_1',
   };
   const listing1 = createListing(id, { publicData }, { author: createUser('user-1') });
