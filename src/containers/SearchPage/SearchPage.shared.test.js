@@ -1,4 +1,5 @@
 import {
+  omitLimitedListingFieldParams,
   validURLParamForExtendedData,
   validFilterParams,
   validUrlQueryParamsFromProps,
@@ -65,6 +66,29 @@ const listingFieldsConfig = [
       group: 'secondary',
     },
   },
+  {
+    key: 'cat',
+    scope: 'public',
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['sell-bicycles'],
+    },
+    categoryConfig: {
+      limitToCategoryIds: true,
+      categoryIds: ['a'],
+    },
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'cat1', label: 'C1' },
+      { option: 'cat2', label: 'C2' },
+      { option: 'cat3', label: 'C3' },
+    ],
+    filterConfig: {
+      indexForSearch: true,
+      label: 'Cat',
+      group: 'primary',
+    },
+  },
 ];
 
 const defaultFiltersConfig = [
@@ -121,6 +145,28 @@ const sortConfig = {
 };
 
 describe('SearchPage.helpers', () => {
+  describe('omitLimitedListingFieldParams', () => {
+    it('returns everything if no category limit is set', () => {
+      const params = { pub_rider: 'women', other_param: 'somevalue' };
+      const validParam = omitLimitedListingFieldParams(params, filterConfigs);
+      expect(validParam).toEqual({ pub_rider: 'women', other_param: 'somevalue' });
+    });
+    it('returns filtered parameters if category limit affects', () => {
+      const params = { pub_cat: 'cat1', other_param: 'somevalue' };
+      const validParam = omitLimitedListingFieldParams(params, filterConfigs);
+      expect(validParam).toEqual({ other_param: 'somevalue' });
+    });
+    it('returns everything if correct category is set', () => {
+      const params = { pub_categoryLevel1: 'a', pub_cat: 'cat1', other_param: 'somevalue' };
+      const validParam = omitLimitedListingFieldParams(params, filterConfigs);
+      expect(validParam).toEqual({
+        pub_categoryLevel1: 'a',
+        pub_cat: 'cat1',
+        other_param: 'somevalue',
+      });
+    });
+  });
+
   describe('validURLParamForExtendedData', () => {
     it('returns a valid parameter', () => {
       const validParam = validURLParamForExtendedData(
@@ -507,7 +553,7 @@ describe('SearchPage.helpers', () => {
         listingFieldsConfig,
         activeListingTypes
       );
-      expect(primary).toEqual([listingFieldsConfig[0]]);
+      expect(primary).toEqual([listingFieldsConfig[0], listingFieldsConfig[3]]);
       expect(secondary).toEqual([listingFieldsConfig[1], listingFieldsConfig[2]]);
     });
   });
