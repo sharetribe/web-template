@@ -2,10 +2,13 @@ import React from 'react';
 import { arrayOf, shape, string } from 'prop-types';
 import { Field } from 'react-final-form';
 import classNames from 'classnames';
-import { ValidationError } from '..';
+
+import { richText } from '../../util/richText';
+import { ValidationError } from '../../components';
 
 import css from './FieldSelectTree.module.css';
 
+const MIN_LENGTH_FOR_LONG_WORDS = 16;
 /**
  * Pick valid option configurations with format like:
  * [{ option, label, suboptions: [{ option, label }] }]
@@ -47,6 +50,11 @@ const Option = props => {
   const isClickable = !isOptSelected || (isOptSelected && isSuboptionSelected);
   const cursorMaybe = isClickable ? { cursor: 'pointer' } : { cursor: 'default' };
 
+  const optionLabel = richText(label || option, {
+    longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
+    longWordClass: css.longWord,
+  });
+
   const buttonClasses = classNames({
     [css.optionBtn]: !isOptSelected,
     [css.optionBtnSelected]: isOptSelected,
@@ -64,7 +72,7 @@ const Option = props => {
           }
         }}
       >
-        {label || option}
+        {optionLabel}
       </button>
 
       {hasSuboptions(config) && isOptSelected ? (
