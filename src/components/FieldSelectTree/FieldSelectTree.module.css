@@ -58,3 +58,8 @@
     color: var(--marketplaceColor);
   }
 }
+
+.longWord {
+  word-break: break-word;
+  hyphens: auto;
+}
