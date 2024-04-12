@@ -53,7 +53,7 @@ jobs:
         HD_NODE_ENV: development
         HD_REACT_APP_CSP: block
         HD_REACT_APP_ENV: development
-        HD_REACT_APP_MARKETPLACE_ROOT_URL: stableworx.dev
+        HD_REACT_APP_MARKETPLACE_ROOT_URL: https://stableworx.dev
         HD_REACT_APP_SHARETRIBE_SDK_CLIENT_ID: ${{ secrets.QA_SHARETRIBE_SDK_CLIENT_ID }}
         HD_REACT_APP_SHARETRIBE_SDK_CLIENT_SECRET: ${{ secrets.QA_SHARETRIBE_SDK_CLIENT_SECRET }}
         HD_REACT_APP_SHARETRIBE_USING_SSL: true
