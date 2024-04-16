@@ -365,6 +365,8 @@ export const ListingPageComponent = props => {
               listingId={currentListing.id}
               mapsConfig={config.maps}
             />
+            <iframe id='GeistWidget' src='https://widget.geist.chat/76426817-5c69-4bf0-9c82-b10c972a0abb'></iframe>
+            <script src='https://unpkg.com/geist-chat-widget' defer></script>
             <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
             <SectionAuthorMaybe
               title={title}
