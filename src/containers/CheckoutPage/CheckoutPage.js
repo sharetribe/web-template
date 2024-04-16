@@ -35,7 +35,7 @@ import {
 import CustomTopbar from './CustomTopbar';
 import CheckoutPageWithPayment, {
   loadInitialData,
-} from './CheckoutPageWithoutPayment';
+} from './CheckoutPageWithPayment';
 import CheckoutPageWithInquiryProcess from './CheckoutPageWithInquiryProcess';
 
 const STORAGE_KEY = 'CheckoutPage';
