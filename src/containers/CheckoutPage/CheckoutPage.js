@@ -34,7 +34,7 @@ import {
 
 import CustomTopbar from './CustomTopbar';
 import CheckoutPageWithPayment, {
-  loadInitialData,
+  loadInitialDataForStripePayments,
 } from './CheckoutPageWithPayment';
 import CheckoutPageWithInquiryProcess from './CheckoutPageWithInquiryProcess';
 
@@ -78,7 +78,7 @@ const EnhancedCheckoutPage = props => {
     // This is for processes using payments with Stripe integration
     if (getProcessName(data) !== INQUIRY_PROCESS_NAME) {
       // Fetch speculateTransition for transactions that include bookings or purchases
-      loadInitialData({
+      loadInitialDataForStripePayments({
         pageData: data || {},
         fetchSpeculatedTransaction,
         config,
