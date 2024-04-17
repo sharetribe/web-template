@@ -493,6 +493,125 @@ export const getHostedConfiguration = () => {
         },
       ],
     },
+    userFields: {
+      userFields: [
+        {
+          key: 'cuisine',
+          scope: 'public',
+          schemaType: 'enum',
+          enumOptions: [
+            { option: 'italian', label: 'Italian' },
+            { option: 'chinese', label: 'Chinese' },
+            { option: 'thai', label: 'Thai' },
+          ],
+          showConfig: {
+            label: 'Favorite cuisine',
+          },
+          saveConfig: {
+            label: 'Favorite cuisine',
+            displayInSignUp: true,
+            isRequired: true,
+          },
+          userTypeConfig: {
+            limitToUserTypeIds: true,
+            userTypeIds: ['a', 'b', 'c'],
+          },
+        },
+        {
+          key: 'canCook',
+          scope: 'public',
+          schemaType: 'boolean',
+          showConfig: {
+            label: 'Can you cook?',
+          },
+          saveConfig: {
+            label: 'Can you cook?',
+            displayInSignUp: true,
+            isRequired: true,
+          },
+          userTypeConfig: {
+            limitToUserTypeIds: true,
+            userTypeIds: ['a', 'b', 'c'],
+          },
+        },
+        {
+          key: 'numberOfCookbooks',
+          scope: 'public',
+          schemaType: 'long',
+          showConfig: {
+            label: 'How many cookbooks do you have',
+          },
+          saveConfig: {
+            label: 'How many cookbooks do you have',
+            displayInSignUp: true,
+            isRequired: true,
+          },
+          userTypeConfig: {
+            limitToUserTypeIds: true,
+            userTypeIds: ['a', 'b', 'c'],
+          },
+        },
+        {
+          key: 'kitchenDescription',
+          scope: 'public',
+          schemaType: 'text',
+          showConfig: {
+            label: 'Description of your kitchen',
+          },
+          saveConfig: {
+            label: 'Description of your kitchen',
+            displayInSignUp: true,
+            isRequired: true,
+          },
+          userTypeConfig: {
+            limitToUserTypeIds: true,
+            userTypeIds: ['a', 'b', 'c'],
+          },
+        },
+        {
+          key: 'dietaryPreferences',
+          scope: 'public',
+          schemaType: 'multi-enum',
+          enumOptions: [
+            { option: 'vegan', label: 'Vegan' },
+            { option: 'vegetarian', label: 'Vegetarian' },
+            { option: 'gluten-free', label: 'Gluten free' },
+            { option: 'dairy-free', label: 'Dairy free' },
+            { option: 'nut-free', label: 'Nut free' },
+            { option: 'egg-free', label: 'Egg free' },
+            { option: 'low-carb', label: 'Low carb' },
+            { option: 'low-fat', label: 'Low fat' },
+          ],
+          showConfig: {
+            label: 'Dietary preferences',
+            displayInProfile: true,
+          },
+          saveConfig: {
+            label: 'Dietary preferences',
+            displayInSignUp: true,
+            isRequired: true,
+          },
+          userTypeConfig: {
+            limitToUserTypeIds: true,
+            userTypeIds: ['a', 'b', 'c'],
+          },
+        },
+        {
+          key: 'notShownInProfileAttribute',
+          scope: 'public',
+          schemaType: 'text',
+          showConfig: {
+            label: 'Not shown in profile',
+            displayInProfile: false,
+          },
+          saveConfig: {
+            label: "Don't show in profile",
+            displayInSignUp: false,
+            isRequired: false,
+          },
+        },
+      ],
+    },
     search: {
       dateRangeFilter: {
         enabled: true,

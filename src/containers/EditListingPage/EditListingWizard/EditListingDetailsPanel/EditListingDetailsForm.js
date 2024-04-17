@@ -11,9 +11,15 @@ import { EXTENDED_DATA_SCHEMA_TYPES, propTypes } from '../../../../util/types';
 import { maxLength, required, composeValidators } from '../../../../util/validators';
 
 // Import shared components
-import { Form, Button, FieldSelect, FieldTextInput, Heading } from '../../../../components';
+import {
+  Form,
+  Button,
+  FieldSelect,
+  FieldTextInput,
+  Heading,
+  CustomExtendedDataField,
+} from '../../../../components';
 // Import modules from this directory
-import CustomExtendedDataField from '../CustomExtendedDataField';
 import css from './EditListingDetailsForm.module.css';
 
 const TITLE_MAX_LENGTH = 60;

@@ -4,12 +4,14 @@ import { compose } from 'redux';
 import { Field, Form as FinalForm } from 'react-final-form';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
+import arrayMutators from 'final-form-arrays';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { ensureCurrentUser } from '../../../util/data';
 import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../util/errors';
+import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
 
 import {
   Form,
@@ -19,6 +21,7 @@ import {
   IconSpinner,
   FieldTextInput,
   H4,
+  CustomExtendedDataField,
 } from '../../../components';
 
 import css from './ProfileSettingsForm.module.css';
@@ -54,6 +57,7 @@ class ProfileSettingsFormComponent extends Component {
     return (
       <FinalForm
         {...this.props}
+        mutators={{ ...arrayMutators }}
         render={fieldRenderProps => {
           const {
             className,
@@ -72,6 +76,8 @@ class ProfileSettingsFormComponent extends Component {
             form,
             marketplaceName,
             values,
+            userFields,
+            userType,
           } = fieldRenderProps;
 
           const user = ensureCurrentUser(currentUser);
@@ -187,6 +193,13 @@ class ProfileSettingsFormComponent extends Component {
           const submitDisabled =
             invalid || pristine || pristineSinceLastSubmit || uploadInProgress || submitInProgress;
 
+          const userFieldProps = getPropsForCustomUserFieldInputs(
+            userFields,
+            intl,
+            userType,
+            false
+          );
+
           return (
             <Form
               className={classes}
@@ -289,7 +302,7 @@ class ProfileSettingsFormComponent extends Component {
                   />
                 </div>
               </div>
-              <div className={classNames(css.sectionContainer, css.lastSection)}>
+              <div className={classNames(css.sectionContainer)}>
                 <H4 as="h2" className={css.sectionTitle}>
                   <FormattedMessage id="ProfileSettingsForm.bioHeading" />
                 </H4>
@@ -303,6 +316,11 @@ class ProfileSettingsFormComponent extends Component {
                 <p className={css.bioInfo}>
                   <FormattedMessage id="ProfileSettingsForm.bioInfo" values={{ marketplaceName }} />
                 </p>
+              </div>
+              <div className={classNames(css.sectionContainer, css.lastSection)}>
+                {userFieldProps.map(fieldProps => (
+                  <CustomExtendedDataField {...fieldProps} />
+                ))}
               </div>
               {submitError}
               <Button
