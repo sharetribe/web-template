@@ -506,7 +506,6 @@ export const getHostedConfiguration = () => {
           ],
           showConfig: {
             label: 'Favorite cuisine',
-            displayInProfile: true,
           },
           saveConfig: {
             label: 'Favorite cuisine',
@@ -524,7 +523,6 @@ export const getHostedConfiguration = () => {
           schemaType: 'boolean',
           showConfig: {
             label: 'Can you cook?',
-            displayInProfile: true,
           },
           saveConfig: {
             label: 'Can you cook?',
@@ -542,7 +540,6 @@ export const getHostedConfiguration = () => {
           schemaType: 'long',
           showConfig: {
             label: 'How many cookbooks do you have',
-            displayInProfile: true,
           },
           saveConfig: {
             label: 'How many cookbooks do you have',
@@ -560,7 +557,6 @@ export const getHostedConfiguration = () => {
           schemaType: 'text',
           showConfig: {
             label: 'Description of your kitchen',
-            displayInProfile: true,
           },
           saveConfig: {
             label: 'Description of your kitchen',
