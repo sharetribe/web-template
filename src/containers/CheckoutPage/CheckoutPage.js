@@ -18,7 +18,7 @@ import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
 // Import shared components
 import { NamedRedirect, Page } from '../../components';
 
-// Session helpers file needs to be imported before CheckoutPageWithPayment and CheckoutPageWithInquiryProcess
+// Session helpers file needs to be imported before CheckoutPageWithoutPayment and CheckoutPageWithInquiryProcess
 import { storeData, clearData, handlePageData } from './CheckoutPageSessionHelpers';
 
 // Import modules from this directory
@@ -33,9 +33,9 @@ import {
 } from './CheckoutPage.duck';
 
 import CustomTopbar from './CustomTopbar';
-import CheckoutPageWithPayment, {
-  loadInitialDataForStripePayments,
-} from './CheckoutPageWithPayment';
+import CheckoutPageWithoutPayment, {
+  loadInitialData,
+} from './CheckoutPageWithoutPayment';
 import CheckoutPageWithInquiryProcess from './CheckoutPageWithInquiryProcess';
 
 const STORAGE_KEY = 'CheckoutPage';
@@ -78,7 +78,7 @@ const EnhancedCheckoutPage = props => {
     // This is for processes using payments with Stripe integration
     if (getProcessName(data) !== INQUIRY_PROCESS_NAME) {
       // Fetch speculateTransition for transactions that include bookings or purchases
-      loadInitialDataForStripePayments({
+      loadInitialData({
         pageData: data || {},
         fetchSpeculatedTransaction,
         config,
@@ -136,7 +136,7 @@ const EnhancedCheckoutPage = props => {
       {...props}
     />
   ) : processName && !isInquiryProcess && !speculateTransactionInProgress ? (
-    <CheckoutPageWithPayment
+    <CheckoutPageWithoutPayment
       config={config}
       routeConfiguration={routeConfiguration}
       intl={intl}
