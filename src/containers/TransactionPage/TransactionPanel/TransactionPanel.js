@@ -191,7 +191,7 @@ export class TransactionPanelComponent extends Component {
     // Define la variable privateMessagingEnabled
     // True permite los mensajes privados.
     // O false si deseas deshabilitar los mensajes privados
-    const privateMessagingEnabled = false;
+    const privateMessagingEnabled = true;
 
     return (
       <div className={classes}>
