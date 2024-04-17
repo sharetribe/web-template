@@ -19,13 +19,15 @@
  *                                  ProfileSettingsPage and AuthenticationPage.
  * - showConfig:                    Configuration for rendering user information. (How the field should be shown.)
  *   - label:                         Label for the saved data.
- *   - displayInProfile               Can be used to hide field content (of type enum, boolean, or long) from profile page.
- *                                    Default value: true,
+ *   - displayInProfile (optional):   Can be used to hide field content from profile page.
+ *                                    Default value: true.
  * - saveConfig:                    Configuration for adding and modifying extended data fields.
  *   - label:                         Label for the input field.
  *   - placeholderMessage (optional): Default message for user input.
  *   - isRequired (optional):         Is the field required for users to fill
  *   - requiredMessage (optional):    Message for mandatory fields.
+ *   - displayInSignUp (optional):    Can be used to show field input on sign up page.
+ *                                    Default value: true.
  * - userTypeConfig:                Configuration for limiting user field to specific user types.
  *   - limitToUserTypeIds:            Can be used to determine whether to limit the field to certain user types. The
  *                                    Console based asset configurations do not yet support user types, so in hosted configurations
@@ -45,7 +47,6 @@ export const userFields = [
     ],
     showConfig: {
       label: 'Favorite cuisine',
-      displayInProfile: true,
     },
     saveConfig: {
       label: 'Favorite cuisine',
@@ -63,7 +64,6 @@ export const userFields = [
     schemaType: 'boolean',
     showConfig: {
       label: 'Can you cook?',
-      displayInProfile: true,
     },
     saveConfig: {
       label: 'Can you cook?',
@@ -82,7 +82,6 @@ export const userFields = [
     schemaType: 'long',
     showConfig: {
       label: 'How many cookbooks do you have',
-      displayInProfile: true,
     },
     saveConfig: {
       label: 'How many cookbooks do you have',
@@ -100,7 +99,6 @@ export const userFields = [
     schemaType: 'text',
     showConfig: {
       label: 'Description of your kitchen',
-      displayInProfile: true,
     },
     saveConfig: {
       label: 'Description of your kitchen',
@@ -120,7 +118,6 @@ export const userFields = [
     schemaType: 'text',
     showConfig: {
       label: 'How do people arrive at your kitchen?',
-      displayInProfile: true,
     },
     saveConfig: {
       label: 'How do people arrive at your kitchen?',
@@ -148,7 +145,6 @@ export const userFields = [
     ],
     showConfig: {
       label: 'Dietary preferences',
-      displayInProfile: true,
     },
     saveConfig: {
       displayInSignUp: true,
