@@ -14,6 +14,17 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Add support for user fields, which will be released later as a new hosted asset.
+
+  - The hosted asset will support enums, multi-enums, and text fields in the same manner as listing
+    fields.
+  - User fields will be stored in public data at this point.
+  - The ProfilePage will display these fields by default.
+  - The ProfileSettingsPage is the default location for adding or editing user fields.
+  - The AuthenticationPage (SignupForm and ConfirmSignupForm) can also collect user field data.
+
+  [#377](https://github.com/sharetribe/web-template/pull/337)
+
 - [change] Update Node.js version to >= 18.20.1 (engine) 20.12.1 (circleci)
   [#360](https://github.com/sharetribe/web-template/pull/360)
 - [change] formatMoney should use correct formattingOptions (JPY gets correct formatting)
