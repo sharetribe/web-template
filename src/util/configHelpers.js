@@ -305,6 +305,43 @@ const validKey = (key, allKeys) => {
   return [isUniqueKey, { key }];
 };
 
+const validUserTypesForUserConfig = (userTypeConfig, userTypesInUse = null) => {
+  const { limitToUserTypeIds, userTypeIds } = userTypeConfig;
+
+  // When no user types are in use, fields by default cannot be limited to a subset of types
+  if (!userTypesInUse) {
+    const isValid = true;
+    const validValue = {
+      userTypeConfig: {
+        limitToUserTypeIds: false,
+      },
+    };
+
+    return [isValid, validValue];
+  }
+
+  const isArray = Array.isArray(userTypeIds);
+  const validatedUserTypes = isArray ? userTypeIds.filter(ut => userTypesInUse?.includes(ut)) : [];
+
+  // If a field is limited to user type ids, it has to have at least one valid type
+  const hasValidUserTypes = validatedUserTypes.length > 0;
+  const isValid = hasValidUserTypes || !limitToUserTypeIds;
+
+  const validValue = hasValidUserTypes
+    ? {
+        userTypeConfig: {
+          limitToUserTypeIds,
+          userTypeIds: validatedUserTypes,
+        },
+      }
+    : {
+        userTypeConfig: {
+          limitToUserTypeIds: false,
+        },
+      };
+  return [isValid, validValue];
+};
+
 const validListingTypesForListingConfig = (includeForListingTypes, listingTypesInUse) => {
   const isUndefinedOrNull = includeForListingTypes == null;
   const isArray = Array.isArray(includeForListingTypes);
@@ -353,11 +390,13 @@ const validSchemaOptions = (enumOptions, schemaType) => {
     ? enumOptions.filter(pickOptionShapes).length === enumOptions.length
     : false;
   const isEnumSchemaType = ['enum', 'multi-enum'].includes(schemaType);
-  const shouldHaveSchemaOptions = isEnumSchemaType && !isUndefined;
+  const shouldHaveSchemaOptions = isEnumSchemaType && !isUndefined && enumOptions.length > 0;
 
-  const isValid = isUndefined || (shouldHaveSchemaOptions && arrayContainsOptionShapes);
+  const isValid = !isEnumSchemaType || (shouldHaveSchemaOptions && arrayContainsOptionShapes);
+
   const schemaOptionsMaybe =
     isEnumSchemaType && isArray ? { enumOptions } : isEnumSchemaType ? { enumOptions: [] } : {};
+
   return [isValid, schemaOptionsMaybe];
 };
 
@@ -423,6 +462,7 @@ const validShowConfig = config => {
   if (isUndefined) {
     return [true, {}];
   }
+
   // Validate: label, isDetail.
   const [isValidLabel, label] = validLabel(config.label);
   const [isValidIsDetail, isDetail] = validBoolean('isDetail', config.isDetail, true);
@@ -432,6 +472,30 @@ const validShowConfig = config => {
     showConfig: {
       ...label,
       ...isDetail,
+    },
+  };
+  return [isValid, validValue];
+};
+
+const validUserShowConfig = config => {
+  const isUndefined = typeof config === 'undefined';
+  if (isUndefined) {
+    return [true, {}];
+  }
+
+  // Validate: label, displayInProfile.
+  const [isValidLabel, label] = validLabel(config.label);
+  const [isValidDisplayInProfile, displayInProfile] = validBoolean(
+    'displayInProfile',
+    config.displayInProfile,
+    true
+  );
+
+  const isValid = isValidLabel && isValidDisplayInProfile;
+  const validValue = {
+    showConfig: {
+      ...label,
+      ...displayInProfile,
     },
   };
   return [isValid, validValue];
@@ -472,6 +536,43 @@ const validSaveConfig = config => {
       ...label,
       ...placeholderMessage,
       ...isRequired,
+      ...requiredMessage,
+    },
+  };
+  return [isValid, validValue];
+};
+const validUserSaveConfig = config => {
+  const isUndefined = typeof config === 'undefined';
+  if (isUndefined) {
+    return [true, {}];
+  }
+  // Validate: label, placeholderMessage, required, displayInSignUp, requiredMessage
+  const [isValidLabel, label] = validLabel(config.label);
+  const [isValidPlaceholder, placeholderMessage] = validPlaceholderMessage(
+    config.placeholderMessage
+  );
+
+  // At this point, all user fields are required by default, and shown in signup by default.
+  const [isValidIsRequired, isRequired] = validBoolean('isRequired', config.isRequired, true);
+  const [isValidDisplayInSignUp, displayInSignUp] = validBoolean(
+    'displayInSignUp',
+    config.displayInSignUp,
+    true
+  );
+  const [isValidRequiredMessage, requiredMessage] = validRequiredMessage(config.requiredMessage);
+
+  const isValid =
+    isValidLabel &&
+    isValidPlaceholder &&
+    isValidIsRequired &&
+    isValidDisplayInSignUp &&
+    isValidRequiredMessage;
+  const validValue = {
+    saveConfig: {
+      ...label,
+      ...placeholderMessage,
+      ...isRequired,
+      ...displayInSignUp,
       ...requiredMessage,
     },
   };
@@ -536,6 +637,57 @@ const validListingFields = (listingFields, listingTypesInUse) => {
     } else {
       return acc;
     }
+  }, []);
+};
+
+const getUserTypeStringsInUse = userTypes => {
+  return userTypes.map(ut => `${ut.userType}`);
+};
+
+const validUserFields = (userFields, userTypesInUse) => {
+  const keys = userFields.map(d => d.key);
+  const scopeOptions = ['public', 'private', 'protected', 'metadata'];
+  const validSchemaTypes = ['enum', 'multi-enum', 'text', 'long', 'boolean'];
+
+  return userFields.reduce((acc, data) => {
+    const schemaType = data.schemaType;
+
+    const validationData = Object.entries(data).reduce(
+      (acc, entry) => {
+        const [name, value] = entry;
+
+        // Validate each property
+        const [isValid, prop] =
+          name === 'key'
+            ? validKey(value, keys)
+            : name === 'label'
+            ? validLabel(value)
+            : name === 'scope'
+            ? validEnumString('scope', value, scopeOptions, 'public')
+            : name === 'schemaType'
+            ? validEnumString('schemaType', value, validSchemaTypes)
+            : name === 'enumOptions'
+            ? validSchemaOptions(value, schemaType)
+            : name === 'showConfig'
+            ? validUserShowConfig(value)
+            : name === 'userTypeConfig'
+            ? validUserTypesForUserConfig(value, userTypesInUse)
+            : name === 'saveConfig'
+            ? validUserSaveConfig(value)
+            : [true, value];
+
+        const hasFoundValid = !(acc.isValid === false || isValid === false);
+        // Let's warn about wrong data in listing extended data config
+        if (isValid === false) {
+          console.warn(`Unsupported user extended data configurations detected (${name}) in`, data);
+        }
+
+        return { config: { ...acc.config, ...prop }, isValid: hasFoundValid };
+      },
+      { config: {}, isValid: true }
+    );
+
+    return validationData.isValid ? [...acc, validationData.config] : acc;
   }, []);
 };
 
@@ -671,6 +823,51 @@ const restructureListingFields = hostedListingFields => {
   );
 };
 
+///////////////////////////////////////
+// Restructure hosted user config //
+///////////////////////////////////////
+
+const restructureUserFields = hostedUserFields => {
+  return (
+    hostedUserFields?.map(userField => {
+      const {
+        key,
+        scope,
+        schemaType,
+        enumOptions,
+        label,
+        showConfig = {},
+        saveConfig = {},
+        userTypeConfig = {},
+        ...rest
+      } = userField;
+      const defaultLabel = label || key;
+      const enumOptionsMaybe = ['enum', 'multi-enum'].includes(schemaType) ? { enumOptions } : {};
+      const { required: isRequired, ...restSaveConfig } = saveConfig;
+
+      return key
+        ? {
+            key,
+            scope,
+            schemaType,
+            ...enumOptionsMaybe,
+            showConfig: {
+              ...showConfig,
+              label: showConfig.label || defaultLabel,
+            },
+            saveConfig: {
+              ...restSaveConfig,
+              isRequired,
+              label: saveConfig.label || defaultLabel,
+            },
+            userTypeConfig,
+            ...rest,
+          }
+        : null;
+    }) || []
+  );
+};
+
 ///////////////////////////
 // Merge listing configs //
 ///////////////////////////
@@ -702,7 +899,7 @@ const mergeListingConfig = (hostedConfig, defaultConfigs) => {
   const { listingTypes: defaultListingTypes, listingFields: defaultListingFields, ...rest } =
     defaultConfigs.listing || {};
 
-  // When debugging, include default configs.
+  // When debugging, include default configs by passing 'true' here.
   // Otherwise, use listing types and fields from hosted assets.
   const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
   const listingTypes = shouldMerge
@@ -719,6 +916,30 @@ const mergeListingConfig = (hostedConfig, defaultConfigs) => {
     listingFields: validListingFields(listingFields, listingTypesInUse),
     listingTypes: validListingTypes(listingTypes),
     enforceValidListingType: defaultConfigs.listing.enforceValidListingType,
+  };
+};
+
+const mergeUserConfig = (hostedConfig, defaultConfigs) => {
+  const hostedUserFields = restructureUserFields(hostedConfig?.userFields?.userFields);
+
+  const { userFields: defaultUserFields, userTypes: defaultUserTypes } = defaultConfigs.user;
+
+  // When debugging, include default configs by passing 'true' here.
+  // Otherwise, use user fields from hosted assets.
+  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
+  const userFields = shouldMerge
+    ? union(hostedUserFields, defaultUserFields, 'key')
+    : hostedUserFields;
+
+  // To include user type validation (if you have user types in your default configuration),
+  // pass userTypes to the validUserFields function as well:
+  // const userTypes = getUserTypeStringsInUse(defaultUserTypes);
+  // return {
+  //   userFields: validUserFields(userFields, userTypes)
+  // };
+
+  return {
+    userFields: validUserFields(userFields),
   };
 };
 
@@ -931,6 +1152,7 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
 
     // Listing configuration comes entirely from hosted assets
     listing: mergeListingConfig(configAsset, defaultConfigs),
+    user: mergeUserConfig(configAsset, defaultConfigs),
 
     // Hosted search configuration does not yet contain sortConfig
     search: mergeSearchConfig(configAsset.search, defaultConfigs.search),
