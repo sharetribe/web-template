@@ -184,14 +184,9 @@ export class TransactionPanelComponent extends Component {
     const showSendMessageForm =
       !isCustomerBanned && !isCustomerDeleted && !isProviderBanned && !isProviderDeleted;
 
-    const deliveryMethod = protectedData?.deliveryMethod;
+    const deliveryMethod = protectedData?.deliveryMethod || 'none';
 
     const classes = classNames(rootClassName || css.root, className);
-    // Ine
-    // Define la variable privateMessagingEnabled
-    // True permite los mensajes privados.
-    // O false si deseas deshabilitar los mensajes privados
-    const privateMessagingEnabled = true;
 
     return (
       <div className={classes}>
@@ -286,30 +281,23 @@ export class TransactionPanelComponent extends Component {
               activityFeed={activityFeed}
               isConversation={isInquiryProcess}
             />
-            {/* incorporamos: privateMessagingEnabled ? ( para deshabilitar los mensajes privados  */}
-            {privateMessagingEnabled ? (
-              showSendMessageForm ? (
-                <SendMessageForm
-                  formId={this.sendMessageFormName}
-                  rootClassName={css.sendMessageForm}
-                  messagePlaceholder={intl.formatMessage(
-                    { id: 'TransactionPanel.sendMessagePlaceholder' },
-                    { name: otherUserDisplayNameString }
-                  )}
-                  inProgress={sendMessageInProgress}
-                  sendMessageError={sendMessageError}
-                  onFocus={this.onSendMessageFormFocus}
-                  onBlur={this.onSendMessageFormBlur}
-                  onSubmit={this.onMessageSubmit}
-                />
-              ) : (
-                <div className={css.sendingMessageNotAllowed}>
-                  <FormattedMessage id="TransactionPanel.sendingMessageNotAllowed" />
-                </div>
-              )
+            {showSendMessageForm ? (
+              <SendMessageForm
+                formId={this.sendMessageFormName}
+                rootClassName={css.sendMessageForm}
+                messagePlaceholder={intl.formatMessage(
+                  { id: 'TransactionPanel.sendMessagePlaceholder' },
+                  { name: otherUserDisplayNameString }
+                )}
+                inProgress={sendMessageInProgress}
+                sendMessageError={sendMessageError}
+                onFocus={this.onSendMessageFormFocus}
+                onBlur={this.onSendMessageFormBlur}
+                onSubmit={this.onMessageSubmit}
+              />
             ) : (
               <div className={css.sendingMessageNotAllowed}>
-                
+                <FormattedMessage id="TransactionPanel.sendingMessageNotAllowed" />
               </div>
             )}
 
