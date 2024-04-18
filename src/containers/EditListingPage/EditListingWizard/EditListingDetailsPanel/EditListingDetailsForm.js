@@ -448,7 +448,7 @@ EditListingDetailsFormComponent.propTypes = {
     })
   ).isRequired,
   hasExistingListingType: bool,
-  listingFieldsConfig: propTypes.listingFieldsConfig,
+  listingFieldsConfig: propTypes.listingFields,
 };
 
 export default compose(injectIntl)(EditListingDetailsFormComponent);
