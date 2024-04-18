@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] Update moment-timezone library to v0.5.45
+  [#362](https://github.com/sharetribe/web-template/pull/362)
 - [add] Update translations for de.json, es.json, and fr.json.
   [#361](https://github.com/sharetribe/web-template/pull/361)
 - [add] Add support for user fields, which will be released later as a new hosted asset.
