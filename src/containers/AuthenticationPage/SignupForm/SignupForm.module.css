@@ -10,6 +10,9 @@
   }
 }
 
+.defaultUserFields {
+}
+
 .name {
   display: flex;
   justify-content: space-between;
