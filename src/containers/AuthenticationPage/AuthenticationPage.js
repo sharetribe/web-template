@@ -59,37 +59,39 @@ import { FacebookLogo, GoogleLogo } from './socialLoginLogos';
 // Social login buttons are needed by AuthenticationForms
 export const SocialLoginButtonsMaybe = props => {
   const routeConfiguration = useRouteConfiguration();
-  const { isLogin, showFacebookLogin, showGoogleLogin, from } = props;
+  const { isLogin, showFacebookLogin, showGoogleLogin, from, userType } = props;
   const showSocialLogins = showFacebookLogin || showGoogleLogin;
 
-  const getDefaultRoutes = () => {
+  const getDataForSSORoutes = () => {
     const baseUrl = apiBaseUrl();
-
-    // Route where the user should be returned after authentication
-    // This is used e.g. with EditListingPage and ListingPage
-    const fromParam = from ? `from=${from}` : '';
 
     // Default route where user is returned after successfull authentication
     const defaultReturn = pathByRouteName('LandingPage', routeConfiguration);
-    const defaultReturnParam = defaultReturn ? `&defaultReturn=${defaultReturn}` : '';
 
     // Route for confirming user data before creating a new user
     const defaultConfirm = pathByRouteName('ConfirmPage', routeConfiguration);
-    const defaultConfirmParam = defaultConfirm ? `&defaultConfirm=${defaultConfirm}` : '';
 
-    return { baseUrl, fromParam, defaultReturnParam, defaultConfirmParam };
+    const queryParams = new URLSearchParams({
+      ...(defaultReturn ? { defaultReturn } : {}),
+      ...(defaultConfirm ? { defaultConfirm } : {}),
+      // Route where the user should be returned after authentication
+      // This is used e.g. with EditListingPage and ListingPage
+      ...(from ? { from } : {}),
+      // The preselected userType needs to be saved over the visit to identity provider's service
+      ...(userType ? { userType } : {}),
+    });
+
+    return { baseUrl, queryParams: queryParams.toString() };
   };
 
   const authWithFacebook = () => {
-    const defaultRoutes = getDefaultRoutes();
-    const { baseUrl, fromParam, defaultReturnParam, defaultConfirmParam } = defaultRoutes;
-    window.location.href = `${baseUrl}/api/auth/facebook?${fromParam}${defaultReturnParam}${defaultConfirmParam}`;
+    const { baseUrl, queryParams } = getDataForSSORoutes();
+    window.location.href = `${baseUrl}/api/auth/facebook?${queryParams}`;
   };
 
   const authWithGoogle = () => {
-    const defaultRoutes = getDefaultRoutes();
-    const { baseUrl, fromParam, defaultReturnParam, defaultConfirmParam } = defaultRoutes;
-    window.location.href = `${baseUrl}/api/auth/google?${fromParam}${defaultReturnParam}${defaultConfirmParam}`;
+    const { baseUrl, queryParams } = getDataForSSORoutes();
+    window.location.href = `${baseUrl}/api/auth/google?${queryParams}`;
   };
 
   return showSocialLogins ? (
@@ -272,7 +274,8 @@ export const AuthenticationForms = props => {
         isLogin={isLogin}
         showFacebookLogin={showFacebookLogin}
         showGoogleLogin={showGoogleLogin}
-        from={from}
+        {...fromMaybe}
+        {...userTypeMaybe}
       />
     </div>
   );
@@ -467,8 +470,10 @@ export const AuthenticationPageComponent = props => {
   const authinfoFrom = authInfo?.from || null;
   const from = locationFrom || authinfoFrom || null;
 
+  const isConfirm = tab === 'confirm';
   const userTypeInPushState = location.state?.userType || null;
-  const userType = pathParams?.userType || userTypeInPushState || null;
+  const userTypeInAuthInfo = isConfirm && authInfo?.userType ? authInfo?.userType : null;
+  const userType = pathParams?.userType || userTypeInPushState || userTypeInAuthInfo || null;
 
   const user = ensureCurrentUser(currentUser);
   const currentUserLoaded = !!user.id;

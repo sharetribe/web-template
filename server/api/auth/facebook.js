@@ -47,7 +47,7 @@ const verifyCallback = (req, accessToken, refreshToken, profile, done) => {
   const state = req.query.state;
   const queryParams = JSON.parse(state);
 
-  const { from, defaultReturn, defaultConfirm } = queryParams;
+  const { from, defaultReturn, defaultConfirm, userType } = queryParams;
 
   const userData = {
     email,
@@ -58,6 +58,7 @@ const verifyCallback = (req, accessToken, refreshToken, profile, done) => {
     from,
     defaultReturn,
     defaultConfirm,
+    userType,
   };
 
   done(null, userData);
@@ -77,11 +78,12 @@ if (clientID) {
  * @param {Function} next Call the next middleware function in the stack
  */
 exports.authenticateFacebook = (req, res, next) => {
-  const { from, defaultReturn, defaultConfirm } = req.query || {};
+  const { from, defaultReturn, defaultConfirm, userType } = req.query || {};
   const params = {
     ...(from ? { from } : {}),
     ...(defaultReturn ? { defaultReturn } : {}),
     ...(defaultConfirm ? { defaultConfirm } : {}),
+    ...(userType ? { userType } : {}),
   };
 
   const paramsAsString = JSON.stringify(params);
