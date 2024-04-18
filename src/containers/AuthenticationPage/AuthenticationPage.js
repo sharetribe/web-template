@@ -164,7 +164,10 @@ export const AuthenticationForms = props => {
   const { userFields, userTypes = [] } = config.user;
   const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
 
-  const fromState = { state: from ? { from } : null };
+  const fromMaybe = from ? { from } : null;
+  const signupRouteName = !!preselectedUserType ? 'SignupForUserTypePage' : 'SignupPage';
+  const userTypeMaybe = preselectedUserType ? { userType: preselectedUserType } : null;
+  const fromState = { state: { ...fromMaybe, ...userTypeMaybe } };
   const tabs = [
     {
       text: (
@@ -174,7 +177,8 @@ export const AuthenticationForms = props => {
       ),
       selected: !isLogin,
       linkProps: {
-        name: 'SignupPage',
+        name: signupRouteName,
+        params: userTypeMaybe,
         to: fromState,
       },
     },
@@ -463,7 +467,8 @@ export const AuthenticationPageComponent = props => {
   const authinfoFrom = authInfo?.from || null;
   const from = locationFrom || authinfoFrom || null;
 
-  const userType = pathParams?.userType || null;
+  const userTypeInPushState = location.state?.userType || null;
+  const userType = pathParams?.userType || userTypeInPushState || null;
 
   const user = ensureCurrentUser(currentUser);
   const currentUserLoaded = !!user.id;
