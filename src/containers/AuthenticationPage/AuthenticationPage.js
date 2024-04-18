@@ -150,6 +150,7 @@ export const AuthenticationForms = props => {
     isLogin,
     showFacebookLogin,
     showGoogleLogin,
+    userType,
     from,
     submitLogin,
     loginError,
@@ -160,7 +161,8 @@ export const AuthenticationForms = props => {
     termsAndConditions,
   } = props;
   const config = useConfiguration();
-  const { userFields } = config.user;
+  const { userFields, userTypes = [] } = config.user;
+  const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
 
   const fromState = { state: from ? { from } : null };
   const tabs = [
@@ -191,19 +193,20 @@ export const AuthenticationForms = props => {
   ];
 
   const handleSubmitSignup = values => {
-    const { fname, lname, ...rest } = values;
+    const { userType, fname, lname, ...rest } = values;
 
     const params = {
       firstName: fname.trim(),
       lastName: lname.trim(),
       publicData: {
-        ...pickUserFieldsData(rest, 'public', null, userFields),
+        userType,
+        ...pickUserFieldsData(rest, 'public', userType, userFields),
       },
       privateData: {
-        ...pickUserFieldsData(rest, 'private', null, userFields),
+        ...pickUserFieldsData(rest, 'private', userType, userFields),
       },
       protectedData: {
-        ...pickUserFieldsData(rest, 'protected', null, userFields),
+        ...pickUserFieldsData(rest, 'protected', userType, userFields),
       },
       ...getNonUserFieldParams(rest, userFields),
     };
@@ -255,6 +258,8 @@ export const AuthenticationForms = props => {
           onSubmit={handleSubmitSignup}
           inProgress={authInProgress}
           termsAndConditions={termsAndConditions}
+          preselectedUserType={preselectedUserType}
+          userTypes={userTypes}
           userFields={userFields}
         />
       )}
@@ -352,6 +357,7 @@ const ConfirmIdProviderInfoForm = props => {
 export const AuthenticationOrConfirmInfoForm = props => {
   const {
     tab,
+    userType,
     authInfo,
     from,
     showFacebookLogin,
@@ -382,6 +388,7 @@ export const AuthenticationOrConfirmInfoForm = props => {
       isLogin={isLogin}
       showFacebookLogin={showFacebookLogin}
       showGoogleLogin={showGoogleLogin}
+      userType={userType}
       from={from}
       loginError={loginError}
       idpAuthError={idpAuthError}
@@ -431,6 +438,7 @@ export const AuthenticationPageComponent = props => {
     intl,
     isAuthenticated,
     location,
+    params: pathParams,
     loginError,
     scrollingDisabled,
     signupError,
@@ -453,7 +461,9 @@ export const AuthenticationPageComponent = props => {
   // so that use can be redirected back to that page after authentication.
   const locationFrom = location.state?.from || null;
   const authinfoFrom = authInfo?.from || null;
-  const from = locationFrom ? locationFrom : authinfoFrom ? authinfoFrom : null;
+  const from = locationFrom || authinfoFrom || null;
+
+  const userType = pathParams?.userType || null;
 
   const user = ensureCurrentUser(currentUser);
   const currentUserLoaded = !!user.id;
@@ -530,6 +540,7 @@ export const AuthenticationPageComponent = props => {
           ) : (
             <AuthenticationOrConfirmInfoForm
               tab={tab}
+              userType={userType}
               authInfo={authInfo}
               from={from}
               showFacebookLogin={!!process.env.REACT_APP_FACEBOOK_APP_ID}
