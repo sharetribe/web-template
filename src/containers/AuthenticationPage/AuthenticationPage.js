@@ -284,15 +284,29 @@ export const AuthenticationForms = props => {
 // Form for confirming information from IdP (e.g. Facebook)
 // This is shown before new user is created to Marketplace API
 const ConfirmIdProviderInfoForm = props => {
-  const { authInfo, authInProgress, confirmError, submitSingupWithIdp, termsAndConditions } = props;
+  const {
+    userType,
+    authInfo,
+    authInProgress,
+    confirmError,
+    submitSingupWithIdp,
+    termsAndConditions,
+  } = props;
   const config = useConfiguration();
-  const { userFields } = config.user;
+  const { userFields, userTypes } = config.user;
+  const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
 
   const idp = authInfo ? authInfo.idpId.replace(/^./, str => str.toUpperCase()) : null;
 
   const handleSubmitConfirm = values => {
     const { idpToken, email, firstName, lastName, idpId } = authInfo;
-    const { email: newEmail, firstName: newFirstName, lastName: newLastName, ...rest } = values;
+    const {
+      userType,
+      email: newEmail,
+      firstName: newFirstName,
+      lastName: newLastName,
+      ...rest
+    } = values;
 
     // Pass email, fistName or lastName to Marketplace API only if user has edited them
     // and they can't be fetched directly from idp provider (e.g. Facebook)
@@ -307,13 +321,14 @@ const ConfirmIdProviderInfoForm = props => {
     const extendedDataMaybe = !isEmpty(rest)
       ? {
           publicData: {
-            ...pickUserFieldsData(rest, 'public', null, userFields),
+            userType,
+            ...pickUserFieldsData(rest, 'public', userType, userFields),
           },
           privateData: {
-            ...pickUserFieldsData(rest, 'private', null, userFields),
+            ...pickUserFieldsData(rest, 'private', userType, userFields),
           },
           protectedData: {
-            ...pickUserFieldsData(rest, 'protected', null, userFields),
+            ...pickUserFieldsData(rest, 'protected', userType, userFields),
             // If the confirm form has any additional values, pass them forward as user's protected data
             ...getNonUserFieldParams(rest, userFields),
           },
@@ -355,6 +370,8 @@ const ConfirmIdProviderInfoForm = props => {
         termsAndConditions={termsAndConditions}
         authInfo={authInfo}
         idp={idp}
+        preselectedUserType={preselectedUserType}
+        userTypes={userTypes}
         userFields={userFields}
       />
     </div>
@@ -384,6 +401,7 @@ export const AuthenticationOrConfirmInfoForm = props => {
 
   return isConfirm ? (
     <ConfirmIdProviderInfoForm
+      userType={userType}
       authInfo={authInfo}
       submitSingupWithIdp={submitSingupWithIdp}
       authInProgress={authInProgress}
