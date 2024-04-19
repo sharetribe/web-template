@@ -1,13 +1,12 @@
 import React from 'react';
-
-import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
+import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_LONG } from '../../util/types';
 import { convertCategoriesToSelectTreeOptions, constructQueryParamName } from '../../util/search';
-
 import SelectSingleFilter from './SelectSingleFilter/SelectSingleFilter';
 import SelectMultipleFilter from './SelectMultipleFilter/SelectMultipleFilter';
 import BookingDateRangeFilter from './BookingDateRangeFilter/BookingDateRangeFilter';
 import KeywordFilter from './KeywordFilter/KeywordFilter';
 import PriceFilter from './PriceFilter/PriceFilter';
+import SelectNumberFromRangeFilter from './SelectNumberFromRangeFilter/SelectNumberFromRangeFilter';
 
 /**
  * FilterComponent is used to map configured filter types
@@ -152,6 +151,22 @@ const FilterComponent = props => {
           {...rest}
         />
       );
+    }
+    case SCHEMA_TYPE_LONG: {
+      const { label } = config;
+      return (
+        <SelectNumberFromRangeFilter
+          id={componentId}
+          label={label}
+          queryParamNames={[key]}
+          initialValues={initialValues([key], liveEdit)}
+          onSubmit={getHandleChangedValueFn(useHistoryPush)}
+          min={-50}
+          max={1000}
+          step={5}
+          {...rest}
+        />
+      )
     }
     default:
       return null;

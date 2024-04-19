@@ -321,6 +321,24 @@ export class SearchPageComponent extends Component {
       ...customSecondaryFilters,
     ];
 
+    // Inject this temporary long filter for testing
+    const longFilter = {
+          "key": "pituus",
+          "scope": "public",
+          "label": "Pituus",
+          "schemaType": "long",
+          "min": -500,
+          "max": 100,
+          "step": 5,
+          "filterConfig": {
+            "indexForSearch": true,
+            "group": "primary"
+          },
+    }
+
+    availableFilters.push(longFilter);
+    availablePrimaryFilters.push(longFilter);
+
     const hasSecondaryFilters = !!(customSecondaryFilters && customSecondaryFilters.length > 0);
 
     // Selected aka active filters
