@@ -39,6 +39,7 @@
 
   @media (--viewportMedium) {
     padding: 8px 0 0px 0;
+    padding: 0;
   }
 }
 
