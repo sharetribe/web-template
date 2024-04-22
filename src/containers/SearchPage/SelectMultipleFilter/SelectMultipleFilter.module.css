@@ -28,7 +28,7 @@
 }
 
 .item {
-  padding: 2px 0;
+  padding: 4px 0 2px 0;
 
   /* Fix broken multi-column layout in Chrome */
   page-break-inside: avoid;
