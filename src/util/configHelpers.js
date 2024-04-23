@@ -1,3 +1,4 @@
+import { number } from 'prop-types';
 import { subUnitDivisors } from '../config/settingsCurrency';
 import { getSupportedProcessesInfo } from '../transactions/transaction';
 
@@ -696,6 +697,8 @@ const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) =
             ? validKey(value, keys)
             : name === 'scope'
             ? validEnumString('scope', value, scopeOptions, 'public')
+            : name === 'numberConfig'
+            ? [true, value]
             : name === 'includeForListingTypes'
             ? validListingTypesForBuiltInSetup(value, listingTypesInUse)
             : name === 'listingTypeConfig'
@@ -887,11 +890,13 @@ const restructureListingFields = hostedListingFields => {
         filterConfig = {},
         showConfig = {},
         saveConfig = {},
+        numberConfig = {},
         categoryConfig = {},
         ...rest
       } = listingField;
       const defaultLabel = label || key;
       const enumOptionsMaybe = ['enum', 'multi-enum'].includes(schemaType) ? { enumOptions } : {};
+      const numberConfigMaybe = schemaType === 'long' ? {numberConfig} : {};
       const { required: isRequired, ...restSaveConfig } = saveConfig;
 
       return key
@@ -900,6 +905,7 @@ const restructureListingFields = hostedListingFields => {
             scope,
             schemaType,
             ...enumOptionsMaybe,
+            ...numberConfigMaybe,
             filterConfig: {
               ...filterConfig,
               label: filterConfig.label || defaultLabel,
@@ -1047,6 +1053,7 @@ const mergeDefaultTypesAndFieldsForDebugging = isDebugging => {
 
 // Note: by default, listing types and fields are only merged if explicitly set for debugging
 const mergeListingConfig = (hostedConfig, defaultConfigs, categoriesInUse) => {
+
   // Listing configuration is splitted to several assets in Console
   const hostedListingTypes = restructureListingTypes(hostedConfig.listingTypes?.listingTypes);
   const hostedListingFields = restructureListingFields(hostedConfig.listingFields?.listingFields);
@@ -1066,7 +1073,7 @@ const mergeListingConfig = (hostedConfig, defaultConfigs, categoriesInUse) => {
     : hostedListingFields;
 
   const listingTypesInUse = getListingTypeStringsInUse(listingTypes);
-
+  
   return {
     ...rest,
     listingFields: validListingFields(listingFields, listingTypesInUse, categoriesInUse),

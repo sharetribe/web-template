@@ -153,20 +153,21 @@ const FilterComponent = props => {
       );
     }
     case SCHEMA_TYPE_LONG: {
-      const { label } = config;
+      const { label, minimum, maximum, scope } = config;
+      const queryParamNames = [constructQueryParamName(key, scope)];
       return (
         <SelectNumberFromRangeFilter
           id={componentId}
           label={label}
-          queryParamNames={[key]}
-          initialValues={initialValues([key], liveEdit)}
+          queryParamNames={queryParamNames}
+          initialValues={initialValues(queryParamNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
-          min={-50}
-          max={1000}
+          min={minimum}
+          max={maximum}
           step={5}
           {...rest}
         />
-      )
+      );
     }
     default:
       return null;
