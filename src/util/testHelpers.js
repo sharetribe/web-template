@@ -52,14 +52,17 @@ export const getDefaultConfiguration = () => {
     listing: {
       listingFields: [
         {
-          key: 'category',
+          key: 'bikeType',
           scope: 'public',
-          includeForListingTypes: [
-            'product-selling',
-            'daily-booking',
-            'nightly-booking',
-            'hourly-booking',
-          ],
+          listingTypeConfig: {
+            limitToListingTypeIds: true,
+            listingTypeIds: [
+              'product-selling',
+              'daily-booking',
+              'nightly-booking',
+              'hourly-booking',
+            ],
+          },
           schemaType: 'enum',
           enumOptions: [
             { option: 'city-bikes', label: 'City bikes' },
@@ -70,30 +73,33 @@ export const getDefaultConfiguration = () => {
           filterConfig: {
             indexForSearch: true,
             filterType: 'SelectSingleFilter',
-            label: 'Category',
+            label: 'Bike type',
             group: 'primary',
           },
           showConfig: {
-            label: 'Category',
+            label: 'Bike type',
             isDetail: true,
           },
           saveConfig: {
-            label: 'Select category',
+            label: 'Select a bike type',
             placeholderMessage: 'Choose…',
             isRequired: true,
-            requiredMessage: 'You need to select a category.',
+            requiredMessage: 'You need to select the type of the bike.',
           },
         },
 
         {
           key: 'tire-size',
           scope: 'public',
-          includeForListingTypes: [
-            'product-selling',
-            'daily-booking',
-            'nightly-booking',
-            'hourly-booking',
-          ],
+          listingTypeConfig: {
+            limitToListingTypeIds: true,
+            listingTypeIds: [
+              'product-selling',
+              'daily-booking',
+              'nightly-booking',
+              'hourly-booking',
+            ],
+          },
           schemaType: 'enum',
           enumOptions: [
             { option: 29, label: '29' },
@@ -123,12 +129,15 @@ export const getDefaultConfiguration = () => {
         {
           key: 'brand',
           scope: 'public',
-          includeForListingTypes: [
-            'product-selling',
-            'daily-booking',
-            'nightly-booking',
-            'hourly-booking',
-          ],
+          listingTypeConfig: {
+            limitToListingTypeIds: true,
+            listingTypeIds: [
+              'product-selling',
+              'daily-booking',
+              'nightly-booking',
+              'hourly-booking',
+            ],
+          },
           schemaType: 'enum',
           enumOptions: [
             { option: 'cube', label: 'Cube' },
@@ -363,8 +372,8 @@ export const getHostedConfiguration = () => {
             group: 'primary',
           },
           scope: 'public',
-          label: 'Category',
-          key: 'category',
+          label: 'Bike type',
+          key: 'bikeType',
           schemaType: 'enum',
           saveConfig: {
             required: true,

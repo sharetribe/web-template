@@ -90,6 +90,7 @@ export { default as FieldCurrencyInput } from './FieldCurrencyInput/FieldCurrenc
 export { default as FieldRadioButton } from './FieldRadioButton/FieldRadioButton';
 export { default as FieldReviewRating } from './FieldReviewRating/FieldReviewRating';
 export { default as FieldSelect } from './FieldSelect/FieldSelect';
+export { default as FieldSelectTree } from './FieldSelectTree/FieldSelectTree';
 export { default as FieldTextInput } from './FieldTextInput/FieldTextInput';
 
 // Fields that use other Fields
