@@ -15,7 +15,7 @@ export const publishableKey = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY;
 // If your marketplace is for US only, you should also be aware that available
 // time slots can only be fetched for 366 days into the future.
 // https://www.sharetribe.com/api-reference/marketplace.html#query-time-slots
-export const dayCountAvailableForBooking = 90;
+export const dayCountAvailableForBooking = 60;
 
 /**
  * Default merchant category code (MCC)
