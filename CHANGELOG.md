@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] Fix a typo in translation keys.
+  [#365](https://github.com/sharetribe/web-template/pull/365)
 - [change] Update browserlist-db aka caniuse-lite.
   [#363](https://github.com/sharetribe/web-template/pull/363)
 - [change] Update moment-timezone library to v0.5.45
