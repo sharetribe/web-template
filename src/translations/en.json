@@ -728,7 +728,7 @@
   "SignupForm.emailPlaceholder": "jane.doe@example.com",
   "SignupForm.emailRequired": "You need to add an email.",
   "SignupForm.firstNameLabel": "First name",
-  "SignupForm.firstNamePlaceholder": "jane",
+  "SignupForm.firstNamePlaceholder": "Jane",
   "SignupForm.firstNameRequired": "You need to add a first name.",
   "SignupForm.lastNameLabel": "Last name",
   "SignupForm.lastNamePlaceholder": "Doe",
