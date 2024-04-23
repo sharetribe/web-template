@@ -62,31 +62,33 @@ const listingTypes = [
 
 const listingFields = [
   {
-    key: 'category',
+    key: 'cat',
     scope: 'public',
-    includeForListingTypes: ['sell-bicycles'],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['sell-bicycles'],
+    },
     schemaType: 'enum',
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
       indexForSearch: true,
-      label: 'Category',
+      label: 'Cat',
       group: 'primary',
     },
     showConfig: {
-      label: 'Category',
+      label: 'Cat',
     },
     saveConfig: {
-      label: 'Category',
+      label: 'Cat',
     },
   },
   {
     key: 'amenities',
     scope: 'public',
-    includeForListingTypes: [
-      'rent-bicycles-daily',
-      'rent-bicycles-nightly',
-      'rent-bicycles-hourly',
-    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['rent-bicycles-daily', 'rent-bicycles-nightly', 'rent-bicycles-hourly'],
+    },
     schemaType: 'multi-enum',
     enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
     filterConfig: {

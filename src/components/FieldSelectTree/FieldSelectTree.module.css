@@ -1,0 +1,76 @@
+@import '../../styles/customMediaQueries.css';
+
+.root {
+  margin-bottom: 16px;
+}
+
+.optionList {
+  margin: 0;
+
+  .optionList {
+    margin: 3px 0;
+  }
+
+  @media (--viewportMedium) {
+    .optionList {
+      margin: 4px 0;
+    }
+  }
+}
+
+.option {
+  padding-left: 12px;
+}
+
+.optionBtn {
+  composes: h4 from global;
+  font-weight: var(--fontWeightMedium);
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--colorGrey700);
+  text-align: left;
+
+  /* Layout */
+  display: block;
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 4px 0 8px 0;
+
+  /* Override button styles */
+  outline: none;
+  border: none;
+  cursor: inherit;
+
+  &:focus,
+  &:hover {
+    color: var(--colorBlack);
+  }
+
+  @media (--viewportMedium) {
+    padding: 8px 0 0px 0;
+    padding: 0;
+  }
+}
+
+.optionBtnSelected {
+  composes: optionBtn;
+  color: var(--marketplaceColor);
+
+  &:focus,
+  &:hover {
+    color: var(--marketplaceColorDark);
+  }
+}
+
+.optionBtnSelectedLowest {
+  &:focus,
+  &:hover {
+    color: var(--marketplaceColor);
+  }
+}
+
+.longWord {
+  word-break: break-word;
+  hyphens: auto;
+}

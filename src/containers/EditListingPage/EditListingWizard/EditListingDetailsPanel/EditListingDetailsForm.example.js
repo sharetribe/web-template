@@ -12,6 +12,37 @@ const selectableListingTypes = [
   },
 ];
 
+const selectableCategories = [
+  {
+    subcategories: [
+      {
+        name: 'Adidas',
+        id: 'adidas',
+      },
+      {
+        name: 'Nike',
+        id: 'nike',
+      },
+    ],
+    name: 'Sneakers',
+    id: 'sneakers',
+  },
+  {
+    subcategories: [
+      {
+        name: 'City bikes',
+        id: 'city-bikes',
+      },
+      {
+        name: 'Mountain bikes',
+        id: 'mountain-bikes',
+      },
+    ],
+    name: 'Bikes',
+    id: 'bikes',
+  },
+];
+
 export const WithInitialValues = {
   component: EditListingDetailsForm,
   props: {
@@ -27,12 +58,15 @@ export const WithInitialValues = {
     selectableListingTypes: selectableListingTypes,
     onListingTypeChange: noop,
     listingConfig: defaultConfig.listing,
+    selectableCategories: selectableCategories,
     initialValues: {
       title: 'Listing',
       description: 'Lorem ipsum',
       listingType: 'sell-bicycles',
       transactionProcessAlias: 'default-purchase/release-1',
       unitType: 'item',
+      categoryLevel1: 'sneakers',
+      categoryLevel2: 'adidas',
     },
   },
   group: 'page:EditListingPage',
@@ -66,6 +100,28 @@ export const MultipleProcessInfos = {
     updated: false,
     updateInProgress: false,
     selectableListingTypes: selectableListingTypes2,
+    selectableCategories: selectableCategories,
+    onListingTypeChange: noop,
+    listingConfig: defaultConfig.listing,
+  },
+  group: 'page:EditListingPage',
+};
+
+export const ChooseListingCategory = {
+  component: EditListingDetailsForm,
+  props: {
+    formId: 'ChooseListingCategory',
+    onSubmit: values => {
+      console.log('Submit EditListingDetailsForm with (unformatted) values:', values);
+    },
+    saveActionMsg: 'Save description',
+    disabled: false,
+    ready: false,
+    updated: false,
+    updateInProgress: false,
+    selectableListingTypes: selectableListingTypes2,
+    selectableCategories: selectableCategories,
+    onCategoryChange: noop,
     onListingTypeChange: noop,
     listingConfig: defaultConfig.listing,
   },

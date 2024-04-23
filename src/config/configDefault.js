@@ -96,6 +96,7 @@ const defaultConfig = {
     analytics: '/integrations/analytics.json',
     googleSearchConsole: '/integrations/google-search-console.json',
     maps: '/integrations/map.json',
+    categories: '/listings/listing-categories.json',
     // These assets are not yet editable through Console.
     // However, Sharetribe onboarding might generate them.
     // You could still rely on built-in variables and comment these out.

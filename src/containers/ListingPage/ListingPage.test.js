@@ -52,29 +52,56 @@ const listingTypes = [
   },
 ];
 
+const capitalizeFirstLetter = str => str.charAt(0).toUpperCase() + str.slice(1);
+const addSpaces = str => str.split('-').join(' ');
+const labelize = str => addSpaces(capitalizeFirstLetter(str));
+
+const generateCategories = optionStrings => {
+  return optionStrings.reduce((converted, entry) => {
+    const isArray = Array.isArray(entry);
+    const option = isArray
+      ? { id: entry[0], name: labelize(entry[0]), subcategories: generateCategories(entry[1]) }
+      : { id: entry, name: labelize(entry) };
+    return [...converted, option];
+  }, []);
+};
+const categories = generateCategories([
+  ['dogs', ['labradors', 'poodles']],
+  ['cats', ['burmese', 'egyptian-mau']],
+  ['fish', [['freshwater', ['grayling', 'arctic-char', 'pike']], 'saltwater']],
+  ['birds', ['parrot', 'macaw']],
+]);
+//console.log(JSON.stringify(categories, null, 2));
+
 const listingFields = [
   {
-    key: 'category',
+    key: 'cat',
     scope: 'public',
-    includeForListingTypes: ['sell-bicycles'],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['sell-bicycles'],
+    },
+    categoryConfig: {
+      limitToCategoryIds: true,
+      categoryIds: ['cats'],
+    },
     schemaType: 'enum',
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
       indexForSearch: true,
     },
     showConfig: {
-      label: 'Category',
+      label: 'Cat',
       isDetail: true,
     },
   },
   {
     key: 'amenities',
     scope: 'public',
-    includeForListingTypes: [
-      'rent-bicycles-daily',
-      'rent-bicycles-nightly',
-      'rent-bicycles-hourly',
-    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['rent-bicycles-daily', 'rent-bicycles-nightly', 'rent-bicycles-hourly'],
+    },
     schemaType: 'multi-enum',
     enumOptions: [
       { option: 'feat_1', label: 'Feat 1' },
@@ -102,6 +129,7 @@ const getConfig = variantType => {
     listingFields: {
       listingFields,
     },
+    categories: { categories },
     layout: {
       ...hostedConfig.layout,
       listingPage: { variantType },
@@ -113,10 +141,11 @@ describe('ListingPage variants', () => {
   const id = 'listing1';
   const slug = 'listing1-title';
   const publicData = {
-    listingType: 'sell-bicycles',
+    listingType: 'sell-bicycles', // Ensure listing field can be tied to listing type
     transactionProcessAlias: 'default-purchase/release-1',
     unitType: 'item',
-    category: 'cat_1',
+    categoryLevel1: 'cats', // Ensure listing field can be tied to category
+    cat: 'cat_1',
   };
   const listing1 = createListing(id, { publicData }, { author: createUser('user-1') });
   const listing1Own = createOwnListing(id, {}, { author: createCurrentUser('user-1') });
@@ -207,7 +236,7 @@ describe('ListingPage variants', () => {
 
       // Has details section title and selected category info
       expect(getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
-      expect(getByText('Category')).toBeInTheDocument();
+      expect(getByText('Cat')).toBeInTheDocument();
       expect(getByText('Cat 1')).toBeInTheDocument();
 
       // Has details location title
@@ -262,7 +291,7 @@ describe('ListingPage variants', () => {
 
       // Has details section title and selected category info
       expect(getByRole('heading', { name: 'ListingPage.detailsTitle' })).toBeInTheDocument();
-      expect(getByText('Category')).toBeInTheDocument();
+      expect(getByText('Cat')).toBeInTheDocument();
       expect(getByText('Cat 1')).toBeInTheDocument();
 
       // Has details location title
