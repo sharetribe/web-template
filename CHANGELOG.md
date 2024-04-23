@@ -15,7 +15,18 @@ way to update this template, but currently, we follow a pattern:
 ## Upcoming version 2024-XX-XX
 
 - [add] Add support for hosted category configuration
+
+  - Prepare for a future asset: listing-categories.json
+  - Prepare for a future changes to assets: listing-search.json and listing-fields.json
+  - Collect (nested) category info on EditListingDetailsPanel
+    - Saved to publicData as categoryLevel1, categoryLelvel2, categoryLevel3.
+    - Allow listing fields to be limited to categories in addition to listing types.
+  - Show listing fields on the ListingPage (category restrictions apply)
+  - Show category filter on the SearchPage
+  - Show listing fields on the SearchPage if category restrictions allow
+
   [#314](https://github.com/sharetribe/web-template/pull/314)
+
 - [change] Fix a typo in translation keys.
   [#365](https://github.com/sharetribe/web-template/pull/365)
 - [change] Update browserlist-db aka caniuse-lite.
