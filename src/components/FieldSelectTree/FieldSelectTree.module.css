@@ -6,6 +6,16 @@
 
 .optionList {
   margin: 0;
+
+  .optionList {
+    margin: 3px 0;
+  }
+
+  @media (--viewportMedium) {
+    .optionList {
+      margin: 4px 0;
+    }
+  }
 }
 
 .option {
