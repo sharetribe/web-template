@@ -14,6 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+## [v5.0.0] 2024-04-23
+
+This major release prepares the codebase for the new concepts: user fields and categories. The
+biggest changes are on PRs: #314 and #337.
+
+Note: We will also introduce user types later on, but that concept might still change a bit from
+what we have in this release.
+
 - [add] Add support for hosted category configuration
 
   - Prepare for a future asset: listing-categories.json
@@ -44,7 +52,7 @@ way to update this template, but currently, we follow a pattern:
   - The ProfileSettingsPage is the default location for adding or editing user fields.
   - The AuthenticationPage (SignupForm and ConfirmSignupForm) can also collect user field data.
 
-  [#377](https://github.com/sharetribe/web-template/pull/337)
+  [#337](https://github.com/sharetribe/web-template/pull/337)
 
 - [change] Update Node.js version to >= 18.20.1 (engine) 20.12.1 (circleci)
   [#360](https://github.com/sharetribe/web-template/pull/360)
@@ -60,6 +68,8 @@ way to update this template, but currently, we follow a pattern:
   [#353](https://github.com/sharetribe/web-template/pull/353)
 - [fix] Some email templates were not using the correct helper to format currencies and dates based
   on localization. [#351](https://github.com/sharetribe/web-template/pull/351)
+
+  [v5.0.0]: https://github.com/sharetribe/web-template/compare/v4.1.2...v5.0.0
 
 ## [v4.1.2] 2024-03-26
 
