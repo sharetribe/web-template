@@ -84,8 +84,9 @@ export const isAnyFilterActive = (filterKeys, urlQueryParams, filterConfigs) => 
 export const pickInitialValuesForFieldSelectTree = (prefix, values) => {
   const pickValuesFn = (picked, entry) => {
     const [key, value] = entry;
-    const startsWithPrefix = key.indexOf(prefix) > -1;
-    return startsWithPrefix ? { ...picked, [key]: value } : picked;
+    const prefixIndex = key.indexOf(prefix);
+    const startsWithPrefix = prefixIndex > -1;
+    return startsWithPrefix ? { ...picked, [key.slice(prefixIndex)]: value } : picked;
   };
   const prefixCollection = Object.entries(values).reduce(pickValuesFn, {});
   return prefixCollection;
