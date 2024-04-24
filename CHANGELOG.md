@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] util/search.js: fix pickInitialValuesForFieldSelectTree.
+  [#369](https://github.com/sharetribe/web-template/pull/369)
+
 ## [v5.0.0] 2024-04-23
 
 This major release prepares the codebase for the new concepts: user fields and categories. The
