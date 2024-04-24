@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { bool, func, number, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
@@ -73,7 +73,22 @@ export const EditListingPricingFormComponent = props => (
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
       const { updateListingError, showListingsError } = fetchErrors || {};
+      const [isChecked, setIsChecked] = useState(false);
 
+      const handleCheckboxChange = () => {
+        setIsChecked(!isChecked);
+        // Reset selected value when checkbox is unchecked
+        if (!isChecked) {
+          setSelectedValue('');
+        }
+      };
+        // Declare a state variable to hold the selected value
+        const [selectedValue, setSelectedValue] = useState('');
+      
+        // Handler function to update the selected value
+        const handleSelectChange = (event) => {
+          setSelectedValue(event.target.value);
+        };
       return (
         <Form onSubmit={handleSubmit} className={classes}>
           {updateListingError ? (
@@ -99,7 +114,22 @@ export const EditListingPricingFormComponent = props => (
             currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
             validate={priceValidators}
           />
-
+                    <div className="descuento">
+            Desea aplicar descuentos en el alquiler de sus articulos a partir de los 3 días de alquiler?
+          <div  style={{display:"flex"}} className="descuento">
+          Si/No
+          <input style={{width:"10%"}} type="checkbox" id="descuento" name="descuento" value="Si/No" onChange={handleCheckboxChange}/>
+          </div>
+          {isChecked && (
+          <div style={{display:"flex" , alignItems: "center"}} className="descuento">
+          Deseo aplicar descuentos del: <select style={{width:"10%"}} value={selectedValue} onChange={handleSelectChange}>       
+          <option value="10%">10%</option>
+         <option value="15%">15%</option>
+         <option value="20%">20%</option>
+              </select>
+          </div>
+           )}
+          </div>
           <Button
             className={css.submitButton}
             type="submit"
