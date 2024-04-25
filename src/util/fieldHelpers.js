@@ -1,3 +1,7 @@
+// This util file is about user and listing fields.
+// I.e. These are custom fields to data entities. They are added through the Marketplace Console.
+// In the codebase, we also have React Final Form fields, which are wrapper around user inputs.
+
 import { SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_TEXT } from './types';
 
 const keyMapping = {
