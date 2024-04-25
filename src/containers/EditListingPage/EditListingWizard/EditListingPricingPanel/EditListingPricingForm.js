@@ -114,15 +114,17 @@ export const EditListingPricingFormComponent = props => (
             currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
             validate={priceValidators}
           />
-                    <div className="descuento">
+                  <div className="descuento">
             Desea aplicar descuentos en el alquiler de sus articulos a partir de los 3 días de alquiler?
           <div  style={{display:"flex"}} className="descuento">
-          Si/No
-          <input style={{width:"10%"}} type="checkbox" id="descuento" name="descuento" value="Si/No" onChange={handleCheckboxChange}/>
+          Si
+          <input style={{width:"5%"}} type="checkbox" id="descuento" name="descuento" value="Si/No" onChange={handleCheckboxChange}/>
+          No
+          <input style={{width:"5%"}} type="checkbox" id="descuento" name="descuento" value="Si/No" />
           </div>
           {isChecked && (
           <div style={{display:"flex" , alignItems: "center"}} className="descuento">
-          Deseo aplicar descuentos del: <select style={{width:"10%"}} value={selectedValue} onChange={handleSelectChange}>       
+          Deseo aplicar descuentos del: <select style={{border:"#fff",width:"10%" , padding: "0px 0px 0px 10px"}} value={selectedValue} onChange={handleSelectChange}>       
           <option value="10%">10%</option>
          <option value="15%">15%</option>
          <option value="20%">20%</option>
