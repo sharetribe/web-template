@@ -255,6 +255,10 @@
   }
 }
 
+.row {
+  width: 100%;
+}
+
 .firstName {
   width: calc(34% - 9px);
 }
