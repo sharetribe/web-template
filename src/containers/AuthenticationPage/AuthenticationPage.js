@@ -199,11 +199,15 @@ export const AuthenticationForms = props => {
   ];
 
   const handleSubmitSignup = values => {
-    const { userType, fname, lname, ...rest } = values;
+    const { userType, fname, lname, displayName, ...rest } = values;
+    const displayNameMaybe = displayName
+      ? { displayName: displayName.trim() }
+      : { displayName: null };
 
     const params = {
       firstName: fname.trim(),
       lastName: lname.trim(),
+      ...displayNameMaybe,
       publicData: {
         userType,
         ...pickUserFieldsData(rest, 'public', userType, userFields),
@@ -300,13 +304,19 @@ const ConfirmIdProviderInfoForm = props => {
 
   const handleSubmitConfirm = values => {
     const { idpToken, email, firstName, lastName, idpId } = authInfo;
+
     const {
       userType,
       email: newEmail,
       firstName: newFirstName,
       lastName: newLastName,
+      displayName,
       ...rest
     } = values;
+
+    const displayNameMaybe = displayName
+      ? { displayName: displayName.trim() }
+      : { displayName: null };
 
     // Pass email, fistName or lastName to Marketplace API only if user has edited them
     // and they can't be fetched directly from idp provider (e.g. Facebook)
@@ -339,6 +349,7 @@ const ConfirmIdProviderInfoForm = props => {
       idpToken,
       idpId,
       ...authParams,
+      ...displayNameMaybe,
       ...extendedDataMaybe,
     });
   };
