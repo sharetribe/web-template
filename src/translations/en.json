@@ -123,6 +123,7 @@
   "ContactDetailsForm.pendingEmailUnverified": "You haven't verified your new email address. {pendingEmailCheckInbox} {resendEmailMessage}",
   "ContactDetailsForm.phoneLabel": "Phone number",
   "ContactDetailsForm.phonePlaceholder": "Enter your phone number.",
+  "ContactDetailsForm.phoneRequired": "A phone number is required.",
   "ContactDetailsForm.resendEmailVerificationText": "Resend verification email.",
   "ContactDetailsForm.resendPasswordLinkText": "Resend instructions.",
   "ContactDetailsForm.resetPasswordInfo": "Forgot your password or don't have one? {resetPasswordLink}",
