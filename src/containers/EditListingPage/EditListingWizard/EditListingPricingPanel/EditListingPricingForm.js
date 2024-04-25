@@ -124,7 +124,7 @@ export const EditListingPricingFormComponent = props => (
           </div>
           {isChecked && (
           <div style={{display:"flex" , alignItems: "center"}} className="descuento">
-          Deseo aplicar descuentos del: <select style={{border:"#fff",width:"10%" , padding: "0px 0px 0px 10px"}} value={selectedValue} onChange={handleSelectChange}>       
+          Deseo aplicar descuentos del: <select style={{boxShadow:"none", border:"#fff",width:"10%" , padding: "0px 0px 0px 10px"}} value={selectedValue} onChange={handleSelectChange}>       
           <option value="10%">10%</option>
          <option value="15%">15%</option>
          <option value="20%">20%</option>
