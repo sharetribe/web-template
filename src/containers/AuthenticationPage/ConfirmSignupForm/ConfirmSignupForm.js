@@ -14,6 +14,7 @@ import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '..
 
 import FieldSelectUserType from '../FieldSelectUserType';
 import UserFieldDisplayName from '../UserFieldDisplayName';
+import UserFieldPhoneNumber from '../UserFieldPhoneNumber';
 
 import css from './ConfirmSignupForm.module.css';
 
@@ -145,6 +146,12 @@ const ConfirmSignupFormComponent = props => (
               </div>
 
               <UserFieldDisplayName
+                formName="ConfirmSignupForm"
+                className={css.row}
+                userTypeConfig={userTypeConfig}
+                intl={intl}
+              />
+              <UserFieldPhoneNumber
                 formName="ConfirmSignupForm"
                 className={css.row}
                 userTypeConfig={userTypeConfig}

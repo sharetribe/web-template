@@ -14,6 +14,7 @@ import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '..
 
 import FieldSelectUserType from '../FieldSelectUserType';
 import UserFieldDisplayName from '../UserFieldDisplayName';
+import UserFieldPhoneNumber from '../UserFieldPhoneNumber';
 
 import css from './SignupForm.module.css';
 
@@ -186,6 +187,13 @@ const SignupFormComponent = props => (
                   id: 'SignupForm.passwordPlaceholder',
                 })}
                 validate={passwordValidators}
+              />
+
+              <UserFieldPhoneNumber
+                formName="SignupForm"
+                className={css.row}
+                userTypeConfig={userTypeConfig}
+                intl={intl}
               />
             </div>
           ) : null}
