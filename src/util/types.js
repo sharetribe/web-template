@@ -484,13 +484,22 @@ propTypes.defaultFiltersConfig = arrayOf(
     step: number,
   }).isRequired
 );
+
 // Extended data config
 propTypes.userType = shape({
   userType: string.isRequired,
   label: string.isRequired,
   defaultUserFields: shape({
-    displayName: string,
-    phoneNumber: string,
+    displayName: bool,
+    phoneNumber: bool,
+  }),
+  displayNameSettings: shape({
+    displayInSignUp: bool,
+    required: bool,
+  }),
+  phoneNumberSettings: shape({
+    displayInSignUp: bool,
+    required: bool,
   }),
 });
 propTypes.userTypes = arrayOf(propTypes.userType);
