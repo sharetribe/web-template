@@ -13,14 +13,18 @@ import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
 import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '../../../components';
 
 import FieldSelectUserType from '../FieldSelectUserType';
+import UserFieldDisplayName from '../UserFieldDisplayName';
 
 import css from './SignupForm.module.css';
+
+const getSoleUserTypeMaybe = userTypes =>
+  Array.isArray(userTypes) && userTypes.length === 1 ? userTypes[0].userType : null;
 
 const SignupFormComponent = props => (
   <FinalForm
     {...props}
     mutators={{ ...arrayMutators }}
-    initialValues={{ userType: props.preselectedUserType }}
+    initialValues={{ userType: props.preselectedUserType || getSoleUserTypeMaybe(props.userTypes) }}
     render={formRenderProps => {
       const {
         rootClassName,
@@ -91,6 +95,7 @@ const SignupFormComponent = props => (
       const userFieldProps = getPropsForCustomUserFieldInputs(userFields, intl, userType);
 
       const noUserTypes = !userType && !(userTypes?.length > 0);
+      const userTypeConfig = userTypes.find(config => config.userType === userType);
       const showDefaultUserFields = userType || noUserTypes;
       const showCustomUserFields = (userType || noUserTypes) && userFieldProps?.length > 0;
 
@@ -160,6 +165,14 @@ const SignupFormComponent = props => (
                   )}
                 />
               </div>
+
+              <UserFieldDisplayName
+                formName="SignupForm"
+                className={css.row}
+                userTypeConfig={userTypeConfig}
+                intl={intl}
+              />
+
               <FieldTextInput
                 className={css.password}
                 type="password"
