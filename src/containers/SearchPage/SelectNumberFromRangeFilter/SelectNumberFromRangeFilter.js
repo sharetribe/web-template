@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { arrayOf, bool, func, node, object, string } from 'prop-types';
 
 import debounce from 'lodash/debounce';
@@ -11,7 +11,6 @@ import RangeInput from './RangeInput';
 
 import { FormattedMessage } from '../../../util/reactIntl';
 import css from './SelectNumberFromRangeFilter.module.css';
-import { parse } from 'url';
 
 const RADIX = 10;
 
@@ -48,12 +47,14 @@ const SelectNumberFromRangeFilter = props => {
     className,
     intl,
     id,
+    name,
     showAsPopup,
     ...rest
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
 
+  const hasValue = value => value != null;
 
   // Extracts initial values for form from query parameters. If a valid query parameter exists, it converts
   // the string to an object using `convertQueryParamToObject`. If not, initializes as an empty object.
@@ -61,22 +62,22 @@ const SelectNumberFromRangeFilter = props => {
     initialValues && initialValues[queryParamNames]
       ? convertQueryParamToObject(initialValues[queryParamNames])
       : {};
-    
+
   const { minValue, maxValue } = parsedInitialValues || {};
-  const hasValue = value => value != null;
   const hasInitialValues = initialValues && hasValue(minValue) && hasValue(maxValue);
+
+  const resolvedInitialValues = {[name]: hasInitialValues ? parsedInitialValues : {}};
 
   // Handles form submission by extracting and updating the range values from the form's current state.
   const handleSubmit = values => {
-    const { minValue: prevMinValue, maxValue: prevMaxValue, numberRangeInput, ...restValues } =
-      values || {};
-    const { minValue = prevMinValue, maxValue = prevMaxValue } = numberRangeInput || {};
+  const usedValue = values?.[name] ? values[name] : values;
+  const { minValue, maxValue } = usedValue || {};
+
     return onSubmit(
       formatToQueryParam(
         {
-          minValue: minValue === '' ? rest.min : minValue,
-          maxValue: maxValue === '' ? rest.max : maxValue,
-          ...restValues,
+          minValue: minValue,
+          maxValue: maxValue,
         },
         queryParamNames
       )
@@ -106,17 +107,17 @@ const SelectNumberFromRangeFilter = props => {
       isSelected={hasInitialValues}
       id={`${id}.popup`}
       onSubmit={handleSubmit}
-      initialValues={hasInitialValues ? parsedInitialValues : { minValue: min, maxValue: max }}
+      initialValues={resolvedInitialValues}
       {...rest}
     >
       <Field
-        component={RangeInput}
-        initialValues={hasInitialValues ? parsedInitialValues : null}
         max={max}
         min={min}
-        name="numberRangeInput"
+        name={name}
         step={step}
+        component={RangeInput}
       />
+
     </FilterPopup>
   ) : (
     <FilterPlain
@@ -128,17 +129,17 @@ const SelectNumberFromRangeFilter = props => {
       isSelected={hasInitialValues}
       id={`${id}.plain`}
       liveEdit
+      onClear={handleSubmit}
       onSubmit={handleSubmitOnLive}
-      initialValues={hasInitialValues ? parsedInitialValues : { minValue: min, maxValue: max }}
+      initialValues={resolvedInitialValues}
       {...rest}
     >
       <Field
         component={RangeInput}
-        initialValues={hasInitialValues ? parsedInitialValues : null}
         isInSideBar
         max={max}
         min={min}
-        name="numberRangeInput"
+        name={name}
         step={step}
       />
     </FilterPlain>

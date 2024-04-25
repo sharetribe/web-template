@@ -159,12 +159,13 @@ const FilterComponent = props => {
         <SelectNumberFromRangeFilter
           id={componentId}
           label={label}
+          name={name}
           queryParamNames={queryParamNames}
           initialValues={initialValues(queryParamNames, liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
           min={minimum}
           max={maximum}
-          step={5}
+          step={1}
           {...rest}
         />
       );
