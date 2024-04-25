@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { bool, object, number } from 'prop-types';
+
 import classNames from 'classnames';
 
 import { RangeSlider } from '../../../components';
@@ -21,10 +23,9 @@ const RangeInput = props => {
     min: defaultMinValue,
     max: defaultMaxValue,
     step,
-    isInSideBar,
-    ...rest
+    isInSideBar
   } = props;
-  const { value: values = {}, onChange, ...inputProps } = input;
+  const { value: values = {}, onChange } = input;
 
   const currentValues = resolveMinMaxValues(values, defaultMaxValue, defaultMinValue)
 
@@ -111,6 +112,22 @@ const RangeInput = props => {
       </div>
     </div>
   );
+};
+
+RangeInput.defaultProps = {
+  input: null,
+  min: null,
+  max: null,
+  step: 5,
+  isInSideBar: false,
+};
+
+RangeInput.propTypes = {
+  input: object,
+  min: number,
+  max: number,
+  step: number,
+  isInSideBar: bool.isRequired,
 };
 
 export default RangeInput;
