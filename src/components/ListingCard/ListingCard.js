@@ -77,6 +77,7 @@ export const ListingCardComponent = props => {
     renderSizes,
     setActiveListing,
     showAuthorInfo,
+    authorObj,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
@@ -132,6 +133,12 @@ export const ListingCardComponent = props => {
           {showAuthorInfo ? (
             <div className={css.authorInfo}>
               <FormattedMessage id="ListingCard.author" values={{ authorName }} />
+              <ResponsiveImage
+                isOwnerAvatar
+                alt={authorName}
+                image={authorObj.profileImage}
+                variants={authorObj.profileImage.attributes.variants['listing-card'].url}
+              />
             </div>
           ) : null}
         </div>
@@ -146,6 +153,7 @@ ListingCardComponent.defaultProps = {
   renderSizes: null,
   setActiveListing: null,
   showAuthorInfo: true,
+  authorObj: '',
 };
 
 ListingCardComponent.propTypes = {
@@ -159,6 +167,7 @@ ListingCardComponent.propTypes = {
   renderSizes: string,
 
   setActiveListing: func,
+  authorObj: propTypes.string,
 };
 
 export default injectIntl(ListingCardComponent);

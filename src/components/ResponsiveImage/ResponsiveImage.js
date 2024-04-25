@@ -51,6 +51,7 @@ const ResponsiveImage = props => {
     image,
     variants,
     dimensions,
+    isOwnerAvatar,
     ...rest
   } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -71,7 +72,7 @@ const ResponsiveImage = props => {
 
   const imageVariants = image.attributes.variants;
 
-  const srcSet = variants
+  const srcSet = isOwnerAvatar ? variants : variants
     .map(variantName => {
       const variant = imageVariants[variantName];
 
@@ -99,6 +100,7 @@ ResponsiveImage.defaultProps = {
   image: null,
   sizes: null,
   noImageMessage: null,
+  isOwnerAvatar: false,
 };
 
 ResponsiveImage.propTypes = {

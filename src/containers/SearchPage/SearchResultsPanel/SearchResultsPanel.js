@@ -58,13 +58,14 @@ const SearchResultsPanel = props => {
     <div className={classes}>
       <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
         {listings.map(l => (
-          <ListingCard
-            className={css.listingCard}
-            key={l.id.uuid}
-            listing={l}
-            renderSizes={cardRenderSizes(isMapVariant)}
-            setActiveListing={setActiveListing}
-          />
+            <ListingCard
+              className={css.listingCard}
+              key={l.id.uuid}
+              listing={l}
+              renderSizes={cardRenderSizes(isMapVariant)}
+              setActiveListing={setActiveListing}
+              authorObj={l.author}
+            />
         ))}
         {props.children}
       </div>

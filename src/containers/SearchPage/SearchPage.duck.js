@@ -256,7 +256,7 @@ export const loadData = (params, search, config) => {
       ...originMaybe,
       page,
       perPage: RESULT_PAGE_SIZE,
-      include: ['author', 'images'],
+      include: ['author', 'author.profileImage', 'images'],
       'fields.listing': [
         'title',
         'geolocation',
