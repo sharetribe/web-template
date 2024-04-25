@@ -53,21 +53,21 @@
  *   - requiredMessage (optional):    Message for those fields, which are mandatory.
  */
 export const listingFields = [
-  {
-    "scope": "public",
-    "label": "Gears",
-    "key": "gears",
-    "schemaType": "long",
-    "numberConfig": {
-      "minimum": 1,
-      "maximum": 24
-    },
-    "filterConfig": {
-      "indexForSearch": true,
-      "group": "primary",
-      "label": "Gears"
-    }
-  }
+  // {
+  //   "scope": "public",
+  //   "label": "Gears",
+  //   "key": "gears",
+  //   "schemaType": "long",
+  //   "numberConfig": {
+  //     "minimum": 1,
+  //     "maximum": 24
+  //   },
+  //   "filterConfig": {
+  //     "indexForSearch": true,
+  //     "group": "primary",
+  //     "label": "Gears"
+  //   }
+  // }
   // {
   //   key: 'bikeType',
   //   scope: 'public',

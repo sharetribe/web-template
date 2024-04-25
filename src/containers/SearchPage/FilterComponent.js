@@ -153,7 +153,8 @@ const FilterComponent = props => {
       );
     }
     case SCHEMA_TYPE_LONG: {
-      const { label, minimum, maximum, scope } = config;
+      const { minimum, maximum, scope, filterConfig = {} } = config;
+      const { label } = filterConfig;
       const queryParamNames = [constructQueryParamName(key, scope)];
       return (
         <SelectNumberFromRangeFilter

@@ -1,4 +1,3 @@
-import { number } from 'prop-types';
 import { subUnitDivisors } from '../config/settingsCurrency';
 import { getSupportedProcessesInfo } from '../transactions/transaction';
 
@@ -577,6 +576,28 @@ const validShowConfig = config => {
   return [isValid, validValue];
 };
 
+// numberConfig is passed along with listing fields that use the schema type `long` 
+const validNumberConfig = config => {
+  const { minimum, maximum } = config;
+
+  // Check if both minimum and maximum are integers
+  if (!Number.isInteger(minimum) || !Number.isInteger(maximum)) {
+    return [false, config];
+  }
+
+  // Ensure both values are within the safe integer range
+  if (minimum < Number.MIN_SAFE_INTEGER || minimum > Number.MAX_SAFE_INTEGER ||
+      maximum < Number.MIN_SAFE_INTEGER || maximum > Number.MAX_SAFE_INTEGER) {
+    return [false, config];
+  }
+
+  // Check that the maximum is greater than the minimum
+  if (maximum <= minimum) {
+    return [false, config];
+  }
+  return [true, config];
+};
+
 const validUserShowConfig = config => {
   const isUndefined = typeof config === 'undefined';
   if (isUndefined) {
@@ -698,7 +719,7 @@ const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) =
             : name === 'scope'
             ? validEnumString('scope', value, scopeOptions, 'public')
             : name === 'numberConfig'
-            ? [true, value]
+            ? validNumberConfig(value)
             : name === 'includeForListingTypes'
             ? validListingTypesForBuiltInSetup(value, listingTypesInUse)
             : name === 'listingTypeConfig'
