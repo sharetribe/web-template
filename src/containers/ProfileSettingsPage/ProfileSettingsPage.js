@@ -42,10 +42,14 @@ export const ProfileSettingsPageComponent = props => {
     intl,
   } = props;
 
-  const { userFields } = config.user;
+  const { userFields, userTypes = [] } = config.user;
 
   const handleSubmit = (values, userType) => {
-    const { firstName, lastName, bio: rawBio, ...rest } = values;
+    const { firstName, lastName, displayName, bio: rawBio, ...rest } = values;
+
+    const displayNameMaybe = displayName
+      ? { displayName: displayName.trim() }
+      : { displayName: null };
 
     // Ensure that the optional bio is a string
     const bio = rawBio || '';
@@ -53,6 +57,7 @@ export const ProfileSettingsPageComponent = props => {
     const profile = {
       firstName: firstName.trim(),
       lastName: lastName.trim(),
+      ...displayNameMaybe,
       bio,
       publicData: {
         ...pickUserFieldsData(rest, 'public', userType, userFields),
@@ -79,6 +84,7 @@ export const ProfileSettingsPageComponent = props => {
   const {
     firstName,
     lastName,
+    displayName,
     bio,
     publicData,
     protectedData,
@@ -87,6 +93,10 @@ export const ProfileSettingsPageComponent = props => {
   const { userType } = publicData || {};
   const profileImageId = user.profileImage ? user.profileImage.id : null;
   const profileImage = image || { imageId: profileImageId };
+  const userTypeConfig = userTypes.find(config => config.userType === userType);
+  const isDisplayNameIncluded = userTypeConfig?.defaultUserFields?.displayName !== false;
+  // ProfileSettingsForm decides if it's allowed to show the input field.
+  const displayNameMaybe = isDisplayNameIncluded && displayName ? { displayName } : {};
 
   const profileSettingsForm = user.id ? (
     <ProfileSettingsForm
@@ -95,6 +105,7 @@ export const ProfileSettingsPageComponent = props => {
       initialValues={{
         firstName,
         lastName,
+        ...displayNameMaybe,
         bio,
         profileImage: user.profileImage,
         ...initialValuesForUserFields(publicData, 'public', userType, userFields),
@@ -110,7 +121,7 @@ export const ProfileSettingsPageComponent = props => {
       onSubmit={values => handleSubmit(values, userType)}
       marketplaceName={config.marketplaceName}
       userFields={userFields}
-      userType={userType}
+      userTypeConfig={userTypeConfig}
     />
   ) : null;
 
