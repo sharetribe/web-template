@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Update translations for de.json, es.json, and fr.json.
+  [#374](https://github.com/sharetribe/web-template/pull/374)
 - [change] Update one copy text.
   [#373](https://github.com/sharetribe/web-template/pull/373)
 - [change] EditListingDetailsForm: pass categoryLevel as argument to translations.
