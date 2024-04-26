@@ -328,6 +328,11 @@ const EditListingDetailsPanel = props => {
             } = values;
 
             const nestedCategories = pickCategoryFields(rest, categoryKey, 1, listingCategories);
+            // Remove old categories by explicitly saving null for them.
+            const cleanedNestedCategories = {
+              ...[1, 2, 3].reduce((a, i) => ({ ...a, [`${categoryKey}${i}`]: null }), {}),
+              ...nestedCategories,
+            };
             const publicListingFields = pickListingFieldsData(
               rest,
               'public',
@@ -350,7 +355,7 @@ const EditListingDetailsPanel = props => {
                 listingType,
                 transactionProcessAlias,
                 unitType,
-                ...nestedCategories,
+                ...cleanedNestedCategories,
                 ...publicListingFields,
               },
               privateData: privateListingFields,
