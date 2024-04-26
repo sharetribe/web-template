@@ -102,7 +102,7 @@ const CustomFieldText = props => {
 
 const CustomFieldLong = props => {
   const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
-  const { maximum, minimum, saveConfig } = fieldConfig;
+  const { minimum, maximum, saveConfig } = fieldConfig;
   const { placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
   const label = getLabel(fieldConfig);
   const placeholder =
@@ -115,7 +115,7 @@ const CustomFieldLong = props => {
     { id: 'CustomExtendedDataField.numberTooBig' },
     { max: maximum }
   );
- 
+
   const validate = (value, min, max) => {
     const requiredError =
       isRequired && value == null ? requiredMessage || defaultRequiredMessage : undefined;

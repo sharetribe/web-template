@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] support for extended data fields with type `long`
+  [#364](https://github.com/sharetribe/web-template/pull/364)
 - [fix] the email template for default-purchase process
   (purchase-order-canceled-from-disputed-provider-html.html) contained copy-paste related typo.
   [#390](https://github.com/sharetribe/web-template/pull/389)
