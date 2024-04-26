@@ -21,9 +21,8 @@
   padding-top: 5px;
   padding-bottom: 5px;
   margin-top: 0px;
-}
-@media (--viewportMedium) {
-  .contentWrapper {
+
+  @media (--viewportMedium) {
     padding-top: 0px;
     padding-bottom: 8px;
     margin-top: 0px;
@@ -92,9 +91,7 @@
 .sliderWrapper {
   display: flex;
   padding: 17px 0 6px 0;
-}
-@media (--viewportMedium) {
-  .sliderWrapper {
+  @media (--viewportMedium) {
     padding: 3px 0 6px 0;
   }
 }

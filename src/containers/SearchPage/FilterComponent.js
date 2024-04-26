@@ -1,12 +1,16 @@
 import React from 'react';
+
+// utils
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_LONG } from '../../util/types';
 import { convertCategoriesToSelectTreeOptions, constructQueryParamName } from '../../util/search';
+
+// component imports
 import SelectSingleFilter from './SelectSingleFilter/SelectSingleFilter';
 import SelectMultipleFilter from './SelectMultipleFilter/SelectMultipleFilter';
 import BookingDateRangeFilter from './BookingDateRangeFilter/BookingDateRangeFilter';
 import KeywordFilter from './KeywordFilter/KeywordFilter';
 import PriceFilter from './PriceFilter/PriceFilter';
-import SelectNumberFromRangeFilter from './SelectNumberFromRangeFilter/SelectNumberFromRangeFilter';
+import IntegerRangeFilter from './IntegerRangeFilter/IntegerRangeFilter';
 
 /**
  * FilterComponent is used to map configured filter types
@@ -157,7 +161,7 @@ const FilterComponent = props => {
       const { label } = filterConfig;
       const queryParamNames = [constructQueryParamName(key, scope)];
       return (
-        <SelectNumberFromRangeFilter
+        <IntegerRangeFilter
           id={componentId}
           label={label}
           name={name}

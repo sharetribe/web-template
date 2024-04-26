@@ -1,16 +1,15 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { arrayOf, bool, func, node, object, string } from 'prop-types';
 
 import debounce from 'lodash/debounce';
 import classNames from 'classnames';
-import { Field } from 'react-final-form';
 
 import FilterPlain from '../FilterPlain/FilterPlain';
 import FilterPopup from '../FilterPopup/FilterPopup';
-import RangeInput from './RangeInput';
+import FieldSelectIntegerRange from './FieldSelectIntegerRange';
 
 import { FormattedMessage } from '../../../util/reactIntl';
-import css from './SelectNumberFromRangeFilter.module.css';
+import css from './IntegerRangeFilter.module.css';
 
 const RADIX = 10;
 
@@ -34,7 +33,7 @@ const formatToQueryParam = (range, queryParamName) => {
   return { [queryParamName]: value };
 };
 
-const SelectNumberFromRangeFilter = props => {
+const IntegerRangeFilter = props => {
   const {
     min,
     max,
@@ -66,12 +65,12 @@ const SelectNumberFromRangeFilter = props => {
   const { minValue, maxValue } = parsedInitialValues || {};
   const hasInitialValues = initialValues && hasValue(minValue) && hasValue(maxValue);
 
-  const resolvedInitialValues = {[name]: hasInitialValues ? parsedInitialValues : {}};
+  const resolvedInitialValues = { [name]: hasInitialValues ? parsedInitialValues : {} };
 
   // Handles form submission by extracting and updating the range values from the form's current state.
   const handleSubmit = values => {
-  const usedValue = values?.[name] ? values[name] : values;
-  const { minValue, maxValue } = usedValue || {};
+    const usedValue = values?.[name] ? values[name] : values;
+    const { minValue, maxValue } = usedValue || {};
 
     return onSubmit(
       formatToQueryParam(
@@ -84,20 +83,37 @@ const SelectNumberFromRangeFilter = props => {
     );
   };
 
-  // Used to display the selected values above the filter component in the "grid" view
-  const labelSelectionForPlain = hasInitialValues ? (
-    <FormattedMessage id="RangeFilter.labelSelectedPlain" values={{ minValue, maxValue }} />
-  ) : null;
+  // We use useRef to create a mutable object that persists across renders without causing re-renders.
+  // This is used as a flag to control whether debouncing should be applied.
+  // Debouncing should only be applied when liveEdit is `true`, i.e. in the grid view, mobile view
+  // or in the secondary filter view.
+  const bypassDebounce = useRef(false);
 
   // A debounced version of the `handleSubmit` function to prevent excessive
-  // or premature submissions during rapid input changes.
+  // or premature submissions during subsequent and rapid input changes.
   const handleSubmitOnLive = debounce(
     values => {
-      return handleSubmit(values);
+      // Check if debounce should be bypassed
+      if (bypassDebounce.current) {
+        bypassDebounce.current = false;
+        return;
+      }
+      handleSubmit(values);
     },
     400,
     { leading: false, trailing: true }
   );
+
+  const handleClear = values => {
+    // Sets the bypass flag to true, instructing the debounced handleSubmit to skip its next invocation.
+    bypassDebounce.current = true;
+    handleSubmit(null);
+  };
+
+  // Used to display the selected values above the filter component in the "grid" view
+  const labelSelectionForPlain = hasInitialValues ? (
+    <FormattedMessage id="IntegerRangeFilter.labelSelectedPlain" values={{ minValue, maxValue }} />
+  ) : null;
 
   return showAsPopup ? (
     <FilterPopup
@@ -110,14 +126,7 @@ const SelectNumberFromRangeFilter = props => {
       initialValues={resolvedInitialValues}
       {...rest}
     >
-      <Field
-        max={max}
-        min={min}
-        name={name}
-        step={step}
-        component={RangeInput}
-      />
-
+      <FieldSelectIntegerRange max={max} min={min} name={name} step={step} />
     </FilterPopup>
   ) : (
     <FilterPlain
@@ -129,41 +138,34 @@ const SelectNumberFromRangeFilter = props => {
       isSelected={hasInitialValues}
       id={`${id}.plain`}
       liveEdit
-      onClear={handleSubmit}
+      onClear={handleClear}
       onSubmit={handleSubmitOnLive}
       initialValues={resolvedInitialValues}
       {...rest}
     >
-      <Field
-        component={RangeInput}
-        isInSideBar
-        max={max}
-        min={min}
-        name={name}
-        step={step}
-      />
+      <FieldSelectIntegerRange isInSideBar max={max} min={min} name={name} step={step} />
     </FilterPlain>
   );
 };
 
-SelectNumberFromRangeFilter.defaultProps = {
-    rootClassName: null,
-    className: null,
-    showAsPopup: true,
-    liveEdit: false,
-    initialValues: null,
-  };
+IntegerRangeFilter.defaultProps = {
+  rootClassName: null,
+  className: null,
+  showAsPopup: true,
+  liveEdit: false,
+  initialValues: null,
+};
 
-  SelectNumberFromRangeFilter.propTypes = {
-    rootClassName: string,
-    className: string,
-    id: string.isRequired,
-    label: node,
-    liveEdit: bool,
-    queryParamNames: arrayOf(string).isRequired,
-    onSubmit: func.isRequired,
-    initialValues: object,
-    showAsPopup: bool,
-  };
+IntegerRangeFilter.propTypes = {
+  rootClassName: string,
+  className: string,
+  id: string.isRequired,
+  label: node,
+  liveEdit: bool,
+  queryParamNames: arrayOf(string).isRequired,
+  onSubmit: func.isRequired,
+  initialValues: object,
+  showAsPopup: bool,
+};
 
-export default SelectNumberFromRangeFilter;
+export default IntegerRangeFilter;
