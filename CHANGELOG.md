@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] EditListingDetailsForm: pass categoryLevel as argument to translations.
+  [#372](https://github.com/sharetribe/web-template/pull/372)
 - [fix] Fix: when changing categories, clear previously saved ones
   [#371](https://github.com/sharetribe/web-template/pull/371)
 - [fix] util/search.js: fix pickInitialValuesForFieldSelectTree.
