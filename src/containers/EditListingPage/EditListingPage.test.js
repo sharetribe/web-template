@@ -310,7 +310,7 @@ describe('EditListingPage', () => {
     };
 
     // Render the EditListingPage component with provided props and configurations
-    const { getByText, getByRole, getByLabelText, queryAllByRole } = render(
+    const { getByText, queryAllByText, getByRole, getByLabelText, queryAllByRole } = render(
       <EditListingPage {...props} />,
       {
         config,
@@ -341,7 +341,7 @@ describe('EditListingPage', () => {
       queryAllByRole('option', { name: 'EditListingDetailsForm.categoryPlaceholder' })[0].selected
     ).toBe(false);
     expect(getByRole('option', { name: 'Sneakers' }).selected).toBe(true);
-    expect(getByText('EditListingDetailsForm.subCategoryLabel')).toBeInTheDocument();
+    expect(queryAllByText('EditListingDetailsForm.categoryLabel')).toHaveLength(2);
 
     // Simulate user selecting subcategory
     await waitFor(() => {
@@ -443,7 +443,7 @@ describe('EditListingPage', () => {
       },
     };
 
-    const { getByText, getByRole, getByLabelText, queryAllByRole } = render(
+    const { getByText, getByRole, getByLabelText, queryAllByText, queryAllByRole } = render(
       <EditListingPage {...props} />,
       {
         initialState: initialState(listing),
@@ -472,7 +472,7 @@ describe('EditListingPage', () => {
       queryAllByRole('option', { name: 'EditListingDetailsForm.categoryPlaceholder' })[0].selected
     ).toBe(false);
     expect(getByRole('option', { name: 'Sneakers' }).selected).toBe(true);
-    expect(getByText('EditListingDetailsForm.subCategoryLabel')).toBeInTheDocument();
+    expect(queryAllByText('EditListingDetailsForm.categoryLabel')).toHaveLength(2);
 
     // Simulate user interaction and select sub level category
     await waitFor(() => {
