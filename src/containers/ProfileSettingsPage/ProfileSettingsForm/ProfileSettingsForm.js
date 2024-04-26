@@ -68,6 +68,9 @@ const DisplayNameMaybe = props => {
         })}
         {...validateMaybe}
       />
+      <p className={css.extraInfo}>
+        <FormattedMessage id="ProfileSettingsForm.displayNameInfo" />
+      </p>
     </div>
   );
 };
@@ -360,7 +363,7 @@ class ProfileSettingsFormComponent extends Component {
                   label={bioLabel}
                   placeholder={bioPlaceholder}
                 />
-                <p className={css.bioInfo}>
+                <p className={css.extraInfo}>
                   <FormattedMessage id="ProfileSettingsForm.bioInfo" values={{ marketplaceName }} />
                 </p>
               </div>
