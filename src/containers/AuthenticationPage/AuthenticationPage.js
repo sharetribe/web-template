@@ -200,9 +200,7 @@ export const AuthenticationForms = props => {
 
   const handleSubmitSignup = values => {
     const { userType, fname, lname, displayName, ...rest } = values;
-    const displayNameMaybe = displayName
-      ? { displayName: displayName.trim() }
-      : { displayName: null };
+    const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
 
     const params = {
       firstName: fname.trim(),
@@ -314,9 +312,7 @@ const ConfirmIdProviderInfoForm = props => {
       ...rest
     } = values;
 
-    const displayNameMaybe = displayName
-      ? { displayName: displayName.trim() }
-      : { displayName: null };
+    const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
 
     // Pass email, fistName or lastName to Marketplace API only if user has edited them
     // and they can't be fetched directly from idp provider (e.g. Facebook)
