@@ -13,6 +13,31 @@ afterEach(cleanup);
 
 const noop = () => null;
 
+const userTypeConfig = {
+  userType: 'a',
+  label: 'Seller',
+  defaultListingFields: {
+    displayName: false,
+    phoneNumber: true,
+  },
+};
+const userTypeConfigC = {
+  userType: 'c',
+  label: 'C',
+  defaultListingFields: {
+    displayName: false,
+    phoneNumber: true,
+  },
+};
+const userTypeConfigE = {
+  userType: 'e',
+  label: 'E',
+  defaultListingFields: {
+    displayName: false,
+    phoneNumber: true,
+  },
+};
+
 const userFieldConfig = [
   {
     key: 'enumField1',
@@ -156,6 +181,7 @@ describe('ProfileSettingsForm', () => {
         currentUser={u1}
         profileImage={{}}
         userFields={userFieldConfig}
+        userTypeConfig={userTypeConfig}
         initialValues={{
           firstName,
           lastName,
@@ -184,6 +210,7 @@ describe('ProfileSettingsForm', () => {
         currentUser={u1}
         profileImage={{}}
         userFields={userFieldConfig}
+        userTypeConfig={userTypeConfig}
         initialValues={{
           bio,
         }}
@@ -208,7 +235,7 @@ describe('ProfileSettingsForm', () => {
         currentUser={u1}
         profileImage={{}}
         userFields={userFieldConfig}
-        userType="a"
+        userTypeConfig={userTypeConfig}
         initialValues={{
           ...initialValuesForUserFields(publicData, 'public', 'a', userFieldConfig),
         }}
@@ -231,7 +258,7 @@ describe('ProfileSettingsForm', () => {
         currentUser={u1}
         profileImage={{}}
         userFields={userFieldConfig}
-        userType="c"
+        userTypeConfig={userTypeConfigC}
         initialValues={{
           ...initialValuesForUserFields(publicData, 'public', 'c', userFieldConfig),
         }}
@@ -254,7 +281,7 @@ describe('ProfileSettingsForm', () => {
         currentUser={u1}
         profileImage={{}}
         userFields={userFieldConfig}
-        userType="a"
+        userTypeConfig={userTypeConfig}
         initialValues={{
           ...initialValuesForUserFields(publicData, 'public', 'a', userFieldConfig),
         }}
@@ -278,7 +305,7 @@ describe('ProfileSettingsForm', () => {
         currentUser={u1}
         profileImage={{}}
         userFields={userFieldConfig}
-        userType="a"
+        userTypeConfig={userTypeConfig}
         initialValues={{
           ...initialValuesForUserFields(privateData, 'private', 'a', userFieldConfig),
         }}
@@ -302,7 +329,7 @@ describe('ProfileSettingsForm', () => {
         currentUser={u1}
         profileImage={{}}
         userFields={userFieldConfig}
-        userType="a"
+        userTypeConfig={userTypeConfig}
         initialValues={{
           ...initialValuesForUserFields(publicData, 'public', 'a', userFieldConfig),
         }}
@@ -329,7 +356,7 @@ describe('ProfileSettingsForm', () => {
         currentUser={u1}
         profileImage={{}}
         userFields={userFieldConfig}
-        userType="a"
+        userTypeConfig={userTypeConfig}
         initialValues={{
           ...initialValuesForUserFields(publicData, 'public', 'a', userFieldConfig),
         }}
@@ -358,6 +385,7 @@ describe('ProfileSettingsForm', () => {
         currentUser={u1}
         profileImage={{}}
         userFields={userFieldConfig}
+        userTypeConfig={null}
         initialValues={{
           ...initialValuesForUserFields(publicData, 'public', null, userFieldConfig),
           ...initialValuesForUserFields(privateData, 'private', null, userFieldConfig),
@@ -401,7 +429,7 @@ describe('ProfileSettingsForm', () => {
         currentUser={u1}
         profileImage={{}}
         userFields={userFieldConfig}
-        userType="e"
+        userTypeConfig={userTypeConfigE}
         initialValues={{
           firstName,
           lastName,
