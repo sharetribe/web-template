@@ -115,10 +115,10 @@ const CustomFieldLong = props => {
     { id: 'CustomExtendedDataField.numberTooBig' },
     { max: maximum }
   );
-
+ 
   const validate = (value, min, max) => {
     const requiredError =
-      isRequired && value != null ? undefined : requiredMessage || defaultRequiredMessage;
+      isRequired && value == null ? requiredMessage || defaultRequiredMessage : undefined;
     const numberError = validateInteger(
       value,
       max,
