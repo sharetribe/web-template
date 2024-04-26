@@ -130,6 +130,17 @@ export const numberAtLeast = (message, minNumber) => value => {
   return typeof valueNum === 'number' && valueNum >= minNumber ? VALID : message;
 };
 
+export const validateInteger = (value, max, min, numberTooSmallMessage, numberTooBigMessage) => {
+  const parsedValue = Number.parseInt(value, 10);
+  if (parsedValue > max) {
+    return numberTooBigMessage;
+  }
+  if (parsedValue < min) {
+    return numberTooSmallMessage;
+  }
+  return VALID;
+};
+
 export const ageAtLeast = (message, minYears) => value => {
   const { year, month, day } = value;
   const dayNum = parseNum(day);

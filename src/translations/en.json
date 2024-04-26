@@ -655,7 +655,7 @@
   "ProfileSettingsPage.heading": "Profile settings",
   "ProfileSettingsPage.title": "Profile settings",
   "ProfileSettingsPage.viewProfileLink": "View your profile",
-  "RangeFilter.labelSelectedPlain": "{minValue} - {maxValue}",
+  "IntegerRangeFilter.labelSelectedPlain": "{minValue} - {maxValue}",
   "ResponsiveBackgroundImageContainer.backgroundImageAlt": "Background image",
   "ResponsiveImage.noImage": "No image",
   "ReviewForm.reviewContentLabel": "Describe your experience",

@@ -9,7 +9,7 @@ import {
   SCHEMA_TYPE_BOOLEAN,
 } from '../../util/types';
 import { useIntl } from '../../util/reactIntl';
-import { required, nonEmptyArray } from '../../util/validators';
+import { required, nonEmptyArray, validateInteger } from '../../util/validators';
 // Import shared components
 import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '..';
 // Import modules from this directory
@@ -100,17 +100,6 @@ const CustomFieldText = props => {
   );
 };
 
-const validateNumber = (value, max, min, numberTooSmallMessage, numberTooBigMessage) => {
-  const parsedValue = Number.parseInt(value, 10);
-  if (parsedValue > max) {
-    return numberTooBigMessage;
-  }
-  if (parsedValue < min) {
-    return numberTooSmallMessage; 
-  }
-  return undefined; 
-};
-
 const CustomFieldLong = props => {
   const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
   const { maximum, minimum, saveConfig } = fieldConfig;
@@ -118,14 +107,27 @@ const CustomFieldLong = props => {
   const label = getLabel(fieldConfig);
   const placeholder =
     placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholderLong' });
-  const numberTooSmallMessage = intl.formatMessage({ id: 'CustomExtendedDataField.numberTooSmall'}, { min: minimum });
-  const numberTooBigMessage = intl.formatMessage({ id: 'CustomExtendedDataField.numberTooBig'}, {max: maximum} );
+  const numberTooSmallMessage = intl.formatMessage(
+    { id: 'CustomExtendedDataField.numberTooSmall' },
+    { min: minimum }
+  );
+  const numberTooBigMessage = intl.formatMessage(
+    { id: 'CustomExtendedDataField.numberTooBig' },
+    { max: maximum }
+  );
 
-    const validate = (value, max, min) => {
-      const requiredError = isRequired && !value ? (requiredMessage || defaultRequiredMessage) : undefined;
-      const numberError = validateNumber(value, max, min, numberTooSmallMessage, numberTooBigMessage);
-      return requiredError || numberError; 
-    };
+  const validate = (value, min, max) => {
+    const requiredError =
+      isRequired && value != null ? undefined : requiredMessage || defaultRequiredMessage;
+    const numberError = validateInteger(
+      value,
+      max,
+      min,
+      numberTooSmallMessage,
+      numberTooBigMessage
+    );
+    return requiredError || numberError;
+  };
 
   return (
     <FieldTextInput
@@ -140,7 +142,7 @@ const CustomFieldLong = props => {
       }}
       label={label}
       placeholder={placeholder}
-      validate={value => validate(value, maximum, minimum)}
+      validate={value => validate(value, minimum, maximum)}
     />
   );
 };

@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { bool, object, number } from 'prop-types';
-
+import { bool, string, number } from 'prop-types';
 import classNames from 'classnames';
+import { Field } from 'react-final-form';
 
 import { RangeSlider } from '../../../components';
 
-import css from './SelectNumberFromRangeFilter.module.css';
+import css from './IntegerRangeFilter.module.css';
 
 const RADIX = 10;
 
@@ -14,25 +14,19 @@ const RADIX = 10;
 //  If `values` does not include `minValue` or `maxValue`, defaults are applied.
 const resolveMinMaxValues = (values, defaultMax, defaultMin) => {
   const { maxValue, minValue } = values || {};
-  return { maxValue: maxValue || defaultMax, minValue: minValue || defaultMin }
-}
+  return { maxValue: maxValue || defaultMax, minValue: minValue || defaultMin };
+};
 
 const RangeInput = props => {
-  const {
-    input,
-    min: defaultMinValue,
-    max: defaultMaxValue,
-    step,
-    isInSideBar
-  } = props;
+  const { input, min: defaultMinValue, max: defaultMaxValue, step, isInSideBar } = props;
   const { value: values = {}, onChange } = input;
 
-  const currentValues = resolveMinMaxValues(values, defaultMaxValue, defaultMinValue)
+  const currentValues = resolveMinMaxValues(values, defaultMaxValue, defaultMinValue);
 
   const handleMinValueChange = event => {
     const newValue = Number.parseInt(event.target.value, RADIX);
     if (isNaN(newValue)) {
-      onChange({...currentValues, minValue: defaultMinValue})
+      onChange({ ...currentValues, minValue: defaultMinValue });
       return;
     }
     if (newValue > currentValues.maxValue) {
@@ -48,10 +42,9 @@ const RangeInput = props => {
   };
 
   const handleMaxValueChange = event => {
-    
     const newValue = Number.parseInt(event.target.value, RADIX);
     if (isNaN(newValue)) {
-      onChange({...currentValues, maxValue: defaultMaxValue})
+      onChange({ ...currentValues, maxValue: defaultMaxValue });
       return;
     }
     if (newValue < currentValues.minValue) {
@@ -84,7 +77,7 @@ const RangeInput = props => {
             step={step}
             placeholder={defaultMinValue}
             value={currentValues.minValue}
-            onChange={(event) => handleMinValueChange(event, values.minValue)}
+            onChange={event => handleMinValueChange(event, values.minValue)}
           ></input>
           <span className={css.valueSeparator}>-</span>
           <input
@@ -114,20 +107,35 @@ const RangeInput = props => {
   );
 };
 
-RangeInput.defaultProps = {
-  input: null,
+const FieldSelectIntegerRange = props => {
+  const { max, min, name, step, isInSideBar, ...rest } = props;
+  return (
+    <Field
+      max={max}
+      min={min}
+      name={name}
+      step={step}
+      isInSideBar
+      component={RangeInput}
+      {...rest}
+    />
+  );
+};
+
+FieldSelectIntegerRange.defaultProps = {
   min: null,
   max: null,
   step: 5,
+  name: null,
   isInSideBar: false,
 };
 
-RangeInput.propTypes = {
-  input: object,
+FieldSelectIntegerRange.propTypes = {
   min: number,
   max: number,
   step: number,
   isInSideBar: bool.isRequired,
+  name: string,
 };
 
-export default RangeInput;
+export default FieldSelectIntegerRange;
