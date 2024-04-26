@@ -650,6 +650,7 @@
   "ProfileSettingsForm.bioPlaceholder": "Tell us a little bit about yourself…",
   "ProfileSettingsForm.changeAvatar": "Change",
   "ProfileSettingsForm.displayNameHeading": "Your display name",
+  "ProfileSettingsForm.displayNameInfo": "The display name defaults to first name plus initial of last name.",
   "ProfileSettingsForm.displayNameLabel": "Display name",
   "ProfileSettingsForm.displayNamePlaceholder": "Jane D",
   "ProfileSettingsForm.displayNameRequired": "This field is required.",
