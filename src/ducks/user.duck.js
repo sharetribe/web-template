@@ -243,13 +243,14 @@ export const fetchCurrentUserHasListings = () => (dispatch, getState, sdk) => {
   }
 
   const params = {
-    // Since we are only interested in if the user has
+    // Since we are only interested in if the user has published
     // listings, we only need at most one result.
+    authorId: currentUser.id.uuid,
     page: 1,
     perPage: 1,
   };
 
-  return sdk.ownListings
+  return sdk.listings
     .query(params)
     .then(response => {
       const hasListings = response.data.data && response.data.data.length > 0;
