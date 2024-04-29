@@ -14,10 +14,14 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] currentUserHasListings info. This is an old bug that emerged when we introduced draft status
+  to listing. The fetched listing might not be a published one but a draft listing. The ownListings
+  API endpoint is not queryable to get only published listings but luckily we have introduced
+  authorId filter to listings end point later on.
+  [#376](https://github.com/sharetribe/web-template/pull/376)
 - [add] Update translations for de.json, es.json, and fr.json.
   [#374](https://github.com/sharetribe/web-template/pull/374)
-- [change] Update one copy text.
-  [#373](https://github.com/sharetribe/web-template/pull/373)
+- [change] Update one copy text. [#373](https://github.com/sharetribe/web-template/pull/373)
 - [change] EditListingDetailsForm: pass categoryLevel as argument to translations.
   [#372](https://github.com/sharetribe/web-template/pull/372)
 - [fix] Fix: when changing categories, clear previously saved ones
