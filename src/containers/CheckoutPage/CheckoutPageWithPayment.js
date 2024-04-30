@@ -213,7 +213,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     speculatedTransaction,
     stripe,
     card,
-    billingDetails: getBillingDetails(formValues),
+    billingDetails: getBillingDetails(formValues, currentUser),
     message,
     paymentIntent,
     hasPaymentIntentUserActionsDone,
