@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+## [v5.0.1] 2024-04-30
+
 - [fix] Fix: currentUser was not passed to billing details, which resulted email address missing on
   Stripe side. [#377](https://github.com/sharetribe/web-template/pull/377)
 - [fix] currentUserHasListings info. This is an old bug that emerged when we introduced draft status
@@ -30,6 +32,8 @@ way to update this template, but currently, we follow a pattern:
   [#371](https://github.com/sharetribe/web-template/pull/371)
 - [fix] util/search.js: fix pickInitialValuesForFieldSelectTree.
   [#369](https://github.com/sharetribe/web-template/pull/369)
+
+  [v5.0.1]: https://github.com/sharetribe/web-template/compare/v5.0.0...v5.0.1
 
 ## [v5.0.0] 2024-04-23
 
