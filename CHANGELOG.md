@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] Fix: currentUser was not passed to billing details, which resulted email address missing on
+  Stripe side. [#377](https://github.com/sharetribe/web-template/pull/377)
 - [fix] currentUserHasListings info. This is an old bug that emerged when we introduced draft status
   to listing. The fetched listing might not be a published one but a draft listing. The ownListings
   API endpoint is not queryable to get only published listings but luckily we have introduced
