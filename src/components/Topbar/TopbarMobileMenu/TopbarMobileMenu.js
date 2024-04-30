@@ -29,13 +29,13 @@ const TopbarMobileMenu = props => {
 
   if (!isAuthenticated) {
     const signup = (
-      <NamedLink name="SignupPage" className={css.signupLink}>
+      <NamedLink name="SignupPage" style={{color: "white"}} className={css.signupLink}>
         <FormattedMessage id="TopbarMobileMenu.signupLink" />
       </NamedLink>
     );
 
     const login = (
-      <NamedLink name="LoginPage" className={css.loginLink}>
+      <NamedLink name="LoginPage" style={{color: "white"}} className={css.loginLink}>
         <FormattedMessage id="TopbarMobileMenu.loginLink" />
       </NamedLink>
     );
@@ -49,14 +49,17 @@ const TopbarMobileMenu = props => {
       <div className={css.root}>
         <div className={css.content}>
           <div className={css.authenticationGreeting}>
-            <FormattedMessage
-              id="TopbarMobileMenu.unauthorizedGreeting"
-              values={{ lineBreak: <br />, signupOrLogin }}
-            />
+            <a className={css.createNewListingLink} href='/s'>
+              <FormattedMessage id="ALQUILAR UN ARTÍCULO" />
+            </a>
           </div>
         </div>
         <div className={css.footer}>
-          <NamedLink className={css.createNewListingLink} name="NewListingPage">
+        <div className={css.createNewListingLink}>
+          <FormattedMessage id="TopbarMobileMenu.signupOrLogin" values={{ signup, login }} />
+        </div>         
+          <br />
+          <NamedLink name="NewListingPage" className={css.createNewListingLink}>
             <FormattedMessage id="TopbarMobileMenu.newListingLink" />
           </NamedLink>
         </div>
@@ -114,7 +117,8 @@ const TopbarMobileMenu = props => {
         </NamedLink>
         <a
           className={classNames(css.navigationLink, currentPageClass('faqs'))}
-          name="AccountSettingsPage" href="https://www.rundo.com.ar/p/frequent-asked-questions"
+          name="AccountSettingsPage"
+          href="https://www.rundo.com.ar/p/frequent-asked-questions"
         >
           <a href="https://www.rundo.com.ar/p/frequent-asked-questions"></a>
           <FormattedMessage id="Preguntas Frecuentes" />
