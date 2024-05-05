@@ -118,6 +118,18 @@ exports.transactionLineItems = (listing, orderData, providerCommission) => {
   const unitPrice = listing.attributes.price;
   const currency = unitPrice.currency;
 
+  const resolveHelmetFeePrice = listing => {
+    const publicData = listing.attributes.publicData;
+    const helmetFee = publicData && publicData.helmetFee;
+    const { amount, currency } = helmetFee;
+  
+    if (amount && currency) {
+      return new Money(amount, currency);
+    }
+  
+    return null;
+  };
+  
   /**
    * Pricing starts with order's base price:
    * Listing's price is related to a single unit. It needs to be multiplied by quantity
@@ -175,6 +187,18 @@ exports.transactionLineItems = (listing, orderData, providerCommission) => {
     includeFor: ['customer', 'provider'],
   };
 
+   const helmetFeePrice = orderData.hasHelmetFee ? resolveHelmetFeePrice(listing) : null;
+   const helmetFee = helmetFeePrice
+     ? [
+         {
+           code: 'line-item/helmet-rental-fee',
+           unitPrice: helmetFeePrice,
+           quantity: 1,
+           includeFor: ['customer', 'provider'],
+         },
+       ]
+     : [];
+     
   // Provider commission reduces the amount of money that is paid out to provider.
   // Therefore, the provider commission line-item should have negative effect to the payout total.
   const getNegation = percentage => {
@@ -187,7 +211,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission) => {
     ? [
         {
           code: 'line-item/provider-commission',
-          unitPrice: calculateTotalFromLineItems([order]),
+          unitPrice: calculateTotalFromLineItems([order, ...helmetFee]),
           percentage: getNegation(providerCommission.percentage),
           includeFor: ['provider'],
         },
@@ -196,7 +220,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission) => {
 
   // Let's keep the base price (order) as first line item and provider's commission as last one.
   // Note: the order matters only if OrderBreakdown component doesn't recognize line-item.
-  const lineItems = [order, ...extraLineItems, ...providerCommissionMaybe];
+  const lineItems = [order, ...extraLineItems, ...helmetFee, ...providerCommissionMaybe];
 
   return lineItems;
 };

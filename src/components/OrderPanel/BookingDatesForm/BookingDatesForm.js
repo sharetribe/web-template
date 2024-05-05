@@ -20,16 +20,18 @@ import {
   initialVisibleMonth,
 } from '../../../util/dates';
 import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, TIME_SLOT_TIME, propTypes } from '../../../util/types';
+ import { formatMoney } from '../../../util/currency';
+ import { types as sdkTypes } from '../../../util/sdkLoader';
 import { BOOKING_PROCESS_NAME } from '../../../transactions/transaction';
 
-import { Form, IconArrowHead, PrimaryButton, FieldDateRangeInput, H6 } from '../../../components';
+import { Form, IconArrowHead, PrimaryButton, FieldDateRangeInput, H6, FieldCheckbox } from '../../../components';
 
 import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe';
 
 import css from './BookingDatesForm.module.css';
 
 const TODAY = new Date();
-
+const { Money } = sdkTypes;
 const nextMonthFn = (currentMoment, timeZone, offset = 1) =>
   getStartOf(currentMoment, 'month', timeZone, offset, 'months');
 const prevMonthFn = (currentMoment, timeZone, offset = 1) =>
@@ -372,13 +374,18 @@ const handleFormSpyChange = (
   onFetchTransactionLineItems
 ) => formValues => {
   const { startDate, endDate } =
-    formValues.values && formValues.values.bookingDates ? formValues.values.bookingDates : {};
+    formValues.values && formValues.values.bookingDates
+      ? formValues.values.bookingDates
+      : {};
+
+  const hasHelmetFee = formValues.values?.helmetFee?.length > 0;
 
   if (startDate && endDate && !fetchLineItemsInProgress) {
     onFetchTransactionLineItems({
       orderData: {
         bookingStart: startDate,
         bookingEnd: endDate,
+        hasHelmetFee,
       },
       listingId,
       isOwnListing,
@@ -467,9 +474,29 @@ export const BookingDatesFormComponent = props => {
           lineItems,
           fetchLineItemsError,
           onFetchTimeSlots,
+          helmetFee,
         } = fieldRenderProps;
         const { startDate, endDate } = values && values.bookingDates ? values.bookingDates : {};
 
+        const formattedHelmetFee = helmetFee
+        ? formatMoney(intl, new Money(helmetFee.amount, helmetFee.currency))
+        : null;
+      
+      const helmetFeeLabel = intl.formatMessage(
+        { id: 'BookingDatesForm.helmetFeeLabel' },
+        { fee: formattedHelmetFee }
+      );
+
+      const helmetFeeMaybe = helmetFee ? (
+        <FieldCheckbox
+          className={css.helmetFeeContainer}
+          id={`${formId}.helmetFee`}
+          name="helmetFee"
+          label={helmetFeeLabel}
+          value="helmetFee"
+        />
+      ) : null;
+      
         const startDateErrorMessage = intl.formatMessage({
           id: 'FieldDateRangeInput.invalidStartDate',
         });
@@ -609,7 +636,7 @@ export const BookingDatesFormComponent = props => {
                 setCurrentMonth(getStartOf(event?.startDate ?? startOfToday, 'month', timeZone))
               }
             />
-
+          {helmetFeeMaybe}
             {showEstimatedBreakdown ? (
               <div className={css.priceBreakdownContainer}>
                 <H6 as="h3" className={css.bookingBreakdownTitle}>

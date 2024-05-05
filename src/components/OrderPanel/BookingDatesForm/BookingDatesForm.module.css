@@ -76,3 +76,7 @@
   stroke: var(--colorWhite);
   fill: var(--colorWhite);
 }
+
+.helmetFeeContainer {
+  margin-top: 24px;
+}
