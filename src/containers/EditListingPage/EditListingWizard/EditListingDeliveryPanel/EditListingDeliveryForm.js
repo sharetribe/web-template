@@ -113,7 +113,7 @@ export const EditListingDeliveryFormComponent = props => (
       return (
         <Form className={classes} onSubmit={handleSubmit}>
           <FieldCheckbox
-            id="pickup"
+            id={formId ? `${formId}.pickup` : 'pickup'}
             className={classNames(css.deliveryCheckbox, { [css.hidden]: !displayMultipleDelivery })}
             name="deliveryOptions"
             label={pickupLabel}
@@ -170,7 +170,7 @@ export const EditListingDeliveryFormComponent = props => (
               className={css.input}
               type="text"
               name="building"
-              id={`${formId}building`}
+              id={formId ? `${formId}.building` : 'building'}
               label={intl.formatMessage(
                 { id: 'EditListingDeliveryForm.building' },
                 { optionalText }
@@ -183,7 +183,7 @@ export const EditListingDeliveryFormComponent = props => (
           </div>
 
           <FieldCheckbox
-            id="shipping"
+            id={formId ? `${formId}.shipping` : 'shipping'}
             className={classNames(css.deliveryCheckbox, { [css.hidden]: !displayMultipleDelivery })}
             name="deliveryOptions"
             label={shippingLabel}
@@ -192,7 +192,11 @@ export const EditListingDeliveryFormComponent = props => (
 
           <div className={shippingClasses}>
             <FieldCurrencyInput
-              id="shippingPriceInSubunitsOneItem"
+              id={
+                formId
+                  ? `${formId}.shippingPriceInSubunitsOneItem`
+                  : 'shippingPriceInSubunitsOneItem'
+              }
               name="shippingPriceInSubunitsOneItem"
               className={css.input}
               label={intl.formatMessage({
@@ -224,7 +228,11 @@ export const EditListingDeliveryFormComponent = props => (
 
             {hasStockInUse ? (
               <FieldCurrencyInput
-                id="shippingPriceInSubunitsAdditionalItems"
+                id={
+                  formId
+                    ? `${formId}.shippingPriceInSubunitsAdditionalItems`
+                    : 'shippingPriceInSubunitsAdditionalItems'
+                }
                 name="shippingPriceInSubunitsAdditionalItems"
                 className={css.input}
                 label={intl.formatMessage({
