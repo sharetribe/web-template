@@ -193,7 +193,8 @@ exports.transactionLineItems = (listing, orderData, providerCommission) => {
          {
            code: 'line-item/helmet-rental-fee',
            unitPrice: helmetFeePrice,
-           quantity: 1,
+           quantity: -1,
+           percentage: getNegation(helmetFeePrice.percentage),
            includeFor: ['customer', 'provider'],
          },
        ]
