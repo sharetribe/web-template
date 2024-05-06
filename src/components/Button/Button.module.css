@@ -56,12 +56,12 @@
 }
 
 .primaryButton.inProgress:disabled {
-  background-color: var(--colorSuccess);
+  background-color: var(--colorPrimaryButton);
 }
 
 .secondaryButton.inProgress:disabled,
 .secondaryButtonInline.inProgress:disabled {
-  background-color: var(--colorWhite);
+  background-color: var(--colorSecondaryButton);
 }
 
 .ready {
@@ -73,12 +73,12 @@
 }
 
 .primaryButton.ready:disabled {
-  background-color: var(--colorSuccess);
+  background-color: var(--colorPrimaryButton);
 }
 
 .secondaryButton.ready:disabled,
 .secondaryButtonInline.ready:disabled {
-  background-color: var(--colorWhite);
+  background-color: var(--colorSecondaryButton);
 }
 
 .spinner {
