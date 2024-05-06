@@ -222,6 +222,21 @@
   background-color: var(--marketplaceColorDark);
 }
 
+.colorPrimaryButton {
+  composes: color;
+  background-color: var(--colorPrimaryButton);
+}
+
+.colorPrimaryButtonLight {
+  composes: color;
+  background-color: var(--colorPrimaryButtonLight);
+}
+
+.colorPrimaryButtonDark {
+  composes: color;
+  background-color: var(--colorPrimaryButtonDark);
+}
+
 .successColorBackground {
   composes: color;
   background-color: var(--colorSuccess);
