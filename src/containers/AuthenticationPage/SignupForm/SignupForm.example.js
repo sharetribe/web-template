@@ -84,6 +84,7 @@ export const Empty = {
       <TermsAndConditions
         onOpenTermsOfService={() => setTosModalOpen(true)}
         onOpenPrivacyPolicy={() => setPrivacyModalOpen(true)}
+        formId="SignupFormExample"
         intl={fakeIntl}
       />
     ),
