@@ -16,16 +16,6 @@
 :root {
   /* ================ Colors ================ */
 
-  /**
-   * Marketplace color comes by default from src/config/brandingConfig.js
-   * It overwrites these CSS Properties.
-   * In the future, we are planning to bring more --marketplace* CSS Properties
-   * from hosted assets, which means that they could be managed through Console.
-   */
-  --marketplaceColor: #5d2bc0; /* hsl(260, 63%, 46%) */
-  --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
-  --marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
-
   /* Colors used for different functions (like error texts) */
 
   --colorSuccess: #2ecc71;
@@ -54,6 +44,31 @@
   --colorBlack: hsl(0 0% 0%);
 
   --colorLightTransparent: rgba(255, 255, 255, 0.65);
+
+  /**
+  * Marketplace color comes by default from src/config/brandingConfig.js
+  * It overwrites these CSS Properties.
+  * In the future, we are planning to bring more --marketplace* CSS Properties
+  * from hosted assets, which means that they could be managed through Console.
+  */
+  --marketplaceColor: #5d2bc0; /* hsl(260, 63%, 46%) */
+  --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
+  --marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
+
+  /** 
+   * The fill color used by <PrimaryButton>
+   * These might be overwritten by values from hosted assets
+   */
+  --colorPrimaryButton: var(--colorSuccess);
+  --colorPrimaryButtonDark: var(--colorSuccessDark);
+  --colorPrimaryButtonLight: var(--colorSuccessLight);
+
+  /** 
+   * The fill color used by <SecondaryButton>
+   */
+  --colorSecondaryButton: var(--colorWhite);
+  --colorSecondaryButtonDark: var(--colorWhite);
+  --colorSecondaryButtonLight: var(--colorWhite);
 
   /* ================ Font ================ */
   --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
@@ -1028,7 +1043,7 @@ textarea {
 
   /* Button colors */
   /* Primary button uses success color */
-  background-color: var(--colorSuccess);
+  background-color: var(--colorPrimaryButton);
   color: var(--colorWhite);
 
   @media (--viewportMedium) {
@@ -1039,7 +1054,7 @@ textarea {
 .buttonPrimary:hover {
   outline: none;
   box-shadow: var(--boxShadowButton);
-  background-color: var(--colorSuccessDark);
+  background-color: var(--colorPrimaryButtonDark);
   color: var(--colorWhite);
 }
 .buttonPrimary:hover {
@@ -1076,7 +1091,7 @@ textarea {
   border: none;
   border-radius: var(--borderRadiusMedium);
 
-  background-color: var(--colorSuccess);
+  background-color: var(--colorPrimaryButton);
   color: var(--colorWhite);
 
   @media (--viewportMedium) {
@@ -1088,7 +1103,7 @@ textarea {
   outline: none;
   box-shadow: var(--boxShadowButton);
   text-decoration: none;
-  background-color: var(--colorSuccessDark);
+  background-color: var(--colorPrimaryButtonDark);
   color: var(--colorWhite);
 }
 .buttonPrimaryInline:disabled {
@@ -1132,7 +1147,7 @@ textarea {
   border-radius: var(--borderRadiusMedium);
 
   /* Button colors: secondary */
-  background-color: var(--colorWhite);
+  background-color: var(--colorSecondaryButton);
   color: var(--colorGrey700);
 
   @media (--viewportMedium) {
@@ -1144,7 +1159,7 @@ textarea {
   outline: none;
   box-shadow: var(--boxShadowButton);
   border-color: var(--colorGrey300);
-  background-color: var(--colorWhite);
+  background-color: var(--colorSecondaryButton);
 }
 .buttonSecondary:hover {
   text-decoration: none;
@@ -1195,7 +1210,7 @@ textarea {
   border-radius: var(--borderRadiusMedium);
 
   /* Button colors: secondary */
-  background-color: var(--colorWhite);
+  background-color: var(--colorSecondaryButton);
   color: var(--colorGrey700);
 
   @media (--viewportMedium) {
@@ -1207,7 +1222,7 @@ textarea {
   outline: none;
   box-shadow: var(--boxShadowButton);
   border-color: var(--colorGrey300);
-  background-color: var(--colorWhite);
+  background-color: var(--colorSecondaryButton);
 }
 .buttonSecondaryInline:hover {
   text-decoration: none;
