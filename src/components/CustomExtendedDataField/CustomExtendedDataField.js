@@ -20,7 +20,7 @@ const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, l
 const getLabel = fieldConfig => fieldConfig?.saveConfig?.label || fieldConfig?.label;
 
 const CustomFieldEnum = props => {
-  const { name, fieldConfig, defaultRequiredMessage, intl } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
   const { enumOptions = [], saveConfig } = fieldConfig || {};
   const { placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
   const validateMaybe = isRequired
@@ -34,7 +34,13 @@ const CustomFieldEnum = props => {
   const label = getLabel(fieldConfig);
 
   return filterOptions ? (
-    <FieldSelect className={css.customField} name={name} id={name} label={label} {...validateMaybe}>
+    <FieldSelect
+      className={css.customField}
+      name={name}
+      id={formId ? `${formId}.${name}` : name}
+      label={label}
+      {...validateMaybe}
+    >
       <option disabled value="">
         {placeholder}
       </option>
@@ -51,7 +57,7 @@ const CustomFieldEnum = props => {
 };
 
 const CustomFieldMultiEnum = props => {
-  const { name, fieldConfig, defaultRequiredMessage } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId } = props;
   const { enumOptions = [], saveConfig } = fieldConfig || {};
   const { isRequired, requiredMessage } = saveConfig || {};
   const label = getLabel(fieldConfig);
@@ -62,7 +68,7 @@ const CustomFieldMultiEnum = props => {
   return enumOptions ? (
     <FieldCheckboxGroup
       className={css.customField}
-      id={name}
+      id={formId ? `${formId}.${name}` : name}
       name={name}
       label={label}
       options={createFilterOptions(enumOptions)}
@@ -72,7 +78,7 @@ const CustomFieldMultiEnum = props => {
 };
 
 const CustomFieldText = props => {
-  const { name, fieldConfig, defaultRequiredMessage, intl } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
   const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const label = getLabel(fieldConfig);
   const validateMaybe = isRequired
@@ -84,7 +90,7 @@ const CustomFieldText = props => {
   return (
     <FieldTextInput
       className={css.customField}
-      id={name}
+      id={formId ? `${formId}.${name}` : name}
       name={name}
       type="textarea"
       label={label}
@@ -95,7 +101,7 @@ const CustomFieldText = props => {
 };
 
 const CustomFieldLong = props => {
-  const { name, fieldConfig, defaultRequiredMessage, intl } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
   const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const label = getLabel(fieldConfig);
   const validateMaybe = isRequired
@@ -107,7 +113,7 @@ const CustomFieldLong = props => {
   return (
     <FieldTextInput
       className={css.customField}
-      id={name}
+      id={formId ? `${formId}.${name}` : name}
       name={name}
       type="number"
       step="1"
@@ -123,7 +129,7 @@ const CustomFieldLong = props => {
 };
 
 const CustomFieldBoolean = props => {
-  const { name, fieldConfig, defaultRequiredMessage, intl } = props;
+  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
   const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const label = getLabel(fieldConfig);
   const validateMaybe = isRequired
@@ -135,7 +141,7 @@ const CustomFieldBoolean = props => {
   return (
     <FieldBoolean
       className={css.customField}
-      id={name}
+      id={formId ? `${formId}.${name}` : name}
       name={name}
       label={label}
       placeholder={placeholder}

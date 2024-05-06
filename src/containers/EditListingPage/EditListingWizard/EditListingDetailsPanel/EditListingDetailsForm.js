@@ -233,7 +233,7 @@ const FieldSelectCategory = props => {
 
 // Add collect data for listing fields (both publicData and privateData) based on configuration
 const AddListingFields = props => {
-  const { listingType, listingFieldsConfig, selectedCategories, intl } = props;
+  const { listingType, listingFieldsConfig, selectedCategories, formId, intl } = props;
   const targetCategoryIds = Object.values(selectedCategories);
 
   const fields = listingFieldsConfig.reduce((pickedFields, fieldConfig) => {
@@ -255,6 +255,7 @@ const AddListingFields = props => {
             defaultRequiredMessage={intl.formatMessage({
               id: 'EditListingDetailsForm.defaultRequiredMessage',
             })}
+            formId={formId}
           />,
         ]
       : pickedFields;
@@ -383,6 +384,7 @@ const EditListingDetailsFormComponent = props => (
               listingType={listingType}
               listingFieldsConfig={listingFieldsConfig}
               selectedCategories={pickSelectedCategories(values)}
+              formId={formId}
               intl={intl}
             />
           ) : null}
