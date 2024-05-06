@@ -64,6 +64,7 @@ const getOrderParams = (pageData, shippingDetails, config) => {
   const quantityMaybe = quantity ? { quantity } : {};
   const deliveryMethod = pageData.orderData?.deliveryMethod;
   const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
+  const hasHelmetFee = pageData.orderData?.helmetFee?.length > 0;
 
   const { listingType, unitType } =
     pageData?.listing?.attributes?.publicData || {};
@@ -81,6 +82,7 @@ const getOrderParams = (pageData, shippingDetails, config) => {
     listingId: pageData?.listing?.id,
     ...deliveryMethodMaybe,
     ...quantityMaybe,
+    hasHelmetFee,
     ...bookingDatesMaybe(pageData.orderData?.bookingDates),
     ...protectedDataMaybe,
   };
