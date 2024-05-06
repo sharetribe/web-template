@@ -59,7 +59,15 @@ const FieldHidden = props => {
 // - transactionProcessAlias  Initiate correct transaction against Marketplace API
 // - unitType                 Main use case: pricing unit
 const FieldSelectListingType = props => {
-  const { name, listingTypes, hasExistingListingType, onListingTypeChange, formApi, intl } = props;
+  const {
+    name,
+    listingTypes,
+    hasExistingListingType,
+    onListingTypeChange,
+    formApi,
+    formId,
+    intl,
+  } = props;
   const hasMultipleListingTypes = listingTypes?.length > 1;
 
   const handleOnChange = value => {
@@ -79,7 +87,7 @@ const FieldSelectListingType = props => {
   return hasMultipleListingTypes && !hasExistingListingType ? (
     <>
       <FieldSelect
-        id={name}
+        id={formId ? `${formId}.${name}` : name}
         name={name}
         className={css.listingTypeSelect}
         label={intl.formatMessage({ id: 'EditListingDetailsForm.listingTypeLabel' })}
@@ -332,6 +340,7 @@ const EditListingDetailsFormComponent = props => (
             hasExistingListingType={hasExistingListingType}
             onListingTypeChange={onListingTypeChange}
             formApi={formApi}
+            formId={formId}
             intl={intl}
           />
 
