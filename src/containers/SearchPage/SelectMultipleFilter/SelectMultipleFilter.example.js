@@ -8,35 +8,35 @@ const URL_PARAM = 'pub_amenities';
 
 const options = [
   {
-    key: 'towels',
+    option: 'towels',
     label: 'Towels',
   },
   {
-    key: 'bathroom',
+    option: 'bathroom',
     label: 'Bathroom',
   },
   {
-    key: 'swimming_pool',
+    option: 'swimming_pool',
     label: 'Swimming pool',
   },
   {
-    key: 'own_drinks',
+    option: 'own_drinks',
     label: 'Own drinks allowed',
   },
   {
-    key: 'jacuzzi',
+    option: 'jacuzzi',
     label: 'Jacuzzi',
   },
   {
-    key: 'audiovisual_entertainment',
+    option: 'audiovisual_entertainment',
     label: 'Audiovisual entertainment',
   },
   {
-    key: 'barbeque',
+    option: 'barbeque',
     label: 'Barbeque',
   },
   {
-    key: 'own_food_allowed',
+    option: 'own_food_allowed',
     label: 'Own food allowed',
   },
 ];
