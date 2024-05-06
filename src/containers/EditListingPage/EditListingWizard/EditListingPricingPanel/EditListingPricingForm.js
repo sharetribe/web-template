@@ -123,7 +123,7 @@ export const EditListingPricingFormComponent = props => (
             placeholder={intl.formatMessage({ id: 'EditListingPricingForm.helmetFeePlaceholder' })}
             currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
           />
-          <div className="descuento">
+{/*           <div className="descuento">
             Desea aplicar descuentos en el alquiler de sus articulos a partir de los 3 días de
             alquiler?
             <div style={{ display: 'flex' }} className="descuento">
@@ -164,7 +164,7 @@ export const EditListingPricingFormComponent = props => (
                 </select>
               </div>
             )}
-          </div>
+          </div> */}
           <Button
             className={css.submitButton}
             type="submit"
