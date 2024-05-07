@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] Styleguide shows multiple versions of some components. The 'id' attributes need to be
+  unique. [#380](https://github.com/sharetribe/web-template/pull/380)
+
 ## [v5.0.1] 2024-04-30
 
 - [fix] Fix: currentUser was not passed to billing details, which resulted email address missing on

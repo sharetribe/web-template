@@ -16,6 +16,7 @@ export const InfinityMultipleItems = {
     disabled: false,
     ready: false,
     initialValues: { stock: 1000000000000 },
+    formId: 'InfinityMultipleItems',
   },
   group: 'page:EditListingPage',
 };
@@ -35,6 +36,7 @@ export const InfinityOneItem = {
     disabled: false,
     ready: false,
     initialValues: { stock: 1000000000000 },
+    formId: 'InfinityOneItem',
   },
   group: 'page:EditListingPage',
 };
@@ -54,6 +56,7 @@ export const InfinityOneItem_stockOf3 = {
     disabled: false,
     ready: false,
     initialValues: { stock: 3 },
+    formId: 'InfinityOneItem_stockOf3',
   },
   group: 'page:EditListingPage',
 };
@@ -73,6 +76,7 @@ export const MultipleItems = {
     disabled: false,
     ready: false,
     initialValues: { stock: 3 },
+    formId: 'MultipleItems',
   },
   group: 'page:EditListingPage',
 };
