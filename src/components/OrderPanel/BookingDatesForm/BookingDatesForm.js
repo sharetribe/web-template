@@ -502,7 +502,7 @@ export const BookingDatesFormComponent = props => {
         { fee: formattedHelmetFee }
       );
 
-      const helmetFeeMaybe = helmetFee ? (
+      const helmetFeeMaybe = showHelmetFee && helmetFee ? (
           <FieldCheckbox
           className={css.helmetFeeContainer}
           id={`${formId}.helmetFee`}
