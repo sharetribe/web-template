@@ -23,10 +23,13 @@ const defaultConfig = {
   currency: 'USD',
 
   // Listing minimum price in currency sub units, e.g. cents.
-  // 0 means no restriction to the price
-  // Note 1: The listingMinimumPriceSubUnits comes from transactionSize asset nowadays by default.
-  //         To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeConfig func)
-  // Note 2: Stripe does have minimum fee that depends on country, currency, etc.
+  // By default, always try to take the value of listingMinimumPriceSubUnits from the transaction-size.json asset.
+  // - If there is no value, we use the value set on this file for listingMinimumPriceSubUnits
+  // - If the value is 0, we use the value set on this file for listingMinimumPriceSubUnits
+  //   This is due to backward compatibility
+  // Note 1: 0 means no restriction to the price (Currently, Console won't show it.)
+  // Note 2: To use only this built-in configuration, you need to remove the overwrite from configHelper.js (mergeConfig func)
+  // Note 3: Stripe does have a minimum fee that depends on country, currency, etc!
   listingMinimumPriceSubUnits: 500,
 
   // Marketplace name is needed for microcopy (aka marketplace texts) and in meta tags (bots and social media sharing reads those)
