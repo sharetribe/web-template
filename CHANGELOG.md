@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] listingMinimumPriceSubUnits: update code comments (0 is not valid value in hosted asset).
+  [#381](https://github.com/sharetribe/web-template/pull/381)
 - [fix] Styleguide shows multiple versions of some components. The 'id' attributes need to be
   unique. [#380](https://github.com/sharetribe/web-template/pull/380)
 
