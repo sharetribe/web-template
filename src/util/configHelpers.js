@@ -1300,7 +1300,12 @@ export const mergeConfig = (configAsset = {}, defaultConfigs = {}) => {
   const cleanedRootURL =
     typeof marketplaceRootURL === 'string' ? marketplaceRootURL.replace(/\/$/, '') : '';
 
-  // defaultConfigs.listingMinimumPriceSubUnits is the backup for listing's minimum price
+  // By default, always try to take the value of listingMinimumPriceSubUnits from the transaction-size.json asset.
+  // - If there is no value, we use the defaultConfigs.listingMinimumPriceSubUnits
+  // - If the value is 0 (aka _falsy_), we use the defaultConfigs.listingMinimumPriceSubUnits
+  //   (The latter is mainly due to backward compatibility atm, since Console won't allow saving 0 anymore.)
+  // Note: It might make sense that 0 handling is different for default-inquiry process.
+  //       With the built-in code flow, you can only remove price altogether from listing type using default-inquiries.
   const listingMinimumPriceSubUnits =
     getListingMinimumPrice(configAsset.transactionSize) ||
     defaultConfigs.listingMinimumPriceSubUnits;
