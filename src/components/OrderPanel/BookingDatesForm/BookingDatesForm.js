@@ -420,10 +420,25 @@ const Prev = props => {
 
   return isDateSameOrAfter(prevMonthDate, currentMonthDate) ? <PrevIcon /> : null;
 };
+const MINIMUM_DAYS_FOR_HELMET_RENTAL = 3; // Define el número mínimo de días requeridos
 
 export const BookingDatesFormComponent = props => {
   const [focusedInput, setFocusedInput] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', props.timeZone));
+  const [showHelmetFee, setShowHelmetFee] = useState(false); // Estado para mostrar u ocultar la casilla de verificación
+    
+  useEffect(() => {
+    // Obtén la fecha de inicio y finalización seleccionadas por el usuario desde las props o el estado
+    const { startDate, endDate } = props.values && props.values.bookingDates ? props.values.bookingDates : {};
+
+    // Calcula la diferencia en días entre la fecha de inicio y la fecha de finalización
+    const differenceInDays = endDate && startDate
+      ? Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24))
+      : 0;
+
+    // Determina si se deben mostrar la casilla de verificación del casco
+    setShowHelmetFee(differenceInDays >= MINIMUM_DAYS_FOR_HELMET_RENTAL);
+  }, [props.values]); // Asegúrate de que el efecto se ejecute cada vez que cambien las fechas de inicio o finalización
 
   useEffect(() => {
     // Call onMonthChanged function if it has been passed in among props.
@@ -488,14 +503,15 @@ export const BookingDatesFormComponent = props => {
       );
 
       const helmetFeeMaybe = helmetFee ? (
-        <FieldCheckbox
+          <FieldCheckbox
           className={css.helmetFeeContainer}
           id={`${formId}.helmetFee`}
           name="helmetFee"
           label={helmetFeeLabel}
           value="helmetFee"
-        />
-      ) : null;
+          />
+        ) : null;
+        
       
         const startDateErrorMessage = intl.formatMessage({
           id: 'FieldDateRangeInput.invalidStartDate',
