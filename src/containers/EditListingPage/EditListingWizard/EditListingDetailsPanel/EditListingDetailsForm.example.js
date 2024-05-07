@@ -1,6 +1,7 @@
-/* eslint-disable no-console */
-import EditListingDetailsForm from './EditListingDetailsForm';
 import defaultConfig from '../../../../config/configDefault';
+import { pickCategoryFields } from '../../../../util/fieldHelpers';
+
+import EditListingDetailsForm from './EditListingDetailsForm';
 
 const noop = () => {};
 const selectableListingTypes = [
@@ -59,6 +60,7 @@ export const WithInitialValues = {
     onListingTypeChange: noop,
     listingConfig: defaultConfig.listing,
     selectableCategories: selectableCategories,
+    pickSelectedCategories: values => pickCategoryFields(values, 'categoryLevel', 1, []),
     initialValues: {
       title: 'Listing',
       description: 'Lorem ipsum',
@@ -101,6 +103,7 @@ export const MultipleProcessInfos = {
     updateInProgress: false,
     selectableListingTypes: selectableListingTypes2,
     selectableCategories: selectableCategories,
+    pickSelectedCategories: values => pickCategoryFields(values, 'categoryLevel', 1, []),
     onListingTypeChange: noop,
     listingConfig: defaultConfig.listing,
   },
@@ -121,6 +124,7 @@ export const ChooseListingCategory = {
     updateInProgress: false,
     selectableListingTypes: selectableListingTypes2,
     selectableCategories: selectableCategories,
+    pickSelectedCategories: values => pickCategoryFields(values, 'categoryLevel', 1, []),
     onCategoryChange: noop,
     onListingTypeChange: noop,
     listingConfig: defaultConfig.listing,

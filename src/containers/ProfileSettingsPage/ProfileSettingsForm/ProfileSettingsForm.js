@@ -74,6 +74,7 @@ class ProfileSettingsFormComponent extends Component {
             uploadImageError,
             uploadInProgress,
             form,
+            formId,
             marketplaceName,
             values,
             userFields,
@@ -319,7 +320,7 @@ class ProfileSettingsFormComponent extends Component {
               </div>
               <div className={classNames(css.sectionContainer, css.lastSection)}>
                 {userFieldProps.map(fieldProps => (
-                  <CustomExtendedDataField {...fieldProps} />
+                  <CustomExtendedDataField {...fieldProps} formId={formId} />
                 ))}
               </div>
               {submitError}
@@ -343,6 +344,7 @@ class ProfileSettingsFormComponent extends Component {
 ProfileSettingsFormComponent.defaultProps = {
   rootClassName: null,
   className: null,
+  formId: null,
   uploadImageError: null,
   updateProfileError: null,
   updateProfileReady: false,
@@ -351,6 +353,7 @@ ProfileSettingsFormComponent.defaultProps = {
 ProfileSettingsFormComponent.propTypes = {
   rootClassName: string,
   className: string,
+  formId: string,
 
   uploadImageError: propTypes.error,
   uploadInProgress: bool.isRequired,
