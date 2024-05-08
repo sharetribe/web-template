@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { bool, string, number } from 'prop-types';
 import classNames from 'classnames';
@@ -18,47 +18,61 @@ const resolveMinMaxValues = (values, defaultMax, defaultMin) => {
 };
 
 const RangeInput = props => {
-  const { input, min: defaultMinValue, max: defaultMaxValue, step, isInSideBar } = props;
-  const { value: values = {}, onChange } = input;
+  const {
+    input,
+    min: defaultMinValue,
+    max: defaultMaxValue,
+    step,
+    isInSideBar,
+    initialValues,
+  } = props;
+  const { value: values = {}, onChange, name } = input;
 
-  const currentValues = resolveMinMaxValues(values, defaultMaxValue, defaultMinValue);
+  const currentValues = resolveMinMaxValues(initialValues[name], defaultMaxValue, defaultMinValue);
+  const [fieldValues, setFieldValues] = useState(currentValues);
+
+  useEffect(() => {
+    setFieldValues(currentValues);
+  }, [initialValues]);
 
   const handleMinValueChange = event => {
     const newValue = Number.parseInt(event.target.value, RADIX);
     if (isNaN(newValue)) {
-      onChange({ ...currentValues, minValue: defaultMinValue });
+      onChange({ ...fieldValues, minValue: defaultMinValue });
       return;
     }
-    if (newValue > currentValues.maxValue) {
+    if (newValue > fieldValues.maxValue) {
       return;
     }
     if (newValue < defaultMinValue) {
       return;
     }
 
-    const newValues = { ...currentValues, minValue: newValue };
-
+    const newValues = { ...fieldValues, minValue: newValue };
+    setFieldValues(newValues);
     onChange(newValues);
   };
 
   const handleMaxValueChange = event => {
     const newValue = Number.parseInt(event.target.value, RADIX);
     if (isNaN(newValue)) {
-      onChange({ ...currentValues, maxValue: defaultMaxValue });
+      onChange({ ...fieldValues, maxValue: defaultMaxValue });
       return;
     }
-    if (newValue < currentValues.minValue) {
+    if (newValue < fieldValues.minValue) {
       return;
     }
     if (newValue > defaultMaxValue) {
       return;
     }
 
-    const newValues = { ...currentValues, maxValue: newValue };
+    const newValues = { ...fieldValues, maxValue: newValue };
+    setFieldValues(newValues);
     onChange(newValues);
   };
 
   const handleSliderChange = updatedValue => {
+    setFieldValues({ ...updatedValue });
     onChange({ ...updatedValue });
   };
 
@@ -76,7 +90,7 @@ const RangeInput = props => {
             max={defaultMaxValue}
             step={step}
             placeholder={defaultMinValue}
-            value={currentValues.minValue}
+            value={fieldValues.minValue}
             onChange={event => handleMinValueChange(event, values.minValue)}
           ></input>
           <span className={css.valueSeparator}>-</span>
@@ -87,7 +101,7 @@ const RangeInput = props => {
             max={defaultMaxValue}
             placeholder={defaultMaxValue}
             step={step}
-            value={currentValues.maxValue}
+            value={fieldValues.maxValue}
             onChange={handleMaxValueChange}
           ></input>
         </div>
@@ -97,7 +111,7 @@ const RangeInput = props => {
           min={defaultMinValue}
           max={defaultMaxValue}
           step={step}
-          handles={[currentValues.minValue, currentValues.maxValue]}
+          handles={[fieldValues.minValue, fieldValues.maxValue]}
           onChange={handles => {
             handleSliderChange({ minValue: handles[0], maxValue: handles[1] });
           }}
@@ -115,7 +129,7 @@ const FieldSelectIntegerRange = props => {
       min={min}
       name={name}
       step={step}
-      isInSideBar
+      isInSideBar={isInSideBar}
       component={RangeInput}
       {...rest}
     />

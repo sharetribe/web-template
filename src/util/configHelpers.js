@@ -579,10 +579,11 @@ const validShowConfig = config => {
 // numberConfig is passed along with listing fields that use the schema type `long`
 const validNumberConfig = config => {
   const { minimum, maximum } = config;
+  const integerConfig = { minimum, maximum, step: 1 };
 
   // Check if both minimum and maximum are integers
   if (!Number.isInteger(minimum) || !Number.isInteger(maximum)) {
-    return [false, config];
+    return [false, integerConfig];
   }
 
   // Ensure both values are within the safe integer range
@@ -592,14 +593,14 @@ const validNumberConfig = config => {
     maximum < Number.MIN_SAFE_INTEGER ||
     maximum > Number.MAX_SAFE_INTEGER
   ) {
-    return [false, config];
+    return [false, integerConfig];
   }
 
   // Check that the maximum is greater than the minimum
   if (maximum <= minimum) {
-    return [false, config];
+    return [false, integerConfig];
   }
-  return [true, config];
+  return [true, integerConfig];
 };
 
 const validUserShowConfig = config => {

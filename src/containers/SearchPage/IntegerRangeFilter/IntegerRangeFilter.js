@@ -104,6 +104,7 @@ const IntegerRangeFilter = props => {
     { leading: false, trailing: true }
   );
 
+  // If we don't have a specific function here, there will be a delay when pressing clear
   const handleClear = values => {
     // Sets the bypass flag to true, instructing the debounced handleSubmit to skip its next invocation.
     bypassDebounce.current = true;
@@ -126,7 +127,13 @@ const IntegerRangeFilter = props => {
       initialValues={resolvedInitialValues}
       {...rest}
     >
-      <FieldSelectIntegerRange max={max} min={min} name={name} step={step} />
+      <FieldSelectIntegerRange
+        max={max}
+        min={min}
+        name={name}
+        step={step}
+        initialValues={resolvedInitialValues}
+      />
     </FilterPopup>
   ) : (
     <FilterPlain
@@ -143,7 +150,14 @@ const IntegerRangeFilter = props => {
       initialValues={resolvedInitialValues}
       {...rest}
     >
-      <FieldSelectIntegerRange isInSideBar max={max} min={min} name={name} step={step} />
+      <FieldSelectIntegerRange
+        isInSideBar
+        max={max}
+        min={min}
+        name={name}
+        step={step}
+        initialValues={resolvedInitialValues}
+      />
     </FilterPlain>
   );
 };
