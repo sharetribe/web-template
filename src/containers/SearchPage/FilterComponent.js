@@ -157,7 +157,7 @@ const FilterComponent = props => {
       );
     }
     case SCHEMA_TYPE_LONG: {
-      const { minimum, maximum, scope, filterConfig = {} } = config;
+      const { minimum, maximum, scope, step, filterConfig = {} } = config;
       const { label } = filterConfig;
       const queryParamNames = [constructQueryParamName(key, scope)];
       return (
@@ -170,7 +170,7 @@ const FilterComponent = props => {
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
           min={minimum}
           max={maximum}
-          step={1}
+          step={step}
           {...rest}
         />
       );
