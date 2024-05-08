@@ -49,31 +49,42 @@ const TopbarMobileMenu = props => {
       <div className={css.root}>
         <div className={css.content}>
           <div className={css.authenticationGreeting}>
-            <a style={{backgroundColor: "#7CC9BC"}} className={css.createNewListingLink} href='/s'>
+            <a href='/s'>
               <FormattedMessage id="ALQUILAR UN ARTÍCULO" />
             </a>
+            <br></br>
+            <br></br>
+            <NamedLink name="NewListingPage" >
+            <FormattedMessage id="TopbarMobileMenu.newListingLink" />
+          </NamedLink>
           </div>
         </div>
         <div style={{display: "flex" ,flexDirection: "column"}} className="categorias">
-          <h3 style={{color: "#7CC9BC"}}>Categorias</h3>
+          <h2 style={{color: "#7CC9BC"}}>CATEGORÍAS</h2>
           <a href="/s?pub_campamento=carpa%2Cbolsa_de_dormir%2Caislante%2Csilla_camping%2Ccocina_camping%2Cheladeritas%2Ccolchon_inflable%2Cmochila%2Ciluminacion%2Cotros_camping">
-          <FormattedMessage id="Camping" />
+          <FormattedMessage id="* Camping" />
           </a>
+          <br></br>
           <a href="/s?pub_deportes_acuaticos=kayak%2Csup%2Ctraje_neoprene%2Cchaleco_salvavida%2Cbote_inflable%2Cotros_da&pub_esqui_snow_cate=esquies_alpino%2Cbotas_esqui_alpino%2Csnow_alpino%2Cbotas_snow%2Cbastones%2Cotros_sys_cate&pub_esqui_travesia=esqui_pieles_travesia%2Cbotas_travesia%2Cbastones_travesia%2Cseguridad_travesia%2Cpiquetas_travesia%2Ccasco%2Cantiparras%2Cguantes%2Ccrampones%2Csplitboard%2Cotros_syst">
-          <FormattedMessage id="Deportes" />
+          <FormattedMessage id="* Deportes" />
           </a>
+          <br></br>
           <a href="/s?pub_hogar=has_all%3Aherramientas_e%2Cmyi%2Cjardineria">
-          <FormattedMessage id="Hogar" />
+          <FormattedMessage id="* Hogar" />
           </a>
+          <br></br>
           <a href="/s?pub_bebes=butaca_auto%2Cbuster%2Csilla_comer%2Cpracticuna%2Cmochila_trekking_bebe%2Cbanadera%2CCochecito%2Cotros_bebes%2Csalvavidas_bebe%2Cropa_nieve_bebe">
-          <FormattedMessage id="Bebes" />
+          <FormattedMessage id="* Bebés" />
           </a>
+          <br></br>
           <a href="/s?pub_ropa=has_all%3Aadultos%2Cninos%2Cbebe">
-          <FormattedMessage id="Vestimenta" />
+          <FormattedMessage id="* Vestimenta" />
           </a>
+          <br></br>
           <a href="/s">
-          <FormattedMessage id="Otros" />
+          <FormattedMessage id="* Otros" />
           </a>
+          <br></br>
           <br></br>
           <a href="https://www.rundo.com.ar/p/frequent-asked-questions">
           <FormattedMessage id="Preguntas Frecuentes" />
@@ -89,10 +100,6 @@ const TopbarMobileMenu = props => {
             <FormattedMessage id=" INICIA SESIÓN" />
           </NamedLink>         
         </div>         
-          <br />
-          <NamedLink style={{backgroundColor: "#7CC9BC"}}  name="NewListingPage" className={css.createNewListingLink}>
-            <FormattedMessage id="TopbarMobileMenu.newListingLink" />
-          </NamedLink>
         </div>
       </div>
     );
