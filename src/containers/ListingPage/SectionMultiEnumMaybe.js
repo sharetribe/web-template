@@ -4,7 +4,7 @@ import { Heading, PropertyGroup } from '../../components';
 import css from './ListingPage.module.css';
 
 const SectionMultiEnumMaybe = props => {
-  const { heading, options, selectedOptions } = props;
+  const { heading, options, selectedOptions, showUnselectedOptions = true } = props;
   if (!heading || !options || !selectedOptions) {
     return null;
   }
@@ -19,6 +19,7 @@ const SectionMultiEnumMaybe = props => {
         options={options}
         selectedOptions={selectedOptions}
         twoColumns={options.length > 5}
+        showUnselectedOptions={showUnselectedOptions}
       />
     </section>
   );
