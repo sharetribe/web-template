@@ -458,7 +458,7 @@ export const BookingDatesFormComponent = props => {
     fetchLineItemsInProgress,
     onFetchTransactionLineItems
   );
-  useEffect(() => {
+  /* useEffect(() => {
     // Obtén la fecha de inicio y finalización seleccionadas por el usuario desde las props o el estado
     const { startDate, endDate } = props.values?.bookingDates || {};
   
@@ -472,7 +472,7 @@ export const BookingDatesFormComponent = props => {
     console.log("differenceInDays",differenceInDays);
   }, [props.values?.bookingDates]); // Ahora utilizamos props.values?.bookingDates para evitar errores
   console.log(props.values?.bookingDates);
-  
+   */
   return (
     <FinalForm
       {...rest}
@@ -495,6 +495,9 @@ export const BookingDatesFormComponent = props => {
         } = fieldRenderProps;
         const { startDate, endDate } = values && values.bookingDates ? values.bookingDates : {};
 
+        const differenceInDays = startDate && endDate 
+          ? Math.ceil(endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
+          : 0; 
         const formattedHelmetFee = helmetFee
         ? formatMoney(intl, new Money(helmetFee.amount, helmetFee.currency))
         : null;
@@ -504,7 +507,12 @@ export const BookingDatesFormComponent = props => {
         { fee: formattedHelmetFee }
       );
 
-      const helmetFeeMaybe = showHelmetFee && helmetFee ? (
+
+      
+      console.log({ differenceInDays });
+      
+
+      const helmetFeeMaybe = differenceInDays > 3 ? (
           <FieldCheckbox
           className={css.helmetFeeContainer}
           id={`${formId}.helmetFee`}
@@ -551,7 +559,6 @@ export const BookingDatesFormComponent = props => {
           startDatePlaceholder || intl.formatDate(startOfToday, dateFormatOptions);
         const endDatePlaceholderText =
           endDatePlaceholder || intl.formatDate(tomorrow, dateFormatOptions);
-          console.log("breakdownData",breakdownData);
 
 
         const onMonthClick = handleMonthClick(
@@ -580,8 +587,6 @@ export const BookingDatesFormComponent = props => {
           timeZone
         );
 
-        console.log("dayCountAvailableForBooking",dayCountAvailableForBooking);
-        console.log("focusedInput",focusedInput)
         console.log("lineItemUnitType",lineItemUnitType);
         console.log("LINE_ITEM_DAY",LINE_ITEM_DAY);
         return (
