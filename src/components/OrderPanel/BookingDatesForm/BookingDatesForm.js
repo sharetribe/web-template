@@ -420,25 +420,12 @@ const Prev = props => {
 
   return isDateSameOrAfter(prevMonthDate, currentMonthDate) ? <PrevIcon /> : null;
 };
-const MINIMUM_DAYS_FOR_HELMET_RENTAL = 3; // Define el número mínimo de días requeridos
 
 export const BookingDatesFormComponent = props => {
   const [focusedInput, setFocusedInput] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', props.timeZone));
   const [showHelmetFee, setShowHelmetFee] = useState(false); // Estado para mostrar u ocultar la casilla de verificación
     
-  useEffect(() => {
-    // Obtén la fecha de inicio y finalización seleccionadas por el usuario desde las props o el estado
-    const { startDate, endDate } = props.values && props.values.bookingDates ? props.values.bookingDates : {};
-
-    // Calcula la diferencia en días entre la fecha de inicio y la fecha de finalización
-    const differenceInDays = endDate && startDate
-      ? Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24))
-      : 0;
-
-    // Determina si se deben mostrar la casilla de verificación del casco
-    setShowHelmetFee(differenceInDays >= MINIMUM_DAYS_FOR_HELMET_RENTAL);
-  }, [props.values]); // Asegúrate de que el efecto se ejecute cada vez que cambien las fechas de inicio o finalización
 
   useEffect(() => {
     // Call onMonthChanged function if it has been passed in among props.
@@ -471,6 +458,21 @@ export const BookingDatesFormComponent = props => {
     fetchLineItemsInProgress,
     onFetchTransactionLineItems
   );
+  useEffect(() => {
+    // Obtén la fecha de inicio y finalización seleccionadas por el usuario desde las props o el estado
+    const { startDate, endDate } = props.values?.bookingDates || {};
+  
+    // Calcula la diferencia en días entre la fecha de inicio y la fecha de finalización
+    const differenceInDays = endDate && startDate
+      ? Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24))
+      : 0;
+  
+    // Determina si se deben mostrar la casilla de verificación del casco
+    setShowHelmetFee(differenceInDays > 3);
+    console.log("differenceInDays",differenceInDays);
+  }, [props.values?.bookingDates]); // Ahora utilizamos props.values?.bookingDates para evitar errores
+  console.log(props.values?.bookingDates);
+  
   return (
     <FinalForm
       {...rest}
@@ -532,9 +534,10 @@ export const BookingDatesFormComponent = props => {
                 endDate,
               }
             : null;
-
-        const showEstimatedBreakdown =
-          breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
+            const showEstimatedBreakdown =
+            breakdownData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
+            console.log("breakdownData",breakdownData);
+            console.log("lineItems",lineItems);
 
         const dateFormatOptions = {
           weekday: 'short',
@@ -548,6 +551,8 @@ export const BookingDatesFormComponent = props => {
           startDatePlaceholder || intl.formatDate(startOfToday, dateFormatOptions);
         const endDatePlaceholderText =
           endDatePlaceholder || intl.formatDate(tomorrow, dateFormatOptions);
+          console.log("breakdownData",breakdownData);
+
 
         const onMonthClick = handleMonthClick(
           currentMonth,
@@ -575,6 +580,10 @@ export const BookingDatesFormComponent = props => {
           timeZone
         );
 
+        console.log("dayCountAvailableForBooking",dayCountAvailableForBooking);
+        console.log("focusedInput",focusedInput)
+        console.log("lineItemUnitType",lineItemUnitType);
+        console.log("LINE_ITEM_DAY",LINE_ITEM_DAY);
         return (
           <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
             <FormSpy subscription={{ values: true }} onChange={onFormSpyChange} />
