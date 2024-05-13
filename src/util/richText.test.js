@@ -284,6 +284,102 @@ describe('richText', () => {
         `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>)</span>`
       );
     });
+
+    it('should add link inside non-whitespace-sequence that ends to common puctuation (!:,.;)', () => {
+      // !
+      const wrapper = render(
+        <span>{richText('Check this http://example.com!', { ...options, linkify: true })}</span>
+      );
+      // <span>
+      //   Check this <a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>!
+      // </span>
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
+        `<span>Check this <a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>!</span>`
+      );
+
+      // :
+      const colon = render(
+        <span>
+          {richText('Check this http://example.com: asdf', { ...options, linkify: true })}
+        </span>
+      );
+      expect(colon.asFragment().firstChild.outerHTML).toEqual(
+        `<span>Check this <a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>: asdf</span>`
+      );
+
+      // ,
+      // Note: comma is part of break chars by default, therefore zero-width-space is added there
+      const comma = render(
+        <span>
+          {richText('Check this http://example.com, asdf', { ...options, linkify: true })}
+        </span>
+      );
+      expect(comma.asFragment().firstChild.outerHTML).toEqual(
+        `<span>Check this <a href=\"http://example.com\" class=\"longWord\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>​,​ asdf</span>`
+      );
+
+      // .
+      const dot = render(
+        <span>
+          {richText('Check this http://example.com. Asdf', { ...options, linkify: true })}
+        </span>
+      );
+      expect(dot.asFragment().firstChild.outerHTML).toEqual(
+        `<span>Check this <a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>. Asdf</span>`
+      );
+
+      // ;
+      const semicolon = render(
+        <span>
+          {richText('Check this http://example.com; and this http://example.com', {
+            ...options,
+            linkify: true,
+          })}
+        </span>
+      );
+      expect(semicolon.asFragment().firstChild.outerHTML).toEqual(
+        `<span>Check this <a href=\"http://example.com\" class=\"longWord\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>; and this <a href=\"http://example.com\" class=\"longWord\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a></span>`
+      );
+    });
+
+    it('should not include quote chars to link (http://example.com")', () => {
+      const wrapper = render(
+        <span>{richText('Link: (http://example.com")', { ...options, linkify: true })}</span>
+      );
+      // <span>
+      //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
+      // </span>
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
+        `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>\")</span>`
+      );
+
+      const singleQuote = render(
+        <span>{richText("Link: (http://example.com')", { ...options, linkify: true })}</span>
+      );
+      expect(singleQuote.asFragment().firstChild.outerHTML).toEqual(
+        `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>\')</span>`
+      );
+
+      const singleQuote2 = render(
+        <span>{richText("Link: (http://example.com')", { ...options, linkify: true })}</span>
+      );
+      expect(singleQuote2.asFragment().firstChild.outerHTML).toEqual(
+        `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>\')</span>`
+      );
+    });
+    it('should not include closing anchor tag to a link (http://example.com</a>")', () => {
+      // Note: the slash ('/') is part of break chars by default, therefore zero-width-space is added there
+      const wrapper = render(
+        <span>{richText('Link: (http://example.com</a>)', { ...options, linkify: true })}</span>
+      );
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
+        `<span>Link: (<a href="http://example.com" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com</a>&lt;​/​a&gt;)</span>`
+      );
+    });
+
     it('should not add span around a string if no linkify option is given', () => {
       const wrapper = render(
         <span>
