@@ -424,8 +424,7 @@ const Prev = props => {
 export const BookingDatesFormComponent = props => {
   const [focusedInput, setFocusedInput] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', props.timeZone));
-  const [showHelmetFee, setShowHelmetFee] = useState(false); // Estado para mostrar u ocultar la casilla de verificación
-    
+  
 
   useEffect(() => {
     // Call onMonthChanged function if it has been passed in among props.
@@ -458,21 +457,7 @@ export const BookingDatesFormComponent = props => {
     fetchLineItemsInProgress,
     onFetchTransactionLineItems
   );
-  /* useEffect(() => {
-    // Obtén la fecha de inicio y finalización seleccionadas por el usuario desde las props o el estado
-    const { startDate, endDate } = props.values?.bookingDates || {};
-  
-    // Calcula la diferencia en días entre la fecha de inicio y la fecha de finalización
-    const differenceInDays = endDate && startDate
-      ? Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24))
-      : 0;
-  
-    // Determina si se deben mostrar la casilla de verificación del casco
-    setShowHelmetFee(differenceInDays > 3);
-    console.log("differenceInDays",differenceInDays);
-  }, [props.values?.bookingDates]); // Ahora utilizamos props.values?.bookingDates para evitar errores
-  console.log(props.values?.bookingDates);
-   */
+
   return (
     <FinalForm
       {...rest}
@@ -495,9 +480,12 @@ export const BookingDatesFormComponent = props => {
         } = fieldRenderProps;
         const { startDate, endDate } = values && values.bookingDates ? values.bookingDates : {};
 
+        const minDaysRequired = lineItemUnitType === LINE_ITEM_DAY ? 3 : 2;
         const differenceInDays = startDate && endDate 
           ? Math.ceil(endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
           : 0; 
+          const showHelmetFee = differenceInDays >= minDaysRequired;
+
         const formattedHelmetFee = helmetFee
         ? formatMoney(intl, new Money(helmetFee.amount, helmetFee.currency))
         : null;
@@ -506,13 +494,9 @@ export const BookingDatesFormComponent = props => {
         { id: 'BookingDatesForm.helmetFeeLabel' },
         { fee: formattedHelmetFee }
       );
-
-
       
-      console.log({ differenceInDays });
       
-
-      const helmetFeeMaybe = differenceInDays > 3 ? (
+      const helmetFeeMaybe = showHelmetFee ? (
           <FieldCheckbox
           className={css.helmetFeeContainer}
           id={`${formId}.helmetFee`}
