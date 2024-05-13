@@ -2,6 +2,9 @@ import React from 'react';
 import flow from 'lodash/flow';
 import flatMap from 'lodash/flatMap';
 import map from 'lodash/map';
+
+import { sanitizeUrl } from './sanitize';
+
 import { ExternalLink } from '../components';
 // NOTE: This file imports components/index.js, which may lead to circular dependency
 
@@ -88,11 +91,13 @@ export const linkifyOrWrapLinkSplit = (word, key, options = {}) => {
   if (word.match(urlRegex)) {
     // Split strings like "(http://www.example.com)" to ["(","http://www.example.com",")"]
     return word.split(urlRegex).map(w => {
-      return !w.match(urlRegex) ? (
+      const isEmptyString = !w.match(urlRegex);
+      const sanitizedURL = !isEmptyString && linkify ? sanitizeUrl(w) : w;
+      return isEmptyString ? (
         w
       ) : linkify ? (
-        <ExternalLink key={key} href={w} className={linkClass}>
-          {w}
+        <ExternalLink key={key} href={sanitizedURL} className={linkClass}>
+          {sanitizedURL}
         </ExternalLink>
       ) : linkClass ? (
         <span key={key} className={linkClass}>
