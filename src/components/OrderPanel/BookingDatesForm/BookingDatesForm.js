@@ -480,11 +480,10 @@ export const BookingDatesFormComponent = props => {
         } = fieldRenderProps;
         const { startDate, endDate } = values && values.bookingDates ? values.bookingDates : {};
 
-        const minDaysRequired = lineItemUnitType === LINE_ITEM_DAY ? 3 : 2;
+
         const differenceInDays = startDate && endDate 
           ? Math.ceil(endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
           : 0; 
-          const showHelmetFee = differenceInDays >= minDaysRequired;
 
         const formattedHelmetFee = helmetFee
         ? formatMoney(intl, new Money(helmetFee.amount, helmetFee.currency))
@@ -496,7 +495,7 @@ export const BookingDatesFormComponent = props => {
       );
       
       
-      const helmetFeeMaybe = showHelmetFee ? (
+      const helmetFeeMaybe = differenceInDays > 3 ? (
           <FieldCheckbox
           className={css.helmetFeeContainer}
           id={`${formId}.helmetFee`}
