@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] Add preview resolution for listing in PreviewResolverPage
+  [#384](https://github.com/sharetribe/web-template/pull/384)
 - [add] Support for a target path parameter (target_path) in the login as user functionality
   [#383](https://github.com/sharetribe/web-template/pull/383)
 - [change] listingMinimumPriceSubUnits: update code comments (0 is not valid value in hosted asset).

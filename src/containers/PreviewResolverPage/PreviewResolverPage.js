@@ -31,6 +31,12 @@ const PreviewResolverPage = props => {
   const toCMSPage = <NamedRedirect name="CMSPage" params={{ pageId: pageAssetName }} />;
   const toLandingPage = <NamedRedirect name="LandingPage" />;
 
+  const listingId = parsedQueryString?.['listingId'];
+  const hasListingId = !!listingId;
+  const toListingPage = (
+    <NamedRedirect name="ListingPage" params={{ id: listingId, slug: 'from-console' }} />
+  );
+
   // Check if a specific page should be shown
   // If pageAssetName can't be detected, redirect to LandingPage
   return pageAssetName === 'terms-of-service'
@@ -41,6 +47,8 @@ const PreviewResolverPage = props => {
     ? toLandingPage
     : hasCMSPagePath
     ? toCMSPage
+    : hasListingId
+    ? toListingPage
     : toLandingPage;
 };
 
