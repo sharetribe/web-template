@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] FilterComponent: relax generated name-attribute for inputs: allow camelCase.
+  [#402](https://github.com/sharetribe/web-template/pull/402)
 
 ## [v5.2.0] 2024-05-28
 
