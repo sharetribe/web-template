@@ -223,6 +223,11 @@ const mergeBranding = (brandingConfig, defaultBranding) => {
   const marketplaceColorDark = marketplaceColor ? hexToCssHsl(marketplaceColor, -10) : null;
   const marketplaceColorLight = marketplaceColor ? hexToCssHsl(marketplaceColor, 10) : null;
 
+  // The 'marketplaceColor' has a special status for branding. Other colors are just prefixed with "color".
+  const colorPrimaryButton = marketplaceColors?.primaryButton;
+  const colorPrimaryButtonDark = colorPrimaryButton ? hexToCssHsl(colorPrimaryButton, -10) : null;
+  const colorPrimaryButtonLight = colorPrimaryButton ? hexToCssHsl(colorPrimaryButton, 10) : null;
+
   const logoSettingsRaw = logoSettings || defaultBranding.logoSettings;
   const validLogoSettings =
     logoSettingsRaw?.format === 'image' && [24, 36, 48].includes(logoSettingsRaw?.height);
@@ -236,6 +241,9 @@ const mergeBranding = (brandingConfig, defaultBranding) => {
     marketplaceColor,
     marketplaceColorDark,
     marketplaceColorLight,
+    colorPrimaryButton,
+    colorPrimaryButtonDark,
+    colorPrimaryButtonLight,
     logoSettings: validLogoSettings ? logoSettingsRaw : { format: 'image', height: 24 },
     logoImageDesktop: logo || defaultBranding.logoImageDesktopURL,
     logoImageMobile: logo || defaultBranding.logoImageMobileURL,
