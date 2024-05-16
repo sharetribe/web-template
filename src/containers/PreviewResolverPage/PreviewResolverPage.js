@@ -33,7 +33,16 @@ const PreviewResolverPage = props => {
 
   const listingId = parsedQueryString?.['listingId'];
   const hasListingId = !!listingId;
-  const toListingPage = (
+  const listingStatus = parsedQueryString?.['listingStatus'];
+  const useOwnListing = ['draft', 'pending-approval'].includes(listingStatus);
+  // TODO the old named route, ListingPageVariant for unpublished listings, is confusing nowadays
+  // since we use variant also to mean a layout variant on the listing page.
+  const toListingPage = useOwnListing ? (
+    <NamedRedirect
+      name="ListingPageVariant"
+      params={{ id: listingId, slug: 'from-console', variant: listingStatus }}
+    />
+  ) : (
     <NamedRedirect name="ListingPage" params={{ id: listingId, slug: 'from-console' }} />
   );
 

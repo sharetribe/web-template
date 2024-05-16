@@ -55,7 +55,7 @@ module.exports = (req, res) => {
     .digest('base64');
   const codeChallenge = urlifyBase64(hash);
   const authorizeServerUrl = `${CONSOLE_URL}/api/authorize-as`;
-  const { target_path } = req.query || {};
+  const { target_path: targetPath } = req.query || {};
 
   const location = `${authorizeServerUrl}?\
 response_type=code&\
@@ -73,8 +73,8 @@ code_challenge_method=S256`;
 
   res.cookie(stateKey, state, cookieOpts);
   res.cookie(codeVerifierKey, codeVerifier, cookieOpts);
-  if (target_path) {
-    res.cookie(targetPathKey, target_path, cookieOpts);
+  if (targetPath) {
+    res.cookie(targetPathKey, targetPath, cookieOpts);
   }
   return res.redirect(location);
 };

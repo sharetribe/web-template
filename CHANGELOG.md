@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] handle listings with draft and pending-approval state with login-as feature.
+  [#387](https://github.com/sharetribe/web-template/pull/387)
 - [Add] Get the color of the PrimeryButton from branding asset.
   [#379](https://github.com/sharetribe/web-template/pull/379)
 - [change] Add preview resolution for listing in PreviewResolverPage
