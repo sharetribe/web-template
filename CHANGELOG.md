@@ -14,6 +14,18 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Autolink text on the UI. Those links must start with 'http' to be recognized.
+
+  - ListingPage > Listing's description
+  - ListingPage > Listing fields with schema type ‘text’
+  - ListingPage > User's bio on <UserCard>
+  - ProfilePage > User's bio
+  - ProfilePage > User fields with schema type ‘text’
+  - TransactionPage > Messages
+  - TransactionPage > inquiryMessage
+
+  [#385](https://github.com/sharetribe/web-template/pull/385)
+
 - [change] handle listings with draft and pending-approval state with login-as feature.
   [#387](https://github.com/sharetribe/web-template/pull/387)
 - [Add] Get the color of the PrimeryButton from branding asset.
