@@ -16,6 +16,8 @@ import {
 import { ensureCurrentUser, ensureUser } from '../../util/data';
 import { withViewport } from '../../util/uiHelpers';
 import { pickCustomFieldProps } from '../../util/fieldHelpers';
+import { richText } from '../../util/richText';
+
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import {
@@ -41,6 +43,7 @@ import SectionTextMaybe from './SectionTextMaybe';
 import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
+const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 export const AsideContent = props => {
   const { user, displayName, isCurrentUser } = props;
@@ -194,6 +197,11 @@ export const MainContent = props => {
   const hasListings = listings.length > 0;
   const isMobileLayout = viewport.width < MAX_MOBILE_SCREEN_WIDTH;
   const hasBio = !!bio;
+  const bioWithLinks = richText(bio, {
+    linkify: true,
+    longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
+    longWordClass: css.longWord,
+  });
 
   const listingsContainerClasses = classNames(css.listingsContainer, {
     [css.withBioMissingAbove]: !hasBio,
@@ -211,7 +219,7 @@ export const MainContent = props => {
       <H2 as="h1" className={css.desktopHeading}>
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
       </H2>
-      {hasBio ? <p className={css.bio}>{bio}</p> : null}
+      {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
       <CustomUserFields
         publicData={publicData}
         metadata={metadata}
