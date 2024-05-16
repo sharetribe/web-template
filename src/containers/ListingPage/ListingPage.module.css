@@ -677,9 +677,6 @@
 }
 
 .longWord {
-  /* fallback option */
-  word-break: break-all;
-  /* use break-word if available */
   word-break: break-word;
   hyphens: auto;
 }

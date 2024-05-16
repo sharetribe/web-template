@@ -85,6 +85,11 @@
   }
 }
 
+.longWord {
+  word-break: break-word;
+  hyphens: auto;
+}
+
 .bio {
   /* Preserve newlines, but collapse other whitespace */
   white-space: pre-line;

@@ -10,6 +10,7 @@ const SectionTextMaybe = props => {
   const { text, heading, showAsIngress = false } = props;
   const textClass = showAsIngress ? css.ingress : css.text;
   const content = richText(text, {
+    linkify: true,
     longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
     longWordClass: css.longWord,
     breakChars: '/',
