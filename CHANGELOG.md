@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [Add] Get the color of the PrimeryButton from branding asset.
+  [#379](https://github.com/sharetribe/web-template/pull/379)
 - [change] Add preview resolution for listing in PreviewResolverPage
   [#384](https://github.com/sharetribe/web-template/pull/384)
 - [add] Support for a target path parameter (target_path) in the login as user functionality

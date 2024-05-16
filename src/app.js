@@ -24,6 +24,7 @@ import { RouteConfigurationProvider } from './context/routeConfigurationContext'
 import { ConfigurationProvider } from './context/configurationContext';
 import { mergeConfig } from './util/configHelpers';
 import { IntlProvider } from './util/reactIntl';
+import { includeCSSProperties } from './util/style';
 import { IncludeScripts } from './util/includeScripts';
 
 import { MaintenanceMode } from './components';
@@ -235,16 +236,13 @@ export const ClientApp = props => {
     );
   }
 
-  // Marketplace color and branding image comes from configs
+  // Marketplace color and the color for <PrimaryButton> come from configs
   // If set, we need to create CSS Property and set it to DOM (documentElement is selected here)
   // This provides marketplace color for everything under <html> tag (including modals/portals)
   // Note: This is also set on Page component to provide server-side rendering.
   const elem = window.document.documentElement;
-  if (appConfig.branding.marketplaceColor) {
-    elem.style.setProperty('--marketplaceColor', appConfig.branding.marketplaceColor);
-    elem.style.setProperty('--marketplaceColorDark', appConfig.branding.marketplaceColorDark);
-    elem.style.setProperty('--marketplaceColorLight', appConfig.branding.marketplaceColorLight);
-  }
+  includeCSSProperties(appConfig.branding, elem);
+
   // This gives good input for debugging issues on live environments, but with test it's not needed.
   const logLoadDataCalls = appSettings?.env !== 'test';
 
