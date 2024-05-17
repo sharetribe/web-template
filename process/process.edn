@@ -113,6 +113,10 @@
    :on :transition/request-payment,
    :to :actor.role/provider,
    :template :booking-new-request}
+  {:name :notification/booking-accepted-notification,
+   :on :transition/request-payment,
+   :to :actor.role/customer,
+   :template :booking-new-request}
   {:name :notification/booking-accepted-request,
    :on :transition/accept,
    :to :actor.role/customer,
@@ -181,4 +185,11 @@
    :on :transition/review-2-by-customer,
    :to :actor.role/provider,
    :template :booking-review-by-other-party-published}
+  {:name :notification/booking-reminder-customer
+   :on :transition/operator-accept,
+   :to :actor.role/customer
+   :template :booking-reminder-customer
+   :at {:fn/minus
+        [{:fn/timepoint [:time/booking-start]}
+         {:fn/period ["P1D"]}]}}
   ]}
