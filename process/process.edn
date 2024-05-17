@@ -116,7 +116,7 @@
   {:name :notification/booking-accepted-notification,
    :on :transition/request-payment,
    :to :actor.role/customer,
-   :template :booking-new-request}
+   :template :booking-accepted-notification}
   {:name :notification/booking-accepted-request,
    :on :transition/accept,
    :to :actor.role/customer,
