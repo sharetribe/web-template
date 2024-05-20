@@ -4,8 +4,8 @@ import { createUserWithIdp } from '../util/api';
 import { storableError } from '../util/errors';
 import * as log from '../util/log';
 
-const authenticated = authInfo => authInfo && authInfo.isAnonymous === false;
-const loggedInAs = authInfo => authInfo && authInfo.isLoggedInAs === true;
+const authenticated = authInfo => authInfo?.isAnonymous === false;
+const loggedInAs = authInfo => authInfo?.isLoggedInAs === true;
 
 // ================ Action types ================ //
 
