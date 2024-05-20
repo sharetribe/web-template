@@ -400,7 +400,7 @@
   "LayoutWrapperAccountSettingsSideNav.paymentsTabTitle": "Auszahlungsdetails",
   "LimitedAccessBanner.logout": "Abmelden",
   "LimitedAccessBanner.message": "Du bist als {firstName} {lastName} angemeldet. Du hast eingeschränkte Handlungsrechte. Sie können im Namen des Benutzers keine Transaktionen initiieren, vorantreiben oder Nachrichten senden.",
-  "LimitedAccessBanner.fullRightsMessage": "You're logged in as {firstName} {lastName}. You have full access rights. In a Live environment, you will have limited rights.",
+  "LimitedAccessBanner.fullRightsMessage": "Du bist als {firstName} {lastName} angemeldet. Sie haben volle Zugriffsrechte. In einer Live-Umgebung haben Sie eingeschränkte Rechte.",
   "LimitedAccessBanner.fallbackMessage": "Du bist als {firstName} {lastName} angemeldet.",
   "ListingCard.author": "{authorName}",
   "ListingCard.perUnit": "{unitType, select, day {pro Tag} night {pro Nacht} hour {pro Stunde} other {}}",
