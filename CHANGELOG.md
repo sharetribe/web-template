@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] the email template for default-purchase process
+  (purchase-order-canceled-from-disputed-provider-html.html) contained copy-paste related typo.
+  [#390](https://github.com/sharetribe/web-template/pull/389)
 - [add] Autolink text on the UI. Those links must start with 'http' to be recognized.
 
   - ListingPage > Listing's description
