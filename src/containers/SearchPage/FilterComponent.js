@@ -1,13 +1,16 @@
 import React from 'react';
 
-import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from '../../util/types';
+// utils
+import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_LONG } from '../../util/types';
 import { convertCategoriesToSelectTreeOptions, constructQueryParamName } from '../../util/search';
 
+// component imports
 import SelectSingleFilter from './SelectSingleFilter/SelectSingleFilter';
 import SelectMultipleFilter from './SelectMultipleFilter/SelectMultipleFilter';
 import BookingDateRangeFilter from './BookingDateRangeFilter/BookingDateRangeFilter';
 import KeywordFilter from './KeywordFilter/KeywordFilter';
 import PriceFilter from './PriceFilter/PriceFilter';
+import IntegerRangeFilter from './IntegerRangeFilter/IntegerRangeFilter';
 
 /**
  * FilterComponent is used to map configured filter types
@@ -149,6 +152,25 @@ const FilterComponent = props => {
           options={enumOptions}
           schemaType={schemaType}
           searchMode={searchMode}
+          {...rest}
+        />
+      );
+    }
+    case SCHEMA_TYPE_LONG: {
+      const { minimum, maximum, scope, step, filterConfig = {} } = config;
+      const { label } = filterConfig;
+      const queryParamNames = [constructQueryParamName(key, scope)];
+      return (
+        <IntegerRangeFilter
+          id={componentId}
+          label={label}
+          name={name}
+          queryParamNames={queryParamNames}
+          initialValues={initialValues(queryParamNames, liveEdit)}
+          onSubmit={getHandleChangedValueFn(useHistoryPush)}
+          min={minimum}
+          max={maximum}
+          step={step}
           {...rest}
         />
       );

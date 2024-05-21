@@ -9,7 +9,7 @@ import {
   SCHEMA_TYPE_BOOLEAN,
 } from '../../util/types';
 import { useIntl } from '../../util/reactIntl';
-import { required, nonEmptyArray } from '../../util/validators';
+import { required, nonEmptyArray, validateInteger } from '../../util/validators';
 // Import shared components
 import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '..';
 // Import modules from this directory
@@ -102,13 +102,27 @@ const CustomFieldText = props => {
 
 const CustomFieldLong = props => {
   const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
-  const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
+  const { minimum, maximum, saveConfig } = fieldConfig;
+  const { placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
   const label = getLabel(fieldConfig);
-  const validateMaybe = isRequired
-    ? { validate: required(requiredMessage || defaultRequiredMessage) }
-    : {};
   const placeholder =
     placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholderLong' });
+  const numberTooSmallMessage = intl.formatMessage(
+    { id: 'CustomExtendedDataField.numberTooSmall' },
+    { min: minimum }
+  );
+  const numberTooBigMessage = intl.formatMessage(
+    { id: 'CustomExtendedDataField.numberTooBig' },
+    { max: maximum }
+  );
+
+  // Field with schema type 'long' will always be validated against min & max
+  const validate = (value, min, max) => {
+    const requiredMsg = requiredMessage || defaultRequiredMessage;
+    return isRequired && value == null
+      ? requiredMsg
+      : validateInteger(value, max, min, numberTooSmallMessage, numberTooBigMessage);
+  };
 
   return (
     <FieldTextInput
@@ -123,7 +137,7 @@ const CustomFieldLong = props => {
       }}
       label={label}
       placeholder={placeholder}
-      {...validateMaybe}
+      validate={value => validate(value, minimum, maximum)}
     />
   );
 };

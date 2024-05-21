@@ -54,6 +54,21 @@
  */
 export const listingFields = [
   // {
+  //   "scope": "public",
+  //   "label": "Gears",
+  //   "key": "gears",
+  //   "schemaType": "long",
+  //   "numberConfig": {
+  //     "minimum": 1,
+  //     "maximum": 24
+  //   },
+  //   "filterConfig": {
+  //     "indexForSearch": true,
+  //     "group": "primary",
+  //     "label": "Gears"
+  //   }
+  // }
+  // {
   //   key: 'bikeType',
   //   scope: 'public',
   //   schemaType: 'enum',
