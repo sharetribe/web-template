@@ -23,6 +23,7 @@ export const TopbarContainerComponent = props => {
     currentUserHasOrders,
     history,
     isAuthenticated,
+    isLoggedInAs,
     authScopes,
     hasGenericError,
     location,
@@ -45,6 +46,7 @@ export const TopbarContainerComponent = props => {
       currentUserHasOrders={currentUserHasOrders}
       history={history}
       isAuthenticated={isAuthenticated}
+      isLoggedInAs={isLoggedInAs}
       authScopes={authScopes}
       location={location}
       notificationCount={notificationCount}
@@ -77,6 +79,7 @@ TopbarContainerComponent.propTypes = {
   currentUserHasListings: bool.isRequired,
   currentUserHasOrders: bool,
   isAuthenticated: bool.isRequired,
+  isLoggedInAs: bool.isRequired,
   authScopes: array,
   notificationCount: number,
   onLogout: func.isRequired,
@@ -94,8 +97,8 @@ TopbarContainerComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
-  // Topbar needs isAuthenticated
-  const { isAuthenticated, logoutError, authScopes } = state.auth;
+  // Topbar needs isAuthenticated and isLoggedInAs
+  const { isAuthenticated, isLoggedInAs, logoutError, authScopes } = state.auth;
   // Topbar needs user info.
   const {
     currentUser,
@@ -113,6 +116,7 @@ const mapStateToProps = state => {
     currentUserHasOrders,
     notificationCount,
     isAuthenticated,
+    isLoggedInAs,
     authScopes,
     sendVerificationEmailInProgress,
     sendVerificationEmailError,
