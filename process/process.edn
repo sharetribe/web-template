@@ -145,14 +145,14 @@
    :on :transition/expire,
    :to :actor.role/customer,
    :template :booking-expired-request}
-  {:name :notification/booking-reminder-provider,
+  {:name :notification/booking-reminder-end-provider,
    :on :transition/complete,
    :to :actor.role/provider,
-   :template :booking-reminder-provider}
-  {:name :notification/booking-reminder-customer
+   :template :booking-reminder-end-provider}
+  {:name :notification/booking-reminder-end-customer
    :on :transition/complete,
    :to :actor.role/customer
-   :template :booking-reminder-customer}
+   :template :booking-reminder-end-customer}
   {:name :notification/review-period-start-provider,
    :on :transition/operator-complete,
    :to :actor.role/provider,
@@ -161,10 +161,10 @@
    :on :transition/operator-complete,
    :to :actor.role/customer,
    :template :booking-review-by-customer-wanted}
-  {:name :notification/booking-reminder-provider-operator-complete,
+  {:name :notification/booking-reminder-end-provider-operator-complete,
    :on :transition/operator-complete,
    :to :actor.role/provider,
-   :template :booking-reminder-provider}
+   :template :booking-reminder-end-provider}
   {:name :notification/review-period-start-provider-operator-complete,
    :on :transition/operator-complete,
    :to :actor.role/provider,
