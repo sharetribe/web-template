@@ -150,7 +150,7 @@
   {:name :notification/booking-reminder-customer,
    :on :transition/operator-complete,
    :to :actor.role/customer,
-   :template :booking-reminder-provider}
+   :template :booking-reminder-customer}
   {:name :notification/booking-reminder-provider,
    :on :transition/operator-complete,
    :to :actor.role/provider,
