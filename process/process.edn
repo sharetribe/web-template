@@ -113,10 +113,6 @@
    :on :transition/request-payment,
    :to :actor.role/provider,
    :template :booking-new-request}
-  {:name :notification/booking-accepted-notification,
-   :on :transition/request-payment,
-   :to :actor.role/customer,
-   :template :booking-accepted-notification}
   {:name :notification/booking-new-request-customer,
    :on :transition/request-payment,
    :to :actor.role/customer,
