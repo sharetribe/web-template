@@ -116,17 +116,12 @@ const CustomFieldLong = props => {
     { max: maximum }
   );
 
+  // Field with schema type 'long' will always be validated against min & max
   const validate = (value, min, max) => {
-    const requiredError =
-      isRequired && value == null ? requiredMessage || defaultRequiredMessage : undefined;
-    const numberError = validateInteger(
-      value,
-      max,
-      min,
-      numberTooSmallMessage,
-      numberTooBigMessage
-    );
-    return requiredError || numberError;
+    const requiredMsg = requiredMessage || defaultRequiredMessage;
+    return isRequired && value == null
+      ? requiredMsg
+      : validateInteger(value, max, min, numberTooSmallMessage, numberTooBigMessage);
   };
 
   return (
