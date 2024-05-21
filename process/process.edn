@@ -145,10 +145,14 @@
    :on :transition/expire,
    :to :actor.role/customer,
    :template :booking-expired-request}
-  {:name :notification/booking-money-paid,
+  {:name :notification/booking-reminder-provider,
    :on :transition/complete,
    :to :actor.role/provider,
-   :template :booking-money-paid}
+   :template :booking-reminder-provider}
+  {:name :notification/booking-reminder-customer
+   :on :transition/complete,
+   :to :actor.role/customer
+   :template :booking-reminder-customer}
   {:name :notification/review-period-start-provider,
    :on :transition/complete,
    :to :actor.role/provider,
@@ -157,10 +161,10 @@
    :on :transition/complete,
    :to :actor.role/customer,
    :template :booking-review-by-customer-wanted}
-  {:name :notification/booking-money-paid-operator-complete,
+  {:name :notification/booking-reminder-provider-operator-complete,
    :on :transition/operator-complete,
    :to :actor.role/provider,
-   :template :booking-money-paid}
+   :template :booking-reminder-provider}
   {:name :notification/review-period-start-provider-operator-complete,
    :on :transition/operator-complete,
    :to :actor.role/provider,
@@ -185,11 +189,4 @@
    :on :transition/review-2-by-customer,
    :to :actor.role/provider,
    :template :booking-review-by-other-party-published}
-  {:name :notification/booking-reminder-customer
-   :on :transition/operator-accept,
-   :to :actor.role/customer
-   :template :booking-reminder-customer
-   :at {:fn/minus
-        [{:fn/timepoint [:time/booking-start]}
-         {:fn/period ["P1D"]}]}}
   ]}
