@@ -41,6 +41,12 @@ way to update this template, but currently, we follow a pattern:
   [#381](https://github.com/sharetribe/web-template/pull/381)
 - [fix] Styleguide shows multiple versions of some components. The 'id' attributes need to be
   unique. [#380](https://github.com/sharetribe/web-template/pull/380)
+- [change] Update SDK to v1.21.0 [#386](https://github.com/sharetribe/web-template/pull/386)
+- [change] Use `authInfo.isLoggedInAs` instead of relying on auth token's
+  `scope` to determine if current session is operator user logged in as
+  marketplace user [#386](https://github.com/sharetribe/web-template/pull/386)
+- [change] For login as, use `sdk.loginAs` instead of `sdk.login`, which is
+  deprecated for this purpose [#386](https://github.com/sharetribe/web-template/pull/386)
 
 ## [v5.0.1] 2024-04-30
 

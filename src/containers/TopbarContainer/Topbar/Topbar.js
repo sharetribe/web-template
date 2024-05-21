@@ -203,6 +203,7 @@ class TopbarComponent extends Component {
       mobileRootClassName,
       mobileClassName,
       isAuthenticated,
+      isLoggedInAs,
       authScopes,
       authInProgress,
       currentUser,
@@ -278,6 +279,7 @@ class TopbarComponent extends Component {
       <div className={classes}>
         <LimitedAccessBanner
           isAuthenticated={isAuthenticated}
+          isLoggedInAs={isLoggedInAs}
           authScopes={authScopes}
           currentUser={currentUser}
           onLogout={this.handleLogout}
@@ -391,6 +393,7 @@ TopbarComponent.propTypes = {
   mobileRootClassName: string,
   mobileClassName: string,
   isAuthenticated: bool.isRequired,
+  isLoggedInAs: bool.isRequired,
   authScopes: array,
   authInProgress: bool.isRequired,
   currentUser: propTypes.currentUser,
