@@ -576,6 +576,33 @@ const validShowConfig = config => {
   return [isValid, validValue];
 };
 
+// numberConfig is passed along with listing fields that use the schema type `long`
+const validNumberConfig = config => {
+  const { minimum, maximum } = config;
+  const integerConfig = { minimum, maximum, step: 1 };
+
+  // Check if both minimum and maximum are integers
+  if (!Number.isInteger(minimum) || !Number.isInteger(maximum)) {
+    return [false, integerConfig];
+  }
+
+  // Ensure both values are within the safe integer range
+  if (
+    minimum < Number.MIN_SAFE_INTEGER ||
+    minimum > Number.MAX_SAFE_INTEGER ||
+    maximum < Number.MIN_SAFE_INTEGER ||
+    maximum > Number.MAX_SAFE_INTEGER
+  ) {
+    return [false, integerConfig];
+  }
+
+  // Check that the maximum is greater than the minimum
+  if (maximum <= minimum) {
+    return [false, integerConfig];
+  }
+  return [true, integerConfig];
+};
+
 const validUserShowConfig = config => {
   const isUndefined = typeof config === 'undefined';
   if (isUndefined) {
@@ -696,6 +723,8 @@ const validListingFields = (listingFields, listingTypesInUse, categoriesInUse) =
             ? validKey(value, keys)
             : name === 'scope'
             ? validEnumString('scope', value, scopeOptions, 'public')
+            : name === 'numberConfig'
+            ? validNumberConfig(value)
             : name === 'includeForListingTypes'
             ? validListingTypesForBuiltInSetup(value, listingTypesInUse)
             : name === 'listingTypeConfig'
@@ -887,11 +916,13 @@ const restructureListingFields = hostedListingFields => {
         filterConfig = {},
         showConfig = {},
         saveConfig = {},
+        numberConfig = {},
         categoryConfig = {},
         ...rest
       } = listingField;
       const defaultLabel = label || key;
       const enumOptionsMaybe = ['enum', 'multi-enum'].includes(schemaType) ? { enumOptions } : {};
+      const numberConfigMaybe = schemaType === 'long' ? { numberConfig } : {};
       const { required: isRequired, ...restSaveConfig } = saveConfig;
 
       return key
@@ -900,6 +931,7 @@ const restructureListingFields = hostedListingFields => {
             scope,
             schemaType,
             ...enumOptionsMaybe,
+            ...numberConfigMaybe,
             filterConfig: {
               ...filterConfig,
               label: filterConfig.label || defaultLabel,
@@ -1057,7 +1089,7 @@ const mergeListingConfig = (hostedConfig, defaultConfigs, categoriesInUse) => {
 
   // When debugging, include default configs by passing 'true' here.
   // Otherwise, use listing types and fields from hosted assets.
-  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(false);
+  const shouldMerge = mergeDefaultTypesAndFieldsForDebugging(true);
   const listingTypes = shouldMerge
     ? union(hostedListingTypes, defaultListingTypes, 'listingType')
     : hostedListingTypes;
