@@ -154,11 +154,11 @@
    :to :actor.role/customer
    :template :booking-reminder-customer}
   {:name :notification/review-period-start-provider,
-   :on :transition/complete,
+   :on :transition/operator-complete,
    :to :actor.role/provider,
    :template :booking-review-by-provider-wanted}
   {:name :notification/review-period-start-customer,
-   :on :transition/complete,
+   :on :transition/operator-complete,
    :to :actor.role/customer,
    :template :booking-review-by-customer-wanted}
   {:name :notification/booking-reminder-provider-operator-complete,
