@@ -30,8 +30,8 @@ const LimitedAccessBanner = props => {
 
   const { firstName, lastName } = user.attributes.profile;
 
-  const limitedRights = authScopes.indexOf('user:limited') >= 0;
-  const fullRights = authScopes.indexOf('user') >= 0;
+  const limitedRights = authScopes?.indexOf('user:limited') >= 0;
+  const fullRights = authScopes?.indexOf('user') >= 0;
 
   return showBanner ? (
     <div className={classes}>
