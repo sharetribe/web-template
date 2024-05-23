@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] mergeDefaultTypesAndFieldsForDebugging was set to true, which is wrong. The 0 handling with
+  min and max was wrong. [#393](https://github.com/sharetribe/web-template/pull/393)
+
 ## [v5.1.0] 2024-05-21
 
 - [add] support for extended data fields with type `long`

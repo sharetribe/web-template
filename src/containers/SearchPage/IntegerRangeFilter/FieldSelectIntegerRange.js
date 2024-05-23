@@ -14,7 +14,10 @@ const RADIX = 10;
 //  If `values` does not include `minValue` or `maxValue`, defaults are applied.
 const resolveMinMaxValues = (values, defaultMax, defaultMin) => {
   const { maxValue, minValue } = values || {};
-  return { maxValue: maxValue || defaultMax, minValue: minValue || defaultMin };
+  return {
+    maxValue: maxValue != null ? maxValue : defaultMax,
+    minValue: minValue != null ? minValue : defaultMin,
+  };
 };
 
 const RangeInput = props => {
