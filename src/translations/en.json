@@ -421,6 +421,7 @@
   "ListingPage.detailsTitle": "Details",
   "ListingPage.editListing": "Edit listing",
   "ListingPage.editProfileLink": "Edit profile",
+  "ListingPage.errorInvalidListingMessage": "The listing contained invalid data. Please contact the marketplace operator.",
   "ListingPage.errorLoadingListingMessage": "Could not load the listing. Please try again.",
   "ListingPage.errorLoadingListingTitle": "Error in loading the listing",
   "ListingPage.finishListing": "Finish listing",
