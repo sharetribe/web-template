@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] en.json: typo on 'StripeConnectAccountForm.stripeToSText'
+  [#395](https://github.com/sharetribe/web-template/pull/395)
 - [change] StripeConnectAccount: use 'collectionOptions' instead of deprecated 'collect'. The
   future_requirements uses 'include' by default.
   [#392](https://github.com/sharetribe/web-template/pull/392)
