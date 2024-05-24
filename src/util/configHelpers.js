@@ -1327,7 +1327,7 @@ const hasMandatoryConfigs = hostedConfig => {
   printErrorIfHostedAssetIsMissing({ branding, listingTypes, listingFields, transactionSize });
   return (
     branding?.logo &&
-    listingTypes?.listingTypes &&
+    listingTypes?.listingTypes?.length > 0 &&
     listingFields?.listingFields &&
     transactionSize?.listingMinimumPrice &&
     !hasClashWithBuiltInPublicDataKey(listingFields?.listingFields)
