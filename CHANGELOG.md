@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] StripeConnectAccount: use 'collectionOptions' instead of deprecated 'collect'. The
+  future_requirements uses 'include' by default.
+  [#392](https://github.com/sharetribe/web-template/pull/392)
 - [fix] mergeDefaultTypesAndFieldsForDebugging was set to true, which is wrong. The 0 handling with
   min and max was wrong. [#393](https://github.com/sharetribe/web-template/pull/393)
 
