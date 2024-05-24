@@ -304,7 +304,7 @@ const EditListingDetailsFormComponent = props => (
         values,
       } = formRenderProps;
 
-      const { listingType } = values;
+      const { listingType, transactionProcessAlias, unitType } = values;
       const [allCategoriesChosen, setAllCategoriesChosen] = useState(false);
 
       const titleRequiredMessage = intl.formatMessage({
@@ -328,7 +328,9 @@ const EditListingDetailsFormComponent = props => (
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
-      const submitDisabled = invalid || disabled || submitInProgress;
+      const hasMandatoryListingTypeData = listingType && transactionProcessAlias && unitType;
+      const submitDisabled =
+        invalid || disabled || submitInProgress || !hasMandatoryListingTypeData;
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
