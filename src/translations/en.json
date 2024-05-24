@@ -863,7 +863,7 @@
   "StripeConnectAccountForm.loadingStripeAccountData": "Fetching payout details…",
   "StripeConnectAccountForm.missingStripeKey": "Oops, something went wrong. Please refresh the page and try again. If the problem persists, contact support.",
   "StripeConnectAccountForm.stripeConnectedAccountTermsLink": "Stripe Connected Account Agreement",
-  "StripeConnectAccountForm.stripeToSText": "By the saving details, you agree to the {stripeConnectedAccountTermsLink}.",
+  "StripeConnectAccountForm.stripeToSText": "By saving the details, you agree to the {stripeConnectedAccountTermsLink}.",
   "StripeConnectAccountStatusBox.editAccountButton": "Edit Stripe account",
   "StripeConnectAccountStatusBox.getVerifiedButton": "Get verified",
   "StripeConnectAccountStatusBox.verificationFailedText": "To receive payments, you need to add your banking details and verify your account.",
