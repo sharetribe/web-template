@@ -2,7 +2,7 @@
  *  TopbarMobileMenu prints the menu content for authenticated user or
  * shows login actions for those who are not authenticated.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -10,7 +10,7 @@ import { ACCOUNT_SETTINGS_PAGES } from '../../../routing/routeConfiguration';
 import { FormattedMessage } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import { ensureCurrentUser } from '../../../util/data';
-
+import { Collapse } from 'react-collapse';
 import { AvatarLarge, InlineTextButton, NamedLink, NotificationBadge } from '../../../components';
 
 import css from './TopbarMobileMenu.module.css';
@@ -27,15 +27,20 @@ const TopbarMobileMenu = props => {
 
   const user = ensureCurrentUser(currentUser);
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
   if (!isAuthenticated) {
     const signup = (
-      <NamedLink name="SignupPage" style={{color: "white"}} className={css.signupLink}>
+      <NamedLink name="SignupPage" style={{ color: 'white' }} className={css.signupLink}>
         <FormattedMessage id="TopbarMobileMenu.signupLink" />
       </NamedLink>
     );
 
     const login = (
-      <NamedLink name="LoginPage" style={{color: "white"}} className={css.loginLink}>
+      <NamedLink name="LoginPage" style={{ color: 'white' }} className={css.loginLink}>
         <FormattedMessage id="TopbarMobileMenu.loginLink" />
       </NamedLink>
     );
@@ -48,61 +53,86 @@ const TopbarMobileMenu = props => {
     return (
       <div className={css.root}>
         <div className={css.content}>
+          <img className={css.logo} src="/static/icons/rundo_web-social-media.png" alt="Logo" />
           <div className={css.authenticationGreeting}>
-            <a href='/s'>
+            {/*             <a href='/s'>
               <FormattedMessage id="ALQUILAR UN ARTÍCULO" />
-            </a>
+            </a> */}
+
             <br></br>
-            <br></br>
-            <NamedLink name="NewListingPage" >
-            <FormattedMessage id="TopbarMobileMenu.newListingLink" />
-          </NamedLink>
-          </div>
-        </div>
-        <div style={{display: "flex" ,flexDirection: "column"}} className="categorias">
-          <h1 style={{color: "#7CC9BC"}}>Categorías</h1>
-         
-          <a style={{ marginLeft: '5%' }} href="/s?pub_campamento=carpa%2Cbolsa_de_dormir%2Caislante%2Csilla_camping%2Ccocina_camping%2Cheladeritas%2Ccolchon_inflable%2Cmochila%2Ciluminacion%2Cotros_camping">
-          <FormattedMessage id="Camping"/>
-          </a>
-          <br></br>
-          <a style={{ marginLeft: '5%' }} href="/s?pub_deportes_acuaticos=kayak%2Csup%2Ctraje_neoprene%2Cchaleco_salvavida%2Cbote_inflable%2Cotros_da&pub_esqui_snow_cate=esquies_alpino%2Cbotas_esqui_alpino%2Csnow_alpino%2Cbotas_snow%2Cbastones%2Cotros_sys_cate&pub_esqui_travesia=esqui_pieles_travesia%2Cbotas_travesia%2Cbastones_travesia%2Cseguridad_travesia%2Cpiquetas_travesia%2Ccasco%2Cantiparras%2Cguantes%2Ccrampones%2Csplitboard%2Cotros_syst">
-          <FormattedMessage id="Deportes" />
-          </a>
-          <br></br>
-          <a style={{ marginLeft: '5%' }} href="/s?pub_hogar=has_all%3Aherramientas_e%2Cmyi%2Cjardineria">
-          <FormattedMessage id=" Hogar" />
-          </a>
-          <br></br>
-          <a style={{ marginLeft: '5%' }} href="/s?pub_bebes=butaca_auto%2Cbuster%2Csilla_comer%2Cpracticuna%2Cmochila_trekking_bebe%2Cbanadera%2CCochecito%2Cotros_bebes%2Csalvavidas_bebe%2Cropa_nieve_bebe">
-          <FormattedMessage id=" Bebés" />
-          </a>
-          <br></br>
-          <a style={{ marginLeft: '5%' }} href="/s?pub_ropa=has_all%3Aadultos%2Cninos%2Cbebe">
-          <FormattedMessage id=" Vestimenta" />
-          </a>
-          <br></br>
-          <a style={{ marginLeft: '5%' }} href="/s">
-          <FormattedMessage id=" Otros" />
-          </a>
+
+            <h1 style={{ color: 'black', cursor: 'pointer' }} onClick={toggleDropdown}>
+              Quiero alquilar
+            </h1>
+            <i class="fa-solid fa-chevron-down"></i>
+            
+            <Collapse isOpened={isOpen}>
+              <div className={css.menuLinks}>
+                <a
+                  style={{  color: 'black' }}
+                  href="/s?pub_campamento=carpa%2Cbolsa_de_dormir%2Caislante%2Csilla_camping%2Ccocina_camping%2Cheladeritas%2Ccolchon_inflable%2Cmochila%2Ciluminacion%2Cotros_camping"
+                >
+                  <FormattedMessage id="Camping" />
+                </a>
+                <br />
+                <a
+                  style={{  color: 'black' }}
+                  href="/s?pub_deportes_acuaticos=kayak%2Csup%2Ctraje_neoprene%2Cchaleco_salvavida%2Cbote_inflable%2Cotros_da&pub_esqui_snow_cate=esquies_alpino%2Cbotas_esqui_alpino%2Csnow_alpino%2Cbotas_snow%2Cbastones%2Cotros_sys_cate&pub_esqui_travesia=esqui_pieles_travesia%2Cbotas_travesia%2Cbastones_travesia%2Cseguridad_travesia%2Cpiquetas_travesia%2Ccasco%2Cantiparras%2Cguantes%2Ccrampones%2Csplitboard%2Cotros_syst"
+                >
+                  <FormattedMessage id="Deportes" />
+                </a>
+                <br />
+                <a
+                  style={{  color: 'black' }}
+                  href="/s?pub_hogar=has_all%3Aherramientas_e%2Cmyi%2Cjardineria"
+                >
+                  <FormattedMessage id="Hogar" />
+                </a>
+                <br />
+                <a
+                  style={{  color: 'black' }}
+                  href="/s?pub_bebes=butaca_auto%2Cbuster%2Csilla_comer%2Cpracticuna%2Cmochila_trekking_bebe%2Cbanadera%2CCochecito%2Cotros_bebes%2Csalvavidas_bebe%2Cropa_nieve_bebe"
+                >
+                  <FormattedMessage id="Bebés" />
+                </a>
+                <br />
+                <a
+                  style={{  color: 'black' }}
+                  href="/s?pub_ropa=has_all%3Aadultos%2Cninos%2Cbebe"
+                >
+                  <FormattedMessage id="Vestimenta" />
+                </a>
+                <br />
+                <a style={{  color: 'black' }} href="/s">
+                  <FormattedMessage id="Otros" />
+                </a>
+              </div>
+            </Collapse>
           
           <br></br>
           <br></br>
-          <a href="https://www.rundo.com.ar/p/frequent-asked-questions">
-          <h1 style={{color: "#7CC9BC"}}>Preguntas frecuentes
-          </h1>
-          </a>
+          <div>
+            <NamedLink style={{ color: 'black' }} name="NewListingPage">
+              <h1>
+                <FormattedMessage id="TopbarMobileMenu.newListingLink" />
+              </h1>
+            </NamedLink>
+            <a href="https://www.rundo.com.ar/p/frequent-asked-questions">
+              <h1 style={{ color: 'black' }}>Preguntas frecuentes</h1>
+            </a>
           </div>
+          </div>
+        </div>
         <div className={css.footer}>
-        <div style={{backgroundColor: "#7CC9BC"}} className={css.createNewListingLink}>
-          <NamedLink name="SignupPage" style={{color: "white"}}>
-            <FormattedMessage id="REGISTRATE " />
-          </NamedLink>
-          O
-          <NamedLink name="LoginPage" style={{color: "white"}}>
-            <FormattedMessage id=" INICIA SESIÓN" />
-          </NamedLink>         
-        </div>         
+          <div style={{ backgroundColor: '#7CC9BC' }} className={css.createNewListingLink}>
+            <NamedLink name="SignupPage" style={{ color: 'white' }}>
+              <FormattedMessage id="REGISTRATE " />
+            </NamedLink>
+            O
+            <NamedLink name="LoginPage" style={{ color: 'white' }}>
+              <FormattedMessage id=" INICIA SESIÓN" />
+            </NamedLink>
+          </div>
         </div>
       </div>
     );
@@ -131,7 +161,7 @@ const TopbarMobileMenu = props => {
           <FormattedMessage id="TopbarMobileMenu.logoutLink" />
         </InlineTextButton>
         <NamedLink
-          className={classNames(css.inbox, currentPageClass('InboxPage'))}
+          className={classNames(css.inbox, currentPageClass('InboxPage'))}çç
           name="InboxPage"
           params={{ tab: currentUserHasListings ? 'sales' : 'orders' }}
         >

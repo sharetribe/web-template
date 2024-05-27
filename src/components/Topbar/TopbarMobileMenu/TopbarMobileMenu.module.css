@@ -1,6 +1,7 @@
 @import '../../../styles/customMediaQueries.css';
 
 .root {
+  padding: 0px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -10,14 +11,21 @@
 }
 
 .content {
+  
+  margin: -11px;
+  width: 100vh;
+  height: 15vh;
   flex-grow: 1;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  
+  background-color: var(--marketplaceColor);
 }
-
+.logo{
+  margin-top: 15px;
+  width: 23%;
+}
 .footer {
   position: fixed;
   bottom: 0;
@@ -123,7 +131,7 @@
   margin-bottom: 11px;
 }
 .currentPageLink {
-  color: var(--marketplaceColorDark);
+   color: var(--marketplaceColorDark); 
 }
 
 .notificationBadge {
@@ -147,16 +155,24 @@
 
 
 .authenticationGreeting {
+  margin-left: 5%;
   /* Font */
-  composes: h1 from global;
+
   width: 100%;
 /*   margin-bottom: 24px;
   margin-top: var(--TopbarMobileMenu_topMargin); */
-  margin-top: 20%; 
+  /* background-color: var(--marketplaceColor); */
 }
 .authenticationLinks {
   white-space: nowrap;
   color: aliceblue
+}
+
+.menuLinks{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: black;
 }
 
 .signupLink {
