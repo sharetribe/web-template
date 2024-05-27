@@ -524,7 +524,7 @@ export const AuthenticationPageComponent = props => {
   } else if (isAuthenticated && currentUserLoaded && !showEmailVerification) {
     return <NamedRedirect name="LandingPage" />;
   } else if (show404) {
-    return <NotFoundPage />;
+    return <NotFoundPage staticContext={props.staticContext} />;
   }
 
   const resendErrorTranslationId = isTooManyEmailVerificationRequestsError(
