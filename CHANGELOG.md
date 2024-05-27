@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] en.json: typo on 'ModalMissingInformation.verifyEmailText'
+  [#396](https://github.com/sharetribe/web-template/pull/396)
 - [fix] Ensure that there is listingType, transactionProcessAlias and unitType defined.
   [#394](https://github.com/sharetribe/web-template/pull/394)
 - [fix] en.json: typo on 'StripeConnectAccountForm.stripeToSText'
