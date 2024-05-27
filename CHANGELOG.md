@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] Update SDK to v1.21.1. Fixes bug with extended data with a key `length`
+  and a number type value.
+  [#398](https://github.com/sharetribe/web-template/pull/398)
 - [fix] util/sanitize.js: handle publicData = null case which happens with banned user
   [#397](https://github.com/sharetribe/web-template/pull/397)
 - [fix] en.json: typo on 'ModalMissingInformation.verifyEmailText'
