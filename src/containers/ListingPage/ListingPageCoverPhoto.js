@@ -157,7 +157,7 @@ export const ListingPageComponent = props => {
 
   if (showListingError && showListingError.status === 404) {
     // 404 listing not found
-    return <NotFoundPage />;
+    return <NotFoundPage staticContext={props.staticContext} />;
   } else if (showListingError) {
     // Other error in fetching listing
     return <ErrorPage topbar={topbar} scrollingDisabled={scrollingDisabled} intl={intl} />;
