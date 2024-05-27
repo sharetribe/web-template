@@ -491,7 +491,7 @@
   "ModalMissingInformation.resendFailed": "Resending verification email failed. Please try again.",
   "ModalMissingInformation.resendFailedTooManyRequests": "Resending verification email failed. Too many verification emails sent.",
   "ModalMissingInformation.sendingEmail": "Sending verification email…",
-  "ModalMissingInformation.verifyEmailText": "Please verify your email address so we can send you your receipt and information on your order status. We are unable to send you email before your email has been verified.",
+  "ModalMissingInformation.verifyEmailText": "Please verify your email address so we can send you your receipt and information on your order status. We are unable to send you emails before your email has been verified.",
   "ModalMissingInformation.verifyEmailTitle": "Please verify your email address",
   "NotFoundPage.SearchForm.placeholder": "Search listings…",
   "NotFoundPage.description": "We can't find the page you're looking for. Make sure you've typed in the URL correctly or try searching {marketplaceName}.",
