@@ -51,6 +51,8 @@ import { TermsOfServiceContent } from '../../containers/TermsOfServicePage/Terms
 // We need to get PrivacyPolicy asset and get it rendered for the modal on this page.
 import { PrivacyPolicyContent } from '../../containers/PrivacyPolicyPage/PrivacyPolicyPage';
 
+import NotFoundPage from '../NotFoundPage/NotFoundPage';
+
 import { TOS_ASSET_NAME, PRIVACY_POLICY_ASSET_NAME } from './AuthenticationPage.duck';
 
 import css from './AuthenticationPage.module.css';
@@ -502,6 +504,10 @@ export const AuthenticationPageComponent = props => {
   const userTypeInAuthInfo = isConfirm && authInfo?.userType ? authInfo?.userType : null;
   const userType = pathParams?.userType || userTypeInPushState || userTypeInAuthInfo || null;
 
+  const { userTypes = [] } = config.user;
+  const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
+  const show404 = userType && !preselectedUserType;
+
   const user = ensureCurrentUser(currentUser);
   const currentUserLoaded = !!user.id;
   const isLogin = tab === 'login';
@@ -517,6 +523,8 @@ export const AuthenticationPageComponent = props => {
     return <Redirect to={from} />;
   } else if (isAuthenticated && currentUserLoaded && !showEmailVerification) {
     return <NamedRedirect name="LandingPage" />;
+  } else if (show404) {
+    return <NotFoundPage />;
   }
 
   const resendErrorTranslationId = isTooManyEmailVerificationRequestsError(
