@@ -162,16 +162,14 @@ const sanitizedExtendedDataFields = (value, config) => {
  * @returns
  */
 const sanitizeConfiguredPublicData = (publicData, config = {}) => {
-  const sanitizedConfiguredPublicData = Object.entries(publicData).reduce((sanitized, entry) => {
+  // The publicData could be null (e.g. for banned user)
+  const publicDataObj = publicData || {};
+  return Object.entries(publicDataObj).reduce((sanitized, entry) => {
     const [key, value] = entry;
     const foundListingFieldConfig = config?.listingFields?.find(d => d.key === key);
     const foundUserFieldConfig = config?.userFields?.find(d => d.key === key);
-    const sanitizedValue = [
-      'listingType',
-      'transactionProcessAlias',
-      'unitType',
-      'userType',
-    ].includes(key)
+    const knownKeysWithString = ['listingType', 'transactionProcessAlias', 'unitType', 'userType'];
+    const sanitizedValue = knownKeysWithString.includes(key)
       ? sanitizeText(value)
       : foundListingFieldConfig
       ? sanitizedExtendedDataFields(value, foundListingFieldConfig)
@@ -186,7 +184,6 @@ const sanitizeConfiguredPublicData = (publicData, config = {}) => {
       [key]: sanitizedValue,
     };
   }, {});
-  return sanitizedConfiguredPublicData;
 };
 
 /**
