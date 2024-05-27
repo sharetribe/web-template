@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] util/sanitize.js: handle publicData = null case which happens with banned user
+  [#397](https://github.com/sharetribe/web-template/pull/397)
 - [fix] en.json: typo on 'ModalMissingInformation.verifyEmailText'
   [#396](https://github.com/sharetribe/web-template/pull/396)
 - [fix] Ensure that there is listingType, transactionProcessAlias and unitType defined.
