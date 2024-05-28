@@ -29,7 +29,7 @@
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingNewRequestCustomer.ContentForNightly" "You have booked { listingTitle } from {dateStart,date,::YYYYMMMd} to {dateEnd,date,::YYYYMMMd}." dateStart=booking.start dateEnd=booking.end listingTitle=listing.title}}</p>
                 {{/ eq}}
                 {{/each}}
-                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingNewRequestCustomer.ContactProvider" "If you have questions about your booking, you can contact {providerDisplayName} through the order page." providerDisplayName=provider.display-name}}</p>
+                <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingNewRequestCustomer.ContactProvider" "If you have questions about your booking, you can contact {providerDisplayName} through the order page." providerDisplayName=provider.display-name}} <a target="_blank" style="color:#7cc9bc;text-decoration:none" href="https://api.whatsapp.com/send/?phone=5492944232664&text&type=phone_number&app_absent=0">WhatsApp.</a></p>
                 <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation"
                   width="100%">
                   <tbody>
