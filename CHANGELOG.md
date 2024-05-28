@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] add currently available translations for de, es, fr.
+  [#400](https://github.com/sharetribe/web-template/pull/400)
 - [add] This adds user types. User fields can be tied to user types
 
   - User fields contain multiple default user fields
