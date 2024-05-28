@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+
+## [v5.2.0] 2024-05-28
+
 - [add] add currently available translations for de, es, fr.
   [#400](https://github.com/sharetribe/web-template/pull/400)
 - [add] This adds user types. User fields can be tied to user types
@@ -53,6 +56,8 @@ way to update this template, but currently, we follow a pattern:
   [#392](https://github.com/sharetribe/web-template/pull/392)
 - [fix] mergeDefaultTypesAndFieldsForDebugging was set to true, which is wrong. The 0 handling with
   min and max was wrong. [#393](https://github.com/sharetribe/web-template/pull/393)
+
+  [v5.2.0]: https://github.com/sharetribe/web-template/compare/v5.1.0...v5.2.0
 
 ## [v5.1.0] 2024-05-21
 
