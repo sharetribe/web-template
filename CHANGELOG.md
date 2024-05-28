@@ -14,6 +14,26 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] This adds user types. User fields can be tied to user types
+
+  - User fields contain multiple default user fields
+    - Only displayName and phoneNumber can be toggle on/off
+      - You can also toggle wether those are shown on sign up forms.
+  - Custom user fields can be tied to user types.
+  - AuthenticationPage: SignupForm and ConfirmSignupForm show a dropdown to select user type if it's
+    not preselected
+    - Default
+  - New route **_SignupForUserTypePage_** with path `/signup/:userType`
+    - This route preselects one user type for the sign up forms.
+    - If preselected userType is there (`/signup/:userType`), then
+      - Dropdown selector is not shown.
+      - Toggling between login & signup tabs should keep the userType in memory
+      - Using SSO, saves the preselected user type to a temporary cookie (to be used in
+        ConfirmSignupForm after returning from ID provider's website)
+    - An unknown (e.g. outdated) userType in the route will show 404 page.
+
+  [#399](https://github.com/sharetribe/web-template/pull/399)
+
 - [add] Toggle the visibility of unselected options on SectionMultiEnumMaybe through hosted assets.
   [#382](https://github.com/sharetribe/web-template/pull/382)
 - [fix] Update SDK to v1.21.1. Fixes bug with extended data with a key `length` and a number type
