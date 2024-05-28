@@ -204,7 +204,7 @@ export const InboxPageComponent = props => {
   const { tab } = params;
   const validTab = tab === 'orders' || tab === 'sales';
   if (!validTab) {
-    return <NotFoundPage />;
+    return <NotFoundPage staticContext={props.staticContext} />;
   }
 
   const isOrders = tab === 'orders';
