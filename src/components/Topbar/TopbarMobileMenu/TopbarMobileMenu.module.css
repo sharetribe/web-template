@@ -26,6 +26,9 @@
   margin-top: 15px;
   width: 23%;
 }
+.categories{
+  display: flex;
+}
 .footer {
   position: fixed;
   bottom: 0;
