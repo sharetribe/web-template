@@ -565,12 +565,18 @@ const validShowConfig = config => {
   // Validate: label, isDetail.
   const [isValidLabel, label] = validLabel(config.label);
   const [isValidIsDetail, isDetail] = validBoolean('isDetail', config.isDetail, true);
+  const [isValidUnselectedOptions, unselectedOptions] = validBoolean(
+    'unselectedOptions',
+    config.unselectedOptions,
+    true
+  );
 
-  const isValid = isValidLabel && isValidIsDetail;
+  const isValid = isValidLabel && isValidIsDetail && isValidUnselectedOptions;
   const validValue = {
     showConfig: {
       ...label,
       ...isDetail,
+      ...unselectedOptions,
     },
   };
   return [isValid, validValue];
@@ -616,12 +622,18 @@ const validUserShowConfig = config => {
     config.displayInProfile,
     true
   );
+  const [isValidUnselectedOptions, unselectedOptions] = validBoolean(
+    'unselectedOptions',
+    config.unselectedOptions,
+    true
+  );
 
-  const isValid = isValidLabel && isValidDisplayInProfile;
+  const isValid = isValidLabel && isValidDisplayInProfile && isValidUnselectedOptions;
   const validValue = {
     showConfig: {
       ...label,
       ...displayInProfile,
+      ...unselectedOptions,
     },
   };
   return [isValid, validValue];
