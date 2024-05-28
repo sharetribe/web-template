@@ -115,7 +115,8 @@ export const pickCustomFieldProps = (
   shouldPickFn
 ) => {
   return fieldConfigs?.reduce((pickedElements, config) => {
-    const { key, enumOptions, schemaType, scope = 'public' } = config;
+    const { key, enumOptions, schemaType, scope = 'public', showConfig } = config;
+    const { label, unselectedOptions: showUnselectedOptions } = showConfig || {};
     const entityType = publicData && publicData[entityTypeKey];
     const isTargetEntityType = isFieldFor(entityTypeKey, entityType, config);
 
@@ -137,9 +138,10 @@ export const pickCustomFieldProps = (
           {
             schemaType,
             key,
-            heading: config?.showConfig?.label,
+            heading: label,
             options: createFilterOptions(enumOptions),
             selectedOptions: value || [],
+            showUnselectedOptions: showUnselectedOptions !== false,
           },
         ]
       : isTargetEntityType && !!value && config.schemaType === SCHEMA_TYPE_TEXT && shouldPick
@@ -148,7 +150,7 @@ export const pickCustomFieldProps = (
           {
             schemaType,
             key,
-            heading: config?.showConfig?.label,
+            heading: label,
             text: value,
           },
         ]
