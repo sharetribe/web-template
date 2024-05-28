@@ -87,7 +87,8 @@ NotFoundPageComponent.propTypes = {
   marketplaceName: string.isRequired,
   isKeywordSearch: bool.isRequired,
 
-  // context object from StaticRouter, injected by the withRouter wrapper
+  // The context object from StaticRouter,
+  // it should be manually passed if this page is rendered inside other route.
   staticContext: object,
 
   // from useIntl

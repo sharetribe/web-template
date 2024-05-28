@@ -29,6 +29,52 @@ import css from './ProfileSettingsForm.module.css';
 const ACCEPT_IMAGES = 'image/*';
 const UPLOAD_CHANGE_DELAY = 2000; // Show spinner so that browser has time to load img srcset
 
+const DisplayNameMaybe = props => {
+  const { userTypeConfig, intl } = props;
+
+  const isDisabled = userTypeConfig?.defaultUserFields?.displayName === false;
+  if (isDisabled) {
+    return null;
+  }
+
+  const { required } = userTypeConfig?.displayNameSettings || {};
+  const isRequired = required === true;
+
+  const validateMaybe = isRequired
+    ? {
+        validate: validators.required(
+          intl.formatMessage({
+            id: 'ProfileSettingsForm.displayNameRequired',
+          })
+        ),
+      }
+    : {};
+
+  return (
+    <div className={css.sectionContainer}>
+      <H4 as="h2" className={css.sectionTitle}>
+        <FormattedMessage id="ProfileSettingsForm.displayNameHeading" />
+      </H4>
+      <FieldTextInput
+        className={css.row}
+        type="text"
+        id="displayName"
+        name="displayName"
+        label={intl.formatMessage({
+          id: 'ProfileSettingsForm.displayNameLabel',
+        })}
+        placeholder={intl.formatMessage({
+          id: 'ProfileSettingsForm.displayNamePlaceholder',
+        })}
+        {...validateMaybe}
+      />
+      <p className={css.extraInfo}>
+        <FormattedMessage id="ProfileSettingsForm.displayNameInfo" />
+      </p>
+    </div>
+  );
+};
+
 class ProfileSettingsFormComponent extends Component {
   constructor(props) {
     super(props);
@@ -78,7 +124,7 @@ class ProfileSettingsFormComponent extends Component {
             marketplaceName,
             values,
             userFields,
-            userType,
+            userTypeConfig,
           } = fieldRenderProps;
 
           const user = ensureCurrentUser(currentUser);
@@ -197,7 +243,7 @@ class ProfileSettingsFormComponent extends Component {
           const userFieldProps = getPropsForCustomUserFieldInputs(
             userFields,
             intl,
-            userType,
+            userTypeConfig?.userType,
             false
           );
 
@@ -303,6 +349,9 @@ class ProfileSettingsFormComponent extends Component {
                   />
                 </div>
               </div>
+
+              <DisplayNameMaybe userTypeConfig={userTypeConfig} intl={intl} />
+
               <div className={classNames(css.sectionContainer)}>
                 <H4 as="h2" className={css.sectionTitle}>
                   <FormattedMessage id="ProfileSettingsForm.bioHeading" />
@@ -314,7 +363,7 @@ class ProfileSettingsFormComponent extends Component {
                   label={bioLabel}
                   placeholder={bioPlaceholder}
                 />
-                <p className={css.bioInfo}>
+                <p className={css.extraInfo}>
                   <FormattedMessage id="ProfileSettingsForm.bioInfo" values={{ marketplaceName }} />
                 </p>
               </div>

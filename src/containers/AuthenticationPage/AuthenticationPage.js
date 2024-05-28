@@ -51,6 +51,8 @@ import { TermsOfServiceContent } from '../../containers/TermsOfServicePage/Terms
 // We need to get PrivacyPolicy asset and get it rendered for the modal on this page.
 import { PrivacyPolicyContent } from '../../containers/PrivacyPolicyPage/PrivacyPolicyPage';
 
+import NotFoundPage from '../NotFoundPage/NotFoundPage';
+
 import { TOS_ASSET_NAME, PRIVACY_POLICY_ASSET_NAME } from './AuthenticationPage.duck';
 
 import css from './AuthenticationPage.module.css';
@@ -59,37 +61,39 @@ import { FacebookLogo, GoogleLogo } from './socialLoginLogos';
 // Social login buttons are needed by AuthenticationForms
 export const SocialLoginButtonsMaybe = props => {
   const routeConfiguration = useRouteConfiguration();
-  const { isLogin, showFacebookLogin, showGoogleLogin, from } = props;
+  const { isLogin, showFacebookLogin, showGoogleLogin, from, userType } = props;
   const showSocialLogins = showFacebookLogin || showGoogleLogin;
 
-  const getDefaultRoutes = () => {
+  const getDataForSSORoutes = () => {
     const baseUrl = apiBaseUrl();
-
-    // Route where the user should be returned after authentication
-    // This is used e.g. with EditListingPage and ListingPage
-    const fromParam = from ? `from=${from}` : '';
 
     // Default route where user is returned after successfull authentication
     const defaultReturn = pathByRouteName('LandingPage', routeConfiguration);
-    const defaultReturnParam = defaultReturn ? `&defaultReturn=${defaultReturn}` : '';
 
     // Route for confirming user data before creating a new user
     const defaultConfirm = pathByRouteName('ConfirmPage', routeConfiguration);
-    const defaultConfirmParam = defaultConfirm ? `&defaultConfirm=${defaultConfirm}` : '';
 
-    return { baseUrl, fromParam, defaultReturnParam, defaultConfirmParam };
+    const queryParams = new URLSearchParams({
+      ...(defaultReturn ? { defaultReturn } : {}),
+      ...(defaultConfirm ? { defaultConfirm } : {}),
+      // Route where the user should be returned after authentication
+      // This is used e.g. with EditListingPage and ListingPage
+      ...(from ? { from } : {}),
+      // The preselected userType needs to be saved over the visit to identity provider's service
+      ...(userType ? { userType } : {}),
+    });
+
+    return { baseUrl, queryParams: queryParams.toString() };
   };
 
   const authWithFacebook = () => {
-    const defaultRoutes = getDefaultRoutes();
-    const { baseUrl, fromParam, defaultReturnParam, defaultConfirmParam } = defaultRoutes;
-    window.location.href = `${baseUrl}/api/auth/facebook?${fromParam}${defaultReturnParam}${defaultConfirmParam}`;
+    const { baseUrl, queryParams } = getDataForSSORoutes();
+    window.location.href = `${baseUrl}/api/auth/facebook?${queryParams}`;
   };
 
   const authWithGoogle = () => {
-    const defaultRoutes = getDefaultRoutes();
-    const { baseUrl, fromParam, defaultReturnParam, defaultConfirmParam } = defaultRoutes;
-    window.location.href = `${baseUrl}/api/auth/google?${fromParam}${defaultReturnParam}${defaultConfirmParam}`;
+    const { baseUrl, queryParams } = getDataForSSORoutes();
+    window.location.href = `${baseUrl}/api/auth/google?${queryParams}`;
   };
 
   return showSocialLogins ? (
@@ -150,6 +154,7 @@ export const AuthenticationForms = props => {
     isLogin,
     showFacebookLogin,
     showGoogleLogin,
+    userType,
     from,
     submitLogin,
     loginError,
@@ -160,9 +165,13 @@ export const AuthenticationForms = props => {
     termsAndConditions,
   } = props;
   const config = useConfiguration();
-  const { userFields } = config.user;
+  const { userFields, userTypes = [] } = config.user;
+  const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
 
-  const fromState = { state: from ? { from } : null };
+  const fromMaybe = from ? { from } : null;
+  const signupRouteName = !!preselectedUserType ? 'SignupForUserTypePage' : 'SignupPage';
+  const userTypeMaybe = preselectedUserType ? { userType: preselectedUserType } : null;
+  const fromState = { state: { ...fromMaybe, ...userTypeMaybe } };
   const tabs = [
     {
       text: (
@@ -172,7 +181,8 @@ export const AuthenticationForms = props => {
       ),
       selected: !isLogin,
       linkProps: {
-        name: 'SignupPage',
+        name: signupRouteName,
+        params: userTypeMaybe,
         to: fromState,
       },
     },
@@ -191,21 +201,26 @@ export const AuthenticationForms = props => {
   ];
 
   const handleSubmitSignup = values => {
-    const { fname, lname, ...rest } = values;
+    const { userType, email, password, fname, lname, displayName, ...rest } = values;
+    const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
 
     const params = {
+      email,
+      password,
       firstName: fname.trim(),
       lastName: lname.trim(),
+      ...displayNameMaybe,
       publicData: {
-        ...pickUserFieldsData(rest, 'public', null, userFields),
+        userType,
+        ...pickUserFieldsData(rest, 'public', userType, userFields),
       },
       privateData: {
-        ...pickUserFieldsData(rest, 'private', null, userFields),
+        ...pickUserFieldsData(rest, 'private', userType, userFields),
       },
       protectedData: {
-        ...pickUserFieldsData(rest, 'protected', null, userFields),
+        ...pickUserFieldsData(rest, 'protected', userType, userFields),
+        ...getNonUserFieldParams(rest, userFields),
       },
-      ...getNonUserFieldParams(rest, userFields),
     };
 
     submitSignup(params);
@@ -255,6 +270,8 @@ export const AuthenticationForms = props => {
           onSubmit={handleSubmitSignup}
           inProgress={authInProgress}
           termsAndConditions={termsAndConditions}
+          preselectedUserType={preselectedUserType}
+          userTypes={userTypes}
           userFields={userFields}
         />
       )}
@@ -263,7 +280,8 @@ export const AuthenticationForms = props => {
         isLogin={isLogin}
         showFacebookLogin={showFacebookLogin}
         showGoogleLogin={showGoogleLogin}
-        from={from}
+        {...fromMaybe}
+        {...userTypeMaybe}
       />
     </div>
   );
@@ -272,15 +290,33 @@ export const AuthenticationForms = props => {
 // Form for confirming information from IdP (e.g. Facebook)
 // This is shown before new user is created to Marketplace API
 const ConfirmIdProviderInfoForm = props => {
-  const { authInfo, authInProgress, confirmError, submitSingupWithIdp, termsAndConditions } = props;
+  const {
+    userType,
+    authInfo,
+    authInProgress,
+    confirmError,
+    submitSingupWithIdp,
+    termsAndConditions,
+  } = props;
   const config = useConfiguration();
-  const { userFields } = config.user;
+  const { userFields, userTypes } = config.user;
+  const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
 
   const idp = authInfo ? authInfo.idpId.replace(/^./, str => str.toUpperCase()) : null;
 
   const handleSubmitConfirm = values => {
     const { idpToken, email, firstName, lastName, idpId } = authInfo;
-    const { email: newEmail, firstName: newFirstName, lastName: newLastName, ...rest } = values;
+
+    const {
+      userType,
+      email: newEmail,
+      firstName: newFirstName,
+      lastName: newLastName,
+      displayName,
+      ...rest
+    } = values;
+
+    const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
 
     // Pass email, fistName or lastName to Marketplace API only if user has edited them
     // and they can't be fetched directly from idp provider (e.g. Facebook)
@@ -295,13 +331,14 @@ const ConfirmIdProviderInfoForm = props => {
     const extendedDataMaybe = !isEmpty(rest)
       ? {
           publicData: {
-            ...pickUserFieldsData(rest, 'public', null, userFields),
+            userType,
+            ...pickUserFieldsData(rest, 'public', userType, userFields),
           },
           privateData: {
-            ...pickUserFieldsData(rest, 'private', null, userFields),
+            ...pickUserFieldsData(rest, 'private', userType, userFields),
           },
           protectedData: {
-            ...pickUserFieldsData(rest, 'protected', null, userFields),
+            ...pickUserFieldsData(rest, 'protected', userType, userFields),
             // If the confirm form has any additional values, pass them forward as user's protected data
             ...getNonUserFieldParams(rest, userFields),
           },
@@ -312,6 +349,7 @@ const ConfirmIdProviderInfoForm = props => {
       idpToken,
       idpId,
       ...authParams,
+      ...displayNameMaybe,
       ...extendedDataMaybe,
     });
   };
@@ -343,6 +381,8 @@ const ConfirmIdProviderInfoForm = props => {
         termsAndConditions={termsAndConditions}
         authInfo={authInfo}
         idp={idp}
+        preselectedUserType={preselectedUserType}
+        userTypes={userTypes}
         userFields={userFields}
       />
     </div>
@@ -352,6 +392,7 @@ const ConfirmIdProviderInfoForm = props => {
 export const AuthenticationOrConfirmInfoForm = props => {
   const {
     tab,
+    userType,
     authInfo,
     from,
     showFacebookLogin,
@@ -371,6 +412,7 @@ export const AuthenticationOrConfirmInfoForm = props => {
 
   return isConfirm ? (
     <ConfirmIdProviderInfoForm
+      userType={userType}
       authInfo={authInfo}
       submitSingupWithIdp={submitSingupWithIdp}
       authInProgress={authInProgress}
@@ -382,6 +424,7 @@ export const AuthenticationOrConfirmInfoForm = props => {
       isLogin={isLogin}
       showFacebookLogin={showFacebookLogin}
       showGoogleLogin={showGoogleLogin}
+      userType={userType}
       from={from}
       loginError={loginError}
       idpAuthError={idpAuthError}
@@ -431,6 +474,7 @@ export const AuthenticationPageComponent = props => {
     intl,
     isAuthenticated,
     location,
+    params: pathParams,
     loginError,
     scrollingDisabled,
     signupError,
@@ -453,7 +497,16 @@ export const AuthenticationPageComponent = props => {
   // so that use can be redirected back to that page after authentication.
   const locationFrom = location.state?.from || null;
   const authinfoFrom = authInfo?.from || null;
-  const from = locationFrom ? locationFrom : authinfoFrom ? authinfoFrom : null;
+  const from = locationFrom || authinfoFrom || null;
+
+  const isConfirm = tab === 'confirm';
+  const userTypeInPushState = location.state?.userType || null;
+  const userTypeInAuthInfo = isConfirm && authInfo?.userType ? authInfo?.userType : null;
+  const userType = pathParams?.userType || userTypeInPushState || userTypeInAuthInfo || null;
+
+  const { userTypes = [] } = config.user;
+  const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
+  const show404 = userType && !preselectedUserType;
 
   const user = ensureCurrentUser(currentUser);
   const currentUserLoaded = !!user.id;
@@ -470,6 +523,8 @@ export const AuthenticationPageComponent = props => {
     return <Redirect to={from} />;
   } else if (isAuthenticated && currentUserLoaded && !showEmailVerification) {
     return <NamedRedirect name="LandingPage" />;
+  } else if (show404) {
+    return <NotFoundPage staticContext={props.staticContext} />;
   }
 
   const resendErrorTranslationId = isTooManyEmailVerificationRequestsError(
@@ -530,6 +585,7 @@ export const AuthenticationPageComponent = props => {
           ) : (
             <AuthenticationOrConfirmInfoForm
               tab={tab}
+              userType={userType}
               authInfo={authInfo}
               from={from}
               showFacebookLogin={!!process.env.REACT_APP_FACEBOOK_APP_ID}

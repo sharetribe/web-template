@@ -7,9 +7,28 @@ import { fakeIntl } from '../../../util/testData';
 import TermsAndConditions from '../TermsAndConditions/TermsAndConditions';
 import ConfirmSignupForm from './ConfirmSignupForm';
 
-const { screen, fireEvent, userEvent } = testingLibrary;
+const { screen, fireEvent, userEvent, waitFor } = testingLibrary;
 
 const noop = () => null;
+
+const userTypes = [
+  {
+    userType: 'a',
+    label: 'Seller',
+  },
+  {
+    userType: 'b',
+    label: 'Buyer',
+  },
+  {
+    userType: 'c',
+    label: 'Guest',
+  },
+  {
+    userType: 'd',
+    label: 'Host',
+  },
+];
 
 const userFields = [
   {
@@ -100,17 +119,26 @@ describe('ConfirmSignupForm', () => {
   //   expect(tree.asFragment()).toMatchSnapshot();
   // });
 
-  it('enables Continue with button when required fields are filled', () => {
+  it('enables Continue with button when required fields are filled', async () => {
     render(
       <ConfirmSignupForm
         authInfo={authInfo}
         intl={fakeIntl}
         termsAndConditions={termsAndConditions}
+        userTypes={userTypes}
         userFields={userFields}
         onSubmit={noop}
         onOpenTermsOfService={noop}
       />
     );
+
+    // Simulate user interaction and select parent level category
+    await waitFor(() => {
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'Seller' })
+      );
+    });
 
     // Test that sign up button is disabled at first
     expect(screen.getByRole('button', { name: 'ConfirmSignupForm.signUp' })).toBeDisabled();
@@ -137,17 +165,26 @@ describe('ConfirmSignupForm', () => {
     expect(screen.getByRole('button', { name: 'ConfirmSignupForm.signUp' })).toBeEnabled();
   });
 
-  it('shows custom user fields according to configuration', () => {
+  it('shows custom user fields according to configuration', async () => {
     render(
       <ConfirmSignupForm
         authInfo={authInfo}
         intl={fakeIntl}
         termsAndConditions={termsAndConditions}
+        userTypes={userTypes}
         userFields={userFields}
         onSubmit={noop}
         onOpenTermsOfService={noop}
       />
     );
+
+    // Simulate user interaction and select parent level category
+    await waitFor(() => {
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'Seller' })
+      );
+    });
 
     // Show user fields that have not been limited to type and have displayInSignUp: true
     expect(screen.getByText('Enum Field 1')).toBeInTheDocument();

@@ -105,6 +105,7 @@ const defaultConfig = {
     // You could still rely on built-in variables and comment these out.
     localization: '/general/localization.json',
     // NOTE: we don't fetch commission configuration here but on the server-side
+    userTypes: '/users/user-types.json',
     userFields: '/users/user-fields.json',
   },
 

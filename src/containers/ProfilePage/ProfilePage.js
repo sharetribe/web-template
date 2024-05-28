@@ -263,7 +263,7 @@ export const ProfilePageComponent = props => {
   const schemaTitle = intl.formatMessage({ id: 'ProfilePage.schemaTitle' }, schemaTitleVars);
 
   if (userShowError && userShowError.status === 404) {
-    return <NotFoundPage />;
+    return <NotFoundPage staticContext={props.staticContext} />;
   }
   return (
     <Page
