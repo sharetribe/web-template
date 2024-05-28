@@ -421,6 +421,7 @@
   "ListingPage.detailsTitle": "Detalles",
   "ListingPage.editListing": "Editar anuncio",
   "ListingPage.editProfileLink": "Editar perfil",
+  "ListingPage.errorInvalidListingMessage": "El anuncio contenía datos no válidos. Comunícate con los administradores del sistema.",
   "ListingPage.errorLoadingListingMessage": "No se pudo cargar el anuncio. Inténtalo de nuevo.",
   "ListingPage.errorLoadingListingTitle": "Error al cargar el anuncio",
   "ListingPage.finishListing": "Completar anuncio",
