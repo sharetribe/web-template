@@ -38,7 +38,7 @@ const FilterComponent = props => {
   const useHistoryPush = liveEdit || showAsPopup;
   const prefix = idPrefix || 'SearchPage';
   const componentId = `${prefix}.${key.toLowerCase()}`;
-  const name = key.replace(/\s+/g, '-').toLowerCase();
+  const name = key.replace(/\s+/g, '-');
 
   // Default filters: price, keywords, dates
   switch (schemaType) {
