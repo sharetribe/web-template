@@ -3,6 +3,25 @@ import { fakeIntl } from '../../../util/testData';
 import TermsAndConditions from '../TermsAndConditions/TermsAndConditions';
 import SignupForm from './SignupForm';
 
+const userTypes = [
+  {
+    userType: 'a',
+    label: 'Seller',
+  },
+  {
+    userType: 'b',
+    label: 'Buyer',
+  },
+  {
+    userType: 'c',
+    label: 'Guest',
+  },
+  {
+    userType: 'd',
+    label: 'Host',
+  },
+];
+
 const userFields = [
   {
     key: 'enumField1',
@@ -73,6 +92,7 @@ export const Empty = {
   component: SignupForm,
   props: {
     formId: 'SignupFormExample',
+    userTypes,
     userFields,
     onSubmit(values) {
       console.log('sign up with form values:', values);

@@ -11,6 +11,25 @@ const authInfo = {
   idpId: 'idpId',
 };
 
+const userTypes = [
+  {
+    userType: 'a',
+    label: 'Seller',
+  },
+  {
+    userType: 'b',
+    label: 'Buyer',
+  },
+  {
+    userType: 'c',
+    label: 'Guest',
+  },
+  {
+    userType: 'd',
+    label: 'Host',
+  },
+];
+
 const userFields = [
   {
     key: 'enumField1',
@@ -82,6 +101,7 @@ export const Empty = {
   props: {
     formId: 'ConfirmSignupFormExample',
     authInfo,
+    userTypes,
     userFields,
     onSubmit(values) {
       console.log('sign up with form values:', values);
