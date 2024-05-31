@@ -87,7 +87,7 @@ export const linkifyOrWrapLinkSplit = (word, key, options = {}) => {
   // https://stackoverflow.com/questions/1500260/detect-urls-in-text-with-javascript
 
   // eslint-disable-next-line no-useless-escape
-  const urlRegex = /(\bhttps?:\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+  const urlRegex = /(\bhttps?:\/\/[-A-Z0-9+&@#\/%?=~_|\(\)!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
   if (word.match(urlRegex)) {
     // Split strings like "(http://www.example.com)" to ["(","http://www.example.com",")"]
     return word.split(urlRegex).map(w => {
