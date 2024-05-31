@@ -186,10 +186,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission) => {
     quantity,
     includeFor: ['customer', 'provider'],
   };
-  const helmetFeeLabel = intl.formatMessage(
-    { id: 'BookingDatesForm.helmetFeeLabel' },
-    { fee: formattedHelmetFee }
-  );
+
    const helmetFeePrice = orderData.hasHelmetFee ? resolveHelmetFeePrice(listing) : null;
    const helmetFee = helmetFeePrice
      ? [
@@ -198,7 +195,6 @@ exports.transactionLineItems = (listing, orderData, providerCommission) => {
            unitPrice: helmetFeePrice,
            quantity: -1,
            includeFor: ['customer', 'provider'],
-           label:{helmetFeeLabel},
          },
        ]
      : [];
