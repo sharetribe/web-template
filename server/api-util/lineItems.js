@@ -186,15 +186,19 @@ exports.transactionLineItems = (listing, orderData, providerCommission) => {
     quantity,
     includeFor: ['customer', 'provider'],
   };
-
+  const helmetFeeLabel = intl.formatMessage(
+    { id: 'BookingDatesForm.helmetFeeLabel' },
+    { fee: formattedHelmetFee }
+  );
    const helmetFeePrice = orderData.hasHelmetFee ? resolveHelmetFeePrice(listing) : null;
    const helmetFee = helmetFeePrice
      ? [
          {
-           code: 'line-item/helmet-rental-fee',
+           code: 'line-item/helmet-rental-discount',
            unitPrice: helmetFeePrice,
            quantity: -1,
            includeFor: ['customer', 'provider'],
+           label:{helmetFeeLabel},
          },
        ]
      : [];

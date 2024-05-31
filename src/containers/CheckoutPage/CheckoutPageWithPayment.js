@@ -91,7 +91,7 @@ const getOrderParams = (pageData, shippingDetails, optionalPaymentParams, config
     listingId: pageData?.listing?.id,
     ...deliveryMethodMaybe,
     ...quantityMaybe,
-    hasHelmetFee,
+    ...hasHelmetFee,
     ...bookingDatesMaybe(pageData.orderData?.bookingDates),
     ...protectedDataMaybe,
     ...optionalPaymentParams,
