@@ -194,7 +194,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission) => {
    const helmetFee = helmetFeePrice
      ? [
          {
-           code: 'line-item/helmet-rental-discount',
+           code: 'line-item/helmet-rental-fee',
            unitPrice: helmetFeePrice,
            quantity: -1,
            includeFor: ['customer', 'provider'],
