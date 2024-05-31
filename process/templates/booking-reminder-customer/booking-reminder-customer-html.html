@@ -30,7 +30,7 @@
                 <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingReminderCustomer.ContentForNightly" "¡Hola {customerDisplayName}! Mañana {dateStart,date,::YYYYMMMd} comienza el alquiler de {listingTitle} hasta {dateEnd,date,::YYYYMMMd}. No olvides ponerte en contacto con {providerDisplayName} para coordinar la entrega y devolución del mismo." dateStart=booking.start dateEnd=booking.end listingTitle=listing.title customerDisplayName=customer.display-name providerDisplayName=provider.display-name}}</p>
                 {{/eq}}{{#eq "line-item/provider-commission" code}}
                           <p style="text-align:left;font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingReminderCustomer.ContentAmount" "Your card has been charged for {providerDisplayName} {currency}. Here's the booking breakdown." amount=payin-total.amount currency=payin-total.currency providerDisplayName=provider.display-name}}
-                             {{> format-money money=payout-total}} y en caso de haberlo acordado, el valor del depósito en garantía. Este último se reembolsará cuando devuelvas el artículo en condiciones.                             
+                             {{> format-money money=payout-total}} y además, el valor del depósito en garantía que figura en la publicación del artículo. Este último se reembolsará cuando devuelvas el artículo en condiciones.                             
                              <br>
                              <br>Ante cualquier duda, podés consultarnos al <a target="_blank" style="color:#7cc9bc;text-decoration:none" href="https://api.whatsapp.com/send/?phone=5492944232664&text&type=phone_number&app_absent=0">WhatsApp.</a> 
                              <br></p>
@@ -38,7 +38,7 @@
                              <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848">{{t "BookingReminderCustomer.ContactProvider" "{{> format-money money=payout-total}}If you have questions about your booking, you can contact {providerDisplayName} through the order page." providerDisplayName=provider.display-name}}</p>
                 </table>
                 {{/eq}}{{/each}}
-                        
+                                        
                 <table style="padding:16px 0 0" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>
                     <tr>
