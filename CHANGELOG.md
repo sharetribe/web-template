@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] The example files of SignupForm and ConfirmSignupForm had wrong data.
+  [#403](https://github.com/sharetribe/web-template/pull/403)
 - [change] FilterComponent: relax generated name-attribute for inputs: allow camelCase.
   [#402](https://github.com/sharetribe/web-template/pull/402)
 
