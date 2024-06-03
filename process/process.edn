@@ -52,6 +52,12 @@
     [{:fn/timepoint [:time/booking-end]} {:fn/period ["P1D"]}]},
    :from :state/accepted,
    :to :state/delivered}
+  {:name :transition/complete-start,
+   :at
+   {:fn/minus
+    [{:fn/timepoint [:time/booking-start]} {:fn/period ["P1D"]}]},
+   :from :state/accepted,
+   :to :state/delivered}
   {:name :transition/operator-complete,
    :actor :actor.role/operator,
    :from :state/accepted,
@@ -113,6 +119,10 @@
    :on :transition/request-payment,
    :to :actor.role/provider,
    :template :booking-new-request}
+  {:name :notification/booking-new-request-customer,
+   :on :transition/request-payment,
+   :to :actor.role/customer,
+   :template :booking-new-request-customer}
   {:name :notification/booking-accepted-request,
    :on :transition/accept,
    :to :actor.role/customer,
@@ -141,22 +151,34 @@
    :on :transition/expire,
    :to :actor.role/customer,
    :template :booking-expired-request}
-  {:name :notification/booking-money-paid,
+  {:name :notification/booking-reminder-customer,
+   :on :transition/complete-start,
+   :to :actor.role/customer,
+   :template :booking-reminder-customer}
+  {:name :notification/booking-reminder-provider,
+   :on :transition/complete-start,
+   :to :actor.role/provider,
+   :template :booking-reminder-provider}
+  {:name :notification/booking-reminder-end-provider,
    :on :transition/complete,
    :to :actor.role/provider,
-   :template :booking-money-paid}
-  {:name :notification/review-period-start-provider,
+   :template :booking-reminder-end-provider}
+  {:name :notification/booking-reminder-end-customer
    :on :transition/complete,
+   :to :actor.role/customer
+   :template :booking-reminder-end-customer}
+  {:name :notification/review-period-start-provider,
+   :on :transition/operator-complete,
    :to :actor.role/provider,
    :template :booking-review-by-provider-wanted}
   {:name :notification/review-period-start-customer,
-   :on :transition/complete,
+   :on :transition/operator-complete,
    :to :actor.role/customer,
    :template :booking-review-by-customer-wanted}
-  {:name :notification/booking-money-paid-operator-complete,
+  {:name :notification/booking-reminder-end-provider-operator-complete,
    :on :transition/operator-complete,
    :to :actor.role/provider,
-   :template :booking-money-paid}
+   :template :booking-reminder-end-provider}
   {:name :notification/review-period-start-provider-operator-complete,
    :on :transition/operator-complete,
    :to :actor.role/provider,
