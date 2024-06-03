@@ -392,8 +392,9 @@ export const ListingPageComponent = props => {
               text={publicData.extraFeatures}
               heading={intl.formatMessage({ id: 'ListingPage.extraFeaturesTitle' })}
             />
-            <SectionTextMaybe
-              text={publicData.building}
+
+            <SectionTextMaybe             
+              text={publicData.location.building}
               heading={intl.formatMessage({ id: 'ListingPage.buildingTitle' })}
             />
             
