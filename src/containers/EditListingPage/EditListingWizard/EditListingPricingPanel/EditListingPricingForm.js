@@ -165,6 +165,10 @@ export const EditListingPricingFormComponent = props => (
               </div>
             )}
           </div> */}
+          <p style={{ color: 'var(--colorGrey300)' }}>
+            Lo podés calcular utilizando la siguiente fórmula: Precio Nuevo * 0.022 = Precio del
+            alquiler base. Luego, ajustalo según el estado y la demanda que hay de tu artículo.
+          </p>
           <Button
             className={css.submitButton}
             type="submit"

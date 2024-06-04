@@ -253,7 +253,8 @@ export const EditListingPhotosFormComponent = props => {
             <p className={css.tip}>
               <FormattedMessage id="EditListingPhotosForm.addImagesTip" />
             </p>
-
+            <p style={{color: "var(--colorGrey300)"}}>
+            Si necesitás cambiar el tamaño de la imagen, podés usar plataformas que modifiquen la imagen (Ej.: “Convert my image”, "ResizeMyImage", etc.)</p>
             <PublishListingError error={publishListingError} />
             <ShowListingsError error={showListingsError} />
 
