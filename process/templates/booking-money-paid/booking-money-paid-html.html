@@ -6,12 +6,12 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
   </head>
-  {{~#*inline "format-money"~}}{{money-amount money}} {{ money.currency }}{{~/inline~}}
-  {{~#*inline "format-day"~}}{{#with transaction.listing.availability-plan}}{{date date format="EE" tz=timezone}}{{/with}}{{~/inline~}}
-  {{~#*inline "format-day-before"}}{{#with transaction.listing.availability-plan}}{{format-text "{date,date,::EE}" date=(date-transform date days=-1)}}{{/with}}{{~/inline~}}
-  {{~#*inline "format-day-time"~}}{{#with transaction.listing.availability-plan}}{{date date format="EE h:mm a" tz=timezone}}{{/with}}{{~/inline~}}
-  {{~#*inline "format-month-date"~}}{{#with transaction.listing.availability-plan}}{{date date format="MMM d" tz=timezone}}{{/with}}{{~/inline~}}
-  {{~#*inline "format-month-date-day-before"~}}{{#with transaction.listing.availability-plan}}{{date-day-before date format="MMM d" tz=timezone}}{{/with}}{{~/inline~}}
+  {{~#*inline "format-money"~}}{{format-text "{amount,number,::.00} {currency}" amount=money.amount currency=money.currency}}{{~/inline~}}
+  {{~#*inline "format-day"~}}{{#with transaction.listing.availability-plan}}{{format-text "{date,date,::EE}" date=date}}{{/with}}{{~/inline~}}
+  {{~#*inline "format-day-before"~}}{{#with transaction.listing.availability-plan}}{{format-text "{date,date,::EE}" date=(date-transform date days=-1)}}{{/with}}{{~/inline~}}
+  {{~#*inline "format-day-time"~}}{{#with transaction.listing.availability-plan}}{{format-text "{date,date,::EEhmma}" date=date}}{{/with}}{{~/inline~}}
+  {{~#*inline "format-month-date"~}}{{#with transaction.listing.availability-plan}}{{format-text "{date,date,::MMMd}" date=date}}{{/with}}{{~/inline~}}
+  {{~#*inline "format-month-date-day-before"~}}{{#with transaction.listing.availability-plan}}{{format-text "{date,date,::MMMd}" date=(date-transform date days=-1)}}{{/with}}{{~/inline~}}
   {{#with transaction}}
   <table style="background-color:#FFF;margin:0 auto;padding:24px 12px 0;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
     <tbody>

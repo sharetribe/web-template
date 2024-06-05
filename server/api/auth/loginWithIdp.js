@@ -64,7 +64,7 @@ module.exports = (err, user, req, res, idpClientId, idpId) => {
       .redirect(`${rootUrl}/login#`);
   }
 
-  const { from, defaultReturn, defaultConfirm } = user;
+  const { from, defaultReturn, defaultConfirm, userType } = user;
 
   const tokenStore = sharetribeSdk.tokenStore.expressCookieStore({
     clientId: CLIENT_ID,
@@ -123,6 +123,7 @@ module.exports = (err, user, req, res, idpClientId, idpId) => {
           idpToken: user.idpToken,
           idpId,
           from,
+          userType,
         },
         {
           maxAge: 15 * 60 * 1000, // 15 minutes

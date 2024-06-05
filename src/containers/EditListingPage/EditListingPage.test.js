@@ -3,7 +3,11 @@ import '@testing-library/jest-dom';
 import 'react-dates/initialize';
 
 import { types as sdkTypes } from '../../util/sdkLoader';
-import { LISTING_PAGE_PARAM_TYPE_EDIT } from '../../util/urlHelpers';
+import {
+  LISTING_PAGE_PARAM_TYPE_DRAFT,
+  LISTING_PAGE_PARAM_TYPE_EDIT,
+  LISTING_PAGE_PARAM_TYPE_NEW,
+} from '../../util/urlHelpers';
 import { createCurrentUser, createStock, createOwnListing, fakeIntl } from '../../util/testData';
 import {
   renderWithProviders as render,
@@ -79,50 +83,57 @@ const listingTypesInquiry = [
       alias: 'default-inquiry/release-1',
     },
     unitType: 'inquiry',
-    defaultListingFields: {
-      price: false,
-    },
   },
 ];
 
 const listingFieldsInquiry = [
   {
-    key: 'category',
+    key: 'cat',
     scope: 'public',
-    includeForListingTypes: ['inquiry'],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['inquiry'],
+    },
     schemaType: 'enum',
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
       indexForSearch: true,
-      label: 'Category',
+      label: 'Cat',
       group: 'primary',
     },
     showConfig: {
-      label: 'Category',
+      label: 'Cat',
     },
     saveConfig: {
-      label: 'Category',
+      label: 'Cat',
     },
   },
 ];
 
 const listingFieldsPurchase = [
   {
-    key: 'category',
+    key: 'cat',
     scope: 'public',
-    includeForListingTypes: ['sell-bicycles'],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['sell-bicycles'],
+    },
+    categoryConfig: {
+      limitToCategoryIds: true,
+      categoryIds: ['sneakers'],
+    },
     schemaType: 'enum',
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
       indexForSearch: true,
-      label: 'Category',
+      label: 'Cat',
       group: 'primary',
     },
     showConfig: {
-      label: 'Category',
+      label: 'Cat',
     },
     saveConfig: {
-      label: 'Category',
+      label: 'Cat',
     },
   },
 ];
@@ -131,11 +142,10 @@ const listingFieldsBooking = [
   {
     key: 'amenities',
     scope: 'public',
-    includeForListingTypes: [
-      'rent-bicycles-daily',
-      'rent-bicycles-nightly',
-      'rent-bicycles-hourly',
-    ],
+    listingTypeConfig: {
+      limitToListingTypeIds: true,
+      listingTypeIds: ['rent-bicycles-daily', 'rent-bicycles-nightly', 'rent-bicycles-hourly'],
+    },
     schemaType: 'multi-enum',
     enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
     filterConfig: {
@@ -153,7 +163,52 @@ const listingFieldsBooking = [
   },
 ];
 
-const getConfig = (listingTypes, listingFields) => {
+const categoryConfig = {
+  categories: [
+    {
+      subcategories: [
+        {
+          name: 'Adidas',
+          id: 'adidas',
+        },
+        {
+          name: 'Nike',
+          id: 'nike',
+        },
+      ],
+      name: 'Sneakers',
+      id: 'sneakers',
+    },
+    {
+      subcategories: [
+        {
+          name: 'City bikes',
+          id: 'city-bikes',
+        },
+        {
+          name: 'Mountain bikes',
+          id: 'mountain-bikes',
+        },
+      ],
+      name: 'Bikes',
+      id: 'bikes',
+    },
+  ],
+};
+const categoryConfigWithoutSubcategories = {
+  categories: [
+    {
+      name: 'Sneakers',
+      id: 'sneakers',
+    },
+    {
+      name: 'Bikes',
+      id: 'bikes',
+    },
+  ],
+};
+
+const getConfig = (listingTypes, listingFields, categoryConfig) => {
   const hostedConfig = getHostedConfiguration();
   return {
     ...hostedConfig,
@@ -163,6 +218,7 @@ const getConfig = (listingTypes, listingFields) => {
     listingTypes: {
       listingTypes,
     },
+    categories: { ...categoryConfig },
   };
 };
 
@@ -236,6 +292,274 @@ describe('EditListingPage', () => {
     currentUser: createCurrentUser('id-of-me-myself'),
   };
 
+  // Test for new listing flow with categories
+  it('Purchase: new listing flow with categories', async () => {
+    // add category configuration, define above
+    const config = getConfig(listingTypesPurchase, listingFieldsPurchase, categoryConfig);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+
+    // Set up props for the component
+    const props = {
+      ...commonProps,
+      params: {
+        id: '00000000-0000-0000-0000-000000000000',
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_NEW,
+        tab: DETAILS,
+      },
+    };
+
+    // Render the EditListingPage component with provided props and configurations
+    const { getByText, queryAllByText, getByRole, getByLabelText, queryAllByRole } = render(
+      <EditListingPage {...props} />,
+      {
+        config,
+        routeConfiguration,
+      }
+    );
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelDetails';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingDetailsPanel.createListingTitle')).toBeInTheDocument();
+    });
+
+    // Select parent category
+    await waitFor(() => {
+      // Simulate user selecting options
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'Sneakers' })
+      );
+    });
+
+    // Assert that the selected option is as expected
+    expect(
+      queryAllByRole('option', { name: 'EditListingDetailsForm.categoryPlaceholder' })[0].selected
+    ).toBe(false);
+    expect(getByRole('option', { name: 'Sneakers' }).selected).toBe(true);
+    expect(queryAllByText('EditListingDetailsForm.categoryLabel')).toHaveLength(2);
+
+    // Simulate user selecting subcategory
+    await waitFor(() => {
+      const selectSubcategory = screen.getAllByRole('combobox')[1];
+      userEvent.selectOptions(selectSubcategory, screen.getByRole('option', { name: 'Adidas' }));
+    });
+    expect(getByRole('option', { name: 'Adidas' }).selected).toBe(true);
+
+    // Assert the presence of the default listing fields after selecting both categories
+    await waitFor(() => {
+      expect(getByRole('textbox', { name: 'EditListingDetailsForm.title' })).toBeInTheDocument();
+      //
+      expect(
+        getByRole('textbox', { name: 'EditListingDetailsForm.description' })
+      ).toBeInTheDocument();
+      expect(getByLabelText('Cat')).toBeInTheDocument();
+      //
+      expect(
+        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+      ).toBe(true);
+      //
+      expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(false);
+      //
+      expect(
+        getByRole('button', { name: 'EditListingWizard.default-purchase.new.saveDetails' })
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('Purchase: new listing flow without a category configuration set', async () => {
+    const config = getConfig(listingTypesPurchase, listingFieldsPurchase);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: '00000000-0000-0000-0000-000000000000',
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_NEW,
+        tab: DETAILS,
+      },
+    };
+
+    // Render the EditListingPage component with provided props and configurations
+    const { getByText, getByRole, getByLabelText, queryAllByRole } = render(
+      <EditListingPage {...props} />,
+      {
+        config,
+        routeConfiguration,
+      }
+    );
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelDetails';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingDetailsPanel.createListingTitle')).toBeInTheDocument();
+      expect(getByRole('textbox', { name: 'EditListingDetailsForm.title' })).toBeInTheDocument();
+      // Check description exists
+      expect(
+        getByRole('textbox', { name: 'EditListingDetailsForm.description' })
+      ).toBeInTheDocument();
+      expect(getByLabelText('Cat')).toBeInTheDocument();
+      // Check custom extended data field exists
+      expect(
+        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+      ).toBe(true);
+      // Check there is no selection
+      expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(false);
+      // Check the submit button exists
+      expect(
+        getByRole('button', { name: 'EditListingWizard.default-purchase.new.saveDetails' })
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('Purchase: edit existing listings that has no predefined categories', async () => {
+    const config = getConfig(listingTypesPurchase, listingFieldsPurchase, categoryConfig);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-item', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      publicData: {
+        listingType: 'sell-bicycles',
+        transactionProcessAlias: 'default-purchase/release-1',
+        unitType: 'item',
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { getByText, getByRole, getByLabelText, queryAllByText, queryAllByRole } = render(
+      <EditListingPage {...props} />,
+      {
+        initialState: initialState(listing),
+        config,
+        routeConfiguration,
+      }
+    );
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelDetails';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingDetailsPanel.title')).toBeInTheDocument();
+    });
+
+    // Simulate user interaction and select parent level category
+    await waitFor(() => {
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'Sneakers' })
+      );
+    });
+
+    expect(
+      queryAllByRole('option', { name: 'EditListingDetailsForm.categoryPlaceholder' })[0].selected
+    ).toBe(false);
+    expect(getByRole('option', { name: 'Sneakers' }).selected).toBe(true);
+    expect(queryAllByText('EditListingDetailsForm.categoryLabel')).toHaveLength(2);
+
+    // Simulate user interaction and select sub level category
+    await waitFor(() => {
+      const selectSubcategory = screen.getAllByRole('combobox')[1];
+      userEvent.selectOptions(selectSubcategory, screen.getByRole('option', { name: 'Adidas' }));
+    });
+    expect(getByRole('option', { name: 'Adidas' }).selected).toBe(true);
+    expect(
+      getByRole('textbox', { name: 'EditListingDetailsForm.description' })
+    ).toBeInTheDocument();
+    expect(getByLabelText('Cat')).toBeInTheDocument();
+    expect(
+      getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+    ).toBe(true);
+    //
+    expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(false);
+    expect(getByRole('button', { name: 'EditListingWizard.edit.saveDetails' })).toBeInTheDocument();
+  });
+
+  it('Purchase: Create new listing with only a parent-level category', async () => {
+    // add category configuration, define above
+    const config = getConfig(
+      listingTypesPurchase,
+      listingFieldsPurchase,
+      categoryConfigWithoutSubcategories
+    );
+    const routeConfiguration = getRouteConfiguration(config.layout);
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: '00000000-0000-0000-0000-000000000000',
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_NEW,
+        tab: DETAILS,
+      },
+    };
+
+    const { getByText, getByRole, getByLabelText, queryAllByRole } = render(
+      <EditListingPage {...props} />,
+      {
+        config,
+        routeConfiguration,
+      }
+    );
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelDetails';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingDetailsPanel.createListingTitle')).toBeInTheDocument();
+    });
+
+    // Simulate user interaction and select parent level category
+    await waitFor(() => {
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'Sneakers' })
+      );
+    });
+
+    expect(
+      queryAllByRole('option', { name: 'EditListingDetailsForm.categoryPlaceholder' })[0].selected
+    ).toBe(false);
+    expect(getByRole('option', { name: 'Sneakers' }).selected).toBe(true);
+
+    await waitFor(() => {
+      expect(getByRole('textbox', { name: 'EditListingDetailsForm.title' })).toBeInTheDocument();
+
+      expect(
+        getByRole('textbox', { name: 'EditListingDetailsForm.description' })
+      ).toBeInTheDocument();
+      expect(getByLabelText('Cat')).toBeInTheDocument();
+
+      expect(
+        getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
+      ).toBe(true);
+
+      expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(false);
+
+      expect(
+        getByRole('button', { name: 'EditListingWizard.default-purchase.new.saveDetails' })
+      ).toBeInTheDocument();
+    });
+  });
+
   it('Purchase: edit flow on details tab', async () => {
     const config = getConfig(listingTypesPurchase, listingFieldsPurchase);
     const routeConfiguration = getRouteConfiguration(config.layout);
@@ -284,7 +608,7 @@ describe('EditListingPage', () => {
       );
 
       // Tab/form: listing field
-      expect(getByLabelText('Category')).toBeInTheDocument();
+      expect(getByLabelText('Cat')).toBeInTheDocument();
       expect(
         getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
       ).toBe(true);
@@ -513,6 +837,274 @@ describe('EditListingPage', () => {
       expect(getByText('EditListingPhotosForm.imageTypes')).toBeInTheDocument();
       expect(getByText('EditListingPhotosForm.addImagesTip')).toBeInTheDocument();
       expect(getByText('EditListingWizard.edit.savePhotos')).toBeInTheDocument();
+    });
+  });
+
+  it('Purchase: edit flow with infinity on pricing-and-stock tab', async () => {
+    const listingTypePurchase = listingTypesPurchase[0];
+    const purchaseWithInfinityStock = {
+      ...listingTypePurchase,
+      stockType: 'infiniteMultipleItems',
+    };
+    const config = getConfig([purchaseWithInfinityStock], listingFieldsPurchase);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing(
+      'listing-item',
+      {
+        title: 'the listing',
+        description: 'Lorem ipsum',
+        price: new Money(5500, 'USD'),
+        publicData: {
+          listingType: 'sell-bicycles',
+          transactionProcessAlias: 'default-purchase/release-1',
+          unitType: 'item',
+          category: 'cat_1',
+        },
+      },
+      {
+        currentStock: createStock('stock-id', { quantity: 5 }),
+      }
+    );
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: PRICING_AND_STOCK,
+      },
+    };
+
+    const { getByText, getByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelPricingAndStock';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingPricingAndStockPanel.title')).toBeInTheDocument();
+
+      // Tab/form: price
+      expect(
+        getByRole('textbox', { name: 'EditListingPricingAndStockForm.pricePerProduct' })
+      ).toHaveValue('$55.00');
+
+      // Tab/form: infinity stock warning
+      expect(
+        getByRole('checkbox', { name: /EditListingPricingAndStockForm.updateToInfinite/i })
+      ).not.toBeChecked();
+
+      const saveButton = getByRole('button', {
+        name: 'EditListingWizard.edit.savePricingAndStock',
+      });
+      expect(saveButton).toBeInTheDocument();
+      expect(saveButton).toBeDisabled();
+    });
+    // Test intercation
+    await waitFor(() => {
+      userEvent.click(
+        getByRole('checkbox', { name: /EditListingPricingAndStockForm.updateToInfinite/i })
+      );
+    });
+    const saveButton = getByRole('button', { name: 'EditListingWizard.edit.savePricingAndStock' });
+    expect(saveButton).not.toBeDisabled();
+  });
+
+  it('Purchase: edit flow no shipping on delivery tab', async () => {
+    const listingTypePurchase = listingTypesPurchase[0];
+    const purchaseNoShipping = {
+      ...listingTypePurchase,
+      defaultListingFields: { shipping: false },
+    };
+    const config = getConfig([purchaseNoShipping], listingFieldsPurchase);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing(
+      'listing-item',
+      {
+        title: 'the listing',
+        description: 'Lorem ipsum',
+        price: new Money(5500, 'USD'),
+        publicData: {
+          listingType: 'sell-bicycles',
+          transactionProcessAlias: 'default-purchase/release-1',
+          unitType: 'item',
+          category: 'cat_1',
+        },
+      },
+      {
+        currentStock: createStock('stock-id', { quantity: 5 }),
+      }
+    );
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DELIVERY,
+      },
+    };
+
+    const { getByText, getByRole, queryByRole, queryByPlaceholderText } = render(
+      <EditListingPage {...props} />,
+      {
+        initialState: initialState(listing),
+        config,
+        routeConfiguration,
+      }
+    );
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelDelivery';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingDeliveryPanel.title')).toBeInTheDocument();
+
+      expect(getByText('EditListingDeliveryForm.shippingLabel')).toBeInTheDocument();
+
+      // Tab/form: pickup
+      expect(getByRole('checkbox', { name: /EditListingDeliveryForm.pickupLabel/i })).toBeChecked();
+      expect(
+        queryByPlaceholderText('EditListingDeliveryForm.addressPlaceholder')
+      ).not.toBeDisabled();
+      expect(getByRole('textbox', { name: 'EditListingDeliveryForm.building' })).not.toBeDisabled();
+
+      // Tab/form: no shipping
+      expect(
+        queryByRole('checkbox', { name: /EditListingDeliveryForm.shippingLabel/i }).parentNode
+      ).toHaveClass('hidden');
+    });
+  });
+
+  it('Purchase: edit flow no pickup on delivery tab', async () => {
+    const listingTypePurchase = listingTypesPurchase[0];
+    const purchaseNoPickup = { ...listingTypePurchase, defaultListingFields: { pickup: false } };
+    const config = getConfig([purchaseNoPickup], listingFieldsPurchase);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing(
+      'listing-item',
+      {
+        title: 'the listing',
+        description: 'Lorem ipsum',
+        price: new Money(5500, 'USD'),
+        publicData: {
+          listingType: 'sell-bicycles',
+          transactionProcessAlias: 'default-purchase/release-1',
+          unitType: 'item',
+          category: 'cat_1',
+        },
+      },
+      {
+        currentStock: createStock('stock-id', { quantity: 5 }),
+      }
+    );
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DELIVERY,
+      },
+    };
+
+    const { getByText, getByRole } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelDelivery';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingDeliveryPanel.title')).toBeInTheDocument();
+
+      expect(getByText('EditListingDeliveryForm.shippingLabel')).toBeInTheDocument();
+
+      // Tab/form: pickup
+      expect(
+        getByRole('checkbox', { name: /EditListingDeliveryForm.pickupLabel/i }).parentNode
+      ).toHaveClass('hidden');
+
+      // Tab/form: no shipping
+      expect(
+        getByRole('checkbox', { name: /EditListingDeliveryForm.shippingLabel/i })
+      ).toBeChecked();
+      expect(
+        getByRole('textbox', { name: 'EditListingDeliveryForm.shippingOneItemLabel' })
+      ).toBeInTheDocument();
+      expect(
+        getByRole('textbox', { name: 'EditListingDeliveryForm.shippingAdditionalItemsLabel' })
+      ).toBeInTheDocument();
+
+      expect(
+        getByRole('button', { name: 'EditListingWizard.edit.saveDelivery' })
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('Purchase: edit flow no delivery tab', async () => {
+    const listingTypePurchase = listingTypesPurchase[0];
+    const purchaseNoDelivery = {
+      ...listingTypePurchase,
+      defaultListingFields: { pickup: false, shipping: false },
+    };
+    const config = getConfig([purchaseNoDelivery], listingFieldsPurchase);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing(
+      'listing-item',
+      {
+        title: 'the listing',
+        description: 'Lorem ipsum',
+        price: new Money(5500, 'USD'),
+        publicData: {
+          listingType: 'sell-bicycles',
+          transactionProcessAlias: 'default-purchase/release-1',
+          unitType: 'item',
+          category: 'cat_1',
+        },
+      },
+      {
+        currentStock: createStock('stock-id', { quantity: 5 }),
+      }
+    );
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { getByText, queryByText } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelDelivery';
+      expect(queryByText(tabLabel)).not.toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingDetailsPanel.title')).toBeInTheDocument();
     });
   });
 
@@ -1351,6 +1943,70 @@ describe('EditListingPage', () => {
     });
   });
 
+  it('Booking (day): edit flow no location on details tab', async () => {
+    const listingTypeDailyBooking = listingTypesBookingDay[0];
+    const dailyBookingNoLocation = {
+      ...listingTypeDailyBooking,
+      defaultListingFields: { location: false },
+    };
+    const config = getConfig([dailyBookingNoLocation], listingFieldsBooking);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-day', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      price: new Money(1000, 'USD'),
+      availabilityPlan: {
+        type: 'availability-plan/time',
+        timezone: 'Etc/UTC',
+        entries: [
+          { dayOfWeek: 'mon', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'tue', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'wed', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'thu', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'fri', startTime: '00:00', endTime: '00:00', seats: 1 },
+          { dayOfWeek: 'sat', startTime: '00:00', endTime: '00:00', seats: 1 },
+          //{ dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 1 },
+        ],
+      },
+
+      publicData: {
+        listingType: 'rent-bicycles-daily',
+        transactionProcessAlias: 'default-booking/release-1',
+        unitType: 'hour',
+        amenities: ['dog_1'],
+        location: {
+          address: 'Main Street 123',
+          building: 'A 1',
+        },
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: PHOTOS,
+      },
+    };
+
+    const { getByText, queryByText } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelDetails';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      const tabLabelLocation = 'EditListingWizard.tabLabelLocation';
+      expect(queryByText(tabLabelLocation)).not.toBeInTheDocument();
+    });
+  });
+
   it('Inquiry: edit flow on details tab', async () => {
     const config = getConfig(listingTypesInquiry, listingFieldsInquiry);
     const routeConfiguration = getRouteConfiguration(config.layout);
@@ -1399,7 +2055,7 @@ describe('EditListingPage', () => {
       );
 
       // Tab/form: listing field
-      expect(getByLabelText('Category')).toBeInTheDocument();
+      expect(getByLabelText('Cat')).toBeInTheDocument();
       expect(
         getByRole('option', { name: 'CustomExtendedDataField.placeholderSingleSelect' }).selected
       ).toBe(true);
@@ -1423,8 +2079,10 @@ describe('EditListingPage', () => {
     expect(getByRole('option', { name: 'Cat 1' }).selected).toBe(true);
   });
 
-  it('Inquiry: edit flow on pricing tab (defaultListingFields?.price = false)', async () => {
-    const config = getConfig(listingTypesInquiry, listingFieldsInquiry);
+  it('Inquiry: edit flow no pricing on details tab', async () => {
+    const listingTypeInquiry = listingTypesInquiry[0];
+    const inquiryNoPricing = { ...listingTypeInquiry, defaultListingFields: { price: false } };
+    const config = getConfig([inquiryNoPricing], listingFieldsInquiry);
     const routeConfiguration = getRouteConfiguration(config.layout);
     const listing = createOwnListing('listing-item', {
       title: 'the listing',
@@ -1460,6 +2118,46 @@ describe('EditListingPage', () => {
       expect(queryByText(tabLabel1)).not.toBeInTheDocument();
       const tabLabel2 = 'EditListingWizard.tabLabelPricing';
       expect(queryByText(tabLabel2)).not.toBeInTheDocument();
+    });
+  });
+
+  it('Inquiry: edit flow no location on details tab', async () => {
+    const listingTypeInquiry = listingTypesInquiry[0];
+    const inquiryNoLocation = { ...listingTypeInquiry, defaultListingFields: { location: false } };
+    const config = getConfig([inquiryNoLocation], listingFieldsInquiry);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-item', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      price: new Money(5500, 'USD'),
+      publicData: {
+        listingType: 'inquiry',
+        transactionProcessAlias: 'default-inquiry/release-1',
+        unitType: 'inquiry',
+        category: 'cat_1',
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: DETAILS,
+      },
+    };
+
+    const { queryByText } = render(<EditListingPage {...props} />, {
+      initialState: initialState(listing),
+      config,
+      routeConfiguration,
+    });
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel1 = 'EditListingWizard.tabLabelLocation';
+      expect(queryByText(tabLabel1)).not.toBeInTheDocument();
     });
   });
 
@@ -1530,6 +2228,62 @@ describe('EditListingPage', () => {
 
     // Tab/form: existing building
     expect(getByLabelText('EditListingLocationForm.building')).toHaveValue('B 2');
+  });
+
+  it('Inquiry: edit flow on pricing tab', async () => {
+    const config = getConfig(listingTypesInquiry, listingFieldsInquiry);
+    const routeConfiguration = getRouteConfiguration(config.layout);
+    const listing = createOwnListing('listing-item', {
+      title: 'the listing',
+      description: 'Lorem ipsum',
+      publicData: {
+        listingType: 'inquiry',
+        transactionProcessAlias: 'default-inquiry/release-1',
+        unitType: 'inquiry',
+        category: 'cat_1',
+        location: {
+          address: 'Main Street 123',
+          building: 'A 1',
+        },
+      },
+    });
+
+    const props = {
+      ...commonProps,
+      params: {
+        id: listing.id.uuid,
+        slug: 'slug',
+        type: LISTING_PAGE_PARAM_TYPE_EDIT,
+        tab: PRICING,
+      },
+    };
+
+    const { getByText, getByRole, getByLabelText, getByPlaceholderText } = render(
+      <EditListingPage {...props} />,
+      {
+        initialState: initialState(listing),
+        config,
+        routeConfiguration,
+      }
+    );
+
+    await waitFor(() => {
+      // Navigation to tab
+      const tabLabel = 'EditListingWizard.tabLabelPricing';
+      expect(getByText(tabLabel)).toBeInTheDocument();
+
+      // Tab: panel title
+      expect(getByText('EditListingPricingPanel.title')).toBeInTheDocument();
+
+      // Tab/form: existing address
+      expect(getByPlaceholderText('EditListingPricingForm.priceInputPlaceholder')).toHaveValue(
+        '$55.00'
+      );
+
+      expect(
+        getByRole('button', { name: 'EditListingWizard.edit.savePricing' })
+      ).toBeInTheDocument();
+    });
   });
 
   it('Inquiry: edit flow on photos tab', async () => {

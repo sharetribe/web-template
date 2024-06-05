@@ -11,7 +11,7 @@ const FormComponent = props => (
     {...props}
     formId={formName}
     render={fieldRenderProps => {
-      const { form, handleSubmit, onChange, invalid, pristine, submitting } = props;
+      const { form, handleSubmit, onChange, invalid, pristine, submitting } = fieldRenderProps;
       const required = validators.requiredBoolean('This field is required');
       const submitDisabled = invalid || pristine || submitting;
       return (

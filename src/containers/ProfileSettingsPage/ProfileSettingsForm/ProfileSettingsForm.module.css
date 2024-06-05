@@ -255,6 +255,10 @@
   }
 }
 
+.row {
+  width: 100%;
+}
+
 .firstName {
   width: calc(34% - 9px);
 }
@@ -263,7 +267,7 @@
   width: calc(66% - 9px);
 }
 
-.bioInfo {
+.extraInfo {
   composes: textSmall from global;
   color: var(--colorGrey300);
   margin-top: 11px;

@@ -10,11 +10,19 @@
   &:nth-of-type(odd) {
     background-color: var(--colorWhite);
   }
+
+  &:target {
+    scroll-margin-top: var(--topbarHeight);
+    @media (--viewportMedium) {
+      scroll-margin-top: var(--topbarHeightDesktop);
+    }
+  }
 }
 
 .sectionContent {
   padding: 32px 0;
   position: relative;
+  word-break: break-word;
 
   @media (--viewportMedium) {
     padding: 64px 0;

@@ -1,0 +1,110 @@
+@import '../../../../../styles/customMediaQueries.css';
+
+.currentPage {
+  color: var(--colorBlack);
+  position: relative;
+
+  & .menuItemBorder {
+    width: 6px;
+    background-color: var(--colorBlack);
+  }
+
+  &:hover {
+    & .menuItemBorder {
+      background-color: var(--colorBlack);
+    }
+  }
+}
+
+.linkMenuLabelWrapper {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: baseline;
+  margin: 28px 0;
+  text-decoration: inherit;
+}
+
+.linkMenuLabel {
+  flex-shrink: 0;
+
+  border-bottom: 0px solid;
+  transition: var(--transitionStyleButton);
+
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0;
+  color: var(--colorGrey700);
+
+  display: inline;
+  height: 100%;
+  margin: 0;
+  padding: 0 12px 0 12px;
+
+  &:hover {
+    border-bottom: 4px solid var(--marketplaceColor);
+    border-radius: 0;
+    text-decoration: none;
+    color: var(--colorBlack);
+  }
+
+  &:active {
+    border-bottom: 0;
+  }
+}
+
+.linkMenuIsOpen {
+  &:hover {
+    border-bottom: 0;
+  }
+}
+
+.arrowIcon {
+  margin-left: 8px;
+}
+
+.linkMenuContent {
+  min-width: 276px;
+  padding: 20px 0;
+}
+
+/* left animated "border" like hover element */
+.menuItemBorder {
+  position: absolute;
+  top: 2px;
+  left: 0px;
+  height: calc(100% - 4px);
+  width: 0;
+  transition: width var(--transitionStyleButton);
+}
+
+.menuLink {
+  composes: textSmall from global;
+  position: relative;
+  display: block;
+
+  /* Dimensions */
+  width: 100%;
+  min-width: 276px;
+  margin: 0;
+  padding: 4px 24px;
+
+  /* Layout details */
+  color: var(--colorGrey700);
+  text-align: left;
+  transition: var(--transitionStyleButton);
+
+  &:hover {
+    color: var(--colorBlack);
+    text-decoration: none;
+
+    & .menuItemBorder {
+      width: 6px;
+      background-color: var(--marketplaceColor);
+    }
+  }
+
+  @media (--viewportMedium) {
+    margin: 0;
+  }
+}

@@ -11,6 +11,9 @@ import twitterImage from '../assets/biketribe-twitter-sharing-600x314.jpg';
 // and in components.                                  //
 /////////////////////////////////////////////////////////
 
+// Note: These come from the branding asset nowadays by default.
+//       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeBranding func)
+
 // Marketplace color.
 // This is saved as CSS Property: --marketplaceColor in src/app.js
 // Also --marketplaceColorDark and --marketplaceColorLight are generated from this one

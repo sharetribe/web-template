@@ -48,6 +48,7 @@
 .actionBar {
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
   width: 100%;
   color: var(--colorGrey100);
   background-color: var(--colorGrey700);
@@ -58,6 +59,10 @@
   cursor: initial;
 
   border-radius: var(--borderRadius);
+
+  @media (--viewportMedium) {
+    flex-direction: row;
+  }
 }
 
 .actionBarForProductLayout {
@@ -74,12 +79,17 @@
   }
 }
 
-.actionBarForHeroLayout {
+.actionBarContainerForHeroLayout {
   position: absolute;
   top: 13px;
   left: 13px;
   width: calc(100% - 26px);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
 
+.actionBarForHeroLayout {
   /* Action bar prevents the image click events going to the parent and
    should not show a pointer */
   cursor: initial;
@@ -87,7 +97,7 @@
 
 .ownListingText {
   composes: h5 from global;
-  margin: 14px 12px 11px 24px;
+  margin: 14px 24px 11px 24px;
 
   @media (--viewportMedium) {
     margin: 24px 12px 24px 24px;
@@ -109,11 +119,11 @@
   }
 }
 
+.addPayoutDetails,
 .editListingLink {
   composes: h5 from global;
   flex-shrink: 0;
-  margin: 0;
-  padding: 14px 24px 11px 12px;
+  margin: 14px 24px 11px 24px;
   color: var(--colorGrey100);
 
   transition: var(--transitionStyleButton);
@@ -124,9 +134,18 @@
   }
 
   @media (--viewportMedium) {
-    margin: 0;
-    padding: 30px 24px 24px 12px;
+    margin: 24px 24px 24px 12px;
   }
+}
+
+.missingPayoutDetailsText {
+  color: var(--colorAttention);
+}
+
+.payoutDetailsWarning {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .editIcon {
@@ -561,10 +580,12 @@
 .sectionAuthor {
   padding: 0 24px;
   margin-top: 42px;
+  scroll-margin-top: calc(var(--topbarHeight) + 24px);
 
   @media (--viewportMedium) {
     padding: 0;
     margin-top: 40px;
+    scroll-margin-top: calc(var(--topbarHeightDesktop) + 24px);
   }
   @media (--viewportLarge) {
     padding: 8px 0;
@@ -656,9 +677,6 @@
 }
 
 .longWord {
-  /* fallback option */
-  word-break: break-all;
-  /* use break-word if available */
   word-break: break-word;
   hyphens: auto;
 }

@@ -29,39 +29,12 @@ class KeywordFilter extends Component {
   constructor(props) {
     super(props);
 
-    this.filter = null;
-    this.filterContent = null;
     this.shortKeywordTimeout = null;
     this.mobileInputRef = React.createRef();
-
-    this.positionStyleForContent = this.positionStyleForContent.bind(this);
   }
 
   componentWillUnmount() {
     window.clearTimeout(this.shortKeywordTimeout);
-  }
-
-  positionStyleForContent() {
-    if (this.filter && this.filterContent) {
-      // Render the filter content to the right from the menu
-      // unless there's no space in which case it is rendered
-      // to the left
-      const distanceToRight = window.innerWidth - this.filter.getBoundingClientRect().right;
-      const labelWidth = this.filter.offsetWidth;
-      const contentWidth = this.filterContent.offsetWidth;
-      const contentWidthBiggerThanLabel = contentWidth - labelWidth;
-      const renderToRight = distanceToRight > contentWidthBiggerThanLabel;
-      const contentPlacementOffset = this.props.contentPlacementOffset;
-
-      const offset = renderToRight
-        ? { left: contentPlacementOffset }
-        : { right: contentPlacementOffset };
-      // set a min-width if the content is narrower than the label
-      const minWidth = contentWidth < labelWidth ? { minWidth: labelWidth } : null;
-
-      return { ...offset, ...minWidth };
-    }
-    return {};
   }
 
   render() {
@@ -96,10 +69,7 @@ class KeywordFilter extends Component {
     const labelForPlain = <span className={labelClass}>{label}</span>;
 
     const filterText = intl.formatMessage({ id: 'KeywordFilter.filterText' });
-
     const placeholder = intl.formatMessage({ id: 'KeywordFilter.placeholder' });
-
-    const contentStyle = this.positionStyleForContent();
 
     // pass the initial values with the name key so that
     // they can be passed to the correct field
@@ -177,14 +147,15 @@ class KeywordFilter extends Component {
         isSelected={hasInitialValues}
         id={`${id}.plain`}
         liveEdit
-        contentPlacementOffset={contentStyle}
         onSubmit={handleChangeWithDebounce}
         onClear={handleClear}
         initialValues={namedInitialValues}
         {...rest}
       >
         <fieldset className={css.fieldPlain}>
-          <label className={css.fieldPlainLabel}>{filterText}</label>
+          <label className={css.fieldPlainLabel} htmlFor={`${id}-input`}>
+            {filterText}
+          </label>
           <FieldTextInput
             name={name}
             id={`${id}-input`}

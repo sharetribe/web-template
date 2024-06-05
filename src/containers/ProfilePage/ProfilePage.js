@@ -6,9 +6,18 @@ import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-import { REVIEW_TYPE_OF_PROVIDER, REVIEW_TYPE_OF_CUSTOMER, propTypes } from '../../util/types';
+import {
+  REVIEW_TYPE_OF_PROVIDER,
+  REVIEW_TYPE_OF_CUSTOMER,
+  SCHEMA_TYPE_MULTI_ENUM,
+  SCHEMA_TYPE_TEXT,
+  propTypes,
+} from '../../util/types';
 import { ensureCurrentUser, ensureUser } from '../../util/data';
 import { withViewport } from '../../util/uiHelpers';
+import { pickCustomFieldProps } from '../../util/fieldHelpers';
+import { richText } from '../../util/richText';
+
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import {
@@ -29,8 +38,12 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 import NotFoundPage from '../../containers/NotFoundPage/NotFoundPage';
 
 import css from './ProfilePage.module.css';
+import SectionDetailsMaybe from './SectionDetailsMaybe';
+import SectionTextMaybe from './SectionTextMaybe';
+import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
+const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 export const AsideContent = props => {
   const { user, displayName, isCurrentUser } = props;
@@ -142,6 +155,29 @@ export const DesktopReviews = props => {
   );
 };
 
+export const CustomUserFields = props => {
+  const { publicData, metadata, userFieldConfig } = props;
+
+  const shouldPickUserField = fieldConfig => fieldConfig?.showConfig?.displayInProfile !== false;
+  const propsForCustomFields =
+    pickCustomFieldProps(publicData, metadata, userFieldConfig, 'userType', shouldPickUserField) ||
+    [];
+
+  return (
+    <>
+      <SectionDetailsMaybe {...props} />
+      {propsForCustomFields.map(customFieldProps => {
+        const { schemaType, ...fieldProps } = customFieldProps;
+        return schemaType === SCHEMA_TYPE_MULTI_ENUM ? (
+          <SectionMultiEnumMaybe {...fieldProps} />
+        ) : schemaType === SCHEMA_TYPE_TEXT ? (
+          <SectionTextMaybe {...fieldProps} />
+        ) : null;
+      })}
+    </>
+  );
+};
+
 export const MainContent = props => {
   const {
     userShowError,
@@ -152,11 +188,20 @@ export const MainContent = props => {
     reviews,
     queryReviewsError,
     viewport,
+    publicData,
+    metadata,
+    userFieldConfig,
+    intl,
   } = props;
 
   const hasListings = listings.length > 0;
   const isMobileLayout = viewport.width < MAX_MOBILE_SCREEN_WIDTH;
   const hasBio = !!bio;
+  const bioWithLinks = richText(bio, {
+    linkify: true,
+    longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
+    longWordClass: css.longWord,
+  });
 
   const listingsContainerClasses = classNames(css.listingsContainer, {
     [css.withBioMissingAbove]: !hasBio,
@@ -174,7 +219,13 @@ export const MainContent = props => {
       <H2 as="h1" className={css.desktopHeading}>
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
       </H2>
-      {hasBio ? <p className={css.bio}>{bio}</p> : null}
+      {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
+      <CustomUserFields
+        publicData={publicData}
+        metadata={metadata}
+        userFieldConfig={userFieldConfig}
+        intl={intl}
+      />
       {hasListings ? (
         <div className={listingsContainerClasses}>
           <H4 as="h2" className={css.listingsTitle}>
@@ -198,20 +249,21 @@ export const MainContent = props => {
   );
 };
 
-const ProfilePageComponent = props => {
+export const ProfilePageComponent = props => {
   const config = useConfiguration();
   const { scrollingDisabled, currentUser, userShowError, user, intl, ...rest } = props;
   const ensuredCurrentUser = ensureCurrentUser(currentUser);
   const profileUser = ensureUser(user);
   const isCurrentUser =
     ensuredCurrentUser.id && profileUser.id && ensuredCurrentUser.id.uuid === profileUser.id.uuid;
-  const { bio, displayName } = profileUser?.attributes?.profile || {};
+  const { bio, displayName, publicData, metadata } = profileUser?.attributes?.profile || {};
+  const { userFields } = config.user;
 
   const schemaTitleVars = { name: displayName, marketplaceName: config.marketplaceName };
   const schemaTitle = intl.formatMessage({ id: 'ProfilePage.schemaTitle' }, schemaTitleVars);
 
   if (userShowError && userShowError.status === 404) {
-    return <NotFoundPage />;
+    return <NotFoundPage staticContext={props.staticContext} />;
   }
   return (
     <Page
@@ -225,13 +277,22 @@ const ProfilePageComponent = props => {
     >
       <LayoutSideNavigation
         sideNavClassName={css.aside}
-        topbar={<TopbarContainer currentPage="ProfilePage" />}
+        topbar={<TopbarContainer />}
         sideNav={
           <AsideContent user={user} isCurrentUser={isCurrentUser} displayName={displayName} />
         }
         footer={<FooterContainer />}
       >
-        <MainContent bio={bio} displayName={displayName} userShowError={userShowError} {...rest} />
+        <MainContent
+          bio={bio}
+          displayName={displayName}
+          userShowError={userShowError}
+          publicData={publicData}
+          metadata={metadata}
+          userFieldConfig={userFields}
+          intl={intl}
+          {...rest}
+        />
       </LayoutSideNavigation>
     </Page>
   );
