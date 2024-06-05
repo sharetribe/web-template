@@ -165,7 +165,7 @@
 .modalContainer {
   composes: marketplaceModalInMobileBaseStyles from global;
   padding: 0;
-  padding: var(--modalPadding);
+/*   padding: var(--modalPadding); */
 
   @media (--viewportMedium) {
     flex-basis: 576px;

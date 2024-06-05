@@ -192,7 +192,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
    const helmetFee = helmetFeePrice
      ? [
          {
-           code: 'line-item/helmet-rental-fee',
+           code: 'line-item/Descuento por días de alquiler',
            unitPrice: helmetFeePrice,
            quantity: -1,
            includeFor: ['customer', 'provider'],
@@ -218,10 +218,24 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
           code: 'line-item/provider-commission',
           unitPrice: calculateTotalFromLineItems([order, ...helmetFee]),
           percentage: getNegation(providerCommission.percentage),
-          includeFor: ['provider'],
+          includeFor: ['customer','provider'],
         },
       ]
     : [];
+
+      // The customer commission is what the customer pays for the transaction, and
+  // it is added on top of the order price to get the customer's payin price:
+  // orderPrice + customerCommission = customerPayin
+  const customerCommissionMaybe = hasCommissionPercentage(customerCommission)
+  ? [
+      {
+        code: 'line-item/customer-commission',
+        unitPrice: calculateTotalFromLineItems([order]),
+        percentage: customerCommission.percentage,
+        includeFor: ['customer'],
+      },
+    ]
+  : [];
 
   // The customer commission is what the customer pays for the transaction, and
   // it is added on top of the order price to get the customer's payin price:
@@ -239,7 +253,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
 
   // Let's keep the base price (order) as first line item and provider and customer commissions as last.
   // Note: the order matters only if OrderBreakdown component doesn't recognize line-item.
-  const lineItems = [order, ...extraLineItems, ...providerCommissionMaybe];
+  const lineItems = [order, ...extraLineItems, ...helmetFee, ...providerCommissionMaybe];
 
   return lineItems;
 };

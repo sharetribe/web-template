@@ -1,0 +1,1 @@
+{{set-translations (asset "content/email-texts.json")}}{{t "BookingReminderCustomerCopy.Subject" "Your booking for {listingTitle} is approaching!" listingTitle=transaction.listing.title }}
