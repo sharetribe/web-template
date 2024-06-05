@@ -3,9 +3,9 @@
 // Main configuration here is the extended data config //
 /////////////////////////////////////////////////////////
 
-// NOTE: if you want to change the structure of the data,
-// you should also check src/util/configHelpers.js
-// some validation is added there.
+// Note: The listingFields come from listingFields asset nowadays by default.
+//       To use this built-in configuration, you need to change the overwrite from configHelper.js
+//       (E.g. use mergeDefaultTypesAndFieldsForDebugging func)
 
 /**
  * Configuration options for listing fields (custom extended data fields):
@@ -13,14 +13,20 @@
  * - scope (optional):              Scope of the extended data can be either 'public' or 'private'.
  *                                  Default value: 'public'.
  *                                  Note: listing doesn't support 'protected' scope atm.
- * - includeForListingTypes:        An array of listing types, for which the extended
- *   (optional)                     data is relevant and should be added.
  * - schemaType (optional):         Schema for this extended data field.
  *                                  This is relevant when rendering components and querying listings.
  *                                  Possible values: 'enum', 'multi-enum', 'text', 'long', 'boolean'.
  * - enumOptions (optional):        Options shown for 'enum' and 'multi-enum' extended data.
  *                                  These are used to render options for inputs and filters on
  *                                  EditListingPage, ListingPage, and SearchPage.
+ * - listingTypeConfig (optional):  Relationship configuration against listing types.
+ *   - limitToListingTypeIds:         Indicator whether this listing field is relevant to a limited set of listing types.
+ *   - listingTypeIds:                An array of listing types, for which this custom listing field is
+ *                                    relevant and should be added. This is mandatory if limitToListingTypeIds is true.
+ * - categoryConfig (optional):     Relationship configuration against categories.
+ *   - limitToCategoryIds:            Indicator whether this listing field is relevant to a limited set of categories.
+ *   - categoryIds:                   An array of categories, for which this custom listing field is
+ *                                    relevant and should be added. This is mandatory if limitToCategoryIds is true.
  * - filterConfig:                  Filter configuration for listings query.
  *    - indexForSearch (optional):    If set as true, it is assumed that the extended data key has
  *                                    search index in place. I.e. the key can be used to filter
@@ -47,124 +53,145 @@
  *   - requiredMessage (optional):    Message for those fields, which are mandatory.
  */
 export const listingFields = [
-  {
-    key: 'category',
-    scope: 'public',
-    schemaType: 'enum',
-    enumOptions: [
-      { option: 'city-bikes', label: 'City bikes' },
-      { option: 'electric-bikes', label: 'Electric bikes' },
-      { option: 'mountain-bikes', label: 'Mountain bikes' },
-      { option: 'childrens-bikes', label: "Children's bikes" },
-    ],
-    filterConfig: {
-      indexForSearch: true,
-      filterType: 'SelectMultipleFilter',
-      label: 'Category',
-      group: 'primary',
-    },
-    showConfig: {
-      label: 'Category',
-      isDetail: true,
-    },
-    saveConfig: {
-      label: 'Category',
-      placeholderMessage: 'Select an option…',
-      isRequired: true,
-      requiredMessage: 'You need to select a category.',
-    },
-  },
-  {
-    key: 'tire',
-    scope: 'public',
-    schemaType: 'enum',
-    enumOptions: [
-      { option: '29', label: '29' },
-      { option: '28', label: '28' },
-      { option: '27', label: '27' },
-      { option: '26', label: '26' },
-      { option: '24', label: '24' },
-      { option: '20', label: '20' },
-      { option: '18', label: '18' },
-    ],
-    filterConfig: {
-      indexForSearch: true,
-      label: 'Tire size',
-      group: 'secondary',
-    },
-    showConfig: {
-      label: 'Tire size',
-      isDetail: true,
-    },
-    saveConfig: {
-      label: 'Tire size',
-      placeholderMessage: 'Select an option…',
-      isRequired: true,
-      requiredMessage: 'You need to select a tire size.',
-    },
-  },
-  {
-    key: 'brand',
-    scope: 'public',
-    schemaType: 'enum',
-    enumOptions: [
-      { option: 'cube', label: 'Cube' },
-      { option: 'diamant', label: 'Diamant' },
-      { option: 'ghost', label: 'GHOST' },
-      { option: 'giant', label: 'Giant' },
-      { option: 'kalkhoff', label: 'Kalkhoff' },
-      { option: 'kona', label: 'Kona' },
-      { option: 'otler', label: 'Otler' },
-      { option: 'vermont', label: 'Vermont' },
-    ],
-    filterConfig: {
-      indexForSearch: true,
-      label: 'Brand',
-      group: 'secondary',
-    },
-    showConfig: {
-      label: 'Brand',
-      isDetail: true,
-    },
-    saveConfig: {
-      label: 'Brand',
-      placeholderMessage: 'Select an option…',
-      isRequired: true,
-      requiredMessage: 'You need to select a brand.',
-    },
-  },
-  {
-    key: 'accessories',
-    scope: 'public',
-    schemaType: 'multi-enum',
-    enumOptions: [
-      { option: 'bell', label: 'Bell' },
-      { option: 'lights', label: 'Lights' },
-      { option: 'lock', label: 'Lock' },
-      { option: 'mudguard', label: 'Mudguard' },
-    ],
-    filterConfig: {
-      indexForSearch: true,
-      label: 'Accessories',
-      searchMode: 'has_all',
-      group: 'secondary',
-    },
-    showConfig: {
-      label: 'Accessories',
-    },
-    saveConfig: {
-      label: 'Accessories',
-      placeholderMessage: 'Select an option…',
-      isRequired: false,
-    },
-  },
-
+  // {
+  //   "scope": "public",
+  //   "label": "Gears",
+  //   "key": "gears",
+  //   "schemaType": "long",
+  //   "numberConfig": {
+  //     "minimum": 1,
+  //     "maximum": 24
+  //   },
+  //   "filterConfig": {
+  //     "indexForSearch": true,
+  //     "group": "primary",
+  //     "label": "Gears"
+  //   }
+  // }
+  // {
+  //   key: 'bikeType',
+  //   scope: 'public',
+  //   schemaType: 'enum',
+  //   enumOptions: [
+  //     { option: 'city-bikes', label: 'City bikes' },
+  //     { option: 'electric-bikes', label: 'Electric bikes' },
+  //     { option: 'mountain-bikes', label: 'Mountain bikes' },
+  //     { option: 'childrens-bikes', label: "Children's bikes" },
+  //   ],
+  //   categoryConfig: {
+  //     limitToCategoryIds: true,
+  //     categoryIds: ['cats'],
+  //   },
+  //   filterConfig: {
+  //     indexForSearch: true,
+  //     filterType: 'SelectMultipleFilter', //'SelectSingleFilter',
+  //     label: 'Bike type',
+  //     group: 'primary',
+  //   },
+  //   showConfig: {
+  //     label: 'Bike type',
+  //     isDetail: true,
+  //   },
+  //   saveConfig: {
+  //     label: 'Bike type',
+  //     placeholderMessage: 'Select an option…',
+  //     isRequired: true,
+  //     requiredMessage: 'You need to select a bike type.',
+  //   },
+  // },
+  // {
+  //   key: 'tire',
+  //   scope: 'public',
+  //   schemaType: 'enum',
+  //   enumOptions: [
+  //     { option: '29', label: '29' },
+  //     { option: '28', label: '28' },
+  //     { option: '27', label: '27' },
+  //     { option: '26', label: '26' },
+  //     { option: '24', label: '24' },
+  //     { option: '20', label: '20' },
+  //     { option: '18', label: '18' },
+  //   ],
+  //   filterConfig: {
+  //     indexForSearch: true,
+  //     label: 'Tire size',
+  //     group: 'secondary',
+  //   },
+  //   showConfig: {
+  //     label: 'Tire size',
+  //     isDetail: true,
+  //   },
+  //   saveConfig: {
+  //     label: 'Tire size',
+  //     placeholderMessage: 'Select an option…',
+  //     isRequired: true,
+  //     requiredMessage: 'You need to select a tire size.',
+  //   },
+  // },
+  // {
+  //   key: 'brand',
+  //   scope: 'public',
+  //   schemaType: 'enum',
+  //   enumOptions: [
+  //     { option: 'cube', label: 'Cube' },
+  //     { option: 'diamant', label: 'Diamant' },
+  //     { option: 'ghost', label: 'GHOST' },
+  //     { option: 'giant', label: 'Giant' },
+  //     { option: 'kalkhoff', label: 'Kalkhoff' },
+  //     { option: 'kona', label: 'Kona' },
+  //     { option: 'otler', label: 'Otler' },
+  //     { option: 'vermont', label: 'Vermont' },
+  //   ],
+  //   filterConfig: {
+  //     indexForSearch: true,
+  //     label: 'Brand',
+  //     group: 'secondary',
+  //   },
+  //   showConfig: {
+  //     label: 'Brand',
+  //     isDetail: true,
+  //   },
+  //   saveConfig: {
+  //     label: 'Brand',
+  //     placeholderMessage: 'Select an option…',
+  //     isRequired: true,
+  //     requiredMessage: 'You need to select a brand.',
+  //   },
+  // },
+  // {
+  //   key: 'accessories',
+  //   scope: 'public',
+  //   schemaType: 'multi-enum',
+  //   enumOptions: [
+  //     { option: 'bell', label: 'Bell' },
+  //     { option: 'lights', label: 'Lights' },
+  //     { option: 'lock', label: 'Lock' },
+  //     { option: 'mudguard', label: 'Mudguard' },
+  //   ],
+  //   filterConfig: {
+  //     indexForSearch: true,
+  //     label: 'Accessories',
+  //     searchMode: 'has_all',
+  //     group: 'secondary',
+  //   },
+  //   showConfig: {
+  //     label: 'Accessories',
+  //   },
+  //   saveConfig: {
+  //     label: 'Accessories',
+  //     placeholderMessage: 'Select an option…',
+  //     isRequired: false,
+  //   },
+  // },
   // // An example of how to use transaction type specific custom fields and private data.
   // {
   //   key: 'note',
   //   scope: 'public',
-  //   includeForListingTypes: ['product-selling'],
   //   schemaType: 'text',
+  //   listingTypeConfig: {
+  //     limitToListingTypeIds: true,
+  //     listingTypeIds: ['product-selling'],
+  //   },
   //   showConfig: {
   //     label: 'Extra notes',
   //   },
@@ -176,8 +203,11 @@ export const listingFields = [
   // {
   //   key: 'privatenote',
   //   scope: 'private',
-  //   includeForListingTypes: ['daily-booking'],
   //   schemaType: 'text',
+  //   listingTypeConfig: {
+  //     limitToListingTypeIds: true,
+  //     listingTypeIds: ['daily-booking'],
+  //   },
   //   saveConfig: {
   //     label: 'Private notes',
   //     placeholderMessage: 'Some private note about this bike...',
@@ -191,9 +221,9 @@ export const listingFields = [
 
 // A presets of supported listing configurations
 //
-// Note 1: With first iteration of hosted configs, we are unlikely to support
-//         multiple listing types, even though this template has some
-//         rudimentary support for it.
+// Note 1: The listingTypes come from listingTypes asset nowadays by default.
+//         To use this built-in configuration, you need to change the overwrite from configHelper.js
+//         (E.g. use mergeDefaultTypesAndFieldsForDebugging func)
 // Note 2: transaction type is part of listing type. It defines what transaction process and units
 //         are used when transaction is created against a specific listing.
 
@@ -220,9 +250,15 @@ export const listingFields = [
  *                        considered unique (stock = 1).
  *                        Possible values: 'oneItem' and 'multipleItems'.
  *                        Default: 'multipleItems'.
- * - defaultListingFields This is relevant only to listings using default-inquiry process atm.
- *                        It contains price: true/false value to indicate, whether price should be shown.
- *                        If defaultListingFields.price is not explicitly set to _false_, price will be shown.
+ * - defaultListingFields These are tied to transaction processes. Different processes have different flags.
+ *                        E.g. default-inquiry can toggle price and location to true/false value to indicate,
+ *                        whether price (or location) tab should be shown. If defaultListingFields.price is not
+ *                        explicitly set to _false_, price will be shown.
+ *                        If the location or pickup is not used, listing won't be returned with location search.
+ *                        Use keyword search as main search type if location is not enforced.
+ *                        The payoutDetails flag allows provider to bypass setting of payout details.
+ *                        Note: customers can't order listings, if provider has not set payout details! Monitor
+ *                        providers who have not set payout details and contact them to ensure that they add the details.
  */
 
 export const listingTypes = [
@@ -233,6 +269,10 @@ export const listingTypes = [
       process: 'default-booking',
       alias: 'default-booking/release-1',
       unitType: 'day',
+    },
+    defaultListingFields: {
+      location: true,
+      payoutDetails: true,
     },
   },
 
@@ -265,6 +305,11 @@ export const listingTypes = [
   //     unitType: 'item',
   //   },
   //   stockType: 'multipleItems',
+  //   defaultListingFields: {
+  //     shipping: true,
+  //     pickup: true,
+  //     payoutDetails: true,
+  //   },
   // },
   // {
   //   listingType: 'inquiry',
@@ -276,6 +321,7 @@ export const listingTypes = [
   //   },
   //   defaultListingFields: {
   //     price: false,
+  //     location: true,
   //   },
   // },
 ];

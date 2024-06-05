@@ -437,6 +437,7 @@ export const BookingDatesFormComponent = props => {
     timeZone,
     dayCountAvailableForBooking,
     marketplaceName,
+    payoutDetailsWarning,
     ...rest
   } = props;
   const classes = classNames(rootClassName || css.root, className);
@@ -638,13 +639,17 @@ export const BookingDatesFormComponent = props => {
               </PrimaryButton>
             </div>
             <p className={css.finePrint}>
-              <FormattedMessage
-                id={
-                  isOwnListing
-                    ? 'BookingDatesForm.ownListing'
-                    : 'BookingDatesForm.youWontBeChargedInfo'
-                }
-              />
+              {payoutDetailsWarning ? (
+                payoutDetailsWarning
+              ) : (
+                <FormattedMessage
+                  id={
+                    isOwnListing
+                      ? 'BookingDatesForm.ownListing'
+                      : 'BookingDatesForm.youWontBeChargedInfo'
+                  }
+                />
+              )}
             </p>
           </Form>
         );

@@ -132,7 +132,12 @@ class RouteComponentRenderer extends Component {
     }
     return canShow ? (
       <LoadableComponentErrorBoundary>
-        <RouteComponent params={match.params} location={location} {...extraProps} />
+        <RouteComponent
+          params={match.params}
+          location={location}
+          staticContext={staticContext}
+          {...extraProps}
+        />
       </LoadableComponentErrorBoundary>
     ) : (
       <NamedRedirect

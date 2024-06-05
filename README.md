@@ -16,7 +16,7 @@ namely server side rendering, code-splitting, and a custom CSS setup.
 > - [FTW-product](https://github.com/sharetribe/ftw-hourly)
 >
 > Read more from
-> [Sharetribe Developer Docs](https://www.sharetribe.com/docs/ftw/sharetribe-web-template/)
+> [Sharetribe Developer Docs](https://www.sharetribe.com/docs/template/sharetribe-web-template/)
 
 ## Quick start
 
@@ -38,8 +38,8 @@ You can also follow along the
 tutorial in the [Sharetribe Developer Docs](https://www.sharetribe.com/docs/).
 
 For more information of the configuration, see the
-[Environment configuration variables](https://www.sharetribe.com/docs/ftw/ftw-env/) reference in
-Sharetribe Developer Docs.
+[Environment configuration variables](https://www.sharetribe.com/docs/template/template-env/)
+reference in Sharetribe Developer Docs.
 
 ### For Windows users
 
@@ -52,8 +52,9 @@ articles instead of DOS commands.
 ## Getting started with your own customization
 
 If you want to build your own Sharetribe marketplace by customizing the template application, see
-the [How to Customize the Template](https://www.sharetribe.com/docs/ftw/how-to-customize-ftw/) guide
-in Developer Docs.
+the
+[How to Customize the Template](https://www.sharetribe.com/docs/template/how-to-customize-template/)
+guide in Developer Docs.
 
 ## Deploying to Heroku
 
@@ -61,7 +62,7 @@ in Developer Docs.
 Github repository to Heroku will make manual deploys easier.
 
 See the
-[How to deploy this template to production](https://www.sharetribe.com/docs/ftw/how-to-deploy-ftw-to-production/)
+[How to deploy this template to production](https://www.sharetribe.com/docs/template/how-to-deploy-template-to-production/)
 guide in Developer Docs for more information.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
@@ -74,6 +75,9 @@ See the Sharetribe Developer Docs: [sharetribe.com/docs/](https://www.sharetribe
 
 If you have any questions about development, the best place to ask them is the Developer Slack
 channel at https://www.sharetribe.com/dev-slack
+
+If you need help with development, you can hire a verified software developer with Sharetribe
+experience from the [Expert Network](https://www.sharetribe.com/experts/).
 
 ## License
 

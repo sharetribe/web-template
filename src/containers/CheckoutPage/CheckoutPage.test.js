@@ -397,6 +397,7 @@ describe('CheckoutPage', () => {
         speculateTransactionError: null,
         speculateTransactionInProgress: false,
         speculatedTransaction: null,
+        isClockInSync: false,
         transaction: null,
         confirmPaymentError: null,
         initiateInquiryError: null,

@@ -193,10 +193,18 @@ const routeConfiguration = (layoutConfig) => {
       loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
     },
     {
+      path: '/signup/:userType',
+      name: 'SignupForUserTypePage',
+      component: AuthenticationPage,
+      extraProps: { tab: 'signup' },
+      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
+    },
+    {
       path: '/confirm',
       name: 'ConfirmPage',
       component: AuthenticationPage,
       extraProps: { tab: 'confirm' },
+      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
     },
     {
       path: '/recover-password',

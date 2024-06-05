@@ -1,23 +1,28 @@
 import React from 'react';
-import { bool, node } from 'prop-types';
+import { bool, node, string } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
-import { Form, PrimaryButton, FieldTextInput, FieldPhoneNumberInput} from '../../../components';
+import { Form, PrimaryButton, FieldTextInput } from '../../../components';
 
 import css from './SignupForm.module.css';
 
 // import FieldPhoneNumberInput from '../../../components';
 
+const getSoleUserTypeMaybe = userTypes =>
+  Array.isArray(userTypes) && userTypes.length === 1 ? userTypes[0].userType : null;
+
 const SignupFormComponent = props => (
   <FinalForm
     {...props}
     mutators={{ ...arrayMutators }}
-    render={fieldRenderProps => {
+    initialValues={{ userType: props.preselectedUserType || getSoleUserTypeMaybe(props.userTypes) }}
+    render={formRenderProps => {
       const {
         rootClassName,
         className,
@@ -27,7 +32,13 @@ const SignupFormComponent = props => (
         invalid,
         intl,
         termsAndConditions,
-      } = fieldRenderProps;
+        preselectedUserType,
+        userTypes,
+        userFields,
+        values,
+      } = formRenderProps;
+
+      const { userType } = values || {};
 
       // email
       const emailRequired = validators.required(
@@ -88,6 +99,15 @@ const SignupFormComponent = props => (
         passwordMaxLength
       );
 
+      // Custom user fields. Since user types are not supported here,
+      // only fields with no user type id limitation are selected.
+      const userFieldProps = getPropsForCustomUserFieldInputs(userFields, intl, userType);
+
+      const noUserTypes = !userType && !(userTypes?.length > 0);
+      const userTypeConfig = userTypes.find(config => config.userType === userType);
+      const showDefaultUserFields = userType || noUserTypes;
+      const showCustomUserFields = (userType || noUserTypes) && userFieldProps?.length > 0;
+
       const classes = classNames(rootClassName || css.root, className);
       const submitInProgress = inProgress;
       const submitDisabled = invalid || submitInProgress;
@@ -107,14 +127,6 @@ const SignupFormComponent = props => (
                 id: 'SignupForm.emailPlaceholder',
               })}
               validate={validators.composeValidators(emailRequired, emailValid)}
-            />
-            <FieldPhoneNumberInput
-              className={css.phone}
-              id={formId ? `${formId}.phoneNumber` : 'phoneNumber'}
-              name="phoneNumber"
-              label={phoneLabel}
-              placeholder={phonePlaceholder}
-              validate={phoneRequired}
             />
             <div className={css.name}>
               <FieldTextInput
@@ -182,11 +194,23 @@ const SignupFormComponent = props => (
   />
 );
 
-SignupFormComponent.defaultProps = { inProgress: false };
+SignupFormComponent.defaultProps = {
+  rootClassName: null,
+  className: null,
+  formId: null,
+  inProgress: false,
+  preselectedUserType: null,
+};
 
 SignupFormComponent.propTypes = {
+  rootClassName: string,
+  className: string,
+  formId: string,
   inProgress: bool,
   termsAndConditions: node.isRequired,
+  preselectedUserType: string,
+  userTypes: propTypes.userTypes.isRequired,
+  userFields: propTypes.listingFields.isRequired,
 
   // from injectIntl
   intl: intlShape.isRequired,

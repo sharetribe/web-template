@@ -1,10 +1,17 @@
 # SearchPage
 
-> **Note:** _category_ and _amenities_ filters are not actually filtering anything by default. They
-> are tied to [extended data](https://www.sharetribe.com/docs/references/extended-data/), which is
-> likely to be customized in every marketplace. You can add public data to listing entity in your
-> client app, but to make it work as a search filter, see this article:
-> https://www.sharetribe.com/docs/flex-cli/manage-search-schemas-with-flex-cli/
+This page handles searches for listings. Most of the configuration comes from hosted assets that are
+defined through Console. There you can configure
+
+- **custom listing fields** with search schema of enum, multi-enum or text
+  - Configured through listing-fields.json
+- **categories**
+  - Configured through both listing-search.json and listing-categories.json
+  - Categories support nesting
+  - It might use multiple query parameters: pub_categoryLevel1, pub_categoryLevel2,
+    pub_categoryLevel3
+- **built-in filters**: price, dates, keywords
+  - Configured through listing-search.json
 
 ## Structure
 
@@ -17,7 +24,9 @@ There are 2 layout variants in use:
 
 Searches can be made by each of these components.
 
-- Topbar contains location search (LocationAutocompleteInput)
+- SearchPage.shared.js file contains shared functions for both page layout variants
+- Topbar contains location search (LocationAutocompleteInput) or Keywords search
+  - The main search type set through hosted asset: listing-search.json
 - MainPanel has Filters that can fine-tune current location search
 - SearchMap can create new location searches when the map's bounding box changes (i.e. moving,
   zooming, etc.)
@@ -67,7 +76,15 @@ if SearchMap's bounds have changed enough.
 ### Search filters
 
 See the
-[filters documentation](https://www.sharetribe.com/docs/cookbook-search/change-search-filters-in-ftw/).
+[filters documentation](https://www.sharetribe.com/docs/how-to/change-search-filters-in-template/).
+
+In addition to enum, multi-enum, and text search schemas, Marketplace API supports also **long** and
+**boolean** search schemas for extended data. However, this template does not yet have filter
+components for those search schema types. (I.e. you need to build them yourself).
+
+> **Note:** You can add public data to listing entity through your client app too, but to make it
+> work as a search filter, see this article:
+> https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-sharetribe-cli/
 
 ### SeachPage schema / SEO
 

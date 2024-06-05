@@ -1,0 +1,52 @@
+@import '../../../../../styles/customMediaQueries.css';
+
+.priorityLinkWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+}
+
+.priorityLink {
+  border-bottom: 0px solid;
+  transition: var(--transitionStyleButton);
+
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0;
+  color: var(--colorGrey700);
+
+  flex-shrink: 0;
+  height: 100%;
+  padding: 0 12px 0 12px;
+  margin: 0;
+
+  &:hover {
+    color: var(--colorBlack);
+    border-bottom: 4px solid var(--marketplaceColor);
+    border-radius: 0;
+    text-decoration: none;
+  }
+
+  @media (--viewportMedium) {
+    line-height: 16px;
+    margin: 0;
+  }
+}
+
+.highlight {
+  color: var(--marketplaceColor);
+  &:hover {
+    color: var(--marketplaceColorDark);
+  }
+}
+
+.priorityLinkLabel {
+  composes: textSmall from global;
+  display: inline-block;
+  margin: 28px 0;
+  text-decoration: inherit;
+  text-wrap: nowrap;
+}

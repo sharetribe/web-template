@@ -4,6 +4,7 @@ import dropWhile from 'lodash/dropWhile';
 import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { richText } from '../../../util/richText';
 import { formatDateWithProximity } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
 import {
@@ -20,13 +21,21 @@ import { stateDataShape } from '../TransactionPage.stateData';
 
 import css from './ActivityFeed.module.css';
 
+const MIN_LENGTH_FOR_LONG_WORDS = 20;
+
 const Message = props => {
   const { message, formattedDate } = props;
+  const content = richText(message.attributes.content, {
+    linkify: true,
+    longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
+    longWordClass: css.longWord,
+  });
+
   return (
     <div className={css.message}>
       <Avatar className={css.avatar} user={message.sender} />
       <div>
-        <p className={css.messageContent}>{message.attributes.content}</p>
+        <p className={css.messageContent}>{content}</p>
         <p className={css.messageDate}>{formattedDate}</p>
       </div>
     </div>
@@ -40,10 +49,17 @@ Message.propTypes = {
 
 const OwnMessage = props => {
   const { message, formattedDate } = props;
+  const content = richText(message.attributes.content, {
+    linkify: true,
+    linkClass: css.ownMessageContentLink,
+    longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
+    longWordClass: css.longWord,
+  });
+
   return (
     <div className={css.ownMessage}>
       <div className={css.ownMessageContentWrapper}>
-        <p className={css.ownMessageContent}>{message.attributes.content}</p>
+        <p className={css.ownMessageContent}>{content}</p>
       </div>
       <p className={css.ownMessageDate}>{formattedDate}</p>
     </div>
@@ -265,7 +281,7 @@ export const ActivityFeedComponent = props => {
               transition={transition}
               nextState={nextState}
               stateData={stateData}
-              deliveryMethod={transaction.attributes?.protectedData?.deliveryMethod}
+              deliveryMethod={transaction.attributes?.protectedData?.deliveryMethod || 'none'}
               listingTitle={listingTitle}
               ownRole={ownRole}
               otherUsersName={<UserDisplayName user={otherUser} intl={intl} />}

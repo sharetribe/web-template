@@ -8,7 +8,7 @@ const noop = () => null;
 
 const validListingTypes = [
   {
-    id: 'rent-bicycles-daily',
+    listingType: 'rent-bicycles-daily',
     transactionType: {
       process: 'default-booking',
       alias: 'default-booking/release-1',

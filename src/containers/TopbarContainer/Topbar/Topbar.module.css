@@ -1,4 +1,4 @@
-@import '../../styles/customMediaQueries.css';
+@import '../../../styles/customMediaQueries.css';
 
 .root {
   width: 100%;
@@ -170,8 +170,8 @@
   @media (--viewportMedium) {
     flex-basis: 576px;
     flex-grow: 1;
-    min-height: 100vh;
-    height: 100%;
+    min-height: max(100%, 100vh);
+    height: auto;
     padding: 24px;
     background-color: var(--colorWhite);
     border-bottom: none;

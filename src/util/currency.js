@@ -5,7 +5,7 @@ import Decimal from 'decimal.js';
 import appSettings from '../config/settings';
 import { types as sdkTypes } from '../util/sdkLoader';
 
-const { subUnitDivisors } = appSettings;
+const { subUnitDivisors, getCurrencyFormatting } = appSettings;
 const { Money } = sdkTypes;
 
 // https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER
@@ -251,14 +251,10 @@ export const formatMoney = (intl, value) => {
   const valueAsNumber = convertMoneyToNumber(value);
 
   // See: https://github.com/yahoo/react-intl/wiki/API#formatnumber
-  const numberFormatOptions = {
-    style: 'currency',
-    currency: value.currency,
-    currencyDisplay: 'symbol',
-    useGrouping: true,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  };
+  // If you have used currencies that are not listed in src/config/settingsCurrency.js,
+  // you might want to use option { enforceSupportedCurrencies: false }
+  const options = {};
+  const numberFormatOptions = getCurrencyFormatting(value.currency, options);
 
   return intl.formatNumber(valueAsNumber, numberFormatOptions);
 };

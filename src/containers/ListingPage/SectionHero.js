@@ -18,6 +18,7 @@ const SectionHero = props => {
     imageCarouselOpen,
     onImageCarouselClose,
     onManageDisableScrolling,
+    noPayoutDetailsSetWithOwnListing,
   } = props;
 
   const hasImages = listing.images && listing.images.length > 0;
@@ -25,19 +26,6 @@ const SectionHero = props => {
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith('scaled'))
     : [];
-
-  // Action bar is wrapped with a div that prevents the click events
-  // to the parent that would otherwise open the image carousel
-  const actionBar = listing.id ? (
-    <div onClick={e => e.stopPropagation()}>
-      <ActionBarMaybe
-        className={css.actionBarForHeroLayout}
-        isOwnListing={isOwnListing}
-        listing={listing}
-        editParams={editParams}
-      />
-    </div>
-  ) : null;
 
   const viewPhotosButton = hasImages ? (
     <button className={css.viewPhotos} onClick={handleViewPhotosClick}>
@@ -49,9 +37,28 @@ const SectionHero = props => {
   ) : null;
 
   return (
-    <div className={css.sectionHero} data-testid="hero">
+    <section className={css.sectionHero} data-testid="hero">
       <div className={css.imageWrapperForSectionHero} onClick={handleViewPhotosClick}>
-        {actionBar}
+        {listing.id && isOwnListing ? (
+          <div onClick={e => e.stopPropagation()} className={css.actionBarContainerForHeroLayout}>
+            {noPayoutDetailsSetWithOwnListing ? (
+              <ActionBarMaybe
+                className={css.actionBarForHeroLayout}
+                isOwnListing={isOwnListing}
+                listing={listing}
+                showNoPayoutDetailsSet={noPayoutDetailsSetWithOwnListing}
+              />
+            ) : null}
+
+            <ActionBarMaybe
+              className={css.actionBarForHeroLayout}
+              isOwnListing={isOwnListing}
+              listing={listing}
+              editParams={editParams}
+            />
+          </div>
+        ) : null}
+
         <ResponsiveImage
           rootClassName={css.rootForImage}
           alt={title}
@@ -75,7 +82,7 @@ const SectionHero = props => {
           imageVariants={['scaled-small', 'scaled-medium', 'scaled-large', 'scaled-xlarge']}
         />
       </Modal>
-    </div>
+    </section>
   );
 };
 

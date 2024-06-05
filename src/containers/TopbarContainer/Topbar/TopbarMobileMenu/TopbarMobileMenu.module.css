@@ -1,4 +1,4 @@
-@import '../../../styles/customMediaQueries.css';
+@import '../../../../styles/customMediaQueries.css';
 
 .root {
   flex-shrink: 0;
@@ -14,6 +14,16 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+
+.accountLinksWrapper,
+.customLinksWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.accountLinksWrapper {
+  margin-bottom: 36px;
 }
 
 .footer {
@@ -143,7 +153,7 @@
   /* Font */
   composes: h1 from global;
 
-  margin-bottom: 24px;
+  margin-bottom: 48px;
   margin-top: var(--TopbarMobileMenu_topMargin);
 }
 .authenticationLinks {

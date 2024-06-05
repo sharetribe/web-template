@@ -1,4 +1,4 @@
-@import '../../../styles/customMediaQueries.css';
+@import '../../../../styles/customMediaQueries.css';
 
 /* Desktop */
 .root {
@@ -36,16 +36,11 @@
 
 /* Search */
 .searchLink {
-  flex-grow: 1;
+  min-width: 320px;
   height: 100%;
-  margin-right: 24px;
   border-left-style: solid;
   border-left-width: 1px;
   border-left-color: var(--colorGrey100);
-
-  @media (--viewportLarge) {
-    padding-left: 0;
-  }
 }
 
 .search {
@@ -64,8 +59,16 @@
   }
 }
 
+.takeAvailableSpace {
+  flex-grow: 1;
+
+  /* At 1024px, the translations might need more space than what searchLink otherwise gets. */
+  min-width: 220px;
+}
+
 .topbarSearchWithLeftPadding {
   padding-left: 24px;
+  padding-right: 24px;
   height: var(--topbarHeightDesktop);
 
   @media (--viewportLarge) {
@@ -73,48 +76,10 @@
   }
 }
 
-/* Create listing (CTA for providers) */
-.createListingLink {
-  border-bottom: 0px solid;
-  transition: var(--transitionStyleButton);
-
-  font-weight: var(--fontWeightMedium);
-  font-size: 14px;
-  line-height: 18px;
-  letter-spacing: 0;
-  color: var(--marketplaceColor);
-
+/* These is used with Inbox, Sign up, and Log in */
+.topbarLink {
   flex-shrink: 0;
-  height: 100%;
-  padding: 0 12px 0 12px;
-  margin: 0;
 
-  &:hover {
-    color: var(--marketplaceColorDark);
-    border-bottom: 4px solid var(--marketplaceColor);
-    border-radius: 0;
-    text-decoration: none;
-  }
-
-  @media (--viewportMedium) {
-    line-height: 16px;
-    margin: 0;
-  }
-}
-
-.topbarDesktopLabel {
-  composes: textSmall from global;
-  display: inline-block;
-  margin: 28px 0;
-  text-decoration: inherit;
-}
-
-.createListing {
-  composes: topbarDesktopLabel;
-}
-
-/* Inbox */
-.inboxLink {
   border-bottom: 0px solid;
   transition: var(--transitionStyleButton);
 
@@ -141,8 +106,11 @@
   }
 }
 
-.inbox {
-  composes: topbarDesktopLabel;
+.topbarLinkLabel {
+  composes: textSmall from global;
+  display: inline-block;
+  margin: 28px 0;
+  text-decoration: inherit;
   position: relative;
 }
 
@@ -186,6 +154,12 @@
   border-bottom: 0px solid;
   transition: var(--transitionStyleButton);
 
+  font-weight: var(--fontWeightMedium);
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0;
+  color: var(--colorGrey700);
+
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -219,52 +193,6 @@
   padding-top: 20px;
 }
 
-/* Authentication */
-.signupLink {
-  border-bottom: 0px solid;
-  transition: var(--transitionStyleButton);
-
-  flex-shrink: 0;
-  height: 100%;
-  padding: 0 12px 0 12px;
-
-  color: var(--colorGrey700);
-
-  &:hover {
-    color: var(--colorBlack);
-    border-bottom: 4px solid var(--marketplaceColor);
-    border-radius: 0;
-    text-decoration: none;
-  }
-}
-
-.loginLink {
-  border-bottom: 0px solid;
-  transition: var(--transitionStyleButton);
-
-  flex-shrink: 0;
-  height: 100%;
-  padding: 0 12px 0 12px;
-
-  color: var(--colorGrey700);
-
-  &:hover {
-    color: var(--colorBlack);
-    border-bottom: 4px solid var(--marketplaceColor);
-    border-radius: 0;
-    text-decoration: none;
-  }
-}
-
-.signup,
-.login {
-  composes: textSmall from global;
-
-  display: inline-block;
-  margin: 28px 0;
-  text-decoration: inherit;
-}
-
 /* left animated "border" like hover element */
 .menuItemBorder {
   position: absolute;
@@ -275,14 +203,14 @@
   transition: width var(--transitionStyleButton);
 }
 
-.profileSettingsLink,
-.yourListingsLink {
+.menuLink {
   composes: textSmall from global;
   position: relative;
   display: block;
 
   /* Dimensions */
   width: 100%;
+  min-width: 276px;
   margin: 0;
   padding: 4px 24px;
 

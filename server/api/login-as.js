@@ -12,6 +12,9 @@ const loginAsRedirectUri = `${ROOT_URL.replace(/\/$/, '')}/api/login-as`;
 const stateKey = `st-${CLIENT_ID}-oauth2State`;
 const codeVerifierKey = `st-${CLIENT_ID}-pkceCodeVerifier`;
 
+// Cookies used for additional login information
+const targetPathKey = `st-${CLIENT_ID}-targetPath`;
+
 // Works as the redirect_uri passed in an authorization code request. Receives
 // an authorization code and uses that to log in and redirect to the landing
 // page.
@@ -30,19 +33,22 @@ module.exports = (req, res) => {
   }
 
   const codeVerifier = req.cookies[codeVerifierKey];
+  const targetPath = req.cookies[targetPathKey];
 
   // clear state and code verifier cookies
   res.clearCookie(stateKey, { secure: USING_SSL });
   res.clearCookie(codeVerifierKey, { secure: USING_SSL });
+  // clear additional login cookies
+  res.clearCookie(targetPathKey, { secure: USING_SSL });
 
   const sdk = sdkUtils.getSdk(req, res);
 
   sdk
-    .login({
+    .loginAs({
       code,
       redirect_uri: loginAsRedirectUri,
       code_verifier: codeVerifier,
     })
-    .then(() => res.redirect('/'))
+    .then(() => res.redirect(targetPath || '/'))
     .catch(() => res.status(401).send('Unable to authenticate as a user'));
 };
