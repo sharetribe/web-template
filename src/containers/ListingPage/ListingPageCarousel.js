@@ -394,7 +394,7 @@ export const ListingPageComponent = props => {
             />
 
             <SectionTextMaybe             
-              text={publicData.building}
+              text={publicData.location.building}
               heading={intl.formatMessage({ id: 'ListingPage.buildingTitle' })}
             />
             
