@@ -239,6 +239,22 @@ export const listingFields = [
      },
   },
 
+    // Web page
+    {
+      key: 'webpage',
+      scope: 'public',
+      schemaType: 'text',
+      saveConfig: {
+        label: 'Webpage :',
+        placeholderMessage: 'Please enter your website link',
+        isRequired: false,
+      },
+      showConfig: {
+        label: 'Webpage :',
+      },
+    },
+  
+
   // Area
 
   {

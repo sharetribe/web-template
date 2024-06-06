@@ -1,11 +1,12 @@
 import React from 'react';
-
 import { FormattedMessage } from '../../util/reactIntl';
 import { isFieldForListingType } from '../../util/fieldHelpers';
-
 import { Heading } from '../../components';
+import { richText } from '../../util/richText';
 
 import css from './ListingPage.module.css';
+
+const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 const SectionDetailsMaybe = props => {
   const { publicData, metadata = {}, listingFieldConfigs, isFieldForCategory, intl } = props;
@@ -39,6 +40,18 @@ const SectionDetailsMaybe = props => {
         ? filteredConfigs.concat({ key, value: getBooleanMessage(value), label })
         : schemaType === 'long'
         ? filteredConfigs.concat({ key, value, label })
+        : schemaType === 'text'
+        ? filteredConfigs.concat({
+            key,
+            value: richText(value, {
+              linkify: true,
+              longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
+              longWordClass: css.longWord,
+              breakChars: '/',
+            }),
+            label,
+            isText: true,
+          })
         : filteredConfigs;
     }
     return filteredConfigs;
@@ -55,7 +68,7 @@ const SectionDetailsMaybe = props => {
         {existingListingFields.map(detail => (
           <li key={detail.key} className={css.detailsRow}>
             <span className={css.detailLabel}>{detail.label}</span>
-            <span>{detail.value}</span>
+            <span className={detail.isText ? css.text : ''}>{detail.value}</span>
           </li>
         ))}
       </ul>
