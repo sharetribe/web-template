@@ -223,7 +223,7 @@ const PlainPage = props => {
 };
 
 export const ErrorPage = props => {
-  const { topbar, scrollingDisabled, invalidListing, intl } = props;
+  const { topbar, scrollingDisabled, intl } = props;
   return (
     <PlainPage
       title={intl.formatMessage({
@@ -233,11 +233,7 @@ export const ErrorPage = props => {
       scrollingDisabled={scrollingDisabled}
     >
       <p className={css.errorText}>
-        {invalidListing ? (
-          <FormattedMessage id="ListingPage.errorInvalidListingMessage" />
-        ) : (
-          <FormattedMessage id="ListingPage.errorLoadingListingMessage" />
-        )}
+        <FormattedMessage id="ListingPage.errorLoadingListingMessage" />
       </p>
     </PlainPage>
   );

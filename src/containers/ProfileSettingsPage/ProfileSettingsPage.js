@@ -18,7 +18,6 @@ import ProfileSettingsForm from './ProfileSettingsForm/ProfileSettingsForm';
 
 import { updateProfile, uploadImage } from './ProfileSettingsPage.duck';
 import css from './ProfileSettingsPage.module.css';
-import { initialValuesForUserFields, pickUserFieldsData } from '../../util/userHelpers';
 
 const onImageUploadHandler = (values, fn) => {
   const { id, imageId, file } = values;
@@ -42,14 +41,8 @@ export const ProfileSettingsPageComponent = props => {
     intl,
   } = props;
 
-  const { userFields, userTypes = [] } = config.user;
-
-  const handleSubmit = (values, userType) => {
-    const { firstName, lastName, displayName, bio: rawBio, ...rest } = values;
-
-    const displayNameMaybe = displayName
-      ? { displayName: displayName.trim() }
-      : { displayName: null };
+  const handleSubmit = values => {
+    const { firstName, lastName, bio: rawBio } = values;
 
     // Ensure that the optional bio is a string
     const bio = rawBio || '';
@@ -57,17 +50,7 @@ export const ProfileSettingsPageComponent = props => {
     const profile = {
       firstName: firstName.trim(),
       lastName: lastName.trim(),
-      ...displayNameMaybe,
       bio,
-      publicData: {
-        ...pickUserFieldsData(rest, 'public', userType, userFields),
-      },
-      protectedData: {
-        ...pickUserFieldsData(rest, 'protected', userType, userFields),
-      },
-      privateData: {
-        ...pickUserFieldsData(rest, 'private', userType, userFields),
-      },
     };
     const uploadedImage = props.image;
 
@@ -81,47 +64,23 @@ export const ProfileSettingsPageComponent = props => {
   };
 
   const user = ensureCurrentUser(currentUser);
-  const {
-    firstName,
-    lastName,
-    displayName,
-    bio,
-    publicData,
-    protectedData,
-    privateData,
-  } = user?.attributes.profile;
-  const { userType } = publicData || {};
+  const { firstName, lastName, bio } = user.attributes.profile;
   const profileImageId = user.profileImage ? user.profileImage.id : null;
   const profileImage = image || { imageId: profileImageId };
-  const userTypeConfig = userTypes.find(config => config.userType === userType);
-  const isDisplayNameIncluded = userTypeConfig?.defaultUserFields?.displayName !== false;
-  // ProfileSettingsForm decides if it's allowed to show the input field.
-  const displayNameMaybe = isDisplayNameIncluded && displayName ? { displayName } : {};
 
   const profileSettingsForm = user.id ? (
     <ProfileSettingsForm
       className={css.form}
       currentUser={currentUser}
-      initialValues={{
-        firstName,
-        lastName,
-        ...displayNameMaybe,
-        bio,
-        profileImage: user.profileImage,
-        ...initialValuesForUserFields(publicData, 'public', userType, userFields),
-        ...initialValuesForUserFields(protectedData, 'protected', userType, userFields),
-        ...initialValuesForUserFields(privateData, 'private', userType, userFields),
-      }}
+      initialValues={{ firstName, lastName, bio, profileImage: user.profileImage }}
       profileImage={profileImage}
       onImageUpload={e => onImageUploadHandler(e, onImageUpload)}
       uploadInProgress={uploadInProgress}
       updateInProgress={updateInProgress}
       uploadImageError={uploadImageError}
       updateProfileError={updateProfileError}
-      onSubmit={values => handleSubmit(values, userType)}
+      onSubmit={handleSubmit}
       marketplaceName={config.marketplaceName}
-      userFields={userFields}
-      userTypeConfig={userTypeConfig}
     />
   ) : null;
 
@@ -132,7 +91,7 @@ export const ProfileSettingsPageComponent = props => {
       <LayoutSingleColumn
         topbar={
           <>
-            <TopbarContainer />
+            <TopbarContainer currentPage="ProfileSettingsPage" />
             <UserNav currentPage="ProfileSettingsPage" />
           </>
         }

@@ -18,11 +18,7 @@ import classNames from 'classnames';
 import omit from 'lodash/omit';
 
 import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
-import {
-  displayDeliveryPickup,
-  displayDeliveryShipping,
-  displayPrice,
-} from '../../util/configHelpers';
+import { displayPrice } from '../../util/configHelpers';
 import {
   propTypes,
   LISTING_STATE_CLOSED,
@@ -30,8 +26,6 @@ import {
   LINE_ITEM_DAY,
   LINE_ITEM_ITEM,
   LINE_ITEM_HOUR,
-  STOCK_MULTIPLE_ITEMS,
-  STOCK_INFINITE_MULTIPLE_ITEMS,
 } from '../../util/types';
 import { formatMoney } from '../../util/currency';
 import { parse, stringify } from '../../util/urlHelpers';
@@ -143,14 +137,7 @@ const handleSubmit = (
 const dateFormattingOptions = { month: 'short', day: 'numeric', weekday: 'short' };
 
 const PriceMaybe = props => {
-  const {
-    price,
-    publicData,
-    validListingTypes,
-    intl,
-    marketplaceCurrency,
-    showCurrencyMismatch = false,
-  } = props;
+  const { price, publicData, validListingTypes, intl } = props;
   const { listingType, unitType } = publicData || {};
 
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
@@ -159,20 +146,7 @@ const PriceMaybe = props => {
     return null;
   }
 
-  // Get formatted price or currency code if the currency does not match with marketplace currency
-  const { formattedPrice, priceTitle } = priceData(price, marketplaceCurrency, intl);
-  // TODO: In CTA, we don't have space to show proper error message for a mismatch of marketplace currency
-  //       Instead, we show the currency code in place of the price
-  return showCurrencyMismatch ? (
-    <div className={css.priceContainerInCTA}>
-      <div className={css.priceValue} title={priceTitle}>
-        {formattedPrice}
-      </div>
-      <div className={css.perUnitInCTA}>
-        <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
-      </div>
-    </div>
-  ) : (
+  return (
     <div className={css.priceContainer}>
       <p className={css.price}>{formatMoney(intl, price)}</p>
       <div className={css.perUnit}>
@@ -210,10 +184,12 @@ const OrderPanel = props => {
     marketplaceName,
     fetchLineItemsInProgress,
     fetchLineItemsError,
+    onToggleFavorites,
+    currentUser,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
-  const { listingType, unitType, transactionProcessAlias = '' } = publicData || {};
+  const { unitType, transactionProcessAlias = '' } = publicData || {};
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
 
@@ -265,14 +241,8 @@ const OrderPanel = props => {
 
   const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
 
-  const listingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
-  const displayShipping = displayDeliveryShipping(listingTypeConfig);
-  const displayPickup = displayDeliveryPickup(listingTypeConfig);
-  const allowOrdersOfMultipleItems = [STOCK_MULTIPLE_ITEMS, STOCK_INFINITE_MULTIPLE_ITEMS].includes(
-    listingTypeConfig?.stockType
-  );
-
   const showClosedListingHelpText = listing.id && isClosed;
+  const { formattedPrice, priceTitle } = priceData(price, marketplaceCurrency, intl);
   const isOrderOpen = !!parse(location.search).orderOpen;
 
   const subTitleText = showClosedListingHelpText
@@ -329,7 +299,6 @@ const OrderPanel = props => {
           publicData={publicData}
           validListingTypes={validListingTypes}
           intl={intl}
-          marketplaceCurrency={marketplaceCurrency}
         />
 
         <div className={css.author}>
@@ -367,7 +336,6 @@ const OrderPanel = props => {
             lineItems={lineItems}
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
-            payoutDetailsWarning={payoutDetailsWarning}
           />
         ) : showBookingDatesForm ? (
           <BookingDatesForm
@@ -388,6 +356,7 @@ const OrderPanel = props => {
             lineItems={lineItems}
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
+            helmetFee={helmetFee}
           />
         ) : showProductOrderForm ? (
           <ProductOrderForm
@@ -396,10 +365,8 @@ const OrderPanel = props => {
             price={price}
             marketplaceCurrency={marketplaceCurrency}
             currentStock={currentStock}
-            allowOrdersOfMultipleItems={allowOrdersOfMultipleItems}
-            pickupEnabled={pickupEnabled && displayPickup}
-            shippingEnabled={shippingEnabled && displayShipping}
-            displayDeliveryMethod={displayPickup || displayShipping}
+            pickupEnabled={pickupEnabled}
+            shippingEnabled={shippingEnabled}
             listingId={listing.id}
             isOwnListing={isOwnListing}
             marketplaceName={marketplaceName}
@@ -408,7 +375,6 @@ const OrderPanel = props => {
             lineItems={lineItems}
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
-            payoutDetailsWarning={payoutDetailsWarning}
           />
         ) : showInquiryForm ? (
           <InquiryWithoutPaymentForm formId="OrderPanelInquiryForm" onSubmit={onSubmit} />
@@ -419,14 +385,14 @@ const OrderPanel = props => {
         ) : null}
       </ModalInMobile>
       <div className={css.openOrderForm}>
-        <PriceMaybe
-          price={price}
-          publicData={publicData}
-          validListingTypes={validListingTypes}
-          intl={intl}
-          marketplaceCurrency={marketplaceCurrency}
-          showCurrencyMismatch
-        />
+        <div className={css.priceContainerInCTA}>
+          <div className={css.priceValue} title={priceTitle}>
+            {formattedPrice}
+          </div>
+          <div className={css.perUnitInCTA}>
+            <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
+          </div>
+        </div>
 
         {isClosed ? (
           <div className={css.closedListingButton}>
@@ -474,7 +440,6 @@ OrderPanel.defaultProps = {
   titleClassName: null,
   isOwnListing: false,
   authorLink: null,
-  payoutDetailsWarning: null,
   titleDesktop: null,
   subTitle: null,
   monthlyTimeSlots: null,
@@ -500,7 +465,6 @@ OrderPanel.propTypes = {
   isOwnListing: bool,
   author: oneOfType([propTypes.user, propTypes.currentUser]).isRequired,
   authorLink: node,
-  payoutDetailsWarning: node,
   onSubmit: func.isRequired,
   title: oneOfType([node, string]).isRequired,
   titleDesktop: node,

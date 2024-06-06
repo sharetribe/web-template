@@ -6,6 +6,7 @@
   flex-direction: column;
   min-height: 100%;
   height: auto;
+  font-size: x-large;
 }
 
 .content {
@@ -14,6 +15,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  
 }
 
 .footer {
@@ -138,16 +140,23 @@
 .createNewListingLink {
   composes: buttonPrimary from global;
 }
+.LoginListingLink {
+  composes: buttonPrimary from global;
+  
+}
+
 
 .authenticationGreeting {
   /* Font */
   composes: h1 from global;
-
-  margin-bottom: 24px;
-  margin-top: var(--TopbarMobileMenu_topMargin);
+  width: 100%;
+/*   margin-bottom: 24px;
+  margin-top: var(--TopbarMobileMenu_topMargin); */
+  margin-top: 20%; 
 }
 .authenticationLinks {
   white-space: nowrap;
+  color: aliceblue
 }
 
 .signupLink {

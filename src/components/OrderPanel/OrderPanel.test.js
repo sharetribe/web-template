@@ -56,39 +56,36 @@ const listingTypes = [
       alias: 'default-purchase/release-1',
     },
     unitType: 'item',
-    stockType: 'multipleItems',
   },
 ];
 
 const listingFields = [
   {
-    key: 'cat',
+    key: 'category',
     scope: 'public',
-    listingTypeConfig: {
-      limitToListingTypeIds: true,
-      listingTypeIds: ['sell-bicycles'],
-    },
+    includeForListingTypes: ['sell-bicycles'],
     schemaType: 'enum',
     enumOptions: [{ option: 'cat_1', label: 'Cat 1' }, { option: 'cat_2', label: 'Cat 2' }],
     filterConfig: {
       indexForSearch: true,
-      label: 'Cat',
+      label: 'Category',
       group: 'primary',
     },
     showConfig: {
-      label: 'Cat',
+      label: 'Category',
     },
     saveConfig: {
-      label: 'Cat',
+      label: 'Category',
     },
   },
   {
     key: 'amenities',
     scope: 'public',
-    listingTypeConfig: {
-      limitToListingTypeIds: true,
-      listingTypeIds: ['rent-bicycles-daily', 'rent-bicycles-nightly', 'rent-bicycles-hourly'],
-    },
+    includeForListingTypes: [
+      'rent-bicycles-daily',
+      'rent-bicycles-nightly',
+      'rent-bicycles-hourly',
+    ],
     schemaType: 'multi-enum',
     enumOptions: [{ option: 'dog_1', label: 'Dog 1' }, { option: 'dog_2', label: 'Dog 2' }],
     filterConfig: {
@@ -221,7 +218,6 @@ describe('OrderPanel', () => {
 
   const config = getConfig();
   const routeConfiguration = getRouteConfiguration(config.layout);
-  const stockTypeMaybe = stockType => (stockType ? { stockType } : {});
   const validListingTypes = config.listingTypes.listingTypes.map(({ id, ...rest }) => ({
     listingType: id,
     transactionType: {
@@ -229,7 +225,6 @@ describe('OrderPanel', () => {
       alias: rest?.transactionProcess?.alias,
       unitType: rest.unitType,
     },
-    ...stockTypeMaybe(rest?.stockType),
   }));
 
   it('Booking: daily', async () => {

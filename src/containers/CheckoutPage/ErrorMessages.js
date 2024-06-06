@@ -9,7 +9,6 @@ import {
   isTransactionChargeDisabledError,
   isTransactionZeroPaymentError,
   isTransitionQuantityInfoMissingError,
-  isTooManyRequestsError,
   transactionInitiateOrderStripeErrors,
 } from '../../util/errors';
 
@@ -52,26 +51,15 @@ export const getErrorMessages = (
   } else if (isChargeDisabledError) {
     initiateOrderErrorMessage = <FormattedMessage id="CheckoutPage.chargeDisabledMessage" />;
   } else if (stripeErrors && stripeErrors.length > 0) {
-    const noAccountMsg =
-      'Your destination account needs to have at least one of the following capabilities enabled';
-    if (stripeErrors.length === 1 && stripeErrors[0].indexOf(noAccountMsg) > -1) {
-      initiateOrderErrorMessage = (
-        <FormattedMessage id="CheckoutPage.destinationAccountNotCompleteStripeError" />
-      );
-    } else {
-      // NOTE: Error messages from Stripes are not part of translations.
-      // By default they are in English.
-      const stripeErrorsAsString = stripeErrors.join(', ');
-      initiateOrderErrorMessage = (
-        <FormattedMessage
-          id="CheckoutPage.initiateOrderStripeError"
-          values={{ stripeErrors: stripeErrorsAsString }}
-        />
-      );
-    }
-  } else if (isTooManyRequestsError(initiateOrderError)) {
-    // 429 Too Many Requests
-    initiateOrderErrorMessage = <FormattedMessage id="CheckoutPage.tooManyRequestsError" />;
+    // NOTE: Error messages from Stripes are not part of translations.
+    // By default they are in English.
+    const stripeErrorsAsString = stripeErrors.join(', ');
+    initiateOrderErrorMessage = (
+      <FormattedMessage
+        id="CheckoutPage.initiateOrderStripeError"
+        values={{ stripeErrors: stripeErrorsAsString }}
+      />
+    );
   } else if (initiateOrderError) {
     // Generic initiate order error
     initiateOrderErrorMessage = (
@@ -108,13 +96,11 @@ export const getErrorMessages = (
   const speculateErrorMessageParagraph = speculateErrorMessage ? (
     <p className={css.orderError}>{speculateErrorMessage}</p>
   ) : null;
-  const speculateTransactionErrorMessageParagraph =
-    speculateTransactionError &&
-    !isTransactionInitiateMissingStripeAccountError(speculateTransactionError) ? (
-      <p className={css.speculateError}>
-        <FormattedMessage id="CheckoutPage.speculateTransactionError" />
-      </p>
-    ) : null;
+  const speculateTransactionErrorMessageParagraph = speculateTransactionError ? (
+    <p className={css.speculateError}>
+      <FormattedMessage id="CheckoutPage.speculateTransactionError" />
+    </p>
+  ) : null;
 
   // Stripe might throw error when retrieving payment intent
   const retrievePaymentIntentErrorMessageParagraph = retrievePaymentIntentError ? (

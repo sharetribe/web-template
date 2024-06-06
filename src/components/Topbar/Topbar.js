@@ -178,6 +178,7 @@ class TopbarComponent extends Component {
     const isMobileSearchOpen = isMobileLayout && mobilesearch === 'open';
 
     const mobileMenu = (
+      <div> 
       <TopbarMobileMenu
         isAuthenticated={isAuthenticated}
         currentUserHasListings={currentUserHasListings}
@@ -185,8 +186,10 @@ class TopbarComponent extends Component {
         onLogout={this.handleLogout}
         notificationCount={notificationCount}
         currentPage={currentPage}
-      />
-    );
+        />
+        </div>
+
+        );
 
     const topbarSearcInitialValues = () => {
       if (isMainSearchTypeKeywords(config)) {
@@ -229,6 +232,13 @@ class TopbarComponent extends Component {
             {notificationDot}
           </Button>
           <LinkedLogo layout={'mobile'} alt={intl.formatMessage({ id: 'Topbar.logoIcon' })} />
+                        <a style={{width: '20%', height: '100%'}}>
+        <a style={{ height: '100%', display: 'flex', alignItems: 'center'}} href="https://wa.me/5492944232664" target="_blank" >
+        <p style={{color: "green",textAlign: "center", display: "flex",
+        color: "#7cc9bc",alignItems: "center"}}> 
+        <img src="/static/icons/whatsapp.png" alt="WhatsApp" style={{marginLeft: "10%", width: "36.5px", height: "35.5px"}}/></p>
+        </a>
+      </a>
           <Button
             rootClassName={css.searchMenu}
             onClick={this.handleMobileSearchOpen}

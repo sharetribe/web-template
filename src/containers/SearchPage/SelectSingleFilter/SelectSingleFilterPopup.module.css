@@ -1,0 +1,180 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  display: inline-block;
+
+  &:last-of-type {
+    padding-right: 0;
+  }
+}
+
+.menuLabel,
+.menuLabelSelected {
+  display: inline-block;
+  width: auto;
+  height: 35px;
+  min-height: 35px;
+
+  padding: 0 18px;
+  margin: 0 9px 0 0;
+
+  transition: all var(--transitionStyleButton);
+  cursor: pointer;
+
+  /* Font */
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: 0.2px;
+
+  /* Button text styles */
+  /* Default button text is centered without decorations */
+  text-align: center;
+  text-decoration: none;
+
+  &:focus,
+  &:hover {
+    outline: none;
+    box-shadow: var(--boxShadowFilterButton);
+    text-decoration: none;
+  }
+
+  &:disabled {
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  @media (--viewportMedium) {
+    height: auto;
+    min-height: 0;
+    padding: var(--marketplaceButtonSmallDesktopPadding);
+    margin: 0;
+
+    font-weight: var(--fontWeightMedium);
+    font-size: 13px;
+    line-height: 20px;
+  }
+}
+
+.menuLabel {
+  /* Button borders */
+  border: 1px solid var(--colorGrey100);
+  border-radius: var(--borderRadiusMedium);
+
+  background-color: var(--colorWhite);
+
+  &:hover,
+  &:focus {
+    border-color: var(--colorGrey300);
+  }
+  &:disabled {
+    border-color: var(--colorGrey100);
+  }
+
+  @media (--viewportMedium) {
+    &:hover,
+    &:focus {
+      border-color: transparent;
+    }
+  }
+}
+
+.menuLabelSelected {
+  /* Button borders */
+  border-radius: var(--borderRadiusMedium);
+  border: 1px solid var(--marketplaceColor);
+
+  /* Button colors: secondary */
+  background-color: var(--marketplaceColor);
+  color: var(--colorWhite);
+
+  &:hover,
+  &:focus {
+    border: 1px solid var(--marketplaceColorDark);
+  }
+  &:disabled {
+    background-color: var(--colorGrey100);
+    color: var(--colorWhite);
+  }
+}
+
+.menuContent {
+  margin-top: 7px;
+  padding-top: 13px;
+  min-width: 300px;
+  border-radius: var(--borderRadiusMedium);
+}
+
+/* left animated "border" like hover element */
+.menuItemBorder {
+  position: absolute;
+  top: 2px;
+  left: 0px;
+  height: calc(100% - 4px);
+  width: 0;
+  background-color: var(--marketplaceColor);
+  transition: width var(--transitionStyleButton);
+}
+
+/* left static border for selected element */
+.menuItemBorderSelected {
+  position: absolute;
+  top: 2px;
+  left: 0px;
+  height: calc(100% - 7px);
+  width: 6px;
+  background-color: var(--colorBlack);
+}
+
+.menuItem {
+  composes: marketplaceListingAttributeFontStyles from global;
+  color: var(--colorGrey700);
+
+  /* Layout */
+  position: relative;
+  min-width: 300px;
+  margin: 0;
+  padding: 4px 30px;
+
+  /* Override button styles */
+  outline: none;
+  text-align: left;
+  border: none;
+
+  cursor: pointer;
+
+  &:focus,
+  &:hover {
+    color: var(--colorBlack);
+  }
+
+  &:hover .menuItemBorder {
+    width: 6px;
+  }
+}
+
+.clearMenuItem {
+  composes: textSmall from global;
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorGrey300);
+
+  /* Layout */
+  position: relative;
+  min-width: 300px;
+  margin: 0;
+  padding: 32px 30px 18px 30px;
+
+  /* Override button styles */
+  outline: none;
+  text-align: left;
+  border: none;
+
+  cursor: pointer;
+  transition: width var(--transitionStyleButton);
+
+  &:focus,
+  &:hover {
+    color: var(--colorGrey700);
+    transition: width var(--transitionStyleButton);
+  }
+}

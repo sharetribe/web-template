@@ -52,17 +52,14 @@ export const getDefaultConfiguration = () => {
     listing: {
       listingFields: [
         {
-          key: 'bikeType',
+          key: 'category',
           scope: 'public',
-          listingTypeConfig: {
-            limitToListingTypeIds: true,
-            listingTypeIds: [
-              'product-selling',
-              'daily-booking',
-              'nightly-booking',
-              'hourly-booking',
-            ],
-          },
+          includeForListingTypes: [
+            'product-selling',
+            'daily-booking',
+            'nightly-booking',
+            'hourly-booking',
+          ],
           schemaType: 'enum',
           enumOptions: [
             { option: 'city-bikes', label: 'City bikes' },
@@ -73,33 +70,30 @@ export const getDefaultConfiguration = () => {
           filterConfig: {
             indexForSearch: true,
             filterType: 'SelectSingleFilter',
-            label: 'Bike type',
+            label: 'Category',
             group: 'primary',
           },
           showConfig: {
-            label: 'Bike type',
+            label: 'Category',
             isDetail: true,
           },
           saveConfig: {
-            label: 'Select a bike type',
+            label: 'Select category',
             placeholderMessage: 'Choose…',
             isRequired: true,
-            requiredMessage: 'You need to select the type of the bike.',
+            requiredMessage: 'You need to select a category.',
           },
         },
 
         {
           key: 'tire-size',
           scope: 'public',
-          listingTypeConfig: {
-            limitToListingTypeIds: true,
-            listingTypeIds: [
-              'product-selling',
-              'daily-booking',
-              'nightly-booking',
-              'hourly-booking',
-            ],
-          },
+          includeForListingTypes: [
+            'product-selling',
+            'daily-booking',
+            'nightly-booking',
+            'hourly-booking',
+          ],
           schemaType: 'enum',
           enumOptions: [
             { option: 29, label: '29' },
@@ -129,15 +123,12 @@ export const getDefaultConfiguration = () => {
         {
           key: 'brand',
           scope: 'public',
-          listingTypeConfig: {
-            limitToListingTypeIds: true,
-            listingTypeIds: [
-              'product-selling',
-              'daily-booking',
-              'nightly-booking',
-              'hourly-booking',
-            ],
-          },
+          includeForListingTypes: [
+            'product-selling',
+            'daily-booking',
+            'nightly-booking',
+            'hourly-booking',
+          ],
           schemaType: 'enum',
           enumOptions: [
             { option: 'cube', label: 'Cube' },
@@ -372,8 +363,8 @@ export const getHostedConfiguration = () => {
             group: 'primary',
           },
           scope: 'public',
-          label: 'Bike type',
-          key: 'bikeType',
+          label: 'Category',
+          key: 'category',
           schemaType: 'enum',
           saveConfig: {
             required: true,
@@ -499,161 +490,6 @@ export const getHostedConfiguration = () => {
             required: true,
           },
           schemaType: 'multi-enum',
-        },
-      ],
-    },
-    userTypes: {
-      userTypes: [
-        {
-          userType: 'a',
-          label: 'Seller',
-          defaultListingFields: {
-            displayName: true,
-            phoneNumber: true,
-          },
-        },
-        {
-          userType: 'b',
-          label: 'Buyer',
-          defaultListingFields: {
-            displayName: false,
-            phoneNumber: true,
-          },
-        },
-        {
-          userType: 'c',
-          label: 'Guest',
-          defaultListingFields: {
-            displayName: false,
-            phoneNumber: true,
-          },
-        },
-        {
-          userType: 'd',
-          label: 'Host',
-          defaultListingFields: {
-            displayName: false,
-            phoneNumber: true,
-          },
-        },
-      ],
-    },
-    userFields: {
-      userFields: [
-        {
-          key: 'cuisine',
-          scope: 'public',
-          schemaType: 'enum',
-          enumOptions: [
-            { option: 'italian', label: 'Italian' },
-            { option: 'chinese', label: 'Chinese' },
-            { option: 'thai', label: 'Thai' },
-          ],
-          showConfig: {
-            label: 'Favorite cuisine',
-          },
-          saveConfig: {
-            label: 'Favorite cuisine',
-            displayInSignUp: true,
-            isRequired: true,
-          },
-          userTypeConfig: {
-            limitToUserTypeIds: true,
-            userTypeIds: ['a', 'b', 'c'],
-          },
-        },
-        {
-          key: 'canCook',
-          scope: 'public',
-          schemaType: 'boolean',
-          showConfig: {
-            label: 'Can you cook?',
-          },
-          saveConfig: {
-            label: 'Can you cook?',
-            displayInSignUp: true,
-            isRequired: true,
-          },
-          userTypeConfig: {
-            limitToUserTypeIds: true,
-            userTypeIds: ['a', 'b', 'c'],
-          },
-        },
-        {
-          key: 'numberOfCookbooks',
-          scope: 'public',
-          schemaType: 'long',
-          showConfig: {
-            label: 'How many cookbooks do you have',
-          },
-          saveConfig: {
-            label: 'How many cookbooks do you have',
-            displayInSignUp: true,
-            isRequired: true,
-          },
-          userTypeConfig: {
-            limitToUserTypeIds: true,
-            userTypeIds: ['a', 'b', 'c'],
-          },
-        },
-        {
-          key: 'kitchenDescription',
-          scope: 'public',
-          schemaType: 'text',
-          showConfig: {
-            label: 'Description of your kitchen',
-          },
-          saveConfig: {
-            label: 'Description of your kitchen',
-            displayInSignUp: true,
-            isRequired: true,
-          },
-          userTypeConfig: {
-            limitToUserTypeIds: true,
-            userTypeIds: ['a', 'b', 'c'],
-          },
-        },
-        {
-          key: 'dietaryPreferences',
-          scope: 'public',
-          schemaType: 'multi-enum',
-          enumOptions: [
-            { option: 'vegan', label: 'Vegan' },
-            { option: 'vegetarian', label: 'Vegetarian' },
-            { option: 'gluten-free', label: 'Gluten free' },
-            { option: 'dairy-free', label: 'Dairy free' },
-            { option: 'nut-free', label: 'Nut free' },
-            { option: 'egg-free', label: 'Egg free' },
-            { option: 'low-carb', label: 'Low carb' },
-            { option: 'low-fat', label: 'Low fat' },
-          ],
-          showConfig: {
-            label: 'Dietary preferences',
-            displayInProfile: true,
-          },
-          saveConfig: {
-            label: 'Dietary preferences',
-            displayInSignUp: true,
-            isRequired: true,
-          },
-          userTypeConfig: {
-            limitToUserTypeIds: true,
-            userTypeIds: ['a', 'b', 'c'],
-          },
-        },
-        {
-          key: 'notShownInProfileAttribute',
-          scope: 'public',
-          schemaType: 'text',
-          showConfig: {
-            label: 'Not shown in profile',
-            displayInProfile: false,
-          },
-          saveConfig: {
-            label: "Don't show in profile",
-            displayInSignUp: false,
-            isRequired: false,
-          },
         },
       ],
     },

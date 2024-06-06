@@ -75,15 +75,6 @@
   color: var(--colorWhite);
   float: right;
 }
-.ownMessageContentLink {
-  color: var(--colorWhite);
-  text-decoration: underline;
-
-  &:hover {
-    text-decoration: none;
-    background-color: var(--marketplaceColorDark);
-  }
-}
 
 .messageDate,
 .ownMessageDate {

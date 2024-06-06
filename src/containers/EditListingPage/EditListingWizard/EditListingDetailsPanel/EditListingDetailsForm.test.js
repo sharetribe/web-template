@@ -1,7 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 
-import { pickCategoryFields } from '../../../../util/fieldHelpers';
 import { fakeIntl } from '../../../../util/testData';
 import { renderWithProviders as render, testingLibrary } from '../../../../util/testHelpers';
 
@@ -25,12 +24,9 @@ describe('EditListingDetailsForm', () => {
 
     const listingFieldsConfig = [
       {
-        key: 'clothing',
+        key: 'category',
         scope: 'public',
-        listingTypeConfig: {
-          limitToListingTypeIds: true,
-          listingTypeIds: ['sell-bicycles'],
-        },
+        includeForListingTypes: ['sell-bicycles'],
         schemaType: 'enum',
         enumOptions: [
           { option: 'men', label: 'Men' },
@@ -39,23 +35,24 @@ describe('EditListingDetailsForm', () => {
         ],
         filterConfig: {
           indexForSearch: true,
-          label: 'Clothing',
+          label: 'Amenities',
         },
         showConfig: {
-          label: 'Clothing',
+          label: 'Category',
           isDetail: true,
         },
         saveConfig: {
-          label: 'Clothing',
+          label: 'Category',
         },
       },
       {
         key: 'amenities',
         scope: 'public',
-        listingTypeConfig: {
-          limitToListingTypeIds: true,
-          listingTypeIds: ['rent-bicycles-daily', 'rent-bicycles-nightly', 'rent-bicycles-hourly'],
-        },
+        includeForListingTypes: [
+          'rent-bicycles-daily',
+          'rent-bicycles-nightly',
+          'rent-bicycles-hourly',
+        ],
         schemaType: 'multi-enum',
         enumOptions: [
           { option: 'towels', label: 'Towels' },
@@ -68,7 +65,7 @@ describe('EditListingDetailsForm', () => {
           label: 'Amenities',
         },
         showConfig: {
-          label: 'Amenities',
+          label: 'Category',
         },
         saveConfig: {
           label: 'Amenities',
@@ -88,9 +85,6 @@ describe('EditListingDetailsForm', () => {
         disabled={false}
         ready={false}
         listingFieldsConfig={listingFieldsConfig}
-        categoryPrefix="categoryLevel"
-        selectableCategories={[]}
-        pickSelectedCategories={values => pickCategoryFields(values, 'categoryLevel', 1, [])}
         selectableListingTypes={selectableListingTypes}
         hasExistingListingType={true}
         initialValues={selectableListingTypes[0]}
@@ -112,7 +106,7 @@ describe('EditListingDetailsForm', () => {
     userEvent.type(screen.getByRole('textbox', { name: description }), 'Lorem ipsum');
 
     // Fill custom listing field
-    userEvent.selectOptions(screen.getByLabelText('Clothing'), 'kids');
+    userEvent.selectOptions(screen.getByLabelText('Category'), 'kids');
 
     // Test that save button is enabled
     expect(screen.getByRole('button', { name: saveActionMsg })).toBeEnabled();

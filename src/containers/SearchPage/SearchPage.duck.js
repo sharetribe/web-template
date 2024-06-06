@@ -9,9 +9,8 @@ import {
   getStartOf,
 } from '../../util/dates';
 import { createImageVariantConfig } from '../../util/sdkLoader';
-import { constructQueryParamName, isOriginInUse, isStockInUse } from '../../util/search';
+import { isOriginInUse, isStockInUse } from '../../util/search';
 import { parse } from '../../util/urlHelpers';
-
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 
 // Pagination page size might need to be dynamic on responsive page layouts
@@ -118,36 +117,6 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
       : {};
   };
 
-  const omitInvalidCategoryParams = params => {
-    const categoryConfig = config.search.defaultFilters?.find(f => f.schemaType === 'category');
-    const categories = config.categoryConfiguration.categories;
-    const { key: prefix, scope } = categoryConfig || {};
-    const categoryParamPrefix = constructQueryParamName(prefix, scope);
-
-    const validURLParamForCategoryData = (prefix, categories, level, params) => {
-      const levelKey = `${categoryParamPrefix}${level}`;
-      const levelValue = params?.[levelKey];
-      const foundCategory = categories.find(cat => cat.id === levelValue);
-      const subcategories = foundCategory?.subcategories || [];
-      return foundCategory && subcategories.length > 0
-        ? {
-            [levelKey]: levelValue,
-            ...validURLParamForCategoryData(prefix, subcategories, level + 1, params),
-          }
-        : foundCategory
-        ? { [levelKey]: levelValue }
-        : {};
-    };
-
-    const categoryKeys = validURLParamForCategoryData(prefix, categories, 1, params);
-    const nonCategoryKeys = Object.entries(params).reduce(
-      (picked, [k, v]) => (k.startsWith(categoryParamPrefix) ? picked : { ...picked, [k]: v }),
-      {}
-    );
-
-    return { ...nonCategoryKeys, ...categoryKeys };
-  };
-
   const priceSearchParams = priceParam => {
     const inSubunits = value => convertUnitToSubUnit(value, unitDivisor(config.currency));
     const values = priceParam ? priceParam.split(',') : [];
@@ -228,16 +197,14 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     return hasDatesFilterInUse ? {} : { minStock: 1, stockMode: 'match-undefined' };
   };
 
-  const { perPage, price, dates, sort, mapSearch, ...restOfParams } = searchParams;
+  const { perPage, price, dates, sort, ...rest } = searchParams;
   const priceMaybe = priceSearchParams(price);
   const datesMaybe = datesSearchParams(dates);
   const stockMaybe = stockFilters(datesMaybe);
   const sortMaybe = sort === config.search.sortConfig.relevanceKey ? {} : { sort };
 
   const params = {
-    // The rest of the params except invalid nested category-related params
-    // Note: invalid independent search params are still passed through
-    ...omitInvalidCategoryParams(restOfParams),
+    ...rest,
     ...priceMaybe,
     ...datesMaybe,
     ...stockMaybe,
@@ -267,7 +234,7 @@ export const setActiveListing = listingId => ({
   payload: listingId,
 });
 
-export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
+export const loadData = (params, search, config) => {
   const queryParams = parse(search, {
     latlng: ['origin'],
     latlngBounds: ['bounds'],
@@ -283,7 +250,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
 
-  const searchListingsCall = searchListings(
+  return searchListings(
     {
       ...rest,
       ...originMaybe,
@@ -315,5 +282,4 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     },
     config
   );
-  return dispatch(searchListingsCall);
 };

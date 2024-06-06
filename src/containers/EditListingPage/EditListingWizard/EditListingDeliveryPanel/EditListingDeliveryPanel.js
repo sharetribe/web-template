@@ -4,8 +4,7 @@ import classNames from 'classnames';
 
 // Import configs and util modules
 import { FormattedMessage } from '../../../../util/reactIntl';
-import { LISTING_STATE_DRAFT, STOCK_MULTIPLE_ITEMS } from '../../../../util/types';
-import { displayDeliveryPickup, displayDeliveryShipping } from '../../../../util/configHelpers';
+import { LISTING_STATE_DRAFT } from '../../../../util/types';
 import { types as sdkTypes } from '../../../../util/sdkLoader';
 
 // Import shared components
@@ -18,14 +17,8 @@ import css from './EditListingDeliveryPanel.module.css';
 const { Money } = sdkTypes;
 
 const getInitialValues = props => {
-  const { listing, listingTypes, marketplaceCurrency } = props;
+  const { listing, marketplaceCurrency } = props;
   const { geolocation, publicData, price } = listing?.attributes || {};
-
-  const listingType = listing?.attributes?.publicData?.listingType;
-  const listingTypeConfig = listingTypes.find(conf => conf.listingType === listingType);
-  const displayShipping = displayDeliveryShipping(listingTypeConfig);
-  const displayPickup = displayDeliveryPickup(listingTypeConfig);
-  const displayMultipleDelivery = displayShipping && displayPickup;
 
   // Only render current search if full place object is available in the URL params
   // TODO bounds are missing - those need to be queried directly from Google Places
@@ -40,10 +33,10 @@ const getInitialValues = props => {
   } = publicData;
   const deliveryOptions = [];
 
-  if (shippingEnabled || (!displayMultipleDelivery && displayShipping)) {
+  if (shippingEnabled) {
     deliveryOptions.push('shipping');
   }
-  if (pickupEnabled || (!displayMultipleDelivery && displayPickup)) {
+  if (pickupEnabled) {
     deliveryOptions.push('pickup');
   }
 
@@ -97,7 +90,7 @@ const EditListingDeliveryPanel = props => {
   const priceCurrencyValid = listing?.attributes?.price?.currency === marketplaceCurrency;
   const listingType = listing?.attributes?.publicData?.listingType;
   const listingTypeConfig = listingTypes.find(conf => conf.listingType === listingType);
-  const hasStockInUse = listingTypeConfig.stockType === STOCK_MULTIPLE_ITEMS;
+  const hasStockInUse = listingTypeConfig.stockType === 'multipleItems';
 
   return (
     <div className={classes}>
@@ -171,7 +164,6 @@ const EditListingDeliveryPanel = props => {
             });
             onSubmit(updateValues);
           }}
-          listingTypeConfig={listingTypeConfig}
           marketplaceCurrency={marketplaceCurrency}
           hasStockInUse={hasStockInUse}
           saveActionMsg={submitButtonText}

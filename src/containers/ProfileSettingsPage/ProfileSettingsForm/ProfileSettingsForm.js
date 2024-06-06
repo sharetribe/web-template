@@ -4,14 +4,12 @@ import { compose } from 'redux';
 import { Field, Form as FinalForm } from 'react-final-form';
 import isEqual from 'lodash/isEqual';
 import classNames from 'classnames';
-import arrayMutators from 'final-form-arrays';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { ensureCurrentUser } from '../../../util/data';
 import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../util/errors';
-import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
 
 import {
   Form,
@@ -21,59 +19,12 @@ import {
   IconSpinner,
   FieldTextInput,
   H4,
-  CustomExtendedDataField,
 } from '../../../components';
 
 import css from './ProfileSettingsForm.module.css';
 
 const ACCEPT_IMAGES = 'image/*';
 const UPLOAD_CHANGE_DELAY = 2000; // Show spinner so that browser has time to load img srcset
-
-const DisplayNameMaybe = props => {
-  const { userTypeConfig, intl } = props;
-
-  const isDisabled = userTypeConfig?.defaultUserFields?.displayName === false;
-  if (isDisabled) {
-    return null;
-  }
-
-  const { required } = userTypeConfig?.displayNameSettings || {};
-  const isRequired = required === true;
-
-  const validateMaybe = isRequired
-    ? {
-        validate: validators.required(
-          intl.formatMessage({
-            id: 'ProfileSettingsForm.displayNameRequired',
-          })
-        ),
-      }
-    : {};
-
-  return (
-    <div className={css.sectionContainer}>
-      <H4 as="h2" className={css.sectionTitle}>
-        <FormattedMessage id="ProfileSettingsForm.displayNameHeading" />
-      </H4>
-      <FieldTextInput
-        className={css.row}
-        type="text"
-        id="displayName"
-        name="displayName"
-        label={intl.formatMessage({
-          id: 'ProfileSettingsForm.displayNameLabel',
-        })}
-        placeholder={intl.formatMessage({
-          id: 'ProfileSettingsForm.displayNamePlaceholder',
-        })}
-        {...validateMaybe}
-      />
-      <p className={css.extraInfo}>
-        <FormattedMessage id="ProfileSettingsForm.displayNameInfo" />
-      </p>
-    </div>
-  );
-};
 
 class ProfileSettingsFormComponent extends Component {
   constructor(props) {
@@ -103,7 +54,6 @@ class ProfileSettingsFormComponent extends Component {
     return (
       <FinalForm
         {...this.props}
-        mutators={{ ...arrayMutators }}
         render={fieldRenderProps => {
           const {
             className,
@@ -120,11 +70,8 @@ class ProfileSettingsFormComponent extends Component {
             uploadImageError,
             uploadInProgress,
             form,
-            formId,
             marketplaceName,
             values,
-            userFields,
-            userTypeConfig,
           } = fieldRenderProps;
 
           const user = ensureCurrentUser(currentUser);
@@ -240,13 +187,6 @@ class ProfileSettingsFormComponent extends Component {
           const submitDisabled =
             invalid || pristine || pristineSinceLastSubmit || uploadInProgress || submitInProgress;
 
-          const userFieldProps = getPropsForCustomUserFieldInputs(
-            userFields,
-            intl,
-            userTypeConfig?.userType,
-            false
-          );
-
           return (
             <Form
               className={classes}
@@ -349,10 +289,7 @@ class ProfileSettingsFormComponent extends Component {
                   />
                 </div>
               </div>
-
-              <DisplayNameMaybe userTypeConfig={userTypeConfig} intl={intl} />
-
-              <div className={classNames(css.sectionContainer)}>
+              <div className={classNames(css.sectionContainer, css.lastSection)}>
                 <H4 as="h2" className={css.sectionTitle}>
                   <FormattedMessage id="ProfileSettingsForm.bioHeading" />
                 </H4>
@@ -363,14 +300,9 @@ class ProfileSettingsFormComponent extends Component {
                   label={bioLabel}
                   placeholder={bioPlaceholder}
                 />
-                <p className={css.extraInfo}>
+                <p className={css.bioInfo}>
                   <FormattedMessage id="ProfileSettingsForm.bioInfo" values={{ marketplaceName }} />
                 </p>
-              </div>
-              <div className={classNames(css.sectionContainer, css.lastSection)}>
-                {userFieldProps.map(fieldProps => (
-                  <CustomExtendedDataField {...fieldProps} formId={formId} />
-                ))}
               </div>
               {submitError}
               <Button
@@ -393,7 +325,6 @@ class ProfileSettingsFormComponent extends Component {
 ProfileSettingsFormComponent.defaultProps = {
   rootClassName: null,
   className: null,
-  formId: null,
   uploadImageError: null,
   updateProfileError: null,
   updateProfileReady: false,
@@ -402,7 +333,6 @@ ProfileSettingsFormComponent.defaultProps = {
 ProfileSettingsFormComponent.propTypes = {
   rootClassName: string,
   className: string,
-  formId: string,
 
   uploadImageError: propTypes.error,
   uploadInProgress: bool.isRequired,

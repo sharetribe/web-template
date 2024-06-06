@@ -197,6 +197,7 @@ export class BookingDateRangeFilterComponent extends Component {
         isSelected={isSelected}
         id={`${id}.plain`}
         liveEdit
+        contentPlacementOffset={contentPlacementOffset}
         onSubmit={handleSubmit}
         {...onClearPlainMaybe}
         initialValues={initialDates}

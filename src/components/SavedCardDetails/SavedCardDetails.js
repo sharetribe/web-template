@@ -3,6 +3,7 @@ import { bool, func, number, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import { injectIntl, intlShape } from '../../util/reactIntl';
 import {
+  IconCard,
   IconClose,
   IconCheckmark,
   Button,
@@ -13,8 +14,6 @@ import {
   MenuContent,
   Modal,
 } from '../../components';
-
-import IconCard from './IconCard/IconCard';
 import css from './SavedCardDetails.module.css';
 
 const DEFAULT_CARD = 'defaultCard';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { arrayOf, bool, func, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { Field, Form as FinalForm } from 'react-final-form';
@@ -8,19 +8,12 @@ import classNames from 'classnames';
 // Import util modules
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
 import { EXTENDED_DATA_SCHEMA_TYPES, propTypes } from '../../../../util/types';
-import { isFieldForCategory, isFieldForListingType } from '../../../../util/fieldHelpers';
 import { maxLength, required, composeValidators } from '../../../../util/validators';
 
 // Import shared components
-import {
-  Form,
-  Button,
-  FieldSelect,
-  FieldTextInput,
-  Heading,
-  CustomExtendedDataField,
-} from '../../../../components';
+import { Form, Button, FieldSelect, FieldTextInput, Heading } from '../../../../components';
 // Import modules from this directory
+import CustomExtendedDataField from '../CustomExtendedDataField';
 import css from './EditListingDetailsForm.module.css';
 
 const TITLE_MAX_LENGTH = 60;
@@ -59,15 +52,7 @@ const FieldHidden = props => {
 // - transactionProcessAlias  Initiate correct transaction against Marketplace API
 // - unitType                 Main use case: pricing unit
 const FieldSelectListingType = props => {
-  const {
-    name,
-    listingTypes,
-    hasExistingListingType,
-    onListingTypeChange,
-    formApi,
-    formId,
-    intl,
-  } = props;
+  const { name, listingTypes, hasExistingListingType, onListingTypeChange, formApi, intl } = props;
   const hasMultipleListingTypes = listingTypes?.length > 1;
 
   const handleOnChange = value => {
@@ -87,7 +72,7 @@ const FieldSelectListingType = props => {
   return hasMultipleListingTypes && !hasExistingListingType ? (
     <>
       <FieldSelect
-        id={formId ? `${formId}.${name}` : name}
+        id={name}
         name={name}
         className={css.listingTypeSelect}
         label={intl.formatMessage({ id: 'EditListingDetailsForm.listingTypeLabel' })}
@@ -130,130 +115,19 @@ const FieldSelectListingType = props => {
   );
 };
 
-// Finds the correct subcategory within the given categories array based on the provided categoryIdToFind.
-const findCategoryConfig = (categories, categoryIdToFind) => {
-  return categories?.find(category => category.id === categoryIdToFind);
-};
-
-/**
- * Recursively render subcategory field inputs if there are subcategories available.
- * This function calls itself with updated props to render nested category fields.
- * The select field is used for choosing a category or subcategory.
- */
-const CategoryField = props => {
-  const { currentCategoryOptions, level, values, prefix, handleCategoryChange, intl } = props;
-
-  const currentCategoryKey = `${prefix}${level}`;
-
-  const categoryConfig = findCategoryConfig(currentCategoryOptions, values[`${prefix}${level}`]);
-
-  return (
-    <>
-      {currentCategoryOptions ? (
-        <FieldSelect
-          key={currentCategoryKey}
-          id={currentCategoryKey}
-          name={currentCategoryKey}
-          className={css.listingTypeSelect}
-          onChange={event => handleCategoryChange(event, level, currentCategoryOptions)}
-          label={intl.formatMessage(
-            { id: 'EditListingDetailsForm.categoryLabel' },
-            { categoryLevel: currentCategoryKey }
-          )}
-          validate={required(
-            intl.formatMessage(
-              { id: 'EditListingDetailsForm.categoryRequired' },
-              { categoryLevel: currentCategoryKey }
-            )
-          )}
-        >
-          <option disabled value="">
-            {intl.formatMessage(
-              { id: 'EditListingDetailsForm.categoryPlaceholder' },
-              { categoryLevel: currentCategoryKey }
-            )}
-          </option>
-
-          {currentCategoryOptions.map(option => (
-            <option key={option.id} value={option.id}>
-              {option.name}
-            </option>
-          ))}
-        </FieldSelect>
-      ) : null}
-
-      {categoryConfig?.subcategories?.length > 0 ? (
-        <CategoryField
-          currentCategoryOptions={categoryConfig.subcategories}
-          level={level + 1}
-          values={values}
-          prefix={prefix}
-          handleCategoryChange={handleCategoryChange}
-          intl={intl}
-        />
-      ) : null}
-    </>
-  );
-};
-
-const FieldSelectCategory = props => {
-  useEffect(() => {
-    checkIfInitialValuesExist();
-  }, []);
-
-  const { prefix, listingCategories, formApi, intl, setAllCategoriesChosen, values } = props;
-
-  // Counts the number of selected categories in the form values based on the given prefix.
-  const countSelectedCategories = () => {
-    return Object.keys(values).filter(key => key.startsWith(prefix)).length;
-  };
-
-  // Checks if initial values exist for categories and sets the state accordingly.
-  // If initial values exist, it sets `allCategoriesChosen` state to true; otherwise, it sets it to false
-  const checkIfInitialValuesExist = () => {
-    const count = countSelectedCategories(values, prefix);
-    setAllCategoriesChosen(count > 0);
-  };
-
-  // If a parent category changes, clear all child category values
-  const handleCategoryChange = (category, level, currentCategoryOptions) => {
-    const selectedCatLenght = countSelectedCategories();
-    if (level < selectedCatLenght) {
-      for (let i = selectedCatLenght; i > level; i--) {
-        formApi.change(`${prefix}${i}`, null);
-      }
-    }
-    const categoryConfig = findCategoryConfig(currentCategoryOptions, category).subcategories;
-    setAllCategoriesChosen(!categoryConfig || categoryConfig.length === 0);
-  };
-
-  return (
-    <CategoryField
-      currentCategoryOptions={listingCategories}
-      level={1}
-      values={values}
-      prefix={prefix}
-      handleCategoryChange={handleCategoryChange}
-      intl={intl}
-    />
-  );
-};
-
 // Add collect data for listing fields (both publicData and privateData) based on configuration
 const AddListingFields = props => {
-  const { listingType, listingFieldsConfig, selectedCategories, formId, intl } = props;
-  const targetCategoryIds = Object.values(selectedCategories);
-
+  const { listingType, listingFieldsConfig, intl } = props;
   const fields = listingFieldsConfig.reduce((pickedFields, fieldConfig) => {
-    const { key, schemaType, scope } = fieldConfig || {};
+    const { key, includeForListingTypes, schemaType, scope } = fieldConfig || {};
     const namespacedKey = scope === 'public' ? `pub_${key}` : `priv_${key}`;
 
     const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+    const isTargetListingType =
+      includeForListingTypes == null || includeForListingTypes.includes(listingType);
     const isProviderScope = ['public', 'private'].includes(scope);
-    const isTargetListingType = isFieldForListingType(listingType, fieldConfig);
-    const isTargetCategory = isFieldForCategory(targetCategoryIds, fieldConfig);
 
-    return isKnownSchemaType && isProviderScope && isTargetListingType && isTargetCategory
+    return isKnownSchemaType && isTargetListingType && isProviderScope
       ? [
           ...pickedFields,
           <CustomExtendedDataField
@@ -263,7 +137,6 @@ const AddListingFields = props => {
             defaultRequiredMessage={intl.formatMessage({
               id: 'EditListingDetailsForm.defaultRequiredMessage',
             })}
-            formId={formId}
           />,
         ]
       : pickedFields;
@@ -292,10 +165,7 @@ const EditListingDetailsFormComponent = props => (
         invalid,
         pristine,
         selectableListingTypes,
-        selectableCategories,
         hasExistingListingType,
-        pickSelectedCategories,
-        categoryPrefix,
         saveActionMsg,
         updated,
         updateInProgress,
@@ -304,8 +174,7 @@ const EditListingDetailsFormComponent = props => (
         values,
       } = formRenderProps;
 
-      const { listingType, transactionProcessAlias, unitType } = values;
-      const [allCategoriesChosen, setAllCategoriesChosen] = useState(false);
+      const { listingType } = values;
 
       const titleRequiredMessage = intl.formatMessage({
         id: 'EditListingDetailsForm.titleRequired',
@@ -318,19 +187,14 @@ const EditListingDetailsFormComponent = props => (
       );
       const maxLength60Message = maxLength(maxLengthMessage, TITLE_MAX_LENGTH);
 
-      const hasCategories = selectableCategories && selectableCategories.length > 0;
-      const showCategories = listingType && hasCategories;
-
-      const showTitle = hasCategories ? allCategoriesChosen : listingType;
-      const showDescription = hasCategories ? allCategoriesChosen : listingType;
-      const showListingFields = hasCategories ? allCategoriesChosen : listingType;
+      // Show title and description only after listing type is selected
+      const showTitle = listingType;
+      const showDescription = listingType;
 
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
-      const hasMandatoryListingTypeData = listingType && transactionProcessAlias && unitType;
-      const submitDisabled =
-        invalid || disabled || submitInProgress || !hasMandatoryListingTypeData;
+      const submitDisabled = invalid || disabled || submitInProgress;
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
@@ -342,21 +206,8 @@ const EditListingDetailsFormComponent = props => (
             hasExistingListingType={hasExistingListingType}
             onListingTypeChange={onListingTypeChange}
             formApi={formApi}
-            formId={formId}
             intl={intl}
           />
-
-          {showCategories ? (
-            <FieldSelectCategory
-              values={values}
-              prefix={categoryPrefix}
-              listingCategories={selectableCategories}
-              formApi={formApi}
-              intl={intl}
-              allCategoriesChosen={allCategoriesChosen}
-              setAllCategoriesChosen={setAllCategoriesChosen}
-            />
-          ) : null}
 
           {showTitle ? (
             <FieldTextInput
@@ -390,15 +241,11 @@ const EditListingDetailsFormComponent = props => (
             />
           ) : null}
 
-          {showListingFields ? (
-            <AddListingFields
-              listingType={listingType}
-              listingFieldsConfig={listingFieldsConfig}
-              selectedCategories={pickSelectedCategories(values)}
-              formId={formId}
-              intl={intl}
-            />
-          ) : null}
+          <AddListingFields
+            listingType={listingType}
+            listingFieldsConfig={listingFieldsConfig}
+            intl={intl}
+          />
 
           <Button
             className={css.submitButton}
@@ -439,7 +286,6 @@ EditListingDetailsFormComponent.propTypes = {
     showListingsError: propTypes.error,
     updateListingError: propTypes.error,
   }),
-  pickSelectedCategories: func.isRequired,
   selectableListingTypes: arrayOf(
     shape({
       listingType: string.isRequired,
@@ -448,7 +294,7 @@ EditListingDetailsFormComponent.propTypes = {
     })
   ).isRequired,
   hasExistingListingType: bool,
-  listingFieldsConfig: propTypes.listingFields,
+  listingFieldsConfig: propTypes.listingFieldsConfig,
 };
 
 export default compose(injectIntl)(EditListingDetailsFormComponent);

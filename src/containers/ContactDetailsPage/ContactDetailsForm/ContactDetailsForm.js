@@ -27,41 +27,6 @@ import css from './ContactDetailsForm.module.css';
 
 const SHOW_EMAIL_SENT_TIMEOUT = 2000;
 
-const PhoneNumberMaybe = props => {
-  const { formId, userTypeConfig, intl } = props;
-
-  const isDisabled = userTypeConfig?.defaultUserFields?.phoneNumber === false;
-  if (isDisabled) {
-    return null;
-  }
-
-  const { required } = userTypeConfig?.phoneNumberSettings || {};
-  const isRequired = required === true;
-
-  const validateMaybe = isRequired
-    ? {
-        validate: validators.required(
-          intl.formatMessage({
-            id: 'ContactDetailsForm.phoneRequired',
-          })
-        ),
-      }
-    : {};
-
-  return (
-    <FieldPhoneNumberInput
-      className={css.phone}
-      name="phoneNumber"
-      id={formId ? `${formId}.phoneNumber` : 'phoneNumber'}
-      label={intl.formatMessage({ id: 'ContactDetailsForm.phoneLabel' })}
-      placeholder={intl.formatMessage({
-        id: 'ContactDetailsForm.phonePlaceholder',
-      })}
-      {...validateMaybe}
-    />
-  );
-};
-
 class ContactDetailsFormComponent extends Component {
   constructor(props) {
     super(props);
@@ -113,7 +78,6 @@ class ContactDetailsFormComponent extends Component {
             sendVerificationEmailInProgress,
             resetPasswordInProgress,
             values,
-            userTypeConfig,
           } = fieldRenderProps;
           const { email, phoneNumber } = values;
 
@@ -234,6 +198,11 @@ class ContactDetailsFormComponent extends Component {
           const phoneNumberChanged =
             currentPhoneNumber !== phoneNumber &&
             !(typeof currentPhoneNumber === 'undefined' && phoneNumber === '');
+
+          const phonePlaceholder = intl.formatMessage({
+            id: 'ContactDetailsForm.phonePlaceholder',
+          });
+          const phoneLabel = intl.formatMessage({ id: 'ContactDetailsForm.phoneLabel' });
 
           // password
           const passwordLabel = intl.formatMessage({
@@ -358,8 +327,13 @@ class ContactDetailsFormComponent extends Component {
                   customErrorText={emailTouched ? null : emailTakenErrorText}
                 />
                 {emailVerifiedInfo}
-
-                <PhoneNumberMaybe formId={formId} userTypeConfig={userTypeConfig} intl={intl} />
+                <FieldPhoneNumberInput
+                  className={css.phone}
+                  name="phoneNumber"
+                  id={formId ? `${formId}.phoneNumber` : 'phoneNumber'}
+                  label={phoneLabel}
+                  placeholder={phonePlaceholder}
+                />
               </div>
 
               <div className={confirmClasses}>

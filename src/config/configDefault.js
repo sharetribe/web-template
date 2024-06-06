@@ -5,7 +5,6 @@ import * as maps from './configMaps';
 import * as branding from './configBranding';
 import * as layout from './configLayout';
 import * as analytics from './configAnalytics';
-import * as user from './configUser';
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets to this file.
@@ -18,16 +17,16 @@ const defaultConfig = {
   // Marketplace currency.
   // The currency used in the Marketplace must be in ISO 4217 currency code. For example USD, EUR, CAD, AUD, etc. The default value is USD.
   // It should match one of the currencies listed in currencySettings.js
-  currency: 'USD',
+  currency: 'ARS',
 
   // Listing minimum price in currency sub units, e.g. cents.
   // 0 means no restriction to the price
   // Note 1: hosted configs overwrite this
   // Note 2: Stripe does have minimum fee that depends on country, currency, etc.
-  listingMinimumPriceSubUnits: 500,
+  listingMinimumPriceSubUnits: 0,
 
   // Marketplace name is needed for microcopy and in meta tags (bots and social media sharing reads those)
-  marketplaceName: 'Biketribe',
+  marketplaceName: 'Rundo',
 
   // Modify Stripe configuration in configStripe.js
   // - picks REACT_APP_STRIPE_PUBLISHABLE_KEY from environment variables
@@ -39,8 +38,6 @@ const defaultConfig = {
 
   // Modify listing extended data and listing type in configListing.js
   listing,
-
-  user,
   // Modify search settings data in configSearch.js
   search,
   // Modify settings for map providers in configMaps.js
@@ -63,8 +60,6 @@ const defaultConfig = {
 
   // If you want to change the language, remember to also change the
   // locale data and the messages in the app.js file.
-  // Note: The localization comes from localization asset nowadays by default.
-  //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeLocalizations func)
   localization: {
     locale: 'es-ES',
     // First day of week
@@ -83,7 +78,6 @@ const defaultConfig = {
   appCdnAssets: {
     translations: '/content/translations.json',
     footer: '/content/footer.json',
-    topbar: '/content/top-bar.json',
     branding: '/design/branding.json',
     layout: '/design/layout.json',
     listingTypes: '/listings/listing-types.json',
@@ -92,31 +86,26 @@ const defaultConfig = {
     transactionSize: '/transactions/minimum-transaction-size.json',
     analytics: '/integrations/analytics.json',
     googleSearchConsole: '/integrations/google-search-console.json',
-    maps: '/integrations/map.json',
-    categories: '/listings/listing-categories.json',
     // These assets are not yet editable through Console.
     // However, Sharetribe onboarding might generate them.
-    // You could still rely on built-in variables and comment these out.
+    // You could still rely on environment variables and comment these out.
+    maps: '/integrations/map.json',
     localization: '/general/localization.json',
     // NOTE: we don't fetch commission configuration here but on the server-side
-    userTypes: '/users/user-types.json',
-    userFields: '/users/user-fields.json',
   },
 
   // Optional
   // Online presence of the same organization:
   // Facebook page is used in SEO schema (http://schema.org/Organization)
-  siteFacebookPage: null, // e.g. 'https://www.facebook.com/Sharetribe/',
+  siteFacebookPage: null, // e.g. '@sharetribe',
   // Instagram page is used in SEO schema (http://schema.org/Organization)
   siteInstagramPage: 'https://www.instagram.com/rundo.co/', // e.g. 'https://www.instagram.com/sharetribe/',
   // Twitter handle is needed in meta tags (twitter:site). Start it with '@' character
-  siteTwitterHandle: null, // e.g. '@sharetribe',
+  siteTwitterHandle: null, // e.g. 'https://www.facebook.com/Sharetribe/',
 
   // Optional
   // This creates meta tag for Google Search Console verification
   // I.e. <meta name=“google-site-verification” content=“GOOGLE_SITE_VERIFICATION_TOKEN”/>
-  // Note: The googleSearchConsole comes from googleSearchConsole asset nowadays by default.
-  //       To use this built-in configuration, you need to remove the overwrite from configHelper.js (mergeConfig func)
   googleSearchConsole: {
     googleSiteVerification: null, // Add google-site-verification token as a string
   },

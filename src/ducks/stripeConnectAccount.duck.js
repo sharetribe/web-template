@@ -276,17 +276,12 @@ export const getStripeConnectAccountLink = params => (dispatch, getState, sdk) =
   const { failureURL, successURL, type } = params;
   dispatch(getAccountLinkRequest());
 
-  // Read more from collection_options and verification updates from Stripe's Docs:
-  // https://docs.stripe.com/connect/handle-verification-updates
   return sdk.stripeAccountLinks
     .create({
       failureURL,
       successURL,
       type,
-      collectionOptions: {
-        fields: 'currently_due',
-        future_requirements: 'include',
-      },
+      collect: 'currently_due',
     })
     .then(response => {
       // Return the account link

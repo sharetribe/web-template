@@ -13,7 +13,6 @@ import {
   LISTING_STATE_CLOSED,
   LISTING_STATE_DRAFT,
   propTypes,
-  STOCK_MULTIPLE_ITEMS,
 } from '../../../util/types';
 import { formatMoney } from '../../../util/currency';
 import { ensureOwnListing } from '../../../util/data';
@@ -192,7 +191,6 @@ const ShowOutOfStockOverlayMaybe = props => {
     slug,
     actionsInProgressListingId,
     currentListingId,
-    hasStockManagementInUse,
     onCloseListing,
     intl,
   } = props;
@@ -204,54 +202,35 @@ const ShowOutOfStockOverlayMaybe = props => {
         { listingTitle: title }
       )}
     >
-      {hasStockManagementInUse ? (
-        <>
-          <NamedLink
-            className={css.finishListingDraftLink}
-            name="EditListingPage"
-            params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_EDIT, tab: 'pricing-and-stock' }}
-          >
-            <FormattedMessage id="ManageListingCard.setPriceAndStock" />
-          </NamedLink>
+      <NamedLink
+        className={css.finishListingDraftLink}
+        name="EditListingPage"
+        params={{ id, slug, type: LISTING_PAGE_PARAM_TYPE_EDIT, tab: 'pricing-and-stock' }}
+      >
+        <FormattedMessage id="ManageListingCard.setPriceAndStock" />
+      </NamedLink>
 
-          <div className={css.closeListingText}>
-            {intl.formatMessage(
-              { id: 'ManageListingCard.closeListingTextOr' },
-              {
-                closeListingLink: (
-                  <InlineTextButton
-                    key="closeListingLink"
-                    className={css.closeListingText}
-                    disabled={!!actionsInProgressListingId}
-                    onClick={() => {
-                      if (!actionsInProgressListingId) {
-                        onCloseListing(currentListingId);
-                      }
-                    }}
-                  >
-                    <FormattedMessage id="ManageListingCard.closeListingText" />
-                  </InlineTextButton>
-                ),
-              }
-            )}
-          </div>
-        </>
-      ) : (
-        <div className={css.closeListingText}>
-          <InlineTextButton
-            key="closeListingLink"
-            className={css.closeListingText}
-            disabled={!!actionsInProgressListingId}
-            onClick={() => {
-              if (!actionsInProgressListingId) {
-                onCloseListing(currentListingId);
-              }
-            }}
-          >
-            <FormattedMessage id="ManageListingCard.closeListingText" />
-          </InlineTextButton>
-        </div>
-      )}
+      <div className={css.closeListingText}>
+        {intl.formatMessage(
+          { id: 'ManageListingCard.closeListingTextOr' },
+          {
+            closeListingLink: (
+              <InlineTextButton
+                key="closeListingLink"
+                className={css.closeListingText}
+                disabled={!!actionsInProgressListingId}
+                onClick={() => {
+                  if (!actionsInProgressListingId) {
+                    onCloseListing(currentListingId);
+                  }
+                }}
+              >
+                <FormattedMessage id="ManageListingCard.closeListingText" />
+              </InlineTextButton>
+            ),
+          }
+        )}
+      </div>
     </Overlay>
   ) : null;
 };
@@ -263,12 +242,12 @@ const LinkToStockOrAvailabilityTab = props => {
     editListingLinkType,
     isBookable,
     hasListingType,
-    hasStockManagementInUse,
+    hasStockInUse,
     currentStock,
     intl,
   } = props;
 
-  if (!hasListingType || !(isBookable || hasStockManagementInUse)) {
+  if (!hasListingType || !(isBookable || hasStockInUse)) {
     return null;
   }
 
@@ -373,8 +352,6 @@ export const ManageListingCardComponent = props => {
   const isOutOfStock = currentStock === 0;
   const showOutOfStockOverlay =
     !isBookable && isOutOfStock && !isPendingApproval && !isClosed && !isDraft;
-  const hasStockManagementInUse =
-    isProductOrder && foundListingTypeConfig?.stockType === STOCK_MULTIPLE_ITEMS;
 
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
@@ -518,7 +495,6 @@ export const ManageListingCardComponent = props => {
           actionsInProgressListingId={actionsInProgressListingId}
           currentListingId={currentListing.id}
           onCloseListing={onCloseListing}
-          hasStockManagementInUse={hasStockManagementInUse}
           intl={intl}
         />
 
@@ -565,7 +541,7 @@ export const ManageListingCardComponent = props => {
             isBookable={isBookable}
             currentStock={currentStock}
             hasListingType={hasListingType}
-            hasStockManagementInUse={hasStockManagementInUse}
+            hasStockInUse={isProductOrder && foundListingTypeConfig?.stockType === 'multipleItems'}
             intl={intl}
           />
         </div>

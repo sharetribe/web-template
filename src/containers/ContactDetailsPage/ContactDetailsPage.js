@@ -3,12 +3,9 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import { useConfiguration } from '../../context/configurationContext';
-
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
-
 import { sendVerificationEmail } from '../../ducks/user.duck';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
@@ -27,7 +24,6 @@ import {
 import css from './ContactDetailsPage.module.css';
 
 export const ContactDetailsPageComponent = props => {
-  const config = useConfiguration();
   const {
     saveEmailError,
     savePhoneNumberError,
@@ -45,35 +41,21 @@ export const ContactDetailsPageComponent = props => {
     resetPasswordError,
     intl,
   } = props;
-  const { userTypes = [] } = config.user;
 
   const user = ensureCurrentUser(currentUser);
   const currentEmail = user.attributes.email || '';
-  const publicData = user.attributes.profile.publicData || {};
-  const userType = publicData?.userType;
   const protectedData = user.attributes.profile.protectedData || {};
   const currentPhoneNumber = protectedData.phoneNumber || '';
-  const userTypeConfig = userType && userTypes.find(config => config.userType === userType);
-  const isPhoneNumberIncluded = userTypeConfig?.defaultUserFields?.phoneNumber !== false;
-  // ContactDetailsForm decides if it's allowed to show the input field.
-  const phoneNumberMaybe =
-    isPhoneNumberIncluded && currentPhoneNumber ? { phoneNumber: currentPhoneNumber } : {};
-
-  const handleSubmit = values => {
-    const phoneNumber = values.phoneNumber ? values.phoneNumber : null;
-    return onSubmitContactDetails({ ...values, phoneNumber, currentEmail, currentPhoneNumber });
-  };
-
   const contactInfoForm = user.id ? (
     <ContactDetailsForm
       className={css.form}
-      initialValues={{ email: currentEmail, ...phoneNumberMaybe }}
+      initialValues={{ email: currentEmail, phoneNumber: currentPhoneNumber }}
       saveEmailError={saveEmailError}
       savePhoneNumberError={savePhoneNumberError}
       currentUser={currentUser}
       onResendVerificationEmail={onResendVerificationEmail}
       onResetPassword={onResetPassword}
-      onSubmit={handleSubmit}
+      onSubmit={values => onSubmitContactDetails({ ...values, currentEmail, currentPhoneNumber })}
       onChange={onChange}
       inProgress={saveContactDetailsInProgress}
       ready={contactDetailsChanged}
@@ -81,7 +63,6 @@ export const ContactDetailsPageComponent = props => {
       sendVerificationEmailError={sendVerificationEmailError}
       resetPasswordInProgress={resetPasswordInProgress}
       resetPasswordError={resetPasswordError}
-      userTypeConfig={userTypeConfig}
     />
   ) : null;
 
@@ -93,6 +74,7 @@ export const ContactDetailsPageComponent = props => {
         topbar={
           <>
             <TopbarContainer
+              currentPage="ContactDetailsPage"
               desktopClassName={css.desktopTopbar}
               mobileClassName={css.mobileTopbar}
             />

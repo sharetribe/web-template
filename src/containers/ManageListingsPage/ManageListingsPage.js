@@ -128,7 +128,7 @@ export class ManageListingsPageComponent extends Component {
         <LayoutSingleColumn
           topbar={
             <>
-              <TopbarContainer />
+              <TopbarContainer currentPage="ManageListingsPage" />
               <UserNav currentPage="ManageListingsPage" />
             </>
           }

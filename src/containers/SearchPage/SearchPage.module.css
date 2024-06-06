@@ -7,12 +7,6 @@
 }
 
 .topbar {
-  width: 100%;
-
-  /* Top Bar's drop shadow should always be visible */
-  z-index: var(--zIndexTopbar);
-  position: relative;
-
   @media (--viewportMedium) {
     position: fixed;
     top: 0;

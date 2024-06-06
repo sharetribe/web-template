@@ -34,10 +34,6 @@
   color: var(--colorGrey300);
 }
 
-.hidden {
-  display: none;
-}
-
 .locationAutocompleteInput {
   /* Safari bugfix: without this Safari will print placeholder to a wrong place */
   &::-webkit-input-placeholder {

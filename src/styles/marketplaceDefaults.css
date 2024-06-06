@@ -16,6 +16,16 @@
 :root {
   /* ================ Colors ================ */
 
+  /**
+   * Marketplace color comes by default from src/config/brandingConfig.js
+   * It overwrites these CSS Properties.
+   * In the future, we are planning to bring more --marketplace* CSS Properties
+   * from hosted assets, which means that they could be managed through Console.
+   */
+  --marketplaceColor: #5d2bc0; /* hsl(260, 63%, 46%) */
+  --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
+  --marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
+
   /* Colors used for different functions (like error texts) */
 
   --colorSuccess: #39EDCC;
@@ -44,31 +54,6 @@
   --colorBlack: hsl(0 0% 0%);
 
   --colorLightTransparent: rgba(255, 255, 255, 0.65);
-
-  /**
-  * Marketplace color comes by default from src/config/brandingConfig.js
-  * It overwrites these CSS Properties.
-  * In the future, we are planning to bring more --marketplace* CSS Properties
-  * from hosted assets, which means that they could be managed through Console.
-  */
-  --marketplaceColor: #5d2bc0; /* hsl(260, 63%, 46%) */
-  --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
-  --marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
-
-  /** 
-   * The fill color used by <PrimaryButton>
-   * These might be overwritten by values from hosted assets
-   */
-  --colorPrimaryButton: var(--colorSuccess);
-  --colorPrimaryButtonDark: var(--colorSuccessDark);
-  --colorPrimaryButtonLight: var(--colorSuccessLight);
-
-  /** 
-   * The fill color used by <SecondaryButton>
-   */
-  --colorSecondaryButton: var(--colorWhite);
-  --colorSecondaryButtonDark: var(--colorWhite);
-  --colorSecondaryButtonLight: var(--colorWhite);
 
   /* ================ Font ================ */
   --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
@@ -211,18 +196,6 @@ body {
 ::-moz-selection {
   background: var(--marketplaceColor); /* Gecko Browsers */
   color: var(--colorWhite);
-}
-
-/* Default elements that are targets */
-/* In addition, let's ensure that section components have scroll-margin */
-/* Since target does not work in every situation */
-:target,
-section {
-  scroll-margin-top: var(--topbarHeight);
-
-  @media (--viewportMedium) {
-    scroll-margin-top: var(--topbarHeightDesktop);
-  }
 }
 
 a {
@@ -396,6 +369,11 @@ html {
   color: var(--colorGrey700);
   padding: 0;
   margin: 0;
+  scroll-padding-top: calc(var(--topbarHeight) + 1px);
+
+  @media (--viewportMedium) {
+    scroll-padding-top: calc(var(--topbarHeightDesktop) + 1px);
+  }
 }
 
 ul {
@@ -1043,7 +1021,7 @@ textarea {
 
   /* Button colors */
   /* Primary button uses success color */
-  background-color: var(--colorPrimaryButton);
+  background-color: var(--colorSuccess);
   color: var(--colorWhite);
 
   @media (--viewportMedium) {
@@ -1054,7 +1032,7 @@ textarea {
 .buttonPrimary:hover {
   outline: none;
   box-shadow: var(--boxShadowButton);
-  background-color: var(--colorPrimaryButtonDark);
+  background-color: var(--colorSuccessDark);
   color: var(--colorWhite);
 }
 .buttonPrimary:hover {
@@ -1091,7 +1069,7 @@ textarea {
   border: none;
   border-radius: var(--borderRadiusMedium);
 
-  background-color: var(--colorPrimaryButton);
+  background-color: var(--colorSuccess);
   color: var(--colorWhite);
 
   @media (--viewportMedium) {
@@ -1103,7 +1081,7 @@ textarea {
   outline: none;
   box-shadow: var(--boxShadowButton);
   text-decoration: none;
-  background-color: var(--colorPrimaryButtonDark);
+  background-color: var(--colorSuccessDark);
   color: var(--colorWhite);
 }
 .buttonPrimaryInline:disabled {
@@ -1147,7 +1125,7 @@ textarea {
   border-radius: var(--borderRadiusMedium);
 
   /* Button colors: secondary */
-  background-color: var(--colorSecondaryButton);
+  background-color: var(--colorWhite);
   color: var(--colorGrey700);
 
   @media (--viewportMedium) {
@@ -1159,7 +1137,7 @@ textarea {
   outline: none;
   box-shadow: var(--boxShadowButton);
   border-color: var(--colorGrey300);
-  background-color: var(--colorSecondaryButton);
+  background-color: var(--colorWhite);
 }
 .buttonSecondary:hover {
   text-decoration: none;
@@ -1210,7 +1188,7 @@ textarea {
   border-radius: var(--borderRadiusMedium);
 
   /* Button colors: secondary */
-  background-color: var(--colorSecondaryButton);
+  background-color: var(--colorWhite);
   color: var(--colorGrey700);
 
   @media (--viewportMedium) {
@@ -1222,7 +1200,7 @@ textarea {
   outline: none;
   box-shadow: var(--boxShadowButton);
   border-color: var(--colorGrey300);
-  background-color: var(--colorSecondaryButton);
+  background-color: var(--colorWhite);
 }
 .buttonSecondaryInline:hover {
   text-decoration: none;

@@ -51,6 +51,7 @@ class FilterPlainComponent extends Component {
       children,
       initialValues,
       keepDirtyOnReinitialize,
+      contentPlacementOffset,
     } = this.props;
     const classes = classNames(rootClassName || css.root, className);
 
@@ -84,6 +85,7 @@ class FilterPlainComponent extends Component {
           <FilterForm
             id={`${id}.form`}
             liveEdit
+            contentPlacementOffset={contentPlacementOffset}
             onChange={this.handleChange}
             initialValues={initialValues}
             keepDirtyOnReinitialize={keepDirtyOnReinitialize}

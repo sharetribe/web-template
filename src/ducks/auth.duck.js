@@ -1,10 +1,10 @@
+import isEmpty from 'lodash/isEmpty';
 import { clearCurrentUser, fetchCurrentUser } from './user.duck';
 import { createUserWithIdp } from '../util/api';
 import { storableError } from '../util/errors';
 import * as log from '../util/log';
 
-const authenticated = authInfo => authInfo?.isAnonymous === false;
-const loggedInAs = authInfo => authInfo?.isLoggedInAs === true;
+const authenticated = authInfo => authInfo && authInfo.isAnonymous === false;
 
 // ================ Action types ================ //
 
@@ -35,9 +35,6 @@ export const USER_LOGOUT = 'app/USER_LOGOUT';
 
 const initialState = {
   isAuthenticated: false,
-
-  // is marketplace operator logged in as a marketplace user
-  isLoggedInAs: false,
 
   // scopes associated with current token
   authScopes: [],
@@ -72,7 +69,6 @@ export default function reducer(state = initialState, action = {}) {
         ...state,
         authInfoLoaded: true,
         isAuthenticated: authenticated(payload),
-        isLoggedInAs: loggedInAs(payload),
         authScopes: payload.scopes,
       };
 
@@ -92,13 +88,7 @@ export default function reducer(state = initialState, action = {}) {
     case LOGOUT_REQUEST:
       return { ...state, logoutInProgress: true, loginError: null, logoutError: null };
     case LOGOUT_SUCCESS:
-      return {
-        ...state,
-        logoutInProgress: false,
-        isAuthenticated: false,
-        isLoggedInAs: false,
-        authScopes: [],
-      };
+      return { ...state, logoutInProgress: false, isAuthenticated: false, authScopes: [] };
     case LOGOUT_ERROR:
       return { ...state, logoutInProgress: false, logoutError: payload };
 
@@ -209,14 +199,18 @@ export const signup = params => (dispatch, getState, sdk) => {
     return Promise.reject(new Error('Login or logout already in progress'));
   }
   dispatch(signupRequest());
-  // Note: params are already structured on AuthenticationPage (handleSubmitSignup)
+  const { email, password, firstName, lastName, ...rest } = params;
+
+  const createUserParams = isEmpty(rest)
+    ? { email, password, firstName, lastName }
+    : { email, password, firstName, lastName, protectedData: { ...rest } };
 
   // We must login the user if signup succeeds since the API doesn't
   // do that automatically.
   return sdk.currentUser
-    .create(params)
+    .create(createUserParams)
     .then(() => dispatch(signupSuccess()))
-    .then(() => dispatch(login(params.email, params.password)))
+    .then(() => dispatch(login(email, password)))
     .catch(e => {
       dispatch(signupError(storableError(e)));
       log.error(e, 'signup-failed', {

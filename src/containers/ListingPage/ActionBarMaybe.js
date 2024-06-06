@@ -1,5 +1,5 @@
 import React from 'react';
-import { bool, oneOfType, object, string, shape } from 'prop-types';
+import { bool, oneOfType, object, string } from 'prop-types';
 import { FormattedMessage } from '../../util/reactIntl';
 import classNames from 'classnames';
 import {
@@ -14,14 +14,7 @@ import EditIcon from './EditIcon';
 import css from './ListingPage.module.css';
 
 export const ActionBarMaybe = props => {
-  const {
-    rootClassName,
-    className,
-    isOwnListing,
-    listing,
-    editParams,
-    showNoPayoutDetailsSet,
-  } = props;
+  const { rootClassName, className, isOwnListing, listing, editParams } = props;
   const classes = classNames(rootClassName || css.actionBar, className);
 
   const state = listing.attributes.state;
@@ -29,19 +22,7 @@ export const ActionBarMaybe = props => {
   const isClosed = state === LISTING_STATE_CLOSED;
   const isDraft = state === LISTING_STATE_DRAFT;
 
-  if (isOwnListing && showNoPayoutDetailsSet) {
-    return (
-      <div className={classes}>
-        <p className={classNames(css.ownListingText, css.missingPayoutDetailsText)}>
-          <FormattedMessage id="ListingPage.addPayoutDetailsMessage" />
-        </p>
-        <NamedLink className={css.addPayoutDetails} name="StripePayoutPage">
-          <EditIcon className={css.editIcon} />
-          <FormattedMessage id="ListingPage.addPayoutDetails" />
-        </NamedLink>
-      </div>
-    );
-  } else if (isOwnListing) {
+  if (isOwnListing) {
     let ownListingTextTranslationId = 'ListingPage.ownListing';
 
     if (isPendingApproval) {
@@ -90,12 +71,7 @@ ActionBarMaybe.propTypes = {
   className: string,
   isOwnListing: bool.isRequired,
   listing: oneOfType([propTypes.listing, propTypes.ownListing]).isRequired,
-  editParams: shape({
-    id: string,
-    slug: string,
-    type: string,
-    tab: string,
-  }),
+  editParams: object.isRequired,
 };
 
 ActionBarMaybe.displayName = 'ActionBarMaybe';

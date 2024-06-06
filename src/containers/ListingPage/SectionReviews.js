@@ -8,7 +8,7 @@ const SectionReviews = props => {
   const { reviews, fetchReviewsError } = props;
 
   return (
-    <section className={css.sectionReviews}>
+    <div className={css.sectionReviews}>
       <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>
         <FormattedMessage id="ListingPage.reviewsTitle" values={{ count: reviews.length }} />
       </Heading>
@@ -18,7 +18,7 @@ const SectionReviews = props => {
         </H2>
       ) : null}
       <Reviews reviews={reviews} />
-    </section>
+    </div>
   );
 };
 

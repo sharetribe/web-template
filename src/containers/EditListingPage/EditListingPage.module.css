@@ -1,5 +1,9 @@
 @import '../../styles/customMediaQueries.css';
 
+.topbar {
+  z-index: 1;
+}
+
 .mobileTopbar {
   /* Size */
   width: 100%;
@@ -17,7 +21,7 @@
   /* shadows */
   box-shadow: none;
 
-  @media (--viewportLarge) {
+  @media (--viewportMedium) {
     display: none;
   }
 }

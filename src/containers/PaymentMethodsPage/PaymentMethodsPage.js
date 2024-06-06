@@ -146,6 +146,7 @@ const PaymentMethodsPageComponent = props => {
         topbar={
           <>
             <TopbarContainer
+              currentPage="PaymentMethodsPage"
               desktopClassName={css.desktopTopbar}
               mobileClassName={css.mobileTopbar}
             />

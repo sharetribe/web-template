@@ -1,26 +1,23 @@
 import React from 'react';
-import { node, string } from 'prop-types';
+import PropTypes from 'prop-types';
 
 // External link that opens in a new tab/window, ensuring that the
 // opened page doesn't have access to the current page.
 //
 // See: https://mathiasbynens.github.io/rel-noopener/
 const ExternalLink = props => {
-  const { children, target, ...rest } = props;
-  const targetProp = target || '_blank';
-  const anchorProps =
-    targetProp === '_blank'
-      ? { target: '_blank', rel: 'noopener noreferrer' }
-      : { target: targetProp };
+  const { children, ...rest } = props;
   return (
-    <a {...rest} {...anchorProps}>
+    <a {...rest} target="_blank" rel="noopener noreferrer">
       {children}
     </a>
   );
 };
 
-ExternalLink.defaultProps = { children: null, target: '_blank' };
+ExternalLink.defaultProps = { children: null };
 
-ExternalLink.propTypes = { children: node, target: string };
+const { node } = PropTypes;
+
+ExternalLink.propTypes = { children: node };
 
 export default ExternalLink;

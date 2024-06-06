@@ -2,9 +2,6 @@ import React from 'react';
 import flow from 'lodash/flow';
 import flatMap from 'lodash/flatMap';
 import map from 'lodash/map';
-
-import { sanitizeUrl } from './sanitize';
-
 import { ExternalLink } from '../components';
 // NOTE: This file imports components/index.js, which may lead to circular dependency
 
@@ -12,9 +9,9 @@ import { ExternalLink } from '../components';
  * Add zero width space (zwsp) around given breakchars (default '/') to make word break possible.
  * E.g. "one/two/three" => ["one", "​/​", "two" "​/​" "three"]
  *
- * @param {String} wordToBreak word to be broken from special character points.
- * @param {String} breakChars string containing possible chars that can be surrounded with zwsp.
- * @return {Array<String>} returns an array containing strings-
+ * @param {string} wordToBreak word to be broken from special character points.
+ * @param {string} breakChars string containing possible chars that can be surrounded with zwsp.
+ * @return {Array<string>} returns an array containing strings-
  */
 export const zwspAroundSpecialCharsSplit = (wordToBreak, breakChars = '/') => {
   if (typeof wordToBreak !== 'string') {
@@ -36,10 +33,10 @@ export const zwspAroundSpecialCharsSplit = (wordToBreak, breakChars = '/') => {
  * Layouts are not fixed sizes - So, long words in text make flexboxed items to grow too big.
  * This wraps long words with span and adds given class to it
  *
- * @param {String} word to be wrapped if requirement (longWordMinLength) is met
- * @param {Number} key span needs a key in React/JSX
- * @param {Number} longWordMinLength minimum length when word is considered long
- * @param {String} longWordClass class to be added to spans
+ * @param {string} word to be wrapped if requirement (longWordMinLength) is met
+ * @param {number} key span needs a key in React/JSX
+ * @param {number} longWordMinLength minimum length when word is considered long
+ * @param {string} longWordClass class to be added to spans
  * @return {node} returns a string or component
  */
 export const wrapLongWord = (word, key, options = {}) => {
@@ -61,8 +58,8 @@ export const wrapLongWord = (word, key, options = {}) => {
 /**
  * Find links from words and surround them with <ExternalLink> component
  *
- * @param {String} word to be linkified if requirement (link) is met
- * @param {Number} key span needs a key in React/JSX
+ * @param {string} word to be linkified if requirement (link) is met
+ * @param {number} key span needs a key in React/JSX
  * @param {Object} options than can contain keys: linkify, linkClass.
  * @return {Array<node>} returns a array containing ExternalLink component or strings
  */
@@ -91,13 +88,11 @@ export const linkifyOrWrapLinkSplit = (word, key, options = {}) => {
   if (word.match(urlRegex)) {
     // Split strings like "(http://www.example.com)" to ["(","http://www.example.com",")"]
     return word.split(urlRegex).map(w => {
-      const isEmptyString = !w.match(urlRegex);
-      const sanitizedURL = !isEmptyString && linkify ? sanitizeUrl(w) : w;
-      return isEmptyString ? (
+      return !w.match(urlRegex) ? (
         w
       ) : linkify ? (
-        <ExternalLink key={key} href={sanitizedURL} className={linkClass}>
-          {sanitizedURL}
+        <ExternalLink key={key} href={w} className={linkClass}>
+          {w}
         </ExternalLink>
       ) : linkClass ? (
         <span key={key} className={linkClass}>
@@ -117,11 +112,8 @@ export const linkifyOrWrapLinkSplit = (word, key, options = {}) => {
  * Wrap long words: options should contain longWordMinLength & longWordClass
  * Linkify found links: options should contain "linkify: true" (linkClass is optional)
  *
- * Note: this autolinks only strings that start with 'http'. In addition, links are assumed
- *       to lead outside of the app. In-app linking is not supported atm.
- *
- * @param {String} text check text content
- * @param {Object} options { longWordMinLength, longWordClass, linkify = false, linkClass }
+ * @param {string} text check text content
+ * @param {object} options { longWordMinLength, longWordClass, linkify = false, linkClass }
  * @return {Array<node>} returns a child array containing strings and inline elements
  */
 export const richText = (text, options) => {

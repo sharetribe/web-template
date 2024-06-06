@@ -91,7 +91,6 @@ export class BookingTimeFormComponent extends Component {
             lineItems,
             fetchLineItemsInProgress,
             fetchLineItemsError,
-            payoutDetailsWarning,
           } = fieldRenderProps;
 
           const startTime = values && values.bookingStartTime ? values.bookingStartTime : null;
@@ -174,17 +173,13 @@ export class BookingTimeFormComponent extends Component {
               </div>
 
               <p className={css.finePrint}>
-                {payoutDetailsWarning ? (
-                  payoutDetailsWarning
-                ) : (
-                  <FormattedMessage
-                    id={
-                      isOwnListing
-                        ? 'BookingTimeForm.ownListing'
-                        : 'BookingTimeForm.youWontBeChargedInfo'
-                    }
-                  />
-                )}
+                <FormattedMessage
+                  id={
+                    isOwnListing
+                      ? 'BookingTimeForm.ownListing'
+                      : 'BookingTimeForm.youWontBeChargedInfo'
+                  }
+                />
               </p>
             </Form>
           );

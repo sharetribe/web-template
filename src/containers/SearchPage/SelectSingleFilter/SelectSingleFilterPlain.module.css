@@ -1,0 +1,186 @@
+@import '../../../styles/customMediaQueries.css';
+
+.root {
+  padding-top: 24px;
+  padding-bottom: 17px;
+  border-bottom: 1px solid var(--colorGrey100);
+
+  @media (--viewportMedium) {
+    padding-top: 16px;
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+}
+
+.filterHeader {
+  line-height: 24px;
+}
+
+.label,
+.labelSelected {
+  composes: marketplaceSmallFontStyles from global;
+  font-weight: var(--fontWeightBold);
+
+  /* Baseline adjustment for label text */
+  margin-top: 0;
+  margin-bottom: 12px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 8px;
+  }
+}
+
+.label {
+  color: inherit;
+}
+
+.labelSelected {
+  color: var(--marketplaceColor);
+}
+
+.openSign {
+  float: right;
+}
+
+.labelButton {
+  /* Override button styles */
+  width: 100%;
+  outline: none;
+  line-height: 24px;
+  text-align: left;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--colorGrey700);
+
+  &:hover {
+    color: var(--marketplaceColor);
+
+    & * {
+      stroke: var(--marketplaceColor);
+    }
+  }
+}
+
+.labelButtonContent {
+  display: inline-block;
+  width: 100%;
+}
+
+.optionsContainerOpen {
+  height: auto;
+  padding-bottom: 0;
+
+  @media (--viewportMedium) {
+    padding-bottom: 16px;
+  }
+}
+
+.optionsContainerClosed {
+  height: 0;
+  overflow: hidden;
+}
+
+.twoColumns {
+  @media (--viewportMedium) {
+    column-count: 2;
+  }
+}
+
+.optionBorder,
+.optionBorderSelected {
+  position: absolute;
+  height: calc(100% - 12px);
+  top: 4px;
+  left: -24px;
+  transition: width var(--transitionStyleButton);
+
+  @media (--viewportMedium) {
+    height: calc(100% - 8px);
+    top: 8px;
+  }
+}
+
+/* left animated "border" like hover element */
+.optionBorder {
+  width: 0;
+  background-color: var(--colorBlack);
+}
+
+/* left static border for selected element */
+.optionBorderSelected {
+  width: 8px;
+  background-color: var(--colorBlack);
+}
+
+.option {
+  composes: h4 from global;
+  font-weight: var(--fontWeightMedium);
+  font-size: 16px;
+  color: var(--colorGrey700);
+  text-align: left;
+
+  /* Layout */
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 4px 0 8px 12px;
+
+  /* Override button styles */
+  outline: none;
+  border: none;
+  cursor: pointer;
+
+  &:focus,
+  &:hover {
+    color: var(--colorBlack);
+  }
+
+  &:hover .menuItemBorder {
+    width: 6px;
+  }
+
+  @media (--viewportMedium) {
+    padding: 8px 0 0px 12px;
+  }
+}
+
+.optionSelected {
+  composes: option;
+  color: var(--colorBlack);
+}
+
+.optionHighlight {
+  color: var(--marketplaceColor);
+
+  &:focus,
+  &:hover {
+    color: var(--marketplaceColorLight);
+  }
+}
+
+.clearButton {
+  composes: h5 from global;
+  font-weight: var(--fontWeightMedium);
+  color: var(--colorGrey300);
+
+  display: block;
+  margin: 12px 0 0 0;
+  padding: 2px 0 4px 12px;
+
+  /* Override button styles */
+  outline: none;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+
+  &:focus,
+  &:hover {
+    color: var(--colorGrey700);
+  }
+
+  @media (--viewportMedium) {
+    margin: 16px 0 0 0;
+    padding: 4px 0 4px 12px;
+  }
+}

@@ -419,11 +419,6 @@
   }
 }
 
-.longWord {
-  word-break: break-word;
-  hyphens: auto;
-}
-
 /* Passed-in props for FeedSection subcomponent */
 .bookingLocationContainer,
 .deliveryInfoContainer,

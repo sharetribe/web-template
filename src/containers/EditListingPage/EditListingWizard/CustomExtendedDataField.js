@@ -7,22 +7,20 @@ import {
   SCHEMA_TYPE_TEXT,
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
-} from '../../util/types';
-import { useIntl } from '../../util/reactIntl';
-import { required, nonEmptyArray, validateInteger } from '../../util/validators';
+} from '../../../util/types';
+import { useIntl } from '../../../util/reactIntl';
+import { required, nonEmptyArray } from '../../../util/validators';
 // Import shared components
-import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '..';
+import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '../../../components';
 // Import modules from this directory
-import css from './CustomExtendedDataField.module.css';
+import css from './EditListingWizard.module.css';
 
 const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
 
-const getLabel = fieldConfig => fieldConfig?.saveConfig?.label || fieldConfig?.label;
-
 const CustomFieldEnum = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
+  const { name, fieldConfig, defaultRequiredMessage, intl } = props;
   const { enumOptions = [], saveConfig } = fieldConfig || {};
-  const { placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
+  const { label, placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -31,16 +29,8 @@ const CustomFieldEnum = props => {
     intl.formatMessage({ id: 'CustomExtendedDataField.placeholderSingleSelect' });
   const filterOptions = createFilterOptions(enumOptions);
 
-  const label = getLabel(fieldConfig);
-
   return filterOptions ? (
-    <FieldSelect
-      className={css.customField}
-      name={name}
-      id={formId ? `${formId}.${name}` : name}
-      label={label}
-      {...validateMaybe}
-    >
+    <FieldSelect className={css.customField} name={name} id={name} label={label} {...validateMaybe}>
       <option disabled value="">
         {placeholder}
       </option>
@@ -57,10 +47,9 @@ const CustomFieldEnum = props => {
 };
 
 const CustomFieldMultiEnum = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId } = props;
+  const { name, fieldConfig, defaultRequiredMessage } = props;
   const { enumOptions = [], saveConfig } = fieldConfig || {};
-  const { isRequired, requiredMessage } = saveConfig || {};
-  const label = getLabel(fieldConfig);
+  const { label, isRequired, requiredMessage } = saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: nonEmptyArray(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -68,7 +57,7 @@ const CustomFieldMultiEnum = props => {
   return enumOptions ? (
     <FieldCheckboxGroup
       className={css.customField}
-      id={formId ? `${formId}.${name}` : name}
+      id={name}
       name={name}
       label={label}
       options={createFilterOptions(enumOptions)}
@@ -78,9 +67,8 @@ const CustomFieldMultiEnum = props => {
 };
 
 const CustomFieldText = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
-  const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
-  const label = getLabel(fieldConfig);
+  const { name, fieldConfig, defaultRequiredMessage, intl } = props;
+  const { label, placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
@@ -90,7 +78,7 @@ const CustomFieldText = props => {
   return (
     <FieldTextInput
       className={css.customField}
-      id={formId ? `${formId}.${name}` : name}
+      id={name}
       name={name}
       type="textarea"
       label={label}
@@ -101,33 +89,18 @@ const CustomFieldText = props => {
 };
 
 const CustomFieldLong = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
-  const { minimum, maximum, saveConfig } = fieldConfig;
-  const { placeholderMessage, isRequired, requiredMessage } = saveConfig || {};
-  const label = getLabel(fieldConfig);
+  const { name, fieldConfig, defaultRequiredMessage, intl } = props;
+  const { label, placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
+  const validateMaybe = isRequired
+    ? { validate: required(requiredMessage || defaultRequiredMessage) }
+    : {};
   const placeholder =
     placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholderLong' });
-  const numberTooSmallMessage = intl.formatMessage(
-    { id: 'CustomExtendedDataField.numberTooSmall' },
-    { min: minimum }
-  );
-  const numberTooBigMessage = intl.formatMessage(
-    { id: 'CustomExtendedDataField.numberTooBig' },
-    { max: maximum }
-  );
-
-  // Field with schema type 'long' will always be validated against min & max
-  const validate = (value, min, max) => {
-    const requiredMsg = requiredMessage || defaultRequiredMessage;
-    return isRequired && value == null
-      ? requiredMsg
-      : validateInteger(value, max, min, numberTooSmallMessage, numberTooBigMessage);
-  };
 
   return (
     <FieldTextInput
       className={css.customField}
-      id={formId ? `${formId}.${name}` : name}
+      id={name}
       name={name}
       type="number"
       step="1"
@@ -137,25 +110,24 @@ const CustomFieldLong = props => {
       }}
       label={label}
       placeholder={placeholder}
-      validate={value => validate(value, minimum, maximum)}
+      {...validateMaybe}
     />
   );
 };
 
 const CustomFieldBoolean = props => {
-  const { name, fieldConfig, defaultRequiredMessage, formId, intl } = props;
-  const { placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
-  const label = getLabel(fieldConfig);
+  const { name, fieldConfig, defaultRequiredMessage, intl } = props;
+  const { label, placeholderMessage, isRequired, requiredMessage } = fieldConfig?.saveConfig || {};
   const validateMaybe = isRequired
     ? { validate: required(requiredMessage || defaultRequiredMessage) }
     : {};
   const placeholder =
-    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholderBoolean' });
+    placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholder' });
 
   return (
     <FieldBoolean
       className={css.customField}
-      id={formId ? `${formId}.${name}` : name}
+      id={name}
       name={name}
       label={label}
       placeholder={placeholder}

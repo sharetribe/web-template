@@ -8,7 +8,6 @@ import classNames from 'classnames';
 import appSettings from '../../../../config/settings';
 import { intlShape, injectIntl, FormattedMessage } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
-import { displayDeliveryPickup, displayDeliveryShipping } from '../../../../util/configHelpers';
 import {
   autocompleteSearchRequired,
   autocompletePlaceSelected,
@@ -46,7 +45,6 @@ export const EditListingDeliveryFormComponent = props => (
         intl,
         pristine,
         invalid,
-        listingTypeConfig,
         marketplaceCurrency,
         hasStockInUse,
         saveActionMsg,
@@ -70,11 +68,8 @@ export const EditListingDeliveryFormComponent = props => (
       pauseValidation(false);
       useEffect(() => resumeValidation(), [values]);
 
-      const displayShipping = displayDeliveryShipping(listingTypeConfig);
-      const displayPickup = displayDeliveryPickup(listingTypeConfig);
-      const displayMultipleDelivery = displayShipping && displayPickup;
-      const shippingEnabled = displayShipping && values.deliveryOptions?.includes('shipping');
-      const pickupEnabled = displayPickup && values.deliveryOptions?.includes('pickup');
+      const shippingEnabled = values.deliveryOptions?.includes('shipping');
+      const pickupEnabled = values.deliveryOptions?.includes('pickup');
 
       const addressRequiredMessage = intl.formatMessage({
         id: 'EditListingDeliveryForm.addressRequired',
@@ -98,23 +93,18 @@ export const EditListingDeliveryFormComponent = props => (
       const shippingLabel = intl.formatMessage({ id: 'EditListingDeliveryForm.shippingLabel' });
       const pickupLabel = intl.formatMessage({ id: 'EditListingDeliveryForm.pickupLabel' });
 
-      const pickupClasses = classNames({
-        [css.deliveryOption]: displayMultipleDelivery,
-        [css.disabled]: !pickupEnabled,
-        [css.hidden]: !displayPickup,
-      });
-      const shippingClasses = classNames({
-        [css.deliveryOption]: displayMultipleDelivery,
-        [css.disabled]: !shippingEnabled,
-        [css.hidden]: !displayShipping,
-      });
+      const pickupClasses = classNames(css.deliveryOption, !pickupEnabled ? css.disabled : null);
+      const shippingClasses = classNames(
+        css.deliveryOption,
+        !shippingEnabled ? css.disabled : null
+      );
       const currencyConfig = appSettings.getCurrencyFormatting(marketplaceCurrency);
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
           <FieldCheckbox
-            id={formId ? `${formId}.pickup` : 'pickup'}
-            className={classNames(css.deliveryCheckbox, { [css.hidden]: !displayMultipleDelivery })}
+            id="pickup"
+            className={css.deliveryCheckbox}
             name="deliveryOptions"
             label={pickupLabel}
             value="pickup"
@@ -170,7 +160,7 @@ export const EditListingDeliveryFormComponent = props => (
               className={css.input}
               type="text"
               name="building"
-              id={formId ? `${formId}.building` : 'building'}
+              id={`${formId}building`}
               label={intl.formatMessage(
                 { id: 'EditListingDeliveryForm.building' },
                 { optionalText }
@@ -181,10 +171,9 @@ export const EditListingDeliveryFormComponent = props => (
               disabled={!pickupEnabled}
             />
           </div>
-
           <FieldCheckbox
-            id={formId ? `${formId}.shipping` : 'shipping'}
-            className={classNames(css.deliveryCheckbox, { [css.hidden]: !displayMultipleDelivery })}
+            id="shipping"
+            className={css.deliveryCheckbox}
             name="deliveryOptions"
             label={shippingLabel}
             value="shipping"
@@ -192,11 +181,7 @@ export const EditListingDeliveryFormComponent = props => (
 
           <div className={shippingClasses}>
             <FieldCurrencyInput
-              id={
-                formId
-                  ? `${formId}.shippingPriceInSubunitsOneItem`
-                  : 'shippingPriceInSubunitsOneItem'
-              }
+              id="shippingPriceInSubunitsOneItem"
               name="shippingPriceInSubunitsOneItem"
               className={css.input}
               label={intl.formatMessage({
@@ -228,11 +213,7 @@ export const EditListingDeliveryFormComponent = props => (
 
             {hasStockInUse ? (
               <FieldCurrencyInput
-                id={
-                  formId
-                    ? `${formId}.shippingPriceInSubunitsAdditionalItems`
-                    : 'shippingPriceInSubunitsAdditionalItems'
-                }
+                id="shippingPriceInSubunitsAdditionalItems"
                 name="shippingPriceInSubunitsAdditionalItems"
                 className={css.input}
                 label={intl.formatMessage({

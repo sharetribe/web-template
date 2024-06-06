@@ -26,7 +26,7 @@ const LineItemCustomerCommissionMaybe = props => {
     item => item.code === LINE_ITEM_CUSTOMER_COMMISSION && !item.reversal
   );
 
-  // If commission is passed it will be shown as a fee already added to the total price
+  // If commission is passed it will be shown as a fee already reduces from the total price
   let commissionItem = null;
 
   if (isCustomer && customerCommissionLineItem) {
@@ -42,10 +42,7 @@ const LineItemCustomerCommissionMaybe = props => {
     commissionItem = (
       <div className={css.lineItem}>
         <span className={css.itemLabel}>
-          <FormattedMessage
-            id="OrderBreakdown.commission"
-            values={{ marketplaceName, role: 'customer' }}
-          />
+          <FormattedMessage id="OrderBreakdown.commission" values={{ marketplaceName }} />
         </span>
         <span className={css.itemValue}>{formattedCommission}</span>
       </div>

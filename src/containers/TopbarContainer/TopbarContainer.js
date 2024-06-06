@@ -3,15 +3,11 @@ import { array, bool, func, number, object, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import loadable from '@loadable/component';
-
 import { propTypes } from '../../util/types';
-
 import { sendVerificationEmail, hasCurrentUserErrors } from '../../ducks/user.duck';
 import { logout, authenticationInProgress } from '../../ducks/auth.duck';
 import { manageDisableScrolling } from '../../ducks/ui.duck';
-
-const Topbar = loadable(() => import(/* webpackChunkName: "Topbar" */ './Topbar/Topbar'));
+import { Topbar } from '../../components';
 
 export const TopbarContainerComponent = props => {
   const {
@@ -23,7 +19,6 @@ export const TopbarContainerComponent = props => {
     currentUserHasOrders,
     history,
     isAuthenticated,
-    isLoggedInAs,
     authScopes,
     hasGenericError,
     location,
@@ -46,7 +41,6 @@ export const TopbarContainerComponent = props => {
       currentUserHasOrders={currentUserHasOrders}
       history={history}
       isAuthenticated={isAuthenticated}
-      isLoggedInAs={isLoggedInAs}
       authScopes={authScopes}
       location={location}
       notificationCount={notificationCount}
@@ -79,7 +73,6 @@ TopbarContainerComponent.propTypes = {
   currentUserHasListings: bool.isRequired,
   currentUserHasOrders: bool,
   isAuthenticated: bool.isRequired,
-  isLoggedInAs: bool.isRequired,
   authScopes: array,
   notificationCount: number,
   onLogout: func.isRequired,
@@ -97,8 +90,8 @@ TopbarContainerComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
-  // Topbar needs isAuthenticated and isLoggedInAs
-  const { isAuthenticated, isLoggedInAs, logoutError, authScopes } = state.auth;
+  // Topbar needs isAuthenticated
+  const { isAuthenticated, logoutError, authScopes } = state.auth;
   // Topbar needs user info.
   const {
     currentUser,
@@ -116,7 +109,6 @@ const mapStateToProps = state => {
     currentUserHasOrders,
     notificationCount,
     isAuthenticated,
-    isLoggedInAs,
     authScopes,
     sendVerificationEmailInProgress,
     sendVerificationEmailError,

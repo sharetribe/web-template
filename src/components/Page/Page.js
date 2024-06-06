@@ -6,7 +6,6 @@ import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-import { getCustomCSSPropertiesFromConfig } from '../../util/style';
 import { useIntl, intlShape } from '../../util/reactIntl';
 import { metaTagProps } from '../../util/seo';
 import { canonicalRoutePath } from '../../util/routes';
@@ -234,10 +233,14 @@ class PageComponent extends Component {
     const faviconVariants = getFaviconVariants(config);
     const appleTouchIcon = getAppleTouchIconURL(config);
 
-    // Marketplace color and the color for <PrimaryButton> come from configs
-    // If set, we need to create those custom CSS Properties and set them for the app
+    // Marketplace color and branding image comes from configs
+    // If set, we need to create CSS Property and set it to DOM (documentElement is selected here)
     // Note: this is also set to <html> element in app.js to provide marketplace colors for modals/portals.
-    const styles = getCustomCSSPropertiesFromConfig(config.branding);
+    const styles = {
+      ['--marketplaceColor']: config.branding.marketplaceColor,
+      ['--marketplaceColorDark']: config.branding.marketplaceColorDark,
+      ['--marketplaceColorLight']: config.branding.marketplaceColorLight,
+    };
 
     return (
       <div className={classes} style={styles} id="page">

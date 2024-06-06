@@ -351,13 +351,14 @@ describe('auth duck', () => {
         password,
         firstName: 'Pekka',
         lastName: 'Pohjola',
-        protectedData: {
-          phoneNumber: '+123 555 1234567',
-        },
+        phoneNumber: '+123 555 1234567',
       };
+      const { phoneNumber, ...rest } = params;
 
       return signup(params)(dispatch, getState, sdk).then(() => {
-        expect(sdk.currentUser.create.mock.calls).toEqual([[params]]);
+        expect(sdk.currentUser.create.mock.calls).toEqual([
+          [{ ...rest, protectedData: { phoneNumber } }],
+        ]);
         expect(sdk.login.mock.calls).toEqual([[{ username: email, password }]]);
         expect(dispatchedActions(dispatch)).toEqual([
           signupRequest(),
@@ -390,16 +391,17 @@ describe('auth duck', () => {
         password,
         firstName: 'Pekka',
         lastName: 'Pohjola',
-        protectedData: {
-          phoneNumber: '+123 555 1234567',
-        },
+        phoneNumber: '+123 555 1234567',
       };
+      const { phoneNumber, ...rest } = params;
 
       // disable error logging
       log.error = jest.fn();
 
       return signup(params)(dispatch, getState, sdk).then(() => {
-        expect(sdk.currentUser.create.mock.calls).toEqual([[params]]);
+        expect(sdk.currentUser.create.mock.calls).toEqual([
+          [{ ...rest, protectedData: { phoneNumber } }],
+        ]);
         expect(dispatchedActions(dispatch)).toEqual([
           signupRequest(),
           signupError(storableError(error)),

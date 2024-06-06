@@ -60,11 +60,6 @@
   }
 }
 
-.longWord {
-  word-break: break-word;
-  hyphens: auto;
-}
-
 .showMore {
   /* Position and dimensions */
   display: inline;

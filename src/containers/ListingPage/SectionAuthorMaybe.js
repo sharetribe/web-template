@@ -32,7 +32,7 @@ const SectionAuthorMaybe = props => {
   const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
   return (
-    <section id="author" className={css.sectionAuthor}>
+    <div id="author" className={css.sectionAuthor}>
       <Heading as="h2" rootClassName={css.sectionHeadingWithExtraMargin}>
         <FormattedMessage id="ListingPage.aboutProviderTitle" />
       </Heading>
@@ -60,7 +60,7 @@ const SectionAuthorMaybe = props => {
           inProgress={sendInquiryInProgress}
         />
       </Modal>
-    </section>
+    </div>
   );
 };
 
