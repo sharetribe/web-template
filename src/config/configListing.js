@@ -212,10 +212,6 @@ export const listingFields = [
     showConfig: {
       label: 'Mobile number :',
     },
-       categoryConfig: {
-       limitToCategoryIds: false,
-       categoryIds: ['customer'],
-     },
   },
 
   
@@ -233,10 +229,7 @@ export const listingFields = [
     showConfig: {
       label: 'Email :',
     },
-       categoryConfig: {
-       limitToCategoryIds: false,
-       categoryIds: ['customer'],
-     },
+
   },
 
     // Web page
@@ -251,6 +244,10 @@ export const listingFields = [
       },
       showConfig: {
         label: 'Webpage :',
+      },
+      categoryConfig: {
+        limitToCategoryIds: true,
+        categoryIds: ['civil-contractor','project-supervisor'],
       },
     },
   

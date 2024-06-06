@@ -372,23 +372,7 @@ const EditListingDetailsFormComponent = props => (
             />
           ) : null}
 
-          {showDescription ? (
-            <FieldTextInput
-              id={`${formId}description`}
-              name="description"
-              className={css.description}
-              type="textarea"
-              label={intl.formatMessage({ id: 'EditListingDetailsForm.description' })}
-              placeholder={intl.formatMessage({
-                id: 'EditListingDetailsForm.descriptionPlaceholder',
-              })}
-              validate={required(
-                intl.formatMessage({
-                  id: 'EditListingDetailsForm.descriptionRequired',
-                })
-              )}
-            />
-          ) : null}
+
 
           {showListingFields ? (
             <AddListingFields
