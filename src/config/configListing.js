@@ -229,7 +229,6 @@ export const listingFields = [
     showConfig: {
       label: 'Email :',
     },
-
   },
 
     // Web page
