@@ -157,6 +157,8 @@ export const userFields = [
     },
   },
 ];
+ 
+
 
 /////////////////////////////////////
 // Example user type configuration //
