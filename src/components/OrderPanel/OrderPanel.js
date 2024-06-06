@@ -356,10 +356,7 @@ const OrderPanel = props => {
             lineItems={lineItems}
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
-<<<<<<< HEAD
             helmetFee={helmetFee}
-=======
->>>>>>> parent of 886375086 (Merge remote-tracking branch 'upstream/main' into updates-from-upstream)
           />
         ) : showProductOrderForm ? (
           <ProductOrderForm
