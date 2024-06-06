@@ -261,20 +261,7 @@ export const listingFields = [
  *                        providers who have not set payout details and contact them to ensure that they add the details.
  */
 
-export const listingTypes = [
-  {
-    listingType: 'daily-booking',
-    label: 'Daily booking',
-    transactionType: {
-      process: 'default-booking',
-      alias: 'default-booking/release-1',
-      unitType: 'day',
-    },
-    defaultListingFields: {
-      location: true,
-      payoutDetails: true,
-    },
-  },
+
   // // Here are some examples for other listingTypes
   // // TODO: SearchPage does not work well if both booking and product selling are used at the same time
   // {
