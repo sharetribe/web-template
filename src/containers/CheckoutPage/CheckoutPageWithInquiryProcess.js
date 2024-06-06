@@ -148,7 +148,7 @@ export const CheckoutPageWithInquiryProcess = props => {
 
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
-      <CustomTopbar intl={intl} linkToExternalSite={config?.topbar?.logoLink} />
+      <CustomTopbar intl={intl} />
       <div className={css.contentContainer}>
         <MobileListingImage
           listingTitle={listingTitle}

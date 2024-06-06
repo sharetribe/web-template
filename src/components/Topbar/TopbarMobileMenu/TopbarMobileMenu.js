@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /*
+=======
+/**
+>>>>>>> parent of 886375086 (Merge remote-tracking branch 'upstream/main' into updates-from-upstream)
  *  TopbarMobileMenu prints the menu content for authenticated user or
  * shows login actions for those who are not authenticated.
  */
@@ -29,13 +33,21 @@ const TopbarMobileMenu = props => {
 
   if (!isAuthenticated) {
     const signup = (
+<<<<<<< HEAD
       <NamedLink name="SignupPage" style={{color: "white"}} className={css.signupLink}>
+=======
+      <NamedLink name="SignupPage" className={css.signupLink}>
+>>>>>>> parent of 886375086 (Merge remote-tracking branch 'upstream/main' into updates-from-upstream)
         <FormattedMessage id="TopbarMobileMenu.signupLink" />
       </NamedLink>
     );
 
     const login = (
+<<<<<<< HEAD
       <NamedLink name="LoginPage" style={{color: "white"}} className={css.loginLink}>
+=======
+      <NamedLink name="LoginPage" className={css.loginLink}>
+>>>>>>> parent of 886375086 (Merge remote-tracking branch 'upstream/main' into updates-from-upstream)
         <FormattedMessage id="TopbarMobileMenu.loginLink" />
       </NamedLink>
     );
@@ -49,6 +61,7 @@ const TopbarMobileMenu = props => {
       <div className={css.root}>
         <div className={css.content}>
           <div className={css.authenticationGreeting}>
+<<<<<<< HEAD
             <a href='/s'>
               <FormattedMessage id="ALQUILAR UN ARTÍCULO" />
             </a>
@@ -103,6 +116,18 @@ const TopbarMobileMenu = props => {
             <FormattedMessage id=" INICIA SESIÓN" />
           </NamedLink>         
         </div>         
+=======
+            <FormattedMessage
+              id="TopbarMobileMenu.unauthorizedGreeting"
+              values={{ lineBreak: <br />, signupOrLogin }}
+            />
+          </div>
+        </div>
+        <div className={css.footer}>
+          <NamedLink className={css.createNewListingLink} name="NewListingPage">
+            <FormattedMessage id="TopbarMobileMenu.newListingLink" />
+          </NamedLink>
+>>>>>>> parent of 886375086 (Merge remote-tracking branch 'upstream/main' into updates-from-upstream)
         </div>
       </div>
     );
@@ -158,8 +183,12 @@ const TopbarMobileMenu = props => {
         </NamedLink>
         <a
           className={classNames(css.navigationLink, currentPageClass('faqs'))}
+<<<<<<< HEAD
           name="AccountSettingsPage"
           href="https://www.rundo.com.ar/p/frequent-asked-questions"
+=======
+          name="AccountSettingsPage" href="https://www.rundo.com.ar/p/frequent-asked-questions"
+>>>>>>> parent of 886375086 (Merge remote-tracking branch 'upstream/main' into updates-from-upstream)
         >
           <a href="https://www.rundo.com.ar/p/frequent-asked-questions"></a>
           <FormattedMessage id="Preguntas Frecuentes" />

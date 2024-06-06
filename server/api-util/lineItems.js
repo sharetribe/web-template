@@ -220,7 +220,11 @@ exports.transactionLineItems = (listing, orderData, providerCommission) => {
 
   // Let's keep the base price (order) as first line item and provider's commission as last one.
   // Note: the order matters only if OrderBreakdown component doesn't recognize line-item.
+<<<<<<< HEAD
   const lineItems = [order, ...extraLineItems, ...helmetFee, ...providerCommissionMaybe];
+=======
+  const lineItems = [order, ...extraLineItems, ...providerCommissionMaybe];
+>>>>>>> parent of 886375086 (Merge remote-tracking branch 'upstream/main' into updates-from-upstream)
 
   return lineItems;
 };
