@@ -42,8 +42,7 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
       return { processName, processState, showDetailCardHeadings: true };
     })
     .cond([states.PREAUTHORIZED, CUSTOMER], () => {
-      const primary = isCustomerBanned ? null : actionButtonProps(transitions.ACCEPT, PROVIDER);
-      return { processName, processState, showDetailCardHeadings: true, showExtraInfo: true, showActionButtons: true, primaryButtonProps: primary,};
+      return { processName, processState, showDetailCardHeadings: true, showExtraInfo: true };
     })
     .cond([states.PREAUTHORIZED, PROVIDER], () => {
       const primary = isCustomerBanned ? null : actionButtonProps(transitions.ACCEPT, PROVIDER);

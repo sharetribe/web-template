@@ -109,7 +109,6 @@ export const EditListingLocationFormComponent = props => (
             placeholder={intl.formatMessage({
               id: 'EditListingLocationForm.buildingPlaceholder',
             })}
-            required
           />
 
           <Button

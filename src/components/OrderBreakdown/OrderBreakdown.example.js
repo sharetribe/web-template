@@ -82,7 +82,7 @@ export const ProductShippingCustomer = {
         },
         {
           code: 'line-item/provider-commission',
-          includeFor: ['customer','provider'],
+          includeFor: ['provider'],
           unitPrice: new Money(fee.toNumber(), CURRENCY),
           lineTotal: new Money(fee.toNumber(), CURRENCY),
           reversal: false,
@@ -172,14 +172,14 @@ export const ProductRefundShippingCustomer = {
         },
         {
           code: 'line-item/provider-commission',
-          includeFor: ['customer','provider'],
+          includeFor: ['provider'],
           unitPrice: new Money(fee.toNumber(), CURRENCY),
           lineTotal: new Money(fee.toNumber(), CURRENCY),
           reversal: false,
         },
         {
           code: 'line-item/provider-commission',
-          includeFor: ['customer','provider'],
+          includeFor: ['provider'],
           unitPrice: new Money(fee.toNumber(), CURRENCY),
           lineTotal: new Money(fee.times(-1).toNumber(), CURRENCY),
           reversal: true,
