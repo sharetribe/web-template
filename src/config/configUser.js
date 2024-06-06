@@ -157,15 +157,13 @@ export const userFields = [
     },
   },
 ];
- 
-
 
 /////////////////////////////////////
 // Example user type configuration //
 /////////////////////////////////////
 /**
  * User types are not supported in hosted configuration yet.
- * test
+ *
  * To take user types into use in your
  * custom code, you can do the following things:
  * - Add a new user field with key 'userType', scope 'publicData', and schemaType enum

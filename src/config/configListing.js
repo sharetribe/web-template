@@ -53,6 +53,264 @@
  *   - requiredMessage (optional):    Message for those fields, which are mandatory.
  */
 export const listingFields = [
+
+
+  // Hire as a Civil Contractor
+  {
+    key: 'hireascivil',
+    scope: 'public',
+    schemaType: 'multi-enum',
+    enumOptions: [
+      { option: 'Civil Contractor', label: 'Civil Contractor' },
+    ],
+    saveConfig: {
+      label: 'Hire as a',
+      placeholderMessage: 'Select an option…',
+      isRequired: true,
+    },
+    showConfig: {
+      label: 'Hire as a',
+    },
+    categoryConfig: {
+      limitToCategoryIds: true,
+      categoryIds: ['civil-contractor'],
+    },
+  },
+
+  // Hire a Civil Contractor for customers
+  {
+    key: 'hireacontractor',
+    scope: 'public',
+    schemaType: 'enum',
+    enumOptions: [
+      { option: 'Civil Contractor', label: 'Civil Contractor' },      
+      { option: 'Project Supervisor', label: 'Project Supervisor' },
+    ],
+    saveConfig: {
+      label: 'Looking for a',
+      placeholderMessage: 'Select an option…',
+      isRequired: true,
+    },
+    showConfig: {
+      label: 'Looking for a',
+    },
+    categoryConfig: {
+      limitToCategoryIds: true,
+      categoryIds: ['customer'],
+    },
+  },
+
+    // Hire as a project-supervisor
+    {
+      key: 'projectsupervisor',
+      scope: 'public',
+      schemaType: 'multi-enum',
+      enumOptions: [
+        { option: 'Project Supervisor at rs1000/day for all Civil and Interior works', label: 'Project Supervisor at rs1000/day for all Civil and Interior works' },      
+      ],
+      saveConfig: {
+        label: 'Hire as a',
+        placeholderMessage: 'Select an option…',
+        isRequired: true,
+      },
+      showConfig: {
+        label: 'Hire as a',
+      },
+      categoryConfig: {
+        limitToCategoryIds: true,
+        categoryIds: ['project-supervisor'],
+      },
+    },
+
+//  Services Offered :
+
+{
+  key: 'servicesoffered',
+  scope: 'public',
+  schemaType: 'multi-enum',
+  enumOptions: [
+    { option: 'Home Renovation', label: 'Home Renovation' },
+    { option: 'Office Renovation', label: 'Office Renovation' },
+    { option: 'Carpentry', label: 'Carpentry' },
+    { option: 'Electrical', label: 'Electrical' },    
+    { option: 'Flooring', label: 'Flooring' },
+    { option: 'Masonry', label: 'Masonry' },
+    { option: 'MEP', label: 'MEP' },
+    { option: 'Painting', label: 'Painting' },
+    { option: 'Plumbing', label: 'Plumbing' },
+    { option: 'Other Works', label: 'Other Works' },
+  ],
+  saveConfig: {
+    label: 'Services Offered',
+    placeholderMessage: 'Select an option…',
+    isRequired: true,
+  },
+  filterConfig: {
+    indexForSearch: true,
+    label: 'Services Offered',
+    searchMode: 'has_any',
+    group: 'primary',
+  },
+  showConfig: {
+    label: 'Services Offered',
+  },
+  categoryConfig: {
+    limitToCategoryIds: true,
+    categoryIds: ['civil-contractor'],
+  },
+},
+
+//  Services Required 
+
+{
+  key: 'servicesrequired',
+  scope: 'public',
+  schemaType: 'multi-enum',
+  enumOptions: [
+    { option: 'Home Renovation', label: 'Home Renovation' },
+    { option: 'Office Renovation', label: 'Office Renovation' },
+    { option: 'Carpentry', label: 'Carpentry' },
+    { option: 'Electrical', label: 'Electrical' },    
+    { option: 'Flooring', label: 'Flooring' },
+    { option: 'Masonry', label: 'Masonry' },
+    { option: 'MEP', label: 'MEP' },
+    { option: 'Painting', label: 'Painting' },
+    { option: 'Plumbing', label: 'Plumbing' },
+    { option: 'Other Works', label: 'Other Works' },
+  ],
+  saveConfig: {
+    label: 'Services Required',
+    placeholderMessage: 'Select an option…',
+    isRequired: true,
+  },
+  filterConfig: {
+    indexForSearch: false,
+    label: 'Services Required',
+    searchMode: 'has_any',
+    group: 'primary',
+  },
+  showConfig: {
+    label: 'Services Required',
+  },
+  categoryConfig: {
+    limitToCategoryIds: true,
+    categoryIds: ['customer'],
+  },
+},
+
+
+  // Mobile Number
+  {
+    key: 'mobilenumber',
+    scope: 'public',
+    schemaType: 'long',
+    saveConfig: {
+      label: 'Mobile number :',
+      placeholderMessage: 'Please enter your 10 Digit Mobile Number',
+      isRequired: true,
+    },
+    showConfig: {
+      label: 'Mobile number :',
+    },
+       categoryConfig: {
+       limitToCategoryIds: false,
+       categoryIds: ['customer'],
+     },
+  },
+
+  
+  // Email
+
+  {
+    key: 'emailid',
+    scope: 'public',
+    schemaType: 'text',
+    saveConfig: {
+      label: 'Email :',
+      placeholderMessage: 'Enter your email-id',
+      isRequired: true,
+    },
+    showConfig: {
+      label: 'Email :',
+    },
+       categoryConfig: {
+       limitToCategoryIds: false,
+       categoryIds: ['customer'],
+     },
+  },
+
+  // Area
+
+  {
+    key: 'area',
+    scope: 'public',
+    schemaType: 'text',
+    saveConfig: {
+      label: 'Area :',
+      placeholderMessage: 'Enter your Area name',
+      isRequired: true,
+    },
+    showConfig: {
+      label: 'Area :',
+    },
+       categoryConfig: {
+       limitToCategoryIds: true,
+       categoryIds: ['civil-contractor','project-supervisor'],
+     },
+  },
+
+
+  // City
+  {
+    key: 'city',
+    scope: 'public',
+    schemaType: 'text',
+    enumOptions: [
+      { option: 'bell', label: 'Bell' },
+      { option: 'lights', label: 'Lights' },
+      { option: 'lock', label: 'Lock' },
+      { option: 'mudguard', label: 'Mudguard' },
+    ],
+    saveConfig: {
+      label: 'City :',
+      placeholderMessage: 'Enter your city name',
+      isRequired: true,
+    },
+    showConfig: {
+      label: 'City :',
+    },
+       categoryConfig: {
+       limitToCategoryIds: false,
+       categoryIds: ['customer'],
+     },
+  },
+
+// Pincode
+
+  {
+    key: 'pincode',
+    scope: 'public',
+    schemaType: 'long',
+    enumOptions: [
+      { option: 'bell', label: 'Bell' },
+      { option: 'lights', label: 'Lights' },
+      { option: 'lock', label: 'Lock' },
+      { option: 'mudguard', label: 'Mudguard' },
+    ],
+    saveConfig: {
+      label: 'Pincode :',
+      placeholderMessage: 'Enter 6 Digit Pincode',
+      isRequired: true,
+    },
+    showConfig: {
+      label: 'Pincode :',
+    },
+       categoryConfig: {
+       limitToCategoryIds: false,
+       categoryIds: ['customer'],
+     },
+  },
+
   // {
   //   "scope": "public",
   //   "label": "Gears",
@@ -261,6 +519,9 @@ export const listingFields = [
  *                        providers who have not set payout details and contact them to ensure that they add the details.
  */
 
+export const listingTypes = [
+
+  
 
   // // Here are some examples for other listingTypes
   // // TODO: SearchPage does not work well if both booking and product selling are used at the same time
