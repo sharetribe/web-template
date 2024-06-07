@@ -1264,7 +1264,7 @@ textarea {
   flex-grow: 1;
 
   /* Create context so the close button can be positioned within it */
-  position: relative;
+  position: fixed;
 
   /* Display and dimensions */
   display: flex;
