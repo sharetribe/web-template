@@ -1,15 +1,48 @@
 .customField {
-  margin-bottom: 24px;
+  /* Your custom styles for the text input field */
+  /* Example styles: */
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-bottom: 16px; /* Adjust as needed */
+  position: relative;
+}
 
-  &:last-child {
-    margin-bottom: 0;
-  }
+.customField label {
+  /* Your custom styles for the label */
+  /* Example styles: */
+  font-weight: bold;
+}
 
-  @media (--viewportMedium) {
-    margin-bottom: 32px;
+.customField input[type="text"],
+.customField input[type="number"] {
+  /* Your custom styles for the text input */
+  /* Example styles: */
+  width: calc(100% - 16px); /* Adjust for padding */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-top: 8px; /* Adjust as needed */
+  transition: font-size 0.3s ease-in-out; /* Smooth transition for font-size change */
+}
 
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
+.customField input[type="text"]:focus,
+.customField input[type="number"]:focus {
+  font-size: 20px; /* Increase font size on focus */
+}
+
+.customField input[type="text"]::placeholder,
+.customField input[type="number"]::placeholder {
+  /* Placeholder styles */
+  /* Example styles: */
+  font-size: 16px; /* Initial font size */
+  transition: font-size 0.3s ease-in-out; /* Smooth transition for font-size change */
+}
+
+.customField input[type="text"]:focus::placeholder,
+.customField input[type="number"]:focus::placeholder {
+  font-size: 14px; /* Shrink font size on focus */
 }

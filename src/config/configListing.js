@@ -277,12 +277,6 @@ export const listingFields = [
     key: 'city',
     scope: 'public',
     schemaType: 'text',
-    enumOptions: [
-      { option: 'bell', label: 'Bell' },
-      { option: 'lights', label: 'Lights' },
-      { option: 'lock', label: 'Lock' },
-      { option: 'mudguard', label: 'Mudguard' },
-    ],
     saveConfig: {
       label: 'City :',
       placeholderMessage: 'Enter your city name',
@@ -303,12 +297,6 @@ export const listingFields = [
     key: 'pincode',
     scope: 'public',
     schemaType: 'long',
-    enumOptions: [
-      { option: 'bell', label: 'Bell' },
-      { option: 'lights', label: 'Lights' },
-      { option: 'lock', label: 'Lock' },
-      { option: 'mudguard', label: 'Mudguard' },
-    ],
     saveConfig: {
       label: 'Pincode :',
       placeholderMessage: 'Enter 6 Digit Pincode',

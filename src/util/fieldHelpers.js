@@ -145,7 +145,7 @@ export const pickCustomFieldProps = (
             heading: label,
             options: createFilterOptions(enumOptions),
             selectedOptions: value || [],
-            showUnselectedOptions: showUnselectedOptions !== true,
+            showUnselectedOptions: showUnselectedOptions !== false,
           },
         ]
       : isTargetEntityType && !!value && config.schemaType === SCHEMA_TYPE_TEXT && shouldPick
