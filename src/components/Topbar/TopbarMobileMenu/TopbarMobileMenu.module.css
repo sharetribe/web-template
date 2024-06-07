@@ -11,9 +11,7 @@
 }
 
 .content {
-
   width: 100vw;
-  height: 15vh;
   flex-grow: 1;
   flex-shrink: 0;
   display: flex;
