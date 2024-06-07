@@ -1,48 +1,68 @@
+/* Custom styles for the text input field */
 .customField {
-  /* Your custom styles for the text input field */
-  /* Example styles: */
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 16px;
-  margin-bottom: 16px; /* Adjust as needed */
+  margin-bottom: 20px;
   position: relative;
 }
 
+/* Custom styles for the label */
 .customField label {
-  /* Your custom styles for the label */
-  /* Example styles: */
   font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
 }
 
+/* Custom styles for the text input */
 .customField input[type="text"],
 .customField input[type="number"] {
-  /* Your custom styles for the text input */
-  /* Example styles: */
-  width: calc(100% - 16px); /* Adjust for padding */
-  padding: 8px;
+  width: calc(100% - 22px);
+  padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 16px;
-  margin-top: 8px; /* Adjust as needed */
-  transition: font-size 0.3s ease-in-out; /* Smooth transition for font-size change */
+  margin-top: 8px;
+  margin-bottom: 2px;
+  transition: all 0.3s ease-in-out;
 }
 
+/* Increase font size and add shadow on focus */
 .customField input[type="text"]:focus,
 .customField input[type="number"]:focus {
-  font-size: 20px; /* Increase font size on focus */
+  font-size: 18px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
+/* Placeholder styles */
 .customField input[type="text"]::placeholder,
 .customField input[type="number"]::placeholder {
-  /* Placeholder styles */
-  /* Example styles: */
-  font-size: 16px; /* Initial font size */
-  transition: font-size 0.3s ease-in-out; /* Smooth transition for font-size change */
+  font-size: 16px;
+  transition: all 0.3s ease-in-out;
+  color: #999;
 }
 
+/* Shrink font size and change color on focus */
 .customField input[type="text"]:focus::placeholder,
 .customField input[type="number"]:focus::placeholder {
-  font-size: 14px; /* Shrink font size on focus */
+  font-size: 14px;
+  color: #777;
+}
+
+/* Style for submit button */
+.customField input[type="submit"] {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease-in-out;
+}
+
+.customField input[type="submit"]:hover {
+  background-color: #0056b3;
 }
