@@ -1,21 +1,31 @@
 @import '../../../styles/customMediaQueries.css';
 
 .root {
+  padding: 0px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   min-height: 100%;
   height: auto;
+  font-size: x-large;
 }
 
 .content {
+  width: 100vw;
   flex-grow: 1;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  background-color: var(--marketplaceColor);
 }
-
+.logo{
+  width: 42vw;
+}
+.categories{
+  margin-top: 5%;
+  display: flex;
+}
 .footer {
   position: fixed;
   bottom: 0;
@@ -121,7 +131,7 @@
   margin-bottom: 11px;
 }
 .currentPageLink {
-  color: var(--marketplaceColorDark);
+   color: var(--marketplaceColorDark); 
 }
 
 .notificationBadge {
@@ -138,16 +148,31 @@
 .createNewListingLink {
   composes: buttonPrimary from global;
 }
+.LoginListingLink {
+  composes: buttonPrimary from global;
+  
+}
+
 
 .authenticationGreeting {
+  margin-left: 5%;
   /* Font */
-  composes: h1 from global;
 
-  margin-bottom: 24px;
-  margin-top: var(--TopbarMobileMenu_topMargin);
+  width: 100%;
+/*   margin-bottom: 24px;
+  margin-top: var(--TopbarMobileMenu_topMargin); */
+  /* background-color: var(--marketplaceColor); */
 }
 .authenticationLinks {
   white-space: nowrap;
+  color: aliceblue
+}
+
+.menuLinks{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: black;
 }
 
 .signupLink {

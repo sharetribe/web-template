@@ -26,7 +26,10 @@ const IconClose = props => {
       width="12"
       height="12"
       viewBox="0 0 12 12"
+      color='white'
       xmlns="http://www.w3.org/2000/svg"
+      border= "2px solid white"
+      borderRadius="50%"
     >
       <g transform="translate(-1 -1)" fillRule="evenodd">
         <rect transform="rotate(45 7 7)" x="-1" y="6" width="16" height="2" rx="1" />
