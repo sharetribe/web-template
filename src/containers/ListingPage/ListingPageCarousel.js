@@ -77,6 +77,31 @@ import SectionGallery from './SectionGallery';
 
 import css from './ListingPage.module.css';
 
+import FeedSection from '../TransactionPage/TransactionPanel/FeedSection.js';
+import SendMessageForm from '../TransactionPage/SendMessageForm/SendMessageForm.js';
+import TransactionPanelComponent from '../TransactionPage/TransactionPanel/TransactionPanel.js';
+
+
+  const handleSubmitMessage = (values, form) => {
+    // Aquí puedes manejar la lógica para enviar el mensaje
+    console.log('Mensaje enviado:', values.message);
+    form.reset();
+  };
+
+  const sendMessageFormProps = {
+    sendMessageFormName : 'TransactionPanel.SendMessageForm',
+    formId: 'TransactionPanel.SendMessageForm', // Valor para formId
+    rootClassName: 'css.sendMessageForm', // Valor para rootClassName
+    messagePlaceholder: 'Placeholder para el mensaje', // Valor para messagePlaceholder
+    inProgress: false, // Valor para inProgress
+    sendMessageError: null, // Valor para sendMessageError
+    onFocus: () => console.log('SendMessageForm focused'), // Función para onFocus
+    onBlur: () => console.log('SendMessageForm blurred'), // Función para onBlur
+    onSubmit: (values, form) => console.log('Mensaje enviado:', values.message), // Función para onSubmit
+
+    
+  };
+
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
 const { UUID } = sdkTypes;
@@ -85,7 +110,7 @@ export const ListingPageComponent = props => {
   const [inquiryModalOpen, setInquiryModalOpen] = useState(
     props.inquiryModalOpenForListingId === props.params.id
   );
-
+  let otherUserDisplayNameString = '';
   const {
     isAuthenticated,
     currentUser,
@@ -115,6 +140,13 @@ export const ListingPageComponent = props => {
     config,
     routeConfiguration,
     onUpdateFavorites,
+    sendMessageInProgress,
+    sendMessageError ,
+    onSendMessageFormFocus,
+    onSendMessageFormBlur,
+    onMessageSubmit,
+    activityFeed,
+    isInquiryProcess,
   } = props;
 
   // prop override makes testing a bit easier
@@ -272,6 +304,7 @@ export const ListingPageComponent = props => {
     location,
   });
 
+  
   return (
     <Page
       title={schemaTitle}
@@ -369,6 +402,20 @@ export const ListingPageComponent = props => {
               listingId={currentListing.id}
               mapsConfig={config.maps}
             />
+             
+              <H4>Preguntale al dueño del artículo</H4>
+              <SendMessageForm
+               formId={{ sendMessageFormName: 'TransactionPanel.sendMessagePlaceholder' }}
+               rootClassName={css.sendMessageForm}
+               messagePlaceholder={intl.formatMessage(
+                 { id: 'TransactionPanel.sendMessagePlaceholder' },
+                 { name: otherUserDisplayNameString }
+               )}
+               inProgress={sendMessageInProgress}
+               sendMessageError={sendMessageError}
+               onSubmit={handleSubmitMessage}/>
+            
+            
             <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
             <SectionAuthorMaybe
               title={title}

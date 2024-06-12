@@ -11,7 +11,10 @@
 }
 
 .content {
-  width: 100vw;
+  
+  margin: -11px;
+  width: 100vh;
+  height: 15vh;
   flex-grow: 1;
   flex-shrink: 0;
   display: flex;
@@ -20,10 +23,10 @@
   background-color: var(--marketplaceColor);
 }
 .logo{
-  width: 42vw;
+  margin-top: 15px;
+  width: 23%;
 }
 .categories{
-  margin-top: 5%;
   display: flex;
 }
 .footer {

@@ -18,7 +18,7 @@ import { savePaymentMethod } from '../../ducks/paymentMethods.duck';
 // Import shared components
 import { NamedRedirect, Page } from '../../components';
 
-// Session helpers file needs to be imported before CheckoutPageWithPayment and CheckoutPageWithInquiryProcess
+// Session helpers file needs to be imported before CheckoutPageWithoutPayment and CheckoutPageWithInquiryProcess
 import { storeData, clearData, handlePageData } from './CheckoutPageSessionHelpers';
 
 // Import modules from this directory
@@ -33,7 +33,7 @@ import {
 } from './CheckoutPage.duck';
 
 import CustomTopbar from './CustomTopbar';
-import CheckoutPageWithPayment, {
+import CheckoutPageWithoutPayment, {
   loadInitialData,
 } from './CheckoutPageWithoutPayment';
 import CheckoutPageWithInquiryProcess from './CheckoutPageWithInquiryProcess';
@@ -136,7 +136,7 @@ const EnhancedCheckoutPage = props => {
       {...props}
     />
   ) : processName && !isInquiryProcess && !speculateTransactionInProgress ? (
-    <CheckoutPageWithPayment
+    <CheckoutPageWithoutPayment
       config={config}
       routeConfiguration={routeConfiguration}
       intl={intl}
