@@ -6,8 +6,8 @@ that are visible in Sharetribe Console.
 
 There's a bit of duplication involved with transaction processes. If you decide to customize
 existing transaction processes or create a unique process, you need to define the process so that
-the Sharetribe backend understands it. You can use Flex CLI to push the process to your marketplace
-environment.
+the Sharetribe backend understands it. You can use Sharetribe CLI to push the process to your
+marketplace environment.
 
 Read more about transaction processes:  
 https://www.sharetribe.com/docs/concepts/transaction-process/
@@ -59,5 +59,5 @@ These files reference the actual transaction processes that are available by def
 marketplace.
 
 > Note: changing these files or email templates doesn't change the actual processes in your
-> marketplace environments unless you use Flex CLI to actually update the processes listed in the
-> Console.
+> marketplace environments unless you use Sharetribe CLI to actually update the processes listed in
+> the Console.
