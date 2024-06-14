@@ -121,7 +121,7 @@ export const OrderBreakdownComponent = props => {
 
       <LineItemCustomerCommissionMaybe
         lineItems={lineItems}
-        isCustomer={isCustomer}
+        isProvider={isProvider}
         marketplaceName={marketplaceName}
         intl={intl}
       />
