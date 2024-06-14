@@ -489,10 +489,10 @@ export const BookingDatesFormComponent = props => {
         ? formatMoney(intl, new Money(helmetFee.amount, helmetFee.currency))
         : null;
       
-/*       const helmetFeeLabel = intl.formatMessage(
+       const helmetFeeLabel = intl.formatMessage(
         { id: 'BookingDatesForm.helmetFeeLabel' },
         { fee: formattedHelmetFee }
-      ); */
+      ); 
       
       
       const helmetFeeMaybe = differenceInDays > 3 ? (
