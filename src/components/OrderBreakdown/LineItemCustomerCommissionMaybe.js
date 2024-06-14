@@ -20,7 +20,7 @@ const isValidCommission = commissionLineItem => {
 };
 
 const LineItemCustomerCommissionMaybe = props => {
-  const { lineItems, isProvider, marketplaceName, intl } = props;
+  const { lineItems, isCustomer, marketplaceName, intl } = props;
 
   const customerCommissionLineItem = lineItems.find(
     item => item.code === LINE_ITEM_CUSTOMER_COMMISSION && !item.reversal
@@ -29,7 +29,7 @@ const LineItemCustomerCommissionMaybe = props => {
   // If commission is passed it will be shown as a fee already reduces from the total price
   let commissionItem = null;
 
-  if (isProvider && customerCommissionLineItem) {
+  if (isCustomer && customerCommissionLineItem) {
     if (!isValidCommission(customerCommissionLineItem)) {
       // eslint-disable-next-line no-console
       console.error('invalid commission line item:', customerCommissionLineItem);
@@ -54,7 +54,7 @@ const LineItemCustomerCommissionMaybe = props => {
 
 LineItemCustomerCommissionMaybe.propTypes = {
   lineItems: propTypes.lineItems.isRequired,
-  isProvider: bool.isRequired,
+  isCustomer: bool.isRequired,
   marketplaceName: string.isRequired,
   intl: intlShape.isRequired,
 };
