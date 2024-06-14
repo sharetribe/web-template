@@ -14,7 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
-- [add] add currently available translations for de, es, fr.
+- [change] Fix a typo in FR translations.
+  [#407](https://github.com/sharetribe/web-template/pull/407)
+- [add] Add currently available translations for de, es, fr.
   [#404](https://github.com/sharetribe/web-template/pull/404)
 - [fix] The example files of SignupForm and ConfirmSignupForm had wrong data.
   [#403](https://github.com/sharetribe/web-template/pull/403)
