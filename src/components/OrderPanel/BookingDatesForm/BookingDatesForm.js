@@ -495,7 +495,7 @@ export const BookingDatesFormComponent = props => {
       );
       
       
-/*       const helmetFeeMaybe = differenceInDays > 3 ? (
+       const helmetFeeMaybe = differenceInDays > 3 ? (
           <FieldCheckbox
           className={css.helmetFeeContainer}
           id={`${formId}.helmetFee`}
@@ -503,7 +503,7 @@ export const BookingDatesFormComponent = props => {
           label={helmetFeeLabel}
           value="helmetFee"
           />
-        ) : null; */
+        ) : null; 
         
       
         const startDateErrorMessage = intl.formatMessage({
