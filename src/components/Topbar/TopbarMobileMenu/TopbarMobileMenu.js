@@ -50,9 +50,10 @@ const TopbarMobileMenu = props => {
         <FormattedMessage id="TopbarMobileMenu.signupOrLogin" values={{ signup, login }} />
       </span>
     );
+    const contentClass = !!user.id ? css.content : css.contentAnonymous
     return (
       <div className={css.root}>
-        <div className={css.content}>
+        <div className={contentClass}>
           <img className={css.logo} src="/static/icons/rundo_web-social-media.png" alt="Logo" />
           <div className={css.authenticationGreeting}>
             {/*             <a href='/s'>

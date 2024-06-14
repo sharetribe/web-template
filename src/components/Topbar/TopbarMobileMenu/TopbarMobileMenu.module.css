@@ -10,8 +10,17 @@
   font-size: x-large;
 }
 
-.content {
-  
+.content { 
+  margin: 11px;
+  width: 100vh;
+  height: 15vh;
+  flex-grow: 1;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.contentAnonymous {
   margin: -11px;
   width: 100vh;
   height: 15vh;
