@@ -1061,7 +1061,7 @@
   "TransactionPage.default-purchase.customer.reviewed.title": "Vous avez reçu votre commande !",
   "TransactionPage.default-purchase.customer.transition-dispute.actionButton": "Contester",
   "TransactionPage.default-purchase.customer.transition-dispute.actionError": "Oups, l'action de contestation a échoué. Veuillez actualiser la page et réessayer.",
-  "TransactionPage.default-purchase.customer.transition-mark-received-from-purchased.actionButton": "J'ai reçu my commande",
+  "TransactionPage.default-purchase.customer.transition-mark-received-from-purchased.actionButton": "J'ai reçu ma commande",
   "TransactionPage.default-purchase.customer.transition-mark-received-from-purchased.actionError": "Oups, impossible de marquer la commande comme reçue. Veuillez actualiser la page et réessayer.",
   "TransactionPage.default-purchase.customer.transition-mark-received.actionButton": "J'ai reçu ma commande",
   "TransactionPage.default-purchase.customer.transition-mark-received.actionError": "Oups, impossible de marquer la commande comme reçue. Veuillez actualiser la page et réessayer.",
