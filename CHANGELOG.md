@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] Fix another typo in FR translations.
+  [#408](https://github.com/sharetribe/web-template/pull/408)
 - [change] Fix a typo in FR translations.
   [#407](https://github.com/sharetribe/web-template/pull/407)
 - [add] Add currently available translations for de, es, fr.
