@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+/* import React, { Component } from 'react';
 import { string, bool, func } from 'prop-types';
 import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
@@ -142,3 +142,4 @@ const SendMessageForm = compose(injectIntl)(SendMessageFormComponent);
 SendMessageForm.displayName = 'SendMessageForm';
 
 export default SendMessageForm;
+ */
