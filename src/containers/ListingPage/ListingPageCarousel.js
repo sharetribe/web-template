@@ -402,7 +402,7 @@ export const ListingPageComponent = props => {
               listingId={currentListing.id}
               mapsConfig={config.maps}
             />
-             
+{/*              
               <H4>Preguntale al dueño del artículo</H4>
               <SendMessageForm
                formId={{ sendMessageFormName: 'TransactionPanel.sendMessagePlaceholder' }}
@@ -414,7 +414,7 @@ export const ListingPageComponent = props => {
                inProgress={sendMessageInProgress}
                sendMessageError={sendMessageError}
                onSubmit={handleSubmitMessage}/>
-            
+             */}
             
             <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
             <SectionAuthorMaybe
