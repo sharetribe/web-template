@@ -222,12 +222,12 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
       // The customer commission is what the customer pays for the transaction, and
   // it is added on top of the order price to get the customer's payin price:
   // orderPrice + customerCommission = customerPayin
-  const customerCommissionMaybe = hasCommissionPercentage(customerCommission)
+  const customerCommissionMaybe = hasCommissionPercentage(providerCommission)
   ? [
       {
         code: 'line-item/customer-commission',
         unitPrice: calculateTotalFromLineItems([order, ...helmetFee]),
-        percentage:-1 * customerCommission.percentage,
+        percentage:providerCommission.percentage,
         includeFor: ['customer'],
       },
     ]
