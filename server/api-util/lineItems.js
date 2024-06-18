@@ -214,7 +214,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
           code: 'line-item/provider-commission',
           unitPrice: calculateTotalFromLineItems([order, ...helmetFee]),
           percentage: getNegation(providerCommission.percentage),
-          includeFor: ['customer','provider'],
+          includeFor: ['provider'],
         },
       ]
     : [];
