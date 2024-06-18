@@ -14,6 +14,93 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] Fix another typo in FR translations.
+  [#409](https://github.com/sharetribe/web-template/pull/409)
+- [change] Fix a typo in FR translations.
+  [#408](https://github.com/sharetribe/web-template/pull/408)
+- [add] Add currently available translations for de, es, fr.
+  [#404](https://github.com/sharetribe/web-template/pull/404)
+- [fix] The example files of SignupForm and ConfirmSignupForm had wrong data.
+  [#403](https://github.com/sharetribe/web-template/pull/403)
+- [change] FilterComponent: relax generated name-attribute for inputs: allow camelCase.
+  [#402](https://github.com/sharetribe/web-template/pull/402)
+
+## [v5.2.0] 2024-05-28
+
+- [add] add currently available translations for de, es, fr.
+  [#400](https://github.com/sharetribe/web-template/pull/400)
+- [add] This adds user types. User fields can be tied to user types
+
+  - User fields contain multiple default user fields
+    - Only displayName and phoneNumber can be toggle on/off
+      - You can also toggle wether those are shown on sign up forms.
+  - Custom user fields can be tied to user types.
+  - AuthenticationPage: SignupForm and ConfirmSignupForm show a dropdown to select user type if it's
+    not preselected
+    - Default
+  - New route **_SignupForUserTypePage_** with path `/signup/:userType`
+    - This route preselects one user type for the sign up forms.
+    - If preselected userType is there (`/signup/:userType`), then
+      - Dropdown selector is not shown.
+      - Toggling between login & signup tabs should keep the userType in memory
+      - Using SSO, saves the preselected user type to a temporary cookie (to be used in
+        ConfirmSignupForm after returning from ID provider's website)
+    - An unknown (e.g. outdated) userType in the route will show 404 page.
+
+  [#399](https://github.com/sharetribe/web-template/pull/399)
+
+- [add] Toggle the visibility of unselected options on SectionMultiEnumMaybe through hosted assets.
+  [#382](https://github.com/sharetribe/web-template/pull/382)
+- [fix] Update SDK to v1.21.1. Fixes bug with extended data with a key `length` and a number type
+  value. [#398](https://github.com/sharetribe/web-template/pull/398)
+- [fix] util/sanitize.js: handle publicData = null case which happens with banned user
+  [#397](https://github.com/sharetribe/web-template/pull/397)
+- [fix] en.json: typo on 'ModalMissingInformation.verifyEmailText'
+  [#396](https://github.com/sharetribe/web-template/pull/396)
+- [fix] Ensure that there is listingType, transactionProcessAlias and unitType defined.
+  [#394](https://github.com/sharetribe/web-template/pull/394)
+- [fix] en.json: typo on 'StripeConnectAccountForm.stripeToSText'
+  [#395](https://github.com/sharetribe/web-template/pull/395)
+- [change] StripeConnectAccount: use 'collectionOptions' instead of deprecated 'collect'. The
+  future_requirements uses 'include' by default.
+  [#392](https://github.com/sharetribe/web-template/pull/392)
+- [fix] mergeDefaultTypesAndFieldsForDebugging was set to true, which is wrong. The 0 handling with
+  min and max was wrong. [#393](https://github.com/sharetribe/web-template/pull/393)
+
+  [v5.2.0]: https://github.com/sharetribe/web-template/compare/v5.1.0...v5.2.0
+
+## [v5.1.0] 2024-05-21
+
+- [add] support for extended data fields with type `long`
+  [#364](https://github.com/sharetribe/web-template/pull/364)
+- [change] the login-as feature has changed:
+
+  - Use `sdk.loginAs` instead of `sdk.login`, which is deprecated for this purpose
+  - Use `authInfo.isLoggedInAs` instead of relying on auth token's `scope` to determine if current
+    session is operator user logged in as marketplace user.
+  - Note: when taking update from upstream, check also commit be7e2b9b4.
+
+  [#386](https://github.com/sharetribe/web-template/pull/386)
+
+- [fix] the email template for default-purchase process
+  (purchase-order-canceled-from-disputed-provider-html.html) contained copy-paste related typo.
+  [#390](https://github.com/sharetribe/web-template/pull/389)
+- [add] Autolink text on the UI. Those links must start with 'http' to be recognized.
+
+  - ListingPage > Listing's description
+  - ListingPage > Listing fields with schema type ‘text’
+  - ListingPage > User's bio on <UserCard>
+  - ProfilePage > User's bio
+  - ProfilePage > User fields with schema type ‘text’
+  - TransactionPage > Messages
+  - TransactionPage > inquiryMessage
+
+  [#385](https://github.com/sharetribe/web-template/pull/385)
+
+- [change] handle listings with draft and pending-approval state with login-as feature.
+  [#387](https://github.com/sharetribe/web-template/pull/387)
+- [Add] Get the color of the PrimeryButton from branding asset.
+  [#379](https://github.com/sharetribe/web-template/pull/379)
 - [change] Add preview resolution for listing in PreviewResolverPage
   [#384](https://github.com/sharetribe/web-template/pull/384)
 - [add] Support for a target path parameter (target_path) in the login as user functionality
@@ -22,6 +109,9 @@ way to update this template, but currently, we follow a pattern:
   [#381](https://github.com/sharetribe/web-template/pull/381)
 - [fix] Styleguide shows multiple versions of some components. The 'id' attributes need to be
   unique. [#380](https://github.com/sharetribe/web-template/pull/380)
+- [change] Update SDK to v1.21.0 [#386](https://github.com/sharetribe/web-template/pull/386)
+
+  [v5.1.0]: https://github.com/sharetribe/web-template/compare/v5.0.1...v5.1.0
 
 ## [v5.0.1] 2024-04-30
 

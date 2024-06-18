@@ -16,6 +16,7 @@ const LimitedAccessBanner = props => {
     rootClassName,
     className,
     isAuthenticated,
+    isLoggedInAs,
     authScopes,
     currentUser,
     onLogout,
@@ -25,19 +26,29 @@ const LimitedAccessBanner = props => {
   const user = ensureCurrentUser(currentUser);
 
   const showBanner =
-    user.id &&
-    isAuthenticated &&
-    authScopes &&
-    authScopes.length === 1 &&
-    authScopes[0] === 'user:limited' &&
-    !disabledPages.includes(currentPage);
+    user.id && isAuthenticated && isLoggedInAs && !disabledPages.includes(currentPage);
 
   const { firstName, lastName } = user.attributes.profile;
+
+  const limitedRights = authScopes?.indexOf('user:limited') >= 0;
+  const fullRights = authScopes?.indexOf('user') >= 0;
 
   return showBanner ? (
     <div className={classes}>
       <p className={css.text}>
-        <FormattedMessage id="LimitedAccessBanner.message" values={{ firstName, lastName }} />
+        {limitedRights ? (
+          <FormattedMessage id="LimitedAccessBanner.message" values={{ firstName, lastName }} />
+        ) : fullRights ? (
+          <FormattedMessage
+            id="LimitedAccessBanner.fullRightsMessage"
+            values={{ firstName, lastName }}
+          />
+        ) : (
+          <FormattedMessage
+            id="LimitedAccessBanner.fallbackMessage"
+            values={{ firstName, lastName }}
+          />
+        )}
       </p>
       <Button rootClassName={css.button} onClick={onLogout}>
         <FormattedMessage id="LimitedAccessBanner.logout" />
@@ -60,6 +71,7 @@ LimitedAccessBanner.propTypes = {
   rootClassName: string,
   className: string,
   isAuthenticated: bool.isRequired,
+  isLoggedInAs: bool.isRequired,
   authScopes: array,
   currentUser: propTypes.currentUser,
   onLogout: func.isRequired,

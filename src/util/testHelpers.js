@@ -502,6 +502,42 @@ export const getHostedConfiguration = () => {
         },
       ],
     },
+    userTypes: {
+      userTypes: [
+        {
+          userType: 'a',
+          label: 'Seller',
+          defaultListingFields: {
+            displayName: true,
+            phoneNumber: true,
+          },
+        },
+        {
+          userType: 'b',
+          label: 'Buyer',
+          defaultListingFields: {
+            displayName: false,
+            phoneNumber: true,
+          },
+        },
+        {
+          userType: 'c',
+          label: 'Guest',
+          defaultListingFields: {
+            displayName: false,
+            phoneNumber: true,
+          },
+        },
+        {
+          userType: 'd',
+          label: 'Host',
+          defaultListingFields: {
+            displayName: false,
+            phoneNumber: true,
+          },
+        },
+      ],
+    },
     userFields: {
       userFields: [
         {

@@ -1,6 +1,13 @@
 .root {
 }
 
+.input {
+}
+.textarea {
+}
+
+.inputSuccess {
+}
 .inputError {
   border: var(--borderErrorField);
 }

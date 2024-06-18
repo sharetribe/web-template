@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "5.0.1",
+  "version": "5.2.0",
   "private": true,
   "license": "Apache-2.0",
   "dependencies": {
@@ -60,7 +60,7 @@
     "remark-parse": "^9.0.0",
     "remark-rehype": "^8.1.0",
     "seedrandom": "^3.0.5",
-    "sharetribe-flex-sdk": "^v1.20.1",
+    "sharetribe-flex-sdk": "^1.21.1",
     "sharetribe-scripts": "6.0.1",
     "sitemap": "^7.1.1",
     "smoothscroll-polyfill": "^0.4.0",

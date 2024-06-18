@@ -157,7 +157,7 @@ export const ListingPageComponent = props => {
 
   if (showListingError && showListingError.status === 404) {
     // 404 listing not found
-    return <NotFoundPage />;
+    return <NotFoundPage staticContext={props.staticContext} />;
   } else if (showListingError) {
     // Other error in fetching listing
     return <ErrorPage topbar={topbar} scrollingDisabled={scrollingDisabled} intl={intl} />;
@@ -189,7 +189,13 @@ export const ListingPageComponent = props => {
   const isOwnListing =
     userAndListingAuthorAvailable && currentListing.author.id.uuid === currentUser.id.uuid;
 
-  const transactionProcessAlias = publicData?.transactionProcessAlias;
+  const { listingType, transactionProcessAlias, unitType } = publicData;
+  if (!(listingType && transactionProcessAlias && unitType)) {
+    // Listing should always contain listingType, transactionProcessAlias and unitType)
+    return (
+      <ErrorPage topbar={topbar} scrollingDisabled={scrollingDisabled} intl={intl} invalidListing />
+    );
+  }
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const isBooking = isBookingProcess(processName);
   const isPurchase = isPurchaseProcess(processName);

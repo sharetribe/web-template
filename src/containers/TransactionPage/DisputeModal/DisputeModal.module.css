@@ -63,12 +63,6 @@
   margin-top: auto;
   margin-bottom: 96px;
   flex-shrink: 0;
-  background-color: var(--marketplaceColor);
-
-  &:hover,
-  &:focus {
-    background-color: var(--marketplaceColorDark);
-  }
 
   @media (--viewportMedium) {
     display: inline-block;

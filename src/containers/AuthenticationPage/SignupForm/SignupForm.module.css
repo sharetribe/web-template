@@ -10,6 +10,9 @@
   }
 }
 
+.defaultUserFields {
+}
+
 .name {
   display: flex;
   justify-content: space-between;
@@ -20,6 +23,7 @@
   }
 }
 
+.row,
 .customFields {
   margin-top: 24px;
 
