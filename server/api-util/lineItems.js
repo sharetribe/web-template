@@ -227,7 +227,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
       {
         code: 'line-item/customer-commission',
         unitPrice: calculateTotalFromLineItems([order]),
-        percentage: customerCommission.percentage,
+        percentage: getNegation(customerCommission.percentage),
         includeFor: ['customer'],
       },
     ]
