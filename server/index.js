@@ -165,11 +165,29 @@ if (!dev) {
   }
 }
 
+
+
+
+
+
+
+/**
+ * [TODO:]
+ *  - Check if this is needed or not
+ */
+
+
+
 // Initialize Passport.js  (http://www.passportjs.org/)
 // Passport is authentication middleware for Node.js
 // We use passport to enable authenticating with
 // a 3rd party identity provider (e.g. Facebook or Google)
-app.use(passport.initialize());
+// app.use(passport.initialize());
+
+
+
+
+
 
 // Server-side routes that do not render the application
 app.use('/api', apiRouter);

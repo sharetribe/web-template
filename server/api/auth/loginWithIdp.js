@@ -21,6 +21,34 @@ const httpsAgent = new https.Agent({ keepAlive: true });
 const baseUrl = BASE_URL ? { baseUrl: BASE_URL } : {};
 
 module.exports = (err, user, req, res, idpClientId, idpId) => {
+
+
+
+
+
+  console.warn(
+    '\n\n\n...............................',
+    '\n[loginWithIdp] - err:',
+    err,
+    '\n[loginWithIdp] - user:',
+    user,
+    // '\n[loginWithIdp] - req:',
+    // req,
+    // '\n[loginWithIdp] - res:',
+    // res,
+    '\n[loginWithIdp] - idpClientId:',
+    idpClientId,
+    '\n[loginWithIdp] - idpId:',
+    idpId,
+    '\n...............................\n\n\n',
+  );
+
+
+
+
+
+
+
   if (err) {
     log.error(err, 'fetching-user-data-from-idp-failed');
 

@@ -7,9 +7,9 @@ require('./env').configureEnv();
 const express = require('express');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const apiRouter = require('./apiRouter');
+const { auth0RequestHandler } = require('./api/auth/auth0');
 const wellKnownRouter = require('./wellKnownRouter');
 const webmanifestResourceRoute = require('./resources/webmanifest');
 const robotsTxtRoute = require('./resources/robotsTxt');
@@ -29,6 +29,7 @@ app.use(
 );
 app.use(cookieParser());
 app.use('/.well-known', wellKnownRouter);
+app.use(auth0RequestHandler);
 app.use('/api', apiRouter);
 
 // Generate web app manifest

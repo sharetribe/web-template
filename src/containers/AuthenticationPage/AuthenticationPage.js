@@ -54,87 +54,91 @@ import { PrivacyPolicyContent } from '../../containers/PrivacyPolicyPage/Privacy
 import { TOS_ASSET_NAME, PRIVACY_POLICY_ASSET_NAME } from './AuthenticationPage.duck';
 
 import css from './AuthenticationPage.module.css';
-import { FacebookLogo, GoogleLogo } from './socialLoginLogos';
+import { Auth0Logo } from './socialLoginLogos';
 
-// Social login buttons are needed by AuthenticationForms
-export const SocialLoginButtonsMaybe = props => {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// SSO (Auth0) buttons are needed by AuthenticationForms
+export const SSOButton = ({ isLogin, from }) => {
   const routeConfiguration = useRouteConfiguration();
-  const { isLogin, showFacebookLogin, showGoogleLogin, from } = props;
-  const showSocialLogins = showFacebookLogin || showGoogleLogin;
 
   const getDefaultRoutes = () => {
     const baseUrl = apiBaseUrl();
-
     // Route where the user should be returned after authentication
     // This is used e.g. with EditListingPage and ListingPage
     const fromParam = from ? `from=${from}` : '';
-
     // Default route where user is returned after successfull authentication
     const defaultReturn = pathByRouteName('LandingPage', routeConfiguration);
     const defaultReturnParam = defaultReturn ? `&defaultReturn=${defaultReturn}` : '';
-
     // Route for confirming user data before creating a new user
     const defaultConfirm = pathByRouteName('ConfirmPage', routeConfiguration);
     const defaultConfirmParam = defaultConfirm ? `&defaultConfirm=${defaultConfirm}` : '';
-
     return { baseUrl, fromParam, defaultReturnParam, defaultConfirmParam };
   };
 
-  const authWithFacebook = () => {
+  const authWithAuth0 = () => {
     const defaultRoutes = getDefaultRoutes();
     const { baseUrl, fromParam, defaultReturnParam, defaultConfirmParam } = defaultRoutes;
-    window.location.href = `${baseUrl}/api/auth/facebook?${fromParam}${defaultReturnParam}${defaultConfirmParam}`;
+    window.location.href = `${baseUrl}/api/auth/auth0/login?${fromParam}${defaultReturnParam}${defaultConfirmParam}`;
   };
 
-  const authWithGoogle = () => {
-    const defaultRoutes = getDefaultRoutes();
-    const { baseUrl, fromParam, defaultReturnParam, defaultConfirmParam } = defaultRoutes;
-    window.location.href = `${baseUrl}/api/auth/google?${fromParam}${defaultReturnParam}${defaultConfirmParam}`;
-  };
-
-  return showSocialLogins ? (
+  return (
     <div className={css.idpButtons}>
       <div className={css.socialButtonsOr}>
         <span className={css.socialButtonsOrText}>
           <FormattedMessage id="AuthenticationPage.or" />
         </span>
       </div>
-
-      {showFacebookLogin ? (
-        <div className={css.socialButtonWrapper}>
-          <SocialLoginButton onClick={() => authWithFacebook()}>
-            <span className={css.buttonIcon}>{FacebookLogo}</span>
-            {isLogin ? (
-              <FormattedMessage id="AuthenticationPage.loginWithFacebook" />
-            ) : (
-              <FormattedMessage id="AuthenticationPage.signupWithFacebook" />
-            )}
-          </SocialLoginButton>
-        </div>
-      ) : null}
-
-      {showGoogleLogin ? (
-        <div className={css.socialButtonWrapper}>
-          <SocialLoginButton onClick={() => authWithGoogle()}>
-            <span className={css.buttonIcon}>{GoogleLogo}</span>
-            {isLogin ? (
-              <FormattedMessage id="AuthenticationPage.loginWithGoogle" />
-            ) : (
-              <FormattedMessage id="AuthenticationPage.signupWithGoogle" />
-            )}
-          </SocialLoginButton>
-        </div>
-      ) : null}
+      <div className={css.socialButtonWrapper}>
+        <SocialLoginButton onClick={() => authWithAuth0()}>
+          <span className={css.buttonIcon}>{Auth0Logo}</span>
+          {isLogin ? (
+            <FormattedMessage id="AuthenticationPage.loginWithAuth0" />
+          ) : (
+            <FormattedMessage id="AuthenticationPage.signupWithAuth0" />
+          )}
+        </SocialLoginButton>
+      </div>
     </div>
-  ) : null;
+  );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const getNonUserFieldParams = (values, userFieldConfigs) => {
   const userFieldKeys = userFieldConfigs.map(({ scope, key }) => addScopePrefix(scope, key));
-
   return Object.entries(values).reduce((picked, [key, value]) => {
     const isUserFieldKey = userFieldKeys.includes(key);
-
     return isUserFieldKey
       ? picked
       : {
@@ -144,12 +148,19 @@ const getNonUserFieldParams = (values, userFieldConfigs) => {
   }, {});
 };
 
+
+
+
+
+
+
+
+
+
 // Tabs for SignupForm and LoginForm
 export const AuthenticationForms = props => {
   const {
     isLogin,
-    showFacebookLogin,
-    showGoogleLogin,
     from,
     submitLogin,
     loginError,
@@ -259,12 +270,7 @@ export const AuthenticationForms = props => {
         />
       )}
 
-      <SocialLoginButtonsMaybe
-        isLogin={isLogin}
-        showFacebookLogin={showFacebookLogin}
-        showGoogleLogin={showGoogleLogin}
-        from={from}
-      />
+      <SSOButton isLogin={isLogin} from={from} />
     </div>
   );
 };
@@ -354,8 +360,6 @@ export const AuthenticationOrConfirmInfoForm = props => {
     tab,
     authInfo,
     from,
-    showFacebookLogin,
-    showGoogleLogin,
     submitLogin,
     submitSignup,
     submitSingupWithIdp,
@@ -380,8 +384,6 @@ export const AuthenticationOrConfirmInfoForm = props => {
   ) : (
     <AuthenticationForms
       isLogin={isLogin}
-      showFacebookLogin={showFacebookLogin}
-      showGoogleLogin={showGoogleLogin}
       from={from}
       loginError={loginError}
       idpAuthError={idpAuthError}
@@ -532,8 +534,6 @@ export const AuthenticationPageComponent = props => {
               tab={tab}
               authInfo={authInfo}
               from={from}
-              showFacebookLogin={!!process.env.REACT_APP_FACEBOOK_APP_ID}
-              showGoogleLogin={!!process.env.REACT_APP_GOOGLE_CLIENT_ID}
               submitLogin={submitLogin}
               submitSignup={submitSignup}
               submitSingupWithIdp={submitSingupWithIdp}

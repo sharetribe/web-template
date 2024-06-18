@@ -18,8 +18,7 @@ const transitionPrivileged = require('./api/transition-privileged');
 
 const createUserWithIdp = require('./api/auth/createUserWithIdp');
 
-const { authenticateFacebook, authenticateFacebookCallback } = require('./api/auth/facebook');
-const { authenticateGoogle, authenticateGoogleCallback } = require('./api/auth/google');
+const { authenticateAuth0, authenticateAuth0Callback } = require('./api/auth/auth0');
 
 const router = express.Router();
 
@@ -60,24 +59,33 @@ router.post('/transition-privileged', transitionPrivileged);
 // they want to continue with the data fetched from IdP (e.g. name and email)
 router.post('/auth/create-user-with-idp', createUserWithIdp);
 
-// Facebook authentication endpoints
 
-// This endpoint is called when user wants to initiate authenticaiton with Facebook
-router.get('/auth/facebook', authenticateFacebook);
+
+
+
+
+
+/**
+ * [TODO:]
+ *  - Borrar las rutas que no usen Auth0 como metodo de session!!
+ */
+
+
+
+
+
+
+
+
+
+// Auth0 authentication endpoints
+
+// This endpoint is called when user wants to initiate authenticaiton with Auth0
+router.get('/auth/auth0/login', authenticateAuth0);
 
 // This is the route for callback URL the user is redirected after authenticating
-// with Facebook. In this route a Passport.js custom callback is used for calling
+// with Auth0. In this route a custom callback is used for calling
 // loginWithIdp endpoint in Sharetribe Auth API to authenticate user to the marketplace
-router.get('/auth/facebook/callback', authenticateFacebookCallback);
-
-// Google authentication endpoints
-
-// This endpoint is called when user wants to initiate authenticaiton with Google
-router.get('/auth/google', authenticateGoogle);
-
-// This is the route for callback URL the user is redirected after authenticating
-// with Google. In this route a Passport.js custom callback is used for calling
-// loginWithIdp endpoint in Sharetribe Auth API to authenticate user to the marketplace
-router.get('/auth/google/callback', authenticateGoogleCallback);
+router.get('/auth/auth0/custom-callback', authenticateAuth0Callback);
 
 module.exports = router;
