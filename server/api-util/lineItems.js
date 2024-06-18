@@ -214,7 +214,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
           code: 'line-item/provider-commission',
           unitPrice: calculateTotalFromLineItems([order, ...helmetFee]),
           percentage: getNegation(providerCommission.percentage),
-          includeFor: ['provider'],
+          includeFor: ['customer','provider'],
         },
       ]
     : [];
@@ -226,8 +226,8 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   ? [
       {
         code: 'line-item/customer-commission',
-        unitPrice: calculateTotalFromLineItems([order]),
-        percentage: getNegation(customerCommission.percentage),
+        unitPrice: calculateTotalFromLineItems([order, ...helmetFee]),
+        percentage:-1 * customerCommission.percentage,
         includeFor: ['customer'],
       },
     ]
