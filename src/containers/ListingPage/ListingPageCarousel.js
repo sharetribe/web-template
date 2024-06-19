@@ -372,7 +372,7 @@ export const ListingPageComponent = props => {
               className={css.productOrderPanel}
               listing={currentListing}
               isOwnListing={isOwnListing}
-              onSubmit={handleOrderSubmit}
+              onSubmit={redirect} // old : onSubmit={handleOrderSubmit}
               authorLink={
                 <NamedLink
                   className={css.authorNameLink}
@@ -410,6 +410,14 @@ export const ListingPageComponent = props => {
     </Page>
   );
 };
+
+// remove this have old contact feature
+const redirect = values => {
+  window.location.href = 'http://localhost:3000/signup';
+};
+
+// until this
+
 
 ListingPageComponent.defaultProps = {
   currentUser: null,
