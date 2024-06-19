@@ -413,7 +413,7 @@ export const ListingPageComponent = props => {
 
 // remove this have old contact feature
 const redirect = values => {
-  window.location.href = 'http://localhost:3000/signup';
+  window.location.href = 'https://dev.justconstruct.co/signup';
 };
 
 // until this
