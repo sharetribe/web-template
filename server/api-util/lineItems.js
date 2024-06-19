@@ -214,7 +214,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
           code: 'line-item/provider-commission',
           unitPrice: calculateTotalFromLineItems([order, ...helmetFee]),
           percentage: getNegation(providerCommission.percentage),
-          includeFor: ['provider'],
+          includeFor: ['customer','provider'],
         },
       ]
     : [];
@@ -222,12 +222,12 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
       // The customer commission is what the customer pays for the transaction, and
   // it is added on top of the order price to get the customer's payin price:
   // orderPrice + customerCommission = customerPayin
-  const customerCommissionMaybe = hasCommissionPercentage(providerCommission)
+  const customerCommissionMaybe = hasCommissionPercentage(customerCommission)
   ? [
       {
         code: 'line-item/customer-commission',
         unitPrice: calculateTotalFromLineItems([order, ...helmetFee]),
-        percentage:providerCommission.percentage,
+        percentage:customerCommission.percentage,
         includeFor: ['customer'],
       },
     ]
