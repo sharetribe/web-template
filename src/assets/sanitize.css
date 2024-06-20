@@ -591,3 +591,7 @@ textarea,
 [aria-disabled] {
   cursor: default;
 }
+
+.banner-hero-section{padding: 0 16px;}
+.banner-hero-section header{background-color: rgba(0, 0, 0, 0.5); padding: 20px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px;}
+.banner-hero-section header h1{font-weight: 700; font-size: 40px;}

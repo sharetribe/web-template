@@ -38,11 +38,13 @@ const SectionHero = props => {
       options={fieldOptions}
     >
       {hasHeaderFields ? (
-        <header className={defaultClasses.sectionDetails}>
-          <Field data={title} className={defaultClasses.title} options={fieldOptions} />
-          <Field data={description} className={defaultClasses.description} options={fieldOptions} />
-          <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
-        </header>
+        <div class="banner-hero-section">
+          <header className={defaultClasses.sectionDetails}>
+            <Field data={title} className={defaultClasses.title} options={fieldOptions} />
+            <Field data={description} className={defaultClasses.description} options={fieldOptions} />
+            <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
+          </header>
+        </div>
       ) : null}
     </SectionContainer>
   );
