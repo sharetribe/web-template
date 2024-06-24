@@ -169,9 +169,15 @@ export const OrderBreakdownComponent = props => {
       <LineItemTotalPrice transaction={transaction} isProvider={isProvider} intl={intl} />
 
       {hasCommissionLineItem ? (
-        <span className={css.feeInfo}>
-          <FormattedMessage id="OrderBreakdown.commissionFeeNote" />
-        </span>
+        <div>
+          <span className={css.feeInfo}>
+            <FormattedMessage id="OrderBreakdown.commissionFeeNote" />
+          </span>
+          <br></br>
+          <span className={css.feeInfo}>
+            <FormattedMessage id="OrderBreakdown.commissionFeeNote2" />
+          </span>
+        </div>
       ) : null}
     </div>
   );
