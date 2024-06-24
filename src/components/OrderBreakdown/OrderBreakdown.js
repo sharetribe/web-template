@@ -129,7 +129,9 @@ export const OrderBreakdownComponent = props => {
           {intl.formatNumber(netSubtotal / 100, { style: 'currency', currency })}
         </span>
       </div>
-
+          <span className={css.feeInfo}>
+            <FormattedMessage id="OrderBreakdown.subTotalNote" />
+          </span>
 {/*       <LineItemSubTotalMaybe
         lineItems={lineItems}
         code={lineItemUnitType}
@@ -169,15 +171,11 @@ export const OrderBreakdownComponent = props => {
       <LineItemTotalPrice transaction={transaction} isProvider={isProvider} intl={intl} />
 
       {hasCommissionLineItem ? (
-        <div>
+
           <span className={css.feeInfo}>
             <FormattedMessage id="OrderBreakdown.commissionFeeNote" />
           </span>
-          <br></br>
-          <span className={css.feeInfo}>
-            <FormattedMessage id="OrderBreakdown.commissionFeeNote2" />
-          </span>
-        </div>
+
       ) : null}
     </div>
   );
