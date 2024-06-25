@@ -301,12 +301,12 @@ export class TransactionPanelComponent extends Component {
               </div>
             )} */}
 
-            {stateData.showActionButtons ? (
+{/*             {stateData.showActionButtons ? (
               <>
                 <div className={css.mobileActionButtonSpacer}></div>
                 <div className={css.mobileActionButtons}>{actionButtons}</div>
               </>
-            ) : null}
+            ) : null} */}
           </div>
 
           <div className={css.asideDesktop}>
@@ -346,9 +346,9 @@ export class TransactionPanelComponent extends Component {
                   processName={stateData.processName}
                 />
 
-                {stateData.showActionButtons ? (
+{/*                 {stateData.showActionButtons ? (
                   <div className={css.desktopActionButtons}>{actionButtons}</div>
-                ) : null}
+                ) : null} */}
               </div>
               <DiminishedActionButtonMaybe
                 showDispute={stateData.showDispute}
