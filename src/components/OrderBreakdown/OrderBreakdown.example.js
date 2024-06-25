@@ -2,14 +2,10 @@ import Decimal from 'decimal.js';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { DATE_TYPE_DATE, DATE_TYPE_DATETIME } from '../../util/types';
 import { TX_TRANSITION_ACTOR_CUSTOMER, getProcess } from '../../transactions/transaction';
-
 import OrderBreakdown from './OrderBreakdown';
-
 const { UUID, Money } = sdkTypes;
-
 const CURRENCY = 'USD';
 const marketplaceName = 'MarketplaceX';
-
 const exampleBooking = attributes => {
   return {
     id: new UUID('example-booking'),
@@ -17,10 +13,8 @@ const exampleBooking = attributes => {
     attributes,
   };
 };
-
 const processName = 'default-purchase';
 const transitions = getProcess(processName)?.transitions;
-
 const exampleTransaction = params => {
   const created = new Date(Date.UTC(2017, 1, 1));
   const confirmed = new Date(Date.UTC(2017, 1, 1, 0, 1));
@@ -44,19 +38,16 @@ const exampleTransaction = params => {
           transition: transitions.CONFIRM_PAYMENT,
         },
       ],
-
       // payinTotal, payoutTotal, and lineItems required in params
       ...params,
     },
   };
 };
-
 const unitPrice = new Decimal(4500);
 const quantity = new Decimal(2);
 const basePrice = unitPrice.times(quantity);
 const fee = basePrice.dividedBy(10).times(-1);
 const shipping = new Decimal(1000);
-
 export const ProductShippingCustomer = {
   component: OrderBreakdown,
   props: {
@@ -82,7 +73,7 @@ export const ProductShippingCustomer = {
         },
         {
           code: 'line-item/provider-commission',
-          includeFor: ['provider'],
+          includeFor: ['customer','provider'],
           unitPrice: new Money(fee.toNumber(), CURRENCY),
           lineTotal: new Money(fee.toNumber(), CURRENCY),
           reversal: false,
@@ -100,7 +91,6 @@ export const ProductShippingCustomer = {
   },
   group: 'payment',
 };
-
 export const ProductShippingProvider = {
   component: OrderBreakdown,
   props: {
@@ -144,7 +134,6 @@ export const ProductShippingProvider = {
   },
   group: 'payment',
 };
-
 export const ProductRefundShippingCustomer = {
   component: OrderBreakdown,
   props: {
@@ -172,14 +161,14 @@ export const ProductRefundShippingCustomer = {
         },
         {
           code: 'line-item/provider-commission',
-          includeFor: ['provider'],
+          includeFor: ['customer','provider'],
           unitPrice: new Money(fee.toNumber(), CURRENCY),
           lineTotal: new Money(fee.toNumber(), CURRENCY),
           reversal: false,
         },
         {
           code: 'line-item/provider-commission',
-          includeFor: ['provider'],
+          includeFor: ['customer','provider'],
           unitPrice: new Money(fee.toNumber(), CURRENCY),
           lineTotal: new Money(fee.times(-1).toNumber(), CURRENCY),
           reversal: true,
@@ -205,7 +194,6 @@ export const ProductRefundShippingCustomer = {
   },
   group: 'payment',
 };
-
 export const ProductRefundShippingProvider = {
   component: OrderBreakdown,
   props: {
@@ -266,7 +254,6 @@ export const ProductRefundShippingProvider = {
   },
   group: 'payment',
 };
-
 export const ProductRefundPickupCustomer = {
   component: OrderBreakdown,
   props: {
@@ -327,7 +314,6 @@ export const ProductRefundPickupCustomer = {
   },
   group: 'payment',
 };
-
 export const ProductRefundPickupProvider = {
   component: OrderBreakdown,
   props: {
@@ -388,7 +374,6 @@ export const ProductRefundPickupProvider = {
   },
   group: 'payment',
 };
-
 export const BookingCheckout = {
   component: OrderBreakdown,
   props: {
@@ -416,7 +401,6 @@ export const BookingCheckout = {
   },
   group: 'payment',
 };
-
 export const BookingCustomerOrder = {
   component: OrderBreakdown,
   props: {
@@ -444,7 +428,6 @@ export const BookingCustomerOrder = {
   },
   group: 'payment',
 };
-
 export const BookingProviderSale = {
   component: OrderBreakdown,
   props: {
@@ -479,7 +462,6 @@ export const BookingProviderSale = {
   },
   group: 'payment',
 };
-
 export const BookingProviderSaleZeroCommission = {
   component: OrderBreakdown,
   props: {
@@ -514,7 +496,6 @@ export const BookingProviderSaleZeroCommission = {
   },
   group: 'payment',
 };
-
 export const BookingProviderSaleSingleNight = {
   component: OrderBreakdown,
   props: {
@@ -549,7 +530,6 @@ export const BookingProviderSaleSingleNight = {
   },
   group: 'payment',
 };
-
 export const BookingProviderSalePreauthorized = {
   component: OrderBreakdown,
   props: {
@@ -585,7 +565,6 @@ export const BookingProviderSalePreauthorized = {
   },
   group: 'payment',
 };
-
 export const BookingSingleDay = {
   component: OrderBreakdown,
   props: {
@@ -613,7 +592,6 @@ export const BookingSingleDay = {
   },
   group: 'payment',
 };
-
 export const BookingMultipleDays = {
   component: OrderBreakdown,
   props: {
@@ -641,7 +619,6 @@ export const BookingMultipleDays = {
   },
   group: 'payment',
 };
-
 export const BookingWithItemType = {
   component: OrderBreakdown,
   props: {
@@ -669,7 +646,6 @@ export const BookingWithItemType = {
   },
   group: 'payment',
 };
-
 export const BookingCustomPricing = {
   component: OrderBreakdown,
   props: {
@@ -721,7 +697,6 @@ export const BookingCustomPricing = {
   },
   group: 'payment',
 };
-
 export const BookingCustomPricingWithRefund = {
   component: OrderBreakdown,
   props: {

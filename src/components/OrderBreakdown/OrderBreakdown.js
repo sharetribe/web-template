@@ -5,7 +5,6 @@
 import React from 'react';
 import { oneOf, string } from 'prop-types';
 import classNames from 'classnames';
-
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import {
   propTypes,
@@ -13,7 +12,6 @@ import {
   LINE_ITEM_CUSTOMER_COMMISSION,
   LINE_ITEM_PROVIDER_COMMISSION,
 } from '../../util/types';
-
 import LineItemBookingPeriod from './LineItemBookingPeriod';
 import LineItemBasePriceMaybe from './LineItemBasePriceMaybe';
 import LineItemSubTotalMaybe from './LineItemSubTotalMaybe';
@@ -26,9 +24,7 @@ import LineItemProviderCommissionRefundMaybe from './LineItemProviderCommissionR
 import LineItemRefundMaybe from './LineItemRefundMaybe';
 import LineItemTotalPrice from './LineItemTotalPrice';
 import LineItemUnknownItemsMaybe from './LineItemUnknownItemsMaybe';
-
 import css from './OrderBreakdown.module.css';
-
 export const OrderBreakdownComponent = props => {
   const {
     rootClassName,
@@ -42,7 +38,6 @@ export const OrderBreakdownComponent = props => {
     currency,
     marketplaceName,
   } = props;
-
   const isCustomer = userRole === 'customer';
   const isProvider = userRole === 'provider';
   const lineItems = transaction.attributes.lineItems;
@@ -51,15 +46,23 @@ export const OrderBreakdownComponent = props => {
   );
   // Line-item code that matches with base unit: day, night, hour, item
   const lineItemUnitType = unitLineItem?.code;
+  // Calcula el subtotal y la comisión del cliente
+  const subtotal = lineItems.reduce((sum, item) => {
+    return sum + (item.lineTotal.amount || 0);
+  }, 0);
+
+  const customerCommission = lineItems.reduce((sum, item) => {
+    return sum + (isCustomer && item.code === LINE_ITEM_CUSTOMER_COMMISSION && !item.reversal ? item.lineTotal.amount : 0);
+  }, 0);
+
+  const netSubtotal = subtotal - customerCommission;
 
   const hasCommissionLineItem = lineItems.find(item => {
     const hasCustomerCommission = isCustomer && item.code === LINE_ITEM_CUSTOMER_COMMISSION;
     const hasProviderCommission = isProvider && item.code === LINE_ITEM_PROVIDER_COMMISSION;
     return (hasCustomerCommission || hasProviderCommission) && !item.reversal;
   });
-
   const classes = classNames(rootClassName || css.root, className);
-
   /**
    * OrderBreakdown contains different line items:
    *
@@ -95,7 +98,6 @@ export const OrderBreakdownComponent = props => {
    * LineItemTotalPrice: prints total price of the transaction
    *
    */
-
   return (
     <div className={classes}>
       <LineItemBookingPeriod
@@ -104,19 +106,31 @@ export const OrderBreakdownComponent = props => {
         dateType={dateType}
         timeZone={timeZone}
       />
-
       <LineItemBasePriceMaybe lineItems={lineItems} code={lineItemUnitType} intl={intl} />
       <LineItemShippingFeeMaybe lineItems={lineItems} intl={intl} />
       <LineItemPickupFeeMaybe lineItems={lineItems} intl={intl} />
       <LineItemUnknownItemsMaybe lineItems={lineItems} isProvider={isProvider} intl={intl} />
 
-      <LineItemSubTotalMaybe
+      {/* Codigo modificado para mostrar el subtotal - el valor de comisión */}
+      <div className={css.subTotalLineItem}>
+        <span className={css.itemLabel}>
+          <FormattedMessage id="OrderBreakdown.subTotal" />
+        </span>
+        <span className={css.itemValue}>
+          {intl.formatNumber(netSubtotal / 100, { style: 'currency', currency })}
+        </span>
+      </div>
+          <span className={css.feeInfo}>
+            <FormattedMessage id="OrderBreakdown.subTotalNote" />
+          </span>
+{/*       <LineItemSubTotalMaybe
         lineItems={lineItems}
         code={lineItemUnitType}
         userRole={userRole}
         intl={intl}
         marketplaceCurrency={currency}
       />
+ */}
       <LineItemRefundMaybe lineItems={lineItems} intl={intl} marketplaceCurrency={currency} />
 
       <LineItemCustomerCommissionMaybe
@@ -131,7 +145,6 @@ export const OrderBreakdownComponent = props => {
         marketplaceName={marketplaceName}
         intl={intl}
       />
-
       <LineItemProviderCommissionMaybe
         lineItems={lineItems}
         isProvider={isProvider}
@@ -144,41 +157,35 @@ export const OrderBreakdownComponent = props => {
         marketplaceName={marketplaceName}
         intl={intl}
       />
-
       <LineItemTotalPrice transaction={transaction} isProvider={isProvider} intl={intl} />
 
       {hasCommissionLineItem ? (
+
         <span className={css.feeInfo}>
           <FormattedMessage id="OrderBreakdown.commissionFeeNote" />
         </span>
+
       ) : null}
     </div>
-  );
+  ); 
 };
-
 OrderBreakdownComponent.defaultProps = {
   rootClassName: null,
   className: null,
   booking: null,
   dateType: null,
 };
-
 OrderBreakdownComponent.propTypes = {
   rootClassName: string,
   className: string,
-
   marketplaceName: string.isRequired,
   userRole: oneOf(['customer', 'provider']).isRequired,
   transaction: propTypes.transaction.isRequired,
   booking: propTypes.booking,
   dateType: propTypes.dateType,
-
   // from injectIntl
   intl: intlShape.isRequired,
 };
-
 const OrderBreakdown = injectIntl(OrderBreakdownComponent);
-
 OrderBreakdown.displayName = 'OrderBreakdown';
-
 export default OrderBreakdown;
