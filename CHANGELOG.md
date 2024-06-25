@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] Remove left-behind slash from inquiry-new-inquiry email template reference.
+  [#406](https://github.com/sharetribe/web-template/pull/406)
 - [fix] The subject line of purchase-new-order email had a wrong variable name.
   [#413](https://github.com/sharetribe/web-template/pull/413)
 - [change] Fix another typo in FR translations.
