@@ -392,12 +392,10 @@ export const ListingPageComponent = props => {
               text={publicData.extraFeatures}
               heading={intl.formatMessage({ id: 'ListingPage.extraFeaturesTitle' })}
             />
-
             <SectionTextMaybe             
               text={publicData.location?.building}
               heading={intl.formatMessage({ id: 'ListingPage.buildingTitle' })}
-            /> 
-            
+            />             
             <SectionMapMaybe
               geolocation={geolocation}
               publicData={publicData}
@@ -416,7 +414,6 @@ export const ListingPageComponent = props => {
                inProgress={sendMessageInProgress}
                sendMessageError={sendMessageError}
                onSubmit={handleSubmitMessage}/>
-
              */}
             
             <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
