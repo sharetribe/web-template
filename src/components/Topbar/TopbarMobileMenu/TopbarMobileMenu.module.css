@@ -32,10 +32,10 @@
   background-color: var(--marketplaceColor);
 }
 .logo{
-  margin-top: 15px;
-  width: 23%;
+  width: 42vw;
 }
 .categories{
+  margin-top: 5%;
   display: flex;
 }
 .footer {

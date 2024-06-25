@@ -5,16 +5,13 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-
 import { Collapse } from 'react-collapse';
 import { AvatarLarge, InlineTextButton, NamedLink, NotificationBadge } from '../../../components';
 import { ACCOUNT_SETTINGS_PAGES } from '../../../routing/routeConfiguration';
 import { ensureCurrentUser } from '../../../util/data';
 import { FormattedMessage } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
-
 import css from './TopbarMobileMenu.module.css';
-
 const TopbarMobileMenu = props => {
   const {
     isAuthenticated,
@@ -24,11 +21,8 @@ const TopbarMobileMenu = props => {
     notificationCount,
     onLogout,
   } = props;
-
   const user = ensureCurrentUser(currentUser);
-
   const [isOpen, setIsOpen] = useState(false);
-
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -38,13 +32,11 @@ const TopbarMobileMenu = props => {
         <FormattedMessage id="TopbarMobileMenu.signupLink" />
       </NamedLink>
     );
-
     const login = (
       <NamedLink name="LoginPage" style={{ color: 'white' }} className={css.loginLink}>
         <FormattedMessage id="TopbarMobileMenu.loginLink" />
       </NamedLink>
     );
-
     const signupOrLogin = (
       <span className={css.authenticationLinks}>
         <FormattedMessage id="TopbarMobileMenu.signupOrLogin" values={{ signup, login }} />
@@ -55,22 +47,42 @@ const TopbarMobileMenu = props => {
       <div className={css.root}>
         <div className={contentClass}>
           <img className={css.logo} src="/static/icons/rundo_web-social-media.png" alt="Logo" />
+          </div>
           <div className={css.authenticationGreeting}>
             {/*             <a href='/s'>
               <FormattedMessage id="ALQUILAR UN ARTÍCULO" />
             </a> */}
-
             <br></br>
             <div className={css.categories}>             
               <h1 style={{ color: 'black', cursor: 'pointer' }} onClick={toggleDropdown}>
                 Quiero alquilar
               </h1>
               {isOpen ? (
-        <svg style={{ width: '30px', color: 'var(--marketplaceColor)', marginLeft: '10px', cursor: 'pointer' }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" onClick={toggleDropdown}>
+                <svg
+                  style={{
+                    width: '30px',
+                    color: 'var(--marketplaceColor)',
+                    marginLeft: '10px',
+                    cursor: 'pointer',
+                  }}
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 512 512"
+                  onClick={toggleDropdown}
+                >
           <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z" />
         </svg>
       ) : (
-        <svg style={{ width: '30px', color: 'var(--marketplaceColor)', marginLeft: '10px', cursor: 'pointer' }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" onClick={toggleDropdown}>
+                <svg
+                  style={{
+                    width: '30px',
+                    color: 'var(--marketplaceColor)',
+                    marginLeft: '10px',
+                    cursor: 'pointer',
+                  }}
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 512 512"
+                  onClick={toggleDropdown}
+                >
           <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
         </svg>
       )}
@@ -105,10 +117,7 @@ const TopbarMobileMenu = props => {
                   <FormattedMessage id="Bebés" />
                 </a>
                 <br />
-                <a
-                  style={{  color: 'black' }}
-                  href="/s?pub_ropa=has_all%3Aadultos%2Cninos%2Cbebe"
-                >
+                <a style={{ color: 'black' }} href="/s?pub_ropa=has_all%3Aadultos%2Cninos%2Cbebe">
                   <FormattedMessage id="Vestimenta" />
                 </a>
                 <br />
@@ -131,7 +140,7 @@ const TopbarMobileMenu = props => {
             </a>
           </div>
           </div>
-        </div>
+
         <div className={css.footer}>
           <div style={{ backgroundColor: '#7CC9BC' }} className={css.createNewListingLink}>
             <NamedLink name="SignupPage" style={{ color: 'white' }}>
@@ -146,19 +155,16 @@ const TopbarMobileMenu = props => {
       </div>
     );
   }
-
   const notificationCountBadge =
     notificationCount > 0 ? (
       <NotificationBadge className={css.notificationBadge} count={notificationCount} />
     ) : null;
-
   const displayName = user.attributes.profile.firstName;
   const currentPageClass = page => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
     return currentPage === page || isAccountSettingsPage ? css.currentPage : null;
   };
-
   return (
     <div className={css.root}>
       <AvatarLarge className={css.avatar} user={currentUser} />
@@ -170,7 +176,8 @@ const TopbarMobileMenu = props => {
           <FormattedMessage id="TopbarMobileMenu.logoutLink" />
         </InlineTextButton>
         <NamedLink
-          className={classNames(css.inbox, currentPageClass('InboxPage'))}çç
+          className={classNames(css.inbox, currentPageClass('InboxPage'))}
+          çç
           name="InboxPage"
           params={{ tab: currentUserHasListings ? 'sales' : 'orders' }}
         >
@@ -213,11 +220,8 @@ const TopbarMobileMenu = props => {
     </div>
   );
 };
-
 TopbarMobileMenu.defaultProps = { currentUser: null, notificationCount: 0, currentPage: null };
-
 const { bool, func, number, string } = PropTypes;
-
 TopbarMobileMenu.propTypes = {
   isAuthenticated: bool.isRequired,
   currentUserHasListings: bool.isRequired,
@@ -226,5 +230,4 @@ TopbarMobileMenu.propTypes = {
   notificationCount: number,
   onLogout: func.isRequired,
 };
-
 export default TopbarMobileMenu;
