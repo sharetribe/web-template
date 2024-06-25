@@ -120,9 +120,6 @@ export const OrderBreakdownComponent = props => {
           {intl.formatNumber(netSubtotal / 100, { style: 'currency', currency })}
         </span>
       </div>
-          <span className={css.feeInfo}>
-            <FormattedMessage id="OrderBreakdown.subTotalNote" />
-          </span>
 {/*       <LineItemSubTotalMaybe
         lineItems={lineItems}
         code={lineItemUnitType}
