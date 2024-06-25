@@ -1,1 +1,1 @@
-{{set-translations (asset "content/email-texts.json")}}{{t "PurchaseNewOrder.Subject" "{customerDisplayName} placed an order for {transactionListingTitle}" listingTitle=transaction.listing.title customerDisplayName=transaction.customer.display-name }}
+{{set-translations (asset "content/email-texts.json")}}{{t "PurchaseNewOrder.Subject" "{customerDisplayName} placed an order for {transactionListingTitle}" transactionListingTitle=transaction.listing.title customerDisplayName=transaction.customer.display-name }}
