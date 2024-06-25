@@ -485,17 +485,18 @@ export const BookingDatesFormComponent = props => {
           ? Math.ceil(endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
           : 0; 
 
-/*         const formattedHelmetFee = helmetFee
+        const formattedHelmetFee = helmetFee
         ? formatMoney(intl, new Money(helmetFee.amount, helmetFee.currency))
         : null;
       
-      const helmetFeeLabel = intl.formatMessage(
+       const helmetFeeLabel = intl.formatMessage(
         { id: 'BookingDatesForm.helmetFeeLabel' },
         { fee: formattedHelmetFee }
-      ); */
+      ); 
+
       
       
-/*        const helmetFeeMaybe = differenceInDays > 3 ? (
+        const helmetFeeMaybe = differenceInDays > 3 ? (
           <FieldCheckbox
           className={css.helmetFeeContainer}
           id={`${formId}.helmetFee`}
@@ -503,7 +504,7 @@ export const BookingDatesFormComponent = props => {
           label={helmetFeeLabel}
           value="helmetFee"
           />
-        ) : null;  */
+        ) : null;  
         
       
         const startDateErrorMessage = intl.formatMessage({

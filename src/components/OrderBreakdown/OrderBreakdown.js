@@ -51,7 +51,17 @@ export const OrderBreakdownComponent = props => {
   );
   // Line-item code that matches with base unit: day, night, hour, item
   const lineItemUnitType = unitLineItem?.code;
+  // Calcula el subtotal y la comisión del cliente
+  const subtotal = lineItems.reduce((sum, item) => {
+    return sum + (item.lineTotal.amount || 0);
+  }, 0);
 
+  const customerCommission = lineItems.reduce((sum, item) => {
+    return sum + (isCustomer && item.code === LINE_ITEM_CUSTOMER_COMMISSION && !item.reversal ? item.lineTotal.amount : 0);
+  }, 0);
+
+  const netSubtotal = subtotal - customerCommission;
+  
   const hasCommissionLineItem = lineItems.find(item => {
     const hasCustomerCommission = isCustomer && item.code === LINE_ITEM_CUSTOMER_COMMISSION;
     const hasProviderCommission = isProvider && item.code === LINE_ITEM_PROVIDER_COMMISSION;
@@ -110,13 +120,26 @@ export const OrderBreakdownComponent = props => {
       <LineItemPickupFeeMaybe lineItems={lineItems} intl={intl} />
       <LineItemUnknownItemsMaybe lineItems={lineItems} isProvider={isProvider} intl={intl} />
 
-      <LineItemSubTotalMaybe
+      {/* Codigo modificado para mostrar el subtotal - el valor de comisión */}
+      <div className={css.subTotalLineItem}>
+        <span className={css.itemLabel}>
+          <FormattedMessage id="OrderBreakdown.subTotal" />
+        </span>
+        <span className={css.itemValue}>
+          {intl.formatNumber(netSubtotal / 100, { style: 'currency', currency })}
+        </span>
+      </div>
+          <span className={css.feeInfo}>
+            <FormattedMessage id="OrderBreakdown.subTotalNote" />
+          </span>
+{/*       <LineItemSubTotalMaybe
         lineItems={lineItems}
         code={lineItemUnitType}
         userRole={userRole}
         intl={intl}
         marketplaceCurrency={currency}
       />
+ */}
       <LineItemRefundMaybe lineItems={lineItems} intl={intl} marketplaceCurrency={currency} />
 
       <LineItemCustomerCommissionMaybe
@@ -148,9 +171,11 @@ export const OrderBreakdownComponent = props => {
       <LineItemTotalPrice transaction={transaction} isProvider={isProvider} intl={intl} />
 
       {hasCommissionLineItem ? (
-        <span className={css.feeInfo}>
-          <FormattedMessage id="OrderBreakdown.commissionFeeNote" />
-        </span>
+
+          <span className={css.feeInfo}>
+            <FormattedMessage id="OrderBreakdown.commissionFeeNote" />
+          </span>
+
       ) : null}
     </div>
   );
