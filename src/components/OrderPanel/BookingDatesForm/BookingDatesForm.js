@@ -489,14 +489,13 @@ export const BookingDatesFormComponent = props => {
         ? formatMoney(intl, new Money(helmetFee.amount, helmetFee.currency))
         : null;
       
-       const helmetFeeLabel = intl.formatMessage(
+      const helmetFeeLabel = intl.formatMessage(
         { id: 'BookingDatesForm.helmetFeeLabel' },
         { fee: formattedHelmetFee }
-      ); 
-
+      );
       
       
-        const helmetFeeMaybe = differenceInDays > 3 ? (
+       const helmetFeeMaybe = differenceInDays > 3 ? (
           <FieldCheckbox
           className={css.helmetFeeContainer}
           id={`${formId}.helmetFee`}
@@ -504,7 +503,7 @@ export const BookingDatesFormComponent = props => {
           label={helmetFeeLabel}
           value="helmetFee"
           />
-        ) : null;  
+        ) : null; 
         
       
         const startDateErrorMessage = intl.formatMessage({
@@ -650,7 +649,7 @@ export const BookingDatesFormComponent = props => {
                 setCurrentMonth(getStartOf(event?.startDate ?? startOfToday, 'month', timeZone))
               }
             />
-           {helmetFeeMaybe} 
+          {helmetFeeMaybe}
             {showEstimatedBreakdown ? (
               <div className={css.priceBreakdownContainer}>
                 <H6 as="h3" className={css.bookingBreakdownTitle}>
