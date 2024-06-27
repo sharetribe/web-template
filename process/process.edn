@@ -52,7 +52,7 @@
     [{:fn/timepoint [:time/booking-end]} {:fn/period ["P1D"]}]},
    :from :state/accepted,
    :to :state/delivered}
-  {:name :transition/complete-start,
+  {:name :transition/operator-complete,
    :at
    {:fn/minus
     [{:fn/timepoint [:time/booking-start]} {:fn/period ["P1D"]}]},
@@ -152,11 +152,11 @@
    :to :actor.role/customer,
    :template :booking-expired-request}
   {:name :notification/booking-reminder-customer,
-   :on :transition/complete-start,
+   :on :transition/operator-complete,
    :to :actor.role/customer,
    :template :booking-reminder-customer}
   {:name :notification/booking-reminder-provider,
-   :on :transition/complete-start,
+   :on :transition/operator-complete,
    :to :actor.role/provider,
    :template :booking-reminder-provider}
   {:name :notification/booking-reminder-end-provider,
