@@ -44,7 +44,15 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
+import {
+  ModalInMobile,
+  PrimaryButton,
+  AvatarSmall,
+  H1,
+  H2,
+  Button, // add these rows to the
+  SecondaryButton, // existing import from '../../components'
+} from '../../components';
 
 import css from './OrderPanel.module.css';
 
@@ -124,13 +132,11 @@ const PriceMaybe = props => {
     showCurrencyMismatch = false,
   } = props;
   const { listingType, unitType } = publicData || {};
-
   const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const showPrice = displayPrice(foundListingTypeConfig);
   if (!showPrice || !price) {
     return null;
   }
-
   // Get formatted price or currency code if the currency does not match with marketplace currency
   const { formattedPrice, priceTitle } = priceData(price, marketplaceCurrency, intl);
   // TODO: In CTA, we don't have space to show proper error message for a mismatch of marketplace currency
@@ -183,16 +189,16 @@ const OrderPanel = props => {
     fetchLineItemsInProgress,
     fetchLineItemsError,
     payoutDetailsWarning,
+    onToggleFavorites,
+    currentUser,
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};
   const { listingType, unitType, transactionProcessAlias = '' } = publicData || {};
   const processName = resolveLatestProcessName(transactionProcessAlias.split('/')[0]);
   const lineItemUnitType = lineItemUnitTypeMaybe || `line-item/${unitType}`;
-
   const price = listing?.attributes?.price;
   const isPaymentProcess = processName !== INQUIRY_PROCESS_NAME;
-
   const showPriceMissing = isPaymentProcess && !price;
   const PriceMissing = () => {
     return (
@@ -209,53 +215,56 @@ const OrderPanel = props => {
       </p>
     );
   };
-
   const timeZone = listing?.attributes?.availabilityPlan?.timezone;
   const isClosed = listing?.attributes?.state === LISTING_STATE_CLOSED;
-
   const isBooking = isBookingProcess(processName);
   const shouldHaveBookingTime = isBooking && [LINE_ITEM_HOUR].includes(lineItemUnitType);
   const showBookingTimeForm = shouldHaveBookingTime && !isClosed && timeZone;
-
   const shouldHaveBookingDates =
     isBooking && [LINE_ITEM_DAY, LINE_ITEM_NIGHT].includes(lineItemUnitType);
   const showBookingDatesForm = shouldHaveBookingDates && !isClosed && timeZone;
-
   // The listing resource has a relationship: `currentStock`,
   // which you should include when making API calls.
   const isPurchase = isPurchaseProcess(processName);
   const currentStock = listing.currentStock?.attributes?.quantity;
   const isOutOfStock = isPurchase && lineItemUnitType === LINE_ITEM_ITEM && currentStock === 0;
-
   // Show form only when stock is fully loaded. This avoids "Out of stock" UI by
   // default before all data has been downloaded.
   const showProductOrderForm = isPurchase && typeof currentStock === 'number';
-
   const showInquiryForm = processName === INQUIRY_PROCESS_NAME;
-
   const supportedProcessesInfo = getSupportedProcessesInfo();
   const isKnownProcess = supportedProcessesInfo.map(info => info.name).includes(processName);
-
   const { pickupEnabled, shippingEnabled } = listing?.attributes?.publicData || {};
-
   const listingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
   const displayShipping = displayDeliveryShipping(listingTypeConfig);
   const displayPickup = displayDeliveryPickup(listingTypeConfig);
   const allowOrdersOfMultipleItems = [STOCK_MULTIPLE_ITEMS, STOCK_INFINITE_MULTIPLE_ITEMS].includes(
     listingTypeConfig?.stockType
   );
-
   const showClosedListingHelpText = listing.id && isClosed;
   const isOrderOpen = !!parse(location.search).orderOpen;
-
   const subTitleText = showClosedListingHelpText
     ? intl.formatMessage({ id: 'OrderPanel.subTitleClosedListing' })
     : null;
-
   const authorDisplayName = userDisplayNameAsString(author, '');
-
   const classes = classNames(rootClassName || css.root, className);
   const titleClasses = classNames(titleClassName || css.orderTitle);
+  const isFavorite = currentUser?.attributes.profile.privateData.favorites?.[listingType]?.includes(
+    listing.id.uuid
+  );
+  const toggleFavorites = () => onToggleFavorites(isFavorite);
+  const favoriteButton = isFavorite ? (
+    <SecondaryButton
+      className={css.favoriteButton}
+      onClick={toggleFavorites}
+    >
+      <FormattedMessage id="OrderPanel.unfavoriteButton" />
+    </SecondaryButton>
+  ) : (
+    <Button className={css.favoriteButton} onClick={toggleFavorites}>
+      <FormattedMessage id="OrderPanel.addFavoriteButton" />
+    </Button>
+  );
 
   return (
     <div className={classes}>
@@ -271,12 +280,10 @@ const OrderPanel = props => {
         <div className={css.modalHeading}>
           <H1 className={css.heading}>{title}</H1>
         </div>
-
         <div className={css.orderHeading}>
           {titleDesktop ? titleDesktop : <H2 className={titleClasses}>{title}</H2>}
           {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
         </div>
-
         <PriceMaybe
           price={price}
           publicData={publicData}
@@ -284,7 +291,6 @@ const OrderPanel = props => {
           intl={intl}
           marketplaceCurrency={marketplaceCurrency}
         />
-
         <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
           <span className={css.providerNameLinked}>
@@ -294,7 +300,7 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
           </span>
         </div>
-
+        {favoriteButton}
         {showPriceMissing ? (
           <PriceMissing />
         ) : showInvalidCurrency ? (
@@ -381,7 +387,6 @@ const OrderPanel = props => {
           marketplaceCurrency={marketplaceCurrency}
           showCurrencyMismatch
         />
-
         {isClosed ? (
           <div className={css.closedListingButton}>
             <FormattedMessage id="OrderPanel.closedListingButtonText" />
@@ -452,7 +457,6 @@ OrderPanel.propTypes = {
   titleDesktop: node,
   subTitle: oneOfType([node, string]),
   onManageDisableScrolling: func.isRequired,
-
   onFetchTimeSlots: func.isRequired,
   monthlyTimeSlots: object,
   onFetchTransactionLineItems: func.isRequired,
@@ -463,7 +467,8 @@ OrderPanel.propTypes = {
   marketplaceCurrency: string.isRequired,
   dayCountAvailableForBooking: number.isRequired,
   marketplaceName: string.isRequired,
-
+  onToggleFavorites: func.isRequired,
+  currentUser: propTypes.currentUser.isRequired,
   // from withRouter
   history: shape({
     push: func.isRequired,
@@ -471,7 +476,6 @@ OrderPanel.propTypes = {
   location: shape({
     search: string,
   }).isRequired,
-
   // from injectIntl
   intl: intlShape.isRequired,
 };

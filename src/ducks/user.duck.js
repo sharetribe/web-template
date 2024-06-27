@@ -371,6 +371,7 @@ export const fetchCurrentUser = (params = null) => (dispatch, getState, sdk) => 
 
       // Make sure auth info is up to date
       dispatch(authInfo());
+      return currentUser;
     })
     .catch(e => {
       // Make sure auth info is up to date

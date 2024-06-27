@@ -89,13 +89,6 @@ export const isOldTotalMismatchStockError = error =>
   hasErrorWithCode(error, ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH);
 
 /**
- * Check if the given API error (from `sdk.passwordReset.request()`)
- * is due to no user having the given email address.
- */
-export const isPasswordRecoveryEmailNotFoundError = error =>
-  hasErrorWithCode(error, ERROR_CODE_EMAIL_NOT_FOUND);
-
-/**
  * Check if the given API error (from `sdk.transaction.initiate()` or
  * `sdk.transaction.initiateSpeculative()`) is due to the listing
  * being closed or deleted.
@@ -223,18 +216,6 @@ export const isTransactionsTransitionAlreadyReviewed = error =>
   error.status === 409 &&
   (hasErrorWithCode(error, ERROR_CODE_TRANSACTION_ALREADY_REVIEWED_BY_CUSTOMER) ||
     hasErrorWithCode(error, ERROR_CODE_TRANSACTION_ALREADY_REVIEWED_BY_PROVIDER));
-
-/**
- * Check if the given API error (from `sdk.currentUser.changeEmail(params)`)
- * is due to giving wrong password.
- */
-export const isChangeEmailWrongPassword = error => error && error.status === 403;
-
-/**
- * Check if the given API error (from `sdk.currentUser.changePassword(params)`)
- * is due to giving wrong password.
- */
-export const isChangePasswordWrongPassword = error => error && error.status === 403;
 
 /**
  * Check if the given API error (from

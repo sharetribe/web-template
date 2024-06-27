@@ -4,9 +4,6 @@ import { diffInTime } from './dates';
 
 const { LatLng, Money } = sdkTypes;
 
-export const PASSWORD_MIN_LENGTH = 8;
-export const PASSWORD_MAX_LENGTH = 256;
-
 const isNonEmptyString = val => {
   return typeof val === 'string' && val.trim().length > 0;
 };

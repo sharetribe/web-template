@@ -11,7 +11,6 @@ import * as validators from '../../../util/validators';
 import { ensureCurrentUser } from '../../../util/data';
 import {
   isChangeEmailTakenError,
-  isChangeEmailWrongPassword,
   isTooManyEmailVerificationRequestsError,
 } from '../../../util/errors';
 
@@ -68,7 +67,6 @@ class ContactDetailsFormComponent extends Component {
     this.state = { showVerificationEmailSentMessage: false, showResetPasswordMessage: false };
     this.emailSentTimeoutId = null;
     this.handleResendVerificationEmail = this.handleResendVerificationEmail.bind(this);
-    this.handleResetPassword = this.handleResetPassword.bind(this);
     this.submittedValues = {};
   }
 
@@ -85,12 +83,6 @@ class ContactDetailsFormComponent extends Component {
         this.setState({ showVerificationEmailSentMessage: false });
       }, SHOW_EMAIL_SENT_TIMEOUT);
     });
-  }
-
-  handleResetPassword() {
-    this.setState({ showResetPasswordMessage: true });
-    const email = this.props.currentUser.attributes.email;
-    this.props.onResetPassword(email);
   }
 
   render() {
@@ -111,12 +103,10 @@ class ContactDetailsFormComponent extends Component {
             invalid,
             sendVerificationEmailError,
             sendVerificationEmailInProgress,
-            resetPasswordInProgress,
             values,
             userTypeConfig,
           } = fieldRenderProps;
           const { email, phoneNumber } = values;
-
           const user = ensureCurrentUser(currentUser);
 
           if (!user.id) {
@@ -126,30 +116,16 @@ class ContactDetailsFormComponent extends Component {
           const { email: currentEmail, emailVerified, pendingEmail, profile } = user.attributes;
 
           // email
-
           // has the email changed
           const emailChanged = currentEmail !== email;
-
           const emailLabel = intl.formatMessage({
             id: 'ContactDetailsForm.emailLabel',
           });
-
           const emailPlaceholder = currentEmail || '';
-
-          const emailRequiredMessage = intl.formatMessage({
-            id: 'ContactDetailsForm.emailRequired',
-          });
-          const emailRequired = validators.required(emailRequiredMessage);
-          const emailInvalidMessage = intl.formatMessage({
-            id: 'ContactDetailsForm.emailInvalid',
-          });
-          const emailValid = validators.emailFormatValid(emailInvalidMessage);
 
           const tooManyVerificationRequests = isTooManyEmailVerificationRequestsError(
             sendVerificationEmailError
           );
-
-          const emailTouched = this.submittedValues.email !== values.email;
           const emailTakenErrorText = isChangeEmailTakenError(saveEmailError)
             ? intl.formatMessage({ id: 'ContactDetailsForm.emailTakenError' })
             : null;
@@ -184,7 +160,6 @@ class ContactDetailsFormComponent extends Component {
 
           // Email status info: unverified, verified and pending email (aka changed unverified email)
           let emailVerifiedInfo = null;
-
           if (emailVerified && !pendingEmail && !emailChanged) {
             // Current email is verified and there's no pending unverified email
             emailVerifiedInfo = (
@@ -194,7 +169,6 @@ class ContactDetailsFormComponent extends Component {
             );
           } else if (!emailVerified && !pendingEmail) {
             // Current email is unverified. This is the email given in sign up form
-
             emailVerifiedInfo = (
               <span className={css.emailUnverified}>
                 <FormattedMessage
@@ -205,7 +179,6 @@ class ContactDetailsFormComponent extends Component {
             );
           } else if (pendingEmail) {
             // Current email has been tried to change, but the new address is not yet verified
-
             const pendingEmailStyled = <span className={css.emailStyle}>{pendingEmail}</span>;
             const pendingEmailCheckInbox = (
               <span className={css.checkInbox}>
@@ -215,7 +188,6 @@ class ContactDetailsFormComponent extends Component {
                 />
               </span>
             );
-
             emailVerifiedInfo = (
               <span className={css.pendingEmailUnverified}>
                 <FormattedMessage
@@ -235,54 +207,9 @@ class ContactDetailsFormComponent extends Component {
             currentPhoneNumber !== phoneNumber &&
             !(typeof currentPhoneNumber === 'undefined' && phoneNumber === '');
 
-          // password
-          const passwordLabel = intl.formatMessage({
-            id: 'ContactDetailsForm.passwordLabel',
-          });
-          const passwordPlaceholder = intl.formatMessage({
-            id: 'ContactDetailsForm.passwordPlaceholder',
-          });
-          const passwordRequiredMessage = intl.formatMessage({
-            id: 'ContactDetailsForm.passwordRequired',
-          });
-
-          const passwordRequired = validators.requiredStringNoTrim(passwordRequiredMessage);
-
-          const passwordMinLengthMessage = intl.formatMessage(
-            {
-              id: 'ContactDetailsForm.passwordTooShort',
-            },
-            {
-              minLength: validators.PASSWORD_MIN_LENGTH,
-            }
-          );
-
-          const passwordMinLength = validators.minLength(
-            passwordMinLengthMessage,
-            validators.PASSWORD_MIN_LENGTH
-          );
-
-          const passwordValidators = emailChanged
-            ? validators.composeValidators(passwordRequired, passwordMinLength)
-            : null;
-
-          const passwordFailedMessage = intl.formatMessage({
-            id: 'ContactDetailsForm.passwordFailed',
-          });
-          const passwordTouched = this.submittedValues.currentPassword !== values.currentPassword;
-          const passwordErrorText = isChangeEmailWrongPassword(saveEmailError)
-            ? passwordFailedMessage
-            : null;
-
-          const confirmClasses = classNames(css.confirmChangesSection, {
-            [css.confirmChangesSectionVisible]: emailChanged,
-          });
-
           // generic error
-          const isGenericEmailError = saveEmailError && !(emailTakenErrorText || passwordErrorText);
-
+          const isGenericEmailError = saveEmailError && !(emailTakenErrorText);
           let genericError = null;
-
           if (isGenericEmailError && savePhoneNumberError) {
             genericError = (
               <span className={css.error}>
@@ -302,33 +229,6 @@ class ContactDetailsFormComponent extends Component {
               </span>
             );
           }
-
-          const sendPasswordLink = (
-            <span className={css.helperLink} onClick={this.handleResetPassword} role="button">
-              <FormattedMessage id="ContactDetailsForm.resetPasswordLinkText" />
-            </span>
-          );
-
-          const resendPasswordLink = (
-            <span className={css.helperLink} onClick={this.handleResetPassword} role="button">
-              <FormattedMessage id="ContactDetailsForm.resendPasswordLinkText" />
-            </span>
-          );
-
-          const resetPasswordLink =
-            this.state.showResetPasswordMessage || resetPasswordInProgress ? (
-              <>
-                <FormattedMessage
-                  id="ContactDetailsForm.resetPasswordLinkSent"
-                  values={{
-                    email: <span className={css.emailStyle}>{currentUser.attributes.email}</span>,
-                  }}
-                />{' '}
-                {resendPasswordLink}
-              </>
-            ) : (
-              sendPasswordLink
-            );
 
           const classes = classNames(rootClassName || css.root, className);
           const submittedOnce = Object.keys(this.submittedValues).length > 0;
@@ -354,39 +254,12 @@ class ContactDetailsFormComponent extends Component {
                   id={formId ? `${formId}.email` : 'email'}
                   label={emailLabel}
                   placeholder={emailPlaceholder}
-                  validate={validators.composeValidators(emailRequired, emailValid)}
-                  customErrorText={emailTouched ? null : emailTakenErrorText}
+                  disabled
                 />
                 {emailVerifiedInfo}
-
                 <PhoneNumberMaybe formId={formId} userTypeConfig={userTypeConfig} intl={intl} />
               </div>
 
-              <div className={confirmClasses}>
-                <H4 as="h3" className={css.confirmChangesTitle}>
-                  <FormattedMessage id="ContactDetailsForm.confirmChangesTitle" />
-                </H4>
-                <p className={css.confirmChangesInfo}>
-                  <FormattedMessage id="ContactDetailsForm.confirmChangesInfo" />
-                  <br />
-                  <FormattedMessage
-                    id="ContactDetailsForm.resetPasswordInfo"
-                    values={{ resetPasswordLink }}
-                  />
-                </p>
-
-                <FieldTextInput
-                  className={css.password}
-                  type="password"
-                  name="currentPassword"
-                  id={formId ? `${formId}.currentPassword` : 'currentPassword'}
-                  autoComplete="current-password"
-                  label={passwordLabel}
-                  placeholder={passwordPlaceholder}
-                  validate={passwordValidators}
-                  customErrorText={passwordTouched ? null : passwordErrorText}
-                />
-              </div>
               <div className={css.bottomWrapper}>
                 {genericError}
                 <PrimaryButton
@@ -417,8 +290,6 @@ ContactDetailsFormComponent.defaultProps = {
   sendVerificationEmailInProgress: false,
   email: null,
   phoneNumber: null,
-  resetPasswordInProgress: false,
-  resetPasswordError: null,
 };
 
 const { bool, func, string } = PropTypes;
@@ -435,8 +306,6 @@ ContactDetailsFormComponent.propTypes = {
   ready: bool.isRequired,
   sendVerificationEmailError: propTypes.error,
   sendVerificationEmailInProgress: bool,
-  resetPasswordInProgress: bool,
-  resetPasswordError: propTypes.error,
 };
 
 const ContactDetailsForm = compose(injectIntl)(ContactDetailsFormComponent);

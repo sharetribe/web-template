@@ -35,7 +35,9 @@ import {
 // Global ducks (for Redux actions and thunks)
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
+import { fetchCurrentUser } from '../../ducks/user.duck';
 import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
+import { updateProfile } from '../ProfileSettingsPage/ProfileSettingsPage.duck';
 
 // Shared components
 import {
@@ -67,6 +69,7 @@ import {
   handleContactUser,
   handleSubmitInquiry,
   handleSubmit,
+  handleToggleFavorites,
 } from './ListingPage.shared';
 import SectionHero from './SectionHero';
 import SectionTextMaybe from './SectionTextMaybe';
@@ -114,6 +117,8 @@ export const ListingPageComponent = props => {
     onInitializeCardPaymentData,
     config,
     routeConfiguration,
+    onUpdateFavorites,
+    onFetchCurrentUser,
   } = props;
 
   const listingConfig = config.listing;
@@ -289,6 +294,14 @@ export const ListingPageComponent = props => {
     setImageCarouselOpen(true);
   };
 
+  const onToggleFavorites = handleToggleFavorites({
+    ...commonParams,
+    listingType,
+    onUpdateFavorites,
+    onFetchCurrentUser,
+    location,
+  });
+
   return (
     <Page
       title={schemaTitle}
@@ -402,6 +415,8 @@ export const ListingPageComponent = props => {
               marketplaceCurrency={config.currency}
               dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
               marketplaceName={config.marketplaceName}
+              onToggleFavorites={onToggleFavorites}
+              currentUser={currentUser}
             />
           </div>
         </div>
@@ -552,6 +567,8 @@ const mapDispatchToProps = dispatch => ({
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
+  onUpdateFavorites: (payload) => dispatch(updateProfile(payload)),
+  onFetchCurrentUser: () => dispatch(fetchCurrentUser({})),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

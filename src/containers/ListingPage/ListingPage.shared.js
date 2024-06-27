@@ -259,3 +259,70 @@ export const LoadingPage = props => {
     </PlainPage>
   );
 };
+
+export const handleToggleFavorites = parameters => async (isFavorite) => {
+  const { onFetchCurrentUser, routes, location, history } = parameters;
+  const currentUser = await onFetchCurrentUser();
+  // Only allow signed-in users to save favorites
+  if (!currentUser) {
+    const state = {
+      from: `${location.pathname}${location.search}${location.hash}`,
+    };
+    // Sign up and return back to the listing page.
+    history.push(
+      createResourceLocatorString('SignupPage', routes, {}, {}),
+      state
+    );
+  } else {
+    const { params, onUpdateFavorites, listingType } = parameters;
+    const {
+      attributes: { profile },
+    } = currentUser;
+    const { privateData } = profile;
+    const favorites = privateData?.favorites;
+    const categoryFavorites = favorites?.[listingType];
+    const noPrivateData = !privateData;
+    const noFavorites = !favorites;
+    const noFavoritesCategory = !categoryFavorites;
+    let payload;
+    if (noPrivateData || noFavorites) {
+      payload = {
+        privateData: {
+          favorites: {
+            [listingType]: [params.id],
+          },
+        },
+      };
+    } else if (noFavoritesCategory) {
+      payload = {
+        privateData: {
+          favorites: {
+            ...favorites,
+            [listingType]: [params.id],
+          },
+        },
+      };
+    } else {
+      if (isFavorite) {
+        payload = {
+          privateData: {
+            favorites: {
+              ...favorites,
+              [listingType]: categoryFavorites.filter(f => f !== params.id),
+            },
+          },
+        };
+      } else {
+        payload = {
+          privateData: {
+            favorites: {
+              ...favorites,
+              [listingType]: [...categoryFavorites, params.id],
+            },
+          },
+        };
+      }
+    }
+    onUpdateFavorites(payload);
+  }
+};

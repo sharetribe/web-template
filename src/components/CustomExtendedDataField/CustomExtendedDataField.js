@@ -86,13 +86,15 @@ const CustomFieldText = props => {
     : {};
   const placeholder =
     placeholderMessage || intl.formatMessage({ id: 'CustomExtendedDataField.placeholderText' });
+  const fieldKey = fieldConfig.key;
+  const notTextArea = ["instagramHandle"].includes(fieldKey);
 
   return (
     <FieldTextInput
       className={css.customField}
       id={formId ? `${formId}.${name}` : name}
       name={name}
-      type="textarea"
+      { ...(notTextArea ? {} : { type: "textarea" })}
       label={label}
       placeholder={placeholder}
       {...validateMaybe}

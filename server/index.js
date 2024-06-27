@@ -27,8 +27,8 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const enforceSsl = require('express-enforces-ssl');
 const path = require('path');
-const passport = require('passport');
 
+const { auth0RequestHandler } = require('./api/auth/auth0');
 const auth = require('./auth');
 const apiRouter = require('./apiRouter');
 const wellKnownRouter = require('./wellKnownRouter');
@@ -165,11 +165,10 @@ if (!dev) {
   }
 }
 
-// Initialize Passport.js  (http://www.passportjs.org/)
-// Passport is authentication middleware for Node.js
-// We use passport to enable authenticating with
-// a 3rd party identity provider (e.g. Facebook or Google)
-app.use(passport.initialize());
+// Initialize the authentication middleware for Node.js
+// We use this to enable authenticating with
+// a 3rd party identity provider (Auth0)
+app.use(auth0RequestHandler);
 
 // Server-side routes that do not render the application
 app.use('/api', apiRouter);
