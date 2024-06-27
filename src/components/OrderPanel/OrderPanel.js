@@ -254,10 +254,7 @@ const OrderPanel = props => {
   );
   const toggleFavorites = () => onToggleFavorites(isFavorite);
   const favoriteButton = isFavorite ? (
-    <SecondaryButton
-      className={css.favoriteButton}
-      onClick={toggleFavorites}
-    >
+    <SecondaryButton className={css.favoriteButton} onClick={toggleFavorites}>
       <FormattedMessage id="OrderPanel.unfavoriteButton" />
     </SecondaryButton>
   ) : (

@@ -208,7 +208,7 @@ class ContactDetailsFormComponent extends Component {
             !(typeof currentPhoneNumber === 'undefined' && phoneNumber === '');
 
           // generic error
-          const isGenericEmailError = saveEmailError && !(emailTakenErrorText);
+          const isGenericEmailError = saveEmailError && !emailTakenErrorText;
           let genericError = null;
           if (isGenericEmailError && savePhoneNumberError) {
             genericError = (

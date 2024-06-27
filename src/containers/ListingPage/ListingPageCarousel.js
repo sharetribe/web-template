@@ -569,7 +569,7 @@ const mapDispatchToProps = dispatch => ({
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
-  onUpdateFavorites: (payload) => dispatch(updateProfile(payload)),
+  onUpdateFavorites: payload => dispatch(updateProfile(payload)),
   onFetchCurrentUser: () => dispatch(fetchCurrentUser({})),
 });
 

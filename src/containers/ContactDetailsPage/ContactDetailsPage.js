@@ -19,10 +19,7 @@ import FooterContainer from '../../containers/FooterContainer/FooterContainer';
 
 import ContactDetailsForm from './ContactDetailsForm/ContactDetailsForm';
 
-import {
-  saveContactDetails,
-  saveContactDetailsClear,
-} from './ContactDetailsPage.duck';
+import { saveContactDetails, saveContactDetailsClear } from './ContactDetailsPage.duck';
 import css from './ContactDetailsPage.module.css';
 
 export const ContactDetailsPageComponent = props => {

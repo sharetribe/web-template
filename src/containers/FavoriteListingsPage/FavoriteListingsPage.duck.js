@@ -48,7 +48,7 @@ const favoriteListingsPageReducer = (state = initialState, action = {}) => {
       return {
         ...state,
         queryInProgress: false,
-        queryFavoritesError: payload
+        queryFavoritesError: payload,
       };
 
     default:

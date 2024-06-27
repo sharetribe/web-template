@@ -6,7 +6,9 @@ const loginWithIdp = require('./loginWithIdp');
 const radix = 10;
 const PORT = parseInt(process.env.REACT_APP_DEV_API_SERVER_PORT, radix);
 const useDevApiServer = process.env.NODE_ENV === 'development' && !!PORT;
-const baseURL = useDevApiServer ? `http://localhost:${PORT}` : process.env.REACT_APP_MARKETPLACE_ROOT_URL;
+const baseURL = useDevApiServer
+  ? `http://localhost:${PORT}`
+  : process.env.REACT_APP_MARKETPLACE_ROOT_URL;
 const clientID = process.env.AUTH0_MARKETPLACE_CLIENT_ID;
 
 const authorizationParams = {
@@ -50,7 +52,7 @@ exports.authenticateAuth0 = (req, res) => {
       ...authorizationParams,
       ...params,
     },
-  })
+  });
 };
 
 exports.auth0RequestHandler = auth({ ...configParams });

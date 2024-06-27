@@ -23,7 +23,15 @@ import css from './FavoriteListingsPage.module.css';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 
 export const FavoriteListingsPageComponent = props => {
-  const { listings, pagination, queryInProgress, queryFavoritesError, queryParams, scrollingDisabled, intl } = props;
+  const {
+    listings,
+    pagination,
+    queryInProgress,
+    queryFavoritesError,
+    queryParams,
+    scrollingDisabled,
+    intl,
+  } = props;
 
   const hasPaginationInfo = !!pagination && pagination.totalItems != null;
   const listingsAreLoaded = !queryInProgress && hasPaginationInfo;

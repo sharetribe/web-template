@@ -260,7 +260,7 @@ export const LoadingPage = props => {
   );
 };
 
-export const handleToggleFavorites = parameters => async (isFavorite) => {
+export const handleToggleFavorites = parameters => async isFavorite => {
   const { onFetchCurrentUser, routes, location, history } = parameters;
   const currentUser = await onFetchCurrentUser();
   // Only allow signed-in users to save favorites
@@ -269,10 +269,7 @@ export const handleToggleFavorites = parameters => async (isFavorite) => {
       from: `${location.pathname}${location.search}${location.hash}`,
     };
     // Sign up and return back to the listing page.
-    history.push(
-      createResourceLocatorString('SignupPage', routes, {}, {}),
-      state
-    );
+    history.push(createResourceLocatorString('SignupPage', routes, {}, {}), state);
   } else {
     const { params, onUpdateFavorites, listingType } = parameters;
     const {

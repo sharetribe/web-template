@@ -107,12 +107,7 @@ const getNonUserFieldParams = (values, userFieldConfigs) => {
 
 // Tabs for SignupForm and LoginForm
 export const AuthenticationForms = props => {
-  const {
-    isLogin,
-    userType,
-    from,
-    idpAuthError,
-  } = props;
+  const { isLogin, userType, from, idpAuthError } = props;
   const config = useConfiguration();
   const { userTypes = [] } = config.user;
   const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
@@ -152,20 +147,13 @@ export const AuthenticationForms = props => {
       <FormattedMessage id="AuthenticationPage.idpAuthFailed" />
     </div>
   );
-  const loginOrSignupError =
-    isLogin && !!idpAuthError
-      ? idpAuthErrorMessage
-      : null;
+  const loginOrSignupError = isLogin && !!idpAuthError ? idpAuthErrorMessage : null;
 
   return (
     <div className={css.content}>
       <LinkTabNavHorizontal className={css.tabs} tabs={tabs} />
       {loginOrSignupError}
-      {isLogin ? (
-        <LoginForm />
-      ) : (
-        <SignupForm />
-      )}
+      {isLogin ? <LoginForm /> : <SignupForm />}
       <SSOButton isLogin={isLogin} {...fromMaybe} {...userTypeMaybe} />
     </div>
   );
