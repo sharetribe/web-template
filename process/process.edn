@@ -46,21 +46,21 @@
     {:name :action/decline-booking}],
    :from :state/preauthorized,
    :to :state/expired}
-  {:name :transition/complete,
-   :at
-   {:fn/minus
-    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P1D"]}]},
-   :from :state/accepted,
-   :to :state/complete-start}
   {:name :transition/complete-start,
    :at
    {:fn/minus
     [{:fn/timepoint [:time/booking-start]} {:fn/period ["P1D"]}]},
+   :from :state/accepted,
+   :to :state/complete-start}
+  {:name :transition/complete,
+   :at
+   {:fn/minus
+    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P1D"]}]},
    :from :state/complete-start,
-   :to :state/operator-complete}
+   :to :state/complete}
   {:name :transition/operator-complete,
    :actor :actor.role/operator,
-   :from :state/complete-start,
+   :from :state/complete,
    :to :state/delivered}
   {:name :transition/cancel,
    :actor :actor.role/operator,
