@@ -33,11 +33,18 @@ exports.calculateShippingFee = (
   currency,
   quantity
 ) => {
-  if (isNumber(shippingPriceInSubunitsOneItem) && currency && quantity === 1) {
+  if (
+    isNumber(shippingPriceInSubunitsOneItem) &&
+    shippingPriceInSubunitsOneItem >= 0 &&
+    currency &&
+    quantity === 1
+  ) {
     return new Money(shippingPriceInSubunitsOneItem, currency);
   } else if (
     isNumber(shippingPriceInSubunitsOneItem) &&
     isNumber(shippingPriceInSubunitsAdditionalItems) &&
+    shippingPriceInSubunitsOneItem >= 0 &&
+    shippingPriceInSubunitsAdditionalItems >= 0 &&
     currency &&
     quantity > 1
   ) {

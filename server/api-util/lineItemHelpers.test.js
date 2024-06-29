@@ -237,6 +237,34 @@ describe('calculateShippingFee()', () => {
     );
     expect(shippingFee).toEqual(new Money(100, 'EUR'));
   });
+
+  it('should calculate shipping with quantity 1, negative fee', () => {
+    const shippingPriceInSubunitsOneItem = -1000;
+    const shippingPriceInSubunitsAdditionalItems = -100;
+    const currency = 'EUR';
+    const quantity = 1;
+    const shippingFee = calculateShippingFee(
+      shippingPriceInSubunitsOneItem,
+      shippingPriceInSubunitsAdditionalItems,
+      currency,
+      quantity
+    );
+    expect(shippingFee).toEqual(null);
+  });
+
+  it('should calculate shipping with quantity 2, negative fees', () => {
+    const shippingPriceInSubunitsOneItem = -1000;
+    const shippingPriceInSubunitsAdditionalItems = -100;
+    const currency = 'EUR';
+    const quantity = 2;
+    const shippingFee = calculateShippingFee(
+      shippingPriceInSubunitsOneItem,
+      shippingPriceInSubunitsAdditionalItems,
+      currency,
+      quantity
+    );
+    expect(shippingFee).toEqual(null);
+  });
 });
 
 describe('calculateTotalFromLineItems()', () => {
