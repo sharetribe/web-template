@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] fix: calculateShippingFee (when shippingPriceInSubunitsAdditionalItems is 0, no shipping fee
+  was included) [#414](https://github.com/sharetribe/web-template/pull/414)
 - [fix] Remove stock from schema if there's no stock in use.
   [#405](https://github.com/sharetribe/web-template/pull/405)
 - [fix] Remove left-behind slash from inquiry-new-inquiry email template reference.
