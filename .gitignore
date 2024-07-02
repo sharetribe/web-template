@@ -15,3 +15,6 @@ build
 .env
 npm-debug.log
 yarn-error.log
+
+# pixel meta
+src/util/includeScripts.js
