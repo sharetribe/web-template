@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+## [v5.2.1] 2024-07-02
+
 - [fix] fix: calculateShippingFee (when shippingPriceInSubunitsAdditionalItems is 0, no shipping fee
   was included) [#414](https://github.com/sharetribe/web-template/pull/414)
 - [fix] Remove stock from schema if there's no stock in use.
@@ -32,6 +34,8 @@ way to update this template, but currently, we follow a pattern:
   [#403](https://github.com/sharetribe/web-template/pull/403)
 - [change] FilterComponent: relax generated name-attribute for inputs: allow camelCase.
   [#402](https://github.com/sharetribe/web-template/pull/402)
+
+  [v5.2.1]: https://github.com/sharetribe/web-template/compare/v5.2.0...v5.2.1
 
 ## [v5.2.0] 2024-05-28
 
