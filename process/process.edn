@@ -74,7 +74,7 @@
   {:name :transition/review-1-by-provider,
    :actor :actor.role/provider,
    :actions [{:name :action/post-review-by-provider}],
-   :from :state/review,
+   :from :state/complete,
    :to :state/reviewed-by-provider}
   {:name :transition/review-2-by-provider,
    :actor :actor.role/provider,
@@ -86,7 +86,7 @@
   {:name :transition/review-1-by-customer,
    :actor :actor.role/customer,
    :actions [{:name :action/post-review-by-customer}],
-   :from :state/review,
+   :from :state/complete,
    :to :state/reviewed-by-customer}
   {:name :transition/review-2-by-customer,
    :actor :actor.role/customer,
@@ -170,11 +170,11 @@
    :to :actor.role/customer
    :template :booking-reminder-end-customer}
   {:name :notification/review-period-start-provider,
-   :on :transition/review,
+   :on :transition/complete,
    :to :actor.role/provider,
    :template :booking-review-by-provider-wanted}
   {:name :notification/review-period-start-customer,
-   :on :transition/review,
+   :on :transition/complete,
    :to :actor.role/customer,
    :template :booking-review-by-customer-wanted}
   {:name :notification/review-by-provider-first,
