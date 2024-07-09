@@ -136,24 +136,15 @@ export const graph = {
     [states.EXPIRED]: {},
     [states.ACCEPTED]: {
       on: {
-        [transitions.COMPLETE_START]: states.ACCEPTED,
-      },
-    },
-    [state.COMPLETE_START]: {
-      on: {
         [transitions.CANCEL]: states.CANCELED,
+        [transitions.COMPLETE_START]: states.ACCEPTED,
         [transitions.COMPLETE]: states.ACCEPTED,
-      },
-    },
-    [state.COMPLETE]: {
-      on: {
-        [transitions.REVIEW]: states.DELIVERED,
-        [transitions.Expire - reviewed]: states.REVIWED,
       },
     },
     [states.CANCELED]: {},
     [states.DELIVERED]: {
       on: {
+        [transitions.REVIEW]: states.DELIVERED,
         [transitions.EXPIRE_REVIEW_PERIOD]: states.REVIEWED,
         [transitions.REVIEW_1_BY_CUSTOMER]: states.REVIEWED_BY_CUSTOMER,
         [transitions.REVIEW_1_BY_PROVIDER]: states.REVIEWED_BY_PROVIDER,
