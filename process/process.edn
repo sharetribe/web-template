@@ -59,9 +59,8 @@
    :from :state/complete-start,
    :to :state/complete}
   {:name :transition/review,
-   :at
-   {:fn/plus
-    [{:fn/timepoint [:time/booking-end]} {:fn/period ["P1D"]}]},
+  :at
+  {:fn/timepoint [:time/booking-end]}, 
    :from :state/complete,
    :to :state/review}
   {:name :transition/cancel,
