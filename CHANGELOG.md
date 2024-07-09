@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] Safari has a bug related to reading array directly from JSON-LD script tag.
+  [#418](https://github.com/sharetribe/web-template/pull/418)
 - [fix] There could be rare time-windows when indexing has not caught up with deleted & closed
   listings. This might result those listings to be included to listing queries.
   [#417](https://github.com/sharetribe/web-template/pull/417)
