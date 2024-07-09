@@ -98,7 +98,7 @@ export const states = {
   PENDING_PAYMENT: 'pending-payment',
   PAYMENT_EXPIRED: 'payment-expired',
   PURCHASED: 'purchased',
-  DELIVERED: 'delivered',
+  DELIVERED: 'review',
   RECEIVED: 'received',
   DISPUTED: 'disputed',
   CANCELED: 'canceled',
