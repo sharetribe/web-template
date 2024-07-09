@@ -50,7 +50,7 @@ export const transitions = {
 
   // The backend will mark the transaction completed.
   COMPLETE: 'transition/complete',
-  OPERATOR_COMPLETE: 'transition/operator-complete',
+  REVIEW: 'transition/review',
 
   // Reviews are given through transaction transitions. Review 1 can be
   // by provider or customer, and review 2 will be the other party of
@@ -137,7 +137,7 @@ export const graph = {
       on: {
         [transitions.CANCEL]: states.CANCELED,
         [transitions.COMPLETE]: states.DELIVERED,
-        [transitions.OPERATOR_COMPLETE]: states.DELIVERED,
+        [transitions.REVIEW]: states.DELIVERED,
       },
     },
     [states.CANCELED]: {},
@@ -173,7 +173,7 @@ export const isRelevantPastTransition = transition => {
     transitions.OPERATOR_ACCEPT,
     transitions.CANCEL,
     transitions.COMPLETE,
-    transitions.OPERATOR_COMPLETE,
+    transitions.REVIEW,
     transitions.CONFIRM_PAYMENT,
     transitions.DECLINE,
     transitions.OPERATOR_DECLINE,
@@ -213,7 +213,7 @@ export const isPrivileged = transition => {
 export const isCompleted = transition => {
   const txCompletedTransitions = [
     transitions.COMPLETE,
-    transitions.OPERATOR_COMPLETE,
+    transitions.REVIEW,
     transitions.REVIEW_1_BY_CUSTOMER,
     transitions.REVIEW_1_BY_PROVIDER,
     transitions.REVIEW_2_BY_CUSTOMER,

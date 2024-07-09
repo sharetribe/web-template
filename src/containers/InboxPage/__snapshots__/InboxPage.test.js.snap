@@ -810,7 +810,7 @@ exports[`InboxPage InboxItem: default-booking process with "day" check booking: 
 </div>
 `;
 
-exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/operator-complete 1`] = `
+exports[`InboxPage InboxItem: default-booking process with "day" check booking: transition/review 1`] = `
 <div
   class="item"
 >
@@ -2160,7 +2160,7 @@ exports[`InboxPage InboxItem: default-booking process with "hour" check booking:
 </div>
 `;
 
-exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/operator-complete 1`] = `
+exports[`InboxPage InboxItem: default-booking process with "hour" check booking: transition/review 1`] = `
 <div
   class="item"
 >
