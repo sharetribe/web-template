@@ -49,6 +49,7 @@ export const transitions = {
   CANCEL: 'transition/cancel',
 
   // The backend will mark the transaction completed.
+  COMPLETE_START: 'transition/complete-start',
   COMPLETE: 'transition/complete',
   REVIEW: 'transition/review',
 
@@ -136,6 +137,7 @@ export const graph = {
     [states.ACCEPTED]: {
       on: {
         [transitions.CANCEL]: states.CANCELED,
+        [transitions.COMPLETE_START]: states.DELIVERED,
         [transitions.COMPLETE]: states.DELIVERED,
         [transitions.REVIEW]: states.DELIVERED,
       },
@@ -172,6 +174,7 @@ export const isRelevantPastTransition = transition => {
     transitions.ACCEPT,
     transitions.OPERATOR_ACCEPT,
     transitions.CANCEL,
+    transitions.COMPLETE_START,
     transitions.COMPLETE,
     transitions.REVIEW,
     transitions.CONFIRM_PAYMENT,
@@ -212,6 +215,7 @@ export const isPrivileged = transition => {
 // Check when transaction is completed (booking over)
 export const isCompleted = transition => {
   const txCompletedTransitions = [
+    transitions.COMPLETE_START,
     transitions.COMPLETE,
     transitions.REVIEW,
     transitions.REVIEW_1_BY_CUSTOMER,
