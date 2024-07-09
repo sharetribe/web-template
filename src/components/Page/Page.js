@@ -197,26 +197,29 @@ class PageComponent extends Component {
     const hasSchema = schema != null;
     const schemaFromProps = hasSchema && Array.isArray(schema) ? schema : hasSchema ? [schema] : [];
     const addressMaybe = config.address?.streetAddress ? { address: config.address } : {};
-    const schemaArrayJSONString = JSON.stringify([
-      ...schemaFromProps,
-      {
-        '@context': 'http://schema.org',
-        '@type': 'Organization',
-        '@id': `${marketplaceRootURL}#organization`,
-        url: marketplaceRootURL,
-        name: marketplaceName,
-        sameAs: sameOrganizationAs,
-        logo: config.branding.logoImageMobileURL,
-        ...addressMaybe,
-      },
-      {
-        '@context': 'http://schema.org',
-        '@type': 'WebSite',
-        url: marketplaceRootURL,
-        description: schemaDescription,
-        name: schemaTitle,
-      },
-    ]);
+    const schemaArrayJSONString = JSON.stringify({
+      '@context': 'http://schema.org',
+      '@graph': [
+        ...schemaFromProps,
+        {
+          '@context': 'http://schema.org',
+          '@type': 'Organization',
+          '@id': `${marketplaceRootURL}#organization`,
+          url: marketplaceRootURL,
+          name: marketplaceName,
+          sameAs: sameOrganizationAs,
+          logo: config.branding.logoImageMobileURL,
+          ...addressMaybe,
+        },
+        {
+          '@context': 'http://schema.org',
+          '@type': 'WebSite',
+          url: marketplaceRootURL,
+          description: schemaDescription,
+          name: schemaTitle,
+        },
+      ],
+    });
 
     const scrollPositionStyles = scrollingDisabled
       ? { marginTop: `${-1 * this.scrollPosition}px` }
