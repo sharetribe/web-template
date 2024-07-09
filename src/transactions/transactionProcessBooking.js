@@ -131,15 +131,24 @@ export const graph = {
         [transitions.OPERATOR_ACCEPT]: states.ACCEPTED,
       },
     },
-    
+
     [states.DECLINED]: {},
     [states.EXPIRED]: {},
     [states.ACCEPTED]: {
       on: {
-        [transitions.CANCEL]: states.CANCELED,
         [transitions.COMPLETE_START]: states.ACCEPTED,
+      },
+    },
+    [state.COMPLETE_START]: {
+      on: {
+        [transitions.CANCEL]: states.CANCELED,
         [transitions.COMPLETE]: states.ACCEPTED,
+      },
+    },
+    [state.COMPLETE]: {
+      on: {
         [transitions.REVIEW]: states.DELIVERED,
+        [transitions.Expire - reviewed]: states.REVIWED,
       },
     },
     [states.CANCELED]: {},
