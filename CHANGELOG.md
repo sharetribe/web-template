@@ -14,6 +14,10 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] There could be rare time-windows when indexing has not caught up with deleted & closed
+  listings. This might result those listings to be included to listing queries.
+  [#417](https://github.com/sharetribe/web-template/pull/417)
+
 ## [v5.2.1] 2024-07-02
 
 - [fix] fix: calculateShippingFee (when shippingPriceInSubunitsAdditionalItems is 0, no shipping fee
