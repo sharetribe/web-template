@@ -144,7 +144,10 @@ export const queryUserListings = (userId, config) => (dispatch, getState, sdk) =
     })
     .then(response => {
       // Pick only the id and type properties from the response listings
-      const listingRefs = response.data.data.map(({ id, type }) => ({ id, type }));
+      const listings = response.data.data;
+      const listingRefs = listings
+        .filter(l => l => !l.attributes.deleted && l.attributes.state === 'published')
+        .map(({ id, type }) => ({ id, type }));
       dispatch(addMarketplaceEntities(response));
       dispatch(queryListingsSuccess(listingRefs));
       return response;
