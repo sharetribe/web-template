@@ -137,8 +137,8 @@ export const graph = {
     [states.ACCEPTED]: {
       on: {
         [transitions.CANCEL]: states.CANCELED,
-        [transitions.COMPLETE_START]: states.ACCEPTED,
-        [transitions.COMPLETE]: states.ACCEPTED,
+        [transitions.COMPLETE_START]: states.DELIVERED,
+        [transitions.COMPLETE]: states.DELIVERED,
         [transitions.REVIEW]: states.DELIVERED,
       },
     },
