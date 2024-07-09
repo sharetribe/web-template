@@ -495,6 +495,7 @@ export const BookingDatesFormComponent = props => {
       );
       
       
+
        const helmetFeeMaybe = differenceInDays > 3 && helmetFee? (
           <FieldCheckbox
           className={css.helmetFeeContainer}
