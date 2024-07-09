@@ -84,7 +84,7 @@ export const states = {
   ACCEPTED: 'accepted',
   EXPIRED: 'expired',
   CANCELED: 'canceled',
-  DELIVERED: 'review',
+  DELIVERED: 'delivered',
   REVIEWED: 'reviewed',
   REVIEWED_BY_CUSTOMER: 'reviewed-by-customer',
   REVIEWED_BY_PROVIDER: 'reviewed-by-provider',
@@ -139,12 +139,12 @@ export const graph = {
         [transitions.CANCEL]: states.CANCELED,
         [transitions.COMPLETE_START]: states.ACCEPTED,
         [transitions.COMPLETE]: states.ACCEPTED,
+        [transitions.REVIEW]: states.DELIVERED,
       },
     },
     [states.CANCELED]: {},
     [states.DELIVERED]: {
       on: {
-        [transitions.REVIEW]: states.DELIVERED,
         [transitions.EXPIRE_REVIEW_PERIOD]: states.REVIEWED,
         [transitions.REVIEW_1_BY_CUSTOMER]: states.REVIEWED_BY_CUSTOMER,
         [transitions.REVIEW_1_BY_PROVIDER]: states.REVIEWED_BY_PROVIDER,
