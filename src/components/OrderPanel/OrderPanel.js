@@ -38,7 +38,15 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2, Button, SecondaryButton, } from '../../components';
+import {
+  ModalInMobile,
+  PrimaryButton,
+  AvatarSmall,
+  H1,
+  H2,
+  Button,
+  SecondaryButton,
+} from '../../components';
 
 import css from './OrderPanel.module.css';
 import WhatsAppButton from '../../components/Button/WhatsAppButton';
@@ -273,6 +281,12 @@ const OrderPanel = props => {
     </Button>
   );
   */
+  const handleButtonClick = () => {
+    fbq('track', 'ButtonClicked');
+    setTimeout(() => {
+      window.location.href = 'https://wa.me/5492944232664';
+    }, 300);
+  };
   const helmetFee = listing?.attributes?.publicData.helmetFee;
   return (
     <div className={classes}>
@@ -310,7 +324,7 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
           </span>
         </div>
-        
+
         {showPriceMissing ? (
           <PriceMissing />
         ) : showInvalidCurrency ? (
@@ -421,13 +435,14 @@ const OrderPanel = props => {
             )}
           </PrimaryButton>
         )}
-      
       </div>
-
-      <div>
-        <p>Comunicate con Rundo</p>
+      
+      <div style={{ textAlign: "center" }}>
+        <button onClick={handleButtonClick} style={{ border: 'none' }}>
+          <p>Comunicate con Rundo</p>
+        </button>
         <a href="https://wa.me/5492944232664" target="_blank" className={css.A_css}>
-	          <img src="/static/icons/whatsapp.png" alt="WhatsApp" className={css.whatsAppButton}/>
+          <img src="/static/icons/whatsapp.png" alt="WhatsApp" className={css.whatsAppButton} />
         </a>
       </div>
     </div>
@@ -497,7 +512,4 @@ OrderPanel.propTypes = {
   currentUser: propTypes.currentUser.isRequired,
 };
 
-export default compose(
-  withRouter,
-  injectIntl
-)(OrderPanel);
+export default compose(withRouter, injectIntl)(OrderPanel);
