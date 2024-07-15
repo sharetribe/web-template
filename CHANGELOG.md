@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] richText.js: support parentheses on autolinked URLs.
+  [#419](https://github.com/sharetribe/web-template/pull/419)
 - [fix] Safari has a bug related to reading array directly from JSON-LD script tag.
   [#418](https://github.com/sharetribe/web-template/pull/418)
 - [fix] There could be rare time-windows when indexing has not caught up with deleted & closed
