@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] Update express.js (v4.19.2) and nodemon (3.1.4).
+  [#421](https://github.com/sharetribe/web-template/pull/421)
 - [add] richText.js: support parentheses on autolinked URLs.
   [#419](https://github.com/sharetribe/web-template/pull/419)
 - [fix] Safari has a bug related to reading array directly from JSON-LD script tag.
