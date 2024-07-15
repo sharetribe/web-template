@@ -283,9 +283,9 @@ const OrderPanel = props => {
   */
   const handleButtonClick = () => {
     if (typeof fbq !== 'undefined') {
-      fbq('track', 'ButtonClicked');
+      fbq('track', 'BtnWspListingPage');
       setTimeout(() => {
-        window.location.href = 'https://wa.me/5492944232664';
+        window.open('https://wa.me/5492944232664', '_blank');
       }, 300);
     } else {
       console.error('Meta Pixel no está definido');
@@ -442,7 +442,16 @@ const OrderPanel = props => {
       </div>
 
       <div style={{ textAlign: 'center' }}>
-        <button onClick={handleButtonClick} style={{ border: 'none', display: "flex", alignItems: "center", flexDirection: "column" }}>
+        <button
+          onClick={handleButtonClick}
+          style={{
+            border: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'column',
+            cursor: 'pointer',
+          }}
+        >
           <p>Comunicate con Rundo</p>
           <img src="/static/icons/whatsapp.png" alt="WhatsApp" className={css.whatsAppButton} />
         </button>
