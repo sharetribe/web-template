@@ -440,10 +440,10 @@ const OrderPanel = props => {
       <div style={{ textAlign: "center" }}>
         <button onClick={handleButtonClick} style={{ border: 'none' }}>
           <p>Comunicate con Rundo</p>
-        </button>
         <a href="https://wa.me/5492944232664" target="_blank" className={css.A_css}>
           <img src="/static/icons/whatsapp.png" alt="WhatsApp" className={css.whatsAppButton} />
         </a>
+        </button>
       </div>
     </div>
   );
