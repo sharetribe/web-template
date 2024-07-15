@@ -282,10 +282,14 @@ const OrderPanel = props => {
   );
   */
   const handleButtonClick = () => {
-    fbq('track', 'ButtonClicked');
-    setTimeout(() => {
-      window.location.href = 'https://wa.me/5492944232664';
-    }, 300);
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'ButtonClicked');
+      setTimeout(() => {
+        window.location.href = 'https://wa.me/5492944232664';
+      }, 300);
+    } else {
+      console.error('Meta Pixel no está definido');
+    }
   };
   const helmetFee = listing?.attributes?.publicData.helmetFee;
   return (
@@ -436,13 +440,11 @@ const OrderPanel = props => {
           </PrimaryButton>
         )}
       </div>
-      
-      <div style={{ textAlign: "center" }}>
-        <button onClick={handleButtonClick} style={{ border: 'none' }}>
+
+      <div style={{ textAlign: 'center' }}>
+        <button onClick={handleButtonClick} style={{ border: 'none', display: "flex", alignItems: "center", flexDirection: "column" }}>
           <p>Comunicate con Rundo</p>
-        <a href="https://wa.me/5492944232664" target="_blank" className={css.A_css}>
           <img src="/static/icons/whatsapp.png" alt="WhatsApp" className={css.whatsAppButton} />
-        </a>
         </button>
       </div>
     </div>
