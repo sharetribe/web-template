@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "clinyong.vscode-css-modules",
+    "foxundermoon.shell-format",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "stylelint.vscode-stylelint",
+    "streetsidesoftware.code-spell-checker"
+  ]
+}
