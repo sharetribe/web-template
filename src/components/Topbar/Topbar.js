@@ -178,18 +178,17 @@ class TopbarComponent extends Component {
     const isMobileSearchOpen = isMobileLayout && mobilesearch === 'open';
 
     const mobileMenu = (
-      <div> 
-      <TopbarMobileMenu
-        isAuthenticated={isAuthenticated}
-        currentUserHasListings={currentUserHasListings}
-        currentUser={currentUser}
-        onLogout={this.handleLogout}
-        notificationCount={notificationCount}
-        currentPage={currentPage}
+      <div>
+        <TopbarMobileMenu
+          isAuthenticated={isAuthenticated}
+          currentUserHasListings={currentUserHasListings}
+          currentUser={currentUser}
+          onLogout={this.handleLogout}
+          notificationCount={notificationCount}
+          currentPage={currentPage}
         />
-        </div>
-
-        );
+      </div>
+    );
 
     const topbarSearcInitialValues = () => {
       if (isMainSearchTypeKeywords(config)) {
@@ -212,7 +211,16 @@ class TopbarComponent extends Component {
     const initialSearchFormValues = topbarSearcInitialValues();
 
     const classes = classNames(rootClassName || css.root, className);
-
+    const handleButtonClick = () => {
+      if (typeof fbq !== 'undefined') {
+        fbq('track', 'BtnWspHeader');
+        setTimeout(() => {
+          window.open('https://wa.me/5492944232664', '_blank');
+        }, 300);
+      } else {
+        console.error('Meta Pixel no está definido');
+      }
+    };
     return (
       <div className={classes}>
         <LimitedAccessBanner
@@ -232,13 +240,20 @@ class TopbarComponent extends Component {
             {notificationDot}
           </Button>
           <LinkedLogo layout={'mobile'} alt={intl.formatMessage({ id: 'Topbar.logoIcon' })} />
-                        <a style={{width: '20%', height: '100%'}}>
-        <a style={{ height: '100%', display: 'flex', alignItems: 'center'}} href="https://wa.me/5492944232664" target="_blank" >
-        <p style={{color: "green",textAlign: "center", display: "flex",
-        color: "#7cc9bc",alignItems: "center"}}> 
-        <img src="/static/icons/whatsapp.png" alt="WhatsApp" style={{marginLeft: "10%", width: "36.5px", height: "35.5px"}}/></p>
-        </a>
-      </a>
+          <div style={{ textAlign: 'center' }}>
+        <button
+          onClick={handleButtonClick}
+          style={{
+            border: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'column',
+            cursor: 'pointer',
+          }}
+        >
+          <img src="/static/icons/whatsapp.png" alt="WhatsApp" style={{marginLeft: "10%", width: "36.5px", height: "35.5px"}} />
+        </button>
+      </div>
           <Button
             rootClassName={css.searchMenu}
             onClick={this.handleMobileSearchOpen}
