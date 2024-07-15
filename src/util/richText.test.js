@@ -285,6 +285,96 @@ describe('richText', () => {
       );
     });
 
+    it('should add link inside non-whitespace-sequence ((http://example.com/path_(etc)))', () => {
+      const wrapper = render(
+        <span>
+          {richText('Link: ((http://example.com/path_(etc))) asdf', { ...options, linkify: true })}
+        </span>
+      );
+      // <span>
+      //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
+      // </span>
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
+        `<span>Link: ((<a href="http://example.com/path_(etc)" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path_(etc)</a>)) asdf</span>`
+      );
+    });
+
+    it('should add link inside non-whitespace-sequence: ((http://example.com/path_(etc)', () => {
+      const wrapper = render(
+        <span>
+          {richText('Link: ((http://example.com/path_(etc) asdf', { ...options, linkify: true })}
+        </span>
+      );
+      // <span>
+      //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
+      // </span>
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
+        `<span>Link: ((<a href="http://example.com/path_(etc)" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path_(etc)</a> asdf</span>`
+      );
+    });
+
+    it('should add link inside non-whitespace-sequence: ((http://example.com/path_(etc', () => {
+      const wrapper = render(
+        <span>
+          {richText('Link: ((http://example.com/path_(etc asdf', { ...options, linkify: true })}
+        </span>
+      );
+      // <span>
+      //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
+      // </span>
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
+        `<span>Link: ((<a href="http://example.com/path_(etc" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path_(etc</a> asdf</span>`
+      );
+    });
+
+    it('should add link inside non-whitespace-sequence: ((http://example.com/path_etc)', () => {
+      const wrapper = render(
+        <span>
+          {richText('Link: ((http://example.com/path_etc) asdf', { ...options, linkify: true })}
+        </span>
+      );
+      // <span>
+      //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
+      // </span>
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
+        `<span>Link: ((<a href="http://example.com/path_etc" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path_etc</a>) asdf</span>`
+      );
+    });
+
+    it('should add link inside non-whitespace-sequence: ((http://example.com/path_(etc))', () => {
+      const wrapper = render(
+        <span>
+          {richText('Link: ((http://example.com/path_(etc)) asdf', { ...options, linkify: true })}
+        </span>
+      );
+      // <span>
+      //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
+      // </span>
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
+        `<span>Link: ((<a href="http://example.com/path_(etc)" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path_(etc)</a>) asdf</span>`
+      );
+    });
+
+    it('should add link inside non-whitespace-sequence: ((http://example.com/path(_(etc))', () => {
+      const wrapper = render(
+        <span>
+          {richText('Link: ((http://example.com/path(_(etc)) asdf', { ...options, linkify: true })}
+        </span>
+      );
+      // <span>
+      //   Link: (<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">http://example.com</a>)
+      // </span>
+      const htmlString = wrapper.asFragment().firstChild.outerHTML;
+      expect(htmlString).toEqual(
+        `<span>Link: ((<a href="http://example.com/path(_(etc))" class="longWord" target="_blank" rel="noopener noreferrer">http://example.com/path(_(etc))</a> asdf</span>`
+      );
+    });
+
     it('should add link inside non-whitespace-sequence that ends to common puctuation (!:,.;)', () => {
       // !
       const wrapper = render(
