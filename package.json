@@ -1,102 +1,17 @@
 {
-	"name": "app",
+	"name": "swan-shoppe-mvp",
+	"description": "Swan Shoppe MVP",
 	"version": "5.2.1",
 	"private": true,
-	"license": "Apache-2.0",
-	"dependencies": {
-		"@babel/runtime": "^7.17.9",
-		"@loadable/component": "^5.15.2",
-		"@loadable/server": "^5.15.2",
-		"@mapbox/polyline": "^1.1.1",
-		"@sentry/browser": "^6.19.7",
-		"@sentry/node": "^6.19.7",
-		"autosize": "^5.0.1",
-		"basic-auth": "^2.0.1",
-		"body-parser": "^1.20.2",
-		"classnames": "^2.5.1",
-		"compression": "^1.7.4",
-		"cookie-parser": "^1.4.6",
-		"core-js": "^3.22.5",
-		"cors": "^2.8.5",
-		"decimal.js": "^10.4.3",
-		"dotenv": "^10.0.0",
-		"dotenv-expand": "^5.1.0",
-		"express": "^4.19.2",
-		"express-enforces-ssl": "^1.1.0",
-		"final-form": "4.20.7",
-		"final-form-arrays": "3.0.2",
-		"full-icu": "^1.4.0",
-		"helmet": "^7.1.0",
-		"jose": "5.2.0",
-		"lodash": "^4.17.21",
-		"mapbox-gl-multitouch": "^1.0.3",
-		"moment": "^2.30.1",
-		"moment-timezone": "^0.5.45",
-		"passport": "^0.7.0",
-		"passport-facebook": "^3.0.0",
-		"passport-google-oauth": "^2.0.0",
-		"patch-package": "^8.0.0",
-		"path-to-regexp": "^6.2.1",
-		"postinstall-postinstall": "^2.1.0",
-		"prop-types": "^15.8.1",
-		"query-string": "^7.1.1",
-		"raf": "^3.4.0",
-		"react": "^16.13.1",
-		"react-dates": "^21.8.0",
-		"react-dom": "^16.13.1",
-		"react-final-form": "6.5.9",
-		"react-final-form-arrays": "3.1.3",
-		"react-helmet-async": "^1.3.0",
-		"react-image-gallery": "1.2.8",
-		"react-intl": "^5.25.1",
-		"react-moment-proptypes": "^1.8.1",
-		"react-redux": "^7.2.8",
-		"react-router-dom": "^5.3.2",
-		"react-with-direction": "^1.4.0",
-		"redux": "^4.2.0",
-		"redux-thunk": "^2.4.1",
-		"rehype-react": "^6.2.1",
-		"rehype-sanitize": "^4.0.0",
-		"remark-parse": "^9.0.0",
-		"remark-rehype": "^8.1.0",
-		"seedrandom": "^3.0.5",
-		"sharetribe-flex-sdk": "^1.21.1",
-		"sharetribe-scripts": "6.0.1",
-		"sitemap": "^7.1.1",
-		"smoothscroll-polyfill": "^0.4.0",
-		"source-map-support": "^0.5.21",
-		"unified": "^9.2.2",
-		"url": "^0.11.0"
-	},
-	"devDependencies": {
-		"@buildinams/lint": "^0.4.2",
-		"@testing-library/jest-dom": "^5.16.2",
-		"@testing-library/react": "^12.1.2",
-		"@testing-library/user-event": "^13.5.0",
-		"bfj": "^7.0.2",
-		"chalk": "^v4.1.2",
-		"concurrently": "^8.2.2",
-		"cross-env": "^7.0.3",
-		"eslint-plugin-unused-imports": "^4.0.0",
-		"globals": "^15.8.0",
-		"inquirer": "^8.2.4",
-		"nodemon": "^3.1.4"
-	},
-	"resolutions": {
-		"moment": "^2.30.1",
-		"react-dates/lodash": "^4.17.21",
-		"react-test-renderer": "^16.13.1"
-	},
-	"nodemonConfig": {
-		"execMap": {
-			"js": "node --icu-data-dir=node_modules/full-icu"
-		}
-	},
-	"jest": {
-		"moduleNameMapper": {
-			"axios": "axios/dist/node/axios.cjs"
-		}
-	},
+   "license": "Apache-2.0",
+   "author": "Build in Amsterdam <development@buildinamsterdam.com> (https://www.buildinamsterdam.com/)",
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/buildinamsterdam/swan-shoppe.git"
+   },
+   "bugs": {
+      "url": "https://github.com/buildinamsterdam/swan-shoppe/issues"
+   },
 	"scripts": {
       "audit": "yarn audit --json | node scripts/audit.js",
       "build": "yarn build-web&&yarn build-server",
@@ -110,7 +25,8 @@
       "dev-frontend": "sharetribe-scripts start",
       "dev-server": "cross-env-shell NODE_ENV=development PORT=4000 REACT_APP_MARKETPLACE_ROOT_URL=http://localhost:4000 \"yarn run build&&nodemon --watch server server/index.js\"",
       "eject": "sharetribe-scripts eject",
-      "fix": "stylelint --fix '**/*.css' && eslint --fix .",
+		"fix": "eslint --fix .",
+      "fix-css": "stylelint --fix '**/*.css'",
       "format": "prettier --write '**/*.{js,css}'",
       "format-ci": "prettier --list-different '**/*.{js,css}'",
       "format-docs": "prettier --write '**/*.md'",
@@ -123,19 +39,106 @@
       "test-server": "jest ./server/**/*.test.js",
       "translate": "node scripts/translations.js"
    },
+   "dependencies": {
+      "@babel/runtime": "^7.17.9",
+      "@loadable/component": "^5.15.2",
+      "@loadable/server": "^5.15.2",
+      "@mapbox/polyline": "^1.1.1",
+      "@sentry/browser": "^6.19.7",
+      "@sentry/node": "^6.19.7",
+      "autosize": "^5.0.1",
+      "basic-auth": "^2.0.1",
+      "body-parser": "^1.20.2",
+      "classnames": "^2.5.1",
+      "compression": "^1.7.4",
+      "cookie-parser": "^1.4.6",
+      "core-js": "^3.22.5",
+      "cors": "^2.8.5",
+      "decimal.js": "^10.4.3",
+      "dotenv": "^10.0.0",
+      "dotenv-expand": "^5.1.0",
+      "express": "^4.19.2",
+      "express-enforces-ssl": "^1.1.0",
+      "final-form": "4.20.7",
+      "final-form-arrays": "3.0.2",
+      "full-icu": "^1.4.0",
+      "helmet": "^7.1.0",
+      "jose": "5.2.0",
+      "lodash": "^4.17.21",
+      "mapbox-gl-multitouch": "^1.0.3",
+      "moment": "^2.30.1",
+      "moment-timezone": "^0.5.45",
+      "passport": "^0.7.0",
+      "passport-facebook": "^3.0.0",
+      "passport-google-oauth": "^2.0.0",
+      "patch-package": "^8.0.0",
+      "path-to-regexp": "^6.2.1",
+      "postinstall-postinstall": "^2.1.0",
+      "prop-types": "^15.8.1",
+      "query-string": "^7.1.1",
+      "raf": "^3.4.0",
+      "react": "^16.13.1",
+      "react-dates": "^21.8.0",
+      "react-dom": "^16.13.1",
+      "react-final-form": "6.5.9",
+      "react-final-form-arrays": "3.1.3",
+      "react-helmet-async": "^1.3.0",
+      "react-image-gallery": "1.2.8",
+      "react-intl": "^5.25.1",
+      "react-moment-proptypes": "^1.8.1",
+      "react-redux": "^7.2.8",
+      "react-router-dom": "^5.3.2",
+      "react-with-direction": "^1.4.0",
+      "redux": "^4.2.0",
+      "redux-thunk": "^2.4.1",
+      "rehype-react": "^6.2.1",
+      "rehype-sanitize": "^4.0.0",
+      "remark-parse": "^9.0.0",
+      "remark-rehype": "^8.1.0",
+      "seedrandom": "^3.0.5",
+      "sharetribe-flex-sdk": "^1.21.1",
+      "sharetribe-scripts": "6.0.1",
+      "sitemap": "^7.1.1",
+      "smoothscroll-polyfill": "^0.4.0",
+      "source-map-support": "^0.5.21",
+      "unified": "^9.2.2",
+      "url": "^0.11.0"
+   },
+   "devDependencies": {
+      "@buildinams/lint": "^0.4.2",
+      "@testing-library/jest-dom": "^5.16.2",
+      "@testing-library/react": "^12.1.2",
+      "@testing-library/user-event": "^13.5.0",
+      "bfj": "^7.0.2",
+      "chalk": "^v4.1.2",
+      "concurrently": "^8.2.2",
+      "cross-env": "^7.0.3",
+      "eslint-plugin-unused-imports": "^4.0.0",
+      "globals": "^15.8.0",
+      "inquirer": "^8.2.4",
+      "nodemon": "^3.1.4"
+   },
+   "engines": {
+      "node": ">=18.20.1",
+      "npm": "please use yarn"
+   },
+   "jest": {
+      "moduleNameMapper": {
+         "axios": "axios/dist/node/axios.cjs"
+      }
+   },
+   "nodemonConfig": {
+      "execMap": {
+         "js": "node --icu-data-dir=node_modules/full-icu"
+      }
+   },
+   "resolutions": {
+      "moment": "^2.30.1",
+      "react-dates/lodash": "^4.17.21",
+      "react-test-renderer": "^16.13.1"
+   },
 	"browserslist": {
-		"production": [
-			">0.2%",
-			"not dead",
-			"not op_mini all"
-		],
-		"development": [
-			"last 1 chrome version",
-			"last 1 firefox version",
-			"last 1 safari version"
-		]
-	},
-	"engines": {
-		"node": ">=18.20.1"
-	}
+      "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"],
+      "production": [">0.2%", "not dead", "not op_mini all"]
+   }
 }
