@@ -299,13 +299,15 @@ const ExceptionDateTimeRange = (props) => {
 	useEffect(() => {
 		if (appSettings.dev && appSettings.verbose) {
 			// This side effect just prints debug data into the console.log feed.
-			console.log(
+			console.warn(
 				`Fetched months: ${monthIdString(startMonth)} - exclusive(${monthIdString(endMonth)})`,
 				"\nExceptions found:",
 				allExceptions,
 			);
-			console.log("Dates with availability info:", availableDates);
+
+			// console.log("Dates with availability info:", availableDates);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- starter code
 	}, [currentMonth]);
 
 	const dayData = exceptionStartDay

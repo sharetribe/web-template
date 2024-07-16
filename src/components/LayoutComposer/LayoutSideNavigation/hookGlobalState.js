@@ -18,6 +18,7 @@ export const createGlobalState = (initialState) => {
 
 	const useGlobalState = (key) => {
 		const [state, setState] = useState(globalState[key]);
+
 		useEffect(() => {
 			const listener = () => {
 				setState(globalState[key]);
@@ -25,7 +26,9 @@ export const createGlobalState = (initialState) => {
 			listeners[key].add(listener);
 			listener(); // in case it's already changed
 			return () => listeners[key].delete(listener); // cleanup
+			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, []);
+
 		return [state, (nextValue) => setGlobalState(key, nextValue)];
 	};
 

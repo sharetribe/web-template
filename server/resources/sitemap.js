@@ -59,7 +59,7 @@ const createCacheProxy = (ttl) => {
 	const cache = {};
 	return new Proxy(cache, {
 		// Get data for the property together with timestamp
-		get(target, property, receiver) {
+		get(target, property) {
 			const cachedData = target[property];
 			if (!!cachedData) {
 				// Check if the cached data has expired
@@ -70,7 +70,7 @@ const createCacheProxy = (ttl) => {
 			return { data: null, timestamp: cachedData?.timestamp || Date.now() };
 		},
 		// Set given value as data to property accompanied with timestamp
-		set(target, property, value, receiver) {
+		set(target, property, value) {
 			target[property] = { data: value, timestamp: Date.now() };
 		},
 	});

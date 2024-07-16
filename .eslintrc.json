@@ -1,6 +1,8 @@
 {
 	"extends": ["./node_modules/@buildinams/lint/eslint/react-javascript"],
 	"rules": {
+		"jsx-a11y/label-has-associated-control": ["warn"],
+		"jsx-a11y/no-autofocus": ["warn"],
 		"react/prop-types": ["off", {
 			"ignore": ["children"]
 		}],
@@ -10,7 +12,7 @@
 	// Ignore no console warning for .example.js files
 	"overrides": [
 		{
-			"files": ["*.example.js"],
+			"files": ["*.example.js", "server/**/*.js", "scripts/**/*.js", "src/analytics/**/*.js"],
 			"rules": {
 				"no-console": ["off"]
 			}

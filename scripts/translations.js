@@ -117,9 +117,6 @@ const run = () => {
  * @param {String} targetLang Target language code
  */
 const runWithTarget = (targetLang) => {
-	let key;
-	let translation;
-
 	const sourceLang = SOURCE_LANG.code;
 	const source = readFileToJSON(filePath(sourceLang));
 	const target = readFileToJSON(filePath(targetLang));
@@ -144,6 +141,8 @@ const runWithTarget = (targetLang) => {
  * @param {Array} diff Missing keys in target
  */
 const translateLanguage = (targetLang, source, target, diff) => {
+	let key, translation;
+
 	selectKey(targetLang, diff, source, target)
 		.then((answers) => {
 			key = answers.key;
@@ -185,7 +184,7 @@ const translateLanguage = (targetLang, source, target, diff) => {
 				// break out of Promise chain, continue with this language
 				runWithTarget(targetLang);
 			} else {
-				console.log(chalk.red(`An error occurred due to: ${err.message}`));
+				console.error(chalk.red(`An error occurred due to: ${err.message}`));
 			}
 		});
 };
@@ -212,10 +211,17 @@ const selectLanguage = (choices) => {
  *
  * @param {String} targetLang The language that is being translated
  * @param {Array} diff Keys missing frrom target language translations
+ * @param {*} [source]
+ * @param {*} [target]
  *
  * @return a Promise
  */
-const selectKey = (targetLang, diff, source, target) => {
+const selectKey = (
+	targetLang,
+	diff,
+	// source,
+	// target
+) => {
 	const choices = [{ name: "Back to languages", value: null }, ...diff];
 	return inquirer.prompt([
 		{

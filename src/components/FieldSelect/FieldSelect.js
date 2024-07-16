@@ -24,7 +24,12 @@ const FieldSelectComponent = (props) => {
 		throw new Error("id required when a label is given");
 	}
 
-	const { valid, invalid, touched, error } = meta;
+	const {
+		// valid,
+		invalid,
+		touched,
+		error,
+	} = meta;
 
 	// Error message and input error styles are only shown if the
 	// field has been touched and the validation has failed.

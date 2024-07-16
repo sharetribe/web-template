@@ -45,7 +45,7 @@ const PlaceInfo = (props) => {
 
 PlaceInfo.propTypes = { place: propTypes.place.isRequired };
 
-const FormContainer = (props) => {
+const FormContainer = () => {
 	const [location, setLocation] = useState({});
 	const onSubmit = (values) => {
 		setLocation(values.location);

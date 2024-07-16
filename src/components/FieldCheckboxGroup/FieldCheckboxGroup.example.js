@@ -74,7 +74,8 @@ const tosProps = {
 	validate: requiredFieldArrayCheckbox("You need to accept Terms of Service"),
 };
 
-const formComponent = (country) => (props) => (
+// (country) => props => ...
+const formComponent = () => (props) => (
 	<FinalForm
 		{...props}
 		mutators={{ ...arrayMutators }}

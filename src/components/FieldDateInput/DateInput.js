@@ -79,7 +79,7 @@ const defaultProps = {
 	isDayBlocked: () => false,
 
 	// This gets default value at FieldDateInput
-	isOutsideRange: (day) => false,
+	isOutsideRange: () => false, // (day) => boolean
 	isDayHighlighted: () => {},
 
 	// Internationalization props

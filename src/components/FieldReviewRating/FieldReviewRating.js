@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React from "react";
 import { Field } from "react-final-form";
 import classNames from "classnames";
@@ -23,9 +24,10 @@ const FieldReviewRatingComponent = (props) => {
 	} = props;
 	/* eslint-enable no-unused-vars */
 
-	const handleChange = (event) => {
-		input.onChange(event.target.value);
-	};
+	// Unused code. Remove?
+	// const handleChange = (event) => {
+	// 	input.onChange(event.target.value);
+	// };
 
 	const { touched, error } = meta;
 	const errorText = customErrorText || error;

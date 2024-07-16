@@ -370,6 +370,7 @@ const EditListingDetailsPanel = (props) => {
 					updated={panelUpdated}
 					updateInProgress={updateInProgress}
 					fetchErrors={errors}
+					// eslint-disable-next-line jsx-a11y/no-autofocus
 					autoFocus
 				/>
 			) : (

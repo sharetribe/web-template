@@ -41,7 +41,11 @@ const callLoadData = (props) => {
 	}
 };
 
-const setPageScrollPosition = (location, delayed) => {
+/**
+ * @param {*} location
+ * @param {*} [delayed]
+ */
+const setPageScrollPosition = (location) => {
 	if (!location.hash) {
 		// No hash, scroll to top
 		window.scroll({

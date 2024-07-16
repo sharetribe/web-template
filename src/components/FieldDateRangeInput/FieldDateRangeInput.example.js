@@ -13,8 +13,16 @@ const FormComponent = (props) => (
 	<FinalForm
 		{...props}
 		render={(fieldRenderProps) => {
-			const { style, form, handleSubmit, onChange, pristine, submitting, dateInputProps } =
-				fieldRenderProps;
+			const {
+				style,
+				// form
+				handleSubmit,
+				onChange,
+				pristine,
+				submitting,
+				dateInputProps,
+			} = fieldRenderProps;
+
 			const submitDisabled = pristine || submitting;
 
 			return (

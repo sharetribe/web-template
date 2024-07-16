@@ -2,6 +2,7 @@ const fs = require("fs");
 const { Transform, Writable } = require("stream");
 const log = require("../log.js");
 const { getRootURL } = require("../api-util/rootURL.js");
+const { EmptyStream } = require("sitemap");
 
 // Emulate feature that's part of sitemap dependency
 const streamToPromise = (stream) => {

@@ -159,7 +159,7 @@ class TokenInputFieldComponent extends Component {
 
 				// Handle response only if the input values haven't changed
 				if (this._isMounted && valuesAreUnchanged) {
-					this.setState((prevState) => {
+					this.setState(() => {
 						return { stripeError: null };
 					});
 

@@ -60,6 +60,7 @@ const EditListingPhotosPanel = (props) => {
 				initialValues={getInitialValues(props)}
 				onImageUpload={onImageUpload}
 				onSubmit={(values) => {
+					// eslint-disable-next-line no-unused-vars
 					const { addImage, ...updateValues } = values;
 					onSubmit(updateValues);
 				}}

@@ -391,13 +391,10 @@ describe("EditListingPage", () => {
 		};
 
 		// Render the EditListingPage component with provided props and configurations
-		const { getByText, getByRole, getByLabelText, queryAllByRole } = render(
-			<EditListingPage {...props} />,
-			{
-				config,
-				routeConfiguration,
-			},
-		);
+		const { getByText, getByRole, getByLabelText } = render(<EditListingPage {...props} />, {
+			config,
+			routeConfiguration,
+		});
 
 		await waitFor(() => {
 			// Navigation to tab
@@ -1136,7 +1133,7 @@ describe("EditListingPage", () => {
 			},
 		};
 
-		const { getByText, getByRole, getByLabelText } = render(<EditListingPage {...props} />, {
+		const { getByText, getByRole } = render(<EditListingPage {...props} />, {
 			initialState: initialState(listing),
 			config,
 			routeConfiguration,
@@ -1539,7 +1536,7 @@ describe("EditListingPage", () => {
 			},
 		};
 
-		const { getByText, getByRole, queryAllByText } = render(<EditListingPage {...props} />, {
+		const { getByText, getByRole } = render(<EditListingPage {...props} />, {
 			initialState: initialState(listing),
 			config,
 			routeConfiguration,
@@ -2269,14 +2266,11 @@ describe("EditListingPage", () => {
 			},
 		};
 
-		const { getByText, getByRole, getByLabelText, getByPlaceholderText } = render(
-			<EditListingPage {...props} />,
-			{
-				initialState: initialState(listing),
-				config,
-				routeConfiguration,
-			},
-		);
+		const { getByText, getByRole, getByPlaceholderText } = render(<EditListingPage {...props} />, {
+			initialState: initialState(listing),
+			config,
+			routeConfiguration,
+		});
 
 		await waitFor(() => {
 			// Navigation to tab

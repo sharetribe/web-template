@@ -66,6 +66,8 @@ export const EditListingDeliveryFormComponent = (props) => (
 			// if this fix causes trouble in future dependency updates.
 			const { pauseValidation, resumeValidation } = form;
 			pauseValidation(false);
+			// Wacko starter
+			// eslint-disable-next-line react-hooks/rules-of-hooks, react-hooks/exhaustive-deps
 			useEffect(() => resumeValidation(), [values]);
 
 			const displayShipping = displayDeliveryShipping(listingTypeConfig);
@@ -137,6 +139,7 @@ export const EditListingDeliveryFormComponent = (props) => (
 							iconClassName={css.locationAutocompleteInputIcon}
 							predictionsClassName={css.predictionsRoot}
 							validClassName={css.validLocation}
+							// eslint-disable-next-line jsx-a11y/no-autofocus
 							autoFocus={autoFocus}
 							name="location"
 							label={intl.formatMessage({ id: "EditListingDeliveryForm.address" })}

@@ -192,13 +192,14 @@ const SavedCardDetails = (props) => {
 						<div className={css.modalTitle}>{removeCardModalTitle}</div>
 						<p className={css.modalMessage}>{removeCardModalContent}</p>
 						<div className={css.modalButtonsWrapper}>
-							<div
+							<button
+								type="button"
 								onClick={() => setIsModalOpen(false)}
 								className={css.cancelCardDelete}
 								tabIndex="0"
 							>
 								{cancel}
-							</div>
+							</button>
 							<Button onClick={onDeleteCard} inProgress={deletePaymentMethodInProgress}>
 								{removeCard}
 							</Button>

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /**
  * Note: This form is using card from Stripe Elements https://stripe.com/docs/stripe-js#elements
  * Card is not a Final Form field so it's not available trough Final Form.
@@ -368,7 +369,7 @@ class StripePaymentForm extends Component {
 			this.finalFormAPI.change("postal", postalCode);
 		}
 
-		this.setState((prevState) => {
+		this.setState(() => {
 			return {
 				error: error ? stripeErrorTranslation(intl, error) : null,
 				cardValueValid: complete,
@@ -414,7 +415,6 @@ class StripePaymentForm extends Component {
 			inProgress: submitInProgress,
 			loadingData,
 			formId,
-			paymentInfo,
 			authorDisplayName,
 			showInitialMessageInput,
 			intl,
@@ -435,7 +435,8 @@ class StripePaymentForm extends Component {
 			marketplaceName,
 			isBooking,
 			isFuzzyLocation,
-			values,
+			// paymentInfo,
+			// values,
 		} = formRenderProps;
 
 		this.finalFormAPI = formApi;
@@ -664,6 +665,7 @@ class StripePaymentForm extends Component {
 	}
 
 	render() {
+		// eslint-disable-next-line no-unused-vars
 		const { onSubmit, ...rest } = this.props;
 		return <FinalForm onSubmit={this.handleSubmit} {...rest} render={this.paymentForm} />;
 	}

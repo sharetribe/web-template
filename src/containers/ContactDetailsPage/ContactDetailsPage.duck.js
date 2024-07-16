@@ -164,86 +164,110 @@ const requestSaveEmail = (params) => (dispatch, getState, sdk) => {
 /**
  * Save email and update the current user.
  */
-const saveEmail = (params) => (dispatch, getState, sdk) => {
-	return (
-		dispatch(requestSaveEmail(params))
-			.then((user) => {
-				dispatch(currentUserShowSuccess(user));
-				dispatch(saveContactDetailsSuccess());
-			})
-			// error action dispatched in requestSaveEmail
-			.catch((e) => null)
-	);
-};
+const saveEmail =
+	(params) =>
+	(
+		dispatch,
+		// getState,
+		// sdk
+	) => {
+		return (
+			dispatch(requestSaveEmail(params))
+				.then((user) => {
+					dispatch(currentUserShowSuccess(user));
+					dispatch(saveContactDetailsSuccess());
+				})
+				// error action dispatched in requestSaveEmail
+				.catch(() => null)
+		);
+	};
 
 /**
  * Save phone number and update the current user.
  */
-const savePhoneNumber = (params) => (dispatch, getState, sdk) => {
-	return (
-		dispatch(requestSavePhoneNumber(params))
-			.then((user) => {
-				dispatch(currentUserShowSuccess(user));
-				dispatch(saveContactDetailsSuccess());
-			})
-			// error action dispatched in requestSavePhoneNumber
-			.catch((e) => null)
-	);
-};
+const savePhoneNumber =
+	(params) =>
+	(
+		dispatch,
+		// getState,
+		// sdk
+	) => {
+		return (
+			dispatch(requestSavePhoneNumber(params))
+				.then((user) => {
+					dispatch(currentUserShowSuccess(user));
+					dispatch(saveContactDetailsSuccess());
+				})
+				// error action dispatched in requestSavePhoneNumber
+				.catch(() => null)
+		);
+	};
 
 /**
  * Save email and phone number and update the current user.
  */
-const saveEmailAndPhoneNumber = (params) => (dispatch, getState, sdk) => {
-	const { email, phoneNumber, currentPassword } = params;
+const saveEmailAndPhoneNumber =
+	(params) =>
+	(
+		dispatch,
+		// getState,
+		// sdk
+	) => {
+		const { email, phoneNumber, currentPassword } = params;
 
-	// order of promises: 1. email, 2. phone number
-	const promises = [
-		dispatch(requestSaveEmail({ email, currentPassword })),
-		dispatch(requestSavePhoneNumber({ phoneNumber })),
-	];
+		// order of promises: 1. email, 2. phone number
+		const promises = [
+			dispatch(requestSaveEmail({ email, currentPassword })),
+			dispatch(requestSavePhoneNumber({ phoneNumber })),
+		];
 
-	return Promise.all(promises)
-		.then((values) => {
-			// Array of two user objects is resolved
-			// the first one is from the email update
-			// the second one is from the phone number update
+		return Promise.all(promises)
+			.then((values) => {
+				// Array of two user objects is resolved
+				// the first one is from the email update
+				// the second one is from the phone number update
 
-			const saveEmailUser = values[0];
-			const savePhoneNumberUser = values[1];
+				const saveEmailUser = values[0];
+				const savePhoneNumberUser = values[1];
 
-			// merge the protected data from the user object returned
-			// by the phone update operation
-			const protectedData = savePhoneNumberUser.attributes.profile.protectedData;
-			const phoneNumberMergeSource = { attributes: { profile: { protectedData } } };
+				// merge the protected data from the user object returned
+				// by the phone update operation
+				const protectedData = savePhoneNumberUser.attributes.profile.protectedData;
+				const phoneNumberMergeSource = { attributes: { profile: { protectedData } } };
 
-			const currentUser = merge(saveEmailUser, phoneNumberMergeSource);
-			dispatch(currentUserShowSuccess(currentUser));
-			dispatch(saveContactDetailsSuccess());
-		})
-		.catch((e) => null);
-};
+				const currentUser = merge(saveEmailUser, phoneNumberMergeSource);
+				dispatch(currentUserShowSuccess(currentUser));
+				dispatch(saveContactDetailsSuccess());
+			})
+			.catch(() => null);
+	};
 
 /**
  * Update contact details, actions depend on which data has changed
  */
-export const saveContactDetails = (params) => (dispatch, getState, sdk) => {
-	dispatch(saveContactDetailsRequest());
+export const saveContactDetails =
+	(params) =>
+	(
+		dispatch,
+		// getState,
+		// sdk
+	) => {
+		dispatch(saveContactDetailsRequest());
 
-	const { email, currentEmail, phoneNumber, currentPhoneNumber, currentPassword } = params;
-	const emailChanged = email !== currentEmail;
-	const phoneNumberChanged = phoneNumber !== currentPhoneNumber;
+		const { email, currentEmail, phoneNumber, currentPhoneNumber, currentPassword } = params;
+		const emailChanged = email !== currentEmail;
+		const phoneNumberChanged = phoneNumber !== currentPhoneNumber;
 
-	if (emailChanged && phoneNumberChanged) {
-		return dispatch(saveEmailAndPhoneNumber({ email, currentPassword, phoneNumber }));
-	} else if (emailChanged) {
-		return dispatch(saveEmail({ email, currentPassword }));
-	} else if (phoneNumberChanged) {
-		return dispatch(savePhoneNumber({ phoneNumber }));
-	}
-};
+		if (emailChanged && phoneNumberChanged) {
+			return dispatch(saveEmailAndPhoneNumber({ email, currentPassword, phoneNumber }));
+		} else if (emailChanged) {
+			return dispatch(saveEmail({ email, currentPassword }));
+		} else if (phoneNumberChanged) {
+			return dispatch(savePhoneNumber({ phoneNumber }));
+		}
+	};
 
-export const resetPassword = (email) => (dispatch, getState, sdk) => {
+export const resetPassword = (email) => (dispatch, _, sdk) => {
 	dispatch(resetPasswordRequest());
 	return sdk.passwordReset
 		.request({ email })

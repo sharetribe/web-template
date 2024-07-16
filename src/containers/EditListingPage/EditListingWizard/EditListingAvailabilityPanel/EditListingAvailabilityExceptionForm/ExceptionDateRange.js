@@ -71,7 +71,7 @@ const isBlockedIfStartIsSelected = (params) => {
 	}
 	const slot = dayData.slots[0];
 	if (!slot) {
-		console.log(params, "exceptionStart", exceptionStart);
+		console.warn(params, "exceptionStart", exceptionStart);
 	}
 	// The range end is longer with night booking: excluded range end should be selectable as range end.
 	const rangeEnd =
@@ -146,7 +146,8 @@ const isDayBlocked = (params) => (focusedInput) => (day) => {
 	return slot ? !isInSlotRange(localizedDay, slot, isDaily) : true;
 };
 
-const isOutsideRange = (timeZone) => (focusedInput) => (day) => {
+// () => (focusedInput) => (day) => {}
+const isOutsideRange = (timeZone) => () => (day) => {
 	// 'day' is pointing to browser's local time-zone (react-dates gives these).
 	// However, exceptionStartDay and other times refer to listing's timeZone.
 	const localizedDay = timeOfDayFromLocalToTimeZone(day, timeZone);
@@ -210,13 +211,14 @@ const ExceptionDateRange = (props) => {
 			// This side effect just prints debug data into the console.log feed.
 			// Note: endMonth is exclusive end time of the range.
 			const lastFetchedMonth = new Date(endMonth.getTime() - 1);
-			console.log(
+			console.warn(
 				`Fetched months: ${monthIdString(startMonth)} ... ${monthIdString(lastFetchedMonth)}`,
 				"\nExceptions found:",
 				allExceptions,
 			);
-			console.log("Dates with availability info:", availableDates);
+			// console.log("Dates with availability info:", availableDates);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- starter code
 	}, [currentMonth]);
 
 	// Returns a function that changes the current month

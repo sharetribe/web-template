@@ -102,7 +102,8 @@ class Handle extends Component {
 		const classes = classNames(rootClassName || css.rootTouchBuffer, className);
 
 		return (
-			<div
+			<button
+				type="button"
 				className={classes}
 				ref={this.handleRef}
 				style={{ left: `${position}px` }}
@@ -112,14 +113,13 @@ class Handle extends Component {
 				onTouchStart={this.onTouchStart}
 				onTouchMove={this.onTouchMove}
 				onTouchEnd={this.onTouchEnd}
-				role="button"
 			>
 				<div
 					className={classNames(css.visibleHandle, {
 						[css.dragged]: this.state.dragging,
 					})}
 				/>
-			</div>
+			</button>
 		);
 	}
 }

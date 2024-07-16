@@ -191,6 +191,7 @@ const CategoryField = (props) => {
 const FieldSelectCategory = (props) => {
 	useEffect(() => {
 		checkIfInitialValuesExist();
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- starter code
 	}, []);
 
 	const { prefix, listingCategories, formApi, intl, setAllCategoriesChosen, values } = props;
@@ -297,6 +298,7 @@ const EditListingDetailsFormComponent = (props) => (
 			} = formRenderProps;
 
 			const { listingType, transactionProcessAlias, unitType } = values;
+			// eslint-disable-next-line react-hooks/rules-of-hooks -- wacko
 			const [allCategoriesChosen, setAllCategoriesChosen] = useState(false);
 
 			const titleRequiredMessage = intl.formatMessage({
@@ -360,6 +362,7 @@ const EditListingDetailsFormComponent = (props) => (
 							placeholder={intl.formatMessage({ id: "EditListingDetailsForm.titlePlaceholder" })}
 							maxLength={TITLE_MAX_LENGTH}
 							validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
+							// eslint-disable-next-line jsx-a11y/no-autofocus
 							autoFocus={autoFocus}
 						/>
 					) : null}

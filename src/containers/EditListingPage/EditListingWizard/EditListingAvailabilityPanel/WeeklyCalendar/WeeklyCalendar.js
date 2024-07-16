@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
 import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import { arrayOf, bool, func, number, object, shape, string } from "prop-types";
@@ -367,6 +369,7 @@ const WeeklyCalendar = (props) => {
 			);
 			history.replace(redirectTo);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- wacko starter
 	}, [currentWeek]);
 
 	useEffect(() => {
@@ -389,6 +392,7 @@ const WeeklyCalendar = (props) => {
 				});
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentWeek, fetchExceptionsInProgress]);
 
 	const daysOfWeekStrings = Object.keys(availableDates);
@@ -445,7 +449,10 @@ const WeeklyCalendar = (props) => {
 						}}
 						startDateOffset={(day) => getStartOfWeekAsMoment(day, timeZone, firstDayOfWeek)}
 						endDateOffset={(day) => getEndOfWeekAsMoment(day, timeZone, firstDayOfWeek)}
-						onFocusChange={({ focused }) => setWeekPickerFocused(focused)}
+						onFocusChange={() => {
+							// Undefined variable. Wacko starter
+							// setWeekPickerFocused(focused);
+						}}
 						isOutsideRange={(day) => !isInRange(day, thisWeek, endOfRange, "day", timeZone)}
 						timeZone={timeZone}
 					/>

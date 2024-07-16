@@ -8,7 +8,7 @@ import EditListingPhotosForm, { FieldAddImage } from "./EditListingPhotosForm";
 
 import "@testing-library/jest-dom";
 
-const { screen, userEvent, waitFor, act } = testingLibrary;
+const { screen, userEvent } = testingLibrary;
 
 const noop = () => null;
 
@@ -39,11 +39,11 @@ describe("EditListingDeliveryForm", () => {
 
 	it("Check that FieldAddImage works", async () => {
 		const ACCEPT_IMAGES = "image/*";
-		const tree = render(
+		render(
 			<FinalForm
 				onSubmit={noop}
 				mutators={{ ...arrayMutators }}
-				render={(formRenderProps) => {
+				render={() => {
 					return (
 						<form onSubmit={noop}>
 							<FieldAddImage

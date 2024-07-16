@@ -62,6 +62,7 @@ class FieldDateInputComponent extends Component {
 			[css.pickerError]: hasError,
 		});
 
+		// eslint-disable-next-line no-unused-vars
 		const { onBlur, onFocus, onChange: inputOnChange, type, checked, ...restOfInput } = input;
 		const inputProps = {
 			onBlur: input.onBlur,

@@ -36,7 +36,7 @@ describe("NamedLink", () => {
 
 	it("should contain correct link", () => {
 		const id = 12;
-		const tree = render(
+		render(
 			<NamedLink name="ListingPageCanonical" params={{ id }}>
 				to ListingPage
 			</NamedLink>,

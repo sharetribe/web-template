@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { Component, useEffect } from "react";
 import classNames from "classnames";
 import { array, arrayOf, bool, func, number, object, oneOf, shape, string } from "prop-types";
@@ -312,7 +313,10 @@ const handleGetStripeConnectAccountLinkFn = (getLinkFn, commonParams) => (type) 
 };
 
 const RedirectToStripe = ({ redirectFn }) => {
-	useEffect(redirectFn("custom_account_verification"), []);
+	useEffect(() => {
+		redirectFn("custom_account_verification");
+	}, [redirectFn]);
+
 	return <FormattedMessage id="EditListingWizard.redirectingToStripe" />;
 };
 
@@ -492,9 +496,10 @@ class EditListingWizard extends Component {
 				.reverse()
 				.find((t) => tabsStatus[t]);
 
-			console.log(
+			console.error(
 				`You tried to access an EditListingWizard tab (${selectedTab}), which was not yet activated.`,
 			);
+
 			return <NamedRedirect name="EditListingPage" params={{ ...params, tab: nearestActiveTab }} />;
 		}
 

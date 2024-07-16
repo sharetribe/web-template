@@ -83,6 +83,7 @@ export const EditListingLocationFormComponent = (props) => (
 						iconClassName={css.locationAutocompleteInputIcon}
 						predictionsClassName={css.predictionsRoot}
 						validClassName={css.validLocation}
+						// eslint-disable-next-line jsx-a11y/no-autofocus
 						autoFocus={autoFocus}
 						name="location"
 						label={intl.formatMessage({ id: "EditListingLocationForm.address" })}

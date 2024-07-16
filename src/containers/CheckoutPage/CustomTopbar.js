@@ -9,6 +9,7 @@ import css from "./CheckoutPage.module.css";
 const CustomTopbar = (props) => {
 	const [isMobile, setIsMobile] = useState(false);
 
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => {
 		// set initial value
 		const mediaQueryList = window.matchMedia("(max-width: 767px)");

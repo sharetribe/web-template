@@ -54,18 +54,19 @@ exports.unitDivisor = (currency) => {
 	return subUnitDivisors[currency];
 };
 
+// Unused code. Remove?
 // Divisor can be positive value given as Decimal, Number, or String
-const convertDivisorToDecimal = (divisor) => {
-	try {
-		const divisorAsDecimal = new Decimal(divisor);
-		if (divisorAsDecimal.isNegative()) {
-			throw new Error(`Parameter (${divisor}) must be a positive number.`);
-		}
-		return divisorAsDecimal;
-	} catch (e) {
-		throw new Error(`Parameter (${divisor}) must present a number.`, e);
-	}
-};
+// const convertDivisorToDecimal = (divisor) => {
+// 	try {
+// 		const divisorAsDecimal = new Decimal(divisor);
+// 		if (divisorAsDecimal.isNegative()) {
+// 			throw new Error(`Parameter (${divisor}) must be a positive number.`);
+// 		}
+// 		return divisorAsDecimal;
+// 	} catch (e) {
+// 		throw new Error(`Parameter (${divisor}) must present a number.`, e);
+// 	}
+// };
 
 // Check if the value is a number
 const isNumber = (value) => {

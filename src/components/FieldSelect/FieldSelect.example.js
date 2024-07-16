@@ -10,9 +10,18 @@ const FormComponent = (props) => (
 	<FinalForm
 		{...props}
 		render={(fieldRenderProps) => {
-			const { form, handleSubmit, onChange, invalid, pristine, submitting } = fieldRenderProps;
+			const {
+				// form,
+				handleSubmit,
+				onChange,
+				invalid,
+				pristine,
+				submitting,
+			} = fieldRenderProps;
+
 			const required = validators.required("This field is required");
 			const submitDisabled = invalid || pristine || submitting;
+
 			return (
 				<form
 					onSubmit={(e) => {

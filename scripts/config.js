@@ -20,7 +20,7 @@ const run = () => {
 
 	if (process.argv[2] && process.argv[2] === "--check") {
 		if (!hasEnvFile) {
-			process.on("exit", (code) => {
+			process.on("exit", () => {
 				console.log(`
 
 ${chalk.bold.red(`You don't have required .env file!`)}
@@ -332,7 +332,7 @@ const findSavedValues = () => {
  */
 
 const readLines = (answers) => {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		const rl = readline.createInterface({
 			input: fs.createReadStream("./.env"),
 		});

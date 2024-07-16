@@ -106,6 +106,7 @@ const DeliveryMethodMaybe = (props) => {
 };
 
 const renderForm = (formRenderProps) => {
+	// eslint-disable-next-line react-hooks/rules-of-hooks
 	const [mounted, setMounted] = useState(false);
 	const {
 		// FormRenderProps from final-form
@@ -133,6 +134,7 @@ const renderForm = (formRenderProps) => {
 	} = formRenderProps;
 
 	// Note: don't add custom logic before useEffect
+	// eslint-disable-next-line react-hooks/rules-of-hooks
 	useEffect(() => {
 		setMounted(true);
 
@@ -149,6 +151,7 @@ const renderForm = (formRenderProps) => {
 				onFetchTransactionLineItems,
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	// If form values change, update line-items for the order breakdown
@@ -298,6 +301,7 @@ const renderForm = (formRenderProps) => {
 const ProductOrderForm = (props) => {
 	const intl = useIntl();
 	const {
+		// eslint-disable-next-line no-unused-vars
 		price,
 		currentStock,
 		pickupEnabled,

@@ -34,6 +34,7 @@ module.exports = (req, res) => {
 		})
 		.then((trustedSdk) => {
 			// Omit listingId from params (transition/request-payment-after-inquiry does not need it)
+			// eslint-disable-next-line no-unused-vars
 			const { listingId, ...restParams } = bodyParams?.params || {};
 
 			// Add lineItems to the body params

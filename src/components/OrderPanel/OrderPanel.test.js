@@ -14,7 +14,7 @@ import OrderPanel from "./OrderPanel";
 import "@testing-library/jest-dom";
 import "react-dates/initialize";
 
-const { screen, waitFor } = testingLibrary;
+const { waitFor } = testingLibrary;
 
 const { Money, UUID } = sdkTypes;
 const noop = () => null;

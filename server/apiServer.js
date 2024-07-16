@@ -7,7 +7,7 @@ require("./env").configureEnv();
 const express = require("express");
 const compression = require("compression");
 const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser");
+
 const cors = require("cors");
 const apiRouter = require("./apiRouter");
 const wellKnownRouter = require("./wellKnownRouter");

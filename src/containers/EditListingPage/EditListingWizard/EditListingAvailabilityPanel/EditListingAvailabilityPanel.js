@@ -161,7 +161,7 @@ const EditListingAvailabilityPanel = (props) => {
 			.then(() => {
 				setIsEditPlanModalOpen(false);
 			})
-			.catch((e) => {
+			.catch(() => {
 				// Don't close modal if there was an error
 			});
 	};
@@ -197,7 +197,7 @@ const EditListingAvailabilityPanel = (props) => {
 			.then(() => {
 				setIsEditExceptionsModalOpen(false);
 			})
-			.catch((e) => {
+			.catch(() => {
 				// Don't close modal if there was an error
 			});
 	};

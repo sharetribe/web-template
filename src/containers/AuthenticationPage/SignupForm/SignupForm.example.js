@@ -103,8 +103,9 @@ export const Empty = {
 		},
 		termsAndConditions: (
 			<TermsAndConditions
-				onOpenTermsOfService={() => setTosModalOpen(true)}
-				onOpenPrivacyPolicy={() => setPrivacyModalOpen(true)}
+				// Wacko starter code, undefined variables:
+				// onOpenTermsOfService={() => setTosModalOpen(true)}
+				// onOpenPrivacyPolicy={() => setPrivacyModalOpen(true)}
 				formId="SignupFormExample"
 				intl={fakeIntl}
 			/>

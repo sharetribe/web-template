@@ -29,12 +29,12 @@ const routeConfiguration = [
 	{
 		path: "/",
 		name: "LandingPage",
-		component: (props) => <div />,
+		component: () => <div />,
 	},
 	{
 		path: "/about",
 		name: "AboutPage",
-		component: (props) => <div />,
+		component: () => <div />,
 	},
 ];
 

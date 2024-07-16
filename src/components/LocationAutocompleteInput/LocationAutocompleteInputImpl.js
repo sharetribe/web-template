@@ -71,38 +71,40 @@ const LocationPredictionsList = (props) => {
 		const predictionId = geocoder.getPredictionId(prediction);
 
 		return (
-			<li
-				className={isHighlighted ? css.highlighted : null}
-				key={predictionId}
-				onTouchStart={(e) => {
-					e.preventDefault();
-					onSelectStart(getTouchCoordinates(e.nativeEvent));
-				}}
-				onMouseDown={(e) => {
-					e.preventDefault();
-					onSelectStart();
-				}}
-				onTouchMove={(e) => {
-					e.preventDefault();
-					onSelectMove(getTouchCoordinates(e.nativeEvent));
-				}}
-				onTouchEnd={(e) => {
-					e.preventDefault();
-					onSelectEnd(prediction);
-				}}
-				onMouseUp={(e) => {
-					e.preventDefault();
-					onSelectEnd(prediction);
-				}}
-			>
-				{predictionId === currentLocationId ? (
-					<span className={css.currentLocation}>
-						<IconCurrentLocation />
-						<FormattedMessage id="LocationAutocompleteInput.currentLocation" />
-					</span>
-				) : (
-					geocoder.getPredictionAddress(prediction)
-				)}
+			<li key={predictionId}>
+				<button
+					type="button"
+					className={isHighlighted ? css.highlighted : null}
+					onTouchStart={(e) => {
+						e.preventDefault();
+						onSelectStart(getTouchCoordinates(e.nativeEvent));
+					}}
+					onMouseDown={(e) => {
+						e.preventDefault();
+						onSelectStart();
+					}}
+					onTouchMove={(e) => {
+						e.preventDefault();
+						onSelectMove(getTouchCoordinates(e.nativeEvent));
+					}}
+					onTouchEnd={(e) => {
+						e.preventDefault();
+						onSelectEnd(prediction);
+					}}
+					onMouseUp={(e) => {
+						e.preventDefault();
+						onSelectEnd(prediction);
+					}}
+				>
+					{predictionId === currentLocationId ? (
+						<span className={css.currentLocation}>
+							<IconCurrentLocation />
+							<FormattedMessage id="LocationAutocompleteInput.currentLocation" />
+						</span>
+					) : (
+						geocoder.getPredictionAddress(prediction)
+					)}
+				</button>
 			</li>
 		);
 	};
@@ -309,7 +311,7 @@ class LocationAutocompleteInputImplementation extends Component {
 	// index from the current state and the given direction number
 	// (DIRECTION_UP or DIRECTION_DOWN)
 	changeHighlight(direction) {
-		this.setState((prevState, props) => {
+		this.setState((prevState) => {
 			const predictions = this.currentPredictions();
 			const currentIndex = prevState.highlightedIndex;
 			let index = currentIndex;
@@ -527,6 +529,7 @@ class LocationAutocompleteInputImplementation extends Component {
 					className={inputClass}
 					type="search"
 					autoComplete="off"
+					// eslint-disable-next-line jsx-a11y/no-autofocus
 					autoFocus={autoFocus}
 					placeholder={placeholder}
 					name={name}

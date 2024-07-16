@@ -1,6 +1,7 @@
 import { fetchPageAssets } from "../../ducks/hostedAssets.duck";
 
-export const loadData = (params, search) => (dispatch) => {
+// (params, search) => (dispatch) => ...
+export const loadData = (params) => (dispatch) => {
 	const pageId = params.pageId;
 	const pageAsset = { [pageId]: `content/pages/${pageId}.json` };
 	const hasFallbackContent = false;

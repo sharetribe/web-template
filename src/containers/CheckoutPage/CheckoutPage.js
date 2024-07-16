@@ -75,6 +75,7 @@ const EnhancedCheckoutPage = (props) => {
 				config,
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- starter code
 	}, []);
 
 	const {

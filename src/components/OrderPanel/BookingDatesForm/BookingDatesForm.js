@@ -412,8 +412,11 @@ export const BookingDatesFormComponent = (props) => {
 	useEffect(() => {
 		// Call onMonthChanged function if it has been passed in among props.
 		if (props.onMonthChanged) {
-			props.onMonthChanged(monthId);
+			// Wacko starter -- undefined variable
+			// props.onMonthChanged(monthId);
+			props.onMonthChanged(undefined);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentMonth]);
 
 	const {

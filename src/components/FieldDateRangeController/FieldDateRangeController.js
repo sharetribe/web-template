@@ -9,6 +9,7 @@ import DateRangeController from "./DateRangeController";
 
 const component = (props) => {
 	const { input, controllerRef, ...rest } = props;
+	// eslint-disable-next-line no-unused-vars
 	const { type, checked, ...restOfInput } = input;
 	return <DateRangeController ref={controllerRef} {...restOfInput} {...rest} />;
 };

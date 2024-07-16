@@ -128,7 +128,7 @@ const SelectOptions = (props) => {
  * @returns an array of selected nested option configurations.
  */
 const getBranchPath = (primaryOptions, currentSelections) => {
-	const currentSelectionsEntries = Object.entries(currentSelections).sort(([k, v]) => k);
+	const currentSelectionsEntries = Object.entries(currentSelections).sort(([k]) => k);
 	return currentSelectionsEntries.reduce((branchPath, entry) => {
 		const [levelKey, selectedOption] = entry;
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /**
  * DateRangeInput wraps DateRangePicker from React-dates and gives a list of all default props we use.
  * Styles for DateRangePicker can be found from 'public/reactDates.css'.
@@ -123,7 +124,7 @@ const defaultProps = {
 	isDayBlocked: () => () => false,
 
 	// This gets default value at FieldDateRangeInput
-	isOutsideRange: (day) => false,
+	isOutsideRange: () => false, // (day) => boolean
 	isDayHighlighted: () => {},
 
 	// Internationalization props
@@ -216,20 +217,20 @@ class DateRangeInputComponent extends Component {
 			isDaily,
 			initialDates,
 			intl,
-			name,
 			startDatePlaceholderText,
 			endDatePlaceholderText,
-			onBlur,
-			onChange,
-			onFocus,
 			screenReaderInputMessage,
 			useMobileMargins,
 			value,
+			isDayBlocked,
+			isOutsideRange,
+			name,
+			onBlur,
+			onChange,
+			onFocus,
 			children,
 			render,
 			isBlockedBetween,
-			isDayBlocked,
-			isOutsideRange,
 			...datePickerProps
 		} = this.props;
 

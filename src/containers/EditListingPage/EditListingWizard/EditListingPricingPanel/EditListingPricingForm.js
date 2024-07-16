@@ -88,6 +88,7 @@ export const EditListingPricingFormComponent = (props) => (
 						id={`${formId}price`}
 						name="price"
 						className={css.input}
+						// eslint-disable-next-line jsx-a11y/no-autofocus
 						autoFocus={autoFocus}
 						label={intl.formatMessage(
 							{ id: "EditListingPricingForm.pricePerProduct" },

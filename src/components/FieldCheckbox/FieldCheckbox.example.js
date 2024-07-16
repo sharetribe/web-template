@@ -11,7 +11,14 @@ const FormComponent = (props) => (
 		{...props}
 		formId={formName}
 		render={(fieldRenderProps) => {
-			const { form, handleSubmit, onChange, invalid, pristine, submitting } = fieldRenderProps;
+			const {
+				handleSubmit,
+				onChange,
+				invalid,
+				pristine,
+				submitting,
+				// form
+			} = fieldRenderProps;
 
 			const submitDisabled = invalid || pristine || submitting;
 

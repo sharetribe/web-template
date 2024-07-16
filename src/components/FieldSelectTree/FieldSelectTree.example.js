@@ -128,9 +128,17 @@ const FormComponent = (props) => (
 	<FinalForm
 		{...props}
 		render={(formRenderProps) => {
-			const { handleSubmit, onChange, invalid, pristine, submitting } = formRenderProps;
+			const {
+				handleSubmit,
+				onChange,
+				// invalid,
+				// pristine
+				submitting,
+			} = formRenderProps;
+
 			const submitDisabled = submitting; //invalid || pristine || submitting;
 			const required = validators.requiredSelectTreeOption("This field is required");
+
 			return (
 				<form
 					onSubmit={(e) => {

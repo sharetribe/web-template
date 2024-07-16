@@ -6,7 +6,7 @@ import EditListingPricingAndStockForm from "./EditListingPricingAndStockForm";
 
 import "@testing-library/jest-dom";
 
-const { screen, userEvent, fireEvent } = testingLibrary;
+const { screen, userEvent } = testingLibrary;
 
 const noop = () => null;
 

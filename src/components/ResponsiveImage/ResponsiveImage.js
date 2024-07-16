@@ -43,6 +43,7 @@ import NoImageIcon from "./NoImageIcon";
 import css from "./ResponsiveImage.module.css";
 
 const ResponsiveImage = (props) => {
+	// eslint-disable-next-line no-unused-vars
 	const { className, rootClassName, alt, noImageMessage, image, variants, dimensions, ...rest } =
 		props;
 	const classes = classNames(rootClassName || css.root, className);

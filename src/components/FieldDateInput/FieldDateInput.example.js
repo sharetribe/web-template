@@ -16,9 +16,19 @@ const FormComponent = (props) => (
 	<FinalForm
 		{...props}
 		render={(fieldRenderProps) => {
-			const { style, form, handleSubmit, onChange, pristine, submitting, dateInputProps, values } =
-				fieldRenderProps;
+			const {
+				style,
+				// form,
+				handleSubmit,
+				onChange,
+				pristine,
+				submitting,
+				dateInputProps,
+				values,
+			} = fieldRenderProps;
+
 			const submitDisabled = pristine || submitting;
+
 			if (values && values.bookingDates) {
 				onChange(values.bookingDates);
 			}

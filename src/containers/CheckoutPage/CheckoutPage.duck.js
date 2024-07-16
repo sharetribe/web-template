@@ -329,13 +329,20 @@ export const sendMessage = (params) => (dispatch, getState, sdk) => {
  * @returns
  */
 export const initiateInquiryWithoutPayment =
-	(inquiryParams, processAlias, transitionName) => (dispatch, getState, sdk) => {
+	(inquiryParams, processAlias, transitionName) =>
+	(
+		dispatch,
+		_, // getState,
+		sdk,
+	) => {
 		dispatch(initiateInquiryRequest());
 
 		if (!processAlias) {
 			const error = new Error("No transaction process attached to listing");
 			log.error(error, "listing-process-missing", {
-				listingId: listing?.id?.uuid,
+				// Wacko starter, undefined variable
+				// listingId: listing?.id?.uuid,
+				listingId: undefined,
 			});
 			dispatch(initiateInquiryError(storableError(error)));
 			return Promise.reject(error);
@@ -464,14 +471,20 @@ export const speculateTransaction =
 
 // StripeCustomer is a relantionship to currentUser
 // We need to fetch currentUser with correct params to include relationship
-export const stripeCustomer = () => (dispatch, getState, sdk) => {
-	dispatch(stripeCustomerRequest());
+export const stripeCustomer =
+	() =>
+	(
+		dispatch,
+		// getState,
+		// sdk
+	) => {
+		dispatch(stripeCustomerRequest());
 
-	return dispatch(fetchCurrentUser({ include: ["stripeCustomer.defaultPaymentMethod"] }))
-		.then((response) => {
-			dispatch(stripeCustomerSuccess());
-		})
-		.catch((e) => {
-			dispatch(stripeCustomerError(storableError(e)));
-		});
-};
+		return dispatch(fetchCurrentUser({ include: ["stripeCustomer.defaultPaymentMethod"] }))
+			.then(() => {
+				dispatch(stripeCustomerSuccess());
+			})
+			.catch((e) => {
+				dispatch(stripeCustomerError(storableError(e)));
+			});
+	};

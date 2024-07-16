@@ -444,8 +444,8 @@ const getAuthErrorFromCookies = () => {
 export const AuthenticationPageComponent = (props) => {
 	const [tosModalOpen, setTosModalOpen] = useState(false);
 	const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
-	const [authInfo, setAuthInfo] = useState(getAuthInfoFromCookies());
-	const [authError, setAuthError] = useState(getAuthErrorFromCookies());
+	const [authInfo] = useState(getAuthInfoFromCookies());
+	const [authError] = useState(getAuthErrorFromCookies());
 	const config = useConfiguration();
 
 	useEffect(() => {
@@ -454,6 +454,7 @@ export const AuthenticationPageComponent = (props) => {
 		if (authError) {
 			Cookies.remove("st-autherror");
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- starter code
 	}, []);
 
 	// On mobile, it's better to scroll to top.

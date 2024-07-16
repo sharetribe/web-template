@@ -19,6 +19,8 @@ export const getTransactionTypeData = (listingType, unitTypeInPublicData, config
 	const listingTypeConfig = config.listing.listingTypes.find(
 		(lt) => lt.listingType === listingType,
 	);
+
+	// eslint-disable-next-line no-unused-vars
 	const { process, alias, unitType, ...rest } = listingTypeConfig?.transactionType || {};
 	// Note: we want to rely on unitType written in public data of the listing entity.
 	//       The listingType configuration might have changed on the fly.
@@ -92,7 +94,7 @@ export const getFormattedTotalPrice = (transaction, intl) => {
  */
 export const getShippingDetailsMaybe = (formValues) => {
 	const {
-		saveAfterOnetimePayment: saveAfterOnetimePaymentRaw,
+		// saveAfterOnetimePayment: saveAfterOnetimePaymentRaw,
 		recipientName,
 		recipientPhoneNumber,
 		recipientAddressLine1,
@@ -320,7 +322,7 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
 					}
 					return { ...fnParams, paymentMethodSaved: true };
 				})
-				.catch((e) => {
+				.catch(() => {
 					// Real error cases are catched already in paymentMethods page.
 					return { ...fnParams, paymentMethodSaved: false };
 				});

@@ -170,13 +170,13 @@ class ContactDetailsFormComponent extends Component {
 						);
 					} else {
 						resendEmailMessage = (
-							<span
+							<button
 								className={css.helperLink}
 								onClick={this.handleResendVerificationEmail}
-								role="button"
+								type="button"
 							>
 								<FormattedMessage id="ContactDetailsForm.resendEmailVerificationText" />
-							</span>
+							</button>
 						);
 					}
 
@@ -302,15 +302,15 @@ class ContactDetailsFormComponent extends Component {
 					}
 
 					const sendPasswordLink = (
-						<span className={css.helperLink} onClick={this.handleResetPassword} role="button">
+						<button type="button" className={css.helperLink} onClick={this.handleResetPassword}>
 							<FormattedMessage id="ContactDetailsForm.resetPasswordLinkText" />
-						</span>
+						</button>
 					);
 
 					const resendPasswordLink = (
-						<span className={css.helperLink} onClick={this.handleResetPassword} role="button">
+						<button type="button" className={css.helperLink} onClick={this.handleResetPassword}>
 							<FormattedMessage id="ContactDetailsForm.resendPasswordLinkText" />
-						</span>
+						</button>
 					);
 
 					const resetPasswordLink =

@@ -60,7 +60,7 @@ const WeekPicker = (props) => {
 
 	return (
 		<OutsideClickHandler onOutsideClick={() => setIsOpen(false)}>
-			<div className={classes} onKeyDown={handleKeyDown(setIsOpen)}>
+			<button type="button" className={classes} onKeyDown={handleKeyDown(setIsOpen)}>
 				<InlineTextButton
 					className={css.label}
 					onClick={() => setIsOpen((prevState) => !prevState)}
@@ -73,7 +73,10 @@ const WeekPicker = (props) => {
 							<FieldDateRangeController
 								name="dates"
 								minimumNights={6}
-								onChange={({ startDate, endDate }) => {
+								onChange={({
+									startDate,
+									// endDate
+								}) => {
 									onDateChange(startDate);
 									setIsOpen(false);
 								}}
@@ -97,7 +100,7 @@ const WeekPicker = (props) => {
 						</PickerForm>
 					) : null}
 				</div>
-			</div>
+			</button>
 		</OutsideClickHandler>
 	);
 };

@@ -10,8 +10,8 @@ const RADIX = 10;
 const BLACK_BG = "#000000";
 
 const IFrame = (props) => {
-	const { dimensions, ...rest } = props;
-	return <iframe {...dimensions} {...rest} />;
+	const { dimensions, title, ...rest } = props;
+	return <iframe title={title} {...dimensions} {...rest} />;
 };
 const LazyIFrame = lazyLoadWithDimensions(IFrame);
 

@@ -65,7 +65,7 @@ const drawFuzzyCircle = (mapsConfig, center) => {
 };
 
 class StaticGoogleMap extends Component {
-	shouldComponentUpdate(nextProps, prevState) {
+	shouldComponentUpdate(nextProps) {
 		// Do not draw the map unless center, zoom or dimensions change
 		// We want to prevent unnecessary calls to Google Maps APIs due
 		const currentData = pick(this.props, ["center", "zoom", "dimensions"]);

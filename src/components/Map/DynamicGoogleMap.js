@@ -15,7 +15,7 @@ class DynamicGoogleMap extends Component {
 		this.initializeMap = this.initializeMap.bind(this);
 	}
 
-	componentDidMount(prevProps) {
+	componentDidMount() {
 		if (!this.map && this.mapContainer) {
 			this.initializeMap();
 		}

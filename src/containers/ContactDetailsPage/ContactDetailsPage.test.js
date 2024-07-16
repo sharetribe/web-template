@@ -13,7 +13,7 @@ const noop = () => null;
 describe("ContactDetailsPageComponent", () => {
 	it("Check that newPassword input shows error and submit is enabled if form is filled", () => {
 		act(() => {
-			const tree = render(
+			render(
 				<ContactDetailsPageComponent
 					params={{ displayName: "my-shop" }}
 					history={{ push: noop }}

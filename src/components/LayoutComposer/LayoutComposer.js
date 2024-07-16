@@ -74,20 +74,24 @@ const resize = (config, callback) => (e) => {
 const handleResponsiveAreasOnBrowser = (responsiveAreas, setAreas) => {
 	let resizeListeners = [];
 	const entries = Object.entries(responsiveAreas);
-	entries.forEach(([name, config]) => {
-		const { mediaQuery, areas } = config;
-		const mediaQueryList = window.matchMedia(mediaQuery);
-		// Set areas if current viewport matches
-		if (mediaQueryList.matches) {
-			setAreas(parseAreas(areas));
-		}
-		// Create listener for future matches of MQL rule
-		const resizeListener = resize(config, setAreas);
-		// Save MQL and listener for future "removeEventListener" call
-		resizeListeners.push({ mediaQueryList, resizeListener });
-		// Add the created resizeListener to MQL
-		mediaQueryList.addEventListener("change", resizeListener);
-	});
+	entries.forEach(
+		(
+			[, config], // [name, config]
+		) => {
+			const { mediaQuery, areas } = config;
+			const mediaQueryList = window.matchMedia(mediaQuery);
+			// Set areas if current viewport matches
+			if (mediaQueryList.matches) {
+				setAreas(parseAreas(areas));
+			}
+			// Create listener for future matches of MQL rule
+			const resizeListener = resize(config, setAreas);
+			// Save MQL and listener for future "removeEventListener" call
+			resizeListeners.push({ mediaQueryList, resizeListener });
+			// Add the created resizeListener to MQL
+			mediaQueryList.addEventListener("change", resizeListener);
+		},
+	);
 	return resizeListeners;
 };
 
@@ -186,9 +190,11 @@ const LayoutComposer = React.forwardRef((props, ref) => {
 				mediaQueryList.removeEventListener("change", resizeListener);
 			});
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const { components, gridTemplateAreas } = currentAreas;
+	// eslint-disable-next-line no-unused-vars
 	const { children, style = {}, areas, responsiveAreas, display, as, ...otherProps } = props;
 	const Tag = as || "div";
 

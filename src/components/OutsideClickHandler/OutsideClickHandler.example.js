@@ -7,7 +7,7 @@ const childStyle = {
 	background: "#e7e7e7",
 };
 
-const OutsideClickHandlerWrapper = (props) => {
+const OutsideClickHandlerWrapper = () => {
 	const [message, setMessage] = useState("This is OutsideClickHandler example");
 
 	const handleClick = () => {

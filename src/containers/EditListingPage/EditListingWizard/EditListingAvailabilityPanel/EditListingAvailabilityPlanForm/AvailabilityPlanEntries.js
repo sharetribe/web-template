@@ -224,9 +224,9 @@ const TimeRangeSelects = (props) => {
 					<FormattedMessage id="EditListingAvailabilityPlanForm.plus1Day" />
 				</div>
 			</div>
-			<div className={css.fieldArrayRemove} onClick={onRemove} style={{ cursor: "pointer" }}>
+			<button type="button" className={css.fieldArrayRemove} onClick={onRemove}>
 				<IconClose rootClassName={css.closeIcon} />
-			</div>
+			</button>
 		</div>
 	);
 };

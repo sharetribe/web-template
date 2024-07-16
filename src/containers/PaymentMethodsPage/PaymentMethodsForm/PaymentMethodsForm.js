@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+
 /**
  * Note: This form is using card from Stripe Elements https://stripe.com/docs/stripe-js#elements
  * Card is not a Final Form field so it's not available trough Final Form.

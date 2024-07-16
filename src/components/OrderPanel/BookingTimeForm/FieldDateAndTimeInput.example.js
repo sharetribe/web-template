@@ -180,7 +180,8 @@ export const Empty = {
 			bookingStartDate: { date: new Date(Date.UTC(currentYear, today.getUTCMonth(), 14)) },
 		},
 		dayCountAvailableForBooking: 90,
-		onChange: (formState) => {},
+		// onChange: (formState) => void
+		onChange: () => {},
 		onSubmit: (values) => {
 			console.log("Submitting a form with values:", values);
 		},

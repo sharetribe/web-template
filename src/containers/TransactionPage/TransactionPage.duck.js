@@ -646,7 +646,13 @@ const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config) => {
 		.catch((e) => {
 			// If transaction transition is invalid, lets try another endpoint.
 			if (isTransactionsTransitionInvalidTransition(e)) {
-				return sendReviewAsSecond(id, params, role, dispatch, sdk);
+				return sendReviewAsSecond(
+					undefined, // id (undefined variable in starter code)
+					params,
+					undefined, // role (undefined variable in starter code)
+					dispatch,
+					sdk,
+				);
 			} else {
 				dispatch(sendReviewError(storableError(e)));
 

@@ -890,59 +890,74 @@ const fetchLoadDataExceptions = (dispatch, listing, search, firstDayOfWeek) => {
 	return Promise.all([]);
 };
 
-export const savePayoutDetails = (values, isUpdateCall) => (dispatch, getState, sdk) => {
-	const upsertThunk = isUpdateCall ? updateStripeAccount : createStripeAccount;
-	dispatch(savePayoutDetailsRequest());
+export const savePayoutDetails =
+	(values, isUpdateCall) =>
+	(
+		dispatch,
+		// getState,
+		// sdk
+	) => {
+		const upsertThunk = isUpdateCall ? updateStripeAccount : createStripeAccount;
+		dispatch(savePayoutDetailsRequest());
 
-	return dispatch(upsertThunk(values, { expand: true }))
-		.then((response) => {
-			dispatch(savePayoutDetailsSuccess());
-			return response;
-		})
-		.catch(() => dispatch(savePayoutDetailsError()));
-};
+		return dispatch(upsertThunk(values, { expand: true }))
+			.then((response) => {
+				dispatch(savePayoutDetailsSuccess());
+				return response;
+			})
+			.catch(() => dispatch(savePayoutDetailsError()));
+	};
 
 // loadData is run for each tab of the wizard. When editing an
 // existing listing, the listing must be fetched first.
-export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
-	dispatch(clearUpdatedTab());
-	const { id, type } = params;
+export const loadData =
+	(params, search, config) =>
+	(
+		dispatch,
+		getState,
+		// sdk
+	) => {
+		dispatch(clearUpdatedTab());
+		const { id, type } = params;
 
-	if (type === "new") {
-		// No need to listing data when creating a new listing
-		return Promise.all([dispatch(fetchCurrentUser())])
+		if (type === "new") {
+			// No need to listing data when creating a new listing
+			return Promise.all([dispatch(fetchCurrentUser())])
+				.then((response) => {
+					const currentUser = getState().user.currentUser;
+					if (currentUser && currentUser.stripeAccount) {
+						dispatch(fetchStripeAccount());
+					}
+					return response;
+				})
+				.catch((e) => {
+					throw e;
+				});
+		}
+
+		const payload = { id: new UUID(id) };
+		return Promise.all([
+			dispatch(requestShowListing(payload, config)),
+			dispatch(fetchCurrentUser()),
+		])
 			.then((response) => {
 				const currentUser = getState().user.currentUser;
 				if (currentUser && currentUser.stripeAccount) {
 					dispatch(fetchStripeAccount());
 				}
+
+				// Because of two dispatch functions, response is an array.
+				// We are only interested in the response from requestShowListing here,
+				// so we need to pick the first one
+				const listing = response[0]?.data?.data;
+				const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias;
+				if (listing && isBookingProcessAlias(transactionProcessAlias)) {
+					fetchLoadDataExceptions(dispatch, listing, search, config.localization.firstDayOfWeek);
+				}
+
 				return response;
 			})
 			.catch((e) => {
 				throw e;
 			});
-	}
-
-	const payload = { id: new UUID(id) };
-	return Promise.all([dispatch(requestShowListing(payload, config)), dispatch(fetchCurrentUser())])
-		.then((response) => {
-			const currentUser = getState().user.currentUser;
-			if (currentUser && currentUser.stripeAccount) {
-				dispatch(fetchStripeAccount());
-			}
-
-			// Because of two dispatch functions, response is an array.
-			// We are only interested in the response from requestShowListing here,
-			// so we need to pick the first one
-			const listing = response[0]?.data?.data;
-			const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias;
-			if (listing && isBookingProcessAlias(transactionProcessAlias)) {
-				fetchLoadDataExceptions(dispatch, listing, search, config.localization.firstDayOfWeek);
-			}
-
-			return response;
-		})
-		.catch((e) => {
-			throw e;
-		});
-};
+	};

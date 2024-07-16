@@ -62,7 +62,13 @@ const estimatedTotalPrice = (lineItems, marketplaceCurrency) => {
 	);
 };
 
-const estimatedBooking = (bookingStart, bookingEnd, lineItemUnitType, timeZone = "Etc/UTC") => {
+/**
+ * @param {*} bookingStart
+ * @param {*} bookingEnd
+ * @param {*} [lineItemUnitType]
+ * @param {*} [timeZone]
+ */
+const estimatedBooking = (bookingStart, bookingEnd) => {
 	const duration = { start: bookingStart, end: bookingEnd };
 
 	return {

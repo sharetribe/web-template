@@ -6,7 +6,6 @@
 // Note: to use this script, you should pipe in the output of 'yarn audit --json'
 
 const bfj = require("bfj");
-const fs = require("fs");
 const exceptions = require("../.auditrc").exceptions;
 
 const INDENT = "  ";
@@ -55,7 +54,7 @@ bfj
 		);
 		process.exit(1);
 	})
-	.on("end", (error) => {
+	.on("end", () => {
 		const advisoryKeys = Object.keys(advisories);
 		if (advisoryKeys.length > 0) {
 			console.log("Vulneralibilities found:");

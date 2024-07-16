@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState } from "react";
 import { Field, Form as FinalForm } from "react-final-form";
 import classNames from "classnames";
@@ -96,6 +97,7 @@ const CreateStripeAccountFields = (props) => {
 		if (!hasMCC && defaultMCC) {
 			form.change("businessProfileMCC", defaultMCC);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const country = values.country;

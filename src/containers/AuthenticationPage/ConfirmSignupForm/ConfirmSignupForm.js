@@ -159,8 +159,12 @@ const ConfirmSignupFormComponent = (props) => (
 
 					{showCustomUserFields ? (
 						<div className={css.customFields}>
-							{userFieldProps.map((fieldProps) => (
-								<CustomExtendedDataField {...fieldProps} formId={formId} />
+							{userFieldProps.map((fieldProps, index) => (
+								<CustomExtendedDataField
+									key={`user-field-${index}`}
+									{...fieldProps}
+									formId={formId}
+								/>
 							))}
 						</div>
 					) : null}

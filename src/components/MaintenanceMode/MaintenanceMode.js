@@ -9,7 +9,7 @@ import css from "./MaintenanceMode.module.css";
 // Note 1: this microcopy/translation does not come from translation file.
 //         It needs to be something that is not part of fetched assets but built-in text
 // Note 2: In the LandingPage directory, there's a similar content (FallbackPage.js).
-const MaintenanceMode = (props) => {
+const MaintenanceMode = () => {
 	const isDev = appSettings.dev;
 	return (
 		<LayoutSingleColumn
@@ -34,7 +34,7 @@ const MaintenanceMode = (props) => {
 								Check that all the configuration assets are added to your marketplace environment
 								through the Marketplace Console.
 							</p>
-							<p>Check also browser's developer tools for printed errors.</p>
+							<p>Check also browser&apos;s developer tools for printed errors.</p>
 						</>
 					) : (
 						<p>

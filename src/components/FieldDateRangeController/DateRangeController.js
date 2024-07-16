@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from "react";
 import { DayPickerRangeController } from "react-dates";
 import classNames from "classnames";
