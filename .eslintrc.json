@@ -9,7 +9,7 @@
 		"no-unused-vars": ["warn"],
 		"no-console": ["warn"]
 	},
-	// Ignore no console warning for .example.js files
+	// Ignore console warning for specific directories
 	"overrides": [
 		{
 			"files": ["*.example.js", "server/**/*.js", "scripts/**/*.js", "src/analytics/**/*.js"],
