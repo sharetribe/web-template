@@ -55,24 +55,25 @@
 .navLeft,
 .navRight {
 	position: absolute;
-	width: 10vw;
-	min-width: 52px;
-	height: 100%;
-	border: 0;
-	padding: 0;
 	z-index: 1;
 
 	/* center content */
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	width: 10vw;
+	min-width: 52px;
+	height: 100%;
+	padding: 0;
+	border: 0;
 
 	&:hover {
 		cursor: pointer;
 
 		& .navArrowWrapper {
-			background-color: rgba(255, 255, 255, 1);
+			background-color: rgb(255 255 255 / 100%);
 		}
+
 		& .arrowHead {
 			fill: var(--colorGrey300);
 			stroke: var(--colorGrey300);
@@ -110,19 +111,16 @@
 
 .navArrowWrapper {
 	display: none;
-
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-
-	background-color: transparent;
-
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	width: 40px;
+	height: 40px;
+	background-color: transparent;
+	border-radius: 50%;
 
 	@media (--viewportMedium) {
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: rgb(0 0 0 / 50%);
 	}
 }
 
@@ -137,13 +135,13 @@
 .imageIndex {
 	/* Fonts */
 	composes: h4 from global;
-	font-weight: var(--fontWeightSemiBold);
 
 	/* Position and dimensions */
 	position: absolute;
 	top: 21px;
 	left: 20px;
 	margin: 0;
+	font-weight: var(--fontWeightSemiBold);
 
 	/* Colors */
 	color: var(--colorWhite);

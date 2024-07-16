@@ -49,6 +49,7 @@
 
 .label {
 	width: var(--ProfileSettingsForm_avatarSize);
+
 	@media (--viewportMedium) {
 		width: var(--ProfileSettingsForm_avatarSizeDesktop);
 	}
@@ -58,18 +59,18 @@
 .avatarContainer {
 	/* Dimension */
 	position: relative;
-	width: var(--ProfileSettingsForm_avatarSize);
-	height: var(--ProfileSettingsForm_avatarSize);
 
 	/* Center content */
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	width: var(--ProfileSettingsForm_avatarSize);
+	height: var(--ProfileSettingsForm_avatarSize);
+	cursor: pointer;
 
 	/* Initial coloring */
 	background-color: var(--colorGrey50);
 	border-radius: calc(var(--ProfileSettingsForm_avatarSize) / 2);
-	cursor: pointer;
 
 	@media (--viewportMedium) {
 		width: var(--ProfileSettingsForm_avatarSizeDesktop);
@@ -79,11 +80,11 @@
 }
 
 .avatarPlaceholder {
+	border-color: var(--colorGrey100);
+
 	/* Placeholder border */
 	border-style: dashed;
-	border-color: var(--colorGrey100);
 	border-width: 2px;
-
 	transition: var(--transitionStyleButton);
 
 	&:hover {
@@ -96,6 +97,7 @@
 		display: none;
 	}
 }
+
 .avatarPlaceholderText {
 	display: none;
 
@@ -107,18 +109,19 @@
 }
 
 .avatarUploadError {
+	border-color: var(--colorFail);
+
 	/* Placeholder border */
 	border-style: dashed;
-	border-color: var(--colorFail);
 	border-width: 2px;
 }
 
 .error {
 	/* Font */
 	composes: h4 from global;
-	color: var(--colorFail);
 	margin-top: 18px;
 	margin-bottom: 0;
+	color: var(--colorFail);
 
 	@media (--viewportMedium) {
 		margin-top: 22px;
@@ -134,16 +137,19 @@
 .changeAvatar {
 	/* Font */
 	composes: h5 from global;
-	font-weight: var(--fontWeightMedium);
 
 	/* Positioning: right */
 	position: absolute;
-	bottom: 27px;
 	right: -129px;
+	bottom: 27px;
+
 	/* Dimensions */
 	width: 105px;
 	height: 41px;
 	padding: 11px 10px 7px 35px;
+	margin-top: 0;
+	margin-bottom: 0;
+	font-weight: var(--fontWeightMedium);
 
 	/* Look and feel (buttonish) */
 	background-color: var(--colorWhite);
@@ -153,17 +159,15 @@
 	border: solid 1px var(--colorGrey100);
 	border-radius: 2px;
 
-	margin-top: 0;
-	margin-bottom: 0;
-
 	@media (--viewportMedium) {
+		right: auto;
+
 		/* Position: under */
 		bottom: -10px;
-		right: auto;
+		padding: 11px 10px 7px 35px;
 		margin-top: 0;
 		margin-bottom: 0;
 		transition: var(--transitionStyleButton);
-		padding: 11px 10px 7px 35px;
 	}
 
 	&:hover {
@@ -172,19 +176,19 @@
 }
 
 .uploadingImage {
+	position: relative;
+	display: block;
+
 	/* Dimensions */
 	width: var(--ProfileSettingsForm_avatarSize);
 	height: var(--ProfileSettingsForm_avatarSize);
+	margin: 0;
+	overflow: hidden;
 
 	/* Image fitted to container */
 	object-fit: cover;
 	background-color: var(--colorGrey100); /* Loading BG color */
 	border-radius: calc(var(--ProfileSettingsForm_avatarSize) / 2);
-	overflow: hidden;
-
-	display: block;
-	position: relative;
-	margin: 0;
 
 	@media (--viewportMedium) {
 		width: var(--ProfileSettingsForm_avatarSizeDesktop);
@@ -196,33 +200,30 @@
 .uploadingImageOverlay {
 	/* Cover everything (overlay) */
 	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
+	inset: 0;
+
+	/* Center content */
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
 	/* Overlay style */
 	background-color: var(--colorWhite);
 	opacity: 0.8;
-
-	/* Center content */
-	display: flex;
-	justify-content: center;
-	align-items: center;
 }
 
 .avatarInvisible {
-	visibility: hidden;
 	position: absolute;
 	top: -1000px;
 	left: -1000px;
+	visibility: hidden;
 }
 
 .tip {
-	composes: marketplaceDefaultFontStyles from global;
-	color: var(--colorGrey300);
+	composes: marketplacedefaultfontstyles from global;
 	margin-top: 0;
 	margin-bottom: 12px;
+	color: var(--colorGrey300);
 
 	@media (--viewportMedium) {
 		margin-top: 0;
@@ -232,16 +233,16 @@
 
 .fileInfo {
 	composes: h5 from global;
-	color: var(--colorGrey300);
-	margin-top: 0;
-	margin-bottom: 0;
 	padding-top: 5px;
 	padding-bottom: 1px;
+	margin-top: 0;
+	margin-bottom: 0;
+	color: var(--colorGrey300);
 
 	@media (--viewportMedium) {
+		padding: 4px 0;
 		margin-top: 0;
 		margin-bottom: 0;
-		padding: 4px 0 4px 0;
 	}
 }
 
@@ -268,9 +269,9 @@
 }
 
 .extraInfo {
-	composes: textSmall from global;
-	color: var(--colorGrey300);
+	composes: textsmall from global;
 	margin-top: 11px;
+	color: var(--colorGrey300);
 
 	@media (--viewportMedium) {
 		margin-top: 16px;

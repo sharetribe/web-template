@@ -1,7 +1,7 @@
 @import "../../../styles/customMediaQueries.css";
 
 .root {
-	composes: marketplaceModalBaseStyles from global;
+	composes: marketplacemodalbasestyles from global;
 	padding-top: 70px;
 
 	@media (--viewportMedium) {
@@ -15,12 +15,12 @@
 
 /* Icon of the modal */
 .modalIcon {
-	composes: marketplaceModalIconStyles from global;
+	composes: marketplacemodaliconstyles from global;
 }
 
 /* Title of the modal */
 .modalTitle {
-	composes: marketplaceModalTitleStyles from global;
+	composes: marketplacemodaltitlestyles from global;
 }
 
 .reviewee {
@@ -29,5 +29,5 @@
 
 /* Paragraph for the Modal */
 .modalMessage {
-	composes: marketplaceModalParagraphStyles from global;
+	composes: marketplacemodalparagraphstyles from global;
 }

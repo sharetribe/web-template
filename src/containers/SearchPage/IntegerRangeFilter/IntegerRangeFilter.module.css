@@ -3,8 +3,8 @@
 .root {
 	position: relative;
 	padding-top: 24px;
-	margin-top: 12px;
 	padding-bottom: 17px;
+	margin-top: 12px;
 	border-bottom: 1px solid var(--colorGrey100);
 
 	@media (--viewportMedium) {
@@ -20,12 +20,12 @@
 	max-width: 300px;
 	padding-top: 5px;
 	padding-bottom: 5px;
-	margin-top: 0px;
+	margin-top: 0;
 
 	@media (--viewportMedium) {
-		padding-top: 0px;
+		padding-top: 0;
 		padding-bottom: 8px;
-		margin-top: 0px;
+		margin-top: 0;
 	}
 }
 
@@ -39,14 +39,14 @@
 
 .labelPopup {
 	composes: h5 from global;
-
-	font-weight: var(--fontWeightSemiBold);
-	padding: 11px 0 13px 0;
+	padding: 11px 0 13px;
 	margin: 0 18px 0 0;
+	font-weight: var(--fontWeightSemiBold);
 }
+
 @media (--viewportMedium) {
 	.label {
-		padding: 8px 0 16px 0;
+		padding: 8px 0 16px;
 	}
 }
 
@@ -62,17 +62,16 @@
 .maxValue {
 	width: 48px;
 	text-align: center;
-
-	-moz-appearance: textfield;
+	appearance: textfield;
 
 	&::-webkit-inner-spin-button,
 	&::-webkit-outer-spin-button {
-		-webkit-appearance: none;
 		margin: 0;
+		appearance: none;
 	}
 
 	@media (--viewportMedium) {
-		padding: 3px 0 3px 0;
+		padding: 3px 0;
 	}
 }
 
@@ -81,17 +80,18 @@
 }
 
 .valueSeparator {
-	margin: 6px 8px 0 8px;
+	margin: 6px 8px 0;
 
 	@media (--viewportMedium) {
-		margin: 5px 8px 0 8px;
+		margin: 5px 8px 0;
 	}
 }
 
 .sliderWrapper {
 	display: flex;
-	padding: 17px 0 25px 0;
+	padding: 17px 0 25px;
+
 	@media (--viewportMedium) {
-		padding: 3px 0 13px 0;
+		padding: 3px 0 13px;
 	}
 }

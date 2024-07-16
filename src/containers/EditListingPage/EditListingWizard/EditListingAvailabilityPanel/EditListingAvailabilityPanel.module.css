@@ -1,62 +1,63 @@
 @import "../../../../styles/customMediaQueries.css";
 
 .root {
+	display: flex;
+	flex-direction: column;
 	flex-grow: 1;
 	width: 100%;
 	height: auto;
-	display: flex;
-	flex-direction: column;
 }
 
 .sectionHeader {
 	display: flex;
 	flex-direction: row;
-	align-items: flex-end;
 	gap: 6px;
+	align-items: flex-end;
 	margin-top: 0;
 	margin-bottom: 0;
 
 	@media (--viewportMedium) {
-		align-items: baseline;
-		padding: 5px 0 3px 0;
 		gap: 8px;
+		align-items: baseline;
+		padding: 5px 0 3px;
 		margin-top: 0;
 	}
 }
 
 .planInfo {
 	@media (--viewportMedium) {
-		padding: 1px 0 7px 0;
+		padding: 1px 0 7px;
 	}
 }
 
 .section {
-	margin: 24px 0 0 0;
+	margin: 24px 0 0;
 }
 
 .editPlanButton {
+	padding: 1px 0 5px;
 	margin: 0;
-	padding: 1px 0 5px 0;
+
 	@media (--viewportMedium) {
-		padding: 5px 0 3px 0;
+		padding: 5px 0 3px;
 	}
 }
 
 .addExceptionButton {
 	composes: h4 from global;
-	padding: 1px 0 5px 0;
-	margin: 0 0 24px 0;
+	padding: 1px 0 5px;
+	margin: 0 0 24px;
 
 	@media (--viewportMedium) {
-		padding: 3px 0 5px 0;
-		margin: 0 0 72px 0;
+		padding: 3px 0 5px;
+		margin: 0 0 72px;
 	}
 }
 
 .goToNextTabButton {
+	flex-shrink: 0;
 	margin-top: auto;
 	margin-bottom: 24px;
-	flex-shrink: 0;
 
 	@media (--viewportLarge) {
 		display: inline-block;
@@ -65,19 +66,17 @@
 }
 
 .modalContainer {
-	composes: marketplaceModalBaseStyles from global;
-	min-height: 100vh;
+	composes: marketplacemodalbasestyles from global;
 	height: 100%;
-
-	padding-left: 0;
+	min-height: 100vh;
 	padding-right: 0;
-
+	padding-left: 0;
 	background-color: var(--colorGrey50);
 
 	@media (--viewportMedium) {
 		flex-basis: 576px;
-		min-height: auto;
 		height: auto;
+		min-height: auto;
 	}
 }
 

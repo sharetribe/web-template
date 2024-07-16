@@ -11,7 +11,7 @@
 }
 
 .modalContainer {
-	composes: marketplaceModalInMobileBaseStyles from global;
+	composes: marketplacemodalinmobilebasestyles from global;
 
 	@media (--viewportMedium) {
 		flex-basis: 576px;

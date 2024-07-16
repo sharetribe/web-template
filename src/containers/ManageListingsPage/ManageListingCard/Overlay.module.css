@@ -2,20 +2,17 @@
 
 .coverEverything {
 	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
+	inset: 0;
 }
 
 .root {
 	/* Positioning */
-	composes: coverEverything;
+	composes: covereverything;
 }
 
 .overlay {
 	/* Positioning */
-	composes: coverEverything;
+	composes: covereverything;
 
 	/* Overlay background style */
 	background-color: var(--colorWhite);
@@ -24,21 +21,21 @@
 
 .overlayContent {
 	composes: h4 from global;
-	color: var(--colorGrey700);
 
 	/* Positioning */
-	composes: coverEverything;
+	composes: covereverything;
 
 	/* Layout */
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
 	align-items: center;
-	cursor: default;
+	justify-content: center;
 
 	/* Remove default margins from font */
 	margin-top: 0;
 	margin-bottom: 0;
+	color: var(--colorGrey700);
+	cursor: default;
 }
 
 @media (--viewportMedium) {
@@ -49,7 +46,7 @@
 }
 
 .message {
-	composes: textXSmall from global;
+	composes: textxsmall from global;
 	max-width: 220px;
 	text-align: center;
 }

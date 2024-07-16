@@ -11,9 +11,9 @@
 
 .heading {
 	composes: p from global;
-	font-weight: var(--fontWeightBold);
 	padding: 0;
 	margin-bottom: 16px;
+	font-weight: var(--fontWeightBold);
 }
 
 .locationDetails {
@@ -22,7 +22,7 @@
 }
 
 .card {
-	composes: marketplaceInputStyles from global;
+	composes: marketplaceinputstyles from global;
 
 	@media (--viewportMedium) {
 		padding: 11px 0 11px 16px;
@@ -34,8 +34,8 @@
 }
 
 .error {
-	color: var(--colorFail);
 	font-size: 13px;
+	color: var(--colorFail);
 }
 
 .errorMessage {
@@ -57,37 +57,35 @@
 
 	@media (--viewportMedium) {
 		padding-top: 8px;
-		margin-top: 0px;
+		margin-top: 0;
 		margin-bottom: 48px;
 	}
 }
 
 .saveForLaterUseCheckbox {
 	display: inline-block;
-	padding: 2px 0 3px 0;
+	padding: 2px 0 3px;
 
 	@media (--viewportMedium) {
-		padding: 1px 0 0px 0;
+		padding: 1px 0 0;
 	}
 }
 
 .saveForLaterUseLabel {
 	composes: h5 from global;
-
-	color: var(--colorGrey700);
 	margin-top: 3px;
-	margin-bottom: 0px;
+	margin-bottom: 0;
+	color: var(--colorGrey700);
 	cursor: pointer;
 }
 
 .saveForLaterUseLegalInfo {
 	composes: h5 from global;
-
-	color: var(--colorGrey300);
 	display: inline-block;
-	padding: 0px 0 0px 26px;
+	padding: 0 0 0 26px;
 	margin-top: -2px;
 	margin-bottom: 2px;
+	color: var(--colorGrey300);
 
 	@media (--viewportMedium) {
 		margin-top: -1px;
@@ -105,10 +103,10 @@
 }
 
 .messageLabel {
-	margin: 0 0 5px 0;
+	margin: 0 0 5px;
 
 	@media (--viewportMedium) {
-		margin: 0 0 6px 0;
+		margin: 0 0 6px;
 	}
 }
 
@@ -130,15 +128,14 @@
 
 .paymentInfo {
 	composes: h5 from global;
-
+	margin: 28px 0 0;
 	color: var(--colorGrey300);
 	text-align: center;
-	margin: 28px 0 0 0;
 
 	@media (--viewportLarge) {
+		padding: 2px 0 6px;
+		margin: 24px 0 0;
 		font-size: 14px;
-		padding: 2px 0 6px 0;
-		margin: 24px 0 0 0;
 	}
 }
 
@@ -148,6 +145,7 @@
 	@media (--viewportMedium) {
 		margin-top: 26px;
 	}
+
 	@media (--viewportLarge) {
 		margin-top: 16px;
 	}

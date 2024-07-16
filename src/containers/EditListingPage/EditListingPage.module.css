@@ -1,15 +1,15 @@
 @import "../../styles/customMediaQueries.css";
 
 .mobileTopbar {
-	/* Size */
-	width: 100%;
-	height: var(--topbarHeight);
-
 	/* Layout for child components */
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
 	align-items: center;
+	justify-content: space-between;
+
+	/* Size */
+	width: 100%;
+	height: var(--topbarHeight);
 
 	/* fill */
 	background-color: var(--colorWhite);

@@ -1,33 +1,33 @@
 @import "../../styles/customMediaQueries.css";
 
 /* Order form inside modalContainer needs special handling */
+
 /* since "inMobile" breakpoint is actually --viewportLarge */
 .modalContainer {
-	composes: marketplaceModalInMobileBaseStyles from global;
-
+	composes: marketplacemodalinmobilebasestyles from global;
 	height: 100vh;
 
 	@media (--viewportMedium) {
 		flex-basis: 576px;
 		height: unset;
 		padding: var(--modalPaddingMedium);
-		background-color: var(--colorWhite);
 		margin-top: 12.5vh;
 		margin-bottom: 12.5vh;
+		background-color: var(--colorWhite);
 	}
 
 	@media (--viewportLarge) {
 		padding: 0;
-		background-color: transparent;
 		margin-top: 0;
 		margin-bottom: 0;
+		background-color: transparent;
 	}
 }
 
 .modalHeading {
-	margin-top: 89px;
-	margin-bottom: 0px;
 	padding: 0 24px;
+	margin-top: 89px;
+	margin-bottom: 0;
 
 	@media (--viewportMedium) {
 		padding: 0;
@@ -39,13 +39,14 @@
 }
 
 .heading {
-	/* Font */
-	color: var(--colorGrey700);
-
 	/* Layout */
 	width: 100%;
 	margin-top: 0;
 	margin-bottom: 0;
+
+	/* Font */
+	color: var(--colorGrey700);
+
 	@media (--viewportMedium) {
 		margin-top: 0;
 		margin-bottom: 5px;
@@ -54,27 +55,24 @@
 
 .price {
 	composes: h4 from global;
-	font-weight: var(--fontWeightBold);
-
-	color: var(--marketplaceColor);
 	margin: 0 0 0 24px;
+	font-weight: var(--fontWeightBold);
+	color: var(--marketplaceColor);
 
 	@media (--viewportMedium) {
-		margin: 0;
 		padding: 0;
+		margin: 0;
 	}
 }
 
 .perUnit {
 	/* Font */
 	composes: h4 from global;
-	font-weight: var(--fontWeightBold);
-
-	color: var(--marketplaceColor);
 	padding: 0;
-
 	margin-top: 0;
 	margin-bottom: 0;
+	font-weight: var(--fontWeightBold);
+	color: var(--marketplaceColor);
 
 	@media (--viewportMedium) {
 		margin-top: 0;
@@ -87,15 +85,14 @@
 
 .author {
 	composes: p from global;
-	margin: 0px 24px 32px 24px;
-
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	margin: 0 24px 32px;
 
 	@media (--viewportMedium) {
 		width: 100%;
-		margin: 12px 0 36px 0;
+		margin: 12px 0 36px;
 		color: var(--colorGrey700);
 	}
 }
@@ -135,11 +132,11 @@
 }
 
 .orderTitle {
-	/* Font */
-	color: var(--colorGrey700);
-
 	margin-top: 0;
 	margin-bottom: 2px;
+
+	/* Font */
+	color: var(--colorGrey700);
 
 	@media (--viewportLarge) {
 		margin-bottom: 0;
@@ -151,21 +148,21 @@
 	display: none;
 
 	@media (--viewportMedium) {
-		color: var(--colorGrey700);
 		display: block;
 		margin-top: 0;
+		color: var(--colorGrey700);
 	}
 }
 
 .bookingForm {
-	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
+	flex-grow: 1;
 	padding: 0;
 
 	@media (--viewportMedium) {
-		padding: 0;
 		min-height: 400px;
+		padding: 0;
 	}
 
 	@media (--viewportLarge) {
@@ -175,23 +172,25 @@
 }
 
 .openOrderForm {
-	/* Ensure that mobile button is over Footer too */
-	z-index: 9;
 	position: fixed;
 	bottom: 0;
 	left: 0;
+
+	/* Ensure that mobile button is over Footer too */
+	z-index: 9;
+	display: flex;
 	width: 100vw;
 	padding: 18px 24px 18px 16px;
 	background-color: var(--colorWhite);
 	box-shadow: var(--boxShadowTop);
-	display: flex;
 
 	/* Contain repainting to this component only */
+
 	/* 3D painting container helps scrolling */
 	transform: translate3d(0, 0, 0);
 
 	@media (--viewportMedium) {
-		padding: 18px 60px 18px 60px;
+		padding: 18px 60px;
 	}
 
 	@media (--viewportLarge) {
@@ -204,11 +203,11 @@
 	/* Layout */
 	display: flex;
 	flex-direction: row;
-	align-items: baseline;
-	gap: 4px;
 	flex-shrink: 0;
-	margin-right: 22px;
+	gap: 4px;
+	align-items: baseline;
 	padding: 3px 0;
+	margin-right: 22px;
 
 	@media (--viewportMedium) {
 		padding: 4px 0;
@@ -216,24 +215,25 @@
 
 	@media (--viewportLarge) {
 		flex-direction: row;
-		margin-right: unset;
 		padding: 0;
+		margin-right: unset;
 	}
 }
+
 .priceContainerInCTA {
 	flex-direction: column;
+	gap: unset;
 	align-items: center;
 	justify-content: center;
-	gap: unset;
 }
 
 .priceValue {
 	/* Font */
 	composes: h3 from global;
+	margin-top: 0;
+	margin-bottom: 0;
 	color: var(--marketplaceColor);
 
-	margin-top: 0;
-	margin-bottom: 0px;
 	@media (--viewportMedium) {
 		margin-top: 0;
 		margin-bottom: 0;
@@ -242,13 +242,12 @@
 
 .perUnitInCTA {
 	/* Font */
-	composes: marketplaceTinyFontStyles from global;
-	color: var(--marketplaceColor);
-	font-weight: var(--fontWeightSemiBold);
+	composes: marketplacetinyfontstyles from global;
 	padding: 0;
-
 	margin-top: 0;
 	margin-bottom: 0;
+	font-weight: var(--fontWeightSemiBold);
+	color: var(--marketplaceColor);
 
 	@media (--viewportMedium) {
 		margin-top: 0;
@@ -260,10 +259,10 @@
 }
 
 .closedListingButton {
-	border-left: 1px solid var(--colorGrey100);
 	width: 100%;
-	padding: 15px 24px 15px 24px;
+	padding: 15px 24px;
 	text-align: center;
+	border-left: 1px solid var(--colorGrey100);
 }
 
 .receipt {
@@ -272,17 +271,17 @@
 
 .error {
 	composes: h4 from global;
-	color: var(--colorFail);
-
 	padding: 0 24px;
+	color: var(--colorFail);
 
 	@media (--viewportMedium) {
 		padding: 0;
 	}
 }
+
 .errorSidebar {
-	color: var(--colorFail);
 	padding: 0 24px;
+	color: var(--colorFail);
 
 	@media (--viewportMedium) {
 		padding: 0;

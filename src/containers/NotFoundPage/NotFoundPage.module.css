@@ -3,17 +3,17 @@
 /* 404 page */
 
 .root {
-	/* Expand to the available space */
-	flex-grow: 1;
-
 	display: flex;
 	flex-direction: column;
+
+	/* Expand to the available space */
+	flex-grow: 1;
 	align-items: center;
 }
 
 .content {
-	max-width: 587px;
 	width: 80%;
+	max-width: 587px;
 	margin-top: 60px;
 	margin-bottom: 60px;
 
@@ -23,10 +23,10 @@
 }
 
 .number {
-	composes: marketplaceHeroTitleFontStyles from global;
-	text-align: center;
+	composes: marketplaceherotitlefontstyles from global;
+	margin: 1px 0 0;
 	color: var(--marketplaceColor);
-	margin: 1px 0 0 0;
+	text-align: center;
 
 	@media (--viewportMedium) {
 		margin: 0;
@@ -34,9 +34,9 @@
 }
 
 .heading {
-	composes: marketplaceModalTitleStyles from global;
-	text-align: center;
+	composes: marketplacemodaltitlestyles from global;
 	margin-top: 16px;
+	text-align: center;
 
 	@media (--viewportMedium) {
 		margin-top: 22px;
@@ -44,8 +44,8 @@
 }
 
 .description {
-	text-align: center;
 	margin-bottom: 0;
+	text-align: center;
 
 	@media (--viewportMedium) {
 		margin-top: 24px;
@@ -55,8 +55,7 @@
 
 .searchForm {
 	max-width: 408px;
-	margin: 62px auto 0 auto;
-
+	margin: 62px auto 0;
 	background-color: var(--colorWhite);
 	border-bottom: 4px solid var(--marketplaceColor);
 	box-shadow: var(--boxShadowNotFoundPageSearch);

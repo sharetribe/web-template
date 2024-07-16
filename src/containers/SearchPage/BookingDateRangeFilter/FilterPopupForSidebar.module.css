@@ -15,6 +15,7 @@
 .filterHeader {
 	line-height: 24px;
 }
+
 .labelWrapper {
 	display: inline-block;
 	max-width: calc(100% - 16px);
@@ -22,13 +23,13 @@
 
 .label,
 .labelSelected {
-	composes: marketplaceSmallFontStyles from global;
-	font-weight: var(--fontWeightBold);
+	composes: marketplacesmallfontstyles from global;
+	padding: 4px 0 2px;
 
 	/* Baseline adjustment for label text */
 	margin-top: 0;
 	margin-bottom: 12px;
-	padding: 4px 0 2px 0;
+	font-weight: var(--fontWeightBold);
 
 	@media (--viewportMedium) {
 		padding: 0;
@@ -48,11 +49,11 @@
 .labelButton {
 	/* Override button styles */
 	width: 100%;
-	outline: none;
-	text-align: left;
-	border: none;
 	padding: 0;
+	text-align: left;
 	cursor: pointer;
+	border: none;
+	outline: none;
 }
 
 .labelButtonContent {
@@ -65,35 +66,35 @@
 }
 
 .popup {
-	/* By default hide the content */
-	display: block;
-	visibility: hidden;
-	opacity: 0;
-	pointer-events: none;
-
 	/* Position */
 	position: absolute;
 	z-index: var(--zIndexPopup);
 
+	/* By default hide the content */
+	display: block;
+
 	/* Layout */
 	min-width: 300px;
 	margin-top: 7px;
+	pointer-events: none;
+	visibility: hidden;
 	background-color: var(--colorWhite);
 
 	/* Borders */
 	border-top: 1px solid var(--colorGrey100);
-	box-shadow: var(--boxShadowPopup);
 	border-radius: var(--borderRadiusMedium);
+	box-shadow: var(--boxShadowPopup);
+	opacity: 0;
 	transition: var(--transitionStyleButton);
 }
 
 .popupSize {
-	padding: 15px 30px 17px 30px;
+	padding: 15px 30px 17px;
 }
 
 .isOpen {
 	display: block;
+	pointer-events: auto;
 	visibility: visible;
 	opacity: 1;
-	pointer-events: auto;
 }

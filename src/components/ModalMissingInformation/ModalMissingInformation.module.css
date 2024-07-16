@@ -4,12 +4,12 @@
 
 /* Title of the modal */
 .modalTitle {
-	composes: marketplaceModalTitleStyles from global;
+	composes: marketplacemodaltitlestyles from global;
 }
 
 /* Paragraph for the Modal */
 .modalMessage {
-	composes: marketplaceModalParagraphStyles from global;
+	composes: marketplacemodalparagraphstyles from global;
 }
 
 /* Make the email pop */
@@ -19,28 +19,28 @@
 
 .helperLink {
 	composes: a from global;
-	composes: marketplaceModalHelperLink from global;
+	composes: marketplacemodalhelperlink from global;
 }
 
 .helperText {
-	composes: marketplaceModalHelperText from global;
+	composes: marketplacemodalhelpertext from global;
 }
 
 .error {
-	composes: marketplaceModalPasswordMargins from global;
+	composes: marketplacemodalpasswordmargins from global;
 }
 
 .bottomWrapper {
-	composes: marketplaceModalBottomWrapper from global;
+	composes: marketplacemodalbottomwrapper from global;
 
 	/* Align the helper links to the left since there isn't a Primary Button anymore */
 	text-align: left;
 }
 
 .modalIcon {
-	composes: marketplaceModalIconStyles from global;
+	composes: marketplacemodaliconstyles from global;
 }
 
 .reminderModalLinkButton {
-	composes: buttonPrimary from global;
+	composes: buttonprimary from global;
 }

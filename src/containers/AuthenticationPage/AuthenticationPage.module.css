@@ -5,9 +5,9 @@
 }
 
 .contentContainer {
-	composes: marketplaceModalRootStyles from global;
-	min-height: calc(100vh - 60px);
+	composes: marketplacemodalrootstyles from global;
 	height: auto;
+	min-height: calc(100vh - 60px);
 
 	@media (--viewportMedium) {
 		height: unset;
@@ -16,13 +16,13 @@
 }
 
 .content {
-	composes: marketplaceModalBaseStyles from global;
+	composes: marketplacemodalbasestyles from global;
 	padding-top: 29px;
 
 	@media (--viewportMedium) {
+		min-height: 700px;
 		margin-top: 5vh;
 		margin-bottom: 7.5vh;
-		min-height: 700px;
 	}
 }
 
@@ -35,7 +35,7 @@
 }
 
 .tab {
-	composes: marketplaceModalTitleStyles from global;
+	composes: marketplacemodaltitlestyles from global;
 	padding: 0;
 	margin-top: 0;
 	margin-bottom: 0;
@@ -50,13 +50,13 @@
 	margin-top: 24px;
 
 	@media (--viewportMedium) {
-		margin-top: 30px;
 		padding-top: 2px;
+		margin-top: 30px;
 	}
 }
 
 .loginForm {
-	margin-top: 24px;
+	flex-basis: 260px;
 
 	/* We don't want the form to take the whole space so that on mobile view
   the social login buttons will be after the sign up button
@@ -64,17 +64,17 @@
   We also need to add flex-basis value so that Safari will show the
   whole form correctly.  */
 	flex-grow: 0;
-	flex-basis: 260px;
+	margin-top: 24px;
 
 	@media (--viewportMedium) {
 		flex-basis: 330px;
-		margin-top: 30px;
 		padding-top: 2px;
+		margin-top: 30px;
 	}
 }
 
 .signupForm {
-	margin-top: 24px;
+	flex-basis: 340px;
 
 	/* We don't want the form to take the whole space so that on mobile view
   the social login buttons will be after the sign up button
@@ -82,23 +82,23 @@
   We also need to add flex-basis value so that Safari will show the
   whole form correctly.  */
 	flex-grow: 0;
-	flex-basis: 340px;
+	margin-top: 24px;
 
 	@media (--viewportMedium) {
 		flex-basis: 410px;
-		margin-top: 30px;
 		padding-top: 2px;
+		margin-top: 30px;
 	}
 }
 
 .bottomWrapper {
-	composes: marketplaceModalBottomWrapper from global;
+	composes: marketplacemodalbottomwrapper from global;
 
 	/* Align the helper links to the left since there isn't a Primary Button anymore */
 	text-align: left;
 }
 
-/* Terms of Service modal*/
+/* Terms of Service modal */
 
 .privacyWrapper,
 .termsWrapper {
@@ -123,14 +123,15 @@
 .selectedLabel {
 	composes: label from global;
 }
+
 .selectedValue {
 	margin-top: 0;
 	margin-bottom: 6px;
 
 	@media (--viewportMedium) {
+		padding: 2px 0 6px;
 		margin-top: 0;
 		margin-bottom: 0;
-		padding: 2px 0 6px 0;
 	}
 }
 
@@ -147,56 +148,57 @@
 /* ================ Close icon ================ */
 
 .verifyClose {
-	composes: marketplaceModalCloseStyles from global;
+	composes: marketplacemodalclosestyles from global;
 
 	/* This is not a real modal, z-index should not be modal's z-index */
 	z-index: 1;
 }
 
 .closeText {
-	composes: marketplaceModalCloseText from global;
+	composes: marketplacemodalclosetext from global;
 }
 
 .closeIcon {
-	composes: marketplaceModalCloseIcon from global;
+	composes: marketplacemodalcloseicon from global;
 }
 
 /* ================ Typography ================ */
 
 /* Title of the modal */
 .modalTitle {
-	composes: marketplaceModalTitleStyles from global;
+	composes: marketplacemodaltitlestyles from global;
 }
 
 /* Paragraph for the Modal */
 .modalMessage {
-	composes: marketplaceModalParagraphStyles from global;
+	composes: marketplacemodalparagraphstyles from global;
 }
 
 /* Make the email pop */
 .email {
 	font-weight: var(--fontWeightHighlightEmail);
+	hyphens: auto;
 
 	/* fallback option */
 	word-break: break-all;
+
 	/* use break-word if available */
 	word-break: break-word;
-	hyphens: auto;
 }
 
 /* Helper links */
 .modalHelperLink {
 	composes: a from global;
-	composes: marketplaceModalHelperLink from global;
+	composes: marketplacemodalhelperlink from global;
 }
 
 /* Helper texts for the links, not the actual links */
 .modalHelperText {
-	composes: marketplaceModalHelperText from global;
+	composes: marketplacemodalhelpertext from global;
 }
 
 .modalIcon {
-	composes: marketplaceModalIconStyles from global;
+	composes: marketplacemodaliconstyles from global;
 
 	/* Align the icon and rest of the content in the modal. Sign & Login doesn't use an icon, maybe we should add one? */
 	margin-top: 47px;
@@ -209,16 +211,16 @@
 /* ================ Errors ================ */
 
 .error {
-	composes: marketplaceModalPasswordMargins from global;
+	composes: marketplacemodalpasswordmargins from global;
 }
 
 /* ================ Social logins & SSO ================ */
 
 .signupWithIdpTitle {
-	composes: marketplaceModalTitleStyles from global;
+	composes: marketplacemodaltitlestyles from global;
+	padding-top: 16px;
 	margin-top: 0;
 	margin-bottom: 0;
-	padding-top: 16px;
 	color: var(--colorBlack);
 
 	@media (--viewportMedium) {
@@ -238,27 +240,28 @@
 
 .socialButtonWrapper {
 	margin-bottom: 6px;
+
 	@media (--viewportMedium) {
 		margin-top: 8px;
 	}
 }
 
 .socialButtonsOr {
+	position: relative;
 	width: 100%;
 	height: 32px;
-	margin: 28px 0 20px 0;
+	margin: 28px 0 20px;
 	text-align: center;
-	position: relative;
 	background-color: var(--colorWhite);
 
-	&:after {
-		content: "";
-		width: 100%;
-		border-bottom: solid 1px #d2d2d2;
+	&::after {
 		position: absolute;
-		left: 0;
 		top: 50%;
+		left: 0;
 		z-index: 1;
+		width: 100%;
+		content: "";
+		border-bottom: solid 1px #d2d2d2;
 	}
 }
 
@@ -270,11 +273,11 @@
 }
 
 .socialButtonsOrText {
-	background-color: var(--colorWhite);
-	width: auto;
-	display: inline-block;
-	z-index: 3;
-	padding: 0 20px 0 20px;
 	position: relative;
+	z-index: 3;
+	display: inline-block;
+	width: auto;
+	padding: 0 20px;
 	margin: 0;
+	background-color: var(--colorWhite);
 }

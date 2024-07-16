@@ -33,29 +33,29 @@
 }
 
 .cardIcon {
-	margin: 0 12px 0 4px;
+	display: inline-block;
 	width: 24px;
 	height: 16px;
-	display: inline-block;
+	margin: 0 12px 0 4px;
 }
 
 .closeIcon {
-	composes: marketplaceModalCloseIcon from global;
-	margin-left: 0;
+	composes: marketplacemodalcloseicon from global;
 	margin-right: 5px;
 	margin-bottom: 3px;
+	margin-left: 0;
 }
 
 .iconCheckmark {
-	stroke: var(--colorSuccess);
 	display: inline-block;
 	margin: 12px 0 0 24px;
+	stroke: var(--colorSuccess);
 }
 
 .iconCheckmarkHidden {
-	visibility: hidden;
 	display: inline-block;
 	margin: 0 0 0 24px;
+	visibility: hidden;
 }
 
 .expirationDate {
@@ -69,10 +69,10 @@
 
 .cardExpiredText {
 	composes: h4 from global;
-	color: var(--colorFail);
-	font-weight: var(--fontWeightSemiBold);
 	margin-top: 13px;
 	margin-bottom: 11px;
+	font-weight: var(--fontWeightSemiBold);
+	color: var(--colorFail);
 }
 
 .menu {
@@ -81,40 +81,39 @@
 }
 
 .menuLabel {
-	text-align: left;
-	font-weight: var(--fontWeightMedium);
-	padding: 0;
-	border-radius: 6px;
-	border: 1px solid #d8dce6;
-	transition: all 0.2s ease-out;
-	z-index: calc(var(--zIndexPopup) + 1);
 	position: relative;
-
+	z-index: calc(var(--zIndexPopup) + 1);
+	padding: 0;
+	font-weight: var(--fontWeightMedium);
+	text-align: left;
 	background-color: #fff;
-	box-shadow: 0 2px 3px 0 rgba(216, 220, 230, 0.7);
+	border: 1px solid #d8dce6;
+	border-radius: 6px;
+	box-shadow: 0 2px 3px 0 rgb(216 220 230 / 70%);
+	transition: all 0.2s ease-out;
 
 	&:hover {
 		border: 1px solid #b8bfd1;
-		box-shadow: 0 2px 3px 0 rgba(216, 220, 230, 0.7);
+		box-shadow: 0 2px 3px 0 rgb(216 220 230 / 70%);
 	}
 
 	&:focus {
-		outline: none;
-		box-shadow: none;
+		text-decoration: none;
 		background-color: var(--colorWhite);
 		border: 1px solid #d8dce6;
-		text-decoration: none;
-		border-radius: 6px 6px 0px 0px;
+		border-radius: 6px 6px 0 0;
+		outline: none;
+		box-shadow: none;
 	}
 }
 
 .menuLabelWrapper,
 .menuLabelWrapperExpired {
-	width: 100%;
 	display: flex;
+	flex-wrap: nowrap;
 	align-items: center;
 	justify-content: space-between;
-	flex-wrap: nowrap;
+	width: 100%;
 	padding: 6px 24px 6px 10px;
 	background-image: url("data:image/svg+xml,%3Csvg width='10' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232D4053' stroke='%232D4053' stroke-width='.5' fill-rule='evenodd'%3E%3Cpath d='M4.687 15.315a.443.443 0 0 0 .626 0l3.557-3.556a.446.446 0 0 0-.629-.629L5 14.37l-3.241-3.24a.445.445 0 0 0-.629.63l3.557 3.553v.002ZM5.313 1.13a.443.443 0 0 0-.626 0L1.13 4.685a.446.446 0 0 0 .629.63L5 2.074l3.241 3.24a.445.445 0 0 0 .629-.629L5.313 1.131V1.13Z'/%3E%3C/g%3E%3C/svg%3E");
 	background-position: center right 12px;
@@ -132,28 +131,27 @@
 }
 
 .menuContent {
-	width: 100% !important; /* To override inline style width which causes an overflow bug in mobile */
 	position: absolute;
+	top: 0;
 	z-index: var(--zIndexPopup);
-
-	background-color: var(--colorWhite);
-	box-shadow: var(--boxShadowFilterButton);
-	border-radius: 6px;
-	border: 1px solid var(--colorGrey100);
-
-	transition: all 0.15s ease-out;
+	width: 100% !important; /* To override inline style width which causes an overflow bug in mobile */
 
 	/* When the dropdown is open, we need to hack the box-shadow's position
     to fit the whole dropdown menu component with padding-top
 
     MenuLabel height 56px + original padding-top 7px results to 63px
   */
-	padding: 63px 0 15px 0;
-	top: 0px;
+	padding: 63px 0 15px;
+	background-color: var(--colorWhite);
+	border: 1px solid var(--colorGrey100);
+	border-radius: 6px;
+	box-shadow: var(--boxShadowFilterButton);
+	transition: all 0.15s ease-out;
 }
 
 .menuItem {
 	color: var(--colorGrey700);
+
 	&:hover {
 		background-color: #f2f2f2;
 	}
@@ -161,20 +159,20 @@
 
 .menuText,
 .menuTextReplaceCard {
-	composes: marketplaceMessageFontStyles from global;
+	composes: marketplacemessagefontstyles from global;
+	width: 80%;
 	padding: 12px 8px;
+	font-weight: var(--fontWeightMedium);
 	color: var(--colorGrey700);
 	text-align: left;
-	font-weight: var(--fontWeightMedium);
-	width: 80%;
 
 	&:hover {
 		text-decoration: none;
 	}
 
 	&:focus {
-		outline: 0;
 		background-color: #f2f2f2;
+		outline: 0;
 	}
 }
 
@@ -187,53 +185,53 @@
 
 .menuDivider {
 	composes: h5 from global;
-	color: var(--colorGrey300);
-	padding: 14px 24px 2px 24px;
+	padding: 14px 24px 2px;
 	margin: 0;
+	color: var(--colorGrey300);
 }
 
 .savedPaymentMethodDelete {
 	composes: h4 from global;
-	color: var(--colorGrey300);
-	cursor: pointer;
 	margin-top: 14px;
 	margin-bottom: 10px;
+	color: var(--colorGrey300);
+	cursor: pointer;
 
 	&:hover {
 		color: var(--colorGrey700);
 	}
 
 	&:focus {
-		outline: none;
 		color: var(--colorGrey700);
+		outline: none;
 	}
 }
 
 .modalButtonsWrapper {
-	padding-top: 80px;
 	display: flex;
-	justify-content: flex-end;
 	align-items: baseline;
+	justify-content: flex-end;
+	padding-top: 80px;
 }
 
 /* Title of the modal */
 .modalTitle {
-	composes: marketplaceModalTitleStyles from global;
+	composes: marketplacemodaltitlestyles from global;
 	padding-top: 36px;
 }
 
 /* Paragraph for the Modal */
 .modalMessage {
-	composes: marketplaceModalParagraphStyles from global;
+	composes: marketplacemodalparagraphstyles from global;
 	min-height: 200px;
 }
 
 .cancelCardDelete {
-	color: var(--colorGrey300);
-	cursor: pointer;
 	width: 50%;
-	text-align: right;
 	padding-right: 64px;
+	color: var(--colorGrey300);
+	text-align: right;
+	cursor: pointer;
 
 	&:hover {
 		color: var(--colorGrey700);

@@ -1,8 +1,8 @@
 .root {
 	position: relative;
-	margin: 0 10px;
 	width: calc(100% - 20px);
 	height: 24px;
+	margin: 0 10px;
 }
 
 .activeHandle {

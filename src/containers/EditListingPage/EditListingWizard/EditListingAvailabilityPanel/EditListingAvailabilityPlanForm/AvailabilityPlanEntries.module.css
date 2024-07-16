@@ -2,26 +2,26 @@
 
 .weekDay,
 .hasEntries {
-	padding-left: 30px;
 	padding-right: 30px;
+	padding-left: 30px;
 
 	@media (--viewportSmall) {
-		padding-left: 60px;
 		padding-right: 60px;
+		padding-left: 60px;
 	}
 }
 
 .weekDay {
-	composes: marketplaceTabNavHorizontalFontStyles from global;
+	composes: marketplacetabnavhorizontalfontstyles from global;
 
 	/* Layout */
+
 	/* display: grid;
   grid-template-columns: 24px 140px minmax(300px, 1fr);
   grid-template-areas: "checkbox dayOfWeek pickers"; */
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-
 	padding-top: 10px;
 	padding-bottom: 13px;
 	border-top: solid 1px var(--colorGrey100);
@@ -57,27 +57,29 @@
 		padding-top: 8px;
 	}
 }
+
 .pickerArea {
 	flex-grow: 1;
 }
+
 .timePicker {
 	width: 100%;
 }
 
 .fieldWrapper {
+	position: relative;
+
 	/* This container uses flexbox layout */
 	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	width: 100%;
 
 	/* parent aka root is flexbox, this container takes all available space */
 	flex-grow: 1;
 	flex-shrink: 0;
 	flex-wrap: nowrap;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
 	padding-bottom: 6px;
-
-	position: relative;
 
 	@media (--viewportMedium) {
 		padding-bottom: 8px;
@@ -85,29 +87,30 @@
 }
 
 .formRow {
+	z-index: 1;
+
+	/* This container uses flexbox layout */
+	display: flex;
+
 	/* parent aka fieldWrapper is flexbox, this container takes all available space */
 	flex-grow: 1;
 	flex-shrink: 0;
 	flex-wrap: nowrap;
-
-	/* This container uses flexbox layout */
-	display: flex;
-	justify-content: flex-start;
 	align-items: center;
-
-	z-index: 1;
+	justify-content: flex-start;
 }
+
 .formRowHidden {
 	display: none;
 }
 
 .closeIcon {
-	composes: marketplaceModalCloseIcon from global;
+	composes: marketplacemodalcloseicon from global;
 
-	stroke: none;
-	fill: var(--colorGrey300);
 	/* align icon with the select fields */
-	padding: 5px 0 7px 0;
+	padding: 5px 0 7px;
+	fill: var(--colorGrey300);
+	stroke: none;
 
 	&:hover {
 		fill: var(--colorGrey700);
@@ -119,23 +122,24 @@
 }
 
 .dashBetweenTimes {
-	padding-left: 6px;
 	padding-right: 6px;
+	padding-left: 6px;
 }
 
 .plus1Day {
-	composes: marketplaceTinyFontStyles from global;
+	composes: marketplacetinyfontstyles from global;
+	padding: 5px 0 1px;
+	margin: 0 0 0 8px;
 	color: var(--colorGrey300);
 	visibility: hidden;
 	opacity: 0;
-	padding: 5px 0 1px 0;
-	margin: 0 0px 0 8px;
 
 	@media (--viewportMedium) {
-		padding: 6px 0 2px 0;
-		margin: 0 0px 0 8px;
+		padding: 6px 0 2px;
+		margin: 0 0 0 8px;
 	}
 }
+
 .showPlus1Day {
 	visibility: visible;
 	opacity: 1;
@@ -151,16 +155,17 @@
 }
 
 .fieldSelect {
-	composes: marketplaceTabNavHorizontalFontStyles from global;
-	background: none;
-	padding: 6px 12px 4px 12px;
+	composes: marketplacetabnavhorizontalfontstyles from global;
 	min-width: 87px;
+	padding: 6px 12px 4px;
 	text-align: center;
+	background: none;
 
 	&:select {
 		margin-right: 0;
 	}
 }
+
 .notSelected {
 	color: var(--colorGrey300);
 }

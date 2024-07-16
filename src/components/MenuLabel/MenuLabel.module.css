@@ -1,9 +1,9 @@
 .root {
-	height: 100%;
 	width: 100%;
-	border: 0;
+	height: 100%;
 	cursor: pointer;
 	background-color: transparent;
+	border: 0;
 
 	&:hover {
 		background-color: transparent;

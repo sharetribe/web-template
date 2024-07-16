@@ -5,18 +5,17 @@
 	box-shadow: var(--boxShadowBottomForm);
 
 	@media (--viewportLarge) {
-		box-shadow: none;
-
 		/* Clearfix */
 		width: 100%;
 		overflow: hidden;
+		box-shadow: none;
 	}
 }
 
 .spinner {
-	stroke: var(--colorWhite);
 	width: 18px;
 	height: 18px;
+	stroke: var(--colorWhite);
 	stroke-width: 4px;
 }
 
@@ -36,16 +35,15 @@
 .errorContainer {
 	display: block;
 	flex: 1;
-	text-align: right;
 	padding: 26px 24px 0 0;
+	text-align: right;
 }
 
 .error {
 	composes: h5 from global;
-
+	margin: 0;
 	font-weight: var(--fontWeightMedium);
 	color: var(--colorFail);
-	margin: 0;
 }
 
 .submitButton {

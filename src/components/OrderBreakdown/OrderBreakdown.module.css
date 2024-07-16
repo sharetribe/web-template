@@ -11,23 +11,22 @@
 
 .lineItem {
 	composes: h4 from global;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
 	margin: 0;
 
 	@media (--viewportMedium) {
 		padding-top: 7px;
 		padding-bottom: 1px;
 	}
-
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
 }
 
 .bookingPeriod {
-	flex: 1 1;
 	display: flex;
-	justify-content: space-between;
+	flex: 1 1;
 	flex-wrap: wrap;
+	justify-content: space-between;
 	padding-bottom: 6px;
 
 	@media (--viewportMedium) {
@@ -44,11 +43,11 @@
 }
 
 .dayLabel {
-	composes: textSmall from global;
-	margin: 0;
-	line-height: 24px;
+	composes: textsmall from global;
 	padding-top: 2px;
 	padding-bottom: 4px;
+	margin: 0;
+	line-height: 24px;
 
 	@media (--viewportMedium) {
 		padding: 0;
@@ -58,38 +57,35 @@
 .dayInfo,
 .totalPrice {
 	composes: p from global;
+	padding: 0;
+	margin: 0;
 	font-weight: var(--fontWeightBold);
 	letter-spacing: -0.2px;
-
-	margin: 0;
-	padding: 0;
 }
 
 .subTotalLineItem {
 	composes: h4 from global;
-	font-weight: var(--fontWeightBold);
-	margin: 0;
-	padding: 5px 0 1px 0;
-
-	@media (--viewportMedium) {
-		padding: 7px 0 1px 0;
-	}
-
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
+	padding: 5px 0 1px;
+	margin: 0;
+	font-weight: var(--fontWeightBold);
+
+	@media (--viewportMedium) {
+		padding: 7px 0 1px;
+	}
 }
 
 .lineItemTotal {
 	composes: h4 from global;
-	margin: 0;
-	padding-top: 6px;
-	padding-bottom: 6px;
-
 	display: flex;
 	flex-direction: row;
 	align-items: flex-end;
 	justify-content: space-between;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	margin: 0;
 
 	@media (--viewportMedium) {
 		padding-top: 7px;
@@ -98,12 +94,12 @@
 }
 
 .itemLabel {
-	composes: marketplaceSmallFontStyles from global;
+	composes: marketplacesmallfontstyles from global;
 	flex: 1;
 }
 
 .itemValue {
-	composes: marketplaceSmallFontStyles from global;
+	composes: marketplacesmallfontstyles from global;
 	margin: 0 0 0 10px;
 }
 
@@ -111,27 +107,26 @@
 	/* dimensions */
 	width: 100%;
 	height: 1px;
-	margin: 12px 0 5px 0;
-
-	border: none;
+	margin: 12px 0 5px;
 	background-color: var(--colorGrey100);
+	border: none;
 
 	@media (--viewportMedium) {
-		margin: 7px 0 0px 0;
+		margin: 7px 0 0;
 	}
 }
 
 .totalLabel {
-	composes: marketplaceSmallFontStyles from global;
+	composes: marketplacesmallfontstyles from global;
 }
 
 .feeInfo {
-	composes: marketplaceTinyFontStyles from global;
+	composes: marketplacetinyfontstyles from global;
 	flex-shrink: 0;
-	margin: 0;
-	color: var(--colorGrey300);
 	padding-top: 4px;
 	padding-bottom: 14px;
+	margin: 0;
+	color: var(--colorGrey300);
 
 	@media (--viewportMedium) {
 		padding-top: 11px;

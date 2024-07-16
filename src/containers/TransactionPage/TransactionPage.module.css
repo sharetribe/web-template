@@ -2,17 +2,17 @@
 
 .root {
 	display: flex;
-	flex-direction: column;
 	flex: 1;
+	flex-direction: column;
 }
 
 .loading {
 	display: flex;
 	flex-direction: column;
+	flex-grow: 1;
+	gap: 16px;
 	align-items: center;
 	justify-content: center;
-	gap: 16px;
-	flex-grow: 1;
 }
 
 .error {
@@ -38,39 +38,40 @@
 
 /* OrderBreakdown subcomponent */
 .breakdown {
-	margin: 14px 24px 0 24px;
-	padding: 1px 0 5px 0;
+	padding: 1px 0 5px;
+	margin: 14px 24px 0;
 
 	@media (--viewportMedium) {
-		margin: 16px 24px 0 24px;
-		padding: 3px 0 5px 0;
+		padding: 3px 0 5px;
+		margin: 16px 24px 0;
 	}
+
 	@media (--viewportLarge) {
-		margin: 0px 48px 47px 48px;
-		padding: 6px 0 2px 0;
+		padding: 6px 0 2px;
+		margin: 0 48px 47px;
 	}
 }
 
 /* OrderPanel subcomponent */
 .orderPanel {
-	margin: 16px 48px 48px 48px;
+	margin: 16px 48px 48px;
 }
 
 .orderTitle {
-	/* Font */
-	color: var(--colorGrey700);
-
 	margin-top: 0;
 	margin-bottom: 1px;
+
+	/* Font */
+	color: var(--colorGrey700);
 }
 
 .orderPanelTitle {
-	/* Font */
-	font-weight: var(--fontWeightBold);
-	color: var(--colorGrey700);
-
 	/* Layout */
 	width: 100%;
 	margin-top: 0;
 	margin-bottom: 0;
+
+	/* Font */
+	font-weight: var(--fontWeightBold);
+	color: var(--colorGrey700);
 }

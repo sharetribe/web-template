@@ -9,12 +9,11 @@
 }
 
 .mobileIcon {
-	margin-left: 24px;
-	padding: 11px 0 17px 0;
-
 	display: flex;
-	width: 24px;
 	align-self: stretch;
+	width: 24px;
+	padding: 11px 0 17px;
+	margin-left: 24px;
 	background-color: var(--colorWhite);
 
 	@media (--viewportMedium) {
@@ -23,25 +22,25 @@
 }
 
 .fontInput {
-	font-weight: var(--fontWeightBlack);
-	font-size: 24px;
-	line-height: 24px;
+	padding: 4px 13px 10px;
 
 	/* Layout */
 	margin: 0 24px 0 0;
-	padding: 4px 13px 10px 13px;
+	font-size: 24px;
+	font-weight: var(--fontWeightBlack);
+	line-height: 24px;
 
 	@media (--viewportMedium) {
+		padding: 5px 13px 15px;
+		margin: 0;
 		font-size: 30px;
 		line-height: 40px;
-		padding: 5px 13px 15px 13px;
-		margin: 0;
 	}
 }
 
 .mobileInput {
 	/* Font */
-	composes: fontInput;
+	composes: fontinput;
 
 	/* Layout */
 	height: 50px;
@@ -51,53 +50,52 @@
 	border-radius: 0;
 
 	/* Safari bugfix: without this Safari will print placeholder to a wrong place */
-	&::-webkit-input-placeholder {
+	&::input-placeholder {
 		line-height: normal;
 	}
 
 	&:hover,
 	&:focus {
-		border-radius: 0;
 		border: 0;
+		border-radius: 0;
 		outline: none;
 		box-shadow: none;
 	}
 }
 
 .desktopIcon {
-	height: var(--topbarHeightDesktop);
-	border: none;
-	padding-top: 2px;
-
 	display: flex;
-	width: 24px;
 	align-self: stretch;
+	width: 24px;
+	height: var(--topbarHeightDesktop);
+	padding-top: 2px;
 	background-color: var(--colorWhite);
+	border: none;
 }
 
 .desktopInput {
 	composes: p from global;
 	flex-grow: 1;
+
 	/* Font */
 	height: var(--topbarHeightDesktop);
-	line-height: unset;
-	border: none;
 	padding-top: 0;
 	padding-bottom: 0;
 	padding-left: 10px;
+	margin-top: 0;
+	margin-bottom: 0;
+	overflow-x: hidden;
+	line-height: unset;
 
 	/* Search text gets ellipsis if it's too wide */
 	text-overflow: ellipsis;
-	overflow-x: hidden;
-
-	margin-top: 0;
-	margin-bottom: 0;
+	border: none;
 
 	&:hover,
 	&:focus {
+		border: 0;
 		border-bottom-color: var(--marketplaceColor);
 		outline: none;
-		border: 0;
 		box-shadow: none;
 	}
 
@@ -108,8 +106,8 @@
 
 	/* Placeholder text might be too wide */
 	&::placeholder {
-		text-overflow: ellipsis;
 		overflow-x: hidden;
+		text-overflow: ellipsis;
 		transition: var(--transitionStyleButton);
 	}
 
@@ -123,14 +121,15 @@
 	position: absolute;
 	top: 50px;
 	left: 0;
+	z-index: calc(var(--zIndexPopup) + 1);
+	width: 100%;
+
 	/* searchContainer margin-top (94px) + mobileInput height (50px) = 144px */
 	min-height: calc(100vh - 144px);
-	width: 100%;
 	background-color: var(--marketplaceColor);
-	border-bottom-left-radius: var(--borderRadius);
 	border-bottom-right-radius: var(--borderRadius);
+	border-bottom-left-radius: var(--borderRadius);
 	box-shadow: var(--boxShadowPopup);
-	z-index: calc(var(--zIndexPopup) + 1);
 
 	@media (--viewportMedium) {
 		min-height: unset;
@@ -146,17 +145,16 @@
 
 .desktopPredictions {
 	position: absolute;
-	width: 100%;
 	top: var(--topbarHeightDesktop);
 	left: 0;
-	background-color: var(--marketplaceColor);
-	border-bottom-left-radius: var(--borderRadius);
-	border-bottom-right-radius: var(--borderRadius);
-	box-shadow: var(--boxShadowPopup);
 	z-index: calc(var(--zIndexPopup) + 1);
-
-	margin-top: 0;
+	width: 100%;
 	max-width: 434px;
+	margin-top: 0;
+	background-color: var(--marketplaceColor);
+	border-bottom-right-radius: var(--borderRadius);
+	border-bottom-left-radius: var(--borderRadius);
+	box-shadow: var(--boxShadowPopup);
 }
 
 /**
@@ -168,9 +166,9 @@
 }
 
 .searchSubmit {
-	border: 0;
 	padding: 0;
 	cursor: pointer;
+	border: 0;
 
 	&:hover,
 	&:focus {
@@ -184,10 +182,10 @@
 
 .icon {
 	display: flex;
-	width: 24px;
 	align-self: stretch;
-	border-bottom: 2px solid var(--marketplaceColor);
+	width: 24px;
 	background-color: var(--colorWhite);
+	border-bottom: 2px solid var(--marketplaceColor);
 }
 
 .iconSvg {

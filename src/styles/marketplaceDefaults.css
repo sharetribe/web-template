@@ -21,29 +21,28 @@
 	--colorSuccess: #2ecc71;
 	--colorSuccessDark: #239954;
 	--colorSuccessLight: #f0fff6;
-	--colorFail: #ff0000;
+	--colorFail: #f00;
 	--colorFailLight: #fff0f0;
-	--colorAttention: #ffaa00;
+	--colorAttention: #fa0;
 	--colorAttentionLight: #fff7f0;
 	--colorBannedLight: var(--marketplaceColorLight);
 	--colorBannedDark: var(--marketplaceColor);
 
 	/* B&W and Grey palette */
 
-	--colorWhite: hsl(0 0% 100%);
-	--colorGrey50: hsl(240 3% 98%);
-	--colorGrey100: hsl(240 3% 90%);
-	--colorGrey200: hsl(240 3% 80%);
-	--colorGrey300: hsl(240 3% 70%);
-	--colorGrey400: hsl(240 3% 60%);
-	--colorGrey500: hsl(240 3% 50%);
-	--colorGrey600: hsl(240 3% 40%);
-	--colorGrey700: hsl(240 3% 30%);
-	--colorGrey800: hsl(240 3% 20%);
-	--colorGrey900: hsl(240 3% 10%);
-	--colorBlack: hsl(0 0% 0%);
-
-	--colorLightTransparent: rgba(255, 255, 255, 0.65);
+	--colorWhite: hsl(0deg 0% 100%);
+	--colorGrey50: hsl(240deg 3% 98%);
+	--colorGrey100: hsl(240deg 3% 90%);
+	--colorGrey200: hsl(240deg 3% 80%);
+	--colorGrey300: hsl(240deg 3% 70%);
+	--colorGrey400: hsl(240deg 3% 60%);
+	--colorGrey500: hsl(240deg 3% 50%);
+	--colorGrey600: hsl(240deg 3% 40%);
+	--colorGrey700: hsl(240deg 3% 30%);
+	--colorGrey800: hsl(240deg 3% 20%);
+	--colorGrey900: hsl(240deg 3% 10%);
+	--colorBlack: hsl(0deg 0% 0%);
+	--colorLightTransparent: rgb(255 255 255 / 65%);
 
 	/**
   * Marketplace color comes by default from src/config/brandingConfig.js
@@ -71,16 +70,14 @@
 	--colorSecondaryButtonLight: var(--colorWhite);
 
 	/* ================ Font ================ */
-	--fontFamily: -apple-system, BlinkMacSystemFont, "Inter", Helvetica, Arial, sans-serif,
+	--fontFamily: -apple-system, blinkmacsystemfont, "Inter", helvetica, arial, sans-serif,
 		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-
 	--fontWeightRegular: 400;
 	--fontWeightMedium: 500;
 	--fontWeightSemiBold: 600;
 	--fontWeightBold: 700;
 	--fontWeightHeavy: 800;
 	--fontWeightBlack: 900;
-
 	--fontWeightHighlightEmail: var(--fontWeightBold);
 
 	/* ================ Spacing units ================ */
@@ -96,27 +93,30 @@
 	--spacingUnitDesktop: 8px;
 
 	/* Shadows */
-	--boxShadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-	--boxShadowTop: 0 -2px 4px 0 rgba(0, 0, 0, 0.1);
-	--boxShadowLight: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
-	--boxShadowPopup: 0 8px 16px 0 rgba(0, 0, 0, 0.3);
-	--boxShadowPopupLight: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
-	--boxShadowBreakdown: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
-	--boxShadowButton: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
-	--boxShadowListingCard: 0 0 50px 0 rgba(0, 0, 0, 0.1);
-	--boxShadowNotFoundPageSearch: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
-	--boxShadowSectionLocationHover: 0 10px 30px 0 rgba(0, 0, 0, 0.1);
-	--boxShadowBottomForm: 0 -2px 4px 0 rgba(0, 0, 0, 0.05);
-	--boxShadowFilterButton: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+	--boxShadow: 0 2px 4px 0 rgb(0 0 0 / 10%);
+	--boxShadowTop: 0 -2px 4px 0 rgb(0 0 0 / 10%);
+	--boxShadowLight: 0 2px 4px 0 rgb(0 0 0 / 5%);
+	--boxShadowPopup: 0 8px 16px 0 rgb(0 0 0 / 30%);
+	--boxShadowPopupLight: 0 3px 6px 0 rgb(0 0 0 / 20%);
+	--boxShadowBreakdown: 0 3px 6px 0 rgb(0 0 0 / 20%);
+	--boxShadowButton: 0 4px 8px 0 rgb(0 0 0 / 10%);
+	--boxShadowListingCard: 0 0 50px 0 rgb(0 0 0 / 10%);
+	--boxShadowNotFoundPageSearch: 0 2px 4px 0 rgb(0 0 0 / 50%);
+	--boxShadowSectionLocationHover: 0 10px 30px 0 rgb(0 0 0 / 10%);
+	--boxShadowBottomForm: 0 -2px 4px 0 rgb(0 0 0 / 5%);
+	--boxShadowFilterButton: 0 4px 16px 0 rgb(0 0 0 / 20%);
 
 	/* ================ Z-index base levels ================ */
 
 	/* topbar is positioned slightly above content */
 	--zIndexTopbar: 10;
+
 	/* small popups on UI should use z-indexes above 50 */
 	--zIndexPopup: 50;
+
 	/* modals and UI overlays should use z-indexes above 100 */
 	--zIndexModal: 100;
+
 	/* generic error message should overlay even modals */
 	--zIndexGenericError: 200;
 
@@ -134,9 +134,7 @@
 
 	--topbarHeight: 60px;
 	--topbarHeightDesktop: 72px;
-
 	--TopbarMobileMenu_topMargin: 96px;
-
 	--Topbar_logoHeight: 25px;
 	--CheckoutPage_logoHeight: 25px;
 	--CheckoutPage_logoHeightDesktop: 27px;
@@ -151,8 +149,7 @@
 
 	/* ================ DateInput, DateRangeInput, DateRangeController ================ */
 	--ReactDates_selectionHeight: 36px;
-	--ReactDates_hoveredOverlayColor: rgba(255, 255, 255, 0.2);
-
+	--ReactDates_hoveredOverlayColor: rgb(255 255 255 / 20%);
 	--DateInput_selectionHeight: var(--ReactDates_selectionHeight);
 	--DateInput_hoveredOverlayColor: var(--ReactDates_hoveredOverlayColor);
 	--DateRangeInput_selectionHeight: var(--ReactDates_selectionHeight);
@@ -178,11 +175,13 @@
 	--ProfileSettingsForm_avatarSizeDesktop: 240px;
 
 	/* ================ PageBuilder ================ */
+
 	/* --carouselWidth will be updated dynamically through JS */
 	--carouselWidth: 100vw;
 }
 
 /* ================ Global element styles ================ */
+
 /**
  * Here are the global styles: for elements as well as some
  * global classes that are composed into component styles.
@@ -196,25 +195,25 @@ body {
 	/* A non-standard feature: https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth */
 	-webkit-font-smoothing: antialiased;
 	font-smoothing: antialiased;
-
-	text-rendering: optimizeSpeed;
+	text-rendering: optimizespeed;
 	font-optical-sizing: auto;
-
 	background-color: var(--colorGrey50);
 }
 
 ::selection {
-	background: var(--marketplaceColor); /* WebKit/Blink Browsers */
 	color: var(--colorWhite);
+	background: var(--marketplaceColor); /* WebKit/Blink Browsers */
 }
 
-::-moz-selection {
-	background: var(--marketplaceColor); /* Gecko Browsers */
+::selection {
 	color: var(--colorWhite);
+	background: var(--marketplaceColor); /* Gecko Browsers */
 }
 
 /* Default elements that are targets */
+
 /* In addition, let's ensure that section components have scroll-margin */
+
 /* Since target does not work in every situation */
 :target,
 section {
@@ -228,132 +227,139 @@ section {
 a {
 	/* Position and dimensions */
 	display: inline;
-	margin: 0;
 	padding: 0;
-
-	/* Borders */
-	border: none;
+	margin: 0;
 
 	/* Colors */
 	color: var(--marketplaceColor);
 
 	/* Text size should be inherited */
 	text-decoration: none;
+
+	/* Borders */
+	border: none;
 }
+
 a:hover {
 	text-decoration: underline;
 	cursor: pointer;
 }
 
 h1 {
-	font-size: 24px;
-	line-height: 24px;
-	font-weight: var(--fontWeightBlack);
-	padding: 3px 0 3px 0;
+	padding: 3px 0;
+
 	/* margin-top + n * line-height + margin-bottom => x * 6px */
 	margin-top: 18px;
 	margin-bottom: 18px;
+	font-size: 24px;
+	font-weight: var(--fontWeightBlack);
+	line-height: 24px;
 
 	@media (--viewportMedium) {
-		font-size: 64px;
-		line-height: 64px;
 		padding: 0;
+
 		/* margin-top + n * line-height + margin-bottom => x * 8px */
 		margin-top: 24px;
 		margin-bottom: 24px;
+		font-size: 64px;
+		line-height: 64px;
 	}
 }
 
 h2 {
-	font-size: 21px;
-	line-height: 24px;
-	font-weight: var(--fontWeightBold);
+	padding: 4px 0 2px;
 
-	padding: 4px 0 2px 0;
 	/* x * 6px */
 	margin-top: 24px;
 	margin-bottom: 18px;
+	font-size: 21px;
+	font-weight: var(--fontWeightBold);
+	line-height: 24px;
 
 	@media (--viewportMedium) {
-		font-size: 40px;
-		line-height: 56px;
-		padding: 5px 0 3px 0;
+		padding: 5px 0 3px;
+
 		/* x * 8px */
 		margin-top: 24px;
 		margin-bottom: 16px;
+		font-size: 40px;
+		line-height: 56px;
 	}
 }
 
 h3 {
-	font-weight: var(--fontWeightBold);
-	font-size: 18px;
-	line-height: 24px;
 	/* x * 6px */
 	margin-top: 18px;
 	margin-bottom: 12px;
+	font-size: 18px;
+	font-weight: var(--fontWeightBold);
+	line-height: 24px;
 
 	@media (--viewportMedium) {
-		font-size: 30px;
-		line-height: 40px;
-		padding: 1px 0 7px 0;
+		padding: 1px 0 7px;
+
 		/* x * 8px */
 		margin-top: 16px;
 		margin-bottom: 16px;
+		font-size: 30px;
+		line-height: 40px;
 	}
 }
 
 h4 {
-	font-weight: var(--fontWeightBold);
-	font-size: 21px;
-	line-height: 30px;
-	padding: 1px 0 5px 0;
+	padding: 1px 0 5px;
+
 	/* x * 6px */
 	margin-top: 12px;
 	margin-bottom: 6px;
+	font-size: 21px;
+	font-weight: var(--fontWeightBold);
+	line-height: 30px;
 
 	@media (--viewportMedium) {
-		line-height: 32px;
 		padding: 0;
+
 		/* x * 8px */
 		margin-top: 16px;
 		margin-bottom: 16px;
+		line-height: 32px;
 	}
 }
 
 h5 {
-	font-weight: var(--fontWeightMedium);
-	font-size: 14px;
-	line-height: 18px;
 	/* x * 6px */
-	padding: 3px 0 3px 0;
+	padding: 3px 0;
 	margin-top: 12px;
 	margin-bottom: 6px;
+	font-size: 14px;
+	font-weight: var(--fontWeightMedium);
+	line-height: 18px;
 
 	@media (--viewportMedium) {
-		line-height: 16px;
 		/* x * 8px */
-		padding: 3px 0 5px 0;
+		padding: 3px 0 5px;
 		margin-top: 8px;
 		margin-bottom: 16px;
+		line-height: 16px;
 	}
 }
 
 h6 {
-	font-weight: var(--fontWeightBold);
-	font-size: 12px;
-	line-height: 18px;
-	text-transform: uppercase;
 	/* x * 6px */
-	padding: 4px 0 2px 0;
+	padding: 4px 0 2px;
 	margin-top: 6px;
 	margin-bottom: 6px;
+	font-size: 12px;
+	font-weight: var(--fontWeightBold);
+	line-height: 18px;
+	text-transform: uppercase;
 
 	@media (--viewportMedium) {
-		line-height: 16px;
 		/* x * 8px */
-		padding: 3px 0 5px 0;
+		padding: 3px 0 5px;
 		margin-top: 8px;
 		margin-bottom: 8px;
+		line-height: 16px;
 	}
 }
 
@@ -361,18 +367,18 @@ html,
 li,
 p,
 pre {
+	padding: 0;
 	font-family: var(--fontFamily);
-	font-weight: var(--fontWeightMedium);
 
 	/* No margins for default font */
 	font-size: 14px;
+	font-weight: var(--fontWeightMedium);
 	line-height: 24px;
-	padding: 0;
 
 	@media (--viewportMedium) {
+		padding: 5px 0 3px;
 		font-size: 16px;
 		line-height: 24px;
-		padding: 5px 0 3px 0;
 	}
 }
 
@@ -392,52 +398,51 @@ pre {
 /* ================ Normalisations ================ */
 
 html {
-	/* font is set earlier */
-	color: var(--colorGrey700);
 	padding: 0;
 	margin: 0;
+
+	/* font is set earlier */
+	color: var(--colorGrey700);
 }
 
 ul {
-	list-style: none;
 	padding: 0;
+	list-style: none;
 }
 
 legend {
 	display: block;
-
-	font-weight: var(--fontWeightSemiBold);
-	font-size: 14px;
-	line-height: 18px;
-
 	margin-top: 0;
 	margin-bottom: 0;
+	font-size: 14px;
+	font-weight: var(--fontWeightSemiBold);
+	line-height: 18px;
 
 	@media (--viewportMedium) {
-		font-weight: var(--fontWeightSemiBold);
-		line-height: 16px;
-		margin-top: 0;
-		margin-bottom: 0;
 		padding-top: 3px;
 		padding-bottom: 5px;
+		margin-top: 0;
+		margin-bottom: 0;
+		font-weight: var(--fontWeightSemiBold);
+		line-height: 16px;
 	}
 }
 
 label {
-	font-weight: var(--fontWeightSemiBold);
-	font-size: 13px;
-	line-height: 18px;
 	display: block;
 	margin-top: 0;
 	margin-bottom: 6px;
+	font-size: 13px;
+	font-weight: var(--fontWeightSemiBold);
+	line-height: 18px;
 
 	@media (--viewportMedium) {
-		font-weight: var(--fontWeightSemiBold);
-		line-height: 16px;
-		margin-top: 0;
-		margin-bottom: 0;
 		padding-top: 3px;
 		padding-bottom: 13px;
+		margin-top: 0;
+		margin-bottom: 0;
+		font-weight: var(--fontWeightSemiBold);
+		line-height: 16px;
 	}
 }
 
@@ -458,30 +463,29 @@ select {
 	/* Dimensions */
 	display: block;
 	width: 100%;
-	margin: 0;
 
 	/* 6 + 24 + 4 + borders are divisible by 6 */
-	padding: 6px 12px 4px 12px;
-	background-color: #fff;
-
-	/* Borders */
-	border-radius: 6px;
-	border: 1px solid #d8dce6;
-	outline: none;
-
-	/* Transition */
-	transition: all ease-in-out 100ms;
 
 	padding: 6px 24px 4px 12px;
-	box-shadow: 0 2px 3px 0 rgba(216, 220, 230, 0.7);
+	margin: 0;
 
 	/* Unset user agent styles */
 	appearance: none;
+	background-color: #fff;
 
 	/* Background */
 	background-image: url("data:image/svg+xml,%3Csvg width='10' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232D4053' stroke='%232D4053' stroke-width='.5' fill-rule='evenodd'%3E%3Cpath d='M4.687 15.315a.443.443 0 0 0 .626 0l3.557-3.556a.446.446 0 0 0-.629-.629L5 14.37l-3.241-3.24a.445.445 0 0 0-.629.63l3.557 3.553v.002ZM5.313 1.13a.443.443 0 0 0-.626 0L1.13 4.685a.446.446 0 0 0 .629.63L5 2.074l3.241 3.24a.445.445 0 0 0 .629-.629L5.313 1.131V1.13Z'/%3E%3C/g%3E%3C/svg%3E");
 	background-position: center right 12px;
 	background-size: 8px 14px;
+	border: 1px solid #d8dce6;
+
+	/* Borders */
+	border-radius: 6px;
+	outline: none;
+	box-shadow: 0 2px 3px 0 rgb(216 220 230 / 70%);
+
+	/* Transition */
+	transition: all ease-in-out 100ms;
 
 	&::placeholder {
 		color: var(--colorGrey300);
@@ -494,17 +498,20 @@ select {
 		background-size: 10px 16px;
 	}
 }
+
 /* Effects */
 select:hover {
 	border: 1px solid #b8bfd1;
 	transition: all ease-in-out 100ms;
 }
+
 select:focus {
 	background-color: #fff;
 	border-color: #80bdff;
 	box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
 	transition: all ease-in-out 100ms;
 }
+
 select:disabled {
 	opacity: 0.5;
 
@@ -518,15 +525,15 @@ textarea {
 	/* Dimensions */
 	display: block;
 	width: 100%;
-	margin: 0;
 
 	/* 6 + 24 + 4 + borders are divisible by 6 */
-	padding: 6px 12px 4px 12px;
+	padding: 6px 12px 4px;
+	margin: 0;
 	background-color: #fff;
+	border: 1px solid #d8dce6;
 
 	/* Borders */
 	border-radius: 6px;
-	border: 1px solid #d8dce6;
 	outline: none;
 
 	/* Transition */
@@ -538,16 +545,18 @@ textarea {
 
 	@media (--viewportMedium) {
 		/* 7 + 32 + 7 + borders = 48, which is divisible by 8. */
-		padding: 7px 16px 7px 16px;
+		padding: 7px 16px;
 		line-height: 32px;
 	}
 }
+
 /* Effects */
 input:hover,
 textarea:hover {
 	border: 1px solid #b8bfd1;
 	transition: all ease-in-out 100ms;
 }
+
 input:focus,
 textarea:focus {
 	background-color: #fff;
@@ -555,6 +564,7 @@ textarea:focus {
 	box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
 	transition: all ease-in-out 100ms;
 }
+
 input:disabled,
 textarea:disabled {
 	opacity: 0.5;
@@ -585,151 +595,157 @@ textarea {
 .a {
 	/* Position and dimensions */
 	display: inline;
-	margin: 0;
 	padding: 0;
-
-	/* Borders */
-	border: none;
+	margin: 0;
 
 	/* Colors */
 	color: var(--marketplaceColor);
 
 	/* Text size should be inherited */
 	text-decoration: none;
+
+	/* Borders */
+	border: none;
 }
+
 .a:hover {
 	text-decoration: underline;
 	cursor: pointer;
 }
 
 .h1 {
-	font-weight: var(--fontWeightBlack);
-	font-size: 24px;
-	line-height: 24px;
+	padding: 3px 0;
 
-	padding: 3px 0 3px 0;
 	/* margin-top + n * line-height + margin-bottom => x * 6px */
 	margin-top: 18px;
 	margin-bottom: 18px;
+	font-size: 24px;
+	font-weight: var(--fontWeightBlack);
+	line-height: 24px;
 
 	@media (--viewportMedium) {
-		font-size: 64px;
-		line-height: 64px;
 		padding: 0;
+
 		/* margin-top + n * line-height + margin-bottom => x * 8px */
 		margin-top: 24px;
 		margin-bottom: 24px;
+		font-size: 64px;
+		line-height: 64px;
 	}
 }
 
 .h2 {
-	font-weight: var(--fontWeightBold);
-	font-size: 21px;
-	line-height: 24px;
+	padding: 4px 0 2px;
 
-	padding: 4px 0 2px 0;
 	/* x * 6px */
 	margin-top: 24px;
 	margin-bottom: 18px;
+	font-size: 21px;
+	font-weight: var(--fontWeightBold);
+	line-height: 24px;
 
 	@media (--viewportMedium) {
-		font-size: 40px;
-		line-height: 56px;
-		padding: 5px 0 3px 0;
+		padding: 5px 0 3px;
+
 		/* x * 8px */
 		margin-top: 24px;
 		margin-bottom: 16px;
+		font-size: 40px;
+		line-height: 56px;
 	}
 }
 
 .h3 {
-	font-weight: var(--fontWeightBold);
-	font-size: 18px;
-	line-height: 24px;
 	/* x * 6px */
 	margin-top: 18px;
 	margin-bottom: 12px;
+	font-size: 18px;
+	font-weight: var(--fontWeightBold);
+	line-height: 24px;
 
 	@media (--viewportMedium) {
-		font-size: 30px;
-		line-height: 40px;
-		padding: 1px 0 7px 0;
+		padding: 1px 0 7px;
+
 		/* x * 8px */
 		margin-top: 16px;
 		margin-bottom: 16px;
+		font-size: 30px;
+		line-height: 40px;
 	}
 }
 
 .h4 {
-	font-weight: var(--fontWeightBold);
-	font-size: 21px;
-	line-height: 30px;
-	padding: 1px 0 5px 0;
+	padding: 1px 0 5px;
+
 	/* x * 6px */
 	margin-top: 12px;
 	margin-bottom: 6px;
+	font-size: 21px;
+	font-weight: var(--fontWeightBold);
+	line-height: 30px;
 
 	@media (--viewportMedium) {
-		line-height: 32px;
 		padding: 0;
+
 		/* x * 8px */
 		margin-top: 16px;
 		margin-bottom: 16px;
+		line-height: 32px;
 	}
 }
 
 .h5 {
-	font-weight: var(--fontWeightMedium);
-	font-size: 14px;
-	line-height: 18px;
 	/* x * 6px */
-	padding: 3px 0 3px 0;
+	padding: 3px 0;
 	margin-top: 12px;
 	margin-bottom: 6px;
+	font-size: 14px;
+	font-weight: var(--fontWeightMedium);
+	line-height: 18px;
 
 	@media (--viewportMedium) {
-		line-height: 16px;
 		/* x * 8px */
-		padding: 3px 0 5px 0;
+		padding: 3px 0 5px;
 		margin-top: 8px;
 		margin-bottom: 16px;
+		line-height: 16px;
 	}
 }
 
 .h6 {
-	font-weight: var(--fontWeightBold);
-	font-size: 12px;
-	line-height: 18px;
-	text-transform: uppercase;
 	/* x * 6px */
-	padding: 4px 0 2px 0;
+	padding: 4px 0 2px;
 	margin-top: 6px;
 	margin-bottom: 6px;
+	font-size: 12px;
+	font-weight: var(--fontWeightBold);
+	line-height: 18px;
+	text-transform: uppercase;
 
 	@media (--viewportMedium) {
-		line-height: 16px;
 		/* x * 8px */
-		padding: 3px 0 5px 0;
+		padding: 3px 0 5px;
 		margin-top: 8px;
 		margin-bottom: 8px;
+		line-height: 16px;
 	}
 }
 
 .label {
-	font-weight: var(--fontWeightSemiBold);
-	font-size: 13px;
-	line-height: 18px;
 	display: block;
 	margin-top: 0;
 	margin-bottom: 6px;
+	font-size: 13px;
+	font-weight: var(--fontWeightSemiBold);
+	line-height: 18px;
 
 	@media (--viewportMedium) {
-		font-weight: var(--fontWeightSemiBold);
-		line-height: 16px;
-		margin-top: 0;
-		margin-bottom: 0;
 		padding-top: 3px;
 		padding-bottom: 13px;
+		margin-top: 0;
+		margin-bottom: 0;
+		font-weight: var(--fontWeightSemiBold);
+		line-height: 16px;
 	}
 }
 
@@ -744,18 +760,18 @@ textarea {
 .marketplaceListingAttributeFontStyles,
 .marketplaceBodyFontStyles,
 .marketplaceDefaultFontStyles {
+	padding: 0;
 	font-family: var(--fontFamily);
-	font-weight: var(--fontWeightMedium);
 
 	/* No margins for default font */
 	font-size: 14px;
+	font-weight: var(--fontWeightMedium);
 	line-height: 24px;
-	padding: 0;
 
 	@media (--viewportMedium) {
+		padding: 5px 0 3px;
 		font-size: 16px;
 		line-height: 24px;
-		padding: 5px 0 3px 0;
 	}
 }
 
@@ -774,8 +790,8 @@ textarea {
 
 .textLarge {
 	font-size: 20px;
-	line-height: 30px;
 	font-weight: var(--fontWeightMedium);
+	line-height: 30px;
 
 	@media (--viewportMedium) {
 		line-height: 32px;
@@ -784,8 +800,8 @@ textarea {
 
 .textSmall {
 	font-size: 14px;
-	line-height: 18px;
 	font-weight: var(--fontWeightMedium);
+	line-height: 18px;
 	letter-spacing: -0.1px;
 
 	@media (--viewportMedium) {
@@ -795,8 +811,8 @@ textarea {
 
 .textXSmall {
 	font-size: 13px;
-	line-height: 18px;
 	font-weight: var(--fontWeightMedium);
+	line-height: 18px;
 
 	@media (--viewportMedium) {
 		line-height: 16px;
@@ -806,59 +822,61 @@ textarea {
 /* ================ Other fonts ================ */
 
 .marketplaceSmallFontStyles {
-	font-weight: var(--fontWeightMedium);
 	font-size: 14px;
+	font-weight: var(--fontWeightMedium);
 	line-height: 24px;
 }
 
 .marketplaceTinyFontStyles {
-	font-weight: var(--fontWeightRegular);
-	font-size: 13px;
-	line-height: 18px;
 	/* margin-top + n * line-height + margin-bottom => x * 6px */
 	margin-top: 9.5px;
 	margin-bottom: 8.5px;
+	font-size: 13px;
+	font-weight: var(--fontWeightRegular);
+	line-height: 18px;
 	-webkit-font-smoothing: subpixel-antialiased;
 
 	@media (--viewportMedium) {
-		line-height: 16px;
 		/* margin-top + n * line-height + margin-bottom => x * 8px */
 		margin-top: 10.5px;
 		margin-bottom: 13.5px;
+		line-height: 16px;
 	}
 }
 
 /* .marketplaceMessageFontStyles is defined earlier */
-/* .marketplaceTxTransitionFontStyles is defined earlier*/
+
+/* .marketplaceTxTransitionFontStyles is defined earlier */
+
 /* .marketplaceListingAttributeFontStyles is defined earlier */
 
 .marketplaceMessageDateFontStyles {
-	font-weight: var(--fontWeightRegular);
 	font-size: 12px;
+	font-weight: var(--fontWeightRegular);
 	line-height: 18px;
 
 	@media (--viewportMedium) {
-		font-weight: var(--fontWeightMedium);
 		font-size: 12px;
+		font-weight: var(--fontWeightMedium);
 		line-height: 24px;
 	}
 }
 
 .marketplaceSearchFilterLabelFontStyles {
-	font-weight: var(--fontWeightSemiBold);
 	font-size: 13px;
+	font-weight: var(--fontWeightSemiBold);
 	line-height: 18px;
 
 	@media (--viewportMedium) {
-		font-weight: var(--fontWeightMedium);
 		font-size: 13px;
+		font-weight: var(--fontWeightMedium);
 		line-height: 20px;
 	}
 }
 
 .marketplaceSearchFilterSublabelFontStyles {
-	font-weight: var(--fontWeightMedium);
 	font-size: 18px;
+	font-weight: var(--fontWeightMedium);
 	line-height: 18px;
 }
 
@@ -868,15 +886,15 @@ textarea {
 	/* Dimensions */
 	display: block;
 	width: 100%;
-	margin: 0;
 
 	/* 6 + 24 + 4 + borders are divisible by 6 */
-	padding: 6px 12px 4px 12px;
+	padding: 6px 12px 4px;
+	margin: 0;
 	background-color: #fff;
+	border: 1px solid #d8dce6;
 
 	/* Borders */
 	border-radius: 6px;
-	border: 1px solid #d8dce6;
 	outline: none;
 
 	/* Transition */
@@ -888,21 +906,24 @@ textarea {
 
 	@media (--viewportMedium) {
 		/* 7 + 32 + 7 + borders = 48, which is divisible by 8. */
-		padding: 7px 16px 7px 16px;
+		padding: 7px 16px;
 		line-height: 32px;
 	}
 }
+
 /* Effects */
 .marketplaceInputStyles:hover {
 	border: 1px solid #b8bfd1;
 	transition: all ease-in-out 100ms;
 }
+
 .marketplaceInputStyles:focus {
 	background-color: #fff;
 	border-color: #80bdff;
 	box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
 	transition: all ease-in-out 100ms;
 }
+
 .marketplaceInputStyles:disabled {
 	opacity: 0.5;
 
@@ -914,20 +935,20 @@ textarea {
 /* ================ Tabbed navigation font styles ================ */
 
 .marketplaceTabNavFontStyles {
-	font-weight: var(--fontWeightMedium);
 	font-size: 16px;
+	font-weight: var(--fontWeightMedium);
 	line-height: 24px;
 
 	@media (--viewportLarge) {
-		font-weight: var(--fontWeightSemiBold);
 		font-size: 20px;
+		font-weight: var(--fontWeightSemiBold);
 		line-height: 24px;
 	}
 }
 
 .marketplaceTabNavHorizontalFontStyles {
-	font-weight: var(--fontWeightMedium);
 	font-size: 14px;
+	font-weight: var(--fontWeightMedium);
 	line-height: 24px;
 }
 
@@ -935,9 +956,9 @@ textarea {
 
 .clearfix {
 	&::after {
-		content: "";
 		display: table;
 		clear: both;
+		content: "";
 	}
 }
 
@@ -966,47 +987,51 @@ textarea {
 	display: block;
 	width: 100%;
 	min-height: 56px;
-	margin: 0;
 
 	/* Padding is only for <a> elements where button styles are applied,
   buttons elements should have zero padding */
-	padding: 16px 0 16px 0;
-
-	transition: all var(--transitionStyleButton);
-	cursor: pointer;
+	padding: 16px 0;
+	margin: 0;
 
 	/*
    * Font: most font styles are defined earlier in this file
    */
 	font-weight: var(--fontWeightSemiBold);
+	color: var(--colorWhite);
 
 	/* Button text styles */
+
 	/* Default button text is centered without decorations */
 	text-align: center;
 	text-decoration: none;
+	cursor: pointer;
+
+	/* Button colors */
+
+	/* Default button uses marketplace color */
+	background-color: var(--marketplaceColor);
 
 	/* Button borders */
+
 	/* Default button has no borders */
 	border: none;
 	border-radius: var(--borderRadiusMedium);
-
-	/* Button colors */
-	/* Default button uses marketplace color */
-	background-color: var(--marketplaceColor);
-	color: var(--colorWhite);
+	transition: all var(--transitionStyleButton);
 }
+
 .buttonDefault:focus,
 .buttonDefault:hover {
+	background-color: var(--marketplaceColorDark);
 	outline: none;
 	box-shadow: var(--boxShadowButton);
-	background-color: var(--marketplaceColorDark);
 }
+
 .buttonDefault:disabled {
-	box-shadow: none;
-	cursor: not-allowed;
-	text-decoration: none;
-	background-color: var(--colorGrey100);
 	color: var(--colorWhite);
+	text-decoration: none;
+	cursor: not-allowed;
+	background-color: var(--colorGrey100);
+	box-shadow: none;
 }
 
 /**
@@ -1017,54 +1042,59 @@ textarea {
 	display: block;
 	width: 100%;
 	min-height: 56px;
-	margin: 0;
 
 	/* Padding is only for <a> elements where button styles are applied,
   buttons elements should have zero padding */
-	padding: 16px 0 16px 0;
-
-	transition: all var(--transitionStyleButton);
-	cursor: pointer;
+	padding: 16px 0;
+	margin: 0;
 
 	/*
    * Font: most font styles are defined earlier in this file
    */
 	font-weight: var(--fontWeightSemiBold);
+	color: var(--colorWhite);
 
 	/* Button text styles */
+
 	/* Primary button text is centered without decorations */
 	text-align: center;
 	text-decoration: none;
+	cursor: pointer;
+
+	/* Button colors */
+
+	/* Primary button uses success color */
+	background-color: var(--colorPrimaryButton);
 
 	/* Button borders */
+
 	/* Primary button has no borders */
 	border: none;
 	border-radius: var(--borderRadiusMedium);
-
-	/* Button colors */
-	/* Primary button uses success color */
-	background-color: var(--colorPrimaryButton);
-	color: var(--colorWhite);
+	transition: all var(--transitionStyleButton);
 
 	@media (--viewportMedium) {
-		padding: 20px 0 20px 0;
+		padding: 20px 0;
 	}
 }
+
 .buttonPrimary:focus,
 .buttonPrimary:hover {
+	color: var(--colorWhite);
+	background-color: var(--colorPrimaryButtonDark);
 	outline: none;
 	box-shadow: var(--boxShadowButton);
-	background-color: var(--colorPrimaryButtonDark);
-	color: var(--colorWhite);
 }
+
 .buttonPrimary:hover {
 	text-decoration: none;
 }
+
 .buttonPrimary:disabled {
-	box-shadow: none;
+	color: var(--colorGrey700);
 	cursor: not-allowed;
 	background-color: var(--colorGrey100);
-	color: var(--colorGrey700);
+	box-shadow: none;
 }
 
 /**
@@ -1075,42 +1105,42 @@ textarea {
 	padding: 8px 16px;
 	margin: 0;
 
-	transition: all var(--transitionStyleButton);
-	cursor: pointer;
-
 	/* Font */
 	font-size: 13px;
-	line-height: 18px;
 	font-weight: var(--fontWeightMedium);
+	line-height: 18px;
+	color: var(--colorWhite);
 
 	/* Button text styles */
 	text-align: center;
 	text-decoration: none;
+	cursor: pointer;
+	background-color: var(--colorPrimaryButton);
 
 	/* Button borders */
 	border: none;
 	border-radius: var(--borderRadiusMedium);
-
-	background-color: var(--colorPrimaryButton);
-	color: var(--colorWhite);
+	transition: all var(--transitionStyleButton);
 
 	@media (--viewportMedium) {
 		line-height: 16px;
 	}
 }
+
 .buttonPrimaryInline:focus,
 .buttonPrimaryInline:hover {
-	outline: none;
-	box-shadow: var(--boxShadowButton);
+	color: var(--colorWhite);
 	text-decoration: none;
 	background-color: var(--colorPrimaryButtonDark);
-	color: var(--colorWhite);
+	outline: none;
+	box-shadow: var(--boxShadowButton);
 }
+
 .buttonPrimaryInline:disabled {
-	box-shadow: none;
+	color: var(--colorGrey700);
 	cursor: not-allowed;
 	background-color: var(--colorGrey100);
-	color: var(--colorGrey700);
+	box-shadow: none;
 }
 
 /**
@@ -1121,55 +1151,58 @@ textarea {
 	display: block;
 	width: 100%;
 	min-height: 56px;
-	margin: 0;
 
 	/* Padding is only for <a> elements where button styles are applied,
   buttons elements should have zero padding */
-	padding: 16px 0 16px 0;
-
-	transition: all var(--transitionStyleButton);
-	cursor: pointer;
+	padding: 16px 0;
+	margin: 0;
 
 	/*
    * Font: most font styles are defined earlier in this file
    */
 	font-weight: var(--fontWeightSemiBold);
+	color: var(--colorGrey700);
 
 	/* Button text styles */
+
 	/* Secondary button text is centered without decorations */
 	text-align: center;
 	text-decoration: none;
-
-	/* Secondary button has clear borders */
-	border-width: 1px;
-	border-style: solid;
-	border-color: var(--colorGrey100);
-	border-radius: var(--borderRadiusMedium);
+	cursor: pointer;
 
 	/* Button colors: secondary */
 	background-color: var(--colorSecondaryButton);
-	color: var(--colorGrey700);
+	border-color: var(--colorGrey100);
+	border-style: solid;
+
+	/* Secondary button has clear borders */
+	border-width: 1px;
+	border-radius: var(--borderRadiusMedium);
+	transition: all var(--transitionStyleButton);
 
 	@media (--viewportMedium) {
-		padding: 20px 0 20px 0;
+		padding: 20px 0;
 	}
 }
+
 .buttonSecondary:focus,
 .buttonSecondary:hover {
+	background-color: var(--colorSecondaryButton);
+	border-color: var(--colorGrey300);
 	outline: none;
 	box-shadow: var(--boxShadowButton);
-	border-color: var(--colorGrey300);
-	background-color: var(--colorSecondaryButton);
 }
+
 .buttonSecondary:hover {
 	text-decoration: none;
 }
+
 .buttonSecondary:disabled {
-	box-shadow: none;
-	cursor: not-allowed;
-	border-color: var(--colorGrey100);
-	background-color: var(--colorGrey100);
 	color: var(--colorWhite);
+	cursor: not-allowed;
+	background-color: var(--colorGrey100);
+	border-color: var(--colorGrey100);
+	box-shadow: none;
 }
 
 /**
@@ -1179,101 +1212,103 @@ textarea {
 	/* button defaults */
 	display: inline-block;
 	width: auto;
-	min-height: auto;
 	height: 42px;
-	margin: 17px 0 0 0;
+	min-height: auto;
 
 	/* Padding is only for <a> elements where button styles are applied,
   buttons elements should have zero padding */
 	padding: 0 16px;
-
-	transition: all var(--transitionStyleButton);
-	cursor: pointer;
+	margin: 17px 0 0;
+	font-size: 14px;
 
 	/*
    * Font
    */
 	font-weight: var(--fontWeightMedium);
-	font-size: 14px;
 	line-height: 18px;
-	letter-spacing: 0;
+	color: var(--colorGrey700);
 
 	/* Button text styles */
+
 	/* Secondary button text is centered without decorations */
 	text-align: center;
 	text-decoration: none;
-
-	/* Secondary button has clear borders */
-	border-width: 1px;
-	border-style: solid;
-	border-color: var(--colorGrey100);
-	border-radius: var(--borderRadiusMedium);
+	letter-spacing: 0;
+	cursor: pointer;
 
 	/* Button colors: secondary */
 	background-color: var(--colorSecondaryButton);
-	color: var(--colorGrey700);
+	border-color: var(--colorGrey100);
+	border-style: solid;
+
+	/* Secondary button has clear borders */
+	border-width: 1px;
+	border-radius: var(--borderRadiusMedium);
+	transition: all var(--transitionStyleButton);
 
 	@media (--viewportMedium) {
 		height: 40px;
 	}
 }
+
 .buttonSecondaryInline:focus,
 .buttonSecondaryInline:hover {
+	background-color: var(--colorSecondaryButton);
+	border-color: var(--colorGrey300);
 	outline: none;
 	box-shadow: var(--boxShadowButton);
-	border-color: var(--colorGrey300);
-	background-color: var(--colorSecondaryButton);
 }
+
 .buttonSecondaryInline:hover {
 	text-decoration: none;
 }
+
 .buttonSecondaryInline:disabled {
-	box-shadow: none;
 	cursor: not-allowed;
 	border-color: var(--colorGrey100);
+	box-shadow: none;
 }
 
 /* ================ Modals ================ */
 
 .marketplaceModalRootStyles {
-	/* Page is using flex: AuthenticationPage's .root takes all available space */
-	flex-grow: 1;
-
 	/* AuthenticationPage's root uses flexbox */
 	display: flex;
 
+	/* Page is using flex: AuthenticationPage's .root takes all available space */
+	flex-grow: 1;
+
 	@media (--viewportMedium) {
-		justify-content: center;
 		align-items: flex-start;
+		justify-content: center;
 	}
 }
 
 .marketplaceModalFormRootStyles {
 	display: flex;
-	flex-direction: column;
 	flex: 1;
+	flex-direction: column;
 	justify-content: space-between;
 	height: 100%;
 }
 
 .marketplaceModalBaseStyles {
-	flex-grow: 1;
-
 	/* Create context so the close button can be positioned within it */
 	position: relative;
 
 	/* Display and dimensions */
 	display: flex;
 	flex-direction: column;
+	flex-grow: 1;
 	padding: var(--modalPadding);
-
 	background-color: var(--colorWhite);
-	border-radius: var(--borderRadius);
 	border-bottom: none;
+	border-radius: var(--borderRadius);
 
 	@media (--viewportMedium) {
 		flex-basis: 480px;
 		flex-grow: 0;
+
 		/* min-height: 568px; */
 		padding: var(--modalPaddingMedium);
 		margin-top: 12.5vh;
@@ -1283,17 +1318,15 @@ textarea {
 }
 
 .marketplaceModalInMobileBaseStyles {
-	flex-grow: 1;
-
 	/* Create context so the close button can be positioned within it */
 	position: relative;
 
 	/* Display and dimensions */
 	display: flex;
 	flex-direction: column;
+	flex-grow: 1;
 	height: 100vh;
 	padding: 0;
-
 	background-color: var(--colorWhite);
 	border-radius: var(--borderRadius);
 
@@ -1309,35 +1342,35 @@ textarea {
 
 /* Modal title */
 .marketplaceModalTitleStyles {
-	font-weight: var(--fontWeightBold);
-	font-size: 30px;
-	line-height: 36px;
 	margin: 0;
+	font-size: 30px;
+	font-weight: var(--fontWeightBold);
+	line-height: 36px;
 
 	@media (--viewportMedium) {
+		margin: 0;
 		font-weight: var(--fontWeightBold);
 		line-height: 40px;
-		margin: 0;
 	}
 }
 
 /* Modal message */
 .marketplaceModalParagraphStyles {
+	margin: 18px 0 0;
 	font-size: 20px;
-	line-height: 32px;
 	font-weight: var(--fontWeightMedium);
-	margin: 18px 0 0 0;
+	line-height: 32px;
 
 	@media (--viewportMedium) {
-		margin: 24px 0 0 0;
+		margin: 24px 0 0;
 	}
 }
 
 /* Bottom wrapper for the modal */
 .marketplaceModalBottomWrapper {
-	text-align: center;
-	margin-top: 60px;
 	align-self: stretch;
+	margin-top: 60px;
+	text-align: center;
 
 	@media (--viewportMedium) {
 		margin-top: 96px;
@@ -1346,8 +1379,8 @@ textarea {
 
 /* Adjust the bottomWrapper's margin to match modals without the helper text */
 .marketplaceModalBottomWrapperText {
-	margin-top: -24px;
 	padding-bottom: 8px;
+	margin-top: -24px;
 
 	@media (--viewportMedium) {
 		padding-bottom: 0;
@@ -1355,34 +1388,30 @@ textarea {
 }
 
 .marketplaceModalHelperText {
-	font-weight: var(--fontWeightRegular);
+	margin: 0;
 	font-size: 13px;
+	font-weight: var(--fontWeightRegular);
 	line-height: 18px;
-
+	color: var(--colorGrey300);
 	-webkit-font-smoothing: subpixel-antialiased;
 
-	color: var(--colorGrey300);
-	margin: 0;
-
 	@media (--viewportMedium) {
-		line-height: 16px;
 		margin: 0;
+		line-height: 16px;
 	}
 }
 
 .marketplaceModalHelperLink {
-	font-weight: var(--fontWeightRegular);
+	margin: 0;
 	font-size: 13px;
+	font-weight: var(--fontWeightRegular);
 	line-height: 18px;
-
+	color: var(--colorGrey700);
 	-webkit-font-smoothing: subpixel-antialiased;
 
-	color: var(--colorGrey700);
-	margin: 0;
-
 	@media (--viewportMedium) {
-		line-height: 16px;
 		margin: 0;
+		line-height: 16px;
 	}
 }
 
@@ -1405,29 +1434,31 @@ textarea {
 	/* Sizing (touch area) */
 	padding: 24px;
 	margin: 0;
-	border: 0;
-
-	@media (--viewportMedium) {
-		padding: 27px 30px;
-		position: absolute;
-	}
+	color: var(--colorGrey700);
+	cursor: pointer;
 
 	/* Colors */
 	background-color: transparent;
-	color: var(--colorGrey700);
+	border: 0;
 
-	cursor: pointer;
+	@media (--viewportMedium) {
+		position: absolute;
+		padding: 27px 30px;
+	}
 }
+
 .marketplaceModalCloseStyles:enabled:hover {
-	background-color: transparent;
 	color: var(--colorBlack);
-	box-shadow: none;
 	text-decoration: none;
-}
-.marketplaceModalCloseStyles:enabled:active {
 	background-color: transparent;
-	color: var(--colorBlack);
+	box-shadow: none;
 }
+
+.marketplaceModalCloseStyles:enabled:active {
+	color: var(--colorBlack);
+	background-color: transparent;
+}
+
 .marketplaceModalCloseStyles:disabled {
 	background-color: transparent;
 }
@@ -1443,28 +1474,27 @@ textarea {
 }
 
 .marketplaceModalCloseText {
+	margin: 0;
+	font-size: 12px;
+
 	/* Font */
 	font-weight: var(--fontWeightBold);
-	font-size: 12px;
 	line-height: 18px;
 	text-transform: uppercase;
 
-	margin: 0;
-
 	@media (--viewportMedium) {
-		line-height: 16px;
 		margin: 0;
+		line-height: 16px;
 	}
 }
 
 .marketplaceModalCloseIcon {
+	box-sizing: content-box;
 	display: inline-block;
-	margin-left: 8px;
 
 	/* Move X icon vertically to align it with the close text. */
 	margin-top: 3px;
-
-	box-sizing: content-box;
+	margin-left: 8px;
 
 	@media (--viewportMedium) {
 		margin-top: 2px;
@@ -1472,18 +1502,17 @@ textarea {
 }
 
 .marketplaceModalErrorStyles {
-	font-weight: var(--fontWeightMedium);
-	font-size: 15px;
-	line-height: 24px;
-
 	margin-top: 24px;
+	font-size: 15px;
+	font-weight: var(--fontWeightMedium);
+	line-height: 24px;
 	color: var(--colorFail);
 
 	@media (--viewportMedium) {
-		font-weight: var(--fontWeightMedium);
 		/* margin-top + n * line-height + margin-bottom => x * 8px */
 		margin-top: 17px;
 		margin-bottom: 15px;
+		font-weight: var(--fontWeightMedium);
 	}
 }
 

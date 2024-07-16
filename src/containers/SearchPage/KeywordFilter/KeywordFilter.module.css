@@ -23,15 +23,15 @@
 
 .field {
 	composes: h4 from global;
+	padding: 1px 0 13px;
 	margin: 0;
-	padding: 1px 0 13px 0;
 	border: none;
 }
 
 .fieldPlain {
 	composes: h4 from global;
-	margin: 0;
 	padding: 16px 0 30px 12px;
+	margin: 0;
 	border: none;
 
 	@media (--viewportMedium) {
@@ -40,5 +40,5 @@
 }
 
 .fieldPlainLabel {
-	padding: 4px 0 4px 0;
+	padding: 4px 0;
 }

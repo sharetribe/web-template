@@ -37,7 +37,7 @@ body > .reusableMapHidden {
 
 	@media (--viewportMedium) {
 		top: -1000px;
-		left: -1000px;
 		right: auto;
+		left: -1000px;
 	}
 }

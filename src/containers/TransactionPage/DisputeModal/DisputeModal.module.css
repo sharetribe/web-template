@@ -1,7 +1,7 @@
 @import "../../../styles/customMediaQueries.css";
 
 .root {
-	composes: marketplaceModalBaseStyles from global;
+	composes: marketplacemodalbasestyles from global;
 	padding-top: 70px;
 
 	@media (--viewportMedium) {
@@ -16,17 +16,17 @@
 
 /* Icon of the modal */
 .modalIcon {
-	composes: marketplaceModalIconStyles from global;
+	composes: marketplacemodaliconstyles from global;
 }
 
 /* Title of the modal */
 .modalTitle {
-	composes: marketplaceModalTitleStyles from global;
+	composes: marketplacemodaltitlestyles from global;
 }
 
 /* Paragraph for the Modal */
 .modalMessage {
-	composes: marketplaceModalParagraphStyles from global;
+	composes: marketplacemodalparagraphstyles from global;
 }
 
 .formRoot {
@@ -43,9 +43,9 @@
 	color: var(--colorFail);
 
 	@media (--viewportMedium) {
-		margin: 0;
 		width: 100%;
 		min-height: 32px;
+		margin: 0;
 	}
 }
 
@@ -60,9 +60,9 @@
 }
 
 .submitButton {
+	flex-shrink: 0;
 	margin-top: auto;
 	margin-bottom: 96px;
-	flex-shrink: 0;
 
 	@media (--viewportMedium) {
 		display: inline-block;

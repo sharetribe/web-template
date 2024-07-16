@@ -1,11 +1,11 @@
 @import "../../../../styles/customMediaQueries.css";
 
 .root {
+	display: flex;
+	flex-direction: column;
 	flex-grow: 1;
 	width: 100%;
 	height: auto;
-	display: flex;
-	flex-direction: column;
 }
 
 .form {
@@ -15,14 +15,14 @@
 /* ================ Modal ================ */
 
 .modalHeaderWrapper {
+	padding: 0;
 	margin-top: 58px;
 	margin-bottom: 36px;
-	padding: 0;
 
 	@media (--viewportMedium) {
+		padding: 0;
 		margin-top: 0;
 		margin-bottom: 34px;
-		padding: 0;
 	}
 }
 
@@ -30,10 +30,10 @@
 
 /* Title of the modal */
 .modalTitle {
-	composes: marketplaceModalTitleStyles from global;
+	composes: marketplacemodaltitlestyles from global;
 }
 
 /* Paragraph for the Modal */
 .modalMessage {
-	composes: marketplaceModalParagraphStyles from global;
+	composes: marketplacemodalparagraphstyles from global;
 }

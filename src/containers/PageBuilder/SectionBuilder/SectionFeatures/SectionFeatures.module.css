@@ -1,28 +1,28 @@
 @import "../../../../styles/customMediaQueries.css";
 
 .baseColumn {
-	max-width: var(--contentMaxWidthPages);
 	display: grid;
 	grid-template-columns: repeat(1, 1fr);
 	gap: 32px;
-	margin: 0 auto;
+	max-width: var(--contentMaxWidthPages);
 	padding: 32px;
+	margin: 0 auto;
 }
 
 .featuresMain {
-	composes: baseColumn;
+	composes: basecolumn;
 }
 
 .block {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
 	grid-auto-flow: dense;
 	gap: 0;
+	align-items: center;
 
 	@media (--viewportMedium) {
-		gap: 64px;
 		flex-direction: row-reverse;
+		gap: 64px;
 	}
 
 	&:nth-child(even) {
@@ -33,6 +33,6 @@
 }
 
 .noSidePaddings {
-	padding-left: 0;
 	padding-right: 0;
+	padding-left: 0;
 }

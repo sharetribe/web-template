@@ -1,8 +1,7 @@
 @import "../../../styles/customMediaQueries.css";
 
 .root {
-	composes: marketplaceModalFormRootStyles from global;
-
+	composes: marketplacemodalformrootstyles from global;
 	justify-content: flex-start;
 
 	@media (--viewportMedium) {
@@ -11,29 +10,29 @@
 }
 
 .bottomWrapper {
-	composes: marketplaceModalBottomWrapper from global;
+	composes: marketplacemodalbottomwrapper from global;
 }
 
 /* ================ Typography ================ */
 
 /* Title of the modal */
 .modalTitle {
-	composes: marketplaceModalTitleStyles from global;
+	composes: marketplacemodaltitlestyles from global;
 }
 
 /* Paragraph for the Modal */
 .modalMessage {
-	composes: marketplaceModalParagraphStyles from global;
+	composes: marketplacemodalparagraphstyles from global;
 }
 
 .error {
-	composes: marketplaceModalPasswordMargins from global;
+	composes: marketplacemodalpasswordmargins from global;
 }
 
 .submitButton {
-	composes: buttonPrimary from global;
+	composes: buttonprimary from global;
 }
 
 .modalIcon {
-	composes: marketplaceModalIconStyles from global;
+	composes: marketplacemodaliconstyles from global;
 }

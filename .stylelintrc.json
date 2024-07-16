@@ -1,3 +1,17 @@
 {
-	"extends": "./node_modules/@buildinams/lint/stylelint"
+	"extends": "./node_modules/@buildinams/lint/stylelint",
+	"rules": {
+		"selector-class-pattern": [
+			"^[a-z][a-zA-Z0-9]+$",
+			{
+				"message": "Expected class name to be lowerCamelCase"
+			}
+		],
+		"custom-property-pattern": [
+			"^[a-z][a-zA-Z0-9]+$",
+			{
+				"message": "Expected CSS variable name to be lowerCamelCase"
+			}
+		]
+	}
 }

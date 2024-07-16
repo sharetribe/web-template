@@ -1,16 +1,16 @@
 @import "../../../styles/customMediaQueries.css";
 
 .root {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	background-color: var(--colorGrey50);
-	position: relative;
 }
 
 .filters {
 	& > *:not(:last-child) {
+		height: auto;
 		margin-right: 8px;
 		margin-bottom: 8px;
-		height: auto;
 	}
 }
