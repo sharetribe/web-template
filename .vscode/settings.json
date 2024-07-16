@@ -6,10 +6,10 @@
 		"editor.defaultFormatter": "foxundermoon.shell-format"
 	},
 	"cSpell.language": "en-US",
-	// "editor.codeActionsOnSave": {
-	// 	"source.fixAll.eslint": "explicit",
-	// 	"source.fixAll.stylelint": "explicit"
-	// },
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit",
+		"source.fixAll.stylelint": "explicit"
+	},
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnPaste": false,
 	"editor.formatOnSave": true,
