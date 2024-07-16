@@ -167,7 +167,7 @@ const TopbarDesktop = props => {
       />
       {search}
       <div style={{ width: '20%', height: '100%', display: 'flex', alignItems: 'center' }}>
-        <button onClick={handleButtonClick} style={{ border: 'none' }}>
+        <button onClick={handleButtonClick} style={{ border: 'none', cursor: 'pointer' }}>
           <img
             src="/static/icons/whatsapp.png"
             alt="WhatsApp"
