@@ -3,7 +3,7 @@
 	"rules": {
 		"jsx-a11y/label-has-associated-control": ["warn"],
 		"jsx-a11y/no-autofocus": ["warn"],
-		"react/prop-types": ["off", {
+		"react/prop-types": ["warn", {
 			"ignore": ["children"]
 		}],
 		"no-unused-vars": ["warn"],
