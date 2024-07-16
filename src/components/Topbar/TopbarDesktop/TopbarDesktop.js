@@ -94,7 +94,7 @@ const TopbarDesktop = props => {
             <FormattedMessage id="TopbarDesktop.yourListingsLink" />
           </NamedLink>
         </MenuItem>
-        
+
         <MenuItem key="ProfileSettingsPage">
           <NamedLink
             className={classNames(css.profileSettingsLink, currentPageClass('ProfileSettingsPage'))}
@@ -116,7 +116,8 @@ const TopbarDesktop = props => {
         <MenuItem key="FAQS">
           <a
             className={classNames(css.yourListingsLink, currentPageClass('AccountSettingsPage'))}
-            name="FAQS" href="https://www.rundo.com.ar/p/frequent-asked-questions"
+            name="FAQS"
+            href="https://www.rundo.com.ar/p/frequent-asked-questions"
           >
             <span className={css.menuItemBorder} />
             <FormattedMessage id="Preguntas Frecuentes" />
@@ -131,12 +132,12 @@ const TopbarDesktop = props => {
       </MenuContent>
     </Menu>
   ) : null;
-  
+
   const signupLink = isAuthenticatedOrJustHydrated ? null : (
     <NamedLink name="SignupPage" className={css.signupLink}>
-       <span className={css.signup}>
-         <FormattedMessage id="TopbarDesktop.signup" />
-       </span>
+      <span className={css.signup}>
+        <FormattedMessage id="TopbarDesktop.signup" />
+      </span>
     </NamedLink>
   );
 
@@ -147,7 +148,16 @@ const TopbarDesktop = props => {
       </span>
     </NamedLink>
   );
-
+  const handleButtonClick = () => {
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'BtnWspHeader');
+      setTimeout(() => {
+        window.open('https://wa.me/5492944232664', '_blank');
+      }, 300);
+    } else {
+      console.error('Meta Pixel no está definido');
+    }
+  };
   return (
     <nav className={classes}>
       <LinkedLogo
@@ -156,13 +166,15 @@ const TopbarDesktop = props => {
         alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
       />
       {search}
-      <a style={{width: '20%', height: '100%'}}>
-        <a style={{ height: '100%', display: 'flex', alignItems: 'center'}} href="https://wa.me/5492944232664" target="_blank" >
-        <p style={{color: "green",textAlign: "center", display: "flex",
-        color: "#7cc9bc",alignItems: "center"}}>
-        <img src="/static/icons/whatsapp.png" alt="WhatsApp" style={{marginLeft: "10%",width: '15%'}}/></p>
-        </a>
-      </a>
+      <div style={{ width: '20%', height: '100%', display: 'flex', alignItems: 'center' }}>
+        <button onClick={handleButtonClick} style={{ border: 'none', cursor: 'pointer' }}>
+          <img
+            src="/static/icons/whatsapp.png"
+            alt="WhatsApp"
+            style={{ marginLeft: '10%', width: '36.5px', height: '35.5px' }}
+          />
+        </button>
+      </div>
       <NamedLink className={css.createListingLink} name="NewListingPage">
         <span className={css.createListing}>
           <FormattedMessage id="TopbarDesktop.createListing" />
@@ -170,7 +182,7 @@ const TopbarDesktop = props => {
       </NamedLink>
       {inboxLink}
       {profileMenu}
-      
+
       {loginLink}
     </nav>
   );

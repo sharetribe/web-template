@@ -38,7 +38,15 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2, Button, SecondaryButton, } from '../../components';
+import {
+  ModalInMobile,
+  PrimaryButton,
+  AvatarSmall,
+  H1,
+  H2,
+  Button,
+  SecondaryButton,
+} from '../../components';
 
 import css from './OrderPanel.module.css';
 import WhatsAppButton from '../../components/Button/WhatsAppButton';
@@ -273,6 +281,16 @@ const OrderPanel = props => {
     </Button>
   );
   */
+  const handleButtonClick = () => {
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'BtnWspListingPage');
+      setTimeout(() => {
+        window.open('https://wa.me/5492944232664', '_blank');
+      }, 300);
+    } else {
+      console.error('Meta Pixel no está definido');
+    }
+  };
   const helmetFee = listing?.attributes?.publicData.helmetFee;
   return (
     <div className={classes}>
@@ -310,7 +328,7 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
           </span>
         </div>
-        
+
         {showPriceMissing ? (
           <PriceMissing />
         ) : showInvalidCurrency ? (
@@ -421,14 +439,22 @@ const OrderPanel = props => {
             )}
           </PrimaryButton>
         )}
-      
       </div>
 
-      <div>
-        <p>Comunicate con Rundo</p>
-        <a href="https://wa.me/5492944232664" target="_blank" className={css.A_css}>
-	          <img src="/static/icons/whatsapp.png" alt="WhatsApp" className={css.whatsAppButton}/>
-        </a>
+      <div style={{ textAlign: 'center' }}>
+        <button
+          onClick={handleButtonClick}
+          style={{
+            border: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'column',
+            cursor: 'pointer',
+          }}
+        >
+          <p>Comunicate con Rundo</p>
+          <img src="/static/icons/whatsapp.png" alt="WhatsApp" className={css.whatsAppButton} />
+        </button>
       </div>
     </div>
   );
@@ -497,7 +523,4 @@ OrderPanel.propTypes = {
   currentUser: propTypes.currentUser.isRequired,
 };
 
-export default compose(
-  withRouter,
-  injectIntl
-)(OrderPanel);
+export default compose(withRouter, injectIntl)(OrderPanel);
