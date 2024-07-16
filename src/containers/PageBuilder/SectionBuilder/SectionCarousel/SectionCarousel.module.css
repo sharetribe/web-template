@@ -4,7 +4,7 @@
 	display: flex;
 	align-items: center;
 	scroll-behavior: smooth;
-	padding: 64px 0 0;
+	padding: 64px 0 0 0;
 
 	&:hover .carouselArrows {
 		opacity: 1;
@@ -19,35 +19,37 @@
 }
 
 .carouselArrows {
-	z-index: 2;
 	opacity: 0;
+	z-index: 2;
 	transition: all ease-in-out 500ms;
 }
 
 .carouselArrowPrev,
 .carouselArrowNext {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	position: absolute;
 	z-index: 2;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+
 	width: 48px;
 	height: 48px;
-	padding: 0 0 4px;
+	padding: 0px 0 4px 0;
 	margin-top: -64px;
+	border-radius: 100%;
+	border: none;
+
+	background-color: lightgrey;
+	opacity: 0.9;
 	font-size: 30px;
 	color: black;
-	background-color: lightgrey;
-	border: none;
-	border-radius: 100%;
-	opacity: 0.9;
 	transition: all ease-in-out 100ms;
 
 	&:hover {
-		color: white;
+		opacity: 1;
 		cursor: pointer;
 		background: black;
-		opacity: 1;
+		color: white;
 	}
 }
 
@@ -58,7 +60,6 @@
 .carouselArrowNext {
 	right: 48px;
 }
-
 .notEnoughBlocks {
 	@media (--viewportMedium) {
 		display: none;
@@ -70,6 +71,7 @@
 	flex-wrap: nowrap;
 	width: var(--carouselWidth);
 	padding-bottom: 24px;
+
 	overflow-x: auto;
 	-ms-overflow-style: none;
 	scrollbar-width: none;
@@ -85,42 +87,41 @@
 .twoColumns,
 .threeColumns,
 .fourColumns {
-	composes: basecarousel;
+	composes: baseCarousel;
 }
 
 .block {
 	flex: 0 0 auto;
-
 	/* 64px = horizontal layout paddings */
 	width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px);
+
 	margin-right: 16px;
 	scroll-snap-align: center;
+
 	transform: translateX(32px);
 
 	&:last-of-type {
+		padding-right: 32px;
 		/* 32px (padding-right above) */
 		width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px);
-		padding-right: 32px;
 	}
 
 	@media (--viewportMedium) {
 		margin-right: 32px;
 	}
 
-	@media (width >= 1200px) {
+	@media (min-width: 1200px) {
 		/* Offset the start of the carousel so it follows the global grid layout (e.g. (1400 - 1200) / 2 = 100px) */
-
 		/* Removing this uses the full page width for the slider pane */
 		transform: translateX(
 			max(calc((var(--carouselWidth) - var(--contentMaxWidthPages)) / 2 + 32px), 0px)
 		);
 
 		&:last-of-type {
+			padding-right: 32px;
 			width: calc(
 				min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px
 			); /* 32px (padding-right above) */
-
-			padding-right: 32px;
 		}
 	}
 }

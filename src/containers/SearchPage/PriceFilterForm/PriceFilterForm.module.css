@@ -8,33 +8,33 @@
 }
 
 .popup {
+	/* By default hide the content */
+	display: block;
+	visibility: hidden;
+	opacity: 0;
+	pointer-events: none;
+
 	/* Position */
 	position: absolute;
 	z-index: var(--zIndexPopup);
 
-	/* By default hide the content */
-	display: block;
-
 	/* Layout */
-	padding: 15px 30px 20px;
+	padding: 15px 30px 20px 30px;
 	margin-top: 7px;
-	pointer-events: none;
-	visibility: hidden;
 	background-color: var(--colorWhite);
 
 	/* Borders */
 	border-top: 1px solid var(--colorGrey100);
-	border-radius: var(--borderRadiusMedium);
 	box-shadow: var(--boxShadowPopup);
-	opacity: 0;
+	border-radius: var(--borderRadiusMedium);
 	transition: var(--transitionStyleButton);
 }
 
 .isOpenAsPopup {
 	display: block;
-	pointer-events: auto;
 	visibility: visible;
 	opacity: 1;
+	pointer-events: auto;
 }
 
 .plain {
@@ -56,27 +56,26 @@
 	max-width: 300px;
 	padding-top: 5px;
 	padding-bottom: 5px;
-	margin-top: 0;
+	margin-top: 0px;
 }
-
 @media (--viewportMedium) {
 	.contentWrapper {
-		padding-top: 0;
+		padding-top: 0px;
 		padding-bottom: 8px;
-		margin-top: 0;
+		margin-top: 0px;
 	}
 }
 
 .label {
 	composes: h5 from global;
-	padding: 11px 0 13px;
-	margin: 0 18px 0 0;
-	font-weight: var(--fontWeightSemiBold);
-}
 
+	font-weight: var(--fontWeightSemiBold);
+	padding: 11px 0 13px 0;
+	margin: 0 18px 0 0;
+}
 @media (--viewportMedium) {
 	.label {
-		padding: 8px 0 16px;
+		padding: 8px 0 16px 0;
 	}
 }
 
@@ -92,16 +91,17 @@
 .maxPrice {
 	width: 48px;
 	text-align: center;
-	appearance: textfield;
+
+	-moz-appearance: textfield;
 
 	&::-webkit-inner-spin-button,
 	&::-webkit-outer-spin-button {
+		-webkit-appearance: none;
 		margin: 0;
-		appearance: none;
 	}
 
 	@media (--viewportMedium) {
-		padding: 3px 0;
+		padding: 3px 0 3px 0;
 	}
 }
 
@@ -110,21 +110,20 @@
 }
 
 .priceSeparator {
-	margin: 6px 8px 0;
+	margin: 6px 8px 0 8px;
 
 	@media (--viewportMedium) {
-		margin: 5px 8px 0;
+		margin: 5px 8px 0 8px;
 	}
 }
 
 .sliderWrapper {
 	display: flex;
-	padding: 17px 0 25px;
+	padding: 17px 0 25px 0;
 }
-
 @media (--viewportMedium) {
 	.sliderWrapper {
-		padding: 3px 0 24px;
+		padding: 3px 0 24px 0;
 	}
 }
 
@@ -135,16 +134,16 @@
 .clearButton,
 .cancelButton,
 .submitButton {
-	composes: textsmall from global;
+	composes: textSmall from global;
+	font-weight: var(--fontWeightMedium);
 
 	/* Layout */
 	padding: 0;
-	font-weight: var(--fontWeightMedium);
-	cursor: pointer;
-	border: none;
 
 	/* Override button styles */
 	outline: none;
+	border: none;
+	cursor: pointer;
 
 	&:focus,
 	&:hover {
@@ -153,9 +152,10 @@
 }
 
 .clearButton {
+	color: var(--colorGrey300);
+
 	/* Layout */
 	margin: 0 auto 0 0;
-	color: var(--colorGrey300);
 
 	&:focus,
 	&:hover {
@@ -164,6 +164,8 @@
 }
 
 .cancelButton {
+	color: var(--colorGrey300);
+
 	/* Layout */
 	margin: 0;
 
@@ -171,7 +173,6 @@
    * but some hard coded margin is still needed
    */
 	margin-left: 48px;
-	color: var(--colorGrey300);
 
 	&:focus,
 	&:hover {
@@ -180,9 +181,10 @@
 }
 
 .submitButton {
+	color: var(--marketplaceColor);
+
 	/* Layout */
 	margin: 0 0 0 19px;
-	color: var(--marketplaceColor);
 
 	&:focus,
 	&:hover {

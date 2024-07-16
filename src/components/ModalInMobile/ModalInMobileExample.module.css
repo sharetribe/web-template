@@ -2,7 +2,7 @@
 	display: none;
 }
 
-@media (width <= 400px) {
+@media (max-width: 400px) {
 	.visibleOnMobileLayout {
 		display: block;
 	}

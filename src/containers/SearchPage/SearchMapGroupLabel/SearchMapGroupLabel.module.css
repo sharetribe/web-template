@@ -11,41 +11,43 @@
 	&:hover {
 		& .details,
 		& .caret {
-			color: var(--colorWhite);
 			cursor: pointer;
 
 			/* Same as active */
 			background-color: var(--marketplaceColor);
 			border-color: var(--marketplaceColor);
+			color: var(--colorWhite);
 			box-shadow: var(--boxShadowPopup);
 		}
 	}
 }
 
 .details {
-	/* Font */
-	composes: p from global;
-
 	/**
    * Since caret is absolutely positioned,
    * label must have relative to be included to the same rendering layer
    */
 	position: relative;
-	padding: 6px 14px;
+
+	/* Font */
+	composes: p from global;
+	font-weight: var(--fontWeightBold);
 	margin-top: 0;
 	margin-bottom: 0;
-	font-weight: var(--fontWeightBold);
-	color: var(--colorGrey700);
+
+	padding: 6px 14px;
 
 	/* Coloring */
 	background-color: var(--colorWhite);
-	border-color: var(--colorGrey100);
-	border-style: solid;
-	border-width: 1px;
+	color: var(--colorGrey700);
 
 	/* Borders */
 	border-radius: 19px;
+	border-style: solid;
+	border-color: var(--colorGrey100);
+	border-width: 1px;
 	box-shadow: var(--boxShadowPopupLight);
+
 	transition: var(--transitionStyleButton);
 
 	/* Overwrite dimensions from font styles */
@@ -56,43 +58,41 @@
 }
 
 .detailsActive {
-	color: var(--colorWhite);
-
 	/* Same as hover */
 	background-color: var(--marketplaceColor);
 	border-color: var(--marketplaceColor);
+	color: var(--colorWhite);
 	box-shadow: var(--boxShadowPopup);
 }
 
 .caretShadow {
-	position: absolute;
-	bottom: -3px;
-	left: 50%;
-
 	/* Caret / arrow dimensions and position */
 	width: 6px;
 	height: 6px;
+	position: absolute;
+	bottom: -3px;
+	left: 50%;
 	margin-left: -3px;
+	transform: rotate(45deg);
 
 	/* Caret should have same box-shadow as label */
 	box-shadow: var(--boxShadowPopupLight);
-	transform: rotate(45deg);
 }
 
 .caret {
-	position: absolute;
-	bottom: -3px;
-	left: 50%;
-
 	/* Caret / arrow dimensions and position */
 	width: 6px;
 	height: 6px;
+	position: absolute;
+	bottom: -3px;
+	left: 50%;
 	margin-left: -3px;
+	transform: rotate(45deg);
 
 	/* Caret should have same bg-color as label */
 	background-color: var(--colorWhite);
+
 	transition: var(--transitionStyleButton);
-	transform: rotate(45deg);
 }
 
 .caretActive {

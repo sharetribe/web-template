@@ -8,28 +8,29 @@
 
 .heading {
 	composes: p from global;
+	font-weight: var(--fontWeightBold);
+	margin: 0 0 12px 0;
+
 	padding-top: 4px;
 	padding-bottom: 2px;
-	margin: 0 0 12px;
-	font-weight: var(--fontWeightBold);
 
 	@media (--viewportMedium) {
+		margin: 0 0 0 0;
 		padding-top: 5px;
 		padding-bottom: 3px;
-		margin: 0;
 	}
 }
 
 .formRow {
 	/* This container uses flexbox layout */
 	display: flex;
+	justify-content: space-between;
+	width: 100%;
 
 	/* parent aka root is flexbox, this container takes all available space */
 	flex-grow: 1;
 	flex-shrink: 0;
 	flex-wrap: wrap;
-	justify-content: space-between;
-	width: 100%;
 
 	@media (--viewportSmall) {
 		flex-wrap: no-wrap;

@@ -16,7 +16,7 @@
 	padding: 3px 0;
 
 	@media (--viewportMedium) {
-		padding: 5px 0 3px;
+		padding: 5px 0 3px 0;
 	}
 }
 
@@ -33,10 +33,10 @@
 
 .iconWrapper {
 	align-self: baseline;
+	margin-right: 8px;
 
 	/* This follows line-height */
 	height: 24px;
-	margin-right: 8px;
 }
 
 .labelWrapper {
@@ -45,9 +45,9 @@
 
 .selectedLabel,
 .notSelectedLabel {
-	composes: marketplacebodyfontstyles from global;
-	margin: 0;
+	composes: marketplaceBodyFontStyles from global;
 	line-height: 24px;
+	margin: 0;
 }
 
 .selectedLabel {
@@ -55,7 +55,7 @@
 }
 
 .notSelectedLabel {
-	position: relative;
 	color: var(--colorGrey300);
+	position: relative;
 	text-decoration: line-through;
 }

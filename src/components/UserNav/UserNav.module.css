@@ -5,10 +5,10 @@
 
 	@media (--viewportMedium) {
 		display: flex;
-		align-items: flex-end;
 		justify-content: flex-end;
 		height: 57px;
-		padding: 13px 24px 0;
+		align-items: flex-end;
+		padding: 13px 24px 0 24px;
 	}
 
 	@media (--viewportLarge) {

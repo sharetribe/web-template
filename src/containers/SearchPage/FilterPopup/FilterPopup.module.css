@@ -4,35 +4,35 @@
 }
 
 .popup {
+	/* By default hide the content */
+	display: block;
+	visibility: hidden;
+	opacity: 0;
+	pointer-events: none;
+
 	/* Position */
 	position: absolute;
 	z-index: var(--zIndexPopup);
 
-	/* By default hide the content */
-	display: block;
-
 	/* Layout */
 	min-width: 300px;
 	margin-top: 7px;
-	pointer-events: none;
-	visibility: hidden;
 	background-color: var(--colorWhite);
 
 	/* Borders */
 	border-top: 1px solid var(--colorGrey100);
-	border-radius: var(--borderRadiusMedium);
 	box-shadow: var(--boxShadowPopup);
-	opacity: 0;
+	border-radius: var(--borderRadiusMedium);
 	transition: var(--transitionStyleButton);
 }
 
 .popupSize {
-	padding: 15px 30px 17px;
+	padding: 15px 30px 17px 30px;
 }
 
 .isOpen {
 	display: block;
-	pointer-events: auto;
 	visibility: visible;
 	opacity: 1;
+	pointer-events: auto;
 }

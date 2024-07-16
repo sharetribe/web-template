@@ -4,9 +4,9 @@
 	composes: h4 from global;
 	margin-top: 6px;
 	margin-bottom: 0;
+	color: var(--colorFail);
 	overflow: hidden;
 	font-size: 13px;
-	color: var(--colorFail);
 
 	@media (--viewportMedium) {
 		margin-top: 8px;

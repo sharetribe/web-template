@@ -3,8 +3,10 @@
 :global(.image-gallery-thumbnails-container) {
 	text-align: left !important;
 }
-
 :global(.image-gallery-thumbnails) {
+	padding-top: 24px;
+	padding-bottom: 0;
+
 	/*
    By default, the gallery controls the scroll position of the thumbnails when
    browsing the images. We change this logic to a freely scrollable container
@@ -12,23 +14,20 @@
    `disableThumbnailScroll` option in the component JS.
    */
 	width: 100vw;
-	padding-top: 24px;
-	padding-bottom: 0;
 	overflow: auto;
 
 	@media (--viewportMedium) {
 		width: calc(100vw - 48px);
 	}
-
 	@media (--viewportLarge) {
 		width: unset;
 	}
 }
-
 :global(.image-gallery-thumbnail) {
 	width: auto;
-	text-align: left !important;
 	border-radius: 8px;
+
+	text-align: left !important;
 
 	&:first-child {
 		margin-left: 24px;
@@ -37,7 +36,6 @@
 			margin-left: 0;
 		}
 	}
-
 	&:last-child {
 		margin-right: 24px;
 
@@ -57,8 +55,8 @@
 	border-bottom: 1px solid var(--colorGrey100);
 
 	@media (--viewportMedium) {
-		border: 1px solid var(--colorGrey100);
 		border-radius: var(--borderRadiusMedium);
+		border: 1px solid var(--colorGrey100);
 	}
 }
 
@@ -122,22 +120,22 @@
 .navLeft,
 .navRight {
 	position: absolute;
+	width: 60px;
+	height: 100%;
+	border: 0;
+	padding: 0;
 	z-index: 1;
 
 	/* center content */
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 60px;
-	height: 100%;
-	padding: 0;
-	border: 0;
 
 	&:hover {
 		cursor: pointer;
 
 		& .navArrowWrapper {
-			background-color: rgb(255 255 255 / 100%);
+			background-color: rgba(255, 255, 255, 1);
 		}
 	}
 }
@@ -160,10 +158,12 @@
 
 .navArrowWrapper {
 	display: none;
+
 	width: 40px;
 	height: 40px;
-	background-color: rgb(255 255 255 / 50%);
 	border-radius: 50%;
+
+	background-color: rgba(255, 255, 255, 0.5);
 
 	@media (--viewportLarge) {
 		/* center content */
@@ -174,23 +174,19 @@
 }
 
 .openFullscreen {
-	composes: marketplacetinyfontstyles from global;
-
-	/* Position and dimensions */
-	position: absolute;
-	right: 24px;
-	bottom: 19px;
-
-	/* Ensure the button is on top of the navRight area */
-	z-index: 1;
-
 	/* Hide on mobile. Currently react-image-gallery fullscreen mode is broken on
      mobile, and mobile doesn't really benefit from fullscreen anyways. */
 	display: none;
-	padding: 8px 13px 6px;
-	margin: 0;
+
+	composes: marketplaceTinyFontStyles from global;
 	font-weight: var(--fontWeightMedium);
-	cursor: pointer;
+
+	/* Position and dimensions */
+	position: absolute;
+	bottom: 19px;
+	right: 24px;
+	margin: 0;
+	padding: 8px 13px 6px 13px;
 
 	/* Colors */
 	background-color: var(--colorWhite);
@@ -198,12 +194,17 @@
 	/* Borders */
 	border: 1px solid var(--colorGrey100);
 	border-radius: var(--borderRadius);
+
+	cursor: pointer;
 	transition: var(--transitionStyleButton);
 
+	/* Ensure the button is on top of the navRight area */
+	z-index: 1;
+
 	&:hover {
-		color: var(--colorWhite);
 		background-color: var(--marketplaceColor);
 		border-color: var(--marketplaceColor);
+		color: var(--colorWhite);
 	}
 
 	@media (--viewportLarge) {
@@ -212,7 +213,8 @@
 }
 
 .close {
-	composes: marketplacemodalclosestyles from global;
+	composes: marketplaceModalCloseStyles from global;
+
 	color: var(--colorGrey300);
 	transition: var(--transitionStyleButton);
 
@@ -223,9 +225,9 @@
 }
 
 .closeText {
-	composes: marketplacemodalclosetext from global;
+	composes: marketplaceModalCloseText from global;
 }
 
 .closeIcon {
-	composes: marketplacemodalcloseicon from global;
+	composes: marketplaceModalCloseIcon from global;
 }

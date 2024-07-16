@@ -2,12 +2,12 @@
 
 /* Styles for custom sections: classes shared by <SectionColumns>, <SectionArticle>, <SectionFeatures>, <SectionCarousel>, <SectionHero> etc. */
 .sectionDetails {
-	position: relative;
+	max-width: var(--contentMaxWidthPages);
 	display: grid;
 	justify-content: start;
-	max-width: var(--contentMaxWidthPages);
-	padding: 0 32px;
 	margin: 0 auto;
+	padding: 0 32px;
+	position: relative;
 
 	& h1 + p,
 	& h1 + a,
@@ -105,7 +105,7 @@
 }
 
 .blockContainer {
-	padding: 64px 32px 0;
+	padding: 64px 32px 0 32px;
 
 	&:first-child {
 		padding: 0 32px;
@@ -113,12 +113,12 @@
 }
 
 .align {
-	justify-self: start;
 	text-align: left;
+	justify-self: start;
 
 	@media (--viewportMedium) {
-		justify-self: center;
 		text-align: center;
+		justify-self: center;
 	}
 }
 
@@ -136,14 +136,14 @@
 	composes: align;
 	display: inline-block;
 	padding: 8px 20px;
-	margin-top: 24px;
 	font-size: 15px;
-	font-weight: 500;
-	color: white;
-	text-decoration: none;
 	background-color: var(--marketplaceColor);
 	border-radius: 4px;
+	color: white;
+	text-decoration: none;
 	box-shadow: 0 8px 16px 0 rgb(0 0 0 / 20%);
+	font-weight: 500;
+	margin-top: 24px;
 
 	&:hover {
 		text-decoration: none;
@@ -164,19 +164,19 @@
 	color: var(--colorWhite);
 
 	&::selection {
-		color: unset;
 		background-color: cyan;
+		color: unset;
 	}
 }
 
 .darkTheme p,
 .darkTheme li,
 .darkTheme blockquote {
-	color: rgb(255 255 255 / 85%);
+	color: rgba(255, 255, 255, 0.85);
 
 	&::selection {
-		color: unset;
 		background-color: cyan;
+		color: unset;
 	}
 }
 
@@ -186,15 +186,15 @@
 	text-decoration: underline;
 
 	&:hover {
-		color: var(--marketplaceColorLight);
 		text-decoration: none;
+		color: var(--marketplaceColorLight);
 	}
 }
 
 /* button on dark theme */
 .darkTheme .ctaButton {
-	text-decoration: none;
 	border: 1px solid var(--marketplaceColorDark);
+	text-decoration: none;
 
 	&:hover {
 		color: white;
@@ -207,8 +207,8 @@
 
 /* dark inline code */
 .darkTheme code {
-	color: var(--colorGrey100);
 	background-color: var(--colorGrey700);
+	color: var(--colorGrey100);
 }
 
 /* dark code block */

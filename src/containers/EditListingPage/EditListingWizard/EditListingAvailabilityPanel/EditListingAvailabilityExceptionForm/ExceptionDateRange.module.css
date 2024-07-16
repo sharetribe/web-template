@@ -1,13 +1,14 @@
 @import "../../../../../styles/customMediaQueries.css";
 
 .formRow {
-	/* This container uses flexbox layout */
-	display: flex;
-
 	/* parent aka root is flexbox, this container takes all available space */
 	flex-grow: 1;
 	flex-shrink: 0;
+
+	/* This container uses flexbox layout */
+	display: flex;
 	justify-content: space-between;
+
 	width: 100%;
 	padding: 0;
 	margin-top: 30px;
@@ -20,9 +21,9 @@
 }
 
 .field {
-	position: relative;
 	display: flex;
 	align-items: flex-end;
+	position: relative;
 	width: 100%;
 
 	&:nth-child(2n) {

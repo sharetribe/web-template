@@ -1,56 +1,53 @@
 @import "../../styles/customMediaQueries.css";
 
 /* Can be given to Topbar when a modal is opened
- * so that the Topbar is not rendered on top of it. */
+ * so that the Topbar is not rendered on top of it.*/
 .topbarBehindModal {
 	z-index: initial;
 }
 
 .topbar {
-	position: relative;
+	width: 100%;
 
 	/* Top Bar's drop shadow should always be visible */
 	z-index: var(--zIndexTopbar);
-	width: 100%;
+	position: relative;
 
 	@media (--viewportMedium) {
 		position: fixed;
 		top: 0;
 		left: 0;
-
 		/* We need to raise Topbar above .container */
 		z-index: var(--zIndexTopbar);
 	}
 }
 
 .container {
-	display: flex;
-	flex-grow: 1;
-
 	/* Layout */
 	width: 100%;
+	flex-grow: 1;
+	display: flex;
 
 	@media (--viewportMedium) {
 		position: relative;
-		min-height: calc(100vh - var(--topbarHeightDesktop));
 		padding-top: var(--topbarHeightDesktop);
+		min-height: calc(100vh - var(--topbarHeightDesktop));
 	}
 }
 
 /* Container for side and content */
 .layoutWrapperContainer {
 	composes: container;
-
-	/* When side nav is shown as a column, Topbar's box-shadow should be visible */
-	z-index: calc(var(--zIndexTopbar) - 1);
+	/* parent aka root is flexbox, this container takes all available space */
+	flex-shrink: 0;
 
 	/* This container uses flexbox layout */
 	display: flex;
 	flex-direction: column;
-
-	/* parent aka root is flexbox, this container takes all available space */
-	flex-shrink: 0;
 	width: 100%;
+
+	/* When side nav is shown as a column, Topbar's box-shadow should be visible */
+	z-index: calc(var(--zIndexTopbar) - 1);
 
 	@media (--viewportMedium) {
 		flex-direction: row;
@@ -68,22 +65,20 @@
 		justify-content: flex-start;
 		padding: 24px 0 0 24px;
 	}
-
 	@media (--viewportLarge) {
-		flex-direction: column;
-		justify-content: flex-start;
-
 		/* Layout */
 		padding: 40px 0 0 36px;
-		background-color: transparent;
+
+		flex-direction: column;
+		justify-content: flex-start;
 		border: none;
 		box-shadow: none;
+		background-color: transparent;
 	}
 
-	@media (width >= 1440px) {
+	@media (min-width: 1440px) {
 		padding: 40px 0 0 calc((100vw - 1368px) / 2);
 	}
-
 	@media (--viewportXLarge) {
 		padding: 40px 0 0 calc((100vw - 1800px) / 2);
 	}
@@ -102,30 +97,29 @@
 		padding: 8px 36px 24px 0;
 	}
 
-	@media (width >= 1440px) {
+	@media (min-width: 1440px) {
 		padding: 8px 60px 24px 0;
 	}
 }
-
 .filter:first-child {
 	padding-top: 0;
 }
 
 .resetAllButton {
 	composes: h5 from global;
+	font-weight: var(--fontWeightMedium);
+	color: var(--colorGrey300);
 
 	/* Layout */
 	display: inline;
+	margin: 17px 0 0 0;
 	padding: 0;
-	margin: 17px 0 0;
-	font-weight: var(--fontWeightMedium);
-	color: var(--colorGrey300);
-	text-align: left;
-	cursor: pointer;
-	border: none;
 
 	/* Override button styles */
 	outline: none;
+	text-align: left;
+	border: none;
+	cursor: pointer;
 
 	&:focus,
 	&:hover {
@@ -133,27 +127,28 @@
 	}
 
 	@media (--viewportMedium) {
-		padding: 3px 0 5px;
-		margin: 24px 0 0;
+		margin: 24px 0 0 0;
+		padding: 3px 0 5px 0;
 	}
 }
 
 .layoutWrapperMain {
-	display: flex;
-	flex-direction: column;
-
 	/* Expand to the full remaining width of the viewport */
 	flex-grow: 1;
-	padding: 0 24px;
+	display: flex;
+	flex-direction: column;
+	padding: 0 24px 0 24px;
 
 	@media (--viewportMedium) {
 		/**
      * Calculate right padding to match Footer right border
      * and left padding together with border should be 60px.
      */
-		padding: 24px 24px 0;
+		padding: 24px 24px 0 24px;
 		background-color: var(--colorWhite);
-		border-left: 1px solid var(--colorGrey100);
+		border-left-width: 1px;
+		border-left-style: solid;
+		border-left-color: var(--colorGrey100);
 	}
 
 	@media (--viewportLarge) {
@@ -161,31 +156,30 @@
      * Calculate right padding to match Footer right border
      * and left padding together with border should be 60px.
      */
-		padding: 40px 36px 0;
+		padding: 40px 36px 0 36px;
 	}
 
-	@media (width >= 1440px) {
+	@media (min-width: 1440px) {
 		padding: 40px calc((100vw - 1368px) / 2) 0 59px;
 	}
-
 	@media (--viewportXLarge) {
 		padding: 40px calc((100vw - 1800px) / 2) 0 59px;
 	}
 }
 
 .searchResultContainer {
+	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
-	flex-grow: 1;
-	padding: 2px 0 0;
+	padding: 2px 0 0 0;
 
 	@media (--viewportMedium) {
+		padding: 0;
 		/**
      * .container is using flexbox,
      * This specifies that searchResultContainer is taking 60% from the viewport width
      */
 		flex-basis: 50%;
-		padding: 0;
 	}
 
 	@media (--viewportLarge) {
@@ -211,15 +205,15 @@
 }
 
 .mainPanelMapVariant {
-	composes: mainpanel;
+	composes: mainPanel;
 
 	@media (--viewportMedium) {
-		padding: 18px 24px 0;
+		padding: 18px 24px 0 24px;
 		margin-bottom: 21px;
 	}
 
 	@media (--viewportLarge) {
-		padding: 23px 36px 0;
+		padding: 23px 36px 0 36px;
 	}
 }
 
@@ -240,19 +234,19 @@
 }
 
 .searchFiltersPanel {
-	display: flex;
 	flex-grow: 1;
-	padding: 0 24px 24px;
+	display: flex;
+	padding: 0 24px 24px 24px;
 
 	@media (--viewportLarge) {
-		padding: 0 36px 36px;
+		padding: 0 36px 36px 36px;
 	}
 }
 
 .listings {
+	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
-	flex-grow: 1;
 }
 
 .listingsForGridVariant {
@@ -278,14 +272,14 @@
 
 .mapPanel {
 	@media (--viewportMedium) {
-		/* Own layout settings */
-		display: flex;
-
 		/**
      * .container is using flexbox,
      * This specifies that mapPanel is taking 34% from the viewport width
      */
 		flex-basis: 50%;
+
+		/* Own layout settings */
+		display: flex;
 		height: 100%;
 	}
 

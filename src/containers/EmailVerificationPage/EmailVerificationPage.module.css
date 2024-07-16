@@ -13,13 +13,13 @@
 }
 
 .contentContainer {
-	composes: marketplacemodalrootstyles from global;
+	composes: marketplaceModalRootStyles from global;
 }
 
 .content {
-	composes: marketplacemodalbasestyles from global;
+	composes: marketplaceModalBaseStyles from global;
 }
 
 .error {
-	composes: marketplacemodalpasswordmargins from global;
+	composes: marketplaceModalPasswordMargins from global;
 }

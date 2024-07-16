@@ -2,15 +2,17 @@
 
 .coverEverything {
 	position: absolute;
-	inset: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 }
 
 .root {
-	position: relative;
-
 	/* Layout */
 	display: flex;
 	flex-direction: column;
+	position: relative;
 
 	/* Remove link's hover effect */
 	&:hover {
@@ -20,12 +22,12 @@
 
 .menuOverlayWrapper {
 	/* Positioning */
-	composes: covereverything;
+	composes: coverEverything;
 }
 
 .menuOverlay {
 	/* Positioning */
-	composes: covereverything;
+	composes: coverEverything;
 
 	/* Overlay */
 	background-color: var(--colorGrey300);
@@ -39,23 +41,22 @@
 }
 
 .clickWrapper {
-	position: relative;
-
 	/* Layout */
 	display: block;
 	width: 100%;
-	cursor: pointer;
+	position: relative;
 	transition: var(--transitionStyleButton);
+	cursor: pointer;
 
 	&:hover {
-		box-shadow: var(--boxShadowListingCard);
 		transform: scale(1.02);
+		box-shadow: var(--boxShadowListingCard);
 	}
 }
 
 .rootForImage {
 	/* Layout - image will take space defined by aspect ratio wrapper */
-	composes: covereverything;
+	composes: coverEverything;
 	width: 100%;
 	border: solid 1px var(--colorGrey100);
 	border-radius: var(--borderRadiusMedium);
@@ -78,11 +79,12 @@
 	width: 100%;
 	height: 100%;
 
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+
 	/* Gradient */
 	background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAqCAYAAACUV/o4AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAALEwAACxMBAJqcGAAAAVlpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDUuNC4wIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KTMInWQAAAGhJREFUKBVjZGBgKANibiAGga8sQAKEf4N4QMAC4vwH4r8gHgiABOAcmMAfEAMGsKrA0DIqAAsvHGFKkwACRRQjzGJQRP2DcUA0LOZAEQ5S9R8mAJIEA6wCyIYSqYVSz4FcxwR1E5gCAD7HLabS/HFUAAAAAElFTkSuQmCC");
 	background-repeat: repeat;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
 	opacity: 0.5;
 }
 
@@ -90,31 +92,31 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	display: flex;
-	justify-content: flex-end;
 	width: 100%;
 	height: 100%;
+	display: flex;
+	justify-content: flex-end;
 }
 
 .menuLabel {
-	padding: 0 9px 0 8px;
+	padding: 0px 9px 0 8px;
 }
 
 .iconWrapper {
-	padding: 0 10px 1px;
+	padding: 0px 10px 1px 10px;
 	color: var(--colorWhite);
 	border-radius: var(--borderRadiusMedium);
 	transition: var(--transitionStyleButton);
 
 	&:hover {
-		background-color: rgb(0 0 0 / 70%);
+		background-color: rgba(0, 0, 0, 0.7);
 	}
 }
 
 .listingMenuIsOpen {
 	& .iconWrapper {
+		background-color: rgba(0, 0, 0, 0.7);
 		color: var(--colorWhite);
-		background-color: rgb(0 0 0 / 70%);
 	}
 }
 
@@ -122,6 +124,7 @@
 	position: absolute;
 	right: 0;
 	z-index: var(--zIndexPopup);
+
 	background-color: var(--colorGrey700);
 	border-radius: var(--borderRadiusMedium);
 	box-shadow: var(--boxShadowPopup);
@@ -129,37 +132,39 @@
 
 .menuItem {
 	display: inline;
+
+	/* Borders */
+	border: none;
+
+	/* Text size should be inherited */
+	text-decoration: none;
+
+	font-weight: var(--fontWeightMedium);
+	font-size: 14px;
+	line-height: 18px;
+	letter-spacing: 0;
+
+	color: var(--colorWhite);
+	white-space: nowrap;
+	text-align: left;
 	padding: 8px 14px;
+	border-radius: var(--borderRadiusMedium);
 
 	/* Remove default margins from font */
 	margin-top: 0;
 	margin-bottom: 0;
-	font-size: 14px;
-	font-weight: var(--fontWeightMedium);
-	line-height: 18px;
-	color: var(--colorWhite);
-	text-align: left;
-
-	/* Text size should be inherited */
-	text-decoration: none;
-	letter-spacing: 0;
-	white-space: nowrap;
-
-	/* Borders */
-	border: none;
-	border-radius: var(--borderRadiusMedium);
 	transition: var(--transitionStyleButton);
 
 	&:hover {
 		text-decoration: none;
-		cursor: pointer;
 		background-color: var(--colorFail);
+		cursor: pointer;
 	}
 
 	@media (--viewportMedium) {
+		line-height: 16px;
 		margin-top: 0;
 		margin-bottom: 0;
-		line-height: 16px;
 	}
 }
 
@@ -175,10 +180,10 @@
 	/* Layout */
 	display: flex;
 	flex-direction: column;
-	padding: 8px 0 2px;
+	padding: 8px 0 2px 0;
 
 	@media (--viewportMedium) {
-		padding: 14px 0 2px;
+		padding: 14px 0 2px 0;
 	}
 }
 
@@ -186,8 +191,9 @@
 	/* Layout */
 	display: flex;
 	flex-direction: row;
-	flex-shrink: 0;
 	align-items: baseline;
+	flex-shrink: 0;
+
 	padding-top: 4px;
 	padding-bottom: 2px;
 
@@ -200,13 +206,14 @@
 .priceValue {
 	/* Font */
 	composes: p from global;
+	font-weight: var(--fontWeightSemiBold);
+	color: var(--marketplaceColor);
+
+	margin-right: 4px;
 
 	/* Remove default margins from font */
 	margin-top: 0;
-	margin-right: 4px;
 	margin-bottom: 0;
-	font-weight: var(--fontWeightSemiBold);
-	color: var(--marketplaceColor);
 
 	@media (--viewportMedium) {
 		margin-top: 0;
@@ -216,12 +223,12 @@
 
 .perUnit {
 	/* Font */
-	composes: marketplacetinyfontstyles from global;
+	composes: marketplaceTinyFontStyles from global;
+	color: var(--colorGrey700);
 
 	/* Remove default margins from font */
 	margin-top: 0;
 	margin-bottom: 0;
-	color: var(--colorGrey700);
 }
 
 @media (--viewportMedium) {
@@ -232,8 +239,8 @@
 }
 
 .noPrice {
-	composes: perunit;
-	padding: 5px 0 3px;
+	composes: perUnit;
+	padding: 5px 0 3px 0;
 }
 
 .mainInfo {
@@ -251,22 +258,24 @@
 
 	/* Position and dimensions */
 	display: inline;
-	padding: 3px 0;
 
-	/* Remove default margins from font */
-	margin: 0;
-
-	/* Font */
-	font-weight: var(--fontWeightSemiBold);
-	line-height: 24px;
-	color: var(--colorGrey700);
-	text-align: left;
+	/* Borders */
+	border: none;
 
 	/* Text size should be inherited */
 	text-decoration: none;
 
-	/* Borders */
-	border: none;
+	/* Font */
+	font-weight: var(--fontWeightSemiBold);
+	line-height: 24px;
+
+	color: var(--colorGrey700);
+	text-align: left;
+
+	padding: 3px 0;
+
+	/* Remove default margins from font */
+	margin: 0;
 
 	&:hover {
 		text-decoration: underline;
@@ -286,24 +295,27 @@
 /* Solid gray background for draft listings without image */
 .draftNoImage {
 	position: absolute;
-	inset: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 	background-color: var(--colorGrey700);
 }
 
 .edit {
-	composes: buttonsecondary from global;
+	composes: buttonSecondary from global;
+
+	/* TODO: Odd font-size */
+	font-size: 14px;
+
+	/* Reset min-height from button styles */
+	min-height: 0;
 
 	/* Reserve space for button */
 	flex-shrink: 0;
 	width: auto;
 	height: 41px;
-
-	/* Reset min-height from button styles */
-	min-height: 0;
 	padding: 7px 14px 7px 35px;
-
-	/* TODO: Odd font-size */
-	font-size: 14px;
 
 	/* Add edit icon as a background image */
 	background-image: url('data:image/svg+xml;utf8,<svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg"><g stroke="%234A4A4A" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"><path d="M5.307 11.155L1 13l1.846-4.308L10.54 1 13 3.46zM11 5L9 3M5 11L3 9"/></g></svg>');
@@ -313,7 +325,7 @@
 
 .openListingButton,
 .finishListingDraftLink {
-	composes: buttonprimaryinline from global;
+	composes: buttonPrimaryInline from global;
 
 	/* margin-top + n * line-height + margin-bottom => x * 6px */
 	margin-top: 10px;
@@ -335,37 +347,38 @@
 }
 
 .manageLinks {
-	composes: marketplacetinyfontstyles from global;
+	composes: marketplaceTinyFontStyles from global;
+	line-height: 18px;
 	padding-top: 2px;
 	padding-bottom: 4px;
 
 	/* Remove default margins from font */
 	margin-top: 0;
 	margin-bottom: 0;
-	line-height: 18px;
 
 	@media (--viewportMedium) {
+		line-height: 24px;
 		padding-top: 0;
 		padding-bottom: 0;
+
 		margin-top: 0;
 		margin-bottom: 0;
-		line-height: 24px;
 	}
 }
 
 .manageLink {
-	color: var(--colorGrey700);
 	text-decoration: underline;
+	color: var(--colorGrey700);
 	white-space: pre;
 
 	&:hover {
-		color: var(--colorBlack);
 		text-decoration: underline;
+		color: var(--colorBlack);
 	}
 }
 
 .manageLinksSeparator {
-	margin: 0 3px;
+	margin: 0 3px 0 3px;
 }
 
 .closeListingText {

@@ -2,12 +2,12 @@
 
 .panel {
 	flex-grow: 1;
-	padding: 11px 24px 0;
+	padding: 11px 24px 0 24px;
 
 	@media (--viewportLarge) {
 		padding: 48px 36px 82px 59px;
-		background-color: var(--colorWhite);
 		border-left: 1px solid var(--colorGrey100);
+		background-color: var(--colorWhite);
 	}
 
 	@media (--viewportLargeWithPaddings) {

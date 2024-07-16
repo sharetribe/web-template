@@ -1,20 +1,21 @@
 @import "../../../styles/customMediaQueries.css";
 
 .bookingBreakdownTitle {
-	font-weight: var(--fontWeightMedium);
 	letter-spacing: 1px;
+	font-weight: var(--fontWeightMedium);
 }
 
 .totalDivider {
 	/* dimensions */
 	width: 100%;
 	height: 1px;
-	margin: 12px 0 5px;
-	background-color: var(--colorGrey100);
+	margin: 12px 0 5px 0;
+
 	border: none;
+	background-color: var(--colorGrey100);
 
 	@media (--viewportMedium) {
-		margin: 7px 0 0;
+		margin: 7px 0 0px 0;
 	}
 }
 
@@ -71,14 +72,15 @@
 }
 
 .finePrint {
-	composes: marketplacetinyfontstyles from global;
+	composes: marketplaceTinyFontStyles from global;
 	text-align: center;
 }
 
 .error {
 	composes: h4 from global;
-	padding: 0 24px;
 	color: var(--colorFail);
+
+	padding: 0 24px;
 
 	@media (--viewportMedium) {
 		padding: 0;

@@ -19,38 +19,46 @@
 }
 
 .link {
-	/* Font */
-	composes: textsmall from global;
 	display: inline-block;
-	height: 100%;
-	padding-top: 10px;
+	white-space: nowrap;
+
+	/* Font */
+	composes: textSmall from global;
+
+	color: var(--colorGrey700);
 	padding-bottom: 10px;
+	padding-top: 10px;
+	height: 100%;
 
 	/* push tabs against bottom of tab bar */
 	margin-top: auto;
-	color: var(--colorGrey700);
-	white-space: nowrap;
+
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+	border-bottom-color: transparent;
+
+	transition: var(--transitionStyleButton);
 	background-image: url("data:image/svg+xml;utf8,<svg width='4' height='32' viewBox='0 0 4 32' xmlns='http://www.w3.org/2000/svg'><path d='M0 0h4v32H0z' fill='%234a4a4a' fill-rule='evenodd'/></svg>");
 	background-position: calc(var(--TabNav_linkWidth) + 4px) center; /* SelectedLink's width (200px) + border thickness (4px) = 204px */
-	border-bottom: 2px solid transparent;
-	transition: var(--transitionStyleButton);
 
 	&:hover {
-		color: var(--colorBlack);
 		text-decoration: none;
+		color: var(--colorBlack);
 	}
 
 	@media (--viewportLarge) {
-		width: var(--TabNav_linkWidth);
+		font-weight: var(--fontWeightSemiBold);
+		font-size: 20px;
+		line-height: 24px;
+
 		height: unset;
-		padding-top: 5px; /* Drop the text to adjust it to correct baseline */
-		padding-bottom: 3px;
+		width: var(--TabNav_linkWidth);
+		border-bottom-width: 0px;
 		margin-top: 0;
 		margin-bottom: 16px;
-		font-size: 20px;
-		font-weight: var(--fontWeightSemiBold);
-		line-height: 24px;
-		border-bottom-width: 0;
+
+		padding-top: 5px; /* Drop the text to adjust it to correct baseline */
+		padding-bottom: 3px;
 
 		&:hover {
 			background-image: url("data:image/svg+xml;utf8,<svg width='4' height='32' viewBox='0 0 4 32' xmlns='http://www.w3.org/2000/svg'><path d='M0 0h4v32H0z' fill='%234a4a4a' fill-rule='evenodd'/></svg>");
@@ -60,8 +68,8 @@
 }
 
 .selectedLink {
-	color: var(--colorBlack);
 	border-bottom-color: var(--colorBlack);
+	color: var(--colorBlack);
 
 	@media (--viewportLarge) {
 		width: var(--TabNav_linkWidth);
@@ -76,7 +84,7 @@
 }
 
 .disabled {
+	pointer-events: none;
 	color: var(--colorGrey300);
 	text-decoration: none;
-	pointer-events: none;
 }

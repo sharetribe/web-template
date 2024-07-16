@@ -1,14 +1,14 @@
 @import "../../../../styles/customMediaQueries.css";
 
 .root {
+	/* Dimensions */
+	width: 100%;
+	height: auto;
+
 	/* Display format */
 	display: flex;
 	flex: 1;
 	flex-direction: column;
-
-	/* Dimensions */
-	width: 100%;
-	height: auto;
 
 	@media (--viewportMedium) {
 		padding-top: 2px;
@@ -28,14 +28,14 @@
 
 .predictionsRoot {
 	position: absolute;
+	width: 100%;
 	top: 36px;
 	left: 0;
-	z-index: calc(var(--zIndexPopup) + 1);
-	width: 100%;
 	background-color: var(--marketplaceColor);
-	border-bottom-right-radius: var(--borderRadius);
 	border-bottom-left-radius: var(--borderRadius);
+	border-bottom-right-radius: var(--borderRadius);
 	box-shadow: var(--boxShadowPopup);
+	z-index: calc(var(--zIndexPopup) + 1);
 
 	@media (--viewportMedium) {
 		top: 40px;

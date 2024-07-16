@@ -32,10 +32,9 @@
 
 .mobileBio,
 .desktopBio {
-	margin: 18px 0 0;
-
 	/* Preserve newlines, but collapse other whitespace */
 	white-space: pre-line;
+	margin: 18px 0 0 0;
 	transition: all 1s ease-in;
 
 	@media (--viewportMedium) {
@@ -62,28 +61,30 @@
 }
 
 .longWord {
-	hyphens: auto;
 	word-break: break-word;
+	hyphens: auto;
 }
 
 .showMore {
 	/* Position and dimensions */
 	display: inline;
 	padding: 0;
-	margin: 0 0 0 5px;
-	font-size: 15px;
-	font-weight: var(--fontWeightMedium);
-	line-height: 24px;
+
+	/* Borders */
+	border: none;
 
 	/* Colors */
 	color: var(--marketplaceColor);
 
 	/* Text size should be inherited */
 	text-decoration: none;
+
+	font-weight: var(--fontWeightMedium);
+	font-size: 15px;
+	line-height: 24px;
 	letter-spacing: 0;
 
-	/* Borders */
-	border: none;
+	margin: 0 0 0 5px;
 
 	&:hover {
 		text-decoration: underline;
@@ -91,10 +92,10 @@
 	}
 
 	@media (--viewportMedium) {
+		font-weight: var(--fontWeightMedium);
 		/* margin-top + n * line-height + margin-bottom => x * 8px */
 		margin-top: 17px;
 		margin-bottom: 15px;
-		font-weight: var(--fontWeightMedium);
 	}
 }
 
@@ -102,7 +103,7 @@
 	margin-top: 13px;
 
 	@media (--viewportMedium) {
-		margin: 16px 0 0;
+		margin: 16px 0 0 0;
 	}
 }
 
@@ -124,8 +125,8 @@
 
 	@media (--viewportMedium) {
 		flex-direction: row;
-		align-items: baseline;
 		justify-content: space-between;
+		align-items: baseline;
 	}
 }
 
@@ -154,20 +155,21 @@
 	/* Position and dimensions */
 	display: inline;
 	padding: 0;
-	margin: 0;
-	font-size: 15px;
-	font-weight: var(--fontWeightMedium);
-	line-height: 24px;
+
+	/* Borders */
+	border: none;
 
 	/* Colors */
 	color: var(--marketplaceColor);
 
 	/* Text size should be inherited */
 	text-decoration: none;
-	letter-spacing: 0;
 
-	/* Borders */
-	border: none;
+	font-weight: var(--fontWeightMedium);
+	font-size: 15px;
+	line-height: 24px;
+	letter-spacing: 0;
+	margin: 0;
 
 	&:hover {
 		text-decoration: underline;
@@ -175,7 +177,7 @@
 	}
 
 	@media (--viewportMedium) {
-		margin: 0;
 		font-weight: var(--fontWeightMedium);
+		margin: 0;
 	}
 }

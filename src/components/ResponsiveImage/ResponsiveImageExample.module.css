@@ -1,6 +1,6 @@
 .root {
-	position: relative;
 	display: block;
+	position: relative;
 	width: 200px;
 	margin-bottom: 70px;
 	overflow: hidden;
@@ -13,17 +13,20 @@
 
 .rootForImageWithAspectRatio {
 	position: absolute;
-	inset: 0;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
 	width: 100%;
 }
 
 .rootForSizes {
-	position: relative;
 	display: block;
+	position: relative;
 	width: 200px;
 	margin-bottom: 70px;
 
-	@media (width >= 601px) {
+	@media (min-width: 601px) {
 		width: 400px;
 	}
 }

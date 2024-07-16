@@ -5,30 +5,29 @@
 }
 
 .root {
-	/* This component uses flexbox layout too */
-	display: flex;
-
 	/* Parent component should not shrink this field */
 	flex-shrink: 0;
-	flex-wrap: wrap;
+
+	/* This component uses flexbox layout too */
+	display: flex;
 	justify-content: space-between;
+	flex-wrap: wrap;
 }
 
 .input {
 	/* Parent component should not shrink this field */
 	flex-shrink: 0;
-	width: 100%;
 	margin-bottom: 24px;
-
+	width: 100%;
 	&:last-of-type {
 		margin-bottom: 0;
 	}
 }
 
 .error {
-	margin-top: 7px !important; /* TODO: Change the <p> tag in front-end to <span> to remove !important */
-	font-size: 13px !important; /* TODO: Change the <p> tag in front-end to <span> to remove !important */
 	color: var(--colorFail);
+	font-size: 13px !important; /* TODO: Change the <p> tag in front-end to <span> to remove !important */
+	margin-top: 7px !important; /* TODO: Change the <p> tag in front-end to <span> to remove !important */
 }
 
 input.inputError {

@@ -7,10 +7,10 @@
 
 .icon {
 	display: flex;
-	align-self: stretch;
 	width: 24px;
-	background-color: var(--colorWhite);
+	align-self: stretch;
 	border-bottom: 2px solid var(--marketplaceColor);
+	background-color: var(--colorWhite);
 }
 
 .iconSvg {
@@ -27,8 +27,8 @@
 }
 
 .iconSpinner {
-	width: 23px;
 	margin: auto;
+	width: 23px;
 }
 
 .input {
@@ -40,7 +40,7 @@
 	border-bottom-width: 2px;
 
 	/* Safari bugfix: without this Safari will print placeholder to a wrong place */
-	&::input-placeholder {
+	&::-webkit-input-placeholder {
 		line-height: normal;
 	}
 
@@ -57,14 +57,14 @@ size and position, etc.
 */
 .predictionsRoot {
 	position: absolute;
+	width: 100%;
 	top: 50px;
 	left: 0;
-	z-index: calc(var(--zIndexPopup) + 1);
-	width: 100%;
 	background-color: var(--marketplaceColor);
-	border-bottom-right-radius: var(--borderRadius);
 	border-bottom-left-radius: var(--borderRadius);
+	border-bottom-right-radius: var(--borderRadius);
 	box-shadow: var(--boxShadowPopup);
+	z-index: calc(var(--zIndexPopup) + 1);
 }
 
 .predictionsRootGoogle {
@@ -87,9 +87,9 @@ bottom of the container.
 	bottom: 30px;
 	width: 100%;
 	height: 18px;
-	background-image: url("./images/powered_by_google_on_non_white_hdpi.png");
-	background-position: center;
+	background-image: url(./images/powered_by_google_on_non_white_hdpi.png);
 	background-size: auto 18px;
+	background-position: center;
 
 	@media (--viewportMedium) {
 		background-position: center left 36px;
@@ -98,34 +98,35 @@ bottom of the container.
 
 /* List of predictions, with a responsive padding size */
 .predictions {
-	composes: marketplacebodyfontstyles from global;
-	padding: 14px 0;
+	composes: marketplaceBodyFontStyles from global;
+
 	margin: 0;
+	padding: 14px 0;
 
 	& li {
-		/* Assign enough vertical padding to make the element at least 44px high */
-		padding: 9px 24px;
+		color: var(--colorWhite);
+		transition: var(--transitionStyleButton);
 		margin: 0; /* Remove the double white space */
 		line-height: 24px;
-		color: var(--colorWhite);
-
 		/* keep horizontal space stable when hovering */
 		border-left: 6px solid transparent;
-		transition: var(--transitionStyleButton);
+
+		/* Assign enough vertical padding to make the element at least 44px high */
+		padding: 9px 24px;
 
 		@media (--viewportMedium) {
+			color: var(--colorLightTransparent);
 			padding: 10px 36px;
 			margin: 0;
-			color: var(--colorLightTransparent);
 		}
 
 		&:hover,
 		&.highlighted {
-			color: var(--colorWhite);
 			cursor: pointer;
 			border-left: 6px solid var(--colorWhite);
 			border-top-right-radius: 20px;
 			border-bottom-right-radius: 20px;
+			color: var(--colorWhite);
 		}
 	}
 }

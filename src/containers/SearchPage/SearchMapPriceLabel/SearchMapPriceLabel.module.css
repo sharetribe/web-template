@@ -4,18 +4,18 @@
 	position: relative;
 	width: auto;
 	height: auto;
-	padding: 0;
 	border: 0;
+	padding: 0;
 
 	&:hover {
 		& .priceLabel,
 		& .caret {
-			color: var(--colorWhite);
 			cursor: pointer;
 
 			/* Same as active */
 			background-color: var(--marketplaceColor);
 			border-color: var(--marketplaceColor);
+			color: var(--colorWhite);
 			box-shadow: var(--boxShadowPopup);
 		}
 	}
@@ -23,30 +23,30 @@
 
 .priceLabel {
 	composes: h5 from global;
-
 	/**
    * Since caret is absolutely positioned,
    * label must have relative to be included to the same rendering layer
    */
 	position: relative;
 
-	/* Dimensions */
-	padding: 6px 10px;
-	margin-top: 0;
-	margin-bottom: 0;
-
 	/* Font */
 	font-weight: var(--fontWeightSemiBold);
 	color: var(--colorGrey700);
 	letter-spacing: 0.1px;
+
 	background-color: var(--colorWhite);
-	border-color: var(--colorGrey100);
 
 	/* Borders */
 	border-style: solid;
+	border-color: var(--colorGrey100);
 	border-width: 1px;
 	border-radius: var(--borderRadiusMedium);
 	box-shadow: var(--boxShadowPopupLight);
+
+	/* Dimensions */
+	padding: 6px 10px;
+	margin-top: 0;
+	margin-bottom: 0;
 	transition: var(--transitionStyleButton);
 
 	/* Overwrite dimensions from font styles */
@@ -55,52 +55,53 @@
 		margin-bottom: 0;
 	}
 }
-
 .noPriceSetLabel {
 	width: 30px;
 	height: 30px;
 }
 
 .mapLabelActive {
-	color: var(--colorWhite);
-
 	/* Same as hover */
 	background-color: var(--marketplaceColor);
 	border-color: var(--marketplaceColor);
+	color: var(--colorWhite);
 	box-shadow: var(--boxShadowPopup);
 }
 
 .caretShadow {
-	position: absolute;
-	bottom: -3px;
-	left: 50%;
-
 	/* Caret / arrow dimensions and position */
 	width: 6px;
 	height: 6px;
+	position: absolute;
+	bottom: -3px;
+	left: 50%;
 	margin-left: -3px;
+	transform: rotate(45deg);
 
 	/* Caret should have same box-shadow as label */
 	box-shadow: var(--boxShadowPopupLight);
-	transform: rotate(45deg);
 }
 
 .caret {
-	position: absolute;
-	bottom: -3px;
-	left: 50%;
-
 	/* Caret / arrow dimensions and position */
 	width: 6px;
 	height: 6px;
+	position: absolute;
+	bottom: -3px;
+	left: 50%;
 	margin-left: -3px;
+	transform: rotate(45deg);
+
+	transition: var(--transitionStyleButton);
 
 	/* Caret should have same bg-color and border as label */
 	background-color: var(--colorWhite);
-	border-right: 1px solid var(--colorGrey100);
-	border-bottom: 1px solid var(--colorGrey100);
-	transition: var(--transitionStyleButton);
-	transform: rotate(45deg);
+	border-right-style: solid;
+	border-right-color: var(--colorGrey100);
+	border-right-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: var(--colorGrey100);
+	border-bottom-width: 1px;
 }
 
 .caretActive {

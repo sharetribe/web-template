@@ -14,22 +14,22 @@
 .noImageWrapper {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
 	justify-content: center;
+	align-items: center;
 }
 
 .noImageIcon {
-	box-sizing: content-box;
 	padding-top: 24px;
+	box-sizing: content-box;
 	stroke: var(--colorGrey700);
 }
 
 .noImageText {
 	composes: h6 from global;
-	padding-bottom: 24px;
-	margin-bottom: 0;
 	color: var(--colorGrey700);
+	padding-bottom: 24px;
 
+	margin-bottom: 0;
 	@media (--viewportMedium) {
 		margin-bottom: 0;
 	}

@@ -1,15 +1,14 @@
 .root {
-	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	/* SectionContainer defaults */
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
 	width: 100%;
+	position: relative;
 
 	/* Hero specific */
 	min-height: 80vh;
-	background-repeat: no-repeat;
-	background-position: center center;
-
-	/* SectionContainer defaults */
-	background-size: cover;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

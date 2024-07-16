@@ -1,23 +1,23 @@
 @import "../../../styles/customMediaQueries.css";
 
 .root {
-	position: relative;
+	width: 100%;
 
 	/* Top Bar's drop shadow should always be visible */
 	z-index: var(--zIndexTopbar);
-	width: 100%;
+	position: relative;
 }
 
 .container {
-	/* Layout for child components */
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-
 	/* Size */
 	width: 100%;
 	height: var(--topbarHeight);
+
+	/* Layout for child components */
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
 
 	/* fill */
 	background-color: var(--colorWhite);
@@ -43,41 +43,38 @@
 .searchMenu {
 	/* Font */
 	composes: h5 from global;
+	color: var(--colorGrey700);
 
 	/* Layout */
 	display: flex;
 	width: 66px;
 	margin: 0;
-	color: var(--colorGrey700);
+	border-width: 0px;
 	background-color: transparent;
-	border-width: 0;
 
 	/* Hovers */
 	&:enabled {
 		cursor: pointer;
 	}
-
 	&:enabled:hover,
 	&:enabled:active {
 		background-color: transparent;
 		box-shadow: none;
 	}
-
 	&:disabled {
-		cursor: auto;
 		background-color: transparent;
+		cursor: auto;
 	}
 }
 
 .menu {
-	position: relative;
 	padding: 15px 24px;
+	position: relative;
 
 	@media (--viewportMedium) {
 		padding: 21px 24px;
 	}
 }
-
 .searchMenu {
 	padding: 12px 24px;
 
@@ -92,26 +89,28 @@
 }
 
 .notificationDot {
+	/* Dimensions */
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+
 	/* Position */
 	position: absolute;
 	top: 17px;
 	right: 17px;
 
-	/* Dimensions */
-	width: 12px;
-	height: 12px;
-
 	/* Style: red dot with white border */
 	background-color: var(--colorFail);
 	border: 2px solid var(--colorWhite);
-	border-radius: 50%;
-	opacity: 0;
-	transform: scale(0);
+
 	animation-name: notificationPop;
 	animation-duration: 0.1s;
-	animation-timing-function: ease-in;
 	animation-delay: 0.1s;
 	animation-fill-mode: forwards;
+
+	animation-timing-function: ease-in;
+	opacity: 0;
+	transform: scale(0);
 
 	@media (--viewportMedium) {
 		top: 23px;
@@ -120,13 +119,12 @@
 
 @keyframes notificationPop {
 	0% {
-		opacity: 0;
 		transform: scale(0);
+		opacity: 0;
 	}
-
 	100% {
-		opacity: 1;
 		transform: scale(1);
+		opacity: 1;
 	}
 }
 
@@ -142,7 +140,6 @@
 .rootMenuIcon {
 	fill: var(--colorGrey700);
 }
-
 .rootSearchIcon {
 	stroke: var(--colorGrey700);
 }
@@ -154,54 +151,53 @@
 }
 
 .mobileHelp {
+	color: var(--colorGrey300);
+	margin: 0 24px;
+
 	/* Absolute position to avoid affecting the layout of the autocomplete
    predictions list */
 	position: absolute;
 	top: 73px;
-	margin: 0 24px;
-	color: var(--colorGrey300);
 }
 
 /* ================ Modal ================ */
 
 .modalContainer {
-	composes: marketplacemodalinmobilebasestyles from global;
+	composes: marketplaceModalInMobileBaseStyles from global;
 	padding: 0;
 	padding: var(--modalPadding);
 
 	@media (--viewportMedium) {
 		flex-basis: 576px;
 		flex-grow: 1;
-		height: auto;
 		min-height: max(100%, 100vh);
+		height: auto;
 		padding: 24px;
 		background-color: var(--colorWhite);
 		border-bottom: none;
 	}
 }
-
 .modalContainerSearchForm {
-	composes: modalcontainer;
+	composes: modalContainer;
 	padding: 0;
-
 	@media (--viewportMedium) {
 		padding: var(--modalPaddingMedium);
 	}
 }
 
 .missingInformationModal {
-	composes: marketplacemodalbasestyles from global;
+	composes: marketplaceModalBaseStyles from global;
 	padding-top: 70px;
 }
 
 /* Title of the modal */
 .modalTitle {
-	composes: marketplacemodaltitlestyles from global;
+	composes: marketplaceModalTitleStyles from global;
 }
 
 /* Paragraph for the Modal */
 .modalMessage {
-	composes: marketplacemodalparagraphstyles from global;
+	composes: marketplaceModalParagraphStyles from global;
 }
 
 /* Make the email pop */
@@ -210,26 +206,26 @@
 }
 
 .helperLink {
-	composes: marketplacemodalhelperlink from global;
+	composes: marketplaceModalHelperLink from global;
 }
 
 .helperText {
-	composes: marketplacemodalhelpertext from global;
+	composes: marketplaceModalHelperText from global;
 }
 
 .error {
-	composes: marketplacemodalpasswordmargins from global;
+	composes: marketplaceModalPasswordMargins from global;
 }
 
 .bottomWrapper {
-	composes: marketplacemodalbottomwrapper from global;
+	composes: marketplaceModalBottomWrapper from global;
 
 	/* Align the helper links to the left since there isn't a Primary Button anymore */
 	text-align: left;
 }
 
 .modalIcon {
-	composes: marketplacemodaliconstyles from global;
+	composes: marketplaceModalIconStyles from global;
 }
 
 .genericError {
@@ -238,21 +234,22 @@
 
 	/* Place enough to the right to hide the error */
 	right: -355px;
-
-	/* Place on top of everything */
-	z-index: var(--zIndexGenericError);
-	max-width: 340px;
-
-	/* Bleed the bg color from the bottom */
-	padding-bottom: 4px;
-	margin: 0 15px;
-	background-color: var(--marketplaceColor);
-	border-radius: var(--borderRadiusMedium);
 	opacity: 0;
+
+	max-width: 340px;
+	margin: 0 15px;
 
 	/* Animate error from the right */
 	transition: all ease-out 0.2s;
 	transition-delay: 1s;
+
+	/* Bleed the bg color from the bottom */
+	padding-bottom: 4px;
+	background-color: var(--marketplaceColor);
+	border-radius: var(--borderRadiusMedium);
+
+	/* Place on top of everything */
+	z-index: var(--zIndexGenericError);
 
 	@media (--viewportMedium) {
 		top: calc(var(--topbarHeightDesktop) + 15px);
@@ -272,8 +269,8 @@
 
 .genericErrorText {
 	composes: h5 from global;
-	margin: 0;
 	font-weight: var(--fontWeightSemiBold);
+	margin: 0;
 	color: var(--colorWhite);
 
 	@media (--viewportMedium) {

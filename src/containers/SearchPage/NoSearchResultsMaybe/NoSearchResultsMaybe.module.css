@@ -2,11 +2,11 @@
 
 .noSearchResults {
 	composes: h4 from global;
-	margin-top: 18px;
-	margin-bottom: 18px;
 
 	/* Reserves 48px of vertical space */
 	line-height: 24px;
+	margin-top: 18px;
+	margin-bottom: 18px;
 
 	@media (--viewportMedium) {
 		margin-top: 8px;
@@ -17,19 +17,19 @@
 .createListingLink,
 .resetAllFiltersButton {
 	composes: h5 from global;
+	font-weight: var(--fontWeightMedium);
+	color: var(--marketplaceColor);
 
 	/* Layout */
 	display: inline;
-	padding: 0;
 	margin: 0;
-	font-weight: var(--fontWeightMedium);
-	color: var(--marketplaceColor);
-	text-align: left;
-	cursor: pointer;
-	border: none;
+	padding: 0;
 
 	/* Override button styles */
 	outline: none;
+	text-align: left;
+	border: none;
+	cursor: pointer;
 
 	&:focus,
 	&:hover {
@@ -37,6 +37,6 @@
 	}
 
 	@media (--viewportMedium) {
-		padding: 3px 0 5px;
+		padding: 3px 0 5px 0;
 	}
 }

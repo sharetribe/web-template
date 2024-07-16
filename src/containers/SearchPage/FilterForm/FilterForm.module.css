@@ -8,22 +8,22 @@
 
 .buttonsWrapper {
 	display: flex;
-	padding: 0 30px 16px;
+	padding: 0 30px 16px 30px;
 }
 
 .clearButton,
 .cancelButton,
 .submitButton {
-	composes: textsmall from global;
+	composes: textSmall from global;
+	font-weight: var(--fontWeightMedium);
 
 	/* Layout */
 	padding: 0;
-	font-weight: var(--fontWeightMedium);
-	cursor: pointer;
-	border: none;
 
 	/* Override button styles */
 	outline: none;
+	border: none;
+	cursor: pointer;
 
 	&:focus,
 	&:hover {
@@ -32,9 +32,10 @@
 }
 
 .clearButton {
+	color: var(--colorGrey300);
+
 	/* Layout */
 	margin: 0 auto 0 0;
-	color: var(--colorGrey300);
 
 	&:focus,
 	&:hover {
@@ -43,6 +44,8 @@
 }
 
 .cancelButton {
+	color: var(--colorGrey300);
+
 	/* Layout */
 	margin: 0;
 
@@ -50,7 +53,6 @@
    * but some hard coded margin is still needed
    */
 	margin-left: 48px;
-	color: var(--colorGrey300);
 
 	&:focus,
 	&:hover {
@@ -59,9 +61,10 @@
 }
 
 .submitButton {
+	color: var(--marketplaceColor);
+
 	/* Layout */
 	margin: 0 0 0 19px;
-	color: var(--marketplaceColor);
 
 	&:focus,
 	&:hover {

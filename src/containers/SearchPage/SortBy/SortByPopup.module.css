@@ -18,10 +18,10 @@
 }
 
 .menuContent {
-	min-width: 300px;
+	margin-top: 7px;
 	padding-top: 24px;
 	padding-bottom: 24px;
-	margin-top: 7px;
+	min-width: 300px;
 	border-radius: var(--borderRadiusMedium);
 }
 
@@ -29,9 +29,9 @@
 .menuItemBorder {
 	position: absolute;
 	top: 2px;
-	left: 0;
-	width: 0;
+	left: 0px;
 	height: calc(100% - 4px);
+	width: 0;
 	background-color: var(--marketplaceColor);
 	transition: width var(--transitionStyleButton);
 }
@@ -40,35 +40,36 @@
 .menuItemBorderSelected {
 	position: absolute;
 	top: 2px;
-	left: 0;
-	width: 6px;
+	left: 0px;
 	height: calc(100% - 7px);
+	width: 6px;
 	background-color: var(--colorBlack);
 }
 
 .menuHeading {
-	margin-top: 24px;
-	margin-right: 30px;
-	margin-left: 30px;
 	font-weight: var(--fontWeightSemiBold);
 	color: var(--colorGrey700);
+	margin-top: 24px;
+	margin-left: 30px;
+	margin-right: 30px;
 }
 
 .menuItem {
-	composes: marketplacelistingattributefontstyles from global;
+	composes: marketplaceListingAttributeFontStyles from global;
+	color: var(--colorGrey700);
 
 	/* Layout */
 	position: relative;
 	min-width: 300px;
-	padding: 4px 30px;
 	margin: 0;
-	color: var(--colorGrey700);
-	text-align: left;
-	cursor: pointer;
-	border: none;
+	padding: 4px 30px;
 
 	/* Override button styles */
 	outline: none;
+	text-align: left;
+	border: none;
+
+	cursor: pointer;
 
 	&:focus,
 	&:hover {
@@ -83,7 +84,6 @@
 		color: var(--colorGrey300);
 		cursor: default;
 	}
-
 	&:disabled:hover .menuItemBorder {
 		width: 0;
 	}
@@ -91,20 +91,21 @@
 
 .clearMenuItem {
 	composes: h4 from global;
+	font-weight: var(--fontWeightMedium);
+	color: var(--colorGrey300);
 
 	/* Layout */
 	position: relative;
 	min-width: 300px;
-	padding: 32px 30px 18px;
 	margin: 0;
-	font-weight: var(--fontWeightMedium);
-	color: var(--colorGrey300);
-	text-align: left;
-	cursor: pointer;
-	border: none;
+	padding: 32px 30px 18px 30px;
 
 	/* Override button styles */
 	outline: none;
+	text-align: left;
+	border: none;
+
+	cursor: pointer;
 	transition: width var(--transitionStyleButton);
 
 	&:focus,

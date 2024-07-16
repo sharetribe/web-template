@@ -1,17 +1,15 @@
 .root {
-	hyphens: auto;
-
 	/* fallback option */
 	word-break: break-all;
-
 	/* use break-word if available */
 	word-break: break-word;
+	hyphens: auto;
 }
 
 .media {
 	width: 100%;
-	margin-bottom: 0;
 	border-radius: 8px;
+	margin-bottom: 0;
 }
 
 .text {
@@ -32,18 +30,18 @@
 	}
 
 	& ol {
-		padding-left: 0;
-		margin-top: 0;
+		margin-top: 0px;
+		padding-left: 0px;
 	}
 
 	& li {
-		padding: 0;
 		font-size: 14px;
 		color: var(--colorGrey700);
+		padding: 0px;
 		list-style-position: inside;
 	}
 
 	& p {
-		padding: 0;
+		padding: 0px;
 	}
 }

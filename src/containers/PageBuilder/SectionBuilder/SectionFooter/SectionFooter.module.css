@@ -5,45 +5,47 @@
 }
 
 .footer {
+	max-width: var(--contentMaxWidthPages);
 	display: grid;
 	grid-template-columns: repeat(1, 1fr);
 	gap: 32px;
-	max-width: var(--contentMaxWidthPages);
-	padding: 24px 32px;
 	margin: 0 auto;
+	padding: 24px 32px;
 }
 
 .footer ul {
-	padding-inline-start: 0;
-	margin-top: 1px;
 	list-style-type: none;
+	padding-inline-start: 0px;
+	margin-top: 1px;
 }
 
 .linkList {
-	padding-left: 12px;
 	list-style-type: none;
+	padding-left: 12px;
 }
 
 .content {
 	display: grid;
+	justify-content: center;
+	align-content: end;
+	grid-auto-rows: auto;
+	grid-gap: 32px;
+	grid-row-gap: 16px;
+	grid-template-columns: 1fr;
 	grid-template-areas:
 		"logo"
 		"details"
 		"grid"
 		"links";
-	grid-template-columns: 1fr;
-	grid-auto-rows: auto;
-	grid-gap: 32px;
-	grid-row-gap: 16px;
-	place-content: end center;
 }
 
 .grid {
-	display: grid;
 	grid-area: grid;
+	display: grid;
+	justify-content: center;
+	align-content: start;
 	grid-auto-rows: auto;
 	grid-gap: 32px;
-	place-content: start center;
 }
 
 .gridCol1,
@@ -61,7 +63,6 @@
 	font-size: 16px;
 	line-height: 24px;
 }
-
 .sloganMobile {
 	grid-area: details;
 	padding-bottom: 24px;
@@ -70,7 +71,6 @@
 		display: none;
 	}
 }
-
 .sloganDesktop {
 	display: none;
 
@@ -85,24 +85,24 @@
 
 .copyright {
 	display: inline-block;
-	margin-top: 24px;
 	font-size: 12px;
 	line-height: 16px;
 	color: var(--colorGrey500);
+	margin-top: 24px;
 }
 
 .icons {
 	margin-top: 24px;
 
 	@media (--viewportLarge) {
-		margin-top: 0;
+		margin-top: 0px;
 	}
 }
 
 .icon {
-	padding: 10px 15px;
-	margin: 15px 15px 0 0;
 	font-size: 28px;
+	margin: 15px 15px 0px 0px;
+	padding: 10px 15px;
 }
 
 .logoLink {
@@ -113,15 +113,13 @@
 		text-decoration: none;
 	}
 }
-
 .logoWrapper {
 	max-width: 370px;
 }
-
 .logoImage {
+	height: auto;
 	width: auto;
 	max-width: 100%;
-	height: auto;
 	object-fit: contain;
 	object-position: center;
 
@@ -130,7 +128,7 @@
 	}
 }
 
-@media (width >= 350px) {
+@media (min-width: 350px) {
 	.gridCol2,
 	.gridCol3,
 	.gridCol4 {
@@ -138,7 +136,7 @@
 	}
 }
 
-@media (width >= 600px) {
+@media (min-width: 600px) {
 	.gridCol3,
 	.gridCol4 {
 		grid-template-columns: repeat(3, 1fr);
@@ -157,47 +155,40 @@
 	}
 
 	.contentCol1 {
-		grid-template-areas:
-			"logo . ."
-			"details . grid"
-			"details . grid"
-			"details . grid";
-
 		/* 1/6 of space is for grid, and grid uses 1 column internally */
 		grid-template-columns: 2fr 3fr 1fr;
-	}
-
-	.contentCol2 {
 		grid-template-areas:
 			"logo . ."
 			"details . grid"
 			"details . grid"
 			"details . grid";
-
+	}
+	.contentCol2 {
 		/* 2/6 of space is for grid, and grid splits it to 2 columns */
 		grid-template-columns: 2fr 2fr 2fr;
+		grid-template-areas:
+			"logo . ."
+			"details . grid"
+			"details . grid"
+			"details . grid";
 	}
-
 	.contentCol3 {
+		/* 3/6 of space is for grid, and grid splits it to 3 columns */
+		grid-template-columns: 2fr 1fr 1fr 2fr;
 		grid-template-areas:
 			"logo . . ."
 			"details . grid grid"
 			"details . grid grid"
 			"details . grid grid";
-
-		/* 3/6 of space is for grid, and grid splits it to 3 columns */
-		grid-template-columns: 2fr 1fr 1fr 2fr;
 	}
-
 	.contentCol4 {
+		/* 4/6 of space is for grid, and grid splits it to 4 columns */
+		grid-template-columns: 2fr 2fr 2fr;
 		grid-template-areas:
 			"logo . ."
 			"details grid grid"
 			"details grid grid"
 			"details grid grid";
-
-		/* 4/6 of space is for grid, and grid splits it to 4 columns */
-		grid-template-columns: 2fr 2fr 2fr;
 	}
 
 	.gridCol1 {

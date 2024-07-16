@@ -1,9 +1,9 @@
 @import "../../../styles/customMediaQueries.css";
 
 .root {
+	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
-	flex-grow: 1;
 	justify-content: space-between;
 	background-color: var(--colorGrey50);
 }
@@ -11,16 +11,16 @@
 .filtersWrapper {
 	@media (--viewportMedium) {
 		display: grid;
-		grid-template-rows: auto;
-		grid-template-columns: repeat(1, 1fr);
 		grid-gap: 72px;
+		grid-template-columns: repeat(1, 1fr);
+		grid-template-rows: auto;
 	}
 
 	@media (--viewportLarge) {
 		grid-template-columns: repeat(2, 1fr);
 	}
 
-	@media (width >= 1200px) {
+	@media (min-width: 1200px) {
 		grid-template-columns: repeat(3, 1fr);
 	}
 
@@ -39,19 +39,19 @@
 	display: inline;
 	padding: 0;
 
-	/* margin-top + n * line-height + margin-bottom => x * 6px */
-	margin-top: 10px;
-	margin-bottom: 8px;
-	font-size: 14px;
-	font-weight: var(--fontWeightMedium);
-	line-height: 18px;
+	/* Borders */
+	border: none;
 
 	/* Text size should be inherited */
 	text-decoration: none;
-	letter-spacing: 0;
 
-	/* Borders */
-	border: none;
+	font-weight: var(--fontWeightMedium);
+	font-size: 14px;
+	line-height: 18px;
+	letter-spacing: 0;
+	/* margin-top + n * line-height + margin-bottom => x * 6px */
+	margin-top: 10px;
+	margin-bottom: 8px;
 
 	&:hover {
 		text-decoration: underline;
@@ -59,19 +59,18 @@
 	}
 
 	@media (--viewportMedium) {
+		line-height: 16px;
 		/* margin-top + n * line-height + margin-bottom => x * 8px */
 		margin-top: 10px;
 		margin-bottom: 14px;
-		line-height: 16px;
 	}
 }
-
 .resetAllButton {
-	composes: filterbutton;
+	composes: filterButton;
+	color: var(--colorGrey300);
 
 	/* Layout */
 	margin: 0 auto 0 0;
-	color: var(--colorGrey300);
 
 	/* Override button styles */
 	outline: none;
@@ -83,11 +82,11 @@
 }
 
 .cancelButton {
-	composes: filterbutton;
+	composes: filterButton;
+	color: var(--colorGrey300);
 
 	/* Layout */
-	margin: 0 24px;
-	color: var(--colorGrey300);
+	margin: 0 24px 0 24px;
 
 	/* Override button styles */
 	outline: none;
@@ -99,11 +98,11 @@
 }
 
 .applyButton {
-	composes: filterbutton;
+	composes: filterButton;
+	color: var(--marketplaceColor);
 
 	/* Layout */
 	margin: 0;
-	color: var(--marketplaceColor);
 
 	/* Override button styles */
 	outline: none;

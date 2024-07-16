@@ -1,21 +1,21 @@
 @import "../../../styles/customMediaQueries.css";
 
 .popupSize {
-	padding: 0 10px 7px;
+	padding: 0 10px 7px 10px;
 }
 
 .filterLabel,
 .filterLabelSelected,
 .filterLabelWrapper {
 	composes: h3 from global;
-	padding: 4px 0 2px;
 
 	/* Baseline adjustment for label text */
 	margin-top: 0;
 	margin-bottom: 12px;
+	padding: 4px 0 2px 0;
 
 	@media (--viewportMedium) {
-		padding: 6px 0 2px;
+		padding: 6px 0 2px 0;
 		margin-bottom: 8px;
 	}
 }
@@ -31,11 +31,11 @@
 .labelButton {
 	/* Override button styles */
 	width: 100%;
-	padding: 0;
-	text-align: left;
-	cursor: pointer;
-	border: none;
 	outline: none;
+	text-align: left;
+	border: none;
+	padding: 0;
+	cursor: pointer;
 }
 
 .labelButtonContent {
@@ -49,16 +49,16 @@
 
 .clearButton {
 	composes: h5 from global;
-	padding: 2px 0 4px 12px;
 	margin: 0;
 	font-weight: var(--fontWeightMedium);
 	color: var(--colorGrey300);
-	text-align: left;
-	cursor: pointer;
-	border: none;
+	padding: 2px 0 4px 12px;
 
 	/* Override button styles */
 	outline: none;
+	text-align: left;
+	border: none;
+	cursor: pointer;
 
 	&:focus,
 	&:hover {
@@ -71,8 +71,8 @@
 }
 
 .plain {
-	display: none;
 	width: 100%;
+	display: none;
 }
 
 .isOpen {

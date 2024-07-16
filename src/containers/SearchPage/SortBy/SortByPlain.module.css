@@ -7,11 +7,11 @@
 .filterLabel,
 .filterLabelSelected {
 	composes: h3 from global;
-	padding: 4px 0 2px;
 
 	/* Baseline adjustment for label text */
 	margin-top: 0;
 	margin-bottom: 12px;
+	padding: 4px 0 2px 0;
 }
 
 .filterLabel {
@@ -23,13 +23,12 @@
 }
 
 .labelButton {
-	padding: 0;
-	text-align: left;
-	cursor: pointer;
-	border: none;
-
 	/* Override button styles */
 	outline: none;
+	text-align: left;
+	border: none;
+	padding: 0;
+	cursor: pointer;
 }
 
 .optionsContainerOpen {
@@ -45,9 +44,9 @@
 .optionBorder,
 .optionBorderSelected {
 	position: absolute;
+	height: calc(100% - 12px);
 	top: 4px;
 	left: -24px;
-	height: calc(100% - 12px);
 	transition: width var(--transitionStyleButton);
 }
 
@@ -65,20 +64,20 @@
 
 .option {
 	composes: h4 from global;
-	position: relative;
+	font-weight: var(--fontWeightMedium);
+	font-size: 18px;
+	color: var(--colorGrey700);
 
 	/* Layout */
 	display: block;
-	padding: 4px 0 8px 20px;
+	position: relative;
 	margin: 0;
-	font-size: 18px;
-	font-weight: var(--fontWeightMedium);
-	color: var(--colorGrey700);
-	cursor: pointer;
-	border: none;
+	padding: 4px 0 8px 20px;
 
 	/* Override button styles */
 	outline: none;
+	border: none;
+	cursor: pointer;
 
 	&:focus,
 	&:hover {

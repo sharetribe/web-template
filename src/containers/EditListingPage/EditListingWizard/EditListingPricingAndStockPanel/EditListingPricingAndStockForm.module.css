@@ -1,14 +1,13 @@
 @import "../../../../styles/customMediaQueries.css";
 
 .root {
+	/* Dimensions */
+	width: 100%;
+	height: auto;
 	display: flex;
 	flex: 1;
 	flex-direction: column;
 	flex-grow: 1;
-
-	/* Dimensions */
-	width: 100%;
-	height: auto;
 
 	@media (--viewportMedium) {
 		padding-top: 2px;

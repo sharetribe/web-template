@@ -1,15 +1,16 @@
 @import "../../../styles/customMediaQueries.css";
 
 .root {
-	position: relative;
 	display: block;
+	position: relative;
 	height: auto;
-	padding: 0;
 	border: 0;
+	padding: 0;
 
 	/* Borders */
 	border-radius: var(--borderRadiusMedium);
 	box-shadow: var(--boxShadowPopupLight);
+
 	transition: var(--transitionStyleButton);
 
 	&:hover {
@@ -29,23 +30,24 @@
 
 .card {
 	composes: h5 from global;
-
 	/**
    * Since caret is absolutely positioned,
    * label must have relative to be included to the same rendering layer
    */
 	position: relative;
+
 	width: 250px;
 	min-height: 120px;
+
+	/* Font */
+	color: var(--colorGrey700);
+
+	background-color: var(--colorWhite);
 
 	/* Dimensions */
 	padding: 0;
 	margin-top: 0;
 	margin-bottom: 0;
-
-	/* Font */
-	color: var(--colorGrey700);
-	background-color: var(--colorWhite);
 	transition: var(--transitionStyleButton);
 
 	/* Overwrite dimensions from font styles */
@@ -67,7 +69,10 @@
 .rootForImage {
 	/* Layout - image will take space defined by aspect ratio wrapper */
 	position: absolute;
-	inset: 0;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
 	width: 100%;
 }
 
@@ -78,9 +83,10 @@
 
 .price {
 	flex-shrink: 0;
-	margin-right: 10px;
 	font-weight: var(--fontWeightSemiBold);
 	color: var(--marketplaceColor);
+
+	margin-right: 10px;
 }
 
 .name {
@@ -88,20 +94,20 @@
 }
 
 .paginationInfo {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	color: var(--colorWhite);
-	cursor: default;
 	background-color: var(--marketplaceColor);
+	color: var(--colorWhite);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	cursor: default;
 }
 
 .paginationPage {
 	/* Font */
-	composes: textsmall from global;
+	composes: textSmall from global;
+	font-weight: var(--fontWeightSemiBold);
 	margin-top: 0;
 	margin-bottom: 0;
-	font-weight: var(--fontWeightSemiBold);
 
 	/* Overwrite dimensions from font styles */
 	@media (--viewportMedium) {
@@ -114,11 +120,11 @@
 	display: inline-block;
 	width: 36px;
 	height: 40px;
-	cursor: pointer;
+	border: 0;
 	background-image: url('data:image/svg+xml;utf8,<svg width="7" height="10" viewBox="0 0 7 10" xmlns="http://www.w3.org/2000/svg"><path d="M5.667 1c.094 0 .188.04.254.118.12.14.102.35-.038.47L1.85 5l4.032 3.412c.14.12.158.33.04.47-.12.14-.33.158-.47.04L1.117 5.254C1.043 5.19 1 5.098 1 5s.043-.19.118-.255L5.45 1.08c.064-.054.14-.08.217-.08" stroke="%23FFF" fill="%23FFF" fill-rule="evenodd"/></svg>');
 	background-position: center;
-	border: 0;
 	border-bottom-left-radius: inherit;
+	cursor: pointer;
 	opacity: 0.5;
 	transition: var(--transitionStyleButton);
 
@@ -131,11 +137,12 @@
 	display: inline-block;
 	width: 36px;
 	height: 40px;
-	cursor: pointer;
+	border: 0;
 	background-image: url('data:image/svg+xml;utf8,<svg width="7" height="10" viewBox="0 0 7 10" xmlns="http://www.w3.org/2000/svg"><path d="M1.333 9c-.094 0-.188-.04-.254-.118-.12-.14-.102-.35.038-.47L5.15 5 1.118 1.588c-.14-.12-.158-.33-.04-.47.12-.14.33-.158.47-.04l4.334 3.667C5.957 4.81 6 4.902 6 5s-.043.19-.118.255L1.55 8.92c-.064.054-.14.08-.217.08" stroke="%23FFF" fill="%23FFF" fill-rule="evenodd"/></svg>');
 	background-position: center;
-	border: 0;
 	border-bottom-right-radius: inherit;
+	cursor: pointer;
+
 	opacity: 0.5;
 	transition: var(--transitionStyleButton);
 
@@ -145,35 +152,37 @@
 }
 
 .caretShadow {
-	position: absolute;
-	bottom: -3px;
-	left: 50%;
-
 	/* Caret / arrow dimensions and position */
 	width: 6px;
 	height: 6px;
+	position: absolute;
+	bottom: -3px;
+	left: 50%;
 	margin-left: -3px;
+	transform: rotate(45deg);
 
 	/* Caret should have same box-shadow as label */
 	box-shadow: var(--boxShadowPopupLight);
-	transform: rotate(45deg);
 }
 
 .caret {
-	position: absolute;
-	bottom: -3px;
-	left: 50%;
-
 	/* Caret / arrow dimensions and position */
 	width: 6px;
 	height: 6px;
+	position: absolute;
+	bottom: -3px;
+	left: 50%;
 	margin-left: -3px;
+	transform: rotate(45deg);
 
 	/* Caret should have same bg-color and border as label */
 	background-color: var(--colorWhite);
-	border-right: 1px solid var(--colorGrey100);
-	border-bottom: 1px solid var(--colorGrey100);
-	transform: rotate(45deg);
+	border-right-style: solid;
+	border-right-color: var(--colorGrey100);
+	border-right-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: var(--colorGrey100);
+	border-bottom-width: 1px;
 }
 
 .caretWithCarousel {
@@ -183,8 +192,8 @@
 }
 
 .borderRadiusInheritTop {
-	border-top-left-radius: inherit;
 	border-top-right-radius: inherit;
+	border-top-left-radius: inherit;
 }
 
 .borderRadiusInheritBottom {

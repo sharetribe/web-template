@@ -1,7 +1,7 @@
 @import "../../../styles/customMediaQueries.css";
 
 .root {
-	composes: marketplacemodalbottomwrappertext from global;
+	composes: marketplaceModalBottomWrapperText from global;
 	padding-bottom: 6px;
 
 	@media (--viewportMedium) {
@@ -10,14 +10,14 @@
 }
 
 .finePrint {
-	composes: marketplacemodalhelperlink from global;
-	padding: 3px 0 5px;
+	composes: marketplaceModalHelperLink from global;
+	padding: 3px 0 5px 0;
 	text-align: left;
 }
 
 .privacyLink,
 .termsLink {
-	composes: marketplacemodalhelperlink from global;
+	composes: marketplaceModalHelperLink from global;
 	color: var(--marketplaceColor);
 
 	&:hover {

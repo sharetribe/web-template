@@ -1,23 +1,23 @@
 @import "../../styles/customMediaQueries.css";
 
 .root {
-	display: flex;
-	flex-direction: column;
-
 	/* Expand to the available space */
 	flex-grow: 1;
+
+	display: flex;
+	flex-direction: column;
 	align-items: center;
 }
 
 .topbar {
+	/* Size */
+	width: 100%;
+	height: var(--topbarHeight);
+
 	/* Layout for child components */
 	display: flex;
 	align-items: center;
 	justify-content: center;
-
-	/* Size */
-	width: 100%;
-	height: var(--topbarHeight);
 
 	/* fill */
 	background-color: var(--colorWhite);
@@ -26,8 +26,8 @@
 	box-shadow: var(--boxShadow);
 
 	@media (--viewportLarge) {
-		justify-content: center;
 		height: var(--topbarHeightDesktop);
+		justify-content: center;
 	}
 }
 
@@ -54,8 +54,8 @@
 }
 
 .content {
-	width: 80%;
 	max-width: 587px;
+	width: 80%;
 	margin-top: 60px;
 	margin-bottom: 60px;
 
@@ -65,10 +65,10 @@
 }
 
 .number {
-	composes: marketplaceherotitlefontstyles from global;
-	margin: 1px 0 0;
-	color: var(--marketplaceColor);
+	composes: marketplaceHeroTitleFontStyles from global;
 	text-align: center;
+	color: var(--marketplaceColor);
+	margin: 1px 0 0 0;
 
 	@media (--viewportMedium) {
 		margin: 0;
@@ -76,9 +76,9 @@
 }
 
 .heading {
-	composes: marketplacemodaltitlestyles from global;
-	margin-top: 16px;
+	composes: marketplaceModalTitleStyles from global;
 	text-align: center;
+	margin-top: 16px;
 
 	@media (--viewportMedium) {
 		margin-top: 22px;
@@ -86,8 +86,8 @@
 }
 
 .description {
-	margin-bottom: 0;
 	text-align: center;
+	margin-bottom: 0;
 
 	@media (--viewportMedium) {
 		margin-top: 24px;

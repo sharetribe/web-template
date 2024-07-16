@@ -2,52 +2,56 @@
 
 /* Content is visible as modal layer */
 .isOpen {
-	z-index: 100;
 	width: 100%;
+	z-index: 100;
 
 	/* scrollLayer is the .root for the Modal */
 	& .scrollLayer {
-		display: flex;
 		flex-grow: 1;
-
-		/* Additional styles for the modal window, dimming the background and positioning the modal */
-		min-height: 100vh;
-		overflow: auto;
+		display: flex;
 
 		/* Add default background color to avoid bouncing scroll showing the
    page contents from behind the modal. */
 		background-color: var(--colorWhite);
+
+		/* Additional styles for the modal window, dimming the background and positioning the modal */
+		min-height: 100vh;
+		overflow: auto;
 		-webkit-overflow-scrolling: touch;
 
 		@media (--viewportMedium) {
-			align-items: flex-start;
 			justify-content: center;
+			align-items: flex-start;
 			padding: 0;
-			background-color: rgb(0 0 0 / 40%);
+			background-color: rgba(0, 0, 0, 0.4);
 			background-image: none;
 		}
 	}
 
 	& .container {
+		flex-grow: 1;
+
 		/* Create context so the close button can be positioned within it */
 		position: relative;
 
 		/* Display and dimensions */
 		display: flex;
 		flex-direction: column;
-		flex-grow: 1;
-		height: 100%;
-		min-height: 100vh;
 		padding: var(--modalPadding);
+
 		background-color: var(--colorWhite);
-		border-bottom: none;
 		border-radius: var(--borderRadius);
+		border-bottom: none;
+
+		min-height: 100vh;
+		height: 100%;
 
 		@media (--viewportMedium) {
 			flex-basis: 576px;
 			flex-grow: 0;
-			height: auto;
 			min-height: auto;
+			height: auto;
+
 			padding: var(--modalPaddingMedium);
 			margin-top: 12.5vh;
 			margin-bottom: 12.5vh;
@@ -57,24 +61,30 @@
 }
 
 .isOpenInPlace {
-	composes: isopen;
-	position: fixed;
-	inset: 0;
+	composes: isOpen;
 	display: flex;
 	flex-direction: column;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 }
 
 .isOpenInPortal {
-	composes: isopen;
-	position: absolute;
+	composes: isOpen;
 	display: block;
 	height: calc(var(--vh, 1vh) * 100);
+	position: absolute;
 
 	@media (--viewportMedium) {
-		position: fixed;
-		inset: 0;
 		display: flex;
 		flex-direction: column;
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
 	}
 }
 
@@ -82,24 +92,22 @@
 }
 
 /* Content is explicitly hidden (this default can be overridden with passed-in class) */
-
 /* The use case for having both .isOpen and .isClosed is ModalInMobile use case       */
-
 /* where desktop layout should not get any styling from Modal component.              */
 .isClosed {
 	display: none;
 }
 
 .close {
-	composes: marketplacemodalclosestyles from global;
+	composes: marketplaceModalCloseStyles from global;
 }
 
 .closeText {
-	composes: marketplacemodalclosetext from global;
+	composes: marketplaceModalCloseText from global;
 }
 
 .closeIcon {
-	composes: marketplacemodalcloseicon from global;
+	composes: marketplaceModalCloseIcon from global;
 }
 
 .closeLight {

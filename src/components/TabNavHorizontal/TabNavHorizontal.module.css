@@ -28,25 +28,30 @@
 	flex-direction: column;
 	justify-content: flex-end;
 	height: 100%;
-	padding-bottom: 10px;
-	font-size: 14px;
 
 	/* Font */
 	font-weight: var(--fontWeightMedium);
+	font-size: 14px;
 	line-height: 24px;
+
 	color: var(--colorGrey700);
-	border-bottom: 2px solid transparent;
+	padding-bottom: 10px;
+
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+	border-bottom-color: transparent;
+
 	transition: var(--transitionStyleButton);
 
 	&:hover,
 	&:focus {
-		color: var(--colorBlack);
 		text-decoration: none;
+		color: var(--colorBlack);
 	}
 
 	@media (--viewportMedium) {
-		padding: 16px 10px 14px;
 		border-bottom-width: 4px;
+		padding: 16px 10px 14px 10px;
 	}
 }
 
@@ -54,20 +59,19 @@
 	/* Override Chrome's border-radius which is visible when
    border is used as underline */
 	border-radius: 0;
-
 	/* Override Chrome's button outline */
 	outline: 0;
 }
 
 .selectedTabContent {
-	color: var(--colorBlack);
 	border-bottom-color: var(--colorBlack);
+	color: var(--colorBlack);
 }
 
 .disabled {
+	pointer-events: none;
 	color: var(--colorGrey300);
 	text-decoration: none;
-	pointer-events: none;
 }
 
 /* Dark skin */
@@ -80,8 +84,8 @@
 }
 
 .selectedTabContentDarkSkin {
-	color: var(--colorWhite);
 	border-bottom-color: var(--colorWhite);
+	color: var(--colorWhite);
 }
 
 .disabledDarkSkin {

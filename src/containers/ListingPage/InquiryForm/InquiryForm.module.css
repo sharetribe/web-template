@@ -13,20 +13,20 @@
 }
 
 .heading {
-	composes: marketplacemodaltitlestyles from global;
+	composes: marketplaceModalTitleStyles from global;
 }
 
 .field {
-	margin: 25px 0 24px;
+	margin: 25px 0 24px 0;
 
 	@media (--viewportMedium) {
-		margin: 22px 0 24px;
+		margin: 22px 0 24px 0;
 	}
 }
 
 .error {
-	margin-top: 0;
 	color: var(--colorFail);
+	margin-top: 0;
 
 	@media (--viewportMedium) {
 		margin-top: 0;

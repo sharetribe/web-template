@@ -1,18 +1,18 @@
 @import "../../../../styles/customMediaQueries.css";
 
 .root {
+	flex-shrink: 0;
 	display: flex;
 	flex-direction: column;
-	flex-shrink: 0;
-	height: auto;
 	min-height: 100%;
+	height: auto;
 }
 
 .content {
-	display: flex;
-	flex-direction: column;
 	flex-grow: 1;
 	flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
 	align-items: flex-start;
 }
 
@@ -22,7 +22,6 @@
 	flex-direction: column;
 	align-items: flex-start;
 }
-
 .accountLinksWrapper {
 	margin-bottom: 36px;
 }
@@ -44,22 +43,21 @@
 }
 
 .greeting {
-	padding: 3px 0;
-	margin-top: 16px;
-	margin-bottom: 1px;
-	font-size: 24px;
-
 	/* Font */
 	font-weight: var(--fontWeightBlack);
+	font-size: 24px;
 	line-height: 24px;
 
-	@media (--viewportMedium) {
-		padding: 5px 0 3px;
+	padding: 3px 0 3px 0;
+	margin-bottom: 1px;
+	margin-top: 16px;
 
-		/* x * 8px */
-		margin-top: 24px;
+	@media (--viewportMedium) {
 		font-size: 40px;
 		line-height: 56px;
+		padding: 5px 0 3px 0;
+		/* x * 8px */
+		margin-top: 24px;
 	}
 }
 
@@ -67,22 +65,23 @@
 	/* Position and dimensions */
 	display: inline;
 
-	/* Position component */
-	width: initial;
-	padding: 0;
-	margin: 4px 0 24px;
-	font-size: 18px;
-
-	/* Logout font is smaller and gray since the action is not recommended. */
-	font-weight: var(--fontWeightSemiBold);
-	line-height: 24px;
-	color: var(--colorGrey300);
+	/* Borders */
+	border: none;
 
 	/* Text size should be inherited */
 	text-decoration: none;
 
-	/* Borders */
-	border: none;
+	/* Logout font is smaller and gray since the action is not recommended. */
+	font-weight: var(--fontWeightSemiBold);
+	font-size: 18px;
+	line-height: 24px;
+
+	color: var(--colorGrey300);
+
+	/* Position component */
+	width: initial;
+	margin: 4px 0 24px 0;
+	padding: 0;
 
 	&:hover {
 		text-decoration: underline;
@@ -90,48 +89,47 @@
 	}
 
 	@media (--viewportMedium) {
-		margin: 0 0 36px;
+		margin: 0 0 36px 0;
 	}
 }
 
 .customLinkFont {
-	padding: 4px 0 2px;
+	/* Font */
+	font-weight: var(--fontWeightBold);
+	font-size: 21px;
+	line-height: 24px;
 
+	padding: 4px 0 2px 0;
 	/* x * 6px */
 	margin-top: 24px;
 	margin-bottom: 18px;
-	font-size: 21px;
-
-	/* Font */
-	font-weight: var(--fontWeightBold);
-	line-height: 24px;
 
 	@media (--viewportMedium) {
-		padding: 1px 0 7px;
 		font-size: 30px;
 		line-height: 40px;
+		padding: 1px 0 7px 0;
 	}
 }
 
 .inbox {
 	/* Font */
-	composes: customlinkfont;
+	composes: customLinkFont;
+	color: var(--marketplaceColor);
 	position: relative;
+
 	margin-top: auto;
 	margin-bottom: 13px;
-	color: var(--marketplaceColor);
 }
 
 .navigationLink {
 	/* Font */
-	composes: customlinkfont;
+	composes: customLinkFont;
+	color: var(--marketplaceColor);
 
 	/* Layout */
 	margin-top: 0;
 	margin-bottom: 11px;
-	color: var(--marketplaceColor);
 }
-
 .currentPageLink {
 	color: var(--marketplaceColorDark);
 }
@@ -148,39 +146,38 @@
 }
 
 .createNewListingLink {
-	composes: buttonprimary from global;
+	composes: buttonPrimary from global;
 }
 
 .authenticationGreeting {
 	/* Font */
 	composes: h1 from global;
-	margin-top: var(--TopbarMobileMenu_topMargin);
-	margin-bottom: 48px;
-}
 
+	margin-bottom: 48px;
+	margin-top: var(--TopbarMobileMenu_topMargin);
+}
 .authenticationLinks {
 	white-space: nowrap;
 }
 
 .signupLink {
-	color: var(--marketplaceColor);
 	text-decoration: none;
 	white-space: nowrap;
+	color: var(--marketplaceColor);
 }
-
 .loginLink {
-	color: var(--marketplaceColor);
 	text-decoration: none;
 	white-space: nowrap;
+	color: var(--marketplaceColor);
 }
 
 .currentPage {
-	padding-left: 19px;
-	margin-left: -24px;
 	color: var(--colorBlack);
 
 	/* black left border */
 	border-left: 5px solid black;
+	margin-left: -24px;
+	padding-left: 19px;
 }
 
 .spacer {

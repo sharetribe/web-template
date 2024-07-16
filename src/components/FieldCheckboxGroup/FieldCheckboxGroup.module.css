@@ -1,8 +1,8 @@
 @import "../../styles/customMediaQueries.css";
 
 .root {
-	padding: 0;
 	margin: 0;
+	padding: 0;
 	border: none;
 }
 
@@ -17,12 +17,12 @@
 }
 
 .item {
-	padding: 4px 0 2px;
+	padding: 4px 0 2px 0;
 
 	/* Fix broken multi-column layout in Chrome */
 	page-break-inside: avoid;
 
 	@media (--viewportMedium) {
-		padding: 6px 0 2px;
+		padding: 6px 0 2px 0;
 	}
 }
