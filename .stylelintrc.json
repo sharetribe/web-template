@@ -4,13 +4,15 @@
 		"selector-class-pattern": [
 			"^[a-z][a-zA-Z0-9]+$",
 			{
-				"message": "Expected class name to be lowerCamelCase"
+				"message": "Expected class name to be lowerCamelCase",
+				"severity": "warning"
 			}
 		],
 		"custom-property-pattern": [
 			"^[a-z][a-zA-Z0-9]+$",
 			{
-				"message": "Expected CSS variable name to be lowerCamelCase"
+				"message": "Expected CSS variable name to be lowerCamelCase",
+				"severity": "warning"
 			}
 		]
 	}

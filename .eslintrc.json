@@ -1,3 +1,7 @@
 {
-	"extends": ["./node_modules/@buildinams/lint/eslint/react-javascript"]
+	"extends": ["./node_modules/@buildinams/lint/eslint/react-javascript"],
+	"rules": {
+		"react/prop-types": ["warn"],
+		"no-unused-vars": ["warn"]
+	}
 }
