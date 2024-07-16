@@ -1,10 +1,11 @@
 import React from "react";
 import { Form as FinalForm, FormSpy } from "react-final-form";
 
-import { Button } from "../../../../../components";
-import { getDefaultTimeZoneOnBrowser } from "../../../../../util/dates";
 import { FormattedDate } from "../../../../../util/reactIntl";
 import * as validators from "../../../../../util/validators";
+import { getDefaultTimeZoneOnBrowser } from "../../../../../util/dates";
+import { Button } from "../../../../../components";
+
 import FieldTimeZoneSelect from "./FieldTimeZoneSelect";
 
 const FormComponent = (props) => (

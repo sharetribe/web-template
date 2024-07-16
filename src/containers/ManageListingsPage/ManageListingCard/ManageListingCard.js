@@ -1,46 +1,48 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
-import classNames from "classnames";
 import PropTypes from "prop-types";
 import { compose } from "redux";
+import { withRouter } from "react-router-dom";
+import classNames from "classnames";
 
-import {
-	AspectRatioWrapper,
-	IconSpinner,
-	InlineTextButton,
-	Menu,
-	MenuContent,
-	MenuItem,
-	MenuLabel,
-	NamedLink,
-	PrimaryButtonInline,
-	ResponsiveImage,
-} from "../../../components";
 import { useConfiguration } from "../../../context/configurationContext";
 import { useRouteConfiguration } from "../../../context/routeConfigurationContext";
-import { isBookingProcessAlias, isPurchaseProcessAlias } from "../../../transactions/transaction";
+import { FormattedMessage, intlShape, injectIntl } from "../../../util/reactIntl";
 import { displayPrice } from "../../../util/configHelpers";
-import { formatMoney } from "../../../util/currency";
-import { ensureOwnListing } from "../../../util/data";
-import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
-import { createResourceLocatorString, findRouteByRouteName } from "../../../util/routes";
 import {
+	LISTING_STATE_PENDING_APPROVAL,
 	LISTING_STATE_CLOSED,
 	LISTING_STATE_DRAFT,
-	LISTING_STATE_PENDING_APPROVAL,
 	propTypes,
 	STOCK_MULTIPLE_ITEMS,
 } from "../../../util/types";
+import { formatMoney } from "../../../util/currency";
+import { ensureOwnListing } from "../../../util/data";
 import {
-	createSlug,
+	LISTING_PAGE_PENDING_APPROVAL_VARIANT,
 	LISTING_PAGE_DRAFT_VARIANT,
 	LISTING_PAGE_PARAM_TYPE_DRAFT,
 	LISTING_PAGE_PARAM_TYPE_EDIT,
-	LISTING_PAGE_PENDING_APPROVAL_VARIANT,
+	createSlug,
 } from "../../../util/urlHelpers";
-import css from "./ManageListingCard.module.css";
+import { createResourceLocatorString, findRouteByRouteName } from "../../../util/routes";
+import { isBookingProcessAlias, isPurchaseProcessAlias } from "../../../transactions/transaction";
+
+import {
+	AspectRatioWrapper,
+	InlineTextButton,
+	Menu,
+	MenuLabel,
+	MenuContent,
+	MenuItem,
+	NamedLink,
+	IconSpinner,
+	PrimaryButtonInline,
+	ResponsiveImage,
+} from "../../../components";
+
 import MenuIcon from "./MenuIcon";
 import Overlay from "./Overlay";
+import css from "./ManageListingCard.module.css";
 
 // Menu content needs the same padding
 const MENU_CONTENT_OFFSET = -12;

@@ -1,18 +1,18 @@
 import React from "react";
-
-import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from "../../../transactions/transaction";
-import {
-	createCurrentUser,
-	createListing,
-	createMessage,
-	createTransaction,
-	createUser,
-	fakeIntl,
-} from "../../../util/testData";
-import { renderWithProviders as render, testingLibrary } from "../../../util/testHelpers";
-import { ActivityFeedComponent } from "./ActivityFeed";
-
 import "@testing-library/jest-dom";
+
+import { renderWithProviders as render, testingLibrary } from "../../../util/testHelpers";
+import {
+	fakeIntl,
+	createUser,
+	createCurrentUser,
+	createMessage,
+	createListing,
+	createTransaction,
+} from "../../../util/testData";
+import { TX_TRANSITION_ACTOR_CUSTOMER, getProcess } from "../../../transactions/transaction";
+
+import { ActivityFeedComponent } from "./ActivityFeed";
 
 const processTransitions = getProcess("default-purchase")?.transitions;
 

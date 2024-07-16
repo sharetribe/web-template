@@ -1,11 +1,13 @@
 import React from "react";
-import classNames from "classnames";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 
-import { IconReviewUser, Modal } from "../../../components";
-import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
+import { FormattedMessage, intlShape, injectIntl } from "../../../util/reactIntl";
 import { propTypes } from "../../../util/types";
+import { IconReviewUser, Modal } from "../../../components";
+
 import ReviewForm from "../ReviewForm/ReviewForm";
+
 import css from "./ReviewModal.module.css";
 
 const ReviewModal = (props) => {

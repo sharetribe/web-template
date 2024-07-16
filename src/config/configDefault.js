@@ -1,10 +1,10 @@
-import * as analytics from "./configAnalytics";
+import * as stripe from "./configStripe";
+import * as listing from "./configListing";
+import * as search from "./configSearch";
+import * as maps from "./configMaps";
 import * as branding from "./configBranding";
 import * as layout from "./configLayout";
-import * as listing from "./configListing";
-import * as maps from "./configMaps";
-import * as search from "./configSearch";
-import * as stripe from "./configStripe";
+import * as analytics from "./configAnalytics";
 import * as user from "./configUser";
 
 // NOTE: only expose configuration that should be visible in the

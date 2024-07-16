@@ -3,13 +3,16 @@
  * Navigational 'aside' content should be added to this wrapper.
  */
 import React, { useEffect } from "react";
-import { node, number, shape, string } from "prop-types";
+import { node, number, string, shape } from "prop-types";
 import { compose } from "redux";
 
-import { TabNav } from "../../../components";
 import { FormattedMessage } from "../../../util/reactIntl";
 import { withViewport } from "../../../util/uiHelpers";
+
+import { TabNav } from "../../../components";
+
 import { createGlobalState } from "./hookGlobalState";
+
 import css from "./LayoutSideNavigation.module.css";
 
 const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;

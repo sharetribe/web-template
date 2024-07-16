@@ -1,43 +1,46 @@
 import React, { useState } from "react";
+import { bool, arrayOf, number, shape } from "prop-types";
+import { compose } from "redux";
 import { connect } from "react-redux";
 import classNames from "classnames";
-import { arrayOf, bool, number, shape } from "prop-types";
-import { compose } from "redux";
 
-import {
-	AvatarLarge,
-	ButtonTabNavHorizontal,
-	H2,
-	H4,
-	Heading,
-	LayoutSideNavigation,
-	ListingCard,
-	NamedLink,
-	Page,
-	Reviews,
-} from "../../components";
-import FooterContainer from "../../containers/FooterContainer/FooterContainer";
-import NotFoundPage from "../../containers/NotFoundPage/NotFoundPage";
-import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
 import { useConfiguration } from "../../context/configurationContext";
-import { getMarketplaceEntities } from "../../ducks/marketplaceData.duck";
-import { isScrollingDisabled } from "../../ducks/ui.duck";
-import { ensureCurrentUser, ensureUser } from "../../util/data";
-import { pickCustomFieldProps } from "../../util/fieldHelpers";
 import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
-import { richText } from "../../util/richText";
 import {
-	propTypes,
-	REVIEW_TYPE_OF_CUSTOMER,
 	REVIEW_TYPE_OF_PROVIDER,
+	REVIEW_TYPE_OF_CUSTOMER,
 	SCHEMA_TYPE_MULTI_ENUM,
 	SCHEMA_TYPE_TEXT,
+	propTypes,
 } from "../../util/types";
+import { ensureCurrentUser, ensureUser } from "../../util/data";
 import { withViewport } from "../../util/uiHelpers";
+import { pickCustomFieldProps } from "../../util/fieldHelpers";
+import { richText } from "../../util/richText";
+
+import { isScrollingDisabled } from "../../ducks/ui.duck";
+import { getMarketplaceEntities } from "../../ducks/marketplaceData.duck";
+import {
+	Heading,
+	H2,
+	H4,
+	Page,
+	AvatarLarge,
+	NamedLink,
+	ListingCard,
+	Reviews,
+	ButtonTabNavHorizontal,
+	LayoutSideNavigation,
+} from "../../components";
+
+import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
+import FooterContainer from "../../containers/FooterContainer/FooterContainer";
+import NotFoundPage from "../../containers/NotFoundPage/NotFoundPage";
+
 import css from "./ProfilePage.module.css";
 import SectionDetailsMaybe from "./SectionDetailsMaybe";
-import SectionMultiEnumMaybe from "./SectionMultiEnumMaybe";
 import SectionTextMaybe from "./SectionTextMaybe";
+import SectionMultiEnumMaybe from "./SectionMultiEnumMaybe";
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;

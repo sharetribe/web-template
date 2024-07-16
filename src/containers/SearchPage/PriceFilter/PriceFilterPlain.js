@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import classNames from "classnames";
 import { arrayOf, func, node, number, shape, string } from "prop-types";
+import classNames from "classnames";
 
-import { formatCurrencyMajorUnit } from "../../../util/currency";
 import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
+import { formatCurrencyMajorUnit } from "../../../util/currency";
+
 import IconPlus from "../IconPlus/IconPlus";
 import PriceFilterForm from "../PriceFilterForm/PriceFilterForm";
+
 import css from "./PriceFilterPlain.module.css";
 
 const RADIX = 10;

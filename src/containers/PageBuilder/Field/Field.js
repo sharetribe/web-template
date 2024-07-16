@@ -12,30 +12,32 @@ import {
 	string,
 } from "prop-types";
 
-import renderMarkdown from "../markdownProcessor";
-import { Code, CodeBlock } from "../Primitives/Code";
-import { CustomAppearance } from "../Primitives/CustomAppearance";
 // Primitive components that are actually used for rendering field data
 // These are essentially calling the index.js
 // E.g. import { H1, H2, H3, H4, H5, H6 } from '../Primitives/Heading/index.js';
 import { H1, H2, H3, H4, H5, H6 } from "../Primitives/Heading";
-import { FieldImage, MarkdownImage } from "../Primitives/Image";
+import { Ul, Ol, Li } from "../Primitives/List";
 import { Ingress } from "../Primitives/Ingress";
-import { Link, SocialMediaLink } from "../Primitives/Link";
-import { Li, Ol, Ul } from "../Primitives/List";
 import { P } from "../Primitives/P";
 import { Text } from "../Primitives/Text";
+import { Code, CodeBlock } from "../Primitives/Code";
+import { Link, SocialMediaLink } from "../Primitives/Link";
+import { MarkdownImage, FieldImage } from "../Primitives/Image";
+import { CustomAppearance } from "../Primitives/CustomAppearance";
 import { YoutubeEmbed } from "../Primitives/YoutubeEmbed";
+
+import renderMarkdown from "../markdownProcessor";
+
 import {
+	hasContent,
 	exposeContentAsChildren,
 	exposeContentString,
+	exposeLinkProps,
 	exposeCustomAppearanceProps,
 	exposeImageProps,
-	exposeLinkProps,
+	exposeYoutubeProps,
 	exposeOpenGraphData,
 	exposeSocialMediaProps,
-	exposeYoutubeProps,
-	hasContent,
 } from "./Field.helpers";
 
 const TEXT_CONTENT = [

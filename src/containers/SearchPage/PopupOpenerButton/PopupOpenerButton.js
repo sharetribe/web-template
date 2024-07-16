@@ -1,6 +1,6 @@
 import React from "react";
-import classNames from "classnames";
 import { bool, func, node, number } from "prop-types";
+import classNames from "classnames";
 
 import css from "./PopupOpenerButton.module.css";
 

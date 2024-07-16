@@ -1,10 +1,10 @@
 import React from "react";
 import { bool } from "prop-types";
-
-import { getProcess, resolveLatestProcessName } from "../../transactions/transaction";
-import { formatMoney } from "../../util/currency";
 import { FormattedMessage, intlShape } from "../../util/reactIntl";
+import { formatMoney } from "../../util/currency";
 import { propTypes } from "../../util/types";
+import { resolveLatestProcessName, getProcess } from "../../transactions/transaction";
+
 import css from "./OrderBreakdown.module.css";
 
 const LineItemTotalPrice = (props) => {

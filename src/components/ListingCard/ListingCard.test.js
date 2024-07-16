@@ -1,10 +1,10 @@
 import React from "react";
-
-import { createListing, createUser, fakeIntl } from "../../util/testData";
-import { getHostedConfiguration, renderWithProviders as render } from "../../util/testHelpers";
-import { ListingCardComponent } from "./ListingCard";
-
 import "@testing-library/jest-dom";
+
+import { getHostedConfiguration, renderWithProviders as render } from "../../util/testHelpers";
+import { createUser, createListing, fakeIntl } from "../../util/testData";
+
+import { ListingCardComponent } from "./ListingCard";
 
 const getConfig = () => {
 	const hostedConfig = getHostedConfiguration();

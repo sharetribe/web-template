@@ -1,8 +1,10 @@
 import React from "react";
 import classNames from "classnames";
 
-import { ExternalLink } from "../../../components";
 import { FormattedMessage } from "../../../util/reactIntl";
+
+import { ExternalLink } from "../../../components";
+
 import css from "./TransactionPanel.module.css";
 
 // Functional component as a helper to build AddressLinkMaybe

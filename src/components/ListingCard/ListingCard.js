@@ -1,18 +1,21 @@
 import React from "react";
+import { string, func, bool } from "prop-types";
 import classNames from "classnames";
-import { bool, func, string } from "prop-types";
 
-import { AspectRatioWrapper, NamedLink, ResponsiveImage } from "../../components";
 import { useConfiguration } from "../../context/configurationContext";
-import { isBookingProcessAlias } from "../../transactions/transaction";
+
+import { FormattedMessage, intlShape, injectIntl } from "../../util/reactIntl";
 import { displayPrice } from "../../util/configHelpers";
+import { lazyLoadWithDimensions } from "../../util/uiHelpers";
+import { propTypes } from "../../util/types";
 import { formatMoney } from "../../util/currency";
 import { ensureListing, ensureUser } from "../../util/data";
-import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
 import { richText } from "../../util/richText";
-import { propTypes } from "../../util/types";
-import { lazyLoadWithDimensions } from "../../util/uiHelpers";
 import { createSlug } from "../../util/urlHelpers";
+import { isBookingProcessAlias } from "../../transactions/transaction";
+
+import { AspectRatioWrapper, NamedLink, ResponsiveImage } from "../../components";
+
 import css from "./ListingCard.module.css";
 
 const MIN_LENGTH_FOR_LONG_WORDS = 10;

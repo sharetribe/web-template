@@ -1,13 +1,14 @@
 import React from "react";
 import Decimal from "decimal.js";
 
-import { getProcess } from "../../transactions/transaction";
-import { injectIntl } from "../../util/reactIntl";
 import { types as sdkTypes } from "../../util/sdkLoader";
-import { createListing, createTransaction, createUser } from "../../util/testData";
+import { injectIntl } from "../../util/reactIntl";
+import { createUser, createListing, createTransaction } from "../../util/testData";
 import { LINE_ITEM_ITEM } from "../../util/types";
-import { InboxItem } from "./InboxPage";
+import { getProcess } from "../../transactions/transaction";
+
 import { getStateData } from "./InboxPage.stateData";
+import { InboxItem } from "./InboxPage";
 
 const noop = () => null;
 const { Money } = sdkTypes;

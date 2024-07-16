@@ -1,11 +1,13 @@
 import React from "react";
-import { Field, Form as FinalForm, FormSpy } from "react-final-form";
+import { bool, func, number, object, string } from "prop-types";
 import classNames from "classnames";
 import debounce from "lodash/debounce";
-import { bool, func, number, object, string } from "prop-types";
+import { Field, Form as FinalForm, FormSpy } from "react-final-form";
+
+import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
 
 import { Form, RangeSlider } from "../../../components";
-import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
+
 import css from "./PriceFilterForm.module.css";
 
 const DEBOUNCE_WAIT_TIME = 400;

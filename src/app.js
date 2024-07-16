@@ -1,36 +1,40 @@
 import React from "react";
-import ReactDOMServer from "react-dom/server";
-import { HelmetProvider } from "react-helmet-async";
-import { Provider } from "react-redux";
-import { BrowserRouter, StaticRouter } from "react-router-dom";
-import loadable from "@loadable/component";
-import difference from "lodash/difference";
-import mapValues from "lodash/mapValues";
-import moment from "moment";
 import { any, string } from "prop-types";
-
-import { MaintenanceMode } from "./components";
-// Configs and store setup
-import defaultConfig from "./config/configDefault";
-import appSettings from "./config/settings";
-import { ConfigurationProvider } from "./context/configurationContext";
-// utils
-import { RouteConfigurationProvider } from "./context/routeConfigurationContext";
-// routing
-import routeConfiguration from "./routing/routeConfiguration";
-import Routes from "./routing/Routes";
-import configureStore from "./store";
-// Sharetribe Web Template uses English translations as default translations.
-import defaultMessages from "./translations/en.json";
-import { mergeConfig } from "./util/configHelpers";
-import { IncludeScripts } from "./util/includeScripts";
-import { IntlProvider } from "./util/reactIntl";
-import { includeCSSProperties } from "./util/style";
+import ReactDOMServer from "react-dom/server";
 
 // react-dates needs to be initialized before using any react-dates component
 // https://github.com/airbnb/react-dates#initialize
 // NOTE: Initializing it here will initialize it also for app.test.js
 import "react-dates/initialize";
+import { HelmetProvider } from "react-helmet-async";
+import { BrowserRouter, StaticRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import loadable from "@loadable/component";
+import difference from "lodash/difference";
+import mapValues from "lodash/mapValues";
+import moment from "moment";
+
+// Configs and store setup
+import defaultConfig from "./config/configDefault";
+import appSettings from "./config/settings";
+import configureStore from "./store";
+
+// utils
+import { RouteConfigurationProvider } from "./context/routeConfigurationContext";
+import { ConfigurationProvider } from "./context/configurationContext";
+import { mergeConfig } from "./util/configHelpers";
+import { IntlProvider } from "./util/reactIntl";
+import { includeCSSProperties } from "./util/style";
+import { IncludeScripts } from "./util/includeScripts";
+
+import { MaintenanceMode } from "./components";
+
+// routing
+import routeConfiguration from "./routing/routeConfiguration";
+import Routes from "./routing/Routes";
+
+// Sharetribe Web Template uses English translations as default translations.
+import defaultMessages from "./translations/en.json";
 
 // If you want to change the language of default (fallback) translations,
 // change the imports to match the wanted locale:

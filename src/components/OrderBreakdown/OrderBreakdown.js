@@ -3,28 +3,30 @@
  * I.e. dates and other details related to payment decision in receipt format.
  */
 import React from "react";
-import classNames from "classnames";
 import { oneOf, string } from "prop-types";
+import classNames from "classnames";
 
-import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
+import { FormattedMessage, intlShape, injectIntl } from "../../util/reactIntl";
 import {
+	propTypes,
+	LISTING_UNIT_TYPES,
 	LINE_ITEM_CUSTOMER_COMMISSION,
 	LINE_ITEM_PROVIDER_COMMISSION,
-	LISTING_UNIT_TYPES,
-	propTypes,
 } from "../../util/types";
-import LineItemBasePriceMaybe from "./LineItemBasePriceMaybe";
+
 import LineItemBookingPeriod from "./LineItemBookingPeriod";
+import LineItemBasePriceMaybe from "./LineItemBasePriceMaybe";
+import LineItemSubTotalMaybe from "./LineItemSubTotalMaybe";
+import LineItemShippingFeeMaybe from "./LineItemShippingFeeMaybe";
+import LineItemPickupFeeMaybe from "./LineItemPickupFeeMaybe";
 import LineItemCustomerCommissionMaybe from "./LineItemCustomerCommissionMaybe";
 import LineItemCustomerCommissionRefundMaybe from "./LineItemCustomerCommissionRefundMaybe";
-import LineItemPickupFeeMaybe from "./LineItemPickupFeeMaybe";
 import LineItemProviderCommissionMaybe from "./LineItemProviderCommissionMaybe";
 import LineItemProviderCommissionRefundMaybe from "./LineItemProviderCommissionRefundMaybe";
 import LineItemRefundMaybe from "./LineItemRefundMaybe";
-import LineItemShippingFeeMaybe from "./LineItemShippingFeeMaybe";
-import LineItemSubTotalMaybe from "./LineItemSubTotalMaybe";
 import LineItemTotalPrice from "./LineItemTotalPrice";
 import LineItemUnknownItemsMaybe from "./LineItemUnknownItemsMaybe";
+
 import css from "./OrderBreakdown.module.css";
 
 export const OrderBreakdownComponent = (props) => {

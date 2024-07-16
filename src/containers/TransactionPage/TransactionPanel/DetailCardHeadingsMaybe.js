@@ -1,8 +1,8 @@
 import React from "react";
-
 import { H4 } from "../../../components";
-import { formatMoney } from "../../../util/currency";
+
 import css from "./TransactionPanel.module.css";
+import { formatMoney } from "../../../util/currency";
 
 // Functional component as a helper to build detail card headings
 const DetailCardHeadingsMaybe = (props) => {

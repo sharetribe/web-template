@@ -1,12 +1,12 @@
 import { bool, shape, string } from "prop-types";
-
 import {
 	BOOKING_PROCESS_NAME,
-	getProcess,
 	INQUIRY_PROCESS_NAME,
 	PURCHASE_PROCESS_NAME,
 	resolveLatestProcessName,
+	getProcess,
 } from "../../transactions/transaction";
+
 import { getStateDataForBookingProcess } from "./InboxPage.stateDataBooking.js";
 import { getStateDataForInquiryProcess } from "./InboxPage.stateDataInquiry.js";
 import { getStateDataForPurchaseProcess } from "./InboxPage.stateDataPurchase.js";

@@ -1,18 +1,19 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import classNames from "classnames";
+import { arrayOf, func, node, number, object, shape, string } from "prop-types";
 import differenceBy from "lodash/differenceBy";
 import isEqual from "lodash/isEqual";
-import { arrayOf, func, node, number, object, shape, string } from "prop-types";
+import classNames from "classnames";
 
-import { ensureListing } from "../../../util/data";
-import { hasSameSDKBounds, sdkBoundsToFixedCoordinates } from "../../../util/maps";
 import { types as sdkTypes } from "../../../util/sdkLoader";
-import { propTypes } from "../../../util/types";
 import { parse } from "../../../util/urlHelpers";
-import SearchMapGroupLabel from "../SearchMapGroupLabel/SearchMapGroupLabel";
-import SearchMapInfoCard from "../SearchMapInfoCard/SearchMapInfoCard";
+import { propTypes } from "../../../util/types";
+import { ensureListing } from "../../../util/data";
+import { sdkBoundsToFixedCoordinates, hasSameSDKBounds } from "../../../util/maps";
+
 import SearchMapPriceLabel from "../SearchMapPriceLabel/SearchMapPriceLabel";
+import SearchMapInfoCard from "../SearchMapInfoCard/SearchMapInfoCard";
+import SearchMapGroupLabel from "../SearchMapGroupLabel/SearchMapGroupLabel";
 import { groupedByCoordinates, reducedToArray } from "./SearchMap.helpers";
 import css from "./SearchMapWithMapbox.module.css";
 

@@ -1,21 +1,24 @@
 import React from "react";
-import classNames from "classnames";
+import { string, arrayOf, bool, func, number, object } from "prop-types";
 import dropWhile from "lodash/dropWhile";
-import { arrayOf, bool, func, number, string } from "prop-types";
+import classNames from "classnames";
 
-import { Avatar, InlineTextButton, ReviewRating, UserDisplayName } from "../../../components";
+import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
+import { richText } from "../../../util/richText";
+import { formatDateWithProximity } from "../../../util/dates";
+import { propTypes } from "../../../util/types";
 import {
 	getProcess,
 	getUserTxRole,
-	TX_TRANSITION_ACTOR_OPERATOR,
 	TX_TRANSITION_ACTOR_PROVIDER,
+	TX_TRANSITION_ACTOR_OPERATOR,
 	TX_TRANSITION_ACTOR_SYSTEM,
 } from "../../../transactions/transaction";
-import { formatDateWithProximity } from "../../../util/dates";
-import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
-import { richText } from "../../../util/richText";
-import { propTypes } from "../../../util/types";
+
+import { Avatar, InlineTextButton, ReviewRating, UserDisplayName } from "../../../components";
+
 import { stateDataShape } from "../TransactionPage.stateData";
+
 import css from "./ActivityFeed.module.css";
 
 const MIN_LENGTH_FOR_LONG_WORDS = 20;

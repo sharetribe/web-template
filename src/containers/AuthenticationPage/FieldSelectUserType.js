@@ -1,12 +1,14 @@
 import React from "react";
+import { bool, string } from "prop-types";
 import { Field } from "react-final-form";
 import classNames from "classnames";
-import { bool, string } from "prop-types";
 
-import { FieldSelect } from "../../components";
 import { intlShape } from "../../util/reactIntl";
 import { propTypes } from "../../util/types";
 import * as validators from "../../util/validators";
+
+import { FieldSelect } from "../../components";
+
 import css from "./AuthenticationPage.module.css";
 
 // Hidden input field

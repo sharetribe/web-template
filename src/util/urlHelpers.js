@@ -1,5 +1,4 @@
 import queryString from "query-string";
-
 import { types as sdkTypes } from "./sdkLoader";
 
 const { LatLng, LatLngBounds } = sdkTypes;

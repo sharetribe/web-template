@@ -1,9 +1,9 @@
 import React from "react";
+import "@testing-library/jest-dom";
 
 import { renderWithProviders as render, testingLibrary } from "../../util/testHelpers";
-import NamedLink from "./NamedLink";
 
-import "@testing-library/jest-dom";
+import NamedLink from "./NamedLink";
 
 const { screen } = testingLibrary;
 

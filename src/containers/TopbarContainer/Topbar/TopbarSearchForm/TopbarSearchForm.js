@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import { Field, Form as FinalForm } from "react-final-form";
-import classNames from "classnames";
 import { bool, func, object, string } from "prop-types";
+import { Form as FinalForm, Field } from "react-final-form";
+import classNames from "classnames";
+
+import { intlShape, injectIntl } from "../../../../util/reactIntl";
+import { isMainSearchTypeKeywords } from "../../../../util/search";
 
 import { Form, LocationAutocompleteInput } from "../../../../components";
-import { injectIntl, intlShape } from "../../../../util/reactIntl";
-import { isMainSearchTypeKeywords } from "../../../../util/search";
+
 import IconSearchDesktop from "./IconSearchDesktop";
 import css from "./TopbarSearchForm.module.css";
 

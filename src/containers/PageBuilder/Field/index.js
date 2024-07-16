@@ -1,1 +1,1 @@
-export { default, hasDataInFields, validProps } from "./Field";
+export { default, validProps, hasDataInFields } from "./Field";

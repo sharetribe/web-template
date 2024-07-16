@@ -1,13 +1,16 @@
 import React, { Component } from "react";
-import classNames from "classnames";
 import { arrayOf, bool, func, string } from "prop-types";
+import classNames from "classnames";
+
+import { useRouteConfiguration } from "../../context/routeConfigurationContext";
+
+import { FormattedMessage } from "../../util/reactIntl";
+import { ensureCurrentUser } from "../../util/data";
+import { propTypes } from "../../util/types";
+import { pathByRouteName } from "../../util/routes";
 
 import { Modal } from "../../components";
-import { useRouteConfiguration } from "../../context/routeConfigurationContext";
-import { ensureCurrentUser } from "../../util/data";
-import { FormattedMessage } from "../../util/reactIntl";
-import { pathByRouteName } from "../../util/routes";
-import { propTypes } from "../../util/types";
+
 import EmailReminder from "./EmailReminder";
 import css from "./ModalMissingInformation.module.css";
 

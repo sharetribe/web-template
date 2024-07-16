@@ -1,9 +1,10 @@
 import React from "react";
-import classNames from "classnames";
 import { func, node, object, shape, string } from "prop-types";
+import classNames from "classnames";
 
 import Field, { hasDataInFields } from "../../Field";
 import BlockContainer from "../BlockContainer";
+
 import css from "./BlockDefault.module.css";
 
 const FieldMedia = (props) => {

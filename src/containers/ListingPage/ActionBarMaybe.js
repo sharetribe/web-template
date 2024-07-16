@@ -1,16 +1,16 @@
 import React from "react";
-import classNames from "classnames";
-import { bool, oneOfType, shape, string } from "prop-types";
-
-import { NamedLink } from "../../components";
+import { bool, oneOfType, object, string, shape } from "prop-types";
 import { FormattedMessage } from "../../util/reactIntl";
+import classNames from "classnames";
 import {
+	LISTING_STATE_PENDING_APPROVAL,
 	LISTING_STATE_CLOSED,
 	LISTING_STATE_DRAFT,
-	LISTING_STATE_PENDING_APPROVAL,
 	propTypes,
 } from "../../util/types";
+import { NamedLink } from "../../components";
 import EditIcon from "./EditIcon";
+
 import css from "./ListingPage.module.css";
 
 export const ActionBarMaybe = (props) => {

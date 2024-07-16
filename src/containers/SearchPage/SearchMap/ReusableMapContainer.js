@@ -1,8 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { node, object, string } from "prop-types";
+import { node, string, object } from "prop-types";
 
 import { IntlProvider } from "../../../util/reactIntl";
+
 import css from "./SearchMap.module.css";
 
 /**

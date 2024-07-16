@@ -18,12 +18,12 @@
  * the one in the generated pathname of the link.
  */
 import React from "react";
+import { object, string, shape, any } from "prop-types";
 import { Link, withRouter } from "react-router-dom";
 import classNames from "classnames";
-import { any, object, shape, string } from "prop-types";
-
 import { useRouteConfiguration } from "../../context/routeConfigurationContext";
-import { findRouteByRouteName, pathByRouteName } from "../../util/routes";
+
+import { pathByRouteName, findRouteByRouteName } from "../../util/routes";
 
 export const NamedLinkComponent = (props) => {
 	const routeConfiguration = useRouteConfiguration();

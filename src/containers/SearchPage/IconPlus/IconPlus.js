@@ -1,6 +1,6 @@
 import React from "react";
-import classNames from "classnames";
 import { bool, string } from "prop-types";
+import classNames from "classnames";
 
 import css from "./IconPlus.module.css";
 

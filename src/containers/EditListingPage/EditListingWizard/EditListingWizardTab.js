@@ -1,23 +1,25 @@
 import React from "react";
 import PropTypes, { arrayOf } from "prop-types";
 
-import { ensureListing } from "../../../util/data";
-import { createResourceLocatorString } from "../../../util/routes";
-import { propTypes } from "../../../util/types";
 // Import configs and util modules
 import {
 	LISTING_PAGE_PARAM_TYPE_DRAFT,
 	LISTING_PAGE_PARAM_TYPE_NEW,
 	LISTING_PAGE_PARAM_TYPES,
 } from "../../../util/urlHelpers";
+import { ensureListing } from "../../../util/data";
+import { createResourceLocatorString } from "../../../util/routes";
+import { propTypes } from "../../../util/types";
+
 // Import modules from this directory
 import EditListingAvailabilityPanel from "./EditListingAvailabilityPanel/EditListingAvailabilityPanel";
-import EditListingDeliveryPanel from "./EditListingDeliveryPanel/EditListingDeliveryPanel";
 import EditListingDetailsPanel from "./EditListingDetailsPanel/EditListingDetailsPanel";
+import EditListingDeliveryPanel from "./EditListingDeliveryPanel/EditListingDeliveryPanel";
 import EditListingLocationPanel from "./EditListingLocationPanel/EditListingLocationPanel";
 import EditListingPhotosPanel from "./EditListingPhotosPanel/EditListingPhotosPanel";
-import EditListingPricingAndStockPanel from "./EditListingPricingAndStockPanel/EditListingPricingAndStockPanel";
 import EditListingPricingPanel from "./EditListingPricingPanel/EditListingPricingPanel";
+import EditListingPricingAndStockPanel from "./EditListingPricingAndStockPanel/EditListingPricingAndStockPanel";
+
 import css from "./EditListingWizardTab.module.css";
 
 export const DETAILS = "details";

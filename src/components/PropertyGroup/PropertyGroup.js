@@ -7,9 +7,9 @@
  */
 
 import React from "react";
+import PropTypes from "prop-types";
 import classNames from "classnames";
 import includes from "lodash/includes";
-import PropTypes from "prop-types";
 
 import css from "./PropertyGroup.module.css";
 

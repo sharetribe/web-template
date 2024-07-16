@@ -3,8 +3,8 @@
  * Clicking it toggles visibility of MenuContent.
  */
 import React, { Component } from "react";
-import classNames from "classnames";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 
 import css from "./MenuLabel.module.css";
 

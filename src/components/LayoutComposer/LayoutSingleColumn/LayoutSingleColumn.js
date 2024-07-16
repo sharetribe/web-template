@@ -1,8 +1,9 @@
 import React from "react";
-import classNames from "classnames";
 import { node, string } from "prop-types";
+import classNames from "classnames";
 
 import LayoutComposer from "../LayoutComposer";
+
 import css from "./LayoutSingleColumn.module.css";
 
 // Commonly used layout

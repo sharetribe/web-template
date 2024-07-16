@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 import React from "react";
 import { Form as FinalForm, FormSpy } from "react-final-form";
-
-import { Button } from "../../components";
+import { required, bookingDatesRequired, composeValidators } from "../../util/validators";
+import { LINE_ITEM_NIGHT } from "../../util/types";
 import { getStartOf } from "../../util/dates";
-import { bookingDatesRequired, composeValidators, required } from "../../util/validators";
+import { Button } from "../../components";
 import FieldDateRangeInput from "./FieldDateRangeInput";
 
 const identity = (v) => v;

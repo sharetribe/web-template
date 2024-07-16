@@ -1,7 +1,7 @@
+import { clearCurrentUser, fetchCurrentUser } from "./user.duck";
 import { createUserWithIdp } from "../util/api";
 import { storableError } from "../util/errors";
 import * as log from "../util/log";
-import { clearCurrentUser, fetchCurrentUser } from "./user.duck";
 
 const authenticated = (authInfo) => authInfo?.isAnonymous === false;
 const loggedInAs = (authInfo) => authInfo?.isLoggedInAs === true;

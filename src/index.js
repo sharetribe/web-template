@@ -13,38 +13,42 @@
 
 // React 16 depends on the collection types Map and Set, as well as requestAnimationFrame.
 // https://reactjs.org/docs/javascript-environment-requirements.html
+import "core-js/features/map";
+import "core-js/features/set";
+import "raf/polyfill";
+
 // Dependency libs
 import React from "react";
 import ReactDOM from "react-dom";
 import { loadableReady } from "@loadable/component";
 
-import { GoogleAnalyticsHandler, LoggingAnalyticsHandler } from "./analytics/handlers";
-// App it self
-import { ClientApp, renderApp } from "./app";
-import defaultConfig from "./config/configDefault";
-// Configs and store setup
-import appSettings from "./config/settings";
-// Import relevant global duck files
-import { authInfo } from "./ducks/auth.duck";
-import { fetchAppAssets } from "./ducks/hostedAssets.duck";
-import { fetchCurrentUser } from "./ducks/user.duck";
-// Route config
-import routeConfiguration from "./routing/routeConfiguration";
-import configureStore from "./store";
-import * as apiUtils from "./util/api";
-import { mergeConfig } from "./util/configHelpers";
-import * as log from "./util/log";
-import { matchPathname } from "./util/routes";
-// Utils
-import { createInstance, types as sdkTypes } from "./util/sdkLoader";
-
-import "core-js/features/map";
-import "core-js/features/set";
-import "raf/polyfill";
 // Import default styles before other CSS-related modules are imported
 // This ensures that the styles in marketplaceDefaults.css are included
 // as first ones in the final build CSS build file.
 import "./styles/marketplaceDefaults.css";
+
+// Configs and store setup
+import appSettings from "./config/settings";
+import defaultConfig from "./config/configDefault";
+import { LoggingAnalyticsHandler, GoogleAnalyticsHandler } from "./analytics/handlers";
+import configureStore from "./store";
+
+// Utils
+import { createInstance, types as sdkTypes } from "./util/sdkLoader";
+import { mergeConfig } from "./util/configHelpers";
+import { matchPathname } from "./util/routes";
+import * as apiUtils from "./util/api";
+import * as log from "./util/log";
+
+// Import relevant global duck files
+import { authInfo } from "./ducks/auth.duck";
+import { fetchAppAssets } from "./ducks/hostedAssets.duck";
+import { fetchCurrentUser } from "./ducks/user.duck";
+
+// Route config
+import routeConfiguration from "./routing/routeConfiguration";
+// App it self
+import { ClientApp, renderApp } from "./app";
 
 const render = (store, shouldHydrate) => {
 	// If the server already loaded the auth information, render the app
@@ -179,10 +183,10 @@ export default renderApp;
 // matchPathname helps to figure out which route is called and if it has preloading needs
 // configureStore is used for creating initial store state for Redux after preloading
 export {
-	configureStore,
-	defaultConfig,
-	fetchAppAssets,
 	matchPathname,
-	mergeConfig,
+	configureStore,
 	routeConfiguration,
+	defaultConfig,
+	mergeConfig,
+	fetchAppAssets,
 };

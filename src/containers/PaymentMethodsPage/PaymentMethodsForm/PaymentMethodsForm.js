@@ -4,13 +4,15 @@
  * It's also handled separately in handleSubmit function.
  */
 import React, { Component } from "react";
+import { func, object, string } from "prop-types";
 import { Form as FinalForm } from "react-final-form";
 import classNames from "classnames";
-import { func, object, string } from "prop-types";
 
-import { FieldTextInput, Form, H4, PrimaryButton, StripePaymentAddress } from "../../../components";
 import { useConfiguration } from "../../../context/configurationContext";
-import { FormattedMessage, intlShape, useIntl } from "../../../util/reactIntl";
+import { FormattedMessage, useIntl, intlShape } from "../../../util/reactIntl";
+
+import { Form, PrimaryButton, FieldTextInput, StripePaymentAddress, H4 } from "../../../components";
+
 import css from "./PaymentMethodsForm.module.css";
 
 /**

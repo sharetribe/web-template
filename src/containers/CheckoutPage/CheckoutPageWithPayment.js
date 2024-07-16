@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { arrayOf, bool, func, object, oneOfType, shape, string } from "prop-types";
 
-// Import shared components
-import { H3, H4, NamedLink, OrderBreakdown, Page } from "../../components";
-import { getProcess, isBookingProcessAlias } from "../../transactions/transaction";
-import { ensureTransaction } from "../../util/data";
-import { isTransactionInitiateListingNotFoundError } from "../../util/errors";
 // Import contexts and util modules
 import { FormattedMessage, intlShape } from "../../util/reactIntl";
 import { pathByRouteName } from "../../util/routes";
-import { DATE_TYPE_DATE, DATE_TYPE_DATETIME, LINE_ITEM_HOUR, propTypes } from "../../util/types";
+import { propTypes, LINE_ITEM_HOUR, DATE_TYPE_DATE, DATE_TYPE_DATETIME } from "../../util/types";
+import { ensureTransaction } from "../../util/data";
 import { createSlug } from "../../util/urlHelpers";
-import css from "./CheckoutPage.module.css";
+import { isTransactionInitiateListingNotFoundError } from "../../util/errors";
+import { getProcess, isBookingProcessAlias } from "../../transactions/transaction";
+
+// Import shared components
+import { H3, H4, NamedLink, OrderBreakdown, Page } from "../../components";
+
 import {
 	bookingDatesMaybe,
 	getBillingDetails,
@@ -24,12 +25,15 @@ import {
 	processCheckoutWithPayment,
 	setOrderPageInitialValues,
 } from "./CheckoutPageTransactionHelpers.js";
-import CustomTopbar from "./CustomTopbar";
-import DetailsSideCard from "./DetailsSideCard";
 import { getErrorMessages } from "./ErrorMessages";
+
+import CustomTopbar from "./CustomTopbar";
+import StripePaymentForm from "./StripePaymentForm/StripePaymentForm";
+import DetailsSideCard from "./DetailsSideCard";
 import MobileListingImage from "./MobileListingImage";
 import MobileOrderBreakdown from "./MobileOrderBreakdown";
-import StripePaymentForm from "./StripePaymentForm/StripePaymentForm";
+
+import css from "./CheckoutPage.module.css";
 
 // Stripe PaymentIntent statuses, where user actions are already completed
 // https://stripe.com/docs/payments/payment-intents/status

@@ -1,13 +1,16 @@
 import React from "react";
-import classNames from "classnames";
 import { array, arrayOf, func, node, number, object, oneOf, string } from "prop-types";
+import classNames from "classnames";
 
-import { FieldCheckbox } from "../../../components";
 import { useIntl } from "../../../util/reactIntl";
 import { parseSelectFilterOptions } from "../../../util/search";
 import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from "../../../util/types";
+
+import { FieldCheckbox } from "../../../components";
+
 import FilterPlain from "../FilterPlain/FilterPlain";
 import FilterPopup from "../FilterPopup/FilterPopup";
+
 import css from "./SelectMultipleFilter.module.css";
 
 // SelectMultipleFilter doesn't need array mutators since it doesn't require validation.

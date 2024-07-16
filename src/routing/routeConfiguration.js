@@ -1,13 +1,14 @@
 import React from 'react';
 import loadable from '@loadable/component';
 
+import getPageDataLoadingAPI from '../containers/pageDataLoadingAPI';
+import NotFoundPage from '../containers/NotFoundPage/NotFoundPage';
+import PreviewResolverPage from '../containers/PreviewResolverPage/PreviewResolverPage';
+
 // routeConfiguration needs to initialize containers first
 // Otherwise, components will import form container eventually and
 // at that point css bundling / imports will happen in wrong order.
 import { NamedRedirect } from '../components';
-import NotFoundPage from '../containers/NotFoundPage/NotFoundPage';
-import getPageDataLoadingAPI from '../containers/pageDataLoadingAPI';
-import PreviewResolverPage from '../containers/PreviewResolverPage/PreviewResolverPage';
 
 const pageDataLoadingAPI = getPageDataLoadingAPI();
 

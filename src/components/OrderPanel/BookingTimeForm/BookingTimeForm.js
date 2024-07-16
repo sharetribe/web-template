@@ -1,17 +1,20 @@
 import React, { Component } from "react";
-import { Form as FinalForm, FormSpy } from "react-final-form";
-import classNames from "classnames";
 import { array, bool, func, number, object, string } from "prop-types";
 import { compose } from "redux";
+import { Form as FinalForm, FormSpy } from "react-final-form";
+import classNames from "classnames";
+
+import { FormattedMessage, intlShape, injectIntl } from "../../../util/reactIntl";
+import { timestampToDate } from "../../../util/dates";
+import { propTypes } from "../../../util/types";
+import { BOOKING_PROCESS_NAME } from "../../../transactions/transaction";
 
 import { Form, H6, PrimaryButton } from "../../../components";
-import { BOOKING_PROCESS_NAME } from "../../../transactions/transaction";
-import { timestampToDate } from "../../../util/dates";
-import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
-import { propTypes } from "../../../util/types";
+
 import EstimatedCustomerBreakdownMaybe from "../EstimatedCustomerBreakdownMaybe";
-import css from "./BookingTimeForm.module.css";
 import FieldDateAndTimeInput from "./FieldDateAndTimeInput";
+
+import css from "./BookingTimeForm.module.css";
 
 export class BookingTimeFormComponent extends Component {
 	constructor(props) {

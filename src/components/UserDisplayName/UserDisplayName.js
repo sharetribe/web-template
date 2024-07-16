@@ -1,7 +1,6 @@
 import React from "react";
 import classNames from "classnames";
 import { oneOfType, string } from "prop-types";
-
 import { propTypes } from "../../util/types";
 
 const UserDisplayName = (props) => {

@@ -1,27 +1,29 @@
 import React, { Component } from "react";
-import { Field, Form as FinalForm } from "react-final-form";
-import classNames from "classnames";
-import arrayMutators from "final-form-arrays";
-import isEqual from "lodash/isEqual";
 import { bool, string } from "prop-types";
 import { compose } from "redux";
+import { Field, Form as FinalForm } from "react-final-form";
+import isEqual from "lodash/isEqual";
+import classNames from "classnames";
+import arrayMutators from "final-form-arrays";
+
+import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
+import { ensureCurrentUser } from "../../../util/data";
+import { propTypes } from "../../../util/types";
+import * as validators from "../../../util/validators";
+import { isUploadImageOverLimitError } from "../../../util/errors";
+import { getPropsForCustomUserFieldInputs } from "../../../util/userHelpers";
 
 import {
+	Form,
 	Avatar,
 	Button,
-	CustomExtendedDataField,
-	FieldTextInput,
-	Form,
-	H4,
-	IconSpinner,
 	ImageFromFile,
+	IconSpinner,
+	FieldTextInput,
+	H4,
+	CustomExtendedDataField,
 } from "../../../components";
-import { ensureCurrentUser } from "../../../util/data";
-import { isUploadImageOverLimitError } from "../../../util/errors";
-import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
-import { propTypes } from "../../../util/types";
-import { getPropsForCustomUserFieldInputs } from "../../../util/userHelpers";
-import * as validators from "../../../util/validators";
+
 import css from "./ProfileSettingsForm.module.css";
 
 const ACCEPT_IMAGES = "image/*";

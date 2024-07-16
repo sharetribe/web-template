@@ -1,9 +1,9 @@
 import React from "react";
+import "@testing-library/jest-dom";
 
 import { renderWithProviders as render, testingLibrary } from "../../util/testHelpers";
-import { LandingPageComponent } from "./LandingPage";
 
-import "@testing-library/jest-dom";
+import { LandingPageComponent } from "./LandingPage";
 
 const { waitFor } = testingLibrary;
 

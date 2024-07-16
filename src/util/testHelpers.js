@@ -1,22 +1,26 @@
 import React from "react";
-import { HelmetProvider } from "react-helmet-async";
-import { Provider } from "react-redux";
-import { MemoryRouter } from "react-router-dom";
-import * as reactTestingLibrary from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import mapValues from "lodash/mapValues";
 
+import * as reactTestingLibrary from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
+import { MemoryRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import { HelmetProvider } from "react-helmet-async";
+
+import { IntlProvider } from "./reactIntl";
+import { mergeConfig } from "./configHelpers";
+
+import configureStore from "../store";
 import defaultConfig from "../config/configDefault";
 import { ConfigurationProvider } from "../context/configurationContext";
 import { RouteConfigurationProvider } from "../context/routeConfigurationContext";
 import routeConfiguration from "../routing/routeConfiguration";
-import configureStore from "../store";
+
 // In case you have translated the template and have new translations that
 // are missing from the en translations file, the language for the tests can
 // be changed here so that there are no missing translation keys in tests.
 import messages from "../translations/en.json";
-import { mergeConfig } from "./configHelpers";
-import { IntlProvider } from "./reactIntl";
 
 let undefined;
 export const getDefaultConfiguration = () => {

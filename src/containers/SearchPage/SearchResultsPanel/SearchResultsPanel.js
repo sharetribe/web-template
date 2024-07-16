@@ -1,9 +1,10 @@
 import React from "react";
-import classNames from "classnames";
 import { array, bool, node, object, string } from "prop-types";
+import classNames from "classnames";
 
-import { ListingCard, PaginationLinks } from "../../../components";
 import { propTypes } from "../../../util/types";
+import { ListingCard, PaginationLinks } from "../../../components";
+
 import css from "./SearchResultsPanel.module.css";
 
 const SearchResultsPanel = (props) => {

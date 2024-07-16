@@ -36,12 +36,12 @@ export { default as IconSpinner } from './IconSpinner/IconSpinner';
 export { default as IconSuccess } from './IconSuccess/IconSuccess';
 
 // Typography
-export { H1, H2, H3, H4, H5, H6,Heading  } from './Heading/Heading';
+export { Heading, H1, H2, H3, H4, H5, H6  } from './Heading/Heading';
 
 // Other independent components
 export { default as AspectRatioWrapper } from './AspectRatioWrapper/AspectRatioWrapper';
-export { default as ExpandingTextarea } from './ExpandingTextarea/ExpandingTextarea';
 export { default as ExternalLink } from './ExternalLink/ExternalLink';
+export { default as ExpandingTextarea } from './ExpandingTextarea/ExpandingTextarea';
 export { default as Form } from './Form/Form';
 export { default as LimitedAccessBanner } from './LimitedAccessBanner/LimitedAccessBanner';
 export { default as Logo } from './Logo/Logo';
@@ -52,8 +52,8 @@ export { default as OutsideClickHandler } from './OutsideClickHandler/OutsideCli
 export { default as Promised } from './Promised/Promised';
 export { default as PropertyGroup } from './PropertyGroup/PropertyGroup';
 export { default as RangeSlider } from './RangeSlider/RangeSlider';
-export { default as ResponsiveBackgroundImageContainer } from './ResponsiveBackgroundImageContainer/ResponsiveBackgroundImageContainer';
 export { default as ResponsiveImage } from './ResponsiveImage/ResponsiveImage';
+export { default as ResponsiveBackgroundImageContainer } from './ResponsiveBackgroundImageContainer/ResponsiveBackgroundImageContainer';
 export { default as TimeRange } from './TimeRange/TimeRange';
 export { default as UserDisplayName } from './UserDisplayName/UserDisplayName';
 export { default as ValidationError } from './ValidationError/ValidationError';
@@ -67,18 +67,18 @@ export { default as ValidationError } from './ValidationError/ValidationError';
 // First components that include only atomic components //
 //////////////////////////////////////////////////////////
 
-export { default as Button, InlineTextButton, PrimaryButton, PrimaryButtonInline, SecondaryButton, SecondaryButtonInline, SocialLoginButton } from './Button/Button';
+export { default as Button, PrimaryButton, PrimaryButtonInline, SecondaryButton, SecondaryButtonInline, InlineTextButton, SocialLoginButton } from './Button/Button';
 export { default as ImageFromFile } from './ImageFromFile/ImageFromFile';
-export { default as ListingLink } from './ListingLink/ListingLink';
 export { default as LinkedLogo } from './Logo/LinkedLogo';
+export { default as ListingLink } from './ListingLink/ListingLink';
 export { default as PaginationLinks } from './PaginationLinks/PaginationLinks';
 export { default as ReviewRating } from './ReviewRating/ReviewRating';
 
 // Menu
-export { default as Menu } from './Menu/Menu';
-export { default as MenuContent } from './MenuContent/MenuContent';
 export { default as MenuItem } from './MenuItem/MenuItem';
+export { default as MenuContent } from './MenuContent/MenuContent';
 export { default as MenuLabel } from './MenuLabel/MenuLabel';
+export { default as Menu } from './Menu/Menu';
 
 // Modal
 export { default as Modal } from './Modal/Modal';
@@ -97,7 +97,7 @@ export { default as FieldTextInput } from './FieldTextInput/FieldTextInput';
 export { default as FieldBoolean } from './FieldBoolean/FieldBoolean';
 export { default as FieldCheckboxGroup } from './FieldCheckboxGroup/FieldCheckboxGroup';
 export { default as FieldPhoneNumberInput } from './FieldPhoneNumberInput/FieldPhoneNumberInput';
-export { FieldLocationAutocompleteInput,default as LocationAutocompleteInput } from './LocationAutocompleteInput/LocationAutocompleteInput';
+export { default as LocationAutocompleteInput, FieldLocationAutocompleteInput } from './LocationAutocompleteInput/LocationAutocompleteInput';
 // Fields and inputs using old naming pattern
 export { default as StripeBankAccountTokenInputField } from './StripeBankAccountTokenInputField/StripeBankAccountTokenInputField';
 // Fields wrapping react-dates
@@ -108,7 +108,7 @@ export const FieldDateRangeInput = loadable(() => import(/* webpackChunkName: "F
 
 // Tab navigation
 export { default as TabNav } from './TabNav/TabNav';
-export { ButtonTabNavHorizontal,LinkTabNavHorizontal } from './TabNavHorizontal/TabNavHorizontal';
+export { LinkTabNavHorizontal, ButtonTabNavHorizontal } from './TabNavHorizontal/TabNavHorizontal';
 export { default as Tabs } from './Tabs/Tabs';
 export { default as UserNav } from './UserNav/UserNav';
 
@@ -116,12 +116,12 @@ export { default as UserNav } from './UserNav/UserNav';
 // These components include other components //
 ///////////////////////////////////////////////
 
-export { default as Avatar, AvatarLarge,AvatarMedium, AvatarSmall } from './Avatar/Avatar';
+export { default as Avatar, AvatarSmall, AvatarMedium, AvatarLarge } from './Avatar/Avatar';
 export { default as CustomExtendedDataField } from './CustomExtendedDataField/CustomExtendedDataField';
-export { default as ListingCard } from './ListingCard/ListingCard';
-export { default as Map } from './Map/Map';
 export { default as OrderBreakdown } from './OrderBreakdown/OrderBreakdown';
 export { default as OrderPanel } from './OrderPanel/OrderPanel';
+export { default as ListingCard } from './ListingCard/ListingCard';
+export { default as Map } from './Map/Map';
 export { default as Page } from './Page/Page';
 export { default as Reviews } from './Reviews/Reviews';
 export { default as SavedCardDetails } from './SavedCardDetails/SavedCardDetails';
@@ -135,6 +135,6 @@ export { default as StripeConnectAccountForm } from './StripeConnectAccountForm/
 // Page sections and modal content wrappers //
 //////////////////////////////////////////////
 
-export { default as LayoutComposer, LayoutSideNavigation,LayoutSingleColumn } from './LayoutComposer';
+export { default as LayoutComposer, LayoutSingleColumn, LayoutSideNavigation } from './LayoutComposer';
 export { default as MaintenanceMode } from './MaintenanceMode/MaintenanceMode';
 export { default as ModalMissingInformation } from './ModalMissingInformation/ModalMissingInformation';

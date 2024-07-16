@@ -4,24 +4,27 @@
  * It's also handled separately in handleSubmit function.
  */
 import React, { Component } from "react";
+import { bool, func, object, shape, string } from "prop-types";
 import { Form as FinalForm } from "react-final-form";
 import classNames from "classnames";
-import { bool, func, object, shape, string } from "prop-types";
+
+import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
+import { propTypes } from "../../../util/types";
+import { ensurePaymentMethodCard } from "../../../util/data";
 
 import {
+	Heading,
+	Form,
+	PrimaryButton,
 	FieldCheckbox,
 	FieldTextInput,
-	Form,
-	Heading,
 	IconSpinner,
-	PrimaryButton,
 	SavedCardDetails,
 	StripePaymentAddress,
 } from "../../../components";
-import { ensurePaymentMethodCard } from "../../../util/data";
-import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
-import { propTypes } from "../../../util/types";
+
 import ShippingDetails from "../ShippingDetails/ShippingDetails";
+
 import css from "./StripePaymentForm.module.css";
 
 /**

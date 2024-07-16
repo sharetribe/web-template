@@ -1,8 +1,9 @@
 import React from "react";
 import classNames from "classnames";
 
-import { H6 } from "../../../components";
 import { FormattedMessage } from "../../../util/reactIntl";
+import { H6 } from "../../../components";
+
 import css from "./TransactionPanel.module.css";
 
 // Functional component as a helper to build OrderBreakdown

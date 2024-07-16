@@ -1,8 +1,8 @@
-import { ensureTransaction } from "../util/data";
 import * as log from "../util/log";
+import { ensureTransaction } from "../util/data";
+import * as purchaseProcess from "./transactionProcessPurchase";
 import * as bookingProcess from "./transactionProcessBooking";
 import * as inquiryProcess from "./transactionProcessInquiry";
-import * as purchaseProcess from "./transactionProcessPurchase";
 
 // Supported unit types
 // Note: These are passed to translations/microcopy in certain cases.

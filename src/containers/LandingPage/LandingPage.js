@@ -1,11 +1,13 @@
 import React from "react";
-import { connect } from "react-redux";
 import loadable from "@loadable/component";
+
 import { bool, object } from "prop-types";
 import { compose } from "redux";
+import { connect } from "react-redux";
 
 import { camelize } from "../../util/string";
 import { propTypes } from "../../util/types";
+
 import FallbackPage from "./FallbackPage";
 import { ASSET_NAME } from "./LandingPage.duck";
 

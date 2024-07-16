@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Form as FinalForm, FormSpy } from "react-final-form";
 import { bool, func, number, string } from "prop-types";
+import { Form as FinalForm, FormSpy } from "react-final-form";
 
-import {
-	FieldSelect,
-	FieldTextInput,
-	Form,
-	H3,
-	H6,
-	InlineTextButton,
-	PrimaryButton,
-} from "../../../components";
-import { PURCHASE_PROCESS_NAME } from "../../../transactions/transaction";
 import { FormattedMessage, useIntl } from "../../../util/reactIntl";
 import { propTypes } from "../../../util/types";
 import { numberAtLeast, required } from "../../../util/validators";
+import { PURCHASE_PROCESS_NAME } from "../../../transactions/transaction";
+
+import {
+	Form,
+	FieldSelect,
+	FieldTextInput,
+	InlineTextButton,
+	PrimaryButton,
+	H3,
+	H6,
+} from "../../../components";
+
 import EstimatedCustomerBreakdownMaybe from "../EstimatedCustomerBreakdownMaybe";
+
 import css from "./ProductOrderForm.module.css";
 
 // Browsers can't render huge number of select options.

@@ -1,27 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { Field, Form as FinalForm } from "react-final-form";
-import classNames from "classnames";
-import arrayMutators from "final-form-arrays";
+import React, { useState, useEffect } from "react";
 import { bool, func, object, shape, string } from "prop-types";
 import { compose } from "redux";
+import { Field, Form as FinalForm } from "react-final-form";
+import arrayMutators from "final-form-arrays";
+import classNames from "classnames";
+
+import { useConfiguration } from "../../context/configurationContext";
+import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
+import { useRouteConfiguration } from "../../context/routeConfigurationContext";
+import { createResourceLocatorString } from "../../util/routes";
+import { isStripeError } from "../../util/errors";
+import * as validators from "../../util/validators";
+import { propTypes } from "../../util/types";
 
 import {
+	H4,
 	Button,
 	ExternalLink,
-	FieldRadioButton,
-	FieldSelect,
-	Form,
-	H4,
 	InlineTextButton,
+	FieldSelect,
+	FieldRadioButton,
+	Form,
 	StripeBankAccountTokenInputField,
 } from "../../components";
-import { useConfiguration } from "../../context/configurationContext";
-import { useRouteConfiguration } from "../../context/routeConfigurationContext";
-import { isStripeError } from "../../util/errors";
-import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
-import { createResourceLocatorString } from "../../util/routes";
-import { propTypes } from "../../util/types";
-import * as validators from "../../util/validators";
+
 import css from "./StripeConnectAccountForm.module.css";
 
 const getSupportedCountryCodes = (supportedCountries) => supportedCountries.map((c) => c.code);

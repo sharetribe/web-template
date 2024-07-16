@@ -1,11 +1,11 @@
 import React from "react";
+import "@testing-library/jest-dom";
 import { Form as FinalForm } from "react-final-form";
 
 import { renderWithProviders as render, testingLibrary } from "../../util/testHelpers";
 import * as validators from "../../util/validators";
-import FieldBoolean from "./FieldBoolean";
 
-import "@testing-library/jest-dom";
+import FieldBoolean from "./FieldBoolean";
 
 const { screen, userEvent } = testingLibrary;
 

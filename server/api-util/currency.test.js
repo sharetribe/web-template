@@ -1,6 +1,5 @@
 const Decimal = require("decimal.js");
 const { types } = require("sharetribe-flex-sdk");
-
 const { Money } = types;
 const { convertDecimalJSToNumber, getAmountAsDecimalJS } = require("./currency");
 

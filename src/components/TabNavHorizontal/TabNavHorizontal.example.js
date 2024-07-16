@@ -1,6 +1,5 @@
 import React from "react";
-
-import { ButtonTabNavHorizontal, LinkTabNavHorizontal } from "./TabNavHorizontal";
+import { LinkTabNavHorizontal, ButtonTabNavHorizontal } from "./TabNavHorizontal";
 
 const selfLinkProps = {
 	name: "StyleguideComponent",

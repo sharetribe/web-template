@@ -1,13 +1,15 @@
 import React from "react";
-import { Form as FinalForm } from "react-final-form";
-import classNames from "classnames";
 import { bool, func, string } from "prop-types";
+import classNames from "classnames";
+import { Form as FinalForm } from "react-final-form";
 
-import { Button, FieldTextInput, Form, IconDisputeOrder, Modal } from "../../../components";
 import { useConfiguration } from "../../../context/configurationContext";
-import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
+import { FormattedMessage, intlShape, injectIntl } from "../../../util/reactIntl";
 import { propTypes } from "../../../util/types";
 import { required } from "../../../util/validators";
+
+import { FieldTextInput, Form, IconDisputeOrder, Modal, Button } from "../../../components";
+
 import css from "./DisputeModal.module.css";
 
 const DisputeForm = (props) => (

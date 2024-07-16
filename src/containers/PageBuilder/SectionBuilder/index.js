@@ -1,13 +1,16 @@
 // Default wrapping element for block components
-import SectionArticle from "./SectionArticle";
-// Main component: SectionBuilder
-import SectionBuilder from "./SectionBuilder";
-import SectionCarousel from "./SectionCarousel";
+import SectionContainer from "./SectionContainer";
+
 // Section components
 import SectionColumns from "./SectionColumns";
-import SectionContainer from "./SectionContainer";
+import SectionArticle from "./SectionArticle";
 import SectionFeatures from "./SectionFeatures";
+import SectionCarousel from "./SectionCarousel";
+import SectionHero from "./SectionHero";
 
-export { SectionArticle, SectionCarousel, SectionColumns, SectionContainer, SectionFeatures };
+// Main component: SectionBuilder
+import SectionBuilder from "./SectionBuilder";
+
+export { SectionContainer, SectionColumns, SectionArticle, SectionFeatures, SectionCarousel };
 
 export default SectionBuilder;

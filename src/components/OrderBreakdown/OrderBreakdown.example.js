@@ -1,8 +1,8 @@
 import Decimal from "decimal.js";
-
-import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from "../../transactions/transaction";
 import { types as sdkTypes } from "../../util/sdkLoader";
 import { DATE_TYPE_DATE, DATE_TYPE_DATETIME } from "../../util/types";
+import { TX_TRANSITION_ACTOR_CUSTOMER, getProcess } from "../../transactions/transaction";
+
 import OrderBreakdown from "./OrderBreakdown";
 
 const { UUID, Money } = sdkTypes;

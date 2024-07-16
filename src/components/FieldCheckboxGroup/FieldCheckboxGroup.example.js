@@ -1,10 +1,9 @@
 import React from "react";
 import { Form as FinalForm, FormSpy } from "react-final-form";
 import arrayMutators from "final-form-arrays";
-
 import { Button, H3 } from "../../components";
-import { requiredFieldArrayCheckbox } from "../../util/validators";
 import FieldCheckboxGroup from "./FieldCheckboxGroup";
+import { requiredFieldArrayCheckbox } from "../../util/validators";
 
 const formName = "Styleguide.FieldCheckboxGroup";
 const formNameRequired = "Styleguide.FieldCheckboxGroupRequired";

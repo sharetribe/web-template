@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import classNames from "classnames";
 import { bool, func, number, shape, string } from "prop-types";
-
+import classNames from "classnames";
+import { injectIntl, intlShape } from "../../util/reactIntl";
 import {
-	Button,
-	IconCheckmark,
 	IconClose,
+	IconCheckmark,
+	Button,
 	InlineTextButton,
 	Menu,
-	MenuContent,
-	MenuItem,
 	MenuLabel,
+	MenuItem,
+	MenuContent,
 	Modal,
 } from "../../components";
-import { injectIntl, intlShape } from "../../util/reactIntl";
+
 import IconCard from "./IconCard/IconCard";
 import css from "./SavedCardDetails.module.css";
 

@@ -10,11 +10,11 @@
  * component for them that can be used in the `OrderBreakdown` component.
  */
 import React from "react";
-
+import { intlShape } from "../../util/reactIntl";
 import { formatMoney } from "../../util/currency";
 import { humanizeLineItemCode } from "../../util/data";
-import { intlShape } from "../../util/reactIntl";
 import { LINE_ITEMS, propTypes } from "../../util/types";
+
 import css from "./OrderBreakdown.module.css";
 
 const LineItemUnknownItemsMaybe = (props) => {

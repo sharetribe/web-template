@@ -1,9 +1,9 @@
 import React from "react";
+import "@testing-library/jest-dom";
 
 import { renderWithProviders as render, testingLibrary } from "../../util/testHelpers";
-import { TermsOfServicePageComponent } from "./TermsOfServicePage";
 
-import "@testing-library/jest-dom";
+import { TermsOfServicePageComponent } from "./TermsOfServicePage";
 
 const { waitFor } = testingLibrary;
 

@@ -1,7 +1,9 @@
 import React from "react";
 
-import { Heading, IconClose, IconEmailSent, InlineTextButton, NamedLink } from "../../components";
 import { FormattedMessage } from "../../util/reactIntl";
+
+import { Heading, NamedLink, IconEmailSent, InlineTextButton, IconClose } from "../../components";
+
 import css from "./AuthenticationPage.module.css";
 
 const EmailVerificationInfo = (props) => {

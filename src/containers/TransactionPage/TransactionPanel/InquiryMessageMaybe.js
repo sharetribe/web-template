@@ -1,9 +1,11 @@
 import React from "react";
 import classNames from "classnames";
 
-import { Heading } from "../../../components";
 import { FormattedMessage } from "../../../util/reactIntl";
 import { richText } from "../../../util/richText";
+
+import { Heading } from "../../../components";
+
 import css from "./TransactionPanel.module.css";
 
 const MIN_LENGTH_FOR_LONG_WORDS = 20;

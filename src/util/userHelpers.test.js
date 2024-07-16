@@ -1,9 +1,10 @@
-import { fakeIntl } from "./testData";
 import {
-	getPropsForCustomUserFieldInputs,
-	initialValuesForUserFields,
 	pickUserFieldsData,
+	initialValuesForUserFields,
+	getPropsForCustomUserFieldInputs,
 } from "./userHelpers";
+
+import { fakeIntl } from "./testData";
 
 const config = [
 	{

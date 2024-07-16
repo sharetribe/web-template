@@ -1,10 +1,10 @@
 import React from "react";
-
-import { fakeIntl } from "../../util/testData";
-import { renderWithProviders as render, testingLibrary } from "../../util/testHelpers";
-import PaginationLinks from "./PaginationLinks";
-
 import "@testing-library/jest-dom";
+
+import { renderWithProviders as render, testingLibrary } from "../../util/testHelpers";
+import { fakeIntl } from "../../util/testData";
+
+import PaginationLinks from "./PaginationLinks";
 
 const { screen } = testingLibrary;
 

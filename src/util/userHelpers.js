@@ -1,5 +1,5 @@
-import { getFieldValue } from "./fieldHelpers";
 import { EXTENDED_DATA_SCHEMA_TYPES } from "./types";
+import { getFieldValue } from "./fieldHelpers";
 
 /**
  * Get the namespaced attribute key based on the specified extended data scope and attribute key

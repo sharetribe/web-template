@@ -1,30 +1,33 @@
 import React from "react";
+import "@testing-library/jest-dom";
 
-import { addMarketplaceEntities } from "../../ducks/marketplaceData.duck";
-import { storableError } from "../../util/errors";
 import { types as sdkTypes } from "../../util/sdkLoader";
 import {
+	createUser,
 	createCurrentUser,
 	createListing,
 	createOwnListing,
 	createReview,
-	createUser,
 } from "../../util/testData";
 import {
-	getHostedConfiguration,
-	getRouteConfiguration,
 	renderWithProviders as render,
 	testingLibrary,
+	getRouteConfiguration,
+	getHostedConfiguration,
 } from "../../util/testHelpers";
+
+import { storableError } from "../../util/errors";
+
 import {
-	LISTING_STATE_CLOSED,
 	LISTING_STATE_PENDING_APPROVAL,
 	LISTING_STATE_PUBLISHED,
+	LISTING_STATE_CLOSED,
 } from "../../util/types";
-import ActionBarMaybe from "./ActionBarMaybe";
-import { showListing, showListingError, showListingRequest } from "./ListingPage.duck";
 
-import "@testing-library/jest-dom";
+import { addMarketplaceEntities } from "../../ducks/marketplaceData.duck";
+import { showListingRequest, showListingError, showListing } from "./ListingPage.duck";
+
+import ActionBarMaybe from "./ActionBarMaybe";
 
 const { UUID } = sdkTypes;
 const { screen, waitFor, within } = testingLibrary;

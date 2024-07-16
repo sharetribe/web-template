@@ -1,23 +1,23 @@
 import { storableError } from "../util/errors";
-import * as log from "../util/log";
+import { clearCurrentUser, currentUserShowRequest, currentUserShowSuccess } from "./user.duck";
 import reducer, {
 	authenticationInProgress,
 	authInfoSuccess,
 	login,
-	loginError,
 	loginRequest,
 	loginSuccess,
+	loginError,
 	logout,
-	logoutError,
 	logoutRequest,
 	logoutSuccess,
+	logoutError,
 	signup,
-	signupError,
 	signupRequest,
 	signupSuccess,
+	signupError,
 	userLogout,
 } from "./auth.duck";
-import { clearCurrentUser, currentUserShowRequest, currentUserShowSuccess } from "./user.duck";
+import * as log from "../util/log";
 
 // Create a dispatch function that correctly calls the thunk functions
 // with itself

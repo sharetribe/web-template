@@ -6,7 +6,6 @@ const {
 	hasCommissionPercentage,
 } = require("./lineItemHelpers");
 const { types } = require("sharetribe-flex-sdk");
-
 const { Money } = types;
 
 /**

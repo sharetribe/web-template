@@ -1,9 +1,8 @@
 /* eslint-disable no-console */
 import React from "react";
 import { Form as FinalForm, FormSpy } from "react-final-form";
-
-import { Button } from "../../components";
 import * as validators from "../../util/validators";
+import { Button } from "../../components";
 import FieldSelect from "./FieldSelect";
 
 const FormComponent = (props) => (

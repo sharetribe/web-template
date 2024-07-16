@@ -1,7 +1,6 @@
 import React from "react";
-import loadable from "@loadable/component";
-
 import { useConfiguration } from "../../context/configurationContext";
+import loadable from "@loadable/component";
 
 const SectionBuilder = loadable(
 	() => import(/* webpackChunkName: "SectionBuilder" */ "../PageBuilder/PageBuilder"),

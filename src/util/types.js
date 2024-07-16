@@ -17,7 +17,6 @@
  * defined. This way we get the validation errors only in the most
  * specific place and avoid duplicate errros.
  */
-import Decimal from "decimal.js";
 import {
 	arrayOf,
 	bool,
@@ -32,12 +31,12 @@ import {
 	shape,
 	string,
 } from "prop-types";
-
+import Decimal from "decimal.js";
+import { types as sdkTypes } from "./sdkLoader";
 import {
 	getAllTransitionsForEveryProcess,
 	TX_TRANSITION_ACTORS,
 } from "../transactions/transaction";
-import { types as sdkTypes } from "./sdkLoader";
 // NOTE: This file imports ../transactions/transaction.js, which may lead to circular dependency
 
 const { UUID, LatLng, LatLngBounds, Money } = sdkTypes;

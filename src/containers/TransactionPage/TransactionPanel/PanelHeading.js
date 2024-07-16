@@ -1,11 +1,13 @@
 import React from "react";
 import classNames from "classnames";
 
-import { H1, H2, NamedLink } from "../../../components";
-import { formatMoney } from "../../../util/currency";
 import { FormattedMessage } from "../../../util/reactIntl";
 import { createSlug, stringify } from "../../../util/urlHelpers";
+
+import { H1, H2, NamedLink } from "../../../components";
+
 import css from "./TransactionPanel.module.css";
+import { formatMoney } from "../../../util/currency";
 
 const createListingLink = (listingId, label, listingDeleted, searchParams = {}, className = "") => {
 	if (!listingDeleted) {

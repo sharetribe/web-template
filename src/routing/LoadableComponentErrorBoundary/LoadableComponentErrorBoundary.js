@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import appSettings from "../../config/settings";
+
 import { LoadableComponentErrorBoundaryPage } from "./LoadableComponentErrorBoundaryPage";
 
 // Use ErrorBoyndary to catch ChunkLoadError

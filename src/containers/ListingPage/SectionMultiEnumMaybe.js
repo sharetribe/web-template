@@ -1,6 +1,6 @@
 import React from "react";
-
 import { Heading, PropertyGroup } from "../../components";
+
 import css from "./ListingPage.module.css";
 
 const SectionMultiEnumMaybe = (props) => {

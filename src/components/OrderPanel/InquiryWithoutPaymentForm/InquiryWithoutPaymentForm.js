@@ -1,10 +1,12 @@
 import React from "react";
+import { func, string } from "prop-types";
 import { Form as FinalForm } from "react-final-form";
 import classNames from "classnames";
-import { func, string } from "prop-types";
 
 import { FormattedMessage, useIntl } from "../../../util/reactIntl";
+
 import { Form, PrimaryButton } from "../..";
+
 import css from "./InquiryWithoutPaymentForm.module.css";
 
 const renderForm = (formRenderProps) => {

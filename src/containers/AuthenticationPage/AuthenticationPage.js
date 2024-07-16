@@ -1,53 +1,62 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import { Redirect, withRouter } from "react-router-dom";
-import classNames from "classnames";
-import Cookies from "js-cookie";
-import isEmpty from "lodash/isEmpty";
+import React, { useState, useEffect } from "react";
 import { bool, func, object, oneOf, shape } from "prop-types";
 import { compose } from "redux";
+import { connect } from "react-redux";
+import { withRouter, Redirect } from "react-router-dom";
+import Cookies from "js-cookie";
+import classNames from "classnames";
+import isEmpty from "lodash/isEmpty";
 
-import {
-	Heading,
-	LayoutSingleColumn,
-	LinkTabNavHorizontal,
-	Modal,
-	NamedRedirect,
-	Page,
-	ResponsiveBackgroundImageContainer,
-	SocialLoginButton,
-} from "../../components";
-import FooterContainer from "../../containers/FooterContainer/FooterContainer";
-// We need to get PrivacyPolicy asset and get it rendered for the modal on this page.
-import { PrivacyPolicyContent } from "../../containers/PrivacyPolicyPage/PrivacyPolicyPage";
-// We need to get ToS asset and get it rendered for the modal on this page.
-import { TermsOfServiceContent } from "../../containers/TermsOfServicePage/TermsOfServicePage";
-import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
 import { useConfiguration } from "../../context/configurationContext";
 import { useRouteConfiguration } from "../../context/routeConfigurationContext";
-import { authenticationInProgress, login, signup, signupWithIdp } from "../../ducks/auth.duck";
-import { isScrollingDisabled, manageDisableScrolling } from "../../ducks/ui.duck";
-import { sendVerificationEmail } from "../../ducks/user.duck";
+import { camelize } from "../../util/string";
+import { pathByRouteName } from "../../util/routes";
 import { apiBaseUrl } from "../../util/api";
+import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
+import { propTypes } from "../../util/types";
 import { ensureCurrentUser } from "../../util/data";
 import {
 	isSignupEmailTakenError,
 	isTooManyEmailVerificationRequestsError,
 } from "../../util/errors";
-import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
-import { pathByRouteName } from "../../util/routes";
-import { camelize } from "../../util/string";
-import { propTypes } from "../../util/types";
-import { addScopePrefix, pickUserFieldsData } from "../../util/userHelpers";
-import NotFoundPage from "../NotFoundPage/NotFoundPage";
-import { PRIVACY_POLICY_ASSET_NAME, TOS_ASSET_NAME } from "./AuthenticationPage.duck";
-import css from "./AuthenticationPage.module.css";
+import { pickUserFieldsData, addScopePrefix } from "../../util/userHelpers";
+
+import { login, authenticationInProgress, signup, signupWithIdp } from "../../ducks/auth.duck";
+import { isScrollingDisabled, manageDisableScrolling } from "../../ducks/ui.duck";
+import { sendVerificationEmail } from "../../ducks/user.duck";
+
+import {
+	Page,
+	Heading,
+	NamedRedirect,
+	LinkTabNavHorizontal,
+	SocialLoginButton,
+	ResponsiveBackgroundImageContainer,
+	Modal,
+	LayoutSingleColumn,
+} from "../../components";
+
+import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
+import FooterContainer from "../../containers/FooterContainer/FooterContainer";
+
+import TermsAndConditions from "./TermsAndConditions/TermsAndConditions";
 import ConfirmSignupForm from "./ConfirmSignupForm/ConfirmSignupForm";
-import EmailVerificationInfo from "./EmailVerificationInfo";
 import LoginForm from "./LoginForm/LoginForm";
 import SignupForm from "./SignupForm/SignupForm";
+import EmailVerificationInfo from "./EmailVerificationInfo";
+
+// We need to get ToS asset and get it rendered for the modal on this page.
+import { TermsOfServiceContent } from "../../containers/TermsOfServicePage/TermsOfServicePage";
+
+// We need to get PrivacyPolicy asset and get it rendered for the modal on this page.
+import { PrivacyPolicyContent } from "../../containers/PrivacyPolicyPage/PrivacyPolicyPage";
+
+import NotFoundPage from "../NotFoundPage/NotFoundPage";
+
+import { TOS_ASSET_NAME, PRIVACY_POLICY_ASSET_NAME } from "./AuthenticationPage.duck";
+
+import css from "./AuthenticationPage.module.css";
 import { FacebookLogo, GoogleLogo } from "./socialLoginLogos";
-import TermsAndConditions from "./TermsAndConditions/TermsAndConditions";
 
 // Social login buttons are needed by AuthenticationForms
 export const SocialLoginButtonsMaybe = (props) => {

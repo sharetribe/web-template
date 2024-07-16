@@ -1,13 +1,15 @@
 import React from "react";
-import classNames from "classnames";
 import PropTypes from "prop-types";
+import classNames from "classnames";
+
+// Import configs and util modules
+import { FormattedMessage } from "../../../../util/reactIntl";
+import { LISTING_STATE_DRAFT } from "../../../../util/types";
+import { types as sdkTypes } from "../../../../util/sdkLoader";
 
 // Import shared components
 import { H3, ListingLink } from "../../../../components";
-// Import configs and util modules
-import { FormattedMessage } from "../../../../util/reactIntl";
-import { types as sdkTypes } from "../../../../util/sdkLoader";
-import { LISTING_STATE_DRAFT } from "../../../../util/types";
+
 // Import modules from this directory
 import EditListingPricingForm from "./EditListingPricingForm";
 import css from "./EditListingPricingPanel.module.css";

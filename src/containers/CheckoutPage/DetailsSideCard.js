@@ -1,6 +1,11 @@
 import React from "react";
 import { node, object, string } from "prop-types";
 
+import { FormattedMessage } from "../../util/reactIntl";
+import { propTypes } from "../../util/types";
+import { createSlug } from "../../util/urlHelpers";
+import { formatMoney } from "../../util/currency";
+
 import {
 	AspectRatioWrapper,
 	AvatarMedium,
@@ -9,10 +14,7 @@ import {
 	NamedLink,
 	ResponsiveImage,
 } from "../../components";
-import { formatMoney } from "../../util/currency";
-import { FormattedMessage } from "../../util/reactIntl";
-import { propTypes } from "../../util/types";
-import { createSlug } from "../../util/urlHelpers";
+
 import css from "./CheckoutPage.module.css";
 
 const DetailsSideCard = (props) => {

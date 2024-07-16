@@ -1,13 +1,13 @@
 import { parseDateFromISO8601 } from "./dates";
 import {
-	availabilityPerDate,
+	uniqueBy,
+	pipe,
+	map,
 	availableRanges,
-	exceptionFreeSlotsPerDate,
 	generateDates,
 	generateMonths,
-	map,
-	pipe,
-	uniqueBy,
+	exceptionFreeSlotsPerDate,
+	availabilityPerDate,
 } from "./generators";
 
 describe("generators and iterators", () => {

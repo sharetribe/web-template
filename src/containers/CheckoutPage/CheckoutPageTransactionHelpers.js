@@ -1,8 +1,8 @@
 // Import contexts and util modules
-import { formatMoney } from "../../util/currency";
+import { findRouteByRouteName } from "../../util/routes";
 import { ensureStripeCustomer, ensureTransaction } from "../../util/data";
 import { minutesBetween } from "../../util/dates";
-import { findRouteByRouteName } from "../../util/routes";
+import { formatMoney } from "../../util/currency";
 import { storeData } from "./CheckoutPageSessionHelpers";
 
 /**

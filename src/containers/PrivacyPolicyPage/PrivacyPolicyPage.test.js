@@ -1,9 +1,9 @@
 import React from "react";
+import "@testing-library/jest-dom";
 
 import { renderWithProviders as render, testingLibrary } from "../../util/testHelpers";
-import { PrivacyPolicyPageComponent } from "./PrivacyPolicyPage";
 
-import "@testing-library/jest-dom";
+import { PrivacyPolicyPageComponent } from "./PrivacyPolicyPage";
 
 const { waitFor } = testingLibrary;
 

@@ -1,8 +1,8 @@
 import React from "react";
+import { string } from "prop-types";
 import { isInclusivelyAfterDay, isInclusivelyBeforeDay } from "react-dates";
 import { Field } from "react-final-form";
 import moment from "moment";
-import { string } from "prop-types";
 
 import { useConfiguration } from "../../context/configurationContext";
 import DateRangeController from "./DateRangeController";

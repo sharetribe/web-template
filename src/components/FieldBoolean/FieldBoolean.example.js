@@ -1,8 +1,7 @@
 import React from "react";
 import { Form as FinalForm, FormSpy } from "react-final-form";
-
-import { Button } from "../../components";
 import * as validators from "../../util/validators";
+import { Button } from "../../components";
 import FieldBoolean from "./FieldBoolean";
 
 const formName = "Styleguide.FieldBoolean.Form";

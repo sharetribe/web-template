@@ -1,15 +1,19 @@
 import React from "react";
-import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { compose } from "redux";
+import { connect } from "react-redux";
 
-import { H3, LayoutSideNavigation, Page, UserNav } from "../../components";
-import FooterContainer from "../../containers/FooterContainer/FooterContainer";
-import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
-import { isScrollingDisabled } from "../../ducks/ui.duck";
 import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
 import { propTypes } from "../../util/types";
+import { isScrollingDisabled } from "../../ducks/ui.duck";
+
+import { Page, UserNav, H3, LayoutSideNavigation } from "../../components";
+
+import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
+import FooterContainer from "../../containers/FooterContainer/FooterContainer";
+
 import PasswordChangeForm from "./PasswordChangeForm/PasswordChangeForm";
+
 import { changePassword, changePasswordClear, resetPassword } from "./PasswordChangePage.duck";
 import css from "./PasswordChangePage.module.css";
 

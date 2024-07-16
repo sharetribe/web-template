@@ -1,8 +1,9 @@
 import React from "react";
-import classNames from "classnames";
 import { func, node, object, shape, string } from "prop-types";
+import classNames from "classnames";
 
 import Field from "../../Field";
+
 import css from "./SectionContainer.module.css";
 
 // This component can be used to wrap some common styles and features of Section-level components.

@@ -1,9 +1,10 @@
 import React from "react";
-
-import { Heading, InlineTextButton, LayoutSingleColumn, Logo } from "../../components";
-import { useRouteConfiguration } from "../../context/routeConfigurationContext";
 import { FormattedMessage } from "../../util/reactIntl";
 import { pathByRouteName } from "../../util/routes";
+import { useRouteConfiguration } from "../../context/routeConfigurationContext";
+
+import { InlineTextButton, Logo, Heading, LayoutSingleColumn } from "../../components";
+
 import css from "./LoadableComponentErrorBoundary.module.css";
 
 export const LoadableComponentErrorBoundaryPage = () => {

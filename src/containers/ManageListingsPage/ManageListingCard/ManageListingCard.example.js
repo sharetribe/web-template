@@ -1,12 +1,13 @@
 /* eslint-disable no-console */
 import React from "react";
 
-import { createOwnListing, fakeIntl } from "../../../util/testData";
 import {
 	LISTING_STATE_CLOSED,
-	LISTING_STATE_DRAFT,
 	LISTING_STATE_PENDING_APPROVAL,
+	LISTING_STATE_DRAFT,
 } from "../../../util/types";
+import { createOwnListing, fakeIntl } from "../../../util/testData";
+
 import ManageListingCard from "./ManageListingCard";
 
 const noop = () => null;

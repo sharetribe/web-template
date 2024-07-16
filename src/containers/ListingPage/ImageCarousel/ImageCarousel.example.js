@@ -1,5 +1,4 @@
 import React from "react";
-
 import { types as sdkTypes } from "../../../util/sdkLoader";
 import ImageCarousel from "./ImageCarousel";
 

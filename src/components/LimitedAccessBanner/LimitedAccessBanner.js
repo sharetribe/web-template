@@ -1,11 +1,11 @@
 import React from "react";
-import classNames from "classnames";
 import PropTypes from "prop-types";
-
-import { Button } from "../../components";
-import { ensureCurrentUser } from "../../util/data";
+import classNames from "classnames";
 import { FormattedMessage } from "../../util/reactIntl";
 import { propTypes } from "../../util/types";
+import { Button } from "../../components";
+import { ensureCurrentUser } from "../../util/data";
+
 import css from "./LimitedAccessBanner.module.css";
 
 // Due to the layout structure, do not render the banner on the following pages

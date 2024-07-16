@@ -1,10 +1,12 @@
 import React from "react";
-import classNames from "classnames";
 import { arrayOf, bool, func, node, object, shape, string } from "prop-types";
+import classNames from "classnames";
 
-import BlockBuilder from "../../BlockBuilder";
 import Field, { hasDataInFields } from "../../Field";
+import BlockBuilder from "../../BlockBuilder";
+
 import SectionContainer from "../SectionContainer";
+
 import css from "./SectionFeatures.module.css";
 
 // Section component that shows features.

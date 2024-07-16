@@ -1,8 +1,7 @@
 import React from "react";
 import classNames from "classnames";
-
-import { IconEdit, IconSuccess, InlineTextButton, PrimaryButton } from "../../components";
 import { FormattedMessage } from "../../util/reactIntl";
+import { IconEdit, IconSuccess, PrimaryButton, InlineTextButton } from "../../components";
 import css from "./StripeConnectAccountStatusBox.module.css";
 
 const STATUS_VERIFICATION_NEEDED = "verificationNeeded";

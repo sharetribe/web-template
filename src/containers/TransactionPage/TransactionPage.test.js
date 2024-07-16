@@ -1,20 +1,23 @@
 import React from "react";
+import "@testing-library/jest-dom";
 import Decimal from "decimal.js";
+import "react-dates/initialize";
 
-import {
-	getProcess,
-	TX_TRANSITION_ACTOR_CUSTOMER,
-	TX_TRANSITION_ACTOR_PROVIDER,
-} from "../../transactions/transaction";
 import { types as sdkTypes } from "../../util/sdkLoader";
 import {
-	createBooking,
+	LINE_ITEM_DAY,
+	LINE_ITEM_HOUR,
+	LINE_ITEM_ITEM,
+	LINE_ITEM_PROVIDER_COMMISSION,
+} from "../../util/types";
+import {
+	createUser,
 	createCurrentUser,
 	createListing,
-	createMessage,
-	createTransaction,
-	createUser,
 	fakeIntl,
+	createTransaction,
+	createBooking,
+	createMessage,
 } from "../../util/testData";
 import {
 	getHostedConfiguration,
@@ -22,17 +25,15 @@ import {
 	renderWithProviders as render,
 	testingLibrary,
 } from "../../util/testHelpers";
-import {
-	LINE_ITEM_DAY,
-	LINE_ITEM_HOUR,
-	LINE_ITEM_ITEM,
-	LINE_ITEM_PROVIDER_COMMISSION,
-} from "../../util/types";
-import { TransactionPageComponent } from "./TransactionPage";
-import { getStateData } from "./TransactionPage.stateData";
 
-import "@testing-library/jest-dom";
-import "react-dates/initialize";
+import {
+	TX_TRANSITION_ACTOR_CUSTOMER,
+	TX_TRANSITION_ACTOR_PROVIDER,
+	getProcess,
+} from "../../transactions/transaction";
+
+import { getStateData } from "./TransactionPage.stateData";
+import { TransactionPageComponent } from "./TransactionPage";
 
 const { Money, UUID } = sdkTypes;
 const { screen, waitFor, within } = testingLibrary;

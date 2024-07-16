@@ -1,11 +1,11 @@
 import React, { Component } from "react";
+import { string } from "prop-types";
 import { DayPickerRangeController } from "react-dates";
 import classNames from "classnames";
 import moment from "moment";
-import { string } from "prop-types";
+import { START_DATE } from "../../util/dates";
 
 import { IconArrowHead } from "../../components";
-import { START_DATE } from "../../util/dates";
 import css from "./DateRangeController.module.css";
 
 export const HORIZONTAL_ORIENTATION = "horizontal";

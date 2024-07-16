@@ -1,37 +1,42 @@
 import React, { useEffect, useState } from "react";
-import { useIntl } from "react-intl";
+import { compose } from "redux";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { compose } from "redux";
+import { useIntl } from "react-intl";
 
-// Import shared components
-import { NamedRedirect, Page } from "../../components";
 // Import contexts and util modules
 import { useConfiguration } from "../../context/configurationContext";
 import { useRouteConfiguration } from "../../context/routeConfigurationContext";
-import { savePaymentMethod } from "../../ducks/paymentMethods.duck";
-import { confirmCardPayment, retrievePaymentIntent } from "../../ducks/stripe.duck";
+import { userDisplayNameAsString } from "../../util/data";
+import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from "../../transactions/transaction";
+
 // Import global thunk functions
 import { isScrollingDisabled } from "../../ducks/ui.duck";
-import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from "../../transactions/transaction";
-import { userDisplayNameAsString } from "../../util/data";
+import { confirmCardPayment, retrievePaymentIntent } from "../../ducks/stripe.duck";
+import { savePaymentMethod } from "../../ducks/paymentMethods.duck";
+
+// Import shared components
+import { NamedRedirect, Page } from "../../components";
+
+// Session helpers file needs to be imported before CheckoutPageWithPayment and CheckoutPageWithInquiryProcess
+import { storeData, clearData, handlePageData } from "./CheckoutPageSessionHelpers";
+
 // Import modules from this directory
 import {
-	confirmPayment,
-	initiateInquiryWithoutPayment,
 	initiateOrder,
-	sendMessage,
 	setInitialValues,
 	speculateTransaction,
 	stripeCustomer,
+	confirmPayment,
+	sendMessage,
+	initiateInquiryWithoutPayment,
 } from "./CheckoutPage.duck";
-// Session helpers file needs to be imported before CheckoutPageWithPayment and CheckoutPageWithInquiryProcess
-import { clearData, handlePageData, storeData } from "./CheckoutPageSessionHelpers";
-import CheckoutPageWithInquiryProcess from "./CheckoutPageWithInquiryProcess";
+
+import CustomTopbar from "./CustomTopbar";
 import CheckoutPageWithPayment, {
 	loadInitialDataForStripePayments,
 } from "./CheckoutPageWithPayment";
-import CustomTopbar from "./CustomTopbar";
+import CheckoutPageWithInquiryProcess from "./CheckoutPageWithInquiryProcess";
 
 const STORAGE_KEY = "CheckoutPage";
 

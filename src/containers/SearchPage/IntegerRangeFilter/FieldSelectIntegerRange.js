@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Field } from "react-final-form";
+import React, { useState, useEffect } from "react";
+
+import { bool, string, number } from "prop-types";
 import classNames from "classnames";
-import { bool, number, string } from "prop-types";
+import { Field } from "react-final-form";
 
 import { RangeSlider } from "../../../components";
+
 import css from "./IntegerRangeFilter.module.css";
 
 const RADIX = 10;

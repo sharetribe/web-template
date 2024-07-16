@@ -1,5 +1,4 @@
 import pick from "lodash/pick";
-
 import { storableError } from "../util/errors";
 import * as log from "../util/log";
 

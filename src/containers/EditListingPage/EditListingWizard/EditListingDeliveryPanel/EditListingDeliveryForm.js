@@ -1,29 +1,31 @@
 import React, { useEffect } from "react";
-import { Form as FinalForm } from "react-final-form";
-import classNames from "classnames";
 import { bool, func, shape, string } from "prop-types";
 import { compose } from "redux";
+import { Form as FinalForm } from "react-final-form";
+import classNames from "classnames";
 
-// Import shared components
-import {
-	Button,
-	FieldCheckbox,
-	FieldCurrencyInput,
-	FieldLocationAutocompleteInput,
-	FieldTextInput,
-	Form,
-} from "../../../../components";
 // Import configs and util modules
 import appSettings from "../../../../config/settings";
-import { displayDeliveryPickup, displayDeliveryShipping } from "../../../../util/configHelpers";
-import { FormattedMessage, injectIntl, intlShape } from "../../../../util/reactIntl";
+import { intlShape, injectIntl, FormattedMessage } from "../../../../util/reactIntl";
 import { propTypes } from "../../../../util/types";
+import { displayDeliveryPickup, displayDeliveryShipping } from "../../../../util/configHelpers";
 import {
-	autocompletePlaceSelected,
 	autocompleteSearchRequired,
+	autocompletePlaceSelected,
 	composeValidators,
 	required,
 } from "../../../../util/validators";
+
+// Import shared components
+import {
+	Form,
+	FieldLocationAutocompleteInput,
+	Button,
+	FieldCurrencyInput,
+	FieldTextInput,
+	FieldCheckbox,
+} from "../../../../components";
+
 // Import modules from this directory
 import css from "./EditListingDeliveryForm.module.css";
 

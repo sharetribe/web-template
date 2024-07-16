@@ -1,6 +1,6 @@
 import React from "react";
-import classNames from "classnames";
 import { node, string } from "prop-types";
+import classNames from "classnames";
 
 import css from "./P.module.css";
 

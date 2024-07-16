@@ -28,19 +28,21 @@
 import React from "react";
 import Decimal from "decimal.js";
 
-import { OrderBreakdown } from "../../components";
-import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from "../../transactions/transaction";
-import { convertMoneyToNumber, convertUnitToSubUnit, unitDivisor } from "../../util/currency";
-import { FormattedMessage } from "../../util/reactIntl";
 import { types as sdkTypes } from "../../util/sdkLoader";
+import { FormattedMessage } from "../../util/reactIntl";
 import {
 	DATE_TYPE_DATE,
-	DATE_TYPE_DATETIME,
 	LINE_ITEM_DAY,
-	LINE_ITEM_HOUR,
 	LINE_ITEM_NIGHT,
+	LINE_ITEM_HOUR,
 	LISTING_UNIT_TYPES,
+	DATE_TYPE_DATETIME,
 } from "../../util/types";
+import { unitDivisor, convertMoneyToNumber, convertUnitToSubUnit } from "../../util/currency";
+import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from "../../transactions/transaction";
+
+import { OrderBreakdown } from "../../components";
+
 import css from "./OrderPanel.module.css";
 
 const { Money, UUID } = sdkTypes;

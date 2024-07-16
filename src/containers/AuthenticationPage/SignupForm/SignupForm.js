@@ -1,18 +1,21 @@
 import React from "react";
-import { Form as FinalForm } from "react-final-form";
-import classNames from "classnames";
-import arrayMutators from "final-form-arrays";
 import { bool, node, string } from "prop-types";
 import { compose } from "redux";
+import { Form as FinalForm } from "react-final-form";
+import arrayMutators from "final-form-arrays";
+import classNames from "classnames";
 
-import { CustomExtendedDataField, FieldTextInput, Form, PrimaryButton } from "../../../components";
 import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
 import { propTypes } from "../../../util/types";
-import { getPropsForCustomUserFieldInputs } from "../../../util/userHelpers";
 import * as validators from "../../../util/validators";
+import { getPropsForCustomUserFieldInputs } from "../../../util/userHelpers";
+
+import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from "../../../components";
+
 import FieldSelectUserType from "../FieldSelectUserType";
 import UserFieldDisplayName from "../UserFieldDisplayName";
 import UserFieldPhoneNumber from "../UserFieldPhoneNumber";
+
 import css from "./SignupForm.module.css";
 
 const getSoleUserTypeMaybe = (userTypes) =>

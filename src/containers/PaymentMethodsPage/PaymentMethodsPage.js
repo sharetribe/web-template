@@ -1,19 +1,24 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
 import { bool, func, object } from "prop-types";
 import { compose } from "redux";
+import { connect } from "react-redux";
 
-import { H3, LayoutSideNavigation, Page, SavedCardDetails, UserNav } from "../../components";
-import FooterContainer from "../../containers/FooterContainer/FooterContainer";
-import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
-import { deletePaymentMethod, savePaymentMethod } from "../../ducks/paymentMethods.duck";
-import { handleCardSetup } from "../../ducks/stripe.duck";
-import { isScrollingDisabled, manageDisableScrolling } from "../../ducks/ui.duck";
-import { ensureCurrentUser, ensurePaymentMethodCard, ensureStripeCustomer } from "../../util/data";
 import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
+import { ensureCurrentUser, ensureStripeCustomer, ensurePaymentMethodCard } from "../../util/data";
 import { propTypes } from "../../util/types";
+import { savePaymentMethod, deletePaymentMethod } from "../../ducks/paymentMethods.duck";
+import { handleCardSetup } from "../../ducks/stripe.duck";
+import { manageDisableScrolling, isScrollingDisabled } from "../../ducks/ui.duck";
+
+import { H3, SavedCardDetails, Page, UserNav, LayoutSideNavigation } from "../../components";
+
+import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
+import FooterContainer from "../../containers/FooterContainer/FooterContainer";
+
 import PaymentMethodsForm from "./PaymentMethodsForm/PaymentMethodsForm";
+
 import { createStripeSetupIntent, stripeCustomer } from "./PaymentMethodsPage.duck.js";
+
 import css from "./PaymentMethodsPage.module.css";
 
 const PaymentMethodsPageComponent = (props) => {

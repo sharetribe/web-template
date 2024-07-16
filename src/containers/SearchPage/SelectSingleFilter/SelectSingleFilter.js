@@ -1,11 +1,14 @@
 import React from "react";
-import classNames from "classnames";
 import { array, arrayOf, bool, func, node, number, object, string } from "prop-types";
+import classNames from "classnames";
+
+import { pickInitialValuesForFieldSelectTree } from "../../../util/search";
 
 import { FieldSelectTree } from "../../../components";
-import { pickInitialValuesForFieldSelectTree } from "../../../util/search";
+
 import FilterPlain from "../FilterPlain/FilterPlain";
 import FilterPopup from "../FilterPopup/FilterPopup";
+
 import css from "./SelectSingleFilter.module.css";
 
 const getQueryParamName = (queryParamNames) => {

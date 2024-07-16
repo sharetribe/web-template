@@ -1,7 +1,8 @@
+import Decimal from "decimal.js";
 import loadable from "@loadable/component";
-
-import { injectIntl } from "../../../util/reactIntl";
 import { types as sdkTypes } from "../../../util/sdkLoader";
+import { injectIntl } from "../../../util/reactIntl";
+import { LINE_ITEM_ITEM } from "../../../util/types";
 
 const ProductOrderForm = loadable(
 	() => import(/* webpackChunkName: "ProductOrderForm" */ "./ProductOrderForm"),

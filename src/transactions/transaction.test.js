@@ -1,11 +1,12 @@
-import { createListing, createTransaction, createTxTransition, createUser } from "../util/testData";
+import { createUser, createTransaction, createListing, createTxTransition } from "../util/testData";
+
 import {
-	CONDITIONAL_RESOLVER_WILDCARD,
-	ConditionalResolver,
-	getProcess,
 	TX_TRANSITION_ACTOR_CUSTOMER,
 	TX_TRANSITION_ACTOR_PROVIDER,
 	TX_TRANSITION_ACTOR_SYSTEM,
+	CONDITIONAL_RESOLVER_WILDCARD,
+	ConditionalResolver,
+	getProcess,
 } from "./transaction";
 
 describe("transaction utils for default-purchase", () => {

@@ -1,7 +1,18 @@
 import React, { useState } from "react";
+import { bool, node, object, shape, string } from "prop-types";
 import { Form as FinalForm } from "react-final-form";
 import classNames from "classnames";
-import { bool, node, object, shape, string } from "prop-types";
+
+// Import contexts and util modules
+import { FormattedMessage, intlShape } from "../../util/reactIntl";
+import { displayPrice } from "../../util/configHelpers";
+import { pathByRouteName } from "../../util/routes";
+import { propTypes } from "../../util/types";
+import { formatMoney } from "../../util/currency";
+import { createSlug } from "../../util/urlHelpers";
+import { isTransactionInitiateListingNotFoundError } from "../../util/errors";
+import * as validators from "../../util/validators";
+import { getProcess } from "../../transactions/transaction";
 
 // Import shared components
 import {
@@ -14,21 +25,14 @@ import {
 	Page,
 	PrimaryButton,
 } from "../../components";
-import { getProcess } from "../../transactions/transaction";
-import { displayPrice } from "../../util/configHelpers";
-import { formatMoney } from "../../util/currency";
-import { isTransactionInitiateListingNotFoundError } from "../../util/errors";
-// Import contexts and util modules
-import { FormattedMessage, intlShape } from "../../util/reactIntl";
-import { pathByRouteName } from "../../util/routes";
-import { propTypes } from "../../util/types";
-import { createSlug } from "../../util/urlHelpers";
-import * as validators from "../../util/validators";
-import css from "./CheckoutPage.module.css";
+
 import { getTransactionTypeData } from "./CheckoutPageTransactionHelpers.js";
+
 import CustomTopbar from "./CustomTopbar";
 import DetailsSideCard from "./DetailsSideCard";
 import MobileListingImage from "./MobileListingImage";
+
+import css from "./CheckoutPage.module.css";
 
 const ErrorMessage = (props) => {
 	const { error } = props;

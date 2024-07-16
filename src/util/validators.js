@@ -1,7 +1,6 @@
 import toPairs from "lodash/toPairs";
-
-import { diffInTime } from "./dates";
 import { types as sdkTypes } from "./sdkLoader";
+import { diffInTime } from "./dates";
 
 const { LatLng, Money } = sdkTypes;
 

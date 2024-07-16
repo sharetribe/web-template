@@ -1,10 +1,10 @@
 import React from "react";
-
-import { fakeIntl } from "../../../util/testData";
-import { renderWithProviders as render, testingLibrary } from "../../../util/testHelpers";
-import LoginForm from "./LoginForm";
-
 import "@testing-library/jest-dom";
+
+import { renderWithProviders as render, testingLibrary } from "../../../util/testHelpers";
+import { fakeIntl } from "../../../util/testData";
+
+import LoginForm from "./LoginForm";
 
 const { screen, userEvent } = testingLibrary;
 

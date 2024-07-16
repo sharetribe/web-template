@@ -1,8 +1,9 @@
 import React from "react";
-import classNames from "classnames";
 import { oneOf, shape, string } from "prop-types";
+import classNames from "classnames";
 
 import { ExternalLink, Logo, NamedLink } from "../../components";
+
 import css from "./LinkedLogo.module.css";
 
 const LinkedLogo = (props) => {

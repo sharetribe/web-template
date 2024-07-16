@@ -1,15 +1,16 @@
 import React from "react";
 
-import { constructQueryParamName, convertCategoriesToSelectTreeOptions } from "../../util/search";
 // utils
-import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_LONG, SCHEMA_TYPE_MULTI_ENUM } from "../../util/types";
-import BookingDateRangeFilter from "./BookingDateRangeFilter/BookingDateRangeFilter";
-import IntegerRangeFilter from "./IntegerRangeFilter/IntegerRangeFilter";
-import KeywordFilter from "./KeywordFilter/KeywordFilter";
-import PriceFilter from "./PriceFilter/PriceFilter";
-import SelectMultipleFilter from "./SelectMultipleFilter/SelectMultipleFilter";
+import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_LONG } from "../../util/types";
+import { convertCategoriesToSelectTreeOptions, constructQueryParamName } from "../../util/search";
+
 // component imports
 import SelectSingleFilter from "./SelectSingleFilter/SelectSingleFilter";
+import SelectMultipleFilter from "./SelectMultipleFilter/SelectMultipleFilter";
+import BookingDateRangeFilter from "./BookingDateRangeFilter/BookingDateRangeFilter";
+import KeywordFilter from "./KeywordFilter/KeywordFilter";
+import PriceFilter from "./PriceFilter/PriceFilter";
+import IntegerRangeFilter from "./IntegerRangeFilter/IntegerRangeFilter";
 
 /**
  * FilterComponent is used to map configured filter types

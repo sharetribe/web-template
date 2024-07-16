@@ -1,18 +1,20 @@
 import React from "react";
-import { Form as FinalForm } from "react-final-form";
-import classNames from "classnames";
 import { bool, func, number, shape, string } from "prop-types";
 import { compose } from "redux";
+import { Form as FinalForm } from "react-final-form";
+import classNames from "classnames";
 
-// Import shared components
-import { Button, FieldCurrencyInput, Form } from "../../../../components";
 // Import configs and util modules
 import appSettings from "../../../../config/settings";
-import { formatMoney } from "../../../../util/currency";
-import { FormattedMessage, injectIntl, intlShape } from "../../../../util/reactIntl";
-import { types as sdkTypes } from "../../../../util/sdkLoader";
+import { intlShape, injectIntl, FormattedMessage } from "../../../../util/reactIntl";
 import { propTypes } from "../../../../util/types";
 import * as validators from "../../../../util/validators";
+import { formatMoney } from "../../../../util/currency";
+import { types as sdkTypes } from "../../../../util/sdkLoader";
+
+// Import shared components
+import { Button, Form, FieldCurrencyInput, FieldTextInput } from "../../../../components";
+
 // Import modules from this directory
 import css from "./EditListingPricingForm.module.css";
 

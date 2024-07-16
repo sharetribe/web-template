@@ -1,15 +1,15 @@
 import intersection from "lodash/intersection";
 
-import { getStartOf, parseDateFromISO8601, subtractTime } from "../../util/dates";
-import { isFieldForCategory } from "../../util/fieldHelpers";
+import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from "../../util/types";
 import { createResourceLocatorString } from "../../util/routes";
 import {
-	constructQueryParamName,
 	isAnyFilterActive,
 	parseSelectFilterOptions,
+	constructQueryParamName,
 } from "../../util/search";
-import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from "../../util/types";
 import { createSlug, parse, stringify } from "../../util/urlHelpers";
+import { getStartOf, parseDateFromISO8601, subtractTime } from "../../util/dates";
+import { isFieldForCategory } from "../../util/fieldHelpers";
 
 /**
  * Omit those listing field parameters, that are not allowed with current category selection

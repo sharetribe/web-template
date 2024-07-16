@@ -1,9 +1,10 @@
 import React from "react";
 import { string } from "prop-types";
 
-import { formatMoney } from "../../util/currency";
 import { FormattedMessage, intlShape } from "../../util/reactIntl";
-import { LINE_ITEM_PROVIDER_COMMISSION, propTypes } from "../../util/types";
+import { formatMoney } from "../../util/currency";
+import { propTypes, LINE_ITEM_PROVIDER_COMMISSION } from "../../util/types";
+
 import css from "./OrderBreakdown.module.css";
 
 const LineItemProviderCommissionRefundMaybe = (props) => {

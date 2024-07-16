@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import css from "./CustomLinksMenu.module.css";
-import LinksMenu from "./LinksMenu";
 import PriorityLinks, { CreateListingMenuLink } from "./PriorityLinks";
+import LinksMenu from "./LinksMenu";
+
+import css from "./CustomLinksMenu.module.css";
 
 const draftId = "00000000-0000-0000-0000-000000000000";
 const createListingLinkConfig = (intl) => ({

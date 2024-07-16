@@ -1,13 +1,14 @@
 import React from "react";
 import classNames from "classnames";
-import { bool, number, object, string } from "prop-types";
 
 import { useConfiguration } from "../../context/configurationContext";
-import { getMapProviderApiAccess } from "../../util/maps";
+import { bool, number, object, string } from "prop-types";
 import { propTypes } from "../../util/types";
-import * as googleMapsMap from "./GoogleMap";
-import css from "./Map.module.css";
+import { getMapProviderApiAccess } from "../../util/maps";
 import * as mapboxMap from "./MapboxMap";
+import * as googleMapsMap from "./GoogleMap";
+
+import css from "./Map.module.css";
 
 export const Map = (props) => {
 	const config = useConfiguration();

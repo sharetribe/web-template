@@ -1,8 +1,6 @@
 import React from "react";
+import { compose } from "redux";
 import { withRouter } from "react-router-dom";
-import loadable from "@loadable/component";
-import classNames from "classnames";
-import omit from "lodash/omit";
 import {
 	array,
 	arrayOf,
@@ -15,35 +13,39 @@ import {
 	shape,
 	string,
 } from "prop-types";
-import { compose } from "redux";
+import loadable from "@loadable/component";
+import classNames from "classnames";
+import omit from "lodash/omit";
 
-import { AvatarSmall, H1, H2, ModalInMobile, PrimaryButton } from "../../components";
-import {
-	getSupportedProcessesInfo,
-	INQUIRY_PROCESS_NAME,
-	isBookingProcess,
-	isPurchaseProcess,
-	resolveLatestProcessName,
-} from "../../transactions/transaction";
+import { intlShape, injectIntl, FormattedMessage } from "../../util/reactIntl";
 import {
 	displayDeliveryPickup,
 	displayDeliveryShipping,
 	displayPrice,
 } from "../../util/configHelpers";
-import { formatMoney } from "../../util/currency";
-import { userDisplayNameAsString } from "../../util/data";
-import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
 import {
-	LINE_ITEM_DAY,
-	LINE_ITEM_HOUR,
-	LINE_ITEM_ITEM,
-	LINE_ITEM_NIGHT,
-	LISTING_STATE_CLOSED,
 	propTypes,
-	STOCK_INFINITE_MULTIPLE_ITEMS,
+	LISTING_STATE_CLOSED,
+	LINE_ITEM_NIGHT,
+	LINE_ITEM_DAY,
+	LINE_ITEM_ITEM,
+	LINE_ITEM_HOUR,
 	STOCK_MULTIPLE_ITEMS,
+	STOCK_INFINITE_MULTIPLE_ITEMS,
 } from "../../util/types";
+import { formatMoney } from "../../util/currency";
 import { parse, stringify } from "../../util/urlHelpers";
+import { userDisplayNameAsString } from "../../util/data";
+import {
+	INQUIRY_PROCESS_NAME,
+	getSupportedProcessesInfo,
+	isBookingProcess,
+	isPurchaseProcess,
+	resolveLatestProcessName,
+} from "../../transactions/transaction";
+
+import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from "../../components";
+
 import css from "./OrderPanel.module.css";
 
 const BookingTimeForm = loadable(

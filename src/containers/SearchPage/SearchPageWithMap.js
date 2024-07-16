@@ -1,50 +1,55 @@
 import React, { Component } from "react";
+import { array, arrayOf, bool, func, object, oneOf, shape, string } from "prop-types";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import { useHistory, useLocation } from "react-router-dom";
-import classNames from "classnames";
 import debounce from "lodash/debounce";
 import omit from "lodash/omit";
-import { array, arrayOf, bool, func, object, shape, string } from "prop-types";
-import { compose } from "redux";
+import classNames from "classnames";
 
-import { H3, H5, ModalInMobile, Page } from "../../components";
-import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
+import { useIntl, intlShape, FormattedMessage } from "../../util/reactIntl";
 import { useConfiguration } from "../../context/configurationContext";
 import { useRouteConfiguration } from "../../context/routeConfigurationContext";
-import { getListingsById } from "../../ducks/marketplaceData.duck";
-import { isScrollingDisabled, manageDisableScrolling } from "../../ducks/ui.duck";
-import { FormattedMessage, intlShape, useIntl } from "../../util/reactIntl";
+
 import { createResourceLocatorString, pathByRouteName } from "../../util/routes";
 import {
-	getQueryParamNames,
 	isAnyFilterActive,
 	isMainSearchTypeKeywords,
 	isOriginInUse,
+	getQueryParamNames,
 } from "../../util/search";
-import { propTypes } from "../../util/types";
 import { parse } from "../../util/urlHelpers";
-import FilterComponent from "./FilterComponent";
-import MainPanelHeader from "./MainPanelHeader/MainPanelHeader";
-import NoSearchResultsMaybe from "./NoSearchResultsMaybe/NoSearchResultsMaybe";
-import SearchFiltersMobile from "./SearchFiltersMobile/SearchFiltersMobile";
-import SearchFiltersPrimary from "./SearchFiltersPrimary/SearchFiltersPrimary";
-import SearchFiltersSecondary from "./SearchFiltersSecondary/SearchFiltersSecondary";
-import SearchMap from "./SearchMap/SearchMap";
+import { propTypes } from "../../util/types";
+import { getListingsById } from "../../ducks/marketplaceData.duck";
+import { manageDisableScrolling, isScrollingDisabled } from "../../ducks/ui.duck";
+
+import { H3, H5, ModalInMobile, Page } from "../../components";
+import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
+
 import { setActiveListing } from "./SearchPage.duck";
-import css from "./SearchPage.module.css";
 import {
-	cleanSearchFromConflictingParams,
-	createSearchResultSchema,
 	groupListingFieldConfigs,
 	initialValues,
-	omitLimitedListingFieldParams,
-	pickListingFieldFilters,
 	searchParamsPicker,
-	validFilterParams,
 	validUrlQueryParamsFromProps,
+	validFilterParams,
+	cleanSearchFromConflictingParams,
+	createSearchResultSchema,
+	pickListingFieldFilters,
+	omitLimitedListingFieldParams,
 } from "./SearchPage.shared";
-import SearchResultsPanel from "./SearchResultsPanel/SearchResultsPanel";
+
+import FilterComponent from "./FilterComponent";
+import SearchMap from "./SearchMap/SearchMap";
+import MainPanelHeader from "./MainPanelHeader/MainPanelHeader";
+import SearchFiltersSecondary from "./SearchFiltersSecondary/SearchFiltersSecondary";
+import SearchFiltersPrimary from "./SearchFiltersPrimary/SearchFiltersPrimary";
+import SearchFiltersMobile from "./SearchFiltersMobile/SearchFiltersMobile";
 import SortBy from "./SortBy/SortBy";
+import SearchResultsPanel from "./SearchResultsPanel/SearchResultsPanel";
+import NoSearchResultsMaybe from "./NoSearchResultsMaybe/NoSearchResultsMaybe";
+
+import css from "./SearchPage.module.css";
 
 const MODAL_BREAKPOINT = 768; // Search is in modal on mobile layout
 const SEARCH_WITH_MAP_DEBOUNCE = 300; // Little bit of debounce before search is initiated.

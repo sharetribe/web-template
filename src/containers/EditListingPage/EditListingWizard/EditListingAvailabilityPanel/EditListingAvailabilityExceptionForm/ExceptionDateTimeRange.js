@@ -1,38 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 
-import { FieldDateInput, FieldSelect } from "../../../../../components";
 import appSettings from "../../../../../config/settings";
 import {
 	END_DATE,
-	findNextBoundary,
-	formatDateIntoPartials,
-	getEndHours,
-	getSharpHours,
-	getStartHours,
+	START_DATE,
+	isSameDay,
+	isInRange,
+	timestampToDate,
 	getStartOf,
 	initialVisibleMonth,
-	isDateSameOrAfter,
-	isInRange,
-	isSameDay,
-	monthIdString,
-	START_DATE,
 	stringifyDateToISO8601,
 	timeOfDayFromLocalToTimeZone,
 	timeOfDayFromTimeZoneToLocal,
-	timestampToDate,
+	isDateSameOrAfter,
+	findNextBoundary,
+	getSharpHours,
+	getStartHours,
+	getEndHours,
+	formatDateIntoPartials,
+	monthIdString,
 } from "../../../../../util/dates";
 import { exceptionFreeSlotsPerDate } from "../../../../../util/generators";
 import { bookingDateRequired } from "../../../../../util/validators";
+import { FieldDateInput, FieldSelect } from "../../../../../components";
+
 import {
-	endOfAvailabilityExceptionRange,
-	extractDateFromFieldDateInput,
-	getMonthlyFetchRange,
 	getStartOfNextMonth,
 	getStartOfPrevMonth,
+	extractDateFromFieldDateInput,
+	endOfAvailabilityExceptionRange,
 	handleMonthClick,
+	getMonthlyFetchRange,
 } from "../availability.helpers";
+
 import Next from "../NextArrow";
 import Prev from "../PrevArrow";
+
 import css from "./ExceptionDateTimeRange.module.css";
 
 // Marketplace API allows fetching exceptions to 366 days into the future.

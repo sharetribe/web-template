@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
-import classNames from "classnames";
+import React, { useState, useEffect } from "react";
 import { string } from "prop-types";
+import classNames from "classnames";
+
+import { intlShape } from "../../util/reactIntl";
 
 import { LinkedLogo } from "../../components";
-import { intlShape } from "../../util/reactIntl";
+
 import css from "./CheckoutPage.module.css";
 
 const CustomTopbar = (props) => {

@@ -1,21 +1,25 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { arrayOf, bool, func, object, shape, string } from "prop-types";
 import { compose } from "redux";
+import { connect } from "react-redux";
+import { useHistory } from "react-router-dom";
 
-import { Heading, LayoutSingleColumn, Page } from "../../components";
-import FooterContainer from "../../containers/FooterContainer/FooterContainer";
-import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
 import { useConfiguration } from "../../context/configurationContext";
 import { useRouteConfiguration } from "../../context/routeConfigurationContext";
-import { isScrollingDisabled } from "../../ducks/ui.duck";
-import { FormattedMessage, intlShape, useIntl } from "../../util/reactIntl";
+import { FormattedMessage, useIntl, intlShape } from "../../util/reactIntl";
+import { propTypes } from "../../util/types";
 import { createResourceLocatorString } from "../../util/routes";
 import { isMainSearchTypeKeywords } from "../../util/search";
-import { propTypes } from "../../util/types";
-import css from "./NotFoundPage.module.css";
+import { isScrollingDisabled } from "../../ducks/ui.duck";
+
+import { Heading, Page, LayoutSingleColumn } from "../../components";
+
+import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
+import FooterContainer from "../../containers/FooterContainer/FooterContainer";
+
 import SearchForm from "./SearchForm/SearchForm";
+
+import css from "./NotFoundPage.module.css";
 
 export class NotFoundPageComponent extends Component {
 	constructor(props) {

@@ -1,8 +1,8 @@
 import React from "react";
-
+import { FormattedMessage, FormattedDate } from "../../util/reactIntl";
+import { LINE_ITEM_NIGHT, DATE_TYPE_DATE, LINE_ITEM_HOUR, propTypes } from "../../util/types";
 import { subtractTime } from "../../util/dates";
-import { FormattedDate, FormattedMessage } from "../../util/reactIntl";
-import { DATE_TYPE_DATE, LINE_ITEM_HOUR, LINE_ITEM_NIGHT, propTypes } from "../../util/types";
+
 import css from "./OrderBreakdown.module.css";
 
 const BookingPeriod = (props) => {

@@ -1,9 +1,11 @@
 import React from "react";
-import classNames from "classnames";
 import { string } from "prop-types";
+import classNames from "classnames";
+
+import { lazyLoadWithDimensions } from "../../../../util/uiHelpers.js";
 
 import { AspectRatioWrapper } from "../../../../components/index.js";
-import { lazyLoadWithDimensions } from "../../../../util/uiHelpers.js";
+
 import css from "./YoutubeEmbed.module.css";
 
 const RADIX = 10;

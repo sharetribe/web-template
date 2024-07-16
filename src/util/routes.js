@@ -1,7 +1,6 @@
-import { matchPath } from "react-router-dom";
 import find from "lodash/find";
+import { matchPath } from "react-router-dom";
 import { compile } from "path-to-regexp";
-
 import { stringify } from "./urlHelpers";
 // NOTE: This file imports urlHelpers.js, which may lead to circular dependency
 

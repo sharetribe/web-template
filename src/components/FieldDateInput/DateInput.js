@@ -5,18 +5,21 @@
  * N.B. *isOutsideRange* in defaultProps is defining what dates are available to booking.
  */
 import React, { Component } from "react";
+import { bool, func, instanceOf, shape, string } from "prop-types";
 import { SingleDatePicker } from "react-dates";
-import classNames from "classnames";
+
 // Import moment from moment-timezone. 10-year range only.
 // The full data included in moment-timezone dependency is mostly irrelevant
 // and slows down the first paint.
 import moment from "moment-timezone/builds/moment-timezone-with-data-10-year-range.min";
-import { bool, func, instanceOf, shape, string } from "prop-types";
 
-import { injectIntl, intlShape } from "../../util/reactIntl";
-import css from "./DateInput.module.css";
+import classNames from "classnames";
+
+import { intlShape, injectIntl } from "../../util/reactIntl";
+
 import NextMonthIcon from "./NextMonthIcon";
 import PreviousMonthIcon from "./PreviousMonthIcon";
+import css from "./DateInput.module.css";
 
 export const HORIZONTAL_ORIENTATION = "horizontal";
 export const ANCHOR_LEFT = "left";

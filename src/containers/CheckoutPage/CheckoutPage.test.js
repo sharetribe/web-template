@@ -1,4 +1,5 @@
 import React from "react";
+import "@testing-library/jest-dom";
 import Decimal from "decimal.js";
 
 import { types as sdkTypes } from "../../util/sdkLoader";
@@ -11,15 +12,14 @@ import {
 	fakeIntl,
 } from "../../util/testData";
 import {
-	getDefaultConfiguration,
 	renderWithProviders as render,
 	testingLibrary,
+	getDefaultConfiguration,
 } from "../../util/testHelpers";
-import checkoutPageReducer, { SET_INITIAL_VALUES, setInitialValues } from "./CheckoutPage.duck";
-import CheckoutPageWithInquiryProcess from "./CheckoutPageWithInquiryProcess";
-import CheckoutPageWithPayment from "./CheckoutPageWithPayment";
 
-import "@testing-library/jest-dom";
+import CheckoutPageWithPayment from "./CheckoutPageWithPayment";
+import CheckoutPageWithInquiryProcess from "./CheckoutPageWithInquiryProcess";
+import checkoutPageReducer, { SET_INITIAL_VALUES, setInitialValues } from "./CheckoutPage.duck";
 
 const { Money } = sdkTypes;
 const { screen } = testingLibrary;

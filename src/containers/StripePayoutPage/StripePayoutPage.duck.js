@@ -1,9 +1,8 @@
 import pick from "lodash/pick";
-
 import {
 	createStripeAccount,
-	fetchStripeAccount,
 	updateStripeAccount,
+	fetchStripeAccount,
 } from "../../ducks/stripeConnectAccount.duck";
 import { fetchCurrentUser } from "../../ducks/user.duck";
 

@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 import { arrayOf, bool, func, node, number, object, string } from "prop-types";
 
-import { FieldDateRangeController } from "../../../components";
-import { parseDateFromISO8601, stringifyDateToISO8601 } from "../../../util/dates";
 import { injectIntl, intlShape } from "../../../util/reactIntl";
+import { parseDateFromISO8601, stringifyDateToISO8601 } from "../../../util/dates";
+
+import { FieldDateRangeController } from "../../../components";
+
 import FilterPlain from "../FilterPlain/FilterPlain";
 import FilterPopup from "../FilterPopup/FilterPopup";
-import css from "./BookingDateRangeFilter.module.css";
+
 import FilterPopupForSidebar from "./FilterPopupForSidebar";
+import css from "./BookingDateRangeFilter.module.css";
 
 const getDatesQueryParamName = (queryParamNames) => {
 	return Array.isArray(queryParamNames)

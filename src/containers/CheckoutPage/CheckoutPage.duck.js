@@ -1,10 +1,9 @@
 import pick from "lodash/pick";
-
-import { fetchCurrentUser, fetchCurrentUserHasOrdersSuccess } from "../../ducks/user.duck";
 import { initiatePrivileged, transitionPrivileged } from "../../util/api";
 import { denormalisedResponseEntities } from "../../util/data";
 import { storableError } from "../../util/errors";
 import * as log from "../../util/log";
+import { fetchCurrentUserHasOrdersSuccess, fetchCurrentUser } from "../../ducks/user.duck";
 
 // ================ Action types ================ //
 

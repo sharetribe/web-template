@@ -1,12 +1,12 @@
 import React from "react";
+import "@testing-library/jest-dom";
+import "react-dates/initialize";
 import Decimal from "decimal.js";
 
 import { types as sdkTypes } from "../../../util/sdkLoader";
 import { renderWithProviders as render, testingLibrary } from "../../../util/testHelpers";
-import EstimatedCustomerBreakdownMaybe from "../EstimatedCustomerBreakdownMaybe";
 
-import "@testing-library/jest-dom";
-import "react-dates/initialize";
+import EstimatedCustomerBreakdownMaybe from "../EstimatedCustomerBreakdownMaybe";
 
 const { Money } = sdkTypes;
 const { screen, within } = testingLibrary;

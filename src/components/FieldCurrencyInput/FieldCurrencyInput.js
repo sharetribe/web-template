@@ -4,25 +4,27 @@
  * onBlur: formats the given input: "9 999,99 €"
  */
 import React, { Component } from "react";
+import { bool, func, number, object, oneOfType, shape, string } from "prop-types";
 import { Field } from "react-final-form";
 import classNames from "classnames";
 import Decimal from "decimal.js";
-import { bool, func, number, object, oneOfType, shape, string } from "prop-types";
 
-import { ValidationError } from "../../components";
+import { intlShape, injectIntl } from "../../util/reactIntl";
+import { types as sdkTypes } from "../../util/sdkLoader";
 import {
-	convertMoneyToNumber,
+	isSafeNumber,
+	unitDivisor,
 	convertUnitToSubUnit,
+	convertMoneyToNumber,
 	ensureDotSeparator,
 	ensureSeparator,
-	isSafeNumber,
 	truncateToSubUnitPrecision,
-	unitDivisor,
 } from "../../util/currency";
-import * as log from "../../util/log";
-import { injectIntl, intlShape } from "../../util/reactIntl";
-import { types as sdkTypes } from "../../util/sdkLoader";
 import { propTypes } from "../../util/types";
+import * as log from "../../util/log";
+
+import { ValidationError } from "../../components";
+
 import css from "./FieldCurrencyInput.module.css";
 
 const { Money } = sdkTypes;

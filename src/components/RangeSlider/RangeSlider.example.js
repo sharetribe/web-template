@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import RangeSlider from "./RangeSlider";
 
 const RangeSliderWrapper = (props) => {

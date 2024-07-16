@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import classNames from "classnames";
 import { func, number, string } from "prop-types";
+import classNames from "classnames";
 
 import css from "./Handle.module.css";
 

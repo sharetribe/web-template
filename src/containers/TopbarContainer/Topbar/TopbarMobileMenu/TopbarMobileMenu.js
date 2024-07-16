@@ -3,8 +3,13 @@
  * shows login actions for those who are not authenticated.
  */
 import React from "react";
-import classNames from "classnames";
 import PropTypes from "prop-types";
+import classNames from "classnames";
+
+import { ACCOUNT_SETTINGS_PAGES } from "../../../../routing/routeConfiguration";
+import { FormattedMessage } from "../../../../util/reactIntl";
+import { propTypes } from "../../../../util/types";
+import { ensureCurrentUser } from "../../../../util/data";
 
 import {
 	AvatarLarge,
@@ -13,10 +18,7 @@ import {
 	NamedLink,
 	NotificationBadge,
 } from "../../../../components";
-import { ACCOUNT_SETTINGS_PAGES } from "../../../../routing/routeConfiguration";
-import { ensureCurrentUser } from "../../../../util/data";
-import { FormattedMessage } from "../../../../util/reactIntl";
-import { propTypes } from "../../../../util/types";
+
 import css from "./TopbarMobileMenu.module.css";
 
 const CustomLinkComponent = ({ linkConfig, currentPage }) => {

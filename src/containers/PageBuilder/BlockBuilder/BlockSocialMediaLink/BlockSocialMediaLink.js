@@ -1,9 +1,10 @@
 import React from "react";
+import { func, node, object, shape, string } from "prop-types";
 import classNames from "classnames";
-import { func, node, shape, string } from "prop-types";
 
 import Field from "../../Field";
 import BlockContainer from "../BlockContainer";
+
 import css from "./BlockSocialMediaLink.module.css";
 
 const BlockSocialMediaLink = (props) => {

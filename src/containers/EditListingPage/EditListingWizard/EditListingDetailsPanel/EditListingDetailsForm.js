@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { Field, Form as FinalForm } from "react-final-form";
-import classNames from "classnames";
-import arrayMutators from "final-form-arrays";
+import React, { useState, useEffect } from "react";
 import { arrayOf, bool, func, shape, string } from "prop-types";
 import { compose } from "redux";
+import { Field, Form as FinalForm } from "react-final-form";
+import arrayMutators from "final-form-arrays";
+import classNames from "classnames";
+
+// Import util modules
+import { intlShape, injectIntl, FormattedMessage } from "../../../../util/reactIntl";
+import { EXTENDED_DATA_SCHEMA_TYPES, propTypes } from "../../../../util/types";
+import { isFieldForCategory, isFieldForListingType } from "../../../../util/fieldHelpers";
+import { maxLength, required, composeValidators } from "../../../../util/validators";
 
 // Import shared components
 import {
+	Form,
 	Button,
-	CustomExtendedDataField,
 	FieldSelect,
 	FieldTextInput,
-	Form,
 	Heading,
+	CustomExtendedDataField,
 } from "../../../../components";
-import { isFieldForCategory, isFieldForListingType } from "../../../../util/fieldHelpers";
-// Import util modules
-import { FormattedMessage, injectIntl, intlShape } from "../../../../util/reactIntl";
-import { EXTENDED_DATA_SCHEMA_TYPES, propTypes } from "../../../../util/types";
-import { composeValidators, maxLength, required } from "../../../../util/validators";
 // Import modules from this directory
 import css from "./EditListingDetailsForm.module.css";
 

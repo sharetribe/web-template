@@ -1,8 +1,17 @@
 import React, { Component } from "react";
-import classNames from "classnames";
-import pickBy from "lodash/pickBy";
 import { array, arrayOf, bool, func, number, object, shape, string } from "prop-types";
+import pickBy from "lodash/pickBy";
+import classNames from "classnames";
 
+import appSettings from "../../../config/settings";
+import { useConfiguration } from "../../../context/configurationContext";
+import { useRouteConfiguration } from "../../../context/routeConfigurationContext";
+
+import { FormattedMessage, intlShape, useIntl } from "../../../util/reactIntl";
+import { isMainSearchTypeKeywords, isOriginInUse } from "../../../util/search";
+import { parse, stringify } from "../../../util/urlHelpers";
+import { createResourceLocatorString, matchPathname, pathByRouteName } from "../../../util/routes";
+import { propTypes } from "../../../util/types";
 import {
 	Button,
 	LimitedAccessBanner,
@@ -10,20 +19,14 @@ import {
 	Modal,
 	ModalMissingInformation,
 } from "../../../components";
-import appSettings from "../../../config/settings";
-import { useConfiguration } from "../../../context/configurationContext";
-import { useRouteConfiguration } from "../../../context/routeConfigurationContext";
-import { FormattedMessage, intlShape, useIntl } from "../../../util/reactIntl";
-import { createResourceLocatorString, matchPathname, pathByRouteName } from "../../../util/routes";
-import { isMainSearchTypeKeywords, isOriginInUse } from "../../../util/search";
-import { propTypes } from "../../../util/types";
-import { parse, stringify } from "../../../util/urlHelpers";
+
 import MenuIcon from "./MenuIcon";
 import SearchIcon from "./SearchIcon";
-import css from "./Topbar.module.css";
-import TopbarDesktop from "./TopbarDesktop/TopbarDesktop";
-import TopbarMobileMenu from "./TopbarMobileMenu/TopbarMobileMenu";
 import TopbarSearchForm from "./TopbarSearchForm/TopbarSearchForm";
+import TopbarMobileMenu from "./TopbarMobileMenu/TopbarMobileMenu";
+import TopbarDesktop from "./TopbarDesktop/TopbarDesktop";
+
+import css from "./Topbar.module.css";
 
 const MAX_MOBILE_SCREEN_WIDTH = 1024;
 

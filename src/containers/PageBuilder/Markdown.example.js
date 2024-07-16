@@ -1,8 +1,10 @@
 import React from "react";
 
-import renderMarkdown from "./markdownProcessor.js";
-import PageBuilder from "./PageBuilder.js";
 import { Code, CodeBlock } from "./Primitives/Code/Code.js";
+
+import renderMarkdown from "./markdownProcessor.js";
+
+import PageBuilder from "./PageBuilder.js";
 
 const addCodeBlockForSyntax = (md) => `
 \`\`\`${md}\`\`\`

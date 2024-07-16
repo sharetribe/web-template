@@ -1,13 +1,15 @@
 import React, { Component } from "react";
-import { useHistory } from "react-router-dom";
+import { bool, func, object, node, number, shape, string, arrayOf } from "prop-types";
 import classNames from "classnames";
-import { arrayOf, bool, func, node, number, object, shape, string } from "prop-types";
+import { useHistory } from "react-router-dom";
 
-import { Button, ModalInMobile } from "../../../components";
 import { useRouteConfiguration } from "../../../context/routeConfigurationContext";
-import { FormattedMessage, intlShape, useIntl } from "../../../util/reactIntl";
-import { createResourceLocatorString } from "../../../util/routes";
+import { FormattedMessage, useIntl, intlShape } from "../../../util/reactIntl";
 import { propTypes } from "../../../util/types";
+import { createResourceLocatorString } from "../../../util/routes";
+
+import { ModalInMobile, Button } from "../../../components";
+
 import PopupOpenerButton from "../PopupOpenerButton/PopupOpenerButton";
 import css from "./SearchFiltersMobile.module.css";
 

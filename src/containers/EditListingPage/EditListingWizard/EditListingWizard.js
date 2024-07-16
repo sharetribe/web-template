@@ -1,24 +1,11 @@
 import React, { Component, useEffect } from "react";
-import classNames from "classnames";
 import { array, arrayOf, bool, func, number, object, oneOf, shape, string } from "prop-types";
+import classNames from "classnames";
 
-// Import shared components
-import {
-	Heading,
-	Modal,
-	NamedRedirect,
-	StripeConnectAccountForm,
-	StripeConnectAccountStatusBox,
-	Tabs,
-} from "../../../components";
 // Import configs and util modules
 import { useConfiguration } from "../../../context/configurationContext";
 import { useRouteConfiguration } from "../../../context/routeConfigurationContext";
-import {
-	INQUIRY_PROCESS_NAME,
-	isBookingProcess,
-	isPurchaseProcess,
-} from "../../../transactions/transaction";
+import { FormattedMessage, intlShape, useIntl } from "../../../util/reactIntl";
 import {
 	displayDeliveryPickup,
 	displayDeliveryShipping,
@@ -26,39 +13,54 @@ import {
 	displayPrice,
 	requirePayoutDetails,
 } from "../../../util/configHelpers";
-import { ensureCurrentUser, ensureListing } from "../../../util/data";
-import {
-	isFieldForCategory,
-	isFieldForListingType,
-	pickCategoryFields,
-} from "../../../util/fieldHelpers";
-import { FormattedMessage, intlShape, useIntl } from "../../../util/reactIntl";
-import { createResourceLocatorString } from "../../../util/routes";
-import {
-	propTypes,
-	SCHEMA_TYPE_BOOLEAN,
-	SCHEMA_TYPE_ENUM,
-	SCHEMA_TYPE_LONG,
-	SCHEMA_TYPE_MULTI_ENUM,
-	SCHEMA_TYPE_TEXT,
-} from "../../../util/types";
-import { withViewport } from "../../../util/uiHelpers";
 import {
 	LISTING_PAGE_PARAM_TYPE_DRAFT,
 	LISTING_PAGE_PARAM_TYPE_NEW,
 	LISTING_PAGE_PARAM_TYPES,
 } from "../../../util/urlHelpers";
-import css from "./EditListingWizard.module.css";
+import { createResourceLocatorString } from "../../../util/routes";
+import { withViewport } from "../../../util/uiHelpers";
+import {
+	SCHEMA_TYPE_ENUM,
+	SCHEMA_TYPE_MULTI_ENUM,
+	SCHEMA_TYPE_TEXT,
+	SCHEMA_TYPE_LONG,
+	SCHEMA_TYPE_BOOLEAN,
+	propTypes,
+} from "../../../util/types";
+import {
+	isFieldForCategory,
+	isFieldForListingType,
+	pickCategoryFields,
+} from "../../../util/fieldHelpers";
+import { ensureCurrentUser, ensureListing } from "../../../util/data";
+import {
+	INQUIRY_PROCESS_NAME,
+	isBookingProcess,
+	isPurchaseProcess,
+} from "../../../transactions/transaction";
+
+// Import shared components
+import {
+	Heading,
+	Modal,
+	NamedRedirect,
+	Tabs,
+	StripeConnectAccountStatusBox,
+	StripeConnectAccountForm,
+} from "../../../components";
+
 // Import modules from this directory
 import EditListingWizardTab, {
-	AVAILABILITY,
-	DELIVERY,
 	DETAILS,
-	LOCATION,
-	PHOTOS,
 	PRICING,
 	PRICING_AND_STOCK,
+	DELIVERY,
+	LOCATION,
+	AVAILABILITY,
+	PHOTOS,
 } from "./EditListingWizardTab";
+import css from "./EditListingWizard.module.css";
 
 // You can reorder these panels.
 // Note 1: You need to change save button translations for new listing flow

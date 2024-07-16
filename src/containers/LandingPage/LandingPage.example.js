@@ -1,5 +1,4 @@
 import React from "react";
-
 import FallbackPage from "./FallbackPage.js";
 
 const FallbackPageComponent = () => <FallbackPage />;

@@ -1,17 +1,17 @@
 import React from "react";
 
-import { useIntl } from "../../util/reactIntl";
 // Import config and utils
 import {
-	SCHEMA_TYPE_BOOLEAN,
 	SCHEMA_TYPE_ENUM,
-	SCHEMA_TYPE_LONG,
 	SCHEMA_TYPE_MULTI_ENUM,
 	SCHEMA_TYPE_TEXT,
+	SCHEMA_TYPE_LONG,
+	SCHEMA_TYPE_BOOLEAN,
 } from "../../util/types";
-import { nonEmptyArray, required, validateInteger } from "../../util/validators";
+import { useIntl } from "../../util/reactIntl";
+import { required, nonEmptyArray, validateInteger } from "../../util/validators";
 // Import shared components
-import { FieldBoolean, FieldCheckboxGroup, FieldSelect, FieldTextInput } from "..";
+import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from "..";
 // Import modules from this directory
 import css from "./CustomExtendedDataField.module.css";
 

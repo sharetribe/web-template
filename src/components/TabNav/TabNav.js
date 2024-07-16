@@ -1,8 +1,8 @@
 import React from "react";
-import classNames from "classnames";
 import PropTypes from "prop-types";
-
+import classNames from "classnames";
 import { NamedLink } from "../../components";
+
 import css from "./TabNav.module.css";
 
 const Tab = (props) => {

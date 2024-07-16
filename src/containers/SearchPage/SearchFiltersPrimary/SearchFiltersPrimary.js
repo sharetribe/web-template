@@ -1,9 +1,11 @@
 import React from "react";
+import { bool, func, node, number, string } from "prop-types";
 import classNames from "classnames";
-import { bool, func, number, string } from "prop-types";
 
 import { FormattedMessage } from "../../../util/reactIntl";
+
 import PopupOpenerButton from "../PopupOpenerButton/PopupOpenerButton";
+
 import css from "./SearchFiltersPrimary.module.css";
 
 const SearchFiltersPrimaryComponent = (props) => {

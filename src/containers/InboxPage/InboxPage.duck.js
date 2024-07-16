@@ -1,10 +1,9 @@
 import reverse from "lodash/reverse";
 import sortBy from "lodash/sortBy";
-
-import { addMarketplaceEntities } from "../../ducks/marketplaceData.duck";
-import { getAllTransitionsForEveryProcess } from "../../transactions/transaction";
 import { storableError } from "../../util/errors";
 import { parse } from "../../util/urlHelpers";
+import { getAllTransitionsForEveryProcess } from "../../transactions/transaction";
+import { addMarketplaceEntities } from "../../ducks/marketplaceData.duck";
 
 const sortedTransactions = (txs) =>
 	reverse(

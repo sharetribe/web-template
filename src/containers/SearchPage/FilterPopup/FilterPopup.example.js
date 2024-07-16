@@ -1,5 +1,4 @@
 import React from "react";
-
 import { FieldTextInput } from "../../../components";
 import FilterPopup from "./FilterPopup";
 

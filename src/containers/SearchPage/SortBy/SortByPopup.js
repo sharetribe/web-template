@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import classNames from "classnames";
 import { arrayOf, func, number, shape, string } from "prop-types";
+import classNames from "classnames";
 
 import { Menu, MenuContent, MenuItem, MenuLabel } from "../../../components";
 import css from "./SortByPopup.module.css";

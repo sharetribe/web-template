@@ -1,11 +1,14 @@
 import React, { Component } from "react";
-import classNames from "classnames";
 import { bool, func, node, number, object, string } from "prop-types";
+import classNames from "classnames";
+
+import { injectIntl, intlShape } from "../../../util/reactIntl";
 
 import { OutsideClickHandler } from "../../../components";
-import { injectIntl, intlShape } from "../../../util/reactIntl";
-import FilterForm from "../FilterForm/FilterForm";
+
 import PopupOpenerButton from "../PopupOpenerButton/PopupOpenerButton";
+import FilterForm from "../FilterForm/FilterForm";
+
 import css from "./FilterPopup.module.css";
 
 const KEY_CODE_ESCAPE = 27;

@@ -1,8 +1,9 @@
 import React from "react";
-import classNames from "classnames";
 import { number, objectOf, oneOf, shape, string } from "prop-types";
+import classNames from "classnames";
 
 import { AspectRatioWrapper, ResponsiveImage } from "../../../../components/index.js";
+
 import css from "./Image.module.css";
 
 // Images in markdown point to elsewhere (they don't support responsive image variants)

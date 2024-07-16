@@ -2,6 +2,7 @@ import React from "react";
 import classNames from "classnames";
 
 import { PrimaryButton, SecondaryButton } from "../../../components";
+
 import css from "./TransactionPanel.module.css";
 
 // Functional component as a helper to build ActionButtons

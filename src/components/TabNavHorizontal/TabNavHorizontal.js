@@ -1,8 +1,8 @@
 import React from "react";
-import classNames from "classnames";
 import PropTypes from "prop-types";
-
+import classNames from "classnames";
 import { InlineTextButton, NamedLink } from "../../components";
+
 import css from "./TabNavHorizontal.module.css";
 
 export const LIGHT_SKIN = "light";

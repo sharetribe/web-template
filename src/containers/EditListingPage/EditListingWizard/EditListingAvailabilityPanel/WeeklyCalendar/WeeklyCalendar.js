@@ -1,43 +1,46 @@
 import React, { useEffect, useState } from "react";
-import classNames from "classnames";
 import { arrayOf, bool, func, number, object, shape, string } from "prop-types";
+import classNames from "classnames";
 
-// Import shared components
-import {
-	H4,
-	Heading,
-	IconArrowHead,
-	IconDelete,
-	IconSpinner,
-	TimeRange,
-} from "../../../../../components";
 // Import configs and util modules
 import appSettings from "../../../../../config/settings";
+import { FormattedDate, FormattedMessage, useIntl } from "../../../../../util/reactIntl";
 import {
-	getEndOfWeekAsMoment,
-	getMomentFromDate,
 	getStartOf,
 	getStartOfWeek,
+	getMomentFromDate,
 	getStartOfWeekAsMoment,
+	getEndOfWeekAsMoment,
 	isInRange,
 	parseDateFromISO8601,
 	parseDateTimeString,
 	stringifyDateToISO8601,
 } from "../../../../../util/dates";
 import { availabilityPerDate } from "../../../../../util/generators";
-import { FormattedDate, FormattedMessage, useIntl } from "../../../../../util/reactIntl";
 import { createResourceLocatorString } from "../../../../../util/routes";
 import { DATE_TYPE_DATE, DATE_TYPE_TIME, propTypes } from "../../../../../util/types";
+
+// Import shared components
+import {
+	Heading,
+	H4,
+	IconArrowHead,
+	IconDelete,
+	IconSpinner,
+	TimeRange,
+} from "../../../../../components";
+
 import {
 	endOfAvailabilityExceptionRange,
 	getStartOfNextWeek,
 	getStartOfPrevWeek,
 	handleWeekClick,
 } from "../availability.helpers";
+
 import Next from "../NextArrow";
 import Prev from "../PrevArrow";
-import css from "./WeeklyCalendar.module.css";
 import WeekPicker from "./WeekPicker";
+import css from "./WeeklyCalendar.module.css";
 
 const TODAY = new Date();
 

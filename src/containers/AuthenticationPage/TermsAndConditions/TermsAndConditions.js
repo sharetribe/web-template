@@ -1,9 +1,11 @@
 import React from "react";
 import { func, string } from "prop-types";
 
-import { FieldCheckboxGroup } from "../../../components";
-import { FormattedMessage, intlShape } from "../../../util/reactIntl";
 import { requiredFieldArrayCheckbox } from "../../../util/validators";
+import { FieldCheckboxGroup } from "../../../components";
+
+import { FormattedMessage, intlShape } from "../../../util/reactIntl";
+
 import css from "./TermsAndConditions.module.css";
 
 const KEY_CODE_ENTER = 13;

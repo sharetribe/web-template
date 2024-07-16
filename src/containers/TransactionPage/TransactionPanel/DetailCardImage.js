@@ -1,7 +1,8 @@
 import React from "react";
 import classNames from "classnames";
 
-import { AspectRatioWrapper, AvatarMedium, ResponsiveImage } from "../../../components";
+import { AvatarMedium, AspectRatioWrapper, ResponsiveImage } from "../../../components";
+
 import css from "./TransactionPanel.module.css";
 
 const DetailCardImage = (props) => {

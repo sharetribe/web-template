@@ -1,14 +1,14 @@
 import React from "react";
-import { connect } from "react-redux";
 import loadable from "@loadable/component";
+
 import { bool, object } from "prop-types";
 import { compose } from "redux";
+import { connect } from "react-redux";
 
 import { camelize } from "../../util/string";
 import { propTypes } from "../../util/types";
+
 import { H1 } from "../PageBuilder/Primitives/Heading";
-import FallbackPage, { fallbackSections } from "./FallbackPage";
-import { ASSET_NAME } from "./TermsOfServicePage.duck";
 
 const PageBuilder = loadable(
 	() => import(/* webpackChunkName: "PageBuilder" */ "../PageBuilder/PageBuilder"),
@@ -19,6 +19,9 @@ const SectionBuilder = loadable(
 		resolveComponent: (components) => components.SectionBuilder,
 	},
 );
+
+import FallbackPage, { fallbackSections } from "./FallbackPage";
+import { ASSET_NAME } from "./TermsOfServicePage.duck";
 
 // This "content-only" component can be used in modals etc.
 const TermsOfServiceContent = (props) => {
@@ -86,6 +89,6 @@ const mapStateToProps = (state) => {
 const TermsOfServicePage = compose(connect(mapStateToProps))(TermsOfServicePageComponent);
 
 const TOS_ASSET_NAME = ASSET_NAME;
-export { TermsOfServiceContent, TermsOfServicePageComponent, TOS_ASSET_NAME };
+export { TOS_ASSET_NAME, TermsOfServicePageComponent, TermsOfServiceContent };
 
 export default TermsOfServicePage;

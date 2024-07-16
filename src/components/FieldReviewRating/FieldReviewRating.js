@@ -1,10 +1,10 @@
-import React from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { intlShape, injectIntl } from "../../util/reactIntl";
 import { Field } from "react-final-form";
 import classNames from "classnames";
-import PropTypes from "prop-types";
-
 import { IconReviewStar, ValidationError } from "../../components";
-import { injectIntl, intlShape } from "../../util/reactIntl";
+
 import css from "./FieldReviewRating.module.css";
 
 const FieldReviewRatingComponent = (props) => {

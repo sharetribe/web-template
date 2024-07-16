@@ -1,11 +1,13 @@
 import React from "react";
-import { connect } from "react-redux";
 import loadable from "@loadable/component";
+
 import { bool, object } from "prop-types";
 import { compose } from "redux";
+import { connect } from "react-redux";
 
 import { camelize } from "../../util/string";
 import { propTypes } from "../../util/types";
+
 import { H1 } from "../PageBuilder/Primitives/Heading";
 import FallbackPage, { fallbackSections } from "./FallbackPage";
 import { ASSET_NAME } from "./PrivacyPolicyPage.duck";
@@ -86,6 +88,6 @@ const mapStateToProps = (state) => {
 const PrivacyPolicyPage = compose(connect(mapStateToProps))(PrivacyPolicyPageComponent);
 
 const PRIVACY_POLICY_ASSET_NAME = ASSET_NAME;
-export { PRIVACY_POLICY_ASSET_NAME, PrivacyPolicyContent, PrivacyPolicyPageComponent };
+export { PRIVACY_POLICY_ASSET_NAME, PrivacyPolicyPageComponent, PrivacyPolicyContent };
 
 export default PrivacyPolicyPage;

@@ -1,18 +1,18 @@
 import React from "react";
+import "@testing-library/jest-dom";
+import "react-dates/initialize";
 
 import { types as sdkTypes } from "../../util/sdkLoader";
 import { createListing, createStock, createUser, fakeIntl } from "../../util/testData";
 import {
-	getHostedConfiguration,
-	getRouteConfiguration,
 	renderWithProviders as render,
 	testingLibrary,
+	getRouteConfiguration,
+	getHostedConfiguration,
 } from "../../util/testHelpers";
 import { TIME_SLOT_TIME } from "../../util/types";
-import OrderPanel from "./OrderPanel";
 
-import "@testing-library/jest-dom";
-import "react-dates/initialize";
+import OrderPanel from "./OrderPanel";
 
 const { screen, waitFor } = testingLibrary;
 

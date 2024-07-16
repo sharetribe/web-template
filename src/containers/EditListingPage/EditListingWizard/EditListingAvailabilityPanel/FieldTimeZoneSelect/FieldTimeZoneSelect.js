@@ -1,8 +1,7 @@
 import React from "react";
 import { string } from "prop-types";
-
-import { FieldSelect } from "../../../../../components";
 import { getTimeZoneNames } from "../../../../../util/dates";
+import { FieldSelect } from "../../../../../components";
 
 const FieldTimeZoneSelect = (props) => {
 	// IANA database contains irrelevant time zones too.

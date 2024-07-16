@@ -1,13 +1,14 @@
 import React from "react";
-
-import { LayoutSingleColumn, Page } from "../../components";
-import FooterContainer from "../../containers/FooterContainer/FooterContainer";
+import { FormattedMessage } from "../../util/reactIntl";
+import { types as sdkTypes } from "../../util/sdkLoader";
+import { createResourceLocatorString, findRouteByRouteName } from "../../util/routes";
 import { formatMoney } from "../../util/currency";
 import { timestampToDate } from "../../util/dates";
-import { FormattedMessage } from "../../util/reactIntl";
-import { createResourceLocatorString, findRouteByRouteName } from "../../util/routes";
-import { types as sdkTypes } from "../../util/sdkLoader";
 import { createSlug } from "../../util/urlHelpers";
+
+import { Page, LayoutSingleColumn } from "../../components";
+import FooterContainer from "../../containers/FooterContainer/FooterContainer";
+
 import css from "./ListingPage.module.css";
 
 /**

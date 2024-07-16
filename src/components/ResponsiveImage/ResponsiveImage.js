@@ -34,11 +34,11 @@
  */
 
 import React from "react";
-import classNames from "classnames";
 import { arrayOf, oneOfType, string } from "prop-types";
-
+import classNames from "classnames";
 import { FormattedMessage } from "../../util/reactIntl";
 import { propTypes } from "../../util/types";
+
 import NoImageIcon from "./NoImageIcon";
 import css from "./ResponsiveImage.module.css";
 

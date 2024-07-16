@@ -1,9 +1,8 @@
 import React from "react";
-import classNames from "classnames";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 
 import css from "./IconClose.module.css";
-
 const SIZE_SMALL = "small";
 
 const IconClose = (props) => {
