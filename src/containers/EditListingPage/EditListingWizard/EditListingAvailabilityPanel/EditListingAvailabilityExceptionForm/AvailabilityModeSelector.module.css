@@ -1,15 +1,15 @@
-@import '../../../../../styles/customMediaQueries.css';
+@import "../../../../../styles/customMediaQueries.css";
 
 .radioButtons {
 }
 
 .checkedAvailable {
-  display: none;
-  stroke: var(--colorSuccess);
-  fill: var(--colorSuccess);
+	display: none;
+	stroke: var(--colorSuccess);
+	fill: var(--colorSuccess);
 }
 .checkedNotAvailable {
-  display: none;
-  stroke: var(--colorFail);
-  fill: var(--colorFail);
+	display: none;
+	stroke: var(--colorFail);
+	fill: var(--colorFail);
 }

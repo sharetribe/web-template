@@ -1,79 +1,79 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .root {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 
-  @media (--viewportMedium) {
-    flex-direction: row;
-  }
+	@media (--viewportMedium) {
+		flex-direction: row;
+	}
 }
 
 .withPadding {
-  padding: calc(2 * var(--spacingUnit));
+	padding: calc(2 * var(--spacingUnit));
 
-  @media (--viewportMedium) {
-    padding: calc(2 * var(--spacingUnitDesktop));
-  }
+	@media (--viewportMedium) {
+		padding: calc(2 * var(--spacingUnitDesktop));
+	}
 }
 
 .withMargin,
 .defaultWrapperStyles {
-  margin: calc(2 * var(--spacingUnit)) 0;
+	margin: calc(2 * var(--spacingUnit)) 0;
 
-  @media (--viewportMedium) {
-    margin: calc(2 * var(--spacingUnitDesktop)) 0;
-  }
+	@media (--viewportMedium) {
+		margin: calc(2 * var(--spacingUnitDesktop)) 0;
+	}
 }
 
 .navBar {
-  flex-basis: 300px;
-  flex-shrink: 0;
-  composes: withPadding;
-  box-shadow: var(--boxShadow);
+	flex-basis: 300px;
+	flex-shrink: 0;
+	composes: withPadding;
+	box-shadow: var(--boxShadow);
 }
 
 .main {
-  flex-grow: 1;
-  composes: withPadding;
+	flex-grow: 1;
+	composes: withPadding;
 
-  @media (--viewportMedium) {
-    padding: 16px 16px 0 16px;
-    width: calc(100vw - 300px);
-  }
+	@media (--viewportMedium) {
+		padding: 16px 16px 0 16px;
+		width: calc(100vw - 300px);
+	}
 }
 
 .contentHeading {
-  margin: 18px 0 0 0;
+	margin: 18px 0 0 0;
 
-  @media (--viewportMedium) {
-    margin: 16px 0 0 0;
-  }
+	@media (--viewportMedium) {
+		margin: 16px 0 0 0;
+	}
 }
 
 .examplesList {
-  margin: 24px 0;
+	margin: 24px 0;
 }
 
 .example {
-  padding: 0;
+	padding: 0;
 }
 
 .link {
-  color: var(--marketplaceColor);
+	color: var(--marketplaceColor);
 }
 
 .groups {
-  margin: 0 0 12px 0;
+	margin: 0 0 12px 0;
 }
 
 .group {
-  text-transform: capitalize;
+	text-transform: capitalize;
 }
 
 .selectedGroup {
-  font-weight: bold;
-  color: var(--marketplaceColorDark);
+	font-weight: bold;
+	color: var(--marketplaceColorDark);
 }
 
 /* Typography.example */
@@ -81,228 +81,228 @@
 }
 
 .baselines {
-  background-image: url('data:image/svg+xml;utf8,<svg width="10" height="24" viewBox="0 0 10 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h10M0 06h10M0 12h10" stroke="%23eee" shape-rendering="crispEdges" /><path d="M0 18h10" stroke="%23f1f1f1" stroke-width="1" shape-rendering="crispEdges" /></svg>');
-  background-repeat: repeat;
+	background-image: url('data:image/svg+xml;utf8,<svg width="10" height="24" viewBox="0 0 10 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h10M0 06h10M0 12h10" stroke="%23eee" shape-rendering="crispEdges" /><path d="M0 18h10" stroke="%23f1f1f1" stroke-width="1" shape-rendering="crispEdges" /></svg>');
+	background-repeat: repeat;
 
-  @media (--viewportMedium) {
-    background-image: url('data:image/svg+xml;utf8,<svg width="10" height="24" viewBox="0 0 10 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h10" stroke="%23eee" stroke-width="1" shape-rendering="crispEdges" /><path d="M0 08h10M0 16h10M0" stroke="%23f1f1f1" shape-rendering="crispEdges" /></svg>');
-    background-repeat: repeat;
-  }
+	@media (--viewportMedium) {
+		background-image: url('data:image/svg+xml;utf8,<svg width="10" height="24" viewBox="0 0 10 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h10" stroke="%23eee" stroke-width="1" shape-rendering="crispEdges" /><path d="M0 08h10M0 16h10M0" stroke="%23f1f1f1" shape-rendering="crispEdges" /></svg>');
+		background-repeat: repeat;
+	}
 }
 
 .spacing2x {
-  margin: calc(2 * var(--spacingUnit)) 0;
+	margin: calc(2 * var(--spacingUnit)) 0;
 
-  @media (--viewportMedium) {
-    margin: calc(2 * var(--spacingUnitDesktop)) 0;
-  }
+	@media (--viewportMedium) {
+		margin: calc(2 * var(--spacingUnitDesktop)) 0;
+	}
 }
 
 .fontsContainer {
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 15px;
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: 15px;
 
-  @media (--viewportMedium) {
-    margin-top: 19px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 19px;
+	}
 }
 
 .fontCard {
-  flex-basis: 300px;
-  display: flex;
-  flex-direction: column;
+	flex-basis: 300px;
+	display: flex;
+	flex-direction: column;
 
-  margin-right: 12px;
-  margin-bottom: 12px;
+	margin-right: 12px;
+	margin-bottom: 12px;
 
-  @media (--viewportMedium) {
-    margin-right: 16px;
-    margin-bottom: 16px;
-  }
+	@media (--viewportMedium) {
+		margin-right: 16px;
+		margin-bottom: 16px;
+	}
 }
 
 .element {
-  border-style: solid;
-  border-color: #aaa;
-  border-width: 1px;
+	border-style: solid;
+	border-color: #aaa;
+	border-width: 1px;
 }
 
 .description {
-  flex-grow: 1;
-  width: 100%;
-  background-color: #f1f1f1;
-  padding: 7px 12px;
+	flex-grow: 1;
+	width: 100%;
+	background-color: #f1f1f1;
+	padding: 7px 12px;
 
-  border-style: solid;
-  border-color: #aaa;
-  border-width: 1px;
-  border-top-color: transparent;
+	border-style: solid;
+	border-color: #aaa;
+	border-width: 1px;
+	border-top-color: transparent;
 
-  @media (--viewportMedium) {
-    padding: 13px 16px 15px 16px;
-  }
+	@media (--viewportMedium) {
+		padding: 13px 16px 15px 16px;
+	}
 }
 
 .heroTitle {
-  composes: marketplaceHeroTitleFontStyles from global;
+	composes: marketplaceHeroTitleFontStyles from global;
 }
 
 .descriptionInfo {
-  margin: 12px 0 9.5px 0;
+	margin: 12px 0 9.5px 0;
 
-  @media (--viewportMedium) {
-    margin: 16px 0 8px 0;
-  }
+	@media (--viewportMedium) {
+		margin: 16px 0 8px 0;
+	}
 }
 .tinyFont {
-  composes: marketplaceTinyFontStyles from global;
+	composes: marketplaceTinyFontStyles from global;
 }
 
 /* Colors.example */
 
 .colorsContent,
 .colorsContainer {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 .colorsGroup {
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: calc(4 * var(--spacingUnit));
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: calc(4 * var(--spacingUnit));
 }
 
 .colorCard {
-  flex-basis: 275px;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: calc(4 * var(--spacingUnit));
-  margin-right: calc(2 * var(--spacingUnit));
-  overflow: hidden;
+	flex-basis: 275px;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: calc(4 * var(--spacingUnit));
+	margin-right: calc(2 * var(--spacingUnit));
+	overflow: hidden;
 
-  border: 1px solid var(--colorGrey100);
+	border: 1px solid var(--colorGrey100);
 }
 
 .color {
-  display: grid;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 150px;
-  color: white;
+	display: grid;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 150px;
+	color: white;
 }
 
 .colorDescription {
-  flex-grow: 1;
-  width: 100%;
-  background-color: #fff;
-  padding: calc(2 * var(--spacingUnit));
+	flex-grow: 1;
+	width: 100%;
+	background-color: #fff;
+	padding: calc(2 * var(--spacingUnit));
 
-  @media (--viewportMedium) {
-    padding: calc(2 * var(--spacingUnitDesktop) - 2px) calc(2 * var(--spacingUnitDesktop));
-  }
+	@media (--viewportMedium) {
+		padding: calc(2 * var(--spacingUnitDesktop) - 2px) calc(2 * var(--spacingUnitDesktop));
+	}
 }
 .colorInput {
-  padding: 2px;
+	padding: 2px;
 }
 
 .marketplaceColorBackground {
-  composes: color;
-  background-color: var(--marketplaceColor);
+	composes: color;
+	background-color: var(--marketplaceColor);
 }
 
 .marketplaceColorLightBackground {
-  composes: color;
-  background-color: var(--marketplaceColorLight);
+	composes: color;
+	background-color: var(--marketplaceColorLight);
 }
 
 .marketplaceColorDarkBackground {
-  composes: color;
-  background-color: var(--marketplaceColorDark);
+	composes: color;
+	background-color: var(--marketplaceColorDark);
 }
 
 .colorPrimaryButton {
-  composes: color;
-  background-color: var(--colorPrimaryButton);
+	composes: color;
+	background-color: var(--colorPrimaryButton);
 }
 
 .colorPrimaryButtonLight {
-  composes: color;
-  background-color: var(--colorPrimaryButtonLight);
+	composes: color;
+	background-color: var(--colorPrimaryButtonLight);
 }
 
 .colorPrimaryButtonDark {
-  composes: color;
-  background-color: var(--colorPrimaryButtonDark);
+	composes: color;
+	background-color: var(--colorPrimaryButtonDark);
 }
 
 .successColorBackground {
-  composes: color;
-  background-color: var(--colorSuccess);
+	composes: color;
+	background-color: var(--colorSuccess);
 }
 
 .failColorBackground {
-  composes: color;
-  background-color: var(--colorFail);
+	composes: color;
+	background-color: var(--colorFail);
 }
 
 .attentionColorBackground {
-  composes: color;
-  background-color: var(--colorAttention);
+	composes: color;
+	background-color: var(--colorAttention);
 }
 
 .colorBlack {
-  composes: color;
-  background-color: var(--colorBlack);
+	composes: color;
+	background-color: var(--colorBlack);
 }
 
 .colorWhite {
-  composes: color;
-  color: black;
-  background-color: var(--colorWhite);
+	composes: color;
+	color: black;
+	background-color: var(--colorWhite);
 }
 
 .colorGrey50 {
-  composes: color;
-  color: black;
-  background-color: var(--colorGrey50);
+	composes: color;
+	color: black;
+	background-color: var(--colorGrey50);
 }
 .colorGrey100 {
-  composes: color;
-  color: black;
-  background-color: var(--colorGrey100);
+	composes: color;
+	color: black;
+	background-color: var(--colorGrey100);
 }
 .colorGrey200 {
-  composes: color;
-  color: black;
-  background-color: var(--colorGrey200);
+	composes: color;
+	color: black;
+	background-color: var(--colorGrey200);
 }
 .colorGrey300 {
-  composes: color;
-  background-color: var(--colorGrey300);
+	composes: color;
+	background-color: var(--colorGrey300);
 }
 .colorGrey400 {
-  composes: color;
-  background-color: var(--colorGrey400);
+	composes: color;
+	background-color: var(--colorGrey400);
 }
 .colorGrey500 {
-  composes: color;
-  background-color: var(--colorGrey500);
+	composes: color;
+	background-color: var(--colorGrey500);
 }
 .colorGrey600 {
-  composes: color;
-  background-color: var(--colorGrey600);
+	composes: color;
+	background-color: var(--colorGrey600);
 }
 .colorGrey700 {
-  composes: color;
-  background-color: var(--colorGrey700);
+	composes: color;
+	background-color: var(--colorGrey700);
 }
 .colorGrey800 {
-  composes: color;
-  background-color: var(--colorGrey800);
+	composes: color;
+	background-color: var(--colorGrey800);
 }
 .colorGrey900 {
-  composes: color;
-  background-color: var(--colorGrey900);
+	composes: color;
+	background-color: var(--colorGrey900);
 }

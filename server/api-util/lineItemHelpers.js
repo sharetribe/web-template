@@ -1,17 +1,17 @@
-const Decimal = require('decimal.js');
-const moment = require('moment-timezone/builds/moment-timezone-with-data-10-year-range.min');
-const { types } = require('sharetribe-flex-sdk');
+const Decimal = require("decimal.js");
+const moment = require("moment-timezone/builds/moment-timezone-with-data-10-year-range.min");
+const { types } = require("sharetribe-flex-sdk");
 const { Money } = types;
 
-const { getAmountAsDecimalJS, convertDecimalJSToNumber } = require('./currency');
-const { nightsBetween, daysBetween } = require('./dates');
-const LINE_ITEM_NIGHT = 'line-item/night';
-const LINE_ITEM_DAY = 'line-item/day';
+const { getAmountAsDecimalJS, convertDecimalJSToNumber } = require("./currency");
+const { nightsBetween, daysBetween } = require("./dates");
+const LINE_ITEM_NIGHT = "line-item/night";
+const LINE_ITEM_DAY = "line-item/day";
 
 /** Helper functions for constructing line items*/
 
 const isNumber = value => {
-  return typeof value === 'number' && !isNaN(value);
+	return typeof value === "number" && !isNaN(value);
 };
 
 /**
@@ -28,35 +28,35 @@ const isNumber = value => {
  * @returns {Money} lineTotal
  */
 exports.calculateShippingFee = (
-  shippingPriceInSubunitsOneItem,
-  shippingPriceInSubunitsAdditionalItems,
-  currency,
-  quantity
+	shippingPriceInSubunitsOneItem,
+	shippingPriceInSubunitsAdditionalItems,
+	currency,
+	quantity,
 ) => {
-  if (
-    isNumber(shippingPriceInSubunitsOneItem) &&
-    shippingPriceInSubunitsOneItem >= 0 &&
-    currency &&
-    quantity === 1
-  ) {
-    return new Money(shippingPriceInSubunitsOneItem, currency);
-  } else if (
-    isNumber(shippingPriceInSubunitsOneItem) &&
-    isNumber(shippingPriceInSubunitsAdditionalItems) &&
-    shippingPriceInSubunitsOneItem >= 0 &&
-    shippingPriceInSubunitsAdditionalItems >= 0 &&
-    currency &&
-    quantity > 1
-  ) {
-    const oneItemFee = getAmountAsDecimalJS(new Money(shippingPriceInSubunitsOneItem, currency));
-    const additionalItemsFee = getAmountAsDecimalJS(
-      new Money(shippingPriceInSubunitsAdditionalItems, currency)
-    );
-    const additionalItemsTotal = additionalItemsFee.times(quantity - 1);
-    const numericShippingFee = convertDecimalJSToNumber(oneItemFee.plus(additionalItemsTotal));
-    return new Money(numericShippingFee, currency);
-  }
-  return null;
+	if (
+		isNumber(shippingPriceInSubunitsOneItem) &&
+		shippingPriceInSubunitsOneItem >= 0 &&
+		currency &&
+		quantity === 1
+	) {
+		return new Money(shippingPriceInSubunitsOneItem, currency);
+	} else if (
+		isNumber(shippingPriceInSubunitsOneItem) &&
+		isNumber(shippingPriceInSubunitsAdditionalItems) &&
+		shippingPriceInSubunitsOneItem >= 0 &&
+		shippingPriceInSubunitsAdditionalItems >= 0 &&
+		currency &&
+		quantity > 1
+	) {
+		const oneItemFee = getAmountAsDecimalJS(new Money(shippingPriceInSubunitsOneItem, currency));
+		const additionalItemsFee = getAmountAsDecimalJS(
+			new Money(shippingPriceInSubunitsAdditionalItems, currency),
+		);
+		const additionalItemsTotal = additionalItemsFee.times(quantity - 1);
+		const numericShippingFee = convertDecimalJSToNumber(oneItemFee.plus(additionalItemsTotal));
+		return new Money(numericShippingFee, currency);
+	}
+	return null;
 };
 
 /**
@@ -69,15 +69,15 @@ exports.calculateShippingFee = (
  * @returns {Money} lineTotal
  */
 exports.calculateTotalPriceFromQuantity = (unitPrice, unitCount) => {
-  const amountFromUnitPrice = getAmountAsDecimalJS(unitPrice);
+	const amountFromUnitPrice = getAmountAsDecimalJS(unitPrice);
 
-  // NOTE: We round the total price to the nearest integer.
-  //       Payment processors don't support fractional subunits.
-  const totalPrice = amountFromUnitPrice.times(unitCount).toNearest(1, Decimal.ROUND_HALF_UP);
-  // Get total price as Number (and validate that the conversion is safe)
-  const numericTotalPrice = convertDecimalJSToNumber(totalPrice);
+	// NOTE: We round the total price to the nearest integer.
+	//       Payment processors don't support fractional subunits.
+	const totalPrice = amountFromUnitPrice.times(unitCount).toNearest(1, Decimal.ROUND_HALF_UP);
+	// Get total price as Number (and validate that the conversion is safe)
+	const numericTotalPrice = convertDecimalJSToNumber(totalPrice);
 
-  return new Money(numericTotalPrice, unitPrice.currency);
+	return new Money(numericTotalPrice, unitPrice.currency);
 };
 
 /**
@@ -90,19 +90,19 @@ exports.calculateTotalPriceFromQuantity = (unitPrice, unitCount) => {
  * @returns {Money} lineTotal
  */
 exports.calculateTotalPriceFromPercentage = (unitPrice, percentage) => {
-  const amountFromUnitPrice = getAmountAsDecimalJS(unitPrice);
+	const amountFromUnitPrice = getAmountAsDecimalJS(unitPrice);
 
-  // NOTE: We round the total price to the nearest integer.
-  //       Payment processors don't support fractional subunits.
-  const totalPrice = amountFromUnitPrice
-    .times(percentage)
-    .dividedBy(100)
-    .toNearest(1, Decimal.ROUND_HALF_UP);
+	// NOTE: We round the total price to the nearest integer.
+	//       Payment processors don't support fractional subunits.
+	const totalPrice = amountFromUnitPrice
+		.times(percentage)
+		.dividedBy(100)
+		.toNearest(1, Decimal.ROUND_HALF_UP);
 
-  // Get total price as Number (and validate that the conversion is safe)
-  const numericTotalPrice = convertDecimalJSToNumber(totalPrice);
+	// Get total price as Number (and validate that the conversion is safe)
+	const numericTotalPrice = convertDecimalJSToNumber(totalPrice);
 
-  return new Money(numericTotalPrice, unitPrice.currency);
+	return new Money(numericTotalPrice, unitPrice.currency);
 };
 
 /**
@@ -116,23 +116,23 @@ exports.calculateTotalPriceFromPercentage = (unitPrice, percentage) => {
  * @returns {Money} lineTotal
  */
 exports.calculateTotalPriceFromSeats = (unitPrice, unitCount, seats) => {
-  if (seats < 0) {
-    throw new Error(`Value of seats can't be negative`);
-  }
+	if (seats < 0) {
+		throw new Error(`Value of seats can't be negative`);
+	}
 
-  const amountFromUnitPrice = getAmountAsDecimalJS(unitPrice);
+	const amountFromUnitPrice = getAmountAsDecimalJS(unitPrice);
 
-  // NOTE: We round the total price to the nearest integer.
-  //       Payment processors don't support fractional subunits.
-  const totalPrice = amountFromUnitPrice
-    .times(unitCount)
-    .times(seats)
-    .toNearest(1, Decimal.ROUND_HALF_UP);
+	// NOTE: We round the total price to the nearest integer.
+	//       Payment processors don't support fractional subunits.
+	const totalPrice = amountFromUnitPrice
+		.times(unitCount)
+		.times(seats)
+		.toNearest(1, Decimal.ROUND_HALF_UP);
 
-  // Get total price as Number (and validate that the conversion is safe)
-  const numericTotalPrice = convertDecimalJSToNumber(totalPrice);
+	// Get total price as Number (and validate that the conversion is safe)
+	const numericTotalPrice = convertDecimalJSToNumber(totalPrice);
 
-  return new Money(numericTotalPrice, unitPrice.currency);
+	return new Money(numericTotalPrice, unitPrice.currency);
 };
 
 /**
@@ -145,12 +145,12 @@ exports.calculateTotalPriceFromSeats = (unitPrice, unitCount, seats) => {
  * @returns {number} quantity
  */
 exports.calculateQuantityFromDates = (startDate, endDate, type) => {
-  if (type === LINE_ITEM_NIGHT) {
-    return nightsBetween(startDate, endDate);
-  } else if (type === LINE_ITEM_DAY) {
-    return daysBetween(startDate, endDate);
-  }
-  throw new Error(`Can't calculate quantity from dates to unit type: ${type}`);
+	if (type === LINE_ITEM_NIGHT) {
+		return nightsBetween(startDate, endDate);
+	} else if (type === LINE_ITEM_DAY) {
+		return daysBetween(startDate, endDate);
+	}
+	throw new Error(`Can't calculate quantity from dates to unit type: ${type}`);
 };
 
 /**
@@ -169,8 +169,8 @@ exports.calculateQuantityFromDates = (startDate, endDate, type) => {
  *
  */
 exports.calculateQuantityFromHours = (startDate, endDate) => {
-  // Note: the last parameter (true) ensures that floats are returned.
-  return moment(endDate).diff(moment(startDate), 'hours', true);
+	// Note: the last parameter (true) ensures that floats are returned.
+	return moment(endDate).diff(moment(startDate), "hours", true);
 };
 
 /**
@@ -185,19 +185,19 @@ exports.calculateQuantityFromHours = (startDate, endDate) => {
  *
  */
 exports.calculateLineTotal = lineItem => {
-  const { code, unitPrice, quantity, percentage, seats, units } = lineItem;
+	const { code, unitPrice, quantity, percentage, seats, units } = lineItem;
 
-  if (quantity) {
-    return this.calculateTotalPriceFromQuantity(unitPrice, quantity);
-  } else if (percentage != null) {
-    return this.calculateTotalPriceFromPercentage(unitPrice, percentage);
-  } else if (seats && units) {
-    return this.calculateTotalPriceFromSeats(unitPrice, units, seats);
-  } else {
-    throw new Error(
-      `Can't calculate the lineTotal of lineItem: ${code}. Make sure the lineItem has quantity, percentage or both seats and units`
-    );
-  }
+	if (quantity) {
+		return this.calculateTotalPriceFromQuantity(unitPrice, quantity);
+	} else if (percentage != null) {
+		return this.calculateTotalPriceFromPercentage(unitPrice, percentage);
+	} else if (seats && units) {
+		return this.calculateTotalPriceFromSeats(unitPrice, units, seats);
+	} else {
+		throw new Error(
+			`Can't calculate the lineTotal of lineItem: ${code}. Make sure the lineItem has quantity, percentage or both seats and units`,
+		);
+	}
 };
 
 /**
@@ -207,16 +207,16 @@ exports.calculateLineTotal = lineItem => {
  * @retuns {Money} total sum
  */
 exports.calculateTotalFromLineItems = lineItems => {
-  const totalPrice = lineItems.reduce((sum, lineItem) => {
-    const lineTotal = this.calculateLineTotal(lineItem);
-    return getAmountAsDecimalJS(lineTotal).add(sum);
-  }, 0);
+	const totalPrice = lineItems.reduce((sum, lineItem) => {
+		const lineTotal = this.calculateLineTotal(lineItem);
+		return getAmountAsDecimalJS(lineTotal).add(sum);
+	}, 0);
 
-  // Get total price as Number (and validate that the conversion is safe)
-  const numericTotalPrice = convertDecimalJSToNumber(totalPrice);
-  const unitPrice = lineItems[0].unitPrice;
+	// Get total price as Number (and validate that the conversion is safe)
+	const numericTotalPrice = convertDecimalJSToNumber(totalPrice);
+	const unitPrice = lineItems[0].unitPrice;
 
-  return new Money(numericTotalPrice, unitPrice.currency);
+	return new Money(numericTotalPrice, unitPrice.currency);
 };
 
 /**
@@ -225,8 +225,8 @@ exports.calculateTotalFromLineItems = lineItems => {
  * @returns {Money} total sum
  */
 exports.calculateTotalForProvider = lineItems => {
-  const providerLineItems = lineItems.filter(lineItem => lineItem.includeFor.includes('provider'));
-  return this.calculateTotalFromLineItems(providerLineItems);
+	const providerLineItems = lineItems.filter(lineItem => lineItem.includeFor.includes("provider"));
+	return this.calculateTotalFromLineItems(providerLineItems);
 };
 
 /**
@@ -235,8 +235,8 @@ exports.calculateTotalForProvider = lineItems => {
  * @returns {Money} total sum
  */
 exports.calculateTotalForCustomer = lineItems => {
-  const providerLineItems = lineItems.filter(lineItem => lineItem.includeFor.includes('customer'));
-  return this.calculateTotalFromLineItems(providerLineItems);
+	const providerLineItems = lineItems.filter(lineItem => lineItem.includeFor.includes("customer"));
+	return this.calculateTotalFromLineItems(providerLineItems);
 };
 
 /**
@@ -251,26 +251,26 @@ exports.calculateTotalForCustomer = lineItems => {
  *
  */
 exports.constructValidLineItems = lineItems => {
-  const lineItemsWithTotals = lineItems.map(lineItem => {
-    const { code, quantity, percentage } = lineItem;
+	const lineItemsWithTotals = lineItems.map(lineItem => {
+		const { code, quantity, percentage } = lineItem;
 
-    if (!/^line-item\/.+/.test(code)) {
-      throw new Error(`Invalid line item code: ${code}`);
-    }
+		if (!/^line-item\/.+/.test(code)) {
+			throw new Error(`Invalid line item code: ${code}`);
+		}
 
-    // lineItems are expected to be in similar format as when they are returned from API
-    // so that we can use them in e.g. OrderBreakdown component.
-    // This means we need to convert quantity to Decimal and add attributes lineTotal and reversal to lineItems
-    const lineTotal = this.calculateLineTotal(lineItem);
-    return {
-      ...lineItem,
-      lineTotal,
-      quantity: quantity ? new Decimal(quantity) : null,
-      percentage: percentage ? new Decimal(percentage) : null,
-      reversal: false,
-    };
-  });
-  return lineItemsWithTotals;
+		// lineItems are expected to be in similar format as when they are returned from API
+		// so that we can use them in e.g. OrderBreakdown component.
+		// This means we need to convert quantity to Decimal and add attributes lineTotal and reversal to lineItems
+		const lineTotal = this.calculateLineTotal(lineItem);
+		return {
+			...lineItem,
+			lineTotal,
+			quantity: quantity ? new Decimal(quantity) : null,
+			percentage: percentage ? new Decimal(percentage) : null,
+			reversal: false,
+		};
+	});
+	return lineItemsWithTotals;
 };
 
 /**
@@ -279,14 +279,14 @@ exports.constructValidLineItems = lineItems => {
  * @returns boolean
  */
 exports.hasCommissionPercentage = commission => {
-  const percentage = commission?.percentage;
-  const isDefined = percentage != null;
-  const isNumber = typeof percentage === 'number' && !isNaN(percentage);
-  if (isDefined && !isNumber) {
-    throw new Error(`${percentage} is not a number.`);
-  }
+	const percentage = commission?.percentage;
+	const isDefined = percentage != null;
+	const isNumber = typeof percentage === "number" && !isNaN(percentage);
+	if (isDefined && !isNumber) {
+		throw new Error(`${percentage} is not a number.`);
+	}
 
-  // Only create a line item if the percentage is set to be more than zero
-  const isMoreThanZero = percentage > 0;
-  return isDefined && isMoreThanZero;
+	// Only create a line item if the percentage is set to be more than zero
+	const isMoreThanZero = percentage > 0;
+	return isDefined && isMoreThanZero;
 };

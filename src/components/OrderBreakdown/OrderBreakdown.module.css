@@ -1,140 +1,140 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .root {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 .nowrap {
-  white-space: nowrap;
+	white-space: nowrap;
 }
 
 .lineItem {
-  composes: h4 from global;
-  margin: 0;
+	composes: h4 from global;
+	margin: 0;
 
-  @media (--viewportMedium) {
-    padding-top: 7px;
-    padding-bottom: 1px;
-  }
+	@media (--viewportMedium) {
+		padding-top: 7px;
+		padding-bottom: 1px;
+	}
 
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
 }
 
 .bookingPeriod {
-  flex: 1 1;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  padding-bottom: 6px;
+	flex: 1 1;
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	padding-bottom: 6px;
 
-  @media (--viewportMedium) {
-    padding-bottom: 8px;
-  }
+	@media (--viewportMedium) {
+		padding-bottom: 8px;
+	}
 }
 
 .bookingPeriodSectionLeft {
-  text-align: left;
+	text-align: left;
 }
 
 .bookingPeriodSectionRight {
-  text-align: right;
+	text-align: right;
 }
 
 .dayLabel {
-  composes: textSmall from global;
-  margin: 0;
-  line-height: 24px;
-  padding-top: 2px;
-  padding-bottom: 4px;
+	composes: textSmall from global;
+	margin: 0;
+	line-height: 24px;
+	padding-top: 2px;
+	padding-bottom: 4px;
 
-  @media (--viewportMedium) {
-    padding: 0;
-  }
+	@media (--viewportMedium) {
+		padding: 0;
+	}
 }
 
 .dayInfo,
 .totalPrice {
-  composes: p from global;
-  font-weight: var(--fontWeightBold);
-  letter-spacing: -0.2px;
+	composes: p from global;
+	font-weight: var(--fontWeightBold);
+	letter-spacing: -0.2px;
 
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 .subTotalLineItem {
-  composes: h4 from global;
-  font-weight: var(--fontWeightBold);
-  margin: 0;
-  padding: 5px 0 1px 0;
+	composes: h4 from global;
+	font-weight: var(--fontWeightBold);
+	margin: 0;
+	padding: 5px 0 1px 0;
 
-  @media (--viewportMedium) {
-    padding: 7px 0 1px 0;
-  }
+	@media (--viewportMedium) {
+		padding: 7px 0 1px 0;
+	}
 
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
 }
 
 .lineItemTotal {
-  composes: h4 from global;
-  margin: 0;
-  padding-top: 6px;
-  padding-bottom: 6px;
+	composes: h4 from global;
+	margin: 0;
+	padding-top: 6px;
+	padding-bottom: 6px;
 
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  justify-content: space-between;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+	justify-content: space-between;
 
-  @media (--viewportMedium) {
-    padding-top: 7px;
-    padding-bottom: 1px;
-  }
+	@media (--viewportMedium) {
+		padding-top: 7px;
+		padding-bottom: 1px;
+	}
 }
 
 .itemLabel {
-  composes: marketplaceSmallFontStyles from global;
-  flex: 1;
+	composes: marketplaceSmallFontStyles from global;
+	flex: 1;
 }
 
 .itemValue {
-  composes: marketplaceSmallFontStyles from global;
-  margin: 0 0 0 10px;
+	composes: marketplaceSmallFontStyles from global;
+	margin: 0 0 0 10px;
 }
 
 .totalDivider {
-  /* dimensions */
-  width: 100%;
-  height: 1px;
-  margin: 12px 0 5px 0;
+	/* dimensions */
+	width: 100%;
+	height: 1px;
+	margin: 12px 0 5px 0;
 
-  border: none;
-  background-color: var(--colorGrey100);
+	border: none;
+	background-color: var(--colorGrey100);
 
-  @media (--viewportMedium) {
-    margin: 7px 0 0px 0;
-  }
+	@media (--viewportMedium) {
+		margin: 7px 0 0px 0;
+	}
 }
 
 .totalLabel {
-  composes: marketplaceSmallFontStyles from global;
+	composes: marketplaceSmallFontStyles from global;
 }
 
 .feeInfo {
-  composes: marketplaceTinyFontStyles from global;
-  flex-shrink: 0;
-  margin: 0;
-  color: var(--colorGrey300);
-  padding-top: 4px;
-  padding-bottom: 14px;
+	composes: marketplaceTinyFontStyles from global;
+	flex-shrink: 0;
+	margin: 0;
+	color: var(--colorGrey300);
+	padding-top: 4px;
+	padding-bottom: 14px;
 
-  @media (--viewportMedium) {
-    padding-top: 11px;
-    padding-bottom: 21px;
-  }
+	@media (--viewportMedium) {
+		padding-top: 11px;
+		padding-bottom: 21px;
+	}
 }

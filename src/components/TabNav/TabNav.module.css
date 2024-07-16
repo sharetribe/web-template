@@ -1,90 +1,90 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .root {
-  display: flex;
-  flex-direction: row;
-  overflow-x: auto;
+	display: flex;
+	flex-direction: row;
+	overflow-x: auto;
 }
 
 .tab {
-  margin-left: 16px;
+	margin-left: 16px;
 
-  &:first-child {
-    margin-left: 0;
-  }
+	&:first-child {
+		margin-left: 0;
+	}
 
-  @media (--viewportLarge) {
-    margin-left: 24px;
-  }
+	@media (--viewportLarge) {
+		margin-left: 24px;
+	}
 }
 
 .link {
-  display: inline-block;
-  white-space: nowrap;
+	display: inline-block;
+	white-space: nowrap;
 
-  /* Font */
-  composes: textSmall from global;
+	/* Font */
+	composes: textSmall from global;
 
-  color: var(--colorGrey700);
-  padding-bottom: 10px;
-  padding-top: 10px;
-  height: 100%;
+	color: var(--colorGrey700);
+	padding-bottom: 10px;
+	padding-top: 10px;
+	height: 100%;
 
-  /* push tabs against bottom of tab bar */
-  margin-top: auto;
+	/* push tabs against bottom of tab bar */
+	margin-top: auto;
 
-  border-bottom-width: 2px;
-  border-bottom-style: solid;
-  border-bottom-color: transparent;
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+	border-bottom-color: transparent;
 
-  transition: var(--transitionStyleButton);
-  background-image: url("data:image/svg+xml;utf8,<svg width='4' height='32' viewBox='0 0 4 32' xmlns='http://www.w3.org/2000/svg'><path d='M0 0h4v32H0z' fill='%234a4a4a' fill-rule='evenodd'/></svg>");
-  background-position: calc(var(--TabNav_linkWidth) + 4px) center; /* SelectedLink's width (200px) + border thickness (4px) = 204px */
+	transition: var(--transitionStyleButton);
+	background-image: url("data:image/svg+xml;utf8,<svg width='4' height='32' viewBox='0 0 4 32' xmlns='http://www.w3.org/2000/svg'><path d='M0 0h4v32H0z' fill='%234a4a4a' fill-rule='evenodd'/></svg>");
+	background-position: calc(var(--TabNav_linkWidth) + 4px) center; /* SelectedLink's width (200px) + border thickness (4px) = 204px */
 
-  &:hover {
-    text-decoration: none;
-    color: var(--colorBlack);
-  }
+	&:hover {
+		text-decoration: none;
+		color: var(--colorBlack);
+	}
 
-  @media (--viewportLarge) {
-    font-weight: var(--fontWeightSemiBold);
-    font-size: 20px;
-    line-height: 24px;
+	@media (--viewportLarge) {
+		font-weight: var(--fontWeightSemiBold);
+		font-size: 20px;
+		line-height: 24px;
 
-    height: unset;
-    width: var(--TabNav_linkWidth);
-    border-bottom-width: 0px;
-    margin-top: 0;
-    margin-bottom: 16px;
+		height: unset;
+		width: var(--TabNav_linkWidth);
+		border-bottom-width: 0px;
+		margin-top: 0;
+		margin-bottom: 16px;
 
-    padding-top: 5px; /* Drop the text to adjust it to correct baseline */
-    padding-bottom: 3px;
+		padding-top: 5px; /* Drop the text to adjust it to correct baseline */
+		padding-bottom: 3px;
 
-    &:hover {
-      background-image: url("data:image/svg+xml;utf8,<svg width='4' height='32' viewBox='0 0 4 32' xmlns='http://www.w3.org/2000/svg'><path d='M0 0h4v32H0z' fill='%234a4a4a' fill-rule='evenodd'/></svg>");
-      background-position: right center;
-    }
-  }
+		&:hover {
+			background-image: url("data:image/svg+xml;utf8,<svg width='4' height='32' viewBox='0 0 4 32' xmlns='http://www.w3.org/2000/svg'><path d='M0 0h4v32H0z' fill='%234a4a4a' fill-rule='evenodd'/></svg>");
+			background-position: right center;
+		}
+	}
 }
 
 .selectedLink {
-  border-bottom-color: var(--colorBlack);
-  color: var(--colorBlack);
+	border-bottom-color: var(--colorBlack);
+	color: var(--colorBlack);
 
-  @media (--viewportLarge) {
-    width: var(--TabNav_linkWidth);
-    background-image: url("data:image/svg+xml;utf8,<svg width='4' height='32' viewBox='0 0 4 32' xmlns='http://www.w3.org/2000/svg'><path d='M0 0h4v32H0z' fill='%23000' fill-rule='evenodd'/></svg>");
-    background-position: right center;
+	@media (--viewportLarge) {
+		width: var(--TabNav_linkWidth);
+		background-image: url("data:image/svg+xml;utf8,<svg width='4' height='32' viewBox='0 0 4 32' xmlns='http://www.w3.org/2000/svg'><path d='M0 0h4v32H0z' fill='%23000' fill-rule='evenodd'/></svg>");
+		background-position: right center;
 
-    &:hover {
-      background-image: url("data:image/svg+xml;utf8,<svg width='4' height='32' viewBox='0 0 4 32' xmlns='http://www.w3.org/2000/svg'><path d='M0 0h4v32H0z' fill='%234a4a4a' fill-rule='evenodd'/></svg>");
-      background-position: right center;
-    }
-  }
+		&:hover {
+			background-image: url("data:image/svg+xml;utf8,<svg width='4' height='32' viewBox='0 0 4 32' xmlns='http://www.w3.org/2000/svg'><path d='M0 0h4v32H0z' fill='%234a4a4a' fill-rule='evenodd'/></svg>");
+			background-position: right center;
+		}
+	}
 }
 
 .disabled {
-  pointer-events: none;
-  color: var(--colorGrey300);
-  text-decoration: none;
+	pointer-events: none;
+	color: var(--colorGrey300);
+	text-decoration: none;
 }

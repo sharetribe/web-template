@@ -2,102 +2,102 @@
 // so, they are not directly calling Marketplace API or Integration API.
 // You can find these api endpoints from 'server/api/...' directory
 
-import appSettings from '../config/settings';
-import { types as sdkTypes, transit } from './sdkLoader';
-import Decimal from 'decimal.js';
+import appSettings from "../config/settings";
+import { types as sdkTypes, transit } from "./sdkLoader";
+import Decimal from "decimal.js";
 
 export const apiBaseUrl = marketplaceRootURL => {
-  const port = process.env.REACT_APP_DEV_API_SERVER_PORT;
-  const useDevApiServer = process.env.NODE_ENV === 'development' && !!port;
+	const port = process.env.REACT_APP_DEV_API_SERVER_PORT;
+	const useDevApiServer = process.env.NODE_ENV === "development" && !!port;
 
-  // In development, the dev API server is running in a different port
-  if (useDevApiServer) {
-    return `http://localhost:${port}`;
-  }
+	// In development, the dev API server is running in a different port
+	if (useDevApiServer) {
+		return `http://localhost:${port}`;
+	}
 
-  // Otherwise, use the given marketplaceRootURL parameter or the same domain and port as the frontend
-  return marketplaceRootURL ? marketplaceRootURL.replace(/\/$/, '') : `${window.location.origin}`;
+	// Otherwise, use the given marketplaceRootURL parameter or the same domain and port as the frontend
+	return marketplaceRootURL ? marketplaceRootURL.replace(/\/$/, "") : `${window.location.origin}`;
 };
 
 // Application type handlers for JS SDK.
 //
 // NOTE: keep in sync with `typeHandlers` in `server/api-util/sdk.js`
 export const typeHandlers = [
-  // Use Decimal type instead of SDK's BigDecimal.
-  {
-    type: sdkTypes.BigDecimal,
-    customType: Decimal,
-    writer: v => new sdkTypes.BigDecimal(v.toString()),
-    reader: v => new Decimal(v.value),
-  },
+	// Use Decimal type instead of SDK's BigDecimal.
+	{
+		type: sdkTypes.BigDecimal,
+		customType: Decimal,
+		writer: v => new sdkTypes.BigDecimal(v.toString()),
+		reader: v => new Decimal(v.value),
+	},
 ];
 
 const serialize = data => {
-  return transit.write(data, { typeHandlers, verbose: appSettings.sdk.transitVerbose });
+	return transit.write(data, { typeHandlers, verbose: appSettings.sdk.transitVerbose });
 };
 
 const deserialize = str => {
-  return transit.read(str, { typeHandlers });
+	return transit.read(str, { typeHandlers });
 };
 
 const methods = {
-  POST: 'POST',
-  GET: 'GET',
-  PUT: 'PUT',
-  PATCH: 'PATCH',
-  DELETE: 'DELETE',
+	POST: "POST",
+	GET: "GET",
+	PUT: "PUT",
+	PATCH: "PATCH",
+	DELETE: "DELETE",
 };
 
 // If server/api returns data from SDK, you should set Content-Type to 'application/transit+json'
 const request = (path, options = {}) => {
-  const url = `${apiBaseUrl()}${path}`;
-  const { credentials, headers, body, ...rest } = options;
+	const url = `${apiBaseUrl()}${path}`;
+	const { credentials, headers, body, ...rest } = options;
 
-  // If headers are not set, we assume that the body should be serialized as transit format.
-  const shouldSerializeBody =
-    (!headers || headers['Content-Type'] === 'application/transit+json') && body;
-  const bodyMaybe = shouldSerializeBody ? { body: serialize(body) } : {};
+	// If headers are not set, we assume that the body should be serialized as transit format.
+	const shouldSerializeBody =
+		(!headers || headers["Content-Type"] === "application/transit+json") && body;
+	const bodyMaybe = shouldSerializeBody ? { body: serialize(body) } : {};
 
-  const fetchOptions = {
-    credentials: credentials || 'include',
-    // Since server/api mostly talks to Marketplace API using SDK,
-    // we default to 'application/transit+json' as content type (as SDK uses transit).
-    headers: headers || { 'Content-Type': 'application/transit+json' },
-    ...bodyMaybe,
-    ...rest,
-  };
+	const fetchOptions = {
+		credentials: credentials || "include",
+		// Since server/api mostly talks to Marketplace API using SDK,
+		// we default to 'application/transit+json' as content type (as SDK uses transit).
+		headers: headers || { "Content-Type": "application/transit+json" },
+		...bodyMaybe,
+		...rest,
+	};
 
-  return window.fetch(url, fetchOptions).then(res => {
-    const contentTypeHeader = res.headers.get('Content-Type');
-    const contentType = contentTypeHeader ? contentTypeHeader.split(';')[0] : null;
+	return window.fetch(url, fetchOptions).then(res => {
+		const contentTypeHeader = res.headers.get("Content-Type");
+		const contentType = contentTypeHeader ? contentTypeHeader.split(";")[0] : null;
 
-    if (res.status >= 400) {
-      return res.json().then(data => {
-        let e = new Error();
-        e = Object.assign(e, data);
+		if (res.status >= 400) {
+			return res.json().then(data => {
+				let e = new Error();
+				e = Object.assign(e, data);
 
-        throw e;
-      });
-    }
-    if (contentType === 'application/transit+json') {
-      return res.text().then(deserialize);
-    } else if (contentType === 'application/json') {
-      return res.json();
-    }
-    return res.text();
-  });
+				throw e;
+			});
+		}
+		if (contentType === "application/transit+json") {
+			return res.text().then(deserialize);
+		} else if (contentType === "application/json") {
+			return res.json();
+		}
+		return res.text();
+	});
 };
 
 // Keep the previous parameter order for the post method.
 // For now, only POST has own specific function, but you can create more or use request directly.
 const post = (path, body, options = {}) => {
-  const requestOptions = {
-    ...options,
-    method: methods.POST,
-    body,
-  };
+	const requestOptions = {
+		...options,
+		method: methods.POST,
+		body,
+	};
 
-  return request(path, requestOptions);
+	return request(path, requestOptions);
 };
 
 // Fetch transaction line items from the local API endpoint.
@@ -105,7 +105,7 @@ const post = (path, body, options = {}) => {
 // See `server/api/transaction-line-items.js` to see what data should
 // be sent in the body.
 export const transactionLineItems = body => {
-  return post('/api/transaction-line-items', body);
+	return post("/api/transaction-line-items", body);
 };
 
 // Initiate a privileged transaction.
@@ -117,7 +117,7 @@ export const transactionLineItems = body => {
 // See `server/api/initiate-privileged.js` to see what data should be
 // sent in the body.
 export const initiatePrivileged = body => {
-  return post('/api/initiate-privileged', body);
+	return post("/api/initiate-privileged", body);
 };
 
 // Transition a transaction with a privileged transition.
@@ -129,7 +129,7 @@ export const initiatePrivileged = body => {
 // See `server/api/transition-privileged.js` to see what data should
 // be sent in the body.
 export const transitionPrivileged = body => {
-  return post('/api/transition-privileged', body);
+	return post("/api/transition-privileged", body);
 };
 
 // Create user with identity provider (e.g. Facebook or Google)
@@ -142,5 +142,5 @@ export const transitionPrivileged = body => {
 // See `server/api/auth/createUserWithIdp.js` to see what data should
 // be sent in the body.
 export const createUserWithIdp = body => {
-  return post('/api/auth/create-user-with-idp', body);
+	return post("/api/auth/create-user-with-idp", body);
 };

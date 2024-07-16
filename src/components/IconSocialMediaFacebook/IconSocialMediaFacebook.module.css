@@ -1,7 +1,7 @@
 .root {
-  fill: var(--colorGrey700);
-  transition: var(--transitionStyleButton);
-  &:hover {
-    fill: var(--marketplaceColor);
-  }
+	fill: var(--colorGrey700);
+	transition: var(--transitionStyleButton);
+	&:hover {
+		fill: var(--marketplaceColor);
+	}
 }

@@ -1,8 +1,8 @@
 .root {
-  stroke: var(--colorGrey300);
-  transition: var(--transitionStyleButton);
+	stroke: var(--colorGrey300);
+	transition: var(--transitionStyleButton);
 
-  &:hover {
-    stroke: var(--colorFail);
-  }
+	&:hover {
+		stroke: var(--colorFail);
+	}
 }

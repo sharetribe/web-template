@@ -1,186 +1,186 @@
-@import '../../../../styles/customMediaQueries.css';
+@import "../../../../styles/customMediaQueries.css";
 
 .root {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  height: auto;
+	flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
+	height: auto;
 }
 
 .content {
-  flex-grow: 1;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+	flex-grow: 1;
+	flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
 }
 
 .accountLinksWrapper,
 .customLinksWrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
 }
 .accountLinksWrapper {
-  margin-bottom: 36px;
+	margin-bottom: 36px;
 }
 
 .footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100vw;
-  padding: 24px;
-  background-color: var(--colorWhite);
-  box-shadow: var(--boxShadowTop);
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100vw;
+	padding: 24px;
+	background-color: var(--colorWhite);
+	box-shadow: var(--boxShadowTop);
 }
 
 .avatar {
-  /* Layout */
-  flex-shrink: 0;
-  margin: var(--TopbarMobileMenu_topMargin) 0 0 0;
+	/* Layout */
+	flex-shrink: 0;
+	margin: var(--TopbarMobileMenu_topMargin) 0 0 0;
 }
 
 .greeting {
-  /* Font */
-  font-weight: var(--fontWeightBlack);
-  font-size: 24px;
-  line-height: 24px;
+	/* Font */
+	font-weight: var(--fontWeightBlack);
+	font-size: 24px;
+	line-height: 24px;
 
-  padding: 3px 0 3px 0;
-  margin-bottom: 1px;
-  margin-top: 16px;
+	padding: 3px 0 3px 0;
+	margin-bottom: 1px;
+	margin-top: 16px;
 
-  @media (--viewportMedium) {
-    font-size: 40px;
-    line-height: 56px;
-    padding: 5px 0 3px 0;
-    /* x * 8px */
-    margin-top: 24px;
-  }
+	@media (--viewportMedium) {
+		font-size: 40px;
+		line-height: 56px;
+		padding: 5px 0 3px 0;
+		/* x * 8px */
+		margin-top: 24px;
+	}
 }
 
 .logoutButton {
-  /* Position and dimensions */
-  display: inline;
+	/* Position and dimensions */
+	display: inline;
 
-  /* Borders */
-  border: none;
+	/* Borders */
+	border: none;
 
-  /* Text size should be inherited */
-  text-decoration: none;
+	/* Text size should be inherited */
+	text-decoration: none;
 
-  /* Logout font is smaller and gray since the action is not recommended. */
-  font-weight: var(--fontWeightSemiBold);
-  font-size: 18px;
-  line-height: 24px;
+	/* Logout font is smaller and gray since the action is not recommended. */
+	font-weight: var(--fontWeightSemiBold);
+	font-size: 18px;
+	line-height: 24px;
 
-  color: var(--colorGrey300);
+	color: var(--colorGrey300);
 
-  /* Position component */
-  width: initial;
-  margin: 4px 0 24px 0;
-  padding: 0;
+	/* Position component */
+	width: initial;
+	margin: 4px 0 24px 0;
+	padding: 0;
 
-  &:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
+	&:hover {
+		text-decoration: underline;
+		cursor: pointer;
+	}
 
-  @media (--viewportMedium) {
-    margin: 0 0 36px 0;
-  }
+	@media (--viewportMedium) {
+		margin: 0 0 36px 0;
+	}
 }
 
 .customLinkFont {
-  /* Font */
-  font-weight: var(--fontWeightBold);
-  font-size: 21px;
-  line-height: 24px;
+	/* Font */
+	font-weight: var(--fontWeightBold);
+	font-size: 21px;
+	line-height: 24px;
 
-  padding: 4px 0 2px 0;
-  /* x * 6px */
-  margin-top: 24px;
-  margin-bottom: 18px;
+	padding: 4px 0 2px 0;
+	/* x * 6px */
+	margin-top: 24px;
+	margin-bottom: 18px;
 
-  @media (--viewportMedium) {
-    font-size: 30px;
-    line-height: 40px;
-    padding: 1px 0 7px 0;
-  }
+	@media (--viewportMedium) {
+		font-size: 30px;
+		line-height: 40px;
+		padding: 1px 0 7px 0;
+	}
 }
 
 .inbox {
-  /* Font */
-  composes: customLinkFont;
-  color: var(--marketplaceColor);
-  position: relative;
+	/* Font */
+	composes: customLinkFont;
+	color: var(--marketplaceColor);
+	position: relative;
 
-  margin-top: auto;
-  margin-bottom: 13px;
+	margin-top: auto;
+	margin-bottom: 13px;
 }
 
 .navigationLink {
-  /* Font */
-  composes: customLinkFont;
-  color: var(--marketplaceColor);
+	/* Font */
+	composes: customLinkFont;
+	color: var(--marketplaceColor);
 
-  /* Layout */
-  margin-top: 0;
-  margin-bottom: 11px;
+	/* Layout */
+	margin-top: 0;
+	margin-bottom: 11px;
 }
 .currentPageLink {
-  color: var(--marketplaceColorDark);
+	color: var(--marketplaceColorDark);
 }
 
 .notificationBadge {
-  position: absolute;
-  top: 4px;
-  right: -26px;
+	position: absolute;
+	top: 4px;
+	right: -26px;
 
-  /* This is inside a link - remove underline */
-  &:hover {
-    text-decoration: none;
-  }
+	/* This is inside a link - remove underline */
+	&:hover {
+		text-decoration: none;
+	}
 }
 
 .createNewListingLink {
-  composes: buttonPrimary from global;
+	composes: buttonPrimary from global;
 }
 
 .authenticationGreeting {
-  /* Font */
-  composes: h1 from global;
+	/* Font */
+	composes: h1 from global;
 
-  margin-bottom: 48px;
-  margin-top: var(--TopbarMobileMenu_topMargin);
+	margin-bottom: 48px;
+	margin-top: var(--TopbarMobileMenu_topMargin);
 }
 .authenticationLinks {
-  white-space: nowrap;
+	white-space: nowrap;
 }
 
 .signupLink {
-  text-decoration: none;
-  white-space: nowrap;
-  color: var(--marketplaceColor);
+	text-decoration: none;
+	white-space: nowrap;
+	color: var(--marketplaceColor);
 }
 .loginLink {
-  text-decoration: none;
-  white-space: nowrap;
-  color: var(--marketplaceColor);
+	text-decoration: none;
+	white-space: nowrap;
+	color: var(--marketplaceColor);
 }
 
 .currentPage {
-  color: var(--colorBlack);
+	color: var(--colorBlack);
 
-  /* black left border */
-  border-left: 5px solid black;
-  margin-left: -24px;
-  padding-left: 19px;
+	/* black left border */
+	border-left: 5px solid black;
+	margin-left: -24px;
+	padding-left: 19px;
 }
 
 .spacer {
-  width: 100%;
-  height: 124px;
+	width: 100%;
+	height: 124px;
 }

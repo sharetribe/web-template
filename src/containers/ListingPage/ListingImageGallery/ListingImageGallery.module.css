@@ -1,77 +1,77 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 :global(.image-gallery-thumbnails-container) {
-  text-align: left !important;
+	text-align: left !important;
 }
 :global(.image-gallery-thumbnails) {
-  padding-top: 24px;
-  padding-bottom: 0;
+	padding-top: 24px;
+	padding-bottom: 0;
 
-  /*
+	/*
    By default, the gallery controls the scroll position of the thumbnails when
    browsing the images. We change this logic to a freely scrollable container
    that the user controls. This overflow works together with the
    `disableThumbnailScroll` option in the component JS.
    */
-  width: 100vw;
-  overflow: auto;
+	width: 100vw;
+	overflow: auto;
 
-  @media (--viewportMedium) {
-    width: calc(100vw - 48px);
-  }
-  @media (--viewportLarge) {
-    width: unset;
-  }
+	@media (--viewportMedium) {
+		width: calc(100vw - 48px);
+	}
+	@media (--viewportLarge) {
+		width: unset;
+	}
 }
 :global(.image-gallery-thumbnail) {
-  width: auto;
-  border-radius: 8px;
+	width: auto;
+	border-radius: 8px;
 
-  text-align: left !important;
+	text-align: left !important;
 
-  &:first-child {
-    margin-left: 24px;
+	&:first-child {
+		margin-left: 24px;
 
-    @media (--viewportMedium) {
-      margin-left: 0;
-    }
-  }
-  &:last-child {
-    margin-right: 24px;
+		@media (--viewportMedium) {
+			margin-left: 0;
+		}
+	}
+	&:last-child {
+		margin-right: 24px;
 
-    @media (--viewportMedium) {
-      margin-right: 0;
-    }
-  }
+		@media (--viewportMedium) {
+			margin-right: 0;
+		}
+	}
 
-  &:hover,
-  &:global(.active) {
-    border-color: var(--marketplaceColor);
-  }
+	&:hover,
+	&:global(.active) {
+		border-color: var(--marketplaceColor);
+	}
 }
 
 :global(.image-gallery-slide-wrapper) {
-  background-color: var(--colorWhite);
-  border-bottom: 1px solid var(--colorGrey100);
+	background-color: var(--colorWhite);
+	border-bottom: 1px solid var(--colorGrey100);
 
-  @media (--viewportMedium) {
-    border-radius: var(--borderRadiusMedium);
-    border: 1px solid var(--colorGrey100);
-  }
+	@media (--viewportMedium) {
+		border-radius: var(--borderRadiusMedium);
+		border: 1px solid var(--colorGrey100);
+	}
 }
 
 :global(.fullscreen) {
-  background-color: var(--colorWhite) !important;
+	background-color: var(--colorWhite) !important;
 
-  & :global(.image-gallery-slide-wrapper) {
-    background-color: transparent;
-    border: none;
-  }
+	& :global(.image-gallery-slide-wrapper) {
+		background-color: transparent;
+		border: none;
+	}
 
-  & :global(.image-gallery-thumbnails-container),
-  & :global(.image-gallery-thumbnail) {
-    text-align: center !important;
-  }
+	& :global(.image-gallery-thumbnails-container),
+	& :global(.image-gallery-thumbnail) {
+		text-align: center !important;
+	}
 }
 
 .root {
@@ -79,155 +79,155 @@
 
 .itemWrapper,
 .itemWrapperFullscreen {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .itemWrapper {
 }
 
 .noImage {
-  border: 1px solid var(--colorGrey100);
-  border-radius: var(--borderRadiusMedium);
+	border: 1px solid var(--colorGrey100);
+	border-radius: var(--borderRadiusMedium);
 }
 
 .itemWrapperFullscreen {
-  height: calc(100vh - 130px);
+	height: calc(100vh - 130px);
 }
 
 .itemCentering {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
 }
 
 .item {
-  max-width: 100%;
-  max-height: 100%;
+	max-width: 100%;
+	max-height: 100%;
 }
 
 .thumb {
-  /* With the active thumbnail border (default 4px), make the result
+	/* With the active thumbnail border (default 4px), make the result
    height a multiple of the baseline. */
-  max-width: 88px;
-  max-height: 88px;
-  border-radius: var(--borderRadiusMedium);
+	max-width: 88px;
+	max-height: 88px;
+	border-radius: var(--borderRadiusMedium);
 }
 
 .navLeft,
 .navRight {
-  position: absolute;
-  width: 60px;
-  height: 100%;
-  border: 0;
-  padding: 0;
-  z-index: 1;
+	position: absolute;
+	width: 60px;
+	height: 100%;
+	border: 0;
+	padding: 0;
+	z-index: 1;
 
-  /* center content */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	/* center content */
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-  &:hover {
-    cursor: pointer;
+	&:hover {
+		cursor: pointer;
 
-    & .navArrowWrapper {
-      background-color: rgba(255, 255, 255, 1);
-    }
-  }
+		& .navArrowWrapper {
+			background-color: rgba(255, 255, 255, 1);
+		}
+	}
 }
 
 .navLeft {
-  left: 0;
+	left: 0;
 
-  & .navArrowWrapper {
-    padding-right: 2px;
-  }
+	& .navArrowWrapper {
+		padding-right: 2px;
+	}
 }
 
 .navRight {
-  right: 0;
+	right: 0;
 
-  & .navArrowWrapper {
-    padding-left: 2px;
-  }
+	& .navArrowWrapper {
+		padding-left: 2px;
+	}
 }
 
 .navArrowWrapper {
-  display: none;
+	display: none;
 
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
 
-  background-color: rgba(255, 255, 255, 0.5);
+	background-color: rgba(255, 255, 255, 0.5);
 
-  @media (--viewportLarge) {
-    /* center content */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+	@media (--viewportLarge) {
+		/* center content */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 }
 
 .openFullscreen {
-  /* Hide on mobile. Currently react-image-gallery fullscreen mode is broken on
+	/* Hide on mobile. Currently react-image-gallery fullscreen mode is broken on
      mobile, and mobile doesn't really benefit from fullscreen anyways. */
-  display: none;
+	display: none;
 
-  composes: marketplaceTinyFontStyles from global;
-  font-weight: var(--fontWeightMedium);
+	composes: marketplaceTinyFontStyles from global;
+	font-weight: var(--fontWeightMedium);
 
-  /* Position and dimensions */
-  position: absolute;
-  bottom: 19px;
-  right: 24px;
-  margin: 0;
-  padding: 8px 13px 6px 13px;
+	/* Position and dimensions */
+	position: absolute;
+	bottom: 19px;
+	right: 24px;
+	margin: 0;
+	padding: 8px 13px 6px 13px;
 
-  /* Colors */
-  background-color: var(--colorWhite);
+	/* Colors */
+	background-color: var(--colorWhite);
 
-  /* Borders */
-  border: 1px solid var(--colorGrey100);
-  border-radius: var(--borderRadius);
+	/* Borders */
+	border: 1px solid var(--colorGrey100);
+	border-radius: var(--borderRadius);
 
-  cursor: pointer;
-  transition: var(--transitionStyleButton);
+	cursor: pointer;
+	transition: var(--transitionStyleButton);
 
-  /* Ensure the button is on top of the navRight area */
-  z-index: 1;
+	/* Ensure the button is on top of the navRight area */
+	z-index: 1;
 
-  &:hover {
-    background-color: var(--marketplaceColor);
-    border-color: var(--marketplaceColor);
-    color: var(--colorWhite);
-  }
+	&:hover {
+		background-color: var(--marketplaceColor);
+		border-color: var(--marketplaceColor);
+		color: var(--colorWhite);
+	}
 
-  @media (--viewportLarge) {
-    display: block;
-  }
+	@media (--viewportLarge) {
+		display: block;
+	}
 }
 
 .close {
-  composes: marketplaceModalCloseStyles from global;
+	composes: marketplaceModalCloseStyles from global;
 
-  color: var(--colorGrey300);
-  transition: var(--transitionStyleButton);
+	color: var(--colorGrey300);
+	transition: var(--transitionStyleButton);
 
-  &:enabled:hover,
-  &:enabled:active {
-    color: var(--colorBlack);
-  }
+	&:enabled:hover,
+	&:enabled:active {
+		color: var(--colorBlack);
+	}
 }
 
 .closeText {
-  composes: marketplaceModalCloseText from global;
+	composes: marketplaceModalCloseText from global;
 }
 
 .closeIcon {
-  composes: marketplaceModalCloseIcon from global;
+	composes: marketplaceModalCloseIcon from global;
 }

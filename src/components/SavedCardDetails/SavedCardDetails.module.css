@@ -1,241 +1,241 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .root {
 }
 
 .savedPaymentMethodTitle {
-  composes: h4 from global;
-  font-weight: bold;
-  cursor: pointer;
+	composes: h4 from global;
+	font-weight: bold;
+	cursor: pointer;
 }
 
 .savedPaymentMethod {
-  display: inline-block;
-  margin-right: auto;
+	display: inline-block;
+	margin-right: auto;
 }
 
 .paymentMethodPlaceholderDesktop {
-  display: none;
+	display: none;
 }
 
 .paymentMethodPlaceholderMobile {
-  display: inline-block;
+	display: inline-block;
 }
 
 @media (--viewportSmall) {
-  .paymentMethodPlaceholderDesktop {
-    display: inline-block;
-  }
+	.paymentMethodPlaceholderDesktop {
+		display: inline-block;
+	}
 
-  .paymentMethodPlaceholderMobile {
-    display: none;
-  }
+	.paymentMethodPlaceholderMobile {
+		display: none;
+	}
 }
 
 .cardIcon {
-  margin: 0 12px 0 4px;
-  width: 24px;
-  height: 16px;
-  display: inline-block;
+	margin: 0 12px 0 4px;
+	width: 24px;
+	height: 16px;
+	display: inline-block;
 }
 
 .closeIcon {
-  composes: marketplaceModalCloseIcon from global;
-  margin-left: 0;
-  margin-right: 5px;
-  margin-bottom: 3px;
+	composes: marketplaceModalCloseIcon from global;
+	margin-left: 0;
+	margin-right: 5px;
+	margin-bottom: 3px;
 }
 
 .iconCheckmark {
-  stroke: var(--colorSuccess);
-  display: inline-block;
-  margin: 12px 0 0 24px;
+	stroke: var(--colorSuccess);
+	display: inline-block;
+	margin: 12px 0 0 24px;
 }
 
 .iconCheckmarkHidden {
-  visibility: hidden;
-  display: inline-block;
-  margin: 0 0 0 24px;
+	visibility: hidden;
+	display: inline-block;
+	margin: 0 0 0 24px;
 }
 
 .expirationDate {
-  padding-left: 24px;
+	padding-left: 24px;
 }
 
 .expirationDateExpired {
-  padding-left: 24px;
-  color: var(--colorFail);
+	padding-left: 24px;
+	color: var(--colorFail);
 }
 
 .cardExpiredText {
-  composes: h4 from global;
-  color: var(--colorFail);
-  font-weight: var(--fontWeightSemiBold);
-  margin-top: 13px;
-  margin-bottom: 11px;
+	composes: h4 from global;
+	color: var(--colorFail);
+	font-weight: var(--fontWeightSemiBold);
+	margin-top: 13px;
+	margin-bottom: 11px;
 }
 
 .menu {
-  max-width: 100%;
-  height: auto;
+	max-width: 100%;
+	height: auto;
 }
 
 .menuLabel {
-  text-align: left;
-  font-weight: var(--fontWeightMedium);
-  padding: 0;
-  border-radius: 6px;
-  border: 1px solid #d8dce6;
-  transition: all 0.2s ease-out;
-  z-index: calc(var(--zIndexPopup) + 1);
-  position: relative;
+	text-align: left;
+	font-weight: var(--fontWeightMedium);
+	padding: 0;
+	border-radius: 6px;
+	border: 1px solid #d8dce6;
+	transition: all 0.2s ease-out;
+	z-index: calc(var(--zIndexPopup) + 1);
+	position: relative;
 
-  background-color: #fff;
-  box-shadow: 0 2px 3px 0 rgba(216, 220, 230, 0.7);
+	background-color: #fff;
+	box-shadow: 0 2px 3px 0 rgba(216, 220, 230, 0.7);
 
-  &:hover {
-    border: 1px solid #b8bfd1;
-    box-shadow: 0 2px 3px 0 rgba(216, 220, 230, 0.7);
-  }
+	&:hover {
+		border: 1px solid #b8bfd1;
+		box-shadow: 0 2px 3px 0 rgba(216, 220, 230, 0.7);
+	}
 
-  &:focus {
-    outline: none;
-    box-shadow: none;
-    background-color: var(--colorWhite);
-    border: 1px solid #d8dce6;
-    text-decoration: none;
-    border-radius: 6px 6px 0px 0px;
-  }
+	&:focus {
+		outline: none;
+		box-shadow: none;
+		background-color: var(--colorWhite);
+		border: 1px solid #d8dce6;
+		text-decoration: none;
+		border-radius: 6px 6px 0px 0px;
+	}
 }
 
 .menuLabelWrapper,
 .menuLabelWrapperExpired {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: nowrap;
-  padding: 6px 24px 6px 10px;
-  background-image: url("data:image/svg+xml,%3Csvg width='10' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232D4053' stroke='%232D4053' stroke-width='.5' fill-rule='evenodd'%3E%3Cpath d='M4.687 15.315a.443.443 0 0 0 .626 0l3.557-3.556a.446.446 0 0 0-.629-.629L5 14.37l-3.241-3.24a.445.445 0 0 0-.629.63l3.557 3.553v.002ZM5.313 1.13a.443.443 0 0 0-.626 0L1.13 4.685a.446.446 0 0 0 .629.63L5 2.074l3.241 3.24a.445.445 0 0 0 .629-.629L5.313 1.131V1.13Z'/%3E%3C/g%3E%3C/svg%3E");
-  background-position: center right 12px;
-  background-size: 8px 14px;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: nowrap;
+	padding: 6px 24px 6px 10px;
+	background-image: url("data:image/svg+xml,%3Csvg width='10' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232D4053' stroke='%232D4053' stroke-width='.5' fill-rule='evenodd'%3E%3Cpath d='M4.687 15.315a.443.443 0 0 0 .626 0l3.557-3.556a.446.446 0 0 0-.629-.629L5 14.37l-3.241-3.24a.445.445 0 0 0-.629.63l3.557 3.553v.002ZM5.313 1.13a.443.443 0 0 0-.626 0L1.13 4.685a.446.446 0 0 0 .629.63L5 2.074l3.241 3.24a.445.445 0 0 0 .629-.629L5.313 1.131V1.13Z'/%3E%3C/g%3E%3C/svg%3E");
+	background-position: center right 12px;
+	background-size: 8px 14px;
 
-  @media (--viewportMedium) {
-    padding: 11px 24px 11px 12px;
-    background-position: center right 16px;
-    background-size: 10px 16px;
-  }
+	@media (--viewportMedium) {
+		padding: 11px 24px 11px 12px;
+		background-position: center right 16px;
+		background-size: 10px 16px;
+	}
 }
 
 .menuLabelWrapperExpired {
-  border: var(--borderErrorField);
+	border: var(--borderErrorField);
 }
 
 .menuContent {
-  width: 100% !important; /* To override inline style width which causes an overflow bug in mobile */
-  position: absolute;
-  z-index: var(--zIndexPopup);
+	width: 100% !important; /* To override inline style width which causes an overflow bug in mobile */
+	position: absolute;
+	z-index: var(--zIndexPopup);
 
-  background-color: var(--colorWhite);
-  box-shadow: var(--boxShadowFilterButton);
-  border-radius: 6px;
-  border: 1px solid var(--colorGrey100);
+	background-color: var(--colorWhite);
+	box-shadow: var(--boxShadowFilterButton);
+	border-radius: 6px;
+	border: 1px solid var(--colorGrey100);
 
-  transition: all 0.15s ease-out;
+	transition: all 0.15s ease-out;
 
-  /* When the dropdown is open, we need to hack the box-shadow's position
+	/* When the dropdown is open, we need to hack the box-shadow's position
     to fit the whole dropdown menu component with padding-top
 
     MenuLabel height 56px + original padding-top 7px results to 63px
   */
-  padding: 63px 0 15px 0;
-  top: 0px;
+	padding: 63px 0 15px 0;
+	top: 0px;
 }
 
 .menuItem {
-  color: var(--colorGrey700);
-  &:hover {
-    background-color: #f2f2f2;
-  }
+	color: var(--colorGrey700);
+	&:hover {
+		background-color: #f2f2f2;
+	}
 }
 
 .menuText,
 .menuTextReplaceCard {
-  composes: marketplaceMessageFontStyles from global;
-  padding: 12px 8px;
-  color: var(--colorGrey700);
-  text-align: left;
-  font-weight: var(--fontWeightMedium);
-  width: 80%;
+	composes: marketplaceMessageFontStyles from global;
+	padding: 12px 8px;
+	color: var(--colorGrey700);
+	text-align: left;
+	font-weight: var(--fontWeightMedium);
+	width: 80%;
 
-  &:hover {
-    text-decoration: none;
-  }
+	&:hover {
+		text-decoration: none;
+	}
 
-  &:focus {
-    outline: 0;
-    background-color: #f2f2f2;
-  }
+	&:focus {
+		outline: 0;
+		background-color: #f2f2f2;
+	}
 }
 
 .menuTextReplaceCard svg {
-  position: relative;
-  top: -2px;
-  width: 22px;
-  margin: 0 10px 0 4px;
+	position: relative;
+	top: -2px;
+	width: 22px;
+	margin: 0 10px 0 4px;
 }
 
 .menuDivider {
-  composes: h5 from global;
-  color: var(--colorGrey300);
-  padding: 14px 24px 2px 24px;
-  margin: 0;
+	composes: h5 from global;
+	color: var(--colorGrey300);
+	padding: 14px 24px 2px 24px;
+	margin: 0;
 }
 
 .savedPaymentMethodDelete {
-  composes: h4 from global;
-  color: var(--colorGrey300);
-  cursor: pointer;
-  margin-top: 14px;
-  margin-bottom: 10px;
+	composes: h4 from global;
+	color: var(--colorGrey300);
+	cursor: pointer;
+	margin-top: 14px;
+	margin-bottom: 10px;
 
-  &:hover {
-    color: var(--colorGrey700);
-  }
+	&:hover {
+		color: var(--colorGrey700);
+	}
 
-  &:focus {
-    outline: none;
-    color: var(--colorGrey700);
-  }
+	&:focus {
+		outline: none;
+		color: var(--colorGrey700);
+	}
 }
 
 .modalButtonsWrapper {
-  padding-top: 80px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: baseline;
+	padding-top: 80px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: baseline;
 }
 
 /* Title of the modal */
 .modalTitle {
-  composes: marketplaceModalTitleStyles from global;
-  padding-top: 36px;
+	composes: marketplaceModalTitleStyles from global;
+	padding-top: 36px;
 }
 
 /* Paragraph for the Modal */
 .modalMessage {
-  composes: marketplaceModalParagraphStyles from global;
-  min-height: 200px;
+	composes: marketplaceModalParagraphStyles from global;
+	min-height: 200px;
 }
 
 .cancelCardDelete {
-  color: var(--colorGrey300);
-  cursor: pointer;
-  width: 50%;
-  text-align: right;
-  padding-right: 64px;
+	color: var(--colorGrey300);
+	cursor: pointer;
+	width: 50%;
+	text-align: right;
+	padding-right: 64px;
 
-  &:hover {
-    color: var(--colorGrey700);
-  }
+	&:hover {
+		color: var(--colorGrey700);
+	}
 }

@@ -1,100 +1,100 @@
 .root {
-  padding-top: 24px;
-  padding-bottom: 17px;
-  border-bottom: 1px solid var(--colorGrey100);
+	padding-top: 24px;
+	padding-bottom: 17px;
+	border-bottom: 1px solid var(--colorGrey100);
 }
 
 .filterLabel,
 .filterLabelSelected {
-  composes: h3 from global;
+	composes: h3 from global;
 
-  /* Baseline adjustment for label text */
-  margin-top: 0;
-  margin-bottom: 12px;
-  padding: 4px 0 2px 0;
+	/* Baseline adjustment for label text */
+	margin-top: 0;
+	margin-bottom: 12px;
+	padding: 4px 0 2px 0;
 }
 
 .filterLabel {
-  color: var(--colorBlack);
+	color: var(--colorBlack);
 }
 
 .filterLabelSelected {
-  color: var(--marketplaceColor);
+	color: var(--marketplaceColor);
 }
 
 .labelButton {
-  /* Override button styles */
-  outline: none;
-  text-align: left;
-  border: none;
-  padding: 0;
-  cursor: pointer;
+	/* Override button styles */
+	outline: none;
+	text-align: left;
+	border: none;
+	padding: 0;
+	cursor: pointer;
 }
 
 .optionsContainerOpen {
-  height: auto;
-  padding-bottom: 30px;
+	height: auto;
+	padding-bottom: 30px;
 }
 
 .optionsContainerClosed {
-  height: 0;
-  overflow: hidden;
+	height: 0;
+	overflow: hidden;
 }
 
 .optionBorder,
 .optionBorderSelected {
-  position: absolute;
-  height: calc(100% - 12px);
-  top: 4px;
-  left: -24px;
-  transition: width var(--transitionStyleButton);
+	position: absolute;
+	height: calc(100% - 12px);
+	top: 4px;
+	left: -24px;
+	transition: width var(--transitionStyleButton);
 }
 
 /* left animated "border" like hover element */
 .optionBorder {
-  width: 0;
-  background-color: var(--colorBlack);
+	width: 0;
+	background-color: var(--colorBlack);
 }
 
 /* left static border for selected element */
 .optionBorderSelected {
-  width: 8px;
-  background-color: var(--colorBlack);
+	width: 8px;
+	background-color: var(--colorBlack);
 }
 
 .option {
-  composes: h4 from global;
-  font-weight: var(--fontWeightMedium);
-  font-size: 18px;
-  color: var(--colorGrey700);
+	composes: h4 from global;
+	font-weight: var(--fontWeightMedium);
+	font-size: 18px;
+	color: var(--colorGrey700);
 
-  /* Layout */
-  display: block;
-  position: relative;
-  margin: 0;
-  padding: 4px 0 8px 20px;
+	/* Layout */
+	display: block;
+	position: relative;
+	margin: 0;
+	padding: 4px 0 8px 20px;
 
-  /* Override button styles */
-  outline: none;
-  border: none;
-  cursor: pointer;
+	/* Override button styles */
+	outline: none;
+	border: none;
+	cursor: pointer;
 
-  &:focus,
-  &:hover {
-    color: var(--colorBlack);
-  }
+	&:focus,
+	&:hover {
+		color: var(--colorBlack);
+	}
 
-  &:hover .menuItemBorder {
-    width: 6px;
-  }
+	&:hover .menuItemBorder {
+		width: 6px;
+	}
 
-  &:disabled {
-    color: var(--colorGrey300);
-    cursor: default;
-  }
+	&:disabled {
+		color: var(--colorGrey300);
+		cursor: default;
+	}
 }
 
 .optionSelected {
-  composes: option;
-  color: var(--colorBlack);
+	composes: option;
+	color: var(--colorBlack);
 }

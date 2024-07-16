@@ -1,2 +1,2 @@
-import BlockFooter from './BlockFooter';
+import BlockFooter from "./BlockFooter";
 export default BlockFooter;

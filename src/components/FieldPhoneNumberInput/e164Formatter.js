@@ -17,7 +17,7 @@ const hasLeadingPlus = str => str.match(/^\+/g);
  * @param {String} str
  * @returns string that contains only numbers
  */
-const pickOnlyDigits = str => str.replace(/[^\d]/g, '');
+const pickOnlyDigits = str => str.replace(/[^\d]/g, "");
 
 /**
  * This picks only correct characters for e.164 formatted phone numbers if the phoneNumber starts with a '+' character.
@@ -27,18 +27,18 @@ const pickOnlyDigits = str => str.replace(/[^\d]/g, '');
  * @returns formatted E.164 phone number or a string that has not been formatted at all.
  */
 const pickValidCharsForE164 = phoneNumber => {
-  const number = phoneNumber || '';
-  const startsWithPlus = !!hasLeadingPlus(number);
-  const digitsOnly = pickOnlyDigits(number);
-  // Digits must start with 1-9 and there can't be more than 15 digits altogether in E.164
-  const noLeadingZeroDigits =
-    digitsOnly.length > 0 && digitsOnly.charAt(0) === '0' ? digitsOnly.slice(1) : digitsOnly;
+	const number = phoneNumber || "";
+	const startsWithPlus = !!hasLeadingPlus(number);
+	const digitsOnly = pickOnlyDigits(number);
+	// Digits must start with 1-9 and there can't be more than 15 digits altogether in E.164
+	const noLeadingZeroDigits =
+		digitsOnly.length > 0 && digitsOnly.charAt(0) === "0" ? digitsOnly.slice(1) : digitsOnly;
 
-  return startsWithPlus && noLeadingZeroDigits.length > 15
-    ? `+${noLeadingZeroDigits.slice(0, 15)}`
-    : startsWithPlus
-    ? `+${noLeadingZeroDigits}`
-    : number;
+	return startsWithPlus && noLeadingZeroDigits.length > 15
+		? `+${noLeadingZeroDigits.slice(0, 15)}`
+		: startsWithPlus
+		? `+${noLeadingZeroDigits}`
+		: number;
 };
 
 /**
@@ -49,11 +49,11 @@ const pickValidCharsForE164 = phoneNumber => {
  * +123 55 1234567, which is formatted as +123551234567
  */
 export const format = value => {
-  if (!value) {
-    return '';
-  }
+	if (!value) {
+		return "";
+	}
 
-  return pickValidCharsForE164(value);
+	return pickValidCharsForE164(value);
 };
 
 /**
@@ -61,5 +61,5 @@ export const format = value => {
  * This is executed, when user manually types or copy-pastes a phone number to the input field.
  */
 export const parse = value => {
-  return pickValidCharsForE164(value);
+	return pickValidCharsForE164(value);
 };

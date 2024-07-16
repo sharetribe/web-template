@@ -1,48 +1,48 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .ratingFieldSet {
-  border: none;
-  padding: 0;
-  margin: 0;
+	border: none;
+	padding: 0;
+	margin: 0;
 
-  & legend {
-    font-weight: var(--fontWeightSemiBold);
-    font-size: 18px;
-    line-height: 24px;
-    color: var(--colorGrey300);
+	& legend {
+		font-weight: var(--fontWeightSemiBold);
+		font-size: 18px;
+		line-height: 24px;
+		color: var(--colorGrey300);
 
-    /* margin-top + n * line-height + margin-bottom => x * 6px */
-    margin-top: 16px;
-    margin-bottom: 14px;
+		/* margin-top + n * line-height + margin-bottom => x * 6px */
+		margin-top: 16px;
+		margin-bottom: 14px;
 
-    @media (--viewportMedium) {
-      /* margin-top + n * line-height + margin-bottom => x * 8px */
-      margin-top: 16px;
-      margin-bottom: 16px;
-    }
-  }
+		@media (--viewportMedium) {
+			/* margin-top + n * line-height + margin-bottom => x * 8px */
+			margin-top: 16px;
+			margin-bottom: 16px;
+		}
+	}
 }
 
 /* fieldset can't use flexbox hence this wrapper exists */
 .rating {
-  display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-end;
-  margin-top: 16px;
+	display: flex;
+	flex-direction: row-reverse;
+	justify-content: flex-end;
+	margin-top: 16px;
 }
 
 .rateInput {
-  display: none;
+	display: none;
 }
 
 .label {
-  width: 27px;
-  cursor: pointer;
+	width: 27px;
+	cursor: pointer;
 }
 
 .star {
-  fill: var(--colorGrey100);
-  transition: var(--transitionStyleButton);
+	fill: var(--colorGrey100);
+	transition: var(--transitionStyleButton);
 }
 
 /***** CSS Magic to Highlight Stars on Hover *****/
@@ -55,8 +55,8 @@
 .rating > .rateInput:checked ~ .label > .star,
 .rating > .label:hover > .star,
 .rating > .label:hover ~ .label > .star {
-  fill: var(--marketplaceColor);
-  transition: var(--transitionStyleButton);
+	fill: var(--marketplaceColor);
+	transition: var(--transitionStyleButton);
 }
 
 /* Darken hovered star when changing rating i.e it already is active */
@@ -67,5 +67,5 @@
 .rating > .rateInput:checked ~ .label:hover > .star,
 .rating > .label:hover ~ .rateInput:checked ~ .label > .star,
 .rating > .rateInput:checked ~ .label:hover ~ .label > .star {
-  fill: var(--marketplaceColorDark);
+	fill: var(--marketplaceColorDark);
 }

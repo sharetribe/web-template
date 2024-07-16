@@ -1,11 +1,11 @@
 .strokeMarketplaceColor {
-  stroke: var(--marketplaceColor);
+	stroke: var(--marketplaceColor);
 }
 
 .fillSuccessColor {
-  fill: var(--colorSuccess);
+	fill: var(--colorSuccess);
 }
 
 .strokeLightColor {
-  stroke: var(--colorWhite);
+	stroke: var(--colorWhite);
 }

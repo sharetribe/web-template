@@ -1,76 +1,76 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .root {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
 }
 
 .loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 16px;
+	flex-grow: 1;
 }
 
 .error {
-  composes: loading;
-  color: var(--colorFail);
+	composes: loading;
+	color: var(--colorFail);
 }
 
 .tabContent {
-  display: none;
+	display: none;
 }
 
 .tabContentVisible {
-  display: block;
+	display: block;
 }
 
 .footer {
-  display: none;
+	display: none;
 
-  @media (--viewportLarge) {
-    display: block;
-  }
+	@media (--viewportLarge) {
+		display: block;
+	}
 }
 
 /* OrderBreakdown subcomponent */
 .breakdown {
-  margin: 14px 24px 0 24px;
-  padding: 1px 0 5px 0;
+	margin: 14px 24px 0 24px;
+	padding: 1px 0 5px 0;
 
-  @media (--viewportMedium) {
-    margin: 16px 24px 0 24px;
-    padding: 3px 0 5px 0;
-  }
-  @media (--viewportLarge) {
-    margin: 0px 48px 47px 48px;
-    padding: 6px 0 2px 0;
-  }
+	@media (--viewportMedium) {
+		margin: 16px 24px 0 24px;
+		padding: 3px 0 5px 0;
+	}
+	@media (--viewportLarge) {
+		margin: 0px 48px 47px 48px;
+		padding: 6px 0 2px 0;
+	}
 }
 
 /* OrderPanel subcomponent */
 .orderPanel {
-  margin: 16px 48px 48px 48px;
+	margin: 16px 48px 48px 48px;
 }
 
 .orderTitle {
-  /* Font */
-  color: var(--colorGrey700);
+	/* Font */
+	color: var(--colorGrey700);
 
-  margin-top: 0;
-  margin-bottom: 1px;
+	margin-top: 0;
+	margin-bottom: 1px;
 }
 
 .orderPanelTitle {
-  /* Font */
-  font-weight: var(--fontWeightBold);
-  color: var(--colorGrey700);
+	/* Font */
+	font-weight: var(--fontWeightBold);
+	color: var(--colorGrey700);
 
-  /* Layout */
-  width: 100%;
-  margin-top: 0;
-  margin-bottom: 0;
+	/* Layout */
+	width: 100%;
+	margin-top: 0;
+	margin-bottom: 0;
 }

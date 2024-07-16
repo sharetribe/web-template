@@ -1,29 +1,29 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import appSettings from '../../config/settings';
+import appSettings from "../../config/settings";
 
-import { LoadableComponentErrorBoundaryPage } from './LoadableComponentErrorBoundaryPage';
+import { LoadableComponentErrorBoundaryPage } from "./LoadableComponentErrorBoundaryPage";
 
 // Use ErrorBoyndary to catch ChunkLoadError
 // https://reactjs.org/docs/error-boundaries.html
 class LoadableComponentErrorBoundary extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { error: null };
-  }
+	constructor(props) {
+		super(props);
+		this.state = { error: null };
+	}
 
-  static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
-    return { error };
-  }
+	static getDerivedStateFromError(error) {
+		// Update state so the next render will show the fallback UI.
+		return { error };
+	}
 
-  render() {
-    if (this.state.error && this.state.error.name === 'ChunkLoadError') {
-      return <LoadableComponentErrorBoundaryPage />;
-    }
+	render() {
+		if (this.state.error && this.state.error.name === "ChunkLoadError") {
+			return <LoadableComponentErrorBoundaryPage />;
+		}
 
-    return this.props.children;
-  }
+		return this.props.children;
+	}
 }
 
 // LoadableComponentErrorBoundary helps in situations
@@ -31,11 +31,11 @@ class LoadableComponentErrorBoundary extends Component {
 // long-living client app tries to fetch code chunks that don't exist anymore.
 // Note: in development mode with Hot Module Reloading (HMR) in use, this causes error loops.
 const UseLoadableErrorBoundaryOnlyInProdutionMode = props => {
-  const { children } = props;
-  return appSettings.dev ? (
-    children
-  ) : (
-    <LoadableComponentErrorBoundary>{children}</LoadableComponentErrorBoundary>
-  );
+	const { children } = props;
+	return appSettings.dev ? (
+		children
+	) : (
+		<LoadableComponentErrorBoundary>{children}</LoadableComponentErrorBoundary>
+	);
 };
 export default UseLoadableErrorBoundaryOnlyInProdutionMode;

@@ -1,14 +1,14 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .root {
 }
 
 .submitButton {
-  padding: 0 24px;
-  margin-top: 24px;
+	padding: 0 24px;
+	margin-top: 24px;
 
-  @media (--viewportMedium) {
-    padding: 0;
-    margin-top: 72px;
-  }
+	@media (--viewportMedium) {
+		padding: 0;
+		margin-top: 72px;
+	}
 }

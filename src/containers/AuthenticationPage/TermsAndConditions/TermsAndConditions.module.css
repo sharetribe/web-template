@@ -1,28 +1,28 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .root {
-  composes: marketplaceModalBottomWrapperText from global;
-  padding-bottom: 6px;
+	composes: marketplaceModalBottomWrapperText from global;
+	padding-bottom: 6px;
 
-  @media (--viewportMedium) {
-    padding-bottom: 8px;
-  }
+	@media (--viewportMedium) {
+		padding-bottom: 8px;
+	}
 }
 
 .finePrint {
-  composes: marketplaceModalHelperLink from global;
-  padding: 3px 0 5px 0;
-  text-align: left;
+	composes: marketplaceModalHelperLink from global;
+	padding: 3px 0 5px 0;
+	text-align: left;
 }
 
 .privacyLink,
 .termsLink {
-  composes: marketplaceModalHelperLink from global;
-  color: var(--marketplaceColor);
+	composes: marketplaceModalHelperLink from global;
+	color: var(--marketplaceColor);
 
-  &:hover {
-    color: var(--marketplaceColorDark);
-    text-decoration: underline;
-    cursor: pointer;
-  }
+	&:hover {
+		color: var(--marketplaceColorDark);
+		text-decoration: underline;
+		cursor: pointer;
+	}
 }

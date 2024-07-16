@@ -1,2 +1,2 @@
-import EditListingAvailabilityExceptionForm from './EditListingAvailabilityExceptionForm';
+import EditListingAvailabilityExceptionForm from "./EditListingAvailabilityExceptionForm";
 export default EditListingAvailabilityExceptionForm;

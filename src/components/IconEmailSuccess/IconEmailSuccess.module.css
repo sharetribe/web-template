@@ -2,13 +2,13 @@
 }
 
 .marketplaceStroke {
-  stroke: var(--marketplaceColor);
+	stroke: var(--marketplaceColor);
 }
 
 .successFill {
-  fill: var(--colorSuccess);
+	fill: var(--colorSuccess);
 }
 
 .checkStroke {
-  stroke: var(--colorWhite);
+	stroke: var(--colorWhite);
 }

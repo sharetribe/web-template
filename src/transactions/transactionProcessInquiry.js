@@ -13,9 +13,9 @@
  */
 
 export const transitions = {
-  // A customer can initiate a transaction with an inquiry, and
-  // then transition that with a request.
-  INQUIRE_WITHOUT_PAYMENT: 'transition/inquire-without-payment',
+	// A customer can initiate a transaction with an inquiry, and
+	// then transition that with a request.
+	INQUIRE_WITHOUT_PAYMENT: "transition/inquire-without-payment",
 };
 
 /**
@@ -28,8 +28,8 @@ export const transitions = {
  *       in Marketplace API. Only last transitions are passed along transaction object.
  */
 export const states = {
-  INITIAL: 'initial',
-  FREE_INQUIRY: 'free-inquiry',
+	INITIAL: "initial",
+	FREE_INQUIRY: "free-inquiry",
 };
 
 /**
@@ -42,44 +42,44 @@ export const states = {
  *       https://xstate.js.org/docs/
  */
 export const graph = {
-  // id is defined only to support Xstate format.
-  // However if you have multiple transaction processes defined,
-  // it is best to keep them in sync with transaction process aliases.
-  id: 'default-inquiry/release-1',
+	// id is defined only to support Xstate format.
+	// However if you have multiple transaction processes defined,
+	// it is best to keep them in sync with transaction process aliases.
+	id: "default-inquiry/release-1",
 
-  // This 'initial' state is a starting point for new transaction
-  initial: states.INITIAL,
+	// This 'initial' state is a starting point for new transaction
+	initial: states.INITIAL,
 
-  // States
-  states: {
-    [states.INITIAL]: {
-      on: {
-        [transitions.INQUIRE_WITHOUT_PAYMENT]: states.FREE_INQUIRY,
-      },
-    },
-    [states.FREE_INQUIRY]: { type: 'final' },
-  },
+	// States
+	states: {
+		[states.INITIAL]: {
+			on: {
+				[transitions.INQUIRE_WITHOUT_PAYMENT]: states.FREE_INQUIRY,
+			},
+		},
+		[states.FREE_INQUIRY]: { type: "final" },
+	},
 };
 
 // Check if a transition is the kind that should be rendered
 // when showing transition history (e.g. ActivityFeed)
 // The first transition and most of the expiration transitions made by system are not relevant
 export const isRelevantPastTransition = transition => {
-  return [transitions.INQUIRE_WITHOUT_PAYMENT].includes(transition);
+	return [transitions.INQUIRE_WITHOUT_PAYMENT].includes(transition);
 };
 
 // Processes might be different on how reviews are handled.
 // Default processes use two-sided diamond shape, where either party can make the review first
 // NOTE: this functions is added just for the sake of consistency
 export const isCustomerReview = transition => {
-  return false;
+	return false;
 };
 
 // Processes might be different on how reviews are handled.
 // Default processes use two-sided diamond shape, where either party can make the review first
 // NOTE: this functions is added just for the sake of consistency
 export const isProviderReview = transition => {
-  return false;
+	return false;
 };
 
 // Check if the given transition is privileged.
@@ -90,20 +90,20 @@ export const isProviderReview = transition => {
 // enough.
 // NOTE: this functions is added just for the sake of consistency
 export const isPrivileged = transition => {
-  return false;
+	return false;
 };
 
 // Check when transaction is completed (booking over)
 // NOTE: this functions is added just for the sake of consistency
 export const isCompleted = transition => {
-  return false;
+	return false;
 };
 
 // Check when transaction is refunded (booking did not happen)
 // In these transitions action/stripe-refund-payment is called
 // NOTE: this functions is added just for the sake of consistency
 export const isRefunded = transition => {
-  return false;
+	return false;
 };
 
 // NOTE: this functions is added just for the sake of consistency

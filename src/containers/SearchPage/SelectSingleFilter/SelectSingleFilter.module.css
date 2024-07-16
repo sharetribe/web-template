@@ -1,8 +1,8 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .labelPlain {
 }
 
 .labelPlainSelected {
-  color: var(--marketplaceColor);
+	color: var(--marketplaceColor);
 }

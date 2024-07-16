@@ -1,67 +1,67 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 /* 404 page */
 
 .root {
-  /* Expand to the available space */
-  flex-grow: 1;
+	/* Expand to the available space */
+	flex-grow: 1;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .content {
-  max-width: 587px;
-  width: 80%;
-  margin-top: 60px;
-  margin-bottom: 60px;
+	max-width: 587px;
+	width: 80%;
+	margin-top: 60px;
+	margin-bottom: 60px;
 
-  @media (--viewportMedium) {
-    margin-top: 10vh;
-  }
+	@media (--viewportMedium) {
+		margin-top: 10vh;
+	}
 }
 
 .number {
-  composes: marketplaceHeroTitleFontStyles from global;
-  text-align: center;
-  color: var(--marketplaceColor);
-  margin: 1px 0 0 0;
+	composes: marketplaceHeroTitleFontStyles from global;
+	text-align: center;
+	color: var(--marketplaceColor);
+	margin: 1px 0 0 0;
 
-  @media (--viewportMedium) {
-    margin: 0;
-  }
+	@media (--viewportMedium) {
+		margin: 0;
+	}
 }
 
 .heading {
-  composes: marketplaceModalTitleStyles from global;
-  text-align: center;
-  margin-top: 16px;
+	composes: marketplaceModalTitleStyles from global;
+	text-align: center;
+	margin-top: 16px;
 
-  @media (--viewportMedium) {
-    margin-top: 22px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 22px;
+	}
 }
 
 .description {
-  text-align: center;
-  margin-bottom: 0;
+	text-align: center;
+	margin-bottom: 0;
 
-  @media (--viewportMedium) {
-    margin-top: 24px;
-    margin-bottom: 0;
-  }
+	@media (--viewportMedium) {
+		margin-top: 24px;
+		margin-bottom: 0;
+	}
 }
 
 .searchForm {
-  max-width: 408px;
-  margin: 62px auto 0 auto;
+	max-width: 408px;
+	margin: 62px auto 0 auto;
 
-  background-color: var(--colorWhite);
-  border-bottom: 4px solid var(--marketplaceColor);
-  box-shadow: var(--boxShadowNotFoundPageSearch);
+	background-color: var(--colorWhite);
+	border-bottom: 4px solid var(--marketplaceColor);
+	box-shadow: var(--boxShadowNotFoundPageSearch);
 
-  @media (--viewportMedium) {
-    margin-top: 64px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 64px;
+	}
 }

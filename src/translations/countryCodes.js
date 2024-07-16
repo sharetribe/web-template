@@ -253,15 +253,15 @@ const countryCodes = [
 ];
 
 const getCountryCodes = lang => {
-  // Add the lnew locale here so that the correct translations will be returned.
-  // If locale is unknown or the translation is missing, this will default to english coutnry name.
-  const codes = countryCodes.map(c => {
-    const countryName = c[lang] ? c[lang] : c['en'];
-    const counryCode = c.code;
+	// Add the lnew locale here so that the correct translations will be returned.
+	// If locale is unknown or the translation is missing, this will default to english coutnry name.
+	const codes = countryCodes.map(c => {
+		const countryName = c[lang] ? c[lang] : c["en"];
+		const counryCode = c.code;
 
-    return { code: counryCode, name: countryName };
-  });
-  return codes;
+		return { code: counryCode, name: countryName };
+	});
+	return codes;
 };
 
 export default getCountryCodes;

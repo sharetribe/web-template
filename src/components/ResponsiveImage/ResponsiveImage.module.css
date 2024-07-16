@@ -1,36 +1,36 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .root {
-  width: 100%;
+	width: 100%;
 }
 
 .noImageContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background-color: var(--colorGrey100);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	background-color: var(--colorGrey100);
 }
 
 .noImageWrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 .noImageIcon {
-  padding-top: 24px;
-  box-sizing: content-box;
-  stroke: var(--colorGrey700);
+	padding-top: 24px;
+	box-sizing: content-box;
+	stroke: var(--colorGrey700);
 }
 
 .noImageText {
-  composes: h6 from global;
-  color: var(--colorGrey700);
-  padding-bottom: 24px;
+	composes: h6 from global;
+	color: var(--colorGrey700);
+	padding-bottom: 24px;
 
-  margin-bottom: 0;
-  @media (--viewportMedium) {
-    margin-bottom: 0;
-  }
+	margin-bottom: 0;
+	@media (--viewportMedium) {
+		margin-bottom: 0;
+	}
 }

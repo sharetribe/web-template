@@ -1,27 +1,27 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 /* Dummy Topbar */
 
 .topbar {
-  /* Size */
-  width: 100%;
-  height: var(--topbarHeight);
+	/* Size */
+	width: 100%;
+	height: var(--topbarHeight);
 
-  /* Layout for child components */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	/* Layout for child components */
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-  /* fill */
-  background-color: var(--colorWhite);
+	/* fill */
+	background-color: var(--colorWhite);
 
-  /* shadows */
-  box-shadow: var(--boxShadow);
+	/* shadows */
+	box-shadow: var(--boxShadow);
 
-  @media (--viewportMedium) {
-    height: var(--topbarHeightDesktop);
-    justify-content: center;
-  }
+	@media (--viewportMedium) {
+		height: var(--topbarHeightDesktop);
+		justify-content: center;
+	}
 }
 
 /* /Dummy Topbar */
@@ -32,394 +32,394 @@
  * priceBreakdown is inside separate column (detailsContainerDesktop)
  */
 .contentContainer {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
 
-  @media (--viewportLarge) {
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 0 48px;
-  }
+	@media (--viewportLarge) {
+		flex-direction: row;
+		justify-content: center;
+		align-items: flex-start;
+		padding: 0 48px;
+	}
 }
 
 .orderFormContainer {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
 
-  @media (--viewportLarge) {
-    flex-grow: 0;
-    flex-basis: 519px;
-    margin-top: 73px;
-    margin-right: 132px;
-  }
+	@media (--viewportLarge) {
+		flex-grow: 0;
+		flex-basis: 519px;
+		margin-top: 73px;
+		margin-right: 132px;
+	}
 }
 
 .listingImageMobile {
-  position: relative;
-  background-color: var(--colorGrey100); /* Loading BG color */
+	position: relative;
+	background-color: var(--colorGrey100); /* Loading BG color */
 
-  @media (--viewportLarge) {
-    display: none;
-  }
+	@media (--viewportLarge) {
+		display: none;
+	}
 }
 
 .rootForImage {
-  /* Layout - image will take space defined by aspect ratio wrapper */
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
+	/* Layout - image will take space defined by aspect ratio wrapper */
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
 
-  @media (--viewportLarge) {
-    border-radius: 2px 2px 0 0;
-  }
+	@media (--viewportLarge) {
+		border-radius: 2px 2px 0 0;
+	}
 }
 
 .avatarWrapper {
-  /* Position (over the listing image)*/
-  margin-left: 24px;
-  margin-top: -31px;
+	/* Position (over the listing image)*/
+	margin-left: 24px;
+	margin-top: -31px;
 
-  /* Rendering context to the same lavel as listing image */
-  position: relative;
+	/* Rendering context to the same lavel as listing image */
+	position: relative;
 
-  /* Layout */
-  display: block;
+	/* Layout */
+	display: block;
 
-  @media (--viewportLarge) {
-    margin-left: 0;
-  }
+	@media (--viewportLarge) {
+		margin-left: 0;
+	}
 }
 
 .avatarMobile {
-  @media (--viewportLarge) {
-    display: none;
-  }
+	@media (--viewportLarge) {
+		display: none;
+	}
 }
 
 .headingContainer {
-  margin-top: 29px;
-  margin-bottom: 34px;
-  padding: 0 24px;
+	margin-top: 29px;
+	margin-bottom: 34px;
+	padding: 0 24px;
 
-  @media (--viewportMedium) {
-    margin-top: 27px;
-    margin-bottom: 30px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 27px;
+		margin-bottom: 30px;
+	}
 
-  @media (--viewportLarge) {
-    margin-top: 0px;
-    margin-bottom: 0px;
-    padding: 0;
-  }
+	@media (--viewportLarge) {
+		margin-top: 0px;
+		margin-bottom: 0px;
+		padding: 0;
+	}
 }
 
 .heading {
-  /* Layout */
-  width: 100%;
-  margin-top: 0;
-  margin-bottom: 7px;
+	/* Layout */
+	width: 100%;
+	margin-top: 0;
+	margin-bottom: 7px;
 
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 8px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 0;
+		margin-bottom: 8px;
+	}
 }
 
 .listingDetailsWrapper {
-  margin: 0 48px;
+	margin: 0 48px;
 }
 
 .detailsHeadingMobile {
-  @media (--viewportLarge) {
-    display: none;
-  }
+	@media (--viewportLarge) {
+		display: none;
+	}
 }
 
 .author {
-  width: 100%;
-  composes: h4 from global;
+	width: 100%;
+	composes: h4 from global;
 
-  /* Reset margins from font styles */
-  margin-top: 0;
-  margin-bottom: 0;
+	/* Reset margins from font styles */
+	margin-top: 0;
+	margin-bottom: 0;
 
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+	@media (--viewportMedium) {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
 }
 
 .priceBreakdownContainer {
-  padding: 0 24px;
-  margin-bottom: 37px;
+	padding: 0 24px;
+	margin-bottom: 37px;
 
-  @media (--viewportMedium) {
-    margin-bottom: 38px;
-  }
-  @media (--viewportLarge) {
-    /* we don't show price breakdown since it will be visible within 2nd column (detailsContainerDesktop) */
-    display: none;
-  }
+	@media (--viewportMedium) {
+		margin-bottom: 38px;
+	}
+	@media (--viewportLarge) {
+		/* we don't show price breakdown since it will be visible within 2nd column (detailsContainerDesktop) */
+		display: none;
+	}
 }
 
 .priceBreakdownTitle {
-  /* Font */
-  color: var(--colorGrey300);
+	/* Font */
+	color: var(--colorGrey300);
 
-  margin-top: 0;
-  margin-bottom: 14px;
+	margin-top: 0;
+	margin-bottom: 14px;
 
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 18px;
-  }
-  @media (--viewportLarge) {
-    margin-top: 0;
-    margin-bottom: 14px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 0;
+		margin-bottom: 18px;
+	}
+	@media (--viewportLarge) {
+		margin-top: 0;
+		margin-bottom: 14px;
+	}
 }
 
 .paymentContainer {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 0 24px;
-  margin-bottom: 35px;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	padding: 0 24px;
+	margin-bottom: 35px;
 
-  @media (--viewportMedium) {
-    margin-top: 2px;
-    margin-bottom: 120px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 2px;
+		margin-bottom: 120px;
+	}
 
-  @media (--viewportLarge) {
-    margin-top: 0;
-    padding: 0;
-  }
+	@media (--viewportLarge) {
+		margin-top: 0;
+		padding: 0;
+	}
 }
 
 .orderError,
 .notFoundError {
-  margin: 11px 0 12px 0;
+	margin: 11px 0 12px 0;
 
-  @media (--viewportMedium) {
-    margin: 10px 0 12px 0;
-  }
+	@media (--viewportMedium) {
+		margin: 10px 0 12px 0;
+	}
 }
 .orderError {
-  color: var(--colorFail);
+	color: var(--colorFail);
 }
 .notFoundError {
-  color: var(--colorAttention);
+	color: var(--colorAttention);
 }
 
 .speculateError {
-  color: var(--colorFail);
-  margin: 19px 0 1px 0;
+	color: var(--colorFail);
+	margin: 19px 0 1px 0;
 
-  @media (--viewportLarge) {
-    margin: 28px 0 0 0;
-  }
+	@media (--viewportLarge) {
+		margin: 28px 0 0 0;
+	}
 }
 
 .paymentForm {
-  flex-grow: 1;
+	flex-grow: 1;
 }
 
 /* Details column is visible only on desktop */
 .detailsContainerDesktop {
-  display: none;
+	display: none;
 
-  @media (--viewportLarge) {
-    flex-shrink: 0;
-    display: block;
-    /* Dimensions */
-    width: 409px;
-    padding-bottom: 36px;
+	@media (--viewportLarge) {
+		flex-shrink: 0;
+		display: block;
+		/* Dimensions */
+		width: 409px;
+		padding-bottom: 36px;
 
-    /* Position */
-    margin: 56px 0 24px 0;
+		/* Position */
+		margin: 56px 0 24px 0;
 
-    /* Coloring */
-    background-color: var(--colorWhite);
-    border: 1px solid var(--colorGrey100);
-    border-radius: 2px;
-  }
+		/* Coloring */
+		background-color: var(--colorWhite);
+		border: 1px solid var(--colorGrey100);
+		border-radius: 2px;
+	}
 }
 
 .detailsAspectWrapper {
-  position: relative;
-  background-color: var(--colorGrey100); /* Loading BG color */
+	position: relative;
+	background-color: var(--colorGrey100); /* Loading BG color */
 }
 
 .detailsHeadings {
-  display: none;
+	display: none;
 
-  @media (--viewportLarge) {
-    display: block;
-    margin: 0;
-  }
+	@media (--viewportLarge) {
+		display: block;
+		margin: 0;
+	}
 }
 
 .detailsSubtitle {
-  composes: h5 from global;
+	composes: h5 from global;
 
-  /* Reset margins from font styles */
-  margin-top: 0;
-  margin-bottom: 0;
+	/* Reset margins from font styles */
+	margin-top: 0;
+	margin-bottom: 0;
 
-  @media (--viewportLarge) {
-    padding: 3px 0 5px 0;
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+	@media (--viewportLarge) {
+		padding: 3px 0 5px 0;
+		margin-top: 0;
+		margin-bottom: 0;
+	}
 }
 
 .orderBreakdownHeader {
-  @media (--viewportLarge) {
-    margin: 0 48px;
-  }
+	@media (--viewportLarge) {
+		margin: 0 48px;
+	}
 }
 .orderBreakdownTitle {
-  /* Font */
-  letter-spacing: 1px;
-  font-weight: var(--fontWeightMedium);
+	/* Font */
+	letter-spacing: 1px;
+	font-weight: var(--fontWeightMedium);
 
-  /* Layout spacing */
-  margin: 5px 24px 25px 24px;
+	/* Layout spacing */
+	margin: 5px 24px 25px 24px;
 
-  @media (--viewportLarge) {
-    padding: 6px 0 2px 0;
-    margin: 16px 0 8px 0;
-  }
+	@media (--viewportLarge) {
+		padding: 6px 0 2px 0;
+		margin: 16px 0 8px 0;
+	}
 }
 
 .totalDivider {
-  /* dimensions */
-  width: 100%;
-  height: 1px;
-  margin: 12px 0 5px 0;
+	/* dimensions */
+	width: 100%;
+	height: 1px;
+	margin: 12px 0 5px 0;
 
-  border: none;
-  background-color: var(--colorGrey100);
+	border: none;
+	background-color: var(--colorGrey100);
 
-  @media (--viewportMedium) {
-    margin: 7px 0 0 0;
-  }
+	@media (--viewportMedium) {
+		margin: 7px 0 0 0;
+	}
 }
 
 .orderBreakdown {
-  @media (--viewportLarge) {
-    padding-bottom: 20px;
-    margin: 0 48px;
-  }
+	@media (--viewportLarge) {
+		padding-bottom: 20px;
+		margin: 0 48px;
+	}
 }
 
 /* ChekcoutPageWithInquiryProcess */
 
 .section {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 40px;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 40px;
 }
 
 .sectionHeading {
-  composes: p from global;
-  font-weight: var(--fontWeightBold);
-  margin: 0 0 12px 0;
+	composes: p from global;
+	font-weight: var(--fontWeightBold);
+	margin: 0 0 12px 0;
 
-  padding-top: 4px;
-  padding-bottom: 2px;
+	padding-top: 4px;
+	padding-bottom: 2px;
 
-  @media (--viewportMedium) {
-    margin: 0 0 0 0;
-    padding-top: 5px;
-    padding-bottom: 3px;
-  }
+	@media (--viewportMedium) {
+		margin: 0 0 0 0;
+		padding-top: 5px;
+		padding-bottom: 3px;
+	}
 }
 
 .field {
-  margin: 25px 0 24px 0;
+	margin: 25px 0 24px 0;
 
-  @media (--viewportMedium) {
-    margin: 22px 0 24px 0;
-  }
+	@media (--viewportMedium) {
+		margin: 22px 0 24px 0;
+	}
 }
 
 .fieldInquiryMessage {
-  margin: 0 0 24px 0;
+	margin: 0 0 24px 0;
 
-  @media (--viewportMedium) {
-    margin: 16px 0 24px 0;
-  }
+	@media (--viewportMedium) {
+		margin: 16px 0 24px 0;
+	}
 }
 
 .error {
-  color: var(--colorFail);
-  margin-top: 0;
+	color: var(--colorFail);
+	margin-top: 0;
 
-  @media (--viewportMedium) {
-    margin-top: 0;
-  }
+	@media (--viewportMedium) {
+		margin-top: 0;
+	}
 }
 
 .priceContainer {
-  /* Layout */
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  gap: 4px;
-  flex-shrink: 0;
-  margin-right: 22px;
-  padding: 3px 0;
+	/* Layout */
+	display: flex;
+	flex-direction: row;
+	align-items: baseline;
+	gap: 4px;
+	flex-shrink: 0;
+	margin-right: 22px;
+	padding: 3px 0;
 
-  @media (--viewportMedium) {
-    padding: 4px 0;
-  }
+	@media (--viewportMedium) {
+		padding: 4px 0;
+	}
 
-  @media (--viewportLarge) {
-    flex-direction: row;
-    margin-right: unset;
-    padding: 0;
-  }
+	@media (--viewportLarge) {
+		flex-direction: row;
+		margin-right: unset;
+		padding: 0;
+	}
 }
 .price {
-  composes: p from global;
-  font-weight: var(--fontWeightBold);
+	composes: p from global;
+	font-weight: var(--fontWeightBold);
 
-  margin: 0 0 0 24px;
+	margin: 0 0 0 24px;
 
-  @media (--viewportMedium) {
-    margin: 0;
-    padding: 0;
-  }
+	@media (--viewportMedium) {
+		margin: 0;
+		padding: 0;
+	}
 }
 
 .perUnit {
-  /* Font */
-  composes: p from global;
-  font-weight: var(--fontWeightBold);
+	/* Font */
+	composes: p from global;
+	font-weight: var(--fontWeightBold);
 
-  padding: 0;
+	padding: 0;
 
-  margin-top: 0;
-  margin-bottom: 0;
+	margin-top: 0;
+	margin-bottom: 0;
 
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+	@media (--viewportMedium) {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
 
-  @media (--viewportLarge) {
-  }
+	@media (--viewportLarge) {
+	}
 }
 
 .inquiryPrice {
-  composes: p from global;
-  font-weight: var(--fontWeightBold);
+	composes: p from global;
+	font-weight: var(--fontWeightBold);
 }

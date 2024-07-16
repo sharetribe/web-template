@@ -1,32 +1,32 @@
 // ================ Action types ================ //
 
-export const LOCATION_CHANGED = 'app/routing/LOCATION_CHANGED';
+export const LOCATION_CHANGED = "app/routing/LOCATION_CHANGED";
 
 // ================ Reducer ================ //
 
 const initialState = {
-  currentLocation: null,
-  currentCanonicalPath: null,
+	currentLocation: null,
+	currentCanonicalPath: null,
 };
 
 export default function routingReducer(state = initialState, action = {}) {
-  const { type, payload } = action;
-  switch (type) {
-    case LOCATION_CHANGED:
-      return {
-        ...state,
-        currentLocation: payload.location,
-        currentCanonicalPath: payload.canonicalPath,
-      };
+	const { type, payload } = action;
+	switch (type) {
+		case LOCATION_CHANGED:
+			return {
+				...state,
+				currentLocation: payload.location,
+				currentCanonicalPath: payload.canonicalPath,
+			};
 
-    default:
-      return state;
-  }
+		default:
+			return state;
+	}
 }
 
 // ================ Action creators ================ //
 
 export const locationChanged = (location, canonicalPath) => ({
-  type: LOCATION_CHANGED,
-  payload: { location, canonicalPath },
+	type: LOCATION_CHANGED,
+	payload: { location, canonicalPath },
 });

@@ -1,2 +1,2 @@
-import FieldTimeZoneSelect from './FieldTimeZoneSelect';
+import FieldTimeZoneSelect from "./FieldTimeZoneSelect";
 export default FieldTimeZoneSelect;

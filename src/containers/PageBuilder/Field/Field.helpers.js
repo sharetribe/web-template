@@ -1,11 +1,11 @@
-import { sanitizeUrl } from '../../../util/sanitize';
-import { supportedPlatforms } from '../Primitives/Link/SocialMediaLink';
+import { sanitizeUrl } from "../../../util/sanitize";
+import { supportedPlatforms } from "../Primitives/Link/SocialMediaLink";
 
 /////////////////////////////
 // Pickers for valid props //
 /////////////////////////////
 
-export const hasContent = data => typeof data?.content === 'string' && data?.content.length > 0;
+export const hasContent = data => typeof data?.content === "string" && data?.content.length > 0;
 
 /**
  * Exposes "content" prop as children property, if "content" has type of string.
@@ -14,7 +14,7 @@ export const hasContent = data => typeof data?.content === 'string' && data?.con
  * @returns object containing content string as value for key: children.
  */
 export const exposeContentAsChildren = data => {
-  return hasContent(data) ? { children: data.content } : {};
+	return hasContent(data) ? { children: data.content } : {};
 };
 
 /**
@@ -33,43 +33,43 @@ export const exposeContentString = data => (hasContent(data) ? { content: data.c
  * @returns object containing children and href.
  */
 export const exposeLinkProps = data => {
-  const { content, href } = data;
-  const hasCorrectProps = typeof href === 'string' && href.length > 0;
-  // Sanitize the URL. See: src/utl/sanitize.js for more information.
-  const cleanUrl = hasCorrectProps ? sanitizeUrl(href) : null;
-  // If no content is given, use href.
-  const linkText = hasContent(data) ? content : cleanUrl;
-  return cleanUrl ? { children: linkText, href: cleanUrl } : {};
+	const { content, href } = data;
+	const hasCorrectProps = typeof href === "string" && href.length > 0;
+	// Sanitize the URL. See: src/utl/sanitize.js for more information.
+	const cleanUrl = hasCorrectProps ? sanitizeUrl(href) : null;
+	// If no content is given, use href.
+	const linkText = hasContent(data) ? content : cleanUrl;
+	return cleanUrl ? { children: linkText, href: cleanUrl } : {};
 };
 
 export const exposeSocialMediaProps = data => {
-  const { platform, url } = data;
-  const hasCorrectProps = typeof url === 'string' && url.length > 0;
-  const cleanUrl = hasCorrectProps ? sanitizeUrl(url) : null;
-  const validPlatform = supportedPlatforms.includes(platform) ? platform : null;
-  return cleanUrl ? { platform: validPlatform, href: cleanUrl } : {};
+	const { platform, url } = data;
+	const hasCorrectProps = typeof url === "string" && url.length > 0;
+	const cleanUrl = hasCorrectProps ? sanitizeUrl(url) : null;
+	const validPlatform = supportedPlatforms.includes(platform) ? platform : null;
+	return cleanUrl ? { platform: validPlatform, href: cleanUrl } : {};
 };
 
 const getValidSanitizedImage = image => {
-  const { id, type, attributes } = image || {};
-  const variantEntries = Object.entries(attributes?.variants || {});
-  const variants = variantEntries.reduce((validVariants, entry) => {
-    const [key, value] = entry;
-    const { url, width, height } = value || {};
+	const { id, type, attributes } = image || {};
+	const variantEntries = Object.entries(attributes?.variants || {});
+	const variants = variantEntries.reduce((validVariants, entry) => {
+		const [key, value] = entry;
+		const { url, width, height } = value || {};
 
-    const isValid = typeof width === 'number' && typeof height === 'number';
-    return isValid
-      ? {
-          ...validVariants,
-          [key]: { url: sanitizeUrl(url), width, height },
-        }
-      : validVariants;
-  }, {});
+		const isValid = typeof width === "number" && typeof height === "number";
+		return isValid
+			? {
+					...validVariants,
+					[key]: { url: sanitizeUrl(url), width, height },
+			  }
+			: validVariants;
+	}, {});
 
-  const isValidImage = Object.keys(variants).length > 0;
-  const sanitizedImage = { id, type, attributes: { ...attributes, variants } };
+	const isValidImage = Object.keys(variants).length > 0;
+	const sanitizedImage = { id, type, attributes: { ...attributes, variants } };
 
-  return isValidImage ? sanitizedImage : null;
+	return isValidImage ? sanitizedImage : null;
 };
 
 /**
@@ -98,18 +98,18 @@ const getValidSanitizedImage = image => {
  * @returns object containing alt string and variants.
  */
 export const exposeImageProps = data => {
-  // Note: data includes also "aspectRatio" key (and "fieldType"),
-  //       but image refs can rely on actual image variants
-  const { alt, image } = data;
-  const { type } = image || {};
+	// Note: data includes also "aspectRatio" key (and "fieldType"),
+	//       but image refs can rely on actual image variants
+	const { alt, image } = data;
+	const { type } = image || {};
 
-  if (type !== 'imageAsset') {
-    return {};
-  }
+	if (type !== "imageAsset") {
+		return {};
+	}
 
-  const alternativeText = typeof alt === 'string' ? alt : '🖼️';
-  const sanitizedImage = getValidSanitizedImage(image);
-  return sanitizedImage ? { alt: alternativeText, image: sanitizedImage } : {};
+	const alternativeText = typeof alt === "string" ? alt : "🖼️";
+	const sanitizedImage = getValidSanitizedImage(image);
+	return sanitizedImage ? { alt: alternativeText, image: sanitizedImage } : {};
 };
 
 /**
@@ -119,9 +119,9 @@ export const exposeImageProps = data => {
  * @returns Object containing valid color prop.
  */
 const exposeColorValue = color => {
-  const re = new RegExp('^#([0-9a-f]{3}){1,2}$', 'i');
-  const isValidColor = typeof color === 'string' && re.test(color);
-  return isValidColor ? color : null;
+	const re = new RegExp("^#([0-9a-f]{3}){1,2}$", "i");
+	const isValidColor = typeof color === "string" && re.test(color);
+	return isValidColor ? color : null;
 };
 
 /**
@@ -133,45 +133,45 @@ const exposeColorValue = color => {
  * @returns object containing valid data.
  */
 export const exposeCustomAppearanceProps = data => {
-  const { backgroundImage, backgroundImageOverlay, backgroundColor, textColor, alt } = data;
-  const { type } = backgroundImage || {};
+	const { backgroundImage, backgroundImageOverlay, backgroundColor, textColor, alt } = data;
+	const { type } = backgroundImage || {};
 
-  if (!!type && type !== 'imageAsset') {
-    return {};
-  }
+	if (!!type && type !== "imageAsset") {
+		return {};
+	}
 
-  const validBackgroundColor = exposeColorValue(backgroundColor);
-  const isValidBackgroundColor = !!validBackgroundColor;
-  const backgroundColorMaybe = isValidBackgroundColor
-    ? { backgroundColor: validBackgroundColor }
-    : {};
-  const isValidTextColor = ['light', 'dark'].includes(textColor);
-  const textColorMaybe = isValidTextColor ? { textColor } : {};
+	const validBackgroundColor = exposeColorValue(backgroundColor);
+	const isValidBackgroundColor = !!validBackgroundColor;
+	const backgroundColorMaybe = isValidBackgroundColor
+		? { backgroundColor: validBackgroundColor }
+		: {};
+	const isValidTextColor = ["light", "dark"].includes(textColor);
+	const textColorMaybe = isValidTextColor ? { textColor } : {};
 
-  const sanitizedImage = getValidSanitizedImage(backgroundImage);
-  const backgroundImageMaybe = sanitizedImage ? { backgroundImage: sanitizedImage, alt } : {};
+	const sanitizedImage = getValidSanitizedImage(backgroundImage);
+	const backgroundImageMaybe = sanitizedImage ? { backgroundImage: sanitizedImage, alt } : {};
 
-  // On top of the background image there could be an overlay that mixes in some color (e.g. black)
-  // with the given opacity.
-  // At this point this is used as a shader to add contrast between foreground text and background.
-  const { preset, color: overlayColor, opacity: overlayOpacity } = backgroundImageOverlay || {};
-  const hasBackgroundOverlay = typeof preset === 'string' && preset !== 'none';
-  const backgroundImageOverlayMaybe = hasBackgroundOverlay
-    ? {
-        backgroundImageOverlay: {
-          preset,
-          color: exposeColorValue(overlayColor),
-          opacity: typeof overlayOpacity === 'number' ? overlayOpacity : 1,
-        },
-      }
-    : {};
+	// On top of the background image there could be an overlay that mixes in some color (e.g. black)
+	// with the given opacity.
+	// At this point this is used as a shader to add contrast between foreground text and background.
+	const { preset, color: overlayColor, opacity: overlayOpacity } = backgroundImageOverlay || {};
+	const hasBackgroundOverlay = typeof preset === "string" && preset !== "none";
+	const backgroundImageOverlayMaybe = hasBackgroundOverlay
+		? {
+				backgroundImageOverlay: {
+					preset,
+					color: exposeColorValue(overlayColor),
+					opacity: typeof overlayOpacity === "number" ? overlayOpacity : 1,
+				},
+		  }
+		: {};
 
-  return {
-    ...backgroundImageMaybe,
-    ...backgroundColorMaybe,
-    ...backgroundImageOverlayMaybe,
-    ...textColorMaybe,
-  };
+	return {
+		...backgroundImageMaybe,
+		...backgroundColorMaybe,
+		...backgroundImageOverlayMaybe,
+		...textColorMaybe,
+	};
 };
 
 /**
@@ -182,44 +182,44 @@ export const exposeCustomAppearanceProps = data => {
  * @returns object containing children and href.
  */
 export const exposeYoutubeProps = data => {
-  const { youtubeVideoId, aspectRatio } = data;
-  const isString = str => typeof str === 'string' && str?.length > 0;
+	const { youtubeVideoId, aspectRatio } = data;
+	const isString = str => typeof str === "string" && str?.length > 0;
 
-  const hasYoutubeVideoId =
-    isString(youtubeVideoId) &&
-    youtubeVideoId.length < 12 &&
-    youtubeVideoId.match(/^[a-zA-Z0-9_-]+$/i);
-  const cleanYoutubeVideoId = hasYoutubeVideoId ? encodeURIComponent(youtubeVideoId) : null;
+	const hasYoutubeVideoId =
+		isString(youtubeVideoId) &&
+		youtubeVideoId.length < 12 &&
+		youtubeVideoId.match(/^[a-zA-Z0-9_-]+$/i);
+	const cleanYoutubeVideoId = hasYoutubeVideoId ? encodeURIComponent(youtubeVideoId) : null;
 
-  const hasAspectRatio = isString(aspectRatio) && aspectRatio.match(/^(\d+)\/(\d+)+$/);
-  const aspectRatioMaybe = hasAspectRatio ? { aspectRatio } : {};
+	const hasAspectRatio = isString(aspectRatio) && aspectRatio.match(/^(\d+)\/(\d+)+$/);
+	const aspectRatioMaybe = hasAspectRatio ? { aspectRatio } : {};
 
-  return cleanYoutubeVideoId
-    ? {
-        youtubeVideoId: cleanYoutubeVideoId,
-        ...aspectRatioMaybe,
-      }
-    : {};
+	return cleanYoutubeVideoId
+		? {
+				youtubeVideoId: cleanYoutubeVideoId,
+				...aspectRatioMaybe,
+		  }
+		: {};
 };
 
 export const exposeOpenGraphData = data => {
-  const { title, description, image } = data || {};
-  const { type } = image || {};
+	const { title, description, image } = data || {};
+	const { type } = image || {};
 
-  if (!!type && type !== 'imageAsset') {
-    return {};
-  }
+	if (!!type && type !== "imageAsset") {
+		return {};
+	}
 
-  const isString = content => typeof content === 'string' && content.length > 0;
-  const sanitizedImage = getValidSanitizedImage(image);
-  const image1200 = sanitizedImage?.attributes?.variants?.social1200;
-  const image600 = sanitizedImage?.attributes?.variants?.social600;
+	const isString = content => typeof content === "string" && content.length > 0;
+	const sanitizedImage = getValidSanitizedImage(image);
+	const image1200 = sanitizedImage?.attributes?.variants?.social1200;
+	const image600 = sanitizedImage?.attributes?.variants?.social600;
 
-  return {
-    title: isString(title) ? title : null,
-    description: isString(description) ? description : null,
-    // Open Graph can handle multiple images, so we return arrays for the sake of consistency
-    images1200: image1200 ? [image1200] : null,
-    images600: image600 ? [image600] : null,
-  };
+	return {
+		title: isString(title) ? title : null,
+		description: isString(description) ? description : null,
+		// Open Graph can handle multiple images, so we return arrays for the sake of consistency
+		images1200: image1200 ? [image1200] : null,
+		images600: image600 ? [image600] : null,
+	};
 };

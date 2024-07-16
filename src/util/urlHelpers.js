@@ -1,70 +1,70 @@
-import queryString from 'query-string';
-import { types as sdkTypes } from './sdkLoader';
+import queryString from "query-string";
+import { types as sdkTypes } from "./sdkLoader";
 
 const { LatLng, LatLngBounds } = sdkTypes;
 
-export const LISTING_PAGE_PENDING_APPROVAL_VARIANT = 'pending-approval';
-export const LISTING_PAGE_DRAFT_VARIANT = 'draft';
+export const LISTING_PAGE_PENDING_APPROVAL_VARIANT = "pending-approval";
+export const LISTING_PAGE_DRAFT_VARIANT = "draft";
 
-export const LISTING_PAGE_PARAM_TYPE_NEW = 'new';
-export const LISTING_PAGE_PARAM_TYPE_DRAFT = 'draft';
-export const LISTING_PAGE_PARAM_TYPE_EDIT = 'edit';
+export const LISTING_PAGE_PARAM_TYPE_NEW = "new";
+export const LISTING_PAGE_PARAM_TYPE_DRAFT = "draft";
+export const LISTING_PAGE_PARAM_TYPE_EDIT = "edit";
 export const LISTING_PAGE_PARAM_TYPES = [
-  LISTING_PAGE_PARAM_TYPE_NEW,
-  LISTING_PAGE_PARAM_TYPE_DRAFT,
-  LISTING_PAGE_PARAM_TYPE_EDIT,
+	LISTING_PAGE_PARAM_TYPE_NEW,
+	LISTING_PAGE_PARAM_TYPE_DRAFT,
+	LISTING_PAGE_PARAM_TYPE_EDIT,
 ];
 
 // Create slug from random texts
 // From Gist thread: https://gist.github.com/mathewbyrne/1280286
 export const createSlug = str => {
-  let text = str
-    .toString()
-    .toLowerCase()
-    .trim();
+	let text = str
+		.toString()
+		.toLowerCase()
+		.trim();
 
-  const sets = [
-    { to: 'a', from: 'ÀÁÂÃÄÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ' },
-    { to: 'c', from: 'ÇĆĈČ' },
-    { to: 'd', from: 'ÐĎĐÞ' },
-    { to: 'e', from: 'ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ' },
-    { to: 'g', from: 'ĜĞĢǴ' },
-    { to: 'h', from: 'ĤḦ' },
-    { to: 'i', from: 'ÌÍÎÏĨĪĮİỈỊ' },
-    { to: 'j', from: 'Ĵ' },
-    { to: 'ij', from: 'Ĳ' },
-    { to: 'k', from: 'Ķ' },
-    { to: 'l', from: 'ĹĻĽŁ' },
-    { to: 'm', from: 'Ḿ' },
-    { to: 'n', from: 'ÑŃŅŇ' },
-    { to: 'o', from: 'ÒÓÔÕÖØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ' },
-    { to: 'oe', from: 'Œ' },
-    { to: 'p', from: 'ṕ' },
-    { to: 'r', from: 'ŔŖŘ' },
-    { to: 's', from: 'ßŚŜŞŠ' },
-    { to: 't', from: 'ŢŤ' },
-    { to: 'u', from: 'ÙÚÛÜŨŪŬŮŰŲỤỦỨỪỬỮỰƯ' },
-    { to: 'w', from: 'ẂŴẀẄ' },
-    { to: 'x', from: 'ẍ' },
-    { to: 'y', from: 'ÝŶŸỲỴỶỸ' },
-    { to: 'z', from: 'ŹŻŽ' },
-    { to: '-', from: "·/_,:;'" },
-  ];
+	const sets = [
+		{ to: "a", from: "ÀÁÂÃÄÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ" },
+		{ to: "c", from: "ÇĆĈČ" },
+		{ to: "d", from: "ÐĎĐÞ" },
+		{ to: "e", from: "ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ" },
+		{ to: "g", from: "ĜĞĢǴ" },
+		{ to: "h", from: "ĤḦ" },
+		{ to: "i", from: "ÌÍÎÏĨĪĮİỈỊ" },
+		{ to: "j", from: "Ĵ" },
+		{ to: "ij", from: "Ĳ" },
+		{ to: "k", from: "Ķ" },
+		{ to: "l", from: "ĹĻĽŁ" },
+		{ to: "m", from: "Ḿ" },
+		{ to: "n", from: "ÑŃŅŇ" },
+		{ to: "o", from: "ÒÓÔÕÖØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ" },
+		{ to: "oe", from: "Œ" },
+		{ to: "p", from: "ṕ" },
+		{ to: "r", from: "ŔŖŘ" },
+		{ to: "s", from: "ßŚŜŞŠ" },
+		{ to: "t", from: "ŢŤ" },
+		{ to: "u", from: "ÙÚÛÜŨŪŬŮŰŲỤỦỨỪỬỮỰƯ" },
+		{ to: "w", from: "ẂŴẀẄ" },
+		{ to: "x", from: "ẍ" },
+		{ to: "y", from: "ÝŶŸỲỴỶỸ" },
+		{ to: "z", from: "ŹŻŽ" },
+		{ to: "-", from: "·/_,:;'" },
+	];
 
-  sets.forEach(set => {
-    text = text.replace(new RegExp(`[${set.from}]`, 'gi'), set.to);
-  });
+	sets.forEach(set => {
+		text = text.replace(new RegExp(`[${set.from}]`, "gi"), set.to);
+	});
 
-  const slug = encodeURIComponent(
-    text
-      .replace(/\s+/g, '-') // Replace spaces with -
-      .replace(/[^\w-]+/g, '') // Remove all non-word chars
-      .replace(/--+/g, '-') // Replace multiple - with single -
-      .replace(/^-+/, '') // Trim - from start of text
-      .replace(/-+$/, '') // Trim - from end of text
-  );
+	const slug = encodeURIComponent(
+		text
+			.replace(/\s+/g, "-") // Replace spaces with -
+			.replace(/[^\w-]+/g, "") // Remove all non-word chars
+			.replace(/--+/g, "-") // Replace multiple - with single -
+			.replace(/^-+/, "") // Trim - from start of text
+			.replace(/-+$/, ""), // Trim - from end of text
+	);
 
-  return slug.length > 0 ? slug : 'no-slug';
+	return slug.length > 0 ? slug : "no-slug";
 };
 
 /**
@@ -75,14 +75,14 @@ export const createSlug = str => {
  * @return {Number|null} number parsed from the string, null if not a number
  */
 export const parseFloatNum = str => {
-  const trimmed = str && typeof str.trim === 'function' ? str.trim() : null;
-  if (!trimmed) {
-    return null;
-  }
-  const num = parseFloat(trimmed);
-  const isNumber = !isNaN(num);
-  const isFullyParsedNum = isNumber && num.toString() === trimmed;
-  return isFullyParsedNum ? num : null;
+	const trimmed = str && typeof str.trim === "function" ? str.trim() : null;
+	if (!trimmed) {
+		return null;
+	}
+	const num = parseFloat(trimmed);
+	const isNumber = !isNaN(num);
+	const isFullyParsedNum = isNumber && num.toString() === trimmed;
+	return isFullyParsedNum ? num : null;
 };
 
 /**
@@ -102,16 +102,16 @@ export const encodeLatLng = location => `${location.lat},${location.lng}`;
  * @return {LatLng|null} location instance, null if could not parse
  */
 export const decodeLatLng = str => {
-  const parts = str.split(',');
-  if (parts.length !== 2) {
-    return null;
-  }
-  const lat = parseFloatNum(parts[0]);
-  const lng = parseFloatNum(parts[1]);
-  if (lat === null || lng === null) {
-    return null;
-  }
-  return new LatLng(lat, lng);
+	const parts = str.split(",");
+	if (parts.length !== 2) {
+		return null;
+	}
+	const lat = parseFloatNum(parts[0]);
+	const lng = parseFloatNum(parts[1]);
+	if (lat === null || lng === null) {
+		return null;
+	}
+	return new LatLng(lat, lng);
 };
 
 /**
@@ -131,33 +131,33 @@ export const encodeLatLngBounds = bounds => `${encodeLatLng(bounds.ne)},${encode
  * @return {LatLngBounds|null} location bounds instance, null if could not parse
  */
 export const decodeLatLngBounds = str => {
-  const parts = str.split(',');
-  if (parts.length !== 4) {
-    return null;
-  }
-  const ne = decodeLatLng(`${parts[0]},${parts[1]}`);
-  const sw = decodeLatLng(`${parts[2]},${parts[3]}`);
-  if (ne === null || sw === null) {
-    return null;
-  }
-  return new LatLngBounds(ne, sw);
+	const parts = str.split(",");
+	if (parts.length !== 4) {
+		return null;
+	}
+	const ne = decodeLatLng(`${parts[0]},${parts[1]}`);
+	const sw = decodeLatLng(`${parts[2]},${parts[3]}`);
+	if (ne === null || sw === null) {
+		return null;
+	}
+	return new LatLngBounds(ne, sw);
 };
 
 // Serialise SDK types in given object values into strings
 const serialiseSdkTypes = obj =>
-  Object.keys(obj).reduce((result, key) => {
-    const val = obj[key];
-    /* eslint-disable no-param-reassign */
-    if (val instanceof LatLngBounds) {
-      result[key] = encodeLatLngBounds(val);
-    } else if (val instanceof LatLng) {
-      result[key] = encodeLatLng(val);
-    } else {
-      result[key] = val;
-    }
-    /* eslint-enable no-param-reassign */
-    return result;
-  }, {});
+	Object.keys(obj).reduce((result, key) => {
+		const val = obj[key];
+		/* eslint-disable no-param-reassign */
+		if (val instanceof LatLngBounds) {
+			result[key] = encodeLatLngBounds(val);
+		} else if (val instanceof LatLng) {
+			result[key] = encodeLatLng(val);
+		} else {
+			result[key] = val;
+		}
+		/* eslint-enable no-param-reassign */
+		return result;
+	}, {});
 
 /**
  * Serialise given object into a string that can be used in a
@@ -171,17 +171,17 @@ const serialiseSdkTypes = obj =>
  * values, `undefined` and `null` values are removed
  */
 export const stringify = params => {
-  const serialised = serialiseSdkTypes(params);
-  const cleaned = Object.keys(serialised).reduce((result, key) => {
-    const val = serialised[key];
-    /* eslint-disable no-param-reassign */
-    if (val !== null) {
-      result[key] = val;
-    }
-    /* eslint-enable no-param-reassign */
-    return result;
-  }, {});
-  return queryString.stringify(cleaned);
+	const serialised = serialiseSdkTypes(params);
+	const cleaned = Object.keys(serialised).reduce((result, key) => {
+		const val = serialised[key];
+		/* eslint-disable no-param-reassign */
+		if (val !== null) {
+			result[key] = val;
+		}
+		/* eslint-enable no-param-reassign */
+		return result;
+	}, {});
+	return queryString.stringify(cleaned);
 };
 
 /**
@@ -202,26 +202,26 @@ export const stringify = params => {
  * @return {Object} key/value pairs parsed from the given String
  */
 export const parse = (search, options = {}) => {
-  const { latlng = [], latlngBounds = [] } = options;
-  const params = queryString.parse(search);
-  return Object.keys(params).reduce((result, key) => {
-    const val = params[key];
-    /* eslint-disable no-param-reassign */
-    if (latlng.includes(key)) {
-      result[key] = decodeLatLng(val);
-    } else if (latlngBounds.includes(key)) {
-      result[key] = decodeLatLngBounds(val);
-    } else if (val === 'true') {
-      result[key] = true;
-    } else if (val === 'false') {
-      result[key] = false;
-    } else {
-      const num = parseFloatNum(val);
-      result[key] = num === null ? val : num;
-    }
-    /* eslint-enable no-param-reassign */
-    return result;
-  }, {});
+	const { latlng = [], latlngBounds = [] } = options;
+	const params = queryString.parse(search);
+	return Object.keys(params).reduce((result, key) => {
+		const val = params[key];
+		/* eslint-disable no-param-reassign */
+		if (latlng.includes(key)) {
+			result[key] = decodeLatLng(val);
+		} else if (latlngBounds.includes(key)) {
+			result[key] = decodeLatLngBounds(val);
+		} else if (val === "true") {
+			result[key] = true;
+		} else if (val === "false") {
+			result[key] = false;
+		} else {
+			const num = parseFloatNum(val);
+			result[key] = num === null ? val : num;
+		}
+		/* eslint-enable no-param-reassign */
+		return result;
+	}, {});
 };
 
 /**
@@ -232,10 +232,10 @@ export const parse = (search, options = {}) => {
  * @return {String} twitterPageURL
  */
 export const twitterPageURL = twitterHandle => {
-  if (twitterHandle && twitterHandle.charAt(0) === '@') {
-    return `https://twitter.com/${twitterHandle.substring(1)}`;
-  } else if (twitterHandle) {
-    return `https://twitter.com/${twitterHandle}`;
-  }
-  return null;
+	if (twitterHandle && twitterHandle.charAt(0) === "@") {
+		return `https://twitter.com/${twitterHandle.substring(1)}`;
+	} else if (twitterHandle) {
+		return `https://twitter.com/${twitterHandle}`;
+	}
+	return null;
 };

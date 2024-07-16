@@ -1,61 +1,61 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .root {
-  margin: 0;
+	margin: 0;
 }
 
 .twoColumns {
-  @media (--viewportMedium) {
-    column-count: 2;
-  }
+	@media (--viewportMedium) {
+		column-count: 2;
+	}
 }
 
 .item {
-  display: flex;
-  align-items: center;
-  padding: 3px 0;
+	display: flex;
+	align-items: center;
+	padding: 3px 0;
 
-  @media (--viewportMedium) {
-    padding: 5px 0 3px 0;
-  }
+	@media (--viewportMedium) {
+		padding: 5px 0 3px 0;
+	}
 }
 
 .checkIcon {
 }
 
 .hidden {
-  visibility: hidden;
+	visibility: hidden;
 }
 
 .marketplaceFill {
-  fill: var(--marketplaceColor);
+	fill: var(--marketplaceColor);
 }
 
 .iconWrapper {
-  align-self: baseline;
-  margin-right: 8px;
+	align-self: baseline;
+	margin-right: 8px;
 
-  /* This follows line-height */
-  height: 24px;
+	/* This follows line-height */
+	height: 24px;
 }
 
 .labelWrapper {
-  display: inline-block;
+	display: inline-block;
 }
 
 .selectedLabel,
 .notSelectedLabel {
-  composes: marketplaceBodyFontStyles from global;
-  line-height: 24px;
-  margin: 0;
+	composes: marketplaceBodyFontStyles from global;
+	line-height: 24px;
+	margin: 0;
 }
 
 .selectedLabel {
-  font-weight: var(--fontWeightSemiBold);
+	font-weight: var(--fontWeightSemiBold);
 }
 
 .notSelectedLabel {
-  color: var(--colorGrey300);
-  position: relative;
-  text-decoration: line-through;
+	color: var(--colorGrey300);
+	position: relative;
+	text-decoration: line-through;
 }

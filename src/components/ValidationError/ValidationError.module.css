@@ -1,14 +1,14 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .root {
-  composes: h4 from global;
-  margin-top: 6px;
-  margin-bottom: 0;
-  color: var(--colorFail);
-  overflow: hidden;
-  font-size: 13px;
+	composes: h4 from global;
+	margin-top: 6px;
+	margin-bottom: 0;
+	color: var(--colorFail);
+	overflow: hidden;
+	font-size: 13px;
 
-  @media (--viewportMedium) {
-    margin-top: 8px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 8px;
+	}
 }

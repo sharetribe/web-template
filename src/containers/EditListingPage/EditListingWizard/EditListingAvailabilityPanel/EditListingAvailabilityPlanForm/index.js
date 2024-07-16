@@ -1,2 +1,2 @@
-import EditListingAvailabilityPlanForm from './EditListingAvailabilityPlanForm';
+import EditListingAvailabilityPlanForm from "./EditListingAvailabilityPlanForm";
 export default EditListingAvailabilityPlanForm;

@@ -1,2 +1,2 @@
-import BlockDefault from './BlockDefault';
+import BlockDefault from "./BlockDefault";
 export default BlockDefault;

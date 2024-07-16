@@ -1,10 +1,10 @@
-const { Readable } = require('stream');
-const { SitemapIndexStream, SitemapStream, streamToPromise } = require('sitemap');
-const log = require('../log.js');
-const { getRootURL } = require('../api-util/rootURL.js');
-const sdkUtils = require('../api-util/sdk.js');
+const { Readable } = require("stream");
+const { SitemapIndexStream, SitemapStream, streamToPromise } = require("sitemap");
+const log = require("../log.js");
+const { getRootURL } = require("../api-util/rootURL.js");
+const sdkUtils = require("../api-util/sdk.js");
 
-const isSitemapDisabled = process.env.SITEMAP_DISABLED === 'true';
+const isSitemapDisabled = process.env.SITEMAP_DISABLED === "true";
 
 ///////////////////////////////////////////////////////////////////////////////
 // This file generates sitemaps.                                             //
@@ -43,12 +43,12 @@ const isSitemapDisabled = process.env.SITEMAP_DISABLED === 'true';
 // Note 3: You can add relevant searches here
 //         E.g. searchHats: { url: '/s?pub_category=hats' },
 const defaultPublicPaths = {
-  landingPage: { url: '/' },
-  termsOfService: { url: '/terms-of-service' },
-  privacyPolicy: { url: '/privacy-policy' },
-  signup: { url: '/signup' },
-  login: { url: '/login' },
-  search: { url: '/s' },
+	landingPage: { url: "/" },
+	termsOfService: { url: "/terms-of-service" },
+	privacyPolicy: { url: "/privacy-policy" },
+	signup: { url: "/signup" },
+	login: { url: "/login" },
+	search: { url: "/s" },
 };
 
 // Time-to-live (ttl) is set to one day aka 86400 seconds
@@ -56,24 +56,24 @@ const ttl = 86400; // seconds
 
 // This creates simple (proxied) memory cache
 const createCacheProxy = ttl => {
-  const cache = {};
-  return new Proxy(cache, {
-    // Get data for the property together with timestamp
-    get(target, property, receiver) {
-      const cachedData = target[property];
-      if (!!cachedData) {
-        // Check if the cached data has expired
-        if (Date.now() - cachedData.timestamp < ttl * 1000) {
-          return cachedData;
-        }
-      }
-      return { data: null, timestamp: cachedData?.timestamp || Date.now() };
-    },
-    // Set given value as data to property accompanied with timestamp
-    set(target, property, value, receiver) {
-      target[property] = { data: value, timestamp: Date.now() };
-    },
-  });
+	const cache = {};
+	return new Proxy(cache, {
+		// Get data for the property together with timestamp
+		get(target, property, receiver) {
+			const cachedData = target[property];
+			if (!!cachedData) {
+				// Check if the cached data has expired
+				if (Date.now() - cachedData.timestamp < ttl * 1000) {
+					return cachedData;
+				}
+			}
+			return { data: null, timestamp: cachedData?.timestamp || Date.now() };
+		},
+		// Set given value as data to property accompanied with timestamp
+		set(target, property, value, receiver) {
+			target[property] = { data: value, timestamp: Date.now() };
+		},
+	});
 };
 
 const cache = createCacheProxy(ttl);
@@ -93,47 +93,47 @@ const cache = createCacheProxy(ttl);
  * @param {String} rootUrl location from where these sitemap paths can be found
  */
 const sitemapIndex = (req, res, rootUrl) => {
-  res.set({
-    'Content-Type': 'application/xml',
-    'Cache-Control': `public, max-age=${ttl}`,
-  });
+	res.set({
+		"Content-Type": "application/xml",
+		"Cache-Control": `public, max-age=${ttl}`,
+	});
 
-  // If we have a cached content send it
-  const { data, timestamp } = cache.sitemapIndex;
-  if (data && timestamp) {
-    const age = Math.floor((Date.now() - timestamp) / 1000);
-    res.set('Age', age);
-    res.send(data);
-    return;
-  }
+	// If we have a cached content send it
+	const { data, timestamp } = cache.sitemapIndex;
+	if (data && timestamp) {
+		const age = Math.floor((Date.now() - timestamp) / 1000);
+		res.set("Age", age);
+		res.send(data);
+		return;
+	}
 
-  try {
-    const smiStream = new SitemapIndexStream({ level: 'warn' });
+	try {
+		const smiStream = new SitemapIndexStream({ level: "warn" });
 
-    // Sitemap-index will contain the following sitemaps:
-    const sitemaps = [
-      '/sitemap-default.xml',
-      '/sitemap-recent-listings.xml',
-      '/sitemap-recent-pages.xml',
-    ];
+		// Sitemap-index will contain the following sitemaps:
+		const sitemaps = [
+			"/sitemap-default.xml",
+			"/sitemap-recent-listings.xml",
+			"/sitemap-recent-pages.xml",
+		];
 
-    // Add sitemaps to the index
-    sitemaps.forEach(sitemapPath => {
-      smiStream.write({ url: `${rootUrl}${sitemapPath}` });
-    });
+		// Add sitemaps to the index
+		sitemaps.forEach(sitemapPath => {
+			smiStream.write({ url: `${rootUrl}${sitemapPath}` });
+		});
 
-    streamToPromise(smiStream).then(sm => (cache.sitemapIndex = sm));
+		streamToPromise(smiStream).then(sm => (cache.sitemapIndex = sm));
 
-    smiStream.pipe(res).on('error', e => {
-      throw e;
-    });
+		smiStream.pipe(res).on("error", e => {
+			throw e;
+		});
 
-    // Since we manually add content to the stream, we need to close it.
-    smiStream.end();
-  } catch (e) {
-    log.error(e, 'sitemap-index-render-failed');
-    res.status(500).end();
-  }
+		// Since we manually add content to the stream, we need to close it.
+		smiStream.end();
+	} catch (e) {
+		log.error(e, "sitemap-index-render-failed");
+		res.status(500).end();
+	}
 };
 
 /**
@@ -146,39 +146,39 @@ const sitemapIndex = (req, res, rootUrl) => {
  * @param {String} rootUrl location from where these sitemap paths can be found
  */
 const sitemapDefault = (req, res, rootUrl) => {
-  res.set({
-    'Content-Type': 'application/xml',
-    'Cache-Control': `public, max-age=${ttl}`,
-  });
+	res.set({
+		"Content-Type": "application/xml",
+		"Cache-Control": `public, max-age=${ttl}`,
+	});
 
-  // If we have a cached content send it
-  const { data, timestamp } = cache.sitemapDefault;
-  if (data && timestamp) {
-    const age = Math.floor((Date.now() - timestamp) / 1000);
-    res.set('Age', age);
-    res.send(data);
-    return;
-  }
+	// If we have a cached content send it
+	const { data, timestamp } = cache.sitemapDefault;
+	if (data && timestamp) {
+		const age = Math.floor((Date.now() - timestamp) / 1000);
+		res.set("Age", age);
+		res.send(data);
+		return;
+	}
 
-  try {
-    const smStream = new SitemapStream({ hostname: rootUrl });
+	try {
+		const smStream = new SitemapStream({ hostname: rootUrl });
 
-    // Pass default public paths to SitemapStream.
-    // These are defined in the beginning of the page
-    const paths = Object.values(defaultPublicPaths);
-    Readable.from(paths).pipe(smStream);
+		// Pass default public paths to SitemapStream.
+		// These are defined in the beginning of the page
+		const paths = Object.values(defaultPublicPaths);
+		Readable.from(paths).pipe(smStream);
 
-    // Save to in-memory cache
-    streamToPromise(smStream).then(sm => (cache.sitemapDefault = sm));
+		// Save to in-memory cache
+		streamToPromise(smStream).then(sm => (cache.sitemapDefault = sm));
 
-    // Write the stream to the response
-    smStream.pipe(res).on('error', e => {
-      throw e;
-    });
-  } catch (e) {
-    log.error(e, 'sitemap-default-render-failed');
-    res.status(500).end();
-  }
+		// Write the stream to the response
+		smStream.pipe(res).on("error", e => {
+			throw e;
+		});
+	} catch (e) {
+		log.error(e, "sitemap-default-render-failed");
+		res.status(500).end();
+	}
 };
 
 /**
@@ -189,52 +189,52 @@ const sitemapDefault = (req, res, rootUrl) => {
  * @param {String} rootUrl location from where these sitemap paths can be found
  */
 const sitemapListings = (req, res, rootUrl) => {
-  res.set({
-    'Content-Type': 'application/xml',
-    'Cache-Control': `public, max-age=${ttl}`,
-  });
+	res.set({
+		"Content-Type": "application/xml",
+		"Cache-Control": `public, max-age=${ttl}`,
+	});
 
-  // If we have a cached content send it
-  const { data, timestamp } = cache.sitemapRecentListings;
-  if (data && timestamp) {
-    const age = Math.floor((Date.now() - timestamp) / 1000);
-    res.set('Age', age);
-    res.send(data);
-    return;
-  }
+	// If we have a cached content send it
+	const { data, timestamp } = cache.sitemapRecentListings;
+	if (data && timestamp) {
+		const age = Math.floor((Date.now() - timestamp) / 1000);
+		res.set("Age", age);
+		res.send(data);
+		return;
+	}
 
-  const sdk = sdkUtils.getSdk(req, res);
-  sdk.sitemapData
-    .queryListings()
-    .then(response => {
-      const listings = response.data.data || [];
-      // Use canonical URL: https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls
-      const ids = listings.map(l => `l/${l.id?.uuid}`);
+	const sdk = sdkUtils.getSdk(req, res);
+	sdk.sitemapData
+		.queryListings()
+		.then(response => {
+			const listings = response.data.data || [];
+			// Use canonical URL: https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls
+			const ids = listings.map(l => `l/${l.id?.uuid}`);
 
-      // If there's no listings, let's just return empty sitemap
-      const hasListingIds = ids.length > 0;
-      if (!hasListingIds) {
-        res.send(
-          `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"></urlset>`
-        );
-        return;
-      }
+			// If there's no listings, let's just return empty sitemap
+			const hasListingIds = ids.length > 0;
+			if (!hasListingIds) {
+				res.send(
+					`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"></urlset>`,
+				);
+				return;
+			}
 
-      const smStream = new SitemapStream({ hostname: rootUrl });
-      Readable.from(ids).pipe(smStream);
+			const smStream = new SitemapStream({ hostname: rootUrl });
+			Readable.from(ids).pipe(smStream);
 
-      // Save to in-memory cache
-      streamToPromise(smStream).then(sm => (cache.sitemapRecentListings = sm));
+			// Save to in-memory cache
+			streamToPromise(smStream).then(sm => (cache.sitemapRecentListings = sm));
 
-      // Write the stream to the response
-      smStream.pipe(res).on('error', e => {
-        throw e;
-      });
-    })
-    .catch(e => {
-      log.error(e, 'sitemap-recent-listings-render-failed');
-      res.status(500).end();
-    });
+			// Write the stream to the response
+			smStream.pipe(res).on("error", e => {
+				throw e;
+			});
+		})
+		.catch(e => {
+			log.error(e, "sitemap-recent-listings-render-failed");
+			res.status(500).end();
+		});
 };
 
 /**
@@ -247,59 +247,59 @@ const sitemapListings = (req, res, rootUrl) => {
  * @param {String} rootUrl location from where these sitemap paths can be found
  */
 const sitemapPages = (req, res, rootUrl) => {
-  res.set({
-    'Content-Type': 'application/xml',
-    'Cache-Control': `public, max-age=${ttl}`,
-  });
+	res.set({
+		"Content-Type": "application/xml",
+		"Cache-Control": `public, max-age=${ttl}`,
+	});
 
-  // If we have a cached content send it
-  const { data, timestamp } = cache.sitemapRecentPages;
-  if (data && timestamp) {
-    const age = Math.floor((Date.now() - timestamp) / 1000);
-    res.set('Age', age);
-    res.send(data);
-    return;
-  }
+	// If we have a cached content send it
+	const { data, timestamp } = cache.sitemapRecentPages;
+	if (data && timestamp) {
+		const age = Math.floor((Date.now() - timestamp) / 1000);
+		res.set("Age", age);
+		res.send(data);
+		return;
+	}
 
-  const pathPrefix = '/content/pages/';
-  const sdk = sdkUtils.getSdk(req, res);
-  sdk.sitemapData
-    .queryAssets({ pathPrefix })
-    .then(response => {
-      const assets = response.data.data || [];
+	const pathPrefix = "/content/pages/";
+	const sdk = sdkUtils.getSdk(req, res);
+	sdk.sitemapData
+		.queryAssets({ pathPrefix })
+		.then(response => {
+			const assets = response.data.data || [];
 
-      // If there's no Pages, let's just return empty sitemap
-      const hasAssets = assets.length > 0;
-      if (!hasAssets) {
-        res.send(
-          `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"></urlset>`
-        );
-        return;
-      }
+			// If there's no Pages, let's just return empty sitemap
+			const hasAssets = assets.length > 0;
+			if (!hasAssets) {
+				res.send(
+					`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"></urlset>`,
+				);
+				return;
+			}
 
-      // Pick those asset paths that CMSPage component renders
-      const cmsPagePaths = assets.reduce((picked, asset) => {
-        const assetFileName = asset.attributes?.assetPath?.slice(pathPrefix.length);
-        const assetName = assetFileName.split('.')[0];
-        const permanentPaths = ['landing-page', 'terms-of-service', 'privacy-policy'];
-        return permanentPaths.includes(assetName) ? picked : [...picked, `p/${assetName}`];
-      }, []);
+			// Pick those asset paths that CMSPage component renders
+			const cmsPagePaths = assets.reduce((picked, asset) => {
+				const assetFileName = asset.attributes?.assetPath?.slice(pathPrefix.length);
+				const assetName = assetFileName.split(".")[0];
+				const permanentPaths = ["landing-page", "terms-of-service", "privacy-policy"];
+				return permanentPaths.includes(assetName) ? picked : [...picked, `p/${assetName}`];
+			}, []);
 
-      const smStream = new SitemapStream({ hostname: rootUrl });
-      Readable.from(cmsPagePaths).pipe(smStream);
+			const smStream = new SitemapStream({ hostname: rootUrl });
+			Readable.from(cmsPagePaths).pipe(smStream);
 
-      // Save to in-memory cache
-      streamToPromise(smStream).then(sm => (cache.sitemapRecentPages = sm));
+			// Save to in-memory cache
+			streamToPromise(smStream).then(sm => (cache.sitemapRecentPages = sm));
 
-      // stream write the response
-      smStream.pipe(res).on('error', e => {
-        throw e;
-      });
-    })
-    .catch(e => {
-      log.error(e, 'sitemap-recent-pages-render-failed');
-      res.status(500).end();
-    });
+			// stream write the response
+			smStream.pipe(res).on("error", e => {
+				throw e;
+			});
+		})
+		.catch(e => {
+			log.error(e, "sitemap-recent-pages-render-failed");
+			res.status(500).end();
+		});
 };
 
 /**
@@ -310,30 +310,30 @@ const sitemapPages = (req, res, rootUrl) => {
  * @param {function} next
  */
 module.exports = (req, res, next) => {
-  // Making it a bit faster to react to DDOS attacks, since the generation is a bit resource intensive.
-  // You might want to consider adding cron job and avoid sitemap generation on request time.
-  if (isSitemapDisabled) {
-    res.status(503).end();
-    console.log('Sitemap functionality is disabled.');
-    return;
-  }
+	// Making it a bit faster to react to DDOS attacks, since the generation is a bit resource intensive.
+	// You might want to consider adding cron job and avoid sitemap generation on request time.
+	if (isSitemapDisabled) {
+		res.status(503).end();
+		console.log("Sitemap functionality is disabled.");
+		return;
+	}
 
-  const resource = req.params.resource;
-  const parts = resource.split('.');
-  const sitemapResource = parts[0];
-  // Resolve hostname inside the request
-  const rootUrl = getRootURL();
+	const resource = req.params.resource;
+	const parts = resource.split(".");
+	const sitemapResource = parts[0];
+	// Resolve hostname inside the request
+	const rootUrl = getRootURL();
 
-  if (sitemapResource === 'index') {
-    sitemapIndex(req, res, getRootURL({ useDevApiServerPort: true }));
-  } else if (sitemapResource === 'default') {
-    sitemapDefault(req, res, rootUrl);
-  } else if (sitemapResource === 'recent-listings') {
-    sitemapListings(req, res, rootUrl);
-  } else if (sitemapResource === 'recent-pages') {
-    sitemapPages(req, res, rootUrl);
-  } else {
-    // If none of the resource-routes mapped, we pass this forward.
-    next();
-  }
+	if (sitemapResource === "index") {
+		sitemapIndex(req, res, getRootURL({ useDevApiServerPort: true }));
+	} else if (sitemapResource === "default") {
+		sitemapDefault(req, res, rootUrl);
+	} else if (sitemapResource === "recent-listings") {
+		sitemapListings(req, res, rootUrl);
+	} else if (sitemapResource === "recent-pages") {
+		sitemapPages(req, res, rootUrl);
+	} else {
+		// If none of the resource-routes mapped, we pass this forward.
+		next();
+	}
 };

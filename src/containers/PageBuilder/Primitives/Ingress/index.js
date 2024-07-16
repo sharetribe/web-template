@@ -1,1 +1,1 @@
-export { Ingress } from './Ingress';
+export { Ingress } from "./Ingress";

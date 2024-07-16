@@ -2,11 +2,11 @@
 }
 
 .bookingInfo {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
 }
 
 .dateSection {
-  margin-right: 5px;
+	margin-right: 5px;
 }

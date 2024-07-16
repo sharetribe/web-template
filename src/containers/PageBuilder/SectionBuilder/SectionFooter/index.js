@@ -1,2 +1,2 @@
-import SectionFooter from './SectionFooter';
+import SectionFooter from "./SectionFooter";
 export default SectionFooter;

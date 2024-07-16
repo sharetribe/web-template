@@ -1,15 +1,15 @@
 .backgroundLight {
-  stop-color: var(--colorBannedLight);
+	stop-color: var(--colorBannedLight);
 }
 
 .backgroundDark {
-  stop-color: var(--colorBannedDark);
+	stop-color: var(--colorBannedDark);
 }
 
 .foregroundFill {
-  fill: var(--colorWhite);
+	fill: var(--colorWhite);
 }
 
 .foregroundStroke {
-  stroke: var(--colorWhite);
+	stroke: var(--colorWhite);
 }

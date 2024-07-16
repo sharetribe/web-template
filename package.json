@@ -69,6 +69,8 @@
     "url": "^0.11.0"
   },
   "devDependencies": {
+    "@buildinams/lint": "^0.4.2",
+    "@eslint/js": "^9.7.0",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -76,6 +78,9 @@
     "chalk": "^v4.1.2",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
+    "eslint": "8.x",
+    "eslint-plugin-react": "^7.34.4",
+    "globals": "^15.8.0",
     "inquirer": "^8.2.4",
     "nodemon": "^3.1.4",
     "prettier": "^1.18.2"
@@ -133,10 +138,5 @@
   },
   "engines": {
     "node": ">=18.20.1"
-  },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "es5",
-    "proseWrap": "always"
   }
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 // Global state is useful in situations, where UI state needs to be tracked navigation history.
 // Alternatively, Redux could be used too, but it's unnecessarily heavy to use for
@@ -8,29 +8,29 @@ import { useEffect, useState } from 'react';
 // This piece of code is taken from Daishi Kato's blog:
 // https://blog.axlight.com/posts/steps-to-develop-global-state-for-react/
 export const createGlobalState = initialState => {
-  let globalState = initialState;
-  const listeners = Object.fromEntries(Object.keys(initialState).map(key => [key, new Set()]));
+	let globalState = initialState;
+	const listeners = Object.fromEntries(Object.keys(initialState).map(key => [key, new Set()]));
 
-  const setGlobalState = (key, nextValue) => {
-    globalState = { ...globalState, [key]: nextValue };
-    listeners[key].forEach(listener => listener());
-  };
+	const setGlobalState = (key, nextValue) => {
+		globalState = { ...globalState, [key]: nextValue };
+		listeners[key].forEach(listener => listener());
+	};
 
-  const useGlobalState = key => {
-    const [state, setState] = useState(globalState[key]);
-    useEffect(() => {
-      const listener = () => {
-        setState(globalState[key]);
-      };
-      listeners[key].add(listener);
-      listener(); // in case it's already changed
-      return () => listeners[key].delete(listener); // cleanup
-    }, []);
-    return [state, nextValue => setGlobalState(key, nextValue)];
-  };
+	const useGlobalState = key => {
+		const [state, setState] = useState(globalState[key]);
+		useEffect(() => {
+			const listener = () => {
+				setState(globalState[key]);
+			};
+			listeners[key].add(listener);
+			listener(); // in case it's already changed
+			return () => listeners[key].delete(listener); // cleanup
+		}, []);
+		return [state, nextValue => setGlobalState(key, nextValue)];
+	};
 
-  return {
-    setGlobalState,
-    useGlobalState,
-  };
+	return {
+		setGlobalState,
+		useGlobalState,
+	};
 };

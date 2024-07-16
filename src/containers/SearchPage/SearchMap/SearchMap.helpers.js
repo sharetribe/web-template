@@ -1,5 +1,5 @@
-import groupBy from 'lodash/groupBy';
-import reduce from 'lodash/reduce';
+import groupBy from "lodash/groupBy";
+import reduce from "lodash/reduce";
 
 /**
  * hasParentWithClassName searches class name from parent elements of given target
@@ -7,9 +7,9 @@ import reduce from 'lodash/reduce';
  * @param {String} className - class name string to be found
  */
 export const hasParentWithClassName = (target, className) => {
-  return [...document.querySelectorAll(`.${className}`)].some(
-    el => el !== target && el.contains(target)
-  );
+	return [...document.querySelectorAll(`.${className}`)].some(
+		el => el !== target && el.contains(target),
+	);
 };
 
 /**
@@ -18,10 +18,10 @@ export const hasParentWithClassName = (target, className) => {
  * @return {Object} - Object where coordinate pair is the key to different listings
  */
 export const groupedByCoordinates = mapListings => {
-  return groupBy(mapListings, l => {
-    const g = l.attributes.geolocation;
-    return `${g.lat}-${g.lng}`;
-  });
+	return groupBy(mapListings, l => {
+		const g = l.attributes.geolocation;
+		return `${g.lat}-${g.lng}`;
+	});
 };
 
 /**
@@ -31,5 +31,5 @@ export const groupedByCoordinates = mapListings => {
  *   (They are arrays containing all the listings in that location)
  */
 export const reducedToArray = mapListings => {
-  return reduce(mapListings, (acc, listing) => acc.concat([listing]), []);
+	return reduce(mapListings, (acc, listing) => acc.concat([listing]), []);
 };

@@ -1,101 +1,101 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .root {
-  position: relative;
+	position: relative;
 }
 
 .input {
-  position: absolute;
-  opacity: 0;
-  height: 0;
-  width: 0;
+	position: absolute;
+	opacity: 0;
+	height: 0;
+	width: 0;
 
-  /* Display the "check" when checked */
-  &:checked + label .checked {
-    display: inline;
-  }
+	/* Display the "check" when checked */
+	&:checked + label .checked {
+		display: inline;
+	}
 
-  /* Highlight the borders if the checkbox is hovered, focused or checked */
-  &:hover + label .notChecked,
-  &:hover + label .required,
-  &:focus + label .notChecked,
-  &:focus + label .required,
-  &:checked + label .required {
-    stroke: var(--colorBlack);
-  }
+	/* Highlight the borders if the checkbox is hovered, focused or checked */
+	&:hover + label .notChecked,
+	&:hover + label .required,
+	&:focus + label .notChecked,
+	&:focus + label .required,
+	&:checked + label .required {
+		stroke: var(--colorBlack);
+	}
 
-  &:checked + label .notChecked {
-    stroke: none;
-  }
+	&:checked + label .notChecked {
+		stroke: none;
+	}
 
-  /* Hightlight the text on checked, hover and focus */
-  &:focus + label .text,
-  &:hover + label .text,
-  &:checked + label .text {
-    color: var(--colorBlack);
-  }
+	/* Hightlight the text on checked, hover and focus */
+	&:focus + label .text,
+	&:hover + label .text,
+	&:checked + label .text {
+		color: var(--colorBlack);
+	}
 
-  /* Disabled radio-button label should look like disabled */
-  &:disabled + label {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  &:disabled + label .text {
-    cursor: not-allowed;
-  }
+	/* Disabled radio-button label should look like disabled */
+	&:disabled + label {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+	&:disabled + label .text {
+		cursor: not-allowed;
+	}
 }
 
 .label {
-  display: flex;
-  align-items: center;
-  padding-top: 1px;
-  padding-bottom: 5px;
+	display: flex;
+	align-items: center;
+	padding-top: 1px;
+	padding-bottom: 5px;
 
-  @media (--viewportMedium) {
-    padding-top: 0px;
-    padding-bottom: 8px;
-  }
+	@media (--viewportMedium) {
+		padding-top: 0px;
+		padding-bottom: 8px;
+	}
 }
 
 .radioButtonWrapper {
-  /* This should follow line-height */
-  height: 24px;
-  margin-top: -1px;
-  margin-right: 12px;
-  align-self: center;
+	/* This should follow line-height */
+	height: 24px;
+	margin-top: -1px;
+	margin-right: 12px;
+	align-self: center;
 
-  display: inline-flex;
-  align-items: center;
-  cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	cursor: pointer;
 }
 
 .checkedStyle {
-  stroke: var(--marketplaceColor);
-  fill: var(--marketplaceColor);
+	stroke: var(--marketplaceColor);
+	fill: var(--marketplaceColor);
 }
 
 .checked {
-  display: none;
+	display: none;
 }
 
 .notChecked {
-  stroke: var(--colorGrey300);
-  &:hover {
-    stroke: pink;
-  }
+	stroke: var(--colorGrey300);
+	&:hover {
+		stroke: pink;
+	}
 }
 
 .required {
-  stroke: var(--colorAttention);
-  &:hover {
-    stroke: pink;
-  }
+	stroke: var(--colorAttention);
+	&:hover {
+		stroke: pink;
+	}
 }
 
 .text {
-  composes: marketplaceListingAttributeFontStyles from global;
-  color: var(--colorGrey700);
-  margin-top: -1px;
-  margin-bottom: 1px;
-  cursor: pointer;
+	composes: marketplaceListingAttributeFontStyles from global;
+	color: var(--colorGrey700);
+	margin-top: -1px;
+	margin-bottom: 1px;
+	cursor: pointer;
 }

@@ -1,280 +1,280 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .root {
-  flex-grow: 1;
+	flex-grow: 1;
 }
 
 .contentContainer {
-  composes: marketplaceModalRootStyles from global;
-  min-height: calc(100vh - 60px);
-  height: auto;
+	composes: marketplaceModalRootStyles from global;
+	min-height: calc(100vh - 60px);
+	height: auto;
 
-  @media (--viewportMedium) {
-    height: unset;
-    min-height: unset;
-  }
+	@media (--viewportMedium) {
+		height: unset;
+		min-height: unset;
+	}
 }
 
 .content {
-  composes: marketplaceModalBaseStyles from global;
-  padding-top: 29px;
+	composes: marketplaceModalBaseStyles from global;
+	padding-top: 29px;
 
-  @media (--viewportMedium) {
-    margin-top: 5vh;
-    margin-bottom: 7.5vh;
-    min-height: 700px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 5vh;
+		margin-bottom: 7.5vh;
+		min-height: 700px;
+	}
 }
 
 /* ================ Tabs & Form ================ */
 
 .tabs {
-  @media (--viewportMedium) {
-    margin-top: 6px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 6px;
+	}
 }
 
 .tab {
-  composes: marketplaceModalTitleStyles from global;
-  padding: 0;
-  margin-top: 0;
-  margin-bottom: 0;
+	composes: marketplaceModalTitleStyles from global;
+	padding: 0;
+	margin-top: 0;
+	margin-bottom: 0;
 
-  @media (--viewportMedium) {
-    padding: 0;
-    margin-top: 0;
-  }
+	@media (--viewportMedium) {
+		padding: 0;
+		margin-top: 0;
+	}
 }
 
 .form {
-  margin-top: 24px;
+	margin-top: 24px;
 
-  @media (--viewportMedium) {
-    margin-top: 30px;
-    padding-top: 2px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 30px;
+		padding-top: 2px;
+	}
 }
 
 .loginForm {
-  margin-top: 24px;
+	margin-top: 24px;
 
-  /* We don't want the form to take the whole space so that on mobile view
+	/* We don't want the form to take the whole space so that on mobile view
   the social login buttons will be after the sign up button
   and not in the bottom of the page.
   We also need to add flex-basis value so that Safari will show the
   whole form correctly.  */
-  flex-grow: 0;
-  flex-basis: 260px;
+	flex-grow: 0;
+	flex-basis: 260px;
 
-  @media (--viewportMedium) {
-    flex-basis: 330px;
-    margin-top: 30px;
-    padding-top: 2px;
-  }
+	@media (--viewportMedium) {
+		flex-basis: 330px;
+		margin-top: 30px;
+		padding-top: 2px;
+	}
 }
 
 .signupForm {
-  margin-top: 24px;
+	margin-top: 24px;
 
-  /* We don't want the form to take the whole space so that on mobile view
+	/* We don't want the form to take the whole space so that on mobile view
   the social login buttons will be after the sign up button
   and not in the bottom of the page.
   We also need to add flex-basis value so that Safari will show the
   whole form correctly.  */
-  flex-grow: 0;
-  flex-basis: 340px;
+	flex-grow: 0;
+	flex-basis: 340px;
 
-  @media (--viewportMedium) {
-    flex-basis: 410px;
-    margin-top: 30px;
-    padding-top: 2px;
-  }
+	@media (--viewportMedium) {
+		flex-basis: 410px;
+		margin-top: 30px;
+		padding-top: 2px;
+	}
 }
 
 .bottomWrapper {
-  composes: marketplaceModalBottomWrapper from global;
+	composes: marketplaceModalBottomWrapper from global;
 
-  /* Align the helper links to the left since there isn't a Primary Button anymore */
-  text-align: left;
+	/* Align the helper links to the left since there isn't a Primary Button anymore */
+	text-align: left;
 }
 
 /* Terms of Service modal*/
 
 .privacyWrapper,
 .termsWrapper {
-  width: 100%;
-  padding-top: 40px;
+	width: 100%;
+	padding-top: 40px;
 
-  @media (--viewportMedium) {
-    width: 604px;
-    padding-top: 11px;
-  }
+	@media (--viewportMedium) {
+		width: 604px;
+		padding-top: 11px;
+	}
 }
 
 /* userType selection */
 .userTypeSelect {
-  margin-bottom: 24px;
+	margin-bottom: 24px;
 
-  @media (--viewportMedium) {
-    margin-bottom: 32px;
-  }
+	@media (--viewportMedium) {
+		margin-bottom: 32px;
+	}
 }
 
 .selectedLabel {
-  composes: label from global;
+	composes: label from global;
 }
 .selectedValue {
-  margin-top: 0;
-  margin-bottom: 6px;
+	margin-top: 0;
+	margin-bottom: 6px;
 
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-    padding: 2px 0 6px 0;
-  }
+	@media (--viewportMedium) {
+		margin-top: 0;
+		margin-bottom: 0;
+		padding: 2px 0 6px 0;
+	}
 }
 
 /* ================ Hide Top bar in screens smaller than 768px  ================ */
 
 .hideOnMobile {
-  display: none;
+	display: none;
 
-  @media (--viewportMedium) {
-    display: block;
-  }
+	@media (--viewportMedium) {
+		display: block;
+	}
 }
 
 /* ================ Close icon ================ */
 
 .verifyClose {
-  composes: marketplaceModalCloseStyles from global;
+	composes: marketplaceModalCloseStyles from global;
 
-  /* This is not a real modal, z-index should not be modal's z-index */
-  z-index: 1;
+	/* This is not a real modal, z-index should not be modal's z-index */
+	z-index: 1;
 }
 
 .closeText {
-  composes: marketplaceModalCloseText from global;
+	composes: marketplaceModalCloseText from global;
 }
 
 .closeIcon {
-  composes: marketplaceModalCloseIcon from global;
+	composes: marketplaceModalCloseIcon from global;
 }
 
 /* ================ Typography ================ */
 
 /* Title of the modal */
 .modalTitle {
-  composes: marketplaceModalTitleStyles from global;
+	composes: marketplaceModalTitleStyles from global;
 }
 
 /* Paragraph for the Modal */
 .modalMessage {
-  composes: marketplaceModalParagraphStyles from global;
+	composes: marketplaceModalParagraphStyles from global;
 }
 
 /* Make the email pop */
 .email {
-  font-weight: var(--fontWeightHighlightEmail);
+	font-weight: var(--fontWeightHighlightEmail);
 
-  /* fallback option */
-  word-break: break-all;
-  /* use break-word if available */
-  word-break: break-word;
-  hyphens: auto;
+	/* fallback option */
+	word-break: break-all;
+	/* use break-word if available */
+	word-break: break-word;
+	hyphens: auto;
 }
 
 /* Helper links */
 .modalHelperLink {
-  composes: a from global;
-  composes: marketplaceModalHelperLink from global;
+	composes: a from global;
+	composes: marketplaceModalHelperLink from global;
 }
 
 /* Helper texts for the links, not the actual links */
 .modalHelperText {
-  composes: marketplaceModalHelperText from global;
+	composes: marketplaceModalHelperText from global;
 }
 
 .modalIcon {
-  composes: marketplaceModalIconStyles from global;
+	composes: marketplaceModalIconStyles from global;
 
-  /* Align the icon and rest of the content in the modal. Sign & Login doesn't use an icon, maybe we should add one? */
-  margin-top: 47px;
+	/* Align the icon and rest of the content in the modal. Sign & Login doesn't use an icon, maybe we should add one? */
+	margin-top: 47px;
 
-  @media (--viewportMedium) {
-    margin-top: 0;
-  }
+	@media (--viewportMedium) {
+		margin-top: 0;
+	}
 }
 
 /* ================ Errors ================ */
 
 .error {
-  composes: marketplaceModalPasswordMargins from global;
+	composes: marketplaceModalPasswordMargins from global;
 }
 
 /* ================ Social logins & SSO ================ */
 
 .signupWithIdpTitle {
-  composes: marketplaceModalTitleStyles from global;
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-top: 16px;
-  color: var(--colorBlack);
+	composes: marketplaceModalTitleStyles from global;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-top: 16px;
+	color: var(--colorBlack);
 
-  @media (--viewportMedium) {
-    padding: 0;
-    margin-top: 6px;
-  }
+	@media (--viewportMedium) {
+		padding: 0;
+		margin-top: 6px;
+	}
 }
 
 .confirmInfoText {
 }
 
 .buttonIcon {
-  position: absolute;
-  left: 0;
-  margin-left: 20px;
+	position: absolute;
+	left: 0;
+	margin-left: 20px;
 }
 
 .socialButtonWrapper {
-  margin-bottom: 6px;
-  @media (--viewportMedium) {
-    margin-top: 8px;
-  }
+	margin-bottom: 6px;
+	@media (--viewportMedium) {
+		margin-top: 8px;
+	}
 }
 
 .socialButtonsOr {
-  width: 100%;
-  height: 32px;
-  margin: 28px 0 20px 0;
-  text-align: center;
-  position: relative;
-  background-color: var(--colorWhite);
+	width: 100%;
+	height: 32px;
+	margin: 28px 0 20px 0;
+	text-align: center;
+	position: relative;
+	background-color: var(--colorWhite);
 
-  &:after {
-    content: '';
-    width: 100%;
-    border-bottom: solid 1px #d2d2d2;
-    position: absolute;
-    left: 0;
-    top: 50%;
-    z-index: 1;
-  }
+	&:after {
+		content: "";
+		width: 100%;
+		border-bottom: solid 1px #d2d2d2;
+		position: absolute;
+		left: 0;
+		top: 50%;
+		z-index: 1;
+	}
 }
 
 @media (--viewportMedium) {
-  .socialButtonsOr {
-    height: 34px;
-    margin: 15px 0;
-  }
+	.socialButtonsOr {
+		height: 34px;
+		margin: 15px 0;
+	}
 }
 
 .socialButtonsOrText {
-  background-color: var(--colorWhite);
-  width: auto;
-  display: inline-block;
-  z-index: 3;
-  padding: 0 20px 0 20px;
-  position: relative;
-  margin: 0;
+	background-color: var(--colorWhite);
+	width: auto;
+	display: inline-block;
+	z-index: 3;
+	padding: 0 20px 0 20px;
+	position: relative;
+	margin: 0;
 }

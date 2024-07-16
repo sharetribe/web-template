@@ -1,24 +1,24 @@
 .ingress {
-  font-size: 18px;
-  line-height: 1.66;
-  margin-top: 0;
-  margin-bottom: 0;
-  letter-spacing: 0;
-  /* Note: text-wrap is experimental CSS feature. Most browsers don't support it */
-  text-wrap: balance;
+	font-size: 18px;
+	line-height: 1.66;
+	margin-top: 0;
+	margin-bottom: 0;
+	letter-spacing: 0;
+	/* Note: text-wrap is experimental CSS feature. Most browsers don't support it */
+	text-wrap: balance;
 
-  /* Handle margin-top of next adjacent element against this p element */
-  & + p,
-  & + ul,
-  & + ol,
-  & + pre,
-  & + div,
-  & + h1,
-  & + h2,
-  & + h3,
-  & + h4,
-  & + h5,
-  & + h6 {
-    margin-top: 24px;
-  }
+	/* Handle margin-top of next adjacent element against this p element */
+	& + p,
+	& + ul,
+	& + ol,
+	& + pre,
+	& + div,
+	& + h1,
+	& + h2,
+	& + h3,
+	& + h4,
+	& + h5,
+	& + h6 {
+		margin-top: 24px;
+	}
 }

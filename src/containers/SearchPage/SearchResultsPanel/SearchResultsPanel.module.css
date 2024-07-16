@@ -1,63 +1,63 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .root {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 .listingCardsMapVariant {
-  padding: 0 0 96px 0;
+	padding: 0 0 96px 0;
 
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 24px;
-  width: 100%;
+	display: grid;
+	grid-template-columns: repeat(1, 1fr);
+	gap: 24px;
+	width: 100%;
 
-  @media (--viewportLarge) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+	@media (--viewportLarge) {
+		grid-template-columns: repeat(2, 1fr);
+	}
 
-  @media (--viewportXLarge) {
-    grid-template-columns: repeat(3, 1fr);
-  }
+	@media (--viewportXLarge) {
+		grid-template-columns: repeat(3, 1fr);
+	}
 }
 
 .listingCards {
-  padding: 0 0 72px 0;
+	padding: 0 0 72px 0;
 
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 24px;
-  width: 100%;
+	display: grid;
+	grid-template-columns: repeat(1, 1fr);
+	gap: 24px;
+	width: 100%;
 
-  @media (min-width: 550px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+	@media (min-width: 550px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
 
-  @media (--viewportMedium) {
-    padding: 0 0 96px 0;
-    grid-template-columns: repeat(2, 1fr);
-  }
+	@media (--viewportMedium) {
+		padding: 0 0 96px 0;
+		grid-template-columns: repeat(2, 1fr);
+	}
 
-  @media (--viewportLarge) {
-    grid-template-columns: repeat(3, 1fr);
-  }
+	@media (--viewportLarge) {
+		grid-template-columns: repeat(3, 1fr);
+	}
 
-  @media (min-width: 1440px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
+	@media (min-width: 1440px) {
+		grid-template-columns: repeat(4, 1fr);
+	}
 
-  @media (--viewportXLarge) {
-    grid-template-columns: repeat(5, 1fr);
-  }
+	@media (--viewportXLarge) {
+		grid-template-columns: repeat(5, 1fr);
+	}
 }
 
 .listingCard {
-  width: 100%;
+	width: 100%;
 }
 
 .pagination {
-  /* margin-top: auto; pushes pagination to the end of the page. */
-  margin-top: auto;
-  background-color: transparent;
+	/* margin-top: auto; pushes pagination to the end of the page. */
+	margin-top: auto;
+	background-color: transparent;
 }

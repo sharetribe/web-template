@@ -1,25 +1,25 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .layoutWrapperMain {
-  min-height: calc(100vh - var(--topbarHeight));
+	min-height: calc(100vh - var(--topbarHeight));
 
-  @media (--viewportMedium) {
-    min-height: calc(100vh - var(--topbarHeightDesktop));
-  }
+	@media (--viewportMedium) {
+		min-height: calc(100vh - var(--topbarHeightDesktop));
+	}
 }
 
 .root {
-  flex-grow: 1;
+	flex-grow: 1;
 }
 
 .contentContainer {
-  composes: marketplaceModalRootStyles from global;
+	composes: marketplaceModalRootStyles from global;
 }
 
 .content {
-  composes: marketplaceModalBaseStyles from global;
+	composes: marketplaceModalBaseStyles from global;
 }
 
 .error {
-  composes: marketplaceModalPasswordMargins from global;
+	composes: marketplaceModalPasswordMargins from global;
 }

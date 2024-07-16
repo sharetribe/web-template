@@ -1,2 +1,2 @@
-import SectionFeatures from './SectionFeatures';
+import SectionFeatures from "./SectionFeatures";
 export default SectionFeatures;

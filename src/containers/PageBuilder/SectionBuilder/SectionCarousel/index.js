@@ -1,2 +1,2 @@
-import SectionCarousel from './SectionCarousel';
+import SectionCarousel from "./SectionCarousel";
 export default SectionCarousel;

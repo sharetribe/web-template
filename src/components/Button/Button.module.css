@@ -1,178 +1,178 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .root {
-  composes: buttonDefault from global;
+	composes: buttonDefault from global;
 
-  /* Clear padding that is set for link elements looking like buttons */
-  padding: 0;
+	/* Clear padding that is set for link elements looking like buttons */
+	padding: 0;
 }
 
 .primaryButtonRoot {
-  composes: buttonPrimary from global;
+	composes: buttonPrimary from global;
 
-  /* Clear padding that is set for link elements looking like buttons */
-  padding: 0;
+	/* Clear padding that is set for link elements looking like buttons */
+	padding: 0;
 }
 
 .primaryButtonInlineRoot {
-  composes: buttonPrimaryInline from global;
+	composes: buttonPrimaryInline from global;
 }
 
 .secondaryButtonRoot {
-  composes: buttonSecondary from global;
+	composes: buttonSecondary from global;
 
-  /* We must lift up the text from the center since it looks better with
+	/* We must lift up the text from the center since it looks better with
    the button border. Also clears the top padding set for link
    elements looking like buttons */
-  padding: 0 0 2px 0;
+	padding: 0 0 2px 0;
 }
 
 .secondaryButtonInlineRoot {
-  composes: buttonSecondaryInline from global;
+	composes: buttonSecondaryInline from global;
 
-  margin: 17px 0 0 0;
+	margin: 17px 0 0 0;
 }
 
 .inlineTextButtonRoot {
-  composes: a textSmall from global;
+	composes: a textSmall from global;
 }
 
 .primaryButton {
-  /* Class handle for primary button state styles */
+	/* Class handle for primary button state styles */
 }
 .secondaryButton {
-  /* Class handle for secondary button state styles */
+	/* Class handle for secondary button state styles */
 }
 .secondaryButtonInline {
-  /* Class handle for secondary button state styles */
+	/* Class handle for secondary button state styles */
 }
 
 .inProgress {
-  padding: 0;
+	padding: 0;
 
-  &:disabled {
-    background-color: var(--marketplaceColor);
-  }
+	&:disabled {
+		background-color: var(--marketplaceColor);
+	}
 }
 
 .primaryButton.inProgress:disabled {
-  background-color: var(--colorPrimaryButton);
+	background-color: var(--colorPrimaryButton);
 }
 
 .secondaryButton.inProgress:disabled,
 .secondaryButtonInline.inProgress:disabled {
-  background-color: var(--colorSecondaryButton);
+	background-color: var(--colorSecondaryButton);
 }
 
 .ready {
-  padding: 0;
+	padding: 0;
 
-  &:disabled {
-    background-color: var(--marketplaceColor);
-  }
+	&:disabled {
+		background-color: var(--marketplaceColor);
+	}
 }
 
 .primaryButton.ready:disabled {
-  background-color: var(--colorPrimaryButton);
+	background-color: var(--colorPrimaryButton);
 }
 
 .secondaryButton.ready:disabled,
 .secondaryButtonInline.ready:disabled {
-  background-color: var(--colorSecondaryButton);
+	background-color: var(--colorSecondaryButton);
 }
 
 .spinner {
-  width: 28px;
-  height: 28px;
-  stroke: var(--colorWhite);
-  stroke-width: 3px;
+	width: 28px;
+	height: 28px;
+	stroke: var(--colorWhite);
+	stroke-width: 3px;
 }
 
 .checkmark {
-  width: 24px;
-  height: 24px;
-  stroke: var(--colorWhite);
+	width: 24px;
+	height: 24px;
+	stroke: var(--colorWhite);
 
-  /* Animation */
-  animation-name: checkmarkAnimation;
-  animation-duration: 0.5s;
-  animation-iteration-count: 1;
-  animation-timing-function: ease-out;
+	/* Animation */
+	animation-name: checkmarkAnimation;
+	animation-duration: 0.5s;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-out;
 }
 
 @keyframes checkmarkAnimation {
-  0% {
-    opacity: 0;
-    transform: scale(0.75);
-  }
-  50% {
-    transform: scale(1.15);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+	0% {
+		opacity: 0;
+		transform: scale(0.75);
+	}
+	50% {
+		transform: scale(1.15);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
 }
 
 .secondaryButton .spinner,
 .secondaryButtonInline .spinner {
-  stroke: var(--colorGrey300);
+	stroke: var(--colorGrey300);
 }
 
 .secondaryButton .checkmark,
 .secondaryButtonInline .checkmark {
-  stroke: var(--colorGrey300);
+	stroke: var(--colorGrey300);
 }
 
 /* Social logins && SSO buttons */
 
 .socialButtonRoot {
-  display: block;
-  width: 100%;
-  min-height: 48px;
-  margin: 0;
+	display: block;
+	width: 100%;
+	min-height: 48px;
+	margin: 0;
 
-  padding: 0;
+	padding: 0;
 
-  transition: all var(--transitionStyleButton);
-  cursor: pointer;
+	transition: all var(--transitionStyleButton);
+	cursor: pointer;
 
-  font-family: var(--fontFamily);
-  font-weight: var(--fontWeightMedium);
-  font-size: 14px;
-  line-height: 24px;
+	font-family: var(--fontFamily);
+	font-weight: var(--fontWeightMedium);
+	font-size: 14px;
+	line-height: 24px;
 
-  text-align: center;
-  text-decoration: none;
+	text-align: center;
+	text-decoration: none;
 
-  border: 1px solid #d2d2d2;
-  border-radius: var(--borderRadiusMedium);
+	border: 1px solid #d2d2d2;
+	border-radius: var(--borderRadiusMedium);
 
-  background-color: var(--colorWhite);
-  color: var(--colorBlack);
+	background-color: var(--colorWhite);
+	color: var(--colorBlack);
 
-  /* We need to add this to position the icon inside button */
-  position: relative;
+	/* We need to add this to position the icon inside button */
+	position: relative;
 
-  &:hover,
-  &:focus {
-    outline: none;
-    box-shadow: var(--boxShadowButton);
-    background-color: var(--colorWhite);
-    text-decoration: none;
-  }
-  &:disabled {
-    box-shadow: none;
-    cursor: not-allowed;
-    background-color: var(--colorGrey100);
-    color: var(--colorWhite);
-  }
+	&:hover,
+	&:focus {
+		outline: none;
+		box-shadow: var(--boxShadowButton);
+		background-color: var(--colorWhite);
+		text-decoration: none;
+	}
+	&:disabled {
+		box-shadow: none;
+		cursor: not-allowed;
+		background-color: var(--colorGrey100);
+		color: var(--colorWhite);
+	}
 
-  @media (--viewportMedium) {
-    font-size: 16px;
-    line-height: 24px;
-    padding: 0;
-  }
+	@media (--viewportMedium) {
+		font-size: 16px;
+		line-height: 24px;
+		padding: 0;
+	}
 }
 
 .socialButton {

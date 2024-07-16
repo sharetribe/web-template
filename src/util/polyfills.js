@@ -5,7 +5,7 @@
 // Smoothscroll
 // TODO: scroll-behaviour smooth was added to Safari on March 2022.
 //       We could consider removing this on 2023.
-require('smoothscroll-polyfill').polyfill();
+require("smoothscroll-polyfill").polyfill();
 
 // To support browsers that do not have Intl.PluralRules (e.g IE11 & Safari 12-),
 // - add npm packaged to package.json: "intl-pluralrules": "^1.3.1",

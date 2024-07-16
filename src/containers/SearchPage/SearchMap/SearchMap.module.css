@@ -1,27 +1,27 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .root {
-  width: 100%;
-  height: 100%;
-  background-color: var(--colorGrey100);
+	width: 100%;
+	height: 100%;
+	background-color: var(--colorGrey100);
 }
 
 .mapRoot {
-  width: 100%;
-  height: 100%;
+	width: 100%;
+	height: 100%;
 }
 
 .reusableMap {
-  width: 100%;
-  height: 100%;
+	width: 100%;
+	height: 100%;
 }
 
 .defaultMapLayout {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 50vw;
-  height: 100vh;
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 50vw;
+	height: 100vh;
 }
 
 /**
@@ -29,15 +29,15 @@
  * Specificity rule is added to overwrite positioning coming from props.className
  */
 body > .reusableMapHidden {
-  position: absolute;
-  top: -1000px;
-  left: -1000px;
-  visibility: hidden;
-  opacity: 0;
+	position: absolute;
+	top: -1000px;
+	left: -1000px;
+	visibility: hidden;
+	opacity: 0;
 
-  @media (--viewportMedium) {
-    top: -1000px;
-    left: -1000px;
-    right: auto;
-  }
+	@media (--viewportMedium) {
+		top: -1000px;
+		left: -1000px;
+		right: auto;
+	}
 }

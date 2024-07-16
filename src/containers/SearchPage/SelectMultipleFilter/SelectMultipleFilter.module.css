@@ -1,39 +1,39 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .root {
-  position: relative;
-  display: inline-block;
+	position: relative;
+	display: inline-block;
 }
 
 .fieldGroup {
-  margin: 0;
-  padding: 0;
-  border: none;
+	margin: 0;
+	padding: 0;
+	border: none;
 }
 
 .fieldGroupPlain {
-  margin: 0;
-  padding-left: 12px;
-  padding-bottom: 6px;
-  border: none;
+	margin: 0;
+	padding-left: 12px;
+	padding-bottom: 6px;
+	border: none;
 
-  @media (--viewportMedium) {
-    padding: 3px 0 29px 12px;
-    padding: 4px 0 4px 12px;
-  }
+	@media (--viewportMedium) {
+		padding: 3px 0 29px 12px;
+		padding: 4px 0 4px 12px;
+	}
 }
 
 .list {
-  margin: 0;
+	margin: 0;
 }
 
 .item {
-  padding: 4px 0 2px 0;
+	padding: 4px 0 2px 0;
 
-  /* Fix broken multi-column layout in Chrome */
-  page-break-inside: avoid;
+	/* Fix broken multi-column layout in Chrome */
+	page-break-inside: avoid;
 
-  @media (--viewportMedium) {
-    padding: 4px 0;
-  }
+	@media (--viewportMedium) {
+		padding: 4px 0;
+	}
 }

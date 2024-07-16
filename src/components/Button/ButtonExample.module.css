@@ -1,26 +1,26 @@
 .buttonLink {
-  composes: buttonDefault from global;
+	composes: buttonDefault from global;
 }
 
 .buttonLinkPrimary {
-  composes: buttonPrimary from global;
+	composes: buttonPrimary from global;
 }
 
 .buttonLinkSecondary {
-  composes: buttonSecondary from global;
+	composes: buttonSecondary from global;
 }
 
 .customButton {
-  composes: buttonDefault from global;
+	composes: buttonDefault from global;
 
-  padding: 0;
-  border-radius: 8px;
-  height: 100px;
+	padding: 0;
+	border-radius: 8px;
+	height: 100px;
 }
 
 .customIcon {
-  width: 24px;
-  height: 24px;
-  stroke: #fff;
-  margin-right: 10px;
+	width: 24px;
+	height: 24px;
+	stroke: #fff;
+	margin-right: 10px;
 }

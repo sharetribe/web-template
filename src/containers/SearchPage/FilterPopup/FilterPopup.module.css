@@ -1,38 +1,38 @@
 .root {
-  position: relative;
-  display: inline-block;
+	position: relative;
+	display: inline-block;
 }
 
 .popup {
-  /* By default hide the content */
-  display: block;
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
+	/* By default hide the content */
+	display: block;
+	visibility: hidden;
+	opacity: 0;
+	pointer-events: none;
 
-  /* Position */
-  position: absolute;
-  z-index: var(--zIndexPopup);
+	/* Position */
+	position: absolute;
+	z-index: var(--zIndexPopup);
 
-  /* Layout */
-  min-width: 300px;
-  margin-top: 7px;
-  background-color: var(--colorWhite);
+	/* Layout */
+	min-width: 300px;
+	margin-top: 7px;
+	background-color: var(--colorWhite);
 
-  /* Borders */
-  border-top: 1px solid var(--colorGrey100);
-  box-shadow: var(--boxShadowPopup);
-  border-radius: var(--borderRadiusMedium);
-  transition: var(--transitionStyleButton);
+	/* Borders */
+	border-top: 1px solid var(--colorGrey100);
+	box-shadow: var(--boxShadowPopup);
+	border-radius: var(--borderRadiusMedium);
+	transition: var(--transitionStyleButton);
 }
 
 .popupSize {
-  padding: 15px 30px 17px 30px;
+	padding: 15px 30px 17px 30px;
 }
 
 .isOpen {
-  display: block;
-  visibility: visible;
-  opacity: 1;
-  pointer-events: auto;
+	display: block;
+	visibility: visible;
+	opacity: 1;
+	pointer-events: auto;
 }

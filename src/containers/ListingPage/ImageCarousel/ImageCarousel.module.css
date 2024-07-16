@@ -1,155 +1,155 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 :global(.image-gallery-content),
 :global(.image-gallery-slide-wrapper),
 :global(.image-gallery-swipe),
 :global(.image-gallery-slides),
 :global(.image-gallery-slide) {
-  width: 100%;
-  height: 100%;
+	width: 100%;
+	height: 100%;
 }
 
 :global(.image-gallery-slide-wrapper) {
-  background-color: var(--colorBlack);
+	background-color: var(--colorBlack);
 
-  @media (--viewportMedium) {
-    padding: 0 10%;
-  }
+	@media (--viewportMedium) {
+		padding: 0 10%;
+	}
 }
 
 .root {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  padding: 0;
-  background-color: var(--colorBlack);
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	padding: 0;
+	background-color: var(--colorBlack);
 
-  @media (--viewportMedium) {
-    padding: 100px 0;
-  }
+	@media (--viewportMedium) {
+		padding: 100px 0;
+	}
 }
 
 .noImage {
-  border: 1px solid var(--colorGrey100);
-  border-radius: var(--borderRadiusMedium);
+	border: 1px solid var(--colorGrey100);
+	border-radius: var(--borderRadiusMedium);
 }
 
 .itemCentering {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
 }
 
 .item {
-  max-width: 100%;
-  max-height: 100%;
+	max-width: 100%;
+	max-height: 100%;
 }
 
 .arrowHead {
-  fill: var(--colorWhite);
-  stroke: var(--colorWhite);
+	fill: var(--colorWhite);
+	stroke: var(--colorWhite);
 }
 
 .navLeft,
 .navRight {
-  position: absolute;
-  width: 10vw;
-  min-width: 52px;
-  height: 100%;
-  border: 0;
-  padding: 0;
-  z-index: 1;
+	position: absolute;
+	width: 10vw;
+	min-width: 52px;
+	height: 100%;
+	border: 0;
+	padding: 0;
+	z-index: 1;
 
-  /* center content */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	/* center content */
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-  &:hover {
-    cursor: pointer;
+	&:hover {
+		cursor: pointer;
 
-    & .navArrowWrapper {
-      background-color: rgba(255, 255, 255, 1);
-    }
-    & .arrowHead {
-      fill: var(--colorGrey300);
-      stroke: var(--colorGrey300);
-    }
-  }
+		& .navArrowWrapper {
+			background-color: rgba(255, 255, 255, 1);
+		}
+		& .arrowHead {
+			fill: var(--colorGrey300);
+			stroke: var(--colorGrey300);
+		}
+	}
 }
 
 .navLeft {
-  left: 0;
-  justify-content: flex-start;
-  padding-left: 12px;
+	left: 0;
+	justify-content: flex-start;
+	padding-left: 12px;
 
-  @media (--viewportMedium) {
-    padding-left: 3vw;
-  }
+	@media (--viewportMedium) {
+		padding-left: 3vw;
+	}
 
-  & .navArrowWrapper {
-    padding-right: 2px;
-  }
+	& .navArrowWrapper {
+		padding-right: 2px;
+	}
 }
 
 .navRight {
-  right: 0;
-  justify-content: flex-end;
-  padding-right: 12px;
+	right: 0;
+	justify-content: flex-end;
+	padding-right: 12px;
 
-  @media (--viewportMedium) {
-    padding-right: 3vw;
-  }
+	@media (--viewportMedium) {
+		padding-right: 3vw;
+	}
 
-  & .navArrowWrapper {
-    padding-left: 2px;
-  }
+	& .navArrowWrapper {
+		padding-left: 2px;
+	}
 }
 
 .navArrowWrapper {
-  display: none;
+	display: none;
 
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
 
-  background-color: transparent;
+	background-color: transparent;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-  @media (--viewportMedium) {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
+	@media (--viewportMedium) {
+		background-color: rgba(0, 0, 0, 0.5);
+	}
 }
 
 .imageWrapper {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 100%;
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	height: 100%;
 }
 
 .imageIndex {
-  /* Fonts */
-  composes: h4 from global;
-  font-weight: var(--fontWeightSemiBold);
+	/* Fonts */
+	composes: h4 from global;
+	font-weight: var(--fontWeightSemiBold);
 
-  /* Position and dimensions */
-  position: absolute;
-  top: 21px;
-  left: 20px;
-  margin: 0;
+	/* Position and dimensions */
+	position: absolute;
+	top: 21px;
+	left: 20px;
+	margin: 0;
 
-  /* Colors */
-  color: var(--colorWhite);
+	/* Colors */
+	color: var(--colorWhite);
 
-  @media (--viewportMedium) {
-    margin: 0;
-    font-weight: var(--fontWeightSemiBold);
-  }
+	@media (--viewportMedium) {
+		margin: 0;
+		font-weight: var(--fontWeightSemiBold);
+	}
 }

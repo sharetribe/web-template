@@ -5,22 +5,22 @@
  * @returns Object literal containing custom CSS Properties (e.g. ['--marketplaceColor']: #aaff00).
  */
 export const getCustomCSSPropertiesFromConfig = brandingConfig => {
-  const marketplaceColorsMaybe = brandingConfig.marketplaceColor
-    ? {
-        ['--marketplaceColor']: brandingConfig.marketplaceColor,
-        ['--marketplaceColorDark']: brandingConfig.marketplaceColorDark,
-        ['--marketplaceColorLight']: brandingConfig.marketplaceColorLight,
-      }
-    : {};
-  const primaryButtonColorsMaybe = brandingConfig.colorPrimaryButton
-    ? {
-        ['--colorPrimaryButton']: brandingConfig.colorPrimaryButton,
-        ['--colorPrimaryButtonDark']: brandingConfig.colorPrimaryButtonDark,
-        ['--colorPrimaryButtonLight']: brandingConfig.colorPrimaryButtonLight,
-      }
-    : {};
+	const marketplaceColorsMaybe = brandingConfig.marketplaceColor
+		? {
+				["--marketplaceColor"]: brandingConfig.marketplaceColor,
+				["--marketplaceColorDark"]: brandingConfig.marketplaceColorDark,
+				["--marketplaceColorLight"]: brandingConfig.marketplaceColorLight,
+		  }
+		: {};
+	const primaryButtonColorsMaybe = brandingConfig.colorPrimaryButton
+		? {
+				["--colorPrimaryButton"]: brandingConfig.colorPrimaryButton,
+				["--colorPrimaryButtonDark"]: brandingConfig.colorPrimaryButtonDark,
+				["--colorPrimaryButtonLight"]: brandingConfig.colorPrimaryButtonLight,
+		  }
+		: {};
 
-  return { ...marketplaceColorsMaybe, ...primaryButtonColorsMaybe };
+	return { ...marketplaceColorsMaybe, ...primaryButtonColorsMaybe };
 };
 
 /**
@@ -30,8 +30,8 @@ export const getCustomCSSPropertiesFromConfig = brandingConfig => {
  * @param {Node} element DOM element, which gets these CSS vars included.
  */
 export const includeCSSProperties = (brandingConfig, element) => {
-  Object.entries(getCustomCSSPropertiesFromConfig(brandingConfig)).forEach(customCSSProperty => {
-    const [key, value] = customCSSProperty;
-    element.style.setProperty(key, value);
-  });
+	Object.entries(getCustomCSSPropertiesFromConfig(brandingConfig)).forEach(customCSSProperty => {
+		const [key, value] = customCSSProperty;
+		element.style.setProperty(key, value);
+	});
 };

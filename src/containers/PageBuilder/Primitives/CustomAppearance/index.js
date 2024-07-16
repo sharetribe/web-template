@@ -1,1 +1,1 @@
-export { CustomAppearance } from './CustomAppearance';
+export { CustomAppearance } from "./CustomAppearance";

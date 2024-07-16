@@ -3,16 +3,16 @@
  * "has_all:a,b,c,d" or "a,b,c,d"
  */
 export const parseSelectFilterOptions = uriComponentValue => {
-  const startsWithHasAll = uriComponentValue && uriComponentValue.indexOf('has_all:') === 0;
-  const startsWithHasAny = uriComponentValue && uriComponentValue.indexOf('has_any:') === 0;
+	const startsWithHasAll = uriComponentValue && uriComponentValue.indexOf("has_all:") === 0;
+	const startsWithHasAny = uriComponentValue && uriComponentValue.indexOf("has_any:") === 0;
 
-  if (startsWithHasAll) {
-    return uriComponentValue.substring(8).split(',');
-  } else if (startsWithHasAny) {
-    return uriComponentValue.substring(8).split(',');
-  } else {
-    return uriComponentValue.split(',');
-  }
+	if (startsWithHasAll) {
+		return uriComponentValue.substring(8).split(",");
+	} else if (startsWithHasAny) {
+		return uriComponentValue.substring(8).split(",");
+	} else {
+		return uriComponentValue.split(",");
+	}
 };
 
 /**
@@ -22,8 +22,8 @@ export const parseSelectFilterOptions = uriComponentValue => {
  * @param {String} scope Scope extracted from listingExtendData config.
  */
 export const constructQueryParamName = (key, scope) => {
-  const prefixedKey = scope === 'meta' ? `meta_${key}` : `pub_${key}`;
-  return prefixedKey.replace(/\s/g, '_');
+	const prefixedKey = scope === "meta" ? `meta_${key}` : `pub_${key}`;
+	return prefixedKey.replace(/\s/g, "_");
 };
 
 /**
@@ -35,40 +35,40 @@ export const constructQueryParamName = (key, scope) => {
  * @param {Object} defaultFiltersConfig Configuration of default filters.
  */
 export const getQueryParamNames = (listingFieldsConfig, defaultFiltersConfig) => {
-  const queryParamKeysOfDefaultFilters = defaultFiltersConfig.reduce((pickedKeys, config) => {
-    const { key, schemaType, scope, nestedParams } = config;
-    const newKeys =
-      schemaType === 'category' && nestedParams
-        ? nestedParams?.map(p => constructQueryParamName(p, scope))
-        : [key];
-    return [...pickedKeys, ...newKeys];
-  }, []);
-  const queryParamKeysOfListingFields = listingFieldsConfig.reduce((params, config) => {
-    const param = constructQueryParamName(config.key, config.scope);
-    return config.filterConfig?.indexForSearch ? [...params, param] : params;
-  }, []);
-  return [...queryParamKeysOfDefaultFilters, ...queryParamKeysOfListingFields];
+	const queryParamKeysOfDefaultFilters = defaultFiltersConfig.reduce((pickedKeys, config) => {
+		const { key, schemaType, scope, nestedParams } = config;
+		const newKeys =
+			schemaType === "category" && nestedParams
+				? nestedParams?.map(p => constructQueryParamName(p, scope))
+				: [key];
+		return [...pickedKeys, ...newKeys];
+	}, []);
+	const queryParamKeysOfListingFields = listingFieldsConfig.reduce((params, config) => {
+		const param = constructQueryParamName(config.key, config.scope);
+		return config.filterConfig?.indexForSearch ? [...params, param] : params;
+	}, []);
+	return [...queryParamKeysOfDefaultFilters, ...queryParamKeysOfListingFields];
 };
 /**
  * Check if any of the filters (defined by filterKeys) have currently active query parameter in URL.
  */
 export const isAnyFilterActive = (filterKeys, urlQueryParams, filterConfigs) => {
-  const { listingFieldsConfig, defaultFiltersConfig } = filterConfigs;
-  const queryParamKeys = getQueryParamNames(listingFieldsConfig, defaultFiltersConfig);
+	const { listingFieldsConfig, defaultFiltersConfig } = filterConfigs;
+	const queryParamKeys = getQueryParamNames(listingFieldsConfig, defaultFiltersConfig);
 
-  const getQueryParamKeysOfGivenFilters = (pickedKeys, key) => {
-    const isFilterIncluded = filterKeys.includes(key);
-    const addedQueryParamNamesMaybe = isFilterIncluded ? [key] : [];
-    return [...pickedKeys, ...addedQueryParamNamesMaybe];
-  };
-  const queryParamKeysOfGivenFilters = queryParamKeys.reduce(getQueryParamKeysOfGivenFilters, []);
+	const getQueryParamKeysOfGivenFilters = (pickedKeys, key) => {
+		const isFilterIncluded = filterKeys.includes(key);
+		const addedQueryParamNamesMaybe = isFilterIncluded ? [key] : [];
+		return [...pickedKeys, ...addedQueryParamNamesMaybe];
+	};
+	const queryParamKeysOfGivenFilters = queryParamKeys.reduce(getQueryParamKeysOfGivenFilters, []);
 
-  const paramEntries = Object.entries(urlQueryParams);
-  const activeKey = paramEntries.find(entry => {
-    const [key, value] = entry;
-    return queryParamKeysOfGivenFilters.includes(key) && value != null;
-  });
-  return !!activeKey;
+	const paramEntries = Object.entries(urlQueryParams);
+	const activeKey = paramEntries.find(entry => {
+		const [key, value] = entry;
+		return queryParamKeysOfGivenFilters.includes(key) && value != null;
+	});
+	return !!activeKey;
 };
 
 /**
@@ -82,14 +82,14 @@ export const isAnyFilterActive = (filterKeys, urlQueryParams, filterConfigs) => 
  * @returns returns properties, which have a key that starts with the given prefix.
  */
 export const pickInitialValuesForFieldSelectTree = (prefix, values) => {
-  const pickValuesFn = (picked, entry) => {
-    const [key, value] = entry;
-    const prefixIndex = key.indexOf(prefix);
-    const startsWithPrefix = prefixIndex > -1;
-    return startsWithPrefix ? { ...picked, [key.slice(prefixIndex)]: value } : picked;
-  };
-  const prefixCollection = Object.entries(values).reduce(pickValuesFn, {});
-  return prefixCollection;
+	const pickValuesFn = (picked, entry) => {
+		const [key, value] = entry;
+		const prefixIndex = key.indexOf(prefix);
+		const startsWithPrefix = prefixIndex > -1;
+		return startsWithPrefix ? { ...picked, [key.slice(prefixIndex)]: value } : picked;
+	};
+	const prefixCollection = Object.entries(values).reduce(pickValuesFn, {});
+	return prefixCollection;
 };
 
 /**
@@ -100,40 +100,40 @@ export const pickInitialValuesForFieldSelectTree = (prefix, values) => {
  * @returns an array that contains objects with props: _option_, _label_ and potentially _suboptions_.
  */
 export const convertCategoriesToSelectTreeOptions = categories => {
-  const convertSubcategoryData = params => {
-    const { id, name, subcategories } = params;
-    const suboptionsMaybe = subcategories
-      ? { suboptions: subcategories.map(cat => convertSubcategoryData(cat)) }
-      : {};
-    return { option: id, label: name, ...suboptionsMaybe };
-  };
+	const convertSubcategoryData = params => {
+		const { id, name, subcategories } = params;
+		const suboptionsMaybe = subcategories
+			? { suboptions: subcategories.map(cat => convertSubcategoryData(cat)) }
+			: {};
+		return { option: id, label: name, ...suboptionsMaybe };
+	};
 
-  const categoriesArray = Array.isArray(categories) ? categories : [];
-  return categoriesArray.map(cat => convertSubcategoryData(cat));
+	const categoriesArray = Array.isArray(categories) ? categories : [];
+	return categoriesArray.map(cat => convertSubcategoryData(cat));
 };
 
 /**
  * Check if the main search type is 'keywords'
  */
 export const isMainSearchTypeKeywords = config =>
-  config.search?.mainSearch?.searchType === 'keywords';
+	config.search?.mainSearch?.searchType === "keywords";
 
 /**
  * Check if the origin parameter is currently active.
  */
 export const isOriginInUse = config =>
-  config.search?.mainSearch?.searchType === 'location' && config.maps?.search?.sortSearchByDistance;
+	config.search?.mainSearch?.searchType === "location" && config.maps?.search?.sortSearchByDistance;
 
 /**
  * Check if the stock management is currently active.
  */
 export const isStockInUse = config => {
-  const listingTypes = config.listing.listingTypes;
-  const stockProcesses = ['default-purchase'];
-  const hasStockProcessesInUse = !!listingTypes.find(conf =>
-    stockProcesses.includes(conf.transactionType.process)
-  );
+	const listingTypes = config.listing.listingTypes;
+	const stockProcesses = ["default-purchase"];
+	const hasStockProcessesInUse = !!listingTypes.find(conf =>
+		stockProcesses.includes(conf.transactionType.process),
+	);
 
-  // Note: these are active processes!
-  return hasStockProcessesInUse;
+	// Note: these are active processes!
+	return hasStockProcessesInUse;
 };

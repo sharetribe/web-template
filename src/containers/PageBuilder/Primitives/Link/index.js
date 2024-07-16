@@ -1,2 +1,2 @@
-export { Link } from './Link';
-export { SocialMediaLink } from './SocialMediaLink';
+export { Link } from "./Link";
+export { SocialMediaLink } from "./SocialMediaLink";

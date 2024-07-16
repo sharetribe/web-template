@@ -1,58 +1,58 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .root {
-  position: relative;
-  box-shadow: var(--boxShadowBottomForm);
+	position: relative;
+	box-shadow: var(--boxShadowBottomForm);
 
-  @media (--viewportLarge) {
-    box-shadow: none;
+	@media (--viewportLarge) {
+		box-shadow: none;
 
-    /* Clearfix */
-    width: 100%;
-    overflow: hidden;
-  }
+		/* Clearfix */
+		width: 100%;
+		overflow: hidden;
+	}
 }
 
 .spinner {
-  stroke: var(--colorWhite);
-  width: 18px;
-  height: 18px;
-  stroke-width: 4px;
+	stroke: var(--colorWhite);
+	width: 18px;
+	height: 18px;
+	stroke-width: 4px;
 }
 
 .fillSuccess {
-  fill: var(--colorSuccess);
+	fill: var(--colorSuccess);
 }
 
 .strokeMatter {
-  stroke: var(--colorGrey700);
+	stroke: var(--colorGrey700);
 }
 
 .submitContainer {
-  display: flex;
-  flex-direction: row;
+	display: flex;
+	flex-direction: row;
 }
 
 .errorContainer {
-  display: block;
-  flex: 1;
-  text-align: right;
-  padding: 26px 24px 0 0;
+	display: block;
+	flex: 1;
+	text-align: right;
+	padding: 26px 24px 0 0;
 }
 
 .error {
-  composes: h5 from global;
+	composes: h5 from global;
 
-  font-weight: var(--fontWeightMedium);
-  color: var(--colorFail);
-  margin: 0;
+	font-weight: var(--fontWeightMedium);
+	color: var(--colorFail);
+	margin: 0;
 }
 
 .submitButton {
-  float: right;
-  min-width: 150px;
+	float: right;
+	min-width: 150px;
 }
 
 .sendIcon {
-  margin: -3px 5px 0 0;
+	margin: -3px 5px 0 0;
 }

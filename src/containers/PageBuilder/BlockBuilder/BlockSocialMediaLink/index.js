@@ -1,2 +1,2 @@
-import BlockSocialMediaLink from './BlockSocialMediaLink';
+import BlockSocialMediaLink from "./BlockSocialMediaLink";
 export default BlockSocialMediaLink;

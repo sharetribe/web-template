@@ -1,60 +1,60 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .coverEverything {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 }
 
 .root {
-  /* Positioning */
-  composes: coverEverything;
+	/* Positioning */
+	composes: coverEverything;
 }
 
 .overlay {
-  /* Positioning */
-  composes: coverEverything;
+	/* Positioning */
+	composes: coverEverything;
 
-  /* Overlay background style */
-  background-color: var(--colorWhite);
-  opacity: 0.9;
+	/* Overlay background style */
+	background-color: var(--colorWhite);
+	opacity: 0.9;
 }
 
 .overlayContent {
-  composes: h4 from global;
-  color: var(--colorGrey700);
+	composes: h4 from global;
+	color: var(--colorGrey700);
 
-  /* Positioning */
-  composes: coverEverything;
+	/* Positioning */
+	composes: coverEverything;
 
-  /* Layout */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  cursor: default;
+	/* Layout */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	cursor: default;
 
-  /* Remove default margins from font */
-  margin-top: 0;
-  margin-bottom: 0;
+	/* Remove default margins from font */
+	margin-top: 0;
+	margin-bottom: 0;
 }
 
 @media (--viewportMedium) {
-  .overlayContent {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+	.overlayContent {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
 }
 
 .message {
-  composes: textXSmall from global;
-  max-width: 220px;
-  text-align: center;
+	composes: textXSmall from global;
+	max-width: 220px;
+	text-align: center;
 }
 
 .errorMessage {
-  composes: message;
-  color: var(--colorFail);
+	composes: message;
+	color: var(--colorFail);
 }

@@ -1,49 +1,49 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .root {
-  composes: marketplaceModalFormRootStyles from global;
+	composes: marketplaceModalFormRootStyles from global;
 
-  justify-content: flex-start;
+	justify-content: flex-start;
 
-  @media (--viewportMedium) {
-    justify-content: space-between;
-  }
+	@media (--viewportMedium) {
+		justify-content: space-between;
+	}
 }
 
 .defaultUserFields {
 }
 
 .name {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 24px;
+	display: flex;
+	justify-content: space-between;
+	margin-top: 24px;
 
-  @media (--viewportMedium) {
-    margin-top: 32px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 32px;
+	}
 }
 
 .row,
 .customFields {
-  margin-top: 24px;
+	margin-top: 24px;
 
-  @media (--viewportMedium) {
-    margin-top: 32px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 32px;
+	}
 }
 
 .firstNameRoot {
-  width: calc(34% - 9px);
+	width: calc(34% - 9px);
 }
 
 .lastNameRoot {
-  width: calc(66% - 9px);
+	width: calc(66% - 9px);
 }
 
 .password {
-  composes: marketplaceModalPasswordMargins from global;
+	composes: marketplaceModalPasswordMargins from global;
 }
 
 .bottomWrapper {
-  composes: marketplaceModalBottomWrapper from global;
+	composes: marketplaceModalBottomWrapper from global;
 }

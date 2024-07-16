@@ -1,7 +1,7 @@
-import IconDelete from './IconDelete';
+import IconDelete from "./IconDelete";
 
 export const Icon = {
-  component: IconDelete,
-  props: {},
-  group: 'icons',
+	component: IconDelete,
+	props: {},
+	group: "icons",
 };

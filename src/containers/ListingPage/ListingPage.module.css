@@ -1,727 +1,727 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .root {
 }
 
 .pageRoot {
-  padding-bottom: 90px;
+	padding-bottom: 90px;
 
-  @media (--viewportLarge) {
-    padding-bottom: 0;
-  }
+	@media (--viewportLarge) {
+		padding-bottom: 0;
+	}
 }
 
 .loadingText {
-  margin: 24px;
+	margin: 24px;
 }
 
 .errorText {
-  color: var(--colorFail);
-  margin: 24px;
+	color: var(--colorFail);
+	margin: 24px;
 }
 
 .sectionHero {
-  position: relative;
-  margin: 0 0 36px 0;
+	position: relative;
+	margin: 0 0 36px 0;
 
-  @media (--viewportMedium) {
-    margin: 0;
-  }
+	@media (--viewportMedium) {
+		margin: 0;
+	}
 }
 
 .heroHeight {
-  @media (--viewportMedium) {
-    height: calc(0.41 * 100vw);
-    max-height: 50vh;
-    overflow-y: hidden;
-  }
+	@media (--viewportMedium) {
+		height: calc(0.41 * 100vw);
+		max-height: 50vh;
+		overflow-y: hidden;
+	}
 }
 
 .imageWrapperForSectionHero {
-  composes: heroHeight;
-  background-color: var(--colorGrey100); /* Loading BG color */
+	composes: heroHeight;
+	background-color: var(--colorGrey100); /* Loading BG color */
 
-  /* Image carousel can be opened from the image, therefore we should show a pointer */
-  cursor: pointer;
+	/* Image carousel can be opened from the image, therefore we should show a pointer */
+	cursor: pointer;
 }
 
 .actionBar {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  width: 100%;
-  color: var(--colorGrey100);
-  background-color: var(--colorGrey700);
-  z-index: 1; /* bring on top of mobile image */
+	display: flex;
+	justify-content: space-between;
+	flex-direction: column;
+	width: 100%;
+	color: var(--colorGrey100);
+	background-color: var(--colorGrey700);
+	z-index: 1; /* bring on top of mobile image */
 
-  /* Action bar prevents the image click events going to the parent and
+	/* Action bar prevents the image click events going to the parent and
    should not show a pointer */
-  cursor: initial;
+	cursor: initial;
 
-  border-radius: var(--borderRadius);
+	border-radius: var(--borderRadius);
 
-  @media (--viewportMedium) {
-    flex-direction: row;
-  }
+	@media (--viewportMedium) {
+		flex-direction: row;
+	}
 }
 
 .actionBarForProductLayout {
-  margin: 24px;
-  width: calc(100% - 48px);
+	margin: 24px;
+	width: calc(100% - 48px);
 
-  @media (--viewportMedium) {
-    margin: 24px 0 24px 0;
-    width: 100%;
-  }
+	@media (--viewportMedium) {
+		margin: 24px 0 24px 0;
+		width: 100%;
+	}
 
-  @media (--viewportLarge) {
-    margin: 0 0 24px 0;
-  }
+	@media (--viewportLarge) {
+		margin: 0 0 24px 0;
+	}
 }
 
 .actionBarContainerForHeroLayout {
-  position: absolute;
-  top: 13px;
-  left: 13px;
-  width: calc(100% - 26px);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+	position: absolute;
+	top: 13px;
+	left: 13px;
+	width: calc(100% - 26px);
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
 }
 
 .actionBarForHeroLayout {
-  /* Action bar prevents the image click events going to the parent and
+	/* Action bar prevents the image click events going to the parent and
    should not show a pointer */
-  cursor: initial;
+	cursor: initial;
 }
 
 .ownListingText {
-  composes: h5 from global;
-  margin: 14px 24px 11px 24px;
+	composes: h5 from global;
+	margin: 14px 24px 11px 24px;
 
-  @media (--viewportMedium) {
-    margin: 24px 12px 24px 24px;
-  }
+	@media (--viewportMedium) {
+		margin: 24px 12px 24px 24px;
+	}
 }
 
 .ownListingTextPendingApproval {
-  color: var(--colorAttention);
+	color: var(--colorAttention);
 }
 
 .closedListingText {
-  composes: h4 from global;
-  margin: 14px 12px 11px 24px;
-  text-align: center;
-  width: 100%;
+	composes: h4 from global;
+	margin: 14px 12px 11px 24px;
+	text-align: center;
+	width: 100%;
 
-  @media (--viewportMedium) {
-    margin: 25px 12px 22px 24px;
-  }
+	@media (--viewportMedium) {
+		margin: 25px 12px 22px 24px;
+	}
 }
 
 .addPayoutDetails,
 .editListingLink {
-  composes: h5 from global;
-  flex-shrink: 0;
-  margin: 14px 24px 11px 24px;
-  color: var(--colorGrey100);
+	composes: h5 from global;
+	flex-shrink: 0;
+	margin: 14px 24px 11px 24px;
+	color: var(--colorGrey100);
 
-  transition: var(--transitionStyleButton);
+	transition: var(--transitionStyleButton);
 
-  &:hover {
-    color: var(--colorWhite);
-    text-decoration: none;
-  }
+	&:hover {
+		color: var(--colorWhite);
+		text-decoration: none;
+	}
 
-  @media (--viewportMedium) {
-    margin: 24px 24px 24px 12px;
-  }
+	@media (--viewportMedium) {
+		margin: 24px 24px 24px 12px;
+	}
 }
 
 .missingPayoutDetailsText {
-  color: var(--colorAttention);
+	color: var(--colorAttention);
 }
 
 .payoutDetailsWarning {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
 }
 
 .editIcon {
-  margin: -6px 7px 0 0;
+	margin: -6px 7px 0 0;
 }
 
 .rootForImage {
-  composes: heroHeight;
-  width: 100%;
-  transition: var(--transitionStyleButton);
+	composes: heroHeight;
+	width: 100%;
+	transition: var(--transitionStyleButton);
 
-  @media (--viewportMedium) {
-    object-fit: cover;
-    border-radius: var(--borderRadius);
+	@media (--viewportMedium) {
+		object-fit: cover;
+		border-radius: var(--borderRadius);
 
-    &:hover {
-      transform: scale(1.005);
-      box-shadow: var(--boxShadowListingCard);
-    }
-  }
+		&:hover {
+			transform: scale(1.005);
+			box-shadow: var(--boxShadowListingCard);
+		}
+	}
 }
 
 .viewPhotos {
-  composes: marketplaceTinyFontStyles from global;
-  font-weight: var(--fontWeightMedium);
+	composes: marketplaceTinyFontStyles from global;
+	font-weight: var(--fontWeightMedium);
 
-  /* Position and dimensions */
-  position: absolute;
-  bottom: 19px;
-  right: 24px;
-  margin: 0;
-  padding: 8px 13px 6px 13px;
+	/* Position and dimensions */
+	position: absolute;
+	bottom: 19px;
+	right: 24px;
+	margin: 0;
+	padding: 8px 13px 6px 13px;
 
-  /* Colors */
-  background-color: var(--colorWhite);
+	/* Colors */
+	background-color: var(--colorWhite);
 
-  /* Borders */
-  border: none;
-  border-radius: var(--borderRadius);
+	/* Borders */
+	border: none;
+	border-radius: var(--borderRadius);
 
-  cursor: pointer;
-  transition: var(--transitionStyleButton);
+	cursor: pointer;
+	transition: var(--transitionStyleButton);
 
-  &:hover {
-    background-color: var(--marketplaceColor);
-    color: var(--colorWhite);
-  }
+	&:hover {
+		background-color: var(--marketplaceColor);
+		color: var(--colorWhite);
+	}
 
-  @media (--viewportMedium) {
-    margin: 0;
-  }
+	@media (--viewportMedium) {
+		margin: 0;
+	}
 }
 
 .carouselModalScrollLayer {
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(1, 1, 1, 0.92);
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(1, 1, 1, 0.92);
 }
 
 .carouselModalContainer {
-  width: 100%;
-  height: 100%;
+	width: 100%;
+	height: 100%;
 }
 
 .contentWrapperForHeroLayout {
-  @media (--viewportMedium) {
-    width: 100%;
-    max-width: var(--contentMaxWidth);
-    margin: 0 auto;
-    padding: 0 24px;
-    display: flex;
-    position: relative;
-  }
+	@media (--viewportMedium) {
+		width: 100%;
+		max-width: var(--contentMaxWidth);
+		margin: 0 auto;
+		padding: 0 24px;
+		display: flex;
+		position: relative;
+	}
 
-  @media (--viewportLarge) {
-    max-width: calc(var(--contentMaxWidth) + 72px);
-    padding: 0 36px;
-    margin: 0 auto 117px;
-  }
+	@media (--viewportLarge) {
+		max-width: calc(var(--contentMaxWidth) + 72px);
+		padding: 0 36px;
+		margin: 0 auto 117px;
+	}
 
-  @media (--viewportXLarge) {
-    max-width: var(--contentMaxWidth);
-    padding: 0;
-  }
+	@media (--viewportXLarge) {
+		max-width: var(--contentMaxWidth);
+		padding: 0;
+	}
 }
 
 .mainColumnForProductLayout {
-  @media (--viewportMedium) {
-  }
-  @media (--viewportLarge) {
-    /* contentContainer's full width - (orderColumn + paddings + margin) */
-    max-width: calc(100% - 360px);
-    flex-basis: calc(100% - 360px);
-    flex-shrink: 0;
-    flex-grow: 1;
-  }
+	@media (--viewportMedium) {
+	}
+	@media (--viewportLarge) {
+		/* contentContainer's full width - (orderColumn + paddings + margin) */
+		max-width: calc(100% - 360px);
+		flex-basis: calc(100% - 360px);
+		flex-shrink: 0;
+		flex-grow: 1;
+	}
 }
 
 .orderColumnForProductLayout {
-  @media (--viewportMedium) {
-  }
-  @media (--viewportLarge) {
-    display: block;
-    margin-left: 48px;
-    flex-basis: 312px;
-    flex-shrink: 0;
-  }
+	@media (--viewportMedium) {
+	}
+	@media (--viewportLarge) {
+		display: block;
+		margin-left: 48px;
+		flex-basis: 312px;
+		flex-shrink: 0;
+	}
 }
 
 .contentWrapperForProductLayout {
-  margin: 0 0 56px 0;
+	margin: 0 0 56px 0;
 
-  @media (--viewportMedium) {
-    width: 100%;
-    max-width: var(--contentMaxWidth);
-    padding: 0 24px 0 24px;
-    margin: 0 auto 56px auto;
-  }
+	@media (--viewportMedium) {
+		width: 100%;
+		max-width: var(--contentMaxWidth);
+		padding: 0 24px 0 24px;
+		margin: 0 auto 56px auto;
+	}
 
-  @media (--viewportLarge) {
-    display: flex;
-    flex-direction: row;
-    max-width: unset;
-    width: min(calc(var(--contentMaxWidth) + 72px), 100vw);
-    padding: 64px 36px 0 36px;
-    margin: 0 auto 117px auto;
-  }
+	@media (--viewportLarge) {
+		display: flex;
+		flex-direction: row;
+		max-width: unset;
+		width: min(calc(var(--contentMaxWidth) + 72px), 100vw);
+		padding: 64px 36px 0 36px;
+		margin: 0 auto 117px auto;
+	}
 }
 
 .mainColumnForHeroLayout {
-  flex-basis: 100%;
-  margin-bottom: 23px;
+	flex-basis: 100%;
+	margin-bottom: 23px;
 
-  @media (--viewportMedium) {
-    margin-top: 50px;
-    margin-bottom: 51px;
-    flex-shrink: 0;
-  }
+	@media (--viewportMedium) {
+		margin-top: 50px;
+		margin-bottom: 51px;
+		flex-shrink: 0;
+	}
 
-  @media (--viewportLarge) {
-    margin-top: 80px;
-    margin-bottom: 0px;
-    /* contentContainer's full width - (orderColumn + two paddings + margin + border) */
-    max-width: calc(100% - 433px);
-    flex-basis: calc(100% - 433px);
-    flex-shrink: 0;
-    flex-grow: 1;
-  }
+	@media (--viewportLarge) {
+		margin-top: 80px;
+		margin-bottom: 0px;
+		/* contentContainer's full width - (orderColumn + two paddings + margin + border) */
+		max-width: calc(100% - 433px);
+		flex-basis: calc(100% - 433px);
+		flex-shrink: 0;
+		flex-grow: 1;
+	}
 }
 
 .orderColumnForHeroLayout {
-  @media (--viewportMedium) {
-  }
-  @media (--viewportLarge) {
-    display: block;
-    margin-top: 80px;
-    margin-left: 60px;
-    border-left: 1px solid var(--colorGrey100);
-    padding-left: 60px;
-    flex-basis: 312px;
-    flex-shrink: 0;
-  }
+	@media (--viewportMedium) {
+	}
+	@media (--viewportLarge) {
+		display: block;
+		margin-top: 80px;
+		margin-left: 60px;
+		border-left: 1px solid var(--colorGrey100);
+		padding-left: 60px;
+		flex-basis: 312px;
+		flex-shrink: 0;
+	}
 }
 
 .orderPanel {
-  /* Note: panel height might be too much on small viewport - hence min-height */
-  @media (--viewportLarge) and (min-height: 950px) {
-    position: sticky;
-    top: 108px;
-  }
+	/* Note: panel height might be too much on small viewport - hence min-height */
+	@media (--viewportLarge) and (min-height: 950px) {
+		position: sticky;
+		top: 108px;
+	}
 }
 
 .productOrderPanel {
-  @media (--viewportLarge) {
-    display: block;
-    margin-top: 24px;
-  }
-  /* Note: panel height might be too much on small viewport - hence min-height */
-  @media (--viewportLarge) and (min-height: 950px) {
-    position: sticky;
-    top: 108px;
-  }
+	@media (--viewportLarge) {
+		display: block;
+		margin-top: 24px;
+	}
+	/* Note: panel height might be too much on small viewport - hence min-height */
+	@media (--viewportLarge) and (min-height: 950px) {
+		position: sticky;
+		top: 108px;
+	}
 }
 
 .orderPanelTitle {
-  /* Font */
-  font-weight: var(--fontWeightBold);
+	/* Font */
+	font-weight: var(--fontWeightBold);
 
-  /* Layout */
-  width: 100%;
-  margin-top: 0;
-  margin-bottom: 0;
+	/* Layout */
+	width: 100%;
+	margin-top: 0;
+	margin-bottom: 0;
 }
 
 .sectionAvatar {
-  /* Position (over the listing image)*/
-  margin-left: 24px;
-  margin-top: -31px;
+	/* Position (over the listing image)*/
+	margin-left: 24px;
+	margin-top: -31px;
 
-  /* Rendering context to the same lavel as listing image */
-  position: relative;
+	/* Rendering context to the same lavel as listing image */
+	position: relative;
 
-  /* Flexbox would give too much width by default. */
-  width: 60px;
+	/* Flexbox would give too much width by default. */
+	width: 60px;
 
-  @media (--viewportMedium) {
-    position: absolute;
-    top: -49px;
-    margin-left: 0;
-    margin-top: 0;
-  }
+	@media (--viewportMedium) {
+		position: absolute;
+		top: -49px;
+		margin-left: 0;
+		margin-top: 0;
+	}
 }
 
 .avatarMobile {
-  display: flex;
+	display: flex;
 
-  @media (--viewportMedium) {
-    display: none; /* Hide the medium avatar from the bigger screens */
-  }
+	@media (--viewportMedium) {
+		display: none; /* Hide the medium avatar from the bigger screens */
+	}
 }
 
 .avatarDesktop {
-  display: none; /* Hide the large avatar from the smaller screens */
+	display: none; /* Hide the large avatar from the smaller screens */
 
-  @media (--viewportMedium) {
-    display: flex;
-  }
+	@media (--viewportMedium) {
+		display: flex;
+	}
 }
 
 .desktopPriceContainer {
-  display: none;
+	display: none;
 
-  @media (--viewportLarge) {
-    /* Layout */
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    flex-shrink: 0;
-    margin: 0 48px 0 0;
-    padding: 0;
-  }
+	@media (--viewportLarge) {
+		/* Layout */
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		flex-shrink: 0;
+		margin: 0 48px 0 0;
+		padding: 0;
+	}
 }
 
 .desktopPriceValue {
-  /* Font */
-  composes: marketplaceModalTitleStyles from global;
-  color: var(--marketplaceColor);
+	/* Font */
+	composes: marketplaceModalTitleStyles from global;
+	color: var(--marketplaceColor);
 
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 1px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 0;
+		margin-bottom: 1px;
+	}
 }
 
 .desktopPerUnit {
-  /* Font */
-  composes: h5 from global;
-  color: var(--colorGrey700);
+	/* Font */
+	composes: h5 from global;
+	color: var(--colorGrey700);
 
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+	@media (--viewportMedium) {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
 }
 
 .heading {
-  margin-bottom: 33px;
-  padding: 0 24px;
+	margin-bottom: 33px;
+	padding: 0 24px;
 
-  @media (--viewportMedium) {
-    margin-bottom: 0;
-    padding: 0;
-  }
+	@media (--viewportMedium) {
+		margin-bottom: 0;
+		padding: 0;
+	}
 }
 
 .title {
-  /* Font */
-  composes: marketplaceModalTitleStyles from global;
-  color: var(--colorGrey700);
+	/* Font */
+	composes: marketplaceModalTitleStyles from global;
+	color: var(--colorGrey700);
 
-  /* Layout */
-  width: 100%;
-  margin-top: 0;
-  margin-bottom: 0;
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 2px;
-  }
+	/* Layout */
+	width: 100%;
+	margin-top: 0;
+	margin-bottom: 0;
+	@media (--viewportMedium) {
+		margin-top: 0;
+		margin-bottom: 2px;
+	}
 }
 
 .author {
-  width: 100%;
-  composes: h5 from global;
+	width: 100%;
+	composes: h5 from global;
 
-  margin-top: 7px;
-  margin-bottom: 0;
+	margin-top: 7px;
+	margin-bottom: 0;
 
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-    color: var(--colorGrey700);
-  }
+	@media (--viewportMedium) {
+		margin-top: 0;
+		margin-bottom: 0;
+		color: var(--colorGrey700);
+	}
 }
 
 .authorNameLink {
-  composes: textSmall from global;
-  color: var(--colorGrey700);
+	composes: textSmall from global;
+	color: var(--colorGrey700);
 }
 
 .contactWrapper {
-  display: none;
+	display: none;
 
-  @media (--viewportMedium) {
-    display: inline;
-  }
+	@media (--viewportMedium) {
+		display: inline;
+	}
 }
 
 .separator {
-  margin: 0 6px;
+	margin: 0 6px;
 }
 
 .contactLink {
-  /* Position and dimensions */
-  display: inline;
-  padding: 0;
+	/* Position and dimensions */
+	display: inline;
+	padding: 0;
 
-  /* Borders */
-  border: none;
+	/* Borders */
+	border: none;
 
-  /* Colors */
-  color: var(--marketplaceColor);
+	/* Colors */
+	color: var(--marketplaceColor);
 
-  /* Text size should be inherited */
-  text-decoration: none;
+	/* Text size should be inherited */
+	text-decoration: none;
 
-  font-weight: var(--fontWeightMedium);
-  font-size: 14px;
-  line-height: 18px;
-  letter-spacing: 0;
-  margin: 0;
+	font-weight: var(--fontWeightMedium);
+	font-size: 14px;
+	line-height: 18px;
+	letter-spacing: 0;
+	margin: 0;
 
-  &:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
+	&:hover {
+		text-decoration: underline;
+		cursor: pointer;
+	}
 
-  @media (--viewportMedium) {
-    line-height: 16px;
-  }
+	@media (--viewportMedium) {
+		line-height: 16px;
+	}
 }
 
 .sectionText {
-  padding: 0 24px;
-  margin-bottom: 36px;
+	padding: 0 24px;
+	margin-bottom: 36px;
 
-  @media (--viewportMedium) {
-    padding: 0;
-    margin-bottom: 40px;
-  }
+	@media (--viewportMedium) {
+		padding: 0;
+		margin-bottom: 40px;
+	}
 }
 
 .sectionHeading,
 .sectionHeadingWithExtraMargin {
-  /* Font for sections titles */
-  composes: p from global;
-  padding: 0;
-  font-weight: var(--fontWeightBold);
+	/* Font for sections titles */
+	composes: p from global;
+	padding: 0;
+	font-weight: var(--fontWeightBold);
 
-  margin-top: 0;
-  margin-bottom: 12px;
+	margin-top: 0;
+	margin-bottom: 12px;
 
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 8px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 0;
+		margin-bottom: 8px;
+	}
 }
 
 .sectionHeadingWithExtraMargin {
-  @media (--viewportMedium) {
-    margin-bottom: 16px;
-  }
+	@media (--viewportMedium) {
+		margin-bottom: 16px;
+	}
 }
 
 .text {
-  font-weight: var(--fontWeightRegular);
-  padding: 1px 0 5px 0;
-  margin: 0;
+	font-weight: var(--fontWeightRegular);
+	padding: 1px 0 5px 0;
+	margin: 0;
 
-  /* Preserve newlines, but collapse other whitespace */
-  white-space: pre-line;
+	/* Preserve newlines, but collapse other whitespace */
+	white-space: pre-line;
 
-  @media (--viewportMedium) {
-    padding: 3px 0 5px 0;
-    margin: 0;
-  }
+	@media (--viewportMedium) {
+		padding: 3px 0 5px 0;
+		margin: 0;
+	}
 }
 
 .ingress {
-  composes: p from global;
-  margin: 0;
+	composes: p from global;
+	margin: 0;
 
-  /* Preserve newlines, but collapse other whitespace */
-  white-space: pre-line;
+	/* Preserve newlines, but collapse other whitespace */
+	white-space: pre-line;
 
-  @media (--viewportMedium) {
-    margin: 0;
-  }
+	@media (--viewportMedium) {
+		margin: 0;
+	}
 }
 
 .sectionDetails,
 .sectionMultiEnum {
-  padding: 0 24px;
-  margin-bottom: 32px;
+	padding: 0 24px;
+	margin-bottom: 32px;
 
-  @media (--viewportMedium) {
-    padding: 0;
-    margin-bottom: 40px;
-  }
+	@media (--viewportMedium) {
+		padding: 0;
+		margin-bottom: 40px;
+	}
 }
 
 .sectionMap {
-  padding: 0 24px;
-  margin-bottom: 35px;
+	padding: 0 24px;
+	margin-bottom: 35px;
 
-  @media (--viewportMedium) {
-    padding: 0;
-    margin-bottom: 0;
-  }
+	@media (--viewportMedium) {
+		padding: 0;
+		margin-bottom: 0;
+	}
 }
 
 .sectionReviews,
 .sectionAuthor {
-  padding: 0 24px;
-  margin-top: 42px;
-  scroll-margin-top: calc(var(--topbarHeight) + 24px);
+	padding: 0 24px;
+	margin-top: 42px;
+	scroll-margin-top: calc(var(--topbarHeight) + 24px);
 
-  @media (--viewportMedium) {
-    padding: 0;
-    margin-top: 40px;
-    scroll-margin-top: calc(var(--topbarHeightDesktop) + 24px);
-  }
-  @media (--viewportLarge) {
-    padding: 8px 0;
-  }
+	@media (--viewportMedium) {
+		padding: 0;
+		margin-top: 40px;
+		scroll-margin-top: calc(var(--topbarHeightDesktop) + 24px);
+	}
+	@media (--viewportLarge) {
+		padding: 8px 0;
+	}
 }
 
 .details {
-  padding-bottom: 1px;
-  margin: 0;
+	padding-bottom: 1px;
+	margin: 0;
 }
 
 .detailsRow {
-  display: inline-flex;
-  justify-content: space-between;
-  width: 100%;
-  padding: 1px 0 4px 0;
-  line-height: 36px;
-  list-style: none;
-  font-weight: var(--fontWeightRegular);
+	display: inline-flex;
+	justify-content: space-between;
+	width: 100%;
+	padding: 1px 0 4px 0;
+	line-height: 36px;
+	list-style: none;
+	font-weight: var(--fontWeightRegular);
 
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--colorGrey100);
-  }
+	&:not(:last-child) {
+		border-bottom: 1px solid var(--colorGrey100);
+	}
 
-  @media (--viewportMedium) {
-    padding: 5px 0 2px 0;
-    line-height: 32px;
-  }
+	@media (--viewportMedium) {
+		padding: 5px 0 2px 0;
+		line-height: 32px;
+	}
 }
 
 .detailLabel {
-  font-weight: var(--fontWeightSemiBold);
-  letter-spacing: -0.09px;
+	font-weight: var(--fontWeightSemiBold);
+	letter-spacing: -0.09px;
 }
 
 .inquiryModalContent {
-  flex-grow: 1;
-  display: flex;
+	flex-grow: 1;
+	display: flex;
 }
 
 .inquiryForm {
-  flex-grow: 1;
-  margin: 70px 0 100px 0;
+	flex-grow: 1;
+	margin: 70px 0 100px 0;
 
-  @media (--viewportMedium) {
-    display: flex;
-    flex-direction: column;
-    min-height: 400px;
-    margin: 0;
-  }
+	@media (--viewportMedium) {
+		display: flex;
+		flex-direction: column;
+		min-height: 400px;
+		margin: 0;
+	}
 }
 
 .inquirySubmitButtonWrapper {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 24px;
-  background-color: var(--colorWhite);
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 24px;
+	background-color: var(--colorWhite);
 
-  @media (--viewportMedium) {
-    position: static;
-    padding: 0;
-    margin-top: auto;
-  }
+	@media (--viewportMedium) {
+		position: static;
+		padding: 0;
+		margin-top: auto;
+	}
 }
 
 .map {
-  /* Dimensions: Map takes all available space from viewport (excludes action button and section title) */
-  height: calc(100vh - 193px);
-  width: 100%;
+	/* Dimensions: Map takes all available space from viewport (excludes action button and section title) */
+	height: calc(100vh - 193px);
+	width: 100%;
 
-  /* Static map: dimensions are 640px */
-  max-width: 640px;
-  max-height: 640px;
-  background-color: #eee;
-  padding: 0;
-  border: 0;
-  cursor: pointer;
+	/* Static map: dimensions are 640px */
+	max-width: 640px;
+	max-height: 640px;
+	background-color: #eee;
+	padding: 0;
+	border: 0;
+	cursor: pointer;
 
-  @media (--viewportMedium) {
-    height: 75vh;
-  }
+	@media (--viewportMedium) {
+		height: 75vh;
+	}
 
-  @media (--viewportLarge) {
-    height: 417px;
-    margin-bottom: 7px;
-  }
+	@media (--viewportLarge) {
+		height: 417px;
+		margin-bottom: 7px;
+	}
 }
 
 .longWord {
-  word-break: break-word;
-  hyphens: auto;
+	word-break: break-word;
+	hyphens: auto;
 }
 
 .productGallery {
-  margin: 0 0 36px 0;
+	margin: 0 0 36px 0;
 
-  @media (--viewportMedium) {
-    margin: 24px 0 48px 0;
-  }
-  @media (--viewportLarge) {
-    margin: 0 0 40px 0;
-    padding-bottom: 4px;
-  }
+	@media (--viewportMedium) {
+		margin: 24px 0 48px 0;
+	}
+	@media (--viewportLarge) {
+		margin: 0 0 40px 0;
+		padding-bottom: 4px;
+	}
 }
 
 .mobileHeading {
-  margin: 0 24px 24px 24px;
+	margin: 0 24px 24px 24px;
 
-  @media (--viewportMedium) {
-    margin: 0 0 24px 0;
-  }
+	@media (--viewportMedium) {
+		margin: 0 0 24px 0;
+	}
 
-  @media (--viewportLarge) {
-    display: none;
-  }
+	@media (--viewportLarge) {
+		display: none;
+	}
 }
 
 .productDesktopHeading {
-  display: none;
-  @media (--viewportLarge) {
-    display: block;
-  }
+	display: none;
+	@media (--viewportLarge) {
+		display: block;
+	}
 }
 
 .productSideContent {
 }
 
 .productBookingPanel {
-  @media (--viewportLarge) {
-    display: block;
-    margin-top: 24px;
+	@media (--viewportLarge) {
+		display: block;
+		margin-top: 24px;
 
-    /* The calendar needs 312px */
-    flex-basis: 312px;
-    flex-shrink: 0;
-  }
+		/* The calendar needs 312px */
+		flex-basis: 312px;
+		flex-shrink: 0;
+	}
 }

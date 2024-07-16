@@ -1,68 +1,68 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .sortBy {
-  margin-right: 9px;
+	margin-right: 9px;
 }
 
 .sortByDesktop {
-  margin-left: auto;
+	margin-left: auto;
 }
 
 .sortByMenuLabel {
-  display: inline-block;
-  width: auto;
-  height: 35px;
-  min-height: 35px;
+	display: inline-block;
+	width: auto;
+	height: 35px;
+	min-height: 35px;
 
-  padding: 0 18px;
-  margin: 0 9px 0 0;
+	padding: 0 18px;
+	margin: 0 9px 0 0;
 
-  transition: all var(--transitionStyleButton);
-  cursor: pointer;
+	transition: all var(--transitionStyleButton);
+	cursor: pointer;
 
-  /* Font */
-  font-weight: var(--fontWeightSemiBold);
-  font-size: 13px;
-  line-height: 18px;
-  letter-spacing: 0.2px;
+	/* Font */
+	font-weight: var(--fontWeightSemiBold);
+	font-size: 13px;
+	line-height: 18px;
+	letter-spacing: 0.2px;
 
-  /* Button text styles */
-  /* Default button text is centered without decorations */
-  text-align: center;
-  text-decoration: none;
+	/* Button text styles */
+	/* Default button text is centered without decorations */
+	text-align: center;
+	text-decoration: none;
 
-  /* Button borders */
-  border: 1px solid var(--colorGrey100);
-  border-radius: var(--borderRadiusMedium);
+	/* Button borders */
+	border: 1px solid var(--colorGrey100);
+	border-radius: var(--borderRadiusMedium);
 
-  background-color: var(--colorWhite);
+	background-color: var(--colorWhite);
 
-  &:focus,
-  &:hover {
-    outline: none;
-    box-shadow: var(--boxShadowFilterButton);
-    text-decoration: none;
-    border-color: var(--colorGrey300);
-  }
+	&:focus,
+	&:hover {
+		outline: none;
+		box-shadow: var(--boxShadowFilterButton);
+		text-decoration: none;
+		border-color: var(--colorGrey300);
+	}
 
-  &:disabled {
-    box-shadow: none;
-    cursor: not-allowed;
-  }
+	&:disabled {
+		box-shadow: none;
+		cursor: not-allowed;
+	}
 
-  @media (--viewportMedium) {
-    height: auto;
-    min-height: 0;
-    padding: var(--marketplaceButtonSmallDesktopPadding);
-    margin: 0;
+	@media (--viewportMedium) {
+		height: auto;
+		min-height: 0;
+		padding: var(--marketplaceButtonSmallDesktopPadding);
+		margin: 0;
 
-    font-weight: var(--fontWeightMedium);
-    font-size: 13px;
-    line-height: 20px;
+		font-weight: var(--fontWeightMedium);
+		font-size: 13px;
+		line-height: 20px;
 
-    &:hover,
-    &:focus {
-      border-color: transparent;
-    }
-  }
+		&:hover,
+		&:focus {
+			border-color: transparent;
+		}
+	}
 }

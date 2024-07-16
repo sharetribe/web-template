@@ -1,183 +1,183 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .root {
 }
 
 .content {
-  display: flex;
-  flex-direction: row;
+	display: flex;
+	flex-direction: row;
 }
 
 .avatar {
-  flex-shrink: 0;
-  margin-right: 36px;
+	flex-shrink: 0;
+	margin-right: 36px;
 }
 
 .info {
-  flex: 1;
+	flex: 1;
 }
 
 .heading {
-  composes: p from global;
-  margin: 0;
+	composes: p from global;
+	margin: 0;
 
-  @media (--viewportMedium) {
-    margin: 0;
-  }
+	@media (--viewportMedium) {
+		margin: 0;
+	}
 }
 
 .link {
-  white-space: nowrap;
+	white-space: nowrap;
 }
 
 .mobileBio,
 .desktopBio {
-  /* Preserve newlines, but collapse other whitespace */
-  white-space: pre-line;
-  margin: 18px 0 0 0;
-  transition: all 1s ease-in;
+	/* Preserve newlines, but collapse other whitespace */
+	white-space: pre-line;
+	margin: 18px 0 0 0;
+	transition: all 1s ease-in;
 
-  @media (--viewportMedium) {
-    margin: 0;
-  }
+	@media (--viewportMedium) {
+		margin: 0;
+	}
 }
 
 .mobileBio {
-  @media (--viewportMedium) {
-    display: none;
-  }
+	@media (--viewportMedium) {
+		display: none;
+	}
 }
 
 .desktopBio {
-  display: none;
+	display: none;
 
-  @media (--viewportMedium) {
-    display: inline;
+	@media (--viewportMedium) {
+		display: inline;
 
-    &::before {
-      content: ' ';
-    }
-  }
+		&::before {
+			content: " ";
+		}
+	}
 }
 
 .longWord {
-  word-break: break-word;
-  hyphens: auto;
+	word-break: break-word;
+	hyphens: auto;
 }
 
 .showMore {
-  /* Position and dimensions */
-  display: inline;
-  padding: 0;
+	/* Position and dimensions */
+	display: inline;
+	padding: 0;
 
-  /* Borders */
-  border: none;
+	/* Borders */
+	border: none;
 
-  /* Colors */
-  color: var(--marketplaceColor);
+	/* Colors */
+	color: var(--marketplaceColor);
 
-  /* Text size should be inherited */
-  text-decoration: none;
+	/* Text size should be inherited */
+	text-decoration: none;
 
-  font-weight: var(--fontWeightMedium);
-  font-size: 15px;
-  line-height: 24px;
-  letter-spacing: 0;
+	font-weight: var(--fontWeightMedium);
+	font-size: 15px;
+	line-height: 24px;
+	letter-spacing: 0;
 
-  margin: 0 0 0 5px;
+	margin: 0 0 0 5px;
 
-  &:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
+	&:hover {
+		text-decoration: underline;
+		cursor: pointer;
+	}
 
-  @media (--viewportMedium) {
-    font-weight: var(--fontWeightMedium);
-    /* margin-top + n * line-height + margin-bottom => x * 8px */
-    margin-top: 17px;
-    margin-bottom: 15px;
-  }
+	@media (--viewportMedium) {
+		font-weight: var(--fontWeightMedium);
+		/* margin-top + n * line-height + margin-bottom => x * 8px */
+		margin-top: 17px;
+		margin-bottom: 15px;
+	}
 }
 
 .links {
-  margin-top: 13px;
+	margin-top: 13px;
 
-  @media (--viewportMedium) {
-    margin: 16px 0 0 0;
-  }
+	@media (--viewportMedium) {
+		margin: 16px 0 0 0;
+	}
 }
 
 .withBioMissingAbove {
-  @media (--viewportMedium) {
-    /* Fix baseline alignment if bio is missing from above */
-    margin-top: 16px;
-  }
+	@media (--viewportMedium) {
+		/* Fix baseline alignment if bio is missing from above */
+		margin-top: 16px;
+	}
 }
 
 .linkSeparator {
-  margin: 0 10px;
-  color: var(--marketplaceColor);
+	margin: 0 10px;
+	color: var(--marketplaceColor);
 }
 
 .headingRow {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 
-  @media (--viewportMedium) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: baseline;
-  }
+	@media (--viewportMedium) {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: baseline;
+	}
 }
 
 .editProfileDesktop {
-  composes: p from global;
-  display: none;
-  padding: 0;
-  margin: 0;
-  white-space: nowrap;
+	composes: p from global;
+	display: none;
+	padding: 0;
+	margin: 0;
+	white-space: nowrap;
 
-  @media (--viewportMedium) {
-    display: inline;
-  }
+	@media (--viewportMedium) {
+		display: inline;
+	}
 }
 
 .editProfileMobile {
-  composes: p from global;
-  display: inline;
+	composes: p from global;
+	display: inline;
 
-  @media (--viewportMedium) {
-    display: none;
-  }
+	@media (--viewportMedium) {
+		display: none;
+	}
 }
 
 .contact {
-  /* Position and dimensions */
-  display: inline;
-  padding: 0;
+	/* Position and dimensions */
+	display: inline;
+	padding: 0;
 
-  /* Borders */
-  border: none;
+	/* Borders */
+	border: none;
 
-  /* Colors */
-  color: var(--marketplaceColor);
+	/* Colors */
+	color: var(--marketplaceColor);
 
-  /* Text size should be inherited */
-  text-decoration: none;
+	/* Text size should be inherited */
+	text-decoration: none;
 
-  font-weight: var(--fontWeightMedium);
-  font-size: 15px;
-  line-height: 24px;
-  letter-spacing: 0;
-  margin: 0;
+	font-weight: var(--fontWeightMedium);
+	font-size: 15px;
+	line-height: 24px;
+	letter-spacing: 0;
+	margin: 0;
 
-  &:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
+	&:hover {
+		text-decoration: underline;
+		cursor: pointer;
+	}
 
-  @media (--viewportMedium) {
-    font-weight: var(--fontWeightMedium);
-    margin: 0;
-  }
+	@media (--viewportMedium) {
+		font-weight: var(--fontWeightMedium);
+		margin: 0;
+	}
 }

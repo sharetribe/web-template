@@ -1,2 +1,2 @@
-import BlockContainer from './BlockContainer';
+import BlockContainer from "./BlockContainer";
 export default BlockContainer;

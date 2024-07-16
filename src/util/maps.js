@@ -1,6 +1,6 @@
-import memoize from 'lodash/memoize';
-import seedrandom from 'seedrandom';
-import { types as sdkTypes } from './sdkLoader';
+import memoize from "lodash/memoize";
+import seedrandom from "seedrandom";
+import { types as sdkTypes } from "./sdkLoader";
 
 const { LatLng, LatLngBounds } = sdkTypes;
 
@@ -10,17 +10,17 @@ const THREE_PI = Math.PI * 3;
 const TWO_PI = Math.PI * 2;
 
 const degToRadians = latlng => {
-  const { lat, lng } = latlng;
-  const latR = lat * DEG_TO_RAD;
-  const lngR = lng * DEG_TO_RAD;
-  return { lat: latR, lng: lngR };
+	const { lat, lng } = latlng;
+	const latR = lat * DEG_TO_RAD;
+	const lngR = lng * DEG_TO_RAD;
+	return { lat: latR, lng: lngR };
 };
 
 const radToDegrees = latlngInRadians => {
-  const { lat: latR, lng: lngR } = latlngInRadians;
-  const lat = latR / DEG_TO_RAD;
-  const lng = lngR / DEG_TO_RAD;
-  return { lat, lng };
+	const { lat: latR, lng: lngR } = latlngInRadians;
+	const lat = latR / DEG_TO_RAD;
+	const lng = lngR / DEG_TO_RAD;
+	return { lat, lng };
 };
 
 /**
@@ -33,38 +33,38 @@ const radToDegrees = latlngInRadians => {
  */
 
 const obfuscatedCoordinatesImpl = (latlng, fuzzyOffset, cacheKey) => {
-  const { lat, lng } = degToRadians(latlng);
-  const sinLat = Math.sin(lat);
-  const cosLat = Math.cos(lat);
+	const { lat, lng } = degToRadians(latlng);
+	const sinLat = Math.sin(lat);
+	const cosLat = Math.cos(lat);
 
-  const randomizeBearing = cacheKey ? seedrandom(cacheKey)() : Math.random();
-  const randomizeDistance = cacheKey
-    ? seedrandom(
-        cacheKey
-          .split('')
-          .reverse()
-          .join('')
-      )()
-    : Math.random();
+	const randomizeBearing = cacheKey ? seedrandom(cacheKey)() : Math.random();
+	const randomizeDistance = cacheKey
+		? seedrandom(
+				cacheKey
+					.split("")
+					.reverse()
+					.join(""),
+		  )()
+		: Math.random();
 
-  // Randomize distance and bearing
-  const distance = randomizeDistance * fuzzyOffset;
-  const bearing = randomizeBearing * TWO_PI;
-  const theta = distance / EARTH_RADIUS;
-  const sinBearing = Math.sin(bearing);
-  const cosBearing = Math.cos(bearing);
-  const sinTheta = Math.sin(theta);
-  const cosTheta = Math.cos(theta);
+	// Randomize distance and bearing
+	const distance = randomizeDistance * fuzzyOffset;
+	const bearing = randomizeBearing * TWO_PI;
+	const theta = distance / EARTH_RADIUS;
+	const sinBearing = Math.sin(bearing);
+	const cosBearing = Math.cos(bearing);
+	const sinTheta = Math.sin(theta);
+	const cosTheta = Math.cos(theta);
 
-  const newLat = Math.asin(sinLat * cosTheta + cosLat * sinTheta * cosBearing);
-  const newLng =
-    lng + Math.atan2(sinBearing * sinTheta * cosLat, cosTheta - sinLat * Math.sin(newLat));
+	const newLat = Math.asin(sinLat * cosTheta + cosLat * sinTheta * cosBearing);
+	const newLng =
+		lng + Math.atan2(sinBearing * sinTheta * cosLat, cosTheta - sinLat * Math.sin(newLat));
 
-  // Normalize -PI -> +PI radians
-  const newLngNormalized = ((newLng + THREE_PI) % TWO_PI) - Math.PI;
+	// Normalize -PI -> +PI radians
+	const newLngNormalized = ((newLng + THREE_PI) % TWO_PI) - Math.PI;
 
-  const result = radToDegrees({ lat: newLat, lng: newLngNormalized });
-  return new LatLng(result.lat, result.lng);
+	const result = radToDegrees({ lat: newLat, lng: newLngNormalized });
+	return new LatLng(result.lat, result.lng);
 };
 
 const obfuscationKeyGetter = (latlng, fuzzyOffset, cacheKey) => cacheKey;
@@ -85,9 +85,9 @@ const memoizedObfuscatedCoordinatesImpl = memoize(obfuscatedCoordinatesImpl, obf
  * @return {LatLng} obfuscated coordinates
  */
 export const obfuscatedCoordinates = (latlng, fuzzyOffset, cacheKey = null) => {
-  return cacheKey
-    ? memoizedObfuscatedCoordinatesImpl(latlng, fuzzyOffset, cacheKey)
-    : obfuscatedCoordinatesImpl(latlng, fuzzyOffset);
+	return cacheKey
+		? memoizedObfuscatedCoordinatesImpl(latlng, fuzzyOffset, cacheKey)
+		: obfuscatedCoordinatesImpl(latlng, fuzzyOffset);
 };
 
 /**
@@ -96,31 +96,31 @@ export const obfuscatedCoordinates = (latlng, fuzzyOffset, cacheKey = null) => {
  * @return {Promise<LatLng>} user's current location
  */
 export const userLocation = () =>
-  new Promise((resolve, reject) => {
-    const geolocationAvailable = 'geolocation' in navigator;
+	new Promise((resolve, reject) => {
+		const geolocationAvailable = "geolocation" in navigator;
 
-    if (!geolocationAvailable) {
-      reject(new Error('Geolocation not available in browser'));
-      return;
-    }
+		if (!geolocationAvailable) {
+			reject(new Error("Geolocation not available in browser"));
+			return;
+		}
 
-    // Some defaults for user's current geolocation call
-    // https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
-    // Note: without high accuracy, the given location might differ quite much.
-    //       We decided that true would be better default for a template app.
-    const options = {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0,
-    };
+		// Some defaults for user's current geolocation call
+		// https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
+		// Note: without high accuracy, the given location might differ quite much.
+		//       We decided that true would be better default for a template app.
+		const options = {
+			enableHighAccuracy: true,
+			timeout: 5000,
+			maximumAge: 0,
+		};
 
-    const onSuccess = position =>
-      resolve(new LatLng(position.coords.latitude, position.coords.longitude));
+		const onSuccess = position =>
+			resolve(new LatLng(position.coords.latitude, position.coords.longitude));
 
-    const onError = error => reject(error);
+		const onError = error => reject(error);
 
-    navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
-  });
+		navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
+	});
 
 /**
  * Calculate a circular polyline around the given point
@@ -134,36 +134,36 @@ export const userLocation = () =>
  * pairs forming the circle
  */
 export const circlePolyline = (latlng, radius) => {
-  const { lat, lng } = latlng;
-  const detail = 8;
-  const R = 6371;
-  const pi = Math.PI;
+	const { lat, lng } = latlng;
+	const detail = 8;
+	const R = 6371;
+	const pi = Math.PI;
 
-  const _lat = (lat * pi) / 180;
-  const _lng = (lng * pi) / 180;
-  const d = radius / 1000 / R;
+	const _lat = (lat * pi) / 180;
+	const _lng = (lng * pi) / 180;
+	const d = radius / 1000 / R;
 
-  let points = [];
-  for (let i = 0; i <= 360; i += detail) {
-    const brng = (i * pi) / 180;
+	let points = [];
+	for (let i = 0; i <= 360; i += detail) {
+		const brng = (i * pi) / 180;
 
-    let pLat = Math.asin(
-      Math.sin(_lat) * Math.cos(d) + Math.cos(_lat) * Math.sin(d) * Math.cos(brng)
-    );
-    const pLng =
-      ((_lng +
-        Math.atan2(
-          Math.sin(brng) * Math.sin(d) * Math.cos(_lat),
-          Math.cos(d) - Math.sin(_lat) * Math.sin(pLat)
-        )) *
-        180) /
-      pi;
-    pLat = (pLat * 180) / pi;
+		let pLat = Math.asin(
+			Math.sin(_lat) * Math.cos(d) + Math.cos(_lat) * Math.sin(d) * Math.cos(brng),
+		);
+		const pLng =
+			((_lng +
+				Math.atan2(
+					Math.sin(brng) * Math.sin(d) * Math.cos(_lat),
+					Math.cos(d) - Math.sin(_lat) * Math.sin(pLat),
+				)) *
+				180) /
+			pi;
+		pLat = (pLat * 180) / pi;
 
-    points.push([pLat, pLng]);
-  }
+		points.push([pLat, pLng]);
+	}
 
-  return points;
+	return points;
 };
 
 /**
@@ -176,11 +176,11 @@ export const circlePolyline = (latlng, radius) => {
  * @return {LatLngBounds} - bounds cut to given fixed precision
  */
 export const sdkBoundsToFixedCoordinates = (sdkBounds, fixedPrecision) => {
-  const fixed = n => Number.parseFloat(n.toFixed(fixedPrecision));
-  const ne = new LatLng(fixed(sdkBounds.ne.lat), fixed(sdkBounds.ne.lng));
-  const sw = new LatLng(fixed(sdkBounds.sw.lat), fixed(sdkBounds.sw.lng));
+	const fixed = n => Number.parseFloat(n.toFixed(fixedPrecision));
+	const ne = new LatLng(fixed(sdkBounds.ne.lat), fixed(sdkBounds.ne.lng));
+	const sw = new LatLng(fixed(sdkBounds.sw.lat), fixed(sdkBounds.sw.lng));
 
-  return new LatLngBounds(ne, sw);
+	return new LatLngBounds(ne, sw);
 };
 
 /**
@@ -192,15 +192,15 @@ export const sdkBoundsToFixedCoordinates = (sdkBounds, fixedPrecision) => {
  * @return {boolean} - true if bounds are the same
  */
 export const hasSameSDKBounds = (sdkBounds1, sdkBounds2) => {
-  if (!(sdkBounds1 instanceof LatLngBounds) || !(sdkBounds2 instanceof LatLngBounds)) {
-    return false;
-  }
-  return (
-    sdkBounds1.ne.lat === sdkBounds2.ne.lat &&
-    sdkBounds1.ne.lng === sdkBounds2.ne.lng &&
-    sdkBounds1.sw.lat === sdkBounds2.sw.lat &&
-    sdkBounds1.sw.lng === sdkBounds2.sw.lng
-  );
+	if (!(sdkBounds1 instanceof LatLngBounds) || !(sdkBounds2 instanceof LatLngBounds)) {
+		return false;
+	}
+	return (
+		sdkBounds1.ne.lat === sdkBounds2.ne.lat &&
+		sdkBounds1.ne.lng === sdkBounds2.ne.lng &&
+		sdkBounds1.sw.lat === sdkBounds2.sw.lat &&
+		sdkBounds1.sw.lng === sdkBounds2.sw.lng
+	);
 };
 
 /**
@@ -210,6 +210,6 @@ export const hasSameSDKBounds = (sdkBounds1, sdkBounds2) => {
  * @returns googleMapsAPIKey or mapboxAccessToken
  */
 export const getMapProviderApiAccess = mapConfig => {
-  const isGoogleMapsInUse = mapConfig.mapProvider === 'googleMaps';
-  return isGoogleMapsInUse ? mapConfig.googleMapsAPIKey : mapConfig.mapboxAccessToken;
+	const isGoogleMapsInUse = mapConfig.mapProvider === "googleMaps";
+	return isGoogleMapsInUse ? mapConfig.googleMapsAPIKey : mapConfig.mapboxAccessToken;
 };

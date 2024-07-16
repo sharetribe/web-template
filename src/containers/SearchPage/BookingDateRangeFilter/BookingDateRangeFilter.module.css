@@ -1,80 +1,80 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .popupSize {
-  padding: 0 10px 7px 10px;
+	padding: 0 10px 7px 10px;
 }
 
 .filterLabel,
 .filterLabelSelected,
 .filterLabelWrapper {
-  composes: h3 from global;
+	composes: h3 from global;
 
-  /* Baseline adjustment for label text */
-  margin-top: 0;
-  margin-bottom: 12px;
-  padding: 4px 0 2px 0;
+	/* Baseline adjustment for label text */
+	margin-top: 0;
+	margin-bottom: 12px;
+	padding: 4px 0 2px 0;
 
-  @media (--viewportMedium) {
-    padding: 6px 0 2px 0;
-    margin-bottom: 8px;
-  }
+	@media (--viewportMedium) {
+		padding: 6px 0 2px 0;
+		margin-bottom: 8px;
+	}
 }
 
 .filterLabel {
-  color: var(--colorBlack);
+	color: var(--colorBlack);
 }
 
 .filterLabelSelected {
-  color: var(--marketplaceColor);
+	color: var(--marketplaceColor);
 }
 
 .labelButton {
-  /* Override button styles */
-  width: 100%;
-  outline: none;
-  text-align: left;
-  border: none;
-  padding: 0;
-  cursor: pointer;
+	/* Override button styles */
+	width: 100%;
+	outline: none;
+	text-align: left;
+	border: none;
+	padding: 0;
+	cursor: pointer;
 }
 
 .labelButtonContent {
-  display: inline-block;
-  width: 100%;
+	display: inline-block;
+	width: 100%;
 }
 
 .openSign {
-  float: right;
+	float: right;
 }
 
 .clearButton {
-  composes: h5 from global;
-  margin: 0;
-  font-weight: var(--fontWeightMedium);
-  color: var(--colorGrey300);
-  padding: 2px 0 4px 12px;
+	composes: h5 from global;
+	margin: 0;
+	font-weight: var(--fontWeightMedium);
+	color: var(--colorGrey300);
+	padding: 2px 0 4px 12px;
 
-  /* Override button styles */
-  outline: none;
-  text-align: left;
-  border: none;
-  cursor: pointer;
+	/* Override button styles */
+	outline: none;
+	text-align: left;
+	border: none;
+	cursor: pointer;
 
-  &:focus,
-  &:hover {
-    color: var(--colorGrey700);
-  }
+	&:focus,
+	&:hover {
+		color: var(--colorGrey700);
+	}
 
-  @media (--viewportMedium) {
-    padding: 4px 0 4px 12px;
-  }
+	@media (--viewportMedium) {
+		padding: 4px 0 4px 12px;
+	}
 }
 
 .plain {
-  width: 100%;
-  display: none;
+	width: 100%;
+	display: none;
 }
 
 .isOpen {
-  display: block;
+	display: block;
 }

@@ -1,11 +1,11 @@
 const radix = 10;
-const USING_SSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === 'true';
+const USING_SSL = process.env.REACT_APP_SHARETRIBE_USING_SSL === "true";
 const DEV_SERVER_PORT = parseInt(process.env.REACT_APP_DEV_API_SERVER_PORT, radix);
-const useDevApiServer = process.env.NODE_ENV === 'development' && !!DEV_SERVER_PORT;
+const useDevApiServer = process.env.NODE_ENV === "development" && !!DEV_SERVER_PORT;
 const marketplaceRootUrlRaw = process.env.REACT_APP_MARKETPLACE_ROOT_URL;
 const marketplaceRootUrl = marketplaceRootUrlRaw
-  ? `${marketplaceRootUrlRaw.replace(/\/$/, '')}`
-  : '';
+	? `${marketplaceRootUrlRaw.replace(/\/$/, "")}`
+	: "";
 
 /**
  * Resolves domain and port information from
@@ -13,11 +13,11 @@ const marketplaceRootUrl = marketplaceRootUrlRaw
  * https://example.com:8080 => example.com:8080
  */
 const domainAndPort = rootURL => {
-  if (rootURL.indexOf('//') === -1) {
-    return rootURL;
-  } else {
-    return rootURL.split('//')[1];
-  }
+	if (rootURL.indexOf("//") === -1) {
+		return rootURL;
+	} else {
+		return rootURL.split("//")[1];
+	}
 };
 
 /**
@@ -25,11 +25,11 @@ const domainAndPort = rootURL => {
  * https://example.com:8080 => example.com
  */
 const domain = rootURL => {
-  if (!rootURL) {
-    return 'INVALID_URL';
-  }
+	if (!rootURL) {
+		return "INVALID_URL";
+	}
 
-  return domainAndPort(rootURL).split(':')[0];
+	return domainAndPort(rootURL).split(":")[0];
 };
 
 /**
@@ -37,11 +37,11 @@ const domain = rootURL => {
  * can not be found `undefined` will be returned.
  */
 const port = rootURL => {
-  if (!rootURL) {
-    return 'INVALID_URL';
-  }
+	if (!rootURL) {
+		return "INVALID_URL";
+	}
 
-  return domainAndPort(rootURL).split(':')[1];
+	return domainAndPort(rootURL).split(":")[1];
 };
 
 /**
@@ -53,15 +53,15 @@ const port = rootURL => {
  * @returns hostname
  */
 exports.getRootURL = options => {
-  const { rootURL, useDevApiServerPort = false } = options || {};
-  const protocol = USING_SSL ? 'https' : 'http';
-  const rUrl = rootURL || marketplaceRootUrl;
-  const portInRootUrl = port(rUrl);
-  const portMaybe =
-    portInRootUrl && useDevApiServer && useDevApiServerPort
-      ? `:${DEV_SERVER_PORT}`
-      : portInRootUrl
-      ? `:${portInRootUrl}`
-      : '';
-  return `${protocol}://${domain(rUrl)}${portMaybe}`;
+	const { rootURL, useDevApiServerPort = false } = options || {};
+	const protocol = USING_SSL ? "https" : "http";
+	const rUrl = rootURL || marketplaceRootUrl;
+	const portInRootUrl = port(rUrl);
+	const portMaybe =
+		portInRootUrl && useDevApiServer && useDevApiServerPort
+			? `:${DEV_SERVER_PORT}`
+			: portInRootUrl
+			? `:${portInRootUrl}`
+			: "";
+	return `${protocol}://${domain(rUrl)}${portMaybe}`;
 };

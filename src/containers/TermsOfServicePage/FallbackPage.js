@@ -1,8 +1,8 @@
-import React from 'react';
-import loadable from '@loadable/component';
+import React from "react";
+import loadable from "@loadable/component";
 
 const PageBuilder = loadable(() =>
-  import(/* webpackChunkName: "PageBuilder" */ '../PageBuilder/PageBuilder')
+	import(/* webpackChunkName: "PageBuilder" */ "../PageBuilder/PageBuilder"),
 );
 
 // NOTE: You could add the actual Terms of Service here as a fallback
@@ -17,39 +17,39 @@ Please refresh the page and, if that doesn't help, contact the marketplace admin
 
 // Create fallback content (array of sections) in page asset format:
 export const fallbackSections = {
-  sections: [
-    {
-      sectionType: 'article',
-      sectionId: 'terms',
-      appearance: { fieldType: 'customAppearance', backgroundColor: '#ffffff' },
-      title: { fieldType: 'heading1', content: 'Terms of Service' },
-      blocks: [
-        {
-          blockType: 'defaultBlock',
-          blockId: 'hero-content',
-          text: {
-            fieldType: 'markdown',
-            content: fallbackTerms,
-          },
-        },
-      ],
-    },
-  ],
-  meta: {
-    pageTitle: {
-      fieldType: 'metaTitle',
-      content: 'Terms of service page',
-    },
-    pageDescription: {
-      fieldType: 'metaDescription',
-      content: 'Terms of service fetch failed',
-    },
-  },
+	sections: [
+		{
+			sectionType: "article",
+			sectionId: "terms",
+			appearance: { fieldType: "customAppearance", backgroundColor: "#ffffff" },
+			title: { fieldType: "heading1", content: "Terms of Service" },
+			blocks: [
+				{
+					blockType: "defaultBlock",
+					blockId: "hero-content",
+					text: {
+						fieldType: "markdown",
+						content: fallbackTerms,
+					},
+				},
+			],
+		},
+	],
+	meta: {
+		pageTitle: {
+			fieldType: "metaTitle",
+			content: "Terms of service page",
+		},
+		pageDescription: {
+			fieldType: "metaDescription",
+			content: "Terms of service fetch failed",
+		},
+	},
 };
 
 // This is the fallback page, in case there's no Terms of Service asset defined in Console.
 const FallbackPage = props => {
-  return <PageBuilder pageAssetsData={fallbackSections} {...props} />;
+	return <PageBuilder pageAssetsData={fallbackSections} {...props} />;
 };
 
 export default FallbackPage;

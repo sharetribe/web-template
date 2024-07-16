@@ -1,42 +1,42 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .noSearchResults {
-  composes: h4 from global;
+	composes: h4 from global;
 
-  /* Reserves 48px of vertical space */
-  line-height: 24px;
-  margin-top: 18px;
-  margin-bottom: 18px;
+	/* Reserves 48px of vertical space */
+	line-height: 24px;
+	margin-top: 18px;
+	margin-bottom: 18px;
 
-  @media (--viewportMedium) {
-    margin-top: 8px;
-    margin-bottom: 8px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 8px;
+		margin-bottom: 8px;
+	}
 }
 
 .createListingLink,
 .resetAllFiltersButton {
-  composes: h5 from global;
-  font-weight: var(--fontWeightMedium);
-  color: var(--marketplaceColor);
+	composes: h5 from global;
+	font-weight: var(--fontWeightMedium);
+	color: var(--marketplaceColor);
 
-  /* Layout */
-  display: inline;
-  margin: 0;
-  padding: 0;
+	/* Layout */
+	display: inline;
+	margin: 0;
+	padding: 0;
 
-  /* Override button styles */
-  outline: none;
-  text-align: left;
-  border: none;
-  cursor: pointer;
+	/* Override button styles */
+	outline: none;
+	text-align: left;
+	border: none;
+	cursor: pointer;
 
-  &:focus,
-  &:hover {
-    color: var(--colorGrey700);
-  }
+	&:focus,
+	&:hover {
+		color: var(--colorGrey700);
+	}
 
-  @media (--viewportMedium) {
-    padding: 3px 0 5px 0;
-  }
+	@media (--viewportMedium) {
+		padding: 3px 0 5px 0;
+	}
 }

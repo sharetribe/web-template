@@ -1,52 +1,52 @@
 .root {
-  position: absolute;
-  z-index: var(--zIndexPopup);
+	position: absolute;
+	z-index: var(--zIndexPopup);
 
-  background-color: var(--colorWhite);
-  border-top: 1px solid var(--colorGrey100);
-  box-shadow: var(--boxShadowPopup);
-  border-radius: 0 0 2px 2px;
-  transition: var(--transitionStyleButton);
+	background-color: var(--colorWhite);
+	border-top: 1px solid var(--colorGrey100);
+	box-shadow: var(--boxShadowPopup);
+	border-radius: 0 0 2px 2px;
+	transition: var(--transitionStyleButton);
 }
 
 .isClosed {
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
+	visibility: hidden;
+	opacity: 0;
+	pointer-events: none;
 }
 
 .isOpen {
-  visibility: visible;
-  opacity: 1;
-  pointer-events: auto;
+	visibility: visible;
+	opacity: 1;
+	pointer-events: auto;
 }
 
 .content {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
+	display: flex;
+	flex-direction: column;
+	margin: 0;
 }
 
 /* Styles for arrow (if arrowPosition is defined) */
 .arrowTop,
 .arrowBelow {
-  content: ' ';
-  position: absolute;
-  bottom: 100%;
-  height: 0;
-  width: 0;
-  border: solid transparent;
-  pointer-events: none;
+	content: " ";
+	position: absolute;
+	bottom: 100%;
+	height: 0;
+	width: 0;
+	border: solid transparent;
+	pointer-events: none;
 }
 
 .arrowTop {
-  border-bottom-color: var(--colorWhite);
-  border-width: 7px;
-  margin-left: -7px;
+	border-bottom-color: var(--colorWhite);
+	border-width: 7px;
+	margin-left: -7px;
 }
 
 .arrowBelow {
-  border-bottom-color: var(--colorGrey100);
-  border-width: 9px;
-  margin-left: -9px;
+	border-bottom-color: var(--colorGrey100);
+	border-width: 9px;
+	margin-left: -9px;
 }

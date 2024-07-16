@@ -1,38 +1,38 @@
-@import '../../../../styles/customMediaQueries.css';
+@import "../../../../styles/customMediaQueries.css";
 
 .root {
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  width: 100%;
-  position: relative;
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+	width: 100%;
+	position: relative;
 
-  &:nth-of-type(odd) {
-    background-color: var(--colorWhite);
-  }
+	&:nth-of-type(odd) {
+		background-color: var(--colorWhite);
+	}
 
-  &:target {
-    scroll-margin-top: var(--topbarHeight);
-    @media (--viewportMedium) {
-      scroll-margin-top: var(--topbarHeightDesktop);
-    }
-  }
+	&:target {
+		scroll-margin-top: var(--topbarHeight);
+		@media (--viewportMedium) {
+			scroll-margin-top: var(--topbarHeightDesktop);
+		}
+	}
 }
 
 .sectionContent {
-  padding: 32px 0;
-  position: relative;
-  word-break: break-word;
+	padding: 32px 0;
+	position: relative;
+	word-break: break-word;
 
-  @media (--viewportMedium) {
-    padding: 64px 0;
-  }
+	@media (--viewportMedium) {
+		padding: 64px 0;
+	}
 }
 
 .backgroundImageWrapper {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 }

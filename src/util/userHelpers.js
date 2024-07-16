@@ -1,5 +1,5 @@
-import { EXTENDED_DATA_SCHEMA_TYPES } from './types';
-import { getFieldValue } from './fieldHelpers';
+import { EXTENDED_DATA_SCHEMA_TYPES } from "./types";
+import { getFieldValue } from "./fieldHelpers";
 
 /**
  * Get the namespaced attribute key based on the specified extended data scope and attribute key
@@ -8,17 +8,17 @@ import { getFieldValue } from './fieldHelpers';
  * @returns a string containing the namespace prefix and the attribute name
  */
 export const addScopePrefix = (scope, key) => {
-  const scopeFnMap = {
-    private: k => `priv_${k}`,
-    protected: k => `prot_${k}`,
-    public: k => `pub_${k}`,
-    meta: k => `meta_${k}`,
-  };
+	const scopeFnMap = {
+		private: k => `priv_${k}`,
+		protected: k => `prot_${k}`,
+		public: k => `pub_${k}`,
+		meta: k => `meta_${k}`,
+	};
 
-  const validKey = key.replace(/\s/g, '_');
-  const keyScoper = scopeFnMap[scope];
+	const validKey = key.replace(/\s/g, "_");
+	const keyScoper = scopeFnMap[scope];
 
-  return !!keyScoper ? keyScoper(validKey) : validKey;
+	return !!keyScoper ? keyScoper(validKey) : validKey;
 };
 
 /**
@@ -38,25 +38,25 @@ export const addScopePrefix = (scope, key) => {
  * @returns Array of picked extended data fields from submitted data.
  */
 export const pickUserFieldsData = (data, targetScope, targetUserType, userFieldConfigs) => {
-  return userFieldConfigs.reduce((fields, field) => {
-    const { key, userTypeConfig, scope = 'public', schemaType } = field || {};
-    const namespacedKey = addScopePrefix(scope, key);
+	return userFieldConfigs.reduce((fields, field) => {
+		const { key, userTypeConfig, scope = "public", schemaType } = field || {};
+		const namespacedKey = addScopePrefix(scope, key);
 
-    const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
-    const isTargetScope = scope === targetScope;
-    const isTargetUserType =
-      !userTypeConfig.limitToUserTypeIds || userTypeConfig.userTypeIds.includes(targetUserType);
+		const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+		const isTargetScope = scope === targetScope;
+		const isTargetUserType =
+			!userTypeConfig.limitToUserTypeIds || userTypeConfig.userTypeIds.includes(targetUserType);
 
-    if (isKnownSchemaType && isTargetScope && isTargetUserType) {
-      const fieldValue = getFieldValue(data, namespacedKey);
-      return { ...fields, [key]: fieldValue };
-    } else if (isKnownSchemaType && isTargetScope && !isTargetUserType) {
-      // Note: this clears extra custom fields
-      // These might exists if user swaps between user types before saving the user.
-      return { ...fields, [key]: null };
-    }
-    return fields;
-  }, {});
+		if (isKnownSchemaType && isTargetScope && isTargetUserType) {
+			const fieldValue = getFieldValue(data, namespacedKey);
+			return { ...fields, [key]: fieldValue };
+		} else if (isKnownSchemaType && isTargetScope && !isTargetUserType) {
+			// Note: this clears extra custom fields
+			// These might exists if user swaps between user types before saving the user.
+			return { ...fields, [key]: null };
+		}
+		return fields;
+	}, {});
 };
 
 /**
@@ -72,21 +72,21 @@ export const pickUserFieldsData = (data, targetScope, targetUserType, userFieldC
  * @returns Array of picked extended data fields
  */
 export const initialValuesForUserFields = (data, targetScope, targetUserType, userFieldConfigs) => {
-  return userFieldConfigs.reduce((fields, field) => {
-    const { key, userTypeConfig, scope = 'public', schemaType } = field || {};
-    const namespacedKey = addScopePrefix(scope, key);
+	return userFieldConfigs.reduce((fields, field) => {
+		const { key, userTypeConfig, scope = "public", schemaType } = field || {};
+		const namespacedKey = addScopePrefix(scope, key);
 
-    const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
-    const isTargetScope = scope === targetScope;
-    const isTargetUserType =
-      !userTypeConfig?.limitToUserTypeIds || userTypeConfig?.userTypeIds?.includes(targetUserType);
+		const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+		const isTargetScope = scope === targetScope;
+		const isTargetUserType =
+			!userTypeConfig?.limitToUserTypeIds || userTypeConfig?.userTypeIds?.includes(targetUserType);
 
-    if (isKnownSchemaType && isTargetScope && isTargetUserType) {
-      const fieldValue = getFieldValue(data, key);
-      return { ...fields, [namespacedKey]: fieldValue };
-    }
-    return fields;
-  }, {});
+		if (isKnownSchemaType && isTargetScope && isTargetUserType) {
+			const fieldValue = getFieldValue(data, key);
+			return { ...fields, [namespacedKey]: fieldValue };
+		}
+		return fields;
+	}, {});
 };
 
 /**
@@ -101,35 +101,35 @@ export const initialValuesForUserFields = (data, targetScope, targetUserType, us
  * fieldConfig, defaultRequiredMessage
  */
 export const getPropsForCustomUserFieldInputs = (
-  userFieldsConfig,
-  intl,
-  userType = null,
-  isSignup = true
+	userFieldsConfig,
+	intl,
+	userType = null,
+	isSignup = true,
 ) => {
-  return (
-    userFieldsConfig?.reduce((pickedFields, fieldConfig) => {
-      const { key, userTypeConfig, schemaType, scope, saveConfig = {} } = fieldConfig || {};
-      const namespacedKey = addScopePrefix(scope, key);
-      const showField = isSignup ? saveConfig.displayInSignUp : true;
+	return (
+		userFieldsConfig?.reduce((pickedFields, fieldConfig) => {
+			const { key, userTypeConfig, schemaType, scope, saveConfig = {} } = fieldConfig || {};
+			const namespacedKey = addScopePrefix(scope, key);
+			const showField = isSignup ? saveConfig.displayInSignUp : true;
 
-      const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
-      const isTargetUserType =
-        !userTypeConfig?.limitToUserTypeIds || userTypeConfig?.userTypeIds?.includes(userType);
-      const isUserScope = ['public', 'private', 'protected'].includes(scope);
+			const isKnownSchemaType = EXTENDED_DATA_SCHEMA_TYPES.includes(schemaType);
+			const isTargetUserType =
+				!userTypeConfig?.limitToUserTypeIds || userTypeConfig?.userTypeIds?.includes(userType);
+			const isUserScope = ["public", "private", "protected"].includes(scope);
 
-      return isKnownSchemaType && isTargetUserType && isUserScope && showField
-        ? [
-            ...pickedFields,
-            {
-              key: namespacedKey,
-              name: namespacedKey,
-              fieldConfig: fieldConfig,
-              defaultRequiredMessage: intl.formatMessage({
-                id: 'CustomExtendedDataField.required',
-              }),
-            },
-          ]
-        : pickedFields;
-    }, []) || []
-  );
+			return isKnownSchemaType && isTargetUserType && isUserScope && showField
+				? [
+						...pickedFields,
+						{
+							key: namespacedKey,
+							name: namespacedKey,
+							fieldConfig: fieldConfig,
+							defaultRequiredMessage: intl.formatMessage({
+								id: "CustomExtendedDataField.required",
+							}),
+						},
+				  ]
+				: pickedFields;
+		}, []) || []
+	);
 };

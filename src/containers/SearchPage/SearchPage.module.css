@@ -1,314 +1,314 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 /* Can be given to Topbar when a modal is opened
  * so that the Topbar is not rendered on top of it.*/
 .topbarBehindModal {
-  z-index: initial;
+	z-index: initial;
 }
 
 .topbar {
-  width: 100%;
+	width: 100%;
 
-  /* Top Bar's drop shadow should always be visible */
-  z-index: var(--zIndexTopbar);
-  position: relative;
+	/* Top Bar's drop shadow should always be visible */
+	z-index: var(--zIndexTopbar);
+	position: relative;
 
-  @media (--viewportMedium) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    /* We need to raise Topbar above .container */
-    z-index: var(--zIndexTopbar);
-  }
+	@media (--viewportMedium) {
+		position: fixed;
+		top: 0;
+		left: 0;
+		/* We need to raise Topbar above .container */
+		z-index: var(--zIndexTopbar);
+	}
 }
 
 .container {
-  /* Layout */
-  width: 100%;
-  flex-grow: 1;
-  display: flex;
+	/* Layout */
+	width: 100%;
+	flex-grow: 1;
+	display: flex;
 
-  @media (--viewportMedium) {
-    position: relative;
-    padding-top: var(--topbarHeightDesktop);
-    min-height: calc(100vh - var(--topbarHeightDesktop));
-  }
+	@media (--viewportMedium) {
+		position: relative;
+		padding-top: var(--topbarHeightDesktop);
+		min-height: calc(100vh - var(--topbarHeightDesktop));
+	}
 }
 
 /* Container for side and content */
 .layoutWrapperContainer {
-  composes: container;
-  /* parent aka root is flexbox, this container takes all available space */
-  flex-shrink: 0;
+	composes: container;
+	/* parent aka root is flexbox, this container takes all available space */
+	flex-shrink: 0;
 
-  /* This container uses flexbox layout */
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+	/* This container uses flexbox layout */
+	display: flex;
+	flex-direction: column;
+	width: 100%;
 
-  /* When side nav is shown as a column, Topbar's box-shadow should be visible */
-  z-index: calc(var(--zIndexTopbar) - 1);
+	/* When side nav is shown as a column, Topbar's box-shadow should be visible */
+	z-index: calc(var(--zIndexTopbar) - 1);
 
-  @media (--viewportMedium) {
-    flex-direction: row;
-    justify-content: center;
-  }
+	@media (--viewportMedium) {
+		flex-direction: row;
+		justify-content: center;
+	}
 }
 
 .layoutWrapperFilterColumn {
-  display: none;
+	display: none;
 
-  @media (--viewportMedium) {
-    /* Layout */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 24px 0 0 24px;
-  }
-  @media (--viewportLarge) {
-    /* Layout */
-    padding: 40px 0 0 36px;
+	@media (--viewportMedium) {
+		/* Layout */
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		padding: 24px 0 0 24px;
+	}
+	@media (--viewportLarge) {
+		/* Layout */
+		padding: 40px 0 0 36px;
 
-    flex-direction: column;
-    justify-content: flex-start;
-    border: none;
-    box-shadow: none;
-    background-color: transparent;
-  }
+		flex-direction: column;
+		justify-content: flex-start;
+		border: none;
+		box-shadow: none;
+		background-color: transparent;
+	}
 
-  @media (min-width: 1440px) {
-    padding: 40px 0 0 calc((100vw - 1368px) / 2);
-  }
-  @media (--viewportXLarge) {
-    padding: 40px 0 0 calc((100vw - 1800px) / 2);
-  }
+	@media (min-width: 1440px) {
+		padding: 40px 0 0 calc((100vw - 1368px) / 2);
+	}
+	@media (--viewportXLarge) {
+		padding: 40px 0 0 calc((100vw - 1800px) / 2);
+	}
 }
 
 .filterColumnContent {
-  width: 210px;
-  padding: 8px 24px 0 0;
+	width: 210px;
+	padding: 8px 24px 0 0;
 
-  @media (--viewportMedium) {
-    padding: 8px 24px 24px 0;
-  }
+	@media (--viewportMedium) {
+		padding: 8px 24px 24px 0;
+	}
 
-  @media (--viewportLarge) {
-    width: 240px;
-    padding: 8px 36px 24px 0;
-  }
+	@media (--viewportLarge) {
+		width: 240px;
+		padding: 8px 36px 24px 0;
+	}
 
-  @media (min-width: 1440px) {
-    padding: 8px 60px 24px 0;
-  }
+	@media (min-width: 1440px) {
+		padding: 8px 60px 24px 0;
+	}
 }
 .filter:first-child {
-  padding-top: 0;
+	padding-top: 0;
 }
 
 .resetAllButton {
-  composes: h5 from global;
-  font-weight: var(--fontWeightMedium);
-  color: var(--colorGrey300);
+	composes: h5 from global;
+	font-weight: var(--fontWeightMedium);
+	color: var(--colorGrey300);
 
-  /* Layout */
-  display: inline;
-  margin: 17px 0 0 0;
-  padding: 0;
+	/* Layout */
+	display: inline;
+	margin: 17px 0 0 0;
+	padding: 0;
 
-  /* Override button styles */
-  outline: none;
-  text-align: left;
-  border: none;
-  cursor: pointer;
+	/* Override button styles */
+	outline: none;
+	text-align: left;
+	border: none;
+	cursor: pointer;
 
-  &:focus,
-  &:hover {
-    color: var(--colorGrey700);
-  }
+	&:focus,
+	&:hover {
+		color: var(--colorGrey700);
+	}
 
-  @media (--viewportMedium) {
-    margin: 24px 0 0 0;
-    padding: 3px 0 5px 0;
-  }
+	@media (--viewportMedium) {
+		margin: 24px 0 0 0;
+		padding: 3px 0 5px 0;
+	}
 }
 
 .layoutWrapperMain {
-  /* Expand to the full remaining width of the viewport */
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 0 24px 0 24px;
+	/* Expand to the full remaining width of the viewport */
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	padding: 0 24px 0 24px;
 
-  @media (--viewportMedium) {
-    /**
+	@media (--viewportMedium) {
+		/**
      * Calculate right padding to match Footer right border
      * and left padding together with border should be 60px.
      */
-    padding: 24px 24px 0 24px;
-    background-color: var(--colorWhite);
-    border-left-width: 1px;
-    border-left-style: solid;
-    border-left-color: var(--colorGrey100);
-  }
+		padding: 24px 24px 0 24px;
+		background-color: var(--colorWhite);
+		border-left-width: 1px;
+		border-left-style: solid;
+		border-left-color: var(--colorGrey100);
+	}
 
-  @media (--viewportLarge) {
-    /**
+	@media (--viewportLarge) {
+		/**
      * Calculate right padding to match Footer right border
      * and left padding together with border should be 60px.
      */
-    padding: 40px 36px 0 36px;
-  }
+		padding: 40px 36px 0 36px;
+	}
 
-  @media (min-width: 1440px) {
-    padding: 40px calc((100vw - 1368px) / 2) 0 59px;
-  }
-  @media (--viewportXLarge) {
-    padding: 40px calc((100vw - 1800px) / 2) 0 59px;
-  }
+	@media (min-width: 1440px) {
+		padding: 40px calc((100vw - 1368px) / 2) 0 59px;
+	}
+	@media (--viewportXLarge) {
+		padding: 40px calc((100vw - 1800px) / 2) 0 59px;
+	}
 }
 
 .searchResultContainer {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 2px 0 0 0;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	padding: 2px 0 0 0;
 
-  @media (--viewportMedium) {
-    padding: 0;
-    /**
+	@media (--viewportMedium) {
+		padding: 0;
+		/**
      * .container is using flexbox,
      * This specifies that searchResultContainer is taking 60% from the viewport width
      */
-    flex-basis: 50%;
-  }
+		flex-basis: 50%;
+	}
 
-  @media (--viewportLarge) {
-    flex-basis: 62.5%;
-  }
+	@media (--viewportLarge) {
+		flex-basis: 62.5%;
+	}
 }
 
 .error {
-  color: var(--colorFail);
+	color: var(--colorFail);
 }
 
 .searchString {
-  /* Search string should not break on white spaces - i.e. line-break should happen before. */
-  white-space: nowrap;
+	/* Search string should not break on white spaces - i.e. line-break should happen before. */
+	white-space: nowrap;
 }
 
 .mainPanel {
-  display: none;
+	display: none;
 
-  @media (--viewportMedium) {
-    display: flex;
-  }
+	@media (--viewportMedium) {
+		display: flex;
+	}
 }
 
 .mainPanelMapVariant {
-  composes: mainPanel;
+	composes: mainPanel;
 
-  @media (--viewportMedium) {
-    padding: 18px 24px 0 24px;
-    margin-bottom: 21px;
-  }
+	@media (--viewportMedium) {
+		padding: 18px 24px 0 24px;
+		margin-bottom: 21px;
+	}
 
-  @media (--viewportLarge) {
-    padding: 23px 36px 0 36px;
-  }
+	@media (--viewportLarge) {
+		padding: 23px 36px 0 36px;
+	}
 }
 
 .searchFiltersMobileMap {
-  padding: 16px 24px;
+	padding: 16px 24px;
 
-  @media (--viewportMedium) {
-    display: none;
-  }
+	@media (--viewportMedium) {
+		display: none;
+	}
 }
 
 .searchFiltersMobileList {
-  padding: 16px 0;
+	padding: 16px 0;
 
-  @media (--viewportMedium) {
-    display: none;
-  }
+	@media (--viewportMedium) {
+		display: none;
+	}
 }
 
 .searchFiltersPanel {
-  flex-grow: 1;
-  display: flex;
-  padding: 0 24px 24px 24px;
+	flex-grow: 1;
+	display: flex;
+	padding: 0 24px 24px 24px;
 
-  @media (--viewportLarge) {
-    padding: 0 36px 36px 36px;
-  }
+	@media (--viewportLarge) {
+		padding: 0 36px 36px 36px;
+	}
 }
 
 .listings {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
 }
 
 .listingsForGridVariant {
-  composes: listings;
+	composes: listings;
 }
 
 .listingsForMapVariant {
-  composes: listings;
-  padding: 0 24px;
+	composes: listings;
+	padding: 0 24px;
 
-  @media (--viewportLarge) {
-    padding: 0 36px;
-  }
+	@media (--viewportLarge) {
+		padding: 0 36px;
+	}
 }
 
 .newSearchInProgress {
-  opacity: 0.1;
+	opacity: 0.1;
 }
 
 .searchListingsPanel {
-  flex-grow: 1;
+	flex-grow: 1;
 }
 
 .mapPanel {
-  @media (--viewportMedium) {
-    /**
+	@media (--viewportMedium) {
+		/**
      * .container is using flexbox,
      * This specifies that mapPanel is taking 34% from the viewport width
      */
-    flex-basis: 50%;
+		flex-basis: 50%;
 
-    /* Own layout settings */
-    display: flex;
-    height: 100%;
-  }
+		/* Own layout settings */
+		display: flex;
+		height: 100%;
+	}
 
-  @media (--viewportLarge) {
-    flex-basis: 37.5%;
-  }
+	@media (--viewportLarge) {
+		flex-basis: 37.5%;
+	}
 }
 
 .mapWrapper {
-  width: 100%;
-  height: 100%;
+	width: 100%;
+	height: 100%;
 }
 
 .map {
-  width: 100vw;
-  height: 100vh;
+	width: 100vw;
+	height: 100vh;
 
-  @media (--viewportMedium) {
-    /* Map is fixed so that it doesn't scroll along search results */
-    position: fixed;
-    top: var(--topbarHeightDesktop);
-    right: 0;
+	@media (--viewportMedium) {
+		/* Map is fixed so that it doesn't scroll along search results */
+		position: fixed;
+		top: var(--topbarHeightDesktop);
+		right: 0;
 
-    /* Fixed content needs width relative to viewport */
-    width: 50vw;
-    height: calc(100vh - var(--topbarHeightDesktop));
-  }
+		/* Fixed content needs width relative to viewport */
+		width: 50vw;
+		height: calc(100vh - var(--topbarHeightDesktop));
+	}
 
-  @media (--viewportLarge) {
-    width: 37.5vw;
-  }
+	@media (--viewportLarge) {
+		width: 37.5vw;
+	}
 }

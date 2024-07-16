@@ -1,97 +1,97 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .label,
 .labelSelected {
-  display: inline-block;
-  width: auto;
-  height: 35px;
-  min-height: 35px;
+	display: inline-block;
+	width: auto;
+	height: 35px;
+	min-height: 35px;
 
-  padding: 0 18px;
-  margin: 0 9px 0 0;
+	padding: 0 18px;
+	margin: 0 9px 0 0;
 
-  transition: all var(--transitionStyleButton);
-  cursor: pointer;
+	transition: all var(--transitionStyleButton);
+	cursor: pointer;
 
-  /* Font */
-  font-weight: var(--fontWeightSemiBold);
-  font-size: 13px;
-  line-height: 18px;
-  letter-spacing: 0.2px;
+	/* Font */
+	font-weight: var(--fontWeightSemiBold);
+	font-size: 13px;
+	line-height: 18px;
+	letter-spacing: 0.2px;
 
-  /* Button text styles */
-  /* Default button text is centered without decorations */
-  text-align: center;
-  text-decoration: none;
+	/* Button text styles */
+	/* Default button text is centered without decorations */
+	text-align: center;
+	text-decoration: none;
 
-  &:focus,
-  &:hover {
-    outline: none;
-    box-shadow: var(--boxShadowFilterButton);
-    text-decoration: none;
-  }
+	&:focus,
+	&:hover {
+		outline: none;
+		box-shadow: var(--boxShadowFilterButton);
+		text-decoration: none;
+	}
 
-  &:disabled {
-    box-shadow: none;
-    cursor: not-allowed;
-  }
+	&:disabled {
+		box-shadow: none;
+		cursor: not-allowed;
+	}
 
-  @media (--viewportMedium) {
-    height: auto;
-    min-height: 0;
-    padding: var(--marketplaceButtonSmallDesktopPadding);
-    margin: 0;
+	@media (--viewportMedium) {
+		height: auto;
+		min-height: 0;
+		padding: var(--marketplaceButtonSmallDesktopPadding);
+		margin: 0;
 
-    font-weight: var(--fontWeightMedium);
-    font-size: 13px;
-    line-height: 20px;
-  }
+		font-weight: var(--fontWeightMedium);
+		font-size: 13px;
+		line-height: 20px;
+	}
 }
 
 .label {
-  /* Button borders */
-  border: 1px solid var(--colorGrey100);
-  border-radius: var(--borderRadiusMedium);
+	/* Button borders */
+	border: 1px solid var(--colorGrey100);
+	border-radius: var(--borderRadiusMedium);
 
-  background-color: var(--colorWhite);
+	background-color: var(--colorWhite);
 
-  &:hover,
-  &:focus {
-    border-color: var(--colorGrey300);
-  }
-  &:disabled {
-    border-color: var(--colorGrey100);
-  }
+	&:hover,
+	&:focus {
+		border-color: var(--colorGrey300);
+	}
+	&:disabled {
+		border-color: var(--colorGrey100);
+	}
 
-  @media (--viewportMedium) {
-    &:hover,
-    &:focus {
-      border-color: transparent;
-    }
-  }
+	@media (--viewportMedium) {
+		&:hover,
+		&:focus {
+			border-color: transparent;
+		}
+	}
 }
 
 .labelSelected {
-  /* Button borders */
-  border-radius: var(--borderRadiusMedium);
-  border: 1px solid var(--marketplaceColor);
+	/* Button borders */
+	border-radius: var(--borderRadiusMedium);
+	border: 1px solid var(--marketplaceColor);
 
-  /* Button colors: secondary */
-  background-color: var(--marketplaceColor);
-  color: var(--colorWhite);
+	/* Button colors: secondary */
+	background-color: var(--marketplaceColor);
+	color: var(--colorWhite);
 
-  &:hover,
-  &:focus {
-    border: 1px solid var(--marketplaceColorDark);
-  }
-  &:disabled {
-    background-color: var(--colorGrey100);
-    color: var(--colorWhite);
-  }
+	&:hover,
+	&:focus {
+		border: 1px solid var(--marketplaceColorDark);
+	}
+	&:disabled {
+		background-color: var(--colorGrey100);
+		color: var(--colorWhite);
+	}
 }
 
 .labelEllipsis {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }

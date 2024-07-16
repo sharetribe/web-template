@@ -1,4 +1,4 @@
 .root,
 .pencil {
-  stroke: var(--marketplaceColor);
+	stroke: var(--marketplaceColor);
 }

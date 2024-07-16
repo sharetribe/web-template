@@ -1,114 +1,114 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .root {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background-color: var(--colorGrey50);
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	background-color: var(--colorGrey50);
 }
 
 .filtersWrapper {
-  @media (--viewportMedium) {
-    display: grid;
-    grid-gap: 72px;
-    grid-template-columns: repeat(1, 1fr);
-    grid-template-rows: auto;
-  }
+	@media (--viewportMedium) {
+		display: grid;
+		grid-gap: 72px;
+		grid-template-columns: repeat(1, 1fr);
+		grid-template-rows: auto;
+	}
 
-  @media (--viewportLarge) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+	@media (--viewportLarge) {
+		grid-template-columns: repeat(2, 1fr);
+	}
 
-  @media (min-width: 1200px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
+	@media (min-width: 1200px) {
+		grid-template-columns: repeat(3, 1fr);
+	}
 
-  @media (--viewportXLarge) {
-    grid-template-columns: repeat(4, 1fr);
-  }
+	@media (--viewportXLarge) {
+		grid-template-columns: repeat(4, 1fr);
+	}
 }
 
 .footer {
-  display: flex;
-  margin-top: 8px;
+	display: flex;
+	margin-top: 8px;
 }
 
 .filterButton {
-  /* Position and dimensions */
-  display: inline;
-  padding: 0;
+	/* Position and dimensions */
+	display: inline;
+	padding: 0;
 
-  /* Borders */
-  border: none;
+	/* Borders */
+	border: none;
 
-  /* Text size should be inherited */
-  text-decoration: none;
+	/* Text size should be inherited */
+	text-decoration: none;
 
-  font-weight: var(--fontWeightMedium);
-  font-size: 14px;
-  line-height: 18px;
-  letter-spacing: 0;
-  /* margin-top + n * line-height + margin-bottom => x * 6px */
-  margin-top: 10px;
-  margin-bottom: 8px;
+	font-weight: var(--fontWeightMedium);
+	font-size: 14px;
+	line-height: 18px;
+	letter-spacing: 0;
+	/* margin-top + n * line-height + margin-bottom => x * 6px */
+	margin-top: 10px;
+	margin-bottom: 8px;
 
-  &:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
+	&:hover {
+		text-decoration: underline;
+		cursor: pointer;
+	}
 
-  @media (--viewportMedium) {
-    line-height: 16px;
-    /* margin-top + n * line-height + margin-bottom => x * 8px */
-    margin-top: 10px;
-    margin-bottom: 14px;
-  }
+	@media (--viewportMedium) {
+		line-height: 16px;
+		/* margin-top + n * line-height + margin-bottom => x * 8px */
+		margin-top: 10px;
+		margin-bottom: 14px;
+	}
 }
 .resetAllButton {
-  composes: filterButton;
-  color: var(--colorGrey300);
+	composes: filterButton;
+	color: var(--colorGrey300);
 
-  /* Layout */
-  margin: 0 auto 0 0;
+	/* Layout */
+	margin: 0 auto 0 0;
 
-  /* Override button styles */
-  outline: none;
+	/* Override button styles */
+	outline: none;
 
-  &:focus,
-  &:hover {
-    color: var(--colorGrey700);
-  }
+	&:focus,
+	&:hover {
+		color: var(--colorGrey700);
+	}
 }
 
 .cancelButton {
-  composes: filterButton;
-  color: var(--colorGrey300);
+	composes: filterButton;
+	color: var(--colorGrey300);
 
-  /* Layout */
-  margin: 0 24px 0 24px;
+	/* Layout */
+	margin: 0 24px 0 24px;
 
-  /* Override button styles */
-  outline: none;
+	/* Override button styles */
+	outline: none;
 
-  &:focus,
-  &:hover {
-    color: var(--colorGrey700);
-  }
+	&:focus,
+	&:hover {
+		color: var(--colorGrey700);
+	}
 }
 
 .applyButton {
-  composes: filterButton;
-  color: var(--marketplaceColor);
+	composes: filterButton;
+	color: var(--marketplaceColor);
 
-  /* Layout */
-  margin: 0;
+	/* Layout */
+	margin: 0;
 
-  /* Override button styles */
-  outline: none;
+	/* Override button styles */
+	outline: none;
 
-  &:focus,
-  &:hover {
-    color: var(--marketplaceColorDark);
-  }
+	&:focus,
+	&:hover {
+		color: var(--marketplaceColorDark);
+	}
 }

@@ -1,7 +1,7 @@
-import IconInquiry from './IconInquiry';
+import IconInquiry from "./IconInquiry";
 
 export const Icon = {
-  component: IconInquiry,
-  props: {},
-  group: 'icons',
+	component: IconInquiry,
+	props: {},
+	group: "icons",
 };

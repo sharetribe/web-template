@@ -1,4 +1,4 @@
-const moment = require('moment');
+const moment = require("moment");
 
 /** Helper functions for handling dates
  * These helper functions are copied from src/util/dates.js
@@ -20,11 +20,11 @@ const moment = require('moment');
  * @returns {Number} number of nights between the given dates
  */
 exports.nightsBetween = (startDate, endDate) => {
-  const nights = moment(endDate).diff(startDate, 'days');
-  if (nights < 0) {
-    throw new Error('End date cannot be before start date');
-  }
-  return nights;
+	const nights = moment(endDate).diff(startDate, "days");
+	if (nights < 0) {
+		throw new Error("End date cannot be before start date");
+	}
+	return nights;
 };
 
 /**
@@ -46,9 +46,9 @@ exports.nightsBetween = (startDate, endDate) => {
  * @returns {Number} number of days between the given dates
  */
 exports.daysBetween = (startDate, endDate) => {
-  const days = moment(endDate).diff(startDate, 'days');
-  if (days < 0) {
-    throw new Error('End date cannot be before start date');
-  }
-  return days;
+	const days = moment(endDate).diff(startDate, "days");
+	if (days < 0) {
+		throw new Error("End date cannot be before start date");
+	}
+	return days;
 };

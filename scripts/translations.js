@@ -9,18 +9,18 @@
  * but that can be changed by modifying the SOURCE_LANG.
  */
 
-const inquirer = require('inquirer');
-const difference = require('lodash/difference');
-const fs = require('fs');
-const chalk = require('chalk');
+const inquirer = require("inquirer");
+const difference = require("lodash/difference");
+const fs = require("fs");
+const chalk = require("chalk");
 
-const PATH = './src/translations/';
+const PATH = "./src/translations/";
 
-const SOURCE_LANG = { name: 'English', code: 'en' };
+const SOURCE_LANG = { name: "English", code: "en" };
 const TARGET_LANG_NAMES = {
-  es: 'Spanish',
-  de: 'German',
-  fr: 'French',
+	es: "Spanish",
+	de: "German",
+	fr: "French",
 };
 
 class BreakToRun {}
@@ -38,9 +38,9 @@ const filePath = lang => `${PATH}${lang}.json`;
  * If a lang name is not found, language code is returned.
  */
 const targetLangName = code => {
-  const name = TARGET_LANG_NAMES[code];
+	const name = TARGET_LANG_NAMES[code];
 
-  return name || code;
+	return name || code;
 };
 
 /**
@@ -51,21 +51,21 @@ const targetLangName = code => {
  * Relies on translation file naming: <lang code>.json
  */
 const targetLangChoices = () => {
-  const folder = './src/translations/';
-  const filenames = fs.readdirSync(folder);
+	const folder = "./src/translations/";
+	const filenames = fs.readdirSync(folder);
 
-  const choices = filenames
-    .filter(name => name.endsWith('.json'))
-    .map(name => name.split('.')[0])
-    .filter(code => code !== SOURCE_LANG.code)
-    .map(code => {
-      return {
-        name: targetLangName(code),
-        value: code,
-      };
-    });
+	const choices = filenames
+		.filter(name => name.endsWith(".json"))
+		.map(name => name.split(".")[0])
+		.filter(code => code !== SOURCE_LANG.code)
+		.map(code => {
+			return {
+				name: targetLangName(code),
+				value: code,
+			};
+		});
 
-  return choices;
+	return choices;
 };
 
 /**
@@ -75,12 +75,12 @@ const targetLangChoices = () => {
  * See: http://exploringjs.com/es6/ch_oop-besides-classes.html#_traversal-order-of-properties
  */
 const sort = obj => {
-  const sorted = {};
-  Object.keys(obj)
-    .sort()
-    .forEach(key => (sorted[key] = obj[key]));
+	const sorted = {};
+	Object.keys(obj)
+		.sort()
+		.forEach(key => (sorted[key] = obj[key]));
 
-  return sorted;
+	return sorted;
 };
 
 /**
@@ -90,8 +90,8 @@ const sort = obj => {
  * @param filepath
  */
 const readFileToJSON = filepath => {
-  const rawdata = fs.readFileSync(filepath);
-  return JSON.parse(rawdata);
+	const rawdata = fs.readFileSync(filepath);
+	return JSON.parse(rawdata);
 };
 
 /**
@@ -99,15 +99,15 @@ const readFileToJSON = filepath => {
  *
  */
 const run = () => {
-  const choices = targetLangChoices();
+	const choices = targetLangChoices();
 
-  selectLanguage(choices)
-    .then(answers => {
-      runWithTarget(answers.lang);
-    })
-    .catch(err => {
-      console.log(chalk.red(`An error occurred due to: ${err.message}`));
-    });
+	selectLanguage(choices)
+		.then(answers => {
+			runWithTarget(answers.lang);
+		})
+		.catch(err => {
+			console.log(chalk.red(`An error occurred due to: ${err.message}`));
+		});
 };
 
 /**
@@ -117,22 +117,22 @@ const run = () => {
  * @param {String} targetLang Target language code
  */
 const runWithTarget = targetLang => {
-  let key;
-  let translation;
+	let key;
+	let translation;
 
-  const sourceLang = SOURCE_LANG.code;
-  const source = readFileToJSON(filePath(sourceLang));
-  const target = readFileToJSON(filePath(targetLang));
-  const sourceKeys = Object.keys(source);
-  const targetKeys = Object.keys(target);
-  const diff = difference(sourceKeys, targetKeys);
+	const sourceLang = SOURCE_LANG.code;
+	const source = readFileToJSON(filePath(sourceLang));
+	const target = readFileToJSON(filePath(targetLang));
+	const sourceKeys = Object.keys(source);
+	const targetKeys = Object.keys(target);
+	const diff = difference(sourceKeys, targetKeys);
 
-  if (diff.length === 0) {
-    console.log(`No translations missing from the ${targetLangName(targetLang)} translations`);
-    run();
-  } else {
-    translateLanguage(targetLang, source, target, diff);
-  }
+	if (diff.length === 0) {
+		console.log(`No translations missing from the ${targetLangName(targetLang)} translations`);
+		run();
+	} else {
+		translateLanguage(targetLang, source, target, diff);
+	}
 };
 
 /**
@@ -144,50 +144,50 @@ const runWithTarget = targetLang => {
  * @param {Array} diff Missing keys in target
  */
 const translateLanguage = (targetLang, source, target, diff) => {
-  selectKey(targetLang, diff, source, target)
-    .then(answers => {
-      key = answers.key;
-      if (key === null) {
-        throw new BreakToRun();
-      }
-      if (key != null) {
-        return addTranslation(targetLang, key, source);
-      }
-    })
-    .then(answers => {
-      translation = answers.value;
-      return confirmTranslation(targetLang, key, translation);
-    })
-    .then(answers => {
-      // y|Y|n|N
-      const confirmation = answers.value;
+	selectKey(targetLang, diff, source, target)
+		.then(answers => {
+			key = answers.key;
+			if (key === null) {
+				throw new BreakToRun();
+			}
+			if (key != null) {
+				return addTranslation(targetLang, key, source);
+			}
+		})
+		.then(answers => {
+			translation = answers.value;
+			return confirmTranslation(targetLang, key, translation);
+		})
+		.then(answers => {
+			// y|Y|n|N
+			const confirmation = answers.value;
 
-      if (/n/i.test(confirmation)) {
-        console.log('Discarding new translation');
-        throw new BreakToRunWithTarget();
-      }
+			if (/n/i.test(confirmation)) {
+				console.log("Discarding new translation");
+				throw new BreakToRunWithTarget();
+			}
 
-      target[key] = translation;
+			target[key] = translation;
 
-      const sorted = sort(target);
-      const data = JSON.stringify(sorted, null, 2);
+			const sorted = sort(target);
+			const data = JSON.stringify(sorted, null, 2);
 
-      return updateTranslationsFile(data, targetLang);
-    })
-    .then(() => {
-      runWithTarget(targetLang);
-    })
-    .catch(err => {
-      if (err instanceof BreakToRun) {
-        // break out of Promise chain, start over
-        run();
-      } else if (err instanceof BreakToRunWithTarget) {
-        // break out of Promise chain, continue with this language
-        runWithTarget(targetLang);
-      } else {
-        console.log(chalk.red(`An error occurred due to: ${err.message}`));
-      }
-    });
+			return updateTranslationsFile(data, targetLang);
+		})
+		.then(() => {
+			runWithTarget(targetLang);
+		})
+		.catch(err => {
+			if (err instanceof BreakToRun) {
+				// break out of Promise chain, start over
+				run();
+			} else if (err instanceof BreakToRunWithTarget) {
+				// break out of Promise chain, continue with this language
+				runWithTarget(targetLang);
+			} else {
+				console.log(chalk.red(`An error occurred due to: ${err.message}`));
+			}
+		});
 };
 
 /**
@@ -197,14 +197,14 @@ const translateLanguage = (targetLang, source, target, diff) => {
  * @return a Promise
  */
 const selectLanguage = choices => {
-  return inquirer.prompt([
-    {
-      type: 'list',
-      name: 'lang',
-      message: 'Which language would you like to inspect? (Or hit Ctrl+C to quit)',
-      choices: choices,
-    },
-  ]);
+	return inquirer.prompt([
+		{
+			type: "list",
+			name: "lang",
+			message: "Which language would you like to inspect? (Or hit Ctrl+C to quit)",
+			choices: choices,
+		},
+	]);
 };
 
 /**
@@ -216,20 +216,20 @@ const selectLanguage = choices => {
  * @return a Promise
  */
 const selectKey = (targetLang, diff, source, target) => {
-  const choices = [{ name: 'Back to languages', value: null }, ...diff];
-  return inquirer.prompt([
-    {
-      type: 'list',
-      name: 'key',
-      message: `The following translation keys (${
-        diff.length
-      }) are missing from the ${targetLangName(
-        targetLang
-      )} translations. Select a key to add a translation.`,
-      choices: choices,
-      pageSize: 30,
-    },
-  ]);
+	const choices = [{ name: "Back to languages", value: null }, ...diff];
+	return inquirer.prompt([
+		{
+			type: "list",
+			name: "key",
+			message: `The following translation keys (${
+				diff.length
+			}) are missing from the ${targetLangName(
+				targetLang,
+			)} translations. Select a key to add a translation.`,
+			choices: choices,
+			pageSize: 30,
+		},
+	]);
 };
 
 /**
@@ -242,17 +242,17 @@ const selectKey = (targetLang, diff, source, target) => {
  * @return a Promise
  */
 const addTranslation = (targetLang, key, source) => {
-  return inquirer.prompt([
-    {
-      type: 'input',
-      name: 'value',
-      message: `Please provide a translation in ${targetLangName(
-        targetLang
-      )} for the key ${chalk.blueBright(key)}. The current ${
-        SOURCE_LANG.name
-      } translation is ${chalk.green(source[key])} \n`,
-    },
-  ]);
+	return inquirer.prompt([
+		{
+			type: "input",
+			name: "value",
+			message: `Please provide a translation in ${targetLangName(
+				targetLang,
+			)} for the key ${chalk.blueBright(key)}. The current ${
+				SOURCE_LANG.name
+			} translation is ${chalk.green(source[key])} \n`,
+		},
+	]);
 };
 
 /**
@@ -265,16 +265,16 @@ const addTranslation = (targetLang, key, source) => {
  * @return a Promise with with answers.value being 'y' or 'N'
  */
 const confirmTranslation = (targetLang, key, translation) => {
-  return inquirer.prompt([
-    {
-      type: 'input',
-      name: 'value',
-      message: `Do you want to add the ${targetLangName(targetLang)} translation ${chalk.green(
-        translation
-      )} for the key ${chalk.blueBright(key)}? (y/n)`,
-      validate: value => /y/i.test(value) || /n/i.test(value),
-    },
-  ]);
+	return inquirer.prompt([
+		{
+			type: "input",
+			name: "value",
+			message: `Do you want to add the ${targetLangName(targetLang)} translation ${chalk.green(
+				translation,
+			)} for the key ${chalk.blueBright(key)}? (y/n)`,
+			validate: value => /y/i.test(value) || /n/i.test(value),
+		},
+	]);
 };
 
 /**
@@ -286,15 +286,15 @@ const confirmTranslation = (targetLang, key, translation) => {
  * @return a Promise that resolves when file is written
  */
 const updateTranslationsFile = (data, targetLang) => {
-  return new Promise((resolve, reject) => {
-    fs.writeFile(filePath(targetLang), data, err => {
-      if (err) {
-        reject(err);
-      }
-      console.log(chalk.bold('The translation file is updated'));
-      resolve();
-    });
-  });
+	return new Promise((resolve, reject) => {
+		fs.writeFile(filePath(targetLang), data, err => {
+			if (err) {
+				reject(err);
+			}
+			console.log(chalk.bold("The translation file is updated"));
+			resolve();
+		});
+	});
 };
 
 run();

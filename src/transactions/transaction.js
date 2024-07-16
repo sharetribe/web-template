@@ -1,22 +1,22 @@
-import * as log from '../util/log';
-import { ensureTransaction } from '../util/data';
-import * as purchaseProcess from './transactionProcessPurchase';
-import * as bookingProcess from './transactionProcessBooking';
-import * as inquiryProcess from './transactionProcessInquiry';
+import * as log from "../util/log";
+import { ensureTransaction } from "../util/data";
+import * as purchaseProcess from "./transactionProcessPurchase";
+import * as bookingProcess from "./transactionProcessBooking";
+import * as inquiryProcess from "./transactionProcessInquiry";
 
 // Supported unit types
 // Note: These are passed to translations/microcopy in certain cases.
 //       Therefore, they can't contain wordbreaks like '-' or space ' '
-export const ITEM = 'item';
-export const DAY = 'day';
-export const NIGHT = 'night';
-export const HOUR = 'hour';
-export const INQUIRY = 'inquiry';
+export const ITEM = "item";
+export const DAY = "day";
+export const NIGHT = "night";
+export const HOUR = "hour";
+export const INQUIRY = "inquiry";
 
 // Then names of supported processes
-export const PURCHASE_PROCESS_NAME = 'default-purchase';
-export const BOOKING_PROCESS_NAME = 'default-booking';
-export const INQUIRY_PROCESS_NAME = 'default-inquiry';
+export const PURCHASE_PROCESS_NAME = "default-purchase";
+export const BOOKING_PROCESS_NAME = "default-booking";
+export const INQUIRY_PROCESS_NAME = "default-inquiry";
 
 /**
  * A process should export:
@@ -32,24 +32,24 @@ export const INQUIRY_PROCESS_NAME = 'default-inquiry';
  * - statesNeedingCustomerAttention
  */
 const PROCESSES = [
-  {
-    name: PURCHASE_PROCESS_NAME,
-    alias: `${PURCHASE_PROCESS_NAME}/release-1`,
-    process: purchaseProcess,
-    unitTypes: [ITEM],
-  },
-  {
-    name: BOOKING_PROCESS_NAME,
-    alias: `${BOOKING_PROCESS_NAME}/release-1`,
-    process: bookingProcess,
-    unitTypes: [DAY, NIGHT, HOUR],
-  },
-  {
-    name: INQUIRY_PROCESS_NAME,
-    alias: `${INQUIRY_PROCESS_NAME}/release-1`,
-    process: inquiryProcess,
-    unitTypes: [INQUIRY],
-  },
+	{
+		name: PURCHASE_PROCESS_NAME,
+		alias: `${PURCHASE_PROCESS_NAME}/release-1`,
+		process: purchaseProcess,
+		unitTypes: [ITEM],
+	},
+	{
+		name: BOOKING_PROCESS_NAME,
+		alias: `${BOOKING_PROCESS_NAME}/release-1`,
+		process: bookingProcess,
+		unitTypes: [DAY, NIGHT, HOUR],
+	},
+	{
+		name: INQUIRY_PROCESS_NAME,
+		alias: `${INQUIRY_PROCESS_NAME}/release-1`,
+		process: inquiryProcess,
+		unitTypes: [INQUIRY],
+	},
 ];
 
 /**
@@ -78,16 +78,16 @@ const statesObjectFromGraph = graph => graph.states || {};
  * @returns {function} Returns a function to check the next state after given transition.
  */
 const getStateAfterTransition = process => transition => {
-  const statesObj = statesObjectFromGraph(process.graph);
-  const stateNames = Object.keys(statesObj);
-  const fromState = stateNames.find(stateName => {
-    const transitionsForward = Object.keys(statesObj[stateName]?.on || {});
-    return transitionsForward.includes(transition);
-  });
+	const statesObj = statesObjectFromGraph(process.graph);
+	const stateNames = Object.keys(statesObj);
+	const fromState = stateNames.find(stateName => {
+		const transitionsForward = Object.keys(statesObj[stateName]?.on || {});
+		return transitionsForward.includes(transition);
+	});
 
-  return fromState && transition && statesObj[fromState]?.on[transition]
-    ? statesObj[fromState]?.on[transition]
-    : null;
+	return fromState && transition && statesObj[fromState]?.on[transition]
+		? statesObj[fromState]?.on[transition]
+		: null;
 };
 
 /**
@@ -105,7 +105,7 @@ const getStateAfterTransition = process => transition => {
  * given process.
  */
 const getProcessState = process => tx => {
-  return getStateAfterTransition(process)(txLastTransition(tx));
+	return getStateAfterTransition(process)(txLastTransition(tx));
 };
 
 /**
@@ -123,10 +123,10 @@ const getProcessState = process => tx => {
  * @param {Array} initialTransitions
  */
 const pickTransitionsToTargetState = (transitionEntries, targetState, initialTransitions) => {
-  return transitionEntries.reduce((pickedTransitions, transitionEntry) => {
-    const [transition, nextState] = transitionEntry;
-    return nextState === targetState ? [...pickedTransitions, transition] : pickedTransitions;
-  }, initialTransitions);
+	return transitionEntries.reduce((pickedTransitions, transitionEntry) => {
+		const [transition, nextState] = transitionEntry;
+		return nextState === targetState ? [...pickedTransitions, transition] : pickedTransitions;
+	}, initialTransitions);
 };
 
 /**
@@ -155,16 +155,16 @@ const pickTransitionsToTargetState = (transitionEntries, targetState, initialTra
  * @param {String} targetState
  */
 const getTransitionsToState = (process, targetState) => {
-  const states = Object.values(statesObjectFromGraph(process.graph));
+	const states = Object.values(statesObjectFromGraph(process.graph));
 
-  return states.reduce((collectedTransitions, inspectedState) => {
-    const transitionEntriesForward = Object.entries(inspectedState.on || {});
-    return pickTransitionsToTargetState(
-      transitionEntriesForward,
-      targetState,
-      collectedTransitions
-    );
-  }, []);
+	return states.reduce((collectedTransitions, inspectedState) => {
+		const transitionEntriesForward = Object.entries(inspectedState.on || {});
+		return pickTransitionsToTargetState(
+			transitionEntriesForward,
+			targetState,
+			collectedTransitions,
+		);
+	}, []);
 };
 
 /**
@@ -174,9 +174,9 @@ const getTransitionsToState = (process, targetState) => {
  * @returns {function} Returns a function to get the transitions that lead to given states.
  */
 const getTransitionsToStates = process => stateNames => {
-  return stateNames.reduce((pickedTransitions, stateName) => {
-    return [...pickedTransitions, ...getTransitionsToState(process, stateName)];
-  }, []);
+	return stateNames.reduce((pickedTransitions, stateName) => {
+		return [...pickedTransitions, ...getTransitionsToState(process, stateName)];
+	}, []);
 };
 
 /**
@@ -186,13 +186,13 @@ const getTransitionsToStates = process => stateNames => {
  * @param {Object} process against which passed states are checked.
  */
 const hasPassedState = process => (stateName, tx) => {
-  const txTransitions = tx => tx?.attributes?.transitions || [];
-  const hasPassedTransition = (transitionName, tx) =>
-    !!txTransitions(tx).find(t => t.transition === transitionName);
+	const txTransitions = tx => tx?.attributes?.transitions || [];
+	const hasPassedTransition = (transitionName, tx) =>
+		!!txTransitions(tx).find(t => t.transition === transitionName);
 
-  return (
-    getTransitionsToState(process, stateName).filter(t => hasPassedTransition(t, tx)).length > 0
-  );
+	return (
+		getTransitionsToState(process, stateName).filter(t => hasPassedTransition(t, tx)).length > 0
+	);
 };
 
 /**
@@ -205,21 +205,21 @@ const hasPassedState = process => (stateName, tx) => {
  * @param {String} processName
  */
 export const resolveLatestProcessName = processName => {
-  switch (processName) {
-    case 'flex-product-default-process':
-    case 'default-buying-products':
-    case PURCHASE_PROCESS_NAME:
-      return PURCHASE_PROCESS_NAME;
-    case 'flex-default-process':
-    case 'flex-hourly-default-process':
-    case 'flex-booking-default-process':
-    case BOOKING_PROCESS_NAME:
-      return BOOKING_PROCESS_NAME;
-    case INQUIRY_PROCESS_NAME:
-      return INQUIRY_PROCESS_NAME;
-    default:
-      return processName;
-  }
+	switch (processName) {
+		case "flex-product-default-process":
+		case "default-buying-products":
+		case PURCHASE_PROCESS_NAME:
+			return PURCHASE_PROCESS_NAME;
+		case "flex-default-process":
+		case "flex-hourly-default-process":
+		case "flex-booking-default-process":
+		case BOOKING_PROCESS_NAME:
+			return BOOKING_PROCESS_NAME;
+		case INQUIRY_PROCESS_NAME:
+			return INQUIRY_PROCESS_NAME;
+		default:
+			return processName;
+	}
 };
 
 /**
@@ -227,39 +227,39 @@ export const resolveLatestProcessName = processName => {
  * @param {String} processName
  */
 export const getProcess = processName => {
-  const latestProcessName = resolveLatestProcessName(processName);
-  const processInfo = PROCESSES.find(process => process.name === latestProcessName);
-  if (processInfo) {
-    return {
-      ...processInfo.process,
-      getState: getProcessState(processInfo.process),
-      getStateAfterTransition: getStateAfterTransition(processInfo.process),
-      getTransitionsToStates: getTransitionsToStates(processInfo.process),
-      hasPassedState: hasPassedState(processInfo.process),
-    };
-  } else {
-    const error = new Error(`Unknown transaction process name: ${processName}`);
-    log.error(error, 'unknown-transaction-process', { processName });
-    throw error;
-  }
+	const latestProcessName = resolveLatestProcessName(processName);
+	const processInfo = PROCESSES.find(process => process.name === latestProcessName);
+	if (processInfo) {
+		return {
+			...processInfo.process,
+			getState: getProcessState(processInfo.process),
+			getStateAfterTransition: getStateAfterTransition(processInfo.process),
+			getTransitionsToStates: getTransitionsToStates(processInfo.process),
+			hasPassedState: hasPassedState(processInfo.process),
+		};
+	} else {
+		const error = new Error(`Unknown transaction process name: ${processName}`);
+		log.error(error, "unknown-transaction-process", { processName });
+		throw error;
+	}
 };
 
 /**
  * Get the info about supported processes: name, alias, unitTypes
  */
 export const getSupportedProcessesInfo = () =>
-  PROCESSES.map(p => {
-    const { process, ...rest } = p;
-    return rest;
-  });
+	PROCESSES.map(p => {
+		const { process, ...rest } = p;
+		return rest;
+	});
 
 /**
  * Get all the transitions for every supported process
  */
 export const getAllTransitionsForEveryProcess = () => {
-  return PROCESSES.reduce((accTransitions, processInfo) => {
-    return [...accTransitions, ...Object.values(processInfo.process.transitions)];
-  }, []);
+	return PROCESSES.reduce((accTransitions, processInfo) => {
+		return [...accTransitions, ...Object.values(processInfo.process.transitions)];
+	}, []);
 };
 
 /**
@@ -268,9 +268,9 @@ export const getAllTransitionsForEveryProcess = () => {
  * @param {String} processName
  */
 export const isPurchaseProcess = processName => {
-  const latestProcessName = resolveLatestProcessName(processName);
-  const processInfo = PROCESSES.find(process => process.name === latestProcessName);
-  return [PURCHASE_PROCESS_NAME].includes(processInfo?.name);
+	const latestProcessName = resolveLatestProcessName(processName);
+	const processInfo = PROCESSES.find(process => process.name === latestProcessName);
+	return [PURCHASE_PROCESS_NAME].includes(processInfo?.name);
 };
 
 /**
@@ -279,8 +279,8 @@ export const isPurchaseProcess = processName => {
  * @param {String} processAlias
  */
 export const isPurchaseProcessAlias = processAlias => {
-  const processName = processAlias ? processAlias.split('/')[0] : null;
-  return processAlias ? isPurchaseProcess(processName) : false;
+	const processName = processAlias ? processAlias.split("/")[0] : null;
+	return processAlias ? isPurchaseProcess(processName) : false;
 };
 
 /**
@@ -289,9 +289,9 @@ export const isPurchaseProcessAlias = processAlias => {
  * @param {String} processName
  */
 export const isBookingProcess = processName => {
-  const latestProcessName = resolveLatestProcessName(processName);
-  const processInfo = PROCESSES.find(process => process.name === latestProcessName);
-  return [BOOKING_PROCESS_NAME].includes(processInfo?.name);
+	const latestProcessName = resolveLatestProcessName(processName);
+	const processInfo = PROCESSES.find(process => process.name === latestProcessName);
+	return [BOOKING_PROCESS_NAME].includes(processInfo?.name);
 };
 
 /**
@@ -300,8 +300,8 @@ export const isBookingProcess = processName => {
  * @param {String} processAlias
  */
 export const isBookingProcessAlias = processAlias => {
-  const processName = processAlias ? processAlias.split('/')[0] : null;
-  return processAlias ? isBookingProcess(processName) : false;
+	const processName = processAlias ? processAlias.split("/")[0] : null;
+	return processAlias ? isBookingProcess(processName) : false;
 };
 
 /**
@@ -312,29 +312,29 @@ export const isBookingProcessAlias = processAlias => {
  * @param {String} unitType
  */
 export const isFullDay = unitType => {
-  return [DAY, NIGHT].includes(unitType);
+	return [DAY, NIGHT].includes(unitType);
 };
 
 /**
  * Get transitions that need provider's attention for every supported process
  */
 export const getTransitionsNeedingProviderAttention = () => {
-  return PROCESSES.reduce((accTransitions, processInfo) => {
-    const statesNeedingProviderAttention = Object.values(
-      processInfo.process.statesNeedingProviderAttention
-    );
-    const process = processInfo.process;
-    const processTransitions = statesNeedingProviderAttention.reduce(
-      (pickedTransitions, stateName) => {
-        return [...pickedTransitions, ...getTransitionsToState(process, stateName)];
-      },
-      []
-    );
-    // Return only unique transitions names
-    // TODO: this setup is subject to problems if one process has important transition named
-    // similarly as unimportant transition in another process.
-    return [...new Set([...accTransitions, ...processTransitions])];
-  }, []);
+	return PROCESSES.reduce((accTransitions, processInfo) => {
+		const statesNeedingProviderAttention = Object.values(
+			processInfo.process.statesNeedingProviderAttention,
+		);
+		const process = processInfo.process;
+		const processTransitions = statesNeedingProviderAttention.reduce(
+			(pickedTransitions, stateName) => {
+				return [...pickedTransitions, ...getTransitionsToState(process, stateName)];
+			},
+			[],
+		);
+		// Return only unique transitions names
+		// TODO: this setup is subject to problems if one process has important transition named
+		// similarly as unimportant transition in another process.
+		return [...new Set([...accTransitions, ...processTransitions])];
+	}, []);
 };
 
 /**
@@ -344,16 +344,16 @@ export const getTransitionsNeedingProviderAttention = () => {
  */
 
 // Roles of actors that perform transaction transitions
-export const TX_TRANSITION_ACTOR_CUSTOMER = 'customer';
-export const TX_TRANSITION_ACTOR_PROVIDER = 'provider';
-export const TX_TRANSITION_ACTOR_SYSTEM = 'system';
-export const TX_TRANSITION_ACTOR_OPERATOR = 'operator';
+export const TX_TRANSITION_ACTOR_CUSTOMER = "customer";
+export const TX_TRANSITION_ACTOR_PROVIDER = "provider";
+export const TX_TRANSITION_ACTOR_SYSTEM = "system";
+export const TX_TRANSITION_ACTOR_OPERATOR = "operator";
 
 export const TX_TRANSITION_ACTORS = [
-  TX_TRANSITION_ACTOR_CUSTOMER,
-  TX_TRANSITION_ACTOR_PROVIDER,
-  TX_TRANSITION_ACTOR_SYSTEM,
-  TX_TRANSITION_ACTOR_OPERATOR,
+	TX_TRANSITION_ACTOR_CUSTOMER,
+	TX_TRANSITION_ACTOR_PROVIDER,
+	TX_TRANSITION_ACTOR_SYSTEM,
+	TX_TRANSITION_ACTOR_OPERATOR,
 ];
 
 /**
@@ -363,23 +363,23 @@ export const TX_TRANSITION_ACTORS = [
  * @param {Object} transaction Transaction entity from Marketplace API
  */
 export const getUserTxRole = (currentUserId, transaction) => {
-  const tx = ensureTransaction(transaction);
-  const customer = tx.customer;
-  if (currentUserId && currentUserId.uuid && tx.id && customer.id) {
-    // user can be either customer or provider
-    return currentUserId.uuid === customer.id.uuid
-      ? TX_TRANSITION_ACTOR_CUSTOMER
-      : TX_TRANSITION_ACTOR_PROVIDER;
-  } else {
-    throw new Error(`Parameters for "userIsCustomer" function were wrong.
+	const tx = ensureTransaction(transaction);
+	const customer = tx.customer;
+	if (currentUserId && currentUserId.uuid && tx.id && customer.id) {
+		// user can be either customer or provider
+		return currentUserId.uuid === customer.id.uuid
+			? TX_TRANSITION_ACTOR_CUSTOMER
+			: TX_TRANSITION_ACTOR_PROVIDER;
+	} else {
+		throw new Error(`Parameters for "userIsCustomer" function were wrong.
       currentUserId: ${currentUserId}, transaction: ${transaction}`);
-  }
+	}
 };
 
 /**
  * Wildcard string for ConditionalResolver's conditions.
  */
-export const CONDITIONAL_RESOLVER_WILDCARD = '*';
+export const CONDITIONAL_RESOLVER_WILDCARD = "*";
 
 /**
  * This class helps to resolve correct UI data for each combination of conditional data [state & role]
@@ -398,31 +398,31 @@ export const CONDITIONAL_RESOLVER_WILDCARD = '*';
  *    .resolve();
  */
 export class ConditionalResolver {
-  constructor(data) {
-    this.data = data;
-    this.resolver = null;
-    this.defaultResolver = null;
-  }
-  cond(conditions, resolver) {
-    if (conditions?.length === this.data.length && this.resolver == null) {
-      const isDefined = item => typeof item !== 'undefined';
-      const isWildcard = item => item === CONDITIONAL_RESOLVER_WILDCARD;
-      const isMatch = conditions.reduce(
-        (isPartialMatch, item, i) =>
-          isPartialMatch && isDefined(item) && (isWildcard(item) || item === this.data[i]),
-        true
-      );
-      this.resolver = isMatch ? resolver : null;
-    }
-    return this;
-  }
-  default(defaultResolver) {
-    this.defaultResolver = defaultResolver;
-    return this;
-  }
-  resolve() {
-    // This resolves the output against current conditions.
-    // Therefore, call for resolve() must be the last call in method chain.
-    return this.resolver ? this.resolver() : this.defaultResolver ? this.defaultResolver() : null;
-  }
+	constructor(data) {
+		this.data = data;
+		this.resolver = null;
+		this.defaultResolver = null;
+	}
+	cond(conditions, resolver) {
+		if (conditions?.length === this.data.length && this.resolver == null) {
+			const isDefined = item => typeof item !== "undefined";
+			const isWildcard = item => item === CONDITIONAL_RESOLVER_WILDCARD;
+			const isMatch = conditions.reduce(
+				(isPartialMatch, item, i) =>
+					isPartialMatch && isDefined(item) && (isWildcard(item) || item === this.data[i]),
+				true,
+			);
+			this.resolver = isMatch ? resolver : null;
+		}
+		return this;
+	}
+	default(defaultResolver) {
+		this.defaultResolver = defaultResolver;
+		return this;
+	}
+	resolve() {
+		// This resolves the output against current conditions.
+		// Therefore, call for resolve() must be the last call in method chain.
+		return this.resolver ? this.resolver() : this.defaultResolver ? this.defaultResolver() : null;
+	}
 }

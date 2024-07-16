@@ -1,34 +1,34 @@
-import { updatedEntities, denormalisedEntities } from '../util/data';
+import { updatedEntities, denormalisedEntities } from "../util/data";
 
 // ================ Action types ================ //
 
-export const ADD_MARKETPLACE_ENTITIES = 'app/marketplaceData/ADD_MARKETPLACE_ENTITIES';
+export const ADD_MARKETPLACE_ENTITIES = "app/marketplaceData/ADD_MARKETPLACE_ENTITIES";
 
 // ================ Reducer ================ //
 
 const initialState = {
-  // Database of all the fetched entities.
-  entities: {},
+	// Database of all the fetched entities.
+	entities: {},
 };
 
 const merge = (state, payload) => {
-  const { sdkResponse, sanitizeConfig } = payload;
-  const apiResponse = sdkResponse.data;
-  return {
-    ...state,
-    entities: updatedEntities({ ...state.entities }, apiResponse, sanitizeConfig),
-  };
+	const { sdkResponse, sanitizeConfig } = payload;
+	const apiResponse = sdkResponse.data;
+	return {
+		...state,
+		entities: updatedEntities({ ...state.entities }, apiResponse, sanitizeConfig),
+	};
 };
 
 export default function marketplaceDataReducer(state = initialState, action = {}) {
-  const { type, payload } = action;
-  switch (type) {
-    case ADD_MARKETPLACE_ENTITIES:
-      return merge(state, payload);
+	const { type, payload } = action;
+	switch (type) {
+		case ADD_MARKETPLACE_ENTITIES:
+			return merge(state, payload);
 
-    default:
-      return state;
-  }
+		default:
+			return state;
+	}
 }
 
 // ================ Selectors ================ //
@@ -40,13 +40,13 @@ export default function marketplaceDataReducer(state = initialState, action = {}
  * @param {Array<UUID>} listingIds listing IDs to select from the store
  */
 export const getListingsById = (state, listingIds) => {
-  const { entities } = state.marketplaceData;
-  const resources = listingIds.map(id => ({
-    id,
-    type: 'listing',
-  }));
-  const throwIfNotFound = false;
-  return denormalisedEntities(entities, resources, throwIfNotFound);
+	const { entities } = state.marketplaceData;
+	const resources = listingIds.map(id => ({
+		id,
+		type: "listing",
+	}));
+	const throwIfNotFound = false;
+	return denormalisedEntities(entities, resources, throwIfNotFound);
 };
 
 /**
@@ -61,14 +61,14 @@ export const getListingsById = (state, listingIds) => {
  * @return {Array<Object>} denormalised entities
  */
 export const getMarketplaceEntities = (state, entityRefs) => {
-  const { entities } = state.marketplaceData;
-  const throwIfNotFound = false;
-  return denormalisedEntities(entities, entityRefs, throwIfNotFound);
+	const { entities } = state.marketplaceData;
+	const throwIfNotFound = false;
+	return denormalisedEntities(entities, entityRefs, throwIfNotFound);
 };
 
 // ================ Action creators ================ //
 
 export const addMarketplaceEntities = (sdkResponse, sanitizeConfig) => ({
-  type: ADD_MARKETPLACE_ENTITIES,
-  payload: { sdkResponse, sanitizeConfig },
+	type: ADD_MARKETPLACE_ENTITIES,
+	payload: { sdkResponse, sanitizeConfig },
 });

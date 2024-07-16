@@ -1,7 +1,7 @@
 .root {
-  fill: var(--colorGrey100);
+	fill: var(--colorGrey100);
 }
 
 .filled {
-  fill: var(--marketplaceColor);
+	fill: var(--marketplaceColor);
 }

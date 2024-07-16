@@ -1,11 +1,11 @@
-@import '../../../../styles/customMediaQueries.css';
+@import "../../../../styles/customMediaQueries.css";
 
 .root {
-  &:target {
-    scroll-margin-top: calc(var(--topbarHeight) + 24px);
+	&:target {
+		scroll-margin-top: calc(var(--topbarHeight) + 24px);
 
-    @media (--viewportMedium) {
-      scroll-margin-top: calc(var(--topbarHeightDesktop) + 24px);
-    }
-  }
+		@media (--viewportMedium) {
+			scroll-margin-top: calc(var(--topbarHeightDesktop) + 24px);
+		}
+	}
 }

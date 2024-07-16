@@ -1,7 +1,7 @@
-import IconDisputeOrder from './IconDisputeOrder';
+import IconDisputeOrder from "./IconDisputeOrder";
 
 export const Icon = {
-  component: IconDisputeOrder,
-  props: {},
-  group: 'icons',
+	component: IconDisputeOrder,
+	props: {},
+	group: "icons",
 };

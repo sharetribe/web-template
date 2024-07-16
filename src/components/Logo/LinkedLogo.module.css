@@ -1,21 +1,21 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .root {
-  display: block;
+	display: block;
 
-  flex-shrink: 0;
-  padding: 0;
-  height: 100%;
+	flex-shrink: 0;
+	padding: 0;
+	height: 100%;
 
-  &:hover {
-    text-decoration: none;
-  }
+	&:hover {
+		text-decoration: none;
+	}
 
-  @media (--viewportMedium) {
-    padding: 0 24px;
-  }
+	@media (--viewportMedium) {
+		padding: 0 24px;
+	}
 
-  @media (--viewportLarge) {
-    padding: 0 36px;
-  }
+	@media (--viewportLarge) {
+		padding: 0 36px;
+	}
 }

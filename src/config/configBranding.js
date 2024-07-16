@@ -1,8 +1,8 @@
-import logoImageDesktop from '../assets/biketribe-logo-desktop.png';
-import logoImageMobile from '../assets/biketribe-logo-mobile.png';
-import brandImage from '../assets/biketribe-brandImage-1500.jpg';
-import facebookImage from '../assets/biketribe-facebook-sharing-1200x630.jpg';
-import twitterImage from '../assets/biketribe-twitter-sharing-600x314.jpg';
+import logoImageDesktop from "../assets/biketribe-logo-desktop.png";
+import logoImageMobile from "../assets/biketribe-logo-mobile.png";
+import brandImage from "../assets/biketribe-brandImage-1500.jpg";
+import facebookImage from "../assets/biketribe-facebook-sharing-1200x630.jpg";
+import twitterImage from "../assets/biketribe-twitter-sharing-600x314.jpg";
 
 /////////////////////////////////////////////////////////
 // This file contains configs that affect branding     //
@@ -18,7 +18,7 @@ import twitterImage from '../assets/biketribe-twitter-sharing-600x314.jpg';
 // This is saved as CSS Property: --marketplaceColor in src/app.js
 // Also --marketplaceColorDark and --marketplaceColorLight are generated from this one
 // by adding +/- 10% to lightness.
-export const marketplaceColor = '#7c3aed';
+export const marketplaceColor = "#7c3aed";
 
 // Logo is used in Topbar on mobile and desktop, where height is the limiting factor.
 // Therefore, we strongly suggest that your image file for desktop logo is in landscape!
@@ -34,8 +34,8 @@ export const logoImageMobileURL = logoImageMobile;
 // Note: logo image is always scaled and the limiting factor is height. However, there's also maximum width,
 //       which is 370px in the Topbar. If the logo is wider than that, browser will scale it down.
 export const logoSettings = {
-  height: 24, // Hosted asset supports: 24, 36, 48
-  format: 'image',
+	height: 24, // Hosted asset supports: 24, 36, 48
+	format: "image",
 };
 
 // brandImageURL is used as a background image on the "hero" section of several pages.

@@ -1,5 +1,5 @@
-@import '../assets/sanitize.css';
-@import './customMediaQueries.css';
+@import "../assets/sanitize.css";
+@import "./customMediaQueries.css";
 
 /* ================ Custom Properties aka CSS variables ================ */
 
@@ -14,172 +14,172 @@
  */
 
 :root {
-  /* ================ Colors ================ */
+	/* ================ Colors ================ */
 
-  /* Colors used for different functions (like error texts) */
+	/* Colors used for different functions (like error texts) */
 
-  --colorSuccess: #2ecc71;
-  --colorSuccessDark: #239954;
-  --colorSuccessLight: #f0fff6;
-  --colorFail: #ff0000;
-  --colorFailLight: #fff0f0;
-  --colorAttention: #ffaa00;
-  --colorAttentionLight: #fff7f0;
-  --colorBannedLight: var(--marketplaceColorLight);
-  --colorBannedDark: var(--marketplaceColor);
+	--colorSuccess: #2ecc71;
+	--colorSuccessDark: #239954;
+	--colorSuccessLight: #f0fff6;
+	--colorFail: #ff0000;
+	--colorFailLight: #fff0f0;
+	--colorAttention: #ffaa00;
+	--colorAttentionLight: #fff7f0;
+	--colorBannedLight: var(--marketplaceColorLight);
+	--colorBannedDark: var(--marketplaceColor);
 
-  /* B&W and Grey palette */
+	/* B&W and Grey palette */
 
-  --colorWhite: hsl(0 0% 100%);
-  --colorGrey50: hsl(240 3% 98%);
-  --colorGrey100: hsl(240 3% 90%);
-  --colorGrey200: hsl(240 3% 80%);
-  --colorGrey300: hsl(240 3% 70%);
-  --colorGrey400: hsl(240 3% 60%);
-  --colorGrey500: hsl(240 3% 50%);
-  --colorGrey600: hsl(240 3% 40%);
-  --colorGrey700: hsl(240 3% 30%);
-  --colorGrey800: hsl(240 3% 20%);
-  --colorGrey900: hsl(240 3% 10%);
-  --colorBlack: hsl(0 0% 0%);
+	--colorWhite: hsl(0 0% 100%);
+	--colorGrey50: hsl(240 3% 98%);
+	--colorGrey100: hsl(240 3% 90%);
+	--colorGrey200: hsl(240 3% 80%);
+	--colorGrey300: hsl(240 3% 70%);
+	--colorGrey400: hsl(240 3% 60%);
+	--colorGrey500: hsl(240 3% 50%);
+	--colorGrey600: hsl(240 3% 40%);
+	--colorGrey700: hsl(240 3% 30%);
+	--colorGrey800: hsl(240 3% 20%);
+	--colorGrey900: hsl(240 3% 10%);
+	--colorBlack: hsl(0 0% 0%);
 
-  --colorLightTransparent: rgba(255, 255, 255, 0.65);
+	--colorLightTransparent: rgba(255, 255, 255, 0.65);
 
-  /**
+	/**
   * Marketplace color comes by default from src/config/brandingConfig.js
   * It overwrites these CSS Properties.
   * In the future, we are planning to bring more --marketplace* CSS Properties
   * from hosted assets, which means that they could be managed through Console.
   */
-  --marketplaceColor: #5d2bc0; /* hsl(260, 63%, 46%) */
-  --marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
-  --marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
+	--marketplaceColor: #5d2bc0; /* hsl(260, 63%, 46%) */
+	--marketplaceColorLight: #7748d5; /* hsl(260, 63%, 56%), +10L from marketplaceColor */
+	--marketplaceColorDark: #492296; /* hsl(260, 63%, 26%), -10L from marketplaceColor */
 
-  /** 
+	/** 
    * The fill color used by <PrimaryButton>
    * These might be overwritten by values from hosted assets
    */
-  --colorPrimaryButton: var(--colorSuccess);
-  --colorPrimaryButtonDark: var(--colorSuccessDark);
-  --colorPrimaryButtonLight: var(--colorSuccessLight);
+	--colorPrimaryButton: var(--colorSuccess);
+	--colorPrimaryButtonDark: var(--colorSuccessDark);
+	--colorPrimaryButtonLight: var(--colorSuccessLight);
 
-  /** 
+	/** 
    * The fill color used by <SecondaryButton>
    */
-  --colorSecondaryButton: var(--colorWhite);
-  --colorSecondaryButtonDark: var(--colorWhite);
-  --colorSecondaryButtonLight: var(--colorWhite);
+	--colorSecondaryButton: var(--colorWhite);
+	--colorSecondaryButtonDark: var(--colorWhite);
+	--colorSecondaryButtonLight: var(--colorWhite);
 
-  /* ================ Font ================ */
-  --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+	/* ================ Font ================ */
+	--fontFamily: -apple-system, BlinkMacSystemFont, "Inter", Helvetica, Arial, sans-serif,
+		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
-  --fontWeightRegular: 400;
-  --fontWeightMedium: 500;
-  --fontWeightSemiBold: 600;
-  --fontWeightBold: 700;
-  --fontWeightHeavy: 800;
-  --fontWeightBlack: 900;
+	--fontWeightRegular: 400;
+	--fontWeightMedium: 500;
+	--fontWeightSemiBold: 600;
+	--fontWeightBold: 700;
+	--fontWeightHeavy: 800;
+	--fontWeightBlack: 900;
 
-  --fontWeightHighlightEmail: var(--fontWeightBold);
+	--fontWeightHighlightEmail: var(--fontWeightBold);
 
-  /* ================ Spacing units ================ */
+	/* ================ Spacing units ================ */
 
-  /**
+	/**
    * Note: changing --contentMaxWidth does not affect layouts with LayoutSideNavigation or search pages.
    */
-  --contentMaxWidth: 1056px;
-  --contentMaxWidthPages: 1120px; /* calc(Global width (1056px) + (Horizontal padding (32px) * 2) */
+	--contentMaxWidth: 1056px;
+	--contentMaxWidthPages: 1120px; /* calc(Global width (1056px) + (Horizontal padding (32px) * 2) */
 
-  /* Multiples of mobile and desktop spacing units should be used with margins and paddings. */
-  --spacingUnit: 6px;
-  --spacingUnitDesktop: 8px;
+	/* Multiples of mobile and desktop spacing units should be used with margins and paddings. */
+	--spacingUnit: 6px;
+	--spacingUnitDesktop: 8px;
 
-  /* Shadows */
-  --boxShadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-  --boxShadowTop: 0 -2px 4px 0 rgba(0, 0, 0, 0.1);
-  --boxShadowLight: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
-  --boxShadowPopup: 0 8px 16px 0 rgba(0, 0, 0, 0.3);
-  --boxShadowPopupLight: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
-  --boxShadowBreakdown: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
-  --boxShadowButton: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
-  --boxShadowListingCard: 0 0 50px 0 rgba(0, 0, 0, 0.1);
-  --boxShadowNotFoundPageSearch: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
-  --boxShadowSectionLocationHover: 0 10px 30px 0 rgba(0, 0, 0, 0.1);
-  --boxShadowBottomForm: 0 -2px 4px 0 rgba(0, 0, 0, 0.05);
-  --boxShadowFilterButton: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+	/* Shadows */
+	--boxShadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+	--boxShadowTop: 0 -2px 4px 0 rgba(0, 0, 0, 0.1);
+	--boxShadowLight: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+	--boxShadowPopup: 0 8px 16px 0 rgba(0, 0, 0, 0.3);
+	--boxShadowPopupLight: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
+	--boxShadowBreakdown: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
+	--boxShadowButton: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+	--boxShadowListingCard: 0 0 50px 0 rgba(0, 0, 0, 0.1);
+	--boxShadowNotFoundPageSearch: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+	--boxShadowSectionLocationHover: 0 10px 30px 0 rgba(0, 0, 0, 0.1);
+	--boxShadowBottomForm: 0 -2px 4px 0 rgba(0, 0, 0, 0.05);
+	--boxShadowFilterButton: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
 
-  /* ================ Z-index base levels ================ */
+	/* ================ Z-index base levels ================ */
 
-  /* topbar is positioned slightly above content */
-  --zIndexTopbar: 10;
-  /* small popups on UI should use z-indexes above 50 */
-  --zIndexPopup: 50;
-  /* modals and UI overlays should use z-indexes above 100 */
-  --zIndexModal: 100;
-  /* generic error message should overlay even modals */
-  --zIndexGenericError: 200;
+	/* topbar is positioned slightly above content */
+	--zIndexTopbar: 10;
+	/* small popups on UI should use z-indexes above 50 */
+	--zIndexPopup: 50;
+	/* modals and UI overlays should use z-indexes above 100 */
+	--zIndexModal: 100;
+	/* generic error message should overlay even modals */
+	--zIndexGenericError: 200;
 
-  /* ================ Border radius ================ */
+	/* ================ Border radius ================ */
 
-  --borderRadius: 2px;
-  --borderRadiusMedium: 4px;
+	--borderRadius: 2px;
+	--borderRadiusMedium: 4px;
 
-  /* ================ Transition styles ================ */
+	/* ================ Transition styles ================ */
 
-  --transitionStyle: ease-in 0.2s;
-  --transitionStyleButton: ease-in-out 0.1s;
+	--transitionStyle: ease-in 0.2s;
+	--transitionStyleButton: ease-in-out 0.1s;
 
-  /* ================ Topbar related ================ */
+	/* ================ Topbar related ================ */
 
-  --topbarHeight: 60px;
-  --topbarHeightDesktop: 72px;
+	--topbarHeight: 60px;
+	--topbarHeightDesktop: 72px;
 
-  --TopbarMobileMenu_topMargin: 96px;
+	--TopbarMobileMenu_topMargin: 96px;
 
-  --Topbar_logoHeight: 25px;
-  --CheckoutPage_logoHeight: 25px;
-  --CheckoutPage_logoHeightDesktop: 27px;
+	--Topbar_logoHeight: 25px;
+	--CheckoutPage_logoHeight: 25px;
+	--CheckoutPage_logoHeightDesktop: 27px;
 
-  /* ================ Modal default padding ================ */
+	/* ================ Modal default padding ================ */
 
-  --modalPadding: 24px 24px 48px 24px;
-  --modalPaddingMedium: 55px 60px 55px 60px;
+	--modalPadding: 24px 24px 48px 24px;
+	--modalPaddingMedium: 55px 60px 55px 60px;
 
-  /* ================ Filters ================ */
-  --marketplaceButtonSmallDesktopPadding: 9px 16px 9px 16px;
+	/* ================ Filters ================ */
+	--marketplaceButtonSmallDesktopPadding: 9px 16px 9px 16px;
 
-  /* ================ DateInput, DateRangeInput, DateRangeController ================ */
-  --ReactDates_selectionHeight: 36px;
-  --ReactDates_hoveredOverlayColor: rgba(255, 255, 255, 0.2);
+	/* ================ DateInput, DateRangeInput, DateRangeController ================ */
+	--ReactDates_selectionHeight: 36px;
+	--ReactDates_hoveredOverlayColor: rgba(255, 255, 255, 0.2);
 
-  --DateInput_selectionHeight: var(--ReactDates_selectionHeight);
-  --DateInput_hoveredOverlayColor: var(--ReactDates_hoveredOverlayColor);
-  --DateRangeInput_selectionHeight: var(--ReactDates_selectionHeight);
-  --DateRangeInput_hoveredOverlayColor: var(--ReactDates_hoveredOverlayColor);
-  --DateRangeController_selectionHeight: var(--ReactDates_selectionHeight);
+	--DateInput_selectionHeight: var(--ReactDates_selectionHeight);
+	--DateInput_hoveredOverlayColor: var(--ReactDates_hoveredOverlayColor);
+	--DateRangeInput_selectionHeight: var(--ReactDates_selectionHeight);
+	--DateRangeInput_hoveredOverlayColor: var(--ReactDates_hoveredOverlayColor);
+	--DateRangeController_selectionHeight: var(--ReactDates_selectionHeight);
 
-  /* ================ SectionHero ================ */
-  --SectionHero_desktopTitleMaxWidth: 625px;
+	/* ================ SectionHero ================ */
+	--SectionHero_desktopTitleMaxWidth: 625px;
 
-  /* ================ TabNav ================ */
-  --TabNav_linkWidth: 240px;
+	/* ================ TabNav ================ */
+	--TabNav_linkWidth: 240px;
 
-  /* ================ Inputs, textareas and selects ================ */
-  --borderErrorField: 1px solid var(--colorFail);
+	/* ================ Inputs, textareas and selects ================ */
+	--borderErrorField: 1px solid var(--colorFail);
 
-  /* ================ LandingPage ================ */
-  --LandingPage_sectionMarginTop: 40px;
-  --LandingPage_sectionMarginTopMedium: 60px;
-  --LandingPage_sectionMarginTopLarge: 94px;
+	/* ================ LandingPage ================ */
+	--LandingPage_sectionMarginTop: 40px;
+	--LandingPage_sectionMarginTopMedium: 60px;
+	--LandingPage_sectionMarginTopLarge: 94px;
 
-  /* ================ ProfileSettingsForm ================ */
-  --ProfileSettingsForm_avatarSize: 96px;
-  --ProfileSettingsForm_avatarSizeDesktop: 240px;
+	/* ================ ProfileSettingsForm ================ */
+	--ProfileSettingsForm_avatarSize: 96px;
+	--ProfileSettingsForm_avatarSizeDesktop: 240px;
 
-  /* ================ PageBuilder ================ */
-  /* --carouselWidth will be updated dynamically through JS */
-  --carouselWidth: 100vw;
+	/* ================ PageBuilder ================ */
+	/* --carouselWidth will be updated dynamically through JS */
+	--carouselWidth: 100vw;
 }
 
 /* ================ Global element styles ================ */
@@ -191,26 +191,26 @@
  */
 
 body {
-  font-family: var(--fontFamily);
+	font-family: var(--fontFamily);
 
-  /* A non-standard feature: https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth */
-  -webkit-font-smoothing: antialiased;
-  font-smoothing: antialiased;
+	/* A non-standard feature: https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth */
+	-webkit-font-smoothing: antialiased;
+	font-smoothing: antialiased;
 
-  text-rendering: optimizeSpeed;
-  font-optical-sizing: auto;
+	text-rendering: optimizeSpeed;
+	font-optical-sizing: auto;
 
-  background-color: var(--colorGrey50);
+	background-color: var(--colorGrey50);
 }
 
 ::selection {
-  background: var(--marketplaceColor); /* WebKit/Blink Browsers */
-  color: var(--colorWhite);
+	background: var(--marketplaceColor); /* WebKit/Blink Browsers */
+	color: var(--colorWhite);
 }
 
 ::-moz-selection {
-  background: var(--marketplaceColor); /* Gecko Browsers */
-  color: var(--colorWhite);
+	background: var(--marketplaceColor); /* Gecko Browsers */
+	color: var(--colorWhite);
 }
 
 /* Default elements that are targets */
@@ -218,361 +218,361 @@ body {
 /* Since target does not work in every situation */
 :target,
 section {
-  scroll-margin-top: var(--topbarHeight);
+	scroll-margin-top: var(--topbarHeight);
 
-  @media (--viewportMedium) {
-    scroll-margin-top: var(--topbarHeightDesktop);
-  }
+	@media (--viewportMedium) {
+		scroll-margin-top: var(--topbarHeightDesktop);
+	}
 }
 
 a {
-  /* Position and dimensions */
-  display: inline;
-  margin: 0;
-  padding: 0;
+	/* Position and dimensions */
+	display: inline;
+	margin: 0;
+	padding: 0;
 
-  /* Borders */
-  border: none;
+	/* Borders */
+	border: none;
 
-  /* Colors */
-  color: var(--marketplaceColor);
+	/* Colors */
+	color: var(--marketplaceColor);
 
-  /* Text size should be inherited */
-  text-decoration: none;
+	/* Text size should be inherited */
+	text-decoration: none;
 }
 a:hover {
-  text-decoration: underline;
-  cursor: pointer;
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 h1 {
-  font-size: 24px;
-  line-height: 24px;
-  font-weight: var(--fontWeightBlack);
-  padding: 3px 0 3px 0;
-  /* margin-top + n * line-height + margin-bottom => x * 6px */
-  margin-top: 18px;
-  margin-bottom: 18px;
+	font-size: 24px;
+	line-height: 24px;
+	font-weight: var(--fontWeightBlack);
+	padding: 3px 0 3px 0;
+	/* margin-top + n * line-height + margin-bottom => x * 6px */
+	margin-top: 18px;
+	margin-bottom: 18px;
 
-  @media (--viewportMedium) {
-    font-size: 64px;
-    line-height: 64px;
-    padding: 0;
-    /* margin-top + n * line-height + margin-bottom => x * 8px */
-    margin-top: 24px;
-    margin-bottom: 24px;
-  }
+	@media (--viewportMedium) {
+		font-size: 64px;
+		line-height: 64px;
+		padding: 0;
+		/* margin-top + n * line-height + margin-bottom => x * 8px */
+		margin-top: 24px;
+		margin-bottom: 24px;
+	}
 }
 
 h2 {
-  font-size: 21px;
-  line-height: 24px;
-  font-weight: var(--fontWeightBold);
+	font-size: 21px;
+	line-height: 24px;
+	font-weight: var(--fontWeightBold);
 
-  padding: 4px 0 2px 0;
-  /* x * 6px */
-  margin-top: 24px;
-  margin-bottom: 18px;
+	padding: 4px 0 2px 0;
+	/* x * 6px */
+	margin-top: 24px;
+	margin-bottom: 18px;
 
-  @media (--viewportMedium) {
-    font-size: 40px;
-    line-height: 56px;
-    padding: 5px 0 3px 0;
-    /* x * 8px */
-    margin-top: 24px;
-    margin-bottom: 16px;
-  }
+	@media (--viewportMedium) {
+		font-size: 40px;
+		line-height: 56px;
+		padding: 5px 0 3px 0;
+		/* x * 8px */
+		margin-top: 24px;
+		margin-bottom: 16px;
+	}
 }
 
 h3 {
-  font-weight: var(--fontWeightBold);
-  font-size: 18px;
-  line-height: 24px;
-  /* x * 6px */
-  margin-top: 18px;
-  margin-bottom: 12px;
+	font-weight: var(--fontWeightBold);
+	font-size: 18px;
+	line-height: 24px;
+	/* x * 6px */
+	margin-top: 18px;
+	margin-bottom: 12px;
 
-  @media (--viewportMedium) {
-    font-size: 30px;
-    line-height: 40px;
-    padding: 1px 0 7px 0;
-    /* x * 8px */
-    margin-top: 16px;
-    margin-bottom: 16px;
-  }
+	@media (--viewportMedium) {
+		font-size: 30px;
+		line-height: 40px;
+		padding: 1px 0 7px 0;
+		/* x * 8px */
+		margin-top: 16px;
+		margin-bottom: 16px;
+	}
 }
 
 h4 {
-  font-weight: var(--fontWeightBold);
-  font-size: 21px;
-  line-height: 30px;
-  padding: 1px 0 5px 0;
-  /* x * 6px */
-  margin-top: 12px;
-  margin-bottom: 6px;
+	font-weight: var(--fontWeightBold);
+	font-size: 21px;
+	line-height: 30px;
+	padding: 1px 0 5px 0;
+	/* x * 6px */
+	margin-top: 12px;
+	margin-bottom: 6px;
 
-  @media (--viewportMedium) {
-    line-height: 32px;
-    padding: 0;
-    /* x * 8px */
-    margin-top: 16px;
-    margin-bottom: 16px;
-  }
+	@media (--viewportMedium) {
+		line-height: 32px;
+		padding: 0;
+		/* x * 8px */
+		margin-top: 16px;
+		margin-bottom: 16px;
+	}
 }
 
 h5 {
-  font-weight: var(--fontWeightMedium);
-  font-size: 14px;
-  line-height: 18px;
-  /* x * 6px */
-  padding: 3px 0 3px 0;
-  margin-top: 12px;
-  margin-bottom: 6px;
+	font-weight: var(--fontWeightMedium);
+	font-size: 14px;
+	line-height: 18px;
+	/* x * 6px */
+	padding: 3px 0 3px 0;
+	margin-top: 12px;
+	margin-bottom: 6px;
 
-  @media (--viewportMedium) {
-    line-height: 16px;
-    /* x * 8px */
-    padding: 3px 0 5px 0;
-    margin-top: 8px;
-    margin-bottom: 16px;
-  }
+	@media (--viewportMedium) {
+		line-height: 16px;
+		/* x * 8px */
+		padding: 3px 0 5px 0;
+		margin-top: 8px;
+		margin-bottom: 16px;
+	}
 }
 
 h6 {
-  font-weight: var(--fontWeightBold);
-  font-size: 12px;
-  line-height: 18px;
-  text-transform: uppercase;
-  /* x * 6px */
-  padding: 4px 0 2px 0;
-  margin-top: 6px;
-  margin-bottom: 6px;
+	font-weight: var(--fontWeightBold);
+	font-size: 12px;
+	line-height: 18px;
+	text-transform: uppercase;
+	/* x * 6px */
+	padding: 4px 0 2px 0;
+	margin-top: 6px;
+	margin-bottom: 6px;
 
-  @media (--viewportMedium) {
-    line-height: 16px;
-    /* x * 8px */
-    padding: 3px 0 5px 0;
-    margin-top: 8px;
-    margin-bottom: 8px;
-  }
+	@media (--viewportMedium) {
+		line-height: 16px;
+		/* x * 8px */
+		padding: 3px 0 5px 0;
+		margin-top: 8px;
+		margin-bottom: 8px;
+	}
 }
 
 html,
 li,
 p,
 pre {
-  font-family: var(--fontFamily);
-  font-weight: var(--fontWeightMedium);
+	font-family: var(--fontFamily);
+	font-weight: var(--fontWeightMedium);
 
-  /* No margins for default font */
-  font-size: 14px;
-  line-height: 24px;
-  padding: 0;
+	/* No margins for default font */
+	font-size: 14px;
+	line-height: 24px;
+	padding: 0;
 
-  @media (--viewportMedium) {
-    font-size: 16px;
-    line-height: 24px;
-    padding: 5px 0 3px 0;
-  }
+	@media (--viewportMedium) {
+		font-size: 16px;
+		line-height: 24px;
+		padding: 5px 0 3px 0;
+	}
 }
 
 p,
 pre {
-  /* margin-top + n * line-height + margin-bottom => x * 6px */
-  margin-top: 12px;
-  margin-bottom: 12px;
+	/* margin-top + n * line-height + margin-bottom => x * 6px */
+	margin-top: 12px;
+	margin-bottom: 12px;
 
-  @media (--viewportMedium) {
-    /* margin-top + n * line-height + margin-bottom => x * 8px */
-    margin-top: 16px;
-    margin-bottom: 16px;
-  }
+	@media (--viewportMedium) {
+		/* margin-top + n * line-height + margin-bottom => x * 8px */
+		margin-top: 16px;
+		margin-bottom: 16px;
+	}
 }
 
 /* ================ Normalisations ================ */
 
 html {
-  /* font is set earlier */
-  color: var(--colorGrey700);
-  padding: 0;
-  margin: 0;
+	/* font is set earlier */
+	color: var(--colorGrey700);
+	padding: 0;
+	margin: 0;
 }
 
 ul {
-  list-style: none;
-  padding: 0;
+	list-style: none;
+	padding: 0;
 }
 
 legend {
-  display: block;
+	display: block;
 
-  font-weight: var(--fontWeightSemiBold);
-  font-size: 14px;
-  line-height: 18px;
+	font-weight: var(--fontWeightSemiBold);
+	font-size: 14px;
+	line-height: 18px;
 
-  margin-top: 0;
-  margin-bottom: 0;
+	margin-top: 0;
+	margin-bottom: 0;
 
-  @media (--viewportMedium) {
-    font-weight: var(--fontWeightSemiBold);
-    line-height: 16px;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 3px;
-    padding-bottom: 5px;
-  }
+	@media (--viewportMedium) {
+		font-weight: var(--fontWeightSemiBold);
+		line-height: 16px;
+		margin-top: 0;
+		margin-bottom: 0;
+		padding-top: 3px;
+		padding-bottom: 5px;
+	}
 }
 
 label {
-  font-weight: var(--fontWeightSemiBold);
-  font-size: 13px;
-  line-height: 18px;
-  display: block;
-  margin-top: 0;
-  margin-bottom: 6px;
+	font-weight: var(--fontWeightSemiBold);
+	font-size: 13px;
+	line-height: 18px;
+	display: block;
+	margin-top: 0;
+	margin-bottom: 6px;
 
-  @media (--viewportMedium) {
-    font-weight: var(--fontWeightSemiBold);
-    line-height: 16px;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 3px;
-    padding-bottom: 13px;
-  }
+	@media (--viewportMedium) {
+		font-weight: var(--fontWeightSemiBold);
+		line-height: 16px;
+		margin-top: 0;
+		margin-bottom: 0;
+		padding-top: 3px;
+		padding-bottom: 13px;
+	}
 }
 
 button {
-  font-family: var(--fontFamily);
-  font-weight: var(--fontWeightSemiBold);
+	font-family: var(--fontFamily);
+	font-weight: var(--fontWeightSemiBold);
 }
 
 /* marketplaceInputFontStyles */
 select,
 input,
 textarea {
-  font-family: var(--fontFamily);
-  font-size: 16px;
+	font-family: var(--fontFamily);
+	font-size: 16px;
 }
 
 select {
-  /* Dimensions */
-  display: block;
-  width: 100%;
-  margin: 0;
+	/* Dimensions */
+	display: block;
+	width: 100%;
+	margin: 0;
 
-  /* 6 + 24 + 4 + borders are divisible by 6 */
-  padding: 6px 12px 4px 12px;
-  background-color: #fff;
+	/* 6 + 24 + 4 + borders are divisible by 6 */
+	padding: 6px 12px 4px 12px;
+	background-color: #fff;
 
-  /* Borders */
-  border-radius: 6px;
-  border: 1px solid #d8dce6;
-  outline: none;
+	/* Borders */
+	border-radius: 6px;
+	border: 1px solid #d8dce6;
+	outline: none;
 
-  /* Transition */
-  transition: all ease-in-out 100ms;
+	/* Transition */
+	transition: all ease-in-out 100ms;
 
-  padding: 6px 24px 4px 12px;
-  box-shadow: 0 2px 3px 0 rgba(216, 220, 230, 0.7);
+	padding: 6px 24px 4px 12px;
+	box-shadow: 0 2px 3px 0 rgba(216, 220, 230, 0.7);
 
-  /* Unset user agent styles */
-  appearance: none;
+	/* Unset user agent styles */
+	appearance: none;
 
-  /* Background */
-  background-image: url("data:image/svg+xml,%3Csvg width='10' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232D4053' stroke='%232D4053' stroke-width='.5' fill-rule='evenodd'%3E%3Cpath d='M4.687 15.315a.443.443 0 0 0 .626 0l3.557-3.556a.446.446 0 0 0-.629-.629L5 14.37l-3.241-3.24a.445.445 0 0 0-.629.63l3.557 3.553v.002ZM5.313 1.13a.443.443 0 0 0-.626 0L1.13 4.685a.446.446 0 0 0 .629.63L5 2.074l3.241 3.24a.445.445 0 0 0 .629-.629L5.313 1.131V1.13Z'/%3E%3C/g%3E%3C/svg%3E");
-  background-position: center right 12px;
-  background-size: 8px 14px;
+	/* Background */
+	background-image: url("data:image/svg+xml,%3Csvg width='10' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232D4053' stroke='%232D4053' stroke-width='.5' fill-rule='evenodd'%3E%3Cpath d='M4.687 15.315a.443.443 0 0 0 .626 0l3.557-3.556a.446.446 0 0 0-.629-.629L5 14.37l-3.241-3.24a.445.445 0 0 0-.629.63l3.557 3.553v.002ZM5.313 1.13a.443.443 0 0 0-.626 0L1.13 4.685a.446.446 0 0 0 .629.63L5 2.074l3.241 3.24a.445.445 0 0 0 .629-.629L5.313 1.131V1.13Z'/%3E%3C/g%3E%3C/svg%3E");
+	background-position: center right 12px;
+	background-size: 8px 14px;
 
-  &::placeholder {
-    color: var(--colorGrey300);
-  }
+	&::placeholder {
+		color: var(--colorGrey300);
+	}
 
-  @media (--viewportMedium) {
-    padding: 7px 32px 7px 16px;
-    line-height: 32px;
-    background-position: center right 16px;
-    background-size: 10px 16px;
-  }
+	@media (--viewportMedium) {
+		padding: 7px 32px 7px 16px;
+		line-height: 32px;
+		background-position: center right 16px;
+		background-size: 10px 16px;
+	}
 }
 /* Effects */
 select:hover {
-  border: 1px solid #b8bfd1;
-  transition: all ease-in-out 100ms;
+	border: 1px solid #b8bfd1;
+	transition: all ease-in-out 100ms;
 }
 select:focus {
-  background-color: #fff;
-  border-color: #80bdff;
-  box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
-  transition: all ease-in-out 100ms;
+	background-color: #fff;
+	border-color: #80bdff;
+	box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+	transition: all ease-in-out 100ms;
 }
 select:disabled {
-  opacity: 0.5;
+	opacity: 0.5;
 
-  &:hover {
-    cursor: not-allowed;
-  }
+	&:hover {
+		cursor: not-allowed;
+	}
 }
 
 input,
 textarea {
-  /* Dimensions */
-  display: block;
-  width: 100%;
-  margin: 0;
+	/* Dimensions */
+	display: block;
+	width: 100%;
+	margin: 0;
 
-  /* 6 + 24 + 4 + borders are divisible by 6 */
-  padding: 6px 12px 4px 12px;
-  background-color: #fff;
+	/* 6 + 24 + 4 + borders are divisible by 6 */
+	padding: 6px 12px 4px 12px;
+	background-color: #fff;
 
-  /* Borders */
-  border-radius: 6px;
-  border: 1px solid #d8dce6;
-  outline: none;
+	/* Borders */
+	border-radius: 6px;
+	border: 1px solid #d8dce6;
+	outline: none;
 
-  /* Transition */
-  transition: all ease-in-out 100ms;
+	/* Transition */
+	transition: all ease-in-out 100ms;
 
-  &::placeholder {
-    color: var(--colorGrey300);
-  }
+	&::placeholder {
+		color: var(--colorGrey300);
+	}
 
-  @media (--viewportMedium) {
-    /* 7 + 32 + 7 + borders = 48, which is divisible by 8. */
-    padding: 7px 16px 7px 16px;
-    line-height: 32px;
-  }
+	@media (--viewportMedium) {
+		/* 7 + 32 + 7 + borders = 48, which is divisible by 8. */
+		padding: 7px 16px 7px 16px;
+		line-height: 32px;
+	}
 }
 /* Effects */
 input:hover,
 textarea:hover {
-  border: 1px solid #b8bfd1;
-  transition: all ease-in-out 100ms;
+	border: 1px solid #b8bfd1;
+	transition: all ease-in-out 100ms;
 }
 input:focus,
 textarea:focus {
-  background-color: #fff;
-  border-color: #80bdff;
-  box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
-  transition: all ease-in-out 100ms;
+	background-color: #fff;
+	border-color: #80bdff;
+	box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+	transition: all ease-in-out 100ms;
 }
 input:disabled,
 textarea:disabled {
-  opacity: 0.5;
+	opacity: 0.5;
 
-  &:hover {
-    cursor: not-allowed;
-  }
+	&:hover {
+		cursor: not-allowed;
+	}
 }
 
 textarea {
-  min-height: 84px; /* 3 rows  */
-  max-height: 300px; /* 12 rows fullu visible, scroll after */
+	min-height: 84px; /* 3 rows  */
+	max-height: 300px; /* 12 rows fullu visible, scroll after */
 
-  @media (--viewportMedium) {
-    min-height: 112px; /* 3 rows fully visible */
-    max-height: 496px; /* 15 rows fullu visible, scroll after */
-    line-height: 24px;
-  }
+	@media (--viewportMedium) {
+		min-height: 112px; /* 3 rows fully visible */
+		max-height: 496px; /* 15 rows fullu visible, scroll after */
+		line-height: 24px;
+	}
 }
 
 /* ================ Plain global CSS glasses ================ */
@@ -583,154 +583,154 @@ textarea {
  */
 
 .a {
-  /* Position and dimensions */
-  display: inline;
-  margin: 0;
-  padding: 0;
+	/* Position and dimensions */
+	display: inline;
+	margin: 0;
+	padding: 0;
 
-  /* Borders */
-  border: none;
+	/* Borders */
+	border: none;
 
-  /* Colors */
-  color: var(--marketplaceColor);
+	/* Colors */
+	color: var(--marketplaceColor);
 
-  /* Text size should be inherited */
-  text-decoration: none;
+	/* Text size should be inherited */
+	text-decoration: none;
 }
 .a:hover {
-  text-decoration: underline;
-  cursor: pointer;
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 .h1 {
-  font-weight: var(--fontWeightBlack);
-  font-size: 24px;
-  line-height: 24px;
+	font-weight: var(--fontWeightBlack);
+	font-size: 24px;
+	line-height: 24px;
 
-  padding: 3px 0 3px 0;
-  /* margin-top + n * line-height + margin-bottom => x * 6px */
-  margin-top: 18px;
-  margin-bottom: 18px;
+	padding: 3px 0 3px 0;
+	/* margin-top + n * line-height + margin-bottom => x * 6px */
+	margin-top: 18px;
+	margin-bottom: 18px;
 
-  @media (--viewportMedium) {
-    font-size: 64px;
-    line-height: 64px;
-    padding: 0;
-    /* margin-top + n * line-height + margin-bottom => x * 8px */
-    margin-top: 24px;
-    margin-bottom: 24px;
-  }
+	@media (--viewportMedium) {
+		font-size: 64px;
+		line-height: 64px;
+		padding: 0;
+		/* margin-top + n * line-height + margin-bottom => x * 8px */
+		margin-top: 24px;
+		margin-bottom: 24px;
+	}
 }
 
 .h2 {
-  font-weight: var(--fontWeightBold);
-  font-size: 21px;
-  line-height: 24px;
+	font-weight: var(--fontWeightBold);
+	font-size: 21px;
+	line-height: 24px;
 
-  padding: 4px 0 2px 0;
-  /* x * 6px */
-  margin-top: 24px;
-  margin-bottom: 18px;
+	padding: 4px 0 2px 0;
+	/* x * 6px */
+	margin-top: 24px;
+	margin-bottom: 18px;
 
-  @media (--viewportMedium) {
-    font-size: 40px;
-    line-height: 56px;
-    padding: 5px 0 3px 0;
-    /* x * 8px */
-    margin-top: 24px;
-    margin-bottom: 16px;
-  }
+	@media (--viewportMedium) {
+		font-size: 40px;
+		line-height: 56px;
+		padding: 5px 0 3px 0;
+		/* x * 8px */
+		margin-top: 24px;
+		margin-bottom: 16px;
+	}
 }
 
 .h3 {
-  font-weight: var(--fontWeightBold);
-  font-size: 18px;
-  line-height: 24px;
-  /* x * 6px */
-  margin-top: 18px;
-  margin-bottom: 12px;
+	font-weight: var(--fontWeightBold);
+	font-size: 18px;
+	line-height: 24px;
+	/* x * 6px */
+	margin-top: 18px;
+	margin-bottom: 12px;
 
-  @media (--viewportMedium) {
-    font-size: 30px;
-    line-height: 40px;
-    padding: 1px 0 7px 0;
-    /* x * 8px */
-    margin-top: 16px;
-    margin-bottom: 16px;
-  }
+	@media (--viewportMedium) {
+		font-size: 30px;
+		line-height: 40px;
+		padding: 1px 0 7px 0;
+		/* x * 8px */
+		margin-top: 16px;
+		margin-bottom: 16px;
+	}
 }
 
 .h4 {
-  font-weight: var(--fontWeightBold);
-  font-size: 21px;
-  line-height: 30px;
-  padding: 1px 0 5px 0;
-  /* x * 6px */
-  margin-top: 12px;
-  margin-bottom: 6px;
+	font-weight: var(--fontWeightBold);
+	font-size: 21px;
+	line-height: 30px;
+	padding: 1px 0 5px 0;
+	/* x * 6px */
+	margin-top: 12px;
+	margin-bottom: 6px;
 
-  @media (--viewportMedium) {
-    line-height: 32px;
-    padding: 0;
-    /* x * 8px */
-    margin-top: 16px;
-    margin-bottom: 16px;
-  }
+	@media (--viewportMedium) {
+		line-height: 32px;
+		padding: 0;
+		/* x * 8px */
+		margin-top: 16px;
+		margin-bottom: 16px;
+	}
 }
 
 .h5 {
-  font-weight: var(--fontWeightMedium);
-  font-size: 14px;
-  line-height: 18px;
-  /* x * 6px */
-  padding: 3px 0 3px 0;
-  margin-top: 12px;
-  margin-bottom: 6px;
+	font-weight: var(--fontWeightMedium);
+	font-size: 14px;
+	line-height: 18px;
+	/* x * 6px */
+	padding: 3px 0 3px 0;
+	margin-top: 12px;
+	margin-bottom: 6px;
 
-  @media (--viewportMedium) {
-    line-height: 16px;
-    /* x * 8px */
-    padding: 3px 0 5px 0;
-    margin-top: 8px;
-    margin-bottom: 16px;
-  }
+	@media (--viewportMedium) {
+		line-height: 16px;
+		/* x * 8px */
+		padding: 3px 0 5px 0;
+		margin-top: 8px;
+		margin-bottom: 16px;
+	}
 }
 
 .h6 {
-  font-weight: var(--fontWeightBold);
-  font-size: 12px;
-  line-height: 18px;
-  text-transform: uppercase;
-  /* x * 6px */
-  padding: 4px 0 2px 0;
-  margin-top: 6px;
-  margin-bottom: 6px;
+	font-weight: var(--fontWeightBold);
+	font-size: 12px;
+	line-height: 18px;
+	text-transform: uppercase;
+	/* x * 6px */
+	padding: 4px 0 2px 0;
+	margin-top: 6px;
+	margin-bottom: 6px;
 
-  @media (--viewportMedium) {
-    line-height: 16px;
-    /* x * 8px */
-    padding: 3px 0 5px 0;
-    margin-top: 8px;
-    margin-bottom: 8px;
-  }
+	@media (--viewportMedium) {
+		line-height: 16px;
+		/* x * 8px */
+		padding: 3px 0 5px 0;
+		margin-top: 8px;
+		margin-bottom: 8px;
+	}
 }
 
 .label {
-  font-weight: var(--fontWeightSemiBold);
-  font-size: 13px;
-  line-height: 18px;
-  display: block;
-  margin-top: 0;
-  margin-bottom: 6px;
+	font-weight: var(--fontWeightSemiBold);
+	font-size: 13px;
+	line-height: 18px;
+	display: block;
+	margin-top: 0;
+	margin-bottom: 6px;
 
-  @media (--viewportMedium) {
-    font-weight: var(--fontWeightSemiBold);
-    line-height: 16px;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 3px;
-    padding-bottom: 13px;
-  }
+	@media (--viewportMedium) {
+		font-weight: var(--fontWeightSemiBold);
+		line-height: 16px;
+		margin-top: 0;
+		margin-bottom: 0;
+		padding-top: 3px;
+		padding-bottom: 13px;
+	}
 }
 
 .p,
@@ -744,88 +744,88 @@ textarea {
 .marketplaceListingAttributeFontStyles,
 .marketplaceBodyFontStyles,
 .marketplaceDefaultFontStyles {
-  font-family: var(--fontFamily);
-  font-weight: var(--fontWeightMedium);
+	font-family: var(--fontFamily);
+	font-weight: var(--fontWeightMedium);
 
-  /* No margins for default font */
-  font-size: 14px;
-  line-height: 24px;
-  padding: 0;
+	/* No margins for default font */
+	font-size: 14px;
+	line-height: 24px;
+	padding: 0;
 
-  @media (--viewportMedium) {
-    font-size: 16px;
-    line-height: 24px;
-    padding: 5px 0 3px 0;
-  }
+	@media (--viewportMedium) {
+		font-size: 16px;
+		line-height: 24px;
+		padding: 5px 0 3px 0;
+	}
 }
 
 .p,
 .marketplaceBodyFontStyles {
-  /* margin-top + n * line-height + margin-bottom => x * 6px */
-  margin-top: 12px;
-  margin-bottom: 12px;
+	/* margin-top + n * line-height + margin-bottom => x * 6px */
+	margin-top: 12px;
+	margin-bottom: 12px;
 
-  @media (--viewportMedium) {
-    /* margin-top + n * line-height + margin-bottom => x * 8px */
-    margin-top: 16px;
-    margin-bottom: 16px;
-  }
+	@media (--viewportMedium) {
+		/* margin-top + n * line-height + margin-bottom => x * 8px */
+		margin-top: 16px;
+		margin-bottom: 16px;
+	}
 }
 
 .textLarge {
-  font-size: 20px;
-  line-height: 30px;
-  font-weight: var(--fontWeightMedium);
+	font-size: 20px;
+	line-height: 30px;
+	font-weight: var(--fontWeightMedium);
 
-  @media (--viewportMedium) {
-    line-height: 32px;
-  }
+	@media (--viewportMedium) {
+		line-height: 32px;
+	}
 }
 
 .textSmall {
-  font-size: 14px;
-  line-height: 18px;
-  font-weight: var(--fontWeightMedium);
-  letter-spacing: -0.1px;
+	font-size: 14px;
+	line-height: 18px;
+	font-weight: var(--fontWeightMedium);
+	letter-spacing: -0.1px;
 
-  @media (--viewportMedium) {
-    line-height: 16px;
-  }
+	@media (--viewportMedium) {
+		line-height: 16px;
+	}
 }
 
 .textXSmall {
-  font-size: 13px;
-  line-height: 18px;
-  font-weight: var(--fontWeightMedium);
+	font-size: 13px;
+	line-height: 18px;
+	font-weight: var(--fontWeightMedium);
 
-  @media (--viewportMedium) {
-    line-height: 16px;
-  }
+	@media (--viewportMedium) {
+		line-height: 16px;
+	}
 }
 
 /* ================ Other fonts ================ */
 
 .marketplaceSmallFontStyles {
-  font-weight: var(--fontWeightMedium);
-  font-size: 14px;
-  line-height: 24px;
+	font-weight: var(--fontWeightMedium);
+	font-size: 14px;
+	line-height: 24px;
 }
 
 .marketplaceTinyFontStyles {
-  font-weight: var(--fontWeightRegular);
-  font-size: 13px;
-  line-height: 18px;
-  /* margin-top + n * line-height + margin-bottom => x * 6px */
-  margin-top: 9.5px;
-  margin-bottom: 8.5px;
-  -webkit-font-smoothing: subpixel-antialiased;
+	font-weight: var(--fontWeightRegular);
+	font-size: 13px;
+	line-height: 18px;
+	/* margin-top + n * line-height + margin-bottom => x * 6px */
+	margin-top: 9.5px;
+	margin-bottom: 8.5px;
+	-webkit-font-smoothing: subpixel-antialiased;
 
-  @media (--viewportMedium) {
-    line-height: 16px;
-    /* margin-top + n * line-height + margin-bottom => x * 8px */
-    margin-top: 10.5px;
-    margin-bottom: 13.5px;
-  }
+	@media (--viewportMedium) {
+		line-height: 16px;
+		/* margin-top + n * line-height + margin-bottom => x * 8px */
+		margin-top: 10.5px;
+		margin-bottom: 13.5px;
+	}
 }
 
 /* .marketplaceMessageFontStyles is defined earlier */
@@ -833,112 +833,112 @@ textarea {
 /* .marketplaceListingAttributeFontStyles is defined earlier */
 
 .marketplaceMessageDateFontStyles {
-  font-weight: var(--fontWeightRegular);
-  font-size: 12px;
-  line-height: 18px;
+	font-weight: var(--fontWeightRegular);
+	font-size: 12px;
+	line-height: 18px;
 
-  @media (--viewportMedium) {
-    font-weight: var(--fontWeightMedium);
-    font-size: 12px;
-    line-height: 24px;
-  }
+	@media (--viewportMedium) {
+		font-weight: var(--fontWeightMedium);
+		font-size: 12px;
+		line-height: 24px;
+	}
 }
 
 .marketplaceSearchFilterLabelFontStyles {
-  font-weight: var(--fontWeightSemiBold);
-  font-size: 13px;
-  line-height: 18px;
+	font-weight: var(--fontWeightSemiBold);
+	font-size: 13px;
+	line-height: 18px;
 
-  @media (--viewportMedium) {
-    font-weight: var(--fontWeightMedium);
-    font-size: 13px;
-    line-height: 20px;
-  }
+	@media (--viewportMedium) {
+		font-weight: var(--fontWeightMedium);
+		font-size: 13px;
+		line-height: 20px;
+	}
 }
 
 .marketplaceSearchFilterSublabelFontStyles {
-  font-weight: var(--fontWeightMedium);
-  font-size: 18px;
-  line-height: 18px;
+	font-weight: var(--fontWeightMedium);
+	font-size: 18px;
+	line-height: 18px;
 }
 
 /* ================ Global class for input styles ================ */
 
 .marketplaceInputStyles {
-  /* Dimensions */
-  display: block;
-  width: 100%;
-  margin: 0;
+	/* Dimensions */
+	display: block;
+	width: 100%;
+	margin: 0;
 
-  /* 6 + 24 + 4 + borders are divisible by 6 */
-  padding: 6px 12px 4px 12px;
-  background-color: #fff;
+	/* 6 + 24 + 4 + borders are divisible by 6 */
+	padding: 6px 12px 4px 12px;
+	background-color: #fff;
 
-  /* Borders */
-  border-radius: 6px;
-  border: 1px solid #d8dce6;
-  outline: none;
+	/* Borders */
+	border-radius: 6px;
+	border: 1px solid #d8dce6;
+	outline: none;
 
-  /* Transition */
-  transition: all ease-in-out 100ms;
+	/* Transition */
+	transition: all ease-in-out 100ms;
 
-  &::placeholder {
-    color: var(--colorGrey300);
-  }
+	&::placeholder {
+		color: var(--colorGrey300);
+	}
 
-  @media (--viewportMedium) {
-    /* 7 + 32 + 7 + borders = 48, which is divisible by 8. */
-    padding: 7px 16px 7px 16px;
-    line-height: 32px;
-  }
+	@media (--viewportMedium) {
+		/* 7 + 32 + 7 + borders = 48, which is divisible by 8. */
+		padding: 7px 16px 7px 16px;
+		line-height: 32px;
+	}
 }
 /* Effects */
 .marketplaceInputStyles:hover {
-  border: 1px solid #b8bfd1;
-  transition: all ease-in-out 100ms;
+	border: 1px solid #b8bfd1;
+	transition: all ease-in-out 100ms;
 }
 .marketplaceInputStyles:focus {
-  background-color: #fff;
-  border-color: #80bdff;
-  box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
-  transition: all ease-in-out 100ms;
+	background-color: #fff;
+	border-color: #80bdff;
+	box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 25%);
+	transition: all ease-in-out 100ms;
 }
 .marketplaceInputStyles:disabled {
-  opacity: 0.5;
+	opacity: 0.5;
 
-  &:hover {
-    cursor: not-allowed;
-  }
+	&:hover {
+		cursor: not-allowed;
+	}
 }
 
 /* ================ Tabbed navigation font styles ================ */
 
 .marketplaceTabNavFontStyles {
-  font-weight: var(--fontWeightMedium);
-  font-size: 16px;
-  line-height: 24px;
+	font-weight: var(--fontWeightMedium);
+	font-size: 16px;
+	line-height: 24px;
 
-  @media (--viewportLarge) {
-    font-weight: var(--fontWeightSemiBold);
-    font-size: 20px;
-    line-height: 24px;
-  }
+	@media (--viewportLarge) {
+		font-weight: var(--fontWeightSemiBold);
+		font-size: 20px;
+		line-height: 24px;
+	}
 }
 
 .marketplaceTabNavHorizontalFontStyles {
-  font-weight: var(--fontWeightMedium);
-  font-size: 14px;
-  line-height: 24px;
+	font-weight: var(--fontWeightMedium);
+	font-size: 14px;
+	line-height: 24px;
 }
 
 /* ================ Clearfix solution ================ */
 
 .clearfix {
-  &::after {
-    content: '';
-    display: table;
-    clear: both;
-  }
+	&::after {
+		content: "";
+		display: table;
+		clear: both;
+	}
 }
 
 /* ================ Buttons ================ */
@@ -962,537 +962,537 @@ textarea {
  * Styles for <Button>
  */
 .buttonDefault {
-  /* button defaults */
-  display: block;
-  width: 100%;
-  min-height: 56px;
-  margin: 0;
+	/* button defaults */
+	display: block;
+	width: 100%;
+	min-height: 56px;
+	margin: 0;
 
-  /* Padding is only for <a> elements where button styles are applied,
+	/* Padding is only for <a> elements where button styles are applied,
   buttons elements should have zero padding */
-  padding: 16px 0 16px 0;
+	padding: 16px 0 16px 0;
 
-  transition: all var(--transitionStyleButton);
-  cursor: pointer;
+	transition: all var(--transitionStyleButton);
+	cursor: pointer;
 
-  /*
+	/*
    * Font: most font styles are defined earlier in this file
    */
-  font-weight: var(--fontWeightSemiBold);
+	font-weight: var(--fontWeightSemiBold);
 
-  /* Button text styles */
-  /* Default button text is centered without decorations */
-  text-align: center;
-  text-decoration: none;
+	/* Button text styles */
+	/* Default button text is centered without decorations */
+	text-align: center;
+	text-decoration: none;
 
-  /* Button borders */
-  /* Default button has no borders */
-  border: none;
-  border-radius: var(--borderRadiusMedium);
+	/* Button borders */
+	/* Default button has no borders */
+	border: none;
+	border-radius: var(--borderRadiusMedium);
 
-  /* Button colors */
-  /* Default button uses marketplace color */
-  background-color: var(--marketplaceColor);
-  color: var(--colorWhite);
+	/* Button colors */
+	/* Default button uses marketplace color */
+	background-color: var(--marketplaceColor);
+	color: var(--colorWhite);
 }
 .buttonDefault:focus,
 .buttonDefault:hover {
-  outline: none;
-  box-shadow: var(--boxShadowButton);
-  background-color: var(--marketplaceColorDark);
+	outline: none;
+	box-shadow: var(--boxShadowButton);
+	background-color: var(--marketplaceColorDark);
 }
 .buttonDefault:disabled {
-  box-shadow: none;
-  cursor: not-allowed;
-  text-decoration: none;
-  background-color: var(--colorGrey100);
-  color: var(--colorWhite);
+	box-shadow: none;
+	cursor: not-allowed;
+	text-decoration: none;
+	background-color: var(--colorGrey100);
+	color: var(--colorWhite);
 }
 
 /**
  * Styles for <PrimaryButton>
  */
 .buttonPrimary {
-  /* button defaults */
-  display: block;
-  width: 100%;
-  min-height: 56px;
-  margin: 0;
+	/* button defaults */
+	display: block;
+	width: 100%;
+	min-height: 56px;
+	margin: 0;
 
-  /* Padding is only for <a> elements where button styles are applied,
+	/* Padding is only for <a> elements where button styles are applied,
   buttons elements should have zero padding */
-  padding: 16px 0 16px 0;
+	padding: 16px 0 16px 0;
 
-  transition: all var(--transitionStyleButton);
-  cursor: pointer;
+	transition: all var(--transitionStyleButton);
+	cursor: pointer;
 
-  /*
+	/*
    * Font: most font styles are defined earlier in this file
    */
-  font-weight: var(--fontWeightSemiBold);
+	font-weight: var(--fontWeightSemiBold);
 
-  /* Button text styles */
-  /* Primary button text is centered without decorations */
-  text-align: center;
-  text-decoration: none;
+	/* Button text styles */
+	/* Primary button text is centered without decorations */
+	text-align: center;
+	text-decoration: none;
 
-  /* Button borders */
-  /* Primary button has no borders */
-  border: none;
-  border-radius: var(--borderRadiusMedium);
+	/* Button borders */
+	/* Primary button has no borders */
+	border: none;
+	border-radius: var(--borderRadiusMedium);
 
-  /* Button colors */
-  /* Primary button uses success color */
-  background-color: var(--colorPrimaryButton);
-  color: var(--colorWhite);
+	/* Button colors */
+	/* Primary button uses success color */
+	background-color: var(--colorPrimaryButton);
+	color: var(--colorWhite);
 
-  @media (--viewportMedium) {
-    padding: 20px 0 20px 0;
-  }
+	@media (--viewportMedium) {
+		padding: 20px 0 20px 0;
+	}
 }
 .buttonPrimary:focus,
 .buttonPrimary:hover {
-  outline: none;
-  box-shadow: var(--boxShadowButton);
-  background-color: var(--colorPrimaryButtonDark);
-  color: var(--colorWhite);
+	outline: none;
+	box-shadow: var(--boxShadowButton);
+	background-color: var(--colorPrimaryButtonDark);
+	color: var(--colorWhite);
 }
 .buttonPrimary:hover {
-  text-decoration: none;
+	text-decoration: none;
 }
 .buttonPrimary:disabled {
-  box-shadow: none;
-  cursor: not-allowed;
-  background-color: var(--colorGrey100);
-  color: var(--colorGrey700);
+	box-shadow: none;
+	cursor: not-allowed;
+	background-color: var(--colorGrey100);
+	color: var(--colorGrey700);
 }
 
 /**
  * Styles for <PrimaryButtonInline>
  */
 .buttonPrimaryInline {
-  display: inline-block;
-  padding: 8px 16px;
-  margin: 0;
+	display: inline-block;
+	padding: 8px 16px;
+	margin: 0;
 
-  transition: all var(--transitionStyleButton);
-  cursor: pointer;
+	transition: all var(--transitionStyleButton);
+	cursor: pointer;
 
-  /* Font */
-  font-size: 13px;
-  line-height: 18px;
-  font-weight: var(--fontWeightMedium);
+	/* Font */
+	font-size: 13px;
+	line-height: 18px;
+	font-weight: var(--fontWeightMedium);
 
-  /* Button text styles */
-  text-align: center;
-  text-decoration: none;
+	/* Button text styles */
+	text-align: center;
+	text-decoration: none;
 
-  /* Button borders */
-  border: none;
-  border-radius: var(--borderRadiusMedium);
+	/* Button borders */
+	border: none;
+	border-radius: var(--borderRadiusMedium);
 
-  background-color: var(--colorPrimaryButton);
-  color: var(--colorWhite);
+	background-color: var(--colorPrimaryButton);
+	color: var(--colorWhite);
 
-  @media (--viewportMedium) {
-    line-height: 16px;
-  }
+	@media (--viewportMedium) {
+		line-height: 16px;
+	}
 }
 .buttonPrimaryInline:focus,
 .buttonPrimaryInline:hover {
-  outline: none;
-  box-shadow: var(--boxShadowButton);
-  text-decoration: none;
-  background-color: var(--colorPrimaryButtonDark);
-  color: var(--colorWhite);
+	outline: none;
+	box-shadow: var(--boxShadowButton);
+	text-decoration: none;
+	background-color: var(--colorPrimaryButtonDark);
+	color: var(--colorWhite);
 }
 .buttonPrimaryInline:disabled {
-  box-shadow: none;
-  cursor: not-allowed;
-  background-color: var(--colorGrey100);
-  color: var(--colorGrey700);
+	box-shadow: none;
+	cursor: not-allowed;
+	background-color: var(--colorGrey100);
+	color: var(--colorGrey700);
 }
 
 /**
  * Styles for <SecondaryButton>
  */
 .buttonSecondary {
-  /* button defaults */
-  display: block;
-  width: 100%;
-  min-height: 56px;
-  margin: 0;
+	/* button defaults */
+	display: block;
+	width: 100%;
+	min-height: 56px;
+	margin: 0;
 
-  /* Padding is only for <a> elements where button styles are applied,
+	/* Padding is only for <a> elements where button styles are applied,
   buttons elements should have zero padding */
-  padding: 16px 0 16px 0;
+	padding: 16px 0 16px 0;
 
-  transition: all var(--transitionStyleButton);
-  cursor: pointer;
+	transition: all var(--transitionStyleButton);
+	cursor: pointer;
 
-  /*
+	/*
    * Font: most font styles are defined earlier in this file
    */
-  font-weight: var(--fontWeightSemiBold);
+	font-weight: var(--fontWeightSemiBold);
 
-  /* Button text styles */
-  /* Secondary button text is centered without decorations */
-  text-align: center;
-  text-decoration: none;
+	/* Button text styles */
+	/* Secondary button text is centered without decorations */
+	text-align: center;
+	text-decoration: none;
 
-  /* Secondary button has clear borders */
-  border-width: 1px;
-  border-style: solid;
-  border-color: var(--colorGrey100);
-  border-radius: var(--borderRadiusMedium);
+	/* Secondary button has clear borders */
+	border-width: 1px;
+	border-style: solid;
+	border-color: var(--colorGrey100);
+	border-radius: var(--borderRadiusMedium);
 
-  /* Button colors: secondary */
-  background-color: var(--colorSecondaryButton);
-  color: var(--colorGrey700);
+	/* Button colors: secondary */
+	background-color: var(--colorSecondaryButton);
+	color: var(--colorGrey700);
 
-  @media (--viewportMedium) {
-    padding: 20px 0 20px 0;
-  }
+	@media (--viewportMedium) {
+		padding: 20px 0 20px 0;
+	}
 }
 .buttonSecondary:focus,
 .buttonSecondary:hover {
-  outline: none;
-  box-shadow: var(--boxShadowButton);
-  border-color: var(--colorGrey300);
-  background-color: var(--colorSecondaryButton);
+	outline: none;
+	box-shadow: var(--boxShadowButton);
+	border-color: var(--colorGrey300);
+	background-color: var(--colorSecondaryButton);
 }
 .buttonSecondary:hover {
-  text-decoration: none;
+	text-decoration: none;
 }
 .buttonSecondary:disabled {
-  box-shadow: none;
-  cursor: not-allowed;
-  border-color: var(--colorGrey100);
-  background-color: var(--colorGrey100);
-  color: var(--colorWhite);
+	box-shadow: none;
+	cursor: not-allowed;
+	border-color: var(--colorGrey100);
+	background-color: var(--colorGrey100);
+	color: var(--colorWhite);
 }
 
 /**
  * Styles for <SecondaryButtonInline>
  */
 .buttonSecondaryInline {
-  /* button defaults */
-  display: inline-block;
-  width: auto;
-  min-height: auto;
-  height: 42px;
-  margin: 17px 0 0 0;
+	/* button defaults */
+	display: inline-block;
+	width: auto;
+	min-height: auto;
+	height: 42px;
+	margin: 17px 0 0 0;
 
-  /* Padding is only for <a> elements where button styles are applied,
+	/* Padding is only for <a> elements where button styles are applied,
   buttons elements should have zero padding */
-  padding: 0 16px;
+	padding: 0 16px;
 
-  transition: all var(--transitionStyleButton);
-  cursor: pointer;
+	transition: all var(--transitionStyleButton);
+	cursor: pointer;
 
-  /*
+	/*
    * Font
    */
-  font-weight: var(--fontWeightMedium);
-  font-size: 14px;
-  line-height: 18px;
-  letter-spacing: 0;
+	font-weight: var(--fontWeightMedium);
+	font-size: 14px;
+	line-height: 18px;
+	letter-spacing: 0;
 
-  /* Button text styles */
-  /* Secondary button text is centered without decorations */
-  text-align: center;
-  text-decoration: none;
+	/* Button text styles */
+	/* Secondary button text is centered without decorations */
+	text-align: center;
+	text-decoration: none;
 
-  /* Secondary button has clear borders */
-  border-width: 1px;
-  border-style: solid;
-  border-color: var(--colorGrey100);
-  border-radius: var(--borderRadiusMedium);
+	/* Secondary button has clear borders */
+	border-width: 1px;
+	border-style: solid;
+	border-color: var(--colorGrey100);
+	border-radius: var(--borderRadiusMedium);
 
-  /* Button colors: secondary */
-  background-color: var(--colorSecondaryButton);
-  color: var(--colorGrey700);
+	/* Button colors: secondary */
+	background-color: var(--colorSecondaryButton);
+	color: var(--colorGrey700);
 
-  @media (--viewportMedium) {
-    height: 40px;
-  }
+	@media (--viewportMedium) {
+		height: 40px;
+	}
 }
 .buttonSecondaryInline:focus,
 .buttonSecondaryInline:hover {
-  outline: none;
-  box-shadow: var(--boxShadowButton);
-  border-color: var(--colorGrey300);
-  background-color: var(--colorSecondaryButton);
+	outline: none;
+	box-shadow: var(--boxShadowButton);
+	border-color: var(--colorGrey300);
+	background-color: var(--colorSecondaryButton);
 }
 .buttonSecondaryInline:hover {
-  text-decoration: none;
+	text-decoration: none;
 }
 .buttonSecondaryInline:disabled {
-  box-shadow: none;
-  cursor: not-allowed;
-  border-color: var(--colorGrey100);
+	box-shadow: none;
+	cursor: not-allowed;
+	border-color: var(--colorGrey100);
 }
 
 /* ================ Modals ================ */
 
 .marketplaceModalRootStyles {
-  /* Page is using flex: AuthenticationPage's .root takes all available space */
-  flex-grow: 1;
+	/* Page is using flex: AuthenticationPage's .root takes all available space */
+	flex-grow: 1;
 
-  /* AuthenticationPage's root uses flexbox */
-  display: flex;
+	/* AuthenticationPage's root uses flexbox */
+	display: flex;
 
-  @media (--viewportMedium) {
-    justify-content: center;
-    align-items: flex-start;
-  }
+	@media (--viewportMedium) {
+		justify-content: center;
+		align-items: flex-start;
+	}
 }
 
 .marketplaceModalFormRootStyles {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  justify-content: space-between;
-  height: 100%;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	justify-content: space-between;
+	height: 100%;
 }
 
 .marketplaceModalBaseStyles {
-  flex-grow: 1;
+	flex-grow: 1;
 
-  /* Create context so the close button can be positioned within it */
-  position: relative;
+	/* Create context so the close button can be positioned within it */
+	position: relative;
 
-  /* Display and dimensions */
-  display: flex;
-  flex-direction: column;
-  padding: var(--modalPadding);
+	/* Display and dimensions */
+	display: flex;
+	flex-direction: column;
+	padding: var(--modalPadding);
 
-  background-color: var(--colorWhite);
-  border-radius: var(--borderRadius);
-  border-bottom: none;
+	background-color: var(--colorWhite);
+	border-radius: var(--borderRadius);
+	border-bottom: none;
 
-  @media (--viewportMedium) {
-    flex-basis: 480px;
-    flex-grow: 0;
-    /* min-height: 568px; */
-    padding: var(--modalPaddingMedium);
-    margin-top: 12.5vh;
-    margin-bottom: 12.5vh;
-    border-bottom: 8px solid var(--marketplaceColor);
-  }
+	@media (--viewportMedium) {
+		flex-basis: 480px;
+		flex-grow: 0;
+		/* min-height: 568px; */
+		padding: var(--modalPaddingMedium);
+		margin-top: 12.5vh;
+		margin-bottom: 12.5vh;
+		border-bottom: 8px solid var(--marketplaceColor);
+	}
 }
 
 .marketplaceModalInMobileBaseStyles {
-  flex-grow: 1;
+	flex-grow: 1;
 
-  /* Create context so the close button can be positioned within it */
-  position: relative;
+	/* Create context so the close button can be positioned within it */
+	position: relative;
 
-  /* Display and dimensions */
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  padding: 0;
+	/* Display and dimensions */
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	padding: 0;
 
-  background-color: var(--colorWhite);
-  border-radius: var(--borderRadius);
+	background-color: var(--colorWhite);
+	border-radius: var(--borderRadius);
 
-  @media (--viewportMedium) {
-    flex-basis: 480px;
-    flex-grow: 0;
-    height: 100%;
-    padding: 0;
-    background-color: transparent;
-    border-radius: 0;
-  }
+	@media (--viewportMedium) {
+		flex-basis: 480px;
+		flex-grow: 0;
+		height: 100%;
+		padding: 0;
+		background-color: transparent;
+		border-radius: 0;
+	}
 }
 
 /* Modal title */
 .marketplaceModalTitleStyles {
-  font-weight: var(--fontWeightBold);
-  font-size: 30px;
-  line-height: 36px;
-  margin: 0;
+	font-weight: var(--fontWeightBold);
+	font-size: 30px;
+	line-height: 36px;
+	margin: 0;
 
-  @media (--viewportMedium) {
-    font-weight: var(--fontWeightBold);
-    line-height: 40px;
-    margin: 0;
-  }
+	@media (--viewportMedium) {
+		font-weight: var(--fontWeightBold);
+		line-height: 40px;
+		margin: 0;
+	}
 }
 
 /* Modal message */
 .marketplaceModalParagraphStyles {
-  font-size: 20px;
-  line-height: 32px;
-  font-weight: var(--fontWeightMedium);
-  margin: 18px 0 0 0;
+	font-size: 20px;
+	line-height: 32px;
+	font-weight: var(--fontWeightMedium);
+	margin: 18px 0 0 0;
 
-  @media (--viewportMedium) {
-    margin: 24px 0 0 0;
-  }
+	@media (--viewportMedium) {
+		margin: 24px 0 0 0;
+	}
 }
 
 /* Bottom wrapper for the modal */
 .marketplaceModalBottomWrapper {
-  text-align: center;
-  margin-top: 60px;
-  align-self: stretch;
+	text-align: center;
+	margin-top: 60px;
+	align-self: stretch;
 
-  @media (--viewportMedium) {
-    margin-top: 96px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 96px;
+	}
 }
 
 /* Adjust the bottomWrapper's margin to match modals without the helper text */
 .marketplaceModalBottomWrapperText {
-  margin-top: -24px;
-  padding-bottom: 8px;
+	margin-top: -24px;
+	padding-bottom: 8px;
 
-  @media (--viewportMedium) {
-    padding-bottom: 0;
-  }
+	@media (--viewportMedium) {
+		padding-bottom: 0;
+	}
 }
 
 .marketplaceModalHelperText {
-  font-weight: var(--fontWeightRegular);
-  font-size: 13px;
-  line-height: 18px;
+	font-weight: var(--fontWeightRegular);
+	font-size: 13px;
+	line-height: 18px;
 
-  -webkit-font-smoothing: subpixel-antialiased;
+	-webkit-font-smoothing: subpixel-antialiased;
 
-  color: var(--colorGrey300);
-  margin: 0;
+	color: var(--colorGrey300);
+	margin: 0;
 
-  @media (--viewportMedium) {
-    line-height: 16px;
-    margin: 0;
-  }
+	@media (--viewportMedium) {
+		line-height: 16px;
+		margin: 0;
+	}
 }
 
 .marketplaceModalHelperLink {
-  font-weight: var(--fontWeightRegular);
-  font-size: 13px;
-  line-height: 18px;
+	font-weight: var(--fontWeightRegular);
+	font-size: 13px;
+	line-height: 18px;
 
-  -webkit-font-smoothing: subpixel-antialiased;
+	-webkit-font-smoothing: subpixel-antialiased;
 
-  color: var(--colorGrey700);
-  margin: 0;
+	color: var(--colorGrey700);
+	margin: 0;
 
-  @media (--viewportMedium) {
-    line-height: 16px;
-    margin: 0;
-  }
+	@media (--viewportMedium) {
+		line-height: 16px;
+		margin: 0;
+	}
 }
 
 /* Modal Close icon */
 
 .marketplaceModalCloseStyles {
-  /* Position inside modal */
-  position: fixed;
-  top: 0;
-  right: 0;
+	/* Position inside modal */
+	position: fixed;
+	top: 0;
+	right: 0;
 
-  /* Some content (like map) is positioning itself on top of close button without z-index handling */
-  z-index: calc(var(--zIndexModal) + 1);
+	/* Some content (like map) is positioning itself on top of close button without z-index handling */
+	z-index: calc(var(--zIndexModal) + 1);
 
-  /* Safari didn't know how to baseline-align svg icon and text */
-  display: flex;
-  align-items: flex-start;
-  width: auto;
+	/* Safari didn't know how to baseline-align svg icon and text */
+	display: flex;
+	align-items: flex-start;
+	width: auto;
 
-  /* Sizing (touch area) */
-  padding: 24px;
-  margin: 0;
-  border: 0;
+	/* Sizing (touch area) */
+	padding: 24px;
+	margin: 0;
+	border: 0;
 
-  @media (--viewportMedium) {
-    padding: 27px 30px;
-    position: absolute;
-  }
+	@media (--viewportMedium) {
+		padding: 27px 30px;
+		position: absolute;
+	}
 
-  /* Colors */
-  background-color: transparent;
-  color: var(--colorGrey700);
+	/* Colors */
+	background-color: transparent;
+	color: var(--colorGrey700);
 
-  cursor: pointer;
+	cursor: pointer;
 }
 .marketplaceModalCloseStyles:enabled:hover {
-  background-color: transparent;
-  color: var(--colorBlack);
-  box-shadow: none;
-  text-decoration: none;
+	background-color: transparent;
+	color: var(--colorBlack);
+	box-shadow: none;
+	text-decoration: none;
 }
 .marketplaceModalCloseStyles:enabled:active {
-  background-color: transparent;
-  color: var(--colorBlack);
+	background-color: transparent;
+	color: var(--colorBlack);
 }
 .marketplaceModalCloseStyles:disabled {
-  background-color: transparent;
+	background-color: transparent;
 }
 
 .marketplaceModalIconStyles {
-  height: 48px;
-  margin-bottom: 12px;
+	height: 48px;
+	margin-bottom: 12px;
 
-  @media (--viewportMedium) {
-    height: 64px;
-    margin-bottom: 23px;
-  }
+	@media (--viewportMedium) {
+		height: 64px;
+		margin-bottom: 23px;
+	}
 }
 
 .marketplaceModalCloseText {
-  /* Font */
-  font-weight: var(--fontWeightBold);
-  font-size: 12px;
-  line-height: 18px;
-  text-transform: uppercase;
+	/* Font */
+	font-weight: var(--fontWeightBold);
+	font-size: 12px;
+	line-height: 18px;
+	text-transform: uppercase;
 
-  margin: 0;
+	margin: 0;
 
-  @media (--viewportMedium) {
-    line-height: 16px;
-    margin: 0;
-  }
+	@media (--viewportMedium) {
+		line-height: 16px;
+		margin: 0;
+	}
 }
 
 .marketplaceModalCloseIcon {
-  display: inline-block;
-  margin-left: 8px;
+	display: inline-block;
+	margin-left: 8px;
 
-  /* Move X icon vertically to align it with the close text. */
-  margin-top: 3px;
+	/* Move X icon vertically to align it with the close text. */
+	margin-top: 3px;
 
-  box-sizing: content-box;
+	box-sizing: content-box;
 
-  @media (--viewportMedium) {
-    margin-top: 2px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 2px;
+	}
 }
 
 .marketplaceModalErrorStyles {
-  font-weight: var(--fontWeightMedium);
-  font-size: 15px;
-  line-height: 24px;
+	font-weight: var(--fontWeightMedium);
+	font-size: 15px;
+	line-height: 24px;
 
-  margin-top: 24px;
-  color: var(--colorFail);
+	margin-top: 24px;
+	color: var(--colorFail);
 
-  @media (--viewportMedium) {
-    font-weight: var(--fontWeightMedium);
-    /* margin-top + n * line-height + margin-bottom => x * 8px */
-    margin-top: 17px;
-    margin-bottom: 15px;
-  }
+	@media (--viewportMedium) {
+		font-weight: var(--fontWeightMedium);
+		/* margin-top + n * line-height + margin-bottom => x * 8px */
+		margin-top: 17px;
+		margin-bottom: 15px;
+	}
 }
 
 .marketplaceModalPasswordMargins {
-  /* Leave space between the input and the button below when the
+	/* Leave space between the input and the button below when the
   viewport height is small */
-  margin-top: 24px;
+	margin-top: 24px;
 
-  @media (--viewportMedium) {
-    margin-top: 32px;
-  }
+	@media (--viewportMedium) {
+		margin-top: 32px;
+	}
 }

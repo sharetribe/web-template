@@ -53,166 +53,166 @@
  *   - requiredMessage (optional):    Message for those fields, which are mandatory.
  */
 export const listingFields = [
-  // {
-  //   "scope": "public",
-  //   "label": "Gears",
-  //   "key": "gears",
-  //   "schemaType": "long",
-  //   "numberConfig": {
-  //     "minimum": 1,
-  //     "maximum": 24
-  //   },
-  //   "filterConfig": {
-  //     "indexForSearch": true,
-  //     "group": "primary",
-  //     "label": "Gears"
-  //   }
-  // }
-  // {
-  //   key: 'bikeType',
-  //   scope: 'public',
-  //   schemaType: 'enum',
-  //   enumOptions: [
-  //     { option: 'city-bikes', label: 'City bikes' },
-  //     { option: 'electric-bikes', label: 'Electric bikes' },
-  //     { option: 'mountain-bikes', label: 'Mountain bikes' },
-  //     { option: 'childrens-bikes', label: "Children's bikes" },
-  //   ],
-  //   categoryConfig: {
-  //     limitToCategoryIds: true,
-  //     categoryIds: ['cats'],
-  //   },
-  //   filterConfig: {
-  //     indexForSearch: true,
-  //     filterType: 'SelectMultipleFilter', //'SelectSingleFilter',
-  //     label: 'Bike type',
-  //     group: 'primary',
-  //   },
-  //   showConfig: {
-  //     label: 'Bike type',
-  //     isDetail: true,
-  //   },
-  //   saveConfig: {
-  //     label: 'Bike type',
-  //     placeholderMessage: 'Select an option…',
-  //     isRequired: true,
-  //     requiredMessage: 'You need to select a bike type.',
-  //   },
-  // },
-  // {
-  //   key: 'tire',
-  //   scope: 'public',
-  //   schemaType: 'enum',
-  //   enumOptions: [
-  //     { option: '29', label: '29' },
-  //     { option: '28', label: '28' },
-  //     { option: '27', label: '27' },
-  //     { option: '26', label: '26' },
-  //     { option: '24', label: '24' },
-  //     { option: '20', label: '20' },
-  //     { option: '18', label: '18' },
-  //   ],
-  //   filterConfig: {
-  //     indexForSearch: true,
-  //     label: 'Tire size',
-  //     group: 'secondary',
-  //   },
-  //   showConfig: {
-  //     label: 'Tire size',
-  //     isDetail: true,
-  //   },
-  //   saveConfig: {
-  //     label: 'Tire size',
-  //     placeholderMessage: 'Select an option…',
-  //     isRequired: true,
-  //     requiredMessage: 'You need to select a tire size.',
-  //   },
-  // },
-  // {
-  //   key: 'brand',
-  //   scope: 'public',
-  //   schemaType: 'enum',
-  //   enumOptions: [
-  //     { option: 'cube', label: 'Cube' },
-  //     { option: 'diamant', label: 'Diamant' },
-  //     { option: 'ghost', label: 'GHOST' },
-  //     { option: 'giant', label: 'Giant' },
-  //     { option: 'kalkhoff', label: 'Kalkhoff' },
-  //     { option: 'kona', label: 'Kona' },
-  //     { option: 'otler', label: 'Otler' },
-  //     { option: 'vermont', label: 'Vermont' },
-  //   ],
-  //   filterConfig: {
-  //     indexForSearch: true,
-  //     label: 'Brand',
-  //     group: 'secondary',
-  //   },
-  //   showConfig: {
-  //     label: 'Brand',
-  //     isDetail: true,
-  //   },
-  //   saveConfig: {
-  //     label: 'Brand',
-  //     placeholderMessage: 'Select an option…',
-  //     isRequired: true,
-  //     requiredMessage: 'You need to select a brand.',
-  //   },
-  // },
-  // {
-  //   key: 'accessories',
-  //   scope: 'public',
-  //   schemaType: 'multi-enum',
-  //   enumOptions: [
-  //     { option: 'bell', label: 'Bell' },
-  //     { option: 'lights', label: 'Lights' },
-  //     { option: 'lock', label: 'Lock' },
-  //     { option: 'mudguard', label: 'Mudguard' },
-  //   ],
-  //   filterConfig: {
-  //     indexForSearch: true,
-  //     label: 'Accessories',
-  //     searchMode: 'has_all',
-  //     group: 'secondary',
-  //   },
-  //   showConfig: {
-  //     label: 'Accessories',
-  //   },
-  //   saveConfig: {
-  //     label: 'Accessories',
-  //     placeholderMessage: 'Select an option…',
-  //     isRequired: false,
-  //   },
-  // },
-  // // An example of how to use transaction type specific custom fields and private data.
-  // {
-  //   key: 'note',
-  //   scope: 'public',
-  //   schemaType: 'text',
-  //   listingTypeConfig: {
-  //     limitToListingTypeIds: true,
-  //     listingTypeIds: ['product-selling'],
-  //   },
-  //   showConfig: {
-  //     label: 'Extra notes',
-  //   },
-  //   saveConfig: {
-  //     label: 'Extra notes',
-  //     placeholderMessage: 'Some public extra note about this bike...',
-  //   },
-  // },
-  // {
-  //   key: 'privatenote',
-  //   scope: 'private',
-  //   schemaType: 'text',
-  //   listingTypeConfig: {
-  //     limitToListingTypeIds: true,
-  //     listingTypeIds: ['daily-booking'],
-  //   },
-  //   saveConfig: {
-  //     label: 'Private notes',
-  //     placeholderMessage: 'Some private note about this bike...',
-  //   },
-  // },
+	// {
+	//   "scope": "public",
+	//   "label": "Gears",
+	//   "key": "gears",
+	//   "schemaType": "long",
+	//   "numberConfig": {
+	//     "minimum": 1,
+	//     "maximum": 24
+	//   },
+	//   "filterConfig": {
+	//     "indexForSearch": true,
+	//     "group": "primary",
+	//     "label": "Gears"
+	//   }
+	// }
+	// {
+	//   key: 'bikeType',
+	//   scope: 'public',
+	//   schemaType: 'enum',
+	//   enumOptions: [
+	//     { option: 'city-bikes', label: 'City bikes' },
+	//     { option: 'electric-bikes', label: 'Electric bikes' },
+	//     { option: 'mountain-bikes', label: 'Mountain bikes' },
+	//     { option: 'childrens-bikes', label: "Children's bikes" },
+	//   ],
+	//   categoryConfig: {
+	//     limitToCategoryIds: true,
+	//     categoryIds: ['cats'],
+	//   },
+	//   filterConfig: {
+	//     indexForSearch: true,
+	//     filterType: 'SelectMultipleFilter', //'SelectSingleFilter',
+	//     label: 'Bike type',
+	//     group: 'primary',
+	//   },
+	//   showConfig: {
+	//     label: 'Bike type',
+	//     isDetail: true,
+	//   },
+	//   saveConfig: {
+	//     label: 'Bike type',
+	//     placeholderMessage: 'Select an option…',
+	//     isRequired: true,
+	//     requiredMessage: 'You need to select a bike type.',
+	//   },
+	// },
+	// {
+	//   key: 'tire',
+	//   scope: 'public',
+	//   schemaType: 'enum',
+	//   enumOptions: [
+	//     { option: '29', label: '29' },
+	//     { option: '28', label: '28' },
+	//     { option: '27', label: '27' },
+	//     { option: '26', label: '26' },
+	//     { option: '24', label: '24' },
+	//     { option: '20', label: '20' },
+	//     { option: '18', label: '18' },
+	//   ],
+	//   filterConfig: {
+	//     indexForSearch: true,
+	//     label: 'Tire size',
+	//     group: 'secondary',
+	//   },
+	//   showConfig: {
+	//     label: 'Tire size',
+	//     isDetail: true,
+	//   },
+	//   saveConfig: {
+	//     label: 'Tire size',
+	//     placeholderMessage: 'Select an option…',
+	//     isRequired: true,
+	//     requiredMessage: 'You need to select a tire size.',
+	//   },
+	// },
+	// {
+	//   key: 'brand',
+	//   scope: 'public',
+	//   schemaType: 'enum',
+	//   enumOptions: [
+	//     { option: 'cube', label: 'Cube' },
+	//     { option: 'diamant', label: 'Diamant' },
+	//     { option: 'ghost', label: 'GHOST' },
+	//     { option: 'giant', label: 'Giant' },
+	//     { option: 'kalkhoff', label: 'Kalkhoff' },
+	//     { option: 'kona', label: 'Kona' },
+	//     { option: 'otler', label: 'Otler' },
+	//     { option: 'vermont', label: 'Vermont' },
+	//   ],
+	//   filterConfig: {
+	//     indexForSearch: true,
+	//     label: 'Brand',
+	//     group: 'secondary',
+	//   },
+	//   showConfig: {
+	//     label: 'Brand',
+	//     isDetail: true,
+	//   },
+	//   saveConfig: {
+	//     label: 'Brand',
+	//     placeholderMessage: 'Select an option…',
+	//     isRequired: true,
+	//     requiredMessage: 'You need to select a brand.',
+	//   },
+	// },
+	// {
+	//   key: 'accessories',
+	//   scope: 'public',
+	//   schemaType: 'multi-enum',
+	//   enumOptions: [
+	//     { option: 'bell', label: 'Bell' },
+	//     { option: 'lights', label: 'Lights' },
+	//     { option: 'lock', label: 'Lock' },
+	//     { option: 'mudguard', label: 'Mudguard' },
+	//   ],
+	//   filterConfig: {
+	//     indexForSearch: true,
+	//     label: 'Accessories',
+	//     searchMode: 'has_all',
+	//     group: 'secondary',
+	//   },
+	//   showConfig: {
+	//     label: 'Accessories',
+	//   },
+	//   saveConfig: {
+	//     label: 'Accessories',
+	//     placeholderMessage: 'Select an option…',
+	//     isRequired: false,
+	//   },
+	// },
+	// // An example of how to use transaction type specific custom fields and private data.
+	// {
+	//   key: 'note',
+	//   scope: 'public',
+	//   schemaType: 'text',
+	//   listingTypeConfig: {
+	//     limitToListingTypeIds: true,
+	//     listingTypeIds: ['product-selling'],
+	//   },
+	//   showConfig: {
+	//     label: 'Extra notes',
+	//   },
+	//   saveConfig: {
+	//     label: 'Extra notes',
+	//     placeholderMessage: 'Some public extra note about this bike...',
+	//   },
+	// },
+	// {
+	//   key: 'privatenote',
+	//   scope: 'private',
+	//   schemaType: 'text',
+	//   listingTypeConfig: {
+	//     limitToListingTypeIds: true,
+	//     listingTypeIds: ['daily-booking'],
+	//   },
+	//   saveConfig: {
+	//     label: 'Private notes',
+	//     placeholderMessage: 'Some private note about this bike...',
+	//   },
+	// },
 ];
 
 ///////////////////////////////////////////////////////////////////////
@@ -262,67 +262,67 @@ export const listingFields = [
  */
 
 export const listingTypes = [
-  {
-    listingType: 'daily-booking',
-    label: 'Daily booking',
-    transactionType: {
-      process: 'default-booking',
-      alias: 'default-booking/release-1',
-      unitType: 'day',
-    },
-    defaultListingFields: {
-      location: true,
-      payoutDetails: true,
-    },
-  },
-  // // Here are some examples for other listingTypes
-  // // TODO: SearchPage does not work well if both booking and product selling are used at the same time
-  // {
-  //   listingType: 'nightly-booking',
-  //   label: 'Nightly booking',
-  //   transactionType: {
-  //     process: 'default-booking',
-  //     alias: 'default-booking/release-1',
-  //     unitType: 'night',
-  //   },
-  // },
-  // {
-  //   listingType: 'hourly-booking',
-  //   label: 'Hourly booking',
-  //   transactionType: {
-  //     process: 'default-booking',
-  //     alias: 'default-booking/release-1',
-  //     unitType: 'hour',
-  //   },
-  // },
-  // {
-  //   listingType: 'product-selling',
-  //   label: 'Sell bicycles',
-  //   transactionType: {
-  //     process: 'default-purchase',
-  //     alias: 'default-purchase/release-1',
-  //     unitType: 'item',
-  //   },
-  //   stockType: 'multipleItems',
-  //   defaultListingFields: {
-  //     shipping: true,
-  //     pickup: true,
-  //     payoutDetails: true,
-  //   },
-  // },
-  // {
-  //   listingType: 'inquiry',
-  //   label: 'Inquiry',
-  //   transactionType: {
-  //     process: 'default-inquiry',
-  //     alias: 'default-inquiry/release-1',
-  //     unitType: 'inquiry',
-  //   },
-  //   defaultListingFields: {
-  //     price: false,
-  //     location: true,
-  //   },
-  // },
+	{
+		listingType: "daily-booking",
+		label: "Daily booking",
+		transactionType: {
+			process: "default-booking",
+			alias: "default-booking/release-1",
+			unitType: "day",
+		},
+		defaultListingFields: {
+			location: true,
+			payoutDetails: true,
+		},
+	},
+	// // Here are some examples for other listingTypes
+	// // TODO: SearchPage does not work well if both booking and product selling are used at the same time
+	// {
+	//   listingType: 'nightly-booking',
+	//   label: 'Nightly booking',
+	//   transactionType: {
+	//     process: 'default-booking',
+	//     alias: 'default-booking/release-1',
+	//     unitType: 'night',
+	//   },
+	// },
+	// {
+	//   listingType: 'hourly-booking',
+	//   label: 'Hourly booking',
+	//   transactionType: {
+	//     process: 'default-booking',
+	//     alias: 'default-booking/release-1',
+	//     unitType: 'hour',
+	//   },
+	// },
+	// {
+	//   listingType: 'product-selling',
+	//   label: 'Sell bicycles',
+	//   transactionType: {
+	//     process: 'default-purchase',
+	//     alias: 'default-purchase/release-1',
+	//     unitType: 'item',
+	//   },
+	//   stockType: 'multipleItems',
+	//   defaultListingFields: {
+	//     shipping: true,
+	//     pickup: true,
+	//     payoutDetails: true,
+	//   },
+	// },
+	// {
+	//   listingType: 'inquiry',
+	//   label: 'Inquiry',
+	//   transactionType: {
+	//     process: 'default-inquiry',
+	//     alias: 'default-inquiry/release-1',
+	//     unitType: 'inquiry',
+	//   },
+	//   defaultListingFields: {
+	//     price: false,
+	//     location: true,
+	//   },
+	// },
 ];
 
 // SearchPage can enforce listing query to only those listings with valid listingType

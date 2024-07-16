@@ -1,11 +1,11 @@
 const {
-  calculateQuantityFromDates,
-  calculateQuantityFromHours,
-  calculateTotalFromLineItems,
-  calculateShippingFee,
-  hasCommissionPercentage,
-} = require('./lineItemHelpers');
-const { types } = require('sharetribe-flex-sdk');
+	calculateQuantityFromDates,
+	calculateQuantityFromHours,
+	calculateTotalFromLineItems,
+	calculateShippingFee,
+	hasCommissionPercentage,
+} = require("./lineItemHelpers");
+const { types } = require("sharetribe-flex-sdk");
 const { Money } = types;
 
 /**
@@ -16,47 +16,47 @@ const { Money } = types;
  * @param {*} currency should point to the currency of listing's price.
  */
 const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
-  // Check delivery method and shipping prices
-  const quantity = orderData ? orderData.stockReservationQuantity : null;
-  const deliveryMethod = orderData && orderData.deliveryMethod;
-  const isShipping = deliveryMethod === 'shipping';
-  const isPickup = deliveryMethod === 'pickup';
-  const { shippingPriceInSubunitsOneItem, shippingPriceInSubunitsAdditionalItems } =
-    publicData || {};
+	// Check delivery method and shipping prices
+	const quantity = orderData ? orderData.stockReservationQuantity : null;
+	const deliveryMethod = orderData && orderData.deliveryMethod;
+	const isShipping = deliveryMethod === "shipping";
+	const isPickup = deliveryMethod === "pickup";
+	const { shippingPriceInSubunitsOneItem, shippingPriceInSubunitsAdditionalItems } =
+		publicData || {};
 
-  // Calculate shipping fee if applicable
-  const shippingFee = isShipping
-    ? calculateShippingFee(
-        shippingPriceInSubunitsOneItem,
-        shippingPriceInSubunitsAdditionalItems,
-        currency,
-        quantity
-      )
-    : null;
+	// Calculate shipping fee if applicable
+	const shippingFee = isShipping
+		? calculateShippingFee(
+				shippingPriceInSubunitsOneItem,
+				shippingPriceInSubunitsAdditionalItems,
+				currency,
+				quantity,
+		  )
+		: null;
 
-  // Add line-item for given delivery method.
-  // Note: by default, pickup considered as free.
-  const deliveryLineItem = !!shippingFee
-    ? [
-        {
-          code: 'line-item/shipping-fee',
-          unitPrice: shippingFee,
-          quantity: 1,
-          includeFor: ['customer', 'provider'],
-        },
-      ]
-    : isPickup
-    ? [
-        {
-          code: 'line-item/pickup-fee',
-          unitPrice: new Money(0, currency),
-          quantity: 1,
-          includeFor: ['customer', 'provider'],
-        },
-      ]
-    : [];
+	// Add line-item for given delivery method.
+	// Note: by default, pickup considered as free.
+	const deliveryLineItem = !!shippingFee
+		? [
+				{
+					code: "line-item/shipping-fee",
+					unitPrice: shippingFee,
+					quantity: 1,
+					includeFor: ["customer", "provider"],
+				},
+		  ]
+		: isPickup
+		? [
+				{
+					code: "line-item/pickup-fee",
+					unitPrice: new Money(0, currency),
+					quantity: 1,
+					includeFor: ["customer", "provider"],
+				},
+		  ]
+		: [];
 
-  return { quantity, extraLineItems: deliveryLineItem };
+	return { quantity, extraLineItems: deliveryLineItem };
 };
 
 /**
@@ -65,11 +65,11 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
  * @param {*} orderData should contain quantity
  */
 const getHourQuantityAndLineItems = orderData => {
-  const { bookingStart, bookingEnd } = orderData || {};
-  const quantity =
-    bookingStart && bookingEnd ? calculateQuantityFromHours(bookingStart, bookingEnd) : null;
+	const { bookingStart, bookingEnd } = orderData || {};
+	const quantity =
+		bookingStart && bookingEnd ? calculateQuantityFromHours(bookingStart, bookingEnd) : null;
 
-  return { quantity, extraLineItems: [] };
+	return { quantity, extraLineItems: [] };
 };
 
 /**
@@ -79,12 +79,12 @@ const getHourQuantityAndLineItems = orderData => {
  * @param {*} code should be either 'line-item/day' or 'line-item/night'
  */
 const getDateRangeQuantityAndLineItems = (orderData, code) => {
-  // bookingStart & bookingend are used with day-based bookings (how many days / nights)
-  const { bookingStart, bookingEnd } = orderData || {};
-  const quantity =
-    bookingStart && bookingEnd ? calculateQuantityFromDates(bookingStart, bookingEnd, code) : null;
+	// bookingStart & bookingend are used with day-based bookings (how many days / nights)
+	const { bookingStart, bookingEnd } = orderData || {};
+	const quantity =
+		bookingStart && bookingEnd ? calculateQuantityFromDates(bookingStart, bookingEnd, code) : null;
 
-  return { quantity, extraLineItems: [] };
+	return { quantity, extraLineItems: [] };
 };
 
 /**
@@ -115,112 +115,112 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
  * @returns {Array} lineItems
  */
 exports.transactionLineItems = (listing, orderData, providerCommission, customerCommission) => {
-  const publicData = listing.attributes.publicData;
-  const unitPrice = listing.attributes.price;
-  const currency = unitPrice.currency;
+	const publicData = listing.attributes.publicData;
+	const unitPrice = listing.attributes.price;
+	const currency = unitPrice.currency;
 
-  /**
-   * Pricing starts with order's base price:
-   * Listing's price is related to a single unit. It needs to be multiplied by quantity
-   *
-   * Initial line-item needs therefore:
-   * - code (based on unitType)
-   * - unitPrice
-   * - quantity
-   * - includedFor
-   */
+	/**
+	 * Pricing starts with order's base price:
+	 * Listing's price is related to a single unit. It needs to be multiplied by quantity
+	 *
+	 * Initial line-item needs therefore:
+	 * - code (based on unitType)
+	 * - unitPrice
+	 * - quantity
+	 * - includedFor
+	 */
 
-  // Unit type needs to be one of the following:
-  // day, night, hour or item
-  const unitType = publicData.unitType;
-  const code = `line-item/${unitType}`;
+	// Unit type needs to be one of the following:
+	// day, night, hour or item
+	const unitType = publicData.unitType;
+	const code = `line-item/${unitType}`;
 
-  // Here "extra line-items" means line-items that are tied to unit type
-  // E.g. by default, "shipping-fee" is tied to 'item' aka buying products.
-  const quantityAndExtraLineItems =
-    unitType === 'item'
-      ? getItemQuantityAndLineItems(orderData, publicData, currency)
-      : unitType === 'hour'
-      ? getHourQuantityAndLineItems(orderData)
-      : ['day', 'night'].includes(unitType)
-      ? getDateRangeQuantityAndLineItems(orderData, code)
-      : {};
+	// Here "extra line-items" means line-items that are tied to unit type
+	// E.g. by default, "shipping-fee" is tied to 'item' aka buying products.
+	const quantityAndExtraLineItems =
+		unitType === "item"
+			? getItemQuantityAndLineItems(orderData, publicData, currency)
+			: unitType === "hour"
+			? getHourQuantityAndLineItems(orderData)
+			: ["day", "night"].includes(unitType)
+			? getDateRangeQuantityAndLineItems(orderData, code)
+			: {};
 
-  const { quantity, extraLineItems } = quantityAndExtraLineItems;
+	const { quantity, extraLineItems } = quantityAndExtraLineItems;
 
-  // Throw error if there is no quantity information given
-  if (!quantity) {
-    const message = `Error: transition should contain quantity information: 
+	// Throw error if there is no quantity information given
+	if (!quantity) {
+		const message = `Error: transition should contain quantity information: 
       stockReservationQuantity, quantity, or bookingStart & bookingEnd (if "line-item/day" or "line-item/night" is used)`;
-    const error = new Error(message);
-    error.status = 400;
-    error.statusText = message;
-    error.data = {};
-    throw error;
-  }
+		const error = new Error(message);
+		error.status = 400;
+		error.statusText = message;
+		error.data = {};
+		throw error;
+	}
 
-  /**
-   * If you want to use pre-defined component and translations for printing the lineItems base price for order,
-   * you should use one of the codes:
-   * line-item/night, line-item/day, line-item/hour or line-item/item.
-   *
-   * Pre-definded commission components expects line item code to be one of the following:
-   * 'line-item/provider-commission', 'line-item/customer-commission'
-   *
-   * By default OrderBreakdown prints line items inside LineItemUnknownItemsMaybe if the lineItem code is not recognized. */
+	/**
+	 * If you want to use pre-defined component and translations for printing the lineItems base price for order,
+	 * you should use one of the codes:
+	 * line-item/night, line-item/day, line-item/hour or line-item/item.
+	 *
+	 * Pre-definded commission components expects line item code to be one of the following:
+	 * 'line-item/provider-commission', 'line-item/customer-commission'
+	 *
+	 * By default OrderBreakdown prints line items inside LineItemUnknownItemsMaybe if the lineItem code is not recognized. */
 
-  const order = {
-    code,
-    unitPrice,
-    quantity,
-    includeFor: ['customer', 'provider'],
-  };
+	const order = {
+		code,
+		unitPrice,
+		quantity,
+		includeFor: ["customer", "provider"],
+	};
 
-  // Provider commission reduces the amount of money that is paid out to provider.
-  // Therefore, the provider commission line-item should have negative effect to the payout total.
-  const getNegation = percentage => {
-    return -1 * percentage;
-  };
+	// Provider commission reduces the amount of money that is paid out to provider.
+	// Therefore, the provider commission line-item should have negative effect to the payout total.
+	const getNegation = percentage => {
+		return -1 * percentage;
+	};
 
-  // Note: extraLineItems for product selling (aka shipping fee)
-  // is not included in either customer or provider commission calculation.
+	// Note: extraLineItems for product selling (aka shipping fee)
+	// is not included in either customer or provider commission calculation.
 
-  // The provider commission is what the provider pays for the transaction, and
-  // it is the subtracted from the order price to get the provider payout:
-  // orderPrice - providerCommission = providerPayout
-  const providerCommissionMaybe = hasCommissionPercentage(providerCommission)
-    ? [
-        {
-          code: 'line-item/provider-commission',
-          unitPrice: calculateTotalFromLineItems([order]),
-          percentage: getNegation(providerCommission.percentage),
-          includeFor: ['provider'],
-        },
-      ]
-    : [];
+	// The provider commission is what the provider pays for the transaction, and
+	// it is the subtracted from the order price to get the provider payout:
+	// orderPrice - providerCommission = providerPayout
+	const providerCommissionMaybe = hasCommissionPercentage(providerCommission)
+		? [
+				{
+					code: "line-item/provider-commission",
+					unitPrice: calculateTotalFromLineItems([order]),
+					percentage: getNegation(providerCommission.percentage),
+					includeFor: ["provider"],
+				},
+		  ]
+		: [];
 
-  // The customer commission is what the customer pays for the transaction, and
-  // it is added on top of the order price to get the customer's payin price:
-  // orderPrice + customerCommission = customerPayin
-  const customerCommissionMaybe = hasCommissionPercentage(customerCommission)
-    ? [
-        {
-          code: 'line-item/customer-commission',
-          unitPrice: calculateTotalFromLineItems([order]),
-          percentage: customerCommission.percentage,
-          includeFor: ['customer'],
-        },
-      ]
-    : [];
+	// The customer commission is what the customer pays for the transaction, and
+	// it is added on top of the order price to get the customer's payin price:
+	// orderPrice + customerCommission = customerPayin
+	const customerCommissionMaybe = hasCommissionPercentage(customerCommission)
+		? [
+				{
+					code: "line-item/customer-commission",
+					unitPrice: calculateTotalFromLineItems([order]),
+					percentage: customerCommission.percentage,
+					includeFor: ["customer"],
+				},
+		  ]
+		: [];
 
-  // Let's keep the base price (order) as first line item and provider and customer commissions as last.
-  // Note: the order matters only if OrderBreakdown component doesn't recognize line-item.
-  const lineItems = [
-    order,
-    ...extraLineItems,
-    ...providerCommissionMaybe,
-    ...customerCommissionMaybe,
-  ];
+	// Let's keep the base price (order) as first line item and provider and customer commissions as last.
+	// Note: the order matters only if OrderBreakdown component doesn't recognize line-item.
+	const lineItems = [
+		order,
+		...extraLineItems,
+		...providerCommissionMaybe,
+		...customerCommissionMaybe,
+	];
 
-  return lineItems;
+	return lineItems;
 };

@@ -1,2 +1,2 @@
-import SectionColumns from './SectionColumns';
+import SectionColumns from "./SectionColumns";
 export default SectionColumns;

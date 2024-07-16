@@ -33,82 +33,82 @@
  * sizes, see the API documentation.
  */
 
-import React from 'react';
-import { arrayOf, oneOfType, string } from 'prop-types';
-import classNames from 'classnames';
-import { FormattedMessage } from '../../util/reactIntl';
-import { propTypes } from '../../util/types';
+import React from "react";
+import { arrayOf, oneOfType, string } from "prop-types";
+import classNames from "classnames";
+import { FormattedMessage } from "../../util/reactIntl";
+import { propTypes } from "../../util/types";
 
-import NoImageIcon from './NoImageIcon';
-import css from './ResponsiveImage.module.css';
+import NoImageIcon from "./NoImageIcon";
+import css from "./ResponsiveImage.module.css";
 
 const ResponsiveImage = props => {
-  const {
-    className,
-    rootClassName,
-    alt,
-    noImageMessage,
-    image,
-    variants,
-    dimensions,
-    ...rest
-  } = props;
-  const classes = classNames(rootClassName || css.root, className);
+	const {
+		className,
+		rootClassName,
+		alt,
+		noImageMessage,
+		image,
+		variants,
+		dimensions,
+		...rest
+	} = props;
+	const classes = classNames(rootClassName || css.root, className);
 
-  if (image == null || variants.length === 0) {
-    const noImageClasses = classNames(rootClassName || css.root, css.noImageContainer, className);
+	if (image == null || variants.length === 0) {
+		const noImageClasses = classNames(rootClassName || css.root, css.noImageContainer, className);
 
-    const noImageMessageText = noImageMessage || <FormattedMessage id="ResponsiveImage.noImage" />;
-    return (
-      <div className={noImageClasses}>
-        <div className={css.noImageWrapper}>
-          <NoImageIcon className={css.noImageIcon} />
-          <div className={css.noImageText}>{noImageMessageText}</div>
-        </div>
-      </div>
-    );
-  }
+		const noImageMessageText = noImageMessage || <FormattedMessage id="ResponsiveImage.noImage" />;
+		return (
+			<div className={noImageClasses}>
+				<div className={css.noImageWrapper}>
+					<NoImageIcon className={css.noImageIcon} />
+					<div className={css.noImageText}>{noImageMessageText}</div>
+				</div>
+			</div>
+		);
+	}
 
-  const imageVariants = image.attributes.variants;
+	const imageVariants = image.attributes.variants;
 
-  const srcSet = variants
-    .map(variantName => {
-      const variant = imageVariants[variantName];
+	const srcSet = variants
+		.map(variantName => {
+			const variant = imageVariants[variantName];
 
-      if (!variant) {
-        // Variant not available (most like just not loaded yet)
-        return null;
-      }
-      return `${variant.url} ${variant.width}w`;
-    })
-    .filter(v => v != null)
-    .join(', ');
+			if (!variant) {
+				// Variant not available (most like just not loaded yet)
+				return null;
+			}
+			return `${variant.url} ${variant.width}w`;
+		})
+		.filter(v => v != null)
+		.join(", ");
 
-  const imgProps = {
-    className: classes,
-    srcSet,
-    ...rest,
-  };
+	const imgProps = {
+		className: classes,
+		srcSet,
+		...rest,
+	};
 
-  return <img alt={alt} {...imgProps} />;
+	return <img alt={alt} {...imgProps} />;
 };
 
 ResponsiveImage.defaultProps = {
-  className: null,
-  rootClassName: null,
-  image: null,
-  sizes: null,
-  noImageMessage: null,
+	className: null,
+	rootClassName: null,
+	image: null,
+	sizes: null,
+	noImageMessage: null,
 };
 
 ResponsiveImage.propTypes = {
-  className: string,
-  rootClassName: string,
-  alt: string.isRequired,
-  image: oneOfType([propTypes.image, propTypes.imageAsset]),
-  variants: arrayOf(string).isRequired,
-  sizes: string,
-  noImageMessage: string,
+	className: string,
+	rootClassName: string,
+	alt: string.isRequired,
+	image: oneOfType([propTypes.image, propTypes.imageAsset]),
+	variants: arrayOf(string).isRequired,
+	sizes: string,
+	noImageMessage: string,
 };
 
 export default ResponsiveImage;

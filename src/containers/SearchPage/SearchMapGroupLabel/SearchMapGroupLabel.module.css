@@ -1,102 +1,102 @@
-@import '../../../styles/customMediaQueries.css';
+@import "../../../styles/customMediaQueries.css";
 
 .root {
-  /* Size from content */
-  position: relative;
-  width: auto;
-  height: auto;
-  padding: 0;
-  border: 0;
+	/* Size from content */
+	position: relative;
+	width: auto;
+	height: auto;
+	padding: 0;
+	border: 0;
 
-  &:hover {
-    & .details,
-    & .caret {
-      cursor: pointer;
+	&:hover {
+		& .details,
+		& .caret {
+			cursor: pointer;
 
-      /* Same as active */
-      background-color: var(--marketplaceColor);
-      border-color: var(--marketplaceColor);
-      color: var(--colorWhite);
-      box-shadow: var(--boxShadowPopup);
-    }
-  }
+			/* Same as active */
+			background-color: var(--marketplaceColor);
+			border-color: var(--marketplaceColor);
+			color: var(--colorWhite);
+			box-shadow: var(--boxShadowPopup);
+		}
+	}
 }
 
 .details {
-  /**
+	/**
    * Since caret is absolutely positioned,
    * label must have relative to be included to the same rendering layer
    */
-  position: relative;
+	position: relative;
 
-  /* Font */
-  composes: p from global;
-  font-weight: var(--fontWeightBold);
-  margin-top: 0;
-  margin-bottom: 0;
+	/* Font */
+	composes: p from global;
+	font-weight: var(--fontWeightBold);
+	margin-top: 0;
+	margin-bottom: 0;
 
-  padding: 6px 14px;
+	padding: 6px 14px;
 
-  /* Coloring */
-  background-color: var(--colorWhite);
-  color: var(--colorGrey700);
+	/* Coloring */
+	background-color: var(--colorWhite);
+	color: var(--colorGrey700);
 
-  /* Borders */
-  border-radius: 19px;
-  border-style: solid;
-  border-color: var(--colorGrey100);
-  border-width: 1px;
-  box-shadow: var(--boxShadowPopupLight);
+	/* Borders */
+	border-radius: 19px;
+	border-style: solid;
+	border-color: var(--colorGrey100);
+	border-width: 1px;
+	box-shadow: var(--boxShadowPopupLight);
 
-  transition: var(--transitionStyleButton);
+	transition: var(--transitionStyleButton);
 
-  /* Overwrite dimensions from font styles */
-  @media (--viewportMedium) {
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+	/* Overwrite dimensions from font styles */
+	@media (--viewportMedium) {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
 }
 
 .detailsActive {
-  /* Same as hover */
-  background-color: var(--marketplaceColor);
-  border-color: var(--marketplaceColor);
-  color: var(--colorWhite);
-  box-shadow: var(--boxShadowPopup);
+	/* Same as hover */
+	background-color: var(--marketplaceColor);
+	border-color: var(--marketplaceColor);
+	color: var(--colorWhite);
+	box-shadow: var(--boxShadowPopup);
 }
 
 .caretShadow {
-  /* Caret / arrow dimensions and position */
-  width: 6px;
-  height: 6px;
-  position: absolute;
-  bottom: -3px;
-  left: 50%;
-  margin-left: -3px;
-  transform: rotate(45deg);
+	/* Caret / arrow dimensions and position */
+	width: 6px;
+	height: 6px;
+	position: absolute;
+	bottom: -3px;
+	left: 50%;
+	margin-left: -3px;
+	transform: rotate(45deg);
 
-  /* Caret should have same box-shadow as label */
-  box-shadow: var(--boxShadowPopupLight);
+	/* Caret should have same box-shadow as label */
+	box-shadow: var(--boxShadowPopupLight);
 }
 
 .caret {
-  /* Caret / arrow dimensions and position */
-  width: 6px;
-  height: 6px;
-  position: absolute;
-  bottom: -3px;
-  left: 50%;
-  margin-left: -3px;
-  transform: rotate(45deg);
+	/* Caret / arrow dimensions and position */
+	width: 6px;
+	height: 6px;
+	position: absolute;
+	bottom: -3px;
+	left: 50%;
+	margin-left: -3px;
+	transform: rotate(45deg);
 
-  /* Caret should have same bg-color as label */
-  background-color: var(--colorWhite);
+	/* Caret should have same bg-color as label */
+	background-color: var(--colorWhite);
 
-  transition: var(--transitionStyleButton);
+	transition: var(--transitionStyleButton);
 }
 
 .caretActive {
-  /* Same as hover */
-  background-color: var(--marketplaceColor);
-  border-color: var(--marketplaceColor);
+	/* Same as hover */
+	background-color: var(--marketplaceColor);
+	border-color: var(--marketplaceColor);
 }

@@ -1,20 +1,20 @@
 /* eslint-disable no-console */
-import React from 'react';
-import ListingCard from './ListingCard';
-import { createUser, createListing, fakeIntl } from '../../util/testData';
+import React from "react";
+import ListingCard from "./ListingCard";
+import { createUser, createListing, fakeIntl } from "../../util/testData";
 
-const listing = createListing('listing1', {}, { author: createUser('user1') });
+const listing = createListing("listing1", {}, { author: createUser("user1") });
 
 const ListingCardWrapper = props => (
-  <div style={{ maxWidth: '400px' }}>
-    <ListingCard {...props} />
-  </div>
+	<div style={{ maxWidth: "400px" }}>
+		<ListingCard {...props} />
+	</div>
 );
 
 export const ListingCardWrapped = {
-  component: ListingCardWrapper,
-  props: {
-    intl: fakeIntl,
-    listing,
-  },
+	component: ListingCardWrapper,
+	props: {
+		intl: fakeIntl,
+		listing,
+	},
 };

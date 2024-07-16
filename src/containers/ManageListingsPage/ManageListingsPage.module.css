@@ -1,120 +1,120 @@
-@import '../../styles/customMediaQueries.css';
+@import "../../styles/customMediaQueries.css";
 
 .root {
 }
 
 .tabs {
-  display: none;
+	display: none;
 
-  @media (--viewportMedium) {
-    display: flex;
-    justify-content: flex-end;
-    height: 55px;
-    align-items: flex-end;
-    padding: 13px 24px 0 24px;
-  }
+	@media (--viewportMedium) {
+		display: flex;
+		justify-content: flex-end;
+		height: 55px;
+		align-items: flex-end;
+		padding: 13px 24px 0 24px;
+	}
 
-  @media (--viewportLarge) {
-    padding: 0 36px;
-  }
+	@media (--viewportLarge) {
+		padding: 0 36px;
+	}
 }
 
 .tab {
-  display: flex;
-  align-items: flex-end;
-  height: 100%;
-  margin-left: 16px;
+	display: flex;
+	align-items: flex-end;
+	height: 100%;
+	margin-left: 16px;
 
-  &:first-child {
-    margin-left: 0;
-  }
+	&:first-child {
+		margin-left: 0;
+	}
 
-  @media (--viewportLarge) {
-    margin-left: 24px;
-  }
+	@media (--viewportLarge) {
+		margin-left: 24px;
+	}
 }
 
 .messagePanel,
 .listingPanel {
-  width: 100%;
-  margin: 24px auto 0 auto;
+	width: 100%;
+	margin: 24px auto 0 auto;
 
-  @media (--viewportMedium) {
-    margin: 48px auto 0 auto;
-  }
+	@media (--viewportMedium) {
+		margin: 48px auto 0 auto;
+	}
 
-  @media (--viewportLarge) {
-    margin: 72px auto 0 auto;
-    max-width: calc(var(--contentMaxWidth) + 72px);
-  }
+	@media (--viewportLarge) {
+		margin: 72px auto 0 auto;
+		max-width: calc(var(--contentMaxWidth) + 72px);
+	}
 
-  @media (--viewportXLarge) {
-    max-width: var(--contentMaxWidth);
-  }
+	@media (--viewportXLarge) {
+		max-width: var(--contentMaxWidth);
+	}
 }
 
 .noResultsContainer {
-  margin: 0 24px;
+	margin: 0 24px;
 
-  @media (--viewportMedium) {
-    margin: 0 24px;
-  }
+	@media (--viewportMedium) {
+		margin: 0 24px;
+	}
 
-  @media (--viewportLarge) {
-    margin: 0 36px;
-  }
+	@media (--viewportLarge) {
+		margin: 0 36px;
+	}
 }
 
 .heading {
-  margin: 0 24px 24px 24px;
+	margin: 0 24px 24px 24px;
 
-  @media (--viewportMedium) {
-    margin: 0 24px 32px 24px;
-  }
+	@media (--viewportMedium) {
+		margin: 0 24px 32px 24px;
+	}
 
-  @media (--viewportLarge) {
-    margin: 0 36px 32px 36px;
-  }
+	@media (--viewportLarge) {
+		margin: 0 36px 32px 36px;
+	}
 }
 
 .createListingParagraph,
 .headingNoListings {
-  margin: 0 0 12px 0;
+	margin: 0 0 12px 0;
 
-  @media (--viewportMedium) {
-    margin: 0 0 8px 0;
-  }
+	@media (--viewportMedium) {
+		margin: 0 0 8px 0;
+	}
 
-  @media (--viewportLarge) {
-    margin: 0 0 8px 0;
-  }
+	@media (--viewportLarge) {
+		margin: 0 0 8px 0;
+	}
 }
 
 .listingCards {
-  padding: 0 24px;
+	padding: 0 24px;
 
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 24px;
-  width: 100%;
+	display: grid;
+	grid-template-columns: repeat(1, 1fr);
+	gap: 24px;
+	width: 100%;
 
-  @media (min-width: 550px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+	@media (min-width: 550px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
 
-  @media (--viewportMedium) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+	@media (--viewportMedium) {
+		grid-template-columns: repeat(2, 1fr);
+	}
 
-  @media (--viewportLarge) {
-    grid-template-columns: repeat(3, 1fr);
-    padding: 0 36px;
-  }
+	@media (--viewportLarge) {
+		grid-template-columns: repeat(3, 1fr);
+		padding: 0 36px;
+	}
 }
 
 .listingCard {
-  margin-bottom: 36px;
-  width: 100%;
+	margin-bottom: 36px;
+	width: 100%;
 }
 
 /**
@@ -124,22 +124,22 @@
  */
 
 .listingCard:nth-of-type(2n) {
-  @media screen and (min-width: 768px) and (max-width: 1920px) {
-    margin-right: 0;
-  }
+	@media screen and (min-width: 768px) and (max-width: 1920px) {
+		margin-right: 0;
+	}
 }
 
 .listingCard:nth-of-type(3n) {
-  @media (--viewportXLarge) {
-    margin-right: 0;
-  }
+	@media (--viewportXLarge) {
+		margin-right: 0;
+	}
 }
 
 .pagination {
-  /* margin-top: auto; pushes pagination to the end of the page. */
-  margin: auto 24px 0 24px;
+	/* margin-top: auto; pushes pagination to the end of the page. */
+	margin: auto 24px 0 24px;
 
-  @media (--viewportLarge) {
-    margin: auto 36px 0 36px;
-  }
+	@media (--viewportLarge) {
+		margin: auto 36px 0 36px;
+	}
 }
