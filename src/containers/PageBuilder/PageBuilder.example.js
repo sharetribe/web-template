@@ -1,7 +1,7 @@
 import React from "react";
 
-import { H1 } from "./Primitives/Heading/index.js";
 import PageBuilder from "./PageBuilder.js";
+import { H1 } from "./Primitives/Heading/index.js";
 
 const hexYellow = "#FFAA00";
 

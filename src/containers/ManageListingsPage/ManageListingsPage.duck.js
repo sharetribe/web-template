@@ -1,4 +1,4 @@
-import { updatedEntities, denormalisedEntities } from "../../util/data";
+import { denormalisedEntities, updatedEntities } from "../../util/data";
 import { storableError } from "../../util/errors";
 import { createImageVariantConfig } from "../../util/sdkLoader";
 import { parse } from "../../util/urlHelpers";

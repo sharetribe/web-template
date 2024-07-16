@@ -1,10 +1,10 @@
 import React from "react";
-import { instanceOf, string } from "prop-types";
 import classNames from "classnames";
-import { isSameDay, formatDateIntoPartials } from "../../util/dates";
-import { injectIntl, intlShape } from "../../util/reactIntl";
-import { DATE_TYPE_DATE, DATE_TYPE_TIME, DATE_TYPE_DATETIME, propTypes } from "../../util/types";
+import { instanceOf, string } from "prop-types";
 
+import { formatDateIntoPartials, isSameDay } from "../../util/dates";
+import { injectIntl, intlShape } from "../../util/reactIntl";
+import { DATE_TYPE_DATE, DATE_TYPE_DATETIME, DATE_TYPE_TIME, propTypes } from "../../util/types";
 import css from "./TimeRange.module.css";
 
 // Sometimes we want to break string created by intl.formatDateTimeRange into

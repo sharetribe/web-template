@@ -5,15 +5,14 @@
  * N.B. *isOutsideRange* in defaultProps is defining what dates are available to booking.
  */
 import React, { Component } from "react";
-import { bool, func, instanceOf, oneOf, shape, string } from "prop-types";
 import { DateRangePicker } from "react-dates";
 import classNames from "classnames";
 import moment from "moment";
-
-import { intlShape, injectIntl } from "../../util/reactIntl";
-import { START_DATE, END_DATE } from "../../util/dates";
+import { bool, func, instanceOf, oneOf, shape, string } from "prop-types";
 
 import { IconArrowHead } from "../../components";
+import { END_DATE, START_DATE } from "../../util/dates";
+import { injectIntl, intlShape } from "../../util/reactIntl";
 import css from "./DateRangeInput.module.css";
 
 export const HORIZONTAL_ORIENTATION = "horizontal";

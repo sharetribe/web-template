@@ -1,13 +1,11 @@
 import React from "react";
-import { bool, node, oneOfType, string } from "prop-types";
 import { useIntl } from "react-intl";
 import classNames from "classnames";
-
-import { types as sdkTypes } from "../../util/sdkLoader";
-import { propTypes } from "../../util/types";
+import { bool, node, oneOfType, string } from "prop-types";
 
 import { ResponsiveImage } from "../../components";
-
+import { types as sdkTypes } from "../../util/sdkLoader";
+import { propTypes } from "../../util/types";
 import css from "./ResponsiveBackgroundImageContainer.module.css";
 
 const { UUID } = sdkTypes;

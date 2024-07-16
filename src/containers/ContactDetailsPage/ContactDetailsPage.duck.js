@@ -1,7 +1,8 @@
 import merge from "lodash/merge";
+
+import { currentUserShowSuccess, fetchCurrentUser } from "../../ducks/user.duck";
 import { denormalisedResponseEntities } from "../../util/data";
 import { storableError } from "../../util/errors";
-import { fetchCurrentUser, currentUserShowSuccess } from "../../ducks/user.duck";
 
 // ================ Action types ================ //
 

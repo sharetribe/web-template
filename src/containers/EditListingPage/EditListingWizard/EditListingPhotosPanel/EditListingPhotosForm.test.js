@@ -1,12 +1,12 @@
 import React from "react";
-import "@testing-library/jest-dom";
-import { Form as FinalForm, Field } from "react-final-form";
+import { Form as FinalForm } from "react-final-form";
 import arrayMutators from "final-form-arrays";
 
 import { fakeIntl } from "../../../../util/testData";
 import { renderWithProviders as render, testingLibrary } from "../../../../util/testHelpers";
-
 import EditListingPhotosForm, { FieldAddImage } from "./EditListingPhotosForm";
+
+import "@testing-library/jest-dom";
 
 const { screen, userEvent, waitFor, act } = testingLibrary;
 

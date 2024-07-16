@@ -1,47 +1,45 @@
 import React from "react";
-import { bool, func, object, shape, string, oneOf } from "prop-types";
-import { compose } from "redux";
-import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-
-// Import configs and util modules
-import { intlShape, injectIntl } from "../../util/reactIntl";
-import { types as sdkTypes } from "../../util/sdkLoader";
-import {
-	LISTING_PAGE_PARAM_TYPE_DRAFT,
-	LISTING_PAGE_PARAM_TYPE_NEW,
-	LISTING_PAGE_PARAM_TYPES,
-	LISTING_PAGE_PENDING_APPROVAL_VARIANT,
-	createSlug,
-	parse,
-} from "../../util/urlHelpers";
-import { LISTING_STATE_DRAFT, LISTING_STATE_PENDING_APPROVAL, propTypes } from "../../util/types";
-import { ensureOwnListing } from "../../util/data";
-import { getMarketplaceEntities } from "../../ducks/marketplaceData.duck";
-import { manageDisableScrolling, isScrollingDisabled } from "../../ducks/ui.duck";
-import {
-	stripeAccountClearError,
-	getStripeConnectAccountLink,
-} from "../../ducks/stripeConnectAccount.duck";
+import { withRouter } from "react-router-dom";
+import { bool, func, object, oneOf, shape, string } from "prop-types";
+import { compose } from "redux";
 
 // Import shared components
 import { NamedRedirect, Page } from "../../components";
 import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
-
+import { getMarketplaceEntities } from "../../ducks/marketplaceData.duck";
+import {
+	getStripeConnectAccountLink,
+	stripeAccountClearError,
+} from "../../ducks/stripeConnectAccount.duck";
+import { isScrollingDisabled, manageDisableScrolling } from "../../ducks/ui.duck";
+import { ensureOwnListing } from "../../util/data";
+// Import configs and util modules
+import { injectIntl, intlShape } from "../../util/reactIntl";
+import { types as sdkTypes } from "../../util/sdkLoader";
+import { LISTING_STATE_DRAFT, LISTING_STATE_PENDING_APPROVAL, propTypes } from "../../util/types";
+import {
+	createSlug,
+	LISTING_PAGE_PARAM_TYPE_DRAFT,
+	LISTING_PAGE_PARAM_TYPE_NEW,
+	LISTING_PAGE_PARAM_TYPES,
+	LISTING_PAGE_PENDING_APPROVAL_VARIANT,
+	parse,
+} from "../../util/urlHelpers";
 // Import modules from this directory
 import {
-	requestFetchAvailabilityExceptions,
+	removeListingImage,
 	requestAddAvailabilityException,
-	requestDeleteAvailabilityException,
 	requestCreateListingDraft,
+	requestDeleteAvailabilityException,
+	requestFetchAvailabilityExceptions,
+	requestImageUpload,
 	requestPublishListingDraft,
 	requestUpdateListing,
-	requestImageUpload,
-	removeListingImage,
 	savePayoutDetails,
 } from "./EditListingPage.duck";
-import EditListingWizard from "./EditListingWizard/EditListingWizard";
 import css from "./EditListingPage.module.css";
+import EditListingWizard from "./EditListingWizard/EditListingWizard";
 
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = "success";
 const STRIPE_ONBOARDING_RETURN_URL_FAILURE = "failure";

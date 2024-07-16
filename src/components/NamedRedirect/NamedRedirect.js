@@ -3,8 +3,8 @@
  * (Helps to narrow down the scope of possible format changes to routes.)
  */
 import React from "react";
-import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
+import PropTypes from "prop-types";
 
 import { useRouteConfiguration } from "../../context/routeConfigurationContext";
 import { pathByRouteName } from "../../util/routes";

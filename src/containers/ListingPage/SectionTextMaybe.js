@@ -1,7 +1,7 @@
 import React from "react";
+
 import { Heading } from "../../components";
 import { richText } from "../../util/richText";
-
 import css from "./ListingPage.module.css";
 
 const MIN_LENGTH_FOR_LONG_WORDS = 20;

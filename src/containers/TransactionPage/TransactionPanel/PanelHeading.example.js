@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 import { getProcess } from "../../../transactions/transaction";
-
 import PanelHeading from "./PanelHeading";
 
 const PROCESS_NAME = "default-purchase";

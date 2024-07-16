@@ -1,12 +1,12 @@
 import React from "react";
-import loadable from "@loadable/component";
-
-import { bool, object } from "prop-types";
-import { compose } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import loadable from "@loadable/component";
+import { bool, object } from "prop-types";
+import { compose } from "redux";
 
 import NotFoundPage from "../../containers/NotFoundPage/NotFoundPage";
+
 const PageBuilder = loadable(
 	() => import(/* webpackChunkName: "PageBuilder" */ "../PageBuilder/PageBuilder"),
 );

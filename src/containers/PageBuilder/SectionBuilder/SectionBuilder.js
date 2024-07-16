@@ -1,21 +1,20 @@
 import React from "react";
-import { arrayOf, bool, func, node, oneOf, shape, string } from "prop-types";
 import classNames from "classnames";
+import { arrayOf, bool, func, node, oneOf, shape, string } from "prop-types";
 
 // Section components
 import SectionArticle from "./SectionArticle";
-import SectionCarousel from "./SectionCarousel";
-import SectionColumns from "./SectionColumns";
-import SectionFeatures from "./SectionFeatures";
-import SectionHero from "./SectionHero";
-
 // Styles
 // Note: these contain
 // - shared classes that are passed as defaultClasses
 // - dark theme overrides
 // TODO: alternatively, we could consider more in-place way of theming components
 import css from "./SectionBuilder.module.css";
+import SectionCarousel from "./SectionCarousel";
+import SectionColumns from "./SectionColumns";
+import SectionFeatures from "./SectionFeatures";
 import SectionFooter from "./SectionFooter";
+import SectionHero from "./SectionHero";
 
 // These are shared classes.
 // Use these to have consistent styles between different section components

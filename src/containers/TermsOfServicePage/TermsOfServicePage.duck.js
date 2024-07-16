@@ -1,4 +1,5 @@
 import { fetchPageAssets } from "../../ducks/hostedAssets.duck";
+
 export const ASSET_NAME = "terms-of-service";
 
 export const loadData = (params, search) => (dispatch) => {

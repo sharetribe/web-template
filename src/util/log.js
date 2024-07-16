@@ -7,6 +7,7 @@
  */
 
 import * as Sentry from "@sentry/browser";
+
 import appSettings from "../config/settings";
 
 /**

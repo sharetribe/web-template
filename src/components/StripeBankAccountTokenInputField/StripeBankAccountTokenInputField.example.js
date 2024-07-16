@@ -2,12 +2,11 @@
 import React from "react";
 import { Form as FinalForm, FormSpy } from "react-final-form";
 
+import { Button } from "../../components";
 import defaultConfig from "../../config/configDefault";
 import * as validators from "../../util/validators";
-import { Button } from "../../components";
-
-import { stripeCountryConfigs } from "./StripeBankAccountTokenInputField.util";
 import StripeBankAccountTokenInputField from "./StripeBankAccountTokenInputField";
+import { stripeCountryConfigs } from "./StripeBankAccountTokenInputField.util";
 
 const formComponent = (country) => (props) => (
 	<FinalForm

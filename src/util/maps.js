@@ -1,5 +1,6 @@
 import memoize from "lodash/memoize";
 import seedrandom from "seedrandom";
+
 import { types as sdkTypes } from "./sdkLoader";
 
 const { LatLng, LatLngBounds } = sdkTypes;

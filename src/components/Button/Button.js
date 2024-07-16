@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { bool, node, string } from "prop-types";
 import classNames from "classnames";
+import { bool, node, string } from "prop-types";
 
 import css from "./Button.module.css";
 

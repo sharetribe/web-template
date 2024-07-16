@@ -1,5 +1,6 @@
 import React from "react";
-import { InlineTextButton, MenuContent, MenuLabel, MenuItem } from "../../components";
+
+import { InlineTextButton, MenuContent, MenuItem, MenuLabel } from "../../components";
 import Menu from "./Menu";
 
 const noop = () => null;

@@ -1,6 +1,6 @@
 import LayoutComposer from "./LayoutComposer.js";
-import LayoutSingleColumn from "./LayoutSingleColumn/LayoutSingleColumn";
 import LayoutSideNavigation from "./LayoutSideNavigation/LayoutSideNavigation";
+import LayoutSingleColumn from "./LayoutSingleColumn/LayoutSingleColumn";
 
-export { LayoutSingleColumn, LayoutSideNavigation };
+export { LayoutSideNavigation, LayoutSingleColumn };
 export default LayoutComposer;

@@ -3,9 +3,8 @@ import { Field } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import classNames from "classnames";
 
+import { FieldCheckbox, FieldSelect, IconClose, InlineTextButton } from "../../../../../components";
 import { FormattedMessage } from "../../../../../util/reactIntl";
-import { InlineTextButton, IconClose, FieldSelect, FieldCheckbox } from "../../../../../components";
-
 import css from "./AvailabilityPlanEntries.module.css";
 
 const HOURS = Array(24).fill();

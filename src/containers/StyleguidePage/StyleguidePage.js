@@ -1,11 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
-import isEmpty from "lodash/isEmpty";
 import classNames from "classnames";
+import isEmpty from "lodash/isEmpty";
+import PropTypes from "prop-types";
+
 import { H2, H3, H4, H5, NamedLink } from "../../components";
-
 import * as allExamples from "../../examples";
-
 import css from "./StyleguidePage.module.css";
 
 const ALL = "*";

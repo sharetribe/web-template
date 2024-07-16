@@ -1,6 +1,7 @@
 const Decimal = require("decimal.js");
 const has = require("lodash/has");
 const { types } = require("sharetribe-flex-sdk");
+
 const { Money } = types;
 
 /** Helper functions for handling currency */

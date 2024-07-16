@@ -1,10 +1,10 @@
 import React from "react";
-import "@testing-library/jest-dom";
 
+import { MenuContent, MenuItem, MenuLabel } from "../../components";
 import { renderWithProviders as render } from "../../util/testHelpers";
-
-import { MenuItem, MenuLabel, MenuContent } from "../../components";
 import Menu from "./Menu";
+
+import "@testing-library/jest-dom";
 
 describe("Menu", () => {
 	// This is quite small component what comes to rendered HTML

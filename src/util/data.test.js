@@ -1,12 +1,12 @@
-import { types as sdkTypes } from "./sdkLoader";
 import {
 	combinedRelationships,
 	combinedResourceObjects,
-	updatedEntities,
 	denormalisedEntities,
-	humanizeLineItemCode,
 	denormalizeAssetData,
+	humanizeLineItemCode,
+	updatedEntities,
 } from "./data";
+import { types as sdkTypes } from "./sdkLoader";
 
 const { UUID } = sdkTypes;
 

@@ -1,6 +1,6 @@
 import React from "react";
-import { node, number, string } from "prop-types";
 import classNames from "classnames";
+import { node, number, string } from "prop-types";
 
 import css from "./AspectRatioWrapper.module.css";
 

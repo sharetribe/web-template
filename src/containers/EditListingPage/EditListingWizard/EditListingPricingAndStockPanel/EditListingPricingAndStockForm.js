@@ -1,28 +1,26 @@
 import React from "react";
+import { Field, Form as FinalForm } from "react-final-form";
+import classNames from "classnames";
+import arrayMutators from "final-form-arrays";
 import { bool, func, number, shape, string } from "prop-types";
 import { compose } from "redux";
-import { Field, Form as FinalForm } from "react-final-form";
-import arrayMutators from "final-form-arrays";
-import classNames from "classnames";
-
-// Import configs and util modules
-import appSettings from "../../../../config/settings";
-import { intlShape, injectIntl, FormattedMessage } from "../../../../util/reactIntl";
-import { STOCK_INFINITE_ITEMS, STOCK_MULTIPLE_ITEMS, propTypes } from "../../../../util/types";
-import { isOldTotalMismatchStockError } from "../../../../util/errors";
-import * as validators from "../../../../util/validators";
-import { formatMoney } from "../../../../util/currency";
-import { types as sdkTypes } from "../../../../util/sdkLoader";
 
 // Import shared components
 import {
 	Button,
-	Form,
-	FieldCurrencyInput,
 	FieldCheckboxGroup,
+	FieldCurrencyInput,
 	FieldTextInput,
+	Form,
 } from "../../../../components";
-
+// Import configs and util modules
+import appSettings from "../../../../config/settings";
+import { formatMoney } from "../../../../util/currency";
+import { isOldTotalMismatchStockError } from "../../../../util/errors";
+import { FormattedMessage, injectIntl, intlShape } from "../../../../util/reactIntl";
+import { types as sdkTypes } from "../../../../util/sdkLoader";
+import { propTypes, STOCK_INFINITE_ITEMS, STOCK_MULTIPLE_ITEMS } from "../../../../util/types";
+import * as validators from "../../../../util/validators";
 // Import modules from this directory
 import css from "./EditListingPricingAndStockForm.module.css";
 

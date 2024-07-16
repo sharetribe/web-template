@@ -1,7 +1,7 @@
 import React from "react";
-import { FormattedMessage } from "../../../util/reactIntl";
-import { NamedLink } from "../../../components";
 
+import { NamedLink } from "../../../components";
+import { FormattedMessage } from "../../../util/reactIntl";
 import css from "./NoSearchResultsMaybe.module.css";
 
 const NoSearchResultsMaybe = (props) => {

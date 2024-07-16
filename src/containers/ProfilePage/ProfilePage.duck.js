@@ -1,8 +1,8 @@
 import { addMarketplaceEntities } from "../../ducks/marketplaceData.duck";
 import { fetchCurrentUser } from "../../ducks/user.duck";
-import { types as sdkTypes, createImageVariantConfig } from "../../util/sdkLoader";
 import { denormalisedResponseEntities } from "../../util/data";
 import { storableError } from "../../util/errors";
+import { createImageVariantConfig, types as sdkTypes } from "../../util/sdkLoader";
 
 const { UUID } = sdkTypes;
 

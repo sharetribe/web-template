@@ -1,4 +1,4 @@
-import { updatedEntities, denormalisedEntities } from "../util/data";
+import { denormalisedEntities, updatedEntities } from "../util/data";
 
 // ================ Action types ================ //
 

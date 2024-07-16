@@ -1,8 +1,8 @@
 import {
-	TX_TRANSITION_ACTOR_CUSTOMER as CUSTOMER,
-	TX_TRANSITION_ACTOR_PROVIDER as PROVIDER,
 	CONDITIONAL_RESOLVER_WILDCARD,
 	ConditionalResolver,
+	TX_TRANSITION_ACTOR_CUSTOMER as CUSTOMER,
+	TX_TRANSITION_ACTOR_PROVIDER as PROVIDER,
 } from "../../transactions/transaction";
 
 // Get UI data mapped to specific transaction state & role

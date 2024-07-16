@@ -1,67 +1,61 @@
 import React, { useState } from "react";
-import { array, arrayOf, bool, func, number, object, oneOf, shape, string } from "prop-types";
-import { compose } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
-
-import { useConfiguration } from "../../context/configurationContext";
-import { useRouteConfiguration } from "../../context/routeConfigurationContext";
-import { FormattedMessage, intlShape, injectIntl } from "../../util/reactIntl";
-import { createResourceLocatorString, findRouteByRouteName } from "../../util/routes";
-import {
-	DATE_TYPE_DATE,
-	DATE_TYPE_DATETIME,
-	LISTING_UNIT_TYPES,
-	LINE_ITEM_HOUR,
-	LINE_ITEM_ITEM,
-	propTypes,
-} from "../../util/types";
-import { timestampToDate } from "../../util/dates";
-import { createSlug } from "../../util/urlHelpers";
-import {
-	INQUIRY_PROCESS_NAME,
-	TX_TRANSITION_ACTOR_CUSTOMER as CUSTOMER,
-	TX_TRANSITION_ACTOR_PROVIDER as PROVIDER,
-	resolveLatestProcessName,
-	getProcess,
-	isBookingProcess,
-} from "../../transactions/transaction";
-
-import { getMarketplaceEntities } from "../../ducks/marketplaceData.duck";
-import { isScrollingDisabled, manageDisableScrolling } from "../../ducks/ui.duck";
-import { initializeCardPaymentData } from "../../ducks/stripe.duck.js";
+import { array, arrayOf, bool, func, number, object, oneOf, shape, string } from "prop-types";
+import { compose } from "redux";
 
 import {
 	H4,
 	IconSpinner,
+	LayoutSingleColumn,
 	NamedLink,
 	NamedRedirect,
-	Page,
-	UserDisplayName,
 	OrderBreakdown,
 	OrderPanel,
-	LayoutSingleColumn,
+	Page,
+	UserDisplayName,
 } from "../../components";
-
-import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
 import FooterContainer from "../../containers/FooterContainer/FooterContainer";
-
-import { getStateData } from "./TransactionPage.stateData";
+import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
+import { useConfiguration } from "../../context/configurationContext";
+import { useRouteConfiguration } from "../../context/routeConfigurationContext";
+import { getMarketplaceEntities } from "../../ducks/marketplaceData.duck";
+import { initializeCardPaymentData } from "../../ducks/stripe.duck.js";
+import { isScrollingDisabled, manageDisableScrolling } from "../../ducks/ui.duck";
+import {
+	getProcess,
+	INQUIRY_PROCESS_NAME,
+	isBookingProcess,
+	resolveLatestProcessName,
+	TX_TRANSITION_ACTOR_CUSTOMER as CUSTOMER,
+	TX_TRANSITION_ACTOR_PROVIDER as PROVIDER,
+} from "../../transactions/transaction";
+import { timestampToDate } from "../../util/dates";
+import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
+import { createResourceLocatorString, findRouteByRouteName } from "../../util/routes";
+import {
+	DATE_TYPE_DATE,
+	DATE_TYPE_DATETIME,
+	LINE_ITEM_HOUR,
+	LISTING_UNIT_TYPES,
+	propTypes,
+} from "../../util/types";
+import { createSlug } from "../../util/urlHelpers";
 import ActivityFeed from "./ActivityFeed/ActivityFeed";
 import DisputeModal from "./DisputeModal/DisputeModal";
 import ReviewModal from "./ReviewModal/ReviewModal";
-import TransactionPanel from "./TransactionPanel/TransactionPanel";
-
 import {
-	makeTransition,
-	sendMessage,
-	sendReview,
 	fetchMoreMessages,
 	fetchTimeSlots,
 	fetchTransactionLineItems,
+	makeTransition,
+	sendMessage,
+	sendReview,
 } from "./TransactionPage.duck";
 import css from "./TransactionPage.module.css";
+import { getStateData } from "./TransactionPage.stateData";
+import TransactionPanel from "./TransactionPanel/TransactionPanel";
 
 // Submit dispute and close the review modal
 const onDisputeOrder =

@@ -2,23 +2,20 @@ import React, { useState } from "react";
 import { Form as FinalForm } from "react-final-form";
 import classNames from "classnames";
 
-import { getStartOf, initialVisibleMonth } from "../../../../../util/dates";
-import {
-	endOfAvailabilityExceptionRange,
-	getStartOfNextMonth,
-	getStartOfPrevMonth,
-} from "../availability.helpers";
-
 import {
 	FieldDateRangeController,
 	Form,
 	InlineTextButton,
 	OutsideClickHandler,
 } from "../../../../../components";
-
+import { getStartOf, initialVisibleMonth } from "../../../../../util/dates";
+import {
+	endOfAvailabilityExceptionRange,
+	getStartOfNextMonth,
+	getStartOfPrevMonth,
+} from "../availability.helpers";
 import Next from "../NextArrow";
 import Prev from "../PrevArrow";
-
 import css from "./WeekPicker.module.css";
 
 const KEY_CODE_ESCAPE = 27;

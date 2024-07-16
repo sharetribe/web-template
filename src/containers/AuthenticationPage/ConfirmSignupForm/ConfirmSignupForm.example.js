@@ -1,4 +1,5 @@
 import React from "react";
+
 import { fakeIntl } from "../../../util/testData";
 import TermsAndConditions from "../TermsAndConditions/TermsAndConditions";
 import ConfirmSignupForm from "./ConfirmSignupForm";

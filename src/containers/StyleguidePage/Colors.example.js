@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { NamedLink } from "../../components";
+
 import css from "./StyleguidePage.module.css";
 
 const componentToHex = (c) => (+c).toString(16).padStart(2, "0").toUpperCase();

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { number, object, shape, string } from "prop-types";
+
 import { circlePolyline } from "../../util/maps";
 
 /**

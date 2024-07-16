@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { any, node, number, string } from "prop-types";
-import { FormattedMessage } from "../../util/reactIntl";
 import classNames from "classnames";
+import { any, node, number, string } from "prop-types";
 
 import { AspectRatioWrapper, Promised } from "../../components";
-
+import { FormattedMessage } from "../../util/reactIntl";
 import css from "./ImageFromFile.module.css";
 
 // readImage returns a promise which is resolved

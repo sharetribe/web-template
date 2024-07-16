@@ -1,11 +1,11 @@
 import React from "react";
-import "@testing-library/jest-dom";
 
 import { pickCategoryFields } from "../../../../util/fieldHelpers";
 import { fakeIntl } from "../../../../util/testData";
 import { renderWithProviders as render, testingLibrary } from "../../../../util/testHelpers";
-
 import EditListingDetailsForm from "./EditListingDetailsForm";
+
+import "@testing-library/jest-dom";
 
 const { screen, userEvent } = testingLibrary;
 

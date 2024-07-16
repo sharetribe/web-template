@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 import React from "react";
 import { Form as FinalForm, FormSpy } from "react-final-form";
+
 import { Button } from "../../components";
-import { required, bookingDateRequired, composeValidators } from "../../util/validators";
+import { bookingDateRequired, composeValidators, required } from "../../util/validators";
 import FieldDateInput from "./FieldDateInput";
 
 const identity = (v) => v;

@@ -1,13 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { compose } from "redux";
 import { Form as FinalForm } from "react-final-form";
 import classNames from "classnames";
+import PropTypes from "prop-types";
+import { compose } from "redux";
 
+import { FieldTextInput, Form, NamedLink, PrimaryButton } from "../../../components";
 import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
 import * as validators from "../../../util/validators";
-import { Form, PrimaryButton, FieldTextInput, NamedLink } from "../../../components";
-
 import css from "./LoginForm.module.css";
 
 const LoginFormComponent = (props) => (

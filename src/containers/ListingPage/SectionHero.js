@@ -1,11 +1,9 @@
 import React from "react";
 
+import { Modal, ResponsiveImage } from "../../components";
 import { FormattedMessage } from "../../util/reactIntl";
-import { ResponsiveImage, Modal } from "../../components";
-
-import ImageCarousel from "./ImageCarousel/ImageCarousel";
 import ActionBarMaybe from "./ActionBarMaybe";
-
+import ImageCarousel from "./ImageCarousel/ImageCarousel";
 import css from "./ListingPage.module.css";
 
 const SectionHero = (props) => {

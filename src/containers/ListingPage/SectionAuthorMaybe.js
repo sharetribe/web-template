@@ -1,12 +1,11 @@
 import React from "react";
-import { FormattedMessage } from "../../util/reactIntl";
-import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from "../../transactions/transaction";
 
 import { Heading, Modal } from "../../components";
-import UserCard from "./UserCard/UserCard";
+import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from "../../transactions/transaction";
+import { FormattedMessage } from "../../util/reactIntl";
 import InquiryForm from "./InquiryForm/InquiryForm";
-
 import css from "./ListingPage.module.css";
+import UserCard from "./UserCard/UserCard";
 
 const SectionAuthorMaybe = (props) => {
 	const {

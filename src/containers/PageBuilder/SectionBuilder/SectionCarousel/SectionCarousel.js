@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
-import { arrayOf, func, node, number, object, shape, string } from "prop-types";
 import classNames from "classnames";
+import { arrayOf, func, node, number, object, shape, string } from "prop-types";
 
-import Field, { hasDataInFields } from "../../Field";
 import BlockBuilder from "../../BlockBuilder";
-
+import Field, { hasDataInFields } from "../../Field";
 import SectionContainer from "../SectionContainer";
 import css from "./SectionCarousel.module.css";
 

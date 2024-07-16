@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { number, string } from "prop-types";
 import classNames from "classnames";
+import { number, string } from "prop-types";
 
 import css from "./IconSpinner.module.css";
 

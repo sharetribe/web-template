@@ -2,9 +2,10 @@
 // so, they are not directly calling Marketplace API or Integration API.
 // You can find these api endpoints from 'server/api/...' directory
 
-import appSettings from "../config/settings";
-import { types as sdkTypes, transit } from "./sdkLoader";
 import Decimal from "decimal.js";
+
+import appSettings from "../config/settings";
+import { transit, types as sdkTypes } from "./sdkLoader";
 
 export const apiBaseUrl = (marketplaceRootURL) => {
 	const port = process.env.REACT_APP_DEV_API_SERVER_PORT;

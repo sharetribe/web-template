@@ -1,8 +1,7 @@
 import React from "react";
 
-import { FormattedMessage } from "../../../../util/reactIntl";
-
 import { H2 } from "../../../../components";
+import { FormattedMessage } from "../../../../util/reactIntl";
 
 /**
  * Error messages (e.g. invalidExistingListingType and noListingTypesSet)

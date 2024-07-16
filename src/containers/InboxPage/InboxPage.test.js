@@ -1,8 +1,21 @@
 import React from "react";
-import "@testing-library/jest-dom";
 import Decimal from "decimal.js";
 
+import {
+	getProcess,
+	TX_TRANSITION_ACTOR_CUSTOMER,
+	TX_TRANSITION_ACTOR_PROVIDER,
+} from "../../transactions/transaction";
 import { types as sdkTypes } from "../../util/sdkLoader";
+import {
+	createBooking,
+	createCurrentUser,
+	createListing,
+	createTransaction,
+	createUser,
+	fakeIntl,
+} from "../../util/testData";
+import { renderWithProviders as render, testingLibrary } from "../../util/testHelpers";
 import {
 	LINE_ITEM_DAY,
 	LINE_ITEM_HOUR,
@@ -10,24 +23,10 @@ import {
 	LINE_ITEM_NIGHT,
 	LINE_ITEM_PROVIDER_COMMISSION,
 } from "../../util/types";
-import {
-	createUser,
-	createCurrentUser,
-	createListing,
-	fakeIntl,
-	createTransaction,
-	createBooking,
-} from "../../util/testData";
-import { renderWithProviders as render, testingLibrary } from "../../util/testHelpers";
-
-import {
-	TX_TRANSITION_ACTOR_CUSTOMER,
-	TX_TRANSITION_ACTOR_PROVIDER,
-	getProcess,
-} from "../../transactions/transaction";
-
-import { getStateData } from "./InboxPage.stateData";
 import InboxPage, { InboxItem } from "./InboxPage";
+import { getStateData } from "./InboxPage.stateData";
+
+import "@testing-library/jest-dom";
 
 const { Money } = sdkTypes;
 const { screen, waitFor, within } = testingLibrary;

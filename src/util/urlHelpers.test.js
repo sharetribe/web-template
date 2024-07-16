@@ -1,13 +1,13 @@
 import { types as sdkTypes } from "./sdkLoader";
 import {
 	createSlug,
-	parseFloatNum,
-	encodeLatLng,
 	decodeLatLng,
-	encodeLatLngBounds,
 	decodeLatLngBounds,
-	stringify,
+	encodeLatLng,
+	encodeLatLngBounds,
 	parse,
+	parseFloatNum,
+	stringify,
 } from "./urlHelpers";
 
 const { LatLng, LatLngBounds } = sdkTypes;

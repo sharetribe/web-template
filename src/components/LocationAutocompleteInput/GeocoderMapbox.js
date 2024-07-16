@@ -1,5 +1,5 @@
-import { types as sdkTypes } from "../../util/sdkLoader";
 import { userLocation } from "../../util/maps";
+import { types as sdkTypes } from "../../util/sdkLoader";
 
 const { LatLng: SDKLatLng, LatLngBounds: SDKLatLngBounds } = sdkTypes;
 

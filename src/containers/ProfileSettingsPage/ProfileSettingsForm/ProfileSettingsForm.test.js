@@ -1,11 +1,11 @@
 import React from "react";
-import "@testing-library/jest-dom";
 
-import { renderWithProviders as render, testingLibrary } from "../../../util/testHelpers";
 import { createCurrentUser, fakeIntl } from "../../../util/testData";
+import { renderWithProviders as render, testingLibrary } from "../../../util/testHelpers";
 import { initialValuesForUserFields } from "../../../util/userHelpers";
-
 import ProfileSettingsForm from "./ProfileSettingsForm";
+
+import "@testing-library/jest-dom";
 
 const { screen, userEvent, fireEvent, cleanup } = testingLibrary;
 

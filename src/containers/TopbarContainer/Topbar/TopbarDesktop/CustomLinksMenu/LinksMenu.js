@@ -11,7 +11,6 @@ import {
 	MenuLabel,
 	NamedLink,
 } from "../../../../../components";
-
 import css from "./LinksMenu.module.css";
 
 /**

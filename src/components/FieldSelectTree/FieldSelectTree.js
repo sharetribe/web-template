@@ -1,11 +1,10 @@
 import React from "react";
-import { arrayOf, shape, string } from "prop-types";
 import { Field } from "react-final-form";
 import classNames from "classnames";
+import { arrayOf, shape, string } from "prop-types";
 
-import { richText } from "../../util/richText";
 import { ValidationError } from "../../components";
-
+import { richText } from "../../util/richText";
 import css from "./FieldSelectTree.module.css";
 
 const MIN_LENGTH_FOR_LONG_WORDS = 16;

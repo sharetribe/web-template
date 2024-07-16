@@ -1,25 +1,24 @@
+import isEmpty from "lodash/isEmpty";
 import pick from "lodash/pick";
 import pickBy from "lodash/pickBy";
-import isEmpty from "lodash/isEmpty";
-
-import { types as sdkTypes, createImageVariantConfig } from "../../util/sdkLoader";
-import { findNextBoundary, getStartOf, monthIdString } from "../../util/dates";
-import { isTransactionsTransitionInvalidTransition, storableError } from "../../util/errors";
-import { transactionLineItems } from "../../util/api";
-import * as log from "../../util/log";
-import {
-	updatedEntities,
-	denormalisedEntities,
-	denormalisedResponseEntities,
-} from "../../util/data";
-import {
-	resolveLatestProcessName,
-	getProcess,
-	isBookingProcess,
-} from "../../transactions/transaction";
 
 import { addMarketplaceEntities } from "../../ducks/marketplaceData.duck";
 import { fetchCurrentUserNotifications } from "../../ducks/user.duck";
+import {
+	getProcess,
+	isBookingProcess,
+	resolveLatestProcessName,
+} from "../../transactions/transaction";
+import { transactionLineItems } from "../../util/api";
+import {
+	denormalisedEntities,
+	denormalisedResponseEntities,
+	updatedEntities,
+} from "../../util/data";
+import { findNextBoundary, getStartOf, monthIdString } from "../../util/dates";
+import { isTransactionsTransitionInvalidTransition, storableError } from "../../util/errors";
+import * as log from "../../util/log";
+import { createImageVariantConfig, types as sdkTypes } from "../../util/sdkLoader";
 
 const { UUID } = sdkTypes;
 

@@ -1,11 +1,10 @@
 import React from "react";
-import { arrayOf, bool, func, node, number, object, shape, string } from "prop-types";
 import classNames from "classnames";
+import { arrayOf, func, node, number, object, shape, string } from "prop-types";
+
 import { LinkedLogo } from "../../../../components";
-
-import Field from "../../Field";
 import BlockBuilder from "../../BlockBuilder";
-
+import Field from "../../Field";
 import SectionContainer from "../SectionContainer";
 import css from "./SectionFooter.module.css";
 

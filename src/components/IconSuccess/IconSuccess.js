@@ -1,6 +1,6 @@
 import React from "react";
-import { string } from "prop-types";
 import classNames from "classnames";
+import { string } from "prop-types";
 
 import css from "./IconSuccess.module.css";
 

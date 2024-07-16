@@ -1,4 +1,5 @@
 import { bool, func, oneOf, shape, string } from "prop-types";
+
 import {
 	BOOKING_PROCESS_NAME,
 	INQUIRY_PROCESS_NAME,

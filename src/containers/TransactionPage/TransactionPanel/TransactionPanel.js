@@ -1,31 +1,27 @@
 import React, { Component } from "react";
-import { arrayOf, bool, func, node, object, oneOf, string } from "prop-types";
 import classNames from "classnames";
-
-import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
-import { displayPrice } from "../../../util/configHelpers";
-import { propTypes } from "../../../util/types";
-import { userDisplayNameAsString } from "../../../util/data";
-import { isMobileSafari } from "../../../util/userAgent";
-import { createSlug } from "../../../util/urlHelpers";
+import { arrayOf, bool, func, node, object, oneOf, string } from "prop-types";
 
 import { AvatarLarge, NamedLink, UserDisplayName } from "../../../components";
-
-import { stateDataShape } from "../TransactionPage.stateData";
+import { displayPrice } from "../../../util/configHelpers";
+import { userDisplayNameAsString } from "../../../util/data";
+import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
+import { propTypes } from "../../../util/types";
+import { createSlug } from "../../../util/urlHelpers";
+import { isMobileSafari } from "../../../util/userAgent";
 import SendMessageForm from "../SendMessageForm/SendMessageForm";
-
+import { stateDataShape } from "../TransactionPage.stateData";
+import ActionButtonsMaybe from "./ActionButtonsMaybe";
+import BookingLocationMaybe from "./BookingLocationMaybe";
 // These are internal components that make this file more readable.
 import BreakdownMaybe from "./BreakdownMaybe";
+import DeliveryInfoMaybe from "./DeliveryInfoMaybe";
 import DetailCardHeadingsMaybe from "./DetailCardHeadingsMaybe";
 import DetailCardImage from "./DetailCardImage";
-import DeliveryInfoMaybe from "./DeliveryInfoMaybe";
-import BookingLocationMaybe from "./BookingLocationMaybe";
-import InquiryMessageMaybe from "./InquiryMessageMaybe";
-import FeedSection from "./FeedSection";
-import ActionButtonsMaybe from "./ActionButtonsMaybe";
 import DiminishedActionButtonMaybe from "./DiminishedActionButtonMaybe";
+import FeedSection from "./FeedSection";
+import InquiryMessageMaybe from "./InquiryMessageMaybe";
 import PanelHeading from "./PanelHeading";
-
 import css from "./TransactionPanel.module.css";
 
 // Helper function to get display names for different roles

@@ -1,15 +1,15 @@
 import React from "react";
-import "@testing-library/jest-dom";
 
 import { types as sdkTypes } from "../../../util/sdkLoader";
+import { createOwnListing, createStock, fakeIntl } from "../../../util/testData";
 import {
 	getHostedConfiguration,
 	renderWithProviders as render,
 	testingLibrary,
 } from "../../../util/testHelpers";
-import { createOwnListing, createStock, fakeIntl } from "../../../util/testData";
-
 import { ManageListingCardComponent } from "./ManageListingCard";
+
+import "@testing-library/jest-dom";
 
 const { screen, waitFor } = testingLibrary;
 

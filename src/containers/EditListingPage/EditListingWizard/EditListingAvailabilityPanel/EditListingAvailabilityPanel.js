@@ -1,22 +1,19 @@
 import React, { useState } from "react";
-import { arrayOf, bool, func, object, string } from "prop-types";
 import classNames from "classnames";
-
-// Import configs and util modules
-import { FormattedMessage } from "../../../../util/reactIntl";
-import { getDefaultTimeZoneOnBrowser, timestampToDate } from "../../../../util/dates";
-import { LISTING_STATE_DRAFT, propTypes } from "../../../../util/types";
-import { DAY, isFullDay } from "../../../../transactions/transaction";
+import { arrayOf, bool, func, object, string } from "prop-types";
 
 // Import shared components
 import { Button, H3, InlineTextButton, ListingLink, Modal } from "../../../../components";
-
+import { DAY, isFullDay } from "../../../../transactions/transaction";
+import { getDefaultTimeZoneOnBrowser, timestampToDate } from "../../../../util/dates";
+// Import configs and util modules
+import { FormattedMessage } from "../../../../util/reactIntl";
+import { LISTING_STATE_DRAFT, propTypes } from "../../../../util/types";
+import EditListingAvailabilityExceptionForm from "./EditListingAvailabilityExceptionForm";
+import css from "./EditListingAvailabilityPanel.module.css";
 // Import modules from this directory
 import EditListingAvailabilityPlanForm from "./EditListingAvailabilityPlanForm";
-import EditListingAvailabilityExceptionForm from "./EditListingAvailabilityExceptionForm";
 import WeeklyCalendar from "./WeeklyCalendar/WeeklyCalendar";
-
-import css from "./EditListingAvailabilityPanel.module.css";
 
 // This is the order of days as JavaScript understands them
 // The number returned by "new Date().getDay()" refers to day of week starting from sunday.

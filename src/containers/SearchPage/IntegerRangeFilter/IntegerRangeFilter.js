@@ -1,14 +1,12 @@
 import React, { useRef } from "react";
+import classNames from "classnames";
+import debounce from "lodash/debounce";
 import { arrayOf, bool, func, node, object, string } from "prop-types";
 
-import debounce from "lodash/debounce";
-import classNames from "classnames";
-
+import { FormattedMessage } from "../../../util/reactIntl";
 import FilterPlain from "../FilterPlain/FilterPlain";
 import FilterPopup from "../FilterPopup/FilterPopup";
 import FieldSelectIntegerRange from "./FieldSelectIntegerRange";
-
-import { FormattedMessage } from "../../../util/reactIntl";
 import css from "./IntegerRangeFilter.module.css";
 
 const RADIX = 10;

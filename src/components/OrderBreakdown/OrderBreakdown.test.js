@@ -1,13 +1,13 @@
 import React from "react";
-import "@testing-library/jest-dom";
 import Decimal from "decimal.js";
 
-import { types as sdkTypes } from "../../util/sdkLoader";
-import { fakeIntl, createBooking } from "../../util/testData";
-import { renderWithProviders as render, testingLibrary } from "../../util/testHelpers";
 import { getProcess, TX_TRANSITION_ACTOR_CUSTOMER } from "../../transactions/transaction";
-
+import { types as sdkTypes } from "../../util/sdkLoader";
+import { createBooking, fakeIntl } from "../../util/testData";
+import { renderWithProviders as render, testingLibrary } from "../../util/testHelpers";
 import { OrderBreakdownComponent } from "./OrderBreakdown";
+
+import "@testing-library/jest-dom";
 
 const { UUID, Money } = sdkTypes;
 const { screen, within } = testingLibrary;

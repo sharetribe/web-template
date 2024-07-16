@@ -3,13 +3,10 @@ import React from "react";
 import { IconSpinner, LayoutComposer } from "../../components/index.js";
 import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer.js";
 import FooterContainer from "../FooterContainer/FooterContainer.js";
-
 import { validProps } from "./Field";
-
+import css from "./PageBuilder.module.css";
 import SectionBuilder from "./SectionBuilder/SectionBuilder.js";
 import StaticPage from "./StaticPage.js";
-
-import css from "./PageBuilder.module.css";
 
 const getMetadata = (meta, schemaType, fieldOptions) => {
 	const { pageTitle, pageDescription, socialSharing } = meta;
@@ -135,6 +132,6 @@ const PageBuilder = (props) => {
 	);
 };
 
-export { LayoutComposer, StaticPage, SectionBuilder };
+export { LayoutComposer, SectionBuilder, StaticPage };
 
 export default PageBuilder;

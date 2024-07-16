@@ -1,5 +1,5 @@
 import routeConfiguration from "../routing/routeConfiguration";
-import { createResourceLocatorString, findRouteByRouteName, canonicalRoutePath } from "./routes";
+import { canonicalRoutePath, createResourceLocatorString, findRouteByRouteName } from "./routes";
 
 const layoutConfig = {
 	searchPage: { variantType: "map" },

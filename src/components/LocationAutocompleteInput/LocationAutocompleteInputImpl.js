@@ -1,30 +1,27 @@
 import React, { Component } from "react";
+import classNames from "classnames";
+import debounce from "lodash/debounce";
 import {
 	any,
 	arrayOf,
 	bool,
 	func,
+	node,
 	number,
+	object,
+	oneOfType,
 	shape,
 	string,
-	oneOfType,
-	object,
-	node,
 } from "prop-types";
-import classNames from "classnames";
-import debounce from "lodash/debounce";
 
+import { IconSpinner } from "../../components";
 import { useConfiguration } from "../../context/configurationContext";
 import { FormattedMessage } from "../../util/reactIntl";
 import { propTypes } from "../../util/types";
-
-import { IconSpinner } from "../../components";
-
-import IconHourGlass from "./IconHourGlass";
-import IconCurrentLocation from "./IconCurrentLocation";
-import * as geocoderMapbox from "./GeocoderMapbox";
 import * as geocoderGoogleMaps from "./GeocoderGoogleMaps";
-
+import * as geocoderMapbox from "./GeocoderMapbox";
+import IconCurrentLocation from "./IconCurrentLocation";
+import IconHourGlass from "./IconHourGlass";
 import css from "./LocationAutocompleteInput.module.css";
 
 const DEBOUNCE_WAIT_TIME = 300;

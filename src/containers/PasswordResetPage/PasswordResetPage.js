@@ -1,30 +1,26 @@
 import React, { useState } from "react";
-import { bool, func, shape, string } from "prop-types";
-import { compose } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-
-import { useConfiguration } from "../../context/configurationContext";
-import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
-import { propTypes } from "../../util/types";
-import { parse } from "../../util/urlHelpers";
-import { isScrollingDisabled } from "../../ducks/ui.duck";
+import { bool, func, shape, string } from "prop-types";
+import { compose } from "redux";
 
 import {
 	Heading,
-	Page,
-	NamedLink,
 	IconKeys,
 	IconKeysSuccess,
-	ResponsiveBackgroundImageContainer,
 	LayoutSingleColumn,
+	NamedLink,
+	Page,
+	ResponsiveBackgroundImageContainer,
 } from "../../components";
-
-import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
 import FooterContainer from "../../containers/FooterContainer/FooterContainer";
-
+import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
+import { useConfiguration } from "../../context/configurationContext";
+import { isScrollingDisabled } from "../../ducks/ui.duck";
+import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
+import { propTypes } from "../../util/types";
+import { parse } from "../../util/urlHelpers";
 import PasswordResetForm from "./PasswordResetForm/PasswordResetForm";
-
 import { resetPassword } from "./PasswordResetPage.duck";
 import css from "./PasswordResetPage.module.css";
 

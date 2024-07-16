@@ -16,10 +16,10 @@
  */
 
 import React from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
-import { TabNav } from "../../components";
+import PropTypes from "prop-types";
 
+import { TabNav } from "../../components";
 import css from "./Tabs.module.css";
 
 const Tabs = (props) => {

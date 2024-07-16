@@ -1,8 +1,8 @@
 import React from "react";
-import { FormattedMessage, intlShape } from "../../util/reactIntl";
-import { formatMoney } from "../../util/currency";
-import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes, LINE_ITEM_HOUR } from "../../util/types";
 
+import { formatMoney } from "../../util/currency";
+import { FormattedMessage, intlShape } from "../../util/reactIntl";
+import { LINE_ITEM_DAY, LINE_ITEM_HOUR, LINE_ITEM_NIGHT, propTypes } from "../../util/types";
 import css from "./OrderBreakdown.module.css";
 
 const LineItemBasePriceMaybe = (props) => {

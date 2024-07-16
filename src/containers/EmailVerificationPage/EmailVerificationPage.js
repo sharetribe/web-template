@@ -1,28 +1,25 @@
 import React from "react";
-import { bool, func, shape, string } from "prop-types";
-import { compose } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { bool, func, shape, string } from "prop-types";
+import { compose } from "redux";
 
+import {
+	LayoutSingleColumn,
+	NamedRedirect,
+	Page,
+	ResponsiveBackgroundImageContainer,
+} from "../../components";
+import FooterContainer from "../../containers/FooterContainer/FooterContainer";
+import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
 import { useConfiguration } from "../../context/configurationContext";
+import { verify } from "../../ducks/emailVerification.duck";
+import { isScrollingDisabled } from "../../ducks/ui.duck";
+import { ensureCurrentUser } from "../../util/data";
 import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
 import { propTypes } from "../../util/types";
 import { parse } from "../../util/urlHelpers";
-import { ensureCurrentUser } from "../../util/data";
-import { verify } from "../../ducks/emailVerification.duck";
-import { isScrollingDisabled } from "../../ducks/ui.duck";
-import {
-	Page,
-	ResponsiveBackgroundImageContainer,
-	NamedRedirect,
-	LayoutSingleColumn,
-} from "../../components";
-
-import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
-import FooterContainer from "../../containers/FooterContainer/FooterContainer";
-
 import EmailVerificationForm from "./EmailVerificationForm/EmailVerificationForm";
-
 import css from "./EmailVerificationPage.module.css";
 
 /**

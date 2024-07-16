@@ -1,20 +1,19 @@
 import React, { Component } from "react";
-import { arrayOf, func, number, string, shape, object } from "prop-types";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
+import { arrayOf, func, number, object, shape, string } from "prop-types";
 
 import { useConfiguration } from "../../../context/configurationContext";
 import { useRouteConfiguration } from "../../../context/routeConfigurationContext";
+import { getMapProviderApiAccess, obfuscatedCoordinates } from "../../../util/maps";
 import { createResourceLocatorString } from "../../../util/routes";
-import { createSlug } from "../../../util/urlHelpers";
 import { propTypes } from "../../../util/types";
-import { obfuscatedCoordinates, getMapProviderApiAccess } from "../../../util/maps";
-
-import { hasParentWithClassName } from "./SearchMap.helpers.js";
-import * as searchMapMapbox from "./SearchMapWithMapbox";
-import * as searchMapGoogleMaps from "./SearchMapWithGoogleMaps";
+import { createSlug } from "../../../util/urlHelpers";
 import ReusableMapContainer from "./ReusableMapContainer";
+import { hasParentWithClassName } from "./SearchMap.helpers.js";
 import css from "./SearchMap.module.css";
+import * as searchMapGoogleMaps from "./SearchMapWithGoogleMaps";
+import * as searchMapMapbox from "./SearchMapWithMapbox";
 
 const REUSABLE_MAP_HIDDEN_HANDLE = "reusableMapHidden";
 

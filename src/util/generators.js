@@ -1,10 +1,10 @@
 import {
-	isAfterDate,
-	isInRange,
 	getDayOfWeek,
 	getStartOf,
-	stringifyDateToISO8601,
+	isAfterDate,
+	isInRange,
 	parseDateTimeString,
+	stringifyDateToISO8601,
 } from "./dates.js";
 // NOTE: This file imports sanitize.js, which may lead to circular dependency
 

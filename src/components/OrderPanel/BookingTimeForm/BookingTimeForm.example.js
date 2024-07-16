@@ -1,6 +1,7 @@
 import loadable from "@loadable/component";
-import { types as sdkTypes } from "../../../util/sdkLoader";
+
 import { injectIntl } from "../../../util/reactIntl";
+import { types as sdkTypes } from "../../../util/sdkLoader";
 import { LINE_ITEM_HOUR, TIME_SLOT_TIME } from "../../../util/types";
 
 const BookingTimeForm = loadable(

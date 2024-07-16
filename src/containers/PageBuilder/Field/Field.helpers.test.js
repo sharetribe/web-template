@@ -1,12 +1,12 @@
 import {
-	hasContent,
 	exposeContentAsChildren,
 	exposeContentString,
-	exposeLinkProps,
-	exposeImageProps,
 	exposeCustomAppearanceProps,
-	exposeYoutubeProps,
+	exposeImageProps,
+	exposeLinkProps,
 	exposeOpenGraphData,
+	exposeYoutubeProps,
+	hasContent,
 } from "./Field.helpers";
 
 describe("Field helpers", () => {

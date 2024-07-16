@@ -1,9 +1,8 @@
 import React from "react";
-import { bool, func, node, object, shape, string } from "prop-types";
 import classNames from "classnames";
+import { bool, func, node, object, shape, string } from "prop-types";
 
 import Field, { hasDataInFields } from "../../Field";
-
 import SectionContainer from "../SectionContainer";
 import css from "./SectionHero.module.css";
 

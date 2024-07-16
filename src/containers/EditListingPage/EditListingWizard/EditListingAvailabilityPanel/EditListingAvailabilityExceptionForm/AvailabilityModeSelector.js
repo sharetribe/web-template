@@ -1,6 +1,6 @@
 import React from "react";
-import { FieldRadioButton } from "../../../../../components";
 
+import { FieldRadioButton } from "../../../../../components";
 import css from "./AvailabilityModeSelector.module.css";
 
 const AvailabilityModeSelector = (props) => {

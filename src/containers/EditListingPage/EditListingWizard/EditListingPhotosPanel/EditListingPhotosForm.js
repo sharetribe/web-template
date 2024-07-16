@@ -1,25 +1,23 @@
 import React, { useState } from "react";
+import { Field, Form as FinalForm } from "react-final-form";
+import { FieldArray } from "react-final-form-arrays";
+import classNames from "classnames";
+import { ARRAY_ERROR } from "final-form";
+import arrayMutators from "final-form-arrays";
+import isEqual from "lodash/isEqual";
 import { bool, func, object, shape, string } from "prop-types";
 import { compose } from "redux";
-import { ARRAY_ERROR } from "final-form";
-import { Form as FinalForm, Field } from "react-final-form";
-import arrayMutators from "final-form-arrays";
-import { FieldArray } from "react-final-form-arrays";
-import isEqual from "lodash/isEqual";
-import classNames from "classnames";
-
-// Import configs and util modules
-import { FormattedMessage, intlShape, injectIntl } from "../../../../util/reactIntl";
-import { propTypes } from "../../../../util/types";
-import { nonEmptyArray, composeValidators } from "../../../../util/validators";
-import { isUploadImageOverLimitError } from "../../../../util/errors";
 
 // Import shared components
-import { Button, Form, AspectRatioWrapper } from "../../../../components";
-
+import { AspectRatioWrapper, Button, Form } from "../../../../components";
+import { isUploadImageOverLimitError } from "../../../../util/errors";
+// Import configs and util modules
+import { FormattedMessage, injectIntl, intlShape } from "../../../../util/reactIntl";
+import { propTypes } from "../../../../util/types";
+import { composeValidators, nonEmptyArray } from "../../../../util/validators";
+import css from "./EditListingPhotosForm.module.css";
 // Import modules from this directory
 import ListingImage from "./ListingImage";
-import css from "./EditListingPhotosForm.module.css";
 
 const ACCEPT_IMAGES = "image/*";
 

@@ -1,12 +1,11 @@
 import React from "react";
-import { string } from "prop-types";
 import classNames from "classnames";
+import { string } from "prop-types";
 
+import { FieldTextInput } from "../../components";
 import { intlShape } from "../../util/reactIntl";
 import { propTypes } from "../../util/types";
 import * as validators from "../../util/validators";
-
-import { FieldTextInput } from "../../components";
 
 const UserFieldDisplayName = (props) => {
 	const { rootClassName, className, formId, formName, userTypeConfig, intl } = props;

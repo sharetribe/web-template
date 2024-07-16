@@ -1,7 +1,8 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { stringify, parse } from "../../../util/urlHelpers";
+
 import { SCHEMA_TYPE_MULTI_ENUM } from "../../../util/types";
+import { parse, stringify } from "../../../util/urlHelpers";
 import SelectMultipleFilter from "./SelectMultipleFilter";
 
 const URL_PARAM = "pub_amenities";

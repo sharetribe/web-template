@@ -1,15 +1,14 @@
 import React from "react";
-import { func, object, string } from "prop-types";
 import classNames from "classnames";
+import { func, object, string } from "prop-types";
 
 // Import shared components
 import {
 	AspectRatioWrapper,
+	IconSpinner,
 	ImageFromFile,
 	ResponsiveImage,
-	IconSpinner,
 } from "../../../../components";
-
 // Import modules from this directory
 import css from "./ListingImage.module.css";
 

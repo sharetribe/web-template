@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { H3, IconCheckmark } from "../../components";
-import Button, { PrimaryButton, SecondaryButton, InlineTextButton } from "./Button";
 
+import { H3, IconCheckmark } from "../../components";
+import Button, { InlineTextButton, PrimaryButton, SecondaryButton } from "./Button";
 import css from "./ButtonExample.module.css";
 
 const preventDefault = (e) => {

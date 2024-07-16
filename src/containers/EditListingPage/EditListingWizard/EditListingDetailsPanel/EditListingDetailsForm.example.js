@@ -1,6 +1,5 @@
 import defaultConfig from "../../../../config/configDefault";
 import { pickCategoryFields } from "../../../../util/fieldHelpers";
-
 import EditListingDetailsForm from "./EditListingDetailsForm";
 
 const noop = () => {};

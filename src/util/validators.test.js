@@ -1,14 +1,14 @@
 import { types as sdkTypes } from "./sdkLoader";
 import {
-	required,
-	requiredStringNoTrim,
-	minLength,
-	maxLength,
-	moneySubUnitAmountAtLeast,
 	composeValidators,
+	maxLength,
+	minLength,
+	moneySubUnitAmountAtLeast,
+	required,
+	requiredSelectTreeOption,
+	requiredStringNoTrim,
 	validBusinessURL,
 	validHKID,
-	requiredSelectTreeOption,
 } from "./validators";
 
 const { Money } = sdkTypes;

@@ -1,1 +1,1 @@
-export { MarkdownImage, FieldImage } from "./Image";
+export { FieldImage, MarkdownImage } from "./Image";

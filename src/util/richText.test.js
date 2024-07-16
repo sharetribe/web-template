@@ -1,14 +1,14 @@
 import React from "react";
-import "@testing-library/jest-dom";
 
 import { renderWithProviders as render } from "../util/testHelpers";
-
 import {
-	zwspAroundSpecialCharsSplit,
 	linkifyOrWrapLinkSplit,
-	wrapLongWord,
 	richText,
+	wrapLongWord,
+	zwspAroundSpecialCharsSplit,
 } from "./richText";
+
+import "@testing-library/jest-dom";
 
 describe("richText", () => {
 	// There variables contain zero-width-space on both sides of the visible character.

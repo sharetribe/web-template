@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import { arrayOf, func, node, number, shape, string } from "prop-types";
 import classNames from "classnames";
-
-import { injectIntl, intlShape } from "../../../util/reactIntl";
-import { formatCurrencyMajorUnit } from "../../../util/currency";
+import { arrayOf, func, node, number, shape, string } from "prop-types";
 
 import { OutsideClickHandler } from "../../../components";
-
+import { formatCurrencyMajorUnit } from "../../../util/currency";
+import { injectIntl, intlShape } from "../../../util/reactIntl";
 import PopupOpenerButton from "../PopupOpenerButton/PopupOpenerButton";
 import PriceFilterForm from "../PriceFilterForm/PriceFilterForm";
 import css from "./PriceFilterPopup.module.css";

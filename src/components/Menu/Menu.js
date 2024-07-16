@@ -17,8 +17,8 @@
  */
 
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
+import PropTypes from "prop-types";
 
 import { MenuContent, MenuLabel } from "../../components";
 import css from "./Menu.module.css";

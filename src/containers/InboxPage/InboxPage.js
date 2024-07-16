@@ -1,52 +1,48 @@
 import React from "react";
-import { arrayOf, bool, number, oneOf, shape, string } from "prop-types";
-import { compose } from "redux";
 import { connect } from "react-redux";
 import classNames from "classnames";
+import { arrayOf, bool, number, oneOf, shape, string } from "prop-types";
+import { compose } from "redux";
 
-import { useConfiguration } from "../../context/configurationContext";
-
-import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
 import {
-	propTypes,
-	DATE_TYPE_DATE,
-	DATE_TYPE_DATETIME,
-	LINE_ITEM_NIGHT,
-	LINE_ITEM_HOUR,
-	LISTING_UNIT_TYPES,
-	STOCK_MULTIPLE_ITEMS,
-} from "../../util/types";
-import { subtractTime } from "../../util/dates";
-import {
-	TX_TRANSITION_ACTOR_CUSTOMER,
-	TX_TRANSITION_ACTOR_PROVIDER,
-	resolveLatestProcessName,
-	getProcess,
-	isBookingProcess,
-} from "../../transactions/transaction";
-
-import { getMarketplaceEntities } from "../../ducks/marketplaceData.duck";
-import { isScrollingDisabled } from "../../ducks/ui.duck";
-import {
-	H2,
 	Avatar,
+	H2,
+	IconSpinner,
+	LayoutSideNavigation,
 	NamedLink,
 	NotificationBadge,
 	Page,
 	PaginationLinks,
 	TabNav,
-	IconSpinner,
 	TimeRange,
 	UserDisplayName,
-	LayoutSideNavigation,
 } from "../../components";
-
-import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
 import FooterContainer from "../../containers/FooterContainer/FooterContainer";
 import NotFoundPage from "../../containers/NotFoundPage/NotFoundPage";
-
-import { stateDataShape, getStateData } from "./InboxPage.stateData";
+import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
+import { useConfiguration } from "../../context/configurationContext";
+import { getMarketplaceEntities } from "../../ducks/marketplaceData.duck";
+import { isScrollingDisabled } from "../../ducks/ui.duck";
+import {
+	getProcess,
+	isBookingProcess,
+	resolveLatestProcessName,
+	TX_TRANSITION_ACTOR_CUSTOMER,
+	TX_TRANSITION_ACTOR_PROVIDER,
+} from "../../transactions/transaction";
+import { subtractTime } from "../../util/dates";
+import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
+import {
+	DATE_TYPE_DATE,
+	DATE_TYPE_DATETIME,
+	LINE_ITEM_HOUR,
+	LINE_ITEM_NIGHT,
+	LISTING_UNIT_TYPES,
+	propTypes,
+	STOCK_MULTIPLE_ITEMS,
+} from "../../util/types";
 import css from "./InboxPage.module.css";
+import { getStateData, stateDataShape } from "./InboxPage.stateData";
 
 // Check if the transaction line-items use booking-related units
 const getUnitLineItem = (lineItems) => {

@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { func, object, shape, string } from "prop-types";
 import { Field } from "react-final-form";
 import loadable from "@loadable/component";
+import { func, object, shape, string } from "prop-types";
+
 import { ValidationError } from "../../components";
 
 // LocationAutocompleteInputImpl is a big component that includes code for both Mapbox and Google Maps
