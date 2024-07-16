@@ -287,7 +287,10 @@ class PaymentMethodsForm extends Component {
 	}
 
 	render() {
-		const { onSubmit, ...rest } = this.props;
+		const {
+			// onSubmit,
+			...rest
+		} = this.props;
 		return <FinalForm onSubmit={this.handleSubmit} {...rest} render={this.paymentForm} />;
 	}
 }
