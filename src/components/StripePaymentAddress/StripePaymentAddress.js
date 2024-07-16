@@ -1,11 +1,10 @@
 import React from "react";
 import { bool, object, string } from "prop-types";
 
+import { FieldSelect, FieldTextInput } from "../../components";
+import getCountryCodes from "../../translations/countryCodes";
 import { intlShape } from "../../util/reactIntl";
 import * as validators from "../../util/validators";
-import getCountryCodes from "../../translations/countryCodes";
-import { FieldTextInput, FieldSelect } from "../../components";
-
 import css from "./StripePaymentAddress.module.css";
 
 const StripePaymentAddress = (props) => {

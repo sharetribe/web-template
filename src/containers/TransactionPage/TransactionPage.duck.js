@@ -1,25 +1,24 @@
+import isEmpty from "lodash/isEmpty";
 import pick from "lodash/pick";
 import pickBy from "lodash/pickBy";
-import isEmpty from "lodash/isEmpty";
-
-import { types as sdkTypes, createImageVariantConfig } from "../../util/sdkLoader";
-import { findNextBoundary, getStartOf, monthIdString } from "../../util/dates";
-import { isTransactionsTransitionInvalidTransition, storableError } from "../../util/errors";
-import { transactionLineItems } from "../../util/api";
-import * as log from "../../util/log";
-import {
-	updatedEntities,
-	denormalisedEntities,
-	denormalisedResponseEntities,
-} from "../../util/data";
-import {
-	resolveLatestProcessName,
-	getProcess,
-	isBookingProcess,
-} from "../../transactions/transaction";
 
 import { addMarketplaceEntities } from "../../ducks/marketplaceData.duck";
 import { fetchCurrentUserNotifications } from "../../ducks/user.duck";
+import {
+	getProcess,
+	isBookingProcess,
+	resolveLatestProcessName,
+} from "../../transactions/transaction";
+import { transactionLineItems } from "../../util/api";
+import {
+	denormalisedEntities,
+	denormalisedResponseEntities,
+	updatedEntities,
+} from "../../util/data";
+import { findNextBoundary, getStartOf, monthIdString } from "../../util/dates";
+import { isTransactionsTransitionInvalidTransition, storableError } from "../../util/errors";
+import * as log from "../../util/log";
+import { createImageVariantConfig, types as sdkTypes } from "../../util/sdkLoader";
 
 const { UUID } = sdkTypes;
 
@@ -312,25 +311,31 @@ const timeSlotsRequest = (params) => (dispatch, getState, sdk) => {
 	});
 };
 
-export const fetchTimeSlots = (listingId, start, end, timeZone) => (dispatch, getState, sdk) => {
-	const monthId = monthIdString(start, timeZone);
+export const fetchTimeSlots =
+	(listingId, start, end, timeZone) =>
+	(
+		dispatch,
+		// getState,
+		// sdk
+	) => {
+		const monthId = monthIdString(start, timeZone);
 
-	dispatch(fetchTimeSlotsRequest(monthId));
+		dispatch(fetchTimeSlotsRequest(monthId));
 
-	// The maximum pagination page size for timeSlots is 500
-	const extraParams = {
-		perPage: 500,
-		page: 1,
+		// The maximum pagination page size for timeSlots is 500
+		const extraParams = {
+			perPage: 500,
+			page: 1,
+		};
+
+		return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
+			.then((timeSlots) => {
+				dispatch(fetchTimeSlotsSuccess(monthId, timeSlots));
+			})
+			.catch((e) => {
+				dispatch(fetchTimeSlotsError(monthId, storableError(e)));
+			});
 	};
-
-	return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
-		.then((timeSlots) => {
-			dispatch(fetchTimeSlotsSuccess(monthId, timeSlots));
-		})
-		.catch((e) => {
-			dispatch(fetchTimeSlotsError(monthId, storableError(e)));
-		});
-};
 
 // Helper function for loadData call.
 const fetchMonthlyTimeSlots = (dispatch, listing) => {
@@ -427,7 +432,7 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
 					fetchMonthlyTimeSlots(dispatch, listing);
 				}
 			} catch (error) {
-				console.log(`transaction process (${processName}) was not recognized`);
+				console.error(`transaction process (${processName}) was not recognized`);
 			}
 
 			const canFetchListing = listing && listing.attributes && !listing.attributes.deleted;
@@ -475,6 +480,7 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
 		})
 		.catch((e) => {
 			// refresh failed, but we don't act upon it.
+			// eslint-disable-next-line no-console
 			console.log("error", e);
 		});
 };
@@ -551,16 +557,22 @@ const fetchMessages = (txId, page, config) => (dispatch, getState, sdk) => {
 		});
 };
 
-export const fetchMoreMessages = (txId, config) => (dispatch, getState, sdk) => {
-	const state = getState();
-	const { oldestMessagePageFetched, totalMessagePages } = state.TransactionPage;
-	const hasMoreOldMessages = totalMessagePages > oldestMessagePageFetched;
+export const fetchMoreMessages =
+	(txId, config) =>
+	(
+		dispatch,
+		getState,
+		// sdk
+	) => {
+		const state = getState();
+		const { oldestMessagePageFetched, totalMessagePages } = state.TransactionPage;
+		const hasMoreOldMessages = totalMessagePages > oldestMessagePageFetched;
 
-	// In case there're no more old pages left we default to fetching the current cursor position
-	const nextPage = hasMoreOldMessages ? oldestMessagePageFetched + 1 : oldestMessagePageFetched;
+		// In case there're no more old pages left we default to fetching the current cursor position
+		const nextPage = hasMoreOldMessages ? oldestMessagePageFetched + 1 : oldestMessagePageFetched;
 
-	return dispatch(fetchMessages(txId, nextPage, config));
-};
+		return dispatch(fetchMessages(txId, nextPage, config));
+	};
 
 export const sendMessage = (txId, message, config) => (dispatch, getState, sdk) => {
 	dispatch(sendMessageRequest());
@@ -646,7 +658,12 @@ const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config) => {
 };
 
 export const sendReview =
-	(tx, transitionOptionsInfo, params, config) => (dispatch, getState, sdk) => {
+	(tx, transitionOptionsInfo, params, config) =>
+	(
+		dispatch,
+		_, // getState
+		sdk,
+	) => {
 		const { reviewAsFirst, reviewAsSecond, hasOtherPartyReviewedFirst } = transitionOptionsInfo;
 		dispatch(sendReviewRequest());
 

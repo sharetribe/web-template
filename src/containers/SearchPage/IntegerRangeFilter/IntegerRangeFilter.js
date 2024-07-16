@@ -1,14 +1,12 @@
 import React, { useRef } from "react";
+import classNames from "classnames";
+import debounce from "lodash/debounce";
 import { arrayOf, bool, func, node, object, string } from "prop-types";
 
-import debounce from "lodash/debounce";
-import classNames from "classnames";
-
+import { FormattedMessage } from "../../../util/reactIntl";
 import FilterPlain from "../FilterPlain/FilterPlain";
 import FilterPopup from "../FilterPopup/FilterPopup";
 import FieldSelectIntegerRange from "./FieldSelectIntegerRange";
-
-import { FormattedMessage } from "../../../util/reactIntl";
 import css from "./IntegerRangeFilter.module.css";
 
 const RADIX = 10;
@@ -44,10 +42,10 @@ const IntegerRangeFilter = (props) => {
 		label,
 		rootClassName,
 		className,
-		intl,
 		id,
 		name,
 		showAsPopup,
+		// intl,
 		...rest
 	} = props;
 
@@ -105,7 +103,8 @@ const IntegerRangeFilter = (props) => {
 	);
 
 	// If we don't have a specific function here, there will be a delay when pressing clear
-	const handleClear = (values) => {
+	/** @param {*} [values] */
+	const handleClear = () => {
 		// Sets the bypass flag to true, instructing the debounced handleSubmit to skip its next invocation.
 		bypassDebounce.current = true;
 		handleSubmit(null);

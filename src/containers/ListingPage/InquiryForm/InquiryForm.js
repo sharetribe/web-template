@@ -1,16 +1,14 @@
 import React from "react";
-import { string, bool } from "prop-types";
-import { compose } from "redux";
 import { Form as FinalForm } from "react-final-form";
 import classNames from "classnames";
+import { bool, string } from "prop-types";
+import { compose } from "redux";
 
-import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
-import * as validators from "../../../util/validators";
-import { propTypes } from "../../../util/types";
+import { FieldTextInput, Form, Heading, IconInquiry, PrimaryButton } from "../../../components";
 import { isTooManyRequestsError } from "../../../util/errors";
-
-import { Form, PrimaryButton, FieldTextInput, IconInquiry, Heading } from "../../../components";
-
+import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
+import { propTypes } from "../../../util/types";
+import * as validators from "../../../util/validators";
 import css from "./InquiryForm.module.css";
 
 const ErrorMessage = (props) => {

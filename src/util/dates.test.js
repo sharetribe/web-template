@@ -1,26 +1,26 @@
-import { createIntl, createIntlCache } from "./reactIntl";
 import {
+	daysBetween,
+	diffInTime,
+	findNextBoundary,
+	formatDateIntoPartials,
+	formatDateWithProximity,
+	getEndHours,
+	getSharpHours,
+	getStartHours,
+	getStartOf,
+	getStartOfWeek,
 	getTimeZoneNames,
 	isDate,
+	isInRange,
 	isSameDate,
 	isSameDay,
-	isInRange,
-	getStartOf,
-	daysBetween,
 	minutesBetween,
-	diffInTime,
-	formatDateWithProximity,
-	formatDateIntoPartials,
+	monthIdString,
 	parseDateFromISO8601,
 	parseDateTimeString,
 	stringifyDateToISO8601,
-	findNextBoundary,
-	getSharpHours,
-	getStartHours,
-	getEndHours,
-	monthIdString,
-	getStartOfWeek,
 } from "./dates";
+import { createIntl, createIntlCache } from "./reactIntl";
 
 describe("date utils", () => {
 	const cache = createIntlCache();

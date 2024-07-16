@@ -1,10 +1,9 @@
 import React from "react";
-import { oneOf, string } from "prop-types";
 import classNames from "classnames";
+import { oneOf, string } from "prop-types";
 
-import { useConfiguration } from "../../context/configurationContext";
 import { ResponsiveImage } from "../../components/";
-
+import { useConfiguration } from "../../context/configurationContext";
 import css from "./Logo.module.css";
 
 const HEIGHT_24 = 24;

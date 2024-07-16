@@ -1,32 +1,28 @@
 import React from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { compose } from "redux";
-import { connect } from "react-redux";
-
-import { useConfiguration } from "../../context/configurationContext";
-import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
-import { propTypes } from "../../util/types";
-import { isPasswordRecoveryEmailNotFoundError } from "../../util/errors";
-import { isScrollingDisabled } from "../../ducks/ui.duck";
 
 import {
 	Heading,
-	Page,
-	InlineTextButton,
 	IconKeys,
-	ResponsiveBackgroundImageContainer,
+	InlineTextButton,
 	LayoutSingleColumn,
+	Page,
+	ResponsiveBackgroundImageContainer,
 } from "../../components";
-
-import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
 import FooterContainer from "../../containers/FooterContainer/FooterContainer";
-
+import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
+import { useConfiguration } from "../../context/configurationContext";
+import { isScrollingDisabled } from "../../ducks/ui.duck";
+import { isPasswordRecoveryEmailNotFoundError } from "../../util/errors";
+import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
+import { propTypes } from "../../util/types";
 import PasswordRecoveryForm from "./PasswordRecoveryForm/PasswordRecoveryForm";
-
 import {
+	clearPasswordRecoveryError,
 	recoverPassword,
 	retypePasswordRecoveryEmail,
-	clearPasswordRecoveryError,
 } from "./PasswordRecoveryPage.duck";
 import css from "./PasswordRecoveryPage.module.css";
 

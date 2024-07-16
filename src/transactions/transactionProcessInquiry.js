@@ -71,14 +71,16 @@ export const isRelevantPastTransition = (transition) => {
 // Processes might be different on how reviews are handled.
 // Default processes use two-sided diamond shape, where either party can make the review first
 // NOTE: this functions is added just for the sake of consistency
-export const isCustomerReview = (transition) => {
+/** @param {*} transition */
+export const isCustomerReview = () => {
 	return false;
 };
 
 // Processes might be different on how reviews are handled.
 // Default processes use two-sided diamond shape, where either party can make the review first
 // NOTE: this functions is added just for the sake of consistency
-export const isProviderReview = (transition) => {
+/** @param {*} transition */
+export const isProviderReview = () => {
 	return false;
 };
 
@@ -89,20 +91,23 @@ export const isProviderReview = (transition) => {
 // should go through the local API endpoints, or if using JS SDK is
 // enough.
 // NOTE: this functions is added just for the sake of consistency
-export const isPrivileged = (transition) => {
+/** @param {*} transition */
+export const isPrivileged = () => {
 	return false;
 };
 
 // Check when transaction is completed (booking over)
 // NOTE: this functions is added just for the sake of consistency
-export const isCompleted = (transition) => {
+/** @param {*} transition */
+export const isCompleted = () => {
 	return false;
 };
 
 // Check when transaction is refunded (booking did not happen)
 // In these transitions action/stripe-refund-payment is called
 // NOTE: this functions is added just for the sake of consistency
-export const isRefunded = (transition) => {
+/** @param {*} transition */
+export const isRefunded = () => {
 	return false;
 };
 

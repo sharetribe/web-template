@@ -1,11 +1,11 @@
 import React from "react";
-import "@testing-library/jest-dom";
 
-import { renderWithProviders as render, testingLibrary } from "../../../util/testHelpers";
 import { fakeIntl } from "../../../util/testData";
-
+import { renderWithProviders as render, testingLibrary } from "../../../util/testHelpers";
 import TermsAndConditions from "../TermsAndConditions/TermsAndConditions";
 import ConfirmSignupForm from "./ConfirmSignupForm";
+
+import "@testing-library/jest-dom";
 
 const { screen, fireEvent, userEvent, waitFor } = testingLibrary;
 

@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
 import React from "react";
-import PropTypes from "prop-types";
 import { Form as FinalForm, FormSpy } from "react-final-form";
+import PropTypes from "prop-types";
+
 import { IntlProvider } from "../../util/reactIntl";
 import { currencyConfig } from "../../util/testData";
 import * as validators from "../../util/validators";

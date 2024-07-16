@@ -1,8 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { FormattedMessage } from "../../util/reactIntl";
 import classNames from "classnames";
+import PropTypes from "prop-types";
 
+import { FormattedMessage } from "../../util/reactIntl";
 import css from "./StripeBankAccountTokenInputField.module.css";
 
 const StripeBankAccountRequiredInput = (props) => {

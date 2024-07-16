@@ -1,31 +1,29 @@
 import React, { useEffect } from "react";
-import { bool, func, shape, string } from "prop-types";
-import { compose } from "redux";
 import { Form as FinalForm } from "react-final-form";
 import classNames from "classnames";
-
-// Import configs and util modules
-import appSettings from "../../../../config/settings";
-import { intlShape, injectIntl, FormattedMessage } from "../../../../util/reactIntl";
-import { propTypes } from "../../../../util/types";
-import { displayDeliveryPickup, displayDeliveryShipping } from "../../../../util/configHelpers";
-import {
-	autocompleteSearchRequired,
-	autocompletePlaceSelected,
-	composeValidators,
-	required,
-} from "../../../../util/validators";
+import { bool, func, shape, string } from "prop-types";
+import { compose } from "redux";
 
 // Import shared components
 import {
-	Form,
-	FieldLocationAutocompleteInput,
 	Button,
-	FieldCurrencyInput,
-	FieldTextInput,
 	FieldCheckbox,
+	FieldCurrencyInput,
+	FieldLocationAutocompleteInput,
+	FieldTextInput,
+	Form,
 } from "../../../../components";
-
+// Import configs and util modules
+import appSettings from "../../../../config/settings";
+import { displayDeliveryPickup, displayDeliveryShipping } from "../../../../util/configHelpers";
+import { FormattedMessage, injectIntl, intlShape } from "../../../../util/reactIntl";
+import { propTypes } from "../../../../util/types";
+import {
+	autocompletePlaceSelected,
+	autocompleteSearchRequired,
+	composeValidators,
+	required,
+} from "../../../../util/validators";
 // Import modules from this directory
 import css from "./EditListingDeliveryForm.module.css";
 

@@ -3,10 +3,10 @@
  * Clicking MenuLabel toggles visibility of MenuContent.
  */
 import React from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
-import { MenuItem } from "../../components";
+import PropTypes from "prop-types";
 
+import { MenuItem } from "../../components";
 import css from "./MenuContent.module.css";
 
 const MenuContent = (props) => {

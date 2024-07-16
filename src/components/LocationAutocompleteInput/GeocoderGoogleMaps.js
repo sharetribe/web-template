@@ -1,8 +1,8 @@
 import React from "react";
 import classNames from "classnames";
+
 import * as googleMapsUtil from "../../util/googleMaps";
 import { userLocation } from "../../util/maps";
-
 import css from "./LocationAutocompleteInput.module.css";
 
 export const CURRENT_LOCATION_ID = "current-location";

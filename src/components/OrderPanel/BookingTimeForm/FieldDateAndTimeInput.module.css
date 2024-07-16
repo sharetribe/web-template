@@ -6,15 +6,14 @@
 }
 
 .formRow {
+	/* This container uses flexbox layout */
+	display: flex;
+
 	/* parent aka root is flexbox, this container takes all available space */
 	flex-grow: 1;
 	flex-shrink: 0;
-
-	/* This container uses flexbox layout */
-	display: flex;
-	justify-content: center;
 	flex-wrap: wrap;
-
+	justify-content: center;
 	width: 100%;
 	margin-top: 30px;
 
@@ -30,9 +29,9 @@
 }
 
 .field {
+	position: relative;
 	display: flex;
 	align-items: flex-end;
-	position: relative;
 	width: 100%;
 
 	&:nth-child(2n) {
@@ -49,8 +48,8 @@
 }
 
 .fieldDisabled {
+	color: --colorgrey100;
 	background: none;
-	color: --colorGrey100;
 }
 
 .fieldDateInput {
@@ -61,21 +60,21 @@
 	flex-grow: 1;
 
 	&::after {
-		content: "";
-		display: block;
 		position: absolute;
 		bottom: 13px;
 		left: 11px;
-		background-image: url('data:image/svg+xml;utf8,<svg width="14" height="14" xmlns="http://www.w3.org/2000/svg"><g transform="translate(1 -3)" fill="none" fill-rule="evenodd"><circle stroke="%234A4A4A" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" cx="6" cy="10" r="6"/><g transform="translate(2 6)" fill="%234A4A4A"><rect x="3.5" width="1" height="5" rx=".5"/><rect transform="rotate(90 2.5 4.5)" x="2" y="2.5" width="1" height="4" rx=".5"/></g></g></svg>');
-		background-size: 12px 12px;
+		display: block;
 		width: 12px;
 		height: 12px;
+		content: "";
+		background-image: url('data:image/svg+xml;utf8,<svg width="14" height="14" xmlns="http://www.w3.org/2000/svg"><g transform="translate(1 -3)" fill="none" fill-rule="evenodd"><circle stroke="%234A4A4A" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" cx="6" cy="10" r="6"/><g transform="translate(2 6)" fill="%234A4A4A"><rect x="3.5" width="1" height="5" rx=".5"/><rect transform="rotate(90 2.5 4.5)" x="2" y="2.5" width="1" height="4" rx=".5"/></g></g></svg>');
+		background-size: 12px 12px;
 	}
 
 	@media (--viewportMedium) {
 		&::after {
-			left: 11px;
 			bottom: 19px;
+			left: 11px;
 		}
 	}
 }
@@ -84,28 +83,29 @@
 	composes: fieldSelect;
 
 	&::after {
-		content: "";
-		display: block;
 		position: absolute;
 		bottom: 13px;
 		left: 11px;
-		background-image: url('data:image/svg+xml;utf8,<svg width="14" height="14" xmlns="http://www.w3.org/2000/svg"><g transform="translate(1 -3)" fill="none" fill-rule="evenodd"><circle stroke="%23E6E6E6" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" cx="6" cy="10" r="6"/><g transform="translate(2 6)" fill="%23E6E6E6"><rect x="3.5" width="1" height="5" rx=".5"/><rect transform="rotate(90 2.5 4.5)" x="2" y="2.5" width="1" height="4" rx=".5"/></g></g></svg>');
-		background-size: 12px 12px;
+		display: block;
 		width: 12px;
 		height: 12px;
+		content: "";
+		background-image: url('data:image/svg+xml;utf8,<svg width="14" height="14" xmlns="http://www.w3.org/2000/svg"><g transform="translate(1 -3)" fill="none" fill-rule="evenodd"><circle stroke="%23E6E6E6" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" cx="6" cy="10" r="6"/><g transform="translate(2 6)" fill="%23E6E6E6"><rect x="3.5" width="1" height="5" rx=".5"/><rect transform="rotate(90 2.5 4.5)" x="2" y="2.5" width="1" height="4" rx=".5"/></g></g></svg>');
+		background-size: 12px 12px;
 	}
+
 	@media (--viewportMedium) {
 		&::after {
-			left: 11px;
 			bottom: 19px;
+			left: 11px;
 		}
 	}
 }
 
 .select {
 	position: relative;
-	padding-left: 30px;
 	padding-right: 16px;
+	padding-left: 30px;
 	background-image: url('data:image/svg+xml;utf8,<svg width="10" height="6" xmlns="http://www.w3.org/2000/svg"><path d="M4.686 5.315a.445.445 0 00.628 0L8.87 1.759a.444.444 0 10-.629-.628L5 4.37 1.759 1.13a.444.444 0 10-.628.628l3.555 3.556z" stroke="%234A4A4A" fill="%234A4A4A" fill-rule="evenodd"/></svg>');
 	background-size: 10px 6px;
 
@@ -120,8 +120,8 @@
 }
 
 .arrowIcon {
-	stroke: var(--colorWhite);
 	fill: var(--colorWhite);
+	stroke: var(--colorWhite);
 }
 
 /**
@@ -143,18 +143,20 @@ Remember to do required code changes also in FieldDateAndTimeInput.js!
 .startDate {
 	width: 100%;
 }
+
 .endDateHidden {
 	display: none;
 }
 
 .lineBetween,
 .lineBetweenDisabled {
-	margin: 33px 6px 0 6px;
+	margin: 33px 6px 0;
 
 	@media (--viewportMedium) {
-		margin: 40px 8px 0 8px;
+		margin: 40px 8px 0;
 	}
 }
+
 .lineBetweenDisabled {
 	color: var(--colorGrey100);
 }

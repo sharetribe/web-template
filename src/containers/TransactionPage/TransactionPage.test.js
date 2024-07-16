@@ -1,23 +1,20 @@
 import React from "react";
-import "@testing-library/jest-dom";
 import Decimal from "decimal.js";
-import "react-dates/initialize";
 
+import {
+	getProcess,
+	TX_TRANSITION_ACTOR_CUSTOMER,
+	TX_TRANSITION_ACTOR_PROVIDER,
+} from "../../transactions/transaction";
 import { types as sdkTypes } from "../../util/sdkLoader";
 import {
-	LINE_ITEM_DAY,
-	LINE_ITEM_HOUR,
-	LINE_ITEM_ITEM,
-	LINE_ITEM_PROVIDER_COMMISSION,
-} from "../../util/types";
-import {
-	createUser,
+	createBooking,
 	createCurrentUser,
 	createListing,
-	fakeIntl,
-	createTransaction,
-	createBooking,
 	createMessage,
+	createTransaction,
+	createUser,
+	fakeIntl,
 } from "../../util/testData";
 import {
 	getHostedConfiguration,
@@ -25,18 +22,24 @@ import {
 	renderWithProviders as render,
 	testingLibrary,
 } from "../../util/testHelpers";
-
 import {
-	TX_TRANSITION_ACTOR_CUSTOMER,
-	TX_TRANSITION_ACTOR_PROVIDER,
-	getProcess,
-} from "../../transactions/transaction";
-
-import { getStateData } from "./TransactionPage.stateData";
+	LINE_ITEM_DAY,
+	LINE_ITEM_HOUR,
+	LINE_ITEM_ITEM,
+	LINE_ITEM_PROVIDER_COMMISSION,
+} from "../../util/types";
 import { TransactionPageComponent } from "./TransactionPage";
+import { getStateData } from "./TransactionPage.stateData";
+
+import "@testing-library/jest-dom";
+import "react-dates/initialize";
 
 const { Money, UUID } = sdkTypes;
-const { screen, waitFor, within } = testingLibrary;
+const {
+	screen,
+	waitFor,
+	// within
+} = testingLibrary;
 const noop = () => null;
 
 const bookingTransitions = getProcess("default-booking")?.transitions;
@@ -299,100 +302,110 @@ describe("TransactionPage", () => {
 			};
 		});
 
-		test.each(purchases)("check purchase: $tr", ({ tr, tx, isReversal, isReceived }) => {
-			const transactionRole = TX_TRANSITION_ACTOR_CUSTOMER;
-			const isInquiry = tr === "transition/inquire";
+		test.each(purchases)(
+			"check purchase: $tr",
+			({
+				tr,
+				tx,
+				isReversal,
+				// isReceived
+			}) => {
+				const transactionRole = TX_TRANSITION_ACTOR_CUSTOMER;
+				const isInquiry = tr === "transition/inquire";
 
-			const stateData = getStateData(
-				{
+				const stateData = getStateData(
+					{
+						transaction: tx,
+						transactionRole,
+						intl: fakeIntl,
+						transitionInProgress: false,
+						transitionError: null,
+						onTransition: noop,
+						sendReviewInProgress: false,
+						sendReviewError: null,
+						onOpenReviewModal: noop,
+					},
+					process,
+				);
+
+				const props = {
+					...panelBaseProps,
+					currentUser: createCurrentUser(customerId),
 					transaction: tx,
 					transactionRole,
-					intl: fakeIntl,
-					transitionInProgress: false,
-					transitionError: null,
-					onTransition: noop,
-					sendReviewInProgress: false,
-					sendReviewError: null,
-					onOpenReviewModal: noop,
-				},
-				process,
-			);
+					params: {
+						id: tx.id?.uuid,
+					},
+				};
 
-			const props = {
-				...panelBaseProps,
-				currentUser: createCurrentUser(customerId),
-				transaction: tx,
-				transactionRole,
-				params: {
-					id: tx.id?.uuid,
-				},
-			};
+				render(<TransactionPageComponent {...props} />);
 
-			render(<TransactionPageComponent {...props} />);
+				const state = stateData.processState;
+				const providerTitle = `TransactionPage.${processName}.${transactionRole}.${state}.title`;
+				expect(screen.getByText(providerTitle)).toBeInTheDocument();
 
-			const state = stateData.processState;
-			const providerTitle = `TransactionPage.${processName}.${transactionRole}.${state}.title`;
-			expect(screen.getByText(providerTitle)).toBeInTheDocument();
+				expect(screen.getByText("TransactionPage.listingTitleMobile")).toBeInTheDocument();
 
-			expect(screen.getByText("TransactionPage.listingTitleMobile")).toBeInTheDocument();
+				// Order breakdown
+				const expectedLength = isInquiry ? 0 : 2;
+				expect(
+					screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
+				).toHaveLength(expectedLength);
+				expect(screen.queryAllByText("OrderBreakdown.baseUnitQuantity")).toHaveLength(
+					expectedLength,
+				);
+				expect(screen.queryAllByText("OrderBreakdown.subTotal")).toHaveLength(
+					isReversal ? expectedLength : 0,
+				);
+				expect(screen.queryAllByText("$10.00")).toHaveLength(
+					isReversal ? expectedLength * 3 : expectedLength * 2,
+				); // base, subtotal, total
 
-			// Order breakdown
-			const expectedLength = isInquiry ? 0 : 2;
-			expect(
-				screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
-			).toHaveLength(expectedLength);
-			expect(screen.queryAllByText("OrderBreakdown.baseUnitQuantity")).toHaveLength(expectedLength);
-			expect(screen.queryAllByText("OrderBreakdown.subTotal")).toHaveLength(
-				isReversal ? expectedLength : 0,
-			);
-			expect(screen.queryAllByText("$10.00")).toHaveLength(
-				isReversal ? expectedLength * 3 : expectedLength * 2,
-			); // base, subtotal, total
+				// Order breakdown: refund?
+				const expectedLengthReversal = isReversal ? 2 : 0;
+				expect(screen.queryAllByText("OrderBreakdown.refund")).toHaveLength(expectedLengthReversal);
+				expect(screen.queryAllByText("-$10.00")).toHaveLength(expectedLengthReversal);
 
-			// Order breakdown: refund?
-			const expectedLengthReversal = isReversal ? 2 : 0;
-			expect(screen.queryAllByText("OrderBreakdown.refund")).toHaveLength(expectedLengthReversal);
-			expect(screen.queryAllByText("-$10.00")).toHaveLength(expectedLengthReversal);
+				// Order breakdown: commission (customer should no see this)
+				expect(screen.queryAllByText("OrderBreakdown.commission")).toHaveLength(0);
+				expect(screen.queryAllByText("-$1.00")).toHaveLength(0);
 
-			// Order breakdown: commission (customer should no see this)
-			expect(screen.queryAllByText("OrderBreakdown.commission")).toHaveLength(0);
-			expect(screen.queryAllByText("-$1.00")).toHaveLength(0);
+				// Order breakdown: commission refund? (customer should no see this)
+				expect(screen.queryAllByText("OrderBreakdown.refundProviderFee")).toHaveLength(0);
 
-			// Order breakdown: commission refund? (customer should no see this)
-			expect(screen.queryAllByText("OrderBreakdown.refundProviderFee")).toHaveLength(0);
+				// Order breakdown: total (with multiple translation keys)
+				const total = "OrderBreakdown.total";
+				const expectedTotal = isReversal ? expectedLengthReversal : expectedLength;
+				expect(screen.queryAllByText(total)).toHaveLength(expectedTotal);
 
-			// Order breakdown: total (with multiple translation keys)
-			const total = "OrderBreakdown.total";
-			const expectedTotal = isReversal ? expectedLengthReversal : expectedLength;
-			expect(screen.queryAllByText(total)).toHaveLength(expectedTotal);
+				// A note about commission (customer should no see this)
+				expect(screen.queryAllByText("OrderBreakdown.commissionFeeNote")).toHaveLength(0);
 
-			// A note about commission (customer should no see this)
-			expect(screen.queryAllByText("OrderBreakdown.commissionFeeNote")).toHaveLength(0);
+				// Activity feed (here we just check the heading)
+				expect(screen.getByText("TransactionPanel.activityHeading")).toBeInTheDocument();
 
-			// Activity feed (here we just check the heading)
-			expect(screen.getByText("TransactionPanel.activityHeading")).toBeInTheDocument();
+				// Listing's title (side card)
+				// NOTE: OrderPanel is codes-plitted and "test.each" don't work with async setup
 
-			// Listing's title (side card)
-			// NOTE: OrderPanel is codes-plitted and "test.each" don't work with async setup
+				expect(screen.queryAllByText("listing-item title")).toHaveLength(isInquiry ? 0 : 1);
 
-			expect(screen.queryAllByText("listing-item title")).toHaveLength(isInquiry ? 0 : 1);
+				// Primary action button
+				// E.g.
+				// TransactionPage.default-purchase.customer.transition-mark-received-from-purchased.actionButton
+				// TransactionPage.default-purchase.customer.transition-mark-received.actionButton
+				// TransactionPage.leaveReview.actionButton (twice)
+				const primaryButtonText = stateData.primaryButtonProps?.buttonText || "no-button";
+				// length == 2 => mobile & desktop are rendered separately
+				const expectedLengthPrimary = stateData.primaryButtonProps?.buttonText ? 2 : 0;
+				expect(screen.queryAllByText(primaryButtonText)).toHaveLength(expectedLengthPrimary);
 
-			// Primary action button
-			// E.g.
-			// TransactionPage.default-purchase.customer.transition-mark-received-from-purchased.actionButton
-			// TransactionPage.default-purchase.customer.transition-mark-received.actionButton
-			// TransactionPage.leaveReview.actionButton (twice)
-			const primaryButtonText = stateData.primaryButtonProps?.buttonText || "no-button";
-			// length == 2 => mobile & desktop are rendered separately
-			const expectedLengthPrimary = stateData.primaryButtonProps?.buttonText ? 2 : 0;
-			expect(screen.queryAllByText(primaryButtonText)).toHaveLength(expectedLengthPrimary);
-
-			// Messaging
-			const sendMsg = screen.getByPlaceholderText("TransactionPanel.sendMessagePlaceholder");
-			expect(sendMsg).toBeInTheDocument();
-			const sendMsgButton = screen.queryByRole("button", { name: "SendMessageForm.sendMessage" });
-			expect(sendMsgButton).toBeInTheDocument();
-		});
+				// Messaging
+				const sendMsg = screen.getByPlaceholderText("TransactionPanel.sendMessagePlaceholder");
+				expect(sendMsg).toBeInTheDocument();
+				const sendMsgButton = screen.queryByRole("button", { name: "SendMessageForm.sendMessage" });
+				expect(sendMsgButton).toBeInTheDocument();
+			},
+		);
 	});
 
 	// BOOKING SALE
@@ -625,106 +638,114 @@ describe("TransactionPage", () => {
 			};
 		});
 
-		test.each(bookings)("check booking: $tr", ({ tr, tx, isReversal, isReceived }) => {
-			const transactionRole = TX_TRANSITION_ACTOR_CUSTOMER;
-			const isInquiry = tr === "transition/inquire";
+		test.each(bookings)(
+			"check booking: $tr",
+			({
+				tr,
+				tx,
+				isReversal,
+				// isReceived
+			}) => {
+				const transactionRole = TX_TRANSITION_ACTOR_CUSTOMER;
+				const isInquiry = tr === "transition/inquire";
 
-			const stateData = getStateData(
-				{
+				const stateData = getStateData(
+					{
+						transaction: tx,
+						transactionRole,
+						intl: fakeIntl,
+						transitionInProgress: false,
+						transitionError: null,
+						onTransition: noop,
+						sendReviewInProgress: false,
+						sendReviewError: null,
+						onOpenReviewModal: noop,
+					},
+					process,
+				);
+
+				const props = {
+					...panelBaseProps,
+					currentUser: createCurrentUser(customerId),
 					transaction: tx,
 					transactionRole,
-					intl: fakeIntl,
-					transitionInProgress: false,
-					transitionError: null,
-					onTransition: noop,
-					sendReviewInProgress: false,
-					sendReviewError: null,
-					onOpenReviewModal: noop,
-				},
-				process,
-			);
+					params: {
+						id: tx.id?.uuid,
+					},
+				};
 
-			const props = {
-				...panelBaseProps,
-				currentUser: createCurrentUser(customerId),
-				transaction: tx,
-				transactionRole,
-				params: {
-					id: tx.id?.uuid,
-				},
-			};
+				render(<TransactionPageComponent {...props} />);
 
-			render(<TransactionPageComponent {...props} />);
+				const state = stateData.processState;
+				const txTitle = `TransactionPage.${processName}.${transactionRole}.${state}.title`;
+				expect(screen.getByText(txTitle)).toBeInTheDocument();
 
-			const state = stateData.processState;
-			const txTitle = `TransactionPage.${processName}.${transactionRole}.${state}.title`;
-			expect(screen.getByText(txTitle)).toBeInTheDocument();
+				expect(screen.getByText("TransactionPage.listingTitleMobile")).toBeInTheDocument();
 
-			expect(screen.getByText("TransactionPage.listingTitleMobile")).toBeInTheDocument();
+				// Order breakdown
+				const expectedLength = isInquiry ? 0 : 2;
+				expect(
+					screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
+				).toHaveLength(expectedLength);
 
-			// Order breakdown
-			const expectedLength = isInquiry ? 0 : 2;
-			expect(
-				screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
-			).toHaveLength(expectedLength);
+				expect(screen.queryAllByText("OrderBreakdown.bookingStart")).toHaveLength(expectedLength);
+				expect(screen.queryAllByText("Tuesday")).toHaveLength(expectedLength * 2);
+				expect(screen.queryAllByText("Jun 14")).toHaveLength(expectedLength * 2);
+				expect(screen.queryAllByText("OrderBreakdown.bookingEnd")).toHaveLength(expectedLength);
+				//expect(screen.queryAllByText('Tuesday')).toHaveLength(expectedLength);
+				//expect(screen.queryAllByText('Jun 14')).toHaveLength(expectedLength);
 
-			expect(screen.queryAllByText("OrderBreakdown.bookingStart")).toHaveLength(expectedLength);
-			expect(screen.queryAllByText("Tuesday")).toHaveLength(expectedLength * 2);
-			expect(screen.queryAllByText("Jun 14")).toHaveLength(expectedLength * 2);
-			expect(screen.queryAllByText("OrderBreakdown.bookingEnd")).toHaveLength(expectedLength);
-			//expect(screen.queryAllByText('Tuesday')).toHaveLength(expectedLength);
-			//expect(screen.queryAllByText('Jun 14')).toHaveLength(expectedLength);
+				expect(screen.queryAllByText("OrderBreakdown.baseUnitDay")).toHaveLength(expectedLength);
+				expect(screen.queryAllByText("OrderBreakdown.subTotal")).toHaveLength(
+					isReversal ? expectedLength : 0,
+				);
+				expect(screen.queryAllByText("$10.00")).toHaveLength(
+					isReversal ? expectedLength * 3 : expectedLength * 2,
+				); // base, subtotal, total
 
-			expect(screen.queryAllByText("OrderBreakdown.baseUnitDay")).toHaveLength(expectedLength);
-			expect(screen.queryAllByText("OrderBreakdown.subTotal")).toHaveLength(
-				isReversal ? expectedLength : 0,
-			);
-			expect(screen.queryAllByText("$10.00")).toHaveLength(
-				isReversal ? expectedLength * 3 : expectedLength * 2,
-			); // base, subtotal, total
+				// Order breakdown: refund?
+				const expectedLengthReversal = isReversal ? 2 : 0;
+				expect(screen.queryAllByText("OrderBreakdown.refund")).toHaveLength(expectedLengthReversal);
+				expect(screen.queryAllByText("-$10.00")).toHaveLength(expectedLengthReversal);
 
-			// Order breakdown: refund?
-			const expectedLengthReversal = isReversal ? 2 : 0;
-			expect(screen.queryAllByText("OrderBreakdown.refund")).toHaveLength(expectedLengthReversal);
-			expect(screen.queryAllByText("-$10.00")).toHaveLength(expectedLengthReversal);
+				// Order breakdown: commission (customer should no see this)
+				expect(screen.queryAllByText("OrderBreakdown.commission")).toHaveLength(0);
+				expect(screen.queryAllByText("-$1.00")).toHaveLength(0);
 
-			// Order breakdown: commission (customer should no see this)
-			expect(screen.queryAllByText("OrderBreakdown.commission")).toHaveLength(0);
-			expect(screen.queryAllByText("-$1.00")).toHaveLength(0);
+				// Order breakdown: commission refund? (customer should no see this)
+				expect(screen.queryAllByText("OrderBreakdown.refundProviderFee")).toHaveLength(0);
 
-			// Order breakdown: commission refund? (customer should no see this)
-			expect(screen.queryAllByText("OrderBreakdown.refundProviderFee")).toHaveLength(0);
+				// Order breakdown: total (with multiple translation keys)
+				const total = "OrderBreakdown.total";
+				const expectedTotal = isReversal ? expectedLengthReversal : expectedLength;
+				expect(screen.queryAllByText(total)).toHaveLength(expectedTotal);
 
-			// Order breakdown: total (with multiple translation keys)
-			const total = "OrderBreakdown.total";
-			const expectedTotal = isReversal ? expectedLengthReversal : expectedLength;
-			expect(screen.queryAllByText(total)).toHaveLength(expectedTotal);
+				// A note about commission (customer should no see this)
+				expect(screen.queryAllByText("OrderBreakdown.commissionFeeNote")).toHaveLength(0);
 
-			// A note about commission (customer should no see this)
-			expect(screen.queryAllByText("OrderBreakdown.commissionFeeNote")).toHaveLength(0);
+				// Activity feed (here we just check the heading)
+				expect(screen.getByText("TransactionPanel.activityHeading")).toBeInTheDocument();
 
-			// Activity feed (here we just check the heading)
-			expect(screen.getByText("TransactionPanel.activityHeading")).toBeInTheDocument();
+				// Listing's title (side card)
+				// NOTE: OrderPanel is codes-plitted and "test.each" don't work with async setup
+				expect(screen.queryAllByText("listing-item title")).toHaveLength(isInquiry ? 0 : 1);
 
-			// Listing's title (side card)
-			// NOTE: OrderPanel is codes-plitted and "test.each" don't work with async setup
-			expect(screen.queryAllByText("listing-item title")).toHaveLength(isInquiry ? 0 : 1);
+				// Primary action button
+				// E.g.
+				// TransactionPage.default-purchase.provider.transition-mark-delivered.actionButton
+				// TransactionPage.leaveReview.actionButton (twice)
+				const primaryButtonText = stateData.primaryButtonProps?.buttonText || "no-button";
+				// length == 2 => mobile & desktop are rendered separately
+				const expectedLengthPrimary = stateData.primaryButtonProps?.buttonText ? 2 : 0;
+				expect(screen.queryAllByText(primaryButtonText)).toHaveLength(expectedLengthPrimary);
 
-			// Primary action button
-			// E.g.
-			// TransactionPage.default-purchase.provider.transition-mark-delivered.actionButton
-			// TransactionPage.leaveReview.actionButton (twice)
-			const primaryButtonText = stateData.primaryButtonProps?.buttonText || "no-button";
-			// length == 2 => mobile & desktop are rendered separately
-			const expectedLengthPrimary = stateData.primaryButtonProps?.buttonText ? 2 : 0;
-			expect(screen.queryAllByText(primaryButtonText)).toHaveLength(expectedLengthPrimary);
-
-			// Messaging
-			const sendMsg = screen.getByPlaceholderText("TransactionPanel.sendMessagePlaceholder");
-			expect(sendMsg).toBeInTheDocument();
-			const sendMsgButton = screen.queryByRole("button", { name: "SendMessageForm.sendMessage" });
-			expect(sendMsgButton).toBeInTheDocument();
-		});
+				// Messaging
+				const sendMsg = screen.getByPlaceholderText("TransactionPanel.sendMessagePlaceholder");
+				expect(sendMsg).toBeInTheDocument();
+				const sendMsgButton = screen.queryByRole("button", { name: "SendMessageForm.sendMessage" });
+				expect(sendMsgButton).toBeInTheDocument();
+			},
+		);
 	});
 
 	// BOOKING SALE (hour)
@@ -956,106 +977,114 @@ describe("TransactionPage", () => {
 			};
 		});
 
-		test.each(bookings)("check purchase: $tr", ({ tr, tx, isReversal, isReceived }) => {
-			const transactionRole = TX_TRANSITION_ACTOR_CUSTOMER;
-			const isInquiry = tr === "transition/inquire";
+		test.each(bookings)(
+			"check purchase: $tr",
+			({
+				tr,
+				tx,
+				isReversal,
+				// isReceived
+			}) => {
+				const transactionRole = TX_TRANSITION_ACTOR_CUSTOMER;
+				const isInquiry = tr === "transition/inquire";
 
-			const stateData = getStateData(
-				{
+				const stateData = getStateData(
+					{
+						transaction: tx,
+						transactionRole,
+						intl: fakeIntl,
+						transitionInProgress: false,
+						transitionError: null,
+						onTransition: noop,
+						sendReviewInProgress: false,
+						sendReviewError: null,
+						onOpenReviewModal: noop,
+					},
+					process,
+				);
+
+				const props = {
+					...panelBaseProps,
+					currentUser: createCurrentUser(customerId),
 					transaction: tx,
 					transactionRole,
-					intl: fakeIntl,
-					transitionInProgress: false,
-					transitionError: null,
-					onTransition: noop,
-					sendReviewInProgress: false,
-					sendReviewError: null,
-					onOpenReviewModal: noop,
-				},
-				process,
-			);
+					params: {
+						id: tx.id?.uuid,
+					},
+				};
 
-			const props = {
-				...panelBaseProps,
-				currentUser: createCurrentUser(customerId),
-				transaction: tx,
-				transactionRole,
-				params: {
-					id: tx.id?.uuid,
-				},
-			};
+				render(<TransactionPageComponent {...props} />);
 
-			render(<TransactionPageComponent {...props} />);
+				const state = stateData.processState;
+				const txTitle = `TransactionPage.${processName}.${transactionRole}.${state}.title`;
+				expect(screen.getByText(txTitle)).toBeInTheDocument();
 
-			const state = stateData.processState;
-			const txTitle = `TransactionPage.${processName}.${transactionRole}.${state}.title`;
-			expect(screen.getByText(txTitle)).toBeInTheDocument();
+				expect(screen.getByText("TransactionPage.listingTitleMobile")).toBeInTheDocument();
 
-			expect(screen.getByText("TransactionPage.listingTitleMobile")).toBeInTheDocument();
+				// Order breakdown
+				const expectedLength = isInquiry ? 0 : 2;
+				expect(
+					screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
+				).toHaveLength(expectedLength);
 
-			// Order breakdown
-			const expectedLength = isInquiry ? 0 : 2;
-			expect(
-				screen.queryAllByText(`TransactionPanel.${processName}.orderBreakdownTitle`),
-			).toHaveLength(expectedLength);
+				expect(screen.queryAllByText("OrderBreakdown.bookingStart")).toHaveLength(expectedLength);
+				expect(screen.queryAllByText("Tue 10:00 AM")).toHaveLength(expectedLength);
+				expect(screen.queryAllByText("Tue 1:00 PM")).toHaveLength(expectedLength);
+				expect(screen.queryAllByText("Jun 14")).toHaveLength(expectedLength * 2);
+				expect(screen.queryAllByText("OrderBreakdown.bookingEnd")).toHaveLength(expectedLength);
 
-			expect(screen.queryAllByText("OrderBreakdown.bookingStart")).toHaveLength(expectedLength);
-			expect(screen.queryAllByText("Tue 10:00 AM")).toHaveLength(expectedLength);
-			expect(screen.queryAllByText("Tue 1:00 PM")).toHaveLength(expectedLength);
-			expect(screen.queryAllByText("Jun 14")).toHaveLength(expectedLength * 2);
-			expect(screen.queryAllByText("OrderBreakdown.bookingEnd")).toHaveLength(expectedLength);
+				expect(screen.queryAllByText("OrderBreakdown.baseUnitHour")).toHaveLength(expectedLength);
+				// expect(screen.queryAllByText('OrderBreakdown.subTotal')).toHaveLength(expectedLength);
+				// expect(screen.queryAllByText('OrderBreakdown.subTotal')).toHaveLength(
+				//   isReversal ? expectedLength : 0
+				// );
+				// expect(screen.queryAllByText('$30.00')).toHaveLength(
+				//   isReversal ? expectedLength * 3 : expectedLength * 2
+				// ); // base, subtotal, total
 
-			expect(screen.queryAllByText("OrderBreakdown.baseUnitHour")).toHaveLength(expectedLength);
-			// expect(screen.queryAllByText('OrderBreakdown.subTotal')).toHaveLength(expectedLength);
-			// expect(screen.queryAllByText('OrderBreakdown.subTotal')).toHaveLength(
-			//   isReversal ? expectedLength : 0
-			// );
-			// expect(screen.queryAllByText('$30.00')).toHaveLength(
-			//   isReversal ? expectedLength * 3 : expectedLength * 2
-			// ); // base, subtotal, total
+				// Order breakdown: refund?
+				const expectedLengthReversal = isReversal ? 2 : 0;
+				expect(screen.queryAllByText("OrderBreakdown.refund")).toHaveLength(expectedLengthReversal);
+				expect(screen.queryAllByText("-$30.00")).toHaveLength(expectedLengthReversal);
 
-			// Order breakdown: refund?
-			const expectedLengthReversal = isReversal ? 2 : 0;
-			expect(screen.queryAllByText("OrderBreakdown.refund")).toHaveLength(expectedLengthReversal);
-			expect(screen.queryAllByText("-$30.00")).toHaveLength(expectedLengthReversal);
+				// Order breakdown: commission (customer should no see this)
+				expect(screen.queryAllByText("OrderBreakdown.commission")).toHaveLength(0);
+				expect(screen.queryAllByText("-$1.00")).toHaveLength(0);
 
-			// Order breakdown: commission (customer should no see this)
-			expect(screen.queryAllByText("OrderBreakdown.commission")).toHaveLength(0);
-			expect(screen.queryAllByText("-$1.00")).toHaveLength(0);
+				// Order breakdown: commission refund? (customer should no see this)
+				expect(screen.queryAllByText("OrderBreakdown.refundProviderFee")).toHaveLength(0);
 
-			// Order breakdown: commission refund? (customer should no see this)
-			expect(screen.queryAllByText("OrderBreakdown.refundProviderFee")).toHaveLength(0);
+				// Order breakdown: total (with multiple translation keys)
+				const total = "OrderBreakdown.total";
+				const expectedTotal = isReversal ? expectedLengthReversal : expectedLength;
+				expect(screen.queryAllByText(total)).toHaveLength(expectedTotal);
 
-			// Order breakdown: total (with multiple translation keys)
-			const total = "OrderBreakdown.total";
-			const expectedTotal = isReversal ? expectedLengthReversal : expectedLength;
-			expect(screen.queryAllByText(total)).toHaveLength(expectedTotal);
+				// A note about commission (customer should no see this)
+				expect(screen.queryAllByText("OrderBreakdown.commissionFeeNote")).toHaveLength(0);
 
-			// A note about commission (customer should no see this)
-			expect(screen.queryAllByText("OrderBreakdown.commissionFeeNote")).toHaveLength(0);
+				// Activity feed (here we just check the heading)
+				expect(screen.getByText("TransactionPanel.activityHeading")).toBeInTheDocument();
 
-			// Activity feed (here we just check the heading)
-			expect(screen.getByText("TransactionPanel.activityHeading")).toBeInTheDocument();
+				// Listing's title (side card)
+				// NOTE: OrderPanel is codes-plitted and "test.each" don't work with async setup
+				expect(screen.queryAllByText("listing-item title")).toHaveLength(isInquiry ? 0 : 1);
 
-			// Listing's title (side card)
-			// NOTE: OrderPanel is codes-plitted and "test.each" don't work with async setup
-			expect(screen.queryAllByText("listing-item title")).toHaveLength(isInquiry ? 0 : 1);
+				// Primary action button
+				// E.g.
+				// TransactionPage.default-purchase.provider.transition-mark-delivered.actionButton
+				// TransactionPage.leaveReview.actionButton (twice)
+				const primaryButtonText = stateData.primaryButtonProps?.buttonText || "no-button";
+				// length == 2 => mobile & desktop are rendered separately
+				const expectedLengthPrimary = stateData.primaryButtonProps?.buttonText ? 2 : 0;
+				expect(screen.queryAllByText(primaryButtonText)).toHaveLength(expectedLengthPrimary);
 
-			// Primary action button
-			// E.g.
-			// TransactionPage.default-purchase.provider.transition-mark-delivered.actionButton
-			// TransactionPage.leaveReview.actionButton (twice)
-			const primaryButtonText = stateData.primaryButtonProps?.buttonText || "no-button";
-			// length == 2 => mobile & desktop are rendered separately
-			const expectedLengthPrimary = stateData.primaryButtonProps?.buttonText ? 2 : 0;
-			expect(screen.queryAllByText(primaryButtonText)).toHaveLength(expectedLengthPrimary);
-
-			// Messaging
-			const sendMsg = screen.getByPlaceholderText("TransactionPanel.sendMessagePlaceholder");
-			expect(sendMsg).toBeInTheDocument();
-			const sendMsgButton = screen.queryByRole("button", { name: "SendMessageForm.sendMessage" });
-			expect(sendMsgButton).toBeInTheDocument();
-		});
+				// Messaging
+				const sendMsg = screen.getByPlaceholderText("TransactionPanel.sendMessagePlaceholder");
+				expect(sendMsg).toBeInTheDocument();
+				const sendMsgButton = screen.queryByRole("button", { name: "SendMessageForm.sendMessage" });
+				expect(sendMsgButton).toBeInTheDocument();
+			},
+		);
 	});
 
 	// With OrderPanel

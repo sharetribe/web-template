@@ -1,12 +1,11 @@
-import { createUser, createTransaction, createListing, createTxTransition } from "../util/testData";
-
+import { createListing, createTransaction, createTxTransition, createUser } from "../util/testData";
 import {
-	TX_TRANSITION_ACTOR_CUSTOMER,
-	TX_TRANSITION_ACTOR_PROVIDER,
-	TX_TRANSITION_ACTOR_SYSTEM,
 	CONDITIONAL_RESOLVER_WILDCARD,
 	ConditionalResolver,
 	getProcess,
+	TX_TRANSITION_ACTOR_CUSTOMER,
+	TX_TRANSITION_ACTOR_PROVIDER,
+	TX_TRANSITION_ACTOR_SYSTEM,
 } from "./transaction";
 
 describe("transaction utils for default-purchase", () => {
@@ -161,18 +160,18 @@ describe("transaction utils for default-booking", () => {
 		transitions: [transitionRequestPayment, transitionConfirmPayment, transitionAccept],
 	});
 
-	const txCompleted = createTransaction({
-		lastTransition: transitions.COMPLETE,
-		customer: createUser("user1"),
-		provider: createUser("user2"),
-		listing: createListing("Listing"),
-		transitions: [
-			transitionRequestPayment,
-			transitionConfirmPayment,
-			transitionAccept,
-			transitionComplete,
-		],
-	});
+	// const txCompleted = createTransaction({
+	// 	lastTransition: transitions.COMPLETE,
+	// 	customer: createUser("user1"),
+	// 	provider: createUser("user2"),
+	// 	listing: createListing("Listing"),
+	// 	transitions: [
+	// 		transitionRequestPayment,
+	// 		transitionConfirmPayment,
+	// 		transitionAccept,
+	// 		transitionComplete,
+	// 	],
+	// });
 
 	const txReviewed = createTransaction({
 		lastTransition: transitions.EXPIRE_REVIEW_PERIOD,

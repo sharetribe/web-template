@@ -1,19 +1,21 @@
 import React from "react";
-import { bool, func, string } from "prop-types";
-import { Form as FinalForm, Field } from "react-final-form";
+import { Field, Form as FinalForm } from "react-final-form";
 import classNames from "classnames";
+import { bool, func, string } from "prop-types";
 
-import { intlShape, injectIntl } from "../../../util/reactIntl";
 import { Form, LocationAutocompleteInput } from "../../../components";
-
+import { injectIntl, intlShape } from "../../../util/reactIntl";
 import IconSearchDesktop from "./IconSearchDesktop";
-
 import css from "./SearchForm.module.css";
 
 const identity = (v) => v;
 
 const KeywordSearchField = (props) => {
-	const { intl, inputRef } = props;
+	const {
+		intl,
+		// inputRef
+	} = props;
+
 	return (
 		<div className={css.keywordSearchWrapper}>
 			<button className={css.searchSubmit}>
@@ -23,7 +25,10 @@ const KeywordSearchField = (props) => {
 			</button>
 			<Field
 				name="keywords"
-				render={({ input, meta }) => {
+				render={({
+					input,
+					// meta
+				}) => {
 					return (
 						<input
 							className={css.keywordInput}

@@ -1,31 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { array, bool, func, number, object, string } from "prop-types";
-import { compose } from "redux";
+import React, { useEffect, useState } from "react";
 import { Form as FinalForm, FormSpy } from "react-final-form";
 import classNames from "classnames";
+import { array, bool, func, number, object, string } from "prop-types";
+import { compose } from "redux";
 
-import { FormattedMessage, intlShape, injectIntl } from "../../../util/reactIntl";
-import { required, bookingDatesRequired, composeValidators } from "../../../util/validators";
+import { FieldDateRangeInput, Form, H6, IconArrowHead, PrimaryButton } from "../../../components";
+import { BOOKING_PROCESS_NAME } from "../../../transactions/transaction";
 import {
-	START_DATE,
+	addTime,
 	END_DATE,
 	getStartOf,
-	addTime,
-	isSameDay,
+	initialVisibleMonth,
 	isDateSameOrAfter,
 	isInRange,
+	isSameDay,
+	monthIdString,
+	START_DATE,
 	timeOfDayFromLocalToTimeZone,
 	timeOfDayFromTimeZoneToLocal,
-	monthIdString,
-	initialVisibleMonth,
 } from "../../../util/dates";
-import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, TIME_SLOT_TIME, propTypes } from "../../../util/types";
-import { BOOKING_PROCESS_NAME } from "../../../transactions/transaction";
-
-import { Form, IconArrowHead, PrimaryButton, FieldDateRangeInput, H6 } from "../../../components";
-
+import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
+import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, propTypes, TIME_SLOT_TIME } from "../../../util/types";
+import { bookingDatesRequired, composeValidators, required } from "../../../util/validators";
 import EstimatedCustomerBreakdownMaybe from "../EstimatedCustomerBreakdownMaybe";
-
 import css from "./BookingDatesForm.module.css";
 
 const TODAY = new Date();

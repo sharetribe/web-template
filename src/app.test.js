@@ -1,8 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { getHostedConfiguration } from "./util/testHelpers";
+
 import { ClientApp } from "./app";
 import configureStore from "./store";
+import { getHostedConfiguration } from "./util/testHelpers";
 
 const jsdomScroll = window.scroll;
 beforeAll(() => {

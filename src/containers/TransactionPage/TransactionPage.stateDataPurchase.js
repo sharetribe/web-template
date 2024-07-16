@@ -1,8 +1,8 @@
 import {
-	TX_TRANSITION_ACTOR_CUSTOMER as CUSTOMER,
-	TX_TRANSITION_ACTOR_PROVIDER as PROVIDER,
 	CONDITIONAL_RESOLVER_WILDCARD,
 	ConditionalResolver,
+	TX_TRANSITION_ACTOR_CUSTOMER as CUSTOMER,
+	TX_TRANSITION_ACTOR_PROVIDER as PROVIDER,
 } from "../../transactions/transaction";
 
 /**
@@ -23,9 +23,9 @@ export const getStateDataForPurchaseProcess = (txInfo, processInfo) => {
 		processState,
 		states,
 		transitions,
-		isCustomer,
 		actionButtonProps,
 		leaveReviewProps,
+		// isCustomer,
 	} = processInfo;
 
 	return new ConditionalResolver([processState, transactionRole])

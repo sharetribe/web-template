@@ -1,18 +1,18 @@
 import pick from "lodash/pick";
 
-import { types as sdkTypes, createImageVariantConfig } from "../../util/sdkLoader";
-import { storableError } from "../../util/errors";
 import { addMarketplaceEntities } from "../../ducks/marketplaceData.duck";
+import { fetchCurrentUser, fetchCurrentUserHasOrdersSuccess } from "../../ducks/user.duck";
+import { getProcess, isBookingProcessAlias } from "../../transactions/transaction";
 import { transactionLineItems } from "../../util/api";
-import * as log from "../../util/log";
 import { denormalisedResponseEntities } from "../../util/data";
 import { findNextBoundary, getStartOf, monthIdString } from "../../util/dates";
+import { storableError } from "../../util/errors";
+import * as log from "../../util/log";
+import { createImageVariantConfig, types as sdkTypes } from "../../util/sdkLoader";
 import {
 	LISTING_PAGE_DRAFT_VARIANT,
 	LISTING_PAGE_PENDING_APPROVAL_VARIANT,
 } from "../../util/urlHelpers";
-import { getProcess, isBookingProcessAlias } from "../../transactions/transaction";
-import { fetchCurrentUser, fetchCurrentUserHasOrdersSuccess } from "../../ducks/user.duck";
 
 const { UUID } = sdkTypes;
 
@@ -273,25 +273,31 @@ const timeSlotsRequest = (params) => (dispatch, getState, sdk) => {
 	});
 };
 
-export const fetchTimeSlots = (listingId, start, end, timeZone) => (dispatch, getState, sdk) => {
-	const monthId = monthIdString(start, timeZone);
+export const fetchTimeSlots =
+	(listingId, start, end, timeZone) =>
+	(
+		dispatch,
+		// getState,
+		// sdk
+	) => {
+		const monthId = monthIdString(start, timeZone);
 
-	dispatch(fetchTimeSlotsRequest(monthId));
+		dispatch(fetchTimeSlotsRequest(monthId));
 
-	// The maximum pagination page size for timeSlots is 500
-	const extraParams = {
-		perPage: 500,
-		page: 1,
+		// The maximum pagination page size for timeSlots is 500
+		const extraParams = {
+			perPage: 500,
+			page: 1,
+		};
+
+		return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
+			.then((timeSlots) => {
+				dispatch(fetchTimeSlotsSuccess(monthId, timeSlots));
+			})
+			.catch((e) => {
+				dispatch(fetchTimeSlotsError(monthId, storableError(e)));
+			});
 	};
-
-	return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
-		.then((timeSlots) => {
-			dispatch(fetchTimeSlotsSuccess(monthId, timeSlots));
-		})
-		.catch((e) => {
-			dispatch(fetchTimeSlotsError(monthId, storableError(e)));
-		});
-};
 
 export const sendInquiry = (listing, message) => (dispatch, getState, sdk) => {
 	dispatch(sendInquiryRequest());
@@ -306,7 +312,7 @@ export const sendInquiry = (listing, message) => (dispatch, getState, sdk) => {
 	}
 
 	const listingId = listing?.id;
-	const [processName, alias] = processAlias.split("/");
+	const [processName] = processAlias.split("/"); // [processName, alias]
 	const transitions = getProcess(processName)?.transitions;
 
 	const bodyParams = {

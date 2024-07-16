@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { any, node, number, string } from "prop-types";
-import { FormattedMessage } from "../../util/reactIntl";
 import classNames from "classnames";
+import { any, node, number, string } from "prop-types";
 
 import { AspectRatioWrapper, Promised } from "../../components";
-
+import { FormattedMessage } from "../../util/reactIntl";
 import css from "./ImageFromFile.module.css";
 
 // readImage returns a promise which is resolved
@@ -23,7 +22,7 @@ const readImage = (file) =>
 
 // Create elements out of given thumbnail file
 const ImageFromFile = (props) => {
-	const [promisedImage, setPromisedImage] = useState(readImage(props.file));
+	const [promisedImage] = useState(readImage(props.file));
 	const { className, rootClassName, aspectWidth, aspectHeight, file, id, children } = props;
 	const classes = classNames(rootClassName || css.root, className);
 

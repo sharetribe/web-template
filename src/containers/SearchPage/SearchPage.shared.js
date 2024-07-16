@@ -1,15 +1,15 @@
 import intersection from "lodash/intersection";
 
-import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from "../../util/types";
-import { createResourceLocatorString } from "../../util/routes";
-import {
-	isAnyFilterActive,
-	parseSelectFilterOptions,
-	constructQueryParamName,
-} from "../../util/search";
-import { createSlug, parse, stringify } from "../../util/urlHelpers";
 import { getStartOf, parseDateFromISO8601, subtractTime } from "../../util/dates";
 import { isFieldForCategory } from "../../util/fieldHelpers";
+import { createResourceLocatorString } from "../../util/routes";
+import {
+	constructQueryParamName,
+	isAnyFilterActive,
+	parseSelectFilterOptions,
+} from "../../util/search";
+import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM } from "../../util/types";
+import { createSlug, parse, stringify } from "../../util/urlHelpers";
 
 /**
  * Omit those listing field parameters, that are not allowed with current category selection
@@ -296,7 +296,12 @@ export const cleanSearchFromConflictingParams = (searchParams, filterConfigs, so
  * @param {boolean} isOriginInUse if origin is in use, return it too.
  */
 export const pickSearchParamsOnly = (params, filterConfigs, sortConfig, isOriginInUse) => {
-	const { address, origin, bounds, ...rest } = params || {};
+	const {
+		origin,
+		bounds,
+		// address,
+		...rest
+	} = params || {};
 	const boundsMaybe = bounds ? { bounds } : {};
 	const originMaybe = isOriginInUse && origin ? { origin } : {};
 	const filterParams = validFilterParams(rest, filterConfigs);
@@ -335,7 +340,11 @@ export const searchParamsPicker = (
 	sortConfig,
 	isOriginInUse,
 ) => {
-	const { mapSearch, page, ...searchParamsInURL } = parse(searchFromLocation, {
+	const {
+		// mapSearch,
+		// page,
+		...searchParamsInURL
+	} = parse(searchFromLocation, {
 		latlng: ["origin"],
 		latlngBounds: ["bounds"],
 	});

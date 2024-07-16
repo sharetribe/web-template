@@ -2,7 +2,6 @@
 
 .root {
 	composes: marketplaceModalFormRootStyles from global;
-
 	justify-content: flex-start;
 
 	@media (--viewportMedium) {

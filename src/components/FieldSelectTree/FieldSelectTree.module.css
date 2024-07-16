@@ -24,23 +24,23 @@
 
 .optionBtn {
 	composes: h4 from global;
-	font-weight: var(--fontWeightMedium);
-	font-size: 16px;
-	line-height: 24px;
-	color: var(--colorGrey700);
-	text-align: left;
+	position: relative;
 
 	/* Layout */
 	display: block;
-	position: relative;
 	width: 100%;
+	padding: 4px 0 8px;
 	margin: 0;
-	padding: 4px 0 8px 0;
+	font-size: 16px;
+	font-weight: var(--fontWeightMedium);
+	line-height: 24px;
+	color: var(--colorGrey700);
+	text-align: left;
+	cursor: inherit;
+	border: none;
 
 	/* Override button styles */
 	outline: none;
-	border: none;
-	cursor: inherit;
 
 	&:focus,
 	&:hover {
@@ -48,7 +48,7 @@
 	}
 
 	@media (--viewportMedium) {
-		padding: 8px 0 0px 0;
+		padding: 8px 0 0;
 		padding: 0;
 	}
 }
@@ -71,6 +71,6 @@
 }
 
 .longWord {
-	word-break: break-word;
 	hyphens: auto;
+	word-break: break-word;
 }

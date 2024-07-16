@@ -1,20 +1,17 @@
 import React, { Component } from "react";
-import { arrayOf, bool, object, func, shape, string } from "prop-types";
-import { compose } from "redux";
 import { connect } from "react-redux";
-import { Switch, Route, withRouter } from "react-router-dom";
-
-import { useRouteConfiguration } from "../context/routeConfigurationContext";
-import { propTypes } from "../util/types";
-import * as log from "../util/log";
-import { canonicalRoutePath } from "../util/routes";
-import { useConfiguration } from "../context/configurationContext";
-
-import { locationChanged } from "../ducks/routing.duck";
+import { Route, Switch, withRouter } from "react-router-dom";
+import { arrayOf, bool, func, object, shape, string } from "prop-types";
+import { compose } from "redux";
 
 import { NamedRedirect } from "../components";
 import NotFoundPage from "../containers/NotFoundPage/NotFoundPage";
-
+import { useConfiguration } from "../context/configurationContext";
+import { useRouteConfiguration } from "../context/routeConfigurationContext";
+import { locationChanged } from "../ducks/routing.duck";
+import * as log from "../util/log";
+import { canonicalRoutePath } from "../util/routes";
+import { propTypes } from "../util/types";
 import LoadableComponentErrorBoundary from "./LoadableComponentErrorBoundary/LoadableComponentErrorBoundary";
 
 const canShowComponent = (props) => {
@@ -34,6 +31,7 @@ const callLoadData = (props) => {
 			.then(() => {
 				if (props.logLoadDataCalls) {
 					// This gives good input for debugging issues on live environments, but with test it's not needed.
+					// eslint-disable-next-line no-console
 					console.log(`loadData success for ${name} route`);
 				}
 			})
@@ -70,7 +68,7 @@ const setPageScrollPosition = (location, delayed) => {
 			// A naive attempt to make a delayed call to scrollIntoView
 			// Note: 300 milliseconds might not be enough, but adding too much delay
 			// might affect user initiated scrolling.
-			delayed = window.setTimeout(() => {
+			window.setTimeout(() => {
 				const reTry = document.querySelector(location.hash);
 				reTry.scrollIntoView({
 					block: "start",
@@ -182,7 +180,10 @@ const RouteComponentContainer = compose(connect(mapStateToProps))(RouteComponent
  *   <Route render={pageB} />
  * </Switch>
  */
-const Routes = (props, context) => {
+const Routes = (
+	props,
+	// context
+) => {
 	const routeConfiguration = useRouteConfiguration();
 	const config = useConfiguration();
 	const { isAuthenticated, logoutInProgress, logLoadDataCalls } = props;

@@ -1,9 +1,8 @@
 import React from "react";
-import { number, objectOf, oneOf, shape, string } from "prop-types";
 import classNames from "classnames";
+import { number, objectOf, oneOf, shape, string } from "prop-types";
 
 import { ResponsiveImage } from "../../../../components/index.js";
-
 import css from "./CustomAppearance.module.css";
 
 // BackgroundImage doesn't have enforcable aspectratio

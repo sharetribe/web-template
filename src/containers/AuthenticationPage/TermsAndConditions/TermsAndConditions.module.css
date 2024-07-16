@@ -11,7 +11,7 @@
 
 .finePrint {
 	composes: marketplaceModalHelperLink from global;
-	padding: 3px 0 5px 0;
+	padding: 3px 0 5px;
 	text-align: left;
 }
 

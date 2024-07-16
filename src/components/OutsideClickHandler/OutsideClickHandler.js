@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { func, node, string } from "prop-types";
 import classNames from "classnames";
+import { func, node, string } from "prop-types";
 
 import css from "./OutsideClickHandler.module.css";
 

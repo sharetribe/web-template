@@ -1,26 +1,26 @@
 .root {
-	background-color: #df492a;
-	text-align: center;
 	padding: 10px 20px 9px;
+	text-align: center;
+	background-color: #df492a;
 }
 
 .text {
-	margin: 0;
 	display: inline-block;
-	color: #fff;
-	font-size: 16px;
+	margin: 0;
 	margin-bottom: 16px;
+	font-size: 16px;
 	line-height: 20px;
+	color: #fff;
 }
 
 .button {
-	background: #2a3d4b;
-	margin: 0 16px;
 	padding: 8px 16px;
-	border-radius: var(--borderRadiusMedium);
+	margin: 0 16px;
 	font-size: 14px;
 	color: #fff;
+	background: #2a3d4b;
 	border: 0;
+	border-radius: var(--borderRadiusMedium);
 
 	&:hover {
 		text-decoration: none;

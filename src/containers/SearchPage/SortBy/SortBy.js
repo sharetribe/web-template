@@ -1,14 +1,12 @@
 import React from "react";
-import { string, bool } from "prop-types";
+import { bool, string } from "prop-types";
 
 import { useConfiguration } from "../../../context/configurationContext";
-import { intlShape, injectIntl } from "../../../util/reactIntl";
+import { injectIntl, intlShape } from "../../../util/reactIntl";
 import { isMainSearchTypeKeywords } from "../../../util/search";
-
+import css from "./SortBy.module.css";
 import SortByPlain from "./SortByPlain";
 import SortByPopup from "./SortByPopup";
-
-import css from "./SortBy.module.css";
 
 const SortBy = (props) => {
 	const config = useConfiguration();

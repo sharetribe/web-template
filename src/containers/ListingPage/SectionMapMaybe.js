@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { string } from "prop-types";
-import { FormattedMessage } from "../../util/reactIntl";
 import classNames from "classnames";
-import { propTypes } from "../../util/types";
-import { obfuscatedCoordinates } from "../../util/maps";
-import { Heading, Map } from "../../components";
+import { string } from "prop-types";
 
+import { Heading, Map } from "../../components";
+import { obfuscatedCoordinates } from "../../util/maps";
+import { FormattedMessage } from "../../util/reactIntl";
+import { propTypes } from "../../util/types";
 import css from "./ListingPage.module.css";
 
 class SectionMapMaybe extends Component {

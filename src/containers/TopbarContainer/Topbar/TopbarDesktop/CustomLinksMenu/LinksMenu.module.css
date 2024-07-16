@@ -1,8 +1,8 @@
 @import "../../../../../styles/customMediaQueries.css";
 
 .currentPage {
-	color: var(--colorBlack);
 	position: relative;
+	color: var(--colorBlack);
 
 	& .menuItemBorder {
 		width: 6px;
@@ -25,27 +25,24 @@
 }
 
 .linkMenuLabel {
+	display: inline;
 	flex-shrink: 0;
-
-	border-bottom: 0px solid;
+	height: 100%;
+	padding: 0 12px;
+	margin: 0;
+	font-size: 14px;
+	font-weight: var(--fontWeightMedium);
+	line-height: 18px;
+	color: var(--colorGrey700);
+	letter-spacing: 0;
+	border-bottom: 0 solid;
 	transition: var(--transitionStyleButton);
 
-	font-weight: var(--fontWeightMedium);
-	font-size: 14px;
-	line-height: 18px;
-	letter-spacing: 0;
-	color: var(--colorGrey700);
-
-	display: inline;
-	height: 100%;
-	margin: 0;
-	padding: 0 12px 0 12px;
-
 	&:hover {
+		color: var(--colorBlack);
+		text-decoration: none;
 		border-bottom: 4px solid var(--marketplaceColor);
 		border-radius: 0;
-		text-decoration: none;
-		color: var(--colorBlack);
 	}
 
 	&:active {
@@ -72,9 +69,9 @@
 .menuItemBorder {
 	position: absolute;
 	top: 2px;
-	left: 0px;
-	height: calc(100% - 4px);
+	left: 0;
 	width: 0;
+	height: calc(100% - 4px);
 	transition: width var(--transitionStyleButton);
 }
 
@@ -86,8 +83,8 @@
 	/* Dimensions */
 	width: 100%;
 	min-width: 276px;
-	margin: 0;
 	padding: 4px 24px;
+	margin: 0;
 
 	/* Layout details */
 	color: var(--colorGrey700);

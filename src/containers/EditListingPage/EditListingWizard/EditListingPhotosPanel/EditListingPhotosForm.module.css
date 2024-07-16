@@ -1,20 +1,20 @@
 @import "../../../../styles/customMediaQueries.css";
 
 .root {
-	width: 100%;
-	height: auto;
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
 	flex-shrink: 0;
+	width: 100%;
+	height: auto;
 }
 
 .imagesFieldArray {
-	flex-shrink: 0;
 	display: grid;
+	flex-shrink: 0;
 	grid-template-columns: 1fr 1fr;
 	gap: 24px;
-	margin: 0 0 24px 0;
+	margin: 0 0 24px;
 }
 
 .thumbnail {
@@ -23,50 +23,47 @@
 }
 
 .addImageWrapper {
-	float: left;
 	position: relative;
+	float: left;
 	width: 100%;
 	overflow: hidden;
 
 	&::after {
-		content: ".";
-		visibility: hidden;
 		display: block;
 		height: 0;
 		clear: both;
+		visibility: hidden;
+		content: ".";
 	}
 }
 
 .addImage {
 	/* Layout */
+
 	/* Maintain aspect ratio */
 	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	width: 100%;
 	height: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 	margin-top: 0;
+
+	/* Behaviour */
+	cursor: pointer;
 
 	/* Colors */
 	background-color: var(--colorWhite);
+	border-color: var(--colorGrey100);
+	border-style: dashed;
+	border-width: 2px;
+	border-radius: 2px;
+	transition: var(--transitionStyleButton);
 
 	@media (--viewportLarge) {
 		background-color: var(--colorGrey50);
 	}
-
-	border-style: dashed;
-	border-color: var(--colorGrey100);
-	border-width: 2px;
-	border-radius: 2px;
-
-	/* Behaviour */
-	cursor: pointer;
-	transition: var(--transitionStyleButton);
 
 	&:hover {
 		border-color: var(--colorGrey300);
@@ -81,25 +78,23 @@
 
 .chooseImage {
 	composes: h4 from global;
-	color: var(--colorGrey700);
-	font-weight: var(--fontWeightSemiBold);
-
 	margin-top: 0;
 	margin-bottom: 0;
+	font-weight: var(--fontWeightSemiBold);
+	color: var(--colorGrey700);
 
 	@media (--viewportLarge) {
-		font-weight: var(--fontWeightSemiBold);
 		margin-top: 0;
 		margin-bottom: 0;
+		font-weight: var(--fontWeightSemiBold);
 	}
 }
 
 .imageTypes {
 	composes: marketplaceTinyFontStyles from global;
-	color: var(--colorGrey300);
-
 	margin-top: 0;
 	margin-bottom: 0;
+	color: var(--colorGrey300);
 
 	@media (--viewportLarge) {
 		margin-top: 0;
@@ -113,11 +108,10 @@
 
 .tip {
 	composes: h5 from global;
-
 	flex-shrink: 0;
-	color: var(--colorGrey300);
 	margin-top: 24px;
 	margin-bottom: 60px;
+	color: var(--colorGrey300);
 
 	@media (--viewportLarge) {
 		margin-top: 0;
@@ -130,21 +124,20 @@
 }
 
 .arrayError {
-	font-weight: var(--fontWeightMedium);
-	font-size: 15px;
-	line-height: 24px;
-	letter-spacing: 0;
-	color: var(--colorFail);
 	width: 100%;
-	clear: both;
-
 	margin-top: 6px;
 	margin-bottom: 12px;
+	clear: both;
+	font-size: 15px;
+	font-weight: var(--fontWeightMedium);
+	line-height: 24px;
+	color: var(--colorFail);
+	letter-spacing: 0;
 
 	@media (--viewportMedium) {
-		font-weight: var(--fontWeightMedium);
 		margin-top: 6px;
 		margin-bottom: 10px;
+		font-weight: var(--fontWeightMedium);
 	}
 }
 

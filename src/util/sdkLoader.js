@@ -41,4 +41,4 @@ const createImageVariantConfig = (name, width, aspectRatio) => {
 	};
 };
 
-export { createInstance, types, transit, util, createImageVariantConfig };
+export { createImageVariantConfig, createInstance, transit, types, util };

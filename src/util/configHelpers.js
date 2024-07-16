@@ -126,7 +126,7 @@ const mergeLocalizations = (hostedLocalization, defaultLocalization) => {
 /////////////////////
 
 // The "arguments" (an Array like object) is only available for non-arrow functions.
-function joinStrings(str1, str2) {
+function joinStrings() {
 	const removeTrailingComma = (str) => str.trim().replace(/,\s*$/, "");
 	// Filter out empty strings (falsy) and join remaining items with comma
 	return Array.from(arguments)

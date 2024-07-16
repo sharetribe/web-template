@@ -1,10 +1,10 @@
 import React from "react";
-import "@testing-library/jest-dom";
 
 import { fakeIntl } from "../../util/testData";
 import { renderWithProviders as render, testingLibrary } from "../../util/testHelpers";
-
 import { NotFoundPageComponent } from "./NotFoundPage";
+
+import "@testing-library/jest-dom";
 
 const { screen } = testingLibrary;
 
@@ -14,12 +14,12 @@ const routeConfiguration = [
 	{
 		path: "/",
 		name: "LandingPage",
-		component: (props) => <div />,
+		component: () => <div />,
 	},
 	{
 		path: "/about",
 		name: "AboutPage",
-		component: (props) => <div />,
+		component: () => <div />,
 	},
 ];
 

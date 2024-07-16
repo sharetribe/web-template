@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 /**
  * Error logging
  *
@@ -7,6 +9,7 @@
  */
 
 import * as Sentry from "@sentry/browser";
+
 import appSettings from "../config/settings";
 
 /**

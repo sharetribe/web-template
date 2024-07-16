@@ -1,4 +1,4 @@
-import { subUnitDivisors, currencyFormatting } from "./settingsCurrency";
+import { currencyFormatting, subUnitDivisors } from "./settingsCurrency";
 
 // NOTE: only expose configuration that should be visible in the
 // client side, don't add any server secrets in this file.

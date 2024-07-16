@@ -1,48 +1,46 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { compose } from "redux";
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
-
-import { useConfiguration } from "../../../context/configurationContext";
-import { useRouteConfiguration } from "../../../context/routeConfigurationContext";
-import { FormattedMessage, intlShape, injectIntl } from "../../../util/reactIntl";
-import { displayPrice } from "../../../util/configHelpers";
-import {
-	LISTING_STATE_PENDING_APPROVAL,
-	LISTING_STATE_CLOSED,
-	LISTING_STATE_DRAFT,
-	propTypes,
-	STOCK_MULTIPLE_ITEMS,
-} from "../../../util/types";
-import { formatMoney } from "../../../util/currency";
-import { ensureOwnListing } from "../../../util/data";
-import {
-	LISTING_PAGE_PENDING_APPROVAL_VARIANT,
-	LISTING_PAGE_DRAFT_VARIANT,
-	LISTING_PAGE_PARAM_TYPE_DRAFT,
-	LISTING_PAGE_PARAM_TYPE_EDIT,
-	createSlug,
-} from "../../../util/urlHelpers";
-import { createResourceLocatorString, findRouteByRouteName } from "../../../util/routes";
-import { isBookingProcessAlias, isPurchaseProcessAlias } from "../../../transactions/transaction";
+import PropTypes from "prop-types";
+import { compose } from "redux";
 
 import {
 	AspectRatioWrapper,
+	IconSpinner,
 	InlineTextButton,
 	Menu,
-	MenuLabel,
 	MenuContent,
 	MenuItem,
+	MenuLabel,
 	NamedLink,
-	IconSpinner,
 	PrimaryButtonInline,
 	ResponsiveImage,
 } from "../../../components";
-
+import { useConfiguration } from "../../../context/configurationContext";
+import { useRouteConfiguration } from "../../../context/routeConfigurationContext";
+import { isBookingProcessAlias, isPurchaseProcessAlias } from "../../../transactions/transaction";
+import { displayPrice } from "../../../util/configHelpers";
+import { formatMoney } from "../../../util/currency";
+import { ensureOwnListing } from "../../../util/data";
+import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
+import { createResourceLocatorString, findRouteByRouteName } from "../../../util/routes";
+import {
+	LISTING_STATE_CLOSED,
+	LISTING_STATE_DRAFT,
+	LISTING_STATE_PENDING_APPROVAL,
+	propTypes,
+	STOCK_MULTIPLE_ITEMS,
+} from "../../../util/types";
+import {
+	createSlug,
+	LISTING_PAGE_DRAFT_VARIANT,
+	LISTING_PAGE_PARAM_TYPE_DRAFT,
+	LISTING_PAGE_PARAM_TYPE_EDIT,
+	LISTING_PAGE_PENDING_APPROVAL_VARIANT,
+} from "../../../util/urlHelpers";
+import css from "./ManageListingCard.module.css";
 import MenuIcon from "./MenuIcon";
 import Overlay from "./Overlay";
-import css from "./ManageListingCard.module.css";
 
 // Menu content needs the same padding
 const MENU_CONTENT_OFFSET = -12;
@@ -410,7 +408,8 @@ export const ManageListingCardComponent = (props) => {
 
 	return (
 		<div className={classes}>
-			<div
+			<button
+				type="button"
 				className={css.clickWrapper}
 				tabIndex={0}
 				onClick={(event) => {
@@ -425,6 +424,7 @@ export const ManageListingCardComponent = (props) => {
 					history.push(createListingURL(routeConfiguration, listing));
 				}}
 				onMouseOver={onOverListingLink}
+				onFocus={onOverListingLink}
 				onTouchStart={onOverListingLink}
 			>
 				<AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
@@ -523,7 +523,7 @@ export const ManageListingCardComponent = (props) => {
 				) : hasError ? (
 					<Overlay errorMessage={intl.formatMessage({ id: "ManageListingCard.actionFailed" })} />
 				) : null}
-			</div>
+			</button>
 
 			<div className={css.info}>
 				<PriceMaybe price={price} publicData={publicData} config={config} intl={intl} />

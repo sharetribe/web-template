@@ -1,9 +1,10 @@
 // We create Redux store directly, instead of using any extra dependencies.
-import { legacy_createStore as createStore, applyMiddleware, compose } from "redux";
+import { applyMiddleware, compose, legacy_createStore as createStore } from "redux";
 import thunk from "redux-thunk";
-import createReducer from "./reducers";
+
 import * as analytics from "./analytics/analytics";
 import appSettings from "./config/settings";
+import createReducer from "./reducers";
 
 /**
  * Create a new store with the given initial state. Adds Redux

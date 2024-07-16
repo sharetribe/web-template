@@ -4,15 +4,13 @@
  * It's also handled separately in handleSubmit function.
  */
 import React, { Component } from "react";
-import { func, object, string } from "prop-types";
 import { Form as FinalForm } from "react-final-form";
 import classNames from "classnames";
+import { func, object, string } from "prop-types";
 
+import { FieldTextInput, Form, H4, PrimaryButton, StripePaymentAddress } from "../../../components";
 import { useConfiguration } from "../../../context/configurationContext";
-import { FormattedMessage, useIntl, intlShape } from "../../../util/reactIntl";
-
-import { Form, PrimaryButton, FieldTextInput, StripePaymentAddress, H4 } from "../../../components";
-
+import { FormattedMessage, intlShape, useIntl } from "../../../util/reactIntl";
 import css from "./PaymentMethodsForm.module.css";
 
 /**
@@ -142,7 +140,7 @@ class PaymentMethodsForm extends Component {
 			this.finalFormAPI.change("postal", postalCode);
 		}
 
-		this.setState((prevState) => {
+		this.setState(() => {
 			return {
 				error: error ? stripeErrorTranslation(intl, error) : null,
 				cardValueValid: complete,

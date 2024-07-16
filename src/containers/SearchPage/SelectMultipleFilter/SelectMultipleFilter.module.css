@@ -6,19 +6,18 @@
 }
 
 .fieldGroup {
-	margin: 0;
 	padding: 0;
+	margin: 0;
 	border: none;
 }
 
 .fieldGroupPlain {
-	margin: 0;
-	padding-left: 12px;
 	padding-bottom: 6px;
+	padding-left: 12px;
+	margin: 0;
 	border: none;
 
 	@media (--viewportMedium) {
-		padding: 3px 0 29px 12px;
 		padding: 4px 0 4px 12px;
 	}
 }
@@ -28,7 +27,7 @@
 }
 
 .item {
-	padding: 4px 0 2px 0;
+	padding: 4px 0 2px;
 
 	/* Fix broken multi-column layout in Chrome */
 	page-break-inside: avoid;

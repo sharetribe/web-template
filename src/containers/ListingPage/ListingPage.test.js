@@ -1,33 +1,30 @@
 import React from "react";
-import "@testing-library/jest-dom";
 
+import { addMarketplaceEntities } from "../../ducks/marketplaceData.duck";
+import { storableError } from "../../util/errors";
 import { types as sdkTypes } from "../../util/sdkLoader";
 import {
-	createUser,
 	createCurrentUser,
 	createListing,
 	createOwnListing,
 	createReview,
+	createUser,
 } from "../../util/testData";
 import {
+	getHostedConfiguration,
+	getRouteConfiguration,
 	renderWithProviders as render,
 	testingLibrary,
-	getRouteConfiguration,
-	getHostedConfiguration,
 } from "../../util/testHelpers";
-
-import { storableError } from "../../util/errors";
-
 import {
+	LISTING_STATE_CLOSED,
 	LISTING_STATE_PENDING_APPROVAL,
 	LISTING_STATE_PUBLISHED,
-	LISTING_STATE_CLOSED,
 } from "../../util/types";
-
-import { addMarketplaceEntities } from "../../ducks/marketplaceData.duck";
-import { showListingRequest, showListingError, showListing } from "./ListingPage.duck";
-
 import ActionBarMaybe from "./ActionBarMaybe";
+import { showListing, showListingError, showListingRequest } from "./ListingPage.duck";
+
+import "@testing-library/jest-dom";
 
 const { UUID } = sdkTypes;
 const { screen, waitFor, within } = testingLibrary;
@@ -370,23 +367,26 @@ describe("Duck", () => {
 
 		// Calling sdk.listings.show is expected to fail now
 
-		return showListing(id, config)(dispatch, null, sdk).then((data) => {
-			expect(show.mock.calls).toEqual([
-				[
-					expect.objectContaining({
-						id,
-						"imageVariant.listing-card": "w:400;h:400;fit:crop",
-						"imageVariant.listing-card-2x": "w:800;h:800;fit:crop",
-						include: ["author", "author.profileImage", "images", "currentStock"],
-					}),
-				],
-			]);
-			expect(dispatch.mock.calls).toEqual([
-				[showListingRequest(id)],
-				[expect.anything()], // fetchCurrentUser() call
-				[showListingError(storableError(error))],
-			]);
-		});
+		return showListing(id, config)(dispatch, null, sdk).then(
+			// data
+			() => {
+				expect(show.mock.calls).toEqual([
+					[
+						expect.objectContaining({
+							id,
+							"imageVariant.listing-card": "w:400;h:400;fit:crop",
+							"imageVariant.listing-card-2x": "w:800;h:800;fit:crop",
+							include: ["author", "author.profileImage", "images", "currentStock"],
+						}),
+					],
+				]);
+				expect(dispatch.mock.calls).toEqual([
+					[showListingRequest(id)],
+					[expect.anything()], // fetchCurrentUser() call
+					[showListingError(storableError(error))],
+				]);
+			},
+		);
 	});
 });
 

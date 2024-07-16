@@ -1,13 +1,14 @@
 import React from "react";
-import "@testing-library/jest-dom";
 
 import { createListing } from "../../util/testData";
 import {
+	getHostedConfiguration,
+	getRouteConfiguration,
 	renderWithProviders as render,
 	testingLibrary,
-	getRouteConfiguration,
-	getHostedConfiguration,
 } from "../../util/testHelpers";
+
+import "@testing-library/jest-dom";
 
 const { screen, userEvent, waitFor } = testingLibrary;
 
@@ -422,14 +423,11 @@ describe("SearchPage", () => {
 		const searchRouteConfig = routeConfiguration.find((conf) => conf.name === "SearchPage");
 		const SearchPage = searchRouteConfig.component;
 
-		const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
-			<SearchPage {...props} />,
-			{
-				initialState,
-				config,
-				routeConfiguration,
-			},
-		);
+		const { getByText, queryByText, getByRole } = render(<SearchPage {...props} />, {
+			initialState,
+			config,
+			routeConfiguration,
+		});
 
 		await waitFor(() => {
 			// Has no Cat filter (primary)

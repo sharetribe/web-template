@@ -1,24 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { bool, func, object, number, string } from "prop-types";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames";
+import { bool, func, number, object, string } from "prop-types";
 
-import { FormattedMessage, intlShape } from "../../../../util/reactIntl";
-import { ACCOUNT_SETTINGS_PAGES } from "../../../../routing/routeConfiguration";
-import { propTypes } from "../../../../util/types";
 import {
 	Avatar,
 	InlineTextButton,
 	LinkedLogo,
 	Menu,
-	MenuLabel,
 	MenuContent,
 	MenuItem,
+	MenuLabel,
 	NamedLink,
 } from "../../../../components";
-
+import { ACCOUNT_SETTINGS_PAGES } from "../../../../routing/routeConfiguration";
+import { FormattedMessage, intlShape } from "../../../../util/reactIntl";
+import { propTypes } from "../../../../util/types";
 import TopbarSearchForm from "../TopbarSearchForm/TopbarSearchForm";
 import CustomLinksMenu from "./CustomLinksMenu/CustomLinksMenu";
-
 import css from "./TopbarDesktop.module.css";
 
 const SignupLink = () => {

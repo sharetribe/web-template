@@ -1,6 +1,6 @@
 import React from "react";
-import { node, string } from "prop-types";
 import classNames from "classnames";
+import { node, string } from "prop-types";
 
 import css from "./Overlay.module.css";
 
@@ -10,7 +10,8 @@ const Overlay = (props) => {
 	const classes = classNames(rootClassName || css.root, className);
 
 	return (
-		<div
+		<button
+			type="button"
 			className={classes}
 			onClick={(event) => {
 				event.preventDefault();
@@ -23,7 +24,7 @@ const Overlay = (props) => {
 				{message ? <div className={css.message}>{message}</div> : null}
 				{children}
 			</div>
-		</div>
+		</button>
 	);
 };
 

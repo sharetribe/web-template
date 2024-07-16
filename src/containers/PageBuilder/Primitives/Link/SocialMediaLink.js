@@ -1,6 +1,6 @@
 import React from "react";
-import { node, string } from "prop-types";
 import classNames from "classnames";
+import { node, string } from "prop-types";
 
 import { ExternalLink } from "../../../../components/index.js";
 import {
@@ -12,7 +12,6 @@ import {
 	xIcon,
 	youtubeIcon,
 } from "./Icons";
-
 import css from "./SocialMediaLink.module.css";
 
 const PLATFORM_CONF = {

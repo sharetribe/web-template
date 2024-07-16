@@ -1,23 +1,30 @@
 import React, { useState } from "react";
-import { array, arrayOf, bool, func, shape, string, oneOf, object } from "prop-types";
-import { compose } from "redux";
 import { connect } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
+import { array, arrayOf, bool, func, object, oneOf, shape, string } from "prop-types";
+import { compose } from "redux";
 
+// Shared components
+import {
+	H4,
+	LayoutSingleColumn,
+	NamedLink,
+	NamedRedirect,
+	OrderPanel,
+	Page,
+} from "../../components";
 // Contexts
 import { useConfiguration } from "../../context/configurationContext";
 import { useRouteConfiguration } from "../../context/routeConfigurationContext";
-// Utils
-import { FormattedMessage, intlShape, useIntl } from "../../util/reactIntl";
-import { LISTING_STATE_PENDING_APPROVAL, LISTING_STATE_CLOSED, propTypes } from "../../util/types";
-import { types as sdkTypes } from "../../util/sdkLoader";
+// Global ducks (for Redux actions and thunks)
+import { getMarketplaceEntities } from "../../ducks/marketplaceData.duck";
+import { initializeCardPaymentData } from "../../ducks/stripe.duck.js";
+import { isScrollingDisabled, manageDisableScrolling } from "../../ducks/ui.duck";
 import {
-	LISTING_PAGE_DRAFT_VARIANT,
-	LISTING_PAGE_PENDING_APPROVAL_VARIANT,
-	LISTING_PAGE_PARAM_TYPE_DRAFT,
-	LISTING_PAGE_PARAM_TYPE_EDIT,
-	createSlug,
-} from "../../util/urlHelpers";
+	isBookingProcess,
+	isPurchaseProcess,
+	resolveLatestProcessName,
+} from "../../transactions/transaction";
 import { convertMoneyToNumber } from "../../util/currency";
 import {
 	ensureListing,
@@ -25,57 +32,44 @@ import {
 	ensureUser,
 	userDisplayNameAsString,
 } from "../../util/data";
+// Utils
+import { FormattedMessage, intlShape, useIntl } from "../../util/reactIntl";
 import { richText } from "../../util/richText";
+import { types as sdkTypes } from "../../util/sdkLoader";
+import { LISTING_STATE_CLOSED, LISTING_STATE_PENDING_APPROVAL, propTypes } from "../../util/types";
 import {
-	isBookingProcess,
-	isPurchaseProcess,
-	resolveLatestProcessName,
-} from "../../transactions/transaction";
-
-// Global ducks (for Redux actions and thunks)
-import { getMarketplaceEntities } from "../../ducks/marketplaceData.duck";
-import { manageDisableScrolling, isScrollingDisabled } from "../../ducks/ui.duck";
-import { initializeCardPaymentData } from "../../ducks/stripe.duck.js";
-
-// Shared components
-import {
-	H4,
-	Page,
-	NamedLink,
-	NamedRedirect,
-	OrderPanel,
-	LayoutSingleColumn,
-} from "../../components";
-
-// Related components and modules
-import TopbarContainer from "../TopbarContainer/TopbarContainer";
+	createSlug,
+	LISTING_PAGE_DRAFT_VARIANT,
+	LISTING_PAGE_PARAM_TYPE_DRAFT,
+	LISTING_PAGE_PARAM_TYPE_EDIT,
+	LISTING_PAGE_PENDING_APPROVAL_VARIANT,
+} from "../../util/urlHelpers";
 import FooterContainer from "../FooterContainer/FooterContainer";
 import NotFoundPage from "../NotFoundPage/NotFoundPage";
-
+// Related components and modules
+import TopbarContainer from "../TopbarContainer/TopbarContainer";
+import CustomListingFields from "./CustomListingFields";
 import {
-	sendInquiry,
-	setInitialValues,
 	fetchTimeSlots,
 	fetchTransactionLineItems,
+	sendInquiry,
+	setInitialValues,
 } from "./ListingPage.duck";
-
-import {
-	LoadingPage,
-	ErrorPage,
-	priceData,
-	listingImages,
-	handleContactUser,
-	handleSubmitInquiry,
-	handleSubmit,
-} from "./ListingPage.shared";
-import SectionHero from "./SectionHero";
-import SectionTextMaybe from "./SectionTextMaybe";
-import SectionReviews from "./SectionReviews";
-import SectionAuthorMaybe from "./SectionAuthorMaybe";
-import SectionMapMaybe from "./SectionMapMaybe";
-import CustomListingFields from "./CustomListingFields";
-
 import css from "./ListingPage.module.css";
+import {
+	ErrorPage,
+	handleContactUser,
+	handleSubmit,
+	handleSubmitInquiry,
+	listingImages,
+	LoadingPage,
+	priceData,
+} from "./ListingPage.shared";
+import SectionAuthorMaybe from "./SectionAuthorMaybe";
+import SectionHero from "./SectionHero";
+import SectionMapMaybe from "./SectionMapMaybe";
+import SectionReviews from "./SectionReviews";
+import SectionTextMaybe from "./SectionTextMaybe";
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 

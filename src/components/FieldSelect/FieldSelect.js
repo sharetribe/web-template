@@ -1,9 +1,9 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Field } from "react-final-form";
 import classNames from "classnames";
-import { ValidationError } from "../../components";
+import PropTypes from "prop-types";
 
+import { ValidationError } from "../../components";
 import css from "./FieldSelect.module.css";
 
 const FieldSelectComponent = (props) => {

@@ -24,13 +24,12 @@
 	/* We must lift up the text from the center since it looks better with
    the button border. Also clears the top padding set for link
    elements looking like buttons */
-	padding: 0 0 2px 0;
+	padding: 0 0 2px;
 }
 
 .secondaryButtonInlineRoot {
 	composes: buttonSecondaryInline from global;
-
-	margin: 17px 0 0 0;
+	margin: 17px 0 0;
 }
 
 .inlineTextButtonRoot {
@@ -40,9 +39,11 @@
 .primaryButton {
 	/* Class handle for primary button state styles */
 }
+
 .secondaryButton {
 	/* Class handle for secondary button state styles */
 }
+
 .secondaryButtonInline {
 	/* Class handle for secondary button state styles */
 }
@@ -96,8 +97,8 @@
 	/* Animation */
 	animation-name: checkmarkAnimation;
 	animation-duration: 0.5s;
-	animation-iteration-count: 1;
 	animation-timing-function: ease-out;
+	animation-iteration-count: 1;
 }
 
 @keyframes checkmarkAnimation {
@@ -105,9 +106,11 @@
 		opacity: 0;
 		transform: scale(0.75);
 	}
+
 	50% {
 		transform: scale(1.15);
 	}
+
 	100% {
 		opacity: 1;
 		transform: scale(1);
@@ -127,51 +130,45 @@
 /* Social logins && SSO buttons */
 
 .socialButtonRoot {
+	/* We need to add this to position the icon inside button */
+	position: relative;
 	display: block;
 	width: 100%;
 	min-height: 48px;
-	margin: 0;
-
 	padding: 0;
-
-	transition: all var(--transitionStyleButton);
-	cursor: pointer;
-
+	margin: 0;
 	font-family: var(--fontFamily);
-	font-weight: var(--fontWeightMedium);
 	font-size: 14px;
+	font-weight: var(--fontWeightMedium);
 	line-height: 24px;
-
+	color: var(--colorBlack);
 	text-align: center;
 	text-decoration: none;
-
+	cursor: pointer;
+	background-color: var(--colorWhite);
 	border: 1px solid #d2d2d2;
 	border-radius: var(--borderRadiusMedium);
-
-	background-color: var(--colorWhite);
-	color: var(--colorBlack);
-
-	/* We need to add this to position the icon inside button */
-	position: relative;
+	transition: all var(--transitionStyleButton);
 
 	&:hover,
 	&:focus {
+		text-decoration: none;
+		background-color: var(--colorWhite);
 		outline: none;
 		box-shadow: var(--boxShadowButton);
-		background-color: var(--colorWhite);
-		text-decoration: none;
 	}
+
 	&:disabled {
-		box-shadow: none;
+		color: var(--colorWhite);
 		cursor: not-allowed;
 		background-color: var(--colorGrey100);
-		color: var(--colorWhite);
+		box-shadow: none;
 	}
 
 	@media (--viewportMedium) {
+		padding: 0;
 		font-size: 16px;
 		line-height: 24px;
-		padding: 0;
 	}
 }
 

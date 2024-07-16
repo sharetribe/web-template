@@ -1,15 +1,14 @@
 import React from "react";
+import { Form as FinalForm } from "react-final-form";
+import classNames from "classnames";
+import arrayMutators from "final-form-arrays";
 import { bool, object, string } from "prop-types";
 import { compose } from "redux";
-import { Form as FinalForm } from "react-final-form";
-import arrayMutators from "final-form-arrays";
-import classNames from "classnames";
 
+import { Form, H3, Heading, PrimaryButton } from "../../../../../components";
 import { FormattedMessage, injectIntl, intlShape } from "../../../../../util/reactIntl";
-import { Form, Heading, H3, PrimaryButton } from "../../../../../components";
 import FieldTimeZoneSelect from "../FieldTimeZoneSelect";
 import AvailabilityPlanEntries from "./AvailabilityPlanEntries";
-
 import css from "./EditListingAvailabilityPlanForm.module.css";
 
 /**

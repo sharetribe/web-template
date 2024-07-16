@@ -1,11 +1,10 @@
 import React from "react";
-import { bool, node, string } from "prop-types";
 import classNames from "classnames";
+import { bool, node, string } from "prop-types";
 
 import LayoutComposer from "../LayoutComposer";
-import LayoutWrapperAccountSettingsSideNav from "./LayoutWrapperAccountSettingsSideNav";
-
 import css from "./LayoutSideNavigation.module.css";
+import LayoutWrapperAccountSettingsSideNav from "./LayoutWrapperAccountSettingsSideNav";
 
 // Commonly used layout
 const LayoutSideNavigation = (props) => {

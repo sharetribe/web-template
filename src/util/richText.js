@@ -1,11 +1,10 @@
 import React from "react";
-import flow from "lodash/flow";
 import flatMap from "lodash/flatMap";
+import flow from "lodash/flow";
 import map from "lodash/map";
 
-import { sanitizeUrl } from "./sanitize";
-
 import { ExternalLink } from "../components";
+import { sanitizeUrl } from "./sanitize";
 // NOTE: This file imports components/index.js, which may lead to circular dependency
 
 /**

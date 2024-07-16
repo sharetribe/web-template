@@ -1,20 +1,19 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import invariant from "invariant";
-import { arrayOf, func, number, object, oneOfType, shape, string } from "prop-types";
-import isEqual from "lodash/isEqual";
 import classNames from "classnames";
+import invariant from "invariant";
+import isEqual from "lodash/isEqual";
+import { arrayOf, func, number, object, oneOfType, shape, string } from "prop-types";
 
-import { types as sdkTypes } from "../../../util/sdkLoader";
-import { parse } from "../../../util/urlHelpers";
-import { propTypes } from "../../../util/types";
 import { ensureListing } from "../../../util/data";
-import { sdkBoundsToFixedCoordinates, hasSameSDKBounds } from "../../../util/maps";
-import { getOffsetOverride, getLayoutStyles } from "../../../util/googleMaps";
-
-import SearchMapPriceLabel from "../SearchMapPriceLabel/SearchMapPriceLabel";
-import SearchMapInfoCard from "../SearchMapInfoCard/SearchMapInfoCard";
+import { getLayoutStyles, getOffsetOverride } from "../../../util/googleMaps";
+import { hasSameSDKBounds, sdkBoundsToFixedCoordinates } from "../../../util/maps";
+import { types as sdkTypes } from "../../../util/sdkLoader";
+import { propTypes } from "../../../util/types";
+import { parse } from "../../../util/urlHelpers";
 import SearchMapGroupLabel from "../SearchMapGroupLabel/SearchMapGroupLabel";
+import SearchMapInfoCard from "../SearchMapInfoCard/SearchMapInfoCard";
+import SearchMapPriceLabel from "../SearchMapPriceLabel/SearchMapPriceLabel";
 import { groupedByCoordinates, reducedToArray } from "./SearchMap.helpers";
 import css from "./SearchMapWithGoogleMaps.module.css";
 
@@ -490,7 +489,7 @@ class SearchMapWithGoogleMaps extends Component {
 		this.setState({ mapContainer: element });
 	}
 
-	onIdle(e) {
+	onIdle() {
 		if (this.map) {
 			// If reusableMapHiddenHandle is given and parent element has that class,
 			// we don't listen moveend events.
@@ -534,8 +533,9 @@ class SearchMapWithGoogleMaps extends Component {
 			config,
 		} = this.props;
 		return (
-			<div
+			<button
 				id={id}
+				type="button"
 				ref={this.onMount}
 				className={classNames(className, css.fullArea)}
 				onClick={this.props.onClick}
@@ -561,7 +561,7 @@ class SearchMapWithGoogleMaps extends Component {
 						config={config}
 					/>
 				) : null}
-			</div>
+			</button>
 		);
 	}
 }

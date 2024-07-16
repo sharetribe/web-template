@@ -25,12 +25,12 @@
 .label,
 .labelSelected {
 	composes: marketplaceSmallFontStyles from global;
-	font-weight: var(--fontWeightBold);
+	padding: 4px 0 2px;
 
 	/* Baseline adjustment for label text */
 	margin-top: 0;
 	margin-bottom: 12px;
-	padding: 4px 0 2px 0;
+	font-weight: var(--fontWeightBold);
 
 	@media (--viewportMedium) {
 		padding: 0;
@@ -48,14 +48,15 @@
 }
 
 .labelButton {
-	/* Override button styles */
-	outline: none;
+	width: 100%;
+	padding: 0;
 	line-height: 24px;
 	text-align: left;
-	border: none;
-	padding: 0;
 	cursor: pointer;
-	width: 100%;
+	border: none;
+
+	/* Override button styles */
+	outline: none;
 }
 
 .labelButtonContent {
@@ -82,16 +83,16 @@
 
 .clearButton {
 	composes: h5 from global;
-	margin: 0;
 	display: block;
+	margin: 0;
 	font-weight: var(--fontWeightMedium);
 	color: var(--colorGrey300);
+	text-align: left;
+	cursor: pointer;
+	border: none;
 
 	/* Override button styles */
 	outline: none;
-	text-align: left;
-	border: none;
-	cursor: pointer;
 
 	&:focus,
 	&:hover {
@@ -99,7 +100,7 @@
 	}
 
 	@media (--viewportMedium) {
+		padding: 4px 0;
 		margin: 0;
-		padding: 4px 0 4px 0;
 	}
 }

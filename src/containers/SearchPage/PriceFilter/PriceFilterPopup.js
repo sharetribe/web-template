@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import { arrayOf, func, node, number, shape, string } from "prop-types";
 import classNames from "classnames";
-
-import { injectIntl, intlShape } from "../../../util/reactIntl";
-import { formatCurrencyMajorUnit } from "../../../util/currency";
+import { arrayOf, func, node, number, shape, string } from "prop-types";
 
 import { OutsideClickHandler } from "../../../components";
-
+import { formatCurrencyMajorUnit } from "../../../util/currency";
+import { injectIntl, intlShape } from "../../../util/reactIntl";
 import PopupOpenerButton from "../PopupOpenerButton/PopupOpenerButton";
 import PriceFilterForm from "../PriceFilterForm/PriceFilterForm";
 import css from "./PriceFilterPopup.module.css";
@@ -154,12 +152,12 @@ class PriceFilterPopup extends Component {
 				? label
 				: intl.formatMessage({ id: "PriceFilter.label" });
 
-		const labelStyles = hasInitialValues ? css.labelSelected : css.label;
 		const contentStyle = this.positionStyleForContent();
 
 		return (
 			<OutsideClickHandler onOutsideClick={this.handleBlur}>
-				<div
+				<button
+					type="button"
 					className={classes}
 					onKeyDown={this.handleKeyDown}
 					ref={(node) => {
@@ -187,7 +185,7 @@ class PriceFilterPopup extends Component {
 						showAsPopup
 						isOpen={this.state.isOpen}
 					/>
-				</div>
+				</button>
 			</OutsideClickHandler>
 		);
 	}

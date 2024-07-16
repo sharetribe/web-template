@@ -2,7 +2,6 @@ import React from "react";
 import classNames from "classnames";
 
 import { AspectRatioWrapper, AvatarMedium, ResponsiveImage } from "../../components";
-
 import css from "./CheckoutPage.module.css";
 
 const MobileListingImage = (props) => {

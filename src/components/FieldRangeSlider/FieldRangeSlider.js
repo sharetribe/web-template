@@ -1,6 +1,7 @@
 import React from "react";
 import { Field } from "react-final-form";
 import classNames from "classnames";
+
 import { RangeSlider } from "../../components";
 
 const RangeSliderInput = (props) => {

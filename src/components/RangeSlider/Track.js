@@ -1,6 +1,6 @@
 import React from "react";
-import { array, node, string } from "prop-types";
 import classNames from "classnames";
+import { array, node, string } from "prop-types";
 
 import css from "./Track.module.css";
 

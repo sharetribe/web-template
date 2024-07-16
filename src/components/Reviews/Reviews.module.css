@@ -18,10 +18,10 @@
 
 .review {
 	display: flex;
-	flex-direction: row;
 	flex-basis: 564px;
-	flex-shrink: 1;
+	flex-direction: row;
 	flex-grow: 0;
+	flex-shrink: 1;
 }
 
 .avatar {
@@ -31,15 +31,15 @@
 
 .reviewContent {
 	composes: textSmall from global;
-	font-style: italic;
 	margin: 0;
+	font-style: italic;
 	white-space: pre-line;
 }
 
 .reviewInfo {
 	composes: h5 from global;
 	margin-top: 10px;
-	margin-bottom: 0px;
+	margin-bottom: 0;
 	color: var(--colorGrey300);
 
 	@media (--viewportMedium) {
@@ -52,8 +52,8 @@
 }
 
 .desktopSeparator {
-	margin: 0 7px;
 	display: none;
+	margin: 0 7px;
 
 	@media (--viewportMedium) {
 		display: inline;
@@ -88,8 +88,8 @@
 }
 
 .reviewRatingStar {
-	height: 12px;
 	width: 12px;
+	height: 12px;
 	margin-right: 2px;
 
 	&:last-of-type {

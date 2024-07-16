@@ -9,7 +9,7 @@
  */
 .mobileMargins {
 	width: calc(100% - 48px);
-	margin: 0 24px 6px 24px;
+	margin: 0 24px 6px;
 
 	@media (--viewportMedium) {
 		width: 100%;

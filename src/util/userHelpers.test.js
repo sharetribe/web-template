@@ -1,10 +1,9 @@
-import {
-	pickUserFieldsData,
-	initialValuesForUserFields,
-	getPropsForCustomUserFieldInputs,
-} from "./userHelpers";
-
 import { fakeIntl } from "./testData";
+import {
+	getPropsForCustomUserFieldInputs,
+	initialValuesForUserFields,
+	pickUserFieldsData,
+} from "./userHelpers";
 
 const config = [
 	{

@@ -1,6 +1,7 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
+import PropTypes from "prop-types";
+
 import { parse } from "../../util/urlHelpers";
 import PaginationLinks from "./PaginationLinks";
 

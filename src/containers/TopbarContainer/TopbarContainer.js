@@ -1,15 +1,14 @@
 import React from "react";
-import { array, bool, func, number, object, shape, string } from "prop-types";
-import { compose } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import loadable from "@loadable/component";
+import { array, bool, func, number, object, shape, string } from "prop-types";
+import { compose } from "redux";
 
-import { propTypes } from "../../util/types";
-
-import { sendVerificationEmail, hasCurrentUserErrors } from "../../ducks/user.duck";
-import { logout, authenticationInProgress } from "../../ducks/auth.duck";
+import { authenticationInProgress, logout } from "../../ducks/auth.duck";
 import { manageDisableScrolling } from "../../ducks/ui.duck";
+import { hasCurrentUserErrors, sendVerificationEmail } from "../../ducks/user.duck";
+import { propTypes } from "../../util/types";
 
 const Topbar = loadable(() => import(/* webpackChunkName: "Topbar" */ "./Topbar/Topbar"));
 

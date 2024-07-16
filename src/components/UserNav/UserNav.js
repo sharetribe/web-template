@@ -1,10 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { FormattedMessage } from "../../util/reactIntl";
 import classNames from "classnames";
-import { ACCOUNT_SETTINGS_PAGES } from "../../routing/routeConfiguration";
-import { LinkTabNavHorizontal } from "../../components";
+import PropTypes from "prop-types";
 
+import { LinkTabNavHorizontal } from "../../components";
+import { ACCOUNT_SETTINGS_PAGES } from "../../routing/routeConfiguration";
+import { FormattedMessage } from "../../util/reactIntl";
 import css from "./UserNav.module.css";
 
 const UserNav = (props) => {

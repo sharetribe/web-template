@@ -2,15 +2,15 @@
 
 /* Desktop */
 .root {
-	/* Size */
-	width: 100%;
-	height: var(--topbarHeightDesktop);
-
 	/* Layout for child components */
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
 	align-items: flex-start;
+	justify-content: space-between;
+
+	/* Size */
+	width: 100%;
+	height: var(--topbarHeightDesktop);
 	padding: 0 12px 0 0;
 
 	/* fill */
@@ -26,9 +26,10 @@
 
 /* logo */
 .logoLink {
-	border-bottom: 0px solid;
+	border-bottom: 0 solid;
 	transition: var(--transitionStyleButton);
 }
+
 .logoLink:hover {
 	border-bottom: 4px solid var(--marketplaceColor);
 	border-radius: 0;
@@ -38,21 +39,18 @@
 .searchLink {
 	min-width: 320px;
 	height: 100%;
-	border-left-style: solid;
-	border-left-width: 1px;
-	border-left-color: var(--colorGrey100);
+	border-left: 1px solid var(--colorGrey100);
 }
 
 .search {
-	font-weight: var(--fontWeightMedium);
-	font-size: 15px;
-	line-height: 24px;
-	letter-spacing: 0;
-	color: var(--colorGrey700);
-
 	display: inline-block;
 	margin: 28px 0;
+	font-size: 15px;
+	font-weight: var(--fontWeightMedium);
+	line-height: 24px;
+	color: var(--colorGrey700);
 	text-decoration: inherit;
+	letter-spacing: 0;
 
 	@media (--viewportMedium) {
 		font-weight: var(--fontWeightMedium);
@@ -67,9 +65,9 @@
 }
 
 .topbarSearchWithLeftPadding {
-	padding-left: 24px;
-	padding-right: 24px;
 	height: var(--topbarHeightDesktop);
+	padding-right: 24px;
+	padding-left: 24px;
 
 	@media (--viewportLarge) {
 		padding-left: 34px;
@@ -79,98 +77,92 @@
 /* These is used with Inbox, Sign up, and Log in */
 .topbarLink {
 	flex-shrink: 0;
-
-	border-bottom: 0px solid;
-	transition: var(--transitionStyleButton);
-
-	font-weight: var(--fontWeightMedium);
-	font-size: 14px;
-	line-height: 18px;
-	letter-spacing: 0;
-	color: var(--colorGrey700);
-
 	height: 100%;
-	padding: 0 12px 0 12px;
+	padding: 0 12px;
 	margin: 0;
+	font-size: 14px;
+	font-weight: var(--fontWeightMedium);
+	line-height: 18px;
+	color: var(--colorGrey700);
+	letter-spacing: 0;
+	border-bottom: 0 solid;
+	transition: var(--transitionStyleButton);
 
 	&:hover {
 		color: var(--colorBlack);
+		text-decoration: none;
 		border-bottom: 4px solid var(--marketplaceColor);
 		border-radius: 0;
-		text-decoration: none;
 	}
 
 	@media (--viewportMedium) {
-		line-height: 16px;
 		margin: 0;
+		line-height: 16px;
 	}
 }
 
 .topbarLinkLabel {
 	composes: textSmall from global;
+	position: relative;
 	display: inline-block;
 	margin: 28px 0;
 	text-decoration: inherit;
-	position: relative;
 }
 
 .notificationDot {
-	/* Dimensions */
-	width: 7px;
-	height: 7px;
-	border-radius: 50%;
-
 	/* Position */
 	position: absolute;
 	top: 2px;
 	right: -9px;
 
+	/* Dimensions */
+	width: 7px;
+	height: 7px;
+
 	/* Style: red dot */
 	background-color: var(--colorFail);
-
-	animation-name: notificationPop;
-	animation-duration: 0.1s;
-	animation-delay: 0.1s;
-	animation-fill-mode: forwards;
-
-	animation-timing-function: ease-in;
+	border-radius: 50%;
 	opacity: 0;
 	transform: scale(0);
+	animation-name: notificationPop;
+	animation-duration: 0.1s;
+	animation-timing-function: ease-in;
+	animation-delay: 0.1s;
+	animation-fill-mode: forwards;
 }
 
 @keyframes notificationPop {
 	0% {
-		transform: scale(0);
 		opacity: 0;
+		transform: scale(0);
 	}
+
 	100% {
-		transform: scale(1);
 		opacity: 1;
+		transform: scale(1);
 	}
 }
 
 /* Profile menu */
 .profileMenuLabel {
-	border-bottom: 0px solid;
-	transition: var(--transitionStyleButton);
-
-	font-weight: var(--fontWeightMedium);
-	font-size: 14px;
-	line-height: 18px;
-	letter-spacing: 0;
-	color: var(--colorGrey700);
-
-	flex-shrink: 0;
 	display: flex;
+	flex-shrink: 0;
 	align-items: center;
 	height: 100%;
+	padding: 0 12px;
 	margin: 0;
-	padding: 0 12px 0 12px;
+	font-size: 14px;
+	font-weight: var(--fontWeightMedium);
+	line-height: 18px;
+	color: var(--colorGrey700);
+	letter-spacing: 0;
+	border-bottom: 0 solid;
+	transition: var(--transitionStyleButton);
 
 	&:hover {
+		text-decoration: none;
 		border-bottom: 4px solid var(--marketplaceColor);
 		border-radius: 0;
-		text-decoration: none;
 	}
 
 	&:active {
@@ -197,9 +189,9 @@
 .menuItemBorder {
 	position: absolute;
 	top: 2px;
-	left: 0px;
-	height: calc(100% - 4px);
+	left: 0;
 	width: 0;
+	height: calc(100% - 4px);
 	transition: width var(--transitionStyleButton);
 }
 
@@ -211,8 +203,8 @@
 	/* Dimensions */
 	width: 100%;
 	min-width: 276px;
-	margin: 0;
 	padding: 4px 24px;
+	margin: 0;
 
 	/* Layout details */
 	color: var(--colorGrey700);
@@ -235,59 +227,56 @@
 }
 
 .logoutButton {
+	/* Dimensions */
+	position: relative;
 	display: inline;
-
-	/* Text size should be inherited */
-	text-decoration: none;
+	width: 100%;
+	min-width: 276px;
+	padding: 20px 24px;
+	margin: 0;
+	font-size: 14px;
 
 	/* Font is specific to this component */
 	font-weight: var(--fontWeightMedium);
-	font-size: 14px;
 	line-height: 18px;
-	letter-spacing: 0;
-
-	/* Dimensions */
-	position: relative;
-	width: 100%;
-	min-width: 276px;
-	margin: 0;
-	padding: 20px 24px;
 
 	/* Layout details */
 	color: var(--colorGrey300);
 	text-align: left;
+
+	/* Text size should be inherited */
+	text-decoration: none;
+	letter-spacing: 0;
 	white-space: nowrap;
-	transition: var(--transitionStyleButton);
 
 	/* Borders */
 	border: none;
-	border-top-width: 1px;
-	border-top-style: solid;
-	border-top-color: var(--colorGrey100);
+	border-top: 1px solid var(--colorGrey100);
+	transition: var(--transitionStyleButton);
 
 	&:hover {
-		cursor: pointer;
 		color: var(--colorBlack);
 		text-decoration: none;
+		cursor: pointer;
 
 		& .menuItemBorder {
-			height: 100%;
-			width: 6px;
 			top: 0;
+			width: 6px;
+			height: 100%;
 			background-color: var(--marketplaceColor);
 		}
 	}
 
 	@media (--viewportMedium) {
-		line-height: 16px;
 		margin-top: 20px;
 		margin-bottom: 0;
+		line-height: 16px;
 	}
 }
 
 .currentPage {
-	color: var(--colorBlack);
 	position: relative;
+	color: var(--colorBlack);
 
 	& .menuItemBorder {
 		width: 6px;

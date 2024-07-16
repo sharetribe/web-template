@@ -1,40 +1,36 @@
 import React from "react";
-import { any, string } from "prop-types";
 import ReactDOMServer from "react-dom/server";
+import { HelmetProvider } from "react-helmet-async";
+import { Provider } from "react-redux";
+import { BrowserRouter, StaticRouter } from "react-router-dom";
+import loadable from "@loadable/component";
+import difference from "lodash/difference";
+import mapValues from "lodash/mapValues";
+import moment from "moment";
+import { any, string } from "prop-types";
+
+import { MaintenanceMode } from "./components";
+// Configs and store setup
+import defaultConfig from "./config/configDefault";
+import appSettings from "./config/settings";
+import { ConfigurationProvider } from "./context/configurationContext";
+// utils
+import { RouteConfigurationProvider } from "./context/routeConfigurationContext";
+// routing
+import routeConfiguration from "./routing/routeConfiguration";
+import Routes from "./routing/Routes";
+import configureStore from "./store";
+// Sharetribe Web Template uses English translations as default translations.
+import defaultMessages from "./translations/en.json";
+import { mergeConfig } from "./util/configHelpers";
+import { IncludeScripts } from "./util/includeScripts";
+import { IntlProvider } from "./util/reactIntl";
+import { includeCSSProperties } from "./util/style";
 
 // react-dates needs to be initialized before using any react-dates component
 // https://github.com/airbnb/react-dates#initialize
 // NOTE: Initializing it here will initialize it also for app.test.js
 import "react-dates/initialize";
-import { HelmetProvider } from "react-helmet-async";
-import { BrowserRouter, StaticRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import loadable from "@loadable/component";
-import difference from "lodash/difference";
-import mapValues from "lodash/mapValues";
-import moment from "moment";
-
-// Configs and store setup
-import defaultConfig from "./config/configDefault";
-import appSettings from "./config/settings";
-import configureStore from "./store";
-
-// utils
-import { RouteConfigurationProvider } from "./context/routeConfigurationContext";
-import { ConfigurationProvider } from "./context/configurationContext";
-import { mergeConfig } from "./util/configHelpers";
-import { IntlProvider } from "./util/reactIntl";
-import { includeCSSProperties } from "./util/style";
-import { IncludeScripts } from "./util/includeScripts";
-
-import { MaintenanceMode } from "./components";
-
-// routing
-import routeConfiguration from "./routing/routeConfiguration";
-import Routes from "./routing/Routes";
-
-// Sharetribe Web Template uses English translations as default translations.
-import defaultMessages from "./translations/en.json";
 
 // If you want to change the language of default (fallback) translations,
 // change the imports to match the wanted locale:
@@ -111,30 +107,27 @@ const localeMessages = isTestEnv
 // just remove this and directly import the necessary locale on step 2.
 const MomentLocaleLoader = (props) => {
 	const { children, locale } = props;
-	const isAlreadyImportedLocale =
-		typeof hardCodedLocale !== "undefined" && locale === hardCodedLocale;
 
 	// Moment's built-in locale does not need loader
 	const NoLoader = (props) => <>{props.children()}</>;
 
 	// The default locale is en (en-US). Here we dynamically load one of the other common locales.
 	// However, the default is to include all supported locales package from moment library.
-	const MomentLocale =
-		["en", "en-US"].includes(locale) || isAlreadyImportedLocale
-			? NoLoader
-			: ["fr", "fr-FR"].includes(locale)
-				? loadable.lib(() => import(/* webpackChunkName: "fr" */ "moment/locale/fr"))
-				: ["de", "de-DE"].includes(locale)
-					? loadable.lib(() => import(/* webpackChunkName: "de" */ "moment/locale/de"))
-					: ["es", "es-ES"].includes(locale)
-						? loadable.lib(() => import(/* webpackChunkName: "es" */ "moment/locale/es"))
-						: ["fi", "fi-FI"].includes(locale)
-							? loadable.lib(() => import(/* webpackChunkName: "fi" */ "moment/locale/fi"))
-							: ["nl", "nl-NL"].includes(locale)
-								? loadable.lib(() => import(/* webpackChunkName: "nl" */ "moment/locale/nl"))
-								: loadable.lib(
-										() => import(/* webpackChunkName: "locales" */ "moment/min/locales.min"),
-									);
+	const MomentLocale = ["en", "en-US"].includes(locale)
+		? NoLoader
+		: ["fr", "fr-FR"].includes(locale)
+			? loadable.lib(() => import(/* webpackChunkName: "fr" */ "moment/locale/fr"))
+			: ["de", "de-DE"].includes(locale)
+				? loadable.lib(() => import(/* webpackChunkName: "de" */ "moment/locale/de"))
+				: ["es", "es-ES"].includes(locale)
+					? loadable.lib(() => import(/* webpackChunkName: "es" */ "moment/locale/es"))
+					: ["fi", "fi-FI"].includes(locale)
+						? loadable.lib(() => import(/* webpackChunkName: "fi" */ "moment/locale/fi"))
+						: ["nl", "nl-NL"].includes(locale)
+							? loadable.lib(() => import(/* webpackChunkName: "nl" */ "moment/locale/nl"))
+							: loadable.lib(
+									() => import(/* webpackChunkName: "locales" */ "moment/min/locales.min"),
+								);
 
 	return (
 		<MomentLocale>
@@ -194,8 +187,9 @@ const EnvironmentVariableWarning = (props) => {
 				</p>
 				<p>
 					All the environment variables that start with <i>REACT_APP_</i> prefix will be part of the
-					published React app that's running on a browser. Those variables are, therefore, visible
-					to anyone on the web. Secrets should only be used on a secure environment like the server.
+					published React app that&apos;s running on a browser. Those variables are, therefore,
+					visible to anyone on the web. Secrets should only be used on a secure environment like the
+					server.
 				</p>
 				{containsINTEG(suspiciousEnvKey) ? (
 					<p>

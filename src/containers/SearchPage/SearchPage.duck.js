@@ -1,18 +1,17 @@
-import { storableError } from "../../util/errors";
+import { addMarketplaceEntities } from "../../ducks/marketplaceData.duck";
 import { convertUnitToSubUnit, unitDivisor } from "../../util/currency";
 import {
-	parseDateFromISO8601,
-	getExclusiveEndDate,
 	addTime,
-	subtractTime,
 	daysBetween,
+	getExclusiveEndDate,
 	getStartOf,
+	parseDateFromISO8601,
+	subtractTime,
 } from "../../util/dates";
+import { storableError } from "../../util/errors";
 import { createImageVariantConfig } from "../../util/sdkLoader";
-import { constructQueryParamName, isOriginInUse, isStockInUse } from "../../util/search";
+import { constructQueryParamName, isOriginInUse } from "../../util/search";
 import { parse } from "../../util/urlHelpers";
-
-import { addMarketplaceEntities } from "../../ducks/marketplaceData.duck";
 
 // Pagination page size might need to be dynamic on responsive page layouts
 // Current design has max 3 columns 12 is divisible by 2 and 3
@@ -233,7 +232,15 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 		return hasDatesFilterInUse ? {} : { minStock: 1, stockMode: "match-undefined" };
 	};
 
-	const { perPage, price, dates, sort, mapSearch, ...restOfParams } = searchParams;
+	const {
+		perPage,
+		price,
+		dates,
+		sort,
+		//  mapSearch,
+		...restOfParams
+	} = searchParams;
+
 	const priceMaybe = priceSearchParams(price);
 	const datesMaybe = datesSearchParams(dates);
 	const stockMaybe = stockFilters(datesMaybe);
@@ -272,55 +279,73 @@ export const setActiveListing = (listingId) => ({
 	payload: listingId,
 });
 
-export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
-	const queryParams = parse(search, {
-		latlng: ["origin"],
-		latlngBounds: ["bounds"],
-	});
+/**
+ * @param {*} params
+ * @param {*} search
+ * @param {*} config
+ */
+export const loadData =
+	(_, search, config) =>
+	/**
+	 * @param {Function} dispatch
+	 * @param {*} [getState]
+	 * @param {*} [sdk]
+	 */
+	(dispatch) => {
+		const queryParams = parse(search, {
+			latlng: ["origin"],
+			latlngBounds: ["bounds"],
+		});
 
-	const { page = 1, address, origin, ...rest } = queryParams;
-	const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
+		const {
+			page = 1,
+			origin,
+			// address,
+			...rest
+		} = queryParams;
 
-	const {
-		aspectWidth = 1,
-		aspectHeight = 1,
-		variantPrefix = "listing-card",
-	} = config.layout.listingImage;
-	const aspectRatio = aspectHeight / aspectWidth;
+		const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
 
-	const searchListingsCall = searchListings(
-		{
-			...rest,
-			...originMaybe,
-			page,
-			perPage: RESULT_PAGE_SIZE,
-			include: ["author", "images"],
-			"fields.listing": [
-				"title",
-				"geolocation",
-				"price",
-				"deleted",
-				"state",
-				"publicData.listingType",
-				"publicData.transactionProcessAlias",
-				"publicData.unitType",
-				// These help rendering of 'purchase' listings,
-				// when transitioning from search page to listing page
-				"publicData.pickupEnabled",
-				"publicData.shippingEnabled",
-			],
-			"fields.user": ["profile.displayName", "profile.abbreviatedName"],
-			"fields.image": [
-				"variants.scaled-small",
-				"variants.scaled-medium",
-				`variants.${variantPrefix}`,
-				`variants.${variantPrefix}-2x`,
-			],
-			...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
-			...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
-			"limit.images": 1,
-		},
-		config,
-	);
-	return dispatch(searchListingsCall);
-};
+		const {
+			aspectWidth = 1,
+			aspectHeight = 1,
+			variantPrefix = "listing-card",
+		} = config.layout.listingImage;
+		const aspectRatio = aspectHeight / aspectWidth;
+
+		const searchListingsCall = searchListings(
+			{
+				...rest,
+				...originMaybe,
+				page,
+				perPage: RESULT_PAGE_SIZE,
+				include: ["author", "images"],
+				"fields.listing": [
+					"title",
+					"geolocation",
+					"price",
+					"deleted",
+					"state",
+					"publicData.listingType",
+					"publicData.transactionProcessAlias",
+					"publicData.unitType",
+					// These help rendering of 'purchase' listings,
+					// when transitioning from search page to listing page
+					"publicData.pickupEnabled",
+					"publicData.shippingEnabled",
+				],
+				"fields.user": ["profile.displayName", "profile.abbreviatedName"],
+				"fields.image": [
+					"variants.scaled-small",
+					"variants.scaled-medium",
+					`variants.${variantPrefix}`,
+					`variants.${variantPrefix}-2x`,
+				],
+				...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+				...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+				"limit.images": 1,
+			},
+			config,
+		);
+		return dispatch(searchListingsCall);
+	};

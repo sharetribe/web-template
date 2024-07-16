@@ -4,12 +4,12 @@
  * This data is saved to Session Store which only exists while the browsing session exists -
  * e.g. tab is open. (Session Store is not related to session cookies.)
  */
-import reduce from "lodash/reduce";
 import Decimal from "decimal.js";
+import reduce from "lodash/reduce";
 
+import { getProcess } from "../../transactions/transaction";
 import { isAfterDate, subtractTime } from "../../util/dates";
 import { types as sdkTypes } from "../../util/sdkLoader";
-import { getProcess } from "../../transactions/transaction";
 
 const { UUID, Money } = sdkTypes;
 

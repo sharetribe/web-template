@@ -1,8 +1,8 @@
 import { addMarketplaceEntities } from "../../ducks/marketplaceData.duck";
 import { fetchCurrentUser } from "../../ducks/user.duck";
-import { types as sdkTypes, createImageVariantConfig } from "../../util/sdkLoader";
 import { denormalisedResponseEntities } from "../../util/data";
 import { storableError } from "../../util/errors";
+import { createImageVariantConfig, types as sdkTypes } from "../../util/sdkLoader";
 
 const { UUID } = sdkTypes;
 
@@ -146,7 +146,7 @@ export const queryUserListings = (userId, config) => (dispatch, getState, sdk) =
 			// Pick only the id and type properties from the response listings
 			const listings = response.data.data;
 			const listingRefs = listings
-				.filter((l) => (l) => !l.attributes.deleted && l.attributes.state === "published")
+				.filter(() => (l) => !l.attributes.deleted && l.attributes.state === "published")
 				.map(({ id, type }) => ({ id, type }));
 			dispatch(addMarketplaceEntities(response));
 			dispatch(queryListingsSuccess(listingRefs));
@@ -188,17 +188,27 @@ export const showUser = (userId, config) => (dispatch, getState, sdk) => {
 		.catch((e) => dispatch(showUserError(storableError(e))));
 };
 
-export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
-	const userId = new UUID(params.id);
+export const loadData =
+	(
+		params,
+		_, // search
+		config,
+	) =>
+	(
+		dispatch,
+		// getState,
+		// sdk
+	) => {
+		const userId = new UUID(params.id);
 
-	// Clear state so that previously loaded data is not visible
-	// in case this page load fails.
-	dispatch(setInitialState());
+		// Clear state so that previously loaded data is not visible
+		// in case this page load fails.
+		dispatch(setInitialState());
 
-	return Promise.all([
-		dispatch(fetchCurrentUser()),
-		dispatch(showUser(userId, config)),
-		dispatch(queryUserListings(userId, config)),
-		dispatch(queryUserReviews(userId)),
-	]);
-};
+		return Promise.all([
+			dispatch(fetchCurrentUser()),
+			dispatch(showUser(userId, config)),
+			dispatch(queryUserListings(userId, config)),
+			dispatch(queryUserReviews(userId)),
+		]);
+	};

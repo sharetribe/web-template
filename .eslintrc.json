@@ -1,7 +1,19 @@
 {
 	"extends": ["./node_modules/@buildinams/lint/eslint/react-javascript"],
 	"rules": {
-		"react/prop-types": ["warn"],
-		"no-unused-vars": ["warn"]
-	}
+		"react/prop-types": ["off", {
+			"ignore": ["children"]
+		}],
+		"no-unused-vars": ["warn"],
+		"no-console": ["warn"]
+	},
+	// Ignore no console warning for .example.js files
+	"overrides": [
+		{
+			"files": ["*.example.js"],
+			"rules": {
+				"no-console": ["off"]
+			}
+		}
+	]
 }

@@ -1,9 +1,8 @@
 import React from "react";
-import { bool, func, node, number, string } from "prop-types";
 import classNames from "classnames";
+import { bool, node, number, string } from "prop-types";
 
 import { FormattedMessage } from "../../../util/reactIntl";
-
 import css from "./MainPanelHeader.module.css";
 
 const MainPanelHeader = (props) => {
@@ -13,7 +12,7 @@ const MainPanelHeader = (props) => {
 		children,
 		sortByComponent,
 		isSortByActive,
-		listingsAreLoaded,
+		// listingsAreLoaded,
 		resultsCount,
 		searchInProgress,
 		noResultsInfo,

@@ -6,16 +6,15 @@
  */
 
 import React, { Component } from "react";
-import { bool, func, object, oneOf, string, number } from "prop-types";
 import { isInclusivelyAfterDay, isInclusivelyBeforeDay } from "react-dates";
 import { Field } from "react-final-form";
 import classNames from "classnames";
 import moment from "moment";
+import { bool, func, number, object, oneOf, string } from "prop-types";
 
-import { useConfiguration } from "../../context/configurationContext";
-import { START_DATE, END_DATE } from "../../util/dates";
 import { ValidationError } from "../../components";
-
+import { useConfiguration } from "../../context/configurationContext";
+import { END_DATE, START_DATE } from "../../util/dates";
 import DateRangeInput from "./DateRangeInput";
 import css from "./FieldDateRangeInput.module.css";
 

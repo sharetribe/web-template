@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import { bool, func, oneOfType, string } from "prop-types";
-import truncate from "lodash/truncate";
 import classNames from "classnames";
+import truncate from "lodash/truncate";
+import { bool, func, oneOfType, string } from "prop-types";
 
+import { AvatarLarge, InlineTextButton, NamedLink } from "../../../components";
+import { ensureCurrentUser, ensureUser } from "../../../util/data";
 import { FormattedMessage } from "../../../util/reactIntl";
 import { richText } from "../../../util/richText";
-import { ensureUser, ensureCurrentUser } from "../../../util/data";
 import { propTypes } from "../../../util/types";
-
-import { AvatarLarge, NamedLink, InlineTextButton } from "../../../components";
-
 import css from "./UserCard.module.css";
 
 // Approximated collapsed size so that there are ~three lines of text

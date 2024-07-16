@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import { func, object, string } from "prop-types";
 import classNames from "classnames";
-
-import { FormattedMessage } from "../../../util/reactIntl";
+import { func, object, string } from "prop-types";
 
 import { InlineTextButton } from "../../../components";
-
+import { FormattedMessage } from "../../../util/reactIntl";
 import css from "./SearchFiltersSecondary.module.css";
 
 class SearchFiltersSecondaryComponent extends Component {

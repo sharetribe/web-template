@@ -17,8 +17,8 @@
  */
 
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
+import PropTypes from "prop-types";
 
 import { MenuContent, MenuLabel } from "../../components";
 import css from "./Menu.module.css";
@@ -190,6 +190,7 @@ class Menu extends Component {
 		const menuChildren = this.state.ready ? this.prepareChildren() : null;
 
 		return (
+			// eslint-disable-next-line jsx-a11y/no-static-element-interactions
 			<div
 				id={id}
 				className={classes}
@@ -218,6 +219,7 @@ Menu.defaultProps = {
 const { bool, func, node, number, string } = PropTypes;
 
 Menu.propTypes = {
+	id: string,
 	children: node.isRequired,
 	className: string,
 	rootClassName: string,

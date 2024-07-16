@@ -1,24 +1,21 @@
 @import "../../../styles/customMediaQueries.css";
 
 .root {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	background-color: var(--colorGrey50);
-
 	/* sticky result summary in mobile */
 	position: sticky;
 	top: 0;
 	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	background-color: var(--colorGrey50);
 }
 
 .searchResultSummary {
 	composes: h3 from global;
-	margin-top: 6px;
-
 	display: flex;
 	justify-content: space-between;
-
+	margin-top: 6px;
 	background-color: var(--colorGrey50);
 
 	@media (--viewportMedium) {
@@ -33,17 +30,16 @@
 .mapIcon {
 	/* Font */
 	composes: marketplaceTinyFontStyles from global;
-	font-weight: var(--fontWeightMedium);
-
-	/* background map image */
-	background-image: url(./images/map_icon216x105.png);
-	background-size: cover;
-
-	border-radius: 3px;
 	width: 72px;
 	height: 35px;
 	padding: 9px 22px;
 	margin: 0;
+	font-weight: var(--fontWeightMedium);
+
+	/* background map image */
+	background-image: url("./images/map_icon216x105.png");
+	background-size: cover;
+	border-radius: 3px;
 }
 
 .modalContainer {
@@ -64,19 +60,19 @@
 
 .resetAllButton {
 	composes: h5 from global;
-	font-weight: var(--fontWeightMedium);
-	color: var(--colorGrey300);
 
 	/* Layout */
 	display: inline;
 	float: right;
-	margin: 8px 0 0 0;
 	padding: 0;
+	margin: 8px 0 0;
+	font-weight: var(--fontWeightMedium);
+	color: var(--colorGrey300);
+	text-align: left;
+	border: none;
 
 	/* Override button styles */
 	outline: none;
-	text-align: left;
-	border: none;
 
 	&:focus,
 	&:hover {
@@ -95,17 +91,15 @@
 	position: fixed;
 	bottom: 0;
 	left: 0;
-
+	z-index: 11;
 	width: 100vw;
 	padding: 18px 24px;
-
 	background: var(--colorWhite);
-	box-shadow: 0 -2px 4px 0 rgba(0, 0, 0, 0.1);
-	z-index: 11;
+	box-shadow: 0 -2px 4px 0 rgb(0 0 0 / 10%);
 }
 
 .showListingsButton {
-	background-color: var(--marketplaceColor);
 	display: inline-block;
+	background-color: var(--marketplaceColor);
 	border-radius: 3px;
 }

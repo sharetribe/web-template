@@ -1,8 +1,9 @@
 import React from "react";
-import { shape, string } from "prop-types";
 import { withRouter } from "react-router-dom";
-import { parse } from "../../util/urlHelpers";
+import { shape, string } from "prop-types";
+
 import { NamedRedirect } from "../../components";
+import { parse } from "../../util/urlHelpers";
 
 // Get page asset name from asset path
 const getPageAssetName = (assetPath) => {

@@ -1,18 +1,19 @@
 import React, { useState } from "react";
+
 import {
-	createUser,
-	createCurrentUser,
-	createMessage,
-	createTransaction,
-	createListing,
-	createTxTransition,
-	createReview,
-} from "../../../util/testData";
-import {
+	getProcess,
 	TX_TRANSITION_ACTOR_CUSTOMER,
 	TX_TRANSITION_ACTOR_PROVIDER,
-	getProcess,
 } from "../../../transactions/transaction";
+import {
+	createCurrentUser,
+	createListing,
+	createMessage,
+	createReview,
+	createTransaction,
+	createTxTransition,
+	createUser,
+} from "../../../util/testData";
 import ActivityFeed from "./ActivityFeed";
 
 const noop = () => null;
@@ -259,7 +260,7 @@ export const WithAReviewFromBothUsers = {
 	group: "page:TransactionPage",
 };
 
-const PagedFeed = (props) => {
+const PagedFeed = () => {
 	const [showAllMessages, setShowAllMessages] = useState(false);
 	const dates = [
 		new Date(Date.UTC(2017, 10, 20, 12)),
@@ -319,7 +320,6 @@ const PagedFeed = (props) => {
 	const messages = showAllMessages ? [msg1, msg2, msg3, msg4] : [msg2, msg3, msg4];
 
 	const handleShowOlder = () => {
-		console.log("show older messages");
 		setShowAllMessages(true);
 	};
 

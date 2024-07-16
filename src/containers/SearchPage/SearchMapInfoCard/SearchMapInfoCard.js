@@ -1,15 +1,13 @@
 import React, { useState } from "react";
+import classNames from "classnames";
 import { arrayOf, bool, func, object, string } from "prop-types";
 import { compose } from "redux";
-import classNames from "classnames";
-
-import { injectIntl, intlShape } from "../../../util/reactIntl";
-import { propTypes } from "../../../util/types";
-import { formatMoney } from "../../../util/currency";
-import { ensureListing } from "../../../util/data";
 
 import { AspectRatioWrapper, ResponsiveImage } from "../../../components";
-
+import { formatMoney } from "../../../util/currency";
+import { ensureListing } from "../../../util/data";
+import { injectIntl, intlShape } from "../../../util/reactIntl";
+import { propTypes } from "../../../util/types";
 import css from "./SearchMapInfoCard.module.css";
 
 // ListingCard is the listing info without overlayview or carousel controls

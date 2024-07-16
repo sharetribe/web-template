@@ -1,14 +1,11 @@
 import React, { Component } from "react";
-import { bool, func, node, number, object, string } from "prop-types";
 import classNames from "classnames";
-
-import { injectIntl, intlShape } from "../../../util/reactIntl";
+import { bool, func, node, number, object, string } from "prop-types";
 
 import { OutsideClickHandler } from "../../../components";
-
-import PopupOpenerButton from "../PopupOpenerButton/PopupOpenerButton";
+import { injectIntl, intlShape } from "../../../util/reactIntl";
 import FilterForm from "../FilterForm/FilterForm";
-
+import PopupOpenerButton from "../PopupOpenerButton/PopupOpenerButton";
 import css from "./FilterPopup.module.css";
 
 const KEY_CODE_ESCAPE = 27;
@@ -122,7 +119,8 @@ class FilterPopup extends Component {
 
 		return (
 			<OutsideClickHandler onOutsideClick={this.handleBlur}>
-				<div
+				<button
+					type="button"
 					className={classes}
 					onKeyDown={this.handleKeyDown}
 					ref={(node) => {
@@ -160,7 +158,7 @@ class FilterPopup extends Component {
 							</FilterForm>
 						) : null}
 					</div>
-				</div>
+				</button>
 			</OutsideClickHandler>
 		);
 	}

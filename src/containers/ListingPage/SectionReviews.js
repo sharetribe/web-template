@@ -1,7 +1,7 @@
 import React from "react";
-import { FormattedMessage } from "../../util/reactIntl";
-import { Heading, H2, Reviews } from "../../components";
 
+import { H2, Heading, Reviews } from "../../components";
+import { FormattedMessage } from "../../util/reactIntl";
 import css from "./ListingPage.module.css";
 
 const SectionReviews = (props) => {

@@ -1,11 +1,9 @@
 import React from "react";
 
+import { Modal, ResponsiveImage } from "../../components";
 import { FormattedMessage } from "../../util/reactIntl";
-import { ResponsiveImage, Modal } from "../../components";
-
-import ImageCarousel from "./ImageCarousel/ImageCarousel";
 import ActionBarMaybe from "./ActionBarMaybe";
-
+import ImageCarousel from "./ImageCarousel/ImageCarousel";
 import css from "./ListingPage.module.css";
 
 const SectionHero = (props) => {
@@ -38,9 +36,17 @@ const SectionHero = (props) => {
 
 	return (
 		<section className={css.sectionHero} data-testid="hero">
-			<div className={css.imageWrapperForSectionHero} onClick={handleViewPhotosClick}>
+			<button
+				type="button"
+				className={css.imageWrapperForSectionHero}
+				onClick={handleViewPhotosClick}
+			>
 				{listing.id && isOwnListing ? (
-					<div onClick={(e) => e.stopPropagation()} className={css.actionBarContainerForHeroLayout}>
+					<button
+						type="button"
+						onClick={(e) => e.stopPropagation()}
+						className={css.actionBarContainerForHeroLayout}
+					>
 						{noPayoutDetailsSetWithOwnListing ? (
 							<ActionBarMaybe
 								className={css.actionBarForHeroLayout}
@@ -56,7 +62,7 @@ const SectionHero = (props) => {
 							listing={listing}
 							editParams={editParams}
 						/>
-					</div>
+					</button>
 				) : null}
 
 				<ResponsiveImage
@@ -66,7 +72,7 @@ const SectionHero = (props) => {
 					variants={variants}
 				/>
 				{viewPhotosButton}
-			</div>
+			</button>
 			<Modal
 				id="ListingPage.imageCarousel"
 				scrollLayerClassName={css.carouselModalScrollLayer}

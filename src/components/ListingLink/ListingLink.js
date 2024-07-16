@@ -7,16 +7,16 @@
   based on the listing state.
 */
 import React from "react";
-import { string, oneOfType, node } from "prop-types";
+import { node, oneOfType, string } from "prop-types";
+
+import { NamedLink } from "../../components";
 import { richText } from "../../util/richText";
 import { LISTING_STATE_DRAFT, LISTING_STATE_PENDING_APPROVAL, propTypes } from "../../util/types";
 import {
+	createSlug,
 	LISTING_PAGE_DRAFT_VARIANT,
 	LISTING_PAGE_PENDING_APPROVAL_VARIANT,
-	createSlug,
 } from "../../util/urlHelpers";
-import { NamedLink } from "../../components";
-
 import css from "./ListingLink.module.css";
 
 const MIN_LENGTH_FOR_LONG_WORDS = 16;

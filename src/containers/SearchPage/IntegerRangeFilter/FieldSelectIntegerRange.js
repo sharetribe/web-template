@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
-
-import { bool, string, number } from "prop-types";
-import classNames from "classnames";
+import React, { useEffect, useState } from "react";
 import { Field } from "react-final-form";
+import classNames from "classnames";
+import { bool, number, string } from "prop-types";
 
 import { RangeSlider } from "../../../components";
-
 import css from "./IntegerRangeFilter.module.css";
 
 const RADIX = 10;
@@ -36,6 +34,7 @@ const RangeInput = (props) => {
 
 	useEffect(() => {
 		setFieldValues(currentValues);
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- starter code
 	}, [initialValues]);
 
 	const handleMinValueChange = (event) => {

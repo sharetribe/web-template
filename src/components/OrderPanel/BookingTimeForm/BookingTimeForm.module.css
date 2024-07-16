@@ -6,29 +6,27 @@
 }
 
 .bookingBreakdownTitle {
-	letter-spacing: 1px;
 	font-weight: var(--fontWeightMedium);
+	letter-spacing: 1px;
 }
 
 .totalDivider {
 	/* dimensions */
 	width: 100%;
 	height: 1px;
-	margin: 12px 0 5px 0;
-
-	border: none;
+	margin: 12px 0 5px;
 	background-color: var(--colorGrey100);
+	border: none;
 
 	@media (--viewportMedium) {
-		margin: 7px 0 0px 0;
+		margin: 7px 0 0;
 	}
 }
 
 .bookingDates {
-	flex-shrink: 0;
-
 	/* Ensure that calendar dropdown gets some stacking context relative to other form items below */
 	z-index: 1;
+	flex-shrink: 0;
 }
 
 .priceBreakdownContainer {
@@ -43,29 +41,29 @@
 
 .receipt {
 	flex-shrink: 0;
-	margin: 0 0 24px 0;
+	margin: 0 0 24px;
 }
 
 .error {
-	color: var(--colorFail);
-	margin: 0 24px;
 	display: inline-block;
+	margin: 0 24px;
+	color: var(--colorFail);
 }
 
 .sideBarError {
 	composes: h4 from global;
+	margin: 0 24px 12px;
 	color: var(--colorFail);
-	margin: 0 24px 12px 24px;
 
 	@media (--viewportMedium) {
-		margin: 24px 0 12px 0;
+		margin: 24px 0 12px;
 	}
 }
 
 .finePrint {
 	composes: marketplaceTinyFontStyles from global;
-	text-align: center;
 	margin-top: 8px;
+	text-align: center;
 }
 
 .submitButton {

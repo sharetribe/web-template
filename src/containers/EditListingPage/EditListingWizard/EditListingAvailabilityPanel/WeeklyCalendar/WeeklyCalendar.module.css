@@ -6,22 +6,22 @@
 	flex-wrap: wrap;
 	align-items: baseline;
 
-	@media (min-width: 435px) {
+	@media (width >= 435px) {
 		flex-direction: row;
 	}
 
 	@media (--viewportMedium) {
-		padding: 5px 0 3px 0;
+		padding: 5px 0 3px;
 	}
 }
+
 .weekPicker,
 .sectionTitle {
 	composes: marketplaceSearchFilterSublabelFontStyles from global;
-	color: var(--colorGrey300);
-
-	padding: 3px 0 3px 0;
+	padding: 3px 0;
 	margin-top: 0;
 	margin-bottom: 0;
+	color: var(--colorGrey300);
 
 	@media (--viewportMedium) {
 		padding: 0;
@@ -29,6 +29,7 @@
 		margin-bottom: 0;
 	}
 }
+
 .sectionTitle {
 	margin-right: 5px;
 }
@@ -40,6 +41,7 @@
 	align-items: center;
 	text-align: left;
 }
+
 .weekPicker {
 	color: var(--colorGrey700);
 }
@@ -69,8 +71,8 @@
 	align-items: center;
 	justify-content: center;
 	padding: 6px 8px;
-	border: solid 1px var(--colorGrey100);
 	cursor: pointer;
+	border: solid 1px var(--colorGrey100);
 
 	&:hover {
 		background-color: var(--colorGrey50);
@@ -80,6 +82,7 @@
 		padding: 11px 13px;
 	}
 }
+
 .prev {
 	composes: button;
 	margin-right: -1px;
@@ -88,6 +91,7 @@
 		margin-right: 0;
 	}
 }
+
 .next {
 	composes: button;
 }
@@ -95,30 +99,32 @@
 .grid {
 	display: grid;
 	grid-template-columns: 1fr;
+	margin-top: 17px;
 	border-top: solid 1px var(--colorGrey100);
 	border-right: solid 1px var(--colorGrey100);
 	border-left: solid 1px var(--colorGrey100);
 	border-radius: var(--borderRadiusMedium);
-	margin-top: 17px;
 
 	@media (--viewportMedium) {
 		grid-template-columns: auto 1fr;
+
 		/* this takes border-top into account */
 		margin-top: 15px;
 	}
 }
 
 .dateLabelContainer {
-	padding: 24px 24px 12px 24px;
+	padding: 24px 24px 12px;
 
 	@media (--viewportMedium) {
-		padding: 24px 24px 23px 24px;
+		padding: 24px 24px 23px;
 		border-bottom: solid 1px var(--colorGrey100);
 	}
 }
+
 .dateLabel {
-	margin: 0;
 	composes: p from global;
+	margin: 0;
 	font-weight: var(--fontWeightBold);
 
 	&::first-letter {
@@ -129,13 +135,14 @@
 		margin: 0;
 	}
 }
+
 .dateAndMonth {
 	composes: h5 from global;
 }
 
 .blockedDateLabel {
-	background-color: #f3f3f3;
 	color: var(--colorGrey300);
+	background-color: #f3f3f3;
 }
 
 .info {
@@ -144,10 +151,10 @@
 .planEntries {
 	display: flex;
 	flex-direction: column;
-	padding: 4px 0 2px 0;
+	padding: 4px 0 2px;
 
 	@media (--viewportMedium) {
-		padding: 8px 0 0 0;
+		padding: 8px 0 0;
 	}
 }
 
@@ -167,21 +174,22 @@
 
 .exceptionsTitle {
 	composes: marketplaceSmallFontStyles from global;
-	padding: 6px 0 0 0;
+	padding: 6px 0 0;
 	margin: 0;
 
 	@media (--viewportMedium) {
-		padding: 6px 0 2px 0;
+		padding: 6px 0 2px;
 	}
 }
 
 .exceptionsSubtitle {
 	composes: marketplaceTinyFontStyles from global;
+	margin: 6px 0 0;
 	text-transform: unset;
 	letter-spacing: 0;
-	margin: 6px 0 0 0;
+
 	@media (--viewportMedium) {
-		margin: 8px 0 0 0;
+		margin: 8px 0 0;
 	}
 }
 
@@ -189,25 +197,24 @@
 	composes: marketplaceTinyFontStyles from global;
 	display: inline-flex;
 	flex-wrap: wrap;
+	margin: 0;
 	color: var(--colorGrey700);
 	transition: color var(--transitionStyleButton);
-	margin: 0;
 
 	@media (--viewportMedium) {
-		padding: 3px 0 5px 0;
+		padding: 3px 0 5px;
 	}
 }
 
 .availabilityDot {
 	flex-shrink: 0;
+	place-self: center center;
 	width: 8px;
 	height: 8px;
-	border-radius: var(--borderRadiusMedium);
-	align-self: center;
-	justify-self: center;
-	margin: 0 0 2px 0;
-	background-color: var(--colorFail);
+	margin: 0 0 2px;
 	margin-right: 8px;
+	background-color: var(--colorFail);
+	border-radius: var(--borderRadiusMedium);
 }
 
 .isAvailable {
@@ -229,9 +236,9 @@
 }
 
 .deleteButton {
-	border: 0;
-	padding: 0px 8px;
+	padding: 0 8px;
 	cursor: pointer;
+	border: 0;
 }
 
 .exception {
@@ -240,6 +247,7 @@
 	&:hover > .timeRange {
 		color: var(--colorBlack);
 	}
+
 	&:hover .deleteIcon {
 		stroke: var(--colorFail);
 	}
@@ -250,19 +258,19 @@
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
-	padding: 0 24px 23px 24px;
+	padding: 0 24px 23px;
 	border-bottom: solid 1px var(--colorGrey100);
 
 	@media (--viewportMedium) {
 		flex-direction: row;
 		flex-wrap: wrap;
-		padding: 24px 24px 23px 24px;
+		padding: 24px 24px 23px;
 	}
 }
 
 .blockedDate {
-	background-color: #f3f3f3;
 	color: var(--colorGrey300);
+	background-color: #f3f3f3;
 
 	& .timeRange {
 		color: var(--colorGrey300);
@@ -273,6 +281,7 @@
 	&:hover .exception > .timeRange {
 		color: var(--colorGrey700);
 	}
+
 	&:hover .exception:hover > .timeRange {
 		color: var(--colorBlack);
 	}

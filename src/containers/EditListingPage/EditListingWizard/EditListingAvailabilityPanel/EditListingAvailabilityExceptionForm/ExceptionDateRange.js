@@ -1,34 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
+import { FieldDateRangeInput } from "../../../../../components";
 import appSettings from "../../../../../config/settings";
 import {
 	END_DATE,
-	START_DATE,
 	getStartOf,
 	initialVisibleMonth,
 	isInRange,
 	isSameDay,
+	monthIdString,
+	START_DATE,
 	stringifyDateToISO8601,
 	timeOfDayFromLocalToTimeZone,
 	timeOfDayFromTimeZoneToLocal,
-	monthIdString,
 } from "../../../../../util/dates";
 import { exceptionFreeSlotsPerDate } from "../../../../../util/generators";
-import { required, bookingDatesRequired, composeValidators } from "../../../../../util/validators";
-import { FieldDateRangeInput } from "../../../../../components";
-
+import { bookingDatesRequired, composeValidators, required } from "../../../../../util/validators";
 import {
+	endOfAvailabilityExceptionRange,
+	extractDateFromFieldDateRangeInput,
+	getMonthlyFetchRange,
 	getStartOfNextMonth,
 	getStartOfPrevMonth,
-	extractDateFromFieldDateRangeInput,
-	endOfAvailabilityExceptionRange,
 	handleMonthClick,
-	getMonthlyFetchRange,
 } from "../availability.helpers";
-
 import Next from "../NextArrow";
 import Prev from "../PrevArrow";
-
 import css from "./ExceptionDateRange.module.css";
 
 // Marketplace API allows fetching exceptions to 366 days into the future.

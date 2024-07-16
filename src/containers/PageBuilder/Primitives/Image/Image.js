@@ -1,9 +1,8 @@
 import React from "react";
-import { number, objectOf, oneOf, shape, string } from "prop-types";
 import classNames from "classnames";
+import { number, objectOf, oneOf, shape, string } from "prop-types";
 
 import { AspectRatioWrapper, ResponsiveImage } from "../../../../components/index.js";
-
 import css from "./Image.module.css";
 
 // Images in markdown point to elsewhere (they don't support responsive image variants)
@@ -11,6 +10,7 @@ export const MarkdownImage = React.forwardRef((props, ref) => {
 	const { className, rootClassName, ...otherProps } = props;
 	const classes = classNames(rootClassName || css.markdownImage, className);
 
+	// eslint-disable-next-line jsx-a11y/alt-text
 	return <img className={classes} {...otherProps} ref={ref} crossOrigin="anonymous" />;
 });
 

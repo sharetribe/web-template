@@ -1,13 +1,11 @@
 import React from "react";
-import { bool, object, string } from "prop-types";
 import classNames from "classnames";
-
-import { FormattedMessage, intlShape } from "../../../util/reactIntl";
-import * as validators from "../../../util/validators";
-import getCountryCodes from "../../../translations/countryCodes";
+import { bool, object, string } from "prop-types";
 
 import { FieldSelect, FieldTextInput, Heading } from "../../../components";
-
+import getCountryCodes from "../../../translations/countryCodes";
+import { FormattedMessage, intlShape } from "../../../util/reactIntl";
+import * as validators from "../../../util/validators";
 import css from "./ShippingDetails.module.css";
 
 const ShippingDetails = (props) => {

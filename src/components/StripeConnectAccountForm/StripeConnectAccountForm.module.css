@@ -31,8 +31,8 @@
 
 .radioButtonRow {
 	display: flex;
-	justify-content: left;
 	flex-wrap: wrap;
+	justify-content: left;
 	width: 100%;
 	margin-bottom: 24px;
 	white-space: nowrap;
@@ -70,19 +70,19 @@
 }
 
 .bankDetailsStripeField p {
-	font-weight: var(--fontWeightMedium);
-	font-size: 15px;
-	line-height: 24px;
-	letter-spacing: 0;
 	/* margin-top + n * line-height + margin-bottom => x * 6px */
 	margin-top: 12px;
 	margin-bottom: 12px;
+	font-size: 15px;
+	font-weight: var(--fontWeightMedium);
+	line-height: 24px;
+	letter-spacing: 0;
 
 	@media (--viewportMedium) {
-		font-weight: var(--fontWeightMedium);
 		/* margin-top + n * line-height + margin-bottom => x * 8px */
 		margin-top: 17px;
 		margin-bottom: 15px;
+		font-weight: var(--fontWeightMedium);
 	}
 }
 
@@ -96,7 +96,7 @@
 
 .savedCountry {
 	padding-top: 6px;
-	padding-bottom: 0px;
+	padding-bottom: 0;
 	margin-bottom: 12px;
 
 	@media (--viewportMedium) {
@@ -116,7 +116,7 @@
 	text-align: left;
 
 	&:hover {
-		cursor: text;
 		text-decoration: none;
+		cursor: text;
 	}
 }

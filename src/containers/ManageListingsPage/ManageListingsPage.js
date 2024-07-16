@@ -1,27 +1,23 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { compose } from "redux";
-import { connect } from "react-redux";
-
-import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
-import { propTypes } from "../../util/types";
-import { isScrollingDisabled } from "../../ducks/ui.duck";
 
 import {
 	H3,
+	LayoutSingleColumn,
+	NamedLink,
 	Page,
 	PaginationLinks,
 	UserNav,
-	LayoutSingleColumn,
-	NamedLink,
 } from "../../components";
-
-import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
 import FooterContainer from "../../containers/FooterContainer/FooterContainer";
-
+import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
+import { isScrollingDisabled } from "../../ducks/ui.duck";
+import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
+import { propTypes } from "../../util/types";
 import ManageListingCard from "./ManageListingCard/ManageListingCard";
-
-import { closeListing, openListing, getOwnListingsById } from "./ManageListingsPage.duck";
+import { closeListing, getOwnListingsById, openListing } from "./ManageListingsPage.duck";
 import css from "./ManageListingsPage.module.css";
 
 export class ManageListingsPageComponent extends Component {

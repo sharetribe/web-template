@@ -1,12 +1,12 @@
 import React from "react";
-import "@testing-library/jest-dom";
 
 import { fakeIntl } from "../../../../util/testData";
 import { renderWithProviders as render, testingLibrary } from "../../../../util/testHelpers";
-
 import EditListingPricingForm from "./EditListingPricingForm";
 
-const { screen, userEvent, fireEvent } = testingLibrary;
+import "@testing-library/jest-dom";
+
+const { screen, userEvent } = testingLibrary;
 
 const noop = () => null;
 

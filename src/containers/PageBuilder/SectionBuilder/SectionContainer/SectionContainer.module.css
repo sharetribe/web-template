@@ -1,11 +1,11 @@
 @import "../../../../styles/customMediaQueries.css";
 
 .root {
-	background-size: cover;
-	background-position: center center;
-	background-repeat: no-repeat;
-	width: 100%;
 	position: relative;
+	width: 100%;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: cover;
 
 	&:nth-of-type(odd) {
 		background-color: var(--colorWhite);
@@ -13,6 +13,7 @@
 
 	&:target {
 		scroll-margin-top: var(--topbarHeight);
+
 		@media (--viewportMedium) {
 			scroll-margin-top: var(--topbarHeightDesktop);
 		}
@@ -20,8 +21,8 @@
 }
 
 .sectionContent {
-	padding: 32px 0;
 	position: relative;
+	padding: 32px 0;
 	word-break: break-word;
 
 	@media (--viewportMedium) {
@@ -31,8 +32,5 @@
 
 .backgroundImageWrapper {
 	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
+	inset: 0;
 }

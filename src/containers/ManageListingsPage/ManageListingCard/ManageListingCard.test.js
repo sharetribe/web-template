@@ -1,17 +1,11 @@
 import React from "react";
-import "@testing-library/jest-dom";
 
 import { types as sdkTypes } from "../../../util/sdkLoader";
-import {
-	getHostedConfiguration,
-	renderWithProviders as render,
-	testingLibrary,
-} from "../../../util/testHelpers";
 import { createOwnListing, createStock, fakeIntl } from "../../../util/testData";
-
+import { getHostedConfiguration, renderWithProviders as render } from "../../../util/testHelpers";
 import { ManageListingCardComponent } from "./ManageListingCard";
 
-const { screen, waitFor } = testingLibrary;
+import "@testing-library/jest-dom";
 
 const { Money } = sdkTypes;
 const noop = () => null;

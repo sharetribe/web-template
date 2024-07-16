@@ -1,35 +1,31 @@
 import React from "react";
+import { connect } from "react-redux";
 import { bool, func, oneOf, shape } from "prop-types";
 import { compose } from "redux";
-import { connect } from "react-redux";
-
-import { useConfiguration } from "../../context/configurationContext";
-import { useRouteConfiguration } from "../../context/routeConfigurationContext";
-import { createResourceLocatorString } from "../../util/routes";
-import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
-import { ensureCurrentUser } from "../../util/data";
-import { propTypes } from "../../util/types";
-import { isScrollingDisabled } from "../../ducks/ui.duck";
-import {
-	stripeAccountClearError,
-	getStripeConnectAccountLink,
-} from "../../ducks/stripeConnectAccount.duck";
 
 import {
 	H3,
+	LayoutSideNavigation,
 	NamedRedirect,
 	Page,
-	StripeConnectAccountStatusBox,
 	StripeConnectAccountForm,
+	StripeConnectAccountStatusBox,
 	UserNav,
-	LayoutSideNavigation,
 } from "../../components";
-
-import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
 import FooterContainer from "../../containers/FooterContainer/FooterContainer";
-
+import TopbarContainer from "../../containers/TopbarContainer/TopbarContainer";
+import { useConfiguration } from "../../context/configurationContext";
+import { useRouteConfiguration } from "../../context/routeConfigurationContext";
+import {
+	getStripeConnectAccountLink,
+	stripeAccountClearError,
+} from "../../ducks/stripeConnectAccount.duck";
+import { isScrollingDisabled } from "../../ducks/ui.duck";
+import { ensureCurrentUser } from "../../util/data";
+import { FormattedMessage, injectIntl, intlShape } from "../../util/reactIntl";
+import { createResourceLocatorString } from "../../util/routes";
+import { propTypes } from "../../util/types";
 import { savePayoutDetails } from "./StripePayoutPage.duck";
-
 import css from "./StripePayoutPage.module.css";
 
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = "success";

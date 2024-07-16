@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 import { getProcess } from "../../../transactions/transaction";
-
 import PanelHeading from "./PanelHeading";
 
 const PROCESS_NAME = "default-purchase";
@@ -18,6 +17,7 @@ const ProcessHeadings = () => {
 	const handleChange = (e) => {
 		const name = e.target.name;
 		const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+		// eslint-disable-next-line no-console
 		console.log("handleChange:", name, value);
 		setFormData({
 			...formData,

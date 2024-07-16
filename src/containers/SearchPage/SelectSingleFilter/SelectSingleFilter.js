@@ -1,14 +1,11 @@
 import React from "react";
-import { array, arrayOf, bool, func, node, number, object, string } from "prop-types";
 import classNames from "classnames";
-
-import { pickInitialValuesForFieldSelectTree } from "../../../util/search";
+import { array, arrayOf, bool, func, node, number, object, string } from "prop-types";
 
 import { FieldSelectTree } from "../../../components";
-
+import { pickInitialValuesForFieldSelectTree } from "../../../util/search";
 import FilterPlain from "../FilterPlain/FilterPlain";
 import FilterPopup from "../FilterPopup/FilterPopup";
-
 import css from "./SelectSingleFilter.module.css";
 
 const getQueryParamName = (queryParamNames) => {
@@ -21,7 +18,7 @@ const SelectSingleFilter = (props) => {
 		className,
 		showAsPopup,
 		options,
-		isNestedEnum,
+		// isNestedEnum,
 		id,
 		name,
 		label,

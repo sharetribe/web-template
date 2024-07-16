@@ -1,16 +1,15 @@
 import React from "react";
 
+import { constructQueryParamName, convertCategoriesToSelectTreeOptions } from "../../util/search";
 // utils
-import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_LONG } from "../../util/types";
-import { convertCategoriesToSelectTreeOptions, constructQueryParamName } from "../../util/search";
-
-// component imports
-import SelectSingleFilter from "./SelectSingleFilter/SelectSingleFilter";
-import SelectMultipleFilter from "./SelectMultipleFilter/SelectMultipleFilter";
+import { SCHEMA_TYPE_ENUM, SCHEMA_TYPE_LONG, SCHEMA_TYPE_MULTI_ENUM } from "../../util/types";
 import BookingDateRangeFilter from "./BookingDateRangeFilter/BookingDateRangeFilter";
+import IntegerRangeFilter from "./IntegerRangeFilter/IntegerRangeFilter";
 import KeywordFilter from "./KeywordFilter/KeywordFilter";
 import PriceFilter from "./PriceFilter/PriceFilter";
-import IntegerRangeFilter from "./IntegerRangeFilter/IntegerRangeFilter";
+import SelectMultipleFilter from "./SelectMultipleFilter/SelectMultipleFilter";
+// component imports
+import SelectSingleFilter from "./SelectSingleFilter/SelectSingleFilter";
 
 /**
  * FilterComponent is used to map configured filter types
@@ -20,14 +19,15 @@ const FilterComponent = (props) => {
 	const {
 		idPrefix,
 		config,
-		urlQueryParams,
 		initialValues,
 		getHandleChangedValueFn,
 		listingCategories,
 		marketplaceCurrency,
 		intl,
+		// urlQueryParams,
 		...rest
 	} = props;
+
 	// Note: config can be either
 	// - listingFields config or
 	// - default filter config

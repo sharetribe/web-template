@@ -6,9 +6,8 @@ import scaled36h from "./images/scaled36h.png";
 import scaled36h2x from "./images/scaled36h2x.png";
 import scaled48h from "./images/scaled48h.png";
 import scaled48h2x from "./images/scaled48h2x.png";
-
-import { LogoComponent } from "./Logo";
 import css from "./LinkedLogo.module.css";
+import { LogoComponent } from "./Logo";
 
 const logoImageDesktop = scaled24h;
 const logoImageMobile = scaled24h;

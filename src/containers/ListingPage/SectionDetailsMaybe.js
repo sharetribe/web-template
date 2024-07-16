@@ -1,10 +1,8 @@
 import React from "react";
 
-import { FormattedMessage } from "../../util/reactIntl";
-import { isFieldForListingType } from "../../util/fieldHelpers";
-
 import { Heading } from "../../components";
-
+import { isFieldForListingType } from "../../util/fieldHelpers";
+import { FormattedMessage } from "../../util/reactIntl";
 import css from "./ListingPage.module.css";
 
 const SectionDetailsMaybe = (props) => {

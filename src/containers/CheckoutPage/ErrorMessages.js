@@ -1,18 +1,17 @@
 import React from "react";
 
-import { FormattedMessage } from "../../util/reactIntl";
 import {
+	isTooManyRequestsError,
+	isTransactionChargeDisabledError,
 	isTransactionInitiateAmountTooLowError,
-	isTransactionInitiateMissingStripeAccountError,
 	isTransactionInitiateBookingTimeNotAvailableError,
 	isTransactionInitiateListingInsufficientStockError,
-	isTransactionChargeDisabledError,
+	isTransactionInitiateMissingStripeAccountError,
 	isTransactionZeroPaymentError,
 	isTransitionQuantityInfoMissingError,
-	isTooManyRequestsError,
 	transactionInitiateOrderStripeErrors,
 } from "../../util/errors";
-
+import { FormattedMessage } from "../../util/reactIntl";
 import css from "./CheckoutPage.module.css";
 
 // Collect error message checks to a single function.

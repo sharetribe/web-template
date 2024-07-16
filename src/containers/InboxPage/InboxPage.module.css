@@ -1,15 +1,15 @@
 @import "../../styles/customMediaQueries.css";
 
 .mobileTopbar {
-	/* Size */
-	width: 100%;
-	height: var(--topbarHeight);
-
 	/* Layout for child components */
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
 	align-items: center;
+	justify-content: space-between;
+
+	/* Size */
+	width: 100%;
+	height: var(--topbarHeight);
 
 	/* fill */
 	background-color: var(--colorWhite);
@@ -41,27 +41,25 @@
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: space-between;
-	padding: 29px 24px 0 24px;
-
-	border-top-width: 1px;
-	border-top-color: var(--colorGrey100);
-	border-top-style: solid;
+	padding: 29px 24px 0;
 	background-color: var(--colorWhite);
+	border-top: 1px solid var(--colorGrey100);
 	box-shadow: var(--boxShadow);
 
 	@media (--viewportMedium) {
-		padding: 24px 24px 0 24px;
+		padding: 24px 24px 0;
 	}
 
 	@media (--viewportLarge) {
-		flex-wrap: unset;
-		padding: 40px 0 82px 36px;
 		flex-direction: column;
+		flex-wrap: unset;
 		justify-content: flex-start;
+		padding: 40px 0 82px 36px;
+		background-color: transparent;
 		border: none;
 		box-shadow: none;
-		background-color: transparent;
 	}
+
 	@media (--viewportLargeWithPaddings) {
 		padding: 40px 0 82px calc((100% - 1056px) / 2);
 	}
@@ -69,7 +67,7 @@
 
 .title {
 	align-self: center;
-	padding: 0px 0 8px 0;
+	padding: 0 0 8px;
 
 	/* Layout */
 	margin-top: 0;
@@ -82,26 +80,24 @@
 	}
 
 	@media (--viewportLarge) {
-		padding: 5px 0 3px 0;
 		align-self: unset;
+		padding: 5px 0 3px;
 	}
 }
 
 .tabs {
-	padding-top: 2px;
-
 	display: flex;
 	flex-direction: row;
+	padding-top: 2px;
 	overflow-x: auto;
 
 	@media (--viewportMedium) {
-		padding-top: 12px;
 		padding-top: 20px;
 	}
 
 	@media (--viewportLarge) {
-		padding-top: 24px;
 		flex-direction: column;
+		padding-top: 24px;
 	}
 }
 
@@ -118,8 +114,8 @@
 }
 
 .error {
+	margin: 23px 24px 24px;
 	color: var(--colorFail);
-	margin: 23px 24px 24px 24px;
 
 	@media (--viewportLarge) {
 		margin-top: 18px;
@@ -127,9 +123,9 @@
 }
 
 .noResults {
-	margin-left: 24px;
-	margin-right: 24px;
 	margin-top: 1px;
+	margin-right: 24px;
+	margin-left: 24px;
 
 	@media (--viewportLarge) {
 		margin-top: 25px;
@@ -137,17 +133,19 @@
 }
 
 .itemList {
-	margin: 0;
 	padding: 0;
+	margin: 0;
 }
 
 @keyframes loadingSpinnerFadeIn {
 	0% {
 		opacity: 0;
 	}
+
 	50% {
 		opacity: 0;
 	}
+
 	100% {
 		opacity: 1;
 	}
@@ -155,26 +153,24 @@
 
 .listItemsLoading {
 	display: inline-flex;
-	justify-content: center;
 	align-items: center;
-	height: 60px;
+	justify-content: center;
 	width: 100%;
+	height: 60px;
 	opacity: 0;
+	animation-name: loadingSpinnerFadeIn;
 
 	/* animation shorthand property doesn't work with local scope of CSS Modules */
 	animation-duration: 1s;
-	animation-name: loadingSpinnerFadeIn;
 	animation-fill-mode: forwards;
 }
 
 .listItem {
-	/* Layout */
-	margin-bottom: 10px;
 	padding-bottom: 12px;
 
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
-	border-bottom-color: var(--colorGrey100);
+	/* Layout */
+	margin-bottom: 10px;
+	border-bottom: 1px solid var(--colorGrey100);
 
 	&:last-child {
 		border-bottom: none;
@@ -207,20 +203,20 @@
 }
 
 .itemLink {
-	flex: 1;
-
 	/* Layout */
 	display: inline-grid;
-	grid-template-columns: 22px auto;
+	flex: 1;
 	grid-template-areas:
 		"dot name    state"
 		"... item    state"
 		"... details state";
-	padding: 2px 0 6px;
+	grid-template-columns: 22px auto;
 	gap: 4px 0;
+	padding: 2px 0 6px;
 
 	/* Remove text underline from this link */
 	text-decoration: none;
+
 	&:hover {
 		text-decoration: none;
 	}
@@ -233,12 +229,10 @@
 
 .rowNotificationDot {
 	grid-area: dot;
-	justify-self: center;
-	align-self: flex-start;
-	margin-top: 8px;
-
+	place-self: flex-start center;
 	width: 6px;
 	height: 6px;
+	margin-top: 8px;
 
 	@media (--viewportLarge) {
 		margin-top: 5px;
@@ -253,64 +247,57 @@
 }
 
 .notificationDot {
-	color: var(--colorWhite);
-
 	width: 100%;
 	height: 100%;
-	border-radius: 50%;
+	color: var(--colorWhite);
 	background-color: var(--colorFail);
+	border-radius: 50%;
 }
 
 .itemUsername {
-	grid-area: name;
-
 	/* Font */
 	composes: textSmall from global;
+	grid-area: name;
+	margin-top: 0;
+	margin-bottom: 0;
 	font-weight: var(--fontWeightBold);
 	color: var(--colorGrey700);
 
-	margin-top: 0;
-	margin-bottom: 0;
-
 	@media (--viewportMedium) {
-		line-height: 16px;
 		padding: 0;
 		margin-top: 0;
 		margin-bottom: 0;
+		line-height: 16px;
 	}
 }
+
 .itemTitle {
 	composes: marketplaceTinyFontStyles from global;
 	grid-area: item;
-	color: var(--colorGrey700);
-
 	margin-top: 0;
 	margin-bottom: 0;
+	color: var(--colorGrey700);
 }
 
 .itemDetails {
 	composes: marketplaceTinyFontStyles from global;
 	grid-area: details;
-	color: var(--colorGrey700);
-
 	margin-top: 0;
 	margin-bottom: 0;
+	color: var(--colorGrey700);
 }
 
 .itemState {
-	grid-area: state;
-
 	/* Font */
 	composes: marketplaceTinyFontStyles from global;
-	line-height: 18px;
-	font-weight: var(--fontWeightMedium);
-	letter-spacing: normal;
-
+	grid-area: state;
 	justify-self: flex-end;
-	text-align: end;
-
 	margin-top: 6px;
-	margin-bottom: 0px;
+	margin-bottom: 0;
+	font-weight: var(--fontWeightMedium);
+	line-height: 18px;
+	text-align: end;
+	letter-spacing: normal;
 
 	@media (--viewportMedium) {
 		margin-top: 0;
@@ -319,7 +306,7 @@
 }
 
 .pagination {
-	margin: auto 24px 0 24px;
+	margin: auto 24px 0;
 }
 
 /* Transaction status affects to certain font colors and weights */
@@ -342,8 +329,8 @@
 }
 
 .bookingActionNeeded {
-	color: var(--colorGrey700);
 	margin-top: 4px;
+	color: var(--colorGrey700);
 
 	@media (--viewportMedium) {
 		margin-top: 9px;
@@ -355,8 +342,8 @@
 }
 
 .lastTransitionedAtEmphasized {
-	color: var(--colorGrey700);
 	font-weight: var(--fontWeightMedium);
+	color: var(--colorGrey700);
 }
 
 .lastTransitionedAtNotEmphasized {

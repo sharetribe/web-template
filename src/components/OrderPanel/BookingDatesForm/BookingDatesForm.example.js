@@ -1,7 +1,8 @@
-import Decimal from "decimal.js";
 import loadable from "@loadable/component";
-import { types as sdkTypes } from "../../../util/sdkLoader";
+import Decimal from "decimal.js";
+
 import { injectIntl } from "../../../util/reactIntl";
+import { types as sdkTypes } from "../../../util/sdkLoader";
 import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, TIME_SLOT_TIME } from "../../../util/types";
 
 const BookingDatesForm = loadable(

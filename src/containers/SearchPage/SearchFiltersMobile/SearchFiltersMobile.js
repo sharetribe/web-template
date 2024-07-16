@@ -1,15 +1,13 @@
 import React, { Component } from "react";
-import { bool, func, object, node, number, shape, string, arrayOf } from "prop-types";
-import classNames from "classnames";
 import { useHistory } from "react-router-dom";
+import classNames from "classnames";
+import { arrayOf, bool, func, node, number, object, shape, string } from "prop-types";
 
+import { Button, ModalInMobile } from "../../../components";
 import { useRouteConfiguration } from "../../../context/routeConfigurationContext";
-import { FormattedMessage, useIntl, intlShape } from "../../../util/reactIntl";
-import { propTypes } from "../../../util/types";
+import { FormattedMessage, intlShape, useIntl } from "../../../util/reactIntl";
 import { createResourceLocatorString } from "../../../util/routes";
-
-import { ModalInMobile, Button } from "../../../components";
-
+import { propTypes } from "../../../util/types";
 import PopupOpenerButton from "../PopupOpenerButton/PopupOpenerButton";
 import css from "./SearchFiltersMobile.module.css";
 
@@ -113,9 +111,9 @@ class SearchFiltersMobileComponent extends Component {
 
 					{sortByComponent}
 					{isMapVariant ? (
-						<div className={css.mapIcon} onClick={onMapIconClick}>
+						<button type="button" className={css.mapIcon} onClick={onMapIconClick}>
 							<FormattedMessage id="SearchFiltersMobile.openMapView" className={css.mapIconText} />
-						</div>
+						</button>
 					) : null}
 				</div>
 

@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
 import React from "react";
 import { Form as FinalForm, FormSpy } from "react-final-form";
+
+import { Button } from "../../../components";
 import { injectIntl } from "../../../util/reactIntl";
 import { types as sdkTypes } from "../../../util/sdkLoader";
-import { Button } from "../../../components";
-import { required, bookingDateRequired, composeValidators } from "../../../util/validators";
 import { LINE_ITEM_HOUR, TIME_SLOT_TIME } from "../../../util/types";
+import { bookingDateRequired, composeValidators, required } from "../../../util/validators";
 import FieldDateAndTimeInput from "./FieldDateAndTimeInput";
 
 const { UUID } = sdkTypes;

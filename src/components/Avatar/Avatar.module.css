@@ -1,12 +1,11 @@
 @import "../../styles/customMediaQueries.css";
 
 .avatarBase {
-	border-radius: 50%;
-
 	/* Position possible initials to the center of the component */
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	color: var(--colorWhite);
 
 	/* Colors */
 	background-image: linear-gradient(
@@ -14,7 +13,7 @@
 		var(--marketplaceColorLight) 0%,
 		var(--marketplaceColor) 100%
 	);
-	color: var(--colorWhite);
+	border-radius: 50%;
 
 	&:hover {
 		text-decoration: none;
@@ -49,6 +48,7 @@
 	width: 32px;
 	height: 32px;
 }
+
 .initialsSmall {
 	/* Exception and unique font-size for the small avatar */
 	font-size: 11px;
@@ -64,6 +64,7 @@
 	width: 60px;
 	height: 60px;
 }
+
 .initialsMedium {
 	composes: textLarge from global;
 	padding: 0;
@@ -73,11 +74,11 @@
 
 .largeAvatar {
 	composes: avatarBase;
-	padding: 0;
 
 	/* Fixed dimensions */
 	width: 96px;
 	height: 96px;
+	padding: 0;
 
 	@media (--viewportMedium) {
 		padding: 0;

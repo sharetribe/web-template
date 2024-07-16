@@ -1,29 +1,26 @@
 import React from "react";
-import { bool, func, object, string } from "prop-types";
 import classNames from "classnames";
+import { bool, func, object, string } from "prop-types";
 
+// Import shared components
+import { H3, ListingLink } from "../../../../components";
+import { isBookingProcessAlias } from "../../../../transactions/transaction";
+import {
+	isFieldForCategory,
+	isFieldForListingType,
+	pickCategoryFields,
+} from "../../../../util/fieldHelpers";
 // Import util modules
 import { FormattedMessage } from "../../../../util/reactIntl";
 import {
 	EXTENDED_DATA_SCHEMA_TYPES,
 	LISTING_STATE_DRAFT,
 	SCHEMA_TYPE_ENUM,
-	SCHEMA_TYPE_MULTI_ENUM,
 } from "../../../../util/types";
-import {
-	isFieldForCategory,
-	isFieldForListingType,
-	pickCategoryFields,
-} from "../../../../util/fieldHelpers";
-import { isBookingProcessAlias } from "../../../../transactions/transaction";
-
-// Import shared components
-import { H3, ListingLink } from "../../../../components";
-
-// Import modules from this directory
-import ErrorMessage from "./ErrorMessage";
 import EditListingDetailsForm from "./EditListingDetailsForm";
 import css from "./EditListingDetailsPanel.module.css";
+// Import modules from this directory
+import ErrorMessage from "./ErrorMessage";
 
 /**
  * Get listing configuration. For existing listings, it is stored to publicData.

@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { func, object, string } from "prop-types";
 import classNames from "classnames";
+import { func, object, string } from "prop-types";
 
-import { injectIntl, intlShape } from "../../../util/reactIntl";
-import { propTypes } from "../../../util/types";
 import { formatMoney } from "../../../util/currency";
 import { ensureListing } from "../../../util/data";
-
+import { injectIntl, intlShape } from "../../../util/reactIntl";
+import { propTypes } from "../../../util/types";
 import css from "./SearchMapPriceLabel.module.css";
 
 class SearchMapPriceLabel extends Component {

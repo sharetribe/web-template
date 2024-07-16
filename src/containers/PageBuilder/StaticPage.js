@@ -1,9 +1,9 @@
 import React from "react";
-import { node } from "prop-types";
 import { connect } from "react-redux";
+import { node } from "prop-types";
 
-import { isScrollingDisabled } from "../../ducks/ui.duck.js";
 import { Page } from "../../components/index.js";
+import { isScrollingDisabled } from "../../ducks/ui.duck.js";
 
 const StaticPageComponent = (props) => {
 	const { children, ...pageProps } = props;

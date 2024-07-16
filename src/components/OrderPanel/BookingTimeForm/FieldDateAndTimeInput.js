@@ -1,28 +1,27 @@
 import React, { Component } from "react";
-import { func, number, object, string } from "prop-types";
 import classNames from "classnames";
+import { func, number, object, string } from "prop-types";
 
-import { intlShape } from "../../../util/reactIntl";
+import { FieldDateInput, FieldSelect, IconArrowHead } from "../../../components";
 import {
-	getStartHours,
-	getEndHours,
-	isInRange,
-	isSameDate,
-	isDayMomentInsideRange,
-	timeOfDayFromLocalToTimeZone,
-	timeOfDayFromTimeZoneToLocal,
-	isDateSameOrAfter,
 	findNextBoundary,
-	timestampToDate,
 	formatDateIntoPartials,
-	monthIdString,
+	getEndHours,
+	getStartHours,
 	getStartOf,
 	initialVisibleMonth,
+	isDateSameOrAfter,
+	isDayMomentInsideRange,
+	isInRange,
+	isSameDate,
+	monthIdString,
+	timeOfDayFromLocalToTimeZone,
+	timeOfDayFromTimeZoneToLocal,
+	timestampToDate,
 } from "../../../util/dates";
+import { intlShape } from "../../../util/reactIntl";
 import { propTypes } from "../../../util/types";
 import { bookingDateRequired } from "../../../util/validators";
-import { FieldDateInput, FieldSelect, IconArrowHead } from "../../../components";
-
 import css from "./FieldDateAndTimeInput.module.css";
 
 // dayCountAvailableForBooking is the maximum number of days forwards during which a booking can be made.

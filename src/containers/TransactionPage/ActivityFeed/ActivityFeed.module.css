@@ -6,10 +6,9 @@
 }
 
 .messageItem {
-	margin-bottom: 20px;
-
 	/* Clearfix */
 	composes: clearfix from global;
+	margin-bottom: 20px;
 
 	@media (--viewportMedium) {
 		margin-bottom: 17px;
@@ -22,9 +21,10 @@
 
 .message,
 .ownMessage {
+	max-width: 433px;
+
 	/* Preserve newlines, but collapse other whitespace */
 	white-space: pre-line;
-	max-width: 433px;
 }
 
 .message {
@@ -38,10 +38,10 @@
 
 .avatar {
 	flex-shrink: 0;
-	margin: 0px 12px 0 0;
+	margin: 0 12px 0 0;
 
 	@media (--viewportMedium) {
-		margin: 0px 12px 0 0;
+		margin: 0 12px 0 0;
 	}
 }
 
@@ -52,16 +52,15 @@
 .messageContent,
 .ownMessageContent {
 	composes: textSmall from global;
-
 	display: inline-block;
+	padding: 8.5px 14px;
 	margin: 0;
-	padding: 8.5px 14px 8.5px 14px;
+	background-color: var(--colorWhite);
 	border-radius: 8px;
 	box-shadow: var(--boxShadow);
-	background-color: var(--colorWhite);
 
 	@media (--viewportMedium) {
-		padding: 8px 14px 8px 14px;
+		padding: 8px 14px;
 		margin: 0;
 	}
 }
@@ -71,10 +70,11 @@
 }
 
 .ownMessageContent {
-	background-color: var(--marketplaceColor);
-	color: var(--colorWhite);
 	float: right;
+	color: var(--colorWhite);
+	background-color: var(--marketplaceColor);
 }
+
 .ownMessageContentLink {
 	color: var(--colorWhite);
 	text-decoration: underline;
@@ -88,12 +88,11 @@
 .messageDate,
 .ownMessageDate {
 	composes: marketplaceMessageDateFontStyles from global;
-
-	margin: 11px 0 0 0;
+	margin: 11px 0 0;
 	color: var(--colorGrey300);
 
 	@media (--viewportMedium) {
-		margin: 0 0 0 0;
+		margin: 0;
 	}
 }
 
@@ -106,10 +105,9 @@
 }
 
 .transitionItem {
-	margin-bottom: 18px;
-
 	/* Clearfix */
 	composes: clearfix from global;
+	margin-bottom: 18px;
 
 	@media (--viewportMedium) {
 		margin-bottom: 16px;
@@ -123,7 +121,7 @@
 .transition {
 	display: flex;
 	flex-direction: row;
-	padding: 3px 0 2px 0;
+	padding: 3px 0 2px;
 
 	@media (--viewportMedium) {
 		padding: 0;
@@ -137,8 +135,8 @@
 
 .transitionDate {
 	composes: marketplaceMessageDateFontStyles from global;
+	margin: 7px 0 0;
 	color: var(--colorGrey300);
-	margin: 7px 0 0 0;
 
 	@media (--viewportMedium) {
 		margin: 0;
@@ -151,13 +149,13 @@
 
 .reviewContent {
 	composes: h4 from global;
+	margin: 8px 0 0;
 	font-style: italic;
 	white-space: pre-line;
-	margin: 8px 0 0 0;
 
 	@media (--viewportMedium) {
 		max-width: 500px;
-		margin: 7px 0 0 0;
+		margin: 7px 0 0;
 	}
 }
 
@@ -178,8 +176,8 @@
 }
 
 .showOlderWrapper {
-	text-align: center;
 	margin-bottom: 1px;
+	text-align: center;
 
 	@media (--viewportMedium) {
 		margin-bottom: 0;

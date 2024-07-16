@@ -1,5 +1,5 @@
-import { fetchCurrentUser } from "../../ducks/user.duck";
 import { setInitialValues as setInitialValuesForPaymentMethods } from "../../ducks/paymentMethods.duck";
+import { fetchCurrentUser } from "../../ducks/user.duck";
 import { storableError } from "../../util/errors";
 import * as log from "../../util/log";
 
@@ -85,22 +85,34 @@ export const createStripeSetupIntent = () => (dispatch, getState, sdk) => {
 		});
 };
 
-export const stripeCustomer = () => (dispatch, getState, sdk) => {
-	dispatch(stripeCustomerRequest());
+export const stripeCustomer =
+	() =>
+	(
+		dispatch,
+		// getState,
+		// sdk
+	) => {
+		dispatch(stripeCustomerRequest());
 
-	return dispatch(fetchCurrentUser({ include: ["stripeCustomer.defaultPaymentMethod"] }))
-		.then((response) => {
-			dispatch(stripeCustomerSuccess());
-		})
-		.catch((e) => {
-			const error = storableError(e);
-			log.error(error, "fetch-stripe-customer-failed");
-			dispatch(stripeCustomerError(error));
-		});
-};
+		return dispatch(fetchCurrentUser({ include: ["stripeCustomer.defaultPaymentMethod"] }))
+			.then(() => {
+				dispatch(stripeCustomerSuccess());
+			})
+			.catch((e) => {
+				const error = storableError(e);
+				log.error(error, "fetch-stripe-customer-failed");
+				dispatch(stripeCustomerError(error));
+			});
+	};
 
-export const loadData = () => (dispatch, getState, sdk) => {
-	dispatch(setInitialValuesForPaymentMethods());
+export const loadData =
+	() =>
+	(
+		dispatch,
+		// getState,
+		// sdk
+	) => {
+		dispatch(setInitialValuesForPaymentMethods());
 
-	return dispatch(stripeCustomer());
-};
+		return dispatch(stripeCustomer());
+	};

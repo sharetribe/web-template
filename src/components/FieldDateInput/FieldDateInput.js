@@ -5,15 +5,14 @@
  * you should convert value.date to start date and end date before submitting it to API
  */
 import React, { Component } from "react";
-import { bool, func, object, string } from "prop-types";
 import { isInclusivelyAfterDay, isInclusivelyBeforeDay } from "react-dates";
 import { Field } from "react-final-form";
 import classNames from "classnames";
 import moment from "moment";
+import { bool, func, object, string } from "prop-types";
 
-import { useConfiguration } from "../../context/configurationContext";
 import { ValidationError } from "../../components";
-
+import { useConfiguration } from "../../context/configurationContext";
 import DateInput from "./DateInput";
 import css from "./FieldDateInput.module.css";
 

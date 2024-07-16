@@ -1,15 +1,14 @@
 @import "../../../../styles/customMediaQueries.css";
 
 .root {
-	/* Dimensions */
-	width: 100%;
-	height: auto;
-
 	/* Layout */
 	display: flex;
 	flex: 1;
 	flex-direction: column;
 
+	/* Dimensions */
+	width: 100%;
+	height: auto;
 	padding-top: 1px;
 
 	@media (--viewportMedium) {
@@ -49,14 +48,15 @@
 .selectedLabel {
 	composes: label from global;
 }
+
 .selectedValue {
 	margin-top: 0;
 	margin-bottom: 6px;
 
 	@media (--viewportMedium) {
+		padding: 2px 0 6px;
 		margin-top: 0;
 		margin-bottom: 0;
-		padding: 2px 0 6px 0;
 	}
 }
 
@@ -65,9 +65,9 @@
 }
 
 .submitButton {
+	flex-shrink: 0;
 	margin-top: auto;
 	margin-bottom: 24px;
-	flex-shrink: 0;
 
 	@media (--viewportLarge) {
 		display: inline-block;

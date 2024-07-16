@@ -1,51 +1,45 @@
 import React, { Component } from "react";
-import { array, bool, func, oneOf, object, shape, string, arrayOf } from "prop-types";
 import { connect } from "react-redux";
-import { compose } from "redux";
 import { useHistory, useLocation } from "react-router-dom";
-import omit from "lodash/omit";
 import classNames from "classnames";
-
-import { useIntl, intlShape, FormattedMessage } from "../../util/reactIntl";
-import { useConfiguration } from "../../context/configurationContext";
-import { useRouteConfiguration } from "../../context/routeConfigurationContext";
-
-import { createResourceLocatorString } from "../../util/routes";
-import {
-	isAnyFilterActive,
-	isMainSearchTypeKeywords,
-	getQueryParamNames,
-	isOriginInUse,
-} from "../../util/search";
-import { parse } from "../../util/urlHelpers";
-import { propTypes } from "../../util/types";
-import { getListingsById } from "../../ducks/marketplaceData.duck";
-import { manageDisableScrolling, isScrollingDisabled } from "../../ducks/ui.duck";
+import omit from "lodash/omit";
+import { array, arrayOf, bool, func, object, shape, string } from "prop-types";
+import { compose } from "redux";
 
 import { H3, H5, Page } from "../../components";
-import TopbarContainer from "../TopbarContainer/TopbarContainer";
-import FooterContainer from "../FooterContainer/FooterContainer";
-
+import { useConfiguration } from "../../context/configurationContext";
+import { useRouteConfiguration } from "../../context/routeConfigurationContext";
+import { getListingsById } from "../../ducks/marketplaceData.duck";
+import { isScrollingDisabled, manageDisableScrolling } from "../../ducks/ui.duck";
+import { FormattedMessage, intlShape, useIntl } from "../../util/reactIntl";
+import { createResourceLocatorString } from "../../util/routes";
 import {
-	groupListingFieldConfigs,
-	initialValues,
-	searchParamsPicker,
-	validUrlQueryParamsFromProps,
-	validFilterParams,
-	cleanSearchFromConflictingParams,
-	createSearchResultSchema,
-	pickListingFieldFilters,
-	omitLimitedListingFieldParams,
-} from "./SearchPage.shared";
-
+	getQueryParamNames,
+	isAnyFilterActive,
+	isMainSearchTypeKeywords,
+	isOriginInUse,
+} from "../../util/search";
+import { propTypes } from "../../util/types";
+import { parse } from "../../util/urlHelpers";
+import FooterContainer from "../FooterContainer/FooterContainer";
+import TopbarContainer from "../TopbarContainer/TopbarContainer";
 import FilterComponent from "./FilterComponent";
 import MainPanelHeader from "./MainPanelHeader/MainPanelHeader";
-import SearchFiltersMobile from "./SearchFiltersMobile/SearchFiltersMobile";
-import SortBy from "./SortBy/SortBy";
-import SearchResultsPanel from "./SearchResultsPanel/SearchResultsPanel";
 import NoSearchResultsMaybe from "./NoSearchResultsMaybe/NoSearchResultsMaybe";
-
+import SearchFiltersMobile from "./SearchFiltersMobile/SearchFiltersMobile";
 import css from "./SearchPage.module.css";
+import {
+	cleanSearchFromConflictingParams,
+	createSearchResultSchema,
+	groupListingFieldConfigs,
+	initialValues,
+	omitLimitedListingFieldParams,
+	pickListingFieldFilters,
+	searchParamsPicker,
+	validUrlQueryParamsFromProps,
+} from "./SearchPage.shared";
+import SearchResultsPanel from "./SearchResultsPanel/SearchResultsPanel";
+import SortBy from "./SortBy/SortBy";
 
 const MODAL_BREAKPOINT = 768; // Search is in modal on mobile layout
 
@@ -86,7 +80,7 @@ export class SearchPageComponent extends Component {
 	}
 
 	// Reset all filter query parameters
-	resetAll(e) {
+	resetAll() {
 		const { history, routeConfiguration, config } = this.props;
 		const { listingFields: listingFieldsConfig } = config?.listing || {};
 		const { defaultFilters: defaultFiltersConfig } = config?.search || {};

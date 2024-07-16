@@ -1,25 +1,24 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
 import ReactImageGallery from "react-image-gallery";
+import classNames from "classnames";
+import PropTypes from "prop-types";
 
-import { propTypes } from "../../../util/types";
-import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
 import {
 	AspectRatioWrapper,
 	Button,
-	IconClose,
 	IconArrowHead,
+	IconClose,
 	ResponsiveImage,
 } from "../../../components";
+import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
+import { propTypes } from "../../../util/types";
+import css from "./ListingImageGallery.module.css";
 
 // Copied directly from
 // `node_modules/react-image-gallery/styles/css/image-gallery.css`. The
 // copied file is left unedited, and all the overrides are defined in
 // the component CSS file below.
 import "./image-gallery.css";
-
-import css from "./ListingImageGallery.module.css";
 
 const IMAGE_GALLERY_OPTIONS = {
 	showPlayButton: false,

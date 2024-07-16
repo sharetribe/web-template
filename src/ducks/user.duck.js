@@ -1,12 +1,11 @@
+import { getTransitionsNeedingProviderAttention } from "../transactions/transaction";
 import { denormalisedResponseEntities, ensureOwnListing } from "../util/data";
 import { storableError } from "../util/errors";
-import { LISTING_STATE_DRAFT } from "../util/types";
 import * as log from "../util/log";
-import { getTransitionsNeedingProviderAttention } from "../transactions/transaction";
-
+import { util as sdkUtil } from "../util/sdkLoader";
+import { LISTING_STATE_DRAFT } from "../util/types";
 import { authInfo } from "./auth.duck";
 import { stripeAccountCreateSuccess } from "./stripeConnectAccount.duck";
-import { util as sdkUtil } from "../util/sdkLoader";
 
 // ================ Action types ================ //
 
@@ -43,7 +42,12 @@ export const SEND_VERIFICATION_EMAIL_ERROR = "app/user/SEND_VERIFICATION_EMAIL_E
 // ================ Reducer ================ //
 
 const mergeCurrentUser = (oldCurrentUser, newCurrentUser) => {
-	const { id: oId, type: oType, attributes: oAttr, ...oldRelationships } = oldCurrentUser || {};
+	const {
+		// id: oId,
+		// type: oType,
+		// attributes: oAttr,
+		...oldRelationships
+	} = oldCurrentUser || {};
 	const { id, type, attributes, ...relationships } = newCurrentUser || {};
 
 	// Passing null will remove currentUser entity.

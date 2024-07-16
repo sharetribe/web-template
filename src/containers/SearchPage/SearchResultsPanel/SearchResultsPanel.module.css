@@ -6,12 +6,11 @@
 }
 
 .listingCardsMapVariant {
-	padding: 0 0 96px 0;
-
 	display: grid;
 	grid-template-columns: repeat(1, 1fr);
 	gap: 24px;
 	width: 100%;
+	padding: 0 0 96px;
 
 	@media (--viewportLarge) {
 		grid-template-columns: repeat(2, 1fr);
@@ -23,27 +22,26 @@
 }
 
 .listingCards {
-	padding: 0 0 72px 0;
-
 	display: grid;
 	grid-template-columns: repeat(1, 1fr);
 	gap: 24px;
 	width: 100%;
+	padding: 0 0 72px;
 
-	@media (min-width: 550px) {
+	@media (width >= 550px) {
 		grid-template-columns: repeat(2, 1fr);
 	}
 
 	@media (--viewportMedium) {
-		padding: 0 0 96px 0;
 		grid-template-columns: repeat(2, 1fr);
+		padding: 0 0 96px;
 	}
 
 	@media (--viewportLarge) {
 		grid-template-columns: repeat(3, 1fr);
 	}
 
-	@media (min-width: 1440px) {
+	@media (width >= 1440px) {
 		grid-template-columns: repeat(4, 1fr);
 	}
 

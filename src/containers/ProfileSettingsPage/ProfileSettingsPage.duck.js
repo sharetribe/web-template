@@ -1,6 +1,6 @@
+import { currentUserShowSuccess } from "../../ducks/user.duck";
 import { denormalisedResponseEntities } from "../../util/data";
 import { storableError } from "../../util/errors";
-import { currentUserShowSuccess } from "../../ducks/user.duck";
 
 // ================ Action types ================ //
 

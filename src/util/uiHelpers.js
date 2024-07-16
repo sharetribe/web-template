@@ -100,7 +100,7 @@ export const withDimensions = (Component, options = {}) => {
 		}
 
 		setDimensions() {
-			this.setState((prevState) => {
+			this.setState(() => {
 				const { clientWidth, clientHeight } = this.element || { clientWidth: 0, clientHeight: 0 };
 				return { width: clientWidth, height: clientHeight };
 			});
@@ -236,7 +236,7 @@ export const lazyLoadWithDimensions = (Component, options = {}) => {
 		}
 
 		setDimensions() {
-			this.setState((prevState) => {
+			this.setState(() => {
 				const { clientWidth, clientHeight } = this.element || { clientWidth: 0, clientHeight: 0 };
 				return { width: clientWidth, height: clientHeight };
 			});

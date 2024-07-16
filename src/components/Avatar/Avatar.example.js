@@ -1,6 +1,6 @@
-import Avatar, { AvatarMedium, AvatarLarge } from "./Avatar";
 import { types as sdkTypes } from "../../util/sdkLoader";
 import { fakeIntl } from "../../util/testData";
+import Avatar, { AvatarLarge, AvatarMedium } from "./Avatar";
 
 const { UUID } = sdkTypes;
 

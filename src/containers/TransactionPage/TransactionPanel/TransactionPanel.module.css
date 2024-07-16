@@ -12,8 +12,8 @@
 	@media (--viewportLarge) {
 		flex-direction: row;
 		max-width: calc(var(--contentMaxWidth) + 72px);
-		margin: 0 auto 57px auto;
 		padding: 0 36px;
+		margin: 0 auto 57px;
 	}
 
 	@media (--viewportXLarge) {
@@ -35,23 +35,25 @@
 }
 
 .genericError {
+	margin: 24px 24px 0;
 	color: var(--colorFail);
-	margin: 24px 24px 0 24px;
 
 	@media (--viewportMedium) {
-		margin: 32px 24px 0 24px;
+		margin: 32px 24px 0;
 	}
+
 	@media (--viewportLarge) {
-		margin: 32px 0 0 0;
+		margin: 32px 0 0;
 	}
 }
 
 /* DetailCardImage subcomponent */
 .detailCardImageWrapper {
+	position: relative;
+
 	/* Layout */
 	display: none;
 	width: 100%;
-	position: relative;
 	background-color: var(--colorGrey100); /* Loading BG color */
 
 	@media (--viewportLarge) {
@@ -62,10 +64,7 @@
 .rootForImage {
 	/* Layout - image will take space defined by aspect ratio wrapper */
 	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
+	inset: 0;
 	width: 100%;
 
 	@media (--viewportLarge) {
@@ -74,23 +73,25 @@
 }
 
 .avatarWrapper {
-	/* Position (over the listing image)*/
-	margin-left: 24px;
-	margin-top: -30px;
-
 	/* Rendering context to the same lavel as listing image */
 	position: relative;
+
 	/* Flexbox would give too much width by default. */
 	width: 60px;
+	margin-top: -30px;
+
+	/* Position (over the listing image) */
+	margin-left: 24px;
 
 	@media (--viewportMedium) {
-		margin-top: -32px;
 		padding: 2px 0;
+		margin-top: -32px;
 	}
+
 	@media (--viewportLarge) {
-		margin-left: 48px;
 		width: unset;
 		padding: 2px 0;
+		margin-left: 48px;
 	}
 }
 
@@ -129,6 +130,7 @@
 		margin-top: 120px;
 	}
 }
+
 .avatarDesktop {
 	@media (--viewportLarge) {
 		display: flex;
@@ -137,34 +139,34 @@
 
 /* PanelHeadings subcomponent */
 .headingOrder {
-	margin: 30px 24px 0 24px;
+	margin: 30px 24px 0;
 
 	@media (--viewportMedium) {
 		max-width: 80%;
-		margin: 24px 24px 0 24px;
-		padding: 2px 0 6px 0;
+		padding: 2px 0 6px;
+		margin: 24px 24px 0;
 	}
 
 	@media (--viewportLarge) {
 		max-width: 100%;
-		margin: 57px 0 0 0;
+		margin: 57px 0 0;
 	}
 }
 
 .headingSale {
-	margin: 18px 24px 0 24px;
-	padding: 5px 0 1px 0;
+	padding: 5px 0 1px;
+	margin: 18px 24px 0;
 
 	@media (--viewportMedium) {
 		max-width: 80%;
-		margin: 24px 24px 0 24px;
-		padding: 1px 0 7px 0;
+		padding: 1px 0 7px;
+		margin: 24px 24px 0;
 	}
 
 	@media (--viewportLarge) {
 		max-width: 100%;
-		margin: 40px 0 0 0;
-		padding: 2px 0 6px 0;
+		padding: 2px 0 6px;
+		margin: 40px 0 0;
 	}
 }
 
@@ -175,7 +177,7 @@
 }
 
 .listingTitleMobile {
-	margin: 30px 24px 0 24px;
+	margin: 30px 24px 0;
 
 	@media (--viewportLarge) {
 		display: none;
@@ -188,10 +190,10 @@
 }
 
 .transactionInfoMessage {
-	margin: 12px 24px 0 24px;
+	margin: 12px 24px 0;
 
 	@media (--viewportMedium) {
-		margin: 0 24px 0 24px;
+		margin: 0 24px;
 	}
 
 	@media (--viewportLarge) {
@@ -206,24 +208,26 @@
 
 /* Container for order details in mobile layout */
 .orderDetailsMobileSection {
-	margin-top: 48px;
 	order: 2;
+	margin-top: 48px;
 
 	@media (--viewportMedium) {
+		padding: 4px 0;
 		margin-top: 40px;
-		padding: 4px 0 4px 0;
 	}
+
 	@media (--viewportLarge) {
 		display: none;
 	}
 }
+
 .deliveryInfoSection {
 	order: 1;
 }
 
 /* "aside" section in desktop layout */
 .asideDesktop {
-	margin: 1px 0 0 0;
+	margin: 1px 0 0;
 
 	/**
    * Aside is visible on mobile layout too, since it includes OrderPanel component.
@@ -231,7 +235,7 @@
    */
 
 	@media (--viewportLarge) {
-		margin: 56px 0 0 0;
+		margin: 56px 0 0;
 	}
 }
 
@@ -239,8 +243,8 @@
 	@media (--viewportLarge) {
 		position: sticky;
 		top: -200px; /* This is a hack to showcase how the component would look when the image isn't sticky */
-		width: 409px;
 		z-index: 1;
+		width: 409px;
 	}
 }
 
@@ -258,7 +262,7 @@
 
 	@media (--viewportLarge) {
 		display: block;
-		margin: 24px 48px 32px 48px;
+		margin: 24px 48px 32px;
 	}
 }
 
@@ -274,7 +278,6 @@
 
 .detailCardSubtitle {
 	composes: h5 from global;
-
 	margin-top: 0;
 	margin-bottom: 0;
 
@@ -287,8 +290,8 @@
 /* AddressLinkMaybe subcomponent */
 .address {
 	composes: h5 from global;
-	color: var(--colorGrey700);
 	margin: 0;
+	color: var(--colorGrey700);
 }
 
 .viewOnGoogleMapsWrapper {
@@ -298,11 +301,11 @@
 .bookingLocationAddress,
 .pickupAddress {
 	composes: h5 from global;
-	margin: 0;
 	display: inline-block;
+	margin: 0;
 
 	@media (--viewportMedium) {
-		padding: 3px 0 5px 0;
+		padding: 3px 0 5px;
 	}
 }
 
@@ -312,9 +315,9 @@
 }
 
 .orderBreakdownTitle {
-	letter-spacing: 1px;
-	font-weight: var(--fontWeightMedium);
 	margin: 0 24px;
+	font-weight: var(--fontWeightMedium);
+	letter-spacing: 1px;
 
 	@media (--viewportMedium) {
 		margin: 0 48px;
@@ -324,13 +327,12 @@
 .totalDivider {
 	/* dimensions */
 	height: 1px;
-	margin: 12px 24px 5px 24px;
-
-	border: none;
+	margin: 12px 24px 5px;
 	background-color: var(--colorGrey100);
+	border: none;
 
 	@media (--viewportMedium) {
-		margin: 7px 48px 0 48px;
+		margin: 7px 48px 0;
 	}
 }
 
@@ -344,13 +346,13 @@
 
 .sectionHeading {
 	composes: p from global;
-	font-weight: var(--fontWeightBold);
 	padding: 0;
 	margin-bottom: 16px;
+	font-weight: var(--fontWeightBold);
 }
 
 .shippingInfoContent {
-	padding: 0px 0 0px 13px;
+	padding: 0 0 0 13px;
 	margin-top: 12px;
 
 	@media (--viewportMedium) {
@@ -362,11 +364,11 @@
 .bookingLocationContent,
 .pickupInfoContent {
 	composes: marketplaceSmallFontStyles from global;
-	padding: 5px 0 1px 0;
+	padding: 5px 0 1px;
 	margin-top: 6px;
 
 	@media (--viewportMedium) {
-		padding: 1px 0 7px 0;
+		padding: 1px 0 7px;
 		margin-top: 8px;
 	}
 }
@@ -383,121 +385,122 @@
 .inquiryMessage {
 	/* Preserve newlines, but collapse other whitespace */
 	display: inline-block;
+	padding: 8.5px 14px;
 	margin: 0;
-	padding: 8.5px 14px 8.5px 14px;
-	border-radius: 8px;
-	box-shadow: var(--boxShadow);
-	background-color: var(--colorWhite);
-
-	white-space: pre-line;
-
 	margin-top: 12px;
 	margin-bottom: 0;
+	white-space: pre-line;
+	background-color: var(--colorWhite);
+	border-radius: 8px;
+	box-shadow: var(--boxShadow);
 
 	@media (--viewportMedium) {
+		padding: 8px 14px;
 		margin-top: 8px;
-		padding: 8px 14px 8px 14px;
 	}
 }
 
 .ownInquiryMessage {
 	composes: inquiryMessage;
-	background-color: var(--marketplaceColor);
 	color: var(--colorWhite);
+	background-color: var(--marketplaceColor);
 }
 
 .messageError {
+	margin: 13px 0 22px;
 	color: var(--colorFail);
-	margin: 13px 0 22px 0;
 
 	@media (--viewportMedium) {
-		margin: 13px 0 23px 0;
+		margin: 13px 0 23px;
 	}
 
 	@media (--viewportLarge) {
-		margin: 12px 0 23px 0;
+		margin: 12px 0 23px;
 	}
 }
 
 .longWord {
-	word-break: break-word;
 	hyphens: auto;
+	word-break: break-word;
 }
 
 /* Passed-in props for FeedSection subcomponent */
 .bookingLocationContainer,
 .deliveryInfoContainer,
 .feedContainer {
-	margin: 42px 24px 0 24px;
+	margin: 42px 24px 0;
 
 	@media (--viewportMedium) {
-		padding: 7px 0 1px 0;
-		margin: 40px 24px 0 24px;
+		padding: 7px 0 1px;
+		margin: 40px 24px 0;
 	}
+
 	@media (--viewportLarge) {
-		margin: 40px 0 0 0;
+		margin: 40px 0 0;
 	}
 }
 
 /* Prop to be passed to SendMessageForm component */
 .sendMessageForm {
 	position: relative;
-	margin: 46px 24px 0 24px;
+	margin: 46px 24px 0;
 
 	@media (--viewportMedium) {
-		margin: 49px 24px 0 24px;
+		margin: 49px 24px 0;
 		border-top: 0;
 	}
+
 	@media (--viewportLarge) {
-		margin: 48px 0 0 0;
+		margin: 48px 0 0;
 	}
 }
 
 .sendingMessageNotAllowed {
+	position: relative;
+	margin: 46px 24px 0;
 	color: var(--colorGrey300);
 
-	position: relative;
-	margin: 46px 24px 0 24px;
-
 	@media (--viewportMedium) {
-		margin: 49px 24px 0 24px;
+		margin: 49px 24px 0;
 		border-top: 0;
 	}
+
 	@media (--viewportLarge) {
-		margin: 47px 0 0 0;
+		margin: 47px 0 0;
 	}
 }
 
 /* SaleActionButtonsMaybe subcomponent */
 .actionButtons {
-	/* Position action button row above the footer */
-	z-index: 9;
 	position: fixed;
 	bottom: 0;
+
+	/* Position action button row above the footer */
+	z-index: 9;
 	width: 100%;
-	padding: 18px 24px 18px 24px;
+	padding: 18px 24px;
+	background-color: white;
+	box-shadow: var(--boxShadowTop);
 
 	/* Contain repainting to this component only */
+
 	/* 3D painting container helps scrolling */
 	transform: translate3d(0, 0, 0);
 
-	box-shadow: var(--boxShadowTop);
-	background-color: white;
-
 	@media (--viewportLarge) {
-		z-index: unset;
 		position: static;
-		box-shadow: none;
+		z-index: unset;
 		width: auto;
-		margin: 0 48px 0 48px;
 		padding: 0;
+		margin: 0 48px;
+		box-shadow: none;
 	}
 }
 
 .actionButtonWrapper {
-	width: 100%;
 	display: flex;
 	flex-direction: row;
+	width: 100%;
 
 	@media (--viewportLarge) {
 		flex-direction: column;
@@ -507,23 +510,23 @@
 		margin: 0 12px 0 0;
 
 		@media (--viewportLarge) {
-			margin: 8px 0 0 0;
-
 			/* Switch order in desktop layout with accept button being on the top */
 			order: 1;
+			margin: 8px 0 0;
 		}
 	}
 }
 
 .actionError {
 	composes: h5 from global;
+	margin: 0 0 11px;
 	color: var(--colorFail);
-	margin: 0 0 11px 0;
 
 	@media (--viewportMedium) {
-		margin: 0 0 10px 0;
-		padding: 1px 0 7px 0;
+		padding: 1px 0 7px;
+		margin: 0 0 10px;
 	}
+
 	@media (--viewportLarge) {
 		margin: 0;
 	}
@@ -542,9 +545,11 @@
 		display: none;
 	}
 }
+
 .mobileActionButtonSpacer {
 	width: 100%;
 	height: 120px;
+
 	@media (--viewportLarge) {
 		display: none;
 	}
@@ -563,7 +568,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
-	padding: 18px 24px 0 24px;
+	padding: 18px 24px 0;
 
 	@media (--viewportLarge) {
 		align-items: center;
@@ -574,17 +579,17 @@
 /* e.g. dispute "link" */
 .diminishedActionButton {
 	composes: marketplaceTinyFontStyles from global;
-
 	width: max-content;
-	color: #808080;
-	padding: 1px 0 5px 0;
+	padding: 1px 0 5px;
 	margin: 0;
+	color: #808080;
 
 	@media (--viewportMedium) {
 		margin: 0;
 	}
+
 	@media (--viewportLarge) {
-		padding: 0px 75px;
+		padding: 0 75px;
 		margin-top: 16px;
 	}
 }

@@ -3,6 +3,6 @@
 }
 
 .strokeAndFill {
-	stroke: var(--marketplaceColor);
 	fill: var(--marketplaceColor);
+	stroke: var(--marketplaceColor);
 }

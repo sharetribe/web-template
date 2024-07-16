@@ -1,13 +1,12 @@
 import React from "react";
 
-// Utils
-import { SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_TEXT } from "../../util/types";
 import {
 	isFieldForCategory,
 	pickCategoryFields,
 	pickCustomFieldProps,
 } from "../../util/fieldHelpers.js";
-
+// Utils
+import { SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_TEXT } from "../../util/types";
 import SectionDetailsMaybe from "./SectionDetailsMaybe";
 import SectionMultiEnumMaybe from "./SectionMultiEnumMaybe";
 import SectionTextMaybe from "./SectionTextMaybe";

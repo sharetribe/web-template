@@ -2,12 +2,12 @@
 
 /* Styles for custom sections: classes shared by <SectionColumns>, <SectionArticle>, <SectionFeatures>, <SectionCarousel>, <SectionHero> etc. */
 .sectionDetails {
-	max-width: var(--contentMaxWidthPages);
+	position: relative;
 	display: grid;
 	justify-content: start;
-	margin: 0 auto;
+	max-width: var(--contentMaxWidthPages);
 	padding: 0 32px;
-	position: relative;
+	margin: 0 auto;
 
 	& h1 + p,
 	& h1 + a,
@@ -105,7 +105,7 @@
 }
 
 .blockContainer {
-	padding: 64px 32px 0 32px;
+	padding: 64px 32px 0;
 
 	&:first-child {
 		padding: 0 32px;
@@ -113,12 +113,12 @@
 }
 
 .align {
-	text-align: left;
 	justify-self: start;
+	text-align: left;
 
 	@media (--viewportMedium) {
-		text-align: center;
 		justify-self: center;
+		text-align: center;
 	}
 }
 
@@ -136,14 +136,14 @@
 	composes: align;
 	display: inline-block;
 	padding: 8px 20px;
+	margin-top: 24px;
 	font-size: 15px;
-	background-color: var(--marketplaceColor);
-	border-radius: 4px;
+	font-weight: 500;
 	color: white;
 	text-decoration: none;
+	background-color: var(--marketplaceColor);
+	border-radius: 4px;
 	box-shadow: 0 8px 16px 0 rgb(0 0 0 / 20%);
-	font-weight: 500;
-	margin-top: 24px;
 
 	&:hover {
 		text-decoration: none;
@@ -164,19 +164,19 @@
 	color: var(--colorWhite);
 
 	&::selection {
-		background-color: cyan;
 		color: unset;
+		background-color: cyan;
 	}
 }
 
 .darkTheme p,
 .darkTheme li,
 .darkTheme blockquote {
-	color: rgba(255, 255, 255, 0.85);
+	color: rgb(255 255 255 / 85%);
 
 	&::selection {
-		background-color: cyan;
 		color: unset;
+		background-color: cyan;
 	}
 }
 
@@ -186,15 +186,15 @@
 	text-decoration: underline;
 
 	&:hover {
-		text-decoration: none;
 		color: var(--marketplaceColorLight);
+		text-decoration: none;
 	}
 }
 
 /* button on dark theme */
 .darkTheme .ctaButton {
-	border: 1px solid var(--marketplaceColorDark);
 	text-decoration: none;
+	border: 1px solid var(--marketplaceColorDark);
 
 	&:hover {
 		color: white;
@@ -207,8 +207,8 @@
 
 /* dark inline code */
 .darkTheme code {
-	background-color: var(--colorGrey700);
 	color: var(--colorGrey100);
+	background-color: var(--colorGrey700);
 }
 
 /* dark code block */

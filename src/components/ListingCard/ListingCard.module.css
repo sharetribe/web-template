@@ -12,49 +12,49 @@
 }
 
 .aspectRatioWrapper {
-	transition: var(--transitionStyleButton);
 	background: var(--colorGrey100); /* Loading BG color */
 	border-radius: var(--borderRadiusMedium);
+	transition: var(--transitionStyleButton);
 
 	@media (--viewportMedium) {
 		&:hover {
-			transform: scale(1.02);
 			box-shadow: var(--boxShadowListingCard);
+			transform: scale(1.02);
 		}
 	}
 }
 
 .rootForImage {
-	border: solid 1px var(--colorGrey100);
-	border-radius: var(--borderRadiusMedium);
 	width: 100%;
 	height: 100%;
+	border: solid 1px var(--colorGrey100);
+	border-radius: var(--borderRadiusMedium);
 }
 
 .info {
 	/* Layout */
 	display: flex;
 	flex-direction: column;
-	padding: 14px 0 2px 0;
+	padding: 14px 0 2px;
 }
 
 .price {
 	/* Layout */
 	display: flex;
 	flex-direction: row;
-	justify-content: flex-start;
 	flex-shrink: 0;
+	justify-content: flex-start;
 	margin-bottom: 4px;
 }
 
 .priceValue {
 	/* Font */
 	composes: textSmall from global;
-	font-weight: var(--fontWeightSemiBold);
 
 	/* Remove default margins from font */
 	margin-top: 0;
 	margin-bottom: 0;
+	font-weight: var(--fontWeightSemiBold);
 
 	@media (--viewportMedium) {
 		margin-top: 0;
@@ -65,16 +65,15 @@
 .perUnit {
 	/* Font */
 	composes: textSmall from global;
-	font-weight: var(--fontWeightSemiBold);
-
-	color: var(--marketplaceColor);
 	display: inline-flex;
 	align-items: center;
-	margin-left: 2px;
 
 	/* Remove default margins from font */
 	margin-top: 0;
 	margin-bottom: 0;
+	margin-left: 2px;
+	font-weight: var(--fontWeightSemiBold);
+	color: var(--marketplaceColor);
 
 	@media (--viewportMedium) {
 		margin-top: 0;
@@ -90,23 +89,22 @@
 .title {
 	/* Font */
 	composes: textSmall from global;
+	margin: 0;
 	font-weight: var(--fontWeightBold);
 	color: var(--colorGrey700);
-	margin: 0;
 }
 
 .authorInfo {
 	/* Font */
 	composes: marketplaceTinyFontStyles from global;
-	font-weight: var(--fontWeightMedium);
-	color: var(--colorGrey700);
-
 	padding-top: 4px;
 	padding-bottom: 4px;
 
 	/* Remove default margins from font */
 	margin-top: 0;
 	margin-bottom: 0;
+	font-weight: var(--fontWeightMedium);
+	color: var(--colorGrey700);
 
 	@media (--viewportMedium) {
 		margin-top: 0;
@@ -115,9 +113,11 @@
 }
 
 .longWord {
+	hyphens: auto;
+
 	/* fallback option */
 	word-break: break-all;
+
 	/* use break-word if available */
 	word-break: break-word;
-	hyphens: auto;
 }

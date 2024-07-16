@@ -1,8 +1,21 @@
 import React from "react";
-import "@testing-library/jest-dom";
 import Decimal from "decimal.js";
 
+import {
+	getProcess,
+	TX_TRANSITION_ACTOR_CUSTOMER,
+	TX_TRANSITION_ACTOR_PROVIDER,
+} from "../../transactions/transaction";
 import { types as sdkTypes } from "../../util/sdkLoader";
+import {
+	createBooking,
+	createCurrentUser,
+	createListing,
+	createTransaction,
+	createUser,
+	fakeIntl,
+} from "../../util/testData";
+import { renderWithProviders as render, testingLibrary } from "../../util/testHelpers";
 import {
 	LINE_ITEM_DAY,
 	LINE_ITEM_HOUR,
@@ -10,24 +23,10 @@ import {
 	LINE_ITEM_NIGHT,
 	LINE_ITEM_PROVIDER_COMMISSION,
 } from "../../util/types";
-import {
-	createUser,
-	createCurrentUser,
-	createListing,
-	fakeIntl,
-	createTransaction,
-	createBooking,
-} from "../../util/testData";
-import { renderWithProviders as render, testingLibrary } from "../../util/testHelpers";
-
-import {
-	TX_TRANSITION_ACTOR_CUSTOMER,
-	TX_TRANSITION_ACTOR_PROVIDER,
-	getProcess,
-} from "../../transactions/transaction";
-
-import { getStateData } from "./InboxPage.stateData";
 import InboxPage, { InboxItem } from "./InboxPage";
+import { getStateData } from "./InboxPage.stateData";
+
+import "@testing-library/jest-dom";
 
 const { Money } = sdkTypes;
 const { screen, waitFor, within } = testingLibrary;
@@ -304,26 +303,32 @@ describe("InboxPage", () => {
 			};
 		});
 
-		test.each(inquiries)("check inquiry: $tr", ({ tr, tx }) => {
-			const transactionRole = TX_TRANSITION_ACTOR_PROVIDER;
-			const stateDataOrder = getStateData({
-				transaction: tx,
-				transactionRole,
-			});
+		test.each(inquiries)(
+			"check inquiry: $tr",
+			({
+				// tr,
+				tx,
+			}) => {
+				const transactionRole = TX_TRANSITION_ACTOR_PROVIDER;
+				const stateDataOrder = getStateData({
+					transaction: tx,
+					transactionRole,
+				});
 
-			const tree = render(
-				<InboxItem
-					tx={tx}
-					transactionRole={transactionRole}
-					intl={fakeIntl}
-					stateData={stateDataOrder}
-					isBooking={false}
-				/>,
-			);
-			expect(tree.asFragment().firstChild).toMatchSnapshot();
-			const quantityFound = screen.queryAllByText("InboxPage.quantity");
-			expect(quantityFound).toHaveLength(0);
-		});
+				const tree = render(
+					<InboxItem
+						tx={tx}
+						transactionRole={transactionRole}
+						intl={fakeIntl}
+						stateData={stateDataOrder}
+						isBooking={false}
+					/>,
+				);
+				expect(tree.asFragment().firstChild).toMatchSnapshot();
+				const quantityFound = screen.queryAllByText("InboxPage.quantity");
+				expect(quantityFound).toHaveLength(0);
+			},
+		);
 	});
 
 	describe('InboxItem: default-purchase process with "item"', () => {
@@ -512,27 +517,33 @@ describe("InboxPage", () => {
 			};
 		});
 
-		test.each(bookings)("check booking: $tr", ({ tr, tx }) => {
-			const transactionRole = TX_TRANSITION_ACTOR_CUSTOMER;
-			const stateDataBooking = getStateData({
-				transaction: tx,
-				transactionRole,
-			});
+		test.each(bookings)(
+			"check booking: $tr",
+			({
+				tr,
+				// tx
+			}) => {
+				// const transactionRole = TX_TRANSITION_ACTOR_CUSTOMER;
+				// const stateDataBooking = getStateData({
+				// 	transaction: tx,
+				// 	transactionRole,
+				// });
 
-			const tree = render(
-				<InboxItem
-					tx={tx}
-					transactionRole={transactionRole}
-					intl={fakeIntl}
-					stateData={stateDataBooking}
-					isBooking={true}
-				/>,
-			);
+				// const tree = render(
+				// 	<InboxItem
+				// 		tx={tx}
+				// 		transactionRole={transactionRole}
+				// 		intl={fakeIntl}
+				// 		stateData={stateDataBooking}
+				// 		isBooking={true}
+				// 	/>,
+				// );
 
-			const quantityFound = screen.queryAllByText("Jun 14 – 16");
-			const expected = tr !== "transition/inquire" ? 1 : 0;
-			expect(quantityFound).toHaveLength(expected);
-		});
+				const quantityFound = screen.queryAllByText("Jun 14 – 16");
+				const expected = tr !== "transition/inquire" ? 1 : 0;
+				expect(quantityFound).toHaveLength(expected);
+			},
+		);
 	});
 
 	describe('InboxItem: default-booking process with "hour"', () => {

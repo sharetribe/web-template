@@ -1,4 +1,5 @@
 import pick from "lodash/pick";
+
 import { storableError } from "../util/errors";
 import * as log from "../util/log";
 
@@ -178,19 +179,30 @@ export const deletePaymentMethod = () => (dispatch, getState, sdk) => {
 		});
 };
 
-export const updatePaymentMethod = (stripePaymentMethodId) => (dispatch, getState, sdk) => {
-	return dispatch(deletePaymentMethod())
-		.then(() => {
-			return dispatch(addPaymentMethod(stripePaymentMethodId));
-		})
-		.catch((e) => {
-			log.error(storableError(e), "updating-payment-method-failed");
-		});
-};
+export const updatePaymentMethod =
+	(stripePaymentMethodId) =>
+	(
+		dispatch,
+		// getState,
+		// sdk
+	) => {
+		return dispatch(deletePaymentMethod())
+			.then(() => {
+				return dispatch(addPaymentMethod(stripePaymentMethodId));
+			})
+			.catch((e) => {
+				log.error(storableError(e), "updating-payment-method-failed");
+			});
+	};
 
 // This function helps to choose correct thunk function
 export const savePaymentMethod =
-	(stripeCustomer, stripePaymentMethodId) => (dispatch, getState, sdk) => {
+	(stripeCustomer, stripePaymentMethodId) =>
+	(
+		dispatch,
+		getState,
+		// sdk
+	) => {
 		const hasAlreadyDefaultPaymentMethod =
 			stripeCustomer &&
 			stripeCustomer.defaultPaymentMethod &&
@@ -216,7 +228,7 @@ export const savePaymentMethod =
 				}
 				return response;
 			})
-			.catch((e) => {
+			.catch(() => {
 				// errors are already catched in other thunk functions.
 			});
 	};

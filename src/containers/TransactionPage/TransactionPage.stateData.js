@@ -1,4 +1,5 @@
 import { bool, func, oneOf, shape, string } from "prop-types";
+
 import {
 	BOOKING_PROCESS_NAME,
 	INQUIRY_PROCESS_NAME,
@@ -40,7 +41,7 @@ export const stateDataShape = shape({
 // Transitions are following process.edn format: "transition/my-transtion-name"
 // This extracts the 'my-transtion-name' string if namespace exists
 const getTransitionKey = (transitionName) => {
-	const [nameSpace, transitionKey] = transitionName.split("/");
+	const [, transitionKey] = transitionName.split("/"); // [namespace, transitionKey]
 	return transitionKey || transitionName;
 };
 

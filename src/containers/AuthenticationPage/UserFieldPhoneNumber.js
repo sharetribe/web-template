@@ -1,12 +1,11 @@
 import React from "react";
-import { string } from "prop-types";
 import classNames from "classnames";
+import { string } from "prop-types";
 
+import { FieldPhoneNumberInput } from "../../components";
 import { intlShape } from "../../util/reactIntl";
 import { propTypes } from "../../util/types";
 import * as validators from "../../util/validators";
-
-import { FieldPhoneNumberInput } from "../../components";
 
 const UserFieldPhoneNumber = (props) => {
 	const { rootClassName, className, formId, formName, userTypeConfig, intl } = props;

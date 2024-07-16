@@ -1,16 +1,14 @@
 import React, { useState } from "react";
-import { func, object, string, bool } from "prop-types";
 import classNames from "classnames";
-
-// Import configs and util modules
-import { FormattedMessage } from "../../../../util/reactIntl";
-import { LISTING_STATE_DRAFT, STOCK_MULTIPLE_ITEMS } from "../../../../util/types";
-import { displayDeliveryPickup, displayDeliveryShipping } from "../../../../util/configHelpers";
-import { types as sdkTypes } from "../../../../util/sdkLoader";
+import { bool, func, object, string } from "prop-types";
 
 // Import shared components
 import { H3, ListingLink } from "../../../../components";
-
+import { displayDeliveryPickup, displayDeliveryShipping } from "../../../../util/configHelpers";
+// Import configs and util modules
+import { FormattedMessage } from "../../../../util/reactIntl";
+import { types as sdkTypes } from "../../../../util/sdkLoader";
+import { LISTING_STATE_DRAFT, STOCK_MULTIPLE_ITEMS } from "../../../../util/types";
 // Import modules from this directory
 import EditListingDeliveryForm from "./EditListingDeliveryForm";
 import css from "./EditListingDeliveryPanel.module.css";

@@ -1,6 +1,13 @@
 import omit from "lodash/omit";
 
-import { types as sdkTypes, createImageVariantConfig } from "../../util/sdkLoader";
+import { addMarketplaceEntities } from "../../ducks/marketplaceData.duck";
+import {
+	createStripeAccount,
+	fetchStripeAccount,
+	updateStripeAccount,
+} from "../../ducks/stripeConnectAccount.duck";
+import { fetchCurrentUser } from "../../ducks/user.duck";
+import { isBookingProcessAlias } from "../../transactions/transaction";
 import { denormalisedResponseEntities } from "../../util/data";
 import {
 	getDefaultTimeZoneOnBrowser,
@@ -10,19 +17,11 @@ import {
 	parseDateFromISO8601,
 	stringifyDateToISO8601,
 } from "../../util/dates";
-import { uniqueBy } from "../../util/generators";
 import { storableError } from "../../util/errors";
+import { uniqueBy } from "../../util/generators";
 import * as log from "../../util/log";
+import { createImageVariantConfig, types as sdkTypes } from "../../util/sdkLoader";
 import { parse } from "../../util/urlHelpers";
-import { isBookingProcessAlias } from "../../transactions/transaction";
-
-import { addMarketplaceEntities } from "../../ducks/marketplaceData.duck";
-import {
-	createStripeAccount,
-	updateStripeAccount,
-	fetchStripeAccount,
-} from "../../ducks/stripeConnectAccount.duck";
-import { fetchCurrentUser } from "../../ducks/user.duck";
 
 const { UUID } = sdkTypes;
 

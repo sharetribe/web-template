@@ -1,16 +1,14 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { compose } from "redux";
 import { Form as FinalForm } from "react-final-form";
 import classNames from "classnames";
+import PropTypes from "prop-types";
+import { compose } from "redux";
 
-import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
+import { FieldReviewRating, FieldTextInput, Form, PrimaryButton } from "../../../components";
 import { isTransactionsTransitionAlreadyReviewed } from "../../../util/errors";
+import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
 import { propTypes } from "../../../util/types";
 import { required } from "../../../util/validators";
-
-import { FieldReviewRating, Form, PrimaryButton, FieldTextInput } from "../../../components";
-
 import css from "./ReviewForm.module.css";
 
 const ReviewFormComponent = (props) => (

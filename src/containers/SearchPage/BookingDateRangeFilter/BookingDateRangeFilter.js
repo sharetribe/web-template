@@ -1,16 +1,13 @@
 import React, { Component } from "react";
 import { arrayOf, bool, func, node, number, object, string } from "prop-types";
 
-import { injectIntl, intlShape } from "../../../util/reactIntl";
-import { parseDateFromISO8601, stringifyDateToISO8601 } from "../../../util/dates";
-
 import { FieldDateRangeController } from "../../../components";
-
+import { parseDateFromISO8601, stringifyDateToISO8601 } from "../../../util/dates";
+import { injectIntl, intlShape } from "../../../util/reactIntl";
 import FilterPlain from "../FilterPlain/FilterPlain";
 import FilterPopup from "../FilterPopup/FilterPopup";
-
-import FilterPopupForSidebar from "./FilterPopupForSidebar";
 import css from "./BookingDateRangeFilter.module.css";
+import FilterPopupForSidebar from "./FilterPopupForSidebar";
 
 const getDatesQueryParamName = (queryParamNames) => {
 	return Array.isArray(queryParamNames)
@@ -88,16 +85,16 @@ export class BookingDateRangeFilterComponent extends Component {
 		const formattedStartDate = isSelected ? intl.formatDate(startDate, format) : null;
 		const formattedEndDate = isSelected ? intl.formatDate(endDate, format) : null;
 
-		const labelForPlain = isSelected
-			? intl.formatMessage(
-					{ id: "BookingDateRangeFilter.labelSelectedPlain" },
-					{
-						dates: `${formattedStartDate} - ${formattedEndDate}`,
-					},
-				)
-			: label
-				? label
-				: intl.formatMessage({ id: "BookingDateRangeFilter.labelPlain" });
+		// const labelForPlain = isSelected
+		// 	? intl.formatMessage(
+		// 			{ id: "BookingDateRangeFilter.labelSelectedPlain" },
+		// 			{
+		// 				dates: `${formattedStartDate} - ${formattedEndDate}`,
+		// 			},
+		// 		)
+		// 	: label
+		// 		? label
+		// 		: intl.formatMessage({ id: "BookingDateRangeFilter.labelPlain" });
 
 		const labelForPopup = isSelected
 			? intl.formatMessage(

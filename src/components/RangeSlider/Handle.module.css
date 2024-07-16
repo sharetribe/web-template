@@ -2,13 +2,13 @@
 	/* Position */
 	position: absolute;
 	top: 50%;
-	margin-top: -22px;
-	margin-left: -22px;
 
 	/* Layout */
 	width: 44px;
 	height: 44px;
 	padding: 0;
+	margin-top: -22px;
+	margin-left: -22px;
 	border: 0;
 }
 
@@ -16,23 +16,23 @@
 	/* Position */
 	position: absolute;
 	top: 12px;
-	margin-left: 12px;
 
 	/* Layout */
 	width: 20px;
 	height: 20px;
+	margin-left: 12px;
+	cursor: pointer;
+	background-color: var(--colorWhite);
 	border: 2px solid var(--marketplaceColor);
 	border-radius: 50%;
-	background-color: var(--colorWhite);
-	cursor: pointer;
 
 	&:hover  {
+		box-shadow: 0 2px 12px 0 rgb(0 0 0 / 30%);
 		transform: scale(1.1);
-		box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
 	}
 }
 
 .dragged {
+	box-shadow: 0 2px 12px 0 rgb(0 0 0 / 30%);
 	transform: scale(1.1);
-	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
 }

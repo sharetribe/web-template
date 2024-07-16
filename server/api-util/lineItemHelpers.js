@@ -1,10 +1,12 @@
 const Decimal = require("decimal.js");
 const moment = require("moment-timezone/builds/moment-timezone-with-data-10-year-range.min");
 const { types } = require("sharetribe-flex-sdk");
+
 const { Money } = types;
 
 const { getAmountAsDecimalJS, convertDecimalJSToNumber } = require("./currency");
 const { nightsBetween, daysBetween } = require("./dates");
+
 const LINE_ITEM_NIGHT = "line-item/night";
 const LINE_ITEM_DAY = "line-item/day";
 

@@ -43,9 +43,9 @@
 	color: var(--colorFail);
 
 	@media (--viewportMedium) {
-		margin: 0;
 		width: 100%;
 		min-height: 32px;
+		margin: 0;
 	}
 }
 
@@ -60,9 +60,9 @@
 }
 
 .submitButton {
+	flex-shrink: 0;
 	margin-top: auto;
 	margin-bottom: 96px;
-	flex-shrink: 0;
 
 	@media (--viewportMedium) {
 		display: inline-block;

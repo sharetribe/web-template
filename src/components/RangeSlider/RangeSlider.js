@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { arrayOf, number, shape, string } from "prop-types";
 import classNames from "classnames";
-import { withDimensions } from "../../util/uiHelpers";
+import { arrayOf, number, shape, string } from "prop-types";
 
+import { withDimensions } from "../../util/uiHelpers";
 import Handle from "./Handle";
-import Track from "./Track";
 import css from "./RangeSlider.module.css";
+import Track from "./Track";
 
 class RangeSliderComponent extends Component {
 	constructor(props) {

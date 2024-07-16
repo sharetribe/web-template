@@ -1,8 +1,9 @@
 import pick from "lodash/pick";
+
 import {
 	createStripeAccount,
-	updateStripeAccount,
 	fetchStripeAccount,
+	updateStripeAccount,
 } from "../../ducks/stripeConnectAccount.duck";
 import { fetchCurrentUser } from "../../ducks/user.duck";
 
@@ -58,28 +59,40 @@ export const savePayoutDetailsSuccess = () => ({
 
 // ================ Thunks ================ //
 
-export const savePayoutDetails = (values, isUpdateCall) => (dispatch, getState, sdk) => {
-	const upsertThunk = isUpdateCall ? updateStripeAccount : createStripeAccount;
-	dispatch(savePayoutDetailsRequest());
+export const savePayoutDetails =
+	(values, isUpdateCall) =>
+	(
+		dispatch,
+		// getState,
+		// sdk
+	) => {
+		const upsertThunk = isUpdateCall ? updateStripeAccount : createStripeAccount;
+		dispatch(savePayoutDetailsRequest());
 
-	return dispatch(upsertThunk(values, { expand: true }))
-		.then((response) => {
-			dispatch(savePayoutDetailsSuccess());
+		return dispatch(upsertThunk(values, { expand: true }))
+			.then((response) => {
+				dispatch(savePayoutDetailsSuccess());
+				return response;
+			})
+			.catch(() => dispatch(savePayoutDetailsError()));
+	};
+
+export const loadData =
+	() =>
+	(
+		dispatch,
+		getState,
+		// sdk
+	) => {
+		// Clear state so that previously loaded data is not visible
+		// in case this page load fails.
+		dispatch(setInitialValues());
+
+		return dispatch(fetchCurrentUser()).then((response) => {
+			const currentUser = getState().user.currentUser;
+			if (currentUser && currentUser.stripeAccount) {
+				dispatch(fetchStripeAccount());
+			}
 			return response;
-		})
-		.catch(() => dispatch(savePayoutDetailsError()));
-};
-
-export const loadData = () => (dispatch, getState, sdk) => {
-	// Clear state so that previously loaded data is not visible
-	// in case this page load fails.
-	dispatch(setInitialValues());
-
-	return dispatch(fetchCurrentUser()).then((response) => {
-		const currentUser = getState().user.currentUser;
-		if (currentUser && currentUser.stripeAccount) {
-			dispatch(fetchStripeAccount());
-		}
-		return response;
-	});
-};
+		});
+	};

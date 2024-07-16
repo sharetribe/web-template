@@ -2,10 +2,8 @@ import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
 import classNames from "classnames";
 
-import { FormattedMessage } from "../../../../../util/reactIntl";
-
 import { ExternalLink, NamedLink } from "../../../../../components";
-
+import { FormattedMessage } from "../../../../../util/reactIntl";
 import css from "./PriorityLinks.module.css";
 
 /**
@@ -79,6 +77,7 @@ const PriorityLinks = (props) => {
 			}, []);
 			props.setLinks(linksWithWidths);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- code from starter
 	}, [containerRef]);
 
 	const { links, priorityLinks } = props;

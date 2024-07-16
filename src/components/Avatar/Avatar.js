@@ -1,16 +1,16 @@
 import React from "react";
-import { string, oneOfType, bool } from "prop-types";
-import { injectIntl, intlShape } from "../../util/reactIntl";
 import classNames from "classnames";
-import { propTypes } from "../../util/types";
-import {
-	ensureUser,
-	ensureCurrentUser,
-	userDisplayNameAsString,
-	userAbbreviatedName,
-} from "../../util/data";
-import { ResponsiveImage, IconBannedUser, NamedLink } from "../../components/";
+import { bool, oneOfType, string } from "prop-types";
 
+import { IconBannedUser, NamedLink, ResponsiveImage } from "../../components/";
+import {
+	ensureCurrentUser,
+	ensureUser,
+	userAbbreviatedName,
+	userDisplayNameAsString,
+} from "../../util/data";
+import { injectIntl, intlShape } from "../../util/reactIntl";
+import { propTypes } from "../../util/types";
 import css from "./Avatar.module.css";
 
 // Responsive image sizes hint

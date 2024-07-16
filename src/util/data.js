@@ -1,5 +1,6 @@
 import isArray from "lodash/isArray";
 import reduce from "lodash/reduce";
+
 import { sanitizeEntity } from "./sanitize";
 // NOTE: This file imports sanitize.js, which may lead to circular dependency
 
@@ -423,7 +424,7 @@ export const userAbbreviatedName = (user, defaultUserAbbreviatedName) => {
  * otherwise undefined is returned, which results in mergeWith using the
  * standard merging function
  */
-export const overrideArrays = (objValue, srcValue, key, object, source, stack) => {
+export const overrideArrays = (objValue, srcValue) => {
 	if (isArray(objValue)) {
 		return srcValue;
 	}

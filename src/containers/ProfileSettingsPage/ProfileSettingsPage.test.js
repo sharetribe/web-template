@@ -1,10 +1,10 @@
 import React from "react";
-import "@testing-library/jest-dom";
 
 import { createCurrentUser, fakeIntl } from "../../util/testData";
 import { renderWithProviders as render, testingLibrary } from "../../util/testHelpers";
-
 import { ProfileSettingsPageComponent } from "./ProfileSettingsPage";
+
+import "@testing-library/jest-dom";
 
 const { screen } = testingLibrary;
 

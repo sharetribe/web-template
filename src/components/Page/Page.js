@@ -1,18 +1,17 @@
 import React, { Component } from "react";
-import { any, array, arrayOf, bool, number, object, oneOfType, shape, string } from "prop-types";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import classNames from "classnames";
+import { any, array, arrayOf, bool, number, object, oneOfType, shape, string } from "prop-types";
 
 import { useConfiguration } from "../../context/configurationContext";
 import { useRouteConfiguration } from "../../context/routeConfigurationContext";
-import { getCustomCSSPropertiesFromConfig } from "../../util/style";
-import { useIntl, intlShape } from "../../util/reactIntl";
-import { metaTagProps } from "../../util/seo";
-import { canonicalRoutePath } from "../../util/routes";
-import { propTypes } from "../../util/types";
 import { apiBaseUrl } from "../../util/api";
-
+import { intlShape, useIntl } from "../../util/reactIntl";
+import { canonicalRoutePath } from "../../util/routes";
+import { metaTagProps } from "../../util/seo";
+import { getCustomCSSPropertiesFromConfig } from "../../util/style";
+import { propTypes } from "../../util/types";
 import css from "./Page.module.css";
 
 const preventDefault = (e) => {

@@ -1,7 +1,7 @@
-import { clearCurrentUser, fetchCurrentUser } from "./user.duck";
 import { createUserWithIdp } from "../util/api";
 import { storableError } from "../util/errors";
 import * as log from "../util/log";
+import { clearCurrentUser, fetchCurrentUser } from "./user.duck";
 
 const authenticated = (authInfo) => authInfo?.isAnonymous === false;
 const loggedInAs = (authInfo) => authInfo?.isLoggedInAs === true;
@@ -227,15 +227,21 @@ export const signup = (params) => (dispatch, getState, sdk) => {
 		});
 };
 
-export const signupWithIdp = (params) => (dispatch, getState, sdk) => {
-	dispatch(confirmRequest());
-	return createUserWithIdp(params)
-		.then((res) => {
-			return dispatch(confirmSuccess());
-		})
-		.then(() => dispatch(fetchCurrentUser()))
-		.catch((e) => {
-			log.error(e, "create-user-with-idp-failed", { params });
-			return dispatch(confirmError(storableError(e)));
-		});
-};
+export const signupWithIdp =
+	(params) =>
+	(
+		dispatch,
+		// getState,
+		// sdk
+	) => {
+		dispatch(confirmRequest());
+		return createUserWithIdp(params)
+			.then(() => {
+				return dispatch(confirmSuccess());
+			})
+			.then(() => dispatch(fetchCurrentUser()))
+			.catch((e) => {
+				log.error(e, "create-user-with-idp-failed", { params });
+				return dispatch(confirmError(storableError(e)));
+			});
+	};

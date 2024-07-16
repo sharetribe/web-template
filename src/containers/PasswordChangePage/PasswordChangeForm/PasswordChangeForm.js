@@ -1,17 +1,15 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { compose } from "redux";
 import { Form as FinalForm } from "react-final-form";
 import classNames from "classnames";
+import PropTypes from "prop-types";
+import { compose } from "redux";
 
+import { FieldTextInput, Form, H4, PrimaryButton } from "../../../components";
+import { ensureCurrentUser } from "../../../util/data";
+import { isChangePasswordWrongPassword } from "../../../util/errors";
 import { FormattedMessage, injectIntl, intlShape } from "../../../util/reactIntl";
 import { propTypes } from "../../../util/types";
 import * as validators from "../../../util/validators";
-import { ensureCurrentUser } from "../../../util/data";
-import { isChangePasswordWrongPassword } from "../../../util/errors";
-
-import { Form, PrimaryButton, FieldTextInput, H4 } from "../../../components";
-
 import css from "./PasswordChangeForm.module.css";
 
 const RESET_TIMEOUT = 800;
@@ -139,15 +137,15 @@ class PasswordChangeFormComponent extends Component {
 					const submitDisabled = invalid || inProgress;
 
 					const sendPasswordLink = (
-						<span className={css.helperLink} onClick={this.handleResetPassword} role="button">
+						<button className={css.helperLink} onClick={this.handleResetPassword} type="button">
 							<FormattedMessage id="PasswordChangeForm.resetPasswordLinkText" />
-						</span>
+						</button>
 					);
 
 					const resendPasswordLink = (
-						<span className={css.helperLink} onClick={this.handleResetPassword} role="button">
+						<button className={css.helperLink} onClick={this.handleResetPassword} type="button">
 							<FormattedMessage id="PasswordChangeForm.resendPasswordLinkText" />
-						</span>
+						</button>
 					);
 
 					const resetPasswordLink =

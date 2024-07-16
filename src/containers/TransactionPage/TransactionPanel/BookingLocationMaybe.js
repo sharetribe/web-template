@@ -1,11 +1,9 @@
 import React from "react";
 import classNames from "classnames";
 
-import { FormattedMessage } from "../../../util/reactIntl";
 import { Heading } from "../../../components";
-
+import { FormattedMessage } from "../../../util/reactIntl";
 import AddressLinkMaybe from "./AddressLinkMaybe";
-
 import css from "./TransactionPanel.module.css";
 
 // Functional component as a helper to build ActivityFeed section

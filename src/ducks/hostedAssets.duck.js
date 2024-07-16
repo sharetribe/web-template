@@ -165,27 +165,34 @@ export const fetchAppAssets = (assets, version) => (dispatch, getState, sdk) => 
 			//      data, // translation key & value pairs
 			//    },
 			// }
-			return assetEntries.reduce((collectedAssets, assetEntry, i) => {
-				const [name, path] = assetEntry;
+			return assetEntries.reduce(
+				(
+					collectedAssets,
+					assetEntry,
+					// i
+				) => {
+					const [name, path] = assetEntry;
 
-				if (nonConfigAssets.includes(name)) {
-					// There are distinct calls for these assets
-					const assetResponse = name === "translations" ? translationAsset : footerAsset;
-					return { ...collectedAssets, [name]: { path, data: getFirstAssetData(assetResponse) } };
-				}
+					if (nonConfigAssets.includes(name)) {
+						// There are distinct calls for these assets
+						const assetResponse = name === "translations" ? translationAsset : footerAsset;
+						return { ...collectedAssets, [name]: { path, data: getFirstAssetData(assetResponse) } };
+					}
 
-				// Other asset path are assumed to be config assets
-				const fetchedConfigAssets = getMultiAssetData(configAssets);
-				const jsonAsset = findJSONAsset(fetchedConfigAssets, getAbsolutePath(path));
+					// Other asset path are assumed to be config assets
+					const fetchedConfigAssets = getMultiAssetData(configAssets);
+					const jsonAsset = findJSONAsset(fetchedConfigAssets, getAbsolutePath(path));
 
-				// branding.json config asset can contain image references,
-				// which should be denormalized from "included" section of the response
-				const data = denormalizeAssetData({
-					data: jsonAsset?.attributes?.data,
-					included: getMultiAssetIncluded(configAssets),
-				});
-				return { ...collectedAssets, [name]: { path, data } };
-			}, {});
+					// branding.json config asset can contain image references,
+					// which should be denormalized from "included" section of the response
+					const data = denormalizeAssetData({
+						data: jsonAsset?.attributes?.data,
+						included: getMultiAssetIncluded(configAssets),
+					});
+					return { ...collectedAssets, [name]: { path, data } };
+				},
+				{},
+			);
 		})
 		.catch((e) => {
 			log.error(e, "app-asset-fetch-failed", { assets, version });
@@ -210,7 +217,7 @@ export const fetchPageAssets = (assets, hasFallback) => (dispatch, getState, sdk
 		: (assetPath) => sdk.assetByAlias({ path: assetPath, alias: "latest" });
 
 	const assetEntries = Object.entries(assets);
-	const sdkAssets = assetEntries.map(([key, assetPath]) => fetchAssets(assetPath));
+	const sdkAssets = assetEntries.map(([, assetPath]) => fetchAssets(assetPath));
 
 	return Promise.all(sdkAssets)
 		.then((responses) => {

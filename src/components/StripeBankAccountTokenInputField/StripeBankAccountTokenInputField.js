@@ -1,23 +1,22 @@
 /* eslint-disable no-underscore-dangle */
 import React, { Component } from "react";
-import { bool, func, shape, string } from "prop-types";
 import { Field } from "react-final-form";
 import classNames from "classnames";
 import debounce from "lodash/debounce";
+import { bool, func, shape, string } from "prop-types";
 
 import { useConfiguration } from "../../context/configurationContext";
-import { useIntl, FormattedMessage } from "../../util/reactIntl";
-
+import { FormattedMessage, useIntl } from "../../util/reactIntl";
+import StripeBankAccountRequiredInput from "./StripeBankAccountRequiredInput";
+import css from "./StripeBankAccountTokenInputField.module.css";
 import {
 	BANK_ACCOUNT_INPUTS,
 	formatFieldMessage,
-	requiredInputs,
-	mapInputsToStripeAccountKeys,
 	getSupportedCountryCodes,
+	mapInputsToStripeAccountKeys,
+	requiredInputs,
 	translateStripeError,
 } from "./StripeBankAccountTokenInputField.util";
-import StripeBankAccountRequiredInput from "./StripeBankAccountRequiredInput";
-import css from "./StripeBankAccountTokenInputField.module.css";
 
 // Since final-form tracks the onBlur event for marking the field as
 // touched (which triggers possible error validation rendering), only

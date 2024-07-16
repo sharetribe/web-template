@@ -11,7 +11,6 @@ import {
 	MenuLabel,
 	NamedLink,
 } from "../../../../../components";
-
 import css from "./LinksMenu.module.css";
 
 /**
@@ -66,6 +65,7 @@ const MeasureMoreMenu = (props) => {
 		if (moreMenuRef.current && !width) {
 			setWidth(moreMenuRef.current.offsetWidth);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps -- starter code
 	}, [moreMenuRef, width]);
 
 	const isServer = typeof window === "undefined";
@@ -105,7 +105,11 @@ const MeasureMoreMenu = (props) => {
  * @param {*} props contain keys: showMoreLabel, isOpen, intl
  * @returns span containing menu label text and IconArrowHead
  */
-const MenuLabelContent = ({ showMoreLabel, isOpen, intl }) => (
+const MenuLabelContent = ({
+	showMoreLabel,
+	// isOpen,
+	intl,
+}) => (
 	<span className={css.linkMenuLabelWrapper}>
 		{showMoreLabel
 			? intl.formatMessage({ id: "TopbarDesktop.LinksMenu.more" })

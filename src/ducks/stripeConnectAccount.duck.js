@@ -250,7 +250,7 @@ export const updateStripeAccount = (params) => (dispatch, getState, sdk) => {
 		});
 };
 
-export const fetchStripeAccount = (params) => (dispatch, getState, sdk) => {
+export const fetchStripeAccount = () => (dispatch, _, sdk) => {
 	dispatch(stripeAccountFetchRequest());
 
 	return sdk.stripeAccount
@@ -272,7 +272,7 @@ export const fetchStripeAccount = (params) => (dispatch, getState, sdk) => {
 		});
 };
 
-export const getStripeConnectAccountLink = (params) => (dispatch, getState, sdk) => {
+export const getStripeConnectAccountLink = (params) => (dispatch, _, sdk) => {
 	const { failureURL, successURL, type } = params;
 	dispatch(getAccountLinkRequest());
 

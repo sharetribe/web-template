@@ -1,7 +1,7 @@
 .root {
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
+	justify-content: space-between;
 }
 
 .prev,
@@ -11,16 +11,17 @@
 	/* Dimensions */
 	padding-top: 26px;
 	padding-bottom: 26px;
+	font-size: 0;
 
 	/* Reset <a> tag sizing */
 	line-height: 0;
-	font-size: 0;
 }
 
 .prev {
 	/* Minimum touch size 44px (svg width + padding) */
 	padding-right: 33px;
 }
+
 .next {
 	/* Minimum touch size 44px (svg width + padding) */
 	padding-left: 33px;
@@ -96,22 +97,20 @@
 
 .currentPage {
 	/* Dimensions */
-	padding: 21px 5px 18px 5px;
-	border-bottom-style: solid;
-	border-bottom-width: 3px;
-	border-bottom-color: var(--colorBlack);
+	padding: 21px 5px 18px;
 
 	/* Color */
 	color: var(--colorBlack);
+	border-bottom: 3px solid var(--colorBlack);
 }
 
 .paginationGap {
 	/* Dimensions */
 	padding: 21px 5px;
 
-	/* Color for svg icons */
-	color: var(--colorGrey700);
-
 	/* Ellipsis is raised from baseline */
 	line-height: 13px;
+
+	/* Color for svg icons */
+	color: var(--colorGrey700);
 }

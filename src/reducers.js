@@ -1,7 +1,8 @@
 import { combineReducers } from "redux";
-import { USER_LOGOUT } from "./ducks/auth.duck";
-import * as globalReducers from "./ducks";
+
 import * as pageReducers from "./containers/reducers";
+import * as globalReducers from "./ducks";
+import { USER_LOGOUT } from "./ducks/auth.duck";
 
 /**
  * Function _createReducer_ combines global reducers (reducers that are used in

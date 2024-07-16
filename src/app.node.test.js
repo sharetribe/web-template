@@ -5,9 +5,10 @@
 import React from "react";
 import ReactDOMServer from "react-dom/server";
 import forEach from "lodash/forEach";
-import { getHostedConfiguration } from "./util/testHelpers";
+
 import { ServerApp } from "./app";
 import configureStore from "./store";
+import { getHostedConfiguration } from "./util/testHelpers";
 
 const render = (url, context) => {
 	const store = configureStore();

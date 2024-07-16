@@ -1,6 +1,6 @@
 import React from "react";
-import ListingImageGallery from "./ListingImageGallery/ListingImageGallery";
 
+import ListingImageGallery from "./ListingImageGallery/ListingImageGallery";
 import css from "./ListingPage.module.css";
 
 const SectionGallery = (props) => {

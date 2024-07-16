@@ -1,21 +1,14 @@
 import React from "react";
-import "@testing-library/jest-dom";
-import "react-dates/initialize";
 
 import { types as sdkTypes } from "../../util/sdkLoader";
+import { createCurrentUser, createOwnListing, createStock, fakeIntl } from "../../util/testData";
 import {
-	LISTING_PAGE_PARAM_TYPE_DRAFT,
-	LISTING_PAGE_PARAM_TYPE_EDIT,
-	LISTING_PAGE_PARAM_TYPE_NEW,
-} from "../../util/urlHelpers";
-import { createCurrentUser, createStock, createOwnListing, fakeIntl } from "../../util/testData";
-import {
+	getHostedConfiguration,
+	getRouteConfiguration,
 	renderWithProviders as render,
 	testingLibrary,
-	getRouteConfiguration,
-	getHostedConfiguration,
 } from "../../util/testHelpers";
-
+import { LISTING_PAGE_PARAM_TYPE_EDIT, LISTING_PAGE_PARAM_TYPE_NEW } from "../../util/urlHelpers";
 import EditListingPage, { EditListingPageComponent } from "./EditListingPage";
 import {
 	AVAILABILITY,
@@ -26,6 +19,9 @@ import {
 	PRICING,
 	PRICING_AND_STOCK,
 } from "./EditListingWizard/EditListingWizardTab";
+
+import "@testing-library/jest-dom";
+import "react-dates/initialize";
 
 const { screen, userEvent, waitFor, within } = testingLibrary;
 

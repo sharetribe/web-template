@@ -1,10 +1,10 @@
 @import "../../../styles/customMediaQueries.css";
 
 .root {
-	grid-template-rows: auto 1fr auto;
-	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
+	grid-template-rows: auto 1fr auto;
+	min-height: 100vh;
 }
 
 .topbar {
@@ -15,17 +15,17 @@
 
 /* Container for side and content */
 .container {
-	/* parent aka root is flexbox, this container takes all available space */
-	flex-grow: 1;
-	flex-shrink: 0;
+	/* When side nav is shown as a column, Topbar's box-shadow should be visible */
+	z-index: calc(var(--zIndexTopbar) - 1);
 
 	/* This container uses flexbox layout */
 	display: flex;
 	flex-direction: column;
-	width: 100%;
 
-	/* When side nav is shown as a column, Topbar's box-shadow should be visible */
-	z-index: calc(var(--zIndexTopbar) - 1);
+	/* parent aka root is flexbox, this container takes all available space */
+	flex-grow: 1;
+	flex-shrink: 0;
+	width: 100%;
 
 	@media (--viewportLarge) {
 		flex-direction: row;
@@ -34,11 +34,11 @@
 }
 
 .main {
-	/* Expand to the full remaining width of the viewport */
-	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
 
+	/* Expand to the full remaining width of the viewport */
+	flex-grow: 1;
 	padding: 24px;
 
 	@media (--viewportLarge) {
@@ -48,9 +48,7 @@
      */
 		padding: 48px 36px 82px 59px;
 		background-color: var(--colorWhite);
-		border-left-width: 1px;
-		border-left-style: solid;
-		border-left-color: var(--colorGrey100);
+		border-left: 1px solid var(--colorGrey100);
 	}
 
 	@media (--viewportLargeWithPaddings) {
@@ -65,21 +63,18 @@
 	justify-content: flex-end;
 	width: 100vw;
 	padding: 0 24px;
-
-	border-top-width: 1px;
-	border-top-color: var(--colorGrey100);
-	border-top-style: solid;
 	background-color: var(--colorWhite);
+	border-top: 1px solid var(--colorGrey100);
 	box-shadow: var(--boxShadow);
 
 	@media (--viewportLarge) {
-		padding: 48px 0 82px 36px;
 		flex-direction: column;
 		justify-content: flex-start;
 		width: unset;
+		padding: 48px 0 82px 36px;
+		background-color: transparent;
 		border: none;
 		box-shadow: none;
-		background-color: transparent;
 	}
 
 	@media (--viewportLargeWithPaddings) {
@@ -90,19 +85,19 @@
 .tabs {
 	display: flex;
 	flex-direction: row;
-	overflow-x: auto;
 	min-height: 48px;
 	padding-top: 2px;
+	overflow-x: auto;
 
 	@media (--viewportMedium) {
 		min-height: 48px;
 	}
 
 	@media (--viewportLarge) {
-		min-height: auto;
 		flex-direction: column;
-		margin-top: 24px;
+		min-height: auto;
 		padding-top: 0;
+		margin-top: 24px;
 	}
 }
 
