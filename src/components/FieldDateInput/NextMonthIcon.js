@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./DateInput.module.css";
 
-const NextMonthIcon = props => {
+const NextMonthIcon = (props) => {
 	const { className, rootClassName } = props;
 	const classes = classNames(rootClassName || css.rootNextMonthIcon, className);
 

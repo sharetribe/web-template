@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./AspectRatioWrapper.module.css";
 
-const AspectRatioWrapper = props => {
+const AspectRatioWrapper = (props) => {
 	const { children, className, rootClassName, width, height, ...rest } = props;
 	const classes = classNames(rootClassName || css.root, className);
 

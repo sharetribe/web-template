@@ -7,7 +7,7 @@ import { resolveLatestProcessName, getProcess } from "../../transactions/transac
 
 import css from "./OrderBreakdown.module.css";
 
-const LineItemTotalPrice = props => {
+const LineItemTotalPrice = (props) => {
 	const { transaction, isProvider, intl } = props;
 	const processName = resolveLatestProcessName(transaction?.attributes?.processName);
 	if (!processName) {

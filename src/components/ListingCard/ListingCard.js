@@ -41,11 +41,11 @@ const priceData = (price, currency, intl) => {
 
 const LazyImage = lazyLoadWithDimensions(ResponsiveImage, { loadAfterInitialRendering: 3000 });
 
-const PriceMaybe = props => {
+const PriceMaybe = (props) => {
 	const { price, publicData, config, intl } = props;
 	const { listingType } = publicData || {};
 	const validListingTypes = config.listing.listingTypes;
-	const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+	const foundListingTypeConfig = validListingTypes.find((conf) => conf.listingType === listingType);
 	const showPrice = displayPrice(foundListingTypeConfig);
 	if (!showPrice && price) {
 		return null;
@@ -67,17 +67,10 @@ const PriceMaybe = props => {
 	);
 };
 
-export const ListingCardComponent = props => {
+export const ListingCardComponent = (props) => {
 	const config = useConfiguration();
-	const {
-		className,
-		rootClassName,
-		intl,
-		listing,
-		renderSizes,
-		setActiveListing,
-		showAuthorInfo,
-	} = props;
+	const { className, rootClassName, intl, listing, renderSizes, setActiveListing, showAuthorInfo } =
+		props;
 	const classes = classNames(rootClassName || css.root, className);
 	const currentListing = ensureListing(listing);
 	const id = currentListing.id.uuid;
@@ -94,14 +87,14 @@ export const ListingCardComponent = props => {
 		variantPrefix = "listing-card",
 	} = config.layout.listingImage;
 	const variants = firstImage
-		? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
+		? Object.keys(firstImage?.attributes?.variants).filter((k) => k.startsWith(variantPrefix))
 		: [];
 
 	const setActivePropsMaybe = setActiveListing
 		? {
 				onMouseEnter: () => setActiveListing(currentListing.id),
 				onMouseLeave: () => setActiveListing(null),
-		  }
+			}
 		: null;
 
 	return (

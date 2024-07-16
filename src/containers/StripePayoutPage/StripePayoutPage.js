@@ -52,10 +52,10 @@ const createReturnURL = (returnURLType, rootURL, routes) => {
 };
 
 // Get attribute: stripeAccountData
-const getStripeAccountData = stripeAccount => stripeAccount.attributes.stripeAccountData || null;
+const getStripeAccountData = (stripeAccount) => stripeAccount.attributes.stripeAccountData || null;
 
 // Get last 4 digits of bank account returned in Stripe account
-const getBankAccountLast4Digits = stripeAccountData =>
+const getBankAccountLast4Digits = (stripeAccountData) =>
 	stripeAccountData && stripeAccountData.external_accounts.data.length > 0
 		? stripeAccountData.external_accounts.data[0].last4
 		: null;
@@ -68,15 +68,15 @@ const hasRequirements = (stripeAccountData, requirementType) =>
 	stripeAccountData.requirements[requirementType].length > 0;
 
 // Redirect user to Stripe's hosted Connect account onboarding form
-const handleGetStripeConnectAccountLinkFn = (getLinkFn, commonParams) => type => () => {
+const handleGetStripeConnectAccountLinkFn = (getLinkFn, commonParams) => (type) => () => {
 	getLinkFn({ type, ...commonParams })
-		.then(url => {
+		.then((url) => {
 			window.location.href = url;
 		})
-		.catch(err => console.error(err));
+		.catch((err) => console.error(err));
 };
 
-export const StripePayoutPageComponent = props => {
+export const StripePayoutPageComponent = (props) => {
 	const config = useConfiguration();
 	const routes = useRouteConfiguration();
 	const {
@@ -253,7 +253,7 @@ StripePayoutPageComponent.propTypes = {
 	intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	const {
 		getAccountLinkInProgress,
 		getAccountLinkError,
@@ -280,18 +280,15 @@ const mapStateToProps = state => {
 	};
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
 	onPayoutDetailsChange: () => dispatch(stripeAccountClearError()),
 	onPayoutDetailsSubmit: (values, isUpdateCall) =>
 		dispatch(savePayoutDetails(values, isUpdateCall)),
-	onGetStripeConnectAccountLink: params => dispatch(getStripeConnectAccountLink(params)),
+	onGetStripeConnectAccountLink: (params) => dispatch(getStripeConnectAccountLink(params)),
 });
 
 const StripePayoutPage = compose(
-	connect(
-		mapStateToProps,
-		mapDispatchToProps,
-	),
+	connect(mapStateToProps, mapDispatchToProps),
 	injectIntl,
 )(StripePayoutPageComponent);
 

@@ -12,18 +12,18 @@ import css from "./PriceFilterPlain.module.css";
 
 const RADIX = 10;
 
-const getPriceQueryParamName = queryParamNames => {
+const getPriceQueryParamName = (queryParamNames) => {
 	return Array.isArray(queryParamNames)
 		? queryParamNames[0]
 		: typeof queryParamNames === "string"
-		? queryParamNames
-		: "price";
+			? queryParamNames
+			: "price";
 };
 
 // Parse value, which should look like "0,1000"
-const parse = priceRange => {
+const parse = (priceRange) => {
 	const [minPrice, maxPrice] = !!priceRange
-		? priceRange.split(",").map(v => Number.parseInt(v, RADIX))
+		? priceRange.split(",").map((v) => Number.parseInt(v, RADIX))
 		: [];
 	// Note: we compare to null, because 0 as minPrice is falsy in comparisons.
 	return !!priceRange && minPrice != null && maxPrice != null ? { minPrice, maxPrice } : null;
@@ -60,7 +60,7 @@ class PriceFilterPlainComponent extends Component {
 	}
 
 	toggleIsOpen() {
-		this.setState(prevState => ({ isOpen: !prevState.isOpen }));
+		this.setState((prevState) => ({ isOpen: !prevState.isOpen }));
 	}
 
 	render() {
@@ -83,7 +83,7 @@ class PriceFilterPlainComponent extends Component {
 		const initialPrice = initialValues ? parse(initialValues[priceQueryParam]) : {};
 		const { minPrice, maxPrice } = initialPrice || {};
 
-		const hasValue = value => value != null;
+		const hasValue = (value) => value != null;
 		const hasInitialValues = initialValues && hasValue(minPrice) && hasValue(maxPrice);
 
 		const labelSelection = hasInitialValues
@@ -93,7 +93,7 @@ class PriceFilterPlainComponent extends Component {
 						minPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, minPrice),
 						maxPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, maxPrice),
 					},
-			  )
+				)
 			: null;
 		return (
 			<div className={classes}>
@@ -123,7 +123,7 @@ class PriceFilterPlainComponent extends Component {
 						initialValues={hasInitialValues ? initialPrice : { minPrice: min, maxPrice: max }}
 						onChange={this.handleChange}
 						intl={intl}
-						contentRef={node => {
+						contentRef={(node) => {
 							this.filterContent = node;
 						}}
 						min={min}

@@ -5,7 +5,7 @@ import classNames from "classnames";
 import css from "./IconClose.module.css";
 const SIZE_SMALL = "small";
 
-const IconClose = props => {
+const IconClose = (props) => {
 	const { className, rootClassName, size } = props;
 	const classes = classNames(rootClassName || css.root, className);
 

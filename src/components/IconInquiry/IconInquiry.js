@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./IconInquiry.module.css";
 
-const IconInquiry = props => {
+const IconInquiry = (props) => {
 	const { rootClassName, className } = props;
 	const classes = classNames(rootClassName || css.root, className);
 	return (

@@ -13,10 +13,10 @@ import { FieldReviewRating, Form, PrimaryButton, FieldTextInput } from "../../..
 
 import css from "./ReviewForm.module.css";
 
-const ReviewFormComponent = props => (
+const ReviewFormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={fieldRenderProps => {
+		render={(fieldRenderProps) => {
 			const {
 				className,
 				rootClassName,

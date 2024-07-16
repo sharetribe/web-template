@@ -58,7 +58,7 @@ const InboxLink = ({ notificationCount, currentUserHasListings }) => {
 };
 
 const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
-	const currentPageClass = page => {
+	const currentPageClass = (page) => {
 		const isAccountSettingsPage =
 			page === "AccountSettingsPage" && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
 		return currentPage === page || isAccountSettingsPage ? css.currentPage : null;
@@ -108,7 +108,7 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout }) => {
 	);
 };
 
-const TopbarDesktop = props => {
+const TopbarDesktop = (props) => {
 	const {
 		className,
 		config,

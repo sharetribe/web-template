@@ -29,8 +29,8 @@ const apiEndDateToPickerDate = (isDaily, endDate) => {
 	return isValid && isDaily
 		? moment(endDate).subtract(1, "days")
 		: isValid
-		? moment(endDate)
-		: null;
+			? moment(endDate)
+			: null;
 };
 
 // When the unit type is day, the endDate of booking range is exclusive.
@@ -41,13 +41,10 @@ const pickerEndDateToApiDate = (isDaily, endDate) => {
 	// API end dates are exlusive, so we need to shift them with daily
 	// booking.
 	return isValid && isDaily
-		? endDate
-				.clone()
-				.add(1, "days")
-				.toDate()
+		? endDate.clone().add(1, "days").toDate()
 		: isValid
-		? endDate.toDate()
-		: null;
+			? endDate.toDate()
+			: null;
 };
 
 // Since final-form tracks the onBlur event for marking the field as
@@ -61,10 +58,10 @@ const BLUR_TIMEOUT = 100;
 
 // IconArrowHead component might not be defined if exposed directly to the file.
 // This component is called before IconArrowHead component in components/index.js
-const PrevIcon = props => (
+const PrevIcon = (props) => (
 	<IconArrowHead {...props} direction="left" rootClassName={css.arrowIcon} />
 );
-const NextIcon = props => (
+const NextIcon = (props) => (
 	<IconArrowHead {...props} direction="right" rootClassName={css.arrowIcon} />
 );
 
@@ -119,7 +116,7 @@ const defaultProps = {
 
 	renderCalendarDay: undefined, // If undefined, renders react-dates/lib/components/CalendarDay
 	// day presentation and interaction related props
-	renderDayContents: day => {
+	renderDayContents: (day) => {
 		return <span className="renderedDay">{day.format("D")}</span>;
 	},
 	minimumNights: 0,
@@ -127,7 +124,7 @@ const defaultProps = {
 	isDayBlocked: () => () => false,
 
 	// This gets default value at FieldDateRangeInput
-	isOutsideRange: day => false,
+	isOutsideRange: (day) => false,
 	isDayHighlighted: () => {},
 
 	// Internationalization props

@@ -7,18 +7,18 @@ import FieldReviewRating from "./FieldReviewRating";
 
 const formName = "Styleguide.FieldReviewRating.Form";
 
-const FormComponent = props => (
+const FormComponent = (props) => (
 	<FinalForm
 		{...props}
 		formId={formName}
-		render={fieldRenderProps => {
+		render={(fieldRenderProps) => {
 			const { formId, handleSubmit, onChange, invalid, pristine, submitting } = fieldRenderProps;
 			const required = validators.required("This field is required");
 			const submitDisabled = invalid || pristine || submitting;
 
 			return (
 				<form
-					onSubmit={e => {
+					onSubmit={(e) => {
 						e.preventDefault();
 						handleSubmit(e);
 					}}
@@ -42,12 +42,12 @@ const FormComponent = props => (
 export const StarRating = {
 	component: FormComponent,
 	props: {
-		onChange: formState => {
+		onChange: (formState) => {
 			if (formState.dirty) {
 				console.log("form values changed to:", formState.values);
 			}
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("submit values:", values);
 		},
 	},

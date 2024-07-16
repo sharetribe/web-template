@@ -19,7 +19,7 @@ const processTransitions = getProcess("default-purchase")?.transitions;
 const { screen, within } = testingLibrary;
 const noop = () => null;
 
-export const createTxTransition = options => {
+export const createTxTransition = (options) => {
 	return {
 		createdAt: new Date(Date.UTC(2023, 4, 1)),
 		by: TX_TRANSITION_ACTOR_CUSTOMER,

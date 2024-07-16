@@ -10,19 +10,19 @@ const fs = require("fs");
 const exceptions = require("../.auditrc").exceptions;
 
 const INDENT = "  ";
-const isAuditAdvisory = o => o.type === "auditAdvisory";
+const isAuditAdvisory = (o) => o.type === "auditAdvisory";
 
 // get an advisory or empty object
-const getAdvisory = o => (!o ? {} : !o.data ? {} : !o.data.advisory ? {} : o.data.advisory);
+const getAdvisory = (o) => (!o ? {} : !o.data ? {} : !o.data.advisory ? {} : o.data.advisory);
 // get a resolution or empty object
-const getResolution = o => (!o ? {} : !o.data ? {} : !o.data.resolution ? {} : o.data.resolution);
+const getResolution = (o) => (!o ? {} : !o.data ? {} : !o.data.resolution ? {} : o.data.resolution);
 
 // Read the output of 'yarn audit --json', which should be piped in through stdin
 const stdinStream = process.stdin.resume();
 let advisories = {};
 bfj
 	.match(stdinStream, (key, value, depth) => depth === 0, { ndjson: true })
-	.on("data", object => {
+	.on("data", (object) => {
 		if (isAuditAdvisory(object) && Array.isArray(exceptions)) {
 			const { id, severity, title, url } = getAdvisory(object);
 			const { path } = getResolution(object);
@@ -35,7 +35,7 @@ bfj
 			}
 		}
 	})
-	.on("dataError", error => {
+	.on("dataError", (error) => {
 		// A syntax error was found in the JSON
 		console.error(
 			`An error occurred while processing data.
@@ -45,7 +45,7 @@ bfj
 		);
 		process.exit(1);
 	})
-	.on("error", error => {
+	.on("error", (error) => {
 		// Some kind of operational error occurred
 		console.error(
 			`An error occurred while processing data.
@@ -55,19 +55,19 @@ bfj
 		);
 		process.exit(1);
 	})
-	.on("end", error => {
+	.on("end", (error) => {
 		const advisoryKeys = Object.keys(advisories);
 		if (advisoryKeys.length > 0) {
 			console.log("Vulneralibilities found:");
 			console.log("\n----------------------------------------\n");
 
-			advisoryKeys.forEach(key => {
+			advisoryKeys.forEach((key) => {
 				const { title, severity, url, paths } = advisories[key];
 				console.log(key, `(${title})`);
 				console.log("Severity:", severity);
 				console.log("More info:", url);
 				console.log("Affected dependencies:");
-				paths.forEach(path => {
+				paths.forEach((path) => {
 					console.log(INDENT, path);
 				});
 				console.log("\n----------------------------------------\n");

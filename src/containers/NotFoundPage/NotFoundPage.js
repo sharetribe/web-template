@@ -45,7 +45,7 @@ export class NotFoundPageComponent extends Component {
 			id: "NotFoundPage.title",
 		});
 
-		const handleSearchSubmit = values => {
+		const handleSearchSubmit = (values) => {
 			const { keywords, location } = values;
 			const { search, selectedPlace } = location || {};
 			const { origin, bounds } = selectedPlace || {};
@@ -103,7 +103,7 @@ NotFoundPageComponent.propTypes = {
 	}).isRequired,
 };
 
-const EnhancedNotFoundPage = props => {
+const EnhancedNotFoundPage = (props) => {
 	const routeConfiguration = useRouteConfiguration();
 	const config = useConfiguration();
 	const history = useHistory();
@@ -121,7 +121,7 @@ const EnhancedNotFoundPage = props => {
 	);
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	return {
 		scrollingDisabled: isScrollingDisabled(state),
 	};

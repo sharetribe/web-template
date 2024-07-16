@@ -7,16 +7,9 @@ import { ListingCard, PaginationLinks } from "../../../components";
 
 import css from "./SearchResultsPanel.module.css";
 
-const SearchResultsPanel = props => {
-	const {
-		className,
-		rootClassName,
-		listings,
-		pagination,
-		search,
-		setActiveListing,
-		isMapVariant,
-	} = props;
+const SearchResultsPanel = (props) => {
+	const { className, rootClassName, listings, pagination, search, setActiveListing, isMapVariant } =
+		props;
 	const classes = classNames(rootClassName || css.root, className);
 
 	const paginationLinks =
@@ -29,7 +22,7 @@ const SearchResultsPanel = props => {
 			/>
 		) : null;
 
-	const cardRenderSizes = isMapVariant => {
+	const cardRenderSizes = (isMapVariant) => {
 		if (isMapVariant) {
 			// Panel width relative to the viewport
 			const panelMediumWidth = 50;
@@ -57,7 +50,7 @@ const SearchResultsPanel = props => {
 	return (
 		<div className={classes}>
 			<div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
-				{listings.map(l => (
+				{listings.map((l) => (
 					<ListingCard
 						className={css.listingCard}
 						key={l.id.uuid}

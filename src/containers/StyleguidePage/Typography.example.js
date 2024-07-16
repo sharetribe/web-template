@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import css from "./StyleguidePage.module.css";
 
-const Font = props => {
+const Font = (props) => {
 	const { component: TextComponent, description } = props;
 	return (
 		<div className={css.fontCard}>

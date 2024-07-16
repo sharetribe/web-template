@@ -114,9 +114,9 @@ const getAvailableEndTimes = (
 
 const getTimeSlots = (timeSlots, date, timeZone) => {
 	return timeSlots && timeSlots[0]
-		? timeSlots.filter(t => {
+		? timeSlots.filter((t) => {
 				return isInRange(date, t.attributes.start, t.attributes.end, "day", timeZone);
-		  })
+			})
 		: [];
 };
 
@@ -137,7 +137,7 @@ const getAllTimeValues = (
 				timeZone,
 				startDate,
 				getTimeSlots(timeSlots, startDate, timeZone),
-		  );
+			);
 
 	// Value selectedStartTime is a string when user has selected it through the form.
 	// That's why we need to convert also the timestamp we use as a default
@@ -146,8 +146,8 @@ const getAllTimeValues = (
 	const startTime = selectedStartTime
 		? selectedStartTime
 		: startTimes.length > 0 && startTimes[0] && startTimes[0].timestamp
-		? startTimes[0].timestamp.toString()
-		: null;
+			? startTimes[0].timestamp.toString()
+			: null;
 
 	const startTimeAsDate = startTime ? timestampToDate(startTime) : null;
 
@@ -158,10 +158,10 @@ const getAllTimeValues = (
 	const endDate = selectedEndDate
 		? selectedEndDate
 		: startTimeAsDate
-		? new Date(findNextBoundary(startTimeAsDate, "hour", timeZone).getTime() - 1)
-		: null;
+			? new Date(findNextBoundary(startTimeAsDate, "hour", timeZone).getTime() - 1)
+			: null;
 
-	const selectedTimeSlot = timeSlots.find(t =>
+	const selectedTimeSlot = timeSlots.find((t) =>
 		isInRange(startTimeAsDate, t.attributes.start, t.attributes.end),
 	);
 
@@ -184,20 +184,20 @@ const getMonthlyTimeSlots = (monthlyTimeSlots, date, timeZone) => {
 	return !monthlyTimeSlots || Object.keys(monthlyTimeSlots).length === 0
 		? []
 		: monthlyTimeSlots[monthId] && monthlyTimeSlots[monthId].timeSlots
-		? monthlyTimeSlots[monthId].timeSlots
-		: [];
+			? monthlyTimeSlots[monthId].timeSlots
+			: [];
 };
 
 // IconArrowHead component might not be defined if exposed directly to the file.
 // This component is called before IconArrowHead component in components/index.js
-const PrevIcon = props => (
+const PrevIcon = (props) => (
 	<IconArrowHead {...props} direction="left" rootClassName={css.arrowIcon} />
 );
-const NextIcon = props => (
+const NextIcon = (props) => (
 	<IconArrowHead {...props} direction="right" rootClassName={css.arrowIcon} />
 );
 
-const Next = props => {
+const Next = (props) => {
 	const { currentMonth, dayCountAvailableForBooking, timeZone } = props;
 	const nextMonthDate = nextMonthFn(currentMonth, timeZone);
 
@@ -208,7 +208,7 @@ const Next = props => {
 		<NextIcon />
 	);
 };
-const Prev = props => {
+const Prev = (props) => {
 	const { currentMonth, timeZone } = props;
 	const prevMonthDate = prevMonthFn(currentMonth, timeZone);
 	const currentMonthDate = getStartOf(TODAY, "month", timeZone);
@@ -259,7 +259,7 @@ class FieldDateAndTimeInput extends Component {
 		const { onMonthChanged, timeZone } = this.props;
 
 		this.setState(
-			prevState => ({ currentMonth: monthFn(prevState.currentMonth, timeZone) }),
+			(prevState) => ({ currentMonth: monthFn(prevState.currentMonth, timeZone) }),
 			() => {
 				// Callback function after month has been updated.
 				// react-dates component has next and previous months ready (but inivisible).
@@ -281,7 +281,7 @@ class FieldDateAndTimeInput extends Component {
 		);
 	}
 
-	onBookingStartDateChange = value => {
+	onBookingStartDateChange = (value) => {
 		const { monthlyTimeSlots, timeZone, intl, form } = this.props;
 		if (!value || !value.date) {
 			form.batch(() => {
@@ -315,7 +315,7 @@ class FieldDateAndTimeInput extends Component {
 		});
 	};
 
-	onBookingStartTimeChange = value => {
+	onBookingStartTimeChange = (value) => {
 		const { monthlyTimeSlots, timeZone, intl, form, values } = this.props;
 		const timeSlots = getMonthlyTimeSlots(monthlyTimeSlots, this.state.currentMonth, timeZone);
 		const startDate = values.bookingStartDate.date;
@@ -335,7 +335,7 @@ class FieldDateAndTimeInput extends Component {
 		});
 	};
 
-	onBookingEndDateChange = value => {
+	onBookingEndDateChange = (value) => {
 		const { monthlyTimeSlots, timeZone, intl, form, values } = this.props;
 		if (!value || !value.date) {
 			form.change("bookingEndTime", null);
@@ -446,8 +446,8 @@ class FieldDateAndTimeInput extends Component {
 		);
 
 		const isDayBlocked = timeSlotsOnSelectedMonth
-			? day =>
-					!timeSlotsOnSelectedMonth.find(timeSlot =>
+			? (day) =>
+					!timeSlotsOnSelectedMonth.find((timeSlot) =>
 						isDayMomentInsideRange(
 							day,
 							timeSlot.attributes.start,
@@ -477,10 +477,10 @@ class FieldDateAndTimeInput extends Component {
 							id={formId ? `${formId}.bookingStartDate` : "bookingStartDate"}
 							label={startDateInputProps.label}
 							placeholderText={startDateInputProps.placeholderText}
-							format={v =>
+							format={(v) =>
 								v && v.date ? { date: timeOfDayFromTimeZoneToLocal(v.date, timeZone) } : v
 							}
-							parse={v =>
+							parse={(v) =>
 								v && v.date ? { date: timeOfDayFromLocalToTimeZone(v.date, timeZone) } : v
 							}
 							initialVisibleMonth={initialVisibleMonth(bookingStartDate || startOfToday, timeZone)}
@@ -500,7 +500,7 @@ class FieldDateAndTimeInput extends Component {
 							validate={bookingDateRequired(
 								intl.formatMessage({ id: "BookingTimeForm.requiredDate" }),
 							)}
-							onClose={event =>
+							onClose={(event) =>
 								this.setState({
 									currentMonth: getStartOf(event?.date ?? TODAY, "month", this.props.timeZone),
 								})
@@ -520,7 +520,7 @@ class FieldDateAndTimeInput extends Component {
 							onChange={this.onBookingStartTimeChange}
 						>
 							{bookingStartDate ? (
-								availableStartTimes.map(p => (
+								availableStartTimes.map((p) => (
 									<option key={p.timeOfDay} value={p.timestamp}>
 										{p.timeOfDay}
 									</option>
@@ -543,7 +543,7 @@ class FieldDateAndTimeInput extends Component {
 							disabled={!bookingEndTimeAvailable}
 						>
 							{bookingEndTimeAvailable ? (
-								availableEndTimes.map(p => (
+								availableEndTimes.map((p) => (
 									<option key={p.timeOfDay === "00:00" ? "24:00" : p.timeOfDay} value={p.timestamp}>
 										{p.timeOfDay === "00:00" ? "24:00" : p.timeOfDay}
 									</option>

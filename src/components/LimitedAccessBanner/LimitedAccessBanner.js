@@ -11,7 +11,7 @@ import css from "./LimitedAccessBanner.module.css";
 // Due to the layout structure, do not render the banner on the following pages
 const disabledPages = ["SearchPage"];
 
-const LimitedAccessBanner = props => {
+const LimitedAccessBanner = (props) => {
 	const {
 		rootClassName,
 		className,

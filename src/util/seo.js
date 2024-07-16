@@ -1,4 +1,4 @@
-const ensureOpenGraphLocale = locale => {
+const ensureOpenGraphLocale = (locale) => {
 	switch (locale) {
 		case "en":
 			return "en_US";
@@ -10,7 +10,7 @@ const ensureOpenGraphLocale = locale => {
 /**
  * These will be used with Helmet <meta {...openGraphMetaProps} />
  */
-export const openGraphMetaProps = data => {
+export const openGraphMetaProps = (data) => {
 	const {
 		openGraphType,
 		socialSharingTitle,
@@ -45,7 +45,7 @@ export const openGraphMetaProps = data => {
 	];
 
 	if (facebookImages && facebookImages.length > 0) {
-		facebookImages.forEach(i => {
+		facebookImages.forEach((i) => {
 			openGraphMeta.push({
 				property: "og:image",
 				content: i.url,
@@ -80,7 +80,7 @@ export const openGraphMetaProps = data => {
 /**
  * These will be used with Helmet <meta {...twitterMetaProps} />
  */
-export const twitterMetaProps = data => {
+export const twitterMetaProps = (data) => {
 	const {
 		socialSharingTitle,
 		socialSharingDescription,
@@ -115,7 +115,7 @@ export const twitterMetaProps = data => {
 	}
 
 	if (twitterImages && twitterImages.length > 0) {
-		twitterImages.forEach(i => {
+		twitterImages.forEach((i) => {
 			twitterMeta.push({
 				name: "twitter:image",
 				content: i.url,

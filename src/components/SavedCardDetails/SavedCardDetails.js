@@ -20,7 +20,7 @@ import css from "./SavedCardDetails.module.css";
 const DEFAULT_CARD = "defaultCard";
 const REPLACE_CARD = "replaceCard";
 
-const SavedCardDetails = props => {
+const SavedCardDetails = (props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [active, setActive] = useState(DEFAULT_CARD);
@@ -98,7 +98,7 @@ const SavedCardDetails = props => {
 		</div>
 	);
 
-	const handleClick = item => e => {
+	const handleClick = (item) => (e) => {
 		// Clicking buttons inside a form will call submit
 		e.preventDefault();
 		e.stopPropagation();
@@ -110,7 +110,7 @@ const SavedCardDetails = props => {
 		}
 	};
 
-	const onToggleActive = isOpen => {
+	const onToggleActive = (isOpen) => {
 		setMenuOpen(isOpen);
 	};
 

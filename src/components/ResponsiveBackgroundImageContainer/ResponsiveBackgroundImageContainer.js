@@ -19,7 +19,7 @@ const { UUID } = sdkTypes;
  * @param {string} url to the image.
  * @returns image entity (contains: id, type, attributes.variants)
  */
-const createFakeImageEntity = url => {
+const createFakeImageEntity = (url) => {
 	return {
 		id: new UUID("empty"),
 		type: "image",
@@ -43,7 +43,7 @@ const createFakeImageEntity = url => {
  *
  * @param {object} props
  */
-const ResponsiveBackgroundImageContainer = props => {
+const ResponsiveBackgroundImageContainer = (props) => {
 	const intl = useIntl();
 	const {
 		className,

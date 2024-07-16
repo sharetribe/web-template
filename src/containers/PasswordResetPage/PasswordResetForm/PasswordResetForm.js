@@ -11,19 +11,12 @@ import { Form, PrimaryButton, FieldTextInput } from "../../../components";
 
 import css from "./PasswordResetForm.module.css";
 
-const PasswordResetFormComponent = props => (
+const PasswordResetFormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={fieldRenderProps => {
-			const {
-				rootClassName,
-				className,
-				formId,
-				handleSubmit,
-				inProgress,
-				intl,
-				invalid,
-			} = fieldRenderProps;
+		render={(fieldRenderProps) => {
+			const { rootClassName, className, formId, handleSubmit, inProgress, intl, invalid } =
+				fieldRenderProps;
 
 			// password
 			const passwordLabel = intl.formatMessage({

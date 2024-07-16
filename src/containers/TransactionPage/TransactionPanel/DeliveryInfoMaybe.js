@@ -10,7 +10,7 @@ import AddressLinkMaybe from "./AddressLinkMaybe";
 import css from "./TransactionPanel.module.css";
 
 // Functional component as a helper to build ActivityFeed section
-const DeliveryInfoMaybe = props => {
+const DeliveryInfoMaybe = (props) => {
 	const { className, rootClassName, protectedData, listing, locale } = props;
 	const classes = classNames(rootClassName || css.deliveryInfoContainer, className);
 	const deliveryMethod = protectedData?.deliveryMethod;
@@ -45,7 +45,7 @@ const DeliveryInfoMaybe = props => {
 		) : null;
 
 		const countryCodes = getCountryCodes(locale);
-		const countryInfo = countryCodes.find(c => c.code === countryCode);
+		const countryInfo = countryCodes.find((c) => c.code === countryCode);
 		const country = countryInfo?.name;
 
 		return (

@@ -17,13 +17,13 @@ import NotFoundPage from "../containers/NotFoundPage/NotFoundPage";
 
 import LoadableComponentErrorBoundary from "./LoadableComponentErrorBoundary/LoadableComponentErrorBoundary";
 
-const canShowComponent = props => {
+const canShowComponent = (props) => {
 	const { isAuthenticated, route } = props;
 	const { auth } = route;
 	return !auth || isAuthenticated;
 };
 
-const callLoadData = props => {
+const callLoadData = (props) => {
 	const { match, location, route, dispatch, logoutInProgress, config } = props;
 	const { loadData, name } = route;
 	const shouldLoadData =
@@ -37,7 +37,7 @@ const callLoadData = props => {
 					console.log(`loadData success for ${name} route`);
 				}
 			})
-			.catch(e => {
+			.catch((e) => {
 				log.error(e, "load-data-failed", { routeName: name });
 			});
 	}
@@ -166,7 +166,7 @@ RouteComponentRenderer.propTypes = {
 	dispatch: func.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	const { isAuthenticated, logoutInProgress } = state.auth;
 	return { isAuthenticated, logoutInProgress };
 };
@@ -187,7 +187,7 @@ const Routes = (props, context) => {
 	const config = useConfiguration();
 	const { isAuthenticated, logoutInProgress, logLoadDataCalls } = props;
 
-	const toRouteComponent = route => {
+	const toRouteComponent = (route) => {
 		const renderProps = {
 			isAuthenticated,
 			logoutInProgress,
@@ -205,7 +205,7 @@ const Routes = (props, context) => {
 				key={route.name}
 				path={route.path}
 				exact={isExact}
-				render={matchProps => (
+				render={(matchProps) => (
 					<RouteComponentContainer
 						{...renderProps}
 						match={matchProps.match}

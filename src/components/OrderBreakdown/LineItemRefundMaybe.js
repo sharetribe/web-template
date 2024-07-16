@@ -28,7 +28,7 @@ const lineItemsTotal = (lineItems, marketplaceCurrency) => {
 /**
  * Checks if line item represents commission
  */
-const isCommission = lineItem => {
+const isCommission = (lineItem) => {
 	return (
 		lineItem.code === LINE_ITEM_PROVIDER_COMMISSION ||
 		lineItem.code === LINE_ITEM_CUSTOMER_COMMISSION
@@ -38,11 +38,11 @@ const isCommission = lineItem => {
 /**
  * Returns non-commission, reversal line items
  */
-const nonCommissionReversalLineItems = lineItems => {
-	return lineItems.filter(item => !isCommission(item) && item.reversal);
+const nonCommissionReversalLineItems = (lineItems) => {
+	return lineItems.filter((item) => !isCommission(item) && item.reversal);
 };
 
-const LineItemRefundMaybe = props => {
+const LineItemRefundMaybe = (props) => {
 	const { lineItems, intl, marketplaceCurrency } = props;
 
 	// all non-commission, reversal line items

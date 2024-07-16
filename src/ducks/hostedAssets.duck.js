@@ -12,12 +12,12 @@ const pickHostedConfigPaths = (assetEntries, excludeAssetNames) => {
 		return [...pickedPaths, path];
 	}, []);
 };
-const getFirstAssetData = response => response?.data?.data[0]?.attributes?.data;
-const getMultiAssetData = response => response?.data?.data;
-const getMultiAssetIncluded = response => response?.data?.included;
+const getFirstAssetData = (response) => response?.data?.data[0]?.attributes?.data;
+const getMultiAssetData = (response) => response?.data?.data;
+const getMultiAssetIncluded = (response) => response?.data?.included;
 const findJSONAsset = (assets, absolutePath) =>
-	assets.find(a => a.type === "jsonAsset" && a.attributes.assetPath === absolutePath);
-const getAbsolutePath = path => (path.charAt(0) !== "/" ? `/${path}` : path);
+	assets.find((a) => a.type === "jsonAsset" && a.attributes.assetPath === absolutePath);
+const getAbsolutePath = (path) => (path.charAt(0) !== "/" ? `/${path}` : path);
 
 const getGoogleAnalyticsId = (configAssets, path) => {
 	if (!configAssets || !path) {
@@ -89,14 +89,17 @@ export const appAssetsSuccess = (assets, version, googleAnalyticsId) => ({
 	type: ASSETS_SUCCESS,
 	payload: { assets, version, googleAnalyticsId },
 });
-export const appAssetsError = error => ({
+export const appAssetsError = (error) => ({
 	type: ASSETS_ERROR,
 	payload: error,
 });
 
-export const pageAssetsRequested = assetKeys => ({ type: PAGE_ASSETS_REQUEST, payload: assetKeys });
-export const pageAssetsSuccess = assets => ({ type: PAGE_ASSETS_SUCCESS, payload: assets });
-export const pageAssetsError = error => ({
+export const pageAssetsRequested = (assetKeys) => ({
+	type: PAGE_ASSETS_REQUEST,
+	payload: assetKeys,
+});
+export const pageAssetsSuccess = (assets) => ({ type: PAGE_ASSETS_SUCCESS, payload: assets });
+export const pageAssetsError = (error) => ({
 	type: PAGE_ASSETS_ERROR,
 	payload: error,
 });
@@ -117,7 +120,7 @@ export const fetchAppAssets = (assets, version) => (dispatch, getState, sdk) => 
 
 	// If version is given fetch assets by the version,
 	// otherwise default to "latest" alias
-	const fetchAssets = paths =>
+	const fetchAssets = (paths) =>
 		version
 			? sdk.assetsByVersion({ paths, version })
 			: sdk.assetsByAlias({ paths, alias: "latest" });
@@ -135,7 +138,7 @@ export const fetchAppAssets = (assets, version) => (dispatch, getState, sdk) => 
 
 	return Promise.all(separateAssetFetches)
 		.then(([translationAsset, footerAsset, configAssets]) => {
-			const getVersionHash = response => response?.data?.meta?.version;
+			const getVersionHash = (response) => response?.data?.meta?.version;
 			const versionInTranslationsCall = getVersionHash(translationAsset);
 			const versionInFooterCall = getVersionHash(footerAsset);
 			const versionInConfigsCall = getVersionHash(configAssets);
@@ -184,7 +187,7 @@ export const fetchAppAssets = (assets, version) => (dispatch, getState, sdk) => 
 				return { ...collectedAssets, [name]: { path, data } };
 			}, {});
 		})
-		.catch(e => {
+		.catch((e) => {
 			log.error(e, "app-asset-fetch-failed", { assets, version });
 			dispatch(appAssetsError(storableError(e)));
 		});
@@ -203,14 +206,14 @@ export const fetchPageAssets = (assets, hasFallback) => (dispatch, getState, sdk
 	// If version is given fetch assets by the version,
 	// otherwise default to "latest" alias
 	const fetchAssets = version
-		? assetPath => sdk.assetByVersion({ path: assetPath, version })
-		: assetPath => sdk.assetByAlias({ path: assetPath, alias: "latest" });
+		? (assetPath) => sdk.assetByVersion({ path: assetPath, version })
+		: (assetPath) => sdk.assetByAlias({ path: assetPath, alias: "latest" });
 
 	const assetEntries = Object.entries(assets);
 	const sdkAssets = assetEntries.map(([key, assetPath]) => fetchAssets(assetPath));
 
 	return Promise.all(sdkAssets)
-		.then(responses => {
+		.then((responses) => {
 			const hostedAssetsState = getState()?.hostedAssets;
 			// These are fixed page assets that the app expects to be there. Keep fixed assets always in store.
 			const { termsOfService, privacyPolicy, landingPage, ...rest } =
@@ -245,7 +248,7 @@ export const fetchPageAssets = (assets, hasFallback) => (dispatch, getState, sdk
 			dispatch(pageAssetsSuccess(pageAssets));
 			return pageAssets;
 		})
-		.catch(e => {
+		.catch((e) => {
 			// If there's a fallback UI, something went wrong when fetching the "known asset" like landing-page.json.
 			// If there's no fallback UI created, we assume that the page URL was mistyped for 404 errors.
 			if (hasFallback || (!hasFallback && e.status === 404)) {

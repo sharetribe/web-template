@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./IconSpinner.module.css";
 
-const IconSpinner = props => {
+const IconSpinner = (props) => {
 	const { rootClassName, className } = props;
 	const classes = classNames(rootClassName || css.root, className);
 	return (
@@ -39,7 +39,7 @@ const IconSpinner = props => {
 	);
 };
 
-const DelayedSpinner = props => {
+const DelayedSpinner = (props) => {
 	const [showSpinner, setShowSpinner] = useState(false);
 	const { delay = 600, ...restOfProps } = props;
 
@@ -55,7 +55,7 @@ DelayedSpinner.propTypes = {
 	delay: number.isRequired,
 };
 
-const Spinner = props => {
+const Spinner = (props) => {
 	const { delay, ...restOfProps } = props;
 
 	return delay != null ? <DelayedSpinner {...props} /> : <IconSpinner {...restOfProps} />;

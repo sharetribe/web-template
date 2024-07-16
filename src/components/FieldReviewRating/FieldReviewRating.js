@@ -7,7 +7,7 @@ import { IconReviewStar, ValidationError } from "../../components";
 
 import css from "./FieldReviewRating.module.css";
 
-const FieldReviewRatingComponent = props => {
+const FieldReviewRatingComponent = (props) => {
 	/* eslint-disable no-unused-vars */
 	const {
 		rootClassName,
@@ -23,7 +23,7 @@ const FieldReviewRatingComponent = props => {
 	} = props;
 	/* eslint-enable no-unused-vars */
 
-	const handleChange = event => {
+	const handleChange = (event) => {
 		input.onChange(event.target.value);
 	};
 
@@ -36,7 +36,7 @@ const FieldReviewRatingComponent = props => {
 
 	const classes = classNames(rootClassName || css.root, className);
 
-	const createStarRating = starCount => {
+	const createStarRating = (starCount) => {
 		let inputsAndLabels = [];
 
 		// Star inpu order: reverse order expected (5 -> 1) and also input before label
@@ -112,7 +112,7 @@ FieldReviewRatingComponent.propTypes = {
 	intl: intlShape.isRequired,
 };
 
-const FieldReviewRating = props => {
+const FieldReviewRating = (props) => {
 	return <Field component={FieldReviewRatingComponent} {...props} />;
 };
 

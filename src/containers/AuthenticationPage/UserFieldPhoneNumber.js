@@ -8,7 +8,7 @@ import * as validators from "../../util/validators";
 
 import { FieldPhoneNumberInput } from "../../components";
 
-const UserFieldPhoneNumber = props => {
+const UserFieldPhoneNumber = (props) => {
 	const { rootClassName, className, formId, formName, userTypeConfig, intl } = props;
 
 	const { displayInSignUp, required } = userTypeConfig?.phoneNumberSettings || {};
@@ -27,7 +27,7 @@ const UserFieldPhoneNumber = props => {
 						id: `${formName}.phoneNumberRequired`,
 					}),
 				),
-		  }
+			}
 		: {};
 
 	return (

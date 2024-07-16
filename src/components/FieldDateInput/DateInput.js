@@ -75,14 +75,14 @@ const defaultProps = {
 	// day presentation and interaction related props
 	renderCalendarDay: undefined, // If undefined, renders react-dates/lib/components/CalendarDay
 	// day presentation and interaction related props
-	renderDayContents: day => {
+	renderDayContents: (day) => {
 		return <span className="renderedDay">{day.format("D")}</span>;
 	},
 	enableOutsideDays: false,
 	isDayBlocked: () => false,
 
 	// This gets default value at FieldDateInput
-	isOutsideRange: day => false,
+	isOutsideRange: (day) => false,
 	isDayHighlighted: () => {},
 
 	// Internationalization props

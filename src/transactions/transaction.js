@@ -58,7 +58,7 @@ const PROCESSES = [
  *
  * @param {Object} tx transaction entity
  */
-const txLastTransition = tx => tx?.attributes?.lastTransition;
+const txLastTransition = (tx) => tx?.attributes?.lastTransition;
 
 /**
  * Get states from the graph.
@@ -68,7 +68,7 @@ const txLastTransition = tx => tx?.attributes?.lastTransition;
  *
  * @param {Object} graph Description of transaction process graph in StateX format
  */
-const statesObjectFromGraph = graph => graph.states || {};
+const statesObjectFromGraph = (graph) => graph.states || {};
 
 /**
  * This is a helper function that's attached to exported 'getProcess'.
@@ -77,10 +77,10 @@ const statesObjectFromGraph = graph => graph.states || {};
  * @param {Object} process imported from a separate file
  * @returns {function} Returns a function to check the next state after given transition.
  */
-const getStateAfterTransition = process => transition => {
+const getStateAfterTransition = (process) => (transition) => {
 	const statesObj = statesObjectFromGraph(process.graph);
 	const stateNames = Object.keys(statesObj);
-	const fromState = stateNames.find(stateName => {
+	const fromState = stateNames.find((stateName) => {
 		const transitionsForward = Object.keys(statesObj[stateName]?.on || {});
 		return transitionsForward.includes(transition);
 	});
@@ -104,7 +104,7 @@ const getStateAfterTransition = process => transition => {
  * @returns {function} Returns a function to check the current state of transaction entity against
  * given process.
  */
-const getProcessState = process => tx => {
+const getProcessState = (process) => (tx) => {
 	return getStateAfterTransition(process)(txLastTransition(tx));
 };
 
@@ -173,7 +173,7 @@ const getTransitionsToState = (process, targetState) => {
  * @param {Object} process against which transitions and states are checked.
  * @returns {function} Returns a function to get the transitions that lead to given states.
  */
-const getTransitionsToStates = process => stateNames => {
+const getTransitionsToStates = (process) => (stateNames) => {
 	return stateNames.reduce((pickedTransitions, stateName) => {
 		return [...pickedTransitions, ...getTransitionsToState(process, stateName)];
 	}, []);
@@ -185,13 +185,13 @@ const getTransitionsToStates = process => stateNames => {
  *
  * @param {Object} process against which passed states are checked.
  */
-const hasPassedState = process => (stateName, tx) => {
-	const txTransitions = tx => tx?.attributes?.transitions || [];
+const hasPassedState = (process) => (stateName, tx) => {
+	const txTransitions = (tx) => tx?.attributes?.transitions || [];
 	const hasPassedTransition = (transitionName, tx) =>
-		!!txTransitions(tx).find(t => t.transition === transitionName);
+		!!txTransitions(tx).find((t) => t.transition === transitionName);
 
 	return (
-		getTransitionsToState(process, stateName).filter(t => hasPassedTransition(t, tx)).length > 0
+		getTransitionsToState(process, stateName).filter((t) => hasPassedTransition(t, tx)).length > 0
 	);
 };
 
@@ -204,7 +204,7 @@ const hasPassedState = process => (stateName, tx) => {
  *
  * @param {String} processName
  */
-export const resolveLatestProcessName = processName => {
+export const resolveLatestProcessName = (processName) => {
 	switch (processName) {
 		case "flex-product-default-process":
 		case "default-buying-products":
@@ -226,9 +226,9 @@ export const resolveLatestProcessName = processName => {
  * Get process based on process name
  * @param {String} processName
  */
-export const getProcess = processName => {
+export const getProcess = (processName) => {
 	const latestProcessName = resolveLatestProcessName(processName);
-	const processInfo = PROCESSES.find(process => process.name === latestProcessName);
+	const processInfo = PROCESSES.find((process) => process.name === latestProcessName);
 	if (processInfo) {
 		return {
 			...processInfo.process,
@@ -248,7 +248,7 @@ export const getProcess = processName => {
  * Get the info about supported processes: name, alias, unitTypes
  */
 export const getSupportedProcessesInfo = () =>
-	PROCESSES.map(p => {
+	PROCESSES.map((p) => {
 		const { process, ...rest } = p;
 		return rest;
 	});
@@ -267,9 +267,9 @@ export const getAllTransitionsForEveryProcess = () => {
  *
  * @param {String} processName
  */
-export const isPurchaseProcess = processName => {
+export const isPurchaseProcess = (processName) => {
 	const latestProcessName = resolveLatestProcessName(processName);
-	const processInfo = PROCESSES.find(process => process.name === latestProcessName);
+	const processInfo = PROCESSES.find((process) => process.name === latestProcessName);
 	return [PURCHASE_PROCESS_NAME].includes(processInfo?.name);
 };
 
@@ -278,7 +278,7 @@ export const isPurchaseProcess = processName => {
  *
  * @param {String} processAlias
  */
-export const isPurchaseProcessAlias = processAlias => {
+export const isPurchaseProcessAlias = (processAlias) => {
 	const processName = processAlias ? processAlias.split("/")[0] : null;
 	return processAlias ? isPurchaseProcess(processName) : false;
 };
@@ -288,9 +288,9 @@ export const isPurchaseProcessAlias = processAlias => {
  *
  * @param {String} processName
  */
-export const isBookingProcess = processName => {
+export const isBookingProcess = (processName) => {
 	const latestProcessName = resolveLatestProcessName(processName);
-	const processInfo = PROCESSES.find(process => process.name === latestProcessName);
+	const processInfo = PROCESSES.find((process) => process.name === latestProcessName);
 	return [BOOKING_PROCESS_NAME].includes(processInfo?.name);
 };
 
@@ -299,7 +299,7 @@ export const isBookingProcess = processName => {
  *
  * @param {String} processAlias
  */
-export const isBookingProcessAlias = processAlias => {
+export const isBookingProcessAlias = (processAlias) => {
 	const processName = processAlias ? processAlias.split("/")[0] : null;
 	return processAlias ? isBookingProcess(processName) : false;
 };
@@ -311,7 +311,7 @@ export const isBookingProcessAlias = processAlias => {
  *
  * @param {String} unitType
  */
-export const isFullDay = unitType => {
+export const isFullDay = (unitType) => {
 	return [DAY, NIGHT].includes(unitType);
 };
 
@@ -405,8 +405,8 @@ export class ConditionalResolver {
 	}
 	cond(conditions, resolver) {
 		if (conditions?.length === this.data.length && this.resolver == null) {
-			const isDefined = item => typeof item !== "undefined";
-			const isWildcard = item => item === CONDITIONAL_RESOLVER_WILDCARD;
+			const isDefined = (item) => typeof item !== "undefined";
+			const isWildcard = (item) => item === CONDITIONAL_RESOLVER_WILDCARD;
 			const isMatch = conditions.reduce(
 				(isPartialMatch, item, i) =>
 					isPartialMatch && isDefined(item) && (isWildcard(item) || item === this.data[i]),

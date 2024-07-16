@@ -7,7 +7,7 @@ import { Heading } from "../../components";
 
 import css from "./ListingPage.module.css";
 
-const SectionDetailsMaybe = props => {
+const SectionDetailsMaybe = (props) => {
 	const { publicData, metadata = {}, listingFieldConfigs, isFieldForCategory, intl } = props;
 
 	if (!publicData || !listingFieldConfigs) {
@@ -26,8 +26,9 @@ const SectionDetailsMaybe = props => {
 		const value = publicDataValue || metadataValue;
 
 		if (isDetail && isTargetListingType && isTargetCategory && typeof value !== "undefined") {
-			const findSelectedOption = enumValue => enumOptions?.find(o => enumValue === `${o.option}`);
-			const getBooleanMessage = value =>
+			const findSelectedOption = (enumValue) =>
+				enumOptions?.find((o) => enumValue === `${o.option}`);
+			const getBooleanMessage = (value) =>
 				value
 					? intl.formatMessage({ id: "SearchPage.detailYes" })
 					: intl.formatMessage({ id: "SearchPage.detailNo" });
@@ -36,10 +37,10 @@ const SectionDetailsMaybe = props => {
 			return schemaType === "enum"
 				? filteredConfigs.concat({ key, value: optionConfig?.label, label })
 				: schemaType === "boolean"
-				? filteredConfigs.concat({ key, value: getBooleanMessage(value), label })
-				: schemaType === "long"
-				? filteredConfigs.concat({ key, value, label })
-				: filteredConfigs;
+					? filteredConfigs.concat({ key, value: getBooleanMessage(value), label })
+					: schemaType === "long"
+						? filteredConfigs.concat({ key, value, label })
+						: filteredConfigs;
 		}
 		return filteredConfigs;
 	};
@@ -52,7 +53,7 @@ const SectionDetailsMaybe = props => {
 				<FormattedMessage id="ListingPage.detailsTitle" />
 			</Heading>
 			<ul className={css.details}>
-				{existingListingFields.map(detail => (
+				{existingListingFields.map((detail) => (
 					<li key={detail.key} className={css.detailsRow}>
 						<span className={css.detailLabel}>{detail.label}</span>
 						<span>{detail.value}</span>

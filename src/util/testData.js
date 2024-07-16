@@ -70,7 +70,7 @@ export const createCurrentUser = (id, attributes = {}, includes = {}) => ({
 });
 
 // Create a user that conforms to the util/types user schema
-export const createImage = id => ({
+export const createImage = (id) => ({
 	id: new UUID(id),
 	type: "image",
 	attributes: {
@@ -154,7 +154,7 @@ export const createStock = (id, attributes = {}) => {
 	};
 };
 
-export const createTxTransition = options => {
+export const createTxTransition = (options) => {
 	return {
 		createdAt: new Date(Date.UTC(2017, 4, 1)),
 		by: TX_TRANSITION_ACTOR_CUSTOMER,
@@ -163,7 +163,7 @@ export const createTxTransition = options => {
 	};
 };
 
-export const createTransaction = options => {
+export const createTransaction = (options) => {
 	const {
 		id,
 		processName = "default-purchase",
@@ -211,7 +211,7 @@ export const createTransaction = options => {
 					lineTotal: new Money(commission.amount * -1, commission.currency),
 					reversal: false,
 				},
-		  ];
+			];
 
 	return {
 		id: new UUID(id),
@@ -273,7 +273,7 @@ export const createReview = (id, attributes = {}, includes = {}) => {
  * @return {Array} array of time slots
  */
 export const createTimeSlots = (startDate, numberOfDays) => {
-	return Array.from({ length: numberOfDays }, (v, i) => i).map(i => {
+	return Array.from({ length: numberOfDays }, (v, i) => i).map((i) => {
 		return {
 			id: new UUID(i),
 			type: "timeSlot",
@@ -296,22 +296,22 @@ export const currencyConfig = {
 	maximumFractionDigits: 2,
 };
 
-const pad = num => {
+const pad = (num) => {
 	return num >= 0 && num < 10 ? `0${num}` : `${num}`;
 };
 
 // Create fake Internalization object to help with shallow rendering.
 export const fakeIntl = {
-	formatDate: d => `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`,
+	formatDate: (d) => `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`,
 	formatDateTimeRange: (start, end) =>
 		`${start.getUTCFullYear()}-${pad(start.getUTCMonth() + 1)}-${pad(
 			start.getUTCDate(),
 		)} - ${end.getUTCFullYear()}-${pad(end.getUTCMonth() + 1)}-${pad(end.getUTCDate())}`,
-	formatMessage: msg => msg.id,
-	formatNumber: d => `${d}`,
-	formatPlural: d => d,
-	formatRelativeTime: d => d,
-	formatTime: d => `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`,
+	formatMessage: (msg) => msg.id,
+	formatNumber: (d) => `${d}`,
+	formatPlural: (d) => d,
+	formatRelativeTime: (d) => d,
+	formatTime: (d) => `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`,
 	now: () => Date.UTC(2017, 10, 23, 12, 59),
 	messages: {},
 };

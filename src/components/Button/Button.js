@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./Button.module.css";
 
-const PlainButton = props => {
+const PlainButton = (props) => {
 	const [mounted, setMounted] = useState(false);
 
 	const routeConfiguration = useRouteConfiguration();
@@ -42,7 +42,7 @@ const PlainButton = props => {
 		content = children;
 	}
 
-	const onOverButtonFn = enforcePreloadOfPage => () => {
+	const onOverButtonFn = (enforcePreloadOfPage) => () => {
 		// Enforce preloading of given page (loadable component)
 		const { component: Page } = findRouteByRouteName(enforcePreloadOfPage, routeConfiguration);
 		// Loadable Component has a "preload" function.
@@ -56,7 +56,7 @@ const PlainButton = props => {
 		? {
 				onMouseOver: onOverButton,
 				onTouchStart: onOverButton,
-		  }
+			}
 		: {};
 
 	// All buttons are disabled until the component is mounted. This
@@ -73,11 +73,11 @@ const PlainButton = props => {
 
 // Some buttons are link to other pages.
 // If enforcePagePreloadFor property is given, lets enhance the Button a bit.
-const ButtonWithPagePreload = props => {
+const ButtonWithPagePreload = (props) => {
 	const routeConfiguration = useRouteConfiguration();
 	const { enforcePagePreloadFor, ...restProps } = props;
 
-	const onOverButtonFn = enforcePreloadOfPage => () => {
+	const onOverButtonFn = (enforcePreloadOfPage) => () => {
 		// Enforce preloading of given page (loadable component)
 		const { component: Page } = findRouteByRouteName(enforcePreloadOfPage, routeConfiguration);
 		// Loadable Component has a "preload" function.
@@ -91,13 +91,13 @@ const ButtonWithPagePreload = props => {
 		? {
 				onMouseOver: onOverButton,
 				onTouchStart: onOverButton,
-		  }
+			}
 		: {};
 
 	return <PlainButton {...restProps} {...onOverButtonMaybe} />;
 };
 
-const Button = props => {
+const Button = (props) => {
 	const { enforcePagePreloadFor, ...restProps } = props;
 	return enforcePagePreloadFor ? (
 		<ButtonWithPagePreload {...props} />
@@ -134,25 +134,25 @@ Button.propTypes = {
 
 export default Button;
 
-export const PrimaryButton = props => {
+export const PrimaryButton = (props) => {
 	const classes = classNames(props.rootClassName || css.primaryButtonRoot, css.primaryButton);
 	return <Button {...props} rootClassName={classes} />;
 };
 PrimaryButton.displayName = "PrimaryButton";
 
-export const PrimaryButtonInline = props => {
+export const PrimaryButtonInline = (props) => {
 	const classes = classNames(props.rootClassName || css.primaryButtonInlineRoot, css.primaryButton);
 	return <Button {...props} rootClassName={classes} />;
 };
 PrimaryButtonInline.displayName = "PrimaryButtonInline";
 
-export const SecondaryButton = props => {
+export const SecondaryButton = (props) => {
 	const classes = classNames(props.rootClassName || css.secondaryButtonRoot, css.secondaryButton);
 	return <Button {...props} rootClassName={classes} />;
 };
 SecondaryButton.displayName = "SecondaryButton";
 
-export const SecondaryButtonInline = props => {
+export const SecondaryButtonInline = (props) => {
 	const classes = classNames(
 		props.rootClassName || css.secondaryButtonInlineRoot,
 		css.secondaryButtonInline,
@@ -161,13 +161,13 @@ export const SecondaryButtonInline = props => {
 };
 SecondaryButton.displayName = "SecondaryButton";
 
-export const InlineTextButton = props => {
+export const InlineTextButton = (props) => {
 	const classes = classNames(props.rootClassName || css.inlineTextButtonRoot, css.inlineTextButton);
 	return <Button {...props} rootClassName={classes} />;
 };
 InlineTextButton.displayName = "InlineTextButton";
 
-export const SocialLoginButton = props => {
+export const SocialLoginButton = (props) => {
 	const classes = classNames(props.rootClassName || css.socialButtonRoot, css.socialButton);
 	return <Button {...props} rootClassName={classes} />;
 };

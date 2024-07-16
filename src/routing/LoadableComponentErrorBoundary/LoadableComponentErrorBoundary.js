@@ -30,7 +30,7 @@ class LoadableComponentErrorBoundary extends Component {
 // where production build changes in the server and
 // long-living client app tries to fetch code chunks that don't exist anymore.
 // Note: in development mode with Hot Module Reloading (HMR) in use, this causes error loops.
-const UseLoadableErrorBoundaryOnlyInProdutionMode = props => {
+const UseLoadableErrorBoundaryOnlyInProdutionMode = (props) => {
 	const { children } = props;
 	return appSettings.dev ? (
 		children

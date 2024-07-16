@@ -5,11 +5,11 @@ import { LINE_ITEM_SHIPPING_FEE, propTypes } from "../../util/types";
 
 import css from "./OrderBreakdown.module.css";
 
-const LineItemShippingFeeMaybe = props => {
+const LineItemShippingFeeMaybe = (props) => {
 	const { lineItems, intl } = props;
 
 	const shippingFeeLineItem = lineItems.find(
-		item => item.code === LINE_ITEM_SHIPPING_FEE && !item.reversal,
+		(item) => item.code === LINE_ITEM_SHIPPING_FEE && !item.reversal,
 	);
 
 	return shippingFeeLineItem ? (

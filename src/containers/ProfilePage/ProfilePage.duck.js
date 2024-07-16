@@ -76,7 +76,7 @@ export const setInitialState = () => ({
 	type: SET_INITIAL_STATE,
 });
 
-export const showUserRequest = userId => ({
+export const showUserRequest = (userId) => ({
 	type: SHOW_USER_REQUEST,
 	payload: { userId },
 });
@@ -85,23 +85,23 @@ export const showUserSuccess = () => ({
 	type: SHOW_USER_SUCCESS,
 });
 
-export const showUserError = e => ({
+export const showUserError = (e) => ({
 	type: SHOW_USER_ERROR,
 	error: true,
 	payload: e,
 });
 
-export const queryListingsRequest = userId => ({
+export const queryListingsRequest = (userId) => ({
 	type: QUERY_LISTINGS_REQUEST,
 	payload: { userId },
 });
 
-export const queryListingsSuccess = listingRefs => ({
+export const queryListingsSuccess = (listingRefs) => ({
 	type: QUERY_LISTINGS_SUCCESS,
 	payload: { listingRefs },
 });
 
-export const queryListingsError = e => ({
+export const queryListingsError = (e) => ({
 	type: QUERY_LISTINGS_ERROR,
 	error: true,
 	payload: e,
@@ -111,12 +111,12 @@ export const queryReviewsRequest = () => ({
 	type: QUERY_REVIEWS_REQUEST,
 });
 
-export const queryReviewsSuccess = reviews => ({
+export const queryReviewsSuccess = (reviews) => ({
 	type: QUERY_REVIEWS_SUCCESS,
 	payload: reviews,
 });
 
-export const queryReviewsError = e => ({
+export const queryReviewsError = (e) => ({
 	type: QUERY_REVIEWS_ERROR,
 	error: true,
 	payload: e,
@@ -142,20 +142,20 @@ export const queryUserListings = (userId, config) => (dispatch, getState, sdk) =
 			...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
 			...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
 		})
-		.then(response => {
+		.then((response) => {
 			// Pick only the id and type properties from the response listings
 			const listings = response.data.data;
 			const listingRefs = listings
-				.filter(l => l => !l.attributes.deleted && l.attributes.state === "published")
+				.filter((l) => (l) => !l.attributes.deleted && l.attributes.state === "published")
 				.map(({ id, type }) => ({ id, type }));
 			dispatch(addMarketplaceEntities(response));
 			dispatch(queryListingsSuccess(listingRefs));
 			return response;
 		})
-		.catch(e => dispatch(queryListingsError(storableError(e))));
+		.catch((e) => dispatch(queryListingsError(storableError(e))));
 };
 
-export const queryUserReviews = userId => (dispatch, getState, sdk) => {
+export const queryUserReviews = (userId) => (dispatch, getState, sdk) => {
 	sdk.reviews
 		.query({
 			subject_id: userId,
@@ -163,11 +163,11 @@ export const queryUserReviews = userId => (dispatch, getState, sdk) => {
 			include: ["author", "author.profileImage"],
 			"fields.image": ["variants.square-small", "variants.square-small2x"],
 		})
-		.then(response => {
+		.then((response) => {
 			const reviews = denormalisedResponseEntities(response);
 			dispatch(queryReviewsSuccess(reviews));
 		})
-		.catch(e => dispatch(queryReviewsError(e)));
+		.catch((e) => dispatch(queryReviewsError(e)));
 };
 
 export const showUser = (userId, config) => (dispatch, getState, sdk) => {
@@ -178,14 +178,14 @@ export const showUser = (userId, config) => (dispatch, getState, sdk) => {
 			include: ["profileImage"],
 			"fields.image": ["variants.square-small", "variants.square-small2x"],
 		})
-		.then(response => {
+		.then((response) => {
 			const userFields = config?.user?.userFields;
 			const sanitizeConfig = { userFields };
 			dispatch(addMarketplaceEntities(response, sanitizeConfig));
 			dispatch(showUserSuccess());
 			return response;
 		})
-		.catch(e => dispatch(showUserError(storableError(e))));
+		.catch((e) => dispatch(showUserError(storableError(e))));
 };
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {

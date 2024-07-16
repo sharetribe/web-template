@@ -48,11 +48,11 @@ const listingTypes = [
 	},
 ];
 
-const capitalizeFirstLetter = str => str.charAt(0).toUpperCase() + str.slice(1);
-const addSpaces = str => str.split("-").join(" ");
-const labelize = str => addSpaces(capitalizeFirstLetter(str));
+const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+const addSpaces = (str) => str.split("-").join(" ");
+const labelize = (str) => addSpaces(capitalizeFirstLetter(str));
 
-const generateCategories = optionStrings => {
+const generateCategories = (optionStrings) => {
 	return optionStrings.reduce((converted, entry) => {
 		const isArray = Array.isArray(entry);
 		const option = isArray
@@ -83,7 +83,10 @@ const listingFields = [
 			categoryIds: ["cats"],
 		},
 		schemaType: "enum",
-		enumOptions: [{ option: "cat_1", label: "Cat 1" }, { option: "cat_2", label: "Cat 2" }],
+		enumOptions: [
+			{ option: "cat_1", label: "Cat 1" },
+			{ option: "cat_2", label: "Cat 2" },
+		],
 		filterConfig: {
 			indexForSearch: true,
 			label: "Cat",
@@ -104,7 +107,10 @@ const listingFields = [
 			listingTypeIds: ["sell-bicycles"],
 		},
 		schemaType: "enum",
-		enumOptions: [{ option: "enum1", label: "Enum 1" }, { option: "enum2", label: "Enum 2" }],
+		enumOptions: [
+			{ option: "enum1", label: "Enum 1" },
+			{ option: "enum2", label: "Enum 2" },
+		],
 		filterConfig: {
 			indexForSearch: true,
 			filterType: "SelectSingleFilter",
@@ -126,7 +132,10 @@ const listingFields = [
 			listingTypeIds: ["rent-bicycles-daily", "rent-bicycles-nightly", "rent-bicycles-hourly"],
 		},
 		schemaType: "multi-enum",
-		enumOptions: [{ option: "dog_1", label: "Dog 1" }, { option: "dog_2", label: "Dog 2" }],
+		enumOptions: [
+			{ option: "dog_1", label: "Dog 1" },
+			{ option: "dog_2", label: "Dog 2" },
+		],
 		filterConfig: {
 			indexForSearch: true,
 			label: "Amenities",
@@ -246,7 +255,7 @@ describe("SearchPage", () => {
 		const config = getConfig("grid");
 		const routeConfiguration = getRouteConfiguration(config.layout);
 		const props = { ...commonProps };
-		const searchRouteConfig = routeConfiguration.find(conf => conf.name === "SearchPage");
+		const searchRouteConfig = routeConfiguration.find((conf) => conf.name === "SearchPage");
 		const SearchPage = searchRouteConfig.component;
 
 		const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
@@ -323,7 +332,7 @@ describe("SearchPage", () => {
 		const config = getConfig("map");
 		const routeConfiguration = getRouteConfiguration(config.layout);
 		const props = { ...commonProps };
-		const searchRouteConfig = routeConfiguration.find(conf => conf.name === "SearchPage");
+		const searchRouteConfig = routeConfiguration.find((conf) => conf.name === "SearchPage");
 		const SearchPage = searchRouteConfig.component;
 
 		const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(
@@ -410,7 +419,7 @@ describe("SearchPage", () => {
 		const config = getConfig("grid");
 		const routeConfiguration = getRouteConfiguration(config.layout);
 		const props = { ...commonProps };
-		const searchRouteConfig = routeConfiguration.find(conf => conf.name === "SearchPage");
+		const searchRouteConfig = routeConfiguration.find((conf) => conf.name === "SearchPage");
 		const SearchPage = searchRouteConfig.component;
 
 		const { getByPlaceholderText, getByText, getAllByText, queryByText, getByRole } = render(

@@ -4,9 +4,9 @@ import { propTypes } from "../../util/types";
 import { Button } from "../../components";
 import LocationAutocompleteInput from "./LocationAutocompleteInput";
 
-const identity = v => v;
+const identity = (v) => v;
 
-const Form = props => {
+const Form = (props) => {
 	return (
 		<FinalForm
 			{...props}
@@ -25,7 +25,7 @@ const Form = props => {
 	);
 };
 
-const PlaceInfo = props => {
+const PlaceInfo = (props) => {
 	const { place } = props;
 	const { address, origin, bounds } = place;
 	return (
@@ -44,9 +44,9 @@ const PlaceInfo = props => {
 
 PlaceInfo.propTypes = { place: propTypes.place.isRequired };
 
-const FormContainer = props => {
+const FormContainer = (props) => {
 	const [location, setLocation] = useState({});
-	const onSubmit = values => {
+	const onSubmit = (values) => {
 		setLocation(values.location);
 	};
 	const place = location.selectedPlace;

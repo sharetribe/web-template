@@ -14,7 +14,7 @@ import {
 import css from "./ListingImage.module.css";
 
 // Cross shaped button on the top-right corner of the image thumbnail
-const RemoveImageButton = props => {
+const RemoveImageButton = (props) => {
 	const { className, rootClassName, onClick } = props;
 	const classes = classNames(rootClassName || css.removeImage, className);
 	return (
@@ -44,7 +44,7 @@ const RemoveImageButton = props => {
 // Cropped "thumbnail" of given listing image.
 // The image might be one already uploaded and attached to listing entity
 // or representing local image file (before it's uploaded & attached to listing).
-const ListingImage = props => {
+const ListingImage = (props) => {
 	const {
 		className,
 		image,
@@ -54,7 +54,7 @@ const ListingImage = props => {
 		aspectHeight = 1,
 		variantPrefix = "listing-card",
 	} = props;
-	const handleRemoveClick = e => {
+	const handleRemoveClick = (e) => {
 		e.stopPropagation();
 		onRemoveImage(image.id);
 	};
@@ -86,7 +86,7 @@ const ListingImage = props => {
 		const classes = classNames(css.root, className);
 
 		const variants = image
-			? Object.keys(image?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
+			? Object.keys(image?.attributes?.variants).filter((k) => k.startsWith(variantPrefix))
 			: [];
 		const imgForResponsiveImage = image.imageId ? { ...image, id: image.imageId } : image;
 

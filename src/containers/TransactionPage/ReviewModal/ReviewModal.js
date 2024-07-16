@@ -10,7 +10,7 @@ import ReviewForm from "../ReviewForm/ReviewForm";
 
 import css from "./ReviewModal.module.css";
 
-const ReviewModal = props => {
+const ReviewModal = (props) => {
 	const {
 		className,
 		rootClassName,

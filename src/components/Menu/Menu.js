@@ -93,7 +93,7 @@ class Menu extends Component {
 			onToggleActive(isMenuOpen);
 		} else {
 			// If state is handled inside of Menu component, set state
-			this.setState(prevState => {
+			this.setState((prevState) => {
 				const isMenuOpen = enforcedState != null ? enforcedState : !prevState.isOpen;
 				return { isOpen: isMenuOpen };
 			});
@@ -150,7 +150,7 @@ class Menu extends Component {
 			throw new Error("Menu needs to have two children: MenuLabel and MenuContent.");
 		}
 
-		return React.Children.map(this.props.children, child => {
+		return React.Children.map(this.props.children, (child) => {
 			const { isOpen: isOpenProp, onToggleActive } = this.props;
 			const isOpen = isControlledMenu(isOpenProp, onToggleActive) ? isOpenProp : this.state.isOpen;
 
@@ -171,7 +171,7 @@ class Menu extends Component {
 					: null;
 				return React.cloneElement(child, {
 					arrowPosition,
-					contentRef: node => {
+					contentRef: (node) => {
 						this.menuContent = node;
 					},
 					isOpen,
@@ -195,7 +195,7 @@ class Menu extends Component {
 				className={classes}
 				onBlur={this.onBlur}
 				onKeyDown={this.onKeyDown}
-				ref={c => {
+				ref={(c) => {
 					this.menu = c;
 				}}
 			>

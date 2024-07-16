@@ -7,7 +7,7 @@ import BlockContainer from "../BlockContainer";
 
 import css from "./BlockSocialMediaLink.module.css";
 
-const BlockSocialMediaLink = props => {
+const BlockSocialMediaLink = (props) => {
 	const { blockId, className, rootClassName, link, options } = props;
 
 	const classes = classNames(rootClassName || css.root, className);

@@ -6,11 +6,11 @@ import { Menu, MenuContent, MenuItem, MenuLabel } from "../../../components";
 import css from "./SortByPopup.module.css";
 
 const optionLabel = (options, key) => {
-	const option = options.find(o => o.key === key);
+	const option = options.find((o) => o.key === key);
 	return option ? option.label : key;
 };
 
-const SortByIcon = props => {
+const SortByIcon = (props) => {
 	const classes = classNames(css.icon, props.className);
 	// extra small arrow head (down)
 	return (
@@ -25,7 +25,7 @@ const SortByIcon = props => {
 	);
 };
 
-const SortByPopup = props => {
+const SortByPopup = (props) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const {
 		rootClassName,
@@ -39,7 +39,7 @@ const SortByPopup = props => {
 		onSelect,
 	} = props;
 
-	const onToggleActive = isOpenParam => {
+	const onToggleActive = (isOpenParam) => {
 		setIsOpen(isOpenParam);
 	};
 
@@ -69,7 +69,7 @@ const SortByPopup = props => {
 				<SortByIcon className={iconArrowClassName} />
 			</MenuLabel>
 			<MenuContent className={css.menuContent}>
-				{options.map(option => {
+				{options.map((option) => {
 					// check if this option is selected
 					const selected = initialValue === option.key;
 					// menu item border class

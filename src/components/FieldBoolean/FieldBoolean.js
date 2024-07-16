@@ -2,7 +2,7 @@ import React from "react";
 import { injectIntl, intlShape } from "../../util/reactIntl";
 import { FieldSelect } from "../../components";
 
-const FieldBoolean = props => {
+const FieldBoolean = (props) => {
 	const { placeholder, intl, ...rest } = props;
 	const trueLabel = intl.formatMessage({
 		id: "FieldBoolean.yes",
@@ -12,7 +12,7 @@ const FieldBoolean = props => {
 	});
 	const selectProps = {
 		...rest,
-		format: option => {
+		format: (option) => {
 			if (option === true) {
 				return "true";
 			} else if (option === false) {
@@ -20,7 +20,7 @@ const FieldBoolean = props => {
 			}
 			return "";
 		},
-		parse: value => {
+		parse: (value) => {
 			if (value === "true") {
 				return true;
 			} else if (value === "false") {

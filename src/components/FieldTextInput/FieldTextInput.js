@@ -8,7 +8,7 @@ import css from "./FieldTextInput.module.css";
 
 const CONTENT_MAX_LENGTH = 5000;
 
-const FieldTextInputComponent = props => {
+const FieldTextInputComponent = (props) => {
 	const {
 		rootClassName,
 		className,
@@ -64,18 +64,18 @@ const FieldTextInputComponent = props => {
 				...refMaybe,
 				...inputWithoutType,
 				...rest,
-		  }
+			}
 		: isUncontrolled
-		? {
-				className: inputClasses,
-				id,
-				type,
-				defaultValue,
-				...refMaybe,
-				...inputWithoutValue,
-				...rest,
-		  }
-		: { className: inputClasses, id, type, ...refMaybe, ...input, ...rest };
+			? {
+					className: inputClasses,
+					id,
+					type,
+					defaultValue,
+					...refMaybe,
+					...inputWithoutValue,
+					...rest,
+				}
+			: { className: inputClasses, id, type, ...refMaybe, ...input, ...rest };
 
 	const classes = classNames(rootClassName || css.root, className);
 	return (

@@ -32,7 +32,7 @@ const lineItems = [
 	},
 ];
 
-const tx = lastTransition =>
+const tx = (lastTransition) =>
 	createTransaction({
 		id: "order-1",
 		lastTransition,
@@ -63,7 +63,7 @@ const tx = lastTransition =>
 		lineItems,
 	});
 
-const TranslatedInboxItem = props => {
+const TranslatedInboxItem = (props) => {
 	const { intl, tx, transactionRole, ...rest } = props;
 	const stateData = getStateData({ transaction: tx, transactionRole });
 

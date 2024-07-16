@@ -25,7 +25,7 @@ const createListingLink = (listingId, label, listingDeleted, searchParams = {}, 
 
 // Component to render the main heading for an order or a sale. Optionally also
 // renders an info message based on the transaction state.
-const PanelHeading = props => {
+const PanelHeading = (props) => {
 	const {
 		className,
 		rootClassName,

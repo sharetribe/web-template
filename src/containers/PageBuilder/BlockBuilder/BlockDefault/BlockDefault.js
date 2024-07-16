@@ -7,7 +7,7 @@ import BlockContainer from "../BlockContainer";
 
 import css from "./BlockDefault.module.css";
 
-const FieldMedia = props => {
+const FieldMedia = (props) => {
 	const { className, media, sizes, options } = props;
 	const hasMediaField = hasDataInFields([media], options);
 	return hasMediaField ? (
@@ -17,7 +17,7 @@ const FieldMedia = props => {
 	) : null;
 };
 
-const BlockDefault = props => {
+const BlockDefault = (props) => {
 	const {
 		blockId,
 		className,

@@ -16,10 +16,10 @@ import {
 
 import css from "./EmailVerificationForm.module.css";
 
-const EmailVerificationFormComponent = props => (
+const EmailVerificationFormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={formRenderProps => {
+		render={(formRenderProps) => {
 			const { currentUser, inProgress, handleSubmit, verificationError } = formRenderProps;
 
 			const { email, emailVerified, pendingEmail, profile } = currentUser.attributes;
@@ -119,8 +119,8 @@ const EmailVerificationFormComponent = props => (
 			return anyPendingEmailHasBeenVerifiedForCurrentUser && verificationError
 				? alreadyVerifiedButErrorReturned
 				: anyPendingEmailHasBeenVerifiedForCurrentUser
-				? alreadyVerified
-				: verifyEmail;
+					? alreadyVerified
+					: verifyEmail;
 		}}
 	/>
 );

@@ -12,10 +12,10 @@ import { FieldTextInput, Form, IconDisputeOrder, Modal, Button } from "../../../
 
 import css from "./DisputeModal.module.css";
 
-const DisputeForm = props => (
+const DisputeForm = (props) => (
 	<FinalForm
 		{...props}
-		render={fieldRenderProps => {
+		render={(fieldRenderProps) => {
 			const {
 				className,
 				rootClassName,
@@ -65,7 +65,7 @@ const DisputeForm = props => (
 );
 
 // Show dispute form
-const DisputeInfo = props => {
+const DisputeInfo = (props) => {
 	const config = useConfiguration();
 	const marketplaceName = config.marketplaceName;
 
@@ -89,7 +89,7 @@ const DisputeInfo = props => {
 };
 
 // Show info that dispute form has been sent already.
-const DisputeSentInfo = props => (
+const DisputeSentInfo = (props) => (
 	<>
 		<p className={css.modalTitle}>
 			<FormattedMessage id="DisputeModal.sentTitle" />
@@ -104,7 +104,7 @@ const DisputeSentInfo = props => (
 );
 
 // Dispute modal
-const DisputeModal = props => {
+const DisputeModal = (props) => {
 	const {
 		className,
 		rootClassName,

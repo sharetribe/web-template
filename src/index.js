@@ -92,12 +92,12 @@ const render = (store, shouldHydrate) => {
 				);
 			}
 		})
-		.catch(e => {
+		.catch((e) => {
 			log.error(e, "browser-side-render-failed");
 		});
 };
 
-const setupAnalyticsHandlers = googleAnalyticsId => {
+const setupAnalyticsHandlers = (googleAnalyticsId) => {
 	let handlers = [];
 
 	// Log analytics page views and events in dev mode

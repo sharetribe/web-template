@@ -17,7 +17,7 @@ import PasswordChangeForm from "./PasswordChangeForm/PasswordChangeForm";
 import { changePassword, changePasswordClear, resetPassword } from "./PasswordChangePage.duck";
 import css from "./PasswordChangePage.module.css";
 
-export const PasswordChangePageComponent = props => {
+export const PasswordChangePageComponent = (props) => {
 	const {
 		changePasswordError,
 		changePasswordInProgress,
@@ -102,7 +102,7 @@ PasswordChangePageComponent.propTypes = {
 	intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	// Topbar needs user info.
 	const {
 		changePasswordError,
@@ -123,17 +123,14 @@ const mapStateToProps = state => {
 	};
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
 	onChange: () => dispatch(changePasswordClear()),
-	onSubmitChangePassword: values => dispatch(changePassword(values)),
-	onResetPassword: values => dispatch(resetPassword(values)),
+	onSubmitChangePassword: (values) => dispatch(changePassword(values)),
+	onResetPassword: (values) => dispatch(resetPassword(values)),
 });
 
 const PasswordChangePage = compose(
-	connect(
-		mapStateToProps,
-		mapDispatchToProps,
-	),
+	connect(mapStateToProps, mapDispatchToProps),
 	injectIntl,
 )(PasswordChangePageComponent);
 

@@ -32,7 +32,7 @@ module.exports = (req, res) => {
 
 			return getTrustedSdk(req);
 		})
-		.then(trustedSdk => {
+		.then((trustedSdk) => {
 			const { params } = bodyParams;
 
 			// Add lineItems to the body params
@@ -49,7 +49,7 @@ module.exports = (req, res) => {
 			}
 			return trustedSdk.transactions.initiate(body, queryParams);
 		})
-		.then(apiResponse => {
+		.then((apiResponse) => {
 			const { status, statusText, data } = apiResponse;
 			res
 				.status(status)
@@ -63,7 +63,7 @@ module.exports = (req, res) => {
 				)
 				.end();
 		})
-		.catch(e => {
+		.catch((e) => {
 			handleError(res, e);
 		});
 };

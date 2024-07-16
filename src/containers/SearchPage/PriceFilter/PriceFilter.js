@@ -4,7 +4,7 @@ import { bool } from "prop-types";
 import PriceFilterPlain from "./PriceFilterPlain";
 import PriceFilterPopup from "./PriceFilterPopup";
 
-const PriceFilter = props => {
+const PriceFilter = (props) => {
 	const { showAsPopup, marketplaceCurrency, ...rest } = props;
 	return showAsPopup ? (
 		<PriceFilterPopup marketplaceCurrency={marketplaceCurrency} {...rest} />

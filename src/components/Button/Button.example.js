@@ -4,7 +4,7 @@ import Button, { PrimaryButton, SecondaryButton, InlineTextButton } from "./Butt
 
 import css from "./ButtonExample.module.css";
 
-const preventDefault = e => {
+const preventDefault = (e) => {
 	e.preventDefault();
 };
 

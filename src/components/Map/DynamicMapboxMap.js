@@ -134,7 +134,7 @@ class DynamicMapboxMap extends Component {
 		const { containerClassName, mapClassName } = this.props;
 		return (
 			<div className={containerClassName}>
-				<div className={mapClassName} ref={el => (this.mapContainer = el)} />
+				<div className={mapClassName} ref={(el) => (this.mapContainer = el)} />
 			</div>
 		);
 	}

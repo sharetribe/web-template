@@ -7,7 +7,7 @@ const { UUID } = sdkTypes;
 export const EmptyUser = {
 	component: UserCard,
 	props: {
-		onContactUser: user => console.log("concact user:", user),
+		onContactUser: (user) => console.log("concact user:", user),
 	},
 	group: "users",
 };
@@ -16,7 +16,7 @@ export const WithoutBio = {
 	component: UserCard,
 	props: {
 		user: createUser("test-card-user"),
-		onContactUser: user => console.log("concact user:", user),
+		onContactUser: (user) => console.log("concact user:", user),
 	},
 	group: "users",
 };
@@ -26,7 +26,7 @@ export const WithoutBioCurrentUser = {
 	props: {
 		user: createUser("test-card-user"),
 		currentUser: createCurrentUser("test-card-user"),
-		onContactUser: user => console.log("concact user:", user),
+		onContactUser: (user) => console.log("concact user:", user),
 	},
 	group: "users",
 };
@@ -43,8 +43,7 @@ export const WithProfileImageAndBioCurrentUser = {
 				profile: {
 					displayName: "Has P",
 					abbreviatedName: "HP",
-					bio:
-						"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+					bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
 				},
 			},
 			profileImage: {
@@ -69,7 +68,7 @@ export const WithProfileImageAndBioCurrentUser = {
 			},
 		},
 		currentUser: createCurrentUser("full-user"),
-		onContactUser: user => console.log("concact user:", user),
+		onContactUser: (user) => console.log("concact user:", user),
 	},
 	group: "users",
 };
@@ -86,8 +85,7 @@ export const WithProfileImageAndBio = {
 				profile: {
 					displayName: "Has P",
 					abbreviatedName: "HP",
-					bio:
-						"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+					bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
 				},
 			},
 			profileImage: {
@@ -112,7 +110,7 @@ export const WithProfileImageAndBio = {
 			},
 		},
 		currentUser: createCurrentUser("test-card-current-user"),
-		onContactUser: user => console.log("concact user:", user),
+		onContactUser: (user) => console.log("concact user:", user),
 	},
 	group: "users",
 };
@@ -122,7 +120,7 @@ export const WithCurrentUserAsUser = {
 	props: {
 		user: createCurrentUser("test-card-user"),
 		currentUser: createCurrentUser("test-card-user"),
-		onContactUser: user => console.log("concact user:", user),
+		onContactUser: (user) => console.log("concact user:", user),
 	},
 	group: "users",
 };

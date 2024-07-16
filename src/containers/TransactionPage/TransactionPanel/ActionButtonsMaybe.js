@@ -6,7 +6,7 @@ import { PrimaryButton, SecondaryButton } from "../../../components";
 import css from "./TransactionPanel.module.css";
 
 // Functional component as a helper to build ActionButtons
-const ActionButtonsMaybe = props => {
+const ActionButtonsMaybe = (props) => {
 	const {
 		className,
 		rootClassName,

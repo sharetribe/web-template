@@ -20,7 +20,7 @@ const defaultBlockComponents = {
 // Blocks builder //
 ////////////////////
 
-const BlockBuilder = props => {
+const BlockBuilder = (props) => {
 	const { blocks, sectionId, options, ...otherProps } = props;
 
 	// Extract block & field component mappings from props

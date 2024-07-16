@@ -10,7 +10,7 @@ import FieldDateAndTimeInput from "./FieldDateAndTimeInput";
 
 const { UUID } = sdkTypes;
 
-const identity = v => v;
+const identity = (v) => v;
 
 const options = { weekday: "short", month: "long", day: "numeric" };
 const placeholderText = new Intl.DateTimeFormat("en-US", options).format(new Date());
@@ -108,10 +108,10 @@ const monthlyTimeSlots = {
 	},
 };
 
-const FormComponent = props => (
+const FormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={fieldRenderProps => {
+		render={(fieldRenderProps) => {
 			const {
 				style,
 				form,
@@ -138,7 +138,7 @@ const FormComponent = props => (
 			return (
 				<form
 					style={style}
-					onSubmit={e => {
+					onSubmit={(e) => {
 						e.preventDefault();
 						handleSubmit(e);
 					}}
@@ -179,8 +179,8 @@ export const Empty = {
 			bookingStartDate: { date: new Date(Date.UTC(currentYear, today.getUTCMonth(), 14)) },
 		},
 		dayCountAvailableForBooking: 90,
-		onChange: formState => {},
-		onSubmit: values => {
+		onChange: (formState) => {},
+		onSubmit: (values) => {
 			console.log("Submitting a form with values:", values);
 		},
 		onFetchTimeSlots: () => {

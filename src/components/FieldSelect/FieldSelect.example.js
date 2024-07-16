@@ -5,16 +5,16 @@ import * as validators from "../../util/validators";
 import { Button } from "../../components";
 import FieldSelect from "./FieldSelect";
 
-const FormComponent = props => (
+const FormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={fieldRenderProps => {
+		render={(fieldRenderProps) => {
 			const { form, handleSubmit, onChange, invalid, pristine, submitting } = fieldRenderProps;
 			const required = validators.required("This field is required");
 			const submitDisabled = invalid || pristine || submitting;
 			return (
 				<form
-					onSubmit={e => {
+					onSubmit={(e) => {
 						e.preventDefault();
 						handleSubmit(e);
 					}}
@@ -37,12 +37,12 @@ const FormComponent = props => (
 export const Select = {
 	component: FormComponent,
 	props: {
-		onChange: formState => {
+		onChange: (formState) => {
 			if (formState.values.select1) {
 				console.log("form values changed to:", formState.values);
 			}
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("submit values:", values);
 			return false;
 		},

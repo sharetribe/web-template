@@ -14,14 +14,14 @@ import includes from "lodash/includes";
 import css from "./PropertyGroup.module.css";
 
 const checkSelected = (options, selectedOptions) => {
-	return options.map(option => ({
+	return options.map((option) => ({
 		key: option.key,
 		label: option.label,
 		isSelected: includes(selectedOptions, option.key),
 	}));
 };
 
-const IconCheck = props => {
+const IconCheck = (props) => {
 	const isVisible = props.isVisible;
 	const classes = isVisible ? css.checkIcon : classNames(css.checkIcon, css.hidden);
 
@@ -36,7 +36,7 @@ const IconCheck = props => {
 	);
 };
 
-const Item = props => {
+const Item = (props) => {
 	const { label, isSelected } = props;
 	const labelClass = isSelected ? css.selectedLabel : css.notSelectedLabel;
 	return (
@@ -51,7 +51,7 @@ const Item = props => {
 	);
 };
 
-const PropertyGroup = props => {
+const PropertyGroup = (props) => {
 	const {
 		rootClassName,
 		className,
@@ -66,11 +66,11 @@ const PropertyGroup = props => {
 
 	const checked = showUnselectedOptions
 		? checkSelected(options, selectedOptions)
-		: checkSelected(options, selectedOptions).filter(o => o.isSelected);
+		: checkSelected(options, selectedOptions).filter((o) => o.isSelected);
 
 	return (
 		<ul className={listClasses}>
-			{checked.map(option => (
+			{checked.map((option) => (
 				<Item key={`${id}.${option.key}`} label={option.label} isSelected={option.isSelected} />
 			))}
 		</ul>

@@ -10,7 +10,7 @@ import css from "./ValidationError.module.css";
  * `meta` object as a prop and infers if an error message should be
  * shown.
  */
-const ValidationError = props => {
+const ValidationError = (props) => {
 	const { rootClassName, className, fieldMeta } = props;
 	const { touched, error } = fieldMeta;
 	const classes = classNames(rootClassName || css.root, className);

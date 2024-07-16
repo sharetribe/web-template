@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./IconEmailAttention.module.css";
 
-const IconEmailAttention = props => {
+const IconEmailAttention = (props) => {
 	const { rootClassName, className } = props;
 	const classes = classNames(rootClassName || css.root, className);
 	return (

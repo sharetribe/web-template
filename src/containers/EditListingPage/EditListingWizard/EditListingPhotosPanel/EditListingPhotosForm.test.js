@@ -20,8 +20,8 @@ describe("EditListingDeliveryForm", () => {
 				initialValues={{ country: "US", images: [] }}
 				intl={fakeIntl}
 				dispatch={noop}
-				onImageUpload={v => Promise.reject(v)}
-				onSubmit={v => v}
+				onImageUpload={(v) => Promise.reject(v)}
+				onSubmit={(v) => v}
 				saveActionMsg={saveActionMsg}
 				stripeConnected={false}
 				updated={false}
@@ -43,7 +43,7 @@ describe("EditListingDeliveryForm", () => {
 			<FinalForm
 				onSubmit={noop}
 				mutators={{ ...arrayMutators }}
-				render={formRenderProps => {
+				render={(formRenderProps) => {
 					return (
 						<form onSubmit={noop}>
 							<FieldAddImage

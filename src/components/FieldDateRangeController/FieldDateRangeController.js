@@ -7,18 +7,18 @@ import moment from "moment";
 import { useConfiguration } from "../../context/configurationContext";
 import DateRangeController from "./DateRangeController";
 
-const component = props => {
+const component = (props) => {
 	const { input, controllerRef, ...rest } = props;
 	const { type, checked, ...restOfInput } = input;
 	return <DateRangeController ref={controllerRef} {...restOfInput} {...rest} />;
 };
 
-const FieldDateRangeController = props => {
+const FieldDateRangeController = (props) => {
 	const config = useConfiguration();
 	const { isOutsideRange, firstDayOfWeek, ...rest } = props;
 
 	// Outside range -><- today ... today+available days -1 -><- outside range
-	const defaultIsOutSideRange = day => {
+	const defaultIsOutSideRange = (day) => {
 		const endOfRange = config.stripe?.dayCountAvailableForBooking - 1;
 		return (
 			!isInclusivelyAfterDay(day, moment()) ||

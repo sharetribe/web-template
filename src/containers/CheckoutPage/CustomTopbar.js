@@ -8,7 +8,7 @@ import { LinkedLogo } from "../../components";
 
 import css from "./CheckoutPage.module.css";
 
-const CustomTopbar = props => {
+const CustomTopbar = (props) => {
 	const [isMobile, setIsMobile] = useState(false);
 
 	useEffect(() => {

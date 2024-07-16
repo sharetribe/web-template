@@ -9,7 +9,7 @@ import PaginationLinks from "./PaginationLinks";
 const { screen } = testingLibrary;
 
 describe("PaginationLinks", () => {
-	const props = pagination => ({
+	const props = (pagination) => ({
 		pageName: "SearchPage",
 		pagePathParams: {},
 		pageSearchParams: { param: "foobar" },

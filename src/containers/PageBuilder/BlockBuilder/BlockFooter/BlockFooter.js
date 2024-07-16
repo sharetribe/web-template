@@ -7,7 +7,7 @@ import BlockContainer from "../BlockContainer";
 
 import css from "./BlockFooter.module.css";
 
-const BlockFooter = props => {
+const BlockFooter = (props) => {
 	const { blockId, className, rootClassName, textClassName, text, options } = props;
 	const classes = classNames(rootClassName || css.root, className);
 	const hasTextComponentFields = hasDataInFields([text], options);

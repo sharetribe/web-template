@@ -17,11 +17,8 @@ export const LISTING_PAGE_PARAM_TYPES = [
 
 // Create slug from random texts
 // From Gist thread: https://gist.github.com/mathewbyrne/1280286
-export const createSlug = str => {
-	let text = str
-		.toString()
-		.toLowerCase()
-		.trim();
+export const createSlug = (str) => {
+	let text = str.toString().toLowerCase().trim();
 
 	const sets = [
 		{ to: "a", from: "ÀÁÂÃÄÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ" },
@@ -51,7 +48,7 @@ export const createSlug = str => {
 		{ to: "-", from: "·/_,:;'" },
 	];
 
-	sets.forEach(set => {
+	sets.forEach((set) => {
 		text = text.replace(new RegExp(`[${set.from}]`, "gi"), set.to);
 	});
 
@@ -74,7 +71,7 @@ export const createSlug = str => {
  *
  * @return {Number|null} number parsed from the string, null if not a number
  */
-export const parseFloatNum = str => {
+export const parseFloatNum = (str) => {
 	const trimmed = str && typeof str.trim === "function" ? str.trim() : null;
 	if (!trimmed) {
 		return null;
@@ -92,7 +89,7 @@ export const parseFloatNum = str => {
  *
  * @return {String} location coordinates separated by a comma
  */
-export const encodeLatLng = location => `${location.lat},${location.lng}`;
+export const encodeLatLng = (location) => `${location.lat},${location.lng}`;
 
 /**
  * Decode a location from a string
@@ -101,7 +98,7 @@ export const encodeLatLng = location => `${location.lat},${location.lng}`;
  *
  * @return {LatLng|null} location instance, null if could not parse
  */
-export const decodeLatLng = str => {
+export const decodeLatLng = (str) => {
 	const parts = str.split(",");
 	if (parts.length !== 2) {
 		return null;
@@ -121,7 +118,8 @@ export const decodeLatLng = str => {
  *
  * @return {String} bounds coordinates separated by a comma
  */
-export const encodeLatLngBounds = bounds => `${encodeLatLng(bounds.ne)},${encodeLatLng(bounds.sw)}`;
+export const encodeLatLngBounds = (bounds) =>
+	`${encodeLatLng(bounds.ne)},${encodeLatLng(bounds.sw)}`;
 
 /**
  * Decode a location bounds from a string
@@ -130,7 +128,7 @@ export const encodeLatLngBounds = bounds => `${encodeLatLng(bounds.ne)},${encode
  *
  * @return {LatLngBounds|null} location bounds instance, null if could not parse
  */
-export const decodeLatLngBounds = str => {
+export const decodeLatLngBounds = (str) => {
 	const parts = str.split(",");
 	if (parts.length !== 4) {
 		return null;
@@ -144,7 +142,7 @@ export const decodeLatLngBounds = str => {
 };
 
 // Serialise SDK types in given object values into strings
-const serialiseSdkTypes = obj =>
+const serialiseSdkTypes = (obj) =>
 	Object.keys(obj).reduce((result, key) => {
 		const val = obj[key];
 		/* eslint-disable no-param-reassign */
@@ -170,7 +168,7 @@ const serialiseSdkTypes = obj =>
  * @return {String} query string with sorted keys and serialised
  * values, `undefined` and `null` values are removed
  */
-export const stringify = params => {
+export const stringify = (params) => {
 	const serialised = serialiseSdkTypes(params);
 	const cleaned = Object.keys(serialised).reduce((result, key) => {
 		const val = serialised[key];
@@ -231,7 +229,7 @@ export const parse = (search, options = {}) => {
  *
  * @return {String} twitterPageURL
  */
-export const twitterPageURL = twitterHandle => {
+export const twitterPageURL = (twitterHandle) => {
 	if (twitterHandle && twitterHandle.charAt(0) === "@") {
 		return `https://twitter.com/${twitterHandle.substring(1)}`;
 	} else if (twitterHandle) {

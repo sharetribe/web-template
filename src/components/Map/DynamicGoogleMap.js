@@ -56,7 +56,7 @@ class DynamicGoogleMap extends Component {
 				// Origin as object literal (LatLngLiteral)
 				const origin = { lat: center.lat, lng: center.lng };
 				const radius = mapsConfig.fuzzy.offset;
-				const path = circlePolyline(origin, radius).map(c => new GoogleLatLng(c[0], c[1]));
+				const path = circlePolyline(origin, radius).map((c) => new GoogleLatLng(c[0], c[1]));
 
 				const circleProps = {
 					options: {
@@ -88,7 +88,7 @@ class DynamicGoogleMap extends Component {
 		const { containerClassName, mapClassName } = this.props;
 		return (
 			<div className={containerClassName}>
-				<div className={mapClassName} ref={el => (this.mapContainer = el)} />
+				<div className={mapClassName} ref={(el) => (this.mapContainer = el)} />
 			</div>
 		);
 	}

@@ -2,14 +2,14 @@ import { types as sdkTypes } from "../util/sdkLoader";
 
 const { LatLng: SDKLatLng, LatLngBounds: SDKLatLngBounds } = sdkTypes;
 
-const placeOrigin = place => {
+const placeOrigin = (place) => {
 	if (place && place.geometry && place.geometry.location) {
 		return new SDKLatLng(place.geometry.location.lat(), place.geometry.location.lng());
 	}
 	return null;
 };
 
-const placeBounds = place => {
+const placeBounds = (place) => {
 	if (place && place.geometry && place.geometry.viewport) {
 		const ne = place.geometry.viewport.getNorthEast();
 		const sw = place.geometry.viewport.getSouthWest();
@@ -57,7 +57,7 @@ export const getPlaceDetails = (placeId, sessionToken) =>
 		});
 	});
 
-const predictionSuccessful = status => {
+const predictionSuccessful = (status) => {
 	const { OK, ZERO_RESULTS } = window.google.maps.places.PlacesServiceStatus;
 	return status === OK || status === ZERO_RESULTS;
 };
@@ -107,7 +107,7 @@ export const getPlacePredictions = (search, sessionToken, searchConfigurations) 
  * @return {SDKLatLngBounds} - bounds cut to given fixed precision
  */
 export const sdkBoundsToFixedCoordinates = (sdkBounds, fixedPrecision) => {
-	const fixed = n => Number.parseFloat(n.toFixed(fixedPrecision));
+	const fixed = (n) => Number.parseFloat(n.toFixed(fixedPrecision));
 	const ne = new SDKLatLng(fixed(sdkBounds.ne.lat), fixed(sdkBounds.ne.lng));
 	const sw = new SDKLatLng(fixed(sdkBounds.sw.lat), fixed(sdkBounds.sw.lng));
 

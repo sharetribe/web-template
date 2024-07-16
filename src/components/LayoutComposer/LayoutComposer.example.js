@@ -3,7 +3,7 @@ import React from "react";
 import LayoutComposer from "./LayoutComposer.js";
 
 // Wrapper with some inline styles
-const GridContent = props => {
+const GridContent = (props) => {
 	return (
 		<div
 			style={{
@@ -25,11 +25,11 @@ const GridContent = props => {
 };
 
 // Component created using LayoutComposer
-const Component = props => {
+const Component = (props) => {
 	const { borderRadius, ...otherProps } = props;
 	return (
 		<LayoutComposer {...otherProps}>
-			{props => {
+			{(props) => {
 				const { Topbar, Main, Extra, Footer } = props;
 				return (
 					<>

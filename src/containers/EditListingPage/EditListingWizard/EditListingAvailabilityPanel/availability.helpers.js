@@ -31,10 +31,10 @@ export const getStartOfPrevMonth = (currentMoment, timeZone, offset = 1) =>
 	getStartOfMonth(currentMoment, timeZone, -1 * offset);
 
 // React-dates returns wrapped date objects
-export const extractDateFromFieldDateInput = dateValue => dateValue?.date || null;
+export const extractDateFromFieldDateInput = (dateValue) => dateValue?.date || null;
 
 // React-dates returns wrapped date objects
-export const extractDateFromFieldDateRangeInput = dates => {
+export const extractDateFromFieldDateRangeInput = (dates) => {
 	return dates?.startDate || dates?.endDate ? dates : { startDate: null, endDate: null };
 };
 
@@ -77,7 +77,7 @@ const fetchExceptionData = (
 // Update current week
 // When clicking next or prev buttons on weekly calendar,
 // we fetch data for the week that comes after next week.
-export const handleWeekClick = params => weekFn => {
+export const handleWeekClick = (params) => (weekFn) => {
 	const {
 		currentWeek,
 		setCurrentWeek,
@@ -112,7 +112,7 @@ export const handleWeekClick = params => weekFn => {
 // Update current month and call callback function.
 // When clicking next or prev buttons on monthly calendar,
 // we fetch data for the month that comes after next month.
-export const handleMonthClick = params => monthFn => {
+export const handleMonthClick = (params) => (monthFn) => {
 	const {
 		currentMonth,
 		setCurrentMonth,

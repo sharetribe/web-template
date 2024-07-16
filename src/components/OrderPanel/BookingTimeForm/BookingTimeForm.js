@@ -74,7 +74,7 @@ export class BookingTimeFormComponent extends Component {
 				{...rest}
 				unitPrice={unitPrice}
 				onSubmit={this.handleFormSubmit}
-				render={fieldRenderProps => {
+				render={(fieldRenderProps) => {
 					const {
 						endDatePlaceholder,
 						startDatePlaceholder,
@@ -107,7 +107,7 @@ export class BookingTimeFormComponent extends Component {
 							? {
 									startDate,
 									endDate,
-							  }
+								}
 							: null;
 
 					const showEstimatedBreakdown =
@@ -117,7 +117,7 @@ export class BookingTimeFormComponent extends Component {
 						<Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
 							<FormSpy
 								subscription={{ values: true }}
-								onChange={values => {
+								onChange={(values) => {
 									this.handleOnChange(values);
 								}}
 							/>

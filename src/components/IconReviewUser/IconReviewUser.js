@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./IconReviewUser.module.css";
 
-const IconReviewUser = props => {
+const IconReviewUser = (props) => {
 	const { className, rootClassName } = props;
 	const classes = classNames(rootClassName || css.root, className);
 

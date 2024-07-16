@@ -23,7 +23,7 @@ const IMAGE_GALLERY_OPTIONS = {
 	slideDuration: 350,
 };
 
-const ImageCarousel = props => {
+const ImageCarousel = (props) => {
 	const [currentIndex, setIndex] = useState(0);
 	const { intl, rootClassName, className, images, imageVariants } = props;
 
@@ -39,7 +39,7 @@ const ImageCarousel = props => {
 			image: img,
 		};
 	});
-	const renderItem = item => {
+	const renderItem = (item) => {
 		return (
 			<div className={css.imageWrapper}>
 				<div className={css.itemCentering}>
@@ -82,10 +82,10 @@ const ImageCarousel = props => {
 
 	// We render index outside of ReactImageGallery.
 	// This keeps track of current index aka slide changes happening inside gallery.
-	const handleSlide = currentIndex => {
+	const handleSlide = (currentIndex) => {
 		setIndex(currentIndex);
 	};
-	const naturalIndex = index => index + 1;
+	const naturalIndex = (index) => index + 1;
 
 	// Render image index info. E.g. "4/12"
 	const imageIndex =

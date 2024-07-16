@@ -95,7 +95,10 @@ const listingFieldsInquiry = [
 			listingTypeIds: ["inquiry"],
 		},
 		schemaType: "enum",
-		enumOptions: [{ option: "cat_1", label: "Cat 1" }, { option: "cat_2", label: "Cat 2" }],
+		enumOptions: [
+			{ option: "cat_1", label: "Cat 1" },
+			{ option: "cat_2", label: "Cat 2" },
+		],
 		filterConfig: {
 			indexForSearch: true,
 			label: "Cat",
@@ -123,7 +126,10 @@ const listingFieldsPurchase = [
 			categoryIds: ["sneakers"],
 		},
 		schemaType: "enum",
-		enumOptions: [{ option: "cat_1", label: "Cat 1" }, { option: "cat_2", label: "Cat 2" }],
+		enumOptions: [
+			{ option: "cat_1", label: "Cat 1" },
+			{ option: "cat_2", label: "Cat 2" },
+		],
 		filterConfig: {
 			indexForSearch: true,
 			label: "Cat",
@@ -147,7 +153,10 @@ const listingFieldsBooking = [
 			listingTypeIds: ["rent-bicycles-daily", "rent-bicycles-nightly", "rent-bicycles-hourly"],
 		},
 		schemaType: "multi-enum",
-		enumOptions: [{ option: "dog_1", label: "Dog 1" }, { option: "dog_2", label: "Dog 2" }],
+		enumOptions: [
+			{ option: "dog_1", label: "Dog 1" },
+			{ option: "dog_2", label: "Dog 2" },
+		],
 		filterConfig: {
 			indexForSearch: true,
 			label: "Amenities",
@@ -227,7 +236,7 @@ describe("EditListingPage", () => {
 	beforeEach(() => {
 		// This is not defined by default on test env. Availability panel needs it.
 		window.scrollTo = jest.fn();
-		console.warn = msg =>
+		console.warn = (msg) =>
 			!(
 				msg.toString().includes("componentWillReceiveProps") ||
 				msg.toString().includes("componentWillUpdate")
@@ -242,11 +251,11 @@ describe("EditListingPage", () => {
 
 	// We'll initialize the store with relevant listing data
 	const today = new Date();
-	const pad = num => {
+	const pad = (num) => {
 		return num >= 0 && num < 10 ? `0${num}` : `${num}`;
 	};
 
-	const initialState = listing => ({
+	const initialState = (listing) => ({
 		EditListingPage: {
 			createListingDraftError: null,
 			listingId: listing.id,

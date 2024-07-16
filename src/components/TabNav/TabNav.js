@@ -5,7 +5,7 @@ import { NamedLink } from "../../components";
 
 import css from "./TabNav.module.css";
 
-const Tab = props => {
+const Tab = (props) => {
 	const { className, id, disabled, text, selected, linkProps } = props;
 	const linkClasses = classNames(css.link, {
 		[css.selectedLink]: selected,
@@ -34,7 +34,7 @@ Tab.propTypes = {
 	linkProps: object.isRequired,
 };
 
-const TabNav = props => {
+const TabNav = (props) => {
 	const { className, rootClassName, tabRootClassName, tabs } = props;
 	const classes = classNames(rootClassName || css.root, className);
 	const tabClasses = tabRootClassName || css.tab;

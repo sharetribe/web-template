@@ -3,19 +3,12 @@ import { Form as FinalForm, FormSpy } from "react-final-form";
 import { Button } from "../../components";
 import FieldRadioButton from "./FieldRadioButton";
 
-const FormComponent = props => (
+const FormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={fieldRenderProps => {
-			const {
-				handleSubmit,
-				onChange,
-				invalid,
-				pristine,
-				submitting,
-				required,
-				id,
-			} = fieldRenderProps;
+		render={(fieldRenderProps) => {
+			const { handleSubmit, onChange, invalid, pristine, submitting, required, id } =
+				fieldRenderProps;
 
 			const submitDisabled = invalid || pristine || submitting;
 
@@ -23,7 +16,7 @@ const FormComponent = props => (
 
 			return (
 				<form
-					onSubmit={e => {
+					onSubmit={(e) => {
 						e.preventDefault();
 						handleSubmit(e);
 					}}
@@ -63,12 +56,12 @@ const FormComponent = props => (
 export const RadioButtonRequired = {
 	component: FormComponent,
 	props: {
-		onChange: formState => {
+		onChange: (formState) => {
 			if (Object.keys(formState.values).length > 0) {
 				console.log("form values changed to:", formState.values);
 			}
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit values of FieldRadioButton: ", values);
 		},
 		required: true,
@@ -80,12 +73,12 @@ export const RadioButtonRequired = {
 export const RadioButtonNotRequired = {
 	component: FormComponent,
 	props: {
-		onChange: formState => {
+		onChange: (formState) => {
 			if (Object.keys(formState.values).length > 0) {
 				console.log("form values changed to:", formState.values);
 			}
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit values of FieldRadioButton: ", values);
 		},
 		required: false,

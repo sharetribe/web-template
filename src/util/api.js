@@ -6,7 +6,7 @@ import appSettings from "../config/settings";
 import { types as sdkTypes, transit } from "./sdkLoader";
 import Decimal from "decimal.js";
 
-export const apiBaseUrl = marketplaceRootURL => {
+export const apiBaseUrl = (marketplaceRootURL) => {
 	const port = process.env.REACT_APP_DEV_API_SERVER_PORT;
 	const useDevApiServer = process.env.NODE_ENV === "development" && !!port;
 
@@ -27,16 +27,16 @@ export const typeHandlers = [
 	{
 		type: sdkTypes.BigDecimal,
 		customType: Decimal,
-		writer: v => new sdkTypes.BigDecimal(v.toString()),
-		reader: v => new Decimal(v.value),
+		writer: (v) => new sdkTypes.BigDecimal(v.toString()),
+		reader: (v) => new Decimal(v.value),
 	},
 ];
 
-const serialize = data => {
+const serialize = (data) => {
 	return transit.write(data, { typeHandlers, verbose: appSettings.sdk.transitVerbose });
 };
 
-const deserialize = str => {
+const deserialize = (str) => {
 	return transit.read(str, { typeHandlers });
 };
 
@@ -67,12 +67,12 @@ const request = (path, options = {}) => {
 		...rest,
 	};
 
-	return window.fetch(url, fetchOptions).then(res => {
+	return window.fetch(url, fetchOptions).then((res) => {
 		const contentTypeHeader = res.headers.get("Content-Type");
 		const contentType = contentTypeHeader ? contentTypeHeader.split(";")[0] : null;
 
 		if (res.status >= 400) {
-			return res.json().then(data => {
+			return res.json().then((data) => {
 				let e = new Error();
 				e = Object.assign(e, data);
 
@@ -104,7 +104,7 @@ const post = (path, body, options = {}) => {
 //
 // See `server/api/transaction-line-items.js` to see what data should
 // be sent in the body.
-export const transactionLineItems = body => {
+export const transactionLineItems = (body) => {
 	return post("/api/transaction-line-items", body);
 };
 
@@ -116,7 +116,7 @@ export const transactionLineItems = body => {
 //
 // See `server/api/initiate-privileged.js` to see what data should be
 // sent in the body.
-export const initiatePrivileged = body => {
+export const initiatePrivileged = (body) => {
 	return post("/api/initiate-privileged", body);
 };
 
@@ -128,7 +128,7 @@ export const initiatePrivileged = body => {
 //
 // See `server/api/transition-privileged.js` to see what data should
 // be sent in the body.
-export const transitionPrivileged = body => {
+export const transitionPrivileged = (body) => {
 	return post("/api/transition-privileged", body);
 };
 
@@ -141,6 +141,6 @@ export const transitionPrivileged = body => {
 //
 // See `server/api/auth/createUserWithIdp.js` to see what data should
 // be sent in the body.
-export const createUserWithIdp = body => {
+export const createUserWithIdp = (body) => {
 	return post("/api/auth/create-user-with-idp", body);
 };

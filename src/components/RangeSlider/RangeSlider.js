@@ -69,7 +69,7 @@ class RangeSliderComponent extends Component {
 							valueToPosition={this.toPosition}
 							positionToValue={this.toValue}
 							changeActive={() => this.changeActive(index)}
-							onChange={value => this.onChange(value, index)}
+							onChange={(value) => this.onChange(value, index)}
 						/>
 					);
 				})}
@@ -97,7 +97,7 @@ RangeSliderComponent.propTypes = {
 
 const RangeSliderComponentWithDimensions = withDimensions(RangeSliderComponent);
 
-const RangeSlider = props => {
+const RangeSlider = (props) => {
 	const { rootClassName, className, ...rest } = props;
 	const classes = classNames(rootClassName || css.root, className);
 	return (

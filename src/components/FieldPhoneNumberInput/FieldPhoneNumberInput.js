@@ -11,7 +11,7 @@ import { FieldTextInput } from "../../components";
 // but for other inputs it just strips space characters off.
 import { format, parse } from "./e164Formatter";
 
-const FieldPhoneNumberInput = props => {
+const FieldPhoneNumberInput = (props) => {
 	const inputProps = {
 		type: "text",
 		format: format,

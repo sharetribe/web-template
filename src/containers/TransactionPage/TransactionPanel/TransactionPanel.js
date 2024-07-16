@@ -95,11 +95,11 @@ export class TransactionPanelComponent extends Component {
 			return;
 		}
 		onSendMessage(transactionId, message, config)
-			.then(messageId => {
+			.then((messageId) => {
 				form.reset();
 				this.scrollToMessage(messageId);
 			})
-			.catch(e => {
+			.catch((e) => {
 				// Ignore, Redux handles the error
 			});
 	}
@@ -178,7 +178,7 @@ export class TransactionPanelComponent extends Component {
 
 		const listingType = listing?.attributes?.publicData?.listingType;
 		const listingTypeConfigs = config.listing.listingTypes;
-		const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
+		const listingTypeConfig = listingTypeConfigs.find((conf) => conf.listingType === listingType);
 		const showPrice = isInquiryProcess && displayPrice(listingTypeConfig);
 
 		const showSendMessageForm =

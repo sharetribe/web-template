@@ -8,7 +8,7 @@ import { FieldTextInput, FieldSelect } from "../../components";
 
 import css from "./StripePaymentAddress.module.css";
 
-const StripePaymentAddress = props => {
+const StripePaymentAddress = (props) => {
 	const { className, intl, disabled, form, fieldId, card, locale } = props;
 
 	const optionalText = intl.formatMessage({
@@ -68,7 +68,7 @@ const StripePaymentAddress = props => {
 		}),
 	);
 
-	const handleOnChange = event => {
+	const handleOnChange = (event) => {
 		const value = event.target.value;
 		form.change("postal", value);
 		card.update({ value: { postalCode: value } });
@@ -117,7 +117,7 @@ const StripePaymentAddress = props => {
 					placeholder={postalCodePlaceholder}
 					validate={postalCodeRequired}
 					onUnmount={() => form.change("postal", undefined)}
-					onChange={event => handleOnChange(event)}
+					onChange={(event) => handleOnChange(event)}
 				/>
 
 				<FieldTextInput
@@ -157,7 +157,7 @@ const StripePaymentAddress = props => {
 					<option disabled value="">
 						{countryPlaceholder}
 					</option>
-					{countryCodes.map(country => {
+					{countryCodes.map((country) => {
 						return (
 							<option key={country.code} value={country.code}>
 								{country.name}

@@ -12,7 +12,7 @@ import {
 describe("transaction utils for default-purchase", () => {
 	const process = getProcess("default-purchase");
 	const transitions = process?.transitions;
-	const txHasBeenReceived = tx => process.hasPassedState(process.states.RECEIVED, tx);
+	const txHasBeenReceived = (tx) => process.hasPassedState(process.states.RECEIVED, tx);
 
 	// transitions
 	const transitionRequestPayment = createTxTransition({
@@ -199,8 +199,8 @@ describe("transaction utils for default-booking", () => {
 	});
 
 	describe("tx has passed a state X", () => {
-		const txHasBeenAccepted = tx => process.hasPassedState(process.states.ACCEPTED, tx);
-		const txHasBeenDelivered = tx => process.hasPassedState(process.states.DELIVERED, tx);
+		const txHasBeenAccepted = (tx) => process.hasPassedState(process.states.ACCEPTED, tx);
+		const txHasBeenDelivered = (tx) => process.hasPassedState(process.states.DELIVERED, tx);
 
 		it("txHasBeenAccepted(txPreauthorized) fails", () => {
 			expect(txHasBeenAccepted(txPreauthorized)).toEqual(false);

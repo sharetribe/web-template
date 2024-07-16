@@ -14,7 +14,7 @@ import css from "./PriorityLinks.module.css";
  * @param {*} props contains customLinksMenuClass
  * @returns div with only one link inside.
  */
-export const CreateListingMenuLink = props => {
+export const CreateListingMenuLink = (props) => {
 	return (
 		<div className={props.customLinksMenuClass}>
 			<NamedLink name="NewListingPage" className={classNames(css.priorityLink, css.highlight)}>
@@ -61,7 +61,7 @@ const PriorityLink = ({ linkConfig }) => {
  * @param {*} props contains links array and setLinks function
  * @returns container div with priority links included.
  */
-const PriorityLinks = props => {
+const PriorityLinks = (props) => {
 	const containerRef = useRef(null);
 
 	// With this useEffect, we measure the widths of each rendered priority link
@@ -96,19 +96,19 @@ const PriorityLinks = props => {
 					display: "flex",
 					flexDirection: "row",
 				},
-		  };
+			};
 	const linkConfigs = isMeasured ? priorityLinks : links;
 
 	return isMeasured || isServer ? (
 		<div className={css.priorityLinkWrapper} {...styleWrapper} ref={containerRef}>
-			{linkConfigs.map(linkConfig => {
+			{linkConfigs.map((linkConfig) => {
 				return <PriorityLink key={linkConfig.text} linkConfig={linkConfig} />;
 			})}
 		</div>
 	) : (
 		ReactDOM.createPortal(
 			<div className={css.priorityLinkWrapper} {...styleWrapper} ref={containerRef}>
-				{linkConfigs.map(linkConfig => {
+				{linkConfigs.map((linkConfig) => {
 					return <PriorityLink key={linkConfig.text} linkConfig={linkConfig} />;
 				})}
 			</div>,

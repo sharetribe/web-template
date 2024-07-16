@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import css from "./IconKeys.module.css";
 
-const IconKeys = props => {
+const IconKeys = (props) => {
 	const { className } = props;
 	return (
 		<svg

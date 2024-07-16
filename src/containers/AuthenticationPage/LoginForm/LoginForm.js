@@ -10,19 +10,12 @@ import { Form, PrimaryButton, FieldTextInput, NamedLink } from "../../../compone
 
 import css from "./LoginForm.module.css";
 
-const LoginFormComponent = props => (
+const LoginFormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={fieldRenderProps => {
-			const {
-				rootClassName,
-				className,
-				formId,
-				handleSubmit,
-				inProgress,
-				intl,
-				invalid,
-			} = fieldRenderProps;
+		render={(fieldRenderProps) => {
+			const { rootClassName, className, formId, handleSubmit, inProgress, intl, invalid } =
+				fieldRenderProps;
 
 			// email
 			const emailLabel = intl.formatMessage({

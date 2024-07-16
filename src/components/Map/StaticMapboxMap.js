@@ -5,7 +5,7 @@ import polyline from "@mapbox/polyline";
 import { lazyLoadWithDimensions } from "../../util/uiHelpers";
 import { circlePolyline } from "../../util/maps";
 
-const formatColor = color => {
+const formatColor = (color) => {
 	return color.replace(/^#/, "");
 };
 
@@ -23,7 +23,7 @@ const fuzzyCircleOverlay = (center, mapsConfig) => {
 	return `path${styles}(${encodeURIComponent(polyline.encode(path))})`;
 };
 
-const markerOverlay = center => {
+const markerOverlay = (center) => {
 	return `pin-s(${center.lng},${center.lat})`;
 };
 
@@ -34,7 +34,7 @@ const mapOverlay = (center, mapsConfig) => {
 	return markerOverlay(center);
 };
 
-const StaticMapboxMap = props => {
+const StaticMapboxMap = (props) => {
 	const { address, center, zoom, mapsConfig, dimensions } = props;
 	const { width, height } = dimensions;
 

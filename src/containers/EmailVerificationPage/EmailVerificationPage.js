@@ -36,7 +36,7 @@ import css from "./EmailVerificationPage.module.css";
   the unwanted result of the `parse` method is that it automatically
   parses the token to number.
 */
-const parseVerificationToken = search => {
+const parseVerificationToken = (search) => {
 	const urlParams = parse(search);
 	const verificationToken = urlParams.t;
 
@@ -47,7 +47,7 @@ const parseVerificationToken = search => {
 	return null;
 };
 
-export const EmailVerificationPageComponent = props => {
+export const EmailVerificationPageComponent = (props) => {
 	const config = useConfiguration();
 	const {
 		currentUser,
@@ -134,7 +134,7 @@ EmailVerificationPageComponent.propTypes = {
 	intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	const { currentUser } = state.user;
 	const { isVerified, verificationError, verificationInProgress } = state.emailVerification;
 	return {
@@ -146,7 +146,7 @@ const mapStateToProps = state => {
 	};
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
 	submitVerification: ({ verificationToken }) => {
 		return dispatch(verify(verificationToken));
 	},
@@ -160,10 +160,7 @@ const mapDispatchToProps = dispatch => ({
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const EmailVerificationPage = compose(
 	withRouter,
-	connect(
-		mapStateToProps,
-		mapDispatchToProps,
-	),
+	connect(mapStateToProps, mapDispatchToProps),
 	injectIntl,
 )(EmailVerificationPageComponent);
 

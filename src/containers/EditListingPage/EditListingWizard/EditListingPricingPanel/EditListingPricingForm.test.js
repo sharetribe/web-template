@@ -17,7 +17,7 @@ describe("EditListingDeliveryForm", () => {
 			<EditListingPricingForm
 				intl={fakeIntl}
 				dispatch={noop}
-				onSubmit={v => v}
+				onSubmit={(v) => v}
 				marketplaceCurrency="USD"
 				unitType="day"
 				listingMinimumPriceSubUnits={0}

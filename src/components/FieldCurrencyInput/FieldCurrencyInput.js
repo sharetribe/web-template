@@ -29,7 +29,7 @@ import css from "./FieldCurrencyInput.module.css";
 
 const { Money } = sdkTypes;
 
-const allowedInputProps = allProps => {
+const allowedInputProps = (allProps) => {
 	// Strip away props that are not passed to input element (or are overwritten)
 	// eslint-disable-next-line no-unused-vars
 	const { currencyConfig, defaultValue, intl, input, meta, ...inputProps } = allProps;
@@ -45,7 +45,7 @@ const getPrice = (unformattedValue, currencyConfig) => {
 			: new Money(
 					convertUnitToSubUnit(unformattedValue, unitDivisor(currencyConfig.currency)),
 					currencyConfig.currency,
-			  );
+				);
 	} catch (e) {
 		return null;
 	}
@@ -79,7 +79,7 @@ class CurrencyInputComponent extends Component {
 						ensureSeparator(initialValue.toString(), usesComma),
 						unitDivisor(currencyConfig.currency),
 						usesComma,
-				  )
+					)
 				: "";
 			// Formatted value fully localized currency string ("$1,000.99")
 			const formattedValue = hasInitialValue
@@ -120,7 +120,7 @@ class CurrencyInputComponent extends Component {
 			currencyConfig,
 			input: { onBlur },
 		} = this.props;
-		this.setState(prevState => {
+		this.setState((prevState) => {
 			if (onBlur) {
 				// If parent component has provided onBlur function, call it with current price.
 				const price = getPrice(ensureDotSeparator(prevState.unformattedValue), currencyConfig);
@@ -139,7 +139,7 @@ class CurrencyInputComponent extends Component {
 			currencyConfig,
 			input: { onFocus },
 		} = this.props;
-		this.setState(prevState => {
+		this.setState((prevState) => {
 			if (onFocus) {
 				// If parent component has provided onFocus function, call it with current price.
 				const price = getPrice(ensureDotSeparator(prevState.unformattedValue), currencyConfig);
@@ -239,7 +239,7 @@ CurrencyInputComponent.propTypes = {
 
 export const CurrencyInput = injectIntl(CurrencyInputComponent);
 
-const FieldCurrencyInputComponent = props => {
+const FieldCurrencyInputComponent = (props) => {
 	const { rootClassName, className, id, label, input, meta, hideErrorMessage, ...rest } = props;
 
 	if (label && !id) {
@@ -291,7 +291,7 @@ FieldCurrencyInputComponent.propTypes = {
 	meta: object.isRequired,
 };
 
-const FieldCurrencyInput = props => {
+const FieldCurrencyInput = (props) => {
 	return <Field component={FieldCurrencyInputComponent} {...props} />;
 };
 

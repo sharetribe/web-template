@@ -49,14 +49,14 @@ export const pipe = (x0, ...fns) => fns.reduce((x, f) => f(x), x0);
  * @param {function} f carried function for the generator items.
  * @returns generator function that assumes iterable over which "f" is applied.
  */
-export const map = f =>
-	function*(iterable) {
+export const map = (f) =>
+	function* (iterable) {
 		for (let x of iterable) {
 			yield f(x);
 		}
 	};
 
-const getMillis = d => d.getTime();
+const getMillis = (d) => d.getTime();
 const pastException = (x, startInMillis, endInMillis) =>
 	getMillis(x.attributes.start) <= startInMillis && getMillis(x.attributes.end) < endInMillis;
 const exceptionInRange = (x, startInMillis, endInMillis) =>
@@ -71,7 +71,7 @@ const exceptionInRange = (x, startInMillis, endInMillis) =>
  * @returns generator function that generates new time slots that doesn't have exception inside.
  */
 const invertedRangesFromExceptions = (start, end) =>
-	function*(iterable) {
+	function* (iterable) {
 		// Range start and end in milliseconds
 		const startInMillis = getMillis(start);
 		const endInMillis = getMillis(end);
@@ -110,10 +110,7 @@ const invertedRangesFromExceptions = (start, end) =>
  * @returns Array of { start, end } objects.
  */
 export const availableRanges = (start, end, exceptions) => {
-	const availableRanges = pipe(
-		exceptions,
-		invertedRangesFromExceptions(start, end),
-	);
+	const availableRanges = pipe(exceptions, invertedRangesFromExceptions(start, end));
 	return [...availableRanges];
 };
 
@@ -126,7 +123,7 @@ export const availableRanges = (start, end, exceptions) => {
  * @param {integer} step when the next yielded Date object should be pointing at.
  * @param {string} stepUnit step unit that moment library understands (e.g. 'days')
  */
-const timeUnitGenerator = function*(start, unit, timeZone, untilFn, step = 1, stepUnit = "days") {
+const timeUnitGenerator = function* (start, unit, timeZone, untilFn, step = 1, stepUnit = "days") {
 	let s = getStartOf(start, unit, timeZone);
 	const defaultEnd = () => true;
 	const testEnd = untilFn || defaultEnd;
@@ -147,7 +144,7 @@ const timeUnitGenerator = function*(start, unit, timeZone, untilFn, step = 1, st
  * @returns An array of date objects in desired time zone
  */
 export const generateDates = (start, end, timeZone) => {
-	const untilFn = d => isAfterDate(end, d);
+	const untilFn = (d) => isAfterDate(end, d);
 	return [...timeUnitGenerator(start, "day", timeZone, untilFn)];
 };
 /**
@@ -160,7 +157,7 @@ export const generateDates = (start, end, timeZone) => {
  * @returns An array of date objects in desired time zone
  */
 export const generateMonths = (start, end, timeZone) => {
-	const untilFn = d => isAfterDate(end, d);
+	const untilFn = (d) => isAfterDate(end, d);
 	return [...timeUnitGenerator(start, "month", timeZone, untilFn, 1, "months")];
 };
 
@@ -172,14 +169,14 @@ export const generateMonths = (start, end, timeZone) => {
  * @param {String} timeZone IANA time zone key (e.g. "Europe/Helsinki")
  * @returns function that gets day and available slots with them
  */
-const toExceptionFreeSlotsPerDate = (availableSlots, timeZone) => day => {
-	const availableSlotsOnDate = availableSlots.filter(s => {
+const toExceptionFreeSlotsPerDate = (availableSlots, timeZone) => (day) => {
+	const availableSlotsOnDate = availableSlots.filter((s) => {
 		const dayStart = getStartOf(day, "day", timeZone);
 		const dayEnd = getStartOf(day, "day", timeZone, 1, "day");
 		const dateRange = [dayStart, dayEnd];
 		const slotRange = [s.start, s.end];
 
-		const millisecondBeforeEndTime = end => new Date(end.getTime() - 1);
+		const millisecondBeforeEndTime = (end) => new Date(end.getTime() - 1);
 		const dayIsInsideSlot =
 			isInRange(dayStart, ...slotRange, undefined, timeZone) &&
 			isInRange(millisecondBeforeEndTime(dayEnd), ...slotRange, undefined, timeZone);
@@ -204,7 +201,7 @@ const toExceptionFreeSlotsPerDate = (availableSlots, timeZone) => day => {
  * @param {function} f function to extract desired key and value tuple from iterable
  * @returns function that takes in iterator and returns object literal
  */
-const toHashMap = f => iterator => {
+const toHashMap = (f) => (iterator) => {
 	let obj = {};
 	for (let x of iterator) {
 		const [key, value] = f(x);
@@ -252,10 +249,10 @@ export const exceptionFreeSlotsPerDate = (start, end, exceptions, timeZone) => {
  */
 const getExceptionsOnDate = (dateRange, exceptions, timeZone) => {
 	const [dayStart, dayEnd] = dateRange;
-	return exceptions.filter(e => {
+	return exceptions.filter((e) => {
 		const exceptionRange = [e.attributes.start, e.attributes.end];
 
-		const inclusiveEndTime = end => new Date(end.getTime() - 1);
+		const inclusiveEndTime = (end) => new Date(end.getTime() - 1);
 		const dayStartInsideException = isInRange(dayStart, ...exceptionRange, undefined, timeZone);
 		const dayEndInsideException = isInRange(
 			inclusiveEndTime(dayEnd),
@@ -284,7 +281,7 @@ const getExceptionsOnDate = (dateRange, exceptions, timeZone) => {
  */
 const findNextException = (date, exceptions) => {
 	const dateInMillis = getMillis(date);
-	return exceptions.find(exception => {
+	return exceptions.find((exception) => {
 		const start = getMillis(exception.attributes.start);
 		const end = getMillis(exception.attributes.end);
 		// is inside entry or exception is after given date moment
@@ -327,7 +324,7 @@ const getEndTimeAsDate = (date, endTime, timeZone) =>
  */
 const findNextPlanEntryInfo = (date, dayEntries, timeZone) => {
 	const dateInMillis = getMillis(date);
-	const entry = dayEntries.find(e => {
+	const entry = dayEntries.find((e) => {
 		const start = getMillis(parseLocalizedTime(date, e.startTime, timeZone));
 		const end = getMillis(getEndTimeAsDate(date, e.endTime, timeZone));
 		// is inside entry or entry is after given date moment
@@ -351,9 +348,9 @@ const findNextPlanEntryInfo = (date, dayEntries, timeZone) => {
  * @param {String} timeZone IANA time zone key (e.g. "Europe/Helsinki")
  * @returns info of plan entries and exceptions relavant to the given "day" and seats-ranges inside it
  */
-const toAvailabilityPerDate = (plan, exceptions, timeZone) => day => {
+const toAvailabilityPerDate = (plan, exceptions, timeZone) => (day) => {
 	const entries = plan
-		? plan.entries.filter(entry => entry.dayOfWeek === WEEKDAYS[getDayOfWeek(day, timeZone)])
+		? plan.entries.filter((entry) => entry.dayOfWeek === WEEKDAYS[getDayOfWeek(day, timeZone)])
 		: [];
 	const dayStart = getStartOf(day, "day", timeZone);
 	const dayEnd = getStartOf(day, "day", timeZone, 1, "day");
@@ -421,8 +418,8 @@ const toAvailabilityPerDate = (plan, exceptions, timeZone) => day => {
 			const end = isNextRangeAnException
 				? nextException.attributes.start
 				: isNextRangeAPlanEntry
-				? nextPlanEntry.start
-				: dayEnd;
+					? nextPlanEntry.start
+					: dayEnd;
 			ranges.push({
 				start: currentStart,
 				end,
@@ -468,6 +465,6 @@ export const availabilityPerDate = (start, end, plan, exceptions) => {
 	return pipe(
 		generateDates(s, e, timeZone),
 		map(toAvailabilityPerDate(plan, exceptions, timeZone)),
-		toHashMap(x => [x.id, x]),
+		toHashMap((x) => [x.id, x]),
 	);
 };

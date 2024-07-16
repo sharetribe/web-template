@@ -53,7 +53,7 @@ export const fitMapToBounds = (map, bounds, options) => {
  *
  * @return {SDKLatLng} - Converted latLng coordinate
  */
-export const mapboxLngLatToSDKLatLng = lngLat => {
+export const mapboxLngLatToSDKLatLng = (lngLat) => {
 	const mapboxLng = lngLat.lng;
 
 	// For bounding boxes that overlap the antimeridian Mapbox sometimes gives
@@ -71,7 +71,7 @@ export const mapboxLngLatToSDKLatLng = lngLat => {
  *
  * @return {SDKLatLngBounds} - Converted bounds
  */
-export const mapboxBoundsToSDKBounds = mapboxBounds => {
+export const mapboxBoundsToSDKBounds = (mapboxBounds) => {
 	if (!mapboxBounds) {
 		return null;
 	}
@@ -90,7 +90,7 @@ export const mapboxBoundsToSDKBounds = mapboxBounds => {
  *
  * @return {LngLatBoundsLike} a bounding box that is compatible with Mapbox
  */
-const sdkBoundsToMapboxBounds = bounds => {
+const sdkBoundsToMapboxBounds = (bounds) => {
 	if (!bounds) {
 		return null;
 	}
@@ -101,7 +101,10 @@ const sdkBoundsToMapboxBounds = bounds => {
 	// is less than -180
 	const swLng = sw.lng > ne.lng ? -360 + sw.lng : sw.lng;
 
-	return [[swLng, sw.lat], [ne.lng, ne.lat]];
+	return [
+		[swLng, sw.lat],
+		[ne.lng, ne.lat],
+	];
 };
 
 /**
@@ -111,7 +114,7 @@ const sdkBoundsToMapboxBounds = bounds => {
  *
  * @return {SDKLatLngBounds} - Converted bounds of given map
  */
-export const getMapBounds = map => mapboxBoundsToSDKBounds(map.getBounds());
+export const getMapBounds = (map) => mapboxBoundsToSDKBounds(map.getBounds());
 
 /**
  * Return map center as SDKLatLng
@@ -120,7 +123,7 @@ export const getMapBounds = map => mapboxBoundsToSDKBounds(map.getBounds());
  *
  * @return {SDKLatLng} - Converted center of given map
  */
-export const getMapCenter = map => mapboxLngLatToSDKLatLng(map.getCenter());
+export const getMapCenter = (map) => mapboxLngLatToSDKLatLng(map.getCenter());
 
 /**
  * Check if map library is loaded
@@ -140,19 +143,19 @@ const priceLabelsInLocations = (
 	mapComponentRefreshToken,
 ) => {
 	const listingArraysInLocations = reducedToArray(groupedByCoordinates(listings));
-	const priceLabels = listingArraysInLocations.reverse().map(listingArr => {
+	const priceLabels = listingArraysInLocations.reverse().map((listingArr) => {
 		const isActive = activeListingId
-			? !!listingArr.find(l => activeListingId.uuid === l.id.uuid)
+			? !!listingArr.find((l) => activeListingId.uuid === l.id.uuid)
 			: false;
 
 		// If location contains only one listing, print price label
 		if (listingArr.length === 1) {
 			const listing = listingArr[0];
 			const infoCardOpenIds = Array.isArray(infoCardOpen)
-				? infoCardOpen.map(l => l.id.uuid)
+				? infoCardOpen.map((l) => l.id.uuid)
 				: infoCardOpen
-				? [infoCardOpen.id.uuid]
-				: [];
+					? [infoCardOpen.id.uuid]
+					: [];
 
 			// if the listing is open, don't print price label
 			if (infoCardOpen != null && infoCardOpenIds.includes(listing.id.uuid)) {
@@ -393,7 +396,7 @@ class SearchMapWithMapbox extends Component {
 
 			// If map has moved or info card opened, unnecessary markers need to be removed
 			const removableMarkers = differenceBy(this.currentMarkers, labels, "markerId");
-			removableMarkers.forEach(rm => rm.marker.remove());
+			removableMarkers.forEach((rm) => rm.marker.remove());
 
 			// Helper function to create markers to given container
 			const createMarker = (data, markerContainer) =>
@@ -404,10 +407,10 @@ class SearchMapWithMapbox extends Component {
 			// SearchMapPriceLabel and SearchMapGroupLabel:
 			// create a new marker or use existing one if markerId is among previously rendered markers
 			this.currentMarkers = labels
-				.filter(v => v != null)
-				.map(m => {
+				.filter((v) => v != null)
+				.map((m) => {
 					const existingMarkerId = this.currentMarkers.findIndex(
-						marker => m.markerId === marker.markerId && marker.marker,
+						(marker) => m.markerId === marker.markerId && marker.marker,
 					);
 
 					if (existingMarkerId >= 0) {
@@ -460,7 +463,7 @@ class SearchMapWithMapbox extends Component {
 				className={classNames(className, css.fullArea)}
 				onClick={this.props.onClick}
 			>
-				{this.currentMarkers.map(m => {
+				{this.currentMarkers.map((m) => {
 					// Remove existing activeLabel classes and add it only to the correct container
 					m.markerContainer.classList.remove(css.activeLabel);
 					if (activeListingId && activeListingId.uuid === m.componentProps.key) {
@@ -491,7 +494,7 @@ class SearchMapWithMapbox extends Component {
 					? ReactDOM.createPortal(
 							<SearchMapInfoCard {...this.currentInfoCard.componentProps} config={config} />,
 							this.currentInfoCard.markerContainer,
-					  )
+						)
 					: null}
 			</div>
 		);

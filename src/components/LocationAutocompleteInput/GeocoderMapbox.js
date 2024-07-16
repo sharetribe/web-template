@@ -32,7 +32,7 @@ const locationBounds = (latlng, distance) => {
 	);
 };
 
-const placeOrigin = prediction => {
+const placeOrigin = (prediction) => {
 	if (prediction && Array.isArray(prediction.center) && prediction.center.length === 2) {
 		// Coordinates in Mapbox features are represented as [longitude, latitude].
 		return new SDKLatLng(prediction.center[1], prediction.center[0]);
@@ -40,7 +40,7 @@ const placeOrigin = prediction => {
 	return null;
 };
 
-const placeBounds = prediction => {
+const placeBounds = (prediction) => {
 	if (prediction) {
 		if (Array.isArray(prediction.bbox) && prediction.bbox.length === 4) {
 			// Bounds in Mapbox features are represented as [minX, minY, maxX, maxY]
@@ -107,7 +107,7 @@ class GeocoderMapbox {
 				language: [locale],
 			})
 			.send()
-			.then(response => {
+			.then((response) => {
 				return {
 					search,
 					predictions: response.body.features,
@@ -143,7 +143,7 @@ class GeocoderMapbox {
 	 */
 	getPlaceDetails(prediction, currentLocationBoundsDistance) {
 		if (this.getPredictionId(prediction) === CURRENT_LOCATION_ID) {
-			return userLocation().then(latlng => {
+			return userLocation().then((latlng) => {
 				return {
 					address: "",
 					origin: latlng,

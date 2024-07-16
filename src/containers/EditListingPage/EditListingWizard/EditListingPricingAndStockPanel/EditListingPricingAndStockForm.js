@@ -68,7 +68,7 @@ const UpdateStockToInfinityCheckboxMaybe = ({ hasInfiniteStock, currentStock, fo
 					id="EditListingPricingAndStockForm.updateToInfiniteInfo"
 					values={{
 						currentStock,
-						b: msgFragment => <b>{msgFragment}</b>,
+						b: (msgFragment) => <b>{msgFragment}</b>,
 					}}
 				/>
 			</p>
@@ -93,11 +93,11 @@ const UpdateStockToInfinityCheckboxMaybe = ({ hasInfiniteStock, currentStock, fo
 	) : null;
 };
 
-export const EditListingPricingAndStockFormComponent = props => (
+export const EditListingPricingAndStockFormComponent = (props) => (
 	<FinalForm
 		{...props}
 		mutators={{ ...arrayMutators }}
-		render={formRenderProps => {
+		render={(formRenderProps) => {
 			const {
 				formId,
 				autoFocus,
@@ -194,7 +194,7 @@ export const EditListingPricingAndStockFormComponent = props => (
 						/>
 					) : (
 						<Field id="stock" name="stock" type="hidden" className={css.unitTypeHidden}>
-							{fieldRenderProps => <input {...fieldRenderProps?.input} />}
+							{(fieldRenderProps) => <input {...fieldRenderProps?.input} />}
 						</Field>
 					)}
 					{setStockError ? <p className={css.error}>{stockErrorMessage}</p> : null}

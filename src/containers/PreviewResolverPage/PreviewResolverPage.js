@@ -5,7 +5,7 @@ import { parse } from "../../util/urlHelpers";
 import { NamedRedirect } from "../../components";
 
 // Get page asset name from asset path
-const getPageAssetName = assetPath => {
+const getPageAssetName = (assetPath) => {
 	const cmsPageRegex = new RegExp("content/pages/(.*).json");
 	const matches = assetPath.match(cmsPageRegex);
 	// The asset name is found from the matches array;
@@ -19,7 +19,7 @@ const getPageAssetName = assetPath => {
 //
 // If the asset path starts with "content/pages",
 // we try to pick the asset name (e.g. privacy-policy) and resolve the correct route based on that.
-const PreviewResolverPage = props => {
+const PreviewResolverPage = (props) => {
 	const search = props?.location?.search;
 	const parsedQueryString = parse(search);
 	const assetPath = parsedQueryString?.["asset-path"] || "";
@@ -51,14 +51,14 @@ const PreviewResolverPage = props => {
 	return pageAssetName === "terms-of-service"
 		? toTermsOfServicePage
 		: pageAssetName === "privacy-policy"
-		? toPrivacyPolicyPage
-		: pageAssetName === "landing-page"
-		? toLandingPage
-		: hasCMSPagePath
-		? toCMSPage
-		: hasListingId
-		? toListingPage
-		: toLandingPage;
+			? toPrivacyPolicyPage
+			: pageAssetName === "landing-page"
+				? toLandingPage
+				: hasCMSPagePath
+					? toCMSPage
+					: hasListingId
+						? toListingPage
+						: toLandingPage;
 };
 
 PreviewResolverPage.propTypes = {

@@ -11,11 +11,11 @@ import FilterPopup from "../FilterPopup/FilterPopup";
 
 import css from "./SelectSingleFilter.module.css";
 
-const getQueryParamName = queryParamNames => {
+const getQueryParamName = (queryParamNames) => {
 	return Array.isArray(queryParamNames) ? queryParamNames[0] : queryParamNames;
 };
 
-const SelectSingleFilter = props => {
+const SelectSingleFilter = (props) => {
 	const {
 		rootClassName,
 		className,
@@ -43,7 +43,7 @@ const SelectSingleFilter = props => {
 	// they can be passed to the correct field
 	const pickedInitialValues = { [name]: pickInitialValuesForFieldSelectTree(name, initialValues) };
 
-	const handleSubmit = queryParamNames => values => {
+	const handleSubmit = (queryParamNames) => (values) => {
 		const isArray = Array.isArray(queryParamNames);
 		const hasMultipleQueryParams = isArray && queryParamNames.length > 1;
 		const hasSingleQueryParam = isArray && queryParamNames.length === 1;
@@ -58,10 +58,10 @@ const SelectSingleFilter = props => {
 					const k = `${name}${i + 1}`;
 					const v = values?.[name]?.[k] || null;
 					return { ...acc, [p]: v };
-			  }, {})
+				}, {})
 			: hasSingleQueryParam
-			? { [firstQueryParamName]: values?.[name]?.[`${name}1`] || null }
-			: values;
+				? { [firstQueryParamName]: values?.[name]?.[`${name}1`] || null }
+				: values;
 		onSubmit(usedValue);
 	};
 

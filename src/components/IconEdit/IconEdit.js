@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./IconEdit.module.css";
 
-const IconEdit = props => {
+const IconEdit = (props) => {
 	const { rootClassName, className, pencilClassName } = props;
 	const classes = classNames(rootClassName || css.root, className);
 	return (

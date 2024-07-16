@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./SortByPlain.module.css";
 
-const SortByPlain = props => {
+const SortByPlain = (props) => {
 	const [isOpen, setIsOpen] = useState(true);
 	const { rootClassName, className, label, options, initialValue } = props;
 
@@ -19,7 +19,7 @@ const SortByPlain = props => {
 	};
 
 	const toggleIsOpen = () => {
-		setIsOpen(prevIsOpen => !prevIsOpen);
+		setIsOpen((prevIsOpen) => !prevIsOpen);
 	};
 
 	const labelClass = initialValue ? css.filterLabelSelected : css.filterLabel;
@@ -39,7 +39,7 @@ const SortByPlain = props => {
 				</button>
 			</div>
 			<div className={optionsContainerClass}>
-				{options.map(option => {
+				{options.map((option) => {
 					// check if this option is selected
 					const selected = initialValue === option.key;
 					const optionClass = selected ? css.optionSelected : css.option;

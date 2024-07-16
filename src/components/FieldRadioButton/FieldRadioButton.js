@@ -5,7 +5,7 @@ import { Field } from "react-final-form";
 
 import css from "./FieldRadioButton.module.css";
 
-const IconRadioButton = props => {
+const IconRadioButton = (props) => {
 	const { checkedClassName } = props;
 	return (
 		<div>
@@ -39,7 +39,7 @@ IconRadioButton.defaultProps = { className: null };
 
 IconRadioButton.propTypes = { className: string };
 
-const FieldRadioButtonComponent = props => {
+const FieldRadioButtonComponent = (props) => {
 	const {
 		rootClassName,
 		className,

@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./IconSocialMediaTwitter.module.css";
 
-const IconSocialMediaTwitter = props => {
+const IconSocialMediaTwitter = (props) => {
 	const { rootClassName, className } = props;
 	const classes = classNames(rootClassName || css.root, className);
 	return (

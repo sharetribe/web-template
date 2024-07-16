@@ -34,7 +34,7 @@ import MobileListingImage from "./MobileListingImage";
 
 import css from "./CheckoutPage.module.css";
 
-const ErrorMessage = props => {
+const ErrorMessage = (props) => {
 	const { error } = props;
 
 	// Since the listing data is already given from the ListingPage
@@ -61,7 +61,7 @@ const ErrorMessage = props => {
 	) : null;
 };
 
-const handleSubmit = (submitting, setSubmitting, props) => values => {
+const handleSubmit = (submitting, setSubmitting, props) => (values) => {
 	if (submitting) {
 		return;
 	}
@@ -98,7 +98,7 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
 	// This makes a single transition directly to the API endpoint
 	// (unlike in the payment-related processes, where call is proxied through the server to make privileged transition)
 	onInquiryWithoutPayment(inquiryParams, transactionProcessAlias, transition)
-		.then(transactionId => {
+		.then((transactionId) => {
 			setSubmitting(false);
 			onSubmitCallback();
 
@@ -107,13 +107,13 @@ const handleSubmit = (submitting, setSubmitting, props) => values => {
 			});
 			history.push(orderDetailsPath);
 		})
-		.catch(err => {
+		.catch((err) => {
 			console.error(err);
 			setSubmitting(false);
 		});
 };
 
-export const CheckoutPageWithInquiryProcess = props => {
+export const CheckoutPageWithInquiryProcess = (props) => {
 	const [submitting, setSubmitting] = useState(false);
 
 	const {
@@ -143,7 +143,7 @@ export const CheckoutPageWithInquiryProcess = props => {
 
 	const listingType = publicData?.listingType;
 	const listingTypeConfigs = config.listing.listingTypes;
-	const listingTypeConfig = listingTypeConfigs.find(conf => conf.listingType === listingType);
+	const listingTypeConfig = listingTypeConfigs.find((conf) => conf.listingType === listingType);
 	const showPrice = displayPrice(listingTypeConfig);
 
 	return (
@@ -179,7 +179,7 @@ export const CheckoutPageWithInquiryProcess = props => {
 					<section className={css.paymentContainer}>
 						<FinalForm
 							onSubmit={onSubmit}
-							render={formRenderProps => {
+							render={(formRenderProps) => {
 								const {
 									rootClassName,
 									className,

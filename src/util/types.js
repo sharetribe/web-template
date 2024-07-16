@@ -59,7 +59,7 @@ export const EXTENDED_DATA_SCHEMA_TYPES = [
 const propTypes = {};
 
 // Fixed value
-propTypes.value = val => oneOf([val]);
+propTypes.value = (val) => oneOf([val]);
 
 // SDK type instances
 propTypes.uuid = instanceOf(UUID);

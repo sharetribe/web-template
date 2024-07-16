@@ -8,7 +8,7 @@ import InquiryForm from "./InquiryForm/InquiryForm";
 
 import css from "./ListingPage.module.css";
 
-const SectionAuthorMaybe = props => {
+const SectionAuthorMaybe = (props) => {
 	const {
 		title,
 		listing,

@@ -78,7 +78,7 @@ export const updatedEntities = (oldEntities, apiResponse, sanitizeConfig = {}) =
  * found in the entities
  */
 export const denormalisedEntities = (entities, resources, throwIfNotFound = true) => {
-	const denormalised = resources.map(res => {
+	const denormalised = resources.map((res) => {
 		const { id, type } = res;
 		const entityFound = entities[type] && id && entities[type][id.uuid];
 		if (!entityFound) {
@@ -117,7 +117,7 @@ export const denormalisedEntities = (entities, resources, throwIfNotFound = true
 		}
 		return entityData;
 	});
-	return denormalised.filter(e => !!e);
+	return denormalised.filter((e) => !!e);
 };
 
 /**
@@ -128,7 +128,7 @@ export const denormalisedEntities = (entities, resources, throwIfNotFound = true
  * @return {Array} entities in the response with relationships
  * denormalised from the included data
  */
-export const denormalisedResponseEntities = sdkResponse => {
+export const denormalisedResponseEntities = (sdkResponse) => {
 	const apiResponse = sdkResponse.data;
 	const data = apiResponse.data;
 	const resources = Array.isArray(data) ? data : [data];
@@ -160,7 +160,7 @@ const denormalizeJsonData = (data, included) => {
 	// At this point the data has typeof 'object' (aka Array or Object)
 	// Array is the more specific case (of Object)
 	if (data instanceof Array) {
-		copy = data.map(datum => denormalizeJsonData(datum, included));
+		copy = data.map((datum) => denormalizeJsonData(datum, included));
 		return copy;
 	}
 
@@ -176,7 +176,7 @@ const denormalizeJsonData = (data, included) => {
 			const hasUnresolvedImageRef = typeof value == "object" && value?._ref?.resolver === "image";
 
 			if (hasImageRefAsValue) {
-				const foundRef = included.find(inc => inc.id === value._ref?.id);
+				const foundRef = included.find((inc) => inc.id === value._ref?.id);
 				copy[key] = foundRef;
 			} else if (hasUnresolvedImageRef) {
 				// Don't add faulty image ref
@@ -197,7 +197,7 @@ const denormalizeJsonData = (data, included) => {
  * @param {JSON} assetJson in format: { data, included }
  * @returns deep copy of asset data with images denormalized into it.
  */
-export const denormalizeAssetData = assetJson => {
+export const denormalizeAssetData = (assetJson) => {
 	const { data, included } = assetJson || {};
 	return denormalizeJsonData(data, included);
 };
@@ -224,7 +224,7 @@ export const ensureTransaction = (transaction, booking = null, listing = null, p
  *
  * @param {Object} booking entity object, which is to be ensured against null values
  */
-export const ensureBooking = booking => {
+export const ensureBooking = (booking) => {
 	const empty = { id: null, type: "booking", attributes: {} };
 	return { ...empty, ...booking };
 };
@@ -234,7 +234,7 @@ export const ensureBooking = booking => {
  *
  * @param {Object} listing entity object, which is to be ensured against null values
  */
-export const ensureListing = listing => {
+export const ensureListing = (listing) => {
 	const empty = {
 		id: null,
 		type: "listing",
@@ -249,7 +249,7 @@ export const ensureListing = listing => {
  *
  * @param {Object} listing entity object, which is to be ensured against null values
  */
-export const ensureOwnListing = listing => {
+export const ensureOwnListing = (listing) => {
 	const empty = {
 		id: null,
 		type: "ownListing",
@@ -264,7 +264,7 @@ export const ensureOwnListing = listing => {
  *
  * @param {Object} user entity object, which is to be ensured against null values
  */
-export const ensureUser = user => {
+export const ensureUser = (user) => {
 	const empty = { id: null, type: "user", attributes: { profile: {} } };
 	return { ...empty, ...user };
 };
@@ -274,7 +274,7 @@ export const ensureUser = user => {
  *
  * @param {Object} current user entity object, which is to be ensured against null values
  */
-export const ensureCurrentUser = user => {
+export const ensureCurrentUser = (user) => {
 	const empty = { id: null, type: "currentUser", attributes: { profile: {} }, profileImage: {} };
 	return { ...empty, ...user };
 };
@@ -284,7 +284,7 @@ export const ensureCurrentUser = user => {
  *
  * @param {Object} time slot entity object, which is to be ensured against null values
  */
-export const ensureTimeSlot = timeSlot => {
+export const ensureTimeSlot = (timeSlot) => {
 	const empty = { id: null, type: "timeSlot", attributes: {} };
 	return { ...empty, ...timeSlot };
 };
@@ -294,7 +294,7 @@ export const ensureTimeSlot = timeSlot => {
  *
  * @param {Object} availability exception entity object, which is to be ensured against null values
  */
-export const ensureDayAvailabilityPlan = availabilityPlan => {
+export const ensureDayAvailabilityPlan = (availabilityPlan) => {
 	const empty = { type: "availability-plan/day", entries: [] };
 	return { ...empty, ...availabilityPlan };
 };
@@ -304,7 +304,7 @@ export const ensureDayAvailabilityPlan = availabilityPlan => {
  *
  * @param {Object} availability exception entity object, which is to be ensured against null values
  */
-export const ensureAvailabilityException = availabilityException => {
+export const ensureAvailabilityException = (availabilityException) => {
 	const empty = { id: null, type: "availabilityException", attributes: {} };
 	return { ...empty, ...availabilityException };
 };
@@ -314,7 +314,7 @@ export const ensureAvailabilityException = availabilityException => {
  *
  * @param {Object} stripeCustomer entity from API, which is to be ensured against null values
  */
-export const ensureStripeCustomer = stripeCustomer => {
+export const ensureStripeCustomer = (stripeCustomer) => {
 	const empty = { id: null, type: "stripeCustomer", attributes: {} };
 	return { ...empty, ...stripeCustomer };
 };
@@ -324,7 +324,7 @@ export const ensureStripeCustomer = stripeCustomer => {
  *
  * @param {Object} stripeCustomer entity from API, which is to be ensured against null values
  */
-export const ensurePaymentMethodCard = stripePaymentMethod => {
+export const ensurePaymentMethodCard = (stripePaymentMethod) => {
 	const empty = {
 		id: null,
 		type: "stripePaymentMethod",
@@ -438,7 +438,7 @@ export const overrideArrays = (objValue, srcValue, key, object, source, stack) =
  *
  * @return {string} returns the line item code humanized
  */
-export const humanizeLineItemCode = code => {
+export const humanizeLineItemCode = (code) => {
 	if (!/^line-item\/.+/.test(code)) {
 		throw new Error(`Invalid line item code: ${code}`);
 	}

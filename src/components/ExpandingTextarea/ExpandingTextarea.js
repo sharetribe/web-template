@@ -34,7 +34,7 @@ class ExpandingTextarea extends Component {
 		return (
 			<textarea
 				{...this.props}
-				ref={textarea => {
+				ref={(textarea) => {
 					this.textarea = textarea;
 				}}
 			/>

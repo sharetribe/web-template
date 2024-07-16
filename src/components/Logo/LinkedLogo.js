@@ -6,7 +6,7 @@ import { ExternalLink, Logo, NamedLink } from "../../components";
 
 import css from "./LinkedLogo.module.css";
 
-const LinkedLogo = props => {
+const LinkedLogo = (props) => {
 	const {
 		className,
 		rootClassName,

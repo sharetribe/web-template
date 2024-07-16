@@ -8,7 +8,7 @@ import ActionBarMaybe from "./ActionBarMaybe";
 
 import css from "./ListingPage.module.css";
 
-const SectionHero = props => {
+const SectionHero = (props) => {
 	const {
 		title,
 		listing,
@@ -24,7 +24,7 @@ const SectionHero = props => {
 	const hasImages = listing.images && listing.images.length > 0;
 	const firstImage = hasImages ? listing.images[0] : null;
 	const variants = firstImage
-		? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith("scaled"))
+		? Object.keys(firstImage?.attributes?.variants).filter((k) => k.startsWith("scaled"))
 		: [];
 
 	const viewPhotosButton = hasImages ? (
@@ -40,7 +40,7 @@ const SectionHero = props => {
 		<section className={css.sectionHero} data-testid="hero">
 			<div className={css.imageWrapperForSectionHero} onClick={handleViewPhotosClick}>
 				{listing.id && isOwnListing ? (
-					<div onClick={e => e.stopPropagation()} className={css.actionBarContainerForHeroLayout}>
+					<div onClick={(e) => e.stopPropagation()} className={css.actionBarContainerForHeroLayout}>
 						{noPayoutDetailsSetWithOwnListing ? (
 							<ActionBarMaybe
 								className={css.actionBarForHeroLayout}

@@ -13,7 +13,7 @@ const DEFAULT_STROKE_OPACITY = 0.3;
 const DEFAULT_FILL_OPACITY = 0.2;
 
 // Extract color from string. Given value should be either with '#' (e.g. #FFFFFF') or without it.
-const formatColorFromString = color => {
+const formatColorFromString = (color) => {
 	if (typeof color === "string" && /^#[0-9A-F]{6}$/i.test(color)) {
 		return color.substring(1).toUpperCase();
 	} else if (typeof color === "string" && /^[0-9A-F]{6}$/i) {
@@ -24,7 +24,7 @@ const formatColorFromString = color => {
 };
 
 // Convert opacity from floating point value (0.0 -> 1.0) to a hexadecimal format
-const convertOpacity = opacity => {
+const convertOpacity = (opacity) => {
 	if (typeof opacity === "number" && !isNaN(opacity) && opacity >= 0 && opacity <= 1) {
 		// 0.2 => 20
 		return Math.floor(opacity * 255)

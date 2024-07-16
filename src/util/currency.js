@@ -14,7 +14,7 @@ const { Money } = sdkTypes;
 export const MIN_SAFE_INTEGER = Number.MIN_SAFE_INTEGER || -1 * (2 ** 53 - 1);
 export const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 2 ** 53 - 1;
 
-export const isSafeNumber = decimalValue => {
+export const isSafeNumber = (decimalValue) => {
 	if (!(decimalValue instanceof Decimal)) {
 		throw new Error("Value must be a Decimal");
 	}
@@ -22,7 +22,7 @@ export const isSafeNumber = decimalValue => {
 };
 
 // Get the minor unit divisor for the given currency
-export const unitDivisor = currency => {
+export const unitDivisor = (currency) => {
 	if (!has(subUnitDivisors, currency)) {
 		throw new Error(
 			`No minor unit divisor defined for currency: ${currency} in currencySettings.js`,
@@ -56,7 +56,7 @@ export const ensureSeparator = (str, useComma = false) => {
  *
  * @return {String} converted string
  */
-export const ensureDotSeparator = str => {
+export const ensureDotSeparator = (str) => {
 	return ensureSeparator(str, false);
 };
 
@@ -68,7 +68,7 @@ export const ensureDotSeparator = str => {
  *
  * @return {Decimal} numeral value
  */
-export const convertToDecimal = str => {
+export const convertToDecimal = (str) => {
 	const dotFormattedStr = ensureDotSeparator(str);
 	return new Decimal(dotFormattedStr);
 };
@@ -89,7 +89,7 @@ export const convertDecimalToString = (decimalValue, useComma = false) => {
 };
 
 // Divisor can be positive value given as Decimal, Number, or String
-const convertDivisorToDecimal = divisor => {
+const convertDivisorToDecimal = (divisor) => {
 	try {
 		const divisorAsDecimal = new Decimal(divisor);
 		if (divisorAsDecimal.isNegative()) {
@@ -188,14 +188,14 @@ export const convertUnitToSubUnit = (value, subUnitDivisor, useComma = false) =>
 	}
 };
 
-const isNumber = value => {
+const isNumber = (value) => {
 	return typeof value === "number" && !isNaN(value);
 };
 
 /* eslint-disable no-underscore-dangle */
 // Detect if the given value is a goog.math.Long object
 // See: https://google.github.io/closure-library/api/goog.math.Long.html
-const isGoogleMathLong = value => {
+const isGoogleMathLong = (value) => {
 	return typeof value === "object" && isNumber(value.low_) && isNumber(value.high_);
 };
 /* eslint-enable no-underscore-dangle */
@@ -207,7 +207,7 @@ const isGoogleMathLong = value => {
  *
  * @return {Number} converted value
  */
-export const convertMoneyToNumber = value => {
+export const convertMoneyToNumber = (value) => {
 	if (!(value instanceof Money)) {
 		throw new Error("Value must be a Money type");
 	}

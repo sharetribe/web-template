@@ -393,7 +393,7 @@ describe("date utils", () => {
 
 		it('should return string in YYYY-MM format with Etc/UTC tz to equal moment(date).utc().format("YYYY-MM")', () => {
 			const date = new Date(2018, 10, 23);
-			const pad = num => {
+			const pad = (num) => {
 				return num >= 0 && num < 10 ? `0${num}` : `${num}`;
 			};
 			expect(monthIdString(date, "Etc/UTC")).toEqual(

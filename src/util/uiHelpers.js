@@ -6,7 +6,7 @@ import throttle from "lodash/throttle";
  * dimensions to the wrapped component as a `viewport` prop that has
  * the shape `{ width: 600, height: 400}`.
  */
-export const withViewport = Component => {
+export const withViewport = (Component) => {
 	// The resize event is flooded when the browser is resized. We'll
 	// use a small timeout to throttle changing the viewport since it
 	// will trigger rerendering.
@@ -100,7 +100,7 @@ export const withDimensions = (Component, options = {}) => {
 		}
 
 		setDimensions() {
-			this.setState(prevState => {
+			this.setState((prevState) => {
 				const { clientWidth, clientHeight } = this.element || { clientWidth: 0, clientHeight: 0 };
 				return { width: clientWidth, height: clientHeight };
 			});
@@ -121,8 +121,8 @@ export const withDimensions = (Component, options = {}) => {
 				clientWidth !== 0 && clientHeight !== 0
 					? { width: clientWidth, height: clientHeight }
 					: width !== 0 && height !== 0
-					? { width, height }
-					: {};
+						? { width, height }
+						: {};
 
 			const props = { ...this.props, dimensions: currentDimensions };
 
@@ -138,7 +138,7 @@ export const withDimensions = (Component, options = {}) => {
 
 			return (
 				<div
-					ref={element => {
+					ref={(element) => {
 						this.element = element;
 					}}
 					style={style}
@@ -149,8 +149,9 @@ export const withDimensions = (Component, options = {}) => {
 		}
 	}
 
-	WithDimensionsComponent.displayName = `withDimensions(${Component.displayName ||
-		Component.name})`;
+	WithDimensionsComponent.displayName = `withDimensions(${
+		Component.displayName || Component.name
+	})`;
 
 	return WithDimensionsComponent;
 };
@@ -235,7 +236,7 @@ export const lazyLoadWithDimensions = (Component, options = {}) => {
 		}
 
 		setDimensions() {
-			this.setState(prevState => {
+			this.setState((prevState) => {
 				const { clientWidth, clientHeight } = this.element || { clientWidth: 0, clientHeight: 0 };
 				return { width: clientWidth, height: clientHeight };
 			});
@@ -271,7 +272,7 @@ export const lazyLoadWithDimensions = (Component, options = {}) => {
 
 			return (
 				<div
-					ref={element => {
+					ref={(element) => {
 						this.element = element;
 					}}
 					style={style}
@@ -282,8 +283,9 @@ export const lazyLoadWithDimensions = (Component, options = {}) => {
 		}
 	}
 
-	LazyLoadWithDimensionsComponent.displayName = `lazyLoadWithDimensions(${Component.displayName ||
-		Component.name})`;
+	LazyLoadWithDimensionsComponent.displayName = `lazyLoadWithDimensions(${
+		Component.displayName || Component.name
+	})`;
 
 	return LazyLoadWithDimensionsComponent;
 };

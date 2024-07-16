@@ -11,7 +11,7 @@ import css from "./AvailabilityPlanEntries.module.css";
 const HOURS = Array(24).fill();
 
 // Internally, we use 00:00 ... 24:00 mapping for hour strings
-const printHourStrings = h => (h > 9 ? `${h}:00` : `0${h}:00`);
+const printHourStrings = (h) => (h > 9 ? `${h}:00` : `0${h}:00`);
 
 // Start hours and end hours for each day on weekly schedule
 // Note: if you need to use something else than sharp hours,
@@ -46,17 +46,20 @@ const localizedHourStrings = (hour24, intl) => {
  * @param {Integer} defaultCompareReturn if startTime is null, negative value pushes the entry to the beginning
  * @returns
  */
-const sortEntries = (defaultCompareReturn = 0) => (a, b) => {
-	if (a.startTime && b.startTime) {
-		const aStart = Number.parseInt(a.startTime.split(":")[0]);
-		const bStart = Number.parseInt(b.startTime.split(":")[0]);
-		return aStart - bStart;
-	}
-	return defaultCompareReturn;
-};
+const sortEntries =
+	(defaultCompareReturn = 0) =>
+	(a, b) => {
+		if (a.startTime && b.startTime) {
+			const aStart = Number.parseInt(a.startTime.split(":")[0]);
+			const bStart = Number.parseInt(b.startTime.split(":")[0]);
+			return aStart - bStart;
+		}
+		return defaultCompareReturn;
+	};
 
 // Curried: find entry by comparing start time and end time
-const findEntryFn = entry => e => e.startTime === entry.startTime && e.endTime === entry.endTime;
+const findEntryFn = (entry) => (e) =>
+	e.startTime === entry.startTime && e.endTime === entry.endTime;
 
 /**
  * From all the available start hours, filter only those start hours that can be used
@@ -88,8 +91,8 @@ const filterStartHours = (availableStartHours, entries, index) => {
 	// return all the available times before current selected end time.
 	// Otherwise return all the available start times that are after the previous entry or entries.
 	const prevEntry = sortedEntries[currentIndex - 1];
-	const pickBefore = time => h => h < time;
-	const pickBetween = (start, end) => h => h >= start && h < end;
+	const pickBefore = (time) => (h) => h < time;
+	const pickBetween = (start, end) => (h) => h >= start && h < end;
 
 	return !prevEntry || !prevEntry.endTime
 		? availableStartHours.filter(pickBefore(currentEntry.endTime))
@@ -127,8 +130,8 @@ const filterEndHours = (availableEndHours, entries, index) => {
 	// return all the available end times that are after the start of current entry.
 	// Otherwise return all the available end hours between current start time and next entry.
 	const nextEntry = sortedEntries[currentIndex + 1];
-	const pickAfter = time => h => h > time;
-	const pickBetween = (start, end) => h => h > start && h <= end;
+	const pickAfter = (time) => (h) => h > time;
+	const pickBetween = (start, end) => (h) => h > start && h <= end;
 
 	return !nextEntry || !nextEntry.startTime
 		? availableEndHours.filter(pickAfter(currentEntry.startTime))
@@ -143,7 +146,7 @@ const filterEndHours = (availableEndHours, entries, index) => {
  * @param {*} findStartHours find start hours (00:00 ... 23:00) or else (01:00 ... 24:00)
  * @returns array of reserved sharp hours. E.g. ['13:00', '14:00', '15:00', '16:00']
  */
-const getEntryBoundaries = (entries, intl, findStartHours) => index => {
+const getEntryBoundaries = (entries, intl, findStartHours) => (index) => {
 	const boundaryDiff = findStartHours ? 0 : 1;
 
 	return entries.reduce((allHours, entry, i) => {
@@ -166,7 +169,7 @@ const getEntryBoundaries = (entries, intl, findStartHours) => index => {
 /**
  * Date pickers that create time range inside the day: start hour - end hour
  */
-const TimeRangeSelects = props => {
+const TimeRangeSelects = (props) => {
 	const {
 		name,
 		index,
@@ -193,7 +196,7 @@ const TimeRangeSelects = props => {
 							id: "EditListingAvailabilityPlanForm.startTimePlaceholder",
 						})}
 					</option>
-					{filterStartHours(availableStartHours, entries, index).map(s => (
+					{filterStartHours(availableStartHours, entries, index).map((s) => (
 						<option value={s} key={s}>
 							{localizedHourStrings(s, intl)}
 						</option>
@@ -212,7 +215,7 @@ const TimeRangeSelects = props => {
 							id: "EditListingAvailabilityPlanForm.endTimePlaceholder",
 						})}
 					</option>
-					{filterEndHours(availableEndHours, entries, index).map(s => (
+					{filterEndHours(availableEndHours, entries, index).map((s) => (
 						<option value={s} key={s}>
 							{localizedHourStrings(s, intl)}
 						</option>
@@ -230,17 +233,17 @@ const TimeRangeSelects = props => {
 };
 
 // Hidden input field
-const FieldHidden = props => {
+const FieldHidden = (props) => {
 	const { name } = props;
 	return (
 		<Field id={name} name={name} type="hidden" className={css.unitTypeHidden}>
-			{fieldRenderProps => <input {...fieldRenderProps?.input} />}
+			{(fieldRenderProps) => <input {...fieldRenderProps?.input} />}
 		</Field>
 	);
 };
 
 // For unitType: 'hour', set entire day (00:00 - 24:00) and hide the inputs from end user.
-const TimeRangeHidden = props => {
+const TimeRangeHidden = (props) => {
 	const { name } = props;
 	return (
 		<div className={css.formRowHidden}>
@@ -253,7 +256,7 @@ const TimeRangeHidden = props => {
 /**
  * Handle entries for the availability plan. These are modelled with Final Form Arrays (FieldArray)
  */
-const AvailabilityPlanEntries = props => {
+const AvailabilityPlanEntries = (props) => {
 	const { dayOfWeek, useFullDays, values, formApi, intl } = props;
 	const entries = values[dayOfWeek];
 	const hasEntries = entries && entries[0];
@@ -274,7 +277,7 @@ const AvailabilityPlanEntries = props => {
 						id: `EditListingAvailabilityPlanForm.dayOfWeek.${dayOfWeek}`,
 					})}
 					value={dayOfWeek}
-					onChange={e => {
+					onChange={(e) => {
 						const isChecked = e.target.checked;
 
 						// 'day' and 'night' units use full days
@@ -307,13 +310,13 @@ const AvailabilityPlanEntries = props => {
 							<div className={css.timePicker}>
 								{fields.map((name, index) => {
 									// Pick available start hours
-									const pickUnreservedStartHours = h => !getEntryStartTimes(index).includes(h);
+									const pickUnreservedStartHours = (h) => !getEntryStartTimes(index).includes(h);
 									const availableStartHours = ALL_START_HOURS.filter(pickUnreservedStartHours);
 
 									// Pick available end hours
-									const pickUnreservedEndHours = h => !getEntryEndTimes(index).includes(h);
+									const pickUnreservedEndHours = (h) => !getEntryEndTimes(index).includes(h);
 									const availableEndHours = ALL_END_HOURS.filter(pickUnreservedEndHours);
-									const isTimeSetFn = time => fields.value?.[index]?.[time];
+									const isTimeSetFn = (time) => fields.value?.[index]?.[time];
 									const isNextDay = entries[index]?.endTime === "24:00";
 
 									// If full days (00:00 - 24:00) are used we'll hide the start time and end time fields.
@@ -335,7 +338,7 @@ const AvailabilityPlanEntries = props => {
 												const hasOnlyOneEntry = fields.value?.length === 1;
 												if (hasOnlyOneEntry) {
 													const activeDays = values["activePlanDays"];
-													const cleanedDays = activeDays.filter(d => d !== dayOfWeek);
+													const cleanedDays = activeDays.filter((d) => d !== dayOfWeek);
 													// The day should not be active anymore
 													formApi.change("activePlanDays", cleanedDays);
 												}

@@ -30,7 +30,7 @@ import {
 } from "./PasswordRecoveryPage.duck";
 import css from "./PasswordRecoveryPage.module.css";
 
-const PasswordRecovery = props => {
+const PasswordRecovery = (props) => {
 	const { initialEmail, onChange, onSubmitEmail, recoveryInProgress, recoveryError } = props;
 	return (
 		<div className={css.submitEmailContent}>
@@ -44,7 +44,7 @@ const PasswordRecovery = props => {
 			<PasswordRecoveryForm
 				inProgress={recoveryInProgress}
 				onChange={onChange}
-				onSubmit={values => onSubmitEmail(values.email)}
+				onSubmit={(values) => onSubmitEmail(values.email)}
 				initialValues={{ email: initialEmail }}
 				recoveryError={recoveryError}
 			/>
@@ -66,7 +66,7 @@ const GenericError = () => {
 	);
 };
 
-const EmailSubmittedContent = props => {
+const EmailSubmittedContent = (props) => {
 	const {
 		passwordRequested,
 		initialEmail,
@@ -123,7 +123,7 @@ const EmailSubmittedContent = props => {
 	);
 };
 
-export const PasswordRecoveryPageComponent = props => {
+export const PasswordRecoveryPageComponent = (props) => {
 	const config = useConfiguration();
 	const {
 		scrollingDisabled,
@@ -214,14 +214,9 @@ PasswordRecoveryPageComponent.propTypes = {
 	intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
-	const {
-		initialEmail,
-		submittedEmail,
-		recoveryError,
-		recoveryInProgress,
-		passwordRequested,
-	} = state.PasswordRecoveryPage;
+const mapStateToProps = (state) => {
+	const { initialEmail, submittedEmail, recoveryError, recoveryInProgress, passwordRequested } =
+		state.PasswordRecoveryPage;
 	return {
 		scrollingDisabled: isScrollingDisabled(state),
 		initialEmail,
@@ -232,17 +227,14 @@ const mapStateToProps = state => {
 	};
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
 	onChange: () => dispatch(clearPasswordRecoveryError()),
-	onSubmitEmail: email => dispatch(recoverPassword(email)),
+	onSubmitEmail: (email) => dispatch(recoverPassword(email)),
 	onRetypeEmail: () => dispatch(retypePasswordRecoveryEmail()),
 });
 
 const PasswordRecoveryPage = compose(
-	connect(
-		mapStateToProps,
-		mapDispatchToProps,
-	),
+	connect(mapStateToProps, mapDispatchToProps),
 	injectIntl,
 )(PasswordRecoveryPageComponent);
 

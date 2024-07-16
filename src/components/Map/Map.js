@@ -10,7 +10,7 @@ import * as googleMapsMap from "./GoogleMap";
 
 import css from "./Map.module.css";
 
-export const Map = props => {
+export const Map = (props) => {
 	const config = useConfiguration();
 	const {
 		className,

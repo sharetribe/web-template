@@ -48,8 +48,8 @@ const redirectToURLWithoutModalState = (props, modalStateParam) => {
 	history.push(`${pathname}${searchString}`, state);
 };
 
-const isPrimary = o => o.group === "primary";
-const isSecondary = o => o.group === "secondary";
+const isPrimary = (o) => o.group === "primary";
+const isSecondary = (o) => o.group === "secondary";
 const compareGroups = (a, b) => {
 	const isAHigherGroupThanB = isPrimary(a) && isSecondary(b);
 	const isALesserGroupThanB = isSecondary(a) && isPrimary(b);
@@ -57,7 +57,7 @@ const compareGroups = (a, b) => {
 	return isAHigherGroupThanB ? -1 : isALesserGroupThanB ? 1 : 0;
 };
 // Returns links in order where primary links are returned first
-const sortCustomLinks = customLinks => {
+const sortCustomLinks = (customLinks) => {
 	const links = Array.isArray(customLinks) ? customLinks : [];
 	return links.sort(compareGroups);
 };
@@ -65,7 +65,7 @@ const sortCustomLinks = customLinks => {
 // Resolves in-app links against route configuration
 const getResolvedCustomLinks = (customLinks, routeConfiguration) => {
 	const links = Array.isArray(customLinks) ? customLinks : [];
-	return links.map(linkConfig => {
+	return links.map((linkConfig) => {
 		const { type, href } = linkConfig;
 		const isInternalLink = type === "internal" || href.charAt(0) === "/";
 		if (isInternalLink) {
@@ -89,9 +89,9 @@ const getResolvedCustomLinks = (customLinks, routeConfiguration) => {
 	});
 };
 
-const isCMSPage = found =>
+const isCMSPage = (found) =>
 	found.route?.name === "CMSPage" ? `CMSPage:${found.params?.pageId}` : null;
-const isInboxPage = found =>
+const isInboxPage = (found) =>
 	found.route?.name === "InboxPage" ? `InboxPage:${found.params?.tab}` : null;
 // Find the name of the current route/pathname.
 // It's used as handle for currentPage check.
@@ -105,7 +105,7 @@ const getResolvedCurrentPage = (location, routeConfiguration) => {
 	}
 };
 
-const GenericError = props => {
+const GenericError = (props) => {
 	const { show } = props;
 	const classes = classNames(css.genericError, {
 		[css.genericErrorVisible]: show,
@@ -267,7 +267,7 @@ class TopbarComponent extends Component {
 					? {
 							search: address,
 							selectedPlace: { address, origin, bounds },
-					  }
+						}
 					: null,
 			};
 		};
@@ -426,7 +426,7 @@ TopbarComponent.propTypes = {
 	routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
-const Topbar = props => {
+const Topbar = (props) => {
 	const config = useConfiguration();
 	const routeConfiguration = useRouteConfiguration();
 	const intl = useIntl();

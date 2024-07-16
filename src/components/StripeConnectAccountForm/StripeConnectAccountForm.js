@@ -26,9 +26,9 @@ import {
 
 import css from "./StripeConnectAccountForm.module.css";
 
-const getSupportedCountryCodes = supportedCountries => supportedCountries.map(c => c.code);
+const getSupportedCountryCodes = (supportedCountries) => supportedCountries.map((c) => c.code);
 const stripeCountryConfigs = (countryCode, supportedCountries) => {
-	const country = supportedCountries.find(c => c.code === countryCode);
+	const country = supportedCountries.find((c) => c.code === countryCode);
 
 	if (!country) {
 		throw new Error(`Country code not found in Stripe config ${countryCode}`);
@@ -42,16 +42,16 @@ const countryCurrency = (countryCode, supportedCountries) => {
 };
 
 // Hidden input field
-const FieldHidden = props => {
+const FieldHidden = (props) => {
 	const { name } = props;
 	return (
 		<Field id={name} name={name} type="hidden" className={css.unitTypeHidden}>
-			{fieldRenderProps => <input {...fieldRenderProps?.input} />}
+			{(fieldRenderProps) => <input {...fieldRenderProps?.input} />}
 		</Field>
 	);
 };
 
-const CreateStripeAccountFields = props => {
+const CreateStripeAccountFields = (props) => {
 	const routeConfiguration = useRouteConfiguration();
 	const {
 		disabled,
@@ -82,7 +82,7 @@ const CreateStripeAccountFields = props => {
 		// because Stripe will not allow passing a localhost URL
 		const hasBusinessURL = values && values.businessProfileURL;
 		if (!hasBusinessURL && currentUserId) {
-			const pathToProfilePage = uuid =>
+			const pathToProfilePage = (uuid) =>
 				createResourceLocatorString("ProfilePage", routeConfiguration, { id: uuid }, {});
 			const hasMarketplaceRootURL = !!marketplaceRootURL;
 			const rootUrl = hasMarketplaceRootURL ? marketplaceRootURL.replace(/\/$/, "") : null;
@@ -145,7 +145,7 @@ const CreateStripeAccountFields = props => {
 				<option disabled value="">
 					{intl.formatMessage({ id: "StripeConnectAccountForm.countryPlaceholder" })}
 				</option>
-				{getSupportedCountryCodes(supportedCountries).map(c => (
+				{getSupportedCountryCodes(supportedCountries).map((c) => (
 					<option key={c} value={c}>
 						{intl.formatMessage({ id: `StripeConnectAccountForm.countryNames.${c}` })}
 					</option>
@@ -167,7 +167,7 @@ const CreateStripeAccountFields = props => {
 	);
 };
 
-const UpdateStripeAccountFields = props => {
+const UpdateStripeAccountFields = (props) => {
 	const {
 		disabled,
 		countryLabel,
@@ -211,7 +211,7 @@ const UpdateStripeAccountFields = props => {
 	);
 };
 
-const ErrorsMaybe = props => {
+const ErrorsMaybe = (props) => {
 	const { stripeAccountError, stripeAccountLinkError } = props;
 
 	const errorMessage = isStripeError(stripeAccountError) ? (
@@ -233,7 +233,7 @@ const ErrorsMaybe = props => {
 	return errorMessage ? <div className={css.error}>{errorMessage}</div> : null;
 };
 
-const StripeConnectAccountFormComponent = props => {
+const StripeConnectAccountFormComponent = (props) => {
 	const [showCardUpdateInput, setShowCardUpdateInput] = useState(false);
 	const config = useConfiguration();
 	const { onSubmit, ...restOfProps } = props;
@@ -244,11 +244,11 @@ const StripeConnectAccountFormComponent = props => {
 	return (
 		<FinalForm
 			{...restOfProps}
-			onSubmit={values => onSubmit({ ...values, stripePublishableKey }, isUpdate)}
+			onSubmit={(values) => onSubmit({ ...values, stripePublishableKey }, isUpdate)}
 			mutators={{
 				...arrayMutators,
 			}}
-			render={fieldRenderProps => {
+			render={(fieldRenderProps) => {
 				const {
 					rootClassName,
 					className,
@@ -276,7 +276,7 @@ const StripeConnectAccountFormComponent = props => {
 				const submitInProgress = inProgress;
 				const submitDisabled = pristine || invalid || disabled || submitInProgress;
 
-				const handleFormSubmit = event => {
+				const handleFormSubmit = (event) => {
 					// Close the bank account form when clicking "save details"
 					setShowCardUpdateInput(false);
 					handleSubmit(event);

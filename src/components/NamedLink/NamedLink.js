@@ -25,7 +25,7 @@ import { useRouteConfiguration } from "../../context/routeConfigurationContext";
 
 import { pathByRouteName, findRouteByRouteName } from "../../util/routes";
 
-export const NamedLinkComponent = props => {
+export const NamedLinkComponent = (props) => {
 	const routeConfiguration = useRouteConfiguration();
 	const { name, params, title } = props;
 

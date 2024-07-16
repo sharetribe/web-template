@@ -6,7 +6,7 @@ import { FormattedMessage } from "../../../util/reactIntl";
 
 import css from "./MainPanelHeader.module.css";
 
-const MainPanelHeader = props => {
+const MainPanelHeader = (props) => {
 	const {
 		rootClassName,
 		className,

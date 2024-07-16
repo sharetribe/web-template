@@ -31,7 +31,7 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
 				shippingPriceInSubunitsAdditionalItems,
 				currency,
 				quantity,
-		  )
+			)
 		: null;
 
 	// Add line-item for given delivery method.
@@ -44,17 +44,17 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
 					quantity: 1,
 					includeFor: ["customer", "provider"],
 				},
-		  ]
+			]
 		: isPickup
-		? [
-				{
-					code: "line-item/pickup-fee",
-					unitPrice: new Money(0, currency),
-					quantity: 1,
-					includeFor: ["customer", "provider"],
-				},
-		  ]
-		: [];
+			? [
+					{
+						code: "line-item/pickup-fee",
+						unitPrice: new Money(0, currency),
+						quantity: 1,
+						includeFor: ["customer", "provider"],
+					},
+				]
+			: [];
 
 	return { quantity, extraLineItems: deliveryLineItem };
 };
@@ -64,7 +64,7 @@ const getItemQuantityAndLineItems = (orderData, publicData, currency) => {
  *
  * @param {*} orderData should contain quantity
  */
-const getHourQuantityAndLineItems = orderData => {
+const getHourQuantityAndLineItems = (orderData) => {
 	const { bookingStart, bookingEnd } = orderData || {};
 	const quantity =
 		bookingStart && bookingEnd ? calculateQuantityFromHours(bookingStart, bookingEnd) : null;
@@ -141,10 +141,10 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
 		unitType === "item"
 			? getItemQuantityAndLineItems(orderData, publicData, currency)
 			: unitType === "hour"
-			? getHourQuantityAndLineItems(orderData)
-			: ["day", "night"].includes(unitType)
-			? getDateRangeQuantityAndLineItems(orderData, code)
-			: {};
+				? getHourQuantityAndLineItems(orderData)
+				: ["day", "night"].includes(unitType)
+					? getDateRangeQuantityAndLineItems(orderData, code)
+					: {};
 
 	const { quantity, extraLineItems } = quantityAndExtraLineItems;
 
@@ -178,7 +178,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
 
 	// Provider commission reduces the amount of money that is paid out to provider.
 	// Therefore, the provider commission line-item should have negative effect to the payout total.
-	const getNegation = percentage => {
+	const getNegation = (percentage) => {
 		return -1 * percentage;
 	};
 
@@ -196,7 +196,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
 					percentage: getNegation(providerCommission.percentage),
 					includeFor: ["provider"],
 				},
-		  ]
+			]
 		: [];
 
 	// The customer commission is what the customer pays for the transaction, and
@@ -210,7 +210,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
 					percentage: customerCommission.percentage,
 					includeFor: ["customer"],
 				},
-		  ]
+			]
 		: [];
 
 	// Let's keep the base price (order) as first line item and provider and customer commissions as last.

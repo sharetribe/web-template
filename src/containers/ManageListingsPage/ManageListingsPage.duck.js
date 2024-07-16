@@ -39,7 +39,7 @@ const initialState = {
 	closingListingError: null,
 };
 
-const resultIds = data => data.data.map(l => l.id);
+const resultIds = (data) => data.data.map((l) => l.id);
 
 const merge = (state, sdkResponse) => {
 	const apiResponse = sdkResponse.data;
@@ -153,7 +153,7 @@ export default manageListingsPageReducer;
  */
 export const getOwnListingsById = (state, listingIds) => {
 	const { ownEntities } = state.ManageListingsPage;
-	const resources = listingIds.map(id => ({
+	const resources = listingIds.map((id) => ({
 		id,
 		type: "ownListing",
 	}));
@@ -166,61 +166,61 @@ export const getOwnListingsById = (state, listingIds) => {
 // This works the same way as addMarketplaceEntities,
 // but we don't want to mix own listings with searched listings
 // (own listings data contains different info - e.g. exact location etc.)
-export const addOwnEntities = sdkResponse => ({
+export const addOwnEntities = (sdkResponse) => ({
 	type: ADD_OWN_ENTITIES,
 	payload: sdkResponse,
 });
 
-export const openListingRequest = listingId => ({
+export const openListingRequest = (listingId) => ({
 	type: OPEN_LISTING_REQUEST,
 	payload: { listingId },
 });
 
-export const openListingSuccess = response => ({
+export const openListingSuccess = (response) => ({
 	type: OPEN_LISTING_SUCCESS,
 	payload: response.data,
 });
 
-export const openListingError = e => ({
+export const openListingError = (e) => ({
 	type: OPEN_LISTING_ERROR,
 	error: true,
 	payload: e,
 });
 
-export const closeListingRequest = listingId => ({
+export const closeListingRequest = (listingId) => ({
 	type: CLOSE_LISTING_REQUEST,
 	payload: { listingId },
 });
 
-export const closeListingSuccess = response => ({
+export const closeListingSuccess = (response) => ({
 	type: CLOSE_LISTING_SUCCESS,
 	payload: response.data,
 });
 
-export const closeListingError = e => ({
+export const closeListingError = (e) => ({
 	type: CLOSE_LISTING_ERROR,
 	error: true,
 	payload: e,
 });
 
-export const queryListingsRequest = queryParams => ({
+export const queryListingsRequest = (queryParams) => ({
 	type: FETCH_LISTINGS_REQUEST,
 	payload: { queryParams },
 });
 
-export const queryListingsSuccess = response => ({
+export const queryListingsSuccess = (response) => ({
 	type: FETCH_LISTINGS_SUCCESS,
 	payload: { data: response.data },
 });
 
-export const queryListingsError = e => ({
+export const queryListingsError = (e) => ({
 	type: FETCH_LISTINGS_ERROR,
 	error: true,
 	payload: e,
 });
 
 // Throwing error for new (loadData may need that info)
-export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
+export const queryOwnListings = (queryParams) => (dispatch, getState, sdk) => {
 	dispatch(queryListingsRequest(queryParams));
 
 	const { perPage, ...rest } = queryParams;
@@ -228,41 +228,41 @@ export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
 
 	return sdk.ownListings
 		.query(params)
-		.then(response => {
+		.then((response) => {
 			dispatch(addOwnEntities(response));
 			dispatch(queryListingsSuccess(response));
 			return response;
 		})
-		.catch(e => {
+		.catch((e) => {
 			dispatch(queryListingsError(storableError(e)));
 			throw e;
 		});
 };
 
-export const closeListing = listingId => (dispatch, getState, sdk) => {
+export const closeListing = (listingId) => (dispatch, getState, sdk) => {
 	dispatch(closeListingRequest(listingId));
 
 	return sdk.ownListings
 		.close({ id: listingId }, { expand: true })
-		.then(response => {
+		.then((response) => {
 			dispatch(closeListingSuccess(response));
 			return response;
 		})
-		.catch(e => {
+		.catch((e) => {
 			dispatch(closeListingError(storableError(e)));
 		});
 };
 
-export const openListing = listingId => (dispatch, getState, sdk) => {
+export const openListing = (listingId) => (dispatch, getState, sdk) => {
 	dispatch(openListingRequest(listingId));
 
 	return sdk.ownListings
 		.open({ id: listingId }, { expand: true })
-		.then(response => {
+		.then((response) => {
 			dispatch(openListingSuccess(response));
 			return response;
 		})
-		.catch(e => {
+		.catch((e) => {
 			dispatch(openListingError(storableError(e)));
 		});
 };

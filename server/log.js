@@ -51,12 +51,12 @@ exports.errorHandler = () => {
 	}
 };
 
-const responseAPIErrors = error => {
+const responseAPIErrors = (error) => {
 	return error && error.data && error.data.errors ? error.data.errors : [];
 };
 
-const responseApiErrorInfo = err =>
-	responseAPIErrors(err).map(e => ({
+const responseApiErrorInfo = (err) =>
+	responseAPIErrors(err).map((e) => ({
 		status: e.status,
 		code: e.code,
 		meta: e.meta,
@@ -75,9 +75,9 @@ exports.error = (e, code, data) => {
 	if (SENTRY_DSN) {
 		const extra = { ...data, apiErrorData: responseApiErrorInfo(e) };
 
-		Sentry.withScope(scope => {
+		Sentry.withScope((scope) => {
 			scope.setTag("code", code);
-			Object.keys(extra).forEach(key => {
+			Object.keys(extra).forEach((key) => {
 				scope.setExtra(key, extra[key]);
 			});
 			Sentry.captureException(e);

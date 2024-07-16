@@ -73,18 +73,18 @@ const tosProps = {
 	validate: requiredFieldArrayCheckbox("You need to accept Terms of Service"),
 };
 
-const formComponent = country => props => (
+const formComponent = (country) => (props) => (
 	<FinalForm
 		{...props}
 		mutators={{ ...arrayMutators }}
-		render={fieldRenderProps => {
+		render={(fieldRenderProps) => {
 			const { handleSubmit, invalid, submitting, componentProps, onChange } = fieldRenderProps;
 
 			const submitDisabled = invalid || submitting;
 
 			return (
 				<form
-					onSubmit={e => {
+					onSubmit={(e) => {
 						e.preventDefault();
 						handleSubmit(e);
 					}}
@@ -104,12 +104,12 @@ const formComponent = country => props => (
 export const Optional = {
 	component: formComponent(formName),
 	props: {
-		onChange: formState => {
+		onChange: (formState) => {
 			if (formState.dirty) {
 				console.log("form values changed to:", formState.values);
 			}
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit values: ", values);
 		},
 		initialValues: { [optionalProps.name]: ["jacuzzi", "towels"] },
@@ -121,12 +121,12 @@ export const Optional = {
 export const Required = {
 	component: formComponent(formNameRequired),
 	props: {
-		onChange: formState => {
+		onChange: (formState) => {
 			if (formState.dirty) {
 				console.log("form values changed to:", formState.values);
 			}
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit values: ", values);
 		},
 		componentProps: requiredProps,
@@ -137,12 +137,12 @@ export const Required = {
 export const ToSAccepted = {
 	component: formComponent(formNameRequired),
 	props: {
-		onChange: formState => {
+		onChange: (formState) => {
 			if (formState.dirty) {
 				console.log("form values changed to:", formState.values);
 			}
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit values: ", values);
 		},
 		componentProps: tosProps,

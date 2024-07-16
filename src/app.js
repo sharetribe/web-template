@@ -109,13 +109,13 @@ const localeMessages = isTestEnv
 // For customized apps, this dynamic loading of locale files is not necessary.
 // It helps locale change from configDefault.js file or hosted configs, but customizers should probably
 // just remove this and directly import the necessary locale on step 2.
-const MomentLocaleLoader = props => {
+const MomentLocaleLoader = (props) => {
 	const { children, locale } = props;
 	const isAlreadyImportedLocale =
 		typeof hardCodedLocale !== "undefined" && locale === hardCodedLocale;
 
 	// Moment's built-in locale does not need loader
-	const NoLoader = props => <>{props.children()}</>;
+	const NoLoader = (props) => <>{props.children()}</>;
 
 	// The default locale is en (en-US). Here we dynamically load one of the other common locales.
 	// However, the default is to include all supported locales package from moment library.
@@ -123,16 +123,18 @@ const MomentLocaleLoader = props => {
 		["en", "en-US"].includes(locale) || isAlreadyImportedLocale
 			? NoLoader
 			: ["fr", "fr-FR"].includes(locale)
-			? loadable.lib(() => import(/* webpackChunkName: "fr" */ "moment/locale/fr"))
-			: ["de", "de-DE"].includes(locale)
-			? loadable.lib(() => import(/* webpackChunkName: "de" */ "moment/locale/de"))
-			: ["es", "es-ES"].includes(locale)
-			? loadable.lib(() => import(/* webpackChunkName: "es" */ "moment/locale/es"))
-			: ["fi", "fi-FI"].includes(locale)
-			? loadable.lib(() => import(/* webpackChunkName: "fi" */ "moment/locale/fi"))
-			: ["nl", "nl-NL"].includes(locale)
-			? loadable.lib(() => import(/* webpackChunkName: "nl" */ "moment/locale/nl"))
-			: loadable.lib(() => import(/* webpackChunkName: "locales" */ "moment/min/locales.min"));
+				? loadable.lib(() => import(/* webpackChunkName: "fr" */ "moment/locale/fr"))
+				: ["de", "de-DE"].includes(locale)
+					? loadable.lib(() => import(/* webpackChunkName: "de" */ "moment/locale/de"))
+					: ["es", "es-ES"].includes(locale)
+						? loadable.lib(() => import(/* webpackChunkName: "es" */ "moment/locale/es"))
+						: ["fi", "fi-FI"].includes(locale)
+							? loadable.lib(() => import(/* webpackChunkName: "fi" */ "moment/locale/fi"))
+							: ["nl", "nl-NL"].includes(locale)
+								? loadable.lib(() => import(/* webpackChunkName: "nl" */ "moment/locale/nl"))
+								: loadable.lib(
+										() => import(/* webpackChunkName: "locales" */ "moment/min/locales.min"),
+									);
 
 	return (
 		<MomentLocale>
@@ -146,7 +148,7 @@ const MomentLocaleLoader = props => {
 	);
 };
 
-const Configurations = props => {
+const Configurations = (props) => {
 	const { appConfig, children } = props;
 	const routeConfig = routeConfiguration(appConfig.layout);
 	const locale = isTestEnv ? "en" : appConfig.localization.locale;
@@ -160,7 +162,7 @@ const Configurations = props => {
 	);
 };
 
-const MaintenanceModeError = props => {
+const MaintenanceModeError = (props) => {
 	const { locale, messages, helmetContext } = props;
 	return (
 		<IntlProvider locale={locale} messages={messages} textComponent="span">
@@ -172,10 +174,10 @@ const MaintenanceModeError = props => {
 };
 
 // This displays a warning if environment variable key contains a string "SECRET"
-const EnvironmentVariableWarning = props => {
+const EnvironmentVariableWarning = (props) => {
 	const suspiciousEnvKey = props.suspiciousEnvKey;
 	// https://github.com/sharetribe/flex-integration-api-examples#warning-usage-with-your-web-app--website
-	const containsINTEG = str => str.toUpperCase().includes("INTEG");
+	const containsINTEG = (str) => str.toUpperCase().includes("INTEG");
 	return (
 		<div
 			style={{
@@ -208,7 +210,7 @@ const EnvironmentVariableWarning = props => {
 	);
 };
 
-export const ClientApp = props => {
+export const ClientApp = (props) => {
 	const { store, hostedTranslations = {}, hostedConfig = {} } = props;
 	const appConfig = mergeConfig(hostedConfig, defaultConfig);
 
@@ -216,9 +218,9 @@ export const ClientApp = props => {
 	if (appSettings.dev) {
 		const envVars = process.env || {};
 		const envVarKeys = Object.keys(envVars);
-		const containsSECRET = str => str.toUpperCase().includes("SECRET");
+		const containsSECRET = (str) => str.toUpperCase().includes("SECRET");
 		const suspiciousSECRETKey = envVarKeys.find(
-			key => key.startsWith("REACT_APP_") && containsSECRET(key),
+			(key) => key.startsWith("REACT_APP_") && containsSECRET(key),
 		);
 
 		if (suspiciousSECRETKey) {
@@ -268,7 +270,7 @@ export const ClientApp = props => {
 
 ClientApp.propTypes = { store: any.isRequired };
 
-export const ServerApp = props => {
+export const ServerApp = (props) => {
 	const { url, context, helmetContext, store, hostedTranslations = {}, hostedConfig = {} } = props;
 	const appConfig = mergeConfig(hostedConfig, defaultConfig);
 	HelmetProvider.canUseDOM = false;

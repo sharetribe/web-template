@@ -126,16 +126,16 @@ const config = {
 	],
 };
 
-const FormComponent = props => (
+const FormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={formRenderProps => {
+		render={(formRenderProps) => {
 			const { handleSubmit, onChange, invalid, pristine, submitting } = formRenderProps;
 			const submitDisabled = submitting; //invalid || pristine || submitting;
 			const required = validators.requiredSelectTreeOption("This field is required");
 			return (
 				<form
-					onSubmit={e => {
+					onSubmit={(e) => {
 						e.preventDefault();
 						handleSubmit(e);
 					}}
@@ -164,13 +164,13 @@ export const SelectNested = {
 		initialValues: {
 			nestedLevel: pickInitialValuesForFieldSelectTree("nestedLevel", initialData),
 		},
-		onChange: formState => {
+		onChange: (formState) => {
 			const nestedLevel = formState.values?.nestedLevel;
 			if (nestedLevel && Object.values(nestedLevel)?.length > 0) {
 				console.log("field value changed to:", formState.values.nestedLevel);
 			}
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("submit values:", values);
 			return false;
 		},

@@ -7,7 +7,7 @@ import { H6 } from "../../../components";
 import css from "./TransactionPanel.module.css";
 
 // Functional component as a helper to build OrderBreakdown
-const BreakdownMaybe = props => {
+const BreakdownMaybe = (props) => {
 	const { className, rootClassName, orderBreakdown, processName } = props;
 	const classes = classNames(rootClassName || css.breakdownMaybe, className);
 

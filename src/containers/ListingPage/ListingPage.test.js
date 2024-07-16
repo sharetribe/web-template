@@ -52,11 +52,11 @@ const listingTypes = [
 	},
 ];
 
-const capitalizeFirstLetter = str => str.charAt(0).toUpperCase() + str.slice(1);
-const addSpaces = str => str.split("-").join(" ");
-const labelize = str => addSpaces(capitalizeFirstLetter(str));
+const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+const addSpaces = (str) => str.split("-").join(" ");
+const labelize = (str) => addSpaces(capitalizeFirstLetter(str));
 
-const generateCategories = optionStrings => {
+const generateCategories = (optionStrings) => {
 	return optionStrings.reduce((converted, entry) => {
 		const isArray = Array.isArray(entry);
 		const option = isArray
@@ -86,7 +86,10 @@ const listingFields = [
 			categoryIds: ["cats"],
 		},
 		schemaType: "enum",
-		enumOptions: [{ option: "cat_1", label: "Cat 1" }, { option: "cat_2", label: "Cat 2" }],
+		enumOptions: [
+			{ option: "cat_1", label: "Cat 1" },
+			{ option: "cat_2", label: "Cat 2" },
+		],
 		filterConfig: {
 			indexForSearch: true,
 		},
@@ -119,7 +122,7 @@ const listingFields = [
 	},
 ];
 
-const getConfig = variantType => {
+const getConfig = (variantType) => {
 	const hostedConfig = getHostedConfiguration();
 	return {
 		...hostedConfig,
@@ -209,7 +212,7 @@ describe("ListingPage variants", () => {
 		const config = getConfig("coverPhoto");
 		const routeConfiguration = getRouteConfiguration(config.layout);
 		const props = { ...commonProps };
-		const listingRouteConfig = routeConfiguration.find(conf => conf.name === "ListingPage");
+		const listingRouteConfig = routeConfiguration.find((conf) => conf.name === "ListingPage");
 		const ListingPage = listingRouteConfig.component;
 
 		const { getByPlaceholderText, getByRole, queryAllByRole, getByText } = render(
@@ -265,7 +268,7 @@ describe("ListingPage variants", () => {
 		const config = getConfig("carousel");
 		const routeConfiguration = getRouteConfiguration(config.layout);
 		const props = { ...commonProps };
-		const listingRouteConfig = routeConfiguration.find(conf => conf.name === "ListingPage");
+		const listingRouteConfig = routeConfiguration.find((conf) => conf.name === "ListingPage");
 		const ListingPage = listingRouteConfig.component;
 
 		const { getByPlaceholderText, getByRole, queryAllByRole, getByText } = render(
@@ -333,12 +336,12 @@ describe("Duck", () => {
 
 	it("showListing() success", () => {
 		const id = new UUID("00000000-0000-0000-0000-000000000000");
-		const dispatch = jest.fn(action => action);
+		const dispatch = jest.fn((action) => action);
 		const response = { status: 200 };
 		const show = jest.fn(() => Promise.resolve(response));
 		const sdk = { listings: { show }, currentUser: { show } };
 
-		return showListing(id, config)(dispatch, null, sdk).then(data => {
+		return showListing(id, config)(dispatch, null, sdk).then((data) => {
 			expect(data).toEqual(response);
 			expect(show.mock.calls).toEqual([
 				[
@@ -360,14 +363,14 @@ describe("Duck", () => {
 
 	it("showListing() error", () => {
 		const id = new UUID("00000000-0000-0000-0000-000000000000");
-		const dispatch = jest.fn(action => action);
+		const dispatch = jest.fn((action) => action);
 		const error = new Error("fail");
 		const show = jest.fn(() => Promise.reject(error));
 		const sdk = { listings: { show } };
 
 		// Calling sdk.listings.show is expected to fail now
 
-		return showListing(id, config)(dispatch, null, sdk).then(data => {
+		return showListing(id, config)(dispatch, null, sdk).then((data) => {
 			expect(show.mock.calls).toEqual([
 				[
 					expect.objectContaining({

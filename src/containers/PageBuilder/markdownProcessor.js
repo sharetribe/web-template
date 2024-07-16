@@ -9,15 +9,11 @@ import rehypeSanitize from "rehype-sanitize";
 import rehypeReact from "rehype-react";
 
 const processor = (components = {}) => {
-	return unified()
-		.use(remarkParse)
-		.use(remark2rehype)
-		.use(rehypeSanitize)
-		.use(rehypeReact, {
-			createElement,
-			Fragment,
-			components,
-		});
+	return unified().use(remarkParse).use(remark2rehype).use(rehypeSanitize).use(rehypeReact, {
+		createElement,
+		Fragment,
+		components,
+	});
 };
 
 const renderMarkdown = (markdownText, components) => {

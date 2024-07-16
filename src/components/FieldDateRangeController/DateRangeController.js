@@ -13,10 +13,10 @@ export const ANCHOR_LEFT = "left";
 
 // IconArrowHead component might not be defined if exposed directly to the file.
 // This component is called before IconArrowHead component in components/index.js
-const PrevIcon = props => (
+const PrevIcon = (props) => (
 	<IconArrowHead {...props} direction="left" rootClassName={css.arrowIcon} />
 );
-const NextIcon = props => (
+const NextIcon = (props) => (
 	<IconArrowHead {...props} direction="right" rootClassName={css.arrowIcon} />
 );
 
@@ -48,7 +48,7 @@ const defaultProps = {
 
 	renderCalendarDay: undefined, // If undefined, renders react-dates/lib/components/CalendarDay
 	// day presentation and interaction related props
-	renderDayContents: day => {
+	renderDayContents: (day) => {
 		return <span className="renderedDay">{day.format("D")}</span>;
 	},
 	minimumNights: 0,
@@ -56,7 +56,7 @@ const defaultProps = {
 	isDayBlocked: () => false,
 
 	// This gets default value at FieldDateRangeController
-	isOutsideRange: day => false,
+	isOutsideRange: (day) => false,
 	isDayHighlighted: () => {},
 
 	// Internationalization props

@@ -12,7 +12,7 @@ import classNames from "classnames";
 
 import css from "./MenuItem.module.css";
 
-const MenuItem = props => {
+const MenuItem = (props) => {
 	const { children, className, rootClassName } = props;
 	const rootClass = rootClassName || css.root;
 	const classes = classNames(rootClass, className);

@@ -48,7 +48,7 @@ export const WithInitialValues = {
 	component: EditListingDetailsForm,
 	props: {
 		formId: "WithInitialValues",
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit EditListingDetailsForm with (unformatted) values:", values);
 		},
 		saveActionMsg: "Save description",
@@ -60,7 +60,7 @@ export const WithInitialValues = {
 		onListingTypeChange: noop,
 		listingConfig: defaultConfig.listing,
 		selectableCategories: selectableCategories,
-		pickSelectedCategories: values => pickCategoryFields(values, "categoryLevel", 1, []),
+		pickSelectedCategories: (values) => pickCategoryFields(values, "categoryLevel", 1, []),
 		initialValues: {
 			title: "Listing",
 			description: "Lorem ipsum",
@@ -93,7 +93,7 @@ export const MultipleProcessInfos = {
 	component: EditListingDetailsForm,
 	props: {
 		formId: "MultipleProcessInfos",
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit EditListingDetailsForm with (unformatted) values:", values);
 		},
 		saveActionMsg: "Save description",
@@ -103,7 +103,7 @@ export const MultipleProcessInfos = {
 		updateInProgress: false,
 		selectableListingTypes: selectableListingTypes2,
 		selectableCategories: selectableCategories,
-		pickSelectedCategories: values => pickCategoryFields(values, "categoryLevel", 1, []),
+		pickSelectedCategories: (values) => pickCategoryFields(values, "categoryLevel", 1, []),
 		onListingTypeChange: noop,
 		listingConfig: defaultConfig.listing,
 	},
@@ -114,7 +114,7 @@ export const ChooseListingCategory = {
 	component: EditListingDetailsForm,
 	props: {
 		formId: "ChooseListingCategory",
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit EditListingDetailsForm with (unformatted) values:", values);
 		},
 		saveActionMsg: "Save description",
@@ -124,7 +124,7 @@ export const ChooseListingCategory = {
 		updateInProgress: false,
 		selectableListingTypes: selectableListingTypes2,
 		selectableCategories: selectableCategories,
-		pickSelectedCategories: values => pickCategoryFields(values, "categoryLevel", 1, []),
+		pickSelectedCategories: (values) => pickCategoryFields(values, "categoryLevel", 1, []),
 		onCategoryChange: noop,
 		onListingTypeChange: noop,
 		listingConfig: defaultConfig.listing,

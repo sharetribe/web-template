@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import RangeSlider from "./RangeSlider";
 
-const RangeSliderWrapper = props => {
+const RangeSliderWrapper = (props) => {
 	const [handles, setHandles] = useState(props.handles);
 	return (
 		<RangeSlider
 			{...props}
 			handles={handles}
-			onChange={v => {
+			onChange={(v) => {
 				setHandles(v);
 			}}
 		/>

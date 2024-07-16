@@ -4,7 +4,7 @@ import EditListingDeliveryForm from "./EditListingDeliveryForm";
 export const BothPickupAndShipping = {
 	component: EditListingDeliveryForm,
 	props: {
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit EditListingDeliveryForm with (unformatted) values:", values);
 		},
 		saveActionMsg: "Save location",
@@ -21,7 +21,7 @@ export const BothPickupAndShipping = {
 export const NoShipping = {
 	component: EditListingDeliveryForm,
 	props: {
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit EditListingDeliveryForm with (unformatted) values:", values);
 		},
 		saveActionMsg: "Save location",
@@ -40,7 +40,7 @@ export const NoShipping = {
 export const NoPickup = {
 	component: EditListingDeliveryForm,
 	props: {
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit EditListingDeliveryForm with (unformatted) values:", values);
 		},
 		saveActionMsg: "Save location",

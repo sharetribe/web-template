@@ -9,14 +9,14 @@ const DEG_TO_RAD = Math.PI / 180.0;
 const THREE_PI = Math.PI * 3;
 const TWO_PI = Math.PI * 2;
 
-const degToRadians = latlng => {
+const degToRadians = (latlng) => {
 	const { lat, lng } = latlng;
 	const latR = lat * DEG_TO_RAD;
 	const lngR = lng * DEG_TO_RAD;
 	return { lat: latR, lng: lngR };
 };
 
-const radToDegrees = latlngInRadians => {
+const radToDegrees = (latlngInRadians) => {
 	const { lat: latR, lng: lngR } = latlngInRadians;
 	const lat = latR / DEG_TO_RAD;
 	const lng = lngR / DEG_TO_RAD;
@@ -39,12 +39,7 @@ const obfuscatedCoordinatesImpl = (latlng, fuzzyOffset, cacheKey) => {
 
 	const randomizeBearing = cacheKey ? seedrandom(cacheKey)() : Math.random();
 	const randomizeDistance = cacheKey
-		? seedrandom(
-				cacheKey
-					.split("")
-					.reverse()
-					.join(""),
-		  )()
+		? seedrandom(cacheKey.split("").reverse().join(""))()
 		: Math.random();
 
 	// Randomize distance and bearing
@@ -114,10 +109,10 @@ export const userLocation = () =>
 			maximumAge: 0,
 		};
 
-		const onSuccess = position =>
+		const onSuccess = (position) =>
 			resolve(new LatLng(position.coords.latitude, position.coords.longitude));
 
-		const onError = error => reject(error);
+		const onError = (error) => reject(error);
 
 		navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
 	});
@@ -176,7 +171,7 @@ export const circlePolyline = (latlng, radius) => {
  * @return {LatLngBounds} - bounds cut to given fixed precision
  */
 export const sdkBoundsToFixedCoordinates = (sdkBounds, fixedPrecision) => {
-	const fixed = n => Number.parseFloat(n.toFixed(fixedPrecision));
+	const fixed = (n) => Number.parseFloat(n.toFixed(fixedPrecision));
 	const ne = new LatLng(fixed(sdkBounds.ne.lat), fixed(sdkBounds.ne.lng));
 	const sw = new LatLng(fixed(sdkBounds.sw.lat), fixed(sdkBounds.sw.lng));
 
@@ -209,7 +204,7 @@ export const hasSameSDKBounds = (sdkBounds1, sdkBounds2) => {
  * @param {Object} mapConfig
  * @returns googleMapsAPIKey or mapboxAccessToken
  */
-export const getMapProviderApiAccess = mapConfig => {
+export const getMapProviderApiAccess = (mapConfig) => {
 	const isGoogleMapsInUse = mapConfig.mapProvider === "googleMaps";
 	return isGoogleMapsInUse ? mapConfig.googleMapsAPIKey : mapConfig.mapboxAccessToken;
 };

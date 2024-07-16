@@ -10,7 +10,7 @@ const LINE_ITEM_DAY = "line-item/day";
 
 /** Helper functions for constructing line items*/
 
-const isNumber = value => {
+const isNumber = (value) => {
 	return typeof value === "number" && !isNaN(value);
 };
 
@@ -184,7 +184,7 @@ exports.calculateQuantityFromHours = (startDate, endDate) => {
  * @return {Money} lineTotal
  *
  */
-exports.calculateLineTotal = lineItem => {
+exports.calculateLineTotal = (lineItem) => {
 	const { code, unitPrice, quantity, percentage, seats, units } = lineItem;
 
 	if (quantity) {
@@ -206,7 +206,7 @@ exports.calculateLineTotal = lineItem => {
  * @param {Array} lineItems
  * @retuns {Money} total sum
  */
-exports.calculateTotalFromLineItems = lineItems => {
+exports.calculateTotalFromLineItems = (lineItems) => {
 	const totalPrice = lineItems.reduce((sum, lineItem) => {
 		const lineTotal = this.calculateLineTotal(lineItem);
 		return getAmountAsDecimalJS(lineTotal).add(sum);
@@ -224,8 +224,10 @@ exports.calculateTotalFromLineItems = lineItems => {
  * @param {*} lineItems
  * @returns {Money} total sum
  */
-exports.calculateTotalForProvider = lineItems => {
-	const providerLineItems = lineItems.filter(lineItem => lineItem.includeFor.includes("provider"));
+exports.calculateTotalForProvider = (lineItems) => {
+	const providerLineItems = lineItems.filter((lineItem) =>
+		lineItem.includeFor.includes("provider"),
+	);
 	return this.calculateTotalFromLineItems(providerLineItems);
 };
 
@@ -234,8 +236,10 @@ exports.calculateTotalForProvider = lineItems => {
  * @param {*} lineItems
  * @returns {Money} total sum
  */
-exports.calculateTotalForCustomer = lineItems => {
-	const providerLineItems = lineItems.filter(lineItem => lineItem.includeFor.includes("customer"));
+exports.calculateTotalForCustomer = (lineItems) => {
+	const providerLineItems = lineItems.filter((lineItem) =>
+		lineItem.includeFor.includes("customer"),
+	);
 	return this.calculateTotalFromLineItems(providerLineItems);
 };
 
@@ -250,8 +254,8 @@ exports.calculateTotalForCustomer = lineItems => {
  * @returns {Array} lineItems with lineTotal and reversal info
  *
  */
-exports.constructValidLineItems = lineItems => {
-	const lineItemsWithTotals = lineItems.map(lineItem => {
+exports.constructValidLineItems = (lineItems) => {
+	const lineItemsWithTotals = lineItems.map((lineItem) => {
 		const { code, quantity, percentage } = lineItem;
 
 		if (!/^line-item\/.+/.test(code)) {
@@ -278,7 +282,7 @@ exports.constructValidLineItems = lineItems => {
  * @param {Object} commission object potentially containing percentage property.
  * @returns boolean
  */
-exports.hasCommissionPercentage = commission => {
+exports.hasCommissionPercentage = (commission) => {
 	const percentage = commission?.percentage;
 	const isDefined = percentage != null;
 	const isNumber = typeof percentage === "number" && !isNaN(percentage);

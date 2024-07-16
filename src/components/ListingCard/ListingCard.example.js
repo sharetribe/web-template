@@ -5,7 +5,7 @@ import { createUser, createListing, fakeIntl } from "../../util/testData";
 
 const listing = createListing("listing1", {}, { author: createUser("user1") });
 
-const ListingCardWrapper = props => (
+const ListingCardWrapper = (props) => (
 	<div style={{ maxWidth: "400px" }}>
 		<ListingCard {...props} />
 	</div>

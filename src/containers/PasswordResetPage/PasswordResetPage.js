@@ -28,7 +28,7 @@ import PasswordResetForm from "./PasswordResetForm/PasswordResetForm";
 import { resetPassword } from "./PasswordResetPage.duck";
 import css from "./PasswordResetPage.module.css";
 
-const parseUrlParams = location => {
+const parseUrlParams = (location) => {
 	const params = parse(location.search);
 	const { t: token, e: email } = params;
 	return { token, email };
@@ -49,7 +49,7 @@ const ParamsMissingContent = () => {
 	);
 };
 
-const ResetFormContent = props => {
+const ResetFormContent = (props) => {
 	const { handleSubmit, resetPasswordInProgress, resetPasswordError } = props;
 	return (
 		<div className={css.content}>
@@ -91,7 +91,7 @@ const ResetDoneContent = () => {
 	);
 };
 
-export const PasswordResetPageComponent = props => {
+export const PasswordResetPageComponent = (props) => {
 	const [state, setState] = useState({ newPasswordSubmitted: false });
 	const config = useConfiguration();
 	const {
@@ -107,7 +107,7 @@ export const PasswordResetPageComponent = props => {
 	const hasParams = !!(token && email);
 	const isPasswordSubmitted = state.newPasswordSubmitted && !resetPasswordError;
 
-	const handleSubmit = values => {
+	const handleSubmit = (values) => {
 		const { password } = values;
 		setState({ newPasswordSubmitted: false });
 		onSubmitPassword(email, token, password).then(() => {
@@ -172,7 +172,7 @@ PasswordResetPageComponent.propTypes = {
 	intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	const { resetPasswordInProgress, resetPasswordError } = state.PasswordResetPage;
 	return {
 		scrollingDisabled: isScrollingDisabled(state),
@@ -181,7 +181,7 @@ const mapStateToProps = state => {
 	};
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
 	onSubmitPassword: (email, token, password) => dispatch(resetPassword(email, token, password)),
 });
 
@@ -193,10 +193,7 @@ const mapDispatchToProps = dispatch => ({
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const PasswordResetPage = compose(
 	withRouter,
-	connect(
-		mapStateToProps,
-		mapDispatchToProps,
-	),
+	connect(mapStateToProps, mapDispatchToProps),
 	injectIntl,
 )(PasswordResetPageComponent);
 

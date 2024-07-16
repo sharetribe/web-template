@@ -132,7 +132,7 @@ class SearchFiltersMobileComponent extends Component {
 				>
 					<div className={css.modalHeadingWrapper}>
 						<span className={css.modalHeading}>{filtersHeading}</span>
-						<button className={css.resetAllButton} onClick={e => this.resetAll(e)}>
+						<button className={css.resetAllButton} onClick={(e) => this.resetAll(e)}>
 							<FormattedMessage id={"SearchFiltersMobile.resetAll"} />
 						</button>
 					</div>
@@ -191,7 +191,7 @@ SearchFiltersMobileComponent.propTypes = {
 	}).isRequired,
 };
 
-const SearchFiltersMobile = props => {
+const SearchFiltersMobile = (props) => {
 	const routeConfiguration = useRouteConfiguration();
 	const intl = useIntl();
 	const history = useHistory();

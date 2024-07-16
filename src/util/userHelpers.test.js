@@ -349,7 +349,7 @@ describe("userHelpers", () => {
 			const inputConfig1 = getPropsForCustomUserFieldInputs(config, fakeIntl, "a");
 			const inputConfig2 = getPropsForCustomUserFieldInputs(config, fakeIntl, "c");
 
-			const filterFn = f => f.fieldConfig.saveConfig.displayInSignUp;
+			const filterFn = (f) => f.fieldConfig.saveConfig.displayInSignUp;
 			const filteredConfig1 = expectedUserFieldInput(1, ["a", "b"]).filter(filterFn);
 			expect(inputConfig1).toEqual(filteredConfig1);
 			const filteredConfig2 = expectedUserFieldInput(2, ["c", "d"]).filter(filterFn);

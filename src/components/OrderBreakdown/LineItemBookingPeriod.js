@@ -5,7 +5,7 @@ import { subtractTime } from "../../util/dates";
 
 import css from "./OrderBreakdown.module.css";
 
-const BookingPeriod = props => {
+const BookingPeriod = (props) => {
 	const { startDate, endDate, dateType, timeZone } = props;
 	const timeZoneMaybe = timeZone ? { timeZone } : null;
 
@@ -13,12 +13,12 @@ const BookingPeriod = props => {
 		dateType === DATE_TYPE_DATE
 			? {
 					weekday: "long",
-			  }
+				}
 			: {
 					weekday: "short",
 					hour: "numeric",
 					minute: "numeric",
-			  };
+				};
 
 	const dateFormatOptions = {
 		month: "short",
@@ -56,7 +56,7 @@ const BookingPeriod = props => {
 	);
 };
 
-const LineItemBookingPeriod = props => {
+const LineItemBookingPeriod = (props) => {
 	const { booking, code, dateType, timeZone } = props;
 
 	if (!booking) {

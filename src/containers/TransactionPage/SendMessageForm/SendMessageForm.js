@@ -58,7 +58,7 @@ class SendMessageFormComponent extends Component {
 		return (
 			<FinalForm
 				{...this.props}
-				render={formRenderProps => {
+				render={(formRenderProps) => {
 					const {
 						rootClassName,
 						className,
@@ -75,7 +75,7 @@ class SendMessageFormComponent extends Component {
 					const submitInProgress = inProgress;
 					const submitDisabled = invalid || submitInProgress;
 					return (
-						<Form className={classes} onSubmit={values => handleSubmit(values, form)}>
+						<Form className={classes} onSubmit={(values) => handleSubmit(values, form)}>
 							<FieldTextInput
 								inputRootClass={css.textarea}
 								type="textarea"

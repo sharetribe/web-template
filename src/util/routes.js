@@ -4,7 +4,7 @@ import { compile } from "path-to-regexp";
 import { stringify } from "./urlHelpers";
 // NOTE: This file imports urlHelpers.js, which may lead to circular dependency
 
-const findRouteByName = (nameToFind, routes) => find(routes, route => route.name === nameToFind);
+const findRouteByName = (nameToFind, routes) => find(routes, (route) => route.name === nameToFind);
 
 /**
  * E.g. ```const toListingPath = toPathByRouteName('ListingPage', routes);```
@@ -49,7 +49,7 @@ export const matchPathname = (pathname, routeConfiguration) => {
 		return matches;
 	}, []);
 
-	const matchedExactRoute = matchedRoutes.find(r => {
+	const matchedExactRoute = matchedRoutes.find((r) => {
 		return r.exact === true || r.exact == null;
 	});
 

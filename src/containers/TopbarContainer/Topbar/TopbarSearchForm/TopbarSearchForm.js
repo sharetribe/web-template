@@ -11,9 +11,9 @@ import { Form, LocationAutocompleteInput } from "../../../../components";
 import IconSearchDesktop from "./IconSearchDesktop";
 import css from "./TopbarSearchForm.module.css";
 
-const identity = v => v;
+const identity = (v) => v;
 
-const KeywordSearchField = props => {
+const KeywordSearchField = (props) => {
 	const { keywordSearchWrapperClasses, iconClass, intl, isMobile, inputRef } = props;
 	return (
 		<div className={keywordSearchWrapperClasses}>
@@ -45,7 +45,7 @@ const KeywordSearchField = props => {
 	);
 };
 
-const LocationSearchField = props => {
+const LocationSearchField = (props) => {
 	const { desktopInputRootClass, intl, isMobile, inputRef, onLocationChange } = props;
 	return (
 		<Field
@@ -58,7 +58,7 @@ const LocationSearchField = props => {
 				// be to use the FormSpy component from Final Form and pass this.onChange to the
 				// onChange prop but that breaks due to insufficient subscription handling.
 				// See: https://github.com/final-form/react-final-form/issues/159
-				const searchOnChange = value => {
+				const searchOnChange = (value) => {
 					onChange(value);
 					onLocationChange(value);
 				};
@@ -92,7 +92,7 @@ class TopbarSearchFormComponent extends Component {
 
 		// Callback ref
 		this.searchInput = null;
-		this.setSearchInputRef = element => {
+		this.setSearchInputRef = (element) => {
 			this.setSearchInput = element;
 		};
 	}
@@ -127,20 +127,14 @@ class TopbarSearchFormComponent extends Component {
 			<FinalForm
 				{...restOfProps}
 				onSubmit={submit}
-				render={formRenderProps => {
-					const {
-						rootClassName,
-						className,
-						desktopInputRoot,
-						intl,
-						isMobile,
-						handleSubmit,
-					} = formRenderProps;
+				render={(formRenderProps) => {
+					const { rootClassName, className, desktopInputRoot, intl, isMobile, handleSubmit } =
+						formRenderProps;
 					const classes = classNames(rootClassName, className);
 					const desktopInputRootClass = desktopInputRoot || css.desktopInputRoot;
 
 					// Location search: allow form submit only when the place has changed
-					const preventFormSubmit = e => e.preventDefault();
+					const preventFormSubmit = (e) => e.preventDefault();
 					const submitFormFn = isKeywordsSearch ? handleSubmit : preventFormSubmit;
 
 					const keywordSearchWrapperClasses = classNames(

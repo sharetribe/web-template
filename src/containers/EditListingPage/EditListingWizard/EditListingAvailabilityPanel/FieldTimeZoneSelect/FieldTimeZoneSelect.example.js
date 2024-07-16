@@ -8,17 +8,17 @@ import { Button } from "../../../../../components";
 
 import FieldTimeZoneSelect from "./FieldTimeZoneSelect";
 
-const FormComponent = props => (
+const FormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={fieldRenderProps => {
+		render={(fieldRenderProps) => {
 			const { form, handleSubmit, onChange, invalid, submitting } = fieldRenderProps;
 			const required = validators.required("This field is required");
 			const submitDisabled = invalid || submitting;
 			const formState = form.getState();
 			return (
 				<form
-					onSubmit={e => {
+					onSubmit={(e) => {
 						e.preventDefault();
 						handleSubmit(e);
 					}}
@@ -59,12 +59,12 @@ export const Select = {
 	component: FormComponent,
 	props: {
 		initialValues: { timezone1 },
-		onChange: formState => {
+		onChange: (formState) => {
 			if (formState.dirty && formState.values.timezone1) {
 				console.log("form values changed to:", formState.values);
 			}
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("submit values:", values);
 			return false;
 		},

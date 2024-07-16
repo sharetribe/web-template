@@ -24,12 +24,12 @@ import {
 // Import modules from this directory
 import css from "./EditListingLocationForm.module.css";
 
-const identity = v => v;
+const identity = (v) => v;
 
-export const EditListingLocationFormComponent = props => (
+export const EditListingLocationFormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={formRenderProps => {
+		render={(formRenderProps) => {
 			const {
 				formId,
 				autoFocus,

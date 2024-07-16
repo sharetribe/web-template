@@ -24,12 +24,12 @@ import css from "./WeekPicker.module.css";
 const KEY_CODE_ESCAPE = 27;
 const TODAY = new Date();
 
-const PickerForm = props => {
+const PickerForm = (props) => {
 	return (
 		<FinalForm
 			{...props}
 			onSubmit={() => null}
-			render={formRenderProps => {
+			render={(formRenderProps) => {
 				const { handleSubmit, children } = formRenderProps;
 
 				return (
@@ -42,28 +42,20 @@ const PickerForm = props => {
 	);
 };
 
-const handleKeyDown = setIsOpen => e => {
+const handleKeyDown = (setIsOpen) => (e) => {
 	// Gather all escape presses to close menu
 	if (e.keyCode === KEY_CODE_ESCAPE) {
 		setIsOpen(false);
 	}
 };
 
-const WeekPicker = props => {
+const WeekPicker = (props) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [currentMonth, setCurrentMonth] = useState(initialVisibleMonth(props.date, props.timeZone));
 
-	const {
-		rootClassName,
-		className,
-		label,
-		date,
-		onDateChange,
-		timeZone,
-		initialValues,
-		...rest
-	} = props;
-	const onMonthClick = startOfMonth => {
+	const { rootClassName, className, label, date, onDateChange, timeZone, initialValues, ...rest } =
+		props;
+	const onMonthClick = (startOfMonth) => {
 		setCurrentMonth(startOfMonth);
 	};
 	const classes = classNames(rootClassName || css.root, className);
@@ -72,7 +64,10 @@ const WeekPicker = props => {
 	return (
 		<OutsideClickHandler onOutsideClick={() => setIsOpen(false)}>
 			<div className={classes} onKeyDown={handleKeyDown(setIsOpen)}>
-				<InlineTextButton className={css.label} onClick={() => setIsOpen(prevState => !prevState)}>
+				<InlineTextButton
+					className={css.label}
+					onClick={() => setIsOpen((prevState) => !prevState)}
+				>
 					{label}
 				</InlineTextButton>
 				<div className={popupClasses}>

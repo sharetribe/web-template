@@ -27,7 +27,7 @@ import css from "./ContactDetailsForm.module.css";
 
 const SHOW_EMAIL_SENT_TIMEOUT = 2000;
 
-const PhoneNumberMaybe = props => {
+const PhoneNumberMaybe = (props) => {
 	const { formId, userTypeConfig, intl } = props;
 
 	const isDisabled = userTypeConfig?.defaultUserFields?.phoneNumber === false;
@@ -45,7 +45,7 @@ const PhoneNumberMaybe = props => {
 						id: "ContactDetailsForm.phoneRequired",
 					}),
 				),
-		  }
+			}
 		: {};
 
 	return (
@@ -97,7 +97,7 @@ class ContactDetailsFormComponent extends Component {
 		return (
 			<FinalForm
 				{...this.props}
-				render={fieldRenderProps => {
+				render={(fieldRenderProps) => {
 					const {
 						rootClassName,
 						className,
@@ -342,7 +342,7 @@ class ContactDetailsFormComponent extends Component {
 					return (
 						<Form
 							className={classes}
-							onSubmit={e => {
+							onSubmit={(e) => {
 								this.submittedValues = values;
 								handleSubmit(e);
 							}}

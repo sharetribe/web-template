@@ -49,9 +49,9 @@ import { stateDataShape, getStateData } from "./InboxPage.stateData";
 import css from "./InboxPage.module.css";
 
 // Check if the transaction line-items use booking-related units
-const getUnitLineItem = lineItems => {
+const getUnitLineItem = (lineItems) => {
 	const unitLineItem = lineItems?.find(
-		item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal,
+		(item) => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal,
 	);
 	return unitLineItem;
 };
@@ -76,7 +76,7 @@ const bookingData = (tx, lineItemUnitType, timeZone) => {
 	return { bookingStart, bookingEnd };
 };
 
-const BookingTimeInfoMaybe = props => {
+const BookingTimeInfoMaybe = (props) => {
 	const { transaction, ...rest } = props;
 	const processName = resolveLatestProcessName(transaction?.attributes?.processName);
 	const process = getProcess(processName);
@@ -89,8 +89,8 @@ const BookingTimeInfoMaybe = props => {
 	const hasLineItems = transaction?.attributes?.lineItems?.length > 0;
 	const unitLineItem = hasLineItems
 		? transaction.attributes?.lineItems?.find(
-				item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal,
-		  )
+				(item) => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal,
+			)
 		: null;
 
 	const lineItemUnitType = unitLineItem ? unitLineItem.code : null;
@@ -114,7 +114,7 @@ BookingTimeInfoMaybe.propTypes = {
 	transaction: propTypes.transaction.isRequired,
 };
 
-export const InboxItem = props => {
+export const InboxItem = (props) => {
 	const {
 		transactionRole,
 		tx,
@@ -188,7 +188,7 @@ InboxItem.propTypes = {
 	stateData: stateDataShape.isRequired,
 };
 
-export const InboxPageComponent = props => {
+export const InboxPageComponent = (props) => {
 	const config = useConfiguration();
 	const {
 		currentUser,
@@ -213,14 +213,14 @@ export const InboxPageComponent = props => {
 	const salesTitle = intl.formatMessage({ id: "InboxPage.salesTitle" });
 	const title = isOrders ? ordersTitle : salesTitle;
 
-	const pickType = lt => conf => conf.listingType === lt;
-	const findListingTypeConfig = publicData => {
+	const pickType = (lt) => (conf) => conf.listingType === lt;
+	const findListingTypeConfig = (publicData) => {
 		const listingTypeConfigs = config.listing?.listingTypes;
 		const { listingType } = publicData || {};
 		const foundConfig = listingTypeConfigs?.find(pickType(listingType));
 		return foundConfig;
 	};
-	const toTxItem = tx => {
+	const toTxItem = (tx) => {
 		const transactionRole = isOrders ? TX_TRANSITION_ACTOR_CUSTOMER : TX_TRANSITION_ACTOR_PROVIDER;
 		let stateData = null;
 		try {
@@ -369,7 +369,7 @@ InboxPageComponent.propTypes = {
 	intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	const { fetchInProgress, fetchOrdersOrSalesError, pagination, transactionRefs } = state.InboxPage;
 	const { currentUser, currentUserNotificationCount: providerNotificationCount } = state.user;
 	return {
@@ -383,9 +383,6 @@ const mapStateToProps = state => {
 	};
 };
 
-const InboxPage = compose(
-	connect(mapStateToProps),
-	injectIntl,
-)(InboxPageComponent);
+const InboxPage = compose(connect(mapStateToProps), injectIntl)(InboxPageComponent);
 
 export default InboxPage;

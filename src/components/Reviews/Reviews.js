@@ -7,7 +7,7 @@ import { propTypes } from "../../util/types";
 
 import css from "./Reviews.module.css";
 
-const Review = props => {
+const Review = (props) => {
 	const { review, intl } = props;
 
 	const date = review.attributes.createdAt;
@@ -46,13 +46,13 @@ Review.propTypes = {
 	intl: intlShape.isRequired,
 };
 
-const ReviewsComponent = props => {
+const ReviewsComponent = (props) => {
 	const { className, rootClassName, reviews, intl } = props;
 	const classes = classNames(rootClassName || css.root, className);
 
 	return (
 		<ul className={classes}>
-			{reviews.map(r => {
+			{reviews.map((r) => {
 				return (
 					<li key={`Review_${r.id.uuid}`} className={css.reviewItem}>
 						<Review review={r} intl={intl} />

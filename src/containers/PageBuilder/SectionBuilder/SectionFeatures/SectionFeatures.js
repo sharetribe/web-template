@@ -14,7 +14,7 @@ import css from "./SectionFeatures.module.css";
 // [image] text
 // text [image]
 // [image] text
-const SectionFeatures = props => {
+const SectionFeatures = (props) => {
 	const {
 		sectionId,
 		className,

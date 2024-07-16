@@ -13,15 +13,9 @@ import EditIcon from "./EditIcon";
 
 import css from "./ListingPage.module.css";
 
-export const ActionBarMaybe = props => {
-	const {
-		rootClassName,
-		className,
-		isOwnListing,
-		listing,
-		editParams,
-		showNoPayoutDetailsSet,
-	} = props;
+export const ActionBarMaybe = (props) => {
+	const { rootClassName, className, isOwnListing, listing, editParams, showNoPayoutDetailsSet } =
+		props;
 	const classes = classNames(rootClassName || css.actionBar, className);
 
 	const state = listing.attributes.state;

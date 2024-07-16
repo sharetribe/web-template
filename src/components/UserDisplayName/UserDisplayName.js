@@ -3,15 +3,9 @@ import classNames from "classnames";
 import { oneOfType, string } from "prop-types";
 import { propTypes } from "../../util/types";
 
-const UserDisplayName = props => {
-	const {
-		rootClassName,
-		className,
-		user,
-		intl,
-		deletedUserDisplayName,
-		bannedUserDisplayName,
-	} = props;
+const UserDisplayName = (props) => {
+	const { rootClassName, className, user, intl, deletedUserDisplayName, bannedUserDisplayName } =
+		props;
 	const hasAttributes = user && user.attributes;
 	const userIsDeleted = hasAttributes && user.attributes.deleted;
 	const userIsBanned = hasAttributes && user.attributes.banned;
@@ -22,21 +16,21 @@ const UserDisplayName = props => {
 		? deletedUserDisplayName
 		: intl.formatMessage({
 				id: "UserDisplayName.deleted",
-		  });
+			});
 
 	const bannedUserDisplayNameInUse = bannedUserDisplayName
 		? bannedUserDisplayName
 		: intl.formatMessage({
 				id: "UserDisplayName.banned",
-		  });
+			});
 
 	const displayName = userDisplayName
 		? userDisplayName
 		: userIsDeleted
-		? deletedUserDisplayNameInUse
-		: userIsBanned
-		? bannedUserDisplayNameInUse
-		: null;
+			? deletedUserDisplayNameInUse
+			: userIsBanned
+				? bannedUserDisplayNameInUse
+				: null;
 
 	const classes = classNames(rootClassName, className);
 	return <span className={classes}>{displayName}</span>;

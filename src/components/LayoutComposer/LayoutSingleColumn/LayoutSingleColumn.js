@@ -7,7 +7,7 @@ import LayoutComposer from "../LayoutComposer";
 import css from "./LayoutSingleColumn.module.css";
 
 // Commonly used layout
-const LayoutSingleColumn = props => {
+const LayoutSingleColumn = (props) => {
 	const {
 		className,
 		rootClassName,
@@ -27,7 +27,7 @@ const LayoutSingleColumn = props => {
 
 	return (
 		<LayoutComposer areas={layoutAreas} className={classes} {...rest}>
-			{layoutProps => {
+			{(layoutProps) => {
 				const { Topbar, Main, Footer } = layoutProps;
 				return (
 					<>

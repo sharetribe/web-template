@@ -18,7 +18,7 @@ export const CustomAppearance = React.forwardRef((props, ref) => {
 		sizes,
 	} = props;
 
-	const getVariantNames = img => {
+	const getVariantNames = (img) => {
 		const { variants } = img?.attributes || {};
 		return variants ? Object.keys(variants) : [];
 	};

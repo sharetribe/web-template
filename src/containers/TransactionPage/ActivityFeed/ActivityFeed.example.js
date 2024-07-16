@@ -259,7 +259,7 @@ export const WithAReviewFromBothUsers = {
 	group: "page:TransactionPage",
 };
 
-const PagedFeed = props => {
+const PagedFeed = (props) => {
 	const [showAllMessages, setShowAllMessages] = useState(false);
 	const dates = [
 		new Date(Date.UTC(2017, 10, 20, 12)),

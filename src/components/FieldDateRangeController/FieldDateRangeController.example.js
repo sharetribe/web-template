@@ -3,17 +3,17 @@ import { Form as FinalForm } from "react-final-form";
 
 import FieldDateRangeController from "./FieldDateRangeController";
 
-const FormComponent = props => (
+const FormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={formRenderProps => {
+		render={(formRenderProps) => {
 			const { style, handleSubmit, onChange, dirty } = formRenderProps;
 
 			const handleChange = dirty ? onChange : () => null;
 			return (
 				<form
 					style={style}
-					onSubmit={e => {
+					onSubmit={(e) => {
 						e.preventDefault();
 						handleSubmit(e);
 					}}
@@ -28,7 +28,7 @@ const FormComponent = props => (
 export const DateRangeControllerExample = {
 	component: FormComponent,
 	props: {
-		onChange: values => {
+		onChange: (values) => {
 			if (values) {
 				const { startDate, endDate } = values;
 				console.log("Changed to: ", startDate, endDate);

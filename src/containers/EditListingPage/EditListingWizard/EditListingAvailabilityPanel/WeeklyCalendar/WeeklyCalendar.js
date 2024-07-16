@@ -164,7 +164,7 @@ const AvailableExceptionsInfo = ({
 			<Heading as="h6" rootClassName={css.exceptionsSubtitle}>
 				<FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.available" />
 			</Heading>
-			{availableExceptions.map(exception => {
+			{availableExceptions.map((exception) => {
 				return (
 					<ExceptionEntry
 						key={exception.id.uuid}
@@ -194,7 +194,7 @@ const NotAvailableExceptionsInfo = ({
 			<Heading as="h6" rootClassName={css.exceptionsSubtitle}>
 				<FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.notAvailable" />
 			</Heading>
-			{blockingExceptions.map(exception => {
+			{blockingExceptions.map((exception) => {
 				return (
 					<ExceptionEntry
 						key={exception.id.uuid}
@@ -211,7 +211,7 @@ const NotAvailableExceptionsInfo = ({
 };
 
 // The calendar date info (related to <DateLabel>)
-const CalendarDate = props => {
+const CalendarDate = (props) => {
 	const intl = useIntl();
 	const {
 		availabilityData,
@@ -225,8 +225,8 @@ const CalendarDate = props => {
 	} = props;
 	const hasPlanEntries = availabilityData?.planEntries?.length > 0;
 	const hasExceptions = availabilityData?.exceptions?.length > 0;
-	const availableExceptions = availabilityData.exceptions.filter(e => e.attributes.seats > 0);
-	const blockingExceptions = availabilityData.exceptions.filter(e => e.attributes.seats === 0);
+	const availableExceptions = availabilityData.exceptions.filter((e) => e.attributes.seats > 0);
+	const blockingExceptions = availabilityData.exceptions.filter((e) => e.attributes.seats === 0);
 	const date = parseDateFromISO8601(availabilityData?.id, timeZone);
 
 	return (
@@ -319,7 +319,7 @@ const FormattedWeekRange = ({ currentWeek, endOfCurrentWeek, timeZone, intl }) =
 };
 
 // WeeklyCalendar shows the weekly data (plan entries & exceptions) on selected week (on given time zone)
-const WeeklyCalendar = props => {
+const WeeklyCalendar = (props) => {
 	const [currentWeek, setCurrentWeek] = useState(
 		getStartOfSelectedWeek({ ...props, timeZone: props.availabilityPlan.timezone }),
 	);
@@ -384,10 +384,10 @@ const WeeklyCalendar = props => {
 			};
 
 			console.log("\n\n%cDaily availability ranges:", "font-weight: bold;");
-			Object.keys(availableDates).forEach(d => {
+			Object.keys(availableDates).forEach((d) => {
 				const weekday = intl.formatDate(availableDates[d]?.ranges?.[0]?.start, { weekday: "long" });
 				console.log(`\n${d} ${weekday}`);
-				availableDates[d].ranges.map(r => {
+				availableDates[d].ranges.map((r) => {
 					formatRange(r.start, r.end, r.seats > 0, timeZone);
 				});
 			});
@@ -435,7 +435,7 @@ const WeeklyCalendar = props => {
 						initialValues={{ dates: { startDate: currentWeek, endDate: endOfCurrentWeek } }}
 						firstDayOfWeek={firstDayOfWeek}
 						date={getMomentFromDate(currentWeek)}
-						onDateChange={date => {
+						onDateChange={(date) => {
 							const updatedDate = getStartOfWeek(date, timeZone, firstDayOfWeek);
 							setCurrentWeek(updatedDate);
 							const redirectTo = createResourceLocatorString(
@@ -446,10 +446,10 @@ const WeeklyCalendar = props => {
 							);
 							history.replace(redirectTo);
 						}}
-						startDateOffset={day => getStartOfWeekAsMoment(day, timeZone, firstDayOfWeek)}
-						endDateOffset={day => getEndOfWeekAsMoment(day, timeZone, firstDayOfWeek)}
+						startDateOffset={(day) => getStartOfWeekAsMoment(day, timeZone, firstDayOfWeek)}
+						endDateOffset={(day) => getEndOfWeekAsMoment(day, timeZone, firstDayOfWeek)}
 						onFocusChange={({ focused }) => setWeekPickerFocused(focused)}
-						isOutsideRange={day => !isInRange(day, thisWeek, endOfRange, "day", timeZone)}
+						isOutsideRange={(day) => !isInRange(day, thisWeek, endOfRange, "day", timeZone)}
 						timeZone={timeZone}
 					/>
 				</div>

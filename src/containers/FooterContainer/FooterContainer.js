@@ -5,7 +5,7 @@ import loadable from "@loadable/component";
 const SectionBuilder = loadable(
 	() => import(/* webpackChunkName: "SectionBuilder" */ "../PageBuilder/PageBuilder"),
 	{
-		resolveComponent: components => components.SectionBuilder,
+		resolveComponent: (components) => components.SectionBuilder,
 	},
 );
 

@@ -60,7 +60,7 @@ export default function reducer(state = initialState, action = {}) {
 // ================ Action creators ================ //
 
 export const passwordRecoveryRequest = () => ({ type: RECOVERY_REQUEST });
-export const passwordRecoverySuccess = email => ({ type: RECOVERY_SUCCESS, payload: { email } });
+export const passwordRecoverySuccess = (email) => ({ type: RECOVERY_SUCCESS, payload: { email } });
 export const passwordRecoveryError = (error, email) => ({
 	type: RECOVERY_ERROR,
 	payload: { error, email },
@@ -71,11 +71,11 @@ export const clearPasswordRecoveryError = () => ({ type: CLEAR_RECOVERY_ERROR })
 
 // ================ Thunks ================ //
 
-export const recoverPassword = email => (dispatch, getState, sdk) => {
+export const recoverPassword = (email) => (dispatch, getState, sdk) => {
 	dispatch(passwordRecoveryRequest());
 
 	return sdk.passwordReset
 		.request({ email })
 		.then(() => dispatch(passwordRecoverySuccess(email)))
-		.catch(e => dispatch(passwordRecoveryError(storableError(e), email)));
+		.catch((e) => dispatch(passwordRecoveryError(storableError(e), email)));
 };

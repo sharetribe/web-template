@@ -8,7 +8,7 @@ import * as validators from "../../util/validators";
 
 import { FieldTextInput } from "../../components";
 
-const UserFieldDisplayName = props => {
+const UserFieldDisplayName = (props) => {
 	const { rootClassName, className, formId, formName, userTypeConfig, intl } = props;
 
 	const { displayInSignUp, required } = userTypeConfig?.displayNameSettings || {};
@@ -27,7 +27,7 @@ const UserFieldDisplayName = props => {
 						id: `${formName}.displayNameRequired`,
 					}),
 				),
-		  }
+			}
 		: {};
 
 	return (

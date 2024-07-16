@@ -10,7 +10,7 @@ import css from "./SectionArticle.module.css";
 
 // Section component that's able to show article content
 // The article content is mainly supposed to be inside a block
-const SectionArticle = props => {
+const SectionArticle = (props) => {
 	const {
 		sectionId,
 		className,

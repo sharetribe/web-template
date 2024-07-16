@@ -14,18 +14,18 @@ import css from "./PriceFilterPopup.module.css";
 const KEY_CODE_ESCAPE = 27;
 const RADIX = 10;
 
-const getPriceQueryParamName = queryParamNames => {
+const getPriceQueryParamName = (queryParamNames) => {
 	return Array.isArray(queryParamNames)
 		? queryParamNames[0]
 		: typeof queryParamNames === "string"
-		? queryParamNames
-		: "price";
+			? queryParamNames
+			: "price";
 };
 
 // Parse value, which should look like "0,1000"
-const parse = priceRange => {
+const parse = (priceRange) => {
 	const [minPrice, maxPrice] = !!priceRange
-		? priceRange.split(",").map(v => Number.parseInt(v, RADIX))
+		? priceRange.split(",").map((v) => Number.parseInt(v, RADIX))
 		: [];
 	// Note: we compare to null, because 0 as minPrice is falsy in comparisons.
 	return !!priceRange && minPrice != null && maxPrice != null ? { minPrice, maxPrice } : null;
@@ -91,7 +91,7 @@ class PriceFilterPopup extends Component {
 		if (enforcedState) {
 			this.setState({ isOpen: enforcedState });
 		} else {
-			this.setState(prevState => ({ isOpen: !prevState.isOpen }));
+			this.setState((prevState) => ({ isOpen: !prevState.isOpen }));
 		}
 	}
 
@@ -139,7 +139,7 @@ class PriceFilterPopup extends Component {
 			initialValues && initialValues[priceQueryParam] ? parse(initialValues[priceQueryParam]) : {};
 		const { minPrice, maxPrice } = initialPrice || {};
 
-		const hasValue = value => value != null;
+		const hasValue = (value) => value != null;
 		const hasInitialValues = initialValues && hasValue(minPrice) && hasValue(maxPrice);
 
 		const currentLabel = hasInitialValues
@@ -149,10 +149,10 @@ class PriceFilterPopup extends Component {
 						minPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, minPrice),
 						maxPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, maxPrice),
 					},
-			  )
+				)
 			: label
-			? label
-			: intl.formatMessage({ id: "PriceFilter.label" });
+				? label
+				: intl.formatMessage({ id: "PriceFilter.label" });
 
 		const labelStyles = hasInitialValues ? css.labelSelected : css.label;
 		const contentStyle = this.positionStyleForContent();
@@ -162,7 +162,7 @@ class PriceFilterPopup extends Component {
 				<div
 					className={classes}
 					onKeyDown={this.handleKeyDown}
-					ref={node => {
+					ref={(node) => {
 						this.filter = node;
 					}}
 				>
@@ -177,7 +177,7 @@ class PriceFilterPopup extends Component {
 						onCancel={this.handleCancel}
 						onSubmit={this.handleSubmit}
 						intl={intl}
-						contentRef={node => {
+						contentRef={(node) => {
 							this.filterContent = node;
 						}}
 						style={contentStyle}

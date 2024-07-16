@@ -15,7 +15,7 @@ const GOOGLE_MAPS_SCRIPT_ID = "GoogleMapsApi";
  *         if a Content Security Policy (CSP) is turned on, the new URLs
  *         should be whitelisted in the policy. Check: server/csp.js
  */
-export const IncludeScripts = props => {
+export const IncludeScripts = (props) => {
 	const { marketplaceRootURL: rootURL, maps, analytics } = props?.config || {};
 	const { googleAnalyticsId, plausibleDomains } = analytics;
 
@@ -137,7 +137,7 @@ export const IncludeScripts = props => {
 	// We can use that to start listen 'load' events when the library is added on client-side.
 	const onChangeClientState = (newState, addedTags) => {
 		if (addedTags && addedTags.scriptTags) {
-			const foundScript = addedTags.scriptTags.find(s =>
+			const foundScript = addedTags.scriptTags.find((s) =>
 				[MAPBOX_SCRIPT_ID, GOOGLE_MAPS_SCRIPT_ID].includes(s.id),
 			);
 			if (foundScript) {

@@ -94,7 +94,7 @@ describe("sanitize utils", () => {
 				" &#14; javascript:alert('XSS');",
 			];
 
-			attackVectors.forEach(vector => {
+			attackVectors.forEach((vector) => {
 				expect(sanitizeUrl(vector)).toBe("about:blank");
 			});
 
@@ -109,7 +109,7 @@ describe("sanitize utils", () => {
 		});
 
 		describe("invalid protocols", () => {
-			describe.each(["javascript", "data", "vbscript"])("%s", protocol => {
+			describe.each(["javascript", "data", "vbscript"])("%s", (protocol) => {
 				it(`replaces ${protocol} urls with about:blank`, () => {
 					expect(sanitizeUrl(`${protocol}:alert(document.domain)`)).toBe("about:blank");
 				});

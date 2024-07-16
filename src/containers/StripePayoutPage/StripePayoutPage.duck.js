@@ -41,7 +41,7 @@ export default function reducer(state = initialState, action = {}) {
 
 // ================ Action creators ================ //
 
-export const setInitialValues = initialValues => ({
+export const setInitialValues = (initialValues) => ({
 	type: SET_INITIAL_VALUES,
 	payload: pick(initialValues, Object.keys(initialState)),
 });
@@ -63,7 +63,7 @@ export const savePayoutDetails = (values, isUpdateCall) => (dispatch, getState, 
 	dispatch(savePayoutDetailsRequest());
 
 	return dispatch(upsertThunk(values, { expand: true }))
-		.then(response => {
+		.then((response) => {
 			dispatch(savePayoutDetailsSuccess());
 			return response;
 		})
@@ -75,7 +75,7 @@ export const loadData = () => (dispatch, getState, sdk) => {
 	// in case this page load fails.
 	dispatch(setInitialValues());
 
-	return dispatch(fetchCurrentUser()).then(response => {
+	return dispatch(fetchCurrentUser()).then((response) => {
 		const currentUser = getState().user.currentUser;
 		if (currentUser && currentUser.stripeAccount) {
 			dispatch(fetchStripeAccount());

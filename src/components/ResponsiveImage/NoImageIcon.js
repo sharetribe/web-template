@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const NoImageIcon = props => {
+const NoImageIcon = (props) => {
 	const { className } = props;
 
 	return (

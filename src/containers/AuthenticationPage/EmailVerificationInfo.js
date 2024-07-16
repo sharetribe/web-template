@@ -6,7 +6,7 @@ import { Heading, NamedLink, IconEmailSent, InlineTextButton, IconClose } from "
 
 import css from "./AuthenticationPage.module.css";
 
-const EmailVerificationInfo = props => {
+const EmailVerificationInfo = (props) => {
 	const {
 		name,
 		email,

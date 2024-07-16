@@ -171,19 +171,19 @@ describe("data utils", () => {
 	});
 
 	describe("denormalisedEntities()", () => {
-		const createListing = id => ({
+		const createListing = (id) => ({
 			id: new UUID(id),
 			type: "listing",
 			attributes: { title: `Listing ${id} title`, description: `Listing ${id} description` },
 		});
 
-		const createUser = id => ({
+		const createUser = (id) => ({
 			id: new UUID(id),
 			type: "user",
 			attributes: { name: `User ${id} name` },
 		});
 
-		const createImage = id => ({
+		const createImage = (id) => ({
 			id: new UUID(id),
 			type: "image",
 			attributes: { url: `https://example.com/${id}.jpg`, width: 300, height: 200 },

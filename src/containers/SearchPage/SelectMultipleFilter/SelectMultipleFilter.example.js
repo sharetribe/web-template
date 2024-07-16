@@ -47,7 +47,7 @@ const handleSubmit = (values, history) => {
 	history.push(`${window.location.pathname}${queryParams}`);
 };
 
-const AmenitiesFilterPopup = withRouter(props => {
+const AmenitiesFilterPopup = withRouter((props) => {
 	const { history, location } = props;
 
 	const params = parse(location.search);
@@ -60,7 +60,7 @@ const AmenitiesFilterPopup = withRouter(props => {
 			name="amenities"
 			queryParamNames={[URL_PARAM]}
 			label="Amenities"
-			onSubmit={values => handleSubmit(values, history)}
+			onSubmit={(values) => handleSubmit(values, history)}
 			showAsPopup={true}
 			liveEdit={false}
 			options={options}
@@ -77,7 +77,7 @@ export const AmenitiesFilterPopupExample = {
 	group: "page:SearchPage",
 };
 
-const AmenitiesFilterPlain = withRouter(props => {
+const AmenitiesFilterPlain = withRouter((props) => {
 	const { history, location } = props;
 
 	const params = parse(location.search);
@@ -90,7 +90,7 @@ const AmenitiesFilterPlain = withRouter(props => {
 			name="amenities"
 			queryParamNames={[URL_PARAM]}
 			label="Amenities"
-			onSubmit={values => {
+			onSubmit={(values) => {
 				handleSubmit(values, history);
 			}}
 			showAsPopup={false}

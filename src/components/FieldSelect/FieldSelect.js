@@ -6,7 +6,7 @@ import { ValidationError } from "../../components";
 
 import css from "./FieldSelect.module.css";
 
-const FieldSelectComponent = props => {
+const FieldSelectComponent = (props) => {
 	const {
 		rootClassName,
 		className,
@@ -34,7 +34,7 @@ const FieldSelectComponent = props => {
 		[selectClassName]: selectClassName,
 		[css.selectError]: hasError,
 	});
-	const handleChange = e => {
+	const handleChange = (e) => {
 		input.onChange(e);
 		if (onChange) {
 			onChange(e.currentTarget.value);
@@ -81,7 +81,7 @@ FieldSelectComponent.propTypes = {
 	children: node,
 };
 
-const FieldSelect = props => {
+const FieldSelect = (props) => {
 	return <Field component={FieldSelectComponent} {...props} />;
 };
 

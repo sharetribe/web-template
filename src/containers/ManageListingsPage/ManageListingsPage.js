@@ -139,7 +139,7 @@ export class ManageListingsPageComponent extends Component {
 					<div className={css.listingPanel}>
 						{heading}
 						<div className={css.listingCards}>
-							{listings.map(l => (
+							{listings.map((l) => (
 								<ManageListingCard
 									className={css.listingCard}
 									key={l.id.uuid}
@@ -200,7 +200,7 @@ ManageListingsPageComponent.propTypes = {
 	intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	const {
 		currentPageResultIds,
 		pagination,
@@ -228,16 +228,13 @@ const mapStateToProps = state => {
 	};
 };
 
-const mapDispatchToProps = dispatch => ({
-	onCloseListing: listingId => dispatch(closeListing(listingId)),
-	onOpenListing: listingId => dispatch(openListing(listingId)),
+const mapDispatchToProps = (dispatch) => ({
+	onCloseListing: (listingId) => dispatch(closeListing(listingId)),
+	onOpenListing: (listingId) => dispatch(openListing(listingId)),
 });
 
 const ManageListingsPage = compose(
-	connect(
-		mapStateToProps,
-		mapDispatchToProps,
-	),
+	connect(mapStateToProps, mapDispatchToProps),
 	injectIntl,
 )(ManageListingsPageComponent);
 

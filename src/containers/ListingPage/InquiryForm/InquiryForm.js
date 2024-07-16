@@ -13,7 +13,7 @@ import { Form, PrimaryButton, FieldTextInput, IconInquiry, Heading } from "../..
 
 import css from "./InquiryForm.module.css";
 
-const ErrorMessage = props => {
+const ErrorMessage = (props) => {
 	const { error } = props;
 	// No transaction process attached to listing
 	return error ? (
@@ -31,10 +31,10 @@ const ErrorMessage = props => {
 
 // NOTE: this InquiryForm is only for booking & purchase processes
 // The default-inquiry process is handled differently
-const InquiryFormComponent = props => (
+const InquiryFormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={fieldRenderProps => {
+		render={(fieldRenderProps) => {
 			const {
 				rootClassName,
 				className,

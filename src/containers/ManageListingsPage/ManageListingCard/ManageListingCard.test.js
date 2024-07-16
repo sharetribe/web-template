@@ -16,7 +16,7 @@ const { screen, waitFor } = testingLibrary;
 const { Money } = sdkTypes;
 const noop = () => null;
 
-const getConfig = listingTypes => {
+const getConfig = (listingTypes) => {
 	const hostedConfig = getHostedConfiguration();
 	return {
 		...hostedConfig,

@@ -5,10 +5,10 @@ export const Empty = {
 	props: {
 		formId: "SendMessageForm.Empty.Form",
 		messagePlaceholder: "Send message to Juho…",
-		onChange: values => {
+		onChange: (values) => {
 			console.log("values changed to:", values);
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("submit values:", values);
 		},
 		onFocus: () => {
@@ -27,7 +27,7 @@ export const InProgress = {
 		formId: "SendMessageForm.InProgress.Form",
 		messagePlaceholder: "Send message to Juho…",
 		inProgress: true,
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("submit values:", values);
 		},
 	},
@@ -40,7 +40,7 @@ export const Error = {
 		formId: "SendMessageForm.Error.Form",
 		messagePlaceholder: "Send message to Juho…",
 		sendMessageError: { type: "error", name: "ExampleError" },
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("submit values:", values);
 		},
 	},

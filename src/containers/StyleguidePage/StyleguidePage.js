@@ -12,7 +12,7 @@ const ALL = "*";
 const DEFAULT_GROUP = "misc";
 const PREFIX_SEPARATOR = ":";
 
-const Example = props => {
+const Example = (props) => {
 	const {
 		componentName,
 		exampleName,
@@ -92,7 +92,7 @@ Example.propTypes = {
 };
 
 // Renders the list of component example groups as clickable filters
-const Nav = props => {
+const Nav = (props) => {
 	const { groups, selectedGroup } = props;
 	const toGroupLink = (group, linkableContent) => {
 		const linkProps = {
@@ -103,8 +103,8 @@ const Nav = props => {
 		const linkContent = linkableContent
 			? linkableContent
 			: group === ALL
-			? "all components"
-			: group;
+				? "all components"
+				: group;
 		const isSelected = selectedGroup && group === selectedGroup;
 		const groupLink = classNames(css.link, { [css.selectedGroup]: isSelected });
 		return (
@@ -116,7 +116,7 @@ const Nav = props => {
 		);
 	};
 
-	const filteredGroups = groups.filter(g => g !== ALL && g !== DEFAULT_GROUP);
+	const filteredGroups = groups.filter((g) => g !== ALL && g !== DEFAULT_GROUP);
 	// Get prefixGroups => { elements: [], page: [], unprefixed: [] }
 	const prefixGroups = filteredGroups.reduce((acc, g) => {
 		const prefixIndex = g.indexOf(PREFIX_SEPARATOR);
@@ -132,10 +132,10 @@ const Nav = props => {
 
 	const getGroupLinks = (prefixGroups, prefix) =>
 		prefix && prefixGroups[prefix]
-			? prefixGroups[prefix].map(g => toGroupLink(g, g.slice(prefix.length + 1)))
+			? prefixGroups[prefix].map((g) => toGroupLink(g, g.slice(prefix.length + 1)))
 			: !prefix
-			? prefixGroups.unprefixed.map(g => toGroupLink(g))
-			: [];
+				? prefixGroups.unprefixed.map((g) => toGroupLink(g))
+				: [];
 
 	const designElementGroups = getGroupLinks(prefixGroups, "elements");
 	const pageSubComponentGroups = getGroupLinks(prefixGroups, "page");
@@ -166,7 +166,7 @@ Nav.propTypes = {
 
 // The imported examples are in a nested tree structure. Flatten the
 // structure into an array of example objects.
-const flatExamples = examples => {
+const flatExamples = (examples) => {
 	return Object.keys(examples).reduce((flattened, componentName) => {
 		const exs = Object.keys(examples[componentName]).reduce((result, exampleName) => {
 			const ex = examples[componentName][exampleName];
@@ -185,7 +185,7 @@ const flatExamples = examples => {
 
 // Filter the examples based on the given criteria
 const examplesFor = (examples, group, componentName, exampleName) => {
-	return examples.filter(ex => {
+	return examples.filter((ex) => {
 		return (
 			(group === ALL || ex.group === group) &&
 			(componentName === ALL || ex.componentName === componentName) &&
@@ -194,7 +194,7 @@ const examplesFor = (examples, group, componentName, exampleName) => {
 	});
 };
 
-const StyleguidePage = props => {
+const StyleguidePage = (props) => {
 	const { params, raw } = props;
 	const group = params.group ? decodeURIComponent(params.group) : ALL;
 	const componentName = params.component || ALL;
@@ -228,7 +228,7 @@ const StyleguidePage = props => {
 	const html =
 		examples.length > 0 ? (
 			<ul className={css.examplesList}>
-				{examples.map(ex => (
+				{examples.map((ex) => (
 					<Example key={`${ex.componentName}/${ex.exampleName}`} {...ex} />
 				))}
 			</ul>

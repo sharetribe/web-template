@@ -25,11 +25,11 @@ export const zwspAroundSpecialCharsSplit = (wordToBreak, breakChars = "/") => {
 
 	// Escape special regular expression chars
 	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
-	const escapedBCArray = bcArray.map(c => c.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+	const escapedBCArray = bcArray.map((c) => c.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
 	const reSplit = new RegExp("([" + escapedBCArray.join("") + "])");
 
 	const zwsp = "​";
-	return wordToBreak.split(reSplit).map(w => (bcArray.includes(w) ? `${zwsp}${w}${zwsp}` : w));
+	return wordToBreak.split(reSplit).map((w) => (bcArray.includes(w) ? `${zwsp}${w}${zwsp}` : w));
 };
 
 /**
@@ -59,12 +59,12 @@ export const wrapLongWord = (word, key, options = {}) => {
 };
 
 // Get the number of opened parenthesis
-const getOpenedParenthesisCount = str =>
+const getOpenedParenthesisCount = (str) =>
 	Array.from(str).reduce((opened, currentChar) => {
 		return currentChar === "(" ? ++opened : currentChar === ")" ? --opened : opened;
 	}, 0);
 // Split extra parentheses from a (partial) string containing URL
-const splitExtraParentheses = str => {
+const splitExtraParentheses = (str) => {
 	// If the count is not 0, the the parentheses are not balanced
 	const parenthesesCount = getOpenedParenthesisCount(str);
 	if (parenthesesCount < 0) {
@@ -113,7 +113,7 @@ export const linkifyOrWrapLinkSplit = (word, key, options = {}) => {
 	const urlRegex = /(\bhttps?:\/\/[-A-Z0-9+&@#\/%?=~_|\(\)!:,.;]*[-A-Z0-9+&@#\/%=~_|\)])/gi;
 	if (word.match(urlRegex)) {
 		// Split strings like "(http://www.example.com)" to ["(","http://www.example.com",")"]
-		return word.split(urlRegex).map(w => {
+		return word.split(urlRegex).map((w) => {
 			const isEmptyString = !w.match(urlRegex);
 			const [sanitizedURL, extra] =
 				!isEmptyString && linkify ? splitExtraParentheses(sanitizeUrl(w)) : [w];
@@ -165,10 +165,12 @@ export const richText = (text, options) => {
 
 	return text.split(nonWhiteSpaceSequence).reduce((acc, nextChild, i) => {
 		const parts = flow([
-			v =>
-				flatMap(v, w => linkifyOrWrapLinkSplit(w, i, { linkify, linkClass: linkOrLongWordClass })),
-			v => flatMap(v, w => zwspAroundSpecialCharsSplit(w, breakCharsConfig)),
-			v => map(v, (w, j) => wrapLongWord(w, `${i}${j}`, { longWordMinLength, longWordClass })),
+			(v) =>
+				flatMap(v, (w) =>
+					linkifyOrWrapLinkSplit(w, i, { linkify, linkClass: linkOrLongWordClass }),
+				),
+			(v) => flatMap(v, (w) => zwspAroundSpecialCharsSplit(w, breakCharsConfig)),
+			(v) => map(v, (w, j) => wrapLongWord(w, `${i}${j}`, { longWordMinLength, longWordClass })),
 		])([nextChild]);
 		return acc.concat(parts);
 	}, []);

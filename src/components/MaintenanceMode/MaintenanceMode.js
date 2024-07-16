@@ -10,7 +10,7 @@ import css from "./MaintenanceMode.module.css";
 // Note 1: this microcopy/translation does not come from translation file.
 //         It needs to be something that is not part of fetched assets but built-in text
 // Note 2: In the LandingPage directory, there's a similar content (FallbackPage.js).
-const MaintenanceMode = props => {
+const MaintenanceMode = (props) => {
 	const isDev = appSettings.dev;
 	return (
 		<LayoutSingleColumn

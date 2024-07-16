@@ -10,7 +10,7 @@ import { FieldSelect, FieldTextInput, Heading } from "../../../components";
 
 import css from "./ShippingDetails.module.css";
 
-const ShippingDetails = props => {
+const ShippingDetails = (props) => {
 	const { rootClassName, className, locale, intl, disabled, formApi, fieldId } = props;
 	const classes = classNames(rootClassName || css.root, className);
 
@@ -153,7 +153,7 @@ const ShippingDetails = props => {
 					<option disabled value="">
 						{intl.formatMessage({ id: "ShippingDetails.countryPlaceholder" })}
 					</option>
-					{countryCodes.map(country => {
+					{countryCodes.map((country) => {
 						return (
 							<option key={country.code} value={country.code}>
 								{country.name}

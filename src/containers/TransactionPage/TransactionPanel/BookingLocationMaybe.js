@@ -9,7 +9,7 @@ import AddressLinkMaybe from "./AddressLinkMaybe";
 import css from "./TransactionPanel.module.css";
 
 // Functional component as a helper to build ActivityFeed section
-const BookingLocationMaybe = props => {
+const BookingLocationMaybe = (props) => {
 	const { className, rootClassName, listing, showBookingLocation } = props;
 	const classes = classNames(rootClassName || css.bookingLocationContainer, className);
 

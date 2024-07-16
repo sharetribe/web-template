@@ -4,7 +4,7 @@ import { NamedLink } from "../../../components";
 
 import css from "./NoSearchResultsMaybe.module.css";
 
-const NoSearchResultsMaybe = props => {
+const NoSearchResultsMaybe = (props) => {
 	const { listingsAreLoaded, totalItems, location, resetAll } = props;
 	const hasNoResult = listingsAreLoaded && totalItems === 0;
 	const hasSearchParams = location.search?.length > 0;
@@ -13,7 +13,7 @@ const NoSearchResultsMaybe = props => {
 			<FormattedMessage id="SearchPage.noResults" />
 			<br />
 			{hasSearchParams ? (
-				<button className={css.resetAllFiltersButton} onClick={e => resetAll(e)}>
+				<button className={css.resetAllFiltersButton} onClick={(e) => resetAll(e)}>
 					<FormattedMessage id={"SearchPage.resetAllFilters"} />
 				</button>
 			) : null}

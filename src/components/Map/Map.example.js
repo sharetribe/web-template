@@ -7,7 +7,7 @@ import defaultConfig from "../../config/configDefault";
 const { LatLng } = sdkTypes;
 
 export const WithMarker = {
-	component: props => (
+	component: (props) => (
 		<div style={{ height: 400 }}>
 			<Map {...props} />
 		</div>
@@ -21,7 +21,7 @@ export const WithMarker = {
 };
 
 export const WithObfuscatedLocation = {
-	component: props => (
+	component: (props) => (
 		<div style={{ height: 400 }}>
 			<Map {...props} />
 		</div>
@@ -42,7 +42,7 @@ export const WithObfuscatedLocation = {
 };
 
 export const WithCircleLocation = {
-	component: props => (
+	component: (props) => (
 		<div style={{ height: 400 }}>
 			<Map {...props} />
 		</div>

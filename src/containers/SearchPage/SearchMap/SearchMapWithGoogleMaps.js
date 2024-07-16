@@ -65,7 +65,7 @@ export const fitMapToBounds = (map, bounds, options) => {
  *
  * @return {SDKLatLng} - Converted latLng coordinate
  */
-export const googleLatLngToSDKLatLng = googleLatLng => {
+export const googleLatLngToSDKLatLng = (googleLatLng) => {
 	if (!googleLatLng) {
 		return null;
 	}
@@ -79,7 +79,7 @@ export const googleLatLngToSDKLatLng = googleLatLng => {
  *
  * @return {SDKLatLngBounds} - Converted bounds
  */
-export const googleBoundsToSDKBounds = googleBounds => {
+export const googleBoundsToSDKBounds = (googleBounds) => {
 	if (!googleBounds) {
 		return null;
 	}
@@ -88,8 +88,8 @@ export const googleBoundsToSDKBounds = googleBounds => {
 	return new SDKLatLngBounds(new SDKLatLng(ne.lat(), ne.lng()), new SDKLatLng(sw.lat(), sw.lng()));
 };
 
-export const getMapBounds = map => googleBoundsToSDKBounds(map.getBounds());
-export const getMapCenter = map => googleLatLngToSDKLatLng(map.getCenter());
+export const getMapBounds = (map) => googleBoundsToSDKBounds(map.getBounds());
+export const getMapCenter = (map) => googleLatLngToSDKLatLng(map.getCenter());
 
 /**
  * Check if map library is loaded
@@ -280,7 +280,7 @@ class SearchMapGroupLabelWithOverlay extends Component {
 /**
  * Render price labels or group "markers" based on listings array.
  */
-const PriceLabelsAndGroups = props => {
+const PriceLabelsAndGroups = (props) => {
 	const {
 		map,
 		listings,
@@ -291,16 +291,16 @@ const PriceLabelsAndGroups = props => {
 		config,
 	} = props;
 	const listingArraysInLocations = reducedToArray(groupedByCoordinates(listings));
-	const priceLabels = listingArraysInLocations.reverse().map(listingArr => {
+	const priceLabels = listingArraysInLocations.reverse().map((listingArr) => {
 		const isActive = activeListingId
-			? !!listingArr.find(l => activeListingId.uuid === l.id.uuid)
+			? !!listingArr.find((l) => activeListingId.uuid === l.id.uuid)
 			: false;
 		const classes = classNames(css.labelContainer, LABEL_HANDLE, { [css.activeLabel]: isActive });
 
 		// If location contains only one listing, print price label
 		if (listingArr.length === 1) {
 			const listing = listingArr[0];
-			const infoCardOpenIds = Array.isArray(infoCardOpen) ? infoCardOpen.map(l => l.id.uuid) : [];
+			const infoCardOpenIds = Array.isArray(infoCardOpen) ? infoCardOpen.map((l) => l.id.uuid) : [];
 
 			// if the listing is open, don't print price label
 			if (infoCardOpen != null && infoCardOpenIds.includes(listing.id.uuid)) {
@@ -352,7 +352,7 @@ const PriceLabelsAndGroups = props => {
 /**
  * Render info-card overlay if the card is open.
  */
-const InfoCardComponent = props => {
+const InfoCardComponent = (props) => {
 	const {
 		map,
 		infoCardOpen,

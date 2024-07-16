@@ -21,7 +21,7 @@ import css from "./ListingLink.module.css";
 
 const MIN_LENGTH_FOR_LONG_WORDS = 16;
 
-const ListingLink = props => {
+const ListingLink = (props) => {
 	const { className, listing, children } = props;
 	const listingLoaded = listing && listing.id;
 	if (!listingLoaded) {
@@ -44,8 +44,8 @@ const ListingLink = props => {
 	const variant = isPendingApproval
 		? LISTING_PAGE_PENDING_APPROVAL_VARIANT
 		: isDraft
-		? LISTING_PAGE_DRAFT_VARIANT
-		: null;
+			? LISTING_PAGE_DRAFT_VARIANT
+			: null;
 	const linkProps = !!variant
 		? {
 				name: "ListingPageVariant",
@@ -54,11 +54,11 @@ const ListingLink = props => {
 					slug,
 					variant,
 				},
-		  }
+			}
 		: {
 				name: "ListingPage",
 				params: { id, slug },
-		  };
+			};
 	return (
 		<NamedLink className={className} {...linkProps}>
 			{children ? children : richTitle || ""}

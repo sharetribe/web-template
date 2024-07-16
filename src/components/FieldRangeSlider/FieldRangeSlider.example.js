@@ -6,11 +6,11 @@ import FieldRangeSlider from "./FieldRangeSlider";
 
 const formName = "Styleguide.FieldRangeSlider.Form";
 
-const FormComponent = props => (
+const FormComponent = (props) => (
 	<FinalForm
 		{...props}
 		formId={formName}
-		render={fieldRenderProps => {
+		render={(fieldRenderProps) => {
 			const {
 				formId,
 				handleSubmit,
@@ -27,7 +27,7 @@ const FormComponent = props => (
 
 			return (
 				<form
-					onSubmit={e => {
+					onSubmit={(e) => {
 						e.preventDefault();
 						handleSubmit(e);
 					}}
@@ -60,12 +60,12 @@ export const FieldRangeSliderForm = {
 		max: 1000,
 		step: 5,
 		handles: [333, 666],
-		onChange: formState => {
+		onChange: (formState) => {
 			if (formState.dirty) {
 				console.log("form values changed to:", formState.values);
 			}
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("submit values:", values);
 		},
 	},

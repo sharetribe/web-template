@@ -31,7 +31,7 @@ export const getStateDataForBookingProcess = (txInfo, processInfo) => {
 	return new ConditionalResolver([processState, transactionRole])
 		.cond([states.INQUIRY, CUSTOMER], () => {
 			const transitionNames = Array.isArray(nextTransitions)
-				? nextTransitions.map(t => t.attributes.name)
+				? nextTransitions.map((t) => t.attributes.name)
 				: [];
 			const requestAfterInquiry = transitions.REQUEST_PAYMENT_AFTER_INQUIRY;
 			const hasCorrectNextTransition = transitionNames.includes(requestAfterInquiry);

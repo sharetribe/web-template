@@ -4,7 +4,7 @@ const log = require("../log.js");
 const { getRootURL } = require("../api-util/rootURL.js");
 
 // Emulate feature that's part of sitemap dependency
-const streamToPromise = stream => {
+const streamToPromise = (stream) => {
 	return new Promise((resolve, reject) => {
 		const drain = [];
 		stream
@@ -81,9 +81,9 @@ module.exports = (req, res) => {
 		const robotsStream = readStream.pipe(modifiedStream);
 
 		// Save the data to a variable cache
-		streamToPromise(robotsStream).then(rs => (cachedRobotsTxt = rs));
+		streamToPromise(robotsStream).then((rs) => (cachedRobotsTxt = rs));
 
-		robotsStream.pipe(res).on("error", e => {
+		robotsStream.pipe(res).on("error", (e) => {
 			throw e;
 		});
 	} catch (e) {

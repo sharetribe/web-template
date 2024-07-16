@@ -103,7 +103,7 @@ const initialState = {
 // mergeEntityArrays(a, b)
 // => [{ id: { uuid: 3 } }, { id: : { uuid: 2 } }, { id: : { uuid: 1 } }]
 const mergeEntityArrays = (a, b) => {
-	return a.filter(aEntity => !b.find(bEntity => aEntity.id.uuid === bEntity.id.uuid)).concat(b);
+	return a.filter((aEntity) => !b.find((bEntity) => aEntity.id.uuid === bEntity.id.uuid)).concat(b);
 };
 
 export default function transactionPageReducer(state = initialState, action = {}) {
@@ -233,50 +233,53 @@ export default function transactionPageReducer(state = initialState, action = {}
 
 // ================ Selectors ================ //
 
-export const transitionInProgress = state => {
+export const transitionInProgress = (state) => {
 	return state.TransactionPage.transitionInProgress;
 };
 
 // ================ Action creators ================ //
-export const setInitialValues = initialValues => ({
+export const setInitialValues = (initialValues) => ({
 	type: SET_INITIAL_VALUES,
 	payload: pick(initialValues, Object.keys(initialState)),
 });
 
 const fetchTransactionRequest = () => ({ type: FETCH_TRANSACTION_REQUEST });
-const fetchTransactionSuccess = response => ({
+const fetchTransactionSuccess = (response) => ({
 	type: FETCH_TRANSACTION_SUCCESS,
 	payload: response,
 });
-const fetchTransactionError = e => ({ type: FETCH_TRANSACTION_ERROR, error: true, payload: e });
+const fetchTransactionError = (e) => ({ type: FETCH_TRANSACTION_ERROR, error: true, payload: e });
 
 const fetchTransitionsRequest = () => ({ type: FETCH_TRANSITIONS_REQUEST });
-const fetchTransitionsSuccess = response => ({
+const fetchTransitionsSuccess = (response) => ({
 	type: FETCH_TRANSITIONS_SUCCESS,
 	payload: response,
 });
-const fetchTransitionsError = e => ({ type: FETCH_TRANSITIONS_ERROR, error: true, payload: e });
+const fetchTransitionsError = (e) => ({ type: FETCH_TRANSITIONS_ERROR, error: true, payload: e });
 
-const transitionRequest = transitionName => ({ type: TRANSITION_REQUEST, payload: transitionName });
+const transitionRequest = (transitionName) => ({
+	type: TRANSITION_REQUEST,
+	payload: transitionName,
+});
 const transitionSuccess = () => ({ type: TRANSITION_SUCCESS });
-const transitionError = e => ({ type: TRANSITION_ERROR, error: true, payload: e });
+const transitionError = (e) => ({ type: TRANSITION_ERROR, error: true, payload: e });
 
 const fetchMessagesRequest = () => ({ type: FETCH_MESSAGES_REQUEST });
 const fetchMessagesSuccess = (messages, pagination) => ({
 	type: FETCH_MESSAGES_SUCCESS,
 	payload: { messages, ...pagination },
 });
-const fetchMessagesError = e => ({ type: FETCH_MESSAGES_ERROR, error: true, payload: e });
+const fetchMessagesError = (e) => ({ type: FETCH_MESSAGES_ERROR, error: true, payload: e });
 
 const sendMessageRequest = () => ({ type: SEND_MESSAGE_REQUEST });
 const sendMessageSuccess = () => ({ type: SEND_MESSAGE_SUCCESS });
-const sendMessageError = e => ({ type: SEND_MESSAGE_ERROR, error: true, payload: e });
+const sendMessageError = (e) => ({ type: SEND_MESSAGE_ERROR, error: true, payload: e });
 
 const sendReviewRequest = () => ({ type: SEND_REVIEW_REQUEST });
 const sendReviewSuccess = () => ({ type: SEND_REVIEW_SUCCESS });
-const sendReviewError = e => ({ type: SEND_REVIEW_ERROR, error: true, payload: e });
+const sendReviewError = (e) => ({ type: SEND_REVIEW_ERROR, error: true, payload: e });
 
-export const fetchTimeSlotsRequest = monthId => ({
+export const fetchTimeSlotsRequest = (monthId) => ({
 	type: FETCH_TIME_SLOTS_REQUEST,
 	payload: monthId,
 });
@@ -291,11 +294,11 @@ export const fetchTimeSlotsError = (monthId, error) => ({
 });
 
 export const fetchLineItemsRequest = () => ({ type: FETCH_LINE_ITEMS_REQUEST });
-export const fetchLineItemsSuccess = lineItems => ({
+export const fetchLineItemsSuccess = (lineItems) => ({
 	type: FETCH_LINE_ITEMS_SUCCESS,
 	payload: lineItems,
 });
-export const fetchLineItemsError = error => ({
+export const fetchLineItemsError = (error) => ({
 	type: FETCH_LINE_ITEMS_ERROR,
 	error: true,
 	payload: error,
@@ -303,8 +306,8 @@ export const fetchLineItemsError = error => ({
 
 // ================ Thunks ================ //
 
-const timeSlotsRequest = params => (dispatch, getState, sdk) => {
-	return sdk.timeslots.query(params).then(response => {
+const timeSlotsRequest = (params) => (dispatch, getState, sdk) => {
+	return sdk.timeslots.query(params).then((response) => {
 		return denormalisedResponseEntities(response);
 	});
 };
@@ -321,10 +324,10 @@ export const fetchTimeSlots = (listingId, start, end, timeZone) => (dispatch, ge
 	};
 
 	return dispatch(timeSlotsRequest({ listingId, start, end, ...extraParams }))
-		.then(timeSlots => {
+		.then((timeSlots) => {
 			dispatch(fetchTimeSlotsSuccess(monthId, timeSlots));
 		})
-		.catch(e => {
+		.catch((e) => {
 			dispatch(fetchTimeSlotsError(monthId, storableError(e)));
 		});
 };
@@ -356,7 +359,7 @@ const fetchMonthlyTimeSlots = (dispatch, listing) => {
 };
 
 // Helper to fetch correct image variants for different thunk calls
-const getImageVariants = listingImageConfig => {
+const getImageVariants = (listingImageConfig) => {
 	const { aspectWidth = 1, aspectHeight = 1, variantPrefix = "listing-card" } = listingImageConfig;
 	const aspectRatio = aspectHeight / aspectWidth;
 	return {
@@ -374,7 +377,7 @@ const getImageVariants = listingImageConfig => {
 	};
 };
 
-const listingRelationship = txResponse => {
+const listingRelationship = (txResponse) => {
 	return txResponse.data.data.relationships.listing.data;
 };
 
@@ -402,7 +405,7 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
 			},
 			{ expand: true },
 		)
-		.then(response => {
+		.then((response) => {
 			txResponse = response;
 			const listingId = listingRelationship(response).id;
 			const entities = updatedEntities({}, response.data);
@@ -438,7 +441,7 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
 				return response;
 			}
 		})
-		.then(response => {
+		.then((response) => {
 			const listingFields = config?.listing?.listingFields;
 			const sanitizeConfig = { listingFields };
 
@@ -447,30 +450,30 @@ export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk
 			dispatch(fetchTransactionSuccess(txResponse));
 			return response;
 		})
-		.catch(e => {
+		.catch((e) => {
 			dispatch(fetchTransactionError(storableError(e)));
 			throw e;
 		});
 };
 
-const delay = ms => new Promise(resolve => window.setTimeout(resolve, ms));
+const delay = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
 const refreshTx = (sdk, txId) => sdk.transactions.show({ id: txId }, { expand: true });
 const refreshTransactionEntity = (sdk, txId, dispatch) => {
 	delay(3000)
 		.then(() => refreshTx(sdk, txId))
-		.then(response => {
+		.then((response) => {
 			dispatch(addMarketplaceEntities(response));
 			const lastTransition = response?.data?.data?.attributes?.lastTransition;
 			// We'll make another attempt if mark-received-from-purchased from default-purchase process is still the latest.
 			if (lastTransition === "transition/mark-received-from-purchased") {
 				return delay(8000)
 					.then(() => refreshTx(sdk, txId))
-					.then(response => {
+					.then((response) => {
 						dispatch(addMarketplaceEntities(response));
 					});
 			}
 		})
-		.catch(e => {
+		.catch((e) => {
 			// refresh failed, but we don't act upon it.
 			console.log("error", e);
 		});
@@ -484,7 +487,7 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
 
 	return sdk.transactions
 		.transition({ id: txId, transition: transitionName, params }, { expand: true })
-		.then(response => {
+		.then((response) => {
 			dispatch(addMarketplaceEntities(response));
 			dispatch(transitionSuccess());
 			dispatch(fetchCurrentUserNotifications());
@@ -497,7 +500,7 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
 
 			return response;
 		})
-		.catch(e => {
+		.catch((e) => {
 			dispatch(transitionError(storableError(e)));
 			log.error(e, `${transitionName}-failed`, {
 				txId,
@@ -518,7 +521,7 @@ const fetchMessages = (txId, page, config) => (dispatch, getState, sdk) => {
 			...getImageVariants(config.layout.listingImage),
 			...paging,
 		})
-		.then(response => {
+		.then((response) => {
 			const messages = denormalisedResponseEntities(response);
 			const { totalItems, totalPages, page: fetchedPage } = response.data.meta;
 			const pagination = { totalItems, totalPages, page: fetchedPage };
@@ -542,7 +545,7 @@ const fetchMessages = (txId, page, config) => (dispatch, getState, sdk) => {
 					});
 			}
 		})
-		.catch(e => {
+		.catch((e) => {
 			dispatch(fetchMessagesError(storableError(e)));
 			throw e;
 		});
@@ -564,7 +567,7 @@ export const sendMessage = (txId, message, config) => (dispatch, getState, sdk) 
 
 	return sdk.messages
 		.send({ transactionId: txId, content: message })
-		.then(response => {
+		.then((response) => {
 			const messageId = response.data.data.id;
 
 			// We fetch the first page again to add sent message to the page data
@@ -578,7 +581,7 @@ export const sendMessage = (txId, message, config) => (dispatch, getState, sdk) 
 				})
 				.catch(() => dispatch(sendMessageSuccess()));
 		})
-		.catch(e => {
+		.catch((e) => {
 			dispatch(sendMessageError(storableError(e)));
 			// Rethrow so the page can track whether the sending failed, and
 			// keep the message in the form for a retry.
@@ -596,12 +599,12 @@ const sendReviewAsSecond = (txId, transition, params, dispatch, sdk, config) => 
 			{ id: txId, transition, params },
 			{ expand: true, include, ...getImageVariants(config.layout.listingImage) },
 		)
-		.then(response => {
+		.then((response) => {
 			dispatch(addMarketplaceEntities(response));
 			dispatch(sendReviewSuccess());
 			return response;
 		})
-		.catch(e => {
+		.catch((e) => {
 			dispatch(sendReviewError(storableError(e)));
 
 			// Rethrow so the page can track whether the sending failed, and
@@ -623,12 +626,12 @@ const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config) => {
 			{ id: txId, transition, params },
 			{ expand: true, include, ...getImageVariants(config.layout.listingImage) },
 		)
-		.then(response => {
+		.then((response) => {
 			dispatch(addMarketplaceEntities(response));
 			dispatch(sendReviewSuccess());
 			return response;
 		})
-		.catch(e => {
+		.catch((e) => {
 			// If transaction transition is invalid, lets try another endpoint.
 			if (isTransactionsTransitionInvalidTransition(e)) {
 				return sendReviewAsSecond(id, params, role, dispatch, sdk);
@@ -642,51 +645,50 @@ const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config) => {
 		});
 };
 
-export const sendReview = (tx, transitionOptionsInfo, params, config) => (
-	dispatch,
-	getState,
-	sdk,
-) => {
-	const { reviewAsFirst, reviewAsSecond, hasOtherPartyReviewedFirst } = transitionOptionsInfo;
-	dispatch(sendReviewRequest());
+export const sendReview =
+	(tx, transitionOptionsInfo, params, config) => (dispatch, getState, sdk) => {
+		const { reviewAsFirst, reviewAsSecond, hasOtherPartyReviewedFirst } = transitionOptionsInfo;
+		dispatch(sendReviewRequest());
 
-	return hasOtherPartyReviewedFirst
-		? sendReviewAsSecond(tx?.id, reviewAsSecond, params, dispatch, sdk, config)
-		: sendReviewAsFirst(tx?.id, reviewAsFirst, params, dispatch, sdk, config);
-};
+		return hasOtherPartyReviewedFirst
+			? sendReviewAsSecond(tx?.id, reviewAsSecond, params, dispatch, sdk, config)
+			: sendReviewAsFirst(tx?.id, reviewAsFirst, params, dispatch, sdk, config);
+	};
 
-const isNonEmpty = value => {
+const isNonEmpty = (value) => {
 	return typeof value === "object" || Array.isArray(value) ? !isEmpty(value) : !!value;
 };
 
-export const fetchNextTransitions = id => (dispatch, getState, sdk) => {
+export const fetchNextTransitions = (id) => (dispatch, getState, sdk) => {
 	dispatch(fetchTransitionsRequest());
 
 	return sdk.processTransitions
 		.query({ transactionId: id })
-		.then(res => {
+		.then((res) => {
 			dispatch(fetchTransitionsSuccess(res.data.data));
 		})
-		.catch(e => {
+		.catch((e) => {
 			dispatch(fetchTransitionsError(storableError(e)));
 		});
 };
 
-export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }) => dispatch => {
-	dispatch(fetchLineItemsRequest());
-	transactionLineItems({ orderData, listingId, isOwnListing })
-		.then(response => {
-			const lineItems = response.data;
-			dispatch(fetchLineItemsSuccess(lineItems));
-		})
-		.catch(e => {
-			dispatch(fetchLineItemsError(storableError(e)));
-			log.error(e, "fetching-line-items-failed", {
-				listingId: listingId.uuid,
-				orderData,
+export const fetchTransactionLineItems =
+	({ orderData, listingId, isOwnListing }) =>
+	(dispatch) => {
+		dispatch(fetchLineItemsRequest());
+		transactionLineItems({ orderData, listingId, isOwnListing })
+			.then((response) => {
+				const lineItems = response.data;
+				dispatch(fetchLineItemsSuccess(lineItems));
+			})
+			.catch((e) => {
+				dispatch(fetchLineItemsError(storableError(e)));
+				log.error(e, "fetching-line-items-failed", {
+					listingId: listingId.uuid,
+					orderData,
+				});
 			});
-		});
-};
+	};
 
 // loadData is a collection of async calls that need to be made
 // before page has all the info it needs to render itself

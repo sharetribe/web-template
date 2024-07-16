@@ -4,7 +4,7 @@
  * Slice a local number that is in the form
  * of 555 01234567
  */
-const sliceLocal = numbers => {
+const sliceLocal = (numbers) => {
 	if (numbers.length <= 3) {
 		return numbers;
 	}
@@ -15,7 +15,7 @@ const sliceLocal = numbers => {
  * Slice an international phone number i.e.
  * the part that is followed after a '+' or '00'.
  */
-const sliceInternational = numbers => {
+const sliceInternational = (numbers) => {
 	if (numbers.length <= 3) {
 		return numbers;
 	}
@@ -35,7 +35,7 @@ const sliceInternational = numbers => {
  * 00123 55 1234567
  * 555 1234567
  */
-export const format = value => {
+export const format = (value) => {
 	if (!value) {
 		return "";
 	}
@@ -64,4 +64,4 @@ export const format = value => {
  * Parser that strips whitespaces away from a phone number
  * string so that the plain number can be stored.
  */
-export const parse = value => (value ? value.replace(/\s/g, "") : "");
+export const parse = (value) => (value ? value.replace(/\s/g, "") : "");

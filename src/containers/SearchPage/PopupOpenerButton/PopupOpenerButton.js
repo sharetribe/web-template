@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./PopupOpenerButton.module.css";
 
-const PopupOpenerButton = props => {
+const PopupOpenerButton = (props) => {
 	const { isSelected, labelMaxWidth, toggleOpen, children } = props;
 
 	const labelStyles = isSelected ? css.labelSelected : css.label;

@@ -12,7 +12,7 @@ import ManageListingCard from "./ManageListingCard";
 
 const noop = () => null;
 
-const ManageListingCardWrapper = props => (
+const ManageListingCardWrapper = (props) => (
 	<div style={{ maxWidth: "400px" }}>
 		<ManageListingCard {...props} />
 	</div>

@@ -3,7 +3,7 @@ import { Field } from "react-final-form";
 import classNames from "classnames";
 import { RangeSlider } from "../../components";
 
-const RangeSliderInput = props => {
+const RangeSliderInput = (props) => {
 	const { input, handles, ...rest } = props;
 	const { value, ...inputProps } = input;
 
@@ -11,7 +11,7 @@ const RangeSliderInput = props => {
 	return <RangeSlider {...inputProps} {...rest} handles={currentHandles} />;
 };
 
-const FieldRangeSlider = props => {
+const FieldRangeSlider = (props) => {
 	const { rootClassName, className, id, label, ...rest } = props;
 
 	if (label && !id) {

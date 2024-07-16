@@ -44,17 +44,17 @@ const onSubmitCallback = () => {
 	clearData(STORAGE_KEY);
 };
 
-const getProcessName = pageData => {
+const getProcessName = (pageData) => {
 	const { transaction, listing } = pageData || {};
 	const processName = transaction?.id
 		? transaction?.attributes?.processName
 		: listing?.id
-		? listing?.attributes?.publicData?.transactionProcessAlias?.split("/")[0]
-		: null;
+			? listing?.attributes?.publicData?.transactionProcessAlias?.split("/")[0]
+			: null;
 	return resolveLatestProcessName(processName);
 };
 
-const EnhancedCheckoutPage = props => {
+const EnhancedCheckoutPage = (props) => {
 	const [pageData, setPageData] = useState({});
 	const [isDataLoaded, setIsDataLoaded] = useState(false);
 	const config = useConfiguration();
@@ -63,13 +63,8 @@ const EnhancedCheckoutPage = props => {
 	const history = useHistory();
 
 	useEffect(() => {
-		const {
-			orderData,
-			listing,
-			transaction,
-			fetchSpeculatedTransaction,
-			fetchStripeCustomer,
-		} = props;
+		const { orderData, listing, transaction, fetchSpeculatedTransaction, fetchStripeCustomer } =
+			props;
 		const initialData = { orderData, listing, transaction };
 		const data = handlePageData(initialData, STORAGE_KEY, history);
 		setPageData(data || {});
@@ -119,7 +114,7 @@ const EnhancedCheckoutPage = props => {
 		? intl.formatMessage(
 				{ id: `CheckoutPage.${processName}.title` },
 				{ listingTitle, authorDisplayName },
-		  )
+			)
 		: "Checkout page is loading data";
 
 	return processName && isInquiryProcess ? (
@@ -158,7 +153,7 @@ const EnhancedCheckoutPage = props => {
 	);
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	const {
 		listing,
 		orderData,
@@ -194,7 +189,7 @@ const mapStateToProps = state => {
 	};
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
 	dispatch,
 	fetchSpeculatedTransaction: (params, processAlias, txId, transitionName, isPrivileged) =>
 		dispatch(speculateTransaction(params, processAlias, txId, transitionName, isPrivileged)),
@@ -203,21 +198,16 @@ const mapDispatchToProps = dispatch => ({
 		dispatch(initiateInquiryWithoutPayment(params, processAlias, transitionName)),
 	onInitiateOrder: (params, processAlias, transactionId, transitionName, isPrivileged) =>
 		dispatch(initiateOrder(params, processAlias, transactionId, transitionName, isPrivileged)),
-	onRetrievePaymentIntent: params => dispatch(retrievePaymentIntent(params)),
-	onConfirmCardPayment: params => dispatch(confirmCardPayment(params)),
+	onRetrievePaymentIntent: (params) => dispatch(retrievePaymentIntent(params)),
+	onConfirmCardPayment: (params) => dispatch(confirmCardPayment(params)),
 	onConfirmPayment: (transactionId, transitionName, transitionParams) =>
 		dispatch(confirmPayment(transactionId, transitionName, transitionParams)),
-	onSendMessage: params => dispatch(sendMessage(params)),
+	onSendMessage: (params) => dispatch(sendMessage(params)),
 	onSavePaymentMethod: (stripeCustomer, stripePaymentMethodId) =>
 		dispatch(savePaymentMethod(stripeCustomer, stripePaymentMethodId)),
 });
 
-const CheckoutPage = compose(
-	connect(
-		mapStateToProps,
-		mapDispatchToProps,
-	),
-)(EnhancedCheckoutPage);
+const CheckoutPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedCheckoutPage);
 
 CheckoutPage.setInitialValues = (initialValues, saveToSessionStorage = false) => {
 	if (saveToSessionStorage) {

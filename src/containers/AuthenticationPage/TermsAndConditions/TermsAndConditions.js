@@ -10,14 +10,14 @@ import css from "./TermsAndConditions.module.css";
 
 const KEY_CODE_ENTER = 13;
 
-const TermsAndConditions = props => {
+const TermsAndConditions = (props) => {
 	const { onOpenTermsOfService, onOpenPrivacyPolicy, formId, intl } = props;
 
-	const handleClick = callback => e => {
+	const handleClick = (callback) => (e) => {
 		e.preventDefault();
 		callback(e);
 	};
-	const handleKeyUp = callback => e => {
+	const handleKeyUp = (callback) => (e) => {
 		// Allow click action with keyboard like with normal links
 		if (e.keyCode === KEY_CODE_ENTER) {
 			callback();

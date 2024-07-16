@@ -4,7 +4,7 @@ import { func, node, string } from "prop-types";
 import { useRouteConfiguration } from "../../context/routeConfigurationContext";
 import { findRouteByRouteName } from "../../util/routes";
 
-const PlainForm = props => {
+const PlainForm = (props) => {
 	const { children, contentRef, ...restProps } = props;
 
 	const formProps = {
@@ -24,11 +24,11 @@ const PlainForm = props => {
 	return <form {...formProps}>{children}</form>;
 };
 
-const FormWithPagePreload = props => {
+const FormWithPagePreload = (props) => {
 	const routeConfiguration = useRouteConfiguration();
 	const { enforcePagePreloadFor, ...restProps } = props;
 
-	const onOverFormFn = enforcePreloadOfPage => () => {
+	const onOverFormFn = (enforcePreloadOfPage) => () => {
 		// Enforce preloading of given page (loadable component)
 		const { component: Page } = findRouteByRouteName(enforcePreloadOfPage, routeConfiguration);
 		// Loadable Component has a "preload" function.
@@ -46,7 +46,7 @@ const FormWithPagePreload = props => {
 	return <PlainForm {...restProps} {...onOverFormProps} />;
 };
 
-const Form = props => {
+const Form = (props) => {
 	const { enforcePagePreloadFor, ...restProps } = props;
 	return enforcePagePreloadFor ? <FormWithPagePreload {...props} /> : <PlainForm {...restProps} />;
 };

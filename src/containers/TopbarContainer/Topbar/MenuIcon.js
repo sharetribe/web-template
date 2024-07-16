@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./Topbar.module.css";
 
-const MenuIcon = props => {
+const MenuIcon = (props) => {
 	const { className, rootClassName } = props;
 	const classes = classNames(rootClassName || css.rootMenuIcon, className);
 

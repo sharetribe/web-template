@@ -20,7 +20,7 @@ import { isFieldForCategory } from "../../util/fieldHelpers";
  */
 export const omitLimitedListingFieldParams = (searchParams, filterConfigs) => {
 	const { listingFieldsConfig, defaultFiltersConfig, listingCategories } = filterConfigs;
-	const categorySearchConfig = defaultFiltersConfig.find(f => f.schemaType === "category");
+	const categorySearchConfig = defaultFiltersConfig.find((f) => f.schemaType === "category");
 	const validNestedCategoryParamNames = categorySearchConfig
 		? validURLParamForCategoryData(categorySearchConfig.key, listingCategories, 1, searchParams)
 		: {};
@@ -28,7 +28,7 @@ export const omitLimitedListingFieldParams = (searchParams, filterConfigs) => {
 	return Object.entries(searchParams).reduce((picked, searchParam) => {
 		const [searchParamKey, searchParamValue] = searchParam;
 		const foundConfig = listingFieldsConfig.find(
-			f => constructQueryParamName(f.key, f.scope) === searchParamKey,
+			(f) => constructQueryParamName(f.key, f.scope) === searchParamKey,
 		);
 		const currentCategories = Object.values(validNestedCategoryParamNames);
 		const isForCategory = isFieldForCategory(currentCategories, foundConfig);
@@ -59,9 +59,9 @@ export const validURLParamForExtendedData = (
 	// Price is built-in filter for listing entities
 	if (queryParamName === "price") {
 		// Restrict price range to correct min & max
-		const { min, max } = defaultFilters.find(conf => conf.schemaType === "price") || {};
+		const { min, max } = defaultFilters.find((conf) => conf.schemaType === "price") || {};
 		const valueArray = paramValue ? paramValue.split(",") : [];
-		const validValues = valueArray.map(v => {
+		const validValues = valueArray.map((v) => {
 			return v < min ? min : v > max ? max : v;
 		});
 		return validValues.length === 2 ? { [queryParamName]: validValues.join(",") } : {};
@@ -85,7 +85,7 @@ export const validURLParamForExtendedData = (
 
 	// Resolve configurations for extended data filters
 	const listingFieldFilterConfig = listingFieldFilters.find(
-		f => queryParamName === constructQueryParamName(f.key, f.scope),
+		(f) => queryParamName === constructQueryParamName(f.key, f.scope),
 	);
 
 	if (listingFieldFilterConfig) {
@@ -96,14 +96,14 @@ export const validURLParamForExtendedData = (
 
 			// Pick valid select options only
 			const valueArray = parseSelectFilterOptions(paramValue);
-			const allowedValues = enumOptions.map(o => `${o.option}`);
+			const allowedValues = enumOptions.map((o) => `${o.option}`);
 			const validValues = intersection(valueArray, allowedValues).join(",");
 
 			return validValues.length > 0
 				? {
 						[queryParamName]:
 							isSchemaTypeMultiEnum && searchMode ? `${searchMode}:${validValues}` : validValues,
-				  }
+					}
 				: {};
 		} else {
 			// Generic filter - remove empty params
@@ -116,16 +116,16 @@ export const validURLParamForExtendedData = (
 const validURLParamForCategoryData = (prefix, categories, level, params) => {
 	const levelKey = constructQueryParamName(`${prefix}${level}`, "public");
 	const levelValue = params?.[levelKey];
-	const foundCategory = categories.find(cat => cat.id === params?.[levelKey]);
+	const foundCategory = categories.find((cat) => cat.id === params?.[levelKey]);
 	const subcategories = foundCategory?.subcategories || [];
 	return foundCategory && subcategories.length > 0
 		? {
 				[levelKey]: levelValue,
 				...validURLParamForCategoryData(prefix, subcategories, level + 1, params),
-		  }
+			}
 		: foundCategory
-		? { [levelKey]: levelValue }
-		: {};
+			? { [levelKey]: levelValue }
+			: {};
 };
 
 /**
@@ -141,22 +141,22 @@ export const validFilterParams = (params, filterConfigs, dropNonFilterParams = t
 	const { listingFieldsConfig, defaultFiltersConfig, listingCategories } = filterConfigs;
 
 	const listingFieldFiltersConfig = listingFieldsConfig.filter(
-		config => config.filterConfig?.indexForSearch,
+		(config) => config.filterConfig?.indexForSearch,
 	);
-	const listingFieldParamNames = listingFieldFiltersConfig.map(f =>
+	const listingFieldParamNames = listingFieldFiltersConfig.map((f) =>
 		constructQueryParamName(f.key, f.scope),
 	);
 	// Note: builtInFilterParamNames might include categoryLevel,
 	//       even though it isn't a paramname that's used with nested category tree.
 	//       (pub_categoryLevel1, pub_categoryLevel2, and pub_categoryLevel3 are used instead.)
-	const builtInFilterParamNames = defaultFiltersConfig.map(f => {
+	const builtInFilterParamNames = defaultFiltersConfig.map((f) => {
 		return f.schemaType === "category" ? `pub_${f.key}` : f.key;
 	});
 	const filterParamNames = [...listingFieldParamNames, ...builtInFilterParamNames];
 
 	// Note: currently, we only support nested enums with a single default filter
 	//       that has schema type: "category"
-	const categorySearchConfig = defaultFiltersConfig.find(f => f.schemaType === "category");
+	const categorySearchConfig = defaultFiltersConfig.find((f) => f.schemaType === "category");
 	const validNestedCategoryParamNames = categorySearchConfig
 		? validURLParamForCategoryData(categorySearchConfig.key, listingCategories, 1, params)
 		: {};
@@ -177,7 +177,7 @@ export const validFilterParams = (params, filterConfigs, dropNonFilterParams = t
 					paramName,
 					categorySearchConfig?.key,
 					categorySearchConfig?.isNestedEnum,
-			  );
+				);
 		return isIndependentParam
 			? {
 					...validParams,
@@ -187,10 +187,10 @@ export const validFilterParams = (params, filterConfigs, dropNonFilterParams = t
 						listingFieldFiltersConfig,
 						defaultFiltersConfig,
 					),
-			  }
+				}
 			: dropNonFilterParams || isNestedEnum
-			? { ...validParams }
-			: { ...validParams, [paramName]: paramValue };
+				? { ...validParams }
+				: { ...validParams, [paramName]: paramValue };
 	}, {});
 
 	// TODO: Currently this only supports categoryLevel with nested param names.
@@ -205,7 +205,7 @@ export const validFilterParams = (params, filterConfigs, dropNonFilterParams = t
  * @param {Object} props object containing: location and (app) config
  * @returns picked search params against extended data config and default filter config
  */
-export const validUrlQueryParamsFromProps = props => {
+export const validUrlQueryParamsFromProps = (props) => {
 	const { location, config } = props;
 	const { listingFields: listingFieldsConfig } = config?.listing || {};
 	const { defaultFilters: defaultFiltersConfig } = config?.search || {};
@@ -238,7 +238,7 @@ export const initialValues = (props, currentQueryParams) => (queryParamNames, is
 	const urlQueryParams = validUrlQueryParamsFromProps(props);
 
 	// Get initial value for a given parameter from state if its there.
-	const getInitialValue = paramName => {
+	const getInitialValue = (paramName) => {
 		// Query parameters that are in state (user might have not yet clicked "Apply")
 		const currentQueryParam = currentQueryParams[paramName];
 		const hasQueryParamInState = typeof currentQueryParam !== "undefined";
@@ -254,7 +254,7 @@ export const initialValues = (props, currentQueryParams) => (queryParamNames, is
 				const initValue = getInitialValue(paramName);
 				const addInitialValueMaybe = initValue ? { [paramName]: initValue } : {};
 				return { ...acc, ...addInitialValueMaybe };
-		  }, {})
+			}, {})
 		: {};
 };
 
@@ -366,7 +366,7 @@ export const searchParamsPicker = (
 	};
 };
 
-export const pickListingFieldFilters = params => {
+export const pickListingFieldFilters = (params) => {
 	const { listingFields, locationSearch, categoryConfiguration } = params;
 	const searchParams = parse(locationSearch);
 	const categories = categoryConfiguration.categories;
@@ -394,13 +394,13 @@ export const groupListingFieldConfigs = (configs, activeListingTypes) =>
 			const isIndexed = filterConfig?.indexForSearch === true;
 			const isActiveListingTypes =
 				!listingTypeConfig.limitToListingTypeIds ||
-				listingTypeConfig.listingTypeIds.every(lt => activeListingTypes.includes(lt));
+				listingTypeConfig.listingTypeIds.every((lt) => activeListingTypes.includes(lt));
 			const isPrimary = filterConfig?.group === "primary";
 			return isActiveListingTypes && isIndexed && isPrimary
 				? [[...primary, config], secondary]
 				: isActiveListingTypes && isIndexed
-				? [primary, [...secondary, config]]
-				: grouped;
+					? [primary, [...secondary, config]]
+					: grouped;
 		},
 		[[], []],
 	);

@@ -14,12 +14,12 @@ describe("generators and iterators", () => {
 	describe("uniqueBy(arr, f)", () => {
 		it("should remove duplicates according to given by-function", () => {
 			const arr = [{ id: 1 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
-			const uniqArr = uniqueBy(arr, x => x.id);
+			const uniqArr = uniqueBy(arr, (x) => x.id);
 			expect(JSON.stringify(uniqArr)).toEqual(JSON.stringify(arr.slice(1)));
 		});
 		it("if given by-function does not find property, element is not included", () => {
 			const arr = [{}, {}, { id: 2 }, { id: 3 }, { id: 4 }];
-			const uniqArr = uniqueBy(arr, x => x.id);
+			const uniqArr = uniqueBy(arr, (x) => x.id);
 			expect(JSON.stringify(uniqArr)).toEqual(JSON.stringify(arr.slice(2)));
 		});
 	});
@@ -29,8 +29,8 @@ describe("generators and iterators", () => {
 			// 4*2*3
 			const ret = pipe(
 				4,
-				x => x * 2,
-				x => x * 3,
+				(x) => x * 2,
+				(x) => x * 3,
 			);
 			expect(ret).toEqual(24);
 		});
@@ -40,7 +40,7 @@ describe("generators and iterators", () => {
 			const arr = [1, 2, 3, 4, 5, 6];
 			const iterable = pipe(
 				arr,
-				map(x => x * 2),
+				map((x) => x * 2),
 			);
 			const ret = [...iterable];
 			const expectedResult = JSON.stringify([2, 4, 6, 8, 10, 12]);

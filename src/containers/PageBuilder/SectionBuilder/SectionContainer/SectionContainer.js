@@ -8,7 +8,7 @@ import css from "./SectionContainer.module.css";
 
 // This component can be used to wrap some common styles and features of Section-level components.
 // E.g: const SectionHero = props => (<SectionContainer><H1>Hello World!</H1></SectionContainer>);
-const SectionContainer = props => {
+const SectionContainer = (props) => {
 	const { className, rootClassName, id, as, children, appearance, options, ...otherProps } = props;
 	const Tag = as || "section";
 	const classes = classNames(rootClassName || css.root, className);

@@ -7,7 +7,7 @@ import { LinkTabNavHorizontal } from "../../components";
 
 import css from "./UserNav.module.css";
 
-const UserNav = props => {
+const UserNav = (props) => {
 	const { className, rootClassName, currentPage } = props;
 	const classes = classNames(rootClassName || css.root, className);
 

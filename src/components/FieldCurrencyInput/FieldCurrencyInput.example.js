@@ -18,7 +18,7 @@ const currencyConfigEUR = {
 };
 
 // eslint-disable-next-line no-console
-const onChange = price => console.log("CurrencyInput - value:", price);
+const onChange = (price) => console.log("CurrencyInput - value:", price);
 
 // Different locales need to be initialized before their currency formatting is in use
 const CurrencyInputWithIntl = ({ locale, ...rest }) => {
@@ -74,16 +74,16 @@ export const defaultValueWithFiEUR = {
 	group: "inputs",
 };
 
-const FormComponent = props => (
+const FormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={fieldRenderProps => {
+		render={(fieldRenderProps) => {
 			const { handleSubmit, onChange } = fieldRenderProps;
 			const required = validators.required("This field is required");
 
 			return (
 				<form
-					onSubmit={e => {
+					onSubmit={(e) => {
 						e.preventDefault();
 						handleSubmit(e);
 					}}
@@ -106,12 +106,12 @@ const FormComponent = props => (
 export const FieldInForm = {
 	component: FormComponent,
 	props: {
-		onChange: formState => {
+		onChange: (formState) => {
 			if (formState.values && formState.values.price) {
 				console.log("form values changed to:", formState.values);
 			}
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("FieldInForm submitted values:", values);
 			return false;
 		},

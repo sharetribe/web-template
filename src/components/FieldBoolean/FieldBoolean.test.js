@@ -11,11 +11,11 @@ const { screen, userEvent } = testingLibrary;
 
 const noop = () => {};
 
-const FormComponent = props => (
+const FormComponent = (props) => (
 	<FinalForm
 		{...props}
 		formId="test"
-		render={fieldRenderProps => {
+		render={(fieldRenderProps) => {
 			const { formId, handleSubmit, invalid, pristine, submitting } = fieldRenderProps;
 			const required = validators.requiredBoolean("This field is required");
 			const submitDisabled = invalid || pristine || submitting;

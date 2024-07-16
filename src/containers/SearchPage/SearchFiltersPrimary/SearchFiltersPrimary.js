@@ -8,7 +8,7 @@ import PopupOpenerButton from "../PopupOpenerButton/PopupOpenerButton";
 
 import css from "./SearchFiltersPrimary.module.css";
 
-const SearchFiltersPrimaryComponent = props => {
+const SearchFiltersPrimaryComponent = (props) => {
 	const {
 		rootClassName,
 		className,

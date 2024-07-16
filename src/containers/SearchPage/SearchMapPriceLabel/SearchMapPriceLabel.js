@@ -23,15 +23,8 @@ class SearchMapPriceLabel extends Component {
 	}
 
 	render() {
-		const {
-			className,
-			rootClassName,
-			intl,
-			listing,
-			onListingClicked,
-			isActive,
-			config,
-		} = this.props;
+		const { className, rootClassName, intl, listing, onListingClicked, isActive, config } =
+			this.props;
 		const currentListing = ensureListing(listing);
 		const { price } = currentListing.attributes;
 
@@ -40,8 +33,8 @@ class SearchMapPriceLabel extends Component {
 			price && price.currency === config.currency
 				? formatMoney(intl, price)
 				: price?.currency
-				? price.currency
-				: null;
+					? price.currency
+					: null;
 
 		const classes = classNames(rootClassName || css.root, className);
 		const priceLabelClasses = classNames(css.priceLabel, {

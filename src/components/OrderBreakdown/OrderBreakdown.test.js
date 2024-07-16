@@ -14,7 +14,7 @@ const { screen, within } = testingLibrary;
 
 const marketplaceName = "MarketplaceX";
 
-const exampleTransaction = params => {
+const exampleTransaction = (params) => {
 	const transitions = getProcess("default-purchase")?.transitions;
 	const created = new Date(Date.UTC(2017, 1, 1));
 	return {

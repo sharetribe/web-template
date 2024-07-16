@@ -45,7 +45,7 @@ export const priceData = (price, marketplaceCurrency, intl) => {
  * @returns label for the selected value
  */
 export const categoryLabel = (categories, value) => {
-	const cat = categories.find(c => c.key === value);
+	const cat = categories.find((c) => c.key === value);
 	return cat ? cat.label : value;
 };
 
@@ -59,25 +59,25 @@ export const categoryLabel = (categories, value) => {
  */
 export const listingImages = (listing, variantName) =>
 	(listing.images || [])
-		.map(image => {
+		.map((image) => {
 			const variants = image.attributes.variants;
 			const variant = variants ? variants[variantName] : null;
 
 			// deprecated
 			// for backwards combatility only
 			const sizes = image.attributes.sizes;
-			const size = sizes ? sizes.find(i => i.name === variantName) : null;
+			const size = sizes ? sizes.find((i) => i.name === variantName) : null;
 
 			return variant || size;
 		})
-		.filter(variant => variant != null);
+		.filter((variant) => variant != null);
 
 /**
  * Callback for the "contact" button on ListingPage to open inquiry modal.
  *
  * @param {Object} parameters all the info needed to open inquiry modal.
  */
-export const handleContactUser = parameters => () => {
+export const handleContactUser = (parameters) => () => {
 	const {
 		history,
 		params,
@@ -109,14 +109,14 @@ export const handleContactUser = parameters => () => {
  *
  * @param {Object} parameters all the info needed to create inquiry.
  */
-export const handleSubmitInquiry = parameters => values => {
+export const handleSubmitInquiry = (parameters) => (values) => {
 	const { history, params, getListing, onSendInquiry, routes, setInquiryModalOpen } = parameters;
 	const listingId = new UUID(params.id);
 	const listing = getListing(listingId);
 	const { message } = values;
 
 	onSendInquiry(listing, message.trim())
-		.then(txId => {
+		.then((txId) => {
 			setInquiryModalOpen(false);
 
 			// Redirect to OrderDetailsPage
@@ -132,7 +132,7 @@ export const handleSubmitInquiry = parameters => values => {
  *
  * @param {Object} parameters all the info needed to redirect user to CheckoutPage.
  */
-export const handleSubmit = parameters => values => {
+export const handleSubmit = (parameters) => (values) => {
 	const {
 		history,
 		params,
@@ -162,15 +162,15 @@ export const handleSubmit = parameters => values => {
 					bookingStart: bookingDates.startDate,
 					bookingEnd: bookingDates.endDate,
 				},
-		  }
+			}
 		: bookingStartTime && bookingEndTime
-		? {
-				bookingDates: {
-					bookingStart: timestampToDate(bookingStartTime),
-					bookingEnd: timestampToDate(bookingEndTime),
-				},
-		  }
-		: {};
+			? {
+					bookingDates: {
+						bookingStart: timestampToDate(bookingStartTime),
+						bookingEnd: timestampToDate(bookingEndTime),
+					},
+				}
+			: {};
 	const quantity = Number.parseInt(quantityRaw, 10);
 	const quantityMaybe = Number.isInteger(quantity) ? { quantity } : {};
 	const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
@@ -211,7 +211,7 @@ export const handleSubmit = parameters => values => {
  * Create fallback views for the ListingPage: LoadingPage and ErrorPage.
  * The PlainPage is just a helper for them.
  */
-const PlainPage = props => {
+const PlainPage = (props) => {
 	const { title, topbar, scrollingDisabled, children } = props;
 	return (
 		<Page title={title} scrollingDisabled={scrollingDisabled}>
@@ -222,7 +222,7 @@ const PlainPage = props => {
 	);
 };
 
-export const ErrorPage = props => {
+export const ErrorPage = (props) => {
 	const { topbar, scrollingDisabled, invalidListing, intl } = props;
 	return (
 		<PlainPage
@@ -243,7 +243,7 @@ export const ErrorPage = props => {
 	);
 };
 
-export const LoadingPage = props => {
+export const LoadingPage = (props) => {
 	const { topbar, scrollingDisabled, intl } = props;
 	return (
 		<PlainPage

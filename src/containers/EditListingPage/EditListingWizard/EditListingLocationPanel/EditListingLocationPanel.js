@@ -13,7 +13,7 @@ import { H3, ListingLink } from "../../../../components";
 import EditListingLocationForm from "./EditListingLocationForm";
 import css from "./EditListingLocationPanel.module.css";
 
-const getInitialValues = props => {
+const getInitialValues = (props) => {
 	const { listing } = props;
 	const { geolocation, publicData } = listing?.attributes || {};
 
@@ -29,12 +29,12 @@ const getInitialValues = props => {
 			? {
 					search: address,
 					selectedPlace: { address, origin: geolocation },
-			  }
+				}
 			: null,
 	};
 };
 
-const EditListingLocationPanel = props => {
+const EditListingLocationPanel = (props) => {
 	// State is needed since LocationAutocompleteInput doesn't have internal state
 	// and therefore re-rendering would overwrite the values during XHR call.
 	const [state, setState] = useState({ initialValues: getInitialValues(props) });
@@ -72,7 +72,7 @@ const EditListingLocationPanel = props => {
 			<EditListingLocationForm
 				className={css.form}
 				initialValues={state.initialValues}
-				onSubmit={values => {
+				onSubmit={(values) => {
 					const { building = "", location } = values;
 					const {
 						selectedPlace: { address, origin },

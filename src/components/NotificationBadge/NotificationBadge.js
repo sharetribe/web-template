@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./NotificationBadge.module.css";
 
-const NotificationBadge = props => {
+const NotificationBadge = (props) => {
 	const { className, rootClassName, count } = props;
 	const classes = classNames(rootClassName || css.root, className);
 

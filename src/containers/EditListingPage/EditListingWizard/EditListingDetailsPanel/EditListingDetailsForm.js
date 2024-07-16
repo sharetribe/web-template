@@ -26,7 +26,7 @@ import css from "./EditListingDetailsForm.module.css";
 const TITLE_MAX_LENGTH = 60;
 
 // Show various error messages
-const ErrorMessage = props => {
+const ErrorMessage = (props) => {
 	const { fetchErrors } = props;
 	const { updateListingError, createListingDraftError, showListingsError } = fetchErrors || {};
 	const errorMessage = updateListingError ? (
@@ -44,11 +44,11 @@ const ErrorMessage = props => {
 };
 
 // Hidden input field
-const FieldHidden = props => {
+const FieldHidden = (props) => {
 	const { name } = props;
 	return (
 		<Field id={name} name={name} type="hidden" className={css.unitTypeHidden}>
-			{fieldRenderProps => <input {...fieldRenderProps?.input} />}
+			{(fieldRenderProps) => <input {...fieldRenderProps?.input} />}
 		</Field>
 	);
 };
@@ -58,20 +58,13 @@ const FieldHidden = props => {
 // - listingType              Set of predefined configurations for each listing type
 // - transactionProcessAlias  Initiate correct transaction against Marketplace API
 // - unitType                 Main use case: pricing unit
-const FieldSelectListingType = props => {
-	const {
-		name,
-		listingTypes,
-		hasExistingListingType,
-		onListingTypeChange,
-		formApi,
-		formId,
-		intl,
-	} = props;
+const FieldSelectListingType = (props) => {
+	const { name, listingTypes, hasExistingListingType, onListingTypeChange, formApi, formId, intl } =
+		props;
 	const hasMultipleListingTypes = listingTypes?.length > 1;
 
-	const handleOnChange = value => {
-		const selectedListingType = listingTypes.find(config => config.listingType === value);
+	const handleOnChange = (value) => {
+		const selectedListingType = listingTypes.find((config) => config.listingType === value);
 		formApi.change("transactionProcessAlias", selectedListingType.transactionProcessAlias);
 		formApi.change("unitType", selectedListingType.unitType);
 
@@ -79,8 +72,8 @@ const FieldSelectListingType = props => {
 			onListingTypeChange(selectedListingType);
 		}
 	};
-	const getListingTypeLabel = listingType => {
-		const listingTypeConfig = listingTypes.find(config => config.listingType === listingType);
+	const getListingTypeLabel = (listingType) => {
+		const listingTypeConfig = listingTypes.find((config) => config.listingType === listingType);
 		return listingTypeConfig ? listingTypeConfig.label : listingType;
 	};
 
@@ -99,7 +92,7 @@ const FieldSelectListingType = props => {
 				<option disabled value="">
 					{intl.formatMessage({ id: "EditListingDetailsForm.listingTypePlaceholder" })}
 				</option>
-				{listingTypes.map(config => {
+				{listingTypes.map((config) => {
 					const type = config.listingType;
 					return (
 						<option key={type} value={type}>
@@ -132,7 +125,7 @@ const FieldSelectListingType = props => {
 
 // Finds the correct subcategory within the given categories array based on the provided categoryIdToFind.
 const findCategoryConfig = (categories, categoryIdToFind) => {
-	return categories?.find(category => category.id === categoryIdToFind);
+	return categories?.find((category) => category.id === categoryIdToFind);
 };
 
 /**
@@ -140,7 +133,7 @@ const findCategoryConfig = (categories, categoryIdToFind) => {
  * This function calls itself with updated props to render nested category fields.
  * The select field is used for choosing a category or subcategory.
  */
-const CategoryField = props => {
+const CategoryField = (props) => {
 	const { currentCategoryOptions, level, values, prefix, handleCategoryChange, intl } = props;
 
 	const currentCategoryKey = `${prefix}${level}`;
@@ -155,7 +148,7 @@ const CategoryField = props => {
 					id={currentCategoryKey}
 					name={currentCategoryKey}
 					className={css.listingTypeSelect}
-					onChange={event => handleCategoryChange(event, level, currentCategoryOptions)}
+					onChange={(event) => handleCategoryChange(event, level, currentCategoryOptions)}
 					label={intl.formatMessage(
 						{ id: "EditListingDetailsForm.categoryLabel" },
 						{ categoryLevel: currentCategoryKey },
@@ -174,7 +167,7 @@ const CategoryField = props => {
 						)}
 					</option>
 
-					{currentCategoryOptions.map(option => (
+					{currentCategoryOptions.map((option) => (
 						<option key={option.id} value={option.id}>
 							{option.name}
 						</option>
@@ -196,7 +189,7 @@ const CategoryField = props => {
 	);
 };
 
-const FieldSelectCategory = props => {
+const FieldSelectCategory = (props) => {
 	useEffect(() => {
 		checkIfInitialValuesExist();
 	}, []);
@@ -205,7 +198,7 @@ const FieldSelectCategory = props => {
 
 	// Counts the number of selected categories in the form values based on the given prefix.
 	const countSelectedCategories = () => {
-		return Object.keys(values).filter(key => key.startsWith(prefix)).length;
+		return Object.keys(values).filter((key) => key.startsWith(prefix)).length;
 	};
 
 	// Checks if initial values exist for categories and sets the state accordingly.
@@ -240,7 +233,7 @@ const FieldSelectCategory = props => {
 };
 
 // Add collect data for listing fields (both publicData and privateData) based on configuration
-const AddListingFields = props => {
+const AddListingFields = (props) => {
 	const { listingType, listingFieldsConfig, selectedCategories, formId, intl } = props;
 	const targetCategoryIds = Object.values(selectedCategories);
 
@@ -265,7 +258,7 @@ const AddListingFields = props => {
 						})}
 						formId={formId}
 					/>,
-			  ]
+				]
 			: pickedFields;
 	}, []);
 
@@ -274,11 +267,11 @@ const AddListingFields = props => {
 
 // Form that asks title, description, transaction process and unit type for pricing
 // In addition, it asks about custom fields according to marketplace-custom-config.js
-const EditListingDetailsFormComponent = props => (
+const EditListingDetailsFormComponent = (props) => (
 	<FinalForm
 		{...props}
 		mutators={{ ...arrayMutators }}
-		render={formRenderProps => {
+		render={(formRenderProps) => {
 			const {
 				autoFocus,
 				className,

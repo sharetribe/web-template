@@ -32,7 +32,7 @@ const AVATAR_IMAGE_VARIANTS = [
 	"square-small2x",
 ];
 
-export const AvatarComponent = props => {
+export const AvatarComponent = (props) => {
 	const {
 		rootClassName,
 		className,
@@ -53,8 +53,8 @@ export const AvatarComponent = props => {
 	const defaultUserDisplayName = isBannedUser
 		? intl.formatMessage({ id: "Avatar.bannedUserDisplayName" })
 		: isDeletedUser
-		? intl.formatMessage({ id: "Avatar.deletedUserDisplayName" })
-		: "";
+			? intl.formatMessage({ id: "Avatar.deletedUserDisplayName" })
+			: "";
 
 	const defaultUserAbbreviatedName = "";
 
@@ -138,7 +138,7 @@ const Avatar = injectIntl(AvatarComponent);
 
 export default Avatar;
 
-export const AvatarSmall = props => (
+export const AvatarSmall = (props) => (
 	<Avatar
 		rootClassName={css.smallAvatar}
 		initialsClassName={css.initialsSmall}
@@ -148,7 +148,7 @@ export const AvatarSmall = props => (
 );
 AvatarSmall.displayName = "AvatarSmall";
 
-export const AvatarMedium = props => (
+export const AvatarMedium = (props) => (
 	<Avatar
 		rootClassName={css.mediumAvatar}
 		initialsClassName={css.initialsMedium}
@@ -158,7 +158,7 @@ export const AvatarMedium = props => (
 );
 AvatarMedium.displayName = "AvatarMedium";
 
-export const AvatarLarge = props => (
+export const AvatarLarge = (props) => (
 	<Avatar
 		rootClassName={css.largeAvatar}
 		initialsClassName={css.initialsLarge}

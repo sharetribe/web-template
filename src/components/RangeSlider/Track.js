@@ -4,9 +4,9 @@ import classNames from "classnames";
 
 import css from "./Track.module.css";
 
-const Track = props => {
+const Track = (props) => {
 	const { rootClassName, className, children, handles, valueToPosition } = props;
-	const positionFromIndex = index => valueToPosition(handles[index]);
+	const positionFromIndex = (index) => valueToPosition(handles[index]);
 
 	const classes = classNames(rootClassName || css.root, className);
 	return (
@@ -25,7 +25,7 @@ const Track = props => {
 									width: `${positionFromIndex(index + 1) - valueToPosition(h)}px`,
 								}}
 							/>,
-					  ]
+						]
 					: ranges;
 			}, [])}
 

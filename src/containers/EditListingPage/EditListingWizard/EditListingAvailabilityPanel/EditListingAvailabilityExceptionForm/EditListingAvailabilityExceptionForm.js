@@ -18,11 +18,11 @@ import css from "./EditListingAvailabilityExceptionForm.module.css";
 //////////////////////////////////////////
 // EditListingAvailabilityExceptionForm //
 //////////////////////////////////////////
-const EditListingAvailabilityExceptionForm = props => {
+const EditListingAvailabilityExceptionForm = (props) => {
 	return (
 		<FinalForm
 			{...props}
-			render={formRenderProps => {
+			render={(formRenderProps) => {
 				const {
 					className,
 					rootClassName,
@@ -70,7 +70,7 @@ const EditListingAvailabilityExceptionForm = props => {
 				return (
 					<Form
 						className={classes}
-						onSubmit={e => {
+						onSubmit={(e) => {
 							handleSubmit(e).then(() => {
 								formApi.initialize({
 									exceptionStartDate: null,

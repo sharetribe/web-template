@@ -5,7 +5,7 @@ import classNames from "classnames";
 
 import css from "./StripeBankAccountTokenInputField.module.css";
 
-const StripeBankAccountRequiredInput = props => {
+const StripeBankAccountRequiredInput = (props) => {
 	const {
 		className,
 		rootClassName,

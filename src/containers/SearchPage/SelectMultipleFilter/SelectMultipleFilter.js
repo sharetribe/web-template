@@ -16,12 +16,12 @@ import css from "./SelectMultipleFilter.module.css";
 // SelectMultipleFilter doesn't need array mutators since it doesn't require validation.
 // TODO: Live edit didn't work with FieldCheckboxGroup
 //       There's a mutation problem: formstate.dirty is not reliable with it.
-const GroupOfFieldCheckboxes = props => {
+const GroupOfFieldCheckboxes = (props) => {
 	const { id, className, name, options } = props;
 	return (
 		<fieldset className={className}>
 			<ul className={css.list}>
-				{options.map(optionConfig => {
+				{options.map((optionConfig) => {
 					const { option, label } = optionConfig;
 					const fieldId = `${id}.${option}`;
 					return (
@@ -35,7 +35,7 @@ const GroupOfFieldCheckboxes = props => {
 	);
 };
 
-const getQueryParamName = queryParamNames => {
+const getQueryParamName = (queryParamNames) => {
 	return Array.isArray(queryParamNames) ? queryParamNames[0] : queryParamNames;
 };
 
@@ -47,7 +47,7 @@ const format = (selectedOptions, queryParamName, schemaType, searchMode) => {
 	return { [queryParamName]: value };
 };
 
-const SelectMultipleFilter = props => {
+const SelectMultipleFilter = (props) => {
 	const intl = useIntl();
 	const {
 		rootClassName,
@@ -79,21 +79,21 @@ const SelectMultipleFilter = props => {
 		? intl.formatMessage(
 				{ id: "SelectMultipleFilter.labelSelected" },
 				{ labelText: label, count: selectedOptions.length },
-		  )
+			)
 		: label;
 
 	const labelSelectionForPlain = hasInitialValues
 		? intl.formatMessage(
 				{ id: "SelectMultipleFilterPlainForm.labelSelected" },
 				{ count: selectedOptions.length },
-		  )
+			)
 		: "";
 
 	// pass the initial values with the name key so that
 	// they can be passed to the correct field
 	const namedInitialValues = { [name]: selectedOptions };
 
-	const handleSubmit = values => {
+	const handleSubmit = (values) => {
 		const usedValue = values ? values[name] : values;
 		onSubmit(format(usedValue, queryParamName, schemaType, searchMode));
 	};

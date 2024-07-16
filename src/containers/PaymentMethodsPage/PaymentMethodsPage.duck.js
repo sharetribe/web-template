@@ -53,7 +53,7 @@ export default function payoutMethodsPageReducer(state = initialState, action = 
 
 export const setupIntentRequest = () => ({ type: SETUP_INTENT_REQUEST });
 export const setupIntentSuccess = () => ({ type: SETUP_INTENT_SUCCESS });
-export const setupIntentError = e => ({
+export const setupIntentError = (e) => ({
 	type: SETUP_INTENT_ERROR,
 	error: true,
 	payload: e,
@@ -61,7 +61,7 @@ export const setupIntentError = e => ({
 
 export const stripeCustomerRequest = () => ({ type: STRIPE_CUSTOMER_REQUEST });
 export const stripeCustomerSuccess = () => ({ type: STRIPE_CUSTOMER_SUCCESS });
-export const stripeCustomerError = e => ({
+export const stripeCustomerError = (e) => ({
 	type: STRIPE_CUSTOMER_ERROR,
 	error: true,
 	payload: e,
@@ -72,12 +72,12 @@ export const createStripeSetupIntent = () => (dispatch, getState, sdk) => {
 	dispatch(setupIntentRequest());
 	return sdk.stripeSetupIntents
 		.create()
-		.then(response => {
+		.then((response) => {
 			const setupIntent = response.data.data;
 			dispatch(setupIntentSuccess(setupIntent));
 			return setupIntent;
 		})
-		.catch(e => {
+		.catch((e) => {
 			const error = storableError(e);
 			log.error(error, "create-setup-intent-failed");
 			dispatch(setupIntentError(error));
@@ -89,10 +89,10 @@ export const stripeCustomer = () => (dispatch, getState, sdk) => {
 	dispatch(stripeCustomerRequest());
 
 	return dispatch(fetchCurrentUser({ include: ["stripeCustomer.defaultPaymentMethod"] }))
-		.then(response => {
+		.then((response) => {
 			dispatch(stripeCustomerSuccess());
 		})
-		.catch(e => {
+		.catch((e) => {
 			const error = storableError(e);
 			log.error(error, "fetch-stripe-customer-failed");
 			dispatch(stripeCustomerError(error));

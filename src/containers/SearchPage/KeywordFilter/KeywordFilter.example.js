@@ -13,7 +13,7 @@ const handleSubmit = (values, history) => {
 	history.push(`${window.location.pathname}${queryParams}`);
 };
 
-const KeywordFilterPopup = withRouter(props => {
+const KeywordFilterPopup = withRouter((props) => {
 	const { history, location } = props;
 
 	const params = parse(location.search);
@@ -26,7 +26,7 @@ const KeywordFilterPopup = withRouter(props => {
 			name="keyword"
 			queryParamNames={[URL_PARAM]}
 			label="Keyword"
-			onSubmit={values => handleSubmit(values, history)}
+			onSubmit={(values) => handleSubmit(values, history)}
 			showAsPopup={true}
 			liveEdit={false}
 			initialValues={initialValues}
@@ -41,7 +41,7 @@ export const KeywordFilterPopupExample = {
 	group: "page:SearchPage",
 };
 
-const KeywordFilterPlain = withRouter(props => {
+const KeywordFilterPlain = withRouter((props) => {
 	const { history, location } = props;
 
 	const params = parse(location.search);
@@ -54,7 +54,7 @@ const KeywordFilterPlain = withRouter(props => {
 			name="keyword"
 			queryParamNames={[URL_PARAM]}
 			label="Keyword"
-			onSubmit={values => {
+			onSubmit={(values) => {
 				handleSubmit(values, history);
 			}}
 			showAsPopup={false}

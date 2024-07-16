@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { isScrollingDisabled } from "../../ducks/ui.duck.js";
 import { Page } from "../../components/index.js";
 
-const StaticPageComponent = props => {
+const StaticPageComponent = (props) => {
 	const { children, ...pageProps } = props;
 	return <Page {...pageProps}>{children}</Page>;
 };
@@ -18,7 +18,7 @@ StaticPageComponent.propTypes = {
 	children: node,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	return {
 		scrollingDisabled: isScrollingDisabled(state),
 	};

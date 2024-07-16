@@ -7,7 +7,7 @@ import { Heading } from "../../../components";
 import css from "./TransactionPanel.module.css";
 
 // Functional component as a helper to build ActivityFeed section
-const FeedSection = props => {
+const FeedSection = (props) => {
 	const {
 		className,
 		rootClassName,

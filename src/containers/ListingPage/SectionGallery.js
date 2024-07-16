@@ -3,7 +3,7 @@ import ListingImageGallery from "./ListingImageGallery/ListingImageGallery";
 
 import css from "./ListingPage.module.css";
 
-const SectionGallery = props => {
+const SectionGallery = (props) => {
 	const { listing, variantPrefix } = props;
 	const images = listing.images;
 	const imageVariants = ["scaled-small", "scaled-medium", "scaled-large", "scaled-xlarge"];

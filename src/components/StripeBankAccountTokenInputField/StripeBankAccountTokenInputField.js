@@ -41,7 +41,7 @@ class TokenInputFieldComponent extends Component {
 		};
 
 		// Fill initialState with input type specific data
-		BANK_ACCOUNT_INPUTS.forEach(inputType => {
+		BANK_ACCOUNT_INPUTS.forEach((inputType) => {
 			this.initialState[inputType] = {
 				value: "",
 				touched: false,
@@ -119,8 +119,8 @@ class TokenInputFieldComponent extends Component {
 
 		const supportedCountries = config.stripe.supportedCountries;
 		const inputsNeeded = requiredInputs(country, supportedCountries);
-		const missingValues = inputsNeeded.filter(inputType => !values[inputType]);
-		const invalidValues = inputsNeeded.filter(inputType => !!this.state[inputType].error);
+		const missingValues = inputsNeeded.filter((inputType) => !values[inputType]);
+		const invalidValues = inputsNeeded.filter((inputType) => !!this.state[inputType].error);
 
 		const numbersMissing = missingValues.length > 0;
 		const numbersInvalid = invalidValues.length > 0;
@@ -143,7 +143,7 @@ class TokenInputFieldComponent extends Component {
 		// https://stripe.com/docs/stripe-js/reference#collecting-bank-account-details
 		this.stripe
 			.createToken("bank_account", accountData)
-			.then(result => {
+			.then((result) => {
 				if (result.error) {
 					const e = new Error(result.error.message);
 					e.stripeError = result.error;
@@ -151,23 +151,23 @@ class TokenInputFieldComponent extends Component {
 				}
 				return result.token.id;
 			})
-			.then(token => {
+			.then((token) => {
 				// Check if value has changed during async call.
 				const changedValues = inputsNeeded.filter(
-					inputType => values[inputType] !== this.state[inputType].value,
+					(inputType) => values[inputType] !== this.state[inputType].value,
 				);
 				const valuesAreUnchanged = changedValues.length === 0;
 
 				// Handle response only if the input values haven't changed
 				if (this._isMounted && valuesAreUnchanged) {
-					this.setState(prevState => {
+					this.setState((prevState) => {
 						return { stripeError: null };
 					});
 
 					onChange(token);
 				}
 			})
-			.catch(e => {
+			.catch((e) => {
 				if (!e.stripeError) {
 					throw e;
 				}
@@ -192,7 +192,7 @@ class TokenInputFieldComponent extends Component {
 		}
 
 		// Save changes to the state
-		this.setState(prevState => {
+		this.setState((prevState) => {
 			const input = { ...prevState[inputType], value, error: inputError };
 			return {
 				[inputType]: input,
@@ -213,7 +213,7 @@ class TokenInputFieldComponent extends Component {
 	}
 
 	handleInputBlur(inputType) {
-		this.setState(prevState => {
+		this.setState((prevState) => {
 			const inputData = { ...prevState[inputType], touched: true };
 			return { [inputType]: inputData };
 		});
@@ -246,7 +246,7 @@ class TokenInputFieldComponent extends Component {
 
 		const supportedCountries = config.stripe.supportedCountries;
 		const inputConfiguration = requiredInputs(country, supportedCountries);
-		const hasInputErrors = inputConfiguration.some(inputType => {
+		const hasInputErrors = inputConfiguration.some((inputType) => {
 			return (this.state[inputType].touched || formMeta.touched) && !!this.state[inputType].error;
 		});
 
@@ -267,7 +267,7 @@ class TokenInputFieldComponent extends Component {
 
 		return (
 			<div className={classNames(rootClassName || css.root, className)}>
-				{inputConfiguration.map(inputType => {
+				{inputConfiguration.map((inputType) => {
 					return (
 						<StripeBankAccountRequiredInput
 							disabled={disabled}
@@ -276,7 +276,7 @@ class TokenInputFieldComponent extends Component {
 							formName={formName}
 							value={this.state[inputType].value}
 							placeholder={formatFieldMessage(intl, inputType, "placeholder")}
-							onChange={e =>
+							onChange={(e) =>
 								this.handleInputChange(e, inputType, country, supportedCountries, intl)
 							}
 							onFocus={this.handleInputFocus}
@@ -296,7 +296,7 @@ class TokenInputFieldComponent extends Component {
 	}
 }
 
-const EnhancedTokenInputFieldComponent = props => {
+const EnhancedTokenInputFieldComponent = (props) => {
 	const config = useConfiguration();
 	const intl = useIntl();
 	return <TokenInputFieldComponent config={config} intl={intl} {...props} />;
@@ -326,7 +326,7 @@ EnhancedTokenInputFieldComponent.propTypes = {
 	}).isRequired,
 };
 
-const StripeBankAccountTokenInputField = props => {
+const StripeBankAccountTokenInputField = (props) => {
 	return <Field component={EnhancedTokenInputFieldComponent} {...props} />;
 };
 

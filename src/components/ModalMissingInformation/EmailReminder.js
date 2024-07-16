@@ -5,7 +5,7 @@ import { IconEmailAttention, InlineTextButton, NamedLink } from "../../component
 
 import css from "./ModalMissingInformation.module.css";
 
-const EmailReminder = props => {
+const EmailReminder = (props) => {
 	const {
 		className,
 		user,

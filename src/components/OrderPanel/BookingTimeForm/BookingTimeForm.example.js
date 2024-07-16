@@ -3,8 +3,8 @@ import { types as sdkTypes } from "../../../util/sdkLoader";
 import { injectIntl } from "../../../util/reactIntl";
 import { LINE_ITEM_HOUR, TIME_SLOT_TIME } from "../../../util/types";
 
-const BookingTimeForm = loadable(() =>
-	import(/* webpackChunkName: "BookingTimeForm" */ "./BookingTimeForm"),
+const BookingTimeForm = loadable(
+	() => import(/* webpackChunkName: "BookingTimeForm" */ "./BookingTimeForm"),
 );
 
 const { UUID, Money } = sdkTypes;
@@ -83,12 +83,12 @@ export const Form = {
 		initialValues: {
 			bookingStartDate: { date: new Date(Date.UTC(currentYear, today.getUTCMonth(), 14)) },
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit BookingTimeForm with values:", values);
 		},
 		onFetchTimeSlots: () => console.log("onFetchTimeSlots called"),
 		fetchLineItemsInProgress: false,
-		onFetchTransactionLineItems: params => {
+		onFetchTransactionLineItems: (params) => {
 			console.log(
 				"Call to onFetchTransactionLineItems with params:",
 				JSON.stringify(params, null, 2),

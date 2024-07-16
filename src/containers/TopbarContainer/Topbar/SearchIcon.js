@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./Topbar.module.css";
 
-const SearchIcon = props => {
+const SearchIcon = (props) => {
 	const { className, rootClassName } = props;
 	const classes = classNames(rootClassName || css.rootSearchIcon, className);
 

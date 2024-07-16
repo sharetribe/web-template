@@ -45,7 +45,7 @@ const defaultSectionComponents = {
 // Section builder //
 //////////////////////
 
-const SectionBuilder = props => {
+const SectionBuilder = (props) => {
 	const { sections, options } = props;
 	const { sectionComponents = {}, isInsideContainer, ...otherOption } = options || {};
 
@@ -56,7 +56,7 @@ const SectionBuilder = props => {
 
 	// Selection of Section components
 	const components = { ...defaultSectionComponents, ...sectionComponents };
-	const getComponent = sectionType => {
+	const getComponent = (sectionType) => {
 		const config = components[sectionType];
 		return config?.component;
 	};

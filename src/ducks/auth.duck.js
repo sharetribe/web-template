@@ -3,8 +3,8 @@ import { createUserWithIdp } from "../util/api";
 import { storableError } from "../util/errors";
 import * as log from "../util/log";
 
-const authenticated = authInfo => authInfo?.isAnonymous === false;
-const loggedInAs = authInfo => authInfo?.isLoggedInAs === true;
+const authenticated = (authInfo) => authInfo?.isAnonymous === false;
+const loggedInAs = (authInfo) => authInfo?.isLoggedInAs === true;
 
 // ================ Action types ================ //
 
@@ -123,7 +123,7 @@ export default function reducer(state = initialState, action = {}) {
 
 // ================ Selectors ================ //
 
-export const authenticationInProgress = state => {
+export const authenticationInProgress = (state) => {
 	const { loginInProgress, logoutInProgress, signupInProgress } = state.auth;
 	return loginInProgress || logoutInProgress || signupInProgress;
 };
@@ -131,23 +131,23 @@ export const authenticationInProgress = state => {
 // ================ Action creators ================ //
 
 export const authInfoRequest = () => ({ type: AUTH_INFO_REQUEST });
-export const authInfoSuccess = info => ({ type: AUTH_INFO_SUCCESS, payload: info });
+export const authInfoSuccess = (info) => ({ type: AUTH_INFO_SUCCESS, payload: info });
 
 export const loginRequest = () => ({ type: LOGIN_REQUEST });
 export const loginSuccess = () => ({ type: LOGIN_SUCCESS });
-export const loginError = error => ({ type: LOGIN_ERROR, payload: error, error: true });
+export const loginError = (error) => ({ type: LOGIN_ERROR, payload: error, error: true });
 
 export const logoutRequest = () => ({ type: LOGOUT_REQUEST });
 export const logoutSuccess = () => ({ type: LOGOUT_SUCCESS });
-export const logoutError = error => ({ type: LOGOUT_ERROR, payload: error, error: true });
+export const logoutError = (error) => ({ type: LOGOUT_ERROR, payload: error, error: true });
 
 export const signupRequest = () => ({ type: SIGNUP_REQUEST });
 export const signupSuccess = () => ({ type: SIGNUP_SUCCESS });
-export const signupError = error => ({ type: SIGNUP_ERROR, payload: error, error: true });
+export const signupError = (error) => ({ type: SIGNUP_ERROR, payload: error, error: true });
 
 export const confirmRequest = () => ({ type: CONFIRM_REQUEST });
 export const confirmSuccess = () => ({ type: CONFIRM_SUCCESS });
-export const confirmError = error => ({ type: CONFIRM_ERROR, payload: error, error: true });
+export const confirmError = (error) => ({ type: CONFIRM_ERROR, payload: error, error: true });
 
 export const userLogout = () => ({ type: USER_LOGOUT });
 
@@ -157,8 +157,8 @@ export const authInfo = () => (dispatch, getState, sdk) => {
 	dispatch(authInfoRequest());
 	return sdk
 		.authInfo()
-		.then(info => dispatch(authInfoSuccess(info)))
-		.catch(e => {
+		.then((info) => dispatch(authInfoSuccess(info)))
+		.catch((e) => {
 			// Requesting auth info just reads the token from the token
 			// store (i.e. cookies), and should not fail in normal
 			// circumstances. If it fails, it's due to a programming
@@ -181,7 +181,7 @@ export const login = (username, password) => (dispatch, getState, sdk) => {
 		.login({ username, password })
 		.then(() => dispatch(loginSuccess()))
 		.then(() => dispatch(fetchCurrentUser()))
-		.catch(e => dispatch(loginError(storableError(e))));
+		.catch((e) => dispatch(loginError(storableError(e))));
 };
 
 export const logout = () => (dispatch, getState, sdk) => {
@@ -201,10 +201,10 @@ export const logout = () => (dispatch, getState, sdk) => {
 			log.clearUserId();
 			dispatch(userLogout());
 		})
-		.catch(e => dispatch(logoutError(storableError(e))));
+		.catch((e) => dispatch(logoutError(storableError(e))));
 };
 
-export const signup = params => (dispatch, getState, sdk) => {
+export const signup = (params) => (dispatch, getState, sdk) => {
 	if (authenticationInProgress(getState())) {
 		return Promise.reject(new Error("Login or logout already in progress"));
 	}
@@ -217,7 +217,7 @@ export const signup = params => (dispatch, getState, sdk) => {
 		.create(params)
 		.then(() => dispatch(signupSuccess()))
 		.then(() => dispatch(login(params.email, params.password)))
-		.catch(e => {
+		.catch((e) => {
 			dispatch(signupError(storableError(e)));
 			log.error(e, "signup-failed", {
 				email: params.email,
@@ -227,14 +227,14 @@ export const signup = params => (dispatch, getState, sdk) => {
 		});
 };
 
-export const signupWithIdp = params => (dispatch, getState, sdk) => {
+export const signupWithIdp = (params) => (dispatch, getState, sdk) => {
 	dispatch(confirmRequest());
 	return createUserWithIdp(params)
-		.then(res => {
+		.then((res) => {
 			return dispatch(confirmSuccess());
 		})
 		.then(() => dispatch(fetchCurrentUser()))
-		.catch(e => {
+		.catch((e) => {
 			log.error(e, "create-user-with-idp-failed", { params });
 			return dispatch(confirmError(storableError(e)));
 		});

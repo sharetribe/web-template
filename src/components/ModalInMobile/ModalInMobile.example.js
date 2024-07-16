@@ -9,7 +9,7 @@ const onManageDisableScrolling = (componentId, scrollingDisabled = true) => {
 	console.log("Toggling ModalInMobile - currently:", componentId, scrollingDisabled);
 };
 
-const ModalInMobileWrapper = props => {
+const ModalInMobileWrapper = (props) => {
 	const [isOpen, setOpen] = useState(false);
 
 	const handleOpen = () => {

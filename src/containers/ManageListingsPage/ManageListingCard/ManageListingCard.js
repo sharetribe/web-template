@@ -75,8 +75,8 @@ const createListingURL = (routes, listing) => {
 	const variant = isDraft
 		? LISTING_PAGE_DRAFT_VARIANT
 		: isPendingApproval
-		? LISTING_PAGE_PENDING_APPROVAL_VARIANT
-		: null;
+			? LISTING_PAGE_PENDING_APPROVAL_VARIANT
+			: null;
 
 	const linkProps =
 		isPendingApproval || isDraft
@@ -87,11 +87,11 @@ const createListingURL = (routes, listing) => {
 						slug,
 						variant,
 					},
-			  }
+				}
 			: {
 					name: "ListingPage",
 					params: { id, slug },
-			  };
+				};
 
 	return createResourceLocatorString(linkProps.name, routes, linkProps.params, {});
 };
@@ -113,7 +113,7 @@ const formatTitle = (title, maxLength) => {
 	});
 };
 
-const ShowFinishDraftOverlayMaybe = props => {
+const ShowFinishDraftOverlayMaybe = (props) => {
 	const { isDraft, title, id, slug, hasImage, intl } = props;
 
 	return isDraft ? (
@@ -137,15 +137,9 @@ const ShowFinishDraftOverlayMaybe = props => {
 	) : null;
 };
 
-const ShowClosedOverlayMaybe = props => {
-	const {
-		isClosed,
-		title,
-		actionsInProgressListingId,
-		currentListingId,
-		onOpenListing,
-		intl,
-	} = props;
+const ShowClosedOverlayMaybe = (props) => {
+	const { isClosed, title, actionsInProgressListingId, currentListingId, onOpenListing, intl } =
+		props;
 
 	return isClosed ? (
 		<Overlay
@@ -157,7 +151,7 @@ const ShowClosedOverlayMaybe = props => {
 			<PrimaryButtonInline
 				className={css.openListingButton}
 				disabled={!!actionsInProgressListingId}
-				onClick={event => {
+				onClick={(event) => {
 					event.preventDefault();
 					event.stopPropagation();
 					if (!actionsInProgressListingId) {
@@ -171,7 +165,7 @@ const ShowClosedOverlayMaybe = props => {
 	) : null;
 };
 
-const ShowPendingApprovalOverlayMaybe = props => {
+const ShowPendingApprovalOverlayMaybe = (props) => {
 	const { isPendingApproval, title, intl } = props;
 
 	return isPendingApproval ? (
@@ -184,7 +178,7 @@ const ShowPendingApprovalOverlayMaybe = props => {
 	) : null;
 };
 
-const ShowOutOfStockOverlayMaybe = props => {
+const ShowOutOfStockOverlayMaybe = (props) => {
 	const {
 		showOutOfStockOverlay,
 		title,
@@ -256,7 +250,7 @@ const ShowOutOfStockOverlayMaybe = props => {
 	) : null;
 };
 
-const LinkToStockOrAvailabilityTab = props => {
+const LinkToStockOrAvailabilityTab = (props) => {
 	const {
 		id,
 		slug,
@@ -299,11 +293,11 @@ const LinkToStockOrAvailabilityTab = props => {
 	);
 };
 
-const PriceMaybe = props => {
+const PriceMaybe = (props) => {
 	const { price, publicData, config, intl } = props;
 	const { listingType } = publicData || {};
 	const validListingTypes = config.listing.listingTypes;
-	const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+	const foundListingTypeConfig = validListingTypes.find((conf) => conf.listingType === listingType);
 
 	const showPrice = displayPrice(foundListingTypeConfig);
 	if (showPrice && !price) {
@@ -335,7 +329,7 @@ const PriceMaybe = props => {
 	);
 };
 
-export const ManageListingCardComponent = props => {
+export const ManageListingCardComponent = (props) => {
 	const config = useConfiguration();
 	const routeConfiguration = useRouteConfiguration();
 	const {
@@ -367,7 +361,7 @@ export const ManageListingCardComponent = props => {
 	const isProductOrder = isPurchaseProcessAlias(transactionProcessAlias);
 	const hasListingType = !!listingType;
 	const validListingTypes = config.listing.listingTypes;
-	const foundListingTypeConfig = validListingTypes.find(conf => conf.listingType === listingType);
+	const foundListingTypeConfig = validListingTypes.find((conf) => conf.listingType === listingType);
 
 	const currentStock = currentListing.currentStock?.attributes?.quantity;
 	const isOutOfStock = currentStock === 0;
@@ -411,7 +405,7 @@ export const ManageListingCardComponent = props => {
 		variantPrefix = "listing-card",
 	} = config.layout.listingImage;
 	const variants = firstImage
-		? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
+		? Object.keys(firstImage?.attributes?.variants).filter((k) => k.startsWith(variantPrefix))
 		: [];
 
 	return (
@@ -419,7 +413,7 @@ export const ManageListingCardComponent = props => {
 			<div
 				className={css.clickWrapper}
 				tabIndex={0}
-				onClick={event => {
+				onClick={(event) => {
 					event.preventDefault();
 					event.stopPropagation();
 
@@ -454,7 +448,7 @@ export const ManageListingCardComponent = props => {
 							contentPlacementOffset={MENU_CONTENT_OFFSET}
 							contentPosition="left"
 							useArrow={false}
-							onToggleActive={isOpen => {
+							onToggleActive={(isOpen) => {
 								const listingOpen = isOpen ? currentListing : null;
 								onToggleMenu(listingOpen);
 							}}
@@ -469,7 +463,7 @@ export const ManageListingCardComponent = props => {
 								<MenuItem key="close-listing">
 									<InlineTextButton
 										rootClassName={menuItemClasses}
-										onClick={event => {
+										onClick={(event) => {
 											event.preventDefault();
 											event.stopPropagation();
 											if (!actionsInProgressListingId) {
@@ -538,7 +532,7 @@ export const ManageListingCardComponent = props => {
 					<div className={css.titleWrapper}>
 						<InlineTextButton
 							rootClassName={titleClasses}
-							onClick={event => {
+							onClick={(event) => {
 								event.preventDefault();
 								event.stopPropagation();
 								history.push(createListingURL(routeConfiguration, listing));
@@ -605,7 +599,4 @@ ManageListingCardComponent.propTypes = {
 	}).isRequired,
 };
 
-export default compose(
-	withRouter,
-	injectIntl,
-)(ManageListingCardComponent);
+export default compose(withRouter, injectIntl)(ManageListingCardComponent);

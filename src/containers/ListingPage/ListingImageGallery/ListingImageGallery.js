@@ -44,13 +44,13 @@ const getFirstImageAspectRatio = (firstImage, scaledVariant) => {
 	return hasDimensions && aspectRatio >= MAX_LANDSCAPE_ASPECT_RATIO
 		? { aspectWidth: 2, aspectHeight: 1 }
 		: hasDimensions && aspectRatio <= MAX_PORTRAIT_ASPECT_RATIO
-		? { aspectWidth: 4, aspectHeight: 3 }
-		: hasDimensions
-		? { aspectWidth: w, aspectHeight: h }
-		: { aspectWidth: 1, aspectHeight: 1 };
+			? { aspectWidth: 4, aspectHeight: 3 }
+			: hasDimensions
+				? { aspectWidth: w, aspectHeight: h }
+				: { aspectWidth: 1, aspectHeight: 1 };
 };
 
-const ListingImageGallery = props => {
+const ListingImageGallery = (props) => {
 	const [isFullscreen, setIsFullscreen] = useState(false);
 	const { intl, rootClassName, className, images, imageVariants, thumbnailVariants } = props;
 	const thumbVariants = thumbnailVariants || imageVariants;
@@ -76,7 +76,7 @@ const ListingImageGallery = props => {
 	const imageSizesMaybe = isFullscreen
 		? {}
 		: { sizes: `(max-width: 1024px) 100vw, (max-width: 1200px) calc(100vw - 192px), 708px` };
-	const renderItem = item => {
+	const renderItem = (item) => {
 		return (
 			<AspectRatioWrapper
 				width={aspectWidth || 1}
@@ -95,7 +95,7 @@ const ListingImageGallery = props => {
 			</AspectRatioWrapper>
 		);
 	};
-	const renderThumbInner = item => {
+	const renderThumbInner = (item) => {
 		return (
 			<div>
 				<ResponsiveImage
@@ -109,7 +109,7 @@ const ListingImageGallery = props => {
 		);
 	};
 
-	const onScreenChange = isFull => {
+	const onScreenChange = (isFull) => {
 		setIsFullscreen(isFull);
 	};
 

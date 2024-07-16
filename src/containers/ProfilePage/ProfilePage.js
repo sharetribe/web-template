@@ -45,7 +45,7 @@ import SectionMultiEnumMaybe from "./SectionMultiEnumMaybe";
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
-export const AsideContent = props => {
+export const AsideContent = (props) => {
 	const { user, displayName, isCurrentUser } = props;
 	return (
 		<div className={css.asideContent}>
@@ -69,7 +69,7 @@ export const AsideContent = props => {
 	);
 };
 
-export const ReviewsErrorMaybe = props => {
+export const ReviewsErrorMaybe = (props) => {
 	const { queryReviewsError } = props;
 	return queryReviewsError ? (
 		<p className={css.error}>
@@ -78,10 +78,10 @@ export const ReviewsErrorMaybe = props => {
 	) : null;
 };
 
-export const MobileReviews = props => {
+export const MobileReviews = (props) => {
 	const { reviews, queryReviewsError } = props;
-	const reviewsOfProvider = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_PROVIDER);
-	const reviewsOfCustomer = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_CUSTOMER);
+	const reviewsOfProvider = reviews.filter((r) => r.attributes.type === REVIEW_TYPE_OF_PROVIDER);
+	const reviewsOfCustomer = reviews.filter((r) => r.attributes.type === REVIEW_TYPE_OF_CUSTOMER);
 	return (
 		<div className={css.mobileReviews}>
 			<H4 as="h2" className={css.mobileReviewsTitle}>
@@ -104,11 +104,11 @@ export const MobileReviews = props => {
 	);
 };
 
-export const DesktopReviews = props => {
+export const DesktopReviews = (props) => {
 	const [showReviewsType, setShowReviewsType] = useState(REVIEW_TYPE_OF_PROVIDER);
 	const { reviews, queryReviewsError } = props;
-	const reviewsOfProvider = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_PROVIDER);
-	const reviewsOfCustomer = reviews.filter(r => r.attributes.type === REVIEW_TYPE_OF_CUSTOMER);
+	const reviewsOfProvider = reviews.filter((r) => r.attributes.type === REVIEW_TYPE_OF_PROVIDER);
+	const reviewsOfCustomer = reviews.filter((r) => r.attributes.type === REVIEW_TYPE_OF_CUSTOMER);
 	const isReviewTypeProviderSelected = showReviewsType === REVIEW_TYPE_OF_PROVIDER;
 	const isReviewTypeCustomerSelected = showReviewsType === REVIEW_TYPE_OF_CUSTOMER;
 	const desktopReviewTabs = [
@@ -155,10 +155,10 @@ export const DesktopReviews = props => {
 	);
 };
 
-export const CustomUserFields = props => {
+export const CustomUserFields = (props) => {
 	const { publicData, metadata, userFieldConfig } = props;
 
-	const shouldPickUserField = fieldConfig => fieldConfig?.showConfig?.displayInProfile !== false;
+	const shouldPickUserField = (fieldConfig) => fieldConfig?.showConfig?.displayInProfile !== false;
 	const propsForCustomFields =
 		pickCustomFieldProps(publicData, metadata, userFieldConfig, "userType", shouldPickUserField) ||
 		[];
@@ -166,7 +166,7 @@ export const CustomUserFields = props => {
 	return (
 		<>
 			<SectionDetailsMaybe {...props} />
-			{propsForCustomFields.map(customFieldProps => {
+			{propsForCustomFields.map((customFieldProps) => {
 				const { schemaType, ...fieldProps } = customFieldProps;
 				return schemaType === SCHEMA_TYPE_MULTI_ENUM ? (
 					<SectionMultiEnumMaybe {...fieldProps} />
@@ -178,7 +178,7 @@ export const CustomUserFields = props => {
 	);
 };
 
-export const MainContent = props => {
+export const MainContent = (props) => {
 	const {
 		userShowError,
 		bio,
@@ -232,7 +232,7 @@ export const MainContent = props => {
 						<FormattedMessage id="ProfilePage.listingsTitle" values={{ count: listings.length }} />
 					</H4>
 					<ul className={css.listings}>
-						{listings.map(l => (
+						{listings.map((l) => (
 							<li className={css.listing} key={l.id.uuid}>
 								<ListingCard listing={l} showAuthorInfo={false} />
 							</li>
@@ -249,7 +249,7 @@ export const MainContent = props => {
 	);
 };
 
-export const ProfilePageComponent = props => {
+export const ProfilePageComponent = (props) => {
 	const config = useConfiguration();
 	const { scrollingDisabled, currentUser, userShowError, user, intl, ...rest } = props;
 	const ensuredCurrentUser = ensureCurrentUser(currentUser);
@@ -327,16 +327,10 @@ ProfilePageComponent.propTypes = {
 	intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	const { currentUser } = state.user;
-	const {
-		userId,
-		userShowError,
-		queryListingsError,
-		userListingRefs,
-		reviews,
-		queryReviewsError,
-	} = state.ProfilePage;
+	const { userId, userShowError, queryListingsError, userListingRefs, reviews, queryReviewsError } =
+		state.ProfilePage;
 	const userMatches = getMarketplaceEntities(state, [{ type: "user", id: userId }]);
 	const user = userMatches.length === 1 ? userMatches[0] : null;
 	const listings = getMarketplaceEntities(state, userListingRefs);

@@ -29,7 +29,7 @@ const lineItemsTotal = (lineItems, marketplaceCurrency) => {
 /**
  * Checks if line item represents commission
  */
-const isCommission = lineItem => {
+const isCommission = (lineItem) => {
 	return (
 		lineItem.code === LINE_ITEM_PROVIDER_COMMISSION ||
 		lineItem.code === LINE_ITEM_CUSTOMER_COMMISSION
@@ -39,8 +39,8 @@ const isCommission = lineItem => {
 /**
  * Returns non-commission, non-reversal line items
  */
-const nonCommissionNonReversalLineItems = lineItems => {
-	return lineItems.filter(item => !isCommission(item) && !item.reversal);
+const nonCommissionNonReversalLineItems = (lineItems) => {
+	return lineItems.filter((item) => !isCommission(item) && !item.reversal);
 };
 
 /**
@@ -50,17 +50,17 @@ const hasCommission = (lineItems, userRole) => {
 	let commissionLineItem = null;
 
 	if (userRole === "customer") {
-		commissionLineItem = lineItems.find(item => item.code === LINE_ITEM_CUSTOMER_COMMISSION);
+		commissionLineItem = lineItems.find((item) => item.code === LINE_ITEM_CUSTOMER_COMMISSION);
 	} else if (userRole === "provider") {
-		commissionLineItem = lineItems.find(item => item.code === LINE_ITEM_PROVIDER_COMMISSION);
+		commissionLineItem = lineItems.find((item) => item.code === LINE_ITEM_PROVIDER_COMMISSION);
 	}
 	return !!commissionLineItem;
 };
 
-const LineItemSubTotalMaybe = props => {
+const LineItemSubTotalMaybe = (props) => {
 	const { lineItems, code, userRole, intl, marketplaceCurrency } = props;
 
-	const refund = lineItems.find(item => item.code === code && item.reversal);
+	const refund = lineItems.find((item) => item.code === code && item.reversal);
 
 	// Show subtotal only if commission line-item is applicable to user or refund is issued.
 	const showSubTotal = hasCommission(lineItems, userRole) || refund;

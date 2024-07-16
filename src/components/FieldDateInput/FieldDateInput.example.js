@@ -5,26 +5,18 @@ import { Button } from "../../components";
 import { required, bookingDateRequired, composeValidators } from "../../util/validators";
 import FieldDateInput from "./FieldDateInput";
 
-const identity = v => v;
+const identity = (v) => v;
 
 const options = { weekday: "short", month: "long", day: "numeric" };
-const formatDate = date => new Intl.DateTimeFormat("en-US", options).format(date);
+const formatDate = (date) => new Intl.DateTimeFormat("en-US", options).format(date);
 const placeholderText = formatDate(new Date());
 
-const FormComponent = props => (
+const FormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={fieldRenderProps => {
-			const {
-				style,
-				form,
-				handleSubmit,
-				onChange,
-				pristine,
-				submitting,
-				dateInputProps,
-				values,
-			} = fieldRenderProps;
+		render={(fieldRenderProps) => {
+			const { style, form, handleSubmit, onChange, pristine, submitting, dateInputProps, values } =
+				fieldRenderProps;
 			const submitDisabled = pristine || submitting;
 			if (values && values.bookingDates) {
 				onChange(values.bookingDates);
@@ -33,7 +25,7 @@ const FormComponent = props => (
 			return (
 				<form
 					style={style}
-					onSubmit={e => {
+					onSubmit={(e) => {
 						e.preventDefault();
 						handleSubmit(e);
 					}}
@@ -64,14 +56,14 @@ export const Empty = {
 			onBlur: () => console.log("onBlur called from DateInput props."),
 			onFocus: () => console.log("onFocus called from DateInput props."),
 		},
-		onChange: formState => {
+		onChange: (formState) => {
 			const { date } = formState.values;
 			if (date) {
 				const formattedDate = formatDate(date);
 				console.log("Changed to", formattedDate);
 			}
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submitting a form with values:", values);
 		},
 	},

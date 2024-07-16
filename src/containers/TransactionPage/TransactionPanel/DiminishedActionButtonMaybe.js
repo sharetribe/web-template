@@ -10,7 +10,7 @@ import css from "./TransactionPanel.module.css";
 // Currently this is only used to show "dispute order" modal,
 // but like ActionButtonsMayne, this could be customized to handle different actions too.
 // Essentially, this is just a placeholder for diminished actions.
-const DiminishedActionButtonMaybe = props => {
+const DiminishedActionButtonMaybe = (props) => {
 	const { className, rootClassName, showDispute, onOpenDisputeModal } = props;
 
 	const diminishedActionButton = onOpenDisputeModal ? (

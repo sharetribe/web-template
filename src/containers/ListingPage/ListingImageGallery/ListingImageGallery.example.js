@@ -61,7 +61,7 @@ const repeat = (x, n) => {
 	return Array.from(new Array(n)).map(() => x);
 };
 
-const Gallery = props => {
+const Gallery = (props) => {
 	const styles = {
 		width: "100%",
 		maxWidth: 600,

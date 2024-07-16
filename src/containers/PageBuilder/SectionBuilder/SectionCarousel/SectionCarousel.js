@@ -18,19 +18,19 @@ const COLUMN_CONFIG = [
 	{ css: css.threeColumns, responsiveImageSizes: "(max-width: 767px) 100vw, 400px" },
 	{ css: css.fourColumns, responsiveImageSizes: "(max-width: 767px) 100vw, 290px" },
 ];
-const getIndex = numColumns => numColumns - 1;
-const getColumnCSS = numColumns => {
+const getIndex = (numColumns) => numColumns - 1;
+const getColumnCSS = (numColumns) => {
 	const config = COLUMN_CONFIG[getIndex(numColumns)];
 	return config ? config.css : COLUMN_CONFIG[0].css;
 };
-const getResponsiveImageSizes = numColumns => {
+const getResponsiveImageSizes = (numColumns) => {
 	const config = COLUMN_CONFIG[getIndex(numColumns)];
 	return config ? config.responsiveImageSizes : COLUMN_CONFIG[0].responsiveImageSizes;
 };
 
 // Section component that's able to show blocks in a carousel
 // the number blocks visible is defined by "numColumns" prop.
-const SectionCarousel = props => {
+const SectionCarousel = (props) => {
 	const {
 		sectionId,
 		className,
@@ -75,7 +75,7 @@ const SectionCarousel = props => {
 
 	const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
 
-	const onSlideLeft = e => {
+	const onSlideLeft = (e) => {
 		var slider = window.document.getElementById(sliderId);
 		const slideWidth = numColumns * slider?.firstChild?.clientWidth;
 		slider.scrollLeft = slider.scrollLeft - slideWidth;
@@ -83,7 +83,7 @@ const SectionCarousel = props => {
 		e.target.focus();
 	};
 
-	const onSlideRight = e => {
+	const onSlideRight = (e) => {
 		var slider = window.document.getElementById(sliderId);
 		const slideWidth = numColumns * slider?.firstChild?.clientWidth;
 		slider.scrollLeft = slider.scrollLeft + slideWidth;
@@ -91,7 +91,7 @@ const SectionCarousel = props => {
 		e.target.focus();
 	};
 
-	const onKeyDown = e => {
+	const onKeyDown = (e) => {
 		if (e.keyCode === KEY_CODE_ARROW_LEFT) {
 			// Prevent changing cursor position in input
 			e.preventDefault();

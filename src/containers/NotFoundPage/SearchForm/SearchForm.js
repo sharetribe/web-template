@@ -10,9 +10,9 @@ import IconSearchDesktop from "./IconSearchDesktop";
 
 import css from "./SearchForm.module.css";
 
-const identity = v => v;
+const identity = (v) => v;
 
-const KeywordSearchField = props => {
+const KeywordSearchField = (props) => {
 	const { intl, inputRef } = props;
 	return (
 		<div className={css.keywordSearchWrapper}>
@@ -42,7 +42,7 @@ const KeywordSearchField = props => {
 	);
 };
 
-const LocationSearchField = props => {
+const LocationSearchField = (props) => {
 	const { intl, handleChange } = props;
 	return (
 		<Field
@@ -55,7 +55,7 @@ const LocationSearchField = props => {
 				// be to use the FormSpy component from Final Form and pass this.onChange to the
 				// onChange prop but that breaks due to insufficient subscription handling.
 				// See: https://github.com/final-form/react-final-form/issues/159
-				const searchOnChange = value => {
+				const searchOnChange = (value) => {
 					onChange(value);
 					handleChange(value);
 				};
@@ -76,8 +76,8 @@ const LocationSearchField = props => {
 	);
 };
 
-const SearchFormComponent = props => {
-	const handleChange = location => {
+const SearchFormComponent = (props) => {
+	const handleChange = (location) => {
 		if (location.selectedPlace) {
 			// Note that we use `onSubmit` instead of the conventional
 			// `handleSubmit` prop for submitting. We want to autosubmit
@@ -90,12 +90,12 @@ const SearchFormComponent = props => {
 	return (
 		<FinalForm
 			{...props}
-			render={formRenderProps => {
+			render={(formRenderProps) => {
 				const { rootClassName, className, isKeywordSearch, intl, handleSubmit } = formRenderProps;
 				const classes = classNames(rootClassName || css.root, className);
 
 				// Allow form submit only when the place has changed
-				const preventFormSubmit = e => e.preventDefault();
+				const preventFormSubmit = (e) => e.preventDefault();
 				const submitFormFn = isKeywordSearch ? handleSubmit : preventFormSubmit;
 
 				return (

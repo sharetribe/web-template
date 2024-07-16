@@ -9,7 +9,7 @@ import css from "./SectionHero.module.css";
 
 // Section component for a website's hero section
 // The Section Hero doesn't have any Blocks by default, all the configurations are made in the Section Hero settings
-const SectionHero = props => {
+const SectionHero = (props) => {
 	const {
 		sectionId,
 		className,

@@ -11,15 +11,15 @@ const { Money } = sdkTypes;
 
 // Validate the assumption that the commission exists and the amount
 // is zero or negative.
-const isValidCommission = commissionLineItem => {
+const isValidCommission = (commissionLineItem) => {
 	return commissionLineItem.lineTotal instanceof Money && commissionLineItem.lineTotal.amount <= 0;
 };
 
-const LineItemProviderCommissionMaybe = props => {
+const LineItemProviderCommissionMaybe = (props) => {
 	const { lineItems, isProvider, marketplaceName, intl } = props;
 
 	const providerCommissionLineItem = lineItems.find(
-		item => item.code === LINE_ITEM_PROVIDER_COMMISSION && !item.reversal,
+		(item) => item.code === LINE_ITEM_PROVIDER_COMMISSION && !item.reversal,
 	);
 
 	// If commission is passed it will be shown as a fee already reduces from the total price

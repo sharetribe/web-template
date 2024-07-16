@@ -7,7 +7,7 @@ import css from "./IconCheckMark.module.css";
 const SIZE_SMALL = "small";
 const SIZE_BIG = "big";
 
-const IconCheckmark = props => {
+const IconCheckmark = (props) => {
 	const { rootClassName, className, size } = props;
 	const classes = classNames(rootClassName || css.root, className);
 	if (size === SIZE_SMALL) {

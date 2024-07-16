@@ -162,12 +162,12 @@ FieldDateRangeInputComponent.propTypes = {
 	firstDayOfWeek: number.isRequired,
 };
 
-const FieldDateRangeInput = props => {
+const FieldDateRangeInput = (props) => {
 	const config = useConfiguration();
 	const { isOutsideRange, firstDayOfWeek, ...rest } = props;
 
 	// Outside range -><- today ... today+available days -1 -><- outside range
-	const defaultIsOutSideRange = day => {
+	const defaultIsOutSideRange = (day) => {
 		const endOfRange = config.stripe.dayCountAvailableForBooking - 1;
 		return (
 			!isInclusivelyAfterDay(day, moment()) ||

@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./IconReviewStar.module.css";
 
-const IconReviewStar = props => {
+const IconReviewStar = (props) => {
 	const { className, rootClassName, isFilled } = props;
 	const filledOrDefault = isFilled ? css.filled : css.root;
 	const classes = classNames(rootClassName || filledOrDefault, className);

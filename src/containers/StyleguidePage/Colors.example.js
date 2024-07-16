@@ -3,16 +3,12 @@ import PropTypes from "prop-types";
 import { NamedLink } from "../../components";
 import css from "./StyleguidePage.module.css";
 
-const componentToHex = c =>
-	(+c)
-		.toString(16)
-		.padStart(2, "0")
-		.toUpperCase();
-const rgbToHex = rgb => {
+const componentToHex = (c) => (+c).toString(16).padStart(2, "0").toUpperCase();
+const rgbToHex = (rgb) => {
 	const [r, g, b] = rgb.split(",");
 	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 };
-const getRgb = selector => {
+const getRgb = (selector) => {
 	const selectedElem = document.getElementById(selector);
 	const elemStyles = getComputedStyle(selectedElem);
 	return typeof window !== "undefined"
@@ -20,7 +16,7 @@ const getRgb = selector => {
 		: "0,0,0";
 };
 
-const ColorCard = props => {
+const ColorCard = (props) => {
 	const [hexColor, setHexColor] = useState("#FFFFFF");
 
 	useEffect(() => {
@@ -30,7 +26,7 @@ const ColorCard = props => {
 	const { mpColor, name, usage } = props;
 	const colorClasses = mpColor || css.color;
 
-	const handleChange = e => {
+	const handleChange = (e) => {
 		const value = e.target.value;
 		const elem = document.getElementById("styleguide");
 		const re = new RegExp("^#([0-9a-f]{3}){1,2}$", "i");

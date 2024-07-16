@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./IconDelete.module.css";
 
-const IconDelete = props => {
+const IconDelete = (props) => {
 	const { className, rootClassName } = props;
 	const classes = classNames(rootClassName || css.root, className);
 

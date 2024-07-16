@@ -41,11 +41,11 @@ const initialState = {
 	currentPageResultIds: [],
 };
 
-const resultIds = data => {
+const resultIds = (data) => {
 	const listings = data.data;
 	return listings
-		.filter(l => !l.attributes.deleted && l.attributes.state === "published")
-		.map(l => l.id);
+		.filter((l) => !l.attributes.deleted && l.attributes.state === "published")
+		.map((l) => l.id);
 };
 
 const listingPageReducer = (state = initialState, action = {}) => {
@@ -85,17 +85,17 @@ export default listingPageReducer;
 
 // ================ Action creators ================ //
 
-export const searchListingsRequest = searchParams => ({
+export const searchListingsRequest = (searchParams) => ({
 	type: SEARCH_LISTINGS_REQUEST,
 	payload: { searchParams },
 });
 
-export const searchListingsSuccess = response => ({
+export const searchListingsSuccess = (response) => ({
 	type: SEARCH_LISTINGS_SUCCESS,
 	payload: { data: response.data },
 });
 
-export const searchListingsError = e => ({
+export const searchListingsError = (e) => ({
 	type: SEARCH_LISTINGS_ERROR,
 	error: true,
 	payload: e,
@@ -113,18 +113,18 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 	//       ...and then turned enforceValidListingType config to true in configListing.js
 	// Read More:
 	// https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
-	const searchValidListingTypes = listingTypes => {
+	const searchValidListingTypes = (listingTypes) => {
 		return config.listing.enforceValidListingType
 			? {
-					pub_listingType: listingTypes.map(l => l.listingType),
+					pub_listingType: listingTypes.map((l) => l.listingType),
 					// pub_transactionProcessAlias: listingTypes.map(l => l.transactionType.alias),
 					// pub_unitType: listingTypes.map(l => l.transactionType.unitType),
-			  }
+				}
 			: {};
 	};
 
-	const omitInvalidCategoryParams = params => {
-		const categoryConfig = config.search.defaultFilters?.find(f => f.schemaType === "category");
+	const omitInvalidCategoryParams = (params) => {
+		const categoryConfig = config.search.defaultFilters?.find((f) => f.schemaType === "category");
 		const categories = config.categoryConfiguration.categories;
 		const { key: prefix, scope } = categoryConfig || {};
 		const categoryParamPrefix = constructQueryParamName(prefix, scope);
@@ -132,16 +132,16 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 		const validURLParamForCategoryData = (prefix, categories, level, params) => {
 			const levelKey = `${categoryParamPrefix}${level}`;
 			const levelValue = params?.[levelKey];
-			const foundCategory = categories.find(cat => cat.id === levelValue);
+			const foundCategory = categories.find((cat) => cat.id === levelValue);
 			const subcategories = foundCategory?.subcategories || [];
 			return foundCategory && subcategories.length > 0
 				? {
 						[levelKey]: levelValue,
 						...validURLParamForCategoryData(prefix, subcategories, level + 1, params),
-				  }
+					}
 				: foundCategory
-				? { [levelKey]: levelValue }
-				: {};
+					? { [levelKey]: levelValue }
+					: {};
 		};
 
 		const categoryKeys = validURLParamForCategoryData(prefix, categories, 1, params);
@@ -153,19 +153,19 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 		return { ...nonCategoryKeys, ...categoryKeys };
 	};
 
-	const priceSearchParams = priceParam => {
-		const inSubunits = value => convertUnitToSubUnit(value, unitDivisor(config.currency));
+	const priceSearchParams = (priceParam) => {
+		const inSubunits = (value) => convertUnitToSubUnit(value, unitDivisor(config.currency));
 		const values = priceParam ? priceParam.split(",") : [];
 		return priceParam && values.length === 2
 			? {
 					price: [inSubunits(values[0]), inSubunits(values[1]) + 1].join(","),
-			  }
+				}
 			: {};
 	};
 
-	const datesSearchParams = datesParam => {
+	const datesSearchParams = (datesParam) => {
 		const searchTZ = "Etc/UTC";
-		const datesFilter = config.search.defaultFilters.find(f => f.key === "dates");
+		const datesFilter = config.search.defaultFilters.find((f) => f.key === "dates");
 		const values = datesParam ? datesParam.split(",") : [];
 		const hasValues = datesFilter && datesParam && values.length === 2;
 		const { dateRangeMode, availability } = datesFilter || {};
@@ -181,8 +181,8 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 		//   3) Make exact dates filtering against that specific time zone
 		//   This setup would be better for dates filter,
 		//   but it enforces a UX where location is always asked first and therefore configurability
-		const getProlongedStart = date => subtractTime(date, 14, "hours", searchTZ);
-		const getProlongedEnd = date => addTime(date, 12, "hours", searchTZ);
+		const getProlongedStart = (date) => subtractTime(date, 14, "hours", searchTZ);
+		const getProlongedEnd = (date) => addTime(date, 12, "hours", searchTZ);
 
 		const startDate = hasValues ? parseDateFromISO8601(values[0], searchTZ) : null;
 		const endRaw = hasValues ? parseDateFromISO8601(values[1], searchTZ) : null;
@@ -190,8 +190,8 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 			hasValues && isNightlyMode
 				? endRaw
 				: hasValues
-				? getExclusiveEndDate(endRaw, searchTZ)
-				: null;
+					? getExclusiveEndDate(endRaw, searchTZ)
+					: null;
 
 		const today = getStartOf(new Date(), "day", searchTZ);
 		const possibleStartDate = subtractTime(today, 14, "hours", searchTZ);
@@ -218,11 +218,11 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 					availability: "time-partial",
 					// minDuration uses minutes
 					minDuration,
-			  }
+				}
 			: {};
 	};
 
-	const stockFilters = datesMaybe => {
+	const stockFilters = (datesMaybe) => {
 		const hasDatesFilterInUse = Object.keys(datesMaybe).length > 0;
 
 		// If dates filter is not in use,
@@ -253,7 +253,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 
 	return sdk.listings
 		.query(params)
-		.then(response => {
+		.then((response) => {
 			const listingFields = config?.listing?.listingFields;
 			const sanitizeConfig = { listingFields };
 
@@ -261,13 +261,13 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
 			dispatch(searchListingsSuccess(response));
 			return response;
 		})
-		.catch(e => {
+		.catch((e) => {
 			dispatch(searchListingsError(storableError(e)));
 			throw e;
 		});
 };
 
-export const setActiveListing = listingId => ({
+export const setActiveListing = (listingId) => ({
 	type: SEARCH_MAP_SET_ACTIVE_LISTING,
 	payload: listingId,
 });

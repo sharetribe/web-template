@@ -59,7 +59,7 @@ import css from "./AuthenticationPage.module.css";
 import { FacebookLogo, GoogleLogo } from "./socialLoginLogos";
 
 // Social login buttons are needed by AuthenticationForms
-export const SocialLoginButtonsMaybe = props => {
+export const SocialLoginButtonsMaybe = (props) => {
 	const routeConfiguration = useRouteConfiguration();
 	const { isLogin, showFacebookLogin, showGoogleLogin, from, userType } = props;
 	const showSocialLogins = showFacebookLogin || showGoogleLogin;
@@ -144,12 +144,12 @@ const getNonUserFieldParams = (values, userFieldConfigs) => {
 			: {
 					...picked,
 					[key]: value,
-			  };
+				};
 	}, {});
 };
 
 // Tabs for SignupForm and LoginForm
-export const AuthenticationForms = props => {
+export const AuthenticationForms = (props) => {
 	const {
 		isLogin,
 		showFacebookLogin,
@@ -166,7 +166,8 @@ export const AuthenticationForms = props => {
 	} = props;
 	const config = useConfiguration();
 	const { userFields, userTypes = [] } = config.user;
-	const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
+	const preselectedUserType =
+		userTypes.find((conf) => conf.userType === userType)?.userType || null;
 
 	const fromMaybe = from ? { from } : null;
 	const signupRouteName = !!preselectedUserType ? "SignupForUserTypePage" : "SignupPage";
@@ -200,7 +201,7 @@ export const AuthenticationForms = props => {
 		},
 	];
 
-	const handleSubmitSignup = values => {
+	const handleSubmitSignup = (values) => {
 		const { userType, email, password, fname, lname, displayName, ...rest } = values;
 		const displayNameMaybe = displayName ? { displayName: displayName.trim() } : {};
 
@@ -252,10 +253,10 @@ export const AuthenticationForms = props => {
 		isLogin && !!idpAuthError
 			? idpAuthErrorMessage
 			: isLogin && !!loginError
-			? loginErrorMessage
-			: !!signupError
-			? signupErrorMessage
-			: null;
+				? loginErrorMessage
+				: !!signupError
+					? signupErrorMessage
+					: null;
 
 	return (
 		<div className={css.content}>
@@ -289,7 +290,7 @@ export const AuthenticationForms = props => {
 
 // Form for confirming information from IdP (e.g. Facebook)
 // This is shown before new user is created to Marketplace API
-const ConfirmIdProviderInfoForm = props => {
+const ConfirmIdProviderInfoForm = (props) => {
 	const {
 		userType,
 		authInfo,
@@ -300,11 +301,12 @@ const ConfirmIdProviderInfoForm = props => {
 	} = props;
 	const config = useConfiguration();
 	const { userFields, userTypes } = config.user;
-	const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
+	const preselectedUserType =
+		userTypes.find((conf) => conf.userType === userType)?.userType || null;
 
-	const idp = authInfo ? authInfo.idpId.replace(/^./, str => str.toUpperCase()) : null;
+	const idp = authInfo ? authInfo.idpId.replace(/^./, (str) => str.toUpperCase()) : null;
 
-	const handleSubmitConfirm = values => {
+	const handleSubmitConfirm = (values) => {
 		const { idpToken, email, firstName, lastName, idpId } = authInfo;
 
 		const {
@@ -342,7 +344,7 @@ const ConfirmIdProviderInfoForm = props => {
 						// If the confirm form has any additional values, pass them forward as user's protected data
 						...getNonUserFieldParams(rest, userFields),
 					},
-			  }
+				}
 			: {};
 
 		submitSingupWithIdp({
@@ -389,7 +391,7 @@ const ConfirmIdProviderInfoForm = props => {
 	);
 };
 
-export const AuthenticationOrConfirmInfoForm = props => {
+export const AuthenticationOrConfirmInfoForm = (props) => {
 	const {
 		tab,
 		userType,
@@ -448,7 +450,7 @@ const getAuthErrorFromCookies = () => {
 		: null;
 };
 
-export const AuthenticationPageComponent = props => {
+export const AuthenticationPageComponent = (props) => {
 	const [tosModalOpen, setTosModalOpen] = useState(false);
 	const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
 	const [authInfo, setAuthInfo] = useState(getAuthInfoFromCookies());
@@ -505,7 +507,8 @@ export const AuthenticationPageComponent = props => {
 	const userType = pathParams?.userType || userTypeInPushState || userTypeInAuthInfo || null;
 
 	const { userTypes = [] } = config.user;
-	const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
+	const preselectedUserType =
+		userTypes.find((conf) => conf.userType === userType)?.userType || null;
 	const show404 = userType && !preselectedUserType;
 
 	const user = ensureCurrentUser(currentUser);
@@ -696,7 +699,7 @@ AuthenticationPageComponent.propTypes = {
 	intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	const { isAuthenticated, loginError, signupError, confirmError } = state.auth;
 	const { currentUser, sendVerificationEmailInProgress, sendVerificationEmailError } = state.user;
 	const {
@@ -704,8 +707,11 @@ const mapStateToProps = state => {
 		inProgress: privacyFetchInProgress,
 		error: privacyFetchError,
 	} = state.hostedAssets || {};
-	const { pageAssetsData: tosAssetsData, inProgress: tosFetchInProgress, error: tosFetchError } =
-		state.hostedAssets || {};
+	const {
+		pageAssetsData: tosAssetsData,
+		inProgress: tosFetchInProgress,
+		error: tosFetchError,
+	} = state.hostedAssets || {};
 
 	return {
 		authInProgress: authenticationInProgress(state),
@@ -726,10 +732,10 @@ const mapStateToProps = state => {
 	};
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
 	submitLogin: ({ email, password }) => dispatch(login(email, password)),
-	submitSignup: params => dispatch(signup(params)),
-	submitSingupWithIdp: params => dispatch(signupWithIdp(params)),
+	submitSignup: (params) => dispatch(signup(params)),
+	submitSingupWithIdp: (params) => dispatch(signupWithIdp(params)),
 	onResendVerificationEmail: () => dispatch(sendVerificationEmail()),
 	onManageDisableScrolling: (componentId, disableScrolling) =>
 		dispatch(manageDisableScrolling(componentId, disableScrolling)),
@@ -743,10 +749,7 @@ const mapDispatchToProps = dispatch => ({
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const AuthenticationPage = compose(
 	withRouter,
-	connect(
-		mapStateToProps,
-		mapDispatchToProps,
-	),
+	connect(mapStateToProps, mapDispatchToProps),
 	injectIntl,
 )(AuthenticationPageComponent);
 

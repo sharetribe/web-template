@@ -37,7 +37,7 @@ export default function reducer(state = initialState, action = {}) {
 
 // ================ Selectors ================ //
 
-export const verificationInProgress = state => {
+export const verificationInProgress = (state) => {
 	return state.emailVerification.verificationInProgress;
 };
 
@@ -45,7 +45,7 @@ export const verificationInProgress = state => {
 
 export const verificationRequest = () => ({ type: VERIFICATION_REQUEST });
 export const verificationSuccess = () => ({ type: VERIFICATION_SUCCESS });
-export const verificationError = error => ({
+export const verificationError = (error) => ({
 	type: VERIFICATION_ERROR,
 	payload: error,
 	error: true,
@@ -53,7 +53,7 @@ export const verificationError = error => ({
 
 // ================ Thunks ================ //
 
-export const verify = verificationToken => (dispatch, getState, sdk) => {
+export const verify = (verificationToken) => (dispatch, getState, sdk) => {
 	if (verificationInProgress(getState())) {
 		return Promise.reject(new Error("Email verification already in progress"));
 	}
@@ -65,5 +65,5 @@ export const verify = verificationToken => (dispatch, getState, sdk) => {
 		.verifyEmail({ verificationToken })
 		.then(() => dispatch(verificationSuccess()))
 		.then(() => dispatch(fetchCurrentUser()))
-		.catch(e => dispatch(verificationError(storableError(e))));
+		.catch((e) => dispatch(verificationError(storableError(e))));
 };

@@ -115,8 +115,8 @@ export class SearchPageComponent extends Component {
 
 		const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
-		return updatedURLParams => {
-			const updater = prevState => {
+		return (updatedURLParams) => {
+			const updater = (prevState) => {
 				const { address, bounds, keywords } = urlQueryParams;
 				const mergedQueryParams = { ...urlQueryParams, ...prevState.currentQueryParams };
 
@@ -189,7 +189,7 @@ export class SearchPageComponent extends Component {
 
 		const { listingFields } = config?.listing || {};
 		const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
-		const activeListingTypes = config?.listing?.listingTypes.map(config => config.listingType);
+		const activeListingTypes = config?.listing?.listingTypes.map((config) => config.listingType);
 		const marketplaceCurrency = config.currency;
 		const categoryConfiguration = config.categoryConfiguration;
 		const listingCategories = categoryConfiguration.categories;
@@ -217,12 +217,12 @@ export class SearchPageComponent extends Component {
 		const validQueryParams = urlQueryParams;
 
 		const isKeywordSearch = isMainSearchTypeKeywords(config);
-		const builtInPrimaryFilters = defaultFiltersConfig.filter(f =>
+		const builtInPrimaryFilters = defaultFiltersConfig.filter((f) =>
 			["categoryLevel"].includes(f.key),
 		);
 		const builtInFilters = isKeywordSearch
-			? defaultFiltersConfig.filter(f => !["keywords", "categoryLevel"].includes(f.key))
-			: defaultFiltersConfig.filter(f => !["categoryLevel"].includes(f.key));
+			? defaultFiltersConfig.filter((f) => !["keywords", "categoryLevel"].includes(f.key))
+			: defaultFiltersConfig.filter((f) => !["categoryLevel"].includes(f.key));
 		const [customPrimaryFilters, customSecondaryFilters] = groupListingFieldConfigs(
 			listingFieldsConfig,
 			activeListingTypes,
@@ -241,7 +241,7 @@ export class SearchPageComponent extends Component {
 			(searchParamsInURL.dates != null && searchParamsInURL.dates === selectedFilters.dates);
 		const keysOfSelectedFilters = Object.keys(selectedFilters);
 		const selectedFiltersCountForMobile = isKeywordSearch
-			? keysOfSelectedFilters.filter(f => f !== "keywords").length
+			? keysOfSelectedFilters.filter((f) => f !== "keywords").length
 			: keysOfSelectedFilters.length;
 
 		const hasPaginationInfo = !!pagination && pagination.totalItems != null;
@@ -249,8 +249,8 @@ export class SearchPageComponent extends Component {
 			searchParamsAreInSync && hasPaginationInfo
 				? pagination.totalItems
 				: pagination?.paginationUnsupported
-				? listings.length
-				: 0;
+					? listings.length
+					: 0;
 		const listingsAreLoaded =
 			!searchInProgress &&
 			searchParamsAreInSync &&
@@ -261,7 +261,7 @@ export class SearchPageComponent extends Component {
 			validQueryParams,
 			filterConfigs,
 		);
-		const sortBy = mode => {
+		const sortBy = (mode) => {
 			return sortConfig.active ? (
 				<SortBy
 					sort={validQueryParams[sortConfig.queryParamName]}
@@ -311,7 +311,7 @@ export class SearchPageComponent extends Component {
 				<div className={css.layoutWrapperContainer}>
 					<aside className={css.layoutWrapperFilterColumn} data-testid="filterColumnAside">
 						<div className={css.filterColumnContent}>
-							{availableFilters.map(filterConfig => {
+							{availableFilters.map((filterConfig) => {
 								const key = `SearchFiltersDesktop.${filterConfig.scope || "built-in"}.${
 									filterConfig.key
 								}`;
@@ -333,7 +333,7 @@ export class SearchPageComponent extends Component {
 									/>
 								);
 							})}
-							<button className={css.resetAllButton} onClick={e => this.handleResetAll(e)}>
+							<button className={css.resetAllButton} onClick={(e) => this.handleResetAll(e)}>
 								<FormattedMessage id={"SearchFiltersMobile.resetAll"} />
 							</button>
 						</div>
@@ -358,7 +358,7 @@ export class SearchPageComponent extends Component {
 								isMapVariant={false}
 								noResultsInfo={noResultsInfo}
 							>
-								{availableFilters.map(filterConfig => {
+								{availableFilters.map((filterConfig) => {
 									const key = `SearchFiltersMobile.${filterConfig.scope || "built-in"}.${
 										filterConfig.key
 									}`;
@@ -457,7 +457,7 @@ SearchPageComponent.propTypes = {
 	routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
-const EnhancedSearchPage = props => {
+const EnhancedSearchPage = (props) => {
 	const config = useConfiguration();
 	const routeConfiguration = useRouteConfiguration();
 	const intl = useIntl();
@@ -476,14 +476,9 @@ const EnhancedSearchPage = props => {
 	);
 };
 
-const mapStateToProps = state => {
-	const {
-		currentPageResultIds,
-		pagination,
-		searchInProgress,
-		searchListingsError,
-		searchParams,
-	} = state.SearchPage;
+const mapStateToProps = (state) => {
+	const { currentPageResultIds, pagination, searchInProgress, searchListingsError, searchParams } =
+		state.SearchPage;
 	const listings = getListingsById(state, currentPageResultIds);
 
 	return {
@@ -496,7 +491,7 @@ const mapStateToProps = state => {
 	};
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
 	onManageDisableScrolling: (componentId, disableScrolling) =>
 		dispatch(manageDisableScrolling(componentId, disableScrolling)),
 });
@@ -507,11 +502,6 @@ const mapDispatchToProps = dispatch => ({
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const SearchPage = compose(
-	connect(
-		mapStateToProps,
-		mapDispatchToProps,
-	),
-)(EnhancedSearchPage);
+const SearchPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedSearchPage);
 
 export default SearchPage;

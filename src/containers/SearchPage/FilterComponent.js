@@ -16,7 +16,7 @@ import IntegerRangeFilter from "./IntegerRangeFilter/IntegerRangeFilter";
  * FilterComponent is used to map configured filter types
  * to actual filter components
  */
-const FilterComponent = props => {
+const FilterComponent = (props) => {
 	const {
 		idPrefix,
 		config,
@@ -44,7 +44,7 @@ const FilterComponent = props => {
 	switch (schemaType) {
 		case "category": {
 			const { scope, isNestedEnum, nestedParams } = config;
-			const queryParamNames = nestedParams?.map(p => constructQueryParamName(p, scope));
+			const queryParamNames = nestedParams?.map((p) => constructQueryParamName(p, scope));
 			return (
 				<SelectSingleFilter
 					id={componentId}

@@ -35,7 +35,7 @@ module.exports = (req, res) => {
 				.send(serialize({ data: validLineItems }))
 				.end();
 		})
-		.catch(e => {
+		.catch((e) => {
 			handleError(res, e);
 		});
 };

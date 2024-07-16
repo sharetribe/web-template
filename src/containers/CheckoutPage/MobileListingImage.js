@@ -5,13 +5,16 @@ import { AspectRatioWrapper, AvatarMedium, ResponsiveImage } from "../../compone
 
 import css from "./CheckoutPage.module.css";
 
-const MobileListingImage = props => {
+const MobileListingImage = (props) => {
 	const { listingTitle, author, firstImage, layoutListingImageConfig } = props;
 
-	const { aspectWidth = 1, aspectHeight = 1, variantPrefix = "listing-card" } =
-		layoutListingImageConfig || {};
+	const {
+		aspectWidth = 1,
+		aspectHeight = 1,
+		variantPrefix = "listing-card",
+	} = layoutListingImageConfig || {};
 	const variants = firstImage
-		? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
+		? Object.keys(firstImage?.attributes?.variants).filter((k) => k.startsWith(variantPrefix))
 		: [];
 
 	return (

@@ -17,24 +17,25 @@ const ESCAPE_TEXT_REPLACEMENTS = {
 
 // An example how you could sanitize text content.
 // This swaps some coding related characters to less dangerous ones
-const sanitizeText = str =>
+const sanitizeText = (str) =>
 	str == null
 		? str
 		: typeof str === "string"
-		? str.replace(ESCAPE_TEXT_REGEXP, ch => ESCAPE_TEXT_REPLACEMENTS[ch])
-		: "";
+			? str.replace(ESCAPE_TEXT_REGEXP, (ch) => ESCAPE_TEXT_REPLACEMENTS[ch])
+			: "";
 
 // Enum and multi-enum work with predefined option configuration
-const sanitizeEnum = (str, options) => (options.map(o => `${o.option}`).includes(str) ? str : null);
+const sanitizeEnum = (str, options) =>
+	options.map((o) => `${o.option}`).includes(str) ? str : null;
 const sanitizeMultiEnum = (arr, options) =>
 	Array.isArray(arr)
 		? arr.reduce((ret, value) => {
 				const enumValue = sanitizeEnum(value, options);
 				return enumValue ? [...ret, enumValue] : ret;
-		  }, [])
+			}, [])
 		: [];
-const sanitizeLong = lng => (lng == null || typeof lng === "number" ? lng : null);
-const sanitizeBoolean = bool => (bool == null || typeof bool === "boolean" ? bool : null);
+const sanitizeLong = (lng) => (lng == null || typeof lng === "number" ? lng : null);
+const sanitizeBoolean = (bool) => (bool == null || typeof bool === "boolean" ? bool : null);
 
 // URL sanitizer. This code is adapted from
 // https://github.com/braintree/sanitize-url/
@@ -95,15 +96,21 @@ export function sanitizeUrl(url) {
 export const sanitizeUser = (entity, config = {}) => {
 	const { attributes, ...restEntity } = entity || {};
 	const { profile, ...restAttributes } = attributes || {};
-	const { bio, displayName, abbreviatedName, publicData = {}, metadata = {}, ...restProfile } =
-		profile || {};
+	const {
+		bio,
+		displayName,
+		abbreviatedName,
+		publicData = {},
+		metadata = {},
+		...restProfile
+	} = profile || {};
 
-	const sanitizePublicData = publicData => {
+	const sanitizePublicData = (publicData) => {
 		// TODO: If you add public data, you should probably sanitize it here.
 		const sanitizedConfiguredPublicData = sanitizeConfiguredPublicData(publicData, config);
 		return publicData ? { publicData: sanitizedConfiguredPublicData } : {};
 	};
-	const sanitizeMetadata = metadata => {
+	const sanitizeMetadata = (metadata) => {
 		// TODO: If you add user-generated metadata through Integration API,
 		// you should probably sanitize it here.
 		return metadata ? { metadata } : {};
@@ -119,7 +126,7 @@ export const sanitizeUser = (entity, config = {}) => {
 					...sanitizeMetadata(metadata),
 					...restProfile,
 				},
-		  }
+			}
 		: {};
 	const attributesMaybe = attributes ? { attributes: { ...profileMaybe, ...restAttributes } } : {};
 
@@ -138,14 +145,14 @@ const sanitizedExtendedDataFields = (value, config) => {
 		schemaType === "text"
 			? sanitizeText(value)
 			: schemaType === "enum"
-			? sanitizeEnum(value, enumOptions)
-			: schemaType === "multi-enum"
-			? sanitizeMultiEnum(value, enumOptions)
-			: schemaType === "long"
-			? sanitizeLong(value)
-			: schemaType === "boolean"
-			? sanitizeBoolean(value)
-			: null;
+				? sanitizeEnum(value, enumOptions)
+				: schemaType === "multi-enum"
+					? sanitizeMultiEnum(value, enumOptions)
+					: schemaType === "long"
+						? sanitizeLong(value)
+						: schemaType === "boolean"
+							? sanitizeBoolean(value)
+							: null;
 
 	return sanitized;
 };
@@ -166,18 +173,18 @@ const sanitizeConfiguredPublicData = (publicData, config = {}) => {
 	const publicDataObj = publicData || {};
 	return Object.entries(publicDataObj).reduce((sanitized, entry) => {
 		const [key, value] = entry;
-		const foundListingFieldConfig = config?.listingFields?.find(d => d.key === key);
-		const foundUserFieldConfig = config?.userFields?.find(d => d.key === key);
+		const foundListingFieldConfig = config?.listingFields?.find((d) => d.key === key);
+		const foundUserFieldConfig = config?.userFields?.find((d) => d.key === key);
 		const knownKeysWithString = ["listingType", "transactionProcessAlias", "unitType", "userType"];
 		const sanitizedValue = knownKeysWithString.includes(key)
 			? sanitizeText(value)
 			: foundListingFieldConfig
-			? sanitizedExtendedDataFields(value, foundListingFieldConfig)
-			: foundUserFieldConfig
-			? sanitizedExtendedDataFields(value, foundUserFieldConfig)
-			: typeof value === "string"
-			? sanitizeText(value)
-			: value;
+				? sanitizedExtendedDataFields(value, foundListingFieldConfig)
+				: foundUserFieldConfig
+					? sanitizedExtendedDataFields(value, foundUserFieldConfig)
+					: typeof value === "string"
+						? sanitizeText(value)
+						: value;
 
 		return {
 			...sanitized,
@@ -197,12 +204,12 @@ export const sanitizeListing = (entity, config = {}) => {
 	const { attributes, ...restEntity } = entity;
 	const { title, description, publicData, ...restAttributes } = attributes || {};
 
-	const sanitizeLocation = location => {
+	const sanitizeLocation = (location) => {
 		const { address, building } = location || {};
 		return { address: sanitizeText(address), building: sanitizeText(building) };
 	};
 
-	const sanitizePublicData = publicData => {
+	const sanitizePublicData = (publicData) => {
 		// Here's an example how you could sanitize location and rules from publicData:
 		// TODO: If you add public data, you should probably sanitize it here.
 		const { location, ...restPublicData } = publicData || {};
@@ -220,7 +227,7 @@ export const sanitizeListing = (entity, config = {}) => {
 					...sanitizePublicData(publicData),
 					...restAttributes,
 				},
-		  }
+			}
 		: {};
 
 	return { ...attributesMaybe, ...restEntity };

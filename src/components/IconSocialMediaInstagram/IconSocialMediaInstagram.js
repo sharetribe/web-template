@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./IconSocialMediaInstagram.module.css";
 
-const IconSocialMediaInstagram = props => {
+const IconSocialMediaInstagram = (props) => {
 	const { rootClassName, className } = props;
 	const classes = classNames(rootClassName || css.root, className);
 	return (

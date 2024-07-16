@@ -9,10 +9,10 @@ import { getFieldValue } from "./fieldHelpers";
  */
 export const addScopePrefix = (scope, key) => {
 	const scopeFnMap = {
-		private: k => `priv_${k}`,
-		protected: k => `prot_${k}`,
-		public: k => `pub_${k}`,
-		meta: k => `meta_${k}`,
+		private: (k) => `priv_${k}`,
+		protected: (k) => `prot_${k}`,
+		public: (k) => `pub_${k}`,
+		meta: (k) => `meta_${k}`,
 	};
 
 	const validKey = key.replace(/\s/g, "_");
@@ -128,7 +128,7 @@ export const getPropsForCustomUserFieldInputs = (
 								id: "CustomExtendedDataField.required",
 							}),
 						},
-				  ]
+					]
 				: pickedFields;
 		}, []) || []
 	);

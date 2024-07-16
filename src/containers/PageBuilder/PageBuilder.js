@@ -80,7 +80,7 @@ const LoadingSpinner = () => {
  * @param {Object} props
  * @returns page component
  */
-const PageBuilder = props => {
+const PageBuilder = (props) => {
 	const {
 		pageAssetsData,
 		inProgress,
@@ -110,7 +110,7 @@ const PageBuilder = props => {
 	return (
 		<StaticPage {...pageMetaProps} {...pageProps}>
 			<LayoutComposer areas={layoutAreas} className={css.layout}>
-				{props => {
+				{(props) => {
 					const { Topbar, Main, Footer } = props;
 					return (
 						<>

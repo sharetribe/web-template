@@ -15,11 +15,11 @@ import { apiBaseUrl } from "../../util/api";
 
 import css from "./Page.module.css";
 
-const preventDefault = e => {
+const preventDefault = (e) => {
 	e.preventDefault();
 };
 
-const twitterPageURL = siteTwitterHandle => {
+const twitterPageURL = (siteTwitterHandle) => {
 	if (siteTwitterHandle && siteTwitterHandle.charAt(0) === "@") {
 		return `https://twitter.com/${siteTwitterHandle.substring(1)}`;
 	} else if (siteTwitterHandle) {
@@ -28,26 +28,26 @@ const twitterPageURL = siteTwitterHandle => {
 	return null;
 };
 
-const webmanifestURL = marketplaceRootURL => {
+const webmanifestURL = (marketplaceRootURL) => {
 	// Note: on localhost (when running "yarn run dev"), the webmanifest is running on apiServer port
 	const baseUrl = apiBaseUrl(marketplaceRootURL);
 	return `${baseUrl}/site.webmanifest`;
 };
 
-const getFaviconVariants = config => {
+const getFaviconVariants = (config) => {
 	// We add favicon through hosted configs
 	// NOTE: There's no favicon.ico file. This is an imageAsset object which is used together with <meta> tags.
 	const favicon = config.branding.favicon;
 	return favicon?.type === "imageAsset" ? Object.values(favicon.attributes.variants) : [];
 };
 
-const getAppleTouchIconURL = config => {
+const getAppleTouchIconURL = (config) => {
 	// The appIcon is used to pick apple-touch-icon
 	// We use 180x180. I.e. we follow the example set by realfavicongenerator
 	const appIcon = config.branding.appIcon;
 	const appIconVariants =
 		appIcon?.type === "imageAsset" ? Object.values(appIcon.attributes.variants) : [];
-	const appleTouchIconVariant = appIconVariants.find(variant => {
+	const appleTouchIconVariant = appIconVariants.find((variant) => {
 		return variant.width === 180 && variant.height === 180;
 	});
 	return appleTouchIconVariant?.url;
@@ -185,7 +185,7 @@ class PageComponent extends Component {
 		const facebookPage = config.siteFacebookPage;
 		const twitterPage = twitterPageURL(config.siteTwitterHandle);
 		const instagramPage = config.siteInstagramPage;
-		const sameOrganizationAs = [facebookPage, twitterPage, instagramPage].filter(v => v != null);
+		const sameOrganizationAs = [facebookPage, twitterPage, instagramPage].filter((v) => v != null);
 
 		// Schema for search engines (helps them to understand what this page is about)
 		// http://schema.org
@@ -253,7 +253,7 @@ class PageComponent extends Component {
 					{referrer ? <meta name="referrer" content={referrer} /> : null}
 					<link rel="canonical" href={canonicalUrl} />
 
-					{faviconVariants.map(variant => {
+					{faviconVariants.map((variant) => {
 						return (
 							<link
 								key={`icon_${variant.width}`}
@@ -283,7 +283,7 @@ class PageComponent extends Component {
 				<div
 					className={css.content}
 					style={scrollPositionStyles}
-					ref={c => {
+					ref={(c) => {
 						this.contentDiv = c;
 					}}
 				>
@@ -381,7 +381,7 @@ PageComponent.propTypes = {
 	}).isRequired,
 };
 
-const Page = props => {
+const Page = (props) => {
 	const config = useConfiguration();
 	const routeConfiguration = useRouteConfiguration();
 	const location = useLocation();

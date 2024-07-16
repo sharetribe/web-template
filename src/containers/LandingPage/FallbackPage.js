@@ -3,12 +3,12 @@ import loadable from "@loadable/component";
 
 import css from "./FallbackPage.module.css";
 
-const PageBuilder = loadable(() =>
-	import(/* webpackChunkName: "PageBuilder" */ "../PageBuilder/PageBuilder"),
+const PageBuilder = loadable(
+	() => import(/* webpackChunkName: "PageBuilder" */ "../PageBuilder/PageBuilder"),
 );
 
 // Create fallback content (array of sections) in page asset format:
-export const fallbackSections = error => ({
+export const fallbackSections = (error) => ({
 	sections: [
 		{
 			sectionType: "customMaintenance",
@@ -31,7 +31,7 @@ export const fallbackSections = error => ({
 
 // Note: this microcopy/translation does not come from translation file.
 //       It needs to be something that is not part of fetched assets but built-in text
-const SectionMaintenanceMode = props => {
+const SectionMaintenanceMode = (props) => {
 	const { sectionId, error } = props;
 	// 404 means that the landing-page asset was not found from the expected asset path
 	// which is defined in config.js
@@ -60,7 +60,7 @@ const SectionMaintenanceMode = props => {
 };
 
 // This is the fallback page, in case there's no Landing Page asset defined in Console.
-const FallbackPage = props => {
+const FallbackPage = (props) => {
 	const { error, ...rest } = props;
 	return (
 		<PageBuilder

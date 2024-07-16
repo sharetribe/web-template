@@ -9,7 +9,7 @@ import { MenuItem } from "../../components";
 
 import css from "./MenuContent.module.css";
 
-const MenuContent = props => {
+const MenuContent = (props) => {
 	const {
 		arrowPosition,
 		children,
@@ -38,7 +38,7 @@ const MenuContent = props => {
 		</div>
 	) : null;
 
-	React.Children.forEach(children, child => {
+	React.Children.forEach(children, (child) => {
 		if (child.type !== MenuItem) {
 			throw new Error("All children of MenuContent must be MenuItems.");
 		}

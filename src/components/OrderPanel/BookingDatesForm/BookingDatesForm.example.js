@@ -4,8 +4,8 @@ import { types as sdkTypes } from "../../../util/sdkLoader";
 import { injectIntl } from "../../../util/reactIntl";
 import { LINE_ITEM_DAY, LINE_ITEM_NIGHT, TIME_SLOT_TIME } from "../../../util/types";
 
-const BookingDatesForm = loadable(() =>
-	import(/* webpackChunkName: "BookingDatesForm" */ "./BookingDatesForm"),
+const BookingDatesForm = loadable(
+	() => import(/* webpackChunkName: "BookingDatesForm" */ "./BookingDatesForm"),
 );
 
 const CURRENCY = "USD";
@@ -94,7 +94,7 @@ export const FormWithNightBooking = {
 		formId: "OrderPanelBookingDatesFormExample1",
 		listingId: new UUID("listing.id"),
 		lineItemUnitType: LINE_ITEM_NIGHT,
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit BookingDatesForm with values:", values);
 		},
 		price: new Money(unitPrice.toNumber(), CURRENCY),
@@ -107,7 +107,7 @@ export const FormWithNightBooking = {
 
 		fetchLineItemsInProgress: false,
 		fetchLineItemsError: null,
-		onFetchTransactionLineItems: params =>
+		onFetchTransactionLineItems: (params) =>
 			console.log(
 				"onFetchTransactionLineItems called with params:",
 				JSON.stringify(params, null, 2),
@@ -128,7 +128,7 @@ export const FormWithDayBooking = {
 		formId: "OrderPanelBookingDatesFormExample2",
 		listingId: new UUID("listing.id"),
 		lineItemUnitType: LINE_ITEM_DAY,
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit BookingDatesForm with values:", values);
 		},
 		price: new Money(1099, "USD"),
@@ -140,7 +140,7 @@ export const FormWithDayBooking = {
 
 		fetchLineItemsInProgress: false,
 		fetchLineItemsError: null,
-		onFetchTransactionLineItems: params =>
+		onFetchTransactionLineItems: (params) =>
 			console.log(
 				"onFetchTransactionLineItems called with params:",
 				JSON.stringify(params, null, 2),

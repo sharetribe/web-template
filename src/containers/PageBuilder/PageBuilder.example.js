@@ -28,7 +28,7 @@ const imagePlaceholder = (width, height) => ({
 	},
 });
 
-const Placeholder = props => (
+const Placeholder = (props) => (
 	<div
 		style={{
 			backgroundColor: hexYellow,

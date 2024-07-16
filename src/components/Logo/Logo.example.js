@@ -152,7 +152,7 @@ export const Scaled48h_responsive_desktop = {
 	group: "logo",
 };
 
-const LogoWrapper160w = props => (
+const LogoWrapper160w = (props) => (
 	<div
 		style={{
 			display: "flex",

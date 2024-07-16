@@ -5,7 +5,7 @@ export const Empty = {
 	component: ReviewForm,
 	props: {
 		formId: "ReviewFormExample",
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit ReviewForm with (unformatted) values:", values);
 		},
 		reviewSent: false,

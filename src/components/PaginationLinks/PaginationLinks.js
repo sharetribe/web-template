@@ -28,7 +28,7 @@ const getPageNumbersArray = (page, totalPages) => {
 	// Create array of numbers: [1, 2, 3, 4, ..., totalPages]
 	const numbersFrom1ToTotalPages = range(1, totalPages + 1);
 	return numbersFrom1ToTotalPages
-		.filter(v => {
+		.filter((v) => {
 			// Filter numbers that are next to current page and pick also first and last page
 			// E.g. [1, 4, 5, 6, 9], where current page = 5 and totalPages = 9.
 			return v === 1 || Math.abs(v - page) <= 1 || v === totalPages;
@@ -48,16 +48,9 @@ const getPageNumbersArray = (page, totalPages) => {
  *
  * The links will be disabled when no previous/next page exists.
  */
-export const PaginationLinksComponent = props => {
-	const {
-		className,
-		rootClassName,
-		intl,
-		pageName,
-		pagePathParams,
-		pageSearchParams,
-		pagination,
-	} = props;
+export const PaginationLinksComponent = (props) => {
+	const { className, rootClassName, intl, pageName, pagePathParams, pageSearchParams, pagination } =
+		props;
 	const classes = classNames(rootClassName || css.root, className);
 
 	const { page, totalPages, paginationLimit, paginationUnsupported } = pagination;
@@ -65,8 +58,8 @@ export const PaginationLinksComponent = props => {
 	const pageCountLimit = paginationUnsupported
 		? 1
 		: hasPaginationLimit
-		? paginationLimit
-		: totalPages;
+			? paginationLimit
+			: totalPages;
 	const prevPage = page > 1 ? page - 1 : null;
 	const nextPage = page < pageCountLimit ? page + 1 : null;
 	const prevSearchParams = { ...pageSearchParams, page: prevPage };
@@ -120,7 +113,7 @@ export const PaginationLinksComponent = props => {
 
 	/* Numbered pagination links */
 
-	const pageNumbersNavLinks = getPageNumbersArray(page, pageCountLimit).map(v => {
+	const pageNumbersNavLinks = getPageNumbersArray(page, pageCountLimit).map((v) => {
 		const isCurrentPage = v === page;
 		const pageClassNames = classNames(css.toPageLink, { [css.currentPage]: isCurrentPage });
 		return typeof v === "number" ? (

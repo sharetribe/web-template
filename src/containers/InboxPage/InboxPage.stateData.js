@@ -20,7 +20,7 @@ export const stateDataShape = shape({
 });
 
 // Translated name of the state of the given transaction
-export const getStateData = params => {
+export const getStateData = (params) => {
 	const { transaction } = params;
 	const processName = resolveLatestProcessName(transaction?.attributes?.processName);
 	const process = getProcess(processName);

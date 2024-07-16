@@ -16,8 +16,8 @@ export const Example = {
 			console.log("submit with values:", values);
 			return Promise.resolve();
 		},
-		onFetchExceptions: values => console.log("onFetchExceptions", values),
-		onMonthChanged: values => console.log("onMonthChanged", values),
+		onFetchExceptions: (values) => console.log("onFetchExceptions", values),
+		onMonthChanged: (values) => console.log("onMonthChanged", values),
 		fetchErrors: {},
 		isDaily: false,
 		useFullDays: false,

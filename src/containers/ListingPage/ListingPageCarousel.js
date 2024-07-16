@@ -82,7 +82,7 @@ const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
 const { UUID } = sdkTypes;
 
-export const ListingPageComponent = props => {
+export const ListingPageComponent = (props) => {
 	const [inquiryModalOpen, setInquiryModalOpen] = useState(
 		props.inquiryModalOpenForListingId === props.params.id,
 	);
@@ -204,7 +204,7 @@ export const ListingPageComponent = props => {
 	const currentAuthor = authorAvailable ? currentListing.author : null;
 	const ensuredAuthor = ensureUser(currentAuthor);
 	const noPayoutDetailsSetWithOwnListing =
-		isOwnListing && (processType !== "inquiry" && !currentUser?.attributes?.stripeConnected);
+		isOwnListing && processType !== "inquiry" && !currentUser?.attributes?.stripeConnected;
 	const payoutDetailsWarning = noPayoutDetailsSetWithOwnListing ? (
 		<span className={css.payoutDetailsWarning}>
 			<FormattedMessage id="ListingPage.payoutDetailsWarning" values={{ processType }} />
@@ -245,7 +245,7 @@ export const ListingPageComponent = props => {
 		onInitializeCardPaymentData,
 	});
 
-	const handleOrderSubmit = values => {
+	const handleOrderSubmit = (values) => {
 		const isCurrentlyClosed = currentListing.attributes.state === LISTING_STATE_CLOSED;
 		if (isOwnListing || isCurrentlyClosed) {
 			window.scrollTo(0, 0);
@@ -259,7 +259,7 @@ export const ListingPageComponent = props => {
 	const schemaImages = listingImages(
 		currentListing,
 		`${config.layout.listingImage.variantPrefix}-2x`,
-	).map(img => img.url);
+	).map((img) => img.url);
 	const marketplaceName = config.marketplaceName;
 	const schemaTitle = intl.formatMessage(
 		{ id: "ListingPage.schemaTitle" },
@@ -276,14 +276,14 @@ export const ListingPageComponent = props => {
 					maximumFractionDigits: 2,
 				}),
 				priceCurrency: price.currency,
-		  }
+			}
 		: {};
 	const currentStock = currentListing.currentStock?.attributes?.quantity || 0;
 	const schemaAvailability = !currentListing.currentStock
 		? null
 		: currentStock > 0
-		? "https://schema.org/InStock"
-		: "https://schema.org/OutOfStock";
+			? "https://schema.org/InStock"
+			: "https://schema.org/OutOfStock";
 
 	const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
 
@@ -483,7 +483,7 @@ ListingPageComponent.propTypes = {
 	fetchLineItemsError: propTypes.error,
 };
 
-const EnhancedListingPage = props => {
+const EnhancedListingPage = (props) => {
 	const config = useConfiguration();
 	const routeConfiguration = useRouteConfiguration();
 	const intl = useIntl();
@@ -502,7 +502,7 @@ const EnhancedListingPage = props => {
 	);
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	const { isAuthenticated } = state.auth;
 	const {
 		showListingError,
@@ -518,13 +518,13 @@ const mapStateToProps = state => {
 	} = state.ListingPage;
 	const { currentUser } = state.user;
 
-	const getListing = id => {
+	const getListing = (id) => {
 		const ref = { id, type: "listing" };
 		const listings = getMarketplaceEntities(state, [ref]);
 		return listings.length === 1 ? listings[0] : null;
 	};
 
-	const getOwnListing = id => {
+	const getOwnListing = (id) => {
 		const ref = { id, type: "ownListing" };
 		const listings = getMarketplaceEntities(state, [ref]);
 		return listings.length === 1 ? listings[0] : null;
@@ -549,12 +549,12 @@ const mapStateToProps = state => {
 	};
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
 	onManageDisableScrolling: (componentId, disableScrolling) =>
 		dispatch(manageDisableScrolling(componentId, disableScrolling)),
 	callSetInitialValues: (setInitialValues, values, saveToSessionStorage) =>
 		dispatch(setInitialValues(values, saveToSessionStorage)),
-	onFetchTransactionLineItems: params => dispatch(fetchTransactionLineItems(params)),
+	onFetchTransactionLineItems: (params) => dispatch(fetchTransactionLineItems(params)),
 	onSendInquiry: (listing, message) => dispatch(sendInquiry(listing, message)),
 	onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
 	onFetchTimeSlots: (listingId, start, end, timeZone) =>
@@ -567,11 +567,6 @@ const mapDispatchToProps = dispatch => ({
 // lifecycle hook.
 //
 // See: https://github.com/ReactTraining/react-router/issues/4671
-const ListingPage = compose(
-	connect(
-		mapStateToProps,
-		mapDispatchToProps,
-	),
-)(EnhancedListingPage);
+const ListingPage = compose(connect(mapStateToProps, mapDispatchToProps))(EnhancedListingPage);
 
 export default ListingPage;

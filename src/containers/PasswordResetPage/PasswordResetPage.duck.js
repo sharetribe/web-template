@@ -34,7 +34,7 @@ export const resetPasswordRequest = () => ({ type: RESET_PASSWORD_REQUEST });
 
 export const resetPasswordSuccess = () => ({ type: RESET_PASSWORD_SUCCESS });
 
-export const resetPasswordError = e => ({
+export const resetPasswordError = (e) => ({
 	type: RESET_PASSWORD_ERROR,
 	error: true,
 	payload: e,
@@ -42,15 +42,12 @@ export const resetPasswordError = e => ({
 
 // ================ Thunks ================ //
 
-export const resetPassword = (email, passwordResetToken, newPassword) => (
-	dispatch,
-	getState,
-	sdk,
-) => {
-	dispatch(resetPasswordRequest());
-	const params = { email, passwordResetToken, newPassword };
-	return sdk.passwordReset
-		.reset(params)
-		.then(() => dispatch(resetPasswordSuccess()))
-		.catch(e => dispatch(resetPasswordError(storableError(e))));
-};
+export const resetPassword =
+	(email, passwordResetToken, newPassword) => (dispatch, getState, sdk) => {
+		dispatch(resetPasswordRequest());
+		const params = { email, passwordResetToken, newPassword };
+		return sdk.passwordReset
+			.reset(params)
+			.then(() => dispatch(resetPasswordSuccess()))
+			.catch((e) => dispatch(resetPasswordError(storableError(e))));
+	};

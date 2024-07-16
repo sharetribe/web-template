@@ -67,7 +67,7 @@ const getTransactionInfo = (listingTypes, existingListingTypeInfo = {}, inlcudeL
  * @param {Object} publicData JSON-like data stored to listing entity.
  * @returns object literal with to keys: { hasExistingListingType, existingListingTypeInfo }
  */
-const hasSetListingType = publicData => {
+const hasSetListingType = (publicData) => {
 	const { listingType, transactionProcessAlias, unitType } = publicData;
 	const existingListingTypeInfo = { listingType, transactionProcessAlias, unitType };
 
@@ -154,7 +154,7 @@ const initialValuesForListingFields = (
 		const isEnumSchemaType = schemaType === SCHEMA_TYPE_ENUM;
 		const shouldHaveValidEnumOptions =
 			!isEnumSchemaType ||
-			(isEnumSchemaType && !!enumOptions?.find(conf => conf.option === data?.[key]));
+			(isEnumSchemaType && !!enumOptions?.find((conf) => conf.option === data?.[key]));
 		const isTargetScope = scope === targetScope;
 		const isTargetListingType = isFieldForListingType(targetListingType, fieldConfig);
 		const isTargetCategory = isFieldForCategory(targetCategoryIds, fieldConfig);
@@ -180,7 +180,7 @@ const initialValuesForListingFields = (
  * @param {string} processAlias selected for this listing
  * @returns availabilityPlan without any seats available for the listing
  */
-const setNoAvailabilityForUnbookableListings = processAlias => {
+const setNoAvailabilityForUnbookableListings = (processAlias) => {
 	return isBookingProcessAlias(processAlias)
 		? {}
 		: {
@@ -198,7 +198,7 @@ const setNoAvailabilityForUnbookableListings = processAlias => {
 						// { dayOfWeek: 'sun', startTime: '00:00', endTime: '00:00', seats: 0 },
 					],
 				},
-		  };
+			};
 };
 
 /**
@@ -249,7 +249,7 @@ const getInitialValues = (
 	};
 };
 
-const EditListingDetailsPanel = props => {
+const EditListingDetailsPanel = (props) => {
 	const {
 		className,
 		rootClassName,
@@ -275,7 +275,7 @@ const EditListingDetailsPanel = props => {
 	const { hasExistingListingType, existingListingTypeInfo } = hasSetListingType(publicData);
 	const hasValidExistingListingType =
 		hasExistingListingType &&
-		!!listingTypes.find(conf => {
+		!!listingTypes.find((conf) => {
 			const listinTypesMatch = conf.listingType === existingListingTypeInfo.listingType;
 			const unitTypesMatch = conf.transactionType?.unitType === existingListingTypeInfo.unitType;
 			return listinTypesMatch && unitTypesMatch;
@@ -317,15 +317,9 @@ const EditListingDetailsPanel = props => {
 					className={css.form}
 					initialValues={initialValues}
 					saveActionMsg={submitButtonText}
-					onSubmit={values => {
-						const {
-							title,
-							description,
-							listingType,
-							transactionProcessAlias,
-							unitType,
-							...rest
-						} = values;
+					onSubmit={(values) => {
+						const { title, description, listingType, transactionProcessAlias, unitType, ...rest } =
+							values;
 
 						const nestedCategories = pickCategoryFields(rest, categoryKey, 1, listingCategories);
 						// Remove old categories by explicitly saving null for them.
@@ -364,10 +358,10 @@ const EditListingDetailsPanel = props => {
 
 						onSubmit(updateValues);
 					}}
-					selectableListingTypes={listingTypes.map(conf => getTransactionInfo([conf], {}, true))}
+					selectableListingTypes={listingTypes.map((conf) => getTransactionInfo([conf], {}, true))}
 					hasExistingListingType={hasExistingListingType}
 					selectableCategories={listingCategories}
-					pickSelectedCategories={values =>
+					pickSelectedCategories={(values) =>
 						pickCategoryFields(values, categoryKey, 1, listingCategories)
 					}
 					categoryPrefix={categoryKey}

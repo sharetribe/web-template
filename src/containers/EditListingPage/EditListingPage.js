@@ -63,7 +63,7 @@ const pickRenderableImages = (
 	// Images are passed to EditListingForm so that it can generate thumbnails out of them
 	const currentListingImages = currentListing && currentListing.images ? currentListing.images : [];
 	// Images not yet connected to the listing
-	const unattachedImages = uploadedImageIdsInOrder.map(i => uploadedImages[i]);
+	const unattachedImages = uploadedImageIdsInOrder.map((i) => uploadedImages[i]);
 	const allImages = currentListingImages.concat(unattachedImages);
 
 	const pickImagesAndIds = (imgs, img) => {
@@ -82,7 +82,7 @@ const pickRenderableImages = (
 };
 
 // N.B. All the presentational content needs to be extracted to their own components
-export const EditListingPageComponent = props => {
+export const EditListingPageComponent = (props) => {
 	const {
 		currentUser,
 		createStripeAccountError,
@@ -145,14 +145,14 @@ export const EditListingPageComponent = props => {
 						slug: listingSlug,
 						variant: LISTING_PAGE_PENDING_APPROVAL_VARIANT,
 					},
-			  }
+				}
 			: {
 					name: "ListingPage",
 					params: {
 						id: listingId.uuid,
 						slug: listingSlug,
 					},
-			  };
+				};
 
 		return <NamedRedirect {...redirectProps} />;
 	} else if (showForm) {
@@ -325,7 +325,7 @@ EditListingPageComponent.propTypes = {
 	intl: intlShape.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	const page = state.EditListingPage;
 	const {
 		getAccountLinkInProgress,
@@ -338,7 +338,7 @@ const mapStateToProps = state => {
 		stripeAccountFetched,
 	} = state.stripeConnectAccount;
 
-	const getOwnListing = id => {
+	const getOwnListing = (id) => {
 		const listings = getMarketplaceEntities(state, [{ id, type: "ownListing" }]);
 		return listings.length === 1 ? listings[0] : null;
 	};
@@ -359,14 +359,14 @@ const mapStateToProps = state => {
 	};
 };
 
-const mapDispatchToProps = dispatch => ({
-	onFetchExceptions: params => dispatch(requestFetchAvailabilityExceptions(params)),
-	onAddAvailabilityException: params => dispatch(requestAddAvailabilityException(params)),
-	onDeleteAvailabilityException: params => dispatch(requestDeleteAvailabilityException(params)),
+const mapDispatchToProps = (dispatch) => ({
+	onFetchExceptions: (params) => dispatch(requestFetchAvailabilityExceptions(params)),
+	onAddAvailabilityException: (params) => dispatch(requestAddAvailabilityException(params)),
+	onDeleteAvailabilityException: (params) => dispatch(requestDeleteAvailabilityException(params)),
 
 	onUpdateListing: (tab, values, config) => dispatch(requestUpdateListing(tab, values, config)),
 	onCreateListingDraft: (values, config) => dispatch(requestCreateListingDraft(values, config)),
-	onPublishListingDraft: listingId => dispatch(requestPublishListingDraft(listingId)),
+	onPublishListingDraft: (listingId) => dispatch(requestPublishListingDraft(listingId)),
 	onImageUpload: (data, listingImageConfig) =>
 		dispatch(requestImageUpload(data, listingImageConfig)),
 	onManageDisableScrolling: (componentId, disableScrolling) =>
@@ -374,8 +374,8 @@ const mapDispatchToProps = dispatch => ({
 	onPayoutDetailsChange: () => dispatch(stripeAccountClearError()),
 	onPayoutDetailsSubmit: (values, isUpdateCall) =>
 		dispatch(savePayoutDetails(values, isUpdateCall)),
-	onGetStripeConnectAccountLink: params => dispatch(getStripeConnectAccountLink(params)),
-	onRemoveListingImage: imageId => dispatch(removeListingImage(imageId)),
+	onGetStripeConnectAccountLink: (params) => dispatch(getStripeConnectAccountLink(params)),
+	onRemoveListingImage: (imageId) => dispatch(removeListingImage(imageId)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the
@@ -386,10 +386,7 @@ const mapDispatchToProps = dispatch => ({
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const EditListingPage = compose(
 	withRouter,
-	connect(
-		mapStateToProps,
-		mapDispatchToProps,
-	),
+	connect(mapStateToProps, mapDispatchToProps),
 	injectIntl,
 )(EditListingPageComponent);
 

@@ -87,19 +87,19 @@ export default function payoutMethodsPageReducer(state = initialState, action = 
 
 // ================ Action creators ================ //
 
-export const setInitialValues = initialValues => ({
+export const setInitialValues = (initialValues) => ({
 	type: SET_INITIAL_VALUES,
 	payload: pick(initialValues, Object.keys(initialState)),
 });
 
 export const stripeCustomerCreateRequest = () => ({ type: CREATE_STRIPE_CUSTOMER_REQUEST });
 
-export const stripeCustomerCreateSuccess = stripeCustomer => ({
+export const stripeCustomerCreateSuccess = (stripeCustomer) => ({
 	type: CREATE_STRIPE_CUSTOMER_SUCCESS,
 	payload: stripeCustomer,
 });
 
-export const stripeCustomerCreateError = e => ({
+export const stripeCustomerCreateError = (e) => ({
 	type: CREATE_STRIPE_CUSTOMER_ERROR,
 	payload: e,
 	error: true,
@@ -107,12 +107,12 @@ export const stripeCustomerCreateError = e => ({
 
 export const addPaymentMethodRequest = () => ({ type: ADD_PAYMENT_METHOD_REQUEST });
 
-export const addPaymentMethodSuccess = stripeCustomer => ({
+export const addPaymentMethodSuccess = (stripeCustomer) => ({
 	type: ADD_PAYMENT_METHOD_SUCCESS,
 	payload: stripeCustomer,
 });
 
-export const addPaymentMethodError = e => ({
+export const addPaymentMethodError = (e) => ({
 	type: ADD_PAYMENT_METHOD_ERROR,
 	payload: e,
 	error: true,
@@ -120,12 +120,12 @@ export const addPaymentMethodError = e => ({
 
 export const deletePaymentMethodRequest = () => ({ type: DELETE_PAYMENT_METHOD_REQUEST });
 
-export const deletePaymentMethodSuccess = stripeCustomer => ({
+export const deletePaymentMethodSuccess = (stripeCustomer) => ({
 	type: DELETE_PAYMENT_METHOD_SUCCESS,
 	payload: stripeCustomer,
 });
 
-export const deletePaymentMethodError = e => ({
+export const deletePaymentMethodError = (e) => ({
 	type: DELETE_PAYMENT_METHOD_ERROR,
 	payload: e,
 	error: true,
@@ -133,31 +133,31 @@ export const deletePaymentMethodError = e => ({
 
 // ================ Thunks ================ //
 
-export const createStripeCustomer = stripePaymentMethodId => (dispatch, getState, sdk) => {
+export const createStripeCustomer = (stripePaymentMethodId) => (dispatch, getState, sdk) => {
 	dispatch(stripeCustomerCreateRequest());
 	return sdk.stripeCustomer
 		.create({ stripePaymentMethodId }, { expand: true, include: ["defaultPaymentMethod"] })
-		.then(response => {
+		.then((response) => {
 			const stripeCustomer = response.data.data;
 			dispatch(stripeCustomerCreateSuccess(stripeCustomer));
 			return stripeCustomer;
 		})
-		.catch(e => {
+		.catch((e) => {
 			log.error(storableError(e), "create-stripe-user-failed");
 			dispatch(stripeCustomerCreateError(storableError(e)));
 		});
 };
 
-export const addPaymentMethod = stripePaymentMethodId => (dispatch, getState, sdk) => {
+export const addPaymentMethod = (stripePaymentMethodId) => (dispatch, getState, sdk) => {
 	dispatch(addPaymentMethodRequest());
 	return sdk.stripeCustomer
 		.addPaymentMethod({ stripePaymentMethodId }, { expand: true })
-		.then(response => {
+		.then((response) => {
 			const stripeCustomer = response.data.data;
 			dispatch(addPaymentMethodSuccess(stripeCustomer));
 			return stripeCustomer;
 		})
-		.catch(e => {
+		.catch((e) => {
 			log.error(storableError(e), "add-payment-method-failed");
 			dispatch(addPaymentMethodError(storableError(e)));
 		});
@@ -167,60 +167,56 @@ export const deletePaymentMethod = () => (dispatch, getState, sdk) => {
 	dispatch(deletePaymentMethodRequest());
 	return sdk.stripeCustomer
 		.deletePaymentMethod({}, { expand: true })
-		.then(response => {
+		.then((response) => {
 			const stripeCustomer = response.data.data;
 			dispatch(deletePaymentMethodSuccess(stripeCustomer));
 			return stripeCustomer;
 		})
-		.catch(e => {
+		.catch((e) => {
 			log.error(storableError(e), "add-payment-method-failed");
 			dispatch(deletePaymentMethodError(storableError(e)));
 		});
 };
 
-export const updatePaymentMethod = stripePaymentMethodId => (dispatch, getState, sdk) => {
+export const updatePaymentMethod = (stripePaymentMethodId) => (dispatch, getState, sdk) => {
 	return dispatch(deletePaymentMethod())
 		.then(() => {
 			return dispatch(addPaymentMethod(stripePaymentMethodId));
 		})
-		.catch(e => {
+		.catch((e) => {
 			log.error(storableError(e), "updating-payment-method-failed");
 		});
 };
 
 // This function helps to choose correct thunk function
-export const savePaymentMethod = (stripeCustomer, stripePaymentMethodId) => (
-	dispatch,
-	getState,
-	sdk,
-) => {
-	const hasAlreadyDefaultPaymentMethod =
-		stripeCustomer && stripeCustomer.defaultPaymentMethod && stripeCustomer.defaultPaymentMethod.id;
+export const savePaymentMethod =
+	(stripeCustomer, stripePaymentMethodId) => (dispatch, getState, sdk) => {
+		const hasAlreadyDefaultPaymentMethod =
+			stripeCustomer &&
+			stripeCustomer.defaultPaymentMethod &&
+			stripeCustomer.defaultPaymentMethod.id;
 
-	const savePromise =
-		!stripeCustomer || !stripeCustomer.id
-			? dispatch(createStripeCustomer(stripePaymentMethodId))
-			: hasAlreadyDefaultPaymentMethod
-			? dispatch(updatePaymentMethod(stripePaymentMethodId))
-			: dispatch(addPaymentMethod(stripePaymentMethodId));
+		const savePromise =
+			!stripeCustomer || !stripeCustomer.id
+				? dispatch(createStripeCustomer(stripePaymentMethodId))
+				: hasAlreadyDefaultPaymentMethod
+					? dispatch(updatePaymentMethod(stripePaymentMethodId))
+					: dispatch(addPaymentMethod(stripePaymentMethodId));
 
-	return savePromise
-		.then(response => {
-			const {
-				createStripeCustomerError,
-				addPaymentMethodError,
-				deletePaymentMethodError,
-			} = getState().paymentMethods;
+		return savePromise
+			.then((response) => {
+				const { createStripeCustomerError, addPaymentMethodError, deletePaymentMethodError } =
+					getState().paymentMethods;
 
-			// If there are any errors, return those errors
-			if (createStripeCustomerError || addPaymentMethodError || deletePaymentMethodError) {
-				return {
-					errors: { createStripeCustomerError, addPaymentMethodError, deletePaymentMethodError },
-				};
-			}
-			return response;
-		})
-		.catch(e => {
-			// errors are already catched in other thunk functions.
-		});
-};
+				// If there are any errors, return those errors
+				if (createStripeCustomerError || addPaymentMethodError || deletePaymentMethodError) {
+					return {
+						errors: { createStripeCustomerError, addPaymentMethodError, deletePaymentMethodError },
+					};
+				}
+				return response;
+			})
+			.catch((e) => {
+				// errors are already catched in other thunk functions.
+			});
+	};

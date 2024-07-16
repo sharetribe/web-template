@@ -48,7 +48,8 @@ export const BANK_ACCOUNT_INPUTS = [
 	CLABE,
 ];
 
-export const getSupportedCountryCodes = supportedCountries => supportedCountries.map(c => c.code);
+export const getSupportedCountryCodes = (supportedCountries) =>
+	supportedCountries.map((c) => c.code);
 
 /**
  * Country specific Stripe configurations
@@ -58,7 +59,7 @@ export const getSupportedCountryCodes = supportedCountries => supportedCountries
  * @return {Object} configurations
  */
 export const stripeCountryConfigs = (countryCode, supportedCountries) => {
-	const country = supportedCountries.find(c => c.code === countryCode);
+	const country = supportedCountries.find((c) => c.code === countryCode);
 
 	if (!country) {
 		throw new Error(`Country code not found in Stripe config ${countryCode}`);
@@ -76,7 +77,7 @@ export const stripeCountryConfigs = (countryCode, supportedCountries) => {
  */
 export const requiredInputs = (countryCode, supportedCountries) => {
 	const bankAccountInputs = stripeCountryConfigs(countryCode, supportedCountries).accountConfig;
-	return BANK_ACCOUNT_INPUTS.filter(inputType => bankAccountInputs[inputType]);
+	return BANK_ACCOUNT_INPUTS.filter((inputType) => bankAccountInputs[inputType]);
 };
 
 /**
@@ -118,7 +119,7 @@ export const translateStripeError = (country, supportedCountries, intl, stripeEr
 			{ country },
 		);
 	} else {
-		const inputsAsStrings = inputs.map(inputType => inputTypeToString(inputType, intl));
+		const inputsAsStrings = inputs.map((inputType) => inputTypeToString(inputType, intl));
 
 		const andTranslated = intl.formatMessage({
 			id: "StripeBankAccountTokenInputField.andBeforeLastItemInAList",
@@ -280,6 +281,6 @@ export const formatFieldMessage = (intl, inputType, messageType) => {
  *
  * @return {String} cleaned string
  */
-export const cleanedString = str => {
+export const cleanedString = (str) => {
 	return str ? str.replace(/\s/g, "") : "";
 };

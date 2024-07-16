@@ -29,20 +29,20 @@ const validateProperties = (obj, validPropTypes) => {
 };
 
 // Validate content of booking dates object received from SessionStore
-export const isValidBookingDates = bookingDates => {
+export const isValidBookingDates = (bookingDates) => {
 	const props = {
-		bookingStart: d => d instanceof Date,
-		bookingEnd: d => d instanceof Date,
+		bookingStart: (d) => d instanceof Date,
+		bookingEnd: (d) => d instanceof Date,
 	};
 	return validateProperties(bookingDates, props);
 };
 
 // Validate content of listing object received from SessionStore.
 // Currently only id & attributes.price are needed.
-export const isValidListing = listing => {
+export const isValidListing = (listing) => {
 	const props = {
-		id: id => id instanceof UUID,
-		attributes: v => {
+		id: (id) => id instanceof UUID,
+		attributes: (v) => {
 			return typeof v === "object" && v.price instanceof Money;
 		},
 	};
@@ -51,7 +51,7 @@ export const isValidListing = listing => {
 
 // Validate content of an transaction received from SessionStore.
 // An id is required and the last transition needs to be one of the known transitions
-export const isValidTransaction = transaction => {
+export const isValidTransaction = (transaction) => {
 	let process = null;
 	try {
 		const processName = transaction?.attributes?.processName;
@@ -64,9 +64,9 @@ export const isValidTransaction = transaction => {
 	}
 
 	const props = {
-		id: id => id instanceof UUID,
-		type: type => type === "transaction",
-		attributes: v => {
+		id: (id) => id instanceof UUID,
+		type: (type) => type === "transaction",
+		attributes: (v) => {
 			return typeof v === "object" && Object.values(process.transitions).includes(v.lastTransition);
 		},
 	};
@@ -83,7 +83,7 @@ export const storeData = (orderData, listing, transaction, storageKey) => {
 			storedAt: new Date(),
 		};
 
-		const replacer = function(k, v) {
+		const replacer = function (k, v) {
 			if (this[k] instanceof Date) {
 				return { date: v, _serializedType: "SerializableDate" };
 			}
@@ -99,7 +99,7 @@ export const storeData = (orderData, listing, transaction, storageKey) => {
 };
 
 // Get stored data
-export const storedData = storageKey => {
+export const storedData = (storageKey) => {
 	if (window && window.sessionStorage) {
 		const checkoutPageData = window.sessionStorage.getItem(storageKey);
 
@@ -147,7 +147,7 @@ export const storedData = storageKey => {
 	return {};
 };
 
-export const clearData = storageKey => {
+export const clearData = (storageKey) => {
 	if (window && window.sessionStorage) {
 		window.sessionStorage.removeItem(storageKey);
 	}

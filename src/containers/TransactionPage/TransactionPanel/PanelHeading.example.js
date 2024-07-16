@@ -15,7 +15,7 @@ const ProcessHeadings = () => {
 		listingDeleted: false,
 		isCustomerBanned: false,
 	});
-	const handleChange = e => {
+	const handleChange = (e) => {
 		const name = e.target.name;
 		const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
 		console.log("handleChange:", name, value);
@@ -30,7 +30,7 @@ const ProcessHeadings = () => {
 			<form>
 				<p>state: </p>
 				<select name="state" value={formData.state} onChange={handleChange}>
-					{processStates.map(s => (
+					{processStates.map((s) => (
 						<option key={s} value={s}>
 							{s}
 						</option>

@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./IconEmailSuccess.module.css";
 
-const IconEmailSuccess = props => {
+const IconEmailSuccess = (props) => {
 	const { rootClassName, className } = props;
 	const classes = classNames(rootClassName || css.root, className);
 	return (

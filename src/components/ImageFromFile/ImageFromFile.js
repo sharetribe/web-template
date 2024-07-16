@@ -9,11 +9,11 @@ import css from "./ImageFromFile.module.css";
 
 // readImage returns a promise which is resolved
 // when FileReader has loaded given file as dataURL
-const readImage = file =>
+const readImage = (file) =>
 	new Promise((resolve, reject) => {
 		const reader = new FileReader();
-		reader.onload = e => resolve(e.target.result);
-		reader.onerror = e => {
+		reader.onload = (e) => resolve(e.target.result);
+		reader.onerror = (e) => {
 			// eslint-disable-next-line
 			console.error("Error (", e, `) happened while reading ${file.name}: ${e.target.result}`);
 			reject(new Error(`Error reading ${file.name}: ${e.target.result}`));
@@ -22,7 +22,7 @@ const readImage = file =>
 	});
 
 // Create elements out of given thumbnail file
-const ImageFromFile = props => {
+const ImageFromFile = (props) => {
 	const [promisedImage, setPromisedImage] = useState(readImage(props.file));
 	const { className, rootClassName, aspectWidth, aspectHeight, file, id, children } = props;
 	const classes = classNames(rootClassName || css.root, className);
@@ -31,7 +31,7 @@ const ImageFromFile = props => {
 		<Promised
 			key={id}
 			promise={promisedImage}
-			renderFulfilled={dataURL => {
+			renderFulfilled={(dataURL) => {
 				return (
 					<div className={classes}>
 						<AspectRatioWrapper width={aspectWidth} height={aspectHeight}>

@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./ManageListingCard.module.css";
 
-const MenuIcon = props => {
+const MenuIcon = (props) => {
 	const { className, isActive } = props;
 	const classes = classNames(css.menuIcon, className);
 	const filter = isActive ? "" : "url(#a)";

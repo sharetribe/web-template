@@ -142,7 +142,7 @@ class PaymentMethodsForm extends Component {
 			this.finalFormAPI.change("postal", postalCode);
 		}
 
-		this.setState(prevState => {
+		this.setState((prevState) => {
 			return {
 				error: error ? stripeErrorTranslation(intl, error) : null,
 				cardValueValid: complete,
@@ -241,7 +241,7 @@ class PaymentMethodsForm extends Component {
 				<div
 					className={cardClasses}
 					id={`${formId}-card`}
-					ref={el => {
+					ref={(el) => {
 						this.cardContainer = el;
 					}}
 				/>
@@ -321,7 +321,7 @@ PaymentMethodsForm.propTypes = {
 	config: object.isRequired,
 };
 
-const EnhancedPaymentMethodsForm = props => {
+const EnhancedPaymentMethodsForm = (props) => {
 	const config = useConfiguration();
 	const intl = useIntl();
 	return <PaymentMethodsForm config={config} intl={intl} {...props} />;

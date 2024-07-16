@@ -7,11 +7,11 @@ import { propTypes, LINE_ITEM_PROVIDER_COMMISSION } from "../../util/types";
 
 import css from "./OrderBreakdown.module.css";
 
-const LineItemProviderCommissionRefundMaybe = props => {
+const LineItemProviderCommissionRefundMaybe = (props) => {
 	const { lineItems, isProvider, marketplaceName, intl } = props;
 
 	const refund = lineItems.find(
-		item => item.code === LINE_ITEM_PROVIDER_COMMISSION && item.reversal,
+		(item) => item.code === LINE_ITEM_PROVIDER_COMMISSION && item.reversal,
 	);
 
 	return isProvider && refund ? (

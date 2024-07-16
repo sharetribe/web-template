@@ -123,20 +123,20 @@ describe("TransactionPage", () => {
 		const processName = "default-purchase";
 		const process = getProcess(processName);
 
-		const purchases = Object.keys(purchaseTransitions).map(trKey => {
+		const purchases = Object.keys(purchaseTransitions).map((trKey) => {
 			const isReversal = process.isRefunded(purchaseTransitions[trKey]);
 			const isReceived = process.isCompleted(purchaseTransitions[trKey]);
 			const lineItemsMaybe =
 				trKey == "INQUIRE"
 					? []
 					: isReversal
-					? [
-							lineItemUnitTypeItem,
-							lineItemUnitTypeItemReversal,
-							lineItemProviderCommission,
-							lineItemProviderCommissionReversal,
-					  ]
-					: [lineItemUnitTypeItem, lineItemProviderCommission];
+						? [
+								lineItemUnitTypeItem,
+								lineItemUnitTypeItemReversal,
+								lineItemProviderCommission,
+								lineItemProviderCommissionReversal,
+							]
+						: [lineItemUnitTypeItem, lineItemProviderCommission];
 			return {
 				tr: purchaseTransitions[trKey],
 				tx: createTransaction({
@@ -223,8 +223,8 @@ describe("TransactionPage", () => {
 			const total = isReversal
 				? "OrderBreakdown.providerTotalRefunded"
 				: isReceived
-				? "OrderBreakdown.providerTotalReceived"
-				: "OrderBreakdown.providerTotalDefault";
+					? "OrderBreakdown.providerTotalReceived"
+					: "OrderBreakdown.providerTotalDefault";
 			const expectedTotal = isReversal ? expectedLengthReversal : expectedLength;
 			expect(screen.queryAllByText(total)).toHaveLength(expectedTotal);
 
@@ -262,20 +262,20 @@ describe("TransactionPage", () => {
 		const process = getProcess(processName);
 
 		// { EXPIRE_PAYMENT: purchaseTransitions.EXPIRE_PAYMENT }
-		const purchases = Object.keys(purchaseTransitions).map(trKey => {
+		const purchases = Object.keys(purchaseTransitions).map((trKey) => {
 			const isReversal = process.isRefunded(purchaseTransitions[trKey]);
 			const isReceived = process.isCompleted(purchaseTransitions[trKey]);
 			const lineItemsMaybe =
 				trKey == "INQUIRE"
 					? []
 					: isReversal
-					? [
-							lineItemUnitTypeItem,
-							lineItemUnitTypeItemReversal,
-							lineItemProviderCommission,
-							lineItemProviderCommissionReversal,
-					  ]
-					: [lineItemUnitTypeItem, lineItemProviderCommission];
+						? [
+								lineItemUnitTypeItem,
+								lineItemUnitTypeItemReversal,
+								lineItemProviderCommission,
+								lineItemProviderCommissionReversal,
+							]
+						: [lineItemUnitTypeItem, lineItemProviderCommission];
 			return {
 				tr: purchaseTransitions[trKey],
 				tx: createTransaction({
@@ -416,20 +416,20 @@ describe("TransactionPage", () => {
 			reversal: true,
 		};
 
-		const bookings = Object.keys(bookingTransitions).map(trKey => {
+		const bookings = Object.keys(bookingTransitions).map((trKey) => {
 			const isReversal = process.isRefunded(bookingTransitions[trKey]);
 			const isReceived = process.isCompleted(bookingTransitions[trKey]);
 			const lineItemsMaybe =
 				trKey == "INQUIRE"
 					? []
 					: isReversal
-					? [
-							lineItemUnitTypeDay,
-							lineItemUnitTypeDayReversal,
-							lineItemProviderCommission,
-							lineItemProviderCommissionReversal,
-					  ]
-					: [lineItemUnitTypeDay, lineItemProviderCommission];
+						? [
+								lineItemUnitTypeDay,
+								lineItemUnitTypeDayReversal,
+								lineItemProviderCommission,
+								lineItemProviderCommissionReversal,
+							]
+						: [lineItemUnitTypeDay, lineItemProviderCommission];
 			return {
 				tr: bookingTransitions[trKey],
 				tx: createTransaction({
@@ -529,8 +529,8 @@ describe("TransactionPage", () => {
 			const total = isReversal
 				? "OrderBreakdown.providerTotalRefunded"
 				: isReceived
-				? "OrderBreakdown.providerTotalReceived"
-				: "OrderBreakdown.providerTotalDefault";
+					? "OrderBreakdown.providerTotalReceived"
+					: "OrderBreakdown.providerTotalDefault";
 			const expectedTotal = isReversal ? expectedLengthReversal : expectedLength;
 			expect(screen.queryAllByText(total)).toHaveLength(expectedTotal);
 			expect(screen.queryAllByText("$9.00")).toHaveLength(expectedTotal);
@@ -584,20 +584,20 @@ describe("TransactionPage", () => {
 			reversal: true,
 		};
 
-		const bookings = Object.keys(bookingTransitions).map(trKey => {
+		const bookings = Object.keys(bookingTransitions).map((trKey) => {
 			const isReversal = process.isRefunded(bookingTransitions[trKey]);
 			const isReceived = process.isCompleted(bookingTransitions[trKey]);
 			const lineItemsMaybe =
 				trKey == "INQUIRE"
 					? []
 					: isReversal
-					? [
-							lineItemUnitTypeDay,
-							lineItemUnitTypeDayReversal,
-							lineItemProviderCommission,
-							lineItemProviderCommissionReversal,
-					  ]
-					: [lineItemUnitTypeDay, lineItemProviderCommission];
+						? [
+								lineItemUnitTypeDay,
+								lineItemUnitTypeDayReversal,
+								lineItemProviderCommission,
+								lineItemProviderCommissionReversal,
+							]
+						: [lineItemUnitTypeDay, lineItemProviderCommission];
 			return {
 				tr: bookingTransitions[trKey],
 				tx: createTransaction({
@@ -748,20 +748,20 @@ describe("TransactionPage", () => {
 			reversal: true,
 		};
 
-		const bookings = Object.keys(bookingTransitions).map(trKey => {
+		const bookings = Object.keys(bookingTransitions).map((trKey) => {
 			const isReversal = process.isRefunded(bookingTransitions[trKey]);
 			const isReceived = process.isCompleted(bookingTransitions[trKey]);
 			const lineItemsMaybe =
 				trKey == "INQUIRE"
 					? []
 					: isReversal
-					? [
-							lineItemUnitTypeHour,
-							lineItemUnitTypeHourReversal,
-							lineItemProviderCommission,
-							lineItemProviderCommissionReversal,
-					  ]
-					: [lineItemUnitTypeHour, lineItemProviderCommission];
+						? [
+								lineItemUnitTypeHour,
+								lineItemUnitTypeHourReversal,
+								lineItemProviderCommission,
+								lineItemProviderCommissionReversal,
+							]
+						: [lineItemUnitTypeHour, lineItemProviderCommission];
 			return {
 				tr: bookingTransitions[trKey],
 				tx: createTransaction({
@@ -860,8 +860,8 @@ describe("TransactionPage", () => {
 			const total = isReversal
 				? "OrderBreakdown.providerTotalRefunded"
 				: isReceived
-				? "OrderBreakdown.providerTotalReceived"
-				: "OrderBreakdown.providerTotalDefault";
+					? "OrderBreakdown.providerTotalReceived"
+					: "OrderBreakdown.providerTotalDefault";
 			const expectedTotal = isReversal ? expectedLengthReversal : expectedLength;
 			expect(screen.queryAllByText(total)).toHaveLength(expectedTotal);
 			expect(screen.queryAllByText("$9.00")).toHaveLength(expectedTotal);
@@ -915,20 +915,20 @@ describe("TransactionPage", () => {
 			reversal: true,
 		};
 
-		const bookings = Object.keys(bookingTransitions).map(trKey => {
+		const bookings = Object.keys(bookingTransitions).map((trKey) => {
 			const isReversal = process.isRefunded(bookingTransitions[trKey]);
 			const isReceived = process.isCompleted(bookingTransitions[trKey]);
 			const lineItemsMaybe =
 				trKey == "INQUIRE"
 					? []
 					: isReversal
-					? [
-							lineItemUnitTypeHour,
-							lineItemUnitTypeHourReversal,
-							lineItemProviderCommission,
-							lineItemProviderCommissionReversal,
-					  ]
-					: [lineItemUnitTypeHour, lineItemProviderCommission];
+						? [
+								lineItemUnitTypeHour,
+								lineItemUnitTypeHourReversal,
+								lineItemProviderCommission,
+								lineItemProviderCommissionReversal,
+							]
+						: [lineItemUnitTypeHour, lineItemProviderCommission];
 			return {
 				tr: bookingTransitions[trKey],
 				tx: createTransaction({
@@ -1063,7 +1063,7 @@ describe("TransactionPage", () => {
 	describe("Transaction process with OrderPanel", () => {
 		const originalWarn = console.warn.bind(console.warn);
 		beforeAll(() => {
-			console.warn = msg =>
+			console.warn = (msg) =>
 				!msg.toString().includes("componentWillReceiveProps") && originalWarn(msg);
 		});
 		afterAll(() => {

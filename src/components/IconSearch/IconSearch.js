@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import css from "./IconSearch.module.css";
 
-const IconSearch = props => {
+const IconSearch = (props) => {
 	const { rootClassName, className } = props;
 	const classes = classNames(rootClassName || css.root, className);
 	return (

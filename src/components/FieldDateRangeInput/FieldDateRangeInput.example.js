@@ -7,27 +7,20 @@ import { getStartOf } from "../../util/dates";
 import { Button } from "../../components";
 import FieldDateRangeInput from "./FieldDateRangeInput";
 
-const identity = v => v;
+const identity = (v) => v;
 
-const FormComponent = props => (
+const FormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={fieldRenderProps => {
-			const {
-				style,
-				form,
-				handleSubmit,
-				onChange,
-				pristine,
-				submitting,
-				dateInputProps,
-			} = fieldRenderProps;
+		render={(fieldRenderProps) => {
+			const { style, form, handleSubmit, onChange, pristine, submitting, dateInputProps } =
+				fieldRenderProps;
 			const submitDisabled = pristine || submitting;
 
 			return (
 				<form
 					style={style}
-					onSubmit={e => {
+					onSubmit={(e) => {
 						e.preventDefault();
 						handleSubmit(e);
 					}}
@@ -44,7 +37,7 @@ const FormComponent = props => (
 );
 
 const options = { weekday: "short", month: "long", day: "numeric" };
-const formatDate = date => new Intl.DateTimeFormat("en-US", options).format(date);
+const formatDate = (date) => new Intl.DateTimeFormat("en-US", options).format(date);
 const startDatePlaceholderText = formatDate(new Date());
 const endDatePlaceholderText = formatDate(getStartOf(new Date(), "day", "Etc/UTC", 1, "days"));
 
@@ -78,13 +71,13 @@ export const Empty = {
 				return false;
 			},
 		},
-		onChange: formState => {
+		onChange: (formState) => {
 			const { startDate, endDate } = formState.values;
 			if (startDate || endDate) {
 				console.log("Changed to", formatDate(startDate), formatDate(startDate));
 			}
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submitting a form with values:", values);
 		},
 	},

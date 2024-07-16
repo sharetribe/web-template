@@ -4,7 +4,7 @@ import EditListingPricingForm from "./EditListingPricingForm";
 export const Empty = {
 	component: EditListingPricingForm,
 	props: {
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit EditListingPricingForm with (unformatted) values:", values);
 		},
 		saveActionMsg: "Save price",

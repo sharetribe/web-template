@@ -5,18 +5,18 @@ import FieldCheckbox from "./FieldCheckbox";
 
 const formName = "Styleguide.FieldCheckbox.Form";
 
-const FormComponent = props => (
+const FormComponent = (props) => (
 	<FinalForm
 		{...props}
 		formId={formName}
-		render={fieldRenderProps => {
+		render={(fieldRenderProps) => {
 			const { form, handleSubmit, onChange, invalid, pristine, submitting } = fieldRenderProps;
 
 			const submitDisabled = invalid || pristine || submitting;
 
 			return (
 				<form
-					onSubmit={e => {
+					onSubmit={(e) => {
 						e.preventDefault();
 						handleSubmit(e);
 					}}
@@ -37,12 +37,12 @@ const FormComponent = props => (
 export const Checkbox = {
 	component: FormComponent,
 	props: {
-		onChange: formState => {
+		onChange: (formState) => {
 			if (Object.keys(formState.values).length > 0) {
 				console.log("form values changed to:", formState.values);
 			}
 		},
-		onSubmit: values => {
+		onSubmit: (values) => {
 			console.log("Submit values of FieldCheckbox: ", values);
 		},
 	},

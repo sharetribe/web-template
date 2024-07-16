@@ -10,13 +10,13 @@ export const DARK_SKIN = "dark";
 
 const { arrayOf, bool, func, node, object, oneOf, string, shape } = PropTypes;
 
-const Tab = props => {
+const Tab = (props) => {
 	const { className, disabled, text, selected, onClick, linkProps, isDark } = props;
 	const darkSkinClasses = isDark
 		? classNames(css.tabContentDarkSkin, {
 				[css.selectedTabContentDarkSkin]: selected,
 				[css.disabledDarkSkin]: disabled,
-		  })
+			})
 		: null;
 
 	const linkClasses = classNames(
@@ -67,7 +67,7 @@ Tab.propTypes = {
 	isDark: bool.isRequired,
 };
 
-const TabNavHorizontal = props => {
+const TabNavHorizontal = (props) => {
 	const { className, rootClassName, tabRootClassName, tabs, skin } = props;
 	const isDark = skin === DARK_SKIN;
 	const classes = classNames(rootClassName || css.root, { [css.darkSkin]: isDark }, className);
@@ -86,7 +86,7 @@ const TabNavHorizontal = props => {
  * A tab navigation element with buttons. Requires onClick
  * function param for tab objects passed as parameter.
  */
-export const ButtonTabNavHorizontal = props => <TabNavHorizontal {...props} />;
+export const ButtonTabNavHorizontal = (props) => <TabNavHorizontal {...props} />;
 
 ButtonTabNavHorizontal.defaultProps = {
 	className: null,
@@ -115,7 +115,7 @@ ButtonTabNavHorizontal.propTypes = {
  * A tab navigation element with links. Requires linkProps
  * object param for tab objects passed as parameter.
  */
-export const LinkTabNavHorizontal = props => <TabNavHorizontal {...props} />;
+export const LinkTabNavHorizontal = (props) => <TabNavHorizontal {...props} />;
 
 LinkTabNavHorizontal.defaultProps = {
 	className: null,

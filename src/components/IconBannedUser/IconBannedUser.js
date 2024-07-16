@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import css from "./IconBannedUser.module.css";
 
-const IconBannedUser = props => {
+const IconBannedUser = (props) => {
 	const { className } = props;
 	return (
 		<svg

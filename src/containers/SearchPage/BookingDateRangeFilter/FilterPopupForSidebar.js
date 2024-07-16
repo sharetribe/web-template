@@ -73,7 +73,7 @@ class FilterPopupForSidebar extends Component {
 		if (enforcedState) {
 			this.setState({ isOpen: enforcedState });
 		} else {
-			this.setState(prevState => ({ isOpen: !prevState.isOpen }));
+			this.setState((prevState) => ({ isOpen: !prevState.isOpen }));
 		}
 	}
 
@@ -124,7 +124,7 @@ class FilterPopupForSidebar extends Component {
 				<div
 					className={classes}
 					onKeyDown={this.handleKeyDown}
-					ref={node => {
+					ref={(node) => {
 						this.filter = node;
 					}}
 				>
@@ -151,7 +151,7 @@ class FilterPopupForSidebar extends Component {
 					<div
 						id={id}
 						className={popupClasses}
-						ref={node => {
+						ref={(node) => {
 							this.filterContent = node;
 						}}
 						style={contentStyle}

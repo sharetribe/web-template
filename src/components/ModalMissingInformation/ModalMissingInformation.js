@@ -54,7 +54,7 @@ class ModalMissingInformation extends Component {
 		newLocation,
 	) {
 		const routes = this.props.routeConfiguration;
-		const whitelistedPaths = MISSING_INFORMATION_MODAL_WHITELIST.map(page =>
+		const whitelistedPaths = MISSING_INFORMATION_MODAL_WHITELIST.map((page) =>
 			pathByRouteName(page, routes),
 		);
 
@@ -164,7 +164,7 @@ ModalMissingInformation.propTypes = {
 	routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
-const EnhancedModalMissingInformation = props => {
+const EnhancedModalMissingInformation = (props) => {
 	const routeConfiguration = useRouteConfiguration();
 
 	return <ModalMissingInformation routeConfiguration={routeConfiguration} {...props} />;

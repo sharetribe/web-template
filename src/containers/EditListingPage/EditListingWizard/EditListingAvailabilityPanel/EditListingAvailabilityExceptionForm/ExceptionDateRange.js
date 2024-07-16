@@ -39,7 +39,7 @@ const TODAY = new Date();
 const dateFormattingOptions = { month: "short", day: "numeric", weekday: "short" };
 
 // Format form's value for the react-dates input: convert timeOfDay to the local time
-const formatFieldDateInput = timeZone => v => {
+const formatFieldDateInput = (timeZone) => (v) => {
 	const { startDate, endDate } = v || {};
 	// Format the Final Form field's value for the DateRangeInput
 	// DateRangeInput operates on local time zone, but the form uses listing's time zone
@@ -49,7 +49,7 @@ const formatFieldDateInput = timeZone => v => {
 };
 
 // Parse react-dates input's value: convert timeOfDay to the given time zone
-const parseFieldDateInput = timeZone => v => {
+const parseFieldDateInput = (timeZone) => (v) => {
 	const { startDate, endDate } = v || {};
 	// Parse the DateRangeInput's value (local noon) for the Final Form
 	// The form expects listing's time zone and start of day aka 00:00
@@ -62,15 +62,9 @@ const parseFieldDateInput = timeZone => v => {
 	return v ? { startDate: parsedStart, endDate: parsedEnd } : v;
 };
 
-const isBlockedIfStartIsSelected = params => {
-	const {
-		exceptionStartDay,
-		availableDates,
-		isDaily,
-		timeZone,
-		localizedDay,
-		focusedInput,
-	} = params;
+const isBlockedIfStartIsSelected = (params) => {
+	const { exceptionStartDay, availableDates, isDaily, timeZone, localizedDay, focusedInput } =
+		params;
 	const exceptionStart = timeOfDayFromLocalToTimeZone(exceptionStartDay, timeZone);
 	const dayData = availableDates[stringifyDateToISO8601(exceptionStart, timeZone)];
 
@@ -91,7 +85,7 @@ const isBlockedIfStartIsSelected = params => {
 	return isOutsideRange;
 };
 
-const isBlockedIfEndIsSelected = params => {
+const isBlockedIfEndIsSelected = (params) => {
 	const { exceptionEndDay, availableDates, timeZone, localizedDay } = params;
 	const exceptionEnd = timeOfDayFromLocalToTimeZone(exceptionEndDay, timeZone);
 	const lastIncludedDay = getStartOf(exceptionEnd, "day", timeZone, -1, "day");
@@ -108,7 +102,7 @@ const isBlockedIfEndIsSelected = params => {
 	return isOutsideRange;
 };
 
-const isDayBlocked = params => focusedInput => day => {
+const isDayBlocked = (params) => (focusedInput) => (day) => {
 	const { exceptionStartDay, exceptionEndDay, availableDates, isDaily, timeZone } = params;
 	const localizedDay = timeOfDayFromLocalToTimeZone(day, timeZone);
 
@@ -139,8 +133,8 @@ const isDayBlocked = params => focusedInput => day => {
 	const targetDate = exceptionStartDay
 		? exceptionStartDay
 		: isDaily
-		? localizedDay
-		: getStartOf(localizedDay, "day", timeZone, -1, "days");
+			? localizedDay
+			: getStartOf(localizedDay, "day", timeZone, -1, "days");
 
 	const dayData = availableDates[stringifyDateToISO8601(targetDate, timeZone)];
 	const slot = dayData?.slots?.[0];
@@ -155,7 +149,7 @@ const isDayBlocked = params => focusedInput => day => {
 	return slot ? !isInSlotRange(localizedDay, slot, isDaily) : true;
 };
 
-const isOutsideRange = timeZone => focusedInput => day => {
+const isOutsideRange = (timeZone) => (focusedInput) => (day) => {
 	// 'day' is pointing to browser's local time-zone (react-dates gives these).
 	// However, exceptionStartDay and other times refer to listing's timeZone.
 	const localizedDay = timeOfDayFromLocalToTimeZone(day, timeZone);
@@ -184,14 +178,14 @@ const isBlockedBetween = (availableDates, isDaily, timeZone) => (startDate, endD
 // Function that can be passed to nested components
 // so that they can notify this component when the
 // focused input changes.
-const handleFocusedInputChange = setFocusedInput => focusedInput => {
+const handleFocusedInputChange = (setFocusedInput) => (focusedInput) => {
 	setFocusedInput(focusedInput);
 };
 
 //////////////////////////////////////////
 // EditListingAvailabilityExceptionForm //
 //////////////////////////////////////////
-const ExceptionDateRange = props => {
+const ExceptionDateRange = (props) => {
 	const [focusedInput, setFocusedInput] = useState(null);
 	const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, "month", props.timeZone));
 	const {
@@ -209,10 +203,8 @@ const ExceptionDateRange = props => {
 
 	const idPrefix = `${formId}` || "EditListingAvailabilityExceptionForm";
 	const { exceptionRange } = values;
-	const {
-		startDate: exceptionStartDay,
-		endDate: exceptionEndDay,
-	} = extractDateFromFieldDateRangeInput(exceptionRange);
+	const { startDate: exceptionStartDay, endDate: exceptionEndDay } =
+		extractDateFromFieldDateRangeInput(exceptionRange);
 	const [startMonth, endMonth] = getMonthlyFetchRange(monthlyExceptionQueries, timeZone);
 	const availableDates = exceptionFreeSlotsPerDate(startMonth, endMonth, allExceptions, timeZone);
 
@@ -306,7 +298,7 @@ const ExceptionDateRange = props => {
 						})}
 						isOutsideRange={isOutsideRange(timeZone)}
 						isBlockedBetween={isBlockedBetween(availableDates, isDaily, timeZone)}
-						onClose={event =>
+						onClose={(event) =>
 							setCurrentMonth(getStartOf(event?.startDate ?? startOfToday, "month", timeZone))
 						}
 						useMobileMargins

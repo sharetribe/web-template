@@ -13,7 +13,7 @@ const handleSubmit = (values, history) => {
 	history.push(`${window.location.pathname}${queryParams}`);
 };
 
-const PriceFilterWrapper = withRouter(props => {
+const PriceFilterWrapper = withRouter((props) => {
 	const { history, location } = props;
 
 	const params = parse(location.search);
@@ -24,7 +24,7 @@ const PriceFilterWrapper = withRouter(props => {
 		<PriceFilter
 			{...props}
 			initialValues={initialValues}
-			onSubmit={values => {
+			onSubmit={(values) => {
 				console.log("Submit PriceFilterForm with (unformatted) values:", values);
 				handleSubmit(values, history);
 			}}

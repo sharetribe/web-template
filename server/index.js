@@ -210,7 +210,7 @@ app.get("*", (req, res) => {
 
 	dataLoader
 		.loadData(req.url, sdk, appInfo)
-		.then(data => {
+		.then((data) => {
 			const html = renderer.render(req.url, context, data, renderApp, webExtractor);
 
 			if (dev) {
@@ -225,7 +225,7 @@ app.get("*", (req, res) => {
 				// Routes component injects the context.unauthorized when the
 				// user isn't logged in to view the page that requires
 				// authentication.
-				sdk.authInfo().then(authInfo => {
+				sdk.authInfo().then((authInfo) => {
 					if (authInfo && authInfo.isAnonymous === false) {
 						// It looks like the user is logged in.
 						// Full verification would require actual call to API
@@ -249,7 +249,7 @@ app.get("*", (req, res) => {
 				res.send(html);
 			}
 		})
-		.catch(e => {
+		.catch((e) => {
 			log.error(e, "server-side-render-failed");
 			res.status(500).send(errorPage);
 		});
@@ -286,7 +286,7 @@ const server = app.listen(PORT, () => {
 
 // Graceful shutdown:
 // https://expressjs.com/en/advanced/healthcheck-graceful-shutdown.html
-["SIGINT", "SIGTERM"].forEach(signal => {
+["SIGINT", "SIGTERM"].forEach((signal) => {
 	process.on(signal, () => {
 		console.log("Shutting down...");
 		server.close(() => {

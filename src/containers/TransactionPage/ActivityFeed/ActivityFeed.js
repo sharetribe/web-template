@@ -23,7 +23,7 @@ import css from "./ActivityFeed.module.css";
 
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
-const Message = props => {
+const Message = (props) => {
 	const { message, formattedDate } = props;
 	const content = richText(message.attributes.content, {
 		linkify: true,
@@ -47,7 +47,7 @@ Message.propTypes = {
 	formattedDate: string.isRequired,
 };
 
-const OwnMessage = props => {
+const OwnMessage = (props) => {
 	const { message, formattedDate } = props;
 	const content = richText(message.attributes.content, {
 		linkify: true,
@@ -71,7 +71,7 @@ OwnMessage.propTypes = {
 	formattedDate: string.isRequired,
 };
 
-const Review = props => {
+const Review = (props) => {
 	const { content, rating } = props;
 	return (
 		<div>
@@ -92,7 +92,7 @@ Review.propTypes = {
 	rating: number.isRequired,
 };
 
-const TransitionMessage = props => {
+const TransitionMessage = (props) => {
 	const {
 		transition,
 		nextState,
@@ -112,8 +112,8 @@ const TransitionMessage = props => {
 		transition.by === ownRole
 			? "you"
 			: [TX_TRANSITION_ACTOR_SYSTEM, TX_TRANSITION_ACTOR_OPERATOR].includes(transition.by)
-			? transition.by
-			: otherUsersName;
+				? transition.by
+				: otherUsersName;
 
 	const reviewLink = showReviewAsFirstLink ? (
 		<InlineTextButton onClick={onOpenReviewModal}>
@@ -138,7 +138,7 @@ const TransitionMessage = props => {
 	return message;
 };
 
-const Transition = props => {
+const Transition = (props) => {
 	const { transitionMessageComponent, formattedDate, reviewComponent } = props;
 	return (
 		<div className={css.transition}>
@@ -160,11 +160,11 @@ Transition.propTypes = {
 
 const reviewByAuthorId = (transaction, userId) => {
 	return transaction.reviews.filter(
-		r => !r.attributes.deleted && r.author.id.uuid === userId.uuid,
+		(r) => !r.attributes.deleted && r.author.id.uuid === userId.uuid,
 	)[0];
 };
 
-const ReviewComponentMaybe = props => {
+const ReviewComponentMaybe = (props) => {
 	const { showReviews, isRelevantTransition, reviewEntity, intl } = props;
 	if (showReviews && isRelevantTransition) {
 		const deletedReviewContent = intl.formatMessage({
@@ -180,11 +180,11 @@ const ReviewComponentMaybe = props => {
 	return null;
 };
 
-const isMessage = item => item && item.type === "message";
+const isMessage = (item) => item && item.type === "message";
 
 // Compare function for sorting an array containing messages and transitions
 const compareItems = (a, b) => {
-	const itemDate = item => (isMessage(item) ? item.attributes.createdAt : item.createdAt);
+	const itemDate = (item) => (isMessage(item) ? item.attributes.createdAt : item.createdAt);
 	return itemDate(a) - itemDate(b);
 };
 
@@ -194,13 +194,13 @@ const organizedItems = (messages, transitions, hideOldTransitions) => {
 		// Hide transitions that happened before the oldest message. Since
 		// we have older items (messages) that we are not showing, seeing
 		// old transitions would be confusing.
-		return dropWhile(items, i => !isMessage(i));
+		return dropWhile(items, (i) => !isMessage(i));
 	} else {
 		return items;
 	}
 };
 
-export const ActivityFeedComponent = props => {
+export const ActivityFeedComponent = (props) => {
 	const {
 		rootClassName,
 		className,
@@ -223,7 +223,7 @@ export const ActivityFeedComponent = props => {
 	}
 	const process = getProcess(processName);
 	const transitions = transaction?.attributes?.transitions || [];
-	const relevantTransitions = transitions.filter(t =>
+	const relevantTransitions = transitions.filter((t) =>
 		process.isRelevantPastTransition(t.transition),
 	);
 	const todayString = intl.formatMessage({ id: "TransactionPage.ActivityFeed.today" });
@@ -232,7 +232,7 @@ export const ActivityFeedComponent = props => {
 	const hideOldTransitions = hasOlderMessages || fetchMessagesInProgress;
 	const items = organizedItems(messages, relevantTransitions, hideOldTransitions);
 
-	const messageListItem = message => {
+	const messageListItem = (message) => {
 		const formattedDate = formatDateWithProximity(message.attributes.createdAt, intl, todayString);
 		const isOwnMessage = currentUser?.id && message?.sender?.id?.uuid === currentUser.id?.uuid;
 		const messageComponent = isOwnMessage ? (
@@ -248,7 +248,7 @@ export const ActivityFeedComponent = props => {
 		);
 	};
 
-	const transitionListItem = transition => {
+	const transitionListItem = (transition) => {
 		const formattedDate = formatDateWithProximity(transition.createdAt, intl, todayString);
 		const { customer, provider, listing } = transaction || {};
 
@@ -263,8 +263,8 @@ export const ActivityFeedComponent = props => {
 			const reviewEntity = isCustomerReview
 				? reviewByAuthorId(transaction, customer.id)
 				: isProviderRieview
-				? reviewByAuthorId(transaction, provider.id)
-				: null;
+					? reviewByAuthorId(transaction, provider.id)
+					: null;
 
 			const listingTitle = listing.attributes.deleted
 				? intl.formatMessage({ id: "TransactionPage.ActivityFeed.deletedListing" })
@@ -316,7 +316,7 @@ export const ActivityFeedComponent = props => {
 					</InlineTextButton>
 				</li>
 			) : null}
-			{items.map(item => {
+			{items.map((item) => {
 				if (isMessage(item)) {
 					return messageListItem(item);
 				} else {

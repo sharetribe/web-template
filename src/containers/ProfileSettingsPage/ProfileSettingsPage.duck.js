@@ -84,24 +84,27 @@ export const clearUpdatedForm = () => ({
 });
 
 // SDK method: images.upload
-export const uploadImageRequest = params => ({ type: UPLOAD_IMAGE_REQUEST, payload: { params } });
-export const uploadImageSuccess = result => ({ type: UPLOAD_IMAGE_SUCCESS, payload: result.data });
-export const uploadImageError = error => ({
+export const uploadImageRequest = (params) => ({ type: UPLOAD_IMAGE_REQUEST, payload: { params } });
+export const uploadImageSuccess = (result) => ({
+	type: UPLOAD_IMAGE_SUCCESS,
+	payload: result.data,
+});
+export const uploadImageError = (error) => ({
 	type: UPLOAD_IMAGE_ERROR,
 	payload: error,
 	error: true,
 });
 
 // SDK method: sdk.currentUser.updateProfile
-export const updateProfileRequest = params => ({
+export const updateProfileRequest = (params) => ({
 	type: UPDATE_PROFILE_REQUEST,
 	payload: { params },
 });
-export const updateProfileSuccess = result => ({
+export const updateProfileSuccess = (result) => ({
 	type: UPDATE_PROFILE_SUCCESS,
 	payload: result.data,
 });
-export const updateProfileError = error => ({
+export const updateProfileError = (error) => ({
 	type: UPDATE_PROFILE_ERROR,
 	payload: error,
 	error: true,
@@ -125,15 +128,15 @@ export function uploadImage(actionPayload) {
 
 		return sdk.images
 			.upload(bodyParams, queryParams)
-			.then(resp => {
+			.then((resp) => {
 				const uploadedImage = resp.data.data;
 				dispatch(uploadImageSuccess({ data: { id, uploadedImage } }));
 			})
-			.catch(e => dispatch(uploadImageError({ id, error: storableError(e) })));
+			.catch((e) => dispatch(uploadImageError({ id, error: storableError(e) })));
 	};
 }
 
-export const updateProfile = actionPayload => {
+export const updateProfile = (actionPayload) => {
 	return (dispatch, getState, sdk) => {
 		dispatch(updateProfileRequest());
 
@@ -145,7 +148,7 @@ export const updateProfile = actionPayload => {
 
 		return sdk.currentUser
 			.updateProfile(actionPayload, queryParams)
-			.then(response => {
+			.then((response) => {
 				dispatch(updateProfileSuccess(response));
 
 				const entities = denormalisedResponseEntities(response);
@@ -157,6 +160,6 @@ export const updateProfile = actionPayload => {
 				// Update current user in state.user.currentUser through user.duck.js
 				dispatch(currentUserShowSuccess(currentUser));
 			})
-			.catch(e => dispatch(updateProfileError(storableError(e))));
+			.catch((e) => dispatch(updateProfileError(storableError(e))));
 	};
 };

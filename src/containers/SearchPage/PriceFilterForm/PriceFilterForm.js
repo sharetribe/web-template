@@ -14,7 +14,7 @@ const DEBOUNCE_WAIT_TIME = 400;
 
 // Helper function to parse value for min handle
 // Value needs to be between slider's minimum value and current maximum value
-const parseMin = (min, currentMax) => value => {
+const parseMin = (min, currentMax) => (value) => {
 	const parsedValue = Number.parseInt(value, 10);
 	if (isNaN(parsedValue)) {
 		return "";
@@ -24,7 +24,7 @@ const parseMin = (min, currentMax) => value => {
 
 // Helper function to parse value for max handle
 // Value needs to be between slider's max value and current minimum value
-const parseMax = (max, currentMin) => value => {
+const parseMax = (max, currentMin) => (value) => {
 	const parsedValue = Number.parseInt(value, 10);
 	if (isNaN(parsedValue)) {
 		return "";
@@ -33,7 +33,7 @@ const parseMax = (max, currentMin) => value => {
 };
 
 // PriceFilterForm component
-const PriceFilterFormComponent = props => {
+const PriceFilterFormComponent = (props) => {
 	const { liveEdit, onChange, onSubmit, onCancel, onClear, ...rest } = props;
 
 	if (liveEdit && !onChange) {
@@ -47,7 +47,7 @@ const PriceFilterFormComponent = props => {
 	}
 
 	const handleChange = debounce(
-		formState => {
+		(formState) => {
 			if (formState.dirty) {
 				const { minPrice, maxPrice, ...restValues } = formState.values;
 				onChange({
@@ -61,7 +61,7 @@ const PriceFilterFormComponent = props => {
 		{ leading: false, trailing: true },
 	);
 
-	const handleSubmit = values => {
+	const handleSubmit = (values) => {
 		const { minPrice, maxPrice, ...restValues } = values;
 		return onSubmit({
 			minPrice: minPrice === "" ? rest.min : minPrice,
@@ -77,7 +77,7 @@ const PriceFilterFormComponent = props => {
 		<FinalForm
 			{...rest}
 			{...formCallbacks}
-			render={formRenderProps => {
+			render={(formRenderProps) => {
 				const {
 					form,
 					handleSubmit,
@@ -166,7 +166,7 @@ const PriceFilterFormComponent = props => {
 								max={max}
 								step={step}
 								handles={[minPrice, maxPrice]}
-								onChange={handles => {
+								onChange={(handles) => {
 									form.change("minPrice", handles[0]);
 									form.change("maxPrice", handles[1]);
 								}}

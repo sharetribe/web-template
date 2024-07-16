@@ -10,7 +10,7 @@ import SortByPopup from "./SortByPopup";
 
 import css from "./SortBy.module.css";
 
-const SortBy = props => {
+const SortBy = (props) => {
 	const config = useConfiguration();
 	const {
 		sort,
@@ -30,15 +30,15 @@ const SortBy = props => {
 			? {
 					rootClassName: css.sortBy,
 					menuLabelRootClassName: css.sortByMenuLabel,
-			  }
+				}
 			: {
 					className: css.sortByDesktop,
 					menuLabelRootClassName: css.sortByMenuLabel,
-			  };
+				};
 
 	// Ensure that keywords is included to activeFilter list when needed
 	const isMainSearchKeywords = isMainSearchTypeKeywords(config);
-	const hasKeyworsFilter = config.search.defaultFilters.find(df => df.key === relevanceFilter);
+	const hasKeyworsFilter = config.search.defaultFilters.find((df) => df.key === relevanceFilter);
 	const isKeywordsFilterEnabled = isMainSearchKeywords || hasKeyworsFilter;
 
 	const activeOptions = isKeywordsFilterEnabled
@@ -60,7 +60,7 @@ const SortBy = props => {
 					key: option.key,
 					label: intl.formatMessage({ id: option.labelTranslationKey }),
 					...translationKeyLongMaybe,
-			  }
+				}
 			: option;
 		// Omit relevance option if mainSearchType is not 'keywords'
 		// Note: We might change this in the future, if multiple transaction types are allowed
@@ -74,7 +74,7 @@ const SortBy = props => {
 							(isRelevance && (!isRelevanceOptionActive || isConflictingFilterSetAndActive)) ||
 							(!isRelevance && isConflictingFilterActive),
 					},
-			  ];
+				];
 	}, []);
 	const defaultValue = "createdAt";
 	const isRelevanceSortActive = isRelevanceOptionActive && !sort;

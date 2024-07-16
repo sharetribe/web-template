@@ -2,7 +2,7 @@ import React from "react";
 
 import css from "./CheckoutPage.module.css";
 
-const MobileOrderBreakdown = props => {
+const MobileOrderBreakdown = (props) => {
 	const { breakdown, speculateTransactionErrorMessage } = props;
 
 	return (

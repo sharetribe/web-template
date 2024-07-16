@@ -11,7 +11,7 @@ import css from "./TransactionPanel.module.css";
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 // Functional component as a helper to build ActivityFeed section
-const InquiryMessageMaybe = props => {
+const InquiryMessageMaybe = (props) => {
 	const { className, rootClassName, protectedData, showInquiryMessage, isCustomer } = props;
 	const classes = classNames(rootClassName || css.deliveryInfoContainer, className);
 	const inquiryMsgClasses = isCustomer ? css.ownInquiryMessage : css.inquiryMessage;

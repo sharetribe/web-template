@@ -4,7 +4,7 @@ import { Heading, H2, Reviews } from "../../components";
 
 import css from "./ListingPage.module.css";
 
-const SectionReviews = props => {
+const SectionReviews = (props) => {
 	const { reviews, fetchReviewsError } = props;
 
 	return (

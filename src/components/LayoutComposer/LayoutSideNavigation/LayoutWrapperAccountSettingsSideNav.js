@@ -58,7 +58,7 @@ const scrollToTab = (currentPage, scrollLeft, setScrollLeft) => {
 	}
 };
 
-const LayoutWrapperAccountSettingsSideNavComponent = props => {
+const LayoutWrapperAccountSettingsSideNavComponent = (props) => {
 	const [scrollLeft, setScrollLeft] = useGlobalState("scrollLeft");
 	useEffect(() => {
 		const { currentPage, viewport } = props;

@@ -8,7 +8,7 @@ const STATUS_VERIFICATION_NEEDED = "verificationNeeded";
 const STATUS_VERIFICATION_SUCCESS = "verificationSuccess";
 const STATUS_VERIFICATION_ERROR = "verificationError";
 
-const StripeConnectAccountStatusBox = props => {
+const StripeConnectAccountStatusBox = (props) => {
 	const { type, onGetStripeConnectAccountLink, inProgress, disabled } = props;
 
 	if (type === STATUS_VERIFICATION_NEEDED) {

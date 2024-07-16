@@ -11,7 +11,7 @@ const DIRECTION_UP = "up";
 const SIZE_BIG = "big";
 const SIZE_SMALL = "small";
 
-const IconArrowHead = props => {
+const IconArrowHead = (props) => {
 	const { className, rootClassName, direction, size } = props;
 	const classes = classNames(rootClassName || css.root, className);
 

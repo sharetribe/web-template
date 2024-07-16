@@ -29,12 +29,12 @@ import {
 // Import modules from this directory
 import css from "./EditListingDeliveryForm.module.css";
 
-const identity = v => v;
+const identity = (v) => v;
 
-export const EditListingDeliveryFormComponent = props => (
+export const EditListingDeliveryFormComponent = (props) => (
 	<FinalForm
 		{...props}
-		render={formRenderProps => {
+		render={(formRenderProps) => {
 			const {
 				formId,
 				form,
@@ -153,7 +153,7 @@ export const EditListingDeliveryFormComponent = props => (
 									? composeValidators(
 											autocompleteSearchRequired(addressRequiredMessage),
 											autocompletePlaceSelected(addressNotRecognizedMessage),
-									  )
+										)
 									: () => {}
 							}
 							hideErrorMessage={!pickupEnabled}
@@ -213,7 +213,7 @@ export const EditListingDeliveryFormComponent = props => (
 											intl.formatMessage({
 												id: "EditListingDeliveryForm.shippingOneItemRequired",
 											}),
-									  )
+										)
 									: null
 							}
 							hideErrorMessage={!shippingEnabled}
@@ -249,7 +249,7 @@ export const EditListingDeliveryFormComponent = props => (
 												intl.formatMessage({
 													id: "EditListingDeliveryForm.shippingAdditionalItemsRequired",
 												}),
-										  )
+											)
 										: null
 								}
 								hideErrorMessage={!shippingEnabled}

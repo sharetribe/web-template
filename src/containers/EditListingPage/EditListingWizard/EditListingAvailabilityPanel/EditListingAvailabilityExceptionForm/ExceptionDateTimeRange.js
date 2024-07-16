@@ -46,11 +46,11 @@ const TODAY = new Date();
 const dateFormattingOptions = { month: "short", day: "numeric", weekday: "short" };
 
 // Format form's value for the react-dates input: convert timeOfDay to the local time
-const formatFieldDateInput = timeZone => v =>
+const formatFieldDateInput = (timeZone) => (v) =>
 	v && v.date ? { date: timeOfDayFromTimeZoneToLocal(v.date, timeZone) } : { date: v };
 
 // Parse react-dates input's value: convert timeOfDay to the given time zone
-const parseFieldDateInput = timeZone => v =>
+const parseFieldDateInput = (timeZone) => (v) =>
 	v && v.date ? { date: timeOfDayFromLocalToTimeZone(v.date, timeZone) } : v;
 
 // Get available start times for new exceptions on given date.
@@ -137,7 +137,7 @@ const getAllTimeValues = ({
 	const startTimes = getAvailableStartTimes({ selectedStartDate, availableSlots, intl, timeZone });
 	const startTime = selectedStartTime ? selectedStartTime : startTimes?.[0]?.timestamp;
 	const startTimeAsDate = startTime ? timestampToDate(startTime) : null;
-	const selectedSlot = availableSlots.find(t => isInRange(startTimeAsDate, t.start, t.end));
+	const selectedSlot = availableSlots.find((t) => isInRange(startTimeAsDate, t.start, t.end));
 
 	// Note: We need to remove 1ms from the calculated endDate so that if the end
 	// date would be the next day at 00:00, the day in the form is still correct.
@@ -146,8 +146,8 @@ const getAllTimeValues = ({
 	const endDate = selectedEndDate
 		? selectedEndDate
 		: startTimeAsDate
-		? new Date(findNextBoundary(startTimeAsDate, "hour", timeZone).getTime() - 1)
-		: null;
+			? new Date(findNextBoundary(startTimeAsDate, "hour", timeZone).getTime() - 1)
+			: null;
 
 	const params = {
 		intl,
@@ -165,7 +165,7 @@ const getAllTimeValues = ({
 // Prop function for react-dates component: check if the day is blocked
 // For start date, all dates with overlapping availability slots are available
 // For end date, only dates within selected availability slot are available.
-const isDayBlocked = params => day => {
+const isDayBlocked = (params) => (day) => {
 	const { exceptionStartDay, exceptionStartTime, availableDates, timeZone, focusedInput } = params;
 	const localizedDay = timeOfDayFromLocalToTimeZone(day, timeZone);
 
@@ -180,7 +180,7 @@ const isDayBlocked = params => day => {
 	const dayData = availableDates[stringifyDateToISO8601(exceptionStartDay, timeZone)];
 	const slots = dayData?.slots || [];
 	const selectedSlot = exceptionStartTime
-		? slots.find(t => isInRange(timestampToDate(exceptionStartTime), t.start, t.end))
+		? slots.find((t) => isInRange(timestampToDate(exceptionStartTime), t.start, t.end))
 		: slots[0];
 
 	const isInSlotRange = (date, slot) => {
@@ -195,7 +195,7 @@ const isDayBlocked = params => day => {
 
 // Prop function for react-dates component: restrict availability within this range
 // By default, it's today ... today+366d
-const isOutsideRange = timeZone => day => {
+const isOutsideRange = (timeZone) => (day) => {
 	// 'day' is pointing to browser's local time zone (react-dates gives these).
 	// However, exceptionStartDay and other times refer to listing's timeZone.
 	const localizedDay = timeOfDayFromLocalToTimeZone(day, timeZone);
@@ -277,7 +277,7 @@ const onExceptionEndDateChange = (value, availableSlots, props) => {
 //////////////////////////////////////////
 // EditListingAvailabilityExceptionForm //
 //////////////////////////////////////////
-const ExceptionDateTimeRange = props => {
+const ExceptionDateTimeRange = (props) => {
 	const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, "month", props.timeZone));
 	const {
 		formId,
@@ -385,7 +385,7 @@ const ExceptionDateTimeRange = props => {
 							focusedInput: START_DATE,
 						})}
 						isOutsideRange={isOutsideRange(timeZone)}
-						onChange={value => onExceptionStartDateChange(value, availableDates, props)}
+						onChange={(value) => onExceptionStartDateChange(value, availableDates, props)}
 						onPrevMonthClick={() => onMonthClick(getStartOfPrevMonth)}
 						onNextMonthClick={() => onMonthClick(getStartOfNextMonth)}
 						initialVisibleMonth={initialVisibleMonth(exceptionStartDay || startOfToday, timeZone)}
@@ -413,12 +413,12 @@ const ExceptionDateTimeRange = props => {
 						className={exceptionStartDate ? css.fieldSelect : css.fieldSelectDisabled}
 						selectClassName={exceptionStartDate ? css.select : css.selectDisabled}
 						disabled={startTimeDisabled}
-						onChange={value =>
+						onChange={(value) =>
 							onExceptionStartTimeChange(value, availableSlotsOnSelectedDate, props)
 						}
 					>
 						{exceptionStartDay ? (
-							availableStartTimes.map(p => (
+							availableStartTimes.map((p) => (
 								<option key={p.timestamp} value={p.timestamp}>
 									{p.timeOfDay}
 								</option>
@@ -449,7 +449,9 @@ const ExceptionDateTimeRange = props => {
 							timeZone,
 							focusedInput: END_DATE,
 						})}
-						onChange={value => onExceptionEndDateChange(value, availableSlotsOnSelectedDate, props)}
+						onChange={(value) =>
+							onExceptionEndDateChange(value, availableSlotsOnSelectedDate, props)
+						}
 						onPrevMonthClick={() => onMonthClick(getStartOfPrevMonth)}
 						onNextMonthClick={() => onMonthClick(getStartOfNextMonth)}
 						initialVisibleMonth={initialVisibleMonth(exceptionStartDay || startOfToday, timeZone)}

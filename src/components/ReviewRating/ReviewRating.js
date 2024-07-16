@@ -4,14 +4,14 @@ import classNames from "classnames";
 import { IconReviewStar } from "../../components";
 import { REVIEW_RATINGS } from "../../util/types";
 
-const ReviewRating = props => {
+const ReviewRating = (props) => {
 	const { className, rootClassName, reviewStarClassName, rating } = props;
 	const classes = classNames(rootClassName, className);
 
 	const stars = REVIEW_RATINGS;
 	return (
 		<span className={classes} title={`${rating}/5`}>
-			{stars.map(star => (
+			{stars.map((star) => (
 				<IconReviewStar
 					key={`star-${star}`}
 					className={reviewStarClassName}

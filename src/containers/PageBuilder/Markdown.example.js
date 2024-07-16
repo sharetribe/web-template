@@ -6,7 +6,7 @@ import renderMarkdown from "./markdownProcessor.js";
 
 import PageBuilder from "./PageBuilder.js";
 
-const addCodeBlockForSyntax = md => `
+const addCodeBlockForSyntax = (md) => `
 \`\`\`${md}\`\`\`
 
 ${md}
@@ -481,7 +481,7 @@ const SectionCode = {
 	],
 };
 
-const MarkdownPage = props => {
+const MarkdownPage = (props) => {
 	const sections = props.sections;
 	const pageAssetsData = { sections };
 	return (
@@ -589,7 +589,7 @@ export const SyntaxOnDarkTheme = {
 	group: "PageBuilder",
 };
 
-const MarkdownDiv = props => <div>{props.renderedMarkdown}</div>;
+const MarkdownDiv = (props) => <div>{props.renderedMarkdown}</div>;
 
 const mdText = `
 \`\`\`
@@ -614,8 +614,8 @@ const Markdown = () => (
 Some _styled_ **text**!
 `;
 
-const MyItalics = props => <em style={{ color: "tomato", fontStyle: "italic" }} {...props} />;
-const MyStrong = props => <strong style={{ color: "tomato", fontWeight: 700 }} {...props} />;
+const MyItalics = (props) => <em style={{ color: "tomato", fontStyle: "italic" }} {...props} />;
+const MyStrong = (props) => <strong style={{ color: "tomato", fontWeight: 700 }} {...props} />;
 
 export const markdownProcessingWithCustomComponents = {
 	component: MarkdownDiv,

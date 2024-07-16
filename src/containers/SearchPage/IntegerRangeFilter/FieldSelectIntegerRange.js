@@ -20,7 +20,7 @@ const resolveMinMaxValues = (values, defaultMax, defaultMin) => {
 	};
 };
 
-const RangeInput = props => {
+const RangeInput = (props) => {
 	const {
 		input,
 		min: defaultMinValue,
@@ -38,7 +38,7 @@ const RangeInput = props => {
 		setFieldValues(currentValues);
 	}, [initialValues]);
 
-	const handleMinValueChange = event => {
+	const handleMinValueChange = (event) => {
 		const newValue = Number.parseInt(event.target.value, RADIX);
 		if (isNaN(newValue)) {
 			onChange({ ...fieldValues, minValue: defaultMinValue });
@@ -56,7 +56,7 @@ const RangeInput = props => {
 		onChange(newValues);
 	};
 
-	const handleMaxValueChange = event => {
+	const handleMaxValueChange = (event) => {
 		const newValue = Number.parseInt(event.target.value, RADIX);
 		if (isNaN(newValue)) {
 			onChange({ ...fieldValues, maxValue: defaultMaxValue });
@@ -74,7 +74,7 @@ const RangeInput = props => {
 		onChange(newValues);
 	};
 
-	const handleSliderChange = updatedValue => {
+	const handleSliderChange = (updatedValue) => {
 		setFieldValues({ ...updatedValue });
 		onChange({ ...updatedValue });
 	};
@@ -94,7 +94,7 @@ const RangeInput = props => {
 						step={step}
 						placeholder={defaultMinValue}
 						value={fieldValues.minValue}
-						onChange={event => handleMinValueChange(event, values.minValue)}
+						onChange={(event) => handleMinValueChange(event, values.minValue)}
 					></input>
 					<span className={css.valueSeparator}>-</span>
 					<input
@@ -115,7 +115,7 @@ const RangeInput = props => {
 					max={defaultMaxValue}
 					step={step}
 					handles={[fieldValues.minValue, fieldValues.maxValue]}
-					onChange={handles => {
+					onChange={(handles) => {
 						handleSliderChange({ minValue: handles[0], maxValue: handles[1] });
 					}}
 				/>
@@ -124,7 +124,7 @@ const RangeInput = props => {
 	);
 };
 
-const FieldSelectIntegerRange = props => {
+const FieldSelectIntegerRange = (props) => {
 	const { max, min, name, step, isInSideBar, ...rest } = props;
 	return (
 		<Field

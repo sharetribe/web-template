@@ -15,7 +15,7 @@ import { FieldCheckbox, ValidationError } from "../../components";
 
 import css from "./FieldCheckboxGroup.module.css";
 
-const FieldCheckboxRenderer = props => {
+const FieldCheckboxRenderer = (props) => {
 	const {
 		className,
 		rootClassName,
@@ -78,7 +78,7 @@ FieldCheckboxRenderer.propTypes = {
 	twoColumns: bool,
 };
 
-const FieldCheckboxGroup = props => <FieldArray component={FieldCheckboxRenderer} {...props} />;
+const FieldCheckboxGroup = (props) => <FieldArray component={FieldCheckboxRenderer} {...props} />;
 
 // Name and component are required fields for FieldArray.
 // Component-prop we define in this file, name needs to be passed in

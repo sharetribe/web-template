@@ -18,15 +18,15 @@ import UserFieldPhoneNumber from "../UserFieldPhoneNumber";
 
 import css from "./ConfirmSignupForm.module.css";
 
-const getSoleUserTypeMaybe = userTypes =>
+const getSoleUserTypeMaybe = (userTypes) =>
 	Array.isArray(userTypes) && userTypes.length === 1 ? userTypes[0].userType : null;
 
-const ConfirmSignupFormComponent = props => (
+const ConfirmSignupFormComponent = (props) => (
 	<FinalForm
 		{...props}
 		mutators={{ ...arrayMutators }}
 		initialValues={{ userType: props.preselectedUserType || getSoleUserTypeMaybe(props.userTypes) }}
-		render={formRenderProps => {
+		render={(formRenderProps) => {
 			const {
 				rootClassName,
 				className,
@@ -63,7 +63,7 @@ const ConfirmSignupFormComponent = props => (
 			const userFieldProps = getPropsForCustomUserFieldInputs(userFields, intl, userType);
 
 			const noUserTypes = !userType && !(userTypes?.length > 0);
-			const userTypeConfig = userTypes.find(config => config.userType === userType);
+			const userTypeConfig = userTypes.find((config) => config.userType === userType);
 			const showDefaultUserFields = userType || noUserTypes;
 			const showCustomUserFields = (userType || noUserTypes) && userFieldProps?.length > 0;
 
@@ -162,7 +162,7 @@ const ConfirmSignupFormComponent = props => (
 
 					{showCustomUserFields ? (
 						<div className={css.customFields}>
-							{userFieldProps.map(fieldProps => (
+							{userFieldProps.map((fieldProps) => (
 								<CustomExtendedDataField {...fieldProps} formId={formId} />
 							))}
 						</div>

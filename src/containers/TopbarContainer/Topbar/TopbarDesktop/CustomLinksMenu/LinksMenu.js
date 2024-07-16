@@ -22,10 +22,10 @@ import css from "./LinksMenu.module.css";
  */
 const LinkComponent = ({ linkConfig, currentPage }) => {
 	const { text, type, href, route } = linkConfig;
-	const getCurrentPageClass = page => {
-		const hasPageName = name => currentPage?.indexOf(name) === 0;
-		const isCMSPage = pageId => hasPageName("CMSPage") && currentPage === `${page}:${pageId}`;
-		const isInboxPage = tab => hasPageName("InboxPage") && currentPage === `${page}:${tab}`;
+	const getCurrentPageClass = (page) => {
+		const hasPageName = (name) => currentPage?.indexOf(name) === 0;
+		const isCMSPage = (pageId) => hasPageName("CMSPage") && currentPage === `${page}:${pageId}`;
+		const isInboxPage = (tab) => hasPageName("InboxPage") && currentPage === `${page}:${tab}`;
 		const isCurrentPage = currentPage === page;
 		return isCMSPage(route?.params?.pageId) || isInboxPage(route?.params?.tab) || isCurrentPage
 			? css.currentPage
@@ -59,7 +59,7 @@ const LinkComponent = ({ linkConfig, currentPage }) => {
  * @param {*} props containing: width, setWidth, label
  * @returns div with same styles as the real "More" label or null if width is known.
  */
-const MeasureMoreMenu = props => {
+const MeasureMoreMenu = (props) => {
 	const { width, setWidth, label } = props;
 	const moreMenuRef = useRef(null);
 	useEffect(() => {
@@ -82,7 +82,7 @@ const MeasureMoreMenu = props => {
 					display: "flex",
 					flexDirection: "row",
 				},
-		  };
+			};
 
 	return !width && !isServer
 		? ReactDOM.createPortal(
@@ -95,7 +95,7 @@ const MeasureMoreMenu = props => {
 					{label}
 				</div>,
 				document.body,
-		  )
+			)
 		: null;
 };
 
@@ -121,7 +121,7 @@ const MenuLabelContent = ({ showMoreLabel, isOpen, intl }) => (
  * @param {*} props contain: id, currentPage, links, showMoreLabel, moreLabelWidth, setMoreLabelWidth, intl
  * @returns menu component
  */
-const LinksMenu = props => {
+const LinksMenu = (props) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { id, currentPage, links, showMoreLabel, moreLabelWidth, setMoreLabelWidth, intl } = props;
 	const contentPlacementOffset = moreLabelWidth ? -1 * (moreLabelWidth / 2) : 24;
@@ -138,7 +138,7 @@ const LinksMenu = props => {
 					<MenuLabelContent showMoreLabel={showMoreLabel} isOpen={isOpen} intl={intl} />
 				</MenuLabel>
 				<MenuContent className={css.linkMenuContent}>
-					{links.map(linkConfig => {
+					{links.map((linkConfig) => {
 						return (
 							<MenuItem key={linkConfig.text}>
 								<LinkComponent linkConfig={linkConfig} currentPage={currentPage} />

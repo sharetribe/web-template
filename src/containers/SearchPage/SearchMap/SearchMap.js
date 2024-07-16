@@ -18,28 +18,28 @@ import css from "./SearchMap.module.css";
 
 const REUSABLE_MAP_HIDDEN_HANDLE = "reusableMapHidden";
 
-const getSearchMapVariant = mapProvider => {
+const getSearchMapVariant = (mapProvider) => {
 	const isGoogleMapsInUse = mapProvider === "googleMaps";
 	return isGoogleMapsInUse ? searchMapGoogleMaps : searchMapMapbox;
 };
-const getSearchMapVariantHandles = mapProvider => {
+const getSearchMapVariantHandles = (mapProvider) => {
 	const searchMapVariant = getSearchMapVariant(mapProvider);
 	return {
 		labelHandle: searchMapVariant.LABEL_HANDLE,
 		infoCardHandle: searchMapVariant.INFO_CARD_HANDLE,
 	};
 };
-const getFitMapToBounds = mapProvider => {
+const getFitMapToBounds = (mapProvider) => {
 	const searchMapVariant = getSearchMapVariant(mapProvider);
 	return searchMapVariant.fitMapToBounds;
 };
-const getSearchMapVariantComponent = mapProvider => {
+const getSearchMapVariantComponent = (mapProvider) => {
 	const searchMapVariant = getSearchMapVariant(mapProvider);
 	return searchMapVariant.default;
 };
 
 const withCoordinatesObfuscated = (listings, offset) => {
-	return listings.map(listing => {
+	return listings.map((listing) => {
 		const { id, attributes, ...rest } = listing;
 		const origGeolocation = attributes.geolocation;
 		const cacheKey = id ? `${id.uuid}_${origGeolocation.lat}_${origGeolocation.lng}` : null;
@@ -150,7 +150,7 @@ export class SearchMapComponent extends Component {
 		} = this.props;
 		const classes = classNames(rootClassName || css.root, className);
 
-		const listingsWithLocation = originalListings.filter(l => !!l.attributes.geolocation);
+		const listingsWithLocation = originalListings.filter((l) => !!l.attributes.geolocation);
 		const listings = config.maps.fuzzy.enabled
 			? withCoordinatesObfuscated(listingsWithLocation, config.maps.fuzzy.offset)
 			: listingsWithLocation;
@@ -247,7 +247,7 @@ SearchMapComponent.propTypes = {
 	}).isRequired,
 };
 
-const SearchMap = props => {
+const SearchMap = (props) => {
 	const config = useConfiguration();
 	const routeConfiguration = useRouteConfiguration();
 	const history = useHistory();
