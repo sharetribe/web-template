@@ -12,7 +12,7 @@
 	},
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnPaste": false,
-	"editor.formatOnSave": true,
+	"editor.formatOnSave": false,
 	"editor.formatOnType": false,
 	"files.insertFinalNewline": true,
 	"search.exclude": {
