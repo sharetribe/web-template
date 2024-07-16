@@ -14,6 +14,12 @@
 				"message": "Expected CSS variable name to be lowerCamelCase",
 				"severity": "warning"
 			}
+		],
+		"value-keyword-case": [
+			"lower",
+			{
+				"ignoreProperties": ["composes"]
+			}
 		]
 	}
 }
