@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { func, number, object, string } from 'prop-types';
 import classNames from 'classnames';
 
+import appSettings from '../../../config/settings';
 import { intlShape } from '../../../util/reactIntl';
 import {
   getStartHours,
   getEndHours,
   isInRange,
   isSameDate,
-  isDayMomentInsideRange,
   timeOfDayFromLocalToTimeZone,
   timeOfDayFromTimeZoneToLocal,
   isDateSameOrAfter,
@@ -18,8 +18,11 @@ import {
   monthIdString,
   getStartOf,
   initialVisibleMonth,
+  parseDateFromISO8601,
+  stringifyDateToISO8601,
 } from '../../../util/dates';
 import { propTypes } from '../../../util/types';
+import { timeSlotsPerDate } from '../../../util/generators';
 import { bookingDateRequired } from '../../../util/validators';
 import { FieldDateInput, FieldSelect, IconArrowHead } from '../../../components';
 
@@ -42,6 +45,77 @@ const prevMonthFn = (currentMoment, timeZone) =>
 
 const endOfRange = (date, dayCountAvailableForBooking, timeZone) => {
   return getStartOf(date, 'day', timeZone, dayCountAvailableForBooking - 1, 'days');
+};
+
+/**
+ * Get the start of the month in given time zone.
+ *
+ * @param {String} monthId (e.g. '2024-07')
+ * @param {String} timeZone time zone id (E.g. 'Europe/Helsinki')
+ * @returns {Date} start of month
+ */
+const getMonthStartInTimeZone = (monthId, timeZone) => {
+  const month = parseDateFromISO8601(`${monthId}-01`, timeZone); // E.g. new Date('2022-12')
+  return getStartOf(month, 'month', timeZone, 0, 'months');
+};
+
+/**
+ * Get the range of months that we have already fetched time slots.
+ * (This range expands when user clicks Next-button on date picker).
+ * monthlyTimeSlots look like this: { '2024-07': { timeSlots: []}, '2024-08': { timeSlots: []} }
+ *
+ * @param {Object} monthlyTimeSlots { '2024-07': { timeSlots: [] }, }
+ * @param {String} timeZone IANA time zone key ('Europe/Helsinki')
+ * @returns {Array<Date>} a tuple containing dates: the start and exclusive end month
+ */
+const getMonthlyFetchRange = (monthlyTimeSlots, timeZone) => {
+  const monthStrings = Object.entries(monthlyTimeSlots).reduce((picked, entry) => {
+    return Array.isArray(entry[1].timeSlots) ? [...picked, entry[0]] : picked;
+  }, []);
+  const firstMonth = getMonthStartInTimeZone(monthStrings[0], timeZone);
+  const lastMonth = getMonthStartInTimeZone(monthStrings[monthStrings.length - 1], timeZone);
+  const exclusiveEndMonth = nextMonthFn(lastMonth, timeZone);
+  return [firstMonth, exclusiveEndMonth];
+};
+
+/**
+ * This merges the time slots, when consecutive time slots are back to back with same "seats" count.
+ *
+ * @param {Array<TimeSlot>} timeSlots
+ * @returns {Array<TimeSlot>} array of time slots where unnecessary boundaries have been removed.
+ */
+const removeUnnecessaryBoundaries = timeSlots => {
+  return timeSlots.reduce((picked, ts) => {
+    const hasPicked = picked.length > 0;
+    if (hasPicked) {
+      const rest = picked.slice(0, -1);
+      const lastPicked = picked.slice(-1)[0];
+
+      const isBackToBack = lastPicked.attributes.end.getTime() === ts.attributes.start.getTime();
+      const hasSameSeatsCount = lastPicked.attributes.seats === ts.attributes.seats;
+      const createJoinedTimeSlot = (ts1, ts2) => ({
+        ...ts1,
+        attributes: { ...ts1.attributes, end: ts2.attributes.end },
+      });
+      return isBackToBack && hasSameSeatsCount
+        ? [...rest, createJoinedTimeSlot(lastPicked, ts)]
+        : [...picked, ts];
+    }
+    return [ts];
+  }, []);
+};
+
+/**
+ * Join monthly time slots into a single array and remove unnecessary boundaries on month changes.
+ *
+ * @param {Object} monthlyTimeSlots { '2024-07': { timeSlots: [] }, }
+ * @returns {Array<TimeSlot>}
+ */
+const getAllTimeSlots = monthlyTimeSlots => {
+  const timeSlotsRaw = Object.values(monthlyTimeSlots).reduce((picked, mts) => {
+    return [...picked, ...(mts.timeSlots || [])];
+  }, []);
+  return removeUnnecessaryBoundaries(timeSlotsRaw);
 };
 
 const getAvailableStartTimes = (intl, timeZone, bookingStart, timeSlotsOnSelectedDate) => {
@@ -178,14 +252,20 @@ const getAllTimeValues = (
   return { startTime, endDate, endTime, selectedTimeSlot };
 };
 
-const getMonthlyTimeSlots = (monthlyTimeSlots, date, timeZone) => {
-  const monthId = monthIdString(date, timeZone);
-
-  return !monthlyTimeSlots || Object.keys(monthlyTimeSlots).length === 0
-    ? []
-    : monthlyTimeSlots[monthId] && monthlyTimeSlots[monthId].timeSlots
-    ? monthlyTimeSlots[monthId].timeSlots
-    : [];
+/**
+ * Get all the time slots that touch the given date.
+ *
+ * @param {Object} monthlyTimeSlots { '2024-07': { timeSlots: [] }, }
+ * @param {Date} date
+ * @param {String} timeZone IANA time zone key
+ * @returns {Array<TimeSlot>}
+ */
+const getTimeSlotsOnDate = (monthlyTimeSlots, date, timeZone) => {
+  const allTimeSlots = getAllTimeSlots(monthlyTimeSlots);
+  const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
+  const timeSlotsData = timeSlotsPerDate(startMonth, endMonth, allTimeSlots, timeZone);
+  const startIdString = stringifyDateToISO8601(date, timeZone);
+  return timeSlotsData[startIdString]?.timeSlots || [];
 };
 
 // IconArrowHead component might not be defined if exposed directly to the file.
@@ -232,7 +312,6 @@ class FieldDateAndTimeInput extends Component {
     this.onBookingStartDateChange = this.onBookingStartDateChange.bind(this);
     this.onBookingStartTimeChange = this.onBookingStartTimeChange.bind(this);
     this.onBookingEndDateChange = this.onBookingEndDateChange.bind(this);
-    this.isOutsideRange = this.isOutsideRange.bind(this);
   }
 
   fetchMonthData(date) {
@@ -298,8 +377,7 @@ class FieldDateAndTimeInput extends Component {
     // This callback function (onBookingStartDateChange) is called from react-dates component.
     // It gets raw value as a param - browser's local time instead of time in listing's timezone.
     const startDate = timeOfDayFromLocalToTimeZone(value.date, timeZone);
-    const timeSlots = getMonthlyTimeSlots(monthlyTimeSlots, this.state.currentMonth, timeZone);
-    const timeSlotsOnSelectedDate = getTimeSlots(timeSlots, startDate, timeZone);
+    const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
 
     const { startTime, endDate, endTime } = getAllTimeValues(
       intl,
@@ -317,9 +395,8 @@ class FieldDateAndTimeInput extends Component {
 
   onBookingStartTimeChange = value => {
     const { monthlyTimeSlots, timeZone, intl, form, values } = this.props;
-    const timeSlots = getMonthlyTimeSlots(monthlyTimeSlots, this.state.currentMonth, timeZone);
     const startDate = values.bookingStartDate.date;
-    const timeSlotsOnSelectedDate = getTimeSlots(timeSlots, startDate, timeZone);
+    const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
 
     const { endDate, endTime } = getAllTimeValues(
       intl,
@@ -348,8 +425,7 @@ class FieldDateAndTimeInput extends Component {
 
     const { bookingStartDate, bookingStartTime } = values;
     const startDate = bookingStartDate.date;
-    const timeSlots = getMonthlyTimeSlots(monthlyTimeSlots, this.state.currentMonth, timeZone);
-    const timeSlotsOnSelectedDate = getTimeSlots(timeSlots, startDate, timeZone);
+    const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
 
     const { endTime } = getAllTimeValues(
       intl,
@@ -362,26 +438,6 @@ class FieldDateAndTimeInput extends Component {
 
     form.change('bookingEndTime', endTime);
   };
-
-  isOutsideRange(day, bookingStartDate, selectedTimeSlot, timeZone) {
-    if (!selectedTimeSlot) {
-      return true;
-    }
-
-    // 'day' is pointing to browser's local time-zone (react-dates gives these).
-    // However, bookingStartDate and selectedTimeSlot refer to times in listing's timeZone.
-    const localizedDay = timeOfDayFromLocalToTimeZone(day, timeZone);
-    // Given day (endDate) should be after the start of the day of selected booking start date.
-    const startDate = getStartOf(bookingStartDate, 'day', timeZone);
-    // 00:00 would return wrong day as the end date.
-    // Removing 1 millisecond, solves the exclusivity issue.
-    const inclusiveEnd = new Date(selectedTimeSlot.attributes.end.getTime() - 1);
-    // Given day (endDate) should be before the "next" day of selected timeSlots end.
-    const endDate = getStartOf(inclusiveEnd, 'day', timeZone, 1, 'days');
-    return !(
-      isDateSameOrAfter(localizedDay, startDate) && isDateSameOrAfter(endDate, localizedDay)
-    );
-  }
 
   render() {
     const {
@@ -397,24 +453,42 @@ class FieldDateAndTimeInput extends Component {
       dayCountAvailableForBooking,
     } = this.props;
 
+    const allTimeSlots = getAllTimeSlots(monthlyTimeSlots);
+    const monthId = monthIdString(this.state.currentMonth);
+    const currentMonthInProgress = monthlyTimeSlots[monthId]?.fetchTimeSlotsInProgress;
+    const nextMonthId = monthIdString(nextMonthFn(this.state.currentMonth, timeZone));
+    const nextMonthInProgress = monthlyTimeSlots[nextMonthId]?.fetchTimeSlotsInProgress;
+
+    if (appSettings.dev && appSettings.verbose && !currentMonthInProgress && !nextMonthInProgress) {
+      // This side effect just prints debug data into the console.log feed.
+      // Note: endMonth is exclusive end time of the range.
+      const currentMonth = this.state.currentMonth;
+      const nextMonth = nextMonthFn(currentMonth, timeZone);
+      const timeSlotsData = timeSlotsPerDate(currentMonth, nextMonth, allTimeSlots, timeZone);
+      const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
+      const lastFetchedMonth = new Date(endMonth.getTime() - 1);
+
+      console.log(
+        `Fetched months: ${monthIdString(startMonth, timeZone)} ... ${monthIdString(
+          lastFetchedMonth,
+          timeZone
+        )}`,
+        '\nTime slots for the current month:',
+        timeSlotsData
+      );
+    }
+
     const classes = classNames(rootClassName || css.root, className);
 
-    const bookingStartDate =
-      values.bookingStartDate && values.bookingStartDate.date ? values.bookingStartDate.date : null;
-    const bookingStartTime = values.bookingStartTime ? values.bookingStartTime : null;
-    const bookingEndDate =
-      values.bookingEndDate && values.bookingEndDate.date ? values.bookingEndDate.date : null;
+    const bookingStartDate = values.bookingStartDate?.date || null;
+    const bookingStartTime = values.bookingStartTime || null;
+    const bookingEndDate = values.bookingEndDate?.date || null;
 
-    const timeSlotsOnSelectedMonth = getMonthlyTimeSlots(
-      monthlyTimeSlots,
-      this.state.currentMonth,
-      timeZone
-    );
-    const timeSlotsOnSelectedDate = getTimeSlots(
-      timeSlotsOnSelectedMonth,
-      bookingStartDate,
-      timeZone
-    );
+    // Currently available monthly data
+    const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
+    const timeSlotsData = timeSlotsPerDate(startMonth, endMonth, allTimeSlots, timeZone);
+    const bookingStartIdString = stringifyDateToISO8601(bookingStartDate, timeZone);
+    const timeSlotsOnSelectedDate = timeSlotsData[bookingStartIdString]?.timeSlots || [];
 
     const availableStartTimes = getAvailableStartTimes(
       intl,
@@ -445,17 +519,11 @@ class FieldDateAndTimeInput extends Component {
       selectedTimeSlot
     );
 
-    const isDayBlocked = timeSlotsOnSelectedMonth
-      ? day =>
-          !timeSlotsOnSelectedMonth.find(timeSlot =>
-            isDayMomentInsideRange(
-              day,
-              timeSlot.attributes.start,
-              timeSlot.attributes.end,
-              timeZone
-            )
-          )
-      : () => false;
+    const isDayBlocked = day => {
+      const dateIdString = stringifyDateToISO8601(day, timeZone);
+      const timeSlotData = timeSlotsData[dateIdString];
+      return !timeSlotData?.hasAvailability;
+    };
 
     const nextBoundary = findNextBoundary(TODAY, 'hour', timeZone);
     let placeholderTime = '08:00';
