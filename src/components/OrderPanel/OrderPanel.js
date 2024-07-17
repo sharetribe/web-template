@@ -100,6 +100,13 @@ const closeOrderModal = (history, location) => {
   const searchString = `?${stringify(searchParams)}`;
   history.push(`${pathname}${searchString}`, state);
 };
+const trackSubmitApplication = () => {
+  if (typeof fbq !== 'undefined') {
+    fbq('track', 'SubmitApplication');
+  } else {
+    console.error('Meta Pixel no está definido');
+  }
+};
 
 const handleSubmit = (
   isOwnListing,
@@ -109,12 +116,20 @@ const handleSubmit = (
   history,
   location
 ) => {
-  // TODO: currently, inquiry-process does not have any form to ask more order data.
-  // We can submit without opening any inquiry/order modal.
-  return isInquiryWithoutPayment
-    ? () => onSubmit({})
-    : () => openOrderModal(isOwnListing, isClosed, history, location);
+  // Define a new function that combines the tracking and the original logic
+  const combinedSubmit = () => {
+    trackSubmitApplication(); // Llama al evento de seguimiento
+
+    if (isInquiryWithoutPayment) {
+      onSubmit({});
+    } else {
+      openOrderModal(isOwnListing, isClosed, history, location);
+    }
+  };
+
+  return combinedSubmit;
 };
+
 
 /* INE:
 const handleSubmit = (
@@ -292,6 +307,7 @@ const OrderPanel = props => {
     }
   };
   const helmetFee = listing?.attributes?.publicData.helmetFee;
+
   return (
     <div className={classes}>
       <ModalInMobile
@@ -428,6 +444,7 @@ const OrderPanel = props => {
             )}
             disabled={isOutOfStock}
           >
+
             {isBooking ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessageBooking" />
             ) : isOutOfStock ? (
