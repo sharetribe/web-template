@@ -115,19 +115,18 @@ const handleSubmit = (
   onSubmit,
   history,
   location
-) => {
-  // Define a new function that combines the tracking and the original logic
-  const combinedSubmit = () => {
-    trackSubmitApplication(); // Llama al evento de seguimiento
+) => (event) => {
+  event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario si es necesario
 
-    if (isInquiryWithoutPayment) {
-      onSubmit({});
-    } else {
-      openOrderModal(isOwnListing, isClosed, history, location);
-    }
-  };
+  // Llamar al evento de seguimiento
+  trackSubmitApplication();
 
-  return combinedSubmit;
+  // Lógica existente
+  if (isInquiryWithoutPayment) {
+    onSubmit({});
+  } else {
+    openOrderModal(isOwnListing, isClosed, history, location);
+  }
 };
 
 
@@ -196,6 +195,7 @@ const OrderPanel = props => {
     onManageDisableScrolling,
     onFetchTimeSlots,
     monthlyTimeSlots,
+    isInquiryWithoutPayment,
     history,
     location,
     intl,
@@ -436,6 +436,7 @@ const OrderPanel = props => {
           <PrimaryButton
             onClick={handleSubmit(
               isOwnListing,
+              isInquiryWithoutPayment,
               isClosed,
               showInquiryForm,
               onSubmit,
