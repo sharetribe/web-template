@@ -53,7 +53,7 @@ const SearchResultsPanel = props => {
   };
   const handleButtonClick = () => {
     if (typeof fbq !== 'undefined') {
-      fbq('track', 'BtnWspHome');
+      fbq('track', 'ContactTextArticlesGeneral');
       setTimeout(() => {
         window.open('https://wa.me/5492944232664', '_blank');
       }, 300);
