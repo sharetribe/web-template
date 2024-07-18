@@ -101,13 +101,13 @@ const closeOrderModal = (history, location) => {
   history.push(`${pathname}${searchString}`, state);
 };
 const trackSubmitApplication = () => {
+  console.log('Tracking SubmitApplication'); // Log para verificar
   if (typeof fbq !== 'undefined') {
     fbq('track', 'SubmitApplication');
   } else {
     console.error('Meta Pixel no está definido');
   }
 };
-
 const handleSubmit = (
   isOwnListing,
   isClosed,
