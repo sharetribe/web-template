@@ -433,18 +433,17 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.closedListingButtonText" />
           </div>
         ) : (
-          <PrimaryButton
-            onClick={handleSubmit(
-              isOwnListing,
-              isInquiryWithoutPayment,
-              isClosed,
-              showInquiryForm,
-              onSubmit,
-              history,
-              location
-            )}
-            disabled={isOutOfStock}
-          >
+            <PrimaryButton
+              onClick={handleSubmit(
+                props.isOwnListing,
+                props.isClosed,
+                props.showInquiryForm,
+                props.onSubmit,
+                history,
+                props.location
+              )}
+              disabled={props.isOutOfStock}
+            >
 
             {isBooking ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessageBooking" />
