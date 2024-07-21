@@ -548,7 +548,7 @@ export const formatDateIntoPartials = (date, intl, opts = {}) => {
  */
 export const parseDateFromISO8601 = (dateString, timeZone = null) => {
   return timeZone
-    ? moment.tz(dateString, timeZone).toDate()
+    ? moment.tz(dateString, 'YYYY-MM-DD', timeZone).toDate()
     : moment(dateString, 'YYYY-MM-DD').toDate();
 };
 
@@ -561,7 +561,7 @@ export const parseDateFromISO8601 = (dateString, timeZone = null) => {
  */
 export const parseDateTimeString = (dateTimeString, timeZone = null) => {
   return timeZone
-    ? moment.tz(dateTimeString, timeZone).toDate()
+    ? moment.tz(dateTimeString, 'YYYY-MM-DD HH:mm', timeZone).toDate()
     : moment(dateTimeString, 'YYYY-MM-DD HH:mm').toDate();
 };
 
