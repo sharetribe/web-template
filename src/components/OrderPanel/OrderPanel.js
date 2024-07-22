@@ -100,14 +100,7 @@ const closeOrderModal = (history, location) => {
   const searchString = `?${stringify(searchParams)}`;
   history.push(`${pathname}${searchString}`, state);
 };
-const trackSubmitApplication = () => {
-  console.log('Tracking SubmitApplication'); // Log para verificar
-  if (typeof fbq !== 'undefined') {
-    fbq('track', 'SubmitApplication');
-  } else {
-    console.error('Meta Pixel no está definido');
-  }
-};
+
 const handleSubmit = (
   isOwnListing,
   isClosed,
@@ -115,18 +108,12 @@ const handleSubmit = (
   onSubmit,
   history,
   location
-) => (event) => {
-  event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario si es necesario
-
-  // Llamar al evento de seguimiento
-  trackSubmitApplication();
-
-  // Lógica existente
-  if (isInquiryWithoutPayment) {
-    onSubmit({});
-  } else {
-    openOrderModal(isOwnListing, isClosed, history, location);
-  }
+) => {
+  // TODO: currently, inquiry-process does not have any form to ask more order data.
+  // We can submit without opening any inquiry/order modal.
+  return isInquiryWithoutPayment
+    ? () => onSubmit({})
+    : () => openOrderModal(isOwnListing, isClosed, history, location);
 };
 
 
