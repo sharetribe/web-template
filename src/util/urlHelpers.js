@@ -15,6 +15,9 @@ export const LISTING_PAGE_PARAM_TYPES = [
   LISTING_PAGE_PARAM_TYPE_EDIT,
 ];
 
+// No access page - path params:
+export const NO_ACCESS_PAGE_POST_LISTINGS = 'posting-right';
+
 // Create slug from random texts
 // From Gist thread: https://gist.github.com/mathewbyrne/1280286
 export const createSlug = str => {
