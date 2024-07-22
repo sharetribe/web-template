@@ -571,6 +571,15 @@ export const BookingDatesFormComponent = props => {
           timeZone
         );
 
+        const trackSubmitApplication = () => {
+          console.log('Tracking SubmitApplication'); // Log para verificar
+          if (typeof fbq !== 'undefined') {
+            fbq('track', 'SubmitApplication');
+          } else {
+            console.error('Meta Pixel no está definido');
+          }
+        };
+
         console.log("lineItemUnitType",lineItemUnitType);
         console.log("LINE_ITEM_DAY",LINE_ITEM_DAY);
         return (
@@ -674,7 +683,7 @@ export const BookingDatesFormComponent = props => {
             ) : null}
 
             <div className={css.submitButton}>
-              <PrimaryButton type="submit" inProgress={fetchLineItemsInProgress}>
+              <PrimaryButton type="submit" onClick={trackSubmitApplication} inProgress={fetchLineItemsInProgress}>
                 <FormattedMessage id="BookingDatesForm.requestToBook" />
               </PrimaryButton>
             </div>
