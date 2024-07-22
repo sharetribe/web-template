@@ -133,3 +133,18 @@ export const getPropsForCustomUserFieldInputs = (
     }, []) || []
   );
 };
+
+/**
+ * Check if currentUser has permission to post listings.
+ *
+ * @param {Object} currentUser API entity
+ * @returns {Boolean} true if currentUser has permission to post listings.
+ */
+export const hasPermissionToPostListings = currentUser => {
+  if (currentUser?.id && !currentUser?.effectivePermissionSet?.id) {
+    console.warn(
+      '"effectivePermissionSet" relationship is not defined or included to the fetched currentUser entity.'
+    );
+  }
+  return currentUser?.effectivePermissionSet?.attributes?.postListings === 'permission/allow';
+};
