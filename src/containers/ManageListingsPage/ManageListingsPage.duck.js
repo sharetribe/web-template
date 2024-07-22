@@ -3,6 +3,8 @@ import { storableError } from '../../util/errors';
 import { createImageVariantConfig } from '../../util/sdkLoader';
 import { parse } from '../../util/urlHelpers';
 
+import { fetchCurrentUser } from '../../ducks/user.duck';
+
 // Pagination page size might need to be dynamic on responsive page layouts
 // Current design has max 3 columns 42 is divisible by 2 and 3
 // So, there's enough cards to fill all columns on full pagination pages
@@ -267,7 +269,7 @@ export const openListing = listingId => (dispatch, getState, sdk) => {
     });
 };
 
-export const loadData = (params, search, config) => {
+export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const queryParams = parse(search);
   const page = queryParams.page || 1;
 
@@ -278,14 +280,27 @@ export const loadData = (params, search, config) => {
   } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
 
-  return queryOwnListings({
-    ...queryParams,
-    page,
-    perPage: RESULT_PAGE_SIZE,
-    include: ['images', 'currentStock'],
-    'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
-    ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
-    ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
-    'limit.images': 1,
-  });
+  return Promise.all([
+    dispatch(fetchCurrentUser()),
+    dispatch(
+      queryOwnListings({
+        ...queryParams,
+        page,
+        perPage: RESULT_PAGE_SIZE,
+        include: ['images', 'currentStock'],
+        'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
+        ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+        ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+        'limit.images': 1,
+      })
+    ),
+  ])
+    .then(response => {
+      // const currentUser = response[0]?.data?.data;
+      const ownListings = response[1]?.data?.data;
+      return ownListings;
+    })
+    .catch(e => {
+      throw e;
+    });
 };
