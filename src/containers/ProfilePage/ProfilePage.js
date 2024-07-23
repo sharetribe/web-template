@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import {
   REVIEW_TYPE_OF_PROVIDER,
   REVIEW_TYPE_OF_CUSTOMER,
@@ -14,7 +14,6 @@ import {
   propTypes,
 } from '../../util/types';
 import { ensureCurrentUser, ensureUser } from '../../util/data';
-import { withViewport } from '../../util/uiHelpers';
 import { pickCustomFieldProps } from '../../util/fieldHelpers';
 import { richText } from '../../util/richText';
 
@@ -187,7 +186,6 @@ export const MainContent = props => {
     queryListingsError,
     reviews,
     queryReviewsError,
-    viewport,
     publicData,
     metadata,
     userFieldConfig,
@@ -195,7 +193,11 @@ export const MainContent = props => {
   } = props;
 
   const hasListings = listings.length > 0;
-  const isMobileLayout = viewport.width < MAX_MOBILE_SCREEN_WIDTH;
+  const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
+  const isMobileLayout = hasMatchMedia
+    ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
+    : true;
+
   const hasBio = !!bio;
   const bioWithLinks = richText(bio, {
     linkify: true,
@@ -220,12 +222,16 @@ export const MainContent = props => {
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
       </H2>
       {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
-      <CustomUserFields
-        publicData={publicData}
-        metadata={metadata}
-        userFieldConfig={userFieldConfig}
-        intl={intl}
-      />
+
+      {displayName ? (
+        <CustomUserFields
+          publicData={publicData}
+          metadata={metadata}
+          userFieldConfig={userFieldConfig}
+          intl={intl}
+        />
+      ) : null}
+
       {hasListings ? (
         <div className={listingsContainerClasses}>
           <H4 as="h2" className={css.listingsTitle}>
@@ -251,7 +257,8 @@ export const MainContent = props => {
 
 export const ProfilePageComponent = props => {
   const config = useConfiguration();
-  const { scrollingDisabled, currentUser, userShowError, user, intl, ...rest } = props;
+  const intl = useIntl();
+  const { scrollingDisabled, currentUser, userShowError, user, ...rest } = props;
   const ensuredCurrentUser = ensureCurrentUser(currentUser);
   const profileUser = ensureUser(user);
   const isCurrentUser =
@@ -316,15 +323,6 @@ ProfilePageComponent.propTypes = {
   listings: arrayOf(propTypes.listing).isRequired,
   reviews: arrayOf(propTypes.review),
   queryReviewsError: propTypes.error,
-
-  // form withViewport
-  viewport: shape({
-    width: number.isRequired,
-    height: number.isRequired,
-  }).isRequired,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -352,10 +350,6 @@ const mapStateToProps = state => {
   };
 };
 
-const ProfilePage = compose(
-  connect(mapStateToProps),
-  withViewport,
-  injectIntl
-)(ProfilePageComponent);
+const ProfilePage = compose(connect(mapStateToProps))(ProfilePageComponent);
 
 export default ProfilePage;
