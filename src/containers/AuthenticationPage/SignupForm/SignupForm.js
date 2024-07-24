@@ -91,7 +91,14 @@ const SignupFormComponent = props => (
       const classes = classNames(rootClassName || css.root, className);
       const submitInProgress = inProgress;
       const submitDisabled = invalid || submitInProgress;
-
+      const handleFormSubmit = () => {
+        console.log('CompleteRegistration'); // Log para verificar
+        if (typeof fbq !== 'undefined') {
+          fbq('track', 'CompleteRegistration');
+        } else {
+          console.error('Meta Pixel no está definido');
+        }
+      };
       return (
         <Form className={classes} onSubmit={handleSubmit}>
           <div>
@@ -172,7 +179,7 @@ const SignupFormComponent = props => (
 
           <div className={css.bottomWrapper}>
             {termsAndConditions}
-            <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+            <PrimaryButton onClick={handleFormSubmit} type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
               <FormattedMessage id="SignupForm.signUp" />
             </PrimaryButton>
           </div>
