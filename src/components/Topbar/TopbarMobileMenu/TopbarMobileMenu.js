@@ -165,6 +165,14 @@ const TopbarMobileMenu = props => {
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
     return currentPage === page || isAccountSettingsPage ? css.currentPage : null;
   };
+  const handleCreateListingClick = () => {
+    console.log('PublicArticleBtn1'); // Log para verificar
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'PublicArticleBtn1');
+    } else {
+      console.error('Meta Pixel no está definido');
+    }
+  };
   return (
     <div className={css.root}>
       <AvatarLarge className={css.avatar} user={currentUser} />
@@ -213,9 +221,11 @@ const TopbarMobileMenu = props => {
         <div className={css.spacer} />
       </div>
       <div className={css.footer}>
+      <button onClick={handleCreateListingClick} className={css.footer} style={{ border: 'none' }}>
         <NamedLink className={css.createNewListingLink} name="NewListingPage">
           <FormattedMessage id="TopbarMobileMenu.newListingLink" />
         </NamedLink>
+      </button>
       </div>
     </div>
   );
