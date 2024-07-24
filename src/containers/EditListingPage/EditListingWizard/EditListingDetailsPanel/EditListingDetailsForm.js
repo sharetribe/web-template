@@ -195,6 +195,15 @@ const EditListingDetailsFormComponent = props => (
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
       const submitDisabled = invalid || disabled || submitInProgress;
+      
+      const handleCreateListingClick = () => {
+        console.log('PublicArticleBtn2'); // Log para verificar
+        if (typeof fbq !== 'undefined') {
+          fbq('track', 'PublicArticleBtn2');
+        } else {
+          console.error('Meta Pixel no está definido');
+        }
+      };
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
@@ -248,6 +257,7 @@ const EditListingDetailsFormComponent = props => (
           />
 
           <Button
+            onClick={handleCreateListingClick}
             className={css.submitButton}
             type="submit"
             inProgress={submitInProgress}
