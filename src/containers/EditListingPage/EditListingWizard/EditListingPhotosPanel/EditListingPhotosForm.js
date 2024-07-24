@@ -176,6 +176,14 @@ export const EditListingPhotosFormComponent = props => {
         const imagesError = touched.images && errors?.images && errors.images[ARRAY_ERROR];
 
         const classes = classNames(css.root, className);
+        const handleCreateListingClick = () => {
+          console.log('PublicArticleBtn3'); // Log para verificar
+          if (typeof fbq !== 'undefined') {
+            fbq('track', 'PublicArticleBtn3');
+          } else {
+            console.error('Meta Pixel no está definido');
+          }
+        };
 
         return (
           <Form
@@ -259,6 +267,7 @@ export const EditListingPhotosFormComponent = props => {
             <ShowListingsError error={showListingsError} />
 
             <Button
+              onClick={handleCreateListingClick}
               className={css.submitButton}
               type="submit"
               inProgress={submitInProgress}
