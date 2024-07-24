@@ -158,6 +158,16 @@ const TopbarDesktop = props => {
       console.error('Meta Pixel no está definido');
     }
   };
+
+  const handleCreateListingClick = () => {
+    console.log('PublicArticleBtn1'); // Log para verificar
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'PublicArticleBtn1');
+    } else {
+      console.error('Meta Pixel no está definido');
+    }
+  };
+
   return (
     <nav className={classes}>
       <LinkedLogo
@@ -175,11 +185,13 @@ const TopbarDesktop = props => {
           />
         </button>
       </div>
-      <NamedLink className={css.createListingLink} name="NewListingPage">
-        <span className={css.createListing}>
-          <FormattedMessage id="TopbarDesktop.createListing" />
-        </span>
-      </NamedLink>
+      <button onClick={handleCreateListingClick} style={{ border: 'none' }}>
+        <NamedLink onClick={handleCreateListingClick} className={css.createListingLink} name="NewListingPage">
+          <span className={css.createListing}>
+            <FormattedMessage id="TopbarDesktop.createListing" />
+          </span>
+        </NamedLink>
+      </button>
       {inboxLink}
       {profileMenu}
 
