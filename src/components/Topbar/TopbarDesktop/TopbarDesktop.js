@@ -185,11 +185,13 @@ const TopbarDesktop = props => {
           />
         </button>
       </div>
-      <NamedLink onClick={handleCreateListingClick} className={css.createListingLink} name="NewListingPage">
-        <span className={css.createListing}>
-          <FormattedMessage id="TopbarDesktop.createListing" />
-        </span>
-      </NamedLink>
+      <button onClick={handleCreateListingClick} style={{ border: 'none' }}>
+        <NamedLink onClick={handleCreateListingClick} className={css.createListingLink} name="NewListingPage">
+          <span className={css.createListing}>
+            <FormattedMessage id="TopbarDesktop.createListing" />
+          </span>
+        </NamedLink>
+      </button>
       {inboxLink}
       {profileMenu}
 
