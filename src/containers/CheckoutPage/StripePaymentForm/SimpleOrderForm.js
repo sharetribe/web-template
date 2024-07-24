@@ -145,7 +145,14 @@ class SimpleOrderForm extends Component {
     );
 
     const isBookingYesNo = isBooking ? 'yes' : 'no';
-
+    const trackSubmitApplication = () => {
+      console.log('ConfirmApplication'); // Log para verificar
+      if (typeof fbq !== 'undefined') {
+        fbq('track', 'ConfirmApplication');
+      } else {
+        console.error('Meta Pixel no está definido');
+      }
+    };
     return (
       <Form
         className={classes}
@@ -188,6 +195,7 @@ class SimpleOrderForm extends Component {
         ) : null}*/}
         <div className={css.submitContainer}>
           <PrimaryButton
+            onClick={trackSubmitApplication}
             className={css.submitButton}
             type="submit"
             inProgress={submitInProgress}
