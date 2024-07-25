@@ -18,6 +18,7 @@ import {
 } from '../../util/urlHelpers';
 
 import { LISTING_STATE_DRAFT, LISTING_STATE_PENDING_APPROVAL, propTypes } from '../../util/types';
+import { isErrorNoPermissionToPostListings } from '../../util/errors';
 import { ensureOwnListing } from '../../util/data';
 import { hasPermissionToPostListings } from '../../util/userHelpers';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -127,7 +128,9 @@ export const EditListingPageComponent = props => {
   const { state: currentListingState } = currentListing.attributes;
 
   const hasPostingRights = hasPermissionToPostListings(currentUser);
-  const shouldRedirectNoPostingRights = isNewListingFlow && !!currentUser?.id && !hasPostingRights;
+  const hasPostingRightsError = isErrorNoPermissionToPostListings(page.publishListingError?.error);
+  const shouldRedirectNoPostingRights =
+    !!currentUser?.id && ((isNewListingFlow && !hasPostingRights) || hasPostingRightsError);
 
   const isPastDraft = currentListingState && currentListingState !== LISTING_STATE_DRAFT;
   const shouldRedirectAfterPosting = isNewListingFlow && listingId && isPastDraft;
