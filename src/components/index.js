@@ -105,6 +105,8 @@ export { default as StripeBankAccountTokenInputField } from './StripeBankAccount
 export const FieldDateInput = loadable(() => import(/* webpackChunkName: "FieldDateInput" */ './FieldDateInput/FieldDateInput'));
 export const FieldDateRangeController = loadable(() => import(/* webpackChunkName: "FieldDateRangeController" */ './FieldDateRangeController/FieldDateRangeController'));
 export const FieldDateRangeInput = loadable(() => import(/* webpackChunkName: "FieldDateRangeInput" */ './FieldDateRangeInput/FieldDateRangeInput'));
+export { default as FieldDateRangePicker } from './DatePicker/FieldDateRangePicker/FieldDateRangePicker';
+export { default as FieldSingleDatePicker } from './DatePicker/FieldSingleDatePicker/FieldSingleDatePicker';
 
 // Tab navigation
 export { default as TabNav } from './TabNav/TabNav';
