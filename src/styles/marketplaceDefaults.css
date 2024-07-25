@@ -149,6 +149,24 @@
   /* ================ Filters ================ */
   --marketplaceButtonSmallDesktopPadding: 9px 16px 9px 16px;
 
+  /* ================ DatePicker ================ */
+  --datepickerFgColor: var(--colorWhite);
+  --datepickerBgColor: var(--marketplaceColor);
+  --datepickerBorderColor: var(--colorGrey50);
+  --datepickerDisabledFgColor: var(--marketplaceColorDark);
+  --datepickerDisabledTextDeco: unset;
+  --datepickerHoveredFgColor: inherit;
+  --datepickerHoveredBgColor: rgba(255, 255, 255, 0.2);
+  --datepickerHeaderFgColor: var(--colorWhite);
+  --datepickerHeaderFgColorDisabled: var(--colorGrey100);
+  --datepickerHeaderArrowColor: var(--colorWhite);
+  --datepickerDateOutline: white solid 1px;
+  --datepickerButtonOutlineColor: var(--colorGrey50);
+  --datepickerSelectedFgColor: var(--colorWhite);
+  --datepickerSelectedBgColor: var(--colorSuccess);
+  --datepickerSelectedHoveredFgColor: inherit;
+  --datepickerSelectedHoveredBgColor: rgba(255, 255, 255, 0.2);
+
   /* ================ DateInput, DateRangeInput, DateRangeController ================ */
   --ReactDates_selectionHeight: 36px;
   --ReactDates_hoveredOverlayColor: rgba(255, 255, 255, 0.2);
