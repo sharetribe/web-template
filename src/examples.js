@@ -18,6 +18,7 @@ import * as Avatar from './components/Avatar/Avatar.example';
 import * as Button from './components/Button/Button.example';
 import * as ExpandingTextarea from './components/ExpandingTextarea/ExpandingTextarea.example';
 import * as EstimatedCustomerBreakdownMaybe from './components/OrderPanel/EstimatedCustomerBreakdownMaybe.example';
+import * as DatePicker from './components/DatePicker/DatePickers/DatePicker.example';
 import * as FieldBoolean from './components/FieldBoolean/FieldBoolean.example';
 import * as FieldCheckbox from './components/FieldCheckbox/FieldCheckbox.example';
 import * as FieldCheckboxGroup from './components/FieldCheckboxGroup/FieldCheckboxGroup.example';
@@ -138,6 +139,7 @@ export {
   Colors,
   ConfirmSignupForm,
   CMSSections,
+  DatePicker,
   EditListingAvailabilityPlanForm,
   EditListingAvailabilityExceptionForm,
   EditListingDetailsForm,
