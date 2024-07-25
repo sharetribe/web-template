@@ -25,6 +25,7 @@ export const CLOSE_LISTING_SUCCESS = 'app/ManageListingsPage/CLOSE_LISTING_SUCCE
 export const CLOSE_LISTING_ERROR = 'app/ManageListingsPage/CLOSE_LISTING_ERROR';
 
 export const ADD_OWN_ENTITIES = 'app/ManageListingsPage/ADD_OWN_ENTITIES';
+export const CLEAR_OPEN_LISTING_ERROR = 'app/ManageListingsPage/CLEAR_OPEN_LISTING_ERROR';
 
 // ================ Reducer ================ //
 
@@ -67,6 +68,13 @@ const updateListingAttributes = (state, listingEntity) => {
 const manageListingsPageReducer = (state = initialState, action = {}) => {
   const { type, payload } = action;
   switch (type) {
+    case CLEAR_OPEN_LISTING_ERROR:
+      return {
+        ...state,
+        openingListing: null,
+        openingListingError: null,
+      };
+
     case FETCH_LISTINGS_REQUEST:
       return {
         ...state,
@@ -164,6 +172,10 @@ export const getOwnListingsById = (state, listingIds) => {
 };
 
 // ================ Action creators ================ //
+
+export const clearOpenListingError = () => ({
+  type: CLEAR_OPEN_LISTING_ERROR,
+});
 
 // This works the same way as addMarketplaceEntities,
 // but we don't want to mix own listings with searched listings
@@ -272,6 +284,7 @@ export const openListing = listingId => (dispatch, getState, sdk) => {
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const queryParams = parse(search);
   const page = queryParams.page || 1;
+  dispatch(clearOpenListingError());
 
   const {
     aspectWidth = 1,

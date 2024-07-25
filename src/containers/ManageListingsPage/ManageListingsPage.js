@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { arrayOf, bool, func, object, shape, string } from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'redux';
@@ -10,6 +10,7 @@ import { pathByRouteName } from '../../util/routes';
 import { hasPermissionToPostListings } from '../../util/userHelpers';
 import { NO_ACCESS_PAGE_POST_LISTINGS } from '../../util/urlHelpers';
 import { propTypes } from '../../util/types';
+import { isErrorNoPermissionToPostListings } from '../../util/errors';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 
 import {
@@ -88,6 +89,15 @@ export const ManageListingsPageComponent = props => {
     queryParams,
     scrollingDisabled,
   } = props;
+
+  useEffect(() => {
+    if (isErrorNoPermissionToPostListings(openingListingError?.error)) {
+      const noAccessPagePath = pathByRouteName('NoAccessPage', routeConfiguration, {
+        missingAccessRight: NO_ACCESS_PAGE_POST_LISTINGS,
+      });
+      history.push(noAccessPagePath);
+    }
+  }, [openingListingError]);
 
   const onToggleMenu = listing => {
     setListingMenuOpen(listing);
