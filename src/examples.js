@@ -23,6 +23,7 @@ import * as FieldBoolean from './components/FieldBoolean/FieldBoolean.example';
 import * as FieldCheckbox from './components/FieldCheckbox/FieldCheckbox.example';
 import * as FieldCheckboxGroup from './components/FieldCheckboxGroup/FieldCheckboxGroup.example';
 import * as FieldCurrencyInput from './components/FieldCurrencyInput/FieldCurrencyInput.example';
+import * as FieldSingleDatePicker from './components/DatePicker/FieldSingleDatePicker/FieldSingleDatePicker.example';
 import * as FieldDateInput from './components/FieldDateInput/FieldDateInput.example';
 import * as FieldDateRangeController from './components/FieldDateRangeController/FieldDateRangeController.example';
 import * as FieldDateRangeInput from './components/FieldDateRangeInput/FieldDateRangeInput.example';
@@ -166,6 +167,7 @@ export {
   FieldReviewRating,
   FieldSelect,
   FieldSelectTree,
+  FieldSingleDatePicker,
   FieldTextInput,
   FieldTimeZoneSelect,
   FilterForm,
