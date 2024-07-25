@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { func, number, object, string } from 'prop-types';
 import classNames from 'classnames';
 
@@ -296,336 +296,395 @@ const Prev = props => {
   return isDateSameOrAfter(prevMonthDate, currentMonthDate) ? <PrevIcon /> : null;
 };
 
+const fetchMonthData = (
+  date,
+  listingId,
+  dayCountAvailableForBooking,
+  timeZone,
+  onFetchTimeSlots
+) => {
+  const endOfRangeDate = endOfRange(TODAY, dayCountAvailableForBooking, timeZone);
+
+  // Don't fetch timeSlots for past months or too far in the future
+  if (isInRange(date, TODAY, endOfRangeDate)) {
+    // Use "today", if the first day of given month is in the past
+    const start = isDateSameOrAfter(TODAY, date) ? TODAY : date;
+
+    // Use endOfRangeDate, if the first day of the next month is too far in the future
+    const nextMonthDate = nextMonthFn(date, timeZone);
+    const end = isDateSameOrAfter(nextMonthDate, endOfRangeDate)
+      ? getStartOf(endOfRangeDate, 'day', timeZone)
+      : nextMonthDate;
+
+    // Fetch time slots for given time range
+    onFetchTimeSlots(listingId, start, end, timeZone);
+  }
+};
+
+const handleMonthClick = (
+  currentMonth,
+  monthlyTimeSlots,
+  fetchMonthData,
+  dayCountAvailableForBooking,
+  timeZone,
+  listingId,
+  onFetchTimeSlots,
+  setCurrentMonth
+) => monthFn => {
+  // Callback function after month has been updated.
+  // react-dates component has next and previous months ready (but inivisible).
+  // we try to populate those invisible months before user advances there.
+  fetchMonthData(
+    monthFn(currentMonth, timeZone, 2),
+    listingId,
+    dayCountAvailableForBooking,
+    timeZone,
+    onFetchTimeSlots
+  );
+
+  // If previous fetch for month data failed, try again.
+  const monthId = monthIdString(currentMonth, timeZone);
+  const currentMonthData = monthlyTimeSlots[monthId];
+  if (currentMonthData && currentMonthData.fetchTimeSlotsError) {
+    fetchMonthData(
+      currentMonth,
+      listingId,
+      dayCountAvailableForBooking,
+      timeZone,
+      onFetchTimeSlots
+    );
+  }
+  // TODO
+  setCurrentMonth(monthFn(currentMonth, timeZone, 1));
+};
+
+const onBookingStartDateChange = (props, setCurrentMonth) => value => {
+  const { monthlyTimeSlots, timeZone, intl, form: formApi } = props;
+  if (!value || !value.date) {
+    formApi.batch(() => {
+      formApi.change('bookingStartTime', null);
+      formApi.change('bookingEndDate', { date: null });
+      formApi.change('bookingEndTime', null);
+    });
+    // Reset the currentMonth too if bookingStartDate is cleared
+    setCurrentMonth(getStartOf(TODAY, 'month', timeZone));
+
+    return;
+  }
+
+  // This callback function (onBookingStartDateChange) is called from react-dates component.
+  // It gets raw value as a param - browser's local time instead of time in listing's timezone.
+  const startDate = timeOfDayFromLocalToTimeZone(value.date, timeZone);
+  const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
+
+  const { startTime, endDate, endTime } = getAllTimeValues(
+    intl,
+    timeZone,
+    timeSlotsOnSelectedDate,
+    startDate
+  );
+
+  formApi.batch(() => {
+    formApi.change('bookingStartTime', startTime);
+    formApi.change('bookingEndDate', { date: endDate });
+    formApi.change('bookingEndTime', endTime);
+  });
+};
+
+const onBookingStartTimeChange = props => value => {
+  const { monthlyTimeSlots, timeZone, intl, form: formApi, values } = props;
+  const startDate = values.bookingStartDate.date;
+  const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
+
+  const { endDate, endTime } = getAllTimeValues(
+    intl,
+    timeZone,
+    timeSlotsOnSelectedDate,
+    startDate,
+    value
+  );
+
+  formApi.batch(() => {
+    formApi.change('bookingEndDate', { date: endDate });
+    formApi.change('bookingEndTime', endTime);
+  });
+};
+
+// // Note: Not in use atm.
+// const onBookingEndDateChange = props => value => {
+//   const { monthlyTimeSlots, timeZone, intl, form: formApi, values } = props;
+//   if (!value || !value.date) {
+//     formApi.change('bookingEndTime', null);
+//     return;
+//   }
+
+//   // This callback function (onBookingStartDateChange) is called from react-dates component.
+//   // It gets raw value as a param - browser's local time instead of time in listing's timezone.
+//   const endDate = timeOfDayFromLocalToTimeZone(value.date, timeZone);
+
+//   const { bookingStartDate, bookingStartTime } = values;
+//   const startDate = bookingStartDate.date;
+//   const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
+
+//   const { endTime } = getAllTimeValues(
+//     intl,
+//     timeZone,
+//     timeSlotsOnSelectedDate,
+//     startDate,
+//     bookingStartTime,
+//     endDate
+//   );
+
+//   formApi.change('bookingEndTime', endTime);
+// };
+
 /////////////////////////////////////
 // FieldDateAndTimeInput component //
 /////////////////////////////////////
-class FieldDateAndTimeInput extends Component {
-  constructor(props) {
-    super(props);
+const FieldDateAndTimeInput = props => {
+  const {
+    rootClassName,
+    className,
+    formId,
+    startDateInputProps,
+    // endDateInputProps,
+    values,
+    listingId,
+    onFetchTimeSlots,
+    monthlyTimeSlots,
+    onMonthChanged,
+    timeZone,
+    intl,
+    dayCountAvailableForBooking,
+  } = props;
 
-    this.state = {
-      currentMonth: getStartOf(TODAY, 'month', props.timeZone),
-    };
+  const [currentMonth, setCurrentMonth] = useState(getStartOf(TODAY, 'month', timeZone));
 
-    this.fetchMonthData = this.fetchMonthData.bind(this);
-    this.onMonthClick = this.onMonthClick.bind(this);
-    this.onBookingStartDateChange = this.onBookingStartDateChange.bind(this);
-    this.onBookingStartTimeChange = this.onBookingStartTimeChange.bind(this);
-    this.onBookingEndDateChange = this.onBookingEndDateChange.bind(this);
-  }
+  // onMonthClick(monthFn) {
+  //   const { onMonthChanged, timeZone } = this.props;
 
-  fetchMonthData(date) {
-    const { listingId, timeZone, onFetchTimeSlots, dayCountAvailableForBooking } = this.props;
-    const endOfRangeDate = endOfRange(TODAY, dayCountAvailableForBooking, timeZone);
+  //   this.setState(
+  //     prevState => ({ currentMonth: monthFn(prevState.currentMonth, timeZone) }),
+  //     () => {
+  //       // Callback function after month has been updated.
+  //       // react-dates component has next and previous months ready (but inivisible).
+  //       // we try to populate those invisible months before user advances there.
+  //       this.fetchMonthData(monthFn(this.state.currentMonth, timeZone));
 
-    // Don't fetch timeSlots for past months or too far in the future
-    if (isInRange(date, TODAY, endOfRangeDate)) {
-      // Use "today", if the first day of given month is in the past
-      const start = isDateSameOrAfter(TODAY, date) ? TODAY : date;
+  //       // If previous fetch for month data failed, try again.
+  //       const monthId = monthIdString(this.state.currentMonth, timeZone);
+  //       const currentMonthData = this.props.monthlyTimeSlots[monthId];
+  //       if (currentMonthData && currentMonthData.fetchTimeSlotsError) {
+  //         this.fetchMonthData(this.state.currentMonth);
+  //       }
 
-      // Use endOfRangeDate, if the first day of the next month is too far in the future
-      const nextMonthDate = nextMonthFn(date, timeZone);
-      const end = isDateSameOrAfter(nextMonthDate, endOfRangeDate)
-        ? getStartOf(endOfRangeDate, 'day', timeZone)
-        : nextMonthDate;
+  //       // Call onMonthChanged function if it has been passed in among props.
+  //       if (onMonthChanged) {
+  //         onMonthChanged(monthId);
+  //       }
+  //     }
+  //   );
+  // }
 
-      // Fetch time slots for given time range
-      onFetchTimeSlots(listingId, start, end, timeZone);
+  const allTimeSlots = getAllTimeSlots(monthlyTimeSlots);
+  const monthId = monthIdString(currentMonth);
+  const currentMonthInProgress = monthlyTimeSlots[monthId]?.fetchTimeSlotsInProgress;
+  const nextMonthId = monthIdString(nextMonthFn(currentMonth, timeZone));
+  const nextMonthInProgress = monthlyTimeSlots[nextMonthId]?.fetchTimeSlotsInProgress;
+
+  useEffect(() => {
+    // Call onMonthChanged function if it has been passed in among props.
+    if (onMonthChanged) {
+      onMonthChanged(monthId);
     }
-  }
+  }, [currentMonth]);
 
-  onMonthClick(monthFn) {
-    const { onMonthChanged, timeZone } = this.props;
-
-    this.setState(
-      prevState => ({ currentMonth: monthFn(prevState.currentMonth, timeZone) }),
-      () => {
-        // Callback function after month has been updated.
-        // react-dates component has next and previous months ready (but inivisible).
-        // we try to populate those invisible months before user advances there.
-        this.fetchMonthData(monthFn(this.state.currentMonth, timeZone));
-
-        // If previous fetch for month data failed, try again.
-        const monthId = monthIdString(this.state.currentMonth, timeZone);
-        const currentMonthData = this.props.monthlyTimeSlots[monthId];
-        if (currentMonthData && currentMonthData.fetchTimeSlotsError) {
-          this.fetchMonthData(this.state.currentMonth);
-        }
-
-        // Call onMonthChanged function if it has been passed in among props.
-        if (onMonthChanged) {
-          onMonthChanged(monthId);
-        }
-      }
-    );
-  }
-
-  onBookingStartDateChange = value => {
-    const { monthlyTimeSlots, timeZone, intl, form } = this.props;
-    if (!value || !value.date) {
-      form.batch(() => {
-        form.change('bookingStartTime', null);
-        form.change('bookingEndDate', { date: null });
-        form.change('bookingEndTime', null);
-      });
-      // Reset the currentMonth too if bookingStartDate is cleared
-      this.setState({ currentMonth: getStartOf(TODAY, 'month', timeZone) });
-
-      return;
-    }
-
-    // This callback function (onBookingStartDateChange) is called from react-dates component.
-    // It gets raw value as a param - browser's local time instead of time in listing's timezone.
-    const startDate = timeOfDayFromLocalToTimeZone(value.date, timeZone);
-    const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
-
-    const { startTime, endDate, endTime } = getAllTimeValues(
-      intl,
-      timeZone,
-      timeSlotsOnSelectedDate,
-      startDate
-    );
-
-    form.batch(() => {
-      form.change('bookingStartTime', startTime);
-      form.change('bookingEndDate', { date: endDate });
-      form.change('bookingEndTime', endTime);
-    });
-  };
-
-  onBookingStartTimeChange = value => {
-    const { monthlyTimeSlots, timeZone, intl, form, values } = this.props;
-    const startDate = values.bookingStartDate.date;
-    const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
-
-    const { endDate, endTime } = getAllTimeValues(
-      intl,
-      timeZone,
-      timeSlotsOnSelectedDate,
-      startDate,
-      value
-    );
-
-    form.batch(() => {
-      form.change('bookingEndDate', { date: endDate });
-      form.change('bookingEndTime', endTime);
-    });
-  };
-
-  onBookingEndDateChange = value => {
-    const { monthlyTimeSlots, timeZone, intl, form, values } = this.props;
-    if (!value || !value.date) {
-      form.change('bookingEndTime', null);
-      return;
-    }
-
-    // This callback function (onBookingStartDateChange) is called from react-dates component.
-    // It gets raw value as a param - browser's local time instead of time in listing's timezone.
-    const endDate = timeOfDayFromLocalToTimeZone(value.date, timeZone);
-
-    const { bookingStartDate, bookingStartTime } = values;
-    const startDate = bookingStartDate.date;
-    const timeSlotsOnSelectedDate = getTimeSlotsOnDate(monthlyTimeSlots, startDate, timeZone);
-
-    const { endTime } = getAllTimeValues(
-      intl,
-      timeZone,
-      timeSlotsOnSelectedDate,
-      startDate,
-      bookingStartTime,
-      endDate
-    );
-
-    form.change('bookingEndTime', endTime);
-  };
-
-  render() {
-    const {
-      rootClassName,
-      className,
-      formId,
-      startDateInputProps,
-      // endDateInputProps,
-      values,
-      monthlyTimeSlots,
-      timeZone,
-      intl,
-      dayCountAvailableForBooking,
-    } = this.props;
-
-    const allTimeSlots = getAllTimeSlots(monthlyTimeSlots);
-    const monthId = monthIdString(this.state.currentMonth);
-    const currentMonthInProgress = monthlyTimeSlots[monthId]?.fetchTimeSlotsInProgress;
-    const nextMonthId = monthIdString(nextMonthFn(this.state.currentMonth, timeZone));
-    const nextMonthInProgress = monthlyTimeSlots[nextMonthId]?.fetchTimeSlotsInProgress;
-
-    if (appSettings.dev && appSettings.verbose && !currentMonthInProgress && !nextMonthInProgress) {
+  useEffect(() => {
+    // Log time slots marked for each day for debugging
+    if (
+      appSettings.dev &&
+      appSettings.verbose &&
+      !currentMonthInProgress &&
+      !nextMonthInProgress &&
+      monthlyTimeSlots &&
+      timeZone
+    ) {
       // This side effect just prints debug data into the console.log feed.
       // Note: endMonth is exclusive end time of the range.
-      const currentMonth = this.state.currentMonth;
-      const nextMonth = nextMonthFn(currentMonth, timeZone);
-      const timeSlotsData = timeSlotsPerDate(currentMonth, nextMonth, allTimeSlots, timeZone);
-      const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
+      const tz = timeZone;
+      const nextMonth = nextMonthFn(currentMonth, tz);
+      const timeSlotsData = timeSlotsPerDate(currentMonth, nextMonth, allTimeSlots, tz);
+      const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, tz);
       const lastFetchedMonth = new Date(endMonth.getTime() - 1);
 
       console.log(
-        `Fetched months: ${monthIdString(startMonth, timeZone)} ... ${monthIdString(
+        `Fetched months: ${monthIdString(startMonth, tz)} ... ${monthIdString(
           lastFetchedMonth,
-          timeZone
+          tz
         )}`,
         '\nTime slots for the current month:',
         timeSlotsData
       );
     }
+  }, [currentMonth, currentMonthInProgress, nextMonthInProgress, monthlyTimeSlots, timeZone]);
 
-    const classes = classNames(rootClassName || css.root, className);
+  const classes = classNames(rootClassName || css.root, className);
 
-    const bookingStartDate = values.bookingStartDate?.date || null;
-    const bookingStartTime = values.bookingStartTime || null;
-    const bookingEndDate = values.bookingEndDate?.date || null;
+  const bookingStartDate = values.bookingStartDate?.date || null;
+  const bookingStartTime = values.bookingStartTime || null;
+  const bookingEndDate = values.bookingEndDate?.date || null;
 
-    // Currently available monthly data
-    const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
-    const timeSlotsData = timeSlotsPerDate(startMonth, endMonth, allTimeSlots, timeZone);
-    const bookingStartIdString = stringifyDateToISO8601(bookingStartDate, timeZone);
-    const timeSlotsOnSelectedDate = timeSlotsData[bookingStartIdString]?.timeSlots || [];
+  // Currently available monthly data
+  const [startMonth, endMonth] = getMonthlyFetchRange(monthlyTimeSlots, timeZone);
+  const timeSlotsData = timeSlotsPerDate(startMonth, endMonth, allTimeSlots, timeZone);
+  const bookingStartIdString = stringifyDateToISO8601(bookingStartDate, timeZone);
+  const timeSlotsOnSelectedDate = timeSlotsData[bookingStartIdString]?.timeSlots || [];
 
-    const availableStartTimes = getAvailableStartTimes(
-      intl,
-      timeZone,
-      bookingStartDate,
-      timeSlotsOnSelectedDate
-    );
+  const availableStartTimes = getAvailableStartTimes(
+    intl,
+    timeZone,
+    bookingStartDate,
+    timeSlotsOnSelectedDate
+  );
 
-    const firstAvailableStartTime =
-      availableStartTimes.length > 0 && availableStartTimes[0] && availableStartTimes[0].timestamp
-        ? availableStartTimes[0].timestamp
-        : null;
+  const firstAvailableStartTime =
+    availableStartTimes.length > 0 && availableStartTimes[0] && availableStartTimes[0].timestamp
+      ? availableStartTimes[0].timestamp
+      : null;
 
-    const { startTime, endDate, selectedTimeSlot } = getAllTimeValues(
-      intl,
-      timeZone,
-      timeSlotsOnSelectedDate,
-      bookingStartDate,
-      bookingStartTime || firstAvailableStartTime,
-      bookingEndDate || bookingStartDate
-    );
+  const { startTime, endDate, selectedTimeSlot } = getAllTimeValues(
+    intl,
+    timeZone,
+    timeSlotsOnSelectedDate,
+    bookingStartDate,
+    bookingStartTime || firstAvailableStartTime,
+    bookingEndDate || bookingStartDate
+  );
 
-    const availableEndTimes = getAvailableEndTimes(
-      intl,
-      timeZone,
-      bookingStartTime || startTime,
-      bookingEndDate || endDate,
-      selectedTimeSlot
-    );
+  const availableEndTimes = getAvailableEndTimes(
+    intl,
+    timeZone,
+    bookingStartTime || startTime,
+    bookingEndDate || endDate,
+    selectedTimeSlot
+  );
 
-    const isDayBlocked = day => {
-      const dateIdString = stringifyDateToISO8601(day, timeZone);
-      const timeSlotData = timeSlotsData[dateIdString];
-      return !timeSlotData?.hasAvailability;
-    };
+  const onMonthClick = handleMonthClick(
+    currentMonth,
+    monthlyTimeSlots,
+    fetchMonthData,
+    dayCountAvailableForBooking,
+    timeZone,
+    listingId,
+    onFetchTimeSlots,
+    setCurrentMonth
+  );
 
-    const nextBoundary = findNextBoundary(TODAY, 'hour', timeZone);
-    let placeholderTime = '08:00';
-    try {
-      placeholderTime = formatDateIntoPartials(nextBoundary, intl, { timeZone })?.time;
-    } catch (error) {
-      // No need to handle error
-    }
+  const isDayBlocked = day => {
+    const dateIdString = stringifyDateToISO8601(day, timeZone);
+    const timeSlotData = timeSlotsData[dateIdString];
+    return !timeSlotData?.hasAvailability;
+  };
 
-    const startOfToday = getStartOf(TODAY, 'day', timeZone);
-    const bookingEndTimeAvailable = bookingStartDate && (bookingStartTime || startTime);
-    return (
-      <div className={classes}>
-        <div className={css.formRow}>
-          <div className={classNames(css.field, css.startDate)}>
-            <FieldDateInput
-              className={css.fieldDateInput}
-              name="bookingStartDate"
-              id={formId ? `${formId}.bookingStartDate` : 'bookingStartDate'}
-              label={startDateInputProps.label}
-              placeholderText={startDateInputProps.placeholderText}
-              format={v =>
-                v && v.date ? { date: timeOfDayFromTimeZoneToLocal(v.date, timeZone) } : v
-              }
-              parse={v =>
-                v && v.date ? { date: timeOfDayFromLocalToTimeZone(v.date, timeZone) } : v
-              }
-              initialVisibleMonth={initialVisibleMonth(bookingStartDate || startOfToday, timeZone)}
-              isDayBlocked={isDayBlocked}
-              onChange={this.onBookingStartDateChange}
-              onPrevMonthClick={() => this.onMonthClick(prevMonthFn)}
-              onNextMonthClick={() => this.onMonthClick(nextMonthFn)}
-              navNext={
-                <Next
-                  currentMonth={this.state.currentMonth}
-                  timeZone={timeZone}
-                  dayCountAvailableForBooking={dayCountAvailableForBooking}
-                />
-              }
-              navPrev={<Prev currentMonth={this.state.currentMonth} timeZone={timeZone} />}
-              useMobileMargins
-              validate={bookingDateRequired(
-                intl.formatMessage({ id: 'BookingTimeForm.requiredDate' })
-              )}
-              onClose={event =>
-                this.setState({
-                  currentMonth: getStartOf(event?.date ?? TODAY, 'month', this.props.timeZone),
-                })
-              }
-            />
-          </div>
-        </div>
-        <div className={css.formRow}>
-          <div className={css.field}>
-            <FieldSelect
-              name="bookingStartTime"
-              id={formId ? `${formId}.bookingStartTime` : 'bookingStartTime'}
-              className={bookingStartDate ? css.fieldSelect : css.fieldSelectDisabled}
-              selectClassName={bookingStartDate ? css.select : css.selectDisabled}
-              label={intl.formatMessage({ id: 'FieldDateAndTimeInput.startTime' })}
-              disabled={!bookingStartDate}
-              onChange={this.onBookingStartTimeChange}
-            >
-              {bookingStartDate ? (
-                availableStartTimes.map(p => (
-                  <option key={p.timeOfDay} value={p.timestamp}>
-                    {p.timeOfDay}
-                  </option>
-                ))
-              ) : (
-                <option>{placeholderTime}</option>
-              )}
-            </FieldSelect>
-          </div>
+  const nextBoundary = findNextBoundary(TODAY, 'hour', timeZone);
+  let placeholderTime = '08:00';
+  try {
+    placeholderTime = formatDateIntoPartials(nextBoundary, intl, { timeZone })?.time;
+  } catch (error) {
+    // No need to handle error
+  }
 
-          <div className={bookingStartDate ? css.lineBetween : css.lineBetweenDisabled}>-</div>
-
-          <div className={css.field}>
-            <FieldSelect
-              name="bookingEndTime"
-              id={formId ? `${formId}.bookingEndTime` : 'bookingEndTime'}
-              className={bookingStartDate ? css.fieldSelect : css.fieldSelectDisabled}
-              selectClassName={bookingStartDate ? css.select : css.selectDisabled}
-              label={intl.formatMessage({ id: 'FieldDateAndTimeInput.endTime' })}
-              disabled={!bookingEndTimeAvailable}
-            >
-              {bookingEndTimeAvailable ? (
-                availableEndTimes.map(p => (
-                  <option key={p.timeOfDay === '00:00' ? '24:00' : p.timeOfDay} value={p.timestamp}>
-                    {p.timeOfDay === '00:00' ? '24:00' : p.timeOfDay}
-                  </option>
-                ))
-              ) : (
-                <option>{placeholderTime}</option>
-              )}
-            </FieldSelect>
-          </div>
+  const startOfToday = getStartOf(TODAY, 'day', timeZone);
+  const bookingEndTimeAvailable = bookingStartDate && (bookingStartTime || startTime);
+  return (
+    <div className={classes}>
+      <div className={css.formRow}>
+        <div className={classNames(css.field, css.startDate)}>
+          <FieldDateInput
+            className={css.fieldDateInput}
+            name="bookingStartDate"
+            id={formId ? `${formId}.bookingStartDate` : 'bookingStartDate'}
+            label={startDateInputProps.label}
+            placeholderText={startDateInputProps.placeholderText}
+            format={v =>
+              v && v.date ? { date: timeOfDayFromTimeZoneToLocal(v.date, timeZone) } : v
+            }
+            parse={v =>
+              v && v.date ? { date: timeOfDayFromLocalToTimeZone(v.date, timeZone) } : v
+            }
+            initialVisibleMonth={initialVisibleMonth(bookingStartDate || startOfToday, timeZone)}
+            isDayBlocked={isDayBlocked}
+            onChange={onBookingStartDateChange(props, setCurrentMonth)}
+            onPrevMonthClick={() => onMonthClick(prevMonthFn)}
+            onNextMonthClick={() => onMonthClick(nextMonthFn)}
+            navNext={
+              <Next
+                currentMonth={currentMonth}
+                timeZone={timeZone}
+                dayCountAvailableForBooking={dayCountAvailableForBooking}
+              />
+            }
+            navPrev={<Prev currentMonth={currentMonth} timeZone={timeZone} />}
+            useMobileMargins
+            validate={bookingDateRequired(
+              intl.formatMessage({ id: 'BookingTimeForm.requiredDate' })
+            )}
+            onClose={event => {
+              const date = getStartOf(event?.date ?? TODAY, 'month', timeZone);
+              setCurrentMonth(date);
+            }}
+          />
         </div>
       </div>
-    );
-  }
-}
+      <div className={css.formRow}>
+        <div className={css.field}>
+          <FieldSelect
+            name="bookingStartTime"
+            id={formId ? `${formId}.bookingStartTime` : 'bookingStartTime'}
+            className={bookingStartDate ? css.fieldSelect : css.fieldSelectDisabled}
+            selectClassName={bookingStartDate ? css.select : css.selectDisabled}
+            label={intl.formatMessage({ id: 'FieldDateAndTimeInput.startTime' })}
+            disabled={!bookingStartDate}
+            onChange={onBookingStartTimeChange(props)}
+          >
+            {bookingStartDate ? (
+              availableStartTimes.map(p => (
+                <option key={p.timeOfDay} value={p.timestamp}>
+                  {p.timeOfDay}
+                </option>
+              ))
+            ) : (
+              <option>{placeholderTime}</option>
+            )}
+          </FieldSelect>
+        </div>
+
+        <div className={bookingStartDate ? css.lineBetween : css.lineBetweenDisabled}>-</div>
+
+        <div className={css.field}>
+          <FieldSelect
+            name="bookingEndTime"
+            id={formId ? `${formId}.bookingEndTime` : 'bookingEndTime'}
+            className={bookingStartDate ? css.fieldSelect : css.fieldSelectDisabled}
+            selectClassName={bookingStartDate ? css.select : css.selectDisabled}
+            label={intl.formatMessage({ id: 'FieldDateAndTimeInput.endTime' })}
+            disabled={!bookingEndTimeAvailable}
+          >
+            {bookingEndTimeAvailable ? (
+              availableEndTimes.map(p => (
+                <option key={p.timeOfDay === '00:00' ? '24:00' : p.timeOfDay} value={p.timestamp}>
+                  {p.timeOfDay === '00:00' ? '24:00' : p.timeOfDay}
+                </option>
+              ))
+            ) : (
+              <option>{placeholderTime}</option>
+            )}
+          </FieldSelect>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 FieldDateAndTimeInput.defaultProps = {
   rootClassName: null,
