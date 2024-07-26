@@ -51,21 +51,21 @@ const SearchResultsPanel = props => {
       ].join(', ');
     }
   };
+
+  const handleCardClick = listingId => {
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'ViewContent', { listing_id: listingId });
+    } else {
+      console.error('Meta Pixel no está definido');
+    }
+  };
+
   const handleButtonClick = () => {
     if (typeof fbq !== 'undefined') {
       fbq('track', 'ContactTextArticlesGeneral');
       setTimeout(() => {
         window.open('https://wa.me/5492944232664', '_blank');
       }, 300);
-    } else {
-      console.error('Meta Pixel no está definido');
-    }
-  };
-
-  const handleArticleClick = () => {
-    console.log('Tracking SubmitApplication'); // Log para verificar
-    if (typeof fbq !== 'undefined') {
-      fbq('track', 'ViewContent');
     } else {
       console.error('Meta Pixel no está definido');
     }
@@ -85,12 +85,12 @@ const SearchResultsPanel = props => {
       <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
         {listings.map(l => (
           <ListingCard
-            onClick={handleArticleClick}
             className={css.listingCard}
             key={l.id.uuid}
             listing={l}
             renderSizes={cardRenderSizes(isMapVariant)}
             setActiveListing={setActiveListing}
+            onClick={() => handleCardClick(l.id.uuid)} // Añadir evento onClick aquí
           />
         ))}
         {props.children}
