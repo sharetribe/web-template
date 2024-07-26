@@ -29,6 +29,18 @@ const SectionHero = props => {
 
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
 
+  // Define the event handler
+  const handleCtaButtonClick = () => {
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'BtnsHeroSection');
+      setTimeout(() => {
+        window.open('https://example.com', '_blank'); // Reemplaza con tu URL
+      }, 300);
+    } else {
+      console.error('Meta Pixel no está definido');
+    }
+  };
+
   return (
     <SectionContainer
       id={sectionId}
@@ -41,7 +53,12 @@ const SectionHero = props => {
         <header className={defaultClasses.sectionDetails}>
           <Field data={title} className={defaultClasses.title} options={fieldOptions} />
           <Field data={description} className={defaultClasses.description} options={fieldOptions} />
-          <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
+          <Field 
+            data={callToAction} 
+            className={defaultClasses.ctaButton} 
+            options={fieldOptions}
+            onClick={handleCtaButtonClick} // Añade el evento onClick
+          />
         </header>
       ) : null}
     </SectionContainer>
