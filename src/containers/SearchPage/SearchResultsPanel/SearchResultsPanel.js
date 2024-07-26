@@ -61,6 +61,16 @@ const SearchResultsPanel = props => {
       console.error('Meta Pixel no está definido');
     }
   };
+
+  const handleArticleClick = () => {
+    console.log('Tracking SubmitApplication'); // Log para verificar
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'ViewContent');
+    } else {
+      console.error('Meta Pixel no está definido');
+    }
+  };
+
   return (
     <div className={classes}>
       <div className={classNames(css.stickyButtonContainer)}>
@@ -75,6 +85,7 @@ const SearchResultsPanel = props => {
       <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
         {listings.map(l => (
           <ListingCard
+            onClick={handleArticleClick}
             className={css.listingCard}
             key={l.id.uuid}
             listing={l}
