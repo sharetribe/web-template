@@ -77,7 +77,6 @@ export const ListingCardComponent = props => {
     renderSizes,
     setActiveListing,
     showAuthorInfo,
-    onClick, // Agregar onClick como prop
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
@@ -106,7 +105,7 @@ export const ListingCardComponent = props => {
     : null;
 
   return (
-    <NamedLink className={classes} onClick={onClick} name="ListingPage" params={{ id, slug }}>
+    <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
       <AspectRatioWrapper
         className={css.aspectRatioWrapper}
         width={aspectWidth}
@@ -147,7 +146,6 @@ ListingCardComponent.defaultProps = {
   renderSizes: null,
   setActiveListing: null,
   showAuthorInfo: true,
-  onClick: null, // Default null
 };
 
 ListingCardComponent.propTypes = {
@@ -156,7 +154,6 @@ ListingCardComponent.propTypes = {
   intl: intlShape.isRequired,
   listing: propTypes.listing.isRequired,
   showAuthorInfo: bool,
-  onClick: func, // PropType para onClick
 
   // Responsive image sizes hint
   renderSizes: string,

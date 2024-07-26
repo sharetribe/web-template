@@ -74,7 +74,7 @@ const SearchResultsPanel = props => {
   return (
     <div className={classes}>
       <div className={classNames(css.stickyButtonContainer)}>
-        <button style={{position:'static'}}
+        <button style={{ position: 'static' }}
           className={classNames(css.stickyButton, css.whatsappButton)}
           onClick={handleButtonClick}
         >
@@ -84,14 +84,18 @@ const SearchResultsPanel = props => {
 
       <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
         {listings.map(l => (
-          <ListingCard
-            className={css.listingCard}
+          <button
             key={l.id.uuid}
-            listing={l}
-            renderSizes={cardRenderSizes(isMapVariant)}
-            setActiveListing={setActiveListing}
-            onClick={() => handleCardClick(l.id.uuid)} // Añadir evento onClick aquí
-          />
+            onClick={() => handleCardClick(l.id.uuid)}
+            style={{ border: 'none', background: 'none', padding: 0, margin: 0, width: '100%' }}
+          >
+            <ListingCard
+              className={css.listingCard}
+              listing={l}
+              renderSizes={cardRenderSizes(isMapVariant)}
+              setActiveListing={setActiveListing}
+            />
+          </button>
         ))}
         {props.children}
       </div>
