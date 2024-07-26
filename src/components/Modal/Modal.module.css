@@ -107,6 +107,7 @@
 }
 
 .closeIcon {
+  color: var(--colorGrey300);
   composes: marketplaceModalCloseIcon from global;
 }
 
