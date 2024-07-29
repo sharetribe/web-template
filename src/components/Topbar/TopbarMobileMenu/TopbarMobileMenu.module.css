@@ -10,7 +10,7 @@
   font-size: x-large;
 }
 
-.content { 
+.content {
   margin: 11px;
   width: 100vh;
   height: 15vh;
@@ -20,24 +20,75 @@
   flex-direction: column;
   align-items: flex-start;
 }
+
 .contentAnonymous {
   margin: -11px;
   width: 100vh;
-  height: 15vh;
+  height: 20vh;
   flex-grow: 1;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   background-color: var(--marketplaceColor);
+
+  @media (--viewportMedium) {
+    margin: -11px;
+    width: 100vw;
+    height: 20vh;
+  }
 }
-.logo{
+
+.logo {
   width: 42vw;
+  height: 20vh;
+
+  @media (--viewportMedium) {
+    width: 30vw;
+    height: 20vh;
+  }
 }
-.categories{
+
+.categories {
   margin-top: 5%;
   display: flex;
+  @media (--viewportMedium) {
+    width: 100%;
+  }
 }
+
+.categories h1 {
+  @media (--viewportMedium) {
+    margin-top: 0%;
+    width: 100%;
+    font-size: 44px;
+    line-height: 24px;
+  }
+}
+
+.arrow {
+  width: 30px;
+  color: var(--marketplaceColor);
+  margin-Left: 10px;
+  cursor: pointer;
+
+  @media (--viewportMedium) {
+    width: 10%;
+    color: var(--marketplaceColor);
+    margin-right: 50%;
+    margin-bottom: 10px;
+  }
+}
+
+.menu h1 {
+  @media (--viewportMedium) {
+    margin-top: 0%;
+    width: 100%;
+    font-size: 34px;
+    line-height: 24px;
+  }
+}
+
 .footer {
   position: fixed;
   bottom: 0;
@@ -46,6 +97,10 @@
   padding: 24px;
   background-color: var(--colorWhite);
   box-shadow: var(--boxShadowTop);
+
+  @media (--viewportMedium) {
+    width: 100%;
+  }
 }
 
 .avatar {
@@ -142,8 +197,9 @@
   margin-top: 0;
   margin-bottom: 11px;
 }
+
 .currentPageLink {
-   color: var(--marketplaceColorDark); 
+  color: var(--marketplaceColorDark);
 }
 
 .notificationBadge {
@@ -160,9 +216,10 @@
 .createNewListingLink {
   composes: buttonPrimary from global;
 }
+
 .LoginListingLink {
   composes: buttonPrimary from global;
-  
+
 }
 
 
@@ -171,16 +228,22 @@
   /* Font */
 
   width: 100%;
-/*   margin-bottom: 24px;
+
+  /*   margin-bottom: 24px;
   margin-top: var(--TopbarMobileMenu_topMargin); */
   /* background-color: var(--marketplaceColor); */
+  @media (--viewportMedium) {
+    width: 100%;
+    height: 10vh;
+  }
 }
+
 .authenticationLinks {
   white-space: nowrap;
   color: aliceblue
 }
 
-.menuLinks{
+.menuLinks {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -192,6 +255,7 @@
   white-space: nowrap;
   color: var(--marketplaceColor);
 }
+
 .loginLink {
   text-decoration: none;
   white-space: nowrap;
