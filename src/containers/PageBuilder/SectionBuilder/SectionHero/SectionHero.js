@@ -30,10 +30,10 @@ const SectionHero = props => {
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
 
   // Define the event handler
-  const handleCtaButtonClick = listingId => {
+  const handleCtaButtonClick = () => {
     console.log('BtnsLandingHero'); // Log para verificar
     if (typeof fbq !== 'undefined') {
-      fbq('track', 'BtnsLandingHero', { listing_id: listingId });
+      fbq('track', 'BtnsLandingHero');
     } else {
       console.error('Meta Pixel no está definido');
     }
