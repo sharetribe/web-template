@@ -3,6 +3,7 @@ import { denormalisedResponseEntities, ensureOwnListing } from '../util/data';
 import * as log from '../util/log';
 import { LISTING_STATE_DRAFT } from '../util/types';
 import { storableError } from '../util/errors';
+import { isUserAuthorized } from '../util/userHelpers';
 import { getTransitionsNeedingProviderAttention } from '../transactions/transaction';
 
 import { authInfo } from './auth.duck';
@@ -315,7 +316,9 @@ export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => 
 
 export const fetchCurrentUser = (params = null) => (dispatch, getState, sdk) => {
   dispatch(currentUserShowRequest());
-  const { isAuthenticated } = getState().auth;
+  const state = getState();
+  const { currentUserHasListings } = state.user || {};
+  const { isAuthenticated } = state.auth;
 
   if (!isAuthenticated) {
     // Make sure current user is null
@@ -363,10 +366,18 @@ export const fetchCurrentUser = (params = null) => (dispatch, getState, sdk) => 
       return currentUser;
     })
     .then(currentUser => {
-      dispatch(fetchCurrentUserHasListings());
-      dispatch(fetchCurrentUserNotifications());
-      if (!currentUser.attributes.emailVerified) {
-        dispatch(fetchCurrentUserHasOrders());
+      // If currentUser is not active (e.g. in 'pending-approval' state),
+      // then they don't have listings or transactions that we care about.
+      if (isUserAuthorized(currentUser)) {
+        if (currentUserHasListings === false) {
+          dispatch(fetchCurrentUserHasListings());
+        }
+
+        dispatch(fetchCurrentUserNotifications());
+
+        if (!currentUser.attributes.emailVerified) {
+          dispatch(fetchCurrentUserHasOrders());
+        }
       }
 
       // Make sure auth info is up to date
