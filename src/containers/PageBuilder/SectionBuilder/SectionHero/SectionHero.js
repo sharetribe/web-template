@@ -48,10 +48,10 @@ const SectionHero = props => {
       options={fieldOptions}
     >
       {hasHeaderFields ? (
-        <header className={defaultClasses.sectionDetails}>
+        <header className={defaultClasses.sectionDetails} onClick={handleCtaButtonClick}> 
           <Field data={title} className={defaultClasses.title} options={fieldOptions} />
           <Field data={description} className={defaultClasses.description} options={fieldOptions} />
-          <button   onClick={handleCtaButtonClick}
+          <button onClick={handleCtaButtonClick}
             style={{ border: 'none', background: 'none', padding: 0, margin: 0, width: '100%' }}
           >
             <Field
