@@ -1,7 +1,7 @@
-import { fetchCurrentUser } from '../../ducks/user.duck';
-import { setInitialValues as setInitialValuesForPaymentMethods } from '../../ducks/paymentMethods.duck';
 import { storableError } from '../../util/errors';
 import * as log from '../../util/log';
+import { fetchCurrentUser } from '../../ducks/user.duck';
+import { setInitialValues as setInitialValuesForPaymentMethods } from '../../ducks/paymentMethods.duck';
 
 // ================ Action types ================ //
 
