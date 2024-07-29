@@ -48,19 +48,15 @@ const SectionHero = props => {
       options={fieldOptions}
     >
       {hasHeaderFields ? (
-        <header className={defaultClasses.sectionDetails} onClick={handleCtaButtonClick}> 
+        <header className={defaultClasses.sectionDetails}> 
           <Field data={title} className={defaultClasses.title} options={fieldOptions} />
           <Field data={description} className={defaultClasses.description} options={fieldOptions} />
-          <button onClick={handleCtaButtonClick}
-            style={{ border: 'none', background: 'none', padding: 0, margin: 0, width: '100%' }}
-          >
-            <Field
+          <Field
               data={callToAction}
               className={defaultClasses.ctaButton}
               options={fieldOptions}
               onClick={handleCtaButtonClick} // Añade el evento onClick
             />
-          </button>
         </header>
       ) : null}
     </SectionContainer>
