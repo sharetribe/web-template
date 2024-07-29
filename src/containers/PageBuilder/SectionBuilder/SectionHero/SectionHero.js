@@ -37,7 +37,7 @@ const SectionHero = props => {
     } else {
       console.error('Meta Pixel no está definido');
     }
-  };;
+  };
 
   return (
     <SectionContainer
