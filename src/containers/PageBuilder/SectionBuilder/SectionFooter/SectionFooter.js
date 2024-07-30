@@ -82,7 +82,7 @@ function SectionFooter(props) {
           </div>
           <div className={css.sloganMobile}>
             <Field data={slogan} className={css.slogan} />
-          </div>
+          </div> 
           <div className={css.detailsInfo}>
             <div className={css.sloganDesktop}>
               <Field data={slogan} className={css.slogan} />
