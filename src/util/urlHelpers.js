@@ -17,6 +17,8 @@ export const LISTING_PAGE_PARAM_TYPES = [
 
 // No access page - path params:
 export const NO_ACCESS_PAGE_POST_LISTINGS = 'posting-right';
+// If user account is on pending-approval state, then user can't initiate transactions or create listings
+export const NO_ACCESS_PAGE_USER_PENDING_APPROVAL = 'user-approval';
 
 // Create slug from random texts
 // From Gist thread: https://gist.github.com/mathewbyrne/1280286
