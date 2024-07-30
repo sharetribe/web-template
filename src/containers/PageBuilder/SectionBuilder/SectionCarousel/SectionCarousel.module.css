@@ -68,7 +68,6 @@
 
 .baseCarousel {
   display: flex;
-  justify-content: center;
   flex-wrap: nowrap;
   width: var(--carouselWidth);
   padding-bottom: 24px;
