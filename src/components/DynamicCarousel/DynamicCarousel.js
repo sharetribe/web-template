@@ -29,7 +29,7 @@ const DynamicCarousel = ({isTeamBuilding}) => {
 
   return (
     <div className={css.container}>
-      <h2 className={css.title}>I più amati da tutti</h2>
+      <h2 className={css.title}>I workshop più amati</h2>
       <EmblaCarousel isTeamBuilding={isTeamBuilding}/>
 
       <div className={css.buttonContainer}>

@@ -15,7 +15,7 @@ const HowItWorks = ({isTeamBuilding}) => {
 
   return (
     <div className={css.container}>
-      <h2 className={css.title}>Come funziona</h2>
+      <h2 className={css.title}>Come funziona Club Joy?</h2>
       <div className={css.steps}>
         <div className={css.step} onClick={handleNavigate}>
           <img src={img1} alt="Step 1" className={css.image} />

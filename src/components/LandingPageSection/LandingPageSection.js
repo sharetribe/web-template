@@ -147,7 +147,7 @@ function LandingPageSection({ onSearchSubmit }) {
               ) : (
                 <>
               <h1 className={css.contentTitle}>
-              Mani sporche, cuore felice
+              Prova nuovi hobby, vicino a te
               </h1>
               <p className={css.teamText}>
               Scopri il piacere di creare qualcosa con le tue mani, senza pressioni o aspettative. 

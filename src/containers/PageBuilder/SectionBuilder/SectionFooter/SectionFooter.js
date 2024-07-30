@@ -2,6 +2,7 @@ import React from 'react';
 import { arrayOf, bool, func, node, number, object, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import { LinkedLogo } from '../../../../components';
+import footerLogo from '../../../../media/landing/footerLogo.gif';
 
 import Field from '../../Field';
 import BlockBuilder from '../../BlockBuilder';
@@ -77,13 +78,7 @@ function SectionFooter(props) {
       <div className={css.footer}>
         <div className={classNames(css.content, getContentCss(numberOfColumns))}>
           <div>
-            <LinkedLogo
-              rootClassName={css.logoLink}
-              logoClassName={css.logoWrapper}
-              logoImageClassName={css.logoImage}
-              linkToExternalSite={linkLogoToExternalSite}
-              layout={logoLayout}
-            />
+          <img src={footerLogo} alt="Footer Logo" style={{ width: '200px', height: 'auto' }} />
           </div>
           <div className={css.sloganMobile}>
             <Field data={slogan} className={css.slogan} />

@@ -37,7 +37,7 @@ const WhyUs = ({ isTeamBuilding }) => {
               </p>
             </div>
             <div className={css.item}>
-              <h3 className={css.heading}>+45 Artigiani</h3>
+              <h3 className={css.heading}>+70 Artigiani</h3>
               <p className={css.description}>
                 La creatività in tutte le sue forme, scegliete il vostro artigiano preferito
               </p>
@@ -72,7 +72,7 @@ const WhyUs = ({ isTeamBuilding }) => {
               <p className={css.description}>Scopri, prenota e paga in 30 secondi</p>
             </div>
             <div className={css.item}>
-              <h3 className={css.heading}>+45 Artigiani</h3>
+              <h3 className={css.heading}>+70 Artigiani</h3>
               <p className={css.description}>Scopri il tuo artigiano preferito, nella tua città</p>
             </div>
           </>
