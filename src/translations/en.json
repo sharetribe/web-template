@@ -400,6 +400,7 @@
   "InquiryForm.sendInquiryErrorNoProcess": "Oops, no transaction process attached to the listing. Please contact support",
   "InquiryForm.submitButtonText": "Send inquiry",
   "InquiryForm.tooManyRequestsError": "Sending inquiry failed. There have been too many requests made in a short amount of time. If the error persists, try refreshing the page or contact support.",
+  "InquiryForm.userPendingApprovalError": "Oops, something went wrong. You don't have permission to make inquiries",
   "InquiryWithoutPaymentForm.ctaButton": "Send an inquiry",
   "KeywordFilter.filterText": "Filter results by",
   "KeywordFilter.labelSelected": "\"{labelText}\"",
