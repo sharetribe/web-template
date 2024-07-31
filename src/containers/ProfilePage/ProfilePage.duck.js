@@ -220,7 +220,6 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     });
   }
 
-  // TODO
   return Promise.all([
     dispatch(fetchCurrentUser()),
     dispatch(showUser(userId, config)),
