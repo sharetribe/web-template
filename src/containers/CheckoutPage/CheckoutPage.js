@@ -8,6 +8,8 @@ import { useIntl } from 'react-intl';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 import { userDisplayNameAsString } from '../../util/data';
+import { NO_ACCESS_PAGE_USER_PENDING_APPROVAL } from '../../util/urlHelpers';
+import { isUserAuthorized } from '../../util/userHelpers';
 import { INQUIRY_PROCESS_NAME, resolveLatestProcessName } from '../../transactions/transaction';
 
 // Import global thunk functions
@@ -64,6 +66,7 @@ const EnhancedCheckoutPage = props => {
 
   useEffect(() => {
     const {
+      currentUser,
       orderData,
       listing,
       transaction,
@@ -75,15 +78,18 @@ const EnhancedCheckoutPage = props => {
     setPageData(data || {});
     setIsDataLoaded(true);
 
-    // This is for processes using payments with Stripe integration
-    if (getProcessName(data) !== INQUIRY_PROCESS_NAME) {
-      // Fetch StripeCustomer and speculateTransition for transactions that include Stripe payments
-      loadInitialDataForStripePayments({
-        pageData: data || {},
-        fetchSpeculatedTransaction,
-        fetchStripeCustomer,
-        config,
-      });
+    // Do not fetch extra data if user is not active (E.g. they are in pending-approval state.)
+    if (isUserAuthorized(currentUser)) {
+      // This is for processes using payments with Stripe integration
+      if (getProcessName(data) !== INQUIRY_PROCESS_NAME) {
+        // Fetch StripeCustomer and speculateTransition for transactions that include Stripe payments
+        loadInitialDataForStripePayments({
+          pageData: data || {},
+          fetchSpeculatedTransaction,
+          fetchStripeCustomer,
+          config,
+        });
+      }
     }
   }, []);
 
@@ -102,6 +108,7 @@ const EnhancedCheckoutPage = props => {
   const isOwnListing = currentUser?.id && listing?.author?.id?.uuid === currentUser?.id?.uuid;
   const hasRequiredData = !!(listing?.id && listing?.author?.id && processName);
   const shouldRedirect = isDataLoaded && !(hasRequiredData && !isOwnListing);
+  const shouldRedirectUnathorizedUser = isDataLoaded && !isUserAuthorized(currentUser);
 
   // Redirect back to ListingPage if data is missing.
   // Redirection must happen before any data format error is thrown (e.g. wrong currency)
@@ -111,6 +118,13 @@ const EnhancedCheckoutPage = props => {
       listing,
     });
     return <NamedRedirect name="ListingPage" params={params} />;
+  } else if (shouldRedirectUnathorizedUser) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
+      />
+    );
   }
 
   const listingTitle = listing?.attributes?.title;
