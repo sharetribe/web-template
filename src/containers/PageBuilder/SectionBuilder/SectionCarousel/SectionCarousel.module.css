@@ -72,7 +72,6 @@
   width: var(--carouselWidth);
   padding-bottom: 24px;
   
-  margin-right: 32px;
   overflow-x: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -98,12 +97,12 @@
 
   margin-right: 16px;
   scroll-snap-align: center;
-
-  transform: translateX(32px);
+/* 
+  transform: translateX(32px); */
 
    &:last-of-type {
-    margin-right: 32px;
-  /*  padding-right: 32px;
+      /*margin-right: 32px;
+  padding-right: 32px;
       32px (padding-right above) 
     width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px); */
   } 
