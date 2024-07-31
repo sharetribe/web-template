@@ -95,8 +95,7 @@
   /* 64px = horizontal layout paddings */
   width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 120px);
 
-  margin-left: 16px;
-  margin-right: 16px;
+  margin-left: 32px;
   scroll-snap-align: center;
 
 /*   transform: translateX(16px);  */
@@ -109,7 +108,7 @@
   } 
 
   @media (--viewportMedium) {
-    margin-right: 32px;
+/*     margin-right: 32px; */
   }
 
   @media (min-width: 1200px) {
