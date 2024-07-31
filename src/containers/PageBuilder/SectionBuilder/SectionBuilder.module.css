@@ -113,7 +113,7 @@
 }
 
 .align {
-  text-align: left;
+  text-align: center;
   justify-self: start;
 
   @media (--viewportMedium) {
@@ -152,7 +152,7 @@
 }
 .ctaButtonCarrousel {
   composes: align;
-  display: inline-block;
+  display: flow-root;
   padding: 8px 20px;
   font-size: 15px;
   background-color: var(--marketplaceColor);
@@ -161,7 +161,6 @@
   text-decoration: none;
   box-shadow: 0 8px 16px 0 rgb(0 0 0 / 20%);
   font-weight: 500;
-  margin-top: 24px;
 
   &:hover {
     text-decoration: none;
