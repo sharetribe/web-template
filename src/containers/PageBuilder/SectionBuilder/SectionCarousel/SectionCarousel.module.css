@@ -96,9 +96,10 @@
   width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 120px);
 
   margin-left: 16px;
+  margin-right: 16px;
   scroll-snap-align: center;
 
-  transform: translateX(16px); 
+/*   transform: translateX(16px);  */
 
    &:last-of-type {
       /*margin-right: 32px;
