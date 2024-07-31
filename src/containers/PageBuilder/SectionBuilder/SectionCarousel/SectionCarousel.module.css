@@ -93,18 +93,18 @@
 .block {
   flex: 0 0 auto;
   /* 64px = horizontal layout paddings */
-  width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 110px);
+  width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 120px);
 
   margin-right: 16px;
   scroll-snap-align: center;
 
   transform: translateX(32px);
 
-/*   &:last-of-type {
+   &:last-of-type {
     padding-right: 32px;
-     32px (padding-right above) 
-    width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px);
-  } */
+/*      32px (padding-right above) 
+    width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px); */
+  } 
 
   @media (--viewportMedium) {
     margin-right: 32px;
