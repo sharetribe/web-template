@@ -171,8 +171,8 @@
     width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px - 96px) / 4);
 
     &:last-of-type {
-      /* 32px (padding-right above) / 4 (number of columns) */
-      width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 4);
+      /* 32px (padding-right above) / 4 (number of columns) *//* 
+      width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 4); */
     }
   }
 }
