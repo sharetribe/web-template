@@ -125,7 +125,7 @@ const listingPageReducer = (state = initialState, action = {}) => {
     case SEND_INQUIRY_REQUEST:
       return { ...state, sendInquiryInProgress: true, sendInquiryError: null };
     case SEND_INQUIRY_SUCCESS:
-      return { ...state, sendInquiryInProgress: false };
+      return { ...state, sendInquiryInProgress: false, inquiryModalOpenForListingId: null };
     case SEND_INQUIRY_ERROR:
       return { ...state, sendInquiryInProgress: false, sendInquiryError: payload };
 
@@ -374,11 +374,12 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
     });
 };
 
-export const loadData = (params, search, config) => dispatch => {
+export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const listingId = new UUID(params.id);
+  const inquiryModalOpenForListingId = getState().ListingPage.inquiryModalOpenForListingId;
 
   // Clear old line-items
-  dispatch(setInitialValues({ lineItems: null }));
+  dispatch(setInitialValues({ lineItems: null, inquiryModalOpenForListingId }));
 
   const ownListingVariants = [LISTING_PAGE_DRAFT_VARIANT, LISTING_PAGE_PENDING_APPROVAL_VARIANT];
   if (ownListingVariants.includes(params.variant)) {
