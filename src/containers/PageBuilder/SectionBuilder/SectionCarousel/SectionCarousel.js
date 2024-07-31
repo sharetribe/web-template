@@ -115,7 +115,7 @@ const SectionCarousel = props => {
         <header className={defaultClasses.sectionDetails}>
           <Field data={title} className={defaultClasses.title} options={fieldOptions} />
           <Field data={description} className={defaultClasses.description} options={fieldOptions} />
-          <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
+          <Field data={callToAction} className={defaultClasses.ctaButtonCarrousel} options={fieldOptions} />
         </header>
       ) : null}
       {hasBlocks ? (
@@ -135,7 +135,7 @@ const SectionCarousel = props => {
           <div className={getColumnCSS(numColumns)} id={sliderId}>
             <BlockBuilder
               rootClassName={css.block}
-              ctaButtonClass={defaultClasses.ctaButton}
+              ctaButtonClass={defaultClasses.ctaButtonCarrousel}
               blocks={blocks}
               sectionId={sectionId}
               responsiveImageSizes={getResponsiveImageSizes(numColumns)}
@@ -174,7 +174,7 @@ SectionCarousel.propTypes = {
     sectionDetails: string,
     title: string,
     description: string,
-    ctaButton: string,
+    ctaButtonCarrousel: string,
   }),
   numColumns: number,
   title: object,
