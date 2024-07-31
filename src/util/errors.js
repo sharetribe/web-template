@@ -25,6 +25,7 @@ import {
   ERROR_CODE_TRANSACTION_LISTING_INSUFFICIENT_STOCK,
   ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH,
   ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS,
+  ERROR_CODE_PERMISSION_DENIED_PENDING_APPROVAL,
 } from './types';
 // NOTE: This file imports types.js, which may lead to circular dependency
 
@@ -245,6 +246,15 @@ export const isErrorNoPermissionToPostListings = error =>
   error &&
   error.status === 403 &&
   hasErrorWithCode(error, ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS);
+
+/**
+ * Check if the given API error (from `sdk.transactions.initiate(params)`
+ * is due to denied permission for users in pending-approval state.
+ */
+export const isErrorNoPermissionForUserPendingApproval = error =>
+  error &&
+  error.status === 403 &&
+  hasErrorWithCode(error, ERROR_CODE_PERMISSION_DENIED_PENDING_APPROVAL);
 
 /**
  * Check if the given API error (from

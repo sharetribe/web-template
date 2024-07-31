@@ -629,6 +629,7 @@ export const ERROR_CODE_FORBIDDEN = 'forbidden';
 export const ERROR_CODE_MISSING_STRIPE_ACCOUNT = 'transaction-missing-stripe-account';
 export const ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH = 'old-total-mismatch';
 export const ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS = 'permission-denied-post-listings';
+export const ERROR_CODE_PERMISSION_DENIED_PENDING_APPROVAL = 'permission-denied-pending-approval';
 
 const ERROR_CODES = [
   ERROR_CODE_TRANSACTION_LISTING_NOT_FOUND,
@@ -649,6 +650,7 @@ const ERROR_CODES = [
   ERROR_CODE_MISSING_STRIPE_ACCOUNT,
   ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH,
   ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS,
+  ERROR_CODE_PERMISSION_DENIED_PENDING_APPROVAL,
 ];
 
 // API error
