@@ -106,9 +106,11 @@
       32px (padding-right above) 
     width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px); */
   } 
-
+  @media (max-width: 426px) {
+    margin-left: 32px ;
+        margin-right: 32px; 
+  }
   @media (--viewportMedium) {
-/*     margin-right: 32px; */
   }
 
   @media (min-width: 1200px) {
