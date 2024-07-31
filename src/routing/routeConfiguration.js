@@ -160,6 +160,13 @@ const routeConfiguration = (layoutConfig) => {
       loadData: pageDataLoadingAPI.ProfilePage.loadData,
     },
     {
+      path: '/u/:id/:variant',
+      name: 'ProfilePageVariant',
+      auth: true,
+      component: ProfilePage,
+      loadData: pageDataLoadingAPI.ProfilePage.loadData,
+    },
+    {
       path: '/profile-settings',
       name: 'ProfileSettingsPage',
       auth: true,
