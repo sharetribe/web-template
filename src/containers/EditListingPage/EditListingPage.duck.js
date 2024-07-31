@@ -14,6 +14,7 @@ import { uniqueBy } from '../../util/generators';
 import { storableError } from '../../util/errors';
 import * as log from '../../util/log';
 import { parse } from '../../util/urlHelpers';
+import { isUserAuthorized } from '../../util/userHelpers';
 import { isBookingProcessAlias } from '../../transactions/transaction';
 
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
@@ -936,17 +937,21 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   return Promise.all([dispatch(requestShowListing(payload, config)), dispatch(fetchCurrentUser())])
     .then(response => {
       const currentUser = getState().user.currentUser;
-      if (currentUser && currentUser.stripeAccount) {
-        dispatch(fetchStripeAccount());
-      }
 
-      // Because of two dispatch functions, response is an array.
-      // We are only interested in the response from requestShowListing here,
-      // so we need to pick the first one
-      const listing = response[0]?.data?.data;
-      const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias;
-      if (listing && isBookingProcessAlias(transactionProcessAlias)) {
-        fetchLoadDataExceptions(dispatch, listing, search, config.localization.firstDayOfWeek);
+      // Do not fetch extra information if user is in pending-approval state.
+      if (isUserAuthorized(currentUser)) {
+        if (currentUser && currentUser.stripeAccount) {
+          dispatch(fetchStripeAccount());
+        }
+
+        // Because of two dispatch functions, response is an array.
+        // We are only interested in the response from requestShowListing here,
+        // so we need to pick the first one
+        const listing = response[0]?.data?.data;
+        const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias;
+        if (listing && isBookingProcessAlias(transactionProcessAlias)) {
+          fetchLoadDataExceptions(dispatch, listing, search, config.localization.firstDayOfWeek);
+        }
       }
 
       return response;
