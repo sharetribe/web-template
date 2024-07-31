@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [change] ProfilePage: remove withViewport and refactor a bit.
+  [#424](https://github.com/sharetribe/web-template/pull/424)
 - [change] Update express.js (v4.19.2) and nodemon (3.1.4).
   [#421](https://github.com/sharetribe/web-template/pull/421)
 - [add] richText.js: support parentheses on autolinked URLs.
