@@ -7,6 +7,7 @@ import { transactionLineItems } from '../../util/api';
 import * as log from '../../util/log';
 import { denormalisedResponseEntities } from '../../util/data';
 import { findNextBoundary, getStartOf, monthIdString } from '../../util/dates';
+import { isUserAuthorized } from '../../util/userHelpers';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
   LISTING_PAGE_PENDING_APPROVAL_VARIANT,
@@ -376,7 +377,11 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const listingId = new UUID(params.id);
-  const inquiryModalOpenForListingId = getState().ListingPage.inquiryModalOpenForListingId;
+  const state = getState();
+  const currentUser = state.user?.currentUser;
+  const inquiryModalOpenForListingId = isUserAuthorized(currentUser)
+    ? state.ListingPage.inquiryModalOpenForListingId
+    : null;
 
   // Clear old line-items
   dispatch(setInitialValues({ lineItems: null, inquiryModalOpenForListingId }));
