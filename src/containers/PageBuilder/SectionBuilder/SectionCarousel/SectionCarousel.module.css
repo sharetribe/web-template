@@ -100,11 +100,11 @@
 
   transform: translateX(32px);
 
-  &:last-of-type {
+/*   &:last-of-type {
     padding-right: 32px;
-    /* 32px (padding-right above) */
+     32px (padding-right above) 
     width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px);
-  }
+  } */
 
   @media (--viewportMedium) {
     margin-right: 32px;
