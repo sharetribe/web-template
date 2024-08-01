@@ -87,8 +87,11 @@ export const createStripeSetupIntent = () => (dispatch, getState, sdk) => {
 
 export const stripeCustomer = () => (dispatch, getState, sdk) => {
   dispatch(stripeCustomerRequest());
+  const fetchCurrentUserOptions = {
+    callParams: { include: ['stripeCustomer.defaultPaymentMethod'] },
+  };
 
-  return dispatch(fetchCurrentUser({ include: ['stripeCustomer.defaultPaymentMethod'] }))
+  return dispatch(fetchCurrentUser(fetchCurrentUserOptions))
     .then(response => {
       dispatch(stripeCustomerSuccess());
     })
