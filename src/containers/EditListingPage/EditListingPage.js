@@ -297,7 +297,6 @@ EditListingPageComponent.defaultProps = {
   stripeAccountFetched: null,
   currentUser: null,
   stripeAccount: null,
-  currentUserHasOrders: null,
   listing: null,
   listingDraft: null,
   notificationCount: 0,
