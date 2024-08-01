@@ -323,7 +323,7 @@ export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
   const state = getState();
   const { currentUserHasListings, currentUserShowTimestamp } = state.user || {};
   const { isAuthenticated } = state.auth;
-  const { callParams = null } = options || {};
+  const { callParams = null, updateHasListings = true, updateNotifications = true } = options || {};
 
   // Double fetch might happen when e.g. profile page is making a full page load
   const aSecondAgo = new Date().getTime() - 1000;
@@ -382,11 +382,13 @@ export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
       // If currentUser is not active (e.g. in 'pending-approval' state),
       // then they don't have listings or transactions that we care about.
       if (isUserAuthorized(currentUser)) {
-        if (currentUserHasListings === false) {
+        if (currentUserHasListings === false && updateHasListings !== false) {
           dispatch(fetchCurrentUserHasListings());
         }
 
-        dispatch(fetchCurrentUserNotifications());
+        if (updateNotifications !== false) {
+          dispatch(fetchCurrentUserNotifications());
+        }
 
         if (!currentUser.attributes.emailVerified) {
           dispatch(fetchCurrentUserHasOrders());

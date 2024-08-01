@@ -194,13 +194,17 @@ const isCurrentUser = (userId, cu) => userId?.uuid === cu?.id?.uuid;
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const userId = new UUID(params.id);
   const isPreviewForCurrentUser = params.variant === 'pending-approval';
+  const fetchCurrentUserOptions = {
+    updateHasListings: false,
+    updateNotifications: false,
+  };
 
   // Clear state so that previously loaded data is not visible
   // in case this page load fails.
   dispatch(setInitialState());
 
   if (isPreviewForCurrentUser) {
-    return dispatch(fetchCurrentUser()).then(() => {
+    return dispatch(fetchCurrentUser(fetchCurrentUserOptions)).then(() => {
       const currentUser = getState()?.user?.currentUser;
 
       if (isCurrentUser(userId, currentUser) && isUserAuthorized(currentUser)) {
@@ -221,7 +225,7 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   }
 
   return Promise.all([
-    dispatch(fetchCurrentUser()),
+    dispatch(fetchCurrentUser(fetchCurrentUserOptions)),
     dispatch(showUser(userId, config)),
     dispatch(queryUserListings(userId, config)),
     dispatch(queryUserReviews(userId)),
