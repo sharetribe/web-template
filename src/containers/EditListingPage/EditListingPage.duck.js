@@ -917,10 +917,13 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   dispatch(clearUpdatedTab());
   dispatch(clearPublishError());
   const { id, type } = params;
+  const fetchCurrentUserOptions = {
+    updateNotifications: false,
+  };
 
   if (type === 'new') {
     // No need to listing data when creating a new listing
-    return Promise.all([dispatch(fetchCurrentUser())])
+    return Promise.all([dispatch(fetchCurrentUser(fetchCurrentUserOptions))])
       .then(response => {
         const currentUser = getState().user.currentUser;
         if (currentUser && currentUser.stripeAccount) {
@@ -934,7 +937,10 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
   }
 
   const payload = { id: new UUID(id) };
-  return Promise.all([dispatch(requestShowListing(payload, config)), dispatch(fetchCurrentUser())])
+  return Promise.all([
+    dispatch(requestShowListing(payload, config)),
+    dispatch(fetchCurrentUser(fetchCurrentUserOptions)),
+  ])
     .then(response => {
       const currentUser = getState().user.currentUser;
 

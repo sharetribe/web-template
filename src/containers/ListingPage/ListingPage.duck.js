@@ -203,7 +203,13 @@ export const showListing = (listingId, config, isOwn = false) => (dispatch, getS
   const aspectRatio = aspectHeight / aspectWidth;
 
   dispatch(showListingRequest(listingId));
-  dispatch(fetchCurrentUser());
+  // Current user entity is fetched in a bit lazy fashion, since it's not tied to returned Promise chain.
+  const fetchCurrentUserOptions = {
+    updateHasListings: false,
+    updateNotifications: false,
+  };
+  dispatch(fetchCurrentUser(fetchCurrentUserOptions));
+
   const params = {
     id: listingId,
     include: ['author', 'author.profileImage', 'images', 'currentStock'],
