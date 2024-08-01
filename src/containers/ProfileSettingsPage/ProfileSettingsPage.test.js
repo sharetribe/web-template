@@ -15,7 +15,6 @@ describe('ProfileSettingsPage', () => {
     const props = {
       authInProgress: false,
       currentUser: createCurrentUser('userId'),
-      currentUserHasListings: false,
       history: { push: noop },
       isAuthenticated: false,
       location: { search: '' },
