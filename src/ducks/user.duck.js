@@ -319,10 +319,11 @@ export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => 
     .catch(e => dispatch(fetchCurrentUserNotificationsError(storableError(e))));
 };
 
-export const fetchCurrentUser = (params = null) => (dispatch, getState, sdk) => {
+export const fetchCurrentUser = options => (dispatch, getState, sdk) => {
   const state = getState();
   const { currentUserHasListings, currentUserShowTimestamp } = state.user || {};
   const { isAuthenticated } = state.auth;
+  const { callParams = null } = options || {};
 
   // Double fetch might happen when e.g. profile page is making a full page load
   const aSecondAgo = new Date().getTime() - 1000;
@@ -338,7 +339,7 @@ export const fetchCurrentUser = (params = null) => (dispatch, getState, sdk) => 
     return Promise.resolve({});
   }
 
-  const parameters = params || {
+  const parameters = callParams || {
     include: ['effectivePermissionSet', 'profileImage', 'stripeAccount'],
     'fields.image': [
       'variants.square-small',
