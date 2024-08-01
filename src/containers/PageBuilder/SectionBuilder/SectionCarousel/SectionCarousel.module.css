@@ -121,7 +121,7 @@
     ); */
 
     &:last-of-type {
-      padding-right: 32px;
+     /*  padding-right: 32px; */
       width: calc(
         min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px
       ); /* 32px (padding-right above) */
