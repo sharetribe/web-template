@@ -39,12 +39,13 @@ const configParams = {
 };
 
 exports.authenticateAuth0 = (req, res) => {
-  const { from, defaultReturn, defaultConfirm, userType } = req.query || {};
+  const { from, defaultReturn, defaultConfirm, userType, brandStudioId } = req.query || {};
   const params = {
-    ...(from ? { 'ext-from': from } : {}),
-    ...(defaultReturn ? { 'ext-default-return': defaultReturn } : {}),
-    ...(defaultConfirm ? { 'ext-default-confirm': defaultConfirm } : {}),
+    ...(from ? { 'ext-mp-from': from } : {}),
+    ...(defaultReturn ? { 'ext-mp-default-return': defaultReturn } : {}),
+    ...(defaultConfirm ? { 'ext-mp-default-confirm': defaultConfirm } : {}),
     ...(userType ? { 'ext-mp-user-type': userType } : {}),
+    ...(brandStudioId ? { 'ext-mp-brand-studio-id': brandStudioId } : {}),
   };
   res.oidc.login({
     returnTo: '/api/auth/auth0/custom-callback',
@@ -70,9 +71,9 @@ exports.authenticateAuth0Callback = (req, res) => {
     defaultReturn = '/',
     defaultConfirm = '/',
   } = initialRoutes;
-  const { userType = defaultUserType } = initialProfile;
+  const { userType = defaultUserType, given_name: firstName, family_name: lastName, brandStudioId } = initialProfile;
   const userInfo = req.oidc.user;
-  const { email, given_name: firstName, family_name: lastName } = userInfo;
+  const { email } = userInfo;
   const userProfile = {
     email,
     firstName,
@@ -82,6 +83,7 @@ exports.authenticateAuth0Callback = (req, res) => {
     defaultReturn,
     defaultConfirm,
     ...(userType ? { userType } : {}),
+    ...(brandStudioId ? { brandStudioId } : {}),
   };
   loginWithIdp(null, userProfile, req, res, clientID, 'auth0dev');
 };

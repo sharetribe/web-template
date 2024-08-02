@@ -133,3 +133,25 @@ export const getPropsForCustomUserFieldInputs = (
     }, []) || []
   );
 };
+
+export const isStudioBrand = (userType) => {
+  return userType === 'studio-brand';
+};
+
+export const getBrandUserFieldInputs = (userType, isBrandAdmin, fieldKey) => {
+  const hideBrandFields = isStudioBrand(userType) && !isBrandAdmin;
+  if (!hideBrandFields) { return true }
+  switch (fieldKey) {
+    case 'brandName':
+    case 'brandWebsite':
+    case 'aboutUs':
+    case 'brandIndustry':
+      return false;
+    default:
+      return true;
+  }
+};
+
+export const getSelectableUserTypes = (userTypes) => {
+  return userTypes.filter((type) => !isStudioBrand(type.userType));
+};

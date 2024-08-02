@@ -194,6 +194,14 @@ const routeConfiguration = (layoutConfig) => {
       extraProps: { tab: 'signup' },
       loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
     },
+    // Add BrandUser to an existing Brand
+    {
+      path: '/signup/:userType/:brandStudioId',
+      name: 'SignupForUserTypePage',
+      component: AuthenticationPage,
+      extraProps: { tab: 'signup' },
+      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
+    },
     {
       path: '/confirm',
       name: 'ConfirmPage',

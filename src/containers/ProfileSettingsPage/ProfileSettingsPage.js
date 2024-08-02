@@ -95,6 +95,7 @@ export const ProfileSettingsPageComponent = props => {
   const profileImage = image || { imageId: profileImageId };
   const userTypeConfig = userTypes.find(config => config.userType === userType);
   const isDisplayNameIncluded = userTypeConfig?.defaultUserFields?.displayName !== false;
+  const preselectedUserType = userTypeConfig?.userType || null;
   // ProfileSettingsForm decides if it's allowed to show the input field.
   const displayNameMaybe = isDisplayNameIncluded && displayName ? { displayName } : {};
 
@@ -108,6 +109,7 @@ export const ProfileSettingsPageComponent = props => {
         ...displayNameMaybe,
         bio,
         profileImage: user.profileImage,
+        userType: preselectedUserType,
         ...initialValuesForUserFields(publicData, 'public', userType, userFields),
         ...initialValuesForUserFields(protectedData, 'protected', userType, userFields),
         ...initialValuesForUserFields(privateData, 'private', userType, userFields),
@@ -121,7 +123,7 @@ export const ProfileSettingsPageComponent = props => {
       onSubmit={values => handleSubmit(values, userType)}
       marketplaceName={config.marketplaceName}
       userFields={userFields}
-      userTypeConfig={userTypeConfig}
+      userTypes={userTypes}
     />
   ) : null;
 

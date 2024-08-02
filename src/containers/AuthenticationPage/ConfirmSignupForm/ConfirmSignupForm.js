@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
-import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
+import { getPropsForCustomUserFieldInputs, getBrandUserFieldInputs } from '../../../util/userHelpers';
 
 import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '../../../components';
 
@@ -162,9 +162,16 @@ const ConfirmSignupFormComponent = props => (
 
           {showCustomUserFields ? (
             <div className={css.customFields}>
-              {userFieldProps.map(fieldProps => (
-                <CustomExtendedDataField {...fieldProps} formId={formId} />
-              ))}
+              {userFieldProps.map(fieldProps => {
+                const { preselectedUserType, authInfo } = props;
+                const { brandStudioId } = authInfo;
+                const isBrandAdmin = !brandStudioId;
+                const fieldKey = fieldProps.fieldConfig.key;
+                const showField = getBrandUserFieldInputs(preselectedUserType, isBrandAdmin, fieldKey)
+                return showField ? (
+                  <CustomExtendedDataField {...fieldProps} formId={formId} />
+                ) : null;
+              })}
             </div>
           ) : null}
 

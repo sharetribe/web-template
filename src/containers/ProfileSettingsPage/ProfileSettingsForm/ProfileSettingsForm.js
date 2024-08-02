@@ -11,7 +11,7 @@ import { ensureCurrentUser } from '../../../util/data';
 import { propTypes } from '../../../util/types';
 import * as validators from '../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../util/errors';
-import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
+import { getPropsForCustomUserFieldInputs, getBrandUserFieldInputs, getSelectableUserTypes, isStudioBrand } from '../../../util/userHelpers';
 
 import {
   Form,
@@ -23,6 +23,7 @@ import {
   H4,
   CustomExtendedDataField,
 } from '../../../components';
+import FieldSelectUserType from '../../AuthenticationPage/FieldSelectUserType';
 
 import css from './ProfileSettingsForm.module.css';
 
@@ -31,15 +32,12 @@ const UPLOAD_CHANGE_DELAY = 2000; // Show spinner so that browser has time to lo
 
 const DisplayNameMaybe = props => {
   const { userTypeConfig, intl } = props;
-
   const isDisabled = userTypeConfig?.defaultUserFields?.displayName === false;
   if (isDisabled) {
     return null;
   }
-
   const { required } = userTypeConfig?.displayNameSettings || {};
   const isRequired = required === true;
-
   const validateMaybe = isRequired
     ? {
         validate: validators.required(
@@ -49,7 +47,6 @@ const DisplayNameMaybe = props => {
         ),
       }
     : {};
-
   return (
     <div className={css.sectionContainer}>
       <H4 as="h2" className={css.sectionTitle}>
@@ -124,9 +121,10 @@ class ProfileSettingsFormComponent extends Component {
             marketplaceName,
             values,
             userFields,
-            userTypeConfig,
+            userTypes,
           } = fieldRenderProps;
-
+          const { userType } = values || {};
+          const userTypeConfig = userTypes.find(config => config.userType === userType);
           const user = ensureCurrentUser(currentUser);
 
           // First name
@@ -240,10 +238,12 @@ class ProfileSettingsFormComponent extends Component {
           const submitDisabled =
             invalid || pristine || pristineSinceLastSubmit || uploadInProgress || submitInProgress;
 
+          const hideUserTypeField = isStudioBrand(userType);
+          const selectableUserTypes = getSelectableUserTypes(userTypes);
           const userFieldProps = getPropsForCustomUserFieldInputs(
             userFields,
             intl,
-            userTypeConfig?.userType,
+            userType,
             false
           );
 
@@ -367,10 +367,23 @@ class ProfileSettingsFormComponent extends Component {
                   <FormattedMessage id="ProfileSettingsForm.bioInfo" values={{ marketplaceName }} />
                 </p>
               </div>
+
+              <FieldSelectUserType
+                name="userType"
+                userTypes={selectableUserTypes}
+                hasExistingUserType={hideUserTypeField} // Used to define when to display the Field
+                intl={intl}
+              />
+
               <div className={classNames(css.sectionContainer, css.lastSection)}>
-                {userFieldProps.map(fieldProps => (
-                  <CustomExtendedDataField {...fieldProps} formId={formId} />
-                ))}
+                {userFieldProps.map(fieldProps => {
+                  const isBrandAdmin = currentUser.attributes.profile.metadata.isBrandAdmin || false
+                  const fieldKey = fieldProps.fieldConfig.key;
+                  const showField = getBrandUserFieldInputs(userType, isBrandAdmin, fieldKey)
+                  return (
+                    <CustomExtendedDataField {...fieldProps} formId={formId} disabled={!showField}/>
+                  )
+                })}
               </div>
               {submitError}
               <Button
@@ -408,6 +421,7 @@ ProfileSettingsFormComponent.propTypes = {
   uploadInProgress: bool.isRequired,
   updateInProgress: bool.isRequired,
   updateProfileError: propTypes.error,
+  userTypes: propTypes.userTypes.isRequired,
   updateProfileReady: bool,
 
   // from injectIntl

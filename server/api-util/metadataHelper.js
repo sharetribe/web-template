@@ -1,0 +1,30 @@
+const USER_TYPES = {
+  BRAND: 'studio-brand',
+  BUYER: 'buyer',
+  SELLER: 'creative-seller'
+}
+
+const COMMUNITY_STATUS = {
+  APPLIED: 'APPLIED',
+  APPROVED: 'APPROVED',
+  WAITLISTED: 'WAITLISTED',
+}
+
+const SELLER_STATUS = {
+  APPLIED: 'APPLIED',
+  APPROVED: 'APPROVED',
+  WAITLISTED: 'WAITLISTED',
+}
+
+const MEMBERSHIP_TYPES = {
+  BASIC: 'BASIC',
+  CONNECT: 'CONNECT',
+  PRO: 'PRO',
+}
+
+module.exports = {
+  USER_TYPES,
+  COMMUNITY_STATUS,
+  SELLER_STATUS,
+  MEMBERSHIP_TYPES
+};

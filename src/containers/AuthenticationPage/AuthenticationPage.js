@@ -19,7 +19,7 @@ import {
   isSignupEmailTakenError,
   isTooManyEmailVerificationRequestsError,
 } from '../../util/errors';
-import { pickUserFieldsData, addScopePrefix } from '../../util/userHelpers';
+import { pickUserFieldsData, addScopePrefix, isStudioBrand } from '../../util/userHelpers';
 import { authenticationInProgress, signupWithIdp } from '../../ducks/auth.duck';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 import { sendVerificationEmail } from '../../ducks/user.duck';
@@ -51,7 +51,7 @@ import css from './AuthenticationPage.module.css';
 import { Auth0Logo } from './socialLoginLogos';
 
 // SSO (Auth0) buttons are needed by AuthenticationForms
-export const SSOButton = ({ isLogin, from, userType }) => {
+export const SSOButton = ({ isLogin, from, userType, brandStudioId }) => {
   const routeConfiguration = useRouteConfiguration();
   const getDataForSSORoutes = () => {
     const baseUrl = apiBaseUrl();
@@ -59,6 +59,7 @@ export const SSOButton = ({ isLogin, from, userType }) => {
     const defaultReturn = pathByRouteName('LandingPage', routeConfiguration);
     // Route for confirming user data before creating a new user
     const defaultConfirm = pathByRouteName('ConfirmPage', routeConfiguration);
+    const withBrandStudioId = isStudioBrand(userType) && !!brandStudioId;
     const queryParams = new URLSearchParams({
       ...(defaultReturn ? { defaultReturn } : {}),
       ...(defaultConfirm ? { defaultConfirm } : {}),
@@ -67,6 +68,7 @@ export const SSOButton = ({ isLogin, from, userType }) => {
       ...(from ? { from } : {}),
       // The preselected userType needs to be saved over the visit to identity provider's service
       ...(userType ? { userType } : {}),
+      ...(withBrandStudioId ? { brandStudioId } : {}),
     });
     return { baseUrl, queryParams: queryParams.toString() };
   };
@@ -107,7 +109,7 @@ const getNonUserFieldParams = (values, userFieldConfigs) => {
 
 // Tabs for SignupForm and LoginForm
 export const AuthenticationForms = props => {
-  const { isLogin, userType, from, idpAuthError } = props;
+  const { isLogin, userType, from, idpAuthError, brandStudioId } = props;
   const config = useConfiguration();
   const { userTypes = [] } = config.user;
   const preselectedUserType = userTypes.find(conf => conf.userType === userType)?.userType || null;
@@ -154,7 +156,7 @@ export const AuthenticationForms = props => {
       <LinkTabNavHorizontal className={css.tabs} tabs={tabs} />
       {loginOrSignupError}
       {isLogin ? <LoginForm /> : <SignupForm />}
-      <SSOButton isLogin={isLogin} {...fromMaybe} {...userTypeMaybe} />
+      <SSOButton isLogin={isLogin} brandStudioId={brandStudioId} {...fromMaybe} {...userTypeMaybe} />
     </div>
   );
 };
@@ -176,7 +178,7 @@ const ConfirmIdProviderInfoForm = props => {
   const idp = authInfo ? authInfo.idpId.replace(/^./, str => str.toUpperCase()) : null;
 
   const handleSubmitConfirm = values => {
-    const { idpToken, email, firstName, lastName, idpId } = authInfo;
+    const { idpToken, email, brandStudioId, idpId } = authInfo;
     const {
       userType,
       email: newEmail,
@@ -190,11 +192,12 @@ const ConfirmIdProviderInfoForm = props => {
     // and they can't be fetched directly from idp provider (e.g. Facebook)
     const authParams = {
       ...(newEmail !== email && { email: newEmail }),
-      ...(newFirstName !== firstName && { firstName: newFirstName }),
-      ...(newLastName !== lastName && { lastName: newLastName }),
+      firstName: newFirstName,
+      lastName: newLastName,
     };
+    const withHiddenPrivateData = isStudioBrand(userType) && !!brandStudioId;
     // Pass other values as extended data according to user field configuration
-    const extendedDataMaybe = !isEmpty(rest)
+    const extendedDataMaybe = !isEmpty(rest) || withHiddenPrivateData
       ? {
           publicData: {
             userType,
@@ -202,6 +205,7 @@ const ConfirmIdProviderInfoForm = props => {
           },
           privateData: {
             ...pickUserFieldsData(rest, 'private', userType, userFields),
+            ...(!!brandStudioId && { brandStudioId }),
           },
           protectedData: {
             ...pickUserFieldsData(rest, 'protected', userType, userFields),
@@ -264,6 +268,7 @@ export const AuthenticationOrConfirmInfoForm = props => {
     idpAuthError,
     confirmError,
     termsAndConditions,
+    brandStudioId,
   } = props;
   const isConfirm = tab === 'confirm';
   const isLogin = tab === 'login';
@@ -282,6 +287,7 @@ export const AuthenticationOrConfirmInfoForm = props => {
       userType={userType}
       from={from}
       idpAuthError={idpAuthError}
+      brandStudioId={brandStudioId}
     ></AuthenticationForms>
   );
 };
@@ -354,6 +360,7 @@ export const AuthenticationPageComponent = props => {
   const user = ensureCurrentUser(currentUser);
   const currentUserLoaded = !!user.id;
   const isLogin = tab === 'login';
+  const { brandStudioId } = pathParams;
 
   // We only want to show the email verification dialog in the signup
   // tab if the user isn't being redirected somewhere else
@@ -427,6 +434,7 @@ export const AuthenticationPageComponent = props => {
               tab={tab}
               userType={userType}
               authInfo={authInfo}
+              brandStudioId={brandStudioId}
               from={from}
               submitSingupWithIdp={submitSingupWithIdp}
               authInProgress={authInProgress}
