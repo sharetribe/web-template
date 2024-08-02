@@ -54,7 +54,7 @@ const TopbarMobileMenu = props => {
             </a> */}
           <br></br>
           <div className={css.categories}>
-            <h1 style={{ color: 'black', cursor: 'pointer' }} onClick={toggleDropdown}>
+            <h1 style={{ color: 'var(--colorGrey300)', cursor: 'pointer' }} onClick={toggleDropdown}>
               Quiero alquilar
             </h1>
             {isOpen ? (
@@ -78,38 +78,38 @@ const TopbarMobileMenu = props => {
           <Collapse isOpened={isOpen}>
             <div className={css.menuLinks}>
               <a
-                style={{ color: 'black' }}
+                style={{ color: 'var(--colorGrey300)' }}
                 href="/s?pub_campamento=carpa%2Cbolsa_de_dormir%2Caislante%2Csilla_camping%2Ccocina_camping%2Cheladeritas%2Ccolchon_inflable%2Cmochila%2Ciluminacion%2Cotros_camping"
               >
                 <FormattedMessage id="Camping" />
               </a>
               <br />
               <a
-                style={{ color: 'black' }}
+                style={{ color: 'var(--colorGrey300)' }}
                 href="/s?pub_deportes_acuaticos=kayak%2Csup%2Ctraje_neoprene%2Cchaleco_salvavida%2Cbote_inflable%2Cotros_da&pub_esqui_snow_cate=esquies_alpino%2Cbotas_esqui_alpino%2Csnow_alpino%2Cbotas_snow%2Cbastones%2Cotros_sys_cate&pub_esqui_travesia=esqui_pieles_travesia%2Cbotas_travesia%2Cbastones_travesia%2Cseguridad_travesia%2Cpiquetas_travesia%2Ccasco%2Cantiparras%2Cguantes%2Ccrampones%2Csplitboard%2Cotros_syst"
               >
                 <FormattedMessage id="Deportes" />
               </a>
               <br />
               <a
-                style={{ color: 'black' }}
+                style={{ color: 'var(--colorGrey300)' }}
                 href="/s?pub_hogar=has_all%3Aherramientas_e%2Cmyi%2Cjardineria"
               >
                 <FormattedMessage id="Hogar" />
               </a>
               <br />
               <a
-                style={{ color: 'black' }}
+                style={{ color: 'var(--colorGrey300)' }}
                 href="/s?pub_bebes=butaca_auto%2Cbuster%2Csilla_comer%2Cpracticuna%2Cmochila_trekking_bebe%2Cbanadera%2CCochecito%2Cotros_bebes%2Csalvavidas_bebe%2Cropa_nieve_bebe"
               >
                 <FormattedMessage id="Bebés" />
               </a>
               <br />
-              <a style={{ color: 'black' }} href="/s?pub_ropa=has_all%3Aadultos%2Cninos%2Cbebe">
+              <a style={{ color: 'var(--colorGrey300)' }} href="/s?pub_ropa=has_all%3Aadultos%2Cninos%2Cbebe">
                 <FormattedMessage id="Vestimenta" />
               </a>
               <br />
-              <a style={{ color: 'black' }} href="/s">
+              <a style={{ color: 'var(--colorGrey300)' }} href="/s">
                 <FormattedMessage id="Otros" />
               </a>
             </div>
@@ -118,13 +118,13 @@ const TopbarMobileMenu = props => {
           <br></br>
           <br></br>
           <div className={css.menu}>
-            <NamedLink style={{ color: 'black' }} name="NewListingPage">
+            <NamedLink style={{ color: 'var(--colorGrey300)' }} name="NewListingPage">
               <h1>
                 <FormattedMessage id="TopbarMobileMenu.newListingLink" />
               </h1>
             </NamedLink>
             <a href="https://www.rundo.com.ar/p/frequent-asked-questions">
-              <h1 style={{ color: 'black' }}>Preguntas frecuentes</h1>
+              <h1 style={{ color: 'grey' }}>Preguntas frecuentes</h1>
             </a>
           </div>
         </div>
