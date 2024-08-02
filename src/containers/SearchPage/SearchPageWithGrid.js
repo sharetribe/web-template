@@ -305,6 +305,9 @@ export class SearchPageComponent extends Component {
         <div className={css.layoutWrapperContainer}>
           <aside className={css.layoutWrapperFilterColumn} data-testid="filterColumnAside">
             <div className={css.filterColumnContent}>
+            <button className={css.resetAllButton} onClick={e => this.handleResetAll(e)}>
+                <FormattedMessage id={'SearchFiltersMobile.resetAll'} />
+              </button>
               {availableFilters.map(config => {
                 return (
                   <FilterComponent
