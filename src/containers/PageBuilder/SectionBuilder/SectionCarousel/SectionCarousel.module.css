@@ -169,7 +169,7 @@
 .fourColumns .block {
   @media (--viewportMedium) {
     /* 64px (horizontal layout paddings) - 96px (three gutters á 32px) / 4 (number of columns) */
-    width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px - 96px) / 4);
+    width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px - 96px) / 3);
 
     &:last-of-type {
       margin-right: 32px;
