@@ -58,6 +58,7 @@
 }
 
 .categories h1 {
+  font-weight: var(--fontFamily);
   @media (--viewportMedium) {
     margin-top: 0%;
     width: 100%;
@@ -81,6 +82,7 @@
 }
 
 .menu h1 {
+  font-weight: var(--fontFamily);
   @media (--viewportMedium) {
     margin-top: 0%;
     width: 100%;

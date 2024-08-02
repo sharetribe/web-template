@@ -118,13 +118,13 @@ const TopbarMobileMenu = props => {
           <br></br>
           <br></br>
           <div className={css.menu}>
-            <NamedLink style={{ color: 'var(--colorGrey300)' }} name="NewListingPage">
+            <NamedLink style={{ color: 'grey' }} name="NewListingPage">
               <h1>
                 <FormattedMessage id="TopbarMobileMenu.newListingLink" />
               </h1>
             </NamedLink>
             <a href="https://www.rundo.com.ar/p/frequent-asked-questions">
-              <h1 style={{ color: 'grey' }}>Preguntas frecuentes</h1>
+              <h1 style={{ color: 'var(--colorGrey700)' }}>Preguntas frecuentes</h1>
             </a>
           </div>
         </div>
