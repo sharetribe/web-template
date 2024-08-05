@@ -49,6 +49,15 @@ const SectionCarousel = props => {
   const numberOfBlocks = blocks?.length;
   const hasBlocks = numberOfBlocks > 0;
 
+  const handleCtaButtonClick = () => {
+    console.log('BtnsCarrousel'); // Log para verificar
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'BtnsCarrousel');
+    } else {
+      console.error('Meta Pixel no está definido');
+    }
+  };
+
   useEffect(() => {
     const setCarouselWidth = () => {
       if (hasBlocks) {
@@ -102,14 +111,6 @@ const SectionCarousel = props => {
       onSlideRight(e);
     }
   };
-  const handleCtaButtonClick = () => {
-    console.log('BtnsCarrousel'); // Log para verificar
-    if (typeof fbq !== 'undefined') {
-      fbq('track', 'BtnsCarrousel');
-    } else {
-      console.error('Meta Pixel no está definido');
-    }
-  };
   return (
     <SectionContainer
       id={sectionId}
@@ -125,7 +126,7 @@ const SectionCarousel = props => {
           <button onClick={handleCtaButtonClick}
             style={{ border: 'none', background: 'none', padding: 0, margin: 0, width: '100%' }}
           >
-          <Field data={callToAction} className={defaultClasses.ctaButtonCarrousel} options={fieldOptions} />
+          <Field data={callToAction} className={defaultClasses.ctaButtonCarrousel} options={fieldOptions} onClick={handleCtaButtonClick}/>
           </button>
         </header>
       ) : null}
