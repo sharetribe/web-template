@@ -13,6 +13,7 @@ import {
   SCHEMA_TYPE_TEXT,
   propTypes,
 } from '../../util/types';
+import { PROFILE_PAGE_PENDING_APPROVAL_VARIANT } from '../../util/urlHelpers';
 import { pickCustomFieldProps } from '../../util/fieldHelpers';
 import { isUserAuthorized } from '../../util/userHelpers';
 import { richText } from '../../util/richText';
@@ -274,9 +275,8 @@ export const ProfilePageComponent = props => {
     user,
     ...rest
   } = props;
-  // TODO pending-approval vs 'preview'
   const isVariant = pathParams.variant?.length > 0;
-  const isPreview = isVariant && pathParams.variant === 'pending-approval';
+  const isPreview = isVariant && pathParams.variant === PROFILE_PAGE_PENDING_APPROVAL_VARIANT;
 
   // Stripe's onboarding needs a business URL for each seller, but the profile page can be
   // too empty for the provider at the time they are creating their first listing.

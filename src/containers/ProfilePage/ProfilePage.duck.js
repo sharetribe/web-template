@@ -1,6 +1,7 @@
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { fetchCurrentUser } from '../../ducks/user.duck';
 import { types as sdkTypes, createImageVariantConfig } from '../../util/sdkLoader';
+import { PROFILE_PAGE_PENDING_APPROVAL_VARIANT } from '../../util/urlHelpers';
 import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
 import { isUserAuthorized } from '../../util/userHelpers';
@@ -193,7 +194,7 @@ const isCurrentUser = (userId, cu) => userId?.uuid === cu?.id?.uuid;
 
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const userId = new UUID(params.id);
-  const isPreviewForCurrentUser = params.variant === 'pending-approval';
+  const isPreviewForCurrentUser = params.variant === PROFILE_PAGE_PENDING_APPROVAL_VARIANT;
   const fetchCurrentUserOptions = {
     updateHasListings: false,
     updateNotifications: false,
