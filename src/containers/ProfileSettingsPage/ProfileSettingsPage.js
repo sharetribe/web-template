@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { useConfiguration } from '../../context/configurationContext';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
+import { PROFILE_PAGE_PENDING_APPROVAL_VARIANT } from '../../util/urlHelpers';
 import { ensureCurrentUser } from '../../util/data';
 import {
   initialValuesForUserFields,
@@ -37,7 +38,7 @@ const ViewProfileLink = props => {
     <NamedLink
       className={css.profileLink}
       name="ProfilePageVariant"
-      params={{ id: userUUID, variant: 'pending-approval' }}
+      params={{ id: userUUID, variant: PROFILE_PAGE_PENDING_APPROVAL_VARIANT }}
     >
       <FormattedMessage id="ProfileSettingsPage.viewProfileLink" />
     </NamedLink>
