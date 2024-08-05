@@ -144,16 +144,21 @@ const SectionCarousel = props => {
               ›
             </button>
           </div>
-          <div className={getColumnCSS(numColumns)} id={sliderId}>
-            <BlockBuilder
-              rootClassName={css.block}
-              ctaButtonClass={defaultClasses.ctaButtonCarrousel}
-              blocks={blocks}
-              sectionId={sectionId}
-              responsiveImageSizes={getResponsiveImageSizes(numColumns)}
-              options={options}
-            />
-          </div>
+          <button onClick={handleCtaButtonClick}
+            style={{ border: 'none', background: 'none', padding: 0, margin: 0, width: '100%' }}
+          >
+            <div className={getColumnCSS(numColumns)} id={sliderId}>
+              <BlockBuilder
+                rootClassName={css.block}
+                ctaButtonClass={defaultClasses.ctaButtonCarrousel}
+                blocks={blocks}
+                sectionId={sectionId}
+                responsiveImageSizes={getResponsiveImageSizes(numColumns)}
+                options={options}
+                onClick={handleCtaButtonClick}
+              />
+            </div>
+          </button>
         </div>
       ) : null}
     </SectionContainer>
