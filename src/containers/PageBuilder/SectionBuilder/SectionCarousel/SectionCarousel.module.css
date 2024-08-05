@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   scroll-behavior: smooth;
-  padding: 64px 0 0 0;
+  padding: 1px 0 0 0;
 
   &:hover .carouselArrows {
     opacity: 1;
@@ -71,7 +71,7 @@
   flex-wrap: nowrap;
   width: var(--carouselWidth);
   padding-bottom: 24px;
-
+  
   overflow-x: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -93,32 +93,36 @@
 .block {
   flex: 0 0 auto;
   /* 64px = horizontal layout paddings */
-  width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px);
+  width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 140px);
 
-  margin-right: 16px;
+  margin-left: 32px;
   scroll-snap-align: center;
 
-  transform: translateX(32px);
+/*   transform: translateX(16px);  */
 
-  &:last-of-type {
-    padding-right: 32px;
-    /* 32px (padding-right above) */
-    width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px);
+   &:last-of-type {
+      /*margin-right: 32px;
+  padding-right: 32px;
+      32px (padding-right above) 
+    width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px); */
+  } 
+  @media (max-width: 426px) {
+    margin-left: 16px ;
+        margin-right: 16px; 
   }
-
   @media (--viewportMedium) {
-    margin-right: 32px;
   }
 
   @media (min-width: 1200px) {
     /* Offset the start of the carousel so it follows the global grid layout (e.g. (1400 - 1200) / 2 = 100px) */
     /* Removing this uses the full page width for the slider pane */
-    transform: translateX(
+/*     transform: translateX(
       max(calc((var(--carouselWidth) - var(--contentMaxWidthPages)) / 2 + 32px), 0px)
-    );
+    ); */
 
     &:last-of-type {
-      padding-right: 32px;
+     /*  padding-right: 32px; */
+     margin-right: 32px;
       width: calc(
         min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px
       ); /* 32px (padding-right above) */
@@ -165,11 +169,20 @@
 .fourColumns .block {
   @media (--viewportMedium) {
     /* 64px (horizontal layout paddings) - 96px (three gutters á 32px) / 4 (number of columns) */
-    width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px - 96px) / 4);
-
+    width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px - 96px) / 3);
     &:last-of-type {
-      /* 32px (padding-right above) / 4 (number of columns) */
-      width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 4);
+      margin-right: 32px;
+      /* 32px (padding-right above) / 4 (number of columns) *//* 
+      width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 4); */
+    }
+  }
+  @media (--viewportLarge) {
+    /* 64px (horizontal layout paddings) - 96px (three gutters á 32px) / 4 (number of columns) */
+    width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px - 96px) / 4);
+    &:last-of-type {
+      margin-right: 32px;
+      /* 32px (padding-right above) / 4 (number of columns) *//* 
+      width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 4); */
     }
   }
 }
