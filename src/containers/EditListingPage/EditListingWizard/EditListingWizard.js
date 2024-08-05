@@ -642,7 +642,7 @@ class EditListingWizard extends Component {
                   disabled={formDisabled}
                   inProgress={payoutDetailsSaveInProgress}
                   ready={payoutDetailsSaved}
-                  currentUser={ensuredCurrentUser}
+                  currentUser={currentUser}
                   stripeBankAccountLastDigits={getBankAccountLast4Digits(stripeAccountData)}
                   savedCountry={savedCountry}
                   submitButtonText={intl.formatMessage({
