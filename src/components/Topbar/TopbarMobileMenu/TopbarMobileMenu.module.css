@@ -108,7 +108,8 @@
 .avatar {
   /* Layout */
   flex-shrink: 0;
-  margin: var(--TopbarMobileMenu_topMargin) 0 0 0;
+  margin: var(--TopbarMobileMenu_topMargin) 0 0 0;  
+  margin-left: 11px;
 }
 
 .greeting {
