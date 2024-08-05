@@ -119,7 +119,7 @@ const SectionCarousel = props => {
       options={fieldOptions}
     >
       {hasHeaderFields ? (
-        <header className={defaultClasses.sectionDetails}>
+        <header className={defaultClasses.sectionDetails} onClick={handleCtaButtonClick}>
           <Field data={title} className={defaultClasses.title} options={fieldOptions} />
           <Field data={description} className={defaultClasses.description} options={fieldOptions} />
           <button onClick={handleCtaButtonClick}
