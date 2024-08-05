@@ -64,7 +64,14 @@ export const createCurrentUser = (id, attributes = {}, includes = {}) => ({
       displayName: `${id} display name`,
       abbreviatedName: `${id} abbreviated name`,
     },
+    state: 'active',
     ...attributes,
+  },
+  effectivePermissionSet: {
+    id: new UUID('test-effectivePermissionSet'),
+    attributes: {
+      postListings: 'permission/allow',
+    },
   },
   ...includes,
 });
