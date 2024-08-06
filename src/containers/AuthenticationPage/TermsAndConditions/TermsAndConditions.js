@@ -51,6 +51,23 @@ const TermsAndConditions = props => {
   return (
     <div className={css.root}>
       <FieldCheckboxGroup
+        name="adult"
+        id="adult-accepted"
+        optionLabelClassName={css.finePrint}
+        options={[
+          {
+            key: 'tos-and-privacy',
+            label: intl.formatMessage(
+              { id: 'AuthenticationPage.termsAdultCheckbox' },
+              { termsLink, privacyLink }
+            ),
+          },
+        ]}
+        validate={requiredFieldArrayCheckbox(
+          intl.formatMessage({ id: 'AuthenticationPage.termsAdultCheckboxRequired' })
+        )}
+      />
+      <FieldCheckboxGroup
         name="terms"
         id="terms-accepted"
         optionLabelClassName={css.finePrint}
