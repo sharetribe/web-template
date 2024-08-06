@@ -40,7 +40,7 @@
 }
 
 .logo {
-  width: 42vw;
+  width: 50vw;
   height: 20vh;
 
   @media (--viewportMedium) {
@@ -58,6 +58,7 @@
 }
 
 .categories h1 {
+  font-weight: var(--fontFamily);
   @media (--viewportMedium) {
     margin-top: 0%;
     width: 100%;
@@ -81,6 +82,7 @@
 }
 
 .menu h1 {
+  font-weight: var(--fontFamily);
   @media (--viewportMedium) {
     margin-top: 0%;
     width: 100%;
@@ -106,7 +108,8 @@
 .avatar {
   /* Layout */
   flex-shrink: 0;
-  margin: var(--TopbarMobileMenu_topMargin) 0 0 0;
+  margin: var(--TopbarMobileMenu_topMargin) 0 0 0;  
+  margin-left: 11px;
 }
 
 .greeting {
