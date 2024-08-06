@@ -93,7 +93,7 @@
 .block {
   flex: 0 0 auto;
   /* 64px = horizontal layout paddings */
-  width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 150px);
+  width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 170px);
 
   margin-left: 32px;
   scroll-snap-align: center;
