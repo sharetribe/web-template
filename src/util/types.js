@@ -125,7 +125,7 @@ propTypes.imageAsset = shape({
 });
 
 // Denormalised user object
-propTypes.currentUser = shape({
+const currentUser = shape({
   id: propTypes.uuid.isRequired,
   type: propTypes.value('currentUser').isRequired,
   attributes: shape({
@@ -143,6 +143,21 @@ propTypes.currentUser = shape({
   }),
   profileImage: propTypes.image,
 });
+const currentUserBanned = shape({
+  id: propTypes.uuid.isRequired,
+  type: propTypes.value('currentUser').isRequired,
+  attributes: shape({
+    banned: propTypes.value(true).isRequired,
+  }),
+});
+const currentUserDeleted = shape({
+  id: propTypes.uuid.isRequired,
+  type: propTypes.value('currentUser').isRequired,
+  attributes: shape({
+    deleted: propTypes.value(true).isRequired,
+  }),
+});
+propTypes.currentUser = oneOfType([currentUser, currentUserBanned, currentUserDeleted]);
 
 const userAttributes = shape({
   banned: propTypes.value(false).isRequired,
