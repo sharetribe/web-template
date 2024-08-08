@@ -14,6 +14,8 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] Routes.js: reTry can be undefined in some cases (reTry.scrollIntoView)
+  [#427](https://github.com/sharetribe/web-template/pull/427)
 - [change] ProfilePage: remove withViewport and refactor a bit.
   [#424](https://github.com/sharetribe/web-template/pull/424)
 - [change] Update express.js (v4.19.2) and nodemon (3.1.4).
