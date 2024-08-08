@@ -22,14 +22,13 @@
 }
 
 .contentAnonymous {
-  margin: -11px;
   width: 100vh;
-  height: 20vh;
+  height: 18vh;
   flex-grow: 1;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  justify-content: center;
   background-color: var(--marketplaceColor);
 
   @media (--viewportMedium) {
@@ -40,13 +39,15 @@
 }
 
 .logo {
-  width: 60vw;
-  height: 20vh;
+  margin-left: 5%;
+  width: 15%;
+  height: 40%;
 
   @media (--viewportMedium) {
-    width: 30vw;
-    height: 20vh;
-  }
+    margin-left: 5%;
+    width: 20%;
+    height: 60%;
+  } 
 }
 
 .categories {

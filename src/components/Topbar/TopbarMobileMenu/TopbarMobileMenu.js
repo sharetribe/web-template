@@ -46,7 +46,7 @@ const TopbarMobileMenu = props => {
     return (
       <div className={css.root}>
         <div className={contentClass}>
-          <img className={css.logo} src="/static/icons/rundo_web-social-media.png" alt="Logo" />
+          <img className={css.logo} src="/static/icons/Logo-letras-blancas.png" alt="Logo" />
         </div>
         <div className={css.authenticationGreeting}>
           {/*             <a href='/s'>
