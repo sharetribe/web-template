@@ -14,6 +14,15 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Handle API's new permission model & permission to post listings
+
+  - CurrentUser fetch includes a new relationship: effectivePermissionSet
+  - There is a new Page component: NoAccessPage
+  - If user has no posting rights: they can't create or edit a draft listing and they can't open a
+    previously closed published listing. Instead, they are redirected to NoAccessPage
+
+  [#426](https://github.com/sharetribe/web-template/pull/426)
+
 - [fix] Routes.js: reTry can be undefined in some cases (reTry.scrollIntoView)
   [#427](https://github.com/sharetribe/web-template/pull/427)
 - [change] ProfilePage: remove withViewport and refactor a bit.
