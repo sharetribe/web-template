@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { bool, arrayOf, number, shape } from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { bool, arrayOf, oneOfType } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -13,8 +13,9 @@ import {
   SCHEMA_TYPE_TEXT,
   propTypes,
 } from '../../util/types';
-import { ensureCurrentUser, ensureUser } from '../../util/data';
+import { PROFILE_PAGE_PENDING_APPROVAL_VARIANT } from '../../util/urlHelpers';
 import { pickCustomFieldProps } from '../../util/fieldHelpers';
+import { isUserAuthorized } from '../../util/userHelpers';
 import { richText } from '../../util/richText';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -30,6 +31,7 @@ import {
   Reviews,
   ButtonTabNavHorizontal,
   LayoutSideNavigation,
+  NamedRedirect,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
@@ -45,7 +47,7 @@ const MAX_MOBILE_SCREEN_WIDTH = 768;
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
 export const AsideContent = props => {
-  const { user, displayName, isCurrentUser } = props;
+  const { user, displayName, showLinkToProfileSettingsPage } = props;
   return (
     <div className={css.asideContent}>
       <AvatarLarge className={css.avatar} user={user} disableProfileLink />
@@ -54,7 +56,7 @@ export const AsideContent = props => {
           <FormattedMessage id="ProfilePage.mobileHeading" values={{ name: displayName }} />
         ) : null}
       </H2>
-      {isCurrentUser ? (
+      {showLinkToProfileSettingsPage ? (
         <>
           <NamedLink className={css.editLinkMobile} name="ProfileSettingsPage">
             <FormattedMessage id="ProfilePage.editProfileLinkMobile" />
@@ -258,20 +260,55 @@ export const MainContent = props => {
 export const ProfilePageComponent = props => {
   const config = useConfiguration();
   const intl = useIntl();
-  const { scrollingDisabled, currentUser, userShowError, user, ...rest } = props;
-  const ensuredCurrentUser = ensureCurrentUser(currentUser);
-  const profileUser = ensureUser(user);
-  const isCurrentUser =
-    ensuredCurrentUser.id && profileUser.id && ensuredCurrentUser.id.uuid === profileUser.id.uuid;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const {
+    scrollingDisabled,
+    params: pathParams,
+    currentUser,
+    useCurrentUser,
+    userShowError,
+    user,
+    ...rest
+  } = props;
+  const isVariant = pathParams.variant?.length > 0;
+  const isPreview = isVariant && pathParams.variant === PROFILE_PAGE_PENDING_APPROVAL_VARIANT;
+
+  const isCurrentUser = currentUser?.id && currentUser?.id?.uuid === pathParams.id;
+  const profileUser = useCurrentUser ? currentUser : user;
   const { bio, displayName, publicData, metadata } = profileUser?.attributes?.profile || {};
   const { userFields } = config.user;
 
   const schemaTitleVars = { name: displayName, marketplaceName: config.marketplaceName };
   const schemaTitle = intl.formatMessage({ id: 'ProfilePage.schemaTitle' }, schemaTitleVars);
 
-  if (userShowError && userShowError.status === 404) {
+  if (!isPreview && userShowError && userShowError.status === 404) {
     return <NotFoundPage staticContext={props.staticContext} />;
+  } else if (isPreview && mounted && !isCurrentUser) {
+    // Someone is manipulating the URL, redirect to current user's profile page.
+    return isCurrentUser === false ? (
+      <NamedRedirect name="ProfilePage" params={{ id: currentUser?.id?.uuid }} />
+    ) : null;
+  } else if (isPreview && !mounted) {
+    // This preview of the profile page is not not rendered on server-side
+    // and the first pass on client-side needs to render the same UI.
+    return (
+      <Page
+        scrollingDisabled={scrollingDisabled}
+        title={schemaTitle}
+        schema={{
+          '@context': 'http://schema.org',
+          '@type': 'ProfilePage',
+          name: schemaTitle,
+        }}
+      />
+    );
   }
+  // This is rendering normal profile page (not preview for pending-approval)
   return (
     <Page
       scrollingDisabled={scrollingDisabled}
@@ -286,7 +323,11 @@ export const ProfilePageComponent = props => {
         sideNavClassName={css.aside}
         topbar={<TopbarContainer />}
         sideNav={
-          <AsideContent user={user} isCurrentUser={isCurrentUser} displayName={displayName} />
+          <AsideContent
+            user={profileUser}
+            showLinkToProfileSettingsPage={mounted && isCurrentUser}
+            displayName={displayName}
+          />
         }
         footer={<FooterContainer />}
       >
@@ -317,7 +358,8 @@ ProfilePageComponent.defaultProps = {
 ProfilePageComponent.propTypes = {
   scrollingDisabled: bool.isRequired,
   currentUser: propTypes.currentUser,
-  user: propTypes.user,
+  useCurrentUser: bool.isRequired,
+  user: oneOfType([propTypes.user, propTypes.currentUser]),
   userShowError: propTypes.error,
   queryListingsError: propTypes.error,
   listings: arrayOf(propTypes.listing).isRequired,
@@ -337,14 +379,19 @@ const mapStateToProps = state => {
   } = state.ProfilePage;
   const userMatches = getMarketplaceEntities(state, [{ type: 'user', id: userId }]);
   const user = userMatches.length === 1 ? userMatches[0] : null;
-  const listings = getMarketplaceEntities(state, userListingRefs);
+
+  // Show currentUser's data if it's not approved yet
+  const isCurrentUser = userId?.uuid === currentUser?.id?.uuid;
+  const useCurrentUser = isCurrentUser && !isUserAuthorized(currentUser);
+
   return {
     scrollingDisabled: isScrollingDisabled(state),
     currentUser,
+    useCurrentUser,
     user,
     userShowError,
     queryListingsError,
-    listings,
+    listings: getMarketplaceEntities(state, userListingRefs),
     reviews,
     queryReviewsError,
   };

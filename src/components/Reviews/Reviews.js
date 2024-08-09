@@ -1,9 +1,11 @@
 import React from 'react';
-import { injectIntl, intlShape } from '../../util/reactIntl';
 import { arrayOf, string } from 'prop-types';
 import classNames from 'classnames';
-import { Avatar, ReviewRating, UserDisplayName } from '../../components';
+
+import { injectIntl, intlShape } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
+
+import { Avatar, ReviewRating, UserDisplayName } from '../../components';
 
 import css from './Reviews.module.css';
 

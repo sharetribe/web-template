@@ -1,6 +1,6 @@
 import React from 'react';
-import { createListing, createUser } from '../../util/testData';
 import { LISTING_STATE_CLOSED } from '../../util/types';
+import { createListing, createUser } from '../../util/testData';
 import OrderPanel from './OrderPanel';
 import css from './OrderPanelExample.module.css';
 

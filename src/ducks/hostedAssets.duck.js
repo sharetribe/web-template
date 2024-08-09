@@ -1,6 +1,6 @@
 import { denormalizeAssetData } from '../util/data';
-import { storableError } from '../util/errors';
 import * as log from '../util/log';
+import { storableError } from '../util/errors';
 
 // Pick paths from entries of appCdnAssets config (in configDefault.js)
 const pickHostedConfigPaths = (assetEntries, excludeAssetNames) => {

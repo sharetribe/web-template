@@ -74,8 +74,12 @@ export const loadData = () => (dispatch, getState, sdk) => {
   // Clear state so that previously loaded data is not visible
   // in case this page load fails.
   dispatch(setInitialValues());
+  const fetchCurrentUserOptions = {
+    updateHasListings: false,
+    updateNotifications: false,
+  };
 
-  return dispatch(fetchCurrentUser()).then(response => {
+  return dispatch(fetchCurrentUser(fetchCurrentUserOptions)).then(response => {
     const currentUser = getState().user.currentUser;
     if (currentUser && currentUser.stripeAccount) {
       dispatch(fetchStripeAccount());

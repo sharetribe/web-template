@@ -7,7 +7,10 @@ import classNames from 'classnames';
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
 import { propTypes } from '../../../util/types';
-import { isTooManyRequestsError } from '../../../util/errors';
+import {
+  isErrorNoPermissionForUserPendingApproval,
+  isTooManyRequestsError,
+} from '../../../util/errors';
 
 import { Form, PrimaryButton, FieldTextInput, IconInquiry, Heading } from '../../../components';
 
@@ -15,6 +18,8 @@ import css from './InquiryForm.module.css';
 
 const ErrorMessage = props => {
   const { error } = props;
+  const userPendingApproval = true || isErrorNoPermissionForUserPendingApproval(error);
+
   // No transaction process attached to listing
   return error ? (
     <p className={css.error}>
@@ -22,6 +27,8 @@ const ErrorMessage = props => {
         <FormattedMessage id="InquiryForm.sendInquiryErrorNoProcess" />
       ) : isTooManyRequestsError(error) ? (
         <FormattedMessage id="InquiryForm.tooManyRequestsError" />
+      ) : userPendingApproval ? (
+        <FormattedMessage id="InquiryForm.userPendingApprovalError" />
       ) : (
         <FormattedMessage id="InquiryForm.sendInquiryError" />
       )}

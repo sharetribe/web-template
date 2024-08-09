@@ -2352,7 +2352,6 @@ describe('EditListingPageComponent', () => {
     render(
       <EditListingPageComponent
         params={{ id: 'id', slug: 'slug', type: 'new', tab: 'details' }}
-        currentUserHasListings={false}
         isAuthenticated={false}
         authInProgress={false}
         fetchInProgress={false}

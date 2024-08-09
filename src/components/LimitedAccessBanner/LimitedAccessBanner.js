@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+
 import { FormattedMessage } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
-import { Button } from '../../components';
 import { ensureCurrentUser } from '../../util/data';
+
+import { Button } from '../../components';
 
 import css from './LimitedAccessBanner.module.css';
 

@@ -1,5 +1,5 @@
-import { storableError } from '../util/errors';
 import * as log from '../util/log';
+import { storableError } from '../util/errors';
 
 // https://stripe.com/docs/api/payment_intents/object#payment_intent_object-status
 const STRIPE_PI_HAS_PASSED_CONFIRM = ['processing', 'requires_capture', 'canceled', 'succeeded'];

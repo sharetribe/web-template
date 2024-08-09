@@ -478,8 +478,13 @@ export const speculateTransaction = (
 // We need to fetch currentUser with correct params to include relationship
 export const stripeCustomer = () => (dispatch, getState, sdk) => {
   dispatch(stripeCustomerRequest());
+  const fetchCurrentUserOptions = {
+    callParams: { include: ['stripeCustomer.defaultPaymentMethod'] },
+    updateHasListings: false,
+    updateNotifications: false,
+  };
 
-  return dispatch(fetchCurrentUser({ include: ['stripeCustomer.defaultPaymentMethod'] }))
+  return dispatch(fetchCurrentUser(fetchCurrentUserOptions))
     .then(response => {
       dispatch(stripeCustomerSuccess());
     })

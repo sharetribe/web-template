@@ -148,3 +148,22 @@ export const hasPermissionToPostListings = currentUser => {
   }
   return currentUser?.effectivePermissionSet?.attributes?.postListings === 'permission/allow';
 };
+
+/**
+ * Check if currentUser has been approved to gain access.
+ * I.e. they are not in 'pendig-approval' or 'banned' state.
+ *
+ * If the user is in 'pending-approval' state, they don't have right to post listings and initiate transactions.
+ * User's in 'active' state, they might have right to post listings and initiate transactions. It can be verified by passing permissionsToCheck map.
+ *
+ * @param {Object} currentUser API entity. It must have effectivePermissionSet included.
+ * @param {Object} [permissionsToCheck] E.g. { postListings: true }
+ * @returns {Boolean} true if currentUser has been approved (state is 'active'). If the _permissionsToCheck_ map is given, those are also checked.
+ */
+export const isUserAuthorized = (currentUser, permissionsToCheck) => {
+  const { postListings } = permissionsToCheck || {};
+  const isActive = currentUser?.attributes?.state === 'active';
+  return permissionsToCheck && postListings
+    ? isActive && hasPermissionToPostListings(currentUser)
+    : isActive;
+};

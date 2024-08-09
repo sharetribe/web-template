@@ -1,7 +1,7 @@
 // This file deals with Marketplace API which will create Stripe Custom Connect accounts
 // from given bank_account tokens.
-import { storableError } from '../util/errors';
 import * as log from '../util/log';
+import { storableError } from '../util/errors';
 
 // ================ Action types ================ //
 

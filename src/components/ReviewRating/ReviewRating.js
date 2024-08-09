@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { IconReviewStar } from '../../components';
 import { REVIEW_RATINGS } from '../../util/types';
+
+import { IconReviewStar } from '../../components';
 
 const ReviewRating = props => {
   const { className, rootClassName, reviewStarClassName, rating } = props;

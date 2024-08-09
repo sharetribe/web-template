@@ -99,6 +99,7 @@ describe('ProfilePage', () => {
     scrollingDisabled: false,
     intl: fakeIntl,
     viewport: fakeViewport,
+    params: {},
   };
 
   it('Check that user name and bio is shown correctly', () => {

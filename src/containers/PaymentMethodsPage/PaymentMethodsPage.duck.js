@@ -1,7 +1,7 @@
-import { fetchCurrentUser } from '../../ducks/user.duck';
-import { setInitialValues as setInitialValuesForPaymentMethods } from '../../ducks/paymentMethods.duck';
 import { storableError } from '../../util/errors';
 import * as log from '../../util/log';
+import { fetchCurrentUser } from '../../ducks/user.duck';
+import { setInitialValues as setInitialValuesForPaymentMethods } from '../../ducks/paymentMethods.duck';
 
 // ================ Action types ================ //
 
@@ -87,8 +87,13 @@ export const createStripeSetupIntent = () => (dispatch, getState, sdk) => {
 
 export const stripeCustomer = () => (dispatch, getState, sdk) => {
   dispatch(stripeCustomerRequest());
+  const fetchCurrentUserOptions = {
+    callParams: { include: ['stripeCustomer.defaultPaymentMethod'] },
+    updateHasListings: false,
+    updateNotifications: false,
+  };
 
-  return dispatch(fetchCurrentUser({ include: ['stripeCustomer.defaultPaymentMethod'] }))
+  return dispatch(fetchCurrentUser(fetchCurrentUserOptions))
     .then(response => {
       dispatch(stripeCustomerSuccess());
     })

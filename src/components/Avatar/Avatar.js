@@ -9,6 +9,8 @@ import {
   userDisplayNameAsString,
   userAbbreviatedName,
 } from '../../util/data';
+import { isUserAuthorized } from '../../util/userHelpers';
+
 import { ResponsiveImage, IconBannedUser, NamedLink } from '../../components/';
 
 import css from './Avatar.module.css';
@@ -46,6 +48,10 @@ export const AvatarComponent = props => {
 
   const userIsCurrentUser = user && user.type === 'currentUser';
   const avatarUser = userIsCurrentUser ? ensureCurrentUser(user) : ensureUser(user);
+  // I.e. the status is active, not pending-approval or banned
+  const isUnauthorizedUser = userIsCurrentUser && !isUserAuthorized(user);
+  const variant = user?.attributes?.state;
+  //'pending-approval'
 
   const isBannedUser = avatarUser.attributes.banned;
   const isDeletedUser = avatarUser.attributes.deleted;
@@ -61,9 +67,15 @@ export const AvatarComponent = props => {
   const displayName = userDisplayNameAsString(avatarUser, defaultUserDisplayName);
   const abbreviatedName = userAbbreviatedName(avatarUser, defaultUserAbbreviatedName);
   const rootProps = { className: classes, title: displayName };
-  const linkProps = avatarUser.id
-    ? { name: 'ProfilePage', params: { id: avatarUser.id.uuid } }
-    : { name: 'ProfileBasePage' };
+  const linkProps =
+    isUnauthorizedUser && avatarUser.id
+      ? {
+          name: 'ProfilePageVariant',
+          params: { id: avatarUser.id.uuid, variant },
+        }
+      : avatarUser.id
+      ? { name: 'ProfilePage', params: { id: avatarUser.id.uuid } }
+      : { name: 'ProfileBasePage' };
   const hasProfileImage = avatarUser.profileImage && avatarUser.profileImage.id;
   const profileLinkEnabled = !disableProfileLink;
 
