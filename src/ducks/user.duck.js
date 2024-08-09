@@ -324,7 +324,7 @@ export const fetchCurrentUser = (params = null) => (dispatch, getState, sdk) => 
   }
 
   const parameters = params || {
-    include: ['profileImage', 'stripeAccount'],
+    include: ['effectivePermissionSet', 'profileImage', 'stripeAccount'],
     'fields.image': [
       'variants.square-small',
       'variants.square-small2x',
