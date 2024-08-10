@@ -133,7 +133,8 @@ export const deletePaymentMethodError = e => ({
 
 // ================ Thunks ================ //
 
-export const createStripeCustomer = stripePaymentMethodId => (dispatch, getState, sdk) => {
+export const createStripeCustomer = stripePaymentMethodId => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(stripeCustomerCreateRequest());
   return sdk.stripeCustomer
     .create({ stripePaymentMethodId }, { expand: true, include: ['defaultPaymentMethod'] })
@@ -148,7 +149,8 @@ export const createStripeCustomer = stripePaymentMethodId => (dispatch, getState
     });
 };
 
-export const addPaymentMethod = stripePaymentMethodId => (dispatch, getState, sdk) => {
+export const addPaymentMethod = stripePaymentMethodId => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(addPaymentMethodRequest());
   return sdk.stripeCustomer
     .addPaymentMethod({ stripePaymentMethodId }, { expand: true })
@@ -163,7 +165,8 @@ export const addPaymentMethod = stripePaymentMethodId => (dispatch, getState, sd
     });
 };
 
-export const deletePaymentMethod = () => (dispatch, getState, sdk) => {
+export const deletePaymentMethod = () => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(deletePaymentMethodRequest());
   return sdk.stripeCustomer
     .deletePaymentMethod({}, { expand: true })

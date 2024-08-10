@@ -100,7 +100,10 @@ export const denormalisedEntities = (entities, resources, throwIfNotFound = true
           // result.
           const hasMultipleRefs = Array.isArray(relRef.data);
           const multipleRefsEmpty = hasMultipleRefs && relRef.data.length === 0;
-          if (!relRef.data || multipleRefsEmpty) {
+          if (relName == 'documents') {
+            ent[relName] = relRef;
+          }
+          else if (!relRef.data || multipleRefsEmpty) {
             ent[relName] = hasMultipleRefs ? [] : null;
           } else {
             const refs = hasMultipleRefs ? relRef.data : [relRef.data];

@@ -303,7 +303,8 @@ export const fetchLineItemsError = error => ({
 
 // ================ Thunks ================ //
 
-const timeSlotsRequest = params => (dispatch, getState, sdk) => {
+const timeSlotsRequest = params => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   return sdk.timeslots.query(params).then(response => {
     return denormalisedResponseEntities(response);
   });
@@ -378,7 +379,8 @@ const listingRelationship = txResponse => {
   return txResponse.data.data.relationships.listing.data;
 };
 
-export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdk) => {
+export const fetchTransaction = (id, txRole, config) => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(fetchTransactionRequest());
   let txResponse = null;
 
@@ -476,7 +478,8 @@ const refreshTransactionEntity = (sdk, txId, dispatch) => {
     });
 };
 
-export const makeTransition = (txId, transitionName, params) => (dispatch, getState, sdk) => {
+export const makeTransition = (txId, transitionName, params) => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   if (transitionInProgress(getState())) {
     return Promise.reject(new Error('Transition already in progress'));
   }
@@ -507,7 +510,8 @@ export const makeTransition = (txId, transitionName, params) => (dispatch, getSt
     });
 };
 
-const fetchMessages = (txId, page, config) => (dispatch, getState, sdk) => {
+const fetchMessages = (txId, page, config) => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   const paging = { page, perPage: MESSAGES_PAGE_SIZE };
   dispatch(fetchMessagesRequest());
 
@@ -559,7 +563,8 @@ export const fetchMoreMessages = (txId, config) => (dispatch, getState, sdk) => 
   return dispatch(fetchMessages(txId, nextPage, config));
 };
 
-export const sendMessage = (txId, message, config) => (dispatch, getState, sdk) => {
+export const sendMessage = (txId, message, config) => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(sendMessageRequest());
 
   return sdk.messages
@@ -645,8 +650,9 @@ const sendReviewAsFirst = (txId, transition, params, dispatch, sdk, config) => {
 export const sendReview = (tx, transitionOptionsInfo, params, config) => (
   dispatch,
   getState,
-  sdk
+  sdks
 ) => {
+  const sdk = sdks.shareTribeSdk;
   const { reviewAsFirst, reviewAsSecond, hasOtherPartyReviewedFirst } = transitionOptionsInfo;
   dispatch(sendReviewRequest());
 
@@ -659,7 +665,8 @@ const isNonEmpty = value => {
   return typeof value === 'object' || Array.isArray(value) ? !isEmpty(value) : !!value;
 };
 
-export const fetchNextTransitions = id => (dispatch, getState, sdk) => {
+export const fetchNextTransitions = id => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(fetchTransitionsRequest());
 
   return sdk.processTransitions

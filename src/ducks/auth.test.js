@@ -21,10 +21,10 @@ import * as log from '../util/log';
 
 // Create a dispatch function that correctly calls the thunk functions
 // with itself
-const createFakeDispatch = (getState, sdk) => {
+const createFakeDispatch = (getState, sdks) => {
   const dispatch = jest.fn(actionOrFn => {
     if (typeof actionOrFn === 'function') {
-      return actionOrFn(dispatch, getState, sdk);
+      return actionOrFn(dispatch, getState, sdks);
     }
     return actionOrFn;
   });
@@ -188,13 +188,13 @@ describe('auth duck', () => {
     it('should dispatch success and fetch current user', () => {
       const initialState = reducer();
       const getState = () => ({ auth: initialState });
-      const sdk = { login: jest.fn(() => Promise.resolve({})) };
-      const dispatch = createFakeDispatch(getState, sdk);
+      const sdks = { shareTribeSdk: { login: jest.fn(() => Promise.resolve({})) } };
+      const dispatch = createFakeDispatch(getState, sdks);
       const username = 'x.x@example.com';
       const password = 'pass';
 
-      return login(username, password)(dispatch, getState, sdk).then(() => {
-        expect(sdk.login.mock.calls).toEqual([[{ username, password }]]);
+      return login(username, password)(dispatch, getState, sdks).then(() => {
+        expect(sdks.shareTribeSdk.login.mock.calls).toEqual([[{ username, password }]]);
         expect(dispatchedActions(dispatch)).toEqual([
           loginRequest(),
           loginSuccess(),
@@ -212,12 +212,12 @@ describe('auth duck', () => {
       const initialState = reducer();
       const getState = () => ({ auth: initialState });
       const error = new Error('could not login');
-      const sdk = { login: jest.fn(() => Promise.reject(error)) };
+      const sdks = { shareTribeSdk: { login: jest.fn(() => Promise.reject(error)) } };
       const username = 'x.x@example.com';
       const password = 'pass';
 
-      return login(username, password)(dispatch, getState, sdk).then(() => {
-        expect(sdk.login.mock.calls).toEqual([[{ username, password }]]);
+      return login(username, password)(dispatch, getState, sdks).then(() => {
+        expect(sdks.shareTribeSdk.login.mock.calls).toEqual([[{ username, password }]]);
         expect(dispatch.mock.calls).toEqual([[loginRequest()], [loginError(storableError(error))]]);
       });
     });
@@ -226,17 +226,17 @@ describe('auth duck', () => {
       const initialState = reducer();
       const loginInProgressState = reducer(initialState, loginRequest());
       const getState = () => ({ auth: loginInProgressState });
-      const sdk = { login: jest.fn(() => Promise.resolve({})) };
+      const sdks = { shareTribeSdk: { login: jest.fn(() => Promise.resolve({})) } };
       const username = 'x.x@example.com';
       const password = 'pass';
 
-      return login(username, password)(dispatch, getState, sdk).then(
+      return login(username, password)(dispatch, getState, sdks).then(
         () => {
           throw new Error('should not succeed');
         },
         e => {
           expect(e.message).toEqual('Login or logout already in progress');
-          expect(sdk.login.mock.calls.length).toEqual(0);
+          expect(sdks.shareTribeSdk.login.mock.calls.length).toEqual(0);
           expect(dispatch.mock.calls.length).toEqual(0);
         }
       );
@@ -246,17 +246,17 @@ describe('auth duck', () => {
       const initialState = reducer();
       const logoutInProgressState = reducer(initialState, logoutRequest());
       const getState = () => ({ auth: logoutInProgressState });
-      const sdk = { login: jest.fn(() => Promise.resolve({})) };
+      const sdks = { shareTribeSdk: { login: jest.fn(() => Promise.resolve({})) } };
       const username = 'x.x@example.com';
       const password = 'pass';
 
-      return login(username, password)(dispatch, getState, sdk).then(
+      return login(username, password)(dispatch, getState, sdks).then(
         () => {
           throw new Error('should not succeed');
         },
         e => {
           expect(e.message).toEqual('Login or logout already in progress');
-          expect(sdk.login.mock.calls.length).toEqual(0);
+          expect(sdks.shareTribeSdk.login.mock.calls.length).toEqual(0);
           expect(dispatch.mock.calls.length).toEqual(0);
         }
       );
@@ -268,10 +268,10 @@ describe('auth duck', () => {
       const dispatch = jest.fn();
       const initialState = reducer();
       const getState = () => ({ auth: initialState });
-      const sdk = { logout: jest.fn(() => Promise.resolve({})) };
+      const sdks = { shareTribeSdk: { logout: jest.fn(() => Promise.resolve({})) } };
 
-      return logout()(dispatch, getState, sdk).then(() => {
-        expect(sdk.logout.mock.calls.length).toEqual(1);
+      return logout()(dispatch, getState, sdks).then(() => {
+        expect(sdks.shareTribeSdk.logout.mock.calls.length).toEqual(1);
         expect(dispatch.mock.calls).toEqual([
           [logoutRequest()],
           [logoutSuccess()],
@@ -285,10 +285,10 @@ describe('auth duck', () => {
       const initialState = reducer();
       const getState = () => ({ auth: initialState });
       const error = new Error('could not logout');
-      const sdk = { logout: jest.fn(() => Promise.reject(error)) };
+      const sdks = { shareTribeSdk: { logout: jest.fn(() => Promise.reject(error)) } };
 
-      return logout()(dispatch, getState, sdk).then(() => {
-        expect(sdk.logout.mock.calls.length).toEqual(1);
+      return logout()(dispatch, getState, sdks).then(() => {
+        expect(sdks.shareTribeSdk.logout.mock.calls.length).toEqual(1);
         expect(dispatch.mock.calls).toEqual([
           [logoutRequest()],
           [logoutError(storableError(error))],
@@ -318,15 +318,15 @@ describe('auth duck', () => {
       const initialState = reducer();
       const loginInProgressState = reducer(initialState, loginRequest());
       const getState = () => ({ auth: loginInProgressState });
-      const sdk = { logout: jest.fn(() => Promise.resolve({})) };
+      const sdks = { shareTribeSdk: { logout: jest.fn(() => Promise.resolve({})) } };
 
-      return logout()(dispatch, getState, sdk).then(
+      return logout()(dispatch, getState, sdks).then(
         () => {
           throw new Error('should not succeed');
         },
         e => {
           expect(e.message).toEqual('Login or logout already in progress');
-          expect(sdk.logout.mock.calls.length).toEqual(0);
+          expect(sdks.shareTribeSdk.logout.mock.calls.length).toEqual(0);
           expect(dispatch.mock.calls.length).toEqual(0);
         }
       );
@@ -335,14 +335,14 @@ describe('auth duck', () => {
 
   describe('signup thunk', () => {
     it('should dispatch success and login', () => {
-      const sdk = {
+      const sdks = { shareTribeSdk: {
         currentUser: {
           create: jest.fn(() => Promise.resolve({})),
         },
         login: jest.fn(() => Promise.resolve({})),
-      };
+      } };
       const getState = () => ({ auth: state });
-      const dispatch = createFakeDispatch(getState, sdk);
+      const dispatch = createFakeDispatch(getState, sdks);
       const state = reducer();
       const email = 'pekka@example.com';
       const password = 'some pass';
@@ -356,9 +356,9 @@ describe('auth duck', () => {
         },
       };
 
-      return signup(params)(dispatch, getState, sdk).then(() => {
-        expect(sdk.currentUser.create.mock.calls).toEqual([[params]]);
-        expect(sdk.login.mock.calls).toEqual([[{ username: email, password }]]);
+      return signup(params)(dispatch, getState, sdks).then(() => {
+        expect(sdks.shareTribeSdk.currentUser.create.mock.calls).toEqual([[params]]);
+        expect(sdks.shareTribeSdk.login.mock.calls).toEqual([[{ username: email, password }]]);
         expect(dispatchedActions(dispatch)).toEqual([
           signupRequest(),
           signupSuccess(),
@@ -375,13 +375,13 @@ describe('auth duck', () => {
     });
     it('should dispatch error', () => {
       const error = new Error('test signup error');
-      const sdk = {
+      const sdks = { shareTribeSdk: {
         currentUser: {
           create: jest.fn(() => Promise.reject(error)),
         },
-      };
+      } };
       const getState = () => ({ auth: state });
-      const dispatch = createFakeDispatch(getState, sdk);
+      const dispatch = createFakeDispatch(getState, sdks);
       const state = reducer();
       const email = 'pekka@example.com';
       const password = 'some pass';
@@ -398,8 +398,8 @@ describe('auth duck', () => {
       // disable error logging
       log.error = jest.fn();
 
-      return signup(params)(dispatch, getState, sdk).then(() => {
-        expect(sdk.currentUser.create.mock.calls).toEqual([[params]]);
+      return signup(params)(dispatch, getState, sdks).then(() => {
+        expect(sdks.shareTribeSdk.currentUser.create.mock.calls).toEqual([[params]]);
         expect(dispatchedActions(dispatch)).toEqual([
           signupRequest(),
           signupError(storableError(error)),

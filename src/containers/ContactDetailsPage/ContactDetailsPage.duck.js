@@ -99,7 +99,8 @@ export const resetPasswordError = e => ({
 /**
  * Make a phone number update request to the API and return the current user.
  */
-const requestSavePhoneNumber = params => (dispatch, getState, sdk) => {
+const requestSavePhoneNumber = params => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   const phoneNumber = params.phoneNumber;
 
   return sdk.currentUser
@@ -131,7 +132,8 @@ const requestSavePhoneNumber = params => (dispatch, getState, sdk) => {
 /**
  * Make a email update request to the API and return the current user.
  */
-const requestSaveEmail = params => (dispatch, getState, sdk) => {
+const requestSaveEmail = params => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   const { email, currentPassword } = params;
 
   return sdk.currentUser
@@ -242,7 +244,8 @@ export const saveContactDetails = params => (dispatch, getState, sdk) => {
   }
 };
 
-export const resetPassword = email => (dispatch, getState, sdk) => {
+export const resetPassword = email => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(resetPasswordRequest());
   return sdk.passwordReset
     .request({ email })

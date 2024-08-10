@@ -336,9 +336,9 @@ describe('Duck', () => {
     const dispatch = jest.fn(action => action);
     const response = { status: 200 };
     const show = jest.fn(() => Promise.resolve(response));
-    const sdk = { listings: { show }, currentUser: { show } };
+    const sdks = { shareTribeSdk: { listings: { show }, currentUser: { show } } };
 
-    return showListing(id, config)(dispatch, null, sdk).then(data => {
+    return showListing(id, config)(dispatch, null, sdks).then(data => {
       expect(data).toEqual(response);
       expect(show.mock.calls).toEqual([
         [
@@ -363,11 +363,11 @@ describe('Duck', () => {
     const dispatch = jest.fn(action => action);
     const error = new Error('fail');
     const show = jest.fn(() => Promise.reject(error));
-    const sdk = { listings: { show } };
+    const sdks = { shareTribeSdk: { listings: { show } } };
 
     // Calling sdk.listings.show is expected to fail now
 
-    return showListing(id, config)(dispatch, null, sdk).then(data => {
+    return showListing(id, config)(dispatch, null, sdks).then(data => {
       expect(show.mock.calls).toEqual([
         [
           expect.objectContaining({

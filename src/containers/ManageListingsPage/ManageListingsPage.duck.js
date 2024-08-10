@@ -234,7 +234,8 @@ export const queryListingsError = e => ({
 });
 
 // Throwing error for new (loadData may need that info)
-export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
+export const queryOwnListings = queryParams => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(queryListingsRequest(queryParams));
 
   const { perPage, ...rest } = queryParams;
@@ -253,7 +254,8 @@ export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
     });
 };
 
-export const closeListing = listingId => (dispatch, getState, sdk) => {
+export const closeListing = listingId => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(closeListingRequest(listingId));
 
   return sdk.ownListings
@@ -267,7 +269,8 @@ export const closeListing = listingId => (dispatch, getState, sdk) => {
     });
 };
 
-export const openListing = listingId => (dispatch, getState, sdk) => {
+export const openListing = listingId => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(openListingRequest(listingId));
 
   return sdk.ownListings

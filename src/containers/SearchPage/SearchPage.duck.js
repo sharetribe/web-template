@@ -101,7 +101,8 @@ export const searchListingsError = e => ({
   payload: e,
 });
 
-export const searchListings = (searchParams, config) => (dispatch, getState, sdk) => {
+export const searchListings = (searchParams, config) => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(searchListingsRequest(searchParams));
 
   // SearchPage can enforce listing query to only those listings with valid listingType

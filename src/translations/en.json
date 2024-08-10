@@ -1122,5 +1122,14 @@
   "UserDisplayName.deleted": "Deleted user",
   "UserNav.accountSettings": "Account settings",
   "UserNav.profileSettings": "Profile settings",
-  "UserNav.yourListings": "Your listings"
+  "UserNav.yourListings": "Your listings",
+  "EditListingWizard.tabLabelDocuments": "Documents",
+  "EditListingDocumentsPanel.createListingTitle": "Documents",
+  "EditListingDocumentsPanel.title": "Edit the documents of {listingTitle}",
+  "EditListingDocumentsForm.documentsInputPlaceholder": "Add your documents...",
+  "EditListingDocumentsForm.updateFailed": "Updating listing documents failed",
+  "EditListingDocumentsForm.showListingFailed": "Fetching listing documents failed",
+  "EditListingWizard.default-booking.new.saveDocuments": "Next",
+  "EditListingWizard.edit.saveDocuments": "Save changes",
+  "ListingPage.documentsTitle": "Documents"
 }

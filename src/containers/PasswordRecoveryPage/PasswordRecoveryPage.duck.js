@@ -71,7 +71,8 @@ export const clearPasswordRecoveryError = () => ({ type: CLEAR_RECOVERY_ERROR })
 
 // ================ Thunks ================ //
 
-export const recoverPassword = email => (dispatch, getState, sdk) => {
+export const recoverPassword = email => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(passwordRecoveryRequest());
 
   return sdk.passwordReset

@@ -19,12 +19,14 @@ import EditListingLocationPanel from './EditListingLocationPanel/EditListingLoca
 import EditListingPhotosPanel from './EditListingPhotosPanel/EditListingPhotosPanel';
 import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
 import EditListingPricingAndStockPanel from './EditListingPricingAndStockPanel/EditListingPricingAndStockPanel';
+import EditListingDocumentsPanel from './EditListingDocumentsPanel/EditListingDocumentsPanel';
 
 import css from './EditListingWizardTab.module.css';
 
 export const DETAILS = 'details';
 export const PRICING = 'pricing';
 export const PRICING_AND_STOCK = 'pricing-and-stock';
+export const DOCUMENTS = 'documents';
 export const DELIVERY = 'delivery';
 export const LOCATION = 'location';
 export const AVAILABILITY = 'availability';
@@ -35,6 +37,7 @@ export const SUPPORTED_TABS = [
   DETAILS,
   PRICING,
   PRICING_AND_STOCK,
+  DOCUMENTS,
   DELIVERY,
   LOCATION,
   AVAILABILITY,
@@ -85,6 +88,7 @@ const EditListingWizardTab = props => {
     handlePublishListing,
     history,
     images,
+    documents,
     listing,
     weeklyExceptionQueries,
     monthlyExceptionQueries,
@@ -251,6 +255,14 @@ const EditListingWizardTab = props => {
         />
       );
     }
+    case DOCUMENTS: {
+      return (
+        <EditListingDocumentsPanel
+          {...panelProps(DOCUMENTS)}
+          documents={documents}
+        />
+      );
+    }
     default:
       return null;
   }
@@ -285,6 +297,7 @@ EditListingWizardTab.propTypes = {
     replace: func.isRequired,
   }).isRequired,
   images: array.isRequired,
+  documents: array.isRequired,
 
   // We cannot use propTypes.listing since the listing might be a draft.
   listing: shape({

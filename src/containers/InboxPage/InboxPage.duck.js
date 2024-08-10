@@ -73,7 +73,8 @@ const fetchOrdersOrSalesError = e => ({
 
 const INBOX_PAGE_SIZE = 10;
 
-export const loadData = (params, search) => (dispatch, getState, sdk) => {
+export const loadData = (params, search) => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   const { tab } = params;
 
   const onlyFilterValues = {

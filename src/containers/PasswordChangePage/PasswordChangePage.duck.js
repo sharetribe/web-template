@@ -77,7 +77,8 @@ export const resetPasswordError = e => ({
 
 // ================ Thunks ================ //
 
-export const changePassword = params => (dispatch, getState, sdk) => {
+export const changePassword = params => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(changePasswordRequest());
   const { newPassword, currentPassword } = params;
 
@@ -92,7 +93,8 @@ export const changePassword = params => (dispatch, getState, sdk) => {
     });
 };
 
-export const resetPassword = email => (dispatch, getState, sdk) => {
+export const resetPassword = email => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(resetPasswordRequest());
   return sdk.passwordReset
     .request({ email })

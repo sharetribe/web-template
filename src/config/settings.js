@@ -20,6 +20,10 @@ const appSettings = {
     transitVerbose: process.env.REACT_APP_SHARETRIBE_SDK_TRANSIT_VERBOSE === 'true',
   },
 
+  greenStoqSdk: {
+    baseUrl: process.env.REACT_APP_GREEN_STOQ_SDK_BASE_URL,
+  },
+
   // Get currency formatting options for given currency.
   // See: https://github.com/yahoo/react-intl/wiki/API#formatnumber
   getCurrencyFormatting: currencyFormatting,

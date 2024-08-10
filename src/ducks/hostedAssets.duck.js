@@ -103,7 +103,8 @@ export const pageAssetsError = error => ({
 
 // ================ Thunks ================ //
 
-export const fetchAppAssets = (assets, version) => (dispatch, getState, sdk) => {
+export const fetchAppAssets = (assets, version) => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(appAssetsRequested());
 
   // App-wide assets include 2 content assets: translations for microcopy and footer
@@ -190,8 +191,9 @@ export const fetchAppAssets = (assets, version) => (dispatch, getState, sdk) => 
     });
 };
 
-export const fetchPageAssets = (assets, hasFallback) => (dispatch, getState, sdk) => {
+export const fetchPageAssets = (assets, hasFallback) => (dispatch, getState, sdks) => {
   const version = getState()?.hostedAssets?.version;
+  const sdk = sdks.shareTribeSdk;
   if (typeof version === 'undefined') {
     throw new Error(
       'App-wide assets were not fetched first. Asset version missing from Redux store.'

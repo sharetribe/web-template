@@ -68,7 +68,8 @@ export const stripeCustomerError = e => ({
 });
 // ================ Thunks ================ //
 
-export const createStripeSetupIntent = () => (dispatch, getState, sdk) => {
+export const createStripeSetupIntent = () => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(setupIntentRequest());
   return sdk.stripeSetupIntents
     .create()

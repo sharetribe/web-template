@@ -35,6 +35,7 @@ import configureStore from './store';
 
 // Utils
 import { createInstance, types as sdkTypes } from './util/sdkLoader';
+import { createGreenStoqSdk } from './util/greenStoqSdk'
 import { mergeConfig } from './util/configHelpers';
 import { matchPathname } from './util/routes';
 import * as apiUtils from './util/api';
@@ -125,6 +126,7 @@ if (typeof window !== 'undefined') {
   log.setup();
 
   const baseUrl = appSettings.sdk.baseUrl ? { baseUrl: appSettings.sdk.baseUrl } : {};
+  const greenStoqBaseUrl = appSettings.greenStoqSdk.baseUrl ? appSettings.greenStoqSdk.baseUrl : "";
   const assetCdnBaseUrl = appSettings.sdk.assetCdnBaseUrl
     ? { assetCdnBaseUrl: appSettings.sdk.assetCdnBaseUrl }
     : {};
@@ -132,7 +134,7 @@ if (typeof window !== 'undefined') {
   // eslint-disable-next-line no-underscore-dangle
   const preloadedState = window.__PRELOADED_STATE__ || '{}';
   const initialState = JSON.parse(preloadedState, sdkTypes.reviver);
-  const sdk = createInstance({
+  const shareTribeSdk = createInstance({
     transitVerbose: appSettings.sdk.transitVerbose,
     clientId: appSettings.sdk.clientId,
     secure: appSettings.usingSSL,
@@ -141,11 +143,14 @@ if (typeof window !== 'undefined') {
     ...assetCdnBaseUrl,
   });
 
+  //Initialize greenStoqSdk
+  const greenStoqSdk = createGreenStoqSdk(greenStoqBaseUrl)
+
   // Note: on localhost:3000, you need to use environment variable.
   const googleAnalyticsIdFromSSR = initialState?.hostedAssets?.googleAnalyticsId;
   const googleAnalyticsId = googleAnalyticsIdFromSSR || process.env.REACT_APP_GOOGLE_ANALYTICS_ID;
   const analyticsHandlers = setupAnalyticsHandlers(googleAnalyticsId);
-  const store = configureStore(initialState, sdk, analyticsHandlers);
+  const store = configureStore(initialState, shareTribeSdk, greenStoqSdk, analyticsHandlers);
 
   require('./util/polyfills');
   render(store, !!window.__PRELOADED_STATE__);
@@ -155,7 +160,7 @@ if (typeof window !== 'undefined') {
     window.app = {
       appSettings,
       defaultConfig,
-      sdk,
+      sdk: shareTribeSdk,
       sdkTypes,
       store,
     };

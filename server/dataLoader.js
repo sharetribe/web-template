@@ -10,7 +10,7 @@ const extractHostedConfig = configAssets => {
   }, {});
 };
 
-exports.loadData = function(requestUrl, sdk, appInfo) {
+exports.loadData = function(requestUrl, shareTribeSdk, appInfo) {
   const {
     matchPathname,
     configureStore,
@@ -24,7 +24,7 @@ exports.loadData = function(requestUrl, sdk, appInfo) {
   let translations = {};
   let hostedConfig = {};
 
-  const store = configureStore({}, sdk);
+  const store = configureStore({}, shareTribeSdk);
 
   if (PREVENT_DATA_LOADING_IN_SSR) {
     // This might help certain temporary scenarios, where DDOS attack adds load to server.

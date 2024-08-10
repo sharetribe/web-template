@@ -187,7 +187,7 @@ export const initiateOrder = (
   transactionId,
   transitionName,
   isPrivilegedTransition
-) => (dispatch, getState, sdk) => {
+) => (dispatch, getState, sdks) => {
   dispatch(initiateOrderRequest());
 
   // If we already have a transaction ID, we should transition, not
@@ -245,6 +245,7 @@ export const initiateOrder = (
     throw e;
   };
 
+  const sdk = sdks.shareTribeSdk;
   if (isTransition && isPrivilegedTransition) {
     // transition privileged
     return transitionPrivileged({ isSpeculative: false, orderData, bodyParams, queryParams })
@@ -304,7 +305,8 @@ export const confirmPayment = (transactionId, transitionName, transitionParams =
     });
 };
 
-export const sendMessage = params => (dispatch, getState, sdk) => {
+export const sendMessage = params => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   const message = params.message;
   const orderId = params.id;
 
@@ -336,8 +338,9 @@ export const sendMessage = params => (dispatch, getState, sdk) => {
 export const initiateInquiryWithoutPayment = (inquiryParams, processAlias, transitionName) => (
   dispatch,
   getState,
-  sdk
+  sdks
 ) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(initiateInquiryRequest());
 
   if (!processAlias) {
@@ -391,7 +394,8 @@ export const speculateTransaction = (
   transactionId,
   transitionName,
   isPrivilegedTransition
-) => (dispatch, getState, sdk) => {
+) => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(speculateTransactionRequest());
 
   // If we already have a transaction ID, we should transition, not

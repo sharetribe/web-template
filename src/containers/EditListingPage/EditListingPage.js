@@ -93,6 +93,7 @@ export const EditListingPageComponent = props => {
     fetchInProgress,
     fetchStripeAccountError,
     getOwnListing,
+    getDocuments,
     getAccountLinkError,
     getAccountLinkInProgress,
     history,
@@ -209,6 +210,8 @@ export const EditListingPageComponent = props => {
       removedImageIds
     );
 
+    const documents = getDocuments(listingId);
+
     const title = isNewListingFlow
       ? intl.formatMessage({ id: 'EditListingPage.titleCreateListing' })
       : intl.formatMessage({ id: 'EditListingPage.titleEditListing' });
@@ -231,6 +234,7 @@ export const EditListingPageComponent = props => {
           newListingPublished={newListingPublished}
           history={history}
           images={images}
+          documents={documents}
           listing={currentListing}
           weeklyExceptionQueries={page.weeklyExceptionQueries}
           monthlyExceptionQueries={page.monthlyExceptionQueries}
@@ -305,6 +309,7 @@ EditListingPageComponent.propTypes = {
   currentUser: propTypes.currentUser,
   fetchInProgress: bool.isRequired,
   getOwnListing: func.isRequired,
+  getDocuments: func.isRequired,
   onFetchExceptions: func.isRequired,
   onAddAvailabilityException: func.isRequired,
   onDeleteAvailabilityException: func.isRequired,
@@ -359,6 +364,12 @@ const mapStateToProps = state => {
     return listings.length === 1 ? listings[0] : null;
   };
 
+  const getDocuments = id => {
+    const listings = getMarketplaceEntities(state, [{ id, type: 'ownListing' }]);
+    // Retrieve of documents from the state
+    return listings.length === 1 ? listings[0].documents : null;
+  }
+
   return {
     getAccountLinkInProgress,
     getAccountLinkError,
@@ -370,6 +381,7 @@ const mapStateToProps = state => {
     currentUser: state.user.currentUser,
     fetchInProgress: createStripeAccountInProgress,
     getOwnListing,
+    getDocuments,
     page,
     scrollingDisabled: isScrollingDisabled(state),
   };

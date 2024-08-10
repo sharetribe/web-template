@@ -233,7 +233,8 @@ export const sendVerificationEmailError = e => ({
 
 // ================ Thunks ================ //
 
-export const fetchCurrentUserHasListings = () => (dispatch, getState, sdk) => {
+export const fetchCurrentUserHasListings = () => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(fetchCurrentUserHasListingsRequest());
   const { currentUser } = getState().user;
 
@@ -263,7 +264,8 @@ export const fetchCurrentUserHasListings = () => (dispatch, getState, sdk) => {
     .catch(e => dispatch(fetchCurrentUserHasListingsError(storableError(e))));
 };
 
-export const fetchCurrentUserHasOrders = () => (dispatch, getState, sdk) => {
+export const fetchCurrentUserHasOrders = () => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(fetchCurrentUserHasOrdersRequest());
 
   if (!getState().user.currentUser) {
@@ -289,7 +291,8 @@ export const fetchCurrentUserHasOrders = () => (dispatch, getState, sdk) => {
 // Notificaiton page size is max (100 items on page)
 const NOTIFICATION_PAGE_SIZE = 100;
 
-export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => {
+export const fetchCurrentUserNotifications = () => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   const transitionsNeedingAttention = getTransitionsNeedingProviderAttention();
   if (transitionsNeedingAttention.length === 0) {
     // Don't update state, if there's no need to draw user's attention after last transitions.
@@ -313,7 +316,8 @@ export const fetchCurrentUserNotifications = () => (dispatch, getState, sdk) => 
     .catch(e => dispatch(fetchCurrentUserNotificationsError(storableError(e))));
 };
 
-export const fetchCurrentUser = (params = null) => (dispatch, getState, sdk) => {
+export const fetchCurrentUser = (params = null) => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(currentUserShowRequest());
   const { isAuthenticated } = getState().auth;
 
@@ -380,7 +384,8 @@ export const fetchCurrentUser = (params = null) => (dispatch, getState, sdk) => 
     });
 };
 
-export const sendVerificationEmail = () => (dispatch, getState, sdk) => {
+export const sendVerificationEmail = () => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk
   if (verificationSendingInProgress(getState())) {
     return Promise.reject(new Error('Verification email sending already in progress'));
   }

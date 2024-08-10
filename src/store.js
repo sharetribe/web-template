@@ -9,8 +9,16 @@ import appSettings from './config/settings';
  * Create a new store with the given initial state. Adds Redux
  * middleware and enhancers.
  */
-export default function configureStore(initialState = {}, sdk = null, analyticsHandlers = []) {
-  const middlewares = [thunk.withExtraArgument(sdk), analytics.createMiddleware(analyticsHandlers)];
+export default function configureStore(initialState = {}, shareTribeSdk = null, greenStoqSdk = null, analyticsHandlers = []) {
+  const middlewares = [
+    thunk.withExtraArgument(
+      {
+        shareTribeSdk: shareTribeSdk,
+        greenStoqSdk: greenStoqSdk
+      }
+    ),
+    analytics.createMiddleware(analyticsHandlers)
+  ];
 
   // Enable Redux Devtools in client side dev mode.
   const composeEnhancers =

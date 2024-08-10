@@ -155,7 +155,8 @@ export const getAccountLinkSuccess = () => ({
 
 // ================ Thunks ================ //
 
-export const createStripeAccount = params => (dispatch, getState, sdk) => {
+export const createStripeAccount = params => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   if (typeof window === 'undefined' || !window.Stripe) {
     throw new Error('Stripe must be loaded for submitting PayoutPreferences');
   }
@@ -224,7 +225,8 @@ export const createStripeAccount = params => (dispatch, getState, sdk) => {
 // By default the account token will not be used.
 // See API reference for more information:
 // https://www.sharetribe.com/api-reference/?javascript#update-stripe-account
-export const updateStripeAccount = params => (dispatch, getState, sdk) => {
+export const updateStripeAccount = params => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   const { bankAccountToken } = params;
 
   dispatch(stripeAccountUpdateRequest());
@@ -250,7 +252,8 @@ export const updateStripeAccount = params => (dispatch, getState, sdk) => {
     });
 };
 
-export const fetchStripeAccount = params => (dispatch, getState, sdk) => {
+export const fetchStripeAccount = params => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(stripeAccountFetchRequest());
 
   return sdk.stripeAccount
@@ -272,7 +275,8 @@ export const fetchStripeAccount = params => (dispatch, getState, sdk) => {
     });
 };
 
-export const getStripeConnectAccountLink = params => (dispatch, getState, sdk) => {
+export const getStripeConnectAccountLink = params => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   const { failureURL, successURL, type } = params;
   dispatch(getAccountLinkRequest());
 

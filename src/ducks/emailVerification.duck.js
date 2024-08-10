@@ -53,7 +53,8 @@ export const verificationError = error => ({
 
 // ================ Thunks ================ //
 
-export const verify = verificationToken => (dispatch, getState, sdk) => {
+export const verify = verificationToken => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   if (verificationInProgress(getState())) {
     return Promise.reject(new Error('Email verification already in progress'));
   }

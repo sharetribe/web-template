@@ -153,7 +153,8 @@ export const userLogout = () => ({ type: USER_LOGOUT });
 
 // ================ Thunks ================ //
 
-export const authInfo = () => (dispatch, getState, sdk) => {
+export const authInfo = () => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(authInfoRequest());
   return sdk
     .authInfo()
@@ -169,7 +170,8 @@ export const authInfo = () => (dispatch, getState, sdk) => {
     });
 };
 
-export const login = (username, password) => (dispatch, getState, sdk) => {
+export const login = (username, password) => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   if (authenticationInProgress(getState())) {
     return Promise.reject(new Error('Login or logout already in progress'));
   }
@@ -184,7 +186,8 @@ export const login = (username, password) => (dispatch, getState, sdk) => {
     .catch(e => dispatch(loginError(storableError(e))));
 };
 
-export const logout = () => (dispatch, getState, sdk) => {
+export const logout = () => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   if (authenticationInProgress(getState())) {
     return Promise.reject(new Error('Login or logout already in progress'));
   }
@@ -204,7 +207,8 @@ export const logout = () => (dispatch, getState, sdk) => {
     .catch(e => dispatch(logoutError(storableError(e))));
 };
 
-export const signup = params => (dispatch, getState, sdk) => {
+export const signup = params => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   if (authenticationInProgress(getState())) {
     return Promise.reject(new Error('Login or logout already in progress'));
   }

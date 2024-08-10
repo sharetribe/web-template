@@ -56,6 +56,7 @@ import EditListingWizardTab, {
   PRICING,
   PRICING_AND_STOCK,
   DELIVERY,
+  DOCUMENTS,
   LOCATION,
   AVAILABILITY,
   PHOTOS,
@@ -70,7 +71,7 @@ import css from './EditListingWizard.module.css';
 //         Details tab asks for "title" and is therefore the first tab in the wizard flow.
 const TABS_DETAILS_ONLY = [DETAILS];
 const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, DELIVERY, PHOTOS];
-const TABS_BOOKING = [DETAILS, LOCATION, PRICING, AVAILABILITY, PHOTOS];
+const TABS_BOOKING = [DETAILS, LOCATION, PRICING, DOCUMENTS, AVAILABILITY, PHOTOS];
 const TABS_INQUIRY = [DETAILS, LOCATION, PRICING, PHOTOS];
 const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING, ...TABS_INQUIRY];
 
@@ -143,6 +144,9 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, process
   } else if (tab === PHOTOS) {
     labelKey = 'EditListingWizard.tabLabelPhotos';
     submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePhotos`;
+  } else if (tab === DOCUMENTS) {
+    labelKey = 'EditListingWizard.tabLabelDocuments';
+    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveDocuments`;
   }
 
   return {
@@ -246,6 +250,10 @@ const tabCompleted = (tab, listing, config) => {
       return !!availabilityPlan;
     case PHOTOS:
       return images && images.length > 0;
+    case DOCUMENTS:
+      return true;
+    // /** For a required attribute: **/
+    // return !!publicData.extraFeatures;
     default:
       return false;
   }
@@ -696,7 +704,7 @@ EditListingWizard.defaultProps = {
   updateStripeAccountError: null,
   fetchStripeAccountError: null,
   stripeAccountError: null,
-  stripeAccountLinkError: null,
+  stripeAccountLinkError: null
 };
 
 EditListingWizard.propTypes = {
@@ -722,8 +730,10 @@ EditListingWizard.propTypes = {
       price: object,
       title: string,
     }),
-    images: array,
+    images: array
   }),
+
+  documents: array,
 
   errors: shape({
     createListingDraftError: object,

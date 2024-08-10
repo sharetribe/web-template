@@ -193,7 +193,8 @@ export const sendInquiryError = e => ({ type: SEND_INQUIRY_ERROR, error: true, p
 
 // ================ Thunks ================ //
 
-export const showListing = (listingId, config, isOwn = false) => (dispatch, getState, sdk) => {
+export const showListing = (listingId, config, isOwn = false) => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   const {
     aspectWidth = 1,
     aspectHeight = 1,
@@ -247,7 +248,8 @@ export const showListing = (listingId, config, isOwn = false) => (dispatch, getS
     });
 };
 
-export const fetchReviews = listingId => (dispatch, getState, sdk) => {
+export const fetchReviews = listingId => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(fetchReviewsRequest());
   return sdk.reviews
     .query({
@@ -265,7 +267,8 @@ export const fetchReviews = listingId => (dispatch, getState, sdk) => {
     });
 };
 
-const timeSlotsRequest = params => (dispatch, getState, sdk) => {
+const timeSlotsRequest = params => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   return sdk.timeslots.query(params).then(response => {
     return denormalisedResponseEntities(response);
   });
@@ -291,7 +294,8 @@ export const fetchTimeSlots = (listingId, start, end, timeZone) => (dispatch, ge
     });
 };
 
-export const sendInquiry = (listing, message) => (dispatch, getState, sdk) => {
+export const sendInquiry = (listing, message) => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(sendInquiryRequest());
   const processAlias = listing?.attributes?.publicData?.transactionProcessAlias;
   if (!processAlias) {

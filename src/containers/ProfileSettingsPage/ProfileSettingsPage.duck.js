@@ -111,7 +111,8 @@ export const updateProfileError = error => ({
 
 // Images return imageId which we need to map with previously generated temporary id
 export function uploadImage(actionPayload) {
-  return (dispatch, getState, sdk) => {
+  return (dispatch, getState, sdks) => {
+    const sdk = sdks.shareTribeSdk;
     const id = actionPayload.id;
     dispatch(uploadImageRequest(actionPayload));
 
@@ -134,7 +135,8 @@ export function uploadImage(actionPayload) {
 }
 
 export const updateProfile = actionPayload => {
-  return (dispatch, getState, sdk) => {
+  return (dispatch, getState, sdks) => {
+    const sdk = sdks.shareTribeSdk;
     dispatch(updateProfileRequest());
 
     const queryParams = {

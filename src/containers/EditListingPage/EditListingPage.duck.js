@@ -542,7 +542,9 @@ export const savePayoutDetailsError = errorAction(SAVE_PAYOUT_DETAILS_ERROR);
 // ================ Thunk ================ //
 
 export function requestShowListing(actionPayload, config) {
-  return (dispatch, getState, sdk) => {
+  return (dispatch, getState, sdks) => {
+    const sdk = sdks.shareTribeSdk;
+    const greenStockSdk = sdks.greenStoqSdk;
     const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
     const queryParams = {
       include: ['author', 'images', 'currentStock'],
@@ -554,10 +556,19 @@ export function requestShowListing(actionPayload, config) {
     return sdk.ownListings
       .show({ ...actionPayload, ...queryParams })
       .then(response => {
-        // EditListingPage fetches new listing data, which also needs to be added to global data
-        dispatch(addMarketplaceEntities(response));
-        // In case of success, we'll clear state.EditListingPage (user will be redirected away)
-        dispatch(showListingsSuccess(response));
+
+        // Load of documents for the listing
+        greenStockSdk.getDocument(actionPayload.id.uuid)
+          .then(r => {
+            response.data.data.relationships.documents = r.documents
+            // EditListingPage fetches new listing data, which also needs to be added to global data
+            // Documents are put into the state in the same way as images
+            dispatch(addMarketplaceEntities(response));
+            // In case of success, we'll clear state.EditListingPage (user will be redirected away)
+            dispatch(showListingsSuccess(response));
+
+          })
+          .catch(e => dispatch(showListingsError(storableError(e))));
         return response;
       })
       .catch(e => dispatch(showListingsError(storableError(e))));
@@ -566,7 +577,8 @@ export function requestShowListing(actionPayload, config) {
 
 // Set stock if requested among listing update info
 export function compareAndSetStock(listingId, oldTotal, newTotal) {
-  return (dispatch, getState, sdk) => {
+  return (dispatch, getState, sdks) => {
+    const sdk = sdks.shareTribeSdk;
     dispatch(setStockRequest());
 
     return sdk.stock
@@ -601,7 +613,8 @@ const updateStockOfListingMaybe = (listingId, stockTotals, dispatch) => {
 // this means that there needs to be a sequence of calls:
 // create, set stock, show listing (to get updated currentStock entity)
 export function requestCreateListingDraft(data, config) {
-  return (dispatch, getState, sdk) => {
+  return (dispatch, getState, sdks) => {
+    const sdk = sdks.shareTribeSdk;
     dispatch(createListingDraftRequest(data));
     const { stockUpdate, images, ...rest } = data;
 
@@ -644,7 +657,8 @@ export function requestCreateListingDraft(data, config) {
 // display the state.
 // NOTE: what comes to stock management, this follows the same pattern used in create listing call
 export function requestUpdateListing(tab, data, config) {
-  return (dispatch, getState, sdk) => {
+  return (dispatch, getState, sdks) => {
+    const sdk = sdks.shareTribeSdk;
     dispatch(updateListingRequest(data));
     const { id, stockUpdate, images, ...rest } = data;
 
@@ -691,7 +705,8 @@ export function requestUpdateListing(tab, data, config) {
   };
 }
 
-export const requestPublishListingDraft = listingId => (dispatch, getState, sdk) => {
+export const requestPublishListingDraft = listingId => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(publishListingRequest(listingId));
 
   return sdk.ownListings
@@ -709,7 +724,8 @@ export const requestPublishListingDraft = listingId => (dispatch, getState, sdk)
 
 // Images return imageId which we need to map with previously generated temporary id
 export function requestImageUpload(actionPayload, listingImageConfig) {
-  return (dispatch, getState, sdk) => {
+  return (dispatch, getState, sdks) => {
+    const sdk = sdks.shareTribeSdk;
     const id = actionPayload.id;
     const imageVariantInfo = getImageVariantInfo(listingImageConfig);
     const queryParams = {
@@ -733,7 +749,8 @@ export function requestImageUpload(actionPayload, listingImageConfig) {
   };
 }
 
-export const requestAddAvailabilityException = params => (dispatch, getState, sdk) => {
+export const requestAddAvailabilityException = params => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(addAvailabilityExceptionRequest(params));
 
   return sdk.availabilityExceptions
@@ -748,7 +765,8 @@ export const requestAddAvailabilityException = params => (dispatch, getState, sd
     });
 };
 
-export const requestDeleteAvailabilityException = params => (dispatch, getState, sdk) => {
+export const requestDeleteAvailabilityException = params => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   dispatch(deleteAvailabilityExceptionRequest(params));
 
   return sdk.availabilityExceptions
@@ -763,7 +781,8 @@ export const requestDeleteAvailabilityException = params => (dispatch, getState,
     });
 };
 
-export const requestFetchAvailabilityExceptions = params => (dispatch, getState, sdk) => {
+export const requestFetchAvailabilityExceptions = params => (dispatch, getState, sdks) => {
+  const sdk = sdks.shareTribeSdk;
   const { listingId, start, end, timeZone, page, isWeekly } = params;
   const fetchParams = { listingId, start, end };
   const timeUnitIdProp = isWeekly
