@@ -13,7 +13,8 @@ way to update this template, but currently, we follow a pattern:
 ---
 
 ## Upcoming version 2024-XX-XX
-
+- [add] Add currently available translations for DE, ES, FR.
+  [#429](https://github.com/sharetribe/web-template/pull/429)
 - [add] Handle API's new permission model & permission to post listings
 
   - CurrentUser fetch includes a new relationship: effectivePermissionSet
