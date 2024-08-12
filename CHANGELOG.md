@@ -13,6 +13,9 @@ way to update this template, but currently, we follow a pattern:
 ---
 
 ## Upcoming version 2024-XX-XX
+
+- [change] ProfilePage: redirect Stripe's crawler to landing page (profile page might be empty).
+  [#430](https://github.com/sharetribe/web-template/pull/430)
 - [add] Add currently available translations for DE, ES, FR.
   [#429](https://github.com/sharetribe/web-template/pull/429)
 - [add] Handle API's new permission model & permission to post listings
