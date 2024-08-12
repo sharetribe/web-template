@@ -397,11 +397,20 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
     return dispatch(showListing(listingId, config, true));
   }
 
+  // In private marketplace mode, this page won't fetch data if the user is unauthorized
+  const isAuthorized = currentUser && isUserAuthorized(currentUser);
+  const isPrivateMarketplace = config.accessControl.marketplace.private === true;
+  const canFetchData = !isPrivateMarketplace || (isPrivateMarketplace && isAuthorized);
+  if (!canFetchData) {
+    return Promise.resolve();
+  }
+
   return Promise.all([
     dispatch(showListing(listingId, config)),
     dispatch(fetchReviews(listingId)),
   ]).then(response => {
-    const listing = response[0].data.data;
+    const listingResponse = response[0];
+    const listing = listingResponse?.data?.data;
     const transactionProcessAlias = listing?.attributes?.publicData?.transactionProcessAlias || '';
     if (isBookingProcessAlias(transactionProcessAlias)) {
       // Fetch timeSlots.
