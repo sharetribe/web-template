@@ -1,0 +1,21 @@
+#
+# Hello bot! There are some routes that need authentication. You should avoid them :)
+#
+
+User-agent: *
+Disallow: /s
+Disallow: /u
+Disallow: /l
+Disallow: /profile-settings
+Disallow: /inbox
+Disallow: /order
+Disallow: /sale
+Disallow: /listings
+Disallow: /account
+Disallow: /reset-password
+Disallow: /verify-email
+Disallow: /preview
+Disallow: /styleguide
+Crawl-Delay: 5
+
+Sitemap: https://my.marketplace.com/sitemap-index.xml
