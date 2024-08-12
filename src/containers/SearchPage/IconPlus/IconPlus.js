@@ -26,7 +26,7 @@ const IconPlus = props => {
 IconPlus.defaultProps = {
   className: null,
   rootClassName: null,
-  isOpen: true,
+  isOpen: false,
 };
 
 IconPlus.propTypes = {
