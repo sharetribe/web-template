@@ -61,13 +61,16 @@ const RedirectToLandingPage = () => <NamedRedirect name="LandingPage" />;
 
 // Our routes are exact by default.
 // See behaviour from Routes.js where Route is created.
-const routeConfiguration = (layoutConfig) => {
+const routeConfiguration = (layoutConfig, accessControlConfig) => {
   const SearchPage = layoutConfig.searchPage?.variantType === 'map' 
     ? SearchPageWithMap 
     : SearchPageWithGrid;
   const ListingPage = layoutConfig.listingPage?.variantType === 'carousel' 
     ? ListingPageCarousel 
     : ListingPageCoverPhoto;
+
+  const isPrivateMarketplace = accessControlConfig?.marketplace?.private === true;
+  const authForPrivateMarketplace = isPrivateMarketplace ? { auth: true } : {};
   
   return [
     {
@@ -85,6 +88,7 @@ const routeConfiguration = (layoutConfig) => {
     {
       path: '/s',
       name: 'SearchPage',
+      ...authForPrivateMarketplace,
       component: SearchPage,
       loadData: pageDataLoadingAPI.SearchPage.loadData,
     },
@@ -96,6 +100,7 @@ const routeConfiguration = (layoutConfig) => {
     {
       path: '/l/:slug/:id',
       name: 'ListingPage',
+      ...authForPrivateMarketplace,
       component: ListingPage,
       loadData: pageDataLoadingAPI.ListingPage.loadData,
     },
@@ -145,6 +150,7 @@ const routeConfiguration = (layoutConfig) => {
     {
       path: '/l/:id',
       name: 'ListingPageCanonical',
+      ...authForPrivateMarketplace,
       component: ListingPage,
       loadData: pageDataLoadingAPI.ListingPage.loadData,
     },
@@ -156,6 +162,7 @@ const routeConfiguration = (layoutConfig) => {
     {
       path: '/u/:id',
       name: 'ProfilePage',
+      ...authForPrivateMarketplace,
       component: ProfilePage,
       loadData: pageDataLoadingAPI.ProfilePage.loadData,
     },
@@ -327,26 +334,31 @@ const routeConfiguration = (layoutConfig) => {
     {
       path: '/styleguide',
       name: 'Styleguide',
+      ...authForPrivateMarketplace,
       component: StyleguidePage,
     },
     {
       path: '/styleguide/g/:group',
       name: 'StyleguideGroup',
+      ...authForPrivateMarketplace,
       component: StyleguidePage,
     },
     {
       path: '/styleguide/c/:component',
       name: 'StyleguideComponent',
+      ...authForPrivateMarketplace,
       component: StyleguidePage,
     },
     {
       path: '/styleguide/c/:component/:example',
       name: 'StyleguideComponentExample',
+      ...authForPrivateMarketplace,
       component: StyleguidePage,
     },
     {
       path: '/styleguide/c/:component/:example/raw',
       name: 'StyleguideComponentExampleRaw',
+      ...authForPrivateMarketplace,
       component: StyleguidePage,
       extraProps: { raw: true },
     },
