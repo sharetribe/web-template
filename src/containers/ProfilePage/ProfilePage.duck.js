@@ -195,6 +195,7 @@ const isCurrentUser = (userId, cu) => userId?.uuid === cu?.id?.uuid;
 export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const userId = new UUID(params.id);
   const isPreviewForCurrentUser = params.variant === PROFILE_PAGE_PENDING_APPROVAL_VARIANT;
+  const currentUser = getState()?.user?.currentUser;
   const fetchCurrentUserOptions = {
     updateHasListings: false,
     updateNotifications: false,
@@ -206,9 +207,8 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
 
   if (isPreviewForCurrentUser) {
     return dispatch(fetchCurrentUser(fetchCurrentUserOptions)).then(() => {
-      const currentUser = getState()?.user?.currentUser;
-
       if (isCurrentUser(userId, currentUser) && isUserAuthorized(currentUser)) {
+        // Scenario: 'active' user somehow tries to open a link for "variant" profile
         return Promise.all([
           dispatch(showUser(userId, config)),
           dispatch(queryUserListings(userId, config)),
@@ -220,9 +220,19 @@ export const loadData = (params, search, config) => (dispatch, getState, sdk) =>
         // => just set userId to state
         return dispatch(showUserRequest(userId));
       } else {
-        return;
+        return Promise.resolve({});
       }
     });
+  }
+
+  // Fetch data for plain profile page.
+  // Note 1: returns 404s if user is not 'active'.
+  // Note 2: In private marketplace mode, this page won't fetch data if the user is unauthorized
+  const isAuthorized = currentUser && isUserAuthorized(currentUser);
+  const isPrivateMarketplace = config.accessControl.marketplace.private === true;
+  const canFetchData = !isPrivateMarketplace || (isPrivateMarketplace && isAuthorized);
+  if (!canFetchData) {
+    return Promise.resolve();
   }
 
   return Promise.all([
