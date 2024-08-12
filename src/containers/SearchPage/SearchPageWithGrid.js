@@ -6,23 +6,25 @@ import { useHistory, useLocation } from 'react-router-dom';
 import omit from 'lodash/omit';
 import classNames from 'classnames';
 
-import { useIntl, intlShape, FormattedMessage } from '../../util/reactIntl';
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
 
-import { createResourceLocatorString } from '../../util/routes';
+import { useIntl, intlShape, FormattedMessage } from '../../util/reactIntl';
 import {
   isAnyFilterActive,
   isMainSearchTypeKeywords,
-  getQueryParamNames,
   isOriginInUse,
+  getQueryParamNames,
 } from '../../util/search';
-import { parse } from '../../util/urlHelpers';
+import { NO_ACCESS_PAGE_USER_PENDING_APPROVAL, parse } from '../../util/urlHelpers';
+import { createResourceLocatorString } from '../../util/routes';
 import { propTypes } from '../../util/types';
+import { isErrorUserPendingApproval, isForbiddenError } from '../../util/errors';
+import { isUserAuthorized } from '../../util/userHelpers';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 
-import { H3, H5, Page } from '../../components';
+import { H3, H5, NamedRedirect, Page } from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 import FooterContainer from '../FooterContainer/FooterContainer';
 
@@ -464,6 +466,30 @@ const EnhancedSearchPage = props => {
   const history = useHistory();
   const location = useLocation();
 
+  const searchListingsError = props.searchListingsError;
+  if (isForbiddenError(searchListingsError)) {
+    // This can happen if private marketplace mode is active
+    return (
+      <NamedRedirect
+        name="SignupPage"
+        state={{ from: `${location.pathname}${location.search}${location.hash}` }}
+      />
+    );
+  }
+
+  const { currentUser, ...restOfProps } = props;
+  const isPrivateMarketplace = config.accessControl.marketplace.private === true;
+  const isUnauthorizedUser = currentUser && !isUserAuthorized(currentUser);
+  const hasUserPendingApprovalError = isErrorUserPendingApproval(searchListingsError);
+  if ((isPrivateMarketplace && isUnauthorizedUser) || hasUserPendingApprovalError) {
+    return (
+      <NamedRedirect
+        name="NoAccessPage"
+        params={{ missingAccessRight: NO_ACCESS_PAGE_USER_PENDING_APPROVAL }}
+      />
+    );
+  }
+
   return (
     <SearchPageComponent
       config={config}
@@ -471,12 +497,13 @@ const EnhancedSearchPage = props => {
       intl={intl}
       history={history}
       location={location}
-      {...props}
+      {...restOfProps}
     />
   );
 };
 
 const mapStateToProps = state => {
+  const { currentUser } = state.user;
   const {
     currentPageResultIds,
     pagination,
@@ -487,6 +514,7 @@ const mapStateToProps = state => {
   const listings = getListingsById(state, currentPageResultIds);
 
   return {
+    currentUser,
     listings,
     pagination,
     scrollingDisabled: isScrollingDisabled(state),
