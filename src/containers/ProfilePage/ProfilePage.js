@@ -290,6 +290,9 @@ export const ProfilePageComponent = props => {
     return <NamedRedirect name="LandingPage" />;
   }
 
+  const isDataLoaded = isPreview
+    ? currentUser != null || userShowError != null
+    : user != null || userShowError != null;
   const isCurrentUser = currentUser?.id && currentUser?.id?.uuid === pathParams.id;
   const profileUser = useCurrentUser ? currentUser : user;
   const { bio, displayName, publicData, metadata } = profileUser?.attributes?.profile || {};
@@ -298,7 +301,9 @@ export const ProfilePageComponent = props => {
   const schemaTitleVars = { name: displayName, marketplaceName: config.marketplaceName };
   const schemaTitle = intl.formatMessage({ id: 'ProfilePage.schemaTitle' }, schemaTitleVars);
 
-  if (!isPreview && userShowError && userShowError.status === 404) {
+  if (!isDataLoaded) {
+    return null;
+  } else if (!isPreview && userShowError && userShowError.status === 404) {
     return <NotFoundPage staticContext={props.staticContext} />;
   } else if (isPreview && mounted && !isCurrentUser) {
     // Someone is manipulating the URL, redirect to current user's profile page.
