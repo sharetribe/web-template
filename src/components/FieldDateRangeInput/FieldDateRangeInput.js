@@ -19,6 +19,8 @@ import { ValidationError } from '../../components';
 import DateRangeInput from './DateRangeInput';
 import css from './FieldDateRangeInput.module.css';
 
+import { FieldSelect, ValidationError } from '../../components';
+
 const MAX_MOBILE_SCREEN_WIDTH = 768;
 
 class FieldDateRangeInputComponent extends Component {
@@ -70,6 +72,8 @@ class FieldDateRangeInputComponent extends Component {
       // the same values will not be passed on to subcomponents.
       focusedInput,
       onFocusedInputChange,
+      seatsArray,
+  	  seatsLabel,
       ...rest
     } = this.props;
     /* eslint-disable no-unused-vars */
@@ -99,7 +103,18 @@ class FieldDateRangeInputComponent extends Component {
           </label>
         </div>
       ) : null;
-
+    
+      const seatsSelectionMaybe =
+      seatsArray?.length > 1 ? (
+        <FieldSelect name="seats" id="seats" label={seatsLabel}>
+          {seatsArray.map(s => (
+            <option value={s} key={s}>
+              {s}
+            </option>
+          ))}
+        </FieldSelect>
+      ) : null;
+      
     // eslint-disable-next-line no-unused-vars
     const { onBlur, onFocus, type, checked, ...restOfInput } = input;
     const inputProps = {
@@ -123,6 +138,7 @@ class FieldDateRangeInputComponent extends Component {
         {label}
         <DateRangeInput {...inputProps} />
         <ValidationError className={errorClasses} fieldMeta={meta} />
+        {seatsSelectionMaybe}
       </div>
     );
   }

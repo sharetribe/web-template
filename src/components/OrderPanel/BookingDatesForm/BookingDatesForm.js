@@ -30,6 +30,73 @@ import EstimatedCustomerBreakdownMaybe from '../EstimatedCustomerBreakdownMaybe'
 
 import css from './BookingDatesForm.module.css';
 
+import { generateMonths } from '../../../util/generators';
+
+/**
+ * Return an array of timeslots for the months between start date and end date
+ * @param {*} monthlyTimeSlots
+ * @param {*} startDate
+ * @param {*} endDate
+ * @param {*} timeZone
+ * @returns
+ */
+const pickBookingMonthTimeSlots = (
+  monthlyTimeSlots,
+  startDate,
+  endDate,
+  timeZone
+) => {
+  // The generateMonths generator returns the first day of each month that is spanned
+  // by the time range between start date and end date.
+  const monthsInRange = generateMonths(startDate, endDate, timeZone);
+
+  return monthsInRange.reduce((timeSlots, firstOfMonth) => {
+    return [
+      ...timeSlots,
+      ...pickMonthlyTimeSlots(monthlyTimeSlots, firstOfMonth, timeZone),
+    ];
+  }, []);
+};
+
+// Get the time slot for a booking duration that has the least seats
+const getMinSeatsTimeSlot = (
+  monthlyTimeSlots,
+  timeZone,
+  startDate,
+  endDate
+) => {
+  const timeSlots = pickBookingMonthTimeSlots(
+    monthlyTimeSlots,
+    startDate,
+    endDate,
+    timeZone
+  );
+
+  // Determine the timeslots that fall between start date and end date
+  const bookingTimeslots = timeSlots.filter(ts => {
+    const { start, end } = ts.attributes;
+    return (
+      // booking start date falls within time slot
+      (start < startDate && end > startDate) ||
+      // whole time slot is within booking period
+      (start >= startDate && end <= endDate) ||
+      // booking end date falls within time slot
+      (start < endDate && end > endDate)
+    );
+  });
+
+  // Return the timeslot with the least seats in the booking period
+  return bookingTimeslots.reduce((minSeats, ts) => {
+    if (!minSeats?.seats) {
+      return ts.attributes;
+    }
+
+    return ts.attributes.seats < minSeats.seats
+      ? ts.attributes
+      : minSeats;
+  }, {});
+};
+
 const TODAY = new Date();
 const { Money } = sdkTypes;
 const nextMonthFn = (currentMoment, timeZone, offset = 1) =>
@@ -373,19 +440,16 @@ const handleFormSpyChange = (
   fetchLineItemsInProgress,
   onFetchTransactionLineItems
 ) => formValues => {
-  const { startDate, endDate } =
-    formValues.values && formValues.values.bookingDates
-      ? formValues.values.bookingDates
-      : {};
+  const { seats, bookingDates } = formValues.values;
 
-  const hasHelmetFee = formValues.values?.helmetFee?.length > 0;
+  const { startDate, endDate } = bookingDates ? bookingDates : {};
 
   if (startDate && endDate && !fetchLineItemsInProgress) {
     onFetchTransactionLineItems({
       orderData: {
         bookingStart: startDate,
         bookingEnd: endDate,
-        hasHelmetFee,
+        seats: parseInt(seats, 10),
       },
       listingId,
       isOwnListing,
@@ -468,6 +532,7 @@ export const BookingDatesFormComponent = props => {
           endDatePlaceholder,
           startDatePlaceholder,
           formId,
+          form: formApi,
           handleSubmit,
           intl,
           lineItemUnitType,
@@ -478,6 +543,29 @@ export const BookingDatesFormComponent = props => {
           onFetchTimeSlots,
           helmetFee,
         } = fieldRenderProps;
+
+        const getSeatsArray = () => {
+          const formState = formApi.getState();
+          const { bookingDates } = formState.values;
+
+          if (!bookingDates) {
+            return null;
+          }
+        
+          const minSeatsTimeSlot = getMinSeatsTimeSlot(
+            monthlyTimeSlots,
+            timeZone,
+            bookingDates.startDate,
+            bookingDates.endDate
+          );
+        
+          // Return an array of the seat options a customer
+          // can pick for the time range
+          return Array(minSeatsTimeSlot.seats)
+            .fill()
+            .map((_, i) => i + 1);
+        };
+
         const { startDate, endDate } = values && values.bookingDates ? values.bookingDates : {};
 
 
@@ -658,6 +746,8 @@ export const BookingDatesFormComponent = props => {
               onClose={event =>
                 setCurrentMonth(getStartOf(event?.startDate ?? startOfToday, 'month', timeZone))
               }
+              seatsArray={getSeatsArray()}
+              seatsLabel={intl.formatMessage({ id: 'BookingDatesForm.seatsTitle' })}
             />
           {helmetFeeMaybe}
             {showEstimatedBreakdown ? (
