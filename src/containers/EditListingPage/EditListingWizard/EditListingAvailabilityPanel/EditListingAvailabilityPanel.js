@@ -175,10 +175,9 @@ const EditListingAvailabilityPanel = props => {
 
   // Save exception click handler
   const saveException = values => {
-    const { availability, exceptionStartTime, exceptionEndTime, exceptionRange } = values;
+    const { availability, exceptionStartTime, exceptionEndTime, exceptionRange, seats: rawSeats, } = values;
 
-    // TODO: add proper seat handling
-    const seats = availability === 'available' ? 1 : 0;
+    const seats = availability === 'available' ? rawSeats : 0;
 
     // Exception date/time range is given through FieldDateRangeInput or
     // separate time fields.

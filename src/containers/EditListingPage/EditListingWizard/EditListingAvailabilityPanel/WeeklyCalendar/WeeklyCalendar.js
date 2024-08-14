@@ -159,10 +159,12 @@ const AvailableExceptionsInfo = ({
   onDeleteAvailabilityException,
 }) => {
   const hasAvailableExceptions = availableExceptions.length > 0;
+  const seats = hasAvailableExceptions ? availableExceptions[0].attributes.seats : null;
+
   return hasAvailableExceptions ? (
     <>
       <Heading as="h6" rootClassName={css.exceptionsSubtitle}>
-        <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.available" />
+        <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.available" values={{ seats }}/>
       </Heading>
       {availableExceptions.map(exception => {
         return (
