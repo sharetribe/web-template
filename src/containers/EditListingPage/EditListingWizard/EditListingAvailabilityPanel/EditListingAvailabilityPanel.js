@@ -74,12 +74,13 @@ const createEntriesFromSubmitValues = values =>
   WEEKDAYS.reduce((allEntries, dayOfWeek) => {
     const dayValues = values[dayOfWeek] || [];
     const dayEntries = dayValues.map(dayValue => {
-      const { startTime, endTime } = dayValue;
+      const { startTime, endTime, seats } = dayValue;
+      const seatsValue = seats ? seats : 0;
       // Note: This template doesn't support seats yet.
       return startTime && endTime
         ? {
             dayOfWeek,
-            seats: 1,
+            seats: seatsValue,
             startTime,
             endTime: endTime === '24:00' ? '00:00' : endTime,
           }
