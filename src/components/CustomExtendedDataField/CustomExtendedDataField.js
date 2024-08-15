@@ -7,11 +7,11 @@ import {
   SCHEMA_TYPE_TEXT,
   SCHEMA_TYPE_LONG,
   SCHEMA_TYPE_BOOLEAN,
-} from '../../../util/types';
-import { useIntl } from '../../../util/reactIntl';
-import { required, nonEmptyArray } from '../../../util/validators';
+} from '../../util/types';
+import { useIntl } from '../../util/reactIntl';
+import { required, nonEmptyArray } from '../../util/validators';
 // Import shared components
-import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '../../../components';
+import { FieldCheckboxGroup, FieldSelect, FieldTextInput, FieldBoolean } from '..';
 // Import modules from this directory
 import css from './EditListingWizard.module.css';
 

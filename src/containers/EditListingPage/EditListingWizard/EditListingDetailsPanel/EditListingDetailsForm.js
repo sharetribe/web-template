@@ -13,7 +13,7 @@ import { maxLength, required, composeValidators } from '../../../../util/validat
 // Import shared components
 import { Form, Button, FieldSelect, FieldTextInput, Heading } from '../../../../components';
 // Import modules from this directory
-import CustomExtendedDataField from '../CustomExtendedDataField';
+import CustomExtendedDataField from '../../../../components/CustomExtendedDataField/CustomExtendedDataField';
 import css from './EditListingDetailsForm.module.css';
 
 const TITLE_MAX_LENGTH = 60;
