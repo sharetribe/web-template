@@ -8,7 +8,7 @@ import { FormattedMessage, intlShape, injectIntl } from '../../../util/reactIntl
 import { propTypes } from '../../../util/types';
 import { required } from '../../../util/validators';
 
-import { FieldTextInput, Form, IconDisputeOrder, Modal, PrimaryButton } from '../../../components';
+import { FieldTextInput, Form, IconDisputeOrder, Modal, Button } from '../../../components';
 
 import css from './DisputeModal.module.css';
 
@@ -49,7 +49,7 @@ const DisputeForm = props => (
             validate={required(intl.formatMessage({ id: 'DisputeModal.disputeReasonRequired' }))}
           />
           <p className={css.errorPlaceholder}>{errorMessageMaybe}</p>
-          <PrimaryButton
+          <Button
             className={css.submitButton}
             type="submit"
             inProgress={disputeInProgress}
@@ -57,7 +57,7 @@ const DisputeForm = props => (
             ready={disputeSubmitted}
           >
             {intl.formatMessage({ id: 'DisputeModal.submit' })}
-          </PrimaryButton>
+          </Button>
         </Form>
       );
     }}

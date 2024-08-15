@@ -149,7 +149,6 @@ export const StripePayoutPageComponent = props => {
         topbar={
           <>
             <TopbarContainer
-              currentPage="StripePayoutPage"
               desktopClassName={css.desktopTopbar}
               mobileClassName={css.mobileTopbar}
             />

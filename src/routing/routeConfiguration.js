@@ -35,7 +35,11 @@ const SearchPageWithGrid = loadable(() => import(/* webpackChunkName: "SearchPag
 const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayoutPage" */ '../containers/StripePayoutPage/StripePayoutPage'));
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ '../containers/TermsOfServicePage/TermsOfServicePage'));
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
+<<<<<<< HEAD
 const FavoriteListingsPage = loadable(() => import(/* webpackChunkName: "FavoriteListingsPage" */ '../containers/FavoriteListingsPage/FavoriteListingsPage'));
+=======
+const NoAccessPage = loadable(() => import(/* webpackChunkName: "NoAccessPage" */ '../containers/NoAccessPage/NoAccessPage'));
+>>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -193,10 +197,18 @@ const routeConfiguration = (layoutConfig) => {
       loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
     },
     {
+      path: '/signup/:userType',
+      name: 'SignupForUserTypePage',
+      component: AuthenticationPage,
+      extraProps: { tab: 'signup' },
+      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
+    },
+    {
       path: '/confirm',
       name: 'ConfirmPage',
       component: AuthenticationPage,
       extraProps: { tab: 'confirm' },
+      loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
     },
     {
       path: '/recover-password',
@@ -343,6 +355,11 @@ const routeConfiguration = (layoutConfig) => {
       name: 'StyleguideComponentExampleRaw',
       component: StyleguidePage,
       extraProps: { raw: true },
+    },
+    {
+      path: '/no-:missingAccessRight',
+      name: 'NoAccessPage',
+      component: NoAccessPage,
     },
     {
       path: '/notfound',

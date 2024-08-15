@@ -72,7 +72,7 @@ const setPageScrollPosition = (location, delayed) => {
       // might affect user initiated scrolling.
       delayed = window.setTimeout(() => {
         const reTry = document.querySelector(location.hash);
-        reTry.scrollIntoView({
+        reTry?.scrollIntoView({
           block: 'start',
           behavior: 'smooth',
         });
@@ -132,7 +132,12 @@ class RouteComponentRenderer extends Component {
     }
     return canShow ? (
       <LoadableComponentErrorBoundary>
-        <RouteComponent params={match.params} location={location} {...extraProps} />
+        <RouteComponent
+          params={match.params}
+          location={location}
+          staticContext={staticContext}
+          {...extraProps}
+        />
       </LoadableComponentErrorBoundary>
     ) : (
       <NamedRedirect

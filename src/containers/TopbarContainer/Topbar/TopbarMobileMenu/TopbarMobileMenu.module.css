@@ -1,0 +1,223 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.root {
+  padding: 0px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  height: auto;
+  font-size: x-large;
+}
+
+.content {
+  
+  margin: -11px;
+  width: 100vh;
+  height: 15vh;
+  flex-grow: 1;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: var(--marketplaceColor);
+}
+.logo{
+  margin-top: 15px;
+  width: 23%;
+}
+.categories{
+  display: flex;
+}
+<<<<<<< HEAD:src/components/Topbar/TopbarMobileMenu/TopbarMobileMenu.module.css
+=======
+
+.accountLinksWrapper,
+.customLinksWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.accountLinksWrapper {
+  margin-bottom: 36px;
+}
+
+>>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5:src/containers/TopbarContainer/Topbar/TopbarMobileMenu/TopbarMobileMenu.module.css
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  padding: 24px;
+  background-color: var(--colorWhite);
+  box-shadow: var(--boxShadowTop);
+}
+
+.avatar {
+  /* Layout */
+  flex-shrink: 0;
+  margin: var(--TopbarMobileMenu_topMargin) 0 0 0;
+}
+
+.greeting {
+  /* Font */
+  font-weight: var(--fontWeightBlack);
+  font-size: 24px;
+  line-height: 24px;
+
+  padding: 3px 0 3px 0;
+  margin-bottom: 1px;
+  margin-top: 16px;
+
+  @media (--viewportMedium) {
+    font-size: 40px;
+    line-height: 56px;
+    padding: 5px 0 3px 0;
+    /* x * 8px */
+    margin-top: 24px;
+  }
+}
+
+.logoutButton {
+  /* Position and dimensions */
+  display: inline;
+
+  /* Borders */
+  border: none;
+
+  /* Text size should be inherited */
+  text-decoration: none;
+
+  /* Logout font is smaller and gray since the action is not recommended. */
+  font-weight: var(--fontWeightSemiBold);
+  font-size: 18px;
+  line-height: 24px;
+
+  color: var(--colorGrey300);
+
+  /* Position component */
+  width: initial;
+  margin: 4px 0 24px 0;
+  padding: 0;
+
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  @media (--viewportMedium) {
+    margin: 0 0 36px 0;
+  }
+}
+
+.customLinkFont {
+  /* Font */
+  font-weight: var(--fontWeightBold);
+  font-size: 21px;
+  line-height: 24px;
+
+  padding: 4px 0 2px 0;
+  /* x * 6px */
+  margin-top: 24px;
+  margin-bottom: 18px;
+
+  @media (--viewportMedium) {
+    font-size: 30px;
+    line-height: 40px;
+    padding: 1px 0 7px 0;
+  }
+}
+
+.inbox {
+  /* Font */
+  composes: customLinkFont;
+  color: var(--marketplaceColor);
+  position: relative;
+
+  margin-top: auto;
+  margin-bottom: 13px;
+}
+
+.navigationLink {
+  /* Font */
+  composes: customLinkFont;
+  color: var(--marketplaceColor);
+
+  /* Layout */
+  margin-top: 0;
+  margin-bottom: 11px;
+}
+.currentPageLink {
+   color: var(--marketplaceColorDark); 
+}
+
+.notificationBadge {
+  position: absolute;
+  top: 4px;
+  right: -26px;
+
+  /* This is inside a link - remove underline */
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.createNewListingLink {
+  composes: buttonPrimary from global;
+}
+.LoginListingLink {
+  composes: buttonPrimary from global;
+  
+}
+
+
+.authenticationGreeting {
+  margin-left: 5%;
+  /* Font */
+
+<<<<<<< HEAD:src/components/Topbar/TopbarMobileMenu/TopbarMobileMenu.module.css
+  width: 100%;
+/*   margin-bottom: 24px;
+  margin-top: var(--TopbarMobileMenu_topMargin); */
+  /* background-color: var(--marketplaceColor); */
+=======
+  margin-bottom: 48px;
+  margin-top: var(--TopbarMobileMenu_topMargin);
+>>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5:src/containers/TopbarContainer/Topbar/TopbarMobileMenu/TopbarMobileMenu.module.css
+}
+.authenticationLinks {
+  white-space: nowrap;
+  color: aliceblue
+}
+
+.menuLinks{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: black;
+}
+
+.signupLink {
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--marketplaceColor);
+}
+.loginLink {
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--marketplaceColor);
+}
+
+.currentPage {
+  color: var(--colorBlack);
+
+  /* black left border */
+  border-left: 5px solid black;
+  margin-left: -24px;
+  padding-left: 19px;
+}
+
+.spacer {
+  width: 100%;
+  height: 124px;
+}

@@ -1,0 +1,204 @@
+@import '../../../../styles/customMediaQueries.css';
+
+.mobileInputRoot {
+  width: 100%;
+}
+
+.desktopInputRoot {
+  height: var(--topbarHeightDesktop);
+}
+
+.mobileIcon {
+  margin-left: 24px;
+  padding: 11px 0 17px 0;
+
+  display: flex;
+  width: 24px;
+  align-self: stretch;
+  background-color: var(--colorWhite);
+
+  @media (--viewportMedium) {
+    margin-left: 0;
+  }
+}
+
+.fontInput {
+  font-weight: var(--fontWeightBlack);
+  font-size: 24px;
+  line-height: 24px;
+
+  /* Layout */
+  margin: 0 24px 0 0;
+  padding: 4px 13px 10px 13px;
+
+  @media (--viewportMedium) {
+    font-size: 30px;
+    line-height: 40px;
+    padding: 5px 13px 15px 13px;
+    margin: 0;
+  }
+}
+
+.mobileInput {
+  /* Font */
+  composes: fontInput;
+
+  /* Layout */
+  height: 50px;
+
+  /* Borders */
+  border: 0;
+  border-radius: 0;
+
+  /* Safari bugfix: without this Safari will print placeholder to a wrong place */
+  &::-webkit-input-placeholder {
+    line-height: normal;
+  }
+
+  &:hover,
+  &:focus {
+    border-radius: 0;
+    border: 0;
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.desktopIcon {
+  height: var(--topbarHeightDesktop);
+  border: none;
+  padding-top: 2px;
+
+  display: flex;
+  width: 24px;
+  align-self: stretch;
+  background-color: var(--colorWhite);
+}
+
+.desktopInput {
+  composes: p from global;
+  flex-grow: 1;
+  /* Font */
+  height: var(--topbarHeightDesktop);
+  line-height: unset;
+  border: none;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 10px;
+
+  /* Search text gets ellipsis if it's too wide */
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+
+  margin-top: 0;
+  margin-bottom: 0;
+
+  &:hover,
+  &:focus {
+    border-bottom-color: var(--marketplaceColor);
+    outline: none;
+    border: 0;
+    box-shadow: none;
+  }
+
+  &:hover::placeholder,
+  &:focus::placeholder {
+    color: var(--colorGrey700);
+  }
+
+  /* Placeholder text might be too wide */
+  &::placeholder {
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    transition: var(--transitionStyleButton);
+  }
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+.mobilePredictions {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  /* searchContainer margin-top (94px) + mobileInput height (50px) = 144px */
+  min-height: calc(100vh - 144px);
+  width: 100%;
+  background-color: var(--marketplaceColor);
+  border-bottom-left-radius: var(--borderRadius);
+  border-bottom-right-radius: var(--borderRadius);
+  box-shadow: var(--boxShadowPopup);
+  z-index: calc(var(--zIndexPopup) + 1);
+
+  @media (--viewportMedium) {
+    min-height: unset;
+  }
+}
+
+.mobilePredictionsAttribution {
+  /* When using the Google Maps Places geocoder, the "Powered by Google"
+   text is hidden in Mobile Safari without giving some extra space to
+   it. */
+  margin-bottom: 100px;
+}
+
+.desktopPredictions {
+  position: absolute;
+  width: 100%;
+  top: var(--topbarHeightDesktop);
+  left: 0;
+  background-color: var(--marketplaceColor);
+  border-bottom-left-radius: var(--borderRadius);
+  border-bottom-right-radius: var(--borderRadius);
+  box-shadow: var(--boxShadowPopup);
+  z-index: calc(var(--zIndexPopup) + 1);
+
+  margin-top: 0;
+  max-width: 434px;
+}
+
+/**
+ * Keyword search
+ */
+.keywordSearchWrapper {
+  position: relative;
+  display: flex;
+}
+
+.searchSubmit {
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    outline: none;
+
+    & .iconSvgGroup {
+      stroke: var(--colorGrey700);
+    }
+  }
+}
+
+.icon {
+  display: flex;
+  width: 24px;
+  align-self: stretch;
+  border-bottom: 2px solid var(--marketplaceColor);
+  background-color: var(--colorWhite);
+}
+
+.iconSvg {
+  margin: auto;
+}
+
+.iconSvgGroup {
+  stroke: var(--marketplaceColor);
+  stroke-width: 2.5px;
+
+  @media (--viewportMedium) {
+    stroke-width: 2px;
+  }
+}

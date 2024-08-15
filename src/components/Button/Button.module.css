@@ -57,13 +57,17 @@
 }
 
 .primaryButton.inProgress:disabled {
+<<<<<<< HEAD
   /*background-color: #f9a398;*/
   background-color: var(--colorSuccess);
+=======
+  background-color: var(--colorPrimaryButton);
+>>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5
 }
 
 .secondaryButton.inProgress:disabled,
 .secondaryButtonInline.inProgress:disabled {
-  background-color: var(--colorWhite);
+  background-color: var(--colorSecondaryButton);
 }
 
 .ready {
@@ -75,13 +79,17 @@
 }
 
 .primaryButton.ready:disabled {
+<<<<<<< HEAD
   /*background-color:#f9a398;*/
   background-color: var(--colorSuccess);
+=======
+  background-color: var(--colorPrimaryButton);
+>>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5
 }
 
 .secondaryButton.ready:disabled,
 .secondaryButtonInline.ready:disabled {
-  background-color: var(--colorWhite);
+  background-color: var(--colorSecondaryButton);
 }
 
 .spinner {

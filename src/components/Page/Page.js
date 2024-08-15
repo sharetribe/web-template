@@ -6,6 +6,7 @@ import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { useRouteConfiguration } from '../../context/routeConfigurationContext';
+import { getCustomCSSPropertiesFromConfig } from '../../util/style';
 import { useIntl, intlShape } from '../../util/reactIntl';
 import { metaTagProps } from '../../util/seo';
 import { canonicalRoutePath } from '../../util/routes';
@@ -196,26 +197,29 @@ class PageComponent extends Component {
     const hasSchema = schema != null;
     const schemaFromProps = hasSchema && Array.isArray(schema) ? schema : hasSchema ? [schema] : [];
     const addressMaybe = config.address?.streetAddress ? { address: config.address } : {};
-    const schemaArrayJSONString = JSON.stringify([
-      ...schemaFromProps,
-      {
-        '@context': 'http://schema.org',
-        '@type': 'Organization',
-        '@id': `${marketplaceRootURL}#organization`,
-        url: marketplaceRootURL,
-        name: marketplaceName,
-        sameAs: sameOrganizationAs,
-        logo: config.branding.logoImageMobileURL,
-        ...addressMaybe,
-      },
-      {
-        '@context': 'http://schema.org',
-        '@type': 'WebSite',
-        url: marketplaceRootURL,
-        description: schemaDescription,
-        name: schemaTitle,
-      },
-    ]);
+    const schemaArrayJSONString = JSON.stringify({
+      '@context': 'http://schema.org',
+      '@graph': [
+        ...schemaFromProps,
+        {
+          '@context': 'http://schema.org',
+          '@type': 'Organization',
+          '@id': `${marketplaceRootURL}#organization`,
+          url: marketplaceRootURL,
+          name: marketplaceName,
+          sameAs: sameOrganizationAs,
+          logo: config.branding.logoImageMobileURL,
+          ...addressMaybe,
+        },
+        {
+          '@context': 'http://schema.org',
+          '@type': 'WebSite',
+          url: marketplaceRootURL,
+          description: schemaDescription,
+          name: schemaTitle,
+        },
+      ],
+    });
 
     const scrollPositionStyles = scrollingDisabled
       ? { marginTop: `${-1 * this.scrollPosition}px` }
@@ -233,14 +237,10 @@ class PageComponent extends Component {
     const faviconVariants = getFaviconVariants(config);
     const appleTouchIcon = getAppleTouchIconURL(config);
 
-    // Marketplace color and branding image comes from configs
-    // If set, we need to create CSS Property and set it to DOM (documentElement is selected here)
+    // Marketplace color and the color for <PrimaryButton> come from configs
+    // If set, we need to create those custom CSS Properties and set them for the app
     // Note: this is also set to <html> element in app.js to provide marketplace colors for modals/portals.
-    const styles = {
-      ['--marketplaceColor']: config.branding.marketplaceColor,
-      ['--marketplaceColorDark']: config.branding.marketplaceColorDark,
-      ['--marketplaceColorLight']: config.branding.marketplaceColorLight,
-    };
+    const styles = getCustomCSSPropertiesFromConfig(config.branding);
 
     return (
       <div className={classes} style={styles} id="page">

@@ -249,16 +249,24 @@
                             </tr>
                           </tbody>
                         </table>
+<<<<<<< HEAD:process/templates/booking-accepted-request/booking-accepted-request-html.html
                         
                         {{/if}}{{/eq}}{{/contains}}{{/each}}
 
                         {{/eq}}{{#eq "line-item/provider-commission" code}}
+=======
+                        {{/if}}{{/eq}}{{#eq "line-item/customer-commission" code}}
+>>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5:ext/transaction-processes/default-booking/templates/booking-accepted-request/booking-accepted-request-html.html
                         <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                           <tbody>
                             <tr>
                               <td>
                                 <td>
+<<<<<<< HEAD:process/templates/booking-accepted-request/booking-accepted-request-html.html
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px">{{t "BookingMoneyPaid.FeeLabel" "{marketplaceName} fee" marketplaceName=marketplace.name }}</p>
+=======
+                                  <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px">{{t "BookingAcceptedRequest.MarketplaceFeeLabel" "{marketplaceName} fee" marketplaceName=marketplace.name}}</p>
+>>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5:ext/transaction-processes/default-booking/templates/booking-accepted-request/booking-accepted-request-html.html
                                 </td>
                                 <td style="text-align:right">
                                   <p style="font-size:16px;line-height:1.4;margin:16px 0;color:#484848;margin-top:1px">{{> format-money money=line-total}}</p>
@@ -266,8 +274,13 @@
                               </td>
                             </tr>
                           </tbody>
+<<<<<<< HEAD:process/templates/booking-accepted-request/booking-accepted-request-html.html
                         </table> 
                         {{/eq}}{{/each}}
+=======
+                        </table>
+                        {{/eq}}{{/contains}}{{/each}}
+>>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5:ext/transaction-processes/default-booking/templates/booking-accepted-request/booking-accepted-request-html.html
                         <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#E1E1E1;margin:20px 0" />
                         <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                           <tbody>

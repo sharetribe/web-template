@@ -9,13 +9,13 @@ const SectionGallery = props => {
   const imageVariants = ['scaled-small', 'scaled-medium', 'scaled-large', 'scaled-xlarge'];
   const thumbnailVariants = [variantPrefix, `${variantPrefix}-2x`, `${variantPrefix}-4x`];
   return (
-    <div className={css.productGallery} data-testid="carousel">
+    <section className={css.productGallery} data-testid="carousel">
       <ListingImageGallery
         images={images}
         imageVariants={imageVariants}
         thumbnailVariants={thumbnailVariants}
       />
-    </div>
+    </section>
   );
 };
 

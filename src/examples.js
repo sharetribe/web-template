@@ -30,6 +30,7 @@ import * as FieldRadioButton from './components/FieldRadioButton/FieldRadioButto
 import * as FieldRangeSlider from './components/FieldRangeSlider/FieldRangeSlider.example';
 import * as FieldReviewRating from './components/FieldReviewRating/FieldReviewRating.example';
 import * as FieldSelect from './components/FieldSelect/FieldSelect.example';
+import * as FieldSelectTree from './components/FieldSelectTree/FieldSelectTree.example';
 import * as FieldTextInput from './components/FieldTextInput/FieldTextInput.example';
 import * as IconAdd from './components/IconAdd/IconAdd.example';
 import * as IconBannedUser from './components/IconBannedUser/IconBannedUser.example';
@@ -85,6 +86,7 @@ import * as LayoutComposer from './components/LayoutComposer/LayoutComposer.exam
 
 // components under containers
 import * as SignupForm from './containers/AuthenticationPage/SignupForm/SignupForm.example';
+import * as ConfirmSignupForm from './containers/AuthenticationPage/ConfirmSignupForm/ConfirmSignupForm.example';
 import * as LoginForm from './containers/AuthenticationPage/LoginForm/LoginForm.example';
 import * as StripePaymentForm from './containers/CheckoutPage/StripePaymentForm/StripePaymentForm.example';
 import * as FieldTimeZoneSelect from './containers/EditListingPage/EditListingWizard/EditListingAvailabilityPanel/FieldTimeZoneSelect/FieldTimeZoneSelect.example';
@@ -134,6 +136,7 @@ export {
   ProductOrderForm,
   Button,
   Colors,
+  ConfirmSignupForm,
   CMSSections,
   EditListingAvailabilityPlanForm,
   EditListingAvailabilityExceptionForm,
@@ -160,6 +163,7 @@ export {
   FieldRangeSlider,
   FieldReviewRating,
   FieldSelect,
+  FieldSelectTree,
   FieldTextInput,
   FieldTimeZoneSelect,
   FilterForm,

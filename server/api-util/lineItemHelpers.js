@@ -10,6 +10,10 @@ const LINE_ITEM_DAY = 'line-item/day';
 
 /** Helper functions for constructing line items*/
 
+const isNumber = value => {
+  return typeof value === 'number' && !isNaN(value);
+};
+
 /**
  * Calculates shipping fee based on saved public data fields and quantity.
  * The total will be `shippingPriceInSubunitsOneItem + (shippingPriceInSubunitsAdditionalItems * (quantity - 1))`.
@@ -29,11 +33,18 @@ exports.calculateShippingFee = (
   currency,
   quantity
 ) => {
-  if (shippingPriceInSubunitsOneItem && currency && quantity === 1) {
+  if (
+    isNumber(shippingPriceInSubunitsOneItem) &&
+    shippingPriceInSubunitsOneItem >= 0 &&
+    currency &&
+    quantity === 1
+  ) {
     return new Money(shippingPriceInSubunitsOneItem, currency);
   } else if (
-    shippingPriceInSubunitsOneItem &&
-    shippingPriceInSubunitsAdditionalItems &&
+    isNumber(shippingPriceInSubunitsOneItem) &&
+    isNumber(shippingPriceInSubunitsAdditionalItems) &&
+    shippingPriceInSubunitsOneItem >= 0 &&
+    shippingPriceInSubunitsAdditionalItems >= 0 &&
     currency &&
     quantity > 1
   ) {
@@ -268,11 +279,14 @@ exports.constructValidLineItems = lineItems => {
  * @returns boolean
  */
 exports.hasCommissionPercentage = commission => {
-  const percentage = commission.percentage;
+  const percentage = commission?.percentage;
   const isDefined = percentage != null;
   const isNumber = typeof percentage === 'number' && !isNaN(percentage);
   if (isDefined && !isNumber) {
     throw new Error(`${percentage} is not a number.`);
   }
-  return isDefined;
+
+  // Only create a line item if the percentage is set to be more than zero
+  const isMoreThanZero = percentage > 0;
+  return isDefined && isMoreThanZero;
 };

@@ -21,7 +21,7 @@ export const parseSelectFilterOptions = uriComponentValue => {
  * @param {String} key Key extracted from listingExtendData config.
  * @param {String} scope Scope extracted from listingExtendData config.
  */
-const constructQueryParamName = (key, scope) => {
+export const constructQueryParamName = (key, scope) => {
   const prefixedKey = scope === 'meta' ? `meta_${key}` : `pub_${key}`;
   return prefixedKey.replace(/\s/g, '_');
 };
@@ -35,7 +35,14 @@ const constructQueryParamName = (key, scope) => {
  * @param {Object} defaultFiltersConfig Configuration of default filters.
  */
 export const getQueryParamNames = (listingFieldsConfig, defaultFiltersConfig) => {
-  const queryParamKeysOfDefaultFilters = defaultFiltersConfig.map(config => config.key);
+  const queryParamKeysOfDefaultFilters = defaultFiltersConfig.reduce((pickedKeys, config) => {
+    const { key, schemaType, scope, nestedParams } = config;
+    const newKeys =
+      schemaType === 'category' && nestedParams
+        ? nestedParams?.map(p => constructQueryParamName(p, scope))
+        : [key];
+    return [...pickedKeys, ...newKeys];
+  }, []);
   const queryParamKeysOfListingFields = listingFieldsConfig.reduce((params, config) => {
     const param = constructQueryParamName(config.key, config.scope);
     return config.filterConfig?.indexForSearch ? [...params, param] : params;
@@ -45,12 +52,8 @@ export const getQueryParamNames = (listingFieldsConfig, defaultFiltersConfig) =>
 /**
  * Check if any of the filters (defined by filterKeys) have currently active query parameter in URL.
  */
-export const isAnyFilterActive = (
-  filterKeys,
-  urlQueryParams,
-  listingFieldsConfig,
-  defaultFiltersConfig
-) => {
+export const isAnyFilterActive = (filterKeys, urlQueryParams, filterConfigs) => {
+  const { listingFieldsConfig, defaultFiltersConfig } = filterConfigs;
   const queryParamKeys = getQueryParamNames(listingFieldsConfig, defaultFiltersConfig);
 
   const getQueryParamKeysOfGivenFilters = (pickedKeys, key) => {
@@ -66,6 +69,47 @@ export const isAnyFilterActive = (
     return queryParamKeysOfGivenFilters.includes(key) && value != null;
   });
   return !!activeKey;
+};
+
+/**
+ * Pick initial vales for FieldSelectTree component.
+ * The value object should be an object containing search params:
+ * { pub_categoryLevel1: 'cats', pub_categoryLevel2: 'egyptian-mau', meta_foo: 'bar' }
+ *
+ * @param {String} prefix like "pub_categoryLevel"
+ * @param {Object} values object literal containing level-specific info
+ *
+ * @returns returns properties, which have a key that starts with the given prefix.
+ */
+export const pickInitialValuesForFieldSelectTree = (prefix, values) => {
+  const pickValuesFn = (picked, entry) => {
+    const [key, value] = entry;
+    const prefixIndex = key.indexOf(prefix);
+    const startsWithPrefix = prefixIndex > -1;
+    return startsWithPrefix ? { ...picked, [key.slice(prefixIndex)]: value } : picked;
+  };
+  const prefixCollection = Object.entries(values).reduce(pickValuesFn, {});
+  return prefixCollection;
+};
+
+/**
+ * This converts the category structure to the format that that's understood by SelectSingleFilter
+ * and its child component: FieldSelectTree.
+ *
+ * @param {Array} categories contain objects with props: _id_, _name_, potentially _subcategories_.
+ * @returns an array that contains objects with props: _option_, _label_ and potentially _suboptions_.
+ */
+export const convertCategoriesToSelectTreeOptions = categories => {
+  const convertSubcategoryData = params => {
+    const { id, name, subcategories } = params;
+    const suboptionsMaybe = subcategories
+      ? { suboptions: subcategories.map(cat => convertSubcategoryData(cat)) }
+      : {};
+    return { option: id, label: name, ...suboptionsMaybe };
+  };
+
+  const categoriesArray = Array.isArray(categories) ? categories : [];
+  return categoriesArray.map(cat => convertSubcategoryData(cat));
 };
 
 /**

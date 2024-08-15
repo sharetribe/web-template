@@ -13,6 +13,9 @@ const loginAsRedirectUri = `${ROOT_URL.replace(/\/$/, '')}/api/login-as`;
 const stateKey = `st-${CLIENT_ID}-oauth2State`;
 const codeVerifierKey = `st-${CLIENT_ID}-pkceCodeVerifier`;
 
+// Cookies used for additional login information
+const targetPathKey = `st-${CLIENT_ID}-targetPath`;
+
 /**
  * Makes a base64 string URL friendly by
  * replacing unaccepted characters.
@@ -52,6 +55,7 @@ module.exports = (req, res) => {
     .digest('base64');
   const codeChallenge = urlifyBase64(hash);
   const authorizeServerUrl = `${CONSOLE_URL}/api/authorize-as`;
+  const { target_path: targetPath } = req.query || {};
 
   const location = `${authorizeServerUrl}?\
 response_type=code&\
@@ -69,5 +73,8 @@ code_challenge_method=S256`;
 
   res.cookie(stateKey, state, cookieOpts);
   res.cookie(codeVerifierKey, codeVerifier, cookieOpts);
+  if (targetPath) {
+    res.cookie(targetPathKey, targetPath, cookieOpts);
+  }
   return res.redirect(location);
 };

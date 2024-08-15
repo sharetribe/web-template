@@ -85,6 +85,11 @@
   }
 }
 
+.longWord {
+  word-break: break-word;
+  hyphens: auto;
+}
+
 .bio {
   /* Preserve newlines, but collapse other whitespace */
   white-space: pre-line;
@@ -202,4 +207,99 @@
 
 .desktopReviewsTabNav {
   margin-bottom: 32px;
+}
+
+.sectionText {
+  padding: 0 24px;
+  margin-bottom: 30px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-bottom: 40px;
+  }
+}
+
+/* 
+ * Custom field component classes 
+ */
+
+.sectionHeading {
+  /* Font for sections titles */
+  composes: p from global;
+  padding: 0;
+  font-weight: var(--fontWeightBold);
+
+  margin-top: 0;
+  margin-bottom: 12px;
+
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+}
+
+.text {
+  font-weight: var(--fontWeightRegular);
+  padding: 1px 0 5px 0;
+  margin: 0;
+
+  /* Preserve newlines, but collapse other whitespace */
+  white-space: pre-line;
+
+  @media (--viewportMedium) {
+    padding: 3px 0 5px 0;
+    margin: 0;
+  }
+}
+
+.ingress {
+  composes: p from global;
+  margin: 0;
+
+  /* Preserve newlines, but collapse other whitespace */
+  white-space: pre-line;
+
+  @media (--viewportMedium) {
+    margin: 0;
+  }
+}
+
+.sectionMultiEnum,
+.sectionDetails {
+  padding: 0 24px;
+  margin-bottom: 30px;
+
+  @media (--viewportMedium) {
+    padding: 0;
+    margin-bottom: 40px;
+  }
+}
+
+.details {
+  padding-bottom: 1px;
+  margin: 0;
+}
+
+.detailsRow {
+  display: inline-flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1px 0 4px 0;
+  line-height: 36px;
+  list-style: none;
+  font-weight: var(--fontWeightRegular);
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--colorGrey100);
+  }
+
+  @media (--viewportMedium) {
+    padding: 5px 0 2px 0;
+    line-height: 32px;
+  }
+}
+
+.detailLabel {
+  font-weight: var(--fontWeightSemiBold);
+  letter-spacing: -0.09px;
 }

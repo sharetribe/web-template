@@ -81,10 +81,11 @@ const MarketplaceColors = () => {
   return (
     <div className={css.content}>
       <p className={css.spacing2x}>
-        Marketplace colors have three groups: branding color and its variations, action colors, and
-        grey palette for fine tuning UI elements.
+        Marketplace colors have four groups: branding color, primary button color, traffic light
+        colors, and grey palette for fine tuning UI elements.
       </p>
       <div className={css.colorsContainer}>
+        <h4>Marketplace color</h4>
         <div className={css.colorsGroup}>
           <ColorCard
             mpColor={css.marketplaceColorBackground}
@@ -102,6 +103,25 @@ const MarketplaceColors = () => {
             usage="color: var(--marketplaceColorDark);"
           />
         </div>
+        <h4>Custom color for PrimaryButtons</h4>
+        <div className={css.colorsGroup}>
+          <ColorCard
+            mpColor={css.colorPrimaryButton}
+            name="--colorPrimaryButton"
+            usage="<PrimaryButton>"
+          />
+          <ColorCard
+            mpColor={css.colorPrimaryButtonLight}
+            name="--colorPrimaryButtonLight"
+            usage="<PrimaryButton>"
+          />
+          <ColorCard
+            mpColor={css.colorPrimaryButtonDark}
+            name="--colorPrimaryButtonDark"
+            usage="<PrimaryButton>"
+          />
+        </div>
+        <h4>Traffic light colors</h4>
         <div className={css.colorsGroup}>
           <ColorCard
             mpColor={css.successColorBackground}
@@ -119,6 +139,7 @@ const MarketplaceColors = () => {
             usage="color: var(--colorAttention);"
           />
         </div>
+        <h4>Grey colors</h4>
         <div className={css.colorsGroup}>
           <ColorCard
             mpColor={css.colorBlack}

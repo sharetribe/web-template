@@ -6,7 +6,18 @@ import classNames from 'classnames';
 import { useConfiguration } from '../../../context/configurationContext';
 import { useRouteConfiguration } from '../../../context/routeConfigurationContext';
 import { FormattedMessage, intlShape, useIntl } from '../../../util/reactIntl';
-import { displayPrice } from '../../../util/configHelpers';
+import {
+  displayDeliveryPickup,
+  displayDeliveryShipping,
+  displayLocation,
+  displayPrice,
+  requirePayoutDetails,
+} from '../../../util/configHelpers';
+import {
+  LISTING_PAGE_PARAM_TYPE_DRAFT,
+  LISTING_PAGE_PARAM_TYPE_NEW,
+  LISTING_PAGE_PARAM_TYPES,
+} from '../../../util/urlHelpers';
 import { createResourceLocatorString } from '../../../util/routes';
 import { withViewport } from '../../../util/uiHelpers';
 import {
@@ -18,10 +29,10 @@ import {
   propTypes,
 } from '../../../util/types';
 import {
-  LISTING_PAGE_PARAM_TYPE_DRAFT,
-  LISTING_PAGE_PARAM_TYPE_NEW,
-  LISTING_PAGE_PARAM_TYPES,
-} from '../../../util/urlHelpers';
+  isFieldForCategory,
+  isFieldForListingType,
+  pickCategoryFields,
+} from '../../../util/fieldHelpers';
 import { ensureCurrentUser, ensureListing } from '../../../util/data';
 import {
   INQUIRY_PROCESS_NAME,
@@ -68,7 +79,6 @@ const TABS_BOOKING = [
   PHOTOS,
 ];
 const TABS_INQUIRY = [DETAILS, LOCATION, PRICING, PHOTOS];
-const TABS_INQUIRY_WITHOUT_PRICE = [DETAILS, LOCATION, PHOTOS];
 const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING, ...TABS_INQUIRY];
 
 // Tabs are horizontal in small screens
@@ -76,6 +86,31 @@ const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
 
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = 'success';
 const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
+
+// Pick only allowed tabs from the given list
+const getTabs = (processTabs, disallowedTabs) => {
+  return disallowedTabs.length > 0
+    ? processTabs.filter(tab => !disallowedTabs.includes(tab))
+    : processTabs;
+};
+// Pick only allowed booking tabs (location could be omitted)
+const tabsForBookingProcess = (processTabs, listingTypeConfig) => {
+  const disallowedTabs = !displayLocation(listingTypeConfig) ? [LOCATION] : [];
+  return getTabs(processTabs, disallowedTabs);
+};
+// Pick only allowed purchase tabs (delivery could be omitted)
+const tabsForPurchaseProcess = (processTabs, listingTypeConfig) => {
+  const isDeliveryDisabled =
+    !displayDeliveryPickup(listingTypeConfig) && !displayDeliveryShipping(listingTypeConfig);
+  const disallowedTabs = isDeliveryDisabled ? [DELIVERY] : [];
+  return getTabs(processTabs, disallowedTabs);
+};
+// Pick only allowed inquiry tabs (location and pricing could be omitted)
+const tabsForInquiryProcess = (processTabs, listingTypeConfig) => {
+  const locationMaybe = !displayLocation(listingTypeConfig) ? [LOCATION] : [];
+  const priceMaybe = !displayPrice(listingTypeConfig) ? [PRICING] : [];
+  return getTabs(processTabs, [...locationMaybe, ...priceMaybe]);
+};
 
 /**
  * Return translations for wizard tab: label and submit button.
@@ -135,13 +170,7 @@ const tabLabelAndSubmit = (intl, tab, isNewListingFlow, isPriceDisabled, process
  */
 const hasValidListingFieldsInExtendedData = (publicData, privateData, config) => {
   const isValidField = (fieldConfig, fieldData) => {
-    const {
-      key,
-      includeForListingTypes,
-      schemaType,
-      enumOptions = [],
-      saveConfig = {},
-    } = fieldConfig;
+    const { key, schemaType, enumOptions = [], saveConfig = {} } = fieldConfig;
 
     const schemaOptionKeys = enumOptions.map(o => `${o.option}`);
     const hasValidEnumValue = optionData => {
@@ -151,9 +180,15 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
       return savedOptions.every(optionData => schemaOptionKeys.includes(optionData));
     };
 
-    const isRequired =
-      !!saveConfig.isRequired &&
-      (includeForListingTypes == null || includeForListingTypes.includes(publicData?.listingType));
+    const categoryKey = config.categoryConfiguration.key;
+    const categoryOptions = config.categoryConfiguration.categories;
+    const categoriesObj = pickCategoryFields(publicData, categoryKey, 1, categoryOptions);
+    const currentCategories = Object.values(categoriesObj);
+
+    const isTargetListingType = isFieldForListingType(publicData?.listingType, fieldConfig);
+    const isTargetCategory = isFieldForCategory(currentCategories, fieldConfig);
+    const isRequired = !!saveConfig.isRequired && isTargetListingType && isTargetCategory;
+
     if (isRequired) {
       const savedListingField = fieldData[key];
       return schemaType === SCHEMA_TYPE_ENUM
@@ -354,6 +389,12 @@ class EditListingWizard extends Component {
     const processName = listing?.attributes?.publicData?.transactionProcessAlias.split('/')[0];
     const isInquiryProcess = processName === INQUIRY_PROCESS_NAME;
 
+    const listingTypeConfig = getListingTypeConfig(listing, this.state.selectedListingType, config);
+    // Through hosted configs (listingTypeConfig.defaultListingFields?.payoutDetails),
+    // it's possible to publish listing without payout details set by provider.
+    // Customers can't purchase these listings - but it gives operator opportunity to discuss with providers who fail to do so.
+    const isPayoutDetailsRequired = requirePayoutDetails(listingTypeConfig);
+
     const stripeConnected = !!currentUser?.stripeAccount?.id;
     const stripeAccountData = stripeConnected ? getStripeAccountData(stripeAccount) : null;
     const stripeRequirementsMissing =
@@ -361,7 +402,11 @@ class EditListingWizard extends Component {
       (hasRequirements(stripeAccountData, 'past_due') ||
         hasRequirements(stripeAccountData, 'currently_due'));
 
-    if (isInquiryProcess || (stripeConnected && !stripeRequirementsMissing)) {
+    if (
+      isInquiryProcess ||
+      !isPayoutDetailsRequired ||
+      (stripeConnected && !stripeRequirementsMissing)
+    ) {
       onPublishListingDraft(id);
     } else {
       this.setState({
@@ -450,12 +495,10 @@ class EditListingWizard extends Component {
       isNewListingFlow && (invalidExistingListingType || !hasListingTypeSelected)
         ? TABS_DETAILS_ONLY
         : isBookingProcess(processName)
-        ? TABS_BOOKING
+        ? tabsForBookingProcess(TABS_BOOKING, listingTypeConfig)
         : isPurchaseProcess(processName)
-        ? TABS_PRODUCT
-        : isPriceDisabled
-        ? TABS_INQUIRY_WITHOUT_PRICE
-        : TABS_INQUIRY;
+        ? tabsForPurchaseProcess(TABS_PRODUCT, listingTypeConfig)
+        : tabsForInquiryProcess(TABS_INQUIRY, listingTypeConfig);
 
     // Check if wizard tab is active / linkable.
     // When creating a new listing, we don't allow users to access next tab until the current one is completed.
@@ -612,7 +655,47 @@ class EditListingWizard extends Component {
                 <p className={css.modalMessage}>
                   <FormattedMessage id="EditListingWizard.payoutModalInfo" />
                 </p>
+<<<<<<< HEAD
                 
+=======
+                <StripeConnectAccountForm
+                  disabled={formDisabled}
+                  inProgress={payoutDetailsSaveInProgress}
+                  ready={payoutDetailsSaved}
+                  currentUser={currentUser}
+                  stripeBankAccountLastDigits={getBankAccountLast4Digits(stripeAccountData)}
+                  savedCountry={savedCountry}
+                  submitButtonText={intl.formatMessage({
+                    id: 'StripePayoutPage.submitButtonText',
+                  })}
+                  stripeAccountError={stripeAccountError}
+                  stripeAccountFetched={stripeAccountFetched}
+                  stripeAccountLinkError={stripeAccountLinkError}
+                  onChange={onPayoutDetailsChange}
+                  onSubmit={rest.onPayoutDetailsSubmit}
+                  onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink}
+                  stripeConnected={stripeConnected}
+                >
+                  {stripeConnected && !returnedAbnormallyFromStripe && showVerificationNeeded ? (
+                    <StripeConnectAccountStatusBox
+                      type="verificationNeeded"
+                      inProgress={getAccountLinkInProgress}
+                      onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink(
+                        'custom_account_verification'
+                      )}
+                    />
+                  ) : stripeConnected && savedCountry && !returnedAbnormallyFromStripe ? (
+                    <StripeConnectAccountStatusBox
+                      type="verificationSuccess"
+                      inProgress={getAccountLinkInProgress}
+                      disabled={payoutDetailsSaveInProgress}
+                      onGetStripeConnectAccountLink={handleGetStripeConnectAccountLink(
+                        'custom_account_update'
+                      )}
+                    />
+                  ) : null}
+                </StripeConnectAccountForm>
+>>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5
               </>
             )}
           </div>
