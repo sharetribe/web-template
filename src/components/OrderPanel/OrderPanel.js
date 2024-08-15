@@ -194,12 +194,9 @@ const OrderPanel = props => {
     marketplaceName,
     fetchLineItemsInProgress,
     fetchLineItemsError,
-<<<<<<< HEAD
     onToggleFavorites,
     currentUser,
-=======
     payoutDetailsWarning,
->>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5
   } = props;
 
   const publicData = listing?.attributes?.publicData || {};

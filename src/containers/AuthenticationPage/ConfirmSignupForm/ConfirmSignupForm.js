@@ -7,9 +7,6 @@ import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
-<<<<<<< HEAD
-import { Form, PrimaryButton, FieldTextInput, FieldPhoneNumberInput } from '../../../components';
-=======
 import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
 
 import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '../../../components';
@@ -17,7 +14,6 @@ import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '..
 import FieldSelectUserType from '../FieldSelectUserType';
 import UserFieldDisplayName from '../UserFieldDisplayName';
 import UserFieldPhoneNumber from '../UserFieldPhoneNumber';
->>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5
 
 import css from './ConfirmSignupForm.module.css';
 // import FieldPhoneNumberInput from '../../../components';
@@ -78,32 +74,6 @@ const ConfirmSignupFormComponent = props => (
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
-<<<<<<< HEAD
-          <div>
-            <FieldTextInput
-              type="email"
-              id={formId ? `${formId}.email` : 'email'}
-              name="email"
-              autoComplete="email"
-              label={intl.formatMessage({
-                id: 'ConfirmSignupForm.emailLabel',
-              })}
-              placeholder={intl.formatMessage({
-                id: 'ConfirmSignupForm.emailPlaceholder',
-              })}
-              initialValue={email}
-              validate={validators.composeValidators(emailRequired, emailValid)}
-            />
-            <FieldPhoneNumberInput
-              className={css.phone}
-              id={formId ? `${formId}.phoneNumber` : 'phoneNumber'}
-              name="phoneNumber"
-              label={phoneLabel}
-              placeholder={phonePlaceholder}
-              validate={phoneRequired}
-            />
-            <div className={css.name}>
-=======
           <FieldSelectUserType
             name="userType"
             userTypes={userTypes}
@@ -113,7 +83,6 @@ const ConfirmSignupFormComponent = props => (
 
           {showDefaultUserFields ? (
             <div className={css.defaultUserFields}>
->>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5
               <FieldTextInput
                 type="email"
                 id={formId ? `${formId}.email` : 'email'}
