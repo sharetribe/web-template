@@ -60,15 +60,15 @@ const render = (store, shouldHydrate) => {
   const info = authInfoLoaded ? Promise.resolve({}) : store.dispatch(authInfo());
   info
     .then(() => {
-      store.dispatch(fetchCurrentUser());
       // Ensure that Loadable Components is ready
       // and fetch hosted assets in parallel before initializing the ClientApp
       return Promise.all([
         loadableReady(),
         store.dispatch(fetchAppAssets(defaultConfig.appCdnAssets, cdnAssetsVersion)),
+        store.dispatch(fetchCurrentUser()),
       ]);
     })
-    .then(([_, fetchedAppAssets]) => {
+    .then(([_, fetchedAppAssets, cu]) => {
       const { translations: translationsRaw, ...rest } = fetchedAppAssets || {};
       // We'll handle translations as a separate data.
       // It's given to React Intl instead of pushing to config Context
