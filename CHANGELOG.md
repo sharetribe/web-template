@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] SearchPage: SearchFiltersMobile (modal) should be above topbar.
+  [#432](https://github.com/sharetribe/web-template/pull/432)
+
 ## [v5.3.0] 2024-08-13
 
 - [change] ProfilePage: redirect Stripe's crawler to landing page (profile page might be empty).
