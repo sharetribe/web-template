@@ -81,7 +81,8 @@
     "cross-env": "^7.0.3",
     "inquirer": "^8.2.4",
     "nodemon": "^3.1.4",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "yarn": "latest"
   },
   "resolutions": {
     "react-dates/lodash": "^4.17.21",
@@ -134,7 +135,9 @@
     ]
   },
   "engines": {
-    "node": ">=18.20.1"
+    "node": ">=18.20.1",
+     "npm": ">=7.3.0",
+    "yarn": ">=1.22.5"
   },
   "prettier": {
     "singleQuote": true,
