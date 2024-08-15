@@ -79,6 +79,22 @@ const getDateRangeQuantityAndLineItems = (orderData, code) => {
   return { quantity, extraLineItems: [] };
 };
 /**
+ * Calculate units based on days or nights between given bookingDates. Returns units and seats.
+ *
+ * @param {*} orderData should contain booking dates and seats
+ * @param {*} code should be either 'line-item/day' or 'line-item/night'
+ */
+const getDateRangeUnitsSeatsLineItems = (orderData, code) => {
+  const { bookingStart, bookingEnd, seats } = orderData;
+
+  const units =
+    bookingStart && bookingEnd
+      ? calculateQuantityFromDates(bookingStart, bookingEnd, code)
+      : null;
+
+  return { units, seats, extraLineItems: [] };
+};
+/**
  * Returns collection of lineItems (max 50)
  *
  * All the line-items dedicated to _customer_ define the "payin total".
@@ -143,20 +159,25 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
       ? getItemQuantityAndLineItems(orderData, publicData, currency)
       : unitType === 'hour'
       ? getHourQuantityAndLineItems(orderData)
+      : ['day', 'night'].includes(unitType) && !!orderData.seats
+      ? getDateRangeUnitsSeatsLineItems(orderData, code)
       : ['day', 'night'].includes(unitType)
       ? getDateRangeQuantityAndLineItems(orderData, code)
       : {};
-  const { quantity, extraLineItems } = quantityAndExtraLineItems;
+  const { quantity, units, seats, extraLineItems } = quantityAndExtraLineItems;
   // Throw error if there is no quantity information given
-  if (!quantity) {
+  if (!quantity && !(units && seats)) {
     const message = `Error: transition should contain quantity information: 
-      stockReservationQuantity, quantity, or bookingStart & bookingEnd (if "line-item/day" or "line-item/night" is used)`;
+      stockReservationQuantity, quantity, units & seats, or bookingStart & bookingEnd (if "line-item/day" or "line-item/night" is used)`;
     const error = new Error(message);
     error.status = 400;
     error.statusText = message;
     error.data = {};
     throw error;
   }
+  // A booking line item can have either quantity, or units and seats. Add the
+  // correct values depending on whether units and seats exist.
+  const quantityOrSeats = !!units && !!seats ? { units, seats } : { quantity };
   /**
    * If you want to use pre-defined component and translations for printing the lineItems base price for order,
    * you should use one of the codes:
@@ -169,7 +190,7 @@ exports.transactionLineItems = (listing, orderData, providerCommission, customer
   const order = {
     code,
     unitPrice,
-    quantity,
+    ...quantityOrSeats,
     includeFor: ['customer', 'provider'],
   };
    const helmetFeePrice = orderData.hasHelmetFee ? resolveHelmetFeePrice(listing) : null;

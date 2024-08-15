@@ -49,6 +49,15 @@ const SectionCarousel = props => {
   const numberOfBlocks = blocks?.length;
   const hasBlocks = numberOfBlocks > 0;
 
+  const handleCtaButtonClick = () => {
+    console.log('BtnsCarrousel'); // Log para verificar
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'BtnsCarrousel');
+    } else {
+      console.error('Meta Pixel no está definido');
+    }
+  };
+
   useEffect(() => {
     const setCarouselWidth = () => {
       if (hasBlocks) {
@@ -102,7 +111,6 @@ const SectionCarousel = props => {
       onSlideRight(e);
     }
   };
-
   return (
     <SectionContainer
       id={sectionId}
@@ -115,7 +123,8 @@ const SectionCarousel = props => {
         <header className={defaultClasses.sectionDetails}>
           <Field data={title} className={defaultClasses.title} options={fieldOptions} />
           <Field data={description} className={defaultClasses.description} options={fieldOptions} />
-          <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
+          <Field data={callToAction} className={defaultClasses.ctaButtonCarrousel} options={fieldOptions}/>
+
         </header>
       ) : null}
       {hasBlocks ? (
@@ -132,16 +141,21 @@ const SectionCarousel = props => {
               ›
             </button>
           </div>
-          <div className={getColumnCSS(numColumns)} id={sliderId}>
-            <BlockBuilder
-              rootClassName={css.block}
-              ctaButtonClass={defaultClasses.ctaButton}
-              blocks={blocks}
-              sectionId={sectionId}
-              responsiveImageSizes={getResponsiveImageSizes(numColumns)}
-              options={options}
-            />
-          </div>
+          <button onClick={handleCtaButtonClick}
+            style={{ border: 'none', background: 'none', padding: 0, margin: 0, width: '100%' }}
+          >
+            <div className={getColumnCSS(numColumns)} id={sliderId}>
+              <BlockBuilder
+                rootClassName={css.block}
+                ctaButtonClass={defaultClasses.ctaButtonCarrousel}
+                blocks={blocks}
+                sectionId={sectionId}
+                responsiveImageSizes={getResponsiveImageSizes(numColumns)}
+                options={options}
+                onClick={handleCtaButtonClick}
+              />
+            </div>
+          </button>
         </div>
       ) : null}
     </SectionContainer>
@@ -174,7 +188,7 @@ SectionCarousel.propTypes = {
     sectionDetails: string,
     title: string,
     description: string,
-    ctaButton: string,
+    ctaButtonCarrousel: string,
   }),
   numColumns: number,
   title: object,

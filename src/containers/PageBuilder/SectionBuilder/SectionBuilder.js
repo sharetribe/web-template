@@ -25,6 +25,7 @@ const DEFAULT_CLASSES = {
   title: css.title,
   description: css.description,
   ctaButton: css.ctaButton,
+  ctaButtonCarrousel: css.ctaButtonCarrousel,
   blockContainer: css.blockContainer,
 };
 

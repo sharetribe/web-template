@@ -93,7 +93,7 @@ class TopbarSearchFormComponent extends Component {
     // Callback ref
     this.searchInput = null;
     this.setSearchInputRef = element => {
-      this.setSearchInput = element;
+      this.searchInput = element;
     };
   }
 
@@ -112,6 +112,14 @@ class TopbarSearchFormComponent extends Component {
 
   onSubmit(values) {
     const { appConfig, onSubmit } = this.props;
+
+    // Evento de Meta Pixel
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'Search', { search_string: values.keywords });
+    } else {
+      console.error('Meta Pixel no está definido');
+    }
+
     if (isMainSearchTypeKeywords(appConfig)) {
       onSubmit({ keywords: values.keywords });
       // blur search input to hide software keyboard

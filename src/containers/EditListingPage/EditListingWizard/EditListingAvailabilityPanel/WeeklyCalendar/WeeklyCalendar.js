@@ -87,7 +87,7 @@ const DateLabel = ({ dateId, hasAvailability, timeZone }) => {
 const PlanEntry = ({ date, entry, useFullDays, isDaily, timeZone, intl, ...rest }) => {
   const isAvailable = entry.seats > 0;
   const availabilityInfo = isAvailable ? (
-    <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.available" />
+    <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.available" values={{ seats: entry.seats }}/>
   ) : (
     <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.notAvailable" />
   );
@@ -159,10 +159,12 @@ const AvailableExceptionsInfo = ({
   onDeleteAvailabilityException,
 }) => {
   const hasAvailableExceptions = availableExceptions.length > 0;
+  const seats = hasAvailableExceptions ? availableExceptions[0].attributes.seats : null;
+
   return hasAvailableExceptions ? (
     <>
       <Heading as="h6" rootClassName={css.exceptionsSubtitle}>
-        <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.available" />
+        <FormattedMessage id="EditListingAvailabilityPanel.WeeklyCalendar.available" values={{ seats }}/>
       </Heading>
       {availableExceptions.map(exception => {
         return (

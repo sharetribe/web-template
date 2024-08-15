@@ -62,6 +62,8 @@ import css from './CheckoutPage.module.css';
 const getOrderParams = (pageData, shippingDetails, config) => {
   const quantity = pageData.orderData?.quantity;
   const quantityMaybe = quantity ? { quantity } : {};
+  const seats = pageData.orderData?.seats;
+  const seatsMaybe = seats ? { seats } : {};
   const deliveryMethod = pageData.orderData?.deliveryMethod;
   const deliveryMethodMaybe = deliveryMethod ? { deliveryMethod } : {};
   const hasHelmetFee = pageData.orderData?.helmetFee?.length > 0;
@@ -82,6 +84,7 @@ const getOrderParams = (pageData, shippingDetails, config) => {
     listingId: pageData?.listing?.id,
     ...deliveryMethodMaybe,
     ...quantityMaybe,
+    ...seatsMaybe,
     hasHelmetFee,
     ...bookingDatesMaybe(pageData.orderData?.bookingDates),
     ...protectedDataMaybe,

@@ -18,6 +18,14 @@ export const Link = React.forwardRef((props, ref) => {
   const titleMaybe = title ? { title } : {};
   const linkProps = { className: classes, href, children, ...titleMaybe };
 
+  const handleCtaButtonClick = listingId => {
+    console.log('BtnsLandingHero'); // Log para verificar
+    if (typeof fbq !== 'undefined') {
+      fbq('track', 'BtnsLandingHero', { listing_id: listingId });
+    } else {
+      console.error('Meta Pixel no está definido');
+    }
+  };
   // Markdown parser (rehype-sanitize) might return undefined href
   if (!href || !children) {
     return null;
@@ -31,7 +39,12 @@ export const Link = React.forwardRef((props, ref) => {
       const found = matchedRoutes[0];
       const to = { search: testURL.search, hash: testURL.hash };
       return (
-        <NamedLink name={found.route.name} params={found.params} to={to} {...linkProps} ref={ref} />
+        <button onClick={handleCtaButtonClick}
+            style={{ border: 'none', background: 'none', padding: 0, margin: 0, width: '100%' }}
+          >
+
+            <NamedLink name={found.route.name} params={found.params} to={to} {...linkProps} ref={ref} />
+          </button>
       );
     }
   }

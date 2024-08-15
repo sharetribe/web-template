@@ -100,13 +100,6 @@ const closeOrderModal = (history, location) => {
   const searchString = `?${stringify(searchParams)}`;
   history.push(`${pathname}${searchString}`, state);
 };
-const trackSubmitApplication = () => {
-  if (typeof fbq !== 'undefined') {
-    fbq('track', 'SubmitApplication');
-  } else {
-    console.error('Meta Pixel no está definido');
-  }
-};
 
 const handleSubmit = (
   isOwnListing,
@@ -115,18 +108,12 @@ const handleSubmit = (
   onSubmit,
   history,
   location
-) => (event) => {
-  event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario si es necesario
-
-  // Llamar al evento de seguimiento
-  trackSubmitApplication();
-
-  // Lógica existente
-  if (isInquiryWithoutPayment) {
-    onSubmit({});
-  } else {
-    openOrderModal(isOwnListing, isClosed, history, location);
-  }
+) => {
+  // TODO: currently, inquiry-process does not have any form to ask more order data.
+  // We can submit without opening any inquiry/order modal.
+  return isInquiryWithoutPayment
+    ? () => onSubmit({})
+    : () => openOrderModal(isOwnListing, isClosed, history, location);
 };
 
 
@@ -433,18 +420,17 @@ const OrderPanel = props => {
             <FormattedMessage id="OrderPanel.closedListingButtonText" />
           </div>
         ) : (
-          <PrimaryButton
-            onClick={handleSubmit(
-              isOwnListing,
-              isInquiryWithoutPayment,
-              isClosed,
-              showInquiryForm,
-              onSubmit,
-              history,
-              location
-            )}
-            disabled={isOutOfStock}
-          >
+            <PrimaryButton
+              onClick={handleSubmit(
+                props.isOwnListing,
+                props.isClosed,
+                props.showInquiryForm,
+                props.onSubmit,
+                history,
+                props.location
+              )}
+              disabled={props.isOutOfStock}
+            >
 
             {isBooking ? (
               <FormattedMessage id="OrderPanel.ctaButtonMessageBooking" />

@@ -13,11 +13,13 @@
 }
 
 .sectionContent {
-  padding: 32px 0;
+
+  padding-top: 32px ;
+  padding-bottom: 20px ;
   position: relative;
 
   @media (--viewportMedium) {
-    padding: 64px 0;
+    padding: 32px 0;
   }
 }
 
