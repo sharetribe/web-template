@@ -30,6 +30,7 @@ import {
   Reviews,
   ButtonTabNavHorizontal,
   LayoutSideNavigation,
+  NamedRedirect,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
@@ -259,6 +260,19 @@ export const ProfilePageComponent = props => {
   const config = useConfiguration();
   const intl = useIntl();
   const { scrollingDisabled, currentUser, userShowError, user, ...rest } = props;
+
+  // Stripe's onboarding needs a business URL for each seller, but the profile page can be
+  // too empty for the provider at the time they are creating their first listing.
+  // To remedy the situation, we redirect Stripe's crawler to the landing page of the marketplace.
+  // TODO: When there's more content on the profile page, we should consider by-passing this redirection.
+  const searchParams = rest?.location?.search;
+  const isStorefront = searchParams
+    ? new URLSearchParams(searchParams)?.get('mode') === 'storefront'
+    : false;
+  if (isStorefront) {
+    return <NamedRedirect name="LandingPage" />;
+  }
+
   const ensuredCurrentUser = ensureCurrentUser(currentUser);
   const profileUser = ensureUser(user);
   const isCurrentUser =

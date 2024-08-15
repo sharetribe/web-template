@@ -14,6 +14,15 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [fix] SearchPage: SearchFiltersMobile (modal) should be above topbar.
+  [#432](https://github.com/sharetribe/web-template/pull/432)
+
+## [v5.3.0] 2024-08-13
+
+- [change] ProfilePage: redirect Stripe's crawler to landing page (profile page might be empty).
+  [#430](https://github.com/sharetribe/web-template/pull/430)
+- [add] Add currently available translations for DE, ES, FR.
+  [#429](https://github.com/sharetribe/web-template/pull/429)
 - [add] Handle API's new permission model & permission to post listings
 
   - CurrentUser fetch includes a new relationship: effectivePermissionSet
@@ -36,6 +45,8 @@ way to update this template, but currently, we follow a pattern:
 - [fix] There could be rare time-windows when indexing has not caught up with deleted & closed
   listings. This might result those listings to be included to listing queries.
   [#417](https://github.com/sharetribe/web-template/pull/417)
+
+  [v5.3.0]: https://github.com/sharetribe/web-template/compare/v5.2.1...v5.3.0
 
 ## [v5.2.1] 2024-07-02
 
