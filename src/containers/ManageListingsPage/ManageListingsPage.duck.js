@@ -3,6 +3,8 @@ import { storableError } from '../../util/errors';
 import { createImageVariantConfig } from '../../util/sdkLoader';
 import { parse } from '../../util/urlHelpers';
 
+import { fetchCurrentUser } from '../../ducks/user.duck';
+
 // Pagination page size might need to be dynamic on responsive page layouts
 // Current design has max 3 columns 42 is divisible by 2 and 3
 // So, there's enough cards to fill all columns on full pagination pages
@@ -23,6 +25,7 @@ export const CLOSE_LISTING_SUCCESS = 'app/ManageListingsPage/CLOSE_LISTING_SUCCE
 export const CLOSE_LISTING_ERROR = 'app/ManageListingsPage/CLOSE_LISTING_ERROR';
 
 export const ADD_OWN_ENTITIES = 'app/ManageListingsPage/ADD_OWN_ENTITIES';
+export const CLEAR_OPEN_LISTING_ERROR = 'app/ManageListingsPage/CLEAR_OPEN_LISTING_ERROR';
 
 // ================ Reducer ================ //
 
@@ -65,6 +68,13 @@ const updateListingAttributes = (state, listingEntity) => {
 const manageListingsPageReducer = (state = initialState, action = {}) => {
   const { type, payload } = action;
   switch (type) {
+    case CLEAR_OPEN_LISTING_ERROR:
+      return {
+        ...state,
+        openingListing: null,
+        openingListingError: null,
+      };
+
     case FETCH_LISTINGS_REQUEST:
       return {
         ...state,
@@ -162,6 +172,10 @@ export const getOwnListingsById = (state, listingIds) => {
 };
 
 // ================ Action creators ================ //
+
+export const clearOpenListingError = () => ({
+  type: CLEAR_OPEN_LISTING_ERROR,
+});
 
 // This works the same way as addMarketplaceEntities,
 // but we don't want to mix own listings with searched listings
@@ -267,9 +281,10 @@ export const openListing = listingId => (dispatch, getState, sdk) => {
     });
 };
 
-export const loadData = (params, search, config) => {
+export const loadData = (params, search, config) => (dispatch, getState, sdk) => {
   const queryParams = parse(search);
   const page = queryParams.page || 1;
+  dispatch(clearOpenListingError());
 
   const {
     aspectWidth = 1,
@@ -278,14 +293,27 @@ export const loadData = (params, search, config) => {
   } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
 
-  return queryOwnListings({
-    ...queryParams,
-    page,
-    perPage: RESULT_PAGE_SIZE,
-    include: ['images', 'currentStock'],
-    'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
-    ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
-    ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
-    'limit.images': 1,
-  });
+  return Promise.all([
+    dispatch(fetchCurrentUser()),
+    dispatch(
+      queryOwnListings({
+        ...queryParams,
+        page,
+        perPage: RESULT_PAGE_SIZE,
+        include: ['images', 'currentStock'],
+        'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
+        ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+        ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+        'limit.images': 1,
+      })
+    ),
+  ])
+    .then(response => {
+      // const currentUser = response[0]?.data?.data;
+      const ownListings = response[1]?.data?.data;
+      return ownListings;
+    })
+    .catch(e => {
+      throw e;
+    });
 };

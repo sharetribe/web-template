@@ -5,10 +5,9 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
+import { FormattedMessage, useIntl } from '../../util/reactIntl';
 import { REVIEW_TYPE_OF_PROVIDER, REVIEW_TYPE_OF_CUSTOMER, propTypes } from '../../util/types';
 import { ensureCurrentUser, ensureUser } from '../../util/data';
-import { withViewport } from '../../util/uiHelpers';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import {
@@ -22,6 +21,7 @@ import {
   Reviews,
   ButtonTabNavHorizontal,
   LayoutSideNavigation,
+  NamedRedirect,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
@@ -151,11 +151,14 @@ export const MainContent = props => {
     queryListingsError,
     reviews,
     queryReviewsError,
-    viewport,
   } = props;
 
   const hasListings = listings.length > 0;
-  const isMobileLayout = viewport.width < MAX_MOBILE_SCREEN_WIDTH;
+  const hasMatchMedia = typeof window !== 'undefined' && window?.matchMedia;
+  const isMobileLayout = hasMatchMedia
+    ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
+    : true;
+
   const hasBio = !!bio;
 
   const listingsContainerClasses = classNames(css.listingsContainer, {
@@ -174,7 +177,17 @@ export const MainContent = props => {
       <H2 as="h1" className={css.desktopHeading}>
         <FormattedMessage id="ProfilePage.desktopHeading" values={{ name: displayName }} />
       </H2>
-      {hasBio ? <p className={css.bio}>{bio}</p> : null}
+      {hasBio ? <p className={css.bio}>{bioWithLinks}</p> : null}
+
+      {displayName ? (
+        <CustomUserFields
+          publicData={publicData}
+          metadata={metadata}
+          userFieldConfig={userFieldConfig}
+          intl={intl}
+        />
+      ) : null}
+
       {hasListings ? (
         <div className={listingsContainerClasses}>
           <H4 as="h2" className={css.listingsTitle}>
@@ -200,7 +213,21 @@ export const MainContent = props => {
 
 const ProfilePageComponent = props => {
   const config = useConfiguration();
-  const { scrollingDisabled, currentUser, userShowError, user, intl, ...rest } = props;
+  const intl = useIntl();
+  const { scrollingDisabled, currentUser, userShowError, user, ...rest } = props;
+
+  // Stripe's onboarding needs a business URL for each seller, but the profile page can be
+  // too empty for the provider at the time they are creating their first listing.
+  // To remedy the situation, we redirect Stripe's crawler to the landing page of the marketplace.
+  // TODO: When there's more content on the profile page, we should consider by-passing this redirection.
+  const searchParams = rest?.location?.search;
+  const isStorefront = searchParams
+    ? new URLSearchParams(searchParams)?.get('mode') === 'storefront'
+    : false;
+  if (isStorefront) {
+    return <NamedRedirect name="LandingPage" />;
+  }
+
   const ensuredCurrentUser = ensureCurrentUser(currentUser);
   const profileUser = ensureUser(user);
   const isCurrentUser =
@@ -255,15 +282,6 @@ ProfilePageComponent.propTypes = {
   listings: arrayOf(propTypes.listing).isRequired,
   reviews: arrayOf(propTypes.review),
   queryReviewsError: propTypes.error,
-
-  // form withViewport
-  viewport: shape({
-    width: number.isRequired,
-    height: number.isRequired,
-  }).isRequired,
-
-  // from injectIntl
-  intl: intlShape.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -291,10 +309,6 @@ const mapStateToProps = state => {
   };
 };
 
-const ProfilePage = compose(
-  connect(mapStateToProps),
-  withViewport,
-  injectIntl
-)(ProfilePageComponent);
+const ProfilePage = compose(connect(mapStateToProps))(ProfilePageComponent);
 
 export default ProfilePage;

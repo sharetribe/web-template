@@ -1,4 +1,5 @@
 /*
+/*
  *  TopbarMobileMenu prints the menu content for authenticated user or
  * shows login actions for those who are not authenticated.
  */
@@ -8,6 +9,7 @@ import React, { useState } from 'react';
 import { Collapse } from 'react-collapse';
 import { AvatarLarge, InlineTextButton, NamedLink, NotificationBadge } from '../../../components';
 import { ACCOUNT_SETTINGS_PAGES } from '../../../routing/routeConfiguration';
+import { ensureCurrentUser } from '../../../util/data';
 import { ensureCurrentUser } from '../../../util/data';
 import { FormattedMessage } from '../../../util/reactIntl';
 import { propTypes } from '../../../util/types';
@@ -29,10 +31,12 @@ const TopbarMobileMenu = props => {
   if (!isAuthenticated) {
     const signup = (
       <NamedLink name="SignupPage" style={{ color: 'white' }} className={css.signupLink}>
+      <NamedLink name="SignupPage" style={{ color: 'white' }} className={css.signupLink}>
         <FormattedMessage id="TopbarMobileMenu.signupLink" />
       </NamedLink>
     );
     const login = (
+      <NamedLink name="LoginPage" style={{ color: 'white' }} className={css.loginLink}>
       <NamedLink name="LoginPage" style={{ color: 'white' }} className={css.loginLink}>
         <FormattedMessage id="TopbarMobileMenu.loginLink" />
       </NamedLink>
@@ -139,6 +143,15 @@ const TopbarMobileMenu = props => {
               <FormattedMessage id=" INICIA SESIÓN" />
             </NamedLink>
           </div>
+          <div style={{ backgroundColor: '#7CC9BC' }} className={css.createNewListingLink}>
+            <NamedLink name="SignupPage" style={{ color: 'white' }}>
+              <FormattedMessage id="REGISTRATE " />
+            </NamedLink>
+            O
+            <NamedLink name="LoginPage" style={{ color: 'white' }}>
+              <FormattedMessage id=" INICIA SESIÓN" />
+            </NamedLink>
+          </div>
         </div>
       </div>
     );
@@ -198,6 +211,14 @@ const TopbarMobileMenu = props => {
         >
           <FormattedMessage id="TopbarMobileMenu.accountSettingsLink" />
         </NamedLink>
+        <a
+          className={classNames(css.navigationLink, currentPageClass('faqs'))}
+          name="AccountSettingsPage"
+          href="https://www.rundo.com.ar/p/frequent-asked-questions"
+        >
+          <a href="https://www.rundo.com.ar/p/frequent-asked-questions"></a>
+          <FormattedMessage id="Preguntas Frecuentes" />
+        </a>
         <a
           className={classNames(css.navigationLink, currentPageClass('faqs'))}
           name="AccountSettingsPage"

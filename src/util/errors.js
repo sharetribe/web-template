@@ -24,6 +24,7 @@ import {
   ERROR_CODE_TRANSACTION_BOOKING_TIME_NOT_AVAILABLE,
   ERROR_CODE_TRANSACTION_LISTING_INSUFFICIENT_STOCK,
   ERROR_CODE_STOCK_OLD_TOTAL_MISMATCH,
+  ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS,
 } from './types';
 // NOTE: This file imports types.js, which may lead to circular dependency
 
@@ -230,6 +231,15 @@ export const isChangeEmailWrongPassword = error => error && error.status === 403
  * is due to giving wrong password.
  */
 export const isChangePasswordWrongPassword = error => error && error.status === 403;
+
+/**
+ * Check if the given API error (from `sdk.listings.open(params)` or `sdk.listings.publish(params)`)
+ * is due to denied permission to post listings.
+ */
+export const isErrorNoPermissionToPostListings = error =>
+  error &&
+  error.status === 403 &&
+  hasErrorWithCode(error, ERROR_CODE_PERMISSION_DENIED_POST_LISTINGS);
 
 /**
  * Check if the given API error (from

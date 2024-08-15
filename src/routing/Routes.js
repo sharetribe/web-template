@@ -72,7 +72,7 @@ const setPageScrollPosition = (location, delayed) => {
       // might affect user initiated scrolling.
       delayed = window.setTimeout(() => {
         const reTry = document.querySelector(location.hash);
-        reTry.scrollIntoView({
+        reTry?.scrollIntoView({
           block: 'start',
           behavior: 'smooth',
         });

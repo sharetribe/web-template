@@ -257,8 +257,13 @@ export const ListingPageComponent = props => {
       }
     : {};
   const currentStock = currentListing.currentStock?.attributes?.quantity || 0;
-  const schemaAvailability =
-    currentStock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
+  const schemaAvailability = !currentListing.currentStock
+    ? null
+    : currentStock > 0
+    ? 'https://schema.org/InStock'
+    : 'https://schema.org/OutOfStock';
+
+  const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
 
   const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
 
@@ -287,7 +292,7 @@ export const ListingPageComponent = props => {
           '@type': 'Offer',
           url: productURL,
           ...schemaPriceMaybe,
-          availability: schemaAvailability,
+          ...availabilityMaybe,
         },
       }}
     >
