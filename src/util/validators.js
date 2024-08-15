@@ -54,6 +54,12 @@ export const requiredFieldArrayCheckbox = message => value => {
   return hasSelectedValues ? VALID : message;
 };
 
+export const requiredSelectTreeOption = message => value => {
+  if (typeof value === 'undefined' || value === null || Object.values(value)?.length === 0) {
+    return message;
+  }
+};
+
 export const minLength = (message, minimumLength) => value => {
   const hasLength = value && typeof value.length === 'number';
   return hasLength && value.length >= minimumLength ? VALID : message;
@@ -122,6 +128,17 @@ const parseNum = str => {
 export const numberAtLeast = (message, minNumber) => value => {
   const valueNum = parseNum(value);
   return typeof valueNum === 'number' && valueNum >= minNumber ? VALID : message;
+};
+
+export const validateInteger = (value, max, min, numberTooSmallMessage, numberTooBigMessage) => {
+  const parsedValue = Number.parseInt(value, 10);
+  if (parsedValue > max) {
+    return numberTooBigMessage;
+  }
+  if (parsedValue < min) {
+    return numberTooSmallMessage;
+  }
+  return VALID;
 };
 
 export const ageAtLeast = (message, minYears) => value => {
