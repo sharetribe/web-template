@@ -7,13 +7,6 @@ import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
-<<<<<<< HEAD
-import { Form, PrimaryButton, FieldTextInput, FieldPhoneNumberInput} from '../../../components';
-
-import css from './SignupForm.module.css';
-
-// import FieldPhoneNumberInput from '../../../components';
-=======
 import { getPropsForCustomUserFieldInputs } from '../../../util/userHelpers';
 
 import { Form, PrimaryButton, FieldTextInput, CustomExtendedDataField } from '../../../components';
@@ -26,7 +19,6 @@ import css from './SignupForm.module.css';
 
 const getSoleUserTypeMaybe = userTypes =>
   Array.isArray(userTypes) && userTypes.length === 1 ? userTypes[0].userType : null;
->>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5
 
 const SignupFormComponent = props => (
   <FinalForm
@@ -116,31 +108,6 @@ const SignupFormComponent = props => (
       };
       return (
         <Form className={classes} onSubmit={handleSubmit}>
-<<<<<<< HEAD
-          <div>
-            <FieldTextInput
-              type="email"
-              id={formId ? `${formId}.email` : 'email'}
-              name="email"
-              autoComplete="email"
-              label={intl.formatMessage({
-                id: 'SignupForm.emailLabel',
-              })}
-              placeholder={intl.formatMessage({
-                id: 'SignupForm.emailPlaceholder',
-              })}
-              validate={validators.composeValidators(emailRequired, emailValid)}
-            />
-            <FieldPhoneNumberInput
-              className={css.phone}
-              id={formId ? `${formId}.phoneNumber` : 'phoneNumber'}
-              name="phoneNumber"
-              label={phoneLabel}
-              placeholder={phonePlaceholder}
-              validate={phoneRequired}
-            />
-            <div className={css.name}>
-=======
           <FieldSelectUserType
             name="userType"
             userTypes={userTypes}
@@ -150,7 +117,6 @@ const SignupFormComponent = props => (
 
           {showDefaultUserFields ? (
             <div className={css.defaultUserFields}>
->>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5
               <FieldTextInput
                 type="email"
                 id={formId ? `${formId}.email` : 'email'}

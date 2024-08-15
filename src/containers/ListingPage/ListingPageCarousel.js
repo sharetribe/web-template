@@ -298,7 +298,6 @@ export const ListingPageComponent = props => {
     ? 'https://schema.org/InStock'
     : 'https://schema.org/OutOfStock';
 
-<<<<<<< HEAD
   const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
   
   const onToggleFavorites = handleToggleFavorites({
@@ -307,9 +306,7 @@ export const ListingPageComponent = props => {
     onUpdateFavorites,
     location,
   });
-=======
   const availabilityMaybe = schemaAvailability ? { availability: schemaAvailability } : {};
->>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5
 
   
   return (

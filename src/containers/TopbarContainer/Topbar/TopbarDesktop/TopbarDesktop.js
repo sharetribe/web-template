@@ -14,12 +14,8 @@ import {
   MenuContent,
   MenuItem,
   NamedLink,
-<<<<<<< HEAD:src/components/Topbar/TopbarDesktop/TopbarDesktop.js
   Button,
 } from '../../../components';
-=======
-} from '../../../../components';
->>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5:src/containers/TopbarContainer/Topbar/TopbarDesktop/TopbarDesktop.js
 
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
 import CustomLinksMenu from './CustomLinksMenu/CustomLinksMenu';
@@ -149,7 +145,6 @@ const TopbarDesktop = props => {
     />
   ) : null;
 
-<<<<<<< HEAD:src/components/Topbar/TopbarDesktop/TopbarDesktop.js
   const currentPageClass = page => {
     const isAccountSettingsPage =
       page === 'AccountSettingsPage' && ACCOUNT_SETTINGS_PAGES.includes(currentPage);
@@ -224,14 +219,6 @@ const TopbarDesktop = props => {
       </span>
     </NamedLink>
   );
-=======
-  const profileMenuMaybe = authenticatedOnClientSide ? (
-    <ProfileMenu currentPage={currentPage} currentUser={currentUser} onLogout={onLogout} />
-  ) : null;
-
-  const signupLinkMaybe = isAuthenticatedOrJustHydrated ? null : <SignupLink />;
-  const loginLinkMaybe = isAuthenticatedOrJustHydrated ? null : <LoginLink />;
->>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5:src/containers/TopbarContainer/Topbar/TopbarDesktop/TopbarDesktop.js
 
   return (
     <nav className={classes}>
@@ -241,7 +228,6 @@ const TopbarDesktop = props => {
         alt={intl.formatMessage({ id: 'TopbarDesktop.logo' }, { marketplaceName })}
         linkToExternalSite={config?.topbar?.logoLink}
       />
-<<<<<<< HEAD:src/components/Topbar/TopbarDesktop/TopbarDesktop.js
       {search}
       <a style={{width: '20%', height: '100%'}}>
         <a style={{ height: '100%', display: 'flex', alignItems: 'center'}} href="https://wa.me/5492944232664" target="_blank" >
@@ -259,27 +245,6 @@ const TopbarDesktop = props => {
       {profileMenu}
       
       {loginLink}
-=======
-      <TopbarSearchForm
-        className={classNames(css.searchLink, { [css.takeAvailableSpace]: giveSpaceForSearch })}
-        desktopInputRoot={css.topbarSearchWithLeftPadding}
-        onSubmit={onSearchSubmit}
-        initialValues={initialSearchFormValues}
-        appConfig={config}
-      />
-
-      <CustomLinksMenu
-        currentPage={currentPage}
-        customLinks={customLinks}
-        intl={intl}
-        hasClientSideContentReady={authenticatedOnClientSide || !isAuthenticatedOrJustHydrated}
-      />
-
-      {inboxLinkMaybe}
-      {profileMenuMaybe}
-      {signupLinkMaybe}
-      {loginLinkMaybe}
->>>>>>> 4f6c2423343b1a8e6fff98c37c149642bee077b5:src/containers/TopbarContainer/Topbar/TopbarDesktop/TopbarDesktop.js
     </nav>
   );
 };
