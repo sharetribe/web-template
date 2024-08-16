@@ -14,6 +14,20 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Access control: 'pending-approval' state for users.
+
+  - Users will get "state", which is exposed through currentUser's attribute
+  - A new state is "pending-approval", which restricts user from initiating transactions and posting
+    listings.
+  - In addition, 'banned' users will also have state 'banned'.
+  - Extra: Routes.js: do not allow banned users to auth pages
+  - [fix]: InboxPage.duck.js: include deleted and banned attributes
+  - [fix]: ModalMissingInformation: only 'active' users get this modal shown
+  - [fix]: Inquiry modal: open the modal after authentication
+  - Some util-file imports have been reordered (might cause conflicts)
+
+  [#428](https://github.com/sharetribe/web-template/pull/428)
+
 - [fix] SearchPage: SearchFiltersMobile (modal) should be above topbar.
   [#432](https://github.com/sharetribe/web-template/pull/432)
 
