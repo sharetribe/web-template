@@ -3,7 +3,7 @@
  * Navigational 'aside' content should be added to this wrapper.
  */
 import React, { useEffect } from 'react';
-import { node, number, string, shape } from 'prop-types';
+import { node, number, shape, string } from 'prop-types';
 import { compose } from 'redux';
 
 import { FormattedMessage } from '../../../util/reactIntl';
@@ -78,9 +78,11 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
     return () => {
       // Update scroll position when unmounting
       const el = document.querySelector(`#${currentPage}Tab`);
-      setScrollLeft(el.parentElement.scrollLeft);
-      if (scrollTimeout) {
-        clearTimeout(scrollTimeout);
+      if (el) {
+        setScrollLeft(el.parentElement.scrollLeft);
+        if (scrollTimeout) {
+          clearTimeout(scrollTimeout);
+        }
       }
     };
   });

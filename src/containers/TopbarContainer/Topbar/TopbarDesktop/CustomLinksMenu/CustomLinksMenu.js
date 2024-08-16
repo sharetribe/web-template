@@ -64,6 +64,10 @@ const groupMeasuredLinks = (links, containerWidth, menuMoreWidth) => {
 };
 
 const calculateContainerWidth = (containerRefTarget, parentWidth) => {
+  if (!containerRefTarget) {
+    return;
+  }
+
   // Siblings include logo, search form, (inbox, profile menu || login signup)
   const siblingArray = Array.from(containerRefTarget.parentNode.childNodes).filter(
     n => n !== containerRefTarget
@@ -159,7 +163,10 @@ const CustomLinksMenu = ({ currentPage, customLinks = [], hasClientSideContentRe
     }
     return () => {
       observer.current?.unobserve(document.body);
-      observer.current?.unobserve(containerRef.current);
+      if (containerRef.current) {
+        observer.current?.unobserve(containerRef?.current);
+      }
+
       if (animationFrameId) {
         window.cancelAnimationFrame(animationFrameId);
       }

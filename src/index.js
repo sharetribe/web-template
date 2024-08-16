@@ -30,7 +30,7 @@ import './styles/marketplaceDefaults.css';
 // Configs and store setup
 import appSettings from './config/settings';
 import defaultConfig from './config/configDefault';
-import { LoggingAnalyticsHandler, GoogleAnalyticsHandler } from './analytics/handlers';
+import { GoogleAnalyticsHandler, LoggingAnalyticsHandler } from './analytics/handlers';
 import configureStore from './store';
 
 // Utils
@@ -49,6 +49,7 @@ import { fetchCurrentUser } from './ducks/user.duck';
 import routeConfiguration from './routing/routeConfiguration';
 // App it self
 import { ClientApp, renderApp } from './app';
+import { createRoot } from 'react-dom/client';
 
 const render = (store, shouldHydrate) => {
   // If the server already loaded the auth information, render the app
@@ -86,9 +87,9 @@ const render = (store, shouldHydrate) => {
           document.getElementById('root')
         );
       } else {
-        ReactDOM.render(
-          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />,
-          document.getElementById('root')
+        const root = createRoot(document.getElementById('root'));
+        root.render(
+          <ClientApp store={store} hostedTranslations={translations} hostedConfig={hostedConfig} />
         );
       }
     })
