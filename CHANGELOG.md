@@ -14,6 +14,15 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2024-XX-XX
 
+- [add] Access control: private marketplace mode
+
+  - Fetch a new asset: /general/access-control.json to check private: true/false flag
+  - Make SearchPage, ListingPage, ProfilePage, Styleguide require authentication
+  - Ensure currentUser entity is loaded before loadData on client-side
+  - Restrict data load & add redirections for SearchPage, ListingPage, and ProfilePage
+
+  [#434](https://github.com/sharetribe/web-template/pull/434)
+
 - [add] Access control: 'pending-approval' state for users.
 
   - Users will get "state", which is exposed through currentUser's attribute
